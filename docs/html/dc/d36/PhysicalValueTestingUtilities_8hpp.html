@@ -86,12 +86,12 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d5c/structsequoia_1_1testing_1_1value__tester_3_01physics_1_1physical__value_3_01PhysicalValueSpace_de42f6b0e7ab3da683b4fb7404279a0a.html">sequoia::testing::value_tester&lt; physics::physical_value&lt; PhysicalValueSpace, Unit, Convention, Origin, Validator &gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d15/structsequoia_1_1testing_1_1value__tester_3_01physics_1_1physical__value_3_01PhysicalValueSpace_c92fd3fa46fb0b6002861077977c31c4.html">sequoia::testing::value_tester&lt; physics::physical_value&lt; PhysicalValueSpace, Unit, Basis, Origin, Validator &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a62393e4b34c29b612266fa6afa381837"><td class="memTemplParams" colspan="2">template&lt;maths::convex_space ValueSpace, class Unit , class Convention , class Origin , class Validator &gt; </td></tr>
+<tr class="memitem:a62393e4b34c29b612266fa6afa381837"><td class="memTemplParams" colspan="2">template&lt;maths::convex_space ValueSpace, class Unit , maths::basis_for&lt; maths::free_module_type_of_t&lt; ValueSpace &gt; &gt; Basis, class Origin , class Validator &gt; </td></tr>
 <tr class="memitem:a62393e4b34c29b612266fa6afa381837"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/d36/PhysicalValueTestingUtilities_8hpp.html#a62393e4b34c29b612266fa6afa381837">sequoia::testing::defines_physical_value_v</a></td></tr>
 <tr class="separator:a62393e4b34c29b612266fa6afa381837"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -102,7 +102,7 @@ Variables</h2></td></tr>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;maths::convex_space ValueSpace, class Unit , class Convention , class Origin , class Validator &gt; </div>
+template&lt;maths::convex_space ValueSpace, class Unit , maths::basis_for&lt; maths::free_module_type_of_t&lt; ValueSpace &gt; &gt; Basis, class Origin , class Validator &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -119,7 +119,7 @@ template&lt;maths::convex_space ValueSpace, class Unit , class Convention , clas
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <span class="keyword">requires</span> {</div>
-<div class="line">      <span class="keyword">typename</span> physics::physical_value&lt;ValueSpace, Unit, Convention, Origin, Validator&gt;;</div>
+<div class="line">      <span class="keyword">typename</span> physics::physical_value&lt;ValueSpace, Unit, Basis, Origin, Validator&gt;;</div>
 <div class="line">    }</div>
 <div class="line">  }</div>
 </div><!-- fragment -->

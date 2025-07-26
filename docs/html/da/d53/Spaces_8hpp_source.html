@@ -574,394 +574,453 @@ $(function() {
 <div class="line"><a id="l01087" name="l01087"></a><span class="lineno"> 1087</span> </div>
 <div class="line"><a id="l01088" name="l01088"></a><span class="lineno"> 1088</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keywordtype">bool</span> has_distinguished_origin{std::is_same_v&lt;Origin, distinguished_origin&gt;};</div>
 <div class="line"><a id="l01089" name="l01089"></a><span class="lineno"> 1089</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keywordtype">bool</span> has_identity_validator{is_identity_validator_v&lt;Validator&gt;};</div>
-<div class="line"><a id="l01090" name="l01090"></a><span class="lineno"> 1090</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t dimension{free_module_type::dimension};</div>
-<div class="line"><a id="l01091" name="l01091"></a><span class="lineno"> 1091</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t D{dimension};</div>
-<div class="line"><a id="l01092" name="l01092"></a><span class="lineno"> 1092</span> </div>
-<div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a>() <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l01094" name="l01094"></a><span class="lineno"> 1094</span> </div>
-<div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span>    <span class="keyword">constexpr</span> <span class="keyword">explicit</span> <a class="code hl_class" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a>(std::span&lt;const value_type, D&gt; vals) <span class="keyword">noexcept</span>(has_identity_validator)</div>
-<div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span>      : m_Values{validate(vals, m_Validator)}</div>
-<div class="line"><a id="l01097" name="l01097"></a><span class="lineno"> 1097</span>    {}</div>
-<div class="line"><a id="l01098" name="l01098"></a><span class="lineno"> 1098</span> </div>
-<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Ts&gt;</div>
-<div class="line"><a id="l01100" name="l01100"></a><span class="lineno"> 1100</span>      <span class="keyword">requires</span> (D &gt; 1) &amp;&amp; (<span class="keyword">sizeof</span>...(Ts) == D) &amp;&amp; (std::convertible_to&lt;Ts, value_type&gt; &amp;&amp; ...)</div>
-<div class="line"><a id="l01101" name="l01101"></a><span class="lineno"> 1101</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a>(Ts... ts) <span class="keyword">noexcept</span>(has_identity_validator)</div>
-<div class="line"><a id="l01102" name="l01102"></a><span class="lineno"> 1102</span>      : m_Values{m_Validator(std::array&lt;value_type, D&gt;{ts...})}</div>
-<div class="line"><a id="l01103" name="l01103"></a><span class="lineno"> 1103</span>    {}</div>
-<div class="line"><a id="l01104" name="l01104"></a><span class="lineno"> 1104</span> </div>
-<div class="line"><a id="l01105" name="l01105"></a><span class="lineno"> 1105</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a id="l01106" name="l01106"></a><span class="lineno"> 1106</span>      <span class="keyword">requires</span> (D == 1) &amp;&amp; (std::convertible_to&lt;T, value_type&gt;)</div>
-<div class="line"><a id="l01107" name="l01107"></a><span class="lineno"> 1107</span>    <span class="keyword">constexpr</span> <span class="keyword">explicit</span> <a class="code hl_class" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a>(T val) <span class="keyword">noexcept</span>(has_identity_validator)</div>
-<div class="line"><a id="l01108" name="l01108"></a><span class="lineno"> 1108</span>      : m_Values{m_Validator(val)}</div>
-<div class="line"><a id="l01109" name="l01109"></a><span class="lineno"> 1109</span>    {}</div>
-<div class="line"><a id="l01110" name="l01110"></a><span class="lineno"> 1110</span> </div>
-<div class="line"><a id="l01111" name="l01111"></a><span class="lineno"> 1111</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Self&gt;</div>
-<div class="line"><a id="l01112" name="l01112"></a><span class="lineno"> 1112</span>    <span class="keyword">constexpr</span> Self&amp; operator+=(<span class="keyword">this</span> Self&amp; self, <span class="keyword">const</span> displacement_coordinates_type&amp; v) <span class="keyword">noexcept</span>(has_identity_validator)</div>
-<div class="line"><a id="l01113" name="l01113"></a><span class="lineno"> 1113</span>    {</div>
-<div class="line"><a id="l01114" name="l01114"></a><span class="lineno"> 1114</span>      self.apply_to_each_element(v.values(), [](value_type&amp; lhs, value_type rhs){ lhs += rhs; });</div>
-<div class="line"><a id="l01115" name="l01115"></a><span class="lineno"> 1115</span>      <span class="keywordflow">return</span> self;</div>
-<div class="line"><a id="l01116" name="l01116"></a><span class="lineno"> 1116</span>    }</div>
-<div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span> </div>
-<div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Self&gt;</div>
-<div class="line"><a id="l01119" name="l01119"></a><span class="lineno"> 1119</span>      <span class="keyword">requires</span> has_distinguished_origin &amp;&amp; (!std::is_same_v&lt;coordinates_base, displacement_coordinates_type&gt;)</div>
-<div class="line"><a id="l01120" name="l01120"></a><span class="lineno"> 1120</span>    <span class="keyword">constexpr</span> Self&amp; <span class="keyword">operator</span>+=(<span class="keyword">this</span> Self&amp; self, <span class="keyword">const</span> <a class="code hl_class" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a>&amp; v) <span class="keyword">noexcept</span>(has_identity_validator)</div>
-<div class="line"><a id="l01121" name="l01121"></a><span class="lineno"> 1121</span>    {</div>
-<div class="line"><a id="l01122" name="l01122"></a><span class="lineno"> 1122</span>      self.apply_to_each_element(v.values(), [](value_type&amp; lhs, value_type rhs){ lhs += rhs; });</div>
-<div class="line"><a id="l01123" name="l01123"></a><span class="lineno"> 1123</span>      <span class="keywordflow">return</span> self;</div>
-<div class="line"><a id="l01124" name="l01124"></a><span class="lineno"> 1124</span>    }</div>
-<div class="line"><a id="l01125" name="l01125"></a><span class="lineno"> 1125</span> </div>
-<div class="line"><a id="l01126" name="l01126"></a><span class="lineno"> 1126</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Self&gt;</div>
-<div class="line"><a id="l01127" name="l01127"></a><span class="lineno"> 1127</span>    <span class="keyword">constexpr</span> Self&amp; operator-=(<span class="keyword">this</span> Self&amp; self, <span class="keyword">const</span> displacement_coordinates_type&amp; v) <span class="keyword">noexcept</span>(has_identity_validator)</div>
-<div class="line"><a id="l01128" name="l01128"></a><span class="lineno"> 1128</span>    {</div>
-<div class="line"><a id="l01129" name="l01129"></a><span class="lineno"> 1129</span>      self.apply_to_each_element(v.values(), [](value_type&amp; lhs, value_type rhs){ lhs -= rhs; });</div>
-<div class="line"><a id="l01130" name="l01130"></a><span class="lineno"> 1130</span>      <span class="keywordflow">return</span> self;</div>
-<div class="line"><a id="l01131" name="l01131"></a><span class="lineno"> 1131</span>    }</div>
-<div class="line"><a id="l01132" name="l01132"></a><span class="lineno"> 1132</span> </div>
-<div class="line"><a id="l01133" name="l01133"></a><span class="lineno"> 1133</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Self&gt;</div>
-<div class="line"><a id="l01134" name="l01134"></a><span class="lineno"> 1134</span>    <span class="keyword">constexpr</span> Self&amp; operator*=(<span class="keyword">this</span> Self&amp; self, value_type u) <span class="keyword">noexcept</span>(has_identity_validator)</div>
-<div class="line"><a id="l01135" name="l01135"></a><span class="lineno"> 1135</span>      <span class="keyword">requires</span> has_distinguished_origin</div>
-<div class="line"><a id="l01136" name="l01136"></a><span class="lineno"> 1136</span>    {</div>
-<div class="line"><a id="l01137" name="l01137"></a><span class="lineno"> 1137</span>      self.for_each_element([u](value_type&amp; x) { <span class="keywordflow">return</span> x *= u; });</div>
-<div class="line"><a id="l01138" name="l01138"></a><span class="lineno"> 1138</span>      <span class="keywordflow">return</span> self;</div>
-<div class="line"><a id="l01139" name="l01139"></a><span class="lineno"> 1139</span>    }</div>
-<div class="line"><a id="l01140" name="l01140"></a><span class="lineno"> 1140</span> </div>
-<div class="line"><a id="l01141" name="l01141"></a><span class="lineno"> 1141</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Self&gt;</div>
-<div class="line"><a id="l01142" name="l01142"></a><span class="lineno"> 1142</span>    <span class="keyword">constexpr</span> Self&amp; operator/=(<span class="keyword">this</span> Self&amp; self, value_type u)</div>
-<div class="line"><a id="l01143" name="l01143"></a><span class="lineno"> 1143</span>      <span class="keyword">requires</span> <a class="code hl_concept" href="../../de/d6f/conceptsequoia_1_1maths_1_1vector__space.html">vector_space&lt;free_module_type&gt;</a> &amp;&amp; has_distinguished_origin</div>
-<div class="line"><a id="l01144" name="l01144"></a><span class="lineno"> 1144</span>    {</div>
-<div class="line"><a id="l01145" name="l01145"></a><span class="lineno"> 1145</span>      self.for_each_element([u](value_type&amp; x) { <span class="keywordflow">return</span> x /= u; });</div>
-<div class="line"><a id="l01146" name="l01146"></a><span class="lineno"> 1146</span>      <span class="keywordflow">return</span> self;</div>
-<div class="line"><a id="l01147" name="l01147"></a><span class="lineno"> 1147</span>    }</div>
-<div class="line"><a id="l01148" name="l01148"></a><span class="lineno"> 1148</span> </div>
-<div class="line"><a id="l01149" name="l01149"></a><span class="lineno"> 1149</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Derived&gt;</div>
-<div class="line"><a id="l01150" name="l01150"></a><span class="lineno"> 1150</span>      <span class="keyword">requires</span> std::is_base_of_v&lt;coordinates_base, Derived&gt;</div>
+<div class="line"><a id="l01090" name="l01090"></a><span class="lineno"> 1090</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keywordtype">bool</span> has_freely_mutable_components{has_identity_validator &amp;&amp; has_distinguished_origin};</div>
+<div class="line"><a id="l01091" name="l01091"></a><span class="lineno"> 1091</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t dimension{free_module_type::dimension};</div>
+<div class="line"><a id="l01092" name="l01092"></a><span class="lineno"> 1092</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t D{dimension};</div>
+<div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span> </div>
+<div class="line"><a id="l01094" name="l01094"></a><span class="lineno"> 1094</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a>() <span class="keyword">noexcept</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span> </div>
+<div class="line"><a id="l01096" name="l01096"></a><span class="lineno"> 1096</span>    <span class="keyword">constexpr</span> <span class="keyword">explicit</span> <a class="code hl_class" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a>(std::span&lt;const value_type, D&gt; vals) <span class="keyword">noexcept</span>(has_identity_validator)</div>
+<div class="line"><a id="l01097" name="l01097"></a><span class="lineno"> 1097</span>      : m_Values{validate(vals, m_Validator)}</div>
+<div class="line"><a id="l01098" name="l01098"></a><span class="lineno"> 1098</span>    {}</div>
+<div class="line"><a id="l01099" name="l01099"></a><span class="lineno"> 1099</span> </div>
+<div class="line"><a id="l01100" name="l01100"></a><span class="lineno"> 1100</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Ts&gt;</div>
+<div class="line"><a id="l01101" name="l01101"></a><span class="lineno"> 1101</span>      <span class="keyword">requires</span> (D &gt; 1) &amp;&amp; (std::convertible_to&lt;Ts, value_type&gt; &amp;&amp; ...)</div>
+<div class="line"><a id="l01102" name="l01102"></a><span class="lineno"> 1102</span>    <span class="keyword">constexpr</span> <span class="keyword">explicit</span>(<span class="keyword">sizeof</span>...(Ts) == 1) <a class="code hl_class" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a>(Ts... ts) <span class="keyword">noexcept</span>(has_identity_validator)</div>
+<div class="line"><a id="l01103" name="l01103"></a><span class="lineno"> 1103</span>      : m_Values{m_Validator(std::array&lt;value_type, D&gt;{ts...})}</div>
+<div class="line"><a id="l01104" name="l01104"></a><span class="lineno"> 1104</span>    {}</div>
+<div class="line"><a id="l01105" name="l01105"></a><span class="lineno"> 1105</span> </div>
+<div class="line"><a id="l01106" name="l01106"></a><span class="lineno"> 1106</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a id="l01107" name="l01107"></a><span class="lineno"> 1107</span>      <span class="keyword">requires</span> (D == 1) &amp;&amp; (std::convertible_to&lt;T, value_type&gt;)</div>
+<div class="line"><a id="l01108" name="l01108"></a><span class="lineno"> 1108</span>    <span class="keyword">constexpr</span> <span class="keyword">explicit</span> <a class="code hl_class" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a>(T val) <span class="keyword">noexcept</span>(has_identity_validator)</div>
+<div class="line"><a id="l01109" name="l01109"></a><span class="lineno"> 1109</span>      : m_Values{m_Validator(val)}</div>
+<div class="line"><a id="l01110" name="l01110"></a><span class="lineno"> 1110</span>    {}</div>
+<div class="line"><a id="l01111" name="l01111"></a><span class="lineno"> 1111</span> </div>
+<div class="line"><a id="l01112" name="l01112"></a><span class="lineno"> 1112</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Self&gt;</div>
+<div class="line"><a id="l01113" name="l01113"></a><span class="lineno"> 1113</span>    <span class="keyword">constexpr</span> Self&amp; operator+=(<span class="keyword">this</span> Self&amp; self, <span class="keyword">const</span> displacement_coordinates_type&amp; v) <span class="keyword">noexcept</span>(has_identity_validator)</div>
+<div class="line"><a id="l01114" name="l01114"></a><span class="lineno"> 1114</span>    {</div>
+<div class="line"><a id="l01115" name="l01115"></a><span class="lineno"> 1115</span>      self.apply_to_each_element(v.values(), [](value_type&amp; lhs, value_type rhs){ lhs += rhs; });</div>
+<div class="line"><a id="l01116" name="l01116"></a><span class="lineno"> 1116</span>      <span class="keywordflow">return</span> self;</div>
+<div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span>    }</div>
+<div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span> </div>
+<div class="line"><a id="l01119" name="l01119"></a><span class="lineno"> 1119</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Self&gt;</div>
+<div class="line"><a id="l01120" name="l01120"></a><span class="lineno"> 1120</span>      <span class="keyword">requires</span> has_distinguished_origin &amp;&amp; (!std::is_same_v&lt;coordinates_base, displacement_coordinates_type&gt;)</div>
+<div class="line"><a id="l01121" name="l01121"></a><span class="lineno"> 1121</span>    <span class="keyword">constexpr</span> Self&amp; <span class="keyword">operator</span>+=(<span class="keyword">this</span> Self&amp; self, <span class="keyword">const</span> <a class="code hl_class" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a>&amp; v) <span class="keyword">noexcept</span>(has_identity_validator)</div>
+<div class="line"><a id="l01122" name="l01122"></a><span class="lineno"> 1122</span>    {</div>
+<div class="line"><a id="l01123" name="l01123"></a><span class="lineno"> 1123</span>      self.apply_to_each_element(v.values(), [](value_type&amp; lhs, value_type rhs){ lhs += rhs; });</div>
+<div class="line"><a id="l01124" name="l01124"></a><span class="lineno"> 1124</span>      <span class="keywordflow">return</span> self;</div>
+<div class="line"><a id="l01125" name="l01125"></a><span class="lineno"> 1125</span>    }</div>
+<div class="line"><a id="l01126" name="l01126"></a><span class="lineno"> 1126</span> </div>
+<div class="line"><a id="l01127" name="l01127"></a><span class="lineno"> 1127</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Self&gt;</div>
+<div class="line"><a id="l01128" name="l01128"></a><span class="lineno"> 1128</span>    <span class="keyword">constexpr</span> Self&amp; operator-=(<span class="keyword">this</span> Self&amp; self, <span class="keyword">const</span> displacement_coordinates_type&amp; v) <span class="keyword">noexcept</span>(has_identity_validator)</div>
+<div class="line"><a id="l01129" name="l01129"></a><span class="lineno"> 1129</span>    {</div>
+<div class="line"><a id="l01130" name="l01130"></a><span class="lineno"> 1130</span>      self.apply_to_each_element(v.values(), [](value_type&amp; lhs, value_type rhs){ lhs -= rhs; });</div>
+<div class="line"><a id="l01131" name="l01131"></a><span class="lineno"> 1131</span>      <span class="keywordflow">return</span> self;</div>
+<div class="line"><a id="l01132" name="l01132"></a><span class="lineno"> 1132</span>    }</div>
+<div class="line"><a id="l01133" name="l01133"></a><span class="lineno"> 1133</span> </div>
+<div class="line"><a id="l01134" name="l01134"></a><span class="lineno"> 1134</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Self&gt;</div>
+<div class="line"><a id="l01135" name="l01135"></a><span class="lineno"> 1135</span>    <span class="keyword">constexpr</span> Self&amp; operator*=(<span class="keyword">this</span> Self&amp; self, value_type u) <span class="keyword">noexcept</span>(has_identity_validator)</div>
+<div class="line"><a id="l01136" name="l01136"></a><span class="lineno"> 1136</span>      <span class="keyword">requires</span> has_distinguished_origin</div>
+<div class="line"><a id="l01137" name="l01137"></a><span class="lineno"> 1137</span>    {</div>
+<div class="line"><a id="l01138" name="l01138"></a><span class="lineno"> 1138</span>      self.for_each_element([u](value_type&amp; x) { <span class="keywordflow">return</span> x *= u; });</div>
+<div class="line"><a id="l01139" name="l01139"></a><span class="lineno"> 1139</span>      <span class="keywordflow">return</span> self;</div>
+<div class="line"><a id="l01140" name="l01140"></a><span class="lineno"> 1140</span>    }</div>
+<div class="line"><a id="l01141" name="l01141"></a><span class="lineno"> 1141</span> </div>
+<div class="line"><a id="l01142" name="l01142"></a><span class="lineno"> 1142</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Self&gt;</div>
+<div class="line"><a id="l01143" name="l01143"></a><span class="lineno"> 1143</span>    <span class="keyword">constexpr</span> Self&amp; operator/=(<span class="keyword">this</span> Self&amp; self, value_type u)</div>
+<div class="line"><a id="l01144" name="l01144"></a><span class="lineno"> 1144</span>      <span class="keyword">requires</span> <a class="code hl_concept" href="../../de/d6f/conceptsequoia_1_1maths_1_1vector__space.html">vector_space&lt;free_module_type&gt;</a> &amp;&amp; has_distinguished_origin</div>
+<div class="line"><a id="l01145" name="l01145"></a><span class="lineno"> 1145</span>    {</div>
+<div class="line"><a id="l01146" name="l01146"></a><span class="lineno"> 1146</span>      self.for_each_element([u](value_type&amp; x) { <span class="keywordflow">return</span> x /= u; });</div>
+<div class="line"><a id="l01147" name="l01147"></a><span class="lineno"> 1147</span>      <span class="keywordflow">return</span> self;</div>
+<div class="line"><a id="l01148" name="l01148"></a><span class="lineno"> 1148</span>    }</div>
+<div class="line"><a id="l01149" name="l01149"></a><span class="lineno"> 1149</span> </div>
+<div class="line"><a id="l01150" name="l01150"></a><span class="lineno"> 1150</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Self&gt;</div>
 <div class="line"><a id="l01151" name="l01151"></a><span class="lineno"> 1151</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01152" name="l01152"></a><span class="lineno"> 1152</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> Derived operator+(Derived c, <span class="keyword">const</span> displacement_coordinates_type&amp; v) <span class="keyword">noexcept</span>(has_identity_validator) { <span class="keywordflow">return</span> c += v; }</div>
-<div class="line"><a id="l01153" name="l01153"></a><span class="lineno"> 1153</span> </div>
-<div class="line"><a id="l01154" name="l01154"></a><span class="lineno"> 1154</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Derived&gt;</div>
-<div class="line"><a id="l01155" name="l01155"></a><span class="lineno"> 1155</span>    <span class="keyword">requires</span> std::is_base_of_v&lt;coordinates_base, Derived&gt; &amp;&amp; (!std::is_same_v&lt;Derived, displacement_coordinates_type&gt;)</div>
-<div class="line"><a id="l01156" name="l01156"></a><span class="lineno"> 1156</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01157" name="l01157"></a><span class="lineno"> 1157</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> Derived <span class="keyword">operator</span>+(<span class="keyword">const</span> displacement_coordinates_type&amp; v, Derived c) <span class="keyword">noexcept</span>(has_identity_validator)</div>
-<div class="line"><a id="l01158" name="l01158"></a><span class="lineno"> 1158</span>    {</div>
-<div class="line"><a id="l01159" name="l01159"></a><span class="lineno"> 1159</span>      <span class="keywordflow">return</span> c += v;</div>
-<div class="line"><a id="l01160" name="l01160"></a><span class="lineno"> 1160</span>    }</div>
-<div class="line"><a id="l01161" name="l01161"></a><span class="lineno"> 1161</span>  </div>
-<div class="line"><a id="l01162" name="l01162"></a><span class="lineno"> 1162</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Derived&gt;</div>
-<div class="line"><a id="l01163" name="l01163"></a><span class="lineno"> 1163</span>      <span class="keyword">requires</span> std::is_base_of_v&lt;coordinates_base, Derived&gt; &amp;&amp; (!std::is_same_v&lt;Derived, displacement_coordinates_type&gt;) &amp;&amp; has_distinguished_origin </div>
-<div class="line"><a id="l01164" name="l01164"></a><span class="lineno"> 1164</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01165" name="l01165"></a><span class="lineno"> 1165</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> Derived <span class="keyword">operator</span>+(Derived c, <span class="keyword">const</span> Derived&amp; v) <span class="keyword">noexcept</span>(has_identity_validator)</div>
-<div class="line"><a id="l01166" name="l01166"></a><span class="lineno"> 1166</span>    {</div>
-<div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span>      <span class="keywordflow">return</span> c += v;</div>
-<div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span>    }</div>
-<div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span> </div>
-<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Derived&gt;</div>
-<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span>      <span class="keyword">requires</span> std::is_base_of_v&lt;coordinates_base, Derived&gt;</div>
-<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> Derived operator-(Derived c, <span class="keyword">const</span> displacement_coordinates_type&amp; v) <span class="keyword">noexcept</span>(has_identity_validator)</div>
-<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span>    {</div>
-<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span>      <span class="keywordflow">return</span> c -= v;</div>
-<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span>    }</div>
-<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span> </div>
-<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Derived&gt;</div>
-<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span>      <span class="keyword">requires</span> std::is_base_of_v&lt;coordinates_base, Derived&gt; &amp;&amp; has_distinguished_origin</div>
-<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01181" name="l01181"></a><span class="lineno"> 1181</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> Derived operator*(Derived v, value_type u) <span class="keyword">noexcept</span>(has_identity_validator)</div>
-<div class="line"><a id="l01182" name="l01182"></a><span class="lineno"> 1182</span>    {</div>
-<div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span>      <span class="keywordflow">return</span> v *= u;</div>
-<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span>    }</div>
-<div class="line"><a id="l01185" name="l01185"></a><span class="lineno"> 1185</span> </div>
-<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Derived&gt;</div>
-<div class="line"><a id="l01187" name="l01187"></a><span class="lineno"> 1187</span>      <span class="keyword">requires</span> std::is_base_of_v&lt;coordinates_base, Derived&gt; &amp;&amp; has_distinguished_origin</div>
-<div class="line"><a id="l01188" name="l01188"></a><span class="lineno"> 1188</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01189" name="l01189"></a><span class="lineno"> 1189</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> Derived operator*(value_type u, Derived v) <span class="keyword">noexcept</span>(has_identity_validator)</div>
-<div class="line"><a id="l01190" name="l01190"></a><span class="lineno"> 1190</span>    {</div>
-<div class="line"><a id="l01191" name="l01191"></a><span class="lineno"> 1191</span>      <span class="keywordflow">return</span> v * u;</div>
-<div class="line"><a id="l01192" name="l01192"></a><span class="lineno"> 1192</span>    }</div>
-<div class="line"><a id="l01193" name="l01193"></a><span class="lineno"> 1193</span> </div>
-<div class="line"><a id="l01194" name="l01194"></a><span class="lineno"> 1194</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Derived&gt;</div>
-<div class="line"><a id="l01195" name="l01195"></a><span class="lineno"> 1195</span>      <span class="keyword">requires</span> std::is_base_of_v&lt;coordinates_base, Derived&gt; &amp;&amp; <a class="code hl_concept" href="../../de/d6f/conceptsequoia_1_1maths_1_1vector__space.html">vector_space&lt;free_module_type&gt;</a> &amp;&amp; has_distinguished_origin</div>
-<div class="line"><a id="l01196" name="l01196"></a><span class="lineno"> 1196</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01197" name="l01197"></a><span class="lineno"> 1197</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> Derived operator/(Derived v, value_type u)</div>
-<div class="line"><a id="l01198" name="l01198"></a><span class="lineno"> 1198</span>    {</div>
-<div class="line"><a id="l01199" name="l01199"></a><span class="lineno"> 1199</span>      <span class="keywordflow">return</span> v /= u;</div>
-<div class="line"><a id="l01200" name="l01200"></a><span class="lineno"> 1200</span>    }</div>
-<div class="line"><a id="l01201" name="l01201"></a><span class="lineno"> 1201</span> </div>
+<div class="line"><a id="l01152" name="l01152"></a><span class="lineno"> 1152</span>    <span class="keyword">constexpr</span> Self operator+(<span class="keyword">this</span> <span class="keyword">const</span> Self&amp; self) <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l01153" name="l01153"></a><span class="lineno"> 1153</span>    {</div>
+<div class="line"><a id="l01154" name="l01154"></a><span class="lineno"> 1154</span>      <span class="keywordflow">return</span> self;</div>
+<div class="line"><a id="l01155" name="l01155"></a><span class="lineno"> 1155</span>    }</div>
+<div class="line"><a id="l01156" name="l01156"></a><span class="lineno"> 1156</span> </div>
+<div class="line"><a id="l01157" name="l01157"></a><span class="lineno"> 1157</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Self&gt;</div>
+<div class="line"><a id="l01158" name="l01158"></a><span class="lineno"> 1158</span>      <span class="keyword">requires</span>    std::constructible_from&lt;Self, std::span&lt;const value_type, D&gt;&gt;</div>
+<div class="line"><a id="l01159" name="l01159"></a><span class="lineno"> 1159</span>               &amp;&amp; has_distinguished_origin</div>
+<div class="line"><a id="l01160" name="l01160"></a><span class="lineno"> 1160</span>               &amp;&amp; (!std::is_unsigned_v&lt;value_type&gt;)</div>
+<div class="line"><a id="l01161" name="l01161"></a><span class="lineno"> 1161</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01162" name="l01162"></a><span class="lineno"> 1162</span>    <span class="keyword">constexpr</span> Self <span class="keyword">operator</span>-(<span class="keyword">this</span> <span class="keyword">const</span> Self&amp; self) <span class="keyword">noexcept</span>(has_identity_validator)</div>
+<div class="line"><a id="l01163" name="l01163"></a><span class="lineno"> 1163</span>    {</div>
+<div class="line"><a id="l01164" name="l01164"></a><span class="lineno"> 1164</span>      <span class="keywordflow">return</span> Self{utilities::to_array(self.values(), [](value_type t) { return -t; })};</div>
+<div class="line"><a id="l01165" name="l01165"></a><span class="lineno"> 1165</span>    }</div>
+<div class="line"><a id="l01166" name="l01166"></a><span class="lineno"> 1166</span> </div>
+<div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Derived&gt;</div>
+<div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span>      <span class="keyword">requires</span> std::is_base_of_v&lt;coordinates_base, Derived&gt;</div>
+<div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span>            &amp;&amp; (!std::is_same_v&lt;Derived, displacement_coordinates_type&gt;)</div>
+<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span>            &amp;&amp; std::constructible_from&lt;<span class="keyword">typename</span> Derived::displacement_coordinates_type, std::span&lt;const value_type, D&gt;&gt;</div>
+<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keyword">typename</span> Derived::displacement_coordinates_type <span class="keyword">operator</span>-(<span class="keyword">const</span> Derived&amp; lhs, <span class="keyword">const</span> Derived&amp; rhs) <span class="keyword">noexcept</span>(has_identity_validator)</div>
+<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span>    {</div>
+<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span>      <span class="keywordflow">return</span>[&amp;] &lt;std::size_t... Is&gt;(std::index_sequence&lt;Is...&gt;) {</div>
+<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span>        <span class="keywordflow">return</span> <span class="keyword">typename</span> Derived::displacement_coordinates_type{(lhs.values()[Is] - rhs.values()[Is])...};</div>
+<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span>      }(std::make_index_sequence&lt;D&gt;{});</div>
+<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span>    }</div>
+<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span> </div>
+<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Derived&gt;</div>
+<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span>      <span class="keyword">requires</span> std::is_base_of_v&lt;coordinates_base, Derived&gt;</div>
+<div class="line"><a id="l01181" name="l01181"></a><span class="lineno"> 1181</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01182" name="l01182"></a><span class="lineno"> 1182</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> Derived operator+(Derived c, <span class="keyword">const</span> displacement_coordinates_type&amp; v) <span class="keyword">noexcept</span>(has_identity_validator) { <span class="keywordflow">return</span> c += v; }</div>
+<div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span> </div>
+<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Derived&gt;</div>
+<div class="line"><a id="l01185" name="l01185"></a><span class="lineno"> 1185</span>    <span class="keyword">requires</span> std::is_base_of_v&lt;coordinates_base, Derived&gt; &amp;&amp; (!std::is_same_v&lt;Derived, displacement_coordinates_type&gt;)</div>
+<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01187" name="l01187"></a><span class="lineno"> 1187</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> Derived <span class="keyword">operator</span>+(<span class="keyword">const</span> displacement_coordinates_type&amp; v, Derived c) <span class="keyword">noexcept</span>(has_identity_validator)</div>
+<div class="line"><a id="l01188" name="l01188"></a><span class="lineno"> 1188</span>    {</div>
+<div class="line"><a id="l01189" name="l01189"></a><span class="lineno"> 1189</span>      <span class="keywordflow">return</span> c += v;</div>
+<div class="line"><a id="l01190" name="l01190"></a><span class="lineno"> 1190</span>    }</div>
+<div class="line"><a id="l01191" name="l01191"></a><span class="lineno"> 1191</span>  </div>
+<div class="line"><a id="l01192" name="l01192"></a><span class="lineno"> 1192</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Derived&gt;</div>
+<div class="line"><a id="l01193" name="l01193"></a><span class="lineno"> 1193</span>      <span class="keyword">requires</span> std::is_base_of_v&lt;coordinates_base, Derived&gt; &amp;&amp; (!std::is_same_v&lt;Derived, displacement_coordinates_type&gt;) &amp;&amp; has_distinguished_origin </div>
+<div class="line"><a id="l01194" name="l01194"></a><span class="lineno"> 1194</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01195" name="l01195"></a><span class="lineno"> 1195</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> Derived <span class="keyword">operator</span>+(Derived c, <span class="keyword">const</span> Derived&amp; v) <span class="keyword">noexcept</span>(has_identity_validator)</div>
+<div class="line"><a id="l01196" name="l01196"></a><span class="lineno"> 1196</span>    {</div>
+<div class="line"><a id="l01197" name="l01197"></a><span class="lineno"> 1197</span>      <span class="keywordflow">return</span> c += v;</div>
+<div class="line"><a id="l01198" name="l01198"></a><span class="lineno"> 1198</span>    }</div>
+<div class="line"><a id="l01199" name="l01199"></a><span class="lineno"> 1199</span> </div>
+<div class="line"><a id="l01200" name="l01200"></a><span class="lineno"> 1200</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Derived&gt;</div>
+<div class="line"><a id="l01201" name="l01201"></a><span class="lineno"> 1201</span>      <span class="keyword">requires</span> std::is_base_of_v&lt;coordinates_base, Derived&gt;</div>
 <div class="line"><a id="l01202" name="l01202"></a><span class="lineno"> 1202</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01203" name="l01203"></a><span class="lineno"> 1203</span>    <span class="keyword">constexpr</span> <span class="keyword">const</span> validator_type&amp; validator() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_Validator; }</div>
-<div class="line"><a id="l01204" name="l01204"></a><span class="lineno"> 1204</span> </div>
-<div class="line"><a id="l01205" name="l01205"></a><span class="lineno"> 1205</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01206" name="l01206"></a><span class="lineno"> 1206</span>    <span class="keyword">constexpr</span> std::span&lt;const value_type, D&gt; values() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_Values; }</div>
+<div class="line"><a id="l01203" name="l01203"></a><span class="lineno"> 1203</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> Derived operator-(Derived c, <span class="keyword">const</span> displacement_coordinates_type&amp; v) <span class="keyword">noexcept</span>(has_identity_validator)</div>
+<div class="line"><a id="l01204" name="l01204"></a><span class="lineno"> 1204</span>    {</div>
+<div class="line"><a id="l01205" name="l01205"></a><span class="lineno"> 1205</span>      <span class="keywordflow">return</span> c -= v;</div>
+<div class="line"><a id="l01206" name="l01206"></a><span class="lineno"> 1206</span>    }</div>
 <div class="line"><a id="l01207" name="l01207"></a><span class="lineno"> 1207</span> </div>
-<div class="line"><a id="l01208" name="l01208"></a><span class="lineno"> 1208</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01209" name="l01209"></a><span class="lineno"> 1209</span>    <span class="keyword">constexpr</span> std::span&lt;value_type, D&gt; values() <span class="keyword">noexcept</span> <span class="keyword">requires</span>(has_identity_validator) { <span class="keywordflow">return</span> m_Values; }</div>
-<div class="line"><a id="l01210" name="l01210"></a><span class="lineno"> 1210</span> </div>
-<div class="line"><a id="l01211" name="l01211"></a><span class="lineno"> 1211</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01212" name="l01212"></a><span class="lineno"> 1212</span>    <span class="keyword">constexpr</span> <span class="keyword">const</span> value_type&amp; value() <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="keyword">requires</span> (D == 1) { <span class="keywordflow">return</span> m_Values[0]; }</div>
-<div class="line"><a id="l01213" name="l01213"></a><span class="lineno"> 1213</span> </div>
-<div class="line"><a id="l01214" name="l01214"></a><span class="lineno"> 1214</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01215" name="l01215"></a><span class="lineno"> 1215</span>    <span class="keyword">constexpr</span> value_type&amp; value() <span class="keyword">noexcept</span> <span class="keyword">requires</span> (D == 1) &amp;&amp; has_identity_validator { <span class="keywordflow">return</span> m_Values[0]; }</div>
-<div class="line"><a id="l01216" name="l01216"></a><span class="lineno"> 1216</span> </div>
+<div class="line"><a id="l01208" name="l01208"></a><span class="lineno"> 1208</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Derived&gt;</div>
+<div class="line"><a id="l01209" name="l01209"></a><span class="lineno"> 1209</span>      <span class="keyword">requires</span> std::is_base_of_v&lt;coordinates_base, Derived&gt; &amp;&amp; has_distinguished_origin</div>
+<div class="line"><a id="l01210" name="l01210"></a><span class="lineno"> 1210</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01211" name="l01211"></a><span class="lineno"> 1211</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> Derived operator*(Derived v, value_type u) <span class="keyword">noexcept</span>(has_identity_validator)</div>
+<div class="line"><a id="l01212" name="l01212"></a><span class="lineno"> 1212</span>    {</div>
+<div class="line"><a id="l01213" name="l01213"></a><span class="lineno"> 1213</span>      <span class="keywordflow">return</span> v *= u;</div>
+<div class="line"><a id="l01214" name="l01214"></a><span class="lineno"> 1214</span>    }</div>
+<div class="line"><a id="l01215" name="l01215"></a><span class="lineno"> 1215</span> </div>
+<div class="line"><a id="l01216" name="l01216"></a><span class="lineno"> 1216</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Derived&gt;</div>
+<div class="line"><a id="l01217" name="l01217"></a><span class="lineno"> 1217</span>      <span class="keyword">requires</span> std::is_base_of_v&lt;coordinates_base, Derived&gt; &amp;&amp; has_distinguished_origin</div>
 <div class="line"><a id="l01218" name="l01218"></a><span class="lineno"> 1218</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01219" name="l01219"></a><span class="lineno"><a class="line" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html#abe61d8edeea9f9d71886156ead14ce06"> 1219</a></span>    <span class="keyword">constexpr</span> <span class="keyword">explicit</span> <span class="keyword">operator</span> bool() const noexcept requires (D == 1) &amp;&amp; std::convertible_to&lt;value_type, <span class="keywordtype">bool</span>&gt;</div>
+<div class="line"><a id="l01219" name="l01219"></a><span class="lineno"> 1219</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> Derived operator*(value_type u, Derived v) <span class="keyword">noexcept</span>(has_identity_validator)</div>
 <div class="line"><a id="l01220" name="l01220"></a><span class="lineno"> 1220</span>    {</div>
-<div class="line"><a id="l01221" name="l01221"></a><span class="lineno"> 1221</span>      <span class="keywordflow">return</span> m_Values[0];</div>
+<div class="line"><a id="l01221" name="l01221"></a><span class="lineno"> 1221</span>      <span class="keywordflow">return</span> v * u;</div>
 <div class="line"><a id="l01222" name="l01222"></a><span class="lineno"> 1222</span>    }</div>
 <div class="line"><a id="l01223" name="l01223"></a><span class="lineno"> 1223</span> </div>
-<div class="line"><a id="l01224" name="l01224"></a><span class="lineno"> 1224</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01225" name="l01225"></a><span class="lineno"> 1225</span>    <span class="keyword">constexpr</span> value_type operator[](std::size_t i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_Values[i]; }</div>
-<div class="line"><a id="l01226" name="l01226"></a><span class="lineno"> 1226</span> </div>
-<div class="line"><a id="l01227" name="l01227"></a><span class="lineno"> 1227</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01228" name="l01228"></a><span class="lineno"> 1228</span>    <span class="keyword">constexpr</span> value_type&amp; operator[](std::size_t i) <span class="keyword">requires</span>(has_identity_validator) { <span class="keywordflow">return</span> m_Values[i]; }</div>
-<div class="line"><a id="l01229" name="l01229"></a><span class="lineno"> 1229</span> </div>
-<div class="line"><a id="l01230" name="l01230"></a><span class="lineno"> 1230</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01231" name="l01231"></a><span class="lineno"> 1231</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> coordinates_base&amp; lhs, <span class="keyword">const</span> coordinates_base&amp; rhs) <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> lhs.m_Values == rhs.m_Values; }</div>
-<div class="line"><a id="l01232" name="l01232"></a><span class="lineno"> 1232</span> </div>
-<div class="line"><a id="l01233" name="l01233"></a><span class="lineno"> 1233</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01234" name="l01234"></a><span class="lineno"> 1234</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> operator&lt;=&gt;(<span class="keyword">const</span> coordinates_base&amp; lhs, <span class="keyword">const</span> coordinates_base&amp; rhs) <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l01235" name="l01235"></a><span class="lineno"> 1235</span>      <span class="keyword">requires</span> (D == 1) &amp;&amp; std::totally_ordered&lt;value_type&gt;</div>
-<div class="line"><a id="l01236" name="l01236"></a><span class="lineno"> 1236</span>    {</div>
-<div class="line"><a id="l01237" name="l01237"></a><span class="lineno"> 1237</span>      <span class="keywordflow">return</span> lhs.value() &lt;=&gt; rhs.value();</div>
-<div class="line"><a id="l01238" name="l01238"></a><span class="lineno"> 1238</span>    }</div>
-<div class="line"><a id="l01239" name="l01239"></a><span class="lineno"> 1239</span>  <span class="keyword">protected</span>:</div>
-<div class="line"><a id="l01240" name="l01240"></a><span class="lineno"> 1240</span>    coordinates_base(<span class="keyword">const</span> coordinates_base&amp;)     = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l01241" name="l01241"></a><span class="lineno"> 1241</span>    coordinates_base(coordinates_base&amp;&amp;) noexcept = default;</div>
-<div class="line"><a id="l01242" name="l01242"></a><span class="lineno"> 1242</span> </div>
-<div class="line"><a id="l01243" name="l01243"></a><span class="lineno"> 1243</span>    coordinates_base&amp; operator=(const coordinates_base&amp;)     = default;</div>
-<div class="line"><a id="l01244" name="l01244"></a><span class="lineno"> 1244</span>    coordinates_base&amp; operator=(coordinates_base&amp;&amp;) noexcept = default;</div>
-<div class="line"><a id="l01245" name="l01245"></a><span class="lineno"> 1245</span> </div>
-<div class="line"><a id="l01246" name="l01246"></a><span class="lineno"> 1246</span>    ~coordinates_base() = default;</div>
-<div class="line"><a id="l01247" name="l01247"></a><span class="lineno"> 1247</span>    </div>
-<div class="line"><a id="l01248" name="l01248"></a><span class="lineno"> 1248</span>    template&lt;class Self, class Fn&gt;</div>
-<div class="line"><a id="l01249" name="l01249"></a><span class="lineno"> 1249</span>      requires std::invocable&lt;Fn, value_type&amp;, value_type&gt;</div>
-<div class="line"><a id="l01250" name="l01250"></a><span class="lineno"> 1250</span>    constexpr <span class="keywordtype">void</span> apply_to_each_element(this Self&amp; self, std::span&lt;const value_type, D&gt; rhs, Fn f)</div>
-<div class="line"><a id="l01251" name="l01251"></a><span class="lineno"> 1251</span>    {</div>
-<div class="line"><a id="l01252" name="l01252"></a><span class="lineno"> 1252</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(has_identity_validator)</div>
-<div class="line"><a id="l01253" name="l01253"></a><span class="lineno"> 1253</span>      {</div>
-<div class="line"><a id="l01254" name="l01254"></a><span class="lineno"> 1254</span>        std::ranges::for_each(std::views::zip(self.values(), rhs), [&amp;f](<span class="keyword">auto</span>&amp;&amp; z){ f(std::get&lt;0&gt;(z), std::get&lt;1&gt;(z)); });</div>
-<div class="line"><a id="l01255" name="l01255"></a><span class="lineno"> 1255</span>      }</div>
-<div class="line"><a id="l01256" name="l01256"></a><span class="lineno"> 1256</span>      <span class="keywordflow">else</span></div>
-<div class="line"><a id="l01257" name="l01257"></a><span class="lineno"> 1257</span>      {</div>
-<div class="line"><a id="l01258" name="l01258"></a><span class="lineno"> 1258</span>        <span class="keyword">auto</span> tmp{self.m_Values};</div>
-<div class="line"><a id="l01259" name="l01259"></a><span class="lineno"> 1259</span>        std::ranges::for_each(std::views::zip(tmp, rhs), [&amp;f](<span class="keyword">auto</span>&amp;&amp; z){ f(std::get&lt;0&gt;(z), std::get&lt;1&gt;(z)); });</div>
-<div class="line"><a id="l01260" name="l01260"></a><span class="lineno"> 1260</span>        self.m_Values = validate(tmp, self.m_Validator);</div>
-<div class="line"><a id="l01261" name="l01261"></a><span class="lineno"> 1261</span>      }</div>
-<div class="line"><a id="l01262" name="l01262"></a><span class="lineno"> 1262</span>    }</div>
-<div class="line"><a id="l01263" name="l01263"></a><span class="lineno"> 1263</span> </div>
-<div class="line"><a id="l01264" name="l01264"></a><span class="lineno"> 1264</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Self, <span class="keyword">class</span> Fn&gt;</div>
-<div class="line"><a id="l01265" name="l01265"></a><span class="lineno"> 1265</span>      <span class="keyword">requires</span> std::invocable&lt;Fn, value_type&amp;&gt;</div>
-<div class="line"><a id="l01266" name="l01266"></a><span class="lineno"> 1266</span>    <span class="keyword">constexpr</span> <span class="keywordtype">void</span> for_each_element(<span class="keyword">this</span> Self&amp; self, Fn f)</div>
-<div class="line"><a id="l01267" name="l01267"></a><span class="lineno"> 1267</span>    {</div>
-<div class="line"><a id="l01268" name="l01268"></a><span class="lineno"> 1268</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(has_identity_validator)</div>
-<div class="line"><a id="l01269" name="l01269"></a><span class="lineno"> 1269</span>      {</div>
-<div class="line"><a id="l01270" name="l01270"></a><span class="lineno"> 1270</span>        std::ranges::for_each(self.values(), f);</div>
-<div class="line"><a id="l01271" name="l01271"></a><span class="lineno"> 1271</span>      }</div>
-<div class="line"><a id="l01272" name="l01272"></a><span class="lineno"> 1272</span>      <span class="keywordflow">else</span></div>
-<div class="line"><a id="l01273" name="l01273"></a><span class="lineno"> 1273</span>      {</div>
-<div class="line"><a id="l01274" name="l01274"></a><span class="lineno"> 1274</span>        <span class="keyword">auto</span> tmp{self.m_Values};</div>
-<div class="line"><a id="l01275" name="l01275"></a><span class="lineno"> 1275</span>        std::ranges::for_each(tmp, f);</div>
-<div class="line"><a id="l01276" name="l01276"></a><span class="lineno"> 1276</span>        self.m_Values = validate(tmp, self.m_Validator);</div>
-<div class="line"><a id="l01277" name="l01277"></a><span class="lineno"> 1277</span>      }</div>
-<div class="line"><a id="l01278" name="l01278"></a><span class="lineno"> 1278</span>    }</div>
-<div class="line"><a id="l01279" name="l01279"></a><span class="lineno"> 1279</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l01280" name="l01280"></a><span class="lineno"> 1280</span>    SEQUOIA_NO_UNIQUE_ADDRESS validator_type m_Validator;</div>
-<div class="line"><a id="l01281" name="l01281"></a><span class="lineno"> 1281</span>    std::array&lt;value_type, D&gt; m_Values{};</div>
-<div class="line"><a id="l01282" name="l01282"></a><span class="lineno"> 1282</span> </div>
-<div class="line"><a id="l01283" name="l01283"></a><span class="lineno"> 1283</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01284" name="l01284"></a><span class="lineno"> 1284</span>    <span class="keyword">static</span> std::array&lt;value_type, D&gt; validate(std::span&lt;const value_type, D&gt; vals, Validator&amp; validator)</div>
-<div class="line"><a id="l01285" name="l01285"></a><span class="lineno"> 1285</span>    {</div>
-<div class="line"><a id="l01286" name="l01286"></a><span class="lineno"> 1286</span>      <span class="keywordflow">return</span> validate(utilities::to_array(vals), validator);</div>
-<div class="line"><a id="l01287" name="l01287"></a><span class="lineno"> 1287</span>    }</div>
-<div class="line"><a id="l01288" name="l01288"></a><span class="lineno"> 1288</span> </div>
-<div class="line"><a id="l01289" name="l01289"></a><span class="lineno"> 1289</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01290" name="l01290"></a><span class="lineno"> 1290</span>    <span class="keyword">static</span> std::array&lt;value_type, D&gt; validate(std::array&lt;value_type, D&gt; vals, Validator&amp; validator)</div>
-<div class="line"><a id="l01291" name="l01291"></a><span class="lineno"> 1291</span>    {</div>
-<div class="line"><a id="l01292" name="l01292"></a><span class="lineno"> 1292</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(validator_for_array&lt;Validator, ConvexSpace&gt;)</div>
-<div class="line"><a id="l01293" name="l01293"></a><span class="lineno"> 1293</span>        <span class="keywordflow">return</span> validator(vals);</div>
-<div class="line"><a id="l01294" name="l01294"></a><span class="lineno"> 1294</span>      <span class="keywordflow">else</span></div>
-<div class="line"><a id="l01295" name="l01295"></a><span class="lineno"> 1295</span>        <span class="keywordflow">return</span> {validator(vals.front())};</div>
-<div class="line"><a id="l01296" name="l01296"></a><span class="lineno"> 1296</span>    }</div>
-<div class="line"><a id="l01297" name="l01297"></a><span class="lineno"> 1297</span>  };</div>
-<div class="line"><a id="l01298" name="l01298"></a><span class="lineno"> 1298</span> </div>
-<div class="line"><a id="l01303" name="l01303"></a><span class="lineno"> 1303</span>  <span class="keyword">template</span>&lt;convex_space ConvexSpace, basis_for&lt;free_module_type_of_t&lt;ConvexSpace&gt;&gt; Basis, <span class="keyword">class</span> Origin, val<span class="keywordtype">id</span>ator_for&lt;ConvexSpace&gt; Val<span class="keywordtype">id</span>ator&gt;</div>
-<div class="line"><a id="l01304" name="l01304"></a><span class="lineno"><a class="line" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html"> 1304</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">coordinates</a> final : <span class="keyword">public</span> <a class="code hl_class" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a>&lt;ConvexSpace, Basis, Origin, Validator&gt;</div>
-<div class="line"><a id="l01305" name="l01305"></a><span class="lineno"> 1305</span>  {</div>
-<div class="line"><a id="l01306" name="l01306"></a><span class="lineno"> 1306</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l01307" name="l01307"></a><span class="lineno"> 1307</span>    <span class="keyword">using </span><a class="code hl_class" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">base_type</a> = <a class="code hl_class" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base&lt;ConvexSpace, Basis, Origin, Validator&gt;</a>;</div>
-<div class="line"><a id="l01308" name="l01308"></a><span class="lineno"> 1308</span>    <span class="keyword">using </span>base_type::base_type;</div>
-<div class="line"><a id="l01309" name="l01309"></a><span class="lineno"> 1309</span>    <span class="keyword">using </span>displacement_coordinates_type = base_type::displacement_coordinates_type;</div>
-<div class="line"><a id="l01310" name="l01310"></a><span class="lineno"> 1310</span>    <span class="keyword">using </span>value_type                    = base_type::value_type;</div>
-<div class="line"><a id="l01311" name="l01311"></a><span class="lineno"> 1311</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keywordtype">bool</span> has_identity_validator{base_type::has_identity_validator};</div>
+<div class="line"><a id="l01224" name="l01224"></a><span class="lineno"> 1224</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Derived&gt;</div>
+<div class="line"><a id="l01225" name="l01225"></a><span class="lineno"> 1225</span>      <span class="keyword">requires</span> std::is_base_of_v&lt;coordinates_base, Derived&gt; &amp;&amp; <a class="code hl_concept" href="../../de/d6f/conceptsequoia_1_1maths_1_1vector__space.html">vector_space&lt;free_module_type&gt;</a> &amp;&amp; has_distinguished_origin</div>
+<div class="line"><a id="l01226" name="l01226"></a><span class="lineno"> 1226</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01227" name="l01227"></a><span class="lineno"> 1227</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> Derived operator/(Derived v, value_type u)</div>
+<div class="line"><a id="l01228" name="l01228"></a><span class="lineno"> 1228</span>    {</div>
+<div class="line"><a id="l01229" name="l01229"></a><span class="lineno"> 1229</span>      <span class="keywordflow">return</span> v /= u;</div>
+<div class="line"><a id="l01230" name="l01230"></a><span class="lineno"> 1230</span>    }</div>
+<div class="line"><a id="l01231" name="l01231"></a><span class="lineno"> 1231</span> </div>
+<div class="line"><a id="l01232" name="l01232"></a><span class="lineno"> 1232</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01233" name="l01233"></a><span class="lineno"> 1233</span>    <span class="keyword">constexpr</span> <span class="keyword">const</span> validator_type&amp; validator() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_Validator; }</div>
+<div class="line"><a id="l01234" name="l01234"></a><span class="lineno"> 1234</span> </div>
+<div class="line"><a id="l01235" name="l01235"></a><span class="lineno"> 1235</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01236" name="l01236"></a><span class="lineno"> 1236</span>    <span class="keyword">constexpr</span> std::span&lt;const value_type, D&gt; values() <span class="keyword">const</span> <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> m_Values; }</div>
+<div class="line"><a id="l01237" name="l01237"></a><span class="lineno"> 1237</span> </div>
+<div class="line"><a id="l01238" name="l01238"></a><span class="lineno"> 1238</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01239" name="l01239"></a><span class="lineno"> 1239</span>    <span class="keyword">constexpr</span> std::span&lt;value_type, D&gt; values() <span class="keyword">noexcept</span> <span class="keyword">requires</span> has_freely_mutable_components { <span class="keywordflow">return</span> m_Values; }</div>
+<div class="line"><a id="l01240" name="l01240"></a><span class="lineno"> 1240</span> </div>
+<div class="line"><a id="l01241" name="l01241"></a><span class="lineno"> 1241</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01242" name="l01242"></a><span class="lineno"> 1242</span>    <span class="keyword">constexpr</span> <span class="keyword">const</span> value_type&amp; value() <span class="keyword">const</span> <span class="keyword">noexcept</span> <span class="keyword">requires</span> (D == 1) { <span class="keywordflow">return</span> m_Values[0]; }</div>
+<div class="line"><a id="l01243" name="l01243"></a><span class="lineno"> 1243</span> </div>
+<div class="line"><a id="l01244" name="l01244"></a><span class="lineno"> 1244</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01245" name="l01245"></a><span class="lineno"> 1245</span>    <span class="keyword">constexpr</span> value_type&amp; value() <span class="keyword">noexcept</span> <span class="keyword">requires</span> (D == 1) &amp;&amp; has_freely_mutable_components { <span class="keywordflow">return</span> m_Values[0]; }</div>
+<div class="line"><a id="l01246" name="l01246"></a><span class="lineno"> 1246</span> </div>
+<div class="line"><a id="l01248" name="l01248"></a><span class="lineno"> 1248</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01249" name="l01249"></a><span class="lineno"><a class="line" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html#abe61d8edeea9f9d71886156ead14ce06"> 1249</a></span>    <span class="keyword">constexpr</span> <span class="keyword">explicit</span> <span class="keyword">operator</span> bool() const noexcept requires (D == 1) &amp;&amp; std::convertible_to&lt;value_type, <span class="keywordtype">bool</span>&gt;</div>
+<div class="line"><a id="l01250" name="l01250"></a><span class="lineno"> 1250</span>    {</div>
+<div class="line"><a id="l01251" name="l01251"></a><span class="lineno"> 1251</span>      <span class="keywordflow">return</span> m_Values[0];</div>
+<div class="line"><a id="l01252" name="l01252"></a><span class="lineno"> 1252</span>    }</div>
+<div class="line"><a id="l01253" name="l01253"></a><span class="lineno"> 1253</span> </div>
+<div class="line"><a id="l01254" name="l01254"></a><span class="lineno"> 1254</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01255" name="l01255"></a><span class="lineno"> 1255</span>    <span class="keyword">constexpr</span> value_type operator[](std::size_t i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_Values[i]; }</div>
+<div class="line"><a id="l01256" name="l01256"></a><span class="lineno"> 1256</span> </div>
+<div class="line"><a id="l01257" name="l01257"></a><span class="lineno"> 1257</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01258" name="l01258"></a><span class="lineno"> 1258</span>    <span class="keyword">constexpr</span> value_type&amp; operator[](std::size_t i) <span class="keyword">requires</span> has_freely_mutable_components { <span class="keywordflow">return</span> m_Values[i]; }</div>
+<div class="line"><a id="l01259" name="l01259"></a><span class="lineno"> 1259</span> </div>
+<div class="line"><a id="l01260" name="l01260"></a><span class="lineno"> 1260</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01261" name="l01261"></a><span class="lineno"> 1261</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> begin() const noexcept { <span class="keywordflow">return</span> m_Values.begin(); }</div>
+<div class="line"><a id="l01262" name="l01262"></a><span class="lineno"> 1262</span> </div>
+<div class="line"><a id="l01263" name="l01263"></a><span class="lineno"> 1263</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01264" name="l01264"></a><span class="lineno"> 1264</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> end() const noexcept { <span class="keywordflow">return</span> m_Values.end(); }</div>
+<div class="line"><a id="l01265" name="l01265"></a><span class="lineno"> 1265</span> </div>
+<div class="line"><a id="l01266" name="l01266"></a><span class="lineno"> 1266</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01267" name="l01267"></a><span class="lineno"> 1267</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> rbegin() const noexcept { <span class="keywordflow">return</span> m_Values.rbegin(); }</div>
+<div class="line"><a id="l01268" name="l01268"></a><span class="lineno"> 1268</span> </div>
+<div class="line"><a id="l01269" name="l01269"></a><span class="lineno"> 1269</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01270" name="l01270"></a><span class="lineno"> 1270</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> rend() const noexcept { <span class="keywordflow">return</span> m_Values.rend(); }</div>
+<div class="line"><a id="l01271" name="l01271"></a><span class="lineno"> 1271</span> </div>
+<div class="line"><a id="l01272" name="l01272"></a><span class="lineno"> 1272</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01273" name="l01273"></a><span class="lineno"> 1273</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> cbegin() const noexcept { <span class="keywordflow">return</span> begin(); }</div>
+<div class="line"><a id="l01274" name="l01274"></a><span class="lineno"> 1274</span> </div>
+<div class="line"><a id="l01275" name="l01275"></a><span class="lineno"> 1275</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01276" name="l01276"></a><span class="lineno"> 1276</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> cend() const noexcept { <span class="keywordflow">return</span> end(); }</div>
+<div class="line"><a id="l01277" name="l01277"></a><span class="lineno"> 1277</span> </div>
+<div class="line"><a id="l01278" name="l01278"></a><span class="lineno"> 1278</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01279" name="l01279"></a><span class="lineno"> 1279</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> crbegin() const noexcept { <span class="keywordflow">return</span> rbegin(); }</div>
+<div class="line"><a id="l01280" name="l01280"></a><span class="lineno"> 1280</span> </div>
+<div class="line"><a id="l01281" name="l01281"></a><span class="lineno"> 1281</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01282" name="l01282"></a><span class="lineno"> 1282</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> crend() const noexcept { <span class="keywordflow">return</span> rend(); }</div>
+<div class="line"><a id="l01283" name="l01283"></a><span class="lineno"> 1283</span> </div>
+<div class="line"><a id="l01284" name="l01284"></a><span class="lineno"> 1284</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01285" name="l01285"></a><span class="lineno"> 1285</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> begin() noexcept requires has_freely_mutable_components { <span class="keywordflow">return</span> m_Values.begin(); }</div>
+<div class="line"><a id="l01286" name="l01286"></a><span class="lineno"> 1286</span> </div>
+<div class="line"><a id="l01287" name="l01287"></a><span class="lineno"> 1287</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01288" name="l01288"></a><span class="lineno"> 1288</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> end() noexcept requires has_freely_mutable_components { <span class="keywordflow">return</span> m_Values.end(); }</div>
+<div class="line"><a id="l01289" name="l01289"></a><span class="lineno"> 1289</span> </div>
+<div class="line"><a id="l01290" name="l01290"></a><span class="lineno"> 1290</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01291" name="l01291"></a><span class="lineno"> 1291</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> rbegin() noexcept requires has_freely_mutable_components { <span class="keywordflow">return</span> m_Values.rbegin(); }</div>
+<div class="line"><a id="l01292" name="l01292"></a><span class="lineno"> 1292</span> </div>
+<div class="line"><a id="l01293" name="l01293"></a><span class="lineno"> 1293</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01294" name="l01294"></a><span class="lineno"> 1294</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> rend() noexcept requires has_freely_mutable_components { <span class="keywordflow">return</span> m_Values.rend(); }</div>
+<div class="line"><a id="l01295" name="l01295"></a><span class="lineno"> 1295</span> </div>
+<div class="line"><a id="l01296" name="l01296"></a><span class="lineno"> 1296</span> </div>
+<div class="line"><a id="l01297" name="l01297"></a><span class="lineno"> 1297</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01298" name="l01298"></a><span class="lineno"> 1298</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> coordinates_base&amp; lhs, <span class="keyword">const</span> coordinates_base&amp; rhs) <span class="keyword">noexcept</span> { <span class="keywordflow">return</span> lhs.m_Values == rhs.m_Values; }</div>
+<div class="line"><a id="l01299" name="l01299"></a><span class="lineno"> 1299</span> </div>
+<div class="line"><a id="l01300" name="l01300"></a><span class="lineno"> 1300</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01301" name="l01301"></a><span class="lineno"> 1301</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> operator&lt;=&gt;(<span class="keyword">const</span> coordinates_base&amp; lhs, <span class="keyword">const</span> coordinates_base&amp; rhs) <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l01302" name="l01302"></a><span class="lineno"> 1302</span>      <span class="keyword">requires</span> (D == 1) &amp;&amp; std::totally_ordered&lt;value_type&gt;</div>
+<div class="line"><a id="l01303" name="l01303"></a><span class="lineno"> 1303</span>    {</div>
+<div class="line"><a id="l01304" name="l01304"></a><span class="lineno"> 1304</span>      <span class="keywordflow">return</span> lhs.value() &lt;=&gt; rhs.value();</div>
+<div class="line"><a id="l01305" name="l01305"></a><span class="lineno"> 1305</span>    }</div>
+<div class="line"><a id="l01306" name="l01306"></a><span class="lineno"> 1306</span>  <span class="keyword">protected</span>:</div>
+<div class="line"><a id="l01307" name="l01307"></a><span class="lineno"> 1307</span>    coordinates_base(<span class="keyword">const</span> coordinates_base&amp;)     = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l01308" name="l01308"></a><span class="lineno"> 1308</span>    coordinates_base(coordinates_base&amp;&amp;) noexcept = default;</div>
+<div class="line"><a id="l01309" name="l01309"></a><span class="lineno"> 1309</span> </div>
+<div class="line"><a id="l01310" name="l01310"></a><span class="lineno"> 1310</span>    coordinates_base&amp; operator=(const coordinates_base&amp;)     = default;</div>
+<div class="line"><a id="l01311" name="l01311"></a><span class="lineno"> 1311</span>    coordinates_base&amp; operator=(coordinates_base&amp;&amp;) noexcept = default;</div>
 <div class="line"><a id="l01312" name="l01312"></a><span class="lineno"> 1312</span> </div>
-<div class="line"><a id="l01313" name="l01313"></a><span class="lineno"> 1313</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01314" name="l01314"></a><span class="lineno"> 1314</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> displacement_coordinates_type operator-(<span class="keyword">const</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">coordinates</a>&amp; lhs, <span class="keyword">const</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">coordinates</a>&amp; rhs) <span class="keyword">noexcept</span>(has_identity_validator)</div>
-<div class="line"><a id="l01315" name="l01315"></a><span class="lineno"> 1315</span>    {</div>
-<div class="line"><a id="l01316" name="l01316"></a><span class="lineno"> 1316</span>      <span class="keywordflow">return</span>[&amp;] &lt;std::size_t... Is&gt;(std::index_sequence&lt;Is...&gt;) {</div>
-<div class="line"><a id="l01317" name="l01317"></a><span class="lineno"> 1317</span>        <span class="keywordflow">return</span> displacement_coordinates_type{(lhs.values()[Is] - rhs.values()[Is])...};</div>
-<div class="line"><a id="l01318" name="l01318"></a><span class="lineno"> 1318</span>      }(std::make_index_sequence&lt;base_type::D&gt;{});</div>
-<div class="line"><a id="l01319" name="l01319"></a><span class="lineno"> 1319</span>    }</div>
-<div class="line"><a id="l01320" name="l01320"></a><span class="lineno"> 1320</span> </div>
-<div class="line"><a id="l01321" name="l01321"></a><span class="lineno"> 1321</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01322" name="l01322"></a><span class="lineno"> 1322</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">coordinates</a> operator+() <span class="keyword">const</span> <span class="keyword">noexcept</span>(has_identity_validator)</div>
-<div class="line"><a id="l01323" name="l01323"></a><span class="lineno"> 1323</span>    {</div>
-<div class="line"><a id="l01324" name="l01324"></a><span class="lineno"> 1324</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">coordinates</a>{this-&gt;values()};</div>
-<div class="line"><a id="l01325" name="l01325"></a><span class="lineno"> 1325</span>    }</div>
-<div class="line"><a id="l01326" name="l01326"></a><span class="lineno"> 1326</span> </div>
-<div class="line"><a id="l01327" name="l01327"></a><span class="lineno"> 1327</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01328" name="l01328"></a><span class="lineno"> 1328</span>    <span class="keyword">constexpr</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">coordinates</a> operator-() <span class="keyword">const</span> <span class="keyword">noexcept</span>(has_identity_validator)</div>
-<div class="line"><a id="l01329" name="l01329"></a><span class="lineno"> 1329</span>    {</div>
-<div class="line"><a id="l01330" name="l01330"></a><span class="lineno"> 1330</span>      <span class="keywordflow">return</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">coordinates</a>{utilities::to_array(this-&gt;values(), [](value_type t) { <span class="keywordflow">return</span> -t; })};</div>
-<div class="line"><a id="l01331" name="l01331"></a><span class="lineno"> 1331</span>    }</div>
-<div class="line"><a id="l01332" name="l01332"></a><span class="lineno"> 1332</span>  };</div>
-<div class="line"><a id="l01333" name="l01333"></a><span class="lineno"> 1333</span> </div>
-<div class="line"><a id="l01334" name="l01334"></a><span class="lineno"> 1334</span>  <span class="keyword">namespace </span>sets</div>
-<div class="line"><a id="l01335" name="l01335"></a><span class="lineno"> 1335</span>  {</div>
-<div class="line"><a id="l01339" name="l01339"></a><span class="lineno"> 1339</span>    <span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> D&gt;</div>
-<div class="line"><a id="l01340" name="l01340"></a><span class="lineno"><a class="line" href="../../d3/d41/structsequoia_1_1maths_1_1sets_1_1Z.html"> 1340</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d3/d41/structsequoia_1_1maths_1_1sets_1_1Z.html">Z</a></div>
-<div class="line"><a id="l01341" name="l01341"></a><span class="lineno"> 1341</span>    {</div>
-<div class="line"><a id="l01342" name="l01342"></a><span class="lineno"> 1342</span>      <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t dimension{D};</div>
-<div class="line"><a id="l01343" name="l01343"></a><span class="lineno"> 1343</span>    };</div>
-<div class="line"><a id="l01344" name="l01344"></a><span class="lineno"> 1344</span> </div>
-<div class="line"><a id="l01348" name="l01348"></a><span class="lineno"> 1348</span>    <span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> D&gt;</div>
-<div class="line"><a id="l01349" name="l01349"></a><span class="lineno"><a class="line" href="../../d0/d37/structsequoia_1_1maths_1_1sets_1_1N__0.html"> 1349</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d0/d37/structsequoia_1_1maths_1_1sets_1_1N__0.html">N_0</a></div>
-<div class="line"><a id="l01350" name="l01350"></a><span class="lineno"> 1350</span>    {</div>
-<div class="line"><a id="l01351" name="l01351"></a><span class="lineno"> 1351</span>      <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t dimension{D};</div>
-<div class="line"><a id="l01352" name="l01352"></a><span class="lineno"> 1352</span>    };</div>
-<div class="line"><a id="l01353" name="l01353"></a><span class="lineno"> 1353</span> </div>
-<div class="line"><a id="l01357" name="l01357"></a><span class="lineno"> 1357</span>    <span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> D&gt;</div>
-<div class="line"><a id="l01358" name="l01358"></a><span class="lineno"><a class="line" href="../../d8/d9a/structsequoia_1_1maths_1_1sets_1_1R.html"> 1358</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d8/d9a/structsequoia_1_1maths_1_1sets_1_1R.html">R</a></div>
-<div class="line"><a id="l01359" name="l01359"></a><span class="lineno"> 1359</span>    {</div>
-<div class="line"><a id="l01360" name="l01360"></a><span class="lineno"> 1360</span>      <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t dimension{D};</div>
-<div class="line"><a id="l01361" name="l01361"></a><span class="lineno"> 1361</span>    };</div>
-<div class="line"><a id="l01362" name="l01362"></a><span class="lineno"> 1362</span> </div>
-<div class="line"><a id="l01363" name="l01363"></a><span class="lineno"> 1363</span> </div>
-<div class="line"><a id="l01367" name="l01367"></a><span class="lineno"> 1367</span>    <span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> D&gt;</div>
-<div class="line"><a id="l01368" name="l01368"></a><span class="lineno"><a class="line" href="../../da/d3c/structsequoia_1_1maths_1_1sets_1_1orthant.html"> 1368</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../da/d3c/structsequoia_1_1maths_1_1sets_1_1orthant.html">orthant</a></div>
-<div class="line"><a id="l01369" name="l01369"></a><span class="lineno"> 1369</span>    {</div>
-<div class="line"><a id="l01370" name="l01370"></a><span class="lineno"> 1370</span>      <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t dimension{D};</div>
-<div class="line"><a id="l01371" name="l01371"></a><span class="lineno"> 1371</span>    };</div>
-<div class="line"><a id="l01372" name="l01372"></a><span class="lineno"> 1372</span> </div>
-<div class="line"><a id="l01376" name="l01376"></a><span class="lineno"> 1376</span>    <span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> D&gt;</div>
-<div class="line"><a id="l01377" name="l01377"></a><span class="lineno"><a class="line" href="../../d7/d8e/structsequoia_1_1maths_1_1sets_1_1C.html"> 1377</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/d8e/structsequoia_1_1maths_1_1sets_1_1C.html">C</a></div>
-<div class="line"><a id="l01378" name="l01378"></a><span class="lineno"> 1378</span>    {</div>
-<div class="line"><a id="l01379" name="l01379"></a><span class="lineno"> 1379</span>      <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t dimension{D};</div>
-<div class="line"><a id="l01380" name="l01380"></a><span class="lineno"> 1380</span>    };</div>
-<div class="line"><a id="l01381" name="l01381"></a><span class="lineno"> 1381</span>  }</div>
-<div class="line"><a id="l01382" name="l01382"></a><span class="lineno"> 1382</span> </div>
-<div class="line"><a id="l01383" name="l01383"></a><span class="lineno"> 1383</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> B&gt;</div>
-<div class="line"><a id="l01384" name="l01384"></a><span class="lineno"> 1384</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_orthonormal_basis_v{</div>
-<div class="line"><a id="l01385" name="l01385"></a><span class="lineno"> 1385</span>    <span class="keyword">requires</span> {</div>
-<div class="line"><a id="l01386" name="l01386"></a><span class="lineno"> 1386</span>      <span class="keyword">typename</span> B::orthonormal;</div>
-<div class="line"><a id="l01387" name="l01387"></a><span class="lineno"> 1387</span>      <span class="keyword">requires</span> std::same_as&lt;typename B::orthonormal, std::true_type&gt;;</div>
-<div class="line"><a id="l01388" name="l01388"></a><span class="lineno"> 1388</span>    }</div>
-<div class="line"><a id="l01389" name="l01389"></a><span class="lineno"> 1389</span>  };</div>
-<div class="line"><a id="l01390" name="l01390"></a><span class="lineno"> 1390</span> </div>
-<div class="line"><a id="l01391" name="l01391"></a><span class="lineno"> 1391</span>  <span class="keyword">template</span>&lt;vector_space V&gt;</div>
-<div class="line"><a id="l01392" name="l01392"></a><span class="lineno"><a class="line" href="../../d8/d15/structsequoia_1_1maths_1_1arbitary__basis.html"> 1392</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d8/d15/structsequoia_1_1maths_1_1arbitary__basis.html">arbitary_basis</a> {};</div>
-<div class="line"><a id="l01393" name="l01393"></a><span class="lineno"> 1393</span> </div>
-<div class="line"><a id="l01394" name="l01394"></a><span class="lineno"> 1394</span>  <span class="keyword">template</span>&lt;vector_space V&gt;</div>
-<div class="line"><a id="l01395" name="l01395"></a><span class="lineno"> 1395</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> has_norm_v{</div>
-<div class="line"><a id="l01396" name="l01396"></a><span class="lineno"> 1396</span>    <span class="keyword">requires</span> (<span class="keyword">const</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">vector_coordinates&lt;V, arbitary_basis&lt;V&gt;</a>&gt;&amp; v) {</div>
-<div class="line"><a id="l01397" name="l01397"></a><span class="lineno"> 1397</span>      { norm(v) } -&gt; std::convertible_to&lt;typename V::field_type&gt;;</div>
-<div class="line"><a id="l01398" name="l01398"></a><span class="lineno"> 1398</span>    }</div>
-<div class="line"><a id="l01399" name="l01399"></a><span class="lineno"> 1399</span>  };</div>
-<div class="line"><a id="l01400" name="l01400"></a><span class="lineno"> 1400</span> </div>
-<div class="line"><a id="l01401" name="l01401"></a><span class="lineno"> 1401</span>  <span class="keyword">template</span>&lt;vector_space V&gt;</div>
-<div class="line"><a id="l01402" name="l01402"></a><span class="lineno"> 1402</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> has_inner_product_v{</div>
-<div class="line"><a id="l01403" name="l01403"></a><span class="lineno"> 1403</span>    <span class="keyword">requires</span> (<span class="keyword">const</span> vector_coordinates&lt;V, arbitary_basis&lt;V&gt;&gt;&amp; v) {</div>
-<div class="line"><a id="l01404" name="l01404"></a><span class="lineno"> 1404</span>      { inner_product(v, v) } -&gt; std::convertible_to&lt;typename V::field_type&gt;;</div>
-<div class="line"><a id="l01405" name="l01405"></a><span class="lineno"> 1405</span>    }</div>
-<div class="line"><a id="l01406" name="l01406"></a><span class="lineno"> 1406</span>  };</div>
-<div class="line"><a id="l01407" name="l01407"></a><span class="lineno"> 1407</span> </div>
-<div class="line"><a id="l01408" name="l01408"></a><span class="lineno"> 1408</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> V&gt;</div>
-<div class="line"><a id="l01409" name="l01409"></a><span class="lineno"><a class="line" href="../../de/d74/conceptsequoia_1_1maths_1_1normed__vector__space.html"> 1409</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="../../de/d74/conceptsequoia_1_1maths_1_1normed__vector__space.html">normed_vector_space</a> = <a class="code hl_concept" href="../../de/d6f/conceptsequoia_1_1maths_1_1vector__space.html">vector_space&lt;V&gt;</a> &amp;&amp; has_norm_v&lt;V&gt;;</div>
-<div class="line"><a id="l01410" name="l01410"></a><span class="lineno"> 1410</span> </div>
-<div class="line"><a id="l01411" name="l01411"></a><span class="lineno"> 1411</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> V&gt;</div>
-<div class="line"><a id="l01412" name="l01412"></a><span class="lineno"><a class="line" href="../../d7/d9b/conceptsequoia_1_1maths_1_1inner__product__space.html"> 1412</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="../../d7/d9b/conceptsequoia_1_1maths_1_1inner__product__space.html">inner_product_space</a> = <a class="code hl_concept" href="../../de/d6f/conceptsequoia_1_1maths_1_1vector__space.html">vector_space&lt;V&gt;</a> &amp;&amp; has_inner_product_v&lt;V&gt;;</div>
-<div class="line"><a id="l01413" name="l01413"></a><span class="lineno"> 1413</span> </div>
-<div class="line"><a id="l01414" name="l01414"></a><span class="lineno"> 1414</span>  <span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> D, std::<span class="keywordtype">float</span>ing_po<span class="keywordtype">int</span> T&gt;</div>
-<div class="line"><a id="l01415" name="l01415"></a><span class="lineno"><a class="line" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html"> 1415</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">euclidean_vector_space</a></div>
-<div class="line"><a id="l01416" name="l01416"></a><span class="lineno"> 1416</span>  {</div>
-<div class="line"><a id="l01417" name="l01417"></a><span class="lineno"> 1417</span>    <span class="keyword">using </span><a class="code hl_struct" href="../../d8/d9a/structsequoia_1_1maths_1_1sets_1_1R.html">set_type</a>          = <a class="code hl_struct" href="../../d8/d9a/structsequoia_1_1maths_1_1sets_1_1R.html">sets::R&lt;D&gt;</a>;</div>
-<div class="line"><a id="l01418" name="l01418"></a><span class="lineno"> 1418</span>    <span class="keyword">using </span>field_type        = T;</div>
-<div class="line"><a id="l01419" name="l01419"></a><span class="lineno"> 1419</span>    <span class="keyword">using </span>is_vector_space   = std::true_type;</div>
-<div class="line"><a id="l01420" name="l01420"></a><span class="lineno"> 1420</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t dimension{D};</div>
-<div class="line"><a id="l01421" name="l01421"></a><span class="lineno"> 1421</span> </div>
-<div class="line"><a id="l01422" name="l01422"></a><span class="lineno"> 1422</span>    <span class="keyword">template</span>&lt;basis Basis&gt;</div>
-<div class="line"><a id="l01423" name="l01423"></a><span class="lineno"> 1423</span>      <span class="keyword">requires</span> is_orthonormal_basis_v&lt;Basis&gt;</div>
-<div class="line"><a id="l01424" name="l01424"></a><span class="lineno"> 1424</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01425" name="l01425"></a><span class="lineno"> 1425</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> field_type inner_product(<span class="keyword">const</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">vector_coordinates&lt;euclidean_vector_space, Basis&gt;</a>&amp; v, <span class="keyword">const</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">vector_coordinates&lt;euclidean_vector_space, Basis&gt;</a>&amp; w)</div>
-<div class="line"><a id="l01426" name="l01426"></a><span class="lineno"> 1426</span>    {</div>
-<div class="line"><a id="l01427" name="l01427"></a><span class="lineno"> 1427</span>      <span class="keywordflow">return</span> std::ranges::fold_left(std::views::zip(v.values(), w.values()), field_type{}, [](field_type f, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; z){ return f + std::get&lt;0&gt;(z) * std::get&lt;1&gt;(z); });</div>
-<div class="line"><a id="l01428" name="l01428"></a><span class="lineno"> 1428</span>    }</div>
-<div class="line"><a id="l01429" name="l01429"></a><span class="lineno"> 1429</span> </div>
-<div class="line"><a id="l01430" name="l01430"></a><span class="lineno"> 1430</span>    <span class="keyword">template</span>&lt;basis Basis&gt;</div>
-<div class="line"><a id="l01431" name="l01431"></a><span class="lineno"> 1431</span>      <span class="keyword">requires</span> is_orthonormal_basis_v&lt;Basis&gt;</div>
-<div class="line"><a id="l01432" name="l01432"></a><span class="lineno"> 1432</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01433" name="l01433"></a><span class="lineno"> 1433</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> field_type dot(<span class="keyword">const</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">vector_coordinates&lt;euclidean_vector_space, Basis&gt;</a>&amp; v, <span class="keyword">const</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">vector_coordinates&lt;euclidean_vector_space, Basis&gt;</a>&amp; w)</div>
-<div class="line"><a id="l01434" name="l01434"></a><span class="lineno"> 1434</span>    {</div>
-<div class="line"><a id="l01435" name="l01435"></a><span class="lineno"> 1435</span>      <span class="keywordflow">return</span> inner_product(v, w);</div>
-<div class="line"><a id="l01436" name="l01436"></a><span class="lineno"> 1436</span>    }</div>
-<div class="line"><a id="l01437" name="l01437"></a><span class="lineno"> 1437</span> </div>
-<div class="line"><a id="l01438" name="l01438"></a><span class="lineno"> 1438</span>    <span class="keyword">template</span>&lt;basis Basis&gt;</div>
-<div class="line"><a id="l01439" name="l01439"></a><span class="lineno"> 1439</span>      <span class="keyword">requires</span> is_orthonormal_basis_v&lt;Basis&gt;</div>
-<div class="line"><a id="l01440" name="l01440"></a><span class="lineno"> 1440</span>    [[nodiscard]]</div>
-<div class="line"><a id="l01441" name="l01441"></a><span class="lineno"> 1441</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> field_type norm(<span class="keyword">const</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">vector_coordinates&lt;euclidean_vector_space, Basis&gt;</a>&amp; v)</div>
-<div class="line"><a id="l01442" name="l01442"></a><span class="lineno"> 1442</span>    {</div>
-<div class="line"><a id="l01443" name="l01443"></a><span class="lineno"> 1443</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(D == 1)</div>
-<div class="line"><a id="l01444" name="l01444"></a><span class="lineno"> 1444</span>      {</div>
-<div class="line"><a id="l01445" name="l01445"></a><span class="lineno"> 1445</span>        <span class="keywordflow">return</span> std::abs(v.value());</div>
-<div class="line"><a id="l01446" name="l01446"></a><span class="lineno"> 1446</span>      }</div>
-<div class="line"><a id="l01447" name="l01447"></a><span class="lineno"> 1447</span>      <span class="keywordflow">else</span></div>
-<div class="line"><a id="l01448" name="l01448"></a><span class="lineno"> 1448</span>      {</div>
-<div class="line"><a id="l01449" name="l01449"></a><span class="lineno"> 1449</span>        <span class="keywordflow">return</span> std::sqrt(inner_product(v, v));</div>
-<div class="line"><a id="l01450" name="l01450"></a><span class="lineno"> 1450</span>      }</div>
-<div class="line"><a id="l01451" name="l01451"></a><span class="lineno"> 1451</span>    }</div>
-<div class="line"><a id="l01452" name="l01452"></a><span class="lineno"> 1452</span>  };</div>
+<div class="line"><a id="l01313" name="l01313"></a><span class="lineno"> 1313</span>    ~coordinates_base() = default;</div>
+<div class="line"><a id="l01314" name="l01314"></a><span class="lineno"> 1314</span>    </div>
+<div class="line"><a id="l01315" name="l01315"></a><span class="lineno"> 1315</span>    template&lt;class Self, class Fn&gt;</div>
+<div class="line"><a id="l01316" name="l01316"></a><span class="lineno"> 1316</span>      requires std::invocable&lt;Fn, value_type&amp;, value_type&gt;</div>
+<div class="line"><a id="l01317" name="l01317"></a><span class="lineno"> 1317</span>    constexpr <span class="keywordtype">void</span> apply_to_each_element(this Self&amp; self, std::span&lt;const value_type, D&gt; rhs, Fn f)</div>
+<div class="line"><a id="l01318" name="l01318"></a><span class="lineno"> 1318</span>    {</div>
+<div class="line"><a id="l01319" name="l01319"></a><span class="lineno"> 1319</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(has_identity_validator)</div>
+<div class="line"><a id="l01320" name="l01320"></a><span class="lineno"> 1320</span>      {</div>
+<div class="line"><a id="l01321" name="l01321"></a><span class="lineno"> 1321</span>        std::ranges::for_each(std::views::zip(self.m_Values, rhs), [&amp;f](<span class="keyword">auto</span>&amp;&amp; z){ f(std::get&lt;0&gt;(z), std::get&lt;1&gt;(z)); });</div>
+<div class="line"><a id="l01322" name="l01322"></a><span class="lineno"> 1322</span>      }</div>
+<div class="line"><a id="l01323" name="l01323"></a><span class="lineno"> 1323</span>      <span class="keywordflow">else</span></div>
+<div class="line"><a id="l01324" name="l01324"></a><span class="lineno"> 1324</span>      {</div>
+<div class="line"><a id="l01325" name="l01325"></a><span class="lineno"> 1325</span>        <span class="keyword">auto</span> tmp{self.m_Values};</div>
+<div class="line"><a id="l01326" name="l01326"></a><span class="lineno"> 1326</span>        std::ranges::for_each(std::views::zip(tmp, rhs), [&amp;f](<span class="keyword">auto</span>&amp;&amp; z){ f(std::get&lt;0&gt;(z), std::get&lt;1&gt;(z)); });</div>
+<div class="line"><a id="l01327" name="l01327"></a><span class="lineno"> 1327</span>        self.m_Values = validate(tmp, self.m_Validator);</div>
+<div class="line"><a id="l01328" name="l01328"></a><span class="lineno"> 1328</span>      }</div>
+<div class="line"><a id="l01329" name="l01329"></a><span class="lineno"> 1329</span>    }</div>
+<div class="line"><a id="l01330" name="l01330"></a><span class="lineno"> 1330</span> </div>
+<div class="line"><a id="l01331" name="l01331"></a><span class="lineno"> 1331</span>    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Self, <span class="keyword">class</span> Fn&gt;</div>
+<div class="line"><a id="l01332" name="l01332"></a><span class="lineno"> 1332</span>      <span class="keyword">requires</span> std::invocable&lt;Fn, value_type&amp;&gt;</div>
+<div class="line"><a id="l01333" name="l01333"></a><span class="lineno"> 1333</span>    <span class="keyword">constexpr</span> <span class="keywordtype">void</span> for_each_element(<span class="keyword">this</span> Self&amp; self, Fn f)</div>
+<div class="line"><a id="l01334" name="l01334"></a><span class="lineno"> 1334</span>    {</div>
+<div class="line"><a id="l01335" name="l01335"></a><span class="lineno"> 1335</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(has_identity_validator)</div>
+<div class="line"><a id="l01336" name="l01336"></a><span class="lineno"> 1336</span>      {</div>
+<div class="line"><a id="l01337" name="l01337"></a><span class="lineno"> 1337</span>        std::ranges::for_each(self.values(), f);</div>
+<div class="line"><a id="l01338" name="l01338"></a><span class="lineno"> 1338</span>      }</div>
+<div class="line"><a id="l01339" name="l01339"></a><span class="lineno"> 1339</span>      <span class="keywordflow">else</span></div>
+<div class="line"><a id="l01340" name="l01340"></a><span class="lineno"> 1340</span>      {</div>
+<div class="line"><a id="l01341" name="l01341"></a><span class="lineno"> 1341</span>        <span class="keyword">auto</span> tmp{self.m_Values};</div>
+<div class="line"><a id="l01342" name="l01342"></a><span class="lineno"> 1342</span>        std::ranges::for_each(tmp, f);</div>
+<div class="line"><a id="l01343" name="l01343"></a><span class="lineno"> 1343</span>        self.m_Values = validate(tmp, self.m_Validator);</div>
+<div class="line"><a id="l01344" name="l01344"></a><span class="lineno"> 1344</span>      }</div>
+<div class="line"><a id="l01345" name="l01345"></a><span class="lineno"> 1345</span>    }</div>
+<div class="line"><a id="l01346" name="l01346"></a><span class="lineno"> 1346</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l01347" name="l01347"></a><span class="lineno"> 1347</span>    SEQUOIA_NO_UNIQUE_ADDRESS validator_type m_Validator;</div>
+<div class="line"><a id="l01348" name="l01348"></a><span class="lineno"> 1348</span>    std::array&lt;value_type, D&gt; m_Values{};</div>
+<div class="line"><a id="l01349" name="l01349"></a><span class="lineno"> 1349</span> </div>
+<div class="line"><a id="l01350" name="l01350"></a><span class="lineno"> 1350</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01351" name="l01351"></a><span class="lineno"> 1351</span>    <span class="keyword">static</span> std::array&lt;value_type, D&gt; validate(std::span&lt;const value_type, D&gt; vals, Validator&amp; validator)</div>
+<div class="line"><a id="l01352" name="l01352"></a><span class="lineno"> 1352</span>    {</div>
+<div class="line"><a id="l01353" name="l01353"></a><span class="lineno"> 1353</span>      <span class="keywordflow">return</span> validate(utilities::to_array(vals), validator);</div>
+<div class="line"><a id="l01354" name="l01354"></a><span class="lineno"> 1354</span>    }</div>
+<div class="line"><a id="l01355" name="l01355"></a><span class="lineno"> 1355</span> </div>
+<div class="line"><a id="l01356" name="l01356"></a><span class="lineno"> 1356</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01357" name="l01357"></a><span class="lineno"> 1357</span>    <span class="keyword">static</span> std::array&lt;value_type, D&gt; validate(std::array&lt;value_type, D&gt; vals, Validator&amp; validator)</div>
+<div class="line"><a id="l01358" name="l01358"></a><span class="lineno"> 1358</span>    {</div>
+<div class="line"><a id="l01359" name="l01359"></a><span class="lineno"> 1359</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(validator_for_array&lt;Validator, ConvexSpace&gt;)</div>
+<div class="line"><a id="l01360" name="l01360"></a><span class="lineno"> 1360</span>        <span class="keywordflow">return</span> validator(vals);</div>
+<div class="line"><a id="l01361" name="l01361"></a><span class="lineno"> 1361</span>      <span class="keywordflow">else</span></div>
+<div class="line"><a id="l01362" name="l01362"></a><span class="lineno"> 1362</span>        <span class="keywordflow">return</span> {validator(vals.front())};</div>
+<div class="line"><a id="l01363" name="l01363"></a><span class="lineno"> 1363</span>    }</div>
+<div class="line"><a id="l01364" name="l01364"></a><span class="lineno"> 1364</span>  };</div>
+<div class="line"><a id="l01365" name="l01365"></a><span class="lineno"> 1365</span> </div>
+<div class="line"><a id="l01370" name="l01370"></a><span class="lineno"> 1370</span>  <span class="keyword">template</span>&lt;convex_space ConvexSpace, basis_for&lt;free_module_type_of_t&lt;ConvexSpace&gt;&gt; Basis, <span class="keyword">class</span> Origin, val<span class="keywordtype">id</span>ator_for&lt;ConvexSpace&gt; Val<span class="keywordtype">id</span>ator&gt;</div>
+<div class="line"><a id="l01371" name="l01371"></a><span class="lineno"><a class="line" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html"> 1371</a></span>  <span class="keyword">class </span><a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">coordinates</a> final : <span class="keyword">public</span> <a class="code hl_class" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a>&lt;ConvexSpace, Basis, Origin, Validator&gt;</div>
+<div class="line"><a id="l01372" name="l01372"></a><span class="lineno"> 1372</span>  {</div>
+<div class="line"><a id="l01373" name="l01373"></a><span class="lineno"> 1373</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l01374" name="l01374"></a><span class="lineno"> 1374</span>    <span class="keyword">using </span><a class="code hl_class" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">coordinates_base</a>&lt;ConvexSpace, Basis, Origin, Validator&gt;::coordinates_base;</div>
+<div class="line"><a id="l01375" name="l01375"></a><span class="lineno"> 1375</span>  };</div>
+<div class="line"><a id="l01376" name="l01376"></a><span class="lineno"> 1376</span> </div>
+<div class="line"><a id="l01377" name="l01377"></a><span class="lineno"> 1377</span>  <span class="keyword">namespace </span>sets</div>
+<div class="line"><a id="l01378" name="l01378"></a><span class="lineno"> 1378</span>  {</div>
+<div class="line"><a id="l01382" name="l01382"></a><span class="lineno"> 1382</span>    <span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> D&gt;</div>
+<div class="line"><a id="l01383" name="l01383"></a><span class="lineno"><a class="line" href="../../d3/d41/structsequoia_1_1maths_1_1sets_1_1Z.html"> 1383</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d3/d41/structsequoia_1_1maths_1_1sets_1_1Z.html">Z</a></div>
+<div class="line"><a id="l01384" name="l01384"></a><span class="lineno"> 1384</span>    {</div>
+<div class="line"><a id="l01385" name="l01385"></a><span class="lineno"> 1385</span>      <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t dimension{D};</div>
+<div class="line"><a id="l01386" name="l01386"></a><span class="lineno"> 1386</span>    };</div>
+<div class="line"><a id="l01387" name="l01387"></a><span class="lineno"> 1387</span> </div>
+<div class="line"><a id="l01391" name="l01391"></a><span class="lineno"> 1391</span>    <span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> D&gt;</div>
+<div class="line"><a id="l01392" name="l01392"></a><span class="lineno"><a class="line" href="../../d0/d37/structsequoia_1_1maths_1_1sets_1_1N__0.html"> 1392</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d0/d37/structsequoia_1_1maths_1_1sets_1_1N__0.html">N_0</a></div>
+<div class="line"><a id="l01393" name="l01393"></a><span class="lineno"> 1393</span>    {</div>
+<div class="line"><a id="l01394" name="l01394"></a><span class="lineno"> 1394</span>      <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t dimension{D};</div>
+<div class="line"><a id="l01395" name="l01395"></a><span class="lineno"> 1395</span>    };</div>
+<div class="line"><a id="l01396" name="l01396"></a><span class="lineno"> 1396</span> </div>
+<div class="line"><a id="l01400" name="l01400"></a><span class="lineno"> 1400</span>    <span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> D&gt;</div>
+<div class="line"><a id="l01401" name="l01401"></a><span class="lineno"><a class="line" href="../../d8/d9a/structsequoia_1_1maths_1_1sets_1_1R.html"> 1401</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d8/d9a/structsequoia_1_1maths_1_1sets_1_1R.html">R</a></div>
+<div class="line"><a id="l01402" name="l01402"></a><span class="lineno"> 1402</span>    {</div>
+<div class="line"><a id="l01403" name="l01403"></a><span class="lineno"> 1403</span>      <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t dimension{D};</div>
+<div class="line"><a id="l01404" name="l01404"></a><span class="lineno"> 1404</span>    };</div>
+<div class="line"><a id="l01405" name="l01405"></a><span class="lineno"> 1405</span> </div>
+<div class="line"><a id="l01406" name="l01406"></a><span class="lineno"> 1406</span> </div>
+<div class="line"><a id="l01410" name="l01410"></a><span class="lineno"> 1410</span>    <span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> D&gt;</div>
+<div class="line"><a id="l01411" name="l01411"></a><span class="lineno"><a class="line" href="../../da/d3c/structsequoia_1_1maths_1_1sets_1_1orthant.html"> 1411</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../da/d3c/structsequoia_1_1maths_1_1sets_1_1orthant.html">orthant</a></div>
+<div class="line"><a id="l01412" name="l01412"></a><span class="lineno"> 1412</span>    {</div>
+<div class="line"><a id="l01413" name="l01413"></a><span class="lineno"> 1413</span>      <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t dimension{D};</div>
+<div class="line"><a id="l01414" name="l01414"></a><span class="lineno"> 1414</span>    };</div>
+<div class="line"><a id="l01415" name="l01415"></a><span class="lineno"> 1415</span> </div>
+<div class="line"><a id="l01419" name="l01419"></a><span class="lineno"> 1419</span>    <span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> D&gt;</div>
+<div class="line"><a id="l01420" name="l01420"></a><span class="lineno"><a class="line" href="../../d7/d8e/structsequoia_1_1maths_1_1sets_1_1C.html"> 1420</a></span>    <span class="keyword">struct </span><a class="code hl_struct" href="../../d7/d8e/structsequoia_1_1maths_1_1sets_1_1C.html">C</a></div>
+<div class="line"><a id="l01421" name="l01421"></a><span class="lineno"> 1421</span>    {</div>
+<div class="line"><a id="l01422" name="l01422"></a><span class="lineno"> 1422</span>      <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t dimension{D};</div>
+<div class="line"><a id="l01423" name="l01423"></a><span class="lineno"> 1423</span>    };</div>
+<div class="line"><a id="l01424" name="l01424"></a><span class="lineno"> 1424</span>  }</div>
+<div class="line"><a id="l01425" name="l01425"></a><span class="lineno"> 1425</span> </div>
+<div class="line"><a id="l01426" name="l01426"></a><span class="lineno"> 1426</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> B&gt;</div>
+<div class="line"><a id="l01427" name="l01427"></a><span class="lineno"> 1427</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_orthonormal_basis_v{</div>
+<div class="line"><a id="l01428" name="l01428"></a><span class="lineno"> 1428</span>    <span class="keyword">requires</span> {</div>
+<div class="line"><a id="l01429" name="l01429"></a><span class="lineno"> 1429</span>      <span class="keyword">typename</span> B::orthonormal;</div>
+<div class="line"><a id="l01430" name="l01430"></a><span class="lineno"> 1430</span>      <span class="keyword">requires</span> std::same_as&lt;typename B::orthonormal, std::true_type&gt;;</div>
+<div class="line"><a id="l01431" name="l01431"></a><span class="lineno"> 1431</span>    }</div>
+<div class="line"><a id="l01432" name="l01432"></a><span class="lineno"> 1432</span>  };</div>
+<div class="line"><a id="l01433" name="l01433"></a><span class="lineno"> 1433</span> </div>
+<div class="line"><a id="l01434" name="l01434"></a><span class="lineno"> 1434</span>  <span class="keyword">template</span>&lt;vector_space V&gt;</div>
+<div class="line"><a id="l01435" name="l01435"></a><span class="lineno"><a class="line" href="../../d8/d15/structsequoia_1_1maths_1_1arbitary__basis.html"> 1435</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d8/d15/structsequoia_1_1maths_1_1arbitary__basis.html">arbitary_basis</a> {};</div>
+<div class="line"><a id="l01436" name="l01436"></a><span class="lineno"> 1436</span> </div>
+<div class="line"><a id="l01437" name="l01437"></a><span class="lineno"> 1437</span>  <span class="keyword">template</span>&lt;vector_space V&gt;</div>
+<div class="line"><a id="l01438" name="l01438"></a><span class="lineno"> 1438</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> has_norm_v{</div>
+<div class="line"><a id="l01439" name="l01439"></a><span class="lineno"> 1439</span>    <span class="keyword">requires</span> (<span class="keyword">const</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">vector_coordinates&lt;V, arbitary_basis&lt;V&gt;</a>&gt;&amp; v) {</div>
+<div class="line"><a id="l01440" name="l01440"></a><span class="lineno"> 1440</span>      { norm(v) } -&gt; std::convertible_to&lt;typename V::field_type&gt;;</div>
+<div class="line"><a id="l01441" name="l01441"></a><span class="lineno"> 1441</span>    }</div>
+<div class="line"><a id="l01442" name="l01442"></a><span class="lineno"> 1442</span>  };</div>
+<div class="line"><a id="l01443" name="l01443"></a><span class="lineno"> 1443</span> </div>
+<div class="line"><a id="l01444" name="l01444"></a><span class="lineno"> 1444</span>  <span class="keyword">template</span>&lt;vector_space V&gt;</div>
+<div class="line"><a id="l01445" name="l01445"></a><span class="lineno"> 1445</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> has_inner_product_v{</div>
+<div class="line"><a id="l01446" name="l01446"></a><span class="lineno"> 1446</span>    <span class="keyword">requires</span> (<span class="keyword">const</span> vector_coordinates&lt;V, arbitary_basis&lt;V&gt;&gt;&amp; v) {</div>
+<div class="line"><a id="l01447" name="l01447"></a><span class="lineno"> 1447</span>      { inner_product(v, v) } -&gt; std::convertible_to&lt;typename V::field_type&gt;;</div>
+<div class="line"><a id="l01448" name="l01448"></a><span class="lineno"> 1448</span>    }</div>
+<div class="line"><a id="l01449" name="l01449"></a><span class="lineno"> 1449</span>  };</div>
+<div class="line"><a id="l01450" name="l01450"></a><span class="lineno"> 1450</span> </div>
+<div class="line"><a id="l01451" name="l01451"></a><span class="lineno"> 1451</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> V&gt;</div>
+<div class="line"><a id="l01452" name="l01452"></a><span class="lineno"><a class="line" href="../../de/d74/conceptsequoia_1_1maths_1_1normed__vector__space.html"> 1452</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="../../de/d74/conceptsequoia_1_1maths_1_1normed__vector__space.html">normed_vector_space</a> = <a class="code hl_concept" href="../../de/d6f/conceptsequoia_1_1maths_1_1vector__space.html">vector_space&lt;V&gt;</a> &amp;&amp; has_norm_v&lt;V&gt;;</div>
 <div class="line"><a id="l01453" name="l01453"></a><span class="lineno"> 1453</span> </div>
-<div class="line"><a id="l01454" name="l01454"></a><span class="lineno"> 1454</span>  <span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> D, std::<span class="keywordtype">float</span>ing_po<span class="keywordtype">int</span> T&gt;</div>
-<div class="line"><a id="l01455" name="l01455"></a><span class="lineno"><a class="line" href="../../d8/dd8/structsequoia_1_1maths_1_1euclidean__affine__space.html"> 1455</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d8/dd8/structsequoia_1_1maths_1_1euclidean__affine__space.html">euclidean_affine_space</a></div>
-<div class="line"><a id="l01456" name="l01456"></a><span class="lineno"> 1456</span>  {</div>
-<div class="line"><a id="l01457" name="l01457"></a><span class="lineno"> 1457</span>    <span class="keyword">using </span><a class="code hl_struct" href="../../d8/d9a/structsequoia_1_1maths_1_1sets_1_1R.html">set_type</a>          = <a class="code hl_struct" href="../../d8/d9a/structsequoia_1_1maths_1_1sets_1_1R.html">sets::R&lt;D&gt;</a>;</div>
-<div class="line"><a id="l01458" name="l01458"></a><span class="lineno"> 1458</span>    <span class="keyword">using </span><a class="code hl_struct" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">vector_space_type</a> = <a class="code hl_struct" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">euclidean_vector_space&lt;D, T&gt;</a>;</div>
-<div class="line"><a id="l01459" name="l01459"></a><span class="lineno"> 1459</span>    <span class="keyword">using </span>is_affine_space   = std::true_type;</div>
-<div class="line"><a id="l01460" name="l01460"></a><span class="lineno"> 1460</span>  };</div>
-<div class="line"><a id="l01461" name="l01461"></a><span class="lineno"> 1461</span> </div>
-<div class="line"><a id="l01462" name="l01462"></a><span class="lineno"> 1462</span>  <span class="keyword">template</span>&lt;std::<span class="keywordtype">float</span>ing_po<span class="keywordtype">int</span> T&gt;</div>
-<div class="line"><a id="l01463" name="l01463"></a><span class="lineno"><a class="line" href="../../dc/d5d/structsequoia_1_1maths_1_1euclidean__half__space.html"> 1463</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../dc/d5d/structsequoia_1_1maths_1_1euclidean__half__space.html">euclidean_half_space</a></div>
-<div class="line"><a id="l01464" name="l01464"></a><span class="lineno"> 1464</span>  {</div>
-<div class="line"><a id="l01465" name="l01465"></a><span class="lineno"> 1465</span>    <span class="keyword">using </span><a class="code hl_struct" href="../../da/d3c/structsequoia_1_1maths_1_1sets_1_1orthant.html">set_type</a>          = <a class="code hl_struct" href="../../da/d3c/structsequoia_1_1maths_1_1sets_1_1orthant.html">sets::orthant&lt;1&gt;</a>;</div>
-<div class="line"><a id="l01466" name="l01466"></a><span class="lineno"> 1466</span>    <span class="keyword">using </span><a class="code hl_struct" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">vector_space_type</a> = <a class="code hl_struct" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">euclidean_vector_space&lt;1, T&gt;</a>;</div>
-<div class="line"><a id="l01467" name="l01467"></a><span class="lineno"> 1467</span>    <span class="keyword">using </span>is_convex_space   = std::true_type;</div>
-<div class="line"><a id="l01468" name="l01468"></a><span class="lineno"> 1468</span>  };</div>
-<div class="line"><a id="l01469" name="l01469"></a><span class="lineno"> 1469</span> </div>
-<div class="line"><a id="l01470" name="l01470"></a><span class="lineno"> 1470</span>  <span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> D, std::<span class="keywordtype">float</span>ing_po<span class="keywordtype">int</span> T, basis Basis, <span class="keyword">class</span> Origin&gt;</div>
-<div class="line"><a id="l01471" name="l01471"></a><span class="lineno"> 1471</span>  <span class="keyword">using </span><a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">euclidean_affine_coordinates</a> = <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">affine_coordinates&lt;euclidean_affine_space&lt;D, T&gt;</a>, Basis, Origin&gt;;</div>
-<div class="line"><a id="l01472" name="l01472"></a><span class="lineno"> 1472</span> </div>
-<div class="line"><a id="l01473" name="l01473"></a><span class="lineno"> 1473</span>  <span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> D, std::<span class="keywordtype">float</span>ing_po<span class="keywordtype">int</span> T, basis Basis&gt;</div>
-<div class="line"><a id="l01474" name="l01474"></a><span class="lineno"> 1474</span>  <span class="keyword">using </span><a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">euclidean_vector_coordinates</a> = <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">vector_coordinates&lt;euclidean_vector_space&lt;D, T&gt;</a>, Basis&gt;;</div>
+<div class="line"><a id="l01454" name="l01454"></a><span class="lineno"> 1454</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> V&gt;</div>
+<div class="line"><a id="l01455" name="l01455"></a><span class="lineno"><a class="line" href="../../d7/d9b/conceptsequoia_1_1maths_1_1inner__product__space.html"> 1455</a></span>  <span class="keyword">concept </span><a class="code hl_concept" href="../../d7/d9b/conceptsequoia_1_1maths_1_1inner__product__space.html">inner_product_space</a> = <a class="code hl_concept" href="../../de/d6f/conceptsequoia_1_1maths_1_1vector__space.html">vector_space&lt;V&gt;</a> &amp;&amp; has_inner_product_v&lt;V&gt;;</div>
+<div class="line"><a id="l01456" name="l01456"></a><span class="lineno"> 1456</span> </div>
+<div class="line"><a id="l01457" name="l01457"></a><span class="lineno"><a class="line" href="../../d1/df9/structsequoia_1_1maths_1_1mathematical__arena.html"> 1457</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d1/df9/structsequoia_1_1maths_1_1mathematical__arena.html">mathematical_arena</a> {};</div>
+<div class="line"><a id="l01458" name="l01458"></a><span class="lineno"> 1458</span> </div>
+<div class="line"><a id="l01459" name="l01459"></a><span class="lineno"> 1459</span>  <span class="keyword">template</span>&lt;std::<span class="keywordtype">float</span>ing_po<span class="keywordtype">int</span> T, std::<span class="keywordtype">size_t</span> D, <span class="keyword">class</span> Arena=mathematical_arena&gt;</div>
+<div class="line"><a id="l01460" name="l01460"></a><span class="lineno"><a class="line" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html"> 1460</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">euclidean_vector_space</a></div>
+<div class="line"><a id="l01461" name="l01461"></a><span class="lineno"> 1461</span>  {</div>
+<div class="line"><a id="l01462" name="l01462"></a><span class="lineno"> 1462</span>    <span class="keyword">using </span><a class="code hl_struct" href="../../d8/d9a/structsequoia_1_1maths_1_1sets_1_1R.html">set_type</a>        = <a class="code hl_struct" href="../../d8/d9a/structsequoia_1_1maths_1_1sets_1_1R.html">sets::R&lt;D&gt;</a>;</div>
+<div class="line"><a id="l01463" name="l01463"></a><span class="lineno"> 1463</span>    <span class="keyword">using </span>field_type      = T;</div>
+<div class="line"><a id="l01464" name="l01464"></a><span class="lineno"> 1464</span>    <span class="keyword">using </span>is_vector_space = std::true_type;</div>
+<div class="line"><a id="l01465" name="l01465"></a><span class="lineno"> 1465</span>    <span class="keyword">using </span>arena_type      = Arena;</div>
+<div class="line"><a id="l01466" name="l01466"></a><span class="lineno"> 1466</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t dimension{D};</div>
+<div class="line"><a id="l01467" name="l01467"></a><span class="lineno"> 1467</span> </div>
+<div class="line"><a id="l01468" name="l01468"></a><span class="lineno"> 1468</span>    <span class="keyword">template</span>&lt;basis Basis&gt;</div>
+<div class="line"><a id="l01469" name="l01469"></a><span class="lineno"> 1469</span>      <span class="keyword">requires</span> is_orthonormal_basis_v&lt;Basis&gt;</div>
+<div class="line"><a id="l01470" name="l01470"></a><span class="lineno"> 1470</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01471" name="l01471"></a><span class="lineno"> 1471</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> field_type inner_product(<span class="keyword">const</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">vector_coordinates&lt;euclidean_vector_space, Basis&gt;</a>&amp; v, <span class="keyword">const</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">vector_coordinates&lt;euclidean_vector_space, Basis&gt;</a>&amp; w)</div>
+<div class="line"><a id="l01472" name="l01472"></a><span class="lineno"> 1472</span>    {</div>
+<div class="line"><a id="l01473" name="l01473"></a><span class="lineno"> 1473</span>      <span class="keywordflow">return</span> std::ranges::fold_left(std::views::zip(v.values(), w.values()), field_type{}, [](field_type f, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; z){ return f + std::get&lt;0&gt;(z) * std::get&lt;1&gt;(z); });</div>
+<div class="line"><a id="l01474" name="l01474"></a><span class="lineno"> 1474</span>    }</div>
 <div class="line"><a id="l01475" name="l01475"></a><span class="lineno"> 1475</span> </div>
-<div class="line"><a id="l01476" name="l01476"></a><span class="lineno"> 1476</span>  <span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> D, std::<span class="keywordtype">float</span>ing_po<span class="keywordtype">int</span> T&gt;</div>
-<div class="line"><a id="l01477" name="l01477"></a><span class="lineno"><a class="line" href="../../d5/dfb/structsequoia_1_1maths_1_1standard__basis.html"> 1477</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d5/dfb/structsequoia_1_1maths_1_1standard__basis.html">standard_basis</a></div>
-<div class="line"><a id="l01478" name="l01478"></a><span class="lineno"> 1478</span>  {</div>
-<div class="line"><a id="l01479" name="l01479"></a><span class="lineno"> 1479</span>    <span class="keyword">using </span><a class="code hl_struct" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">vector_space_type</a> = <a class="code hl_struct" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">euclidean_vector_space&lt;D, T&gt;</a>;</div>
-<div class="line"><a id="l01480" name="l01480"></a><span class="lineno"> 1480</span>    <span class="keyword">using </span>orthonormal       = std::true_type;</div>
-<div class="line"><a id="l01481" name="l01481"></a><span class="lineno"> 1481</span>  };</div>
-<div class="line"><a id="l01482" name="l01482"></a><span class="lineno"> 1482</span> </div>
-<div class="line"><a id="l01483" name="l01483"></a><span class="lineno"> 1483</span>  <span class="keyword">template</span>&lt;std::<span class="keywordtype">size_t</span> D, std::<span class="keywordtype">float</span>ing_po<span class="keywordtype">int</span> T&gt;</div>
-<div class="line"><a id="l01484" name="l01484"></a><span class="lineno"> 1484</span>  <span class="keyword">using </span><a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">vec_coords</a> = <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">euclidean_vector_coordinates&lt;D, T, standard_basis&lt;D, T&gt;</a>&gt;;</div>
-<div class="line"><a id="l01485" name="l01485"></a><span class="lineno"> 1485</span>}</div>
+<div class="line"><a id="l01476" name="l01476"></a><span class="lineno"> 1476</span>    <span class="keyword">template</span>&lt;basis Basis&gt;</div>
+<div class="line"><a id="l01477" name="l01477"></a><span class="lineno"> 1477</span>      <span class="keyword">requires</span> is_orthonormal_basis_v&lt;Basis&gt;</div>
+<div class="line"><a id="l01478" name="l01478"></a><span class="lineno"> 1478</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01479" name="l01479"></a><span class="lineno"> 1479</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> field_type dot(<span class="keyword">const</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">vector_coordinates&lt;euclidean_vector_space, Basis&gt;</a>&amp; v, <span class="keyword">const</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">vector_coordinates&lt;euclidean_vector_space, Basis&gt;</a>&amp; w)</div>
+<div class="line"><a id="l01480" name="l01480"></a><span class="lineno"> 1480</span>    {</div>
+<div class="line"><a id="l01481" name="l01481"></a><span class="lineno"> 1481</span>      <span class="keywordflow">return</span> inner_product(v, w);</div>
+<div class="line"><a id="l01482" name="l01482"></a><span class="lineno"> 1482</span>    }</div>
+<div class="line"><a id="l01483" name="l01483"></a><span class="lineno"> 1483</span> </div>
+<div class="line"><a id="l01484" name="l01484"></a><span class="lineno"> 1484</span>    <span class="keyword">template</span>&lt;basis Basis&gt;</div>
+<div class="line"><a id="l01485" name="l01485"></a><span class="lineno"> 1485</span>      <span class="keyword">requires</span> is_orthonormal_basis_v&lt;Basis&gt;</div>
+<div class="line"><a id="l01486" name="l01486"></a><span class="lineno"> 1486</span>    [[nodiscard]]</div>
+<div class="line"><a id="l01487" name="l01487"></a><span class="lineno"> 1487</span>    <span class="keyword">friend</span> <span class="keyword">constexpr</span> field_type norm(<span class="keyword">const</span> <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">vector_coordinates&lt;euclidean_vector_space, Basis&gt;</a>&amp; v)</div>
+<div class="line"><a id="l01488" name="l01488"></a><span class="lineno"> 1488</span>    {</div>
+<div class="line"><a id="l01489" name="l01489"></a><span class="lineno"> 1489</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span>(D == 1)</div>
+<div class="line"><a id="l01490" name="l01490"></a><span class="lineno"> 1490</span>      {</div>
+<div class="line"><a id="l01491" name="l01491"></a><span class="lineno"> 1491</span>        <span class="keywordflow">return</span> std::abs(v.value());</div>
+<div class="line"><a id="l01492" name="l01492"></a><span class="lineno"> 1492</span>      }</div>
+<div class="line"><a id="l01493" name="l01493"></a><span class="lineno"> 1493</span>      <span class="keywordflow">else</span></div>
+<div class="line"><a id="l01494" name="l01494"></a><span class="lineno"> 1494</span>      {</div>
+<div class="line"><a id="l01495" name="l01495"></a><span class="lineno"> 1495</span>        <span class="keywordflow">return</span> std::sqrt(inner_product(v, v));</div>
+<div class="line"><a id="l01496" name="l01496"></a><span class="lineno"> 1496</span>      }</div>
+<div class="line"><a id="l01497" name="l01497"></a><span class="lineno"> 1497</span>    }</div>
+<div class="line"><a id="l01498" name="l01498"></a><span class="lineno"> 1498</span>  };</div>
+<div class="line"><a id="l01499" name="l01499"></a><span class="lineno"> 1499</span> </div>
+<div class="line"><a id="l01500" name="l01500"></a><span class="lineno"> 1500</span>  <span class="keyword">template</span>&lt;std::<span class="keywordtype">float</span>ing_po<span class="keywordtype">int</span> T, std::<span class="keywordtype">size_t</span> D, <span class="keyword">class</span> Arena=mathematical_arena&gt;</div>
+<div class="line"><a id="l01501" name="l01501"></a><span class="lineno"><a class="line" href="../../d8/dd8/structsequoia_1_1maths_1_1euclidean__affine__space.html"> 1501</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d8/dd8/structsequoia_1_1maths_1_1euclidean__affine__space.html">euclidean_affine_space</a></div>
+<div class="line"><a id="l01502" name="l01502"></a><span class="lineno"> 1502</span>  {</div>
+<div class="line"><a id="l01503" name="l01503"></a><span class="lineno"> 1503</span>    <span class="keyword">using </span><a class="code hl_struct" href="../../d8/d9a/structsequoia_1_1maths_1_1sets_1_1R.html">set_type</a>          = <a class="code hl_struct" href="../../d8/d9a/structsequoia_1_1maths_1_1sets_1_1R.html">sets::R&lt;D&gt;</a>;</div>
+<div class="line"><a id="l01504" name="l01504"></a><span class="lineno"> 1504</span>    <span class="keyword">using </span><a class="code hl_struct" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">vector_space_type</a> = <a class="code hl_struct" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">euclidean_vector_space&lt;T, D, Arena&gt;</a>;</div>
+<div class="line"><a id="l01505" name="l01505"></a><span class="lineno"> 1505</span>    <span class="keyword">using </span>is_affine_space   = std::true_type;</div>
+<div class="line"><a id="l01506" name="l01506"></a><span class="lineno"> 1506</span>    <span class="keyword">using </span>arena_type        = Arena;</div>
+<div class="line"><a id="l01507" name="l01507"></a><span class="lineno"> 1507</span>  };</div>
+<div class="line"><a id="l01508" name="l01508"></a><span class="lineno"> 1508</span> </div>
+<div class="line"><a id="l01509" name="l01509"></a><span class="lineno"> 1509</span>  <span class="keyword">template</span>&lt;std::<span class="keywordtype">float</span>ing_po<span class="keywordtype">int</span> T, <span class="keyword">class</span> Arena=mathematical_arena&gt;</div>
+<div class="line"><a id="l01510" name="l01510"></a><span class="lineno"><a class="line" href="../../dc/d5d/structsequoia_1_1maths_1_1euclidean__half__space.html"> 1510</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../dc/d5d/structsequoia_1_1maths_1_1euclidean__half__space.html">euclidean_half_space</a></div>
+<div class="line"><a id="l01511" name="l01511"></a><span class="lineno"> 1511</span>  {</div>
+<div class="line"><a id="l01512" name="l01512"></a><span class="lineno"> 1512</span>    <span class="keyword">using </span><a class="code hl_struct" href="../../da/d3c/structsequoia_1_1maths_1_1sets_1_1orthant.html">set_type</a>          = <a class="code hl_struct" href="../../da/d3c/structsequoia_1_1maths_1_1sets_1_1orthant.html">sets::orthant&lt;1&gt;</a>;</div>
+<div class="line"><a id="l01513" name="l01513"></a><span class="lineno"> 1513</span>    <span class="keyword">using </span><a class="code hl_struct" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">vector_space_type</a> = <a class="code hl_struct" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">euclidean_vector_space&lt;T, 1&gt;</a>;</div>
+<div class="line"><a id="l01514" name="l01514"></a><span class="lineno"> 1514</span>    <span class="keyword">using </span>is_convex_space   = std::true_type;</div>
+<div class="line"><a id="l01515" name="l01515"></a><span class="lineno"> 1515</span>    <span class="keyword">using </span>arena_type        = Arena;</div>
+<div class="line"><a id="l01516" name="l01516"></a><span class="lineno"> 1516</span>  };</div>
+<div class="line"><a id="l01517" name="l01517"></a><span class="lineno"> 1517</span> </div>
+<div class="line"><a id="l01518" name="l01518"></a><span class="lineno"> 1518</span>  <span class="keyword">template</span>&lt;std::<span class="keywordtype">float</span>ing_po<span class="keywordtype">int</span> T, std::<span class="keywordtype">size_t</span> D, basis Basis, <span class="keyword">class</span> Origin, <span class="keyword">class</span> Arena=mathematical_arena&gt;</div>
+<div class="line"><a id="l01519" name="l01519"></a><span class="lineno"> 1519</span>  <span class="keyword">using </span><a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">euclidean_affine_coordinates</a> = <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">affine_coordinates&lt;euclidean_affine_space&lt;T, D, Arena&gt;</a>, Basis, Origin&gt;;</div>
+<div class="line"><a id="l01520" name="l01520"></a><span class="lineno"> 1520</span> </div>
+<div class="line"><a id="l01521" name="l01521"></a><span class="lineno"> 1521</span>  <span class="keyword">template</span>&lt;std::<span class="keywordtype">float</span>ing_po<span class="keywordtype">int</span> T, std::<span class="keywordtype">size_t</span> D, basis Basis, <span class="keyword">class</span> Arena=mathematical_arena&gt;</div>
+<div class="line"><a id="l01522" name="l01522"></a><span class="lineno"> 1522</span>  <span class="keyword">using </span><a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">euclidean_vector_coordinates</a> = <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">vector_coordinates&lt;euclidean_vector_space&lt;T, D, Arena&gt;</a>, Basis&gt;;</div>
+<div class="line"><a id="l01523" name="l01523"></a><span class="lineno"> 1523</span> </div>
+<div class="line"><a id="l01529" name="l01529"></a><span class="lineno"> 1529</span>  <span class="keyword">template</span>&lt;free_module M&gt;</div>
+<div class="line"><a id="l01530" name="l01530"></a><span class="lineno"><a class="line" href="../../df/deb/structsequoia_1_1maths_1_1canonical__right__handed__basis.html"> 1530</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../df/deb/structsequoia_1_1maths_1_1canonical__right__handed__basis.html">canonical_right_handed_basis</a></div>
+<div class="line"><a id="l01531" name="l01531"></a><span class="lineno"> 1531</span>  {</div>
+<div class="line"><a id="l01532" name="l01532"></a><span class="lineno"> 1532</span>    <span class="keyword">using </span>free_module_type = M;</div>
+<div class="line"><a id="l01533" name="l01533"></a><span class="lineno"> 1533</span>  };</div>
+<div class="line"><a id="l01534" name="l01534"></a><span class="lineno"> 1534</span> </div>
+<div class="line"><a id="l01535" name="l01535"></a><span class="lineno"> 1535</span>  <span class="keyword">template</span>&lt;free_module M&gt;</div>
+<div class="line"><a id="l01536" name="l01536"></a><span class="lineno"><a class="line" href="../../df/db0/structsequoia_1_1maths_1_1dual__of_3_01canonical__right__handed__basis_3_01M_01_4_01_4.html"> 1536</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d4/d5c/structsequoia_1_1maths_1_1dual__of.html">dual_of</a>&lt;<a class="code hl_struct" href="../../df/deb/structsequoia_1_1maths_1_1canonical__right__handed__basis.html">canonical_right_handed_basis</a>&lt;M&gt;&gt;</div>
+<div class="line"><a id="l01537" name="l01537"></a><span class="lineno"> 1537</span>  {</div>
+<div class="line"><a id="l01538" name="l01538"></a><span class="lineno"> 1538</span>    <span class="keyword">using </span><a class="code hl_struct" href="../../df/deb/structsequoia_1_1maths_1_1canonical__right__handed__basis.html">type</a> = <a class="code hl_struct" href="../../df/deb/structsequoia_1_1maths_1_1canonical__right__handed__basis.html">canonical_right_handed_basis&lt;dual_of_t&lt;M&gt;</a>&gt;;</div>
+<div class="line"><a id="l01539" name="l01539"></a><span class="lineno"> 1539</span>  };</div>
+<div class="line"><a id="l01540" name="l01540"></a><span class="lineno"> 1540</span> </div>
+<div class="line"><a id="l01541" name="l01541"></a><span class="lineno"> 1541</span>  <span class="keyword">template</span>&lt;free_module M&gt;</div>
+<div class="line"><a id="l01542" name="l01542"></a><span class="lineno"><a class="line" href="../../dd/dd2/structsequoia_1_1maths_1_1dual__of_3_01canonical__right__handed__basis_3_01dual_3_01M_01_4_01_4_01_4.html"> 1542</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="../../d4/d5c/structsequoia_1_1maths_1_1dual__of.html">dual_of</a>&lt;<a class="code hl_struct" href="../../df/deb/structsequoia_1_1maths_1_1canonical__right__handed__basis.html">canonical_right_handed_basis</a>&lt;<a class="code hl_struct" href="../../d7/def/structsequoia_1_1maths_1_1dual.html">dual</a>&lt;M&gt;&gt;&gt;</div>
+<div class="line"><a id="l01543" name="l01543"></a><span class="lineno"> 1543</span>  {</div>
+<div class="line"><a id="l01544" name="l01544"></a><span class="lineno"> 1544</span>    <span class="keyword">using </span><a class="code hl_struct" href="../../df/deb/structsequoia_1_1maths_1_1canonical__right__handed__basis.html">type</a> = <a class="code hl_struct" href="../../df/deb/structsequoia_1_1maths_1_1canonical__right__handed__basis.html">canonical_right_handed_basis&lt;M&gt;</a>;</div>
+<div class="line"><a id="l01545" name="l01545"></a><span class="lineno"> 1545</span>  };   </div>
+<div class="line"><a id="l01546" name="l01546"></a><span class="lineno"> 1546</span> </div>
+<div class="line"><a id="l01547" name="l01547"></a><span class="lineno"> 1547</span>  <span class="keyword">template</span>&lt;std::<span class="keywordtype">float</span>ing_po<span class="keywordtype">int</span> T, std::<span class="keywordtype">size_t</span> D, <span class="keyword">class</span> Arena=mathematical_arena&gt;</div>
+<div class="line"><a id="l01548" name="l01548"></a><span class="lineno"> 1548</span>  <span class="keyword">using </span><a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">vec_coords</a> = <a class="code hl_class" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">euclidean_vector_coordinates&lt;T, D, canonical_right_handed_basis&lt;euclidean_vector_space&lt;T, D, Arena&gt;</a>&gt;, Arena&gt;;</div>
+<div class="line"><a id="l01549" name="l01549"></a><span class="lineno"> 1549</span>}</div>
 <div class="ttc" id="aArrayUtilities_8hpp_html"><div class="ttname"><a href="../../d8/def/ArrayUtilities_8hpp.html">ArrayUtilities.hpp</a></div><div class="ttdoc">Utility to convert an initializer_list into an array, potentially transforming the initializer_list i...</div></div>
 <div class="ttc" id="aConcepts_8hpp_html"><div class="ttname"><a href="../../d3/d84/Concepts_8hpp.html">Concepts.hpp</a></div><div class="ttdoc">Concepts which are sufficiently general to appear in the sequoia namespace.</div></div>
 <div class="ttc" id="aTypeAlgorithms_8hpp_html"><div class="ttname"><a href="../../d4/da8/TypeAlgorithms_8hpp.html">TypeAlgorithms.hpp</a></div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1coordinates__base_html"><div class="ttname"><a href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">sequoia::maths::coordinates_base</a></div><div class="ttdoc">Class designed for inheritance by concerete coordinate types.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1076</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1coordinates_html"><div class="ttname"><a href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">sequoia::maths::coordinates</a></div><div class="ttdoc">Forward declaration for the coordinates class template.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1305</div></div>
+<div class="ttc" id="aclasssequoia_1_1maths_1_1coordinates_html"><div class="ttname"><a href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">sequoia::maths::coordinates</a></div><div class="ttdoc">Forward declaration for the coordinates class template.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1372</div></div>
 <div class="ttc" id="aconceptsequoia_1_1maths_1_1affine__space_html"><div class="ttname"><a href="../../d2/d7f/conceptsequoia_1_1maths_1_1affine__space.html">sequoia::maths::affine_space</a></div><div class="ttdoc">concept for affine spaces</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:529</div></div>
 <div class="ttc" id="aconceptsequoia_1_1maths_1_1basis__for_html"><div class="ttname"><a href="../../d1/de9/conceptsequoia_1_1maths_1_1basis__for.html">sequoia::maths::basis_for</a></div><div class="ttdoc">A concept to determine if a basis is appropriate for a particular free module.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:620</div></div>
 <div class="ttc" id="aconceptsequoia_1_1maths_1_1basis_html"><div class="ttname"><a href="../../d9/d2a/conceptsequoia_1_1maths_1_1basis.html">sequoia::maths::basis</a></div><div class="ttdoc">A basis must identify the free module to which it corresponds.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:614</div></div>
 <div class="ttc" id="aconceptsequoia_1_1maths_1_1convex__space_html"><div class="ttname"><a href="../../dd/d82/conceptsequoia_1_1maths_1_1convex__space.html">sequoia::maths::convex_space</a></div><div class="ttdoc">concept for convex spaces</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:517</div></div>
 <div class="ttc" id="aconceptsequoia_1_1maths_1_1free__module_html"><div class="ttname"><a href="../../da/d8c/conceptsequoia_1_1maths_1_1free__module.html">sequoia::maths::free_module</a></div><div class="ttdoc">concept for a free module, implicitly understood to be over a commutative ring.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:476</div></div>
-<div class="ttc" id="aconceptsequoia_1_1maths_1_1inner__product__space_html"><div class="ttname"><a href="../../d7/d9b/conceptsequoia_1_1maths_1_1inner__product__space.html">sequoia::maths::inner_product_space</a></div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1412</div></div>
-<div class="ttc" id="aconceptsequoia_1_1maths_1_1normed__vector__space_html"><div class="ttname"><a href="../../de/d74/conceptsequoia_1_1maths_1_1normed__vector__space.html">sequoia::maths::normed_vector_space</a></div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1409</div></div>
+<div class="ttc" id="aconceptsequoia_1_1maths_1_1inner__product__space_html"><div class="ttname"><a href="../../d7/d9b/conceptsequoia_1_1maths_1_1inner__product__space.html">sequoia::maths::inner_product_space</a></div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1455</div></div>
+<div class="ttc" id="aconceptsequoia_1_1maths_1_1normed__vector__space_html"><div class="ttname"><a href="../../de/d74/conceptsequoia_1_1maths_1_1normed__vector__space.html">sequoia::maths::normed_vector_space</a></div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1452</div></div>
 <div class="ttc" id="aconceptsequoia_1_1maths_1_1validator__for_html"><div class="ttname"><a href="../../d2/d36/conceptsequoia_1_1maths_1_1validator__for.html">sequoia::maths::validator_for</a></div><div class="ttdoc">concept to check if a validator is compatible with a convex space.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:676</div></div>
 <div class="ttc" id="aconceptsequoia_1_1maths_1_1vector__space_html"><div class="ttname"><a href="../../de/d6f/conceptsequoia_1_1maths_1_1vector__space.html">sequoia::maths::vector_space</a></div><div class="ttdoc">concept for a vector space, which is a special case of a free module</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:482</div></div>
 <div class="ttc" id="aconceptsequoia_1_1maths_1_1weak__commutative__ring_html"><div class="ttname"><a href="../../d4/d6f/conceptsequoia_1_1maths_1_1weak__commutative__ring.html">sequoia::maths::weak_commutative_ring</a></div><div class="ttdoc">concept representing reasonable approximations to a commutative ring.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:322</div></div>
@@ -985,7 +1044,8 @@ $(function() {
 <div class="ttc" id="agroup__PropertiesOfSpaces_html_gafae05b9db9bdbd3b44e4f44bca12ca8d"><div class="ttname"><a href="../../d1/d7a/group__PropertiesOfSpaces.html#gafae05b9db9bdbd3b44e4f44bca12ca8d">sequoia::maths::has_set_type_v</a></div><div class="ttdeci">constexpr bool has_set_type_v</div><div class="ttdoc">Compile time constant reflecting whether a type exposes a nested type named set_type.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:399</div></div>
 <div class="ttc" id="agroup__Validators_html_gaaeba933d5c49eac178e434e0e89764de"><div class="ttname"><a href="../../d1/d8f/group__Validators.html#gaaeba933d5c49eac178e434e0e89764de">sequoia::maths::validator_for_single_value</a></div><div class="ttdeci">constexpr bool validator_for_single_value</div><div class="ttdoc">Validators for spaces of dimension 1 must provide an operator() for validating single values.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:652</div></div>
 <div class="ttc" id="agroup__Validators_html_gad5e5143d27974bdc87d8f53506611813"><div class="ttname"><a href="../../d1/d8f/group__Validators.html#gad5e5143d27974bdc87d8f53506611813">sequoia::maths::validator_for_array</a></div><div class="ttdeci">constexpr bool validator_for_array</div><div class="ttdoc">Validators for spaces of dimension d&gt;1 must provide an operator() for an array of d values.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:666</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1arbitary__basis_html"><div class="ttname"><a href="../../d8/d15/structsequoia_1_1maths_1_1arbitary__basis.html">sequoia::maths::arbitary_basis</a></div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1392</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1arbitary__basis_html"><div class="ttname"><a href="../../d8/d15/structsequoia_1_1maths_1_1arbitary__basis.html">sequoia::maths::arbitary_basis</a></div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1435</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1canonical__right__handed__basis_html"><div class="ttname"><a href="../../df/deb/structsequoia_1_1maths_1_1canonical__right__handed__basis.html">sequoia::maths::canonical_right_handed_basis</a></div><div class="ttdoc">Right-handed bases for arbitrary D, build recursively from 1D.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1531</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1commutative__ring__type__of_html"><div class="ttname"><a href="../../d8/d62/structsequoia_1_1maths_1_1commutative__ring__type__of.html">sequoia::maths::commutative_ring_type_of</a></div><div class="ttdoc">Helper to extract the commutative ring type of the free module associated with a convex space.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:580</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1defines__half__line_html"><div class="ttname"><a href="../../d4/d7d/structsequoia_1_1maths_1_1defines__half__line.html">sequoia::maths::defines_half_line</a></div><div class="ttdoc">Trait to determine if a type defines the half line.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:726</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1direct__product_html"><div class="ttname"><a href="../../de/dec/structsequoia_1_1maths_1_1direct__product.html">sequoia::maths::direct_product</a></div><div class="ttdef"><b>Definition:</b> Spaces.hpp:763</div></div>
@@ -993,24 +1053,24 @@ $(function() {
 <div class="ttc" id="astructsequoia_1_1maths_1_1dual_3_01T_01_4_html"><div class="ttname"><a href="../../d9/d86/structsequoia_1_1maths_1_1dual_3_01T_01_4.html">sequoia::maths::dual&lt; T &gt;</a></div><div class="ttdoc">Specialization for units, such as degrees Celsius, for which the corresponding quantity cannot be inv...</div><div class="ttdef"><b>Definition:</b> PhysicalValues.hpp:37</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1dual__of_html"><div class="ttname"><a href="../../d4/d5c/structsequoia_1_1maths_1_1dual__of.html">sequoia::maths::dual_of</a></div><div class="ttdoc">Helper to generate the dual of a space, taking into account that the dual of the dual may be related ...</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:964</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1dual_html"><div class="ttname"><a href="../../d7/def/structsequoia_1_1maths_1_1dual.html">sequoia::maths::dual</a></div><div class="ttdoc">Primary class template for defining duals.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:896</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1euclidean__affine__space_html"><div class="ttname"><a href="../../d8/dd8/structsequoia_1_1maths_1_1euclidean__affine__space.html">sequoia::maths::euclidean_affine_space</a></div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1456</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1euclidean__half__space_html"><div class="ttname"><a href="../../dc/d5d/structsequoia_1_1maths_1_1euclidean__half__space.html">sequoia::maths::euclidean_half_space</a></div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1464</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1euclidean__vector__space_html"><div class="ttname"><a href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">sequoia::maths::euclidean_vector_space</a></div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1416</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1euclidean__affine__space_html"><div class="ttname"><a href="../../d8/dd8/structsequoia_1_1maths_1_1euclidean__affine__space.html">sequoia::maths::euclidean_affine_space</a></div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1502</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1euclidean__half__space_html"><div class="ttname"><a href="../../dc/d5d/structsequoia_1_1maths_1_1euclidean__half__space.html">sequoia::maths::euclidean_half_space</a></div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1511</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1euclidean__vector__space_html"><div class="ttname"><a href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">sequoia::maths::euclidean_vector_space</a></div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1461</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1free__module__type__of_html"><div class="ttname"><a href="../../db/d28/structsequoia_1_1maths_1_1free__module__type__of.html">sequoia::maths::free_module_type_of</a></div><div class="ttdoc">Helper to extract the free module type associated with a convex space.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:547</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1half__line__validator_html"><div class="ttname"><a href="../../d4/ddf/structsequoia_1_1maths_1_1half__line__validator.html">sequoia::maths::half_line_validator</a></div><div class="ttdoc">A validator the the half line.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:703</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1is__direct__product_html"><div class="ttname"><a href="../../da/d29/structsequoia_1_1maths_1_1is__direct__product.html">sequoia::maths::is_direct_product</a></div><div class="ttdef"><b>Definition:</b> Spaces.hpp:801</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1is__dual_html"><div class="ttname"><a href="../../d8/d99/structsequoia_1_1maths_1_1is__dual.html">sequoia::maths::is_dual</a></div><div class="ttdoc">Helper to detect if a type is defined as a dual of something else.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:938</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1is__free__module_html"><div class="ttname"><a href="../../dd/d01/structsequoia_1_1maths_1_1is__free__module.html">sequoia::maths::is_free_module</a></div><div class="ttdoc">Helper that universal template parameters will obviate the need for.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:535</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1is__identity__validator_html"><div class="ttname"><a href="../../d0/d7f/structsequoia_1_1maths_1_1is__identity__validator.html">sequoia::maths::is_identity_validator</a></div><div class="ttdoc">Trait for validators that behave like the identity.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:686</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1mathematical__arena_html"><div class="ttname"><a href="../../d1/df9/structsequoia_1_1maths_1_1mathematical__arena.html">sequoia::maths::mathematical_arena</a></div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1457</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1multiplication__weakly__distributive__over__addition_html"><div class="ttname"><a href="../../db/dc1/structsequoia_1_1maths_1_1multiplication__weakly__distributive__over__addition.html">sequoia::maths::multiplication_weakly_distributive_over_addition</a></div><div class="ttdoc">Trait for specifying whether a type exhibits multiplication that (approximately) distributes over add...</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:308</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1sets_1_1C_html"><div class="ttname"><a href="../../d7/d8e/structsequoia_1_1maths_1_1sets_1_1C.html">sequoia::maths::sets::C</a></div><div class="ttdoc">Class template for giving a name to the set of complex numbers and its generalization to other dimens...</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1378</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1sets_1_1N__0_html"><div class="ttname"><a href="../../d0/d37/structsequoia_1_1maths_1_1sets_1_1N__0.html">sequoia::maths::sets::N_0</a></div><div class="ttdoc">Class template for giving a name to the set of semi-positive integers and its generalization to other...</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1350</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1sets_1_1R_html"><div class="ttname"><a href="../../d8/d9a/structsequoia_1_1maths_1_1sets_1_1R.html">sequoia::maths::sets::R</a></div><div class="ttdoc">Class template for giving a name to the set of real numbers and its generalization to other dimension...</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1359</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1sets_1_1Z_html"><div class="ttname"><a href="../../d3/d41/structsequoia_1_1maths_1_1sets_1_1Z.html">sequoia::maths::sets::Z</a></div><div class="ttdoc">Class template for giving a name to the set of integers and its generalization to other dimensionalit...</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1341</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1sets_1_1C_html"><div class="ttname"><a href="../../d7/d8e/structsequoia_1_1maths_1_1sets_1_1C.html">sequoia::maths::sets::C</a></div><div class="ttdoc">Class template for giving a name to the set of complex numbers and its generalization to other dimens...</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1421</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1sets_1_1N__0_html"><div class="ttname"><a href="../../d0/d37/structsequoia_1_1maths_1_1sets_1_1N__0.html">sequoia::maths::sets::N_0</a></div><div class="ttdoc">Class template for giving a name to the set of semi-positive integers and its generalization to other...</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1393</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1sets_1_1R_html"><div class="ttname"><a href="../../d8/d9a/structsequoia_1_1maths_1_1sets_1_1R.html">sequoia::maths::sets::R</a></div><div class="ttdoc">Class template for giving a name to the set of real numbers and its generalization to other dimension...</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1402</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1sets_1_1Z_html"><div class="ttname"><a href="../../d3/d41/structsequoia_1_1maths_1_1sets_1_1Z.html">sequoia::maths::sets::Z</a></div><div class="ttdoc">Class template for giving a name to the set of integers and its generalization to other dimensionalit...</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1384</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1sets_1_1convex__functionals_html"><div class="ttname"><a href="../../d9/db5/structsequoia_1_1maths_1_1sets_1_1convex__functionals.html">sequoia::maths::sets::convex_functionals</a></div><div class="ttdoc">Class template for giving a name to convex functionals.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:876</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1sets_1_1linear__functionals_html"><div class="ttname"><a href="../../d3/dbf/structsequoia_1_1maths_1_1sets_1_1linear__functionals.html">sequoia::maths::sets::linear_functionals</a></div><div class="ttdoc">Class template for giving a name to linear functionals.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:888</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1sets_1_1orthant_html"><div class="ttname"><a href="../../da/d3c/structsequoia_1_1maths_1_1sets_1_1orthant.html">sequoia::maths::sets::orthant</a></div><div class="ttdoc">Class template for giving a name to the set of non-negative real numbers and its generalization to ot...</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1369</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1standard__basis_html"><div class="ttname"><a href="../../d5/dfb/structsequoia_1_1maths_1_1standard__basis.html">sequoia::maths::standard_basis</a></div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1478</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1sets_1_1orthant_html"><div class="ttname"><a href="../../da/d3c/structsequoia_1_1maths_1_1sets_1_1orthant.html">sequoia::maths::sets::orthant</a></div><div class="ttdoc">Class template for giving a name to the set of non-negative real numbers and its generalization to ot...</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:1412</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1weakly__abelian__group__under__addition_html"><div class="ttname"><a href="../../da/d90/structsequoia_1_1maths_1_1weakly__abelian__group__under__addition.html">sequoia::maths::weakly_abelian_group_under_addition</a></div><div class="ttdoc">Trait for specifying whether a type behaves (appoximately) as an abelian group under addition.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:261</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1weakly__abelian__group__under__multiplication_html"><div class="ttname"><a href="../../d8/d1d/structsequoia_1_1maths_1_1weakly__abelian__group__under__multiplication.html">sequoia::maths::weakly_abelian_group_under_multiplication</a></div><div class="ttdoc">Trait for specifying whether a type behaves (appoximately) as an abelian group under multiplication.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:286</div></div>
 </div><!-- fragment --></div><!-- contents -->
