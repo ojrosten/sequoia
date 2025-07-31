@@ -105,6 +105,7 @@ namespace sequoia::testing
   struct canonical_basis
   {
     using vector_space_type = my_vec_space<Set, Field, D>;
+    using is_basis    = std::true_type;
     using orthonormal = std::true_type;
   };
 
@@ -120,6 +121,7 @@ namespace sequoia::testing
   template<class Set, maths::weak_commutative_ring Ring, std::size_t D>
   struct canonical_free_module_basis
   {
+    using is_basis         = std::true_type;
     using free_module_type = my_free_module<Set, Ring, D>;
   };
 

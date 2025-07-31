@@ -602,16 +602,27 @@ namespace sequoia::maths
   inline constexpr std::size_t dimension_of{free_module_type_of_t<ConvexSpace>::dimension};
 
   /** @defgroup Basis Basis
-      @brief Concepts for the basis of free modules.
+      @brief Concepts and helpers for bases of free modules.
    */
 
+  /** @ingroup Basis
+      @brief Compile time constant reflecting whether a type self-identifies as a basis.
+   */
+  template<class T>
+  inline constexpr bool identifies_as_basis_v{
+     requires {
+      typename T::is_basis;
+      requires std::convertible_to<typename T::is_basis, std::true_type>;
+    }
+  };
+  
   /** @ingroup Basis
       @brief A basis must identify the free module to which it corresponds.
 
       This takes into account that a vector space is a special case of a free module.
    */
   template<class B>
-  concept basis = has_free_module_type_v<B> || has_vector_space_type_v<B>;
+  concept basis = identifies_as_basis_v<B> && (has_free_module_type_v<B> || has_vector_space_type_v<B>);
 
   /** @ingroup Basis
       @brief A concept to determine if a basis is appropriate for a particular free module.
@@ -1529,6 +1540,7 @@ namespace sequoia::maths
   template<free_module M>
   struct canonical_right_handed_basis
   {
+    using is_basis         = std::true_type;
     using free_module_type = M;
   };
 
