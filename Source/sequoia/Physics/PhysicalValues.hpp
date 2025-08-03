@@ -168,7 +168,7 @@ namespace sequoia::physics
   template<physical_unit T, physical_unit... Us>
   struct reduction<direct_product<T, composite_unit<Us...>>>
   {
-    using type = impl::simplify_t<direct_product<Us...>, direct_product<T>>;
+    using type = impl::simplify_t<direct_product<T>, direct_product<Us...>>;
   };
 
   template<physical_unit... Ts, physical_unit... Us>
