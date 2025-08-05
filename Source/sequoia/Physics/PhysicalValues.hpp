@@ -12,30 +12,38 @@
 #include "sequoia/Physics/PhysicalValuesDetails.hpp"
 
 namespace sequoia::physics
-{
-  template<physical_unit T>
-  struct is_invertible_unit : std::false_type {};
+{  
+  template<class T>
+  struct reciprocal_validator;
 
-  template<physical_unit T>
-    requires   std::is_same_v<typename T::validator_type, std::identity>
-            || std::is_same_v<typename T::validator_type, maths::half_line_validator>
-  struct is_invertible_unit<T> : std::true_type
-  {};
+  template<class T>
+  using reciprocal_validator_t = reciprocal_validator<T>::type;
 
-  template<physical_unit T>
-  using is_invertible_unit_t = is_invertible_unit<T>::type;
+  template<>
+  struct reciprocal_validator<std::identity>
+  {
+    using type = std::identity;
+  };
 
-  template<physical_unit T>
-  inline constexpr bool is_invertible_unit_v{is_invertible_unit<T>::value};
+  template<>
+  struct reciprocal_validator<maths::half_line_validator>
+  {
+    using type = maths::half_line_validator;
+  };
+
+  template<class T>
+  inline constexpr bool has_reciprocal_validator_v{
+    requires { typename reciprocal_validator_t<T>; }
+  };
 }
 
 namespace sequoia::maths
 {
   template<physics::physical_unit T>
-    requires physics::is_invertible_unit_v<T>
+    requires physics::has_reciprocal_validator_v<typename T::validator_type>
   struct dual<T>
   {
-    using validator_type = T::validator_type;
+    using validator_type = physics::reciprocal_validator_t<typename T::validator_type>;
   };
 
   /** @brief Specialization for units, such as degrees Celsius, for which
@@ -46,7 +54,7 @@ namespace sequoia::maths
              be std::identity
    */
   template<physics::physical_unit T>
-    requires (!physics::is_invertible_unit_v<T>)
+    requires (!physics::has_reciprocal_validator_v<typename T::validator_type>)
   struct dual<T>
   {
     using validator_type = void;
@@ -239,7 +247,9 @@ namespace sequoia::physics
 
   template<convex_space ValueSpace, physical_unit Unit>
   inline constexpr bool has_consistent_unit{
-    !is_dual_v<Unit> || vector_space<ValueSpace> || (!affine_space<ValueSpace> && is_invertible_unit_v<dual_of_t<Unit>>)
+       !is_dual_v<Unit>
+    || vector_space<ValueSpace>
+       || (!affine_space<ValueSpace> && has_reciprocal_validator_v<typename dual_of_t<Unit>::validator_type>)
   };
   
   template<convex_space ValueSpace, physical_unit Unit, basis_for<free_module_type_of_t<ValueSpace>> Basis, class Origin, validator_for<ValueSpace> Validator>
