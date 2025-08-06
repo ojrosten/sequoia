@@ -1069,11 +1069,6 @@ namespace sequoia::maths
       One of the novelties in the context of physics is the notion of units and quantities
       of different types that can nevertheless by multipled and in some cases (like widths
       and heights) added.
-
-      Noteable omissions from the base class are unary+ and unary- as well as subtraction of
-      two coordinates. Since these turn out to require a different implementation for
-      physical quantities, insofar as maths is concerned they are defined only in the derived
-      coordinates class template.
    */
 
   template<
