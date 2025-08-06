@@ -242,18 +242,16 @@ namespace sequoia::physics
 
   template<convex_space ValueSpace, validator_for<ValueSpace> Validator>
   inline constexpr bool has_consistent_validator{
-    !affine_space<ValueSpace> || std::is_same_v<Validator, std::identity>
+    !affine_space<ValueSpace> || is_identity_validator_v<Validator>
   };
 
-  template<convex_space ValueSpace, physical_unit Unit>
-  inline constexpr bool has_consistent_unit{
-       !is_dual_v<Unit>
-    || vector_space<ValueSpace>
-       || (!affine_space<ValueSpace> && has_reciprocal_validator_v<typename dual_of_t<Unit>::validator_type>)
+  template<convex_space ValueSpace>
+  inline constexpr bool has_consistent_space{
+    (!is_dual_v<ValueSpace>) || vector_space<ValueSpace> || (!affine_space<ValueSpace>)
   };
   
   template<convex_space ValueSpace, physical_unit Unit, basis_for<free_module_type_of_t<ValueSpace>> Basis, class Origin, validator_for<ValueSpace> Validator>
-    requires    has_consistent_unit<ValueSpace, Unit>
+    requires    has_consistent_space<ValueSpace>
              && has_consistent_validator<ValueSpace, Validator>
              && has_consistent_origin<ValueSpace, Unit, Origin>
   class physical_value;
@@ -454,7 +452,7 @@ namespace sequoia::physics
     class Origin                                       = to_origin_type_t<ValueSpace, Unit>,
     validator_for<ValueSpace> Validator                = typename Unit::validator_type
   >
-    requires    has_consistent_unit<ValueSpace, Unit>
+    requires    has_consistent_space<ValueSpace>
              && has_consistent_validator<ValueSpace, Validator>
              && has_consistent_origin<ValueSpace, Unit, Origin>
   class physical_value final : public to_coordinates_base_type<ValueSpace, Unit, Basis, Origin, Validator>
