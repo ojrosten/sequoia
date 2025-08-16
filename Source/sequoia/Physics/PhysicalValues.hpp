@@ -756,6 +756,14 @@ namespace sequoia::physics
   };
 
   template<std::floating_point Rep, class Arena>
+  struct absolute_temperature_space
+    : physical_value_convex_space<sets::classical::temperatures<Arena>, Rep, 1, absolute_temperature_space<Rep, Arena>>
+  {
+    using arena_type = Arena;
+    using base_space = absolute_temperature_space;
+  };
+
+  template<std::floating_point Rep, class Arena>
   struct temperature_space
     : physical_value_convex_space<sets::classical::temperatures<Arena>, Rep, 1, temperature_space<Rep, Arena>>
   {
@@ -911,7 +919,7 @@ namespace sequoia::physics
     using time_interval = physical_value<time_interval_space<T, Arena>, units::second_t>;
 
     template<std::floating_point T, class Arena=implicit_common_arena>
-    using temperature = physical_value<temperature_space<T, Arena>, units::kelvin_t>;
+    using temperature = physical_value<absolute_temperature_space<T, Arena>, units::kelvin_t>;
 
     template<std::floating_point T, class Arena=implicit_common_arena>
     using electrical_current = physical_value<electrical_current_space<T, Arena>, units::ampere_t>;
