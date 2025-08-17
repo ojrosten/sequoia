@@ -154,13 +154,12 @@ namespace sequoia::physics
     requires (!affine_space<Ts> && ...)
   struct composite_space<Ts...>
   {
-    using direct_product_t = direct_product<Ts...>;
-    using set_type         = reduction<typename direct_product_t::set_type>;
-    using free_module_type = composite_space<free_module_type_of_t<Ts>...>;
-    using is_convex_space  = std::true_type;
-    using arena_type       = arena_type_of<direct_product<Ts...>>;
-    using has_distinguished_origin
-                           = std::bool_constant<(has_distinguished_origin_t<Ts>::value && ...)>;
+    using direct_product_t     = direct_product<Ts...>;
+    using set_type             = reduction<typename direct_product_t::set_type>;
+    using free_module_type     = composite_space<free_module_type_of_t<Ts>...>;
+    using is_convex_space      = std::true_type;
+    using arena_type           = arena_type_of<direct_product<Ts...>>;
+    using distinguished_origin = std::bool_constant<(has_distinguished_origin_t<Ts>::value && ...)>;
   };
 
   template<physical_unit T, physical_unit U>
@@ -753,27 +752,27 @@ namespace sequoia::physics
   struct mass_space
     : physical_value_convex_space<sets::classical::masses<Arena>, Rep, 1, mass_space<Rep, Arena>>
   {
-    using arena_type               = Arena;
-    using base_space               = mass_space;
-    using has_distinguished_origin = std::true_type;
+    using arena_type           = Arena;
+    using base_space           = mass_space;
+    using distinguished_origin = std::true_type;
   };
 
   template<std::floating_point Rep, class Arena>
   struct absolute_temperature_space
     : physical_value_convex_space<sets::classical::temperatures<Arena>, Rep, 1, absolute_temperature_space<Rep, Arena>>
   {
-    using arena_type               = Arena;
-    using base_space               = absolute_temperature_space;
-    using has_distinguished_origin = std::true_type;
+    using arena_type           = Arena;
+    using base_space           = absolute_temperature_space;
+    using distinguished_origin = std::true_type;
   };
 
   template<std::floating_point Rep, class Arena>
   struct temperature_space
     : physical_value_convex_space<sets::classical::temperatures<Arena>, Rep, 1, temperature_space<Rep, Arena>>
   {
-    using arena_type               = Arena;
-    using base_space               = temperature_space;
-    using has_distinguished_origin = std::false_type;
+    using arena_type           = Arena;
+    using base_space           = temperature_space;
+    using distinguished_origin = std::false_type;
   };
 
   template<std::floating_point Rep, class Arena>
@@ -795,9 +794,9 @@ namespace sequoia::physics
   struct length_space
     : physical_value_convex_space<sets::classical::lengths<Arena>, Rep, 1, length_space<Rep, Arena>>
   {
-    using arena_type               = Arena;
-    using base_space               = length_space;
-    using has_distinguished_origin = std::true_type;
+    using arena_type           = Arena;
+    using base_space           = length_space;
+    using distinguished_origin = std::true_type;
   };
 
   template<arithmetic Rep, class Arena>
@@ -817,7 +816,7 @@ namespace sequoia::physics
     : physical_value_convex_space<sets::classical::time_intervals<Arena>, Rep, 1, time_interval_space<Rep, Arena>>
   {
     using arena_type = Arena;
-    using has_distinguished_origin = std::true_type;
+    using distinguished_origin = std::true_type;
   };
   
   template<arithmetic Rep, class Arena>

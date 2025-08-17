@@ -541,24 +541,24 @@ namespace sequoia::maths
   template<convex_space Space>
   struct convex_space_traits
   {
-    using has_distinguished_origin = Space::has_distinguished_origin;
+    using distinguished_origin = Space::distinguished_origin;
   };
 
   template<free_module Space>
   struct convex_space_traits<Space>
   {
-    using has_distinguished_origin = std::true_type;
+    using distinguished_origin = std::true_type;
   };
 
   template<affine_space Space>
     requires (!vector_space<Space>)
   struct convex_space_traits<Space>
   {
-    using has_distinguished_origin = std::false_type;
+    using distinguished_origin = std::false_type;
   };
 
   template<convex_space Space>
-  using has_distinguished_origin_t = convex_space_traits<Space>::has_distinguished_origin;
+  using has_distinguished_origin_t = convex_space_traits<Space>::distinguished_origin;
   
   /** @ingroup PropertiesOfSpace
       @brief Helper to extract the free module type associated with a convex space.
@@ -935,10 +935,10 @@ namespace sequoia::maths
     requires (!affine_space<C>)
   struct dual<C>
   {
-    using set_type         = sets::convex_functionals<C, commutative_ring_type_of_t<C>>;
-    using free_module_type = dual<free_module_type_of_t<C>>;
-    using is_convex_space  = std::true_type;
-    using has_distinguished_origin = has_distinguished_origin_t<C>;
+    using set_type             = sets::convex_functionals<C, commutative_ring_type_of_t<C>>;
+    using free_module_type     = dual<free_module_type_of_t<C>>;
+    using is_convex_space      = std::true_type;
+    using distinguished_origin = has_distinguished_origin_t<C>;
   };
 
    /** @ingroup DualSpaces
@@ -1042,6 +1042,10 @@ namespace sequoia::maths
     */
 
   struct distinguished_origin {};
+
+  template<class... Ts>
+  struct coordinate_system;
+  
 
   /** @ingroup Coordinates
       @brief Forward declaration for the coordinates class template.
@@ -1538,11 +1542,11 @@ namespace sequoia::maths
   template<std::floating_point T, class Arena=mathematical_arena>
   struct euclidean_half_space
   {
-    using set_type                 = sets::orthant<1>;
-    using vector_space_type        = euclidean_vector_space<T, 1>;
-    using is_convex_space          = std::true_type;
-    using arena_type               = Arena;
-    using has_distinguished_origin = std::true_type;
+    using set_type             = sets::orthant<1>;
+    using vector_space_type    = euclidean_vector_space<T, 1>;
+    using is_convex_space      = std::true_type;
+    using arena_type           = Arena;
+    using distinguished_origin = std::true_type;
   };
 
   template<std::floating_point T, std::size_t D, basis Basis, class Origin, class Arena=mathematical_arena>
