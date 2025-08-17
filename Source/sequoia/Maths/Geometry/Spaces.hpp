@@ -548,33 +548,28 @@ namespace sequoia::maths
   };
 
   template<convex_space Space>
-  struct convex_space_traits
-  {
-    using distinguished_origin = std::false_type;
-  };
+  struct has_distinguished_origin : std::false_type
+  {};
 
   template<convex_space Space>
     requires has_distinguished_origin_type_v<Space>
-  struct convex_space_traits<Space>
-  {
-    using distinguished_origin = Space::distinguished_origin;
-  };
+  struct has_distinguished_origin<Space> : Space::distinguished_origin::type
+  {};
 
   template<free_module Space>
-  struct convex_space_traits<Space>
-  {
-    using distinguished_origin = std::true_type;
-  };
+  struct has_distinguished_origin<Space> : std::true_type
+  {};
 
   template<affine_space Space>
     requires (!vector_space<Space>)
-  struct convex_space_traits<Space>
-  {
-    using distinguished_origin = std::false_type;
-  };
+  struct has_distinguished_origin<Space> : std::false_type
+  {};
 
   template<convex_space Space>
-  using has_distinguished_origin_t = convex_space_traits<Space>::distinguished_origin;
+  using has_distinguished_origin_t = has_distinguished_origin<Space>::type;
+
+  template<convex_space Space>
+  inline constexpr bool has_distinguished_origin_v{has_distinguished_origin<Space>::value};
   
   /** @ingroup PropertiesOfSpace
       @brief Helper to extract the free module type associated with a convex space.
@@ -1134,7 +1129,7 @@ namespace sequoia::maths
     using value_type                    = commutative_ring_type;
     using displacement_coordinates_type = DisplacementCoordinates;
 
-    constexpr static bool has_distinguished_origin{has_distinguished_origin_t<ConvexSpace>::value};
+    constexpr static bool has_distinguished_origin{has_distinguished_origin_v<ConvexSpace>};
     constexpr static bool has_identity_validator{is_identity_validator_v<Validator>};
     constexpr static bool has_freely_mutable_components{has_identity_validator && has_distinguished_origin};
     constexpr static std::size_t dimension{free_module_type::dimension};
