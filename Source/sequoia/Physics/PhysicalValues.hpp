@@ -159,7 +159,7 @@ namespace sequoia::physics
     using free_module_type     = composite_space<free_module_type_of_t<Ts>...>;
     using is_convex_space      = std::true_type;
     using arena_type           = arena_type_of<direct_product<Ts...>>;
-    using distinguished_origin = std::bool_constant<(has_distinguished_origin_t<Ts>::value && ...)>;
+    using distinguished_origin = std::bool_constant<(has_distinguished_origin_v<Ts> && ...)>;
   };
 
   template<physical_unit T, physical_unit U>
@@ -229,16 +229,10 @@ namespace sequoia::physics
     using type = half_line_validator;
   };
 
-  template<convex_space ValueSpace, physical_unit Unit>
-  inline constexpr bool has_distinguished_origin{
-       free_module<ValueSpace>
-    || (!affine_space<ValueSpace> && defines_half_line_v<typename Unit::validator_type>)
-  };
-
-  template<convex_space ValueSpace, physical_unit Unit, class Origin>
+  template<convex_space ValueSpace, class Origin>
   inline constexpr bool has_consistent_origin{
-       ( has_distinguished_origin<ValueSpace, Unit> &&  std::is_same_v<Origin, distinguished_origin>)
-    || (!has_distinguished_origin<ValueSpace, Unit> && !std::is_same_v<Origin, distinguished_origin>)
+       ( maths::has_distinguished_origin_v<ValueSpace> &&  std::is_same_v<Origin, distinguished_origin>)
+    || (!maths::has_distinguished_origin_v<ValueSpace> && !std::is_same_v<Origin, distinguished_origin>)
   };
 
   template<convex_space ValueSpace, validator_for<ValueSpace> Validator>
@@ -254,7 +248,7 @@ namespace sequoia::physics
   template<convex_space ValueSpace, physical_unit Unit, basis_for<free_module_type_of_t<ValueSpace>> Basis, class Origin, validator_for<ValueSpace> Validator>
     requires    has_consistent_space<ValueSpace>
              && has_consistent_validator<ValueSpace, Validator>
-             && has_consistent_origin<ValueSpace, Unit, Origin>
+             && has_consistent_origin<ValueSpace, Origin>
   class physical_value;
 
   template<physical_unit Unit>
@@ -267,7 +261,7 @@ namespace sequoia::physics
   struct to_origin_type;
 
   template<convex_space ValueSpace, physical_unit Unit>
-    requires (!has_distinguished_origin<ValueSpace, Unit>) && (!affine_space<ValueSpace>)
+    requires (!has_distinguished_origin_v<ValueSpace>) && (!affine_space<ValueSpace>)
   struct to_origin_type<ValueSpace, Unit>
   {
     using type = unit_defined_origin<Unit>;
@@ -277,14 +271,14 @@ namespace sequoia::physics
   using to_origin_type_t = to_origin_type<ValueSpace, Unit>::type;
 
   template<convex_space ValueSpace, physical_unit Unit>
-    requires has_distinguished_origin<ValueSpace, Unit>
+    requires has_distinguished_origin_v<ValueSpace>
   struct to_origin_type<ValueSpace, Unit>
   {
     using type = distinguished_origin;
   };
 
   template<convex_space ValueSpace, physical_unit Unit>
-    requires (!has_distinguished_origin<ValueSpace, Unit> && affine_space<ValueSpace>)
+    requires (!has_distinguished_origin_v<ValueSpace> && affine_space<ValueSpace>)
   struct to_origin_type<ValueSpace, Unit>
   {
     using type = implicit_affine_origin<ValueSpace>;
@@ -455,7 +449,7 @@ namespace sequoia::physics
   >
     requires    has_consistent_space<ValueSpace>
              && has_consistent_validator<ValueSpace, Validator>
-             && has_consistent_origin<ValueSpace, Unit, Origin>
+             && has_consistent_origin<ValueSpace, Origin>
   class physical_value final : public to_coordinates_base_type<ValueSpace, Unit, Basis, Origin, Validator>
   {
   public:
