@@ -125,11 +125,11 @@ namespace sequoia::testing
     using free_module_type = my_free_module<Set, Ring, D>;
   };
 
-  template<maths::convex_space ConvexSpace, maths::basis Basis, class Origin, class Validator>
+  template<maths::convex_space ConvexSpace, maths::basis Basis, class... Ts>
     requires maths::basis_for<Basis, maths::free_module_type_of_t<ConvexSpace>>
-  struct value_tester<maths::coordinates<ConvexSpace, Basis, Origin, Validator>>
+  struct value_tester<maths::coordinates<ConvexSpace, Basis, Ts...>>
   {
-    using coord_type = maths::coordinates<ConvexSpace, Basis, Origin, Validator>;
+    using coord_type = maths::coordinates<ConvexSpace, Basis, Ts...>;
     using commutative_ring_type = typename coord_type::commutative_ring_type;
     constexpr static std::size_t D{coord_type::dimension};
 

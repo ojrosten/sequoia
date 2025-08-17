@@ -561,7 +561,7 @@ namespace sequoia::maths
   {};
 
   template<affine_space Space>
-    requires (!vector_space<Space>)
+    requires (!free_module<Space>)
   struct has_distinguished_origin<Space> : std::false_type
   {};
 
@@ -1065,8 +1065,7 @@ namespace sequoia::maths
   template<
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
-    class Origin,
-    validator_for<ConvexSpace> Validator
+    class... Ts
   >
   class coordinates;
 
@@ -1077,19 +1076,19 @@ namespace sequoia::maths
       space to be aware of the type of the coordinate representation for displacements
    */
   template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin>
-  using affine_coordinates = coordinates<AffineSpace, Basis, Origin, std::identity>;
+  using affine_coordinates = coordinates<AffineSpace, Basis, Origin>;
 
   /** @ingroup Coordinates
       @brief Alias for coordinates of an element of a vector space with respect to a particular basis.
    */
   template<vector_space VectorSpace, basis_for<free_module_type_of_t<VectorSpace>> Basis>
-  using vector_coordinates = affine_coordinates<VectorSpace, Basis, distinguished_origin>;
+  using vector_coordinates = coordinates<VectorSpace, Basis>;
 
   /** @ingroup Coordinates
       @brief Alias for coordinates of an element of a free module with respect to a particular basis.
    */
   template<free_module FreeModule, basis_for<free_module_type_of_t<FreeModule>> Basis>
-  using free_module_coordinates = coordinates<FreeModule, Basis, distinguished_origin, std::identity>;
+  using free_module_coordinates = coordinates<FreeModule, Basis>;
   
   /** @ingroup Coordinates
       @brief Class designed for inheritance by concerete coordinate types.
@@ -1412,12 +1411,27 @@ namespace sequoia::maths
    */
   
   template<convex_space ConvexSpace, basis_for<free_module_type_of_t<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
-  class coordinates final : public coordinates_base<ConvexSpace, Basis, Origin, Validator>
+  class coordinates<ConvexSpace, Basis, Origin, Validator>  final : public coordinates_base<ConvexSpace, Basis, Origin, Validator>
   {
   public:
     using coordinates_base<ConvexSpace, Basis, Origin, Validator>::coordinates_base;
   };
 
+  template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin>
+    requires (!free_module<AffineSpace>)
+  class coordinates<AffineSpace, Basis, Origin>  final : public coordinates_base<AffineSpace, Basis, Origin, std::identity>
+  {
+  public:
+    using coordinates_base<AffineSpace, Basis, Origin, std::identity>::coordinates_base;
+  };
+
+  template<free_module M, basis_for<free_module_type_of_t<M>> Basis>    
+  class coordinates<M, Basis>  final : public coordinates_base<M, Basis, distinguished_origin, std::identity>
+  {
+  public:
+    using coordinates_base<M, Basis, distinguished_origin, std::identity>::coordinates_base;
+  };
+  
   namespace sets
   {
     /** @ingroup Sets
