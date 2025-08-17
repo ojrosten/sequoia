@@ -1417,6 +1417,14 @@ namespace sequoia::maths
     using coordinates_base<ConvexSpace, Basis, Origin, Validator>::coordinates_base;
   };
 
+  template<convex_space ConvexSpace, basis_for<free_module_type_of_t<ConvexSpace>> Basis, validator_for<ConvexSpace> Validator>
+    requires has_distinguished_origin_v<ConvexSpace>
+  class coordinates<ConvexSpace, Basis, Validator>  final : public coordinates_base<ConvexSpace, Basis, distinguished_origin, Validator>
+  {
+  public:
+    using coordinates_base<ConvexSpace, Basis, distinguished_origin, Validator>::coordinates_base;
+  };
+
   template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin>
     requires (!free_module<AffineSpace>)
   class coordinates<AffineSpace, Basis, Origin>  final : public coordinates_base<AffineSpace, Basis, Origin, std::identity>
