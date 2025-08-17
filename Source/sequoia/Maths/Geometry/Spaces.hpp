@@ -539,7 +539,23 @@ namespace sequoia::maths
    */
 
   template<convex_space Space>
+  inline constexpr bool has_distinguished_origin_type_v{
+    requires {
+      typename Space::distinguished_origin;
+      requires (   std::convertible_to<typename Space::distinguished_origin, std::true_type>
+                || std::convertible_to<typename Space::distinguished_origin, std::false_type>);
+    }
+  };
+
+  template<convex_space Space>
   struct convex_space_traits
+  {
+    using distinguished_origin = std::false_type;
+  };
+
+  template<convex_space Space>
+    requires has_distinguished_origin_type_v<Space>
+  struct convex_space_traits<Space>
   {
     using distinguished_origin = Space::distinguished_origin;
   };
