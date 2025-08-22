@@ -1052,8 +1052,6 @@ namespace sequoia::maths
       
     */
 
-  struct distinguished_origin {};
-
   template<class... Ts>
   struct coordinate_system;
   
@@ -1111,17 +1109,15 @@ namespace sequoia::maths
   template<
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
-    class Origin,
     validator_for<ConvexSpace> Validator,
     class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<ConvexSpace>, Basis>
   >
   class coordinates_base
   {
   public:
-    using convex_space_type             = ConvexSpace;   
+    using space_type                    = ConvexSpace;   
     using basis_type                    = Basis;
     using validator_type                = Validator;
-    using origin_type                   = Origin;
     using set_type                      = ConvexSpace::set_type;
     using free_module_type              = free_module_type_of_t<ConvexSpace>;
     using commutative_ring_type         = commutative_ring_type_of_t<ConvexSpace>;
@@ -1411,33 +1407,37 @@ namespace sequoia::maths
    */
   
   template<convex_space ConvexSpace, basis_for<free_module_type_of_t<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
-  class coordinates<ConvexSpace, Basis, Origin, Validator>  final : public coordinates_base<ConvexSpace, Basis, Origin, Validator>
+  class coordinates<ConvexSpace, Basis, Origin, Validator>  final : public coordinates_base<ConvexSpace, Basis, Validator>
   {
   public:
-    using coordinates_base<ConvexSpace, Basis, Origin, Validator>::coordinates_base;
+    using origin_type = Origin;
+
+    using coordinates_base<ConvexSpace, Basis, Validator>::coordinates_base;
   };
 
   template<convex_space ConvexSpace, basis_for<free_module_type_of_t<ConvexSpace>> Basis, validator_for<ConvexSpace> Validator>
     requires has_distinguished_origin_v<ConvexSpace>
-  class coordinates<ConvexSpace, Basis, Validator>  final : public coordinates_base<ConvexSpace, Basis, distinguished_origin, Validator>
+  class coordinates<ConvexSpace, Basis, Validator>  final : public coordinates_base<ConvexSpace, Basis, Validator>
   {
   public:
-    using coordinates_base<ConvexSpace, Basis, distinguished_origin, Validator>::coordinates_base;
+    using coordinates_base<ConvexSpace, Basis, Validator>::coordinates_base;
   };
 
   template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin>
     requires (!free_module<AffineSpace>)
-  class coordinates<AffineSpace, Basis, Origin>  final : public coordinates_base<AffineSpace, Basis, Origin, std::identity>
+  class coordinates<AffineSpace, Basis, Origin>  final : public coordinates_base<AffineSpace, Basis, std::identity>
   {
   public:
-    using coordinates_base<AffineSpace, Basis, Origin, std::identity>::coordinates_base;
+    using origin_type = Origin;
+    
+    using coordinates_base<AffineSpace, Basis, std::identity>::coordinates_base;
   };
 
   template<free_module M, basis_for<free_module_type_of_t<M>> Basis>    
-  class coordinates<M, Basis>  final : public coordinates_base<M, Basis, distinguished_origin, std::identity>
+  class coordinates<M, Basis>  final : public coordinates_base<M, Basis, std::identity>
   {
   public:
-    using coordinates_base<M, Basis, distinguished_origin, std::identity>::coordinates_base;
+    using coordinates_base<M, Basis, std::identity>::coordinates_base;
   };
   
   namespace sets

@@ -226,11 +226,13 @@ namespace sequoia::testing
     
     using graph_type = transition_checker<Coordinates>::transition_graph;
     using coords_t   = Coordinates;
+    using space_t    = Coordinates::space_type;
     using disp_t     = coords_t::displacement_coordinates_type;
     using module_t   = coords_t::free_module_type;
     using ring_t     = coords_t::commutative_ring_type;
     constexpr static std::size_t dimension{Coordinates::dimension};
     constexpr static bool orderable{(dimension == 1) && std::totally_ordered<ring_t>};
+    constexpr static bool has_distinguished_origin{maths::has_distinguished_origin_v<space_t>};
 
     regular_test& m_Test;
     graph_type m_Graph;
@@ -304,7 +306,7 @@ namespace sequoia::testing
         add_dim_1_attempted_negative_transitions(g, test, units...);
       }
 
-      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::distinguished_origin>)
+      if constexpr(has_distinguished_origin)
       {
         add_dim_1_distinguished_origin_transitions(g, test);
       }
@@ -357,7 +359,7 @@ namespace sequoia::testing
         }
       };
 
-      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::distinguished_origin>)
+      if constexpr(has_distinguished_origin)
       {
         add_dim_2_distinguished_origin_transitions(g, test, units...);
       }
@@ -539,7 +541,7 @@ namespace sequoia::testing
         }
       );
 
-      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::distinguished_origin>)
+      if constexpr(has_distinguished_origin)
       {
         add_transition<coords_t>(
           g,
