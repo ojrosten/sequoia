@@ -239,7 +239,13 @@ namespace sequoia::physics
     (!is_dual_v<ValueSpace>) || vector_space<ValueSpace> || (!affine_space<ValueSpace>)
   };
   
-  template<convex_space ValueSpace, physical_unit Unit, basis_for<free_module_type_of_t<ValueSpace>> Basis, class Origin, validator_for<ValueSpace> Validator>
+  template<
+    convex_space ValueSpace,
+    physical_unit Unit,
+    basis_for<free_module_type_of_t<ValueSpace>> Basis,
+    class Origin,
+    validator_for<ValueSpace> Validator
+  >
     requires    has_consistent_space<ValueSpace>
              && has_consistent_validator<ValueSpace, Validator>
   class physical_value;
