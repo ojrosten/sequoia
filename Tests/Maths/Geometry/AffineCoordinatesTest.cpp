@@ -15,7 +15,31 @@ namespace sequoia::testing
 
   namespace
   {
-    struct alice {};
+    template<affine_space A>
+    struct alice
+    {
+      using space_type = A;
+    };
+
+    template<affine_space A>
+    struct bob
+    {
+      using space_type = A;
+    };
+
+    template<class From, class To>
+    struct coordinate_transform;
+
+    template<affine_space A, basis_for<free_module_type_of_t<A>> Basis>
+    struct coordinate_transform<affine_coordinates<A, Basis, alice<A>>, affine_coordinates<A, Basis, bob<A>>>
+    {
+      [[nodiscard]]
+      constexpr affine_coordinates<A, Basis, bob<A>>
+        operator()(const affine_coordinates<A, Basis, alice<A>>& c) const noexcept
+      {
+        return affine_coordinates<A, Basis, bob<A>>{c.values()};
+      }
+    };
   }
 
   [[nodiscard]]
@@ -35,7 +59,9 @@ namespace sequoia::testing
   template<class Element, maths::weak_field Field, std::size_t D>
   void affine_coordinates_test::test_affine()
   {
-    using affine_t = affine_coordinates<my_affine_space<Element, Field, D>, canonical_basis<Element, Field, D>, alice>;
+    using space_t  = my_affine_space<Element, Field, D>;
+    using basis_t  = canonical_basis<Element, Field, D>;
+    using affine_t = affine_coordinates<space_t, basis_t, alice<space_t>>;
     using delta_t  = affine_t::displacement_coordinates_type;
     using value_t  = Field;
     STATIC_CHECK(!can_multiply<affine_t, value_t>);
@@ -52,5 +78,10 @@ namespace sequoia::testing
     STATIC_CHECK(!has_unary_minus<affine_t>);
     
     coordinates_operations<affine_t>{*this}.execute();
+
+    using affine2_t = affine_coordinates<space_t, basis_t, bob<space_t>>;
+    affine2_t bob_coords{coordinate_transform<affine_t, affine2_t>{}(affine_t{})};
+
+    check(equality, "", bob_coords, affine2_t{});
   }
 }

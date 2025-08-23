@@ -1407,7 +1407,7 @@ namespace sequoia::maths
    */
   
   template<convex_space ConvexSpace, basis_for<free_module_type_of_t<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
-  class coordinates<ConvexSpace, Basis, Origin, Validator>  final : public coordinates_base<ConvexSpace, Basis, Validator>
+  class coordinates<ConvexSpace, Basis, Origin, Validator> final : public coordinates_base<ConvexSpace, Basis, Validator>
   {
   public:
     using origin_type = Origin;
