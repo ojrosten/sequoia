@@ -33,11 +33,20 @@ namespace sequoia::testing
     template<affine_space A, basis_for<free_module_type_of_t<A>> Basis>
     struct coordinate_transform<affine_coordinates<A, Basis, alice<A>>, affine_coordinates<A, Basis, bob<A>>>
     {
+      using disp_type = affine_coordinates<A, Basis, alice<A>>::displacement_coordinates_type;
+
+      disp_type displacement{};
+
+      explicit coordinate_transform(const disp_type& d)
+        : displacement{d}
+      {}
+      
       [[nodiscard]]
       constexpr affine_coordinates<A, Basis, bob<A>>
         operator()(const affine_coordinates<A, Basis, alice<A>>& c) const noexcept
       {
-        return affine_coordinates<A, Basis, bob<A>>{c.values()};
+        
+        return affine_coordinates<A, Basis, bob<A>>{(c + displacement).values()};
       }
     };
   }
@@ -80,8 +89,8 @@ namespace sequoia::testing
     coordinates_operations<affine_t>{*this}.execute();
 
     using affine2_t = affine_coordinates<space_t, basis_t, bob<space_t>>;
-    affine2_t bob_coords{coordinate_transform<affine_t, affine2_t>{}(affine_t{})};
+    affine2_t bob_coords{coordinate_transform<affine_t, affine2_t>{delta_t{Field{-1.0}}}(affine_t{})};
 
-    check(equality, "", bob_coords, affine2_t{});
+    check(equality, "", bob_coords, affine2_t{Field{-1.0}});
   }
 }
