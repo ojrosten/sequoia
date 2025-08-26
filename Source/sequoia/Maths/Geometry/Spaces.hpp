@@ -1439,6 +1439,9 @@ namespace sequoia::maths
   public:
     using coordinates_base<M, Basis, std::identity>::coordinates_base;
   };
+
+  template<class From, class To>
+  struct coordinate_transform;
   
   namespace sets
   {

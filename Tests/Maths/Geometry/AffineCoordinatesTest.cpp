@@ -26,31 +26,36 @@ namespace sequoia::testing
     {
       using space_type = A;
     };
-
-    template<class From, class To>
-    struct coordinate_transform;
-
-    template<affine_space A, basis_for<free_module_type_of_t<A>> Basis>
-    struct coordinate_transform<affine_coordinates<A, Basis, alice<A>>, affine_coordinates<A, Basis, bob<A>>>
-    {
-      using disp_type = affine_coordinates<A, Basis, alice<A>>::displacement_coordinates_type;
-
-      disp_type displacement{};
-
-      explicit coordinate_transform(const disp_type& d)
-        : displacement{d}
-      {}
-      
-      [[nodiscard]]
-      constexpr affine_coordinates<A, Basis, bob<A>>
-        operator()(const affine_coordinates<A, Basis, alice<A>>& c) const noexcept
-      {
-        
-        return affine_coordinates<A, Basis, bob<A>>{(c + displacement).values()};
-      }
-    };
   }
+}
 
+namespace sequoia::maths
+{
+  using namespace testing;
+
+  template<affine_space A, basis_for<free_module_type_of_t<A>> Basis>
+  struct coordinate_transform<affine_coordinates<A, Basis, alice<A>>, affine_coordinates<A, Basis, bob<A>>>
+  {
+    using disp_type = affine_coordinates<A, Basis, alice<A>>::displacement_coordinates_type;
+
+    disp_type displacement{};
+
+    explicit coordinate_transform(const disp_type& d)
+      : displacement{d}
+    {}
+      
+    [[nodiscard]]
+    constexpr affine_coordinates<A, Basis, bob<A>>
+    operator()(const affine_coordinates<A, Basis, alice<A>>& c) const noexcept
+    {
+        
+      return affine_coordinates<A, Basis, bob<A>>{(c + displacement).values()};
+    }
+  };
+}
+
+namespace sequoia::testing
+{
   [[nodiscard]]
   std::filesystem::path affine_coordinates_test::source_file() const
   {
