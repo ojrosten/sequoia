@@ -66,7 +66,7 @@ namespace sequoia::testing
       );
 
       STATIC_CHECK(has_quantity_conversion_v<si::temperature<value_t>, quantity_t>);
-      //STATIC_CHECK(has_quantity_conversion_v<quantity_t, si::temperature<value_t>>);
+      STATIC_CHECK(has_quantity_conversion_v<quantity_t, si::temperature<value_t>>);
       STATIC_CHECK(!has_quantity_conversion_v<quantity_t, si::mass<value_t>>);
 
       using absolute_temp_t       = si::temperature<value_t>;
@@ -84,6 +84,20 @@ namespace sequoia::testing
         "",
         delta_absolute_temp_t{}.convert_to(si::units::celsius),
         delta_q_t{0, si::units::celsius}
+      );
+
+      check(
+        equality,
+        "",
+        quantity_t{}.convert_to(si::units::kelvin),
+        absolute_temp_t{273.15, si::units::kelvin}
+      );
+
+      check(
+        equality,
+        "",
+        delta_q_t{}.convert_to(si::units::kelvin),
+        delta_absolute_temp_t{0, si::units::kelvin}
       );
     }
   }

@@ -655,7 +655,8 @@ namespace sequoia::physics
     >
       requires has_quantity_conversion_v<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>
     [[nodiscard]]
-    constexpr physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator> convert_to(OtherUnit) const noexcept
+    constexpr physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator> convert_to(OtherUnit) const
+    // TO DO: noexcept based on spec for coordinate_transform::operator()
     {
       return coordinate_transform<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>{}(*this);
     }
@@ -990,9 +991,21 @@ namespace sequoia::physics
   };
 
   template<std::floating_point Rep, class Arena>
+  struct conversion_space<temperature_space<Rep, Arena>, si::units::kelvin_t>
+  {
+    using type = absolute_temperature_space<Rep, Arena>;
+  };
+
+  template<std::floating_point Rep, class Arena>
   struct conversion_space<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::celsius_t>
   {
     using type = associated_displacement_space<temperature_space<Rep, Arena>>;
+  };
+
+  template<std::floating_point Rep, class Arena>
+  struct conversion_space<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::kelvin_t>
+  {
+    using type = associated_displacement_space<absolute_temperature_space<Rep, Arena>>;
   };
   
   template<vector_space ValueSpace, physical_unit Unit, class Basis, class Origin, validator_for<ValueSpace> Validator>
@@ -1082,6 +1095,23 @@ namespace sequoia::maths
     }
   };
 
+  template<std::floating_point Rep, class Arena>
+  struct coordinate_transform<
+    physical_value<temperature_space<Rep, Arena>, si::units::celsius_t>,
+    physical_value<absolute_temperature_space<Rep, Arena>, si::units::kelvin_t>
+  >
+  {
+    using absolute_temperature_type = physical_value<absolute_temperature_space<Rep, Arena>, si::units::kelvin_t>;
+    using celsius_temperature_type  = physical_value<temperature_space<Rep, Arena>, si::units::celsius_t>;
+    
+    [[nodiscard]]
+    constexpr absolute_temperature_type operator()(const celsius_temperature_type& celsiusTemp) noexcept
+    {
+      using delta_temp_t = absolute_temperature_type::displacement_type;
+      return absolute_temperature_type{celsiusTemp.value(), si::units::kelvin} + delta_temp_t{273.15, si::units::kelvin};
+    }
+  };
+
   template<std::floating_point Rep, class Arena, class LHSBasis, class LHSOrigin, class LHSValidator, class RHSBasis, class RHSOrigin, class RHSValidator>
   struct coordinate_transform<
     physical_value<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::kelvin_t, LHSBasis, LHSOrigin, LHSValidator>,
@@ -1094,7 +1124,23 @@ namespace sequoia::maths
     [[nodiscard]]
     constexpr celsius_delta_temperature_type operator()(const absolute_delta_temperature_type& absDeltaTemp) noexcept
     {
-      return celsius_delta_temperature_type{absDeltaTemp.value(), si::units::celsius};
+      return {absDeltaTemp.value(), si::units::celsius};
+    }
+  };
+
+  template<std::floating_point Rep, class Arena, class LHSBasis, class LHSOrigin, class LHSValidator, class RHSBasis, class RHSOrigin, class RHSValidator>
+  struct coordinate_transform<
+    physical_value<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::celsius_t, LHSBasis, LHSOrigin, LHSValidator>,
+    physical_value<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::kelvin_t, RHSBasis, RHSOrigin, RHSValidator>    
+  >
+  {
+    using absolute_delta_temperature_type = physical_value<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::kelvin_t, RHSBasis, RHSOrigin, RHSValidator>;
+    using celsius_delta_temperature_type  = physical_value<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::celsius_t, LHSBasis, LHSOrigin, LHSValidator>;
+    
+    [[nodiscard]]
+    constexpr absolute_delta_temperature_type operator()(const celsius_delta_temperature_type& celsiusDeltaTemp) noexcept
+    {
+      return {celsiusDeltaTemp.value(), si::units::kelvin};
     }
   };
 }
