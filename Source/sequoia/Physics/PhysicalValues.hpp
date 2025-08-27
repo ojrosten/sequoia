@@ -461,7 +461,7 @@ namespace sequoia::physics
     physical_unit Unit,
     basis_for<free_module_type_of_t<ValueSpace>> Basis = canonical_right_handed_basis<free_module_type_of_t<ValueSpace>>,
     class Origin                                       = to_origin_type_t<ValueSpace, Unit>,
-    validator_for<ValueSpace> Validator                = typename Unit::validator_type
+    validator_for<ValueSpace> Validator                = std::conditional_t<affine_space<ValueSpace>, std::identity, typename Unit::validator_type>
   >
     requires    has_consistent_space<ValueSpace>
              && has_consistent_validator<ValueSpace, Validator>
@@ -646,7 +646,7 @@ namespace sequoia::physics
     template<physical_unit OtherUnit, convex_space OtherSpace=conversion_space_t<ValueSpace, OtherUnit>>
       requires has_quantity_conversion_v<physical_value, physical_value<OtherSpace, OtherUnit>>
     [[nodiscard]]
-    constexpr physical_value<OtherSpace, OtherUnit> convert_to(OtherUnit) const
+    constexpr physical_value<OtherSpace, OtherUnit> convert_to(OtherUnit) const noexcept
     {
       return coordinate_transform<physical_value, physical_value<OtherSpace, OtherUnit>>{}(*this);
     }
@@ -979,6 +979,12 @@ namespace sequoia::physics
   {
     using type = temperature_space<Rep, Arena>;
   };
+
+  template<std::floating_point Rep, class Arena>
+  struct conversion_space<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::celsius_t>
+  {
+    using type = associated_displacement_space<temperature_space<Rep, Arena>>;
+  };
   
   template<vector_space ValueSpace, physical_unit Unit, class Basis, class Origin, validator_for<ValueSpace> Validator>
     requires (dimension_of<ValueSpace> == 1)
@@ -1064,6 +1070,22 @@ namespace sequoia::maths
     {
       using delta_temp_t = celsius_temperature_type::displacement_type;
       return celsius_temperature_type{absTemp.value(), si::units::celsius} - delta_temp_t{273.15, si::units::celsius};
+    }
+  };
+
+  template<std::floating_point Rep, class Arena, class LHSBasis, class LHSOrigin, class LHSValidator, class RHSBasis, class RHSOrigin, class RHSValidator>
+  struct coordinate_transform<
+    physical_value<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::kelvin_t, LHSBasis, LHSOrigin, LHSValidator>,
+    physical_value<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::celsius_t, RHSBasis, RHSOrigin, RHSValidator>
+  >
+  {
+    using absolute_delta_temperature_type = physical_value<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::kelvin_t, LHSBasis, LHSOrigin, LHSValidator>;
+    using celsius_delta_temperature_type  = physical_value<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::celsius_t, RHSBasis, RHSOrigin, RHSValidator>;
+    
+    [[nodiscard]]
+    constexpr celsius_delta_temperature_type operator()(const absolute_delta_temperature_type& absDeltaTemp) noexcept
+    {
+      return celsius_delta_temperature_type{absDeltaTemp.value(), si::units::celsius};
     }
   };
 }
