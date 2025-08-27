@@ -441,7 +441,12 @@ namespace sequoia::physics
           reduced_validator_t<LHSValidator, RHSValidator>
         >;
   };
-  
+
+  template<class From, class To>
+  inline constexpr bool has_quantity_conversion_v{
+    has_coordinate_transform_v<From, To> && std::constructible_from<coordinate_transform<From, To>>
+  };
+
   template<
     convex_space ValueSpace,
     physical_unit Unit,
@@ -627,6 +632,14 @@ namespace sequoia::physics
           return physical_value_t{std::array{this->values()[Is]...}, OtherUnit{}};
         }(std::make_index_sequence<D>{});
       }
+    }
+
+    template<physical_unit OtherUnit, convex_space OtherSpace>
+      requires has_quantity_conversion_v<physical_value, physical_value<OtherSpace, OtherUnit>>
+    [[nodiscard]]
+    constexpr physical_value<OtherSpace, OtherUnit> convert() const
+    {
+      return coordinate_transform<physical_value, physical_value<OtherSpace, OtherUnit>>{}(*this);
     }
   };
 

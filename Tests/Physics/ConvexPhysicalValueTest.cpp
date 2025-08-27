@@ -65,11 +65,14 @@ namespace sequoia::testing
           typename dual<units_type>::validator_type>
       );
 
-      STATIC_CHECK(has_coordinate_transform_v<si::temperature<value_t>, quantity_t>);
-      //STATIC_CHECK(has_coordinate_transform_v<quantity_t, si::temperature<value_t>>);
+      STATIC_CHECK(has_quantity_conversion_v<si::temperature<value_t>, quantity_t>);
+      //STATIC_CHECK(has_quantity_conversion_v<quantity_t, si::temperature<value_t>>);
 
-      auto zeroK{coordinate_transform<si::temperature<value_t>, quantity_t>{}(si::temperature<value_t>{})};
-      check(equality, "", zeroK, quantity_t{-273.15, si::units::celsius});
+      check(
+        equality,
+        "",
+        si::temperature<value_t>{}.template convert<si::units::celsius_t, temperature_space<value_t, implicit_common_arena>>(),
+        quantity_t{-273.15, si::units::celsius});
     }
   }
 }
