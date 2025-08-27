@@ -447,6 +447,30 @@ namespace sequoia::physics
     has_coordinate_transform_v<From, To> && std::constructible_from<coordinate_transform<From, To>>
   };
 
+  template<physical_unit Unit, class Rep, class Arena>
+    requires std::is_arithmetic_v<Rep>
+  inline constexpr bool has_associated_space_type_for_v{
+    requires {
+      typename Unit::template associated_space_type<Rep, Arena>;
+    }
+  };
+
+  template<convex_space C, physical_unit ConversionUnit>
+  struct conversion_space
+  {
+    using type = C;
+  };
+
+  template<convex_space C, physical_unit ConversionUnit>
+  using conversion_space_t = conversion_space<C, ConversionUnit>::type;
+
+  template<convex_space C, physical_unit ConversionUnit>
+    requires has_associated_space_type_for_v<ConversionUnit, commutative_ring_type_of_t<C>, arena_type_of_t<C>>
+  struct conversion_space<C, ConversionUnit>
+  {
+    using type = ConversionUnit::template associated_space_type<commutative_ring_type_of_t<C>, arena_type_of_t<C>>;
+  };
+
   template<
     convex_space ValueSpace,
     physical_unit Unit,
@@ -634,7 +658,7 @@ namespace sequoia::physics
       }
     }
 
-    template<physical_unit OtherUnit, convex_space OtherSpace=OtherUnit::template associated_space_type<value_type, arena_type_of_t<ValueSpace>>>
+    template<physical_unit OtherUnit, convex_space OtherSpace=conversion_space_t<ValueSpace, OtherUnit>>
       requires has_quantity_conversion_v<physical_value, physical_value<OtherSpace, OtherUnit>>
     [[nodiscard]]
     constexpr physical_value<OtherSpace, OtherUnit> convert_to(OtherUnit) const
