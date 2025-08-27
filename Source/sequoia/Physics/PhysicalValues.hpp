@@ -643,12 +643,18 @@ namespace sequoia::physics
       }
     }
 
-    template<physical_unit OtherUnit, convex_space OtherSpace=conversion_space_t<ValueSpace, OtherUnit>>
-      requires has_quantity_conversion_v<physical_value, physical_value<OtherSpace, OtherUnit>>
+    template<
+      physical_unit OtherUnit,
+      convex_space OtherSpace=conversion_space_t<ValueSpace, OtherUnit>,
+      basis_for<free_module_type_of_t<OtherSpace>> OtherBasis = canonical_right_handed_basis<free_module_type_of_t<OtherSpace>>,
+      class OtherOrigin                                       = to_origin_type_t<OtherSpace, OtherUnit>,
+      validator_for<OtherSpace> OtherValidator                = std::conditional_t<affine_space<OtherSpace>, std::identity, typename OtherUnit::validator_type>
+    >
+      requires has_quantity_conversion_v<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>
     [[nodiscard]]
-    constexpr physical_value<OtherSpace, OtherUnit> convert_to(OtherUnit) const noexcept
+    constexpr physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator> convert_to(OtherUnit) const noexcept
     {
-      return coordinate_transform<physical_value, physical_value<OtherSpace, OtherUnit>>{}(*this);
+      return coordinate_transform<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>{}(*this);
     }
   };
 
