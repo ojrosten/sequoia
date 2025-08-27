@@ -634,10 +634,10 @@ namespace sequoia::physics
       }
     }
 
-    template<physical_unit OtherUnit, convex_space OtherSpace>
+    template<physical_unit OtherUnit, convex_space OtherSpace=OtherUnit::template associated_space_type<value_type, arena_type_of_t<ValueSpace>>>
       requires has_quantity_conversion_v<physical_value, physical_value<OtherSpace, OtherUnit>>
     [[nodiscard]]
-    constexpr physical_value<OtherSpace, OtherUnit> convert() const
+    constexpr physical_value<OtherSpace, OtherUnit> convert_to(OtherUnit) const
     {
       return coordinate_transform<physical_value, physical_value<OtherSpace, OtherUnit>>{}(*this);
     }
@@ -908,6 +908,9 @@ namespace sequoia::physics
 
         using validator_type = validator;
         constexpr static std::string_view symbol{"degC"};
+
+        template<std::floating_point Rep, class Arena>
+        using associated_space_type = temperature_space<Rep, Arena>;
       };
 
       inline constexpr ampere_t   ampere{};

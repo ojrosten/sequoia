@@ -71,7 +71,7 @@ namespace sequoia::testing
       check(
         equality,
         "",
-        si::temperature<value_t>{}.template convert<si::units::celsius_t, temperature_space<value_t, implicit_common_arena>>(),
+        si::temperature<value_t>{}.convert_to(si::units::celsius),
         quantity_t{-273.15, si::units::celsius});
     }
   }
