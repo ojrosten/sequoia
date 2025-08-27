@@ -447,14 +447,6 @@ namespace sequoia::physics
     has_coordinate_transform_v<From, To> && std::constructible_from<coordinate_transform<From, To>>
   };
 
-  template<physical_unit Unit, class Rep, class Arena>
-    requires std::is_arithmetic_v<Rep>
-  inline constexpr bool has_associated_space_type_for_v{
-    requires {
-      typename Unit::template associated_space_type<Rep, Arena>;
-    }
-  };
-
   template<convex_space C, physical_unit ConversionUnit>
   struct conversion_space
   {
@@ -463,13 +455,6 @@ namespace sequoia::physics
 
   template<convex_space C, physical_unit ConversionUnit>
   using conversion_space_t = conversion_space<C, ConversionUnit>::type;
-
-  template<convex_space C, physical_unit ConversionUnit>
-    requires has_associated_space_type_for_v<ConversionUnit, commutative_ring_type_of_t<C>, arena_type_of_t<C>>
-  struct conversion_space<C, ConversionUnit>
-  {
-    using type = ConversionUnit::template associated_space_type<commutative_ring_type_of_t<C>, arena_type_of_t<C>>;
-  };
 
   template<
     convex_space ValueSpace,
@@ -932,9 +917,6 @@ namespace sequoia::physics
 
         using validator_type = validator;
         constexpr static std::string_view symbol{"degC"};
-
-        template<std::floating_point Rep, class Arena>
-        using associated_space_type = temperature_space<Rep, Arena>;
       };
 
       inline constexpr ampere_t   ampere{};
@@ -992,6 +974,12 @@ namespace sequoia::physics
     using position = physical_value<position_space<T, D, Arena>, units::metre_t, Basis, Origin, std::identity>;
   }
 
+  template<std::floating_point Rep, class Arena>
+  struct conversion_space<absolute_temperature_space<Rep, Arena>, si::units::celsius_t>
+  {
+    using type = temperature_space<Rep, Arena>;
+  };
+  
   template<vector_space ValueSpace, physical_unit Unit, class Basis, class Origin, validator_for<ValueSpace> Validator>
     requires (dimension_of<ValueSpace> == 1)
   [[nodiscard]]
