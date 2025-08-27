@@ -1441,7 +1441,9 @@ namespace sequoia::maths
   };
 
   template<class From, class To>
-  struct coordinate_transform;
+  struct coordinate_transform
+  {
+  };
 
   template<class From, class To>
   inline constexpr bool has_coordinate_transform_v{

@@ -67,6 +67,7 @@ namespace sequoia::testing
 
       STATIC_CHECK(has_quantity_conversion_v<si::temperature<value_t>, quantity_t>);
       //STATIC_CHECK(has_quantity_conversion_v<quantity_t, si::temperature<value_t>>);
+      STATIC_CHECK(!has_quantity_conversion_v<quantity_t, si::mass<value_t>>);
 
       using absolute_temp_t       = si::temperature<value_t>;
       using delta_absolute_temp_t = absolute_temp_t::displacement_type;
