@@ -921,6 +921,9 @@ namespace sequoia::physics
     using temperature = physical_value<absolute_temperature_space<T, Arena>, units::kelvin_t>;
 
     template<std::floating_point T, class Arena=implicit_common_arena>
+    using temperature_celsius = physical_value<temperature_space<T, Arena>, units::celsius_t>;
+
+    template<std::floating_point T, class Arena=implicit_common_arena>
     using electrical_current = physical_value<electrical_current_space<T, Arena>, units::ampere_t>;
 
     template<std::floating_point T, class Arena=implicit_common_arena>
@@ -1013,6 +1016,28 @@ namespace sequoia::physics
 
   template<std::floating_point Rep, class Arena=implicit_common_arena>
   using euclidean_half_line_quantity = quantity<euclidean_half_space<Rep, Arena>, no_unit_t>;
+}
+
+namespace sequoia::maths
+{
+  using namespace physics;
+
+  template<std::floating_point Rep, class Arena>
+  struct coordinate_transform<
+    physical_value<absolute_temperature_space<Rep, Arena>, si::units::kelvin_t>,
+    physical_value<temperature_space<Rep, Arena>, si::units::celsius_t>
+  >
+  {
+    using absolute_temperature_type = physical_value<absolute_temperature_space<Rep, Arena>, si::units::kelvin_t>;
+    using celsius_temperature_type  = physical_value<temperature_space<Rep, Arena>, si::units::celsius_t>;
+    
+    [[nodiscard]]
+    constexpr celsius_temperature_type operator()(const absolute_temperature_type& absTemp) noexcept
+    {
+      using delta_temp_t = celsius_temperature_type::displacement_type;
+      return celsius_temperature_type{absTemp.value(), si::units::celsius} - delta_temp_t{273.15, si::units::celsius};
+    }
+  };
 }
 
 // TO DO: extend this
