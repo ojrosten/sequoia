@@ -456,12 +456,15 @@ namespace sequoia::physics
   template<convex_space C, physical_unit ConversionUnit>
   using conversion_space_t = conversion_space<C, ConversionUnit>::type;
 
+  template<convex_space ValueSpace, physical_unit Unit>
+  using default_validator_t = std::conditional_t<affine_space<ValueSpace>, std::identity, typename Unit::validator_type>;
+
   template<
     convex_space ValueSpace,
     physical_unit Unit,
     basis_for<free_module_type_of_t<ValueSpace>> Basis = canonical_right_handed_basis<free_module_type_of_t<ValueSpace>>,
     class Origin                                       = to_origin_type_t<ValueSpace, Unit>,
-    validator_for<ValueSpace> Validator                = std::conditional_t<affine_space<ValueSpace>, std::identity, typename Unit::validator_type>
+    validator_for<ValueSpace> Validator                = default_validator_t<ValueSpace, Unit>
   >
     requires    has_consistent_space<ValueSpace>
              && has_consistent_validator<ValueSpace, Validator>
@@ -648,7 +651,7 @@ namespace sequoia::physics
       convex_space OtherSpace=conversion_space_t<ValueSpace, OtherUnit>,
       basis_for<free_module_type_of_t<OtherSpace>> OtherBasis = canonical_right_handed_basis<free_module_type_of_t<OtherSpace>>,
       class OtherOrigin                                       = to_origin_type_t<OtherSpace, OtherUnit>,
-      validator_for<OtherSpace> OtherValidator                = std::conditional_t<affine_space<OtherSpace>, std::identity, typename OtherUnit::validator_type>
+      validator_for<OtherSpace> OtherValidator                = default_validator_t<OtherSpace, OtherUnit>
     >
       requires has_quantity_conversion_v<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>
     [[nodiscard]]
