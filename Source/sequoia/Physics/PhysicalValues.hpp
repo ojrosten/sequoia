@@ -984,6 +984,12 @@ namespace sequoia::physics
     using position = physical_value<position_space<T, D, Arena>, units::metre_t, Basis, Origin, std::identity>;
   }
 
+  template<convex_space C, physical_unit ConversionUnit>
+  struct conversion_space<associated_displacement_space<C>, ConversionUnit>
+  {
+    using type = associated_displacement_space<conversion_space_t<C, ConversionUnit>>;
+  };
+  
   template<std::floating_point Rep, class Arena>
   struct conversion_space<absolute_temperature_space<Rep, Arena>, si::units::celsius_t>
   {
@@ -994,18 +1000,6 @@ namespace sequoia::physics
   struct conversion_space<temperature_space<Rep, Arena>, si::units::kelvin_t>
   {
     using type = absolute_temperature_space<Rep, Arena>;
-  };
-
-  template<std::floating_point Rep, class Arena>
-  struct conversion_space<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::celsius_t>
-  {
-    using type = associated_displacement_space<temperature_space<Rep, Arena>>;
-  };
-
-  template<std::floating_point Rep, class Arena>
-  struct conversion_space<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::kelvin_t>
-  {
-    using type = associated_displacement_space<absolute_temperature_space<Rep, Arena>>;
   };
   
   template<vector_space ValueSpace, physical_unit Unit, class Basis, class Origin, validator_for<ValueSpace> Validator>
