@@ -1442,7 +1442,14 @@ namespace sequoia::maths
 
   template<class From, class To>
   struct coordinate_transform;
-  
+
+  template<class From, class To>
+  inline constexpr bool has_coordinate_transform_v{
+    requires (const From& f){
+      { std::declval<coordinate_transform<From, To>>()(f) } -> std::convertible_to<To>;
+    }
+  };
+
   namespace sets
   {
     /** @ingroup Sets
