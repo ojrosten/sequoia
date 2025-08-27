@@ -1106,14 +1106,14 @@ namespace sequoia::maths
     }
   };
 
-  template<std::floating_point Rep, class Arena, class LHSBasis, class LHSOrigin, class LHSValidator, class RHSBasis, class RHSOrigin, class RHSValidator>
+  template<std::floating_point Rep, class Arena>
   struct coordinate_transform<
-    physical_value<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::kelvin_t, LHSBasis, LHSOrigin, LHSValidator>,
-    physical_value<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::celsius_t, RHSBasis, RHSOrigin, RHSValidator>
+    physical_value<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::kelvin_t>,
+    physical_value<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::celsius_t>
   >
   {
-    using absolute_delta_temperature_type = physical_value<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::kelvin_t, LHSBasis, LHSOrigin, LHSValidator>;
-    using celsius_delta_temperature_type  = physical_value<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::celsius_t, RHSBasis, RHSOrigin, RHSValidator>;
+    using absolute_delta_temperature_type = physical_value<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::kelvin_t>;
+    using celsius_delta_temperature_type  = physical_value<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::celsius_t>;
     
     [[nodiscard]]
     constexpr celsius_delta_temperature_type operator()(const absolute_delta_temperature_type& absDeltaTemp) noexcept
@@ -1122,14 +1122,14 @@ namespace sequoia::maths
     }
   };
 
-  template<std::floating_point Rep, class Arena, class LHSBasis, class LHSOrigin, class LHSValidator, class RHSBasis, class RHSOrigin, class RHSValidator>
+  template<std::floating_point Rep, class Arena>
   struct coordinate_transform<
-    physical_value<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::celsius_t, LHSBasis, LHSOrigin, LHSValidator>,
-    physical_value<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::kelvin_t, RHSBasis, RHSOrigin, RHSValidator>    
+    physical_value<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::celsius_t>,
+    physical_value<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::kelvin_t>    
   >
   {
-    using absolute_delta_temperature_type = physical_value<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::kelvin_t, RHSBasis, RHSOrigin, RHSValidator>;
-    using celsius_delta_temperature_type  = physical_value<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::celsius_t, LHSBasis, LHSOrigin, LHSValidator>;
+    using absolute_delta_temperature_type = physical_value<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::kelvin_t>;
+    using celsius_delta_temperature_type  = physical_value<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::celsius_t>;
     
     [[nodiscard]]
     constexpr absolute_delta_temperature_type operator()(const celsius_delta_temperature_type& celsiusDeltaTemp) noexcept
