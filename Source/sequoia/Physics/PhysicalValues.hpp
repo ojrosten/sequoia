@@ -11,6 +11,7 @@
 
 #include "sequoia/Physics/PhysicalValuesDetails.hpp"
 
+#include <numbers>
 #include <ratio>
 
 namespace sequoia::physics
@@ -901,17 +902,38 @@ namespace sequoia::physics
   template<class Validator>
   inline constexpr bool scale_invariant_validator_v{scale_invariant_validator<Validator>::value};
 
-  template<class T, class Factor>
-  struct dilatation;
+  template<std::floating_point T, T v>
+  struct floating_point_constant
+  {
+    constexpr static T value{v};
+  };
 
   template<physical_unit U, class Factor>
     requires scale_invariant_validator_v<typename U::validator_type>
-  struct dilatation<U, Factor>
+  struct dilatation
   {
     using validator_type = typename U::validator_type;
     using factor_type    = Factor;
   };
 
+  template<class T>
+  struct is_floating_point_constant : std::false_type {};
+
+  template<class T>
+  inline constexpr bool is_floating_point_constant_v{is_floating_point_constant<T>::value};
+
+  template<std::floating_point T, T v>
+  struct is_floating_point_constant<floating_point_constant<T, v>> : std::true_type {};
+
+  template<class T>
+  inline constexpr bool has_floating_point_factor_type_v{
+    requires {
+      typename T::factor_type;
+      requires is_floating_point_constant_v<typename T::factor_type>;
+    }
+  };
+  
+  
   template<class Unit>
   using milli = dilatation<Unit, std::milli>;
 
@@ -1044,6 +1066,20 @@ namespace sequoia::physics
     using position = physical_value<position_space<T, D, Arena>, units::metre_t, Basis, Origin, std::identity>;
   }
 
+  namespace non_si
+  {
+    namespace units
+    {
+      struct degree_t : dilatation<si::units::radian_t, floating_point_constant<long double, std::numbers::pi_v<long double> / 180>>
+      {
+        using validator_type = std::identity;
+        constexpr static std::string_view symbol{"deg"};
+      };
+
+      inline constexpr degree_t degree{};
+    }
+  }
+
   template<convex_space C, physical_unit ConversionUnit>
   struct conversion_space<associated_displacement_space<C>, ConversionUnit>
   {
@@ -1070,6 +1106,18 @@ namespace sequoia::physics
   struct default_space<si::units::kilogram_t, T>
   {
     using type = mass_space<T, implicit_common_arena>;
+  };
+
+  template<std::floating_point T>
+  struct default_space<si::units::radian_t, T>
+  {
+    using type = angular_space<T, implicit_common_arena>;
+  };
+
+  template<std::floating_point T>
+  struct default_space<non_si::units::degree_t, T>
+  {
+    using type = angular_space<T, implicit_common_arena>;
   };
   
   template<vector_space ValueSpace, physical_unit Unit, class Basis, class Origin, validator_for<ValueSpace> Validator>
@@ -1222,6 +1270,34 @@ namespace sequoia::maths
     {
       // TO DO: better proection against overflow/underflow
       return {utilities::to_array(pv.values(), [](auto v) { return v * NumFrom * DenomTo / (DenomFrom * NumTo); }), to_unit_type{}};
+    }
+  };
+
+  template<
+    convex_space ValueSpace,
+    physical_unit Unit,
+    basis_for<free_module_type_of_t<ValueSpace>> Basis,
+    class Origin,
+    validator_for<ValueSpace> Validator,
+    physical_unit UnitTo
+  >
+  requires has_floating_point_factor_type_v<UnitTo> && std::convertible_to<UnitTo, dilatation<Unit, typename UnitTo::factor_type>>
+  struct coordinate_transform<
+    physical_value<ValueSpace, Unit, Basis, Origin, Validator>,
+    physical_value<ValueSpace, UnitTo, Basis, Origin> // TO DO Need to deal with overridden validator
+  >
+  {
+    using value_type      = commutative_ring_type_of_t<ValueSpace>;
+    using from_unit_type  = Unit;
+    using from_type       = physical_value<ValueSpace, from_unit_type, Basis, Origin, Validator>;
+    using to_unit_type    = UnitTo;
+    using to_type         = physical_value<ValueSpace, to_unit_type, Basis, Origin>;
+    
+    [[nodiscard]]    
+    to_type operator()(const from_type& pv)
+    {
+      constexpr static auto conversion{static_cast<value_type>(UnitTo::factor_type::value)};
+      return{utilities::to_array(pv.values(), [](value_type v) { return v / conversion; }), to_unit_type{}};
     }
   };
 
