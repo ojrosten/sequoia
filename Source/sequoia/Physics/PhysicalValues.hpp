@@ -1118,23 +1118,24 @@ namespace sequoia::maths
     basis_for<free_module_type_of_t<ValueSpace>> Basis,
     class Origin,
     validator_for<ValueSpace> Validator,
-    std::intmax_t Num,
-    std::intmax_t Denom
+    std::intmax_t NumTo,
+    std::intmax_t DenomTo
   >
   struct coordinate_transform<
     physical_value<ValueSpace, Unit, Basis, Origin, Validator>,
-    physical_value<ValueSpace, dilatation<Unit, std::ratio<Num, Denom>>, Basis, Origin> // TO DO Need to deal with overridden validator
+    physical_value<ValueSpace, dilatation<Unit, std::ratio<NumTo, DenomTo>>, Basis, Origin> // TO DO Need to deal with overridden validator
   >
   {
-    using root_type            = physical_value<ValueSpace, Unit, Basis, Origin, Validator>;
-    using dilatation_unit_type = dilatation<Unit, std::ratio<Num, Denom>>;
-    using dilatation_type      = physical_value<ValueSpace, dilatation_unit_type, Basis, Origin>;
+    using from_unit_type  = Unit;
+    using from_type       = physical_value<ValueSpace, from_unit_type, Basis, Origin, Validator>;
+    using to_unit_type    = dilatation<Unit, std::ratio<NumTo, DenomTo>>;
+    using to_type         = physical_value<ValueSpace, to_unit_type, Basis, Origin>;
     
     [[nodiscard]]    
-    dilatation_type operator()(const root_type& pv)
+    to_type operator()(const from_type& pv)
     {
       // TO DO: better proection against overflow/underflow
-      return{utilities::to_array(pv.values(), [](auto v) { return v * Denom / Num; }), dilatation_unit_type{}};
+      return{utilities::to_array(pv.values(), [](auto v) { return v * DenomTo / NumTo; }), to_unit_type{}};
     }
   };
 
@@ -1144,23 +1145,24 @@ namespace sequoia::maths
     basis_for<free_module_type_of_t<ValueSpace>> Basis,
     class Origin,
     validator_for<ValueSpace> Validator,
-    std::intmax_t Num,
-    std::intmax_t Denom
+    std::intmax_t NumFrom,
+    std::intmax_t DenomFrom
   >
   struct coordinate_transform<
-    physical_value<ValueSpace, dilatation<Unit, std::ratio<Num, Denom>>, Basis, Origin, Validator>,
+    physical_value<ValueSpace, dilatation<Unit, std::ratio<NumFrom, DenomFrom>>, Basis, Origin, Validator>,
     physical_value<ValueSpace, Unit, Basis, Origin> // TO DO Need to deal with overridden validator
   >
   {
-    using root_type            = physical_value<ValueSpace, Unit, Basis, Origin, Validator>;
-    using dilatation_unit_type = dilatation<Unit, std::ratio<Num, Denom>>;
-    using dilatation_type      = physical_value<ValueSpace, dilatation_unit_type, Basis, Origin>;
+    using from_unit_type  = dilatation<Unit, std::ratio<NumFrom, DenomFrom>>;
+    using from_type       = physical_value<ValueSpace, from_unit_type, Basis, Origin, Validator>;
+    using to_unit_type    = Unit;
+    using to_type         = physical_value<ValueSpace, to_unit_type, Basis, Origin>;
     
     [[nodiscard]]    
-    root_type operator()(const dilatation_type& pv)
+    to_type operator()(const from_type& pv)
     {
       // TO DO: better proection against overflow/underflow
-      return {utilities::to_array(pv.values(), [](auto v) { return v * Num / Denom; }), Unit{}};
+      return {utilities::to_array(pv.values(), [](auto v) { return v * NumFrom / DenomFrom; }), to_unit_type{}};
     }
   };
 
