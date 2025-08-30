@@ -893,6 +893,9 @@ namespace sequoia::physics
   };
 
   template<class Unit>
+  using milli = dilatation<Unit, std::milli>;
+
+  template<class Unit>
   using kilo = dilatation<Unit, std::kilo>;
   
   namespace si
@@ -970,7 +973,10 @@ namespace sequoia::physics
 
       inline constexpr celsius_t celsius{};
 
+      using gram_t = milli<si::units::kilogram_t>;
       using tonne_t = kilo<si::units::kilogram_t>;
+
+      inline constexpr gram_t  gram{};
       inline constexpr tonne_t tonne{};
     }
 
