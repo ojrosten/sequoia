@@ -125,5 +125,13 @@ namespace sequoia::testing
       angle_t{1, si::units::radian}.convert_to(non_si::units::degree),
       physical_value{T(1) / (pi / 180), non_si::units::degree}
     );
+
+    check(
+      equality,
+      "",
+      physical_value{T(1) / (pi / 180), non_si::units::degree}.convert_to(si::units::radian),
+      angle_t{1, si::units::radian}
+      
+    );
   }
 }

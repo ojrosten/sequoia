@@ -1301,6 +1301,34 @@ namespace sequoia::maths
     }
   };
 
+  template<
+    convex_space ValueSpace,
+    physical_unit UnitFrom,
+    basis_for<free_module_type_of_t<ValueSpace>> Basis,
+    class Origin,
+    validator_for<ValueSpace> Validator,
+    physical_unit UnitTo
+  >
+  requires has_floating_point_factor_type_v<UnitFrom> && std::convertible_to<UnitFrom, dilatation<UnitTo, typename UnitFrom::factor_type>>
+  struct coordinate_transform<
+    physical_value<ValueSpace, UnitFrom, Basis, Origin, Validator>,
+    physical_value<ValueSpace, UnitTo, Basis, Origin> // TO DO Need to deal with overridden validator
+  >
+  {
+    using value_type      = commutative_ring_type_of_t<ValueSpace>;
+    using from_unit_type  = UnitFrom;
+    using from_type       = physical_value<ValueSpace, from_unit_type, Basis, Origin, Validator>;
+    using to_unit_type    = UnitTo;
+    using to_type         = physical_value<ValueSpace, to_unit_type, Basis, Origin>;
+    
+    [[nodiscard]]    
+    to_type operator()(const from_type& pv)
+    {
+      constexpr static auto conversion{static_cast<value_type>(UnitFrom::factor_type::value)};
+      return{utilities::to_array(pv.values(), [](value_type v) { return v * conversion; }), to_unit_type{}};
+    }
+  };
+
   template<std::floating_point Rep, class Arena>
   struct coordinate_transform<
     physical_value<absolute_temperature_space<Rep, Arena>, si::units::kelvin_t>,
