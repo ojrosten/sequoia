@@ -1164,6 +1164,35 @@ namespace sequoia::maths
     }
   };
 
+  template<
+    convex_space ValueSpace,
+    physical_unit Unit,
+    basis_for<free_module_type_of_t<ValueSpace>> Basis,
+    class Origin,
+    validator_for<ValueSpace> Validator,
+    std::intmax_t NumFrom,
+    std::intmax_t DenomFrom,
+    std::intmax_t NumTo,
+    std::intmax_t DenomTo
+  >
+  struct coordinate_transform<
+    physical_value<ValueSpace, dilatation<Unit, std::ratio<NumFrom, DenomFrom>>, Basis, Origin, Validator>,
+    physical_value<ValueSpace, dilatation<Unit, std::ratio<NumTo, DenomTo>>, Basis, Origin> // TO DO Need to deal with overridden validator
+  >
+  {    
+    using from_unit_type  = dilatation<Unit, std::ratio<NumFrom, DenomFrom>>;
+    using from_type       = physical_value<ValueSpace, from_unit_type, Basis, Origin, Validator>;
+    using to_unit_type    = dilatation<Unit, std::ratio<NumTo, DenomTo>>;
+    using to_type         = physical_value<ValueSpace, to_unit_type, Basis, Origin>;
+    
+    [[nodiscard]]    
+    to_type operator()(const from_type& pv)
+    {
+      // TO DO: better proection against overflow/underflow
+      return {utilities::to_array(pv.values(), [](auto v) { return v * NumFrom * DenomTo / (DenomFrom * NumTo); }), to_unit_type{}};
+    }
+  };
+
   template<std::floating_point Rep, class Arena>
   struct coordinate_transform<
     physical_value<absolute_temperature_space<Rep, Arena>, si::units::kelvin_t>,
