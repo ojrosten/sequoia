@@ -33,35 +33,35 @@ namespace sequoia::testing
       equality,
       "",
       si::mass<float>{1000.0, si::units::kilogram}.convert_to(si::units::tonne),
-      physical_value<mass_space<float, implicit_common_arena>, si::units::tonne_t>{1, si::units::tonne}
+      physical_value{1.0f, si::units::tonne}
     );
 
     check(
       equality,
       "",
       si::mass<float>{1.0, si::units::kilogram}.convert_to(si::units::gram),
-      physical_value<mass_space<float, implicit_common_arena>, si::units::gram_t>{1000, si::units::gram}
+      physical_value{1000.0f, si::units::gram}
     );
 
     check(
       equality,
       "",
-      physical_value<mass_space<float, implicit_common_arena>, si::units::tonne_t>{1, si::units::tonne}.convert_to(si::units::kilogram),
+      physical_value{1.0f, si::units::tonne}.convert_to(si::units::kilogram),
       si::mass<float>{1000, si::units::kilogram}
     );
 
     check(
       equality,
       "",
-      physical_value<mass_space<float, implicit_common_arena>, si::units::tonne_t>{1, si::units::tonne}.convert_to(si::units::gram),
-      physical_value<mass_space<float, implicit_common_arena>, si::units::gram_t>{1'000'000, si::units::gram}
+      physical_value{1.0f, si::units::tonne}.convert_to(si::units::gram),
+      physical_value{1'000'000.0f, si::units::gram}
     );
 
     check(
       equality,
       "",
-      physical_value<mass_space<float, implicit_common_arena>, si::units::gram_t>{1'000'000, si::units::gram}.convert_to(si::units::tonne),
-      physical_value<mass_space<float, implicit_common_arena>, si::units::tonne_t>{1, si::units::tonne}
+      physical_value{1'000'000.0f, si::units::gram}.convert_to(si::units::tonne),
+      physical_value{1.0f, si::units::tonne}
     );
 
     check(

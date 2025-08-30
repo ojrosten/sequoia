@@ -664,8 +664,25 @@ namespace sequoia::physics
     }
 
     [[nodiscard]]
-    constexpr physical_value convert_to(Unit) const { return *this; } 
+    constexpr physical_value convert_to(Unit) const noexcept { return *this; } 
   };
+
+  template<physical_unit Unit, class Rep>
+  struct default_space {};
+
+  template<physical_unit Unit, class Rep>
+  using default_space_t = default_space<Unit, Rep>::type;
+
+  template<physical_unit Unit, class Rep>
+  inline constexpr bool has_default_space_v{
+    requires {
+      typename default_space_t<Unit, Rep>;
+    }
+  };
+
+  template<class T, physical_unit U>
+    requires has_default_space_v<U, T>
+  physical_value(T, U) -> physical_value<default_space_t<U, T>, U>;
 
   namespace sets::classical
   {
@@ -1043,6 +1060,16 @@ namespace sequoia::physics
   struct conversion_space<temperature_space<Rep, Arena>, si::units::kelvin_t>
   {
     using type = absolute_temperature_space<Rep, Arena>;
+  };
+
+  template<physical_unit Unit, class Rep, class Factor>
+    requires has_default_space_v<Unit, Rep>
+  struct default_space<dilatation<Unit, Factor>, Rep> : default_space<Unit, Rep> {};
+
+  template<std::floating_point T>
+  struct default_space<si::units::kilogram_t, T>
+  {
+    using type = mass_space<T, implicit_common_arena>;
   };
   
   template<vector_space ValueSpace, physical_unit Unit, class Basis, class Origin, validator_for<ValueSpace> Validator>
