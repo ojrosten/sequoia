@@ -1292,30 +1292,29 @@ namespace sequoia::maths
 
   template<
     convex_space ValueSpace,
-    physical_unit Unit,
+    physical_unit UnitFrom,
     basis_for<free_module_type_of_t<ValueSpace>> Basis,
     class Origin,
     validator_for<ValueSpace> Validator,
-    std::intmax_t NumFrom,
-    std::intmax_t DenomFrom,
-    std::intmax_t NumTo,
-    std::intmax_t DenomTo
+    physical_unit UnitTo
   >
+  requires has_ratio_factor_type_v<UnitFrom> && has_ratio_factor_type_v<UnitTo>
   struct coordinate_transform<
-    physical_value<ValueSpace, dilatation<Unit, std::ratio<NumFrom, DenomFrom>>, Basis, Origin, Validator>,
-    physical_value<ValueSpace, dilatation<Unit, std::ratio<NumTo, DenomTo>>, Basis, Origin> // TO DO Need to deal with overridden validator
+    physical_value<ValueSpace, UnitFrom, Basis, Origin, Validator>,
+    physical_value<ValueSpace, UnitTo,   Basis, Origin> // TO DO Need to deal with overridden validator
   >
   {    
-    using from_unit_type  = dilatation<Unit, std::ratio<NumFrom, DenomFrom>>;
+    using from_unit_type  = UnitFrom;
     using from_type       = physical_value<ValueSpace, from_unit_type, Basis, Origin, Validator>;
-    using to_unit_type    = dilatation<Unit, std::ratio<NumTo, DenomTo>>;
+    using to_unit_type    = UnitTo;
     using to_type         = physical_value<ValueSpace, to_unit_type, Basis, Origin>;
+    using ratio_type      = std::ratio<UnitFrom::factor_type::num * UnitTo::factor_type::den, UnitFrom::factor_type::den * UnitTo::factor_type::num>;
     
     [[nodiscard]]    
     to_type operator()(const from_type& pv)
     {
       // TO DO: better proection against overflow/underflow
-      return {utilities::to_array(pv.values(), [](auto v) { return v * NumFrom * DenomTo / (DenomFrom * NumTo); }), to_unit_type{}};
+      return {utilities::to_array(pv.values(), [](auto v) { return v * ratio_type::num / ratio_type::den; }), to_unit_type{}};
     }
   };
 
