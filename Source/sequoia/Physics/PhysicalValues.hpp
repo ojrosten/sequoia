@@ -920,19 +920,48 @@ namespace sequoia::physics
   struct is_floating_point_constant : std::false_type {};
 
   template<class T>
+  using is_floating_point_constant_t = is_floating_point_constant<T>::type;
+
+  template<class T>
   inline constexpr bool is_floating_point_constant_v{is_floating_point_constant<T>::value};
 
   template<std::floating_point T, T v>
   struct is_floating_point_constant<floating_point_constant<T, v>> : std::true_type {};
 
   template<class T>
-  inline constexpr bool has_floating_point_factor_type_v{
+  inline constexpr bool has_factor_type_v{
     requires {
       typename T::factor_type;
-      requires is_floating_point_constant_v<typename T::factor_type>;
     }
   };
-  
+
+  template<class T>
+  inline constexpr bool has_floating_point_factor_type_v{
+       has_factor_type_v<T>
+    && requires {
+         requires is_floating_point_constant_v<typename T::factor_type>;
+       }
+  };
+
+  template<class T>
+  struct is_ratio : std::false_type {};
+
+  template<class T>
+  using is_ratio_t = is_ratio<T>::type;
+
+  template<class T>
+  inline constexpr bool is_ratio_v{is_ratio<T>::value};
+
+  template<std::intmax_t Num, std::intmax_t Den>
+  struct is_ratio<std::ratio<Num, Den>> : std::true_type {};
+
+  template<class T>
+  inline constexpr bool has_ratio_factor_type_v{
+       has_factor_type_v<T>
+    && requires {
+         requires is_ratio_v<typename T::factor_type>;
+       }
+  };
   
   template<class Unit>
   using milli = dilatation<Unit, std::milli>;
@@ -1076,7 +1105,16 @@ namespace sequoia::physics
         constexpr static std::string_view symbol{"deg"};
       };
 
+      struct gradian_t
+        : dilatation<si::units::radian_t, floating_point_constant<long double, std::numbers::pi_v<long double> / 200>>
+      //, dilatation<non_si::units::degree_t, std::ratio<9, 10>>
+      {
+        using validator_type = std::identity;
+        constexpr static std::string_view symbol{"gon"};
+      };
+
       inline constexpr degree_t degree{};
+      inline constexpr gradian_t gradian{};
     }
   }
 
@@ -1116,6 +1154,12 @@ namespace sequoia::physics
 
   template<std::floating_point T>
   struct default_space<non_si::units::degree_t, T>
+  {
+    using type = angular_space<T, implicit_common_arena>;
+  };
+
+  template<std::floating_point T>
+  struct default_space<non_si::units::gradian_t, T>
   {
     using type = angular_space<T, implicit_common_arena>;
   };
@@ -1192,28 +1236,29 @@ namespace sequoia::maths
 
   template<
     convex_space ValueSpace,
-    physical_unit Unit,
+    physical_unit UnitFrom,
     basis_for<free_module_type_of_t<ValueSpace>> Basis,
     class Origin,
     validator_for<ValueSpace> Validator,
-    std::intmax_t NumTo,
-    std::intmax_t DenomTo
+    physical_unit UnitTo
   >
+    requires has_ratio_factor_type_v<UnitTo> && std::convertible_to<UnitTo, dilatation<UnitFrom, typename UnitTo::factor_type>>
   struct coordinate_transform<
-    physical_value<ValueSpace, Unit, Basis, Origin, Validator>,
-    physical_value<ValueSpace, dilatation<Unit, std::ratio<NumTo, DenomTo>>, Basis, Origin> // TO DO Need to deal with overridden validator
+    physical_value<ValueSpace, UnitFrom, Basis, Origin, Validator>,
+    physical_value<ValueSpace, UnitTo, Basis, Origin> // TO DO Need to deal with overridden validator
   >
   {
-    using from_unit_type  = Unit;
+    using from_unit_type  = UnitFrom;
     using from_type       = physical_value<ValueSpace, from_unit_type, Basis, Origin, Validator>;
-    using to_unit_type    = dilatation<Unit, std::ratio<NumTo, DenomTo>>;
+    using to_unit_type    = UnitTo;
     using to_type         = physical_value<ValueSpace, to_unit_type, Basis, Origin>;
+    using ratio_type      = typename UnitTo::factor_type;
     
     [[nodiscard]]    
     to_type operator()(const from_type& pv)
     {
       // TO DO: better proection against overflow/underflow
-      return{utilities::to_array(pv.values(), [](auto v) { return v * DenomTo / NumTo; }), to_unit_type{}};
+      return{utilities::to_array(pv.values(), [](auto v) { return v * ratio_type::den / ratio_type::num; }), to_unit_type{}};
     }
   };
 
@@ -1275,20 +1320,20 @@ namespace sequoia::maths
 
   template<
     convex_space ValueSpace,
-    physical_unit Unit,
+    physical_unit UnitFrom,
     basis_for<free_module_type_of_t<ValueSpace>> Basis,
     class Origin,
     validator_for<ValueSpace> Validator,
     physical_unit UnitTo
   >
-  requires has_floating_point_factor_type_v<UnitTo> && std::convertible_to<UnitTo, dilatation<Unit, typename UnitTo::factor_type>>
+    requires has_floating_point_factor_type_v<UnitTo> && std::convertible_to<UnitTo, dilatation<UnitFrom, typename UnitTo::factor_type>>
   struct coordinate_transform<
-    physical_value<ValueSpace, Unit, Basis, Origin, Validator>,
-    physical_value<ValueSpace, UnitTo, Basis, Origin> // TO DO Need to deal with overridden validator
+    physical_value<ValueSpace, UnitFrom, Basis, Origin, Validator>,
+    physical_value<ValueSpace, UnitTo,   Basis, Origin> // TO DO Need to deal with overridden validator
   >
   {
     using value_type      = commutative_ring_type_of_t<ValueSpace>;
-    using from_unit_type  = Unit;
+    using from_unit_type  = UnitFrom;
     using from_type       = physical_value<ValueSpace, from_unit_type, Basis, Origin, Validator>;
     using to_unit_type    = UnitTo;
     using to_type         = physical_value<ValueSpace, to_unit_type, Basis, Origin>;
@@ -1309,10 +1354,10 @@ namespace sequoia::maths
     validator_for<ValueSpace> Validator,
     physical_unit UnitTo
   >
-  requires has_floating_point_factor_type_v<UnitFrom> && std::convertible_to<UnitFrom, dilatation<UnitTo, typename UnitFrom::factor_type>>
+    requires has_floating_point_factor_type_v<UnitFrom> && std::convertible_to<UnitFrom, dilatation<UnitTo, typename UnitFrom::factor_type>>
   struct coordinate_transform<
     physical_value<ValueSpace, UnitFrom, Basis, Origin, Validator>,
-    physical_value<ValueSpace, UnitTo, Basis, Origin> // TO DO Need to deal with overridden validator
+    physical_value<ValueSpace, UnitTo,   Basis, Origin> // TO DO Need to deal with overridden validator
   >
   {
     using value_type      = commutative_ring_type_of_t<ValueSpace>;
