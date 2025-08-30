@@ -891,6 +891,9 @@ namespace sequoia::physics
     using validator_type = typename U::validator_type;
     using factor_type    = Factor;
   };
+
+  template<class Unit>
+  using kilo = dilatation<Unit, std::kilo>;
   
   namespace si
   {
@@ -966,6 +969,9 @@ namespace sequoia::physics
       inline constexpr radian_t   radian{};
 
       inline constexpr celsius_t celsius{};
+
+      using tonne_t = kilo<si::units::kilogram_t>;
+      inline constexpr tonne_t tonne{};
     }
 
     template<std::floating_point T, class Arena=implicit_common_arena>
