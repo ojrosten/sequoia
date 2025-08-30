@@ -57,6 +57,13 @@ namespace sequoia::testing
       physical_value<mass_space<float, implicit_common_arena>, si::units::gram_t>{1'000'000, si::units::gram}
     );
 
+    check(
+      equality,
+      "",
+      physical_value<mass_space<float, implicit_common_arena>, si::units::gram_t>{1'000'000, si::units::gram}.convert_to(si::units::tonne),
+      physical_value<mass_space<float, implicit_common_arena>, si::units::tonne_t>{1, si::units::tonne}
+    );
+
   }
 
   template<class Quantity>
