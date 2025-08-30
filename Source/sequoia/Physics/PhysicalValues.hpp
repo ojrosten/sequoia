@@ -662,6 +662,9 @@ namespace sequoia::physics
     {
       return coordinate_transform<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>{}(*this);
     }
+
+    [[nodiscard]]
+    constexpr physical_value convert_to(Unit) const { return *this; } 
   };
 
   namespace sets::classical
