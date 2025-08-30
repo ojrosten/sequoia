@@ -28,6 +28,15 @@ namespace sequoia::testing
     test_absolute_quantity<si::length<float>>();
     test_absolute_quantity<si::time_interval<float>>();
     test_absolute_quantity<si::temperature<double>>();
+
+    using tonne_t = dilatation<si::units::kilogram_t, std::kilo>;
+    
+    check(
+      equality,
+      "",
+      si::mass<float>{1000.0, si::units::kilogram}.convert_to(tonne_t{}),
+      physical_value<mass_space<float, implicit_common_arena>, tonne_t>{1, tonne_t{}}
+    );
   }
 
   template<class Quantity>

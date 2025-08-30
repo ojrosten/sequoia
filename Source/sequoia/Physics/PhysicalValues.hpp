@@ -11,6 +11,8 @@
 
 #include "sequoia/Physics/PhysicalValuesDetails.hpp"
 
+#include <ratio>
+
 namespace sequoia::physics
 {
   template<class T>
@@ -863,6 +865,32 @@ namespace sequoia::physics
     requires {
       { U::symbol } -> std::convertible_to<std::string_view>; }
   };
+
+  template<class Validator>
+  struct scale_invariant_validator : std::false_type {};
+
+  template<>
+  struct scale_invariant_validator<std::identity> : std::true_type {};
+
+  template<>
+  struct scale_invariant_validator<half_line_validator> : std::true_type {};
+
+  template<class Validator>
+  using scale_invariant_validator_t = scale_invariant_validator<Validator>::type;
+
+  template<class Validator>
+  inline constexpr bool scale_invariant_validator_v{scale_invariant_validator<Validator>::value};
+
+  template<class T, class Factor>
+  struct dilatation;
+
+  template<physical_unit U, class Factor>
+    requires scale_invariant_validator_v<typename U::validator_type>
+  struct dilatation<U, Factor>
+  {
+    using validator_type = typename U::validator_type;
+    using factor_type    = Factor;
+  };
   
   namespace si
   {
@@ -1071,6 +1099,31 @@ namespace sequoia::physics
 namespace sequoia::maths
 {
   using namespace physics;
+
+  template<
+    convex_space ValueSpace,
+    physical_unit Unit,
+    basis_for<free_module_type_of_t<ValueSpace>> Basis,
+    class Origin,
+    validator_for<ValueSpace> Validator, // Need to deal with overridden validator
+    std::intmax_t Num,
+    std::intmax_t Denom
+  >
+  struct coordinate_transform<
+    physical_value<ValueSpace, Unit, Basis, Origin, Validator>,
+    physical_value<ValueSpace, dilatation<Unit, std::ratio<Num, Denom>>, Basis, Origin>
+  >
+  {
+    using dilatation_unit_type = dilatation<Unit, std::ratio<Num, Denom>>;
+    using dilatation_type      = physical_value<ValueSpace, dilatation_unit_type, Basis, Origin>;
+    
+    [[nodiscard]]    
+    dilatation_type operator()(const physical_value<ValueSpace, Unit, Basis, Origin, Validator>& pv) noexcept
+    {
+      // TO DO: better proectoin against overflow/underflow
+      return dilatation_type{utilities::to_array(pv.values(), [](auto v) { return v * Denom / Num; }), dilatation_unit_type{}};
+    }
+  };
 
   template<std::floating_point Rep, class Arena>
   struct coordinate_transform<
