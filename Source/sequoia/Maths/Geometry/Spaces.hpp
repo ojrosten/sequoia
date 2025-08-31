@@ -1157,39 +1157,34 @@ namespace sequoia::maths
     template<class Self>
     constexpr Self& operator+=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
-      self.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
-      return self;
+      return self = (self + v);
     }
 
     template<class Self>
       requires has_distinguished_origin && (!std::is_same_v<coordinates_base, displacement_coordinates_type>)
     constexpr Self& operator+=(this Self& self, const coordinates_base& v) noexcept(has_identity_validator)
     {
-      self.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
-      return self;
+      return self = (self + v);
     }
 
     template<class Self>
     constexpr Self& operator-=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
-      self.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
-      return self;
+       return self = (self - v);
     }
 
     template<class Self>
     constexpr Self& operator*=(this Self& self, value_type u) noexcept(has_identity_validator)
       requires has_distinguished_origin
     {
-      self.for_each_element([u](value_type& x) { return x *= u; });
-      return self;
+      return self = (self * u);
     }
 
     template<class Self>
     constexpr Self& operator/=(this Self& self, value_type u)
       requires vector_space<free_module_type>
     {
-      self.for_each_element([u](value_type& x) { return x /= u; });
-      return self;
+      return self = (self / u);
     }
 
     template<class Self>
@@ -1226,7 +1221,7 @@ namespace sequoia::maths
     [[nodiscard]]
     friend constexpr Derived operator+(Derived c, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
-      return c += v;
+      return c.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
     }
 
     template<class Derived>
@@ -1234,15 +1229,17 @@ namespace sequoia::maths
     [[nodiscard]]
     friend constexpr Derived operator+(const displacement_coordinates_type& v, Derived c) noexcept(has_identity_validator)
     {
-      return c += v;
+      return v + c;
     }
   
     template<class Derived>
-      requires std::derived_from<Derived, coordinates_base> && (!std::is_same_v<Derived, displacement_coordinates_type>) && has_distinguished_origin 
+      requires    std::derived_from<Derived, coordinates_base>
+               && (!std::is_same_v<Derived, displacement_coordinates_type>)
+               && has_distinguished_origin 
     [[nodiscard]]
     friend constexpr Derived operator+(Derived c, const Derived& v) noexcept(has_identity_validator)
     {
-      return c += v;
+      return c.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
     }
 
     template<class Derived>
@@ -1250,7 +1247,7 @@ namespace sequoia::maths
     [[nodiscard]]
     friend constexpr Derived operator-(Derived c, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
-      return c -= v;
+      return c.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
     }
 
     template<class Derived>
@@ -1258,7 +1255,7 @@ namespace sequoia::maths
     [[nodiscard]]
     friend constexpr Derived operator*(Derived v, value_type u) noexcept(has_identity_validator)
     {
-      return v *= u;
+      return v.for_each_element([u](value_type& x) { return x *= u; });
     }
 
     template<class Derived>
@@ -1274,7 +1271,7 @@ namespace sequoia::maths
     [[nodiscard]]
     friend constexpr Derived operator/(Derived v, value_type u)
     {
-      return v /= u;
+      return v.for_each_element([u](value_type& x) { return x /= u; });
     }
 
     [[nodiscard]]
@@ -1362,7 +1359,7 @@ namespace sequoia::maths
     
     template<class Self, class Fn>
       requires std::invocable<Fn, value_type&, value_type>
-    constexpr void apply_to_each_element(this Self& self, std::span<const value_type, D> rhs, Fn f)
+    constexpr Self& apply_to_each_element(this Self& self, std::span<const value_type, D> rhs, Fn f)
     {
       if constexpr(has_identity_validator)
       {
@@ -1374,11 +1371,13 @@ namespace sequoia::maths
         std::ranges::for_each(std::views::zip(tmp, rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
         self.m_Values = validate(tmp, self.m_Validator);
       }
+
+      return self;
     }
 
     template<class Self, class Fn>
       requires std::invocable<Fn, value_type&>
-    constexpr void for_each_element(this Self& self, Fn f)
+    constexpr Self& for_each_element(this Self& self, Fn f)
     {
       if constexpr(has_identity_validator)
       {
@@ -1390,6 +1389,8 @@ namespace sequoia::maths
         std::ranges::for_each(tmp, f);
         self.m_Values = validate(tmp, self.m_Validator);
       }
+
+      return self;
     }
   private:
     SEQUOIA_NO_UNIQUE_ADDRESS validator_type m_Validator;
