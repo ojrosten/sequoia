@@ -1102,8 +1102,14 @@ namespace sequoia::maths
       useful in terms of reducing what would otherwise be very significant code duplication.
 
       One of the novelties in the context of physics is the notion of units and quantities
-      of different types that can nevertheless by multipled and in some cases (like widths
+      of different types that can nevertheless be multipled and in some cases (like widths
       and heights) added.
+
+      Morally, for a space of dimension D, coordinates_base wraps D values of the appropriate
+      arithmetic type. However, this wrapping does introduce some subtleties. Most notable,
+      the rules for arithmetic promotion are not those of the fundamental types. For example,
+      unary plus simply returns a copy, without attempting to promote the return type such
+      that it wraps the appropriately promoted arithmetic type.
    */
 
   template<
@@ -1218,7 +1224,10 @@ namespace sequoia::maths
     template<class Derived>
       requires std::derived_from<Derived, coordinates_base>
     [[nodiscard]]
-    friend constexpr Derived operator+(Derived c, const displacement_coordinates_type& v) noexcept(has_identity_validator) { return c += v; }
+    friend constexpr Derived operator+(Derived c, const displacement_coordinates_type& v) noexcept(has_identity_validator)
+    {
+      return c += v;
+    }
 
     template<class Derived>
       requires std::derived_from<Derived, coordinates_base> && (!std::is_same_v<Derived, displacement_coordinates_type>)
