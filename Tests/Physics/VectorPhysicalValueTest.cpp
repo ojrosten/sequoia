@@ -133,11 +133,25 @@ namespace sequoia::testing
       angle_t{1, si::units::radian}
     );
 
-    /*check(
+    check(
       equality,
       "",
       physical_value{T(360), non_si::units::degree}.convert_to(non_si::units::gradian),
-      angle_t{400, non_si::units::gradian}  
-      );*/
+      physical_value{T(400), non_si::units::gradian}  
+    );
+
+    check(
+      equality,
+      "",
+      physical_value{T(400), non_si::units::gradian}.convert_to(non_si::units::degree),
+      physical_value{T(360), non_si::units::degree}  
+    );
+
+    check(
+      equality,
+      "",
+      physical_value{T(1.1), non_si::units::degree}.convert_to(non_si::units::gradian),
+      physical_value{T(1.1) * 10 / 9, non_si::units::gradian}  
+    );
   }
 }
