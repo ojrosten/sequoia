@@ -95,6 +95,8 @@ namespace sequoia::testing
 
   void absolute_physical_value_test::test_mass_conversions()
   {
+    STATIC_CHECK(!noexcept(si::mass<float>{}.convert_to(si::units::tonne)));
+    
     check(
       equality,
       "",

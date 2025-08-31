@@ -1470,6 +1470,14 @@ namespace sequoia::maths
     }
   };
 
+  template<class From, class To>
+  inline constexpr bool has_noexcept_coordinate_transform_v{
+       has_coordinate_transform_v<From, To>
+    && requires (const From& f){
+         requires noexcept(std::declval<coordinate_transform<From, To>>()(f));
+    }
+  };
+
   namespace sets
   {
     /** @ingroup Sets

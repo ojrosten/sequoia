@@ -431,7 +431,7 @@ namespace sequoia::physics
     convex_space LHSValueSpace, physical_unit LHSUnit, basis_for<free_module_type_of_t<LHSValueSpace>> LHSBasis, class LHSValidator,
     convex_space RHSValueSpace, physical_unit RHSUnit, basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, class RHSValidator
   >
-    requires  consistent_bases_v<LHSBasis, RHSBasis> && is_1d_euclidean_v<RHSValueSpace>
+    requires consistent_bases_v<LHSBasis, RHSBasis> && is_1d_euclidean_v<RHSValueSpace>
   struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSBasis, distinguished_origin<LHSValueSpace>, LHSValidator>,
                                 physical_value<RHSValueSpace, RHSUnit, RHSBasis, distinguished_origin<RHSValueSpace>, RHSValidator>>
   {
@@ -651,7 +651,7 @@ namespace sequoia::physics
       requires has_quantity_conversion_v<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>
     [[nodiscard]]
     constexpr physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator> convert_to(OtherUnit) const
-    // TO DO: noexcept based on spec for coordinate_transform::operator()
+      noexcept(has_noexcept_coordinate_transform_v<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>)
     {
       return coordinate_transform<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>{}(*this);
     }
