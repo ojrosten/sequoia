@@ -1235,10 +1235,12 @@ namespace sequoia::maths
     validator_for<ValueSpace> Validator,
     physical_unit UnitTo
   >
-    requires has_ratio_type_v<UnitTo> && std::convertible_to<UnitTo, dilatation<UnitFrom, typename UnitTo::ratio_type>>
+    requires    scale_invariant_validator_v<Validator>
+             && has_ratio_type_v<UnitTo>
+             && std::convertible_to<UnitTo, dilatation<UnitFrom, typename UnitTo::ratio_type>>
   struct coordinate_transform<
     physical_value<ValueSpace, UnitFrom, Basis, Origin, Validator>,
-    physical_value<ValueSpace, UnitTo, Basis, Origin> // TO DO Need to deal with overridden validator
+    physical_value<ValueSpace, UnitTo,   Basis, Origin, Validator>
   >
   {
     using value_type      = commutative_ring_type_of_t<ValueSpace>;
@@ -1264,10 +1266,12 @@ namespace sequoia::maths
     validator_for<ValueSpace> Validator,
     physical_unit UnitTo
   >
-    requires has_ratio_type_v<UnitFrom> && std::convertible_to<UnitFrom, dilatation<UnitTo, typename UnitFrom::ratio_type>>
+    requires    scale_invariant_validator_v<Validator>
+             && has_ratio_type_v<UnitFrom>
+             && std::convertible_to<UnitFrom, dilatation<UnitTo, typename UnitFrom::ratio_type>>
   struct coordinate_transform<
     physical_value<ValueSpace, UnitFrom, Basis, Origin, Validator>,
-    physical_value<ValueSpace, UnitTo, Basis, Origin> // TO DO Need to deal with overridden validator
+    physical_value<ValueSpace, UnitTo,   Basis, Origin, Validator>
   >
   {
     using value_type      = commutative_ring_type_of_t<ValueSpace>;
@@ -1293,10 +1297,10 @@ namespace sequoia::maths
     validator_for<ValueSpace> Validator,
     physical_unit UnitTo
   >
-  requires has_ratio_type_v<UnitFrom> && has_ratio_type_v<UnitTo>
+  requires scale_invariant_validator_v<Validator> && has_ratio_type_v<UnitFrom> && has_ratio_type_v<UnitTo>
   struct coordinate_transform<
     physical_value<ValueSpace, UnitFrom, Basis, Origin, Validator>,
-    physical_value<ValueSpace, UnitTo,   Basis, Origin> // TO DO Need to deal with overridden validator
+    physical_value<ValueSpace, UnitTo,   Basis, Origin, Validator>
   >
   {
     using value_type      = commutative_ring_type_of_t<ValueSpace>;
@@ -1312,7 +1316,21 @@ namespace sequoia::maths
       return {
         utilities::to_array(
           pv.values(),
-          [](value_type v) -> value_type { return v * UnitFrom::ratio_type::num * UnitTo::ratio_type::den / (UnitFrom::ratio_type::den * UnitTo::ratio_type::num); }),
+          [](value_type v) -> value_type {
+            if constexpr(UnitFrom::ratio_type::num == UnitFrom::ratio_type::den)
+            {
+              return v * UnitTo::ratio_type::den / UnitTo::ratio_type::num;
+            }
+            else if constexpr(UnitTo::ratio_type::den == UnitTo::ratio_type::num)
+            {
+              return v * UnitFrom::ratio_type::num  / (UnitFrom::ratio_type::den);
+            }
+            else
+            {
+              return v * UnitFrom::ratio_type::num * UnitTo::ratio_type::den / (UnitFrom::ratio_type::den * UnitTo::ratio_type::num);
+            }
+          }
+        ),
         to_unit_type{}};
     }
   };
