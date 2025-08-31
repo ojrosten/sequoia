@@ -540,8 +540,7 @@ namespace sequoia::physics
       requires is_intrinsically_absolute && (std::is_base_of_v<ValueSpace, OtherValueSpace>) && consistent_bases_v<basis_type, OtherBasis>
     constexpr physical_value& operator+=(const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& other) noexcept(has_identity_validator)
     {
-      this->apply_to_each_element(other.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
-      return *this;
+      return *this = (*this + other);
     }
 
     using coordinates_type::operator-=;
@@ -555,14 +554,17 @@ namespace sequoia::physics
     }
 
     template<convex_space OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
-      requires (!std::is_same_v<ValueSpace, OtherValueSpace>) && have_compatible_base_spaces_v<ValueSpace, OtherValueSpace> && consistent_bases_v<basis_type, OtherBasis>
+      requires is_intrinsically_absolute && (!std::is_same_v<ValueSpace, OtherValueSpace>) && have_compatible_base_spaces_v<ValueSpace, OtherValueSpace> && consistent_bases_v<basis_type, OtherBasis>
     [[nodiscard]]
     friend constexpr auto operator+(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& rhs)
     {
       using value_space_t = std::common_type_t<typename ValueSpace::base_space, typename OtherValueSpace::base_space>;
       using physical_value_t
         = physical_value<value_space_t, Unit, canonical_right_handed_basis<free_module_type_of_t<value_space_t>>, to_origin_type_t<value_space_t, Unit>, Validator>;
-      return physical_value_t{lhs.values(), units_type{}} += rhs;
+
+      return [&] <std::size_t... Is>(std::index_sequence<Is...>) {
+        return physical_value_t{std::array{(lhs.values()[Is] + rhs.values()[Is])...}, units_type{}};
+      }(std::make_index_sequence<D>{});
     }
 
     template<class OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>

@@ -1155,25 +1155,30 @@ namespace sequoia::maths
     {}
 
     template<class Self>
+      requires std::derived_from<Self, coordinates_base>
     constexpr Self& operator+=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
       return self = (self + v);
     }
 
     template<class Self>
-      requires has_distinguished_origin && (!std::is_same_v<coordinates_base, displacement_coordinates_type>)
+      requires     std::derived_from<Self, coordinates_base>
+               && has_distinguished_origin
+               && (!std::is_same_v<coordinates_base, displacement_coordinates_type>)
     constexpr Self& operator+=(this Self& self, const coordinates_base& v) noexcept(has_identity_validator)
     {
       return self = (self + v);
     }
 
     template<class Self>
+      requires std::derived_from<Self, coordinates_base>
     constexpr Self& operator-=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
        return self = (self - v);
     }
 
     template<class Self>
+      requires std::derived_from<Self, coordinates_base>
     constexpr Self& operator*=(this Self& self, value_type u) noexcept(has_identity_validator)
       requires has_distinguished_origin
     {
@@ -1181,6 +1186,7 @@ namespace sequoia::maths
     }
 
     template<class Self>
+      requires std::derived_from<Self, coordinates_base>
     constexpr Self& operator/=(this Self& self, value_type u)
       requires vector_space<free_module_type>
     {
@@ -1188,6 +1194,7 @@ namespace sequoia::maths
     }
 
     template<class Self>
+      requires std::derived_from<Self, coordinates_base>    
     [[nodiscard]]
     constexpr Self operator+(this const Self& self) noexcept
     {
@@ -1195,7 +1202,8 @@ namespace sequoia::maths
     }
 
     template<class Self>
-      requires    std::constructible_from<Self, std::span<const value_type, D>>
+      requires    std::derived_from<Self, coordinates_base>
+               && std::constructible_from<Self, std::span<const value_type, D>>
                && has_distinguished_origin
                && (!std::is_unsigned_v<value_type>)
     [[nodiscard]]
@@ -1359,7 +1367,7 @@ namespace sequoia::maths
     
     template<class Self, class Fn>
       requires std::invocable<Fn, value_type&, value_type>
-    constexpr Self& apply_to_each_element(this Self& self, std::span<const value_type, D> rhs, Fn f)
+    constexpr Self&& apply_to_each_element(this Self&& self, std::span<const value_type, D> rhs, Fn f)
     {
       if constexpr(has_identity_validator)
       {
@@ -1372,7 +1380,7 @@ namespace sequoia::maths
         self.m_Values = validate(tmp, self.m_Validator);
       }
 
-      return self;
+      return std::forward<Self>(self);
     }
 
     template<class Self, class Fn>
