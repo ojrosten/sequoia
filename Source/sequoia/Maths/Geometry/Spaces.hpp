@@ -1180,7 +1180,7 @@ namespace sequoia::maths
 
     template<class Self>
     constexpr Self& operator/=(this Self& self, value_type u)
-      requires vector_space<free_module_type> && has_distinguished_origin
+      requires vector_space<free_module_type>
     {
       self.for_each_element([u](value_type& x) { return x /= u; });
       return self;
