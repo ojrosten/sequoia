@@ -543,16 +543,6 @@ namespace sequoia::physics
       return *this = (*this + other);
     }
 
-    using coordinates_type::operator-=;
-    
-    template<convex_space OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
-      requires is_intrinsically_absolute && (std::is_base_of_v<ValueSpace, OtherValueSpace>) && consistent_bases_v<basis_type, OtherBasis>
-    constexpr physical_value& operator-=(const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& other) noexcept(has_identity_validator)
-    {
-      this->apply_to_each_element(other.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
-      return *this;
-    }
-
     template<convex_space OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
       requires is_intrinsically_absolute && (!std::is_same_v<ValueSpace, OtherValueSpace>) && have_compatible_base_spaces_v<ValueSpace, OtherValueSpace> && consistent_bases_v<basis_type, OtherBasis>
     [[nodiscard]]

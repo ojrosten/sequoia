@@ -19,32 +19,42 @@
 namespace sequoia::testing
 {
   template<class T, class U>
-  constexpr bool can_multiply{
+  inline constexpr bool can_multiply{
     requires(const T& t, const U& u) { t * u; }
   };
 
   template<class T, class U>
-  constexpr bool can_divide{
+  inline constexpr bool can_divide{
     requires(const T& t, const U& u) { t / u; }
   };
 
   template<class T, class U>
-  constexpr bool can_add{
+  inline constexpr bool can_add{
     requires(const T& t, const U& u) { t + u; }
   };
 
   template<class T, class U>
-  constexpr bool can_subtract{
+  inline constexpr bool can_subtract{
     requires(const T& t, const U& u) { t - u; }
   };
 
+  template<class T, class U>
+  inline constexpr bool addition_combinable{
+    requires(T& t, const U& u) { { t += u } -> std::convertible_to<T>; }
+  };
+
+  template<class T, class U>
+  inline constexpr bool subtraction_combinable{
+    requires(T& t, const U& u) { { t -= u } -> std::convertible_to<T>; }
+  };
+
   template<class T>
-  constexpr bool has_unary_plus{
+  inline constexpr bool has_unary_plus{
     requires(const T& t) { { +t } -> std::convertible_to<T>; }
   };
 
   template<class T>
-  constexpr bool has_unary_minus{
+  inline constexpr bool has_unary_minus{
     requires(const T& t) { { -t } -> std::convertible_to<T>; }
   };
   
