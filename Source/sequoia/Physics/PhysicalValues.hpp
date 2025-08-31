@@ -910,12 +910,6 @@ namespace sequoia::physics
     constexpr static auto den{Den};
   };
 
-  template<std::floating_point T, T v>
-  struct floating_point_constant
-  {
-    constexpr static T value{v};
-  };
-
   template<class U, class T>
   struct dilatation;
 
