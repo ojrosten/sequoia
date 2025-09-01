@@ -161,6 +161,12 @@ Variables</h2></td></tr>
 <tr class="memitem:a860a6516ba225e8e3556c23143d98a99"><td class="memTemplParams" colspan="2">template&lt;class T , class U &gt; </td></tr>
 <tr class="memitem:a860a6516ba225e8e3556c23143d98a99"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d9/dcd/GeometryTestingUtilities_8hpp.html#a860a6516ba225e8e3556c23143d98a99">sequoia::testing::can_subtract</a></td></tr>
 <tr class="separator:a860a6516ba225e8e3556c23143d98a99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e497b662c610a590a73fe25480b83cf"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a9e497b662c610a590a73fe25480b83cf"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d9/dcd/GeometryTestingUtilities_8hpp.html#a9e497b662c610a590a73fe25480b83cf">sequoia::testing::has_unary_plus</a></td></tr>
+<tr class="separator:a9e497b662c610a590a73fe25480b83cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57ec5b2cb651682a9a6b77cb8d7d414b"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a57ec5b2cb651682a9a6b77cb8d7d414b"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d9/dcd/GeometryTestingUtilities_8hpp.html#a57ec5b2cb651682a9a6b77cb8d7d414b">sequoia::testing::has_unary_minus</a></td></tr>
+<tr class="separator:a57ec5b2cb651682a9a6b77cb8d7d414b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64ed4ee6a32aa45056eac2c9aa93a340"><td class="memTemplParams" colspan="2"><a id="a64ed4ee6a32aa45056eac2c9aa93a340" name="a64ed4ee6a32aa45056eac2c9aa93a340"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a64ed4ee6a32aa45056eac2c9aa93a340"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::is_complex_v</b> {is_complex&lt;T&gt;::value}</td></tr>
@@ -301,6 +307,60 @@ template&lt;class T , class U &gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">    <span class="keyword">requires</span>(<span class="keyword">const</span> T&amp; t, <span class="keyword">const</span> U&amp; u) { t - u; }</div>
+<div class="line">  }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a57ec5b2cb651682a9a6b77cb8d7d414b" name="a57ec5b2cb651682a9a6b77cb8d7d414b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57ec5b2cb651682a9a6b77cb8d7d414b">&#9670;&#160;</a></span>has_unary_minus</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::testing::has_unary_minus</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">    <span class="keyword">requires</span>(<span class="keyword">const</span> T&amp; t) { { -t } -&gt; std::convertible_to&lt;T&gt;; }</div>
+<div class="line">  }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a9e497b662c610a590a73fe25480b83cf" name="a9e497b662c610a590a73fe25480b83cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e497b662c610a590a73fe25480b83cf">&#9670;&#160;</a></span>has_unary_plus</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool sequoia::testing::has_unary_plus</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">    <span class="keyword">requires</span>(<span class="keyword">const</span> T&amp; t) { { +t } -&gt; std::convertible_to&lt;T&gt;; }</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>

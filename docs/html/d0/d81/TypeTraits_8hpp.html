@@ -140,6 +140,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dd6/structsequoia_1_1is__compatible.html">sequoia::is_compatible&lt; T, U &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template for determining if a type is compatible with a floating-point type.  <a href="../../d9/dd6/structsequoia_1_1is__compatible.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/da1/structsequoia_1_1are__same.html">sequoia::are_same&lt; T, Ts &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trait for determining if the elements of a set of types are all the same.  <a href="../../d5/da1/structsequoia_1_1are__same.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -175,6 +178,10 @@ template&lt;class T &gt; </td></tr>
 template&lt;std::floating_point T, class U &gt; </td></tr>
 <tr class="memitem:a82916f2b50437aba4d739d6eb3742a7d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_compatible_t</b> = typename is_compatible&lt; T, U &gt;::type</td></tr>
 <tr class="separator:a82916f2b50437aba4d739d6eb3742a7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2210f3abecab5d249acdaf9ff24f4347"><td class="memTemplParams" colspan="2"><a id="a2210f3abecab5d249acdaf9ff24f4347" name="a2210f3abecab5d249acdaf9ff24f4347"></a>
+template&lt;class T , class... Ts&gt; </td></tr>
+<tr class="memitem:a2210f3abecab5d249acdaf9ff24f4347"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::are_same_t</b> = are_same&lt; T, Ts... &gt;::type</td></tr>
+<tr class="separator:a2210f3abecab5d249acdaf9ff24f4347"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -234,6 +241,10 @@ template&lt;class T &gt; </td></tr>
 template&lt;std::floating_point T, class U &gt; </td></tr>
 <tr class="memitem:a0da11d695398c081836f61c51367b909"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_compatible_v</b> {is_compatible&lt;T, U&gt;::value}</td></tr>
 <tr class="separator:a0da11d695398c081836f61c51367b909"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c9ed4f2082cb33cadc2f76cd51451b0"><td class="memTemplParams" colspan="2"><a id="a7c9ed4f2082cb33cadc2f76cd51451b0" name="a7c9ed4f2082cb33cadc2f76cd51451b0"></a>
+template&lt;class T , class... Ts&gt; </td></tr>
+<tr class="memitem:a7c9ed4f2082cb33cadc2f76cd51451b0"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::are_same_v</b> {are_same&lt;T, Ts...&gt;::value}</td></tr>
+<tr class="separator:a7c9ed4f2082cb33cadc2f76cd51451b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Traits which are sufficiently general to appear in the <code>sequoia</code> namespace. </p>

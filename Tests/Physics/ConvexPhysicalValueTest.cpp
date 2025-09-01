@@ -78,7 +78,7 @@ namespace sequoia::testing
         equality,
         "",
         absolute_temp_t{}.convert_to(si::units::celsius),
-        quantity_t{-273.15, si::units::celsius}
+        quantity_t{value_t(-273.15), si::units::celsius}
       );
 
       check(
@@ -92,7 +92,7 @@ namespace sequoia::testing
         equality,
         "",
         quantity_t{}.convert_to(si::units::kelvin),
-        absolute_temp_t{273.15, si::units::kelvin}
+        absolute_temp_t{value_t(273.15), si::units::kelvin}
       );
 
       check(

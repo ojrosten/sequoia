@@ -201,13 +201,20 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d15/structsequoia_1_1maths_1_1arbitary__basis.html">sequoia::maths::arbitary_basis&lt; V &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">sequoia::maths::euclidean_vector_space&lt; D, T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/df9/structsequoia_1_1maths_1_1mathematical__arena.html">sequoia::maths::mathematical_arena</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dd8/structsequoia_1_1maths_1_1euclidean__affine__space.html">sequoia::maths::euclidean_affine_space&lt; D, T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">sequoia::maths::euclidean_vector_space&lt; T, D, Arena &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d5d/structsequoia_1_1maths_1_1euclidean__half__space.html">sequoia::maths::euclidean_half_space&lt; T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dd8/structsequoia_1_1maths_1_1euclidean__affine__space.html">sequoia::maths::euclidean_affine_space&lt; T, D, Arena &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dfb/structsequoia_1_1maths_1_1standard__basis.html">sequoia::maths::standard_basis&lt; D, T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d5d/structsequoia_1_1maths_1_1euclidean__half__space.html">sequoia::maths::euclidean_half_space&lt; T, Arena &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/deb/structsequoia_1_1maths_1_1canonical__right__handed__basis.html">sequoia::maths::canonical_right_handed_basis&lt; M &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Right-handed bases for arbitrary D, build recursively from 1D.  <a href="../../df/deb/structsequoia_1_1maths_1_1canonical__right__handed__basis.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/db0/structsequoia_1_1maths_1_1dual__of_3_01canonical__right__handed__basis_3_01M_01_4_01_4.html">sequoia::maths::dual_of&lt; canonical_right_handed_basis&lt; M &gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dd2/structsequoia_1_1maths_1_1dual__of_3_01canonical__right__handed__basis_3_01dual_3_01M_01_4_01_4_01_4.html">sequoia::maths::dual_of&lt; canonical_right_handed_basis&lt; dual&lt; M &gt; &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
@@ -304,18 +311,18 @@ template&lt;free_module FreeModule, basis_for&lt; free_module_type_of_t&lt; Free
 <tr class="memitem:ga2df0238c48dcb387755177669985237e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::free_module_coordinates</b> = coordinates&lt; FreeModule, Basis, distinguished_origin, std::identity &gt;</td></tr>
 <tr class="memdesc:ga2df0238c48dcb387755177669985237e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for coordinates of an element of a free module with respect to a particular basis. <br /></td></tr>
 <tr class="separator:ga2df0238c48dcb387755177669985237e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71888d695e9face5eae8a4c785b92033"><td class="memTemplParams" colspan="2"><a id="a71888d695e9face5eae8a4c785b92033" name="a71888d695e9face5eae8a4c785b92033"></a>
-template&lt;std::size_t D, std::floating_point T, basis Basis, class Origin &gt; </td></tr>
-<tr class="memitem:a71888d695e9face5eae8a4c785b92033"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::euclidean_affine_coordinates</b> = affine_coordinates&lt; euclidean_affine_space&lt; D, T &gt;, Basis, Origin &gt;</td></tr>
-<tr class="separator:a71888d695e9face5eae8a4c785b92033"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b6fcc3db5a091d5778da6f5c0364668"><td class="memTemplParams" colspan="2"><a id="a1b6fcc3db5a091d5778da6f5c0364668" name="a1b6fcc3db5a091d5778da6f5c0364668"></a>
-template&lt;std::size_t D, std::floating_point T, basis Basis&gt; </td></tr>
-<tr class="memitem:a1b6fcc3db5a091d5778da6f5c0364668"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::euclidean_vector_coordinates</b> = vector_coordinates&lt; euclidean_vector_space&lt; D, T &gt;, Basis &gt;</td></tr>
-<tr class="separator:a1b6fcc3db5a091d5778da6f5c0364668"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a405bf328a93a129973451e7c82933ca1"><td class="memTemplParams" colspan="2"><a id="a405bf328a93a129973451e7c82933ca1" name="a405bf328a93a129973451e7c82933ca1"></a>
-template&lt;std::size_t D, std::floating_point T&gt; </td></tr>
-<tr class="memitem:a405bf328a93a129973451e7c82933ca1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::vec_coords</b> = euclidean_vector_coordinates&lt; D, T, standard_basis&lt; D, T &gt; &gt;</td></tr>
-<tr class="separator:a405bf328a93a129973451e7c82933ca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb635351128de3a81dbffdcb4685d7a0"><td class="memTemplParams" colspan="2"><a id="acb635351128de3a81dbffdcb4685d7a0" name="acb635351128de3a81dbffdcb4685d7a0"></a>
+template&lt;std::floating_point T, std::size_t D, basis Basis, class Origin , class Arena  = mathematical_arena&gt; </td></tr>
+<tr class="memitem:acb635351128de3a81dbffdcb4685d7a0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::euclidean_affine_coordinates</b> = affine_coordinates&lt; euclidean_affine_space&lt; T, D, Arena &gt;, Basis, Origin &gt;</td></tr>
+<tr class="separator:acb635351128de3a81dbffdcb4685d7a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2283dcf49689086d8db4ee20cb2b80b9"><td class="memTemplParams" colspan="2"><a id="a2283dcf49689086d8db4ee20cb2b80b9" name="a2283dcf49689086d8db4ee20cb2b80b9"></a>
+template&lt;std::floating_point T, std::size_t D, basis Basis, class Arena  = mathematical_arena&gt; </td></tr>
+<tr class="memitem:a2283dcf49689086d8db4ee20cb2b80b9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::euclidean_vector_coordinates</b> = vector_coordinates&lt; euclidean_vector_space&lt; T, D, Arena &gt;, Basis &gt;</td></tr>
+<tr class="separator:a2283dcf49689086d8db4ee20cb2b80b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a194d2f94063a81def40c06c4c3196e39"><td class="memTemplParams" colspan="2"><a id="a194d2f94063a81def40c06c4c3196e39" name="a194d2f94063a81def40c06c4c3196e39"></a>
+template&lt;std::floating_point T, std::size_t D, class Arena  = mathematical_arena&gt; </td></tr>
+<tr class="memitem:a194d2f94063a81def40c06c4c3196e39"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::vec_coords</b> = euclidean_vector_coordinates&lt; T, D, canonical_right_handed_basis&lt; euclidean_vector_space&lt; T, D, Arena &gt; &gt;, Arena &gt;</td></tr>
+<tr class="separator:a194d2f94063a81def40c06c4c3196e39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
