@@ -19,32 +19,42 @@
 namespace sequoia::testing
 {
   template<class T, class U>
-  constexpr bool can_multiply{
+  inline constexpr bool can_multiply{
     requires(const T& t, const U& u) { t * u; }
   };
 
   template<class T, class U>
-  constexpr bool can_divide{
+  inline constexpr bool can_divide{
     requires(const T& t, const U& u) { t / u; }
   };
 
   template<class T, class U>
-  constexpr bool can_add{
+  inline constexpr bool can_add{
     requires(const T& t, const U& u) { t + u; }
   };
 
   template<class T, class U>
-  constexpr bool can_subtract{
+  inline constexpr bool can_subtract{
     requires(const T& t, const U& u) { t - u; }
   };
 
+  template<class T, class U>
+  inline constexpr bool addition_combinable{
+    requires(T& t, const U& u) { { t += u } -> std::convertible_to<T>; }
+  };
+
+  template<class T, class U>
+  inline constexpr bool subtraction_combinable{
+    requires(T& t, const U& u) { { t -= u } -> std::convertible_to<T>; }
+  };
+
   template<class T>
-  constexpr bool has_unary_plus{
+  inline constexpr bool has_unary_plus{
     requires(const T& t) { { +t } -> std::convertible_to<T>; }
   };
 
   template<class T>
-  constexpr bool has_unary_minus{
+  inline constexpr bool has_unary_minus{
     requires(const T& t) { { -t } -> std::convertible_to<T>; }
   };
   
@@ -105,6 +115,7 @@ namespace sequoia::testing
   struct canonical_basis
   {
     using vector_space_type = my_vec_space<Set, Field, D>;
+    using is_basis    = std::true_type;
     using orthonormal = std::true_type;
   };
 
@@ -120,14 +131,15 @@ namespace sequoia::testing
   template<class Set, maths::weak_commutative_ring Ring, std::size_t D>
   struct canonical_free_module_basis
   {
+    using is_basis         = std::true_type;
     using free_module_type = my_free_module<Set, Ring, D>;
   };
 
-  template<maths::convex_space ConvexSpace, maths::basis Basis, class Origin, class Validator>
+  template<maths::convex_space ConvexSpace, maths::basis Basis, class... Ts>
     requires maths::basis_for<Basis, maths::free_module_type_of_t<ConvexSpace>>
-  struct value_tester<maths::coordinates<ConvexSpace, Basis, Origin, Validator>>
+  struct value_tester<maths::coordinates<ConvexSpace, Basis, Ts...>>
   {
-    using coord_type = maths::coordinates<ConvexSpace, Basis, Origin, Validator>;
+    using coord_type = maths::coordinates<ConvexSpace, Basis, Ts...>;
     using commutative_ring_type = typename coord_type::commutative_ring_type;
     constexpr static std::size_t D{coord_type::dimension};
 
@@ -224,11 +236,13 @@ namespace sequoia::testing
     
     using graph_type = transition_checker<Coordinates>::transition_graph;
     using coords_t   = Coordinates;
+    using space_t    = Coordinates::space_type;
     using disp_t     = coords_t::displacement_coordinates_type;
     using module_t   = coords_t::free_module_type;
     using ring_t     = coords_t::commutative_ring_type;
     constexpr static std::size_t dimension{Coordinates::dimension};
     constexpr static bool orderable{(dimension == 1) && std::totally_ordered<ring_t>};
+    constexpr static bool has_distinguished_origin{maths::has_distinguished_origin_v<space_t>};
 
     regular_test& m_Test;
     graph_type m_Graph;
@@ -302,7 +316,7 @@ namespace sequoia::testing
         add_dim_1_attempted_negative_transitions(g, test, units...);
       }
 
-      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::distinguished_origin>)
+      if constexpr(has_distinguished_origin)
       {
         add_dim_1_distinguished_origin_transitions(g, test);
       }
@@ -355,7 +369,7 @@ namespace sequoia::testing
         }
       };
 
-      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::distinguished_origin>)
+      if constexpr(has_distinguished_origin)
       {
         add_dim_2_distinguished_origin_transitions(g, test, units...);
       }
@@ -537,7 +551,7 @@ namespace sequoia::testing
         }
       );
 
-      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::distinguished_origin>)
+      if constexpr(has_distinguished_origin)
       {
         add_transition<coords_t>(
           g,

@@ -14,7 +14,7 @@
 #include <numbers>
 
 namespace sequoia::testing
-{ 
+{
   using namespace physics;
 
   [[nodiscard]]
@@ -118,5 +118,40 @@ namespace sequoia::testing
 
     check(equality, "", atan(T{}), angle_t{});
     check(equality, "", atan(T{1}), angle_t{pi / 4, radian});
+
+    check(
+      equality,
+      "",
+      angle_t{1, si::units::radian}.convert_to(non_si::units::degree),
+      physical_value{T(1) / (pi / 180), non_si::units::degree}
+    );
+
+    check(
+      equality,
+      "",
+      physical_value{T(1) / (pi / 180), non_si::units::degree}.convert_to(si::units::radian),
+      angle_t{1, si::units::radian}
+    );
+
+    check(
+      equality,
+      "",
+      physical_value{T(360), non_si::units::degree}.convert_to(non_si::units::gradian),
+      physical_value{T(400), non_si::units::gradian}  
+    );
+
+    check(
+      equality,
+      "",
+      physical_value{T(400), non_si::units::gradian}.convert_to(non_si::units::degree),
+      physical_value{T(360), non_si::units::degree}  
+    );
+
+    check(
+      equality,
+      "",
+      physical_value{T(1.1), non_si::units::degree}.convert_to(non_si::units::gradian),
+      physical_value{T(1.1) * 10 / 9, non_si::units::gradian}  
+    );
   }
 }

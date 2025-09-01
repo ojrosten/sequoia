@@ -28,6 +28,8 @@ namespace sequoia::testing
     test_absolute_quantity<si::length<float>>();
     test_absolute_quantity<si::time_interval<float>>();
     test_absolute_quantity<si::temperature<double>>();
+
+    test_mass_conversions();   
   }
 
   template<class Quantity>
@@ -89,5 +91,52 @@ namespace sequoia::testing
     check(equality, "", (delta_q_t{4.0, units_type{}} *  delta_q_t{-3.0, units_type{}}  /  quantity_t{2.0, units_type{}})  / quantity_t{2.0, units_type{}},   euc_vec_space_qty{-3.0, no_unit});
     check(equality, "", (delta_q_t{4.0, units_type{}} *  delta_q_t{-3.0, units_type{}}) / (quantity_t{2.0, units_type{}}   * quantity_t{2.0, units_type{}}),  euc_vec_space_qty{-3.0, no_unit});
     check(equality, "",  delta_q_t{4.0, units_type{}} * (delta_q_t{-3.0, units_type{}}  / (quantity_t{2.0, units_type{}}   * quantity_t{2.0, units_type{}})), euc_vec_space_qty{-3.0, no_unit});
+  }
+
+  void absolute_physical_value_test::test_mass_conversions()
+  {
+    STATIC_CHECK(!noexcept(si::mass<float>{}.convert_to(si::units::tonne)));
+    
+    check(
+      equality,
+      "",
+      si::mass<float>{1000.0, si::units::kilogram}.convert_to(si::units::tonne),
+      physical_value{1.0f, si::units::tonne}
+    );
+
+    check(
+      equality,
+      "",
+      si::mass<float>{1.0, si::units::kilogram}.convert_to(si::units::gram),
+      physical_value{1000.0f, si::units::gram}
+    );
+
+    check(
+      equality,
+      "",
+      physical_value{1.0f, si::units::tonne}.convert_to(si::units::kilogram),
+      si::mass<float>{1000, si::units::kilogram}
+    );
+
+    check(
+      equality,
+      "",
+      physical_value{1.0f, si::units::tonne}.convert_to(si::units::gram),
+      physical_value{1'000'000.0f, si::units::gram}
+    );
+
+    check(
+      equality,
+      "",
+      physical_value{1'000'000.0f, si::units::gram}.convert_to(si::units::tonne),
+      physical_value{1.0f, si::units::tonne}
+    );
+
+    check(
+      equality,
+      "",
+      si::mass<float>{1.0, si::units::kilogram}.convert_to(si::units::kilogram),
+      si::mass<float>{1.0, si::units::kilogram}
+    );
   }
 }

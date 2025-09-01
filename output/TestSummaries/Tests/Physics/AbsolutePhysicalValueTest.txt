@@ -1,2 +1,2 @@
 Absolute Physical Value Test
-Standard Top Level Checks:               600;  Failures:  0  [Deep checks: 6310]
+Standard Top Level Checks:               607;  Failures:  0  [Deep checks: 6323]
