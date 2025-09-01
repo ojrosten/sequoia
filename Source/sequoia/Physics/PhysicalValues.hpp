@@ -1240,7 +1240,10 @@ namespace sequoia::maths
     to_type operator()(const from_type& pv)
     {
       // TO DO: better proection against overflow/underflow
-      return{utilities::to_array(pv.values(), [](value_type v) -> value_type { return v * ratio_type::den / ratio_type::num; }), to_unit_type{}};
+      return{
+        utilities::to_array(pv.values(), [](value_type v) -> value_type { return static_cast<value_type>(v * ratio_type::den / ratio_type::num); }),
+        to_unit_type{}
+      };
     }
   };
 
@@ -1271,7 +1274,10 @@ namespace sequoia::maths
     to_type operator()(const from_type& pv)
     {
       // TO DO: better proection against overflow/underflow
-      return {utilities::to_array(pv.values(), [](value_type v) -> value_type { return v * ratio_type::num / ratio_type::den; }), to_unit_type{}};
+      return {
+        utilities::to_array(pv.values(), [](value_type v) -> value_type { return static_cast<value_type>(v * ratio_type::num / ratio_type::den); }),
+        to_unit_type{}
+      };
     }
   };
 
@@ -1305,15 +1311,15 @@ namespace sequoia::maths
           [](value_type v) -> value_type {
             if constexpr(UnitFrom::ratio_type::num == UnitFrom::ratio_type::den)
             {
-              return v * UnitTo::ratio_type::den / UnitTo::ratio_type::num;
+              return static_cast<value_type>(v * UnitTo::ratio_type::den / UnitTo::ratio_type::num);
             }
             else if constexpr(UnitTo::ratio_type::den == UnitTo::ratio_type::num)
             {
-              return v * UnitFrom::ratio_type::num  / (UnitFrom::ratio_type::den);
+              return static_cast<value_type>(v * UnitFrom::ratio_type::num  / (UnitFrom::ratio_type::den));
             }
             else
             {
-              return v * UnitFrom::ratio_type::num * UnitTo::ratio_type::den / (UnitFrom::ratio_type::den * UnitTo::ratio_type::num);
+              return static_cast<value_type>(v * UnitFrom::ratio_type::num * UnitTo::ratio_type::den / (UnitFrom::ratio_type::den * UnitTo::ratio_type::num));
             }
           }
         ),
@@ -1334,7 +1340,7 @@ namespace sequoia::maths
     constexpr celsius_temperature_type operator()(const absolute_temperature_type& absTemp) noexcept
     {
       using delta_temp_t = celsius_temperature_type::displacement_type;
-      return celsius_temperature_type{absTemp.value(), si::units::celsius} - delta_temp_t{273.15, si::units::celsius};
+      return celsius_temperature_type{absTemp.value(), si::units::celsius} - delta_temp_t{Rep(273.15), si::units::celsius};
     }
   };
 
@@ -1351,7 +1357,7 @@ namespace sequoia::maths
     constexpr absolute_temperature_type operator()(const celsius_temperature_type& celsiusTemp) noexcept
     {
       using delta_temp_t = absolute_temperature_type::displacement_type;
-      return absolute_temperature_type{celsiusTemp.value(), si::units::kelvin} + delta_temp_t{273.15, si::units::kelvin};
+      return absolute_temperature_type{celsiusTemp.value(), si::units::kelvin} + delta_temp_t{Rep(273.15), si::units::kelvin};
     }
   };
 
