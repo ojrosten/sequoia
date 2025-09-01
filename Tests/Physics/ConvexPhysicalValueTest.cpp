@@ -72,7 +72,7 @@ namespace sequoia::testing
       using absolute_temp_t       = si::temperature<value_t>;
       using delta_absolute_temp_t = absolute_temp_t::displacement_type;
 
-      STATIC_CHECK(noexcept(absolute_temp_t{}.convert_to(si::units::celsius)));
+      STATIC_CHECK(not noexcept(absolute_temp_t{}.convert_to(si::units::celsius)));
       
       check(
         equality,
