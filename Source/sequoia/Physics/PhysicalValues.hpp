@@ -1351,7 +1351,8 @@ namespace sequoia::maths
     class OriginTo,
     validator_for<ValueSpaceFrom> ValidatorTo
   >
-    requires std::convertible_to<UnitTo, translation<UnitFrom, UnitTo::displacement>>
+    requires (   std::convertible_to<UnitTo, translation<UnitFrom, UnitTo::displacement>>
+              || std::convertible_to<UnitFrom, translation<UnitTo, UnitFrom::displacement>>)
   struct coordinate_transform<
     physical_value<ValueSpaceFrom, UnitFrom, BasisFrom, OriginFrom, ValidatorFrom>,
     physical_value<ValueSpaceTo,   UnitTo,   BasisTo,   OriginTo,   ValidatorTo>
@@ -1362,9 +1363,11 @@ namespace sequoia::maths
     using from_type       = physical_value<ValueSpaceFrom, from_unit_type, BasisFrom, OriginFrom, ValidatorFrom>;
     using to_unit_type    = UnitTo;
     using to_type         = physical_value<ValueSpaceTo, to_unit_type, BasisTo, OriginTo, ValidatorTo>;
+    constexpr static bool both_vector_spaces{vector_space<ValueSpaceFrom> && vector_space<ValueSpaceTo>};
 
     [[nodiscard]]    
     to_type operator()(const from_type& pv)
+      requires (!both_vector_spaces) && std::convertible_to<UnitTo, translation<UnitFrom, UnitTo::displacement>>
     {
       return {
         utilities::to_array(
@@ -1374,34 +1377,10 @@ namespace sequoia::maths
         to_unit_type{}
       };
     }
-  };
-
-  template<
-    convex_space ValueSpaceFrom,
-    physical_unit UnitFrom,
-    basis_for<free_module_type_of_t<ValueSpaceFrom>> BasisFrom,
-    class OriginFrom,
-    validator_for<ValueSpaceFrom> ValidatorFrom,
-    convex_space ValueSpaceTo,
-    basis_for<free_module_type_of_t<ValueSpaceTo>> BasisTo,
-    physical_unit UnitTo,
-    class OriginTo,
-    validator_for<ValueSpaceFrom> ValidatorTo
-  >
-    requires std::convertible_to<UnitFrom, translation<UnitTo, UnitFrom::displacement>>
-  struct coordinate_transform<
-    physical_value<ValueSpaceFrom, UnitFrom, BasisFrom, OriginFrom, ValidatorFrom>,
-    physical_value<ValueSpaceTo,   UnitTo,   BasisTo,   OriginTo,   ValidatorTo>
-  >
-  {
-    using value_type      = commutative_ring_type_of_t<ValueSpaceFrom>;
-    using from_unit_type  = UnitFrom;
-    using from_type       = physical_value<ValueSpaceFrom, from_unit_type, BasisFrom, OriginFrom, ValidatorFrom>;
-    using to_unit_type    = UnitTo;
-    using to_type         = physical_value<ValueSpaceTo, to_unit_type, BasisTo, OriginTo, ValidatorTo>;
 
     [[nodiscard]]    
     to_type operator()(const from_type& pv)
+      requires (!both_vector_spaces) && std::convertible_to<UnitFrom, translation<UnitTo, UnitFrom::displacement>>
     {
       return {
         utilities::to_array(
@@ -1411,37 +1390,14 @@ namespace sequoia::maths
         to_unit_type{}
       };
     }
-  };
 
-  template<std::floating_point Rep, class Arena>
-  struct coordinate_transform<
-    physical_value<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::kelvin_t>,
-    physical_value<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::celsius_t>
-  >
-  {
-    using absolute_delta_temperature_type = physical_value<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::kelvin_t>;
-    using celsius_delta_temperature_type  = physical_value<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::celsius_t>;
-    
-    [[nodiscard]]
-    constexpr celsius_delta_temperature_type operator()(const absolute_delta_temperature_type& absDeltaTemp) noexcept
-    {
-      return {absDeltaTemp.value(), si::units::celsius};
-    }
-  };
+    // TO DO: composed translations
 
-  template<std::floating_point Rep, class Arena>
-  struct coordinate_transform<
-    physical_value<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::celsius_t>,
-    physical_value<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::kelvin_t>    
-  >
-  {
-    using absolute_delta_temperature_type = physical_value<associated_displacement_space<absolute_temperature_space<Rep, Arena>>, si::units::kelvin_t>;
-    using celsius_delta_temperature_type  = physical_value<associated_displacement_space<temperature_space<Rep, Arena>>, si::units::celsius_t>;
-    
-    [[nodiscard]]
-    constexpr absolute_delta_temperature_type operator()(const celsius_delta_temperature_type& celsiusDeltaTemp) noexcept
+    [[nodiscard]]    
+    to_type operator()(const from_type& pv)
+      requires both_vector_spaces
     {
-      return {celsiusDeltaTemp.value(), si::units::kelvin};
+      return {pv.values(), to_unit_type{}};
     }
   };
 }
