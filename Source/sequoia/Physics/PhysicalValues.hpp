@@ -1231,95 +1231,60 @@ namespace sequoia::maths
   using namespace physics;
 
   template<
-    convex_space ValueSpace,
+    convex_space ValueSpaceFrom,
     physical_unit UnitFrom,
-    basis_for<free_module_type_of_t<ValueSpace>> Basis,
-    class Origin,
-    validator_for<ValueSpace> Validator,
-    physical_unit UnitTo
+    basis_for<free_module_type_of_t<ValueSpaceFrom>> BasisFrom,
+    class OriginFrom,
+    validator_for<ValueSpaceFrom> ValidatorFrom,
+    convex_space ValueSpaceTo,
+    basis_for<free_module_type_of_t<ValueSpaceTo>> BasisTo,
+    physical_unit UnitTo,
+    class OriginTo,
+    validator_for<ValueSpaceTo> ValidatorTo
   >
-    requires    scale_invariant_validator_v<Validator>
-             && has_ratio_type_v<UnitTo>
-             && std::convertible_to<UnitTo, dilatation<UnitFrom, typename UnitTo::ratio_type>>
+  // TO DO: Make sfinae friendly
+  /*requires    scale_invariant_validator_v<ValidatorFrom> && scale_invariant_validator_v<ValidatorTo>
+            && (   (has_ratio_type_v<UnitTo>   && std::convertible_to<UnitTo, dilatation<UnitFrom, typename UnitTo::ratio_type>>)
+            || (has_ratio_type_v<UnitFrom> && std::convertible_to<UnitFrom, dilatation<UnitTo, typename UnitFrom::ratio_type>>))*/
+  
   struct coordinate_transform<
-    physical_value<ValueSpace, UnitFrom, Basis, Origin, Validator>,
-    physical_value<ValueSpace, UnitTo,   Basis, Origin, Validator>
+    physical_value<ValueSpaceFrom, UnitFrom, BasisFrom, OriginFrom, ValidatorFrom>,
+    physical_value<ValueSpaceTo,   UnitTo,   BasisTo,   OriginTo,   ValidatorTo>
   >
   {
-    using value_type      = commutative_ring_type_of_t<ValueSpace>;
+    using value_type      = commutative_ring_type_of_t<ValueSpaceFrom>;
     using from_unit_type  = UnitFrom;
-    using from_type       = physical_value<ValueSpace, from_unit_type, Basis, Origin, Validator>;
+    using from_type       = physical_value<ValueSpaceFrom, from_unit_type, BasisFrom, OriginFrom, ValidatorFrom>;
     using to_unit_type    = UnitTo;
-    using to_type         = physical_value<ValueSpace, to_unit_type, Basis, Origin>;
-    using ratio_type      = typename UnitTo::ratio_type;
+    using to_type         = physical_value<ValueSpaceTo, to_unit_type, BasisTo, OriginTo, ValidatorTo>;
     
     [[nodiscard]]    
     to_type operator()(const from_type& pv)
+      requires has_ratio_type_v<UnitTo> && (!has_ratio_type_v<UnitFrom>)
     {
-      // TO DO: better proection against overflow/underflow
+      // TO DO: better protection against overflow/underflow
+      using ratio_type = typename UnitTo::ratio_type;
       return{
         utilities::to_array(pv.values(), [](value_type v) -> value_type { return static_cast<value_type>(v * ratio_type::den / ratio_type::num); }),
         to_unit_type{}
       };
     }
-  };
 
-  template<
-    convex_space ValueSpace,
-    physical_unit UnitFrom,
-    basis_for<free_module_type_of_t<ValueSpace>> Basis,
-    class Origin,
-    validator_for<ValueSpace> Validator,
-    physical_unit UnitTo
-  >
-    requires    scale_invariant_validator_v<Validator>
-             && has_ratio_type_v<UnitFrom>
-             && std::convertible_to<UnitFrom, dilatation<UnitTo, typename UnitFrom::ratio_type>>
-  struct coordinate_transform<
-    physical_value<ValueSpace, UnitFrom, Basis, Origin, Validator>,
-    physical_value<ValueSpace, UnitTo,   Basis, Origin, Validator>
-  >
-  {
-    using value_type      = commutative_ring_type_of_t<ValueSpace>;
-    using from_unit_type  = UnitFrom;
-    using from_type       = physical_value<ValueSpace, from_unit_type, Basis, Origin, Validator>;
-    using to_unit_type    = UnitTo;
-    using to_type         = physical_value<ValueSpace, to_unit_type, Basis, Origin>;
-    using ratio_type      = typename UnitFrom::ratio_type;
-    
     [[nodiscard]]    
     to_type operator()(const from_type& pv)
+      requires (!has_ratio_type_v<UnitTo>) && has_ratio_type_v<UnitFrom>
     {
       // TO DO: better proection against overflow/underflow
+      using ratio_type = typename UnitFrom::ratio_type;
       return {
         utilities::to_array(pv.values(), [](value_type v) -> value_type { return static_cast<value_type>(v * ratio_type::num / ratio_type::den); }),
         to_unit_type{}
       };
     }
-  };
-
-  template<
-    convex_space ValueSpace,
-    physical_unit UnitFrom,
-    basis_for<free_module_type_of_t<ValueSpace>> Basis,
-    class Origin,
-    validator_for<ValueSpace> Validator,
-    physical_unit UnitTo
-  >
-    requires scale_invariant_validator_v<Validator> && has_ratio_type_v<UnitFrom> && has_ratio_type_v<UnitTo>
-  struct coordinate_transform<
-    physical_value<ValueSpace, UnitFrom, Basis, Origin, Validator>,
-    physical_value<ValueSpace, UnitTo,   Basis, Origin, Validator>
-  >
-  {
-    using value_type      = commutative_ring_type_of_t<ValueSpace>;
-    using from_unit_type  = UnitFrom;
-    using from_type       = physical_value<ValueSpace, from_unit_type, Basis, Origin, Validator>;
-    using to_unit_type    = UnitTo;
-    using to_type         = physical_value<ValueSpace, to_unit_type, Basis, Origin>;
 
     [[nodiscard]]    
     to_type operator()(const from_type& pv)
+      requires has_ratio_type_v<UnitTo> && has_ratio_type_v<UnitFrom>
     {
       // TO DO: better proection against overflow/underflow
       return {
@@ -1354,8 +1319,9 @@ namespace sequoia::maths
     basis_for<free_module_type_of_t<ValueSpaceTo>> BasisTo,
     physical_unit UnitTo,
     class OriginTo,
-    validator_for<ValueSpaceFrom> ValidatorTo
+    validator_for<ValueSpaceTo> ValidatorTo
   >
+  // TO DO: Make sfinae friendly
     requires (   (has_displacement_value_v<UnitTo>   && std::convertible_to<UnitTo, translation<UnitFrom, UnitTo::displacement>>)
               || (has_displacement_value_v<UnitFrom> && std::convertible_to<UnitFrom, translation<UnitTo, UnitFrom::displacement>>))
   struct coordinate_transform<
