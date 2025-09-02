@@ -952,6 +952,11 @@ namespace sequoia::physics
       requires is_ratio_v<typename T::ratio_type>;
     }
   };
+
+  template<class T>
+  inline constexpr bool has_displacement_value_v{
+    requires { T::displacement; }
+  };
   
   template<class Unit>
   using milli = dilatation<Unit, std::milli>;
@@ -1301,7 +1306,7 @@ namespace sequoia::maths
     validator_for<ValueSpace> Validator,
     physical_unit UnitTo
   >
-  requires scale_invariant_validator_v<Validator> && has_ratio_type_v<UnitFrom> && has_ratio_type_v<UnitTo>
+    requires scale_invariant_validator_v<Validator> && has_ratio_type_v<UnitFrom> && has_ratio_type_v<UnitTo>
   struct coordinate_transform<
     physical_value<ValueSpace, UnitFrom, Basis, Origin, Validator>,
     physical_value<ValueSpace, UnitTo,   Basis, Origin, Validator>
@@ -1351,8 +1356,8 @@ namespace sequoia::maths
     class OriginTo,
     validator_for<ValueSpaceFrom> ValidatorTo
   >
-    requires (   std::convertible_to<UnitTo, translation<UnitFrom, UnitTo::displacement>>
-              || std::convertible_to<UnitFrom, translation<UnitTo, UnitFrom::displacement>>)
+    requires (   (has_displacement_value_v<UnitTo>   && std::convertible_to<UnitTo, translation<UnitFrom, UnitTo::displacement>>)
+              || (has_displacement_value_v<UnitFrom> && std::convertible_to<UnitFrom, translation<UnitTo, UnitFrom::displacement>>))
   struct coordinate_transform<
     physical_value<ValueSpaceFrom, UnitFrom, BasisFrom, OriginFrom, ValidatorFrom>,
     physical_value<ValueSpaceTo,   UnitTo,   BasisTo,   OriginTo,   ValidatorTo>
