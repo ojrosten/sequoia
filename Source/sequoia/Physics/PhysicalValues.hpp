@@ -957,6 +957,14 @@ namespace sequoia::physics
   inline constexpr bool has_displacement_value_v{
     requires { T::displacement; }
   };
+
+  template<physical_unit From, physical_unit To>
+  inline constexpr bool is_translatable_v{
+       has_displacement_value_v<From>
+    && requires {
+         requires std::convertible_to<From, translation<To, From::displacement>>;
+       }
+  };
   
   template<class Unit>
   using milli = dilatation<Unit, std::milli>;
@@ -1321,9 +1329,7 @@ namespace sequoia::maths
     class OriginTo,
     validator_for<ValueSpaceTo> ValidatorTo
   >
-  // TO DO: Make sfinae friendly
-    requires (   (has_displacement_value_v<UnitTo>   && std::convertible_to<UnitTo, translation<UnitFrom, UnitTo::displacement>>)
-              || (has_displacement_value_v<UnitFrom> && std::convertible_to<UnitFrom, translation<UnitTo, UnitFrom::displacement>>))
+    requires is_translatable_v<UnitFrom, UnitTo> || is_translatable_v<UnitTo, UnitFrom>
   struct coordinate_transform<
     physical_value<ValueSpaceFrom, UnitFrom, BasisFrom, OriginFrom, ValidatorFrom>,
     physical_value<ValueSpaceTo,   UnitTo,   BasisTo,   OriginTo,   ValidatorTo>
@@ -1338,20 +1344,7 @@ namespace sequoia::maths
 
     [[nodiscard]]    
     to_type operator()(const from_type& pv)
-      requires (!both_vector_spaces) && std::convertible_to<UnitTo, translation<UnitFrom, UnitTo::displacement>>
-    {
-      return {
-        utilities::to_array(
-          pv.values(),
-          [](value_type v) -> value_type { return static_cast<value_type>(v + UnitTo::displacement); }
-        ),
-        to_unit_type{}
-      };
-    }
-
-    [[nodiscard]]    
-    to_type operator()(const from_type& pv)
-      requires (!both_vector_spaces) && std::convertible_to<UnitFrom, translation<UnitTo, UnitFrom::displacement>>
+      requires (!both_vector_spaces) && is_translatable_v<UnitFrom, UnitTo>
     {
       return {
         utilities::to_array(
@@ -1361,6 +1354,19 @@ namespace sequoia::maths
         to_unit_type{}
       };
     }
+
+    [[nodiscard]]    
+    to_type operator()(const from_type& pv)
+      requires (!both_vector_spaces) && is_translatable_v<UnitTo, UnitFrom>
+    {
+      return {
+        utilities::to_array(
+          pv.values(),
+          [](value_type v) -> value_type { return static_cast<value_type>(v + UnitTo::displacement); }
+        ),
+        to_unit_type{}
+      };
+    }    
 
     // TO DO: composed translations
 
