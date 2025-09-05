@@ -909,6 +909,7 @@ namespace sequoia::physics
     requires scale_invariant_validator_v<typename U::validator_type>
   struct dilatation<U, ratio<Num, Den>>
   {
+    using unit_type      = U;
     using validator_type = typename U::validator_type;
     using ratio_type     = ratio<Num, Den>;
   };
@@ -917,6 +918,7 @@ namespace sequoia::physics
     requires scale_invariant_validator_v<typename U::validator_type>
   struct dilatation<U, std::ratio<Num, Den>>
   {
+    using unit_type      = U;
     using validator_type = typename U::validator_type;
     using ratio_type     = std::ratio<Num, Den>;
   };
@@ -959,18 +961,32 @@ namespace sequoia::physics
   };
 
   template<physical_unit From, physical_unit To>
-  inline constexpr bool is_translatable_v{
+  inline constexpr bool defines_translation_v{
        has_displacement_value_v<From>
     && requires {
          requires std::convertible_to<From, translation<To, From::displacement>>;
        }
   };
+
+  template<physical_unit From, physical_unit To>
+  inline constexpr bool defines_dilatation_v{
+       has_ratio_type_v<From>
+    && requires {
+         requires std::convertible_to<From, dilatation<To, typename From::ratio_type>>;
+       }
+  };
+
+  template<class Unit>
+  using micro = dilatation<Unit, std::micro>;
   
   template<class Unit>
   using milli = dilatation<Unit, std::milli>;
 
   template<class Unit>
   using kilo = dilatation<Unit, std::kilo>;
+
+  template<class Unit>
+  using mega = dilatation<Unit, std::mega>;
   
   namespace si
   {
@@ -1050,11 +1066,15 @@ namespace sequoia::physics
 
       inline constexpr celsius_t celsius{};
 
-      using gram_t = milli<si::units::kilogram_t>;
-      using tonne_t = kilo<si::units::kilogram_t>;
+      using milligram_t = micro<si::units::kilogram_t>;
+      using gram_t      = milli<si::units::kilogram_t>;
+      using tonne_t     = kilo<si::units::kilogram_t>;
+      using kilotonne_t = mega<si::units::kilogram_t>;
 
-      inline constexpr gram_t  gram{};
-      inline constexpr tonne_t tonne{};
+      inline constexpr milligram_t milligram{};
+      inline constexpr gram_t      gram{};
+      inline constexpr tonne_t     tonne{};
+      inline constexpr kilotonne_t kilotonne{};
     }
 
     template<std::floating_point T, class Arena=implicit_common_arena>
@@ -1250,10 +1270,8 @@ namespace sequoia::maths
     class OriginTo,
     validator_for<ValueSpaceTo> ValidatorTo
   >
-  // TO DO: Make sfinae friendly
-  /*requires    scale_invariant_validator_v<ValidatorFrom> && scale_invariant_validator_v<ValidatorTo>
-            && (   (has_ratio_type_v<UnitTo>   && std::convertible_to<UnitTo, dilatation<UnitFrom, typename UnitTo::ratio_type>>)
-            || (has_ratio_type_v<UnitFrom> && std::convertible_to<UnitFrom, dilatation<UnitTo, typename UnitFrom::ratio_type>>))*/
+  //requires scale_invariant_validator_v<ValidatorFrom> && scale_invariant_validator_v<ValidatorTo> // TO DO: overconstrained?
+  //&& (defines_dilatation_v<UnitFrom, UnitTo> || defines_dilatation_v<UnitTo, UnitFrom>)
   
   struct coordinate_transform<
     physical_value<ValueSpaceFrom, UnitFrom, BasisFrom, OriginFrom, ValidatorFrom>,
@@ -1265,10 +1283,24 @@ namespace sequoia::maths
     using from_type       = physical_value<ValueSpaceFrom, from_unit_type, BasisFrom, OriginFrom, ValidatorFrom>;
     using to_unit_type    = UnitTo;
     using to_type         = physical_value<ValueSpaceTo, to_unit_type, BasisTo, OriginTo, ValidatorTo>;
-    
+
+    [[nodiscard]]    
+    to_type operator()(const from_type& pv)
+      requires has_ratio_type_v<UnitFrom> && (!has_ratio_type_v<UnitTo>)
+    //requires defines_dilatation_v<UnitTo, UnitFrom> && (!defines_dilatation_v<UnitFrom, UnitTo>)
+    {
+      // TO DO: better protection against overflow/underflow
+      using ratio_type = typename UnitFrom::ratio_type;
+      return {
+        utilities::to_array(pv.values(), [](value_type v) -> value_type { return static_cast<value_type>(v * ratio_type::num / ratio_type::den); }),
+        to_unit_type{}
+      };
+    }
+
     [[nodiscard]]    
     to_type operator()(const from_type& pv)
       requires has_ratio_type_v<UnitTo> && (!has_ratio_type_v<UnitFrom>)
+    //requires defines_dilatation_v<UnitFrom, UnitTo>
     {
       // TO DO: better protection against overflow/underflow
       using ratio_type = typename UnitTo::ratio_type;
@@ -1280,21 +1312,10 @@ namespace sequoia::maths
 
     [[nodiscard]]    
     to_type operator()(const from_type& pv)
-      requires (!has_ratio_type_v<UnitTo>) && has_ratio_type_v<UnitFrom>
+      requires has_ratio_type_v<UnitFrom> && has_ratio_type_v<UnitTo> 
+    //requires defines_dilatation_v<UnitFrom, UnitTo> && defines_dilatation_v<UnitTo, UnitFrom>
     {
-      // TO DO: better proection against overflow/underflow
-      using ratio_type = typename UnitFrom::ratio_type;
-      return {
-        utilities::to_array(pv.values(), [](value_type v) -> value_type { return static_cast<value_type>(v * ratio_type::num / ratio_type::den); }),
-        to_unit_type{}
-      };
-    }
-
-    [[nodiscard]]    
-    to_type operator()(const from_type& pv)
-      requires has_ratio_type_v<UnitTo> && has_ratio_type_v<UnitFrom>
-    {
-      // TO DO: better proection against overflow/underflow
+      // TO DO: better protection against overflow/underflow
       return {
         utilities::to_array(
           pv.values(),
@@ -1329,7 +1350,7 @@ namespace sequoia::maths
     class OriginTo,
     validator_for<ValueSpaceTo> ValidatorTo
   >
-    requires is_translatable_v<UnitFrom, UnitTo> || is_translatable_v<UnitTo, UnitFrom>
+    requires defines_translation_v<UnitFrom, UnitTo> || defines_translation_v<UnitTo, UnitFrom>
   struct coordinate_transform<
     physical_value<ValueSpaceFrom, UnitFrom, BasisFrom, OriginFrom, ValidatorFrom>,
     physical_value<ValueSpaceTo,   UnitTo,   BasisTo,   OriginTo,   ValidatorTo>
@@ -1344,7 +1365,7 @@ namespace sequoia::maths
 
     [[nodiscard]]    
     to_type operator()(const from_type& pv)
-      requires (!both_vector_spaces) && is_translatable_v<UnitFrom, UnitTo>
+      requires (!both_vector_spaces) && defines_translation_v<UnitFrom, UnitTo>
     {
       return {
         utilities::to_array(
@@ -1357,7 +1378,7 @@ namespace sequoia::maths
 
     [[nodiscard]]    
     to_type operator()(const from_type& pv)
-      requires (!both_vector_spaces) && is_translatable_v<UnitTo, UnitFrom>
+      requires (!both_vector_spaces) && defines_translation_v<UnitTo, UnitFrom>
     {
       return {
         utilities::to_array(
