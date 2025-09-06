@@ -1404,7 +1404,8 @@ namespace sequoia::maths
     validator_for<ValueSpaceTo> ValidatorTo
   >
     requires std::same_as<root_unit_t<UnitFrom>, root_unit_t<UnitTo>>
-  // && scale_invariant_validator_v<ValidatorFrom> && scale_invariant_validator_v<ValidatorTo> // TO DO: overconstrained?
+          && scale_invariant_validator_v<ValidatorFrom>
+          && scale_invariant_validator_v<ValidatorTo>
   
   struct coordinate_transform<
     physical_value<ValueSpaceFrom, UnitFrom, BasisFrom, OriginFrom, ValidatorFrom>,
