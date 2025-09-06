@@ -58,6 +58,7 @@ namespace sequoia::testing
 
     test_conversions<float>();
     test_conversions<double>();
+    test_conversions<long double>();
   }
 
   template<class Quantity>
