@@ -41,16 +41,6 @@ namespace sequoia::testing
 {
   using namespace physics;
 
-  static_assert(!std::same_as<ratio<1, 1>, ratio<1L, 1>>, "This is an unfortunate consequence of ratio<intmax_t, intmax_t> being a specialization");
-  static_assert(std::same_as<root_unit_t<alternative::gradian_t>, si::units::radian_t>);
-  static_assert(std::same_as<root_unit_ratio_t<alternative::gradian_t>, ratio<std::numbers::pi_v<long double>, 200L>>);
-  static_assert(std::same_as<root_unit_t<non_si::units::gradian_t>, si::units::radian_t>);
-  static_assert(std::same_as<root_unit_ratio_t<non_si::units::gradian_t>, ratio<std::numbers::pi_v<long double>, 200L>>);
-  static_assert(std::same_as<root_unit_t<milli<si::units::radian_t>>, si::units::radian_t>);
-  static_assert(std::same_as<root_unit_ratio_t<milli<si::units::radian_t>>, std::ratio<1, 1000>>);
-  static_assert(std::same_as<root_unit_t<milli<milli<si::units::radian_t>>>, si::units::radian_t>);
-  static_assert(std::same_as<root_unit_ratio_t<milli<milli<si::units::radian_t>>>, std::ratio<1, 1'000'000>>);
-
   [[nodiscard]]
   std::filesystem::path vector_physical_value_test::source_file() const
   {
@@ -65,6 +55,9 @@ namespace sequoia::testing
 
     test_trig<float>();
     test_trig<double>();
+
+    test_conversions<float>();
+    test_conversions<double>();
   }
 
   template<class Quantity>
@@ -152,6 +145,24 @@ namespace sequoia::testing
 
     check(equality, "", atan(T{}), angle_t{});
     check(equality, "", atan(T{1}), angle_t{pi / 4, radian});
+  }
+
+  template<std::floating_point T>
+  void vector_physical_value_test::test_conversions()
+  {
+    STATIC_CHECK(!std::same_as<ratio<1, 1>, ratio<1L, 1>>, "This is an unfortunate consequence of ratio<intmax_t, intmax_t> being a specialization");
+    STATIC_CHECK(std::same_as<root_unit_t<alternative::gradian_t>, si::units::radian_t>);
+    STATIC_CHECK(std::same_as<root_unit_ratio_t<alternative::gradian_t>, ratio<std::numbers::pi_v<long double>, 200L>>);
+    STATIC_CHECK(std::same_as<root_unit_t<non_si::units::gradian_t>, si::units::radian_t>);
+    STATIC_CHECK(std::same_as<root_unit_ratio_t<non_si::units::gradian_t>, ratio<std::numbers::pi_v<long double>, 200L>>);
+    STATIC_CHECK(std::same_as<root_unit_t<milli<si::units::radian_t>>, si::units::radian_t>);
+    STATIC_CHECK(std::same_as<root_unit_ratio_t<milli<si::units::radian_t>>, std::ratio<1, 1000>>);
+    STATIC_CHECK(std::same_as<root_unit_t<milli<milli<si::units::radian_t>>>, si::units::radian_t>);
+    STATIC_CHECK(std::same_as<root_unit_ratio_t<milli<milli<si::units::radian_t>>>, std::ratio<1, 1'000'000>>);
+
+    using angle_t = si::angle<T>;
+    using namespace si::units;
+    constexpr auto pi{std::numbers::pi_v<T>};
 
     check(
       equality,

@@ -28,5 +28,8 @@ namespace sequoia::testing
 
     template<std::floating_point T>
     void test_trig();
+
+    template<std::floating_point T>
+    void test_conversions();
   };
 }
