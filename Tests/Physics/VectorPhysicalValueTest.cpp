@@ -15,16 +15,41 @@
 
 namespace sequoia::testing
 {
-  using namespace physics;
-
   namespace alternative
   {
-    struct gradian_t : dilatation<non_si::units::degree_t, ratio<9, 10>>
+    struct gradian_t : maths::dilatation<physics::non_si::units::degree_t, std::ratio<9, 10>>
     {
       using validator_type = std::identity;
       constexpr static std::string_view symbol{"gon"};
     };
+
+    constexpr gradian_t gradian{};
   }
+}
+
+namespace sequoia::physics
+{
+  // TO DO: there should be no need for this: deduce it from radians
+  template<std::floating_point T>
+  struct default_space<testing::alternative::gradian_t, T>
+  {
+    using type = angular_space<T, implicit_common_arena>;
+  };
+}
+
+namespace sequoia::testing
+{
+  using namespace physics;
+
+  static_assert(!std::same_as<ratio<1, 1>, ratio<1L, 1>>, "This is an unfortunate consequence of ratio<intmax_t, intmax_t> being a specialization");
+  static_assert(std::same_as<root_unit_t<alternative::gradian_t>, si::units::radian_t>);
+  static_assert(std::same_as<root_unit_ratio_t<alternative::gradian_t>, ratio<std::numbers::pi_v<long double>, 200L>>);
+  static_assert(std::same_as<root_unit_t<non_si::units::gradian_t>, si::units::radian_t>);
+  static_assert(std::same_as<root_unit_ratio_t<non_si::units::gradian_t>, ratio<std::numbers::pi_v<long double>, 200L>>);
+  static_assert(std::same_as<root_unit_t<milli<si::units::radian_t>>, si::units::radian_t>);
+  static_assert(std::same_as<root_unit_ratio_t<milli<si::units::radian_t>>, std::ratio<1, 1000>>);
+  static_assert(std::same_as<root_unit_t<milli<milli<si::units::radian_t>>>, si::units::radian_t>);
+  static_assert(std::same_as<root_unit_ratio_t<milli<milli<si::units::radian_t>>>, std::ratio<1, 1'000'000>>);
 
   [[nodiscard]]
   std::filesystem::path vector_physical_value_test::source_file() const
@@ -182,6 +207,20 @@ namespace sequoia::testing
       "Gradians to Degrees (not exactly representable as floating-point)",
       physical_value{T(1.1), non_si::units::gradian}.convert_to(non_si::units::degree),
       physical_value{T(1.1 * 9 / 10), non_si::units::degree}
+    );
+
+    check(
+      equality,
+      "Degrees to alternative::gradian",
+      physical_value{T(360), non_si::units::degree}.convert_to(alternative::gradian),
+      physical_value{T(400), alternative::gradian}  
+    );
+
+    check(
+      equality,
+      "alternative::Gradian to Degrees",
+      physical_value{T(400), alternative::gradian}.convert_to(non_si::units::degree),
+      physical_value{T(360), non_si::units::degree}  
     );
   }
 }

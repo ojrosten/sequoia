@@ -893,14 +893,109 @@ namespace sequoia::physics
 
   template<class Validator>
   inline constexpr bool scale_invariant_validator_v{scale_invariant_validator<Validator>::value};
- 
+
   template<auto Num, auto Den>
-    requires std::is_arithmetic_v<decltype(Num)> && std::is_arithmetic_v<decltype(Den)>
-  struct ratio
+  struct ratio;
+
+  template<long double Num, long double Den>
+  struct ratio<Num, Den>
   {
     constexpr static auto num{Num};
     constexpr static auto den{Den};
   };
+
+  template<long double Num, std::intmax_t Den>
+  struct ratio<Num, Den>
+  {
+    constexpr static auto num{Num};
+    constexpr static auto den{Den};
+  };
+
+  template<std::intmax_t Num, long double Den>
+  struct ratio<Num, Den>
+  {
+    constexpr static auto num{Num};
+    constexpr static auto den{Den};
+  };
+
+  template<std::intmax_t Num, intmax_t Den>
+  struct ratio<Num, Den> : std::ratio<Num, Den>
+  {
+  };
+
+  template<class>
+  struct reciprocal;
+
+  template<class T>
+  using reciprocal_t = reciprocal<T>::type;
+
+  template<auto Num, auto Den>
+  struct reciprocal<ratio<Num, Den>>
+  {
+    using type = ratio<Den, Num>;
+  };
+
+  template<auto Num, auto Den>
+  struct reciprocal<std::ratio<Num, Den>>
+  {
+    using type = std::ratio<Den, Num>;
+  };
+  
+
+  template<class...>
+  struct product;
+
+  template<class T, class U>
+  using product_t = product<T, U>::type;
+
+  template<auto Num1, auto Den1>
+  struct product<ratio<Num1, Den1>>
+  {
+    using type = ratio<Num1, Den1>;
+  };
+
+  template<std::intmax_t Num1, std::intmax_t Den1>
+  struct product<std::ratio<Num1, Den1>>
+  {
+    using type = std::ratio<Num1, Den1>;
+  };
+
+  template<auto Num1, auto Den1, auto Num2, auto Den2>
+  struct product<ratio<Num1, Den1>, ratio<Num2, Den2>>
+  {
+    using type = ratio<Num1 * Num2, Den1 * Den2>;
+  };
+
+  template<auto Num1, auto Den1, std::intmax_t Num2, std::intmax_t Den2>
+    requires(std::integral<decltype(Den1)>)
+  struct product<ratio<Num1, Den1>, std::ratio<Num2, Den2>>
+  {
+    using reduced_ratio_type = std::ratio<Num2, Den1 * Den2>;
+    using type = ratio<Num1 * reduced_ratio_type::num, reduced_ratio_type::den>;
+  };
+
+  template<intmax_t Num1, intmax_t Den1, auto Num2, auto Den2>
+    requires(std::integral<decltype(Den2)>)
+  struct product<std::ratio<Num1, Den1>, ratio<Num2, Den2>>
+  {
+    using reduced_ratio_type = std::ratio<Num1, Den1 * Den2>;
+    using type = ratio<Num2 * reduced_ratio_type::num, reduced_ratio_type::den>;
+  };
+
+  template<auto Num1, auto Den1, std::intmax_t Num2, std::intmax_t Den2>
+  struct product<ratio<Num1, Den1>, std::ratio<Num2, Den2>> : product<ratio<Num1, Den1>, ratio<Num2, Den2>>
+  {};
+
+  template<std::intmax_t Num1, std::intmax_t Den1, auto Num2, auto Den2>
+  struct product<std::ratio<Num1, Den1>, ratio<Num2, Den2>> : product<ratio<Num1, Den1>, ratio<Num2, Den2>>
+  {};
+
+  template<std::intmax_t Num1, std::intmax_t Den1, std::intmax_t Num2, std::intmax_t Den2>
+  struct product<std::ratio<Num1, Den1>, std::ratio<Num2, Den2>>
+  {
+    using type = std::ratio_multiply<std::ratio<Num1, Den1>, std::ratio<Num2, Den2>>;
+  };
+
 
   template<class U, class T>
   struct dilatation;
@@ -909,19 +1004,56 @@ namespace sequoia::physics
     requires scale_invariant_validator_v<typename U::validator_type>
   struct dilatation<U, ratio<Num, Den>>
   {
-    using unit_type      = U;
-    using validator_type = typename U::validator_type;
-    using ratio_type     = ratio<Num, Den>;
+    using with_respect_to_type = U;
+    using validator_type       = typename U::validator_type;
+    using ratio_type           = ratio<Num, Den>;
   };
 
   template<physical_unit U, std::intmax_t Num, std::intmax_t Den>
     requires scale_invariant_validator_v<typename U::validator_type>
   struct dilatation<U, std::ratio<Num, Den>>
   {
-    using unit_type      = U;
-    using validator_type = typename U::validator_type;
-    using ratio_type     = std::ratio<Num, Den>;
+    using with_respect_to_type = U;
+    using validator_type       = typename U::validator_type;
+    using ratio_type           = std::ratio<Num, Den>;
   };
+
+  template<physical_unit U>
+  inline constexpr bool derives_from_another_unit_v{
+    requires {
+      typename U::with_respect_to_type;
+      requires physical_unit<typename U::with_respect_to_type>;
+    }
+  };
+
+  template<physical_unit U>
+  struct root_unit
+  {
+    using ratio_type = ratio<1, 1>;
+    using type = U;
+  };
+
+  template<physical_unit U>
+  using root_unit_t = root_unit<U>::type;
+
+  template<physical_unit U>
+  using root_unit_ratio_t = root_unit<U>::ratio_type;
+
+  template<physical_unit U>
+    requires derives_from_another_unit_v<U> && (!derives_from_another_unit_v<typename U::with_respect_to_type>)
+  struct root_unit<U> : root_unit<typename U::with_respect_to_type>
+  {
+    using ratio_type = U::ratio_type;
+  };
+
+  template<physical_unit U>
+    requires derives_from_another_unit_v<U> && derives_from_another_unit_v<typename U::with_respect_to_type>
+  struct root_unit<U> : root_unit<typename U::with_respect_to_type>
+  {
+    using wrt_type = typename U::with_respect_to_type;
+    using ratio_type = product_t<typename U::ratio_type, typename root_unit<wrt_type>::ratio_type>;
+  };
+  
 
   template<physical_unit U, auto Displacement>
     requires arithmetic<std::remove_const_t<decltype(Displacement)>>
@@ -976,16 +1108,16 @@ namespace sequoia::physics
        }
   };
 
-  template<class Unit>
+  template<physical_unit Unit>
   using micro = dilatation<Unit, std::micro>;
   
-  template<class Unit>
+  template<physical_unit Unit>
   using milli = dilatation<Unit, std::milli>;
 
-  template<class Unit>
+  template<physical_unit Unit>
   using kilo = dilatation<Unit, std::kilo>;
 
-  template<class Unit>
+  template<physical_unit Unit>
   using mega = dilatation<Unit, std::mega>;
   
   namespace si
@@ -1125,13 +1257,13 @@ namespace sequoia::physics
   {
     namespace units
     {
-      struct degree_t : dilatation<si::units::radian_t, ratio<std::numbers::pi_v<long double>, 180>>
+      struct degree_t : dilatation<si::units::radian_t, ratio<std::numbers::pi_v<long double>, intmax_t{180}>>
       {
         using validator_type = std::identity;
         constexpr static std::string_view symbol{"deg"};
       };
 
-      struct gradian_t : dilatation<si::units::radian_t, ratio<std::numbers::pi_v<long double>, 200>>
+      struct gradian_t : dilatation<si::units::radian_t, ratio<std::numbers::pi_v<long double>, intmax_t{200}>>
       {
         using validator_type = std::identity;
         constexpr static std::string_view symbol{"gon"};
@@ -1176,6 +1308,7 @@ namespace sequoia::physics
     using type = angular_space<T, implicit_common_arena>;
   };
 
+  // TO DO: deduce this from radians
   template<std::floating_point T>
   struct default_space<non_si::units::degree_t, T>
   {
@@ -1270,8 +1403,8 @@ namespace sequoia::maths
     class OriginTo,
     validator_for<ValueSpaceTo> ValidatorTo
   >
-  //requires scale_invariant_validator_v<ValidatorFrom> && scale_invariant_validator_v<ValidatorTo> // TO DO: overconstrained?
-  //&& (defines_dilatation_v<UnitFrom, UnitTo> || defines_dilatation_v<UnitTo, UnitFrom>)
+    requires std::same_as<root_unit_t<UnitFrom>, root_unit_t<UnitTo>>
+  // && scale_invariant_validator_v<ValidatorFrom> && scale_invariant_validator_v<ValidatorTo> // TO DO: overconstrained?
   
   struct coordinate_transform<
     physical_value<ValueSpaceFrom, UnitFrom, BasisFrom, OriginFrom, ValidatorFrom>,
@@ -1283,58 +1416,15 @@ namespace sequoia::maths
     using from_type       = physical_value<ValueSpaceFrom, from_unit_type, BasisFrom, OriginFrom, ValidatorFrom>;
     using to_unit_type    = UnitTo;
     using to_type         = physical_value<ValueSpaceTo, to_unit_type, BasisTo, OriginTo, ValidatorTo>;
+    using ratio_type      = product_t<root_unit_ratio_t<UnitFrom>, reciprocal_t<root_unit_ratio_t<UnitTo>>>;
 
     [[nodiscard]]    
     to_type operator()(const from_type& pv)
-      requires has_ratio_type_v<UnitFrom> && (!has_ratio_type_v<UnitTo>)
-    //requires defines_dilatation_v<UnitTo, UnitFrom> && (!defines_dilatation_v<UnitFrom, UnitTo>)
     {
-      // TO DO: better protection against overflow/underflow
-      using ratio_type = typename UnitFrom::ratio_type;
       return {
         utilities::to_array(pv.values(), [](value_type v) -> value_type { return static_cast<value_type>(v * ratio_type::num / ratio_type::den); }),
         to_unit_type{}
       };
-    }
-
-    [[nodiscard]]    
-    to_type operator()(const from_type& pv)
-      requires has_ratio_type_v<UnitTo> && (!has_ratio_type_v<UnitFrom>)
-    //requires defines_dilatation_v<UnitFrom, UnitTo>
-    {
-      // TO DO: better protection against overflow/underflow
-      using ratio_type = typename UnitTo::ratio_type;
-      return{
-        utilities::to_array(pv.values(), [](value_type v) -> value_type { return static_cast<value_type>(v * ratio_type::den / ratio_type::num); }),
-        to_unit_type{}
-      };
-    }
-
-    [[nodiscard]]    
-    to_type operator()(const from_type& pv)
-      requires has_ratio_type_v<UnitFrom> && has_ratio_type_v<UnitTo> 
-    //requires defines_dilatation_v<UnitFrom, UnitTo> && defines_dilatation_v<UnitTo, UnitFrom>
-    {
-      // TO DO: better protection against overflow/underflow
-      return {
-        utilities::to_array(
-          pv.values(),
-          [](value_type v) -> value_type {
-            if constexpr(UnitFrom::ratio_type::num == UnitFrom::ratio_type::den)
-            {
-              return static_cast<value_type>(v * UnitTo::ratio_type::den / UnitTo::ratio_type::num);
-            }
-            else if constexpr(UnitTo::ratio_type::den == UnitTo::ratio_type::num)
-            {
-              return static_cast<value_type>(v * UnitFrom::ratio_type::num  / (UnitFrom::ratio_type::den));
-            }
-            else
-            {
-              return static_cast<value_type>(v * UnitFrom::ratio_type::num * UnitTo::ratio_type::den / (UnitFrom::ratio_type::den * UnitTo::ratio_type::num));
-            }
-          }
-        ),
-        to_unit_type{}};
     }
   };
 
