@@ -894,6 +894,7 @@ namespace sequoia::physics
   template<class Validator>
   inline constexpr bool scale_invariant_validator_v{scale_invariant_validator<Validator>::value};
 
+  //====== Temporary home for some (hacky) ratio stuff ======//
   template<auto Num, auto Den>
   struct ratio;
 
@@ -922,6 +923,21 @@ namespace sequoia::physics
   struct ratio<Num, Den> : std::ratio<Num, Den>
   {
   };
+
+  template<class T>
+  struct is_ratio : std::false_type {};
+
+  template<class T>
+  using is_ratio_t = is_ratio<T>::type;
+
+  template<class T>
+  inline constexpr bool is_ratio_v{is_ratio<T>::value};
+
+  template<std::intmax_t Num, std::intmax_t Den>
+  struct is_ratio<std::ratio<Num, Den>> : std::true_type {};
+
+  template<auto Num, auto Den>
+  struct is_ratio<ratio<Num, Den>> : std::true_type {};
 
   template<class>
   struct reciprocal;
@@ -996,6 +1012,7 @@ namespace sequoia::physics
     using type = std::ratio_multiply<std::ratio<Num1, Den1>, std::ratio<Num2, Den2>>;
   };
 
+  //====== End of temporary home for some (hacky) ratio stuff ======//
 
   template<class U, class T>
   struct dilatation;
@@ -1018,6 +1035,15 @@ namespace sequoia::physics
     using ratio_type           = std::ratio<Num, Den>;
   };
 
+  template<physical_unit U, auto Displacement>
+    requires arithmetic<std::remove_const_t<decltype(Displacement)>>
+  struct translation
+  {
+    using with_respect_to_type = U;
+    using displacement_type = std::remove_const_t<decltype(Displacement)>;
+    constexpr static auto displacement{Displacement};
+  };
+
   template<physical_unit U>
   inline constexpr bool derives_from_another_unit_v{
     requires {
@@ -1026,6 +1052,20 @@ namespace sequoia::physics
     }
   };
 
+  template<class T>
+  inline constexpr bool has_ratio_type_v{
+    requires {
+      typename T::ratio_type;
+      requires is_ratio_v<typename T::ratio_type>;
+    }
+  };
+  
+  template<class T>
+  inline constexpr bool has_displacement_value_v{
+    requires { T::displacement; }
+    // && arithmetic or span over arithmetic
+  };
+  
   template<physical_unit U>
   struct root_scale
   {
@@ -1040,56 +1080,50 @@ namespace sequoia::physics
   using root_scale_unit_t = root_scale<U>::unit_type;
 
   template<physical_unit U>
-    requires derives_from_another_unit_v<U> && (!derives_from_another_unit_v<typename U::with_respect_to_type>)
+    requires has_ratio_type_v<U> && derives_from_another_unit_v<U> && (!derives_from_another_unit_v<typename U::with_respect_to_type>)
   struct root_scale<U> : root_scale<typename U::with_respect_to_type>
   {
     using ratio_type = U::ratio_type;
   };
 
   template<physical_unit U>
-    requires derives_from_another_unit_v<U> && derives_from_another_unit_v<typename U::with_respect_to_type>
+    requires has_ratio_type_v<U> && derives_from_another_unit_v<U>
+          && has_ratio_type_v<typename U::with_respect_to_type> && derives_from_another_unit_v<typename U::with_respect_to_type>
   struct root_scale<U> : root_scale<typename U::with_respect_to_type>
   {
     using wrt_type = typename U::with_respect_to_type;
     using ratio_type = product_t<typename U::ratio_type, typename root_scale<wrt_type>::ratio_type>;
   };
-  
 
-  template<physical_unit U, auto Displacement>
-    requires arithmetic<std::remove_const_t<decltype(Displacement)>>
-  struct translation
+  template<physical_unit U>
+  struct root_translation
   {
-    using displacement_type = std::remove_const_t<decltype(Displacement)>;
-    constexpr static auto displacement{Displacement};
-  };
-  
-
-  template<class T>
-  struct is_ratio : std::false_type {};
-
-  template<class T>
-  using is_ratio_t = is_ratio<T>::type;
-
-  template<class T>
-  inline constexpr bool is_ratio_v{is_ratio<T>::value};
-
-  template<std::intmax_t Num, std::intmax_t Den>
-  struct is_ratio<std::ratio<Num, Den>> : std::true_type {};
-
-  template<auto Num, auto Den>
-  struct is_ratio<ratio<Num, Den>> : std::true_type {};
-
-  template<class T>
-  inline constexpr bool has_ratio_type_v{
-    requires {
-      typename T::ratio_type;
-      requires is_ratio_v<typename T::ratio_type>;
-    }
+    constexpr static int displacement{};
+    using unit_type = U;
   };
 
-  template<class T>
-  inline constexpr bool has_displacement_value_v{
-    requires { T::displacement; }
+  template<physical_unit U>
+  inline constexpr auto root_displacement_v = root_translation<U>::displacement;
+
+  template<physical_unit U>
+  using root_translation_unit_t = root_translation<U>::unit_type;
+
+  template<physical_unit U>
+    requires has_displacement_value_v<U> && derives_from_another_unit_v<U> && (!derives_from_another_unit_v<typename U::with_respect_to_type>)
+  struct root_translation<U> : root_translation<typename U::with_respect_to_type>
+  {
+    constexpr static auto displacement{U::displacement};
+  };
+
+  template<physical_unit U>
+    requires has_displacement_value_v<U>
+          && derives_from_another_unit_v<U>
+          && has_displacement_value_v<typename U::with_respect_to_type>
+          && derives_from_another_unit_v<typename U::with_respect_to_type>
+  struct root_translation<U> : root_translation<typename U::with_respect_to_type>
+  {
+    using wrt_type = typename U::with_respect_to_type;
+    constexpr static auto value{U::displacement + root_translation<wrt_type>::displacement};
   };
 
   template<physical_unit From, physical_unit To>
@@ -1167,9 +1201,9 @@ namespace sequoia::physics
       };
 
 
-      struct celsius_t : translation<kelvin_t, -273.15L>
+      struct celsius_t : translation<kelvin_t, 273.15L>
       {
-        using translation_type = translation<kelvin_t, -273.15L>;
+        using translation_type = translation<kelvin_t, 273.15L>;
         
         struct validator
         {
@@ -1177,7 +1211,7 @@ namespace sequoia::physics
           [[nodiscard]]
           constexpr T operator()(const T val) const
           {
-            if(val < static_cast<T>(translation_type::displacement))
+            if(val < static_cast<T>(-translation_type::displacement))
               throw std::domain_error{std::format("Value {} less than -273.15", val)};
 
             return val;
@@ -1404,8 +1438,9 @@ namespace sequoia::maths
     validator_for<ValueSpaceTo> ValidatorTo
   >
     requires std::same_as<root_scale_unit_t<UnitFrom>, root_scale_unit_t<UnitTo>>
-          && scale_invariant_validator_v<ValidatorFrom>
-          && scale_invariant_validator_v<ValidatorTo>
+  || std::same_as<root_translation_unit_t<UnitFrom>, root_translation_unit_t<UnitTo>>
+  //&& scale_invariant_validator_v<ValidatorFrom>
+  //      && scale_invariant_validator_v<ValidatorTo>
   
   struct coordinate_transformation<
     physical_value<ValueSpaceFrom, UnitFrom, BasisFrom, OriginFrom, ValidatorFrom>,
@@ -1418,75 +1453,25 @@ namespace sequoia::maths
     using to_unit_type    = UnitTo;
     using to_type         = physical_value<ValueSpaceTo, to_unit_type, BasisTo, OriginTo, ValidatorTo>;
     using ratio_type      = product_t<root_scale_ratio_t<UnitFrom>, reciprocal_t<root_scale_ratio_t<UnitTo>>>;
+    static constexpr auto displacement{root_displacement_v<UnitFrom> - root_displacement_v<UnitTo>};
 
     [[nodiscard]]    
     constexpr to_type operator()(const from_type& pv)
     {
+      constexpr auto actualDisplacement{
+        [](){
+          if constexpr(free_module<ValueSpaceFrom> && free_module<ValueSpaceTo>)
+            return 0;
+          else if constexpr (!free_module<ValueSpaceFrom> && !free_module<ValueSpaceTo>)
+            return displacement;
+          else
+            static_assert(dependent_false<value_type>::value);
+        }()
+      };
       return {
-        utilities::to_array(pv.values(), [](value_type v) -> value_type { return static_cast<value_type>(v * ratio_type::num / ratio_type::den); }),
+        utilities::to_array(pv.values(), [](value_type v) -> value_type { return static_cast<value_type>((v + actualDisplacement) * ratio_type::num / ratio_type::den); }),
         to_unit_type{}
       };
-    }
-  };
-
-  template<
-    convex_space ValueSpaceFrom,
-    physical_unit UnitFrom,
-    basis_for<free_module_type_of_t<ValueSpaceFrom>> BasisFrom,
-    class OriginFrom,
-    validator_for<ValueSpaceFrom> ValidatorFrom,
-    convex_space ValueSpaceTo,
-    basis_for<free_module_type_of_t<ValueSpaceTo>> BasisTo,
-    physical_unit UnitTo,
-    class OriginTo,
-    validator_for<ValueSpaceTo> ValidatorTo
-  >
-    requires defines_translation_v<UnitFrom, UnitTo> || defines_translation_v<UnitTo, UnitFrom>
-  struct coordinate_transformation<
-    physical_value<ValueSpaceFrom, UnitFrom, BasisFrom, OriginFrom, ValidatorFrom>,
-    physical_value<ValueSpaceTo,   UnitTo,   BasisTo,   OriginTo,   ValidatorTo>
-  >
-  {
-    using value_type      = commutative_ring_type_of_t<ValueSpaceFrom>;
-    using from_unit_type  = UnitFrom;
-    using from_type       = physical_value<ValueSpaceFrom, from_unit_type, BasisFrom, OriginFrom, ValidatorFrom>;
-    using to_unit_type    = UnitTo;
-    using to_type         = physical_value<ValueSpaceTo, to_unit_type, BasisTo, OriginTo, ValidatorTo>;
-    constexpr static bool both_vector_spaces{vector_space<ValueSpaceFrom> && vector_space<ValueSpaceTo>};
-
-    [[nodiscard]]    
-    to_type operator()(const from_type& pv)
-      requires (!both_vector_spaces) && defines_translation_v<UnitFrom, UnitTo>
-    {
-      return {
-        utilities::to_array(
-          pv.values(),
-          [](value_type v) -> value_type { return static_cast<value_type>(v - UnitFrom::displacement); }
-        ),
-        to_unit_type{}
-      };
-    }
-
-    [[nodiscard]]    
-    to_type operator()(const from_type& pv)
-      requires (!both_vector_spaces) && defines_translation_v<UnitTo, UnitFrom>
-    {
-      return {
-        utilities::to_array(
-          pv.values(),
-          [](value_type v) -> value_type { return static_cast<value_type>(v + UnitTo::displacement); }
-        ),
-        to_unit_type{}
-      };
-    }    
-
-    // TO DO: composed translations
-
-    [[nodiscard]]    
-    to_type operator()(const from_type& pv)
-      requires both_vector_spaces
-    {
-      return {pv.values(), to_unit_type{}};
     }
   };
 }
