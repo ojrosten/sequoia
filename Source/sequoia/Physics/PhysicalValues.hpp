@@ -1420,7 +1420,7 @@ namespace sequoia::maths
     using ratio_type      = product_t<root_unit_ratio_t<UnitFrom>, reciprocal_t<root_unit_ratio_t<UnitTo>>>;
 
     [[nodiscard]]    
-    to_type operator()(const from_type& pv)
+    constexpr to_type operator()(const from_type& pv)
     {
       return {
         utilities::to_array(pv.values(), [](value_type v) -> value_type { return static_cast<value_type>(v * ratio_type::num / ratio_type::den); }),
