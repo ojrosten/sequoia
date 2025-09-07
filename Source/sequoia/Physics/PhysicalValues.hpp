@@ -1211,8 +1211,9 @@ namespace sequoia::physics
           [[nodiscard]]
           constexpr T operator()(const T val) const
           {
-            if(val < static_cast<T>(-translation_type::displacement))
-              throw std::domain_error{std::format("Value {} less than -273.15", val)};
+            constexpr auto absZero{static_cast<T>(-translation_type::displacement)};
+            if(val < absZero)
+              throw std::domain_error{std::format("Value {} less than {}", val, absZero)};
 
             return val;
           }
