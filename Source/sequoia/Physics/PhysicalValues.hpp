@@ -1461,7 +1461,7 @@ namespace sequoia::maths
       constexpr auto actualDisplacement{
         [](){
           if constexpr(free_module<ValueSpaceFrom> && free_module<ValueSpaceTo>)
-            return 0;
+            return value_type{};
           else if constexpr (!free_module<ValueSpaceFrom> && !free_module<ValueSpaceTo>)
             return displacement;
           else
