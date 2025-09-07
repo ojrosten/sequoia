@@ -1027,31 +1027,31 @@ namespace sequoia::physics
   };
 
   template<physical_unit U>
-  struct root_unit
+  struct root_scale
   {
     using ratio_type = ratio<1, 1>;
-    using type = U;
+    using unit_type  = U;
   };
 
   template<physical_unit U>
-  using root_unit_t = root_unit<U>::type;
+  using root_scale_ratio_t = root_scale<U>::ratio_type;
 
   template<physical_unit U>
-  using root_unit_ratio_t = root_unit<U>::ratio_type;
+  using root_scale_unit_t = root_scale<U>::unit_type;
 
   template<physical_unit U>
     requires derives_from_another_unit_v<U> && (!derives_from_another_unit_v<typename U::with_respect_to_type>)
-  struct root_unit<U> : root_unit<typename U::with_respect_to_type>
+  struct root_scale<U> : root_scale<typename U::with_respect_to_type>
   {
     using ratio_type = U::ratio_type;
   };
 
   template<physical_unit U>
     requires derives_from_another_unit_v<U> && derives_from_another_unit_v<typename U::with_respect_to_type>
-  struct root_unit<U> : root_unit<typename U::with_respect_to_type>
+  struct root_scale<U> : root_scale<typename U::with_respect_to_type>
   {
     using wrt_type = typename U::with_respect_to_type;
-    using ratio_type = product_t<typename U::ratio_type, typename root_unit<wrt_type>::ratio_type>;
+    using ratio_type = product_t<typename U::ratio_type, typename root_scale<wrt_type>::ratio_type>;
   };
   
 
@@ -1403,7 +1403,7 @@ namespace sequoia::maths
     class OriginTo,
     validator_for<ValueSpaceTo> ValidatorTo
   >
-    requires std::same_as<root_unit_t<UnitFrom>, root_unit_t<UnitTo>>
+    requires std::same_as<root_scale_unit_t<UnitFrom>, root_scale_unit_t<UnitTo>>
           && scale_invariant_validator_v<ValidatorFrom>
           && scale_invariant_validator_v<ValidatorTo>
   
@@ -1417,7 +1417,7 @@ namespace sequoia::maths
     using from_type       = physical_value<ValueSpaceFrom, from_unit_type, BasisFrom, OriginFrom, ValidatorFrom>;
     using to_unit_type    = UnitTo;
     using to_type         = physical_value<ValueSpaceTo, to_unit_type, BasisTo, OriginTo, ValidatorTo>;
-    using ratio_type      = product_t<root_unit_ratio_t<UnitFrom>, reciprocal_t<root_unit_ratio_t<UnitTo>>>;
+    using ratio_type      = product_t<root_scale_ratio_t<UnitFrom>, reciprocal_t<root_scale_ratio_t<UnitTo>>>;
 
     [[nodiscard]]    
     constexpr to_type operator()(const from_type& pv)

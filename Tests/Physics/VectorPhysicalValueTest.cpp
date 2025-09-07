@@ -152,14 +152,14 @@ namespace sequoia::testing
   void vector_physical_value_test::test_conversions()
   {
     STATIC_CHECK(!std::same_as<ratio<1, 1>, ratio<1L, 1>>, "This is an unfortunate consequence of ratio<intmax_t, intmax_t> being a specialization");
-    STATIC_CHECK(std::same_as<root_unit_t<alternative::gradian_t>, si::units::radian_t>);
-    STATIC_CHECK(std::same_as<root_unit_ratio_t<alternative::gradian_t>, ratio<std::numbers::pi_v<long double>, 200L>>);
-    STATIC_CHECK(std::same_as<root_unit_t<non_si::units::gradian_t>, si::units::radian_t>);
-    STATIC_CHECK(std::same_as<root_unit_ratio_t<non_si::units::gradian_t>, ratio<std::numbers::pi_v<long double>, 200L>>);
-    STATIC_CHECK(std::same_as<root_unit_t<milli<si::units::radian_t>>, si::units::radian_t>);
-    STATIC_CHECK(std::same_as<root_unit_ratio_t<milli<si::units::radian_t>>, std::ratio<1, 1000>>);
-    STATIC_CHECK(std::same_as<root_unit_t<milli<milli<si::units::radian_t>>>, si::units::radian_t>);
-    STATIC_CHECK(std::same_as<root_unit_ratio_t<milli<milli<si::units::radian_t>>>, std::ratio<1, 1'000'000>>);
+    STATIC_CHECK(std::same_as<root_scale_unit_t<alternative::gradian_t>, si::units::radian_t>);
+    STATIC_CHECK(std::same_as<root_scale_ratio_t<alternative::gradian_t>, ratio<std::numbers::pi_v<long double>, 200L>>);
+    STATIC_CHECK(std::same_as<root_scale_unit_t<non_si::units::gradian_t>, si::units::radian_t>);
+    STATIC_CHECK(std::same_as<root_scale_ratio_t<non_si::units::gradian_t>, ratio<std::numbers::pi_v<long double>, 200L>>);
+    STATIC_CHECK(std::same_as<root_scale_unit_t<milli<si::units::radian_t>>, si::units::radian_t>);
+    STATIC_CHECK(std::same_as<root_scale_ratio_t<milli<si::units::radian_t>>, std::ratio<1, 1000>>);
+    STATIC_CHECK(std::same_as<root_scale_unit_t<milli<milli<si::units::radian_t>>>, si::units::radian_t>);
+    STATIC_CHECK(std::same_as<root_scale_ratio_t<milli<milli<si::units::radian_t>>>, std::ratio<1, 1'000'000>>);
 
     using angle_t = si::angle<T>;
     using namespace si::units;
