@@ -447,7 +447,7 @@ namespace sequoia::physics
 
   template<class From, class To>
   inline constexpr bool has_quantity_conversion_v{
-    has_coordinate_transform_v<From, To> && std::constructible_from<coordinate_transform<From, To>>
+    has_coordinate_transformation_v<From, To> && std::constructible_from<coordinate_transformation<From, To>>
   };
 
   template<convex_space C, physical_unit ConversionUnit>
@@ -651,9 +651,9 @@ namespace sequoia::physics
       requires has_quantity_conversion_v<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>
     [[nodiscard]]
     constexpr physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator> convert_to(OtherUnit) const
-      noexcept(has_noexcept_coordinate_transform_v<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>)
+      noexcept(has_noexcept_coordinate_transformation_v<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>)
     {
-      return coordinate_transform<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>{}(*this);
+      return coordinate_transformation<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>{}(*this);
     }
 
     [[nodiscard]]
@@ -1407,7 +1407,7 @@ namespace sequoia::maths
           && scale_invariant_validator_v<ValidatorFrom>
           && scale_invariant_validator_v<ValidatorTo>
   
-  struct coordinate_transform<
+  struct coordinate_transformation<
     physical_value<ValueSpaceFrom, UnitFrom, BasisFrom, OriginFrom, ValidatorFrom>,
     physical_value<ValueSpaceTo,   UnitTo,   BasisTo,   OriginTo,   ValidatorTo>
   >
@@ -1442,7 +1442,7 @@ namespace sequoia::maths
     validator_for<ValueSpaceTo> ValidatorTo
   >
     requires defines_translation_v<UnitFrom, UnitTo> || defines_translation_v<UnitTo, UnitFrom>
-  struct coordinate_transform<
+  struct coordinate_transformation<
     physical_value<ValueSpaceFrom, UnitFrom, BasisFrom, OriginFrom, ValidatorFrom>,
     physical_value<ValueSpaceTo,   UnitTo,   BasisTo,   OriginTo,   ValidatorTo>
   >

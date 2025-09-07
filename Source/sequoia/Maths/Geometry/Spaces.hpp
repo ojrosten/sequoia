@@ -1459,22 +1459,22 @@ namespace sequoia::maths
   };
 
   template<class From, class To>
-  struct coordinate_transform
+  struct coordinate_transformation
   {
   };
 
   template<class From, class To>
-  inline constexpr bool has_coordinate_transform_v{
+  inline constexpr bool has_coordinate_transformation_v{
     requires (const From& f){
-      { std::declval<coordinate_transform<From, To>>()(f) } -> std::convertible_to<To>;
+      { std::declval<coordinate_transformation<From, To>>()(f) } -> std::convertible_to<To>;
     }
   };
 
   template<class From, class To>
-  inline constexpr bool has_noexcept_coordinate_transform_v{
-       has_coordinate_transform_v<From, To>
+  inline constexpr bool has_noexcept_coordinate_transformation_v{
+       has_coordinate_transformation_v<From, To>
     && requires (const From& f){
-         requires noexcept(std::declval<coordinate_transform<From, To>>()(f));
+         requires noexcept(std::declval<coordinate_transformation<From, To>>()(f));
     }
   };
 

@@ -34,13 +34,13 @@ namespace sequoia::maths
   using namespace testing;
 
   template<affine_space A, basis_for<free_module_type_of_t<A>> Basis>
-  struct coordinate_transform<affine_coordinates<A, Basis, alice<A>>, affine_coordinates<A, Basis, bob<A>>>
+  struct coordinate_transformation<affine_coordinates<A, Basis, alice<A>>, affine_coordinates<A, Basis, bob<A>>>
   {
     using disp_type = affine_coordinates<A, Basis, alice<A>>::displacement_coordinates_type;
 
     disp_type displacement{};
 
-    explicit coordinate_transform(const disp_type& d)
+    explicit coordinate_transformation(const disp_type& d)
       : displacement{d}
     {}
       
@@ -94,7 +94,7 @@ namespace sequoia::testing
     coordinates_operations<affine_t>{*this}.execute();
 
     using affine2_t = affine_coordinates<space_t, basis_t, bob<space_t>>;
-    affine2_t bob_coords{coordinate_transform<affine_t, affine2_t>{delta_t{Field{-1.0}}}(affine_t{})};
+    affine2_t bob_coords{coordinate_transformation<affine_t, affine2_t>{delta_t{Field{-1.0}}}(affine_t{})};
 
     check(equality, "", bob_coords, affine2_t{Field{-1.0}});
   }
