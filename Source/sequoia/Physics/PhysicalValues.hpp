@@ -1458,21 +1458,24 @@ namespace sequoia::maths
     using to_type         = physical_value<ValueSpaceTo, to_unit_type, BasisTo, OriginTo, ValidatorTo>;
     using ratio_type      = product_t<root_scale_ratio_t<UnitFrom>, reciprocal_t<root_scale_ratio_t<UnitTo>>>;
 
+    template<convex_space C, physical_unit U>
+    constexpr static auto to_displacement() {
+      if constexpr(free_module<C>)
+        return value_type{};
+      else
+        return root_displacement_v<U>;
+    };
+
     [[nodiscard]]    
     constexpr to_type operator()(const from_type& pv)
     {
-      constexpr auto displacement{
-        [](){
-          if constexpr(free_module<ValueSpaceFrom> && free_module<ValueSpaceTo>)
-            return value_type{};
-          else if constexpr (!free_module<ValueSpaceFrom> && !free_module<ValueSpaceTo>)
-            return root_displacement_v<UnitFrom> - root_displacement_v<UnitTo>;
-          else
-            static_assert(dependent_false<value_type>::value);
-        }()
-      };
       return {
-        utilities::to_array(pv.values(), [](value_type v) -> value_type { return static_cast<value_type>((v + displacement) * ratio_type::num / ratio_type::den); }),
+        utilities::to_array(
+          pv.values(),
+          [](value_type v) -> value_type {
+            return static_cast<value_type>((v + to_displacement<ValueSpaceFrom, UnitFrom>()) * ratio_type::num / ratio_type::den) - to_displacement<ValueSpaceFrom, UnitTo>();
+          }
+        ),
         to_unit_type{}
       };
     }
