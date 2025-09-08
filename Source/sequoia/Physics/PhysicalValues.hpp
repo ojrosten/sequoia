@@ -1062,8 +1062,11 @@ namespace sequoia::physics
   
   template<class T>
   inline constexpr bool has_displacement_value_v{
-    requires { T::displacement; }
-    // && arithmetic or span over arithmetic
+    requires {
+      T::displacement;
+      requires arithmetic<decltype(T::displacement)>;    
+      // or span over arithmetic
+    }
   };
   
   template<physical_unit U>
@@ -1454,23 +1457,22 @@ namespace sequoia::maths
     using to_unit_type    = UnitTo;
     using to_type         = physical_value<ValueSpaceTo, to_unit_type, BasisTo, OriginTo, ValidatorTo>;
     using ratio_type      = product_t<root_scale_ratio_t<UnitFrom>, reciprocal_t<root_scale_ratio_t<UnitTo>>>;
-    static constexpr auto displacement{root_displacement_v<UnitFrom> - root_displacement_v<UnitTo>};
 
     [[nodiscard]]    
     constexpr to_type operator()(const from_type& pv)
     {
-      constexpr auto actualDisplacement{
+      constexpr auto displacement{
         [](){
           if constexpr(free_module<ValueSpaceFrom> && free_module<ValueSpaceTo>)
             return value_type{};
           else if constexpr (!free_module<ValueSpaceFrom> && !free_module<ValueSpaceTo>)
-            return displacement;
+            return root_displacement_v<UnitFrom> - root_displacement_v<UnitTo>;
           else
             static_assert(dependent_false<value_type>::value);
         }()
       };
       return {
-        utilities::to_array(pv.values(), [](value_type v) -> value_type { return static_cast<value_type>((v + actualDisplacement) * ratio_type::num / ratio_type::den); }),
+        utilities::to_array(pv.values(), [](value_type v) -> value_type { return static_cast<value_type>((v + displacement) * ratio_type::num / ratio_type::den); }),
         to_unit_type{}
       };
     }
