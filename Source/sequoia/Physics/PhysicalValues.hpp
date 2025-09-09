@@ -806,6 +806,10 @@ namespace sequoia::physics
     using distinguished_origin = std::true_type;
   };
 
+  // TO DO: maybe define this using a class templated relaxed_space<...>
+  // Indeed, this could obivate the need for conversion spaces since
+  // a unit which defines a translation from an absolute space could
+  // automatically yield a relaxed_space<...>
   template<std::floating_point Rep, class Arena>
   struct temperature_space
     : physical_value_convex_space<sets::classical::temperatures<Arena>, Rep, 1, temperature_space<Rep, Arena>>
@@ -1018,7 +1022,8 @@ namespace sequoia::physics
   struct dilatation;
 
   template<physical_unit U, auto Num, auto Den>
-    requires scale_invariant_validator_v<typename U::validator_type>
+  // TO DO: experiment with synthesizing validator instead over overconstraining
+  //  requires scale_invariant_validator_v<typename U::validator_type>
   struct dilatation<U, ratio<Num, Den>>
   {
     using with_respect_to_type = U;
@@ -1027,7 +1032,7 @@ namespace sequoia::physics
   };
 
   template<physical_unit U, std::intmax_t Num, std::intmax_t Den>
-    requires scale_invariant_validator_v<typename U::validator_type>
+  //  requires scale_invariant_validator_v<typename U::validator_type>
   struct dilatation<U, std::ratio<Num, Den>>
   {
     using with_respect_to_type = U;
@@ -1040,7 +1045,8 @@ namespace sequoia::physics
   struct translation
   {
     using with_respect_to_type = U;
-    using displacement_type = std::remove_const_t<decltype(Displacement)>;
+    using validator_type       = typename U::validator_type;
+    using displacement_type    = std::remove_const_t<decltype(Displacement)>;
     constexpr static auto displacement{Displacement};
   };
 
@@ -1207,6 +1213,8 @@ namespace sequoia::physics
       struct celsius_t : translation<kelvin_t, 273.15L>
       {
         using translation_type = translation<kelvin_t, 273.15L>;
+
+        constexpr static std::string_view symbol{"degC"};
         
         struct validator
         {
@@ -1217,13 +1225,13 @@ namespace sequoia::physics
             constexpr auto absZero{static_cast<T>(-translation_type::displacement)};
             if(val < absZero)
               throw std::domain_error{std::format("Value {} less than {}", val, absZero)};
+              throw std::domain_error{std::format("Value {} less than {} {}", val, absZero, symbol)};
 
             return val;
           }
         };
 
         using validator_type = validator;
-        constexpr static std::string_view symbol{"degC"};
       };
 
       inline constexpr ampere_t   ampere{};
@@ -1309,7 +1317,33 @@ namespace sequoia::physics
 
       inline constexpr degree_t degree{};
       inline constexpr gradian_t gradian{};
+
+      struct farenheight_t : translation<dilatation<si::units::celsius_t, std::ratio<9, 5>>, -32.0L>
+      {        
+        constexpr static std::string_view symbol{"degF"};
+
+        struct validator
+        {
+          template<std::floating_point T>
+          [[nodiscard]]
+          constexpr T operator()(const T val) const
+          {
+            constexpr auto absZero{static_cast<T>(-273.15L / 5 * 9 + 32)};
+            if(val < absZero)
+              throw std::domain_error{std::format("Value {} less than {} {}", val, absZero, symbol)};
+
+            return val;
+          }
+        };
+
+        using validator_type = validator;
+      };
+
+      inline constexpr farenheight_t farenheight{};
     }
+
+    template<std::floating_point T, class Arena=implicit_common_arena>
+    using temperature_farenheight = physical_value<temperature_space<T, Arena>, units::farenheight_t>;
   }
 
   template<convex_space C, physical_unit ConversionUnit>
@@ -1320,6 +1354,12 @@ namespace sequoia::physics
   
   template<std::floating_point Rep, class Arena>
   struct conversion_space<absolute_temperature_space<Rep, Arena>, si::units::celsius_t>
+  {
+    using type = temperature_space<Rep, Arena>;
+  };
+
+  template<std::floating_point Rep, class Arena>
+  struct conversion_space<absolute_temperature_space<Rep, Arena>, non_si::units::farenheight_t>
   {
     using type = temperature_space<Rep, Arena>;
   };

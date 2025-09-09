@@ -28,7 +28,9 @@ namespace sequoia::physics
 
   template<class Space>
   inline constexpr bool is_associated_displacement_space_v{is_associated_displacement_space<Space>::value};
-    
+
+  // TO DO: consider changing this so that a physical unit defines an appropriate operator()?
+  // Though it will, in general, be a function template so this may require more thought
   template<class T>
   concept physical_unit = requires {
     typename T::validator_type;

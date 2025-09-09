@@ -25,5 +25,8 @@ namespace sequoia::testing
   private:
     template<class Quantity>
     void test_convex_quantity();
+
+    template<std::floating_point T>
+    void test_celsius_conversions();
   };
 }
