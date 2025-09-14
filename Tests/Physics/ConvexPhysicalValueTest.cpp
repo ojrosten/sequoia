@@ -83,7 +83,7 @@ namespace sequoia::testing
     STATIC_CHECK(
       std::same_as<
         root_transform_t<si::units::celsius_t>,
-        coordinate_transform<si::units::kelvin_t, dilatation<si::units::kelvin_t, std::ratio<1, 1>>, translation<si::units::kelvin_t, 273.15L>>
+        coordinate_transform<si::units::kelvin_t, dilatation<std::ratio<1, 1>>, translation<273.15L>>
       >
     );
     STATIC_CHECK(!has_quantity_conversion_v<quantity_t, si::mass<value_t>>);
@@ -144,20 +144,20 @@ namespace sequoia::testing
     STATIC_CHECK(
       std::same_as<
         farenheight_transform_t,
-        coordinate_transform<si::units::celsius_t, dilatation<si::units::celsius_t, std::ratio<5, 9>>, translation<si::units::celsius_t, -160.0L/9>>
+        coordinate_transform<si::units::celsius_t, dilatation<std::ratio<5, 9>>, translation<-160.0L/9>>
       >
     );
     STATIC_CHECK(
       std::same_as<
         farenheight_nested_transform_t,
-        coordinate_transform<si::units::kelvin_t, dilatation<si::units::kelvin_t, std::ratio<1,1>>, translation<si::units::kelvin_t, 273.15L>>
+        coordinate_transform<si::units::kelvin_t, dilatation<std::ratio<1,1>>, translation<273.15L>>
       >
     );
         
     STATIC_CHECK(
       std::same_as<
         root_transform_t<non_si::units::farenheight_t>,
-        coordinate_transform<si::units::celsius_t, dilatation<si::units::celsius_t, std::ratio<5, 9>>, translation<si::units::celsius_t, 273.15L - 32.0L*5/9>>
+        coordinate_transform<si::units::celsius_t, dilatation<std::ratio<5, 9>>, translation<273.15L - 32.0L*5/9>>
       >,
       "Celsius needs fixing!"
     );
@@ -165,7 +165,7 @@ namespace sequoia::testing
     STATIC_CHECK(
       std::same_as<
         inverse_t<root_transform_t<non_si::units::farenheight_t>>,
-        coordinate_transform<si::units::celsius_t, dilatation<si::units::celsius_t, std::ratio<9, 5>>, translation<si::units::celsius_t, 32.0L - 273.15L*9/5>>
+        coordinate_transform<si::units::celsius_t, dilatation<std::ratio<9, 5>>, translation<32.0L - 273.15L*9/5>>
       >
     );
 

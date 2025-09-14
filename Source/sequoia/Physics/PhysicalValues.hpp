@@ -1018,54 +1018,45 @@ namespace sequoia::physics
 
   //====== End of temporary home for some (hacky) ratio stuff ======//
 
-  template<class U, class T>
+  template<class T>
   struct dilatation;
 
-  template<physical_unit U, auto Num, auto Den>
-  // TO DO: experiment with synthesizing validator instead over overconstraining
-  //  requires scale_invariant_validator_v<typename U::validator_type>
-  struct dilatation<U, ratio<Num, Den>>
+  template<auto Num, auto Den>
+  struct dilatation<ratio<Num, Den>>
   {
-    using with_respect_to_type = U;
-    using validator_type       = typename U::validator_type;
-    using ratio_type           = ratio<Num, Den>;
+    using ratio_type = ratio<Num, Den>;
   };
 
-  template<physical_unit U, std::intmax_t Num, std::intmax_t Den>
-  //  requires scale_invariant_validator_v<typename U::validator_type>
-  struct dilatation<U, std::ratio<Num, Den>>
+  template<std::intmax_t Num, std::intmax_t Den>
+  struct dilatation<std::ratio<Num, Den>>
   {
-    using with_respect_to_type = U;
-    using validator_type       = typename U::validator_type;
-    using ratio_type           = std::ratio<Num, Den>;
+    using ratio_type = std::ratio<Num, Den>;
   };
 
-  template<physical_unit U, auto Num, auto Den>
-  struct inverse<dilatation<U, ratio<Num, Den>>>
+  template<auto Num, auto Den>
+  struct inverse<dilatation<ratio<Num, Den>>>
   {
-    using type = dilatation<U, ratio<Den, Num>>;
+    using type = dilatation<ratio<Den, Num>>;
   };
 
-  template<physical_unit U, std::intmax_t Num, std::intmax_t Den>
-  struct inverse<dilatation<U, std::ratio<Num, Den>>>
+  template<std::intmax_t Num, std::intmax_t Den>
+  struct inverse<dilatation<std::ratio<Num, Den>>>
   {
-    using type = dilatation<U, std::ratio<Den, Num>>;
+    using type = dilatation<std::ratio<Den, Num>>;
   };
 
-  template<physical_unit U, auto Displacement>
+  template<auto Displacement>
     requires arithmetic<std::remove_const_t<decltype(Displacement)>>
   struct translation
   {
-    using with_respect_to_type = U;
-    using validator_type       = typename U::validator_type;
-    using displacement_type    = std::remove_const_t<decltype(Displacement)>;
+    using displacement_type = std::remove_const_t<decltype(Displacement)>;
     constexpr static auto displacement{Displacement};
   };
 
-  template<physical_unit U, auto Displacement>
-  struct inverse<translation<U, Displacement>>
+  template<auto Displacement>
+  struct inverse<translation<Displacement>>
   {
-    using type = translation<U, -Displacement>;
+    using type = translation<-Displacement>;
   };
 
   template<class...>
@@ -1073,36 +1064,34 @@ namespace sequoia::physics
 
   template<physical_unit U, class Ratio, auto Displacement>
   // TO DO: pull U out of the coordinate_transform viz unit_transform : coord_transform<dil, trans>
-  struct coordinate_transform<U, dilatation<U, Ratio>, translation<U, Displacement>>
+  struct coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>
   {
     using validator_type = U::validator_type;// Sort this out!
-    using transform_type = coordinate_transform<U, dilatation<U, Ratio>, translation<U, Displacement>>;
+    using transform_type = coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>; // And this!
     using with_respect_to_type = U;
-    using dilatation_type      = dilatation<U, Ratio>;
-    using translation_type     = translation<U, Displacement>;
+    using dilatation_type      = dilatation<Ratio>;
+    using translation_type     = translation<Displacement>;
   };
 
   template<physical_unit U, class Ratio, auto Displacement>
-  struct inverse<coordinate_transform<U, dilatation<U, Ratio>, translation<U, Displacement>>>
+  struct inverse<coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
   {
     using validator_type = U::validator_type;// Sort this out!
-    using inverse_dil_type   = inverse_t<dilatation<U, Ratio>>;
+    using inverse_dil_type   = inverse_t<dilatation<Ratio>>;
     using inverse_ratio_type = inverse_dil_type::ratio_type;
-    using type = coordinate_transform<U, inverse_dil_type, inverse_t<translation<U, Displacement * inverse_ratio_type::num / inverse_ratio_type::den>>>;
+    using type = coordinate_transform<U, inverse_dil_type, inverse_t<translation<Displacement * inverse_ratio_type::num / inverse_ratio_type::den>>>;
   };
 
   template<
     physical_unit LHSUnit, class LHSRatio, auto LHSDisplacement,
     physical_unit RHSUnit, class RHSRatio, auto RHSDisplacement
   >
-  struct product<coordinate_transform<LHSUnit, dilatation<LHSUnit, LHSRatio>, translation<LHSUnit, LHSDisplacement>>,
-                 coordinate_transform<RHSUnit, dilatation<RHSUnit, RHSRatio>, translation<RHSUnit, RHSDisplacement>>>
+  struct product<coordinate_transform<LHSUnit, dilatation<LHSRatio>, translation<LHSDisplacement>>,
+                 coordinate_transform<RHSUnit, dilatation<RHSRatio>, translation<RHSDisplacement>>>
   {
-    using lhs_dilatation = dilatation<LHSUnit, LHSRatio>;
-    using rhs_dilatation = dilatation<RHSUnit, RHSRatio>;
-    using net_dilatation = dilatation<RHSUnit, product_t<typename lhs_dilatation::ratio_type, typename rhs_dilatation::ratio_type>>;
-    using net_translation = translation<RHSUnit, LHSDisplacement + RHSDisplacement * LHSRatio::num / LHSRatio::den>;
-    using type = coordinate_transform<RHSUnit, net_dilatation, net_translation>;
+    using dilatation_type  = dilatation<product_t<LHSRatio, RHSRatio>>;
+    using translation_type = translation<LHSDisplacement + RHSDisplacement * LHSRatio::num / LHSRatio::den>;
+    using type             = coordinate_transform<RHSUnit, dilatation_type, translation_type>;
   };
   
   template<physical_unit U>
@@ -1115,7 +1104,7 @@ namespace sequoia::physics
   template<physical_unit U>
   struct root_transform
   {
-    using transform_type = coordinate_transform<U, dilatation<U, std::ratio<1, 1>>, translation<U, 0>>;
+    using transform_type = coordinate_transform<U, dilatation<std::ratio<1, 1>>, translation<0>>;
     using unit_type  = U;
   };
 
@@ -1145,16 +1134,16 @@ namespace sequoia::physics
   };
 
   template<physical_unit Unit>
-  using micro = coordinate_transform<Unit, dilatation<Unit, std::micro>, translation<Unit, 0>>;
+  using micro = coordinate_transform<Unit, dilatation<std::micro>, translation<0>>;
   
   template<physical_unit Unit>
-  using milli = coordinate_transform<Unit, dilatation<Unit, std::milli>, translation<Unit, 0>>;
+  using milli = coordinate_transform<Unit, dilatation<std::milli>, translation<0>>;
 
   template<physical_unit Unit>
-  using kilo = coordinate_transform<Unit, dilatation<Unit, std::kilo>, translation<Unit, 0>>;
+  using kilo = coordinate_transform<Unit, dilatation<std::kilo>, translation<0>>;
 
   template<physical_unit Unit>
-  using mega = coordinate_transform<Unit, dilatation<Unit, std::mega>, translation<Unit, 0>>;
+  using mega = coordinate_transform<Unit, dilatation<std::mega>, translation<0>>;
   
   namespace si
   {
@@ -1202,10 +1191,9 @@ namespace sequoia::physics
         constexpr static std::string_view symbol{"rad"};
       };
 
-
-      struct celsius_t : coordinate_transform<kelvin_t, dilatation<kelvin_t, std::ratio<1, 1>>, translation<kelvin_t, 273.15L>>
+      struct celsius_t : coordinate_transform<kelvin_t, dilatation<std::ratio<1, 1>>, translation<273.15L>>
       {
-        using translation_type = translation<kelvin_t, 273.15L>;
+        using translation_type = translation<273.15L>;
 
         constexpr static std::string_view symbol{"degC"};
         
@@ -1295,13 +1283,13 @@ namespace sequoia::physics
   {
     namespace units
     {
-      struct degree_t : coordinate_transform<si::units::radian_t, dilatation<si::units::radian_t, ratio<std::numbers::pi_v<long double>, intmax_t{180}>>, translation<si::units::radian_t, 0>>
+      struct degree_t : coordinate_transform<si::units::radian_t, dilatation<ratio<std::numbers::pi_v<long double>, intmax_t{180}>>, translation<0>>
       {
         using validator_type = std::identity;
         constexpr static std::string_view symbol{"deg"};
       };
 
-      struct gradian_t : coordinate_transform<si::units::radian_t, dilatation<si::units::radian_t, ratio<std::numbers::pi_v<long double>, intmax_t{200}>>, translation<si::units::radian_t, 0>>
+      struct gradian_t : coordinate_transform<si::units::radian_t, dilatation<ratio<std::numbers::pi_v<long double>, intmax_t{200}>>, translation<0>>
       {
         using validator_type = std::identity;
         constexpr static std::string_view symbol{"gon"};
@@ -1311,7 +1299,7 @@ namespace sequoia::physics
       inline constexpr gradian_t gradian{};
 
       struct farenheight_t
-        : coordinate_transform<si::units::celsius_t, dilatation<si::units::celsius_t, std::ratio<5, 9>>, translation<si::units::celsius_t, -160.0L/9>>
+        : coordinate_transform<si::units::celsius_t, dilatation<std::ratio<5, 9>>, translation<-160.0L/9>>
       {        
         constexpr static std::string_view symbol{"degF"};
 
@@ -1365,7 +1353,7 @@ namespace sequoia::physics
 
   template<physical_unit Unit, class Rep, class Ratio>
     requires has_default_space_v<Unit, Rep>
-  struct default_space<coordinate_transform<Unit, dilatation<Unit, Ratio>, translation<Unit, 0>>, Rep> : default_space<Unit, Rep> {};
+  struct default_space<coordinate_transform<Unit, dilatation<Ratio>, translation<0>>, Rep> : default_space<Unit, Rep> {};
 
   template<std::floating_point T>
   struct default_space<si::units::kilogram_t, T>
