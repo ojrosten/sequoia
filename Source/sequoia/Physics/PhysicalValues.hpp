@@ -944,19 +944,19 @@ namespace sequoia::physics
   struct is_ratio<ratio<Num, Den>> : std::true_type {};
 
   template<class>
-  struct reciprocal;
+  struct inverse;
 
   template<class T>
-  using reciprocal_t = reciprocal<T>::type;
+  using inverse_t = inverse<T>::type;
 
   template<auto Num, auto Den>
-  struct reciprocal<ratio<Num, Den>>
+  struct inverse<ratio<Num, Den>>
   {
     using type = ratio<Den, Num>;
   };
 
   template<auto Num, auto Den>
-  struct reciprocal<std::ratio<Num, Den>>
+  struct inverse<std::ratio<Num, Den>>
   {
     using type = std::ratio<Den, Num>;
   };
@@ -1041,13 +1041,13 @@ namespace sequoia::physics
   };
 
   template<physical_unit U, auto Num, auto Den>
-  struct reciprocal<dilatation<U, ratio<Num, Den>>>
+  struct inverse<dilatation<U, ratio<Num, Den>>>
   {
     using type = dilatation<U, ratio<Den, Num>>;
   };
 
   template<physical_unit U, std::intmax_t Num, std::intmax_t Den>
-  struct reciprocal<dilatation<U, std::ratio<Num, Den>>>
+  struct inverse<dilatation<U, std::ratio<Num, Den>>>
   {
     using type = dilatation<U, std::ratio<Den, Num>>;
   };
@@ -1063,7 +1063,7 @@ namespace sequoia::physics
   };
 
   template<physical_unit U, auto Displacement>
-  struct reciprocal<translation<U, Displacement>>
+  struct inverse<translation<U, Displacement>>
   {
     using type = translation<U, -Displacement>;
   };
@@ -1082,21 +1082,13 @@ namespace sequoia::physics
     using translation_type     = translation<U, Displacement>;
   };
 
-  /*template<physical_unit U, auto Displacement, class Ratio>
-  struct coordinate_transform<U, translation<U, Displacement>, dilatation<U, Ratio>>
-  {
-    using with_respect_to_type = U;
-    using dilatation_type      = dilatation<U, Ratio>;
-    using translation_type     = translation<U, Displacement>;
-    };*/
-
   template<physical_unit U, class Ratio, auto Displacement>
-  struct reciprocal<coordinate_transform<U, dilatation<U, Ratio>, translation<U, Displacement>>>
+  struct inverse<coordinate_transform<U, dilatation<U, Ratio>, translation<U, Displacement>>>
   {
     using validator_type = U::validator_type;// Sort this out!
-    using inverse_dil_type   = reciprocal_t<dilatation<U, Ratio>>;
+    using inverse_dil_type   = inverse_t<dilatation<U, Ratio>>;
     using inverse_ratio_type = inverse_dil_type::ratio_type;
-    using type = coordinate_transform<U, inverse_dil_type, reciprocal_t<translation<U, Displacement * inverse_ratio_type::num / inverse_ratio_type::den>>>;
+    using type = coordinate_transform<U, inverse_dil_type, inverse_t<translation<U, Displacement * inverse_ratio_type::num / inverse_ratio_type::den>>>;
   };
 
   template<
@@ -1493,7 +1485,7 @@ namespace sequoia::maths
     using from_type       = physical_value<ValueSpaceFrom, from_unit_type, BasisFrom, OriginFrom, ValidatorFrom>;
     using to_unit_type    = UnitTo;
     using to_type         = physical_value<ValueSpaceTo, to_unit_type, BasisTo, OriginTo, ValidatorTo>;
-    using transform_type  = product_t<root_transform_t<UnitFrom>, reciprocal_t<root_transform_t<UnitTo>>>;
+    using transform_type  = product_t<root_transform_t<UnitFrom>, inverse_t<root_transform_t<UnitTo>>>;
 
     constexpr static auto to_displacement() noexcept {
       if constexpr(free_module<ValueSpaceFrom>)
