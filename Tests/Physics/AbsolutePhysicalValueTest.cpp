@@ -96,10 +96,6 @@ namespace sequoia::testing
   void absolute_physical_value_test::test_mass_conversions()
   {
     STATIC_CHECK(!noexcept(si::mass<float>{}.convert_to(si::units::tonne)));
-    STATIC_CHECK(!defines_dilatation_v<si::units::kilogram_t, si::units::tonne_t>);
-    STATIC_CHECK(defines_dilatation_v<si::units::tonne_t, si::units::kilogram_t>);
-    STATIC_CHECK(!defines_dilatation_v<si::units::kilogram_t, si::units::gram_t>);
-    STATIC_CHECK(defines_dilatation_v<si::units::gram_t, si::units::kilogram_t>);
     
     check(
       equality,
@@ -143,7 +139,7 @@ namespace sequoia::testing
       si::mass<float>{1.0, si::units::kilogram}
     );
 
-     check(
+    check(
       equality,
       "",
       physical_value{1000.0f, si::units::tonne}.convert_to(si::units::kilotonne),

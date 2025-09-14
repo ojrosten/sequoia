@@ -29,6 +29,9 @@ namespace sequoia::testing
 
     test_celsius_conversions<float>();
     test_celsius_conversions<double>();
+
+    test_farenheight_conversions<float>();
+    test_farenheight_conversions<double>();
   }
 
   template<class Quantity>
@@ -77,6 +80,12 @@ namespace sequoia::testing
     
     STATIC_CHECK(has_quantity_conversion_v<si::temperature<value_t>, quantity_t>);
     STATIC_CHECK(has_quantity_conversion_v<quantity_t, si::temperature<value_t>>);
+    STATIC_CHECK(
+      std::same_as<
+        root_transform_t<si::units::celsius_t>,
+        coordinate_transform<si::units::kelvin_t, dilatation<si::units::kelvin_t, std::ratio<1, 1>>, translation<si::units::kelvin_t, 273.15L>>
+      >
+    );
     STATIC_CHECK(!has_quantity_conversion_v<quantity_t, si::mass<value_t>>);
 
     using absolute_temp_t       = si::temperature<value_t>;
@@ -110,6 +119,70 @@ namespace sequoia::testing
       "",
       delta_q_t{}.convert_to(si::units::kelvin),
       delta_absolute_temp_t{0, si::units::kelvin}
+    );
+  }
+
+  template<std::floating_point T>
+  void convex_physical_value_test::test_farenheight_conversions()
+  {
+    using quantity_t = non_si::temperature_farenheight<T>;
+    //using delta_q_t  = quantity_t::displacement_type;
+    using value_t    = T;
+    using farenheight_wrt_t = non_si::units::farenheight_t::with_respect_to_type;
+
+    STATIC_CHECK(   derives_from_another_unit_v<non_si::units::farenheight_t>
+                 && derives_from_another_unit_v<farenheight_wrt_t>);
+
+    STATIC_CHECK(   derives_from_another_unit_v<si::units::celsius_t>
+                 && !derives_from_another_unit_v<typename si::units::celsius_t::with_respect_to_type>);
+    STATIC_CHECK(std::same_as<root_transform_unit_t<non_si::units::farenheight_t>, si::units::kelvin_t>);
+
+    using farenheight_transform_t = non_si::units::farenheight_t::transform_type;
+    using farenheight_nested_transform_t = typename root_transform<non_si::units::farenheight_t>::nested_transform_type;
+      
+    STATIC_CHECK(std::same_as<root_transform<non_si::units::farenheight_t>::wrt_type, si::units::celsius_t>);
+    STATIC_CHECK(
+      std::same_as<
+        farenheight_transform_t,
+        coordinate_transform<si::units::celsius_t, dilatation<si::units::celsius_t, std::ratio<5, 9>>, translation<si::units::celsius_t, -160.0L/9>>
+      >
+    );
+    STATIC_CHECK(
+      std::same_as<
+        farenheight_nested_transform_t,
+        coordinate_transform<si::units::kelvin_t, dilatation<si::units::kelvin_t, std::ratio<1,1>>, translation<si::units::kelvin_t, 273.15L>>
+      >
+    );
+        
+    STATIC_CHECK(
+      std::same_as<
+        root_transform_t<non_si::units::farenheight_t>,
+        coordinate_transform<si::units::celsius_t, dilatation<si::units::celsius_t, std::ratio<5, 9>>, translation<si::units::celsius_t, 273.15L - 32.0L*5/9>>
+      >,
+      "Celsius needs fixing!"
+    );
+
+    STATIC_CHECK(
+      std::same_as<
+        reciprocal_t<root_transform_t<non_si::units::farenheight_t>>,
+        coordinate_transform<si::units::celsius_t, dilatation<si::units::celsius_t, std::ratio<9, 5>>, translation<si::units::celsius_t, 32.0L - 273.15L*9/5>>
+      >
+    );
+
+    STATIC_CHECK(has_quantity_conversion_v<si::temperature<value_t>, quantity_t>);
+    STATIC_CHECK(has_quantity_conversion_v<quantity_t, si::temperature<value_t>>);
+    STATIC_CHECK(!has_quantity_conversion_v<quantity_t, si::mass<value_t>>);
+
+    using absolute_temp_t       = si::temperature<value_t>;
+    //using delta_absolute_temp_t = absolute_temp_t::displacement_type;
+
+    STATIC_CHECK(not noexcept(absolute_temp_t{}.convert_to(non_si::units::farenheight)));
+   
+    check(
+      equality,
+      "",
+      absolute_temp_t{}.convert_to(non_si::units::farenheight),
+      quantity_t{value_t(-273.15 * 9 / 5 + 32), non_si::units::farenheight}
     );
   }
 }

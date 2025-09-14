@@ -28,5 +28,8 @@ namespace sequoia::testing
 
     template<std::floating_point T>
     void test_celsius_conversions();
+
+    template<std::floating_point T>
+    void test_farenheight_conversions();
   };
 }
