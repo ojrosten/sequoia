@@ -994,12 +994,28 @@ namespace sequoia::physics
     using type = ratio<Num1 * reduced_ratio_type::num, reduced_ratio_type::den>;
   };
 
+  template<auto Num1, auto Den1, std::intmax_t Num2, std::intmax_t Den2>
+    requires(std::integral<decltype(Num1)>)
+  struct product<ratio<Num1, Den1>, std::ratio<Num2, Den2>>
+  {
+    using reduced_ratio_type = std::ratio<Num1 * Num2, Den2>;
+    using type = ratio<reduced_ratio_type::num, reduced_ratio_type::den * Den1>;
+  };
+
   template<intmax_t Num1, intmax_t Den1, auto Num2, auto Den2>
     requires(std::integral<decltype(Den2)>)
   struct product<std::ratio<Num1, Den1>, ratio<Num2, Den2>>
   {
     using reduced_ratio_type = std::ratio<Num1, Den1 * Den2>;
     using type = ratio<Num2 * reduced_ratio_type::num, reduced_ratio_type::den>;
+  };
+
+  template<intmax_t Num1, intmax_t Den1, auto Num2, auto Den2>
+    requires(std::integral<decltype(Num2)>)
+  struct product<std::ratio<Num1, Den1>, ratio<Num2, Den2>>
+  {
+    using reduced_ratio_type = std::ratio<Num1 * Num2, Den1>;
+    using type = ratio<reduced_ratio_type::num, reduced_ratio_type::den * Den2>;
   };
 
   template<auto Num1, auto Den1, std::intmax_t Num2, std::intmax_t Den2>
@@ -1148,36 +1164,35 @@ namespace sequoia::physics
   {
     using wrt_type = typename U::with_respect_to_type;
     using nested_transform_type = root_transform_t<wrt_type>;
-    //using transform_type = product_t<typename U::transform_type, nested_transform_type>;
-    using transform_type = product_t<nested_transform_type, typename U::transform_type>;
+    using transform_type = product_t<typename U::transform_type, nested_transform_type>;
   };
 
   template<physical_unit Unit>
-  struct micro : coordinate_transform<Unit, dilatation<std::micro>, translation<0>>
+  struct micro : coordinate_transform<Unit, dilatation<std::mega>, translation<0>>
   {
     using validator_type = Unit::validator_type;
-    using transform_type = coordinate_transform<Unit, dilatation<std::micro>, translation<0>>;
+    using transform_type = coordinate_transform<Unit, dilatation<std::mega>, translation<0>>;
   };
   
   template<physical_unit Unit>
-  struct milli : coordinate_transform<Unit, dilatation<std::milli>, translation<0>>
-  {
-    using validator_type = Unit::validator_type;
-    using transform_type = coordinate_transform<Unit, dilatation<std::milli>, translation<0>>;
-  };
-
-  template<physical_unit Unit>
-  struct kilo : coordinate_transform<Unit, dilatation<std::kilo>, translation<0>>
+  struct milli : coordinate_transform<Unit, dilatation<std::kilo>, translation<0>>
   {
     using validator_type = Unit::validator_type;
     using transform_type = coordinate_transform<Unit, dilatation<std::kilo>, translation<0>>;
   };
 
   template<physical_unit Unit>
-  struct mega : coordinate_transform<Unit, dilatation<std::mega>, translation<0>>
+  struct kilo : coordinate_transform<Unit, dilatation<std::milli>, translation<0>>
   {
     using validator_type = Unit::validator_type;
-    using transform_type = coordinate_transform<Unit, dilatation<std::mega>, translation<0>>;
+    using transform_type = coordinate_transform<Unit, dilatation<std::milli>, translation<0>>;
+  };
+
+  template<physical_unit Unit>
+  struct mega : coordinate_transform<Unit, dilatation<std::micro>, translation<0>>
+  {
+    using validator_type = Unit::validator_type;
+    using transform_type = coordinate_transform<Unit, dilatation<std::micro>, translation<0>>;
   };
   
   namespace si
@@ -1226,9 +1241,9 @@ namespace sequoia::physics
         constexpr static std::string_view symbol{"rad"};
       };
 
-      struct celsius_t : coordinate_transform<kelvin_t, dilatation<std::ratio<1, 1>>, translation<273.15L>>
+      struct celsius_t : coordinate_transform<kelvin_t, dilatation<std::ratio<1, 1>>, translation<-273.15L>>
       {
-        using translation_type = translation<273.15L>;
+        using translation_type = translation<-273.15L>;
 
         constexpr static std::string_view symbol{"degC"};
         
@@ -1238,7 +1253,7 @@ namespace sequoia::physics
           [[nodiscard]]
           constexpr T operator()(const T val) const
           {
-            constexpr auto absZero{static_cast<T>(-translation_type::displacement)};
+            constexpr auto absZero{static_cast<T>(translation_type::displacement)};
             if(val < absZero)
               throw std::domain_error{std::format("Value {} less than {} {}", val, absZero, symbol)};
 
@@ -1318,13 +1333,13 @@ namespace sequoia::physics
   {
     namespace units
     {
-      struct degree_t : coordinate_transform<si::units::radian_t, dilatation<ratio<std::numbers::pi_v<long double>, intmax_t{180}>>, translation<0>>
+      struct degree_t : coordinate_transform<si::units::radian_t, dilatation<ratio<intmax_t{180}, std::numbers::pi_v<long double>>>, translation<0>>
       {
         using validator_type = std::identity;
         constexpr static std::string_view symbol{"deg"};
       };
 
-      struct gradian_t : coordinate_transform<si::units::radian_t, dilatation<ratio<std::numbers::pi_v<long double>, intmax_t{200}>>, translation<0>>
+      struct gradian_t : coordinate_transform<si::units::radian_t, dilatation<ratio<intmax_t{200}, std::numbers::pi_v<long double>>>, translation<0>>
       {
         using validator_type = std::identity;
         constexpr static std::string_view symbol{"gon"};
@@ -1334,7 +1349,7 @@ namespace sequoia::physics
       inline constexpr gradian_t gradian{};
 
       struct farenheight_t
-        : coordinate_transform<si::units::celsius_t, dilatation<std::ratio<5, 9>>, translation<-160.0L/9>>
+        : coordinate_transform<si::units::celsius_t, dilatation<std::ratio<9, 5>>, translation<32.0l>>
       {        
         constexpr static std::string_view symbol{"degF"};
 
@@ -1512,7 +1527,7 @@ namespace sequoia::maths
     using from_type       = physical_value<ValueSpaceFrom, from_unit_type, BasisFrom, OriginFrom, ValidatorFrom>;
     using to_unit_type    = UnitTo;
     using to_type         = physical_value<ValueSpaceTo, to_unit_type, BasisTo, OriginTo, ValidatorTo>;
-    using transform_type  = product_t<root_transform_t<UnitFrom>, inverse_t<root_transform_t<UnitTo>>>;
+    using transform_type  = product_t<inverse_t<root_transform_t<UnitFrom>>, root_transform_t<UnitTo>>;
 
     constexpr static auto to_displacement() noexcept {
       if constexpr(free_module<ValueSpaceFrom>)
