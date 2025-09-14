@@ -1063,11 +1063,10 @@ namespace sequoia::physics
   struct coordinate_transform;
 
   template<physical_unit U, class Ratio, auto Displacement>
-  // TO DO: pull U out of the coordinate_transform viz unit_transform : coord_transform<dil, trans>
   struct coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>
   {
-    using validator_type = U::validator_type;// Sort this out!
-    using transform_type = coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>; // And this!
+    using validator_type = U::validator_type;// TO DO: Sort this out!
+    using transform_type = coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>; // And this?
     using with_respect_to_type = U;
     using dilatation_type      = dilatation<Ratio>;
     using translation_type     = translation<Displacement>;
@@ -1092,6 +1091,26 @@ namespace sequoia::physics
     using dilatation_type  = dilatation<product_t<LHSRatio, RHSRatio>>;
     using translation_type = translation<LHSDisplacement + RHSDisplacement * LHSRatio::num / LHSRatio::den>;
     using type             = coordinate_transform<RHSUnit, dilatation_type, translation_type>;
+  };
+
+  template<class T>
+  struct is_coordinate_transform : std::false_type {};
+
+  template<class T>
+  using is_coordinate_transform_t = is_coordinate_transform<T>::type;
+
+  template<class T>
+  inline constexpr bool is_coordinate_transform_v{is_coordinate_transform<T>::value};
+
+  template<physical_unit U, class Ratio, auto Displacement>
+  struct is_coordinate_transform<coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>> : std::true_type {};
+
+  template<physical_unit U>
+  inline constexpr bool has_coordinate_transform_v{
+    requires {
+      typename U::transform_type;
+      requires is_coordinate_transform_v<typename U::transform_type>;
+    }
   };
   
   template<physical_unit U>
@@ -1134,16 +1153,32 @@ namespace sequoia::physics
   };
 
   template<physical_unit Unit>
-  using micro = coordinate_transform<Unit, dilatation<std::micro>, translation<0>>;
+  struct micro : coordinate_transform<Unit, dilatation<std::micro>, translation<0>>
+  {
+    using validator_type = Unit::validator_type;
+    using transform_type = coordinate_transform<Unit, dilatation<std::micro>, translation<0>>;
+  };
   
   template<physical_unit Unit>
-  using milli = coordinate_transform<Unit, dilatation<std::milli>, translation<0>>;
+  struct milli : coordinate_transform<Unit, dilatation<std::milli>, translation<0>>
+  {
+    using validator_type = Unit::validator_type;
+    using transform_type = coordinate_transform<Unit, dilatation<std::milli>, translation<0>>;
+  };
 
   template<physical_unit Unit>
-  using kilo = coordinate_transform<Unit, dilatation<std::kilo>, translation<0>>;
+  struct kilo : coordinate_transform<Unit, dilatation<std::kilo>, translation<0>>
+  {
+    using validator_type = Unit::validator_type;
+    using transform_type = coordinate_transform<Unit, dilatation<std::kilo>, translation<0>>;
+  };
 
   template<physical_unit Unit>
-  using mega = coordinate_transform<Unit, dilatation<std::mega>, translation<0>>;
+  struct mega : coordinate_transform<Unit, dilatation<std::mega>, translation<0>>
+  {
+    using validator_type = Unit::validator_type;
+    using transform_type = coordinate_transform<Unit, dilatation<std::mega>, translation<0>>;
+  };
   
   namespace si
   {
@@ -1354,6 +1389,10 @@ namespace sequoia::physics
   template<physical_unit Unit, class Rep, class Ratio>
     requires has_default_space_v<Unit, Rep>
   struct default_space<coordinate_transform<Unit, dilatation<Ratio>, translation<0>>, Rep> : default_space<Unit, Rep> {};
+
+  template<physical_unit Unit, class Rep>
+    requires has_coordinate_transform_v<Unit>
+  struct default_space<Unit, Rep> : default_space<root_transform_t<Unit>, Rep> {};
 
   template<std::floating_point T>
   struct default_space<si::units::kilogram_t, T>
