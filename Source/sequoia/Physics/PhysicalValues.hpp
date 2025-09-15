@@ -450,14 +450,14 @@ namespace sequoia::physics
     has_coordinate_transformation_v<From, To> && std::constructible_from<coordinate_transformation<From, To>>
   };
 
-  template<convex_space C, physical_unit ConversionUnit>
+  template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
   struct conversion_space
   {
     using type = C;
   };
 
-  template<convex_space C, physical_unit ConversionUnit>
-  using conversion_space_t = conversion_space<C, ConversionUnit>::type;
+  template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
+  using conversion_space_t = conversion_space<C, FromUnit, ToUnit>::type;
 
   template<convex_space ValueSpace, physical_unit Unit>
   using default_validator_t = std::conditional_t<affine_space<ValueSpace>, std::identity, typename Unit::validator_type>;
@@ -643,7 +643,7 @@ namespace sequoia::physics
 
     template<
       physical_unit OtherUnit,
-      convex_space OtherSpace=conversion_space_t<ValueSpace, OtherUnit>,
+      convex_space OtherSpace=conversion_space_t<ValueSpace, Unit, OtherUnit>,
       basis_for<free_module_type_of_t<OtherSpace>> OtherBasis = canonical_right_handed_basis<free_module_type_of_t<OtherSpace>>,
       class OtherOrigin                                       = to_origin_type_t<OtherSpace, OtherUnit>,
       validator_for<OtherSpace> OtherValidator                = default_validator_t<OtherSpace, OtherUnit>
@@ -806,19 +806,18 @@ namespace sequoia::physics
     using distinguished_origin = std::true_type;
   };
 
-  // TO DO: maybe define this using a class templated relaxed_space<...>
-  // Indeed, this could obivate the need for conversion spaces since
-  // a unit which defines a translation from an absolute space could
-  // automatically yield a relaxed_space<...>
-  template<std::floating_point Rep, class Arena>
-  struct temperature_space
-    : physical_value_convex_space<sets::classical::temperatures<Arena>, Rep, 1, temperature_space<Rep, Arena>>
+  template<convex_space C>
+    requires has_distinguished_origin_v<C>
+  struct relaxed_space : C
   {
-    using arena_type           = Arena;
-    using base_space           = temperature_space;
+    using base_space          = relaxed_space<typename C::base_space>;
+    using free_module_type    = associated_displacement_space<relaxed_space>;
     using distinguished_origin = std::false_type;
   };
 
+  template<std::floating_point Rep, class Arena>
+  using temperature_space = relaxed_space<absolute_temperature_space<Rep, Arena>>;
+  
   template<std::floating_point Rep, class Arena>
   struct electrical_current_space
     : physical_value_vector_space<sets::classical::electrical_currents<Arena>, Rep, 1, electrical_current_space<Rep, Arena>>
@@ -1167,6 +1166,57 @@ namespace sequoia::physics
     using transform_type = product_t<typename U::transform_type, nested_transform_type>;
   };
 
+  template<class T>
+  struct has_identity_dilatation : std::false_type {};
+
+  template<class T>
+  using has_identity_dilatation_t = has_identity_dilatation<T>::type;
+
+  template<class T>
+  inline constexpr bool has_identity_dilatation_v{has_identity_dilatation<T>::value};
+
+  template<physical_unit U, class Ratio, auto Displacement>
+  struct has_identity_dilatation<coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
+    : std::bool_constant<Ratio::num == Ratio::den>
+  {};
+
+  template<class T>
+  struct has_identity_translation : std::false_type {};
+
+  template<class T>
+  using has_identity_translation_t = has_identity_translation<T>::type;
+
+  template<class T>
+  inline constexpr bool has_identity_translation_v{has_identity_translation<T>::value};
+
+  template<physical_unit U, class Ratio, auto Displacement>
+  struct has_identity_translation<coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
+    : std::bool_constant<Displacement == 0>
+  {}; 
+  
+  template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
+    requires (!has_distinguished_origin_v<C>)
+          || (!has_identity_translation_v<root_transform_t<FromUnit>> && !has_identity_translation_v<root_transform_t<ToUnit>>)
+  struct conversion_space<C, FromUnit, ToUnit>
+  {
+    using type = C;
+  };
+
+  template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
+    requires has_distinguished_origin_v<C>
+          && (has_identity_translation_v<root_transform_t<FromUnit>> && !has_identity_translation_v<root_transform_t<ToUnit>>)
+  struct conversion_space<C, FromUnit, ToUnit>
+  {
+    using type = relaxed_space<C>;
+  };
+
+  template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
+    requires has_distinguished_origin_v<C> && has_identity_translation_v<root_transform_t<ToUnit>>
+  struct conversion_space<relaxed_space<C>, FromUnit, ToUnit>
+  {
+    using type = C;
+  };
+  
   template<physical_unit Unit>
   struct micro : coordinate_transform<Unit, dilatation<std::mega>, translation<0>>
   {
@@ -1377,28 +1427,10 @@ namespace sequoia::physics
     using temperature_farenheight = physical_value<temperature_space<T, Arena>, units::farenheight_t>;
   }
 
-  template<convex_space C, physical_unit ConversionUnit>
-  struct conversion_space<associated_displacement_space<C>, ConversionUnit>
+  template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
+  struct conversion_space<associated_displacement_space<C>, FromUnit, ToUnit>
   {
-    using type = associated_displacement_space<conversion_space_t<C, ConversionUnit>>;
-  };
-  
-  template<std::floating_point Rep, class Arena>
-  struct conversion_space<absolute_temperature_space<Rep, Arena>, si::units::celsius_t>
-  {
-    using type = temperature_space<Rep, Arena>;
-  };
-
-  template<std::floating_point Rep, class Arena>
-  struct conversion_space<absolute_temperature_space<Rep, Arena>, non_si::units::farenheight_t>
-  {
-    using type = temperature_space<Rep, Arena>;
-  };
-
-  template<std::floating_point Rep, class Arena>
-  struct conversion_space<temperature_space<Rep, Arena>, si::units::kelvin_t>
-  {
-    using type = absolute_temperature_space<Rep, Arena>;
+    using type = associated_displacement_space<conversion_space_t<C, FromUnit, ToUnit>>;
   };
 
   template<physical_unit Unit, class Rep, class Ratio>
