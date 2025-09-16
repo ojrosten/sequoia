@@ -125,9 +125,9 @@ namespace sequoia::testing
   template<std::floating_point T>
   void convex_physical_value_test::test_farenheight_conversions()
   {
-    using quantity_t = non_si::temperature_farenheight<T>;
-    //using delta_q_t  = quantity_t::displacement_type;
-    using value_t    = T;
+    using farenheight_t = non_si::temperature_farenheight<T>;
+    using delta_faren_t = farenheight_t::displacement_type;
+    using value_t       = T;
     using farenheight_wrt_t = non_si::units::farenheight_t::with_respect_to_type;
 
     STATIC_CHECK(   derives_from_another_unit_v<non_si::units::farenheight_t>
@@ -168,12 +168,14 @@ namespace sequoia::testing
       >
     );
 
-    STATIC_CHECK(has_quantity_conversion_v<si::temperature<value_t>, quantity_t>);
-    STATIC_CHECK(has_quantity_conversion_v<quantity_t, si::temperature<value_t>>);
-    STATIC_CHECK(!has_quantity_conversion_v<quantity_t, si::mass<value_t>>);
+    STATIC_CHECK(has_quantity_conversion_v<si::temperature<value_t>, farenheight_t>);
+    STATIC_CHECK(has_quantity_conversion_v<farenheight_t, si::temperature<value_t>>);
+    STATIC_CHECK(!has_quantity_conversion_v<farenheight_t, si::mass<value_t>>);
 
     using absolute_temp_t       = si::temperature<value_t>;
-    //using delta_absolute_temp_t = absolute_temp_t::displacement_type;
+    using delta_absolute_temp_t = absolute_temp_t::displacement_type;
+    using celsius_t             = si::temperature_celsius<T>;
+    using delta_celsius_t       = celsius_t::displacement_type;
 
     STATIC_CHECK(not noexcept(absolute_temp_t{}.convert_to(non_si::units::farenheight)));
    
@@ -181,7 +183,35 @@ namespace sequoia::testing
       equality,
       "",
       absolute_temp_t{}.convert_to(non_si::units::farenheight),
-      quantity_t{value_t(-273.15 * 9 / 5 + 32), non_si::units::farenheight}
+      farenheight_t{value_t(-273.15 * 9 / 5 + 32), non_si::units::farenheight}
+    );
+
+    check(
+      equality,
+      "",
+      delta_absolute_temp_t{}.convert_to(non_si::units::farenheight),
+      delta_faren_t{}
+    );
+
+    check(
+      equality,
+      "",
+      delta_absolute_temp_t{10, si::units::kelvin}.convert_to(non_si::units::farenheight),
+      delta_faren_t{value_t(18), non_si::units::farenheight}
+    );
+
+    check(
+      equality,
+      "",
+      delta_faren_t{9, non_si::units::farenheight}.convert_to(si::units::kelvin),
+      delta_absolute_temp_t{value_t{5}, si::units::kelvin}
+    );
+
+    check(
+      equality,
+      "",
+      delta_faren_t{9, non_si::units::farenheight}.convert_to(si::units::celsius),
+      delta_celsius_t{value_t{5}, si::units::celsius}
     );
   }
 }
