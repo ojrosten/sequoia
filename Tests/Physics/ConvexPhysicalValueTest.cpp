@@ -189,6 +189,27 @@ namespace sequoia::testing
     check(
       equality,
       "",
+      farenheight_t{}.convert_to(si::units::kelvin),
+      absolute_temp_t{value_t(273.15 - 160.0L/9), si::units::kelvin}
+    );
+    /*
+    check(
+      equality,
+      "",
+      celsius_t{100, si::units::celsius}.convert_to(non_si::units::farenheight),
+      farenheight_t{value_t(212), non_si::units::farenheight}
+    );
+
+    check(
+      equality,
+      "",
+      farenheight_t{212, non_si::units::farenheight}.convert_to(si::units::celsius),
+      celsius_t{value_t(100), si::units::celsius}
+    );
+    */
+    check(
+      equality,
+      "",
       delta_absolute_temp_t{}.convert_to(non_si::units::farenheight),
       delta_faren_t{}
     );
@@ -211,7 +232,7 @@ namespace sequoia::testing
       equality,
       "",
       delta_faren_t{9, non_si::units::farenheight}.convert_to(si::units::celsius),
-      delta_celsius_t{value_t{5}, si::units::celsius}
+      delta_celsius_t{value_t(5), si::units::celsius}
     );
   }
 }
