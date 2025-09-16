@@ -1452,19 +1452,6 @@ namespace sequoia::physics
   {
     using type = angular_space<T, implicit_common_arena>;
   };
-
-  // TO DO: deduce this from radians
-  template<std::floating_point T>
-  struct default_space<non_si::units::degree_t, T>
-  {
-    using type = angular_space<T, implicit_common_arena>;
-  };
-
-  template<std::floating_point T>
-  struct default_space<non_si::units::gradian_t, T>
-  {
-    using type = angular_space<T, implicit_common_arena>;
-  };
   
   template<vector_space ValueSpace, physical_unit Unit, class Basis, class Origin, validator_for<ValueSpace> Validator>
     requires (dimension_of<ValueSpace> == 1)
