@@ -897,6 +897,18 @@ namespace sequoia::physics
   template<class Validator>
   inline constexpr bool scale_invariant_validator_v{scale_invariant_validator<Validator>::value};
 
+  template<class Validator>
+  struct translation_invariant_validator : std::false_type {};
+
+  template<>
+  struct translation_invariant_validator<std::identity> : std::true_type {};
+
+  template<class Validator>
+  using translation_invariant_validator_t = translation_invariant_validator<Validator>::type;
+
+  template<class Validator>
+  inline constexpr bool translation_invariant_validator_v{translation_invariant_validator<Validator>::value};
+
   //====== Temporary home for some (hacky) ratio stuff ======//
   template<auto Num, auto Den>
   struct ratio;
