@@ -1558,7 +1558,7 @@ namespace sequoia::maths
     using from_type       = physical_value<ValueSpaceFrom, from_unit_type, BasisFrom, OriginFrom, ValidatorFrom>;
     using to_unit_type    = UnitTo;
     using to_type         = physical_value<ValueSpaceTo, to_unit_type, BasisTo, OriginTo, ValidatorTo>;
-    using transform_type  = product_t<inverse_t<root_transform_t<UnitFrom>>, root_transform_t<UnitTo>>;
+    using transform_type  = product_t<root_transform_t<UnitTo>, inverse_t<root_transform_t<UnitFrom>>>;
 
     constexpr static auto to_displacement() noexcept {
       if constexpr(free_module<ValueSpaceFrom>)

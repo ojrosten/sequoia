@@ -192,7 +192,7 @@ namespace sequoia::testing
       farenheight_t{}.convert_to(si::units::kelvin),
       absolute_temp_t{value_t(273.15 - 160.0L/9), si::units::kelvin}
     );
-    /*
+
     check(
       equality,
       "",
@@ -206,7 +206,7 @@ namespace sequoia::testing
       farenheight_t{212, non_si::units::farenheight}.convert_to(si::units::celsius),
       celsius_t{value_t(100), si::units::celsius}
     );
-    */
+
     check(
       equality,
       "",
