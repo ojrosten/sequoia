@@ -748,7 +748,7 @@ namespace sequoia::maths
     template<arithmetic T>
     constexpr T operator()(const T val) const
     {
-      if(val < T{}) throw std::domain_error{std::format("Value {} less than zero", val)};
+      if(val < T{}) throw std::domain_error{std::format("Domain error: attempting to use a value of {} for a semi-positive quantity", val)};
 
       return val;
     }
