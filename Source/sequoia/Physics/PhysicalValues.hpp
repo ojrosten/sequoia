@@ -1317,7 +1317,7 @@ namespace sequoia::physics
           {
             constexpr auto absZero{static_cast<T>(translation_type::displacement)};
             if(val < absZero)
-              throw std::domain_error{std::format("Value {} less than {} {}", val, absZero, symbol)};
+              throw std::domain_error{std::format("Value {} {} less than {} {}", val, symbol, absZero, symbol)};
 
             return val;
           }
@@ -1423,7 +1423,7 @@ namespace sequoia::physics
           {
             constexpr auto absZero{static_cast<T>(-273.15L / 5 * 9 + 32)};
             if(val < absZero)
-              throw std::domain_error{std::format("Value {} less than {} {}", val, absZero, symbol)};
+              throw std::domain_error{std::format("Value {} {} less than {} {}", val, symbol, absZero, symbol)};
 
             return val;
           }

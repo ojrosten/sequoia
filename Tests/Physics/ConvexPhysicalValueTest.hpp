@@ -22,7 +22,10 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
-  private:
+  private:    
+    template<std::floating_point T>
+    void test_exceptions();
+
     template<class Quantity>
     void test_convex_quantity();
 

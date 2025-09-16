@@ -23,15 +23,33 @@ namespace sequoia::testing
 
   void convex_physical_value_test::run_tests()
   {
+    test_exceptions<float>();
+    test_exceptions<double>();
+
     test_convex_quantity<si::temperature_celsius<float>>();
     test_convex_quantity<si::temperature_celsius<double>>();
     test_convex_quantity<non_si::temperature_farenheight<float>>();
+    test_convex_quantity<non_si::temperature_farenheight<double>>();
 
     test_celsius_conversions<float>();
     test_celsius_conversions<double>();
 
     test_farenheight_conversions<float>();
     test_farenheight_conversions<double>();
+  }
+
+  template<std::floating_point T>
+  void convex_physical_value_test::test_exceptions()
+  {
+    check_exception_thrown<std::domain_error>(
+      "",
+      [](){ return si::temperature_celsius<T>{T(-273.16), si::units::celsius}; }
+    );
+
+    check_exception_thrown<std::domain_error>(
+      "",
+      [](){ return non_si::temperature_farenheight<T>{T(-459.7), non_si::units::farenheight}; }
+    );
   }
 
   template<class Quantity>
