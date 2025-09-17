@@ -2,7 +2,7 @@ Tests/Physics/ConvexPhysicalValueTest.cpp, Line 45
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -0.010003662 for a semi-positive quantity
+interval_validator: invoked with -273.16, but values should be >= -273.15 
 
 =======================================
 
@@ -18,7 +18,7 @@ Tests/Physics/ConvexPhysicalValueTest.cpp, Line 45
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -0.010000000000047748 for a semi-positive quantity
+interval_validator: invoked with -273.16, but values should be >= -273.15 
 
 =======================================
 

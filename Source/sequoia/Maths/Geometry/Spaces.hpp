@@ -769,18 +769,21 @@ namespace sequoia::maths
     requires (Upper > Lower)
   struct interval_validator
   {
-    constexpr T operator()(const T val) const
+    constexpr static T lower{Lower}, upper{Upper};
+    
+    template<std::floating_point U>
+    constexpr U operator()(const U val) const
     {
       if constexpr(Lower > -std::numeric_limits<T>::infinity())
       {
-        if(val < Lower)
-          throw std::domain_error{std::format("interval_validator: invoked with {} values should be >= {} ", val, Lower)};
+        if(const auto ulower{static_cast<U>(Lower)}; val < ulower)
+          throw std::domain_error{std::format("interval_validator: invoked with {}, but values should be >= {} ", val, ulower)};
       }
 
       if constexpr(Upper < std::numeric_limits<T>::infinity())
       {
-        if(val > Upper)
-          throw std::domain_error{std::format("interval_validator: invoked with {} values should be <= {} ", val, Upper)};
+        if(const auto uUpper{static_cast<U>(Upper)}; val > uUpper)
+          throw std::domain_error{std::format("interval_validator: invoked with {}, but values should be <= {} ", val, uUpper)};
       }
 
       return val;

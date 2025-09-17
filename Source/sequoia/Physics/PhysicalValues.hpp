@@ -887,11 +887,13 @@ namespace sequoia::physics
   template<class Validator>
   struct scale_invariant_validator : std::false_type {};
 
-  template<>
-  struct scale_invariant_validator<std::identity> : std::true_type {};
+  template<class T>
+    requires is_identity_validator_v<T>
+  struct scale_invariant_validator<T> : std::true_type {};
 
-  template<>
-  struct scale_invariant_validator<half_line_validator> : std::true_type {};
+  template<class T>
+    requires defines_half_line_v<T>
+  struct scale_invariant_validator<T> : std::true_type {};
 
   template<class Validator>
   using scale_invariant_validator_t = scale_invariant_validator<Validator>::type;
@@ -1106,27 +1108,39 @@ namespace sequoia::physics
   struct synthesised_validator;
 
   template<physical_unit U, class Ratio, auto Displacement>
-    requires scale_invariant_validator_v<U> && translation_invariant_validator_v<U>
+    requires scale_invariant_validator_v<typename U::validator_type> && (translation_invariant_validator_v<typename U::validator_type> || !Displacement)
   struct synthesised_validator<coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
   {
     using type = U::validator_type;
   };
 
   template<physical_unit U, class Ratio, auto Displacement>
+    requires scale_invariant_validator_v<typename U::validator_type> && (Displacement != 0)
+  struct synthesised_validator<coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
+  {
+    using value_type = std::remove_cv_t<decltype(Displacement)>;
+    using type = interval_validator<value_type, Displacement>;
+  };
+
+  template<physical_unit U, class Ratio, auto Displacement>
+  requires (!scale_invariant_validator_v<typename U::validator_type>)
   struct synthesised_validator<coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
   {
     struct validator
     {
       template<std::floating_point T>
+      [[nodiscard]]
+      constexpr static T transform(T val) {
+        return static_cast<T>((val * Ratio::num / Ratio::den) + Displacement);
+      }
+      
+      template<std::floating_point T>
       constexpr T operator()(const T val) const
       {
-        using inverse_transformation_type = inverse_t<coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>;
-        using ratio_type                  = inverse_transformation_type::dilatation_type::ratio_type;
-        using translation_type            = inverse_transformation_type::translation_type;
-        using underlying_validator_type   = U::validator_type;
-        underlying_validator_type{}(static_cast<T>((val * ratio_type::num / ratio_type::den) + translation_type::displacement));
+        using underlying_validator_type = U::validator_type; // TO DO: require that this is an interval validator
+        using validator_type = interval_validator<T, transform(underlying_validator_type::lower), transform(underlying_validator_type::upper)>;
 
-        return val;
+        return validator_type{}(val);
       }
     };
 
