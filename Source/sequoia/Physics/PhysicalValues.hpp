@@ -22,16 +22,18 @@ namespace sequoia::physics
   template<class T>
   using reciprocal_validator_t = reciprocal_validator<T>::type;
 
-  template<>
-  struct reciprocal_validator<std::identity>
+  template<class T>
+    requires maths::is_identity_validator_v<T>
+  struct reciprocal_validator<T>
   {
-    using type = std::identity;
+    using type = T;
   };
 
-  template<>
-  struct reciprocal_validator<maths::half_line_validator>
+  template<class T>
+    requires maths::defines_half_line_v<T>
+  struct reciprocal_validator<T>
   {
-    using type = maths::half_line_validator;
+    using type = T;
   };
 
   template<class T>

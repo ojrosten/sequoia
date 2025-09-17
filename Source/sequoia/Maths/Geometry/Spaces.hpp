@@ -739,7 +739,7 @@ namespace sequoia::maths
   struct is_identity_validator<std::identity> : std::true_type {};
 
   /** @ingroup Validators
-      @brief A validator the the half line.
+      @brief A validator for the half line.
 
       For signed arithmetic types throws for negative values; otherwise behaves like an identity operation.
    */
@@ -763,6 +763,31 @@ namespace sequoia::maths
   };
 
   /** @ingroup Validators
+      @brief A generic interval validator for floating-point types.
+   */
+  template<std::floating_point T, T Lower, T Upper=std::numeric_limits<T>::infinity()>
+    requires (Upper > Lower)
+  struct interval_validator
+  {
+    constexpr T operator()(const T val) const
+    {
+      if constexpr(Lower > -std::numeric_limits<T>::infinity())
+      {
+        if(val < Lower)
+          throw std::domain_error{std::format("interval_validator: invoked with {} values should be >= {} ", val, Lower)};
+      }
+
+      if constexpr(Upper < std::numeric_limits<T>::infinity())
+      {
+        if(val > Upper)
+          throw std::domain_error{std::format("interval_validator: invoked with {} values should be <= {} ", val, Upper)};
+      }
+
+      return val;
+    };
+  };
+
+  /** @ingroup Validators
       @brief Trait to determine if a type defines the half line.
    */
   template<class T>
@@ -776,6 +801,16 @@ namespace sequoia::maths
 
   template<>
   struct defines_half_line<half_line_validator> : std::true_type {};
+
+  template<std::floating_point T, T Lower, T Upper>
+  struct defines_half_line<interval_validator<T, Lower, Upper>>
+    : std::bool_constant<(Lower == T{}) && (Upper == std::numeric_limits<T>::infinity())>
+  {};
+
+  template<std::floating_point T, T Lower, T Upper>
+  struct is_identity_validator<interval_validator<T, Lower, Upper>>
+    : std::bool_constant<(Lower == -std::numeric_limits<T>::infinity()) && (Upper == std::numeric_limits<T>::infinity())>
+  {};
 
   /** @defgroup DirectProduct Direct Product
       @brief Direct Products are one way in which spaces can be composed to create new spaces.
