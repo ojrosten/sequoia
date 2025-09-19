@@ -30,7 +30,7 @@ namespace sequoia::physics
   };
 
   template<class T>
-    requires maths::defines_half_line_v<T>
+    requires maths::defines_half_line_validator_v<T>
   struct reciprocal_validator<T>
   {
     using type = T;
@@ -492,7 +492,7 @@ namespace sequoia::physics
     constexpr static std::size_t D{dimension};
 
     constexpr static bool is_intrinsically_absolute{
-      (D == 1) && !affine_space<space_type> && defines_half_line_v<intrinsic_validator_type>
+      (D == 1) && !affine_space<space_type> && defines_half_line_validator_v<intrinsic_validator_type>
     };
 
     constexpr static bool is_effectively_absolute{is_intrinsically_absolute && std::is_same_v<Validator, intrinsic_validator_type>};
@@ -892,7 +892,7 @@ namespace sequoia::physics
   struct scale_invariant_validator<T> : std::true_type {};
 
   template<class T>
-    requires defines_half_line_v<T>
+    requires defines_half_line_validator_v<T>
   struct scale_invariant_validator<T> : std::true_type {};
 
   template<class Validator>

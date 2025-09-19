@@ -806,19 +806,19 @@ namespace sequoia::maths
       @brief Trait to determine if a type defines the half line.
    */
   template<class T>
-  struct defines_half_line : std::false_type {};
+  struct defines_half_line_validator : std::false_type {};
 
   template<class T>
-  using defines_half_line_t = typename defines_half_line<T>::type;
+  using defines_half_line_validator_t = typename defines_half_line_validator<T>::type;
 
   template<class T>
-  inline constexpr bool defines_half_line_v{defines_half_line<T>::value};
+  inline constexpr bool defines_half_line_validator_v{defines_half_line_validator<T>::value};
 
   template<>
-  struct defines_half_line<half_line_validator> : std::true_type {};
+  struct defines_half_line_validator<half_line_validator> : std::true_type {};
 
   template<std::floating_point T, T Lower, T Upper>
-  struct defines_half_line<interval_validator<T, Lower, Upper>>
+  struct defines_half_line_validator<interval_validator<T, Lower, Upper>>
     : std::bool_constant<(Lower == T{}) && (Upper == std::numeric_limits<T>::infinity())>
   {};
 
