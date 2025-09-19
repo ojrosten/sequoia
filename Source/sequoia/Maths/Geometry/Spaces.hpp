@@ -790,6 +790,21 @@ namespace sequoia::maths
     };
   };
 
+  // TO DO: reconsider whether this can/should be more generic.
+  // Also reconsider making a distinction between is_identity_validator (specifc)
+  // and defines_identity_validator
+  template<class T>
+  struct is_interval_validator : std::false_type {};
+
+  template<class T>
+  using is_interval_validator_t = is_interval_validator<T>::type;
+
+  template<class T>
+  inline constexpr bool is_interval_validator_v{is_interval_validator<T>::value};
+
+  template<std::floating_point T, T Lower, T Upper>
+  struct is_interval_validator<interval_validator<T, Lower, Upper>> : std::true_type {};
+
   /** @ingroup Validators
       @brief Trait to determine if a type defines the half line.
    */

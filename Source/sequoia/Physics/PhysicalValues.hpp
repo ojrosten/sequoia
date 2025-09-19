@@ -1123,7 +1123,7 @@ namespace sequoia::physics
   };
 
   template<physical_unit U, class Ratio, auto Displacement>
-  requires (!scale_invariant_validator_v<typename U::validator_type>)
+    requires (!scale_invariant_validator_v<typename U::validator_type>) && is_interval_validator_v<typename U::validator_type>
   struct synthesised_validator<coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
   {
     struct validator
