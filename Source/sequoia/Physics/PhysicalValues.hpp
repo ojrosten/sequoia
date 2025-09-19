@@ -23,7 +23,7 @@ namespace sequoia::physics
   using reciprocal_validator_t = reciprocal_validator<T>::type;
 
   template<class T>
-    requires maths::is_identity_validator_v<T>
+    requires maths::defines_identity_validator_v<T>
   struct reciprocal_validator<T>
   {
     using type = T;
@@ -236,7 +236,7 @@ namespace sequoia::physics
 
   template<convex_space ValueSpace, validator_for<ValueSpace> Validator>
   inline constexpr bool has_consistent_validator{
-    !affine_space<ValueSpace> || is_identity_validator_v<Validator>
+    !affine_space<ValueSpace> || defines_identity_validator_v<Validator>
   };
 
   template<convex_space ValueSpace>
@@ -888,7 +888,7 @@ namespace sequoia::physics
   struct scale_invariant_validator : std::false_type {};
 
   template<class T>
-    requires is_identity_validator_v<T>
+    requires defines_identity_validator_v<T>
   struct scale_invariant_validator<T> : std::true_type {};
 
   template<class T>

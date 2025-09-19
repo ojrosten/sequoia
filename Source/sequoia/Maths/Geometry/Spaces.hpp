@@ -727,16 +727,16 @@ namespace sequoia::maths
       @brief Trait for validators that behave like the identity.
    */
   template<class T>
-  struct is_identity_validator : std::false_type {};
+  struct defines_identity_validator : std::false_type {};
 
   template<class T>
-  using is_identity_validator_t = is_identity_validator<T>::type;
+  using defines_identity_validator_t = defines_identity_validator<T>::type;
 
   template<class T>
-  inline constexpr bool is_identity_validator_v{is_identity_validator<T>::value};
+  inline constexpr bool defines_identity_validator_v{defines_identity_validator<T>::value};
 
   template<>
-  struct is_identity_validator<std::identity> : std::true_type {};
+  struct defines_identity_validator<std::identity> : std::true_type {};
 
   /** @ingroup Validators
       @brief A validator for the half line.
@@ -790,9 +790,6 @@ namespace sequoia::maths
     };
   };
 
-  // TO DO: reconsider whether this can/should be more generic.
-  // Also reconsider making a distinction between is_identity_validator (specifc)
-  // and defines_identity_validator
   template<class T>
   struct is_interval_validator : std::false_type {};
 
@@ -826,7 +823,7 @@ namespace sequoia::maths
   {};
 
   template<std::floating_point T, T Lower, T Upper>
-  struct is_identity_validator<interval_validator<T, Lower, Upper>>
+  struct defines_identity_validator<interval_validator<T, Lower, Upper>>
     : std::bool_constant<(Lower == -std::numeric_limits<T>::infinity()) && (Upper == std::numeric_limits<T>::infinity())>
   {};
 
@@ -1183,7 +1180,7 @@ namespace sequoia::maths
     using displacement_coordinates_type = DisplacementCoordinates;
 
     constexpr static bool has_distinguished_origin{has_distinguished_origin_v<ConvexSpace>};
-    constexpr static bool has_identity_validator{is_identity_validator_v<Validator>};
+    constexpr static bool has_identity_validator{defines_identity_validator_v<Validator>};
     constexpr static bool has_freely_mutable_components{has_identity_validator && has_distinguished_origin};
     constexpr static std::size_t dimension{free_module_type::dimension};
     constexpr static std::size_t D{dimension};
