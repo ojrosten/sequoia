@@ -10,7 +10,7 @@ Tests/Physics/ConvexPhysicalValueTest.cpp, Line 50
 
 Expected Exception Type:
 [std::domain_error]
-Value -459.7 degF less than -459.67 degF
+interval_validator: invoked with -459.7, but values should be >= -459.67 
 
 =======================================
 
@@ -26,7 +26,7 @@ Tests/Physics/ConvexPhysicalValueTest.cpp, Line 50
 
 Expected Exception Type:
 [std::domain_error]
-Value -459.7 degF less than -459.66999999999996 degF
+interval_validator: invoked with -459.7, but values should be >= -459.66999999999996 
 
 =======================================
 

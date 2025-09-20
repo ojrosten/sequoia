@@ -1120,17 +1120,17 @@ namespace sequoia::physics
   {
     struct validator
     {
-      template<std::floating_point T>
+      template<std::floating_point To, std::floating_point From>
       [[nodiscard]]
-      constexpr static T transform(T val) {
-        return static_cast<T>((val * Ratio::num / Ratio::den) + Displacement);
+      constexpr static To transform(From val) {
+        return static_cast<To>((val * Ratio::num / Ratio::den) + Displacement);
       }
       
       template<std::floating_point T>
       constexpr T operator()(const T val) const
       {
         using underlying_validator_type = U::validator_type;
-        using validator_type = interval_validator<T, transform(underlying_validator_type::lower), transform(underlying_validator_type::upper)>;
+        using validator_type = interval_validator<T, transform<T>(underlying_validator_type::lower), transform<T>(underlying_validator_type::upper)>;
 
         return validator_type{}(val);
       }
@@ -1355,8 +1355,6 @@ namespace sequoia::physics
 
       struct celsius_t : coordinate_transform<kelvin_t, dilatation<std::ratio<1, 1>>, translation<-273.15L>>
       {
-        using translation_type = translation<-273.15L>;
-
         constexpr static std::string_view symbol{"degC"};
       };
 
@@ -1448,22 +1446,6 @@ namespace sequoia::physics
         : coordinate_transform<si::units::celsius_t, dilatation<std::ratio<9, 5>>, translation<32.0l>>
       {        
         constexpr static std::string_view symbol{"degF"};
-
-        struct validator
-        {
-          template<std::floating_point T>
-          [[nodiscard]]
-          constexpr T operator()(const T val) const
-          {
-            constexpr auto absZero{static_cast<T>(-273.15L / 5 * 9 + 32)};
-            if(val < absZero)
-              throw std::domain_error{std::format("Value {} {} less than {} {}", val, symbol, absZero, symbol)};
-
-            return val;
-          }
-        };
-
-        using validator_type = validator;
       };
 
       inline constexpr farenheight_t farenheight{};
