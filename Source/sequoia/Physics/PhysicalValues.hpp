@@ -1090,22 +1090,14 @@ namespace sequoia::physics
     using type = translation<-Displacement>;
   };  
   
-  template<class...>
-  struct coordinate_transform;
-
-  template<physical_unit U, class Ratio, auto Displacement>
-  struct coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>
-  {
-    using validator_type = U::validator_type;// TO DO: Sort this out!
-    using transform_type = coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>; // And this?
-    using with_respect_to_type = U;
-    using dilatation_type      = dilatation<Ratio>;
-    using translation_type     = translation<Displacement>;
-  };
-
-  
   template<class T>
   struct synthesised_validator;
+
+  template<class T>
+  using synthesised_validator_t = synthesised_validator<T>::type;
+
+  template<class...>
+  struct coordinate_transform;
 
   template<physical_unit U, class Ratio, auto Displacement>
     requires scale_invariant_validator_v<typename U::validator_type> && (translation_invariant_validator_v<typename U::validator_type> || !Displacement)
@@ -1137,7 +1129,7 @@ namespace sequoia::physics
       template<std::floating_point T>
       constexpr T operator()(const T val) const
       {
-        using underlying_validator_type = U::validator_type; // TO DO: require that this is an interval validator
+        using underlying_validator_type = U::validator_type;
         using validator_type = interval_validator<T, transform(underlying_validator_type::lower), transform(underlying_validator_type::upper)>;
 
         return validator_type{}(val);
@@ -1147,12 +1139,19 @@ namespace sequoia::physics
     using type = validator;
   };
 
-  
+  template<physical_unit U, class Ratio, auto Displacement>
+  struct coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>
+  {
+    using transform_type = coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>;    
+    using validator_type = synthesised_validator_t<transform_type>;
+    using with_respect_to_type = U;
+    using dilatation_type      = dilatation<Ratio>;
+    using translation_type     = translation<Displacement>;
+  };
 
   template<physical_unit U, class Ratio, auto Displacement>
   struct inverse<coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
   {
-    using validator_type = U::validator_type;// Sort this out!
     using inverse_dil_type   = inverse_t<dilatation<Ratio>>;
     using inverse_ratio_type = inverse_dil_type::ratio_type;
     using type = coordinate_transform<U, inverse_dil_type, inverse_t<translation<Displacement * inverse_ratio_type::num / inverse_ratio_type::den>>>;
@@ -1359,22 +1358,6 @@ namespace sequoia::physics
         using translation_type = translation<-273.15L>;
 
         constexpr static std::string_view symbol{"degC"};
-        
-        /*struct validator
-        {
-          template<std::floating_point T>
-          [[nodiscard]]
-          constexpr T operator()(const T val) const
-          {
-            constexpr auto absZero{static_cast<T>(translation_type::displacement)};
-            if(val < absZero)
-              throw std::domain_error{std::format("Value {} {} less than {} {}", val, symbol, absZero, symbol)};
-
-            return val;
-          }
-          };*/
-
-        using validator_type = synthesised_validator<coordinate_transform<kelvin_t, dilatation<std::ratio<1, 1>>, translation<-273.15L>>>::type;
       };
 
       inline constexpr ampere_t   ampere{};
