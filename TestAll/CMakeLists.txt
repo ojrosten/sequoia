@@ -48,6 +48,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/FileSystem/FileSystemFreeTest.cpp
                ${TestDir}/FileSystem/NormalPathTest.cpp
                ${TestDir}/FileSystem/NormalPathTestingDiagnostics.cpp
+               ${TestDir}/Maths/Algebra/RatioFreeTest.cpp
                ${TestDir}/Maths/Geometry/AffineCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp
                ${TestDir}/Maths/Geometry/SpacesMetaFreeTest.cpp

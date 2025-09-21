@@ -154,7 +154,6 @@ namespace sequoia::testing
   template<std::floating_point T>
   void vector_physical_value_test::test_conversions()
   {
-    STATIC_CHECK(!std::same_as<ratio<1, 1>, ratio<1L, 1>>, "This is an unfortunate consequence of ratio<intmax_t, intmax_t> being a specialization");
     STATIC_CHECK(std::same_as<root_transform_unit_t<alternative::gradian_t>, si::units::radian_t>);
     //STATIC_CHECK(std::same_as<root_scale_ratio_t<alternative::gradian_t>, ratio<std::numbers::pi_v<long double>, 200L>>);
     STATIC_CHECK(std::same_as<root_transform_unit_t<non_si::units::gradian_t>, si::units::radian_t>);

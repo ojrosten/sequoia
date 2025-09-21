@@ -13,6 +13,7 @@ set(TestDir ${CMAKE_CURRENT_LIST_DIR}/../Tests)
 
 target_sources(TestChamber PRIVATE 
                
+               ${TestDir}/Maths/Algebra/RatioFreeTest.cpp
                ${TestDir}/Maths/Geometry/AffineCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp
                ${TestDir}/Maths/Geometry/SpacesMetaFreeTest.cpp
