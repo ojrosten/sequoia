@@ -19,7 +19,25 @@ namespace sequoia::testing
   }
 
   void ratio_free_test::run_tests()
-  {    
+  {
+    STATIC_CHECK(maths::ratio<1, 2>::num == 1);
+    STATIC_CHECK(maths::ratio<1, 2>::den == 2);
+
+    STATIC_CHECK(maths::ratio<2, 4>::num == 1);
+    STATIC_CHECK(maths::ratio<2, 4>::den == 2);
+
+    STATIC_CHECK(maths::ratio<4, 2>::num == 2);
+    STATIC_CHECK(maths::ratio<4, 2>::den == 1);
+    
+    STATIC_CHECK(maths::ratio<1.1L, 2>::num == 1.1L);
+    STATIC_CHECK(maths::ratio<1.1L, 2>::den == 2);
+
+    STATIC_CHECK(maths::ratio<2, 1.1L>::num == 2);
+    STATIC_CHECK(maths::ratio<2, 1.1L>::den == 1.1L);
+    
+    STATIC_CHECK(maths::ratio<1.1L, 2.1L>::num == 1.1L);
+    STATIC_CHECK(maths::ratio<1.1L, 2.1L>::den == 2.1L);
+    
     STATIC_CHECK(!std::same_as<maths::ratio<1, 1>, maths::ratio<1L, 1>>,
                  "This is an unfortunate consequence of ratio<intmax_t, intmax_t> being a specialization");
   }
