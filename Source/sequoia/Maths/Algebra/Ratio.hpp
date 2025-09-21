@@ -25,8 +25,9 @@ namespace sequoia::maths
   template<long double Num, long double Den>
   struct ratio<Num, Den>
   {
-    constexpr static auto num{Num};
-    constexpr static auto den{Den};
+    constexpr static bool is_identity_v{Num == Den};
+    constexpr static auto num{is_identity_v ? 1.0L : Num};
+    constexpr static auto den{is_identity_v ? 1.0L : Den};
   };
 
   template<long double Num, std::intmax_t Den>
@@ -53,4 +54,71 @@ namespace sequoia::maths
       requires arithmetic<decltype(T::den)>;
     }
   };
+
+  namespace impl
+  {
+    template<class...>
+    struct ratio_product;
+
+    template<class T, class U>
+    using ratio_product_t = ratio_product<T, U>::type;
+
+    template<auto Num1, auto Den1, auto Num2, auto Den2>
+    struct ratio_product<ratio<Num1, Den1>, ratio<Num2, Den2>>
+    {
+      using type
+        = std::conditional_t<
+            Num1 == Den2,                    ratio<Num2, Den1>,
+            std::conditional_t<Den1 == Num2, ratio<Num1, Den2>,
+                                             ratio<Num1 * Num2, Den1 * Den2>>
+          >;
+    };
+
+    template<auto Num1, auto Den1, std::intmax_t Num2, std::intmax_t Den2>
+      requires std::integral<decltype(Den1)>
+    struct ratio_product<ratio<Num1, Den1>, std::ratio<Num2, Den2>>
+    {
+      using reduced_ratio_type = std::ratio<Num2, Den1 * Den2>;
+      using type = ratio<Num1 * reduced_ratio_type::num, reduced_ratio_type::den>;
+    };
+
+    template<auto Num1, auto Den1, std::intmax_t Num2, std::intmax_t Den2>
+      requires(std::integral<decltype(Num1)>)
+    struct ratio_product<ratio<Num1, Den1>, std::ratio<Num2, Den2>>
+    {
+      using reduced_ratio_type = std::ratio<Num1 * Num2, Den2>;
+      using type = ratio<reduced_ratio_type::num, reduced_ratio_type::den * Den1>;
+    };
+
+    template<intmax_t Num1, intmax_t Den1, auto Num2, auto Den2>
+      requires std::integral<decltype(Den2)>
+    struct ratio_product<std::ratio<Num1, Den1>, ratio<Num2, Den2>>
+    {
+      using reduced_ratio_type = std::ratio<Num1, Den1 * Den2>;
+      using type = ratio<Num2 * reduced_ratio_type::num, reduced_ratio_type::den>;
+    };
+
+    template<intmax_t Num1, intmax_t Den1, auto Num2, auto Den2>
+      requires std::integral<decltype(Num2)>
+    struct ratio_product<std::ratio<Num1, Den1>, ratio<Num2, Den2>>
+    {
+      using reduced_ratio_type = std::ratio<Num1 * Num2, Den1>;
+      using type = ratio<reduced_ratio_type::num, reduced_ratio_type::den * Den2>;
+    };
+
+    template<auto Num1, auto Den1, std::intmax_t Num2, std::intmax_t Den2>
+    struct ratio_product<ratio<Num1, Den1>, std::ratio<Num2, Den2>> : ratio_product<ratio<Num1, Den1>, ratio<Num2, Den2>>
+    {};
+
+    template<std::intmax_t Num1, std::intmax_t Den1, auto Num2, auto Den2>
+    struct ratio_product<std::ratio<Num1, Den1>, ratio<Num2, Den2>> : ratio_product<ratio<Num1, Den1>, ratio<Num2, Den2>>
+    {};
+
+    template<std::intmax_t Num1, std::intmax_t Den1, std::intmax_t Num2, std::intmax_t Den2>
+    struct ratio_product<std::ratio<Num1, Den1>, std::ratio<Num2, Den2>>
+    {
+      using type = std::ratio_multiply<std::ratio<Num1, Den1>, std::ratio<Num2, Den2>>;
+    };
+
+  }
 }

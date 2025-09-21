@@ -938,17 +938,17 @@ namespace sequoia::physics
   template<class T, class U>
   using product_t = product<T, U>::type;
 
-  template<auto Num1, auto Den1>
+  /*template<auto Num1, auto Den1>
   struct product<ratio<Num1, Den1>>
   {
     using type = ratio<Num1, Den1>;
-  };
+    };
 
   template<std::intmax_t Num1, std::intmax_t Den1>
   struct product<std::ratio<Num1, Den1>>
   {
     using type = std::ratio<Num1, Den1>;
-  };
+    };*/
 
   template<auto Num1, auto Den1, auto Num2, auto Den2>
   struct product<ratio<Num1, Den1>, ratio<Num2, Den2>>
