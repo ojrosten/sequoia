@@ -40,5 +40,9 @@ namespace sequoia::testing
     
     STATIC_CHECK(!std::same_as<maths::ratio<1, 1>, maths::ratio<1L, 1>>,
                  "This is an unfortunate consequence of ratio<intmax_t, intmax_t> being a specialization");
+
+    STATIC_CHECK(maths::defines_ratio_v<maths::ratio<1, 2>>);
+    STATIC_CHECK(maths::defines_ratio_v<std::ratio<1, 2>>);
+    STATIC_CHECK(maths::defines_ratio_v<maths::ratio<1.1L, 2>>);
   }
 }

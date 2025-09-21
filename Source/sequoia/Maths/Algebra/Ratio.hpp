@@ -44,18 +44,13 @@ namespace sequoia::maths
   };
 
   template<class T>
-  struct is_ratio : std::false_type {};
+  inline constexpr bool defines_ratio_v{
+    requires {
+      T::num;
+      T::den;
 
-  template<class T>
-  using is_ratio_t = is_ratio<T>::type;
-
-  template<class T>
-  inline constexpr bool is_ratio_v{is_ratio<T>::value};
-
-  template<std::intmax_t Num, std::intmax_t Den>
-  struct is_ratio<std::ratio<Num, Den>> : std::true_type {};
-
-  template<auto Num, auto Den>
-  struct is_ratio<ratio<Num, Den>> : std::true_type {};
-
+      requires arithmetic<decltype(T::num)>;
+      requires arithmetic<decltype(T::den)>;
+    }
+  };
 }
