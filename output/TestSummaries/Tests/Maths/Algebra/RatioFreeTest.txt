@@ -1,2 +1,2 @@
 Ratio Free Test
-Standard Top Level Checks:                19;  Failures:  0  [Deep checks: 19]
+Standard Top Level Checks:                20;  Failures:  0  [Deep checks: 20]
