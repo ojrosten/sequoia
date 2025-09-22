@@ -12,6 +12,8 @@
 
 namespace sequoia::testing
 {
+  using namespace maths;
+
   [[nodiscard]]
   std::filesystem::path ratio_free_test::source_file() const
   {
@@ -19,6 +21,12 @@ namespace sequoia::testing
   }
 
   void ratio_free_test::run_tests()
+  {
+    test_ratio();
+    test_ratio_multiply();
+  }
+
+  void ratio_free_test::test_ratio()
   {
     STATIC_CHECK(maths::ratio<1, 2>::num == 1);
     STATIC_CHECK(maths::ratio<1, 2>::den == 2);
@@ -47,5 +55,10 @@ namespace sequoia::testing
     STATIC_CHECK(maths::defines_ratio_v<maths::ratio<1, 2>>);
     STATIC_CHECK(maths::defines_ratio_v<std::ratio<1, 2>>);
     STATIC_CHECK(maths::defines_ratio_v<maths::ratio<1.1L, 2>>);
+  }
+
+  void ratio_free_test::test_ratio_multiply()
+  {
+    STATIC_CHECK(std::same_as<ratio_multiply<ratio<1, 3>, ratio<2, 4>>, ratio<2, 12>>);
   }
 }

@@ -22,5 +22,9 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
+  private:
+    void test_ratio();
+
+    void test_ratio_multiply();
   };
 }
