@@ -9,7 +9,7 @@
 
 /** \file */
 
-#include <numbers>
+#include <numeric>
 #include <ratio>
 
 namespace sequoia::maths
@@ -65,7 +65,9 @@ namespace sequoia::maths
     template<class T, class U>
     using ratio_product_t = ratio_product<T, U>::type;
 
-    /*template<auto Num1, auto Den1, auto Num2, auto Den2>
+    template<auto Num1, auto Den1, auto Num2, auto Den2>
+    requires (   !std::integral<decltype(Num1)> || !std::integral<decltype(Den1)>
+              || !std::integral<decltype(Num2)> || !std::integral<decltype(Den2)>)
     struct ratio_product<ratio<Num1, Den1>, ratio<Num2, Den2>>
     {
       using type
@@ -74,7 +76,7 @@ namespace sequoia::maths
             std::conditional_t<Den1 == Num2, ratio<Num1, Den2>,
                                              ratio<Num1 * Num2, Den1 * Den2>>
           >;
-          };*/
+    };
 
     template<auto Num1, auto Den1, std::intmax_t Num2, std::intmax_t Den2>
       requires std::integral<decltype(Den1)>
@@ -127,8 +129,8 @@ namespace sequoia::maths
     };
 
     template<auto Num1, auto Den1, auto Num2, auto Den2>
-    requires std::integral<decltype(Num1)> && std::integral<decltype(Den1)>
-          && std::integral<decltype(Num2)> && std::integral<decltype(Den2)>
+      requires std::integral<decltype(Num1)> && std::integral<decltype(Den1)>
+            && std::integral<decltype(Num2)> && std::integral<decltype(Den2)>
     struct ratio_product<ratio<Num1, Den1>, ratio<Num2, Den2>>
       : ratio_product<std::ratio<Num1, Den1>, std::ratio<Num2, Den2>>
     {

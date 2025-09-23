@@ -12,6 +12,8 @@
 #include "sequoia/Physics/PhysicalValuesDetails.hpp"
 #include "sequoia/Maths/Algebra/Ratio.hpp"
 
+#include <numbers>
+
 namespace sequoia::physics
 {
   template<class T>

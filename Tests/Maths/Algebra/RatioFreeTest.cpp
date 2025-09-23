@@ -62,5 +62,7 @@ namespace sequoia::testing
     constexpr auto int_max{std::numeric_limits<std::intmax_t>::max()};
     STATIC_CHECK(std::same_as<ratio_multiply<ratio<1, 3>, ratio<2, 4>>, ratio<1L, 6L>>);
     STATIC_CHECK(std::same_as<ratio_multiply<ratio<int_max, 1>, ratio<2, 4>>, ratio<int_max, 2L>>);
+
+    STATIC_CHECK(std::same_as<ratio_multiply<ratio<1.0L, 3>, ratio<2, 4>>, ratio<2.0L, 12>>);
   }
 }
