@@ -22,7 +22,14 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
-  private:
+  private:    
+    template<std::integral T>
+    void test_ratio();
+
+    template<std::floating_point T>
+    void test_ratio();
+
+    template<std::integral T, std::floating_point U>
     void test_ratio();
 
     void test_ratio_multiply();

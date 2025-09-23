@@ -17,33 +17,28 @@ namespace sequoia::maths
   template<auto Num, auto Den>
   struct ratio;
 
-  template<std::intmax_t Num, intmax_t Den>
-  struct ratio<Num, Den> : std::ratio<Num, Den>
-  {
-  };
-
-  template<long double Num, long double Den>
+  template<auto Num, auto Den>
+    requires std::integral<decltype(Num)> && std::integral<decltype(Den)>
   struct ratio<Num, Den>
   {
+    constexpr static auto divisor{std::gcd(Num, Den)};
+    constexpr static auto num{Num/divisor};
+    constexpr static auto den{Den/divisor};
+  };
+
+  template<auto Num, auto Den>
+    requires arithmetic<decltype(Num)> && arithmetic<decltype(Den)>
+          && (std::floating_point<decltype(Num)> || std::floating_point<decltype(Den)>)
+  struct ratio<Num, Den>
+  {
+    using num_type = std::remove_cv_t<decltype(Num)>;
+    using den_type = std::remove_cv_t<decltype(Den)>;
+    
     // TO DO: once constexpr fmod / remainder is supported,
     // consider more general reductions
     constexpr static bool is_identity_v{Num == Den};
-    constexpr static auto num{is_identity_v ? 1.0L : Num};
-    constexpr static auto den{is_identity_v ? 1.0L : Den};
-  };
-
-  template<long double Num, std::intmax_t Den>
-  struct ratio<Num, Den>
-  {
-    constexpr static auto num{Num};
-    constexpr static auto den{Den};
-  };
-
-  template<std::intmax_t Num, long double Den>
-  struct ratio<Num, Den>
-  {
-    constexpr static auto num{Num};
-    constexpr static auto den{Den};
+    constexpr static auto num{is_identity_v ? num_type(1) : Num};
+    constexpr static auto den{is_identity_v ? den_type(1) : Den};
   };
 
   template<class T>

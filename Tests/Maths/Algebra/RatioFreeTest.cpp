@@ -21,40 +21,87 @@ namespace sequoia::testing
   }
 
   void ratio_free_test::run_tests()
-  {
-    test_ratio();
+  {    
+    STATIC_CHECK(!std::same_as<maths::ratio<1, 1>, maths::ratio<1L, 1>>);
+    
+    test_ratio<int>();
+    test_ratio<std::size_t>();
+    test_ratio<std::intmax_t>();
+
+    test_ratio<float>();
+    test_ratio<double>();
+    test_ratio<long double>();
+
+    test_ratio<int, float>();
+    test_ratio<std::intmax_t, long double>();
+
     test_ratio_multiply();
   }
 
+  template<std::integral T>
   void ratio_free_test::test_ratio()
   {
-    STATIC_CHECK(maths::ratio<1, 2>::num == 1);
-    STATIC_CHECK(maths::ratio<1, 2>::den == 2);
+    STATIC_CHECK(maths::defines_ratio_v<maths::ratio<T(1), T(2)>>);
+    STATIC_CHECK(maths::defines_ratio_v<std::ratio<T(1), T(2)>>);
 
-    STATIC_CHECK(maths::ratio<2, 4>::num == 1);
-    STATIC_CHECK(maths::ratio<2, 4>::den == 2);
+    {
+      using r = maths::ratio<T(1), T(2)>;
+      STATIC_CHECK(r::num == T(1));
+      STATIC_CHECK(r::den == T(2));
+    }
 
-    STATIC_CHECK(maths::ratio<4, 2>::num == 2);
-    STATIC_CHECK(maths::ratio<4, 2>::den == 1);
-    
-    STATIC_CHECK(maths::ratio<1.1L, 2>::num == 1.1L);
-    STATIC_CHECK(maths::ratio<1.1L, 2>::den == 2);
+    {
+      using r = maths::ratio<T(2), T(4)>;
+      STATIC_CHECK(r::num == T(1));
+      STATIC_CHECK(r::den == T(2));
+    }
 
-    STATIC_CHECK(maths::ratio<2, 1.1L>::num == 2);
-    STATIC_CHECK(maths::ratio<2, 1.1L>::den == 1.1L);
-    
-    STATIC_CHECK(maths::ratio<1.1L, 2.1L>::num == 1.1L);
-    STATIC_CHECK(maths::ratio<1.1L, 2.1L>::den == 2.1L);
+    {
+      using r = maths::ratio<T(4), T(2)>;
+      STATIC_CHECK(r::num == T(2));
+      STATIC_CHECK(r::den == T(1));
+    }
+  }
 
-    STATIC_CHECK(maths::ratio<1.1L, 1.1L>::num == 1.0L);
-    STATIC_CHECK(maths::ratio<1.1L, 1.1L>::den == 1.0L);
-    
-    STATIC_CHECK(!std::same_as<maths::ratio<1, 1>, maths::ratio<1L, 1>>,
-                 "This is an unfortunate consequence of ratio<intmax_t, intmax_t> being a specialization");
+  template<std::integral T, std::floating_point U>
+  void ratio_free_test::test_ratio()
+  {
+    STATIC_CHECK(maths::defines_ratio_v<maths::ratio<T(2), U(1.1)>>);
+    STATIC_CHECK(maths::defines_ratio_v<maths::ratio<U(1.1), T(2)>>);
 
-    STATIC_CHECK(maths::defines_ratio_v<maths::ratio<1, 2>>);
-    STATIC_CHECK(maths::defines_ratio_v<std::ratio<1, 2>>);
-    STATIC_CHECK(maths::defines_ratio_v<maths::ratio<1.1L, 2>>);
+    {
+      using r = maths::ratio<T(2), U(1.1)>;
+      STATIC_CHECK(r::num == T(2));
+      STATIC_CHECK(r::den == U(1.1));
+    }
+
+    {
+      using r = maths::ratio<U(1.1), T(2)>;
+      STATIC_CHECK(r::num == U(1.1));
+      STATIC_CHECK(r::den == T(2));
+    }
+
+    {
+      using r = maths::ratio<U(2), T(2)>;
+      STATIC_CHECK(r::num == U(1));
+      STATIC_CHECK(r::den == T(1));
+    }
+  }
+  
+  template<std::floating_point T>
+  void ratio_free_test::test_ratio()
+  {
+    {
+      using r = maths::ratio<T(1.1), T(2.1)>;
+      STATIC_CHECK(r::num == T(1.1));
+      STATIC_CHECK(r::den == T(2.1));
+    }
+
+    {
+      using r = maths::ratio<T(1.1), T(1.1)>;
+      STATIC_CHECK(r::num == T(1));
+      STATIC_CHECK(r::den == T(1));
+    }    
   }
 
   void ratio_free_test::test_ratio_multiply()
