@@ -32,6 +32,13 @@ namespace sequoia::testing
     template<std::integral T, std::floating_point U>
     void test_ratio();
 
+    template<std::integral T>
+    void test_ratio_multiply();
+
+    template<std::floating_point T>
+    void test_ratio_multiply();
+
+    template<std::integral T, std::floating_point U>
     void test_ratio_multiply();
   };
 }

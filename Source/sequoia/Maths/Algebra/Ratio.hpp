@@ -61,16 +61,16 @@ namespace sequoia::maths
     using ratio_product_t = ratio_product<T, U>::type;
 
     template<auto Num1, auto Den1, auto Num2, auto Den2>
-    requires (   !std::integral<decltype(Num1)> || !std::integral<decltype(Den1)>
-              || !std::integral<decltype(Num2)> || !std::integral<decltype(Den2)>)
+    requires arithmetic<decltype(Num1)> && arithmetic<decltype(Den1)>
+          && arithmetic<decltype(Num2)> && arithmetic<decltype(Den2)>
     struct ratio_product<ratio<Num1, Den1>, ratio<Num2, Den2>>
     {
-      using type
-        = std::conditional_t<
-            Num1 == Den2,                    ratio<Num2, Den1>,
-            std::conditional_t<Den1 == Num2, ratio<Num1, Den2>,
-                                             ratio<Num1 * Num2, Den1 * Den2>>
-          >;
+      using reduced_ratio_a_type = ratio<ratio<Num1, Den1>::num, ratio<Num2, Den2>::den>;
+      using reduced_ratio_b_type = ratio<ratio<Num2, Den2>::num, ratio<Num1, Den1>::den>;
+      using fully_reduced_type   = ratio<reduced_ratio_a_type::num * reduced_ratio_b_type::num, 
+                                         reduced_ratio_a_type::den * reduced_ratio_b_type::den>;
+
+      using type = ratio<fully_reduced_type::num, fully_reduced_type::den>;
     };
 
     template<auto Num1, auto Den1, std::intmax_t Num2, std::intmax_t Den2>
@@ -121,14 +121,6 @@ namespace sequoia::maths
     {
       using reduced_ratio_type = std::ratio_multiply<std::ratio<Num1, Den1>, std::ratio<Num2, Den2>>;
       using type = ratio<reduced_ratio_type::num, reduced_ratio_type::den>;
-    };
-
-    template<auto Num1, auto Den1, auto Num2, auto Den2>
-      requires std::integral<decltype(Num1)> && std::integral<decltype(Den1)>
-            && std::integral<decltype(Num2)> && std::integral<decltype(Den2)>
-    struct ratio_product<ratio<Num1, Den1>, ratio<Num2, Den2>>
-      : ratio_product<std::ratio<Num1, Den1>, std::ratio<Num2, Den2>>
-    {
     };
   }
 

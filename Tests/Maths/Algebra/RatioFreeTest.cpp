@@ -35,7 +35,11 @@ namespace sequoia::testing
     test_ratio<int, float>();
     test_ratio<std::intmax_t, long double>();
 
-    test_ratio_multiply();
+    test_ratio_multiply<int>();
+    test_ratio_multiply<std::size_t>();
+    test_ratio_multiply<std::intmax_t>();
+
+    test_ratio_multiply<int, float>();
   }
 
   template<std::integral T>
@@ -104,12 +108,23 @@ namespace sequoia::testing
     }    
   }
 
+  template<std::integral T>
   void ratio_free_test::test_ratio_multiply()
   {
-    constexpr auto int_max{std::numeric_limits<std::intmax_t>::max()};
-    STATIC_CHECK(std::same_as<ratio_multiply<ratio<1, 3>, ratio<2, 4>>, ratio<1L, 6L>>);
-    STATIC_CHECK(std::same_as<ratio_multiply<ratio<int_max, 1>, ratio<2, 4>>, ratio<int_max, 2L>>);
+    constexpr auto max{std::numeric_limits<T>::max()};
+    STATIC_CHECK(std::same_as<ratio_multiply<ratio<T(1), T(3)>, ratio<T(2), T(4)>>, ratio<T(1), T(6)>>);
+    STATIC_CHECK(std::same_as<ratio_multiply<ratio<max,  T(1)>, ratio<T(2), T(4)>>, ratio<max,  T(2)>>);
+  }
 
-    STATIC_CHECK(std::same_as<ratio_multiply<ratio<1.0L, 3>, ratio<2, 4>>, ratio<2.0L, 12>>);
+  template<std::floating_point T>
+  void ratio_free_test::test_ratio_multiply()
+  {
+  }
+
+  template<std::integral T, std::floating_point U>
+  void ratio_free_test::test_ratio_multiply()
+  {
+    STATIC_CHECK(std::same_as<ratio_multiply<ratio<U(1), T(3)>, ratio<T(2), T(4)>>, ratio<U(1), T(6)>>);
+    STATIC_CHECK(std::same_as<ratio_multiply<ratio<U(1), T(3)>, ratio<U(2), T(4)>>, ratio<U(2), T(12)>>);
   }
 }
