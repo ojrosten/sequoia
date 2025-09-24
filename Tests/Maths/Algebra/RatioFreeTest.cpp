@@ -39,7 +39,12 @@ namespace sequoia::testing
     test_ratio_multiply<std::size_t>();
     test_ratio_multiply<std::intmax_t>();
 
+    test_ratio_multiply<float>();
+    test_ratio_multiply<double>();
+    test_ratio_multiply<long double>();
+
     test_ratio_multiply<int, float>();
+    test_ratio_multiply<std::intmax_t, long double>();
   }
 
   template<std::integral T>
@@ -119,6 +124,10 @@ namespace sequoia::testing
   template<std::floating_point T>
   void ratio_free_test::test_ratio_multiply()
   {
+    constexpr auto max{std::numeric_limits<T>::max()};
+    STATIC_CHECK(std::same_as<ratio_multiply<ratio<T(1.5), T(0.5)>, ratio<T(1.0), T(2.5)>>, ratio<T(1.5), T(1.25)>>);
+    STATIC_CHECK(std::same_as<ratio_multiply<ratio<T(1.5), T(0.5)>, ratio<T(0.5), T(2.5)>>, ratio<T(1.5), T(2.5)>>);
+    STATIC_CHECK(std::same_as<ratio_multiply<ratio<max,  T(3.0)>, ratio<T(0.5), max>>, ratio<T(0.5),  T(3.0)>>);
   }
 
   template<std::integral T, std::floating_point U>
