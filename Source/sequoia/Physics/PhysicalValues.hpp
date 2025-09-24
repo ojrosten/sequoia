@@ -914,6 +914,12 @@ namespace sequoia::physics
   inline constexpr bool translation_invariant_validator_v{translation_invariant_validator<Validator>::value};
 
   //====== Temporary home for some (hacky) ratio stuff ======//
+
+  template<class...>
+  struct product;
+
+  template<class T, class U>
+  using product_t = product<T, U>::type;
   
   template<class>
   struct inverse;
@@ -933,76 +939,6 @@ namespace sequoia::physics
     using type = std::ratio<Den, Num>;
   };
   
-
-  template<class...>
-  struct product;
-
-  template<class T, class U>
-  using product_t = product<T, U>::type;
-
-  /*template<auto Num1, auto Den1>
-  struct product<ratio<Num1, Den1>>
-  {
-    using type = ratio<Num1, Den1>;
-    };
-
-  template<std::intmax_t Num1, std::intmax_t Den1>
-  struct product<std::ratio<Num1, Den1>>
-  {
-    using type = std::ratio<Num1, Den1>;
-    };*/
-
-  template<auto Num1, auto Den1, auto Num2, auto Den2>
-  struct product<ratio<Num1, Den1>, ratio<Num2, Den2>>
-  {
-    using type = ratio<Num1 * Num2, Den1 * Den2>;
-  };
-
-  template<auto Num1, auto Den1, std::intmax_t Num2, std::intmax_t Den2>
-    requires(std::integral<decltype(Den1)>)
-  struct product<ratio<Num1, Den1>, std::ratio<Num2, Den2>>
-  {
-    using reduced_ratio_type = std::ratio<Num2, Den1 * Den2>;
-    using type = ratio<Num1 * reduced_ratio_type::num, reduced_ratio_type::den>;
-  };
-
-  template<auto Num1, auto Den1, std::intmax_t Num2, std::intmax_t Den2>
-    requires(std::integral<decltype(Num1)>)
-  struct product<ratio<Num1, Den1>, std::ratio<Num2, Den2>>
-  {
-    using reduced_ratio_type = std::ratio<Num1 * Num2, Den2>;
-    using type = ratio<reduced_ratio_type::num, reduced_ratio_type::den * Den1>;
-  };
-
-  template<intmax_t Num1, intmax_t Den1, auto Num2, auto Den2>
-    requires(std::integral<decltype(Den2)>)
-  struct product<std::ratio<Num1, Den1>, ratio<Num2, Den2>>
-  {
-    using reduced_ratio_type = std::ratio<Num1, Den1 * Den2>;
-    using type = ratio<Num2 * reduced_ratio_type::num, reduced_ratio_type::den>;
-  };
-
-  template<intmax_t Num1, intmax_t Den1, auto Num2, auto Den2>
-    requires(std::integral<decltype(Num2)>)
-  struct product<std::ratio<Num1, Den1>, ratio<Num2, Den2>>
-  {
-    using reduced_ratio_type = std::ratio<Num1 * Num2, Den1>;
-    using type = ratio<reduced_ratio_type::num, reduced_ratio_type::den * Den2>;
-  };
-
-  template<auto Num1, auto Den1, std::intmax_t Num2, std::intmax_t Den2>
-  struct product<ratio<Num1, Den1>, std::ratio<Num2, Den2>> : product<ratio<Num1, Den1>, ratio<Num2, Den2>>
-  {};
-
-  template<std::intmax_t Num1, std::intmax_t Den1, auto Num2, auto Den2>
-  struct product<std::ratio<Num1, Den1>, ratio<Num2, Den2>> : product<ratio<Num1, Den1>, ratio<Num2, Den2>>
-  {};
-
-  template<std::intmax_t Num1, std::intmax_t Den1, std::intmax_t Num2, std::intmax_t Den2>
-  struct product<std::ratio<Num1, Den1>, std::ratio<Num2, Den2>>
-  {
-    using type = std::ratio_multiply<std::ratio<Num1, Den1>, std::ratio<Num2, Den2>>;
-  };
 
   //====== End of temporary home for some (hacky) ratio stuff ======//
 
@@ -1121,7 +1057,7 @@ namespace sequoia::physics
   struct product<coordinate_transform<LHSUnit, dilatation<LHSRatio>, translation<LHSDisplacement>>,
                  coordinate_transform<RHSUnit, dilatation<RHSRatio>, translation<RHSDisplacement>>>
   {
-    using dilatation_type  = dilatation<product_t<LHSRatio, RHSRatio>>;
+    using dilatation_type  = dilatation<ratio_multiply<LHSRatio, RHSRatio>>;
     using translation_type = translation<LHSDisplacement + RHSDisplacement * LHSRatio::num / LHSRatio::den>;
     using type             = coordinate_transform<RHSUnit, dilatation_type, translation_type>;
   };

@@ -175,14 +175,14 @@ namespace sequoia::testing
     STATIC_CHECK(
       std::same_as<
         root_transform_t<non_si::units::farenheight_t>,
-        coordinate_transform<si::units::kelvin_t, dilatation<std::ratio<9, 5>>, translation<32.0L - 273.15L*9/5>>        
+        coordinate_transform<si::units::kelvin_t, dilatation<maths::ratio<9L, 5L>>, translation<32.0L - 273.15L*9/5>>        
       >
     );
 
     STATIC_CHECK(
       std::same_as<
         inverse_t<root_transform_t<non_si::units::farenheight_t>>,
-        coordinate_transform<si::units::kelvin_t, dilatation<std::ratio<5, 9>>, translation<273.15L - 32.0L*5/9>>
+        coordinate_transform<si::units::kelvin_t, dilatation<maths::ratio<5L, 9L>>, translation<273.15L - 32.0L*5/9>>
       >
     );
 
