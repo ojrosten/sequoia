@@ -99,4 +99,8 @@ namespace sequoia::maths
   template<class T, class U>
     requires defines_ratio_v<T> && defines_ratio_v<U>
   using ratio_multiply = impl::ratio_product_t<T, U>;
+
+  template<class T, class U>
+    requires defines_ratio_v<T> && defines_ratio_v<U>
+  using ratio_divide = impl::ratio_product_t<T, ratio<U::den, U::num>>;
 }
