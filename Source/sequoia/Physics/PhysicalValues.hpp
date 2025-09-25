@@ -913,8 +913,6 @@ namespace sequoia::physics
   template<class Validator>
   inline constexpr bool translation_invariant_validator_v{translation_invariant_validator<Validator>::value};
 
-  //====== Temporary home for some (hacky) ratio stuff ======//
-
   template<class...>
   struct product;
 
@@ -926,21 +924,6 @@ namespace sequoia::physics
 
   template<class T>
   using inverse_t = inverse<T>::type;
-
-  template<auto Num, auto Den>
-  struct inverse<ratio<Num, Den>>
-  {
-    using type = ratio<Den, Num>;
-  };
-
-  template<auto Num, auto Den>
-  struct inverse<std::ratio<Num, Den>>
-  {
-    using type = std::ratio<Den, Num>;
-  };
-  
-
-  //====== End of temporary home for some (hacky) ratio stuff ======//
 
   template<class T>
   struct dilatation;
