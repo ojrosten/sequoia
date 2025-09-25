@@ -156,5 +156,12 @@ namespace sequoia::testing
       si::length<float>{1.0, si::units::metre}.convert_to(non_si::units::foot),
       physical_value{3.2808399f, non_si::units::foot}
     );
+
+    check(
+      equality,
+      "",
+      physical_value{1.0f, non_si::units::foot}.convert_to(si::units::metre),
+      si::length<float>{0.3048f, si::units::metre}
+    );
   }
 }
