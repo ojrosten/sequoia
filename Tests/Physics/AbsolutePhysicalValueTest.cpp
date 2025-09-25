@@ -29,7 +29,8 @@ namespace sequoia::testing
     test_absolute_quantity<si::time_interval<float>>();
     test_absolute_quantity<si::temperature<double>>();
 
-    test_mass_conversions();   
+    test_mass_conversions();
+    test_length_conversions();
   }
 
   template<class Quantity>
@@ -144,6 +145,16 @@ namespace sequoia::testing
       "",
       physical_value{1000.0f, si::units::tonne}.convert_to(si::units::kilotonne),
       physical_value{1.0f, si::units::kilotonne}
+    );
+  }
+
+  void absolute_physical_value_test::test_length_conversions()
+  {
+    check(
+      equality,
+      "",
+      si::length<float>{1.0, si::units::metre}.convert_to(non_si::units::foot),
+      physical_value{3.2808399f, non_si::units::foot}
     );
   }
 }

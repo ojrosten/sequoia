@@ -1318,13 +1318,19 @@ namespace sequoia::physics
       inline constexpr degree_t degree{};
       inline constexpr gradian_t gradian{};
 
-      struct farenheight_t
-        : coordinate_transform<si::units::celsius_t, dilatation<std::ratio<9, 5>>, translation<32.0l>>
+      struct farenheight_t : coordinate_transform<si::units::celsius_t, dilatation<std::ratio<9, 5>>, translation<32.0l>>
       {        
         constexpr static std::string_view symbol{"degF"};
       };
 
       inline constexpr farenheight_t farenheight{};
+
+      struct foot_t : coordinate_transform<si::units::metre_t, dilatation<std::ratio<10000, 3048>>, translation<0>>
+      {
+        constexpr static std::string_view symbol{"ft"};
+      };
+
+      inline constexpr foot_t foot{};
     }
 
     template<std::floating_point T, class Arena=implicit_common_arena>
@@ -1344,6 +1350,12 @@ namespace sequoia::physics
   template<physical_unit Unit, class Rep>
     requires has_coordinate_transform_v<Unit>
   struct default_space<Unit, Rep> : default_space<root_transform_t<Unit>, Rep> {};
+
+  template<std::floating_point T>
+  struct default_space<si::units::metre_t, T>
+  {
+    using type = length_space<T, implicit_common_arena>;
+  };
 
   template<std::floating_point T>
   struct default_space<si::units::kilogram_t, T>

@@ -27,5 +27,7 @@ namespace sequoia::testing
     void test_absolute_quantity();
 
     void test_mass_conversions();
+
+    void test_length_conversions();
   };
 }
