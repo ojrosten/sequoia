@@ -402,11 +402,11 @@ namespace sequoia::physics
     return impl::to_composite_space_t<reduction_t<direct_product<LHS, RHS>>>{};
   }
 
-  /*template<physical_unit LHS, physical_unit RHS>
+  template<physical_unit LHS, physical_unit RHS>
   constexpr auto operator/(LHS, RHS) noexcept
   {
     return impl::to_composite_space_t<reduction_t<direct_product<LHS, dual_of_t<RHS>>>>{};
-    }*/
+  }
   
   template<
     convex_space LHSValueSpace, physical_unit LHSUnit, basis_for<free_module_type_of_t<LHSValueSpace>> LHSBasis, class LHSValidator,
