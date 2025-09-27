@@ -48,6 +48,7 @@ namespace sequoia::maths
     requires physics::has_reciprocal_validator_v<typename T::validator_type>
   struct dual<T>
   {
+    using is_unit        = std::true_type;
     using validator_type = physics::reciprocal_validator_t<typename T::validator_type>;
   };
 
@@ -62,6 +63,7 @@ namespace sequoia::maths
     requires (!physics::has_reciprocal_validator_v<typename T::validator_type>)
   struct dual<T>
   {
+    using is_unit        = std::true_type;
     using validator_type = void;
   };
 }
@@ -90,6 +92,7 @@ namespace sequoia::physics
 
   struct no_unit_t
   {
+    using is_unit        = std::true_type;
     using validator_type = maths::half_line_validator;
   };
 
@@ -98,6 +101,7 @@ namespace sequoia::physics
   template<physical_unit... Ts>
   struct composite_unit
   {
+    using is_unit        = std::true_type;
     using validator_type = reduced_validator_t<typename Ts::validator_type...>;
   };
 
@@ -398,11 +402,11 @@ namespace sequoia::physics
     return impl::to_composite_space_t<reduction_t<direct_product<LHS, RHS>>>{};
   }
 
-  template<physical_unit LHS, physical_unit RHS>
+  /*template<physical_unit LHS, physical_unit RHS>
   constexpr auto operator/(LHS, RHS) noexcept
   {
     return impl::to_composite_space_t<reduction_t<direct_product<LHS, dual_of_t<RHS>>>>{};
-  }
+    }*/
   
   template<
     convex_space LHSValueSpace, physical_unit LHSUnit, basis_for<free_module_type_of_t<LHSValueSpace>> LHSBasis, class LHSValidator,
@@ -1037,8 +1041,9 @@ namespace sequoia::physics
   template<physical_unit U, class Ratio, auto Displacement>
   struct coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>
   {
+    using is_unit        = std::true_type;
     using transform_type = coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>;    
-    using validator_type = synthesised_validator_t<transform_type>;
+    using validator_type = synthesised_validator_t<transform_type>;    
     using with_respect_to_type = U;
     using dilatation_type      = dilatation<Ratio>;
     using translation_type     = translation<Displacement>;
@@ -1177,6 +1182,7 @@ namespace sequoia::physics
   template<physical_unit Unit>
   struct micro : coordinate_transform<Unit, dilatation<std::mega>, translation<0>>
   {
+    using is_unit        = std::true_type;
     using validator_type = Unit::validator_type;
     using transform_type = coordinate_transform<Unit, dilatation<std::mega>, translation<0>>;
   };
@@ -1184,6 +1190,7 @@ namespace sequoia::physics
   template<physical_unit Unit>
   struct milli : coordinate_transform<Unit, dilatation<std::kilo>, translation<0>>
   {
+    using is_unit        = std::true_type;
     using validator_type = Unit::validator_type;
     using transform_type = coordinate_transform<Unit, dilatation<std::kilo>, translation<0>>;
   };
@@ -1191,6 +1198,7 @@ namespace sequoia::physics
   template<physical_unit Unit>
   struct kilo : coordinate_transform<Unit, dilatation<std::milli>, translation<0>>
   {
+    using is_unit        = std::true_type;
     using validator_type = Unit::validator_type;
     using transform_type = coordinate_transform<Unit, dilatation<std::milli>, translation<0>>;
   };
@@ -1198,6 +1206,7 @@ namespace sequoia::physics
   template<physical_unit Unit>
   struct mega : coordinate_transform<Unit, dilatation<std::micro>, translation<0>>
   {
+    using is_unit        = std::true_type;
     using validator_type = Unit::validator_type;
     using transform_type = coordinate_transform<Unit, dilatation<std::micro>, translation<0>>;
   };
@@ -1208,48 +1217,56 @@ namespace sequoia::physics
     {
       struct ampere_t
       {
+        using is_unit        = std::true_type;
         using validator_type = std::identity;
-        constexpr static std::string_view symbol{"A"};
+        constexpr static std::string_view symbol{"A"};        
       };
     
       struct kilogram_t
       {
+        using is_unit        = std::true_type;
         using validator_type = half_line_validator;
         constexpr static std::string_view symbol{"kg"};
       };
 
       struct metre_t
       {
+        using is_unit        = std::true_type;
         using validator_type = half_line_validator;
         constexpr static std::string_view symbol{"m"};
       };
 
       struct second_t
       {
+        using is_unit        = std::true_type;
         using validator_type = half_line_validator;
         constexpr static std::string_view symbol{"s"};
       };
 
       struct kelvin_t
       {
+        using is_unit        = std::true_type;
         using validator_type = half_line_validator;
         constexpr static std::string_view symbol{"K"};
       };
 
       struct coulomb_t
       {
+        using is_unit        = std::true_type;
         using validator_type = std::identity;
         constexpr static std::string_view symbol{"C"};
       };
 
       struct radian_t
       {
+        using is_unit        = std::true_type;
         using validator_type = std::identity;
         constexpr static std::string_view symbol{"rad"};
       };
 
       struct celsius_t : coordinate_transform<kelvin_t, dilatation<std::ratio<1, 1>>, translation<-273.15L>>
       {
+        using is_unit = std::true_type;
         constexpr static std::string_view symbol{"degC"};
       };
 
@@ -1324,12 +1341,14 @@ namespace sequoia::physics
     {
       struct degree_t : coordinate_transform<si::units::radian_t, dilatation<ratio<intmax_t{180}, std::numbers::pi_v<long double>>>, translation<0>>
       {
+        using is_unit        = std::true_type;
         using validator_type = std::identity;
         constexpr static std::string_view symbol{"deg"};
       };
 
       struct gradian_t : coordinate_transform<si::units::radian_t, dilatation<ratio<intmax_t{200}, std::numbers::pi_v<long double>>>, translation<0>>
       {
+        using is_unit        = std::true_type;
         using validator_type = std::identity;
         constexpr static std::string_view symbol{"gon"};
       };
@@ -1338,7 +1357,8 @@ namespace sequoia::physics
       inline constexpr gradian_t gradian{};
 
       struct farenheight_t : coordinate_transform<si::units::celsius_t, dilatation<std::ratio<9, 5>>, translation<32.0l>>
-      {        
+      {
+        using is_unit = std::true_type;
         constexpr static std::string_view symbol{"degF"};
       };
 
@@ -1346,6 +1366,7 @@ namespace sequoia::physics
 
       struct foot_t : coordinate_transform<si::units::metre_t, dilatation<std::ratio<10000, 3048>>, translation<0>>
       {
+        using is_unit = std::true_type;
         constexpr static std::string_view symbol{"ft"};
       };
 

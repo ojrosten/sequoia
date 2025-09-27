@@ -60,6 +60,9 @@ namespace sequoia::testing
     check_exception_thrown<std::domain_error>("Negative quantity", [](){ return quantity_t{-1.0, units_type{}}; });
 
     coordinates_operations<quantity_t>{*this}.execute();
+    
+    //check(equality, "", physical_value{2.0, units_type{} * units_type{}}, quantity_t{1.0, units_type{}} * quantity_t{1.0, units_type{}});
+    //check(equality, "", physical_value{2.0, units_type{} * units_type{}}, quantity_t{1.0, units_type{}} * quantity_t{1.0, units_type{}});
 
     using inv_unit_t = dual<units_type>;
     using inv_quantity_t = quantity<dual<space_type>, inv_unit_t>;
