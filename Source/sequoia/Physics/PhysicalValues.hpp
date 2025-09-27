@@ -1393,6 +1393,12 @@ namespace sequoia::physics
   };
 
   template<std::floating_point T>
+  struct default_space<si::units::second_t, T>
+  {
+    using type = time_interval_space<T, implicit_common_arena>;
+  };
+
+  template<std::floating_point T>
   struct default_space<si::units::kilogram_t, T>
   {
     using type = mass_space<T, implicit_common_arena>;
@@ -1402,6 +1408,12 @@ namespace sequoia::physics
   struct default_space<si::units::radian_t, T>
   {
     using type = angular_space<T, implicit_common_arena>;
+  };
+
+  template<std::floating_point T>
+  struct default_space<si::units::kelvin_t, T>
+  {
+    using type = absolute_temperature_space<T, implicit_common_arena>;
   };
   
   template<vector_space ValueSpace, physical_unit Unit, class Basis, class Origin, validator_for<ValueSpace> Validator>
