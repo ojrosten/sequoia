@@ -22,7 +22,6 @@ namespace sequoia::testing
   {
     struct gradian_t : coordinate_transform<non_si::units::degree_t, dilatation<std::ratio<10, 9>>, translation<0>>
     {
-      using is_unit        = std::true_type;
       using validator_type = std::identity;
       constexpr static std::string_view symbol{"gon"};
     };

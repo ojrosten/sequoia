@@ -92,7 +92,7 @@ namespace sequoia::physics
 
   struct no_unit_t
   {
-    using is_unit        = std::true_type;
+    using is_unit        = std::true_type; // TO DO: naming makes this peverse!
     using validator_type = maths::half_line_validator;
   };
 
@@ -1182,7 +1182,6 @@ namespace sequoia::physics
   template<physical_unit Unit>
   struct micro : coordinate_transform<Unit, dilatation<std::mega>, translation<0>>
   {
-    using is_unit        = std::true_type;
     using validator_type = Unit::validator_type;
     using transform_type = coordinate_transform<Unit, dilatation<std::mega>, translation<0>>;
   };
@@ -1190,7 +1189,6 @@ namespace sequoia::physics
   template<physical_unit Unit>
   struct milli : coordinate_transform<Unit, dilatation<std::kilo>, translation<0>>
   {
-    using is_unit        = std::true_type;
     using validator_type = Unit::validator_type;
     using transform_type = coordinate_transform<Unit, dilatation<std::kilo>, translation<0>>;
   };
@@ -1198,7 +1196,6 @@ namespace sequoia::physics
   template<physical_unit Unit>
   struct kilo : coordinate_transform<Unit, dilatation<std::milli>, translation<0>>
   {
-    using is_unit        = std::true_type;
     using validator_type = Unit::validator_type;
     using transform_type = coordinate_transform<Unit, dilatation<std::milli>, translation<0>>;
   };
@@ -1206,7 +1203,6 @@ namespace sequoia::physics
   template<physical_unit Unit>
   struct mega : coordinate_transform<Unit, dilatation<std::micro>, translation<0>>
   {
-    using is_unit        = std::true_type;
     using validator_type = Unit::validator_type;
     using transform_type = coordinate_transform<Unit, dilatation<std::micro>, translation<0>>;
   };
@@ -1266,7 +1262,6 @@ namespace sequoia::physics
 
       struct celsius_t : coordinate_transform<kelvin_t, dilatation<std::ratio<1, 1>>, translation<-273.15L>>
       {
-        using is_unit = std::true_type;
         constexpr static std::string_view symbol{"degC"};
       };
 
