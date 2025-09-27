@@ -1378,9 +1378,9 @@ namespace sequoia::physics
     using type = associated_displacement_space<conversion_space_t<C, FromUnit, ToUnit>>;
   };
 
-  template<physical_unit Unit, class Rep, class Ratio>
-    requires has_default_space_v<Unit, Rep>
-  struct default_space<coordinate_transform<Unit, dilatation<Ratio>, translation<0>>, Rep> : default_space<Unit, Rep> {};
+  template<physical_unit Unit, class Rep, class Ratio, auto Trans>
+  requires has_default_space_v<Unit, Rep> && (Trans == 0)
+  struct default_space<coordinate_transform<Unit, dilatation<Ratio>, translation<Trans>>, Rep> : default_space<Unit, Rep> {};
 
   template<physical_unit Unit, class Rep>
     requires has_coordinate_transform_v<Unit>

@@ -30,16 +30,6 @@ namespace sequoia::testing
   }
 }
 
-namespace sequoia::physics
-{
-  // TO DO: there should be no need for this: deduce it from radians
-  template<std::floating_point T>
-  struct default_space<testing::alternative::gradian_t, T>
-  {
-    using type = angular_space<T, implicit_common_arena>;
-  };
-}
-
 namespace sequoia::testing
 {
   using namespace physics;
