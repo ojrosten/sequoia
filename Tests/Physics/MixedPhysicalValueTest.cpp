@@ -28,6 +28,7 @@ namespace sequoia::testing
     test_mixed_vector();
     test_mixed_vector();
     test_mixed_kinds();
+    test_conversions();
   }
 
   void mixed_physical_value_test::test_mixed()
@@ -96,6 +97,9 @@ namespace sequoia::testing
     STATIC_CHECK( can_add<length_t, width_t>);
     STATIC_CHECK( can_subtract<length_t, width_t>);
 
+    check(equality, "", physical_value{2.0f, si::units::metre * si::units::metre}, length_t{1.0, metre} *  length_t{2.0, metre});
+    check(equality, "", physical_value{2.0f, si::units::metre * si::units::metre}, length_t{2.0, metre} *  length_t{1.0, metre});
+
     check(equality, "", length_t{1.0, metre} += width_t{1.0, metre},  length_t{2.0, metre});
     check(equality, "", length_t{1.0, metre} += height_t{0.5, metre}, length_t{1.5, metre});
     check(equality, "", width_t{0.5, metre}  + height_t{0.5, metre}, length_t{1.0, metre});
@@ -124,5 +128,9 @@ namespace sequoia::testing
     using euc_qty = euclidean_1d_vector_quantity<float>;
     STATIC_CHECK(!std::is_same_v<decltype(d_width_t{} / d_height_t{}), euc_qty>);
     check(equality, "", static_cast<euc_qty>(d_width_t{1.5, metre}/d_height_t{0.5, metre}), euc_qty{3.0, no_unit});
+  }
+
+  void mixed_physical_value_test::test_conversions()
+  {
   }
 }

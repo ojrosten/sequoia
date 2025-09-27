@@ -131,7 +131,7 @@ namespace sequoia::physics
   struct arena_type_of<direct_product<Ts...>>
   {
     using type = std::common_type_t<arena_type_of_t<Ts>...>;
-  }; 
+  };
 
   /// @class Primary class template for the reduction of direct products to a lower dimensional space
   template<class T>
@@ -391,6 +391,18 @@ namespace sequoia::physics
        std::is_same_v<euclidean_vector_space<commutative_ring_type_of_t<C>, 1, arena_type_of_t<C>>, C>
     || std::is_same_v<euclidean_half_space<commutative_ring_type_of_t<C>, arena_type_of_t<C>>, C>
   };
+
+  template<physical_unit LHS, physical_unit RHS>
+  constexpr auto operator*(LHS, RHS) noexcept
+  {
+    return impl::to_composite_space_t<reduction_t<direct_product<LHS, RHS>>>{};
+  }
+
+  template<physical_unit LHS, physical_unit RHS>
+  constexpr auto operator/(LHS, RHS) noexcept
+  {
+    return impl::to_composite_space_t<reduction_t<direct_product<LHS, dual_of_t<RHS>>>>{};
+  }
   
   template<
     convex_space LHSValueSpace, physical_unit LHSUnit, basis_for<free_module_type_of_t<LHSValueSpace>> LHSBasis, class LHSValidator,
@@ -673,6 +685,13 @@ namespace sequoia::physics
     requires {
       typename default_space_t<Unit, Rep>;
     }
+  };
+
+  template<physical_unit... Ts, class Rep>
+    requires (has_default_space_v<Ts, Rep> && ...)
+  struct default_space<composite_unit<Ts...>, Rep>
+  {
+    using type = impl::to_composite_space_t<reduction_t<direct_product<default_space_t<Ts, Rep>...>>>;
   };
 
   template<class T, physical_unit U>
