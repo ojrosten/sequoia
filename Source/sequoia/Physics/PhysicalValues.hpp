@@ -426,6 +426,13 @@ namespace sequoia::physics
   {
     return lhs;
   };
+
+  template<physical_unit RHS>
+    requires (!std::same_as<RHS, no_unit_t>)
+  constexpr auto operator/(no_unit_t, RHS) noexcept
+  {
+    return dual_of_t<RHS>{};
+  };
   
   template<
     convex_space LHSValueSpace, physical_unit LHSUnit, basis_for<free_module_type_of_t<LHSValueSpace>> LHSBasis, class LHSValidator,
