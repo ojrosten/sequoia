@@ -1161,6 +1161,7 @@ namespace sequoia::physics
   };
 
   template<physical_unit... Us>
+  requires (scale_invariant_validator_v<typename Us::validator_type> && ...)
   struct root_transform<composite_unit<Us...>>
   {
     using unit_type = decltype((root_transform_unit_t<Us>{} * ...));
