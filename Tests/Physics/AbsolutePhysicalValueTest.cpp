@@ -65,8 +65,13 @@ namespace sequoia::testing
           "",
           physical_value{value_type{2.0}, units_type{} * units_type{}},
           quantity_t{value_type{2.0}, units_type{}} * quantity_t{value_type{1.0}, units_type{}});
-    //check(equality, "", physical_value{2.0, units_type{} * units_type{}}, quantity_t{1.0, units_type{}} * quantity_t{2.0, units_type{}});
 
+    check(equality,
+          "",
+          physical_value{value_type{2.0}, units_type{} * units_type{}},
+          quantity_t{value_type{1.0}, units_type{}} * quantity_t{value_type{2.0}, units_type{}});
+
+    
     using inv_unit_t = dual<units_type>;
     using inv_quantity_t = quantity<dual<space_type>, inv_unit_t>;
     coordinates_operations<inv_quantity_t>{*this}.execute();
