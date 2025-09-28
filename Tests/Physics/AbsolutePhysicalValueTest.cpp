@@ -15,6 +15,16 @@ namespace sequoia::testing
 {
   using namespace physics;
 
+  namespace
+  {
+    struct astronomical_unit_t : coordinate_transform<si::units::metre_t, dilatation<std::ratio<1, 149'597'870'700>>, translation<0>>
+    {
+      //constexpr static std::string_view symbol{"au"};
+    };
+
+    constexpr astronomical_unit_t astronomical_unit{};
+  }
+
   [[nodiscard]]
   std::filesystem::path absolute_physical_value_test::source_file() const
   {
@@ -201,6 +211,13 @@ namespace sequoia::testing
       physical_value{1.0f, non_si::units::foot}.convert_to(si::units::metre),
       si::length<float>{0.3048f, si::units::metre}
     );
+
+    check(
+      equality,
+      "",
+      physical_value{1.0, astronomical_unit}.convert_to(si::units::metre),
+      si::length<double>{149'597'870'700.0, si::units::metre}
+    );
   }
 
   void absolute_physical_value_test::test_area_conversions()
@@ -211,5 +228,12 @@ namespace sequoia::testing
       physical_value{1.0f, si::units::metre * si::units::metre}.convert_to(non_si::units::foot * non_si::units::foot),
       physical_value{3.2808399f * 3.2808399f, non_si::units::foot * non_si::units::foot}
     );
+
+    /*check(
+      equality,
+      "",
+      physical_value{1.0f, astrnomical_unit * astrnomical_unit}.convert_to(si::units::metre * si::units::metre),
+      physical_value{3.2808399f * 3.2808399f, si::units::metre * si::units::metre}
+      );*/
   }
 }
