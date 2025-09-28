@@ -85,7 +85,13 @@ namespace sequoia::testing
           quantity_t{value_type{2.0}, units_type{} * units_type{} / units_type{}}
     );
 
-          using inv_unit_t = dual<units_type>;
+    check(equality,
+          "",
+          quantity_t{value_type{2.0}, units_type{}},
+          quantity_t{value_type{2.0}, units_type{} / (units_type{} / units_type{})}
+    );
+
+    using inv_unit_t = dual<units_type>;
     using inv_quantity_t = quantity<dual<space_type>, inv_unit_t>;
     coordinates_operations<inv_quantity_t>{*this}.execute();
 
