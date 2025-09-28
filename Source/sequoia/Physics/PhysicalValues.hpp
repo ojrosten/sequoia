@@ -1415,6 +1415,12 @@ namespace sequoia::physics
   {
     using type = absolute_temperature_space<T, implicit_common_arena>;
   };
+
+  template<std::floating_point T>
+  struct default_space<si::units::ampere_t, T>
+  {
+    using type = electrical_current_space<T, implicit_common_arena>;
+  };
   
   template<vector_space ValueSpace, physical_unit Unit, class Basis, class Origin, validator_for<ValueSpace> Validator>
     requires (dimension_of<ValueSpace> == 1)

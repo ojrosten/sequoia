@@ -79,6 +79,16 @@ namespace sequoia::testing
 
     coordinates_operations<quantity_t>{*this}.execute();
 
+    check(equality,
+          "",
+          physical_value{value_type{2.0}, units_type{} * units_type{}},
+          quantity_t{value_type{2.0}, units_type{}} * quantity_t{value_type{1.0}, units_type{}});
+
+    check(equality,
+          "",
+          physical_value{value_type{2.0}, units_type{} * units_type{}},
+          quantity_t{value_type{1.0}, units_type{}} * quantity_t{value_type{2.0}, units_type{}});
+
     using inv_quantity_t = quantity<dual<space_type>, dual<units_type>>;
     coordinates_operations<inv_quantity_t>{*this}.execute();
 
