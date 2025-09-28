@@ -171,12 +171,12 @@ namespace sequoia::physics
     using distinguished_origin = std::bool_constant<(has_distinguished_origin_v<Ts> && ...)>;
   };
 
-  template<physical_unit T, physical_unit U>
-  struct reduction<direct_product<T, U>>
+  template<physical_unit... Us>
+  struct reduction<direct_product<Us...>>
   {
-    using type = impl::simplify_t<direct_product<T>, direct_product<U>>;
+    using type = impl::simplify_t<direct_product<Us...>>;
   };
-
+ 
   template<physical_unit... Ts, physical_unit U>
   struct reduction<direct_product<composite_unit<Ts...>, U>>
   {
@@ -195,10 +195,10 @@ namespace sequoia::physics
     using type = impl::simplify_t<direct_product<Ts...>, direct_product<Us...>>;
   };
 
-  template<convex_space T, convex_space U>
-  struct reduction<direct_product<T, U>>
-  {    
-    using type = impl::simplify_t<direct_product<T>, direct_product<U>>;
+  template<convex_space... Ts>
+  struct reduction<direct_product<Ts...>>
+  {
+    using type = impl::simplify_t<direct_product<Ts...>>;
   };
 
   template<convex_space... Ts, convex_space U>
