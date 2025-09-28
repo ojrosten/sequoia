@@ -965,8 +965,14 @@ namespace sequoia::physics
   template<class...>
   struct product;
 
-  template<class T, class U>
-  using product_t = product<T, U>::type;
+  template<class... Ts>
+  using product_t = product<Ts...>::type;
+
+  template<class T, class U, class... Vs>
+  struct product<T, U, Vs...>
+  {
+    using tpye = product_t<product_t<T, U>, Vs...>;
+  };
   
   template<class>
   struct inverse;
@@ -1152,6 +1158,13 @@ namespace sequoia::physics
     using wrt_type = typename U::with_respect_to_type;
     using nested_transform_type = root_transform_t<wrt_type>;
     using transform_type = product_t<typename U::transform_type, nested_transform_type>;
+  };
+
+  template<physical_unit... Us>
+  struct root_transform<composite_unit<Us...>>
+  {
+    using unit_type = decltype((root_transform_unit_t<Us>{} * ...));
+    using transform_type = product_t<root_transform_t<Us>...>;
   };
 
   template<class T>

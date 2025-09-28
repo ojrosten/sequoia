@@ -29,5 +29,7 @@ namespace sequoia::testing
     void test_mass_conversions();
 
     void test_length_conversions();
+
+    void test_area_conversions();
   };
 }

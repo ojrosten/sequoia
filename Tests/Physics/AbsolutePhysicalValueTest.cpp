@@ -31,6 +31,7 @@ namespace sequoia::testing
 
     test_mass_conversions();
     test_length_conversions();
+    test_area_conversions();
   }
 
   template<class Quantity>
@@ -199,6 +200,16 @@ namespace sequoia::testing
       "",
       physical_value{1.0f, non_si::units::foot}.convert_to(si::units::metre),
       si::length<float>{0.3048f, si::units::metre}
+    );
+  }
+
+  void absolute_physical_value_test::test_area_conversions()
+  {
+    check(
+      equality,
+      "",
+      physical_value{1.0f, si::units::metre * si::units::metre}.convert_to(non_si::units::foot * non_si::units::foot),
+      physical_value{3.2808399f * 3.2808399f, non_si::units::foot * non_si::units::foot}
     );
   }
 }
