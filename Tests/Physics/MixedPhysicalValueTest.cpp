@@ -47,6 +47,7 @@ namespace sequoia::testing
     check(equivalence, "", ml, 2.0f);
     check(equivalence, "", lm, 2.0f);
     check(equality, "", ml, physical_value{2.0f, kilogram * metre});
+    check(equality, "", ml, physical_value{2.0f, metre    * kilogram});
     check(equality, "", lm, physical_value{2.0f, kilogram * metre});
     check(equality, "", lm / mass_t{2.0, kilogram}, length_t{1.0, metre});
     check(equality, "", lm / length_t{0.5, metre}, mass_t{4.0, kilogram});
@@ -58,6 +59,7 @@ namespace sequoia::testing
 
     check(equivalence, "", mlc, -2.0f);
     check(equivalence, "", clm, -2.0f);
+    check(equality, "", mlc, physical_value{-2.0f, metre * ampere * kilogram});
     check(equality, "", mlc / mass_t{1.0, kilogram}, length_t{2.0, metre} * current_t{-1.0, ampere});
     check(equality, "", mlc / length_t{1.0, metre}, mass_t{2.0, kilogram} * current_t{-1.0, ampere});
     check(equality, "", mlc / current_t{-1.0, ampere}, unsafe_mass_t{1.0, kilogram} * length_t{2.0, metre});
