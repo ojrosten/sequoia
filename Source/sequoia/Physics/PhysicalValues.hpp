@@ -402,6 +402,19 @@ namespace sequoia::physics
     return impl::to_composite_space_t<reduction_t<direct_product<LHS, RHS>>>{};
   }
 
+  template<physical_unit LHS>
+  constexpr auto operator*(LHS lhs, no_unit_t) noexcept
+  {
+    return lhs;
+  };
+
+  template<physical_unit RHS>
+    requires (std::same_as<RHS, no_unit_t>)
+  constexpr auto operator*(no_unit_t, RHS rhs) noexcept
+  {
+    return rhs;
+  };
+
   template<physical_unit LHS, physical_unit RHS>
   constexpr auto operator/(LHS, RHS) noexcept
   {
