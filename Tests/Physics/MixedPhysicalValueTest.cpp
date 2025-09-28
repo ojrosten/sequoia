@@ -46,6 +46,8 @@ namespace sequoia::testing
          lm = length_t{2.0, metre} * mass_t{1.0, kilogram};
     check(equivalence, "", ml, 2.0f);
     check(equivalence, "", lm, 2.0f);
+    check(equality, "", ml, physical_value{2.0f, kilogram * metre});
+    check(equality, "", lm, physical_value{2.0f, kilogram * metre});
     check(equality, "", lm / mass_t{2.0, kilogram}, length_t{1.0, metre});
     check(equality, "", lm / length_t{0.5, metre}, mass_t{4.0, kilogram});
     check(equality, "", (mass_t{3.0, kilogram} / mass_t{1.0, kilogram})*mass_t{3.0, kilogram}, mass_t{9.0, kilogram});
