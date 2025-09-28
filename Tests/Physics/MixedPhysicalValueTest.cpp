@@ -69,6 +69,7 @@ namespace sequoia::testing
 
     check(equivalence, "", mlct, -10.0f);
     check(equivalence, "", cltm, -10.0f);
+    check(equality, "", mlct, physical_value{-10.0f, kelvin * metre * ampere * kilogram});
     check(equality, "", mlct / mass_t{1.0, kilogram}, length_t{2.0, metre} * current_t{-1.0, ampere} * temperature_t{5.0, kelvin});
 
     check(equality, "", mass_t{2.0, kilogram} * length_t{3.0, metre} / d_mass_t{-2.0, kilogram}, unsafe_len_t{-3.0, metre});
