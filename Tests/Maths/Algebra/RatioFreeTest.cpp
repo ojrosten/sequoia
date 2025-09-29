@@ -123,6 +123,8 @@ namespace sequoia::testing
     constexpr auto max{std::numeric_limits<T>::max()};
     STATIC_CHECK(std::same_as<ratio_multiply<ratio<T(1), T(3)>, ratio<T(2), T(4)>>, ratio<T(1), T(6)>>);
     STATIC_CHECK(std::same_as<ratio_multiply<ratio<max,  T(1)>, ratio<T(2), T(4)>>, ratio<max,  T(2)>>);
+    STATIC_CHECK(std::same_as<ratio_multiply<ratio<max,  T(1)>, ratio<max,  T(1)>, allow_ratio_fp_conversion::yes>,
+                 ratio<static_cast<long double>(max) * max,  T(1)>>);
   }
 
   template<std::floating_point T>
