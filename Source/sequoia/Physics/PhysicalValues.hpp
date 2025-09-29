@@ -1096,7 +1096,7 @@ namespace sequoia::physics
   struct product<coordinate_transform<LHSUnit, dilatation<LHSRatio>, translation<LHSDisplacement>>,
                  coordinate_transform<RHSUnit, dilatation<RHSRatio>, translation<RHSDisplacement>>>
   {
-    using dilatation_type  = dilatation<ratio_multiply<LHSRatio, RHSRatio>>;
+    using dilatation_type  = dilatation<ratio_multiply<LHSRatio, RHSRatio, allow_ratio_fp_conversion::yes>>;
     using translation_type = translation<LHSDisplacement + RHSDisplacement * LHSRatio::num / LHSRatio::den>;
     using type             = coordinate_transform<RHSUnit, dilatation_type, translation_type>;
   };

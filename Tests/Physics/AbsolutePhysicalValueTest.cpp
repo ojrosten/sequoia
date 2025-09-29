@@ -229,11 +229,11 @@ namespace sequoia::testing
       physical_value{3.2808399f * 3.2808399f, non_si::units::foot * non_si::units::foot}
     );
 
-    /*check(
+    check(
       equality,
       "",
-      physical_value{1.0f, astrnomical_unit * astrnomical_unit}.convert_to(si::units::metre * si::units::metre),
-      physical_value{3.2808399f * 3.2808399f, si::units::metre * si::units::metre}
-      );*/
+      physical_value{1.0, astronomical_unit * astronomical_unit}.convert_to(si::units::metre * si::units::metre),
+      physical_value{149'597'870'700.0 * 149'597'870'700.0, si::units::metre * si::units::metre}
+    );
   }
 }
