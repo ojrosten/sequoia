@@ -101,7 +101,7 @@ namespace sequoia::maths
           }
           else
           {              
-              return static_cast<long double>(M) * static_cast<long double>(N);
+            return static_cast<long double>(M) * static_cast<long double>(N);
           }
         }
       }
