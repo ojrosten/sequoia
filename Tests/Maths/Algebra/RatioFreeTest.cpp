@@ -35,9 +35,10 @@ namespace sequoia::testing
     test_ratio<int, float>();
     test_ratio<std::intmax_t, long double>();
 
-    test_ratio_multiply<int>();
-    test_ratio_multiply<std::size_t>();
+    test_ratio_multiply<int>();    
     test_ratio_multiply<std::intmax_t>();
+    test_ratio_multiply<unsigned>();
+    test_ratio_multiply<std::size_t>();
 
     test_ratio_multiply<float>();
     test_ratio_multiply<double>();
@@ -123,8 +124,16 @@ namespace sequoia::testing
     constexpr auto max{std::numeric_limits<T>::max()};
     STATIC_CHECK(std::same_as<ratio_multiply<ratio<T(1), T(3)>, ratio<T(2), T(4)>>, ratio<T(1), T(6)>>);
     STATIC_CHECK(std::same_as<ratio_multiply<ratio<max,  T(1)>, ratio<T(2), T(4)>>, ratio<max,  T(2)>>);
-    STATIC_CHECK(std::same_as<ratio_multiply<ratio<max,  T(1)>, ratio<max,  T(1)>, allow_ratio_fp_conversion::yes>,
-                 ratio<static_cast<long double>(max) * max,  T(1)>>);
+    if constexpr(std::same_as<T, int>)
+    {
+      STATIC_CHECK(std::same_as<ratio_multiply<ratio<max,  T(1)>, ratio<max,  T(1)>, allow_ratio_fp_conversion::yes>,
+                   ratio<static_cast<std::intmax_t>(max) * max,  T(1)>>);
+    }
+    else
+    {
+      STATIC_CHECK(std::same_as<ratio_multiply<ratio<max,  T(1)>, ratio<max,  T(1)>, allow_ratio_fp_conversion::yes>,
+                   ratio<static_cast<long double>(max) * max,  T(1)>>);
+    }
   }
 
   template<std::floating_point T>

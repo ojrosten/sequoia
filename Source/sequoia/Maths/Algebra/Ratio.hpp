@@ -79,9 +79,31 @@ namespace sequoia::maths
         using common_t = std::common_type_t<std::remove_cv_t<decltype(M)>, std::remove_cv_t<decltype(N)>>;
         constexpr static bool overflow{std::numeric_limits<common_t>::max() / M < N};
         if constexpr((Relaxed == allow_ratio_fp_conversion::no) || (!overflow))
+        {
           return M * N;
+        }
         else
-          return static_cast<long double>(M) * static_cast<long double>(N) ;
+        {
+          if constexpr(std::integral<common_t>)
+          {
+            if constexpr(std::is_signed_v<common_t> && (sizeof(common_t) < sizeof(std::intmax_t)))
+            {
+              return product<static_cast<std::intmax_t>(M), static_cast<std::intmax_t>(N)>();
+            }
+            else if constexpr(!std::is_signed_v<common_t> && (sizeof(common_t) < sizeof(std::size_t)))
+            {
+              return product<static_cast<std::intmax_t>(M), static_cast<std::intmax_t>(N)>();
+            }
+            else
+            {              
+              return static_cast<long double>(M) * static_cast<long double>(N);
+            }
+          }
+          else
+          {              
+              return static_cast<long double>(M) * static_cast<long double>(N);
+          }
+        }
       }
 
       constexpr static auto num{product<reduced_ratio_a_type::num, reduced_ratio_b_type::num>()};
