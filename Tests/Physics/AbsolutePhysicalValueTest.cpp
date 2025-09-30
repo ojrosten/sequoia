@@ -162,7 +162,7 @@ namespace sequoia::testing
     using graph_type = transition_checker<variant_t>::transition_graph;
     using edge_t     = transition_checker<variant_t>::edge;
 
-    enum qty_label { qty, inv, dq, dinvq, euc_half, euv_vec };
+    enum qty_label { qty, dq, inv, dinvq, euc_half, euc_vec };
     
     graph_type g{
       {
@@ -183,6 +183,18 @@ namespace sequoia::testing
             std::weak_ordering::less
           },
           edge_t{
+            qty_label::euc_vec,
+            this->report("qty / d_qty"),
+            [](variant_t v) -> variant_t { return std::get<qty_t>(v) / delta_qty_t{2.0, units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("d_qty / qty"),
+            [](variant_t v) -> variant_t { return delta_qty_t{0.5, units_t{}} / std::get<qty_t>(v); },
+            std::weak_ordering::less
+          },
+          edge_t{
             qty_label::euc_half,
             this->report("qty * inv_qty"),
             [](variant_t v) -> variant_t { return std::get<qty_t>(v) * inv_qty_t{0.5, inv_units_t{}}; },
@@ -190,13 +202,36 @@ namespace sequoia::testing
           },
           edge_t{
             qty_label::euc_half,
-            this->report("qty * inv_qty"),
+            this->report("inv_qty * qty"),
             [](variant_t v) -> variant_t { return inv_qty_t{0.5, inv_units_t{}} * std::get<qty_t>(v); },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("qty * d_inv_qty"),
+            [](variant_t v) -> variant_t { return std::get<qty_t>(v) * delta_inv_qty_t{0.5, inv_units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("d_inv_qty * qty"),
+            [](variant_t v) -> variant_t { return delta_inv_qty_t{0.5, inv_units_t{}} * std::get<qty_t>(v); },
             std::weak_ordering::less
           }
         },
-        {},
-        {},
+        {          
+        },
+        {
+          edge_t{
+            qty_label::inv,
+            this->report("Inv quantity left unaffected by attempting to turn it negative"),
+            [this](variant_t v) -> variant_t {
+              check_exception_thrown<std::domain_error>("Negative quantity", [&v](){ return std::get<inv_qty_t>(v) += delta_inv_qty_t{-3.0, inv_units_t{}}; });
+              return v;
+            },
+            std::weak_ordering::equivalent
+          },
+        },
         {},
         {},
         {}
