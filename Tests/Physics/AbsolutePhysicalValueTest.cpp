@@ -219,7 +219,25 @@ namespace sequoia::testing
             std::weak_ordering::less
           }
         },
-        {          
+        {
+          edge_t{
+            qty_label::euc_vec,
+            this->report("d_qty / d_qty"),
+            [](variant_t v) -> variant_t { return std::get<delta_qty_t>(v) / delta_qty_t{1.0, units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("d_qty * d_inv_qty"),
+            [](variant_t v) -> variant_t { return std::get<delta_qty_t>(v) * delta_inv_qty_t{1.0, inv_units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report(" d_inv_qty * d_qty"),
+            [](variant_t v) -> variant_t { return delta_inv_qty_t{1.0, inv_units_t{}} * std::get<delta_qty_t>(v); },
+            std::weak_ordering::less
+          }
         },
         {
           edge_t{
@@ -230,6 +248,24 @@ namespace sequoia::testing
               return v;
             },
             std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::euc_half,
+            this->report("inv_qty / inv_qty"),
+            [](variant_t v) -> variant_t { return std::get<inv_qty_t>(v) / inv_qty_t{4.0, inv_units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("inv_qty / d_inv_qty"),
+            [](variant_t v) -> variant_t { return std::get<inv_qty_t>(v) / delta_inv_qty_t{4.0, inv_units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("d_inv_qty / inv_qty"),
+            [](variant_t v) -> variant_t { return delta_inv_qty_t{1.0, inv_units_t{}} / std::get<inv_qty_t>(v); },
+            std::weak_ordering::less
           },
         },
         {},
