@@ -113,6 +113,8 @@ namespace sequoia::testing
     using inv_quantity_t = quantity<dual<space_type>, inv_unit_t>;
     coordinates_operations<inv_quantity_t>{*this}.execute();
 
+    test_compositions<quantity_t>();
+
     check(equality, "", (inv_quantity_t{2.0, inv_unit_t{}} * inv_quantity_t{3.0, inv_unit_t{}}) * quantity_t{2.0, units_type{}}, inv_quantity_t{12.0, inv_unit_t{}});
 
     check(equivalence, "", 4.0f / quantity_t{2.0, units_type{}}, 2.0f);
@@ -141,6 +143,65 @@ namespace sequoia::testing
     check(equality, "", (delta_q_t{4.0, units_type{}} *  delta_q_t{-3.0, units_type{}}) / (quantity_t{2.0, units_type{}}   * quantity_t{2.0, units_type{}}),  euc_vec_space_qty{-3.0, no_unit});
     check(equality, "",  delta_q_t{4.0, units_type{}} * (delta_q_t{-3.0, units_type{}}  / (quantity_t{2.0, units_type{}}   * quantity_t{2.0, units_type{}})), euc_vec_space_qty{-3.0, no_unit});
   }
+
+  template<class Quantity>
+  void absolute_physical_value_test::test_compositions()
+  {
+    using quantity_t        = Quantity;
+    using delta_q_t         = quantity_t::displacement_type;
+    using space_type        = quantity_t::space_type;
+    using value_type        = quantity_t::value_type;
+    using units_type        = quantity_t::units_type;
+    using inv_units_t       = dual<units_type>;
+    using inv_quantity_t    = quantity<dual<space_type>, inv_units_t>;
+    using delta_inv_q_t     = inv_quantity_t::displacement_type;
+    using euc_half_line_qty = euclidean_half_line_quantity<value_type>;
+    using euc_vec_space_qty = euclidean_1d_vector_quantity<value_type>;
+
+    using variant_t  = std::variant<quantity_t, delta_q_t, inv_quantity_t, delta_inv_q_t, euc_half_line_qty, euc_vec_space_qty>;
+    using graph_type = transition_checker<variant_t>::transition_graph;
+    using edge_t     = transition_checker<variant_t>::edge;
+
+    enum qty_label { qty, inv, dq, dinvq, euc_half, euv_vec };
+    
+    graph_type g{
+      {
+        {
+          edge_t{
+            qty_label::qty,
+            this->report("Quantity left unaffected by attempting to turn it negative"),
+            [this](variant_t v) -> variant_t {
+              check_exception_thrown<std::domain_error>("Negative quantity", [&v](){ return std::get<quantity_t>(v) += delta_q_t{-2.0, units_type{}}; });
+              return v;
+            },
+            std::weak_ordering::equivalent
+          }
+        },
+        {},
+        {},
+        {},
+        {},
+        {}
+      },
+      {
+        variant_t{quantity_t    {1.0, units_type{}}},
+        variant_t{delta_q_t     {0.5, units_type{}}},
+        variant_t{inv_quantity_t{2.0, inv_units_t{}}},
+        variant_t{delta_inv_q_t {0.25, inv_units_t{}}},
+        variant_t{euc_half_line_qty{0.5, no_unit}},
+        variant_t{euc_vec_space_qty{0.5, no_unit}}
+      }
+    };
+
+    auto checker{
+      [this](std::string_view description, const variant_t& obtained, const variant_t& prediction) {
+        this->check(equality, description, obtained, prediction);
+      }
+    };
+    
+    transition_checker<variant_t>::check("", g, checker);
+  }
+  
 
   void absolute_physical_value_test::test_mass_conversions()
   {
