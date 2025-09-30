@@ -147,18 +147,18 @@ namespace sequoia::testing
   template<class Quantity>
   void absolute_physical_value_test::test_compositions()
   {
-    using quantity_t        = Quantity;
-    using delta_q_t         = quantity_t::displacement_type;
-    using space_type        = quantity_t::space_type;
-    using value_type        = quantity_t::value_type;
-    using units_type        = quantity_t::units_type;
-    using inv_units_t       = dual<units_type>;
-    using inv_quantity_t    = quantity<dual<space_type>, inv_units_t>;
-    using delta_inv_q_t     = inv_quantity_t::displacement_type;
-    using euc_half_line_qty = euclidean_half_line_quantity<value_type>;
-    using euc_vec_space_qty = euclidean_1d_vector_quantity<value_type>;
+    using qty_t             = Quantity;
+    using delta_qty_t       = qty_t::displacement_type;
+    using space_t           = qty_t::space_type;
+    using value_t           = qty_t::value_type;
+    using units_t           = qty_t::units_type;
+    using inv_units_t       = dual<units_t>;
+    using inv_qty_t         = quantity<dual<space_t>, inv_units_t>;
+    using delta_inv_qty_t   = inv_qty_t::displacement_type;
+    using euc_half_line_qty = euclidean_half_line_quantity<value_t>;
+    using euc_vec_space_qty = euclidean_1d_vector_quantity<value_t>;
 
-    using variant_t  = std::variant<quantity_t, delta_q_t, inv_quantity_t, delta_inv_q_t, euc_half_line_qty, euc_vec_space_qty>;
+    using variant_t  = std::variant<qty_t, delta_qty_t, inv_qty_t, delta_inv_qty_t, euc_half_line_qty, euc_vec_space_qty>;
     using graph_type = transition_checker<variant_t>::transition_graph;
     using edge_t     = transition_checker<variant_t>::edge;
 
@@ -171,10 +171,28 @@ namespace sequoia::testing
             qty_label::qty,
             this->report("Quantity left unaffected by attempting to turn it negative"),
             [this](variant_t v) -> variant_t {
-              check_exception_thrown<std::domain_error>("Negative quantity", [&v](){ return std::get<quantity_t>(v) += delta_q_t{-2.0, units_type{}}; });
+              check_exception_thrown<std::domain_error>("Negative quantity", [&v](){ return std::get<qty_t>(v) += delta_qty_t{-2.0, units_t{}}; });
               return v;
             },
             std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::euc_half,
+            this->report("qty / qty"),
+            [](variant_t v) -> variant_t { return std::get<qty_t>(v) / qty_t{2.0, units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_half,
+            this->report("qty * inv_qty"),
+            [](variant_t v) -> variant_t { return std::get<qty_t>(v) * inv_qty_t{0.5, inv_units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_half,
+            this->report("qty * inv_qty"),
+            [](variant_t v) -> variant_t { return inv_qty_t{0.5, inv_units_t{}} * std::get<qty_t>(v); },
+            std::weak_ordering::less
           }
         },
         {},
@@ -184,10 +202,10 @@ namespace sequoia::testing
         {}
       },
       {
-        variant_t{quantity_t    {1.0, units_type{}}},
-        variant_t{delta_q_t     {0.5, units_type{}}},
-        variant_t{inv_quantity_t{2.0, inv_units_t{}}},
-        variant_t{delta_inv_q_t {0.25, inv_units_t{}}},
+        variant_t{qty_t            {1.0, units_t{}}},
+        variant_t{delta_qty_t      {0.5, units_t{}}},
+        variant_t{inv_qty_t        {2.0, inv_units_t{}}},
+        variant_t{delta_inv_qty_t  {0.25, inv_units_t{}}},
         variant_t{euc_half_line_qty{0.5, no_unit}},
         variant_t{euc_vec_space_qty{0.5, no_unit}}
       }
