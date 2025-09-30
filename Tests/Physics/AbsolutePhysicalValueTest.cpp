@@ -276,7 +276,32 @@ namespace sequoia::testing
             std::weak_ordering::less
           },
         },
-        {},
+        {
+          edge_t{
+            qty_label::qty,
+            this->report("euc_half * qty"),
+            [](variant_t v) -> variant_t { return std::get<euc_half_line_qty>(v) * qty_t{2.0, units_t{}}; },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::qty,
+            this->report("qty * euc_half"),
+            [](variant_t v) -> variant_t { return qty_t{2.0, units_t{}} * std::get<euc_half_line_qty>(v); },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::inv,
+            this->report("euc_half * inv_qty"),
+            [](variant_t v) -> variant_t { return std::get<euc_half_line_qty>(v) * inv_qty_t{4.0, inv_units_t{}}; },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::inv,
+            this->report("inv_qty * euc_half"),
+            [](variant_t v) -> variant_t { return inv_qty_t{4.0, inv_units_t{}} * std::get<euc_half_line_qty>(v); },
+            std::weak_ordering::greater
+          }
+        },
         {}
       },
       {
