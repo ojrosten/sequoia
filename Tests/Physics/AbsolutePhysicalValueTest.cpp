@@ -268,7 +268,14 @@ namespace sequoia::testing
             std::weak_ordering::less
           },
         },
-        {},
+        {
+          edge_t{
+            qty_label::euc_vec,
+            this->report("d_inv_qty / d_inv_qty"),
+            [](variant_t v) -> variant_t { return std::get<delta_inv_qty_t>(v) / delta_inv_qty_t{0.5, inv_units_t{}}; },
+            std::weak_ordering::less
+          },
+        },
         {},
         {}
       },
