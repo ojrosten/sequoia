@@ -157,12 +157,14 @@ namespace sequoia::testing
     using delta_inv_qty_t   = inv_qty_t::displacement_type;
     using euc_half_line_qty = euclidean_half_line_quantity<value_t>;
     using euc_vec_space_qty = euclidean_1d_vector_quantity<value_t>;
+    using unsafe_qty_t      = quantity<space_t, units_t, std::identity>;
+    using unsafe_inv_qty_t  = quantity<dual<space_t>, inv_units_t, std::identity>;
 
-    using variant_t  = std::variant<qty_t, delta_qty_t, inv_qty_t, delta_inv_qty_t, euc_half_line_qty, euc_vec_space_qty>;
+    using variant_t  = std::variant<qty_t, delta_qty_t, inv_qty_t, delta_inv_qty_t, euc_half_line_qty, euc_vec_space_qty, unsafe_qty_t, unsafe_inv_qty_t>;
     using graph_type = transition_checker<variant_t>::transition_graph;
     using edge_t     = transition_checker<variant_t>::edge;
 
-    enum qty_label { qty, dq, inv, dinvq, euc_half, euc_vec };
+    enum qty_label { qty, dq, inv, dinvq, euc_half, euc_vec, unsafe, unsafe_inv };
     
     graph_type g{
       {
@@ -326,16 +328,32 @@ namespace sequoia::testing
             this->report("d_inv_qty * euc_vec"),
             [](variant_t v) -> variant_t { return delta_inv_qty_t{0.5, inv_units_t{}} * std::get<euc_vec_space_qty>(v); },
             std::weak_ordering::greater
-          }
-        }
+          },
+          edge_t{
+            qty_label::unsafe,
+            this->report("euc_vec * qty"),
+            [](variant_t v) -> variant_t { return -std::get<euc_vec_space_qty>(v) * qty_t{2.0, units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::unsafe_inv,
+            this->report("euc_vec * inv_qty"),
+            [](variant_t v) -> variant_t { return -std::get<euc_vec_space_qty>(v) * inv_qty_t{4.0, inv_units_t{}}; },
+            std::weak_ordering::less
+          },
+        },
+        {},
+        {}
       },
       {
-        variant_t{qty_t            {1.0, units_t{}}},
-        variant_t{delta_qty_t      {0.5, units_t{}}},
-        variant_t{inv_qty_t        {2.0, inv_units_t{}}},
-        variant_t{delta_inv_qty_t  {0.25, inv_units_t{}}},
+        variant_t{            qty_t{1.0, units_t{}}},
+        variant_t{      delta_qty_t{0.5, units_t{}}},
+        variant_t{        inv_qty_t{2.0, inv_units_t{}}},
+        variant_t{  delta_inv_qty_t{0.25, inv_units_t{}}},
         variant_t{euc_half_line_qty{0.5, no_unit}},
-        variant_t{euc_vec_space_qty{0.5, no_unit}}
+        variant_t{euc_vec_space_qty{0.5, no_unit}},
+        variant_t{      unsafe_qty_t{-1.0, units_t{}}},
+        variant_t{  unsafe_inv_qty_t{-2.0, inv_units_t{}}}
       }
     };
 
