@@ -1519,9 +1519,9 @@ namespace sequoia::physics
     return {std::atan(x), si::units::radian};
   }
 
-  template<physical_unit Unit, class Rep>
+  template<physical_unit Unit, class Rep, class Validator=typename Unit::validator_type>
     requires has_default_space_v<Unit, Rep>
-  using quantity = physical_value<default_space_t<Unit, Rep>, Unit, canonical_right_handed_basis<free_module_type_of_t<default_space_t<Unit, Rep>>>, to_origin_type_t<default_space_t<Unit, Rep>, Unit>, typename Unit::validator_type>;
+  using quantity = physical_value<default_space_t<Unit, Rep>, Unit, canonical_right_handed_basis<free_module_type_of_t<default_space_t<Unit, Rep>>>, to_origin_type_t<default_space_t<Unit, Rep>, Unit>, Validator>;
 
   template<
     convex_space ValueSpace,
@@ -1530,15 +1530,6 @@ namespace sequoia::physics
   >
     requires has_consistent_validator<ValueSpace, Validator>
   using dimensionless_quantity = physical_value<ValueSpace, Unit, canonical_right_handed_basis<free_module_type_of_t<ValueSpace>>, to_origin_type_t<ValueSpace, Unit>, Validator>;
-
-  template<
-    convex_space ValueSpace,
-    physical_unit Unit,
-    validator_for<ValueSpace> Validator
-  >
-    requires has_consistent_validator<ValueSpace, Validator> && (!std::same_as<Validator, typename Unit::validator_type>)
-  using unsafe_quantity = physical_value<ValueSpace, Unit, canonical_right_handed_basis<free_module_type_of_t<ValueSpace>>, to_origin_type_t<ValueSpace, Unit>, Validator>;
-
   
   template<std::floating_point Rep, class Arena=implicit_common_arena>
   using euclidean_1d_vector_quantity = dimensionless_quantity<euclidean_vector_space<Rep, 1, Arena>, no_unit_t, std::identity>;

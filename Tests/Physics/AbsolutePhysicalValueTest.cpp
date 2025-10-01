@@ -149,7 +149,6 @@ namespace sequoia::testing
   {
     using qty_t             = Quantity;
     using delta_qty_t       = qty_t::displacement_type;
-    using space_t           = qty_t::space_type;
     using value_t           = qty_t::value_type;
     using units_t           = qty_t::units_type;
     using inv_units_t       = dual<units_t>;
@@ -157,8 +156,8 @@ namespace sequoia::testing
     using delta_inv_qty_t   = inv_qty_t::displacement_type;
     using euc_half_line_qty = euclidean_half_line_quantity<value_t>;
     using euc_vec_space_qty = euclidean_1d_vector_quantity<value_t>;
-    using unsafe_qty_t      = unsafe_quantity<space_t, units_t, std::identity>;
-    using unsafe_inv_qty_t  = unsafe_quantity<dual<space_t>, inv_units_t, std::identity>;
+    using unsafe_qty_t      = quantity<units_t, value_t, std::identity>;
+    using unsafe_inv_qty_t  = quantity<inv_units_t, value_t, std::identity>;
 
     using variant_t  = std::variant<qty_t, delta_qty_t, inv_qty_t, delta_inv_qty_t, euc_half_line_qty, euc_vec_space_qty, unsafe_qty_t, unsafe_inv_qty_t>;
     using graph_type = transition_checker<variant_t>::transition_graph;
