@@ -717,6 +717,13 @@ namespace sequoia::physics
     }
   };
 
+  template<physical_unit Unit, class Rep>
+    requires has_default_space_v<Unit, Rep>
+  struct default_space<dual<Unit>, Rep>
+  {
+    using type = dual_of_t<default_space_t<Unit, Rep>>;
+  };
+
   template<physical_unit... Ts, class Rep>
     requires (has_default_space_v<Ts, Rep> && ...)
   struct default_space<composite_unit<Ts...>, Rep>
@@ -1419,7 +1426,7 @@ namespace sequoia::physics
   };
 
   template<physical_unit Unit, class Rep, class Ratio, auto Trans>
-  requires has_default_space_v<Unit, Rep> && (Trans == 0)
+    requires has_default_space_v<Unit, Rep> && (Trans == 0)
   struct default_space<coordinate_transform<Unit, dilatation<Ratio>, translation<Trans>>, Rep> : default_space<Unit, Rep> {};
 
   template<physical_unit Unit, class Rep>
@@ -1512,20 +1519,32 @@ namespace sequoia::physics
     return {std::atan(x), si::units::radian};
   }
 
+  template<physical_unit Unit, class Rep>
+    requires has_default_space_v<Unit, Rep>
+  using quantity = physical_value<default_space_t<Unit, Rep>, Unit, canonical_right_handed_basis<free_module_type_of_t<default_space_t<Unit, Rep>>>, to_origin_type_t<default_space_t<Unit, Rep>, Unit>, typename Unit::validator_type>;
+
   template<
     convex_space ValueSpace,
     physical_unit Unit,
     validator_for<ValueSpace> Validator=typename Unit::validator_type
   >
     requires has_consistent_validator<ValueSpace, Validator>
-  using quantity = physical_value<ValueSpace, Unit, canonical_right_handed_basis<free_module_type_of_t<ValueSpace>>, to_origin_type_t<ValueSpace, Unit>, Validator>;
+  using dimensionless_quantity = physical_value<ValueSpace, Unit, canonical_right_handed_basis<free_module_type_of_t<ValueSpace>>, to_origin_type_t<ValueSpace, Unit>, Validator>;
+
+  template<
+    convex_space ValueSpace,
+    physical_unit Unit,
+    validator_for<ValueSpace> Validator
+  >
+    requires has_consistent_validator<ValueSpace, Validator> && (!std::same_as<Validator, typename Unit::validator_type>)
+  using unsafe_quantity = physical_value<ValueSpace, Unit, canonical_right_handed_basis<free_module_type_of_t<ValueSpace>>, to_origin_type_t<ValueSpace, Unit>, Validator>;
 
   
   template<std::floating_point Rep, class Arena=implicit_common_arena>
-  using euclidean_1d_vector_quantity = quantity<euclidean_vector_space<Rep, 1, Arena>, no_unit_t, std::identity>;
+  using euclidean_1d_vector_quantity = dimensionless_quantity<euclidean_vector_space<Rep, 1, Arena>, no_unit_t, std::identity>;
 
   template<std::floating_point Rep, class Arena=implicit_common_arena>
-  using euclidean_half_line_quantity = quantity<euclidean_half_space<Rep, Arena>, no_unit_t>;
+  using euclidean_half_line_quantity = dimensionless_quantity<euclidean_half_space<Rep, Arena>, no_unit_t>;
 }
 
 namespace sequoia::maths
@@ -1582,26 +1601,39 @@ namespace sequoia::maths
   };
 }
 
-// TO DO: extend this
 template<
   sequoia::maths::convex_space ValueSpace,
   sequoia::physics::physical_unit Unit,
+  sequoia::maths::basis_for<sequoia::maths::free_module_type_of_t<ValueSpace>> Basis,
+  class Origin,
   sequoia::maths::validator_for<ValueSpace> Validator
 >
-  requires (sequoia::maths::dimension_of<ValueSpace> == 1)
-struct std::formatter<sequoia::physics::quantity<ValueSpace, Unit, Validator>>
+struct std::formatter<sequoia::physics::physical_value<ValueSpace, Unit, Basis, Origin, Validator>>
 {
+  using physical_value_type = sequoia::physics::physical_value<ValueSpace, Unit, Basis, Origin, Validator>;
+  constexpr static auto dimension{sequoia::maths::dimension_of<ValueSpace> };
+
   constexpr auto parse(auto& ctx)
   {
     return ctx.begin();
   }
 
-  auto format(const sequoia::physics::quantity<ValueSpace, Unit, Validator>& q, auto& ctx) const
+  auto format(const physical_value_type& v, auto& ctx) const
+    requires (dimension == 1)
   {
     if constexpr(sequoia::physics::has_symbol_v<Unit>)
-      return std::format_to(ctx.out(), "{} {}", q.value(), Unit::symbol);
+      return std::format_to(ctx.out(), "{} {}", v.value(), Unit::symbol);
     else
-      return std::format_to(ctx.out(), "{}", q.value());
+      return std::format_to(ctx.out(), "{}", v.value());
+  }
+
+  auto format(const physical_value_type& v, auto& ctx) const
+    requires (dimension > 1)
+  {
+    if constexpr(sequoia::physics::has_symbol_v<Unit>)
+      return std::format_to(ctx.out(), "{} {}", v.values(), Unit::symbol);
+    else
+      return std::format_to(ctx.out(), "{}", v.values());
   }
 };
 

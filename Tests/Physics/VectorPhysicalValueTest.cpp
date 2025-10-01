@@ -89,7 +89,7 @@ namespace sequoia::testing
           physical_value{value_type{2.0}, units_type{} * units_type{}},
           quantity_t{value_type{1.0}, units_type{}} * quantity_t{value_type{2.0}, units_type{}});
 
-    using inv_quantity_t = quantity<dual<space_type>, dual<units_type>>;
+    using inv_quantity_t = quantity<dual<units_type>, value_type>;
     coordinates_operations<inv_quantity_t>{*this}.execute();
 
     using euc_vec_space_qty  = euclidean_1d_vector_quantity<value_type>;
