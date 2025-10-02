@@ -232,6 +232,12 @@ namespace sequoia::testing
             this->report("d_inv_qty * qty"),
             [](variant_t v) -> variant_t { return delta_inv_qty_t{0.5, inv_units_t{}} * std::get<qty_t>(v); },
             std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::q2,
+            this->report("qty * qty"),
+            [](variant_t v) -> variant_t { return std::get<qty_t>(v) * qty_t{3.0, units_t{}}; },
+            std::weak_ordering::less
           }
         },
         {
@@ -357,8 +363,22 @@ namespace sequoia::testing
         },
         {},
         {},
-        {},
-        {}
+        {
+          edge_t{
+            qty_label::q3,
+            this->report("qty^2 * qty"),
+            [](variant_t v) -> variant_t { return std::get<q2>(v) * qty_t{2.0, units_t{}}; },
+            std::weak_ordering::less
+          }
+        },
+        {
+          edge_t{
+            qty_label::q2,
+            this->report("qty^3 / qty"),
+            [](variant_t v) -> variant_t { return std::get<q3>(v) / qty_t{2.0, units_t{}}; },
+            std::weak_ordering::greater
+          }
+        }
       },
       {
         variant_t{            qty_t{1.0, units_t{}}},
@@ -370,7 +390,7 @@ namespace sequoia::testing
         variant_t{     unsafe_qty_t{-1.0, units_t{}}},
         variant_t{ unsafe_inv_qty_t{-2.0, inv_units_t{}}},
         variant_t{   physical_value{value_t{3.0}, units_t{} * units_t{}}},
-        variant_t{   physical_value{value_t{4.0}, units_t{} * units_t{} * units_t{}}}
+        variant_t{   physical_value{value_t{6.0}, units_t{} * units_t{} * units_t{}}}
       }
     };
 
