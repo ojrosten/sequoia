@@ -182,6 +182,7 @@ namespace sequoia::testing
     graph_type g{
       {
         {
+          // Start qty
           edge_t{
             qty_label::qty,
             this->report("Quantity left unaffected by attempting to turn it negative"),
@@ -190,6 +191,12 @@ namespace sequoia::testing
               return v;
             },
             std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::inv,
+            this->report("qty / qty^2"),
+            [](variant_t v) -> variant_t { return std::get<qty_t>(v) / physical_value{value_t{0.5}, units_t{} * units_t{}}; },
+            std::weak_ordering::less
           },
           edge_t{
             qty_label::euc_half,
@@ -236,11 +243,13 @@ namespace sequoia::testing
           edge_t{
             qty_label::q2,
             this->report("qty * qty"),
-            [](variant_t v) -> variant_t { return std::get<qty_t>(v) * qty_t{3.0, units_t{}}; },
+            [](variant_t v) -> variant_t { return std::get<qty_t>(v) * qty_t{4.0, units_t{}}; },
             std::weak_ordering::less
           }
+          // End qty
         },
         {
+          // Start d_q
           edge_t{
             qty_label::euc_vec,
             this->report("d_qty / d_qty"),
@@ -259,8 +268,10 @@ namespace sequoia::testing
             [](variant_t v) -> variant_t { return delta_inv_qty_t{1.0, inv_units_t{}} * std::get<delta_qty_t>(v); },
             std::weak_ordering::less
           }
+          // End d_q
         },
         {
+          // Start inv_q
           edge_t{
             qty_label::inv,
             this->report("Inv quantity left unaffected by attempting to turn it negative"),
@@ -288,16 +299,18 @@ namespace sequoia::testing
             [](variant_t v) -> variant_t { return delta_inv_qty_t{1.0, inv_units_t{}} / std::get<inv_qty_t>(v); },
             std::weak_ordering::less
           },
+          // End inv_q
         },
-        {
+        { // Start d_inv_q
           edge_t{
             qty_label::euc_vec,
             this->report("d_inv_qty / d_inv_qty"),
             [](variant_t v) -> variant_t { return std::get<delta_inv_qty_t>(v) / delta_inv_qty_t{0.5, inv_units_t{}}; },
             std::weak_ordering::less
           },
+          // Start d_inv_q
         },
-        {
+        { // Start euc_half_line
           edge_t{
             qty_label::qty,
             this->report("euc_half * qty"),
@@ -322,8 +335,10 @@ namespace sequoia::testing
             [](variant_t v) -> variant_t { return inv_qty_t{4.0, inv_units_t{}} * std::get<euc_half_line_qty>(v); },
             std::weak_ordering::greater
           }
+          // End euc_half_line
         },
         {
+          // Start euc_vec
           edge_t{
             qty_label::dq,
             this->report("euc_vec * d_qty"),
@@ -360,24 +375,53 @@ namespace sequoia::testing
             [](variant_t v) -> variant_t { return -std::get<euc_vec_space_qty>(v) * inv_qty_t{4.0, inv_units_t{}}; },
             std::weak_ordering::less
           },
+          // End euc_vec
         },
-        {},
-        {},
         {
+          // Start unsafe q
+          // End unsafe q
+        },
+        {
+          // Start unsafe inv q
+          // End unsafe inv q
+        },
+        {
+          // Start q^2
+          edge_t{
+            qty_label::qty,
+            this->report("qty^2 / qty"),
+            [](variant_t v) -> variant_t { return std::get<q2>(v) / qty_t{4.0, units_t{}}; },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::qty,
+            this->report("qty^2 * inv_qty"),
+            [](variant_t v) -> variant_t { return std::get<q2>(v) * inv_qty_t{0.25, inv_units_t{}}; },
+            std::weak_ordering::greater
+          },
           edge_t{
             qty_label::q3,
             this->report("qty^2 * qty"),
             [](variant_t v) -> variant_t { return std::get<q2>(v) * qty_t{2.0, units_t{}}; },
             std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::q3,
+            this->report("qty * qty^2"),
+            [](variant_t v) -> variant_t { return qty_t{2.0, units_t{}} * std::get<q2>(v); },
+            std::weak_ordering::less
           }
+          // End q^2
         },
         {
+          // Start q^3
           edge_t{
             qty_label::q2,
             this->report("qty^3 / qty"),
             [](variant_t v) -> variant_t { return std::get<q3>(v) / qty_t{2.0, units_t{}}; },
             std::weak_ordering::greater
           }
+          // End q^3
         }
       },
       {
@@ -389,8 +433,8 @@ namespace sequoia::testing
         variant_t{euc_vec_space_qty{0.5, no_unit}},
         variant_t{     unsafe_qty_t{-1.0, units_t{}}},
         variant_t{ unsafe_inv_qty_t{-2.0, inv_units_t{}}},
-        variant_t{   physical_value{value_t{3.0}, units_t{} * units_t{}}},
-        variant_t{   physical_value{value_t{6.0}, units_t{} * units_t{} * units_t{}}}
+        variant_t{   physical_value{value_t{4.0}, units_t{} * units_t{}}},
+        variant_t{   physical_value{value_t{8.0}, units_t{} * units_t{} * units_t{}}}
       }
     };
 
