@@ -158,12 +158,26 @@ namespace sequoia::testing
     using euc_vec_space_qty = euclidean_1d_vector_quantity<value_t>;
     using unsafe_qty_t      = quantity<units_t, value_t, std::identity>;
     using unsafe_inv_qty_t  = quantity<inv_units_t, value_t, std::identity>;
+    using q2_t              = decltype(physical_value{value_t{}, units_t{} * units_t{}});
+    using q3_t              = decltype(physical_value{value_t{}, units_t{} *units_t{} * units_t{}});
 
-    using variant_t  = std::variant<qty_t, delta_qty_t, inv_qty_t, delta_inv_qty_t, euc_half_line_qty, euc_vec_space_qty, unsafe_qty_t, unsafe_inv_qty_t>;
+    using variant_t
+      = std::variant<
+          qty_t,
+          delta_qty_t,
+          inv_qty_t,
+          delta_inv_qty_t,
+          euc_half_line_qty,
+          euc_vec_space_qty,
+          unsafe_qty_t,
+          unsafe_inv_qty_t,
+          q2_t,
+          q3_t
+        >;
     using graph_type = transition_checker<variant_t>::transition_graph;
     using edge_t     = transition_checker<variant_t>::edge;
 
-    enum qty_label { qty, dq, inv, dinvq, euc_half, euc_vec, unsafe, unsafe_inv };
+    enum qty_label { qty, dq, inv, dinvq, euc_half, euc_vec, unsafe, unsafe_inv, q2, q3 };
     
     graph_type g{
       {
@@ -342,6 +356,8 @@ namespace sequoia::testing
           },
         },
         {},
+        {},
+        {},
         {}
       },
       {
@@ -351,8 +367,10 @@ namespace sequoia::testing
         variant_t{  delta_inv_qty_t{0.25, inv_units_t{}}},
         variant_t{euc_half_line_qty{0.5, no_unit}},
         variant_t{euc_vec_space_qty{0.5, no_unit}},
-        variant_t{      unsafe_qty_t{-1.0, units_t{}}},
-        variant_t{  unsafe_inv_qty_t{-2.0, inv_units_t{}}}
+        variant_t{     unsafe_qty_t{-1.0, units_t{}}},
+        variant_t{ unsafe_inv_qty_t{-2.0, inv_units_t{}}},
+        variant_t{   physical_value{value_t{3.0}, units_t{} * units_t{}}},
+        variant_t{   physical_value{value_t{4.0}, units_t{} * units_t{} * units_t{}}}
       }
     };
 
