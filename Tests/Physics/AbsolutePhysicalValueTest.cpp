@@ -400,6 +400,18 @@ namespace sequoia::testing
             std::weak_ordering::greater
           },
           edge_t{
+            qty_label::euc_half,
+            this->report("qty^2 / qty^2"),
+            [](variant_t v) -> variant_t { return std::get<q2>(v) / physical_value{value_t{8.0}, units_t{} * units_t{}}; },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::inv,
+            this->report("qty^2 / qty^3"),
+            [](variant_t v) -> variant_t { return std::get<q2>(v) / physical_value{value_t{2.0}, units_t{} * units_t{} * units_t{}}; },
+            std::weak_ordering::greater
+          },
+          edge_t{
             qty_label::q3,
             this->report("qty^2 * qty"),
             [](variant_t v) -> variant_t { return std::get<q2>(v) * qty_t{2.0, units_t{}}; },
@@ -425,16 +437,16 @@ namespace sequoia::testing
         }
       },
       {
-        variant_t{            qty_t{1.0, units_t{}}},
-        variant_t{      delta_qty_t{0.5, units_t{}}},
-        variant_t{        inv_qty_t{2.0, inv_units_t{}}},
-        variant_t{  delta_inv_qty_t{0.25, inv_units_t{}}},
-        variant_t{euc_half_line_qty{0.5, no_unit}},
-        variant_t{euc_vec_space_qty{0.5, no_unit}},
-        variant_t{     unsafe_qty_t{-1.0, units_t{}}},
-        variant_t{ unsafe_inv_qty_t{-2.0, inv_units_t{}}},
-        variant_t{   physical_value{value_t{4.0}, units_t{} * units_t{}}},
-        variant_t{   physical_value{value_t{8.0}, units_t{} * units_t{} * units_t{}}}
+        variant_t{            qty_t{1.0, units_t{}}},                                 // qty
+        variant_t{      delta_qty_t{0.5, units_t{}}},                                 // dq
+        variant_t{        inv_qty_t{2.0, inv_units_t{}}},                             // inv
+        variant_t{  delta_inv_qty_t{0.25, inv_units_t{}}},                            // dinvq
+        variant_t{euc_half_line_qty{0.5, no_unit}},                                   // euc_half
+        variant_t{euc_vec_space_qty{0.5, no_unit}},                                   // euc_vec 
+        variant_t{     unsafe_qty_t{-1.0, units_t{}}},                                // unsafe
+        variant_t{ unsafe_inv_qty_t{-2.0, inv_units_t{}}},                            // unsafe_inv
+        variant_t{   physical_value{value_t{4.0}, units_t{} * units_t{}}},            // q2
+        variant_t{   physical_value{value_t{8.0}, units_t{} * units_t{} * units_t{}}} // q3
       }
     };
 
