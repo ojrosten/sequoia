@@ -194,6 +194,12 @@ namespace sequoia::testing
           },
           edge_t{
             qty_label::inv,
+            this->report("0.5 / qty"),
+            [](variant_t v) -> variant_t { return value_t{2.0} / std::get<qty_t>(v); },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::inv,
             this->report("qty / qty^2"),
             [](variant_t v) -> variant_t { return std::get<qty_t>(v) / physical_value{value_t{0.5}, units_t{} * units_t{}}; },
             std::weak_ordering::less
@@ -249,7 +255,13 @@ namespace sequoia::testing
           // End qty
         },
         {
-          // Start d_q
+          // Start dinvq
+          edge_t{
+            qty_label::dinvq,
+            this->report("0.125 / qty"),
+            [](variant_t v) -> variant_t { return value_t{0.125} / std::get<delta_qty_t>(v); },
+            std::weak_ordering::less
+          },
           edge_t{
             qty_label::euc_vec,
             this->report("d_qty / d_qty"),
