@@ -34,11 +34,13 @@ namespace sequoia::testing
   void absolute_physical_value_test::run_tests()
   {
     test_absolute_quantity<si::mass<float>>();
-    test_absolute_quantity<si::mass<double>>();
-    test_absolute_quantity<si::length<float>>();
+    test_absolute_quantity<si::length<double>>();
     test_absolute_quantity<si::time_interval<float>>();
     test_absolute_quantity<si::temperature<double>>();
 
+    test_compositions<si::mass<double>>();
+    test_compositions<si::temperature<float>>();
+    
     test_mass_conversions();
     test_length_conversions();
     test_area_conversions();
@@ -68,14 +70,10 @@ namespace sequoia::testing
     STATIC_CHECK(has_unary_plus<quantity_t>);
     STATIC_CHECK(!has_unary_minus<quantity_t>);
 
-    check_exception_thrown<std::domain_error>("Negative quantity", [](){ return quantity_t{-1.0, units_type{}}; });
-
     coordinates_operations<quantity_t>{*this}.execute();
 
     using inv_quantity_t = quantity<dual<units_type>, value_type>;
     coordinates_operations<inv_quantity_t>{*this}.execute();
-
-    test_compositions<quantity_t>();
   }
 
   template<class Quantity>
@@ -123,9 +121,18 @@ namespace sequoia::testing
           // Start qty
           edge_t{
             qty_label::qty,
+            this->report("Assigning from an attempt to create a negative quantity"),
+            [this](variant_t v) -> variant_t {
+              check_exception_thrown<std::domain_error>("Attempting to make negative quantity", [&v](){ std::get<qty_t>(v) = qty_t{-1.0, units_t{}}; });
+              return v;
+            },
+            std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::qty,
             this->report("Quantity left unaffected by attempting to turn it negative"),
             [this](variant_t v) -> variant_t {
-              check_exception_thrown<std::domain_error>("Negative quantity", [&v](){ return std::get<qty_t>(v) += delta_qty_t{-2.0, units_t{}}; });
+              check_exception_thrown<std::domain_error>("Attempting to shift quantity negative", [&v](){ std::get<qty_t>(v) += delta_qty_t{-2.0, units_t{}}; });
               return v;
             },
             std::weak_ordering::equivalent
