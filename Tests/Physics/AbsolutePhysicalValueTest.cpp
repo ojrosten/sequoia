@@ -72,14 +72,10 @@ namespace sequoia::testing
 
     coordinates_operations<quantity_t>{*this}.execute();
 
-    using inv_unit_t = dual<units_type>;
-
     using inv_quantity_t = quantity<dual<units_type>, value_type>;
     coordinates_operations<inv_quantity_t>{*this}.execute();
 
     test_compositions<quantity_t>();
-
-    check(equality, "", (inv_quantity_t{2.0, inv_unit_t{}} * inv_quantity_t{3.0, inv_unit_t{}}) * quantity_t{2.0, units_type{}}, inv_quantity_t{12.0, inv_unit_t{}});
   }
 
   template<class Quantity>
@@ -97,8 +93,9 @@ namespace sequoia::testing
     using unsafe_qty_t      = quantity<units_t, value_t, std::identity>;
     using unsafe_inv_qty_t  = quantity<inv_units_t, value_t, std::identity>;
     using q2_t              = decltype(physical_value{value_t{}, units_t{} * units_t{}});
-    using q3_t              = decltype(physical_value{value_t{}, units_t{} *units_t{} * units_t{}});
+    using q3_t              = decltype(physical_value{value_t{}, units_t{} * units_t{} * units_t{}});
     using dq2_t             = decltype(delta_qty_t{value_t{}, units_t{}} * delta_qty_t{value_t{}, units_t{}});
+    using inv_q2_t          = decltype(value_t{} / q2_t{value_t{}, units_t{} *units_t{}});
 
     using variant_t
       = std::variant<
@@ -111,13 +108,14 @@ namespace sequoia::testing
           unsafe_qty_t,
           unsafe_inv_qty_t,
           q2_t,
-          q3_t,
-          dq2_t
+          dq2_t,
+          inv_q2_t,  
+          q3_t
         >;
     using graph_type = transition_checker<variant_t>::transition_graph;
     using edge_t     = transition_checker<variant_t>::edge;
 
-    enum qty_label { qty, dq, inv, dinvq, euc_half, euc_vec, unsafe, unsafe_inv, q2, q3, dq2 };
+    enum qty_label { qty, dq, inv, dinvq, euc_half, euc_vec, unsafe, unsafe_inv, q2, dq2, inv_q2, q3 };
     
     graph_type g{
       {
@@ -261,6 +259,12 @@ namespace sequoia::testing
             qty_label::euc_vec,
             this->report("d_inv_qty / inv_qty"),
             [](variant_t v) -> variant_t { return delta_inv_qty_t{1.0, inv_units_t{}} / std::get<inv_qty_t>(v); },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::inv_q2,
+            this->report("invq * invq"),
+            [](variant_t v) -> variant_t { return std::get<inv_qty_t>(v) * inv_qty_t{0.25, inv_units_t{}}; },
             std::weak_ordering::less
           },
           // End inv_q
@@ -438,6 +442,26 @@ namespace sequoia::testing
           // End q^2
         },
         {
+          // Start (dq)^2
+          edge_t{
+            qty_label::dq,
+            this->report("(dq)^2 / qty"),
+            [](variant_t v) -> variant_t { return -std::get<dq2>(v) / qty_t{8.0, units_t{}}; },
+            std::weak_ordering::greater
+          }
+          // End (dq)^2
+        },
+        {
+          // Start inv_q2
+          edge_t{
+            qty_label::inv,
+            this->report("invq^2 * qty"),
+            [](variant_t v) -> variant_t { return std::get<inv_q2>(v) * qty_t{4.0, units_t{}}; },
+            std::weak_ordering::greater
+          }
+          // End   inv_q2
+        },
+        {
           // Start q^3
           edge_t{
             qty_label::q2,
@@ -447,16 +471,6 @@ namespace sequoia::testing
           }
           // End q^3
         },
-        {
-          // Start (dq)^2
-          edge_t{
-            qty_label::dq,
-            this->report("(dq)^2 / qty"),
-            [](variant_t v) -> variant_t { return -std::get<dq2>(v) / qty_t{8.0, units_t{}}; },
-            std::weak_ordering::greater
-          }
-          // End (dq)^2
-        }
       },
       {
         variant_t{            qty_t{1.0, units_t{}}},                         // qty
@@ -468,8 +482,9 @@ namespace sequoia::testing
         variant_t{     unsafe_qty_t{-1.0, units_t{}}},                        // unsafe
         variant_t{ unsafe_inv_qty_t{-2.0, inv_units_t{}}},                    // unsafe_inv
         variant_t{             q2_t{4.0, units_t{} * units_t{}}},             // q2
-        variant_t{             q3_t{8.0, units_t{} * units_t{} * units_t{}}}, // q3
-        variant_t{            dq2_t{-4.0, units_t{} * units_t{}}}             // dq2
+        variant_t{            dq2_t{-4.0, units_t{} * units_t{}}},            // dq2
+        variant_t{         inv_q2_t{0.5, inv_units_t{} * inv_units_t{}}},     // inv_q2
+        variant_t{             q3_t{8.0, units_t{} * units_t{} * units_t{}}}  // q3
       }
     };
 
