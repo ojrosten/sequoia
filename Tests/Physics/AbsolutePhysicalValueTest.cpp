@@ -439,6 +439,12 @@ namespace sequoia::testing
             [](variant_t v) -> variant_t { return std::get<q2>(v) * (delta_inv_qty_t{0.25, inv_units_t{}} * inv_qty_t{0.5, inv_units_t{}}); },
             std::weak_ordering::greater
           },
+          edge_t{
+            qty_label::inv_q2,
+            this->report("2.0 / qty^2"),
+            [](variant_t v) -> variant_t { return value_t{2.0} / std::get<q2>(v); },
+            std::weak_ordering::less
+          },
           // End q^2
         },
         {
@@ -458,7 +464,13 @@ namespace sequoia::testing
             this->report("invq^2 * qty"),
             [](variant_t v) -> variant_t { return std::get<inv_q2>(v) * qty_t{4.0, units_t{}}; },
             std::weak_ordering::greater
-          }
+          },
+          edge_t{
+            qty_label::q2,
+            this->report("2.0 / inv_qty^2"),
+            [](variant_t v) -> variant_t { return value_t{2.0} / std::get<inv_q2>(v); },
+            std::weak_ordering::greater
+          },
           // End   inv_q2
         },
         {
