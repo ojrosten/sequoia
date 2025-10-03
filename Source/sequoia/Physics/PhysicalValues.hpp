@@ -409,7 +409,7 @@ namespace sequoia::physics
   };
 
   template<physical_unit RHS>
-    requires (std::same_as<RHS, no_unit_t>)
+    requires (!std::same_as<RHS, no_unit_t>)
   constexpr auto operator*(no_unit_t, RHS rhs) noexcept
   {
     return rhs;

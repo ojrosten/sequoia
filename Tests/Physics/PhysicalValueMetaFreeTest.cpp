@@ -216,6 +216,12 @@ namespace sequoia::testing
   {
     using namespace si::units;
 
+    STATIC_CHECK(std::is_same_v<decltype(no_unit * metre), metre_t>);
+    STATIC_CHECK(std::is_same_v<decltype(metre * no_unit), metre_t>);
+    STATIC_CHECK(std::is_same_v<decltype(metre / no_unit), metre_t>);
+    STATIC_CHECK(std::is_same_v<decltype(no_unit / metre), dual<metre_t>>);
+    STATIC_CHECK(std::is_same_v<decltype(no_unit / dual<metre_t>{}), metre_t>);
+
     STATIC_CHECK(std::is_same_v<reduction_t<direct_product<metre_t, kilogram_t>>,
                                   reduction<direct_product<kilogram_t, metre_t>>>);
 
