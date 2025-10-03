@@ -83,11 +83,6 @@ namespace sequoia::testing
 
     using euc_vec_space_qty = euclidean_1d_vector_quantity<value_type>;
 
-
-    check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}  /  delta_q_t{2.0, units_type{}})  / delta_q_t{-2.0, units_type{}},   euc_vec_space_qty{-3.0, no_unit});
-    check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) / (delta_q_t{2.0, units_type{}}   * delta_q_t{-2.0, units_type{}}),  euc_vec_space_qty{-3.0, no_unit});
-    check(equality, "",  quantity_t{4.0, units_type{}} * (quantity_t{3.0, units_type{}}  / (delta_q_t{2.0, units_type{}}   * delta_q_t{-2.0, units_type{}})), euc_vec_space_qty{-3.0, no_unit});
-
     check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}  / delta_q_t{-2.0, units_type{}})  / quantity_t{2.0, units_type{}},  euc_vec_space_qty{-3.0, no_unit});
     check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) / (delta_q_t{-2.0, units_type{}}  * quantity_t{2.0, units_type{}}),  euc_vec_space_qty{-3.0, no_unit});
     check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) * ((1.0 / delta_q_t{-2.0, units_type{}})  * (1.0 / quantity_t{2.0, units_type{}})),  euc_vec_space_qty{-3.0, no_unit});      
@@ -155,6 +150,12 @@ namespace sequoia::testing
             qty_label::inv,
             this->report("qty / qty^2"),
             [](variant_t v) -> variant_t { return std::get<qty_t>(v) / physical_value{value_t{0.5}, units_t{} * units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::dinvq,
+            this->report("qty / dq^2"),
+            [](variant_t v) -> variant_t { return std::get<qty_t>(v) / (delta_qty_t{2.0, units_t{}} * delta_qty_t{2.0, units_t{}}); },
             std::weak_ordering::less
           },
           edge_t{
@@ -399,7 +400,19 @@ namespace sequoia::testing
             this->report("qty * qty^2"),
             [](variant_t v) -> variant_t { return qty_t{2.0, units_t{}} * std::get<q2>(v); },
             std::weak_ordering::less
-          }
+          },
+          edge_t{
+            qty_label::dq,
+            this->report("qty^2 / dq"),
+            [](variant_t v) -> variant_t { return std::get<q2>(v) / delta_qty_t{8.0, units_t{}}; },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("qty^2 / dq^2"),
+            [](variant_t v) -> variant_t { return std::get<q2>(v) / (delta_qty_t{2.0, units_t{}} * delta_qty_t{4.0, units_t{}}); },
+            std::weak_ordering::greater
+          },
           // End q^2
         },
         {
