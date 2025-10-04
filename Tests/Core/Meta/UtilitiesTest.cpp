@@ -17,6 +17,16 @@ namespace sequoia::testing
   {
     double f(int) { return 1.0; }
     double g(int) noexcept { return 1.0; }
+
+    struct fn_ob {
+      int i{};
+      double x{};
+
+      void operator()(int val)    { i = val; }
+      void operator()(double val) { x = val; }
+
+      friend bool operator==(const fn_ob&, const fn_ob&) noexcept = default;
+    };
   }
 
   [[nodiscard]]
@@ -28,6 +38,7 @@ namespace sequoia::testing
   void utilities_test::run_tests()
   {
     test_function_signature();
+    test_for_each();
   }
 
   void utilities_test::test_function_signature()
@@ -116,5 +127,26 @@ namespace sequoia::testing
         return true;
       }()
     );
+  }
+
+  void utilities_test::test_for_each()
+  {
+    {
+      fn_ob f{};  
+      for_each(std::tuple<int>{42}, f);
+      check("", f == fn_ob{42, 0});
+    }
+
+    {
+      fn_ob f{};  
+      for_each(std::tuple<double>{3.14}, f);
+      check("", f == fn_ob{0, 3.14});
+    }
+    
+    {
+      fn_ob f{};  
+      for_each(std::tuple<int, double>{42, 3.14}, f);
+      check("", f == fn_ob{42, 3.14});
+    }
   }
 }
