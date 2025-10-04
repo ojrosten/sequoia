@@ -133,19 +133,19 @@ namespace sequoia::testing
   {
     {
       fn_ob f{};  
-      for_each(std::tuple<int>{42}, f);
+      meta::for_each(std::tuple<int>{42}, f);
       check("", f == fn_ob{42, 0});
     }
 
     {
       fn_ob f{};  
-      for_each(std::tuple<double>{3.14}, f);
+      meta::for_each(std::tuple<double>{3.14}, f);
       check("", f == fn_ob{0, 3.14});
     }
     
     {
       fn_ob f{};  
-      for_each(std::tuple<int, double>{42, 3.14}, f);
+      meta::for_each(std::tuple<int, double>{42, 3.14}, f);
       check("", f == fn_ob{42, 3.14});
     }
   }

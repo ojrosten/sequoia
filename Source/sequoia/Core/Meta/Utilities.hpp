@@ -85,12 +85,14 @@ namespace sequoia
     constexpr static std::size_t size{1 + sizeof...(InnerAlloc)};
   };
 
-  template<class Tuple, class Fn>
-  constexpr void for_each(Tuple&& t, Fn&& f)
+  namespace meta
   {
-    [&]<std::size_t... Is>(std::index_sequence<Is...>){
-      ((std::forward<Fn>(f)(std::get<Is>(t))), ...);
-    }(std::make_index_sequence<std::tuple_size_v<std::remove_cvref_t<Tuple>>>{});
+    template<class Tuple, class Fn>
+    constexpr void for_each(Tuple&& t, Fn&& f)
+    {
+      [&]<std::size_t... Is>(std::index_sequence<Is...>){
+        ((std::forward<Fn>(f)(std::get<Is>(t))), ...);
+      }(std::make_index_sequence<std::tuple_size_v<std::remove_cvref_t<Tuple>>>{});
+    }
   }
-
 }
