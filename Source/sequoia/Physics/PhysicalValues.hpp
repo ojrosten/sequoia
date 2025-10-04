@@ -1398,7 +1398,7 @@ namespace sequoia::physics
       inline constexpr degree_t degree{};
       inline constexpr gradian_t gradian{};
 
-      struct farenheight_t : coordinate_transform<si::units::celsius_t, dilatation<std::ratio<9, 5>>, translation<32.0l>>
+      struct farenheight_t : coordinate_transform<si::units::celsius_t, dilatation<std::ratio<9, 5>>, translation<32.0L>>
       {
         using is_unit = std::true_type;
         constexpr static std::string_view symbol{"degF"};
@@ -1618,13 +1618,14 @@ struct std::formatter<sequoia::physics::physical_value<ValueSpace, Unit, Basis, 
       return std::format_to(ctx.out(), "{}", v.value());
   }
 
-  auto format(const physical_value_type& v, auto& ctx) const
+  // TO DO: reinstate when formatting is working for spans 
+  /*auto format(const physical_value_type& v, auto& ctx) const
     requires (dimension > 1)
   {
     if constexpr(sequoia::physics::has_symbol_v<Unit>)
       return std::format_to(ctx.out(), "{} {}", v.values(), Unit::symbol);
     else
       return std::format_to(ctx.out(), "{}", v.values());
-  }
+  }*/
 };
 

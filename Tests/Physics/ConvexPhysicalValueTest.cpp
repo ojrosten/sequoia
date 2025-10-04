@@ -48,7 +48,7 @@ namespace sequoia::testing
 
     check_exception_thrown<std::domain_error>(
       "",
-      [](){ return non_si::temperature_farenheight<T>{T(-459.7), non_si::units::farenheight}; }
+      [](){ return non_si::temperature_farenheight<T>{T(-460), non_si::units::farenheight}; }
     );
   }
 
@@ -182,7 +182,7 @@ namespace sequoia::testing
     STATIC_CHECK(
       std::same_as<
         inverse_t<root_transform_t<non_si::units::farenheight_t>>,
-        coordinate_transform<si::units::kelvin_t, dilatation<maths::ratio<5L, 9L>>, translation<273.15L - 32.0L*5/9>>
+      coordinate_transform<si::units::kelvin_t, dilatation<maths::ratio<5L, 9L>>, translation<(273.15L*9/5 - 32.0L)*5/9>>
       >
     );
 
