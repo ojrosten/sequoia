@@ -1168,7 +1168,7 @@ namespace sequoia::physics
   };
 
   template<physical_unit... Us>
-  requires (scale_invariant_validator_v<typename Us::validator_type> && ...)
+    requires (scale_invariant_validator_v<typename Us::validator_type> && ...)
   struct root_transform<composite_unit<Us...>>
   {
     using unit_type = decltype((root_transform_unit_t<Us>{} * ...));
@@ -1254,9 +1254,13 @@ namespace sequoia::physics
     using transform_type = coordinate_transform<Unit, dilatation<std::micro>, translation<0>>;
   };
   
-  namespace si
+  // TO DO: these namespace have been made inline to workaround an MSVC bug
+  // https://developercommunity.visualstudio.com/t/Overload-resolution-failing-with-a-class/10977207
+  // It may be worth making them inline, regardless, and possibly abandoning
+  // the inner namespace. I need to think about this.
+  inline namespace si
   {
-    namespace units
+    inline namespace units
     {
       struct ampere_t
       {
@@ -1377,9 +1381,10 @@ namespace sequoia::physics
     using position = physical_value<position_space<T, D, Arena>, units::metre_t, Basis, Origin, std::identity>;
   }
 
-  namespace non_si
+  // TO DO: see commnent above si namespace
+  inline namespace non_si
   {
-    namespace units
+    inline namespace units
     {
       struct degree_t : coordinate_transform<si::units::radian_t, dilatation<ratio<intmax_t{180}, std::numbers::pi_v<long double>>>, translation<0>>
       {
