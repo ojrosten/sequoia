@@ -71,8 +71,11 @@ namespace sequoia::testing
       while(pos < name.size())
       {
         const auto open{name.find_first_of("< ", pos)};
-        pos = open;
-        while((pos < name.size() - 1) && !std::isdigit(name[++pos])) {}
+        if(open >= name.size())
+          break;
+
+        pos = open+1;
+        while((pos < name.size() - 1) && !std::isdigit(name[pos])) { ++pos; }
         if(pos < name.size() - 1)
         {
           if((name[pos - 1] == '_') || std::isalpha(name[pos - 1]))
