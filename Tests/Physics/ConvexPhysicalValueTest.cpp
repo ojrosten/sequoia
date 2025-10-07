@@ -201,14 +201,14 @@ namespace sequoia::testing
       equality,
       "",
       absolute_temp_t{}.convert_to(non_si::units::farenheight),
-      farenheight_t{value_t(-273.15 * 9 / 5 + 32), non_si::units::farenheight}
+      farenheight_t{value_t(-273.15L * 9 / 5 + 32), non_si::units::farenheight}
     );
 
     check(
       equality,
       "",
       farenheight_t{}.convert_to(si::units::kelvin),
-      absolute_temp_t{value_t(273.15 - 160.0L/9), si::units::kelvin}
+      absolute_temp_t{value_t(273.15L - 160.0L/9), si::units::kelvin}
     );
 
     check(

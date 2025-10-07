@@ -165,19 +165,19 @@ namespace sequoia::testing
 
     using angle_t = si::angle<T>;
     using namespace si::units;
-    constexpr auto pi{std::numbers::pi_v<T>};
+    constexpr auto pi{std::numbers::pi_v<long double>};
 
     check(
       equality,
       "Radians to Degrees",
       angle_t{1, si::units::radian}.convert_to(non_si::units::degree),
-      physical_value{T(1) / (pi / 180), non_si::units::degree}
+      physical_value{static_cast<T>(1.0 / (pi / 180)), non_si::units::degree}
     );
 
     check(
       equality,
       "Degrees to Radians",
-      physical_value{T(1) / (pi / 180), non_si::units::degree}.convert_to(si::units::radian),
+      physical_value{static_cast<T>(1.0 / (pi / 180)), non_si::units::degree}.convert_to(si::units::radian),
       angle_t{1, si::units::radian}
     );
 
@@ -185,13 +185,13 @@ namespace sequoia::testing
       equality,
       "Radians to Gradians",
       angle_t{1, si::units::radian}.convert_to(non_si::units::gradian),
-      physical_value{T(1) / (pi / 200), non_si::units::gradian}
+      physical_value{static_cast<T>(1.0 / (pi / 200)), non_si::units::gradian}
     );
 
     check(
       equality,
       "Gradians to Radians",
-      physical_value{T(1) / (pi / 200), non_si::units::gradian}.convert_to(si::units::radian),
+      physical_value{static_cast<T>(1.0 / (pi / 200)), non_si::units::gradian}.convert_to(si::units::radian),
       physical_value{T(1), si::units::radian}
     );
 
@@ -212,15 +212,15 @@ namespace sequoia::testing
     check(
       equality,
       "Degrees to Gradians (not exactly representable as floating-point)",
-      physical_value{T(1.1), non_si::units::degree}.convert_to(non_si::units::gradian),
-      physical_value{T(1.1) * 10 / 9, non_si::units::gradian}  
+      physical_value{T(1.1L), non_si::units::degree}.convert_to(non_si::units::gradian),
+      physical_value{T(1.1L) * 10 / 9, non_si::units::gradian}  
     );
 
     check(
       equality,
       "Gradians to Degrees (not exactly representable as floating-point)",
-      physical_value{T(1.1), non_si::units::gradian}.convert_to(non_si::units::degree),
-      physical_value{T(1.1 * 9 / 10), non_si::units::degree}
+      physical_value{T(1.1L), non_si::units::gradian}.convert_to(non_si::units::degree),
+      physical_value{T(1.1L * 9 / 10), non_si::units::degree}
     );
 
     check(
