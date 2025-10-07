@@ -10,6 +10,8 @@
 #include "OutputFreeTest.hpp"
 #include "sequoia/TestFramework/Output.hpp"
 
+#include "print"
+
 namespace sequoia::testing
 {
   using namespace std::string_literals;
@@ -58,7 +60,15 @@ namespace sequoia::testing
     check(equality,
           "",
           tidy_name(std::format("<(float)[{}]>", std::format("{:X}", std::bit_cast<int>(3.14f))), gcc_type{}),
-          std::format("<{:.6f}>", 3.14f));
+          std::format("<{:.6f}>", 3.14f)
+    );
+
+    // TO DO: reinstate and fix associated bug
+    /*check(equality,
+          "",
+          tidy_name("<(float)[FF]>", gcc_type{}),
+          std::format("<0.0>")
+    );*/
   }
 
   void output_free_test::test_relative_reporting_path()
