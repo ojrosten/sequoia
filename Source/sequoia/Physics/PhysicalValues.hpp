@@ -1579,7 +1579,7 @@ namespace sequoia::maths
         return transform_type::translation_type::displacement;
     };
 
-    [[nodiscard]]    
+    [[nodiscard]]
     constexpr to_type operator()(const from_type& pv)
     {
       return {
@@ -1587,8 +1587,8 @@ namespace sequoia::maths
           pv.values(),
           [](value_type v) -> value_type {
             using ratio_type = transform_type::dilatation_type::ratio_type;
-            
-            return (v * ratio_type::num / ratio_type::den) + to_displacement();
+
+            return static_cast<value_type>((v * ratio_type::num / ratio_type::den) + to_displacement());
           }
         ),
         to_unit_type{}
