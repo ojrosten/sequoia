@@ -156,6 +156,12 @@ namespace sequoia::testing
   {
     STATIC_CHECK(std::same_as<root_transform_unit_t<alternative::gradian_t>, si::units::radian_t>);
     STATIC_CHECK(std::same_as<root_transform_unit_t<non_si::units::gradian_t>, si::units::radian_t>);
+    STATIC_CHECK(std::same_as<root_transform_t<gradian_t>, coordinate_transform<si::units::radian_t, dilatation<ratio<std::intmax_t{200}, std::numbers::pi_v<long double>>>, translation<0>>>);
+    STATIC_CHECK(std::same_as<root_transform_t<degree_t>, coordinate_transform<si::units::radian_t, dilatation<ratio<std::intmax_t{180}, std::numbers::pi_v<long double>>>, translation<0>>>);
+    //STATIC_CHECK(std::same_as<inverse_t<root_transform_t<degree_t>>, coordinate_transform<si::units::radian_t, dilatation<ratio<std::numbers::pi_v<long double>, std::intmax_t{180}>>, translation<0>>>);
+    //STATIC_CHECK(std::same_as<product_t<root_transform_t<gradian_t>, inverse_t<root_transform_t<degree_t>>>, coordinate_transform<si::units::radian_t, dilatation<ratio<std::intmax_t{10}, std::intmax_t{9}>>, translation<0>>>);
+    
+    
     STATIC_CHECK(std::same_as<root_transform_unit_t<milli<si::units::radian_t>>, si::units::radian_t>);
     STATIC_CHECK(std::same_as<root_transform_unit_t<milli<milli<si::units::radian_t>>>, si::units::radian_t>);
 
@@ -216,7 +222,7 @@ namespace sequoia::testing
       equality,
       "Gradians to Degrees (not exactly representable as floating-point)",
       physical_value{T(1.1), non_si::units::gradian}.convert_to(non_si::units::degree),
-      physical_value{T(1.1 * 9 / 10), non_si::units::degree}
+      physical_value{T(1.1) * 9 / 10, non_si::units::degree}
     );
 
     check(

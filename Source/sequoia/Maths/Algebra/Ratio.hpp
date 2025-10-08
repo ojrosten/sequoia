@@ -71,11 +71,23 @@ namespace sequoia::maths
             && arithmetic<decltype(Num2)> && arithmetic<decltype(Den2)>
     struct ratio_product<Relaxed, ratio<Num1, Den1>, ratio<Num2, Den2>>
     {
-      using reduced_ratio_a_type = ratio<ratio<Num1, Den1>::num, ratio<Num2, Den2>::den>;
-      using reduced_ratio_b_type = ratio<ratio<Num2, Den2>::num, ratio<Num1, Den1>::den>;
+      constexpr auto static reduced_num_1{ratio<Num1, Den1>::num};
+      constexpr auto static reduced_den_1{ratio<Num1, Den1>::den};
+      constexpr auto static reduced_num_2{ratio<Num2, Den2>::num};
+      constexpr auto static reduced_den_2{ratio<Num2, Den2>::den};
+      using reduced_ratio_a_type = ratio<reduced_num_1, reduced_den_2>;
+      using reduced_ratio_b_type = ratio<reduced_num_2, reduced_den_1>;
 
       template<auto M, auto N>
       constexpr static auto product() {
+	if constexpr ((M == 1) && (N == 1))
+	  return std::common_type_t<std::remove_cv_t<decltype(M)>, std::remove_cv_t<decltype(N)>>{1};
+	else if constexpr (M == 1)
+	  return N;
+	else if constexpr (N == 1)
+	  return M;
+	else
+	{
         using common_t = std::common_type_t<std::remove_cv_t<decltype(M)>, std::remove_cv_t<decltype(N)>>;
         constexpr static bool overflow{std::numeric_limits<common_t>::max() / M < N};
         if constexpr((Relaxed == allow_ratio_fp_conversion::no) || (!overflow))
@@ -104,6 +116,7 @@ namespace sequoia::maths
             return static_cast<long double>(M) * static_cast<long double>(N);
           }
         }
+	}
       }
 
       constexpr static auto num{product<reduced_ratio_a_type::num, reduced_ratio_b_type::num>()};
