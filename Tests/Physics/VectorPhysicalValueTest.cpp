@@ -187,13 +187,13 @@ namespace sequoia::testing
       equality,
       "Radians to Gradians",
       angle_t{1, si::units::radian}.convert_to(non_si::units::gradian),
-      physical_value{static_cast<T>(1.0 / (pi / 200)), non_si::units::gradian}
+      physical_value{static_cast<T>(std::intmax_t{200} / pi), non_si::units::gradian}
     );
 
     check(
       equality,
       "Gradians to Radians",
-      physical_value{static_cast<T>(1.0 / (pi / 200)), non_si::units::gradian}.convert_to(si::units::radian),
+      physical_value{static_cast<T>(std::intmax_t{200} / pi), non_si::units::gradian}.convert_to(si::units::radian),
       physical_value{T(1), si::units::radian}
     );
 
