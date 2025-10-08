@@ -1386,14 +1386,14 @@ namespace sequoia::physics
   {
     inline namespace units
     {
-      struct degree_t : coordinate_transform<si::units::radian_t, dilatation<ratio<intmax_t{180}, std::numbers::pi_v<long double>>>, translation<0>>
+      struct degree_t : coordinate_transform<si::units::radian_t, dilatation<ratio<std::intmax_t{180}, std::numbers::pi_v<long double>>>, translation<0>>
       {
         using is_unit        = std::true_type;
         using validator_type = std::identity;
         constexpr static std::string_view symbol{"deg"};
       };
 
-      struct gradian_t : coordinate_transform<si::units::radian_t, dilatation<ratio<intmax_t{200}, std::numbers::pi_v<long double>>>, translation<0>>
+      struct gradian_t : coordinate_transform<si::units::radian_t, dilatation<ratio<std::intmax_t{200}, std::numbers::pi_v<long double>>>, translation<0>>
       {
         using is_unit        = std::true_type;
         using validator_type = std::identity;
@@ -1588,7 +1588,7 @@ namespace sequoia::maths
           [](value_type v) -> value_type {
             using ratio_type = transform_type::dilatation_type::ratio_type;
             
-            return static_cast<value_type>((v * ratio_type::num / ratio_type::den) + to_displacement());
+            return (v * ratio_type::num / ratio_type::den) + to_displacement();
           }
         ),
         to_unit_type{}

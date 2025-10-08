@@ -155,13 +155,9 @@ namespace sequoia::testing
   void vector_physical_value_test::test_conversions()
   {
     STATIC_CHECK(std::same_as<root_transform_unit_t<alternative::gradian_t>, si::units::radian_t>);
-    //STATIC_CHECK(std::same_as<root_scale_ratio_t<alternative::gradian_t>, ratio<std::numbers::pi_v<long double>, 200L>>);
     STATIC_CHECK(std::same_as<root_transform_unit_t<non_si::units::gradian_t>, si::units::radian_t>);
-    //STATIC_CHECK(std::same_as<root_scale_ratio_t<non_si::units::gradian_t>, ratio<std::numbers::pi_v<long double>, 200L>>);
     STATIC_CHECK(std::same_as<root_transform_unit_t<milli<si::units::radian_t>>, si::units::radian_t>);
-    //STATIC_CHECK(std::same_as<root_scale_ratio_t<milli<si::units::radian_t>>, std::ratio<1, 1000>>);
     STATIC_CHECK(std::same_as<root_transform_unit_t<milli<milli<si::units::radian_t>>>, si::units::radian_t>);
-    //STATIC_CHECK(std::same_as<root_scale_ratio_t<milli<milli<si::units::radian_t>>>, std::ratio<1, 1'000'000>>);
 
     using angle_t = si::angle<T>;
     using namespace si::units;
@@ -212,15 +208,15 @@ namespace sequoia::testing
     check(
       equality,
       "Degrees to Gradians (not exactly representable as floating-point)",
-      physical_value{T(1.1L), non_si::units::degree}.convert_to(non_si::units::gradian),
-      physical_value{T(1.1L) * 10 / 9, non_si::units::gradian}  
+      physical_value{T(1.1), non_si::units::degree}.convert_to(non_si::units::gradian),
+      physical_value{T(1.1) * 10 / 9, non_si::units::gradian}  
     );
 
     check(
       equality,
       "Gradians to Degrees (not exactly representable as floating-point)",
-      physical_value{T(1.1L), non_si::units::gradian}.convert_to(non_si::units::degree),
-      physical_value{T(1.1L * 9 / 10), non_si::units::degree}
+      physical_value{T(1.1), non_si::units::gradian}.convert_to(non_si::units::degree),
+      physical_value{T(1.1 * 9 / 10), non_si::units::degree}
     );
 
     check(
