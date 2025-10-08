@@ -173,13 +173,13 @@ namespace sequoia::testing
       equality,
       "Radians to Degrees",
       angle_t{1, si::units::radian}.convert_to(non_si::units::degree),
-      physical_value{static_cast<T>(1.0 / (pi / 180)), non_si::units::degree}
+      physical_value{static_cast<T>(180 / pi), non_si::units::degree}
     );
 
     check(
       equality,
       "Degrees to Radians",
-      physical_value{static_cast<T>(1.0 / (pi / 180)), non_si::units::degree}.convert_to(si::units::radian),
+      physical_value{static_cast<T>(180 / pi), non_si::units::degree}.convert_to(si::units::radian),
       angle_t{1, si::units::radian}
     );
 
