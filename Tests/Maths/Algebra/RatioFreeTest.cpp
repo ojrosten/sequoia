@@ -148,8 +148,10 @@ namespace sequoia::testing
   template<std::integral T, std::floating_point U>
   void ratio_free_test::test_ratio_multiply()
   {
-    STATIC_CHECK(std::same_as<ratio_multiply<ratio<U(1.0), T(3)>, ratio<T(2),   T(4)>>, ratio<U(1.0), T(6)>>);
-    STATIC_CHECK(std::same_as<ratio_multiply<ratio<U(1.0), T(3)>, ratio<U(2.0), T(4)>>, ratio<U(2.0), T(12)>>);
+    STATIC_CHECK(std::same_as<ratio_multiply<ratio<U(1.0), T(3)>,  ratio<T(2),   T(4)>>,   ratio<std::intmax_t{1},   T(6)>>);
+    STATIC_CHECK(std::same_as<ratio_multiply<ratio<U(1.0), T(3)>,  ratio<U(2.0), T(4)>>,   ratio<U(2.0), T(12)>>);
+    STATIC_CHECK(std::same_as<ratio_multiply<ratio<U(1.1), T(3)>,  ratio<T(4),   U(1.1)>>, ratio<T(4),   T(3)>>);
+    STATIC_CHECK(std::same_as<ratio_multiply<ratio<U(1.1), T(12)>, ratio<T(4),   U(1.1)>>, ratio<std::intmax_t{1},   T(3)>>);
   }
 
   template<std::integral T>
@@ -166,13 +168,13 @@ namespace sequoia::testing
     constexpr auto max{std::numeric_limits<T>::max()};
     STATIC_CHECK(std::same_as<ratio_divide<ratio<T(1.5), T(0.5)>, ratio<T(2.5), T(1.0)>>, ratio<T(1.5), T(1.25)>>);
     STATIC_CHECK(std::same_as<ratio_divide<ratio<T(1.5), T(0.5)>, ratio<T(2.5), T(0.5)>>, ratio<T(1.5), T(2.5)>>);
-    STATIC_CHECK(std::same_as<ratio_divide<ratio<max,    T(3.0)>, ratio< max, T(0.5)>>,   ratio<T(0.5),  T(3.0)>>);
+    STATIC_CHECK(std::same_as<ratio_divide<ratio<max,    T(3.0)>, ratio<max,    T(0.5)>>, ratio<T(0.5),  T(3.0)>>);
   }
 
   template<std::integral T, std::floating_point U>
   void ratio_free_test::test_ratio_divide()
   {
-    STATIC_CHECK(std::same_as<ratio_divide<ratio<U(1.0), T(3)>, ratio<T(4), T(2)>>,   ratio<U(1.0), T(6)>>);
+    STATIC_CHECK(std::same_as<ratio_divide<ratio<U(1.0), T(3)>, ratio<T(4), T(2)>>,   ratio<std::intmax_t{1}, T(6)>>);
     STATIC_CHECK(std::same_as<ratio_divide<ratio<U(1.0), T(3)>, ratio<T(4), U(2.0)>>, ratio<U(2.0), T(12)>>);
   }
 }

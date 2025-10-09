@@ -81,7 +81,12 @@ namespace sequoia::maths
       template<auto M, auto N>
       constexpr static auto product() {
 	if constexpr ((M == 1) && (N == 1))
-	  return std::common_type_t<std::remove_cv_t<decltype(M)>, std::remove_cv_t<decltype(N)>>{1};
+        {
+          if constexpr (std::floating_point<decltype(M)> || std::floating_point<decltype(N)>)
+            return std::intmax_t{1};
+          else
+            return std::common_type_t<std::remove_cv_t<decltype(M)>, std::remove_cv_t<decltype(N)>>{1};
+        }
 	else if constexpr (M == 1)
 	  return N;
 	else if constexpr (N == 1)
