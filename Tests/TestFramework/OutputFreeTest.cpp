@@ -63,6 +63,12 @@ namespace sequoia::testing
           std::format("<{:.6f}>", 3.14f)
     );
 
+    check(equality,
+          "",
+          tidy_name("coordinates<my_vec_space<1ul>>",  gcc_type{}),
+          "coordinates<my_vec_space<1> >"s
+    );
+
     // TO DO: reinstate and fix associated bug
     /*check(equality,
           "",
