@@ -386,9 +386,9 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string tidy_name(std::string name, gcc_type)
   {
-    replace_all(name, ">>", ">> ");
     replace_all(name, "__cxx11::", "");
-    replace_all(name, "_V2::", "");
+    replace_all(name, "_V2::", "");  
+    replace_all_recursive(name, ">>", "> >");
     process_literals(name);
     process_spans(name);
 
