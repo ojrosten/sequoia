@@ -25,6 +25,14 @@ int main(int argc, char** argv)
                        {.main_cpp{"TestChamber/TestChamberMain.cpp"}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
 
     runner.add_test_suite(
+      "Algebra",
+      suite{
+        "Ratio",
+        ratio_free_test{"Ratio Free Test"}
+      }
+    );
+    
+    runner.add_test_suite(
       "Geometry",
       suite{
         "Spaces",        

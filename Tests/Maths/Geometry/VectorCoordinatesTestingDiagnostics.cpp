@@ -27,7 +27,7 @@ namespace sequoia::testing
     }
 
     {
-      using coords = euclidean_vector_coordinates<1, float, standard_basis<1, float>>;
+      using coords = euclidean_vector_coordinates<float, 1, canonical_right_handed_basis<euclidean_vector_space<float, 1>>>;
       test_vec_1<coords>();
     }
   }

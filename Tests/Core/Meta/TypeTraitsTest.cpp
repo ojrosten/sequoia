@@ -39,6 +39,7 @@ namespace sequoia::testing
     test_is_initializable();
     test_has_allocator_type();
     test_is_compatible();
+    test_are_same();
   }
 
   void type_traits_test::test_resolve_to_copy()
@@ -416,5 +417,19 @@ namespace sequoia::testing
       return true;
       }()
     );
+  }
+
+  void type_traits_test::test_are_same()
+  {
+    STATIC_CHECK(are_same_v<int>);
+    STATIC_CHECK(std::same_as<are_same_t<int>, std::true_type>);
+
+    STATIC_CHECK(are_same_v<float>);
+    STATIC_CHECK(are_same_v<int, int>);
+    STATIC_CHECK(std::same_as<are_same_t<int, int>, std::true_type>);
+
+    STATIC_CHECK(are_same_v<float, float>);
+    STATIC_CHECK(!are_same_v<int, float>);
+    STATIC_CHECK(std::same_as<are_same_t<int, float>, std::false_type>);
   }
 }

@@ -103,10 +103,10 @@ template&lt;test_mode Mode, class Actions , pseudoregular T, class... Args&gt; <
 template&lt;test_mode Mode, class Actions , pseudoregular T&gt; </td></tr>
 <tr class="memitem:a38899daf8317ecac1b9aa65c1c8f6f5d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_copy_assign</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;z, const T &amp;y)</td></tr>
 <tr class="separator:a38899daf8317ecac1b9aa65c1c8f6f5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7d4fff05f9d664829fc5e65969f8911"><td class="memTemplParams" colspan="2"><a id="ae7d4fff05f9d664829fc5e65969f8911" name="ae7d4fff05f9d664829fc5e65969f8911"></a>
-template&lt;test_mode Mode, class Actions , pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator, class... Args&gt; </td></tr>
-<tr class="memitem:ae7d4fff05f9d664829fc5e65969f8911"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_semantics</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, Mutator yMutator, const Args &amp;... args)</td></tr>
-<tr class="separator:ae7d4fff05f9d664829fc5e65969f8911"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a245a4a21fcb0d2f9d0098651c95c90a0"><td class="memTemplParams" colspan="2"><a id="a245a4a21fcb0d2f9d0098651c95c90a0" name="a245a4a21fcb0d2f9d0098651c95c90a0"></a>
+template&lt;test_mode Mode, class Actions , pseudoregular T, class U , std::invocable&lt; T &amp; &gt; Mutator, class... Args&gt; </td></tr>
+<tr class="memitem:a245a4a21fcb0d2f9d0098651c95c90a0"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_semantics</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, optional_ref&lt; const U &gt; movedFromPostConstruction, optional_ref&lt; const U &gt; movedFromPostAssignment, Mutator yMutator, const Args &amp;... args)</td></tr>
+<tr class="separator:a245a4a21fcb0d2f9d0098651c95c90a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>

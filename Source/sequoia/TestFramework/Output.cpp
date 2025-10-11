@@ -71,8 +71,11 @@ namespace sequoia::testing
       while(pos < name.size())
       {
         const auto open{name.find_first_of("< ", pos)};
-        pos = open;
-        while((pos < name.size() - 1) && !std::isdigit(name[++pos])) {}
+        if(open >= name.size())
+          break;
+
+        pos = open+1;
+        while((pos < name.size() - 1) && !std::isdigit(name[pos])) { ++pos; }
         if(pos < name.size() - 1)
         {
           if((name[pos - 1] == '_') || std::isalpha(name[pos - 1]))
@@ -145,7 +148,7 @@ namespace sequoia::testing
     }
 
     std::string& process_spans(std::string& name)
-    {      
+    {
       if(auto[start, end]{find_sandwiched_text(name, "::span<", ">")}; start != end)
       {
         start = name.find(',', start);
@@ -166,6 +169,28 @@ namespace sequoia::testing
       }
       
       return name;
+    }
+
+    void process_array_iterators(std::string& name)
+    {
+      std::string::size_type pos{};
+      while(pos != std::string::npos)
+      {
+        constexpr std::string_view opening{"std::_Array_const_iterator<"}, closing{", 1>"};
+        if(auto [start, end]{find_sandwiched_text(name, opening, closing, pos)}; start != end)
+        {
+          const auto len{end - start};
+          constexpr std::string_view qualifiers{" const*"};
+          name.replace(start - opening.size(), opening.size() + len + closing.size(), name.substr(start, len) += qualifiers);
+          pos = (start - opening.size() + len + qualifiers.size());
+          if((pos < name.size()) && (name[pos] == ' '))
+            name.erase(pos, 1);
+        }
+        else
+        {
+          break;
+        }
+      }
     }
 
     std::string& tidy_name(std::string& name)
@@ -361,9 +386,9 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string tidy_name(std::string name, gcc_type)
   {
-    replace_all(name, ">>", ">> ");
     replace_all(name, "__cxx11::", "");
-    replace_all(name, "_V2::", "");
+    replace_all(name, "_V2::", "");  
+    replace_all_recursive(name, ">>", "> >");
     process_literals(name);
     process_spans(name);
 
@@ -414,6 +439,8 @@ namespace sequoia::testing
 
     replace_all(name, "__cdecl(void)", "()");
     replace_all(name, "__cdecl", "");
+
+    process_array_iterators(name);
 
     return name;
   }

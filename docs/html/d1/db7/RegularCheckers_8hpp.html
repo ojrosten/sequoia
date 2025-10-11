@@ -88,28 +88,46 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af875f3d78c837368b80939122bdad43b"><td class="memTemplParams" colspan="2"><a id="af875f3d78c837368b80939122bdad43b" name="af875f3d78c837368b80939122bdad43b"></a>
-template&lt;test_mode Mode, pseudoregular T&gt; </td></tr>
-<tr class="memitem:af875f3d78c837368b80939122bdad43b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y)</td></tr>
-<tr class="memdesc:af875f3d78c837368b80939122bdad43b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x!=y. <br /></td></tr>
-<tr class="separator:af875f3d78c837368b80939122bdad43b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94b6805107ec8a8068cc261b94e0e90e"><td class="memTemplParams" colspan="2"><a id="a94b6805107ec8a8068cc261b94e0e90e" name="a94b6805107ec8a8068cc261b94e0e90e"></a>
-template&lt;test_mode Mode, pseudoregular T&gt; <br />
-requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:a94b6805107ec8a8068cc261b94e0e90e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, std::weak_ordering order)</td></tr>
-<tr class="memdesc:a94b6805107ec8a8068cc261b94e0e90e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x!=y with values consistent with order. <br /></td></tr>
-<tr class="separator:a94b6805107ec8a8068cc261b94e0e90e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa500713c1dedc7358bb4295fef209615"><td class="memTemplParams" colspan="2"><a id="aa500713c1dedc7358bb4295fef209615" name="aa500713c1dedc7358bb4295fef209615"></a>
-template&lt;test_mode Mode, pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator&gt; </td></tr>
-<tr class="memitem:aa500713c1dedc7358bb4295fef209615"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, Mutator yMutator)</td></tr>
-<tr class="memdesc:aa500713c1dedc7358bb4295fef209615"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x!=y. <br /></td></tr>
-<tr class="separator:aa500713c1dedc7358bb4295fef209615"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae735dce3cf9c41afe5ca805bcc7836c6"><td class="memTemplParams" colspan="2"><a id="ae735dce3cf9c41afe5ca805bcc7836c6" name="ae735dce3cf9c41afe5ca805bcc7836c6"></a>
-template&lt;test_mode Mode, pseudoregular T, std::invocable&lt; T &amp; &gt; Mutator&gt; <br />
-requires std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:ae735dce3cf9c41afe5ca805bcc7836c6"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, std::weak_ordering order, Mutator yMutator)</td></tr>
-<tr class="memdesc:ae735dce3cf9c41afe5ca805bcc7836c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x!=y, with values consistent with order. <br /></td></tr>
-<tr class="separator:ae735dce3cf9c41afe5ca805bcc7836c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c21dec1d4775cb71ae6442bea358df7"><td class="memTemplParams" colspan="2"><a id="a9c21dec1d4775cb71ae6442bea358df7" name="a9c21dec1d4775cb71ae6442bea358df7"></a>
+template&lt;test_mode Mode, pseudoregular T, class U &gt; <br />
+requires checkable_against_for_semantics&lt;Mode, T, U&gt;</td></tr>
+<tr class="memitem:a9c21dec1d4775cb71ae6442bea358df7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, optional_ref&lt; const U &gt; movedFromPostConstruction, optional_ref&lt; const U &gt; movedFromPostAssignment)</td></tr>
+<tr class="memdesc:a9c21dec1d4775cb71ae6442bea358df7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x != y. <br /></td></tr>
+<tr class="separator:a9c21dec1d4775cb71ae6442bea358df7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab69bf032f6f1a3f7cb0126760ac99c04"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, pseudoregular T, class U , class V &gt; <br />
+requires equivalence_checkable_for_semantics&lt;Mode, T, U&gt; &amp;&amp; checkable_against_for_semantics&lt;Mode, T, V&gt;</td></tr>
+<tr class="memitem:ab69bf032f6f1a3f7cb0126760ac99c04"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/db7/RegularCheckers_8hpp.html#ab69bf032f6f1a3f7cb0126760ac99c04">sequoia::testing::check_semantics</a> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, const U &amp;xEquivalent, const U &amp;yEquivalent, optional_ref&lt; const V &gt; movedFromPostConstruction, optional_ref&lt; const V &gt; movedFromPostAssignment)</td></tr>
+<tr class="separator:ab69bf032f6f1a3f7cb0126760ac99c04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ed25aa4492afafb99ddc37ff2caddfb"><td class="memTemplParams" colspan="2"><a id="a0ed25aa4492afafb99ddc37ff2caddfb" name="a0ed25aa4492afafb99ddc37ff2caddfb"></a>
+template&lt;test_mode Mode, pseudoregular T, class U &gt; <br />
+requires std::totally_ordered&lt;T&gt; &amp;&amp; checkable_against_for_semantics&lt;Mode, T, U&gt;</td></tr>
+<tr class="memitem:a0ed25aa4492afafb99ddc37ff2caddfb"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, optional_ref&lt; const U &gt; movedFromPostConstruction, optional_ref&lt; const U &gt; movedFromPostAssignment, std::weak_ordering order)</td></tr>
+<tr class="memdesc:a0ed25aa4492afafb99ddc37ff2caddfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x != y with values consistent with order. <br /></td></tr>
+<tr class="separator:a0ed25aa4492afafb99ddc37ff2caddfb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2aa4fc2742b67f47b5e37483cbd156b"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, pseudoregular T, class U , class V &gt; <br />
+requires std::totally_ordered&lt;T&gt; &amp;&amp; equivalence_checkable_for_semantics&lt;Mode, T, U&gt; &amp;&amp; checkable_against_for_semantics&lt;Mode, T, V&gt;</td></tr>
+<tr class="memitem:ad2aa4fc2742b67f47b5e37483cbd156b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/db7/RegularCheckers_8hpp.html#ad2aa4fc2742b67f47b5e37483cbd156b">sequoia::testing::check_semantics</a> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, const U &amp;xEquivalent, const U &amp;yEquivalent, optional_ref&lt; const V &gt; movedFromPostConstruction, optional_ref&lt; const V &gt; movedFromPostAssignment, std::weak_ordering order)</td></tr>
+<tr class="separator:ad2aa4fc2742b67f47b5e37483cbd156b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd8f2cca3502e606af620eb47453eac4"><td class="memTemplParams" colspan="2"><a id="abd8f2cca3502e606af620eb47453eac4" name="abd8f2cca3502e606af620eb47453eac4"></a>
+template&lt;test_mode Mode, pseudoregular T, class U , std::invocable&lt; T &amp; &gt; Mutator&gt; <br />
+requires checkable_against_for_semantics&lt;Mode, T, U&gt;</td></tr>
+<tr class="memitem:abd8f2cca3502e606af620eb47453eac4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, optional_ref&lt; const U &gt; movedFromPostConstruction, optional_ref&lt; const U &gt; movedFromPostAssignment, Mutator yMutator)</td></tr>
+<tr class="memdesc:abd8f2cca3502e606af620eb47453eac4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x != y. <br /></td></tr>
+<tr class="separator:abd8f2cca3502e606af620eb47453eac4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81a01cac4daa0a2cb8e6895b28bdd0c4"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, pseudoregular T, class U , class V , std::invocable&lt; T &amp; &gt; Mutator&gt; <br />
+requires equivalence_checkable_for_semantics&lt;Mode, T, U&gt; &amp;&amp; checkable_against_for_semantics&lt;Mode, T, V&gt;</td></tr>
+<tr class="memitem:a81a01cac4daa0a2cb8e6895b28bdd0c4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/db7/RegularCheckers_8hpp.html#a81a01cac4daa0a2cb8e6895b28bdd0c4">sequoia::testing::check_semantics</a> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, const U &amp;xEquivalent, const U &amp;yEquivalent, optional_ref&lt; const V &gt; movedFromPostConstruction, optional_ref&lt; const V &gt; movedFromPostAssignment, Mutator yMutator)</td></tr>
+<tr class="separator:a81a01cac4daa0a2cb8e6895b28bdd0c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cbdf8482bc37c307bf8ba54ca09c104"><td class="memTemplParams" colspan="2"><a id="a4cbdf8482bc37c307bf8ba54ca09c104" name="a4cbdf8482bc37c307bf8ba54ca09c104"></a>
+template&lt;test_mode Mode, pseudoregular T, class U , std::invocable&lt; T &amp; &gt; Mutator&gt; <br />
+requires std::totally_ordered&lt;T&gt; &amp;&amp; checkable_against_for_semantics&lt;Mode, T, U&gt;</td></tr>
+<tr class="memitem:a4cbdf8482bc37c307bf8ba54ca09c104"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, optional_ref&lt; const U &gt; movedFromPostConstruction, optional_ref&lt; const U &gt; movedFromPostAssignment, std::weak_ordering order, Mutator yMutator)</td></tr>
+<tr class="memdesc:a4cbdf8482bc37c307bf8ba54ca09c104"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prerequisite: x != y, with values consistent with order. <br /></td></tr>
+<tr class="separator:a4cbdf8482bc37c307bf8ba54ca09c104"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4739860bfa1b160da37645606e4c2751"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, pseudoregular T, class U , class V , std::invocable&lt; T &amp; &gt; Mutator&gt; <br />
+requires std::totally_ordered&lt;T&gt; &amp;&amp; equivalence_checkable_for_semantics&lt;Mode, T, U&gt; &amp;&amp; checkable_against_for_semantics&lt;Mode, T, V&gt;</td></tr>
+<tr class="memitem:a4739860bfa1b160da37645606e4c2751"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/db7/RegularCheckers_8hpp.html#a4739860bfa1b160da37645606e4c2751">sequoia::testing::check_semantics</a> (std::string description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, const U &amp;xEquivalent, const U &amp;yEquivalent, optional_ref&lt; const V &gt; movedFromPostConstruction, optional_ref&lt; const V &gt; movedFromPostAssignment, std::weak_ordering order, Mutator yMutator)</td></tr>
+<tr class="separator:a4739860bfa1b160da37645606e4c2751"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Functions for checking regular semantics. </p>
@@ -118,7 +136,304 @@ requires std::totally_ordered&lt;T&gt;</td></tr>
 <p>Note that a default constructor is not a strict requirement. To distinguish this Concept from std::regular, the Concept pseudoregular is used. Types additionally possessing the remaining comparison operators will be referred to as being std::totally_ordered.</p>
 <p>This file adds functions to the check_semantics overload set: they are appropriate for testing the behaviour of types with regular/std::totally_ordered semantics. Inside the functions, consistency of the operators listed above will be checked. One of the overloads also accepts a mutator. This will modify a copy of y, checking both that the copy is indeed changed and also that y is left alone. The reason for this is to check that classes which e.g. wrap a pointer have faithful copy semantics. For example, suppose that the copy constructor of vector were incorrectly implemented with the pointer, rather than what it points to, being copied. The mutation check would catch this. There is a similar check for copy assignment.</p>
 <p><a class="anchor" id="regular_semantics_definition"></a></p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="ab69bf032f6f1a3f7cb0126760ac99c04" name="ab69bf032f6f1a3f7cb0126760ac99c04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab69bf032f6f1a3f7cb0126760ac99c04">&#9670;&#160;</a></span>check_semantics() <span class="overload">[1/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;test_mode Mode, pseudoregular T, class U , class V &gt; <br />
+requires equivalence_checkable_for_semantics&lt;Mode, T, U&gt; &amp;&amp; checkable_against_for_semantics&lt;Mode, T, V&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void sequoia::testing::check_semantics </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>description</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;&#160;</td>
+          <td class="paramname"><em>logger</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const U &amp;&#160;</td>
+          <td class="paramname"><em>xEquivalent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const U &amp;&#160;</td>
+          <td class="paramname"><em>yEquivalent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">optional_ref&lt; const V &gt;&#160;</td>
+          <td class="paramname"><em>movedFromPostConstruction</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">optional_ref&lt; const V &gt;&#160;</td>
+          <td class="paramname"><em>movedFromPostAssignment</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Prerequisites: x != y x equivalent to xEquivalent y equivalent to yEquivalent </p>
+
+</div>
+</div>
+<a id="a81a01cac4daa0a2cb8e6895b28bdd0c4" name="a81a01cac4daa0a2cb8e6895b28bdd0c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a81a01cac4daa0a2cb8e6895b28bdd0c4">&#9670;&#160;</a></span>check_semantics() <span class="overload">[2/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;test_mode Mode, pseudoregular T, class U , class V , std::invocable&lt; T &amp; &gt; Mutator&gt; <br />
+requires equivalence_checkable_for_semantics&lt;Mode, T, U&gt; &amp;&amp; checkable_against_for_semantics&lt;Mode, T, V&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void sequoia::testing::check_semantics </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>description</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;&#160;</td>
+          <td class="paramname"><em>logger</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const U &amp;&#160;</td>
+          <td class="paramname"><em>xEquivalent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const U &amp;&#160;</td>
+          <td class="paramname"><em>yEquivalent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">optional_ref&lt; const V &gt;&#160;</td>
+          <td class="paramname"><em>movedFromPostConstruction</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">optional_ref&lt; const V &gt;&#160;</td>
+          <td class="paramname"><em>movedFromPostAssignment</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Mutator&#160;</td>
+          <td class="paramname"><em>yMutator</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Prerequisites: x != y x equivalent to xEquivalent y equivalent to yEquivalent </p>
+
+</div>
+</div>
+<a id="ad2aa4fc2742b67f47b5e37483cbd156b" name="ad2aa4fc2742b67f47b5e37483cbd156b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2aa4fc2742b67f47b5e37483cbd156b">&#9670;&#160;</a></span>check_semantics() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;test_mode Mode, pseudoregular T, class U , class V &gt; <br />
+requires std::totally_ordered&lt;T&gt; &amp;&amp; equivalence_checkable_for_semantics&lt;Mode, T, U&gt; &amp;&amp; checkable_against_for_semantics&lt;Mode, T, V&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void sequoia::testing::check_semantics </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>description</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;&#160;</td>
+          <td class="paramname"><em>logger</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const U &amp;&#160;</td>
+          <td class="paramname"><em>xEquivalent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const U &amp;&#160;</td>
+          <td class="paramname"><em>yEquivalent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">optional_ref&lt; const V &gt;&#160;</td>
+          <td class="paramname"><em>movedFromPostConstruction</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">optional_ref&lt; const V &gt;&#160;</td>
+          <td class="paramname"><em>movedFromPostAssignment</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::weak_ordering&#160;</td>
+          <td class="paramname"><em>order</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Prerequisites: x != y, with values consistent with order x equivalent to xEquivalent y equivalent to yEquivalent </p>
+
+</div>
+</div>
+<a id="a4739860bfa1b160da37645606e4c2751" name="a4739860bfa1b160da37645606e4c2751"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4739860bfa1b160da37645606e4c2751">&#9670;&#160;</a></span>check_semantics() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;test_mode Mode, pseudoregular T, class U , class V , std::invocable&lt; T &amp; &gt; Mutator&gt; <br />
+requires std::totally_ordered&lt;T&gt; &amp;&amp; equivalence_checkable_for_semantics&lt;Mode, T, U&gt; &amp;&amp; checkable_against_for_semantics&lt;Mode, T, V&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void sequoia::testing::check_semantics </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>description</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;&#160;</td>
+          <td class="paramname"><em>logger</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const U &amp;&#160;</td>
+          <td class="paramname"><em>xEquivalent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const U &amp;&#160;</td>
+          <td class="paramname"><em>yEquivalent</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">optional_ref&lt; const V &gt;&#160;</td>
+          <td class="paramname"><em>movedFromPostConstruction</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">optional_ref&lt; const V &gt;&#160;</td>
+          <td class="paramname"><em>movedFromPostAssignment</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::weak_ordering&#160;</td>
+          <td class="paramname"><em>order</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Mutator&#160;</td>
+          <td class="paramname"><em>yMutator</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Prerequisites: x != y, with values consistent with order x equivalent to xEquivalent y equivalent to yEquivalent </p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.6

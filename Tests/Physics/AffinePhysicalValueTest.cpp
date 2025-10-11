@@ -31,9 +31,9 @@ namespace sequoia::testing
   {
     test_affine_quantity<si::time<float>>();
     test_affine_quantity<si::time<double>>();
-    test_affine_quantity<si::position<1, float>>();
-    test_affine_quantity<si::position<2, float>>();
-    test_affine_quantity<si::position<2, float, tina_arena, y_down_convention, alice>>();
+    test_affine_quantity<si::position<float, 1>>();
+    test_affine_quantity<si::position<float, 2>>();
+    test_affine_quantity<si::position<float, 2, tina_arena, canonical_right_handed_basis<free_module_type_of_t<position_space<float, 2, tina_arena>>>, alice>>();
   }
 
   template<class Quantity>
@@ -42,7 +42,6 @@ namespace sequoia::testing
     using quantity_t  = Quantity;
     using delta_q_t   = quantity_t::displacement_type;
     using space_type  = quantity_t::space_type;
-    constexpr std::size_t D{quantity_t::D};
 
     STATIC_CHECK(affine_space<space_type>);
     STATIC_CHECK(vector_space<free_module_type_of_t<space_type>>);
@@ -51,6 +50,9 @@ namespace sequoia::testing
     STATIC_CHECK(!can_divide<quantity_t, quantity_t>);
     STATIC_CHECK(!can_divide<quantity_t, delta_q_t>);
     STATIC_CHECK(!can_divide<delta_q_t, quantity_t>);
+    STATIC_CHECK(has_unary_plus<quantity_t>);
+    STATIC_CHECK(!has_unary_minus<quantity_t>);
+
     if constexpr(quantity_t::dimension == 1)
     {
       STATIC_CHECK(can_divide<delta_q_t, delta_q_t>);
@@ -64,6 +66,13 @@ namespace sequoia::testing
 
     using units_type  = quantity_t::units_type;
     using origin_type = quantity_t::origin_type;
-    STATIC_CHECK(!defines_physical_value_v<dual<space_type>, dual<units_type>, canonical_convention<D>, dual<origin_type>, std::identity>);
+    STATIC_CHECK(
+      !defines_physical_value_v<
+        dual<space_type>,
+        dual<units_type>,
+        canonical_right_handed_basis<free_module_type_of_t<dual<space_type>>>,
+        dual<origin_type>,
+        std::identity>
+    );
   }
 }

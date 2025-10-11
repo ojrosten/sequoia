@@ -46,7 +46,7 @@ namespace sequoia::testing
       auto get{
         [](const fs::path& dir) -> opt_path {
           auto entries{fs::directory_iterator{dir}};
-          auto found{std::ranges::find(entries, "CMakeCache.txt", [](const auto& entry){ return entry.path().filename(); })};
+          auto found{std::ranges::find(entries, fs::path{"CMakeCache.txt"}, [](const fs::directory_entry& entry){ return entry.path().filename(); })};
           return found != fs::directory_iterator{} ? opt_path{*found} : std::nullopt;
         }
       };

@@ -28,11 +28,19 @@ namespace sequoia::physics
 
   template<class Space>
   inline constexpr bool is_associated_displacement_space_v{is_associated_displacement_space<Space>::value};
-    
+
   template<class T>
-  concept physical_unit = requires {
-    typename T::validator_type;
+  inline constexpr bool identifies_as_unit_v{
+    requires {
+      typename T::is_unit;
+      requires std::convertible_to<typename T::is_unit, std::true_type>;
+    }
   };
+
+  template<class T>
+  concept physical_unit
+    =    identifies_as_unit_v<T>
+      && requires { typename T::validator_type; };
 
   struct no_unit_t;
 
@@ -155,7 +163,7 @@ namespace sequoia::physics::impl
 
   /// \class Primary class template for counting and combining instances of various types
   template<class...>
-  struct count_and_combine;
+  struct count_and_combine {};
 
   template<class... Ts>
   using count_and_combine_t = count_and_combine<Ts...>::type;
@@ -180,22 +188,19 @@ namespace sequoia::physics::impl
     
   template<class T, class... Ts>
   struct count_and_combine<direct_product<T, Ts...>>
-  {
-    using type = count_and_combine_t<direct_product<Ts...>, count_and_combine_t<T>>;
-  };
+    : count_and_combine<direct_product<Ts...>, count_and_combine_t<T>> 
+  {};
 
   template<class T, class... Us, int... Is>
   struct count_and_combine<direct_product<T>, direct_product<type_counter<Us, Is>...>>
-  {
-    using type = count_and_combine_t<T, direct_product<type_counter<Us, Is>...>>;
-  };
+    : count_and_combine<T, direct_product<type_counter<Us, Is>...>>
+  {};
 
   template<class T, class... Ts, class... Us, int... Is>
     requires (sizeof...(Ts) > 0)
   struct count_and_combine<direct_product<T, Ts...>, direct_product<type_counter<Us, Is>...>>
-  {
-    using type = count_and_combine_t<direct_product<Ts...>, count_and_combine_t<T, direct_product<type_counter<Us, Is>...>>>;
-  };
+    : count_and_combine<direct_product<Ts...>, count_and_combine_t<T, direct_product<type_counter<Us, Is>...>>>
+  {};
 
   template<class S, class T, int I, class... Ts, int... Is>
     requires (!is_direct_product_v<S> && !is_dual_v<S> && !std::is_same_v<S, T> && !std::is_same_v<S, associated_displacement_space<T>>)
@@ -255,38 +260,30 @@ namespace sequoia::physics::impl
   /// TO DO: Consider whether the unpacking roundtrip is necessary;
   /// it may be better just work in terms of type_counter.
   template<class...>
-  struct unpack;
+  struct unpack {};
 
   template<class... Ts>
   using unpack_t = unpack<Ts...>::type;
 
   template<class T, int I>
     requires (I > 0)
-  struct unpack<type_counter<T, I>>
-  {
-    using type = unpack_t<type_counter<T, I - 1>, direct_product<T>>;
-  };
+  struct unpack<type_counter<T, I>> : unpack<type_counter<T, I - 1>, direct_product<T>>
+  {};
 
   template<class T, int I>
     requires (I < 0)
-  struct unpack<type_counter<T, I>>
-  {
-    using type = unpack_t<type_counter<T, I + 1>, direct_product<dual<T>>>;
-  };
+  struct unpack<type_counter<T, I>> : unpack<type_counter<T, I + 1>, direct_product<dual<T>>>
+  {};
 
   template<class T, int I, class... Ts>
     requires (I > 0)
-  struct unpack<type_counter<T, I>, direct_product<Ts...>>
-  {
-    using type = unpack_t<type_counter<T, I - 1>, direct_product<T, Ts...>>;
-  };
+  struct unpack<type_counter<T, I>, direct_product<Ts...>> : unpack<type_counter<T, I - 1>, direct_product<T, Ts...>>
+  {};
 
   template<class T, int I, class... Ts>
     requires (I < 0)
-  struct unpack<type_counter<T, I>, direct_product<Ts...>>
-  {
-    using type = unpack_t<type_counter<T, I + 1>, direct_product<dual<T>, Ts...>>;
-  };
+  struct unpack<type_counter<T, I>, direct_product<Ts...>> : unpack<type_counter<T, I + 1>, direct_product<dual<T>, Ts...>>
+  {};
 
   template<class T, class... Ts>
   struct unpack<type_counter<T, 0>, direct_product<Ts...>>
@@ -304,21 +301,22 @@ namespace sequoia::physics::impl
   template<vector_space T>
   struct reduce<direct_product<type_counter<T, 0>>>
   {
-    using type = direct_product<euclidean_vector_space<1, commutative_ring_type_of_t<T>>>;
+    using arena_type = T::arena_type;
+    using type = direct_product<euclidean_vector_space<commutative_ring_type_of_t<T>, 1, arena_type>>;
   };
 
   template<convex_space T>
     requires (!affine_space<T> && !vector_space<T>)
   struct reduce<direct_product<type_counter<T, 0>>>
   {
-    using type = direct_product<euclidean_half_space<commutative_ring_type_of_t<free_module_type_of_t<T>>>>;
+    using arena_type = T::arena_type;
+    using type = direct_product<euclidean_half_space<commutative_ring_type_of_t<free_module_type_of_t<T>>, arena_type>>;
   };
 
   template<class T, class... Ts, int... Is>
   struct reduce<direct_product<type_counter<T, 0>, type_counter<Ts, Is>...>>
-  {
-    using type = reduce_t<direct_product<type_counter<Ts, Is>...>>;
-  };
+    : reduce<direct_product<type_counter<Ts, Is>...>>
+  {};
 
   template<class T, int I>
     requires (I != 0)
@@ -330,22 +328,19 @@ namespace sequoia::physics::impl
   template<class T, int I, class... Ts, int... Is>
     requires (I != 0)
   struct reduce<direct_product<type_counter<T, I>, type_counter<Ts, Is>...>>
-  {
-    using type = reduce_t<direct_product<type_counter<Ts, Is>...>, unpack_t<type_counter<T, I>>>;
-  };
+    : reduce<direct_product<type_counter<Ts, Is>...>, unpack_t<type_counter<T, I>>>
+  {};
 
   template<class T, class... Ts, int... Is, class... Us>
   struct reduce<direct_product<type_counter<T, 0>, type_counter<Ts, Is>...>, direct_product<Us...>>
-  {
-    using type = reduce_t<direct_product<type_counter<Ts, Is>...>, direct_product<Us...>>;
-  };
+    : reduce<direct_product<type_counter<Ts, Is>...>, direct_product<Us...>>
+  {};
 
   template<class T, int I, class... Ts, int... Is, class... Us>
     requires (I != 0)
   struct reduce<direct_product<type_counter<T, I>, type_counter<Ts, Is>...>, direct_product<Us...>>
-  {
-    using type = reduce_t<direct_product<type_counter<Ts, Is>...>, unpack_t<type_counter<T, I>, direct_product<Us...>>>;
-  };
+    : reduce<direct_product<type_counter<Ts, Is>...>, unpack_t<type_counter<T, I>, direct_product<Us...>>>
+  {};
 
   template<class... Us>
   struct reduce<direct_product<>, direct_product<Us...>>
@@ -360,12 +355,19 @@ namespace sequoia::physics::impl
   };
 
   /// \class Primary class template to aid reduction of direct products and composite units
-  template<class, class>
+  template<class...>
   struct simplify;
 
-  template<class T, class U>
-  using simplify_t = simplify<T, U>::type;
+  template<class... Ts>
+  using simplify_t = simplify<Ts...>::type;
 
+  template<class... Ts>
+  struct simplify<direct_product<Ts...>>
+  {
+    using type = reduction<reduce_t<count_and_combine_t<meta::stable_sort_t<direct_product<Ts...>, meta::type_comparator>>>>;
+  };
+
+  // Assume direct_products are already sorted
   template<class... Ts, class... Us>
   struct simplify<direct_product<Ts...>, direct_product<Us...>>
   {

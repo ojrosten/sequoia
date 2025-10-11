@@ -1129,7 +1129,7 @@ $(function() {
 <div class="line"><a id="l01066" name="l01066"></a><span class="lineno"> 1066</span>      {</div>
 <div class="line"><a id="l01067" name="l01067"></a><span class="lineno"> 1067</span>        <span class="keyword">constexpr</span> <span class="keyword">auto</span> upper{std::numeric_limits&lt;IndexType&gt;::max()};</div>
 <div class="line"><a id="l01068" name="l01068"></a><span class="lineno"> 1068</span>        <span class="keyword">const</span> <span class="keyword">auto</span> fn{</div>
-<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span>          [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; l) {</div>
+<div class="line"><a id="l01069" name="l01069"></a><span class="lineno"> 1069</span>          [](std::initializer_list&lt;T&gt; l) -&gt; IndexType {</div>
 <div class="line"><a id="l01070" name="l01070"></a><span class="lineno"> 1070</span>            <span class="keywordflow">if</span>(l.size() &gt; upper)</div>
 <div class="line"><a id="l01071" name="l01071"></a><span class="lineno"> 1071</span>              <span class="keywordflow">throw</span> std::out_of_range{<span class="stringliteral">&quot;Partition size out of bounds&quot;</span>};</div>
 <div class="line"><a id="l01072" name="l01072"></a><span class="lineno"> 1072</span> </div>

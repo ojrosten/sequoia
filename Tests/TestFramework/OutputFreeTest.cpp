@@ -10,6 +10,8 @@
 #include "OutputFreeTest.hpp"
 #include "sequoia/TestFramework/Output.hpp"
 
+#include "print"
+
 namespace sequoia::testing
 {
   using namespace std::string_literals;
@@ -47,12 +49,32 @@ namespace sequoia::testing
   void output_free_test::test_tidy_name()
   {
     check(equality, "", tidy_name("(some enum)0", clang_type{}), "0"s);
-    check(equality, "", tidy_name("<0f>", clang_type{}), "<0>"s);
-    check(equality, "", tidy_name("<0ul>", clang_type{}), "<0>"s);
-    check(equality, "", tidy_name("<1ul, 0f>", clang_type{}), "<1, 0>"s);
-    check(equality, "", tidy_name("<2ul, 1f>", clang_type{}), "<2, 1>"s);
+    check(equality, "", tidy_name("<0f>",         clang_type{}), "<0>"s);
+    check(equality, "", tidy_name("<0ul>",        clang_type{}), "<0>"s);
+    check(equality, "", tidy_name("<1ul, 0f>",    clang_type{}), "<1, 0>"s);
+    check(equality, "", tidy_name("<2ul, 1f>",    clang_type{}), "<2, 1>"s);
     check(equality, "", tidy_name("<textued_2d>", clang_type{}), "<textued_2d>"s);
     check(equality, "", tidy_name("struct foo", msvc_type{}), "foo"s);
+    check(equality, "", tidy_name("",  gcc_type{}), ""s);
+    check(equality, "", tidy_name(" ", gcc_type{}), " "s);
+    check(equality,
+          "",
+          tidy_name(std::format("<(float)[{}]>", std::format("{:X}", std::bit_cast<int>(3.14f))), gcc_type{}),
+          std::format("<{:.6f}>", 3.14f)
+    );
+
+    check(equality,
+          "",
+          tidy_name("coordinates<my_vec_space<1ul>>",  gcc_type{}),
+          "coordinates<my_vec_space<1> >"s
+    );
+
+    // TO DO: reinstate and fix associated bug
+    /*check(equality,
+          "",
+          tidy_name("<(float)[FF]>", gcc_type{}),
+          std::format("<0.0>")
+    );*/
   }
 
   void output_free_test::test_relative_reporting_path()

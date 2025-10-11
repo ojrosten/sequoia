@@ -77,16 +77,16 @@ $(function() {
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#concepts">Concepts</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">Spaces.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Utilities relating to vector sets.  
+<p>Abstractions pertaining to vector spaces, affine spaces and their generalizations.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d4/da8/TypeAlgorithms_8hpp_source.html">sequoia/Core/Meta/TypeAlgorithms.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../d0/d81/TypeTraits_8hpp_source.html">sequoia/Core/Meta/TypeTraits.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d8/def/ArrayUtilities_8hpp_source.html">sequoia/Core/ContainerUtilities/ArrayUtilities.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">sequoia/Core/Meta/Concepts.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d4/da8/TypeAlgorithms_8hpp_source.html">sequoia/Core/Meta/TypeAlgorithms.hpp</a>&quot;</code><br />
 <code>#include &quot;sequoia/PlatformSpecific/Preprocessor.hpp&quot;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
@@ -101,79 +101,150 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d90/structsequoia_1_1maths_1_1weakly__abelian__group__under__addition.html">sequoia::maths::weakly_abelian_group_under_addition&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trait for specifying whether a type behaves (appoximately) as an abelian group under addition.  <a href="../../da/d90/structsequoia_1_1maths_1_1weakly__abelian__group__under__addition.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dd9/structsequoia_1_1maths_1_1weakly__abelian__group__under__addition_3_01T_01_4.html">sequoia::maths::weakly_abelian_group_under_addition&lt; T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d73/structsequoia_1_1maths_1_1weakly__abelian__group__under__addition_3_01std_1_1complex_3_01T_01_4_01_4.html">sequoia::maths::weakly_abelian_group_under_addition&lt; std::complex&lt; T &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d1d/structsequoia_1_1maths_1_1weakly__abelian__group__under__multiplication.html">sequoia::maths::weakly_abelian_group_under_multiplication&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trait for specifying whether a type behaves (appoximately) as an abelian group under multiplication.  <a href="../../d8/d1d/structsequoia_1_1maths_1_1weakly__abelian__group__under__multiplication.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d7b/structsequoia_1_1maths_1_1weakly__abelian__group__under__multiplication_3_01T_01_4.html">sequoia::maths::weakly_abelian_group_under_multiplication&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d87/structsequoia_1_1maths_1_1weakly__abelian__group__under__multiplication_3_01std_1_1complex_3_01T_01_4_01_4.html">sequoia::maths::weakly_abelian_group_under_multiplication&lt; std::complex&lt; T &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc1/structsequoia_1_1maths_1_1multiplication__weakly__distributive__over__addition.html">sequoia::maths::multiplication_weakly_distributive_over_addition&lt; T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d52/structsequoia_1_1maths_1_1weakly__abelian__group__under__multiplication_3_01bool_01_4.html">sequoia::maths::weakly_abelian_group_under_multiplication&lt; bool &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d15/structsequoia_1_1maths_1_1is__vector__space.html">sequoia::maths::is_vector_space&lt; T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dc1/structsequoia_1_1maths_1_1multiplication__weakly__distributive__over__addition.html">sequoia::maths::multiplication_weakly_distributive_over_addition&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trait for specifying whether a type exhibits multiplication that (approximately) distributes over addition.  <a href="../../db/dc1/structsequoia_1_1maths_1_1multiplication__weakly__distributive__over__addition.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d01/structsequoia_1_1maths_1_1is__free__module.html">sequoia::maths::is_free_module&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper that universal template parameters will obviate the need for.  <a href="../../dd/d01/structsequoia_1_1maths_1_1is__free__module.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dc9/structsequoia_1_1maths_1_1free__module__type__of_3_01ConvexSpace_01_4.html">sequoia::maths::free_module_type_of&lt; ConvexSpace &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d62/structsequoia_1_1maths_1_1commutative__ring__type__of.html">sequoia::maths::commutative_ring_type_of&lt; ConvexSpace &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper to extract the commutative ring type of the free module associated with a convex space.  <a href="../../d8/d62/structsequoia_1_1maths_1_1commutative__ring__type__of.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d10/structsequoia_1_1maths_1_1commutative__ring__type__of_3_01ConvexSpace_01_4.html">sequoia::maths::commutative_ring_type_of&lt; ConvexSpace &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d7f/structsequoia_1_1maths_1_1is__identity__validator.html">sequoia::maths::is_identity_validator&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trait for validators that behave like the identity.  <a href="../../d0/d7f/structsequoia_1_1maths_1_1is__identity__validator.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d42/structsequoia_1_1maths_1_1is__identity__validator_3_01std_1_1identity_01_4.html">sequoia::maths::is_identity_validator&lt; std::identity &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/ddf/structsequoia_1_1maths_1_1half__line__validator.html">sequoia::maths::half_line_validator</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A validator the the half line.  <a href="../../d4/ddf/structsequoia_1_1maths_1_1half__line__validator.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d7d/structsequoia_1_1maths_1_1defines__half__line.html">sequoia::maths::defines_half_line&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trait to determine if a type defines the half line.  <a href="../../d4/d7d/structsequoia_1_1maths_1_1defines__half__line.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da8/structsequoia_1_1maths_1_1defines__half__line_3_01half__line__validator_01_4.html">sequoia::maths::defines_half_line&lt; half_line_validator &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d57/structsequoia_1_1maths_1_1intrinsic__origin.html">sequoia::maths::intrinsic_origin</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/dec/structsequoia_1_1maths_1_1direct__product.html">sequoia::maths::direct_product&lt; Ts &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dcc/structsequoia_1_1maths_1_1direct__product_3_01T_00_01U_01_4.html">sequoia::maths::direct_product&lt; T, U &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/de2/structsequoia_1_1maths_1_1direct__product_3_01Ts_8_8_8_01_4.html">sequoia::maths::direct_product&lt; Ts... &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dad/structsequoia_1_1maths_1_1direct__product_3_01std_1_1tuple_3_01Ts_8_8_8_01_4_01_4.html">sequoia::maths::direct_product&lt; std::tuple&lt; Ts... &gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d29/structsequoia_1_1maths_1_1is__direct__product.html">sequoia::maths::is_direct_product&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d76/structsequoia_1_1maths_1_1extract__common__field__type_3_01std_1_1tuple_3_01Ts_8_8_8_01_4_01_4.html">sequoia::maths::extract_common_field_type&lt; std::tuple&lt; Ts... &gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/daf/structsequoia_1_1maths_1_1is__direct__product_3_01direct__product_3_01Ts_8_8_8_01_4_01_4.html">sequoia::maths::is_direct_product&lt; direct_product&lt; Ts... &gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/db5/structsequoia_1_1maths_1_1sets_1_1convex__functionals.html">sequoia::maths::sets::convex_functionals&lt; From, To &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class template for giving a name to convex functionals.  <a href="../../d9/db5/structsequoia_1_1maths_1_1sets_1_1convex__functionals.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dbf/structsequoia_1_1maths_1_1sets_1_1linear__functionals.html">sequoia::maths::sets::linear_functionals&lt; From, To &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class template for giving a name to linear functionals.  <a href="../../d3/dbf/structsequoia_1_1maths_1_1sets_1_1linear__functionals.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dbb/structsequoia_1_1maths_1_1dual_3_01C_01_4.html">sequoia::maths::dual&lt; C &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for defining duals of convex spaces via convex functionals.  <a href="../../d1/dbb/structsequoia_1_1maths_1_1dual_3_01C_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d20/structsequoia_1_1maths_1_1dual_3_01A_01_4.html">sequoia::maths::dual&lt; A &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for defining duals of affine spaces via convex functionals.  <a href="../../d1/d20/structsequoia_1_1maths_1_1dual_3_01A_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dc3/structsequoia_1_1maths_1_1dual_3_01V_01_4.html">sequoia::maths::dual&lt; V &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for defining duals of vector spaces via linear functionals.  <a href="../../d6/dc3/structsequoia_1_1maths_1_1dual_3_01V_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d99/structsequoia_1_1maths_1_1is__dual.html">sequoia::maths::is_dual&lt; C &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d99/structsequoia_1_1maths_1_1is__dual.html">sequoia::maths::is_dual&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper to detect if a type is defined as a dual of something else.  <a href="../../d8/d99/structsequoia_1_1maths_1_1is__dual.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d31/structsequoia_1_1maths_1_1is__dual_3_01dual_3_01C_01_4_01_4.html">sequoia::maths::is_dual&lt; dual&lt; C &gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d2e/structsequoia_1_1maths_1_1is__dual_3_01dual_3_01T_01_4_01_4.html">sequoia::maths::is_dual&lt; dual&lt; T &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d5c/structsequoia_1_1maths_1_1dual__of.html">sequoia::maths::dual_of&lt; C &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d5c/structsequoia_1_1maths_1_1dual__of.html">sequoia::maths::dual_of&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper to generate the dual of a space, taking into account that the dual of the dual may be related to the original space.  <a href="../../d4/d5c/structsequoia_1_1maths_1_1dual__of.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d78/structsequoia_1_1maths_1_1dual__of_3_01dual_3_01C_01_4_01_4.html">sequoia::maths::dual_of&lt; dual&lt; C &gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d66/structsequoia_1_1maths_1_1dual__of_3_01dual_3_01T_01_4_01_4.html">sequoia::maths::dual_of&lt; dual&lt; T &gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dfa/structsequoia_1_1maths_1_1distinguished__origin.html">sequoia::maths::distinguished_origin</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type to indicate a distinguished origin, relevant for free modules.  <a href="../../d8/dfa/structsequoia_1_1maths_1_1distinguished__origin.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html">sequoia::maths::coordinates_base&lt; ConvexSpace, Basis, Origin, Validator, DisplacementCoordinates &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class designed for inheritance by concerete coordinate types.  <a href="../../dd/d32/classsequoia_1_1maths_1_1coordinates__base.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html">sequoia::maths::coordinates&lt; ConvexSpace, Basis, Origin, Validator &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forward declaration for the coordinates class template.  <a href="../../d7/d56/classsequoia_1_1maths_1_1coordinates.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d9a/structsequoia_1_1maths_1_1sets_1_1R.html">sequoia::maths::sets::R&lt; N, T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d41/structsequoia_1_1maths_1_1sets_1_1Z.html">sequoia::maths::sets::Z&lt; D &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class template for giving a name to the set of integers and its generalization to other dimensionalities.  <a href="../../d3/d41/structsequoia_1_1maths_1_1sets_1_1Z.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dec/structsequoia_1_1maths_1_1sets_1_1half__space.html">sequoia::maths::sets::half_space&lt; N, T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d37/structsequoia_1_1maths_1_1sets_1_1N__0.html">sequoia::maths::sets::N_0&lt; D &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class template for giving a name to the set of semi-positive integers and its generalization to other dimensionalities.  <a href="../../d0/d37/structsequoia_1_1maths_1_1sets_1_1N__0.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d72/structsequoia_1_1maths_1_1sets_1_1C_3_01N_00_01std_1_1complex_3_01T_01_4_01_4.html">sequoia::maths::sets::C&lt; N, std::complex&lt; T &gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d9a/structsequoia_1_1maths_1_1sets_1_1R.html">sequoia::maths::sets::R&lt; D &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class template for giving a name to the set of real numbers and its generalization to other dimensionalities.  <a href="../../d8/d9a/structsequoia_1_1maths_1_1sets_1_1R.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d3c/structsequoia_1_1maths_1_1sets_1_1orthant.html">sequoia::maths::sets::orthant&lt; D &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class template for giving a name to the set of non-negative real numbers and its generalization to other dimensionalities.  <a href="../../da/d3c/structsequoia_1_1maths_1_1sets_1_1orthant.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d8e/structsequoia_1_1maths_1_1sets_1_1C.html">sequoia::maths::sets::C&lt; D &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class template for giving a name to the set of complex numbers and its generalization to other dimensionalities.  <a href="../../d7/d8e/structsequoia_1_1maths_1_1sets_1_1C.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d15/structsequoia_1_1maths_1_1arbitary__basis.html">sequoia::maths::arbitary_basis&lt; V &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">sequoia::maths::euclidean_vector_space&lt; D, T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/df9/structsequoia_1_1maths_1_1mathematical__arena.html">sequoia::maths::mathematical_arena</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dd8/structsequoia_1_1maths_1_1euclidean__affine__space.html">sequoia::maths::euclidean_affine_space&lt; D, T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/dae/structsequoia_1_1maths_1_1euclidean__vector__space.html">sequoia::maths::euclidean_vector_space&lt; T, D, Arena &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d5d/structsequoia_1_1maths_1_1euclidean__half__space.html">sequoia::maths::euclidean_half_space&lt; D, T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dd8/structsequoia_1_1maths_1_1euclidean__affine__space.html">sequoia::maths::euclidean_affine_space&lt; T, D, Arena &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dfb/structsequoia_1_1maths_1_1standard__basis.html">sequoia::maths::standard_basis&lt; D, T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d5d/structsequoia_1_1maths_1_1euclidean__half__space.html">sequoia::maths::euclidean_half_space&lt; T, Arena &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/deb/structsequoia_1_1maths_1_1canonical__right__handed__basis.html">sequoia::maths::canonical_right_handed_basis&lt; M &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Right-handed bases for arbitrary D, build recursively from 1D.  <a href="../../df/deb/structsequoia_1_1maths_1_1canonical__right__handed__basis.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/db0/structsequoia_1_1maths_1_1dual__of_3_01canonical__right__handed__basis_3_01M_01_4_01_4.html">sequoia::maths::dual_of&lt; canonical_right_handed_basis&lt; M &gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dd2/structsequoia_1_1maths_1_1dual__of_3_01canonical__right__handed__basis_3_01dual_3_01M_01_4_01_4_01_4.html">sequoia::maths::dual_of&lt; canonical_right_handed_basis&lt; dual&lt; M &gt; &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
 Concepts</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d6f/conceptsequoia_1_1maths_1_1weak__commutative__ring.html">sequoia::maths::weak_commutative_ring</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">concept representing reasonable approximations to a commutative ring. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d35/conceptsequoia_1_1maths_1_1weak__field.html">sequoia::maths::weak_field</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">concept representing reasonable approximations to a field. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d8c/conceptsequoia_1_1maths_1_1free__module.html">sequoia::maths::free_module</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">concept for a free module, implicitly understood to be over a commutative ring. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d6f/conceptsequoia_1_1maths_1_1vector__space.html">sequoia::maths::vector_space</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d2a/conceptsequoia_1_1maths_1_1basis.html">sequoia::maths::basis</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/de9/conceptsequoia_1_1maths_1_1basis__for.html">sequoia::maths::basis_for</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">concept for a vector space, which is a special case of a free module <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d82/conceptsequoia_1_1maths_1_1convex__space.html">sequoia::maths::convex_space</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">concept for convex spaces <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d7f/conceptsequoia_1_1maths_1_1affine__space.html">sequoia::maths::affine_space</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">concept for affine spaces <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d2a/conceptsequoia_1_1maths_1_1basis.html">sequoia::maths::basis</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A basis must identify the free module to which it corresponds. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/de9/conceptsequoia_1_1maths_1_1basis__for.html">sequoia::maths::basis_for</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A concept to determine if a basis is appropriate for a particular free module. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d36/conceptsequoia_1_1maths_1_1validator__for.html">sequoia::maths::validator_for</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">concept to check if a validator is compatible with a convex space. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d74/conceptsequoia_1_1maths_1_1normed__vector__space.html">sequoia::maths::normed_vector_space</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -194,81 +265,83 @@ template&lt;class T &gt; </td></tr>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a65a717c99d9b3c49607178ac4dfd10c9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::multiplication_weakly_distributive_over_addition_t</b> = typename multiplication_weakly_distributive_over_addition&lt; T &gt;::type</td></tr>
 <tr class="separator:a65a717c99d9b3c49607178ac4dfd10c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87a1d4ba3b7be4d9165a311d8a39875e"><td class="memTemplParams" colspan="2"><a id="a87a1d4ba3b7be4d9165a311d8a39875e" name="a87a1d4ba3b7be4d9165a311d8a39875e"></a>
+<tr class="memitem:a1810d855c6e4e551f89550eff1875f70"><td class="memTemplParams" colspan="2"><a id="a1810d855c6e4e551f89550eff1875f70" name="a1810d855c6e4e551f89550eff1875f70"></a>
 template&lt;convex_space ConvexSpace&gt; </td></tr>
-<tr class="memitem:a87a1d4ba3b7be4d9165a311d8a39875e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::vector_space_type_of</b> = typename ConvexSpace::vector_space_type</td></tr>
-<tr class="separator:a87a1d4ba3b7be4d9165a311d8a39875e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a732c999cd960ee7dbea041fcd4082778"><td class="memTemplParams" colspan="2"><a id="a732c999cd960ee7dbea041fcd4082778" name="a732c999cd960ee7dbea041fcd4082778"></a>
+<tr class="memitem:a1810d855c6e4e551f89550eff1875f70"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::free_module_type_of_t</b> = free_module_type_of&lt; ConvexSpace &gt;::type</td></tr>
+<tr class="separator:a1810d855c6e4e551f89550eff1875f70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99baa0af99931360b9f9973b71ba6e4d"><td class="memTemplParams" colspan="2"><a id="a99baa0af99931360b9f9973b71ba6e4d" name="a99baa0af99931360b9f9973b71ba6e4d"></a>
 template&lt;convex_space ConvexSpace&gt; </td></tr>
-<tr class="memitem:a732c999cd960ee7dbea041fcd4082778"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::space_field_type</b> = typename vector_space_type_of&lt; ConvexSpace &gt;::field_type</td></tr>
-<tr class="separator:a732c999cd960ee7dbea041fcd4082778"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a844ebe26776f2c6d3d25fbef35d2226b"><td class="memTemplParams" colspan="2"><a id="a844ebe26776f2c6d3d25fbef35d2226b" name="a844ebe26776f2c6d3d25fbef35d2226b"></a>
+<tr class="memitem:a99baa0af99931360b9f9973b71ba6e4d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::commutative_ring_type_of_t</b> = commutative_ring_type_of&lt; ConvexSpace &gt;::type</td></tr>
+<tr class="separator:a99baa0af99931360b9f9973b71ba6e4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80829f5902e8276393d49df25fc1c0d4"><td class="memTemplParams" colspan="2"><a id="a80829f5902e8276393d49df25fc1c0d4" name="a80829f5902e8276393d49df25fc1c0d4"></a>
 template&lt;convex_space ConvexSpace&gt; </td></tr>
-<tr class="memitem:a844ebe26776f2c6d3d25fbef35d2226b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::space_value_type</b> = space_field_type&lt; ConvexSpace &gt;</td></tr>
-<tr class="separator:a844ebe26776f2c6d3d25fbef35d2226b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80829f5902e8276393d49df25fc1c0d4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::space_value_type</b> = commutative_ring_type_of_t&lt; ConvexSpace &gt;</td></tr>
+<tr class="separator:a80829f5902e8276393d49df25fc1c0d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac537c7f9b8eed06a538f69640c49114b"><td class="memTemplParams" colspan="2"><a id="ac537c7f9b8eed06a538f69640c49114b" name="ac537c7f9b8eed06a538f69640c49114b"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:ac537c7f9b8eed06a538f69640c49114b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::is_identity_validator_t</b> = is_identity_validator&lt; T &gt;::type</td></tr>
+<tr class="separator:ac537c7f9b8eed06a538f69640c49114b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8fcfe109df4a5345ce341df7a9fe82f"><td class="memTemplParams" colspan="2"><a id="ab8fcfe109df4a5345ce341df7a9fe82f" name="ab8fcfe109df4a5345ce341df7a9fe82f"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:ab8fcfe109df4a5345ce341df7a9fe82f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::defines_half_line_t</b> = typename defines_half_line&lt; T &gt;::type</td></tr>
 <tr class="separator:ab8fcfe109df4a5345ce341df7a9fe82f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7fa16cbe93865c0b19be9b2d3a23bd34"><td class="memTemplParams" colspan="2"><a id="a7fa16cbe93865c0b19be9b2d3a23bd34" name="a7fa16cbe93865c0b19be9b2d3a23bd34"></a>
-template&lt;affine_space AffineSpace, basis_for&lt; vector_space_type_of&lt; AffineSpace &gt; &gt; Basis, class Origin &gt; </td></tr>
-<tr class="memitem:a7fa16cbe93865c0b19be9b2d3a23bd34"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::affine_coordinates</b> = coordinates&lt; AffineSpace, Basis, Origin, std::identity &gt;</td></tr>
-<tr class="separator:a7fa16cbe93865c0b19be9b2d3a23bd34"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abe13b3e7bababfe92c03c4d1e5d13ac1"><td class="memTemplParams" colspan="2"><a id="abe13b3e7bababfe92c03c4d1e5d13ac1" name="abe13b3e7bababfe92c03c4d1e5d13ac1"></a>
-template&lt;vector_space VectorSpace, basis_for&lt; vector_space_type_of&lt; VectorSpace &gt; &gt; Basis&gt; </td></tr>
-<tr class="memitem:abe13b3e7bababfe92c03c4d1e5d13ac1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::vector_coordinates</b> = affine_coordinates&lt; VectorSpace, Basis, intrinsic_origin &gt;</td></tr>
-<tr class="separator:abe13b3e7bababfe92c03c4d1e5d13ac1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aadebe5e156414d4938eff14280eab15c"><td class="memTemplParams" colspan="2"><a id="aadebe5e156414d4938eff14280eab15c" name="aadebe5e156414d4938eff14280eab15c"></a>
-template&lt;class... Ts&gt; </td></tr>
-<tr class="memitem:aadebe5e156414d4938eff14280eab15c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::direct_product_set_t</b> = direct_product&lt; Ts... &gt;::set_type</td></tr>
-<tr class="separator:aadebe5e156414d4938eff14280eab15c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43a49b35490ac4143316c977e0df8502"><td class="memTemplParams" colspan="2"><a id="a43a49b35490ac4143316c977e0df8502" name="a43a49b35490ac4143316c977e0df8502"></a>
+<tr class="memitem:a9fced853d069ff6fe584e52ef48eb3da"><td class="memTemplParams" colspan="2"><a id="a9fced853d069ff6fe584e52ef48eb3da" name="a9fced853d069ff6fe584e52ef48eb3da"></a>
 template&lt;class T &gt; </td></tr>
-<tr class="memitem:a43a49b35490ac4143316c977e0df8502"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::extract_common_field_type_t</b> = extract_common_field_type&lt; T &gt;::type</td></tr>
-<tr class="separator:a43a49b35490ac4143316c977e0df8502"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc6a8dd49286027cf9d7643f008bf06b"><td class="memTemplParams" colspan="2"><a id="afc6a8dd49286027cf9d7643f008bf06b" name="afc6a8dd49286027cf9d7643f008bf06b"></a>
-template&lt;class C &gt; </td></tr>
-<tr class="memitem:afc6a8dd49286027cf9d7643f008bf06b"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::is_dual_t</b> = is_dual&lt; C &gt;::type</td></tr>
-<tr class="separator:afc6a8dd49286027cf9d7643f008bf06b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9fced853d069ff6fe584e52ef48eb3da"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::is_direct_product_t</b> = is_direct_product&lt; T &gt;::type</td></tr>
+<tr class="separator:a9fced853d069ff6fe584e52ef48eb3da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8a51e8eee87fc9eafcd44457c015dd6"><td class="memTemplParams" colspan="2"><a id="ad8a51e8eee87fc9eafcd44457c015dd6" name="ad8a51e8eee87fc9eafcd44457c015dd6"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:ad8a51e8eee87fc9eafcd44457c015dd6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::is_dual_t</b> = is_dual&lt; T &gt;::type</td></tr>
+<tr class="separator:ad8a51e8eee87fc9eafcd44457c015dd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ab825117a2b2bb9859e4796884ed277"><td class="memTemplParams" colspan="2"><a id="a4ab825117a2b2bb9859e4796884ed277" name="a4ab825117a2b2bb9859e4796884ed277"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a4ab825117a2b2bb9859e4796884ed277"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::dual_of_t</b> = dual_of&lt; T &gt;::type</td></tr>
 <tr class="separator:a4ab825117a2b2bb9859e4796884ed277"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71888d695e9face5eae8a4c785b92033"><td class="memTemplParams" colspan="2"><a id="a71888d695e9face5eae8a4c785b92033" name="a71888d695e9face5eae8a4c785b92033"></a>
-template&lt;std::size_t D, std::floating_point T, basis Basis, class Origin &gt; </td></tr>
-<tr class="memitem:a71888d695e9face5eae8a4c785b92033"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::euclidean_affine_coordinates</b> = affine_coordinates&lt; euclidean_affine_space&lt; D, T &gt;, Basis, Origin &gt;</td></tr>
-<tr class="separator:a71888d695e9face5eae8a4c785b92033"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1b6fcc3db5a091d5778da6f5c0364668"><td class="memTemplParams" colspan="2"><a id="a1b6fcc3db5a091d5778da6f5c0364668" name="a1b6fcc3db5a091d5778da6f5c0364668"></a>
-template&lt;std::size_t D, std::floating_point T, basis Basis&gt; </td></tr>
-<tr class="memitem:a1b6fcc3db5a091d5778da6f5c0364668"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::euclidean_vector_coordinates</b> = vector_coordinates&lt; euclidean_vector_space&lt; D, T &gt;, Basis &gt;</td></tr>
-<tr class="separator:a1b6fcc3db5a091d5778da6f5c0364668"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a405bf328a93a129973451e7c82933ca1"><td class="memTemplParams" colspan="2"><a id="a405bf328a93a129973451e7c82933ca1" name="a405bf328a93a129973451e7c82933ca1"></a>
-template&lt;std::size_t D, std::floating_point T&gt; </td></tr>
-<tr class="memitem:a405bf328a93a129973451e7c82933ca1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::vec_coords</b> = euclidean_vector_coordinates&lt; D, T, standard_basis&lt; D, T &gt; &gt;</td></tr>
-<tr class="separator:a405bf328a93a129973451e7c82933ca1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:ab509fd429c45c0a1a614f779d74c884a"><td class="memTemplParams" colspan="2"><a id="ab509fd429c45c0a1a614f779d74c884a" name="ab509fd429c45c0a1a614f779d74c884a"></a>
-template&lt;class T , std::size_t D, class Fn  = std::identity&gt; <br />
-requires std::is_invocable_r_v&lt;T, Fn, T&gt;</td></tr>
-<tr class="memitem:ab509fd429c45c0a1a614f779d74c884a"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::array&lt; T, D &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::to_array</b> (std::span&lt; const T, D &gt; a, Fn f={})</td></tr>
-<tr class="separator:ab509fd429c45c0a1a614f779d74c884a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7fa16cbe93865c0b19be9b2d3a23bd34"><td class="memTemplParams" colspan="2">template&lt;affine_space AffineSpace, basis_for&lt; free_module_type_of_t&lt; AffineSpace &gt; &gt; Basis, class Origin &gt; </td></tr>
+<tr class="memitem:ga7fa16cbe93865c0b19be9b2d3a23bd34"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d5b/group__Coordinates.html#ga7fa16cbe93865c0b19be9b2d3a23bd34">sequoia::maths::affine_coordinates</a> = coordinates&lt; AffineSpace, Basis, Origin, std::identity &gt;</td></tr>
+<tr class="memdesc:ga7fa16cbe93865c0b19be9b2d3a23bd34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for coordinates of a point in an affine space with respect to a particular origin.  <br /></td></tr>
+<tr class="separator:ga7fa16cbe93865c0b19be9b2d3a23bd34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaf998170b5890f5056ffc3b041233877"><td class="memTemplParams" colspan="2">
+template&lt;vector_space VectorSpace, basis_for&lt; free_module_type_of_t&lt; VectorSpace &gt; &gt; Basis&gt; </td></tr>
+<tr class="memitem:gaaf998170b5890f5056ffc3b041233877"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::vector_coordinates</b> = affine_coordinates&lt; VectorSpace, Basis, distinguished_origin &gt;</td></tr>
+<tr class="memdesc:gaaf998170b5890f5056ffc3b041233877"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for coordinates of an element of a vector space with respect to a particular basis. <br /></td></tr>
+<tr class="separator:gaaf998170b5890f5056ffc3b041233877"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2df0238c48dcb387755177669985237e"><td class="memTemplParams" colspan="2">
+template&lt;free_module FreeModule, basis_for&lt; free_module_type_of_t&lt; FreeModule &gt; &gt; Basis&gt; </td></tr>
+<tr class="memitem:ga2df0238c48dcb387755177669985237e"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::free_module_coordinates</b> = coordinates&lt; FreeModule, Basis, distinguished_origin, std::identity &gt;</td></tr>
+<tr class="memdesc:ga2df0238c48dcb387755177669985237e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias for coordinates of an element of a free module with respect to a particular basis. <br /></td></tr>
+<tr class="separator:ga2df0238c48dcb387755177669985237e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acb635351128de3a81dbffdcb4685d7a0"><td class="memTemplParams" colspan="2"><a id="acb635351128de3a81dbffdcb4685d7a0" name="acb635351128de3a81dbffdcb4685d7a0"></a>
+template&lt;std::floating_point T, std::size_t D, basis Basis, class Origin , class Arena  = mathematical_arena&gt; </td></tr>
+<tr class="memitem:acb635351128de3a81dbffdcb4685d7a0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::euclidean_affine_coordinates</b> = affine_coordinates&lt; euclidean_affine_space&lt; T, D, Arena &gt;, Basis, Origin &gt;</td></tr>
+<tr class="separator:acb635351128de3a81dbffdcb4685d7a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2283dcf49689086d8db4ee20cb2b80b9"><td class="memTemplParams" colspan="2"><a id="a2283dcf49689086d8db4ee20cb2b80b9" name="a2283dcf49689086d8db4ee20cb2b80b9"></a>
+template&lt;std::floating_point T, std::size_t D, basis Basis, class Arena  = mathematical_arena&gt; </td></tr>
+<tr class="memitem:a2283dcf49689086d8db4ee20cb2b80b9"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::euclidean_vector_coordinates</b> = vector_coordinates&lt; euclidean_vector_space&lt; T, D, Arena &gt;, Basis &gt;</td></tr>
+<tr class="separator:a2283dcf49689086d8db4ee20cb2b80b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a194d2f94063a81def40c06c4c3196e39"><td class="memTemplParams" colspan="2"><a id="a194d2f94063a81def40c06c4c3196e39" name="a194d2f94063a81def40c06c4c3196e39"></a>
+template&lt;std::floating_point T, std::size_t D, class Arena  = mathematical_arena&gt; </td></tr>
+<tr class="memitem:a194d2f94063a81def40c06c4c3196e39"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::vec_coords</b> = euclidean_vector_coordinates&lt; T, D, canonical_right_handed_basis&lt; euclidean_vector_space&lt; T, D, Arena &gt; &gt;, Arena &gt;</td></tr>
+<tr class="separator:a194d2f94063a81def40c06c4c3196e39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a9edc5752e2118a3cc2b23cf2c0d3eb08"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a9edc5752e2118a3cc2b23cf2c0d3eb08"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d53/Spaces_8hpp.html#a9edc5752e2118a3cc2b23cf2c0d3eb08">sequoia::maths::addable_v</a></td></tr>
-<tr class="separator:a9edc5752e2118a3cc2b23cf2c0d3eb08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d18e7d16b4edb12426c233623cdc568"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a2d18e7d16b4edb12426c233623cdc568"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d53/Spaces_8hpp.html#a2d18e7d16b4edb12426c233623cdc568">sequoia::maths::subtractable_v</a></td></tr>
-<tr class="separator:a2d18e7d16b4edb12426c233623cdc568"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39b003e608f9e332d4f15060038aaaf0"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a39b003e608f9e332d4f15060038aaaf0"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d53/Spaces_8hpp.html#a39b003e608f9e332d4f15060038aaaf0">sequoia::maths::multiplicable_v</a></td></tr>
-<tr class="separator:a39b003e608f9e332d4f15060038aaaf0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ca299b280331ba18b86942841091878"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a3ca299b280331ba18b86942841091878"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d53/Spaces_8hpp.html#a3ca299b280331ba18b86942841091878">sequoia::maths::divisible_v</a></td></tr>
-<tr class="separator:a3ca299b280331ba18b86942841091878"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa6767cb51f38946496234d735cc32e16"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:gaa6767cb51f38946496234d735cc32e16"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/db9/group__ArithmeticProperties.html#gaa6767cb51f38946496234d735cc32e16">sequoia::maths::is_addable_v</a></td></tr>
+<tr class="memdesc:gaa6767cb51f38946496234d735cc32e16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile time constant for addability.  <br /></td></tr>
+<tr class="separator:gaa6767cb51f38946496234d735cc32e16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5c4fc8b4e7291bee88bc60450c95a06a"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ga5c4fc8b4e7291bee88bc60450c95a06a"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/db9/group__ArithmeticProperties.html#ga5c4fc8b4e7291bee88bc60450c95a06a">sequoia::maths::is_subtractable_v</a></td></tr>
+<tr class="memdesc:ga5c4fc8b4e7291bee88bc60450c95a06a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile time constant for subtractability.  <br /></td></tr>
+<tr class="separator:ga5c4fc8b4e7291bee88bc60450c95a06a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0e6ff265dd313c5c0fff302bafd1b309"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ga0e6ff265dd313c5c0fff302bafd1b309"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/db9/group__ArithmeticProperties.html#ga0e6ff265dd313c5c0fff302bafd1b309">sequoia::maths::is_multiplicable_v</a></td></tr>
+<tr class="memdesc:ga0e6ff265dd313c5c0fff302bafd1b309"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile time constant for multiplicability.  <br /></td></tr>
+<tr class="separator:ga0e6ff265dd313c5c0fff302bafd1b309"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5324d0010409c8ba7d5ce8d093902bed"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ga5324d0010409c8ba7d5ce8d093902bed"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/db9/group__ArithmeticProperties.html#ga5324d0010409c8ba7d5ce8d093902bed">sequoia::maths::is_divisible_v</a></td></tr>
+<tr class="memdesc:ga5324d0010409c8ba7d5ce8d093902bed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile time constant for divisibility.  <br /></td></tr>
+<tr class="separator:ga5324d0010409c8ba7d5ce8d093902bed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb48fcd577bb5a1ee1f42ea253b18048"><td class="memTemplParams" colspan="2"><a id="abb48fcd577bb5a1ee1f42ea253b18048" name="abb48fcd577bb5a1ee1f42ea253b18048"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:abb48fcd577bb5a1ee1f42ea253b18048"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::weakly_abelian_group_under_addition_v</b> {weakly_abelian_group_under_addition&lt;T&gt;::value}</td></tr>
@@ -281,47 +354,85 @@ template&lt;class T &gt; </td></tr>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:add4f23f7674b589f02d3c6e454357302"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::multiplication_weakly_distributive_over_addition_v</b> {multiplication_weakly_distributive_over_addition&lt;T&gt;::value}</td></tr>
 <tr class="separator:add4f23f7674b589f02d3c6e454357302"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3379cd28cfdff2144b22b25a2faf7309"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a3379cd28cfdff2144b22b25a2faf7309"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d53/Spaces_8hpp.html#a3379cd28cfdff2144b22b25a2faf7309">sequoia::maths::has_dimension</a></td></tr>
-<tr class="separator:a3379cd28cfdff2144b22b25a2faf7309"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a537d434e15ee3e3003e5dccac8891580"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a537d434e15ee3e3003e5dccac8891580"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d53/Spaces_8hpp.html#a537d434e15ee3e3003e5dccac8891580">sequoia::maths::has_field_type</a></td></tr>
-<tr class="separator:a537d434e15ee3e3003e5dccac8891580"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6579d0e606324a685d64b1f6b56ebc88"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a6579d0e606324a685d64b1f6b56ebc88"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d53/Spaces_8hpp.html#a6579d0e606324a685d64b1f6b56ebc88">sequoia::maths::has_element_type</a></td></tr>
-<tr class="separator:a6579d0e606324a685d64b1f6b56ebc88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6736e89bca6e4a36eeaa5bc7e7d6e9c7"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a6736e89bca6e4a36eeaa5bc7e7d6e9c7"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d53/Spaces_8hpp.html#a6736e89bca6e4a36eeaa5bc7e7d6e9c7">sequoia::maths::has_set_type</a></td></tr>
-<tr class="separator:a6736e89bca6e4a36eeaa5bc7e7d6e9c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9e1129460231855c33862735798f9a6"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:aa9e1129460231855c33862735798f9a6"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d53/Spaces_8hpp.html#aa9e1129460231855c33862735798f9a6">sequoia::maths::has_vector_space_type_v</a></td></tr>
-<tr class="separator:aa9e1129460231855c33862735798f9a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb008b8fdccaca7a85492bf609e483ee"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:acb008b8fdccaca7a85492bf609e483ee"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d53/Spaces_8hpp.html#acb008b8fdccaca7a85492bf609e483ee">sequoia::maths::identifies_as_vector_space_v</a></td></tr>
-<tr class="separator:acb008b8fdccaca7a85492bf609e483ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cbb098216ad918e05c6e4320a60bcf7"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:a2cbb098216ad918e05c6e4320a60bcf7"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d53/Spaces_8hpp.html#a2cbb098216ad918e05c6e4320a60bcf7">sequoia::maths::identifies_as_convex_space_v</a></td></tr>
-<tr class="separator:a2cbb098216ad918e05c6e4320a60bcf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5144f37ccc0ae36735cb6d36d8f9cf5"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:aa5144f37ccc0ae36735cb6d36d8f9cf5"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d53/Spaces_8hpp.html#aa5144f37ccc0ae36735cb6d36d8f9cf5">sequoia::maths::identifies_as_affine_space_v</a></td></tr>
-<tr class="separator:aa5144f37ccc0ae36735cb6d36d8f9cf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae63c67fa2bf01605e91c15a87df218e1"><td class="memTemplParams" colspan="2"><a id="ae63c67fa2bf01605e91c15a87df218e1" name="ae63c67fa2bf01605e91c15a87df218e1"></a>
+<tr class="memitem:ga1544476ae3d7533377c46933e8b4ad80"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ga1544476ae3d7533377c46933e8b4ad80"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/d7a/group__PropertiesOfSpaces.html#ga1544476ae3d7533377c46933e8b4ad80">sequoia::maths::has_commutative_ring_type_v</a></td></tr>
+<tr class="memdesc:ga1544476ae3d7533377c46933e8b4ad80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile time constant reflecting whether a type exposes a nested type named commutative_ring_type which satisifes the weak_commutative_ring concept.  <br /></td></tr>
+<tr class="separator:ga1544476ae3d7533377c46933e8b4ad80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8a562d71c8cdf6884f60fb0f88f4de61"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ga8a562d71c8cdf6884f60fb0f88f4de61"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/d7a/group__PropertiesOfSpaces.html#ga8a562d71c8cdf6884f60fb0f88f4de61">sequoia::maths::has_field_type_v</a></td></tr>
+<tr class="memdesc:ga8a562d71c8cdf6884f60fb0f88f4de61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile time constant reflecting whether a type exposes a nested type named field_type which satisifes the weak_field concept.  <br /></td></tr>
+<tr class="separator:ga8a562d71c8cdf6884f60fb0f88f4de61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8929c12e56ad5068b8261ea394cea007"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ga8929c12e56ad5068b8261ea394cea007"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/d7a/group__PropertiesOfSpaces.html#ga8929c12e56ad5068b8261ea394cea007">sequoia::maths::defines_commutative_ring_v</a> {has_commutative_ring_type_v&lt;T&gt; || has_field_type_v&lt;T&gt;}</td></tr>
+<tr class="memdesc:ga8929c12e56ad5068b8261ea394cea007"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile time constant reflecting whether a type exposes a nested type with the properties of a commutative ring.  <br /></td></tr>
+<tr class="separator:ga8929c12e56ad5068b8261ea394cea007"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaec64ab44db0f1f1eb81c81977b9e9350"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:gaec64ab44db0f1f1eb81c81977b9e9350"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/d7a/group__PropertiesOfSpaces.html#gaec64ab44db0f1f1eb81c81977b9e9350">sequoia::maths::defines_field_v</a></td></tr>
+<tr class="memdesc:gaec64ab44db0f1f1eb81c81977b9e9350"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reports whether a type exposes a nested type with the properties of a field.  <br /></td></tr>
+<tr class="separator:gaec64ab44db0f1f1eb81c81977b9e9350"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae45a34a4b9bd607aaeafc27e5315d47d"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:gae45a34a4b9bd607aaeafc27e5315d47d"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/d7a/group__PropertiesOfSpaces.html#gae45a34a4b9bd607aaeafc27e5315d47d">sequoia::maths::has_dimension_v</a></td></tr>
+<tr class="memdesc:gae45a34a4b9bd607aaeafc27e5315d47d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile time constant reflecting whether a type exposes a nested value, dimension, convertible to a std::size_t.  <br /></td></tr>
+<tr class="separator:gae45a34a4b9bd607aaeafc27e5315d47d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gafae05b9db9bdbd3b44e4f44bca12ca8d"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:gafae05b9db9bdbd3b44e4f44bca12ca8d"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/d7a/group__PropertiesOfSpaces.html#gafae05b9db9bdbd3b44e4f44bca12ca8d">sequoia::maths::has_set_type_v</a></td></tr>
+<tr class="memdesc:gafae05b9db9bdbd3b44e4f44bca12ca8d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile time constant reflecting whether a type exposes a nested type named set_type.  <br /></td></tr>
+<tr class="separator:gafae05b9db9bdbd3b44e4f44bca12ca8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2cbb098216ad918e05c6e4320a60bcf7"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ga2cbb098216ad918e05c6e4320a60bcf7"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d4/d47/group__IdentifiesAsSpace.html#ga2cbb098216ad918e05c6e4320a60bcf7">sequoia::maths::identifies_as_convex_space_v</a></td></tr>
+<tr class="memdesc:ga2cbb098216ad918e05c6e4320a60bcf7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile time constant reflecting whether a space self-identifies as convex.  <br /></td></tr>
+<tr class="separator:ga2cbb098216ad918e05c6e4320a60bcf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa5144f37ccc0ae36735cb6d36d8f9cf5"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:gaa5144f37ccc0ae36735cb6d36d8f9cf5"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d4/d47/group__IdentifiesAsSpace.html#gaa5144f37ccc0ae36735cb6d36d8f9cf5">sequoia::maths::identifies_as_affine_space_v</a></td></tr>
+<tr class="memdesc:gaa5144f37ccc0ae36735cb6d36d8f9cf5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile time constant reflecting whether a space self-identifies as affine.  <br /></td></tr>
+<tr class="separator:gaa5144f37ccc0ae36735cb6d36d8f9cf5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa3921efe69231c1289cdbfac6741c1e7"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:gaa3921efe69231c1289cdbfac6741c1e7"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d4/d47/group__IdentifiesAsSpace.html#gaa3921efe69231c1289cdbfac6741c1e7">sequoia::maths::identifies_as_free_module_v</a></td></tr>
+<tr class="memdesc:gaa3921efe69231c1289cdbfac6741c1e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile time constant reflecting whether a space self-identifies as a free module.  <br /></td></tr>
+<tr class="separator:gaa3921efe69231c1289cdbfac6741c1e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gacb008b8fdccaca7a85492bf609e483ee"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:gacb008b8fdccaca7a85492bf609e483ee"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d4/d47/group__IdentifiesAsSpace.html#gacb008b8fdccaca7a85492bf609e483ee">sequoia::maths::identifies_as_vector_space_v</a></td></tr>
+<tr class="memdesc:gacb008b8fdccaca7a85492bf609e483ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile time constant reflecting whether a space self-identifies as vector space.  <br /></td></tr>
+<tr class="separator:gacb008b8fdccaca7a85492bf609e483ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa9e1129460231855c33862735798f9a6"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:gaa9e1129460231855c33862735798f9a6"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/d7a/group__PropertiesOfSpaces.html#gaa9e1129460231855c33862735798f9a6">sequoia::maths::has_vector_space_type_v</a></td></tr>
+<tr class="memdesc:gaa9e1129460231855c33862735798f9a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile time constant reflecting whether a type exposes a nested vector_space_type which satisfies the vector_space concept.  <br /></td></tr>
+<tr class="separator:gaa9e1129460231855c33862735798f9a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7a53179952bf9dd325cfa7afc8ef3e3d"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ga7a53179952bf9dd325cfa7afc8ef3e3d"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/d7a/group__PropertiesOfSpaces.html#ga7a53179952bf9dd325cfa7afc8ef3e3d">sequoia::maths::has_free_module_type_v</a></td></tr>
+<tr class="memdesc:ga7a53179952bf9dd325cfa7afc8ef3e3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compile time constant reflecting whether a type exposes a nested free_modul_type which satisfies the vector_space concept.  <br /></td></tr>
+<tr class="separator:ga7a53179952bf9dd325cfa7afc8ef3e3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae63c67fa2bf01605e91c15a87df218e1"><td class="memTemplParams" colspan="2">
 template&lt;convex_space ConvexSpace&gt; </td></tr>
-<tr class="memitem:ae63c67fa2bf01605e91c15a87df218e1"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::dimension_of</b> {vector_space_type_of&lt;ConvexSpace&gt;::dimension}</td></tr>
-<tr class="separator:ae63c67fa2bf01605e91c15a87df218e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaeba933d5c49eac178e434e0e89764de"><td class="memTemplParams" colspan="2">template&lt;class V , class ConvexSpace &gt; </td></tr>
-<tr class="memitem:aaeba933d5c49eac178e434e0e89764de"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d53/Spaces_8hpp.html#aaeba933d5c49eac178e434e0e89764de">sequoia::maths::validator_for_single_value</a></td></tr>
-<tr class="separator:aaeba933d5c49eac178e434e0e89764de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5e5143d27974bdc87d8f53506611813"><td class="memTemplParams" colspan="2">template&lt;class V , class ConvexSpace &gt; </td></tr>
-<tr class="memitem:ad5e5143d27974bdc87d8f53506611813"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d53/Spaces_8hpp.html#ad5e5143d27974bdc87d8f53506611813">sequoia::maths::validator_for_array</a></td></tr>
-<tr class="separator:ad5e5143d27974bdc87d8f53506611813"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae63c67fa2bf01605e91c15a87df218e1"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::size_t&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::dimension_of</b> {free_module_type_of_t&lt;ConvexSpace&gt;::dimension}</td></tr>
+<tr class="memdesc:gae63c67fa2bf01605e91c15a87df218e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper to extract the dimension of the free module associated with a convex space. <br /></td></tr>
+<tr class="separator:gae63c67fa2bf01605e91c15a87df218e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaaeba933d5c49eac178e434e0e89764de"><td class="memTemplParams" colspan="2">template&lt;class V , class ConvexSpace &gt; </td></tr>
+<tr class="memitem:gaaeba933d5c49eac178e434e0e89764de"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/d8f/group__Validators.html#gaaeba933d5c49eac178e434e0e89764de">sequoia::maths::validator_for_single_value</a></td></tr>
+<tr class="memdesc:gaaeba933d5c49eac178e434e0e89764de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validators for spaces of dimension 1 must provide an operator() for validating single values.  <br /></td></tr>
+<tr class="separator:gaaeba933d5c49eac178e434e0e89764de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad5e5143d27974bdc87d8f53506611813"><td class="memTemplParams" colspan="2">template&lt;class V , class ConvexSpace &gt; </td></tr>
+<tr class="memitem:gad5e5143d27974bdc87d8f53506611813"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/d8f/group__Validators.html#gad5e5143d27974bdc87d8f53506611813">sequoia::maths::validator_for_array</a></td></tr>
+<tr class="memdesc:gad5e5143d27974bdc87d8f53506611813"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validators for spaces of dimension d&gt;1 must provide an operator() for an array of d values.  <br /></td></tr>
+<tr class="separator:gad5e5143d27974bdc87d8f53506611813"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14c39e1173f344cfca28db7dc90f87e0"><td class="memTemplParams" colspan="2"><a id="a14c39e1173f344cfca28db7dc90f87e0" name="a14c39e1173f344cfca28db7dc90f87e0"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a14c39e1173f344cfca28db7dc90f87e0"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::is_identity_validator_v</b> {is_identity_validator&lt;T&gt;::value}</td></tr>
+<tr class="separator:a14c39e1173f344cfca28db7dc90f87e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a93aba730042374a0fe8344162c099694"><td class="memTemplParams" colspan="2"><a id="a93aba730042374a0fe8344162c099694" name="a93aba730042374a0fe8344162c099694"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a93aba730042374a0fe8344162c099694"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::defines_half_line_v</b> {defines_half_line&lt;T&gt;::value}</td></tr>
 <tr class="separator:a93aba730042374a0fe8344162c099694"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24a1146b5168435a674b094984866a5c"><td class="memTemplParams" colspan="2">template&lt;weak_commutative_ring... Rs&gt; </td></tr>
+<tr class="memitem:a24a1146b5168435a674b094984866a5c"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d53/Spaces_8hpp.html#a24a1146b5168435a674b094984866a5c">sequoia::maths::has_common_ring_v</a></td></tr>
+<tr class="separator:a24a1146b5168435a674b094984866a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0838f30f9b669609f56261b93a34c25d"><td class="memTemplParams" colspan="2"><a id="a0838f30f9b669609f56261b93a34c25d" name="a0838f30f9b669609f56261b93a34c25d"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a0838f30f9b669609f56261b93a34c25d"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::is_direct_product_v</b> = is_direct_product&lt;T&gt;::value</td></tr>
+<tr class="separator:a0838f30f9b669609f56261b93a34c25d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0989a9b6dd06a470a0de4f46f1968a6c"><td class="memTemplParams" colspan="2"><a id="a0989a9b6dd06a470a0de4f46f1968a6c" name="a0989a9b6dd06a470a0de4f46f1968a6c"></a>
-template&lt;class C &gt; </td></tr>
-<tr class="memitem:a0989a9b6dd06a470a0de4f46f1968a6c"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::is_dual_v</b> {is_dual&lt;C&gt;::value}</td></tr>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a0989a9b6dd06a470a0de4f46f1968a6c"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::is_dual_v</b> {is_dual&lt;T&gt;::value}</td></tr>
 <tr class="separator:a0989a9b6dd06a470a0de4f46f1968a6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a935d488672a06f875883978dc972a6b2"><td class="memTemplParams" colspan="2">template&lt;class B &gt; </td></tr>
 <tr class="memitem:a935d488672a06f875883978dc972a6b2"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d53/Spaces_8hpp.html#a935d488672a06f875883978dc972a6b2">sequoia::maths::is_orthonormal_basis_v</a></td></tr>
@@ -334,21 +445,42 @@ template&lt;class C &gt; </td></tr>
 <tr class="separator:a2a6d98b83480bfd1fd33e3de401b9f84"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Utilities relating to vector sets. </p>
+<div class="textblock"><p>Abstractions pertaining to vector spaces, affine spaces and their generalizations. </p>
+<p>Representing abstract algebraic structures in C++ presents an interesting challenge. At root, the fundamental abstraction is a set; indeed, a vector space is nothing but a set with some additional structure defined. However, sets of objects are not straightforward to represent, in general, in C++.</p>
+<p>Consider the real numbers. In C++ we can give a name to the is set by using the type system.</p>
+<p>struct R {};</p>
+<p>But what of the elements of R? Here we run into an immediate difficulty. We would like to associate them with the values of a type. But to truly do so we require a type with an infinite number of values (and uncountably so, in this case). Therefore, when seeking representations, particularly of infinite sets, we are generally reduced to approximations.</p>
+<p>However, at least in so far as the set underpinning a particular vector space goes, it turns out that, for our purposes, we need go no further than naming it. As we will explain momentarily, this is because when dealing with vector spaces in practice, we are almost always interested in the <em>coordinates</em> of a vector with respect to a particular basis and not the abstract entities comprising the elements of the underlying set.</p>
+<p>Before discussing coordinate systems, it is helpful to be more precise about the fundamental definition of a vector space. The first four axioms pertain just to the elements of the underlying set and amount to stating that a vector space is an abelian group under addition. Thus, vector addition is associative, commutative, has an identity element and admits an inverse.</p>
+<p>However, the remaining properties of a vector space require not just the underlying set, V, but also a field, F. Canonical examples of a field include the rationals or the reals: sets admitting the standard arithmetic operations and for which every element has both an additive and multiplicative inverse. As such, we speak of a vector space over a field. A vector space admits a binary operation such that any element of V can be multiplied by any element of F, to give another element within V (or the same element for the multiplicative identity).</p>
+<p>Every vector space admits at least one basis. For a vector space of dimension d, a basis is a set of d elements which are linearly independent and so span the space. Let the basis elements be denoted b_0, ..., b_{n-1}. Any vector in the space may be written as a linear combination:</p>
+<p>v = a_0 b_0 + ... + a_{n-1} b_{n-1},</p>
+<p>where the a_i are valued in the field, F. The set of these values [a_0, ..., a_{n-1}] are none other than the coordinates of v with respect to this particular basis. The [a_0, ..., a_{n-1}] are often informally referred to as a vector. However stricty speaking this is an abuse of terminology and conflates two distinct concepts: an actual vector which is an element of the set which forms the vector space, and a representation of this vector via the coordinates with respect to a particular basis. This distinction can be further reinforced by pointing out that two observers who agree they are talking about the same vector (i.e. set element) will nevertheless disagree on the coordinates if they are using different bases - as they are entirely entitled to do! To further add to the confusion, the coordinates may be referred to as a coordinate vector which is perhaps unfortunate.</p>
+<p>Regardless, from the perspective of performing actual calculations, the coordinates are key. An crucial point to make is that, when dealing with the coordinates, the underlying elements of the set, V, make no explicit appearance. This is a manifestation of the fact that two vector spaces of the same dimension and over the same field are isomorphic. This is incredibly helpful since, for many practical purposes, we need not represent the underlying set beyond, at most, perhaps giving it a name. For example, consider the vector space formed by functions which map some set into a field: the question of how to represent the elements of this vector space in C++ is completely circumvented.</p>
+<p>However, that is not to say that subtleties of imperfect representations of mathematical abstractions are entirely avoided; indeed, quite the contrary! The coordinates are valued in a field and so at this stage we must deal with the fact that C++ types such as float and double model the real numbers imperfectly. Nevertheless, the burden has been shifted from attempting to represent things in C++ that may be completely infeasible to things which can be done to reasonable approximation.</p>
+<p>Vector spaces are just one of the things treated in the code that follows. There are several important generalizations. First, there are affine spaces, which comprise a set, A, together with a vector space, V, whose additive group acts freely and transitively on A. Intuitvely, we can start at any point in A and translate to any other point by adding the appropriate vector. In fact, the relationship is stronger than this: choosing any point in A and adding any vector in V will give a point in A. A nice example of an affine space is Euclidean space. Two observers in this space, Alice and Bob, are entirely entitled to define their location as the origin. Neither is more right than the other since this space has no distinguished origin. Alice and Bob will, in general, disagree about the coordinates of points in the space. However, they will agree on the vector which translates from one point to another (though if they compare vector coordinates, they may have ton contend with using different bases on the vector space!).</p>
+<p>An affine space is sometimes described as a vector space which has forgotten its origin. Indeed, a vector space is an affine space over itself. This is interesting in terms of representing these concepts in C++. Since a vector space is a special case of an affine space, this suggests that an affine space concept is more fundamental, with the vector space being a refinement. However, a vector space is part of the definition of an affine space (a set and a vector space, satisfying certain conditions) and so it is this that will be reflected by the concepts defined below: the affine space concept depends on the vector_space concent, and not vice-versa.</p>
+<p>It will be useful for our purposes to generalize affine spaces. Consider taking a convex subset, C, of an affine space. We may translate from any point in C to any other by adding the appropriate vector from V. However, there are elements of V which, when added to a point in C will take us outside of C and into the broader affine space into which it is a part. However, we do not want define Convex spaces via an embedding in a bigger space. There seems to be a solution which fits neatly into a C++ implementation. Define a convex space, C, to comprise:</p><ol type="1">
+<li>The union, S', of a set of points, S, and an exception state, E</li>
+<li>A vector space, V such that: A. The difference of any two points in S is in V B. An element of V, when added to S remains either in S or maps to E Note that, since every point in S is mapped by elements of V into E, and there is no mapping from E back into S, the action of the additive group of V is not bijective, violating one of the axioms of affine spaces.</li>
+</ol>
+<p>The other interesting generialization is to consider relaxing a vector space's field to a ring. The resulting construction is called a module, which is a generalization of a vector space. Our motivation for this is that the integers form a commutative ring and not a field, since integers do not, in general, have multiplicative inverses valued within the integers. Rather than attempting to deal with modules in full generality, we restrict our attention to what may be the most useful, practical cases in the context of C++: free modules over commutative rings. Free modules are those which admit a basis.</p>
+<p>In line with the above, we also consider affine spaces over free modules and their convex generalization where the action of the free module is not bijective.</p>
+<p>The final issue to address is that question of why to bother modelling concepts such as vector spaces in the abstract sense if it is their coordinates which are the things of use from the perspective of practical computation. The point is that, for example, vector spaces and affine spaces admit different operations: whereas elements of a vector space can be added, the same is not true of the elements of the set underpinning an affine space. By introducing concepts for the abstract algebraic constructs, we can treat coordinates on all of these spaces in a common way by using constraints to enable or disable specific operations. Thus, the coordinates class template is templated on, amongst other things, a convex_space. To define such a space just requires introducing a struct exposing a small amount of data (types and values) known at compile time. These data determines whether we intend to model a vector space, a free module over a commutative space, an affine space or whatever. This is sufficient for the coordinates implementation to expose the correct set of operations. </p>
 </div><h2 class="groupheader">Variable Documentation</h2>
-<a id="a9edc5752e2118a3cc2b23cf2c0d3eb08" name="a9edc5752e2118a3cc2b23cf2c0d3eb08"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9edc5752e2118a3cc2b23cf2c0d3eb08">&#9670;&#160;</a></span>addable_v</h2>
+<a id="a24a1146b5168435a674b094984866a5c" name="a24a1146b5168435a674b094984866a5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24a1146b5168435a674b094984866a5c">&#9670;&#160;</a></span>has_common_ring_v</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class T &gt; </div>
+template&lt;weak_commutative_ring... Rs&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr bool sequoia::maths::addable_v</td>
+          <td class="memname">constexpr bool sequoia::maths::has_common_ring_v</td>
         </tr>
       </table>
   </td>
@@ -358,126 +490,9 @@ template&lt;class T &gt; </div>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <span class="keyword">requires</span>(T&amp; t) {</div>
-<div class="line">      { t += t } -&gt; std::same_as&lt;T&amp;&gt;;</div>
-<div class="line">      { t + t }  -&gt; std::same_as&lt;T&gt;;</div>
-<div class="line">    }</div>
+<div class="line">    ((<a class="code hl_concept" href="../../dc/d35/conceptsequoia_1_1maths_1_1weak__field.html">weak_field&lt;Rs&gt;</a> &amp;&amp; ...) || (!<a class="code hl_concept" href="../../dc/d35/conceptsequoia_1_1maths_1_1weak__field.html">weak_field&lt;Rs&gt;</a> &amp;&amp; ...)) &amp;&amp; <span class="keyword">requires</span> { <span class="keyword">typename</span> std::common_type&lt;Rs...&gt;::type; }</div>
 <div class="line">  }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a3ca299b280331ba18b86942841091878" name="a3ca299b280331ba18b86942841091878"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3ca299b280331ba18b86942841091878">&#9670;&#160;</a></span>divisible_v</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sequoia::maths::divisible_v</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <span class="keyword">requires</span>(T &amp; t) {</div>
-<div class="line">      { t /= t } -&gt; std::same_as&lt;T&amp;&gt;;</div>
-<div class="line">      { t / t }  -&gt; std::same_as&lt;T&gt;;</div>
-<div class="line">    }</div>
-<div class="line">  }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a3379cd28cfdff2144b22b25a2faf7309" name="a3379cd28cfdff2144b22b25a2faf7309"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3379cd28cfdff2144b22b25a2faf7309">&#9670;&#160;</a></span>has_dimension</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sequoia::maths::has_dimension</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <span class="keyword">requires</span> { { T::dimension } -&gt; std::convertible_to&lt;std::size_t&gt;; }</div>
-<div class="line">  }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a6579d0e606324a685d64b1f6b56ebc88" name="a6579d0e606324a685d64b1f6b56ebc88"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6579d0e606324a685d64b1f6b56ebc88">&#9670;&#160;</a></span>has_element_type</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sequoia::maths::has_element_type</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <span class="keyword">requires</span> { <span class="keyword">typename</span> T::element_type; }</div>
-<div class="line">  }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a537d434e15ee3e3003e5dccac8891580" name="a537d434e15ee3e3003e5dccac8891580"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a537d434e15ee3e3003e5dccac8891580">&#9670;&#160;</a></span>has_field_type</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sequoia::maths::has_field_type</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <span class="keyword">requires</span> { </div>
-<div class="line">      <span class="keyword">typename</span> T::field_type;</div>
-<div class="line">      <span class="keyword">requires</span> <a class="code hl_concept" href="../../dc/d35/conceptsequoia_1_1maths_1_1weak__field.html">weak_field&lt;typename T::field_type&gt;</a>;</div>
-<div class="line">    }</div>
-<div class="line">  }</div>
-<div class="ttc" id="aconceptsequoia_1_1maths_1_1weak__field_html"><div class="ttname"><a href="../../dc/d35/conceptsequoia_1_1maths_1_1weak__field.html">sequoia::maths::weak_field</a></div><div class="ttdef"><b>Definition:</b> Spaces.hpp:106</div></div>
+<div class="ttc" id="aconceptsequoia_1_1maths_1_1weak__field_html"><div class="ttname"><a href="../../dc/d35/conceptsequoia_1_1maths_1_1weak__field.html">sequoia::maths::weak_field</a></div><div class="ttdoc">concept representing reasonable approximations to a field.</div><div class="ttdef"><b>Definition:</b> Spaces.hpp:334</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -539,148 +554,6 @@ template&lt;vector_space V&gt; </div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a6736e89bca6e4a36eeaa5bc7e7d6e9c7" name="a6736e89bca6e4a36eeaa5bc7e7d6e9c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6736e89bca6e4a36eeaa5bc7e7d6e9c7">&#9670;&#160;</a></span>has_set_type</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sequoia::maths::has_set_type</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <span class="keyword">requires</span> { <span class="keyword">typename</span> T::set_type; }</div>
-<div class="line">  }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="aa9e1129460231855c33862735798f9a6" name="aa9e1129460231855c33862735798f9a6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa9e1129460231855c33862735798f9a6">&#9670;&#160;</a></span>has_vector_space_type_v</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sequoia::maths::has_vector_space_type_v</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <span class="keyword">requires</span> { <span class="keyword">typename</span> T::vector_space_type; }</div>
-<div class="line">  }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="aa5144f37ccc0ae36735cb6d36d8f9cf5" name="aa5144f37ccc0ae36735cb6d36d8f9cf5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5144f37ccc0ae36735cb6d36d8f9cf5">&#9670;&#160;</a></span>identifies_as_affine_space_v</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sequoia::maths::identifies_as_affine_space_v</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <span class="keyword">requires</span> {</div>
-<div class="line">      <span class="keyword">typename</span> T::affine_space_type;</div>
-<div class="line">      <span class="keyword">requires</span> std::same_as&lt;T, typename T::affine_space_type&gt;;</div>
-<div class="line">    }</div>
-<div class="line">  }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a2cbb098216ad918e05c6e4320a60bcf7" name="a2cbb098216ad918e05c6e4320a60bcf7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2cbb098216ad918e05c6e4320a60bcf7">&#9670;&#160;</a></span>identifies_as_convex_space_v</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sequoia::maths::identifies_as_convex_space_v</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <span class="keyword">requires</span> {</div>
-<div class="line">      <span class="keyword">typename</span> T::convex_space_type;</div>
-<div class="line">      <span class="keyword">requires</span> std::same_as&lt;T, typename T::convex_space_type&gt;;</div>
-<div class="line">    }</div>
-<div class="line">  }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="acb008b8fdccaca7a85492bf609e483ee" name="acb008b8fdccaca7a85492bf609e483ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb008b8fdccaca7a85492bf609e483ee">&#9670;&#160;</a></span>identifies_as_vector_space_v</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sequoia::maths::identifies_as_vector_space_v</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    has_vector_space_type_v&lt;T&gt; &amp;&amp;</div>
-<div class="line">    <span class="keyword">requires</span> { <span class="keyword">requires</span> std::same_as&lt;T, typename T::vector_space_type&gt;; }</div>
-<div class="line">  }</div>
-</div><!-- fragment -->
-</div>
-</div>
 <a id="a935d488672a06f875883978dc972a6b2" name="a935d488672a06f875883978dc972a6b2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a935d488672a06f875883978dc972a6b2">&#9670;&#160;</a></span>is_orthonormal_basis_v</h2>
 
@@ -707,123 +580,6 @@ template&lt;class B &gt; </div>
 <div class="line">      <span class="keyword">typename</span> B::orthonormal;</div>
 <div class="line">      <span class="keyword">requires</span> std::same_as&lt;typename B::orthonormal, std::true_type&gt;;</div>
 <div class="line">    }</div>
-<div class="line">  }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a39b003e608f9e332d4f15060038aaaf0" name="a39b003e608f9e332d4f15060038aaaf0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a39b003e608f9e332d4f15060038aaaf0">&#9670;&#160;</a></span>multiplicable_v</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sequoia::maths::multiplicable_v</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <span class="keyword">requires</span>(T &amp; t) {</div>
-<div class="line">      { t *= t } -&gt; std::same_as&lt;T&amp;&gt;;</div>
-<div class="line">      { t * t }  -&gt; std::same_as&lt;T&gt;;</div>
-<div class="line">    }</div>
-<div class="line">  }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a2d18e7d16b4edb12426c233623cdc568" name="a2d18e7d16b4edb12426c233623cdc568"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2d18e7d16b4edb12426c233623cdc568">&#9670;&#160;</a></span>subtractable_v</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sequoia::maths::subtractable_v</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <span class="keyword">requires</span>(T &amp; t) {</div>
-<div class="line">      { t -= t } -&gt; std::same_as&lt;T&amp;&gt;;</div>
-<div class="line">      { t - t }  -&gt; std::same_as&lt;T&gt;;</div>
-<div class="line">    }</div>
-<div class="line">  }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="ad5e5143d27974bdc87d8f53506611813" name="ad5e5143d27974bdc87d8f53506611813"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad5e5143d27974bdc87d8f53506611813">&#9670;&#160;</a></span>validator_for_array</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class V , class ConvexSpace &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sequoia::maths::validator_for_array</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">    <span class="keyword">requires</span> (V&amp; v, std::array&lt;space_value_type&lt;ConvexSpace&gt;, dimension_of&lt;ConvexSpace&gt;&gt; values) {</div>
-<div class="line">      { v(values) } -&gt; std::convertible_to&lt;<span class="keyword">decltype</span>(values)&gt;;</div>
-<div class="line">    }</div>
-<div class="line">  }</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="aaeba933d5c49eac178e434e0e89764de" name="aaeba933d5c49eac178e434e0e89764de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaeba933d5c49eac178e434e0e89764de">&#9670;&#160;</a></span>validator_for_single_value</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class V , class ConvexSpace &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sequoia::maths::validator_for_single_value</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">       (dimension_of&lt;ConvexSpace&gt; == 1)</div>
-<div class="line">    &amp;&amp; <span class="keyword">requires</span>(V&amp; v, <span class="keyword">const</span> space_value_type&lt;ConvexSpace&gt;&amp; val) { { v(val) } -&gt; std::convertible_to&lt;<span class="keyword">decltype</span>(val)&gt;; }</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>

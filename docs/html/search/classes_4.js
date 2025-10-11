@@ -13,7 +13,7 @@ var searchData=
   ['edge_5ftracker_10',['edge_tracker',['../d3/dc1/classsequoia_1_1testing_1_1edge__tracker.html',1,'sequoia::testing']]],
   ['edge_5fweight_5fdereference_5fpolicy_11',['edge_weight_dereference_policy',['../d1/d68/classsequoia_1_1maths_1_1edge__weight__dereference__policy.html',1,'sequoia::maths']]],
   ['electrical_5fcurrent_5fspace_12',['electrical_current_space',['../d7/dd9/structsequoia_1_1physics_1_1electrical__current__space.html',1,'sequoia::physics']]],
-  ['electrical_5fcurrents_13',['electrical_currents',['../d5/db4/structsequoia_1_1physics_1_1classical__physical__value__sets_1_1electrical__currents.html',1,'sequoia::physics::classical_physical_value_sets']]],
+  ['electrical_5fcurrents_13',['electrical_currents',['../d7/da8/structsequoia_1_1physics_1_1sets_1_1classical_1_1electrical__currents.html',1,'sequoia::physics::sets::classical']]],
   ['elementary_5ffalse_5fnegative_5ffree_5fdiagnostics_14',['elementary_false_negative_free_diagnostics',['../dd/d5e/classsequoia_1_1testing_1_1elementary__false__negative__free__diagnostics.html',1,'sequoia::testing']]],
   ['elementary_5ffalse_5fpositive_5ffree_5fdiagnostics_15',['elementary_false_positive_free_diagnostics',['../d3/d1f/classsequoia_1_1testing_1_1elementary__false__positive__free__diagnostics.html',1,'sequoia::testing']]],
   ['embedded_5fgraph_16',['embedded_graph',['../de/d31/classsequoia_1_1maths_1_1embedded__graph.html',1,'sequoia::maths']]],
@@ -29,7 +29,5 @@ var searchData=
   ['exception_5fmessage_5fextractor_3c_20e_20_3e_26',['exception_message_extractor&lt; E &gt;',['../d4/df9/structsequoia_1_1testing_1_1exception__message__extractor_3_01E_01_4.html',1,'sequoia::testing']]],
   ['exceptions_5ffalse_5fnegative_5ffree_5fdiagnostics_27',['exceptions_false_negative_free_diagnostics',['../dc/d68/classsequoia_1_1testing_1_1exceptions__false__negative__free__diagnostics.html',1,'sequoia::testing']]],
   ['exceptions_5ffalse_5fpositive_5ffree_5fdiagnostics_28',['exceptions_false_positive_free_diagnostics',['../dc/d66/classsequoia_1_1testing_1_1exceptions__false__positive__free__diagnostics.html',1,'sequoia::testing']]],
-  ['experimental_5ftest_29',['experimental_test',['../d9/d26/classsequoia_1_1testing_1_1experimental__test.html',1,'sequoia::testing']]],
-  ['extract_5fcommon_5ffield_5ftype_30',['extract_common_field_type',['../d4/dfc/structsequoia_1_1maths_1_1extract__common__field__type.html',1,'sequoia::maths']]],
-  ['extract_5fcommon_5ffield_5ftype_3c_20std_3a_3atuple_3c_20ts_2e_2e_2e_20_3e_20_3e_31',['extract_common_field_type&lt; std::tuple&lt; Ts... &gt; &gt;',['../d4/d76/structsequoia_1_1maths_1_1extract__common__field__type_3_01std_1_1tuple_3_01Ts_8_8_8_01_4_01_4.html',1,'sequoia::maths']]]
+  ['experimental_5ftest_29',['experimental_test',['../d9/d26/classsequoia_1_1testing_1_1experimental__test.html',1,'sequoia::testing']]]
 ];

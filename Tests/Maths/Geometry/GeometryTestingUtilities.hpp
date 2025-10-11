@@ -19,23 +19,43 @@
 namespace sequoia::testing
 {
   template<class T, class U>
-  constexpr bool can_multiply{
+  inline constexpr bool can_multiply{
     requires(const T& t, const U& u) { t * u; }
   };
 
   template<class T, class U>
-  constexpr bool can_divide{
+  inline constexpr bool can_divide{
     requires(const T& t, const U& u) { t / u; }
   };
 
   template<class T, class U>
-  constexpr bool can_add{
+  inline constexpr bool can_add{
     requires(const T& t, const U& u) { t + u; }
   };
 
   template<class T, class U>
-  constexpr bool can_subtract{
+  inline constexpr bool can_subtract{
     requires(const T& t, const U& u) { t - u; }
+  };
+
+  template<class T, class U>
+  inline constexpr bool addition_combinable{
+    requires(T& t, const U& u) { { t += u } -> std::convertible_to<T>; }
+  };
+
+  template<class T, class U>
+  inline constexpr bool subtraction_combinable{
+    requires(T& t, const U& u) { { t -= u } -> std::convertible_to<T>; }
+  };
+
+  template<class T>
+  inline constexpr bool has_unary_plus{
+    requires(const T& t) { { +t } -> std::convertible_to<T>; }
+  };
+
+  template<class T>
+  inline constexpr bool has_unary_minus{
+    requires(const T& t) { { -t } -> std::convertible_to<T>; }
   };
   
   template<class T>
@@ -95,6 +115,7 @@ namespace sequoia::testing
   struct canonical_basis
   {
     using vector_space_type = my_vec_space<Set, Field, D>;
+    using is_basis    = std::true_type;
     using orthonormal = std::true_type;
   };
 
@@ -110,14 +131,15 @@ namespace sequoia::testing
   template<class Set, maths::weak_commutative_ring Ring, std::size_t D>
   struct canonical_free_module_basis
   {
+    using is_basis         = std::true_type;
     using free_module_type = my_free_module<Set, Ring, D>;
   };
 
-  template<maths::convex_space ConvexSpace, maths::basis Basis, class Origin, class Validator>
+  template<maths::convex_space ConvexSpace, maths::basis Basis, class... Ts>
     requires maths::basis_for<Basis, maths::free_module_type_of_t<ConvexSpace>>
-  struct value_tester<maths::coordinates<ConvexSpace, Basis, Origin, Validator>>
+  struct value_tester<maths::coordinates<ConvexSpace, Basis, Ts...>>
   {
-    using coord_type = maths::coordinates<ConvexSpace, Basis, Origin, Validator>;
+    using coord_type = maths::coordinates<ConvexSpace, Basis, Ts...>;
     using commutative_ring_type = typename coord_type::commutative_ring_type;
     constexpr static std::size_t D{coord_type::dimension};
 
@@ -142,6 +164,15 @@ namespace sequoia::testing
     static void test(equivalence_check_t, test_logger<Mode>& logger, const coord_type& actual, const std::array<commutative_ring_type, D>& prediction)
     {
       check(equality, "Wrapped values", logger, actual.values(), std::span<const commutative_ring_type, D>{prediction});
+      check(equivalence, "Iterators",    logger, std::ranges::subrange{actual.begin(),  actual.end()},    prediction);
+      check(equivalence, "c-Iterators",  logger, std::ranges::subrange{actual.cbegin(),  actual.cend()},  prediction);
+      check(equivalence, "r-Iterators",  logger, std::ranges::subrange{actual.rbegin(),  actual.rend()},  prediction);
+      check(equivalence, "cr-Iterators", logger, std::ranges::subrange{actual.crbegin(), actual.crend()}, prediction);
+
+      for(auto i : std::views::iota(0uz, D))
+      {
+        check(equality, "operator[]", logger, actual[i], prediction[i]);
+      }
     }
   };
 
@@ -203,13 +234,15 @@ namespace sequoia::testing
     enum dim_1_label{ two, one, zero, neg_one };
     enum dim_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one };
     
-    using graph_type = transition_checker<Coordinates>::transition_graph;    
+    using graph_type = transition_checker<Coordinates>::transition_graph;
     using coords_t   = Coordinates;
+    using space_t    = Coordinates::space_type;
     using disp_t     = coords_t::displacement_coordinates_type;
     using module_t   = coords_t::free_module_type;
     using ring_t     = coords_t::commutative_ring_type;
     constexpr static std::size_t dimension{Coordinates::dimension};
     constexpr static bool orderable{(dimension == 1) && std::totally_ordered<ring_t>};
+    constexpr static bool has_distinguished_origin{maths::has_distinguished_origin_v<space_t>};
 
     regular_test& m_Test;
     graph_type m_Graph;
@@ -274,7 +307,7 @@ namespace sequoia::testing
 
       add_dim_1_common_transitions(g, test, units...);
 
-      if constexpr(!maths::defines_half_line_v<typename Coordinates::validator_type>)
+      if constexpr(!maths::defines_half_line_validator_v<typename Coordinates::validator_type>)
       {
         add_dim_1_negative_transitions(g, test, units...);
       }
@@ -283,9 +316,14 @@ namespace sequoia::testing
         add_dim_1_attempted_negative_transitions(g, test, units...);
       }
 
-      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::distinguished_origin>)
+      if constexpr(has_distinguished_origin)
       {
-        add_dim_1_distinguished_origin_transitions(g, test, units...);
+        add_dim_1_distinguished_origin_transitions(g, test);
+      }
+
+      if constexpr(Coordinates::has_freely_mutable_components)
+      {
+        add_dim_1_free_mutations(g, test);
       }
 
       return g;
@@ -298,8 +336,7 @@ namespace sequoia::testing
       graph_type g{
         {
           {
-            edge_t{dim_2_label::one_one,         test.report("- (-1, -1)"),          [](coords_t v) -> coords_t { return -v; }},
-            edge_t{dim_2_label::neg_one_neg_one, test.report("+ (-1, -1)"),          [](coords_t v) -> coords_t { return +v; }},
+             edge_t{dim_2_label::neg_one_neg_one, test.report("+ (-1, -1)"),          [](coords_t v) -> coords_t { return +v; }},
             edge_t{dim_2_label::neg_one_zero,    test.report("(-1, -1) +  (0, 1)"),  [&](coords_t v) -> coords_t { return v +  disp_t{std::array{ring_t{}, ring_t(1)}, units...}; }},
             edge_t{dim_2_label::neg_one_zero,    test.report("(-1, -1) += (0, 1)"),  [&](coords_t v) -> coords_t { return v += disp_t{std::array{ring_t{}, ring_t(1)}, units...}; }},
             edge_t{dim_2_label::zero_neg_one,    test.report("(-1, -1) +  (1, 0)"),  [&](coords_t v) -> coords_t { return v +  disp_t{std::array{ring_t(1), ring_t{}}, units...}; }},
@@ -332,9 +369,14 @@ namespace sequoia::testing
         }
       };
 
-      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::distinguished_origin>)
+      if constexpr(has_distinguished_origin)
       {
         add_dim_2_distinguished_origin_transitions(g, test, units...);
+      }
+
+      if constexpr(Coordinates::has_freely_mutable_components)
+      {
+        add_dim_2_free_mutations(g, test);
       }
 
       return g;
@@ -417,15 +459,19 @@ namespace sequoia::testing
     static void add_dim_1_negative_transitions(maths::network auto& g, regular_test& test, Units... units)
     {
       g.add_node(ring_t(-1), units...);
+
       // Joins to neg_one
-      add_transition<coords_t>(
-        g,
-        dim_1_label::one,
-        dim_1_label::neg_one,
-        test.report("-(1)"),
-        [](coords_t p) -> coords_t { return -p; },
-        std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
-      );
+      if constexpr(coords_t::has_distinguished_origin && !std::is_unsigned_v<ring_t>)
+      {
+        add_transition<coords_t>(
+          g,
+          dim_1_label::one,
+          dim_1_label::neg_one,
+          test.report("-(1)"),
+          [](coords_t p) -> coords_t { return -p; },
+          std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
+        );
+      }
 
       add_transition<coords_t>(
         g,
@@ -435,16 +481,20 @@ namespace sequoia::testing
         [&](coords_t p) -> coords_t { return p - disp_t{ring_t(2), units...}; },
         std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
       );
+
       
       // Joins from neg_one
-      add_transition<coords_t>(
-        g,
-        dim_1_label::neg_one,
-        dim_1_label::one,
-        test.report("- (-1)"),
-        [](coords_t p) -> coords_t { return -p;  },
-        std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
-      );
+      if constexpr(coords_t::has_distinguished_origin && !std::is_unsigned_v<ring_t>)
+      {
+        add_transition<coords_t>(
+          g,
+          dim_1_label::neg_one,
+          dim_1_label::one,
+          test.report("- (-1)"),
+          [](coords_t p) -> coords_t { return -p;  },
+          std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
+        );
+      }
     
       add_transition<coords_t>(
         g,
@@ -454,7 +504,7 @@ namespace sequoia::testing
         [](coords_t p) -> coords_t { return +p;  }
       );
 
-      if constexpr(std::is_same_v<typename Coordinates::validator_type, std::identity>)
+      if constexpr(Coordinates::has_freely_mutable_components)
       {
         add_transition<coords_t>(
           g,
@@ -501,7 +551,7 @@ namespace sequoia::testing
         }
       );
 
-      if constexpr(std::is_same_v<typename Coordinates::origin_type, maths::distinguished_origin>)
+      if constexpr(has_distinguished_origin)
       {
         add_transition<coords_t>(
           g,
@@ -549,10 +599,9 @@ namespace sequoia::testing
       }
     }
 
-    template<class... Units>
-    static void add_dim_1_distinguished_origin_transitions(maths::network auto& g, regular_test& test, Units...)
+    static void add_dim_1_distinguished_origin_transitions(maths::network auto& g, regular_test& test)
     {
-      // TO DO: add in negative transitions
+      // (0) --> (1)
       add_transition<coords_t>(
         g,
         dim_1_label::one,
@@ -625,10 +674,71 @@ namespace sequoia::testing
       }
     }
 
-    template<class... Units>
-    static void add_dim_2_distinguished_origin_transitions(maths::network auto& g, regular_test& test, Units...)
+    static void add_dim_1_free_mutations(maths::network auto& g, regular_test& test)
     {
+      // (1) --> (0)
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::zero,
+        test.report("(1)[0] * ring_t{}"),
+        [](coords_t v) -> coords_t { v[0] *= ring_t{}; return v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::zero,
+        test.report("(1).begin[0] * ring_t{}"),
+        [](coords_t v) -> coords_t { v.begin()[0] *= ring_t{}; return v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::zero,
+        test.report("(1).rbegin[0] * ring_t{}"),
+        [](coords_t v) -> coords_t { v.rbegin()[0] *= ring_t{}; return v; }
+      );
+
+      // (1) --> (2)
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::two,
+        test.report("(1)[0] * ring_t{2}"),
+        [](coords_t v) -> coords_t { v[0] *= ring_t{2}; return v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::two,
+        test.report("(1).begin[0] * ring_t{2}"),
+        [](coords_t v) -> coords_t { v.begin()[0] *= ring_t{2}; return v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::two,
+        test.report("(1).rbegin[0] * ring_t{2}"),
+        [](coords_t v) -> coords_t { v.rbegin()[0] *= ring_t{2}; return v; }
+      );
+    }
+
+    static void add_dim_2_distinguished_origin_transitions(maths::network auto& g, regular_test& test)
+    {      
       // (-1, -1) --> (1, 1)
+   
+      add_transition<coords_t>(
+        g,
+        dim_2_label::neg_one_neg_one,
+        dim_2_label::one_one,
+        test.report("- (-1, -1)"),
+        [](coords_t v) -> coords_t { return -v; }
+      );
 
       add_transition<coords_t>(
         g,
@@ -664,6 +774,60 @@ namespace sequoia::testing
           [](coords_t v) -> coords_t { return v / ring_t{-1}; }
         );
       }
+    }
+
+    static void add_dim_2_free_mutations(maths::network auto& g, regular_test& test)
+    {
+      // (-1, -1) --> (-1, 0)
+
+      add_transition<coords_t>(
+        g,
+        dim_2_label::neg_one_neg_one,
+        dim_2_label::neg_one_zero,
+        test.report("(-1, -1)[1] *= 0"),
+        [](coords_t v) -> coords_t { v[1] *= ring_t{}; return v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_2_label::neg_one_neg_one,
+        dim_2_label::neg_one_zero,
+        test.report("(-1, -1).begin()[1] *= 0"),
+        [](coords_t v) -> coords_t { v.begin()[1] *= ring_t{}; return v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_2_label::neg_one_neg_one,
+        dim_2_label::neg_one_zero,
+        test.report("(-1, -1).rbegin()[0] *= 0"),
+        [](coords_t v) -> coords_t { v.rbegin()[0] *= ring_t{}; return v; }
+      );
+
+      // (0, 1) --> (1, 1)
+      add_transition<coords_t>(
+        g,
+        dim_2_label::zero_one,
+        dim_2_label::one_one,
+        test.report("(0, 1)[0] += 1"),
+        [](coords_t v) -> coords_t { v[0] += ring_t{1}; return v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_2_label::zero_one,
+        dim_2_label::one_one,
+        test.report("(0, 1).begin[0] += 1"),
+        [](coords_t v) -> coords_t { v.begin()[0] += ring_t{1}; return v; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_2_label::zero_one,
+        dim_2_label::one_one,
+        test.report("(0, 1).rbegin[1] += 1"),
+        [](coords_t v) -> coords_t { v.rbegin()[1] += ring_t{1}; return v; }
+      );
     }
   };
 }

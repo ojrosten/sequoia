@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['has_5fdifference_5ftype_0',['has_difference_type',['../d7/de4/Iterator_8hpp.html#ad91216e083c10095768a0e84992cc419',1,'sequoia::utilities']]],
-  ['has_5felement_5ftype_1',['has_element_type',['../d0/d81/TypeTraits_8hpp.html#ae1abe0fd3876fda7eee1dce8562381df',1,'sequoia']]],
-  ['has_5freference_5ftype_2',['has_reference_type',['../d7/de4/Iterator_8hpp.html#a8278e0d7d41d6edb43d6bf789aa99d76',1,'sequoia::utilities']]],
-  ['has_5fvalue_5ftype_3',['has_value_type',['../d0/d81/TypeTraits_8hpp.html#a0656ffe59680e41d0acf4c9a4dd39c96',1,'sequoia']]]
+  ['defines_5fcommutative_5fring_5fv_0',['defines_commutative_ring_v',['../d1/d7a/group__PropertiesOfSpaces.html#ga8929c12e56ad5068b8261ea394cea007',1,'sequoia::maths']]],
+  ['defines_5ffield_5fv_1',['defines_field_v',['../d1/d7a/group__PropertiesOfSpaces.html#gaec64ab44db0f1f1eb81c81977b9e9350',1,'sequoia::maths']]],
+  ['dimension_5fof_2',['dimension_of',['../d1/d7a/group__PropertiesOfSpaces.html#gae63c67fa2bf01605e91c15a87df218e1',1,'sequoia::maths']]]
 ];

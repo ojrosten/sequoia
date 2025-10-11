@@ -88,14 +88,14 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a93cbca00e444a1417174e03d777a0578"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, moveonly T, class U &gt; <br />
-requires checkable_for_move_semantics&lt;Mode, T, U&gt;</td></tr>
-<tr class="memitem:a93cbca00e444a1417174e03d777a0578"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#a93cbca00e444a1417174e03d777a0578">sequoia::testing::check_semantics</a> (std::string description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const U &amp;xEquivalent, const U &amp;yEquivalent, optional_ref&lt; const U &gt; movedFromPostConstruction, optional_ref&lt; const U &gt; movedFromPostAssignment)</td></tr>
-<tr class="separator:a93cbca00e444a1417174e03d777a0578"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6903ed556065343d2a350c3dab15c6d2"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, moveonly T, class U &gt; <br />
-requires checkable_for_move_semantics&lt;Mode, T, U&gt; &amp;&amp; std::totally_ordered&lt;T&gt;</td></tr>
-<tr class="memitem:a6903ed556065343d2a350c3dab15c6d2"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#a6903ed556065343d2a350c3dab15c6d2">sequoia::testing::check_semantics</a> (std::string description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const U &amp;xEquivalent, const U &amp;yEquivalent, optional_ref&lt; const U &gt; movedFromPostConstruction, optional_ref&lt; const U &gt; movedFromPostAssignment, std::weak_ordering order)</td></tr>
-<tr class="separator:a6903ed556065343d2a350c3dab15c6d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4264d44e41aad6f6d3dca8e65372dbbb"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, moveonly T, class U , class V &gt; <br />
+requires checkable_against_for_semantics&lt;Mode, T, U&gt; &amp;&amp; checkable_against_for_semantics&lt;Mode, T, V&gt;</td></tr>
+<tr class="memitem:a4264d44e41aad6f6d3dca8e65372dbbb"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#a4264d44e41aad6f6d3dca8e65372dbbb">sequoia::testing::check_semantics</a> (std::string description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const U &amp;xEquivalent, const U &amp;yEquivalent, optional_ref&lt; const V &gt; movedFromPostConstruction, optional_ref&lt; const V &gt; movedFromPostAssignment)</td></tr>
+<tr class="separator:a4264d44e41aad6f6d3dca8e65372dbbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac7b93da5d0d68e6de2f89523913d24bd"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, moveonly T, class U , class V &gt; <br />
+requires std::totally_ordered&lt;T&gt; &amp;&amp; checkable_against_for_semantics&lt;Mode, T, U&gt; &amp;&amp; checkable_against_for_semantics&lt;Mode, T, V&gt;</td></tr>
+<tr class="memitem:ac7b93da5d0d68e6de2f89523913d24bd"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#ac7b93da5d0d68e6de2f89523913d24bd">sequoia::testing::check_semantics</a> (std::string description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const U &amp;xEquivalent, const U &amp;yEquivalent, optional_ref&lt; const V &gt; movedFromPostConstruction, optional_ref&lt; const V &gt; movedFromPostAssignment, std::weak_ordering order)</td></tr>
+<tr class="separator:ac7b93da5d0d68e6de2f89523913d24bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Functions for checking semantics of types lacking copy semantics but which are otherwise regular. </p>
@@ -107,14 +107,14 @@ requires checkable_for_move_semantics&lt;Mode, T, U&gt; &amp;&amp; std::totally_
 <p>This file adds one function to the check_semantics overload set, inside which consistency of the first list of operators above will be checked. There is an important difference compared to the corresponding overloads for regular semantics. Whereas the latter takes just two instance of T, x and y, in the move-only case 4 are taken. This is because, by definition, we cannot copy x and y and so, to be able to compare to the original values (essential for the mechanics of testing), immutable clones must be supplied.</p>
 <p><a class="anchor" id="move_only_definition"></a></p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a93cbca00e444a1417174e03d777a0578" name="a93cbca00e444a1417174e03d777a0578"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a93cbca00e444a1417174e03d777a0578">&#9670;&#160;</a></span>check_semantics() <span class="overload">[1/2]</span></h2>
+<a id="a4264d44e41aad6f6d3dca8e65372dbbb" name="a4264d44e41aad6f6d3dca8e65372dbbb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4264d44e41aad6f6d3dca8e65372dbbb">&#9670;&#160;</a></span>check_semantics() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;test_mode Mode, moveonly T, class U &gt; <br />
-requires checkable_for_move_semantics&lt;Mode, T, U&gt;</div>
+template&lt;test_mode Mode, moveonly T, class U , class V &gt; <br />
+requires checkable_against_for_semantics&lt;Mode, T, U&gt; &amp;&amp; checkable_against_for_semantics&lt;Mode, T, V&gt;</div>
       <table class="memname">
         <tr>
           <td class="memname">bool sequoia::testing::check_semantics </td>
@@ -155,13 +155,13 @@ requires checkable_for_move_semantics&lt;Mode, T, U&gt;</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">optional_ref&lt; const U &gt;&#160;</td>
+          <td class="paramtype">optional_ref&lt; const V &gt;&#160;</td>
           <td class="paramname"><em>movedFromPostConstruction</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">optional_ref&lt; const U &gt;&#160;</td>
+          <td class="paramtype">optional_ref&lt; const V &gt;&#160;</td>
           <td class="paramname"><em>movedFromPostAssignment</em>&#160;</td>
         </tr>
         <tr>
@@ -171,19 +171,18 @@ requires checkable_for_move_semantics&lt;Mode, T, U&gt;</div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Prerequisites:</p>
-<p>x == xEquivalent y == yEquivalent x != y </p>
+<p>Prerequisites: x != y x equivalent to xEquivalent y equivalent to yEquivalent </p>
 
 </div>
 </div>
-<a id="a6903ed556065343d2a350c3dab15c6d2" name="a6903ed556065343d2a350c3dab15c6d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6903ed556065343d2a350c3dab15c6d2">&#9670;&#160;</a></span>check_semantics() <span class="overload">[2/2]</span></h2>
+<a id="ac7b93da5d0d68e6de2f89523913d24bd" name="ac7b93da5d0d68e6de2f89523913d24bd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7b93da5d0d68e6de2f89523913d24bd">&#9670;&#160;</a></span>check_semantics() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;test_mode Mode, moveonly T, class U &gt; <br />
-requires checkable_for_move_semantics&lt;Mode, T, U&gt; &amp;&amp; std::totally_ordered&lt;T&gt;</div>
+template&lt;test_mode Mode, moveonly T, class U , class V &gt; <br />
+requires std::totally_ordered&lt;T&gt; &amp;&amp; checkable_against_for_semantics&lt;Mode, T, U&gt; &amp;&amp; checkable_against_for_semantics&lt;Mode, T, V&gt;</div>
       <table class="memname">
         <tr>
           <td class="memname">bool sequoia::testing::check_semantics </td>
@@ -224,13 +223,13 @@ requires checkable_for_move_semantics&lt;Mode, T, U&gt; &amp;&amp; std::totally_
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">optional_ref&lt; const U &gt;&#160;</td>
+          <td class="paramtype">optional_ref&lt; const V &gt;&#160;</td>
           <td class="paramname"><em>movedFromPostConstruction</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">optional_ref&lt; const U &gt;&#160;</td>
+          <td class="paramtype">optional_ref&lt; const V &gt;&#160;</td>
           <td class="paramname"><em>movedFromPostAssignment</em>, </td>
         </tr>
         <tr>
@@ -246,8 +245,7 @@ requires checkable_for_move_semantics&lt;Mode, T, U&gt; &amp;&amp; std::totally_
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Prerequisites:</p>
-<p>x == xEquivalent y == yEquivalent x != y </p>
+<p>Prerequisites: x != y x equivalent to xEquivalent y equivalent to yEquivalent </p>
 
 </div>
 </div>

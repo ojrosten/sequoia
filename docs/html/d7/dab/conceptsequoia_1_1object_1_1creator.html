@@ -79,7 +79,7 @@ $(function() {
 <h2 class="groupheader">Concept definition</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="../../d7/dab/conceptsequoia_1_1object_1_1creator.html">sequoia::object::creator</a> =  <span class="keyword">requires</span>(T&amp; a) {</div>
-<div class="line">    <span class="keyword">requires</span> has_value_type&lt;T&gt; || has_element_type&lt;T&gt;;</div>
+<div class="line">    <span class="keyword">requires</span> has_value_type_v&lt;T&gt; || has_element_type_v&lt;T&gt;;</div>
 <div class="line">    <span class="keyword">typename</span> T::product_type;</div>
 <div class="line"> </div>
 <div class="line">    { a.make(std::declval&lt;typename T::product_type&gt;()) } -&gt; std::same_as&lt;typename T::product_type&gt;;</div>

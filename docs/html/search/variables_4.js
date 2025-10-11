@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['initializable_5ffrom_2257',['initializable_from',['../d3/d84/Concepts_8hpp.html#ab6aae756f361434662b41d25d71559bd',1,'sequoia']]],
-  ['invocable_5fr_2258',['invocable_r',['../d3/d84/Concepts_8hpp.html#ac2485b8f6ef28434e29041786b74eee8',1,'sequoia']]]
+  ['validator_5ffor_5farray_0',['validator_for_array',['../d1/d8f/group__Validators.html#gad5e5143d27974bdc87d8f53506611813',1,'sequoia::maths']]],
+  ['validator_5ffor_5fsingle_5fvalue_1',['validator_for_single_value',['../d1/d8f/group__Validators.html#gaaeba933d5c49eac178e434e0e89764de',1,'sequoia::maths']]]
 ];

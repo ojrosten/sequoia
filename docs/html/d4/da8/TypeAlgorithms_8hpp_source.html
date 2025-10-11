@@ -151,8 +151,8 @@ $(function() {
 <div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  template&lt;class T, class U, template&lt;class, class&gt; class Compare&gt;</div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  inline constexpr auto lower_bound_v{lower_bound&lt;T, U, Compare&gt;::value};</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  template&lt;class... Ts, class U, template&lt;class, class&gt; class Compare&gt;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  struct lower_bound&lt;std::tuple&lt;Ts...&gt;, U, Compare&gt;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  template&lt;template&lt;class...&gt; class TT, class... Ts, class U, template&lt;class, class&gt; class Compare&gt;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  struct lower_bound&lt;TT&lt;Ts...&gt;, U, Compare&gt;</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  {</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    constexpr static std::size_t N{sizeof...(Ts)};</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
@@ -182,11 +182,11 @@ $(function() {
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  template&lt;class T, class U&gt;</div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  using filter_t = filter&lt;T, U&gt;::type;</div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  template&lt;class... Ts, std::size_t... Is&gt;</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  template&lt;template&lt;class...&gt; class TT, class... Ts, std::size_t... Is&gt;</div>
 <div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    requires ((Is &lt; sizeof...(Ts)) &amp;&amp; ...)</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  struct filter&lt;std::tuple&lt;Ts...&gt;, std::index_sequence&lt;Is...&gt;&gt;</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  struct filter&lt;TT&lt;Ts...&gt;, std::index_sequence&lt;Is...&gt;&gt;</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  {</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    using type = std::tuple&lt;std::tuple_element_t&lt;Is, std::tuple&lt;Ts...&gt;&gt; ...&gt;;</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    using type = TT&lt;std::tuple_element_t&lt;Is, std::tuple&lt;Ts...&gt;&gt; ...&gt;;</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  };</div>
 <div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  template&lt;class T, template&lt;class&gt; class Trait&gt;</div>
@@ -195,10 +195,10 @@ $(function() {
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  template&lt;class T, template&lt;class&gt; class Trait&gt;</div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  using filter_by_trait_t = filter_by_trait&lt;T, Trait&gt;::type;</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  template&lt;class... Ts, template&lt;class&gt; class Trait&gt;</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  struct filter_by_trait&lt;std::tuple&lt;Ts...&gt;, Trait&gt;</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  template&lt;template&lt;class...&gt; class TT, class... Ts, template&lt;class&gt; class Trait&gt;</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  struct filter_by_trait&lt;TT&lt;Ts...&gt;, Trait&gt;</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  {</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    using type = filter_t&lt;std::tuple&lt;Ts...&gt;, make_filtered_sequence&lt;std::false_type, Trait, Ts...&gt;&gt;;</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    using type = filter_t&lt;TT&lt;Ts...&gt;, make_filtered_sequence&lt;std::false_type, Trait, Ts...&gt;&gt;;</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  };</div>
 <div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  <span class="comment">//==================================================== drop ===================================================//</span></div>
@@ -209,17 +209,17 @@ $(function() {
 <div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>  template&lt;class T, std::size_t N&gt;</div>
 <div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>  using drop_t = drop&lt;T, N&gt;::type;</div>
 <div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>  template&lt;class... Ts, std::size_t N&gt;</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>  template&lt;template&lt;class...&gt; class TT, class... Ts, std::size_t N&gt;</div>
 <div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    requires (N &gt;= sizeof...(Ts))</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>  struct drop&lt;std::tuple&lt;Ts...&gt;, N&gt;</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>  struct drop&lt;TT&lt;Ts...&gt;, N&gt;</div>
 <div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>  {</div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    using type = std::tuple&lt;&gt;;</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    using type = TT&lt;&gt;;</div>
 <div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  };</div>
 <div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    </div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>  template&lt;class... Ts, std::size_t N&gt;</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  struct drop&lt;std::tuple&lt;Ts...&gt;, N&gt;</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>  template&lt;template&lt;class...&gt; class TT, class... Ts, std::size_t N&gt;</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  struct drop&lt;TT&lt;Ts...&gt;, N&gt;</div>
 <div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  {</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    using type = filter_t&lt;std::tuple&lt;Ts...&gt;, shift_sequence_t&lt;std::make_index_sequence&lt;sizeof...(Ts) - N&gt;, N&gt;&gt;;</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    using type = filter_t&lt;TT&lt;Ts...&gt;, shift_sequence_t&lt;std::make_index_sequence&lt;sizeof...(Ts) - N&gt;, N&gt;&gt;;</div>
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  };</div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span> </div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>  <span class="comment">//==================================================== keep ===================================================//</span></div>
@@ -230,17 +230,17 @@ $(function() {
 <div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  template&lt;class T, std::size_t N&gt;</div>
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>  using keep_t = keep&lt;T, N&gt;::type;</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  template&lt;class... Ts, std::size_t N&gt;</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  template&lt;template&lt;class...&gt; class TT, class... Ts, std::size_t N&gt;</div>
 <div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    requires (N &gt;= sizeof...(Ts))</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  struct keep&lt;std::tuple&lt;Ts...&gt;, N&gt;</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  struct keep&lt;TT&lt;Ts...&gt;, N&gt;</div>
 <div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  {</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    using type = std::tuple&lt;Ts...&gt;;</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    using type = TT&lt;Ts...&gt;;</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>  };</div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    </div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>  template&lt;class... Ts, std::size_t N&gt;</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  struct keep&lt;std::tuple&lt;Ts...&gt;, N&gt;</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>  template&lt;template&lt;class...&gt; class TT, class... Ts, std::size_t N&gt;</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  struct keep&lt;TT&lt;Ts...&gt;, N&gt;</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>  {</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    using type = filter_t&lt;std::tuple&lt;Ts...&gt;, std::make_index_sequence&lt;N&gt;&gt;;</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    using type = filter_t&lt;TT&lt;Ts...&gt;, std::make_index_sequence&lt;N&gt;&gt;;</div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>  };</div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>  <span class="comment">//==================================================== insert ===================================================//</span></div>
@@ -251,10 +251,10 @@ $(function() {
 <div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>  template&lt;class T, class U, std::size_t I&gt;</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>  using insert_t = insert&lt;T, U, I&gt;::type;</div>
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>  template&lt;class U&gt;</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>  struct insert&lt;std::tuple&lt;&gt;, U, 0&gt;</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>  template&lt;template&lt;class...&gt; class TT, class U&gt;</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>  struct insert&lt;TT&lt;&gt;, U, 0&gt;</div>
 <div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>  {</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    using type = std::tuple&lt;U&gt;;</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>    using type = TT&lt;U&gt;;</div>
 <div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>  };</div>
 <div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span> </div>
 <div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>  namespace impl</div>
@@ -265,19 +265,19 @@ $(function() {
 <div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>    template&lt;class... Ts&gt;</div>
 <div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    using do_insert_t = do_insert&lt;Ts...&gt;::type;</div>
 <div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    template&lt;class T, class... Us, std::size_t... Is, std::size_t... Js&gt;</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    struct do_insert&lt;T, std::tuple&lt;Us...&gt;, std::index_sequence&lt;Is...&gt;, std::index_sequence&lt;Js...&gt;&gt;</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>    template&lt;template&lt;class...&gt; class TT, class T, class... Us, std::size_t... Is, std::size_t... Js&gt;</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>    struct do_insert&lt;T, TT&lt;Us...&gt;, std::index_sequence&lt;Is...&gt;, std::index_sequence&lt;Js...&gt;&gt;</div>
 <div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    {</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>      using type = std::tuple&lt;std::tuple_element_t&lt;Is, std::tuple&lt;Us...&gt;&gt;..., T, std::tuple_element_t&lt;Js, std::tuple&lt;Us...&gt;&gt;...&gt;;</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>      using type = TT&lt;std::tuple_element_t&lt;Is, std::tuple&lt;Us...&gt;&gt;..., T, std::tuple_element_t&lt;Js, std::tuple&lt;Us...&gt;&gt;...&gt;;</div>
 <div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>    };</div>
 <div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>  }</div>
 <div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>  template&lt;class... Us, class T, std::size_t I&gt;</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>  template&lt;template&lt;class...&gt; class TT, class... Us, class T, std::size_t I&gt;</div>
 <div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>  requires (I &lt;= sizeof...(Us))</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>  struct insert&lt;std::tuple&lt;Us...&gt;, T, I&gt;</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>  struct insert&lt;TT&lt;Us...&gt;, T, I&gt;</div>
 <div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>  {</div>
 <div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    using type = impl::do_insert_t&lt;T,</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                                   std::tuple&lt;Us...&gt;,</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                                   TT&lt;Us...&gt;,</div>
 <div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>                                   std::make_index_sequence&lt;I&gt;,</div>
 <div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                                   shift_sequence_t&lt;std::make_index_sequence&lt;sizeof...(Us) - I&gt;, I&gt;&gt;;</div>
 <div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>  };</div>
@@ -290,15 +290,15 @@ $(function() {
 <div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>  template&lt;class T, std::size_t I&gt;</div>
 <div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  using erase_t = erase&lt;T, I&gt;::type;</div>
 <div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span> </div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>  template&lt;class T, class... Ts&gt;</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>  struct erase&lt;std::tuple&lt;T, Ts...&gt;, 0&gt;</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>  template&lt;template&lt;class...&gt; class TT, class T, class... Ts&gt;</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>  struct erase&lt;TT&lt;T, Ts...&gt;, 0&gt;</div>
 <div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>  {</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    using type = std::tuple&lt;Ts...&gt;;</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>    using type = TT&lt;Ts...&gt;;</div>
 <div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>  };</div>
 <div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span> </div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>  template&lt;class... Ts, std::size_t I&gt;</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>  struct erase&lt;std::tuple&lt;Ts...&gt;, I&gt;</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    : filter&lt;std::tuple&lt;Ts...&gt;,</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>  template&lt;template&lt;class...&gt; class TT, class... Ts, std::size_t I&gt;</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>  struct erase&lt;TT&lt;Ts...&gt;, I&gt;</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>    : filter&lt;TT&lt;Ts...&gt;,</div>
 <div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>             concat_sequences_t&lt;std::make_index_sequence&lt;I&gt;,</div>
 <div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                                shift_sequence_t&lt;std::make_index_sequence&lt;sizeof...(Ts)-I-1&gt;, I+1&gt;&gt;&gt;</div>
 <div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>  {};</div>
@@ -311,30 +311,30 @@ $(function() {
 <div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>  template&lt;class T, class U, template&lt;class, class&gt; class Compare&gt;</div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>  using merge_t = merge&lt;T, U, Compare&gt;::type;</div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span> </div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>  template&lt;class... Ts,  template&lt;class, class&gt; class Compare&gt;</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>  struct merge&lt;std::tuple&lt;Ts...&gt;, std::tuple&lt;&gt;, Compare&gt;</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>  template&lt;template&lt;class...&gt; class TT, class... Ts,  template&lt;class, class&gt; class Compare&gt;</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>  struct merge&lt;TT&lt;Ts...&gt;, TT&lt;&gt;, Compare&gt;</div>
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>  {</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    using type = std::tuple&lt;Ts...&gt;;</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    using type = TT&lt;Ts...&gt;;</div>
 <div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>  };</div>
 <div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span> </div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>  template&lt;class... Ts, template&lt;class, class&gt; class Compare&gt;</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>  template&lt;template&lt;class...&gt; class TT, class... Ts, template&lt;class, class&gt; class Compare&gt;</div>
 <div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    requires (sizeof...(Ts) &gt; 0)</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>  struct merge&lt;std::tuple&lt;&gt;, std::tuple&lt;Ts...&gt;, Compare&gt;</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>  struct merge&lt;TT&lt;&gt;, TT&lt;Ts...&gt;, Compare&gt;</div>
 <div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>  {</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    using type = std::tuple&lt;Ts...&gt;;</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    using type = TT&lt;Ts...&gt;;</div>
 <div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>  };</div>
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span> </div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>  template&lt;class T, class U, template&lt;class, class&gt; class Compare&gt;</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>  struct merge&lt;std::tuple&lt;T&gt;, std::tuple&lt;U&gt;, Compare&gt;</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>  template&lt;template&lt;class...&gt; class TT, class T, class U, template&lt;class, class&gt; class Compare&gt;</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>  struct merge&lt;TT&lt;T&gt;, TT&lt;U&gt;, Compare&gt;</div>
 <div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>  {</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    using type = std::tuple&lt;U, T&gt;;</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>    using type = TT&lt;U, T&gt;;</div>
 <div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>  };</div>
 <div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span> </div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>  template&lt;class T, class U, template&lt;class, class&gt; class Compare&gt;</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>  requires (Compare&lt;T, U&gt;::value)</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>  struct merge&lt;std::tuple&lt;T&gt;, std::tuple&lt;U&gt;, Compare&gt;</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>  template&lt;template&lt;class...&gt; class TT, class T, class U, template&lt;class, class&gt; class Compare&gt;</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>    requires (Compare&lt;T, U&gt;::value)</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>  struct merge&lt;TT&lt;T&gt;, TT&lt;U&gt;, Compare&gt;</div>
 <div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>  {</div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    using type = std::tuple&lt;T, U&gt;;</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>    using type = TT&lt;T, U&gt;;</div>
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>  };</div>
 <div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span> </div>
 <div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>  namespace impl</div>
@@ -345,31 +345,31 @@ $(function() {
 <div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>    template&lt;class T, class U, std::size_t I, template&lt;class, class&gt; class Compare&gt;</div>
 <div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    using merge_from_position_t = merge_from_position&lt;T, U, I, Compare&gt;::type;</div>
 <div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span> </div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    template&lt;class... Us, std::size_t I, template&lt;class, class&gt; class Compare&gt;</div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    struct merge_from_position&lt;std::tuple&lt;&gt;, std::tuple&lt;Us...&gt;, I, Compare&gt;</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span>    template&lt;template&lt;class...&gt; class TT, class... Us, std::size_t I, template&lt;class, class&gt; class Compare&gt;</div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span>    struct merge_from_position&lt;std::tuple&lt;&gt;, TT&lt;Us...&gt;, I, Compare&gt;</div>
 <div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    {</div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>      using type = std::tuple&lt;Us...&gt;;</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>      using type = TT&lt;Us...&gt;;</div>
 <div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>    };</div>
 <div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>    </div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    template&lt;class T, class... Us, std::size_t I, template&lt;class, class&gt; class Compare&gt;</div>
-<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    struct merge_from_position&lt;std::tuple&lt;T&gt;, std::tuple&lt;Us...&gt;, I, Compare&gt;</div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>    template&lt;template&lt;class...&gt; class TT, class T, class... Us, std::size_t I, template&lt;class, class&gt; class Compare&gt;</div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>    struct merge_from_position&lt;TT&lt;T&gt;, TT&lt;Us...&gt;, I, Compare&gt;</div>
 <div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    {</div>
 <div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span>      constexpr static auto N{sizeof...(Us)};</div>
-<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>      constexpr static auto Pos{I + lower_bound_v&lt;drop_t&lt;std::tuple&lt;Us...&gt;, I&gt;, T, Compare&gt;};</div>
-<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>      using type = insert_t&lt;std::tuple&lt;Us...&gt;, T, Pos&gt;;</div>
+<div class="line"><a id="l00283" name="l00283"></a><span class="lineno">  283</span>      constexpr static auto Pos{I + lower_bound_v&lt;drop_t&lt;TT&lt;Us...&gt;, I&gt;, T, Compare&gt;};</div>
+<div class="line"><a id="l00284" name="l00284"></a><span class="lineno">  284</span>      using type = insert_t&lt;TT&lt;Us...&gt;, T, Pos&gt;;</div>
 <div class="line"><a id="l00285" name="l00285"></a><span class="lineno">  285</span>    };</div>
 <div class="line"><a id="l00286" name="l00286"></a><span class="lineno">  286</span> </div>
-<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>    template&lt;class T, class... Ts, class... Us, std::size_t I, template&lt;class, class&gt; class Compare&gt;</div>
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>    struct merge_from_position&lt;std::tuple&lt;T, Ts...&gt;, std::tuple&lt;Us...&gt;, I, Compare&gt;</div>
+<div class="line"><a id="l00287" name="l00287"></a><span class="lineno">  287</span>    template&lt;template&lt;class...&gt; class TT, class T, class... Ts, class... Us, std::size_t I, template&lt;class, class&gt; class Compare&gt;</div>
+<div class="line"><a id="l00288" name="l00288"></a><span class="lineno">  288</span>    struct merge_from_position&lt;TT&lt;T, Ts...&gt;, TT&lt;Us...&gt;, I, Compare&gt;</div>
 <div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>    {</div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>      using first_merge = merge_from_position&lt;std::tuple&lt;T&gt;, std::tuple&lt;Us...&gt;, 0, Compare&gt;;</div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>      using type = merge_from_position_t&lt;std::tuple&lt;Ts...&gt;, typename first_merge::type, first_merge::Pos + 1, Compare&gt;;</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>      using first_merge = merge_from_position&lt;TT&lt;T&gt;, TT&lt;Us...&gt;, 0, Compare&gt;;</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>      using type = merge_from_position_t&lt;TT&lt;Ts...&gt;, typename first_merge::type, first_merge::Pos + 1, Compare&gt;;</div>
 <div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>    };</div>
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>  }  </div>
 <div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span> </div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>  template&lt;class... Ts, class... Us, template&lt;class, class&gt; class Compare&gt;</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>  template&lt;template&lt;class...&gt; class TT, class... Ts, class... Us, template&lt;class, class&gt; class Compare&gt;</div>
 <div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>    requires (sizeof...(Ts) &gt; 0) &amp;&amp; (sizeof...(Us) &gt; 0)</div>
-<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>  struct merge&lt;std::tuple&lt;Ts...&gt;, std::tuple&lt;Us...&gt;, Compare&gt; : impl::merge_from_position&lt;std::tuple&lt;Ts...&gt;, std::tuple&lt;Us...&gt;, 0, Compare&gt;</div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>  struct merge&lt;TT&lt;Ts...&gt;, TT&lt;Us...&gt;, Compare&gt; : impl::merge_from_position&lt;TT&lt;Ts...&gt;, TT&lt;Us...&gt;, 0, Compare&gt;</div>
 <div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>  {};</div>
 <div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span> </div>
 <div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span>  <span class="comment">//==================================================== stable_sort ===================================================//</span></div>
@@ -380,24 +380,24 @@ $(function() {
 <div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class </span>Compare&gt;</div>
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span>  <span class="keyword">using </span>stable_sort_t = stable_sort&lt;T, Compare&gt;::type;</div>
 <div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span> </div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>  <span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class </span>Compare&gt;</div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>  <span class="keyword">struct </span>stable_sort&lt;std::tuple&lt;&gt;, Compare&gt;</div>
+<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span>  <span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>...&gt; <span class="keyword">class </span>TT, <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class </span>Compare&gt;</div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span>  <span class="keyword">struct </span>stable_sort&lt;TT&lt;&gt;, Compare&gt;</div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span>  {</div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    <span class="keyword">using </span>type = std::tuple&lt;&gt;;</div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    <span class="keyword">using </span>type = TT&lt;&gt;;</div>
 <div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>  };</div>
 <div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span> </div>
-<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class </span>Compare&gt;</div>
-<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>  <span class="keyword">struct </span>stable_sort&lt;std::tuple&lt;T&gt;, Compare&gt;</div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>  <span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>...&gt; <span class="keyword">class </span>TT, <span class="keyword">class </span>T, <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class </span>Compare&gt;</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>  <span class="keyword">struct </span>stable_sort&lt;TT&lt;T&gt;, Compare&gt;</div>
 <div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>  {</div>
-<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    <span class="keyword">using </span>type = std::tuple&lt;T&gt;;</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span>    <span class="keyword">using </span>type = TT&lt;T&gt;;</div>
 <div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>  };</div>
 <div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>  </div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Ts, <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class </span>Compare&gt;</div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>  <span class="keyword">struct </span>stable_sort&lt;std::tuple&lt;Ts...&gt;, Compare&gt;</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>  <span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>...&gt; <span class="keyword">class </span>TT, <span class="keyword">class</span>... Ts, <span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class </span>Compare&gt;</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>  <span class="keyword">struct </span>stable_sort&lt;TT&lt;Ts...&gt;, Compare&gt;</div>
 <div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span>  {</div>
 <div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> partition{<span class="keyword">sizeof</span>...(Ts) / 2};</div>
-<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    <span class="keyword">using </span>type = merge_t&lt;stable_sort_t&lt;keep_t&lt;std::tuple&lt;Ts...&gt;, partition&gt;, Compare&gt;,</div>
-<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>                         stable_sort_t&lt;drop_t&lt;std::tuple&lt;Ts...&gt;, partition&gt;, Compare&gt;,</div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span>    <span class="keyword">using </span>type = merge_t&lt;stable_sort_t&lt;keep_t&lt;TT&lt;Ts...&gt;, partition&gt;, Compare&gt;,</div>
+<div class="line"><a id="l00325" name="l00325"></a><span class="lineno">  325</span>                         stable_sort_t&lt;drop_t&lt;TT&lt;Ts...&gt;, partition&gt;, Compare&gt;,</div>
 <div class="line"><a id="l00326" name="l00326"></a><span class="lineno">  326</span>                         Compare&gt;;</div>
 <div class="line"><a id="l00327" name="l00327"></a><span class="lineno">  327</span>  };</div>
 <div class="line"><a id="l00328" name="l00328"></a><span class="lineno">  328</span> </div>
@@ -409,16 +409,16 @@ $(function() {
 <div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt;</div>
 <div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>  <span class="keyword">inline</span> <span class="keyword">constexpr</span> std::size_t find_v{find&lt;T, U&gt;::index};</div>
 <div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span> </div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>  <span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt;</div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>  <span class="keyword">struct </span>find&lt;std::tuple&lt;&gt;, U&gt;</div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>  <span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>...&gt; <span class="keyword">class </span>TT, <span class="keyword">class </span>U&gt;</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>  <span class="keyword">struct </span>find&lt;TT&lt;&gt;, U&gt;</div>
 <div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span>  {</div>
 <div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t index{};</div>
 <div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span>  };</div>
 <div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span> </div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>  <span class="keyword">template</span>&lt;<span class="keyword">class </span>T, <span class="keyword">class</span>... Ts, <span class="keyword">class </span>U&gt;</div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>  <span class="keyword">struct </span>find&lt;std::tuple&lt;T, Ts...&gt;, U&gt;</div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span>  <span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>...&gt; <span class="keyword">class </span>TT, <span class="keyword">class </span>T, <span class="keyword">class</span>... Ts, <span class="keyword">class </span>U&gt;</div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span>  <span class="keyword">struct </span>find&lt;TT&lt;T, Ts...&gt;, U&gt;</div>
 <div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span>  {</div>
-<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t index{std::is_same_v&lt;T, U&gt; ? 0 : 1 + find_v&lt;std::tuple&lt;Ts...&gt;, U&gt;};</div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span>    <span class="keyword">constexpr</span> <span class="keyword">static</span> std::size_t index{std::is_same_v&lt;T, U&gt; ? 0 : 1 + find_v&lt;TT&lt;Ts...&gt;, U&gt;};</div>
 <div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span>  };  </div>
 <div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>}</div>
 <div class="ttc" id="aSequences_8hpp_html"><div class="ttname"><a href="../../d8/d75/Sequences_8hpp.html">Sequences.hpp</a></div></div>
