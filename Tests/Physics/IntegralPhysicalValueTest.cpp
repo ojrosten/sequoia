@@ -23,6 +23,7 @@ namespace sequoia::testing
     {
       struct texel
       {
+        using is_unit        = std::true_type;
         using validator_type = half_line_validator;
       };
     }

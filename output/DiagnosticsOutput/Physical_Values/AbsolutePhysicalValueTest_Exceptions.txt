@@ -1,525 +1,438 @@
-Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 57
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 538
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 549
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 562
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 573
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 584
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 595
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 538
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 549
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 562
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 573
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 584
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 595
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 538
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 549
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 562
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 573
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 584
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 595
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 538
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 549
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 562
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 573
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 584
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 595
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 538
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 549
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 562
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 573
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 584
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 595
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 538
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 549
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 562
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 573
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 584
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 595
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 538
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 549
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 562
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 573
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 584
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 595
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 538
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 549
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 562
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 573
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 584
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 595
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 126
+Attempting to make negative quantity
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 135
+Attempting to shift quantity negative
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 242
 Negative quantity
 
 Expected Exception Type:
 [std::domain_error]
-Value -1 less than zero
+Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 524
+Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 126
+Attempting to make negative quantity
 
 Expected Exception Type:
 [std::domain_error]
-Value -1 less than zero
+Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 535
+Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 135
+Attempting to shift quantity negative
 
 Expected Exception Type:
 [std::domain_error]
-Value -1 less than zero
+Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 548
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 559
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 570
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 581
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 524
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 535
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 548
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 559
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 570
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 581
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 57
+Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 242
 Negative quantity
 
 Expected Exception Type:
 [std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 524
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 535
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 548
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 559
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 570
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 581
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 524
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 535
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 548
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 559
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 570
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 581
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 57
-Negative quantity
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 524
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 535
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 548
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 559
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 570
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 581
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 524
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 535
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 548
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 559
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 570
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 581
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 57
-Negative quantity
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 524
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 535
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 548
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 559
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 570
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 581
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 524
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 535
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 548
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 559
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 570
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 581
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 57
-Negative quantity
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 524
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 535
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 548
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 559
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 570
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 581
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 524
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 535
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 548
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 559
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 570
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 581
-
-Expected Exception Type:
-[std::domain_error]
-Value -1 less than zero
+Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 

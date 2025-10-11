@@ -25,5 +25,14 @@ namespace sequoia::testing
   private:
     template<class Quantity>
     void test_absolute_quantity();
+
+    template<class Quantity>
+    void test_compositions();
+
+    void test_mass_conversions();
+
+    void test_length_conversions();
+
+    void test_area_conversions();
   };
 }

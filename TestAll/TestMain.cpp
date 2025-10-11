@@ -380,6 +380,14 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_suite(
+      "Algebra",
+      suite{
+        "Ratio",
+        ratio_free_test{"Ratio Free Test"}
+      }
+    );
+    
+    runner.add_test_suite(
       "Geometry",
       suite{
         "Spaces",        

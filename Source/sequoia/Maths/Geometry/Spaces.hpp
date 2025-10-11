@@ -537,6 +537,39 @@ namespace sequoia::maths
   /** @defgroup SpacesUtilities Convex Space Utilities
       @brief Utilites for extracting properties of convex spaces
    */
+
+  template<convex_space Space>
+  inline constexpr bool has_distinguished_origin_type_v{
+    requires {
+      typename Space::distinguished_origin;
+      requires (   std::convertible_to<typename Space::distinguished_origin, std::true_type>
+                || std::convertible_to<typename Space::distinguished_origin, std::false_type>);
+    }
+  };
+
+  template<convex_space Space>
+  struct has_distinguished_origin : std::false_type
+  {};
+
+  template<convex_space Space>
+    requires has_distinguished_origin_type_v<Space>
+  struct has_distinguished_origin<Space> : Space::distinguished_origin::type
+  {};
+
+  template<free_module Space>
+  struct has_distinguished_origin<Space> : std::true_type
+  {};
+
+  template<affine_space Space>
+    requires (!free_module<Space>)
+  struct has_distinguished_origin<Space> : std::false_type
+  {};
+
+  template<convex_space Space>
+  using has_distinguished_origin_t = has_distinguished_origin<Space>::type;
+
+  template<convex_space Space>
+  inline constexpr bool has_distinguished_origin_v{has_distinguished_origin<Space>::value};
   
   /** @ingroup PropertiesOfSpace
       @brief Helper to extract the free module type associated with a convex space.
@@ -602,16 +635,27 @@ namespace sequoia::maths
   inline constexpr std::size_t dimension_of{free_module_type_of_t<ConvexSpace>::dimension};
 
   /** @defgroup Basis Basis
-      @brief Concepts for the basis of free modules.
+      @brief Concepts and helpers for bases of free modules.
    */
 
+  /** @ingroup Basis
+      @brief Compile time constant reflecting whether a type self-identifies as a basis.
+   */
+  template<class T>
+  inline constexpr bool identifies_as_basis_v{
+     requires {
+      typename T::is_basis;
+      requires std::convertible_to<typename T::is_basis, std::true_type>;
+    }
+  };
+  
   /** @ingroup Basis
       @brief A basis must identify the free module to which it corresponds.
 
       This takes into account that a vector space is a special case of a free module.
    */
   template<class B>
-  concept basis = has_free_module_type_v<B> || has_vector_space_type_v<B>;
+  concept basis = identifies_as_basis_v<B> && (has_free_module_type_v<B> || has_vector_space_type_v<B>);
 
   /** @ingroup Basis
       @brief A concept to determine if a basis is appropriate for a particular free module.
@@ -683,29 +727,28 @@ namespace sequoia::maths
       @brief Trait for validators that behave like the identity.
    */
   template<class T>
-  struct is_identity_validator : std::false_type {};
+  struct defines_identity_validator : std::false_type {};
 
   template<class T>
-  using is_identity_validator_t = is_identity_validator<T>::type;
+  using defines_identity_validator_t = defines_identity_validator<T>::type;
 
   template<class T>
-  inline constexpr bool is_identity_validator_v{is_identity_validator<T>::value};
+  inline constexpr bool defines_identity_validator_v{defines_identity_validator<T>::value};
 
   template<>
-  struct is_identity_validator<std::identity> : std::true_type {};
+  struct defines_identity_validator<std::identity> : std::true_type {};
 
   /** @ingroup Validators
-      @brief A validator the the half line.
+      @brief A validator for the half line.
 
       For signed arithmetic types throws for negative values; otherwise behaves like an identity operation.
    */
   struct half_line_validator
   {
     template<arithmetic T>
-    [[nodiscard]]
     constexpr T operator()(const T val) const
     {
-      if(val < T{}) throw std::domain_error{std::format("Value {} less than zero", val)};
+      if(val < T{}) throw std::domain_error{std::format("Domain error: attempting to use a value of {} for a semi-positive quantity", val)};
 
       return val;
     }
@@ -720,19 +763,70 @@ namespace sequoia::maths
   };
 
   /** @ingroup Validators
+      @brief A generic interval validator for floating-point types.
+   */
+  template<std::floating_point T, T Lower, T Upper=std::numeric_limits<T>::infinity()>
+    requires (Upper > Lower)
+  struct interval_validator
+  {
+    constexpr static T lower{Lower}, upper{Upper};
+    
+    template<std::floating_point U>
+      requires (sizeof(U) <= sizeof(T))
+    constexpr U operator()(const U val) const
+    {
+      if constexpr(Lower > -std::numeric_limits<T>::infinity())
+      {
+        if(const auto ulower{static_cast<U>(Lower)}; val < ulower)
+          throw std::domain_error{std::format("interval_validator: invoked with {}, but values should be >= {} ", val, ulower)};
+      }
+
+      if constexpr(Upper < std::numeric_limits<T>::infinity())
+      {
+        if(const auto uUpper{static_cast<U>(Upper)}; val > uUpper)
+          throw std::domain_error{std::format("interval_validator: invoked with {}, but values should be <= {} ", val, uUpper)};
+      }
+
+      return val;
+    };
+  };
+
+  template<class T>
+  struct is_interval_validator : std::false_type {};
+
+  template<class T>
+  using is_interval_validator_t = is_interval_validator<T>::type;
+
+  template<class T>
+  inline constexpr bool is_interval_validator_v{is_interval_validator<T>::value};
+
+  template<std::floating_point T, T Lower, T Upper>
+  struct is_interval_validator<interval_validator<T, Lower, Upper>> : std::true_type {};
+
+  /** @ingroup Validators
       @brief Trait to determine if a type defines the half line.
    */
   template<class T>
-  struct defines_half_line : std::false_type {};
+  struct defines_half_line_validator : std::false_type {};
 
   template<class T>
-  using defines_half_line_t = typename defines_half_line<T>::type;
+  using defines_half_line_validator_t = typename defines_half_line_validator<T>::type;
 
   template<class T>
-  inline constexpr bool defines_half_line_v{defines_half_line<T>::value};
+  inline constexpr bool defines_half_line_validator_v{defines_half_line_validator<T>::value};
 
   template<>
-  struct defines_half_line<half_line_validator> : std::true_type {};
+  struct defines_half_line_validator<half_line_validator> : std::true_type {};
+
+  template<std::floating_point T, T Lower, T Upper>
+  struct defines_half_line_validator<interval_validator<T, Lower, Upper>>
+    : std::bool_constant<(Lower == T{}) && (Upper == std::numeric_limits<T>::infinity())>
+  {};
+
+  template<std::floating_point T, T Lower, T Upper>
+  struct defines_identity_validator<interval_validator<T, Lower, Upper>>
+    : std::bool_constant<(Lower == -std::numeric_limits<T>::infinity()) && (Upper == std::numeric_limits<T>::infinity())>
+  {};
 
   /** @defgroup DirectProduct Direct Product
       @brief Direct Products are one way in which spaces can be composed to create new spaces.
@@ -902,9 +996,10 @@ namespace sequoia::maths
     requires (!affine_space<C>)
   struct dual<C>
   {
-    using set_type         = sets::convex_functionals<C, commutative_ring_type_of_t<C>>;
-    using free_module_type = dual<free_module_type_of_t<C>>;
-    using is_convex_space  = std::true_type;
+    using set_type             = sets::convex_functionals<C, commutative_ring_type_of_t<C>>;
+    using free_module_type     = dual<free_module_type_of_t<C>>;
+    using is_convex_space      = std::true_type;
+    using distinguished_origin = has_distinguished_origin_t<C>;
   };
 
    /** @ingroup DualSpaces
@@ -1007,7 +1102,9 @@ namespace sequoia::maths
       
     */
 
-  struct distinguished_origin {};
+  template<class... Ts>
+  struct coordinate_system;
+  
 
   /** @ingroup Coordinates
       @brief Forward declaration for the coordinates class template.
@@ -1016,8 +1113,7 @@ namespace sequoia::maths
   template<
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
-    class Origin,
-    validator_for<ConvexSpace> Validator
+    class... Ts
   >
   class coordinates;
 
@@ -1028,19 +1124,19 @@ namespace sequoia::maths
       space to be aware of the type of the coordinate representation for displacements
    */
   template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin>
-  using affine_coordinates = coordinates<AffineSpace, Basis, Origin, std::identity>;
+  using affine_coordinates = coordinates<AffineSpace, Basis, Origin>;
 
   /** @ingroup Coordinates
       @brief Alias for coordinates of an element of a vector space with respect to a particular basis.
    */
   template<vector_space VectorSpace, basis_for<free_module_type_of_t<VectorSpace>> Basis>
-  using vector_coordinates = affine_coordinates<VectorSpace, Basis, distinguished_origin>;
+  using vector_coordinates = coordinates<VectorSpace, Basis>;
 
   /** @ingroup Coordinates
       @brief Alias for coordinates of an element of a free module with respect to a particular basis.
    */
   template<free_module FreeModule, basis_for<free_module_type_of_t<FreeModule>> Basis>
-  using free_module_coordinates = coordinates<FreeModule, Basis, distinguished_origin, std::identity>;
+  using free_module_coordinates = coordinates<FreeModule, Basis>;
   
   /** @ingroup Coordinates
       @brief Class designed for inheritance by concerete coordinate types.
@@ -1056,37 +1152,36 @@ namespace sequoia::maths
       useful in terms of reducing what would otherwise be very significant code duplication.
 
       One of the novelties in the context of physics is the notion of units and quantities
-      of different types that can nevertheless by multipled and in some cases (like widths
+      of different types that can nevertheless be multipled and in some cases (like widths
       and heights) added.
 
-      Noteable omissions from the base class are unary+ and unary- as well as subtraction of
-      two coordinates. Since these turn out to require a different implementation for
-      physical quantities, insofar as maths is concerned they are defined only in the derived
-      coordinates class template.
+      Morally, for a space of dimension D, coordinates_base wraps D values of the appropriate
+      arithmetic type. However, this wrapping does introduce some subtleties. Most notable,
+      the rules for arithmetic promotion are not those of the fundamental types. For example,
+      unary plus simply returns a copy, without attempting to promote the return type such
+      that it wraps the appropriately promoted arithmetic type.
    */
 
   template<
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
-    class Origin,
     validator_for<ConvexSpace> Validator,
     class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<ConvexSpace>, Basis>
   >
   class coordinates_base
   {
   public:
-    using convex_space_type             = ConvexSpace;   
+    using space_type                    = ConvexSpace;   
     using basis_type                    = Basis;
     using validator_type                = Validator;
-    using origin_type                   = Origin;
     using set_type                      = ConvexSpace::set_type;
     using free_module_type              = free_module_type_of_t<ConvexSpace>;
     using commutative_ring_type         = commutative_ring_type_of_t<ConvexSpace>;
     using value_type                    = commutative_ring_type;
     using displacement_coordinates_type = DisplacementCoordinates;
 
-    constexpr static bool has_distinguished_origin{std::is_same_v<Origin, distinguished_origin>};
-    constexpr static bool has_identity_validator{is_identity_validator_v<Validator>};
+    constexpr static bool has_distinguished_origin{has_distinguished_origin_v<ConvexSpace>};
+    constexpr static bool has_identity_validator{defines_identity_validator_v<Validator>};
     constexpr static bool has_freely_mutable_components{has_identity_validator && has_distinguished_origin};
     constexpr static std::size_t dimension{free_module_type::dimension};
     constexpr static std::size_t D{dimension};
@@ -1110,44 +1205,46 @@ namespace sequoia::maths
     {}
 
     template<class Self>
+      requires std::derived_from<Self, coordinates_base>
     constexpr Self& operator+=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
-      self.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
-      return self;
+      return self = (self + v);
     }
 
     template<class Self>
-      requires has_distinguished_origin && (!std::is_same_v<coordinates_base, displacement_coordinates_type>)
+      requires     std::derived_from<Self, coordinates_base>
+               && has_distinguished_origin
+               && (!std::is_same_v<coordinates_base, displacement_coordinates_type>)
     constexpr Self& operator+=(this Self& self, const coordinates_base& v) noexcept(has_identity_validator)
     {
-      self.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
-      return self;
+      return self = (self + v);
     }
 
     template<class Self>
+      requires std::derived_from<Self, coordinates_base>
     constexpr Self& operator-=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
-      self.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
-      return self;
+       return self = (self - v);
     }
 
     template<class Self>
+      requires std::derived_from<Self, coordinates_base>
     constexpr Self& operator*=(this Self& self, value_type u) noexcept(has_identity_validator)
       requires has_distinguished_origin
     {
-      self.for_each_element([u](value_type& x) { return x *= u; });
-      return self;
+      return self = (self * u);
     }
 
     template<class Self>
+      requires std::derived_from<Self, coordinates_base>
     constexpr Self& operator/=(this Self& self, value_type u)
-      requires vector_space<free_module_type> && has_distinguished_origin
+      requires vector_space<free_module_type>
     {
-      self.for_each_element([u](value_type& x) { return x /= u; });
-      return self;
+      return self = (self / u);
     }
 
     template<class Self>
+      requires std::derived_from<Self, coordinates_base>    
     [[nodiscard]]
     constexpr Self operator+(this const Self& self) noexcept
     {
@@ -1155,7 +1252,8 @@ namespace sequoia::maths
     }
 
     template<class Self>
-      requires    std::constructible_from<Self, std::span<const value_type, D>>
+      requires    std::derived_from<Self, coordinates_base>
+               && std::constructible_from<Self, std::span<const value_type, D>>
                && has_distinguished_origin
                && (!std::is_unsigned_v<value_type>)
     [[nodiscard]]
@@ -1165,7 +1263,7 @@ namespace sequoia::maths
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived>
+      requires std::derived_from<Derived, coordinates_base>
             && (!std::is_same_v<Derived, displacement_coordinates_type>)
             && std::constructible_from<typename Derived::displacement_coordinates_type, std::span<const value_type, D>>
     [[nodiscard]]
@@ -1177,44 +1275,49 @@ namespace sequoia::maths
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived>
+      requires std::derived_from<Derived, coordinates_base>
     [[nodiscard]]
-    friend constexpr Derived operator+(Derived c, const displacement_coordinates_type& v) noexcept(has_identity_validator) { return c += v; }
+    friend constexpr Derived operator+(Derived c, const displacement_coordinates_type& v) noexcept(has_identity_validator)
+    {
+      return c.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
+    }
 
     template<class Derived>
-    requires std::is_base_of_v<coordinates_base, Derived> && (!std::is_same_v<Derived, displacement_coordinates_type>)
+      requires std::derived_from<Derived, coordinates_base> && (!std::is_same_v<Derived, displacement_coordinates_type>)
     [[nodiscard]]
     friend constexpr Derived operator+(const displacement_coordinates_type& v, Derived c) noexcept(has_identity_validator)
     {
-      return c += v;
+      return v + c;
     }
   
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived> && (!std::is_same_v<Derived, displacement_coordinates_type>) && has_distinguished_origin 
+      requires    std::derived_from<Derived, coordinates_base>
+               && (!std::is_same_v<Derived, displacement_coordinates_type>)
+               && has_distinguished_origin 
     [[nodiscard]]
     friend constexpr Derived operator+(Derived c, const Derived& v) noexcept(has_identity_validator)
     {
-      return c += v;
+      return c.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived>
+      requires std::derived_from<Derived, coordinates_base>
     [[nodiscard]]
     friend constexpr Derived operator-(Derived c, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
-      return c -= v;
+      return c.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived> && has_distinguished_origin
+      requires std::derived_from<Derived, coordinates_base> && has_distinguished_origin
     [[nodiscard]]
     friend constexpr Derived operator*(Derived v, value_type u) noexcept(has_identity_validator)
     {
-      return v *= u;
+      return v.for_each_element([u](value_type& x) { return x *= u; });
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived> && has_distinguished_origin
+      requires std::derived_from<Derived, coordinates_base> && has_distinguished_origin
     [[nodiscard]]
     friend constexpr Derived operator*(value_type u, Derived v) noexcept(has_identity_validator)
     {
@@ -1222,11 +1325,11 @@ namespace sequoia::maths
     }
 
     template<class Derived>
-      requires std::is_base_of_v<coordinates_base, Derived> && vector_space<free_module_type> && has_distinguished_origin
+      requires std::derived_from<Derived, coordinates_base> && vector_space<free_module_type> && has_distinguished_origin
     [[nodiscard]]
     friend constexpr Derived operator/(Derived v, value_type u)
     {
-      return v /= u;
+      return v.for_each_element([u](value_type& x) { return x /= u; });
     }
 
     [[nodiscard]]
@@ -1314,7 +1417,7 @@ namespace sequoia::maths
     
     template<class Self, class Fn>
       requires std::invocable<Fn, value_type&, value_type>
-    constexpr void apply_to_each_element(this Self& self, std::span<const value_type, D> rhs, Fn f)
+    constexpr Self&& apply_to_each_element(this Self&& self, std::span<const value_type, D> rhs, Fn f)
     {
       if constexpr(has_identity_validator)
       {
@@ -1326,11 +1429,13 @@ namespace sequoia::maths
         std::ranges::for_each(std::views::zip(tmp, rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
         self.m_Values = validate(tmp, self.m_Validator);
       }
+
+      return std::forward<Self>(self);
     }
 
     template<class Self, class Fn>
       requires std::invocable<Fn, value_type&>
-    constexpr void for_each_element(this Self& self, Fn f)
+    constexpr Self& for_each_element(this Self& self, Fn f)
     {
       if constexpr(has_identity_validator)
       {
@@ -1342,6 +1447,8 @@ namespace sequoia::maths
         std::ranges::for_each(tmp, f);
         self.m_Values = validate(tmp, self.m_Validator);
       }
+
+      return self;
     }
   private:
     SEQUOIA_NO_UNIQUE_ADDRESS validator_type m_Validator;
@@ -1368,10 +1475,57 @@ namespace sequoia::maths
    */
   
   template<convex_space ConvexSpace, basis_for<free_module_type_of_t<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
-  class coordinates final : public coordinates_base<ConvexSpace, Basis, Origin, Validator>
+  class coordinates<ConvexSpace, Basis, Origin, Validator> final : public coordinates_base<ConvexSpace, Basis, Validator>
   {
   public:
-    using coordinates_base<ConvexSpace, Basis, Origin, Validator>::coordinates_base;
+    using origin_type = Origin;
+
+    using coordinates_base<ConvexSpace, Basis, Validator>::coordinates_base;
+  };
+
+  template<convex_space ConvexSpace, basis_for<free_module_type_of_t<ConvexSpace>> Basis, validator_for<ConvexSpace> Validator>
+    requires has_distinguished_origin_v<ConvexSpace>
+  class coordinates<ConvexSpace, Basis, Validator> final : public coordinates_base<ConvexSpace, Basis, Validator>
+  {
+  public:
+    using coordinates_base<ConvexSpace, Basis, Validator>::coordinates_base;
+  };
+
+  template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin>
+    requires (!free_module<AffineSpace>)
+  class coordinates<AffineSpace, Basis, Origin> final : public coordinates_base<AffineSpace, Basis, std::identity>
+  {
+  public:
+    using origin_type = Origin;
+    
+    using coordinates_base<AffineSpace, Basis, std::identity>::coordinates_base;
+  };
+
+  template<free_module M, basis_for<free_module_type_of_t<M>> Basis>    
+  class coordinates<M, Basis> final : public coordinates_base<M, Basis, std::identity>
+  {
+  public:
+    using coordinates_base<M, Basis, std::identity>::coordinates_base;
+  };
+
+  template<class From, class To>
+  struct coordinate_transformation
+  {
+  };
+
+  template<class From, class To>
+  inline constexpr bool has_coordinate_transformation_v{
+    requires (const From& f){
+      { std::declval<coordinate_transformation<From, To>>()(f) } -> std::convertible_to<To>;
+    }
+  };
+
+  template<class From, class To>
+  inline constexpr bool has_noexcept_coordinate_transformation_v{
+       has_coordinate_transformation_v<From, To>
+    && requires (const From& f){
+         requires noexcept(std::declval<coordinate_transformation<From, To>>()(f));
+    }
   };
 
   namespace sets
@@ -1509,10 +1663,11 @@ namespace sequoia::maths
   template<std::floating_point T, class Arena=mathematical_arena>
   struct euclidean_half_space
   {
-    using set_type          = sets::orthant<1>;
-    using vector_space_type = euclidean_vector_space<T, 1>;
-    using is_convex_space   = std::true_type;
-    using arena_type        = Arena;
+    using set_type             = sets::orthant<1>;
+    using vector_space_type    = euclidean_vector_space<T, 1>;
+    using is_convex_space      = std::true_type;
+    using arena_type           = Arena;
+    using distinguished_origin = std::true_type;
   };
 
   template<std::floating_point T, std::size_t D, basis Basis, class Origin, class Arena=mathematical_arena>
@@ -1529,6 +1684,7 @@ namespace sequoia::maths
   template<free_module M>
   struct canonical_right_handed_basis
   {
+    using is_basis         = std::true_type;
     using free_module_type = M;
   };
 

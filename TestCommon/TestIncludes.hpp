@@ -41,6 +41,7 @@
 #include "FileSystem/FileSystemFreeTest.hpp"
 #include "FileSystem/NormalPathTest.hpp"
 #include "FileSystem/NormalPathTestingDiagnostics.hpp"
+#include "Maths/Algebra/RatioFreeTest.hpp"
 #include "Maths/Geometry/AffineCoordinatesTest.hpp"
 #include "Maths/Geometry/AffineCoordinatesTestingDiagnostics.hpp"
 #include "Maths/Geometry/SpacesMetaFreeTest.hpp"

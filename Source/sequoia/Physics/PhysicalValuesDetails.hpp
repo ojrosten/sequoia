@@ -28,11 +28,19 @@ namespace sequoia::physics
 
   template<class Space>
   inline constexpr bool is_associated_displacement_space_v{is_associated_displacement_space<Space>::value};
-    
+
   template<class T>
-  concept physical_unit = requires {
-    typename T::validator_type;
+  inline constexpr bool identifies_as_unit_v{
+    requires {
+      typename T::is_unit;
+      requires std::convertible_to<typename T::is_unit, std::true_type>;
+    }
   };
+
+  template<class T>
+  concept physical_unit
+    =    identifies_as_unit_v<T>
+      && requires { typename T::validator_type; };
 
   struct no_unit_t;
 
@@ -347,12 +355,19 @@ namespace sequoia::physics::impl
   };
 
   /// \class Primary class template to aid reduction of direct products and composite units
-  template<class, class>
+  template<class...>
   struct simplify;
 
-  template<class T, class U>
-  using simplify_t = simplify<T, U>::type;
+  template<class... Ts>
+  using simplify_t = simplify<Ts...>::type;
 
+  template<class... Ts>
+  struct simplify<direct_product<Ts...>>
+  {
+    using type = reduction<reduce_t<count_and_combine_t<meta::stable_sort_t<direct_product<Ts...>, meta::type_comparator>>>>;
+  };
+
+  // Assume direct_products are already sorted
   template<class... Ts, class... Us>
   struct simplify<direct_product<Ts...>, direct_product<Us...>>
   {
