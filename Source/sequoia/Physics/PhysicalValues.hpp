@@ -1055,26 +1055,16 @@ namespace sequoia::physics
   template<physical_unit U, class Ratio, auto Displacement>
     requires (!scale_invariant_validator_v<typename U::validator_type>) && is_interval_validator_v<typename U::validator_type>
   struct synthesised_validator<coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
-  {
-    struct validator
-    {
-      template<std::floating_point To, std::floating_point From>
-      [[nodiscard]]
-      constexpr static To transform(From val) {
-        return static_cast<To>((val * Ratio::num / Ratio::den) + Displacement);
-      }
-      
-      template<std::floating_point T>
-      constexpr T operator()(const T val) const
-      {
-        using underlying_validator_type = U::validator_type;
-        using validator_type = interval_validator<T, transform<T>(underlying_validator_type::lower), transform<T>(underlying_validator_type::upper)>;
+  {    
+    using underlying_validator_type = U::validator_type;
+    using value_type = std::remove_cv_t<decltype(underlying_validator_type::lower)>;
 
-        return validator_type{}(val);
-      }
-    };
+    [[nodiscard]]
+    constexpr static value_type transform(value_type val) {
+      return (val * Ratio::num / Ratio::den) + Displacement;
+    }
 
-    using type = validator;
+    using type = interval_validator<value_type, transform(underlying_validator_type::lower), transform(underlying_validator_type::upper)>;
   };
 
   template<physical_unit U, class Ratio, auto Displacement>

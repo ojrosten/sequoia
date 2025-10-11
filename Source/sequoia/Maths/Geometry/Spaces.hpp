@@ -772,6 +772,7 @@ namespace sequoia::maths
     constexpr static T lower{Lower}, upper{Upper};
     
     template<std::floating_point U>
+      requires (sizeof(U) <= sizeof(T))
     constexpr U operator()(const U val) const
     {
       if constexpr(Lower > -std::numeric_limits<T>::infinity())
