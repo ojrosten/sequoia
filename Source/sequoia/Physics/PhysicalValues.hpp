@@ -1070,9 +1070,9 @@ namespace sequoia::physics
   template<physical_unit U, class Ratio, auto Displacement>
   struct coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>
   {
-    using is_unit        = std::true_type;
-    using transform_type = coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>;    
-    using validator_type = synthesised_validator_t<transform_type>;    
+    using is_unit              = std::true_type;
+    using transform_type       = coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>;
+    using validator_type       = synthesised_validator_t<transform_type>;    
     using with_respect_to_type = U;
     using dilatation_type      = dilatation<Ratio>;
     using translation_type     = translation<Displacement>;
@@ -1083,7 +1083,7 @@ namespace sequoia::physics
   {
     using inverse_dil_type   = inverse_t<dilatation<Ratio>>;
     using inverse_ratio_type = inverse_dil_type::ratio_type;
-    using type = coordinate_transform<U, inverse_dil_type, inverse_t<translation<Displacement * inverse_ratio_type::num / inverse_ratio_type::den>>>;
+    using type               = coordinate_transform<U, inverse_dil_type, inverse_t<translation<Displacement * inverse_ratio_type::num / inverse_ratio_type::den>>>;
   };
 
   template<
