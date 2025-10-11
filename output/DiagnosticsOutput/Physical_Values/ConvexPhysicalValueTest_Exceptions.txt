@@ -1,4 +1,4 @@
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 45
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 47
 
 Expected Exception Type:
 [std::domain_error]
@@ -6,7 +6,7 @@ interval_validator: invoked with -273.16, but values should be >= -273.15
 
 =======================================
 
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 50
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 52
 
 Expected Exception Type:
 [std::domain_error]
@@ -14,7 +14,7 @@ interval_validator: invoked with -460, but values should be >= -459.67
 
 =======================================
 
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 45
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 47
 
 Expected Exception Type:
 [std::domain_error]
@@ -22,11 +22,11 @@ interval_validator: invoked with -273.16, but values should be >= -273.15
 
 =======================================
 
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 50
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 52
 
 Expected Exception Type:
 [std::domain_error]
-interval_validator: invoked with -460, but values should be >= -459.66999999999996 
+interval_validator: invoked with -460, but values should be >= -459.67 
 
 =======================================
 

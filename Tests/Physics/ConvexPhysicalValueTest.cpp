@@ -11,6 +11,8 @@
 
 #include "../Maths/Geometry/GeometryTestingUtilities.hpp"
 
+#include <charconv>
+
 namespace sequoia::testing
 { 
   using namespace physics;
@@ -48,7 +50,30 @@ namespace sequoia::testing
 
     check_exception_thrown<std::domain_error>(
       "",
-      [](){ return non_si::temperature_farenheight<T>{T(-460), non_si::units::farenheight}; }
+      [](){ return non_si::temperature_farenheight<T>{T(-460), non_si::units::farenheight}; },
+      [](const project_paths&, std::string message) {
+        if constexpr(std::same_as<T, double> && (sizeof(double) == sizeof(long double)))
+        {
+          if(message.size() < 2)
+            return message;
+
+          if(const auto pos{message.rfind(' ', message.size() - 2)}; pos != std::string::npos)
+          {
+            /* Homebrew issue means this doesn't link for llvm 21.1.3
+            double val{};
+            const auto[ptr,ec]{std::from_chars(message.data() + pos, message.data() + message.size(), val)};
+            if(ec != std::errc{})
+              throw std::runtime_error{"Unable to extract final double from error message:" +  message};
+            */
+
+            char* end{};
+            const auto val{std::strtod(message.data() + pos, &end)};
+            message.replace(pos + 1, message.size() - pos - 2, std::format("{:.2f}", val));
+          }
+        }
+
+        return message;
+      }
     );
   }
 
