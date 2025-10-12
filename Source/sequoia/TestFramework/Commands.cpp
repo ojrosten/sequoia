@@ -95,7 +95,7 @@ namespace sequoia::testing
     if(!buildPaths.cmake_cache())
       throw std::runtime_error{"CMakeCache.txt location not specified"};
 
-    auto cmd{std::string{"cmake -S ."}.append(" -B \"").append(buildPaths.cmake_cache()->parent_path().string()).append("\" ")};
+    auto cmd{std::string{"cmake -S ."}.append(" -B \"").append(buildPaths.cmake_cache()->parent_path().string()).append("\" -D ADDRESS_SANITIZER=ON ")};
     cmd.append(cmake_extractor(parentBuildPaths, buildPaths));
 
     return {"Running CMake...", cmd, output};
@@ -119,7 +119,7 @@ namespace sequoia::testing
 
         if constexpr(!with_msvc_v)
         {
-          str.append(" -- -j8");
+          str.append(" -- -j14");
         }
 
         return {"Building...", str, output};

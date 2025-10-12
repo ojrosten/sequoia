@@ -29,17 +29,14 @@ namespace sequoia::testing
     std::filesystem::path cmake_cache_dir() const;
 
     [[nodiscard]]
-    const main_paths& main() const noexcept { return m_Main; }
+    const main_paths& get_main_paths() const noexcept { return m_Main; }
 
     [[nodiscard]]
-    const build_paths& build() const noexcept { return m_Build; }
+    const build_paths& get_build_paths() const noexcept { return m_Build; }
 
   private:
     main_paths m_Main;
     build_paths m_Build;
-
-    [[nodiscard]]
-    runtime::shell_command run(const std::filesystem::path& outputDir, std::string_view options) const;
   };
 
   class test_runner_end_to_end_test final : public free_test
@@ -52,7 +49,6 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-
     void test_project_creation();
 
     [[nodiscard]]
