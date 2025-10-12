@@ -110,7 +110,7 @@ namespace sequoia::testing
       && build_cmd(get_build_paths(), buildOutput)
     );
     
-    pause_for_mac_m_series(500ms);
+    pause_for_mac_m_series(750ms);
 
     run_executable(outputDir, options);
   }
@@ -170,7 +170,7 @@ namespace sequoia::testing
     fs::create_directory(working_materials() /= "CreationOutput");
     fs::create_directory(working_materials() /= "Output");
 
-    pause_for_mac_m_series(100ms);
+    pause_for_mac_m_series(250ms);
     b.create_build_run(working_materials() /= "CreationOutput", "BuildOutput2.txt", working_materials() /= "Output");
 
     // Note: the act of creation invokes cmake, and so the first check implicitly checks the cmake output
