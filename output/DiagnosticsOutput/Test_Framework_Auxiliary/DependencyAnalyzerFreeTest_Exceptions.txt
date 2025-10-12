@@ -5,7 +5,7 @@ Expected Exception Type:
 [std::runtime_error]
 Executable is out of date; please build it!
 Executable time stamp:****
-output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/Auxiliary/FakeProject/Source/fakeProject/House.h time stamp:****
+output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/Auxiliary/FakeProject/Source/fakeProject/xxFILExx time stamp:****
 
 =======================================
 
