@@ -1,65 +1,19 @@
 ﻿{
   "version": 10,
-    "configurePresets": [
+  "configurePresets": [
     {
       "name": "macos-homebrew-llvm",
       "displayName": "macOS Debug (Homebrew LLVM)",
-      "description": "Configure for macOS using Homebrew's clang/clang++",
+      "description": "Configure for macOS using Homebrew's clang++",
       "generator": "Unix Makefiles",
       "binaryDir": "${sourceDir}/../build/macos-homebrew-llvm",
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++",
         "CMAKE_BUILD_TYPE": "Debug"
       }
-    },        
-    {
-      "name": "linux-default",
-      "displayName": "Linux Debug",
-      "description": "Target the Windows Subsystem for Linux (WSL) or a remote Linux system.",
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/../build/VSCMade/${presetName}",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/../build/VSCMade/install/${presetName}"
-      },
-      "vendor": {
-        "microsoft.com/VisualStudioSettings/CMake/1.0": { "hostOS": [ "Linux" ] },
-        "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": { "sourceDir": "$env{HOME}/sequoia/$ms{projectDirName}" }
-      }
-    },
-    {
-      "name": "macos-default",
-      "displayName": "macOS Debug",
-      "description": "Target a remote macOS system with Ninja",
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/../build/VSCMade/${presetName}",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/../build/VSCMade/install/${presetName}"
-      },
-      "vendor": {
-        "microsoft.com/VisualStudioSettings/CMake/1.0": { "hostOS": [ "macOS" ] },
-        "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": { "sourceDir": "$env{HOME}/sequoia/$ms{projectDirName}" }
-      }
-    },
-    {
-      "name": "windows-default",
-      "displayName": "Windows x64 Debug",
-      "description": "Target Windows with the Visual Studio development environment.",
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/../build/VSCMade/${presetName}",
-      "architecture": {
-        "value": "x64",
-        "strategy": "external"
-      },
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/../build/VSCMade/install/${presetName}"
-      },
-      "vendor": { "microsoft.com/VisualStudioSettings/CMake/1.0": { "hostOS": [ "Windows" ] } }
     }
-    ],
-    "buildPresets": [
+  ],
+  "buildPresets": [
     {
       "name": "macos-homebrew-llvm",
       "displayName": "macOS (Homebrew LLVM)",
