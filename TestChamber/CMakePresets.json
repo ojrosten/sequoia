@@ -1,6 +1,17 @@
 ﻿{
-  "version": 2,
-  "configurePresets": [
+  "version": 10,
+    "configurePresets": [
+    {
+      "name": "macos-homebrew-llvm",
+      "displayName": "macOS Debug (Homebrew LLVM)",
+      "description": "Configure for macOS using Homebrew's clang/clang++",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/../build/macos-homebrew-llvm",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++",
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },        
     {
       "name": "linux-default",
       "displayName": "Linux Debug",
@@ -46,6 +57,13 @@
         "CMAKE_INSTALL_PREFIX": "${sourceDir}/../build/VSCMade/install/${presetName}"
       },
       "vendor": { "microsoft.com/VisualStudioSettings/CMake/1.0": { "hostOS": [ "Windows" ] } }
+    }
+    ],
+    "buildPresets": [
+    {
+      "name": "macos-homebrew-llvm",
+      "displayName": "macOS (Homebrew LLVM)",
+      "configurePreset": "macos-homebrew-llvm"
     }
   ]
 }
