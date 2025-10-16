@@ -2,6 +2,16 @@
   "version": 10,
   "configurePresets": [
     {
+      "name": "base-debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "base-binary",
+      "binaryDir": "${sourceDir}/../build/${presetName}"
+    },
+    {
       "name": "base-homebrew-llvm",
       "generator": "Unix Makefiles",
       "cacheVariables": {
@@ -12,9 +22,8 @@
     {
       "name": "macos-homebrew-llvm",
       "displayName": "macOS Homebrew LLVM (Debug)",
-      "description": "Configure for macOS using Homebrew's clang++",
-      "inherits": ["base-homebrew-llvm"],
-      "binaryDir": "${sourceDir}/../build/macos-homebrew-llvm"
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-debug", "base-binary", "base-homebrew-llvm"]
     }
   ],
   "buildPresets": [
