@@ -15,8 +15,7 @@
       "name": "base-homebrew-llvm",
       "generator": "Unix Makefiles",
       "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++",
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++"
       }
     },
     {
