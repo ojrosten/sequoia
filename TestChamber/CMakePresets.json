@@ -19,10 +19,23 @@
       }
     },
     {
+      "name": "base-ubuntu-gcc",
+      "generator": "Unix Makefiles",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "/usr/bin/g++-15"
+      }
+    },
+    {
       "name": "macos-homebrew-llvm",
       "displayName": "macOS Homebrew LLVM (Debug)",
       "description": "Configure for ${displayName}",
       "inherits": ["base-debug", "base-binary", "base-homebrew-llvm"]
+    },
+    {
+      "name": "ubuntu-gcc",
+      "displayName": "Ubuntu g++-15 (Debug)",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-debug", "base-binary", "base-ubuntu-gcc"]
     }
   ],
   "buildPresets": [
@@ -30,6 +43,11 @@
       "name": "macos-homebrew-llvm",
       "displayName": "macOS Homebrew LLVM (Debug)",
       "configurePreset": "macos-homebrew-llvm"
+    },
+    {
+      "name": "ubuntu-gcc",
+      "displayName": "Ubuntu g++-15 (Debug)",
+      "configurePreset": "ubuntu-gcc"
     }
   ]
 }
