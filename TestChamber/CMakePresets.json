@@ -29,7 +29,7 @@
   "buildPresets": [
     {
       "name": "macos-homebrew-llvm",
-      "displayName": "macOS (Homebrew LLVM)",
+      "displayName": "macOS Homebrew LLVM (Debug)",
       "configurePreset": "macos-homebrew-llvm"
     }
   ]
