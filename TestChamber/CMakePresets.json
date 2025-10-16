@@ -2,15 +2,19 @@
   "version": 10,
   "configurePresets": [
     {
-      "name": "macos-homebrew-llvm",
-      "displayName": "macOS Debug (Homebrew LLVM)",
-      "description": "Configure for macOS using Homebrew's clang++",
+      "name": "base-homebrew-llvm",
       "generator": "Unix Makefiles",
-      "binaryDir": "${sourceDir}/../build/macos-homebrew-llvm",
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++",
         "CMAKE_BUILD_TYPE": "Debug"
       }
+    },
+    {
+      "name": "macos-homebrew-llvm",
+      "displayName": "macOS Homebrew LLVM (Debug)",
+      "description": "Configure for macOS using Homebrew's clang++",
+      "inherits": ["base-homebrew-llvm"],
+      "binaryDir": "${sourceDir}/../build/macos-homebrew-llvm"
     }
   ],
   "buildPresets": [
