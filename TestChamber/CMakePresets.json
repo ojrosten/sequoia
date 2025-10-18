@@ -9,7 +9,7 @@
     },
     {
       "name": "base-binary",
-      "binaryDir": "${sourceDir}/../build/${presetName}"
+      "binaryDir": "${sourceDir}/../build/${sourceDirName}/${presetName}"
     },
     {
       "name": "base-homebrew-llvm",
@@ -48,6 +48,21 @@
       "name": "ubuntu-gcc",
       "displayName": "Ubuntu g++-15 (Debug)",
       "configurePreset": "ubuntu-gcc"
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "TestChamber",
+      "steps": [
+          {
+            "type": "configure",
+            "name": "macos-homebrew-llvm"
+          },
+          {
+            "type": "build",
+            "name": "macos-homebrew-llvm"
+          }
+      ]
     }
   ]
 }
