@@ -15,6 +15,12 @@
       }
     },
     {
+      "name": "base-asan-msvc",
+      "cacheVariables": {
+          "CMAKE_CXX_FLAGS": "/fsanitize=address /EHsc"
+      }
+    },
+    {
       "name": "base-binary",
       "binaryDir": "${sourceDir}/../build/${sourceDirName}/${presetName}"
     },
@@ -55,6 +61,20 @@
       "displayName": "Ubuntu g++-15 (Debug/asan)",
       "description": "Configure for ${displayName}",
       "inherits": ["ubuntu-gcc", "base-asan"]
+    },
+    {
+      "name": "msvc",
+      "displayName": "Visual Studio",
+      "description": "Configure for ${displayName}",
+      "generator": "Visual Studio 17 2022",
+      "inherits": ["base-binary"]
+    },
+    {
+      "name": "msvc-asan",
+      "displayName": "Visual Studio (asan)",
+      "description": "Configure for ${displayName}",
+      "generator": "Visual Studio 17 2022",
+      "inherits": ["msvc", "base-asan-msvc"]
     }
   ],
   "buildPresets": [
