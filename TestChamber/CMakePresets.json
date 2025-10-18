@@ -85,11 +85,11 @@
   ],
   "buildPresets": [
     {
-       "name": "base-ninja",
-       "hidden": true,
-       "environment": {
+      "name": "base-ninja",
+      "hidden": true,
+      "environment": {
         "NINJA_STATUS": "[%e: %f/%t] "
-       }
+      }
     },
     {
       "name": "macos-homebrew-llvm",
@@ -114,6 +114,60 @@
       "displayName": "Ubuntu g++-15 (Debug/asan)",
       "configurePreset": "ubuntu-gcc-asan",
       "inherits": ["base-ninja"]
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "macos-homebrew-llvm",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos-homebrew-llvm"
+        },
+        {
+          "type": "build",
+          "name": "macos-homebrew-llvm"
+        }
+      ]
+    },
+    {
+      "name": "macos-homebrew-llvm-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos-homebrew-llvm-asan"
+        },
+        {
+          "type": "build",
+          "name": "macos-homebrew-llvm-asan"
+        }
+      ]
+    },
+    {
+      "name": "ubuntu-gcc",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ubuntu-gcc"
+        },
+        {
+          "type": "build",
+          "name": "ubuntu-gcc"
+        }
+      ]
+    },
+    {
+      "name": "ubuntu-gcc-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ubuntu-gcc-asan"
+        },
+        {
+          "type": "build",
+          "name": "ubuntu-gcc-asan"
+        }
+      ]
     }
   ]
 }
