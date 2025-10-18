@@ -42,13 +42,19 @@
       "name": "macos-homebrew-llvm-asan",
       "displayName": "macOS Homebrew LLVM (Debug/asan)",
       "description": "Configure for ${displayName}",
-      "inherits": ["base-debug", "base-asan", "base-binary", "base-homebrew-llvm"]
+      "inherits": ["macos-homebrew-llvm", "base-asan"]
     },
     {
       "name": "ubuntu-gcc",
       "displayName": "Ubuntu g++-15 (Debug)",
       "description": "Configure for ${displayName}",
       "inherits": ["base-debug", "base-binary", "base-ubuntu-gcc"]
+    },
+    {
+      "name": "ubuntu-gcc-asan",
+      "displayName": "Ubuntu g++-15 (Debug/asan)",
+      "description": "Configure for ${displayName}",
+      "inherits": ["ubuntu-gcc", "base-asan"]
     }
   ],
   "buildPresets": [
@@ -66,6 +72,11 @@
       "name": "ubuntu-gcc",
       "displayName": "Ubuntu g++-15 (Debug)",
       "configurePreset": "ubuntu-gcc"
+    },
+    {
+      "name": "ubuntu-gcc-asan",
+      "displayName": "Ubuntu g++-15 (Debug/asan)",
+      "configurePreset": "ubuntu-gcc-asan"
     }
   ]
 }
