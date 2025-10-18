@@ -39,7 +39,7 @@
     {
       "name": "base-ubuntu-gcc",
       "hidden": true,
-      "generator": "Unix Makefiles",
+      "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "/usr/bin/g++-15"
       }
@@ -85,24 +85,35 @@
   ],
   "buildPresets": [
     {
+       "name": "base-ninja",
+       "hidden": true,
+       "environment": {
+        "NINJA_STATUS": "[%e: %f/%t] "
+       }
+    },
+    {
       "name": "macos-homebrew-llvm",
       "displayName": "macOS Homebrew LLVM (Debug)",
-      "configurePreset": "macos-homebrew-llvm"
+      "configurePreset": "macos-homebrew-llvm",
+      "inherits": ["base-ninja"]
     },
     {
       "name": "macos-homebrew-llvm-asan",
       "displayName": "macOS Homebrew LLVM (Debug/asan)",
-      "configurePreset": "macos-homebrew-llvm-asan"
+      "configurePreset": "macos-homebrew-llvm-asan",
+      "inherits": ["base-ninja"]
     },
     {
       "name": "ubuntu-gcc",
       "displayName": "Ubuntu g++-15 (Debug)",
-      "configurePreset": "ubuntu-gcc"
+      "configurePreset": "ubuntu-gcc",
+      "inherits": ["base-ninja"]
     },
     {
       "name": "ubuntu-gcc-asan",
       "displayName": "Ubuntu g++-15 (Debug/asan)",
-      "configurePreset": "ubuntu-gcc-asan"
+      "configurePreset": "ubuntu-gcc-asan",
+      "inherits": ["base-ninja"]
     }
   ]
 }
