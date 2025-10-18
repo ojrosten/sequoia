@@ -49,20 +49,5 @@
       "displayName": "Ubuntu g++-15 (Debug)",
       "configurePreset": "ubuntu-gcc"
     }
-  ],
-  "workflowPresets": [
-    {
-      "name": "TestChamber",
-      "steps": [
-          {
-            "type": "configure",
-            "name": "macos-homebrew-llvm"
-          },
-          {
-            "type": "build",
-            "name": "macos-homebrew-llvm"
-          }
-      ]
-    }
   ]
 }
