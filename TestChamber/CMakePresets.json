@@ -9,7 +9,14 @@
       }
     },
     {
-      "name": "base-asan",
+      "name": "base-release",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "base-asan-unix",
       "hidden": true,
       "cacheVariables": {
           "CMAKE_CXX_FLAGS": "-fsanitize=address",
@@ -29,45 +36,75 @@
       "binaryDir": "${sourceDir}/../build/${sourceDirName}/${presetName}"
     },
     {
-      "name": "base-homebrew-llvm",
+      "name": "base-unix",
       "hidden": true,
       "generator": "Ninja",
+      "inherits": ["base-binary"]  
+    },
+    {
+      "name": "base-homebrew-llvm",
+      "hidden": true,
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++"
-      }
+      },
+      "inherits": ["base-unix"]
     },
     {
       "name": "base-ubuntu-gcc",
       "hidden": true,
-      "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "/usr/bin/g++-15"
-      }
+      },
+      "inherits": ["base-unix"]
     },
     {
       "name": "macos-homebrew-llvm",
-      "displayName": "macOS Homebrew LLVM (Debug)",
+      "displayName": "macOS Homebrew LLVM [Debug]",
       "description": "Configure for ${displayName}",
-      "inherits": ["base-debug", "base-binary", "base-homebrew-llvm"]
+      "inherits": ["base-homebrew-llvm", "base-debug"]
     },
     {
       "name": "macos-homebrew-llvm-asan",
-      "displayName": "macOS Homebrew LLVM (Debug/asan)",
+      "displayName": "macOS Homebrew LLVM [Debug, asan]",
       "description": "Configure for ${displayName}",
-      "inherits": ["macos-homebrew-llvm", "base-asan"]
+      "inherits": ["macos-homebrew-llvm", "base-asan-unix"]
+    },  
+    {
+      "name": "macos-homebrew-llvm-release",
+      "displayName": "macOS Homebrew LLVM [Release]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-homebrew-llvm", "base-release"]
+    },
+    {
+      "name": "macos-homebrew-llvm-release-asan",
+      "displayName": "macOS Homebrew LLVM [Release, asan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-homebrew-llvm-release", "base-asan-unix"]
     },
     {
       "name": "ubuntu-gcc",
-      "displayName": "Ubuntu g++-15 (Debug)",
+      "displayName": "Ubuntu g++-15 [Debug]",
       "description": "Configure for ${displayName}",
-      "inherits": ["base-debug", "base-binary", "base-ubuntu-gcc"]
+      "inherits": ["base-ubuntu-gcc", "base-debug"]
     },
     {
       "name": "ubuntu-gcc-asan",
-      "displayName": "Ubuntu g++-15 (Debug/asan)",
+      "displayName": "Ubuntu g++-15 [Debug, asan]",
       "description": "Configure for ${displayName}",
-      "inherits": ["ubuntu-gcc", "base-asan"]
+      "inherits": ["ubuntu-gcc", "base-asan-unix"]
     },
+    {
+      "name": "ubuntu-gcc-release",
+      "displayName": "Ubuntu g++-15 [Release]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-ubuntu-gcc", "base-release"]
+    },
+    {
+      "name": "ubuntu-gcc-release-asan",
+      "displayName": "Ubuntu g++-15 [Release, asan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-ubuntu-gcc-release", "base-asan-unix"]
+    }, 
     {
       "name": "msvc",
       "displayName": "Visual Studio",
@@ -77,9 +114,8 @@
     },
     {
       "name": "msvc-asan",
-      "displayName": "Visual Studio (asan)",
+      "displayName": "Visual Studio [asan]",
       "description": "Configure for ${displayName}",
-      "generator": "Visual Studio 17 2022",
       "inherits": ["msvc", "base-asan-msvc"]
     }
   ],
@@ -93,50 +129,74 @@
     },
     {
       "name": "macos-homebrew-llvm",
-      "displayName": "macOS Homebrew LLVM (Debug)",
+      "displayName": "macOS Homebrew LLVM [Debug]",
       "configurePreset": "macos-homebrew-llvm",
       "inherits": ["base-ninja"]
     },
     {
       "name": "macos-homebrew-llvm-asan",
-      "displayName": "macOS Homebrew LLVM (Debug/asan)",
+      "displayName": "macOS Homebrew LLVM [Debug, asan]",
       "configurePreset": "macos-homebrew-llvm-asan",
       "inherits": ["base-ninja"]
     },
     {
+      "name": "macos-homebrew-llvm-release",
+      "displayName": "macOS Homebrew LLVM [Release]",
+      "configurePreset": "macos-homebrew-llvm-release",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "macos-homebrew-llvm-release-asan",
+      "displayName": "macOS Homebrew LLVM [Release, asan]",
+      "configurePreset": "macos-homebrew-llvm-release-asan",
+      "inherits": ["base-ninja"]
+    },
+    {
       "name": "ubuntu-gcc",
-      "displayName": "Ubuntu g++-15 (Debug)",
+      "displayName": "Ubuntu g++-15 [Debug]",
       "configurePreset": "ubuntu-gcc",
       "inherits": ["base-ninja"]
     },
     {
       "name": "ubuntu-gcc-asan",
-      "displayName": "Ubuntu g++-15 (Debug/asan)",
+      "displayName": "Ubuntu g++-15 [Debug, asan]",
       "configurePreset": "ubuntu-gcc-asan",
       "inherits": ["base-ninja"]
     },
     {
+      "name": "ubuntu-gcc-release",
+      "displayName": "Ubuntu g++-15 [Release]",
+      "configurePreset": "ubuntu-gcc-release",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "ubuntu-gcc-release-asan",
+      "displayName": "Ubuntu g++-15 [Release, asan]",
+      "configurePreset": "ubuntu-gcc-release-asan",
+      "inherits": ["base-ninja"]
+    },
+    {
       "name": "msvc",
-      "displayName": "Build MSVC Debug",
+      "displayName": "MSVC [Debug]",
       "configurePreset": "msvc",
       "configuration": "Debug"
     },
     {
       "name": "msvc-asan",
-      "displayName": "Build MSVC Debug",
+      "displayName": "MSVC [Debug, asan]",
       "configurePreset": "msvc-asan",
       "configuration": "Debug"
     },
     {
       "name": "msvc-release",
-      "displayName": "Build MSVC Release",
+      "displayName": "MSVC [Release]",
       "configurePreset": "msvc",
       "configuration": "Release"
     },
     {
       "name": "msvc-release-asan",
-      "displayName": "Build MSVC Release",
-      "configurePreset": "msvc",
+      "displayName": "MSVC [Release, asan]",
+      "configurePreset": "msvc-asan",
       "configuration": "Release"
     }
   ],
