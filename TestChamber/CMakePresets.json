@@ -79,7 +79,7 @@
       "name": "macos-homebrew-llvm-release-asan",
       "displayName": "macOS Homebrew LLVM [Release, asan]",
       "description": "Configure for ${displayName}",
-      "inherits": ["base-homebrew-llvm-release", "base-asan-unix"]
+      "inherits": ["macos-homebrew-llvm-release", "base-asan-unix"]
     },
     {
       "name": "ubuntu-gcc",
@@ -103,7 +103,7 @@
       "name": "ubuntu-gcc-release-asan",
       "displayName": "Ubuntu g++-15 [Release, asan]",
       "description": "Configure for ${displayName}",
-      "inherits": ["base-ubuntu-gcc-release", "base-asan-unix"]
+      "inherits": ["ubuntu-gcc-release", "base-asan-unix"]
     }, 
     {
       "name": "msvc",
@@ -228,6 +228,32 @@
       ]
     },
     {
+      "name": "macos-homebrew-llvm-release",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos-homebrew-llvm-release"
+        },
+        {
+          "type": "build",
+          "name": "macos-homebrew-llvm-release"
+        }
+      ]
+    },
+    {
+      "name": "macos-homebrew-llvm-release-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos-homebrew-llvm-release-asan"
+        },
+        {
+          "type": "build",
+          "name": "macos-homebrew-llvm-release-asan"
+        }
+      ]
+    },  
+    {
       "name": "ubuntu-gcc",
       "steps": [
         {
@@ -254,6 +280,32 @@
       ]
     },
     {
+      "name": "ubuntu-gcc-release",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ubuntu-gcc-release"
+        },
+        {
+          "type": "build",
+          "name": "ubuntu-gcc-release"
+        }
+      ]
+    },
+    {
+      "name": "ubuntu-gcc-release-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ubuntu-gcc-release-asan"
+        },
+        {
+          "type": "build",
+          "name": "ubuntu-gcc-release-asan"
+        }
+      ]
+    },  
+    {
       "name": "msvc",
       "steps": [
         {
@@ -276,6 +328,32 @@
         {
           "type": "build",
           "name": "msvc-asan"
+        }
+      ]
+    },
+    {
+      "name": "msvc-release",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "msvc"
+        },
+        {
+          "type": "build",
+          "name": "msvc-release"
+        }
+      ]
+    },
+    {
+      "name": "msvc-release-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "msvc-asan"
+        },
+        {
+          "type": "build",
+          "name": "msvc-release-asan"
         }
       ]
     }
