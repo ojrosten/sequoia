@@ -114,6 +114,30 @@
       "displayName": "Ubuntu g++-15 (Debug/asan)",
       "configurePreset": "ubuntu-gcc-asan",
       "inherits": ["base-ninja"]
+    },
+    {
+      "name": "msvc",
+      "displayName": "Build MSVC Debug",
+      "configurePreset": "msvc",
+      "configuration": "Debug"
+    },
+    {
+      "name": "msvc-asan",
+      "displayName": "Build MSVC Debug",
+      "configurePreset": "msvc-asan",
+      "configuration": "Debug"
+    },
+    {
+      "name": "msvc-release",
+      "displayName": "Build MSVC Release",
+      "configurePreset": "msvc",
+      "configuration": "Release"
+    },
+    {
+      "name": "msvc-release-asan",
+      "displayName": "Build MSVC Release",
+      "configurePreset": "msvc",
+      "configuration": "Release"
     }
   ],
   "workflowPresets": [
@@ -166,6 +190,32 @@
         {
           "type": "build",
           "name": "ubuntu-gcc-asan"
+        }
+      ]
+    },
+    {
+      "name": "msvc",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "msvc"
+        },
+        {
+          "type": "build",
+          "name": "msvc"
+        }
+      ]
+    },
+    {
+      "name": "msvc-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "msvc-asan"
+        },
+        {
+          "type": "build",
+          "name": "msvc-asan"
         }
       ]
     }
