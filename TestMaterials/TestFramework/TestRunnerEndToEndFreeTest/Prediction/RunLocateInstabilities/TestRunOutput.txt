@@ -31,8 +31,8 @@ Container:
 House:
 
 -----------Grand Totals-----------
-[Total Run Time: 3.8ms]
-[Execution Time: 2.41ms]
+[Total Run Time: 3.47ms]
+[Execution Time: 2.12ms]
 	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 118]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -62,14 +62,18 @@ Unstable:
 	Tests/Unstable/FlipperFreeTest.cpp, Line 24
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
 	Tests/Unstable/FlipperFreeTest.cpp, Line 25
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
@@ -87,8 +91,8 @@ Container:
 House:
 
 -----------Grand Totals-----------
-[Total Run Time: 3.06ms]
-[Execution Time: 1.75ms]
+[Total Run Time: 3.16ms]
+[Execution Time: 1.81ms]
 	Standard Top Level Checks:                12;  Failures:  3  [Deep checks: 118]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -107,7 +111,9 @@ vs.
 	Tests/Unstable/FlipperFreeTest.cpp, Line 24
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 

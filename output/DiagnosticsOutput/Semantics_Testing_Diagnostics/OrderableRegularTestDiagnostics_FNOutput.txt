@@ -6,7 +6,9 @@ Broken check invariant
 
   Prerequisite - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -18,7 +20,9 @@ Broken check invariant
 
   Prerequisite - for ordered semantics, it is assumed that y > x
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -29,15 +33,21 @@ Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 38
 
   operator> and operator< are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator< and operator<= are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator< and operator>= are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -48,7 +58,9 @@ Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 44
 
   operator< and operator<= are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -59,7 +71,9 @@ Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 50
 
   operator> and operator< are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -70,7 +84,9 @@ Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 56
 
   operator< and operator<= are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -81,7 +97,9 @@ Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 62
 
   Prerequisite - for ordered semantics, it is assumed that y > x
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -92,7 +110,9 @@ Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 68
 
   operator< and operator<=> are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 

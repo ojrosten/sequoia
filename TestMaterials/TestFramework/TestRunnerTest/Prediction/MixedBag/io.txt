@@ -2,21 +2,23 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 392us]
+[Execution Time: 644us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
 	Always fails
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
 
 -----------Grand Totals-----------
-[Total Run Time: 734us]
-[Execution Time: 392us]
+[Total Run Time: 1.38ms]
+[Execution Time: 644us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -27,14 +29,16 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 158us]
+[Execution Time: 343us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
 	Always fails
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
@@ -42,7 +46,9 @@ Suite:
 	Flipper
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
@@ -58,8 +64,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 434us]
-[Execution Time: 158us]
+[Total Run Time: 1.11ms]
+[Execution Time: 343us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -70,14 +76,16 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 139us]
+[Execution Time: 285us]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
 	Always fails
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
@@ -85,14 +93,16 @@ Suite:
 	Period 3: Pass/Pass/Fail
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
 
 -----------Grand Totals-----------
-[Total Run Time: 408us]
-[Execution Time: 139us]
+[Total Run Time: 936us]
+[Execution Time: 285us]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -103,14 +113,16 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 162us]
+[Execution Time: 326us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
 	Always fails
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
@@ -118,7 +130,9 @@ Suite:
 	Flipper
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
@@ -134,8 +148,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 469us]
-[Execution Time: 162us]
+[Total Run Time: 938us]
+[Execution Time: 326us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -146,21 +160,23 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 135us]
+[Execution Time: 240us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
 	Always fails
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
 
 -----------Grand Totals-----------
-[Total Run Time: 397us]
-[Execution Time: 135us]
+[Total Run Time: 842us]
+[Execution Time: 240us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -171,14 +187,16 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 187us]
+[Execution Time: 302us]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
 	Always fails
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
@@ -186,7 +204,9 @@ Suite:
 	Flipper
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
@@ -204,14 +224,16 @@ Suite:
 	Period 3: Pass/Pass/Fail
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
 
 -----------Grand Totals-----------
-[Total Run Time: 492us]
-[Execution Time: 187us]
+[Total Run Time: 900us]
+[Execution Time: 302us]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -231,7 +253,9 @@ vs.
 	Flipper
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
@@ -271,7 +295,9 @@ vs.
 	Period 3: Pass/Pass/Fail
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
@@ -281,7 +307,9 @@ vs.
 	Period 3: Pass/Pass/Fail
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 

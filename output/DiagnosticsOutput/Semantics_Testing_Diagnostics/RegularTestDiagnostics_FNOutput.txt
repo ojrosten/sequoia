@@ -6,7 +6,9 @@ Broken check invariant
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -18,11 +20,15 @@ Broken equality
 
   operator== is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator== is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -34,11 +40,15 @@ Broken inequality
 
   operator!= is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator!= is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -154,7 +164,9 @@ Broken copy value semantics
 
   Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -166,7 +178,9 @@ Broken copy assignment value semantics
 
   Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 

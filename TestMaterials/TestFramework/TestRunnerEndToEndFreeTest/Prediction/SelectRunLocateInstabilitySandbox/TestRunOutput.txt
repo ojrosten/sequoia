@@ -5,8 +5,8 @@ Unstable:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[Total Run Time: 2.62ms]
-[Execution Time: 1.05ms]
+[Total Run Time: 343us]
+[Execution Time: 126us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -22,14 +22,16 @@ Unstable:
 	Tests/Unstable/FlipperFreeTest.cpp, Line 25
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
 
 -----------Grand Totals-----------
-[Total Run Time: 3.07ms]
-[Execution Time: 1.03ms]
+[Total Run Time: 315us]
+[Execution Time: 118us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -48,7 +50,9 @@ vs.
 	Tests/Unstable/FlipperFreeTest.cpp, Line 25
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 

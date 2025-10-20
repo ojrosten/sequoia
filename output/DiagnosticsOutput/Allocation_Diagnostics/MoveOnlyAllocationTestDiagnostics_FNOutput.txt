@@ -243,7 +243,9 @@ Invariant violated: x == y
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -568,7 +570,9 @@ Invariant violated: x == y
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -853,7 +857,9 @@ Invariant violated: x == y
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -1158,7 +1164,9 @@ Invariant violated: x == y
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 

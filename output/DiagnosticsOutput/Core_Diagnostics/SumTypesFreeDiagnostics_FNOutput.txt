@@ -150,7 +150,9 @@ operator== returned false
   Obtained : null
   Predicted: not null
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -163,7 +165,9 @@ operator== returned false
   Obtained : not null
   Predicted: null
   [bool]
-  check failed
+  operator== returned false
+  Obtained : true
+  Predicted: false
 
 =======================================
 
@@ -207,7 +211,9 @@ Checking for equivalence with:
   Obtained : null
   Predicted: not null
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -222,7 +228,9 @@ Checking for equivalence with:
   Obtained : not null
   Predicted: null
   [bool]
-  check failed
+  operator== returned false
+  Obtained : true
+  Predicted: false
 
 =======================================
 
@@ -259,7 +267,9 @@ Checking for weak equivalence with:
   Obtained : null
   Predicted: not null
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -274,7 +284,9 @@ Checking for weak equivalence with:
   Obtained : not null
   Predicted: null
   [bool]
-  check failed
+  operator== returned false
+  Obtained : true
+  Predicted: false
 
 =======================================
 
@@ -316,7 +328,9 @@ Checking for equivalence with:
 
   Has value
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -330,7 +344,9 @@ Checking for equivalence with:
 
   std::any does not hold the expected type
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 

@@ -6,7 +6,9 @@ Broken check invariant
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -270,7 +272,9 @@ Broken check invariant
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -558,7 +562,9 @@ Broken check invariant
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -786,7 +792,9 @@ Broken check invariant
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -1038,7 +1046,9 @@ Broken check invariant
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -1302,7 +1312,9 @@ Broken check invariant
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -1590,7 +1602,9 @@ Broken check invariant
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -1842,7 +1856,9 @@ Broken check invariant
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 

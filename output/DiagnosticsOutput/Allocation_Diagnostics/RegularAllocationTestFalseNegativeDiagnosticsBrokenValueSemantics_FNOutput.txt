@@ -6,7 +6,9 @@ Broken copy value semantics
 
   Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -18,7 +20,9 @@ Broken copy assignment value semantics
 
   Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -30,11 +34,15 @@ Broken copy value semantics
 
   Mutation is not doing anything following copy then swap
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -46,7 +54,9 @@ Broken copy assignment value semantics
 
   Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -58,7 +68,9 @@ Broken copy value semantics
 
   Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -70,7 +82,9 @@ Broken copy assignment value semantics
 
   Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -136,11 +150,15 @@ Broken copy value semantics
 
   Mutation is not doing anything following copy then swap
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -152,7 +170,9 @@ Broken copy assignment value semantics
 
   Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -218,7 +238,9 @@ Broken copy value semantics
 
   Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -230,7 +252,9 @@ Broken copy assignment value semantics
 
   Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -294,11 +318,15 @@ Broken copy value semantics
 
   Mutation is not doing anything following copy then swap
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -310,7 +338,9 @@ Broken copy assignment value semantics
 
   Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -374,7 +404,9 @@ Broken copy value semantics
 
   Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -386,7 +418,9 @@ Broken copy assignment value semantics
 
   Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -398,11 +432,15 @@ Broken copy value semantics
 
   Mutation is not doing anything following copy then swap
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -414,7 +452,9 @@ Broken copy assignment value semantics
 
   Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
