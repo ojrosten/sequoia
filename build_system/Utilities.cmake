@@ -3,6 +3,7 @@ set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
 include(CTest)
 
 option(CODE_COVERAGE "Build with Code Coverage" OFF)
+set(EXEC_ARGS "" CACHE STRING "Command-line arguments for the 'run' target.")
 
 FUNCTION(sequoia_init)
     if(NOT WIN32)
@@ -70,6 +71,13 @@ FUNCTION(sequoia_set_properties target)
     endif()
 ENDFUNCTION()
 
+FUNCTION(sequoia_set_run_target exectuable)
+    add_custom_target(run 
+        COMMAND $<TARGET_FILE:${exectuable}> ${EXEC_ARGS}
+        DEPENDS ${exectuable}
+    )
+ENDFUNCTION()
+
 FUNCTION(sequoia_add_coverage_options target)
     if(CODE_COVERAGE)
         target_compile_options(${target} PRIVATE -coverage)
@@ -86,6 +94,7 @@ FUNCTION(sequoia_finalize_tests target sourceGroupRoot sourceGroupPrefix)
     if(CODE_COVERAGE)
         add_test(NAME ${target} COMMAND ${target} "--serial")
     endif()
+    sequoia_set_run_target(${target})
 ENDFUNCTION()
 
 FUNCTION(sequoia_finalize_self target sourceGroupRoot sourceGroupPrefix)
@@ -109,4 +118,5 @@ ENDFUNCTION()
 FUNCTION(sequoia_finalize_executable target)
     sequoia_finalize_library(${target})
     sequoia_set_properties(${target})
+    sequoia_set_run_target(${target})
 ENDFUNCTION()

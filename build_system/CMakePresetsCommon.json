@@ -38,7 +38,13 @@
     {
       "name": "base-binary",
       "hidden": true,
-      "binaryDir": "${sourceDir}/../build/${sourceDirName}/${presetName}"
+      "binaryDir": "${sourceDir}/../build/${sourceDirName}/${presetName}",
+      "cacheVariables": {
+        "EXEC_ARGS": {
+          "type": "STRING",
+          "value": "prune;-c;namespace"
+        }
+      }
     },
     {
       "name": "base-unix",
@@ -130,7 +136,8 @@
       "hidden": true,
       "environment": {
         "NINJA_STATUS": "[%e: %f/%t] "
-      }
+      },
+      "targets": "run"
     },
     {
       "name": "macos-homebrew-llvm",
