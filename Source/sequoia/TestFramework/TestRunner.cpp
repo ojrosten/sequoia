@@ -624,7 +624,7 @@ namespace sequoia::testing
                   }}},
                   {{{"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }}}}
                 },
-                [this](std::string_view){})
+                [](std::string_view){})
         };
 
     if(!help.empty())
@@ -834,7 +834,7 @@ namespace sequoia::testing
       auto first{std::ranges::find_if(m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest != std::nullopt; })};
       auto next{std::ranges::find_if(first, m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest->parallelizable(); })};
 
-      auto executor{[&s=m_Suites, id](auto& wt){ wt.summary = wt.optTest->execute(id); }};
+      auto executor{[id](auto& wt){ wt.summary = wt.optTest->execute(id); }};
 
       const timer asyncTimer{};
       std::ranges::for_each(first, next, executor);

@@ -88,7 +88,7 @@ namespace sequoia::testing
           {
             graph_description::node,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_nodes(0, 0);
               return g;
             }
@@ -96,7 +96,7 @@ namespace sequoia::testing
           {
             graph_description::node,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.sort_nodes(0, 0, [](auto i, auto j){ return i < j; });
               return g;
             }
@@ -104,7 +104,7 @@ namespace sequoia::testing
           {
             graph_description::node,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.sort_nodes(0, 1, [](auto i, auto j){ return i < j; });
               return g;
             }
@@ -120,7 +120,7 @@ namespace sequoia::testing
           {
             graph_description::nodew,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.set_node_weight(g.cbegin_node_weights(), std::complex<double>{2.1, 1.1});
               return g;
             }
@@ -190,7 +190,7 @@ namespace sequoia::testing
           {
             graph_description::node_0x,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.set_edge_weight(g.cbegin_edges(0), -0.2f, 0.1f);
               return g;
             }
@@ -198,7 +198,7 @@ namespace sequoia::testing
           {
             graph_description::node_0x,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.set_edge_weight(g.cbegin_edges(0) + 1, -0.2f, 0.1f);
               return g;
             }
@@ -214,7 +214,7 @@ namespace sequoia::testing
           {
             graph_description::nodew_0,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.set_node_weight(g.cbegin_node_weights(), std::complex<double>{2.1, 1.1});
               return g;
             }
@@ -316,7 +316,7 @@ namespace sequoia::testing
           {
             graph_description::node_0y_0x,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_edges(0, 0, 2);
               g.swap_edges(0, 1, 3);
               return g;
@@ -327,7 +327,7 @@ namespace sequoia::testing
           {
             graph_description::node_0x_0y,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_edges(0, 0, 2);
               g.swap_edges(0, 1, 3);
               return g;
@@ -416,7 +416,7 @@ namespace sequoia::testing
           {
             graph_description::nodew_node,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.set_node_weight(g.cbegin_node_weights(), std::complex<double>{2.1, 1.1});
               return g;
             }
@@ -428,7 +428,7 @@ namespace sequoia::testing
           {
             graph_description::nodex_nodew,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_nodes(0, 1);
               return g;
             }
@@ -436,7 +436,7 @@ namespace sequoia::testing
           {
             graph_description::nodex_nodew,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.sort_nodes(0, 2, [&g](auto i, auto j){ return g.begin_node_weights()[i].real() < g.begin_node_weights()[j].real(); });
               return g;
             }
@@ -506,7 +506,7 @@ namespace sequoia::testing
           {
             graph_description::node_1u_node_0u,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.set_edge_weight(g.cbegin_edges(0), -0.2f, 0.1f);
               return g;
             }
@@ -514,7 +514,7 @@ namespace sequoia::testing
           {
             graph_description::node_1u_node_0u,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.set_edge_weight(g.cbegin_edges(1), -0.2f, 0.1f);
               return g;
             }
@@ -524,7 +524,7 @@ namespace sequoia::testing
           {
             graph_description::node_1u_node_0u,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_nodes(1, 0);
               return g;
             }
@@ -532,8 +532,8 @@ namespace sequoia::testing
           {
             graph_description::node_1u_node_0u,
             report(""),
-            [this](graph_t g) -> graph_t {
-              g.sort_nodes(0, 2, [&g](auto i, auto j){ return i > j; });
+            [](graph_t g) -> graph_t {
+              g.sort_nodes(0, 2, [](auto i, auto j){ return i > j; });
               return g;
             }
           },
@@ -542,7 +542,7 @@ namespace sequoia::testing
            {
             graph_description::node_1u_nodew_0u,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_nodes(1, 0);
               return g;
             }
@@ -552,7 +552,7 @@ namespace sequoia::testing
           {
             graph_description::nodew_1u_node_0u,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_nodes(0, 1);
               return g;
             }
@@ -616,7 +616,7 @@ namespace sequoia::testing
          {
            graph_description::node_1u_1_node_0u_0,
            report(""),
-           [this](graph_t g) -> graph_t {
+           [](graph_t g) -> graph_t {
              g.set_edge_weight(g.cbegin_edges(0), -0.2f, 0.1f);
              return g;
            }
@@ -632,7 +632,7 @@ namespace sequoia::testing
          {
            graph_description::node_1u_1_node_0u_0,
            report(""),
-           [this](graph_t g) -> graph_t {
+           [](graph_t g) -> graph_t {
              g.set_edge_weight(g.cbegin_edges(1), -0.2f, 0.1f);
              return g;
            }
@@ -648,7 +648,7 @@ namespace sequoia::testing
          {
            graph_description::node_1u_1_node_0_0u,
            report(""),
-           [this](graph_t g) -> graph_t {
+           [](graph_t g) -> graph_t {
              g.set_edge_weight(g.cbegin_edges(1)+1, -0.2f, 0.1f);
              return g;
            }
@@ -666,7 +666,7 @@ namespace sequoia::testing
          {
             graph_description::node_1u_1_node_0u_0,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_nodes(0, 1);
               return g;
             }
@@ -676,7 +676,7 @@ namespace sequoia::testing
          {
             graph_description::node_1_1u_node_0u_0,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_nodes(0, 1);
               return g;
             }
@@ -686,7 +686,7 @@ namespace sequoia::testing
          {
             graph_description::node_1u_1_node_0_0u,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_nodes(1, 0);
               return g;
             }
@@ -713,7 +713,7 @@ namespace sequoia::testing
        },
 
       // 'graph_description::node_1u_1_node_0_0u'
-      [this]() -> graph_t {
+      []() -> graph_t {
          const auto g{[]{
             graph_t g{{edge_t{1, -0.2f, 0.1f}, edge_t{1}}, {edge_t{0, -0.2f, 0.1f}, edge_t{0}}};
             g.swap_edges(1, 0, 1);
@@ -725,7 +725,7 @@ namespace sequoia::testing
        },
 
       // 'graph_description::node_1_1u_node_0u_0'
-      [this]() -> graph_t {
+      []() -> graph_t {
        const auto g{[]{
           graph_t g{{edge_t{1, -0.2f, 0.1f}, edge_t{1}}, {edge_t{0, -0.2f, 0.1f}, edge_t{0}}};
           g.swap_edges(0, 0, 1);
@@ -758,7 +758,7 @@ namespace sequoia::testing
           {
             graph_description::node_2v_1u_nodex_2_0u_nodew_1_0v,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.sort_nodes(0, 3, [&g](auto i, auto j){ return g.cbegin_node_weights()[i].real() < g.cbegin_node_weights()[j].real(); });
               return g;
             }
@@ -768,7 +768,7 @@ namespace sequoia::testing
           {
             graph_description::nodew_1_2v_nodex_0_2u_node_0v_1u,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.sort_nodes(0, 3, [&g](auto i, auto j){ return g.cbegin_node_weights()[i].real() > g.cbegin_node_weights()[j].real(); });
               return g;
             }
