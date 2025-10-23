@@ -56,7 +56,8 @@
       "name": "base-homebrew-llvm",
       "hidden": true,
       "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++"
+        "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++",
+        "CMAKE_CXX_FLAGS": "-fcolor-diagnostics"
       },
       "inherits": ["base-unix"]
     },
@@ -64,7 +65,8 @@
       "name": "base-ubuntu-gcc",
       "hidden": true,
       "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "/usr/bin/g++-15"
+        "CMAKE_CXX_COMPILER": "/usr/bin/g++-15",
+        "CMAKE_CXX_FLAGS": "--fdiagnostics-color=always"
       },
       "inherits": ["base-unix"]
     },
@@ -136,7 +138,11 @@
       "hidden": true,
       "environment": {
         "NINJA_STATUS": "[%e: %f/%t] "
-      },
+      }
+    },
+    {
+      "name": "base-run",
+      "hidden": true,
       "targets": "run"
     },
     {
@@ -146,10 +152,20 @@
       "inherits": ["base-ninja"]
     },
     {
+      "name": "run-macos-homebrew-llvm",
+      "displayName": "Run macOS Homebrew LLVM [Debug]",
+      "inherits": ["macos-homebrew-llvm", "base-run"]
+    },
+    {
       "name": "macos-homebrew-llvm-asan",
       "displayName": "macOS Homebrew LLVM [Debug, asan]",
       "configurePreset": "macos-homebrew-llvm-asan",
       "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-llvm-asan",
+      "displayName": "Run macOS Homebrew LLVM [Debug, asan]",
+      "inherits": ["macos-homebrew-llvm-asan", "base-run"]
     },
     {
       "name": "macos-homebrew-llvm-release",
@@ -158,10 +174,20 @@
       "inherits": ["base-ninja"]
     },
     {
+      "name": "run-macos-homebrew-llvm-release",
+      "displayName": "Run macOS Homebrew LLVM [Release]",
+      "inherits": ["macos-homebrew-llvm-release", "base-run"]
+    },
+    {
       "name": "macos-homebrew-llvm-release-asan",
       "displayName": "macOS Homebrew LLVM [Release, asan]",
       "configurePreset": "macos-homebrew-llvm-release-asan",
       "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-llvm-release-asan",
+      "displayName": "Run macOS Homebrew LLVM [Release, asan]",
+      "inherits": ["macos-homebrew-llvm-release-asan", "base-run"]
     },
     {
       "name": "ubuntu-gcc",
@@ -170,10 +196,20 @@
       "inherits": ["base-ninja"]
     },
     {
+      "name": "run-ubuntu-gcc",
+      "displayName": "Run Ubuntu g++-15 [Debug]",
+      "inherits": ["ubuntu-gcc", "base-run"]
+    },
+    {
       "name": "ubuntu-gcc-asan",
       "displayName": "Ubuntu g++-15 [Debug, asan]",
       "configurePreset": "ubuntu-gcc-asan",
       "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-ubuntu-gcc-asan",
+      "displayName": "Run Ubuntu g++-15 [Debug, asan]",
+      "inherits": ["ubuntu-gcc-asan", "base-run"]
     },
     {
       "name": "ubuntu-gcc-release",
@@ -182,10 +218,20 @@
       "inherits": ["base-ninja"]
     },
     {
+      "name": "run-ubuntu-gcc-release",
+      "displayName": "Run Ubuntu g++-15 [Release]",
+      "inherits": ["ubuntu-gcc-release", "base-run"]
+    },
+    {
       "name": "ubuntu-gcc-release-asan",
       "displayName": "Ubuntu g++-15 [Release, asan]",
       "configurePreset": "ubuntu-gcc-release-asan",
       "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-ubuntu-gcc-release-asan",
+      "displayName": "Run Ubuntu g++-15 [Release, asan]",
+      "inherits": ["ubuntu-gcc-release-asan", "base-run"]
     },
     {
       "name": "msvc",
@@ -222,7 +268,7 @@
         },
         {
           "type": "build",
-          "name": "macos-homebrew-llvm"
+          "name": "run-macos-homebrew-llvm"
         }
       ]
     },
@@ -235,7 +281,7 @@
         },
         {
           "type": "build",
-          "name": "macos-homebrew-llvm-asan"
+          "name": "run-macos-homebrew-llvm-asan"
         }
       ]
     },
@@ -248,7 +294,7 @@
         },
         {
           "type": "build",
-          "name": "macos-homebrew-llvm-release"
+          "name": "run-macos-homebrew-llvm-release"
         }
       ]
     },
@@ -261,7 +307,7 @@
         },
         {
           "type": "build",
-          "name": "macos-homebrew-llvm-release-asan"
+          "name": "run-macos-homebrew-llvm-release-asan"
         }
       ]
     },  
@@ -274,7 +320,7 @@
         },
         {
           "type": "build",
-          "name": "ubuntu-gcc"
+          "name": "run-ubuntu-gcc"
         }
       ]
     },
@@ -287,7 +333,7 @@
         },
         {
           "type": "build",
-          "name": "ubuntu-gcc-asan"
+          "name": "run-ubuntu-gcc-asan"
         }
       ]
     },
@@ -300,7 +346,7 @@
         },
         {
           "type": "build",
-          "name": "ubuntu-gcc-release"
+          "name": "run-ubuntu-gcc-release"
         }
       ]
     },
@@ -313,7 +359,7 @@
         },
         {
           "type": "build",
-          "name": "ubuntu-gcc-release-asan"
+          "name": "run-ubuntu-gcc-release-asan"
         }
       ]
     },  
