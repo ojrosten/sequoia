@@ -228,7 +228,7 @@ namespace sequoia::testing
         if(fs::exists(main.dir()) && buildPaths.cmake_cache() && fs::exists(buildPaths.cmake_cache()->parent_path()))
         {
           stream << "\n";
-          invoke(cd_cmd(main.dir()) && cmake_cmd(std::nullopt, buildPaths, {}));
+          invoke(cd_cmd(main.dir()) && cmake_cmd(buildPaths, {}));
         }
       }
     };

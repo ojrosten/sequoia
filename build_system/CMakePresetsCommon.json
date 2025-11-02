@@ -38,13 +38,7 @@
     {
       "name": "base-binary",
       "hidden": true,
-      "binaryDir": "${sourceDir}/../build/${sourceDirName}/${presetName}",
-      "cacheVariables": {
-        "EXEC_ARGS": {
-          "type": "STRING",
-          "value": "prune;-c;namespace"
-        }
-      }
+      "binaryDir": "${sourceDir}/../build/${sourceDirName}/${presetName}"
     },
     {
       "name": "base-unix",

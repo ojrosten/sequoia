@@ -33,7 +33,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     const build_paths& get_build_paths() const noexcept { return m_Build; }
-
   private:
     main_paths m_Main;
     build_paths m_Build;
