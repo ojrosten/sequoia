@@ -95,7 +95,7 @@ namespace sequoia::testing
                           const std::optional<std::string>& args)
   {
     
-    std::string cmd{std::format("cmake --preset {}", back(buildPaths.executable_dir()).generic_string())};
+    std::string cmd{std::format("cmake --preset {}", back(buildPaths.cmake_cache().value().parent_path()).generic_string())};
     if(args.has_value())
       cmd.append(std::format( "-D EXEC_ARGS {}", args.value()));
     
@@ -108,7 +108,7 @@ namespace sequoia::testing
   shell_command build_cmd(const build_paths& buildPaths, const std::filesystem::path& output)
   {
     return {"Building...",
-            std::format("cmake --build --preset {}", back(buildPaths.executable_dir()).generic_string()),
+            std::format("cmake --build --preset {}", back(buildPaths.cmake_cache().value().parent_path()).generic_string()),
             output};
   }
 

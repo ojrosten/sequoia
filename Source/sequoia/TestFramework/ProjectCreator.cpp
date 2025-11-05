@@ -168,10 +168,15 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  build_paths make_new_build_paths(const std::filesystem::path& projectRoot, const build_paths& parentBuildPaths)  {
+  build_paths make_new_build_paths(const std::filesystem::path& projectRoot, const build_paths& parentBuildPaths)
+  {
+    if(!parentBuildPaths.cmake_cache() || parentBuildPaths.cmake_cache()->empty())
+      throw std::logic_error{"init_project: No CMakeCache file found"};
 
-    const auto execDir{projectRoot / "build" / "TestAll" / back(parentBuildPaths.executable_dir())};
-    return {projectRoot, execDir, execDir / "CMakeCache.txt"};
+    const auto parentCacheDirParent{parentBuildPaths.cmake_cache()->parent_path().parent_path()};
+    return{projectRoot,
+            projectRoot / "build" / "TestAll" / rebase_from(parentBuildPaths.executable_dir(),      parentCacheDirParent),
+            projectRoot / "build" / "TestAll" / rebase_from(parentBuildPaths.cmake_cache().value(), parentCacheDirParent)};
   }
 
   void init_projects(const project_paths& parentProjectPaths, const std::vector<project_data>& projects, std::ostream& stream)
