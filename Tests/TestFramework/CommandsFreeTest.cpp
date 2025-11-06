@@ -30,7 +30,7 @@ namespace sequoia::testing
   {
     const auto root{working_materials()}, buildSubdir{root / "build/CMade"};
 
-    check_exception_thrown<std::runtime_error>("Null executable dir",
-      [&]() { return cmake_cmd(build_paths{root, "", buildSubdir / "EmptyCacheFile/CMakeCache.txt"}, ""); });
+    check_exception_thrown<std::runtime_error>("No cache file",
+      [&]() { return cmake_cmd(build_paths{root, buildSubdir, ""}, ""); });
   }
 }

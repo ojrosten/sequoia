@@ -94,7 +94,6 @@ namespace sequoia::testing
                           const std::filesystem::path& output,
                           const std::optional<std::string>& args)
   {
-    
     std::string cmd{std::format("cmake --preset {}", back(buildPaths.cmake_cache().value().parent_path()).generic_string())};
     if(args.has_value())
       cmd.append(std::format( "-D EXEC_ARGS {}", args.value()));

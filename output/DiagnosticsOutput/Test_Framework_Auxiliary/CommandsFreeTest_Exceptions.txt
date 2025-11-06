@@ -1,5 +1,5 @@
 Tests/TestFramework/CommandsFreeTest.cpp, Line 33
-Null executable dir
+No cache file
 
 Expected Exception Type:
 [std::runtime_error]
