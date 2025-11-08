@@ -13,7 +13,7 @@ sequoia_init()
 
 add_executable(TestAll TestSandbox.cpp)
 
-add_subdirectory(${SourceDir}/myProject MyProject)
+add_subdirectory(${SourceDir}/FakeProject MyProject)
 target_link_libraries(TestAll PUBLIC MyProject)
 
 target_sources(TestAll PRIVATE

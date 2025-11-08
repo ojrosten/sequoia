@@ -168,7 +168,10 @@ namespace sequoia::testing
       file << outputStream.str();
     }
 
-    check(equivalence, "", projectPath, predictive_materials() /= projectName);
+    check(equivalence, "", projectPath / "output",      (predictive_materials() /= projectName) /= "output");
+    check(equivalence, "", projectPath / "Source",      (predictive_materials() /= projectName) /= "Source");
+    check(equivalence, "", projectPath / "Tests",       (predictive_materials() /= projectName) /= "Tests");
+    check(equivalence, "", projectPath / "TestSandbox", (predictive_materials() /= projectName) /= "TestSandbox");
   }
 
   void test_runner_test_creation::test_creation_failure()
