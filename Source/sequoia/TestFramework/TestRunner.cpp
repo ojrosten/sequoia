@@ -640,7 +640,7 @@ namespace sequoia::testing
       check_argument_consistency();
 
       if(in_mode(runner_mode::create))
-        cmake_nascent_tests(proj_paths(), stream());
+        stream() << '\n' << cmake_nascent_tests(proj_paths());
   
       if(in_mode(runner_mode::init))
         init_projects(proj_paths(), nascentProjects, stream());
