@@ -56,7 +56,7 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path basic_test_interface_free_test::minimal_fake_path() const
   {
-    return fake_project().append("build/CMade");
+    return fake_project().append("build/CMade/FakeExe.txt");
   }
 
   void basic_test_interface_free_test::run_tests()

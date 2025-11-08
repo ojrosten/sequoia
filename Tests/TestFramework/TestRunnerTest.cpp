@@ -357,7 +357,7 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path test_runner_test::minimal_fake_path() const
   {
-    return fake_project().append("build/CMade");
+    return fake_project().append("build/CMade/FakeExe.txt");
   }
 
   [[nodiscard]]

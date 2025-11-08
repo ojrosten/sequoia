@@ -1,2 +1,19 @@
 Test Creation
-Standard Top Level Checks:                35;  Failures:  0  [Deep checks: 1795]
+Standard Top Level Checks:                32;  Failures:  0  [Deep checks: 69]
+
+******  Critical Failures:  1  ******
+
+
+Error -- Unexpected Exception:
+filesystem error: in canonical: No such file or directory ["/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/build/CMade/FakeExe.txt"] [""]
+
+Exception thrown after check completed
+Last Recorded Message:
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 95
+Variadic template
+
+[std::vector<sequoia::testing::template_spec, std::allocator<sequoia::testing::template_spec> >]
+
+=======================================
+

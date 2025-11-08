@@ -170,13 +170,13 @@ namespace sequoia::testing
   [[nodiscard]]
   build_paths make_new_build_paths(const std::filesystem::path& projectRoot, const build_paths& parentBuildPaths)
   {
-    if(!parentBuildPaths.cmake_cache() || parentBuildPaths.cmake_cache()->empty())
-      throw std::logic_error{"init_project: No CMakeCache file found"};
+    if(!fs::exists(parentBuildPaths.cmake_cache_dir()))
+      throw std::logic_error{"init_project: No CMakeCache directory found"};
 
-    const auto parentCacheDirParent{parentBuildPaths.cmake_cache()->parent_path().parent_path()};
+    const auto parentCacheDirParent{parentBuildPaths.cmake_cache_dir().parent_path()};
     return{projectRoot,
-            projectRoot / "build" / "TestAll" / rebase_from(parentBuildPaths.executable_dir(),      parentCacheDirParent),
-            projectRoot / "build" / "TestAll" / rebase_from(parentBuildPaths.cmake_cache().value(), parentCacheDirParent)};
+            projectRoot / "build" / "TestAll" / rebase_from(parentBuildPaths.executable_dir(),  parentCacheDirParent),
+            projectRoot / "build" / "TestAll" / rebase_from(parentBuildPaths.cmake_cache_dir(), parentCacheDirParent)};
   }
 
   void init_projects(const project_paths& parentProjectPaths, const std::vector<project_data>& projects, std::ostream& stream)
@@ -237,7 +237,7 @@ namespace sequoia::testing
         invoke(cd_cmd(main.dir())
             && cmake_cmd(build, data.output)
             && build_cmd(build, data.output)
-            && ((data.do_build == build_invocation::launch_ide) && build.cmake_cache() ? launch_cmd(parentProjectPaths, data.project_root, build.cmake_cache()->parent_path()) : shell_command{})
+            && ((data.do_build == build_invocation::launch_ide) ? launch_cmd(parentProjectPaths, data.project_root, build.cmake_cache_dir()) : shell_command{})
         );
       }
     }
@@ -265,9 +265,9 @@ namespace sequoia::testing
 
     if constexpr(with_msvc_v)
     {
-      if(const auto cmakeCache{parentProjectPaths.build().cmake_cache()})
+      if(const auto cmakeCache{parentProjectPaths.build().cmake_cache_dir() / "CMakeCache.txt"}; fs::exists(cmakeCache))
       {
-        if(const auto optText{read_to_string(cmakeCache.value())})
+        if(const auto optText{read_to_string(cmakeCache)})
         {
           const auto [first, last]{find_sandwiched_text(optText.value(), "CMAKE_GENERATOR_INSTANCE:INTERNAL=", "\n")};
           if((first != npos) && (last != npos))

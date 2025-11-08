@@ -225,7 +225,7 @@ namespace sequoia::testing
 
     auto cmake{
       [&stream](const main_paths& main, const build_paths& buildPaths) {
-        if(fs::exists(main.dir()) && buildPaths.cmake_cache() && fs::exists(buildPaths.cmake_cache()->parent_path()))
+        if(fs::exists(main.dir()) && fs::exists(buildPaths.cmake_cache_dir()))
         {
           stream << "\n";
           invoke(cd_cmd(main.dir()) && cmake_cmd(buildPaths, {}));

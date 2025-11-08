@@ -43,7 +43,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const std::optional<std::filesystem::path>& cmake_cache() const noexcept
+    const std::filesystem::path& cmake_cache() const noexcept
     {
       return m_CMakeCache;
     }
@@ -51,10 +51,9 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator==(const discoverable_paths&, const discoverable_paths&) noexcept = default;
   private:
-    std::filesystem::path m_Root{}, m_Executable{};
-    std::optional<std::filesystem::path> m_CMakeCache{};
+    std::filesystem::path m_Root{}, m_Executable{}, m_CMakeCache{};
 
-    discoverable_paths(std::filesystem::path rt, std::filesystem::path exec, std::optional<std::filesystem::path> cmakeCache);
+    discoverable_paths(std::filesystem::path rt, std::filesystem::path exec, std::filesystem::path cmakeCache);
 
     [[nodiscard]]
     static discoverable_paths make(int argc, char** argv);
@@ -228,7 +227,7 @@ namespace sequoia::testing
   public:
     build_paths() = default;
 
-    build_paths(std::filesystem::path projectRoot, const std::filesystem::path& executableDir, std::optional<std::filesystem::path> cmakeCache);
+    build_paths(std::filesystem::path projectRoot, std::filesystem::path executableDir, std::filesystem::path cmakeCacheDir);
 
     [[nodiscard]]
     const std::filesystem::path& dir() const { return m_Dir; }
@@ -240,16 +239,15 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const std::optional<std::filesystem::path>& cmake_cache() const noexcept
+    const std::filesystem::path& cmake_cache_dir() const noexcept
     {
-      return m_CMakeCache;
+      return m_CMakeCacheDir;
     }
 
     [[nodiscard]]
     friend bool operator==(const build_paths&, const build_paths&) noexcept = default;
   private:
-    std::filesystem::path m_Dir, m_ExecutableDir{};
-    std::optional<std::filesystem::path> m_CMakeCache{};
+    std::filesystem::path m_Dir{}, m_ExecutableDir{}, m_CMakeCacheDir{};
   };
 
   /*! \brief Paths for auxiliary materials, used in creating projects/tests */

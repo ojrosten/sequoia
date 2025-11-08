@@ -70,10 +70,7 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path cmd_builder::cmake_cache_dir() const
   {
-    if(!get_build_paths().cmake_cache())
-      throw std::logic_error{"No CMakeCache.txt"};
-
-    return get_build_paths().cmake_cache()->parent_path();
+    return get_build_paths().cmake_cache_dir();
   }
 
   void cmd_builder::create_build_run(const std::filesystem::path& creationOutput, std::string_view buildOutput, const std::filesystem::path& output) const

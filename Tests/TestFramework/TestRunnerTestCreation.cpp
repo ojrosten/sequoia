@@ -28,7 +28,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string test_runner_test_creation::zeroth_arg(std::string_view projectName) const
   {
-    return (working_materials() / projectName / "build/CMade").generic_string();
+    return (working_materials() / projectName / "build/macos-homebrew-llvm/FakeExe.txt").generic_string();
   }
 
   void test_runner_test_creation::run_tests()
@@ -106,7 +106,6 @@ namespace sequoia::testing
     const auto sourceFolderName{back(sourceFolderPath).generic_string()};
 
     fs::copy(auxiliary_paths::repo(get_project_paths().project_root()), auxiliary_paths::repo(projectPath), fs::copy_options::recursive);
-    fs::create_directory(projectPath / "TestSandbox");
 
     fs::copy(source_paths{auxiliary_paths::project_template(get_project_paths().project_root())}.cmake_lists(), sourceFolderPath);
 
