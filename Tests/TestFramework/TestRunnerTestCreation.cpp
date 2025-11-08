@@ -19,6 +19,8 @@
 
 namespace sequoia::testing
 {
+  namespace fs = std::filesystem;
+
   [[nodiscard]]
   std::filesystem::path test_runner_test_creation::source_file() const
   {
@@ -28,7 +30,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string test_runner_test_creation::zeroth_arg(std::string_view projectName) const
   {
-    return (working_materials() / projectName / "build"/ back(get_project_paths().build().cmake_cache_dir()) / "FakeExe.txt").generic_string();
+    return (auxiliary_materials() / projectName / "build"/ back(get_project_paths().build().cmake_cache_dir()) / "FakeExe.txt").generic_string();
   }
 
   void test_runner_test_creation::run_tests()
@@ -98,9 +100,7 @@ namespace sequoia::testing
 
   void test_runner_test_creation::test_creation(std::string_view projectName, std::optional<std::string> sourceFolder)
   {
-    namespace fs = std::filesystem;
-
-    const auto projectPath{working_materials() / projectName};
+    const auto projectPath{auxiliary_materials() / projectName};
     const source_paths sourcePaths{projectPath, sourceFolder};
     const auto sourceFolderPath{sourcePaths.project()};
     const auto sourceFolderName{back(sourceFolderPath).generic_string()};
@@ -113,7 +113,7 @@ namespace sequoia::testing
 
     const auto cmakeCacheDir{projectPath / "build" / back(get_project_paths().build().cmake_cache_dir())};
     fs::create_directory(cmakeCacheDir);
-    fs::copy(working_materials() / "FakeExe.txt", cmakeCacheDir);
+    fs::copy(auxiliary_materials() / "FakeExe.txt", cmakeCacheDir);
     fs::copy(get_project_paths().build().cmake_cache_dir() / "CMakeCache.txt", cmakeCacheDir);
 
     const main_paths templateMain{auxiliary_paths::project_template(get_project_paths().project_root()) / main_paths::default_main_cpp_from_root()},
@@ -168,10 +168,10 @@ namespace sequoia::testing
       file << outputStream.str();
     }
 
-    check(equivalence, "", projectPath / "output",      (predictive_materials() /= projectName) /= "output");
-    check(equivalence, "", projectPath / "Source",      (predictive_materials() /= projectName) /= "Source");
-    check(equivalence, "", projectPath / "Tests",       (predictive_materials() /= projectName) /= "Tests");
-    check(equivalence, "", projectPath / "TestSandbox", (predictive_materials() /= projectName) /= "TestSandbox");
+    check_directory(projectName, "output");
+    check_directory(projectName, "Source");
+    check_directory(projectName, "Tests");
+    check_directory(projectName, "TestSandbox");
   }
 
   void test_runner_test_creation::test_creation_failure()
@@ -192,5 +192,13 @@ namespace sequoia::testing
           commandline_arguments args{{zeroth_arg("FakeProject"), "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Thingz.hpp"}};
           test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
         });
+  }
+
+  void test_runner_test_creation::check_directory(std::string_view projectName, std::string_view dirName)
+  {
+    const auto targetDir{(working_materials() /= projectName) /= dirName};
+    fs::create_directories(targetDir);
+    fs::copy((auxiliary_materials() /= projectName) /= dirName, targetDir, fs::copy_options::recursive);
+    check(equivalence, "", targetDir, (predictive_materials() /= projectName) /= dirName);
   }
 }

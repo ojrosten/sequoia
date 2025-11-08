@@ -173,4 +173,4 @@ Running CMake...
 -- Found Threads: TRUE
 -- Configuring done (0.5s)
 -- Generating done (0.0s)
--- Build files have been written to: /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/WorkingCopy/FakeProject/build/TestSandbox/macos-homebrew-llvm
+-- Build files have been written to: /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/Auxiliary/FakeProject/build/TestSandbox/macos-homebrew-llvm

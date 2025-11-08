@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 45
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 47
 Empty string
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Equivalent type is unspecified
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 46
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 48
 Just spaces
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Equivalent type is unspecified
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 68
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 70
 Unmatched <
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 70
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 72
 Backwards delimiters
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 72
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 74
 Missing symbol
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 74
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 76
 Missing symbol
 
 Expected Exception Type:
