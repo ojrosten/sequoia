@@ -28,7 +28,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string test_runner_test_creation::zeroth_arg(std::string_view projectName) const
   {
-    return (working_materials() / projectName / "build/macos-homebrew-llvm/FakeExe.txt").generic_string();
+    return (working_materials() / projectName / "build"/ back(get_project_paths().build().cmake_cache_dir()) / "FakeExe.txt").generic_string();
   }
 
   void test_runner_test_creation::run_tests()
@@ -109,12 +109,25 @@ namespace sequoia::testing
 
     fs::copy(source_paths{auxiliary_paths::project_template(get_project_paths().project_root())}.cmake_lists(), sourceFolderPath);
 
+    fs::copy(get_project_paths().build_system().repo(), projectPath / "dependencies/sequoia/build_system", fs::copy_options::recursive);
+
+    const auto cmakeCacheDir{projectPath / "build" / back(get_project_paths().build().cmake_cache_dir())};
+    fs::create_directory(cmakeCacheDir);
+    fs::copy(working_materials() / "FakeExe.txt", cmakeCacheDir);
+    fs::copy(get_project_paths().build().cmake_cache_dir() / "CMakeCache.txt", cmakeCacheDir);
+
     const main_paths templateMain{auxiliary_paths::project_template(get_project_paths().project_root()) / main_paths::default_main_cpp_from_root()},
                      fakeMain{projectPath / "TestSandbox" / "TestSandbox.cpp"};
 
     fs::copy(templateMain.file(), fakeMain.file());
     fs::copy(templateMain.cmake_lists(), fakeMain.cmake_lists());
-    read_modify_write(fakeMain.cmake_lists(), [](std::string& text) { replace_all(text, "TestAllMain.cpp", "TestSandbox.cpp"); } );
+    read_modify_write(
+      fakeMain.cmake_lists(),
+      [projectName,&sourceFolder](std::string& text) {
+        replace_all(text, "TestAllMain.cpp", "TestSandbox.cpp");
+        replace_all(text, "myProject", sourceFolder ? sourceFolder.value() : projectName);
+      }
+    );
 
     commandline_arguments args{{zeroth_arg(projectName)
                                , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
