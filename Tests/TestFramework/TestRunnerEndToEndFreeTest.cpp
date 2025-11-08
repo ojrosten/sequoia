@@ -176,7 +176,6 @@ namespace sequoia::testing
     pause_for_mac_m_series(250ms);
     b.create_build_run(working_materials() /= "CreationOutput", "BuildOutput2.txt", working_materials() /= "Output");
 
-    // Note: the act of creation invokes cmake, and so the first check implicitly checks the cmake output
     check(equivalence, description, working_materials() /= "CreationOutput", predictive_materials() /= "CreationOutput");
     check(append_lines(description, "Second build output existance"), fs::exists(b.cmake_cache_dir() / "BuildOutput2.txt"));
     check(equivalence, append_lines(description, "Test Runner Output"), working_materials() /= "Output", predictive_materials() /= "Output");
@@ -249,8 +248,7 @@ namespace sequoia::testing
 
     const cmd_builder b{generated_project(), get_project_paths().build()};
 
-    // The first file is now overwritten!
-    check("First CMake output existance", fs::exists(b.get_main_paths().dir() / "GenerationOutput.txt"));
+    check("First CMake output existance", fs::exists(b.get_build_paths().cmake_cache_dir() / "CMakeCache.txt"));
     check("First build output existance", fs::exists(b.get_main_paths().dir() / "GenerationOutput.txt"));
     check("First git output existance", fs::exists(generated_project() / "GenerationOutput.txt"));
     check(".git existance", fs::exists(generated_project() / ".git"));
