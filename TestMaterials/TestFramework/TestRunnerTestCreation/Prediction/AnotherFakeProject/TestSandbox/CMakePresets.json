@@ -60,7 +60,7 @@
       "hidden": true,
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "/usr/bin/g++-15",
-        "CMAKE_CXX_FLAGS": "--fdiagnostics-color=always"
+        "CMAKE_CXX_FLAGS": "-fdiagnostics-color=always"
       },
       "inherits": ["base-unix"]
     },

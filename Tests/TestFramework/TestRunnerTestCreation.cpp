@@ -129,6 +129,8 @@ namespace sequoia::testing
       }
     );
 
+    fs::copy(get_project_paths().build_system().repo() / "CMakePresetsCommon.json", fakeMain.dir() / "CMakePresets.json");
+
     commandline_arguments args{{zeroth_arg(projectName)
                                , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
                                , "create", "regular", "utilities::iterator", "int*"
