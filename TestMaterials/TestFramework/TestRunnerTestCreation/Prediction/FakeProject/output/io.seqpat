@@ -1,1 +1,6 @@
-(.*s)
+is .*
+compiler: .*
+-- Performing .*\n
+-- Found Threads: .*\n
+\d.\ds
+ to: .*
