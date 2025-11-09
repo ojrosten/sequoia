@@ -199,21 +199,16 @@ namespace sequoia::testing
 
   void test_runner_end_to_end_test::check_project_files(std::string_view description, const cmd_builder& b)
   {
-    const std::filesystem::path subdirs{"ProjectFiles/win"};
-    fs::create_directories(working_materials() /= subdirs);
     if constexpr(with_msvc_v)
     {
+      const std::filesystem::path subdirs{"ProjectFiles/win"};
+      fs::create_directories(working_materials() /= subdirs);
+
       const auto projFile{b.cmake_cache_dir() / "TestAll.vcxproj"};
       fs::copy(projFile, working_materials() /= subdirs);
-    }
-    else
-    {
-      // TO DO: fake this for now on other platforms to ensure the number of checks/deep checks match;
-      // A solution might be to introduce platform-specific summaries.
-      fs::copy(predictive_materials() /= subdirs, working_materials() /= subdirs);
-    }
 
-    check(equivalence, description, working_materials() /= subdirs, predictive_materials() /= subdirs);
+      check(equivalence, description, working_materials() /= subdirs, predictive_materials() /= subdirs);
+    }
   }
 
   void test_runner_end_to_end_test::run_tests()

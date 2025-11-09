@@ -46,6 +46,12 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path source_file() const;
 
+    [[nodiscard]]
+    std::string summary_discriminator() const
+    {
+      return with_msvc_v ? back(get_project_paths().build().cmake_cache_dir()).generic_string() : std::string{};
+    }
+
     void run_tests();
   private:
     void test_project_creation();
