@@ -47,6 +47,15 @@
       "inherits": ["base-binary"]  
     },
     {
+      "name": "base-coverage",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-coverage",
+        "CMAKE_EXE_LINKER_FLAGS": "-coverage",
+        "CODE_COVERAGE": "ON"
+      }
+    },
+    {
       "name": "base-homebrew-llvm",
       "hidden": true,
       "cacheVariables": {
@@ -99,6 +108,12 @@
       "displayName": "Ubuntu g++-15 [Debug, asan]",
       "description": "Configure for ${displayName}",
       "inherits": ["ubuntu-gcc", "base-asan-unix"]
+    },
+    {
+      "name": "ubuntu-gcc-coverage",
+      "displayName": "Ubuntu g++-15 [Debug,coverage]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["ubuntu-gcc", "base-coverage"]
     },
     {
       "name": "ubuntu-gcc-release",
@@ -204,6 +219,17 @@
       "name": "run-ubuntu-gcc-asan",
       "displayName": "Run Ubuntu g++-15 [Debug, asan]",
       "inherits": ["ubuntu-gcc-asan", "base-run"]
+    },
+    {
+      "name": "ubuntu-gcc-coverage",
+      "displayName": "Ubuntu g++-15 [Debug, coverage]",
+      "configurePreset": "ubuntu-gcc-coverage",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-ubuntu-gcc-coverage",
+      "displayName": "Run Ubuntu g++-15 [Debug, coverage]",
+      "inherits": ["ubuntu-gcc-coverage", "base-run"]
     },
     {
       "name": "ubuntu-gcc-release",
@@ -328,6 +354,19 @@
         {
           "type": "build",
           "name": "run-ubuntu-gcc-asan"
+        }
+      ]
+    },
+    {
+      "name": "ubuntu-gcc-coverage",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ubuntu-gcc-coverage"
+        },
+        {
+          "type": "build",
+          "name": "run-ubuntu-gcc-coverage"
         }
       ]
     },
