@@ -125,7 +125,7 @@ namespace sequoia::testing
       fakeMain.cmake_lists(),
       [projectName,&sourceFolder](std::string& text) {
         replace_all(text, "TestAllMain.cpp", "TestSandbox.cpp");
-        replace_all(text, "myProject", sourceFolder ? sourceFolder.value() : projectName);
+        replace_all(text, "myProject", sourceFolder ? sourceFolder.value() : uncapitalize(projectName));
       }
     );
 
