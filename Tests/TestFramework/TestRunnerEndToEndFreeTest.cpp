@@ -68,7 +68,7 @@ namespace sequoia::testing
   {}
 
   [[nodiscard]]
-  fs::path cmd_builder::cmake_cache_dir() const
+  const fs::path& cmd_builder::cmake_cache_dir() const
   {
     return get_build_paths().cmake_cache_dir();
   }
@@ -177,7 +177,7 @@ namespace sequoia::testing
     b.create_build_run(working_materials() /= "CreationOutput", "BuildOutput2.txt", working_materials() /= "Output");
 
     check(equivalence, description, working_materials() /= "CreationOutput", predictive_materials() /= "CreationOutput");
-    check(append_lines(description, "Second build output existance"), fs::exists(b.cmake_cache_dir() / "BuildOutput2.txt"));
+    check(append_lines(description, "Second build output existance"), fs::exists(b.get_build_paths().executable_dir() / "BuildOutput2.txt"));
     check(equivalence, append_lines(description, "Test Runner Output"), working_materials() /= "Output", predictive_materials() /= "Output");
   }
 

@@ -26,7 +26,7 @@ namespace sequoia::testing
     void run_executable(const std::filesystem::path& outputDir, std::string_view options) const;
 
     [[nodiscard]]
-    std::filesystem::path cmake_cache_dir() const;
+    const std::filesystem::path& cmake_cache_dir() const;
 
     [[nodiscard]]
     const main_paths& get_main_paths() const noexcept { return m_Main; }
@@ -49,7 +49,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string summary_discriminator() const
     {
-      return with_msvc_v ? back(get_project_paths().build().cmake_cache_dir()).generic_string() : std::string{};
+      return with_msvc_v ? "msvc" : std::string{};
     }
 
     void run_tests();
