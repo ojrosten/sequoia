@@ -15,10 +15,6 @@ test_dir="$1"
 # Cleanup lcov
 lcov --zerocounters --directory "$test_Dir"
 
-# Run cTest to ensure RenderingSetup.txt is generatated
-cd "$test_dir"
-ctest -T Test
-
 # Relative location of the html output directory
 output_dir="${script_dir}/../coverage_reports/$(basename "$PWD")"
 
@@ -29,8 +25,8 @@ mkdir -p "$output_dir"
 ctest -T Coverage
 
 # Generate lcov coverage report
-lcov --directory "$test_dir".  --capture --output-file coverage.info --keep-going --filter range --rc geninfo_unexecuted_blocks=1
-lcov --remove coverage.info '/usr/*' --output-file coverage.info
+lcov --directory "$test_dir".  --capture --output-file coverage.info --keep-going --filter range --rc geninfo_unexecuted_blocks=1 --gcov-tool /usr/bin/gcov-15
+lcov --remove coverage.info '/usr/*' --output-file coverage.info --ignore-errors inconsistent
 
 # Generate HTML report
-genhtml --demangle-cpp -o "${output_dir}" coverage.info
+genhtml --demangle-cpp -o "${output_dir}" coverage.info --ignore-errors inconsistent
