@@ -29,4 +29,4 @@ lcov --directory "$test_dir".  --capture --output-file coverage.info --keep-goin
 lcov --remove coverage.info '/usr/*' --output-file coverage.info --ignore-errors inconsistent
 
 # Generate HTML report
-genhtml --demangle-cpp -o "${output_dir}" coverage.info --ignore-errors inconsistent
+genhtml --demangle-cpp -o "${output_dir}" coverage.info --ignore-errors inconsistent --ignore-errors range
