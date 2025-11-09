@@ -201,7 +201,7 @@ namespace sequoia::testing
   {
     if constexpr(with_msvc_v)
     {
-      const std::filesystem::path subdirs{"ProjectFiles/win"};
+      const std::filesystem::path subdirs{"ProjectFiles" / back(get_project_paths().build().cmake_cache_dir())};
       fs::create_directories(working_materials() /= subdirs);
 
       const auto projFile{b.cmake_cache_dir() / "TestAll.vcxproj"};
