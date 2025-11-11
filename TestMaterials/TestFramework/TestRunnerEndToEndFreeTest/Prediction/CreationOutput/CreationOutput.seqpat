@@ -1,4 +1,4 @@
 -- Selecting.*\n
 to:.*
  \(.*\)
-Preset.*\n\n.*\n.*\n.*\n\n
+Preset((.|\n|)*?)(?=--)

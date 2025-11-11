@@ -1,7 +1,7 @@
-is .*
-compiler: .*
+(?=is ).*
+(?=compiler: ).*
 -- Performing .*\n
 -- Found Threads: .*\n
 \d.\ds
- to: .*
-Preset.*\n\n.*\n.*\n.*\n\n
+(?= to: ).*
+Preset((.|\n|)*?)(?=--)
