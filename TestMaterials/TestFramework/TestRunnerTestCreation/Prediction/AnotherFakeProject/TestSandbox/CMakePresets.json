@@ -19,7 +19,7 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
-    },    
+    },
     {
       "name": "base-binary",
       "hidden": true,
