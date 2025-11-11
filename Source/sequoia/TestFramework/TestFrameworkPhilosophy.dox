@@ -33,20 +33,45 @@
       of changes to static data. However, it's conceivable that these changes are desired. If appropriate,
 	  use the `--sandbox` flag to ensure that each run is done in an independent process.
 	  
-	\section sec_platform Platform Independence
+   \section sec_platform Platform Independence
 	
-	Having cloned the `sequoia` repository, the testing framework may be built with CMake. A good way
-	to get started is to navigate to the `TestFrameworkDiagnostics` folder and invoke CMake with
-	the appropriate generator. This has been tested with MSVC, clang and gcc. Appropriate commands may
-	look something like
-	<pre>
-	cmake -G "Visual Studio 17 2022" -B ..\build\CMade\win\TestFrameworkDiagnostics
-	</pre>
-	or
-	<pre>
-	cmake -D CMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin/clang++ -B ../build/CMade/clang/TestFrameworkDiagnostics
-	</pre>
-	depending on the system and precise set-up. Invoking the resulting executable runs a minimal set of diagnostics.
+   Having cloned the `sequoia` repository, the testing framework may be built with CMake. A good way
+   to get started is to navigate to the `TestFrameworkDiagnostics` folder and run
+        <pre>
+          cmake --list-presets
+        </pre>
+        Next, choose appropriate preset, such as `msvc`, `macos-homebrew-llvm` or `ubuntu-gcc`.
+
+        \subsection Windows
+
+        Invoke
+        <pre>
+          cmake --preset msvc
+        </pre>
+        then navigate to `../build/TestFrameworkDiagnostics/msvc` and open the .sln file with Visual Studio.
+
+        \subsection MacOS
+
+        The simplest option is to use a `cmake` workflow to configure, build and then run the executable e.g.
+        <pre>
+          cmake --workflow macos-homebrew-llvm
+        </pre>
+
+        This is equivalent to going through the usual cmake configure and build steps, and then invoking the executable, e.g.
+        <pre>
+          cmake --preset macos-homebrew-llvm
+          cmake --build --preset macos-homebrew-llvm
+          ../build/TestFrameworkDiagnostics/macos-homebrew-llvm/TestFrameworkDiagnostics
+        </pre>
+
+        \subsection Linux
+
+        This is very similar to MacOS e.g.
+        <pre>
+          cmake --workflow ubuntu-gcc
+        </pre>
+
+        In each case, the result of Invoking the resulting executable is to run a set of diagnostics.
 	A richer set may be found in `TestAll`.
 	
 	As described in more detail below, certain output arising from running tests is written to files which should

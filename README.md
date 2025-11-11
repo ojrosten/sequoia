@@ -23,8 +23,8 @@ of these charities.
 
 git 2.40.0  
 CMake 3.29.2  
-clang 20.1.1  
-g++ 14.2.0  
+clang 21.1.5  
+g++ 15.0.1  
 Visual Studio 2022, 17.13.6
 
 ## Dependencies

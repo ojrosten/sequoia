@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['validator_0',['validator',['../d9/d1d/structsequoia_1_1physics_1_1si_1_1units_1_1celsius__t_1_1validator.html',1,'sequoia::physics::si::units::celsius_t']]],
+  ['validator_5ffor_0',['validator_for',['../d2/d36/conceptsequoia_1_1maths_1_1validator__for.html',1,'sequoia::maths']]],
   ['validator_5ffor_5farray_1',['validator_for_array',['../d1/d8f/group__Validators.html#gad5e5143d27974bdc87d8f53506611813',1,'sequoia::maths']]],
   ['validator_5ffor_5fsingle_5fvalue_2',['validator_for_single_value',['../d1/d8f/group__Validators.html#gaaeba933d5c49eac178e434e0e89764de',1,'sequoia::maths']]],
   ['validators_3',['Validators',['../d1/d8f/group__Validators.html',1,'']]],
@@ -16,7 +16,7 @@ var searchData=
   ['value_5ftester_3c_20foo_20_3e_13',['value_tester&lt; foo &gt;',['../d0/de3/structsequoia_1_1testing_1_1value__tester_3_01foo_01_4.html',1,'sequoia::testing']]],
   ['value_5ftester_3c_20graph_20_3e_14',['value_tester&lt; Graph &gt;',['../d5/d34/structsequoia_1_1testing_1_1value__tester_3_01Graph_01_4.html',1,'sequoia::testing']]],
   ['value_5ftester_3c_20maths_3a_3aconnectivity_3c_20flavour_2c_20edgestorage_20_3e_20_3e_15',['value_tester&lt; maths::connectivity&lt; Flavour, EdgeStorage &gt; &gt;',['../dc/dc0/structsequoia_1_1testing_1_1value__tester_3_01maths_1_1connectivity_3_01Flavour_00_01EdgeStorage_01_4_01_4.html',1,'sequoia::testing']]],
-  ['value_5ftester_3c_20maths_3a_3acoordinates_3c_20convexspace_2c_20basis_2c_20origin_2c_20validator_20_3e_20_3e_16',['value_tester&lt; maths::coordinates&lt; ConvexSpace, Basis, Origin, Validator &gt; &gt;',['../d0/dc2/structsequoia_1_1testing_1_1value__tester_3_01maths_1_1coordinates_3_01ConvexSpace_00_01Basis_0020f96a0e44d7388dbf07eb0cd71fdcd2.html',1,'sequoia::testing']]],
+  ['value_5ftester_3c_20maths_3a_3acoordinates_3c_20convexspace_2c_20basis_2c_20ts_2e_2e_2e_20_3e_20_3e_16',['value_tester&lt; maths::coordinates&lt; ConvexSpace, Basis, Ts... &gt; &gt;',['../d6/dfa/structsequoia_1_1testing_1_1value__tester_3_01maths_1_1coordinates_3_01ConvexSpace_00_01Basis_00_01Ts_8_8_8_01_4_01_4.html',1,'sequoia::testing']]],
   ['value_5ftester_3c_20maths_3a_3adirected_5ftree_3c_20link_5fdir_2c_20edgeweight_2c_20node_5fweight_5ftype_2c_20edgestorageconfig_2c_20nodeweightstorage_20_3e_20_3e_17',['value_tester&lt; maths::directed_tree&lt; link_dir, EdgeWeight, node_weight_type, EdgeStorageConfig, NodeWeightStorage &gt; &gt;',['../db/d65/structsequoia_1_1testing_1_1value__tester_3_01maths_1_1directed__tree_3_01link__dir_00_01EdgeWei5cb00b94426eafbd8e789c3ec5046f4f.html',1,'sequoia::testing']]],
   ['value_5ftester_3c_20maths_3a_3aembedded_5fpartial_5fedge_3c_20weighthandler_2c_20metadata_2c_20indextype_20_3e_20_3e_18',['value_tester&lt; maths::embedded_partial_edge&lt; WeightHandler, MetaData, IndexType &gt; &gt;',['../dc/ddc/structsequoia_1_1testing_1_1value__tester_3_01maths_1_1embedded__partial__edge_3_01WeightHandler691184e0580b864bd2a70bcfcaf62433.html',1,'sequoia::testing']]],
   ['value_5ftester_3c_20maths_3a_3aheterogeneous_5fnode_5fstorage_3c_20ts_2e_2e_2e_20_3e_20_3e_19',['value_tester&lt; maths::heterogeneous_node_storage&lt; Ts... &gt; &gt;',['../d1/df6/structsequoia_1_1testing_1_1value__tester_3_01maths_1_1heterogeneous__node__storage_3_01Ts_8_8_8_01_4_01_4.html',1,'sequoia::testing']]],
@@ -85,14 +85,15 @@ var searchData=
   ['value_5ftype_82',['value_type',['../d3/d9e/structsequoia_1_1utilities_1_1value__type.html',1,'sequoia::utilities']]],
   ['value_5ftype_3c_20i_20_3e_83',['value_type&lt; I &gt;',['../d1/d8b/structsequoia_1_1utilities_1_1value__type_3_01I_01_4.html',1,'sequoia::utilities']]],
   ['value_5ftype_3c_20t_20_3e_84',['value_type&lt; T &gt;',['../dd/da1/structsequoia_1_1utilities_1_1value__type_3_01T_01_4.html',1,'sequoia::utilities']]],
-  ['vector_5fcoordinates_85',['vector_coordinates',['../d8/d5b/group__Coordinates.html#gaaf998170b5890f5056ffc3b041233877',1,'sequoia::maths']]],
+  ['vector_5fcoordinates_85',['vector_coordinates',['../d8/d5b/group__Coordinates.html#gaf5d4d405e6c070853f296bb7414f0317',1,'sequoia::maths']]],
   ['vector_5fcoordinates_5ffalse_5fnegative_5ftest_86',['vector_coordinates_false_negative_test',['../de/d35/classsequoia_1_1testing_1_1vector__coordinates__false__negative__test.html',1,'sequoia::testing']]],
   ['vector_5fcoordinates_5ftest_87',['vector_coordinates_test',['../d3/dd3/classsequoia_1_1testing_1_1vector__coordinates__test.html',1,'sequoia::testing']]],
   ['vector_5fphysical_5fvalue_5ftest_88',['vector_physical_value_test',['../d1/d72/classsequoia_1_1testing_1_1vector__physical__value__test.html',1,'sequoia::testing']]],
-  ['vectorcoordinatestest_2ecpp_89',['VectorCoordinatesTest.cpp',['../d2/d21/VectorCoordinatesTest_8cpp.html',1,'']]],
-  ['vectorcoordinatestest_2ehpp_90',['VectorCoordinatesTest.hpp',['../d7/d8a/VectorCoordinatesTest_8hpp.html',1,'']]],
-  ['vectorcoordinatestestingdiagnostics_2ecpp_91',['VectorCoordinatesTestingDiagnostics.cpp',['../d3/dad/VectorCoordinatesTestingDiagnostics_8cpp.html',1,'']]],
-  ['vectorcoordinatestestingdiagnostics_2ehpp_92',['VectorCoordinatesTestingDiagnostics.hpp',['../d4/d8e/VectorCoordinatesTestingDiagnostics_8hpp.html',1,'']]],
-  ['vectorphysicalvaluetest_2ecpp_93',['VectorPhysicalValueTest.cpp',['../d2/dd6/VectorPhysicalValueTest_8cpp.html',1,'']]],
-  ['vectorphysicalvaluetest_2ehpp_94',['VectorPhysicalValueTest.hpp',['../d3/d00/VectorPhysicalValueTest_8hpp.html',1,'']]]
+  ['vector_5fspace_89',['vector_space',['../de/d6f/conceptsequoia_1_1maths_1_1vector__space.html',1,'sequoia::maths']]],
+  ['vectorcoordinatestest_2ecpp_90',['VectorCoordinatesTest.cpp',['../d2/d21/VectorCoordinatesTest_8cpp.html',1,'']]],
+  ['vectorcoordinatestest_2ehpp_91',['VectorCoordinatesTest.hpp',['../d7/d8a/VectorCoordinatesTest_8hpp.html',1,'']]],
+  ['vectorcoordinatestestingdiagnostics_2ecpp_92',['VectorCoordinatesTestingDiagnostics.cpp',['../d3/dad/VectorCoordinatesTestingDiagnostics_8cpp.html',1,'']]],
+  ['vectorcoordinatestestingdiagnostics_2ehpp_93',['VectorCoordinatesTestingDiagnostics.hpp',['../d4/d8e/VectorCoordinatesTestingDiagnostics_8hpp.html',1,'']]],
+  ['vectorphysicalvaluetest_2ecpp_94',['VectorPhysicalValueTest.cpp',['../d2/dd6/VectorPhysicalValueTest_8cpp.html',1,'']]],
+  ['vectorphysicalvaluetest_2ehpp_95',['VectorPhysicalValueTest.hpp',['../d3/d00/VectorPhysicalValueTest_8hpp.html',1,'']]]
 ];

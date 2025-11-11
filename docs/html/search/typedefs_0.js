@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['affine_5fcoordinates_0',['affine_coordinates',['../d8/d5b/group__Coordinates.html#ga7fa16cbe93865c0b19be9b2d3a23bd34',1,'sequoia::maths']]]
+  ['affine_5fcoordinates_0',['affine_coordinates',['../d8/d5b/group__Coordinates.html#ga576de02b64b2113520f8e934b4fe7b4c',1,'sequoia::maths']]]
 ];
