@@ -23,16 +23,16 @@
     {
       "name": "base-binary",
       "hidden": true,
-      "binaryDir": "${sourceDir}/../build/${sourceDirName}/${presetName}",
-      "cacheVariables": {
-          "CMAKE_CXX_FLAGS": "$env{CXX_ASAN_FLAGS} $env{CXX_COVERAGE_FLAGS} $env{CXX_COLOUR_FLAGS}",
-          "CMAKE_EXE_LINKER_FLAGS": "$env{LINKER_ASAN_FLAGS} $env{LINKER_COVERAGE_FLAGS}"
-      }
+      "binaryDir": "${sourceDir}/../build/${sourceDirName}/${presetName}"
     },
     {
       "name": "base-unix",
       "hidden": true,
       "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "$env{CXX_ASAN_FLAGS} $env{CXX_COVERAGE_FLAGS} $env{CXX_COLOUR_FLAGS}",
+        "CMAKE_EXE_LINKER_FLAGS": "$env{LINKER_ASAN_FLAGS} $env{LINKER_COVERAGE_FLAGS}"
+      },
       "inherits": ["base-binary"]  
     },  
     {
@@ -57,7 +57,7 @@
         "CXX_COVERAGE_FLAGS": "-coverage",
         "LINKER_COVERAGE_FLAGS": "-coverage"
       },
-      "cacheVariables": {        
+      "cacheVariables": {
         "CODE_COVERAGE": "ON"
       }
     },
