@@ -19,13 +19,28 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
       }
+    },    
+    {
+      "name": "base-binary",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/../build/${sourceDirName}/${presetName}",
+      "cacheVariables": {
+          "CMAKE_CXX_FLAGS": "$env{CXX_ASAN_FLAGS} $env{CXX_COVERAGE_FLAGS} $env{CXX_COLOUR_FLAGS}",
+          "CMAKE_EXE_LINKER_FLAGS": "$env{LINKER_ASAN_FLAGS} $env{LINKER_COVERAGE_FLAGS}"
+      }
     },
+    {
+      "name": "base-unix",
+      "hidden": true,
+      "generator": "Ninja",
+      "inherits": ["base-binary"]  
+    },  
     {
       "name": "base-asan-unix",
       "hidden": true,
-      "cacheVariables": {
-          "CMAKE_CXX_FLAGS": "-fsanitize=address",
-          "CMAKE_EXE_LINKER_FLAGS": "-fsanitize=address"
+      "environment": {
+          "CXX_ASAN_FLAGS": "-fsanitize=address",
+          "LINKER_ASAN_FLAGS": "-fsanitize=address"
       }
     },
     {
@@ -36,40 +51,35 @@
       }
     },
     {
-      "name": "base-binary",
-      "hidden": true,
-      "binaryDir": "${sourceDir}/../build/${sourceDirName}/${presetName}"
-    },
-    {
-      "name": "base-unix",
-      "hidden": true,
-      "generator": "Ninja",
-      "inherits": ["base-binary"]  
-    },
-    {
       "name": "base-coverage",
       "hidden": true,
-      "cacheVariables": {
-        "CMAKE_CXX_FLAGS": "-coverage",
-        "CMAKE_EXE_LINKER_FLAGS": "-coverage",
+      "environment": {
+        "CXX_COVERAGE_FLAGS": "-coverage",
+        "LINKER_COVERAGE_FLAGS": "-coverage"
+      },
+      "cacheVariables": {        
         "CODE_COVERAGE": "ON"
       }
     },
     {
       "name": "base-homebrew-llvm",
       "hidden": true,
+      "environment": {
+        "CXX_COLOUR_FLAGS": "-fcolor-diagnostics"
+      },
       "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++",
-        "CMAKE_CXX_FLAGS": "-fcolor-diagnostics"
+        "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++"
       },
       "inherits": ["base-unix"]
     },
     {
       "name": "base-ubuntu-gcc",
       "hidden": true,
+      "environment": {
+        "CXX_COLOUR_FLAGS": "-fdiagnostics-color=always"
+      },
       "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "/usr/bin/g++-15",
-        "CMAKE_CXX_FLAGS": "-fdiagnostics-color=always"
+        "CMAKE_CXX_COMPILER": "/usr/bin/g++-15"
       },
       "inherits": ["base-unix"]
     },
