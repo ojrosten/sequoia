@@ -15,8 +15,11 @@ test_dir="$1"
 # Cleanup lcov
 lcov --zerocounters --directory "$test_Dir"
 
+# Get the path components after 'build/'
+path_suffix="${PWD#*build/}"
+
 # Relative location of the html output directory
-output_dir="${script_dir}/../coverage_reports/$(basename "$PWD")"
+output_dir="${script_dir}/../coverage_reports/${path_suffix}"
 
 # Create output directory if it doesn't exist
 mkdir -p "$output_dir"
