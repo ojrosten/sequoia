@@ -27,9 +27,8 @@ mkdir -p "${output_dir}"
 # Cleanup lcov
 lcov --zerocounters --directory "${test_exe_dir}"
 
-# Delete any potentially outdated files and run ctest in coverage mode
+# Run ctest in coverage mode
 pushd "${test_exe_dir}"
-find . -type f -name "*.gcda" -delete
 ctest -T Test -T Coverage
 popd
 
