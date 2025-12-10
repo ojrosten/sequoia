@@ -34,5 +34,7 @@ namespace sequoia::testing
 
     [[nodiscard]]
     std::string zeroth_arg(std::string_view projectName) const;
+
+    void check_directory(std::string_view projectName, std::string_view dirName);
   };
 }

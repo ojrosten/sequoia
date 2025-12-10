@@ -219,21 +219,25 @@ namespace sequoia::testing
     return decomposition;
   }
 
-  void cmake_nascent_tests(const project_paths& projPaths, std::ostream& stream)
+  std::string cmake_nascent_tests(const project_paths& projPaths)
   {
     using namespace runtime;
 
     auto cmake{
-      [&stream](const main_paths& main, const build_paths& buildPaths) {
-        if(fs::exists(main.dir()) && buildPaths.cmake_cache() && fs::exists(buildPaths.cmake_cache()->parent_path()))
+      [](const main_paths& main, const build_paths& buildPaths) {
+        if(fs::exists(main.dir()) && fs::exists(buildPaths.cmake_cache_dir()))
         {
-          stream << "\n";
-          invoke(cd_cmd(main.dir()) && cmake_cmd(std::nullopt, buildPaths, {}));
+          const auto outputPath{buildPaths.cmake_cache_dir() / "CMakeOutput.txt"};
+          invoke(cd_cmd(main.dir()) && cmake_cmd(buildPaths, outputPath));
+          if(auto text{read_to_string(outputPath)})
+            return text.value();            
         }
+
+        return std::string{};
       }
     };
 
-    cmake(projPaths.main(), projPaths.build());
+    return cmake(projPaths.main(), projPaths.build());
   }
 
 

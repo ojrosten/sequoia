@@ -19,6 +19,8 @@
 
 namespace sequoia::testing
 {
+  namespace fs = std::filesystem;
+
   [[nodiscard]]
   std::filesystem::path test_runner_test_creation::source_file() const
   {
@@ -28,7 +30,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string test_runner_test_creation::zeroth_arg(std::string_view projectName) const
   {
-    return (working_materials() / projectName / "build/CMade").generic_string();
+    return (auxiliary_materials() / projectName / "build"/ back(get_project_paths().build().cmake_cache_dir()) / "FakeExe.txt").generic_string();
   }
 
   void test_runner_test_creation::run_tests()
@@ -98,24 +100,36 @@ namespace sequoia::testing
 
   void test_runner_test_creation::test_creation(std::string_view projectName, std::optional<std::string> sourceFolder)
   {
-    namespace fs = std::filesystem;
-
-    const auto projectPath{working_materials() / projectName};
+    const auto projectPath{auxiliary_materials() / projectName};
     const source_paths sourcePaths{projectPath, sourceFolder};
     const auto sourceFolderPath{sourcePaths.project()};
     const auto sourceFolderName{back(sourceFolderPath).generic_string()};
 
     fs::copy(auxiliary_paths::repo(get_project_paths().project_root()), auxiliary_paths::repo(projectPath), fs::copy_options::recursive);
-    fs::create_directory(projectPath / "TestSandbox");
 
     fs::copy(source_paths{auxiliary_paths::project_template(get_project_paths().project_root())}.cmake_lists(), sourceFolderPath);
+
+    fs::copy(get_project_paths().build_system().repo(), projectPath / "dependencies/sequoia/build_system", fs::copy_options::recursive);
+
+    const auto cmakeCacheDir{projectPath / "build" / back(get_project_paths().build().cmake_cache_dir())};
+    fs::create_directory(cmakeCacheDir);
+    fs::copy(auxiliary_materials() / "FakeExe.txt", cmakeCacheDir);
+    fs::copy(get_project_paths().build().cmake_cache_dir() / "CMakeCache.txt", cmakeCacheDir);
 
     const main_paths templateMain{auxiliary_paths::project_template(get_project_paths().project_root()) / main_paths::default_main_cpp_from_root()},
                      fakeMain{projectPath / "TestSandbox" / "TestSandbox.cpp"};
 
     fs::copy(templateMain.file(), fakeMain.file());
     fs::copy(templateMain.cmake_lists(), fakeMain.cmake_lists());
-    read_modify_write(fakeMain.cmake_lists(), [](std::string& text) { replace_all(text, "TestAllMain.cpp", "TestSandbox.cpp"); } );
+    read_modify_write(
+      fakeMain.cmake_lists(),
+      [projectName,&sourceFolder](std::string& text) {
+        replace_all(text, "TestAllMain.cpp", "TestSandbox.cpp");
+        replace_all(text, "myProject", sourceFolder ? sourceFolder.value() : uncapitalize(projectName));
+      }
+    );
+
+    fs::copy(get_project_paths().build_system().repo() / "CMakePresetsCommon.json", fakeMain.dir() / "CMakePresets.json");
 
     commandline_arguments args{{zeroth_arg(projectName)
                                , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
@@ -156,7 +170,10 @@ namespace sequoia::testing
       file << outputStream.str();
     }
 
-    check(equivalence, "", projectPath, predictive_materials() /= projectName);
+    check_directory(projectName, "output");
+    check_directory(projectName, "Source");
+    check_directory(projectName, "Tests");
+    check_directory(projectName, "TestSandbox");
   }
 
   void test_runner_test_creation::test_creation_failure()
@@ -177,5 +194,13 @@ namespace sequoia::testing
           commandline_arguments args{{zeroth_arg("FakeProject"), "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Thingz.hpp"}};
           test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
         });
+  }
+
+  void test_runner_test_creation::check_directory(std::string_view projectName, std::string_view dirName)
+  {
+    const auto targetDir{(working_materials() /= projectName) /= dirName};
+    fs::create_directories(targetDir);
+    fs::copy((auxiliary_materials() /= projectName) /= dirName, targetDir, fs::copy_options::recursive);
+    check(equivalence, "", targetDir, (predictive_materials() /= projectName) /= dirName);
   }
 }

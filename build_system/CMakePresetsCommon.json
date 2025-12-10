@@ -1,0 +1,462 @@
+﻿{
+  "version": 10,
+    "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 29,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base-debug",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "base-release",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "base-binary",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/../build/${sourceDirName}/${presetName}"
+    },
+    {
+      "name": "base-unix",
+      "hidden": true,
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "$env{CXX_ASAN_FLAGS} $env{CXX_COVERAGE_FLAGS} $env{CXX_COLOUR_FLAGS}",
+        "CMAKE_EXE_LINKER_FLAGS": "$env{LINKER_ASAN_FLAGS} $env{LINKER_COVERAGE_FLAGS}"
+      },
+      "inherits": ["base-binary"]  
+    },  
+    {
+      "name": "base-asan-unix",
+      "hidden": true,
+      "environment": {
+          "CXX_ASAN_FLAGS": "-fsanitize=address",
+          "LINKER_ASAN_FLAGS": "-fsanitize=address"
+      }
+    },
+    {
+      "name": "base-asan-msvc",
+      "hidden": true,
+      "cacheVariables": {
+          "CMAKE_CXX_FLAGS": "/fsanitize=address /EHsc"
+      }
+    },
+    {
+      "name": "base-coverage",
+      "hidden": true,
+      "environment": {
+        "CXX_COVERAGE_FLAGS": "-coverage",
+        "LINKER_COVERAGE_FLAGS": "-coverage"
+      },
+      "cacheVariables": {
+        "CODE_COVERAGE": "ON"
+      }
+    },
+    {
+      "name": "base-homebrew-llvm",
+      "hidden": true,
+      "environment": {
+        "CXX_COLOUR_FLAGS": "-fcolor-diagnostics"
+      },
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++"
+      },
+      "inherits": ["base-unix"]
+    },
+    {
+      "name": "base-ubuntu-gcc",
+      "hidden": true,
+      "environment": {
+        "CXX_COLOUR_FLAGS": "-fdiagnostics-color=always"
+      },
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "/usr/bin/g++-15"
+      },
+      "inherits": ["base-unix"]
+    },
+    {
+      "name": "macos-homebrew-llvm",
+      "displayName": "macOS Homebrew LLVM [Debug]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-homebrew-llvm", "base-debug"]
+    },
+    {
+      "name": "macos-homebrew-llvm-asan",
+      "displayName": "macOS Homebrew LLVM [Debug, asan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["macos-homebrew-llvm", "base-asan-unix"]
+    },  
+    {
+      "name": "macos-homebrew-llvm-release",
+      "displayName": "macOS Homebrew LLVM [Release]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-homebrew-llvm", "base-release"]
+    },
+    {
+      "name": "macos-homebrew-llvm-release-asan",
+      "displayName": "macOS Homebrew LLVM [Release, asan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["macos-homebrew-llvm-release", "base-asan-unix"]
+    },
+    {
+      "name": "ubuntu-gcc",
+      "displayName": "Ubuntu g++-15 [Debug]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-ubuntu-gcc", "base-debug"]
+    },
+    {
+      "name": "ubuntu-gcc-asan",
+      "displayName": "Ubuntu g++-15 [Debug, asan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["ubuntu-gcc", "base-asan-unix"]
+    },
+    {
+      "name": "ubuntu-gcc-coverage",
+      "displayName": "Ubuntu g++-15 [Debug,coverage]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["ubuntu-gcc", "base-coverage"]
+    },
+    {
+      "name": "ubuntu-gcc-release",
+      "displayName": "Ubuntu g++-15 [Release]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-ubuntu-gcc", "base-release"]
+    },
+    {
+      "name": "ubuntu-gcc-release-asan",
+      "displayName": "Ubuntu g++-15 [Release, asan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["ubuntu-gcc-release", "base-asan-unix"]
+    }, 
+    {
+      "name": "msvc",
+      "displayName": "Visual Studio",
+      "description": "Configure for ${displayName}",
+      "generator": "Visual Studio 17 2022",
+      "inherits": ["base-binary"]
+    },
+    {
+      "name": "msvc-asan",
+      "displayName": "Visual Studio [asan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["msvc", "base-asan-msvc"]
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "base-ninja",
+      "hidden": true,
+      "environment": {
+        "NINJA_STATUS": "[%e: %f/%t] "
+      }
+    },
+    {
+      "name": "base-run",
+      "hidden": true,
+      "targets": "run"
+    },
+    {
+      "name": "macos-homebrew-llvm",
+      "displayName": "macOS Homebrew LLVM [Debug]",
+      "configurePreset": "macos-homebrew-llvm",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-llvm",
+      "displayName": "Run macOS Homebrew LLVM [Debug]",
+      "inherits": ["macos-homebrew-llvm", "base-run"]
+    },
+    {
+      "name": "macos-homebrew-llvm-asan",
+      "displayName": "macOS Homebrew LLVM [Debug, asan]",
+      "configurePreset": "macos-homebrew-llvm-asan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-llvm-asan",
+      "displayName": "Run macOS Homebrew LLVM [Debug, asan]",
+      "inherits": ["macos-homebrew-llvm-asan", "base-run"]
+    },
+    {
+      "name": "macos-homebrew-llvm-release",
+      "displayName": "macOS Homebrew LLVM [Release]",
+      "configurePreset": "macos-homebrew-llvm-release",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-llvm-release",
+      "displayName": "Run macOS Homebrew LLVM [Release]",
+      "inherits": ["macos-homebrew-llvm-release", "base-run"]
+    },
+    {
+      "name": "macos-homebrew-llvm-release-asan",
+      "displayName": "macOS Homebrew LLVM [Release, asan]",
+      "configurePreset": "macos-homebrew-llvm-release-asan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-llvm-release-asan",
+      "displayName": "Run macOS Homebrew LLVM [Release, asan]",
+      "inherits": ["macos-homebrew-llvm-release-asan", "base-run"]
+    },
+    {
+      "name": "ubuntu-gcc",
+      "displayName": "Ubuntu g++-15 [Debug]",
+      "configurePreset": "ubuntu-gcc",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-ubuntu-gcc",
+      "displayName": "Run Ubuntu g++-15 [Debug]",
+      "inherits": ["ubuntu-gcc", "base-run"]
+    },
+    {
+      "name": "ubuntu-gcc-asan",
+      "displayName": "Ubuntu g++-15 [Debug, asan]",
+      "configurePreset": "ubuntu-gcc-asan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-ubuntu-gcc-asan",
+      "displayName": "Run Ubuntu g++-15 [Debug, asan]",
+      "inherits": ["ubuntu-gcc-asan", "base-run"]
+    },
+    {
+      "name": "ubuntu-gcc-coverage",
+      "displayName": "Ubuntu g++-15 [Debug, coverage]",
+      "configurePreset": "ubuntu-gcc-coverage",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-ubuntu-gcc-coverage",
+      "displayName": "Run Ubuntu g++-15 [Debug, coverage]",
+      "inherits": ["ubuntu-gcc-coverage", "base-run"]
+    },
+    {
+      "name": "ubuntu-gcc-release",
+      "displayName": "Ubuntu g++-15 [Release]",
+      "configurePreset": "ubuntu-gcc-release",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-ubuntu-gcc-release",
+      "displayName": "Run Ubuntu g++-15 [Release]",
+      "inherits": ["ubuntu-gcc-release", "base-run"]
+    },
+    {
+      "name": "ubuntu-gcc-release-asan",
+      "displayName": "Ubuntu g++-15 [Release, asan]",
+      "configurePreset": "ubuntu-gcc-release-asan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-ubuntu-gcc-release-asan",
+      "displayName": "Run Ubuntu g++-15 [Release, asan]",
+      "inherits": ["ubuntu-gcc-release-asan", "base-run"]
+    },
+    {
+      "name": "msvc",
+      "displayName": "MSVC [Debug]",
+      "configurePreset": "msvc",
+      "configuration": "Debug"
+    },
+    {
+      "name": "msvc-asan",
+      "displayName": "MSVC [Debug, asan]",
+      "configurePreset": "msvc-asan",
+      "configuration": "Debug"
+    },
+    {
+      "name": "msvc-release",
+      "displayName": "MSVC [Release]",
+      "configurePreset": "msvc",
+      "configuration": "Release"
+    },
+    {
+      "name": "msvc-release-asan",
+      "displayName": "MSVC [Release, asan]",
+      "configurePreset": "msvc-asan",
+      "configuration": "Release"
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "macos-homebrew-llvm",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos-homebrew-llvm"
+        },
+        {
+          "type": "build",
+          "name": "run-macos-homebrew-llvm"
+        }
+      ]
+    },
+    {
+      "name": "macos-homebrew-llvm-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos-homebrew-llvm-asan"
+        },
+        {
+          "type": "build",
+          "name": "run-macos-homebrew-llvm-asan"
+        }
+      ]
+    },
+    {
+      "name": "macos-homebrew-llvm-release",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos-homebrew-llvm-release"
+        },
+        {
+          "type": "build",
+          "name": "run-macos-homebrew-llvm-release"
+        }
+      ]
+    },
+    {
+      "name": "macos-homebrew-llvm-release-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos-homebrew-llvm-release-asan"
+        },
+        {
+          "type": "build",
+          "name": "run-macos-homebrew-llvm-release-asan"
+        }
+      ]
+    },  
+    {
+      "name": "ubuntu-gcc",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ubuntu-gcc"
+        },
+        {
+          "type": "build",
+          "name": "run-ubuntu-gcc"
+        }
+      ]
+    },
+    {
+      "name": "ubuntu-gcc-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ubuntu-gcc-asan"
+        },
+        {
+          "type": "build",
+          "name": "run-ubuntu-gcc-asan"
+        }
+      ]
+    },
+    {
+      "name": "ubuntu-gcc-coverage",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ubuntu-gcc-coverage"
+        },
+        {
+          "type": "build",
+          "name": "run-ubuntu-gcc-coverage"
+        }
+      ]
+    },
+    {
+      "name": "ubuntu-gcc-release",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ubuntu-gcc-release"
+        },
+        {
+          "type": "build",
+          "name": "run-ubuntu-gcc-release"
+        }
+      ]
+    },
+    {
+      "name": "ubuntu-gcc-release-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "ubuntu-gcc-release-asan"
+        },
+        {
+          "type": "build",
+          "name": "run-ubuntu-gcc-release-asan"
+        }
+      ]
+    },  
+    {
+      "name": "msvc",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "msvc"
+        },
+        {
+          "type": "build",
+          "name": "msvc"
+        }
+      ]
+    },
+    {
+      "name": "msvc-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "msvc-asan"
+        },
+        {
+          "type": "build",
+          "name": "msvc-asan"
+        }
+      ]
+    },
+    {
+      "name": "msvc-release",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "msvc"
+        },
+        {
+          "type": "build",
+          "name": "msvc-release"
+        }
+      ]
+    },
+    {
+      "name": "msvc-release-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "msvc-asan"
+        },
+        {
+          "type": "build",
+          "name": "msvc-release-asan"
+        }
+      ]
+    }
+  ]
+}

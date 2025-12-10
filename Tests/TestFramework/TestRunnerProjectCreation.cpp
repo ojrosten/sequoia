@@ -123,7 +123,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string test_runner_project_creation::zeroth_arg() const
   {
-    return (fake_project() / "build/CMade").generic_string();
+    return (fake_project() / "build/CMade/FakeExe.txt").generic_string();
   }
 
   void test_runner_project_creation::test_project_creation()

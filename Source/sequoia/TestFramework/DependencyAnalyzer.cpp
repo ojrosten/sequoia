@@ -379,7 +379,7 @@ namespace sequoia::testing
 
       std::ranges::sort(
         files,
-        [&g](const auto& lhs, const auto& rhs) {
+        [](const auto& lhs, const auto& rhs) {
           const fs::path& lfile{lhs.file}, rfile{rhs.file};
 
           const fs::path

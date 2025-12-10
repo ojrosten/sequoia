@@ -6,31 +6,35 @@ if [[ -z "$1" ]]; then
   exit 1
 fi
 
-# Get the directory of the script
-script_dir=$(dirname "$0")
+# Get the test executable directory from the first argument
+test_exe_dir_relative="$1"
+test_exe_dir=$(cd "$test_exe_dir_relative" && pwd -P)
+echo "Test Dir: ${test_exe_dir}"
 
-# Get the test directory from the first argument
-test_dir="$1"
+# Get the path components before 'build/'
+path_prefix="${test_exe_dir%%build/*}"
 
-# Cleanup lcov
-lcov --zerocounters --directory "$test_Dir"
-
-# Run cTest to ensure RenderingSetup.txt is generatated
-cd "$test_dir"
-ctest -T Test
+# Get the path components after 'build/'
+path_suffix="${test_exe_dir#*build/}"
 
 # Relative location of the html output directory
-output_dir="${script_dir}/../coverage_reports/$(basename "$PWD")"
+output_dir="${path_prefix}/coverage_reports/${path_suffix}"
+echo "Output Dir: ${output_dir}"
 
 # Create output directory if it doesn't exist
-mkdir -p "$output_dir"
+mkdir -p "${output_dir}"
+
+# Cleanup lcov
+lcov --zerocounters --directory "${test_exe_dir}"
 
 # Run ctest in coverage mode
-ctest -T Coverage
+pushd "${test_exe_dir}"
+ctest -T Test -T Coverage
+popd
 
 # Generate lcov coverage report
-lcov --directory "$test_dir".  --capture --output-file coverage.info --keep-going --filter range --rc geninfo_unexecuted_blocks=1
-lcov --remove coverage.info '/usr/*' --output-file coverage.info
+lcov --directory "${test_exe_dir}"  --capture --output-file "${test_exe_dir}/coverage.info" --keep-going --filter range --rc geninfo_unexecuted_blocks=1 --ignore-errors empty --gcov-tool /usr/bin/gcov-15
+lcov --remove  "${test_exe_dir}/coverage.info" '/usr/*' --output-file "${test_exe_dir}/coverage.info" --ignore-errors inconsistent --ignore-errors empty 
 
 # Generate HTML report
-genhtml --demangle-cpp -o "${output_dir}" coverage.info
+genhtml --demangle-cpp -o "${output_dir}" "${test_exe_dir}/coverage.info" --ignore-errors inconsistent --ignore-errors range --ignore-errors empty

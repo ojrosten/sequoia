@@ -44,7 +44,7 @@ namespace sequoia::testing
   [[nodiscard]]
   template_spec generate_template_spec(std::string_view str);
 
-  void cmake_nascent_tests(const project_paths& projPaths, std::ostream& stream);
+  std::string cmake_nascent_tests(const project_paths& projPaths);
 
   enum class nascent_test_flavour { standard, framework_diagnostics };
 

@@ -19,10 +19,13 @@ namespace sequoia::testing
 {
 
   [[nodiscard]]
-  runtime::shell_command cmake_cmd(const std::optional<build_paths>& parentBuildPaths,
-                                   const build_paths& buildPaths,
-                                   const std::filesystem::path& output);
+  runtime::shell_command cmake_cmd(const build_paths& buildPaths,
+                                   const std::filesystem::path& output,
+                                   const std::optional<std::string>& args = {});
 
   [[nodiscard]]
-  runtime::shell_command build_cmd(const build_paths& build, const std::filesystem::path& output);
+  runtime::shell_command build_cmd(const build_paths& buildPaths, const std::filesystem::path& output);
+
+  [[nodiscard]]
+  runtime::shell_command build_and_run_cmd(const build_paths& buildPaths, const std::filesystem::path& output);
 }

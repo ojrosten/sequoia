@@ -1,0 +1,1 @@
+genhtml --demangle-cpp -o ../../../coverage_reports/TestAll/ubuntu-gcc-coverage coverage.info --ignore-errors inconsistent --ignore-errors range
