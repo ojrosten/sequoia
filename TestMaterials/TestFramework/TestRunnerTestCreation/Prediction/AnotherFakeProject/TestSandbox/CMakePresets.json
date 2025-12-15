@@ -62,26 +62,44 @@
       }
     },
     {
-      "name": "base-homebrew-llvm",
+      "name": "base-llvm",
       "hidden": true,
       "environment": {
         "CXX_COLOUR_FLAGS": "-fcolor-diagnostics"
       },
-      "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++"
-      },
       "inherits": ["base-unix"]
     },
     {
-      "name": "base-ubuntu-gcc",
+      "name": "base-homebrew-llvm",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++"
+      },
+      "inherits": ["base-llvm"]
+    },
+    {
+      "name": "base-gcc",
       "hidden": true,
       "environment": {
         "CXX_COLOUR_FLAGS": "-fdiagnostics-color=always"
       },
+      "inherits": ["base-unix"]
+    },
+    {
+      "name": "base-linux-pkg-gcc",
+      "hidden": true,
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "/usr/bin/g++-15"
       },
-      "inherits": ["base-unix"]
+      "inherits": ["base-gcc"]
+    },
+    {
+      "name": "base-linux-gcc",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "/usr/bin/g++"
+      },
+      "inherits": ["base-gcc"]
     },
     {
       "name": "macos-homebrew-llvm",
@@ -108,35 +126,65 @@
       "inherits": ["macos-homebrew-llvm-release", "base-asan-unix"]
     },
     {
-      "name": "ubuntu-gcc",
-      "displayName": "Ubuntu g++-15 [Debug]",
+      "name": "linux-pkg-gcc",
+      "displayName": "Linux g++-15 [Debug]",
       "description": "Configure for ${displayName}",
-      "inherits": ["base-ubuntu-gcc", "base-debug"]
+      "inherits": ["base-linux-pkg-gcc", "base-debug"]
     },
     {
-      "name": "ubuntu-gcc-asan",
-      "displayName": "Ubuntu g++-15 [Debug, asan]",
+      "name": "linux-pkg-gcc-asan",
+      "displayName": "Linux g++-15 [Debug, asan]",
       "description": "Configure for ${displayName}",
-      "inherits": ["ubuntu-gcc", "base-asan-unix"]
+      "inherits": ["linux-pkg-gcc", "base-asan-unix"]
     },
     {
-      "name": "ubuntu-gcc-coverage",
-      "displayName": "Ubuntu g++-15 [Debug,coverage]",
+      "name": "linux-pkg-gcc-coverage",
+      "displayName": "Linux g++-15 [Debug,coverage]",
       "description": "Configure for ${displayName}",
-      "inherits": ["ubuntu-gcc", "base-coverage"]
+      "inherits": ["linux-pkg-gcc", "base-coverage"]
     },
     {
-      "name": "ubuntu-gcc-release",
-      "displayName": "Ubuntu g++-15 [Release]",
+      "name": "linux-pkg-gcc-release",
+      "displayName": "Linux g++-15 [Release]",
       "description": "Configure for ${displayName}",
-      "inherits": ["base-ubuntu-gcc", "base-release"]
+      "inherits": ["base-linux-pkg-gcc", "base-release"]
     },
     {
-      "name": "ubuntu-gcc-release-asan",
-      "displayName": "Ubuntu g++-15 [Release, asan]",
+      "name": "linux-pkg-gcc-release-asan",
+      "displayName": "Linux g++-15 [Release, asan]",
       "description": "Configure for ${displayName}",
-      "inherits": ["ubuntu-gcc-release", "base-asan-unix"]
-    }, 
+      "inherits": ["linux-pkg-gcc-release", "base-asan-unix"]
+    },
+    {
+      "name": "linux-gcc",
+      "displayName": "Linux g++ [Debug]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-linux-gcc", "base-debug"]
+    },
+    {
+      "name": "linux-gcc-asan",
+      "displayName": "Linux g++ [Debug, asan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["linux-gcc", "base-asan-unix"]
+    },
+    {
+      "name": "linux-gcc-coverage",
+      "displayName": "Linux g++ [Debug,coverage]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["linux-gcc", "base-coverage"]
+    },
+    {
+      "name": "linux-gcc-release",
+      "displayName": "Linux g++ [Release]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-linux-gcc", "base-release"]
+    },
+    {
+      "name": "linux-gcc-release-asan",
+      "displayName": "Linux g++ [Release, asan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["linux-gcc-release", "base-asan-unix"]
+    },
     {
       "name": "msvc",
       "displayName": "Visual Studio",
@@ -209,59 +257,114 @@
       "inherits": ["macos-homebrew-llvm-release-asan", "base-run"]
     },
     {
-      "name": "ubuntu-gcc",
-      "displayName": "Ubuntu g++-15 [Debug]",
-      "configurePreset": "ubuntu-gcc",
+      "name": "linux-gcc",
+      "displayName": "Linux g++ [Debug]",
+      "configurePreset": "linux-gcc",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-ubuntu-gcc",
-      "displayName": "Run Ubuntu g++-15 [Debug]",
-      "inherits": ["ubuntu-gcc", "base-run"]
+      "name": "run-linux-gcc",
+      "displayName": "Run Linux g++ [Debug]",
+      "inherits": ["linux-gcc", "base-run"]
     },
     {
-      "name": "ubuntu-gcc-asan",
-      "displayName": "Ubuntu g++-15 [Debug, asan]",
-      "configurePreset": "ubuntu-gcc-asan",
+      "name": "linux-gcc-asan",
+      "displayName": "Linux g++ [Debug, asan]",
+      "configurePreset": "linux-gcc-asan",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-ubuntu-gcc-asan",
-      "displayName": "Run Ubuntu g++-15 [Debug, asan]",
-      "inherits": ["ubuntu-gcc-asan", "base-run"]
+      "name": "run-linux-gcc-asan",
+      "displayName": "Run Linux g++ [Debug, asan]",
+      "inherits": ["linux-gcc-asan", "base-run"]
     },
     {
-      "name": "ubuntu-gcc-coverage",
-      "displayName": "Ubuntu g++-15 [Debug, coverage]",
-      "configurePreset": "ubuntu-gcc-coverage",
+      "name": "linux-gcc-coverage",
+      "displayName": "Linux g++ [Debug, coverage]",
+      "configurePreset": "linux-gcc-coverage",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-ubuntu-gcc-coverage",
-      "displayName": "Run Ubuntu g++-15 [Debug, coverage]",
-      "inherits": ["ubuntu-gcc-coverage", "base-run"]
+      "name": "run-linux-gcc-coverage",
+      "displayName": "Run Linux g++ [Debug, coverage]",
+      "inherits": ["linux-gcc-coverage", "base-run"]
     },
     {
-      "name": "ubuntu-gcc-release",
-      "displayName": "Ubuntu g++-15 [Release]",
-      "configurePreset": "ubuntu-gcc-release",
+      "name": "linux-gcc-release",
+      "displayName": "Linux g++ [Release]",
+      "configurePreset": "linux-gcc-release",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-ubuntu-gcc-release",
-      "displayName": "Run Ubuntu g++-15 [Release]",
-      "inherits": ["ubuntu-gcc-release", "base-run"]
+      "name": "run-linux-gcc-release",
+      "displayName": "Run Linux g++ [Release]",
+      "inherits": ["linux-gcc-release", "base-run"]
     },
     {
-      "name": "ubuntu-gcc-release-asan",
-      "displayName": "Ubuntu g++-15 [Release, asan]",
-      "configurePreset": "ubuntu-gcc-release-asan",
+      "name": "linux-gcc-release-asan",
+      "displayName": "Linux g++ [Release, asan]",
+      "configurePreset": "linux-gcc-release-asan",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-ubuntu-gcc-release-asan",
-      "displayName": "Run Ubuntu g++-15 [Release, asan]",
-      "inherits": ["ubuntu-gcc-release-asan", "base-run"]
+      "name": "run-linux-gcc-release-asan",
+      "displayName": "Run Linux g++ [Release, asan]",
+      "inherits": ["linux-gcc-release-asan", "base-run"]
+    },
+    {
+      "name": "linux-pkg-gcc",
+      "displayName": "Linux g++-15 [Debug]",
+      "configurePreset": "linux-pkg-gcc",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-linux-pkg-gcc",
+      "displayName": "Run Linux g++-15 [Debug]",
+      "inherits": ["linux-pkg-gcc", "base-run"]
+    },
+    {
+      "name": "linux-pkg-gcc-asan",
+      "displayName": "Linux g++-15 [Debug, asan]",
+      "configurePreset": "linux-pkg-gcc-asan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-linux-pkg-gcc-asan",
+      "displayName": "Run Linux g++-15 [Debug, asan]",
+      "inherits": ["linux-pkg-gcc-asan", "base-run"]
+    },
+    {
+      "name": "linux-pkg-gcc-coverage",
+      "displayName": "Linux g++-15 [Debug, coverage]",
+      "configurePreset": "linux-pkg-gcc-coverage",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-linux-pkg-gcc-coverage",
+      "displayName": "Run Linux g++-15 [Debug, coverage]",
+      "inherits": ["linux-pkg-gcc-coverage", "base-run"]
+    },
+    {
+      "name": "linux-pkg-gcc-release",
+      "displayName": "Linux g++-15 [Release]",
+      "configurePreset": "linux-pkg-gcc-release",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-linux-pkg-gcc-release",
+      "displayName": "Run Linux g++-15 [Release]",
+      "inherits": ["linux-pkg-gcc-release", "base-run"]
+    },
+    {
+      "name": "linux-pkg-gcc-release-asan",
+      "displayName": "Linux g++-15 [Release, asan]",
+      "configurePreset": "linux-pkg-gcc-release-asan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-linux-pkg-gcc-release-asan",
+      "displayName": "Run Linux g++-15 [Release, asan]",
+      "inherits": ["linux-pkg-gcc-release-asan", "base-run"]
     },
     {
       "name": "msvc",
@@ -340,72 +443,137 @@
           "name": "run-macos-homebrew-llvm-release-asan"
         }
       ]
+    },
+    {
+      "name": "linux-gcc",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-gcc"
+        },
+        {
+          "type": "build",
+          "name": "run-linux-gcc"
+        }
+      ]
+    },
+    {
+      "name": "linux-gcc-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-gcc-asan"
+        },
+        {
+          "type": "build",
+          "name": "run-linux-gcc-asan"
+        }
+      ]
+    },
+    {
+      "name": "linux-gcc-coverage",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-gcc-coverage"
+        },
+        {
+          "type": "build",
+          "name": "run-linux-gcc-coverage"
+        }
+      ]
+    },
+    {
+      "name": "linux-gcc-release",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-gcc-release"
+        },
+        {
+          "type": "build",
+          "name": "run-linux-gcc-release"
+        }
+      ]
+    },
+    {
+      "name": "linux-gcc-release-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-gcc-release-asan"
+        },
+        {
+          "type": "build",
+          "name": "run-linux-gcc-release-asan"
+        }
+      ]
     },  
     {
-      "name": "ubuntu-gcc",
+      "name": "linux-pkg-gcc",
       "steps": [
         {
           "type": "configure",
-          "name": "ubuntu-gcc"
+          "name": "linux-pkg-gcc"
         },
         {
           "type": "build",
-          "name": "run-ubuntu-gcc"
+          "name": "run-linux-pkg-gcc"
         }
       ]
     },
     {
-      "name": "ubuntu-gcc-asan",
+      "name": "linux-pkg-gcc-asan",
       "steps": [
         {
           "type": "configure",
-          "name": "ubuntu-gcc-asan"
+          "name": "linux-pkg-gcc-asan"
         },
         {
           "type": "build",
-          "name": "run-ubuntu-gcc-asan"
+          "name": "run-linux-pkg-gcc-asan"
         }
       ]
     },
     {
-      "name": "ubuntu-gcc-coverage",
+      "name": "linux-pkg-gcc-coverage",
       "steps": [
         {
           "type": "configure",
-          "name": "ubuntu-gcc-coverage"
+          "name": "linux-pkg-gcc-coverage"
         },
         {
           "type": "build",
-          "name": "run-ubuntu-gcc-coverage"
+          "name": "run-linux-pkg-gcc-coverage"
         }
       ]
     },
     {
-      "name": "ubuntu-gcc-release",
+      "name": "linux-pkg-gcc-release",
       "steps": [
         {
           "type": "configure",
-          "name": "ubuntu-gcc-release"
+          "name": "linux-pkg-gcc-release"
         },
         {
           "type": "build",
-          "name": "run-ubuntu-gcc-release"
+          "name": "run-linux-pkg-gcc-release"
         }
       ]
     },
     {
-      "name": "ubuntu-gcc-release-asan",
+      "name": "linux-pkg-gcc-release-asan",
       "steps": [
         {
           "type": "configure",
-          "name": "ubuntu-gcc-release-asan"
+          "name": "linux-pkg-gcc-release-asan"
         },
         {
           "type": "build",
-          "name": "run-ubuntu-gcc-release-asan"
+          "name": "run-linux-pkg-gcc-release-asan"
         }
       ]
-    },  
+    },
     {
       "name": "msvc",
       "steps": [
