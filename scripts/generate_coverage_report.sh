@@ -17,6 +17,13 @@ path_prefix="${test_exe_dir%%build/*}"
 # Get the path components after 'build/'
 path_suffix="${test_exe_dir#*build/}"
 
+setup_file="${test_exe_dir}/Setup.txt"
+
+if [[ -f "${setup_file}" ]]; then
+    discriminator=$(head -n 1 "${setup_file}")
+    path_suffix="${path_suffix}/${discriminator}"
+fi
+
 # Relative location of the html output directory
 output_dir="${path_prefix}/coverage_reports/${path_suffix}"
 echo "Output Dir: ${output_dir}"
