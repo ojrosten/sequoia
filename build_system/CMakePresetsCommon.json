@@ -33,6 +33,9 @@
         "CMAKE_CXX_FLAGS": "$env{CXX_ASAN_FLAGS} $env{CXX_COVERAGE_FLAGS} $env{CXX_COLOUR_FLAGS}",
         "CMAKE_EXE_LINKER_FLAGS": "$env{LINKER_ASAN_FLAGS} $env{LINKER_COVERAGE_FLAGS}"
       },
+      "warnings": {
+        "unusedCli": false
+      },
       "inherits": ["base-binary"]  
     },  
     {
@@ -72,7 +75,8 @@
     {
       "name": "base-homebrew-llvm",
       "hidden": true,
-      "cacheVariables": {
+        "cacheVariables": {
+        "CMAKE_C_COMPILER": "/opt/homebrew/opt/llvm/bin/clang",
         "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++"
       },
       "inherits": ["base-llvm"]
@@ -89,6 +93,7 @@
       "name": "base-linux-pkg-gcc",
       "hidden": true,
       "cacheVariables": {
+        "CMAKE_C_COMPILER": "/usr/bin/gcc-15",
         "CMAKE_CXX_COMPILER": "/usr/bin/g++-15"
       },
       "inherits": ["base-gcc"]
@@ -97,6 +102,7 @@
       "name": "base-linux-gcc",
       "hidden": true,
       "cacheVariables": {
+        "CMAKE_C_COMPILER": "/usr/bin/gcc",
         "CMAKE_CXX_COMPILER": "/usr/bin/g++"
       },
       "inherits": ["base-gcc"]
