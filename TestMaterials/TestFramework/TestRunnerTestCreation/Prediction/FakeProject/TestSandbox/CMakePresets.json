@@ -70,12 +70,15 @@
       "environment": {
         "CXX_COLOUR_FLAGS": "-fcolor-diagnostics"
       },
+      "cacheVariables": { 
+        "WARNING_SUPPRESSIONS": "-Wno-missing-braces;-Wno-braced-scalar-init;-Wno-unused-function;-Wno-unused-lambda-capture"
+      },
       "inherits": ["base-unix"]
     },
     {
       "name": "base-homebrew-llvm",
       "hidden": true,
-        "cacheVariables": {
+      "cacheVariables": {
         "CMAKE_C_COMPILER": "/opt/homebrew/opt/llvm/bin/clang",
         "CMAKE_CXX_COMPILER": "/opt/homebrew/opt/llvm/bin/clang++"
       },
@@ -86,6 +89,9 @@
       "hidden": true,
       "environment": {
         "CXX_COLOUR_FLAGS": "-fdiagnostics-color=always"
+      },
+      "cacheVariables": { 
+        "WARNING_SUPPRESSIONS": "-Wno-comment"
       },
       "inherits": ["base-unix"]
     },
