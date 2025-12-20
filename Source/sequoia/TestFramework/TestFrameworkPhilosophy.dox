@@ -68,8 +68,9 @@
 
         This is very similar to MacOS e.g.
         <pre>
-          cmake --workflow ubuntu-gcc
+          cmake --workflow linux-gcc
         </pre>
+        Note that this will use the system gcc. If this lags significantly behind the cutting-edge, try `linux-pkg-gcc`.
 
         In each case, the result of Invoking the resulting executable is to run a set of diagnostics.
 	A richer set may be found in `TestAll`.
