@@ -107,8 +107,9 @@ MacOS</h2>
      </pre><h2 class="doxsection"><a class="anchor" id="Linux"></a>
 Linux</h2>
 <p>This is very similar to MacOS e.g. </p><pre>
-       cmake --workflow ubuntu-gcc
-     </pre><p>In each case, the result of Invoking the resulting executable is to run a set of diagnostics. A richer set may be found in <span class="tt">TestAll</span>.</p>
+       cmake --workflow linux-gcc
+     </pre><p> Note that this will use the system gcc. If this lags significantly behind the cutting-edge, try <span class="tt">linux-pkg-gcc</span>.</p>
+<p>In each case, the result of Invoking the resulting executable is to run a set of diagnostics. A richer set may be found in <span class="tt">TestAll</span>.</p>
 <p>As described in more detail below, certain output arising from running tests is written to files which should be placed under version control. This presents additional difficulties in guaranteeing platform independence. For example, the files may contain absolute paths or demangled type names, which could differ from machine to machine and/or platform to platform. For files placed under version control this is particularly problematic. Therefore, various mechanisms have been put in place to mitigate these problems: see <a class="el" href="#sec_robustness">Robustness</a>, <a class="el" href="#sec_malleable">Malleability</a> and <a class="el" href="#sec_generics">Generics-Friendliness</a>.</p>
 <h1 class="doxsection"><a class="anchor" id="sec_automated"></a>
 Automation</h1>
