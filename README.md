@@ -19,13 +19,13 @@ of these charities.
 
 [WWT: A Conservation charity dedicated to wetlands](https://www.wwt.org.uk/)
 
-## Requirements (as of 2025-11-11):
+## Requirements (as of 2025-12-24):
 
 git 2.40.0  
-CMake 3.31.6  
+CMake 3.31.6 / 4.2 (for MSVC)  
 clang 21.1.5  
-g++ 15.0.1  
-Visual Studio 2022, 17.14.20
+g++ 15.2.0  
+Visual Studio 2028, 18.1.1
 
 ## Dependencies
 
