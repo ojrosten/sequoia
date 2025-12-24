@@ -2,7 +2,7 @@
   "version": 10,
     "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 29,
+    "minor": 31,
     "patch": 0
   },
   "configurePresets": [
@@ -201,7 +201,7 @@
       "name": "msvc",
       "displayName": "Visual Studio",
       "description": "Configure for ${displayName}",
-      "generator": "Visual Studio 17 2022",
+      "generator": "Visual Studio 18 2026",
       "inherits": ["base-binary"]
     },
     {
