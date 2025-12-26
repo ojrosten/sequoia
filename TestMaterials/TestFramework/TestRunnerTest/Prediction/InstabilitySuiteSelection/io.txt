@@ -5,8 +5,8 @@ Another Suite:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 336us]
-[Execution Time: 159us]
+[Total Run Time: 597us]
+[Execution Time: 230us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -23,14 +23,16 @@ Another Suite:
 	Flipper
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
 
 -----------Grand Totals-----------
-[Total Run Time: 177us]
-[Execution Time: 47.8us]
+[Total Run Time: 452us]
+[Execution Time: 124us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -50,7 +52,9 @@ vs.
 	Flipper
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 

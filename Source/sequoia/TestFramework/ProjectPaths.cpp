@@ -37,10 +37,8 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::optional<fs::path> get_cmake_cache(const fs::path& executableDir)
+    fs::path get_cmake_cache(const fs::path& executableDir)
     {
-      if(executableDir.empty()) return {};
-
       using opt_path = std::optional<fs::path>;
 
       auto get{
@@ -58,7 +56,10 @@ namespace sequoia::testing
         cacheFile = get(executableDir.parent_path());
       }
 
-      return cacheFile;
+      if(!cacheFile)
+        throw std::runtime_error{std::format("discoverable_paths: Unable to locate CMakeCache.txt from executable directory {}", executableDir.generic_string())};
+
+      return *cacheFile;
     }
   }
 
@@ -66,7 +67,7 @@ namespace sequoia::testing
     : discoverable_paths{make(argc, argv)}
   {}
 
-  discoverable_paths::discoverable_paths(std::filesystem::path rt, std::filesystem::path exec, std::optional<std::filesystem::path> cmakeCache)
+  discoverable_paths::discoverable_paths(fs::path rt, fs::path exec, fs::path cmakeCache)
     : m_Root{std::move(rt)}
     , m_Executable{std::move(exec)}
     , m_CMakeCache{std::move(cmakeCache)}
@@ -193,10 +194,10 @@ namespace sequoia::testing
 
   //===================================== build_paths =====================================//
 
-  build_paths::build_paths(fs::path projectRoot, const std::filesystem::path& executableDir, std::optional<fs::path> cmakeCache)
+  build_paths::build_paths(fs::path projectRoot, fs::path executableDir, fs::path cmakeCacheDir)
     : m_Dir{std::move(projectRoot /= "build")}
-    , m_ExecutableDir{executableDir}
-    , m_CMakeCache{std::move(cmakeCache)}
+    , m_ExecutableDir{std::move(executableDir)}
+    , m_CMakeCacheDir{std::move(cmakeCacheDir)}
   {}
 
   //===================================== auxiliary_paths =====================================//
@@ -368,7 +369,7 @@ namespace sequoia::testing
     : m_Discovered{argc, argv}
     , m_Main{project_root() / rebase_from(customization.main_cpp, project_root()), project_root() / rebase_from(customization.common_includes, project_root())}
     , m_Source{project_root(), customization.source_folder}
-    , m_Build{project_root(), m_Discovered.executable().parent_path(), m_Discovered.cmake_cache()}
+    , m_Build{project_root(), m_Discovered.executable().parent_path(), m_Discovered.cmake_cache().parent_path()}
     , m_Auxiliary{project_root()}
     , m_Output{project_root()}
     , m_Dependencies{project_root()}

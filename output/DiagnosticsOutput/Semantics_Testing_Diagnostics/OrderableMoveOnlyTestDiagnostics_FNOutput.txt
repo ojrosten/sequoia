@@ -6,7 +6,9 @@ Broken check invariant
 
   Prerequisite - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -18,7 +20,9 @@ Broken check invariant
 
   Prerequisite - for ordered semantics, it is assumed that y > x
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -30,7 +34,9 @@ Broken check invariant
 
   Prerequisite - for ordered semantics, it is assumed that y > x
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -42,19 +48,27 @@ Broken less
 
   operator> and operator< are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator< and operator<= are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator< and operator>= are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator< and operator<=> are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -66,7 +80,9 @@ Broken lesseq
 
   operator< and operator<= are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -78,7 +94,9 @@ Broken greater
 
   operator> and operator< are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -90,7 +108,9 @@ Broken greatereq
 
   operator< and operator>= are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -102,7 +122,9 @@ Inverted comparisons
 
   operator< and operator<=> are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -114,7 +136,9 @@ Broken spaceship
 
   operator< and operator<=> are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -394,7 +418,9 @@ Broken check invariant
 
   Prerequisite - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -406,7 +432,9 @@ Broken check invariant
 
   Prerequisite - for ordered semantics, it is assumed that y > x
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -418,7 +446,9 @@ Broken check invariant
 
   Prerequisite - for ordered semantics, it is assumed that y > x
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -430,19 +460,27 @@ Broken less
 
   operator> and operator< are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator< and operator<= are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator< and operator>= are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator< and operator<=> are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -454,7 +492,9 @@ Broken lesseq
 
   operator< and operator<= are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -466,7 +506,9 @@ Broken greater
 
   operator> and operator< are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -478,7 +520,9 @@ Broken greatereq
 
   operator< and operator>= are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -490,7 +534,9 @@ Inverted comparisons
 
   operator< and operator<=> are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -502,7 +548,9 @@ Broken spaceship
 
   operator< and operator<=> are inconsistent
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 

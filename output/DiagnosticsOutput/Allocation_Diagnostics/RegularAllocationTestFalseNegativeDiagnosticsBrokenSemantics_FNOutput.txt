@@ -6,11 +6,15 @@ Broken equality
 
   operator== is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator== is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -22,11 +26,15 @@ Broken inequality
 
   operator!= is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator!= is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -122,11 +130,15 @@ Broken equality
 
   operator== is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator== is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -138,11 +150,15 @@ Broken inequality
 
   operator!= is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator!= is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -238,11 +254,15 @@ Broken equality
 
   operator== is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator== is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -254,11 +274,15 @@ Broken inequality
 
   operator!= is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator!= is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -354,11 +378,15 @@ Broken equality
 
   operator== is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator== is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -370,11 +398,15 @@ Broken inequality
 
   operator!= is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator!= is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -470,11 +502,15 @@ Broken equality
 
   operator== is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator== is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -486,11 +522,15 @@ Broken inequality
 
   operator!= is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator!= is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -586,11 +626,15 @@ Broken equality
 
   operator== is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator== is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -602,11 +646,15 @@ Broken inequality
 
   operator!= is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator!= is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -702,11 +750,15 @@ Broken equality
 
   operator== is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator== is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -718,11 +770,15 @@ Broken inequality
 
   operator!= is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator!= is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -818,11 +874,15 @@ Broken equality
 
   operator== is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator== is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -834,11 +894,15 @@ Broken inequality
 
   operator!= is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator!= is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 

@@ -1,6 +1,6 @@
 
 Analyzing dependencies...
-[14.4ms]
+[2.16ms]
 
 
 Running tests...
@@ -21,8 +21,8 @@ Unstable:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[Total Run Time: 4.56ms]
-[Execution Time: 1.96ms]
+[Total Run Time: 687us]
+[Execution Time: 350us]
 	Standard Top Level Checks:                 4;  Failures:  1  [Deep checks: 4]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -50,21 +50,25 @@ Unstable:
 	Tests/Unstable/FlipperFreeTest.cpp, Line 24
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
 	Tests/Unstable/FlipperFreeTest.cpp, Line 25
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
 
 -----------Grand Totals-----------
-[Total Run Time: 4.61ms]
-[Execution Time: 1.24ms]
+[Total Run Time: 456us]
+[Execution Time: 186us]
 	Standard Top Level Checks:                 4;  Failures:  3  [Deep checks: 4]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -83,7 +87,9 @@ vs.
 	Tests/Unstable/FlipperFreeTest.cpp, Line 24
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 

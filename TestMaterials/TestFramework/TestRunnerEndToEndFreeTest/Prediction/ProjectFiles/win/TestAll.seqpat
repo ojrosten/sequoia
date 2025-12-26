@@ -1,6 +1,0 @@
-\w:.*output
-\w:.*Modules
-\w:.*Source
-<ProjectGuid>.*</ProjectGuid>
-<WindowsTargetPlatformVersion>.*</WindowsTargetPlatformVersion>
-<Project>.*</Project>

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "sequoia/Core/Meta/TypeTraits.hpp"
+#include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <iterator>
 

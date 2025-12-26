@@ -93,7 +93,7 @@ namespace sequoia::testing
           {
             graph_description::node,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_nodes(0, 0);
               return g;
             }
@@ -101,7 +101,7 @@ namespace sequoia::testing
           {
             graph_description::node,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.sort_nodes(0, 0, [](auto i, auto j){ return i < j; });
               return g;
             }
@@ -109,7 +109,7 @@ namespace sequoia::testing
           {
             graph_description::node,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.sort_nodes(0, 1, [](auto i, auto j){ return i < j; });
               return g;
             }
@@ -125,7 +125,7 @@ namespace sequoia::testing
           {
             graph_description::nodew,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.set_node_weight(g.cbegin_node_weights(), 2.1);
               return g;
             }
@@ -185,7 +185,7 @@ namespace sequoia::testing
           {
             graph_description::node_0x,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.set_edge_weight(g.cbegin_edges(0), 0.2f);
               return g;
             }
@@ -257,7 +257,7 @@ namespace sequoia::testing
         graph_description::node_0,
         graph_description::nodew_0,
         report(""),
-        [this](graph_t g) -> graph_t {
+        [](graph_t g) -> graph_t {
           g.set_node_weight(g.cbegin_node_weights(), 2.1);
           return g;
         }
@@ -305,7 +305,7 @@ namespace sequoia::testing
           {
             graph_description::node_0y_0x,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_edges(0, 0, 1);
               return g;
             }
@@ -313,7 +313,7 @@ namespace sequoia::testing
           {
             graph_description::node_0y_0x,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](const auto& lhs, const auto& rhs){ return lhs.weight() > rhs.weight(); });
               return g;
             }
@@ -321,7 +321,7 @@ namespace sequoia::testing
           {
             graph_description::node_0y_0x,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.stable_sort_edges(g.cbegin_edges(0), g.cend_edges(0), [](const auto& lhs, const auto& rhs){ return lhs.weight() > rhs.weight(); });
               return g;
             }
@@ -331,7 +331,7 @@ namespace sequoia::testing
           {
             graph_description::node_0x_0y,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_edges(0, 1, 0);
               return g;
             }
@@ -416,7 +416,7 @@ namespace sequoia::testing
           {
             graph_description::nodew_node,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.set_node_weight(g.cbegin_node_weights(), 2.1);
               return g;
             }
@@ -428,7 +428,7 @@ namespace sequoia::testing
           {
             graph_description::nodex_nodew,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_nodes(0, 1);
               return g;
             }
@@ -436,7 +436,7 @@ namespace sequoia::testing
           {
             graph_description::nodex_nodew,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.sort_nodes(0, 2, [&g](auto i, auto j){ return g.begin_node_weights()[i] < g.begin_node_weights()[j]; });
               return g;
             }
@@ -510,7 +510,7 @@ namespace sequoia::testing
           {
             graph_description::node_1u_node,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.set_edge_weight(g.cbegin_edges(0), 0.2f);
               return g;
             }
@@ -520,7 +520,7 @@ namespace sequoia::testing
           {
             graph_description::node_node_0u,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_nodes(0, 1);
               return g;
             }
@@ -530,7 +530,7 @@ namespace sequoia::testing
           {
             graph_description::node_1u_node,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_nodes(1, 0);
               return g;
             }
@@ -538,8 +538,8 @@ namespace sequoia::testing
           {
             graph_description::node_1u_node,
             report(""),
-            [this](graph_t g) -> graph_t {
-              g.sort_nodes(0, 2, [&g](auto i, auto j){ return i > j; });
+            [](graph_t g) -> graph_t {
+              g.sort_nodes(0, 2, [](auto i, auto j){ return i > j; });
               return g;
             }
           },
@@ -616,7 +616,7 @@ namespace sequoia::testing
           {
             graph_description::node_1u_node_0,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.set_edge_weight(g.cbegin_edges(0), 0.2f);
               return g;
             }
@@ -624,7 +624,7 @@ namespace sequoia::testing
           {
             graph_description::node_1_node_0u,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.set_edge_weight(g.cbegin_edges(1), 0.2f);
               return g;
             }
@@ -634,7 +634,7 @@ namespace sequoia::testing
           {
             graph_description::node_1u_node_0,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_nodes(0, 1);
               return g;
             }
@@ -644,7 +644,7 @@ namespace sequoia::testing
           {
             graph_description::node_1_node_0u,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_nodes(1, 0);
               return g;
             }
@@ -652,8 +652,8 @@ namespace sequoia::testing
           {
             graph_description::node_1_node_0u,
             report(""),
-            [this](graph_t g) -> graph_t {
-              g.sort_nodes(0, 2, [&g](auto i, auto j){ return i > j; });
+            [](graph_t g) -> graph_t {
+              g.sort_nodes(0, 2, [](auto i, auto j){ return i > j; });
               return g;
             }
           },
@@ -662,7 +662,7 @@ namespace sequoia::testing
            {
             graph_description::node_1u_nodew_0,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.swap_nodes(1, 0);
               return g;
             }
@@ -738,7 +738,7 @@ namespace sequoia::testing
           {
             graph_description::node_2v_nodex_0u_nodew_1,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.sort_nodes(0, 3, [&g](auto i, auto j){ return g.cbegin_node_weights()[i] < g.cbegin_node_weights()[j]; });
               return g;
             }
@@ -748,7 +748,7 @@ namespace sequoia::testing
           {
             graph_description::nodew_1_nodex_2u_node_0v,
             report(""),
-            [this](graph_t g) -> graph_t {
+            [](graph_t g) -> graph_t {
               g.sort_nodes(0, 3, [&g](auto i, auto j){ return g.cbegin_node_weights()[i] > g.cbegin_node_weights()[j]; });
               return g;
             }

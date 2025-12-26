@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['the_20testing_20framework_0',['The Testing Framework',['../dc/d92/testframeworkpage.html',1,'']]]
+  ['expressiveness_0',['Expressiveness',['../dc/d92/testframeworkpage.html#sec_expressive',1,'']]],
+  ['extensibility_1',['Extensibility',['../dc/d92/testframeworkpage.html#sec_extensible',1,'']]]
 ];

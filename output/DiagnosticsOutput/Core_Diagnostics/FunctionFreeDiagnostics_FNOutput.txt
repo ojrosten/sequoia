@@ -9,7 +9,9 @@ Checking for weak equivalence with:
   Obtained : not null
   Predicted: null
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -24,7 +26,9 @@ Checking for weak equivalence with:
   Obtained : null
   Predicted: not null
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -39,7 +43,9 @@ Checking for weak equivalence with:
   Obtained : not null
   Predicted: null
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -54,7 +60,9 @@ Checking for weak equivalence with:
   Obtained : null
   Predicted: not null
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -69,7 +77,9 @@ Checking for weak equivalence with:
   Obtained : not null
   Predicted: null
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -84,7 +94,9 @@ Checking for weak equivalence with:
   Obtained : null
   Predicted: not null
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 

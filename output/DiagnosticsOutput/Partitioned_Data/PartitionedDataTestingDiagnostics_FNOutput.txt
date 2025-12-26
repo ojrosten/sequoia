@@ -124,7 +124,9 @@ operator== returned false
 
   Emptiness incorrect
   [bool]
-  check failed
+  operator== returned false
+  Obtained : true
+  Predicted: false
 
   Size incorrect
   [unsigned long long]
@@ -702,7 +704,9 @@ operator== returned false
 
   Emptiness incorrect
   [bool]
-  check failed
+  operator== returned false
+  Obtained : true
+  Predicted: false
 
   Size incorrect
   [unsigned long long]
@@ -1284,7 +1288,9 @@ operator== returned false
 
   Emptiness incorrect
   [bool]
-  check failed
+  operator== returned false
+  Obtained : true
+  Predicted: false
 
   Size incorrect
   [unsigned long long]
@@ -2026,7 +2032,9 @@ operator== returned false
 
   Emptiness incorrect
   [bool]
-  check failed
+  operator== returned false
+  Obtained : true
+  Predicted: false
 
   Size incorrect
   [unsigned long long]

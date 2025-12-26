@@ -16,6 +16,7 @@
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <chrono>
 #include <fstream>
 
 namespace sequoia::testing
@@ -25,10 +26,17 @@ namespace sequoia::testing
   namespace
   {
     [[nodiscard]]
-    bool is_stale(const fs::file_time_type& lastImplicitModTime, const fs::file_time_type& pruneTimeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
+    bool is_stale(const fs::path& file, const fs::file_time_type& lastImplicitModTime, const fs::file_time_type& pruneTimeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
     {
       if(exeTimeStamp.has_value() && (lastImplicitModTime >= exeTimeStamp.value()))
-        throw std::runtime_error{"Executable is out of date; please build it!\n"};
+        throw std::runtime_error{
+                std::format(
+                  "Executable is out of date; please build it!\nExecutable time stamp: {}\n{} time stamp: {}\n",
+                  exeTimeStamp.value(),
+                  file.generic_string(),
+                  lastImplicitModTime
+                )
+              };
 
       return lastImplicitModTime > pruneTimeStamp;
     }
@@ -38,7 +46,7 @@ namespace sequoia::testing
       file_info(fs::path f, const fs::file_time_type& pruneTimeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
         : file{std::move(f)}
         , implicit_modification_time{fs::last_write_time(file)}
-        , stale{is_stale(implicit_modification_time, pruneTimeStamp, exeTimeStamp)}
+        , stale{is_stale(file, implicit_modification_time, pruneTimeStamp, exeTimeStamp)}
       {}
 
       file_info(fs::path f)
@@ -371,7 +379,7 @@ namespace sequoia::testing
 
       std::ranges::sort(
         files,
-        [&g](const auto& lhs, const auto& rhs) {
+        [](const auto& lhs, const auto& rhs) {
           const fs::path& lfile{lhs.file}, rfile{rhs.file};
 
           const fs::path

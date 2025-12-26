@@ -139,17 +139,7 @@ namespace sequoia::testing
   template<class T>
   concept reportable = serializable<T> || is_character_v<T>;
 
-  /// To prevent implicit conversions to bool
   template<reportable T>
-    requires std::is_same_v<T, bool>
-  [[nodiscard]]
-  std::string failure_message(is_final_message_t, T, T)
-  {
-    return "check failed";
-  }
-
-  template<reportable T>
-    requires (!std::is_same_v<T, bool>)
   [[nodiscard]]
   std::string failure_message(is_final_message_t, const T& obtained, const T& prediction)
   {

@@ -47,6 +47,8 @@ namespace sequoia::testing
     check("Boolean check with ignored advice", false, tutor{[](const std::string&, const std::string&){
         return "I pity the fool who confuses the bool.";}
       });
+    check(equality, "Comparing booleans", false, true);
+    check(equality, "Comparing booleans", true, false);
 
     check(equality, "Integer check", 5, 4);
     check(equality, "Integer check with advice", 5, 4, tutor{[](int, int) {
@@ -345,6 +347,8 @@ namespace sequoia::testing
   void elementary_false_positive_free_diagnostics::built_in_type_tests()
   {
     check("Boolean test", true);
+    check(equality, "Comparing booleans", false, false);
+    check(equality, "Comparing booleans", true,  true);
 
     check(equality, "Integer test", 5, 5);
     check(simple_equality, "Simple integer test", 5, 5);

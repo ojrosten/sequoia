@@ -2,21 +2,23 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 141us]
+[Execution Time: 209us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 251
 	Always fails
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
 
 -----------Grand Totals-----------
-[Total Run Time: 303us]
-[Execution Time: 141us]
+[Total Run Time: 474us]
+[Execution Time: 209us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -27,14 +29,16 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 62.4us]
+[Execution Time: 97.8us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 251
 	Always fails
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
@@ -42,14 +46,16 @@ Suite:
 	Flipper
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
 
 -----------Grand Totals-----------
-[Total Run Time: 191us]
-[Execution Time: 62.4us]
+[Total Run Time: 286us]
+[Execution Time: 97.8us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -65,7 +71,9 @@ Outcome frequencies:
 	Always fails
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
@@ -75,7 +83,9 @@ vs.
 	Always fails
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 
@@ -83,7 +93,9 @@ vs.
 	Flipper
 
 	[bool]
-	check failed
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 	=======================================
 

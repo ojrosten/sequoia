@@ -122,7 +122,7 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path test_runner_performance_test::minimal_fake_path() const
   {
-    return fake_project().append("build/CMade");
+    return fake_project().append("build/CMade/FakeExe.txt");
   }
 
   fs::path test_runner_performance_test::check_output(std::string_view description, std::string_view dirName, std::stringstream& output)

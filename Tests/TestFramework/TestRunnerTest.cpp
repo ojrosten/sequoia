@@ -357,7 +357,7 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path test_runner_test::minimal_fake_path() const
   {
-    return fake_project().append("build/CMade");
+    return fake_project().append("build/CMade/FakeExe.txt");
   }
 
   [[nodiscard]]
@@ -421,7 +421,7 @@ namespace sequoia::testing
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Project root is empty"},
-      [this]() {
+      []() {
         std::stringstream outputStream{};
         commandline_arguments args{{""}};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};

@@ -1,4 +1,4 @@
 Elementary False Negative Free Diagnostics
-False Negative Checks:                    95;  Failures:  0
+False Negative Checks:                    97;  Failures:  0
 Elementary False Positive Free Diagnostics
-False Positive Checks:                    21;  Failures:  0
+False Positive Checks:                    23;  Failures:  0

@@ -2,7 +2,9 @@ Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 32
 Empty stack
 
 [bool]
-check failed
+operator== returned false
+Obtained : false
+Predicted: true
 
 =======================================
 
@@ -19,7 +21,9 @@ Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 47
 Empty stack
 
 [bool]
-check failed
+operator== returned false
+Obtained : false
+Predicted: true
 
 =======================================
 
@@ -27,7 +31,9 @@ Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 48
 Non-empty stack
 
 [bool]
-check failed
+operator== returned false
+Obtained : false
+Predicted: true
 
 =======================================
 
@@ -39,7 +45,9 @@ operator== returned false
 
   Emptiness incorrect
   [bool]
-  check failed
+  operator== returned false
+  Obtained : true
+  Predicted: false
 
   Size incorrect
   [unsigned long long]
@@ -49,7 +57,9 @@ operator== returned false
 
   Hidden state incorrect
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -67,7 +77,9 @@ operator== returned false
 
   Hidden state incorrect
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -79,7 +91,9 @@ operator== returned false
 
   Emptiness incorrect
   [bool]
-  check failed
+  operator== returned false
+  Obtained : true
+  Predicted: false
 
   Size incorrect
   [unsigned long long]
@@ -89,7 +103,9 @@ operator== returned false
 
   Hidden state incorrect
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 

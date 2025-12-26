@@ -8,7 +8,9 @@ Checking for equivalence with:
 
   Insufficient nodes detected while checking node 0
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -212,7 +214,9 @@ Checking for equivalence with:
 
   Insufficient nodes detected while checking node 0
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -242,7 +246,9 @@ Checking for equivalence with:
 
   Extraneous nodes joined to node 0
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -272,7 +278,9 @@ Checking for equivalence with:
 
   Insufficient nodes detected while checking node 2
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -286,7 +294,9 @@ Checking for equivalence with:
 
   Extraneous nodes joined to node 2
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -410,7 +420,9 @@ Checking for equivalence with:
 
   Insufficient nodes detected while checking node 0
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -614,7 +626,9 @@ Checking for equivalence with:
 
   Insufficient nodes detected while checking node 0
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 

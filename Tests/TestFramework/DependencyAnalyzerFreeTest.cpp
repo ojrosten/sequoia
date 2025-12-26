@@ -12,6 +12,7 @@
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
+#include "sequoia/TextProcessing/Patterns.hpp"
 
 #include <fstream>
 
@@ -152,11 +153,36 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::test_exceptions(const project_paths& projPaths)
   {
-    check_exception_thrown<std::runtime_error>("Executable out of date", 
+    check_exception_thrown<std::runtime_error>(
+      "Executable out of date",
       [this, projPaths]() {
         fs::last_write_time(projPaths.executable(), m_ResetTime + earlyExecutableOffset);
         return tests_to_run(projPaths, "");
-      });
+      },
+      [](const project_paths& paths, std::string message) {
+        message = default_exception_message_postprocessor{}(paths, std::move(message));
+        {
+          const auto [first, last]{find_sandwiched_text(message, "fakeProject", "time")};
+          if(first < last)
+            message.replace(first, last - first, "/xxFILExx ");
+        }
+
+        std::string::size_type pos{};
+        while(pos < message.size())
+        {
+          std::string_view remaining{message.data() + pos, message.size() - pos};
+          const auto [first, last]{find_sandwiched_text(remaining, ":", "\n")};
+          if(first >= last)
+            break;
+
+          pos += first;
+          message.replace(pos, last - first, "****");
+          pos += 4;
+        }
+
+        return message;
+      }
+    );
   }
 
   void dependency_analyzer_free_test::test_dependencies(const project_paths& projPaths)

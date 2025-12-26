@@ -33,10 +33,15 @@ namespace sequoia::testing
       return with_msvc_v ? "TestAll.exe" : "./TestAll";
     }
 
-    // This seems necessary on Mac-M series perhaps because of resolution of system clock (?)
-    void pause()
+    // For reasons I haven't thus far been able to divine, this test has
+    // some instabilities on mac m series without some judiciously placed
+    // pauses. They seem to be associated with file writing, suggesting that
+    // perhaps the last write timestamp is inaccurate (?)
+    void pause_for_mac_m_series([[maybe_unused]] std::chrono::milliseconds num)
     {
-      std::this_thread::sleep_for(500ms);
+      #ifdef __APPLE__
+        std::this_thread::sleep_for(num);
+      #endif
     }
 
     [[nodiscard]]
@@ -63,20 +68,25 @@ namespace sequoia::testing
   {}
 
   [[nodiscard]]
-  fs::path cmd_builder::cmake_cache_dir() const
+  const fs::path& cmd_builder::cmake_cache_dir() const
   {
-    if(!build().cmake_cache())
-      throw std::logic_error{"No CMakeCache.txt"};
-
-    return build().cmake_cache()->parent_path();
+    return get_build_paths().cmake_cache_dir();
   }
 
   void cmd_builder::create_build_run(const std::filesystem::path& creationOutput, std::string_view buildOutput, const std::filesystem::path& output) const
-  {
-    invoke(cd_cmd(build().executable_dir())
+  {   
+    invoke(
+         cd_cmd(get_build_paths().executable_dir())
       && shell_command{"", create_cmd(), creationOutput / "CreationOutput.txt"}
-      && build_cmd(build(), buildOutput)
-      && cd_cmd(build().executable_dir())
+    );
+
+    invoke(
+         cd_cmd(get_main_paths().dir())
+         && build_cmd(get_build_paths(), get_build_paths().executable_dir() / buildOutput)
+    );
+
+    invoke(
+         cd_cmd(get_build_paths().executable_dir())
       && shell_command{"", run_cmd(), output / "TestRunOutput.txt"}
       && shell_command{"",
                        run_cmd().append(" select ../../../Tests/HouseAllocationTest.cpp")
@@ -95,19 +105,28 @@ namespace sequoia::testing
 
   void cmd_builder::rebuild_run(const std::filesystem::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const
   {
-    invoke(cd_cmd(main().dir()) && cmake_cmd(std::nullopt, build(), cmakeOutput) && build_cmd(build(), buildOutput) && run(outputDir, options));
+    invoke(
+         cd_cmd(get_main_paths().dir())
+      && cmake_cmd(get_build_paths(), cmakeOutput)
+      && build_cmd(get_build_paths(), buildOutput)
+    );
+    
+    pause_for_mac_m_series(750ms);
+
+    run_executable(outputDir, options);
   }
 
   void cmd_builder::run_executable(const std::filesystem::path& outputDir, std::string_view options) const
   {
-    fs::create_directory(outputDir);
-    invoke(run(outputDir, options));
-  }
+    if(!fs::exists(outputDir))
+      fs::create_directory(outputDir);
 
-  [[nodiscard]]
-  shell_command cmd_builder::run(const std::filesystem::path& outputDir, std::string_view options) const
-  {
-    return cd_cmd(build().executable_dir()) && shell_command("", run_cmd().append(" ").append(options), outputDir / "TestRunOutput.txt");
+    invoke(
+         cd_cmd(get_build_paths().executable_dir())
+      && shell_command("", run_cmd().append(" ").append(options), outputDir / "TestRunOutput.txt")
+    );
+
+    //invoke(cd_cmd(m_Main.dir()) && testing::build_and_run_cmd(m_Build, outputDir / "TestRunOutput.txt"));
   }
 
   [[nodiscard]]
@@ -127,7 +146,7 @@ namespace sequoia::testing
     const auto absoluteFrom{auxiliary_materials() /= relativeFrom};
     const auto absoluteTo{generated_project() / relativeTo};
     fs::copy(absoluteFrom, absoluteTo, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-    pause();
+
     const auto now{fs::file_time_type::clock::now()};
 
     if(fs::is_regular_file(absoluteFrom))
@@ -154,12 +173,11 @@ namespace sequoia::testing
     fs::create_directory(working_materials() /= "CreationOutput");
     fs::create_directory(working_materials() /= "Output");
 
-    pause();
+    pause_for_mac_m_series(250ms);
     b.create_build_run(working_materials() /= "CreationOutput", "BuildOutput2.txt", working_materials() /= "Output");
 
-    // Note: the act of creation invokes cmake, and so the first check implicitly checks the cmake output
     check(equivalence, description, working_materials() /= "CreationOutput", predictive_materials() /= "CreationOutput");
-    check(append_lines(description, "Second build output existance"), fs::exists(b.cmake_cache_dir() / "BuildOutput2.txt"));
+    check(append_lines(description, "Second build output existance"), fs::exists(b.get_build_paths().executable_dir() / "BuildOutput2.txt"));
     check(equivalence, append_lines(description, "Test Runner Output"), working_materials() /= "Output", predictive_materials() /= "Output");
   }
 
@@ -175,27 +193,22 @@ namespace sequoia::testing
 
     b.rebuild_run(working_materials() /= relOutputDir, CMakeOutput, BuildOutput, options);
     check(equivalence, description, working_materials() /= relOutputDir, predictive_materials() /= relOutputDir);
-    check(append_lines(description, "CMake output existance"), fs::exists(b.main().dir() / CMakeOutput));
-    check(append_lines(description, "Build output existance"), fs::exists(b.cmake_cache_dir() / BuildOutput));
+    check(append_lines(description, "CMake output existance"), fs::exists(b.get_main_paths().dir() / CMakeOutput));
+    check(append_lines(description, "Build output existance"), fs::exists(b.get_main_paths().dir() / BuildOutput));
   }
 
   void test_runner_end_to_end_test::check_project_files(std::string_view description, const cmd_builder& b)
   {
-    const std::filesystem::path subdirs{"ProjectFiles/win"};
-    fs::create_directories(working_materials() /= subdirs);
     if constexpr(with_msvc_v)
     {
+      const std::filesystem::path subdirs{"ProjectFiles" / back(get_project_paths().build().cmake_cache_dir())};
+      fs::create_directories(working_materials() /= subdirs);
+
       const auto projFile{b.cmake_cache_dir() / "TestAll.vcxproj"};
       fs::copy(projFile, working_materials() /= subdirs);
-    }
-    else
-    {
-      // TO DO: fake this for now on other platforms to ensure the number of checks/deep checks match;
-      // A solution might be to introduce platform-specific summaries.
-      fs::copy(predictive_materials() /= subdirs, working_materials() /= subdirs);
-    }
 
-    check(equivalence, description, working_materials() /= subdirs, predictive_materials() /= subdirs);
+      check(equivalence, description, working_materials() /= subdirs, predictive_materials() /= subdirs);
+    }
   }
 
   void test_runner_end_to_end_test::run_tests()
@@ -230,8 +243,8 @@ namespace sequoia::testing
 
     const cmd_builder b{generated_project(), get_project_paths().build()};
 
-    check("First CMake output existance", fs::exists(b.main().dir() / "GenerationOutput.txt"));
-    check("First build output existance", fs::exists(b.cmake_cache_dir() / "GenerationOutput.txt"));
+    check("First CMake output existance", fs::exists(b.get_build_paths().cmake_cache_dir() / "CMakeCache.txt"));
+    check("First build output existance", fs::exists(b.get_main_paths().dir() / "GenerationOutput.txt"));
     check("First git output existance", fs::exists(generated_project() / "GenerationOutput.txt"));
     check(".git existance", fs::exists(generated_project() / ".git"));
 
@@ -242,14 +255,13 @@ namespace sequoia::testing
 
     //=================== Run the test executable ===================//
 
-    run_and_check(report("Empty Run"), b, "EmptyRunOutput", "");
+    run_and_check(report("Empty Run"), b, "EmptyRunOutput", "");    
 
     //=================== Create tests and run ===================//
 
     create_run_and_check(report("Test Runner Creation Output"), b);
     fs::copy(generated_project() /= "output/TestSummaries", working_materials() /= "TestSummaries_0", fs::copy_options::recursive);
     check(equivalence, "", working_materials() /= "TestSummaries_0", predictive_materials() /= "TestSummaries_0");
-
 
     //=================== Rerun with async execution ===================//
     // --> async depth should be automatically set to "suite" since number of families is > 4

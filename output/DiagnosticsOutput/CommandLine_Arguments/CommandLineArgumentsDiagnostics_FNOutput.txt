@@ -92,7 +92,9 @@ Checking for weak equivalence with:
 
             Existence ofearly function objects differs
             [bool]
-            check failed
+            operator== returned false
+            Obtained : false
+            Predicted: true
 
 =======================================
 
@@ -124,7 +126,9 @@ Checking for weak equivalence with:
 
             Existence oflate function objects differs
             [bool]
-            check failed
+            operator== returned false
+            Obtained : false
+            Predicted: true
 
 =======================================
 

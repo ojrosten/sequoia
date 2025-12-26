@@ -6,11 +6,15 @@ Broken equality
 
   operator== is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator== is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -22,19 +26,27 @@ Broken inequality
 
   operator== is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator== is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator!= is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator!= is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -94,7 +106,9 @@ Broken check invariant
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -136,7 +150,9 @@ Incorrect moved-from state post construction
 
   Incorrect moved-from value after move construction
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -148,7 +164,9 @@ Incorrect moved-from state post construction
 
   Incorrect moved-from value after move construction
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -160,7 +178,9 @@ Incorrect moved-from state post assignment
 
   Incorrect moved-from value after move construction
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -172,7 +192,9 @@ Incorrect moved-from state post assignment
 
   Incorrect moved-from value after move assignment
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -240,11 +262,15 @@ Broken equality
 
   operator== is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator== is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -256,19 +282,27 @@ Broken inequality
 
   operator== is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator== is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator!= is inconsistent (x)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   operator!= is inconsistent (y)
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 
@@ -368,7 +402,9 @@ Broken check invariant
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
 =======================================
 

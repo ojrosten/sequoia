@@ -1,1 +1,0 @@
-genhtml --demangle-cpp -o ../../scripts/../coverage_reports/TestAll coverage.info

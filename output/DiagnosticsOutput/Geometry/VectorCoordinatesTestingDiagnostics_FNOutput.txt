@@ -78,7 +78,9 @@ operator== returned false
 
   Conversion to bool
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   Value at index 0
   [float]
@@ -168,7 +170,9 @@ operator== returned false
 
   Conversion to bool
   [bool]
-  check failed
+  operator== returned false
+  Obtained : false
+  Predicted: true
 
   Value at index 0
   [float]

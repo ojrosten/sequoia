@@ -50,13 +50,13 @@ namespace sequoia::testing
                                              [this]() { return rebase_from("Foo/Bar", working_materials() /= "Foo/baz.txt"); });
 
     check_exception_thrown<std::runtime_error>("Attempt to rebase non-empty path from empty path",
-                                             [this]() { return rebase_from("Foo/Bar", ""); });
+                                             []() { return rebase_from("Foo/Bar", ""); });
 
     check_exception_thrown<std::runtime_error>("Attempt to rebase ../",
-                                             [this]() { return rebase_from("../", "Foo"); });
+                                             []() { return rebase_from("../", "Foo"); });
 
     check_exception_thrown<std::runtime_error>("Attempt to rebase ../../",
-                                             [this]() { return rebase_from("../../", "Foo"); });
+                                             []() { return rebase_from("../../", "Foo"); });
 
     check(equality, "Empty path", rebase_from("", "Baz"), fs::path{""});
     check(equality, "Empty path from empty path", rebase_from("", ""), fs::path{""});
