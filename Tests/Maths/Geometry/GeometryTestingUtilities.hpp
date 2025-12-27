@@ -232,7 +232,7 @@ namespace sequoia::testing
   class coordinates_operations
   {    
     enum dim_1_label{ two, one, zero, neg_one };
-    enum dim_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one };
+    enum dim_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one, one_two };
     
     using graph_type = transition_checker<Coordinates>::transition_graph;
     using coords_t   = Coordinates;
@@ -358,6 +358,8 @@ namespace sequoia::testing
           }, // one_zero
           {
           }, // one_one
+          {
+          }, // one_two
         },
         {coords_t{std::array{ring_t(-1), ring_t(-1)}, units...},
          coords_t{std::array{ring_t(-1), ring_t{}},   units...},
@@ -365,7 +367,8 @@ namespace sequoia::testing
          coords_t{std::array{ring_t{},   ring_t{}},   units...},
          coords_t{std::array{ring_t{},   ring_t(1)},  units...},
          coords_t{std::array{ring_t(1),  ring_t{}},   units...},
-         coords_t{std::array{ring_t(1),  ring_t(1)},  units...}
+         coords_t{std::array{ring_t(1),  ring_t(1)},  units...},
+         coords_t{std::array{ring_t(1),  ring_t(2)},  units...}
         }
       };
 
@@ -880,6 +883,25 @@ namespace sequoia::testing
         [](coords_t v) -> coords_t { return v *= std::array<ring_t, 2>{-1, 0}; }
       );
 
+      // (-1, -1) --> (1, 2)
+      if constexpr(maths::vector_space<module_t>)
+      {
+        add_transition<coords_t>(
+          g,
+          dim_2_label::neg_one_neg_one,
+          dim_2_label::one_two,
+          test.report("(-1, -1) /= span{-1, -0.5}"),
+          [](coords_t v) -> coords_t { return v /= std::array<ring_t, 2>{-1, -0.5}; }
+        );
+
+        add_transition<coords_t>(
+          g,
+          dim_2_label::neg_one_neg_one,
+          dim_2_label::one_two,
+          test.report("(-1, -1) / span{-1, -0.5}"),
+          [](coords_t v) -> coords_t { return v / std::array<ring_t, 2>{-1, -0.5}; }
+        );
+      }
     }
 
     static void add_dim_2_free_mutations(maths::network auto& g, regular_test& test)
