@@ -516,7 +516,7 @@ namespace sequoia::maths
   concept convex_space
     =    free_module<T>
       || (    has_set_type_v<T>
-          && (has_vector_space_type_v<T> || has_free_module_type_v<T>)
+          && (has_vector_space_type_v<T>      || has_free_module_type_v<T>)
           && (identifies_as_convex_space_v<T> || identifies_as_affine_space_v<T>));
 
   /** @ingroup Spaces
@@ -1228,17 +1228,29 @@ namespace sequoia::maths
     }
 
     template<class Self>
-      requires std::derived_from<Self, coordinates_base>
+      requires std::derived_from<Self, coordinates_base> && has_distinguished_origin
     constexpr Self& operator*=(this Self& self, value_type u) noexcept(has_identity_validator)
-      requires has_distinguished_origin
     {
       return self = (self * u);
     }
 
     template<class Self>
-      requires std::derived_from<Self, coordinates_base>
+      requires std::derived_from<Self, coordinates_base> && has_distinguished_origin
+    constexpr Self& operator*=(this Self& self, std::span<const value_type, D> u) noexcept(has_identity_validator)
+    {
+      return self = (self * u);
+    }
+
+    template<class Self>
+      requires std::derived_from<Self, coordinates_base> && vector_space<free_module_type>
     constexpr Self& operator/=(this Self& self, value_type u)
-      requires vector_space<free_module_type>
+    {
+      return self = (self / u);
+    }
+
+    template<class Self>
+      requires std::derived_from<Self, coordinates_base> && vector_space<free_module_type>
+    constexpr Self& operator/=(this Self& self, std::span<const value_type, D> u)
     {
       return self = (self / u);
     }
@@ -1325,11 +1337,35 @@ namespace sequoia::maths
     }
 
     template<class Derived>
+      requires std::derived_from<Derived, coordinates_base> && has_distinguished_origin
+    [[nodiscard]]
+    friend constexpr Derived operator*(Derived c, std::span<const value_type, D> u) noexcept(has_identity_validator)
+    {
+      return c.apply_to_each_element(u, [](value_type& lhs, value_type rhs){ lhs *= rhs; });
+    }
+    
+    template<class Derived>
+      requires std::derived_from<Derived, coordinates_base> && has_distinguished_origin
+    [[nodiscard]]
+    friend constexpr Derived operator*(std::span<const value_type, D> u, Derived c) noexcept(has_identity_validator)
+    {
+      return c * u;
+    }
+
+    template<class Derived>
       requires std::derived_from<Derived, coordinates_base> && vector_space<free_module_type> && has_distinguished_origin
     [[nodiscard]]
     friend constexpr Derived operator/(Derived v, value_type u)
     {
       return v.for_each_element([u](value_type& x) { return x /= u; });
+    }
+
+    template<class Derived>
+      requires std::derived_from<Derived, coordinates_base> && has_distinguished_origin
+    [[nodiscard]]
+    friend constexpr Derived operator/(Derived c, std::span<const value_type, D> u) noexcept(has_identity_validator)
+    {
+      return c.apply_to_each_element(u, [](value_type& lhs, value_type rhs){ lhs /= rhs; });
     }
 
     [[nodiscard]]

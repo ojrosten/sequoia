@@ -1,2 +1,2 @@
 Integral Physical Value Test
-Standard Top Level Checks:                41;  Failures:  0  [Deep checks: 523]
+Standard Top Level Checks:                53;  Failures:  0  [Deep checks: 757]
