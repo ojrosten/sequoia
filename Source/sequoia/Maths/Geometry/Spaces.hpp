@@ -788,7 +788,7 @@ namespace sequoia::maths
       }
 
       return val;
-    };
+    }
   };
 
   template<class T>
@@ -1097,14 +1097,8 @@ namespace sequoia::maths
       Unlike vector spaces, affine spaces do not have distinguished origin. Therefore, each
       coordinate system for an affine space is with respect to a particular origin. This is
       part of the type system to ensure that different coordinate systems cannot be
-      unwittingly mixed. To allow vector spaces to be treated in a similar way to affine spaces,
-      a type to represent the fact that their origins are distinguished is supplied.
-      
-    */
-
-  template<class... Ts>
-  struct coordinate_system;
-  
+      unwittingly mixed.      
+    */  
 
   /** @ingroup Coordinates
       @brief Forward declaration for the coordinates class template.
