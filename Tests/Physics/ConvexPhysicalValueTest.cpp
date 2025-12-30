@@ -123,7 +123,7 @@ namespace sequoia::testing
 
     check_exception_thrown<std::domain_error>(
       "",
-      []() { return colours<T, 3>{std::array{T(1.1), T(0.5), T(0.1)}, normalized_colour_t<3>{}}; }
+      []() { return colours<T, 3>{T(1.1), T(0.5), T(0.1), normalized_colour_t<3>{}}; }
     );
   }
 

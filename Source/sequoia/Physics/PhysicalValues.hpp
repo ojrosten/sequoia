@@ -506,6 +506,30 @@ namespace sequoia::physics
   template<convex_space ValueSpace, physical_unit Unit>
   using default_validator_t = std::conditional_t<affine_space<ValueSpace>, std::identity, typename Unit::validator_type>;
 
+  namespace impl
+  {
+
+    template<class Rep, class...>
+    struct is_valid_physical_value_pack : std::false_type {};
+
+    template<class Rep, class... Args, std::size_t... Is>
+      requires (sizeof...(Args) == sizeof...(Is) + 1)
+            && physical_unit<std::tuple_element_t<sizeof...(Is), std::tuple<Args...>>>
+            && (std::convertible_to<std::tuple_element_t<Is, std::tuple<Args...>>, Rep> && ...)
+    struct is_valid_physical_value_pack<Rep, std::tuple<Args...>, std::index_sequence<Is...>> : std::true_type
+    {
+    };
+  }
+  
+  template<class Rep, class... Args>
+    requires (sizeof...(Args) > 1)
+  struct is_valid_physical_value_pack
+    : impl::is_valid_physical_value_pack<Rep, std::tuple<Args...>, std::make_index_sequence<sizeof...(Args) - 1>>
+  {};
+
+  template<class Rep, class... Args>
+  inline constexpr bool is_valid_physical_value_pack_v{is_valid_physical_value_pack<Rep, Args...>::value};
+  
   template<
     convex_space ValueSpace,
     physical_unit Unit,
@@ -569,6 +593,12 @@ namespace sequoia::physics
 
     constexpr physical_value(std::span<const value_type, D> val, units_type)
       : coordinates_type{val}
+    {}
+
+    template<class... Args>
+      requires (sizeof...(Args) == D + 1) && (D > 1) && is_valid_physical_value_pack_v<value_type, Args...>
+    constexpr physical_value(Args... args)
+      : physical_value{std::make_index_sequence<D>{}, std::tuple{args...}}
     {}
 
     [[nodiscard]]
@@ -701,7 +731,12 @@ namespace sequoia::physics
     }
 
     [[nodiscard]]
-    constexpr physical_value convert_to(Unit) const noexcept { return *this; } 
+    constexpr physical_value convert_to(Unit) const noexcept { return *this; }
+  private:
+    template<std::size_t... Is, class... Args> 
+    constexpr physical_value(std::index_sequence<Is...>, const std::tuple<Args...>& args)
+      : coordinates_type{std::get<Is>(args)...}
+    {}
   };
 
   template<physical_unit Unit, class Rep>
