@@ -802,7 +802,7 @@ namespace sequoia::physics
       using arena_type = Arena;
     };
 
-    template<class Arena>
+    template<std::size_t D, class Arena>
     struct positions
     {
       using arena_type = Arena;
@@ -962,7 +962,7 @@ namespace sequoia::physics
   };
 
   template<arithmetic Rep, std::size_t D, class Arena>
-  struct position_space : physical_value_affine_space<sets::classical::positions<Arena>, Rep, D, position_space<Rep, D, Arena>>
+  struct position_space : physical_value_affine_space<sets::classical::positions<D, Arena>, Rep, D, position_space<Rep, D, Arena>>
   {
     using arena_type = Arena;
   };
