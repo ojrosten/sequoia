@@ -789,6 +789,16 @@ namespace sequoia::maths
 
       return val;
     }
+
+    template<std::floating_point U, std::size_t D>
+      requires (sizeof(U) <= sizeof(T))
+    constexpr const std::array<U, D>&  operator()(const std::array<U, D>& vals) const
+    {
+      for(const auto v : vals)
+        (*this)(v);
+      
+      return vals;
+    }
   };
 
   template<class T>

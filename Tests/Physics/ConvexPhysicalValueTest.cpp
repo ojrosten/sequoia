@@ -13,10 +13,50 @@
 
 #include <charconv>
 
-namespace sequoia::testing
-{ 
-  using namespace physics;
+using namespace sequoia::physics;
 
+namespace
+{
+  namespace sets
+  {
+    template<std::size_t N, class Arena>
+    struct colours
+    {
+      using arena_type = Arena;
+    };
+  }
+
+  template<std::floating_point Rep, std::size_t N, class Arena>
+  struct colour_space
+    : physical_value_convex_space<sets::colours<N, Arena>, Rep, N, colour_space<Rep, N, Arena>>
+  {
+    using arena_type           = Arena;
+    using base_space           = colour_space;
+    using distinguished_origin = std::true_type;
+  };
+
+  template<std::size_t N>
+  struct normalized_colour_t
+  {
+    using is_unit = std::true_type;
+    using validator_type = interval_validator<long double, 0.0L, 1.0L>;
+  };
+
+  template<std::floating_point T, std::size_t N, class Arena=implicit_common_arena>
+  using colours = physical_value<colour_space<T, N, Arena>, normalized_colour_t<N>>;
+}
+
+namespace sequoia::physics
+{
+  template<std::floating_point T, std::size_t N>
+  struct default_space<normalized_colour_t<N>, T>
+  {
+    using type = colour_space<T, N, implicit_common_arena>;
+  };
+}
+
+namespace sequoia::testing
+{
   [[nodiscard]]
   std::filesystem::path convex_physical_value_test::source_file() const
   {
@@ -59,7 +99,7 @@ namespace sequoia::testing
 
           if(const auto pos{message.rfind(' ', message.size() - 2)}; pos != std::string::npos)
           {
-            /* Homebrew issue means this doesn't link for llvm 21.1.3
+            /* TO DO: Homebrew issue means this doesn't link for llvm 21.1.3
             double val{};
             const auto[ptr,ec]{std::from_chars(message.data() + pos, message.data() + message.size(), val)};
             if(ec != std::errc{})
@@ -74,6 +114,16 @@ namespace sequoia::testing
 
         return message;
       }
+    );
+
+    check_exception_thrown<std::domain_error>(
+      "",
+      []() { return colours<T, 3>{std::array{T(0.0), T(0.5), T(-0.1)}, normalized_colour_t<3>{}}; }
+    );
+
+    check_exception_thrown<std::domain_error>(
+      "",
+      []() { return colours<T, 3>{std::array{T(1.1), T(0.5), T(0.1)}, normalized_colour_t<3>{}}; }
     );
   }
 
