@@ -37,6 +37,7 @@ namespace sequoia::testing
     test_absolute_quantity<si::length<double>>();
     test_absolute_quantity<si::time_interval<float>>();
     test_absolute_quantity<si::temperature<double>>();
+    test_absolute_quantity<euclidean_half_line_quantity<float>>();
 
     test_compositions<si::mass<double>>();
     test_compositions<si::temperature<float>>();
@@ -72,8 +73,11 @@ namespace sequoia::testing
 
     coordinates_operations<quantity_t>{*this}.execute();
 
-    using inv_quantity_t = quantity<dual<units_type>, value_type>;
-    coordinates_operations<inv_quantity_t>{*this}.execute();
+    if constexpr(has_default_space_v<dual_of_t<units_type>, value_type>)
+    {
+      using inv_quantity_t = quantity<dual_of_t<units_type>, value_type>;
+      coordinates_operations<inv_quantity_t>{*this}.execute();
+    }
   }
 
   template<class Quantity>

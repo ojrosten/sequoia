@@ -122,7 +122,7 @@ namespace sequoia::testing
 
     using euc_half_line_qty = euclidean_half_line_quantity<float>;
     check(equality, "", static_cast<euc_half_line_qty>(height_t{0.5, metre} /  width_t{0.5, metre}), euc_half_line_qty{1.0, no_unit});
-    check(equality, "", static_cast<euc_half_line_qty>( width_t{0.5, metre} / height_t{0.5, metre}), euc_half_line_qty{1.0, no_unit});
+    check(equality, "", static_cast<euc_half_line_qty>( width_t{0.5, metre} / height_t{0.5, metre}), euc_half_line_qty{1.0});
 
     STATIC_CHECK(!std::is_same_v<d_len_t, d_width_t>);
     check(equality, "", static_cast<d_len_t>(d_width_t{0.5, metre}), d_len_t{0.5, metre});

@@ -45,6 +45,8 @@ namespace sequoia::testing
     test_vector_quantity<si::electrical_current<float>>();
     test_vector_quantity<si::electrical_current<double>>();
     test_vector_quantity<si::angle<float>>();
+    test_vector_quantity<euclidean_1d_vector_quantity<float>>();
+    test_vector_quantity<dimensionless_quantity<euclidean_vector_space<float, 2>, no_unit_t, std::identity>>();
 
     test_trig<float>();
     test_trig<double>();
@@ -66,10 +68,13 @@ namespace sequoia::testing
     STATIC_CHECK(vector_space<space_type>);
     STATIC_CHECK(can_multiply<quantity_t, value_type>);
     STATIC_CHECK(can_divide<quantity_t, value_type>);
-    STATIC_CHECK(can_divide<quantity_t, quantity_t>);
-    STATIC_CHECK(can_divide<quantity_t, delta_q_t>);
-    STATIC_CHECK(can_divide<delta_q_t, quantity_t>);
-    STATIC_CHECK(can_divide<delta_q_t, delta_q_t>);
+    if constexpr(Quantity::dimension == 1)
+    {
+      STATIC_CHECK(can_divide<quantity_t, quantity_t>);
+      STATIC_CHECK(can_divide<quantity_t, delta_q_t>);
+      STATIC_CHECK(can_divide<delta_q_t, quantity_t>);
+      STATIC_CHECK(can_divide<delta_q_t, delta_q_t>);
+    }
     STATIC_CHECK(can_add<quantity_t, quantity_t>);
     STATIC_CHECK(can_add<quantity_t, delta_q_t>);
     STATIC_CHECK(can_subtract<quantity_t, quantity_t>);
@@ -79,39 +84,47 @@ namespace sequoia::testing
 
     coordinates_operations<quantity_t>{*this}.execute();
 
-    check(equality,
-          "",
-          physical_value{value_type{2.0}, units_type{} * units_type{}},
-          quantity_t{value_type{2.0}, units_type{}} * quantity_t{value_type{1.0}, units_type{}});
+    if constexpr(has_default_space_v<dual_of_t<units_type>, value_type>)
+    {
+      check(
+        equality,
+        "",
+        physical_value{value_type{2.0}, units_type{} * units_type{}},
+        quantity_t{value_type{2.0}, units_type{}} * quantity_t{value_type{1.0}, units_type{}}
+      );
 
-    check(equality,
-          "",
-          physical_value{value_type{2.0}, units_type{} * units_type{}},
-          quantity_t{value_type{1.0}, units_type{}} * quantity_t{value_type{2.0}, units_type{}});
+      check(
+        equality,
+        "",
+        physical_value{value_type{2.0}, units_type{} * units_type{}},
+        quantity_t{value_type{1.0}, units_type{}} * quantity_t{value_type{2.0}, units_type{}}
+      );
 
-    using inv_quantity_t = quantity<dual<units_type>, value_type>;
-    coordinates_operations<inv_quantity_t>{*this}.execute();
+      using inv_quantity_t = quantity<dual<units_type>, value_type>;
+      coordinates_operations<inv_quantity_t>{*this}.execute();      
 
-    using euc_vec_space_qty  = euclidean_1d_vector_quantity<value_type>;
-    check(equality, "", quantity_t{-2.0, units_type{}} / quantity_t{1.0, units_type{}}, euc_vec_space_qty{value_type(-2.0), no_unit}); 
-    check(equality, "", quantity_t{-2.0, units_type{}} / delta_q_t{1.0, units_type{}},  euc_vec_space_qty{value_type(-2.0), no_unit});
-    check(equality, "", delta_q_t{2.0, units_type{}}  / quantity_t{-1.0, units_type{}}, euc_vec_space_qty{value_type(-2.0), no_unit});
+      using euc_vec_space_qty  = euclidean_1d_vector_quantity<value_type>;
+      check(equality, "", quantity_t{-2.0, units_type{}} / quantity_t{1.0, units_type{}}, euc_vec_space_qty{value_type(-2.0), no_unit}); 
+      check(equality, "", quantity_t{-2.0, units_type{}} / delta_q_t{1.0, units_type{}},  euc_vec_space_qty{value_type(-2.0), no_unit});
+      check(equality, "", delta_q_t{2.0, units_type{}}  / quantity_t{-1.0, units_type{}}, euc_vec_space_qty{value_type(-2.0)});
 
-    check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}  /  quantity_t{2.0, units_type{}}) / quantity_t{2.0, units_type{}},   euc_vec_space_qty{3.0, no_unit});
-    check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) / (quantity_t{2.0, units_type{}}  * quantity_t{2.0, units_type{}}),  euc_vec_space_qty{3.0, no_unit});
-    check(equality, "",  quantity_t{4.0, units_type{}} * (quantity_t{3.0, units_type{}}  / (quantity_t{2.0, units_type{}}  * quantity_t{2.0, units_type{}})), euc_vec_space_qty{3.0, no_unit});
+      check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}  /  quantity_t{2.0, units_type{}}) / quantity_t{2.0, units_type{}},   euc_vec_space_qty{3.0, no_unit});
+      check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) / (quantity_t{2.0, units_type{}}  * quantity_t{2.0, units_type{}}),  euc_vec_space_qty{3.0, no_unit});
+      check(equality, "",  quantity_t{4.0, units_type{}} * (quantity_t{3.0, units_type{}}  / (quantity_t{2.0, units_type{}}  * quantity_t{2.0, units_type{}})), euc_vec_space_qty{3.0, no_unit});
 
-    check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}  /  delta_q_t{2.0, units_type{}})  / delta_q_t{-2.0, units_type{}},   euc_vec_space_qty{-3.0, no_unit});
-    check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) / (delta_q_t{2.0, units_type{}}   * delta_q_t{-2.0, units_type{}}),  euc_vec_space_qty{-3.0, no_unit});
-    check(equality, "",  quantity_t{4.0, units_type{}} * (quantity_t{3.0, units_type{}}  / (delta_q_t{2.0, units_type{}}   * delta_q_t{-2.0, units_type{}})), euc_vec_space_qty{-3.0, no_unit});
+      check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}  /  delta_q_t{2.0, units_type{}})  / delta_q_t{-2.0, units_type{}},   euc_vec_space_qty{-3.0, no_unit});
+      check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) / (delta_q_t{2.0, units_type{}}   * delta_q_t{-2.0, units_type{}}),  euc_vec_space_qty{-3.0, no_unit});
+      check(equality, "",  quantity_t{4.0, units_type{}} * (quantity_t{3.0, units_type{}}  / (delta_q_t{2.0, units_type{}}   * delta_q_t{-2.0, units_type{}})), euc_vec_space_qty{-3.0, no_unit});
 
-    check(equality, "", (delta_q_t{4.0, units_type{}} *  delta_q_t{-3.0, units_type{}}  /  quantity_t{2.0, units_type{}})  / quantity_t{2.0, units_type{}},   euc_vec_space_qty{-3.0, no_unit});
-    check(equality, "", (delta_q_t{4.0, units_type{}} *  delta_q_t{-3.0, units_type{}}) / (quantity_t{2.0, units_type{}}   * quantity_t{2.0, units_type{}}),  euc_vec_space_qty{-3.0, no_unit});
-    check(equality, "",  delta_q_t{4.0, units_type{}} * (delta_q_t{-3.0, units_type{}}  / (quantity_t{2.0, units_type{}}   * quantity_t{2.0, units_type{}})), euc_vec_space_qty{-3.0, no_unit});
+      check(equality, "", (delta_q_t{4.0, units_type{}} *  delta_q_t{-3.0, units_type{}}  /  quantity_t{2.0, units_type{}})  / quantity_t{2.0, units_type{}},   euc_vec_space_qty{-3.0, no_unit});
+      check(equality, "", (delta_q_t{4.0, units_type{}} *  delta_q_t{-3.0, units_type{}}) / (quantity_t{2.0, units_type{}}   * quantity_t{2.0, units_type{}}),  euc_vec_space_qty{-3.0, no_unit});
+      check(equality, "",  delta_q_t{4.0, units_type{}} * (delta_q_t{-3.0, units_type{}}  / (quantity_t{2.0, units_type{}}   * quantity_t{2.0, units_type{}})), euc_vec_space_qty{-3.0, no_unit});
 
-    check(equality, "", 1.0f / (1.0f / quantity_t{2.0, units_type{}}), quantity_t{2.0, units_type{}});
-    check(equality, "", quantity_t{2.0, units_type{}} /(1.0f / quantity_t{2.0, units_type{}}), quantity_t{2.0, units_type{}} * quantity_t{2.0, units_type{}});
-    check(equality, "", 4.0f / inv_quantity_t{2.0f, dual<units_type>{}}, quantity_t{2.0, units_type{}});
+      check(equality, "", 1.0f / (1.0f / quantity_t{2.0, units_type{}}), quantity_t{2.0, units_type{}});
+      check(equality, "", quantity_t{2.0, units_type{}} /(1.0f / quantity_t{2.0, units_type{}}), quantity_t{2.0, units_type{}} * quantity_t{2.0, units_type{}});
+
+      check(equality, "", 4.0f / inv_quantity_t{2.0f, dual<units_type>{}}, quantity_t{2.0, units_type{}});
+    }
   }
 
   template<std::floating_point T>
@@ -157,11 +170,7 @@ namespace sequoia::testing
     STATIC_CHECK(std::same_as<root_transform_unit_t<alternative::gradian_t>, si::units::radian_t>);
     STATIC_CHECK(std::same_as<root_transform_unit_t<non_si::units::gradian_t>, si::units::radian_t>);
     STATIC_CHECK(std::same_as<root_transform_t<gradian_t>, coordinate_transform<si::units::radian_t, dilatation<ratio<std::intmax_t{200}, std::numbers::pi_v<long double>>>, translation<0>>>);
-    STATIC_CHECK(std::same_as<root_transform_t<degree_t>, coordinate_transform<si::units::radian_t, dilatation<ratio<std::intmax_t{180}, std::numbers::pi_v<long double>>>, translation<0>>>);
-    //STATIC_CHECK(std::same_as<inverse_t<root_transform_t<degree_t>>, coordinate_transform<si::units::radian_t, dilatation<ratio<std::numbers::pi_v<long double>, std::intmax_t{180}>>, translation<0>>>);
-    //STATIC_CHECK(std::same_as<product_t<root_transform_t<gradian_t>, inverse_t<root_transform_t<degree_t>>>, coordinate_transform<si::units::radian_t, dilatation<ratio<std::intmax_t{10}, std::intmax_t{9}>>, translation<0>>>);
-    
-    
+    STATIC_CHECK(std::same_as<root_transform_t<degree_t>, coordinate_transform<si::units::radian_t, dilatation<ratio<std::intmax_t{180}, std::numbers::pi_v<long double>>>, translation<0>>>);       
     STATIC_CHECK(std::same_as<root_transform_unit_t<milli<si::units::radian_t>>, si::units::radian_t>);
     STATIC_CHECK(std::same_as<root_transform_unit_t<milli<milli<si::units::radian_t>>>, si::units::radian_t>);
 

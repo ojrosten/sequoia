@@ -66,6 +66,12 @@ namespace sequoia::maths
     using is_unit        = std::true_type;
     using validator_type = void;
   };
+
+  template<>
+  struct dual_of<physics::no_unit_t>
+  {
+    using type = physics::no_unit_t;
+  };
 }
 
 namespace sequoia::physics
@@ -601,6 +607,22 @@ namespace sequoia::physics
       : physical_value{std::make_index_sequence<D>{}, std::tuple{args...}}
     {}
 
+    constexpr explicit physical_value(value_type val)
+      requires std::derived_from<units_type, no_unit_t> && (D == 1)
+      : coordinates_type{val}
+    {}
+
+    constexpr explicit physical_value(std::span<const value_type, D> val)
+      requires std::derived_from<units_type, no_unit_t>
+      : coordinates_type{val}
+    {}
+
+    template<class... Args>
+    requires (sizeof...(Args) == D) && (D > 1) && std::derived_from<units_type, no_unit_t> && (std::convertible_to<Args, value_type> && ...)
+    constexpr explicit(sizeof...(Args) == 1) physical_value(Args... args)
+      : physical_value{std::make_index_sequence<D>{}, std::tuple{args...}}
+    {}
+
     [[nodiscard]]
     constexpr physical_value operator-() const noexcept(has_identity_validator)
       requires (coordinates_type::has_distinguished_origin) && (!std::is_unsigned_v<ring_type>) && (!is_effectively_absolute)
@@ -632,8 +654,10 @@ namespace sequoia::physics
     }
 
     template<class OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
-    requires   (!std::is_same_v<OtherValueSpace, displacement_space_type>)
-            && (std::is_same_v<ValueSpace, OtherValueSpace> || have_compatible_base_spaces_v<ValueSpace, OtherValueSpace>) && consistent_bases_v<basis_type, OtherBasis>
+      requires (!std::is_same_v<OtherValueSpace, displacement_space_type>)
+            && (    (std::is_same_v<ValueSpace, OtherValueSpace> && !std::constructible_from<displacement_type, std::span<const value_type, D>>)
+                 || (!std::is_same_v<ValueSpace, OtherValueSpace> && have_compatible_base_spaces_v<ValueSpace, OtherValueSpace>))
+            && consistent_bases_v<basis_type, OtherBasis>
     [[nodiscard]]
     friend constexpr auto operator-(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& rhs)
       noexcept(has_identity_validator)
