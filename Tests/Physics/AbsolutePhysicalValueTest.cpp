@@ -336,13 +336,13 @@ namespace sequoia::testing
             qty_label::euc_vec,
             this->report("euc_half_line * euc_vec"),
             [](variant_t v) -> variant_t { return std::get<euc_half_line_qty>(v) * euc_vec_space_qty{1.0}; },
-            std::weak_ordering::equivalent
+            std::weak_ordering::greater
           },
           edge_t{
             qty_label::euc_vec,
             this->report("euc_half_line / euc_vec"),
             [](variant_t v) -> variant_t { return std::get<euc_half_line_qty>(v) / euc_vec_space_qty{1.0}; },
-            std::weak_ordering::equivalent
+            std::weak_ordering::greater
             },*/
           edge_t{
             qty_label::qty,
@@ -372,6 +372,18 @@ namespace sequoia::testing
         },
         {
           // Start euc_vec
+          /*edge_t{
+            qty_label::euc_vec,
+            this->report("euc_vec * euc_vec"),
+            [](variant_t v) -> variant_t { return std::get<euc_vec_space_qty>(v) * euc_vec_space_qty{1.0}; },
+            std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("euc_vec / euc_vec"),
+            [](variant_t v) -> variant_t { return std::get<euc_vec_space_qty>(v) / euc_vec_space_qty{1.0}; },
+            std::weak_ordering::equivalent
+            },*/
           edge_t{
             qty_label::dq,
             this->report("euc_vec * d_qty"),
