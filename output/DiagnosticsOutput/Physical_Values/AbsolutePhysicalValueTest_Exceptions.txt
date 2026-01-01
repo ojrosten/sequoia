@@ -448,7 +448,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 246
+Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 270
 Negative quantity
 
 Expected Exception Type:
@@ -475,7 +475,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 246
+Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 270
 Negative quantity
 
 Expected Exception Type:

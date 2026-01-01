@@ -142,6 +142,30 @@ namespace sequoia::testing
             std::weak_ordering::equivalent
           },
           edge_t{
+            qty_label::qty,
+            this->report("qty * half_line_qty"),
+            [this](variant_t v) -> variant_t { return std::get<qty_t>(v) * euc_half_line_qty{1.0}; },
+            std::weak_ordering::equivalent
+          },
+          /*edge_t{
+            qty_label::qty,
+            this->report("qty / half_line_qty"),
+            [this](variant_t v) -> variant_t { return std::get<qty_t>(v) / euc_half_line_qty{1.0}; },
+            std::weak_ordering::equivalent
+            },*/
+          edge_t{
+            qty_label::unsafe,
+            this->report("qty * vec_space_qty"),
+            [this](variant_t v) -> variant_t { return std::get<qty_t>(v) * euc_vec_space_qty{-1.0}; },
+            std::weak_ordering::equivalent
+          },
+          /*edge_t{
+            qty_label::unsafe,
+            this->report("qty / vec_space_qty"),
+            [this](variant_t v) -> variant_t { return std::get<qty_t>(v) / euc_vec_space_qty{-1.0}; },
+            std::weak_ordering::equivalent
+            },*/
+          edge_t{
             qty_label::inv,
             this->report("0.5 / qty"),
             [](variant_t v) -> variant_t { return value_t{2.0} / std::get<qty_t>(v); },
