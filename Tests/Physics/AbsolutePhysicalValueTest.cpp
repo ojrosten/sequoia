@@ -320,6 +320,30 @@ namespace sequoia::testing
           // Start d_inv_q
         },
         { // Start euc_half_line
+          /*edge_t{
+            qty_label::euc_half,
+            this->report("euc_half_line * euc_half_line"),
+            [](variant_t v) -> variant_t { return std::get<euc_half_line_qty>(v) * euc_half_line_qty{1.0}; },
+            std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::euc_half,
+            this->report("euc_half_line / euc_half_line"),
+            [](variant_t v) -> variant_t { return std::get<euc_half_line_qty>(v) / euc_half_line_qty{1.0}; },
+            std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("euc_half_line * euc_vec"),
+            [](variant_t v) -> variant_t { return std::get<euc_half_line_qty>(v) * euc_vec_space_qty{1.0}; },
+            std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("euc_half_line / euc_vec"),
+            [](variant_t v) -> variant_t { return std::get<euc_half_line_qty>(v) / euc_vec_space_qty{1.0}; },
+            std::weak_ordering::equivalent
+            },*/
           edge_t{
             qty_label::qty,
             this->report("euc_half * qty"),

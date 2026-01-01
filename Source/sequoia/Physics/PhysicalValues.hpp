@@ -463,7 +463,7 @@ namespace sequoia::physics
     convex_space LHSValueSpace, physical_unit LHSUnit, basis_for<free_module_type_of_t<LHSValueSpace>> LHSBasis, class LHSValidator,
     convex_space RHSValueSpace, physical_unit RHSUnit, basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, class RHSValidator
   >
-    requires  consistent_bases_v<LHSBasis, RHSBasis> && is_1d_euclidean_v<LHSValueSpace>
+    requires consistent_bases_v<LHSBasis, RHSBasis> && is_1d_euclidean_v<LHSValueSpace>
   struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSBasis, distinguished_origin<LHSValueSpace>, LHSValidator>,
                                 physical_value<RHSValueSpace, RHSUnit, RHSBasis, distinguished_origin<RHSValueSpace>, RHSValidator>>
   {
