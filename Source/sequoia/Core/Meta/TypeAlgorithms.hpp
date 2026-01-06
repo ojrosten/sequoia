@@ -344,5 +344,27 @@ namespace sequoia::meta
   struct find<TT<T, Ts...>, U>
   {
     constexpr static std::size_t index{std::is_same_v<T, U> ? 0 : 1 + find_v<TT<Ts...>, U>};
-  };  
+  };
+
+  template<class...>
+  struct flatten;
+
+  template<class... Ts>
+  using flatten_t = flatten<Ts...>::type;
+
+  template<template<class...> class TT, class... Ts>
+  struct flatten<TT<Ts...>>
+  {
+    using type = TT<Ts...>;
+  };
+
+  template<template<class...> class TT, class... Ts>
+  struct flatten<TT<TT<Ts...>>> : flatten<TT<Ts...>>
+  {
+  };
+
+  template<template<class...> class TT, class... Ts, class... Us, class... Vs>
+  struct flatten<TT<TT<Ts...>, TT<Us...>, Vs...>> : flatten<TT<TT<Ts..., Us...>, Vs...>>
+  {
+  };
 }

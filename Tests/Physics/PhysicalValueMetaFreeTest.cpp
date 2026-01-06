@@ -30,6 +30,9 @@ namespace sequoia::testing
     using electrical_current_space_t
                   = electrical_current_space<float, implicit_common_arena>;
 
+    using euc_half_space = euclidean_half_space<float, implicit_common_arena>;
+    using euc_vec_space  = euclidean_vector_space<float, 1, implicit_common_arena>;
+
     using delta_mass_space_t = associated_displacement_space<mass_space_t>;
     using delta_len_space_t  = associated_displacement_space<length_space_t>;
     using delta_temp_space_t = associated_displacement_space<temp_space_t>;
@@ -137,11 +140,21 @@ namespace sequoia::testing
   {
     STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<si::units::kilogram_t, dual<si::units::kilogram_t>>>>,
                                 direct_product<no_unit_t>>);
-    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<mass_space_t>>,       direct_product<mass_space_t>>);
-    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<dual<mass_space_t>>>, direct_product<dual<mass_space_t>>>);
-    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<mass_space_t, mass_space_t>>>,  direct_product<mass_space_t, mass_space_t>>);
-    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<mass_space_t, dual<mass_space_t>>>>,  direct_product<euclidean_half_space<float, implicit_common_arena>>>);
-    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<mass_space_t, dual<delta_mass_space_t>>>>, direct_product<euclidean_vector_space<float, 1, implicit_common_arena>>>);
+
+    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<mass_space_t>>,
+                                direct_product<mass_space_t>>);
+
+    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<dual<mass_space_t>>>,
+                                direct_product<dual<mass_space_t>>>);
+
+    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<mass_space_t, mass_space_t>>>,
+                                direct_product<mass_space_t, mass_space_t>>);
+
+    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<mass_space_t, dual<mass_space_t>>>>,
+                                direct_product<euclidean_half_space<float, implicit_common_arena>>>);
+
+    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<mass_space_t, dual<delta_mass_space_t>>>>,
+                                direct_product<euclidean_vector_space<float, 1, implicit_common_arena>>>);
   }
 
   void physical_value_meta_free_test::test_simplify()
@@ -225,6 +238,9 @@ namespace sequoia::testing
     STATIC_CHECK(std::is_same_v<reduction_t<direct_product<metre_t, kilogram_t>>,
                                   reduction<direct_product<kilogram_t, metre_t>>>);
 
+    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<no_unit_t, no_unit_t>>, reduction<direct_product<no_unit_t>>>);
+    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<metre_t, no_unit_t>>, reduction<direct_product<metre_t>>>);
+    
     STATIC_CHECK(std::is_same_v<reduction_t<direct_product<kilogram_t, metre_t>>,
                                   reduction<direct_product<kilogram_t, metre_t>>>);
 

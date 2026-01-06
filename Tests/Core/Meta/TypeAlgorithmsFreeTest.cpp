@@ -60,6 +60,9 @@ namespace sequoia::testing
 
     test_insert<std::tuple>();
     test_insert<std::variant>();
+
+    test_flatten<std::tuple>();
+    test_flatten<std::variant>();
   }
 
   void type_algorithms_free_test::test_type_comparator()
@@ -186,5 +189,28 @@ namespace sequoia::testing
     STATIC_CHECK((std::is_same_v<insert_t<std::tuple<int, float>, char, 0>, std::tuple<char, int, float>>));
     STATIC_CHECK((std::is_same_v<insert_t<std::tuple<int, float>, char, 1>, std::tuple<int, char, float>>));
     STATIC_CHECK((std::is_same_v<insert_t<std::tuple<int, float>, char, 2>, std::tuple<int, float, char>>));
+  }
+
+  template<template<class...> class TT>
+  void type_algorithms_free_test::test_flatten()
+  {
+    STATIC_CHECK(std::is_same_v<flatten_t<TT<>>,    TT<>>);
+    STATIC_CHECK(std::is_same_v<flatten_t<TT<int>>, TT<int>>);
+
+    STATIC_CHECK(std::is_same_v<flatten_t<TT<TT<>>>,    TT<>>);
+    STATIC_CHECK(std::is_same_v<flatten_t<TT<TT<int>>>, TT<int>>);
+
+    STATIC_CHECK(std::is_same_v<flatten_t<TT<TT<>,       TT<>>>,    TT<>>);
+    STATIC_CHECK(std::is_same_v<flatten_t<TT<TT<int>,    TT<>>>,    TT<int>>);
+    STATIC_CHECK(std::is_same_v<flatten_t<TT<TT<>,       TT<int>>>, TT<int>>);
+    STATIC_CHECK(std::is_same_v<flatten_t<TT<TT<double>, TT<int>>>, TT<double, int>>);
+
+    STATIC_CHECK(std::is_same_v<flatten_t<TT<TT<>,       TT<>, TT<>>>,               TT<>>);
+    STATIC_CHECK(std::is_same_v<flatten_t<TT<TT<int>,    TT<>, TT<>>>,               TT<int>>);
+    STATIC_CHECK(std::is_same_v<flatten_t<TT<TT<>,       TT<int>, TT<>>>,            TT<int>>);
+    STATIC_CHECK(std::is_same_v<flatten_t<TT<TT<>,       TT<>, TT<int>>>,            TT<int>>);
+    STATIC_CHECK(std::is_same_v<flatten_t<TT<TT<float>,  TT<double>, TT<int, int>>>, TT<float, double, int, int>>);
+
+    STATIC_CHECK(std::is_same_v<flatten_t<TT<TT<TT<>>>>, TT<>>);
   }
 }

@@ -291,6 +291,45 @@ namespace sequoia::physics::impl
     using type = direct_product<Ts...>;
   };
 
+  template<class... Ts, int... Is>
+  //  requires (sizeof...(Ts) > 1)
+  struct unpack<direct_product<type_counter<Ts, Is>...>>
+    : meta::flatten<direct_product<unpack_t<type_counter<Ts, Is>>...>>
+  {
+  };
+
+  template<class>
+  struct maximally_reducible : std::false_type {};
+
+  template<class T>
+  inline constexpr bool maximally_reducible_v{maximally_reducible<T>::value};
+
+  template<class T>
+  struct maximally_reducible<type_counter<T, 0>> : std::true_type
+  {
+  };
+
+  template<class T, class Arena, int I>
+    requires (I != 0)
+  struct maximally_reducible<type_counter<euclidean_vector_space<T, 1, Arena>, I>> : std::true_type
+  {
+  };
+
+  template<class T, class Arena, int I>
+    requires (I != 0)
+  struct maximally_reducible<type_counter<euclidean_half_space<T, Arena>, I>> : std::true_type
+  {
+  };
+
+  template<physics::physical_unit U, int I>
+    requires std::derived_from<U, no_unit_t> && (I != 0)
+  struct maximally_reducible<type_counter<U, I>> : std::true_type
+  {
+  };
+
+  template<class T>
+  struct not_maximally_reducible : std::negation<maximally_reducible<T>> {};
+  
   /// \class Primary class template for aiding the reduction of direct products to a lower dimensional space    
   template<class...>
   struct reduce;
@@ -305,6 +344,12 @@ namespace sequoia::physics::impl
     using type = direct_product<euclidean_vector_space<commutative_ring_type_of_t<T>, 1, arena_type>>;
   };
 
+  template<class T, class Arena, int I>
+  struct reduce<direct_product<type_counter<euclidean_vector_space<T, 1, Arena>, I>>>
+  {
+    using type = direct_product<euclidean_vector_space<T, 1, Arena>>;
+  };
+  
   template<convex_space T>
     requires (!affine_space<T> && !vector_space<T>)
   struct reduce<direct_product<type_counter<T, 0>>>
@@ -313,45 +358,72 @@ namespace sequoia::physics::impl
     using type = direct_product<euclidean_half_space<commutative_ring_type_of_t<free_module_type_of_t<T>>, arena_type>>;
   };
 
-  template<class T, class... Ts, int... Is>
-  struct reduce<direct_product<type_counter<T, 0>, type_counter<Ts, Is>...>>
-    : reduce<direct_product<type_counter<Ts, Is>...>>
-  {};
-
-  template<class T, int I>
-    requires (I != 0)
-  struct reduce<direct_product<type_counter<T, I>>>
+  template<class T, class Arena, int I>
+  struct reduce<direct_product<type_counter<euclidean_half_space<T, Arena>, I>>>
   {
-    using type = unpack_t<type_counter<T, I>>;
-  };
- 
-  template<class T, int I, class... Ts, int... Is>
-    requires (I != 0)
-  struct reduce<direct_product<type_counter<T, I>, type_counter<Ts, Is>...>>
-    : reduce<direct_product<type_counter<Ts, Is>...>, unpack_t<type_counter<T, I>>>
-  {};
-
-  template<class T, class... Ts, int... Is, class... Us>
-  struct reduce<direct_product<type_counter<T, 0>, type_counter<Ts, Is>...>, direct_product<Us...>>
-    : reduce<direct_product<type_counter<Ts, Is>...>, direct_product<Us...>>
-  {};
-
-  template<class T, int I, class... Ts, int... Is, class... Us>
-    requires (I != 0)
-  struct reduce<direct_product<type_counter<T, I>, type_counter<Ts, Is>...>, direct_product<Us...>>
-    : reduce<direct_product<type_counter<Ts, Is>...>, unpack_t<type_counter<T, I>, direct_product<Us...>>>
-  {};
-
-  template<class... Us>
-  struct reduce<direct_product<>, direct_product<Us...>>
-  {
-    using type = direct_product<Us...>;
+    using type = direct_product<euclidean_half_space<T, Arena>>;
   };
 
-  template<physics::physical_unit T>
-  struct reduce<direct_product<type_counter<T, 0>>>
+  // TO DO: check that count_and_combine recognizes euc_vec as the displacement space of euc_half
+
+  template<physics::physical_unit U>
+  struct reduce<direct_product<type_counter<U, 0>>>
   {
-    using type = direct_product<physics::no_unit_t>;
+    using type = direct_product<no_unit_t>;
+  };
+
+  /*template<physics::physical_unit U, int I>
+    requires std::derived_from<U, no_unit_t> && (I > 0)
+  struct reduce<direct_product<type_counter<U, I>>>
+  {
+    using type = direct_product<U>;
+    };*/
+
+  template<int I>
+  struct reduce<direct_product<type_counter<no_unit_t, I>>>
+  {
+    using type = direct_product<no_unit_t>;
+  }; 
+
+  template<class... Ts, int... Is>
+  struct reduce<direct_product<type_counter<Ts, Is>...>>
+  {
+    using type = unpack_t<meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, not_maximally_reducible>>;
+  };
+
+  template<class, class>
+  struct concat;
+
+  template<class T, class U>
+  using concat_t = concat<T, U>::type;
+
+  template<template<class...> class TT, class... Ts, class... Us>
+  struct concat<TT<Ts...>, TT<Us...>>
+  {
+    using type = TT<Ts..., Us...>;
+  };
+
+  template<class> struct reverse;
+
+  template<class T>
+  using reverse_t = typename reverse<T>::type;
+
+  template<template<class...> class TT>
+  struct reverse<TT<>>
+  {
+    using type = TT<>;
+  };
+
+  template<template<class...> class TT, class T>
+  struct reverse<TT<T>>
+  {
+    using type = TT<T>;
+  };
+
+  template<template<class...> class TT, class T, class... Ts>
+  struct reverse<TT<T, Ts...>>
+  {
+    using type = concat_t<reverse_t<TT<Ts...>>, TT<T>>;
   };
 
   /// \class Primary class template to aid reduction of direct products and composite units
@@ -364,14 +436,14 @@ namespace sequoia::physics::impl
   template<class... Ts>
   struct simplify<direct_product<Ts...>>
   {
-    using type = reduction<reduce_t<count_and_combine_t<meta::stable_sort_t<direct_product<Ts...>, meta::type_comparator>>>>;
+    using type = reduction<reverse_t<reduce_t<count_and_combine_t<meta::stable_sort_t<direct_product<Ts...>, meta::type_comparator>>>>>;
   };
 
   // Assume direct_products are already sorted
   template<class... Ts, class... Us>
   struct simplify<direct_product<Ts...>, direct_product<Us...>>
   {
-    using type = reduction<reduce_t<count_and_combine_t<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>>;
+    using type = reduction<reverse_t<reduce_t<count_and_combine_t<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>>>;
   };
 
   template<class T>

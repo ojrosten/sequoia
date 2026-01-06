@@ -51,5 +51,8 @@ namespace sequoia::testing
 
     template<template<class...> class TT>
     void test_insert();
+
+    template<template<class...> class TT>
+    void test_flatten();
   };
 }
