@@ -99,18 +99,18 @@ namespace sequoia::testing
 
   void physical_value_meta_free_test::test_count_and_combine()
   {
-    STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<>>, direct_product<>>);
-    STATIC_CHECK(std::is_same_v<count_and_combine_t<mass_space_t>,       direct_product<type_counter<mass_space_t, 1>>>);
-    STATIC_CHECK(std::is_same_v<count_and_combine_t<dual<mass_space_t>>, direct_product<type_counter<dual<mass_space_t>, 1>>>);
-    STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<mass_space_t>>,       direct_product<type_counter<mass_space_t, 1>>>);
-    STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<dual<mass_space_t>>>, direct_product<type_counter<dual<mass_space_t>, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<>>,                                       direct_product<>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<mass_space_t>,                                           direct_product<type_counter<mass_space_t, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<dual<mass_space_t>>,                                     direct_product<type_counter<dual<mass_space_t>, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<mass_space_t>>,                           direct_product<type_counter<mass_space_t, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<dual<mass_space_t>>>,                     direct_product<type_counter<dual<mass_space_t>, 1>>>);
     STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<mass_space_t, mass_space_t>>,             direct_product<type_counter<mass_space_t, 2>>>);
     STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<mass_space_t, dual<mass_space_t>>>,       direct_product<type_counter<mass_space_t, 0>>>);
     STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<dual<mass_space_t>, dual<mass_space_t>>>, direct_product<type_counter<dual<mass_space_t>,2 >>>);
     
-    STATIC_CHECK(std::is_same_v<count_and_combine_t<si::units::kilogram_t>,             direct_product<type_counter<si::units::kilogram_t, 1>>>);
-    STATIC_CHECK(std::is_same_v<count_and_combine_t<dual<si::units::kilogram_t>>,       direct_product<type_counter<dual<si::units::kilogram_t>, 1>>>);
-    STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<si::units::kilogram_t>>, direct_product<type_counter<si::units::kilogram_t, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<si::units::kilogram_t>,                       direct_product<type_counter<si::units::kilogram_t, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<dual<si::units::kilogram_t>>,                 direct_product<type_counter<dual<si::units::kilogram_t>, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<si::units::kilogram_t>>,       direct_product<type_counter<si::units::kilogram_t, 1>>>);
     STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<dual<si::units::kilogram_t>>>, direct_product<type_counter<dual<si::units::kilogram_t>, 1>>>);
 
     STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<si::units::kilogram_t, si::units::kilogram_t>>,
