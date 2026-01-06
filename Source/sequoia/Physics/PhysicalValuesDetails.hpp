@@ -391,41 +391,6 @@ namespace sequoia::physics::impl
     using type = unpack_t<meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, not_maximally_reducible>>;
   };
 
-  template<class, class>
-  struct concat;
-
-  template<class T, class U>
-  using concat_t = concat<T, U>::type;
-
-  template<template<class...> class TT, class... Ts, class... Us>
-  struct concat<TT<Ts...>, TT<Us...>>
-  {
-    using type = TT<Ts..., Us...>;
-  };
-
-  template<class> struct reverse;
-
-  template<class T>
-  using reverse_t = typename reverse<T>::type;
-
-  template<template<class...> class TT>
-  struct reverse<TT<>>
-  {
-    using type = TT<>;
-  };
-
-  template<template<class...> class TT, class T>
-  struct reverse<TT<T>>
-  {
-    using type = TT<T>;
-  };
-
-  template<template<class...> class TT, class T, class... Ts>
-  struct reverse<TT<T, Ts...>>
-  {
-    using type = concat_t<reverse_t<TT<Ts...>>, TT<T>>;
-  };
-
   /// \class Primary class template to aid reduction of direct products and composite units
   template<class...>
   struct simplify;
@@ -436,14 +401,14 @@ namespace sequoia::physics::impl
   template<class... Ts>
   struct simplify<direct_product<Ts...>>
   {
-    using type = reduction<reverse_t<reduce_t<count_and_combine_t<meta::stable_sort_t<direct_product<Ts...>, meta::type_comparator>>>>>;
+    using type = reduction<meta::reverse_t<reduce_t<count_and_combine_t<meta::stable_sort_t<direct_product<Ts...>, meta::type_comparator>>>>>;
   };
 
   // Assume direct_products are already sorted
   template<class... Ts, class... Us>
   struct simplify<direct_product<Ts...>, direct_product<Us...>>
   {
-    using type = reduction<reverse_t<reduce_t<count_and_combine_t<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>>>;
+    using type = reduction<meta::reverse_t<reduce_t<count_and_combine_t<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>>>;
   };
 
   template<class T>

@@ -1,2 +1,2 @@
 Type Algorithms Free Test
-Standard Top Level Checks:               178;  Failures:  0  [Deep checks: 178]
+Standard Top Level Checks:               196;  Failures:  0  [Deep checks: 196]

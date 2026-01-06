@@ -63,6 +63,12 @@ namespace sequoia::testing
 
     test_flatten<std::tuple>();
     test_flatten<std::variant>();
+
+    test_concat<std::tuple>();
+    test_concat<std::variant>();
+
+    test_reverse<std::tuple>();
+    test_reverse<std::variant>();
   }
 
   void type_algorithms_free_test::test_type_comparator()
@@ -212,5 +218,24 @@ namespace sequoia::testing
     STATIC_CHECK(std::is_same_v<flatten_t<TT<TT<float>,  TT<double>, TT<int, int>>>, TT<float, double, int, int>>);
 
     STATIC_CHECK(std::is_same_v<flatten_t<TT<TT<TT<>>>>, TT<>>);
+  }
+
+  template<template<class...> class TT>
+  void type_algorithms_free_test::test_concat()
+  {
+    STATIC_CHECK(std::is_same_v<concat_t<TT<>,    TT<>>,     TT<>>);
+    STATIC_CHECK(std::is_same_v<concat_t<TT<int>, TT<>>,     TT<int>>);
+    STATIC_CHECK(std::is_same_v<concat_t<TT<>,    TT<int>>,  TT<int>>);
+    STATIC_CHECK(std::is_same_v<concat_t<TT<int>, TT<char>>, TT<int, char>>);
+  }
+
+  template<template<class...> class TT>
+  void type_algorithms_free_test::test_reverse()
+  {
+    STATIC_CHECK(std::is_same_v<reverse_t<TT<>>,                        TT<>>);
+    STATIC_CHECK(std::is_same_v<reverse_t<TT<int>>,                     TT<int>>);
+    STATIC_CHECK(std::is_same_v<reverse_t<TT<int, char>>,               TT<char, int>>);
+    STATIC_CHECK(std::is_same_v<reverse_t<TT<int, char, float>>,        TT<float, char, int>>);
+    STATIC_CHECK(std::is_same_v<reverse_t<TT<int, char, float, short>>, TT<short, float, char, int>>);
   }
 }

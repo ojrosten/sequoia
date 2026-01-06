@@ -54,5 +54,11 @@ namespace sequoia::testing
 
     template<template<class...> class TT>
     void test_flatten();
+
+    template<template<class...> class TT>
+    void test_concat();
+
+    template<template<class...> class TT>
+    void test_reverse();
   };
 }

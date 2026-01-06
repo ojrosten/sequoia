@@ -367,4 +367,43 @@ namespace sequoia::meta
   struct flatten<TT<TT<Ts...>, TT<Us...>, Vs...>> : flatten<TT<TT<Ts..., Us...>, Vs...>>
   {
   };
+
+  //==================================================== concat ===================================================//
+  
+  template<class, class>
+  struct concat;
+
+  template<class T, class U>
+  using concat_t = concat<T, U>::type;
+
+  template<template<class...> class TT, class... Ts, class... Us>
+  struct concat<TT<Ts...>, TT<Us...>>
+  {
+    using type = TT<Ts..., Us...>;
+  };
+
+  //==================================================== reverse ===================================================//
+
+  template<class> struct reverse;
+
+  template<class T>
+  using reverse_t = typename reverse<T>::type;
+
+  template<template<class...> class TT>
+  struct reverse<TT<>>
+  {
+    using type = TT<>;
+  };
+
+  template<template<class...> class TT, class T>
+  struct reverse<TT<T>>
+  {
+    using type = TT<T>;
+  };
+
+  template<template<class...> class TT, class T, class... Ts>
+  struct reverse<TT<T, Ts...>>
+  {
+    using type = concat_t<reverse_t<TT<Ts...>>, TT<T>>;
+  };
 }
