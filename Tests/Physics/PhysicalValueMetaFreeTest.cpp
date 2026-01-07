@@ -182,6 +182,24 @@ namespace sequoia::testing
 
     STATIC_CHECK(std::is_same_v<reduction_t<direct_product<euc_half_space_t, length_space_t>>,
                                   reduction<direct_product<length_space_t>>>);
+
+    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<euc_half_space_t, euc_half_space_t>>,
+                                  reduction<direct_product<euc_half_space_t>>>);
+
+    /*STATIC_CHECK(std::is_same_v<reduction_t<direct_product<mass_space_t, euc_vec_space_t>>,
+      reduction<direct_product<mass_space_t>>>);*/
+
+    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<electrical_current_space_t, euc_vec_space_t>>,
+                                  reduction<direct_product<electrical_current_space_t>>>);
+
+    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<euc_vec_space_t, euc_vec_space_t>>,
+                                  reduction<direct_product<euc_vec_space_t>>>);
+
+    /*STATIC_CHECK(std::is_same_v<reduction_t<direct_product<euc_half_space_t, euc_vec_space_t>>,
+                                  reduction<direct_product<euc_vec_space_t>>>);
+
+    STATIC_CHECK(std::is_same_v<reduction_t<direct_product<euc_half_space_t, euc_half_space_t>>,
+    reduction<direct_product<euc_vec_space_t>>>);*/
    
     STATIC_CHECK(std::is_same_v<to_composite_space_t<reduction_t<direct_product<length_space_t, mass_space_t>>>,
                                 composite_space<length_space_t, mass_space_t>>);
