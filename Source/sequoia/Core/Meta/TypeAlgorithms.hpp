@@ -346,6 +346,28 @@ namespace sequoia::meta
     constexpr static std::size_t index{std::is_same_v<T, U> ? 0 : 1 + find_v<TT<Ts...>, U>};
   };
 
+  //==================================================== find_if ===================================================//
+
+  template<class T, template<class> class U>
+  struct find_if;
+
+  template<class T, template<class> class U>
+  inline constexpr std::size_t find_if_v{find_if<T, U>::index};
+
+  template<template<class...> class TT, template<class> class U>
+  struct find_if<TT<>, U>
+  {
+    constexpr static std::size_t index{};
+  };
+
+  template<template<class...> class TT, class T, class... Ts, template<class> class U>
+  struct find_if<TT<T, Ts...>, U>
+  {
+    constexpr static std::size_t index{U<T>::value ? 0 : 1 + find_if_v<TT<Ts...>, U>};
+  };
+
+  //==================================================== flatten ===================================================//
+
   template<class...>
   struct flatten;
 

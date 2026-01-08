@@ -55,6 +55,9 @@ namespace sequoia::testing
     test_find<std::tuple>();
     test_find<std::variant>();
 
+    test_find_if<std::tuple>();
+    test_find_if<std::variant>();
+
     test_erase<std::tuple>();
     test_erase<std::variant>();
 
@@ -161,16 +164,33 @@ namespace sequoia::testing
   template<template<class...> class TT>
   void type_algorithms_free_test::test_find()
   {
-    STATIC_CHECK((find_v<std::tuple<>, int>                      == 0));
-    STATIC_CHECK((find_v<std::tuple<int>, int>                   == 0));
-    STATIC_CHECK((find_v<std::tuple<int>, float>                 == 1));
-    STATIC_CHECK((find_v<std::tuple<int, int>, int>              == 0));
-    STATIC_CHECK((find_v<std::tuple<int, int>, float>            == 2));
-    STATIC_CHECK((find_v<std::tuple<int, float>, float>          == 1));
-    STATIC_CHECK((find_v<std::tuple<int, double, float>, int>    == 0));
-    STATIC_CHECK((find_v<std::tuple<int, double, float>, double> == 1));
-    STATIC_CHECK((find_v<std::tuple<int, double, float>, float>  == 2));
-    STATIC_CHECK((find_v<std::tuple<int, double, float>, char>   == 3));
+    STATIC_CHECK((find_v<std::tuple<>,                    int>    == 0));
+    STATIC_CHECK((find_v<std::tuple<int>,                 int>    == 0));
+    STATIC_CHECK((find_v<std::tuple<int>,                 float>  == 1));
+    STATIC_CHECK((find_v<std::tuple<int, int>,            int>    == 0));
+    STATIC_CHECK((find_v<std::tuple<int, int>,            float>  == 2));
+    STATIC_CHECK((find_v<std::tuple<int, float>,          float>  == 1));
+    STATIC_CHECK((find_v<std::tuple<int, double, float>,  int>    == 0));
+    STATIC_CHECK((find_v<std::tuple<int, double, float>,  double> == 1));
+    STATIC_CHECK((find_v<std::tuple<int, double, float>,  float>  == 2));
+    STATIC_CHECK((find_v<std::tuple<int, double, float>,  char>   == 3));
+    STATIC_CHECK((find_v<std::tuple<int, double, int>,    int>    == 0));
+  }
+
+  template<template<class...> class TT>
+  void type_algorithms_free_test::test_find_if()
+  {
+    STATIC_CHECK((find_if_v<std::tuple<>,                    std::is_integral>       == 0));
+    STATIC_CHECK((find_if_v<std::tuple<int>,                 std::is_integral>       == 0));
+    STATIC_CHECK((find_if_v<std::tuple<int>,                 std::is_floating_point> == 1));
+    STATIC_CHECK((find_if_v<std::tuple<int, int>,            std::is_integral>       == 0));
+    STATIC_CHECK((find_if_v<std::tuple<int, int>,            std::is_floating_point> == 2));
+    STATIC_CHECK((find_if_v<std::tuple<int, float>,          std::is_floating_point> == 1));
+    STATIC_CHECK((find_if_v<std::tuple<int, double, float>,  std::is_integral>       == 0));
+    STATIC_CHECK((find_if_v<std::tuple<int, double, float>,  std::is_floating_point> == 1));
+    STATIC_CHECK((find_if_v<std::tuple<float, double, int>,  std::is_integral>       == 2));
+    STATIC_CHECK((find_if_v<std::tuple<int, double, float>,  std::is_pointer>        == 3));
+    STATIC_CHECK((find_if_v<std::tuple<int, double, int>,    std::is_integral>       == 0));
   }
 
   template<template<class...> class TT>
