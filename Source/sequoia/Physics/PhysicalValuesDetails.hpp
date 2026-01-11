@@ -244,7 +244,8 @@ namespace sequoia::physics::impl
   };
 
   template<class S, class T, int I, class... Ts, int... Is>
-    requires (!std::is_same_v<S, T> && !is_dual_v<T> && !is_associated_displacement_space_v<S> && !is_associated_displacement_space_v<T>)
+  requires (!std::is_same_v<S, T> && !std::is_same_v<S, dual<T>> && !std::is_same_v<S, associated_displacement_space<T>> && !std::is_same_v<S, dual<associated_displacement_space<T>>>
+                                  && !std::is_same_v<T, dual<S>> && !std::is_same_v<T, associated_displacement_space<S>> && !std::is_same_v<T, dual<associated_displacement_space<S>>>)
   struct count_and_combine<dual<S>, direct_product<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
     using type = direct_product<type_counter<dual<S>, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
@@ -262,7 +263,7 @@ namespace sequoia::physics::impl
     using type = direct_product<type_counter<T, I-1>, type_counter<Ts, Is>...>;
   };
   
-  // TO DO: associated_displacement_space is speecific to physical quantities so
+  // TO DO: associated_displacement_space is specific to physical quantities so
   // doesn't recognize euc_vec as the displacement space of euc_half
 
   /// Promote all T to associated_displacement_space<T>
