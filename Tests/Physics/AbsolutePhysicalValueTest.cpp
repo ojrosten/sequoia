@@ -372,7 +372,7 @@ namespace sequoia::testing
         },
         {
           // Start euc_vec
-          /*edge_t{
+          edge_t{
             qty_label::euc_vec,
             this->report("euc_vec * euc_vec"),
             [](variant_t v) -> variant_t { return std::get<euc_vec_space_qty>(v) * euc_vec_space_qty{1.0}; },
@@ -383,7 +383,7 @@ namespace sequoia::testing
             this->report("euc_vec / euc_vec"),
             [](variant_t v) -> variant_t { return std::get<euc_vec_space_qty>(v) / euc_vec_space_qty{1.0}; },
             std::weak_ordering::equivalent
-            },*/
+          },
           edge_t{
             qty_label::dq,
             this->report("euc_vec * d_qty"),
