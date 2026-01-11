@@ -1704,7 +1704,7 @@ namespace sequoia::maths
   struct euclidean_half_space
   {
     using set_type             = sets::orthant<1>;
-    using vector_space_type    = euclidean_vector_space<T, 1>;
+    using vector_space_type    = euclidean_vector_space<T, 1, Arena>;
     using is_convex_space      = std::true_type;
     using arena_type           = Arena;
     using distinguished_origin = std::true_type;

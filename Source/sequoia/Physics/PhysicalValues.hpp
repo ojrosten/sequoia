@@ -364,12 +364,6 @@ namespace sequoia::physics
   template<class T, class U>
   using physical_value_product_t = physical_value_product<T, U>::type;
 
-  template<convex_space C>
-  inline constexpr bool is_1d_euclidean_v{
-       std::is_same_v<euclidean_vector_space<commutative_ring_type_of_t<C>, 1, arena_type_of_t<C>>, C>
-    || std::is_same_v<euclidean_half_space<commutative_ring_type_of_t<C>, arena_type_of_t<C>>, C>
-  };
-
   template<physical_unit LHS, physical_unit RHS>
   constexpr auto operator*(LHS, RHS) noexcept
   {
@@ -412,7 +406,7 @@ namespace sequoia::physics
     convex_space LHSValueSpace, physical_unit LHSUnit, basis_for<free_module_type_of_t<LHSValueSpace>> LHSBasis, class LHSValidator,
     convex_space RHSValueSpace, physical_unit RHSUnit, basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, class RHSValidator
   >
-    requires consistent_bases_v<LHSBasis, RHSBasis> && (!is_1d_euclidean_v<LHSValueSpace> && !is_1d_euclidean_v<RHSValueSpace>)
+    requires consistent_bases_v<LHSBasis, RHSBasis>
   struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSBasis, distinguished_origin<LHSValueSpace>, LHSValidator>,
                                 physical_value<RHSValueSpace, RHSUnit, RHSBasis, distinguished_origin<RHSValueSpace>, RHSValidator>>
   {
@@ -423,42 +417,6 @@ namespace sequoia::physics
           impl::to_composite_space_t<reduction_t<direct_product<LHSUnit, RHSUnit>>>,
           typename consistent_bases<LHSBasis, RHSBasis>::template rebind_type<free_module_type_of_t<value_space_type>>,
           distinguished_origin<value_space_type>,
-          reduced_validator_t<LHSValidator, RHSValidator>
-        >;
-  };
-
-  template<
-    convex_space LHSValueSpace, physical_unit LHSUnit, basis_for<free_module_type_of_t<LHSValueSpace>> LHSBasis, class LHSValidator,
-    convex_space RHSValueSpace, physical_unit RHSUnit, basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, class RHSValidator
-  >
-    requires consistent_bases_v<LHSBasis, RHSBasis> && is_1d_euclidean_v<LHSValueSpace>
-  struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSBasis, distinguished_origin<LHSValueSpace>, LHSValidator>,
-                                physical_value<RHSValueSpace, RHSUnit, RHSBasis, distinguished_origin<RHSValueSpace>, RHSValidator>>
-  {
-    using type
-      = physical_value<
-          RHSValueSpace,
-          RHSUnit,
-          RHSBasis,
-          distinguished_origin<RHSValueSpace>,
-          reduced_validator_t<LHSValidator, RHSValidator>
-        >;
-  };
-
-  template<
-    convex_space LHSValueSpace, physical_unit LHSUnit, basis_for<free_module_type_of_t<LHSValueSpace>> LHSBasis, class LHSValidator,
-    convex_space RHSValueSpace, physical_unit RHSUnit, basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, class RHSValidator
-  >
-    requires consistent_bases_v<LHSBasis, RHSBasis> && is_1d_euclidean_v<RHSValueSpace>
-  struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSBasis, distinguished_origin<LHSValueSpace>, LHSValidator>,
-                                physical_value<RHSValueSpace, RHSUnit, RHSBasis, distinguished_origin<RHSValueSpace>, RHSValidator>>
-  {
-    using type
-      = physical_value<
-          LHSValueSpace,
-          LHSUnit,
-          LHSBasis,
-          distinguished_origin<LHSValueSpace>,
           reduced_validator_t<LHSValidator, RHSValidator>
         >;
   };

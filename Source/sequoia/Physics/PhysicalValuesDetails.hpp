@@ -382,6 +382,7 @@ namespace sequoia::physics::impl
   };
 
   template<class T, class Arena, int I>
+    requires (I > 0)
   struct reduce<direct_product<type_counter<euclidean_vector_space<T, 1, Arena>, I>>>
   {
     using type = direct_product<euclidean_vector_space<T, 1, Arena>>;
@@ -399,6 +400,7 @@ namespace sequoia::physics::impl
   };
 
   template<class T, class Arena, int I>
+    requires (I > 0)
   struct reduce<direct_product<type_counter<euclidean_half_space<T, Arena>, I>>>
   {
     using type = direct_product<euclidean_half_space<T, Arena>>;
@@ -426,17 +428,17 @@ namespace sequoia::physics::impl
   template<class... Ts, int... Is>
   struct reduce<direct_product<type_counter<Ts, Is>...>>
   {
-    // TO DO; potential problem here if reducible modules are floating-point but everything else is arithmetic
-    // Depends where we do any arithmetic promotions 
-    constexpr static bool anyOfNotReducibleFreeModule     {(( free_module<Ts> && !maximally_reducible_v<Ts>) || ...)};
+    // TO DO; potential problem here if reducible modules are floating-point but everything else is integral
+    // Depends where we do any arithmetic promotions; ideally below using common_type
+    constexpr static bool anyOfNotReducibleFreeModule     {(( free_module<Ts> && !maximally_reducible_v<type_counter<Ts, Is>>) || ...)};
 
     // TO DO: this give half-spaces a privileged position but this needs to be generalized!
-    constexpr static bool allOfNotReducibleOrNotFreeModule{((!free_module<Ts> || !maximally_reducible_v<Ts>) && ...)};
+    constexpr static bool allOfNotReducibleOrNotFreeModule{((!free_module<Ts> || !maximally_reducible_v<type_counter<Ts, Is>>) && ...)};
     
     using unpacked_t = unpack_t<meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, not_maximally_reducible>>;
 
     // TO DO: Deal with this case
-    constexpr static bool allOfReducible{(maximally_reducible_v<Ts> && ...)};
+    constexpr static bool allOfReducible{(maximally_reducible_v<type_counter<Ts, Is>> && ...)};
 
     using root_space_t = direct_product<euclidean_vector_space<std::common_type_t<commutative_ring_type_of_t<Ts>...>, 1, std::common_type_t<arena_type_of_t<Ts>...>>>;
 
