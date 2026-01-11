@@ -404,13 +404,13 @@ namespace sequoia::physics::impl
     using type = direct_product<euclidean_half_space<T, Arena>>;
   };
 
-  template<physics::physical_unit U>
+  template<physical_unit U>
   struct reduce<direct_product<type_counter<U, 0>>>
   {
     using type = direct_product<no_unit_t>;
   };
 
-  template<physics::physical_unit U, int I>
+  template<physical_unit U, int I>
     requires std::derived_from<U, no_unit_t> && (I > 0)
   struct reduce<direct_product<type_counter<U, I>>>
   {
