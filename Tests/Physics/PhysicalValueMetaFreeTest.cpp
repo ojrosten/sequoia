@@ -141,6 +141,9 @@ namespace sequoia::testing
 
     STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<length_space_t, mass_space_t, dual<mass_space_t>, temp_space_t>>,
                                  direct_product<type_counter<temp_space_t, 1>, type_counter<mass_space_t, 0>, type_counter<length_space_t, 1>>>);
+
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<euc_vec_space_t, dual<mass_space_t>>>,
+                                direct_product<type_counter<dual<mass_space_t>, 1>, type_counter<euc_vec_space_t, 1>>>);
   }
 
   void physical_value_meta_free_test::test_reduce()
