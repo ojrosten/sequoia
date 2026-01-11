@@ -14,6 +14,8 @@
 
 namespace sequoia::physics
 {
+  using namespace maths;
+  
   template<class Space>
   struct associated_displacement_space;
 
@@ -49,6 +51,38 @@ namespace sequoia::physics
 
   template<physical_unit... Ts>
   struct composite_unit;
+
+  template<class T>
+  inline constexpr bool has_arena_type_v{
+    requires { typename T::arena_type;}
+  };
+
+  template<class T>
+  struct arena_type_of;
+
+  template<class T>
+  using arena_type_of_t = arena_type_of<T>::type;
+
+  template<class T>
+    requires has_arena_type_v<T>
+  struct arena_type_of<T>
+  {
+    using type = T::arena_type;
+  };
+
+  template<convex_space T>
+    requires (!has_arena_type_v<dual<T>>)
+  struct arena_type_of<dual<T>>
+  {
+    using type = arena_type_of_t<T>;
+  };
+
+  template<convex_space... Ts>
+    requires (!has_arena_type_v<direct_product<Ts...>>)
+  struct arena_type_of<direct_product<Ts...>>
+  {
+    using type = std::common_type_t<arena_type_of_t<Ts>...>;
+  };
 
   template<class T>
   struct reduction;
@@ -227,6 +261,9 @@ namespace sequoia::physics::impl
   {
     using type = direct_product<type_counter<T, I-1>, type_counter<Ts, Is>...>;
   };
+  
+  // TO DO: associated_displacement_space is speecific to physical quantities so
+  // doesn't recognize euc_vec as the displacement space of euc_half
 
   /// Promote all T to associated_displacement_space<T>
   template<class T, int I, class... Ts, int... Is>
@@ -292,7 +329,6 @@ namespace sequoia::physics::impl
   };
 
   template<class... Ts, int... Is>
-  //  requires (sizeof...(Ts) > 1)
   struct unpack<direct_product<type_counter<Ts, Is>...>>
     : meta::flatten<direct_product<unpack_t<type_counter<Ts, Is>>...>>
   {
@@ -309,6 +345,7 @@ namespace sequoia::physics::impl
   {
   };
 
+  // TO DO: this is over-eager
   template<class T, class Arena, int I>
     requires (I != 0)
   struct maximally_reducible<type_counter<euclidean_vector_space<T, 1, Arena>, I>> : std::true_type
@@ -349,7 +386,10 @@ namespace sequoia::physics::impl
   {
     using type = direct_product<euclidean_vector_space<T, 1, Arena>>;
   };
-  
+
+  // TO DO: consider generalizing this. Products can only be constructed for absolute spaces
+  // which provides an implicit restriction. However, we may wish to consider convex spaces
+  // with an upper bound, in which case euc_half_space is not restrictive enough.
   template<convex_space T>
     requires (!affine_space<T> && !vector_space<T>)
   struct reduce<direct_product<type_counter<T, 0>>>
@@ -364,31 +404,48 @@ namespace sequoia::physics::impl
     using type = direct_product<euclidean_half_space<T, Arena>>;
   };
 
-  // TO DO: check that count_and_combine recognizes euc_vec as the displacement space of euc_half
-
   template<physics::physical_unit U>
   struct reduce<direct_product<type_counter<U, 0>>>
   {
     using type = direct_product<no_unit_t>;
   };
 
-  /*template<physics::physical_unit U, int I>
+  template<physics::physical_unit U, int I>
     requires std::derived_from<U, no_unit_t> && (I > 0)
   struct reduce<direct_product<type_counter<U, I>>>
   {
     using type = direct_product<U>;
-    };*/
+  };
 
-  template<int I>
-  struct reduce<direct_product<type_counter<no_unit_t, I>>>
+  template<physics::physical_unit... Ts, int... Is>
+  struct reduce<direct_product<type_counter<Ts, Is>...>>
   {
-    using type = direct_product<no_unit_t>;
-  }; 
+    using type = unpack_t<meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, not_maximally_reducible>>;
+  };
 
   template<class... Ts, int... Is>
   struct reduce<direct_product<type_counter<Ts, Is>...>>
   {
-    using type = unpack_t<meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, not_maximally_reducible>>;
+    // TO DO; potential problem here if reducible modules are floating-point but everything else is arithmetic
+    // Depends where we do any arithmetic promotions 
+    constexpr static bool anyOfNotReducibleFreeModule     {(( free_module<Ts> && !maximally_reducible_v<Ts>) || ...)};
+
+    // TO DO: this give half-spaces a privileged position but this needs to be generalized!
+    constexpr static bool allOfNotReducibleOrNotFreeModule{((!free_module<Ts> || !maximally_reducible_v<Ts>) && ...)};
+    
+    using unpacked_t = unpack_t<meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, not_maximally_reducible>>;
+
+    // TO DO: Deal with this case
+    constexpr static bool allOfReducible{(maximally_reducible_v<Ts> && ...)};
+
+    using root_space_t = direct_product<euclidean_vector_space<std::common_type_t<commutative_ring_type_of_t<Ts>...>, 1, std::common_type_t<arena_type_of_t<Ts>...>>>;
+
+    using type
+      = std::conditional_t<
+          anyOfNotReducibleFreeModule || allOfNotReducibleOrNotFreeModule,
+          unpacked_t,
+          meta::merge_t<unpacked_t, root_space_t, meta::type_comparator>
+        >;
   };
 
   /// \class Primary class template to aid reduction of direct products and composite units

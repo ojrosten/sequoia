@@ -109,39 +109,7 @@ namespace sequoia::physics
   {
     using is_unit        = std::true_type;
     using validator_type = reduced_validator_t<typename Ts::validator_type...>;
-  };
-
-  template<class T>
-  inline constexpr bool has_arena_type_v{
-    requires { typename T::arena_type;}
-  };
-
-  template<class T>
-  struct arena_type_of;
-
-  template<class T>
-  using arena_type_of_t = arena_type_of<T>::type;
-
-  template<class T>
-    requires has_arena_type_v<T>
-  struct arena_type_of<T>
-  {
-    using type = T::arena_type;
-  };
-
-  template<convex_space T>
-    requires (!has_arena_type_v<dual<T>>)
-  struct arena_type_of<dual<T>>
-  {
-    using type = arena_type_of_t<T>;
-  };
-
-  template<convex_space... Ts>
-    requires (!has_arena_type_v<direct_product<Ts...>>)
-  struct arena_type_of<direct_product<Ts...>>
-  {
-    using type = std::common_type_t<arena_type_of_t<Ts>...>;
-  };
+  };  
 
   /// @class Primary class template for the reduction of direct products to a lower dimensional space
   template<class T>
