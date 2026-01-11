@@ -148,11 +148,11 @@ namespace sequoia::testing
     STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<dual<mass_space_t>, euc_vec_space_t>>,
                                 direct_product<type_counter<euc_vec_space_t, 1>, type_counter<dual<mass_space_t>, 1>>>);
 
-    STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<euc_vec_space_t, dual<associated_displacement_space<mass_space_t>>>>,
-                                direct_product<type_counter<dual<associated_displacement_space<mass_space_t>>, 1>, type_counter<euc_vec_space_t, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<euc_vec_space_t, dual<delta_mass_space_t>>>,
+                                direct_product<type_counter<dual<delta_mass_space_t>, 1>, type_counter<euc_vec_space_t, 1>>>);
 
-    STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<dual<associated_displacement_space<mass_space_t>>, euc_vec_space_t>>,
-                                direct_product<type_counter<euc_vec_space_t, 1>, type_counter<dual<associated_displacement_space<mass_space_t>>, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<direct_product<dual<delta_mass_space_t>, euc_vec_space_t>>,
+                                direct_product<type_counter<euc_vec_space_t, 1>, type_counter<dual<delta_mass_space_t>, 1>>>);
   }
 
   void physical_value_meta_free_test::test_reduce()
