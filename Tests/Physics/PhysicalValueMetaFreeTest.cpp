@@ -174,6 +174,9 @@ namespace sequoia::testing
 
     STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<mass_space_t, dual<delta_mass_space_t>>>>,
                                 direct_product<euclidean_vector_space<float, 1, implicit_common_arena>>>);
+
+    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<euc_vec_space_t, euc_vec_space_t>>>,
+                                direct_product<euc_vec_space_t>>);
   }
 
   void physical_value_meta_free_test::test_simplify()
