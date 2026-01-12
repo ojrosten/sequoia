@@ -350,9 +350,9 @@ namespace sequoia::testing
             std::weak_ordering::greater
           },
           edge_t{
-            qty_label::dual_euc_vec,
+            qty_label::euc_vec,
             this->report("euc_half_line / euc_vec"),
-            [](variant_t v) -> variant_t { return std::get<euc_half_line_qty>(v) / euc_vec_space_qty{-0.25}; },
+            [](variant_t v) -> variant_t { return std::get<euc_half_line_qty>(v) / euc_vec_space_qty{1.0}; },
             std::weak_ordering::greater
           },
           edge_t{

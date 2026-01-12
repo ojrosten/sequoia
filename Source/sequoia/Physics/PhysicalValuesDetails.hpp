@@ -355,7 +355,19 @@ namespace sequoia::physics::impl
 
   template<class T, class Arena, int I>
     requires (I != 0)
+  struct maximally_reducible<type_counter<dual<euclidean_vector_space<T, 1, Arena>>, I>> : std::true_type
+  {
+  };
+
+  template<class T, class Arena, int I>
+    requires (I != 0)
   struct maximally_reducible<type_counter<euclidean_half_space<T, Arena>, I>> : std::true_type
+  {
+  };
+
+  template<class T, class Arena, int I>
+    requires (I != 0)
+  struct maximally_reducible<type_counter<dual<euclidean_half_space<T, Arena>>, I>> : std::true_type
   {
   };
 
