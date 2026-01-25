@@ -95,6 +95,7 @@ namespace sequoia::testing
     using dual_euc_half_line_qty  = dimensionless_quantity<dual<euclidean_half_space<value_t, arena_t>>, no_unit_t>;
     using euc_vec_space_qty       = euclidean_1d_vector_quantity<value_t>;
     using dual_euc_vec_space_qty  = dimensionless_quantity<dual<euclidean_vector_space<value_t, 1, arena_t>>, no_unit_t, std::identity>;
+    using pseudo_qty_t            = decltype(qty_t{} * euc_vec_space_qty{});
     using unsafe_qty_t            = quantity<units_t, value_t, std::identity>;
     using unsafe_inv_qty_t        = quantity<inv_units_t, value_t, std::identity>;
     using q2_t                    = decltype(physical_value{value_t{}, units_t{} * units_t{}});
@@ -112,6 +113,7 @@ namespace sequoia::testing
           dual_euc_half_line_qty,
           euc_vec_space_qty,
           dual_euc_vec_space_qty,
+          pseudo_qty_t, 
           unsafe_qty_t,
           unsafe_inv_qty_t,
           q2_t,
@@ -122,7 +124,7 @@ namespace sequoia::testing
     using graph_type = transition_checker<variant_t>::transition_graph;
     using edge_t     = transition_checker<variant_t>::edge;
 
-    enum qty_label { qty, dq, inv, dinvq, euc_half, dual_euc_half, euc_vec, dual_euc_vec, unsafe, unsafe_inv, q2, dq2, inv_q2, q3 };
+    enum qty_label { qty, dq, inv, dinvq, euc_half, dual_euc_half, euc_vec, dual_euc_vec, pseudo, unsafe, unsafe_inv, q2, dq2, inv_q2, q3 };
     
     graph_type g{
       {
@@ -158,18 +160,18 @@ namespace sequoia::testing
             [this](variant_t v) -> variant_t { return std::get<qty_t>(v) / euc_half_line_qty{1.0}; },
             std::weak_ordering::equivalent
           },
-          /*edge_t{
-            qty_label::unsafe, // Should no longer transition to unsafe!!
+          edge_t{
+            qty_label::pseudo,
             this->report("qty * vec_space_qty"),
             [this](variant_t v) -> variant_t { return std::get<qty_t>(v) * euc_vec_space_qty{-1.0}; },
             std::weak_ordering::equivalent
-            },*/
-          /*edge_t{
-            qty_label::unsafe,
-            this->report("qty / vec_space_qty"),
+          },
+          edge_t{
+            qty_label::pseudo,
+            this->report("qty / vec_space_qty: not that the space is being taken as the same space assoicated with qty * vec_space_qty"),
             [this](variant_t v) -> variant_t { return std::get<qty_t>(v) / euc_vec_space_qty{-1.0}; },
             std::weak_ordering::equivalent
-            },*/
+          },
           edge_t{
             qty_label::inv,
             this->report("0.5 / qty"),
@@ -442,9 +444,15 @@ namespace sequoia::testing
           */
           // End euc_vec
         },
-        { // Start dual_euc_vec
+        {
+          // Start dual_euc_vec
+          // End dual_euc_vec
         },
-        { // End dual_euc_vec
+        {
+          // Start pseudo
+          // End pseudo
+        },
+        { 
           // Start unsafe q
           // End unsafe q
         },
@@ -578,20 +586,21 @@ namespace sequoia::testing
         },
       },
       {
-        variant_t{            qty_t{1.0, units_t{}}},                         // qty
-        variant_t{      delta_qty_t{0.5, units_t{}}},                         // dq
-        variant_t{        inv_qty_t{2.0, inv_units_t{}}},                     // inv
-        variant_t{  delta_inv_qty_t{0.25, inv_units_t{}}},                    // dinvq
-        variant_t{euc_half_line_qty{0.5, no_unit}},                           // euc_half        
-        variant_t{dual_euc_half_line_qty{1.0, no_unit}},                      // dual_euc_half 
-        variant_t{euc_vec_space_qty{0.5, no_unit}},                           // euc_vec        
-        variant_t{dual_euc_vec_space_qty{-2.0, no_unit}},                     // dual_euc_vec
-        variant_t{     unsafe_qty_t{-1.0, units_t{}}},                        // unsafe
-        variant_t{ unsafe_inv_qty_t{-2.0, inv_units_t{}}},                    // unsafe_inv
-        variant_t{             q2_t{4.0, units_t{} * units_t{}}},             // q2
-        variant_t{            dq2_t{-4.0, units_t{} * units_t{}}},            // dq2
-        variant_t{         inv_q2_t{0.5, inv_units_t{} * inv_units_t{}}},     // inv_q2
-        variant_t{             q3_t{8.0, units_t{} * units_t{} * units_t{}}}  // q3
+        variant_t{                 qty_t{1.0, units_t{}}},                        // qty
+        variant_t{           delta_qty_t{0.5, units_t{}}},                        // dq
+        variant_t{             inv_qty_t{2.0, inv_units_t{}}},                    // inv
+        variant_t{       delta_inv_qty_t{0.25, inv_units_t{}}},                   // dinvq
+        variant_t{     euc_half_line_qty{0.5, no_unit}},                          // euc_half        
+        variant_t{dual_euc_half_line_qty{1.0, no_unit}},                          // dual_euc_half 
+        variant_t{     euc_vec_space_qty{0.5, no_unit}},                          // euc_vec        
+        variant_t{dual_euc_vec_space_qty{-2.0, no_unit}},                         // dual_euc_vec
+        variant_t{          pseudo_qty_t{-1.0, units_t{}}},                       // pseudo_qty  
+        variant_t{          unsafe_qty_t{-1.0, units_t{}}},                       // unsafe
+        variant_t{      unsafe_inv_qty_t{-2.0, inv_units_t{}}},                   // unsafe_inv
+        variant_t{                  q2_t{4.0, units_t{} * units_t{}}},            // q2
+        variant_t{                 dq2_t{-4.0, units_t{} * units_t{}}},           // dq2
+        variant_t{              inv_q2_t{0.5, inv_units_t{} * inv_units_t{}}},    // inv_q2
+        variant_t{                  q3_t{8.0, units_t{} * units_t{} * units_t{}}} // q3
       }
     };
 

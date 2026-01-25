@@ -205,6 +205,7 @@ namespace sequoia::testing
 
     STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<euc_half_space_t, dual<euc_vec_space_t>>>>,
                                 direct_product<euc_vec_space_t>>);
+    // Test more duals
   }
 
   void physical_value_meta_free_test::test_simplify()
@@ -244,7 +245,7 @@ namespace sequoia::testing
         reduction_t<direct_product<mass_space_t, euc_vec_space_t>>,
         reduction<direct_product<mass_space_t, euc_vec_space_t>>
       >,
-      "Mass space is not a vector space, so don't reduce away the vector space; note: maths::euclidean is lexically before physics::mass"
+      "Mass space is not a vector space, so don't reduce away the vector space; note: maths::euclidean is alphabetically before physics::mass"
     );
 
     STATIC_CHECK(std::is_same_v<reduction_t<direct_product<electrical_current_space_t, euc_vec_space_t>>,
