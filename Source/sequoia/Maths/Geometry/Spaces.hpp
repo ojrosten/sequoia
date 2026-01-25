@@ -913,6 +913,18 @@ namespace sequoia::maths
   template<class T>
   inline constexpr bool is_direct_product_v = is_direct_product<T>::value;
 
+  template<class T>
+  struct direct_product_cardinality;
+
+  template<class T>
+  inline constexpr bool direct_product_cardinality_v{direct_product_cardinality<T>::value};
+
+  template<class... Ts>
+  struct direct_product_cardinality<direct_product<Ts...>>
+  {
+    constexpr static auto value{sizeof...(Ts)};
+  };
+
   /** @defgroup DualSpaces Dual Spaces
       @brief Dual vector spaces and various generalizations.
 

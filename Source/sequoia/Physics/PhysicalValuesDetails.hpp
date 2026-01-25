@@ -336,49 +336,49 @@ namespace sequoia::physics::impl
   };
 
   template<class>
-  struct maximally_reducible : std::false_type {};
+  struct potentially_prunable : std::false_type {};
 
   template<class T>
-  inline constexpr bool maximally_reducible_v{maximally_reducible<T>::value};
+  inline constexpr bool potentially_prunable_v{potentially_prunable<T>::value};
 
   template<class T>
-  struct maximally_reducible<type_counter<T, 0>> : std::true_type
+  struct potentially_prunable<type_counter<T, 0>> : std::true_type
   {
   };
 
   // TO DO: this is over-eager
   template<class T, class Arena, int I>
     requires (I != 0)
-  struct maximally_reducible<type_counter<euclidean_vector_space<T, 1, Arena>, I>> : std::true_type
+  struct potentially_prunable<type_counter<euclidean_vector_space<T, 1, Arena>, I>> : std::true_type
   {
   };
 
   template<class T, class Arena, int I>
     requires (I != 0)
-  struct maximally_reducible<type_counter<dual<euclidean_vector_space<T, 1, Arena>>, I>> : std::true_type
+  struct potentially_prunable<type_counter<dual<euclidean_vector_space<T, 1, Arena>>, I>> : std::true_type
   {
   };
 
   template<class T, class Arena, int I>
     requires (I != 0)
-  struct maximally_reducible<type_counter<euclidean_half_space<T, Arena>, I>> : std::true_type
+  struct potentially_prunable<type_counter<euclidean_half_space<T, Arena>, I>> : std::true_type
   {
   };
 
   template<class T, class Arena, int I>
     requires (I != 0)
-  struct maximally_reducible<type_counter<dual<euclidean_half_space<T, Arena>>, I>> : std::true_type
+  struct potentially_prunable<type_counter<dual<euclidean_half_space<T, Arena>>, I>> : std::true_type
   {
   };
 
   template<physics::physical_unit U, int I>
     requires std::derived_from<U, no_unit_t> && (I != 0)
-  struct maximally_reducible<type_counter<U, I>> : std::true_type
+  struct potentially_prunable<type_counter<U, I>> : std::true_type
   {
   };
 
   template<class T>
-  struct not_maximally_reducible : std::negation<maximally_reducible<T>> {};
+  struct not_potentially_prunable : std::negation<potentially_prunable<T>> {};
   
   /// \class Primary class template for aiding the reduction of direct products to a lower dimensional space    
   template<class...>
@@ -435,7 +435,7 @@ namespace sequoia::physics::impl
   template<physics::physical_unit... Ts, int... Is>
   struct reduce<direct_product<type_counter<Ts, Is>...>>
   {
-    using type = unpack_t<meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, not_maximally_reducible>>;
+    using type = unpack_t<meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, not_potentially_prunable>>;
   };
 
   template<class... Ts, int... Is>
@@ -443,15 +443,24 @@ namespace sequoia::physics::impl
   {
     // TO DO; potential problem here if reducible modules are floating-point but everything else is integral
     // Depends where we do any arithmetic promotions; ideally below using common_type
-    constexpr static bool anyOfNotReducibleFreeModule     {(( free_module<Ts> && !maximally_reducible_v<type_counter<Ts, Is>>) || ...)};
+    constexpr static bool anyOfNotReducibleFreeModule     {(( free_module<Ts> && !potentially_prunable_v<type_counter<Ts, Is>>) || ...)};
 
-    // TO DO: this give half-spaces a privileged position but this needs to be generalized!
-    constexpr static bool allOfNotReducibleOrNotFreeModule{((!free_module<Ts> || !maximally_reducible_v<type_counter<Ts, Is>>) && ...)};
-    
-    using unpacked_t = unpack_t<meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, not_maximally_reducible>>;
+    // TO DO: this give half-spaces a privileged position:
+    // !free_module is being interpreted as a convex space which is assumed the to be a half space
+    // But this needs to be generalized!
+    constexpr static bool allOfNotReducibleOrNotFreeModule{((!free_module<Ts> || !potentially_prunable_v<type_counter<Ts, Is>>) && ...)};
+
+    // TO DO: meta fn to get these in one hit?
+    using filtered_t = meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, not_potentially_prunable>;
+    using pruned_t   = meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, potentially_prunable>;
+
+    using unpacked_t = unpack_t<filtered_t>;
+
+    constexpr static bool pruned{direct_product_cardinality_v<filtered_t> < sizeof...(Ts)};
+    //constexpr static bool prunedHasFreeModule{};
 
     // TO DO: Deal with this case
-    constexpr static bool allOfReducible{(maximally_reducible_v<type_counter<Ts, Is>> && ...)};
+    constexpr static bool allOfReducible{(potentially_prunable_v<type_counter<Ts, Is>> && ...)};
 
     using root_space_t = direct_product<euclidean_vector_space<std::common_type_t<commutative_ring_type_of_t<Ts>...>, 1, std::common_type_t<arena_type_of_t<Ts>...>>>;
 
@@ -459,7 +468,7 @@ namespace sequoia::physics::impl
       = std::conditional_t<
           anyOfNotReducibleFreeModule || allOfNotReducibleOrNotFreeModule,
           unpacked_t,
-          meta::merge_t<unpacked_t, root_space_t, meta::type_comparator>
+          meta::merge_t<unpacked_t, root_space_t, meta::type_comparator> // Probably OK, but need to allow implicit conversions to associated displacement space
         >;
   };
 

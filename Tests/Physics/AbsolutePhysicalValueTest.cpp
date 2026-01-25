@@ -152,12 +152,12 @@ namespace sequoia::testing
             [this](variant_t v) -> variant_t { return std::get<qty_t>(v) * euc_half_line_qty{1.0}; },
             std::weak_ordering::equivalent
           },
-          /*edge_t{
+          edge_t{
             qty_label::qty,
             this->report("qty / half_line_qty"),
             [this](variant_t v) -> variant_t { return std::get<qty_t>(v) / euc_half_line_qty{1.0}; },
             std::weak_ordering::equivalent
-            },*/
+          },
           /*edge_t{
             qty_label::unsafe, // Should no longer transition to unsafe!!
             this->report("qty * vec_space_qty"),
