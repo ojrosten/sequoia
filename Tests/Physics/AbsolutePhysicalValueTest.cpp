@@ -96,6 +96,7 @@ namespace sequoia::testing
     using euc_vec_space_qty       = euclidean_1d_vector_quantity<value_t>;
     using dual_euc_vec_space_qty  = dimensionless_quantity<dual<euclidean_vector_space<value_t, 1, arena_t>>, no_unit_t, std::identity>;
     using pseudo_qty_t            = decltype(qty_t{} * euc_vec_space_qty{});
+    using pseudo_inv_qty_t        = decltype(euc_vec_space_qty{} /qty_t{});
     using unsafe_qty_t            = quantity<units_t, value_t, std::identity>;
     using unsafe_inv_qty_t        = quantity<inv_units_t, value_t, std::identity>;
     using q2_t                    = decltype(physical_value{value_t{}, units_t{} * units_t{}});
@@ -113,7 +114,8 @@ namespace sequoia::testing
           dual_euc_half_line_qty,
           euc_vec_space_qty,
           dual_euc_vec_space_qty,
-          pseudo_qty_t, 
+          pseudo_qty_t,
+          pseudo_inv_qty_t,
           unsafe_qty_t,
           unsafe_inv_qty_t,
           q2_t,
@@ -124,7 +126,7 @@ namespace sequoia::testing
     using graph_type = transition_checker<variant_t>::transition_graph;
     using edge_t     = transition_checker<variant_t>::edge;
 
-    enum qty_label { qty, dq, inv, dinvq, euc_half, dual_euc_half, euc_vec, dual_euc_vec, pseudo, unsafe, unsafe_inv, q2, dq2, inv_q2, q3 };
+    enum qty_label { qty, dq, inv, dinvq, euc_half, dual_euc_half, euc_vec, dual_euc_vec, pseudo, pseudo_inv, unsafe, unsafe_inv, q2, dq2, inv_q2, q3 };
     
     graph_type g{
       {
@@ -435,13 +437,12 @@ namespace sequoia::testing
             [](variant_t v) -> variant_t { return -std::get<euc_vec_space_qty>(v) * qty_t{2.0, units_t{}}; },
             std::weak_ordering::less
           },
-          /*edge_t{
-            qty_label::unsafe_inv,
+          edge_t{
+            qty_label::pseudo_inv,
             this->report("euc_vec * inv_qty"),
             [](variant_t v) -> variant_t { return -std::get<euc_vec_space_qty>(v) * inv_qty_t{4.0, inv_units_t{}}; },
             std::weak_ordering::less
           },
-          */
           // End euc_vec
         },
         {
@@ -451,6 +452,10 @@ namespace sequoia::testing
         {
           // Start pseudo
           // End pseudo
+        },
+        {
+          // Start pseudo_inv
+          // End pseudo_inv
         },
         { 
           // Start unsafe q
@@ -594,7 +599,8 @@ namespace sequoia::testing
         variant_t{dual_euc_half_line_qty{1.0, no_unit}},                          // dual_euc_half 
         variant_t{     euc_vec_space_qty{0.5, no_unit}},                          // euc_vec        
         variant_t{dual_euc_vec_space_qty{-2.0, no_unit}},                         // dual_euc_vec
-        variant_t{          pseudo_qty_t{-1.0, units_t{}}},                       // pseudo 
+        variant_t{          pseudo_qty_t{-1.0, units_t{}}},                       // pseudo
+        variant_t{      pseudo_inv_qty_t{-2.0, inv_units_t{}}},                   // pseudo_inv
         variant_t{          unsafe_qty_t{-1.0, units_t{}}},                       // unsafe
         variant_t{      unsafe_inv_qty_t{-2.0, inv_units_t{}}},                   // unsafe_inv
         variant_t{                  q2_t{4.0, units_t{} * units_t{}}},            // q2
