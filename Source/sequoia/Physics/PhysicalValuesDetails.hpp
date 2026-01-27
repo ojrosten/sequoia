@@ -346,7 +346,6 @@ namespace sequoia::physics::impl
   {
   };
 
-  // TO DO: this is over-eager
   template<class T, class Arena, int I>
     requires (I != 0)
   struct potentially_prunable<type_counter<euclidean_vector_space<T, 1, Arena>, I>> : std::true_type
@@ -387,37 +386,37 @@ namespace sequoia::physics::impl
   template<class... Ts>
   using reduce_t = reduce<Ts...>::type;
 
-  template<vector_space T>
+  /*template<vector_space T>
   struct reduce<direct_product<type_counter<T, 0>>>
   {
     using arena_type = T::arena_type;
     using type = direct_product<euclidean_vector_space<commutative_ring_type_of_t<T>, 1, arena_type>>;
-  };
+    };*/
 
-  template<class T, class Arena, int I>
+  /*template<class T, class Arena, int I>
     requires (I > 0)
   struct reduce<direct_product<type_counter<euclidean_vector_space<T, 1, Arena>, I>>>
   {
     using type = direct_product<euclidean_vector_space<T, 1, Arena>>;
-  };
+    };*/
 
   // TO DO: consider generalizing this. Products can only be constructed for absolute spaces
   // which provides an implicit restriction. However, we may wish to consider convex spaces
   // with an upper bound, in which case euc_half_space is not restrictive enough.
-  template<convex_space T>
+  /*template<convex_space T>
     requires (!affine_space<T> && !vector_space<T>)
   struct reduce<direct_product<type_counter<T, 0>>>
   {
     using arena_type = T::arena_type;
     using type = direct_product<euclidean_half_space<commutative_ring_type_of_t<free_module_type_of_t<T>>, arena_type>>;
-  };
+    };*/
 
-  template<class T, class Arena, int I>
+  /*template<class T, class Arena, int I>
     requires (I > 0)
   struct reduce<direct_product<type_counter<euclidean_half_space<T, Arena>, I>>>
   {
     using type = direct_product<euclidean_half_space<T, Arena>>;
-  };
+    };*/
 
   template<physical_unit U>
   struct reduce<direct_product<type_counter<U, 0>>>
@@ -450,25 +449,26 @@ namespace sequoia::physics::impl
     // But this needs to be generalized!
     constexpr static bool allOfNotReducibleOrNotFreeModule{((!free_module<Ts> || !potentially_prunable_v<type_counter<Ts, Is>>) && ...)};
 
-    // TO DO: meta fn to get these in one hit?
     using filtered_t = meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, not_potentially_prunable>;
-    using pruned_t   = meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, potentially_prunable>;
 
     using unpacked_t = unpack_t<filtered_t>;
 
-    constexpr static bool pruned{direct_product_cardinality_v<filtered_t> < sizeof...(Ts)};
-    //constexpr static bool prunedHasFreeModule{};
+    constexpr static auto unpacked_cardinality{direct_product_cardinality_v<unpacked_t>};
 
-    // TO DO: Deal with this case
-    constexpr static bool allOfReducible{(potentially_prunable_v<type_counter<Ts, Is>> && ...)};
-
-    using root_space_t = direct_product<euclidean_vector_space<std::common_type_t<commutative_ring_type_of_t<Ts>...>, 1, std::common_type_t<arena_type_of_t<Ts>...>>>;
-
+    constexpr static bool anyFreeModule{(free_module<Ts> || ...)};
+    
+    using root_space_t =
+      std::conditional_t<
+        anyFreeModule,
+        direct_product<euclidean_vector_space<std::common_type_t<commutative_ring_type_of_t<Ts>...>, 1, std::common_type_t<arena_type_of_t<Ts>...>>>,
+        direct_product<euclidean_half_space<std::common_type_t<commutative_ring_type_of_t<Ts>...>, std::common_type_t<arena_type_of_t<Ts>...>>>
+      >;
+    
     using type
       = std::conditional_t<
-          anyOfNotReducibleFreeModule || allOfNotReducibleOrNotFreeModule,
+          anyOfNotReducibleFreeModule || (allOfNotReducibleOrNotFreeModule && (unpacked_cardinality > 0)),
           unpacked_t,
-          meta::merge_t<unpacked_t, root_space_t, meta::type_comparator> // Probably OK, but need to allow implicit conversions to associated displacement space
+          meta::merge_t<unpacked_t, root_space_t, meta::type_comparator>
         >;
   };
 

@@ -917,7 +917,7 @@ namespace sequoia::maths
   struct direct_product_cardinality;
 
   template<class T>
-  inline constexpr bool direct_product_cardinality_v{direct_product_cardinality<T>::value};
+  inline constexpr std::size_t direct_product_cardinality_v{direct_product_cardinality<T>::value};
 
   template<class... Ts>
   struct direct_product_cardinality<direct_product<Ts...>>
