@@ -205,7 +205,12 @@ namespace sequoia::testing
 
     STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<euc_half_space_t, dual<euc_vec_space_t>>>>,
                                 direct_product<euc_vec_space_t>>);
-    // Test more duals
+
+    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<dual<euc_half_space_t>, euc_vec_space_t>>>,
+                                direct_product<euc_vec_space_t>>);
+
+    STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<dual<euc_half_space_t>, dual<euc_vec_space_t>>>>,
+                                direct_product<euc_vec_space_t>>);
   }
 
   void physical_value_meta_free_test::test_simplify()
