@@ -429,13 +429,13 @@ namespace sequoia::testing
             [](variant_t v) -> variant_t { return delta_inv_qty_t{0.5, inv_units_t{}} * std::get<euc_vec_space_qty>(v); },
             std::weak_ordering::greater
           },
-          /*edge_t{
-            qty_label::unsafe,
+          edge_t{
+            qty_label::pseudo,
             this->report("euc_vec * qty"),
             [](variant_t v) -> variant_t { return -std::get<euc_vec_space_qty>(v) * qty_t{2.0, units_t{}}; },
             std::weak_ordering::less
           },
-          edge_t{
+          /*edge_t{
             qty_label::unsafe_inv,
             this->report("euc_vec * inv_qty"),
             [](variant_t v) -> variant_t { return -std::get<euc_vec_space_qty>(v) * inv_qty_t{4.0, inv_units_t{}}; },
@@ -594,7 +594,7 @@ namespace sequoia::testing
         variant_t{dual_euc_half_line_qty{1.0, no_unit}},                          // dual_euc_half 
         variant_t{     euc_vec_space_qty{0.5, no_unit}},                          // euc_vec        
         variant_t{dual_euc_vec_space_qty{-2.0, no_unit}},                         // dual_euc_vec
-        variant_t{          pseudo_qty_t{-1.0, units_t{}}},                       // pseudo_qty  
+        variant_t{          pseudo_qty_t{-1.0, units_t{}}},                       // pseudo 
         variant_t{          unsafe_qty_t{-1.0, units_t{}}},                       // unsafe
         variant_t{      unsafe_inv_qty_t{-2.0, inv_units_t{}}},                   // unsafe_inv
         variant_t{                  q2_t{4.0, units_t{} * units_t{}}},            // q2
