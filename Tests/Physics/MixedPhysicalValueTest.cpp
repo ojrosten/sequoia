@@ -39,9 +39,9 @@ namespace sequoia::testing
     using current_t     = si::electrical_current<float>;
     using temperature_t = si::temperature<float>;
 
-    using euc_vec_t  = euclidean_1d_vector_quantity<float>;
-    //using unsafe_mass_t = quantity<kilogram_t, float, std::identity>;
-    //using unsafe_len_t  = quantity<   metre_t, float, std::identity>;
+    using euc_vec_t     = euclidean_1d_vector_quantity<float>;
+    using pseudo_mass_t = decltype(mass_t{} * euc_vec_t{});
+    using pseudo_len_t  = decltype(length_t{} * euc_vec_t{});
 
     auto ml = mass_t{1.0, kilogram} * length_t{2.0, metre},
          lm = length_t{2.0, metre} * mass_t{1.0, kilogram};
@@ -53,7 +53,7 @@ namespace sequoia::testing
     check(equality, "", lm / mass_t{2.0, kilogram}, length_t{1.0, metre});
     check(equality, "", lm / length_t{0.5, metre}, mass_t{4.0, kilogram});
     check(equality, "", (mass_t{3.0, kilogram} / mass_t{1.0, kilogram})*mass_t{3.0, kilogram}, mass_t{9.0, kilogram});
-    //check(equality, "", (current_t{-3.0, ampere} / current_t{1.0, ampere})*mass_t{3.0, kilogram}, unsafe_mass_t{-9.0, kilogram});
+    check(equality, "", (current_t{-3.0, ampere} / current_t{1.0, ampere})*mass_t{3.0, kilogram}, pseudo_mass_t{-9.0, kilogram});
       
     auto mlc = mass_t{1.0, kilogram} * length_t{2.0, metre} * current_t{-1.0, ampere},
          clm = current_t{-1.0, ampere} * length_t{2.0, metre} *  mass_t{1.0, kilogram};
@@ -63,7 +63,7 @@ namespace sequoia::testing
     check(equality, "", mlc, physical_value{-2.0f, metre * ampere * kilogram});
     check(equality, "", mlc / mass_t{1.0, kilogram}, length_t{2.0, metre} * current_t{-1.0, ampere});
     check(equality, "", mlc / length_t{1.0, metre}, mass_t{2.0, kilogram} * current_t{-1.0, ampere});
-    //check(equality, "", mlc / current_t{-1.0, ampere}, euc_vec_t{1.0} * mass_t{1.0, kilogram} * length_t{2.0, metre});
+    check(equality, "", mlc / current_t{-1.0, ampere}, euc_vec_t{1.0} * mass_t{1.0, kilogram} * length_t{2.0, metre});
       
     auto mlct = mass_t{1.0, kilogram} * length_t{2.0, metre} * current_t{-1.0, ampere} * temperature_t{5.0, kelvin},
          cltm = current_t{-1.0, ampere} * length_t{2.0, metre} * temperature_t{5.0, kelvin} *  mass_t{1.0, kilogram};
@@ -74,7 +74,7 @@ namespace sequoia::testing
     check(equality, "", mlct / mass_t{1.0, kilogram}, length_t{2.0, metre} * current_t{-1.0, ampere} * temperature_t{5.0, kelvin});
 
     
-    //check(equality, "", mass_t{2.0, kilogram} * length_t{3.0, metre} / d_mass_t{-2.0, kilogram}, d_len_t{-3.0, metre});
+    check(equality, "", mass_t{2.0, kilogram} * length_t{3.0, metre} / d_mass_t{-2.0, kilogram}, pseudo_len_t{-3.0, metre});
   }
 
   void mixed_physical_value_test::test_mixed_vector()
