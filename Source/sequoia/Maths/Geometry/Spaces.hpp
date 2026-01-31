@@ -1722,6 +1722,57 @@ namespace sequoia::maths
     using distinguished_origin = std::true_type;
   };
 
+    template<class T>
+  inline constexpr bool has_arena_type_v{
+    requires { typename T::arena_type;}
+  };
+
+  template<class T>
+  struct arena_type_of;
+
+  template<class T>
+  using arena_type_of_t = arena_type_of<T>::type;
+
+  template<class T>
+    requires has_arena_type_v<T>
+  struct arena_type_of<T>
+  {
+    using type = T::arena_type;
+  };
+
+  template<convex_space T>
+    requires (!has_arena_type_v<dual<T>>)
+  struct arena_type_of<dual<T>>
+  {
+    using type = arena_type_of_t<T>;
+  };
+
+  template<convex_space... Ts>
+    requires (!has_arena_type_v<direct_product<Ts...>>)
+  struct arena_type_of<direct_product<Ts...>>
+  {
+    using type = std::common_type_t<arena_type_of_t<Ts>...>;
+  };
+
+  template<convex_space C>
+  struct is_1d_half_space : std::false_type
+  {};
+
+  template<convex_space C>
+  using is_1d_half_space_t = is_1d_half_space<C>::type;
+
+  template<convex_space C>
+  inline constexpr bool is_1d_half_space_v{is_1d_half_space<C>::value};
+
+  template<std::floating_point T, class Arena>
+  struct is_1d_half_space<euclidean_affine_space<T, 1, Arena>> : std::true_type
+  {};
+
+  template<convex_space C>
+    requires std::derived_from<C, euclidean_half_space<commutative_ring_type_of_t<C>, arena_type_of_t<C>>>
+  struct is_1d_half_space<C> : std::true_type
+  {};
+  
   template<std::floating_point T, std::size_t D, basis Basis, class Origin, class Arena=mathematical_arena>
   using euclidean_affine_coordinates = affine_coordinates<euclidean_affine_space<T, D, Arena>, Basis, Origin>;
 

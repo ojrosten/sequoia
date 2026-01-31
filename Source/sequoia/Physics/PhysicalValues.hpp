@@ -129,7 +129,7 @@ namespace sequoia::physics
     using set_type              = reduction<typename direct_product_t::set_type>;
     using commutative_ring_type = commutative_ring_type_of_t<direct_product_t>;
     using is_free_module        = std::true_type;
-    using arena_type            = arena_type_of<direct_product<Ts...>>;
+    using arena_type            = arena_type_of_t<direct_product<Ts...>>;
     constexpr static std::size_t dimension{std::ranges::max({dimension_of<Ts>...})};
   };
 
@@ -141,7 +141,7 @@ namespace sequoia::physics
     using set_type             = reduction<typename direct_product_t::set_type>;
     using free_module_type     = composite_space<free_module_type_of_t<Ts>...>;
     using is_convex_space      = std::true_type;
-    using arena_type           = arena_type_of<direct_product<Ts...>>;
+    using arena_type           = arena_type_of_t<direct_product<Ts...>>;
     using distinguished_origin = std::bool_constant<(has_distinguished_origin_v<Ts> && ...)>;
   };
 
