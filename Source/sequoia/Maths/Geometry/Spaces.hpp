@@ -1722,7 +1722,7 @@ namespace sequoia::maths
     using distinguished_origin = std::true_type;
   };
 
-    template<class T>
+  template<class T>
   inline constexpr bool has_arena_type_v{
     requires { typename T::arena_type;}
   };
