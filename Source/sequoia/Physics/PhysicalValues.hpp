@@ -838,6 +838,7 @@ namespace sequoia::physics
     using arena_type           = Arena;
     using base_space           = mass_space;
     using distinguished_origin = std::true_type;
+    using half_line            = std::true_type;
   };
 
   template<std::floating_point Rep, class Arena>
@@ -847,15 +848,17 @@ namespace sequoia::physics
     using arena_type           = Arena;
     using base_space           = absolute_temperature_space;
     using distinguished_origin = std::true_type;
+    using half_line            = std::true_type;
   };
 
   template<convex_space C>
     requires has_distinguished_origin_v<C>
   struct relaxed_space : C
   {
-    using base_space          = relaxed_space<typename C::base_space>;
-    using free_module_type    = associated_displacement_space<relaxed_space>;
+    using base_space           = relaxed_space<typename C::base_space>;
+    using free_module_type     = associated_displacement_space<relaxed_space>;
     using distinguished_origin = std::false_type;
+    using half_line            = std::false_type;
   };
 
   template<std::floating_point Rep, class Arena>
@@ -883,6 +886,7 @@ namespace sequoia::physics
     using arena_type           = Arena;
     using base_space           = length_space;
     using distinguished_origin = std::true_type;
+    using half_line            = std::true_type;
   };
 
   template<arithmetic Rep, class Arena>

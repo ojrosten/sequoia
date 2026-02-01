@@ -534,43 +534,7 @@ namespace sequoia::maths
   template<class T>
   struct is_free_module : std::integral_constant<bool, free_module<T>> {};
 
-  /** @defgroup SpacesUtilities Convex Space Utilities
-      @brief Utilites for extracting properties of convex spaces
-   */
-
-  template<convex_space Space>
-  inline constexpr bool has_distinguished_origin_type_v{
-    requires {
-      typename Space::distinguished_origin;
-      requires (   std::convertible_to<typename Space::distinguished_origin, std::true_type>
-                || std::convertible_to<typename Space::distinguished_origin, std::false_type>);
-    }
-  };
-
-  template<convex_space Space>
-  struct has_distinguished_origin : std::false_type
-  {};
-
-  template<convex_space Space>
-    requires has_distinguished_origin_type_v<Space>
-  struct has_distinguished_origin<Space> : Space::distinguished_origin::type
-  {};
-
-  template<free_module Space>
-  struct has_distinguished_origin<Space> : std::true_type
-  {};
-
-  template<affine_space Space>
-    requires (!free_module<Space>)
-  struct has_distinguished_origin<Space> : std::false_type
-  {};
-
-  template<convex_space Space>
-  using has_distinguished_origin_t = has_distinguished_origin<Space>::type;
-
-  template<convex_space Space>
-  inline constexpr bool has_distinguished_origin_v{has_distinguished_origin<Space>::value};
-  
+ 
   /** @ingroup PropertiesOfSpace
       @brief Helper to extract the free module type associated with a convex space.
 
@@ -626,13 +590,85 @@ namespace sequoia::maths
 
   template<convex_space ConvexSpace>
   using space_value_type = commutative_ring_type_of_t<ConvexSpace>;
-
+  
   /** @ingroup PropertiesOfSpaces
       @brief Helper to extract the dimension of the free module associated with a convex space.
    */
   
   template<convex_space ConvexSpace>
   inline constexpr std::size_t dimension_of{free_module_type_of_t<ConvexSpace>::dimension};
+
+  /** @defgroup SpacesUtilities Convex Space Utilities
+      @brief Utilites for extracting properties of convex spaces
+   */
+  
+  template<convex_space C>
+  struct is_1d_half_space : std::false_type
+  {};
+
+  template<convex_space C>
+  using is_1d_half_space_t = is_1d_half_space<C>::type;
+
+  template<convex_space C>
+  inline constexpr bool is_1d_half_space_v{is_1d_half_space<C>::value};
+
+  template<convex_space Space>
+  inline constexpr bool has_distinguished_origin_type_v{
+    requires {
+      typename Space::distinguished_origin;
+      requires (   std::convertible_to<typename Space::distinguished_origin, std::true_type>
+                || std::convertible_to<typename Space::distinguished_origin, std::false_type>);
+    }
+  };
+  
+  template<convex_space Space>
+  struct has_distinguished_origin : std::false_type
+  {};
+
+  template<convex_space Space>
+    requires has_distinguished_origin_type_v<Space>
+  struct has_distinguished_origin<Space> : Space::distinguished_origin::type
+  {
+    static_assert(!is_1d_half_space_v<Space> || Space::distinguished_origin::value);
+  };
+
+  template<convex_space Space>
+    requires (!has_distinguished_origin_type_v<Space>) && is_1d_half_space_v<Space>
+  struct has_distinguished_origin<Space> : std::true_type
+  {
+  };
+
+  template<free_module Space>
+  struct has_distinguished_origin<Space> : std::true_type
+  {};
+
+  template<affine_space Space>
+    requires (!free_module<Space>)
+  struct has_distinguished_origin<Space> : std::false_type
+  {};
+
+  template<convex_space Space>
+  using has_distinguished_origin_t = has_distinguished_origin<Space>::type;
+
+  template<convex_space Space>
+  inline constexpr bool has_distinguished_origin_v{has_distinguished_origin<Space>::value};
+
+  
+  template<convex_space Space>
+  inline constexpr bool has_half_line_type_v{
+    requires {
+      typename Space::half_line;
+      requires (   std::convertible_to<typename Space::half_line, std::true_type>
+                || std::convertible_to<typename Space::half_line, std::false_type>);
+    }
+  };
+
+  template<convex_space C>
+      requires has_half_line_type_v<C>
+  struct is_1d_half_space<C> : C::half_line::type
+  {
+    static_assert(!C::half_line::value || (dimension_of<C> == 1));
+  };
 
   /** @defgroup Basis Basis
       @brief Concepts and helpers for bases of free modules.
@@ -1720,6 +1756,7 @@ namespace sequoia::maths
     using is_convex_space      = std::true_type;
     using arena_type           = Arena;
     using distinguished_origin = std::true_type;
+    using half_line            = std::true_type;
   };
 
   template<class T>
@@ -1753,25 +1790,6 @@ namespace sequoia::maths
   {
     using type = std::common_type_t<arena_type_of_t<Ts>...>;
   };
-
-  template<convex_space C>
-  struct is_1d_half_space : std::false_type
-  {};
-
-  template<convex_space C>
-  using is_1d_half_space_t = is_1d_half_space<C>::type;
-
-  template<convex_space C>
-  inline constexpr bool is_1d_half_space_v{is_1d_half_space<C>::value};
-
-  template<std::floating_point T, class Arena>
-  struct is_1d_half_space<euclidean_affine_space<T, 1, Arena>> : std::true_type
-  {};
-
-  template<convex_space C>
-    requires std::derived_from<C, euclidean_half_space<commutative_ring_type_of_t<C>, arena_type_of_t<C>>>
-  struct is_1d_half_space<C> : std::true_type
-  {};
   
   template<std::floating_point T, std::size_t D, basis Basis, class Origin, class Arena=mathematical_arena>
   using euclidean_affine_coordinates = affine_coordinates<euclidean_affine_space<T, D, Arena>, Basis, Origin>;
