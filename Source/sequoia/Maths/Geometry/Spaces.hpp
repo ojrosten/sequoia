@@ -601,16 +601,16 @@ namespace sequoia::maths
   /** @defgroup SpacesUtilities Convex Space Utilities
       @brief Utilites for extracting properties of convex spaces
    */
-  
+
   template<convex_space C>
-  struct is_1d_half_space : std::false_type
+  struct is_half_line : std::false_type
   {};
 
   template<convex_space C>
-  using is_1d_half_space_t = is_1d_half_space<C>::type;
+  using is_half_line_t = is_half_line<C>::type;
 
   template<convex_space C>
-  inline constexpr bool is_1d_half_space_v{is_1d_half_space<C>::value};
+  inline constexpr bool is_half_line_v{is_half_line<C>::value};
 
   template<convex_space Space>
   inline constexpr bool has_distinguished_origin_type_v{
@@ -629,11 +629,11 @@ namespace sequoia::maths
     requires has_distinguished_origin_type_v<Space>
   struct has_distinguished_origin<Space> : Space::distinguished_origin::type
   {
-    static_assert(!is_1d_half_space_v<Space> || Space::distinguished_origin::value);
+    static_assert(!is_half_line_v<Space> || Space::distinguished_origin::value);
   };
 
   template<convex_space Space>
-    requires (!has_distinguished_origin_type_v<Space>) && is_1d_half_space_v<Space>
+    requires (!has_distinguished_origin_type_v<Space>) && is_half_line_v<Space>
   struct has_distinguished_origin<Space> : std::true_type
   {
   };
@@ -665,7 +665,7 @@ namespace sequoia::maths
 
   template<convex_space C>
       requires has_half_line_type_v<C>
-  struct is_1d_half_space<C> : C::half_line::type
+  struct is_half_line<C> : C::half_line::type
   {
     static_assert(!C::half_line::value || (dimension_of<C> == 1));
   };
