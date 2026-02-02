@@ -70,8 +70,12 @@ namespace sequoia::testing
 
     STATIC_CHECK(has_distinguished_origin_v<half_line_space>);
     STATIC_CHECK(is_half_line_v<half_line_space>);
+    STATIC_CHECK(has_distinguished_origin_v<dual<half_line_space>>);
+    STATIC_CHECK(is_half_line_v<dual<half_line_space>>);
 
     STATIC_CHECK(!has_distinguished_origin_v<unremarkable_space>);
     STATIC_CHECK(!is_half_line_v<unremarkable_space>);
+    STATIC_CHECK(!has_distinguished_origin_v<dual<unremarkable_space>>);
+    STATIC_CHECK(!is_half_line_v<dual<unremarkable_space>>);
   }
 }

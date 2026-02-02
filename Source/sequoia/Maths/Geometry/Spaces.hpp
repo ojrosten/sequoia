@@ -596,79 +596,7 @@ namespace sequoia::maths
    */
   
   template<convex_space ConvexSpace>
-  inline constexpr std::size_t dimension_of{free_module_type_of_t<ConvexSpace>::dimension};
-
-  /** @defgroup SpacesUtilities Convex Space Utilities
-      @brief Utilites for extracting properties of convex spaces
-   */
-
-  template<convex_space C>
-  struct is_half_line : std::false_type
-  {};
-
-  template<convex_space C>
-  using is_half_line_t = is_half_line<C>::type;
-
-  template<convex_space C>
-  inline constexpr bool is_half_line_v{is_half_line<C>::value};
-
-  template<convex_space Space>
-  inline constexpr bool has_distinguished_origin_type_v{
-    requires {
-      typename Space::distinguished_origin;
-      requires (   std::convertible_to<typename Space::distinguished_origin, std::true_type>
-                || std::convertible_to<typename Space::distinguished_origin, std::false_type>);
-    }
-  };
-  
-  template<convex_space Space>
-  struct has_distinguished_origin : std::false_type
-  {};
-
-  template<convex_space Space>
-    requires has_distinguished_origin_type_v<Space>
-  struct has_distinguished_origin<Space> : Space::distinguished_origin::type
-  {
-    static_assert(!is_half_line_v<Space> || Space::distinguished_origin::value);
-  };
-
-  template<convex_space Space>
-    requires (!has_distinguished_origin_type_v<Space>) && is_half_line_v<Space>
-  struct has_distinguished_origin<Space> : std::true_type
-  {
-  };
-
-  template<free_module Space>
-  struct has_distinguished_origin<Space> : std::true_type
-  {};
-
-  template<affine_space Space>
-    requires (!free_module<Space>)
-  struct has_distinguished_origin<Space> : std::false_type
-  {};
-
-  template<convex_space Space>
-  using has_distinguished_origin_t = has_distinguished_origin<Space>::type;
-
-  template<convex_space Space>
-  inline constexpr bool has_distinguished_origin_v{has_distinguished_origin<Space>::value};
-
-  
-  template<convex_space Space>
-  inline constexpr bool has_half_line_type_v{
-    requires {
-      typename Space::half_line;
-      requires (   std::convertible_to<typename Space::half_line, std::true_type>
-                || std::convertible_to<typename Space::half_line, std::false_type>);
-    }
-  };
-
-  template<convex_space C>
-      requires has_half_line_type_v<C>
-  struct is_half_line<C> : C::half_line::type
-  {
-    static_assert(!C::half_line::value || (dimension_of<C> == 1));
-  };
+  inline constexpr std::size_t dimension_of{free_module_type_of_t<ConvexSpace>::dimension};  
 
   /** @defgroup Basis Basis
       @brief Concepts and helpers for bases of free modules.
@@ -1057,7 +985,6 @@ namespace sequoia::maths
     using set_type             = sets::convex_functionals<C, commutative_ring_type_of_t<C>>;
     using free_module_type     = dual<free_module_type_of_t<C>>;
     using is_convex_space      = std::true_type;
-    using distinguished_origin = has_distinguished_origin_t<C>;
   };
 
    /** @ingroup DualSpaces
@@ -1123,6 +1050,89 @@ namespace sequoia::maths
   struct dual_of<dual<T>> {
     using type = T;
   };
+
+  
+  /** @defgroup SpacesUtilities Convex Space Utilities
+      @brief Utilites for extracting properties of convex spaces
+   */
+
+  template<convex_space C>
+  struct is_half_line : std::false_type
+  {};
+
+  template<convex_space C>
+  using is_half_line_t = is_half_line<C>::type;
+
+  template<convex_space C>
+  inline constexpr bool is_half_line_v{is_half_line<C>::value};
+
+  template<convex_space Space>
+  inline constexpr bool has_distinguished_origin_type_v{
+    requires {
+      typename Space::distinguished_origin;
+      requires (   std::convertible_to<typename Space::distinguished_origin, std::true_type>
+                || std::convertible_to<typename Space::distinguished_origin, std::false_type>);
+    }
+  };
+  
+  template<convex_space Space>
+  struct has_distinguished_origin : std::false_type
+  {};
+  
+  template<convex_space Space>
+  using has_distinguished_origin_t = has_distinguished_origin<Space>::type;
+
+  template<convex_space Space>
+  inline constexpr bool has_distinguished_origin_v{has_distinguished_origin<Space>::value};
+
+  template<convex_space Space>
+    requires has_distinguished_origin_type_v<Space>
+  struct has_distinguished_origin<Space> : Space::distinguished_origin::type
+  {
+    static_assert(!is_half_line_v<Space> || Space::distinguished_origin::value);
+  };
+
+  template<convex_space Space>
+    requires (!has_distinguished_origin_type_v<Space>) && is_half_line_v<Space>
+  struct has_distinguished_origin<Space> : std::true_type
+  {
+  };
+
+  template<free_module Space>
+  struct has_distinguished_origin<Space> : std::true_type
+  {};
+
+  template<affine_space Space>
+    requires (!free_module<Space>)
+  struct has_distinguished_origin<Space> : std::false_type
+  {};
+
+  template<convex_space Space>
+  struct has_distinguished_origin<dual<Space>> : has_distinguished_origin<Space>
+  {
+  };
+  
+  template<convex_space Space>
+  inline constexpr bool has_half_line_type_v{
+    requires {
+      typename Space::half_line;
+      requires (   std::convertible_to<typename Space::half_line, std::true_type>
+                || std::convertible_to<typename Space::half_line, std::false_type>);
+    }
+  };
+
+  template<convex_space C>
+      requires has_half_line_type_v<C>
+  struct is_half_line<C> : C::half_line::type
+  {
+    static_assert(!C::half_line::value || (dimension_of<C> == 1));
+  };
+  
+  template<convex_space C>
+  struct is_half_line<dual<C>> : is_half_line<C>
+  {
+  };
+
 
   /** @defgroup Coordinates Coordinates
       @brief Coordinates are the bridge between the abstract mathematics of spaces and practical application.
