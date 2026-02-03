@@ -382,6 +382,7 @@ namespace sequoia::physics::impl
     constexpr static bool anyOfNotReducibleFreeModule     {(( free_module<Ts>    && !potentially_prunable_v<type_counter<Ts, Is>>) || ...)};
     constexpr static bool anyOfNotReducibleHalfLine       {(( is_half_line_v<Ts> && !potentially_prunable_v<type_counter<Ts, Is>>) || ...)};
     constexpr static bool allOfNotReducibleOrNotFreeModule{((!free_module<Ts>    || !potentially_prunable_v<type_counter<Ts, Is>>) && ...)};
+    constexpr static bool allOfNotReducibleOrNotHalfLine  {((!is_half_line_v<Ts> || !potentially_prunable_v<type_counter<Ts, Is>>) && ...)};
     
     using filtered_t = meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, not_potentially_prunable>;
 
@@ -398,7 +399,7 @@ namespace sequoia::physics::impl
     
     using type
       = std::conditional_t<
-          anyOfNotReducibleFreeModule || (allOfNotReducibleOrNotFreeModule && anyOfNotReducibleHalfLine),
+      anyOfNotReducibleFreeModule || (allOfNotReducibleOrNotFreeModule && (anyOfNotReducibleHalfLine || allOfNotReducibleOrNotHalfLine)),
           unpacked_t,
           meta::merge_t<unpacked_t, root_space_t, meta::type_comparator>
         >;

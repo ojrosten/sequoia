@@ -905,8 +905,9 @@ namespace sequoia::physics
   struct time_interval_space
     : physical_value_convex_space<sets::classical::time_intervals<Arena>, Rep, 1, time_interval_space<Rep, Arena>>
   {
-    using arena_type = Arena;
+    using arena_type           = Arena;
     using distinguished_origin = std::true_type;
+    using half_line            = std::true_type;
   };
   
   template<arithmetic Rep, class Arena>
