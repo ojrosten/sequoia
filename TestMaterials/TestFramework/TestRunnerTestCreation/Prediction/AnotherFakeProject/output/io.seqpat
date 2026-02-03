@@ -1,3 +1,4 @@
+-- Selecting .*\n
 (?=is ).*
 (?=compiler: ).*
 -- Performing .*\n
