@@ -212,8 +212,8 @@ namespace sequoia::physics::impl
   };
 
   template<class S, class T, int I, class... Ts, int... Is>
-  requires (!std::is_same_v<S, T> && !std::is_same_v<S, dual<T>> && !std::is_same_v<S, associated_displacement_space<T>> && !std::is_same_v<S, dual<associated_displacement_space<T>>>
-                                  && !std::is_same_v<T, dual<S>> && !std::is_same_v<T, associated_displacement_space<S>> && !std::is_same_v<T, dual<associated_displacement_space<S>>>)
+  requires (!std::is_same_v<S, T> && !std::is_same_v<S, dual_of_t<T>> && !std::is_same_v<S, associated_displacement_space<T>> && !std::is_same_v<S, dual_of_t<associated_displacement_space<T>>> && !std::is_same_v<S, associated_displacement_space<dual_of_t<T>>>
+                                  && !std::is_same_v<T, dual_of_t<S>> && !std::is_same_v<T, associated_displacement_space<S>> && !std::is_same_v<T, dual_of_t<associated_displacement_space<S>>> && !std::is_same_v<T, associated_displacement_space<dual_of_t<S>>>) 
   struct count_and_combine<dual<S>, direct_product<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
     using type = direct_product<type_counter<dual<S>, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
@@ -373,7 +373,7 @@ namespace sequoia::physics::impl
     using type = unpack_t<meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, not_potentially_prunable>>;
   };
 
-  template<class... Ts, int... Is>
+  template<convex_space... Ts, int... Is>
   struct reduce<direct_product<type_counter<Ts, Is>...>>
   {
     // TO DO; potential problem here if reducible modules are floating-point but everything else is integral
