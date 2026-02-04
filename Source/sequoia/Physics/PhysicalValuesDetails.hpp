@@ -399,7 +399,7 @@ namespace sequoia::physics::impl
     
     using type
       = std::conditional_t<
-      anyOfNotReducibleFreeModule || (allOfNotReducibleOrNotFreeModule && (anyOfNotReducibleHalfLine || allOfNotReducibleOrNotHalfLine)),
+          anyOfNotReducibleFreeModule || (allOfNotReducibleOrNotFreeModule && (anyOfNotReducibleHalfLine || allOfNotReducibleOrNotHalfLine)),
           unpacked_t,
           meta::merge_t<unpacked_t, root_space_t, meta::type_comparator>
         >;
