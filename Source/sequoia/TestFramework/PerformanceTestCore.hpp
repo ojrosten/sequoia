@@ -173,7 +173,7 @@ namespace sequoia::testing
       };
 
       auto summarizer{
-        [m_f{m_f},m_s{m_s},minSpeedUp,maxSpeedUp](){
+        [m_f, m_s, minSpeedUp, maxSpeedUp](){
           std::ostringstream message{};
           message << " [" << m_s / m_f << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]";
 

@@ -740,7 +740,6 @@ namespace sequoia::testing
     template<test_mode Mode, class Advisor>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
-      using base_t = base_t;
       base_t::test_pointees(logger, obtained, prediction, advisor);
     }
   };

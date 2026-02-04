@@ -53,7 +53,7 @@ FUNCTION(sequoia_set_compile_options target)
         target_compile_options(${target} PUBLIC /bigobj)
         target_compile_options(${target} PUBLIC /MP)
     else()
-        target_compile_options(${target} PUBLIC -Wall -Wextra -Wpedantic)
+        target_compile_options(${target} PUBLIC -Wall -Wextra -Wpedantic -Wshadow)
     endif()
 
     target_compile_options(${target} PRIVATE ${WARNING_SUPPRESSIONS})
