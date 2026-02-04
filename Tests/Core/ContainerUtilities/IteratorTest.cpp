@@ -55,6 +55,11 @@ namespace sequoia::testing
     template<class Iterator, class DerefPolicy>
     concept scaling_iterator = sequoia::utilities::dereference_policy_for<DerefPolicy, Iterator>
       && requires(DerefPolicy & d) { d.scale(); };
+
+    template<class I>
+    constexpr bool has_arrow_operator_v{
+      requires (I i) { i.operator->(); }
+    };
   }
 
   [[nodiscard]]
@@ -291,7 +296,7 @@ namespace sequoia::testing
     check(equality, message, i[1], begin[1] * scale);
     check(equality, message, i[2], begin[2] * scale);
 
-    if constexpr(requires (CustomIter i) { i.operator->(); })
+    if constexpr(has_arrow_operator_v<CustomIter>)
     {
       check(equality, append_lines(message, "Operator ->"), i.operator->(), pBegin);
     }

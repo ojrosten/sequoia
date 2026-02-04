@@ -75,9 +75,9 @@ namespace sequoia::testing
     check(equality, add_type_info<storage>(""), s, storage{{{}}, allocator{}});
 
     auto mutator{
-      [](storage& s) {
-        s.add_slot();
-        s.push_back_to_partition(s.num_partitions() - 1, 3);
+      [](storage& st) {
+        st.add_slot();
+        st.push_back_to_partition(st.num_partitions() - 1, 3);
       }
     };
 
