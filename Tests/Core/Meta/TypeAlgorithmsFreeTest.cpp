@@ -58,6 +58,9 @@ namespace sequoia::testing
     test_find_if<std::tuple>();
     test_find_if<std::variant>();
 
+    test_contains<std::tuple>();
+    test_contains<std::variant>();
+
     test_erase<std::tuple>();
     test_erase<std::variant>();
 
@@ -191,6 +194,21 @@ namespace sequoia::testing
     STATIC_CHECK((find_if_v<std::tuple<float, double, int>,  std::is_integral>       == 2));
     STATIC_CHECK((find_if_v<std::tuple<int, double, float>,  std::is_pointer>        == 3));
     STATIC_CHECK((find_if_v<std::tuple<int, double, int>,    std::is_integral>       == 0));
+  }
+
+  template<template<class...> class TT>
+  void type_algorithms_free_test::test_contains()
+  {
+    STATIC_CHECK(!contains_v<TT<>,                    int>    );
+    STATIC_CHECK( contains_v<TT<int>,                 int>    );
+    STATIC_CHECK(!contains_v<TT<int>,                 float>  );
+    STATIC_CHECK( contains_v<TT<int, int>,            int>    );
+    STATIC_CHECK(!contains_v<TT<int, int>,            float>  );
+    STATIC_CHECK( contains_v<TT<int, float>,          float>  );
+    STATIC_CHECK( contains_v<TT<int, double, float>,  int>    );
+    STATIC_CHECK( contains_v<TT<int, double, float>,  double> );
+    STATIC_CHECK( contains_v<TT<int, double, float>,  float>  );
+    STATIC_CHECK(!contains_v<TT<int, double, float>,  char>   );
   }
 
   template<template<class...> class TT>

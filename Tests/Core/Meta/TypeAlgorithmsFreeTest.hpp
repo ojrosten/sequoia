@@ -50,6 +50,9 @@ namespace sequoia::testing
     void test_find_if();
 
     template<template<class...> class TT>
+    void test_contains();
+
+    template<template<class...> class TT>
     void test_erase();
 
     template<template<class...> class TT>

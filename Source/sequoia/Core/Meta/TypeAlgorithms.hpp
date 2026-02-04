@@ -366,6 +366,19 @@ namespace sequoia::meta
     constexpr static std::size_t index{U<T>::value ? 0 : 1 + find_if_v<TT<Ts...>, U>};
   };
 
+  //==================================================== find_if ===================================================//
+
+  template<class T, class U>
+  struct contains;
+
+  template<class T, class U>
+  inline constexpr bool contains_v{contains<T, U>::value};
+
+  template<template<class...> class TT, class... Ts, class U>
+  struct contains<TT<Ts...>, U> : std::bool_constant<(std::same_as<U, Ts> ||  ...)>
+  {
+  };
+
   //==================================================== flatten ===================================================//
 
   template<class...>
