@@ -88,7 +88,7 @@ namespace sequoia::testing
                  const project_paths& projPaths)
         : summary{summaryFile}
         , test_file{rebase_from(sourceFile, projPaths.tests().repo())}
-        , workingMaterials{workingMaterials}
+        , working_materials{workingMaterials}
         , predictions{predictiveMaterials}
       {}
 
@@ -96,7 +96,7 @@ namespace sequoia::testing
 
       std::filesystem::path
         test_file,
-        workingMaterials,
+        working_materials,
         predictions;
     };
 
@@ -105,7 +105,7 @@ namespace sequoia::testing
       [[nodiscard]]
       bool operator()(const test_paths& lhs, const test_paths& rhs) const noexcept
       {
-        return lhs.workingMaterials < rhs.workingMaterials;
+        return lhs.working_materials < rhs.working_materials;
       }
     };
 
@@ -131,7 +131,7 @@ namespace sequoia::testing
     void nascent_test_data::operator()(const parsing::commandline::arg_list& args)
     {
       nascent_test_factory factory{"semantic", "allocation", "behavioural"};
-      auto nascent{factory.make(genus, runner.proj_paths(), runner.copyright(), runner.code_indent(), runner.stream())};
+      auto nascentTest{factory.make(genus, runner.proj_paths(), runner.copyright(), runner.code_indent(), runner.stream())};
 
       std::visit(
         overloaded{
@@ -149,9 +149,9 @@ namespace sequoia::testing
             nascent.header(args[0]);
           }
         },
-        nascent);
+        nascentTest);
 
-      nascent_tests.emplace_back(std::move(nascent));
+      nascent_tests.emplace_back(std::move(nascentTest));
     }
 
     [[nodiscard]]
@@ -192,7 +192,7 @@ namespace sequoia::testing
         {
           for(const auto& update : m_Updateables)
           {
-            soft_update(update.workingMaterials, update.predictions);
+            soft_update(update.working_materials, update.predictions);
           }
 
           update_prune_info();
@@ -212,7 +212,7 @@ namespace sequoia::testing
         {
           if(summary.soft_failures())
           {
-            if(fs::exists(files.workingMaterials) && fs::exists(files.predictions))
+            if(fs::exists(files.working_materials) && fs::exists(files.predictions))
             {
               m_Updateables.insert(files);
             }

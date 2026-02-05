@@ -91,37 +91,37 @@ namespace sequoia::testing
           throw std::runtime_error{report_failed_read(file)};
 
 
-        std::string& text{contents.value()};
-        replace(text, "", "");
+        std::string& contentsStr{contents.value()};
+        replace(contentsStr, "", "");
         const auto pattern{std::string{"\""}.append(suiteName).append("\",")};
-        if(auto pos{text.find(pattern)}; pos != npos)
+        if(auto pos{contentsStr.find(pattern)}; pos != npos)
         {
-          if(const auto linePos{text.rfind('\n', pos)}; linePos != npos)
+          if(const auto linePos{contentsStr.rfind('\n', pos)}; linePos != npos)
           {
             std::string_view preamble{"add_test_suite("};
-            if((linePos > preamble.size()) && (text.find(preamble, linePos - preamble.size()) != npos))
+            if((linePos > preamble.size()) && (contentsStr.find(preamble, linePos - preamble.size()) != npos))
             {
-              if(const auto nextLinePos{text.find('\n', pos)}; nextLinePos != npos)
+              if(const auto nextLinePos{contentsStr.find('\n', pos)}; nextLinePos != npos)
               {
-                const auto endpos{text.find(");", pos)};
+                const auto endpos{contentsStr.find(");", pos)};
                 for(const auto& t : tests)
                 {
-                  std::string_view textView{text};
+                  std::string_view textView{contentsStr};
                   std::string_view subtextView{textView.substr(pos, endpos - pos)};
                   if(subtextView.find(t) == npos)
                   {
-                    text.insert(nextLinePos + 1, std::string{indent + indent + indent}.append(t).append(",\n"));
+                    contentsStr.insert(nextLinePos + 1, std::string{indent + indent + indent}.append(t).append(",\n"));
                   }
                 }
 
-                return text;
+                return contentsStr;
               }
             }
           }
         }
-        else if(pos = text.find("runner.execute"); pos != npos)
+        else if(pos = contentsStr.find("runner.execute"); pos != npos)
         {
-          if(const auto linePos{text.rfind('\n', pos)}; linePos != npos)
+          if(const auto linePos{contentsStr.rfind('\n', pos)}; linePos != npos)
           {
             auto builder{
               [&tests, suiteName, indent](){
@@ -143,8 +143,8 @@ namespace sequoia::testing
               }
             };
 
-            text.insert(linePos, builder());
-            return text;
+            contentsStr.insert(linePos, builder());
+            return contentsStr;
           }
         }
 

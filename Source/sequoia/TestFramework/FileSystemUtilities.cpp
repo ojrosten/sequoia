@@ -72,19 +72,21 @@ namespace sequoia::testing
 
   void throw_unless_exists(const fs::path& p, std::string_view message)
   {
-    throw_if(p, append_lines(p.empty() ? "File path is empty" :"not found", message),
-             [](const fs::path& p){ return !fs::exists(p); });
+    throw_if(
+      p,
+      append_lines(p.empty() ? "File path is empty" :"not found", message),
+      [](const fs::path& pth){ return !fs::exists(pth); });
   }
 
   void throw_unless_directory(const fs::path& p, std::string_view message)
   {
-    throw_if(p, append_lines(p.empty() ? "File path is empty" : "is not a directory", message), [](const fs::path& p){ return !fs::is_directory(p); });
+    throw_if(p, append_lines(p.empty() ? "File path is empty" : "is not a directory", message), [](const fs::path& pth){ return !fs::is_directory(pth); });
   }
 
   void throw_unless_regular_file(const fs::path& p, std::string_view message)
   {
     throw_unless_exists(p, message);
-    throw_if(p, append_lines(" is not a regular file", message), [](const fs::path& p){ return !fs::is_regular_file(p); });
+    throw_if(p, append_lines(" is not a regular file", message), [](const fs::path& pth){ return !fs::is_regular_file(pth); });
   }
 
   [[nodiscard]]
@@ -138,7 +140,7 @@ namespace sequoia::testing
     if(p.is_absolute() && dir.is_absolute())
       return fs::relative(p, dir);
 
-    auto i{std::ranges::find_if_not(p, [](const fs::path& p) { return p == ".."; })};
+    auto i{std::ranges::find_if_not(p, [](const fs::path& pth) { return pth == ".."; })};
     if((i == p.end()) || (i->empty()))
       throw std::runtime_error{"Path comprises nothing but ../"};
 

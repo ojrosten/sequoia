@@ -57,11 +57,11 @@ namespace sequoia::testing::impl
   void check_para_constructor_allocations(test_logger<Mode>& logger, const T& y, Mutator yMutator, const allocation_info<T, Getters>&... info)
   {
     auto make{
-      [&logger, &y](auto&... info){
-        T u{y, info.make_allocator()...};
+      [&logger, &y](const allocation_info<T, Getters>&... allocInfo){
+        T u{y, allocInfo.make_allocator()...};
         if(check(equality, "Inconsistent para-copy construction", logger, u, y))
         {
-          check_para_copy_y_allocation(logger, u, std::tuple_cat(make_allocation_checkers(info)...));
+          check_para_copy_y_allocation(logger, u, std::tuple_cat(make_allocation_checkers(allocInfo)...));
           return std::optional<T>{u};
         }
         return std::optional<T>{};
@@ -140,10 +140,10 @@ namespace sequoia::testing::impl
     std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
-  bool check_semantics(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, std::tuple<dual_allocation_checker<T, Getters>...> checkers)
+  bool check_semantics(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, const std::tuple<dual_allocation_checker<T, Getters>...>& checkers)
   {
     auto fn{
-      [&logger, &actions, &x, &y, m{std::move(yMutator)}](auto&&... checkers){
+      [&logger, &actions, &x, &y, m{std::move(yMutator)}](const dual_allocation_checker<T, Getters>&... individualCheckers){
         return check_semantics(logger,
                                actions,
                                x,
@@ -151,7 +151,7 @@ namespace sequoia::testing::impl
                                optional_ref<const T>{},
                                optional_ref<const T>{},
                                m,
-                               std::forward<decltype(checkers)>(checkers)...);
+                               individualCheckers...);
       }
     };
 

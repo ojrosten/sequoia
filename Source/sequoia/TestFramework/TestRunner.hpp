@@ -383,7 +383,7 @@ namespace sequoia::testing
 
     template<class Filter, class Suite>
       requires object::is_suite_v<Suite>
-    void extract_suite_tree(Filter&& filter, Suite&& s)
+    void extract_suite_tree(Filter&& filter, Suite&& testSuite)
     {
       using namespace object;
 
@@ -395,12 +395,12 @@ namespace sequoia::testing
       std::vector<std::filesystem::path> materialsPaths{};
 
       // TO DO: may need generalizing since suites can have arbitrary depth.
-      const std::string suiteName{s.name};
+      const std::string suiteName{testSuite.name};
 
-      extract_tree(std::forward<Suite>(s),
+      extract_tree(std::forward<Suite>(testSuite),
                    std::forward<Filter>(filter),
                    overloaded{
-                     [] <class... Ts> (const suite<Ts...>&s) -> suite_node { return {.summary{log_summary{s.name}}}; },
+                     [] <class... Ts> (const suite<Ts...>& s) -> suite_node { return {.summary{log_summary{s.name}}}; },
                      [this, &suiteName, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
                        test = T{test.name(),
                                 suiteName,

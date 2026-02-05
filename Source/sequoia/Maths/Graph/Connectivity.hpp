@@ -269,8 +269,8 @@ namespace sequoia
         if constexpr(!shared_weight_v && !is_directed(flavour))
         {
           auto partnerSetter{
-            [this](const_edge_iterator iter, auto&&... args){
-              return this->set_partner_edge_weight(iter, std::forward<decltype(args)>(args)...);
+            [this](const_edge_iterator iter, auto&&... partnerArgs){
+              return this->set_partner_edge_weight(iter, std::forward<decltype(args)>(partnerArgs)...);
             }
           };
 
@@ -386,9 +386,9 @@ namespace sequoia
 
       constexpr connectivity_base& operator=(connectivity_base&&) = default;
 
-      constexpr connectivity_base& operator=(const connectivity_base& in)
+      constexpr connectivity_base& operator=(const connectivity_base& other)
       {
-        if(&in != this)
+        if(&other != this)
         {
           auto allocGetter{
             []([[maybe_unused]] const connectivity_base& in){
@@ -408,7 +408,7 @@ namespace sequoia
             }
           };
 
-          assignment_helper::assign(*this, in, allocGetter, partitionsAllocGetter);
+          assignment_helper::assign(*this, other, allocGetter, partitionsAllocGetter);
         }
 
         return *this;
@@ -609,9 +609,10 @@ namespace sequoia
       size_type insert_node(const size_type node)
       {
         m_Edges.insert_slot(node);
-        fix_edge_data(node,
-          [](const auto targetNode, const auto node) { return targetNode >= node; },
-          [](const auto index) { return index + 1; });
+        fix_edge_data(
+          [node](const auto targetNode) { return targetNode >= node; },
+          [](const auto index) { return index + 1; }
+	);
 
         return node;
       }
@@ -671,9 +672,10 @@ namespace sequoia
         }
 
         m_Edges.erase_slot(node);
-        fix_edge_data(node,
-          [](const auto targetNode, const auto node) { return targetNode > node; },
-          [](const auto index) { return index - 1; });
+        fix_edge_data(
+          [node](const auto targetNode) { return targetNode > node; },
+          [](const auto index) { return index - 1; }
+	);
       }
 
       template<class... Args>
@@ -1594,14 +1596,14 @@ namespace sequoia
       }
 
       template<class Pred, class Modifier>
-      constexpr void fix_edge_data(const edge_index_type node, Pred pred, Modifier modifier) noexcept
+      constexpr void fix_edge_data(Pred pred, Modifier modifier) noexcept
       {
         for(size_type i{}; i < m_Edges.num_partitions(); ++i)
         {
           for(auto& edge : m_Edges.partition(i))
           {
             const auto target{edge.target_node()};
-            if(pred(target, node)) edge.target_node(modifier(target));
+            if(pred(target)) edge.target_node(modifier(target));
           }
         }
       }

@@ -158,10 +158,10 @@ namespace sequoia::testing::impl
                        optional_ref<const U> movedFromPostConstruction,
                        optional_ref<const U> movedFromPostAssignment,
                        Mutator m,
-                       std::tuple<dual_allocation_checker<T, Getters>...> checkers)
+                       const std::tuple<dual_allocation_checker<T, Getters>...>& checkers)
   {
     auto fn{
-      [&,m{std::move(m)}](auto&&... checkers){
+      [&,m{std::move(m)}](const dual_allocation_checker<T, Getters>&... individualCheckers){
         return check_semantics(logger,
                                actions,
                                std::forward<T>(x),
@@ -171,7 +171,7 @@ namespace sequoia::testing::impl
                                movedFromPostConstruction,
                                movedFromPostAssignment,
                                std::move(m),
-                               std::forward<decltype(checkers)>(checkers)...);
+                               individualCheckers...);
       }
     };
 
