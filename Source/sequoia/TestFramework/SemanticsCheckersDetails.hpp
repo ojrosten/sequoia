@@ -271,14 +271,14 @@ namespace sequoia::testing::impl
   {
     sentinel sentry{logger, ""};
 
-    check_comparison_consistency(logger, less_than_type{}, actions, x, y, [](const T& x) { return !(x < x); }, args...);
-    check_comparison_consistency(logger, leq_type{}, actions, x, y, [](const T& x) { return x <= x; }, args...);
-    check_comparison_consistency(logger, greater_than_type{}, actions, x, y, [](const T& x) { return !(x > x); }, args...);
-    check_comparison_consistency(logger, geq_type{}, actions, x, y, [](const T& x) { return x >= x; }, args...);
+    check_comparison_consistency(logger, less_than_type{},    actions, x, y, [](const T& u) { return !(u < u); }, args...);
+    check_comparison_consistency(logger, leq_type{},          actions, x, y, [](const T& u) { return u <= u;   }, args...);
+    check_comparison_consistency(logger, greater_than_type{}, actions, x, y, [](const T& u) { return !(u > u); }, args...);
+    check_comparison_consistency(logger, geq_type{},          actions, x, y, [](const T& u) { return u >= u;   }, args...);
 
     if constexpr (std::three_way_comparable<T>)
     {
-      check_comparison_consistency(logger, threeway_type{}, actions, x, y, [](const T& x) { return (x <=> x) == 0; }, args...);
+      check_comparison_consistency(logger, threeway_type{}, actions, x, y, [](const T& u) { return (u <=> u) == 0; }, args...);
     }
 
     return !sentry.failure_detected();
@@ -291,16 +291,16 @@ namespace sequoia::testing::impl
     if(!check_ordering_operators(logger, actions, x, y, args...)) return false;
 
     auto comp{
-      [&logger](const T& x, const T& y){
+      [&logger](const T& u, const T& v){
         sentinel sentry{logger, ""};
 
-        check("operator> and operator< are inconsistent", logger, y > x);
-        check("operator< and operator<= are inconsistent", logger, x <= y);
-        check("operator< and operator>= are inconsistent", logger, y >= x);
+        check("operator> and operator< are inconsistent",  logger, v > u);
+        check("operator< and operator<= are inconsistent", logger, u <= v);
+        check("operator< and operator>= are inconsistent", logger, v >= u);
 
         if constexpr (std::three_way_comparable<T>)
         {
-          check("operator< and operator<=> are inconsistent", logger, (x <=> y) < 0);
+          check("operator< and operator<=> are inconsistent", logger, (u <=> v) < 0);
         }
 
         return !sentry.failure_detected();
@@ -321,8 +321,8 @@ namespace sequoia::testing::impl
   [[nodiscard]]
   bool check_equality_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    const bool eq{check_comparison_consistency(logger, equality_type{}, actions, x, y, [](const T& x) { return x == x; }, args...)};
-    const bool neq{check_comparison_consistency(logger, inequality_type{}, actions, x, y, [](const T& x) { return !(x != x); }, args...)};
+    const bool eq{check_comparison_consistency(logger, equality_type{}, actions, x, y, [](const T& u) { return u == u; }, args...)};
+    const bool neq{check_comparison_consistency(logger, inequality_type{}, actions, x, y, [](const T& u) { return !(u != u); }, args...)};
 
     return eq && neq && check("Prerequisite - for checking semantics, x and y are assumed to be different", logger, x != y);
   }
@@ -370,7 +370,7 @@ namespace sequoia::testing::impl
         if(check_ordering_consistency(logger, actions, x, y, args...))
         {
           const bool cond{order < 0 ? x < y : x > y};
-          auto mess{
+          auto makeMessage{
             [order](){
               std::string mess{"Prerequisite - for ordered semantics, it is assumed that "};
               return order == 0 ? mess.append("x < y") : mess.append("y > x");
@@ -379,13 +379,13 @@ namespace sequoia::testing::impl
 
           if constexpr(serializable<T>)
           {
-            return check(mess(), logger, cond,
-                       tutor{[](const T& x, const T& y) {
-                               return prediction_message(to_string(x), to_string(y)); } });
+            return check(makeMessage(), logger, cond,
+                       tutor{[](const T& u, const T& v) {
+                               return prediction_message(to_string(u), to_string(v)); } });
           }
           else
           {
-            return check(mess(), logger, cond);
+            return check(makeMessage(), logger, cond);
           }
         }
       }

@@ -265,15 +265,17 @@ namespace sequoia::testing
                                  tutor<Advisor> advisor)
   {
     const auto msg{
-      [] (CheckType flavour, std::string desc) -> std::string {
-          return append_lines(desc,
-                              "Comparison performed using:",
-                              make_type_info<value_tester<T>>(),
-                              std::format("Checking for {} with:", to_string(flavour)), make_type_info<U>()).append("\n");
+      [flavour] (std::string desc) -> std::string {
+          return append_lines(
+	           desc,
+		   "Comparison performed using:",
+		   make_type_info<value_tester<T>>(),
+		   std::format("Checking for {} with:", to_string(flavour)), make_type_info<U>()
+	         ).append("\n");
       }
     };
 
-    sentinel<Mode> sentry{logger, msg(flavour, std::move(description))};
+    sentinel<Mode> sentry{logger, msg(std::move(description))};
 
     select_test(flavour, logger, obtained, predicted, advisor);
 

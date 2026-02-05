@@ -475,10 +475,10 @@ namespace sequoia::testing::impl
 
   template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
     requires (sizeof...(Getters) > 0)
-  void check_para_copy_y_allocation(test_logger<Mode>& logger, const T& container, std::tuple<allocation_checker<T, Getters>...> checkers)
+  void check_para_copy_y_allocation(test_logger<Mode>& logger, const T& container, const std::tuple<allocation_checker<T, Getters>...>& checkers)
   {
-    auto fn{[&logger,&container](auto&&... checkers){
-        check_para_copy_y_allocation(logger, container, std::forward<decltype(checkers)>(checkers)...);
+    auto fn{[&logger,&container](const allocation_checker<T, Getters>&... individualCheckers){
+        check_para_copy_y_allocation(logger, container, individualCheckers...);
       }
     };
 
@@ -518,12 +518,12 @@ namespace sequoia::testing::impl
   void check_para_move_allocation(test_logger<Mode>& logger,
                                   container_tag_constant<tag>,
                                   const T& container,
-                                  std::tuple<allocation_checker<T, Getters>...> checkers)
+                                  const std::tuple<allocation_checker<T, Getters>...>& checkers)
   {
     auto fn{
-      [&logger, &container](auto&&... checkers){
+      [&logger, &container](const allocation_checker<T, Getters>... individualCheckers){
         using ctag = container_tag_constant<tag>;
-        check_para_move_allocation(logger, ctag{}, container, std::forward<decltype(checkers)>(checkers)...);
+        check_para_move_allocation(logger, ctag{}, container, individualCheckers...);
       }
     };
 
@@ -571,11 +571,11 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters>
-  void check_init_allocations(test_logger<Mode>& logger, const T& x, const T& y, std::tuple<allocation_checker<T, Getters>...> checkers)
+  void check_init_allocations(test_logger<Mode>& logger, const T& x, const T& y, const std::tuple<allocation_checker<T, Getters>...>& checkers)
   {
     auto fn{
-       [&logger, &x, &y](auto&&... checkers){
-         check_init_allocations(logger, x, y, std::forward<decltype(checkers)>(checkers)...);
+       [&logger, &x, &y](const allocation_checker<T, Getters>&... individualCheckers){
+         check_init_allocations(logger, x, y, individualCheckers...);
       }
     };
 

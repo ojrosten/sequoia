@@ -97,6 +97,32 @@ namespace sequoia::testing
     template<class Advisor>
     static auto make_advisor(std::string_view info, string_view_type obtained, string_view_type prediction, size_type pos, const tutor<Advisor>& advisor)
     {
+      if constexpr(std::invocable<tutor<Advisor>, Char, Char>)
+      {
+        return
+	  tutor{
+            [=, &advisor] (Char a, Char b) {
+              auto m{build_preliminary_message(info, obtained, prediction, pos)};
+              return append_advice(m, {advisor, a, b});
+            },
+            "\n"
+          };
+      }
+      else
+      {
+        return
+	  tutor{
+            [=](const auto&, const auto&) {
+	      return build_preliminary_message(info, obtained, prediction, pos);
+	    },
+            "\n"
+          };
+      }
+    }
+
+    [[nodiscard]]
+    static std::string build_preliminary_message(std::string_view info, string_view_type obtained, string_view_type prediction, size_type pos)
+    {
       constexpr size_type defaultOffset{30}, defaultCount{60}, npos{string_view_type::npos};
       const auto sz{std::ranges::min(obtained.size(), prediction.size())};
 
@@ -106,8 +132,9 @@ namespace sequoia::testing
 
       const size_type offset{loc < npos ? std::ranges::min(defaultOffset, pos - loc) : defaultOffset};
 
-      const auto lpos{pos < offset ? 0 :
-                         pos < sz  ? pos - offset : sz - std::ranges::min(sz, offset)};
+      const auto startPos{pos < offset ? 0 :
+                             pos < sz  ? pos - offset :
+		                         sz - std::ranges::min(sz, offset)};
 
       struct message{ std::string mess; bool trunc{}; };
 
@@ -138,33 +165,12 @@ namespace sequoia::testing
         }
       };
 
-      const auto[obMess,obTrunc]{make(obtained, lpos)};
-      const auto[prMess,prTrunc]{make(prediction, lpos)};
+      const auto[obMess,obTrunc]{make(obtained  , startPos)};
+      const auto[prMess,prTrunc]{make(prediction, startPos)};
 
-      const bool trunc{lpos > 0 || obTrunc || prTrunc};
-      const auto message{append_lines(info,  trunc ? "Surrounding substring(s):" : "Full strings:",
-                                      prediction_message(obMess, prMess))};
-
-      if constexpr(std::invocable<tutor<Advisor>, Char, Char>)
-      {
-
-        return tutor{
-          [message, advisor] (Char a, Char b) {
-            auto m{message};
-            return append_advice(m, {advisor, a, b});
-          },
-          "\n"
-        };
-      }
-      else
-      {
-        return tutor{
-          [message](const auto&, const auto&) { return message; },
-          "\n"
-        };
-      }
+      const bool trunc{startPos > 0 || obTrunc || prTrunc};
+      return append_lines(info,  trunc ? "Surrounding substring(s):" : "Full strings:", prediction_message(obMess, prMess));
     }
-
   public:
     template<test_mode Mode, class Advisor>
     static void test(equality_check_t, test_logger<Mode>& logger, string_view_type obtained, string_view_type prediction, const tutor<Advisor>& advisor)
@@ -492,9 +498,9 @@ namespace sequoia::testing
       namespace fs = std::filesystem;
 
       auto generator{
-        [](const fs::path& dir) {
+        [](const fs::path& dirPath) {
           std::vector<fs::path> paths{};
-          for(const auto& p : fs::directory_iterator(dir))
+          for(const auto& p : fs::directory_iterator(dirPath))
           {
             if(    std::ranges::find(excluded_files,      p.path().filename())  == excluded_files.end()
                 && std::ranges::find(excluded_extensions, p.path().extension()) == excluded_extensions.end())
@@ -511,10 +517,13 @@ namespace sequoia::testing
 
       const std::vector<fs::path> paths{generator(dir)}, predictedPaths{generator(prediction)};
 
-      check(equality, std::string{"Number of directory entries for "}.append(dir.generic_string()),
+      check(
+	equality,
+	std::string{"Number of directory entries for "}.append(dir.generic_string()),
         logger,
         paths.size(),
-        predictedPaths.size());
+        predictedPaths.size()
+      );
 
       const auto iters{std::ranges::mismatch(paths, predictedPaths,
           [&dir,&prediction](const fs::path& lhs, const fs::path& rhs) {
