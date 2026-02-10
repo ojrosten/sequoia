@@ -53,7 +53,7 @@ namespace
 
     [[nodiscard]]
     bar<I + 1> next() const { return {make_next_name(*this)}; }
-  };
+  };  
 
   template<int I>
   struct baz
@@ -75,6 +75,24 @@ namespace
 
     [[nodiscard]]
     friend bool operator==(const baz&, const baz&) noexcept = default;
+  };
+
+  template<class T>
+  constexpr bool has_name_v{
+    requires {
+      { T::name } -> std::convertible_to<std::string>;
+    }
+  };
+
+  struct name_getter{
+    template<class... Ts>
+    [[nodiscard]]
+    std::string operator()(const suite<Ts...>& s) const { return s.name(); }
+
+    template<class T>
+        requires has_name_v<T>
+    [[nodiscard]]
+    std::string operator()(const T& t) const { return t.name; }
   };
 
   struct to_path
@@ -127,7 +145,7 @@ namespace
     [[nodiscard]]
     std::string operator()(const suite<Ts...>& s) const
     {
-      return s.name;
+      return s.name();
     }
 
     template<class T>
@@ -256,7 +274,7 @@ namespace sequoia::testing
       variant_t init[]{foo<0>{"foo"}, bar<0>{"bar"}, baz<0>{"baz"}, foo<1>{"foo1"}, bar<1>{"bar1"}};
 
       auto filter{
-        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name == "root") || ...); }
+        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name() == "root") || ...); }
       };
 
       check(equality, "", extract_leaves(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
@@ -267,7 +285,7 @@ namespace sequoia::testing
       variant_t init[]{foo<0>{"foo"}};
 
       auto filter{
-        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name == "suite_0") || ...); }
+        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name() == "suite_0") || ...); }
       };
 
       check(equality, "", extract_leaves(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
@@ -278,7 +296,7 @@ namespace sequoia::testing
       variant_t init[]{bar<0>{"bar"}, baz<0>{"baz"}};
 
       auto filter{
-        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name == "suite_1") || ...); }
+        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name() == "suite_1") || ...); }
       };
 
       check(equality, "", extract_leaves(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
@@ -289,7 +307,7 @@ namespace sequoia::testing
       variant_t init[]{foo<1>{"foo1"}, bar<1>{"bar1"}};
 
       auto filter{
-        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name == "suite_2") || ...); },
+        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name() == "suite_2") || ...); },
       };
 
       check(equality, "", extract_leaves(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
@@ -300,7 +318,7 @@ namespace sequoia::testing
       variant_t init[]{foo<1>{"foo1"}};
 
       auto filter{
-        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name == "suite_2_0") || ...); }
+        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name() == "suite_2_0") || ...); }
       };
 
       check(equality, "", extract_leaves(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
@@ -311,7 +329,7 @@ namespace sequoia::testing
       variant_t init[]{bar<1>{"bar1"}};
 
       auto filter{
-        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name == "suite_2_1") || ...); }
+        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name() == "suite_2_1") || ...); }
       };
 
       check(equality, "", extract_leaves(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
@@ -322,7 +340,7 @@ namespace sequoia::testing
       variant_t init[]{bar<1>{"bar1"}};
 
       auto filter{
-        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name == "suite_2_1_0") || ...); }
+        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name() == "suite_2_1_0") || ...); }
       };
 
       check(equality, "", extract_leaves(make_test_suite(), filter), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
@@ -349,7 +367,7 @@ namespace sequoia::testing
       variant_t init[]{foo<2>{"foo1->2"}, bar<2>{"bar1->2"}};
 
       auto filter{
-        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name == "suite_2") || ...); },
+        [] <class... Suites> requires (is_suite_v<Suites> && ...) (const auto&, const Suites&... s) { return ((s.name() == "suite_2") || ...); },
       };
 
       check(equality, "", extract_leaves(make_test_suite(), filter, [](const auto& val) { return val.next(); }), std::vector<variant_t>(std::make_move_iterator(std::begin(init)), std::make_move_iterator(std::end(init))));
@@ -576,7 +594,7 @@ namespace sequoia::testing
             extract_tree(suite{"Numbers", int{42}},
                          [](auto&&...) { return true; },
                          overloaded{
-                           [] <class... Ts> (const suite<Ts...>& s) -> std::string { return s.name; },
+                           [] <class... Ts> (const suite<Ts...>& s) -> std::string { return s.name(); },
                            [](auto x) { return x; }
                          }),
             tree_type{{"Numbers", {{42}}}});
@@ -591,8 +609,8 @@ namespace sequoia::testing
             "Projection from items to paths, which are compared using an equivalence relationship, rather than equality",
             extract_tree(suite{"flat", foo<0>{"foo"}, bar<1>{"bar1"}},
                          filter,
-                         [](const auto& s) { return s.name; }),
-            tree_type{{"flat", {{"bar1"}}}});
+                         name_getter{}),
+           tree_type{{"flat", {{"bar1"}}}});
 
       using opt_suites_map_t = std::optional<filter_by_paths::suites_map_type>;
       using opt_items_map_t  = std::optional<filter_by_paths::items_map_type>;
@@ -606,15 +624,24 @@ namespace sequoia::testing
 
     using tree_type = directed_tree<tree_link_direction::forward, null_weight, std::string>;
 
-    check(equality, "", extract_tree(make_test_suite(), [](auto&&...) { return false; }, [](const auto& s) { return s.name; }), tree_type{});
+    check(equality,
+          "",
+          extract_tree(
+            make_test_suite(),
+            [](auto&&...) { return false; },
+            overloaded{
+                           [] <class... Ts> (const suite<Ts...>& s) -> std::string { return s.name(); },
+                           [](const auto& x) -> std::string { return x.name; }
+                         }),
+          tree_type{});
 
-    check(equality, "", extract_tree(make_test_suite(), filter_by_names{{}, {{"foo"s}}}, [](const auto& s) { return s.name; }), tree_type{{"root", {{"suite_0", {{"foo"}}}}}});
+    check(equality, "", extract_tree(make_test_suite(), filter_by_names{{}, {{"foo"s}}}, name_getter{}), tree_type{{"root", {{"suite_0", {{"foo"}}}}}});
 
     check(equality,
           "",
           extract_tree(make_test_suite(),
                        filter_by_names{{{"suite_2"s}}, {}},
-                       [](const auto& s) { return s.name; }),
+                       name_getter{}),
           tree_type{{"root",
                       {{"suite_2",
                         {
@@ -630,7 +657,7 @@ namespace sequoia::testing
           "",
           extract_tree(make_test_suite(),
                        filter_by_names{{{"suite_2"s}}, {{"bar"s}}},
-                       [](const auto& s) { return s.name; }),
+                       name_getter{}),
           tree_type{{"root",
                       {
                         {"suite_1", {{"bar"}}},
@@ -647,8 +674,7 @@ namespace sequoia::testing
 
     check(equality,
           "",
-          extract_tree(make_test_suite(),
-                       filter_by_paths{{{"suite_2"s}}, {{"foo/bar"s}}}, [](const auto& s) { return s.name; }),
+          extract_tree(make_test_suite(), filter_by_paths{{{"suite_2"s}}, {{"foo/bar"s}}}, name_getter{}),
           tree_type{{"root",
                       {
                         {"suite_1", {{"bar"}}},

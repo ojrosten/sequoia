@@ -45,12 +45,21 @@ namespace sequoia::object
   class suite
   {
   public:
-    std::string name;
-    std::tuple<Ts...> values;
+    std::string m_Name;
+    std::tuple<Ts...> m_Values;
 
     suite(std::string name, Ts&&... ts)
-      : name{std::move(name)}
-      , values{std::forward<Ts>(ts)...} {}
+      : m_Name{std::move(name)}
+      , m_Values{std::forward<Ts>(ts)...} {}
+
+    [[nodiscard]]
+    const std::string& name() const noexcept { return m_Name; }
+
+    [[nodiscard]]
+    const std::tuple<Ts...>& values() const noexcept { return m_Values; }
+
+    [[nodiscard]]
+    std::tuple<Ts...>& values() noexcept { return m_Values; }
   };
 
 
@@ -194,7 +203,7 @@ namespace sequoia::object
     void extract_leaves(suite<Ts...>& s, Fn fn)
     {
       [&] <std::size_t... Is> (std::index_sequence<Is...>) {
-        (fn(std::get<Is>(s.values)), ...);
+        (fn(std::get<Is>(s.values())), ...);
       }(std::make_index_sequence<sizeof...(Ts)>{});
     }
 
@@ -235,7 +244,7 @@ namespace sequoia::object
       const auto node{tree.add_node(parentNode, transform(s))};
 
       [node, fn, &s] <std::size_t... Is> (std::index_sequence<Is...>) {
-        (fn(node, std::get<Is>(s.values)), ...);
+        (fn(node, std::get<Is>(s.values())), ...);
       }(std::make_index_sequence<sizeof...(Ts)>{});
 
       if(!std::ranges::distance(tree.cedges(node)))
