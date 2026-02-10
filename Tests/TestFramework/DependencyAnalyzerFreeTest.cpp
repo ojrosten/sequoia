@@ -562,13 +562,13 @@ namespace sequoia::testing
     };
 
 
-    auto checker{
+    auto checkerFn{
         [this](std::string_view description, const test_outcomes& obtained, const test_outcomes& prediction) {
           check_data(description, obtained, prediction);
         }
     };
 
-    transition_checker<test_outcomes>::check(report(""), g, checker);
+    transition_checker<test_outcomes>::check(report(""), g, checkerFn);
   }
 
   void dependency_analyzer_free_test::test_instability_analysis_prune_upate(const project_paths& projPaths)
@@ -687,13 +687,13 @@ namespace sequoia::testing
       }
     };
 
-    auto checker{
+    auto checkerFn{
         [this](std::string_view description, const test_outcomes& obtained, const test_outcomes& prediction) {
           check_data(description, obtained, prediction);
         }
     };
 
-    transition_checker<test_outcomes>::check(report(""), g, checker);
+    transition_checker<test_outcomes>::check(report(""), g, checkerFn);
   }
 
   void dependency_analyzer_free_test::check_data(std::string_view description, const test_outcomes& obtained, const test_outcomes& prediction)

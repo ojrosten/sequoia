@@ -715,9 +715,9 @@ namespace sequoia::testing
       // 'graph_description::node_1u_1_node_0_0u'
       []() -> graph_t {
          const auto g{[]{
-            graph_t g{{edge_t{1, -0.2f, 0.1f}, edge_t{1}}, {edge_t{0, -0.2f, 0.1f}, edge_t{0}}};
-            g.swap_edges(1, 0, 1);
-            return g;
+            graph_t gr{{edge_t{1, -0.2f, 0.1f}, edge_t{1}}, {edge_t{0, -0.2f, 0.1f}, edge_t{0}}};
+            gr.swap_edges(1, 0, 1);
+            return gr;
            }()
          };
 
@@ -727,9 +727,9 @@ namespace sequoia::testing
       // 'graph_description::node_1_1u_node_0u_0'
       []() -> graph_t {
        const auto g{[]{
-          graph_t g{{edge_t{1, -0.2f, 0.1f}, edge_t{1}}, {edge_t{0, -0.2f, 0.1f}, edge_t{0}}};
-          g.swap_edges(0, 0, 1);
-          return g;
+          graph_t gr{{edge_t{1, -0.2f, 0.1f}, edge_t{1}}, {edge_t{0, -0.2f, 0.1f}, edge_t{0}}};
+          gr.swap_edges(0, 0, 1);
+          return gr;
          }()
        };
 
@@ -788,9 +788,9 @@ namespace sequoia::testing
          // 'graph_description::node_2v_1u_nodex_2_0u_nodew_1_0v'
          [this]() -> graph_t {
            constexpr auto g{[](){
-              graph_t g{edges_init_t{{edge_t{1, -0.2f, 0.1f}, edge_t{2, 0.5f}}, {edge_t{0, -0.2f, 0.1f}, edge_t{2}}, {edge_t{0, 0.5f}, edge_t{1}}}, nodes_init_t{{}, {0.7}, {2.1, 1.1}}};
-              for(auto i : std::views::iota(0uz, g.order())) g.swap_edges(static_cast<index_type>(i), 0, 1);
-              return g;
+              graph_t gr{edges_init_t{{edge_t{1, -0.2f, 0.1f}, edge_t{2, 0.5f}}, {edge_t{0, -0.2f, 0.1f}, edge_t{2}}, {edge_t{0, 0.5f}, edge_t{1}}}, nodes_init_t{{}, {0.7}, {2.1, 1.1}}};
+              for(auto i : std::views::iota(0uz, gr.order())) gr.swap_edges(static_cast<index_type>(i), 0, 1);
+              return gr;
             }()
            };
 

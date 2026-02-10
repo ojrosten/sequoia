@@ -81,7 +81,7 @@ namespace sequoia::testing
       {tuple_t{0, 0}, tuple_t{1, 0}, tuple_t{0, 2}}
     };
 
-    auto checker{
+    auto checkerFn{
       [this](std::string_view description, const tuple_t& obtained, const tuple_t& prediction, const tuple_t& parent, std::weak_ordering ordering) {
         this->check(equality, description, obtained, prediction);
         if(ordering != std::weak_ordering::equivalent)
@@ -89,6 +89,6 @@ namespace sequoia::testing
       }
     };
 
-    transition_checker<tuple_t>::check(report(""), g, checker);
+    transition_checker<tuple_t>::check(report(""), g, checkerFn);
   }
 }

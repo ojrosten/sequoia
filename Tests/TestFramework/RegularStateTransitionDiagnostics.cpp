@@ -67,7 +67,7 @@ namespace sequoia::testing
     };
     
     {
-      auto checker{
+      auto checkerFn{
         [this](std::string_view description, double obtained, double prediction, double parent, std::weak_ordering ordering) {
           check(equality, {description, no_source_location}, obtained, prediction);
           check(within_tolerance{0.1}, {description, no_source_location}, obtained, prediction);
@@ -75,11 +75,11 @@ namespace sequoia::testing
         }
       };
 
-      transition_checker<double>::check(report(""), g, checker);
+      transition_checker<double>::check(report(""), g, checkerFn);
     }
 
     {
-      auto checker{
+      auto checkerFn{
         [this](std::string_view description, std::function<double()> obtained, std::function<double()> prediction, std::function<double()> parent, std::weak_ordering ordering) {
           check(equality, {description, no_source_location}, obtained(), prediction());
           check(within_tolerance{0.1}, {description, no_source_location}, obtained(), prediction());
@@ -87,18 +87,18 @@ namespace sequoia::testing
         }
       };
 
-      transition_checker<double>::check(report(""), g, checker);
+      transition_checker<double>::check(report(""), g, checkerFn);
     }
 
     {
-      auto checker{
+      auto checkerFn{
         [this](std::string_view description, double obtained, double prediction) {
           check(equality, {description, no_source_location}, obtained, prediction);
           check(within_tolerance{0.1}, {description, no_source_location}, obtained, prediction);
         }
       };
 
-      transition_checker<double>::check(report(""), g, checker);
+      transition_checker<double>::check(report(""), g, checkerFn);
     }
   }
 
@@ -121,7 +121,7 @@ namespace sequoia::testing
     };
 
     {
-      auto checker{
+      auto checkerFn{
         [this](std::string_view description, cmplx obtained, cmplx prediction, cmplx parent) {
           check(equality, {description, no_source_location}, obtained, prediction);
           check(within_tolerance{0.1}, {description, no_source_location}, obtained, prediction);
@@ -129,11 +129,11 @@ namespace sequoia::testing
         }
       };
 
-      transition_checker<cmplx>::check(report(""), g, checker);
+      transition_checker<cmplx>::check(report(""), g, checkerFn);
     }
 
     {
-      auto checker{
+      auto checkerFn{
         [this](std::string_view description, std::function<cmplx()> obtained, std::function<cmplx()> prediction, std::function<cmplx()> parent) {
           check(equality, {description, no_source_location}, obtained(), prediction());
           check(within_tolerance{0.1}, {description, no_source_location}, obtained(), prediction());
@@ -141,18 +141,18 @@ namespace sequoia::testing
         }
       };
 
-      transition_checker<cmplx>::check(report(""), g, checker);
+      transition_checker<cmplx>::check(report(""), g, checkerFn);
     }
 
     {
-      auto checker{
+      auto checkerFn{
         [this](std::string_view description, cmplx obtained, cmplx prediction) {
           check(equality, {description, no_source_location}, obtained, prediction);
           check(within_tolerance{0.1}, {description, no_source_location}, obtained, prediction);
         }
       };
 
-      transition_checker<cmplx>::check(report(""), g, checker);
+      transition_checker<cmplx>::check(report(""), g, checkerFn);
     }
   }
 
@@ -183,13 +183,13 @@ namespace sequoia::testing
       {0.0, 1.1}
     };
 
-    auto checker{
+    auto checkerFn{
         [this](std::string_view description, double obtained, double prediction) {
           check(equality, {description, no_source_location}, obtained, prediction);
         }
     };
 
-    transition_checker<double>::check(report("Mistake in transition functions"), g, checker);
+    transition_checker<double>::check(report("Mistake in transition functions"), g, checkerFn);
   }
 
   void regular_state_transition_false_negative_diagnostics::test_equality_comparable()
@@ -206,13 +206,13 @@ namespace sequoia::testing
       {{0.0, 0.0}, cmplx{1.1, -0.7}}
     };
 
-    auto checker{
+    auto checkerFn{
         [this](std::string_view description, cmplx obtained, cmplx prediction) {
           check(equality, {description, no_source_location}, obtained, prediction);
         }
     };
 
-    transition_checker<cmplx>::check(report("Mistake in transition functions"), g, checker);
+    transition_checker<cmplx>::check(report("Mistake in transition functions"), g, checkerFn);
   }
 
   void regular_state_transition_false_negative_diagnostics::test_broken_constructor()

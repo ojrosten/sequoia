@@ -666,29 +666,25 @@ namespace sequoia::testing
       return edge_second_traversal_task<concurrency::thread_pool<int>>(graph, upper, 4u);
     };
 
-    auto answers{
-      [](const int upper) -> std::vector<int> {
-        std::vector<int> answers;
-
-        for(int i=0; i < 4; ++i)
-        {
-          const int shift = -i - 1;
-          answers.push_back((upper + shift)*(upper + shift + 1) / 2);
-        }
-
-        return answers;
-      }
+    const auto expected{
+        std::views::iota(0, 4)
+      | std::views::transform(
+          [upper](int i){
+             const int shift{-i - 1};
+	     return (upper + shift)*(upper + shift + 1) / 2;
+	  }
+	)
+     | std::ranges::to<std::vector>()
     };
 
     const std::vector<int>
       serialResults = serialFn(),
-      asyncResults = asyncFn(),
-      poolResults = poolFn(),
-      expected = answers(upper);
+      asyncResults  = asyncFn(),
+      poolResults   = poolFn();
 
-    check(equality, "Null edge first task expected", serialResults, expected);
-    check(equality, "Async edge first task expected", asyncResults, expected);
-    check(equality, "Pool edge first task expected", poolResults, expected);
+    check(equality, "Null edge first task expected" , serialResults, expected);
+    check(equality, "Async edge first task expected", asyncResults , expected);
+    check(equality, "Pool edge first task expected" , poolResults  , expected);
   }
 
   template<maths::dynamic_network Graph>

@@ -610,13 +610,13 @@ namespace sequoia::testing
       }
     };
 
-    auto checker{
+    auto checkerFn{
       [this](std::string_view description, const variant_t& obtained, const variant_t& prediction) {
         this->check(equality, description, obtained, prediction);
       }
     };
     
-    transition_checker<variant_t>::check("", g, checker);
+    transition_checker<variant_t>::check("", g, checkerFn);
   }
   
 

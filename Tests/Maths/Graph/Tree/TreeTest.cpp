@@ -116,14 +116,14 @@ namespace sequoia::testing
       } // end nodes
     };
 
-    auto checker{
+    auto checkerFn{
         [this](std::string_view description, const tree_type& obtained, const tree_type& prediction, const tree_type& parent) {
           check(equality, description, obtained, prediction);
           check_semantics(description, prediction, parent);
         }
     };
 
-    transition_checker_type::check(report(""), g, checker);
+    transition_checker_type::check(report(""), g, checkerFn);
   }
 
   template<maths::dynamic_tree Tree>
@@ -187,13 +187,13 @@ namespace sequoia::testing
       } // end nodes
     };
 
-    auto checker{
+    auto checkerFn{
         [this](std::string_view description, const tree_type& obtained, const tree_type& prediction, const tree_type& parent) {
           check(equality, description, obtained, prediction);
           check_semantics(description, prediction, parent);
         }
     };
 
-    transition_checker_type::check(report(""), g, checker);
+    transition_checker_type::check(report(""), g, checkerFn);
   }
 }

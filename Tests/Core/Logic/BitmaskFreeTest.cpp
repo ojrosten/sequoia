@@ -70,12 +70,12 @@ namespace sequoia::testing
       {mask::none, mask::a, mask::b, static_cast<mask>(3), mask::c, static_cast<mask>(5), static_cast<mask>(6), static_cast<mask>(7)}
     };
 
-    auto checker{
+    auto checkerFn{
         [this](std::string_view description, mask obtained, mask prediction) {
           check(equality, description, obtained, prediction);
         }
     };
 
-    transition_checker_t::check(report(""), g, checker);
+    transition_checker_t::check(report(""), g, checkerFn);
   }
 }

@@ -75,7 +75,7 @@ namespace sequoia::testing
     using edge_allocator = typename Graph::edge_allocator_type;
 
     auto nodeMaker{
-      [](Graph& g) { g.add_node(); }
+      [](Graph& gr) { gr.add_node(); }
     };
 
     Graph g2{};

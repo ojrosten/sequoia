@@ -94,7 +94,7 @@ namespace sequoia::testing
     using edge_init_t = typename Graph::edge_init_type;
 
     auto nodeMaker{
-      [](Graph& g) { g.add_node(); }
+      [](Graph& gr) { gr.add_node(); }
     };
 
     constexpr auto GraphFlavour{Graph::flavour};
