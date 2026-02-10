@@ -269,8 +269,8 @@ namespace sequoia
         if constexpr(!shared_weight_v && !is_directed(flavour))
         {
           auto partnerSetter{
-            [this](const_edge_iterator iter, auto&&... partnerArgs){
-              return this->set_partner_edge_weight(iter, std::forward<decltype(args)>(partnerArgs)...);
+            [this] <class... PartnerArgs> (const_edge_iterator iter, PartnerArgs&&... partnerArgs){
+              return this->set_partner_edge_weight(iter, std::forward<PartnerArgs>(partnerArgs)...);
             }
           };
 
