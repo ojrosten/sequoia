@@ -68,7 +68,7 @@ namespace sequoia::testing
   {
     using allocation_count_shifter<int>::shift;
 
-    static int shift(int count, const alloc_prediction<comparison_flavour::equality>&) noexcept
+    static int shift(int count, const alloc_prediction<comparison_flavour::equal>&) noexcept
     {
       if constexpr(with_msvc_v && (iterator_debug_level() > 0))
       {
@@ -132,7 +132,7 @@ namespace sequoia::testing
   {
     using allocation_count_shifter<int>::shift;
 
-    static int shift(int count, const alloc_prediction<comparison_flavour::inequality>&) noexcept
+    static int shift(int count, const alloc_prediction<comparison_flavour::not_equal>&) noexcept
     {
       if constexpr(with_msvc_v && (iterator_debug_level() > 0))
       {

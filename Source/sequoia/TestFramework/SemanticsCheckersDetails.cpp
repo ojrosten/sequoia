@@ -18,17 +18,17 @@ namespace sequoia::testing
   {
     switch(f)
     {
-    case comparison_flavour::equality:
+    case comparison_flavour::equal:
       return "==";
-    case comparison_flavour::inequality:
+    case comparison_flavour::not_equal:
       return "!=";
     case comparison_flavour::less_than:
       return "<";
     case comparison_flavour::greater_than:
       return ">";
-    case comparison_flavour::leq:
+    case comparison_flavour::less_equal:
       return "<=";
-    case comparison_flavour::geq:
+    case comparison_flavour::greater_equal:
       return ">=";
     case comparison_flavour::threeway:
       return "<=>";

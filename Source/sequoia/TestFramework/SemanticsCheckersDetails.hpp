@@ -72,17 +72,17 @@
 
 namespace sequoia::testing
 {
-  enum class comparison_flavour { equality, inequality, less_than, greater_than, leq, geq, threeway };
+  enum class comparison_flavour { equal, not_equal, less_than, greater_than, less_equal, greater_equal, threeway };
 
   template<comparison_flavour C>
   using comparison_constant = std::integral_constant<comparison_flavour, C>;
 
-  using equality_type     = comparison_constant<comparison_flavour::equality>;
-  using inequality_type   = comparison_constant<comparison_flavour::inequality>;
+  using equality_type     = comparison_constant<comparison_flavour::equal>;
+  using inequality_type   = comparison_constant<comparison_flavour::not_equal>;
   using less_than_type    = comparison_constant<comparison_flavour::less_than>;
   using greater_than_type = comparison_constant<comparison_flavour::greater_than>;
-  using leq_type          = comparison_constant<comparison_flavour::leq>;
-  using geq_type          = comparison_constant<comparison_flavour::geq>;
+  using leq_type          = comparison_constant<comparison_flavour::less_equal>;
+  using geq_type          = comparison_constant<comparison_flavour::greater_equal>;
   using threeway_type     = comparison_constant<comparison_flavour::threeway>;
 
   [[nodiscard]]

@@ -750,7 +750,7 @@ namespace sequoia::testing
       return shift_comparison(count);
     }
 
-    static int shift(int count, const alloc_prediction<comparison_flavour::geq>) noexcept
+    static int shift(int count, const alloc_prediction<comparison_flavour::greater_equal>) noexcept
     {
       return shift_comparison(count);
     }
@@ -760,7 +760,7 @@ namespace sequoia::testing
       return shift_comparison(count);
     }
 
-    static int shift(int count, const alloc_prediction<comparison_flavour::leq>&) noexcept
+    static int shift(int count, const alloc_prediction<comparison_flavour::less_equal>&) noexcept
     {
       return shift_comparison(count);
     }
