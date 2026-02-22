@@ -153,6 +153,7 @@
 #include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Meta/TypeAlgorithms.hpp"
+#include "sequoia/Maths/Algebra/Ratio.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <algorithm>
@@ -1807,7 +1808,7 @@ namespace sequoia::maths
   template<std::floating_point T, std::size_t D, basis Basis, class Arena=mathematical_arena>
   using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<T, D, Arena>, Basis>;
 
-  /** @brief Right-handed bases for arbitrary D, build recursively from 1D
+  /** @brief Right-handed bases for arbitrary D, built recursively from 1D
 
       In 1D, x is taken to run from left to right. Therefore, in 2D, y must go up
       and, building on this, in 3D z comes out from the page.
@@ -1829,7 +1830,42 @@ namespace sequoia::maths
   struct dual_of<canonical_right_handed_basis<dual<M>>>
   {
     using type = canonical_right_handed_basis<M>;
-  };   
+  };
+
+  template<class T>
+  struct dilatation;
+
+  template<auto Num, auto Den>
+  struct dilatation<ratio<Num, Den>>
+  {
+    using ratio_type = ratio<Num, Den>;
+  };
+
+  template<std::intmax_t Num, std::intmax_t Den>
+  struct dilatation<std::ratio<Num, Den>>
+  {
+    using ratio_type = std::ratio<Num, Den>;
+  };
+  
+  template<class...>
+  struct orthogonal_similarity;
+
+  template<class Ratio> // TO DO: reflections and rotations
+  struct orthogonal_similarity<dilatation<Ratio>>
+  {
+    using dilatation_type = dilatation<Ratio>;
+  };
+
+  template<class...>
+  struct orthogonal_basis;
+
+  template<free_module M, class Ratio, class ReferenceBasis>
+  struct orthogonal_basis<M, orthogonal_similarity<dilatation<Ratio>>, ReferenceBasis>
+  {
+    using reference_basis_type = ReferenceBasis;
+    using is_basis             = std::true_type;
+    using free_module_type     = M;
+  };
 
   template<std::floating_point T, std::size_t D, class Arena=mathematical_arena>
   using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<euclidean_vector_space<T, D, Arena>>, Arena>;

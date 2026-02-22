@@ -10,7 +10,6 @@
 /** \file */
 
 #include "sequoia/Physics/PhysicalValuesDetails.hpp"
-#include "sequoia/Maths/Algebra/Ratio.hpp"
 
 #include <numbers>
 
@@ -969,28 +968,13 @@ namespace sequoia::physics
   struct product<T, U, Vs...>
   {
     using tpye = product_t<product_t<T, U>, Vs...>;
-  };
-  
+  }; 
+
   template<class>
   struct inverse;
 
   template<class T>
   using inverse_t = inverse<T>::type;
-
-  template<class T>
-  struct dilatation;
-
-  template<auto Num, auto Den>
-  struct dilatation<ratio<Num, Den>>
-  {
-    using ratio_type = ratio<Num, Den>;
-  };
-
-  template<std::intmax_t Num, std::intmax_t Den>
-  struct dilatation<std::ratio<Num, Den>>
-  {
-    using ratio_type = std::ratio<Num, Den>;
-  };
 
   template<auto Num, auto Den>
   struct inverse<dilatation<ratio<Num, Den>>>
@@ -1003,7 +987,7 @@ namespace sequoia::physics
   {
     using type = dilatation<std::ratio<Den, Num>>;
   };
-
+  
   template<auto Displacement>
     requires arithmetic<std::remove_const_t<decltype(Displacement)>>
   struct translation
