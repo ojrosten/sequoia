@@ -1848,10 +1848,10 @@ namespace sequoia::maths
   };
   
   template<class...>
-  struct orthogonal_similarity;
+  struct orthogonal_similarity_transformation;
 
   template<class Ratio> // TO DO: reflections and rotations
-  struct orthogonal_similarity<dilatation<Ratio>>
+  struct orthogonal_similarity_transformation<dilatation<Ratio>>
   {
     using dilatation_type = dilatation<Ratio>;
   };
@@ -1860,7 +1860,7 @@ namespace sequoia::maths
   struct orthogonal_basis;
 
   template<free_module M, class Ratio, class ReferenceBasis>
-  struct orthogonal_basis<M, orthogonal_similarity<dilatation<Ratio>>, ReferenceBasis>
+  struct orthogonal_basis<M, orthogonal_similarity_transformation<dilatation<Ratio>>, ReferenceBasis>
   {
     using reference_basis_type = ReferenceBasis;
     using is_basis             = std::true_type;
