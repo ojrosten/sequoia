@@ -1859,7 +1859,7 @@ namespace sequoia::maths
   template<class...>
   struct orthogonal_basis;
 
-  template<free_module M, class Ratio, class ReferenceBasis>
+  template<free_module M, class Ratio, basis_for<M> ReferenceBasis>
   struct orthogonal_basis<M, orthogonal_similarity_transformation<dilatation<Ratio>>, ReferenceBasis>
   {
     using reference_basis_type = ReferenceBasis;
