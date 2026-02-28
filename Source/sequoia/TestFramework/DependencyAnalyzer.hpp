@@ -30,8 +30,8 @@ namespace sequoia::testing
     stamp_t time_stamp;
 
     friend std::ostream& operator<<(std::ostream& s, const prune_record& record) {
-      return s << ' ' << record.test_path //<< std::format("{}", record.time_stamp);
-               << std::chrono::duration_cast<std::chrono::nanoseconds>(record.time_stamp.time_since_epoch()).count();
+      return s <<  record.test_path //<< std::format("{}", record.time_stamp);
+               << ' ' << std::chrono::duration_cast<std::chrono::nanoseconds>(record.time_stamp.time_since_epoch()).count();
     }
 
     [[nodiscard]]
