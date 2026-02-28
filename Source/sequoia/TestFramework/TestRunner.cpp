@@ -262,7 +262,7 @@ namespace sequoia::testing
       {
         if(m_Filtered == is_filtered::yes)
         {
-          update_prune_files(m_ProjPaths, m_ExecutedTests, m_FailedTests, m_Id);
+          update_prune_files(m_ProjPaths, m_ExecutedTests, m_FailedTests, entry_time_stamp, m_Id);
         }
         else
         {

@@ -9,6 +9,7 @@
 
 /*! \file */
 
+#include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 
 namespace sequoia::testing
@@ -27,6 +28,9 @@ namespace sequoia::testing
     using opt_test_list   = std::optional<test_list>;
     using multi_test_list = std::vector<test_list>;
 
+    using prune_records     = std::vector<prune_record>;
+    using opt_prune_records = std::optional<prune_records>;
+
     enum class modification_time { very_early, early, late, very_late};
 
     struct updated_file
@@ -37,15 +41,15 @@ namespace sequoia::testing
 
     struct passing_tests
     {
-      std::vector<std::filesystem::path> tests{};
+      std::vector<prune_record> tests{};
       modification_time modification{modification_time::early};
     };
 
     struct test_outcomes
     {
-      test_outcomes(opt_test_list fail, opt_test_list pass);
+      test_outcomes(opt_prune_records fail, opt_prune_records pass);
 
-      opt_test_list failures{}, passes{};
+      opt_prune_records failures{}, passes{};
     };
 
     struct file_states
@@ -68,7 +72,7 @@ namespace sequoia::testing
                             const project_paths& projPaths,
                             std::string_view cutoff,
                             const file_states& fileStates,
-                            std::vector<std::filesystem::path> failures,
+                            std::vector<prune_record> failures,
                             passing_tests passes);
 
     void check_data(std::string_view description, const test_outcomes& obtained, const test_outcomes& prediction);
@@ -76,9 +80,9 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::chrono::seconds to_duration(modification_time modTime);
 
-    static auto read(const std::filesystem::path& file) -> opt_test_list;
+    static auto read(const std::filesystem::path& file) -> opt_prune_records;
 
-    static void write_or_remove(const project_paths& projPaths, const std::filesystem::path& file, const opt_test_list& tests);
+    static void write_or_remove(const project_paths& projPaths, const std::filesystem::path& file, const opt_prune_records& tests);
 
     static void write_or_remove(const project_paths& projPaths, const std::filesystem::path& failureFile, const std::filesystem::path& passesFile, const test_outcomes& d);
   };

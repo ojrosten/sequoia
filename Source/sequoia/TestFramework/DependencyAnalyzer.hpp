@@ -14,16 +14,43 @@
 
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
+#include <iostream>
+#include <format>
+#include <chrono>
+
 namespace sequoia::testing
 {
   enum class prune_mode { passive, active };
 
-  std::vector<std::filesystem::path>& read_tests(const std::filesystem::path& file, std::vector<std::filesystem::path>& tests);
+  struct prune_record
+  {
+    using stamp_t = std::filesystem::file_time_type;
+
+    std::filesystem::path test_path;
+    stamp_t time_stamp;
+
+    friend std::ostream& operator<<(std::ostream& s, const prune_record& record) {
+      return s << ' ' << record.test_path //<< std::format("{}", record.time_stamp);
+               << std::chrono::duration_cast<std::chrono::nanoseconds>(record.time_stamp.time_since_epoch()).count();
+    }
+
+    [[nodiscard]]
+    friend auto operator<=>(const prune_record&, const prune_record&) noexcept = default;
+
+    friend std::istream& operator>>(std::istream& s, prune_record& record) {      
+      std::int64_t duration{};      
+      s >> record.test_path >> duration;
+      
+      using duration_t = stamp_t::duration;
+      record.time_stamp += duration_t{duration};
+      return s;
+    }
+  };
 
   [[nodiscard]]
-  std::vector<std::filesystem::path> read_tests(const std::filesystem::path& file);
+  std::vector<prune_record> read_tests(const std::filesystem::path& file);
 
-  void write_tests(const project_paths& projPaths, const std::filesystem::path& file, const std::vector<std::filesystem::path>& tests);
+  void write_tests(const project_paths& projPaths, const std::filesystem::path& file, std::span<const prune_record> tests);
 
   [[nodiscard]]
   std::optional<std::vector<std::filesystem::path>> tests_to_run(const project_paths& projPaths, std::string_view cutoff);
@@ -34,8 +61,9 @@ namespace sequoia::testing
                           std::optional<std::size_t> id);
 
   void update_prune_files(const project_paths& projPaths,
-                          std::vector<std::filesystem::path> executedTests,
-                          std::vector<std::filesystem::path> failedTests,
+                          std::span<const std::filesystem::path> executedTests,
+                          std::span<const std::filesystem::path> failedTests,
+                          std::filesystem::file_time_type updateTime,
                           std::optional<std::size_t> id);
 
   void setup_instability_analysis_prune_folder(const project_paths& projPaths);

@@ -42,4 +42,12 @@ add_library(sequoia STATIC ${SourceList})
 
 target_include_directories(sequoia PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../)
 
+if (APPLE)
+    # Homebrew deploys libc++ along with the llvm package. We must point to it
+    # otherwise clang will use the header files of the package and link to
+    # system libc++. See llvm/llvm-project#155531 and Homebrew/homebrew-core#235411
+    target_link_directories(sequoia PUBLIC /opt/homebrew/opt/llvm@21/lib/c++)
+endif()
+
+
 sequoia_finalize_library(sequoia)

@@ -10,7 +10,6 @@
 #include "DependencyAnalyzerFreeTest.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
-#include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
 
@@ -30,9 +29,15 @@ namespace sequoia::testing
     constexpr auto latePassOffset{std::chrono::seconds{4}};   // late
     constexpr auto lateEditOffset{std::chrono::seconds{5}};   // very_late
     constexpr auto updatePruneOffset{std::chrono::seconds{5}};
+
+    struct path_projector
+    {
+      [[nodiscard]]
+      fs::path operator()(const prune_record& record) const { return record.test_path; }
+    };
   }
 
-  dependency_analyzer_free_test::test_outcomes::test_outcomes(opt_test_list fail, opt_test_list pass)
+  dependency_analyzer_free_test::test_outcomes::test_outcomes(opt_prune_records fail, opt_prune_records pass)
     : failures{std::move(fail)}
     , passes{std::move(pass)}
   {
@@ -59,14 +64,14 @@ namespace sequoia::testing
     throw std::logic_error{"Unrecognized option for modification_time"};
   }
 
-  auto dependency_analyzer_free_test::read(const fs::path& file) -> opt_test_list
+  auto dependency_analyzer_free_test::read(const fs::path& file) -> opt_prune_records
   {
     if(fs::exists(file)) return read_tests(file);
 
     return std::nullopt;
   }
 
-  void dependency_analyzer_free_test::write_or_remove(const project_paths& projPaths, const fs::path& file, const opt_test_list& tests)
+  void dependency_analyzer_free_test::write_or_remove(const project_paths& projPaths, const fs::path& file, const opt_prune_records& tests)
   {
     if(tests) write_tests(projPaths, file, tests.value());
     else      fs::remove(file);
@@ -88,10 +93,10 @@ namespace sequoia::testing
                                                          const project_paths& projPaths,
                                                          std::string_view cutoff,
                                                          const file_states& fileStates,
-                                                         std::vector<fs::path> failures,
+                                                         std::vector<prune_record> failures,
                                                          passing_tests passes)
   {
-    std::ranges::sort(failures);
+    std::ranges::sort(failures, {}, path_projector{});
     std::ranges::sort(passes.tests);
 
     const auto prune{projPaths.prune()};
@@ -417,6 +422,20 @@ namespace sequoia::testing
                        {});
   }
 
+  // TO DO: test the following scenario:
+  //
+  // Make a mod
+  // undo the mod
+  // build and run with prune --> passess file fully populated
+  // make a mod
+  // build and run with select
+  // undo the mod
+  // run with select
+  // run with prune --> fails to rerun tests
+
+  // To fix this, the entries in the  passes file need to be invalidated
+  // even if they are not run
+
   void dependency_analyzer_free_test::test_prune_update(const project_paths& projPaths)
   {
     const auto updateTime{m_ResetTime + updatePruneOffset};
@@ -440,7 +459,7 @@ namespace sequoia::testing
       [&](const test_outcomes& d, test_list executed, test_list failures) {
         write_or_remove(projPaths, failureFile, passesFile, d);
 
-        update_prune_files(projPaths, std::move(executed), std::move(failures), std::nullopt);
+        update_prune_files(projPaths, std::move(executed), std::move(failures), updateTime, std::nullopt);
         return test_outcomes{read(failureFile), {read(passesFile)}};
       }
     };
@@ -546,18 +565,18 @@ namespace sequoia::testing
       },
       {
         test_outcomes{std::nullopt, std::nullopt}, // 0
-        test_outcomes{test_list{}, std::nullopt}, // 1
-        test_outcomes{test_list{}, test_list{}}, // 2
+        test_outcomes{prune_records{}, std::nullopt}, // 1
+        test_outcomes{prune_records{}, prune_records{}}, // 2
         test_outcomes{{{{"HouseAllocationTest.cpp"}}}, std::nullopt}, // 3
-        test_outcomes{{{{"HouseAllocationTest.cpp"}}}, test_list{}}, // 4
-        test_outcomes{test_list{}, {{{"HouseAllocationTest.cpp"}}}}, // 5
+        test_outcomes{{{{"HouseAllocationTest.cpp"}}}, prune_records{}}, // 4
+        test_outcomes{prune_records{}, {{{"HouseAllocationTest.cpp"}}}}, // 5
         test_outcomes{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::nullopt}, // 6
-        test_outcomes{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, test_list{}}, // 7
+        test_outcomes{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, prune_records{}}, // 7
         test_outcomes{{{{"HouseAllocationTest.cpp"}}}, {{{"Maths/ProbabilityTest.cpp"}}}}, // 8
-        test_outcomes{{{{"HouseAllocationTest.cpp"}, {"Maybe/MaybeTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, test_list{}}, // 9
+        test_outcomes{{{{"HouseAllocationTest.cpp"}, {"Maybe/MaybeTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, prune_records{}}, // 9
         test_outcomes{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, {{{"Maybe/MaybeTest.cpp"}}}}, // 10
         test_outcomes{{{{"HouseAllocationTest.cpp"}}}, {{{"Maybe/MaybeTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}}, // 11
-        test_outcomes{test_list{}, {{{"Maybe/MaybeTest.cpp"}, {"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}} // 12
+        test_outcomes{prune_records{}, {{{"Maybe/MaybeTest.cpp"}, {"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}} // 12
       }
     };
 
@@ -610,7 +629,7 @@ namespace sequoia::testing
 
         for(std::size_t i{}; i < failures.size(); ++i)
         {
-          update_prune_files(projPaths, executed, std::move(failures[i]), i);
+          update_prune_files(projPaths, executed, std::move(failures[i]), updateTime, i);
         }
 
         aggregate_instability_analysis_prune_files(projPaths, prune_mode::passive, updateTime, failures.size());
@@ -677,13 +696,13 @@ namespace sequoia::testing
       },
       {
         test_outcomes{std::nullopt, std::nullopt}, //0
-        test_outcomes{test_list{}, std::nullopt}, // 1
-        test_outcomes{test_list{}, test_list{}}, // 2
+        test_outcomes{prune_records{}, std::nullopt}, // 1
+        test_outcomes{prune_records{}, prune_records{}}, // 2
         test_outcomes{{{{"HouseAllocationTest.cpp"}}}, std::nullopt}, // 3
-        test_outcomes{{{{"HouseAllocationTest.cpp"}}}, test_list{}}, // 4
-        test_outcomes{test_list{}, {{{"HouseAllocationTest.cpp"}}}}, // 5
+        test_outcomes{{{{"HouseAllocationTest.cpp"}}}, prune_records{}}, // 4
+        test_outcomes{prune_records{}, {{{"HouseAllocationTest.cpp"}}}}, // 5
         test_outcomes{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::nullopt}, // 6
-        test_outcomes{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, test_list{}} // 7
+        test_outcomes{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, prune_records{}} // 7
       }
     };
 

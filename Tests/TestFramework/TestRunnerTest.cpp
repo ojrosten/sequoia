@@ -12,6 +12,7 @@
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
 #include <fstream>
+#include <print>
 
 namespace sequoia::testing
 {
@@ -392,7 +393,9 @@ namespace sequoia::testing
       [this]() {
         std::stringstream outputStream{};
         commandline_arguments args{{zeroth_arg()}};
+        std::println("0000000");
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{""}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
+        std::println("00000001");
       });
 
     check_exception_thrown<std::runtime_error>(
