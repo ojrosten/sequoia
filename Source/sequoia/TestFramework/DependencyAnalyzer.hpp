@@ -24,24 +24,25 @@ namespace sequoia::testing
 
   struct prune_record
   {
-    using stamp_t = std::filesystem::file_time_type;
+    using stamp_t    = std::filesystem::file_time_type;
+    using duration_t = std::chrono::microseconds;
 
     std::filesystem::path test_path;
     stamp_t time_stamp;
 
     friend std::ostream& operator<<(std::ostream& s, const prune_record& record) {
-      return s <<  record.test_path //<< std::format("{}", record.time_stamp);
-               << ' ' << std::chrono::duration_cast<std::chrono::nanoseconds>(record.time_stamp.time_since_epoch()).count();
+      return s <<  record.test_path
+               << ' '
+               << std::chrono::duration_cast<duration_t>(record.time_stamp.time_since_epoch()).count();
     }
 
     [[nodiscard]]
     friend auto operator<=>(const prune_record&, const prune_record&) noexcept = default;
 
-    friend std::istream& operator>>(std::istream& s, prune_record& record) {      
-      std::int64_t duration{};      
+    friend std::istream& operator>>(std::istream& s, prune_record& record) { 
+      std::int64_t duration{};
       s >> record.test_path >> duration;
       
-      using duration_t = std::chrono::nanoseconds;
       record.time_stamp = {stamp_t{} + duration_t{duration}};
       return s;
     }
