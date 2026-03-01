@@ -634,10 +634,10 @@ namespace sequoia::testing
     const auto previousFailures{read_tests(failuresFile)};
 
     std::vector<prune_record> remainingPreviousFailures{};
-    std::ranges::set_difference(previousFailures, passingTests, std::back_inserter(remainingPreviousFailures));
+    std::ranges::set_difference(previousFailures, passingTests, std::back_inserter(remainingPreviousFailures), {}, path_projector{}, path_projector{});
 
     std::vector<prune_record> allFailures{};
-    std::ranges::set_union(remainingPreviousFailures, failedTests, std::back_inserter(allFailures));
+    std::ranges::set_union(remainingPreviousFailures, failedTests, std::back_inserter(allFailures), {}, path_projector{}, path_projector{});
 
     write_tests(projPaths, failuresFile, allFailures);
     write_tests(projPaths, passesFile, passingTests);
