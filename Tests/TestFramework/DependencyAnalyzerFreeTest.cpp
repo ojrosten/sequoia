@@ -117,7 +117,7 @@ namespace sequoia::testing
     opt_test_list prediction{fileStates.to_run};
     std::ranges::sort(*prediction);
 
-    check(equality, "description", actual, prediction);
+    check(equality, description, actual, prediction);
 
     for(const auto& f : fileStates.stale)
     {
