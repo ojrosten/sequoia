@@ -41,8 +41,8 @@ namespace sequoia::testing
       std::int64_t duration{};      
       s >> record.test_path >> duration;
       
-      using duration_t = stamp_t::duration;
-      record.time_stamp += duration_t{duration};
+      using duration_t = std::chrono::nanoseconds;
+      record.time_stamp = {stamp_t{} + duration_t{duration}};
       return s;
     }
   };

@@ -567,16 +567,16 @@ namespace sequoia::testing
         test_outcomes{std::nullopt, std::nullopt}, // 0
         test_outcomes{prune_records{}, std::nullopt}, // 1
         test_outcomes{prune_records{}, prune_records{}}, // 2
-        test_outcomes{{{{"HouseAllocationTest.cpp"}}}, std::nullopt}, // 3
-        test_outcomes{{{{"HouseAllocationTest.cpp"}}}, prune_records{}}, // 4
-        test_outcomes{prune_records{}, {{{"HouseAllocationTest.cpp"}}}}, // 5
-        test_outcomes{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::nullopt}, // 6
-        test_outcomes{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, prune_records{}}, // 7
-        test_outcomes{{{{"HouseAllocationTest.cpp"}}}, {{{"Maths/ProbabilityTest.cpp"}}}}, // 8
-        test_outcomes{{{{"HouseAllocationTest.cpp"}, {"Maybe/MaybeTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, prune_records{}}, // 9
-        test_outcomes{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, {{{"Maybe/MaybeTest.cpp"}}}}, // 10
-        test_outcomes{{{{"HouseAllocationTest.cpp"}}}, {{{"Maybe/MaybeTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}}, // 11
-        test_outcomes{prune_records{}, {{{"Maybe/MaybeTest.cpp"}, {"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}} // 12
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, std::nullopt}, // 3
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, prune_records{}}, // 4
+        test_outcomes{prune_records{}, {{{"HouseAllocationTest.cpp", updateTime}}}}, // 5
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, std::nullopt}, // 6
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, prune_records{}}, // 7
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, {{{"Maths/ProbabilityTest.cpp", updateTime}}}}, // 8
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maybe/MaybeTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, prune_records{}}, // 9
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, {{{"Maybe/MaybeTest.cpp", updateTime}}}}, // 10
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, {{{"Maybe/MaybeTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}}, // 11
+        test_outcomes{prune_records{}, {{{"Maybe/MaybeTest.cpp", updateTime}, {"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}} // 12
       }
     };
 
@@ -698,11 +698,11 @@ namespace sequoia::testing
         test_outcomes{std::nullopt, std::nullopt}, //0
         test_outcomes{prune_records{}, std::nullopt}, // 1
         test_outcomes{prune_records{}, prune_records{}}, // 2
-        test_outcomes{{{{"HouseAllocationTest.cpp"}}}, std::nullopt}, // 3
-        test_outcomes{{{{"HouseAllocationTest.cpp"}}}, prune_records{}}, // 4
-        test_outcomes{prune_records{}, {{{"HouseAllocationTest.cpp"}}}}, // 5
-        test_outcomes{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, std::nullopt}, // 6
-        test_outcomes{{{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}, prune_records{}} // 7
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, std::nullopt}, // 3
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, prune_records{}}, // 4
+        test_outcomes{prune_records{}, {{{"HouseAllocationTest.cpp", updateTime}}}}, // 5
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, std::nullopt}, // 6
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, prune_records{}} // 7
       }
     };
 
