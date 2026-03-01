@@ -31,7 +31,7 @@ namespace sequoia::testing
     stamp_t time_stamp;
 
     friend std::ostream& operator<<(std::ostream& s, const prune_record& record) {
-      return s <<  record.test_path
+      return s <<  record.test_path.generic_string()
                << ' '
                << std::chrono::duration_cast<duration_t>(record.time_stamp.time_since_epoch()).count();
     }
@@ -39,10 +39,10 @@ namespace sequoia::testing
     [[nodiscard]]
     friend auto operator<=>(const prune_record&, const prune_record&) noexcept = default;
 
-    friend std::istream& operator>>(std::istream& s, prune_record& record) { 
+    friend std::istream& operator>>(std::istream& s, prune_record& record) {
       std::int64_t duration{};
       s >> record.test_path >> duration;
-      
+
       record.time_stamp = {stamp_t{} + duration_t{duration}};
       return s;
     }
