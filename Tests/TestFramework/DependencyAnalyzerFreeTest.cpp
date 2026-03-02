@@ -94,18 +94,19 @@ namespace sequoia::testing
                                                          std::string_view cutoff,
                                                          const file_states& fileStates,
                                                          std::vector<prune_record> failures,
-                                                         passing_tests passes)
+                                                         std::vector<prune_record> passes)
   {
-    std::ranges::sort(failures, {}, path_projector{});
-    std::ranges::sort(passes.tests);
+    std::ranges::sort(failures);
+    std::ranges::sort(passes);
 
     const auto prune{projPaths.prune()};
     const auto failureFile{prune.failures(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
     write_tests(projPaths, failureFile, failures);
-    write_tests(projPaths, passesFile, passes.tests);
+    write_tests(projPaths, passesFile, passes);
 
-    fs::last_write_time(passesFile, m_ResetTime + to_duration(passes.modification));
+    if(!passes.empty())
+      fs::last_write_time(passesFile, std::ranges::max(passes, {}, [](const prune_record& r){ return r.time_stamp; }).time_stamp);
 
     for(const auto& f : fileStates.stale)
     {
@@ -217,14 +218,14 @@ namespace sequoia::testing
                        "namespace",
                        {.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{}},
                        {},
-                       {{{"HouseAllocationTest.cpp", m_ResetTime + to_duration(modification_time::late)}}, modification_time::late});
+                       {{"HouseAllocationTest.cpp", m_ResetTime + to_duration(modification_time::late)}});
 
     check_tests_to_run("Test cpp stale; has previously passed (when selected), but this should be ignored",
                        projPaths,
                        "namespace",
                        {.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}},
                        {},
-                       {{{"HouseAllocationTest.cpp", m_ResetTime + to_duration(modification_time::very_early)}}, modification_time::very_early});
+                       {{"HouseAllocationTest.cpp", m_ResetTime + to_duration(modification_time::very_early)}});
 
     check_tests_to_run("Test hpp stale (no cutoff)",
                        projPaths,
@@ -262,7 +263,7 @@ namespace sequoia::testing
                        {.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
                          .to_run{{"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}}},
                        {},
-                       {{{"Maybe/MaybeTest.cpp", m_ResetTime + to_duration(modification_time::late)}}, modification_time::late});
+                       {{"Maybe/MaybeTest.cpp", m_ResetTime + to_duration(modification_time::late)}});
 
     check_tests_to_run("Reused utils stale, but two of the tests have passed",
                        projPaths,
@@ -270,19 +271,17 @@ namespace sequoia::testing
                        {.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
                          .to_run{{"Stuff/OldschoolTestingDiagnostics.cpp"}}},
                        {},
-                       {{{"Maybe/MaybeTest.cpp"    , m_ResetTime + to_duration(modification_time::late)},
-                         {"Stuff/OldschoolTest.cpp", m_ResetTime + to_duration(modification_time::late)}},
-                        modification_time::late});
+                       {{"Maybe/MaybeTest.cpp"    , m_ResetTime + to_duration(modification_time::late)},
+                        {"Stuff/OldschoolTest.cpp", m_ResetTime + to_duration(modification_time::late)}});
 
     check_tests_to_run("Reused utils stale, but two of the tests have passed and a different one has failed",
                        projPaths,
                        "namespace",
                        {.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
                          .to_run{{"Stuff/OldschoolTestingDiagnostics.cpp"}, {"HouseAllocationTest.cpp"}}},
-                       {{"HouseAllocationTest.cpp", m_ResetTime + to_duration(modification_time::late)}},
-                       {{{"Maybe/MaybeTest.cpp"    , m_ResetTime + to_duration(modification_time::late)},
-                         {"Stuff/OldschoolTest.cpp", m_ResetTime + to_duration(modification_time::late)}},
-                        modification_time::late});
+                       {{"HouseAllocationTest.cpp" , m_ResetTime + to_duration(modification_time::late)}},
+                       {{"Maybe/MaybeTest.cpp"    , m_ResetTime + to_duration(modification_time::late)},
+                        {"Stuff/OldschoolTest.cpp", m_ResetTime + to_duration(modification_time::late)}});
 
     check_tests_to_run("Reused utils stale, relative path",
                        projPaths,
@@ -314,9 +313,8 @@ namespace sequoia::testing
                        {.stale{{{sourceRepo / "Maths" / "Probability.hpp"}, modification_time::early}},
                          .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
                        {},
-                       {{{"Maths/ProbabilityTest.cpp"              , m_ResetTime + to_duration(modification_time::very_early)},
-                         {"Maths/ProbabilityTestingDiagnostics.cpp", m_ResetTime + to_duration(modification_time::very_early)}},
-                        modification_time::very_early});
+                       {{"Maths/ProbabilityTest.cpp"              , m_ResetTime + to_duration(modification_time::very_early)},
+                        {"Maths/ProbabilityTestingDiagnostics.cpp", m_ResetTime + to_duration(modification_time::very_early)}});
 
     check_tests_to_run("Source cpp stale, following a previously successful run",
                        projPaths,
@@ -324,9 +322,8 @@ namespace sequoia::testing
                        {.stale{{{sourceRepo / "Maths" / "Probability.cpp"}, modification_time::early}},
                          .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
                        {},
-                       {{{"Maths/ProbabilityTest.cpp"              , m_ResetTime + to_duration(modification_time::very_early)},
-                         {"Maths/ProbabilityTestingDiagnostics.cpp", m_ResetTime + to_duration(modification_time::very_early)}},
-                        modification_time::very_early});
+                       {{"Maths/ProbabilityTest.cpp"              , m_ResetTime + to_duration(modification_time::very_early)},
+                        {"Maths/ProbabilityTestingDiagnostics.cpp", m_ResetTime + to_duration(modification_time::very_early)}});
 
     check_tests_to_run("Source cpp indirectly stale via included header",
                        projPaths,
@@ -382,7 +379,7 @@ namespace sequoia::testing
                        {.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
                          .to_run{}},
                        {},
-                       {{{"Stuff/FooTest.cpp", m_ResetTime + to_duration(modification_time::late)}}, modification_time::late});
+                       {{"Stuff/FooTest.cpp", m_ResetTime + to_duration(modification_time::late)}});
 
     check_tests_to_run("Materials stale; test previously passed (when selected), but materials subsequently modified",
                        projPaths,
@@ -390,7 +387,7 @@ namespace sequoia::testing
                        {.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
                          .to_run{{"Stuff/FooTest.cpp"}}},
                        {},
-                       {{{"Stuff/FooTest.cpp", m_ResetTime + to_duration(modification_time::very_early)}}, modification_time::very_early});
+                       {{"Stuff/FooTest.cpp", m_ResetTime + to_duration(modification_time::very_early)}});
 
     check_tests_to_run("Materials stale; test previously passed (when selected); materials subsequently modified some early some late",
                        projPaths,
@@ -399,7 +396,7 @@ namespace sequoia::testing
                                 {{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz2.txt"}, modification_time::very_late}},
                          .to_run{{"Stuff/FooTest.cpp"}}},
                        {},
-                       {{{"Stuff/FooTest.cpp", m_ResetTime + to_duration(modification_time::late)}}, modification_time::late});
+                       {{"Stuff/FooTest.cpp", m_ResetTime + to_duration(modification_time::late)}});
 
     check_tests_to_run("Nothing stale, but a previous failure",
                        projPaths,
@@ -413,7 +410,7 @@ namespace sequoia::testing
                        "namespace",
                        {.stale{}, .to_run{{"Maths/ProbabilityTest.cpp"}}},
                        {{"Maths/ProbabilityTest.cpp" , m_ResetTime + to_duration(modification_time::late)}},
-                       {{{"Maths/ProbabilityTest.cpp", m_ResetTime + to_duration(modification_time::late)}}, modification_time::late});
+                       {{"Maths/ProbabilityTest.cpp", m_ResetTime + to_duration(modification_time::late)}});
 
     check_tests_to_run("Stale and a previous failure",
                        projPaths,
@@ -439,9 +436,8 @@ namespace sequoia::testing
                          .to_run{{"HouseAllocationTest.cpp"}}
                        },
                        {},
-                       {{{"HouseAllocationTest.cpp"  , m_ResetTime + to_duration(modification_time::very_early)},
-                         {"Maths/ProbabilityTest.cpp", m_ResetTime + to_duration(modification_time::late)}},
-                        modification_time::late});
+                       {{"HouseAllocationTest.cpp"  , m_ResetTime + to_duration(modification_time::very_early)},
+                        {"Maths/ProbabilityTest.cpp", m_ResetTime + to_duration(modification_time::late)}});
 
   }
 

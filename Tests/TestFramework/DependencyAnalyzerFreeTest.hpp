@@ -39,12 +39,6 @@ namespace sequoia::testing
       modification_time modification{modification_time::early};
     };
 
-    struct passing_tests
-    {
-      std::vector<prune_record> tests{};
-      modification_time modification{modification_time::early};
-    };
-
     struct test_outcomes
     {
       test_outcomes(opt_prune_records fail, opt_prune_records pass);
@@ -73,7 +67,7 @@ namespace sequoia::testing
                             std::string_view cutoff,
                             const file_states& fileStates,
                             std::vector<prune_record> failures,
-                            passing_tests passes);
+                            std::vector<prune_record> passes);
 
     void check_data(std::string_view description, const test_outcomes& obtained, const test_outcomes& prediction);
 
