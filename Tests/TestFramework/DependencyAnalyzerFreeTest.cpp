@@ -29,12 +29,6 @@ namespace sequoia::testing
     constexpr auto latePassOffset{std::chrono::seconds{4}};   // late
     constexpr auto lateEditOffset{std::chrono::seconds{5}};   // very_late
     constexpr auto updatePruneOffset{std::chrono::seconds{5}};
-
-    struct path_projector
-    {
-      [[nodiscard]]
-      fs::path operator()(const prune_record& record) const { return record.test_path; }
-    };
   }
 
   dependency_analyzer_free_test::test_outcomes::test_outcomes(opt_prune_records fail, opt_prune_records pass)
