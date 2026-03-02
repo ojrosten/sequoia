@@ -15,8 +15,9 @@
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
 #include <iostream>
-#include <format>
 #include <chrono>
+#include <format>
+#include <limits>
 
 namespace sequoia::testing
 {
@@ -25,22 +26,22 @@ namespace sequoia::testing
   struct prune_record
   {
     using stamp_t    = std::filesystem::file_time_type;
-    using duration_t = std::chrono::microseconds;
+    using duration_t = stamp_t::duration;
 
     std::filesystem::path test_path;
     stamp_t time_stamp;
 
-    friend std::ostream& operator<<(std::ostream& s, const prune_record& record) {
+    friend std::ostream& operator<<(std::ostream& s, const prune_record& record) {      
       return s <<  record.test_path.generic_string()
                << ' '
-               << std::chrono::duration_cast<duration_t>(record.time_stamp.time_since_epoch()).count();
+               << std::format("{}", record.time_stamp.time_since_epoch().count());
     }
 
     [[nodiscard]]
     friend auto operator<=>(const prune_record&, const prune_record&) noexcept = default;
 
     friend std::istream& operator>>(std::istream& s, prune_record& record) {
-      std::int64_t duration{};
+      std::size_t duration{};
       s >> record.test_path >> duration;
 
       record.time_stamp = {stamp_t{} + duration_t{duration}};
