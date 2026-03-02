@@ -66,16 +66,8 @@ namespace sequoia::testing
     [[nodiscard]]
     bool in_repo(const fs::path& file, const fs::path& repo)
     {
-      if(std::ranges::distance(repo) >= std::ranges::distance(file)) return false;
-
-      auto fIter{file.begin()}, rIter{repo.begin()};
-      while(rIter != repo.end())
-      {
-        if(*fIter++ != *rIter++)
-          return false;
-      }
-
-      return true;
+      auto zipped{std::views::zip(file, repo)};
+      return std::ranges::find_if(zipped, [](const auto& e) { return std::get<0>(e) != std::get<1>(e); }) == zipped.end();
     }
 
     [[nodiscard]]
@@ -155,7 +147,7 @@ namespace sequoia::testing
           }
           else if(c == '#')
           {
-            // Bug here with #endif
+            // TO DO: Bug here with #endif
             const auto followsHash{from_stream(ifile, " \n")};
             if(followsHash == "include")
             {
