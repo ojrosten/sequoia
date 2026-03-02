@@ -341,10 +341,11 @@ namespace sequoia::testing
 
     void consider_passing_tests(node_iterator i,
                                 const fs::path& relFilePath,
-                                const std::vector<prune_record>& passingTests)
+                                const std::vector<prune_record>& passingTests,
+                                fs::file_time_type maxModificationTime)
     {
       auto iter{std::ranges::lower_bound(passingTests, relFilePath, {}, path_projector{})};
-      if((iter != passingTests.end()) && (iter->test_path == relFilePath))
+      if((iter != passingTests.end()) && (iter->test_path == relFilePath) && (iter->time_stamp > maxModificationTime))
       {
         i->stale = false;
       }
@@ -431,8 +432,8 @@ namespace sequoia::testing
 
             const auto maxModificationTime{materialsWriteTime ? std::ranges::max(materialsWriteTime.value(), weight.implicit_modification_time) : weight.implicit_modification_time};
 
-            if(weight.stale && (passesStamp.value() >= maxModificationTime))
-              consider_passing_tests(i, relPath, passingTestsFromFile);
+            if(weight.stale && (passesStamp.value() > maxModificationTime))
+              consider_passing_tests(i, relPath, passingTestsFromFile, maxModificationTime);
           }
           else if(!weight.stale)
           {

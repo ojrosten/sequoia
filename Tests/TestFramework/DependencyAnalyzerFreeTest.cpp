@@ -80,7 +80,7 @@ namespace sequoia::testing
   void dependency_analyzer_free_test::write_or_remove(const project_paths& projPaths, const fs::path& failureFile, const fs::path& passesFile, const test_outcomes& d)
   {
     write_or_remove(projPaths, failureFile, d.failures);
-    write_or_remove(projPaths, passesFile, d.passes);
+    write_or_remove(projPaths, passesFile , d.passes);
   }
 
   [[nodiscard]]
@@ -429,21 +429,21 @@ namespace sequoia::testing
                        {{"HouseAllocationTest.cpp"  , m_ResetTime + to_duration(modification_time::late)},
                         {"Maths/ProbabilityTest.cpp", m_ResetTime + to_duration(modification_time::late)}},
                        {});
+
+    check_tests_to_run("Ensure that the staleness of a cpp isn't masked by a cpp which has freshly passed",
+                       projPaths,
+                       "namespace",
+                       {
+                         .stale{{{testRepo / "HouseAllocationTest.cpp"}  , modification_time::early},
+                                {{testRepo / "Maths/ProbabilityTest.cpp"}, modification_time::early}},
+                         .to_run{{"HouseAllocationTest.cpp"}}
+                       },
+                       {},
+                       {{{"HouseAllocationTest.cpp"  , m_ResetTime + to_duration(modification_time::very_early)},
+                         {"Maths/ProbabilityTest.cpp", m_ResetTime + to_duration(modification_time::late)}},
+                        modification_time::late});
+
   }
-
-  // TO DO: test the following scenario:
-  //
-  // Make a mod
-  // undo the mod
-  // build and run with prune --> passess file fully populated
-  // make a mod
-  // build and run with select
-  // undo the mod
-  // run with select
-  // run with prune --> fails to rerun tests
-
-  // To fix this, the entries in the  passes file need to be invalidated
-  // even if they are not run
 
   void dependency_analyzer_free_test::test_prune_update(const project_paths& projPaths)
   {
