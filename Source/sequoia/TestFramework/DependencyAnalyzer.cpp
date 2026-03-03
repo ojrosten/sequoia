@@ -341,7 +341,7 @@ namespace sequoia::testing
 
     void consider_passing_tests(node_iterator i,
                                 const fs::path& relFilePath,
-                                const std::vector<prune_record>& passingTests,
+                                std::span<const prune_record> passingTests,
                                 fs::file_time_type maxModificationTime)
     {
       auto iter{std::ranges::lower_bound(passingTests, relFilePath, {}, path_projector{})};
