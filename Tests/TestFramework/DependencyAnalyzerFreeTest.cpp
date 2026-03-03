@@ -28,7 +28,6 @@ namespace sequoia::testing
     constexpr auto lateExecutableOffset{std::chrono::seconds{3}};
     constexpr auto latePassOffset{std::chrono::seconds{4}};   // late
     constexpr auto lateEditOffset{std::chrono::seconds{5}};   // very_late
-    constexpr auto updatePruneOffset{std::chrono::seconds{5}};
   }
 
   dependency_analyzer_free_test::test_outcomes::test_outcomes(opt_prune_records fail, opt_prune_records pass)
@@ -437,7 +436,7 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::test_prune_update(const project_paths& projPaths)
   {
-    const auto updateTime{m_ResetTime + updatePruneOffset};
+    const auto updateTime{m_ResetTime};
     const auto prune{projPaths.prune()};
     const auto failureFile{prune.failures(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
@@ -608,7 +607,7 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::test_instability_analysis_prune_upate(const project_paths& projPaths)
   {
-    const auto updateTime{m_ResetTime + updatePruneOffset};
+    const auto updateTime{m_ResetTime};
     const auto prune{projPaths.prune()};
     const auto failureFile{prune.failures(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
