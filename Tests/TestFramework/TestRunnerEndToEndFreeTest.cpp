@@ -33,17 +33,6 @@ namespace sequoia::testing
       return with_msvc_v ? "TestAll.exe" : "./TestAll";
     }
 
-    // For reasons I haven't thus far been able to divine, this test has
-    // some instabilities on mac m series without some judiciously placed
-    // pauses. They seem to be associated with file writing, suggesting that
-    // perhaps the last write timestamp is inaccurate (?)
-    void pause_for_mac_m_series([[maybe_unused]] std::chrono::milliseconds num)
-    {
-      #ifdef __APPLE__
-        std::this_thread::sleep_for(num);
-      #endif
-    }
-
     [[nodiscard]]
     std::string create_cmd()
     {
@@ -110,8 +99,6 @@ namespace sequoia::testing
       && cmake_cmd(get_build_paths(), cmakeOutput)
       && build_cmd(get_build_paths(), buildOutput)
     );
-    
-    pause_for_mac_m_series(750ms);
 
     run_executable(outputDir, options);
   }
@@ -125,8 +112,6 @@ namespace sequoia::testing
          cd_cmd(get_build_paths().executable_dir())
       && shell_command("", run_cmd().append(" ").append(options), outputDir / "TestRunOutput.txt")
     );
-
-    //invoke(cd_cmd(m_Main.dir()) && testing::build_and_run_cmd(m_Build, outputDir / "TestRunOutput.txt"));
   }
 
   [[nodiscard]]
@@ -173,7 +158,6 @@ namespace sequoia::testing
     fs::create_directory(working_materials() /= "CreationOutput");
     fs::create_directory(working_materials() /= "Output");
 
-    pause_for_mac_m_series(250ms);
     b.create_build_run(working_materials() /= "CreationOutput", "BuildOutput2.txt", working_materials() /= "Output");
 
     check(equivalence, description, working_materials() /= "CreationOutput", predictive_materials() /= "CreationOutput");
