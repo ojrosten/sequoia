@@ -487,6 +487,10 @@ namespace sequoia::testing
                  "Nothing executed, filtered",
                  [update_filtered](const test_outcomes& d) { return update_filtered(d, {}, {}); }
           },
+          edge_t{empty_fails_null_passes,
+                 "Nothing executed, unfiltered",
+                 [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {}); }
+          },
           edge_t{house_fails_null_passes,
                  "A single failure, unfiltered",
                  [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{"HouseAllocationTest.cpp"}}); }
