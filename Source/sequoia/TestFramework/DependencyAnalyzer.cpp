@@ -564,39 +564,39 @@ namespace sequoia::testing
                           std::vector<prune_record> failedTests,
                           std::optional<std::size_t> id)
     {
-      std::ranges::sort(executedTests, {}, path_projector{});
-    
+      auto comparator{
+        [](const prune_record& lhs, const prune_record& rhs) {
+          return (lhs.test_path < rhs.test_path) && (lhs.time_stamp > rhs.time_stamp);
+        }
+      };
+
+      auto to_unique_range{
+        [](std::vector<prune_record>& r) {
+          auto erased{std::ranges::unique(r, {}, path_projector{})};
+          r.erase(erased.begin(), erased.end());
+        }
+      };
+      
+      std::ranges::sort(executedTests, comparator);
+      to_unique_range(executedTests);
+          
       const auto prunePaths{prepare(projPaths, failedTests)};
       const auto passesFile{prunePaths.selected_passes(id)},
                  failuresFile{prunePaths.failures(id)};
 
-      const auto previousPasses{read_tests(passesFile)};
       std::vector<prune_record> trialPasses{};
-
-      std::ranges::set_union(
-                             executedTests,
-                             previousPasses,
-                             std::back_inserter(trialPasses),
-                             {},
-                             path_projector{},
-                             path_projector{});
+      std::ranges::set_union(executedTests, read_tests(passesFile), std::back_inserter(trialPasses));
+      to_unique_range(trialPasses);
 
       std::vector<prune_record> passingTests{};
-      std::ranges::set_difference(
-                                  trialPasses,
-                                  failedTests,
-                                  std::back_inserter(passingTests),
-                                  {},
-                                  path_projector{},
-                                  path_projector{});
-
-      const auto previousFailures{read_tests(failuresFile)};
+      std::ranges::set_difference(trialPasses, failedTests, std::back_inserter(passingTests), {}, path_projector{}, path_projector{});
 
       std::vector<prune_record> remainingPreviousFailures{};
-      std::ranges::set_difference(previousFailures, passingTests, std::back_inserter(remainingPreviousFailures), {}, path_projector{}, path_projector{});
+      std::ranges::set_difference(read_tests(failuresFile), passingTests, std::back_inserter(remainingPreviousFailures), {}, path_projector{}, path_projector{});
 
       std::vector<prune_record> allFailures{};
-      std::ranges::set_union(remainingPreviousFailures, failedTests, std::back_inserter(allFailures), {}, path_projector{}, path_projector{});
+      std::ranges::set_union(remainingPreviousFailures, failedTests, std::back_inserter(allFailures));
+      to_unique_range(remainingPreviousFailures);
 
       write_tests(projPaths, failuresFile, allFailures);
       write_tests(projPaths, passesFile, passingTests);
