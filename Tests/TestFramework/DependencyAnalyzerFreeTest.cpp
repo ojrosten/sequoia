@@ -478,7 +478,7 @@ namespace sequoia::testing
       house_prob_fails_maybe_passes,
       house_fails_maybe_prob_passes,
       empty_fails_maybe_house_prob_passes,
-      house_fails_late_null_passes
+      house_fails_late_empty_passes
     };
 
     const prune_graph g{
@@ -529,10 +529,11 @@ namespace sequoia::testing
                  "Two additional passes, filtered",
                  [update_filtered, updateTime](const test_outcomes& d) { return update_filtered(d, {{"Maths/ProbabilityTest.cpp"}, {"Maybe/MaybeTest.cpp"}}, {}, updateTime); }
           },
-          /*edge_t{house_fails_late_null_passes,
+          edge_t{house_fails_late_empty_passes,
                  "The same test, failing later",
-                 [update_filtered, lateUpdateTime](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{"HouseAllocationTest.cpp"}}, lateUpdateTime); }
-                 },*/
+                 [update_filtered, lateUpdateTime](const test_outcomes& d) {
+        return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{"HouseAllocationTest.cpp"}}, lateUpdateTime); }
+          },
         }, // End   house_fails_null_passes
         {  // Begin house_fails_empty_passes
         }, // End   house_fails_empty_passes
@@ -609,7 +610,7 @@ namespace sequoia::testing
         test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, {{{"Maybe/MaybeTest.cpp", updateTime}}}},
         test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, {{{"Maybe/MaybeTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}},
         test_outcomes{prune_records{}, {{{"Maybe/MaybeTest.cpp", updateTime}, {"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}},
-        test_outcomes{{{{"HouseAllocationTest.cpp", lateUpdateTime}}}, std::nullopt}
+        test_outcomes{{{{"HouseAllocationTest.cpp", lateUpdateTime}}}, prune_records{}}
       }
     };
 
