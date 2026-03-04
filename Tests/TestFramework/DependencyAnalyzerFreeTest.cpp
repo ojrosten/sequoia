@@ -444,7 +444,7 @@ namespace sequoia::testing
     using prune_graph = transition_checker<test_outcomes>::transition_graph;
     using edge_t = transition_checker<test_outcomes>::edge;
 
-    auto update_with_prune{
+    auto update_unfiltered{
       [&](const test_outcomes& d, test_list failures) {
         write_or_remove(projPaths, failureFile, passesFile, d);
 
@@ -484,42 +484,42 @@ namespace sequoia::testing
     const prune_graph g{
       {
         { edge_t{empty_fails_empty_passes,
-                 "Nothing executed, with select",
+                 "Nothing executed, filtered",
                  [update_filtered](const test_outcomes& d) { return update_filtered(d, {}, {}); }
           },
           edge_t{house_fails_null_passes,
-                 "A single failure, with prune",
-                 [update_with_prune](const test_outcomes& d) { return update_with_prune(d, {{"HouseAllocationTest.cpp"}}); }
+                 "A single failure, unfiltered",
+                 [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{"HouseAllocationTest.cpp"}}); }
           },
           edge_t{house_fails_empty_passes,
-                 "A single failure, with select",
+                 "A single failure, filtered",
                  [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{"HouseAllocationTest.cpp"}}); }
           },
           edge_t{empty_fails_house_passes,
-                 "A single pass, with select",
+                 "A single pass, filtered",
                  [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {}); }
           },
           edge_t{house_prob_fails_null_passes,
-                 "Two failures, with prune",
-                 [update_with_prune](const test_outcomes& d) { return update_with_prune(d, {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}); }
+                 "Two failures, unfiltered",
+                 [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}); }
           }
         }, // end node 0 edges
         {},// end node 1 edges
         {},// end node 2 edges
         { edge_t{house_prob_fails_empty_passes,
-                 "An additional failure, with select",
+                 "An additional failure, filtered",
                  [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"Maths/ProbabilityTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}); }
           },
           edge_t{house_prob_maybe_fails_empty_passes,
-                 "Two additional failures, with select",
+                 "Two additional failures, filtered",
                  [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"Maths/ProbabilityTest.cpp"}, {"Maybe/MaybeTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}, {"Maybe/MaybeTest.cpp"}}); }
           },
           edge_t{house_prob_fails_maybe_passes,
-                 "One additional failure, one pass, with select",
+                 "One additional failure, one pass, filtered",
                  [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"Maths/ProbabilityTest.cpp"}, {"Maybe/MaybeTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}); }
           },
           edge_t{house_fails_maybe_prob_passes,
-                 "Two additional passes, with select",
+                 "Two additional passes, filtered",
                  [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"Maths/ProbabilityTest.cpp"}, {"Maybe/MaybeTest.cpp"}}, {}); }
           }
         }, // end node 3 edges
@@ -527,73 +527,73 @@ namespace sequoia::testing
         {}, // end node 5 edges
         {
           edge_t{house_fails_null_passes,
-                 "One failure fewer, with prune",
-                 [update_with_prune](const test_outcomes& d) { return update_with_prune(d, {{"HouseAllocationTest.cpp"}}); }
+                 "One failure fewer, unfiltered",
+                 [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{"HouseAllocationTest.cpp"}}); }
           }
         }, // end node 6 edges
         {
           edge_t{house_fails_prob_passes,
-                 "One failure fewer, with select",
+                 "One failure fewer, filtered",
                  [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"Maths/ProbabilityTest.cpp"}}, {}); }
           },
           edge_t{house_prob_maybe_fails_empty_passes,
-                 "One more failure, with select",
+                 "One more failure, filtered",
                  [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"Maybe/MaybeTest.cpp"}}, {{"Maybe/MaybeTest.cpp"}}); }
           }
         }, // end node 7 edges
         {
           edge_t{empty_fails_null_passes ,
-                 "No failures, with prune",
-                 [update_with_prune](const test_outcomes& d) { return update_with_prune(d, {}); }
+                 "No failures, unfiltered",
+                 [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {}); }
           },
           edge_t{house_prob_fails_empty_passes,
-                 "Add a failure, with select",
+                 "Add a failure, filtered",
                  [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"Maths/ProbabilityTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}); }
           }
         }, // end node 8 edges
        {
          edge_t{empty_fails_null_passes,
-                "Three failures all pass, with prune",
-                [update_with_prune](const test_outcomes& d) { return update_with_prune(d, {}); }
+                "Three failures all pass, unfiltered",
+                [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {}); }
          }
        }, // end node 9 edges
        {
          edge_t{house_fails_maybe_prob_passes,
-                "One of two failures becomes a pass, with select",
+                "One of two failures becomes a pass, filtered",
                 [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"Maths/ProbabilityTest.cpp"}}, {}); }
          }
        }, // end node 10 edges
        {
          edge_t{empty_fails_maybe_house_prob_passes,
-                "Only failure becomes a pass, with select",
+                "Only failure becomes a pass, filtered",
                 [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {}); }
          }
        },  // end node 11 edges
        {
          edge_t{house_fails_maybe_prob_passes,
-                "One pass becomes a failure, with select",
+                "One pass becomes a failure, filtered",
                 [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{"HouseAllocationTest.cpp"}}); }
          },
          edge_t{house_prob_fails_maybe_passes,
-                "Two passes becomes failures, with select",
+                "Two passes becomes failures, filtered",
                 [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}, {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}); }
          }
        }, // end node 12 edges
       },
       {
-        test_outcomes{std::nullopt, std::nullopt}, // 0
-        test_outcomes{prune_records{}, std::nullopt}, // 1
-        test_outcomes{prune_records{}, prune_records{}}, // 2
-        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, std::nullopt}, // 3
-        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, prune_records{}}, // 4
-        test_outcomes{prune_records{}, {{{"HouseAllocationTest.cpp", updateTime}}}}, // 5
-        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, std::nullopt}, // 6
-        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, prune_records{}}, // 7
-        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, {{{"Maths/ProbabilityTest.cpp", updateTime}}}}, // 8
-        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maybe/MaybeTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, prune_records{}}, // 9
-        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, {{{"Maybe/MaybeTest.cpp", updateTime}}}}, // 10
-        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, {{{"Maybe/MaybeTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}}, // 11
-        test_outcomes{prune_records{}, {{{"Maybe/MaybeTest.cpp", updateTime}, {"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}} // 12
+        test_outcomes{std::nullopt, std::nullopt},
+        test_outcomes{prune_records{}, std::nullopt},
+        test_outcomes{prune_records{}, prune_records{}},
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, std::nullopt},
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, prune_records{}},
+        test_outcomes{prune_records{}, {{{"HouseAllocationTest.cpp", updateTime}}}},
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, std::nullopt},
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, prune_records{}},
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, {{{"Maths/ProbabilityTest.cpp", updateTime}}}},
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maybe/MaybeTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, prune_records{}},
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, {{{"Maybe/MaybeTest.cpp", updateTime}}}},
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, {{{"Maybe/MaybeTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}},
+        test_outcomes{prune_records{}, {{{"Maybe/MaybeTest.cpp", updateTime}, {"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}}
       }
     };
 
