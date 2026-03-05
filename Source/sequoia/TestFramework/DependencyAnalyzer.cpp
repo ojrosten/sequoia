@@ -462,14 +462,6 @@ namespace sequoia::testing
       fs::last_write_time(stamp, time);
     }
 
-    [[nodiscard]]
-    prune_paths prepare(const project_paths& projPaths, std::vector<prune_record>& failedTests)
-    {
-      std::ranges::sort(failedTests);
-
-      return projPaths.prune();
-    }
-
     std::vector<prune_record>& read_tests_to(const fs::path& file, std::vector<prune_record>& tests)
     {
       
@@ -562,24 +554,22 @@ namespace sequoia::testing
                           fs::file_time_type updateTime,
                           std::optional<std::size_t> id)
     {
-      const auto prunePaths{prepare(projPaths, failedTests)};
-
+      std::ranges::sort(failedTests, least_path_most_recent{});
+      
+      const auto prunePaths{projPaths.prune()};
       write_tests(projPaths, prunePaths.failures(id), failedTests);
       fs::remove(prunePaths.selected_passes(id));
       update_prune_stamp_on_disk(prunePaths, updateTime);
     }
 
     void do_update_prune_files(const project_paths& projPaths,
-                            std::vector<prune_record> executedTests,
-                            std::vector<prune_record> failedTests,
-                            std::optional<std::size_t> id)
+                               std::vector<prune_record> executedTests,
+                               std::vector<prune_record> failedTests,
+                               std::optional<std::size_t> id)
     {
       std::ranges::sort(executedTests, least_path_most_recent{});
+      std::ranges::sort(failedTests, least_path_most_recent{});
       to_unique_range(executedTests);
-
-      const auto prunePaths{prepare(projPaths, failedTests)};
-      const auto passesFile{prunePaths.selected_passes(id)},
-                 failuresFile{prunePaths.failures(id)};
 
       auto unionize{
         [](std::span<const prune_record> a, std::span<const prune_record> b){
@@ -598,6 +588,10 @@ namespace sequoia::testing
         }
       };
 
+      const auto prunePaths{projPaths.prune()};
+      const auto passesFile{prunePaths.selected_passes(id)},
+                 failuresFile{prunePaths.failures(id)};
+      
       const std::vector<prune_record> trialPasses{unionize(executedTests, read_tests(passesFile))};      
       const std::vector<prune_record> passingTests{difference(trialPasses, failedTests)};
       const std::vector<prune_record> remainingPreviousFailures{difference(read_tests(failuresFile), passingTests)};
