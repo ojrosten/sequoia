@@ -581,19 +581,27 @@ namespace sequoia::testing
       const auto passesFile{prunePaths.selected_passes(id)},
                  failuresFile{prunePaths.failures(id)};
 
-      std::vector<prune_record> trialPasses{};
-      std::ranges::set_union(executedTests, read_tests(passesFile), std::back_inserter(trialPasses), least_path_most_recent{});
-      to_unique_range(trialPasses);
+      auto unionize{
+        [](std::span<const prune_record> a, std::span<const prune_record> b){
+          std::vector<prune_record> tests{};
+          std::ranges::set_union(a, b, std::back_inserter(tests), least_path_most_recent{});
+          to_unique_range(tests);
+          return tests;
+        }
+      };
 
-      std::vector<prune_record> passingTests{};
-      std::ranges::set_difference(trialPasses, failedTests, std::back_inserter(passingTests), {}, path_projector{}, path_projector{});
+      auto difference{
+        [](std::span<const prune_record> a, std::span<const prune_record> b){
+          std::vector<prune_record> tests{};
+          std::ranges::set_difference(a, b, std::back_inserter(tests), {}, path_projector{}, path_projector{});
+          return tests;
+        }
+      };
 
-      std::vector<prune_record> remainingPreviousFailures{};
-      std::ranges::set_difference(read_tests(failuresFile), passingTests, std::back_inserter(remainingPreviousFailures), {}, path_projector{}, path_projector{});
-
-      std::vector<prune_record> allFailures{};
-      std::ranges::set_union(remainingPreviousFailures, failedTests, std::back_inserter(allFailures), least_path_most_recent{});
-      to_unique_range(allFailures);
+      const std::vector<prune_record> trialPasses{unionize(executedTests, read_tests(passesFile))};      
+      const std::vector<prune_record> passingTests{difference(trialPasses, failedTests)};
+      const std::vector<prune_record> remainingPreviousFailures{difference(read_tests(failuresFile), passingTests)};
+      const std::vector<prune_record> allFailures{unionize(remainingPreviousFailures, failedTests)};
 
       write_tests(projPaths, failuresFile, allFailures);
       write_tests(projPaths, passesFile, passingTests);
