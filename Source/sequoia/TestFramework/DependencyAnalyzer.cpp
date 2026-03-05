@@ -485,6 +485,20 @@ namespace sequoia::testing
       return tests;
     }
 
+    struct least_path_most_recent{
+      [[nodiscard]]
+      bool operator()(const prune_record& lhs, const prune_record& rhs) const {
+        auto comp{lhs.test_path <=> rhs.test_path};
+        return comp == 0 ? lhs.time_stamp > rhs.time_stamp : comp < 0;
+      }
+    };
+
+    std::vector<prune_record>& to_unique_range(std::vector<prune_record>& r) {
+      auto erased{std::ranges::unique(r, {}, path_projector{})};
+      r.erase(erased.begin(), erased.end());
+      return r;
+    }
+    
     [[nodiscard]]
     std::vector<prune_record> aggregate_failures(const prune_paths& prunePaths, const std::size_t numReps)
     {
@@ -494,11 +508,7 @@ namespace sequoia::testing
         read_tests_to(prunePaths.failures(i), allTests);
       }
 
-      std::ranges::sort(allTests);
-      auto last{std::ranges::unique(allTests)};
-      allTests.erase(last.begin(), last.end());
-
-      return allTests;
+      return to_unique_range(allTests);
     }
 
     [[nodiscard]]
@@ -564,21 +574,7 @@ namespace sequoia::testing
                             std::vector<prune_record> failedTests,
                             std::optional<std::size_t> id)
     {
-      auto least_path_most_recent{
-        [](const prune_record& lhs, const prune_record& rhs) {
-          auto comp{lhs.test_path <=> rhs.test_path};
-          return comp == 0 ? lhs.time_stamp > rhs.time_stamp : comp < 0;
-        }
-      };
-
-      auto to_unique_range{
-        [](std::vector<prune_record>& r) {
-          auto erased{std::ranges::unique(r, {}, path_projector{})};
-          r.erase(erased.begin(), erased.end());
-        }
-      };
-
-      std::ranges::sort(executedTests, least_path_most_recent);
+      std::ranges::sort(executedTests, least_path_most_recent{});
       to_unique_range(executedTests);
 
       const auto prunePaths{prepare(projPaths, failedTests)};
@@ -586,7 +582,7 @@ namespace sequoia::testing
                  failuresFile{prunePaths.failures(id)};
 
       std::vector<prune_record> trialPasses{};
-      std::ranges::set_union(executedTests, read_tests(passesFile), std::back_inserter(trialPasses), least_path_most_recent);
+      std::ranges::set_union(executedTests, read_tests(passesFile), std::back_inserter(trialPasses), least_path_most_recent{});
       to_unique_range(trialPasses);
 
       std::vector<prune_record> passingTests{};
@@ -596,7 +592,7 @@ namespace sequoia::testing
       std::ranges::set_difference(read_tests(failuresFile), passingTests, std::back_inserter(remainingPreviousFailures), {}, path_projector{}, path_projector{});
 
       std::vector<prune_record> allFailures{};
-      std::ranges::set_union(remainingPreviousFailures, failedTests, std::back_inserter(allFailures), least_path_most_recent);
+      std::ranges::set_union(remainingPreviousFailures, failedTests, std::back_inserter(allFailures), least_path_most_recent{});
       to_unique_range(allFailures);
 
       write_tests(projPaths, failuresFile, allFailures);
