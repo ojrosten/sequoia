@@ -489,7 +489,7 @@ namespace sequoia::testing
     std::vector<prune_record> aggregate_failures(const prune_paths& prunePaths, const std::size_t numReps)
     {
       std::vector<prune_record> allTests{};
-      for(std::size_t i{}; i < numReps; ++i)
+      for(auto i : std::views::iota(0uz, numReps))
       {
         read_tests_to(prunePaths.failures(i), allTests);
       }
@@ -644,10 +644,17 @@ namespace sequoia::testing
                           fs::file_time_type updateTime,
                           std::optional<std::size_t> id)
   {
+    auto build_prune_records{
+      [updateTime](std::span<const fs::path> tests){
+        return std::views::transform(tests, [updateTime](const fs::path& p){ return prune_record{p, updateTime}; })
+             | std::ranges::to<std::vector>();
+      }
+    };
+    
     do_update_prune_files(
       projPaths,
-      std::views::transform(executedTests, [updateTime](const fs::path& p){ return prune_record{p, updateTime}; }) | std::ranges::to<std::vector>(),
-      std::views::transform(failedTests, [updateTime](const fs::path& p){ return prune_record{p, updateTime}; }) | std::ranges::to<std::vector>(),
+      build_prune_records(executedTests),
+      build_prune_records(failedTests),
       id
     );
   }
