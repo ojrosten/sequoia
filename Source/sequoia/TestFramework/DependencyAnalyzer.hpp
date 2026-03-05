@@ -58,7 +58,7 @@ namespace sequoia::testing
   std::optional<std::vector<std::filesystem::path>> tests_to_run(const project_paths& projPaths, std::string_view cutoff);
 
   void update_prune_files(const project_paths& projPaths,
-                          std::vector<std::filesystem::path> failedTests,
+                          std::span<const std::filesystem::path> failedTests,
                           std::filesystem::file_time_type updateTime,
                           std::optional<std::size_t> id);
 
