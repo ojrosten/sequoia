@@ -606,6 +606,12 @@ namespace sequoia::testing
       write_tests(projPaths, failuresFile, allFailures);
       write_tests(projPaths, passesFile, passingTests);
     }
+
+    [[nodiscard]]
+    std::vector<prune_record> build_prune_records(std::span<const fs::path> tests, fs::file_time_type updateTime) {
+      return   std::views::transform(tests, [updateTime](const fs::path& p){ return prune_record{p, updateTime}; })
+             | std::ranges::to<std::vector>();
+    }
   }
 
   [[nodiscard]]
@@ -636,7 +642,7 @@ namespace sequoia::testing
   {
     do_update_prune_files(
       projPaths,
-      std::views::transform(failedTests, [updateTime](const fs::path& p){ return prune_record{p, updateTime}; }) | std::ranges::to<std::vector>(),
+      build_prune_records(failedTests, updateTime),
       updateTime,
       id
     );
@@ -647,18 +653,11 @@ namespace sequoia::testing
                           std::span<const fs::path> failedTests,
                           fs::file_time_type updateTime,
                           std::optional<std::size_t> id)
-  {
-    auto build_prune_records{
-      [updateTime](std::span<const fs::path> tests){
-        return std::views::transform(tests, [updateTime](const fs::path& p){ return prune_record{p, updateTime}; })
-             | std::ranges::to<std::vector>();
-      }
-    };
-    
+  {    
     do_update_prune_files(
       projPaths,
-      build_prune_records(executedTests),
-      build_prune_records(failedTests),
+      build_prune_records(executedTests, updateTime),
+      build_prune_records(failedTests, updateTime),
       id
     );
   }
