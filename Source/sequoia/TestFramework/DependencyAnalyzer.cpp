@@ -95,7 +95,7 @@ namespace sequoia::testing
       int_type c{};
       while((c = istr.get()) != eof)
       {
-        if(auto found{std::ranges::find(delimiters, c)}; found != delimiters.end()) break;
+        if(std::ranges::contains(delimiters, c)) break;
 
         str.push_back(static_cast<char>(c));
       }
