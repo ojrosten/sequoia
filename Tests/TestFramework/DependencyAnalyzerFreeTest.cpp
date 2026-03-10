@@ -644,7 +644,7 @@ namespace sequoia::testing
 
         write_or_remove(projPaths, failureFile, passesFile, d);
 
-        for(std::size_t i{}; i < failures.size(); ++i)
+        for(auto i : std::views::iota(0uz, failures.size()))
         {
           update_prune_files(projPaths, std::move(failures[i]), updateTime, i);
         }
@@ -662,7 +662,7 @@ namespace sequoia::testing
 
         write_or_remove(projPaths, failureFile, passesFile, d);
 
-        for(std::size_t i{}; i < failures.size(); ++i)
+        for(auto i : std::views::iota(0uz, failures.size()))
         {
           update_prune_files(projPaths, executed, std::move(failures[i]), updateTime, i);
         }
