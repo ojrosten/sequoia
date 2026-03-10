@@ -28,6 +28,24 @@ namespace sequoia::testing
     constexpr auto lateExecutableOffset{std::chrono::seconds{3}};
     constexpr auto latePassOffset{std::chrono::seconds{4}};   // late
     constexpr auto lateEditOffset{std::chrono::seconds{5}};   // very_late
+
+        enum node_names : std::size_t
+    {
+      null_fails_null_passes,
+      empty_fails_null_passes,
+      empty_fails_empty_passes,
+      house_fails_null_passes,
+      house_fails_empty_passes,
+      empty_fails_house_passes,
+      house_prob_fails_null_passes,
+      house_prob_fails_empty_passes,
+      house_fails_prob_passes,
+      house_prob_maybe_fails_empty_passes,
+      house_prob_fails_maybe_passes,
+      house_fails_maybe_prob_passes,
+      empty_fails_maybe_house_prob_passes,
+      house_fails_late_empty_passes
+    };
   }
 
   dependency_analyzer_free_test::test_outcomes::test_outcomes(opt_prune_records fail, opt_prune_records pass)
@@ -463,24 +481,6 @@ namespace sequoia::testing
       }
     };
 
-    enum node_names : std::size_t
-    {
-      null_fails_null_passes,
-      empty_fails_null_passes,
-      empty_fails_empty_passes,
-      house_fails_null_passes,
-      house_fails_empty_passes,
-      empty_fails_house_passes,
-      house_prob_fails_null_passes,
-      house_prob_fails_empty_passes,
-      house_fails_prob_passes,
-      house_prob_maybe_fails_empty_passes,
-      house_prob_fails_maybe_passes,
-      house_fails_maybe_prob_passes,
-      empty_fails_maybe_house_prob_passes,
-      house_fails_late_empty_passes
-    };
-
     const prune_graph g{
       { // Begin null_fails_null_passes
         { edge_t{empty_fails_null_passes,
@@ -675,63 +675,69 @@ namespace sequoia::testing
 
     const prune_graph g{
       {
-        {
-          edge_t{1,
+        { // Begin null_fails_null_passes
+          edge_t{empty_fails_null_passes,
                  "Nothing executed, unfiltered",
                  [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {}); }
           },
-          edge_t{2,
+          edge_t{empty_fails_empty_passes,
                  "Nothing executed, filtered",
                  [update_filtered](const test_outcomes& d) { return update_filtered(d, {}, {{}}); }
           },
-          edge_t{3,
+          edge_t{house_fails_null_passes,
                  "A single failure in only the first of two instances, unfiltered",
                  [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{{"HouseAllocationTest.cpp"}}, {}}); }
           },
-          edge_t{3,
+          edge_t{house_fails_null_passes,
                  "A single failure in only the second of two instances, unfiltered",
                  [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{{"HouseAllocationTest.cpp"}}, {}}); }
           },
-          edge_t{3,
+          edge_t{house_fails_null_passes,
                  "A single failure in both instances, unfiltered",
                  [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{{"HouseAllocationTest.cpp"}}, {}}); }
           },
-          edge_t{4,
+          edge_t{house_fails_empty_passes,
                  "A single failure in only the first of two instances, filtered",
                  [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{{"HouseAllocationTest.cpp"}}, {}}); }
           },
-          edge_t{4,
+          edge_t{house_fails_empty_passes,
                  "A single failure in only the second of two instances, filtered",
                  [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{}, {{"HouseAllocationTest.cpp"}}}); }
           },
-          edge_t{4,
+          edge_t{house_fails_empty_passes,
                  "A single failure in both instances, filtered",
                  [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{{"HouseAllocationTest.cpp"}}, {{"HouseAllocationTest.cpp"}}}); }
           },
-          edge_t{5,
+          edge_t{empty_fails_house_passes,
                  "Passes in both instances, filtered",
                  [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{}, {}}); }
           }
-        }, // 0
-        {}, // 1
-        {}, // 2
-        {}, // 3
-        {}, // 4
-        {
-          edge_t{6,
+        }, // End   null_fails_null_passes
+        {  // Begin empty_fails_null_passes
+        }, // End   empty_fails_null_passes
+        {  // Begin empty_fails_empty_passes
+        }, // End   empty_fails_empty_passes
+        {  // Begin house_fails_null_passes
+        }, // End   house_fails_null_passes
+        {  // Begin house_fails_empty_passes
+        }, // End   house_fails_empty_passes
+        {  // Begin empty_fails_house_passes
+          edge_t{house_prob_fails_null_passes,
                  "Two failures, from differing instances, unfiltered",
                  [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{{"HouseAllocationTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}}); }
           },
-          edge_t{7,
+          edge_t{house_prob_fails_empty_passes,
                  "Two failures, from three instances, filtered",
                  [update_filtered](const test_outcomes& d) {
                     return update_filtered(d,
                                              {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}},
                                              {{{"Maths/ProbabilityTest.cpp"}}, {}, {"HouseAllocationTest.cpp"}}); }
           }
-        }, // 5
-        {}, // 6
-        {} // 7
+        }, // End   empty_fails_house_passes
+        {  // Begin house_prob_fails_null_passes
+        }, // End   house_prob_fails_null_passes
+        {  // Begin house_prob_fails_empty_passes
+        }  // End   house_prob_fails_empty_passes
       },
       {
         test_outcomes{std::nullopt, std::nullopt},
