@@ -29,7 +29,7 @@ namespace sequoia::testing
     constexpr auto latePassOffset{std::chrono::seconds{4}};   // late
     constexpr auto lateEditOffset{std::chrono::seconds{5}};   // very_late
 
-        enum node_names : std::size_t
+    enum node_names : std::size_t
     {
       null_fails_null_passes,
       empty_fails_null_passes,
@@ -656,7 +656,7 @@ namespace sequoia::testing
     };
 
     auto update_filtered{
-      [&](const test_outcomes& d, test_list executed, multi_test_list failures) -> test_outcomes {
+      [&](const test_outcomes& d, test_list executed, multi_test_list failures, std::filesystem::file_time_type targetTime) -> test_outcomes {
 
         setup_instability_analysis_prune_folder(projPaths);
 
@@ -664,10 +664,10 @@ namespace sequoia::testing
 
         for(auto i : std::views::iota(0uz, failures.size()))
         {
-          update_prune_files(projPaths, executed, std::move(failures[i]), updateTime, i);
+          update_prune_files(projPaths, executed, std::move(failures[i]), targetTime, i);
         }
 
-        aggregate_instability_analysis_prune_files(projPaths, prune_mode::passive, updateTime, failures.size());
+        aggregate_instability_analysis_prune_files(projPaths, prune_mode::passive, targetTime, failures.size());
 
         return {read(failureFile), read(passesFile)};
       }
@@ -682,7 +682,7 @@ namespace sequoia::testing
           },
           edge_t{empty_fails_empty_passes,
                  "Nothing executed, filtered",
-                 [update_filtered](const test_outcomes& d) { return update_filtered(d, {}, {{}}); }
+                 [update_filtered, updateTime](const test_outcomes& d) { return update_filtered(d, {}, {{}}, updateTime); }
           },
           edge_t{house_fails_null_passes,
                  "A single failure in only the first of two instances, unfiltered",
@@ -698,19 +698,19 @@ namespace sequoia::testing
           },
           edge_t{house_fails_empty_passes,
                  "A single failure in only the first of two instances, filtered",
-                 [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{{"HouseAllocationTest.cpp"}}, {}}); }
+                 [update_filtered, updateTime](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{{"HouseAllocationTest.cpp"}}, {}}, updateTime); }
           },
           edge_t{house_fails_empty_passes,
                  "A single failure in only the second of two instances, filtered",
-                 [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{}, {{"HouseAllocationTest.cpp"}}}); }
+                 [update_filtered, updateTime](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{}, {{"HouseAllocationTest.cpp"}}}, updateTime); }
           },
           edge_t{house_fails_empty_passes,
                  "A single failure in both instances, filtered",
-                 [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{{"HouseAllocationTest.cpp"}}, {{"HouseAllocationTest.cpp"}}}); }
+                 [update_filtered, updateTime](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{{"HouseAllocationTest.cpp"}}, {{"HouseAllocationTest.cpp"}}}, updateTime); }
           },
           edge_t{empty_fails_house_passes,
                  "Passes in both instances, filtered",
-                 [update_filtered](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{}, {}}); }
+                 [update_filtered, updateTime](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{}, {}}, updateTime); }
           }
         }, // End   null_fails_null_passes
         {  // Begin empty_fails_null_passes
@@ -728,10 +728,11 @@ namespace sequoia::testing
           },
           edge_t{house_prob_fails_empty_passes,
                  "Two failures, from three instances, filtered",
-                 [update_filtered](const test_outcomes& d) {
+                 [update_filtered, updateTime](const test_outcomes& d) {
                     return update_filtered(d,
-                                             {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}},
-                                             {{{"Maths/ProbabilityTest.cpp"}}, {}, {"HouseAllocationTest.cpp"}}); }
+                                           {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}},
+                                           {{{"Maths/ProbabilityTest.cpp"}}, {}, {"HouseAllocationTest.cpp"}},
+                                           updateTime); }
           }
         }, // End   empty_fails_house_passes
         {  // Begin house_prob_fails_null_passes
