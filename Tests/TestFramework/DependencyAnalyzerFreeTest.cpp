@@ -483,13 +483,13 @@ namespace sequoia::testing
 
     const prune_graph g{
       { // Begin null_fails_null_passes
-        { edge_t{empty_fails_empty_passes,
-                 "Nothing executed, filtered",
-                 [update_filtered, updateTime](const test_outcomes& d) { return update_filtered(d, {}, {}, updateTime); }
-          },
-          edge_t{empty_fails_null_passes,
+        { edge_t{empty_fails_null_passes,
                  "Nothing executed, unfiltered",
                  [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {}); }
+          },
+          edge_t{empty_fails_empty_passes,
+                 "Nothing executed, filtered",
+                 [update_filtered, updateTime](const test_outcomes& d) { return update_filtered(d, {}, {}, updateTime); }
           },
           edge_t{house_fails_null_passes,
                  "A single failure, unfiltered",
@@ -676,6 +676,10 @@ namespace sequoia::testing
     const prune_graph g{
       {
         {
+          edge_t{1,
+                 "Nothing executed, unfiltered",
+                 [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {}); }
+          },
           edge_t{2,
                  "Nothing executed, filtered",
                  [update_filtered](const test_outcomes& d) { return update_filtered(d, {}, {{}}); }
@@ -730,14 +734,14 @@ namespace sequoia::testing
         {} // 7
       },
       {
-        test_outcomes{std::nullopt, std::nullopt}, //0
-        test_outcomes{prune_records{}, std::nullopt}, // 1
-        test_outcomes{prune_records{}, prune_records{}}, // 2
-        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, std::nullopt}, // 3
-        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, prune_records{}}, // 4
-        test_outcomes{prune_records{}, {{{"HouseAllocationTest.cpp", updateTime}}}}, // 5
-        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, std::nullopt}, // 6
-        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, prune_records{}} // 7
+        test_outcomes{std::nullopt, std::nullopt},
+        test_outcomes{prune_records{}, std::nullopt},
+        test_outcomes{prune_records{}, prune_records{}},
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, std::nullopt},
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, prune_records{}},
+        test_outcomes{prune_records{}, {{{"HouseAllocationTest.cpp", updateTime}}}},
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, std::nullopt},
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, prune_records{}}
       }
     };
 
