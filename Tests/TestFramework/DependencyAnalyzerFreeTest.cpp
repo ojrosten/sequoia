@@ -691,11 +691,11 @@ namespace sequoia::testing
           },
           edge_t{house_fails_null_passes,
                  "A single failure in only the second of two instances, unfiltered",
-                 [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{{"HouseAllocationTest.cpp"}}, {}}); }
+                 [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{}, {{"HouseAllocationTest.cpp"}}}); }
           },
           edge_t{house_fails_null_passes,
                  "A single failure in both instances, unfiltered",
-                 [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{{"HouseAllocationTest.cpp"}}, {}}); }
+                 [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{{"HouseAllocationTest.cpp"}}, {{"HouseAllocationTest.cpp"}}}); }
           },
           edge_t{house_fails_empty_passes,
                  "A single failure in only the first of two instances, filtered",
@@ -712,13 +712,25 @@ namespace sequoia::testing
           edge_t{empty_fails_house_passes,
                  "Passes in both instances, filtered",
                  [update_filtered, updateTime](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{}, {}}, updateTime); }
-          }
+          },
+          edge_t{house_prob_fails_null_passes,
+                 "Two failures, unfiltered, on different runs",
+                 [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{{"HouseAllocationTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}}); }
+          },
+          edge_t{house_prob_fails_null_passes,
+                 "Two failures, unfiltered, on different runs",
+                 [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{{"Maths/ProbabilityTest.cpp"}}, {{"HouseAllocationTest.cpp"}}}); }
+          },
         }, // End   null_fails_null_passes
         {  // Begin empty_fails_null_passes
         }, // End   empty_fails_null_passes
         {  // Begin empty_fails_empty_passes
         }, // End   empty_fails_empty_passes
         {  // Begin house_fails_null_passes
+          edge_t{house_prob_fails_empty_passes,
+                 "An additional failure on the first run, filtered",
+                 [update_filtered, updateTime](const test_outcomes& d) { return update_filtered(d, {{"Maths/ProbabilityTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}, {}}, updateTime); }
+          },
         }, // End   house_fails_null_passes
         {  // Begin house_fails_empty_passes
         }, // End   house_fails_empty_passes
