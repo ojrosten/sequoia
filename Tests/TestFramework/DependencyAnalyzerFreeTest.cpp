@@ -779,13 +779,24 @@ namespace sequoia::testing
           edge_t{house_prob_fails_empty_passes,
                  "Two failures, from three instances, filtered",
                  [update_filtered, updateTime](const test_outcomes& d) {
-                    return update_filtered(d,
-                                           {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}},
-                                           {{{"Maths/ProbabilityTest.cpp"}}, {}, {"HouseAllocationTest.cpp"}},
-                                           updateTime); }
+                    return update_filtered(
+                             d,
+                             {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}},
+                             {{{"Maths/ProbabilityTest.cpp"}}, {}, {"HouseAllocationTest.cpp"}},
+                             updateTime
+                           );
+                 }
           }
         }, // End   empty_fails_house_passes
         {  // Begin house_prob_fails_null_passes
+          edge_t{house_fails_null_passes,
+                 "One failure fewer on the first run, unfiltered",
+                 [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{{"HouseAllocationTest.cpp"}}, {}}); }
+          },
+          edge_t{house_fails_null_passes,
+                 "One failure fewer on the second run, unfiltered",
+                 [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{}, {{"HouseAllocationTest.cpp"}}}); }
+          }
         }, // End   house_prob_fails_null_passes
         {  // Begin house_prob_fails_empty_passes
         }, // End   house_prob_fails_empty_passes
