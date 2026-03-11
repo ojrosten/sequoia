@@ -729,7 +729,44 @@ namespace sequoia::testing
         {  // Begin house_fails_null_passes
           edge_t{house_prob_fails_empty_passes,
                  "An additional failure on the first run, filtered",
-                 [update_filtered, updateTime](const test_outcomes& d) { return update_filtered(d, {{"Maths/ProbabilityTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}, {}}, updateTime); }
+                 [update_filtered, updateTime](const test_outcomes& d) { return update_filtered(d, {{"Maths/ProbabilityTest.cpp"}}, {{{"Maths/ProbabilityTest.cpp"}}, {}}, updateTime); }
+          },
+          edge_t{house_prob_fails_empty_passes,
+                 "An additional failure on the second run, filtered",
+                 [update_filtered, updateTime](const test_outcomes& d) { return update_filtered(d, {{"Maths/ProbabilityTest.cpp"}}, {{}, {{"Maths/ProbabilityTest.cpp"}}}, updateTime); }
+          },
+          edge_t{house_prob_maybe_fails_empty_passes,
+                 "Two additional failures on different runs, filtered",
+                 [update_filtered, updateTime](const test_outcomes& d) {
+                   return update_filtered(
+                            d,
+                            {{"Maths/ProbabilityTest.cpp"}, {"Maybe/MaybeTest.cpp"}},
+                            {{{"Maths/ProbabilityTest.cpp"}}, {{"Maybe/MaybeTest.cpp"}}},
+                            updateTime
+                   );
+                 }
+          },
+          edge_t{house_prob_maybe_fails_empty_passes,
+                 "Two additional failures on different runs, filtered",
+                 [update_filtered, updateTime](const test_outcomes& d) {
+                   return update_filtered(
+                            d,
+                            {{"Maths/ProbabilityTest.cpp"}, {"Maybe/MaybeTest.cpp"}},
+                            {{{"Maybe/MaybeTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}},
+                            updateTime
+                   );
+                 }
+          },
+          edge_t{house_prob_maybe_fails_empty_passes,
+                 "Two additional failures, one reliable, filtered",
+                 [update_filtered, updateTime](const test_outcomes& d) {
+                   return update_filtered(
+                            d,
+                            {{"Maths/ProbabilityTest.cpp"}, {"Maybe/MaybeTest.cpp"}},
+                            {{{"Maybe/MaybeTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}, {{"Maths/ProbabilityTest.cpp"}}},
+                            updateTime
+                   );
+                 }
           },
         }, // End   house_fails_null_passes
         {  // Begin house_fails_empty_passes
