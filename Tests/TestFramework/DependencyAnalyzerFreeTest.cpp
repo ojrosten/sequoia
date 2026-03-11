@@ -799,6 +799,14 @@ namespace sequoia::testing
           }
         }, // End   house_prob_fails_null_passes
         {  // Begin house_prob_fails_empty_passes
+          edge_t{house_fails_prob_passes,
+                 "One failure fewer, filtered",
+                 [update_filtered, updateTime](const test_outcomes& d) { return update_filtered(d, {{"Maths/ProbabilityTest.cpp"}}, {{}, {}}, updateTime); }
+          },
+          edge_t{house_prob_maybe_fails_empty_passes,
+                 "One more failure on second run, filtered",
+                 [update_filtered, updateTime](const test_outcomes& d) { return update_filtered(d, {{"Maybe/MaybeTest.cpp"}}, {{}, {{"Maybe/MaybeTest.cpp"}}}, updateTime); }
+          },
         }, // End   house_prob_fails_empty_passes
         {  // Begin house_fails_prob_passes
         }, // End   house_fails_prob_passes
