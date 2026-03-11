@@ -768,6 +768,18 @@ namespace sequoia::testing
                    );
                  }
           },
+          edge_t{house_fails_late_empty_passes,
+                 "The same test, failing later, on the first run",
+                 [update_filtered, lateUpdateTime](const test_outcomes& d) {
+                   return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{{"HouseAllocationTest.cpp"}}, {}}, lateUpdateTime);
+                 }
+          },
+          edge_t{house_fails_late_empty_passes,
+                 "The same test, failing later, on the second run",
+                 [update_filtered, lateUpdateTime](const test_outcomes& d) {
+                   return update_filtered(d, {{"HouseAllocationTest.cpp"}}, {{}, {{"HouseAllocationTest.cpp"}}}, lateUpdateTime);
+                 }
+          },
         }, // End   house_fails_null_passes
         {  // Begin house_fails_empty_passes
         }, // End   house_fails_empty_passes
