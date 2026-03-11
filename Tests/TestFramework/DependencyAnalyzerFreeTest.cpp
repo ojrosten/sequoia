@@ -594,8 +594,8 @@ namespace sequoia::testing
                  [update_filtered, updateTime](const test_outcomes& d) { return update_filtered(d, {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}, {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}, updateTime); }
           }
         }, // End   empty_fails_maybe_house_prob_passes
-        {
-        }
+        {  // Begin house_fails_late_empty_passes
+        }  // End   house_fails_late_empty_passes
       },
       {
         test_outcomes{std::nullopt, std::nullopt},
@@ -628,6 +628,7 @@ namespace sequoia::testing
   void dependency_analyzer_free_test::test_instability_analysis_prune_upate(const project_paths& projPaths)
   {
     const auto updateTime{m_ResetTime};
+    const auto lateUpdateTime{m_ResetTime + std::chrono::seconds{1}};
     const auto prune{projPaths.prune()};
     const auto failureFile{prune.failures(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
@@ -738,7 +739,19 @@ namespace sequoia::testing
         {  // Begin house_prob_fails_null_passes
         }, // End   house_prob_fails_null_passes
         {  // Begin house_prob_fails_empty_passes
-        }  // End   house_prob_fails_empty_passes
+        }, // End   house_prob_fails_empty_passes
+        {  // Begin house_fails_prob_passes
+        }, // End   house_fails_prob_passes
+        {  // Begin house_prob_maybe_fails_empty_passes
+        }, // End   house_prob_maybe_fails_empty_passes
+        {  // Begin house_prob_fails_maybe_passes
+        }, // End   house_prob_fails_maybe_passes
+        {  // Begin house_fails_maybe_prob_passes
+        }, // End   house_fails_maybe_prob_passes
+        {  // Begin empty_fails_maybe_house_prob_passes
+        }, // End   empty_fails_maybe_house_prob_passes
+        {  // Begin house_fails_late_empty_passes
+        }  // End   house_fails_late_empty_passes
       },
       {
         test_outcomes{std::nullopt, std::nullopt},
@@ -748,7 +761,13 @@ namespace sequoia::testing
         test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, prune_records{}},
         test_outcomes{prune_records{}, {{{"HouseAllocationTest.cpp", updateTime}}}},
         test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, std::nullopt},
-        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, prune_records{}}
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, prune_records{}},
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, {{{"Maths/ProbabilityTest.cpp", updateTime}}}},
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maybe/MaybeTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, prune_records{}},
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}, {{{"Maybe/MaybeTest.cpp", updateTime}}}},
+        test_outcomes{{{{"HouseAllocationTest.cpp", updateTime}}}, {{{"Maybe/MaybeTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}},
+        test_outcomes{prune_records{}, {{{"Maybe/MaybeTest.cpp", updateTime}, {"HouseAllocationTest.cpp", updateTime}, {"Maths/ProbabilityTest.cpp", updateTime}}}},
+        test_outcomes{{{{"HouseAllocationTest.cpp", lateUpdateTime}}}, prune_records{}}
       }
     };
 
