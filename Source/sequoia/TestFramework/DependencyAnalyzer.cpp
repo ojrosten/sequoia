@@ -25,6 +25,11 @@ namespace sequoia::testing
 
   namespace
   {
+    struct path_projector
+    {
+      const fs::path& operator()(const prune_record& record) const { return record.test_path; }
+    };
+    
     [[nodiscard]]
     bool is_stale(const fs::path& file, const fs::file_time_type& lastImplicitModTime, const fs::file_time_type& pruneTimeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
     {
@@ -61,16 +66,8 @@ namespace sequoia::testing
     [[nodiscard]]
     bool in_repo(const fs::path& file, const fs::path& repo)
     {
-      if(std::ranges::distance(repo) >= std::ranges::distance(file)) return false;
-
-      auto fIter{file.begin()}, rIter{repo.begin()};
-      while(rIter != repo.end())
-      {
-        if(*fIter++ != *rIter++)
-          return false;
-      }
-
-      return true;
+      auto zipped{std::views::zip(file, repo)};
+      return std::ranges::find_if(zipped, [](const auto& e) { return std::get<0>(e) != std::get<1>(e); }) == zipped.end();
     }
 
     [[nodiscard]]
@@ -98,7 +95,7 @@ namespace sequoia::testing
       int_type c{};
       while((c = istr.get()) != eof)
       {
-        if(auto found{std::ranges::find(delimiters, c)}; found != delimiters.end()) break;
+        if(std::ranges::contains(delimiters, c)) break;
 
         str.push_back(static_cast<char>(c));
       }
@@ -150,7 +147,7 @@ namespace sequoia::testing
           }
           else if(c == '#')
           {
-            // Bug here with #endif
+            // TO DO: Bug here with #endif
             const auto followsHash{from_stream(ifile, " \n")};
             if(followsHash == "include")
             {
@@ -344,9 +341,11 @@ namespace sequoia::testing
 
     void consider_passing_tests(node_iterator i,
                                 const fs::path& relFilePath,
-                                const std::vector<fs::path>& passingTests)
+                                std::span<const prune_record> passingTests,
+                                fs::file_time_type maxModificationTime)
     {
-      if(auto iter{std::ranges::lower_bound(passingTests, relFilePath)}; (iter != passingTests.end() && (*iter == relFilePath)))
+      auto iter{std::ranges::lower_bound(passingTests, relFilePath, {}, path_projector{})};
+      if((iter != passingTests.end()) && (iter->test_path == relFilePath) && (iter->time_stamp > maxModificationTime))
       {
         i->stale = false;
       }
@@ -425,7 +424,7 @@ namespace sequoia::testing
         {
           const auto relPath{fs::relative(weight.file, projPaths.tests().repo())};
 
-          if(passesStamp && std::ranges::binary_search(passingTestsFromFile, relPath))
+          if(passesStamp && std::ranges::binary_search(passingTestsFromFile, relPath, {}, path_projector{}))
           {
             const auto materialsWriteTime{materials_max_write_time(relPath, projPaths.test_materials().repo())};
             if(!weight.stale && (materialsWriteTime > pruneTimeStamp))
@@ -433,8 +432,8 @@ namespace sequoia::testing
 
             const auto maxModificationTime{materialsWriteTime ? std::ranges::max(materialsWriteTime.value(), weight.implicit_modification_time) : weight.implicit_modification_time};
 
-            if(weight.stale && (passesStamp.value() >= maxModificationTime))
-              consider_passing_tests(i, relPath, passingTestsFromFile);
+            if(weight.stale && (passesStamp.value() > maxModificationTime))
+              consider_passing_tests(i, relPath, passingTestsFromFile, maxModificationTime);
           }
           else if(!weight.stale)
           {
@@ -463,45 +462,60 @@ namespace sequoia::testing
       fs::last_write_time(stamp, time);
     }
 
-    [[nodiscard]]
-    prune_paths prepare(const project_paths& projPaths, std::vector<fs::path>& failedTests)
+    std::vector<prune_record>& read_tests_to(const fs::path& file, std::vector<prune_record>& tests)
     {
-      std::ranges::sort(failedTests);
-
-      return projPaths.prune();
-    }
-
-    [[nodiscard]]
-    std::vector<fs::path> aggregate_failures(const prune_paths& prunePaths, const std::size_t numReps)
-    {
-      std::vector<fs::path> allTests{};
-      for(std::size_t i{}; i < numReps; ++i)
+      
+      if(std::ifstream ifile{file})
       {
-        const auto file{prunePaths.failures(i)};
-        read_tests(file, allTests);
+        using iter_t = std::istream_iterator<prune_record>;
+        tests.append_range(
+            std::ranges::subrange{iter_t{ifile}, iter_t{}}
+          | std::views::filter([](const prune_record& record) {return !record.test_path.empty();})
+        );
       }
 
-      std::ranges::sort(allTests);
-      auto last{std::ranges::unique(allTests)};
-      allTests.erase(last.begin(), last.end());
+      return tests;
+    }
 
-      return allTests;
+    struct least_path_most_recent{
+      [[nodiscard]]
+      bool operator()(const prune_record& lhs, const prune_record& rhs) const {
+        auto comp{lhs.test_path <=> rhs.test_path};
+        return comp == 0 ? lhs.time_stamp > rhs.time_stamp : comp < 0;
+      }
+    };
+
+    std::vector<prune_record>& to_unique_range(std::vector<prune_record>& r) {
+      auto erased{std::ranges::unique(r, {}, path_projector{})};
+      r.erase(erased.begin(), erased.end());
+      return r;
+    }
+    
+    [[nodiscard]]
+    std::vector<prune_record> aggregate_failures(const prune_paths& prunePaths, const std::size_t numReps)
+    {
+      std::vector<prune_record> allTests{};
+      for(auto i : std::views::iota(0uz, numReps))
+      {
+        read_tests_to(prunePaths.failures(i), allTests);
+      }
+
+      return to_unique_range(allTests);
     }
 
     [[nodiscard]]
-    std::optional<std::vector<fs::path>> aggregate_passes(const prune_paths& prunePaths, const std::size_t numReps)
+    std::optional<std::vector<prune_record>> aggregate_passes(const prune_paths& prunePaths, const std::size_t numReps)
     {
-      std::vector<fs::path> intersection{};
-      for(std::size_t i{}; i < numReps; ++i)
+      std::vector<prune_record> intersection{};
+      for(auto i : std::views::iota(0uz, numReps))
       {
         const auto file{prunePaths.selected_passes(i)};
         if(!fs::exists(file)) return std::nullopt;
 
-        std::vector<fs::path> tests{};
-        read_tests(file, tests);
+        std::vector<prune_record> tests{testing::read_tests(file)};
         if(i)
         {
-          std::vector<fs::path> currentIntersection{};
+          std::vector<prune_record> currentIntersection{};
           std::ranges::set_intersection(tests, intersection, std::back_inserter(currentIntersection));
           intersection = std::move(currentIntersection);
         }
@@ -515,39 +529,82 @@ namespace sequoia::testing
     }
   }
 
-  std::vector<fs::path>& read_tests(const fs::path& file, std::vector<fs::path>& tests)
-  {
-    if(std::ifstream ifile{file})
-    {
-      while(ifile)
-      {
-        fs::path source{};
-        ifile >> source;
-        if(!source.empty())
-        {
-          tests.push_back(source);
-        }
-      }
-    }
-
-    return tests;
-  }
-
   [[nodiscard]]
-  std::vector<fs::path> read_tests(const fs::path& file)
+  std::vector<prune_record> read_tests(const fs::path& file)
   {
-    std::vector<fs::path> tests{};
-    return read_tests(file, tests);
+    std::vector<prune_record> tests{};
+    return read_tests_to(file, tests);
   }
 
-  void write_tests(const project_paths& projPaths, const fs::path& file, const std::vector<fs::path>& tests)
+  void write_tests(const project_paths& projPaths, const fs::path& file, std::span<const prune_record> tests)
   {
     if(std::ofstream ostream{file})
     {
       for(const auto& test : tests)
       {
-        ostream << rebase_from(test, projPaths.tests().repo()).generic_string() << "\n";
+        ostream << prune_record{rebase_from(test.test_path, projPaths.tests().repo()), test.time_stamp} << "\n";
       }
+    }
+  }
+
+  namespace
+  {
+    void do_update_prune_files(const project_paths& projPaths,
+                          std::vector<prune_record> failedTests,
+                          fs::file_time_type updateTime,
+                          std::optional<std::size_t> id)
+    {
+      std::ranges::sort(failedTests, least_path_most_recent{});
+      
+      const auto prunePaths{projPaths.prune()};
+      write_tests(projPaths, prunePaths.failures(id), failedTests);
+      fs::remove(prunePaths.selected_passes(id));
+      update_prune_stamp_on_disk(prunePaths, updateTime);
+    }
+
+    void do_update_prune_files(const project_paths& projPaths,
+                               std::vector<prune_record> executedTests,
+                               std::vector<prune_record> failedTests,
+                               std::optional<std::size_t> id)
+    {
+      std::ranges::sort(executedTests, least_path_most_recent{});
+      std::ranges::sort(failedTests, least_path_most_recent{});
+      to_unique_range(executedTests);
+
+      auto unionize{
+        [](std::span<const prune_record> a, std::span<const prune_record> b){
+          std::vector<prune_record> tests{};
+          std::ranges::set_union(a, b, std::back_inserter(tests), least_path_most_recent{});
+          to_unique_range(tests);
+          return tests;
+        }
+      };
+
+      auto difference{
+        [](std::span<const prune_record> a, std::span<const prune_record> b){
+          std::vector<prune_record> tests{};
+          std::ranges::set_difference(a, b, std::back_inserter(tests), {}, path_projector{}, path_projector{});
+          return tests;
+        }
+      };
+
+      const auto prunePaths{projPaths.prune()};
+      const auto passesFile{prunePaths.selected_passes(id)},
+                 failuresFile{prunePaths.failures(id)};
+      
+      const std::vector<prune_record> trialPasses{unionize(executedTests, read_tests(passesFile))};      
+      const std::vector<prune_record> passingTests{difference(trialPasses, failedTests)};
+      const std::vector<prune_record> remainingPreviousFailures{difference(read_tests(failuresFile), passingTests)};
+      const std::vector<prune_record> allFailures{unionize(remainingPreviousFailures, failedTests)};
+
+      write_tests(projPaths, failuresFile, allFailures);
+      write_tests(projPaths, passesFile, passingTests);
+    }
+
+    [[nodiscard]]
+    std::vector<prune_record> build_prune_records(std::span<const fs::path> tests, fs::file_time_type updateTime) {
+      return   std::views::transform(tests, [updateTime](const fs::path& p){ return prune_record{p, updateTime}; })
+             | std::ranges::to<std::vector>();
     }
   }
 
@@ -562,7 +619,9 @@ namespace sequoia::testing
 
     const auto staleTests{find_stale_tests(pruneTimeStamp.value(), projPaths, cutoff)};
 
-    const std::vector<fs::path> failingTests{read_tests(prunePaths.failures(std::nullopt))};
+    const std::vector<fs::path> failingTests{
+      std::views::transform(read_tests(prunePaths.failures(std::nullopt)), path_projector{}) | std::ranges::to<std::vector>()
+    };
 
     std::vector<fs::path> testsToRun{};
     std::ranges::set_union(staleTests, failingTests, std::back_inserter(testsToRun));
@@ -571,45 +630,30 @@ namespace sequoia::testing
   }
 
   void update_prune_files(const project_paths& projPaths,
-                          std::vector<fs::path> failedTests,
+                          std::span<const fs::path> failedTests,
                           fs::file_time_type updateTime,
                           std::optional<std::size_t> id)
   {
-    const auto prunePaths{prepare(projPaths, failedTests)};
-
-    write_tests(projPaths, prunePaths.failures(id), failedTests);
-    fs::remove(prunePaths.selected_passes(id));
-    update_prune_stamp_on_disk(prunePaths, updateTime);
+    do_update_prune_files(
+      projPaths,
+      build_prune_records(failedTests, updateTime),
+      updateTime,
+      id
+    );
   }
 
   void update_prune_files(const project_paths& projPaths,
-                          std::vector<fs::path> executedTests,
-                          std::vector<fs::path> failedTests,
+                          std::span<const fs::path> executedTests,
+                          std::span<const fs::path> failedTests,
+                          fs::file_time_type updateTime,
                           std::optional<std::size_t> id)
-  {
-    std::ranges::sort(executedTests);
-    const auto prunePaths{prepare(projPaths, failedTests)};
-    const auto passesFile{prunePaths.selected_passes(id)},
-               failuresFile{prunePaths.failures(id)};
-
-    const auto previousPasses{read_tests(passesFile)};
-    std::vector<fs::path> trialPasses{};
-
-    std::ranges::set_union(executedTests, previousPasses, std::back_inserter(trialPasses));
-
-    std::vector<fs::path> passingTests{};
-    std::ranges::set_difference(trialPasses, failedTests, std::back_inserter(passingTests));
-
-    const auto previousFailures{read_tests(failuresFile)};
-
-    std::vector<fs::path> remainingPreviousFailures{};
-    std::ranges::set_difference(previousFailures, passingTests, std::back_inserter(remainingPreviousFailures));
-
-    std::vector<fs::path> allFailures{};
-    std::ranges::set_union(remainingPreviousFailures, failedTests, std::back_inserter(allFailures));
-
-    write_tests(projPaths, failuresFile, allFailures);
-    write_tests(projPaths, passesFile, passingTests);
+  {    
+    do_update_prune_files(
+      projPaths,
+      build_prune_records(executedTests, updateTime),
+      build_prune_records(failedTests, updateTime),
+      id
+    );
   }
 
   void setup_instability_analysis_prune_folder(const project_paths& projPaths)
@@ -633,18 +677,18 @@ namespace sequoia::testing
         auto& executedCases{optPasses.value()};
         executedCases.insert(executedCases.end(), failingCases.begin(), failingCases.end());
 
-        update_prune_files(projPaths, std::move(executedCases), std::move(failingCases), std::nullopt);
+        do_update_prune_files(projPaths, std::move(executedCases), std::move(failingCases), std::nullopt);
       }
       else
       {
-        update_prune_files(projPaths, std::move(failingCases), timeStamp, std::nullopt);
+        do_update_prune_files(projPaths, std::move(failingCases), timeStamp, std::nullopt);
       }
 
       break;
     }
     case prune_mode::active:
     {
-      update_prune_files(projPaths, std::move(failingCases), timeStamp, std::nullopt);
+      do_update_prune_files(projPaths, std::move(failingCases), timeStamp, std::nullopt);
       break;
     }
     }
