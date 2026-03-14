@@ -1276,17 +1276,35 @@ namespace sequoia::maths
     constexpr coordinates_base() noexcept = default;
 
     constexpr explicit coordinates_base(std::span<const value_type, D> vals) noexcept(has_identity_validator)
+      requires admits_canonical_basis
       : m_Values{validate(vals, m_Validator)}
     {}
 
     template<class... Ts>
-      requires (D > 1) && (std::convertible_to<Ts, value_type> && ...)
+      requires admits_canonical_basis && (D > 1) && (std::convertible_to<Ts, value_type> && ...)
     constexpr explicit(sizeof...(Ts) == 1) coordinates_base(Ts... ts) noexcept(has_identity_validator)
       : m_Values{m_Validator(std::array<value_type, D>{ts...})}
     {}
 
     template<class T>
-      requires (D == 1) && (std::convertible_to<T, value_type>)
+      requires admits_canonical_basis && (D == 1) && (std::convertible_to<T, value_type>)
+    constexpr explicit coordinates_base(T val) noexcept(has_identity_validator)
+      : m_Values{m_Validator(val)}
+    {}
+
+    constexpr explicit coordinates_base(std::span<const value_type, D> vals) noexcept(has_identity_validator)
+      requires (!admits_canonical_basis)
+      : m_Values{validate(vals, m_Validator)}
+    {}
+
+    template<class... Ts>
+      requires (!admits_canonical_basis) && (D > 1) && (std::convertible_to<Ts, value_type> && ...)
+    constexpr explicit(sizeof...(Ts) == 1) coordinates_base(Ts... ts) noexcept(has_identity_validator)
+      : m_Values{m_Validator(std::array<value_type, D>{ts...})}
+    {}
+
+    template<class T>
+      requires (!admits_canonical_basis) && (D == 1) && (std::convertible_to<T, value_type>)
     constexpr explicit coordinates_base(T val) noexcept(has_identity_validator)
       : m_Values{m_Validator(val)}
     {}
@@ -1596,89 +1614,43 @@ namespace sequoia::maths
   /** @ingroup Coordinates
       @brief Class template for representing coordinates on vector spaces, affine spaces and various generalizations.
    */
-
-  template<
-    convex_space ConvexSpace,
-    basis_for<free_module_type_of_t<ConvexSpace>> Basis,
-    validator_for<ConvexSpace> Validator,
-    class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<ConvexSpace>, Basis>
-  >
-  class canonical_coordinates_base : public coordinates_base<ConvexSpace, Basis, Validator, DisplacementCoordinates>
-  {
-  public:
-    using base_type  = coordinates_base<ConvexSpace, Basis, Validator, DisplacementCoordinates>;
-    using value_type = base_type::value_type;
-
-    constexpr static bool has_identity_validator{base_type::has_identity_validator};
-    constexpr static bool admits_canonical_basis{base_type::admits_canonical_basis};
-    constexpr static std::size_t D{base_type::D};
-    
-    constexpr canonical_coordinates_base() noexcept = default;
-
-    constexpr explicit canonical_coordinates_base(std::span<const value_type, D> vals) noexcept(has_identity_validator)
-      requires admits_canonical_basis
-      : base_type{vals}
-    {}
-
-    template<class... Ts>
-      requires (D > 1) && (std::convertible_to<Ts, value_type> && ...)
-    constexpr explicit(sizeof...(Ts) == 1) canonical_coordinates_base(Ts... ts) noexcept(has_identity_validator)
-      requires admits_canonical_basis
-      : base_type{ts...}
-    {}
-
-    template<class T>
-      requires (D == 1) && (std::convertible_to<T, value_type>)
-    constexpr explicit canonical_coordinates_base(T val) noexcept(has_identity_validator)
-      requires admits_canonical_basis
-      : base_type{val}
-    {}
-  protected:
-    canonical_coordinates_base(const canonical_coordinates_base&)     = default;
-    canonical_coordinates_base(canonical_coordinates_base&&) noexcept = default;
-
-    canonical_coordinates_base& operator=(const canonical_coordinates_base&) noexcept = default;
-    canonical_coordinates_base& operator=(canonical_coordinates_base&&)      noexcept = default;
-    
-    ~canonical_coordinates_base() = default;
-  };
   
   template<convex_space ConvexSpace, basis_for<free_module_type_of_t<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
   class coordinates<ConvexSpace, Basis, Origin, Validator> final
-    : public canonical_coordinates_base<ConvexSpace, Basis, Validator>
+    : public coordinates_base<ConvexSpace, Basis, Validator>
   {
   public:
     using origin_type = Origin;
 
-    using canonical_coordinates_base<ConvexSpace, Basis, Validator>::canonical_coordinates_base;
+    using coordinates_base<ConvexSpace, Basis, Validator>::coordinates_base;
   };
 
   template<convex_space ConvexSpace, basis_for<free_module_type_of_t<ConvexSpace>> Basis, validator_for<ConvexSpace> Validator>
     requires has_distinguished_origin_v<ConvexSpace>
   class coordinates<ConvexSpace, Basis, Validator> final
-    : public canonical_coordinates_base<ConvexSpace, Basis, Validator>
+    : public coordinates_base<ConvexSpace, Basis, Validator>
   {
   public:
-    using canonical_coordinates_base<ConvexSpace, Basis, Validator>::canonical_coordinates_base;
+    using coordinates_base<ConvexSpace, Basis, Validator>::coordinates_base;
   };
 
   template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin>
     requires (!free_module<AffineSpace>)
   class coordinates<AffineSpace, Basis, Origin> final
-    : public canonical_coordinates_base<AffineSpace, Basis, std::identity>
+    : public coordinates_base<AffineSpace, Basis, std::identity>
   {
   public:
     using origin_type = Origin;
     
-    using canonical_coordinates_base<AffineSpace, Basis, std::identity>::canonical_coordinates_base;
+    using coordinates_base<AffineSpace, Basis, std::identity>::coordinates_base;
   };
 
   template<free_module M, basis_for<free_module_type_of_t<M>> Basis>    
   class coordinates<M, Basis> final
-    : public canonical_coordinates_base<M, Basis, std::identity>
+    : public coordinates_base<M, Basis, std::identity>
   {
   public:
-    using canonical_coordinates_base<M, Basis, std::identity>::canonical_coordinates_base;
+    using coordinates_base<M, Basis, std::identity>::coordinates_base;
   };
 
   template<class From, class To>
