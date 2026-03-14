@@ -597,7 +597,28 @@ namespace sequoia::maths
    */
   
   template<convex_space ConvexSpace>
-  inline constexpr std::size_t dimension_of{free_module_type_of_t<ConvexSpace>::dimension};  
+  inline constexpr std::size_t dimension_of{free_module_type_of_t<ConvexSpace>::dimension};
+
+  
+  template<free_module V>
+  inline constexpr bool has_admits_canonical_basis_v{
+    requires{
+      typename V::admits_canonical_basis;
+    }
+  };
+
+  template<free_module M>
+  struct admits_canonical_basis : std::false_type {};
+
+  template<free_module M>
+    requires has_admits_canonical_basis_v<M> && std::convertible_to<typename M::admits_canonical_basis, std::true_type>
+  struct admits_canonical_basis<M> : std::true_type {};
+
+  template<free_module M>
+  using admits_canonical_basis_t = admits_canonical_basis<M>::type;
+
+  template<free_module M>
+  inline constexpr bool admits_canonical_basis_v{admits_canonical_basis<M>::value};
 
   /** @defgroup Basis Basis
       @brief Concepts and helpers for bases of free modules.
@@ -1243,9 +1264,12 @@ namespace sequoia::maths
     using value_type                    = commutative_ring_type;
     using displacement_coordinates_type = DisplacementCoordinates;
 
+    // TO DO: improve conventions
     constexpr static bool has_distinguished_origin{has_distinguished_origin_v<ConvexSpace>};
     constexpr static bool has_identity_validator{defines_identity_validator_v<Validator>};
     constexpr static bool has_freely_mutable_components{has_identity_validator && has_distinguished_origin};
+    constexpr static bool admits_canonical_basis{admits_canonical_basis_v<free_module_type>};
+    
     constexpr static std::size_t dimension{free_module_type::dimension};
     constexpr static std::size_t D{dimension};
 
@@ -1572,39 +1596,89 @@ namespace sequoia::maths
   /** @ingroup Coordinates
       @brief Class template for representing coordinates on vector spaces, affine spaces and various generalizations.
    */
+
+  template<
+    convex_space ConvexSpace,
+    basis_for<free_module_type_of_t<ConvexSpace>> Basis,
+    validator_for<ConvexSpace> Validator,
+    class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<ConvexSpace>, Basis>
+  >
+  class canonical_coordinates_base : public coordinates_base<ConvexSpace, Basis, Validator, DisplacementCoordinates>
+  {
+  public:
+    using base_type  = coordinates_base<ConvexSpace, Basis, Validator, DisplacementCoordinates>;
+    using value_type = base_type::value_type;
+
+    constexpr static bool has_identity_validator{base_type::has_identity_validator};
+    constexpr static bool admits_canonical_basis{base_type::admits_canonical_basis};
+    constexpr static std::size_t D{base_type::D};
+    
+    constexpr canonical_coordinates_base() noexcept = default;
+
+    constexpr explicit canonical_coordinates_base(std::span<const value_type, D> vals) noexcept(has_identity_validator)
+      requires admits_canonical_basis
+      : base_type{vals}
+    {}
+
+    template<class... Ts>
+      requires (D > 1) && (std::convertible_to<Ts, value_type> && ...)
+    constexpr explicit(sizeof...(Ts) == 1) canonical_coordinates_base(Ts... ts) noexcept(has_identity_validator)
+      requires admits_canonical_basis
+      : base_type{ts...}
+    {}
+
+    template<class T>
+      requires (D == 1) && (std::convertible_to<T, value_type>)
+    constexpr explicit canonical_coordinates_base(T val) noexcept(has_identity_validator)
+      requires admits_canonical_basis
+      : base_type{val}
+    {}
+  protected:
+    canonical_coordinates_base(const canonical_coordinates_base&)     = default;
+    canonical_coordinates_base(canonical_coordinates_base&&) noexcept = default;
+
+    canonical_coordinates_base& operator=(const canonical_coordinates_base&) noexcept = default;
+    canonical_coordinates_base& operator=(canonical_coordinates_base&&)      noexcept = default;
+    
+    ~canonical_coordinates_base() = default;
+  };
   
   template<convex_space ConvexSpace, basis_for<free_module_type_of_t<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
-  class coordinates<ConvexSpace, Basis, Origin, Validator> final : public coordinates_base<ConvexSpace, Basis, Validator>
+  class coordinates<ConvexSpace, Basis, Origin, Validator> final
+    : public canonical_coordinates_base<ConvexSpace, Basis, Validator>
   {
   public:
     using origin_type = Origin;
 
-    using coordinates_base<ConvexSpace, Basis, Validator>::coordinates_base;
+    using canonical_coordinates_base<ConvexSpace, Basis, Validator>::canonical_coordinates_base;
   };
 
   template<convex_space ConvexSpace, basis_for<free_module_type_of_t<ConvexSpace>> Basis, validator_for<ConvexSpace> Validator>
     requires has_distinguished_origin_v<ConvexSpace>
-  class coordinates<ConvexSpace, Basis, Validator> final : public coordinates_base<ConvexSpace, Basis, Validator>
+  class coordinates<ConvexSpace, Basis, Validator> final
+    : public canonical_coordinates_base<ConvexSpace, Basis, Validator>
   {
   public:
-    using coordinates_base<ConvexSpace, Basis, Validator>::coordinates_base;
+    using canonical_coordinates_base<ConvexSpace, Basis, Validator>::canonical_coordinates_base;
   };
 
   template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin>
     requires (!free_module<AffineSpace>)
-  class coordinates<AffineSpace, Basis, Origin> final : public coordinates_base<AffineSpace, Basis, std::identity>
+  class coordinates<AffineSpace, Basis, Origin> final
+    : public canonical_coordinates_base<AffineSpace, Basis, std::identity>
   {
   public:
     using origin_type = Origin;
     
-    using coordinates_base<AffineSpace, Basis, std::identity>::coordinates_base;
+    using canonical_coordinates_base<AffineSpace, Basis, std::identity>::canonical_coordinates_base;
   };
 
   template<free_module M, basis_for<free_module_type_of_t<M>> Basis>    
-  class coordinates<M, Basis> final : public coordinates_base<M, Basis, std::identity>
+  class coordinates<M, Basis> final
+    : public canonical_coordinates_base<M, Basis, std::identity>
   {
   public:
-    using coordinates_base<M, Basis, std::identity>::coordinates_base;
+    using canonical_coordinates_base<M, Basis, std::identity>::canonical_coordinates_base;
   };
 
   template<class From, class To>
@@ -1712,10 +1786,11 @@ namespace sequoia::maths
   template<std::floating_point T, std::size_t D, class Arena=mathematical_arena>
   struct euclidean_vector_space
   {
-    using set_type        = sets::R<D>;
-    using field_type      = T;
-    using is_vector_space = std::true_type;
-    using arena_type      = Arena;
+    using set_type              = sets::R<D>;
+    using field_type            = T;
+    using is_vector_space       = std::true_type;
+    using arena_type            = Arena;
+    using admits_canonical_basis = std::true_type;
     constexpr static std::size_t dimension{D};
 
     template<basis Basis>
@@ -1723,7 +1798,12 @@ namespace sequoia::maths
     [[nodiscard]]
     friend constexpr field_type inner_product(const vector_coordinates<euclidean_vector_space, Basis>& v, const vector_coordinates<euclidean_vector_space, Basis>& w)
     {
-      return std::ranges::fold_left(std::views::zip(v.values(), w.values()), field_type{}, [](field_type f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); });
+      return
+        std::ranges::fold_left(
+          std::views::zip(v.values(), w.values()),
+          field_type{},
+          [](field_type f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); }
+        );
     }
 
     template<basis Basis>

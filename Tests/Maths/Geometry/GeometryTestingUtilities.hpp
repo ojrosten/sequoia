@@ -81,9 +81,10 @@ namespace sequoia::testing
   template<class Set, maths::weak_field Field, std::size_t D>
   struct my_vec_space
   {
-    using set_type        = Set;
-    using field_type      = Field;
-    using is_vector_space = std::true_type;
+    using set_type               = Set;
+    using field_type             = Field;
+    using is_vector_space        = std::true_type;
+    using admits_canonical_basis = std::true_type;
     constexpr static std::size_t dimension{D};
 
     template<maths::basis Basis>
@@ -122,9 +123,10 @@ namespace sequoia::testing
   template<class Set, maths::weak_commutative_ring Ring, std::size_t D>
   struct my_free_module
   {
-    using set_type              = Set;
-    using commutative_ring_type = Ring;
-    using is_free_module        = std::true_type;
+    using set_type               = Set;
+    using commutative_ring_type  = Ring;
+    using is_free_module         = std::true_type;
+    using admits_canonical_basis = std::true_type;
     constexpr static std::size_t dimension{D};
   };
 

@@ -88,8 +88,8 @@ namespace sequoia::testing
     STATIC_CHECK(std::same_as<free_module_type_of_t<free_module_t>, free_module_t>);
     STATIC_CHECK(basis_for<canonical_free_module_basis<Set, Ring, D>, free_module_t>);
     
-    using module_t = free_module_coordinates<free_module_t, canonical_free_module_basis<Set, Ring, D>>;
-    coordinates_operations<module_t>{*this}.execute();
+    using module_coords_t = free_module_coordinates<free_module_t, canonical_free_module_basis<Set, Ring, D>>;
+    coordinates_operations<module_coords_t>{*this}.execute();
   }
 
   template<class Set, maths::weak_field Field, std::size_t D>
