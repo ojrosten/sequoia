@@ -39,6 +39,14 @@ namespace sequoia::physics
   inline constexpr bool has_reciprocal_validator_v{
     requires { typename reciprocal_validator_t<T>; }
   };
+
+  template<free_module M, physical_unit U>
+  struct unit_defined_right_handed_basis
+  {
+    using is_basis         = std::true_type;
+    using free_module_type = M;
+    using unit_type        = U;
+  };
 }
 
 namespace sequoia::maths
@@ -70,6 +78,18 @@ namespace sequoia::maths
   struct dual_of<physics::no_unit_t>
   {
     using type = physics::no_unit_t;
+  };
+
+  template<free_module M, physics::physical_unit U>
+  struct dual_of<physics::unit_defined_right_handed_basis<M, U>>
+  {
+    using type = physics::unit_defined_right_handed_basis<dual_of_t<M>, dual_of_t<U>>;
+  };
+
+  template<free_module M, physics::physical_unit U>
+  struct dual_of<physics::unit_defined_right_handed_basis<dual<M>, dual<U>>>
+  {
+    using type = physics::unit_defined_right_handed_basis<M, U>;
   };
 }
 
@@ -350,11 +370,11 @@ namespace sequoia::physics
   template<class Basis1, class Basis2>
   inline constexpr bool consistent_bases_v{consistent_bases<Basis1, Basis2>::value};
 
-  template<free_module M1, free_module M2>
-  struct consistent_bases<canonical_right_handed_basis<M1>, canonical_right_handed_basis<M2>> : std::true_type
+  template<free_module M1, physical_unit U1, free_module M2, physical_unit U2>
+  struct consistent_bases<unit_defined_right_handed_basis<M1, U1>, unit_defined_right_handed_basis<M2, U2>> : std::true_type
   {
-    template<free_module M>
-    using rebind_type = canonical_right_handed_basis<M>;
+    template<free_module M, physical_unit U>
+    using rebind_type = unit_defined_right_handed_basis<M, U>;
   };
 
   template<class T, class U>
@@ -410,11 +430,12 @@ namespace sequoia::physics
                                 physical_value<RHSValueSpace, RHSUnit, RHSBasis, distinguished_origin<RHSValueSpace>, RHSValidator>>
   {
     using value_space_type = impl::to_composite_space_t<reduction_t<direct_product<LHSValueSpace, RHSValueSpace>>>;
+    using unit_type        = impl::to_composite_space_t<reduction_t<direct_product<LHSUnit, RHSUnit>>>;
     using type
       = physical_value<
           value_space_type,
-          impl::to_composite_space_t<reduction_t<direct_product<LHSUnit, RHSUnit>>>,
-          typename consistent_bases<LHSBasis, RHSBasis>::template rebind_type<free_module_type_of_t<value_space_type>>,
+          unit_type,
+          typename consistent_bases<LHSBasis, RHSBasis>::template rebind_type<free_module_type_of_t<value_space_type>, unit_type>,
           distinguished_origin<value_space_type>,
           reduced_validator_t<LHSValidator, RHSValidator>
         >;
@@ -464,7 +485,7 @@ namespace sequoia::physics
   template<
     convex_space ValueSpace,
     physical_unit Unit,
-    basis_for<free_module_type_of_t<ValueSpace>> Basis = canonical_right_handed_basis<free_module_type_of_t<ValueSpace>>,
+    basis_for<free_module_type_of_t<ValueSpace>> Basis = unit_defined_right_handed_basis<free_module_type_of_t<ValueSpace>, Unit>,
     class Origin                                       = to_origin_type_t<ValueSpace, Unit>,
     validator_for<ValueSpace> Validator                = default_validator_t<ValueSpace, Unit>
   >
@@ -571,7 +592,7 @@ namespace sequoia::physics
     {
       using value_space_t = std::common_type_t<typename ValueSpace::base_space, typename OtherValueSpace::base_space>;
       using physical_value_t
-        = physical_value<value_space_t, Unit, canonical_right_handed_basis<free_module_type_of_t<value_space_t>>, to_origin_type_t<value_space_t, Unit>, Validator>;
+        = physical_value<value_space_t, Unit, unit_defined_right_handed_basis<free_module_type_of_t<value_space_t>, Unit>, to_origin_type_t<value_space_t, Unit>, Validator>;
 
       return [&] <std::size_t... Is>(std::index_sequence<Is...>) {
         return physical_value_t{std::array{(lhs.values()[Is] + rhs.values()[Is])...}, units_type{}};
@@ -588,7 +609,7 @@ namespace sequoia::physics
       noexcept(has_identity_validator)
     {
       using disp_space_t = to_displacement_space_t<ValueSpace, OtherValueSpace>;
-      using basis_t = canonical_right_handed_basis<free_module_type_of_t<disp_space_t>>;
+      using basis_t = unit_defined_right_handed_basis<free_module_type_of_t<disp_space_t>, Unit>;
       using disp_t = to_coordinates_base_type<disp_space_t, Unit, basis_t, Validator>::displacement_coordinates_type;
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
         return disp_t{std::array{(lhs.values()[Is] - rhs.values()[Is])...}, units_type{}};
@@ -650,7 +671,7 @@ namespace sequoia::physics
     constexpr operator physical_value<LoweredValueSpace, OtherUnit, OtherBasis, OtherOrigin, validator_type>() const noexcept
     {
       using value_space_t    = to_base_space_t<LoweredValueSpace>;
-      using basis_t          = canonical_right_handed_basis<free_module_type_of_t<value_space_t>>;
+      using basis_t          = unit_defined_right_handed_basis<free_module_type_of_t<value_space_t>, Unit>;
       using physical_value_t = physical_value<to_base_space_t<LoweredValueSpace>, Unit, basis_t, to_origin_type_t<value_space_t, Unit>, validator_type>;
       if constexpr(dimension == 1)
       {
@@ -667,7 +688,7 @@ namespace sequoia::physics
     template<
       physical_unit OtherUnit,
       convex_space OtherSpace=conversion_space_t<ValueSpace, Unit, OtherUnit>,
-      basis_for<free_module_type_of_t<OtherSpace>> OtherBasis = canonical_right_handed_basis<free_module_type_of_t<OtherSpace>>,
+      basis_for<free_module_type_of_t<OtherSpace>> OtherBasis = unit_defined_right_handed_basis<free_module_type_of_t<OtherSpace>, OtherUnit>,
       class OtherOrigin                                       = to_origin_type_t<OtherSpace, OtherUnit>,
       validator_for<OtherSpace> OtherValidator                = default_validator_t<OtherSpace, OtherUnit>
     >
@@ -1333,13 +1354,20 @@ namespace sequoia::physics
       class Arena=implicit_common_arena,
       class Origin=implicit_affine_origin<time_space<T, Arena>>
     >
-    using time = physical_value<time_space<T, Arena>, units::second_t, canonical_right_handed_basis<free_module_type_of_t<time_space<T, Arena>>>, Origin, std::identity>;
+    using time
+      = physical_value<
+          time_space<T, Arena>,
+          units::second_t,
+          unit_defined_right_handed_basis<free_module_type_of_t<time_space<T, Arena>>, units::second_t>,
+          Origin,
+          std::identity
+        >;
 
     template<      
       std::floating_point T,
       std::size_t D,
       class Arena  = implicit_common_arena,      
-      basis_for<free_module_type_of_t<position_space<T, D, Arena>>> Basis = canonical_right_handed_basis<free_module_type_of_t<position_space<T, D, Arena>>>,
+      basis_for<free_module_type_of_t<position_space<T, D, Arena>>> Basis = unit_defined_right_handed_basis<free_module_type_of_t<position_space<T, D, Arena>>, units::metre_t>,
       class Origin = implicit_affine_origin<position_space<T, D, Arena>>
     >
     using position = physical_value<position_space<T, D, Arena>, units::metre_t, Basis, Origin, std::identity>;
@@ -1490,7 +1518,7 @@ namespace sequoia::physics
 
   template<physical_unit Unit, class Rep, class Validator=typename Unit::validator_type>
     requires has_default_space_v<Unit, Rep>
-  using quantity = physical_value<default_space_t<Unit, Rep>, Unit, canonical_right_handed_basis<free_module_type_of_t<default_space_t<Unit, Rep>>>, to_origin_type_t<default_space_t<Unit, Rep>, Unit>, Validator>;
+  using quantity = physical_value<default_space_t<Unit, Rep>, Unit, unit_defined_right_handed_basis<free_module_type_of_t<default_space_t<Unit, Rep>>, Unit>, to_origin_type_t<default_space_t<Unit, Rep>, Unit>, Validator>;
 
   template<
     convex_space ValueSpace,
@@ -1498,7 +1526,7 @@ namespace sequoia::physics
     validator_for<ValueSpace> Validator=typename Unit::validator_type
   >
     requires has_consistent_validator<ValueSpace, Validator>
-  using dimensionless_quantity = physical_value<ValueSpace, Unit, canonical_right_handed_basis<free_module_type_of_t<ValueSpace>>, to_origin_type_t<ValueSpace, Unit>, Validator>;
+  using dimensionless_quantity = physical_value<ValueSpace, Unit, unit_defined_right_handed_basis<free_module_type_of_t<ValueSpace>, Unit>, to_origin_type_t<ValueSpace, Unit>, Validator>;
   
   template<std::floating_point Rep, class Arena=implicit_common_arena>
   using euclidean_1d_vector_quantity = dimensionless_quantity<euclidean_vector_space<Rep, 1, Arena>, no_unit_t, std::identity>;

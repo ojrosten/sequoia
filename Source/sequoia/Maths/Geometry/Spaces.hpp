@@ -1753,6 +1753,7 @@ namespace sequoia::maths
   template<class V>
   concept inner_product_space = vector_space<V> && has_inner_product_v<V>;
 
+  // TO DO: reconsider whether this is necessary
   struct mathematical_arena {};
 
   template<std::floating_point T, std::size_t D, class Arena=mathematical_arena>
