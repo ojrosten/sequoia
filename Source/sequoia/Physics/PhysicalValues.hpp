@@ -45,7 +45,7 @@ namespace sequoia::physics
   {
     using is_basis         = std::true_type;
     using free_module_type = M;
-    using unit_type        = U;
+    using units_type       = U;
   };
 }
 
@@ -416,12 +416,12 @@ namespace sequoia::physics
                                 physical_value<RHSValueSpace, RHSUnit, RHSBasis, distinguished_origin<RHSValueSpace>, RHSValidator>>
   {
     using value_space_type = impl::to_composite_space_t<reduction_t<direct_product<LHSValueSpace, RHSValueSpace>>>;
-    using unit_type        = impl::to_composite_space_t<reduction_t<direct_product<LHSUnit, RHSUnit>>>;
+    using units_type       = impl::to_composite_space_t<reduction_t<direct_product<LHSUnit, RHSUnit>>>;
     using type
       = physical_value<
           value_space_type,
-          unit_type,
-          typename consistent_bases<LHSBasis, RHSBasis>::template rebind_type<free_module_type_of_t<value_space_type>, unit_type>,
+          units_type,
+          typename consistent_bases<LHSBasis, RHSBasis>::template rebind_type<free_module_type_of_t<value_space_type>, units_type>,
           distinguished_origin<value_space_type>,
           reduced_validator_t<LHSValidator, RHSValidator>
         >;
@@ -523,37 +523,7 @@ namespace sequoia::physics
       && (physical_value<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSValidator>::D == 1)
     };
 
-    constexpr physical_value() = default;
-
-    constexpr physical_value(value_type val, units_type) requires (D == 1)
-      : coordinates_type{val}
-    {}
-
-    constexpr physical_value(std::span<const value_type, D> val, units_type)
-      : coordinates_type{val}
-    {}
-
-    template<class... Args>
-      requires (sizeof...(Args) == D + 1) && (D > 1) && is_valid_physical_value_pack_v<value_type, Args...>
-    constexpr physical_value(Args... args)
-      : physical_value{std::make_index_sequence<D>{}, std::tuple{args...}}
-    {}
-
-    constexpr explicit physical_value(value_type val)
-      requires std::derived_from<units_type, no_unit_t> && (D == 1)
-      : coordinates_type{val}
-    {}
-
-    constexpr explicit physical_value(std::span<const value_type, D> val)
-      requires std::derived_from<units_type, no_unit_t>
-      : coordinates_type{val}
-    {}
-
-    template<class... Args>
-    requires (sizeof...(Args) == D) && (D > 1) && std::derived_from<units_type, no_unit_t> && (std::convertible_to<Args, value_type> && ...)
-    constexpr explicit(sizeof...(Args) == 1) physical_value(Args... args)
-      : physical_value{std::make_index_sequence<D>{}, std::tuple{args...}}
-    {}
+    using coordinates_type::coordinates_type;
 
     [[nodiscard]]
     constexpr physical_value operator-() const noexcept(has_identity_validator)
@@ -688,11 +658,6 @@ namespace sequoia::physics
 
     [[nodiscard]]
     constexpr physical_value convert_to(Unit) const noexcept { return *this; }
-  private:
-    template<std::size_t... Is, class... Args> 
-    constexpr physical_value(std::index_sequence<Is...>, const std::tuple<Args...>& args)
-      : coordinates_type{std::get<Is>(args)...}
-    {}
   };
 
   template<physical_unit Unit, class Rep>
@@ -1111,14 +1076,14 @@ namespace sequoia::physics
   struct root_transform
   {
     using transform_type = coordinate_transform<U, dilatation<std::ratio<1, 1>>, translation<0>>;
-    using unit_type  = U;
+    using units_type     = U;
   };
 
   template<physical_unit U>
   using root_transform_t = root_transform<U>::transform_type;
 
   template<physical_unit U>
-  using root_transform_unit_t = root_transform<U>::unit_type;
+  using root_transform_unit_t = root_transform<U>::units_type;
 
   template<physical_unit U>
     requires derives_from_another_unit_v<U>
@@ -1142,7 +1107,7 @@ namespace sequoia::physics
     requires (scale_invariant_validator_v<typename Us::validator_type> && ...)
   struct root_transform<composite_unit<Us...>>
   {
-    using unit_type = decltype((root_transform_unit_t<Us>{} * ...));
+    using units_type = decltype((root_transform_unit_t<Us>{} * ...));
     using transform_type = product_t<root_transform_t<Us>...>;
   };
 
@@ -1544,10 +1509,10 @@ namespace sequoia::maths
   >
   {
     using value_type      = commutative_ring_type_of_t<ValueSpaceFrom>;
-    using from_unit_type  = UnitFrom;
-    using from_type       = physical_value<ValueSpaceFrom, from_unit_type, BasisFrom, OriginFrom, ValidatorFrom>;
-    using to_unit_type    = UnitTo;
-    using to_type         = physical_value<ValueSpaceTo, to_unit_type, BasisTo, OriginTo, ValidatorTo>;
+    using from_units_type = UnitFrom;
+    using from_type       = physical_value<ValueSpaceFrom, from_units_type, BasisFrom, OriginFrom, ValidatorFrom>;
+    using to_units_type   = UnitTo;
+    using to_type         = physical_value<ValueSpaceTo, to_units_type, BasisTo, OriginTo, ValidatorTo>;
     using transform_type  = product_t<root_transform_t<UnitTo>, inverse_t<root_transform_t<UnitFrom>>>;
 
     constexpr static auto to_displacement() noexcept {
@@ -1569,7 +1534,7 @@ namespace sequoia::maths
             return static_cast<value_type>((v * ratio_type::num / ratio_type::den) + to_displacement());
           }
         ),
-        to_unit_type{}
+        to_units_type{}
       };
     }
   };

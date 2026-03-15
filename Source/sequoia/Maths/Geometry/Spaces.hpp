@@ -1171,17 +1171,20 @@ namespace sequoia::maths
   };  
 
   template<basis B>
-  struct get_unit
+  struct get_units
   {
     using type = no_unit_t;
   };
 
   template<basis B>
     requires (!admits_canonical_basis_v<typename B::free_module_type>) // TO DO: encode this in basis_for
-  struct get_unit<B>
+  struct get_units<B>
   {
-    using type = B::unit_type;
+    using type = B::units_type;
   };
+
+  template<basis B>
+  using get_units_t = get_units<B>::type;
 
   /** @defgroup Coordinates Coordinates
       @brief Coordinates are the bridge between the abstract mathematics of spaces and practical application.
@@ -1273,6 +1276,34 @@ namespace sequoia::maths
       that it wraps the appropriately promoted arithmetic type.
    */
 
+
+  namespace impl
+  {
+    template<basis B, class Rep, class...>
+    struct is_units_terminated_pack : std::false_type {};
+
+    template<basis B, class Rep, class... Args, std::size_t... Is>
+      requires (sizeof...(Args) == sizeof...(Is) + 1)
+            && std::same_as<std::tuple_element_t<sizeof...(Is), std::tuple<Args...>>, get_units_t<B>>
+            && (std::same_as<std::tuple_element_t<Is, std::tuple<Args...>>, Rep> && ...)
+    struct is_units_terminated_pack<B, Rep, std::tuple<Args...>, std::index_sequence<Is...>> : std::true_type
+    {
+    };
+  }
+
+  template<basis B, class Rep, class... Args>
+  struct is_units_terminated_pack : std::false_type
+  {};
+  
+  template<basis B, class Rep, class... Args>
+    requires (sizeof...(Args) > 1)
+  struct is_units_terminated_pack<B, Rep, Args...>
+    : impl::is_units_terminated_pack<B, Rep, std::tuple<Args...>, std::make_index_sequence<sizeof...(Args) - 1>>
+  {};
+
+  template<basis B, class Rep, class... Args>
+  inline constexpr bool is_units_terminated_pack_v{is_units_terminated_pack<B, Rep, Args...>::value};
+  
   template<
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
@@ -1290,7 +1321,7 @@ namespace sequoia::maths
     using commutative_ring_type         = commutative_ring_type_of_t<ConvexSpace>;
     using value_type                    = commutative_ring_type;
     using displacement_coordinates_type = DisplacementCoordinates;
-    using unit_type                     = get_unit<Basis>;
+    using units_type                    = get_units_t<Basis>;
 
     // TO DO: improve conventions
     constexpr static bool has_distinguished_origin{has_distinguished_origin_v<ConvexSpace>};
@@ -1305,35 +1336,31 @@ namespace sequoia::maths
 
     constexpr explicit coordinates_base(std::span<const value_type, D> vals) noexcept(has_identity_validator)
       requires admits_canonical_basis
+      : coordinates_base{vals, units_type{}}
+    {}
+
+    constexpr coordinates_base(std::span<const value_type, D> vals, units_type) noexcept(has_identity_validator)
       : m_Values{validate(vals, m_Validator)}
     {}
 
     template<class... Ts>
       requires admits_canonical_basis && (D > 1) && (std::convertible_to<Ts, value_type> && ...)
     constexpr explicit(sizeof...(Ts) == 1) coordinates_base(Ts... ts) noexcept(has_identity_validator)
-      : m_Values{m_Validator(std::array<value_type, D>{ts...})}
-    {}
-
-    template<class T>
-      requires admits_canonical_basis && (D == 1) && (std::convertible_to<T, value_type>)
-    constexpr explicit coordinates_base(T val) noexcept(has_identity_validator)
-      : m_Values{m_Validator(val)}
-    {}
-
-    constexpr explicit coordinates_base(std::span<const value_type, D> vals) noexcept(has_identity_validator)
-      requires (!admits_canonical_basis)
-      : m_Values{validate(vals, m_Validator)}
+      : coordinates_base{ts..., units_type{}}
     {}
 
     template<class... Ts>
-      requires (!admits_canonical_basis) && (D > 1) && (std::convertible_to<Ts, value_type> && ...)
-    constexpr explicit(sizeof...(Ts) == 1) coordinates_base(Ts... ts) noexcept(has_identity_validator)
-      : m_Values{m_Validator(std::array<value_type, D>{ts...})}
+      requires (D > 1) && (sizeof...(Ts) > 1) && is_units_terminated_pack_v<basis_type, value_type, Ts...>
+    constexpr coordinates_base(Ts... ts) noexcept(has_identity_validator)
+      : coordinates_base{std::make_index_sequence<sizeof...(Ts) - 1>{}, std::tuple{ts...}}
     {}
 
-    template<class T>
-      requires (!admits_canonical_basis) && (D == 1) && (std::convertible_to<T, value_type>)
-    constexpr explicit coordinates_base(T val) noexcept(has_identity_validator)
+    constexpr explicit coordinates_base(value_type val) noexcept(has_identity_validator)      
+      requires admits_canonical_basis && (D == 1)
+      : coordinates_base{val, units_type{}}
+    {}
+
+    constexpr coordinates_base(value_type val, units_type) noexcept(has_identity_validator)
       : m_Values{m_Validator(val)}
     {}
 
@@ -1623,6 +1650,11 @@ namespace sequoia::maths
     SEQUOIA_NO_UNIQUE_ADDRESS validator_type m_Validator;
     std::array<value_type, D> m_Values{};
 
+    template<std::size_t... Is, class... Args> 
+    constexpr coordinates_base(std::index_sequence<Is...>, const std::tuple<Args...>& args)
+      : m_Values{m_Validator(std::array<value_type, D>{std::get<Is>(args)...})}
+    {}
+    
     [[nodiscard]]
     static std::array<value_type, D> validate(std::span<const value_type, D> vals, Validator& validator)
     {
