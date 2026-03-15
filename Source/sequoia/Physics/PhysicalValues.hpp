@@ -74,12 +74,6 @@ namespace sequoia::maths
     using validator_type = void;
   };
 
-  template<>
-  struct dual_of<physics::no_unit_t>
-  {
-    using type = physics::no_unit_t;
-  };
-
   template<free_module M, physics::physical_unit U>
   struct dual_of<physics::unit_defined_right_handed_basis<M, U>>
   {
@@ -114,14 +108,6 @@ namespace sequoia::physics
   {
     using type = reduced_validator_t<T, reduced_validator_t<Us...>>;
   };
-
-  struct no_unit_t
-  {
-    using is_unit        = std::true_type; // TO DO: naming makes this peverse!
-    using validator_type = maths::half_line_validator;
-  };
-
-  inline constexpr no_unit_t no_unit{};
 
   template<physical_unit... Ts>
   struct composite_unit

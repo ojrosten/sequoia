@@ -44,8 +44,6 @@ namespace sequoia::physics
     =    identifies_as_unit_v<T>
       && requires { typename T::validator_type; };
 
-  struct no_unit_t;
-
   template<class... Ts>
   struct composite_space;
 

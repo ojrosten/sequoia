@@ -1072,7 +1072,6 @@ namespace sequoia::maths
   struct dual_of<dual<T>> {
     using type = T;
   };
-
   
   /** @defgroup SpacesUtilities Convex Space Utilities
       @brief Utilites for extracting properties of convex spaces
@@ -1155,6 +1154,34 @@ namespace sequoia::maths
   {
   };
 
+  
+  // TO DO: document
+  struct no_unit_t
+  {
+    using is_unit        = std::true_type; // TO DO: naming makes this peverse!
+    using validator_type = maths::half_line_validator;
+  };
+  
+  inline constexpr no_unit_t no_unit{};
+
+  template<>
+  struct dual_of<no_unit_t>
+  {
+    using type = no_unit_t;
+  };  
+
+  template<basis B>
+  struct get_unit
+  {
+    using type = no_unit_t;
+  };
+
+  template<basis B>
+    requires (!admits_canonical_basis_v<typename B::free_module_type>) // TO DO: encode this in basis_for
+  struct get_unit<B>
+  {
+    using type = B::unit_type;
+  };
 
   /** @defgroup Coordinates Coordinates
       @brief Coordinates are the bridge between the abstract mathematics of spaces and practical application.
@@ -1263,6 +1290,7 @@ namespace sequoia::maths
     using commutative_ring_type         = commutative_ring_type_of_t<ConvexSpace>;
     using value_type                    = commutative_ring_type;
     using displacement_coordinates_type = DisplacementCoordinates;
+    using unit_type                     = get_unit<Basis>;
 
     // TO DO: improve conventions
     constexpr static bool has_distinguished_origin{has_distinguished_origin_v<ConvexSpace>};
