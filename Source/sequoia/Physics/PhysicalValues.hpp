@@ -529,7 +529,7 @@ namespace sequoia::physics
     constexpr physical_value operator-() const noexcept(has_identity_validator)
       requires (coordinates_type::has_distinguished_origin) && (!std::is_unsigned_v<ring_type>) && (!is_effectively_absolute)
     {
-      return physical_value{utilities::to_array(this->values(), [](value_type t) { return -t; }), units_type{}};
+      return coordinates_type::operator-();
     }
 
     using coordinates_type::operator+=;

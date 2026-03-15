@@ -1425,13 +1425,13 @@ namespace sequoia::maths
 
     template<class Self>
       requires    std::derived_from<Self, coordinates_base>
-               && std::constructible_from<Self, std::span<const value_type, D>>
+               && std::constructible_from<Self, std::span<const value_type, D>, units_type>
                && has_distinguished_origin
                && (!std::is_unsigned_v<value_type>)
     [[nodiscard]]
     constexpr Self operator-(this const Self& self) noexcept(has_identity_validator)
     {
-      return Self{utilities::to_array(self.values(), [](value_type t) { return -t; })};
+      return Self{utilities::to_array(self.values(), [](value_type t) { return -t; }), units_type{}};
     }
 
     template<class Derived>
