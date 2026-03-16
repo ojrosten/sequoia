@@ -524,14 +524,20 @@ namespace sequoia::physics
     using coordinates_type::operator+=;
     
     template<convex_space OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
-      requires is_non_negative_orthant_v<space_type> && (std::is_base_of_v<ValueSpace, OtherValueSpace>) && consistent_bases_v<basis_type, OtherBasis>
+    requires (!std::same_as<space_type, OtherValueSpace>)
+          && has_distinguished_origin_v<space_type>
+          && (std::derived_from<OtherValueSpace, space_type>)
+          && consistent_bases_v<basis_type, OtherBasis>
     constexpr physical_value& operator+=(const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& other) noexcept(has_identity_validator)
     {
       return *this = (*this + other);
     }
 
     template<convex_space OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
-      requires is_non_negative_orthant_v<space_type> && (!std::is_same_v<ValueSpace, OtherValueSpace>) && have_compatible_base_spaces_v<ValueSpace, OtherValueSpace> && consistent_bases_v<basis_type, OtherBasis>
+      requires has_distinguished_origin_v<space_type>
+           && (!std::is_same_v<space_type, OtherValueSpace>)
+           && have_compatible_base_spaces_v<space_type, OtherValueSpace>
+           && consistent_bases_v<basis_type, OtherBasis>
     [[nodiscard]]
     friend constexpr auto operator+(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& rhs)
     {
@@ -545,8 +551,8 @@ namespace sequoia::physics
     }
 
     template<class OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
-      requires (!std::is_same_v<OtherValueSpace, displacement_space_type>)
-            && (!std::is_same_v<ValueSpace, OtherValueSpace> && have_compatible_base_spaces_v<ValueSpace, OtherValueSpace>)
+      requires (!std::same_as<OtherValueSpace, displacement_space_type>)
+            && (!std::same_as<space_type, OtherValueSpace> && have_compatible_base_spaces_v<space_type, OtherValueSpace>)
             && consistent_bases_v<basis_type, OtherBasis>
     [[nodiscard]]
     friend constexpr auto operator-(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& rhs)
