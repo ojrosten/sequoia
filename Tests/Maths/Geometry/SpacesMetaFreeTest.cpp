@@ -25,10 +25,10 @@ namespace sequoia::testing
     };
 
     struct half_line_space {
-      using set_type         = sets::R<1>;
-      using free_module_type = euclidean_vector_space<float, 1>;
-      using is_convex_space  = std::true_type;
-      using half_line        = std::true_type;
+      using set_type             = sets::R<1>;
+      using free_module_type     = euclidean_vector_space<float, 1>;
+      using is_convex_space      = std::true_type;
+      using non_negative_orthant = std::true_type;
     };
 
     struct unremarkable_space {
@@ -66,16 +66,16 @@ namespace sequoia::testing
     STATIC_CHECK(weakly_abelian_group_under_multiplication_v<std::complex<double>>);
 
     STATIC_CHECK(has_distinguished_origin_v<distinguished_origin_space>);
-    STATIC_CHECK(!is_half_line_v<distinguished_origin_space>);
+    STATIC_CHECK(!is_non_negative_orthant_v<distinguished_origin_space>);
 
     STATIC_CHECK(has_distinguished_origin_v<half_line_space>);
-    STATIC_CHECK(is_half_line_v<half_line_space>);
+    STATIC_CHECK(is_non_negative_orthant_v<half_line_space>);
     STATIC_CHECK(has_distinguished_origin_v<dual<half_line_space>>);
-    STATIC_CHECK(is_half_line_v<dual<half_line_space>>);
+    STATIC_CHECK(is_non_negative_orthant_v<dual<half_line_space>>);
 
     STATIC_CHECK(!has_distinguished_origin_v<unremarkable_space>);
-    STATIC_CHECK(!is_half_line_v<unremarkable_space>);
+    STATIC_CHECK(!is_non_negative_orthant_v<unremarkable_space>);
     STATIC_CHECK(!has_distinguished_origin_v<dual<unremarkable_space>>);
-    STATIC_CHECK(!is_half_line_v<dual<unremarkable_space>>);
+    STATIC_CHECK(!is_non_negative_orthant_v<dual<unremarkable_space>>);
   }
 }

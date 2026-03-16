@@ -377,10 +377,10 @@ namespace sequoia::physics::impl
     // TO DO; potential problem here if reducible modules are floating-point but everything else is integral
     // Depends where we do any arithmetic promotions; ideally below using common_type
     // TO DO: At some point this may need generalizing to finite segments with a distinguished origin
-    constexpr static bool anyOfNotReducibleFreeModule     {(( free_module<Ts>    && !potentially_prunable_v<type_counter<Ts, Is>>) || ...)};
-    constexpr static bool anyOfNotReducibleHalfLine       {(( is_half_line_v<Ts> && !potentially_prunable_v<type_counter<Ts, Is>>) || ...)};
-    constexpr static bool allOfNotReducibleOrNotFreeModule{((!free_module<Ts>    || !potentially_prunable_v<type_counter<Ts, Is>>) && ...)};
-    constexpr static bool allOfNotReducibleOrNotHalfLine  {((!is_half_line_v<Ts> || !potentially_prunable_v<type_counter<Ts, Is>>) && ...)};
+    constexpr static bool anyOfNotReducibleFreeModule     {(( free_module<Ts>               && !potentially_prunable_v<type_counter<Ts, Is>>) || ...)};
+    constexpr static bool anyOfNotReducibleHalfLine       {(( is_non_negative_orthant_v<Ts> && !potentially_prunable_v<type_counter<Ts, Is>>) || ...)};
+    constexpr static bool allOfNotReducibleOrNotFreeModule{((!free_module<Ts>               || !potentially_prunable_v<type_counter<Ts, Is>>) && ...)};
+    constexpr static bool allOfNotReducibleOrNotHalfLine  {((!is_non_negative_orthant_v<Ts> || !potentially_prunable_v<type_counter<Ts, Is>>) && ...)};
     
     using filtered_t = meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, not_potentially_prunable>;
 

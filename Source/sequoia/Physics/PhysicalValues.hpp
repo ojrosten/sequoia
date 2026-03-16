@@ -807,7 +807,7 @@ namespace sequoia::physics
     using arena_type           = Arena;
     using base_space           = mass_space;
     using distinguished_origin = std::true_type;
-    using half_line            = std::true_type;
+    using non_negative_orthant  = std::true_type;
   };
 
   template<std::floating_point Rep, class Arena>
@@ -817,7 +817,7 @@ namespace sequoia::physics
     using arena_type           = Arena;
     using base_space           = absolute_temperature_space;
     using distinguished_origin = std::true_type;
-    using half_line            = std::true_type;
+    using non_negative_orthant = std::true_type;
   };
 
   template<convex_space C>
@@ -827,7 +827,7 @@ namespace sequoia::physics
     using base_space           = relaxed_space<typename C::base_space>;
     using free_module_type     = associated_displacement_space<relaxed_space>;
     using distinguished_origin = std::false_type;
-    using half_line            = std::false_type;
+    using non_negative_orthant = std::false_type;
   };
 
   template<std::floating_point Rep, class Arena>
@@ -855,7 +855,7 @@ namespace sequoia::physics
     using arena_type           = Arena;
     using base_space           = length_space;
     using distinguished_origin = std::true_type;
-    using half_line            = std::true_type;
+    using non_negative_orthant = std::true_type;
   };
 
   template<arithmetic Rep, class Arena>
@@ -876,7 +876,7 @@ namespace sequoia::physics
   {
     using arena_type           = Arena;
     using distinguished_origin = std::true_type;
-    using half_line            = std::true_type;
+    using non_negative_orthant = std::true_type;
   };
   
   template<arithmetic Rep, class Arena>

@@ -1078,21 +1078,38 @@ namespace sequoia::maths
    */
 
   template<convex_space C>
-  struct is_half_line : std::false_type
+  struct is_non_negative_orthant : std::false_type
   {};
 
   template<convex_space C>
-  using is_half_line_t = is_half_line<C>::type;
+  using is_non_negative_orthant_t = is_non_negative_orthant<C>::type;
 
   template<convex_space C>
-  inline constexpr bool is_half_line_v{is_half_line<C>::value};
+  inline constexpr bool is_non_negative_orthant_v{is_non_negative_orthant<C>::value};
+
+  template<convex_space Space>
+  inline constexpr bool has_non_negative_orthant_type_v{
+    requires {
+      typename Space::non_negative_orthant;
+    }
+  };
+
+  template<convex_space C>
+      requires has_non_negative_orthant_type_v<C> && std::convertible_to<typename C::non_negative_orthant, std::true_type>
+  struct is_non_negative_orthant<C> : std::true_type
+  {
+  };
+  
+  template<convex_space C>
+  struct is_non_negative_orthant<dual<C>> : is_non_negative_orthant<C>
+  {
+  };
+  
 
   template<convex_space Space>
   inline constexpr bool has_distinguished_origin_type_v{
     requires {
       typename Space::distinguished_origin;
-      requires (   std::convertible_to<typename Space::distinguished_origin, std::true_type>
-                || std::convertible_to<typename Space::distinguished_origin, std::false_type>);
     }
   };
   
@@ -1107,14 +1124,13 @@ namespace sequoia::maths
   inline constexpr bool has_distinguished_origin_v{has_distinguished_origin<Space>::value};
 
   template<convex_space Space>
-    requires has_distinguished_origin_type_v<Space>
-  struct has_distinguished_origin<Space> : Space::distinguished_origin::type
+    requires has_distinguished_origin_type_v<Space> && std::convertible_to<typename Space::distinguished_origin, std::true_type>
+  struct has_distinguished_origin<Space> : std::true_type
   {
-    static_assert(!is_half_line_v<Space> || Space::distinguished_origin::value);
   };
 
   template<convex_space Space>
-    requires (!has_distinguished_origin_type_v<Space>) && is_half_line_v<Space>
+    requires (!has_distinguished_origin_type_v<Space>) && is_non_negative_orthant_v<Space>
   struct has_distinguished_origin<Space> : std::true_type
   {
   };
@@ -1132,28 +1148,6 @@ namespace sequoia::maths
   struct has_distinguished_origin<dual<Space>> : has_distinguished_origin<Space>
   {
   };
-  
-  template<convex_space Space>
-  inline constexpr bool has_half_line_type_v{
-    requires {
-      typename Space::half_line;
-      requires (   std::convertible_to<typename Space::half_line, std::true_type>
-                || std::convertible_to<typename Space::half_line, std::false_type>);
-    }
-  };
-
-  template<convex_space C>
-      requires has_half_line_type_v<C>
-  struct is_half_line<C> : C::half_line::type
-  {
-    static_assert(!C::half_line::value || (dimension_of<C> == 1));
-  };
-  
-  template<convex_space C>
-  struct is_half_line<dual<C>> : is_half_line<C>
-  {
-  };
-
   
   // TO DO: document
   struct no_unit_t
@@ -1878,7 +1872,7 @@ namespace sequoia::maths
     using is_convex_space      = std::true_type;
     using arena_type           = Arena;
     using distinguished_origin = std::true_type;
-    using half_line            = std::true_type;
+    using non_negative_orthant = std::true_type;
   };
 
   template<class T>
