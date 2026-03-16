@@ -496,15 +496,13 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{displacement_space_type::dimension};
     constexpr static std::size_t D{dimension};
 
-    constexpr static bool is_intrinsically_absolute{is_non_negative_orthant_v<space_type>};
-
     constexpr static bool has_identity_validator{coordinates_type::has_identity_validator};
 
     template<convex_space RHSValueSpace, class RHSUnit, class RHSBasis, class RHSOrigin, class RHSValidator>
     constexpr static bool is_composable_with{
          consistent_bases_v<basis_type, RHSBasis>
-      && (is_intrinsically_absolute || vector_space<space_type>)
-      && (physical_value<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSValidator>::is_intrinsically_absolute || vector_space<RHSValueSpace>)
+      && (is_non_negative_orthant_v<space_type> || vector_space<space_type>)
+      && (is_non_negative_orthant_v<RHSValueSpace> || vector_space<RHSValueSpace>)
     };
 
     template<convex_space RHSValueSpace, class RHSUnit, class RHSBasis, class RHSOrigin, class RHSValidator>
@@ -526,14 +524,14 @@ namespace sequoia::physics
     using coordinates_type::operator+=;
     
     template<convex_space OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
-      requires is_intrinsically_absolute && (std::is_base_of_v<ValueSpace, OtherValueSpace>) && consistent_bases_v<basis_type, OtherBasis>
+      requires is_non_negative_orthant_v<space_type> && (std::is_base_of_v<ValueSpace, OtherValueSpace>) && consistent_bases_v<basis_type, OtherBasis>
     constexpr physical_value& operator+=(const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& other) noexcept(has_identity_validator)
     {
       return *this = (*this + other);
     }
 
     template<convex_space OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
-      requires is_intrinsically_absolute && (!std::is_same_v<ValueSpace, OtherValueSpace>) && have_compatible_base_spaces_v<ValueSpace, OtherValueSpace> && consistent_bases_v<basis_type, OtherBasis>
+      requires is_non_negative_orthant_v<space_type> && (!std::is_same_v<ValueSpace, OtherValueSpace>) && have_compatible_base_spaces_v<ValueSpace, OtherValueSpace> && consistent_bases_v<basis_type, OtherBasis>
     [[nodiscard]]
     friend constexpr auto operator+(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& rhs)
     {
@@ -603,7 +601,7 @@ namespace sequoia::physics
     }
 
     [[nodiscard]] friend constexpr auto operator/(value_type value, const physical_value& rhs)
-      requires ((D == 1) && (is_intrinsically_absolute || vector_space<ValueSpace>))
+      requires ((D == 1) && (is_non_negative_orthant_v<space_type> || vector_space<ValueSpace>))
     {
       using physical_value_t = physical_value<dual_of_t<ValueSpace>, dual_of_t<Unit>, dual_of_t<basis_type>, distinguished_origin<dual_of_t<ValueSpace>>, validator_type>;
       using derived_units_type = physical_value_t::units_type;

@@ -78,9 +78,8 @@ namespace sequoia::testing
 
   void physical_value_meta_free_test::test_space_properties()
   {
-    STATIC_CHECK(si::mass<float>::is_intrinsically_absolute);
- 
-    STATIC_CHECK(convex_space<mass_space_t>);
+    STATIC_CHECK(convex_space<mass_space_t>);    
+    STATIC_CHECK(is_non_negative_orthant_v<mass_space_t>);
     STATIC_CHECK(!has_unary_minus<mass_space_t>);
 
     STATIC_CHECK(vector_space<electrical_current_space_t>);
