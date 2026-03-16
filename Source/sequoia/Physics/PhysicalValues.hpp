@@ -499,7 +499,6 @@ namespace sequoia::physics
       (D == 1) && !affine_space<space_type> && defines_half_line_validator_v<intrinsic_validator_type>
     };
 
-    constexpr static bool is_effectively_absolute{is_intrinsically_absolute && std::is_same_v<Validator, intrinsic_validator_type>};
     constexpr static bool has_identity_validator{coordinates_type::has_identity_validator};
 
     template<convex_space RHSValueSpace, class RHSUnit, class RHSBasis, class RHSOrigin, class RHSValidator>
@@ -527,7 +526,7 @@ namespace sequoia::physics
 
     [[nodiscard]]
     constexpr physical_value operator-() const noexcept(has_identity_validator)
-      requires (coordinates_type::has_distinguished_origin) && (!std::is_unsigned_v<ring_type>) && (!is_effectively_absolute)
+      requires (coordinates_type::has_distinguished_origin) && (!std::is_unsigned_v<ring_type>) && (!is_intrinsically_absolute)
     {
       return coordinates_type::operator-();
     }

@@ -308,11 +308,11 @@ namespace sequoia::testing
 
       add_dim_1_common_transitions(g, test);
 
-      if constexpr(!maths::defines_half_line_validator_v<typename Coordinates::validator_type>)
+      if constexpr(has_unary_minus<Coordinates>)
       {
         add_dim_1_negative_transitions(g, test);
       }
-      else if constexpr(std::is_signed_v<ring_t>)
+      else if constexpr(maths::defines_half_line_validator_v<typename Coordinates::validator_type> && std::is_signed_v<ring_t>)
       {
         add_dim_1_attempted_negative_transitions(g, test);
       }
