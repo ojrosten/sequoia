@@ -1424,10 +1424,9 @@ namespace sequoia::maths
     }
 
     template<class Self>
-      requires    std::derived_from<Self, coordinates_base>
-               && std::constructible_from<Self, std::span<const value_type, D>, units_type>
-               && has_distinguished_origin
-               && (!std::is_unsigned_v<value_type>)
+      requires std::derived_from<Self, coordinates_base>
+            && has_distinguished_origin
+            && (!std::is_unsigned_v<value_type>)
     [[nodiscard]]
     constexpr Self operator-(this const Self& self) noexcept(has_identity_validator)
     {
@@ -1437,12 +1436,11 @@ namespace sequoia::maths
     template<class Derived>
       requires std::derived_from<Derived, coordinates_base>
             && (!std::is_same_v<Derived, displacement_coordinates_type>)
-            && std::constructible_from<typename Derived::displacement_coordinates_type, std::span<const value_type, D>>
     [[nodiscard]]
     friend constexpr typename Derived::displacement_coordinates_type operator-(const Derived& lhs, const Derived& rhs) noexcept(has_identity_validator)
     {
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
-        return typename Derived::displacement_coordinates_type{(lhs.values()[Is] - rhs.values()[Is])...};
+        return typename Derived::displacement_coordinates_type{(lhs.values()[Is] - rhs.values()[Is])..., units_type{}};
       }(std::make_index_sequence<D>{});
     }
 

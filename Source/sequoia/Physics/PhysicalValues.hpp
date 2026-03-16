@@ -556,8 +556,7 @@ namespace sequoia::physics
 
     template<class OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
       requires (!std::is_same_v<OtherValueSpace, displacement_space_type>)
-            && (    (std::is_same_v<ValueSpace, OtherValueSpace> && !std::constructible_from<displacement_type, std::span<const value_type, D>>)
-                 || (!std::is_same_v<ValueSpace, OtherValueSpace> && have_compatible_base_spaces_v<ValueSpace, OtherValueSpace>))
+            && (!std::is_same_v<ValueSpace, OtherValueSpace> && have_compatible_base_spaces_v<ValueSpace, OtherValueSpace>)
             && consistent_bases_v<basis_type, OtherBasis>
     [[nodiscard]]
     friend constexpr auto operator-(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& rhs)
