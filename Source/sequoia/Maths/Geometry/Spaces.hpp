@@ -1098,6 +1098,7 @@ namespace sequoia::maths
       requires has_non_negative_orthant_type_v<C> && std::convertible_to<typename C::non_negative_orthant, std::true_type>
   struct is_non_negative_orthant<C> : std::true_type
   {
+    static_assert(!affine_space<C>);
   };
   
   template<convex_space C>
@@ -1420,6 +1421,7 @@ namespace sequoia::maths
     template<class Self>
       requires std::derived_from<Self, coordinates_base>
             && has_distinguished_origin
+            && (!is_non_negative_orthant_v<space_type>)
             && (!std::is_unsigned_v<value_type>)
     [[nodiscard]]
     constexpr Self operator-(this const Self& self) noexcept(has_identity_validator)

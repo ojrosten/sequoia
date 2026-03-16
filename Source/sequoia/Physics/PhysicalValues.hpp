@@ -148,6 +148,7 @@ namespace sequoia::physics
     using is_convex_space      = std::true_type;
     using arena_type           = arena_type_of_t<direct_product<Ts...>>;
     using distinguished_origin = std::bool_constant<(has_distinguished_origin_v<Ts> && ...)>;
+    using non_negative_orthant = std::bool_constant<(is_non_negative_orthant_v<Ts> && ...)>;
   };
 
   template<physical_unit... Us>
@@ -495,9 +496,7 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{displacement_space_type::dimension};
     constexpr static std::size_t D{dimension};
 
-    constexpr static bool is_intrinsically_absolute{
-      (D == 1) && !affine_space<space_type> && defines_half_line_validator_v<intrinsic_validator_type>
-    };
+    constexpr static bool is_intrinsically_absolute{is_non_negative_orthant_v<space_type>};
 
     constexpr static bool has_identity_validator{coordinates_type::has_identity_validator};
 
@@ -523,13 +522,6 @@ namespace sequoia::physics
     };
 
     using coordinates_type::coordinates_type;
-
-    [[nodiscard]]
-    constexpr physical_value operator-() const noexcept(has_identity_validator)
-      requires (coordinates_type::has_distinguished_origin) && (!std::is_unsigned_v<ring_type>) && (!is_intrinsically_absolute)
-    {
-      return coordinates_type::operator-();
-    }
 
     using coordinates_type::operator+=;
     
