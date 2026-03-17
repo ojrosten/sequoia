@@ -566,8 +566,8 @@ namespace sequoia::physics
       noexcept(has_identity_validator)
     {
       using disp_space_t = to_displacement_space_t<ValueSpace, OtherValueSpace>;
-      using basis_t = unit_defined_right_handed_basis<free_module_type_of_t<disp_space_t>, Unit>;
-      using disp_t = to_coordinates_base_type<disp_space_t, Unit, basis_t, Validator>::displacement_coordinates_type;
+      using basis_t      = consistent_bases<basis_type, OtherBasis>::template rebind_type<free_module_type_of_t<disp_space_t>, Unit>;
+      using disp_t       = to_coordinates_base_type<disp_space_t, Unit, basis_t, Validator>::displacement_coordinates_type;
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
         return disp_t{std::array{(lhs.values()[Is] - rhs.values()[Is])...}, units_type{}};
       }(std::make_index_sequence<D>{});
