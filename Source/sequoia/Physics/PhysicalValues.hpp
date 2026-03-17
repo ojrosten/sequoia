@@ -528,10 +528,17 @@ namespace sequoia::physics
           && has_distinguished_origin_v<space_type>
           && (std::derived_from<OtherValueSpace, space_type>)
           && consistent_bases_v<basis_type, OtherBasis>
-    constexpr physical_value& operator+=(const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& other) noexcept(has_identity_validator)
+    constexpr physical_value& operator+=(const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& other) & noexcept(has_identity_validator)
     {
       return *this = (*this + other);
     }
+
+    template<convex_space OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
+    requires (!std::same_as<space_type, OtherValueSpace>)
+          && has_distinguished_origin_v<space_type>
+          && (std::derived_from<OtherValueSpace, space_type>)
+          && consistent_bases_v<basis_type, OtherBasis>
+    constexpr physical_value& operator+=(const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& ) && = delete;
 
     template<convex_space OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
       requires has_distinguished_origin_v<space_type>

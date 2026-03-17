@@ -107,8 +107,8 @@ namespace sequoia::testing
     check(equality, "", physical_value{2.0f, si::units::metre * si::units::metre}, length_t{1.0, metre} *  length_t{2.0, metre});
     check(equality, "", physical_value{2.0f, si::units::metre * si::units::metre}, length_t{2.0, metre} *  length_t{1.0, metre});
 
-    check(equality, "", length_t{1.0, metre} += width_t{1.0, metre},  length_t{2.0, metre});
-    check(equality, "", length_t{1.0, metre} += height_t{0.5, metre}, length_t{1.5, metre});
+    check(equality, "", [] () { length_t l{1.0, metre}; return l +=  width_t{1.0, metre}; }(),  length_t{2.0, metre});
+    check(equality, "", []()  { length_t l{1.0, metre}; return l += height_t{0.5, metre}; }(), length_t{1.5, metre});
     check(equality, "", width_t{0.5, metre}  + height_t{0.5, metre}, length_t{1.0, metre});
     check(equality, "", height_t{0.5, metre} + width_t{0.5, metre}, length_t{1.0, metre});
 
