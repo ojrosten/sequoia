@@ -351,10 +351,10 @@ namespace sequoia::physics
     using type = free_module_type_of_t<std::common_type_t<typename T::base_space, typename U::base_space>>;
   };
 
-  template<class Basis1, class Basis2>
+  template<basis Basis1, basis Basis2>
   struct consistent_bases : std::false_type {};
 
-  template<class Basis1, class Basis2>
+  template<basis Basis1, basis Basis2>
   inline constexpr bool consistent_bases_v{consistent_bases<Basis1, Basis2>::value};
 
   template<free_module M1, physical_unit U1, free_module M2, physical_unit U2>
