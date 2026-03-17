@@ -1360,58 +1360,58 @@ namespace sequoia::maths
     {}
 
     template<class Self>
-      requires std::derived_from<Self, coordinates_base>
+      requires (!std::same_as<Self, coordinates_base>)
     constexpr Self& operator+=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
       return self = (self + v);
     }
 
     template<class Self>
-      requires     std::derived_from<Self, coordinates_base>
+      requires    (!std::same_as<Self, coordinates_base>)
                && has_distinguished_origin
-               && (!std::is_same_v<coordinates_base, displacement_coordinates_type>)
+               && (!std::same_as<coordinates_base, displacement_coordinates_type>)
     constexpr Self& operator+=(this Self& self, const coordinates_base& v) noexcept(has_identity_validator)
     {
       return self = (self + v);
     }
 
     template<class Self>
-      requires std::derived_from<Self, coordinates_base>
+      requires (!std::same_as<Self, coordinates_base>) 
     constexpr Self& operator-=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
        return self = (self - v);
     }
 
     template<class Self>
-      requires std::derived_from<Self, coordinates_base> && has_distinguished_origin
+      requires (!std::same_as<Self, coordinates_base>) && has_distinguished_origin
     constexpr Self& operator*=(this Self& self, value_type u) noexcept(has_identity_validator)
     {
       return self = (self * u);
     }
 
     template<class Self>
-      requires std::derived_from<Self, coordinates_base> && has_distinguished_origin
+      requires (!std::same_as<Self, coordinates_base>)  && has_distinguished_origin
     constexpr Self& operator*=(this Self& self, std::span<const value_type, D> u) noexcept(has_identity_validator)
     {
       return self = (self * u);
     }
 
     template<class Self>
-      requires std::derived_from<Self, coordinates_base> && vector_space<free_module_type>
+      requires (!std::same_as<Self, coordinates_base>)  && vector_space<free_module_type>
     constexpr Self& operator/=(this Self& self, value_type u)
     {
       return self = (self / u);
     }
 
     template<class Self>
-      requires std::derived_from<Self, coordinates_base> && vector_space<free_module_type>
+      requires (!std::same_as<Self, coordinates_base>) && vector_space<free_module_type>
     constexpr Self& operator/=(this Self& self, std::span<const value_type, D> u)
     {
       return self = (self / u);
     }
 
     template<class Self>
-      requires std::derived_from<Self, coordinates_base>    
+      requires (!std::same_as<Self, coordinates_base>) 
     [[nodiscard]]
     constexpr Self operator+(this const Self& self) noexcept
     {
@@ -1419,7 +1419,7 @@ namespace sequoia::maths
     }
 
     template<class Self>
-      requires std::derived_from<Self, coordinates_base>
+      requires (!std::same_as<Self, coordinates_base>) 
             && has_distinguished_origin
             && (!is_non_negative_orthant_v<space_type>)
             && (!std::is_unsigned_v<value_type>)
@@ -1431,7 +1431,7 @@ namespace sequoia::maths
 
     template<class Derived>
       requires std::derived_from<Derived, coordinates_base>
-            && (!std::is_same_v<Derived, displacement_coordinates_type>)
+            && (!std::same_as<Derived, displacement_coordinates_type>)
     [[nodiscard]]
     friend constexpr typename Derived::displacement_coordinates_type operator-(const Derived& lhs, const Derived& rhs) noexcept(has_identity_validator)
     {
@@ -1449,7 +1449,7 @@ namespace sequoia::maths
     }
 
     template<class Derived>
-      requires std::derived_from<Derived, coordinates_base> && (!std::is_same_v<Derived, displacement_coordinates_type>)
+      requires std::derived_from<Derived, coordinates_base>  && (!std::same_as<Derived, displacement_coordinates_type>)
     [[nodiscard]]
     friend constexpr Derived operator+(const displacement_coordinates_type& v, Derived c) noexcept(has_identity_validator)
     {
@@ -1458,7 +1458,7 @@ namespace sequoia::maths
   
     template<class Derived>
       requires    std::derived_from<Derived, coordinates_base>
-               && (!std::is_same_v<Derived, displacement_coordinates_type>)
+               && (!std::same_as<Derived, displacement_coordinates_type>)
                && has_distinguished_origin 
     [[nodiscard]]
     friend constexpr Derived operator+(Derived c, const Derived& v) noexcept(has_identity_validator)
