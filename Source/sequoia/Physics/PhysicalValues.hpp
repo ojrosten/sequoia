@@ -548,9 +548,9 @@ namespace sequoia::physics
     [[nodiscard]]
     friend constexpr auto operator+(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& rhs)
     {
-      using value_space_t = std::common_type_t<typename ValueSpace::base_space, typename OtherValueSpace::base_space>;
-      using physical_value_t
-        = physical_value<value_space_t, Unit, unit_defined_right_handed_basis<free_module_type_of_t<value_space_t>, Unit>, to_origin_type_t<value_space_t, Unit>, Validator>;
+      using value_space_t    = std::common_type_t<typename ValueSpace::base_space, typename OtherValueSpace::base_space>;
+      using basis_t          = consistent_bases<basis_type, OtherBasis>::template rebind_type<free_module_type_of_t<value_space_t>, Unit>;
+      using physical_value_t = physical_value<value_space_t, Unit, basis_t, to_origin_type_t<value_space_t, Unit>, Validator>;
 
       return [&] <std::size_t... Is>(std::index_sequence<Is...>) {
         return physical_value_t{std::array{(lhs.values()[Is] + rhs.values()[Is])...}, units_type{}};
