@@ -223,15 +223,6 @@ namespace sequoia::testing
       add_transition(g, From, To, message, f);
     }
   }
-
-  template<class T>
-  inline constexpr bool has_units_type{
-    requires {
-      typename T::units_type;
-      requires (!std::derived_from<typename T::units_type, maths::no_unit_t>);
-    }
-  };
-
   
   template<class Coordinates>
   class coordinates_operations
@@ -245,7 +236,7 @@ namespace sequoia::testing
     using disp_t     = coords_t::displacement_coordinates_type;
     using module_t   = coords_t::free_module_type;
     using ring_t     = coords_t::commutative_ring_type;
-    using units_t    = coords_t::units_type;
+    using units_t    = coords_t::basis_isomorphism_type;
     constexpr static std::size_t dimension{Coordinates::dimension};
     constexpr static bool orderable{(dimension == 1) && std::totally_ordered<ring_t>};
     constexpr static bool has_distinguished_origin{maths::has_distinguished_origin_v<space_t>};

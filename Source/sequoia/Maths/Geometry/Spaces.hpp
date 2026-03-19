@@ -1149,37 +1149,25 @@ namespace sequoia::maths
   struct has_distinguished_origin<dual<Space>> : has_distinguished_origin<Space>
   {
   };
-  
-  // TO DO: document
-  struct no_unit_t
-  {
-    using is_unit        = std::true_type; // TO DO: naming makes this peverse!
-    using validator_type = maths::half_line_validator;
-  };
-  
-  inline constexpr no_unit_t no_unit{};
 
-  template<>
-  struct dual_of<no_unit_t>
-  {
-    using type = no_unit_t;
-  };  
+  
+  struct identity_isomorphism {};
 
   template<basis B>
-  struct get_units
+  struct basis_isomorphism_type_of
   {
-    using type = no_unit_t;
+    using type = identity_isomorphism;
   };
+
+  template<basis B>
+  using basis_isomorphism_type_of_t = basis_isomorphism_type_of<B>::type;
 
   template<basis B>
     requires (!admits_canonical_basis_v<typename B::free_module_type>) // TO DO: encode this in basis_for
-  struct get_units<B>
+  struct basis_isomorphism_type_of<B>
   {
-    using type = B::units_type;
+    using type = B::isomorphism_type;
   };
-
-  template<basis B>
-  using get_units_t = get_units<B>::type;
 
   /** @defgroup Coordinates Coordinates
       @brief Coordinates are the bridge between the abstract mathematics of spaces and practical application.
@@ -1251,12 +1239,12 @@ namespace sequoia::maths
       @brief Class designed for inheritance by concerete coordinate types.
 
       The type has protected special member functions (including the destructor) and uses
-      deducing-this patterns as a type-rich alternative to virtual dispatch.
+      deducing-this patterns as a type-rich alternative to virtual dispatch. The purpose
+      of this approach is solely code reduction. In the maths namespace the coordintates
+      namespace derives from coordinates_base, and it turns out to be convenient for
+      the former to have several different specializations.
 
-      From the perspective of the enclosing namespace, maths, there is actually no need
-      for a base class. Indeed, there is a single coordinates class template which derives
-      from coordinates_base, begging the question as to why a base class is necessary at all.
-      The reason is that there are applications in physics which have enough in common
+      Furthermore, there are applications in physics which have enough in common
       with maths::coordinates, but are sufficiently distinct, for a base class to be extremely
       useful in terms of reducing what would otherwise be very significant code duplication.
 
@@ -1279,7 +1267,7 @@ namespace sequoia::maths
 
     template<basis B, class Rep, class... Args, std::size_t... Is>
       requires (sizeof...(Args) == sizeof...(Is) + 1)
-            && std::same_as<std::tuple_element_t<sizeof...(Is), std::tuple<Args...>>, get_units_t<B>>
+            && std::same_as<std::tuple_element_t<sizeof...(Is), std::tuple<Args...>>, basis_isomorphism_type_of_t<B>>
             && (std::same_as<std::tuple_element_t<Is, std::tuple<Args...>>, Rep> && ...)
     struct is_units_terminated_pack<B, Rep, std::tuple<Args...>, std::index_sequence<Is...>> : std::true_type
     {
@@ -1316,7 +1304,7 @@ namespace sequoia::maths
     using commutative_ring_type         = commutative_ring_type_of_t<ConvexSpace>;
     using value_type                    = commutative_ring_type;
     using displacement_coordinates_type = DisplacementCoordinates;
-    using units_type                    = get_units_t<Basis>;
+    using basis_isomorphism_type        = basis_isomorphism_type_of_t<Basis>;
 
     // TO DO: improve conventions
     constexpr static bool has_distinguished_origin{has_distinguished_origin_v<ConvexSpace>};
@@ -1331,17 +1319,17 @@ namespace sequoia::maths
 
     constexpr explicit coordinates_base(std::span<const value_type, D> vals) noexcept(has_identity_validator)
       requires admits_canonical_basis
-      : coordinates_base{vals, units_type{}}
+      : coordinates_base{vals, basis_isomorphism_type{}}
     {}
 
-    constexpr coordinates_base(std::span<const value_type, D> vals, units_type) noexcept(has_identity_validator)
+    constexpr coordinates_base(std::span<const value_type, D> vals, basis_isomorphism_type) noexcept(has_identity_validator)
       : m_Values{validate(vals, m_Validator)}
     {}
 
     template<class... Ts>
       requires admits_canonical_basis && (D > 1) && (std::convertible_to<Ts, value_type> && ...)
     constexpr explicit(sizeof...(Ts) == 1) coordinates_base(Ts... ts) noexcept(has_identity_validator)
-      : coordinates_base{ts..., units_type{}}
+      : coordinates_base{ts..., basis_isomorphism_type{}}
     {}
 
     template<class... Ts>
@@ -1352,10 +1340,10 @@ namespace sequoia::maths
 
     constexpr explicit coordinates_base(value_type val) noexcept(has_identity_validator)      
       requires admits_canonical_basis && (D == 1)
-      : coordinates_base{val, units_type{}}
+      : coordinates_base{val, basis_isomorphism_type{}}
     {}
 
-    constexpr coordinates_base(value_type val, units_type) noexcept(has_identity_validator)
+    constexpr coordinates_base(value_type val, basis_isomorphism_type) noexcept(has_identity_validator)
       : m_Values{m_Validator(val)}
     {}
 
@@ -1426,7 +1414,7 @@ namespace sequoia::maths
     [[nodiscard]]
     constexpr Self operator-(this const Self& self) noexcept(has_identity_validator)
     {
-      return Self{utilities::to_array(self.values(), [](value_type t) { return -t; }), units_type{}};
+      return Self{utilities::to_array(self.values(), [](value_type t) { return -t; }), basis_isomorphism_type{}};
     }
 
     template<class Derived>
@@ -1436,7 +1424,7 @@ namespace sequoia::maths
     friend constexpr typename Derived::displacement_coordinates_type operator-(const Derived& lhs, const Derived& rhs) noexcept(has_identity_validator)
     {
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
-        return typename Derived::displacement_coordinates_type{(lhs.values()[Is] - rhs.values()[Is])..., units_type{}};
+        return typename Derived::displacement_coordinates_type{(lhs.values()[Is] - rhs.values()[Is])..., basis_isomorphism_type{}};
       }(std::make_index_sequence<D>{});
     }
 

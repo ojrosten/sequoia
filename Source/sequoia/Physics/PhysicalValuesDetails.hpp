@@ -52,6 +52,8 @@ namespace sequoia::physics
 
   template<class T>
   struct reduction;
+
+  struct no_unit_t;
 }
 
 namespace sequoia::meta

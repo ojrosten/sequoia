@@ -46,7 +46,16 @@ namespace sequoia::physics
     using is_basis         = std::true_type;
     using free_module_type = M;
     using units_type       = U;
+    using isomorphism_type = units_type;
   };
+
+  struct no_unit_t : identity_isomorphism
+  {
+    using is_unit        = std::true_type; // TO DO: naming makes this peverse!
+    using validator_type = maths::half_line_validator;
+  };
+  
+  inline constexpr no_unit_t no_unit{};
 }
 
 namespace sequoia::maths
@@ -84,6 +93,12 @@ namespace sequoia::maths
   struct dual_of<physics::unit_defined_right_handed_basis<dual<M>, dual<U>>>
   {
     using type = physics::unit_defined_right_handed_basis<M, U>;
+  };
+
+  template<>
+  struct dual_of<physics::no_unit_t>
+  {
+    using type = physics::no_unit_t;
   };
 }
 
