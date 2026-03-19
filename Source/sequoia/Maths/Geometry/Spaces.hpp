@@ -643,12 +643,30 @@ namespace sequoia::maths
   template<class B>
   concept basis = identifies_as_basis_v<B> && (has_free_module_type_v<B> || has_vector_space_type_v<B>);
 
+  struct identity_isomorphism {};
+
+  template<basis B>
+  struct basis_isomorphism_type_of
+  {
+    using type = identity_isomorphism;
+  };
+
+  template<basis B>
+  using basis_isomorphism_type_of_t = basis_isomorphism_type_of<B>::type;
+
+  template<basis B>
+    requires (!admits_canonical_basis_v<typename B::free_module_type>) // TO DO: encode this in basis_for
+  struct basis_isomorphism_type_of<B>
+  {
+    using type = B::isomorphism_type;
+  };
+
   /** @ingroup Basis
       @brief A concept to determine if a basis is appropriate for a particular free module.
   */
   template<class B, class M>
-  concept basis_for = basis<B> && (    requires { requires std::is_same_v<typename B::free_module_type, M> ; }
-                                    || requires { requires std::is_same_v<typename B::vector_space_type, M>; });
+  concept basis_for = basis<B> && requires { requires    std::is_same_v<typename B::free_module_type,  M>
+                                                      || std::is_same_v<typename B::vector_space_type, M>; };
 
   /** @defgroup Validators Validators
       @brief Validators are central to dealing with spaces where the C++ representation could produce values outside the underlying set.
@@ -1148,25 +1166,6 @@ namespace sequoia::maths
   template<convex_space Space>
   struct has_distinguished_origin<dual<Space>> : has_distinguished_origin<Space>
   {
-  };
-
-  
-  struct identity_isomorphism {};
-
-  template<basis B>
-  struct basis_isomorphism_type_of
-  {
-    using type = identity_isomorphism;
-  };
-
-  template<basis B>
-  using basis_isomorphism_type_of_t = basis_isomorphism_type_of<B>::type;
-
-  template<basis B>
-    requires (!admits_canonical_basis_v<typename B::free_module_type>) // TO DO: encode this in basis_for
-  struct basis_isomorphism_type_of<B>
-  {
-    using type = B::isomorphism_type;
   };
 
   /** @defgroup Coordinates Coordinates
