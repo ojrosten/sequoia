@@ -659,7 +659,7 @@ namespace sequoia::physics
 
     template<
       physical_unit OtherUnit,
-      convex_space OtherSpace=conversion_space_t<ValueSpace, Unit, OtherUnit>,
+      convex_space OtherSpace                                 = conversion_space_t<ValueSpace, Unit, OtherUnit>,
       basis_for<free_module_type_of_t<OtherSpace>> OtherBasis = unit_defined_right_handed_basis<free_module_type_of_t<OtherSpace>, OtherUnit>,
       class OtherOrigin                                       = to_origin_type_t<OtherSpace, OtherUnit>,
       validator_for<OtherSpace> OtherValidator                = default_validator_t<OtherSpace, OtherUnit>
