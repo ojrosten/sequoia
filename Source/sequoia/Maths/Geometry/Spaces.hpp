@@ -541,7 +541,7 @@ namespace sequoia::maths
 
       This takes into account that a vector space is a special case of a free module.
    */
-  template<convex_space ConvexSpace>
+  template<class>
   struct free_module_type_of;
 
   template<convex_space ConvexSpace>
@@ -565,8 +565,8 @@ namespace sequoia::maths
     using type = ConvexSpace::vector_space_type;
   };
 
-  template<convex_space ConvexSpace>
-  using free_module_type_of_t = free_module_type_of<ConvexSpace>::type;
+  template<class T>
+  using free_module_type_of_t = free_module_type_of<T>::type;
   
   /** @ingroup PropertiesOfSpaces
       @brief Helper to extract the commutative ring type of the free module associated with a convex space.
@@ -655,7 +655,21 @@ namespace sequoia::maths
   using basis_isomorphism_type_of_t = basis_isomorphism_type_of<B>::type;
 
   template<basis B>
-    requires (!admits_canonical_basis_v<typename B::free_module_type>) // TO DO: encode this in basis_for
+    requires has_free_module_type_v<B>
+  struct free_module_type_of<B>
+  {
+    using type = B::free_module_type;
+  };
+
+  template<basis B>
+    requires has_vector_space_type_v<B>
+  struct free_module_type_of<B>
+  {
+    using type = B::vector_space_type;
+  };
+
+  template<basis B>
+    requires (!admits_canonical_basis_v<free_module_type_of_t<B>>) // TO DO: encode this in basis_for
   struct basis_isomorphism_type_of<B>
   {
     using type = B::isomorphism_type;
