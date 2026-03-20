@@ -513,25 +513,25 @@ namespace sequoia::physics
 
     constexpr static bool has_identity_validator{coordinates_type::has_identity_validator};
 
-    template<convex_space RHSValueSpace, class RHSUnit, class RHSBasis, class RHSOrigin, class RHSValidator>
+    template<convex_space RHSValueSpace, class RHSBasis>
     constexpr static bool is_composable_with{
          consistent_bases_v<basis_type, RHSBasis>
-      && (is_non_negative_orthant_v<space_type> || vector_space<space_type>)
+      && (is_non_negative_orthant_v<space_type>    || vector_space<space_type>)
       && (is_non_negative_orthant_v<RHSValueSpace> || vector_space<RHSValueSpace>)
     };
 
-    template<convex_space RHSValueSpace, class RHSUnit, class RHSBasis, class RHSOrigin, class RHSValidator>
+    template<convex_space RHSValueSpace, class RHSBasis>
     constexpr static bool is_multipicable_with{
-         is_composable_with<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSValidator>
-      && ((D == 1) || (physical_value<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSValidator>::D == 1))
+         is_composable_with<RHSValueSpace, RHSBasis>
+      && ((D == 1) || (free_module_type_of_t<RHSValueSpace>::dimension == 1))
     };
 
-    template<convex_space RHSValueSpace, class RHSUnit, class RHSBasis, class RHSOrigin, class RHSValidator>
+    template<convex_space RHSValueSpace, class RHSBasis>
     constexpr static bool is_divisible_with{
          weak_field<ring_type>
       && weak_field<commutative_ring_type_of_t<RHSValueSpace>>
-      && is_composable_with<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSValidator>
-      && (physical_value<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSValidator>::D == 1)
+      && is_composable_with<RHSValueSpace, RHSBasis>
+      && (free_module_type_of_t<RHSValueSpace>::dimension == 1)
     };
 
     using coordinates_type::coordinates_type;
@@ -589,7 +589,7 @@ namespace sequoia::physics
     }
 
     template<convex_space RHSValueSpace, physical_unit RHSUnit, basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, class RHSOrigin, class RHSValidator>
-      requires is_multipicable_with<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSValidator>
+      requires is_multipicable_with<RHSValueSpace, RHSBasis>
     [[nodiscard]]
     friend constexpr auto operator*(const physical_value& lhs,
                                     const physical_value<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSValidator>& rhs)
@@ -605,7 +605,7 @@ namespace sequoia::physics
     }
 
     template<convex_space RHSValueSpace, class RHSUnit,  basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, class RHSOrigin, class RHSValidator>
-      requires is_divisible_with<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSValidator>
+      requires is_divisible_with<RHSValueSpace, RHSBasis>
     [[nodiscard]]
     friend constexpr auto operator/(const physical_value& lhs,
                                     const physical_value<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSValidator>& rhs)
