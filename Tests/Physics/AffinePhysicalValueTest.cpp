@@ -70,7 +70,7 @@ namespace sequoia::testing
       !defines_physical_value_v<
         dual<space_type>,
         dual<units_type>,
-        canonical_right_handed_basis<free_module_type_of_t<dual<space_type>>>,
+        unit_defined_right_handed_basis<free_module_type_of_t<dual<space_type>>, dual<units_type>>,
         dual<origin_type>,
         std::identity>
     );

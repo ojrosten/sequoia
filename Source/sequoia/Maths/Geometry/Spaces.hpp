@@ -643,17 +643,6 @@ namespace sequoia::maths
   template<class B>
   concept basis = identifies_as_basis_v<B> && (has_free_module_type_v<B> || has_vector_space_type_v<B>);
 
-  struct identity_isomorphism {};
-
-  template<basis B>
-  struct basis_isomorphism_type_of
-  {
-    using type = identity_isomorphism;
-  };
-
-  template<basis B>
-  using basis_isomorphism_type_of_t = basis_isomorphism_type_of<B>::type;
-
   template<basis B>
     requires has_free_module_type_v<B>
   struct free_module_type_of<B>
@@ -668,8 +657,28 @@ namespace sequoia::maths
     using type = B::vector_space_type;
   };
 
+  template<class T>
+  inline constexpr bool has_isomorphism_type_v{
+    requires { typename T::isomorphism_type; }
+  };
+
+  struct identity_isomorphism {};
+
   template<basis B>
-    requires (!admits_canonical_basis_v<free_module_type_of_t<B>>) // TO DO: encode this in basis_for
+  struct basis_isomorphism_type_of;
+  
+  template<basis B>
+    requires admits_canonical_basis_v<free_module_type_of_t<B>>
+  struct basis_isomorphism_type_of<B>
+  {
+    using type = identity_isomorphism;
+  };
+
+  template<basis B>
+  using basis_isomorphism_type_of_t = basis_isomorphism_type_of<B>::type;
+
+  template<basis B>
+    requires (!admits_canonical_basis_v<free_module_type_of_t<B>>) && has_isomorphism_type_v<B>
   struct basis_isomorphism_type_of<B>
   {
     using type = B::isomorphism_type;
@@ -679,7 +688,10 @@ namespace sequoia::maths
       @brief A concept to determine if a basis is appropriate for a particular free module.
   */
   template<class B, class M>
-  concept basis_for = basis<B> && requires { requires std::is_same_v<free_module_type_of_t<B>, M>; };
+  concept basis_for
+    =    basis<B>
+      && (admits_canonical_basis_v<free_module_type_of_t<B>> || has_isomorphism_type_v<B>)
+      && requires { requires std::is_same_v<free_module_type_of_t<B>, M>; };
 
   /** @defgroup Validators Validators
       @brief Validators are central to dealing with spaces where the C++ representation could produce values outside the underlying set.
