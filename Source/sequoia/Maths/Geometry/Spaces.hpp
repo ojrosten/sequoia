@@ -679,8 +679,7 @@ namespace sequoia::maths
       @brief A concept to determine if a basis is appropriate for a particular free module.
   */
   template<class B, class M>
-  concept basis_for = basis<B> && requires { requires    std::is_same_v<typename B::free_module_type,  M>
-                                                      || std::is_same_v<typename B::vector_space_type, M>; };
+  concept basis_for = basis<B> && requires { requires std::is_same_v<free_module_type_of_t<B>, M>; };
 
   /** @defgroup Validators Validators
       @brief Validators are central to dealing with spaces where the C++ representation could produce values outside the underlying set.
