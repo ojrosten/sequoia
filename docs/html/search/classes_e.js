@@ -18,10 +18,13 @@ var searchData=
   ['orderable_5fresource_5fbinder_15',['orderable_resource_binder',['../db/dc2/classsequoia_1_1testing_1_1orderable__resource__binder.html',1,'sequoia::testing']]],
   ['orderable_5fspecified_5fmoved_5ffrom_5fbeast_16',['orderable_specified_moved_from_beast',['../d4/d29/structsequoia_1_1testing_1_1orderable__specified__moved__from__beast.html',1,'sequoia::testing']]],
   ['orthant_17',['orthant',['../da/d3c/structsequoia_1_1maths_1_1sets_1_1orthant.html',1,'sequoia::maths::sets']]],
-  ['orthant_3c_201_20_3e_18',['orthant&lt; 1 &gt;',['../da/d3c/structsequoia_1_1maths_1_1sets_1_1orthant.html',1,'sequoia::maths::sets']]],
-  ['outcome_19',['outcome',['../df/dd1/structsequoia_1_1parsing_1_1commandline_1_1outcome.html',1,'sequoia::parsing::commandline::outcome'],['../da/d15/structsequoia_1_1testing_1_1outcome.html',1,'sequoia::testing::outcome']]],
-  ['outer_5falloc_5fgetter_20',['outer_alloc_getter',['../d0/d65/structsequoia_1_1testing_1_1outer__alloc__getter.html',1,'sequoia::testing']]],
-  ['output_5ffree_5ftest_21',['output_free_test',['../df/dcd/classsequoia_1_1testing_1_1output__free__test.html',1,'sequoia::testing']]],
-  ['output_5fpaths_22',['output_paths',['../d9/d48/classsequoia_1_1testing_1_1output__paths.html',1,'sequoia::testing']]],
-  ['overloaded_23',['overloaded',['../da/d6e/structsequoia_1_1overloaded.html',1,'sequoia']]]
+  ['orthogonal_5fbasis_18',['orthogonal_basis',['../d3/d01/structsequoia_1_1maths_1_1orthogonal__basis.html',1,'sequoia::maths']]],
+  ['orthogonal_5fbasis_3c_20m_2c_20orthogonal_5fsimilarity_5ftransformation_3c_20dilatation_3c_20ratio_20_3e_20_3e_2c_20referencebasis_20_3e_19',['orthogonal_basis&lt; M, orthogonal_similarity_transformation&lt; dilatation&lt; Ratio &gt; &gt;, ReferenceBasis &gt;',['../df/d65/structsequoia_1_1maths_1_1orthogonal__basis_3_01M_00_01orthogonal__similarity__transformation_3_5f5f331f9cd68014700bc3d43b61d5c7.html',1,'sequoia::maths']]],
+  ['orthogonal_5fsimilarity_5ftransformation_20',['orthogonal_similarity_transformation',['../d6/dc4/structsequoia_1_1maths_1_1orthogonal__similarity__transformation.html',1,'sequoia::maths']]],
+  ['orthogonal_5fsimilarity_5ftransformation_3c_20dilatation_3c_20ratio_20_3e_20_3e_21',['orthogonal_similarity_transformation&lt; dilatation&lt; Ratio &gt; &gt;',['../dd/df0/structsequoia_1_1maths_1_1orthogonal__similarity__transformation_3_01dilatation_3_01Ratio_01_4_01_4.html',1,'sequoia::maths']]],
+  ['outcome_22',['outcome',['../df/dd1/structsequoia_1_1parsing_1_1commandline_1_1outcome.html',1,'sequoia::parsing::commandline']]],
+  ['outer_5falloc_5fgetter_23',['outer_alloc_getter',['../d0/d65/structsequoia_1_1testing_1_1outer__alloc__getter.html',1,'sequoia::testing']]],
+  ['output_5ffree_5ftest_24',['output_free_test',['../df/dcd/classsequoia_1_1testing_1_1output__free__test.html',1,'sequoia::testing']]],
+  ['output_5fpaths_25',['output_paths',['../d9/d48/classsequoia_1_1testing_1_1output__paths.html',1,'sequoia::testing']]],
+  ['overloaded_26',['overloaded',['../da/d6e/structsequoia_1_1overloaded.html',1,'sequoia']]]
 ];
