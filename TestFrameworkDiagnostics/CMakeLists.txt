@@ -12,11 +12,11 @@ add_executable(TestFrameworkDiagnostics TestFrameworkDiagnosticsMain.cpp)
 set(TestDir ${CMAKE_CURRENT_LIST_DIR}/../Tests)
 
 target_sources(TestFrameworkDiagnostics PRIVATE
+               ${TestDir}/Core/Object/FactoryTest.cpp
+               ${TestDir}/Core/Object/FactoryTestingDiagnostics.cpp
                ${TestDir}/Parsing/CommandLineArgumentsDiagnostics.cpp
                ${TestDir}/Parsing/CommandLineArgumentsTest.cpp
                ${TestDir}/Parsing/CommandLineArgumentsTestingUtilities.cpp
-               ${TestDir}/Runtime/FactoryTest.cpp
-               ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
                ${TestDir}/Runtime/ShellCommandsTest.cpp
                ${TestDir}/Runtime/ShellCommandsTestingDiagnostics.cpp
                ${TestDir}/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp

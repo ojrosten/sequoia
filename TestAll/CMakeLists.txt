@@ -41,7 +41,9 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Meta/TypeListFreeTest.cpp
                ${TestDir}/Core/Meta/TypeTraitsTest.cpp
                ${TestDir}/Core/Meta/UtilitiesTest.cpp
-               ${TestDir}/Core/Object/CreatorFreeTest.cpp
+               ${TestDir}/Core/Object/CreatorFreeTest.cpp               
+               ${TestDir}/Core/Object/FactoryTest.cpp
+               ${TestDir}/Core/Object/FactoryTestingDiagnostics.cpp
                ${TestDir}/Core/Object/SuiteFreeTest.cpp
                ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Experimental/FlattenTypeListFreeTest.cpp                              
@@ -118,8 +120,6 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Physics/PhysicalValueTestingDiagnostics.cpp
                ${TestDir}/Physics/UnsafeAbsolutePhysicalValueTest.cpp
                ${TestDir}/Physics/VectorPhysicalValueTest.cpp
-               ${TestDir}/Runtime/FactoryTest.cpp
-               ${TestDir}/Runtime/FactoryTestingDiagnostics.cpp
                ${TestDir}/Runtime/ShellCommandsTest.cpp
                ${TestDir}/Runtime/ShellCommandsTestingDiagnostics.cpp
                ${TestDir}/Streaming/StreamingFreeTest.cpp
