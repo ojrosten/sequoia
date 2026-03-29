@@ -41,9 +41,9 @@ namespace sequoia::testing
       }
 
       template<weak_commutative_ring T> 
-      constexpr static std::array<T, 2>& from_underlying(std::array<T, 2>& polar)
+      constexpr static std::array<T, 2>& from_underlying(std::array<T, 2>& cartesian)
       {
-        return polar = from_underlying(std::span<const T, 2>{polar});
+        return cartesian = from_underlying(std::span<const T, 2>{cartesian});
       }
     };
   }
