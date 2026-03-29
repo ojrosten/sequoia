@@ -40,17 +40,18 @@ int main(int argc, char** argv)
       },
       suite{
         "Vector Coordinates",
-        vector_coordinates_false_negative_test{"False negative Test"},
-        vector_coordinates_test{"Unit Test"}
+        vector_coordinates_false_negative_test{"Vector Coordinates False negative Test"},
+        vector_coordinates_test{"Vector Coordinates Test"},
+        vector_polar_coordinates_test{"Vector Polar Coordinates Test"}
       },
       suite{
         "Affine Coordinates",
-        affine_coordinates_false_negative_test{"False negative Test"},
-        affine_coordinates_test{"Unit Test"}
+        affine_coordinates_false_negative_test{"Affine Coordinates False negative Test"},
+        affine_coordinates_test{"Affine Coordinates Test"}
       },
       suite{
         "Free Module Coordinates",
-        free_module_coordinates_test{"Unit Test"}
+        free_module_coordinates_test{"Free Module Test"}
       }
     );
 

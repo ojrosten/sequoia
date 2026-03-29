@@ -50,6 +50,7 @@
 #include "Maths/Geometry/SpacesMetaFreeTest.hpp"
 #include "Maths/Geometry/VectorCoordinatesTest.hpp"
 #include "Maths/Geometry/VectorCoordinatesTestingDiagnostics.hpp"
+#include "Maths/Geometry/VectorPolarCoordinatesTest.hpp"
 #include "Maths/Graph/Algorithms/DynamicGraphTraversalsTest.hpp"
 #include "Maths/Graph/Algorithms/DynamicGraphUpdateTest.hpp"
 #include "Maths/Graph/Algorithms/DynamicSubgraphTest.hpp"

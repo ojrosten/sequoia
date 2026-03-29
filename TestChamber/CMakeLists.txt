@@ -19,6 +19,7 @@ target_sources(TestChamber PRIVATE
                ${TestDir}/Maths/Geometry/SpacesMetaFreeTest.cpp
                ${TestDir}/Maths/Geometry/VectorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp
+               ${TestDir}/Maths/Geometry/VectorPolarCoordinatesTest.cpp
                ${TestDir}/Physics/AbsolutePhysicalValueTest.cpp
                ${TestDir}/Physics/AffinePhysicalValueTest.cpp
                ${TestDir}/Physics/ConvexPhysicalValueTest.cpp

@@ -1,2 +1,2 @@
-Unit Test
+Vector Coordinates Test
 Standard Top Level Checks:               474;  Failures:  0  [Deep checks: 11589]
