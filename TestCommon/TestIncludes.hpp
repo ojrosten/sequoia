@@ -46,6 +46,7 @@
 #include "Maths/Algebra/RatioFreeTest.hpp"
 #include "Maths/Geometry/AffineCoordinatesTest.hpp"
 #include "Maths/Geometry/AffineCoordinatesTestingDiagnostics.hpp"
+#include "Maths/Geometry/FreeModuleCoordinatesTest.hpp"
 #include "Maths/Geometry/SpacesMetaFreeTest.hpp"
 #include "Maths/Geometry/VectorCoordinatesTest.hpp"
 #include "Maths/Geometry/VectorCoordinatesTestingDiagnostics.hpp"

@@ -53,6 +53,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Algebra/RatioFreeTest.cpp
                ${TestDir}/Maths/Geometry/AffineCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp
+               ${TestDir}/Maths/Geometry/FreeModuleCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/SpacesMetaFreeTest.cpp
                ${TestDir}/Maths/Geometry/VectorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp

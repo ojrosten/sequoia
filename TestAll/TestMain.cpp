@@ -402,6 +402,10 @@ int main(int argc, char** argv)
         "Affine Coordinates",
         affine_coordinates_false_negative_test{"False negative Test"},
         affine_coordinates_test{"Unit Test"}
+      },
+      suite{
+        "Free Module Coordinates",
+        free_module_coordinates_test{"Unit Test"}
       }
     );
 
