@@ -18,7 +18,7 @@ namespace sequoia::testing
   using namespace maths;
 
   // TO DO: move this to physics examples
-  namespace
+  /*namespace
   {
     template<std::size_t D, std::floating_point T>
     struct world_displacements {};
@@ -54,7 +54,7 @@ namespace sequoia::testing
 
     template<std::size_t D, std::floating_point T, class Units, basis Basis>
     using world_vector_coordinates = vector_coordinates<world_vector_space<D, T, Units>, Basis>;
-  }
+    }*/
 
   [[nodiscard]]
   std::filesystem::path vector_coordinates_test::source_file() const
@@ -88,7 +88,7 @@ namespace sequoia::testing
     STATIC_CHECK(std::same_as<free_module_type_of_t<free_module_t>, free_module_t>);
     STATIC_CHECK(basis_for<canonical_free_module_basis<Set, Ring, D>, free_module_t>);
     
-    using module_coords_t = free_module_coordinates<free_module_t, canonical_free_module_basis<Set, Ring, D>>;
+    using module_coords_t = free_module_coordinates<free_module_t, canonical_free_module_basis<Set, Ring, D>, identity_representation>;
     coordinates_operations<module_coords_t>{*this}.execute();
   }
 
@@ -96,7 +96,7 @@ namespace sequoia::testing
   void vector_coordinates_test::test_vec()
   {
     using vec_space_t = my_vec_space<Set, Field, D>;
-    using vec_t       = vector_coordinates<vec_space_t, canonical_basis<Set, Field, D>>;
+    using vec_t       = vector_coordinates<vec_space_t, canonical_basis<Set, Field, D>, identity_representation>;
     using value_t     = Field;
     using delta_t     = vec_t::displacement_coordinates_type;
 
@@ -122,7 +122,7 @@ namespace sequoia::testing
   template<class Set, std::floating_point Field>
   void vector_coordinates_test::test_real_vec_1_inner_prod()
   {
-    using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
+    using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>, identity_representation>;
 
     STATIC_CHECK(basis_for<canonical_basis<Set, Field, 1>, my_vec_space<Set, Field, 1>>);
 
@@ -138,7 +138,7 @@ namespace sequoia::testing
     requires is_complex_v<Field>
   void vector_coordinates_test::test_complex_vec_1_inner_prod()
   {
-    using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>>;
+    using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>, identity_representation>;
 
     check(equality, "", inner_product(vec_t{Field(1, 1)}, vec_t{Field(1, 1)}), Field{2});
     check(equality, "", inner_product(vec_t{Field(1, -1)}, vec_t{Field(1, 1)}), Field{0, 2});

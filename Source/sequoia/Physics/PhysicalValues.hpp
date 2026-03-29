@@ -295,7 +295,8 @@ namespace sequoia::physics
   using to_coordinates_base_type
     = coordinates_base<
         ValueSpace,
-        Basis,
+        Basis,    
+        identity_representation,
         Validator,
         physical_value<free_module_type_of_t<ValueSpace>, Unit, Basis, distinguished_origin<free_module_type_of_t<ValueSpace>>, std::identity>>;
 

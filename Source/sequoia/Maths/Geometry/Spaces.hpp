@@ -1244,20 +1244,20 @@ namespace sequoia::maths
       The basis belongs to the associated vector space, allowing the coordinates type for the affine
       space to be aware of the type of the coordinate representation for displacements
    */
-  template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin>
-  using affine_coordinates = coordinates<AffineSpace, Basis, Origin>;
+  template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin, class Representation>
+  using affine_coordinates = coordinates<AffineSpace, Basis, Origin, Representation>;
 
   /** @ingroup Coordinates
       @brief Alias for coordinates of an element of a vector space with respect to a particular basis.
    */
-  template<vector_space VectorSpace, basis_for<free_module_type_of_t<VectorSpace>> Basis>
-  using vector_coordinates = coordinates<VectorSpace, Basis>;
+  template<vector_space VectorSpace, basis_for<free_module_type_of_t<VectorSpace>> Basis, class Representation>
+  using vector_coordinates = coordinates<VectorSpace, Basis, Representation>;
 
   /** @ingroup Coordinates
       @brief Alias for coordinates of an element of a free module with respect to a particular basis.
    */
-  template<free_module FreeModule, basis_for<free_module_type_of_t<FreeModule>> Basis>
-  using free_module_coordinates = coordinates<FreeModule, Basis>;
+  template<free_module FreeModule, basis_for<free_module_type_of_t<FreeModule>> Basis, class Representation>
+  using free_module_coordinates = coordinates<FreeModule, Basis, Representation>;
   
   /** @ingroup Coordinates
       @brief Class designed for inheritance by concerete coordinate types.
@@ -1310,12 +1310,72 @@ namespace sequoia::maths
 
   template<basis B, class Rep, class... Args>
   inline constexpr bool is_units_terminated_pack_v{is_units_terminated_pack<B, Rep, Args...>::value};
+
+  struct identity_representation
+  {
+    template<weak_commutative_ring T, std::size_t N> 
+    [[nodiscard]]
+    constexpr static const std::array<T, N>& to_underlying(const std::array<T, N>& in) noexcept
+    {
+      return in;
+    }
+
+    template<weak_commutative_ring T, std::size_t N> 
+    //[[nodiscard]]
+    constexpr static std::array<T, N>& to_underlying(std::array<T, N>& in) noexcept
+    {
+      return in;
+    }
+
+    template<weak_commutative_ring T, std::size_t N> 
+    [[nodiscard]]
+    constexpr static std::span<const T, N> to_underlying(std::span<const T, N> in) noexcept
+    {
+      return in;
+    }
+
+    template<weak_commutative_ring T, std::size_t N> 
+    //[[nodiscard]]
+    constexpr static std::span<T, N> to_underlying(std::span<T, N> in) noexcept
+    {
+      return in;
+    }
+
+    template<weak_commutative_ring T, std::size_t N> 
+    [[nodiscard]]
+    constexpr static const std::array<T, N>& from_underlying(const std::array<T, N>& in) noexcept
+    {
+      return in;
+    }
+
+    template<weak_commutative_ring T, std::size_t N> 
+    //[[nodiscard]]
+    constexpr static std::array<T, N>& from_underlying(std::array<T, N>& in) noexcept
+    {
+      return in;
+    }
+
+    template<weak_commutative_ring T, std::size_t N> 
+    [[nodiscard]]
+    constexpr static std::span<const T, N> from_underlying(std::span<const T, N> in) noexcept
+    {
+      return in;
+    }
+
+    template<weak_commutative_ring T, std::size_t N> 
+    //[[nodiscard]]
+    constexpr static std::span<T, N> from_underlying(std::span<T, N> in) noexcept
+    {
+      return in;
+    }
+  };
   
   template<
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
+    class Representation,
     validator_for<ConvexSpace> Validator,
-    class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<ConvexSpace>, Basis>
+    class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<ConvexSpace>, Basis, Representation>
   >
   class coordinates_base
   {
@@ -1447,8 +1507,16 @@ namespace sequoia::maths
     [[nodiscard]]
     friend constexpr typename Derived::displacement_coordinates_type operator-(const Derived& lhs, const Derived& rhs) noexcept(has_identity_validator)
     {
-      return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
-        return typename Derived::displacement_coordinates_type{(lhs.values()[Is] - rhs.values()[Is])..., basis_isomorphism_type{}};
+      return[&] <std::size_t... Is>(std::index_sequence<Is...>) {        
+        using disp_t = Derived::displacement_coordinates_type;
+
+        return
+          disp_t{
+            Representation{}.from_underlying(
+              std::array{(Representation{}.to_underlying(std::array{lhs.m_Values})[Is] - Representation{}.to_underlying(rhs.m_Values)[Is])...}
+            ),
+            basis_isomorphism_type{}
+          };
       }(std::make_index_sequence<D>{});
     }
 
@@ -1550,6 +1618,7 @@ namespace sequoia::maths
     constexpr value_type& value() noexcept requires (D == 1) && has_freely_mutable_components { return m_Values[0]; }
 
     /// This is explicit since otherwise, given two vectors a,b, a/b is well-formed due to implicit boolean conversion
+    // TO DO: consider restricting to spaces with a privileged origin
     [[nodiscard]]
     constexpr explicit operator bool() const noexcept requires (D == 1) && std::convertible_to<value_type, bool>
     {
@@ -1623,13 +1692,18 @@ namespace sequoia::maths
     {
       if constexpr(has_identity_validator)
       {
-        std::ranges::for_each(std::views::zip(self.m_Values, rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
+        std::ranges::for_each(
+           std::views::zip(Representation{}.to_underlying(self.m_Values), Representation{}.to_underlying(rhs)),
+          [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); }
+        );
+
+        Representation{}.from_underlying(self.m_Values); 
       }
       else
       {
-        auto tmp{self.m_Values};
-        std::ranges::for_each(std::views::zip(tmp, rhs), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
-        self.m_Values = validate(tmp, self.m_Validator);
+        auto tmp{Representation{}.to_underlying(self.m_Values)};
+        std::ranges::for_each(std::views::zip(tmp, Representation{}.to_underlying(rhs)), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
+        self.m_Values = validate(Representation{}.from_underlying(tmp), self.m_Validator);
       }
 
       return std::forward<Self>(self);
@@ -1641,13 +1715,13 @@ namespace sequoia::maths
     {
       if constexpr(has_identity_validator)
       {
-        std::ranges::for_each(self.values(), f);
+        std::ranges::for_each(Representation{}.to_underlying(self.values()), f);
       }
       else
       {
-        auto tmp{self.m_Values};
+        auto tmp{Representation{}.to_underlying(self.m_Values)};
         std::ranges::for_each(tmp, f);
-        self.m_Values = validate(tmp, self.m_Validator);
+        self.m_Values = validate(Representation{}.from_underlying(tmp), self.m_Validator);
       }
 
       return self;
@@ -1681,42 +1755,58 @@ namespace sequoia::maths
       @brief Class template for representing coordinates on vector spaces, affine spaces and various generalizations.
    */
   
-  template<convex_space ConvexSpace, basis_for<free_module_type_of_t<ConvexSpace>> Basis, class Origin, validator_for<ConvexSpace> Validator>
-  class coordinates<ConvexSpace, Basis, Origin, Validator> final
-    : public coordinates_base<ConvexSpace, Basis, Validator>
+  template<
+    convex_space ConvexSpace,
+    basis_for<free_module_type_of_t<ConvexSpace>> Basis,
+    class Origin,
+    class Representation,
+    validator_for<ConvexSpace> Validator
+  >
+  class coordinates<ConvexSpace, Basis, Origin, Representation, Validator> final
+    : public coordinates_base<ConvexSpace, Basis, Representation, Validator>
   {
   public:
     using origin_type = Origin;
 
-    using coordinates_base<ConvexSpace, Basis, Validator>::coordinates_base;
+    using coordinates_base<ConvexSpace, Basis, Representation, Validator>::coordinates_base;
   };
 
-  template<convex_space ConvexSpace, basis_for<free_module_type_of_t<ConvexSpace>> Basis, validator_for<ConvexSpace> Validator>
+  template<
+    convex_space ConvexSpace,
+    basis_for<free_module_type_of_t<ConvexSpace>> Basis,
+    class Representation,
+    validator_for<ConvexSpace> Validator
+  >
     requires has_distinguished_origin_v<ConvexSpace>
-  class coordinates<ConvexSpace, Basis, Validator> final
-    : public coordinates_base<ConvexSpace, Basis, Validator>
+  class coordinates<ConvexSpace, Basis, Representation, Validator> final
+    : public coordinates_base<ConvexSpace, Basis, Representation, Validator>
   {
   public:
-    using coordinates_base<ConvexSpace, Basis, Validator>::coordinates_base;
+    using coordinates_base<ConvexSpace, Basis, Representation, Validator>::coordinates_base;
   };
 
-  template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin>
+  template<
+    affine_space AffineSpace,
+    basis_for<free_module_type_of_t<AffineSpace>> Basis,
+    class Origin,    
+    class Representation
+  >
     requires (!free_module<AffineSpace>)
-  class coordinates<AffineSpace, Basis, Origin> final
-    : public coordinates_base<AffineSpace, Basis, std::identity>
+  class coordinates<AffineSpace, Basis, Origin, Representation> final
+    : public coordinates_base<AffineSpace, Basis, Representation, std::identity>
   {
   public:
     using origin_type = Origin;
     
-    using coordinates_base<AffineSpace, Basis, std::identity>::coordinates_base;
+    using coordinates_base<AffineSpace, Basis, Representation, std::identity>::coordinates_base;
   };
 
-  template<free_module M, basis_for<free_module_type_of_t<M>> Basis>    
-  class coordinates<M, Basis> final
-    : public coordinates_base<M, Basis, std::identity>
+  template<free_module M, basis_for<free_module_type_of_t<M>> Basis, class Representation>    
+  class coordinates<M, Basis, Representation> final
+    : public coordinates_base<M, Basis, Representation, std::identity>
   {
   public:
-    using coordinates_base<M, Basis, std::identity>::coordinates_base;
+    using coordinates_base<M, Basis, Representation, std::identity>::coordinates_base;
   };
 
   template<class From, class To>
@@ -1800,15 +1890,18 @@ namespace sequoia::maths
   struct arbitary_basis {};
 
   template<vector_space V>
+  struct arbitrary_representation {};
+
+  template<vector_space V>
   inline constexpr bool has_norm_v{
-    requires (const vector_coordinates<V, arbitary_basis<V>>& v) {
+    requires (const vector_coordinates<V, arbitary_basis<V>, arbitrary_representation<V>>& v) {
       { norm(v) } -> std::convertible_to<typename V::field_type>;
     }
   };
 
   template<vector_space V>
   inline constexpr bool has_inner_product_v{
-    requires (const vector_coordinates<V, arbitary_basis<V>>& v) {
+    requires (const vector_coordinates<V, arbitary_basis<V>, arbitrary_representation<V>>& v) {
       { inner_product(v, v) } -> std::convertible_to<typename V::field_type>;
     }
   };
@@ -1825,39 +1918,46 @@ namespace sequoia::maths
   template<std::floating_point T, std::size_t D, class Arena=mathematical_arena>
   struct euclidean_vector_space
   {
-    using set_type              = sets::R<D>;
-    using field_type            = T;
-    using is_vector_space       = std::true_type;
-    using arena_type            = Arena;
+    using set_type               = sets::R<D>;
+    using field_type             = T;
+    using is_vector_space        = std::true_type;
+    using arena_type             = Arena;
     using admits_canonical_basis = std::true_type;
     constexpr static std::size_t dimension{D};
 
-    template<basis Basis>
+    template<basis Basis, class Representation>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
-    friend constexpr field_type inner_product(const vector_coordinates<euclidean_vector_space, Basis>& v, const vector_coordinates<euclidean_vector_space, Basis>& w)
+    friend constexpr field_type inner_product(
+      const vector_coordinates<euclidean_vector_space, Basis, Representation>& v,
+      const vector_coordinates<euclidean_vector_space, Basis, Representation>& w
+    )
     {
       return
         std::ranges::fold_left(
-          std::views::zip(v.values(), w.values()),
+          std::views::zip(v.values(), w.values()), // TO DO: transform_view using repr. or be smarter... e.g. for polar
           field_type{},
           [](field_type f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); }
         );
     }
 
-    template<basis Basis>
+    template<basis Basis, class Representation>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
-    friend constexpr field_type dot(const vector_coordinates<euclidean_vector_space, Basis>& v, const vector_coordinates<euclidean_vector_space, Basis>& w)
+    friend constexpr field_type dot(
+      const vector_coordinates<euclidean_vector_space, Basis, Representation>& v,
+      const vector_coordinates<euclidean_vector_space, Basis, Representation>& w
+    )
     {
       return inner_product(v, w);
     }
 
-    template<basis Basis>
+    template<basis Basis, class Representation>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
-    friend constexpr field_type norm(const vector_coordinates<euclidean_vector_space, Basis>& v)
+    friend constexpr field_type norm(const vector_coordinates<euclidean_vector_space, Basis, Representation>& v)
     {
+      // TO DO: transform_view using repr. or be smarter...
       if constexpr(D == 1)
       {
         return std::abs(v.value());
@@ -1921,11 +2021,11 @@ namespace sequoia::maths
     using type = std::common_type_t<arena_type_of_t<Ts>...>;
   };
   
-  template<std::floating_point T, std::size_t D, basis Basis, class Origin, class Arena=mathematical_arena>
-  using euclidean_affine_coordinates = affine_coordinates<euclidean_affine_space<T, D, Arena>, Basis, Origin>;
+  template<std::floating_point T, std::size_t D, basis Basis, class Origin, class Representation, class Arena=mathematical_arena>
+  using euclidean_affine_coordinates = affine_coordinates<euclidean_affine_space<T, D, Arena>, Basis, Origin, Representation>;
 
-  template<std::floating_point T, std::size_t D, basis Basis, class Arena=mathematical_arena>
-  using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<T, D, Arena>, Basis>;
+  template<std::floating_point T, std::size_t D, basis Basis, class Representation, class Arena=mathematical_arena>
+  using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<T, D, Arena>, Basis, Representation>;
 
   /** @brief Right-handed bases for arbitrary D, built recursively from 1D
 

@@ -87,20 +87,35 @@ namespace sequoia::testing
     using admits_canonical_basis = std::true_type;
     constexpr static std::size_t dimension{D};
 
-    template<maths::basis Basis>
+    template<maths::basis Basis, class Representation>
       requires std::floating_point<field_type>&& is_orthonormal_basis_v<Basis>
     [[nodiscard]]
-    friend constexpr field_type inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
+    friend constexpr field_type inner_product(
+      const maths::vector_coordinates<my_vec_space, Basis, Representation>& lhs,
+      const maths::vector_coordinates<my_vec_space, Basis, Representation>& rhs
+    )
     {
-      return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), field_type{}, [](field_type f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); });
+      return
+        std::ranges::fold_left(
+          std::views::zip(lhs.values(), rhs.values()), // TO DO: use Representation
+          field_type{},
+          [](field_type f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); }
+       );
     }
 
-    template<maths::basis Basis>
+    template<maths::basis Basis, class Representation>
       requires is_complex_v<field_type>&& is_orthonormal_basis_v<Basis>
     [[nodiscard]]
-    friend constexpr field_type inner_product(const maths::vector_coordinates<my_vec_space, Basis>& lhs, const maths::vector_coordinates<my_vec_space, Basis>& rhs)
+    friend constexpr field_type inner_product(
+      const maths::vector_coordinates<my_vec_space, Basis, Representation>& lhs,
+      const maths::vector_coordinates<my_vec_space, Basis, Representation>& rhs
+    )
     {
-      return std::ranges::fold_left(std::views::zip(lhs.values(), rhs.values()), field_type{}, [](field_type f, const auto& z){ return f + conj(std::get<0>(z)) * std::get<1>(z); });
+      return
+        std::ranges::fold_left(
+          std::views::zip(lhs.values(), rhs.values()), // TO DO: use Representation
+          field_type{},
+          [](field_type f, const auto& z){ return f + conj(std::get<0>(z)) * std::get<1>(z); });
     }
   };
 
