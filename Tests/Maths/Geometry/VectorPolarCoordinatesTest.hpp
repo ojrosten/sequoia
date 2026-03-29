@@ -22,5 +22,8 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
+  private:
+    template<class Set, maths::weak_field Field, std::size_t D, class Representation>
+    void test_vec();
   };
 }

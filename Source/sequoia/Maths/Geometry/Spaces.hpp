@@ -1292,7 +1292,7 @@ namespace sequoia::maths
     template<basis B, class Rep, class... Args, std::size_t... Is>
       requires (sizeof...(Args) == sizeof...(Is) + 1)
             && std::same_as<std::tuple_element_t<sizeof...(Is), std::tuple<Args...>>, basis_isomorphism_type_of_t<B>>
-            && (std::same_as<std::tuple_element_t<Is, std::tuple<Args...>>, Rep> && ...)
+            && (std::convertible_to<std::tuple_element_t<Is, std::tuple<Args...>>, Rep> && ...)
     struct is_units_terminated_pack<B, Rep, std::tuple<Args...>, std::index_sequence<Is...>> : std::true_type
     {
     };
@@ -1315,42 +1315,13 @@ namespace sequoia::maths
   {
     template<weak_commutative_ring T, std::size_t N> 
     [[nodiscard]]
-    constexpr static const std::array<T, N>& to_underlying(const std::array<T, N>& in) noexcept
-    {
-      return in;
-    }
-
-    template<weak_commutative_ring T, std::size_t N> 
-    //[[nodiscard]]
-    constexpr static std::array<T, N>& to_underlying(std::array<T, N>& in) noexcept
-    {
-      return in;
-    }
-
-    template<weak_commutative_ring T, std::size_t N> 
-    [[nodiscard]]
     constexpr static std::span<const T, N> to_underlying(std::span<const T, N> in) noexcept
     {
       return in;
     }
 
     template<weak_commutative_ring T, std::size_t N> 
-    //[[nodiscard]]
-    constexpr static std::span<T, N> to_underlying(std::span<T, N> in) noexcept
-    {
-      return in;
-    }
-
-    template<weak_commutative_ring T, std::size_t N> 
-    [[nodiscard]]
-    constexpr static const std::array<T, N>& from_underlying(const std::array<T, N>& in) noexcept
-    {
-      return in;
-    }
-
-    template<weak_commutative_ring T, std::size_t N> 
-    //[[nodiscard]]
-    constexpr static std::array<T, N>& from_underlying(std::array<T, N>& in) noexcept
+    constexpr static std::array<T, N>& to_underlying(std::array<T, N>& in) noexcept
     {
       return in;
     }
@@ -1363,8 +1334,7 @@ namespace sequoia::maths
     }
 
     template<weak_commutative_ring T, std::size_t N> 
-    //[[nodiscard]]
-    constexpr static std::span<T, N> from_underlying(std::span<T, N> in) noexcept
+    constexpr static std::array<T, N>& from_underlying(std::array<T, N>& in) noexcept
     {
       return in;
     }
@@ -1510,13 +1480,9 @@ namespace sequoia::maths
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {        
         using disp_t = Derived::displacement_coordinates_type;
 
-        return
-          disp_t{
-            Representation{}.from_underlying(
-              std::array{(Representation{}.to_underlying(std::array{lhs.m_Values})[Is] - Representation{}.to_underlying(rhs.m_Values)[Is])...}
-            ),
-            basis_isomorphism_type{}
-          };
+        std::array vals{(Representation{}.to_underlying(lhs.values())[Is] - Representation{}.to_underlying(rhs.values())[Is])...};
+
+        return disp_t{Representation{}.from_underlying(vals), basis_isomorphism_type{}};
       }(std::make_index_sequence<D>{});
     }
 
@@ -1693,7 +1659,7 @@ namespace sequoia::maths
       if constexpr(has_identity_validator)
       {
         std::ranges::for_each(
-           std::views::zip(Representation{}.to_underlying(self.m_Values), Representation{}.to_underlying(rhs)),
+          std::views::zip(Representation{}.to_underlying(self.m_Values), Representation{}.to_underlying(rhs)),
           [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); }
         );
 
@@ -1715,7 +1681,7 @@ namespace sequoia::maths
     {
       if constexpr(has_identity_validator)
       {
-        std::ranges::for_each(Representation{}.to_underlying(self.values()), f);
+        std::ranges::for_each(Representation{}.to_underlying(self.m_Values), f);
       }
       else
       {
@@ -1732,7 +1698,7 @@ namespace sequoia::maths
 
     template<std::size_t... Is, class... Args> 
     constexpr coordinates_base(std::index_sequence<Is...>, const std::tuple<Args...>& args)
-      : m_Values{m_Validator(std::array<value_type, D>{std::get<Is>(args)...})}
+      : m_Values{m_Validator(std::array<value_type, D>{static_cast<value_type>(std::get<Is>(args))...})}
     {}
     
     [[nodiscard]]

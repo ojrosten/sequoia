@@ -22,7 +22,7 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
-
+  private:
     template<class VecCoords>
     void test_vec_1();
   };
