@@ -1444,26 +1444,12 @@ namespace sequoia::maths
       return self = (self * u);
     }
 
-    /*template<class Self>
-      requires (!std::same_as<Self, coordinates_base>)  && has_distinguished_origin
-    constexpr Self& operator*=(this Self& self, std::span<const value_type, D> u) noexcept(has_identity_validator)
-    {
-      return self = (self * u);
-      }*/
-
     template<class Self>
       requires (!std::same_as<Self, coordinates_base>)  && vector_space<free_module_type>
     constexpr Self& operator/=(this Self& self, value_type u)
     {
       return self = (self / u);
     }
-
-    /*template<class Self>
-      requires (!std::same_as<Self, coordinates_base>) && vector_space<free_module_type>
-    constexpr Self& operator/=(this Self& self, std::span<const value_type, D> u)
-    {
-      return self = (self / u);
-      }*/
 
     template<class Self>
       requires (!std::same_as<Self, coordinates_base>) 
@@ -1549,22 +1535,6 @@ namespace sequoia::maths
       return v * u;
     }
 
-    /*template<class Derived>
-      requires std::derived_from<Derived, coordinates_base> && has_distinguished_origin
-    [[nodiscard]]
-    friend constexpr Derived operator*(Derived c, std::span<const value_type, D> u) noexcept(has_identity_validator)
-    {
-      return c.apply_to_each_element(u, [](value_type& lhs, value_type rhs){ lhs *= rhs; });
-    }
-    
-    template<class Derived>
-      requires std::derived_from<Derived, coordinates_base> && has_distinguished_origin
-    [[nodiscard]]
-    friend constexpr Derived operator*(std::span<const value_type, D> u, Derived c) noexcept(has_identity_validator)
-    {
-      return c * u;
-      }*/
-
     template<class Derived>
       requires std::derived_from<Derived, coordinates_base> && vector_space<free_module_type> && has_distinguished_origin
     [[nodiscard]]
@@ -1572,14 +1542,6 @@ namespace sequoia::maths
     {
       return v.for_each_element([u](value_type& x) { return x /= u; });
     }
-
-    /*template<class Derived>
-      requires std::derived_from<Derived, coordinates_base> && has_distinguished_origin
-    [[nodiscard]]
-    friend constexpr Derived operator/(Derived c, std::span<const value_type, D> u) noexcept(has_identity_validator)
-    {
-      return c.apply_to_each_element(u, [](value_type& lhs, value_type rhs){ lhs /= rhs; });
-      }*/
 
     [[nodiscard]]
     constexpr const validator_type& validator() const noexcept { return m_Validator; }
