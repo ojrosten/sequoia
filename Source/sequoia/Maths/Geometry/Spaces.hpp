@@ -1327,6 +1327,12 @@ namespace sequoia::maths
     }
 
     template<weak_commutative_ring T, std::size_t N> 
+    constexpr static std::array<T, N>&& to_underlying(std::array<T, N>&& in) noexcept
+    {
+      return in;
+    }
+
+    template<weak_commutative_ring T, std::size_t N> 
     [[nodiscard]]
     constexpr static std::span<const T, N> from_underlying(std::span<const T, N> in) noexcept
     {
@@ -1335,6 +1341,12 @@ namespace sequoia::maths
 
     template<weak_commutative_ring T, std::size_t N> 
     constexpr static std::array<T, N>& from_underlying(std::array<T, N>& in) noexcept
+    {
+      return in;
+    }
+
+    template<weak_commutative_ring T, std::size_t N> 
+    constexpr static std::array<T, N>&& from_underlying(std::array<T, N>&& in) noexcept
     {
       return in;
     }
@@ -1359,6 +1371,7 @@ namespace sequoia::maths
     using value_type                    = commutative_ring_type;
     using displacement_coordinates_type = DisplacementCoordinates;
     using basis_isomorphism_type        = basis_isomorphism_type_of_t<Basis>;
+    using representation_type           = Representation;
 
     // TO DO: improve conventions
     constexpr static bool has_distinguished_origin{has_distinguished_origin_v<ConvexSpace>};
@@ -1431,12 +1444,12 @@ namespace sequoia::maths
       return self = (self * u);
     }
 
-    template<class Self>
+    /*template<class Self>
       requires (!std::same_as<Self, coordinates_base>)  && has_distinguished_origin
     constexpr Self& operator*=(this Self& self, std::span<const value_type, D> u) noexcept(has_identity_validator)
     {
       return self = (self * u);
-    }
+      }*/
 
     template<class Self>
       requires (!std::same_as<Self, coordinates_base>)  && vector_space<free_module_type>
@@ -1445,12 +1458,12 @@ namespace sequoia::maths
       return self = (self / u);
     }
 
-    template<class Self>
+    /*template<class Self>
       requires (!std::same_as<Self, coordinates_base>) && vector_space<free_module_type>
     constexpr Self& operator/=(this Self& self, std::span<const value_type, D> u)
     {
       return self = (self / u);
-    }
+      }*/
 
     template<class Self>
       requires (!std::same_as<Self, coordinates_base>) 
@@ -1468,7 +1481,7 @@ namespace sequoia::maths
     [[nodiscard]]
     constexpr Self operator-(this const Self& self) noexcept(has_identity_validator)
     {
-      return Self{utilities::to_array(self.values(), [](value_type t) { return -t; }), basis_isomorphism_type{}};
+      return Self{self}.for_each_element([](value_type& t) { t = -t; });
     }
 
     template<class Derived>
@@ -1536,7 +1549,7 @@ namespace sequoia::maths
       return v * u;
     }
 
-    template<class Derived>
+    /*template<class Derived>
       requires std::derived_from<Derived, coordinates_base> && has_distinguished_origin
     [[nodiscard]]
     friend constexpr Derived operator*(Derived c, std::span<const value_type, D> u) noexcept(has_identity_validator)
@@ -1550,7 +1563,7 @@ namespace sequoia::maths
     friend constexpr Derived operator*(std::span<const value_type, D> u, Derived c) noexcept(has_identity_validator)
     {
       return c * u;
-    }
+      }*/
 
     template<class Derived>
       requires std::derived_from<Derived, coordinates_base> && vector_space<free_module_type> && has_distinguished_origin
@@ -1560,13 +1573,13 @@ namespace sequoia::maths
       return v.for_each_element([u](value_type& x) { return x /= u; });
     }
 
-    template<class Derived>
+    /*template<class Derived>
       requires std::derived_from<Derived, coordinates_base> && has_distinguished_origin
     [[nodiscard]]
     friend constexpr Derived operator/(Derived c, std::span<const value_type, D> u) noexcept(has_identity_validator)
     {
       return c.apply_to_each_element(u, [](value_type& lhs, value_type rhs){ lhs /= rhs; });
-    }
+      }*/
 
     [[nodiscard]]
     constexpr const validator_type& validator() const noexcept { return m_Validator; }
@@ -1677,11 +1690,12 @@ namespace sequoia::maths
 
     template<class Self, class Fn>
       requires std::invocable<Fn, value_type&>
-    constexpr Self& for_each_element(this Self& self, Fn f)
+    constexpr Self&& for_each_element(this Self&& self, Fn f)
     {
       if constexpr(has_identity_validator)
       {
         std::ranges::for_each(Representation{}.to_underlying(self.m_Values), f);
+        self.m_Values = Representation{}.from_underlying(self.m_Values);
       }
       else
       {

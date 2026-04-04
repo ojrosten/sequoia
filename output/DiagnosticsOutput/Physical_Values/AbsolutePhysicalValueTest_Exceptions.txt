@@ -1,4 +1,4 @@
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 329
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 386
 
 Expected Exception Type:
 [std::domain_error]
@@ -6,7 +6,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 340
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 397
 
 Expected Exception Type:
 [std::domain_error]
@@ -14,7 +14,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 353
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
 
 Expected Exception Type:
 [std::domain_error]
@@ -22,7 +22,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 364
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 421
 
 Expected Exception Type:
 [std::domain_error]
@@ -30,7 +30,15 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 375
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 432
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 443
 
 Expected Exception Type:
 [std::domain_error]
@@ -46,7 +54,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 329
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 397
 
 Expected Exception Type:
 [std::domain_error]
@@ -54,7 +62,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 340
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
 
 Expected Exception Type:
 [std::domain_error]
@@ -62,7 +70,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 353
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 421
 
 Expected Exception Type:
 [std::domain_error]
@@ -70,7 +78,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 364
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 432
 
 Expected Exception Type:
 [std::domain_error]
@@ -78,55 +86,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 375
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 386
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 329
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 340
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 353
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 364
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 375
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 443
 
 Expected Exception Type:
 [std::domain_error]
@@ -142,7 +102,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 329
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 397
 
 Expected Exception Type:
 [std::domain_error]
@@ -150,7 +110,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 340
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
 
 Expected Exception Type:
 [std::domain_error]
@@ -158,7 +118,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 353
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 421
 
 Expected Exception Type:
 [std::domain_error]
@@ -166,7 +126,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 364
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 432
 
 Expected Exception Type:
 [std::domain_error]
@@ -174,55 +134,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 375
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 386
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 329
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 340
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 353
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 364
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 375
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 443
 
 Expected Exception Type:
 [std::domain_error]
@@ -238,7 +150,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 329
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 397
 
 Expected Exception Type:
 [std::domain_error]
@@ -246,7 +158,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 340
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
 
 Expected Exception Type:
 [std::domain_error]
@@ -254,7 +166,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 353
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 421
 
 Expected Exception Type:
 [std::domain_error]
@@ -262,7 +174,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 364
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 432
 
 Expected Exception Type:
 [std::domain_error]
@@ -270,55 +182,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 375
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 386
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 329
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 340
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 353
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 364
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 375
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 443
 
 Expected Exception Type:
 [std::domain_error]
@@ -334,7 +198,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 329
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 397
 
 Expected Exception Type:
 [std::domain_error]
@@ -342,7 +206,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 340
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
 
 Expected Exception Type:
 [std::domain_error]
@@ -350,7 +214,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 353
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 421
 
 Expected Exception Type:
 [std::domain_error]
@@ -358,7 +222,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 364
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 432
 
 Expected Exception Type:
 [std::domain_error]
@@ -366,7 +230,55 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 375
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 443
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 386
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 397
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 421
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 432
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 443
 
 Expected Exception Type:
 [std::domain_error]
@@ -382,7 +294,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 329
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 397
 
 Expected Exception Type:
 [std::domain_error]
@@ -390,7 +302,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 340
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
 
 Expected Exception Type:
 [std::domain_error]
@@ -398,7 +310,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 353
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 421
 
 Expected Exception Type:
 [std::domain_error]
@@ -406,7 +318,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 364
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 432
 
 Expected Exception Type:
 [std::domain_error]
@@ -414,7 +326,7 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 375
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 443
 
 Expected Exception Type:
 [std::domain_error]
@@ -423,6 +335,94 @@ Domain error: attempting to use a value of -1 for a semi-positive quantity
 =======================================
 
 Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 386
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 397
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 421
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 432
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 443
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 386
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 397
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 421
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 432
+
+Expected Exception Type:
+[std::domain_error]
+Domain error: attempting to use a value of -1 for a semi-positive quantity
+
+=======================================
+
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 443
 
 Expected Exception Type:
 [std::domain_error]
