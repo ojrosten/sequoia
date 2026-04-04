@@ -867,6 +867,43 @@ namespace sequoia::maths
     : std::bool_constant<(Lower == -std::numeric_limits<T>::infinity()) && (Upper == std::numeric_limits<T>::infinity())>
   {};
 
+  template<class T>
+  inline constexpr bool has_validator_type_v{
+    requires {
+      typename T::validator_type;
+    }
+  };
+
+  /** @defgroup Representation Representation
+      @brief Representations allow coordinates to be represented using a bijective mapping with respect to an underlying basis.
+
+   */
+
+  template<convex_space ConvexSpace, class Representation>
+  struct representation_for_free_module_of
+  {
+    using type = Representation;
+  };
+
+  template<convex_space ConvexSpace, class Representation>
+  using representation_for_free_module_of_t = representation_for_free_module_of<ConvexSpace,  Representation>::type;
+
+  template<class Representation, class UnderlyingValidator>
+  struct representation_validator
+  {
+    using type = UnderlyingValidator;
+  };
+
+  template<class Representation, class UnderlyingValidator>
+  using representation_validator_t = representation_validator<Representation, UnderlyingValidator>::type;
+
+  template<class Representation, class UnderlyingValidator>
+    requires has_validator_type_v<Representation>
+  struct representation_validator<Representation, UnderlyingValidator>
+  {
+    using type = Representation::validator_type;
+  };
+
   /** @defgroup DirectProduct Direct Product
       @brief Direct Products are one way in which spaces can be composed to create new spaces.
 
@@ -1356,15 +1393,18 @@ namespace sequoia::maths
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
     class Representation,
-    validator_for<ConvexSpace> Validator,
-    class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<ConvexSpace>, Basis, Representation>
+    validator_for<ConvexSpace> UnderlyingValidator,
+    class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<ConvexSpace>,
+                                                          Basis,
+                                                          representation_for_free_module_of_t<ConvexSpace, Representation>>
   >
   class coordinates_base
   {
   public:
-    using space_type                    = ConvexSpace;   
+    using space_type                    = ConvexSpace;
     using basis_type                    = Basis;
-    using validator_type                = Validator;
+    using validator_type                = representation_validator_t<Representation, UnderlyingValidator>;
+    using underlying_validator_type     = UnderlyingValidator;
     using set_type                      = ConvexSpace::set_type;
     using free_module_type              = free_module_type_of_t<ConvexSpace>;
     using commutative_ring_type         = commutative_ring_type_of_t<ConvexSpace>;
@@ -1375,7 +1415,7 @@ namespace sequoia::maths
 
     // TO DO: improve conventions
     constexpr static bool has_distinguished_origin{has_distinguished_origin_v<ConvexSpace>};
-    constexpr static bool has_identity_validator{defines_identity_validator_v<Validator>};
+    constexpr static bool has_identity_validator{defines_identity_validator_v<validator_type>};
     constexpr static bool has_freely_mutable_components{has_identity_validator && has_distinguished_origin};
     constexpr static bool admits_canonical_basis{admits_canonical_basis_v<free_module_type>};
     
@@ -1474,7 +1514,8 @@ namespace sequoia::maths
       requires std::derived_from<Derived, coordinates_base>
             && (!std::same_as<Derived, displacement_coordinates_type>)
     [[nodiscard]]
-    friend constexpr typename Derived::displacement_coordinates_type operator-(const Derived& lhs, const Derived& rhs) noexcept(has_identity_validator)
+    friend constexpr typename Derived::displacement_coordinates_type operator-(const Derived& lhs, const Derived& rhs)
+      noexcept(Derived::displacement_coordinates_type::has_identity_validator)
     {
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {        
         using disp_t = Derived::displacement_coordinates_type;
@@ -1678,15 +1719,15 @@ namespace sequoia::maths
     {}
     
     [[nodiscard]]
-    static std::array<value_type, D> validate(std::span<const value_type, D> vals, Validator& validator)
+    static std::array<value_type, D> validate(std::span<const value_type, D> vals, validator_type& validator)
     {
       return validate(utilities::to_array(vals), validator);
     }
 
     [[nodiscard]]
-    static std::array<value_type, D> validate(std::array<value_type, D> vals, Validator& validator)
+    static std::array<value_type, D> validate(std::array<value_type, D> vals, validator_type& validator)
     {
-      if constexpr(validator_for_array<Validator, ConvexSpace>)
+      if constexpr(validator_for_array<validator_type, ConvexSpace>)
         return validator(vals);
       else
         return {validator(vals.front())};
