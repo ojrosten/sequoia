@@ -27,10 +27,11 @@ namespace sequoia::testing
     using ring_t           = coords_t::commutative_ring_type;
     using units_t          = coords_t::basis_isomorphism_type;
     using representation_t = coords_t::representation_type;
+    using validator_t      = coords_t::validator_type;
     constexpr static std::size_t dimension{Coordinates::dimension};
     constexpr static bool orderable{(dimension == 1) && std::totally_ordered<ring_t>};
     constexpr static bool has_distinguished_origin{maths::has_distinguished_origin_v<space_t>};
-    constexpr static bool has_identity_repr{std::same_as<representation_t, maths::identity_representation>};
+    constexpr static bool has_identity_repr{std::same_as<representation_t, maths::identity_representation<validator_t>>};
 
     regular_test& m_Test;
     graph_type m_Graph;

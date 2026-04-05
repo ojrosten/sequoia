@@ -20,6 +20,8 @@ namespace sequoia::testing
   {
     struct polar_representation
     {
+      using validator_type = std::identity;
+      
       template<weak_commutative_ring T> 
       [[nodiscard]]
       constexpr static std::array<T, 2> to_underlying(std::span<const T, 2> polar)

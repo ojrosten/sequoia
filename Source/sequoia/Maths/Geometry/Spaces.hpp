@@ -888,22 +888,6 @@ namespace sequoia::maths
   template<convex_space ConvexSpace, class Representation>
   using representation_for_free_module_of_t = representation_for_free_module_of<ConvexSpace,  Representation>::type;
 
-  template<class Representation, class UnderlyingValidator>
-  struct representation_validator
-  {
-    using type = UnderlyingValidator;
-  };
-
-  template<class Representation, class UnderlyingValidator>
-  using representation_validator_t = representation_validator<Representation, UnderlyingValidator>::type;
-
-  template<class Representation, class UnderlyingValidator>
-    requires has_validator_type_v<Representation>
-  struct representation_validator<Representation, UnderlyingValidator>
-  {
-    using type = Representation::validator_type;
-  };
-
   /** @defgroup DirectProduct Direct Product
       @brief Direct Products are one way in which spaces can be composed to create new spaces.
 
@@ -1348,8 +1332,11 @@ namespace sequoia::maths
   template<basis B, class Rep, class... Args>
   inline constexpr bool is_units_terminated_pack_v{is_units_terminated_pack<B, Rep, Args...>::value};
 
+  template<class Validator>
   struct identity_representation
   {
+    using validator_type = Validator;
+    
     template<weak_commutative_ring T, std::size_t N> 
     [[nodiscard]]
     constexpr static std::span<const T, N> to_underlying(std::span<const T, N> in) noexcept
@@ -1393,7 +1380,6 @@ namespace sequoia::maths
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
     class Representation,
-    validator_for<ConvexSpace> UnderlyingValidator,
     class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<ConvexSpace>,
                                                           Basis,
                                                           representation_for_free_module_of_t<ConvexSpace, Representation>>
@@ -1402,16 +1388,15 @@ namespace sequoia::maths
   {
   public:
     using space_type                    = ConvexSpace;
-    using basis_type                    = Basis;
-    using validator_type                = representation_validator_t<Representation, UnderlyingValidator>;
-    using underlying_validator_type     = UnderlyingValidator;
+    using basis_type                    = Basis;    
+    using representation_type           = Representation;    
+    using displacement_coordinates_type = DisplacementCoordinates;
     using set_type                      = ConvexSpace::set_type;
     using free_module_type              = free_module_type_of_t<ConvexSpace>;
     using commutative_ring_type         = commutative_ring_type_of_t<ConvexSpace>;
     using value_type                    = commutative_ring_type;
-    using displacement_coordinates_type = DisplacementCoordinates;
     using basis_isomorphism_type        = basis_isomorphism_type_of_t<Basis>;
-    using representation_type           = Representation;
+    using validator_type                = Representation::validator_type;
 
     // TO DO: improve conventions
     constexpr static bool has_distinguished_origin{has_distinguished_origin_v<ConvexSpace>};
@@ -1742,30 +1727,28 @@ namespace sequoia::maths
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
     class Origin,
-    class Representation,
-    validator_for<ConvexSpace> Validator
+    class Representation
   >
-  class coordinates<ConvexSpace, Basis, Origin, Representation, Validator> final
-    : public coordinates_base<ConvexSpace, Basis, Representation, Validator>
+  class coordinates<ConvexSpace, Basis, Origin, Representation> final
+    : public coordinates_base<ConvexSpace, Basis, Representation>
   {
   public:
     using origin_type = Origin;
 
-    using coordinates_base<ConvexSpace, Basis, Representation, Validator>::coordinates_base;
+    using coordinates_base<ConvexSpace, Basis, Representation>::coordinates_base;
   };
 
   template<
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
-    class Representation,
-    validator_for<ConvexSpace> Validator
+    class Representation
   >
-    requires has_distinguished_origin_v<ConvexSpace>
-  class coordinates<ConvexSpace, Basis, Representation, Validator> final
-    : public coordinates_base<ConvexSpace, Basis, Representation, Validator>
+    requires has_distinguished_origin_v<ConvexSpace> && (!free_module<ConvexSpace>)
+  class coordinates<ConvexSpace, Basis, Representation> final
+    : public coordinates_base<ConvexSpace, Basis, Representation>
   {
   public:
-    using coordinates_base<ConvexSpace, Basis, Representation, Validator>::coordinates_base;
+    using coordinates_base<ConvexSpace, Basis, Representation>::coordinates_base;
   };
 
   template<
@@ -1776,20 +1759,20 @@ namespace sequoia::maths
   >
     requires (!free_module<AffineSpace>)
   class coordinates<AffineSpace, Basis, Origin, Representation> final
-    : public coordinates_base<AffineSpace, Basis, Representation, std::identity>
+    : public coordinates_base<AffineSpace, Basis, Representation>
   {
   public:
     using origin_type = Origin;
     
-    using coordinates_base<AffineSpace, Basis, Representation, std::identity>::coordinates_base;
+    using coordinates_base<AffineSpace, Basis, Representation>::coordinates_base;
   };
 
   template<free_module M, basis_for<free_module_type_of_t<M>> Basis, class Representation>    
   class coordinates<M, Basis, Representation> final
-    : public coordinates_base<M, Basis, Representation, std::identity>
+    : public coordinates_base<M, Basis, Representation>
   {
   public:
-    using coordinates_base<M, Basis, Representation, std::identity>::coordinates_base;
+    using coordinates_base<M, Basis, Representation>::coordinates_base;
   };
 
   template<class From, class To>
