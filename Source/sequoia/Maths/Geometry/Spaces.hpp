@@ -879,13 +879,16 @@ namespace sequoia::maths
 
    */
 
-  template<convex_space ConvexSpace, class Representation>
+  template<class R, class ConvexSpace>
+  concept representation_for = convex_space<ConvexSpace> && has_validator_type_v<R> && validator_for<typename R::validator_type, ConvexSpace>;
+
+  template<convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
   struct representation_for_free_module_of
   {
     using type = Representation;
   };
 
-  template<convex_space ConvexSpace, class Representation>
+  template<convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
   using representation_for_free_module_of_t = representation_for_free_module_of<ConvexSpace,  Representation>::type;
 
   /** @defgroup DirectProduct Direct Product
@@ -1265,19 +1268,19 @@ namespace sequoia::maths
       The basis belongs to the associated vector space, allowing the coordinates type for the affine
       space to be aware of the type of the coordinate representation for displacements
    */
-  template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin, class Representation>
+  template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin, representation_for<AffineSpace> Representation>
   using affine_coordinates = coordinates<AffineSpace, Basis, Origin, Representation>;
 
   /** @ingroup Coordinates
       @brief Alias for coordinates of an element of a vector space with respect to a particular basis.
    */
-  template<vector_space VectorSpace, basis_for<free_module_type_of_t<VectorSpace>> Basis, class Representation>
+  template<vector_space VectorSpace, basis_for<free_module_type_of_t<VectorSpace>> Basis, representation_for<VectorSpace> Representation>
   using vector_coordinates = coordinates<VectorSpace, Basis, Representation>;
 
   /** @ingroup Coordinates
       @brief Alias for coordinates of an element of a free module with respect to a particular basis.
    */
-  template<free_module FreeModule, basis_for<free_module_type_of_t<FreeModule>> Basis, class Representation>
+  template<free_module FreeModule, basis_for<free_module_type_of_t<FreeModule>> Basis, representation_for<FreeModule> Representation>
   using free_module_coordinates = coordinates<FreeModule, Basis, Representation>;
   
   /** @ingroup Coordinates
@@ -1379,7 +1382,7 @@ namespace sequoia::maths
   template<
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
-    class Representation,
+    representation_for<ConvexSpace> Representation,
     class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<ConvexSpace>,
                                                           Basis,
                                                           representation_for_free_module_of_t<ConvexSpace, Representation>>
@@ -1727,7 +1730,7 @@ namespace sequoia::maths
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
     class Origin,
-    class Representation
+    representation_for<ConvexSpace> Representation
   >
   class coordinates<ConvexSpace, Basis, Origin, Representation> final
     : public coordinates_base<ConvexSpace, Basis, Representation>
@@ -1741,7 +1744,7 @@ namespace sequoia::maths
   template<
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
-    class Representation
+    representation_for<ConvexSpace> Representation
   >
     requires has_distinguished_origin_v<ConvexSpace> && (!free_module<ConvexSpace>)
   class coordinates<ConvexSpace, Basis, Representation> final
@@ -1755,7 +1758,7 @@ namespace sequoia::maths
     affine_space AffineSpace,
     basis_for<free_module_type_of_t<AffineSpace>> Basis,
     class Origin,    
-    class Representation
+    representation_for<AffineSpace> Representation
   >
     requires (!free_module<AffineSpace>)
   class coordinates<AffineSpace, Basis, Origin, Representation> final
@@ -1767,7 +1770,7 @@ namespace sequoia::maths
     using coordinates_base<AffineSpace, Basis, Representation>::coordinates_base;
   };
 
-  template<free_module M, basis_for<free_module_type_of_t<M>> Basis, class Representation>    
+  template<free_module M, basis_for<free_module_type_of_t<M>> Basis, representation_for<M> Representation>    
   class coordinates<M, Basis, Representation> final
     : public coordinates_base<M, Basis, Representation>
   {
@@ -1891,7 +1894,7 @@ namespace sequoia::maths
     using admits_canonical_basis = std::true_type;
     constexpr static std::size_t dimension{D};
 
-    template<basis Basis, class Representation>
+    template<basis Basis, representation_for<euclidean_vector_space> Representation>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type inner_product(
@@ -1907,7 +1910,7 @@ namespace sequoia::maths
         );
     }
 
-    template<basis Basis, class Representation>
+    template<basis Basis, representation_for<euclidean_vector_space> Representation>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type dot(
@@ -1918,7 +1921,7 @@ namespace sequoia::maths
       return inner_product(v, w);
     }
 
-    template<basis Basis, class Representation>
+    template<basis Basis, representation_for<euclidean_vector_space> Representation>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type norm(const vector_coordinates<euclidean_vector_space, Basis, Representation>& v)
