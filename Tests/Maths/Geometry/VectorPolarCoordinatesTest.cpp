@@ -18,7 +18,7 @@ namespace sequoia::testing
   
   namespace
   {
-    struct polar_representation
+    struct basic_polar_representation
     {
       using validator_type = std::identity;
       
@@ -63,6 +63,23 @@ namespace sequoia::testing
         return std::move(cartesian = from_underlying(std::span<const T, 2>{cartesian}));
       }
     };
+
+    struct polar_representation : basic_polar_representation
+    {
+      template<weak_commutative_ring T>
+      [[nodiscard]]
+      friend constexpr std::array<T, 2> operator*(const std::array<T, 2>& lhs, T scale)
+      {
+        return {lhs[0] * scale, lhs[1]};
+      }
+
+      template<weak_commutative_ring T>
+      [[nodiscard]]
+      friend constexpr std::array<T, 2> operator/(const std::array<T, 2>& lhs, T scale)
+      {
+        return {lhs[0] / scale, lhs[1]};
+      }
+    };
   }
   
   [[nodiscard]]
@@ -73,7 +90,8 @@ namespace sequoia::testing
 
   void vector_polar_coordinates_test::run_tests()
   {
-    test_vec<sets::R<1>, float, 2, polar_representation>();
+    test_vec<sets::R<1>, float , 2, basic_polar_representation>();
+    test_vec<sets::R<1>, double, 2, polar_representation>();
   }
 
   template<class Set, maths::weak_field Field, std::size_t D, class Representation>
@@ -100,11 +118,19 @@ namespace sequoia::testing
     STATIC_CHECK(has_unary_plus<vec_t>);
     STATIC_CHECK(has_unary_minus<vec_t>);
 
-    constexpr auto pi{std::numbers::pi_v<Field>};
-    
-    vec_t v{1, 0}, w{1, pi};
-    check(within_tolerance{value_t(1e-7)}, "", v - w, delta_t{2, 0});
-
     coordinates_operations<vec_t>{*this}.execute();
+       
+    check(
+      within_tolerance{std::same_as<Field, float> ? value_t(1e-7) : value_t(1e-14)},
+      "The resultant angle may be within the tolerance of either 0 or 2pi, depending",
+      []() {
+        constexpr auto pi{std::numbers::pi_v<Field>};
+        constexpr vec_t u{1, 0}, v{1, pi};
+        auto w{u-v};      
+        w[1] = std::fmod(w[1], 2*pi);
+        return w;
+      }(),
+      delta_t{2, 0}
+    );
   }
 }
