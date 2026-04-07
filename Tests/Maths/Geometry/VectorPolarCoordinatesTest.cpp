@@ -73,9 +73,9 @@ namespace sequoia::testing
         constexpr auto pi{std::numbers::pi_v<T>};
         const auto theta{lhs[1]};
         const auto newTheta{
-          scale >= T{}               ? theta
-                       : theta >= pi ? theta - pi
-                                     : theta + pi
+            scale >= T{} ? theta
+          : theta >= pi  ? theta - pi
+                         : theta + pi
         };
         return {lhs[0] * std::abs(scale), newTheta};
       }
