@@ -25,5 +25,8 @@ namespace sequoia::testing
   private:
     template<class Set, maths::weak_field Field, std::size_t D, class Representation>
     void test_vec();
+
+    template<maths::weak_field Field>
+    void test_refined();
   };
 }

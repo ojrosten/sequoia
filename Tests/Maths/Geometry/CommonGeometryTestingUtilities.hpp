@@ -78,14 +78,15 @@ namespace sequoia::testing
     }
   };
 
-  template<class Set, maths::weak_field Field, std::size_t D>
+  template<class Set, maths::weak_field Field, std::size_t Dim>
   struct my_vec_space
   {
     using set_type               = Set;
     using field_type             = Field;
     using is_vector_space        = std::true_type;
     using admits_canonical_basis = std::true_type;
-    constexpr static std::size_t dimension{D};
+    constexpr static std::size_t dimension{Dim};
+    constexpr static std::size_t D{dimension};
 
     template<maths::basis Basis, class Representation>
       requires std::floating_point<field_type>&& is_orthonormal_basis_v<Basis>

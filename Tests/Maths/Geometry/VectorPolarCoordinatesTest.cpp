@@ -68,14 +68,21 @@ namespace sequoia::testing
     {
       template<weak_commutative_ring T>
       [[nodiscard]]
-      friend constexpr std::array<T, 2> operator*(const std::array<T, 2>& lhs, T scale)
+      static constexpr std::array<T, 2> mul(const std::array<T, 2>& lhs, T scale)
       {
-        return {lhs[0] * scale, lhs[1]};
+        constexpr auto pi{std::numbers::pi_v<T>};
+        const auto theta{lhs[1]};
+        const auto newTheta{
+          scale >= T{}               ? theta
+                       : theta >= pi ? theta - pi
+                                     : theta + pi
+        };
+        return {lhs[0] * std::abs(scale), newTheta};
       }
 
       template<weak_commutative_ring T>
       [[nodiscard]]
-      friend constexpr std::array<T, 2> operator/(const std::array<T, 2>& lhs, T scale)
+      static constexpr std::array<T, 2> div(const std::array<T, 2>& lhs, T scale)
       {
         return {lhs[0] / scale, lhs[1]};
       }
@@ -90,8 +97,10 @@ namespace sequoia::testing
 
   void vector_polar_coordinates_test::run_tests()
   {
-    test_vec<sets::R<1>, float , 2, basic_polar_representation>();
-    test_vec<sets::R<1>, double, 2, polar_representation>();
+    test_vec<sets::R<2>, float , 2, basic_polar_representation>();
+    test_vec<sets::R<2>, double, 2, polar_representation>();
+
+    test_refined<float>();
   }
 
   template<class Set, maths::weak_field Field, std::size_t D, class Representation>
@@ -132,5 +141,16 @@ namespace sequoia::testing
       }(),
       delta_t{2, 0}
     );
+  }
+
+  template<maths::weak_field Field>
+  void vector_polar_coordinates_test::test_refined()
+  {
+    using vec_space_t = my_vec_space<sets::R<2>, Field, 2>;
+    using vec_t       = vector_coordinates<vec_space_t, canonical_basis<sets::R<2>, Field, 2>, polar_representation>;
+
+    static_assert(defines_scalar_multiplication_for_v<vec_space_t, polar_representation>);
+    
+    check(equality, "", vec_t{1, 1} * 2, vec_t{2, 1});
   }
 }
