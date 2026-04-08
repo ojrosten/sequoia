@@ -138,7 +138,7 @@ namespace sequoia::testing
       using edge_t = transition_checker<coords_t>::edge;
       graph_type g{
         {
-          {
+          { // neg_one_neg_one
             edge_t{
               dim_2_label::neg_one_neg_one,
               test.report("+ (-1, -1)"),
@@ -627,6 +627,24 @@ namespace sequoia::testing
           [](coords_t v) -> coords_t { return v / ring_t{-1}; }
         );
       }
+
+      // (-1, -1) --> (0, 0)
+      add_transition<coords_t>(
+       g,
+       dim_2_label::neg_one_neg_one,
+       dim_2_label::zero_zero,
+       test.report("(-1, -1) * 0"),
+       [&](coords_t v) -> coords_t { return v * ring_t{}; }
+     );
+
+      // (1, 1) --> (0, 0)
+      add_transition<coords_t>(
+       g,
+       dim_2_label::one_one,
+       dim_2_label::zero_zero,
+       test.report("(1, 1) * 0"),
+       [&](coords_t v) -> coords_t { return v * ring_t{}; }
+     );
     }
 
     static void add_dim_2_free_mutations(maths::network auto& g, regular_test& test)

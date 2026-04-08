@@ -45,7 +45,7 @@ namespace sequoia::testing
       [[nodiscard]]
       constexpr static std::array<T, 2> from_underlying(std::span<const T, 2> cartesian)
       {
-        auto theta{std::atan2(cartesian[1], cartesian[0])};
+        T theta{(!cartesian[0] && !cartesian[1]) ? T{} : std::atan2(cartesian[1], cartesian[0])};
         if(theta < 0) theta += T{2} * std::numbers::pi_v<T>;
         
         return {std::sqrt(cartesian[0] * cartesian[0] + cartesian[1] * cartesian[1]), theta};
@@ -68,23 +68,31 @@ namespace sequoia::testing
     {
       template<weak_commutative_ring T>
       [[nodiscard]]
+      static constexpr T compute_angle(T theta, T scale)
+      {
+        if(!scale)
+          return T{};
+
+        constexpr auto pi{std::numbers::pi_v<T>};
+
+        return
+            scale > T{} ? theta
+          : theta >= pi ? theta - pi
+                        : theta + pi;
+      }
+      
+      template<weak_commutative_ring T>
+      [[nodiscard]]
       static constexpr std::array<T, 2> mul(const std::array<T, 2>& lhs, T scale)
       {
-        constexpr auto pi{std::numbers::pi_v<T>};
-        const auto theta{lhs[1]};
-        const auto newTheta{
-            scale >= T{} ? theta
-          : theta >= pi  ? theta - pi
-                         : theta + pi
-        };
-        return {lhs[0] * std::abs(scale), newTheta};
+        return {lhs[0] * std::abs(scale), compute_angle(lhs[1], scale)};
       }
 
       template<weak_commutative_ring T>
       [[nodiscard]]
       static constexpr std::array<T, 2> div(const std::array<T, 2>& lhs, T scale)
       {
-        return {lhs[0] / scale, lhs[1]};
+        return {lhs[0] / scale, compute_angle(lhs[1], scale)};
       }
     };
   }
