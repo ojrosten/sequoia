@@ -902,6 +902,13 @@ namespace sequoia::maths
     }
   };
 
+  template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
+  inline constexpr bool defines_scalar_division_for_v{
+    requires(const std::array<commutative_ring_type_of_t<ConvexSpace>, ConvexSpace::dimension>& vals, commutative_ring_type_of_t<ConvexSpace> s) {
+      { R::div(vals, s) } -> std::convertible_to<std::array<commutative_ring_type_of_t<ConvexSpace>, ConvexSpace::dimension>>;
+    }
+  };
+
   /** @defgroup DirectProduct Direct Product
       @brief Direct Products are one way in which spaces can be composed to create new spaces.
 
@@ -1588,7 +1595,15 @@ namespace sequoia::maths
     [[nodiscard]]
     friend constexpr Derived operator/(Derived v, value_type u)
     {
-      return v.for_each_element([u](value_type& x) { return x /= u; });
+      if constexpr(defines_scalar_division_for_v<space_type, representation_type>)
+      {
+        v.m_Values = Representation{}.div(v.m_Values, u);
+        return v;
+      }
+      else
+      {
+        return v.for_each_element([u](value_type& x) { return x /= u; });
+      }
     }
 
     [[nodiscard]]

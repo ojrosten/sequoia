@@ -92,7 +92,7 @@ namespace sequoia::testing
       [[nodiscard]]
       static constexpr std::array<T, 2> div(const std::array<T, 2>& lhs, T scale)
       {
-        return {lhs[0] / scale, compute_angle(lhs[1], scale)};
+        return {lhs[0] / std::abs(scale), compute_angle(lhs[1], scale)};
       }
     };
   }
