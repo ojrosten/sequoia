@@ -341,11 +341,7 @@ namespace sequoia::physics
   };
 
   template<convex_space T, convex_space U>
-  inline constexpr bool have_compatible_base_spaces_v{
-    has_base_space_v<T> && has_base_space_v<U> && (free_module_type_of_t<T>::dimension == free_module_type_of_t<U>::dimension) && requires {
-      typename std::common_type<typename T::base_space, typename U::base_space>::type;
-    }
-  };
+  inline constexpr bool have_compatible_base_spaces_v{std::same_as<to_base_space_t<T>, to_base_space_t<U>>};
 
   template<convex_space T, convex_space U>
   struct to_displacement_space;
@@ -558,8 +554,7 @@ namespace sequoia::physics
     template<convex_space OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
       requires (!std::same_as<space_type, OtherValueSpace>)
            && has_distinguished_origin_v<space_type>
-           && std::same_as<to_base_space_t<space_type>, to_base_space_t<OtherValueSpace>>
-    //have_compatible_base_spaces_v<space_type, OtherValueSpace>
+           && have_compatible_base_spaces_v<space_type, OtherValueSpace>
            && consistent_bases_v<basis_type, OtherBasis>
     [[nodiscard]]
     friend constexpr auto operator+(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& rhs)
@@ -617,16 +612,10 @@ namespace sequoia::physics
             physical_value<dual_of_t<RHSValueSpace>, dual_of_t<RHSUnit>, dual_of_t<RHSBasis>, distinguished_origin<dual_of_t<RHSValueSpace>>, RHSValidator>
           >;
       using derived_units_type = physical_value_t::units_type;
-      if constexpr(dimension == 1)
-      {
-        return physical_value_t{lhs.value() / rhs.value(), derived_units_type{}};
-      }
-      else
-      {
-        return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
-          return physical_value_t{std::array{(lhs.values()[Is] / rhs.value())...}, derived_units_type{}};
-        }(std::make_index_sequence<D>{});
-      }
+
+      return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
+        return physical_value_t{std::array{(lhs.values()[Is] / rhs.value())...}, derived_units_type{}};
+      }(std::make_index_sequence<D>{});
     }
 
     [[nodiscard]] friend constexpr auto operator/(value_type value, const physical_value& rhs)
@@ -643,16 +632,10 @@ namespace sequoia::physics
     constexpr operator physical_value<LoweredValueSpace, Unit, OtherBasis, OtherOrigin, validator_type>() const noexcept
     {
       using physical_value_t = physical_value<LoweredValueSpace, Unit, OtherBasis, OtherOrigin, validator_type>;
-      if constexpr(dimension == 1)
-      {
-        return physical_value_t{this->value(), Unit{}};
-      }
-      else
-      {
-        return [this] <std::size_t... Is>(std::index_sequence<Is...>) {
-          return physical_value_t{std::array{this->values()[Is]...}, Unit{}};
-        }(std::make_index_sequence<D>{});
-      }
+      
+      return [this] <std::size_t... Is>(std::index_sequence<Is...>) {
+        return physical_value_t{std::array{this->values()[Is]...}, Unit{}};
+      }(std::make_index_sequence<D>{});
     }
 
     template<
