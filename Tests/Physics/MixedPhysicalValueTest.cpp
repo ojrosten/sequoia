@@ -26,9 +26,8 @@ namespace sequoia::testing
   {
     test_mixed();
     test_mixed_vector();
-    test_mixed_vector();
-    test_mixed_kinds();
-    test_conversions();
+    test_kinds();
+    test_derived_kinds();
   }
 
   void mixed_physical_value_test::test_mixed()
@@ -88,7 +87,7 @@ namespace sequoia::testing
           std::array{0.5f, 1.0f});
   }
 
-  void mixed_physical_value_test::test_mixed_kinds()
+  void mixed_physical_value_test::test_kinds()
   {
     using length_t   = si::length<float>;
     using d_len_t    = length_t::displacement_type;
@@ -137,7 +136,7 @@ namespace sequoia::testing
     check(equality, "", static_cast<euc_qty>(d_width_t{1.5, metre}/d_height_t{0.5, metre}), euc_qty{3.0, no_unit});
   }
 
-  void mixed_physical_value_test::test_conversions()
+  void mixed_physical_value_test::test_derived_kinds()
   {
     physical_value len{1.0, metre};
     physical_value mass{1.0, kilogram};

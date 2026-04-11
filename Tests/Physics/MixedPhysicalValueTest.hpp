@@ -27,8 +27,8 @@ namespace sequoia::testing
 
     void test_mixed_vector();
 
-    void test_mixed_kinds();
+    void test_kinds();
 
-    void test_conversions();
+    void test_derived_kinds();
   };
 }
