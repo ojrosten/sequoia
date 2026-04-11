@@ -337,7 +337,7 @@ namespace sequoia::physics
   struct to_base_space<composite_space<Ts...>>
   {
     using sorted_direct_product_t = meta::stable_sort_t<direct_product<to_base_space_t<Ts>...>,  meta::type_comparator>;
-    using type = impl::to_composite_space_t<reduction<impl::reduce_t<impl::count_and_combine_t<sorted_direct_product_t>>>>;
+    using type = impl::to_composite_space_t<reduction_t<impl::reduce_t<impl::count_and_combine_t<sorted_direct_product_t>>>>;
   };
 
   template<convex_space T, convex_space U>
@@ -556,14 +556,15 @@ namespace sequoia::physics
     constexpr physical_value& operator+=(const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& ) && = delete;
 
     template<convex_space OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
-      requires has_distinguished_origin_v<space_type>
-           && (!std::is_same_v<space_type, OtherValueSpace>)
-           && have_compatible_base_spaces_v<space_type, OtherValueSpace>
+      requires (!std::same_as<space_type, OtherValueSpace>)
+           && has_distinguished_origin_v<space_type>
+           && std::same_as<to_base_space_t<space_type>, to_base_space_t<OtherValueSpace>>
+    //have_compatible_base_spaces_v<space_type, OtherValueSpace>
            && consistent_bases_v<basis_type, OtherBasis>
     [[nodiscard]]
     friend constexpr auto operator+(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& rhs)
     {
-      using value_space_t    = std::common_type_t<typename ValueSpace::base_space, typename OtherValueSpace::base_space>;
+      using value_space_t    = to_base_space_t<space_type>;
       using basis_t          = consistent_bases<basis_type, OtherBasis>::template rebind_type<free_module_type_of_t<value_space_t>, Unit>;
       using physical_value_t = physical_value<value_space_t, Unit, basis_t, to_origin_type_t<value_space_t, Unit>, Validator>;
 
@@ -635,24 +636,21 @@ namespace sequoia::physics
       using derived_units_type = physical_value_t::units_type;
       return physical_value_t{value / rhs.value(), derived_units_type{}};
     }
-
-    // Reduce *everything* to its base space on both sides of the equation; if these are the same, allow the conversion 
-    template<class LoweredValueSpace, class OtherUnit, basis_for<free_module_type_of_t<LoweredValueSpace>> OtherBasis, class OtherOrigin>    
-      requires std::same_as<to_base_space_t<space_type>, to_base_space_t<LoweredValueSpace>> && consistent_bases_v<basis_type, OtherBasis>
+ 
+    template<class LoweredValueSpace, basis_for<free_module_type_of_t<LoweredValueSpace>> OtherBasis, class OtherOrigin>    
+      requires std::same_as<to_base_space_t<space_type>, LoweredValueSpace> && consistent_bases_v<basis_type, OtherBasis>
     [[nodiscard]]
-    constexpr operator physical_value<LoweredValueSpace, OtherUnit, OtherBasis, OtherOrigin, validator_type>() const noexcept
+    constexpr operator physical_value<LoweredValueSpace, Unit, OtherBasis, OtherOrigin, validator_type>() const noexcept
     {
-      using value_space_t    = to_base_space_t<LoweredValueSpace>;
-      using basis_t          = unit_defined_right_handed_basis<free_module_type_of_t<value_space_t>, Unit>;
-      using physical_value_t = physical_value<to_base_space_t<LoweredValueSpace>, Unit, basis_t, to_origin_type_t<value_space_t, Unit>, validator_type>;
+      using physical_value_t = physical_value<LoweredValueSpace, Unit, OtherBasis, OtherOrigin, validator_type>;
       if constexpr(dimension == 1)
       {
-        return physical_value_t{this->value(), OtherUnit{}};
+        return physical_value_t{this->value(), Unit{}};
       }
       else
       {
         return [this] <std::size_t... Is>(std::index_sequence<Is...>) {
-          return physical_value_t{std::array{this->values()[Is]...}, OtherUnit{}};
+          return physical_value_t{std::array{this->values()[Is]...}, Unit{}};
         }(std::make_index_sequence<D>{});
       }
     }
@@ -825,7 +823,7 @@ namespace sequoia::physics
     using arena_type           = Arena;
     using base_space           = mass_space;
     using distinguished_origin = std::true_type;
-    using non_negative_orthant  = std::true_type;
+    using non_negative_orthant = std::true_type;
   };
 
   template<std::floating_point Rep, class Arena>

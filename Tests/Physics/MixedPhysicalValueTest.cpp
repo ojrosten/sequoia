@@ -139,5 +139,20 @@ namespace sequoia::testing
 
   void mixed_physical_value_test::test_conversions()
   {
+    physical_value len{1.0, metre};
+    physical_value mass{1.0, kilogram};
+    physical_value delta_t{1.0, second};
+
+    auto delta_x{len - physical_value{0.0, metre}};
+    auto v{delta_x / delta_t};
+    auto ke{0.5 * mass * v * v};
+
+    auto acc{9.81 * v / delta_t};
+    auto pe{mass * acc * si::height<double>{1.0, metre}};
+
+    STATIC_CHECK(!std::same_as<decltype(pe), decltype(ke)>);
+    
+    check(equality, "", pe + ke, (9.81+0.5)*mass*v*v);
+    check(equality, "", ke + pe, (9.81+0.5)*mass*v*v);
   }
 }
