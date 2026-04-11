@@ -260,8 +260,6 @@ namespace sequoia::physics
   template<affine_space T>
   struct implicit_affine_origin {};
 
-  template<convex_space T>
-    requires has_distinguished_origin_v<T>
   struct distinguished_origin {};
 
   template<convex_space ValueSpace, physical_unit Unit>
@@ -281,7 +279,7 @@ namespace sequoia::physics
     requires has_distinguished_origin_v<ValueSpace>
   struct to_origin_type<ValueSpace, Unit>
   {
-    using type = distinguished_origin<ValueSpace>;
+    using type = distinguished_origin;
   };
 
   template<convex_space ValueSpace, physical_unit Unit>
@@ -297,7 +295,7 @@ namespace sequoia::physics
         ValueSpace,
         Basis,    
         identity_representation<Validator>,
-        physical_value<free_module_type_of_t<ValueSpace>, Unit, Basis, distinguished_origin<free_module_type_of_t<ValueSpace>>, std::identity>>;
+        physical_value<free_module_type_of_t<ValueSpace>, Unit, Basis, distinguished_origin, std::identity>>;
 
   template<class T>
   inline constexpr bool has_base_space_v{
@@ -424,8 +422,8 @@ namespace sequoia::physics
     convex_space RHSValueSpace, physical_unit RHSUnit, basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, class RHSValidator
   >
     requires consistent_bases_v<LHSBasis, RHSBasis>
-  struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSBasis, distinguished_origin<LHSValueSpace>, LHSValidator>,
-                                physical_value<RHSValueSpace, RHSUnit, RHSBasis, distinguished_origin<RHSValueSpace>, RHSValidator>>
+  struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSBasis, distinguished_origin, LHSValidator>,
+                                physical_value<RHSValueSpace, RHSUnit, RHSBasis, distinguished_origin, RHSValidator>>
   {
     using value_space_type = impl::to_composite_space_t<reduction_t<direct_product<LHSValueSpace, RHSValueSpace>>>;
     using units_type       = impl::to_composite_space_t<reduction_t<direct_product<LHSUnit, RHSUnit>>>;
@@ -434,7 +432,7 @@ namespace sequoia::physics
           value_space_type,
           units_type,
           typename consistent_bases<LHSBasis, RHSBasis>::template rebind_type<free_module_type_of_t<value_space_type>, units_type>,
-          distinguished_origin<value_space_type>,
+          distinguished_origin,
           reduced_validator_t<LHSValidator, RHSValidator>
         >;
   };
@@ -609,7 +607,7 @@ namespace sequoia::physics
       using physical_value_t
         = physical_value_product_t<
             physical_value,
-            physical_value<dual_of_t<RHSValueSpace>, dual_of_t<RHSUnit>, dual_of_t<RHSBasis>, distinguished_origin<dual_of_t<RHSValueSpace>>, RHSValidator>
+            physical_value<dual_of_t<RHSValueSpace>, dual_of_t<RHSUnit>, dual_of_t<RHSBasis>, distinguished_origin, RHSValidator>
           >;
       using derived_units_type = physical_value_t::units_type;
 
@@ -621,7 +619,7 @@ namespace sequoia::physics
     [[nodiscard]] friend constexpr auto operator/(value_type value, const physical_value& rhs)
       requires ((D == 1) && (is_non_negative_orthant_v<space_type> || vector_space<ValueSpace>))
     {
-      using physical_value_t = physical_value<dual_of_t<ValueSpace>, dual_of_t<Unit>, dual_of_t<basis_type>, distinguished_origin<dual_of_t<ValueSpace>>, validator_type>;
+      using physical_value_t = physical_value<dual_of_t<ValueSpace>, dual_of_t<Unit>, dual_of_t<basis_type>, distinguished_origin, validator_type>;
       using derived_units_type = physical_value_t::units_type;
       return physical_value_t{value / rhs.value(), derived_units_type{}};
     }
