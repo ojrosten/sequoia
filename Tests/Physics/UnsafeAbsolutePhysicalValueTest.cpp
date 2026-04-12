@@ -59,7 +59,7 @@ namespace sequoia::testing
     using euc_hf_space_t = euclidean_half_space<value_type, implicit_common_arena>;
 
     // TO DO: canonical basis should work here...?
-    using unsafe_euc_half_space_qty = physical_value<euc_hf_space_t, no_unit_t, unit_defined_right_handed_basis<free_module_type_of_t<euc_hf_space_t>, no_unit_t>, to_origin_type_t<euc_hf_space_t, no_unit_t>, std::identity>;
+    using unsafe_euc_half_space_qty = physical_value<euc_hf_space_t, no_unit_t, unit_defined_right_handed_basis<free_module_type_of_t<euc_hf_space_t>, no_unit_t>, to_origin_type_t<euc_hf_space_t>, std::identity>;
     using euc_vec_space_qty         = euclidean_1d_vector_quantity<value_type>;
     check(equality, "", unsafe_qty_t{2.0, units_type{}}  / unsafe_qty_t {-1.0, units_type{}}, unsafe_euc_half_space_qty{-2.0f, no_unit});
     check(equality, "", unsafe_qty_t{-2.0, units_type{}} / delta_q_t{1.0, units_type{}},      euc_vec_space_qty{-2.0, no_unit});

@@ -254,39 +254,37 @@ namespace sequoia::physics
              && has_consistent_validator<ValueSpace, Validator>
   class physical_value;
 
-  template<physical_unit Unit>
   struct unit_defined_origin{};
 
-  template<affine_space T>
   struct implicit_affine_origin {};
 
   struct distinguished_origin {};
 
-  template<convex_space ValueSpace, physical_unit Unit>
+  template<convex_space ValueSpace>
   struct to_origin_type;
+  
+  template<convex_space ValueSpace>
+  using to_origin_type_t = to_origin_type<ValueSpace>::type;
 
-  template<convex_space ValueSpace, physical_unit Unit>
+  template<convex_space ValueSpace>
     requires (!has_distinguished_origin_v<ValueSpace>) && (!affine_space<ValueSpace>)
-  struct to_origin_type<ValueSpace, Unit>
+  struct to_origin_type<ValueSpace>
   {
-    using type = unit_defined_origin<Unit>;
+    using type = unit_defined_origin;
   };
 
-  template<convex_space ValueSpace, physical_unit Unit>
-  using to_origin_type_t = to_origin_type<ValueSpace, Unit>::type;
-
-  template<convex_space ValueSpace, physical_unit Unit>
+  template<convex_space ValueSpace>
     requires has_distinguished_origin_v<ValueSpace>
-  struct to_origin_type<ValueSpace, Unit>
+  struct to_origin_type<ValueSpace>
   {
     using type = distinguished_origin;
   };
 
-  template<convex_space ValueSpace, physical_unit Unit>
+  template<convex_space ValueSpace>
     requires (!has_distinguished_origin_v<ValueSpace> && affine_space<ValueSpace>)
-  struct to_origin_type<ValueSpace, Unit>
+  struct to_origin_type<ValueSpace>
   {
-    using type = implicit_affine_origin<ValueSpace>;
+    using type = implicit_affine_origin;
   };
   
   template<convex_space ValueSpace, physical_unit Unit, basis_for<free_module_type_of_t<ValueSpace>> Basis, class Validator>
@@ -482,7 +480,7 @@ namespace sequoia::physics
     convex_space ValueSpace,
     physical_unit Unit,
     basis_for<free_module_type_of_t<ValueSpace>> Basis = unit_defined_right_handed_basis<free_module_type_of_t<ValueSpace>, Unit>,
-    class Origin                                       = to_origin_type_t<ValueSpace, Unit>,
+    class Origin                                       = to_origin_type_t<ValueSpace>,
     validator_for<ValueSpace> Validator                = default_validator_t<ValueSpace, Unit>
   >
     requires    has_consistent_space<ValueSpace>
@@ -559,7 +557,7 @@ namespace sequoia::physics
     {
       using value_space_t    = to_base_space_t<space_type>;
       using basis_t          = consistent_bases<basis_type, OtherBasis>::template rebind_type<free_module_type_of_t<value_space_t>, Unit>;
-      using physical_value_t = physical_value<value_space_t, Unit, basis_t, to_origin_type_t<value_space_t, Unit>, Validator>;
+      using physical_value_t = physical_value<value_space_t, Unit, basis_t, to_origin_type_t<value_space_t>, Validator>;
 
       return [&] <std::size_t... Is>(std::index_sequence<Is...>) {
         return physical_value_t{std::array{(lhs.values()[Is] + rhs.values()[Is])...}, units_type{}};
@@ -641,7 +639,7 @@ namespace sequoia::physics
       physical_unit OtherUnit,
       convex_space OtherSpace                                 = conversion_space_t<ValueSpace, Unit, OtherUnit>,
       basis_for<free_module_type_of_t<OtherSpace>> OtherBasis = unit_defined_right_handed_basis<free_module_type_of_t<OtherSpace>, OtherUnit>,
-      class OtherOrigin                                       = to_origin_type_t<OtherSpace, OtherUnit>,
+      class OtherOrigin                                       = to_origin_type_t<OtherSpace>,
       validator_for<OtherSpace> OtherValidator                = default_validator_t<OtherSpace, OtherUnit>
     >
       requires has_quantity_conversion_v<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>
@@ -1299,7 +1297,7 @@ namespace sequoia::physics
     template<
       std::floating_point T,
       class Arena=implicit_common_arena,
-      class Origin=implicit_affine_origin<time_space<T, Arena>>
+      class Origin=implicit_affine_origin
     >
     using time
       = physical_value<
@@ -1315,7 +1313,7 @@ namespace sequoia::physics
       std::size_t D,
       class Arena  = implicit_common_arena,      
       basis_for<free_module_type_of_t<position_space<T, D, Arena>>> Basis = unit_defined_right_handed_basis<free_module_type_of_t<position_space<T, D, Arena>>, units::metre_t>,
-      class Origin = implicit_affine_origin<position_space<T, D, Arena>>
+      class Origin = implicit_affine_origin
     >
     using position = physical_value<position_space<T, D, Arena>, units::metre_t, Basis, Origin, std::identity>;
   }
@@ -1465,7 +1463,7 @@ namespace sequoia::physics
 
   template<physical_unit Unit, class Rep, class Validator=typename Unit::validator_type>
     requires has_default_space_v<Unit, Rep>
-  using quantity = physical_value<default_space_t<Unit, Rep>, Unit, unit_defined_right_handed_basis<free_module_type_of_t<default_space_t<Unit, Rep>>, Unit>, to_origin_type_t<default_space_t<Unit, Rep>, Unit>, Validator>;
+  using quantity = physical_value<default_space_t<Unit, Rep>, Unit, unit_defined_right_handed_basis<free_module_type_of_t<default_space_t<Unit, Rep>>, Unit>, to_origin_type_t<default_space_t<Unit, Rep>>, Validator>;
 
   template<
     convex_space ValueSpace,
@@ -1473,7 +1471,7 @@ namespace sequoia::physics
     validator_for<ValueSpace> Validator=typename Unit::validator_type
   >
     requires has_consistent_validator<ValueSpace, Validator>
-  using dimensionless_quantity = physical_value<ValueSpace, Unit, unit_defined_right_handed_basis<free_module_type_of_t<ValueSpace>, Unit>, to_origin_type_t<ValueSpace, Unit>, Validator>;
+  using dimensionless_quantity = physical_value<ValueSpace, Unit, unit_defined_right_handed_basis<free_module_type_of_t<ValueSpace>, Unit>, to_origin_type_t<ValueSpace>, Validator>;
   
   template<std::floating_point Rep, class Arena=implicit_common_arena>
   using euclidean_1d_vector_quantity = dimensionless_quantity<euclidean_vector_space<Rep, 1, Arena>, no_unit_t, std::identity>;

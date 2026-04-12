@@ -155,8 +155,7 @@ namespace sequoia::testing
         dual<space_t>,
         dual<units_t>,
         unit_defined_right_handed_basis<free_module_type_of_t<dual<space_t>>, dual<units_t>>,
-        to_origin_type_t<dual<space_t>,
-        dual<units_t>>,
+        to_origin_type_t<dual<space_t>>,
         typename dual<units_t>::validator_type
       >
     );
