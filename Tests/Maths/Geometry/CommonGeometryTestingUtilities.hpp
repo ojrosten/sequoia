@@ -39,13 +39,29 @@ namespace sequoia::testing
   };
 
   template<class T, class U>
+  inline constexpr bool rvalue_addition_combinable{
+    requires(T&& t, const U& u) {
+      std::move(t) += u;
+    }
+  };
+
+  template<class T, class U>
   inline constexpr bool addition_combinable{
-    requires(T& t, const U& u) { { t += u } -> std::convertible_to<T>; }
+    !rvalue_addition_combinable<T, U>
+    && requires(T& t, const U& u) { { t += u } -> std::convertible_to<T>; }
+  };
+
+  template<class T, class U>
+  inline constexpr bool rvalue_subtraction_combinable{
+    requires(T&& t, const U& u) {
+      std::move(t) -= u;
+    }
   };
 
   template<class T, class U>
   inline constexpr bool subtraction_combinable{
-    requires(T& t, const U& u) { { t -= u } -> std::convertible_to<T>; }
+       !rvalue_subtraction_combinable<T, U>
+    && requires(T& t, const U& u) { { t -= u } -> std::convertible_to<T>; }
   };
 
   template<class T>
