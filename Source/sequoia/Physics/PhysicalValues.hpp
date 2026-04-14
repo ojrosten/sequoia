@@ -56,6 +56,13 @@ namespace sequoia::physics
   };
   
   inline constexpr no_unit_t no_unit{};
+
+  /// @class Primary class template for the reduction of direct products to a lower dimensional space
+  template<class T>
+  struct reduction;
+
+  template<class T>
+  using reduction_t = reduction<T>::type;
 }
 
 namespace sequoia::maths
@@ -100,6 +107,20 @@ namespace sequoia::maths
   {
     using type = physics::no_unit_t;
   };
+
+  template<free_module M1, physics::physical_unit U1, free_module M2, physics::physical_unit U2>
+  struct consistent_bases<physics::unit_defined_right_handed_basis<M1, U1>, physics::unit_defined_right_handed_basis<M2, U2>> : std::true_type
+  {
+    template<free_module M, physics::physical_unit U>
+    using rebind_type = physics::unit_defined_right_handed_basis<M, U>;
+  };
+
+  template<convex_space... Ts>
+  struct to_base_space<physics::composite_space<Ts...>>
+  {
+    using sorted_direct_product_t = meta::stable_sort_t<direct_product<to_base_space_t<Ts>...>,  meta::type_comparator>;
+    using type = physics::impl::to_composite_space_t<physics::reduction_t<physics::impl::reduce_t<physics::impl::count_and_combine_t<sorted_direct_product_t>>>>;
+  };
 }
 
 namespace sequoia::physics
@@ -129,14 +150,7 @@ namespace sequoia::physics
   {
     using is_unit        = std::true_type;
     using validator_type = reduced_validator_t<typename Ts::validator_type...>;
-  };  
-
-  /// @class Primary class template for the reduction of direct products to a lower dimensional space
-  template<class T>
-  struct reduction;
-
-  template<class T>
-  using reduction_t = reduction<T>::type;
+  };
   
   template<class... Ts>
   struct composite_space;
@@ -295,50 +309,6 @@ namespace sequoia::physics
         identity_representation<Validator>,
         physical_value<free_module_type_of_t<ValueSpace>, Unit, Basis, distinguished_origin, std::identity>>;
 
-  template<class T>
-  inline constexpr bool has_base_space_v{
-    requires { typename T::base_space; }
-  };
-
-  template<convex_space T>
-  struct to_base_space
-  {
-    using type = T;
-  };
-
-  template<convex_space T>
-  using to_base_space_t = to_base_space<T>::type;
-
-  template<convex_space T>
-    requires has_base_space_v<T>
-  struct to_base_space<T>
-  {
-    using type = T::base_space;
-  };
-
-  template<convex_space T>
-  struct to_base_space<dual<T>>
-  {
-    using type = dual<T>;
-  };
-
-  template<convex_space T>
-    requires has_base_space_v<T>
-  struct to_base_space<dual<T>>
-  {
-    using type = dual<typename T::base_space>;
-  };
-
-  template<convex_space... Ts>
-  struct to_base_space<composite_space<Ts...>>
-  {
-    using sorted_direct_product_t = meta::stable_sort_t<direct_product<to_base_space_t<Ts>...>,  meta::type_comparator>;
-    using type = impl::to_composite_space_t<reduction_t<impl::reduce_t<impl::count_and_combine_t<sorted_direct_product_t>>>>;
-  };
-
-  template<convex_space T, convex_space U>
-  inline constexpr bool have_compatible_base_spaces_v{std::same_as<to_base_space_t<T>, to_base_space_t<U>>};
-
   template<convex_space T, convex_space U>
   struct to_displacement_space;
 
@@ -356,19 +326,6 @@ namespace sequoia::physics
   struct to_displacement_space<T, U>
   {
     using type = free_module_type_of_t<std::common_type_t<typename T::base_space, typename U::base_space>>;
-  };
-
-  template<basis Basis1, basis Basis2>
-  struct consistent_bases : std::false_type {};
-
-  template<basis Basis1, basis Basis2>
-  inline constexpr bool consistent_bases_v{consistent_bases<Basis1, Basis2>::value};
-
-  template<free_module M1, physical_unit U1, free_module M2, physical_unit U2>
-  struct consistent_bases<unit_defined_right_handed_basis<M1, U1>, unit_defined_right_handed_basis<M2, U2>> : std::true_type
-  {
-    template<free_module M, physical_unit U>
-    using rebind_type = unit_defined_right_handed_basis<M, U>;
   };
 
   template<class T, class U>
@@ -527,18 +484,6 @@ namespace sequoia::physics
     };
 
     using coordinates_type::coordinates_type;
-
-    using coordinates_type::operator+=;
-    
-    template<convex_space OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
-    requires (!std::same_as<space_type, OtherValueSpace>)
-          && has_distinguished_origin_v<space_type>
-          && (std::derived_from<OtherValueSpace, space_type>)
-          && consistent_bases_v<basis_type, OtherBasis>
-    constexpr physical_value& operator+=(const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& other) & noexcept(has_identity_validator)
-    {
-      return *this = (*this + other);
-    }
 
     template<convex_space OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
       requires (!std::same_as<space_type, OtherValueSpace>)

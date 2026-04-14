@@ -197,23 +197,39 @@ namespace sequoia::maths
   /** @ingroup ArithmeticProperties
       @brief Compile time constant for addability
    */
+
+  template<class U, class T>
+  inline constexpr bool is_addable_to_v{
+    requires(const T& t, const U& u) {
+      { t + u } -> std::convertible_to<T>; 
+    }
+  };
+  
   template<class T>
   inline constexpr bool is_addable_v{
-    requires(T& t) {
-      { t += t } -> std::same_as<T&>;
-      { t + t }  -> std::convertible_to<T>;
-    }
+       is_addable_to_v<T, T>
+    && requires(T& t) {
+         { t += t } -> std::same_as<T&>;
+       }
   };
 
   /** @ingroup ArithmeticProperties
       @brief Compile time constant for subtractability
    */
+
+  template<class U, class T>
+  inline constexpr bool is_subtractable_from_v{
+    requires(const T& t, const U& u) {
+      { t - u } -> std::convertible_to<T>; 
+    }
+  };
+
   template<class T>
   inline constexpr bool is_subtractable_v{
-    requires(T& t) {
-      { t -= t } -> std::same_as<T&>;
-      { t - t }  -> std::convertible_to<T>;
-    }
+       is_subtractable_from_v<T, T>
+    && requires(T& t) {
+         { t -= t } -> std::same_as<T&>;
+       }
   };
 
   /** @ingroup ArithmeticProperties
@@ -684,6 +700,12 @@ namespace sequoia::maths
     using type = B::isomorphism_type;
   };
 
+  template<basis Basis1, basis Basis2>
+  struct consistent_bases : std::false_type {};
+
+  template<basis Basis1, basis Basis2>
+  inline constexpr bool consistent_bases_v{consistent_bases<Basis1, Basis2>::value};
+
   /** @ingroup Basis
       @brief A concept to determine if a basis is appropriate for a particular free module.
   */
@@ -908,7 +930,7 @@ namespace sequoia::maths
       { R::div(vals, s) } -> std::convertible_to<std::array<commutative_ring_type_of_t<ConvexSpace>, ConvexSpace::dimension>>;
     }
   };
-
+  
   /** @defgroup DirectProduct Direct Product
       @brief Direct Products are one way in which spaces can be composed to create new spaces.
 
@@ -1157,6 +1179,46 @@ namespace sequoia::maths
   struct dual_of<dual<T>> {
     using type = T;
   };
+
+  /** @defgroup SpaceConversions Conversions Between Spaces
+   */
+
+  template<class T>
+  inline constexpr bool has_base_space_v{
+    requires { typename T::base_space; }
+  };
+
+  template<convex_space T>
+  struct to_base_space
+  {
+    using type = T;
+  };
+
+  template<convex_space T>
+  using to_base_space_t = to_base_space<T>::type;
+
+  template<convex_space T>
+    requires has_base_space_v<T>
+  struct to_base_space<T>
+  {
+    using type = T::base_space;
+  };
+
+  template<convex_space T>
+  struct to_base_space<dual<T>>
+  {
+    using type = dual<T>;
+  };
+
+  template<convex_space T>
+    requires has_base_space_v<T>
+  struct to_base_space<dual<T>>
+  {
+    using type = dual<typename T::base_space>;
+  };
+  
+  template<convex_space T, convex_space U>
+  inline constexpr bool have_compatible_base_spaces_v{std::same_as<to_base_space_t<T>, to_base_space_t<U>>};
   
   /** @defgroup SpacesUtilities Convex Space Utilities
       @brief Utilites for extracting properties of convex spaces
@@ -1467,11 +1529,9 @@ namespace sequoia::maths
       return self = (self + v);
     }
 
-    template<class Self>
-      requires    (!std::same_as<Self, coordinates_base>)
-               && has_distinguished_origin
-               && (!std::same_as<coordinates_base, displacement_coordinates_type>)
-    constexpr Self& operator+=(this Self& self, const coordinates_base& v) noexcept(has_identity_validator)
+    template<class Self, class Other>
+      requires is_addable_to_v<Other, Self>
+    constexpr Self& operator+=(this Self& self, const Other& v) noexcept(has_identity_validator)
     {
       return self = (self + v);
     }
@@ -1549,14 +1609,14 @@ namespace sequoia::maths
     }
   
     template<class Derived>
-      requires    std::derived_from<Derived, coordinates_base>
-               && (!std::same_as<Derived, displacement_coordinates_type>)
-               && has_distinguished_origin 
+      requires std::derived_from<Derived, coordinates_base>
+            && (!std::same_as<Derived, displacement_coordinates_type>)
+            && has_distinguished_origin
     [[nodiscard]]
-    friend constexpr Derived operator+(Derived c, const Derived& v) noexcept(has_identity_validator)
+    friend constexpr Derived operator+(const Derived& c, const Derived& v) noexcept(has_identity_validator)
     {
-      return c.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
-    }
+      return Derived{c}.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
+    }   
 
     template<class Derived>
       requires std::derived_from<Derived, coordinates_base>
