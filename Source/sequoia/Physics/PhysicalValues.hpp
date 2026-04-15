@@ -1309,6 +1309,10 @@ namespace sequoia::physics
     requires has_default_space_v<Unit, Rep> && (Trans == 0)
   struct default_space<coordinate_transform<Unit, dilatation<Ratio>, translation<Trans>>, Rep> : default_space<Unit, Rep> {};
 
+  template<physical_unit Unit, class Rep, class Ratio, auto Trans>
+    requires has_default_space_v<Unit, Rep> && (Trans != 0)
+  struct default_space<coordinate_transform<Unit, dilatation<Ratio>, translation<Trans>>, Rep> {};
+
   template<physical_unit Unit, class Rep>
     requires has_coordinate_transform_v<Unit>
   struct default_space<Unit, Rep> : default_space<root_transform_t<Unit>, Rep> {};
@@ -1416,6 +1420,22 @@ namespace sequoia::physics
 
   template<std::floating_point Rep, class Arena=implicit_common_arena>
   using euclidean_half_line_quantity = dimensionless_quantity<euclidean_half_space<Rep, Arena>, no_unit_t>;
+
+  template<physical_unit Unit, arithmetic Rep>
+    requires has_default_space_v<Unit, Rep>
+  [[nodiscard]]
+  quantity<Unit, Rep> operator*(Rep val, Unit u)
+  {
+    return quantity<Unit, Rep>{val, u};
+  }
+
+  template<physical_unit Unit, arithmetic Rep>
+    requires has_default_space_v<Unit, Rep>
+  [[nodiscard]]
+  quantity<dual<Unit>, Rep> operator/(Rep val, Unit u)
+  {
+    return quantity<dual<Unit>, Rep>{val, u};
+  }
 }
 
 namespace sequoia::maths

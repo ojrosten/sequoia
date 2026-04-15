@@ -52,14 +52,14 @@ namespace sequoia::testing
   {
     using quantity_t = Quantity;
     using delta_q_t  = quantity_t::displacement_type;
-    using space_type = quantity_t::space_type;
-    using value_type = quantity_t::value_type;
-    using units_type = quantity_t::units_type;
+    using space_t    = quantity_t::space_type;
+    using value_t    = quantity_t::value_type;
+    using units_t    = quantity_t::units_type;
 
-    STATIC_CHECK(convex_space<space_type>);
-    STATIC_CHECK(vector_space<free_module_type_of_t<space_type>>);
-    STATIC_CHECK(can_multiply<quantity_t, value_type>);
-    STATIC_CHECK(can_divide<quantity_t, value_type>);
+    STATIC_CHECK(convex_space<space_t>);
+    STATIC_CHECK(vector_space<free_module_type_of_t<space_t>>);
+    STATIC_CHECK(can_multiply<quantity_t, value_t>);
+    STATIC_CHECK(can_divide<quantity_t, value_t>);
     STATIC_CHECK(can_divide<quantity_t, quantity_t>);
     STATIC_CHECK(can_divide<quantity_t, delta_q_t>);
     STATIC_CHECK(can_divide<delta_q_t, quantity_t>);
@@ -70,12 +70,14 @@ namespace sequoia::testing
     STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
     STATIC_CHECK(has_unary_plus<quantity_t>);
     STATIC_CHECK(!has_unary_minus<quantity_t>);
+    STATIC_CHECK(std::same_as<units_t, no_unit_t> ? !can_multiply<float, units_t> : can_multiply<float, units_t>);
+    STATIC_CHECK(std::same_as<units_t, no_unit_t> ? !can_divide<float, units_t>   : can_divide<float, units_t>);
 
     coordinates_operations<quantity_t>{*this}.execute();
 
-    if constexpr(has_default_space_v<dual_of_t<units_type>, value_type>)
+    if constexpr(has_default_space_v<dual_of_t<units_t>, value_t>)
     {
-      using inv_quantity_t = quantity<dual_of_t<units_type>, value_type>;
+      using inv_quantity_t = quantity<dual_of_t<units_t>, value_t>;
       coordinates_operations<inv_quantity_t>{*this}.execute();
     }
   }

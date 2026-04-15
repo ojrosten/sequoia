@@ -138,7 +138,7 @@ namespace sequoia::testing
 
   void mixed_physical_value_test::test_derived_kinds()
   {
-    physical_value len{1.0, metre};
+    physical_value len{1.0 * metre};
     physical_value mass{1.0, kilogram};
     physical_value delta_t{1.0, second};
 
