@@ -159,7 +159,7 @@ namespace sequoia::testing
           g,
           dim_1_label::zero,
           dim_1_label::zero,
-          test.report("0 / unit"),
+          test.report("0 / dual<unit>"),
           [&](const coords_t&) -> coords_t { return ring_t{} / maths::dual_of_t<basis_isomorphism_t>{}; }
         );
 
@@ -175,7 +175,7 @@ namespace sequoia::testing
           g,
           dim_1_label::one,
           dim_1_label::one,
-          test.report("1 / unit"),
+          test.report("1 / dual<unit>"),
           [&](const coords_t&) -> coords_t { return ring_t(1) / maths::dual_of_t<basis_isomorphism_t>{}; }
         );
       }
