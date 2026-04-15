@@ -134,6 +134,7 @@ namespace sequoia::testing
     using delta_q_t  = quantity_t::displacement_type;
     using space_t    = quantity_t::space_type;
     using units_t    = quantity_t::units_type;
+    using value_t    = quantity_t::value_type;
 
     STATIC_CHECK(convex_space<space_t>);
     STATIC_CHECK(vector_space<free_module_type_of_t<space_t>>);
@@ -159,8 +160,8 @@ namespace sequoia::testing
         typename dual<units_t>::validator_type
       >
     );
-    STATIC_CHECK(can_multiply<float, units_t>);
-    STATIC_CHECK(!can_divide<float, units_t>);
+    STATIC_CHECK( can_multiply<value_t, units_t>);
+    STATIC_CHECK(!can_divide <value_t, units_t>);
 
     coordinates_operations<quantity_t>{*this}.execute();
   }

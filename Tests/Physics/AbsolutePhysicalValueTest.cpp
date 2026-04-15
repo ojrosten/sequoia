@@ -55,6 +55,7 @@ namespace sequoia::testing
     using space_t    = quantity_t::space_type;
     using value_t    = quantity_t::value_type;
     using units_t    = quantity_t::units_type;
+    using value_t    = quantity_t::value_type;
 
     STATIC_CHECK(convex_space<space_t>);
     STATIC_CHECK(vector_space<free_module_type_of_t<space_t>>);
@@ -70,8 +71,8 @@ namespace sequoia::testing
     STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
     STATIC_CHECK(has_unary_plus<quantity_t>);
     STATIC_CHECK(!has_unary_minus<quantity_t>);
-    STATIC_CHECK(std::same_as<units_t, no_unit_t> ? !can_multiply<float, units_t> : can_multiply<float, units_t>);
-    STATIC_CHECK(std::same_as<units_t, no_unit_t> ? !can_divide<float, units_t>   : can_divide<float, units_t>);
+    STATIC_CHECK(std::same_as<units_t, no_unit_t> ? !can_multiply<value_t, units_t> : can_multiply<value_t, units_t>);
+    STATIC_CHECK(std::same_as<units_t, no_unit_t> ? !  can_divide<value_t, units_t> :   can_divide<value_t, units_t>);
 
     coordinates_operations<quantity_t>{*this}.execute();
 
