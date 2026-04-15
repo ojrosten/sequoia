@@ -1306,12 +1306,10 @@ namespace sequoia::physics
   };
 
   template<physical_unit Unit, class Rep, class Ratio, auto Trans>
-    requires has_default_space_v<Unit, Rep> && (Trans == 0)
-  struct default_space<coordinate_transform<Unit, dilatation<Ratio>, translation<Trans>>, Rep> : default_space<Unit, Rep> {};
-
-  template<physical_unit Unit, class Rep, class Ratio, auto Trans>
-    requires has_default_space_v<Unit, Rep> && (Trans != 0)
-  struct default_space<coordinate_transform<Unit, dilatation<Ratio>, translation<Trans>>, Rep> {};
+    requires has_default_space_v<Unit, Rep>
+  struct default_space<coordinate_transform<Unit, dilatation<Ratio>, translation<Trans>>, Rep>
+    : default_space<Unit, Rep>
+  {};
 
   template<physical_unit Unit, class Rep>
     requires has_coordinate_transform_v<Unit>
@@ -1345,6 +1343,12 @@ namespace sequoia::physics
   struct default_space<si::units::kelvin_t, T>
   {
     using type = absolute_temperature_space<T, implicit_common_arena>;
+  };
+
+  template<std::floating_point T>
+  struct default_space<si::units::celsius_t, T>
+  {
+    using type = temperature_space<T, implicit_common_arena>;
   };
 
   template<std::floating_point T>

@@ -159,7 +159,7 @@ namespace sequoia::testing
         typename dual<units_t>::validator_type
       >
     );
-    STATIC_CHECK(!can_multiply<float, units_t>);
+    STATIC_CHECK(can_multiply<float, units_t>);
     STATIC_CHECK(!can_divide<float, units_t>);
 
     coordinates_operations<quantity_t>{*this}.execute();
