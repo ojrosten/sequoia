@@ -12,7 +12,15 @@
 #include "CommonGeometryTestingUtilities.hpp"
 
 namespace sequoia::testing
-{  
+{
+  template<class Coordinates>
+  inline constexpr bool supports_multiplicative_syntactic_sugar{
+    requires {
+      requires can_multiply<typename Coordinates::value_type, typename Coordinates::basis_isomorphism_type>;
+      requires std::same_as<decltype(std::declval<typename Coordinates::value_type>() * std::declval<typename Coordinates::basis_isomorphism_type>()), Coordinates>;
+    }
+  };
+  
   template<class Coordinates>
   class coordinates_operations
   {    
@@ -28,6 +36,7 @@ namespace sequoia::testing
     using units_t          = coords_t::basis_isomorphism_type;
     using representation_t = coords_t::representation_type;
     using validator_t      = coords_t::validator_type;
+    using basis_isomorphism_t = coords_t::basis_isomorphism_type;
     constexpr static std::size_t dimension{Coordinates::dimension};
     constexpr static bool orderable{(dimension == 1) && std::totally_ordered<ring_t>};
     constexpr static bool has_distinguished_origin{maths::has_distinguished_origin_v<space_t>};
@@ -105,6 +114,7 @@ namespace sequoia::testing
       };
 
       add_dim_1_common_transitions(g, test);
+      add_dim_1_syntactic_sugar_checks(g, test);
 
       if constexpr(has_unary_minus<Coordinates>)
       {
@@ -133,104 +143,42 @@ namespace sequoia::testing
       return g;
     }
 
-    static graph_type make_dim_2_transition_graph(regular_test& test)
+    static void add_dim_1_syntactic_sugar_checks([[maybe_unused]] maths::network auto& g, [[maybe_unused]] regular_test& test)
     {
-      using edge_t = transition_checker<coords_t>::edge;
-      graph_type g{
-        {
-          { // neg_one_neg_one
-            edge_t{
-              dim_2_label::neg_one_neg_one,
-              test.report("+ (-1, -1)"),
-              [](coords_t v) -> coords_t { return +v; }
-            },
-            edge_t{
-              dim_2_label::neg_one_zero,
-              test.report("(-1, -1) +  (0, 1)"),
-              [&](coords_t v) -> coords_t { return v + disp_t{from_underlying(std::array{ring_t{}, ring_t(1)}), units_t{}}; }
-            },
-            edge_t{
-              dim_2_label::neg_one_zero,
-              test.report("(-1, -1) += (0, 1)"),
-              [&](coords_t v) -> coords_t { return v += disp_t{from_underlying(std::array{ring_t{}, ring_t(1)}), units_t{}}; }
-            },
-            edge_t{
-              dim_2_label::zero_neg_one,
-              test.report("(-1, -1) +  (1, 0)"),
-              [&](coords_t v) -> coords_t { return v +  disp_t{from_underlying(std::array{ring_t(1), ring_t{}}), units_t{}}; }
-            },
-            edge_t{
-              dim_2_label::zero_neg_one,
-              test.report("(-1, -1) += (1, 0)"),
-              [&](coords_t v) -> coords_t { return v += disp_t{from_underlying(std::array{ring_t(1), ring_t{}}), units_t{}}; }
-            }
-          }, // neg_one_neg_one
-          {
-            edge_t{
-              dim_2_label::neg_one_neg_one,
-              test.report("(-1, 0) -  (0, 1)"),
-              [&](coords_t v) -> coords_t { return v -  disp_t{from_underlying(std::array{ring_t{}, ring_t(1)}), units_t{}}; }
-            },
-            edge_t{
-              dim_2_label::neg_one_neg_one,
-              test.report("(-1, 0) -= (0, 1)"),
-              [&](coords_t v) -> coords_t { return v -= disp_t{from_underlying(std::array{ring_t{}, ring_t(1)}), units_t{}}; }
-            }
-          }, // neg_one_zero
-          {
-            edge_t{
-              dim_2_label::neg_one_neg_one,
-              test.report("(0, -1) -  (1, 0)"),
-              [&](coords_t v) -> coords_t { return v -  disp_t{from_underlying(std::array{ring_t{1}, ring_t(0)}), units_t{}}; }
-            },
-            edge_t{
-              dim_2_label::neg_one_neg_one,
-              test.report("(0, -1) -= (1, 0)"),
-              [&](coords_t v) -> coords_t { return v -= disp_t{from_underlying(std::array{ring_t{1}, ring_t(0)}), units_t{}}; }
-            }
-          }, // zero_neg_one
-          {
-          }, // zero_zero
-          {
-          }, // zero_one
-          {
-          }, // one_zero
-          {
-          }, // one_one
-          {
-          }, // one_two
-        },
-        {
-          coords_t{from_underlying(std::array{ring_t(-1), ring_t(-1)}), units_t{}},
-          coords_t{from_underlying(std::array{ring_t(-1), ring_t{}}),   units_t{}},
-          coords_t{from_underlying(std::array{ring_t{},   ring_t(-1)}), units_t{}},
-          coords_t{from_underlying(std::array{ring_t{},   ring_t{}}),   units_t{}},
-          coords_t{from_underlying(std::array{ring_t{},   ring_t(1)}),  units_t{}},
-          coords_t{from_underlying(std::array{ring_t(1),  ring_t{}}),   units_t{}},
-          coords_t{from_underlying(std::array{ring_t(1),  ring_t(1)}),  units_t{}},
-          coords_t{from_underlying(std::array{ring_t(1),  ring_t(2)}),  units_t{}}
-        }
-      };
-
-      if constexpr(has_distinguished_origin)
+      if constexpr(supports_multiplicative_syntactic_sugar<Coordinates>)
       {
-        add_dim_2_distinguished_origin_transitions(g, test);
-      }
+        add_transition<coords_t>(
+          g,
+          dim_1_label::zero,
+          dim_1_label::zero,
+          test.report("0 * unit"),
+          [&](const coords_t&) -> coords_t { return ring_t{} * basis_isomorphism_t{}; }
+        );
 
-      // TO DO: relax last condition, but test values will need ammending.
-      // E.g. (1, 1) -> (sqrt(2), pi/4)
-      // multiplying last cmpt by 0 -> (sqrt(2), 0)
-      if constexpr(Coordinates::has_freely_mutable_components && has_identity_repr)
-      {
-        add_dim_2_free_mutations(g, test);
-      }
+        add_transition<coords_t>(
+          g,
+          dim_1_label::zero,
+          dim_1_label::zero,
+          test.report("0 / unit"),
+          [&](const coords_t&) -> coords_t { return ring_t{} / maths::dual_of_t<basis_isomorphism_t>{}; }
+        );
 
-      if constexpr(std::constructible_from<coords_t, ring_t, ring_t>)
-      {
-        add_dim_2_no_unit_construction(g, test);
-      }
+        add_transition<coords_t>(
+          g,
+          dim_1_label::one,
+          dim_1_label::one,
+          test.report("1 * unit"),
+          [&](const coords_t&) -> coords_t { return ring_t(1) * basis_isomorphism_t{}; }
+        );
 
-      return g;
+        add_transition<coords_t>(
+          g,
+          dim_1_label::one,
+          dim_1_label::one,
+          test.report("1 / unit"),
+          [&](const coords_t&) -> coords_t { return ring_t(1) / maths::dual_of_t<basis_isomorphism_t>{}; }
+        );
+      }
     }
 
     static void add_dim_1_common_transitions(maths::network auto& g, regular_test& test)
@@ -305,7 +253,6 @@ namespace sequoia::testing
       );
     }
 
-    template<class... Units>
     static void add_dim_1_negative_transitions(maths::network auto& g, regular_test& test)
     {
       g.add_node(ring_t(-1), units_t{});
@@ -587,6 +534,106 @@ namespace sequoia::testing
         test.report("(0) +  (1)"),
         [&](coords_t p) -> coords_t { return p +  disp_t{ring_t(1)}; }
       );
+    }
+
+        static graph_type make_dim_2_transition_graph(regular_test& test)
+    {
+      using edge_t = transition_checker<coords_t>::edge;
+      graph_type g{
+        {
+          { // neg_one_neg_one
+            edge_t{
+              dim_2_label::neg_one_neg_one,
+              test.report("+ (-1, -1)"),
+              [](coords_t v) -> coords_t { return +v; }
+            },
+            edge_t{
+              dim_2_label::neg_one_zero,
+              test.report("(-1, -1) +  (0, 1)"),
+              [&](coords_t v) -> coords_t { return v + disp_t{from_underlying(std::array{ring_t{}, ring_t(1)}), units_t{}}; }
+            },
+            edge_t{
+              dim_2_label::neg_one_zero,
+              test.report("(-1, -1) += (0, 1)"),
+              [&](coords_t v) -> coords_t { return v += disp_t{from_underlying(std::array{ring_t{}, ring_t(1)}), units_t{}}; }
+            },
+            edge_t{
+              dim_2_label::zero_neg_one,
+              test.report("(-1, -1) +  (1, 0)"),
+              [&](coords_t v) -> coords_t { return v +  disp_t{from_underlying(std::array{ring_t(1), ring_t{}}), units_t{}}; }
+            },
+            edge_t{
+              dim_2_label::zero_neg_one,
+              test.report("(-1, -1) += (1, 0)"),
+              [&](coords_t v) -> coords_t { return v += disp_t{from_underlying(std::array{ring_t(1), ring_t{}}), units_t{}}; }
+            }
+          }, // neg_one_neg_one
+          {
+            edge_t{
+              dim_2_label::neg_one_neg_one,
+              test.report("(-1, 0) -  (0, 1)"),
+              [&](coords_t v) -> coords_t { return v -  disp_t{from_underlying(std::array{ring_t{}, ring_t(1)}), units_t{}}; }
+            },
+            edge_t{
+              dim_2_label::neg_one_neg_one,
+              test.report("(-1, 0) -= (0, 1)"),
+              [&](coords_t v) -> coords_t { return v -= disp_t{from_underlying(std::array{ring_t{}, ring_t(1)}), units_t{}}; }
+            }
+          }, // neg_one_zero
+          {
+            edge_t{
+              dim_2_label::neg_one_neg_one,
+              test.report("(0, -1) -  (1, 0)"),
+              [&](coords_t v) -> coords_t { return v -  disp_t{from_underlying(std::array{ring_t{1}, ring_t(0)}), units_t{}}; }
+            },
+            edge_t{
+              dim_2_label::neg_one_neg_one,
+              test.report("(0, -1) -= (1, 0)"),
+              [&](coords_t v) -> coords_t { return v -= disp_t{from_underlying(std::array{ring_t{1}, ring_t(0)}), units_t{}}; }
+            }
+          }, // zero_neg_one
+          {
+          }, // zero_zero
+          {
+          }, // zero_one
+          {
+          }, // one_zero
+          {
+          }, // one_one
+          {
+          }, // one_two
+        },
+        {
+          coords_t{from_underlying(std::array{ring_t(-1), ring_t(-1)}), units_t{}},
+          coords_t{from_underlying(std::array{ring_t(-1), ring_t{}}),   units_t{}},
+          coords_t{from_underlying(std::array{ring_t{},   ring_t(-1)}), units_t{}},
+          coords_t{from_underlying(std::array{ring_t{},   ring_t{}}),   units_t{}},
+          coords_t{from_underlying(std::array{ring_t{},   ring_t(1)}),  units_t{}},
+          coords_t{from_underlying(std::array{ring_t(1),  ring_t{}}),   units_t{}},
+          coords_t{from_underlying(std::array{ring_t(1),  ring_t(1)}),  units_t{}},
+          coords_t{from_underlying(std::array{ring_t(1),  ring_t(2)}),  units_t{}}
+        }
+      };
+
+      if constexpr(has_distinguished_origin)
+      {
+        add_dim_2_distinguished_origin_transitions(g, test);
+      }
+
+      // TO DO: relax last condition, but test values will need ammending.
+      // E.g. (1, 1) -> (sqrt(2), pi/4)
+      // multiplying last cmpt by 0 -> (sqrt(2), 0)
+      if constexpr(Coordinates::has_freely_mutable_components && has_identity_repr)
+      {
+        add_dim_2_free_mutations(g, test);
+      }
+
+      if constexpr(std::constructible_from<coords_t, ring_t, ring_t>)
+      {
+        add_dim_2_no_unit_construction(g, test);
+      }
+
+      return g;
     }
 
     static void add_dim_2_distinguished_origin_transitions(maths::network auto& g, regular_test& test)

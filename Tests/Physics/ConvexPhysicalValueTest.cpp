@@ -161,7 +161,7 @@ namespace sequoia::testing
       >
     );
     STATIC_CHECK( can_multiply<value_t, units_t>);
-    STATIC_CHECK(!can_divide <value_t, units_t>);
+    STATIC_CHECK(!can_divide  <value_t, units_t>);
 
     coordinates_operations<quantity_t>{*this}.execute();
   }

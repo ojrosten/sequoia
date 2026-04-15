@@ -1430,15 +1430,15 @@ namespace sequoia::physics
   [[nodiscard]]
   quantity<Unit, Rep> operator*(Rep val, Unit u)
   {
-    return quantity<Unit, Rep>{val, u};
+    return {val, u};
   }
 
   template<physical_unit Unit, arithmetic Rep>
     requires has_default_space_v<Unit, Rep>
   [[nodiscard]]
-  quantity<dual<Unit>, Rep> operator/(Rep val, Unit u)
+  quantity<dual_of_t<Unit>, Rep> operator/(Rep val, Unit)
   {
-    return quantity<dual<Unit>, Rep>{val, u};
+    return {val, dual_of_t<Unit>{}};
   }
 }
 
