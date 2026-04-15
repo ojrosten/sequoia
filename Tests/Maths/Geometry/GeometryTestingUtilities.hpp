@@ -27,15 +27,15 @@ namespace sequoia::testing
     enum dim_1_label{ two, one, zero, neg_one };
     enum dim_2_label{ neg_one_neg_one, neg_one_zero, zero_neg_one, zero_zero, zero_one, one_zero, one_one, one_two };
     
-    using graph_type       = transition_checker<Coordinates>::transition_graph;
-    using coords_t         = Coordinates;
-    using space_t          = Coordinates::space_type;
-    using disp_t           = coords_t::displacement_coordinates_type;
-    using module_t         = coords_t::free_module_type;
-    using ring_t           = coords_t::commutative_ring_type;
-    using units_t          = coords_t::basis_isomorphism_type;
-    using representation_t = coords_t::representation_type;
-    using validator_t      = coords_t::validator_type;
+    using graph_type          = transition_checker<Coordinates>::transition_graph;
+    using coords_t            = Coordinates;
+    using space_t             = Coordinates::space_type;
+    using disp_t              = coords_t::displacement_coordinates_type;
+    using module_t            = coords_t::free_module_type;
+    using ring_t              = coords_t::commutative_ring_type;
+    using units_t             = coords_t::basis_isomorphism_type;
+    using representation_t    = coords_t::representation_type;
+    using validator_t         = coords_t::validator_type;
     using basis_isomorphism_t = coords_t::basis_isomorphism_type;
     constexpr static std::size_t dimension{Coordinates::dimension};
     constexpr static bool orderable{(dimension == 1) && std::totally_ordered<ring_t>};
