@@ -561,12 +561,12 @@ namespace sequoia::physics
       return physical_value_t{value / rhs.value(), derived_units_type{}};
     }
  
-    template<class LoweredValueSpace, basis_for<free_module_type_of_t<LoweredValueSpace>> OtherBasis, class OtherOrigin>    
+    template<class LoweredValueSpace, basis_for<free_module_type_of_t<LoweredValueSpace>> OtherBasis>    
       requires std::same_as<to_base_space_t<space_type>, LoweredValueSpace> && consistent_bases_v<basis_type, OtherBasis>
     [[nodiscard]]
-    constexpr operator physical_value<LoweredValueSpace, Unit, OtherBasis, OtherOrigin, validator_type>() const noexcept
+    constexpr operator physical_value<LoweredValueSpace, Unit, OtherBasis, Origin, validator_type>() const noexcept
     {
-      using physical_value_t = physical_value<LoweredValueSpace, Unit, OtherBasis, OtherOrigin, validator_type>;
+      using physical_value_t = physical_value<LoweredValueSpace, Unit, OtherBasis, Origin, validator_type>;
       
       return [this] <std::size_t... Is>(std::index_sequence<Is...>) {
         return physical_value_t{std::array{this->values()[Is]...}, Unit{}};
