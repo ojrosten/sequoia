@@ -99,15 +99,11 @@ namespace sequoia::testing
 
           if(const auto pos{message.rfind(' ', message.size() - 2)}; pos != std::string::npos)
           {
-            /* TO DO: Homebrew issue means this doesn't link for llvm 21.1.3
             double val{};
-            const auto[ptr,ec]{std::from_chars(message.data() + pos, message.data() + message.size(), val)};
+            const auto[ptr,ec]{std::from_chars(message.data() + pos + 1, message.data() + message.size(), val)};
             if(ec != std::errc{})
-              throw std::runtime_error{"Unable to extract final double from error message:" +  message};
-            */
-
-            char* end{};
-            const auto val{std::strtod(message.data() + pos, &end)};
+              throw std::runtime_error{"Unable to extract final double from error message: " +  message};
+            
             message.replace(pos + 1, message.size() - pos - 2, std::format("{:.2f}", val));
           }
         }
