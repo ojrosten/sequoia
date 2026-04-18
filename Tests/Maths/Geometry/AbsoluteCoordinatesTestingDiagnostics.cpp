@@ -5,25 +5,26 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
-
 /*! \file */
 
-#include "GeometryTestingUtilities.hpp"
+#include "AbsoluteCoordinatesTestingDiagnostics.hpp"
+
 
 namespace sequoia::testing
 {
-  class affine_coordinates_false_negative_test final : public regular_false_negative_test
+  using namespace maths;
+
+  [[nodiscard]]
+  std::filesystem::path absolute_coordinates_false_negative_test::source_file() const
   {
-  public:
-    using regular_false_negative_test::regular_false_negative_test;
+    return std::source_location::current().file_name();
+  }
 
-    [[nodiscard]]
-    std::filesystem::path source_file() const;
+  void absolute_coordinates_false_negative_test::run_tests()
+  {
+  }
 
-    void run_tests();
-  private:
-    template<class AffineCoords>
-    void test_affine_1();
-  };
+  void absolute_coordinates_false_negative_test::test_absolute()
+  {
+  }
 }

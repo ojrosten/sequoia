@@ -22,7 +22,7 @@ int main(int argc, char** argv)
                        argv,
                        "Oliver J. Rosten",
                        "  ",
-                       {.main_cpp{"TestChamber/TestChamberMain.cpp"}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
+                       {.main_cpp{"TestChamber/TestChamberMain.cpp"}, .ancillary_main_cpps{{"TestAll/TestMain.cpp"}}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
 
     runner.add_test_suite(
       "Algebra",
@@ -52,6 +52,12 @@ int main(int argc, char** argv)
       suite{
         "Free Module Coordinates",
         free_module_coordinates_test{"Free Module Test"}
+      },
+      suite{
+        "Absolute Coordinates",
+        absolute_coordinates_false_negative_test{"Absolute Coordinates False negative Test"},
+        absolute_coordinates_test{"Absolute Coordinates Test"},
+        absolute_logarithmic_coordinates_test{"Absolute Logarithmic Coordinates Test"}
       }
     );
 

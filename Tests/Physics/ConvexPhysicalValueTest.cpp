@@ -16,7 +16,7 @@
 using namespace sequoia::physics;
 
 namespace
-{
+{  
   namespace sets
   {
     template<std::size_t N, class Arena>

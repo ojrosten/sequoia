@@ -51,6 +51,9 @@ target_sources(TestAll PRIVATE
                ${TestDir}/FileSystem/NormalPathTest.cpp
                ${TestDir}/FileSystem/NormalPathTestingDiagnostics.cpp
                ${TestDir}/Maths/Algebra/RatioFreeTest.cpp
+               ${TestDir}/Maths/Geometry/AbsoluteCoordinatesTest.cpp
+               ${TestDir}/Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.cpp
+               ${TestDir}/Maths/Geometry/AbsoluteLogarithmicCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/AffineCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp
                ${TestDir}/Maths/Geometry/FreeModuleCoordinatesTest.cpp

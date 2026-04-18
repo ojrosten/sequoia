@@ -407,6 +407,12 @@ int main(int argc, char** argv)
       suite{
         "Free Module Coordinates",
         free_module_coordinates_test{"Free Module Test"}
+      },
+      suite{
+        "Absolute Coordinates",
+        absolute_coordinates_false_negative_test{"Absolute Coordinates False negative Test"},
+        absolute_coordinates_test{"Absolute Coordinates Test"},
+        absolute_logarithmic_coordinates_test{"Absolute Logarithmic Coordinates Test"}
       }
     );
 
