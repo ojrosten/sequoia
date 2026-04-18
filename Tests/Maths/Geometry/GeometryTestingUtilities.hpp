@@ -116,7 +116,7 @@ namespace sequoia::testing
       add_dim_1_common_transitions(g, test);
       add_dim_1_syntactic_sugar_checks(g, test);
 
-      if constexpr(has_unary_minus<Coordinates>)
+      if constexpr(!maths::is_non_negative_orthant_v<space_t>)
       {
         add_dim_1_negative_transitions(g, test);
       }
@@ -258,7 +258,7 @@ namespace sequoia::testing
       g.add_node(ring_t(-1), units_t{});
 
       // Joins to neg_one
-      if constexpr(coords_t::has_distinguished_origin && !std::is_unsigned_v<ring_t>)
+      if constexpr(has_unary_minus<Coordinates>)
       {
         add_transition<coords_t>(
           g,
@@ -281,7 +281,7 @@ namespace sequoia::testing
 
       
       // Joins from neg_one
-      if constexpr(coords_t::has_distinguished_origin && !std::is_unsigned_v<ring_t>)
+      if constexpr(has_unary_minus<Coordinates>)
       {
         add_transition<coords_t>(
           g,
@@ -565,7 +565,7 @@ namespace sequoia::testing
       {
         add_dim_2_negative_transitions(g, test);
       }
-      else //if constexpr(maths::defines_half_line_validator_v<typename Coordinates::validator_type> && std::is_signed_v<ring_t>)
+      else
       {
         add_dim_2_attempted_negative_transitions(g, test);
       }
