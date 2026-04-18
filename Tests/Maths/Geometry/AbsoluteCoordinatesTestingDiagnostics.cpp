@@ -22,9 +22,21 @@ namespace sequoia::testing
 
   void absolute_coordinates_false_negative_test::run_tests()
   {
+    test_absolute<float , 1>();
+    test_absolute<double, 2>();
   }
 
+  template<std::floating_point T, std::size_t D>
   void absolute_coordinates_false_negative_test::test_absolute()
   {
+    using space_t     = euclidean_nonnegative_space<T, D, mathematical_arena>;
+    using validator_t = interval_validator<T, T{}, std::numeric_limits<T>::infinity()>;
+    using coords_t    = coordinates<space_t, canonical_right_handed_basis<free_module_type_of_t<space_t>>, identity_representation<validator_t>>;
+
+    const auto vals{utilities::make_array<T, D>([](auto) { return T(1); })};
+    
+    coords_t x{}, y{vals};
+    check(equivalence, "", x, vals);
+    check(equality, "", x, y);
   }
 }

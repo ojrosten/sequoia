@@ -2041,16 +2041,19 @@ namespace sequoia::maths
     using arena_type        = Arena;
   };
 
-  template<std::floating_point T, class Arena=mathematical_arena>
-  struct euclidean_half_space
+  template<std::floating_point T, std::size_t D, class Arena=mathematical_arena>
+  struct euclidean_nonnegative_space
   {
-    using set_type             = sets::orthant<1>;
-    using vector_space_type    = euclidean_vector_space<T, 1, Arena>;
+    using set_type             = sets::orthant<D>;
+    using vector_space_type    = euclidean_vector_space<T, D, Arena>;
     using is_convex_space      = std::true_type;
     using arena_type           = Arena;
     using distinguished_origin = std::true_type;
     using non_negative_orthant = std::true_type;
   };
+
+  template<std::floating_point T, class Arena=mathematical_arena>
+  using euclidean_half_space = euclidean_nonnegative_space<T, 1, Arena>;
 
   template<class T>
   inline constexpr bool has_arena_type_v{
@@ -2089,6 +2092,9 @@ namespace sequoia::maths
 
   template<std::floating_point T, std::size_t D, basis Basis, class Representation, class Arena=mathematical_arena>
   using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<T, D, Arena>, Basis, Representation>;
+
+  template<std::floating_point T, std::size_t D, basis Basis, class Representation, class Arena=mathematical_arena>
+  using euclidean_nonnegative_coordinates = coordinates<euclidean_nonnegative_space<T, D, Arena>, Basis, Representation>;
 
   /** @brief Right-handed bases for arbitrary D, built recursively from 1D
 

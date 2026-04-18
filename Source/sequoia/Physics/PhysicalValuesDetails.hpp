@@ -328,13 +328,13 @@ namespace sequoia::physics::impl
 
   template<class T, class Arena, int I>
     requires (I != 0)
-  struct potentially_prunable<type_counter<euclidean_half_space<T, Arena>, I>> : std::true_type
+  struct potentially_prunable<type_counter<euclidean_nonnegative_space<T, 1, Arena>, I>> : std::true_type
   {
   };
 
   template<class T, class Arena, int I>
     requires (I != 0)
-  struct potentially_prunable<type_counter<dual<euclidean_half_space<T, Arena>>, I>> : std::true_type
+  struct potentially_prunable<type_counter<dual<euclidean_nonnegative_space<T, 1, Arena>>, I>> : std::true_type
   {
   };
 

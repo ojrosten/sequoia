@@ -23,6 +23,7 @@ namespace sequoia::testing
 
     void run_tests();
   private:
+    template<std::floating_point T, std::size_t D>
     void test_absolute();
   };
 }
