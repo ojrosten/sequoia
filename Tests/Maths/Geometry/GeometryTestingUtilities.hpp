@@ -69,15 +69,15 @@ namespace sequoia::testing
 
     template<class T, std::size_t D>
     [[nodiscard]]
-    static auto from_underlying(std::array<T, D> vals)
+    static auto from_underlying(const std::array<T, D>& vals)
     {
-      return representation_t{}.from_underlying(vals);
+      return representation_t{}.from_underlying(std::span{vals});
     }
 
     template<class T>
     [[nodiscard]]
-    static decltype(auto) from_underlying(T val) {
-      return representation_t{}.from_underlying(std::array{val})[0];
+    static auto from_underlying(T val) {
+      return from_underlying(std::array{val})[0];
     }
     
     

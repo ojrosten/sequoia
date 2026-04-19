@@ -29,34 +29,10 @@ namespace sequoia::testing
       }
 
       template<weak_commutative_ring T> 
-      constexpr static std::array<T, 1>& to_underlying(std::array<T, 1>& val)
-      {
-        return val = to_underlying(std::span<const T, 1>{val});
-      }
-
-      template<weak_commutative_ring T> 
-      constexpr static std::array<T, 1>&& to_underlying(std::array<T, 1>&& val)
-      {
-        return std::move(val = to_underlying(std::span<const T, 1>{val}));
-      }
-
-      template<weak_commutative_ring T> 
       [[nodiscard]]
       constexpr static std::array<T, 1> from_underlying(std::span<const T, 1> val)
       {
         return {std::log(val[0])};
-      }
-
-      template<weak_commutative_ring T> 
-      constexpr static std::array<T, 1>& from_underlying(std::array<T, 1>& val)
-      {
-        return val = from_underlying(std::span<const T, 1>{val});
-      }
-
-      template<weak_commutative_ring T> 
-      constexpr static std::array<T, 1>&& from_underlying(std::array<T, 1>&& val)
-      {
-        return std::move(val = from_underlying(std::span<const T, 1>{val}));
       }
     };
   }

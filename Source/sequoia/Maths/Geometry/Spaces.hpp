@@ -1422,40 +1422,16 @@ namespace sequoia::maths
     
     template<weak_commutative_ring T, std::size_t N> 
     [[nodiscard]]
-    constexpr static std::span<const T, N> to_underlying(std::span<const T, N> in) noexcept
+    constexpr static std::array<T, N> to_underlying(std::span<const T, N> in) noexcept
     {
-      return in;
-    }
-
-    template<weak_commutative_ring T, std::size_t N> 
-    constexpr static std::array<T, N>& to_underlying(std::array<T, N>& in) noexcept
-    {
-      return in;
-    }
-
-    template<weak_commutative_ring T, std::size_t N> 
-    constexpr static std::array<T, N>&& to_underlying(std::array<T, N>&& in) noexcept
-    {
-      return in;
+      return utilities::to_array(in);
     }
 
     template<weak_commutative_ring T, std::size_t N> 
     [[nodiscard]]
-    constexpr static std::span<const T, N> from_underlying(std::span<const T, N> in) noexcept
+    constexpr static std::array<T, N> from_underlying(std::span<const T, N> in) noexcept
     {
-      return in;
-    }
-
-    template<weak_commutative_ring T, std::size_t N> 
-    constexpr static std::array<T, N>& from_underlying(std::array<T, N>& in) noexcept
-    {
-      return in;
-    }
-
-    template<weak_commutative_ring T, std::size_t N> 
-    constexpr static std::array<T, N>&& from_underlying(std::array<T, N>&& in) noexcept
-    {
-      return in;
+      return utilities::to_array(in);
     }
   };
   
@@ -1588,7 +1564,7 @@ namespace sequoia::maths
 
         std::array vals{(Representation{}.to_underlying(lhs.values())[Is] - Representation{}.to_underlying(rhs.values())[Is])...};
 
-        return disp_t{Representation{}.from_underlying(vals), basis_isomorphism_type{}};
+        return disp_t{from_underlying(vals), basis_isomorphism_type{}};
       }(std::make_index_sequence<D>{});
     }
 
@@ -1757,17 +1733,17 @@ namespace sequoia::maths
       if constexpr(has_identity_validator)
       {
         std::ranges::for_each(
-          std::views::zip(Representation{}.to_underlying(self.m_Values), Representation{}.to_underlying(rhs)),
+          std::views::zip(to_underlying(self.m_Values), Representation{}.to_underlying(rhs)),
           [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); }
         );
 
-        Representation{}.from_underlying(self.m_Values); 
+        from_underlying(self.m_Values); 
       }
       else
       {
-        auto tmp{Representation{}.to_underlying(self.m_Values)};
+        auto tmp{to_underlying(self.m_Values)};
         std::ranges::for_each(std::views::zip(tmp, Representation{}.to_underlying(rhs)), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
-        self.m_Values = validate(Representation{}.from_underlying(tmp), self.m_Validator);
+        self.m_Values = validate(from_underlying(tmp), self.m_Validator);
       }
 
       return std::forward<Self>(self);
@@ -1779,14 +1755,14 @@ namespace sequoia::maths
     {
       if constexpr(has_identity_validator)
       {
-        std::ranges::for_each(Representation{}.to_underlying(self.m_Values), f);
-        self.m_Values = Representation{}.from_underlying(self.m_Values);
+        std::ranges::for_each(to_underlying(self.m_Values), f);
+        self.m_Values = from_underlying(self.m_Values);
       }
       else
       {
-        auto tmp{Representation{}.to_underlying(self.m_Values)};
+        auto tmp{to_underlying(self.m_Values)};
         std::ranges::for_each(tmp, f);
-        self.m_Values = validate(Representation{}.from_underlying(tmp), self.m_Validator);
+        self.m_Values = validate(from_underlying(tmp), self.m_Validator);
       }
 
       return self;
@@ -1813,6 +1789,26 @@ namespace sequoia::maths
         return validator(vals);
       else
         return {validator(vals.front())};
+    }
+
+    constexpr static std::array<value_type, D>& to_underlying(std::array<value_type, D>& vals)
+    {
+      return vals = representation_type{}.to_underlying(std::span<const value_type, D>{vals});
+    }
+
+    constexpr static std::array<value_type, D>&& to_underlying(std::array<value_type, D>&& vals)
+    {
+      return std::move(vals = representation_type{}.to_underlying(std::span<const value_type, D>{vals}));
+    }
+
+    constexpr static std::array<value_type, D>& from_underlying(std::array<value_type, D>& vals)
+    {
+      return vals = representation_type{}.from_underlying(std::span<const value_type, D>{vals});
+    }
+
+    constexpr static std::array<value_type, D>&& from_underlying(std::array<value_type, D>&& vals)
+    {
+      return std::move(vals = representation_type{}.from_underlying(std::span<const value_type, D>{vals}));
     }
   };
 

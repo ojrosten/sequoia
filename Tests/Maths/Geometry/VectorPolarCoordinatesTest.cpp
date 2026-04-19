@@ -30,18 +30,6 @@ namespace sequoia::testing
       }
 
       template<weak_commutative_ring T> 
-      constexpr static std::array<T, 2>& to_underlying(std::array<T, 2>& polar)
-      {        
-        return polar = to_underlying(std::span<const T, 2>{polar});
-      }
-
-      template<weak_commutative_ring T>
-      constexpr static std::array<T, 2>&& to_underlying(std::array<T, 2>&& polar)
-      {
-        return std::move(polar = to_underlying(std::span<const T, 2>{polar}));
-      }
-
-      template<weak_commutative_ring T> 
       [[nodiscard]]
       constexpr static std::array<T, 2> from_underlying(std::span<const T, 2> cartesian)
       {
@@ -49,18 +37,6 @@ namespace sequoia::testing
         if(theta < 0) theta += T{2} * std::numbers::pi_v<T>;
         
         return {std::sqrt(cartesian[0] * cartesian[0] + cartesian[1] * cartesian[1]), theta};
-      }
-
-      template<weak_commutative_ring T> 
-      constexpr static std::array<T, 2>& from_underlying(std::array<T, 2>& cartesian)
-      {
-        return cartesian = from_underlying(std::span<const T, 2>{cartesian});
-      }
-
-      template<weak_commutative_ring T> 
-      constexpr static std::array<T, 2>&& from_underlying(std::array<T, 2>&& cartesian)
-      {
-        return std::move(cartesian = from_underlying(std::span<const T, 2>{cartesian}));
       }
     };
 
