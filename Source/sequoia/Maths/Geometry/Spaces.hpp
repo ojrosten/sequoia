@@ -902,11 +902,29 @@ namespace sequoia::maths
    */
 
   template<class R, class ConvexSpace>
+  inline constexpr bool representation_for_single_value{
+        (dimension_of<ConvexSpace> == 1)
+     && requires(R& r, const space_value_type<ConvexSpace>& val) {
+          { r.to_underlying(val)   } -> std::convertible_to<decltype(val)>;
+          { r.from_underlying(val) } -> std::convertible_to<decltype(val)>;
+        }
+  };
+
+  template<class R, class ConvexSpace>
+  inline constexpr bool representation_for_span{
+     requires(R& r, std::span<const space_value_type<ConvexSpace>, dimension_of<ConvexSpace>> vals) {
+       { r.to_underlying(vals)   } -> std::convertible_to<std::array<space_value_type<ConvexSpace>, dimension_of<ConvexSpace>>>;
+       { r.from_underlying(vals) } -> std::convertible_to<std::array<space_value_type<ConvexSpace>, dimension_of<ConvexSpace>>>;
+     }
+  };
+
+  template<class R, class ConvexSpace>
   concept representation_for
     =    convex_space<ConvexSpace>
       && std::is_default_constructible_v<R>
       && has_validator_type_v<R>
-      && validator_for<typename R::validator_type, ConvexSpace>;
+      && validator_for<typename R::validator_type, ConvexSpace>
+      && (representation_for_single_value<R, ConvexSpace> || representation_for_span<R, ConvexSpace>);
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
   struct representation_for_free_module_of

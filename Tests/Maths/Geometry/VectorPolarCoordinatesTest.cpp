@@ -95,6 +95,7 @@ namespace sequoia::testing
     using value_t     = Field;
     using delta_t     = vec_t::displacement_coordinates_type;
 
+    STATIC_CHECK(representation_for_span<Representation, vec_space_t>);
     STATIC_CHECK(vector_space<direct_product<vec_space_t, vec_space_t>>);
     STATIC_CHECK(!vector_space<direct_product<vec_t, vec_t>>);
     STATIC_CHECK(vector_space<direct_product<direct_product<vec_space_t, vec_space_t>, vec_space_t>>);

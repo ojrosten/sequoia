@@ -57,6 +57,7 @@ namespace sequoia::testing
     using delta_t     = coords_t::displacement_coordinates_type;
     using value_t     = T;
 
+    STATIC_CHECK(representation_for_span<Representation, space_t>);
     STATIC_CHECK(can_multiply<coords_t, value_t>);
     STATIC_CHECK(can_divide<coords_t, value_t>);
     STATIC_CHECK(!can_divide<coords_t, coords_t>);
