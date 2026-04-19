@@ -1484,7 +1484,7 @@ namespace sequoia::maths
     // TO DO: improve conventions
     constexpr static bool has_distinguished_origin{has_distinguished_origin_v<ConvexSpace>};
     constexpr static bool has_identity_validator{defines_identity_validator_v<validator_type>};
-    constexpr static bool has_freely_mutable_components{has_identity_validator && has_distinguished_origin};
+    constexpr static bool has_freely_mutable_components{free_module<space_type>};
     constexpr static bool admits_canonical_basis{admits_canonical_basis_v<free_module_type>};
     
     constexpr static std::size_t dimension{free_module_type::dimension};

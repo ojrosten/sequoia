@@ -66,11 +66,22 @@ namespace sequoia::testing
       return m_Tol;
     }
 
-    template<class T>
-      requires has_abs<T, ToleranceType>
+    template<std::floating_point T>
     [[nodiscard]]
     constexpr bool operator()(const T& obtained, const T& prediction) const noexcept
     {
+      constexpr auto inf{std::numeric_limits<T>::infinity()};
+      if(((obtained == inf) && (prediction == inf)) || ((obtained == -inf) && (prediction == -inf)))
+         return true;
+
+      return std::abs(obtained - prediction) <= m_Tol;
+    }
+
+    template<class T>
+    requires (!std::floating_point<T>) && has_abs<T, ToleranceType>
+    [[nodiscard]]
+    constexpr bool operator()(const T& obtained, const T& prediction) const noexcept
+    {      
       using std::abs;
       return abs(obtained - prediction) <= m_Tol;
     }
