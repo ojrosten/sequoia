@@ -68,7 +68,7 @@ namespace sequoia::testing
 
     template<std::floating_point T>
     [[nodiscard]]
-    constexpr bool operator()(const T& obtained, const T& prediction) const noexcept
+    constexpr bool operator()(T obtained, T prediction) const noexcept
     {
       constexpr auto inf{std::numeric_limits<T>::infinity()};
       if(((obtained == inf) && (prediction == inf)) || ((obtained == -inf) && (prediction == -inf)))
@@ -78,7 +78,7 @@ namespace sequoia::testing
     }
 
     template<class T>
-    requires (!std::floating_point<T>) && has_abs<T, ToleranceType>
+      requires (!std::floating_point<T>) && has_abs<T, ToleranceType>
     [[nodiscard]]
     constexpr bool operator()(const T& obtained, const T& prediction) const noexcept
     {      
