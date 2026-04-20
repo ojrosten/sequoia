@@ -77,13 +77,20 @@ namespace sequoia::testing
     template<class T>
     [[nodiscard]]
     static auto from_underlying(T val) {
-      return from_underlying(std::array{val})[0];
+      if constexpr(maths::representation_for_span<representation_t, space_t>)
+      {
+        return from_underlying(std::array{val})[0];
+      }
+      else
+      {
+        return representation_t{}.from_underlying(val);
+      }
     }
     
     
     [[nodiscard]]
     auto make_checker() const
-    {     
+    {
       constexpr auto tol{std::same_as<ring_t, float> ? ring_t(1e-6) : ring_t(1e-12)};
       if constexpr(orderable)
       {
@@ -119,9 +126,9 @@ namespace sequoia::testing
           {}, {}, {}
         },
         {
-          coords_t{from_underlying(std::array{ring_t(2)}), units_t{}},
-          coords_t{from_underlying(std::array{ring_t(1)}), units_t{}},
-          coords_t{from_underlying(std::array{ring_t{}}), units_t{}}
+          coords_t{from_underlying(ring_t(2)), units_t{}},
+          coords_t{from_underlying(ring_t(1)), units_t{}},
+          coords_t{from_underlying(ring_t{}), units_t{}}
         }
       };
 

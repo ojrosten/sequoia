@@ -23,16 +23,16 @@ namespace sequoia::testing
 
       template<weak_commutative_ring T> 
       [[nodiscard]]
-      constexpr static std::array<T, 1> to_underlying(std::span<const T, 1> val)
+      constexpr static T to_underlying(T val)
       {
-        return {std::exp(val[0])};
+        return std::exp(val);
       }
 
       template<weak_commutative_ring T> 
       [[nodiscard]]
-      constexpr static std::array<T, 1> from_underlying(std::span<const T, 1> val)
+      constexpr static T from_underlying(T val)
       {
-        return {std::log(val[0])};
+        return std::log(val);
       }
     };
   }
@@ -57,7 +57,7 @@ namespace sequoia::testing
     using delta_t     = coords_t::displacement_coordinates_type;
     using value_t     = T;
 
-    STATIC_CHECK(representation_for_span<Representation, space_t>);
+    STATIC_CHECK(representation_for_single_value<Representation, space_t>);
     STATIC_CHECK(can_multiply<coords_t, value_t>);
     STATIC_CHECK(can_divide<coords_t, value_t>);
     STATIC_CHECK(!can_divide<coords_t, coords_t>);
