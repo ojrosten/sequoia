@@ -937,16 +937,70 @@ namespace sequoia::maths
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_scalar_multiplication_for_v{
-    requires(const std::array<commutative_ring_type_of_t<ConvexSpace>, ConvexSpace::dimension>& vals, commutative_ring_type_of_t<ConvexSpace> s) {
-      { R::mul(vals, s) } -> std::convertible_to<std::array<commutative_ring_type_of_t<ConvexSpace>, ConvexSpace::dimension>>;
+    requires(const R& r, const std::array<commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>>& vals, commutative_ring_type_of_t<ConvexSpace> s) {
+      { r.mul(vals, s) } -> std::convertible_to<std::array<commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>>>;
     }
   };
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
+  inline constexpr bool defines_scalar_multiplication_for_single_value_v{
+       (dimension_of<ConvexSpace> == 1)
+       && requires(const R& r, commutative_ring_type_of_t<ConvexSpace> val, commutative_ring_type_of_t<ConvexSpace> s) {
+         { r.mul(val, s) } -> std::convertible_to<commutative_ring_type_of_t<ConvexSpace>>;
+       }
+  };
+
+  template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_scalar_division_for_v{
-    requires(const std::array<commutative_ring_type_of_t<ConvexSpace>, ConvexSpace::dimension>& vals, commutative_ring_type_of_t<ConvexSpace> s) {
-      { R::div(vals, s) } -> std::convertible_to<std::array<commutative_ring_type_of_t<ConvexSpace>, ConvexSpace::dimension>>;
+    requires(const R& r, const std::array<commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>>& vals, commutative_ring_type_of_t<ConvexSpace> s) {
+      { r.div(vals, s) } -> std::convertible_to<std::array<commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>>>;
     }
+  };
+
+  template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
+  inline constexpr bool defines_scalar_division_for_single_value_v{
+       (dimension_of<ConvexSpace> == 1)
+    && requires(const R& r, commutative_ring_type_of_t<ConvexSpace> val, commutative_ring_type_of_t<ConvexSpace> s) {
+         { r.div(val, s) } -> std::convertible_to<commutative_ring_type_of_t<ConvexSpace>>;
+       }
+  };
+
+  template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
+  inline constexpr bool defines_addition_for_v{
+    requires(const R& r,
+             const std::array<commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>>& lhs,
+             const std::array<commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>>& rhs) {
+      { r.add(lhs, rhs) } -> std::convertible_to<std::array<commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>>>;
+    }
+  };
+
+  template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
+  inline constexpr bool defines_addition_for_single_value_v{
+    (dimension_of<ConvexSpace> == 1)
+    && requires(const R& r,
+                commutative_ring_type_of_t<ConvexSpace> lhs,
+                commutative_ring_type_of_t<ConvexSpace> rhs) {
+        { r.add(lhs, rhs) } -> std::convertible_to<commutative_ring_type_of_t<ConvexSpace>>;
+      }
+  };
+
+  template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
+  inline constexpr bool defines_subtraction_for_v{
+    requires(const R& r,
+             const std::array<commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>>& lhs,
+             const std::array<commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>>& rhs) {
+      { r.sub(lhs, rhs) } -> std::convertible_to<std::array<commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>>>;
+    }
+  };
+
+  template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
+  inline constexpr bool defines_subtraction_for_single_value_v{
+       (dimension_of<ConvexSpace> == 1)
+    && requires(const R& r,
+                commutative_ring_type_of_t<ConvexSpace> lhs,
+                commutative_ring_type_of_t<ConvexSpace> rhs) {
+         { r.sub(lhs, rhs) } -> std::convertible_to<commutative_ring_type_of_t<ConvexSpace>>;
+       }
   };
   
   /** @defgroup DirectProduct Direct Product
@@ -1577,12 +1631,23 @@ namespace sequoia::maths
     friend constexpr typename Derived::displacement_coordinates_type operator-(const Derived& lhs, const Derived& rhs)
       noexcept(Derived::displacement_coordinates_type::has_identity_validator)
     {
-      return[&] <std::size_t... Is>(std::index_sequence<Is...>) {        
-        using disp_t = Derived::displacement_coordinates_type;
+      using disp_t = Derived::displacement_coordinates_type;
 
-        std::array vals{(Representation{}.to_underlying(lhs.values())[Is] - Representation{}.to_underlying(rhs.values())[Is])...};
-
-        return disp_t{from_underlying(vals), basis_isomorphism_type{}};
+      return
+        [&] <std::size_t... Is>(std::index_sequence<Is...>) -> disp_t {      
+          if constexpr(defines_subtraction_for_v<space_type, representation_type>)
+          {
+            return {representation_type{}.sub(lhs.m_Values, rhs.m_Values), basis_isomorphism_type{}};
+          }
+          else if constexpr(defines_subtraction_for_single_value_v<space_type, representation_type>)
+          {
+            return {representation_type{}.sub(lhs.m_Values[0], rhs.m_Values[0]), basis_isomorphism_type{}};
+          }
+          else
+          {
+            const auto transLHS{to_underlying(lhs.values())}, transRHS{to_underlying(rhs.values())};
+            return {from_underlying(std::array{(transLHS[Is] - transRHS[Is])...}), basis_isomorphism_type{}};
+          }
       }(std::make_index_sequence<D>{});
     }
 
@@ -1591,7 +1656,18 @@ namespace sequoia::maths
     [[nodiscard]]
     friend constexpr Derived operator+(Derived c, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
-      return c.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
+      if constexpr(defines_addition_for_v<space_type, representation_type>)
+      {
+        return {representation_type{}.add(c.m_Values, v.m_Values), basis_isomorphism_type{}};
+      }
+      else if constexpr(defines_addition_for_single_value_v<space_type, representation_type>)
+      {
+        return {representation_type{}.add(c.m_Values[0], v.m_Values[0]), basis_isomorphism_type{}};
+      }
+      else
+      {
+        return c.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
+      }
     }
 
     template<class Derived>
@@ -1609,7 +1685,18 @@ namespace sequoia::maths
     [[nodiscard]]
     friend constexpr Derived operator+(const Derived& c, const Derived& v) noexcept(has_identity_validator)
     {
-      return Derived{c}.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
+      if constexpr(defines_addition_for_v<space_type, representation_type>)
+      {
+        return {representation_type{}.add(c.m_Values, v.m_Values), basis_isomorphism_type{}};
+      }
+      else if constexpr(defines_addition_for_single_value_v<space_type, representation_type>)
+      {
+        return {representation_type{}.add(c.m_Values[0], v.m_Values[0]), basis_isomorphism_type{}};
+      }
+      else
+      {
+        return Derived{c}.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
+      }
     }   
 
     template<class Derived>
@@ -1617,7 +1704,18 @@ namespace sequoia::maths
     [[nodiscard]]
     friend constexpr Derived operator-(Derived c, const displacement_coordinates_type& v) noexcept(has_identity_validator)
     {
-      return c.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
+      if constexpr(defines_subtraction_for_v<space_type, representation_type>)
+      {
+        return {representation_type{}.sub(c.m_Values, v.m_Values), basis_isomorphism_type{}};
+      }
+      else if constexpr(defines_subtraction_for_single_value_v<space_type, representation_type>)
+      {
+        return {representation_type{}.sub(c.m_Values[0], v.m_Values[0]), basis_isomorphism_type{}};
+      }
+      else
+      {
+        return c.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
+      }
     }
 
     template<class Derived>
@@ -1627,8 +1725,11 @@ namespace sequoia::maths
     {
       if constexpr(defines_scalar_multiplication_for_v<space_type, representation_type>)
       {
-        v.m_Values = Representation{}.mul(v.m_Values, u);
-        return v;
+        return {representation_type{}.mul(v.m_Values, u), basis_isomorphism_type{}};
+      }
+      else if constexpr(defines_scalar_multiplication_for_single_value_v<space_type, representation_type>)
+      {
+        return {representation_type{}.mul(v.m_Values[0], u), basis_isomorphism_type{}};
       }
       else
       {
@@ -1651,8 +1752,11 @@ namespace sequoia::maths
     {
       if constexpr(defines_scalar_division_for_v<space_type, representation_type>)
       {
-        v.m_Values = Representation{}.div(v.m_Values, u);
-        return v;
+        return {representation_type{}.div(v.m_Values, u), basis_isomorphism_type{}};
+      }
+      else if constexpr(defines_scalar_division_for_single_value_v<space_type, representation_type>)
+      {
+        return {representation_type{}.div(v.m_Values[0], u), basis_isomorphism_type{}};
       }
       else
       {
@@ -1837,7 +1941,15 @@ namespace sequoia::maths
 
     constexpr static std::array<value_type, D>&& to_underlying(std::array<value_type, D>&& vals)
     {
-      return std::move(vals = representation_type{}.to_underlying(std::span<const value_type, D>{vals}));
+      if constexpr(representation_for_span<representation_type, space_type>)
+      {
+        return std::move(vals = representation_type{}.to_underlying(std::span<const value_type, D>{vals}));
+      }
+      else
+      {
+        static_assert(D == 1);
+        return std::move(vals = std::array{representation_type{}.to_underlying(vals[0])});
+      }
     }
 
     constexpr static std::array<value_type, D>& from_underlying(std::array<value_type, D>& vals)
@@ -1850,6 +1962,19 @@ namespace sequoia::maths
       {
         static_assert(D == 1);
         return vals = std::array{representation_type{}.from_underlying(vals[0])};
+      }
+    }
+
+    constexpr static std::array<value_type, D>&& from_underlying(std::array<value_type, D>&& vals)
+    {
+      if constexpr(representation_for_span<representation_type, space_type>)
+      {
+        return std::move(vals = representation_type{}.from_underlying(std::span<const value_type, D>{vals}));
+      }
+      else
+      {
+        static_assert(D == 1);
+        return std::move(vals = std::array{representation_type{}.from_underlying(vals[0])});
       }
     }
   };

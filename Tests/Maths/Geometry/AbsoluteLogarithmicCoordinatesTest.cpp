@@ -35,6 +35,23 @@ namespace sequoia::testing
         return std::log(val);
       }
     };
+
+    struct logarithmic_representation : naive_logarithmic_representation
+    {
+      template<weak_commutative_ring T>
+      [[nodiscard]]
+      static constexpr T add(T lhs, T rhs)
+      {
+        return lhs + rhs;
+      }
+
+      template<weak_commutative_ring T>
+      [[nodiscard]]
+      static constexpr T sub(T lhs, T rhs)
+      {
+        return lhs - rhs;
+      }
+    };
   }
   
   [[nodiscard]]
@@ -47,6 +64,8 @@ namespace sequoia::testing
   {
     test_absolute_logarithmic<float , naive_logarithmic_representation>();
     test_absolute_logarithmic<double, naive_logarithmic_representation>();
+
+    //test_absolute_logarithmic<float , logarithmic_representation>();
   }
 
   template<std::floating_point T, class Representation>
