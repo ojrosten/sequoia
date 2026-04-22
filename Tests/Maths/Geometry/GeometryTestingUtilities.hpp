@@ -55,16 +55,13 @@ namespace sequoia::testing
       transition_checker<coords_t>::check("", m_Graph, make_checker());
     }
   private:
-    static graph_type make_graph(regular_test& test)
-    {
-      return do_make_graph(test);
-    }
+    template<std::size_t D>
+    struct dimensionality{};
     
     [[nodiscard]]
-    static graph_type do_make_graph(regular_test& test)
+    static graph_type make_graph(regular_test& test)
     {
-      if constexpr     (dimension == 1) return make_dim_1_transition_graph(test);
-      else if constexpr(dimension == 2) return make_dim_2_transition_graph(test);
+      return make_transition_graph(test, dimensionality<dimension>{});
     }
 
     template<class T, std::size_t D>
@@ -119,7 +116,8 @@ namespace sequoia::testing
       }
     }
 
-    static graph_type make_dim_1_transition_graph(regular_test& test)
+    [[nodiscard]]
+    static graph_type make_transition_graph(regular_test& test, dimensionality<1>)
     {
       graph_type g{
         {
@@ -555,7 +553,8 @@ namespace sequoia::testing
       );
     }
 
-    static graph_type make_dim_2_transition_graph(regular_test& test)
+    [[nodiscard]]
+    static graph_type make_transition_graph(regular_test& test, dimensionality<2>)
     {
       graph_type g{
         {
