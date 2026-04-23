@@ -225,22 +225,25 @@ namespace sequoia::testing
                                                                      : std::weak_ordering::equivalent;
   }
 
-  template<maths::network Graph, class Label, class Fn>
-    requires std::convertible_to<Label, std::size_t>
-  void add_transition(Graph& g, Label From, Label To, std::string_view message, Fn f, std::weak_ordering ordering)
+  namespace impl
   {
-    g.join(From, To, std::string{message}, f, ordering);
-  }
+    template<maths::network Graph, class Label, class Fn>
+      requires std::convertible_to<Label, std::size_t>
+    void do_add_transition(Graph& g, Label From, Label To, std::string_view message, Fn f, std::weak_ordering ordering)
+    {
+      g.join(From, To, std::string{message}, f, ordering);
+    }
 
-  template<maths::network Graph, class Label, class Fn>
-    requires std::convertible_to<Label, std::size_t>
-  void add_transition(Graph& g, Label From, Label To, std::string_view message, Fn f)
-  {
-    g.join(From, To, std::string{message}, f);
+    template<maths::network Graph, class Label, class Fn>
+      requires std::convertible_to<Label, std::size_t>
+    void do_add_transition(Graph& g, Label From, Label To, std::string_view message, Fn f)
+    {
+      g.join(From, To, std::string{message}, f);
+    }
   }
 
   template<class Coords, maths::network Graph, class Label, class Fn>
-    requires std::is_invocable_r_v<Coords, Fn, Coords> && std::convertible_to<Label, std::size_t>
+    requires std::convertible_to<Label, std::size_t>
   void add_transition(Graph& g, Label From, Label To, std::string_view message, Fn f, inverted_ordering invert={})
   {
     using ring_t = Coords::commutative_ring_type;
@@ -248,11 +251,11 @@ namespace sequoia::testing
 
     if constexpr((dimension == 1) && std::totally_ordered<ring_t>)
     {
-      add_transition(g, From, To, message, f, to_ordering(From, To, invert));
+      impl::do_add_transition(g, From, To, message, f, to_ordering(From, To, invert));
     }
     else
     {
-      add_transition(g, From, To, message, f);
+      impl::do_add_transition(g, From, To, message, f);
     }
   }
 }

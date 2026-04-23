@@ -175,12 +175,6 @@ namespace sequoia::testing
   template<class T>
   inline constexpr bool is_general_equivalence_check{is_customized_check<T> || std::is_same_v<T, equivalence_check_t> || std::is_same_v<T, weak_equivalence_check_t>};
 
-  template<class Compare, class T>
-  inline constexpr bool potential_comparator_for{
-       std::is_invocable_r_v<bool, Compare, T, T>
-    || (faithful_range<T> && !(is_elementary_check<Compare> || is_best_available_check<Compare> || is_customized_check<Compare>))
-  };
-
   template<class CheckType, test_mode Mode, class T, class U, class... Args>
   concept tests_against = requires(CheckType c, test_logger<Mode>& logger, T&& obtained, const U& predicted, Args&&... args) {
     value_tester<std::remove_cvref_t<T>>::test(c, logger, std::forward<T>(obtained), predicted, std::forward<Args>(args)...);
@@ -200,6 +194,13 @@ namespace sequoia::testing
       typename CheckType::fallback;
       requires checkable_against<typename CheckType::fallback, Mode, T, U, Tutor>;
     }
+  };
+
+  template<class Compare, test_mode Mode, class T, class Advisor>
+  inline constexpr bool potential_comparator_for{
+       std::is_invocable_r_v<bool, Compare, T, T>
+    || (    (faithful_range<T> || tests_against_with_or_without_tutor<Compare, Mode, T, T, tutor<Advisor>>)
+         && !(is_elementary_check<Compare> || is_best_available_check<Compare> || is_customized_check<Compare>))
   };
 
   template<test_mode Mode, class T, class U, class Tutor>
@@ -421,7 +422,7 @@ namespace sequoia::testing
    */
 
   template<class Compare, test_mode Mode, class T, class Advisor=null_advisor>
-    requires potential_comparator_for<Compare, T>
+    requires potential_comparator_for<Compare, Mode, T, Advisor>
   bool check(Compare compare,
              std::string description,
              test_logger<Mode>& logger,
@@ -435,6 +436,10 @@ namespace sequoia::testing
     {
       using finality = final_message_constant<!faithful_range<T>>;
       binary_comparison(finality{}, sentry, std::move(compare), obtained, prediction, advisor);
+    }
+    else if constexpr(tests_against_with_or_without_tutor<Compare, Mode, T, T, tutor<Advisor>>)
+    {
+      select_test(compare, logger, obtained, prediction, advisor);
     }
     else
     {
@@ -759,7 +764,7 @@ namespace sequoia::testing
     }
 
     template<class Compare, class T, class Advisor = null_advisor, class Self>
-      requires potential_comparator_for<Compare, T>
+      requires potential_comparator_for<Compare, Mode, T, Advisor>
     bool check(this Self& self, Compare compare, const reporter& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(std::move(compare), self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));

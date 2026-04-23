@@ -27,7 +27,6 @@ namespace sequoia::testing
     enum dim_1_label{ two, one, zero, neg_one };
     enum dim_2_label{ one_two, one_one, one_zero, zero_one, zero_zero, zero_neg_one, neg_one_zero, neg_one_neg_one };
     
-    using graph_type          = transition_checker<Coordinates>::transition_graph;
     using coords_t            = Coordinates;
     using space_t             = Coordinates::space_type;
     using disp_t              = coords_t::displacement_coordinates_type;
@@ -37,6 +36,8 @@ namespace sequoia::testing
     using representation_t    = coords_t::representation_type;
     using validator_t         = coords_t::validator_type;
     using basis_isomorphism_t = coords_t::basis_isomorphism_type;
+    using variant_t           = std::conditional_t<std::same_as<coords_t, disp_t>, std::variant<coords_t>, std::variant<coords_t, disp_t>>;
+    using graph_type          = transition_checker<variant_t>::transition_graph;
     constexpr static std::size_t dimension{Coordinates::dimension};
     constexpr static bool orderable{(dimension == 1) && std::totally_ordered<ring_t>};
     constexpr static bool has_distinguished_origin{maths::has_distinguished_origin_v<space_t>};
@@ -52,7 +53,7 @@ namespace sequoia::testing
 
     void execute()
     {
-      transition_checker<coords_t>::check("", m_Graph, make_checker());
+      transition_checker<variant_t>::check("", m_Graph, make_checker());
     }
   private:
     template<std::size_t D>
@@ -92,12 +93,12 @@ namespace sequoia::testing
       if constexpr(orderable)
       {
         return
-          [&test=m_Test, tol](std::string_view description, const coords_t& obtained, const coords_t& prediction, const coords_t& parent, std::weak_ordering ordering) {
+          [&test=m_Test, tol](std::string_view description, const variant_t& obtained, const variant_t& prediction, const variant_t& parent, std::weak_ordering ordering) {
             if constexpr(has_identity_repr)
               test.check(equality, description, obtained, prediction);
             else
               test.check(within_tolerance{tol}, description, obtained, prediction);
-            
+
             if(ordering != std::weak_ordering::equivalent)
               test.check_semantics(description, prediction, parent, ordering);
           };
@@ -105,7 +106,7 @@ namespace sequoia::testing
       else
       {
         return
-          [&test=m_Test, tol](std::string_view description, const coords_t& obtained, const coords_t& prediction, const coords_t& parent, std::size_t host, std::size_t target) {
+          [&test=m_Test, tol](std::string_view description, const variant_t& obtained, const variant_t& prediction, const variant_t& parent, std::size_t host, std::size_t target) {
             if constexpr(has_identity_repr)
               test.check(equality, description, obtained, prediction);
             else
@@ -169,7 +170,7 @@ namespace sequoia::testing
           dim_1_label::zero,
           dim_1_label::zero,
           test.report("0 * unit"),
-          [&](const coords_t&) -> coords_t { return from_underlying(ring_t{}) * basis_isomorphism_t{}; }
+          [](const variant_t&) -> variant_t { return from_underlying(ring_t{}) * basis_isomorphism_t{}; }
         );
 
         add_transition<coords_t>(
@@ -177,7 +178,7 @@ namespace sequoia::testing
           dim_1_label::zero,
           dim_1_label::zero,
           test.report("0 / dual<unit>"),
-          [&](const coords_t&) -> coords_t { return from_underlying(ring_t{}) / maths::dual_of_t<basis_isomorphism_t>{}; }
+          [](const variant_t&) -> variant_t { return from_underlying(ring_t{}) / maths::dual_of_t<basis_isomorphism_t>{}; }
         );
 
         add_transition<coords_t>(
@@ -185,7 +186,7 @@ namespace sequoia::testing
           dim_1_label::one,
           dim_1_label::one,
           test.report("1 * unit"),
-          [&](const coords_t&) -> coords_t { return from_underlying(ring_t(1)) * basis_isomorphism_t{}; }
+          [](const variant_t&) -> variant_t { return from_underlying(ring_t(1)) * basis_isomorphism_t{}; }
         );
 
         add_transition<coords_t>(
@@ -193,7 +194,7 @@ namespace sequoia::testing
           dim_1_label::one,
           dim_1_label::one,
           test.report("1 / dual<unit>"),
-          [&](const coords_t&) -> coords_t { return from_underlying(ring_t(1)) / maths::dual_of_t<basis_isomorphism_t>{}; }
+          [](const variant_t&) -> variant_t { return from_underlying(ring_t(1)) / maths::dual_of_t<basis_isomorphism_t>{}; }
         );
       }
     }
@@ -206,7 +207,7 @@ namespace sequoia::testing
         dim_1_label::zero,
         dim_1_label::one,
         test.report("(0) +  (1)"),
-        [&](coords_t p) -> coords_t { return p +  disp_t{from_underlying(ring_t(1)), units_t{}}; }
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) +  disp_t{from_underlying(ring_t(1)), units_t{}}; }
       );
 
       add_transition<coords_t>(
@@ -214,7 +215,7 @@ namespace sequoia::testing
         dim_1_label::zero,
         dim_1_label::one,
         test.report("(0) += (1)"),
-        [&](coords_t p) -> coords_t { return p += disp_t{from_underlying(ring_t(1)), units_t{}}; }
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) += disp_t{from_underlying(ring_t(1)), units_t{}}; }
       );
 
       // Joins from one
@@ -224,7 +225,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::zero,
         test.report("(1)  - (1)"),
-        [&](coords_t p) -> coords_t { return p -  disp_t{from_underlying(ring_t(1)), units_t{}}; }
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) -  disp_t{from_underlying(ring_t(1)), units_t{}}; }
       );
 
       add_transition<coords_t>(
@@ -232,7 +233,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::zero,
         test.report("(1) -= (1)"),
-        [&](coords_t p) -> coords_t { return p -= disp_t{from_underlying(ring_t(1)), units_t{}}; }
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) -= disp_t{from_underlying(ring_t(1)), units_t{}}; }
       );
 
       add_transition<coords_t>(
@@ -240,7 +241,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::one,
         test.report("+(1)"),
-        [](coords_t p) -> coords_t { return +p;}
+        [](variant_t p) -> variant_t { return +std::get<coords_t>(p);}
       );
 
       add_transition<coords_t>(
@@ -248,7 +249,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::two,
         test.report("(1)  + (1)"),
-        [&](coords_t p) -> coords_t { return p +  disp_t{from_underlying(ring_t(1)), units_t{}}; }
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) +  disp_t{from_underlying(ring_t(1)), units_t{}}; }
       );
 
       add_transition<coords_t>(
@@ -256,7 +257,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::two,
         test.report("(1) += (1)"),
-        [&](coords_t p) -> coords_t { return p += disp_t{from_underlying(ring_t(1)), units_t{}}; }
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) += disp_t{from_underlying(ring_t(1)), units_t{}}; }
       );
 
       // Joins from two
@@ -266,13 +267,13 @@ namespace sequoia::testing
         dim_1_label::two,
         dim_1_label::one,
         test.report("(2) - (1)"),
-        [&](coords_t p) -> coords_t { return p - disp_t{from_underlying(ring_t(1)), units_t{}}; }
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) - disp_t{from_underlying(ring_t(1)), units_t{}}; }
       );
     }
 
     static void add_dim_1_negative_transitions(maths::network auto& g, regular_test& test)
     {
-      g.add_node(from_underlying(std::array{ring_t(-1)}), units_t{});
+      g.add_node(variant_t{std::in_place_index<0>, from_underlying(std::array{ring_t(-1)}), units_t{}});
 
       // Joins to neg_one
       if constexpr(has_unary_minus<Coordinates>)
@@ -282,7 +283,7 @@ namespace sequoia::testing
           dim_1_label::one,
           dim_1_label::neg_one,
           test.report("-(1)"),
-          [](coords_t p) -> coords_t { return -p; },
+          [](variant_t p) -> variant_t { return -std::get<coords_t>(p); },
           std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
         );
       }
@@ -292,7 +293,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::neg_one,
         test.report("(1) - (2)"),
-        [&](coords_t p) -> coords_t { return p - disp_t{from_underlying(ring_t(2)), units_t{}}; },
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) - disp_t{from_underlying(ring_t(2)), units_t{}}; },
         std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
       );
 
@@ -305,7 +306,7 @@ namespace sequoia::testing
           dim_1_label::neg_one,
           dim_1_label::one,
           test.report("- (-1)"),
-          [](coords_t p) -> coords_t { return -p;  },
+          [](variant_t p) -> variant_t { return -std::get<coords_t>(p);  },
           std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
         );
       }
@@ -315,7 +316,7 @@ namespace sequoia::testing
         dim_1_label::neg_one,
         dim_1_label::neg_one,
         test.report("+ (-1)"),
-        [](coords_t p) -> coords_t { return +p;  }
+        [](variant_t p) -> variant_t { return +std::get<coords_t>(p);  }
       );
 
       if constexpr(Coordinates::has_freely_mutable_components)
@@ -325,7 +326,7 @@ namespace sequoia::testing
           dim_1_label::neg_one,
           dim_1_label::zero,
           test.report("(-1) += 1"),
-          [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; },
+          [](variant_t v) -> variant_t { auto& p{std::get<coords_t>(v)}; auto& val{p.value()}; val += 1; return p; },
           std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
         );
 
@@ -334,7 +335,7 @@ namespace sequoia::testing
           dim_1_label::neg_one,
           dim_1_label::zero,
           test.report("(-1) + 1"),
-          [](coords_t p) -> coords_t { auto& v{p.value()}; v += 1; return p; },
+          [](variant_t v) -> variant_t { auto& p{std::get<coords_t>(v)}; auto& val{p.value()}; val += 1; return p; },
           std::is_unsigned_v<ring_t> ? inverted_ordering::yes : inverted_ordering::no
         );
       }
@@ -347,8 +348,11 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::one,
         test.report("(1) -= (2)"),
-        [&](coords_t p) -> coords_t {
-          test.check_exception_thrown<std::domain_error>("", [&](){ return p -= disp_t{from_underlying(ring_t(2)), units_t{}};});
+        [&](variant_t p) -> variant_t {
+          test.check_exception_thrown<std::domain_error>(
+            "",
+            [&]() -> variant_t { return std::get<coords_t>(p) -= disp_t{from_underlying(ring_t(2)), units_t{}};}
+          );
           return p;
         }
       );
@@ -358,9 +362,12 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::one,
         test.report("(1) - (2)"),
-        [&](coords_t p) -> coords_t {
-          test.check_exception_thrown<std::domain_error>("", [&](){ return p = (p - disp_t{from_underlying(ring_t(2)), units_t{}}); });
-          return p;
+        [&](variant_t v) -> variant_t {
+          test.check_exception_thrown<std::domain_error>(
+            "",
+            [&p{std::get<coords_t>(v)}]() -> variant_t { return p = p - disp_t{from_underlying(ring_t(2)), units_t{}}; }
+          );
+          return v;
         }
       );
 
@@ -371,8 +378,11 @@ namespace sequoia::testing
           dim_1_label::one,
           dim_1_label::one,
           test.report("(1) *= ring_t{-1}"),
-          [&](coords_t v) -> coords_t {
-            test.check_exception_thrown<std::domain_error>("", [&v](){ return v *= ring_t{-1}; });
+          [&](variant_t v) -> variant_t {
+            test.check_exception_thrown<std::domain_error>(
+              "",
+              [&v]() -> variant_t { return std::get<coords_t>(v) *= ring_t{-1}; }
+            );
             return v;
           }          
         );
@@ -382,8 +392,11 @@ namespace sequoia::testing
           dim_1_label::one,
           dim_1_label::one,
           test.report("ring_t{-1} * (1)"),
-          [&test](coords_t v) -> coords_t {
-            test.check_exception_thrown<std::domain_error>("", [&v](){ return v = ring_t{-1} * v; });
+          [&test](variant_t v) -> variant_t {
+            test.check_exception_thrown<std::domain_error>(
+              "",
+              [&p{std::get<coords_t>(v)}]() -> variant_t { return p = ring_t{-1} * p; }
+            );
             return v;
           }          
         );
@@ -393,10 +406,13 @@ namespace sequoia::testing
           dim_1_label::one,
           dim_1_label::one,
           test.report("(1) /= ring_t{-1}"),
-          [&test](coords_t v) -> coords_t {
-            test.check_exception_thrown<std::domain_error>("", [&v](){ return v /= ring_t{-1}; });
+          [&test](variant_t v) -> variant_t {
+            test.check_exception_thrown<std::domain_error>(
+              "",
+              [&v]() -> variant_t { return std::get<coords_t>(v) /= ring_t{-1}; }
+            );
             return v;
-          }          
+          }
         );
 
         add_transition<coords_t>(
@@ -404,8 +420,11 @@ namespace sequoia::testing
           dim_1_label::one,
           dim_1_label::one,
           test.report("(1) / ring_t{-1}"),
-          [&test](coords_t v) -> coords_t {
-            test.check_exception_thrown<std::domain_error>("", [&v](){ return v = v / ring_t{-1}; });
+          [&test](variant_t v) -> variant_t {
+            test.check_exception_thrown<std::domain_error>(
+               "",
+               [&p{std::get<coords_t>(v)}]() -> variant_t { return p = p / ring_t{-1}; }
+            );
             return v;
           }          
         );
@@ -420,7 +439,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::zero,
         test.report("(1) * ring_t{}"),
-        [](coords_t v) -> coords_t { return v * ring_t{}; }
+        [](variant_t v) -> variant_t { return std::get<coords_t>(v) * ring_t{}; }
       );
 
       add_transition<coords_t>(
@@ -428,7 +447,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::zero,
         test.report("ring_t{} * (1)"),
-        [](coords_t v) -> coords_t { return ring_t{} * v; }
+        [](variant_t v) -> variant_t { return ring_t{} * std::get<coords_t>(v); }
       );
 
       add_transition<coords_t>(
@@ -436,7 +455,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::zero,
         test.report("(1) *= ring_t{}"),
-        [](coords_t v) -> coords_t { return v *= ring_t{}; }
+        [](variant_t v) -> variant_t { return std::get<coords_t>(v) *= ring_t{}; }
       );
 
       // (1) --> (2)
@@ -446,7 +465,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::two,
         test.report("(1) * ring_t{2}"),
-        [](coords_t v) -> coords_t { return v * ring_t{2}; }
+        [](variant_t v) -> variant_t { return std::get<coords_t>(v) * ring_t{2}; }
       );
 
       add_transition<coords_t>(
@@ -454,7 +473,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::two,
         test.report("ring_t{2} * (1)"),
-        [](coords_t v) -> coords_t { return ring_t{2} * v; }
+        [](variant_t v) -> variant_t { return ring_t{2} * std::get<coords_t>(v); }
       );
 
       add_transition<coords_t>(
@@ -462,7 +481,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::two,
         test.report("(1) *= ring_t{2}"),
-        [](coords_t v) -> coords_t { return v *= ring_t{2}; }
+        [](variant_t v) -> variant_t { return std::get<coords_t>(v) *= ring_t{2}; }
       );
 
       // (2) --> (1)
@@ -474,7 +493,7 @@ namespace sequoia::testing
           dim_1_label::two,
           dim_1_label::one,
           test.report("(2) / ring_t{2}"),
-          [](coords_t v) -> coords_t { return v / ring_t{2}; }
+          [](variant_t v) -> variant_t { return std::get<coords_t>(v) / ring_t{2}; }
         );
 
         add_transition<coords_t>(
@@ -482,7 +501,7 @@ namespace sequoia::testing
           dim_1_label::two,
           dim_1_label::one,
           test.report("(2) /= ring_t{2}"),
-          [](coords_t v) -> coords_t { return v /= ring_t{2}; }
+          [](variant_t v) -> variant_t { return std::get<coords_t>(v) /= ring_t{2}; }
         );
       }
     }
@@ -495,7 +514,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::zero,
         test.report("(1)[0] * ring_t{}"),
-        [](coords_t v) -> coords_t { v[0] *= ring_t{}; return v; }
+        [](variant_t v) -> variant_t { std::get<coords_t>(v)[0] *= ring_t{}; return v; }
       );
 
       add_transition<coords_t>(
@@ -503,7 +522,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::zero,
         test.report("(1).begin[0] * ring_t{}"),
-        [](coords_t v) -> coords_t { v.begin()[0] *= ring_t{}; return v; }
+        [](variant_t v) -> variant_t { std::get<coords_t>(v).begin()[0] *= ring_t{}; return v; }
       );
 
       add_transition<coords_t>(
@@ -511,7 +530,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::zero,
         test.report("(1).rbegin[0] * ring_t{}"),
-        [](coords_t v) -> coords_t { v.rbegin()[0] *= ring_t{}; return v; }
+        [](variant_t v) -> variant_t { std::get<coords_t>(v).rbegin()[0] *= ring_t{}; return v; }
       );
 
       // (1) --> (2)
@@ -521,7 +540,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::two,
         test.report("(1)[0] * ring_t{2}"),
-        [](coords_t v) -> coords_t { v[0] *= ring_t{2}; return v; }
+        [](variant_t v) -> variant_t { std::get<coords_t>(v)[0] *= ring_t{2}; return v; }
       );
 
       add_transition<coords_t>(
@@ -529,7 +548,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::two,
         test.report("(1).begin[0] * ring_t{2}"),
-        [](coords_t v) -> coords_t { v.begin()[0] *= ring_t{2}; return v; }
+        [](variant_t v) -> variant_t { std::get<coords_t>(v).begin()[0] *= ring_t{2}; return v; }
       );
 
       add_transition<coords_t>(
@@ -537,7 +556,7 @@ namespace sequoia::testing
         dim_1_label::one,
         dim_1_label::two,
         test.report("(1).rbegin[0] * ring_t{2}"),
-        [](coords_t v) -> coords_t { v.rbegin()[0] *= ring_t{2}; return v; }
+        [](variant_t v) -> variant_t { std::get<coords_t>(v).rbegin()[0] *= ring_t{2}; return v; }
       );
     }
 
@@ -549,7 +568,7 @@ namespace sequoia::testing
         dim_1_label::zero,
         dim_1_label::one,
         test.report("(0) +  (1)"),
-        [&](coords_t p) -> coords_t { return p +  disp_t{from_underlying(ring_t(1))}; }
+        [&](variant_t p) -> variant_t { return std::get<coords_t>(p) +  disp_t{from_underlying(ring_t(1))}; }
       );
     }
 
@@ -611,9 +630,9 @@ namespace sequoia::testing
 
     static void add_dim_2_negative_transitions(maths::network auto& g, regular_test& test)
     {      
-      g.add_node(from_underlying(std::array{ring_t{},   ring_t(-1)}), units_t{});
-      g.add_node(from_underlying(std::array{ring_t(-1), ring_t{}}),   units_t{});
-      g.add_node(from_underlying(std::array{ring_t(-1), ring_t(-1)}), units_t{});
+      g.add_node(variant_t{std::in_place_index<0>, from_underlying(std::array{ring_t{},   ring_t(-1)}), units_t{}});
+      g.add_node(variant_t{std::in_place_index<0>, from_underlying(std::array{ring_t(-1), ring_t{}}),   units_t{}});
+      g.add_node(variant_t{std::in_place_index<0>, from_underlying(std::array{ring_t(-1), ring_t(-1)}), units_t{}});
 
       // (-1, -1) --> (-1, -1)
       add_transition<coords_t>(
@@ -621,7 +640,7 @@ namespace sequoia::testing
         dim_2_label::neg_one_neg_one,
         dim_2_label::neg_one_neg_one,
         test.report("+ (-1, -1)"),
-        [](coords_t v) -> coords_t { return +v; }
+        [](variant_t v) -> variant_t { return +std::get<coords_t>(v); }
       );
 
       // (-1, -1) --> (-1, 0)
@@ -630,7 +649,7 @@ namespace sequoia::testing
         dim_2_label::neg_one_neg_one,
         dim_2_label::neg_one_zero,
         test.report("(-1, -1) +  (0, 1)"),
-        [&](coords_t v) -> coords_t { return v + disp_t{from_underlying(std::array{ring_t{}, ring_t(1)}), units_t{}}; }
+        [](variant_t v) -> variant_t { return std::get<coords_t>(v) + disp_t{from_underlying(std::array{ring_t{}, ring_t(1)}), units_t{}}; }
       );
 
       // (-1, -1) --> (-1, 0)
@@ -639,7 +658,7 @@ namespace sequoia::testing
         dim_2_label::neg_one_neg_one,
         dim_2_label::neg_one_zero,
         test.report("(-1, -1) += (0, 1)"),
-        [&](coords_t v) -> coords_t { return v += disp_t{from_underlying(std::array{ring_t{}, ring_t(1)}), units_t{}}; }
+        [](variant_t v) -> variant_t { return std::get<coords_t>(v) += disp_t{from_underlying(std::array{ring_t{}, ring_t(1)}), units_t{}}; }
       );
 
       // (-1, -1) --> (0, -1)
@@ -648,7 +667,7 @@ namespace sequoia::testing
         dim_2_label::neg_one_neg_one,
         dim_2_label::zero_neg_one,
         test.report("(-1, -1) +  (1, 0)"),
-        [&](coords_t v) -> coords_t { return v +  disp_t{from_underlying(std::array{ring_t(1), ring_t{}}), units_t{}}; }
+        [](variant_t v) -> variant_t { return std::get<coords_t>(v) +  disp_t{from_underlying(std::array{ring_t(1), ring_t{}}), units_t{}}; }
      );
 
       // (-1, -1) --> (0, -1)
@@ -657,7 +676,7 @@ namespace sequoia::testing
         dim_2_label::neg_one_neg_one,
         dim_2_label::zero_neg_one,
         test.report("(-1, -1) += (1, 0)"),
-        [&](coords_t v) -> coords_t { return v +  disp_t{from_underlying(std::array{ring_t(1), ring_t{}}), units_t{}}; }
+        [](variant_t v) -> variant_t { return std::get<coords_t>(v) +  disp_t{from_underlying(std::array{ring_t(1), ring_t{}}), units_t{}}; }
      );
 
       if constexpr (has_unary_minus<Coordinates>)
@@ -668,7 +687,7 @@ namespace sequoia::testing
           dim_2_label::neg_one_neg_one,
           dim_2_label::one_one,
           test.report("- (-1, -1)"),
-          [](coords_t v) -> coords_t { return -v; }
+          [](variant_t v) -> variant_t { return -std::get<coords_t>(v); }
         );
       }
 
@@ -680,7 +699,7 @@ namespace sequoia::testing
           dim_2_label::neg_one_neg_one,
           dim_2_label::one_one,
           test.report("(-1, -1) *= -1"),
-          [](coords_t v) -> coords_t { return v *= ring_t{-1}; }
+          [](variant_t v) -> variant_t { return std::get<coords_t>(v) *= ring_t{-1}; }
         );
 
         // (-1, -1) --> (0, 0)
@@ -689,7 +708,7 @@ namespace sequoia::testing
           dim_2_label::neg_one_neg_one,
           dim_2_label::zero_zero,
           test.report("(-1, -1) * 0"),
-          [&](coords_t v) -> coords_t { return v * ring_t{}; }
+          [](variant_t v) -> variant_t { return std::get<coords_t>(v) * ring_t{}; }
         );
       }
 
@@ -700,7 +719,7 @@ namespace sequoia::testing
           dim_2_label::neg_one_neg_one,
           dim_2_label::one_one,
           test.report("(-1, -1) /= -1"),
-          [](coords_t v) -> coords_t { return v /= ring_t{-1}; }
+          [](variant_t v) -> variant_t { return std::get<coords_t>(v) /= ring_t{-1}; }
         );
 
         add_transition<coords_t>(
@@ -708,7 +727,7 @@ namespace sequoia::testing
           dim_2_label::neg_one_neg_one,
           dim_2_label::one_one,
           test.report("(-1, -1) / -1"),
-          [](coords_t v) -> coords_t { return v / ring_t{-1}; }
+          [](variant_t v) -> variant_t { return std::get<coords_t>(v) / ring_t{-1}; }
         );
       }
 
@@ -718,7 +737,7 @@ namespace sequoia::testing
         dim_2_label::neg_one_zero,
         dim_2_label::neg_one_neg_one,
         test.report("(-1, 0) -  (0, 1)"),
-        [&](coords_t v) -> coords_t { return v -  disp_t{from_underlying(std::array{ring_t{}, ring_t(1)}), units_t{}}; }
+        [](variant_t v) -> variant_t { return std::get<coords_t>(v) -  disp_t{from_underlying(std::array{ring_t{}, ring_t(1)}), units_t{}}; }
       );
 
       add_transition<coords_t>(
@@ -726,7 +745,7 @@ namespace sequoia::testing
         dim_2_label::neg_one_zero,
         dim_2_label::neg_one_neg_one,
         test.report("(-1, 0) -= (0, 1)"),
-        [&](coords_t v) -> coords_t { return v -= disp_t{from_underlying(std::array{ring_t{}, ring_t(1)}), units_t{}}; }
+        [](variant_t v) -> variant_t { return std::get<coords_t>(v) -= disp_t{from_underlying(std::array{ring_t{}, ring_t(1)}), units_t{}}; }
       );
 
       // (0, -1) --> (-1, -1)
@@ -735,7 +754,7 @@ namespace sequoia::testing
         dim_2_label::zero_neg_one,
         dim_2_label::neg_one_neg_one,
         test.report("(0, -1) -  (1, 0)"),
-        [&](coords_t v) -> coords_t { return v -  disp_t{from_underlying(std::array{ring_t{1}, ring_t(0)}), units_t{}}; }
+        [](variant_t v) -> variant_t { return std::get<coords_t>(v) -  disp_t{from_underlying(std::array{ring_t{1}, ring_t(0)}), units_t{}}; }
       );
 
       add_transition<coords_t>(
@@ -743,7 +762,7 @@ namespace sequoia::testing
         dim_2_label::zero_neg_one,
         dim_2_label::neg_one_neg_one,
         test.report("(0, -1) -= (1, 0)"),
-        [&](coords_t v) -> coords_t { return v -= disp_t{from_underlying(std::array{ring_t{1}, ring_t(0)}), units_t{}}; }
+        [](variant_t v) -> variant_t { return std::get<coords_t>(v) -= disp_t{from_underlying(std::array{ring_t{1}, ring_t(0)}), units_t{}}; }
       );
     }
 
@@ -754,9 +773,12 @@ namespace sequoia::testing
         dim_2_label::one_one,
         dim_2_label::one_one,
         test.report("(1, 1) -= (2, 2)"),
-        [&](coords_t p) -> coords_t {
-          test.check_exception_thrown<std::domain_error>("", [&](){ return p -= disp_t{from_underlying(std::array{ring_t{2}, ring_t(2)}), units_t{}};});
-          return p;
+        [&](variant_t v) -> variant_t {
+          test.check_exception_thrown<std::domain_error>(
+            "",
+            [&]() -> variant_t { return std::get<coords_t>(v) -= disp_t{from_underlying(std::array{ring_t{2}, ring_t(2)}), units_t{}};}
+          );
+          return v;
         }
       );
     }
@@ -769,7 +791,7 @@ namespace sequoia::testing
        dim_2_label::one_one,
        dim_2_label::zero_zero,
        test.report("(1, 1) * 0"),
-       [&](coords_t v) -> coords_t { return v * ring_t{}; }
+       [](variant_t v) -> variant_t { return std::get<coords_t>(v) * ring_t{}; }
      );
     }
 
@@ -783,7 +805,7 @@ namespace sequoia::testing
           dim_2_label::neg_one_neg_one,
           dim_2_label::neg_one_zero,
           test.report("(-1, -1)[1] *= 0"),
-          [](coords_t v) -> coords_t { v[1] *= ring_t{}; return v; }
+          [](variant_t v) -> variant_t { std::get<coords_t>(v)[1] *= ring_t{}; return v; }
         );
 
         add_transition<coords_t>(
@@ -791,7 +813,7 @@ namespace sequoia::testing
           dim_2_label::neg_one_neg_one,
           dim_2_label::neg_one_zero,
           test.report("(-1, -1).begin()[1] *= 0"),
-          [](coords_t v) -> coords_t { v.begin()[1] *= ring_t{}; return v; }
+          [](variant_t v) -> variant_t { std::get<coords_t>(v).begin()[1] *= ring_t{}; return v; }
         );
 
         add_transition<coords_t>(
@@ -799,7 +821,7 @@ namespace sequoia::testing
           dim_2_label::neg_one_neg_one,
           dim_2_label::neg_one_zero,
           test.report("(-1, -1).rbegin()[0] *= 0"),
-          [](coords_t v) -> coords_t { v.rbegin()[0] *= ring_t{}; return v; }
+          [](variant_t v) -> variant_t { std::get<coords_t>(v).rbegin()[0] *= ring_t{}; return v; }
         );
       }
 
@@ -809,7 +831,7 @@ namespace sequoia::testing
         dim_2_label::zero_one,
         dim_2_label::one_one,
         test.report("(0, 1)[0] += 1"),
-        [](coords_t v) -> coords_t { v[0] += ring_t{1}; return v; }
+        [](variant_t v) -> variant_t { std::get<coords_t>(v)[0] += ring_t{1}; return v; }
       );
 
       add_transition<coords_t>(
@@ -817,7 +839,7 @@ namespace sequoia::testing
         dim_2_label::zero_one,
         dim_2_label::one_one,
         test.report("(0, 1).begin[0] += 1"),
-        [](coords_t v) -> coords_t { v.begin()[0] += ring_t{1}; return v; }
+        [](variant_t v) -> variant_t { std::get<coords_t>(v).begin()[0] += ring_t{1}; return v; }
       );
 
       add_transition<coords_t>(
@@ -825,7 +847,7 @@ namespace sequoia::testing
         dim_2_label::zero_one,
         dim_2_label::one_one,
         test.report("(0, 1).rbegin[1] += 1"),
-        [](coords_t v) -> coords_t { v.rbegin()[1] += ring_t{1}; return v; }
+        [](variant_t v) -> variant_t { std::get<coords_t>(v).rbegin()[1] += ring_t{1}; return v; }
       );
     }
 
@@ -840,7 +862,10 @@ namespace sequoia::testing
           dim_2_label::neg_one_neg_one,
           dim_2_label::neg_one_neg_one,
           test.report("(-1, -1) without units"),
-          [](coords_t v) -> coords_t { return {v[0], v[1]}; }
+          [](variant_t v) -> variant_t {
+            auto& p{std::get<coords_t>(v)};
+            return coords_t{p[0], p[1]};
+          }
         );
 
         add_transition<coords_t>(
@@ -848,7 +873,7 @@ namespace sequoia::testing
           dim_2_label::neg_one_neg_one,
           dim_2_label::neg_one_neg_one,
           test.report("(-1, -1) without units"),
-          [](coords_t v) -> coords_t { return coords_t{v.values()}; }
+          [](variant_t v) -> variant_t { return coords_t{std::get<coords_t>(v).values()}; }
         );
       }
     }

@@ -141,7 +141,17 @@ Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 66
 
 =======================================
 
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 75
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 72
+
+[std::variant<float>]
+  Variant Contents
+  [float]
+  Obtained : 1
+  Predicted: 3 +/- 1
+
+=======================================
+
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 81
 Empty vs non-empty std::optional
 
 [std::optional<int>]
@@ -156,7 +166,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 76
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 82
 Non-empty vs empty std::optional
 
 [std::optional<int>]
@@ -171,7 +181,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 77
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 83
 Two std::optionals holdings different values
 
 [std::optional<int>]
@@ -185,7 +195,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 80
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 86
 Advice for two std::optionals holdings different values
 
 [std::optional<int>]
@@ -200,7 +210,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 89
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 95
 Empty vs non-empty std::optional
 
 Comparison performed using:
@@ -217,7 +227,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 90
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 96
 Non-empty vs empty std::optional
 
 Comparison performed using:
@@ -234,7 +244,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 91
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 97
 Two std::optionals holdings different values
 
 Comparison performed using:
@@ -256,7 +266,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 97
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 103
 Empty vs non-empty std::optional
 
 Comparison performed using:
@@ -273,7 +283,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 98
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 104
 Non-empty vs empty std::optional
 
 Comparison performed using:
@@ -290,7 +300,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 99
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 105
 Two std::optionals holdings different values
 
 Comparison performed using:
@@ -318,7 +328,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 105
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 111
 Empty std::any
 
 Comparison performed using:
@@ -334,7 +344,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 106
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 112
 std::any holding the wrong type
 
 Comparison performed using:
@@ -350,7 +360,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 107
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 113
 std::any holding the wrong value
 
 Comparison performed using:
@@ -366,7 +376,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 109
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 115
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::any>]
@@ -387,7 +397,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 110
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 116
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::any>]
@@ -414,7 +424,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 113
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 119
 Advice for std::any holding the wrong value
 
 Comparison performed using:
