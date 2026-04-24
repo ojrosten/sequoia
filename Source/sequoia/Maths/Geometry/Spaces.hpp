@@ -927,6 +927,7 @@ namespace sequoia::maths
       && (representation_for_single_value<R, ConvexSpace> || representation_for_span<R, ConvexSpace>);
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
+    requires (!std::is_final_v<Representation>)
   struct representation_for_free_module_of
   {
     struct type : Representation
