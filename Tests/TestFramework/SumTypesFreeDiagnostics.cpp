@@ -65,6 +65,12 @@ namespace sequoia::testing
 
       check(with_best_available, "", var{1}, var{2}, tutor{[](int, int) { return "int advice"; }});
     }
+
+    {
+      using var = std::variant<float>;
+
+      check(within_tolerance{1.0}, "", var{1.0f}, var{3.0f});
+    }
   }
 
   void sum_types_false_negative_free_diagnostics::test_optional()
@@ -147,6 +153,12 @@ namespace sequoia::testing
       check(with_best_available, "", var{1}, var{1});
       check(with_best_available, "", var{only_equivalence_checkable{1}}, var{only_equivalence_checkable{1}});
       check(with_best_available, "", var{only_weakly_checkable{1, 2.0}}, var{only_weakly_checkable{1, 2.0}});
+    }
+
+    {
+      using var = std::variant<float>;
+
+      check(within_tolerance{1.0}, "", var{1.0f}, var{1.5f});
     }
   }
 
