@@ -24,7 +24,7 @@ namespace sequoia::testing
   template<class Coordinates>
   class coordinates_operations
   {    
-    enum dim_1_label{ two, one, zero, neg_one };
+    enum dim_1_label{ delta_one, delta_zero, delta_neg_one, delta_neg_two, two, one, zero, neg_one };
     enum dim_2_label{ one_two, one_one, one_zero, zero_one, zero_zero, zero_neg_one, neg_one_zero, neg_one_neg_one };
     
     using coords_t            = Coordinates;
@@ -42,6 +42,8 @@ namespace sequoia::testing
     constexpr static bool orderable{(dimension == 1) && std::totally_ordered<ring_t>};
     constexpr static bool has_distinguished_origin{maths::has_distinguished_origin_v<space_t>};
     constexpr static bool has_identity_repr{std::same_as<representation_t, maths::identity_representation<validator_t>>};
+
+    static_assert(maths::free_module<typename disp_t::space_type>);
 
     regular_test& m_Test;
     graph_type m_Graph;
@@ -122,9 +124,13 @@ namespace sequoia::testing
     {
       graph_type g{
         {
-          {}, {}, {}
+          {}, {}, {}, {}, {}, {}, {}
         },
         {
+          disp_t{from_underlying(ring_t(1)), units_t{}},
+          disp_t{from_underlying(ring_t()), units_t{}},
+          disp_t{from_underlying(ring_t(-1)), units_t{}},
+          disp_t{from_underlying(ring_t(-2)), units_t{}},
           coords_t{from_underlying(ring_t(2)), units_t{}},
           coords_t{from_underlying(ring_t(1)), units_t{}},
           coords_t{from_underlying(ring_t{}), units_t{}}

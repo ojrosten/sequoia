@@ -1,4 +1,4 @@
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 353
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 359
 
 Expected Exception Type:
 [std::domain_error]
@@ -6,7 +6,7 @@ interval_validator: invoked with -1, but values should be >= 0
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 367
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 373
 
 Expected Exception Type:
 [std::domain_error]
@@ -14,7 +14,7 @@ interval_validator: invoked with -1, but values should be >= 0
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 383
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 389
 
 Expected Exception Type:
 [std::domain_error]
@@ -22,7 +22,7 @@ interval_validator: invoked with -1, but values should be >= 0
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 397
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 403
 
 Expected Exception Type:
 [std::domain_error]
@@ -30,7 +30,7 @@ interval_validator: invoked with -1, but values should be >= 0
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 411
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 417
 
 Expected Exception Type:
 [std::domain_error]
@@ -38,7 +38,7 @@ interval_validator: invoked with -1, but values should be >= 0
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 425
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 431
 
 Expected Exception Type:
 [std::domain_error]
@@ -46,7 +46,7 @@ interval_validator: invoked with -1, but values should be >= 0
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 778
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 784
 
 Expected Exception Type:
 [std::domain_error]

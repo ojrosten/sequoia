@@ -929,7 +929,10 @@ namespace sequoia::maths
   template<convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
   struct representation_for_free_module_of
   {
-    using type = Representation;
+    struct type : Representation
+    {
+      using validator_type = std::identity;
+    };
   };
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
