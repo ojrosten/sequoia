@@ -88,14 +88,14 @@ namespace sequoia::testing
     using variant_t  = std::variant<coords_t, delta_t>;
     using graph_type = transition_checker<variant_t>::transition_graph;
 
-    enum node_label {neg_one, zero, one, two, delta_zero, delta_one, delta_two};
+    enum node_label {neg_one, zero, one, one_plus_ln_two, delta_zero, delta_one, delta_two};
 
     graph_type g{
       {
         { // neg_one
           {
             node_label::zero,
-            this->report("(-1) + (1)"),
+            report("(-1) + (1)"),
             [](variant_t p) -> variant_t { return std::get<coords_t>(p) +  coords_t{1}; },
             std::weak_ordering::greater
           }
@@ -103,7 +103,7 @@ namespace sequoia::testing
         { // zero
           {
             node_label::one,
-            this->report("(0) + (1)"),
+            report("(0) + (1)"),
             [](variant_t p) -> variant_t { return std::get<coords_t>(p) +  coords_t{1}; },
             std::weak_ordering::greater
           }
@@ -111,12 +111,24 @@ namespace sequoia::testing
         { // one
           {
             node_label::delta_zero,
-            this->report("(1) - (1)"),
+            report("(1) - (1)"),
             [](variant_t p) -> variant_t { return std::get<coords_t>(p) -  coords_t{1}; },
             std::weak_ordering::equivalent
+          },
+          {
+            node_label::one_plus_ln_two,
+            report("(1) * 2, with the multiplication performed on the underlying values"),
+            [](variant_t p) -> variant_t { return std::get<coords_t>(p) * 2; },
+            std::weak_ordering::greater
           }
         },
-        { // two
+        { // one_plus_ln_two
+          {
+            node_label::one,
+            report("(1) / 2, with the division performed on the underlying values"),
+            [](variant_t p) -> variant_t { return std::get<coords_t>(p) / 2; },
+            std::weak_ordering::less
+          }
         },
         { // delta_zero,
         },
@@ -129,7 +141,7 @@ namespace sequoia::testing
         coords_t(-1),
         coords_t(0),
         coords_t(1),
-        coords_t(2),
+        coords_t(1 + std::log(value_t(2))),
          delta_t(0),
          delta_t(1),
          delta_t(2),
