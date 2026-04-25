@@ -1679,7 +1679,7 @@ namespace sequoia::maths
     [[nodiscard]]
     friend constexpr Derived operator+(const displacement_coordinates_type& v, const Derived& c) noexcept(has_identity_validator)
     {
-      return v + c;
+      return c + v;
     }
   
     template<class Derived>
