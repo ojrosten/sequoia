@@ -60,6 +60,7 @@ namespace sequoia::testing
   void absolute_logarithmic_coordinates_test::run_tests()
   {
     test_absolute_logarithmic<float , logarithmic_representation>();
+    test_absolute_logarithmic<double, logarithmic_representation>();
   }
 
   template<std::floating_point T, class Representation>
@@ -88,7 +89,7 @@ namespace sequoia::testing
     using variant_t  = std::variant<coords_t, delta_t>;
     using graph_type = transition_checker<variant_t>::transition_graph;
 
-    enum node_label {neg_one, zero, one, one_plus_ln_two, delta_zero, delta_one, delta_two};
+    enum node_label {neg_one, zero, one, one_plus_ln_two, delta_neg_one, delta_zero, delta_one };
 
     graph_type g{
       {
@@ -98,6 +99,12 @@ namespace sequoia::testing
             report("(-1) + (1)"),
             [](variant_t p) -> variant_t { return std::get<coords_t>(p) +  coords_t{1}; },
             std::weak_ordering::greater
+          },
+          {
+            node_label::delta_neg_one,
+            report("(-1) - (0)"),
+            [](variant_t p) -> variant_t { return std::get<coords_t>(p) -  coords_t{}; },
+            std::weak_ordering::equivalent
           }
         },
         { // zero
@@ -130,11 +137,11 @@ namespace sequoia::testing
             std::weak_ordering::less
           }
         },
-        { // delta_zero,
+        { // delta_neg_one,
+        },
+        { // delta_zero
         },
         { // delta_one
-        },
-        { // delta_two
         }
       },
       {
@@ -142,16 +149,16 @@ namespace sequoia::testing
         coords_t(0),
         coords_t(1),
         coords_t(1 + std::log(value_t(2))),
+         delta_t(-1),
          delta_t(0),
          delta_t(1),
-         delta_t(2),
       }
     };
 
     auto checker{
       [this](std::string_view description, const variant_t& obtained, const variant_t& prediction)
       {
-        constexpr auto tol{std::same_as<value_t, float> ? value_t(1e-6) : value_t(1e-12)};
+        constexpr value_t tol{std::same_as<value_t, float> ? value_t(1e-6) : value_t(1e-12)};
         this->check(within_tolerance{tol}, description, obtained, prediction);
       }      
     };
