@@ -24,7 +24,7 @@ namespace sequoia::testing
   template<class Coordinates>
   class coordinates_operations
   {    
-    enum dim_1_label{ delta_one, delta_zero, delta_neg_one, delta_neg_two, two, one, zero, neg_one };
+    enum dim_1_label{ delta_one, delta_zero, two, one, zero, delta_neg_one, delta_neg_two, neg_one };
     enum dim_2_label{ one_two, one_one, one_zero, zero_one, zero_zero, zero_neg_one, neg_one_zero, neg_one_neg_one };
     
     using coords_t            = Coordinates;
@@ -42,8 +42,6 @@ namespace sequoia::testing
     constexpr static bool orderable{(dimension == 1) && std::totally_ordered<ring_t>};
     constexpr static bool has_distinguished_origin{maths::has_distinguished_origin_v<space_t>};
     constexpr static bool has_identity_repr{std::same_as<representation_t, maths::identity_representation<validator_t>>};
-
-    static_assert(maths::free_module<typename disp_t::space_type>);
 
     regular_test& m_Test;
     graph_type m_Graph;
@@ -101,7 +99,7 @@ namespace sequoia::testing
             else
               test.check(within_tolerance{tol}, description, obtained, prediction);
 
-            if(ordering != std::weak_ordering::equivalent)
+            if((ordering != std::weak_ordering::equivalent) && (parent.index() == prediction.index()))
               test.check_semantics(description, prediction, parent, ordering);
           };
       }
@@ -114,7 +112,8 @@ namespace sequoia::testing
             else
               test.check(within_tolerance{tol}, description, obtained, prediction);
 
-            if(host!= target) test.check_semantics(description, prediction, parent);
+            if((host != target) && (parent.index() == prediction.index()))
+              test.check_semantics(description, prediction, parent);
           };
       }
     }
@@ -129,11 +128,11 @@ namespace sequoia::testing
         {
           disp_t{from_underlying(ring_t(1)), units_t{}},
           disp_t{from_underlying(ring_t()), units_t{}},
-          disp_t{from_underlying(ring_t(-1)), units_t{}},
-          disp_t{from_underlying(ring_t(-2)), units_t{}},
           coords_t{from_underlying(ring_t(2)), units_t{}},
           coords_t{from_underlying(ring_t(1)), units_t{}},
-          coords_t{from_underlying(ring_t{}), units_t{}}
+          coords_t{from_underlying(ring_t{}), units_t{}},          
+          disp_t{from_underlying(ring_t(-1)), units_t{}},
+          disp_t{from_underlying(ring_t(-2)), units_t{}}
         }
       };
 
@@ -165,6 +164,86 @@ namespace sequoia::testing
       }
 
       return g;
+    }
+
+    static void add_dim_1_common_transitions(maths::network auto& g, regular_test& test)
+    {
+      // Joins from zero
+      add_transition<coords_t>(
+        g,
+        dim_1_label::zero,
+        dim_1_label::one,
+        test.report("(0) + delta(1)"),
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) +  disp_t{from_underlying(ring_t(1)), units_t{}}; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::zero,
+        dim_1_label::one,
+        test.report("(0) += delta((1)"),
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) += disp_t{from_underlying(ring_t(1)), units_t{}}; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::zero,
+        dim_1_label::delta_neg_two,
+        test.report("(0) - (2)"),
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) - coords_t{from_underlying(ring_t(2)), units_t{}}; }
+      );
+
+      // Joins from one
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::zero,
+        test.report("(1)  - delta((1)"),
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) -  disp_t{from_underlying(ring_t(1)), units_t{}}; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::zero,
+        test.report("(1) -= delta((1)"),
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) -= disp_t{from_underlying(ring_t(1)), units_t{}}; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::one,
+        test.report("+(1)"),
+        [](variant_t p) -> variant_t { return +std::get<coords_t>(p);}
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::two,
+        test.report("(1) + delta((1)"),
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) +  disp_t{from_underlying(ring_t(1)), units_t{}}; }
+      );
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::one,
+        dim_1_label::two,
+        test.report("(1) += delta((1)"),
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) += disp_t{from_underlying(ring_t(1)), units_t{}}; }
+      );
+
+      // Joins from two
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::two,
+        dim_1_label::one,
+        test.report("(2) - delta((1)"),
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) - disp_t{from_underlying(ring_t(1)), units_t{}}; }
+      );
     }
 
     static void add_dim_1_syntactic_sugar_checks([[maybe_unused]] maths::network auto& g, [[maybe_unused]] regular_test& test)
@@ -203,78 +282,6 @@ namespace sequoia::testing
           [](const variant_t&) -> variant_t { return from_underlying(ring_t(1)) / maths::dual_of_t<basis_isomorphism_t>{}; }
         );
       }
-    }
-
-    static void add_dim_1_common_transitions(maths::network auto& g, regular_test& test)
-    {
-      // Joins from zero
-      add_transition<coords_t>(
-        g,
-        dim_1_label::zero,
-        dim_1_label::one,
-        test.report("(0) +  (1)"),
-        [](variant_t p) -> variant_t { return std::get<coords_t>(p) +  disp_t{from_underlying(ring_t(1)), units_t{}}; }
-      );
-
-      add_transition<coords_t>(
-        g,
-        dim_1_label::zero,
-        dim_1_label::one,
-        test.report("(0) += (1)"),
-        [](variant_t p) -> variant_t { return std::get<coords_t>(p) += disp_t{from_underlying(ring_t(1)), units_t{}}; }
-      );
-
-      // Joins from one
-
-      add_transition<coords_t>(
-        g,
-        dim_1_label::one,
-        dim_1_label::zero,
-        test.report("(1)  - (1)"),
-        [](variant_t p) -> variant_t { return std::get<coords_t>(p) -  disp_t{from_underlying(ring_t(1)), units_t{}}; }
-      );
-
-      add_transition<coords_t>(
-        g,
-        dim_1_label::one,
-        dim_1_label::zero,
-        test.report("(1) -= (1)"),
-        [](variant_t p) -> variant_t { return std::get<coords_t>(p) -= disp_t{from_underlying(ring_t(1)), units_t{}}; }
-      );
-
-      add_transition<coords_t>(
-        g,
-        dim_1_label::one,
-        dim_1_label::one,
-        test.report("+(1)"),
-        [](variant_t p) -> variant_t { return +std::get<coords_t>(p);}
-      );
-
-      add_transition<coords_t>(
-        g,
-        dim_1_label::one,
-        dim_1_label::two,
-        test.report("(1)  + (1)"),
-        [](variant_t p) -> variant_t { return std::get<coords_t>(p) +  disp_t{from_underlying(ring_t(1)), units_t{}}; }
-      );
-
-      add_transition<coords_t>(
-        g,
-        dim_1_label::one,
-        dim_1_label::two,
-        test.report("(1) += (1)"),
-        [](variant_t p) -> variant_t { return std::get<coords_t>(p) += disp_t{from_underlying(ring_t(1)), units_t{}}; }
-      );
-
-      // Joins from two
-
-      add_transition<coords_t>(
-        g,
-        dim_1_label::two,
-        dim_1_label::one,
-        test.report("(2) - (1)"),
-        [](variant_t p) -> variant_t { return std::get<coords_t>(p) - disp_t{from_underlying(ring_t(1)), units_t{}}; }
-      );
     }
 
     static void add_dim_1_negative_transitions(maths::network auto& g, regular_test& test)

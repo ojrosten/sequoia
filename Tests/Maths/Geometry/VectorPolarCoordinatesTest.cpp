@@ -59,14 +59,14 @@ namespace sequoia::testing
       
       template<weak_commutative_ring T>
       [[nodiscard]]
-      static constexpr std::array<T, 2> mul(const std::array<T, 2>& lhs, T scale)
+      static constexpr std::array<T, 2> mul(std::span<const T, 2> lhs, T scale)
       {
         return {lhs[0] * std::abs(scale), compute_angle(lhs[1], scale)};
       }
 
       template<weak_commutative_ring T>
       [[nodiscard]]
-      static constexpr std::array<T, 2> div(const std::array<T, 2>& lhs, T scale)
+      static constexpr std::array<T, 2> div(std::span<const T, 2> lhs, T scale)
       {
         return {lhs[0] / std::abs(scale), compute_angle(lhs[1], scale)};
       }

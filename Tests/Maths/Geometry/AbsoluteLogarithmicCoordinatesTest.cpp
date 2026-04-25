@@ -17,7 +17,7 @@ namespace sequoia::testing
 
   namespace
   {
-    struct naive_logarithmic_representation
+    struct logarithmic_representation
     {
       using validator_type = std::identity;
 
@@ -34,10 +34,7 @@ namespace sequoia::testing
       {
         return std::log(val);
       }
-    };
-
-    struct logarithmic_representation : naive_logarithmic_representation
-    {
+      
       template<weak_commutative_ring T>
       [[nodiscard]]
       static constexpr T add(T lhs, T rhs)
@@ -62,10 +59,7 @@ namespace sequoia::testing
 
   void absolute_logarithmic_coordinates_test::run_tests()
   {
-    test_absolute_logarithmic<float , naive_logarithmic_representation>();
-    test_absolute_logarithmic<double, naive_logarithmic_representation>();
-
-    //test_absolute_logarithmic<float , logarithmic_representation>();
+    test_absolute_logarithmic<float , logarithmic_representation>();
   }
 
   template<std::floating_point T, class Representation>
@@ -90,7 +84,66 @@ namespace sequoia::testing
     STATIC_CHECK(has_unary_plus<coords_t>);
     STATIC_CHECK(!has_unary_minus<coords_t>);
     STATIC_CHECK(!coords_t::has_freely_mutable_components);
-    
-    coordinates_operations<coords_t>{*this}.execute();
+
+    using variant_t  = std::variant<coords_t, delta_t>;
+    using graph_type = transition_checker<variant_t>::transition_graph;
+
+    enum node_label {neg_one, zero, one, two, delta_zero, delta_one, delta_two};
+
+    graph_type g{
+      {
+        { // neg_one
+          {
+            node_label::zero,
+            this->report("(-1) + (1)"),
+            [](variant_t p) -> variant_t { return std::get<coords_t>(p) +  coords_t{1}; },
+            std::weak_ordering::greater
+          }
+        },
+        { // zero
+          {
+            node_label::one,
+            this->report("(0) + (1)"),
+            [](variant_t p) -> variant_t { return std::get<coords_t>(p) +  coords_t{1}; },
+            std::weak_ordering::greater
+          }
+        },
+        { // one
+          {
+            node_label::delta_zero,
+            this->report("(1) - (1)"),
+            [](variant_t p) -> variant_t { return std::get<coords_t>(p) -  coords_t{1}; },
+            std::weak_ordering::equivalent
+          }
+        },
+        { // two
+        },
+        { // delta_zero,
+        },
+        { // delta_one
+        },
+        { // delta_two
+        }
+      },
+      {
+        coords_t(-1),
+        coords_t(0),
+        coords_t(1),
+        coords_t(2),
+         delta_t(0),
+         delta_t(1),
+         delta_t(2),
+      }
+    };
+
+    auto checker{
+      [this](std::string_view description, const variant_t& obtained, const variant_t& prediction)
+      {
+        constexpr auto tol{std::same_as<value_t, float> ? value_t(1e-6) : value_t(1e-12)};
+        this->check(within_tolerance{tol}, description, obtained, prediction);
+      }      
+    };
+
+    transition_checker<variant_t>::check("", g, checker);
   }
 }
