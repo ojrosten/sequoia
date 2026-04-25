@@ -1917,6 +1917,7 @@ namespace sequoia::maths
         return {validator(vals.front())};
     }
 
+    [[nodiscard]]
     constexpr static std::array<value_type, D> to_underlying(std::span<const value_type, D> vals)
     {
       if constexpr(representation_for_span<representation_type, space_type>)
