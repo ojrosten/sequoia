@@ -185,7 +185,7 @@ namespace sequoia::testing
       }
     };
 
-    auto checker{
+    auto checkerFn{
       [this](std::string_view description, const variant_t& obtained, const variant_t& prediction, const variant_t& parent, std::weak_ordering ordering)
       {
         constexpr value_t tol{std::same_as<value_t, float> ? value_t(1e-6) : value_t(1e-12)};
@@ -196,6 +196,6 @@ namespace sequoia::testing
       }      
     };
 
-    transition_checker<variant_t>::check("", g, checker);
+    transition_checker<variant_t>::check("", g, checkerFn);
   }
 }
