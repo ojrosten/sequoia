@@ -1,2 +1,2 @@
 Absolute Logarithmic Coordinates Test
-Standard Top Level Checks:                50;  Failures:  0  [Deep checks: 94]
+Standard Top Level Checks:                64;  Failures:  0  [Deep checks: 1284]

@@ -186,10 +186,13 @@ namespace sequoia::testing
     };
 
     auto checker{
-      [this](std::string_view description, const variant_t& obtained, const variant_t& prediction)
+      [this](std::string_view description, const variant_t& obtained, const variant_t& prediction, const variant_t& parent, std::weak_ordering ordering)
       {
         constexpr value_t tol{std::same_as<value_t, float> ? value_t(1e-6) : value_t(1e-12)};
         this->check(within_tolerance{tol}, description, obtained, prediction);
+
+        if((ordering != std::weak_ordering::equivalent) && (parent.index() == prediction.index()))
+              this->check_semantics(description, prediction, parent, ordering);
       }      
     };
 
