@@ -244,6 +244,16 @@ namespace sequoia::testing
         test.report("(2) - delta((1)"),
         [](variant_t p) -> variant_t { return std::get<coords_t>(p) - disp_t{from_underlying(ring_t(1)), units_t{}}; }
       );
+
+      // Joins from delta_neg_one
+
+      add_transition<coords_t>(
+        g,
+        dim_1_label::delta_neg_one,
+        dim_1_label::zero,
+        test.report("delta(-1) + (1)"),
+        [](variant_t p) -> variant_t { return std::get<disp_t>(p) + coords_t{from_underlying(ring_t(1)), units_t{}}; }
+      );
     }
 
     static void add_dim_1_syntactic_sugar_checks([[maybe_unused]] maths::network auto& g, [[maybe_unused]] regular_test& test)

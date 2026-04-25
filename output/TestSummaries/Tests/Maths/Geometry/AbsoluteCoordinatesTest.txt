@@ -1,2 +1,2 @@
 Absolute Coordinates Test
-Standard Top Level Checks:                72;  Failures:  0  [Deep checks: 1575]
+Standard Top Level Checks:                73;  Failures:  0  [Deep checks: 1583]
