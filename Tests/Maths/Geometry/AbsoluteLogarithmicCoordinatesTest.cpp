@@ -118,7 +118,7 @@ namespace sequoia::testing
             node_label::neg_one,
             report("(0) + delta(-1)"),
             [](variant_t p) -> variant_t { return std::get<coords_t>(p) +  delta_t{-1}; },
-            std::weak_ordering::greater
+            std::weak_ordering::less
           },
           {
             node_label::one,
@@ -138,14 +138,20 @@ namespace sequoia::testing
             node_label::delta_zero,
             report("(1) - (1)"),
             [](variant_t p) -> variant_t { return std::get<coords_t>(p) -  coords_t{1}; },
-            std::weak_ordering::equivalent
+            std::weak_ordering::less
           },
           {
             node_label::one_plus_ln_two,
             report("(1) * 2, with the multiplication performed on the underlying values"),
             [](variant_t p) -> variant_t { return std::get<coords_t>(p) * 2; },
             std::weak_ordering::greater
-          }
+          },
+          {
+            node_label::delta_one,
+            report("(1) - (0)"),
+            [](variant_t p) -> variant_t { return std::get<coords_t>(p) -  coords_t{}; },
+            std::weak_ordering::equivalent
+          },
         },
         { // one_plus_ln_two
           {
@@ -159,7 +165,7 @@ namespace sequoia::testing
           {
             node_label::zero,
             report("delta(-1) + (1)"),
-            [](variant_t p) -> variant_t { return std::get<delta_t>(p) +  coords_t{1}; },
+            [](variant_t p) -> variant_t { return std::get<delta_t>(p) + coords_t{1}; },
             std::weak_ordering::greater
           },
         },
