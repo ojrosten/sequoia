@@ -175,7 +175,7 @@ namespace sequoia
   {};
 
   template<class T>
-  struct is_deep_equality_comparable : std::bool_constant<std::equality_comparable<T>>
+  struct is_deep_equality_comparable : std::bool_constant<std::equality_comparable<T> && !std::is_array_v<T>>
   {};
 
   template<class T>
@@ -223,7 +223,7 @@ namespace sequoia
   {};
 
   template<class T>
-  struct is_deep_totally_ordered : std::bool_constant<std::totally_ordered<T>>
+  struct is_deep_totally_ordered : std::bool_constant<std::totally_ordered<T> && !std::is_array_v<T>>
   {};
 
   template<class T>
