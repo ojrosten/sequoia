@@ -1649,8 +1649,8 @@ namespace sequoia::maths
           }
           else
           {
-            const auto transLHS{to_underlying(lhs.values())}, transRHS{to_underlying(rhs.values())};
-            return {from_underlying(std::array{(transLHS[Is] - transRHS[Is])...}), basis_isomorphism_type{}};
+            const auto transLHS{Derived::to_underlying(lhs.values())}, transRHS{Derived::to_underlying(rhs.values())};
+            return {Derived::from_underlying(std::array{(transLHS[Is] - transRHS[Is])...}), basis_isomorphism_type{}};
           }
       }(std::make_index_sequence<D>{});
     }
