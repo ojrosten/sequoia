@@ -85,11 +85,30 @@ namespace sequoia::testing
       }
     }
     
+    template<std::floating_point T>
+    [[nodiscard]]
+    constexpr static T tolerance() noexcept
+    {
+      return std::same_as<T, float> ? T(1e-6) : T(1e-12);
+    }
     
     [[nodiscard]]
     auto make_checker() const
     {
-      constexpr auto tol{std::same_as<ring_t, float> ? ring_t(1e-6) : ring_t(1e-12)};
+      constexpr auto tol{
+        [](){
+          if constexpr(is_complex_v<ring_t>){
+            using underlying_value_t = ring_t::value_type;
+            constexpr auto toler{tolerance<underlying_value_t>()};
+            return ring_t{toler, toler};
+          }
+          else if constexpr(std::integral<ring_t>)
+            return ring_t{};
+          else
+            return tolerance<ring_t>();
+        }()
+      };
+
       if constexpr(orderable)
       {
         return
