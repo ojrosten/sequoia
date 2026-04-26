@@ -1,0 +1,220 @@
+Tests/Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.cpp, Line 39
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::maths::euclidean_nonnegative_space<float, 1, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_right_handed_basis<sequoia::maths::euclidean_vector_space<float, 1, sequoia::maths::mathematical_arena> >, sequoia::maths::identity_representation<sequoia::maths::interval_validator<float, 0.000000, inf> > > >]
+Checking for equivalence with:
+[std::array<float, 1>]
+
+  Wrapped values
+  [std::span<float const, 1>]
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  Iterators
+  [std::ranges::subrange<float const*, float const*, 1>]
+
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  c-Iterators
+  [std::ranges::subrange<float const*, float const*, 1>]
+
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  r-Iterators
+  [std::ranges::subrange<std::reverse_iterator<float const*>, std::reverse_iterator<float const*>, 1>]
+
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  cr-Iterators
+  [std::ranges::subrange<std::reverse_iterator<float const*>, std::reverse_iterator<float const*>, 1>]
+
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  operator[]
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.cpp, Line 40
+
+[sequoia::maths::coordinates<sequoia::maths::euclidean_nonnegative_space<float, 1, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_right_handed_basis<sequoia::maths::euclidean_vector_space<float, 1, sequoia::maths::mathematical_arena> >, sequoia::maths::identity_representation<sequoia::maths::interval_validator<float, 0.000000, inf> > >]
+operator== returned false
+
+  Wrapped values
+  [std::span<float const, 1>]
+    Element 0 of range incorrect
+    [float]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  Wrapped value
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+  Conversion to bool
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+  Value at index 0
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.cpp, Line 39
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::maths::euclidean_nonnegative_space<double, 2, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_right_handed_basis<sequoia::maths::euclidean_vector_space<double, 2, sequoia::maths::mathematical_arena> >, sequoia::maths::identity_representation<sequoia::maths::interval_validator<double, 0.000000, inf> > > >]
+Checking for equivalence with:
+[std::array<double, 2>]
+
+  Wrapped values
+  [std::span<double const, 2>]
+    Element 0 of range incorrect
+    [double]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+    Element 1 of range incorrect
+    [double]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  Iterators
+  [std::ranges::subrange<double, 2>, std::_Array_const_iterator<double, 2> const*]
+
+    Element 0 of range incorrect
+    [double]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+    Element 1 of range incorrect
+    [double]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  c-Iterators
+  [std::ranges::subrange<double, 2>, std::_Array_const_iterator<double, 2> const*]
+
+    Element 0 of range incorrect
+    [double]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+    Element 1 of range incorrect
+    [double]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  r-Iterators
+  [std::ranges::subrange<std::reverse_iterator<double, 2> >, std::reverse_iterator<std::_Array_const_iterator<double, 2> > const*]
+
+    Element 0 of range incorrect
+    [double]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+    Element 1 of range incorrect
+    [double]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  cr-Iterators
+  [std::ranges::subrange<std::reverse_iterator<double, 2> >, std::reverse_iterator<std::_Array_const_iterator<double, 2> > const*]
+
+    Element 0 of range incorrect
+    [double]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+    Element 1 of range incorrect
+    [double]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  operator[]
+  [double]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+  operator[]
+  [double]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.cpp, Line 40
+
+[sequoia::maths::coordinates<sequoia::maths::euclidean_nonnegative_space<double, 2, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_right_handed_basis<sequoia::maths::euclidean_vector_space<double, 2, sequoia::maths::mathematical_arena> >, sequoia::maths::identity_representation<sequoia::maths::interval_validator<double, 0.000000, inf> > >]
+operator== returned false
+
+  Wrapped values
+  [std::span<double const, 2>]
+    Element 0 of range incorrect
+    [double]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+    Element 1 of range incorrect
+    [double]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+  Value at index 0
+  [double]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+  Value at index 1
+  [double]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
