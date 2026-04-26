@@ -155,7 +155,7 @@ namespace sequoia
         constexpr bool operator()(const Edge& e1, const Edge& e2) const noexcept
         {
           using edge_weight_type = typename Edge::weight_type;
-          constexpr bool sort_weights{!std::is_empty_v<edge_weight_type> && std::totally_ordered<edge_weight_type>};
+          constexpr bool sort_weights{!std::is_empty_v<edge_weight_type> && deep_totally_ordered<edge_weight_type>};
 
           if constexpr(!sort_weights)
           {
@@ -953,7 +953,7 @@ namespace sequoia
       constexpr static IntermediateEdges preprocess(IntermediateEdges edges)
         requires (!is_embedded(flavour) && !is_directed(flavour))
       {
-        constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !std::totally_ordered<edge_weight_type>};
+        constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !deep_totally_ordered<edge_weight_type>};
 
         for(edge_index_type i{}; i < edges.num_partitions(); ++i)
         {
@@ -1239,7 +1239,7 @@ namespace sequoia
       constexpr static void visit_edges(const Edges& orderedEdges, PerNodeFn perNode, PerLoopFn perLoop, PerLinkFn perLink)
         requires (!is_embedded(flavour) && !is_directed(flavour))
       {
-        constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !std::totally_ordered<edge_weight_type>};
+        constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !deep_totally_ordered<edge_weight_type>};
 
         for(edge_index_type i{}; i < orderedEdges.num_partitions(); ++i)
         {

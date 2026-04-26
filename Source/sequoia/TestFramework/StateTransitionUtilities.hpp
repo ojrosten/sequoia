@@ -27,11 +27,11 @@ namespace sequoia::testing
     TransitionFn fn;
   };
 
-  template<class T, invocable_r<T, const T&> TransitionFn, check_ordering=check_ordering{std::totally_ordered<T>}>
+  template<class T, invocable_r<T, const T&> TransitionFn, check_ordering=check_ordering{deep_totally_ordered<T>}>
   struct transition_info : transition_info_base<T, TransitionFn>
   {};
 
-  template<std::totally_ordered T, invocable_r<T, const T&> TransitionFn>
+  template<deep_totally_ordered T, invocable_r<T, const T&> TransitionFn>
   struct transition_info<T, TransitionFn, check_ordering::yes> : transition_info_base<T, TransitionFn>
   {
     std::weak_ordering ordering;
@@ -72,7 +72,7 @@ namespace sequoia::testing
     std::function<T()> m_Fn;
   };
 
-  template<class T, check_ordering CheckOrdering=check_ordering{std::totally_ordered<T>}>
+  template<class T, check_ordering CheckOrdering=check_ordering{deep_totally_ordered<T>}>
   struct transition_checker
   {
   public:
@@ -148,7 +148,7 @@ namespace sequoia::testing
     }
 
     template<std::invocable<std::string, T, T, T, std::weak_ordering> CheckFn>
-      requires (std::totally_ordered<T>&& pseudoregular<T>)
+      requires (deep_totally_ordered<T>&& pseudoregular<T>)
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{
@@ -172,7 +172,7 @@ namespace sequoia::testing
     }
 
     template<std::invocable<std::string, std::function<T()>, std::function<T()>, std::function<T()>, std::weak_ordering> CheckFn>
-      requires std::totally_ordered<T>
+      requires deep_totally_ordered<T>
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{

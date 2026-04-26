@@ -99,7 +99,7 @@ namespace sequoia::testing
 
     /// Prerequisite: x != y, with values consistent with order
     template<pseudoregular T, class Self>
-      requires std::totally_ordered<T>
+      requires deep_totally_ordered<T>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order)
     {
       testing::check_semantics(regular_message(self.report(description)),
@@ -117,7 +117,7 @@ namespace sequoia::testing
           y equivalent to yEquivalent
      */
     template<pseudoregular T, class U, class Self>
-      requires std::totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U>
+      requires deep_totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U>
     void check_semantics(this Self& self,
                          const reporter& description,
                          const T& x,
@@ -143,7 +143,7 @@ namespace sequoia::testing
           y equivalent to yEquivalent
      */
     template<pseudoregular T, class U, class V, class Self>
-      requires std::totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
+      requires deep_totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
     void check_semantics(this Self& self,
                          const reporter& description,
                          const T& x,
@@ -234,7 +234,7 @@ namespace sequoia::testing
 
     /// Prerequisites: x != y, with values consistent with order
     template<pseudoregular T, std::invocable<T&> Mutator, class Self>
-      requires std::totally_ordered<T>
+      requires deep_totally_ordered<T>
     void check_semantics(this Self& self, const reporter& description, const T& x, const T& y, std::weak_ordering order, Mutator m)
     {
       testing::check_semantics(regular_message(self.report(description)),
@@ -253,7 +253,7 @@ namespace sequoia::testing
           y equivalent to yEquivalent
      */
     template<pseudoregular T, class U, std::invocable<T&> Mutator, class Self>
-      requires std::totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U>
+      requires deep_totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U>
     void check_semantics(this Self& self,
                          const reporter& description,
                          const T& x,

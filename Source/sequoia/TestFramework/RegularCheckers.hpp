@@ -94,7 +94,7 @@ namespace sequoia::testing
 
   /// Prerequisite: x != y with values consistent with order
   template<test_mode Mode, pseudoregular T, class U>
-    requires std::totally_ordered<T> && checkable_against_for_semantics<Mode, T, U>
+    requires deep_totally_ordered<T> && checkable_against_for_semantics<Mode, T, U>
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        const T& x,
@@ -119,7 +119,7 @@ namespace sequoia::testing
         y equivalent to yEquivalent
    */
   template<test_mode Mode, pseudoregular T, class U, class V>
-    requires std::totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
+    requires deep_totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        const T& x,
@@ -194,7 +194,7 @@ namespace sequoia::testing
 
   /// Prerequisite: x != y, with values consistent with order
   template<test_mode Mode, pseudoregular T, class U, std::invocable<T&> Mutator>
-    requires std::totally_ordered<T> && checkable_against_for_semantics<Mode, T, U>
+    requires deep_totally_ordered<T> && checkable_against_for_semantics<Mode, T, U>
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        const T& x,
@@ -220,7 +220,7 @@ namespace sequoia::testing
         y equivalent to yEquivalent
    */
   template<test_mode Mode, pseudoregular T, class U, class V, std::invocable<T&> Mutator>
-    requires std::totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
+    requires deep_totally_ordered<T> && equivalence_checkable_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        const T& x,

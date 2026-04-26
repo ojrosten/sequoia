@@ -171,7 +171,7 @@ namespace sequoia::testing
   };
 
   template<test_mode Mode, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-  requires checkable_against_for_semantics<Mode, T, U> && (!std::totally_ordered<T>) && (sizeof...(Getters) > 0)
+  requires checkable_against_for_semantics<Mode, T, U> && (!deep_totally_ordered<T>) && (sizeof...(Getters) > 0)
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        T&& x,
@@ -197,7 +197,7 @@ namespace sequoia::testing
   }
 
   template<test_mode Mode, moveonly T, class U, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-    requires checkable_against_for_semantics<Mode, T, U> && std::totally_ordered<T> && (sizeof...(Getters) > 0)
+    requires checkable_against_for_semantics<Mode, T, U> && deep_totally_ordered<T> && (sizeof...(Getters) > 0)
   void check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        T&& x,
@@ -232,7 +232,7 @@ namespace sequoia::testing
     std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
-    requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
+    requires (!deep_totally_ordered<T> && (sizeof...(Getters) > 0))
   std::pair<T,T> check_semantics(std::string description,
                                  test_logger<Mode>& logger,
                                  xMaker xFn,
@@ -262,7 +262,7 @@ namespace sequoia::testing
     std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
-    requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
+    requires (deep_totally_ordered<T> && (sizeof...(Getters) > 0))
   std::pair<T,T> check_semantics(std::string description,
                                  test_logger<Mode>& logger,
                                  xMaker xFn,

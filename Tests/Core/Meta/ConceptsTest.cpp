@@ -11,8 +11,6 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 
-#include "sequoia/TestFramework/AllocationTestUtilities.hpp"
-
 #include <complex>
 #include <set>
 #include <map>
@@ -69,84 +67,77 @@ namespace sequoia::testing
     test_is_allocator();
     test_is_serializable();
     test_deep_equality_comparable();
+    test_deep_totally_ordered();
     test_initializable_from();
   }
 
   void concepts_test::test_is_range()
   {
-    check("", []() {
-        static_assert(faithful_range<std::vector<double>>);
-        static_assert(!faithful_range<double>);
-        return true;
-      }()
-    );
+    STATIC_CHECK(faithful_range<std::vector<double>>);
+    STATIC_CHECK(!faithful_range<double>);
   }
 
   void concepts_test::test_is_allocator()
   {
-    check("", []() {
-        static_assert(!alloc<int>);
-        static_assert(alloc<std::allocator<int>>);
-        return true;
-      }()
-    );
+    STATIC_CHECK(!alloc<int>);
+    STATIC_CHECK(alloc<std::allocator<int>>);
   }
 
   void concepts_test::test_is_serializable()
   {
-
-    check("", []() {
-        static_assert(serializable_to<int, std::stringstream>);
-        static_assert(serializable_to<serializable_thing, std::stringstream>);
-        static_assert(!serializable_to<non_serializable, std::stringstream>);
-        return true;
-      }()
-    );
+    STATIC_CHECK(serializable_to<int, std::stringstream>);
+    STATIC_CHECK(serializable_to<serializable_thing, std::stringstream>);
+    STATIC_CHECK(!serializable_to<non_serializable, std::stringstream>);
   }
 
   void concepts_test::test_deep_equality_comparable()
   {
-    check("", []() {
-        static_assert(deep_equality_comparable<int>);
-        static_assert(deep_equality_comparable<std::vector<int>>);
-        static_assert(deep_equality_comparable<std::array<int, 3>>);
-        static_assert(deep_equality_comparable<std::map<int, double>>);
-        static_assert(deep_equality_comparable<std::tuple<int>>);
-        static_assert(deep_equality_comparable<std::tuple<int, double>>);
-        static_assert(deep_equality_comparable<std::pair<int, double>>);
-        static_assert(deep_equality_comparable<std::optional<int>>);
-        static_assert(deep_equality_comparable<std::variant<int, float>>);
-        static_assert(deep_equality_comparable<std::tuple<std::vector<int>, std::array<std::pair<int, float>, 2>>>);
+    STATIC_CHECK(deep_equality_comparable<int>);
+    STATIC_CHECK(deep_equality_comparable<std::vector<int>>);
+    STATIC_CHECK(deep_equality_comparable<std::array<int, 3>>);
+    STATIC_CHECK(deep_equality_comparable<std::map<int, double>>);
+    STATIC_CHECK(deep_equality_comparable<std::tuple<int>>);
+    STATIC_CHECK(deep_equality_comparable<std::tuple<int, double>>);
+    STATIC_CHECK(deep_equality_comparable<std::pair<int, double>>);
+    STATIC_CHECK(deep_equality_comparable<std::optional<int>>);
+    STATIC_CHECK(deep_equality_comparable<std::variant<int, float>>);
+    STATIC_CHECK(deep_equality_comparable<std::tuple<std::vector<int>, std::array<std::pair<int, float>, 2>>>);
 
-        static_assert(!deep_equality_comparable<bar>);
-        static_assert(!deep_equality_comparable<std::vector<bar>>);
-        static_assert(!deep_equality_comparable<std::array<bar, 3>>);
-        static_assert(!deep_equality_comparable<std::map<int, bar>>);
-        static_assert(!deep_equality_comparable<std::tuple<bar>>);
-        static_assert(!deep_equality_comparable<std::tuple<bar, double>>);
-        static_assert(!deep_equality_comparable<std::optional<bar>>);
-        static_assert(!deep_equality_comparable<std::variant<int, bar>>);
-        static_assert(!deep_equality_comparable<std::tuple<std::vector<bar>, std::array<std::pair<int, float>, 2>>>);
-        static_assert(!deep_equality_comparable<std::tuple<std::vector<int>, std::array<std::pair<bar, float>, 2>>>);
-        static_assert(!deep_equality_comparable<std::tuple<std::vector<int>, std::array<std::pair<int, bar>, 2>>>);
+    STATIC_CHECK(!deep_equality_comparable<bar>);
+    STATIC_CHECK(!deep_equality_comparable<std::vector<bar>>);
+    STATIC_CHECK(!deep_equality_comparable<std::array<bar, 3>>);
+    STATIC_CHECK(!deep_equality_comparable<std::map<int, bar>>);
+    STATIC_CHECK(!deep_equality_comparable<std::tuple<bar>>);
+    STATIC_CHECK(!deep_equality_comparable<std::tuple<bar, double>>);
+    STATIC_CHECK(!deep_equality_comparable<std::optional<bar>>);
+    STATIC_CHECK(!deep_equality_comparable<std::variant<int, bar>>);
+    STATIC_CHECK(!deep_equality_comparable<std::tuple<std::vector<bar>, std::array<std::pair<int, float>, 2>>>);
+    STATIC_CHECK(!deep_equality_comparable<std::tuple<std::vector<int>, std::array<std::pair<bar, float>, 2>>>);
+    STATIC_CHECK(!deep_equality_comparable<std::tuple<std::vector<int>, std::array<std::pair<int, bar>, 2>>>);
+  }
 
-        return true;
-      }()
-    );
+  void concepts_test::test_deep_totally_ordered()
+  {
+    STATIC_CHECK(deep_totally_ordered<int>);
+    STATIC_CHECK(deep_totally_ordered<std::vector<int>>);
+    STATIC_CHECK(deep_totally_ordered<std::array<int, 3>>);
+    STATIC_CHECK(deep_totally_ordered<std::map<int, double>>);
+    STATIC_CHECK(deep_totally_ordered<std::tuple<int>>);
+    STATIC_CHECK(deep_totally_ordered<std::tuple<int, double>>);
+    STATIC_CHECK(deep_totally_ordered<std::pair<int, double>>);
+    STATIC_CHECK(deep_totally_ordered<std::optional<int>>);
+    STATIC_CHECK(deep_totally_ordered<std::variant<int, float>>);
+    STATIC_CHECK(deep_totally_ordered<std::tuple<std::vector<int>, std::array<std::pair<int, float>, 2>>>);
+
   }
 
   void concepts_test::test_initializable_from()
   {
-    check("", []() {
-        static_assert(initializable_from<int, int>);
-        static_assert(initializable_from<bar>);
-        static_assert(!initializable_from<bar, int>);
-        static_assert(initializable_from<aggregate, int, double>);
-        static_assert(!initializable_from<aggregate, int, double, char>);
-        static_assert(initializable_from<move_only_init, std::vector<int>>);
-
-        return true;
-      }()
-    );
+    STATIC_CHECK(initializable_from<int, int>);
+    STATIC_CHECK(initializable_from<bar>);
+    STATIC_CHECK(!initializable_from<bar, int>);
+    STATIC_CHECK(initializable_from<aggregate, int, double>);
+    STATIC_CHECK(!initializable_from<aggregate, int, double, char>);
+    STATIC_CHECK(initializable_from<move_only_init, std::vector<int>>);
   }
 }

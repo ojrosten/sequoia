@@ -147,10 +147,16 @@ namespace sequoia
   template<class T>
   struct is_deep_equality_comparable;
 
+  template<class T>
+  inline constexpr bool is_deep_equality_comparable_v{is_deep_equality_comparable<T>::value};
+
+  template<class T>
+  using is_deep_equality_comparable_t = typename is_deep_equality_comparable<T>::type;
+
   template<class T, std::size_t... I>
   inline constexpr bool heterogeneous_deep_equality_v{
     requires(T & t, std::index_sequence<I...>) {
-      requires (is_deep_equality_comparable<std::remove_cvref_t<decltype(std::get<I>(t))>>::value && ...);
+      requires (is_deep_equality_comparable_v<std::remove_cvref_t<decltype(std::get<I>(t))>> && ...);
     }
   };
 
@@ -169,7 +175,7 @@ namespace sequoia
   {};
 
   template<class T>
-  struct is_deep_equality_comparable : std::bool_constant<std::equality_comparable<T> && !std::is_array_v<T>>
+  struct is_deep_equality_comparable : std::bool_constant<std::equality_comparable<T>>
   {};
 
   template<class T>
@@ -182,22 +188,64 @@ namespace sequoia
   struct is_deep_equality_comparable<T<Ts...>> : std::bool_constant<std::equality_comparable<T<Ts...>> && heterogeneous_deep_equality<T<Ts...>>::value>
   {};
 
-  template<class T>
-  inline constexpr bool is_deep_equality_comparable_v{is_deep_equality_comparable<T>::value};
-
-  template<class T>
-  using is_deep_equality_comparable_t = typename is_deep_equality_comparable<T>::type;
-
   /*! @} */ // end of deep_equality group
 
-   /*! \brief class template for determining if a type is compatible with a floating-point type.
-   
-       The goal is to forbid e.g. multiplication of a float by a double, but to allow multiplication
-       of a float by an integral type, even though the latter operation may also lead to a loss of
-       precision. Thus, for an instance `x` of a type which both wraps a float and defines *=, this
-       utility can be used to allow x *= 2 but forbid x *= 2.2. The idea is to strike a balance 
-       between ergonomics and loss of precision.
-    */
+  /*! @defgroup deep_totally_ordered The deep_totally_ordered Group */
+  
+  template<class T>
+  struct is_deep_totally_ordered;
+
+  template<class T>
+  inline constexpr bool is_deep_totally_ordered_v{is_deep_totally_ordered<T>::value};
+
+  template<class T>
+  using is_deep_totally_ordered_t = typename is_deep_totally_ordered<T>::type;
+
+  template<class T, std::size_t... I>
+  inline constexpr bool heterogeneous_deep_total_order_v{
+    requires(T & t, std::index_sequence<I...>) {
+      requires (is_deep_totally_ordered_v<std::remove_cvref_t<decltype(std::get<I>(t))>> && ...);
+    }
+  };
+
+  template<class T, std::size_t...I>
+  constexpr bool has_heterogeneous_deep_total_order(std::index_sequence<I...>)
+  {
+    return heterogeneous_deep_total_order_v<T, I...>;
+  }
+
+  template<class T>
+  struct heterogeneous_deep_total_order;
+
+  template<template<class...> class T, class... Ts>
+  struct heterogeneous_deep_total_order<T<Ts...>>
+    : std::bool_constant<has_heterogeneous_deep_total_order<T<Ts...>>(std::make_index_sequence<sizeof...(Ts)>{})>
+  {};
+
+  template<class T>
+  struct is_deep_totally_ordered : std::bool_constant<std::totally_ordered<T>>
+  {};
+
+  template<class T>
+    requires has_value_type_v<T>
+  struct is_deep_totally_ordered<T> : std::bool_constant<std::totally_ordered<T>&& is_deep_totally_ordered<typename T::value_type>::value>
+  {};
+
+  template<template<class...> class T, class... Ts>
+    requires (!has_value_type_v<T<Ts...>> && has_gettable_elements<T<Ts...>>)
+  struct is_deep_totally_ordered<T<Ts...>> : std::bool_constant<std::totally_ordered<T<Ts...>> && heterogeneous_deep_total_order<T<Ts...>>::value>
+  {};
+  
+  /*! @} */ // end of deep_totally_ordered group
+
+  /*! \brief class template for determining if a type is compatible with a floating-point type.
+  
+      The goal is to forbid e.g. multiplication of a float by a double, but to allow multiplication
+      of a float by an integral type, even though the latter operation may also lead to a loss of
+      precision. Thus, for an instance `x` of a type which both wraps a float and defines *=, this
+      utility can be used to allow x *= 2 but forbid x *= 2.2. The idea is to strike a balance 
+      between ergonomics and loss of precision.
+   */
 
   template<std::floating_point T, class U>
   struct is_compatible : std::bool_constant<!std::is_same_v<U, bool> && ((std::floating_point<U> && is_initializable_v<T, U>) || std::is_integral_v<U>)> {};

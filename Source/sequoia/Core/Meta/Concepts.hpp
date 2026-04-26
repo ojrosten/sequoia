@@ -105,4 +105,8 @@ namespace sequoia
   concept deep_equality_comparable = is_deep_equality_comparable_v<T>;
 
   /*! @} */
+
+  template<class T>
+  concept deep_totally_ordered = deep_equality_comparable<T> && is_deep_totally_ordered_v<T>;
+
 }

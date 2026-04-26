@@ -32,6 +32,8 @@ namespace sequoia::testing
 
     void test_deep_equality_comparable();
 
+    void test_deep_totally_ordered();
+
     void test_initializable_from();
   };
 }

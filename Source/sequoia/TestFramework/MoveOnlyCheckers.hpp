@@ -82,7 +82,7 @@ namespace sequoia::testing
       y equivalent to yEquivalent
    */
   template<test_mode Mode, moveonly T, class U, class V>
-    requires std::totally_ordered<T> && checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
+    requires deep_totally_ordered<T> && checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
   bool check_semantics(std::string description,
                        test_logger<Mode>& logger,
                        T&& x,

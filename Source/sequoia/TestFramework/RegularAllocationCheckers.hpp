@@ -209,14 +209,14 @@ namespace sequoia::testing
   };
 
   template<test_mode Mode, pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-    requires (!std::totally_ordered<T> && (sizeof...(Getters) > 0))
+    requires (!deep_totally_ordered<T> && (sizeof...(Getters) > 0))
   void check_semantics(std::string description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator, const allocation_info<T, Getters>&... info)
   {
     impl::check_semantics(std::move(description), logger, impl::regular_allocation_actions<T>{}, x, y, std::move(yMutator), info...);
   }
 
   template<test_mode Mode, pseudoregular T, std::invocable<T&> Mutator, alloc_getter<T>... Getters>
-    requires (std::totally_ordered<T> && (sizeof...(Getters) > 0))
+    requires (deep_totally_ordered<T> && (sizeof...(Getters) > 0))
   void check_semantics(std::string description, test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order, Mutator yMutator, const allocation_info<T, Getters>&... info)
   {
     impl::check_semantics(std::move(description), logger, impl::regular_allocation_actions<T>{order}, x, y, std::move(yMutator), info...);
@@ -231,7 +231,7 @@ namespace sequoia::testing
     std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
-    requires (!std::totally_ordered<T> && sizeof...(Getters) > 0)
+    requires (!deep_totally_ordered<T> && sizeof...(Getters) > 0)
   std::pair<T, T> check_semantics(std::string description, test_logger<Mode>& logger, xMaker xFn, yMaker yFn, Mutator yMutator, const allocation_info<T, Getters>&... info)
   {
     return impl::check_semantics(std::move(description), logger, impl::regular_allocation_actions<T>{}, std::move(xFn), std::move(yFn), std::move(yMutator), info...);
@@ -246,7 +246,7 @@ namespace sequoia::testing
     std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
-    requires (std::totally_ordered<T> && sizeof...(Getters) > 0)
+    requires (deep_totally_ordered<T> && sizeof...(Getters) > 0)
   std::pair<T, T> check_semantics(std::string description, test_logger<Mode>& logger, xMaker xFn, yMaker yFn, std::weak_ordering order, Mutator yMutator, const allocation_info<T, Getters>&... info)
   {
     return impl::check_semantics(std::move(description), logger, impl::regular_allocation_actions<T>{order}, std::move(xFn), std::move(yFn), std::move(yMutator), info...);

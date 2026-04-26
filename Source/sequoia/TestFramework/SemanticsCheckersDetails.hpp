@@ -120,14 +120,14 @@ namespace sequoia::testing::impl
   template<class T>
   struct auxiliary_data_policy;
 
-  template<std::equality_comparable T>
+  template<deep_equality_comparable T>
   struct auxiliary_data_policy<T>
   {
   protected:
     ~auxiliary_data_policy() = default;
   };
 
-  template<std::totally_ordered T>
+  template<deep_totally_ordered T>
   struct auxiliary_data_policy<T>
   {
     constexpr explicit auxiliary_data_policy(std::weak_ordering order)
@@ -200,7 +200,7 @@ namespace sequoia::testing::impl
   }
   
   template<test_mode Mode, class Actions, pseudoregular T, class... Args>
-    requires std::totally_ordered<T>
+    requires deep_totally_ordered<T>
   [[nodiscard]]
   static bool check_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
@@ -215,7 +215,7 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, moveonly T, class U, class... Args>
-    requires std::totally_ordered<T>
+    requires deep_totally_ordered<T>
   [[nodiscard]]
   static bool check_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent, const Args&... args)
   {
@@ -230,7 +230,7 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, moveonly T, class... Args>
-    requires std::totally_ordered<T>
+    requires deep_totally_ordered<T>
   [[nodiscard]]
   static bool check_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
@@ -265,7 +265,7 @@ namespace sequoia::testing::impl
     return !sentry.failure_detected();
   }
 
-  template<test_mode Mode, class Actions, std::totally_ordered T, class... Args>
+  template<test_mode Mode, class Actions, deep_totally_ordered T, class... Args>
   [[nodiscard]]
   bool check_ordering_operators(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
@@ -284,7 +284,7 @@ namespace sequoia::testing::impl
     return !sentry.failure_detected();
   }
 
-  template<test_mode Mode, class Actions, std::totally_ordered T, class... Args>
+  template<test_mode Mode, class Actions, deep_totally_ordered T, class... Args>
   [[nodiscard]]
   bool check_ordering_consistency(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
@@ -310,7 +310,7 @@ namespace sequoia::testing::impl
     return x < y ? comp(x,y) : comp(y,x);
   }
 
-  template<test_mode Mode, class Actions, std::totally_ordered T, class U, class... Args>
+  template<test_mode Mode, class Actions, deep_totally_ordered T, class U, class... Args>
   [[nodiscard]]
   bool check_ordering_consistency(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const U&, const U&, const Args&... args)
   {
@@ -357,7 +357,7 @@ namespace sequoia::testing::impl
     return xPassed && yPassed;
   }
   
-  template<test_mode Mode, class Actions, std::totally_ordered T, class... Args>
+  template<test_mode Mode, class Actions, deep_totally_ordered T, class... Args>
   [[nodiscard]]
   bool check_orderable_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {

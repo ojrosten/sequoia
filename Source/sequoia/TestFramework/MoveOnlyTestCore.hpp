@@ -133,7 +133,7 @@ namespace sequoia::testing
           y equivalent to yEquivalent
      */
     template<moveonly T, class U, class V, class Self>
-      requires std::totally_ordered<T> && checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
+      requires deep_totally_ordered<T> && checkable_against_for_semantics<Mode, T, U> && checkable_against_for_semantics<Mode, T, V>
     bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
@@ -163,7 +163,7 @@ namespace sequoia::testing
           y equivalent to yEquivalent
      */
     template<moveonly T, class U, class Self>
-      requires std::totally_ordered<T> && checkable_against_for_semantics<Mode, T, U>
+      requires deep_totally_ordered<T> && checkable_against_for_semantics<Mode, T, U>
     bool check_semantics(this Self& self,
                          const reporter& description,
                          T&& x,
@@ -198,7 +198,7 @@ namespace sequoia::testing
       class U,
       class Self
     >
-      requires std::totally_ordered<T> && checkable_against_for_semantics<Mode, T, U>
+      requires deep_totally_ordered<T> && checkable_against_for_semantics<Mode, T, U>
     bool check_semantics(this Self& self,
                          const reporter& description,
                          xMaker xFn,
@@ -227,7 +227,7 @@ namespace sequoia::testing
       moveonly T=std::invoke_result_t<xMaker>,
       regular_invocable_r<T> yMaker
     >
-      requires std::totally_ordered<T>
+      requires deep_totally_ordered<T>
     bool check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn, std::weak_ordering order)
     {
       return self.check_semantics(description, xFn(), yFn(), xFn(), yFn(), order);
