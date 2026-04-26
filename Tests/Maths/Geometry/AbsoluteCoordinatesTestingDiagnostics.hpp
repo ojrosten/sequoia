@@ -11,6 +11,8 @@
 
 #include "GeometryTestingUtilities.hpp"
 
+#include "sequoia/PlatformSpecific/Preprocessor.hpp"
+
 namespace sequoia::testing
 {
   class absolute_coordinates_false_negative_test final : public regular_false_negative_test
@@ -22,6 +24,12 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
+
+    [[nodiscard]]
+    std::string output_discriminator() const
+    {
+      return compiler_name();
+    }
   private:
     template<std::floating_point T, std::size_t D>
     void test_absolute();

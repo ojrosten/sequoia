@@ -1,7 +1,7 @@
 Tests/Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.cpp, Line 39
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::maths::euclidean_nonnegative_space<float, 1, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_right_handed_basis<sequoia::maths::euclidean_vector_space<float, 1, sequoia::maths::mathematical_arena> >, sequoia::maths::identity_representation<sequoia::maths::interval_validator<float, 0.000000, inf> > > >]
+[sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::maths::euclidean_nonnegative_space<float, 1, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_right_handed_basis<sequoia::maths::euclidean_vector_space<float, 1, sequoia::maths::mathematical_arena> >, sequoia::maths::identity_representation<sequoia::maths::interval_validator<float, 0.000000, inff> > > >]
 Checking for equivalence with:
 [std::array<float, 1>]
 
@@ -59,7 +59,7 @@ Checking for equivalence with:
 
 Tests/Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.cpp, Line 40
 
-[sequoia::maths::coordinates<sequoia::maths::euclidean_nonnegative_space<float, 1, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_right_handed_basis<sequoia::maths::euclidean_vector_space<float, 1, sequoia::maths::mathematical_arena> >, sequoia::maths::identity_representation<sequoia::maths::interval_validator<float, 0.000000, inf> > >]
+[sequoia::maths::coordinates<sequoia::maths::euclidean_nonnegative_space<float, 1, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_right_handed_basis<sequoia::maths::euclidean_vector_space<float, 1, sequoia::maths::mathematical_arena> >, sequoia::maths::identity_representation<sequoia::maths::interval_validator<float, 0.000000, inff> > >]
 operator== returned false
 
   Wrapped values
@@ -112,7 +112,7 @@ Checking for equivalence with:
     Predicted: 1
 
   Iterators
-  [std::ranges::subrange<double, 2>, std::_Array_const_iterator<double, 2> const*]
+  [std::ranges::subrange<double const*, double const*, 1>]
 
     Element 0 of range incorrect
     [double]
@@ -127,7 +127,7 @@ Checking for equivalence with:
     Predicted: 1
 
   c-Iterators
-  [std::ranges::subrange<double, 2>, std::_Array_const_iterator<double, 2> const*]
+  [std::ranges::subrange<double const*, double const*, 1>]
 
     Element 0 of range incorrect
     [double]
@@ -142,7 +142,7 @@ Checking for equivalence with:
     Predicted: 1
 
   r-Iterators
-  [std::ranges::subrange<std::reverse_iterator<double, 2> >, std::reverse_iterator<std::_Array_const_iterator<double, 2> > const*]
+  [std::ranges::subrange<std::reverse_iterator<double const*>, std::reverse_iterator<double const*>, 1>]
 
     Element 0 of range incorrect
     [double]
@@ -157,7 +157,7 @@ Checking for equivalence with:
     Predicted: 1
 
   cr-Iterators
-  [std::ranges::subrange<std::reverse_iterator<double, 2> >, std::reverse_iterator<std::_Array_const_iterator<double, 2> > const*]
+  [std::ranges::subrange<std::reverse_iterator<double const*>, std::reverse_iterator<double const*>, 1>]
 
     Element 0 of range incorrect
     [double]

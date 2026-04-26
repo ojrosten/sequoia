@@ -60,4 +60,17 @@ namespace sequoia
   inline constexpr bool with_msvc_v{std::is_same_v<compiler_constant, msvc_type>};
   inline constexpr bool with_clang_v{std::is_same_v<compiler_constant, clang_type>};
   inline constexpr bool with_gcc_v{std::is_same_v<compiler_constant, gcc_type>};
+
+  [[nodiscard]]
+  inline std::string compiler_name()
+  {
+    if constexpr(with_clang_v)
+      return "clang";
+    else if(with_gcc_v)
+      return "gcc";
+    else if(with_msvc_v)
+      return "msvc";
+
+    return "";
+  }
 }
