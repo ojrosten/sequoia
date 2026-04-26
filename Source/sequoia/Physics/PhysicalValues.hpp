@@ -1312,7 +1312,7 @@ namespace sequoia::physics
   {};
 
   template<physical_unit Unit, class Rep>
-    requires has_coordinate_transform_v<Unit>
+    requires has_coordinate_transform_v<Unit> && (!is_coordinate_transform_v<Unit>) // Last condition only necessary for MSVC
   struct default_space<Unit, Rep> : default_space<root_transform_t<Unit>, Rep> {};
 
   template<std::floating_point T>
