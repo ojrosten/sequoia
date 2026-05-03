@@ -86,8 +86,10 @@ namespace sequoia::testing
     
     T lower{}, upper{};
 
+    template<arithmetic U>
+      requires initializable_from<T, U>
     [[nodiscard]]
-    constexpr bool operator()(std::span<const T, 2> vals) const noexcept
+    constexpr bool operator()(const std::array<U, 2>& vals) const noexcept
     {
       const T r{vals[0] * vals[0] + vals[1] * vals[1]};
       return (r >= lower*lower) && (r <= upper*upper);
