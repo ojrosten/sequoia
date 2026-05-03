@@ -39,6 +39,10 @@ int main(int argc, char** argv)
         spaces_meta_free_test{"Spaces Meta Free Test"}
       },
       suite{
+        "Bounds",
+        bounds_free_test{"Bounds Free Test"}
+      },
+      suite{
         "Vector Coordinates",
         vector_coordinates_false_negative_test{"Vector Coordinates False negative Test"},
         vector_coordinates_test{"Vector Coordinates Test"},

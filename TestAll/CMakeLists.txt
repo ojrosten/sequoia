@@ -56,11 +56,12 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Geometry/AbsoluteLogarithmicCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/AffineCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp
+               ${TestDir}/Maths/Geometry/BoundsFreeTest.cpp
                ${TestDir}/Maths/Geometry/FreeModuleCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/SpacesMetaFreeTest.cpp
                ${TestDir}/Maths/Geometry/VectorCoordinatesTest.cpp
-               ${TestDir}/Maths/Geometry/VectorPolarCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp
+               ${TestDir}/Maths/Geometry/VectorPolarCoordinatesTest.cpp
                ${TestDir}/Maths/Graph/Algorithms/DynamicGraphTraversalsTest.cpp
                ${TestDir}/Maths/Graph/Algorithms/DynamicGraphUpdateTest.cpp
                ${TestDir}/Maths/Graph/Algorithms/DynamicSubgraphTest.cpp
