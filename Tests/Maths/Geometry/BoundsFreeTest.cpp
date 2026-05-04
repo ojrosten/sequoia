@@ -12,16 +12,17 @@
 
 namespace sequoia::testing
 {
+  using namespace maths;
   template<arithmetic T>
   struct coordinate_bounds
   {
     using value_type = T;
 
-    constexpr static auto greatest_upper_bound{
+    constexpr static T greatest_upper_bound{
       std::numeric_limits<T>::has_infinity ? std::numeric_limits<T>::infinity() : std::numeric_limits<T>::max()
     };
 
-    constexpr static auto least_lower_bound{
+    constexpr static T least_lower_bound{
       std::numeric_limits<T>::has_infinity ? -std::numeric_limits<T>::infinity() : std::numeric_limits<T>::lowest()
     };
 
@@ -47,6 +48,15 @@ namespace sequoia::testing
       return true;
     }
 
+    template<arithmetic U, std::size_t D>
+      requires initializable_from<T, U>
+    [[nodiscard]]
+    constexpr bool operator()(const std::array<U, D>& vals) const noexcept
+    {
+      auto v{std::views::transform(vals, [this](const U val) { return this->operator()(val); })};
+      return !std::ranges::contains(v, false);
+    }
+
     template<arithmetic U>
       requires initializable_from<T, U>
     [[nodiscard]]
@@ -54,23 +64,8 @@ namespace sequoia::testing
     {
       return std::format("{}", val);
     }
-  };
 
-  template<arithmetic T, std::size_t D>
-  struct uniform_bounds : coordinate_bounds<T>
-  {
-    using value_type = T;
-    
-    template<arithmetic U>
-      requires initializable_from<T, U>
-    [[nodiscard]]
-    constexpr bool operator()(const std::array<U, D>& vals) const noexcept
-    {
-      auto v{std::views::transform(vals, [this](const U val) { return coordinate_bounds<T>{this->lower, this->upper}(val); })};
-      return !std::ranges::contains(v, false);
-    }
-
-    template<arithmetic U>
+    template<arithmetic U, std::size_t D>
       requires initializable_from<T, U>
     [[nodiscard]]
     std::string format_input(const std::array<U, D>& vals) const
@@ -111,10 +106,28 @@ namespace sequoia::testing
            { Bounds.lower } -> std::convertible_to<typename decltype(Bounds)::value_type>;
            { Bounds.upper } -> std::convertible_to<typename decltype(Bounds)::value_type>;
            requires (Bounds.lower < Bounds.upper);
-
-           //{ Bounds(std::declval<typename decltype(Bounds)::value_type>()) } -> std::convertible_to<bool>;
          };
 
+  template<auto Bounds>
+  inline constexpr bool checks_single_val_against_bounds_v{
+    requires {
+      { Bounds(std::declval<typename decltype(Bounds)::value_type>()) } -> std::convertible_to<bool>;
+    }
+  };
+
+  template<auto Bounds, std::size_t D>
+  inline constexpr bool checks_array_against_bounds_v{
+    requires {
+      { Bounds(std::declval<std::array<typename decltype(Bounds)::value_type, D>>()) } -> std::convertible_to<bool>;
+    }
+  };
+
+  template<auto Bounds, class ConvexSpace>
+  concept bounds_for
+    =      bounds<Bounds> && convex_space<ConvexSpace>
+        && (   ((dimension_of<ConvexSpace> == 1) && checks_single_val_against_bounds_v<Bounds>)
+            || ((dimension_of<ConvexSpace>  > 1) && checks_array_against_bounds_v<Bounds, dimension_of<ConvexSpace>>));
+  
   namespace impl
   {
     template<auto Bounds, class T>
@@ -187,8 +200,15 @@ namespace sequoia::testing
 
   void bounds_free_test::run_tests()
   {
-    STATIC_CHECK(bounds<coordinate_bounds{0.0, 1.0}>);
-    STATIC_CHECK(bounds<uniform_bounds<double, 2>{0.0, 1.0}>);
+    STATIC_CHECK( bounds<coordinate_bounds{0.0, 1.0}>);
+    STATIC_CHECK(!bounds<coordinate_bounds{2.0, 1.0}>);
+    STATIC_CHECK( bounds<annulus_bounds{1.0, 2.0}>);
+    STATIC_CHECK(!bounds<annulus_bounds{2.1, 2.0}>);
+    STATIC_CHECK( bounds_for<coordinate_bounds{0.0, 1.0}, euclidean_vector_space<double, 1>>);
+    STATIC_CHECK( bounds_for<coordinate_bounds{0.0, 1.0}, euclidean_vector_space<double, 2>>);
+    STATIC_CHECK( bounds_for<annulus_bounds{0.0, 1.0}, euclidean_vector_space<double, 2>>);
+    STATIC_CHECK(!bounds_for<annulus_bounds{0.0, 1.0}, euclidean_vector_space<double, 1>>);
+    STATIC_CHECK(!bounds_for<annulus_bounds{0.0, 1.0}, euclidean_vector_space<double, 3>>);
 
     check_exception_thrown<std::domain_error>(
       "",
@@ -200,7 +220,7 @@ namespace sequoia::testing
     check_exception_thrown<std::domain_error>(
       "",
       [](){
-        throwing_validator<uniform_bounds<double, 2>{0.0, 1.0}>{}(std::array{2.0, 1.0});
+        throwing_validator<coordinate_bounds<double>{0.0, 1.0}>{}(std::array{2.0, 1.0});
       }
     );
 
