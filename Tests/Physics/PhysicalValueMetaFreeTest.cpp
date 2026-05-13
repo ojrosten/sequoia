@@ -15,7 +15,6 @@ namespace sequoia::testing
   using namespace physics;
   using namespace physics::impl;
 
-
   namespace
   {
     template<class T>

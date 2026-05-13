@@ -15,7 +15,7 @@
 namespace sequoia::physics
 {
   using namespace maths;
-  
+
   template<class Space>
   struct associated_displacement_space;
 
@@ -40,15 +40,16 @@ namespace sequoia::physics
   };
 
   template<class T>
-  concept physical_unit
-    =    identifies_as_unit_v<T>
-      && requires { typename T::validator_type; };
+  concept physical_unit = identifies_as_unit_v<T>;
 
   template<class... Ts>
   struct composite_space;
 
   template<physical_unit... Ts>
   struct composite_unit;
+
+  template<representation... Ts>
+  struct composite_representation;
 
   template<class T>
   struct reduction;
@@ -440,6 +441,12 @@ namespace sequoia::physics::impl
     using type = composite_unit<Ts...>;
   };
 
+  template<representation... Ts>
+  struct to_composite_space<reduction<direct_product<Ts...>>>
+  {
+    using type = composite_representation<Ts...>;
+  };
+
   template<class T>
   struct to_composite_space<reduction<direct_product<T>>>
   {
@@ -462,5 +469,11 @@ namespace sequoia::maths
   struct dual_of<physics::composite_unit<Ts...>>
   {
     using type = physics::composite_unit<dual_of_t<Ts>...>;
+  };
+
+  template<representation... Ts>
+  struct dual_of<physics::composite_representation<Ts...>>
+  {
+    using type = physics::composite_representation<dual_of_t<Ts>...>;
   };
 }

@@ -50,8 +50,7 @@ namespace sequoia::maths
     [[nodiscard]]
     constexpr affine_coordinates<A, Basis, bob<A>, Representation>
     operator()(const affine_coordinates<A, Basis, alice<A>, Representation>& c) const noexcept
-    {
-        
+    {     
       return affine_coordinates<A, Basis, bob<A>, Representation>{(c + displacement).values()};
     }
   };
@@ -78,7 +77,7 @@ namespace sequoia::testing
   {
     using space_t  = my_affine_space<Element, Field, D>;
     using basis_t  = canonical_basis<Element, Field, D>;
-    using affine_t = affine_coordinates<space_t, basis_t, alice<space_t>, identity_representation<std::identity>>;
+    using affine_t = affine_coordinates<space_t, basis_t, alice<space_t>, identity_representation<Field, no_bounds<to_bounds_value_type_t<Field>>>>;
     using delta_t  = affine_t::displacement_coordinates_type;
     using value_t  = Field;
     STATIC_CHECK(!can_multiply<affine_t, value_t>);
@@ -96,7 +95,7 @@ namespace sequoia::testing
     
     coordinates_operations<affine_t>{*this}.execute();
 
-    using affine2_t = affine_coordinates<space_t, basis_t, bob<space_t>, identity_representation<std::identity>>;
+    using affine2_t = affine_coordinates<space_t, basis_t, bob<space_t>, identity_representation<Field, no_bounds<to_bounds_value_type_t<Field>>>>;
     affine2_t bob_coords{coordinate_transformation<affine_t, affine2_t>{delta_t{Field{-1.0}}}(affine_t{})};
 
     check(equality, "", bob_coords, affine2_t{Field{-1.0}});

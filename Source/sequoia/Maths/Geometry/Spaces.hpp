@@ -495,6 +495,7 @@ namespace sequoia::maths
   /** @ingroup Spaces
       @brief concept for a vector space, which is a special case of a free module
    */
+  // TO DO: rework this so that this becomes a refinement of affine which is a refinement of convex
   template<class T>
   concept vector_space = free_module<T> && defines_field_v<T>;
 
@@ -715,6 +716,255 @@ namespace sequoia::maths
       && (admits_canonical_basis_v<free_module_type_of_t<B>> || has_isomorphism_type_v<B>)
       && requires { requires std::is_same_v<free_module_type_of_t<B>, M>; };
 
+  /** @defgroup Bounds Bounds
+
+   */
+
+  template<auto Bounds>
+  concept bounds
+    =    has_value_type_v<decltype(Bounds)>
+      && requires {
+           { Bounds.lower } -> std::convertible_to<typename decltype(Bounds)::value_type>;
+           { Bounds.upper } -> std::convertible_to<typename decltype(Bounds)::value_type>;
+           requires (Bounds.lower < Bounds.upper);
+         };
+
+  template<auto Bounds>
+  inline constexpr bool checks_single_val_against_bounds_v{
+    requires {
+      { Bounds(std::declval<typename decltype(Bounds)::value_type>()) } -> std::convertible_to<bool>;
+    }
+  };
+
+  template<auto Bounds, std::size_t D>
+  inline constexpr bool checks_array_against_bounds_v{
+    requires {
+      { Bounds(std::declval<std::array<typename decltype(Bounds)::value_type, D>>()) } -> std::convertible_to<bool>;
+    }
+  };
+
+  template<auto Bounds, class ConvexSpace>
+  concept bounds_for
+    =      bounds<Bounds> && convex_space<ConvexSpace>
+        && (   ((dimension_of<ConvexSpace> == 1) && checks_single_val_against_bounds_v<Bounds>)
+            || ((dimension_of<ConvexSpace>  > 1) && checks_array_against_bounds_v<Bounds, dimension_of<ConvexSpace>>));
+  
+  namespace impl
+  {
+    template<auto Bounds, class T>
+    struct range_of_bounds;
+
+    template<auto Bounds, class T>
+    inline constexpr bool range_of_bounds_v{range_of_bounds<Bounds, T>::value};
+
+    template<auto Bounds, std::size_t... Is>
+    struct range_of_bounds<Bounds, std::index_sequence<Is...>> : std::bool_constant<(bounds<Bounds[Is]> && ...)>
+    {      
+    };
+  }
+
+  template<auto Bounds>
+  inline constexpr bool range_of_bounds_v{
+       std::ranges::range<decltype(Bounds)>
+    && requires {
+         requires impl::range_of_bounds_v<Bounds, std::make_index_sequence<Bounds.size()>>;
+       }
+  };
+
+  template<auto Bounds>
+  struct bounds_value_type
+  {
+    using bounds_type = decltype(Bounds);
+    using type = bounds_type::value_type;
+  };
+
+  template<auto Bounds>
+  using bounds_value_type_t = bounds_value_type<Bounds>::type;
+
+  template<auto Bounds>
+    requires range_of_bounds_v<Bounds>
+  struct bounds_value_type<Bounds>
+  {
+    using range_of_bounds_type = decltype(Bounds);
+    using type = range_of_bounds_type::value_type::value_type;
+  };
+
+  template<weak_commutative_ring T>
+  struct to_bounds_value_type
+  {
+    using type = T;
+  };
+
+  template<weak_commutative_ring T>
+  using to_bounds_value_type_t = to_bounds_value_type<T>::type;
+
+  template<std::floating_point T>
+  struct to_bounds_value_type<std::complex<T>>
+  {
+    using type = T;
+  };
+
+  template<weak_commutative_ring T>
+  struct coordinate_bounds
+  {
+    using value_type = T;
+
+    constexpr static T greatest_upper_bound{
+      std::numeric_limits<T>::has_infinity ? std::numeric_limits<T>::infinity() : std::numeric_limits<T>::max()
+    };
+
+    constexpr static T least_lower_bound{
+      std::numeric_limits<T>::has_infinity ? -std::numeric_limits<T>::infinity() : std::numeric_limits<T>::lowest()
+    };
+
+    T lower{}, upper{greatest_upper_bound};
+
+    template<weak_commutative_ring U>
+      requires initializable_from<T, U>
+    [[nodiscard]]
+    constexpr bool operator()(U val) const noexcept
+    {
+      if(lower > least_lower_bound)
+      {
+        if(const U uLower{static_cast<U>(lower)}; val < uLower)
+          return false;
+      }
+
+      if(upper < greatest_upper_bound)
+      {
+        if(const U uUpper{static_cast<U>(upper)}; val > uUpper)
+          return false;
+      }
+
+      return true;
+    }
+
+    template<weak_commutative_ring U, std::size_t D>
+      requires initializable_from<T, U>
+    [[nodiscard]]
+    constexpr bool operator()(const std::array<U, D>& vals) const noexcept
+    {
+      auto v{std::views::transform(vals, [this](const U val) { return this->operator()(val); })};
+      return !std::ranges::contains(v, false);
+    }
+
+    template<weak_commutative_ring U>
+      requires initializable_from<T, U>
+    [[nodiscard]]
+    std::string format_input(const U val) const
+    {
+      return std::format("{}", val);
+    }
+
+    template<weak_commutative_ring U, std::size_t D>
+      requires initializable_from<T, U>
+    [[nodiscard]]
+    std::string format_input(const std::array<U, D>& vals) const
+    {
+      return std::format("{} has at least one value", vals);
+    }
+
+    [[nodiscard]]
+    friend constexpr bool operator==(const coordinate_bounds&, const coordinate_bounds&) noexcept = default; 
+  };
+
+
+  template<weak_commutative_ring T>
+  inline constexpr coordinate_bounds<T> no_bounds{coordinate_bounds<T>::least_lower_bound, coordinate_bounds<T>::greatest_upper_bound};
+
+  template<weak_commutative_ring T>
+  inline constexpr coordinate_bounds<T> half_line_bounds{T{}, coordinate_bounds<T>::greatest_upper_bound};
+  
+  template<weak_commutative_ring T>
+  [[nodiscard]]
+  constexpr coordinate_bounds<T> reciprocal(const coordinate_bounds<T>& b) noexcept
+  {
+    constexpr auto llb{coordinate_bounds<T>::least_lower_bound},
+                   gub{coordinate_bounds<T>::greatest_upper_bound};
+
+    if((b == no_bounds<T>) || (b == half_line_bounds<T>))
+      return b;
+
+    // TO DO: fix this!
+      
+    auto invert{
+      [b](T val){
+        if((val == llb) || (val == gub))
+          return T{};
+
+        if(val)
+          return T(1) / val;
+
+        return b.upper ? gub : llb;      
+      }
+    };
+
+    return {invert(b.upper), invert(b.lower)};
+  }
+
+  // TO DO: rename the fix
+  template<weak_commutative_ring T, weak_commutative_ring U>
+  [[nodiscard]]
+  constexpr coordinate_bounds<std::common_type_t<T, U>> operator*(const coordinate_bounds<T>& a, const coordinate_bounds<U>& b)
+  {
+    using value_type = std::common_type_t<T, U>;
+    constexpr auto llb{coordinate_bounds<value_type>::least_lower_bound},
+                   gub{coordinate_bounds<value_type>::greatest_upper_bound};
+
+    if((a == no_bounds<T>) || (b == no_bounds<T>))
+      return no_bounds<T>;
+
+    auto mul{
+      [](value_type v, value_type w) -> value_type {        
+        if((v > 0) && (w > 0))
+        {
+          if((v == gub) || (w == gub))
+            return gub;
+
+          return v > gub / w ? gub : v * w;
+        }
+
+        if((v < 0) && (w < 0))
+        {
+          if((v == llb) || (w == llb))
+            return llb;
+
+          return v > gub / w ? gub : v * w;
+        }
+
+        if((v > 0) && (w < 0))
+        {
+          if((v == gub) || (w == llb))
+             return llb;
+
+          return v > llb / w ? llb : v * w;
+        }
+
+        if((v < 0) && (w > 0))
+        {
+          if((v == llb) || (w == gub))
+             return llb;
+
+          return w > llb / v ? llb : v * w;
+        }
+
+        return {};
+      }
+    };
+
+    const std::array products{mul(a.lower, b.lower), mul(a.lower, b.upper), mul(a.upper, b.lower), mul(a.upper, b.upper)};
+
+    return {std::ranges::min(products), std::ranges::max(products)};
+  }
+  
+  template<class T>
+  inline constexpr bool has_bounds_v{
+    requires {
+      T::bounds_v;
+      requires bounds<T::bounds_v>;
+    }
+  };
+  
   /** @defgroup Validators Validators
       @brief Validators are central to dealing with spaces where the C++ representation could produce values outside the underlying set.
 
@@ -733,7 +983,7 @@ namespace sequoia::maths
       value) std::identity holds a privileged position, indicating a transparent
       validator that performs no actual checking. However, its privileged status
       is determined by a trait, so that careful clients could implement their
-      own to deal with edge cases such as NaN.
+      own, even for vector/affine spaces,  to deal with edge cases such as NaN.
    */
 
   /** @ingroup Validators
@@ -789,6 +1039,85 @@ namespace sequoia::maths
   template<>
   struct defines_identity_validator<std::identity> : std::true_type {};
 
+  template<auto Bounds>
+  struct throwing_validator;
+
+  // TO DO: probably move template to operator()
+  template<auto Bounds>
+    requires bounds<Bounds>
+  struct throwing_validator<Bounds>
+  {
+    using bounds_type = decltype(Bounds);
+    using value_type  = bounds_type::value_type;
+
+    // TO DO: hopefully get rid of this
+    template<auto OtherBounds>
+    using rebind_type = throwing_validator<OtherBounds>;
+ 
+    constexpr value_type operator()(const value_type val) const
+    {
+      if(!Bounds(val))
+        throw std::domain_error{std::format("Input {} outside permitted domain [{}, {}]", Bounds.format_input(val), Bounds.lower, Bounds.upper)};
+
+      return validate(val);
+    }
+
+    template<std::size_t D>
+    constexpr const std::array<value_type, D>& operator()(const std::array<value_type, D>& vals) const
+    {      
+      return validate(vals);
+    }
+  private:
+    template<class T>
+    constexpr const T& validate(const T& t) const
+    {
+      if(!Bounds(t))
+        throw std::domain_error{std::format("Input {} outside permitted domain [{}, {}]", Bounds.format_input(t), Bounds.lower, Bounds.upper)};
+
+      return t;
+    }
+  };
+
+  template<auto RangeOfBounds>
+    requires range_of_bounds_v<RangeOfBounds>
+  struct throwing_validator<RangeOfBounds>
+  {
+    using bounds_type = decltype(RangeOfBounds)::value_type;
+    using value_type  = bounds_type::value_type;
+    constexpr static std::size_t D{RangeOfBounds.size()};
+
+    constexpr const std::array<value_type, D>& operator()(const std::array<value_type, D>& vals) const
+    {
+      [&]<std::size_t... Is>(std::index_sequence<Is...>) {
+        (throwing_validator<RangeOfBounds[Is]>{}(vals[Is]), ...);
+      }(std::make_index_sequence<RangeOfBounds.size()>());
+
+      return vals;
+    }
+  };
+
+  template<auto Bounds>
+  struct identity_validator
+  {
+    using bounds_type = decltype(Bounds);
+    using value_type  = bounds_type::value_type;
+
+    // TO DO: hopefully get rid of this
+    template<auto OtherBounds>
+    using rebind_type = identity_validator<OtherBounds>;
+ 
+    constexpr value_type operator()(const value_type val) const
+    {
+      return val;
+    }
+
+    template<std::size_t D>
+    constexpr const std::array<value_type, D>& operator()(const std::array<value_type, D>& vals) const
+    {      
+      return vals;
+    }
+  };
+
   /** @ingroup Validators
       @brief A validator for the half line.
 
@@ -812,7 +1141,11 @@ namespace sequoia::maths
       return val;
     }
   };
+  
 
+
+
+  
   /** @ingroup Validators
       @brief A generic interval validator for floating-point types.
    */
@@ -918,22 +1251,37 @@ namespace sequoia::maths
      }
   };
 
+  template<class R>
+  concept representation = has_value_type_v<R> && has_bounds_v<R>; // TO DO
+
   template<class R, class ConvexSpace>
   concept representation_for
     =    convex_space<ConvexSpace>
       && std::is_default_constructible_v<R>
-      && has_validator_type_v<R>
-      && validator_for<typename R::validator_type, ConvexSpace>
+    //&& has_bounds_v<R> TO DO
+    // && bounds_for<typename R::bounds_type, ConvexSpace>
       && (representation_for_single_value<R, ConvexSpace> || representation_for_span<R, ConvexSpace>);
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
-    requires (!std::is_final_v<Representation>)
-  struct representation_for_free_module_of
+  struct representation_for_free_module_of;
+  
+  template<convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
+    requires (!free_module<ConvexSpace>) && (!std::is_final_v<Representation>)
+  struct representation_for_free_module_of<ConvexSpace, Representation>
   {
+    // TO DO
     struct type : Representation
     {
-      using validator_type = std::identity;
+      using value_type = Representation::value_type;
+      constexpr static coordinate_bounds<value_type> bounds_v{no_bounds<value_type>};
     };
+  };
+
+  template<convex_space M, representation_for<M> Representation>
+    requires free_module<M>
+  struct representation_for_free_module_of<M, Representation>
+  {
+    using type = Representation;
   };
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
@@ -1491,33 +1839,49 @@ namespace sequoia::maths
   template<basis B, class Rep, class... Args>
   inline constexpr bool is_units_terminated_pack_v{is_units_terminated_pack<B, Rep, Args...>::value};
 
-  template<class Validator>
+  // TO DO: T extraneous
+  template<weak_commutative_ring T, auto Bounds>
+    requires bounds<Bounds>
   struct identity_representation
   {
-    using validator_type = Validator;
-    
-    template<weak_commutative_ring T, std::size_t N> 
+    constexpr static auto bounds_v{Bounds};
+    using bounds_type = decltype(Bounds);
+    using value_type = T;
+
+    template<auto OtherBounds>
+    using rebind_type = identity_representation<T, OtherBounds>;
+
+    template<std::size_t D>
     [[nodiscard]]
-    constexpr static std::array<T, N> to_underlying(std::span<const T, N> in) noexcept
+    constexpr static std::array<T, D> to_underlying(std::span<const T, D> in) noexcept
     {
       return utilities::to_array(in);
     }
 
-    template<weak_commutative_ring T, std::size_t N> 
+    template<std::size_t D>
     [[nodiscard]]
-    constexpr static std::array<T, N> from_underlying(std::span<const T, N> in) noexcept
+    constexpr static std::array<T, D> from_underlying(std::span<const T, D> in) noexcept
     {
       return utilities::to_array(in);
     }
   };
-  
+
+  template<weak_commutative_ring T, auto Bounds>
+    requires bounds<Bounds>
+  struct dual_of<identity_representation<T, Bounds>>
+  {
+    using type = identity_representation<T, reciprocal(Bounds)>;
+  };
+
   template<
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
     representation_for<ConvexSpace> Representation,
+    class Validator,
     class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<ConvexSpace>,
                                                           Basis,
-                                                          representation_for_free_module_of_t<ConvexSpace, Representation>>
+                                                          typename Representation::template rebind_type<no_bounds<to_bounds_value_type_t<commutative_ring_type_of_t<ConvexSpace>>>>
+                                                          /*representation_for_free_module_of_t<ConvexSpace, Representation>*/>
   >
   class coordinates_base
   {
@@ -1531,14 +1895,14 @@ namespace sequoia::maths
     using commutative_ring_type         = commutative_ring_type_of_t<ConvexSpace>;
     using value_type                    = commutative_ring_type;
     using basis_isomorphism_type        = basis_isomorphism_type_of_t<Basis>;
-    using validator_type                = Representation::validator_type;
+    using validator_type                = Validator;
 
     // TO DO: improve conventions
     constexpr static bool has_distinguished_origin{has_distinguished_origin_v<ConvexSpace>};
     constexpr static bool has_identity_validator{defines_identity_validator_v<validator_type>};
     constexpr static bool has_freely_mutable_components{free_module<space_type>};
     constexpr static bool admits_canonical_basis{admits_canonical_basis_v<free_module_type>};
-    
+
     constexpr static std::size_t dimension{free_module_type::dimension};
     constexpr static std::size_t D{dimension};
 
@@ -1992,28 +2356,30 @@ namespace sequoia::maths
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
     class Origin,
-    representation_for<ConvexSpace> Representation
+    representation_for<ConvexSpace> Representation,
+    class Validator
   >
-  class coordinates<ConvexSpace, Basis, Origin, Representation> final
-    : public coordinates_base<ConvexSpace, Basis, Representation>
+  class coordinates<ConvexSpace, Basis, Origin, Representation, Validator> final
+    : public coordinates_base<ConvexSpace, Basis, Representation, Validator>
   {
   public:
     using origin_type = Origin;
 
-    using coordinates_base<ConvexSpace, Basis, Representation>::coordinates_base;
+    using coordinates_base<ConvexSpace, Basis, Representation, Validator>::coordinates_base;
   };
 
   template<
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
-    representation_for<ConvexSpace> Representation
+    representation_for<ConvexSpace> Representation,
+    class Validator
   >
     requires has_distinguished_origin_v<ConvexSpace> && (!free_module<ConvexSpace>)
-  class coordinates<ConvexSpace, Basis, Representation> final
-    : public coordinates_base<ConvexSpace, Basis, Representation>
+  class coordinates<ConvexSpace, Basis, Representation, Validator> final
+    : public coordinates_base<ConvexSpace, Basis, Representation, Validator>
   {
   public:
-    using coordinates_base<ConvexSpace, Basis, Representation>::coordinates_base;
+    using coordinates_base<ConvexSpace, Basis, Representation, Validator>::coordinates_base;
   };
 
   template<
@@ -2024,20 +2390,20 @@ namespace sequoia::maths
   >
     requires (!free_module<AffineSpace>)
   class coordinates<AffineSpace, Basis, Origin, Representation> final
-    : public coordinates_base<AffineSpace, Basis, Representation>
+    : public coordinates_base<AffineSpace, Basis, Representation, std::identity>
   {
   public:
     using origin_type = Origin;
     
-    using coordinates_base<AffineSpace, Basis, Representation>::coordinates_base;
+    using coordinates_base<AffineSpace, Basis, Representation, std::identity>::coordinates_base;
   };
 
   template<free_module M, basis_for<free_module_type_of_t<M>> Basis, representation_for<M> Representation>    
   class coordinates<M, Basis, Representation> final
-    : public coordinates_base<M, Basis, Representation>
+    : public coordinates_base<M, Basis, Representation, std::identity>
   {
   public:
-    using coordinates_base<M, Basis, Representation>::coordinates_base;
+    using coordinates_base<M, Basis, Representation, std::identity>::coordinates_base;
   };
 
   template<class From, class To>
@@ -2220,6 +2586,7 @@ namespace sequoia::maths
     using non_negative_orthant = std::true_type;
   };
 
+  // TO DO rename line
   template<std::floating_point T, class Arena=mathematical_arena>
   using euclidean_half_space = euclidean_nonnegative_space<T, 1, Arena>;
 
@@ -2262,7 +2629,7 @@ namespace sequoia::maths
   using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<T, D, Arena>, Basis, Representation>;
 
   template<std::floating_point T, std::size_t D, basis Basis, class Representation, class Arena=mathematical_arena>
-  using euclidean_nonnegative_coordinates = coordinates<euclidean_nonnegative_space<T, D, Arena>, Basis, Representation>;
+  using euclidean_nonnegative_coordinates = coordinates<euclidean_nonnegative_space<T, D, Arena>, Basis, Representation, std::identity>;
 
   /** @brief Right-handed bases for arbitrary D, built recursively from 1D
 
@@ -2324,5 +2691,5 @@ namespace sequoia::maths
   };
 
   template<std::floating_point T, std::size_t D, class Arena=mathematical_arena>
-  using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<euclidean_vector_space<T, D, Arena>>, Arena>;
+  using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<euclidean_vector_space<T, D, Arena>>, identity_representation<T, no_bounds<T>>, Arena>;
 }

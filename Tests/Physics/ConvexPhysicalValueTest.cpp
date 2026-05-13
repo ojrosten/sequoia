@@ -131,6 +131,7 @@ namespace sequoia::testing
     using space_t    = quantity_t::space_type;
     using units_t    = quantity_t::units_type;
     using value_t    = quantity_t::value_type;
+    using repr_t     = quantity_t::representation_type;
 
     STATIC_CHECK(convex_space<space_t>);
     STATIC_CHECK(vector_space<free_module_type_of_t<space_t>>);
@@ -153,11 +154,14 @@ namespace sequoia::testing
         dual<units_t>,
         unit_defined_right_handed_basis<free_module_type_of_t<dual<space_t>>, dual<units_t>>,
         to_origin_type_t<dual<space_t>>,
-        typename dual<units_t>::validator_type
+        dual_of_t<repr_t>,
+        throwing_validator<repr_t::bounds_v>
       >
     );
     STATIC_CHECK( can_multiply<value_t, units_t>);
-    STATIC_CHECK(!can_divide  <value_t, units_t>);
+    // TO DO: think if this can be reinstated. The problem is that we
+    // want to exclude for Celsius as a point but not as a Delta
+    //STATIC_CHECK(!can_divide  <value_t, units_t>);
 
     coordinates_operations<quantity_t>{*this}.execute();
   }

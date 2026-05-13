@@ -15,7 +15,7 @@
 
 namespace sequoia::physics
 {
-  template<class T>
+  /*template<class T>
   struct reciprocal_validator;
 
   template<class T>
@@ -38,7 +38,7 @@ namespace sequoia::physics
   template<class T>
   inline constexpr bool has_reciprocal_validator_v{
     requires { typename reciprocal_validator_t<T>; }
-  };
+    };*/
 
   template<free_module M, physical_unit U>
   struct unit_defined_right_handed_basis
@@ -52,7 +52,7 @@ namespace sequoia::physics
   struct no_unit_t : identity_isomorphism
   {
     using is_unit        = std::true_type; // TO DO: naming makes this peverse!
-    using validator_type = maths::half_line_validator;
+    //using validator_type = maths::half_line_validator;
   };
   
   inline constexpr no_unit_t no_unit{};
@@ -68,11 +68,11 @@ namespace sequoia::physics
 namespace sequoia::maths
 {
   template<physics::physical_unit T>
-    requires physics::has_reciprocal_validator_v<typename T::validator_type>
+  //  requires physics::has_reciprocal_validator_v<typename T::validator_type>
   struct dual<T>
   {
     using is_unit        = std::true_type;
-    using validator_type = physics::reciprocal_validator_t<typename T::validator_type>;
+    //  using validator_type = physics::reciprocal_validator_t<typename T::validator_type>;
   };
 
   /** @brief Specialization for units, such as degrees Celsius, for which
@@ -82,13 +82,13 @@ namespace sequoia::maths
              displacements, where the validator is overridden, assumed to
              be std::identity
    */
-  template<physics::physical_unit T>
+  /*template<physics::physical_unit T>
     requires (!physics::has_reciprocal_validator_v<typename T::validator_type>)
   struct dual<T>
   {
     using is_unit        = std::true_type;
     using validator_type = void;
-  };
+    };*/
 
   template<free_module M, physics::physical_unit U>
   struct dual_of<physics::unit_defined_right_handed_basis<M, U>>
@@ -127,29 +127,29 @@ namespace sequoia::physics
 {
   using namespace maths;
 
-  template<class... Ts>
-  struct reduced_validator;
+  /*template<auto... Bs>
+  struct reduced_bounds;
 
-  template<class... Ts>
-  using reduced_validator_t = reduced_validator<Ts...>::type;
+  template<auto... Bs>
+  inline constexpr auto reduced_bounds_v{reduced_bounds<Bs...>::value};
 
-  template<class T>
-  struct reduced_validator<T>
+  template<auto B>
+  struct reduced_bounds<B>
   {
-    using type = T;
+    constexpr static auto value{B};
   };
 
-  template<class T, class... Us>
-  struct reduced_validator<T, Us...>
+  template<auto B, auto... Bs>
+  struct reduced_bounds<B, Bs...>
   {
-    using type = reduced_validator_t<T, reduced_validator_t<Us...>>;
-  };
+    constexpr static auto value{reduced_bounds_v<B, reduced_bounds_v<Bs...>>};
+    };*/
 
   template<physical_unit... Ts>
   struct composite_unit
   {
     using is_unit        = std::true_type;
-    using validator_type = reduced_validator_t<typename Ts::validator_type...>;
+    //using validator_type = reduced_validator_t<typename Ts::validator_type...>;
   };
   
   template<class... Ts>
@@ -180,6 +180,17 @@ namespace sequoia::physics
     using non_negative_orthant = std::bool_constant<(is_non_negative_orthant_v<Ts> && ...)>;
   };
 
+  /*template<representation... Ts>
+  struct composite_representation
+  {
+    constexpr static auto bounds_v{reduced_bounds_v<Ts::bounds_v...>};
+    using value_type = std::common_type_t<typename Ts::value_type...>;
+    };*/
+
+  // TO DO: combine these
+
+
+  // Units
   template<physical_unit... Us>
   struct reduction<direct_product<Us...>>
   {
@@ -204,6 +215,7 @@ namespace sequoia::physics
     using type = impl::simplify_t<direct_product<Ts...>, direct_product<Us...>>;
   };
 
+  // Spaces
   template<convex_space... Ts>
   struct reduction<direct_product<Ts...>>
   {
@@ -228,33 +240,73 @@ namespace sequoia::physics
     using type = impl::simplify_t<direct_product<Ts...>, direct_product<Us...>>;
   };
 
-  template<class T>
-  struct reduced_validator<T, std::identity>
+  template<weak_commutative_ring LHRing, auto LHBounds, weak_commutative_ring RHRing, auto RHBounds>
+    requires bounds<LHBounds> && bounds<RHBounds>
+  struct reduction<direct_product<identity_representation<LHRing, LHBounds>, identity_representation<RHRing, RHBounds>>>
   {
-    using type = std::identity;
+    using ring_t = std::common_type_t<LHRing, RHRing>;
+    using type   = identity_representation<ring_t, LHBounds * RHBounds>;
   };
 
-  template<class T>
-    requires (!std::is_same_v<T, std::identity>)
-  struct reduced_validator<std::identity, T>
+  template<representation R, representation S>
+  struct reduction<direct_product<R, S>>
   {
-    using type = std::identity;
+    using value_type = std::common_type_t<typename R::value_type, typename S::value_type>;
+    using type       = identity_representation<value_type, R::bounds_v * S::bounds_v>; // TO DO
+  };
+  
+  // Representations
+  /*template<representation... Ts>
+  struct reduction<direct_product<Ts...>>
+  {
+    using type = impl::simplify_t<direct_product<Ts...>>;
+  };
+
+  template<representation... Ts, representation U>
+  struct reduction<direct_product<composite_representation<Ts...>, U>>
+  {
+    using type = impl::simplify_t<direct_product<Ts...>, direct_product<U>>;
+  };
+
+  template<representation T, representation... Us>
+  struct reduction<direct_product<T, composite_representation<Us...>>>
+  {
+    using type = impl::simplify_t<direct_product<Us...>, direct_product<T>>;
+  };  
+
+  template<representation... Ts, representation... Us>
+  struct reduction<direct_product<composite_representation<Ts...>, composite_representation<Us...>>>
+  {
+    using type = impl::simplify_t<direct_product<Ts...>, direct_product<Us...>>;
+    };*/
+
+  // Do this through functions and composition of bounds
+  /*template<auto B, weak_commutative_ring T>
+  struct reduced_bounds<B, no_bounds<T>>
+  {
+    using value_type = std::common_type_t<bounds_value_type_of_t<B>, T>;
+    constexpr static auto value{no_bounds<value_type>};
+  };
+
+  template<auto B, weak_commutative_ring T>
+  struct reduced_bounds<no_bounds<T>, B> : reduced_bounds<B, no_bounds<T>>
+  {
   };
 
   template<>
-  struct reduced_validator<half_line_validator, half_line_validator>
+  struct reduced_bounds<half_line_bounds, half_line_bounds>
   {
-    using type = half_line_validator;
-  };
+    constexpr static auto value{half_line_bounds};
+    };*/
 
-  template<convex_space ValueSpace, validator_for<ValueSpace> Validator>
+  /*template<convex_space ValueSpace, validator_for<ValueSpace> Validator>
   inline constexpr bool has_consistent_validator{
     !affine_space<ValueSpace> || defines_identity_validator_v<Validator>
-  };
+    };*/
 
   template<convex_space ValueSpace>
   inline constexpr bool has_consistent_space{
-    (!is_dual_v<ValueSpace>) || vector_space<ValueSpace> || (!affine_space<ValueSpace>)
+    (!is_dual_v<ValueSpace>) || has_distinguished_origin_v<ValueSpace> //vector_space<ValueSpace> || (!affine_space<ValueSpace>)
   };
   
   template<
@@ -262,10 +314,11 @@ namespace sequoia::physics
     physical_unit Unit,
     basis_for<free_module_type_of_t<ValueSpace>> Basis,
     class Origin,
+    representation_for<ValueSpace> Representation,
     validator_for<ValueSpace> Validator
   >
     requires    has_consistent_space<ValueSpace>
-             && has_consistent_validator<ValueSpace, Validator>
+  //&& has_consistent_validator<ValueSpace, Validator>
   class physical_value;
 
   struct unit_defined_origin{};
@@ -301,13 +354,30 @@ namespace sequoia::physics
     using type = implicit_affine_origin;
   };
   
-  template<convex_space ValueSpace, physical_unit Unit, basis_for<free_module_type_of_t<ValueSpace>> Basis, class Validator>
+  template<
+    convex_space ValueSpace,
+    physical_unit Unit,
+    basis_for<free_module_type_of_t<ValueSpace>> Basis,
+    representation_for<ValueSpace> Representation,
+    class Validator
+  >
   using to_coordinates_base_type
     = coordinates_base<
         ValueSpace,
         Basis,    
-        identity_representation<Validator>,
-        physical_value<free_module_type_of_t<ValueSpace>, Unit, Basis, distinguished_origin, std::identity>>;
+        Representation,
+        Validator,
+        physical_value<
+          free_module_type_of_t<ValueSpace>,
+          Unit,
+          Basis,
+          distinguished_origin,
+          typename Representation::template rebind_type<no_bounds<commutative_ring_type_of_t<ValueSpace>>>,
+          typename Validator::template rebind_type<
+            Representation::template rebind_type<no_bounds<commutative_ring_type_of_t<ValueSpace>>>::bounds_v
+          >
+        >
+      >;
 
   template<convex_space T, convex_space U>
   struct to_displacement_space;
@@ -373,22 +443,24 @@ namespace sequoia::physics
   };
   
   template<
-    convex_space LHSValueSpace, physical_unit LHSUnit, basis_for<free_module_type_of_t<LHSValueSpace>> LHSBasis, class LHSValidator,
-    convex_space RHSValueSpace, physical_unit RHSUnit, basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, class RHSValidator
+    convex_space LHSValueSpace, physical_unit LHSUnit, basis_for<free_module_type_of_t<LHSValueSpace>> LHSBasis, class LHSRepresentation, class LHSValidator,
+    convex_space RHSValueSpace, physical_unit RHSUnit, basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, class RHSRepresentation, class RHSValidator
   >
-    requires consistent_bases_v<LHSBasis, RHSBasis>
-  struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSBasis, distinguished_origin, LHSValidator>,
-                                physical_value<RHSValueSpace, RHSUnit, RHSBasis, distinguished_origin, RHSValidator>>
+    requires consistent_bases_v<LHSBasis, RHSBasis> && has_distinguished_origin_v<LHSValueSpace> && has_distinguished_origin_v<RHSValueSpace>
+  struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSBasis, distinguished_origin, LHSRepresentation, LHSValidator>,
+                                physical_value<RHSValueSpace, RHSUnit, RHSBasis, distinguished_origin, RHSRepresentation, RHSValidator>>
   {
-    using value_space_type = impl::to_composite_space_t<reduction_t<direct_product<LHSValueSpace, RHSValueSpace>>>;
-    using units_type       = impl::to_composite_space_t<reduction_t<direct_product<LHSUnit, RHSUnit>>>;
+    using value_space_type    = impl::to_composite_space_t<reduction_t<direct_product<LHSValueSpace, RHSValueSpace>>>;
+    using units_type          = impl::to_composite_space_t<reduction_t<direct_product<LHSUnit, RHSUnit>>>;
+    using representation_type = reduction_t<direct_product<LHSRepresentation, RHSRepresentation>>;
     using type
       = physical_value<
           value_space_type,
           units_type,
           typename consistent_bases<LHSBasis, RHSBasis>::template rebind_type<free_module_type_of_t<value_space_type>, units_type>,
           distinguished_origin,
-          reduced_validator_t<LHSValidator, RHSValidator>
+          representation_type,
+      typename LHSValidator::template rebind_type<representation_type::bounds_v> // TODO must combine validators!
         >;
   };
 
@@ -432,26 +504,52 @@ namespace sequoia::physics
 
   template<class Rep, class... Args>
   inline constexpr bool is_valid_physical_value_pack_v{is_valid_physical_value_pack<Rep, Args...>::value};
+
+  template<convex_space ValueSpace, physical_unit Unit>
+  struct default_representation;
+
+  template<convex_space ValueSpace, physical_unit Unit>
+    requires free_module<ValueSpace> || affine_space<ValueSpace>
+  struct default_representation<ValueSpace, Unit>
+  {
+    using ring_t = commutative_ring_type_of_t<ValueSpace>;
+    using type = identity_representation<ring_t, no_bounds<to_bounds_value_type_t<ring_t>>>;
+  };
+
+  template<convex_space ValueSpace, physical_unit Unit>
+    requires (!free_module<ValueSpace> && !affine_space<ValueSpace>)
+  struct default_representation<ValueSpace, Unit>
+  {
+    using ring_t = commutative_ring_type_of_t<ValueSpace>;
+    // TO DO: transformation from unit
+    using type = identity_representation<ring_t, half_line_bounds<to_bounds_value_type_t<ring_t>>>;
+  };
+
+  template<convex_space ValueSpace, physical_unit Unit>
+  using default_representation_t = default_representation<ValueSpace, Unit>::type;
   
   template<
     convex_space ValueSpace,
     physical_unit Unit,
-    basis_for<free_module_type_of_t<ValueSpace>> Basis = unit_defined_right_handed_basis<free_module_type_of_t<ValueSpace>, Unit>,
+    basis_for<free_module_type_of_t<ValueSpace>> Basis = unit_defined_right_handed_basis<free_module_type_of_t<ValueSpace>, Unit>,    
     class Origin                                       = to_origin_type_t<ValueSpace>,
-    validator_for<ValueSpace> Validator                = default_validator_t<ValueSpace, Unit>
+    representation_for<ValueSpace> Representation      = default_representation_t<ValueSpace, Unit>,
+    validator_for<ValueSpace> Validator                = throwing_validator<Representation::bounds_v> // TODO reintroduce default here and below
   >
     requires    has_consistent_space<ValueSpace>
-             && has_consistent_validator<ValueSpace, Validator>
-  class physical_value final : public to_coordinates_base_type<ValueSpace, Unit, Basis, Validator>
+  //&& has_consistent_validator<ValueSpace, Validator>
+  class physical_value final
+    : public to_coordinates_base_type<ValueSpace, Unit, Basis, Representation, Validator>
   {
   public:
-    using coordinates_type         = to_coordinates_base_type<ValueSpace, Unit, Basis, Validator>;
+    using coordinates_type         = to_coordinates_base_type<ValueSpace, Unit, Basis, Representation, Validator>;
     using space_type               = ValueSpace;
     using units_type               = Unit;
     using basis_type               = Basis;
     using origin_type              = Origin;
     using displacement_space_type  = free_module_type_of_t<ValueSpace>;
-    using intrinsic_validator_type = Unit::validator_type;
+    //using intrinsic_validator_type = Unit::validator_type;
+    using representation_type      = Representation;
     using validator_type           = Validator;
     using ring_type                = commutative_ring_type_of_t<ValueSpace>;
     using value_type               = ring_type;
@@ -491,11 +589,11 @@ namespace sequoia::physics
            && have_compatible_base_spaces_v<space_type, OtherValueSpace>
            && consistent_bases_v<basis_type, OtherBasis>
     [[nodiscard]]
-    friend constexpr auto operator+(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& rhs)
+    friend constexpr auto operator+(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, representation_type, validator_type>& rhs)
     {
       using value_space_t    = to_base_space_t<space_type>;
       using basis_t          = consistent_bases<basis_type, OtherBasis>::template rebind_type<free_module_type_of_t<value_space_t>, Unit>;
-      using physical_value_t = physical_value<value_space_t, Unit, basis_t, to_origin_type_t<value_space_t>, Validator>;
+      using physical_value_t = physical_value<value_space_t, Unit, basis_t, to_origin_type_t<value_space_t>, representation_type, validator_type>;
 
       return [&] <std::size_t... Is>(std::index_sequence<Is...>) {
         return physical_value_t{std::array{(lhs.values()[Is] + rhs.values()[Is])...}, units_type{}};
@@ -508,43 +606,44 @@ namespace sequoia::physics
             && have_compatible_base_spaces_v<space_type, OtherValueSpace>
             && consistent_bases_v<basis_type, OtherBasis>
     [[nodiscard]]
-    friend constexpr auto operator-(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, Validator>& rhs)
+    friend constexpr auto operator-(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasis, OtherOrigin, representation_type, validator_type>& rhs)
       noexcept(has_identity_validator)
     {
       using disp_space_t = to_displacement_space_t<ValueSpace, OtherValueSpace>;
       using basis_t      = consistent_bases<basis_type, OtherBasis>::template rebind_type<free_module_type_of_t<disp_space_t>, Unit>;
-      using disp_t       = to_coordinates_base_type<disp_space_t, Unit, basis_t, Validator>::displacement_coordinates_type;
+      using disp_t       = to_coordinates_base_type<disp_space_t, Unit, basis_t, representation_type, Validator>::displacement_coordinates_type;
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
         return disp_t{std::array{(lhs.values()[Is] - rhs.values()[Is])...}, units_type{}};
       }(std::make_index_sequence<D>{});
     }
 
-    template<convex_space RHSValueSpace, physical_unit RHSUnit, basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, class RHSOrigin, class RHSValidator>
-      requires is_multipicable_with<RHSValueSpace, RHSBasis>
+    template<convex_space RHSValueSpace, physical_unit RHSUnit, basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, class RHSOrigin, class RHSRepresentation, class RHSValidator>
+      requires is_multipicable_with<RHSValueSpace, RHSBasis> // include repr here and validator
     [[nodiscard]]
     friend constexpr auto operator*(const physical_value& lhs,
-                                    const physical_value<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSValidator>& rhs)
+                                    const physical_value<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSRepresentation, RHSValidator>& rhs)
     {
       using physical_value_t
         = physical_value_product_t<
             physical_value,
-            physical_value<RHSValueSpace,RHSUnit, RHSBasis, RHSOrigin, RHSValidator>
+            physical_value<RHSValueSpace,RHSUnit, RHSBasis, RHSOrigin, RHSRepresentation, RHSValidator>
           >;
 
       using derived_units_type = physical_value_t::units_type;
       return physical_value_t{lhs.value() * rhs.value(), derived_units_type{}};
     }
 
-    template<convex_space RHSValueSpace, class RHSUnit,  basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, class RHSOrigin, class RHSValidator>
-      requires is_divisible_with<RHSValueSpace, RHSBasis>
+    template<convex_space RHSValueSpace, class RHSUnit,  basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, class RHSOrigin, class RHSRepresentation, class RHSValidator>
+    requires is_divisible_with<RHSValueSpace, RHSBasis> // constrain rhsorigin
     [[nodiscard]]
     friend constexpr auto operator/(const physical_value& lhs,
-                                    const physical_value<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSValidator>& rhs)
+                                    const physical_value<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSRepresentation, RHSValidator>& rhs)
     {
+      using dual_rep_t = dual_of_t<RHSRepresentation>;
       using physical_value_t
         = physical_value_product_t<
             physical_value,
-            physical_value<dual_of_t<RHSValueSpace>, dual_of_t<RHSUnit>, dual_of_t<RHSBasis>, distinguished_origin, RHSValidator>
+        physical_value<dual_of_t<RHSValueSpace>, dual_of_t<RHSUnit>, dual_of_t<RHSBasis>, distinguished_origin, dual_rep_t, typename RHSValidator::template rebind_type<dual_rep_t::bounds_v>>
           >;
       using derived_units_type = physical_value_t::units_type;
 
@@ -556,7 +655,8 @@ namespace sequoia::physics
     [[nodiscard]] friend constexpr auto operator/(value_type value, const physical_value& rhs)
       requires ((D == 1) && (is_non_negative_orthant_v<space_type> || vector_space<ValueSpace>))
     {
-      using physical_value_t = physical_value<dual_of_t<ValueSpace>, dual_of_t<Unit>, dual_of_t<basis_type>, distinguished_origin, validator_type>;
+      using dual_rep_t = dual_of_t<representation_type>;
+      using physical_value_t = physical_value<dual_of_t<ValueSpace>, dual_of_t<Unit>, dual_of_t<basis_type>, distinguished_origin, dual_rep_t, typename validator_type::template rebind_type<dual_rep_t::bounds_v>>;
       using derived_units_type = physical_value_t::units_type;
       return physical_value_t{value / rhs.value(), derived_units_type{}};
     }
@@ -564,9 +664,9 @@ namespace sequoia::physics
     template<class LoweredValueSpace, basis_for<free_module_type_of_t<LoweredValueSpace>> OtherBasis>    
       requires std::same_as<to_base_space_t<space_type>, LoweredValueSpace> && consistent_bases_v<basis_type, OtherBasis>
     [[nodiscard]]
-    constexpr operator physical_value<LoweredValueSpace, Unit, OtherBasis, Origin, validator_type>() const noexcept
+    constexpr operator physical_value<LoweredValueSpace, Unit, OtherBasis, Origin, representation_type, validator_type>() const noexcept
     {
-      using physical_value_t = physical_value<LoweredValueSpace, Unit, OtherBasis, Origin, validator_type>;
+      using physical_value_t = physical_value<LoweredValueSpace, Unit, OtherBasis, Origin, representation_type, validator_type>;
       
       return [this] <std::size_t... Is>(std::index_sequence<Is...>) {
         return physical_value_t{std::array{this->values()[Is]...}, Unit{}};
@@ -577,15 +677,14 @@ namespace sequoia::physics
       physical_unit OtherUnit,
       convex_space OtherSpace                                 = conversion_space_t<ValueSpace, Unit, OtherUnit>,
       basis_for<free_module_type_of_t<OtherSpace>> OtherBasis = unit_defined_right_handed_basis<free_module_type_of_t<OtherSpace>, OtherUnit>,
-      class OtherOrigin                                       = to_origin_type_t<OtherSpace>,
-      validator_for<OtherSpace> OtherValidator                = default_validator_t<OtherSpace, OtherUnit>
+      class OtherOrigin                                       = to_origin_type_t<OtherSpace>
     >
-      requires has_quantity_conversion_v<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>
+      requires has_quantity_conversion_v<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, representation_type, validator_type>>
     [[nodiscard]]
-    constexpr physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator> convert_to(OtherUnit) const
-      noexcept(has_noexcept_coordinate_transformation_v<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>)
+    constexpr physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, representation_type, validator_type> convert_to(OtherUnit) const
+      noexcept(has_noexcept_coordinate_transformation_v<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, representation_type, validator_type>>)
     {
-      return coordinate_transformation<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherValidator>>{}(*this);
+      return coordinate_transformation<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, representation_type, validator_type>>{}(*this);
     }
 
     [[nodiscard]]
@@ -1243,7 +1342,7 @@ namespace sequoia::physics
           units::second_t,
           unit_defined_right_handed_basis<free_module_type_of_t<time_space<T, Arena>>, units::second_t>,
           Origin,
-          std::identity
+          identity_representation<T, no_bounds<T>>
         >;
 
     template<      
@@ -1253,7 +1352,7 @@ namespace sequoia::physics
       basis_for<free_module_type_of_t<position_space<T, D, Arena>>> Basis = unit_defined_right_handed_basis<free_module_type_of_t<position_space<T, D, Arena>>, units::metre_t>,
       class Origin = implicit_affine_origin
     >
-    using position = physical_value<position_space<T, D, Arena>, units::metre_t, Basis, Origin, std::identity>;
+    using position = physical_value<position_space<T, D, Arena>, units::metre_t, Basis, Origin, identity_representation<T, no_bounds<T>>>;
   }
 
   // TO DO: see commnent above si namespace
@@ -1357,14 +1456,15 @@ namespace sequoia::physics
     using type = electrical_current_space<T, implicit_common_arena>;
   };
   
-  template<vector_space ValueSpace, physical_unit Unit, class Basis, class Origin, validator_for<ValueSpace> Validator>
+  template<vector_space ValueSpace, physical_unit Unit, basis_for<free_module_type_of_t<ValueSpace>> Basis, class Origin, representation_for<ValueSpace> Representation, validator_for<ValueSpace> Validator>
     requires (dimension_of<ValueSpace> == 1)
   [[nodiscard]]
-  constexpr physical_value<ValueSpace, Unit, Basis, Origin, Validator> abs(physical_value<ValueSpace, Unit, Basis, Origin, Validator> q)
+  constexpr physical_value<ValueSpace, Unit, Basis, Origin, Representation, Validator> abs(physical_value<ValueSpace, Unit, Basis, Origin, Representation, Validator> q)
   {
     return {std::abs(q.value()), Unit{}};
   }
 
+  // TO DO: representation etc
   template<std::floating_point T, class Arena=implicit_common_arena>
   [[nodiscard]]
   constexpr T sin(physical_value<angular_space<T, Arena>, si::units::radian_t> theta)
@@ -1407,20 +1507,33 @@ namespace sequoia::physics
     return {std::atan(x), si::units::radian};
   }
 
-  template<physical_unit Unit, class Rep, class Validator=typename Unit::validator_type>
-    requires has_default_space_v<Unit, Rep>
-  using quantity = physical_value<default_space_t<Unit, Rep>, Unit, unit_defined_right_handed_basis<free_module_type_of_t<default_space_t<Unit, Rep>>, Unit>, to_origin_type_t<default_space_t<Unit, Rep>>, Validator>;
+  template<
+    physical_unit Unit,
+    class Rep,
+    class Representation = default_representation_t<default_space_t<Unit, Rep>, Unit>,
+    class Validator = throwing_validator<Representation::bounds_v>
+  >
+  using quantity
+    = physical_value<
+        default_space_t<Unit, Rep>,
+        Unit,
+        unit_defined_right_handed_basis<free_module_type_of_t<default_space_t<Unit, Rep>>, Unit>,
+        to_origin_type_t<default_space_t<Unit, Rep>>,
+        Representation,
+        Validator
+      >;
 
   template<
     convex_space ValueSpace,
     physical_unit Unit,
-    validator_for<ValueSpace> Validator=typename Unit::validator_type
+    representation_for<ValueSpace> Representation      = default_representation_t<ValueSpace, Unit>,
+    validator_for<ValueSpace> Validator                = throwing_validator<Representation::bounds_v>
   >
-    requires has_consistent_validator<ValueSpace, Validator>
-  using dimensionless_quantity = physical_value<ValueSpace, Unit, unit_defined_right_handed_basis<free_module_type_of_t<ValueSpace>, Unit>, to_origin_type_t<ValueSpace>, Validator>;
+  //requires has_consistent_validator<ValueSpace, Validator>
+  using dimensionless_quantity = physical_value<ValueSpace, Unit, unit_defined_right_handed_basis<free_module_type_of_t<ValueSpace>, Unit>, to_origin_type_t<ValueSpace>, Representation, Validator>;
   
   template<std::floating_point Rep, class Arena=implicit_common_arena>
-  using euclidean_1d_vector_quantity = dimensionless_quantity<euclidean_vector_space<Rep, 1, Arena>, no_unit_t, std::identity>;
+  using euclidean_1d_vector_quantity = dimensionless_quantity<euclidean_vector_space<Rep, 1, Arena>, no_unit_t, identity_representation<Rep, no_bounds<Rep>>/*, identity_validator<no_bounds<Rep>>*/>;
 
   template<std::floating_point Rep, class Arena=implicit_common_arena>
   using euclidean_half_line_quantity = dimensionless_quantity<euclidean_half_space<Rep, Arena>, no_unit_t>;
@@ -1433,8 +1546,8 @@ namespace sequoia::physics
     return {val, u};
   }
 
-  template<physical_unit Unit, arithmetic Rep>
-    requires has_default_space_v<Unit, Rep>
+  template<arithmetic Rep, physical_unit Unit>
+    requires has_default_space_v<Unit, Rep> //&& has_consistent_space<default_space_t<Unit, Rep>> rules out 1/Delta Celsius
   [[nodiscard]]
   quantity<dual_of_t<Unit>, Rep> operator/(Rep val, Unit)
   {
@@ -1451,26 +1564,29 @@ namespace sequoia::maths
     physical_unit UnitFrom,
     basis_for<free_module_type_of_t<ValueSpaceFrom>> BasisFrom,
     class OriginFrom,
+    representation_for<ValueSpaceFrom> RepresentationFrom,    
     validator_for<ValueSpaceFrom> ValidatorFrom,
     convex_space ValueSpaceTo,
     basis_for<free_module_type_of_t<ValueSpaceTo>> BasisTo,
     physical_unit UnitTo,
     class OriginTo,
+    representation_for<ValueSpaceTo> RepresentationTo,
     validator_for<ValueSpaceTo> ValidatorTo
   >
     requires std::same_as<root_transform_unit_t<UnitFrom>, root_transform_unit_t<UnitTo>>  
   struct coordinate_transformation<
-    physical_value<ValueSpaceFrom, UnitFrom, BasisFrom, OriginFrom, ValidatorFrom>,
-    physical_value<ValueSpaceTo,   UnitTo,   BasisTo,   OriginTo,   ValidatorTo>
+    physical_value<ValueSpaceFrom, UnitFrom, BasisFrom, OriginFrom, RepresentationFrom, ValidatorFrom>,
+    physical_value<ValueSpaceTo,   UnitTo,   BasisTo,   OriginTo,   RepresentationTo, ValidatorTo>
   >
   {
     using value_type      = commutative_ring_type_of_t<ValueSpaceFrom>;
     using from_units_type = UnitFrom;
-    using from_type       = physical_value<ValueSpaceFrom, from_units_type, BasisFrom, OriginFrom, ValidatorFrom>;
+    using from_type       = physical_value<ValueSpaceFrom, from_units_type, BasisFrom, OriginFrom, RepresentationFrom, ValidatorFrom>;
     using to_units_type   = UnitTo;
-    using to_type         = physical_value<ValueSpaceTo, to_units_type, BasisTo, OriginTo, ValidatorTo>;
+    using to_type         = physical_value<ValueSpaceTo, to_units_type, BasisTo, OriginTo, RepresentationTo, ValidatorTo>;
     using transform_type  = product_t<root_transform_t<UnitTo>, inverse_t<root_transform_t<UnitFrom>>>;
 
+    // TO DO
     constexpr static auto to_displacement() noexcept {
       if constexpr(free_module<ValueSpaceFrom>)
         return value_type{};

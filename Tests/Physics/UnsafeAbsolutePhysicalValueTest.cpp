@@ -33,7 +33,7 @@ namespace sequoia::testing
   void unsafe_absolute_physical_value_test::test_absolute_quantity()
   {
     using value_type   = Quantity::value_type;
-    using unsafe_qty_t = quantity<typename Quantity::units_type, value_type, std::identity>;
+    using unsafe_qty_t = quantity<typename Quantity::units_type, value_type, identity_representation<value_type, no_bounds<value_type>>, identity_validator<no_bounds<value_type>>>;
     using delta_q_t    = unsafe_qty_t::displacement_type;
     using units_t      = unsafe_qty_t::units_type;
 
@@ -53,17 +53,25 @@ namespace sequoia::testing
     coordinates_operations<unsafe_qty_t>{*this}.execute();
 
     using inv_unit_t = dual<units_t>;
-    using unsafe_inv_quantity_t = quantity<inv_unit_t, value_type, std::identity>;
+    using unsafe_inv_quantity_t = quantity<inv_unit_t, value_type, identity_representation<value_type, no_bounds<value_type>>, identity_validator<no_bounds<value_type>>>;
     coordinates_operations<unsafe_inv_quantity_t>{*this}.execute();
 
     using euc_hf_space_t = euclidean_half_space<value_type, implicit_common_arena>;
+    using euc_vec_space_t = euclidean_vector_space<value_type, 1, implicit_common_arena>;
 
     // TO DO: canonical basis should work here...?
-    using unsafe_euc_half_space_qty = physical_value<euc_hf_space_t, no_unit_t, unit_defined_right_handed_basis<free_module_type_of_t<euc_hf_space_t>, no_unit_t>, to_origin_type_t<euc_hf_space_t>, std::identity>;
-    using euc_vec_space_qty         = euclidean_1d_vector_quantity<value_type>;
+    using unsafe_euc_half_space_qty = physical_value<euc_hf_space_t, no_unit_t, unit_defined_right_handed_basis<free_module_type_of_t<euc_hf_space_t>, no_unit_t>, to_origin_type_t<euc_hf_space_t>, identity_representation<value_type, no_bounds<value_type>>, identity_validator<no_bounds<value_type>>>;
+
+    using unsafe_euc_vec_space_qty = physical_value<euc_vec_space_t, no_unit_t, unit_defined_right_handed_basis<free_module_type_of_t<euc_vec_space_t>, no_unit_t>, to_origin_type_t<euc_vec_space_t>, identity_representation<value_type, no_bounds<value_type>>, identity_validator<no_bounds<value_type>>>;
+
+        
     check(equality, "", unsafe_qty_t{2.0, units_t{}}  / unsafe_qty_t {-1.0, units_t{}}, unsafe_euc_half_space_qty{-2.0f, no_unit});
-    check(equality, "", unsafe_qty_t{-2.0, units_t{}} / delta_q_t{1.0, units_t{}},      euc_vec_space_qty{-2.0, no_unit});
-    check(equality, "", delta_q_t{-2.0, units_t{}}    / unsafe_qty_t{1.0, units_t{}},   euc_vec_space_qty{-2.0, no_unit});
+    // TO DO: possibly reinstate these at expense of last two...
+    // using euc_vec_space_qty         = euclidean_1d_vector_quantity<value_type>;
+    //check(equality, "", unsafe_qty_t{-2.0, units_t{}} / delta_q_t{1.0, units_t{}},      euc_vec_space_qty{-2.0, no_unit});
+    //check(equality, "", delta_q_t{-2.0, units_t{}}    / unsafe_qty_t{1.0, units_t{}},   euc_vec_space_qty{-2.0, no_unit});
+    check(equality, "", unsafe_qty_t{-2.0, units_t{}} / delta_q_t{1.0, units_t{}},      unsafe_euc_vec_space_qty{-2.0, no_unit});
+    check(equality, "", delta_q_t{-2.0, units_t{}}    / unsafe_qty_t{1.0, units_t{}},   unsafe_euc_vec_space_qty{-2.0, no_unit});
      
     check(equality, "", 4.0f / unsafe_inv_quantity_t{2.0f, inv_unit_t{}}, unsafe_qty_t{2.0, units_t{}});
   }

@@ -27,13 +27,15 @@ namespace sequoia::testing
   void affine_coordinates_false_negative_test::run_tests()
   {
     {
-      using coords = affine_coordinates<my_affine_space<float, float, 1>, canonical_basis<float, float, 1>, alice, identity_representation<std::identity>>;
-      test_affine_1<coords>();
+      using basis_t  = canonical_basis<float, float, 1>;
+      using coords_t = affine_coordinates<my_affine_space<float, float, 1>, basis_t, alice, identity_representation<float, no_bounds<float>>>;
+      test_affine_1<coords_t>();
     }
 
     {
-      using coords = euclidean_affine_coordinates<float, 1, canonical_right_handed_basis<euclidean_vector_space<float, 1>>, alice, identity_representation<std::identity>>;
-      test_affine_1<coords>();
+      using basis_t =  canonical_right_handed_basis<euclidean_vector_space<float, 1>>;
+      using coords_t = euclidean_affine_coordinates<float, 1, basis_t, alice, identity_representation<float, no_bounds<float>>>;
+      test_affine_1<coords_t>();
     }
   }
 

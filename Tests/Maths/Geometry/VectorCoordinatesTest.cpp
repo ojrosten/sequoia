@@ -78,7 +78,8 @@ namespace sequoia::testing
   void vector_coordinates_test::test_vec()
   {
     using vec_space_t = my_vec_space<Set, Field, D>;
-    using vec_t       = vector_coordinates<vec_space_t, canonical_basis<Set, Field, D>, identity_representation<std::identity>>;
+    using basis_t     = canonical_basis<Set, Field, D>;
+    using vec_t       = vector_coordinates<vec_space_t, basis_t, identity_representation<Field, no_bounds<to_bounds_value_type_t<Field>>>>;
     using value_t     = Field;
     using delta_t     = vec_t::displacement_coordinates_type;
 
@@ -104,7 +105,8 @@ namespace sequoia::testing
   template<class Set, std::floating_point Field>
   void vector_coordinates_test::test_real_vec_1_inner_prod()
   {
-    using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>, identity_representation<std::identity>>;
+    using basis_t = canonical_basis<Set, Field, 1>;
+    using vec_t   = vector_coordinates<my_vec_space<Set, Field, 1>, basis_t, identity_representation<Field, no_bounds<to_bounds_value_type_t<Field>>>>;
 
     STATIC_CHECK(basis_for<canonical_basis<Set, Field, 1>, my_vec_space<Set, Field, 1>>);
 
@@ -120,7 +122,8 @@ namespace sequoia::testing
     requires is_complex_v<Field>
   void vector_coordinates_test::test_complex_vec_1_inner_prod()
   {
-    using vec_t = vector_coordinates<my_vec_space<Set, Field, 1>, canonical_basis<Set, Field, 1>, identity_representation<std::identity>>;
+    using basis_t = canonical_basis<Set, Field, 1>;
+    using vec_t   = vector_coordinates<my_vec_space<Set, Field, 1>, basis_t, identity_representation<Field, no_bounds<to_bounds_value_type_t<Field>>>>;
 
     check(equality, "", inner_product(vec_t{Field(1, 1)}, vec_t{Field(1, 1)}), Field{2});
     check(equality, "", inner_product(vec_t{Field(1, -1)}, vec_t{Field(1, 1)}), Field{0, 2});

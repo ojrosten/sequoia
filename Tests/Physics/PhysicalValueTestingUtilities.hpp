@@ -19,11 +19,12 @@ namespace sequoia::testing
     physics::physical_unit Unit,
     maths::basis_for<maths::free_module_type_of_t<PhysicalValueSpace>> Basis,
     class Origin,
-    class Validator
+    maths::representation_for<PhysicalValueSpace> Representation,
+    maths::validator_for<PhysicalValueSpace> Validator
   >
-  struct value_tester<physics::physical_value<PhysicalValueSpace, Unit, Basis, Origin, Validator>>
+  struct value_tester<physics::physical_value<PhysicalValueSpace, Unit, Basis, Origin, Representation, Validator>>
   {
-    using type       = physics::physical_value<PhysicalValueSpace, Unit, Basis, Origin, Validator>;
+    using type       = physics::physical_value<PhysicalValueSpace, Unit, Basis, Origin, Representation, Validator>;
     using value_type = type::value_type;
     constexpr static auto dimension{type::dimension};
 
@@ -60,11 +61,12 @@ namespace sequoia::testing
     class Unit,
     maths::basis_for<maths::free_module_type_of_t<ValueSpace>> Basis,
     class Origin,
+    class Representation,
     class Validator
   >
   inline constexpr bool defines_physical_value_v{
     requires {
-      typename physics::physical_value<ValueSpace, Unit, Basis, Origin, Validator>;
+      typename physics::physical_value<ValueSpace, Unit, Basis, Origin, Representation, Validator>;
     }
   };
 }

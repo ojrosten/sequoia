@@ -42,6 +42,7 @@ namespace sequoia::testing
     using quantity_t  = Quantity;
     using delta_q_t   = quantity_t::displacement_type;
     using space_type  = quantity_t::space_type;
+    using repr_t      = quantity_t::representation_type;
 
     STATIC_CHECK(affine_space<space_type>);
     STATIC_CHECK(vector_space<free_module_type_of_t<space_type>>);
@@ -72,7 +73,9 @@ namespace sequoia::testing
         dual<units_type>,
         unit_defined_right_handed_basis<free_module_type_of_t<dual<space_type>>, dual<units_type>>,
         dual<origin_type>,
-        std::identity>
+        repr_t,
+        identity_validator<repr_t::bounds_v>
+      >
     );
   }
 }

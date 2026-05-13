@@ -18,18 +18,21 @@ namespace sequoia::testing
   
   namespace
   {
+    template<weak_commutative_ring T, auto Bounds=no_bounds<T>> // TO DO: improve bounds std::array should be made to work...
     struct basic_polar_representation
     {
-      using validator_type = std::identity;
-      
-      template<weak_commutative_ring T> 
+      using value_type = T;
+      constexpr static auto bounds_v{Bounds};
+
+      template<auto OtherBounds>
+      using rebind_type = basic_polar_representation<T, OtherBounds>;
+          
       [[nodiscard]]
       constexpr static std::array<T, 2> to_underlying(std::span<const T, 2> polar)
       {
         return {polar[0] * std::cos(polar[1]), polar[0] * std::sin(polar[1])};
       }
 
-      template<weak_commutative_ring T> 
       [[nodiscard]]
       constexpr static std::array<T, 2> from_underlying(std::span<const T, 2> cartesian)
       {
@@ -40,9 +43,12 @@ namespace sequoia::testing
       }
     };
 
-    struct polar_representation : basic_polar_representation
+    template<weak_commutative_ring T, auto Bounds=no_bounds<T>>
+    struct polar_representation : basic_polar_representation<T, Bounds>
     {
-      template<weak_commutative_ring T>
+      template<auto OtherBounds>
+      using rebind_type = polar_representation<T, OtherBounds>;
+
       [[nodiscard]]
       static constexpr T compute_angle(T theta, T scale)
       {
@@ -57,14 +63,12 @@ namespace sequoia::testing
                         : theta + pi;
       }
       
-      template<weak_commutative_ring T>
       [[nodiscard]]
       static constexpr std::array<T, 2> mul(std::span<const T, 2> lhs, T scale)
       {
         return {lhs[0] * std::abs(scale), compute_angle(lhs[1], scale)};
       }
 
-      template<weak_commutative_ring T>
       [[nodiscard]]
       static constexpr std::array<T, 2> div(std::span<const T, 2> lhs, T scale)
       {
@@ -81,8 +85,8 @@ namespace sequoia::testing
 
   void vector_polar_coordinates_test::run_tests()
   {
-    test_vec<sets::R<2>, float , 2, basic_polar_representation>();
-    test_vec<sets::R<2>, double, 2, polar_representation>();
+    test_vec<sets::R<2>, float , 2, basic_polar_representation<float>>();
+    test_vec<sets::R<2>, double, 2, polar_representation<double>>();
 
     test_refined<float>();
   }
@@ -133,9 +137,9 @@ namespace sequoia::testing
   void vector_polar_coordinates_test::test_refined()
   {
     using vec_space_t = my_vec_space<sets::R<2>, Field, 2>;
-    using vec_t       = vector_coordinates<vec_space_t, canonical_basis<sets::R<2>, Field, 2>, polar_representation>;
+    using vec_t       = vector_coordinates<vec_space_t, canonical_basis<sets::R<2>, Field, 2>, polar_representation<Field>>;
 
-    static_assert(defines_scalar_multiplication_for_v<vec_space_t, polar_representation>);
+    static_assert(defines_scalar_multiplication_for_v<vec_space_t, polar_representation<Field>>);
     
     check(equality, "", vec_t{1, 1} * 2, vec_t{2, 1});
   }

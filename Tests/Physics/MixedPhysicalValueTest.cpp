@@ -24,6 +24,10 @@ namespace sequoia::testing
 
   void mixed_physical_value_test::run_tests()
   {
+
+    // TO DO: put this somewhere better!
+    STATIC_CHECK(representation<identity_representation<float, no_bounds<float>>>);
+    
     test_mixed();
     test_mixed_vector();
     test_kinds();
@@ -62,6 +66,9 @@ namespace sequoia::testing
     check(equality, "", mlc, physical_value{-2.0f, metre * ampere * kilogram});
     check(equality, "", mlc / mass_t{1.0, kilogram}, length_t{2.0, metre} * current_t{-1.0, ampere});
     check(equality, "", mlc / length_t{1.0, metre}, mass_t{2.0, kilogram} * current_t{-1.0, ampere});
+
+    static_assert(std::same_as<decltype(mlc / current_t{-1.0, ampere}), decltype(euc_vec_t{1.0} * mass_t{1.0, kilogram} * length_t{2.0, metre})>);
+    
     check(equality, "", mlc / current_t{-1.0, ampere}, euc_vec_t{1.0} * mass_t{1.0, kilogram} * length_t{2.0, metre});
       
     auto mlct = mass_t{1.0, kilogram} * length_t{2.0, metre} * current_t{-1.0, ampere} * temperature_t{5.0, kelvin},

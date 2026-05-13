@@ -23,7 +23,7 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    template<std::floating_point T, class Representation>
+    template<std::floating_point T>
     void test_absolute_logarithmic();
   };
 }

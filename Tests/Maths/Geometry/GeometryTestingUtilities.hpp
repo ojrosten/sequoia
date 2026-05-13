@@ -41,7 +41,8 @@ namespace sequoia::testing
     constexpr static std::size_t dimension{Coordinates::dimension};
     constexpr static bool orderable{(dimension == 1) && std::totally_ordered<ring_t>};
     constexpr static bool has_distinguished_origin{maths::has_distinguished_origin_v<space_t>};
-    constexpr static bool has_identity_repr{std::same_as<representation_t, maths::identity_representation<validator_t>>};
+    constexpr static auto bounds_v{representation_t::bounds_v};
+    constexpr static bool has_identity_repr{std::same_as<representation_t, maths::identity_representation<ring_t, bounds_v>>};
 
     regular_test& m_Test;
     graph_type m_Graph;

@@ -22,13 +22,13 @@ namespace sequoia::testing
   void vector_coordinates_false_negative_test::run_tests()
   {
     {
-      using coords = vector_coordinates<my_vec_space<sets::R<1>, float, 1>, canonical_basis<sets::R<1>, float, 1>, identity_representation<std::identity>>;
-      test_vec_1<coords>();
+      using basis_t  = canonical_basis<sets::R<1>, float, 1>;
+      using coords_t = vector_coordinates<my_vec_space<sets::R<1>, float, 1>, basis_t, identity_representation<float, no_bounds<float>>>;
+      test_vec_1<coords_t>();
     }
 
     {
-      using coords = euclidean_vector_coordinates<float, 1, canonical_right_handed_basis<euclidean_vector_space<float, 1>>, identity_representation<std::identity>>;
-      test_vec_1<coords>();
+      test_vec_1<vec_coords<float, 1>>();
     }
   }
 

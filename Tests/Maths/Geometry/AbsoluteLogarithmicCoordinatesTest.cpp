@@ -17,32 +17,34 @@ namespace sequoia::testing
 
   namespace
   {
+    template<weak_commutative_ring T, auto Bounds=no_bounds<T>>
+      requires bounds<Bounds>
     struct logarithmic_representation
     {
-      using validator_type = std::identity;
+      using value_type = T;
+      constexpr static coordinate_bounds<T> bounds_v{no_bounds<T>};
 
-      template<weak_commutative_ring T> 
+      template<auto OtherBounds>
+      using rebind_type = logarithmic_representation<T, OtherBounds>;
+
       [[nodiscard]]
       constexpr static T to_underlying(T val)
       {
         return std::exp(val);
       }
 
-      template<weak_commutative_ring T> 
       [[nodiscard]]
       constexpr static T from_underlying(T val)
       {
         return std::log(val);
       }
-      
-      template<weak_commutative_ring T>
+
       [[nodiscard]]
       static constexpr T add(T lhs, T rhs)
       {
         return lhs + rhs;
       }
 
-      template<weak_commutative_ring T>
       [[nodiscard]]
       static constexpr T sub(T lhs, T rhs)
       {
@@ -59,19 +61,21 @@ namespace sequoia::testing
 
   void absolute_logarithmic_coordinates_test::run_tests()
   {
-    test_absolute_logarithmic<float , logarithmic_representation>();
-    test_absolute_logarithmic<double, logarithmic_representation>();
+    test_absolute_logarithmic<float >();
+    test_absolute_logarithmic<double>();
   }
 
-  template<std::floating_point T, class Representation>
+  template<std::floating_point T>
   void absolute_logarithmic_coordinates_test::test_absolute_logarithmic()
   {
     using space_t     = euclidean_nonnegative_space<T, 1, mathematical_arena>;
-    using coords_t    = coordinates<space_t, canonical_right_handed_basis<free_module_type_of_t<space_t>>, Representation>;
+    using rep_t       = logarithmic_representation<T>;
+    using basis_t     = canonical_right_handed_basis<free_module_type_of_t<space_t>>;
+    using coords_t    = coordinates<space_t, basis_t, rep_t, throwing_validator<rep_t::bounds_v>>;
     using delta_t     = coords_t::displacement_coordinates_type;
     using value_t     = T;
 
-    STATIC_CHECK(representation_for_single_value<Representation, space_t>);
+    STATIC_CHECK(representation_for_single_value<rep_t, space_t>);
     STATIC_CHECK(can_multiply<coords_t, value_t>);
     STATIC_CHECK(can_divide<coords_t, value_t>);
     STATIC_CHECK(!can_divide<coords_t, coords_t>);

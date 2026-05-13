@@ -93,7 +93,7 @@ namespace sequoia::testing
       requires std::same_as<typename B::orthonormal, std::true_type>;
     }
   };
-
+  
   template<class Set, maths::weak_field Field, std::size_t Dim>
   struct my_vec_space
   {

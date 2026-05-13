@@ -30,8 +30,8 @@ namespace sequoia::testing
   void absolute_coordinates_false_negative_test::test_absolute()
   {
     using space_t     = euclidean_nonnegative_space<T, D, mathematical_arena>;
-    using validator_t = interval_validator<T, T{}, std::numeric_limits<T>::infinity()>;
-    using coords_t    = coordinates<space_t, canonical_right_handed_basis<free_module_type_of_t<space_t>>, identity_representation<validator_t>>;
+    using basis_t     = canonical_right_handed_basis<free_module_type_of_t<space_t>>;
+    using coords_t    = coordinates<space_t, basis_t, identity_representation<T, no_bounds<T>>, std::identity>;
 
     const auto vals{utilities::make_array<T, D>([](auto) { return T(1); })};
     

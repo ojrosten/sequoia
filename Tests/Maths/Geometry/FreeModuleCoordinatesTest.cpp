@@ -29,12 +29,13 @@ namespace sequoia::testing
   void free_module_coordinates_test::test_free_module()
   {
     using free_module_t = my_free_module<Set, Ring, D>;
+    using basis_t       = canonical_free_module_basis<Set, Ring, D>;
     STATIC_CHECK(!vector_space<free_module_t>);
     STATIC_CHECK(free_module<free_module_t>);
     STATIC_CHECK(std::same_as<free_module_type_of_t<free_module_t>, free_module_t>);
-    STATIC_CHECK(basis_for<canonical_free_module_basis<Set, Ring, D>, free_module_t>);
+    STATIC_CHECK(basis_for<basis_t, free_module_t>);
     
-    using module_coords_t = free_module_coordinates<free_module_t, canonical_free_module_basis<Set, Ring, D>, identity_representation<std::identity>>;
+    using module_coords_t = free_module_coordinates<free_module_t, basis_t, identity_representation<Ring, no_bounds<Ring>>>;
     coordinates_operations<module_coords_t>{*this}.execute();
   }
 }
