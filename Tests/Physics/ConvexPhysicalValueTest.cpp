@@ -42,7 +42,14 @@ namespace
   };
 
   template<std::floating_point T, std::size_t N, class Arena=implicit_common_arena>
-  using colours = physical_value<colour_space<T, N, Arena>, normalized_colour_t<N>>;
+  using colours
+    = physical_value<
+        colour_space<T, N, Arena>,
+        normalized_colour_t<N>,
+        unit_defined_right_handed_basis<free_module_type_of_t<colour_space<T, N, Arena>>, normalized_colour_t<N>>,
+        to_origin_type_t<colour_space<T, N, Arena>>,
+        identity_representation<T, coordinate_bounds{T(0.0), T(1.0)}>
+      >;
 }
 
 namespace sequoia::physics
