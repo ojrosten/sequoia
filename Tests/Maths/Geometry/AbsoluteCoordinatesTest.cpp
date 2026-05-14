@@ -29,9 +29,8 @@ namespace sequoia::testing
   void absolute_coordinates_test::test_absolute()
   {
     using space_t     = euclidean_nonnegative_space<T, D, mathematical_arena>;
-    using validator_t = interval_validator<T, T{}, std::numeric_limits<T>::infinity()>;
     using basis_t     = canonical_right_handed_basis<free_module_type_of_t<space_t>>;
-    using coords_t    = coordinates<space_t, basis_t, identity_representation<T, no_bounds<T>>, std::identity>;
+    using coords_t    = coordinates<space_t, basis_t, identity_representation<T, half_line_bounds<T>>, throwing_validator<half_line_bounds<T>>>;
     using delta_t     = coords_t::displacement_coordinates_type;
     using value_t     = T;
     STATIC_CHECK(can_multiply<coords_t, value_t>);

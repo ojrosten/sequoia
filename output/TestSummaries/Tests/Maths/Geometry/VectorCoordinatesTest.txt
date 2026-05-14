@@ -1,2 +1,2 @@
 Vector Coordinates Test
-Standard Top Level Checks:               396;  Failures:  0  [Deep checks: 11487]
+Standard Top Level Checks:               402;  Failures:  0  [Deep checks: 11949]

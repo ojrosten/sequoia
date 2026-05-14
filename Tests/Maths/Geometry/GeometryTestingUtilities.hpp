@@ -163,7 +163,7 @@ namespace sequoia::testing
       {
         add_dim_1_negative_transitions(g, test);
       }
-      else if constexpr(maths::defines_half_line_validator_v<typename Coordinates::validator_type> && std::is_signed_v<ring_t>)
+      else if constexpr(representation_t::bounds_v == maths::half_line_bounds<ring_t> && std::is_signed_v<ring_t>)
       {
         add_dim_1_attempted_negative_transitions(g, test);
       }

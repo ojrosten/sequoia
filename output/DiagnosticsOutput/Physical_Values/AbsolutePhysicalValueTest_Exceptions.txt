@@ -1,459 +1,432 @@
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 395
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 396
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 409
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 425
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 426
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 439
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 440
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 453
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 454
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 467
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 468
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 395
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 396
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 409
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 425
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 426
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 439
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 440
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 453
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 454
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 467
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 468
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 395
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 396
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 409
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 425
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 426
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 439
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 440
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 453
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 454
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 467
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 468
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 395
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 396
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 409
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 425
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 426
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 439
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 440
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 453
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 454
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 467
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 468
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 395
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 396
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 409
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 425
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 426
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 439
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 440
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 453
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 454
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 467
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 468
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 395
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 396
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 409
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 425
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 426
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 439
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 440
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 453
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 454
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 467
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 468
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 395
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 396
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 409
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 425
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 426
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 439
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 440
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 453
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 454
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 467
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 468
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 395
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 396
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 409
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 425
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 426
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 439
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 440
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 453
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 454
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 467
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 468
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 395
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 396
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 409
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 425
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 426
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 439
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 440
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 453
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 454
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 467
+Tests/Physics/../Maths/Geometry/GeometryTestingUtilities.hpp, Line 468
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 142
-Attempting to make negative quantity
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 151
-Attempting to shift quantity negative
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
-
-=======================================
-
-Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 282
-Negative quantity
-
-Expected Exception Type:
-[std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
@@ -462,7 +435,7 @@ Attempting to make negative quantity
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input -1 outside permitted domain [0, inf]
 
 =======================================
 
@@ -471,7 +444,7 @@ Attempting to shift quantity negative
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
@@ -480,7 +453,34 @@ Negative quantity
 
 Expected Exception Type:
 [std::domain_error]
-Domain error: attempting to use a value of -1 for a semi-positive quantity
+Input [-1] has at least one value outside permitted domain [0, inf]
+
+=======================================
+
+Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 142
+Attempting to make negative quantity
+
+Expected Exception Type:
+[std::domain_error]
+Input -1 outside permitted domain [0, inf]
+
+=======================================
+
+Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 151
+Attempting to shift quantity negative
+
+Expected Exception Type:
+[std::domain_error]
+Input [-1] has at least one value outside permitted domain [0, inf]
+
+=======================================
+
+Tests/Physics/AbsolutePhysicalValueTest.cpp, Line 282
+Negative quantity
+
+Expected Exception Type:
+[std::domain_error]
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 

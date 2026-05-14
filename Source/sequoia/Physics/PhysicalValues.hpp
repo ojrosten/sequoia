@@ -932,22 +932,46 @@ namespace sequoia::physics
       { U::symbol } -> std::convertible_to<std::string_view>; }
   };
 
-  template<class Validator>
-  struct scale_invariant_validator : std::false_type {};
+  template<auto Bounds>
+    requires bounds<Bounds>
+  struct scale_invariant_bounds : std::false_type {};
 
-  template<class T>
-    requires defines_identity_validator_v<T>
-  struct scale_invariant_validator<T> : std::true_type {};
+  template<auto Bounds>
+    requires bounds<Bounds>
+  using scale_invariant_bounds_t = scale_invariant_bounds<Bounds>::type;
 
-  template<class T>
-    requires defines_half_line_validator_v<T>
-  struct scale_invariant_validator<T> : std::true_type {};
+  template<auto Bounds>
+    requires bounds<Bounds>
+  inline constexpr bool scale_invariant_bounds_v{scale_invariant_bounds<Bounds>::bounds_v};
 
-  template<class Validator>
-  using scale_invariant_validator_t = scale_invariant_validator<Validator>::type;
+  template<auto Bounds>
+    requires bounds<Bounds>
+          && ((Bounds.lower == Bounds.least_lower_bound)    || (Bounds.lower == 0))
+          && ((Bounds.upper == Bounds.greatest_upper_bound) || (Bounds.upper == 0))
+  struct scale_invariant_bounds<Bounds>
+    : std::true_type
+  {};
 
-  template<class Validator>
-  inline constexpr bool scale_invariant_validator_v{scale_invariant_validator<Validator>::value};
+  template<auto Bounds>
+    requires bounds<Bounds>
+  struct translation_invariant_bounds : std::false_type {};
+
+  template<auto Bounds>
+    requires bounds<Bounds>
+  using translation_invariant_bounds_t = translation_invariant_bounds<Bounds>::type;
+
+  template<auto Bounds>
+    requires bounds<Bounds>
+  inline constexpr bool translation_invariant_bounds_v{translation_invariant_bounds<Bounds>::bounds_v};
+
+  template<auto Bounds>
+    requires bounds<Bounds>
+          && (Bounds.lower == Bounds.least_lower_bound)
+          && (Bounds.upper == Bounds.greatest_upper_bound)
+  struct translation_invariant_bounds<Bounds>
+    : std::true_type
+  {};
+  
 
   template<class Validator>
   struct translation_invariant_validator : std::false_type {};
@@ -1003,45 +1027,46 @@ namespace sequoia::physics
   struct inverse<translation<Displacement>>
   {
     using type = translation<-Displacement>;
-  };  
-  
-  template<class T>
-  struct synthesised_validator;
+  };
 
-  template<class T>
-  using synthesised_validator_t = synthesised_validator<T>::type;
+  template<auto Bounds, class T>
+  struct synthesised_bounds;
+
+  template<auto Bounds, class T>
+  inline constexpr bool synthesised_bounds_v{synthesised_bounds<Bounds, T>::bounds_v};
 
   template<class...>
   struct coordinate_transform;
 
-  template<physical_unit U, class Ratio, auto Displacement>
-    requires scale_invariant_validator_v<typename U::validator_type> && (translation_invariant_validator_v<typename U::validator_type> || !Displacement)
-  struct synthesised_validator<coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
+  // TO DO: a lot of this should simplify
+  template<auto Bounds, physical_unit U, class Ratio, auto Displacement>
+    requires scale_invariant_bounds_v<Bounds> && (translation_invariant_bounds_v<Bounds> || !Displacement)
+  struct synthesised_bounds<Bounds, coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
   {
-    using type = U::validator_type;
+    constexpr static auto bounds_v{Bounds};
   };
 
-  template<physical_unit U, class Ratio, auto Displacement>
-    requires scale_invariant_validator_v<typename U::validator_type> && (Displacement != 0)
-  struct synthesised_validator<coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
+  template<auto Bounds, physical_unit U, class Ratio, auto Displacement>
+    requires scale_invariant_bounds_v<Bounds> && (Displacement != 0)
+  struct synthesised_bounds<Bounds, coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
   {
-    using value_type = std::remove_cv_t<decltype(Displacement)>;
-    using type = interval_validator<value_type, Displacement>;
+    using value_type = decltype(Bounds)::value_type;    
+    constexpr static coordinate_bounds<value_type> bounds_v{Displacement, Bounds.upper};
   };
 
-  template<physical_unit U, class Ratio, auto Displacement>
-    requires (!scale_invariant_validator_v<typename U::validator_type>) && is_interval_validator_v<typename U::validator_type>
-  struct synthesised_validator<coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
+  template<auto Bounds, physical_unit U, class Ratio, auto Displacement>
+  requires (!scale_invariant_bounds_v<Bounds>) //&& is_interval_validator_v<typename U::validator_type>
+  struct synthesised_bounds<Bounds, coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
   {    
     using underlying_validator_type = U::validator_type;
-    using value_type = std::remove_cv_t<decltype(underlying_validator_type::lower)>;
+    using value_type = decltype(Bounds)::value_type;
 
     [[nodiscard]]
     constexpr static value_type transform(value_type val) {
       return (val * Ratio::num / Ratio::den) + Displacement;
     }
 
-    using type = interval_validator<value_type, transform(underlying_validator_type::lower), transform(underlying_validator_type::upper)>;
+    constexpr static coordinate_bounds<value_type> bounds_v{transform(Bounds.lower), transform(Bounds.upper)};
   };
 
   template<physical_unit U, class Ratio, auto Displacement>
@@ -1049,7 +1074,6 @@ namespace sequoia::physics
   {
     using is_unit              = std::true_type;
     using transform_type       = coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>;
-    using validator_type       = synthesised_validator_t<transform_type>;    
     using with_respect_to_type = U;
     using dilatation_type      = dilatation<Ratio>;
     using translation_type     = translation<Displacement>;
@@ -1135,7 +1159,7 @@ namespace sequoia::physics
   };
 
   template<physical_unit... Us>
-    requires (scale_invariant_validator_v<typename Us::validator_type> && ...)
+  //requires (scale_invariant_validator_v<typename Us::validator_type> && ...)
   struct root_transform<composite_unit<Us...>>
   {
     using units_type = decltype((root_transform_unit_t<Us>{} * ...));
@@ -1172,7 +1196,7 @@ namespace sequoia::physics
   
   template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
     requires (!has_distinguished_origin_v<C>)
-          || (!has_identity_translation_v<root_transform_t<FromUnit>> && !has_identity_translation_v<root_transform_t<ToUnit>>)
+  || (!has_identity_translation_v<root_transform_t<FromUnit>> && !has_identity_translation_v<root_transform_t<ToUnit>>)
   struct conversion_space<C, FromUnit, ToUnit>
   {
     using type = C;
@@ -1180,14 +1204,14 @@ namespace sequoia::physics
 
   template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
     requires has_distinguished_origin_v<C>
-          && (has_identity_translation_v<root_transform_t<FromUnit>> && !has_identity_translation_v<root_transform_t<ToUnit>>)
+  && (has_identity_translation_v<root_transform_t<FromUnit>> && !has_identity_translation_v<root_transform_t<ToUnit>>)
   struct conversion_space<C, FromUnit, ToUnit>
   {
     using type = relaxed_space<C>;
   };
 
   template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
-    requires has_distinguished_origin_v<C> && has_identity_translation_v<root_transform_t<ToUnit>>
+  requires has_distinguished_origin_v<C> && has_identity_translation_v<root_transform_t<ToUnit>>
   struct conversion_space<relaxed_space<C>, FromUnit, ToUnit>
   {
     using type = C;

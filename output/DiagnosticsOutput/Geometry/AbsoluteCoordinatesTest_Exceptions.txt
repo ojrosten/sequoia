@@ -1,56 +1,56 @@
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 395
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 396
 
 Expected Exception Type:
 [std::domain_error]
-interval_validator: invoked with -1, but values should be >= 0 
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 409
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 410
 
 Expected Exception Type:
 [std::domain_error]
-interval_validator: invoked with -1, but values should be >= 0 
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 425
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 426
 
 Expected Exception Type:
 [std::domain_error]
-interval_validator: invoked with -1, but values should be >= 0 
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 439
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 440
 
 Expected Exception Type:
 [std::domain_error]
-interval_validator: invoked with -1, but values should be >= 0 
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 453
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 454
 
 Expected Exception Type:
 [std::domain_error]
-interval_validator: invoked with -1, but values should be >= 0 
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 467
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 468
 
 Expected Exception Type:
 [std::domain_error]
-interval_validator: invoked with -1, but values should be >= 0 
+Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 820
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 821
 
 Expected Exception Type:
 [std::domain_error]
-interval_validator: invoked with -1, but values should be >= 0 
+Input [-1, -1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 

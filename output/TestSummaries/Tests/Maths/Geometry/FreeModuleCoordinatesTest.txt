@@ -1,2 +1,37 @@
 Free Module Test
-Standard Top Level Checks:               108;  Failures:  0  [Deep checks: 4350]
+Standard Top Level Checks:               112;  Failures:  2  [Deep checks: 4562]
+
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 123
+Transition from node 4 to 6
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 212
+(0) - (2)
+
+
+--Regular Semantics--
+[std::variant<sequoia::maths::coordinates<sequoia::testing::my_free_module<sequoia::maths::sets::N_0<1ul>, unsigned long long, 1>, sequoia::testing::canonical_free_module_basis<sequoia::maths::sets::N_0<1ul>, unsigned long long, 1>, sequoia::maths::identity_representation<unsigned long long, sequoia::maths::coordinate_bounds<unsigned long long>{0, 18446744073709551615> > >]
+
+  Prerequisite - for ordered semantics, it is assumed that y > x
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 123
+Transition from node 5 to 4
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 274
+delta(-1) + (1)
+
+
+--Regular Semantics--
+[std::variant<sequoia::maths::coordinates<sequoia::testing::my_free_module<sequoia::maths::sets::N_0<1ul>, unsigned long long, 1>, sequoia::testing::canonical_free_module_basis<sequoia::maths::sets::N_0<1ul>, unsigned long long, 1>, sequoia::maths::identity_representation<unsigned long long, sequoia::maths::coordinate_bounds<unsigned long long>{0, 18446744073709551615> > >]
+
+  Prerequisite - for ordered semantics, it is assumed that y > x
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+

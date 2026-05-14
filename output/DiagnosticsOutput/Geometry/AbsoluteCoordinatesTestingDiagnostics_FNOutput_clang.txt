@@ -1,7 +1,7 @@
 Tests/Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.cpp, Line 39
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::maths::euclidean_nonnegative_space<float, 1, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_right_handed_basis<sequoia::maths::euclidean_vector_space<float, 1, sequoia::maths::mathematical_arena> >, sequoia::maths::identity_representation<sequoia::maths::interval_validator<float, 0.000000, inff> >, std::identity> >]
+[sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::maths::euclidean_nonnegative_space<float, 1, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_right_handed_basis<sequoia::maths::euclidean_vector_space<float, 1, sequoia::maths::mathematical_arena> >, sequoia::maths::identity_representation<float, sequoia::maths::coordinate_bounds<float>{-inff, inff}>, std::identity> >]
 Checking for equivalence with:
 [std::array<float, 1>]
 
@@ -59,7 +59,7 @@ Checking for equivalence with:
 
 Tests/Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.cpp, Line 40
 
-[sequoia::maths::coordinates<sequoia::maths::euclidean_nonnegative_space<float, 1, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_right_handed_basis<sequoia::maths::euclidean_vector_space<float, 1, sequoia::maths::mathematical_arena> >, sequoia::maths::identity_representation<sequoia::maths::interval_validator<float, 0.000000, inff> >, std::identity>]
+[sequoia::maths::coordinates<sequoia::maths::euclidean_nonnegative_space<float, 1, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_right_handed_basis<sequoia::maths::euclidean_vector_space<float, 1, sequoia::maths::mathematical_arena> >, sequoia::maths::identity_representation<float, sequoia::maths::coordinate_bounds<float>{-inff, inff}>, std::identity>]
 operator== returned false
 
   Wrapped values
@@ -93,7 +93,7 @@ operator== returned false
 Tests/Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.cpp, Line 39
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::maths::euclidean_nonnegative_space<double, 2, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_right_handed_basis<sequoia::maths::euclidean_vector_space<double, 2, sequoia::maths::mathematical_arena> >, sequoia::maths::identity_representation<sequoia::maths::interval_validator<double, 0.000000, inf> >, std::identity> >]
+[sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::maths::euclidean_nonnegative_space<double, 2, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_right_handed_basis<sequoia::maths::euclidean_vector_space<double, 2, sequoia::maths::mathematical_arena> >, sequoia::maths::identity_representation<double, sequoia::maths::coordinate_bounds<double>{-inf, inf}>, std::identity> >]
 Checking for equivalence with:
 [std::array<double, 2>]
 
@@ -187,7 +187,7 @@ Checking for equivalence with:
 
 Tests/Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.cpp, Line 40
 
-[sequoia::maths::coordinates<sequoia::maths::euclidean_nonnegative_space<double, 2, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_right_handed_basis<sequoia::maths::euclidean_vector_space<double, 2, sequoia::maths::mathematical_arena> >, sequoia::maths::identity_representation<sequoia::maths::interval_validator<double, 0.000000, inf> >, std::identity>]
+[sequoia::maths::coordinates<sequoia::maths::euclidean_nonnegative_space<double, 2, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_right_handed_basis<sequoia::maths::euclidean_vector_space<double, 2, sequoia::maths::mathematical_arena> >, sequoia::maths::identity_representation<double, sequoia::maths::coordinate_bounds<double>{-inf, inf}>, std::identity>]
 operator== returned false
 
   Wrapped values
