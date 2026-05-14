@@ -39,7 +39,6 @@ namespace
   struct normalized_colour_t
   {
     using is_unit = std::true_type;
-    using validator_type = interval_validator<long double, 0.0L, 1.0L>;
   };
 
   template<std::floating_point T, std::size_t N, class Arena=implicit_common_arena>

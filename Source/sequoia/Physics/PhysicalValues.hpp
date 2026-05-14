@@ -1220,28 +1220,24 @@ namespace sequoia::physics
   template<physical_unit Unit>
   struct micro : coordinate_transform<Unit, dilatation<std::mega>, translation<0>>
   {
-    using validator_type = Unit::validator_type;
     using transform_type = coordinate_transform<Unit, dilatation<std::mega>, translation<0>>;
   };
   
   template<physical_unit Unit>
   struct milli : coordinate_transform<Unit, dilatation<std::kilo>, translation<0>>
   {
-    using validator_type = Unit::validator_type;
     using transform_type = coordinate_transform<Unit, dilatation<std::kilo>, translation<0>>;
   };
 
   template<physical_unit Unit>
   struct kilo : coordinate_transform<Unit, dilatation<std::milli>, translation<0>>
   {
-    using validator_type = Unit::validator_type;
     using transform_type = coordinate_transform<Unit, dilatation<std::milli>, translation<0>>;
   };
 
   template<physical_unit Unit>
   struct mega : coordinate_transform<Unit, dilatation<std::micro>, translation<0>>
   {
-    using validator_type = Unit::validator_type;
     using transform_type = coordinate_transform<Unit, dilatation<std::micro>, translation<0>>;
   };
   
@@ -1256,49 +1252,42 @@ namespace sequoia::physics
       struct ampere_t
       {
         using is_unit        = std::true_type;
-        using validator_type = std::identity;
         constexpr static std::string_view symbol{"A"};        
       };
     
       struct kilogram_t
       {
         using is_unit        = std::true_type;
-        using validator_type = half_line_validator;
         constexpr static std::string_view symbol{"kg"};
       };
 
       struct metre_t
       {
         using is_unit        = std::true_type;
-        using validator_type = half_line_validator;
         constexpr static std::string_view symbol{"m"};
       };
 
       struct second_t
       {
         using is_unit        = std::true_type;
-        using validator_type = half_line_validator;
         constexpr static std::string_view symbol{"s"};
       };
 
       struct kelvin_t
       {
         using is_unit        = std::true_type;
-        using validator_type = half_line_validator;
         constexpr static std::string_view symbol{"K"};
       };
 
       struct coulomb_t
       {
         using is_unit        = std::true_type;
-        using validator_type = std::identity;
         constexpr static std::string_view symbol{"C"};
       };
 
       struct radian_t
       {
         using is_unit        = std::true_type;
-        using validator_type = std::identity;
         constexpr static std::string_view symbol{"rad"};
       };
 
@@ -1387,14 +1376,12 @@ namespace sequoia::physics
       struct degree_t : coordinate_transform<si::units::radian_t, dilatation<ratio<std::intmax_t{180}, std::numbers::pi_v<long double>>>, translation<0>>
       {
         using is_unit        = std::true_type;
-        using validator_type = std::identity;
         constexpr static std::string_view symbol{"deg"};
       };
 
       struct gradian_t : coordinate_transform<si::units::radian_t, dilatation<ratio<std::intmax_t{200}, std::numbers::pi_v<long double>>>, translation<0>>
       {
         using is_unit        = std::true_type;
-        using validator_type = std::identity;
         constexpr static std::string_view symbol{"gon"};
       };
 
