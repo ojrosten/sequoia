@@ -1163,24 +1163,29 @@ namespace sequoia::maths
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
   struct representation_for_free_module_of;
-  
-  template<convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
-    requires (!free_module<ConvexSpace>) && (!std::is_final_v<Representation>)
-  struct representation_for_free_module_of<ConvexSpace, Representation>
+
+  template<convex_space ConvexSpace>
+  struct free_module_ring_type_of
   {
-    // TO DO
-    struct type : Representation
-    {
-      using value_type = Representation::value_type;
-      constexpr static coordinate_bounds<value_type> bounds_v{no_bounds<value_type>};
-    };
+    using type = commutative_ring_type_of_t<ConvexSpace>;
   };
 
-  template<convex_space M, representation_for<M> Representation>
-    requires free_module<M>
-  struct representation_for_free_module_of<M, Representation>
+  template<convex_space ConvexSpace>
+  using free_module_ring_type_of_t = free_module_ring_type_of<ConvexSpace>::type;
+
+  template<convex_space ConvexSpace>
+    requires std::integral<commutative_ring_type_of_t<ConvexSpace>>
+  struct free_module_ring_type_of<ConvexSpace>
   {
-    using type = Representation;
+    // TO DO: this isn't sufficient; an int isn't big enough to serve as the delta for a uint
+    using type = std::make_signed_t<commutative_ring_type_of_t<ConvexSpace>>;
+  };
+  
+  template<convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
+  struct representation_for_free_module_of
+  {
+    using ring_t = free_module_ring_type_of_t<ConvexSpace>;    
+    using type = Representation::template rebind_type<no_bounds<to_bounds_value_type_t<ring_t>>>;
   };
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
@@ -1779,8 +1784,7 @@ namespace sequoia::maths
     class Validator,
     class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<ConvexSpace>,
                                                           Basis,
-                                                          typename Representation::template rebind_type<no_bounds<to_bounds_value_type_t<commutative_ring_type_of_t<ConvexSpace>>>>
-                                                          /*representation_for_free_module_of_t<ConvexSpace, Representation>*/>
+                                                          representation_for_free_module_of_t<ConvexSpace, Representation>>
   >
   class coordinates_base
   {
