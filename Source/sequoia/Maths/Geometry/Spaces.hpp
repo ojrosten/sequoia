@@ -1066,9 +1066,6 @@ namespace sequoia::maths
  
     constexpr value_type operator()(const value_type val) const
     {
-      if(!Bounds(val))
-        throw std::domain_error{std::format("Input {} outside permitted domain [{}, {}]", Bounds.format_input(val), Bounds.lower, Bounds.upper)};
-
       return validate(val);
     }
 
