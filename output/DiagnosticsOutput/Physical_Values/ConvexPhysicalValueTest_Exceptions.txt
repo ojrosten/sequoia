@@ -1,64 +1,64 @@
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 87
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 93
 
 Expected Exception Type:
 [std::domain_error]
-interval_validator: invoked with -273.16, but values should be >= -273.15 
+Input -273.16 outside permitted domain [-273.15, inf]
 
 =======================================
 
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 92
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 98
 
 Expected Exception Type:
 [std::domain_error]
-interval_validator: invoked with -460, but values should be >= -459.67 
+Input -460 outside permitted domain [-459.67, inf]
 
 =======================================
 
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 116
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 122
 
 Expected Exception Type:
 [std::domain_error]
-interval_validator: invoked with -0.1, but values should be >= 0 
+Input [0, 0.5, -0.1] has at least one value outside permitted domain [0, 1]
 
 =======================================
 
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 121
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 127
 
 Expected Exception Type:
 [std::domain_error]
-interval_validator: invoked with 1.1, but values should be <= 1 
+Input [1.1, 0.5, 0.1] has at least one value outside permitted domain [0, 1]
 
 =======================================
 
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 87
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 93
 
 Expected Exception Type:
 [std::domain_error]
-interval_validator: invoked with -273.16, but values should be >= -273.15 
+Input -273.16 outside permitted domain [-273.15, inf]
 
 =======================================
 
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 92
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 98
 
 Expected Exception Type:
 [std::domain_error]
-interval_validator: invoked with -460, but values should be >= -459.67 
+Input -460 outside permitted domain [-459.66999999999996, inf]
 
 =======================================
 
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 116
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 122
 
 Expected Exception Type:
 [std::domain_error]
-interval_validator: invoked with -0.1, but values should be >= 0 
+Input [0, 0.5, -0.1] has at least one value outside permitted domain [0, 1]
 
 =======================================
 
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 121
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 127
 
 Expected Exception Type:
 [std::domain_error]
-interval_validator: invoked with 1.1, but values should be <= 1 
+Input [1.1, 0.5, 0.1] has at least one value outside permitted domain [0, 1]
 
 =======================================
 

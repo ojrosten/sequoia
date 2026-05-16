@@ -1,18 +1,2 @@
 Convex Physical Value Test
-Standard Top Level Checks:                26;  Failures:  0  [Deep checks: 25]
-
-******  Critical Failures:  1  ******
-
-
-Error -- Unexpected Exception:
-Input [-1] has at least one value outside permitted domain [0, inf]
-
-Exception thrown after check completed
-Last Recorded Message:
-
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 167
-
-[bool]
-
-=======================================
-
+Standard Top Level Checks:               222;  Failures:  0  [Deep checks: 2078]

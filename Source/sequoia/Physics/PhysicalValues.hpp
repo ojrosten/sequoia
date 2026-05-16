@@ -466,7 +466,7 @@ namespace sequoia::physics
 
   template<class From, class To>
   inline constexpr bool has_quantity_conversion_v{
-    has_coordinate_transformation_v<From, To> && std::constructible_from<coordinate_transformation<From, To>>
+    has_coordinate_transformation_v<From, To> //&& std::constructible_from<coordinate_transformation<From, To>>
   };
 
   template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
@@ -516,13 +516,27 @@ namespace sequoia::physics
     using type = identity_representation<ring_t, no_bounds<to_bounds_value_type_t<ring_t>>>;
   };
 
+  template<physical_unit U>
+  struct root_transform;
+
+  template<physical_unit U>
+  using root_transform_t = root_transform<U>::transform_type;
+
+  template<auto Bounds, class T>
+  struct synthesised_bounds;
+
+  
+  template<auto Bounds, class T>
+  inline constexpr auto synthesised_bounds_v{synthesised_bounds<Bounds, T>::bounds_v};
+
   template<convex_space ValueSpace, physical_unit Unit>
     requires (!free_module<ValueSpace> && !affine_space<ValueSpace>)
   struct default_representation<ValueSpace, Unit>
   {
     using ring_t = commutative_ring_type_of_t<ValueSpace>;
-    // TO DO: transformation from unit
-    using type = identity_representation<ring_t, half_line_bounds<to_bounds_value_type_t<ring_t>>>;
+    using transform_t = root_transform_t<Unit>;
+    constexpr static auto bounds_v{synthesised_bounds_v<half_line_bounds<to_bounds_value_type_t<ring_t>>, transform_t>};
+    using type = identity_representation<ring_t, bounds_v>;
   };
 
   template<convex_space ValueSpace, physical_unit Unit>
@@ -677,14 +691,16 @@ namespace sequoia::physics
       physical_unit OtherUnit,
       convex_space OtherSpace                                 = conversion_space_t<ValueSpace, Unit, OtherUnit>,
       basis_for<free_module_type_of_t<OtherSpace>> OtherBasis = unit_defined_right_handed_basis<free_module_type_of_t<OtherSpace>, OtherUnit>,
-      class OtherOrigin                                       = to_origin_type_t<OtherSpace>
+      class OtherOrigin                                       = to_origin_type_t<OtherSpace>,
+      representation_for<OtherSpace> OtherRepresentation      = default_representation_t<OtherSpace, OtherUnit>,
+      validator_for<OtherSpace> OtherValidator                = throwing_validator<OtherRepresentation::bounds_v>     
     >
-      requires has_quantity_conversion_v<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, representation_type, validator_type>>
+      requires has_quantity_conversion_v<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherRepresentation, OtherValidator>>
     [[nodiscard]]
-    constexpr physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, representation_type, validator_type> convert_to(OtherUnit) const
-      noexcept(has_noexcept_coordinate_transformation_v<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, representation_type, validator_type>>)
+    constexpr physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherRepresentation, OtherValidator> convert_to(OtherUnit) const
+      noexcept(has_noexcept_coordinate_transformation_v<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherRepresentation, OtherValidator>>)
     {
-      return coordinate_transformation<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, representation_type, validator_type>>{}(*this);
+      return coordinate_transformation<physical_value, physical_value<OtherSpace, OtherUnit, OtherBasis, OtherOrigin, OtherRepresentation, OtherValidator>>{}(*this);
     }
 
     [[nodiscard]]
@@ -942,7 +958,7 @@ namespace sequoia::physics
 
   template<auto Bounds>
     requires bounds<Bounds>
-  inline constexpr bool scale_invariant_bounds_v{scale_invariant_bounds<Bounds>::bounds_v};
+  inline constexpr bool scale_invariant_bounds_v{scale_invariant_bounds<Bounds>::value};
 
   template<auto Bounds>
     requires bounds<Bounds>
@@ -962,7 +978,7 @@ namespace sequoia::physics
 
   template<auto Bounds>
     requires bounds<Bounds>
-  inline constexpr bool translation_invariant_bounds_v{translation_invariant_bounds<Bounds>::bounds_v};
+  inline constexpr bool translation_invariant_bounds_v{translation_invariant_bounds<Bounds>::value};
 
   template<auto Bounds>
     requires bounds<Bounds>
@@ -994,7 +1010,7 @@ namespace sequoia::physics
   template<class T, class U, class... Vs>
   struct product<T, U, Vs...>
   {
-    using tpye = product_t<product_t<T, U>, Vs...>;
+    using type = product_t<product_t<T, U>, Vs...>;
   }; 
 
   template<class>
@@ -1031,9 +1047,6 @@ namespace sequoia::physics
 
   template<auto Bounds, class T>
   struct synthesised_bounds;
-
-  template<auto Bounds, class T>
-  inline constexpr bool synthesised_bounds_v{synthesised_bounds<Bounds, T>::bounds_v};
 
   template<class...>
   struct coordinate_transform;
@@ -1133,9 +1146,6 @@ namespace sequoia::physics
     using transform_type = coordinate_transform<U, dilatation<std::ratio<1, 1>>, translation<0>>;
     using units_type     = U;
   };
-
-  template<physical_unit U>
-  using root_transform_t = root_transform<U>::transform_type;
 
   template<physical_unit U>
   using root_transform_unit_t = root_transform<U>::units_type;
