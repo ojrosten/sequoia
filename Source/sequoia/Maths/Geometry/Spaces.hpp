@@ -1629,6 +1629,7 @@ namespace sequoia::maths
       The basis belongs to the associated vector space, allowing the coordinates type for the affine
       space to be aware of the type of the coordinate representation for displacements
    */
+  // TO DO: consider propagating validator since clients may want to check for nan?
   template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin, representation_for<AffineSpace> Representation>
   using affine_coordinates = coordinates<AffineSpace, Basis, Origin, Representation>;
 
@@ -1733,7 +1734,7 @@ namespace sequoia::maths
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
     representation_for<ConvexSpace> Representation,
-    class Validator,
+    validator_for<ConvexSpace, Representation> Validator,
     class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<ConvexSpace>,
                                                           Basis,
                                                           representation_for_free_module_of_t<ConvexSpace, Representation>>
