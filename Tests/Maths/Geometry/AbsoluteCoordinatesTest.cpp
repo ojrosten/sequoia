@@ -30,7 +30,7 @@ namespace sequoia::testing
   {
     using space_t     = euclidean_nonnegative_space<T, D, mathematical_arena>;
     using basis_t     = canonical_right_handed_basis<free_module_type_of_t<space_t>>;
-    using coords_t    = coordinates<space_t, basis_t, identity_representation<half_line_bounds<T>>, throwing_validator>;
+    using coords_t    = coordinates<space_t, basis_t, canonical_representation<half_line_bounds<T>>, throwing_validator>;
     using delta_t     = coords_t::displacement_coordinates_type;
     using value_t     = T;
     STATIC_CHECK(can_multiply<coords_t, value_t>);

@@ -172,15 +172,15 @@ namespace sequoia::physics
 
   template<auto LHBounds, auto RHBounds>
     requires bounds_value<LHBounds> && bounds_value<RHBounds>
-  struct reduction<direct_product<identity_representation<LHBounds>, identity_representation<RHBounds>>>
+  struct reduction<direct_product<canonical_representation<LHBounds>, canonical_representation<RHBounds>>>
   {
-    using type = identity_representation<LHBounds * RHBounds>;
+    using type = canonical_representation<LHBounds * RHBounds>;
   };
 
   template<representation R, representation S>
   struct reduction<direct_product<R, S>>
   {
-    using type = identity_representation<R::bounds_v * S::bounds_v>; // TO DO
+    using type = canonical_representation<R::bounds_v * S::bounds_v>; // TO DO
   };
 
   // TO DO rename this
@@ -387,7 +387,7 @@ namespace sequoia::physics
   struct default_representation<ValueSpace, Unit>
   {
     using ring_t = commutative_ring_type_of_t<ValueSpace>;
-    using type   = identity_representation<no_bounds<to_bounds_value_type_t<ring_t>>>;
+    using type   = canonical_representation<no_bounds<to_bounds_value_type_t<ring_t>>>;
   };
 
   template<physical_unit U>
@@ -410,7 +410,7 @@ namespace sequoia::physics
     using ring_t = commutative_ring_type_of_t<ValueSpace>;
     using transform_t = root_transform_t<Unit>;
     constexpr static auto bounds_v{synthesised_bounds_v<half_line_bounds<to_bounds_value_type_t<ring_t>>, transform_t>};
-    using type = identity_representation<bounds_v>;
+    using type = canonical_representation<bounds_v>;
   };
 
   template<convex_space ValueSpace, physical_unit Unit>
@@ -1231,7 +1231,7 @@ namespace sequoia::physics
           units::second_t,
           unit_defined_right_handed_basis<free_module_type_of_t<time_space<T, Arena>>, units::second_t>,
           Origin,
-          identity_representation<no_bounds<T>>
+          canonical_representation<no_bounds<T>>
         >;
 
     template<      
@@ -1241,7 +1241,7 @@ namespace sequoia::physics
       basis_for<free_module_type_of_t<position_space<T, D, Arena>>> Basis = unit_defined_right_handed_basis<free_module_type_of_t<position_space<T, D, Arena>>, units::metre_t>,
       class Origin = implicit_affine_origin
     >
-    using position = physical_value<position_space<T, D, Arena>, units::metre_t, Basis, Origin, identity_representation<no_bounds<T>>>;
+    using position = physical_value<position_space<T, D, Arena>, units::metre_t, Basis, Origin, canonical_representation<no_bounds<T>>>;
   }
 
   // TO DO: see commnent above si namespace
@@ -1419,7 +1419,7 @@ namespace sequoia::physics
   using dimensionless_quantity = physical_value<ValueSpace, Unit, unit_defined_right_handed_basis<free_module_type_of_t<ValueSpace>, Unit>, to_origin_type_t<ValueSpace>, Representation, Validator>;
   
   template<std::floating_point Rep, class Arena=implicit_common_arena>
-  using euclidean_1d_vector_quantity = dimensionless_quantity<euclidean_vector_space<Rep, 1, Arena>, no_unit_t, identity_representation<no_bounds<Rep>>/*, identity_validator*/>;
+  using euclidean_1d_vector_quantity = dimensionless_quantity<euclidean_vector_space<Rep, 1, Arena>, no_unit_t, canonical_representation<no_bounds<Rep>>/*, identity_validator*/>;
 
   template<std::floating_point Rep, class Arena=implicit_common_arena>
   using euclidean_half_line_quantity = dimensionless_quantity<euclidean_half_space<Rep, Arena>, no_unit_t>;

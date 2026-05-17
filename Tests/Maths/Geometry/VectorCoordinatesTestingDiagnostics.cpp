@@ -23,7 +23,7 @@ namespace sequoia::testing
   {
     {
       using basis_t  = canonical_basis<sets::R<1>, float, 1>;
-      using coords_t = vector_coordinates<my_vec_space<sets::R<1>, float, 1>, basis_t, identity_representation<no_bounds<float>>>;
+      using coords_t = vector_coordinates<my_vec_space<sets::R<1>, float, 1>, basis_t, canonical_representation<no_bounds<float>>>;
       test_vec_1<coords_t>();
     }
 

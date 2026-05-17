@@ -31,7 +31,7 @@ namespace sequoia::testing
   {
     using space_t     = euclidean_nonnegative_space<T, D, mathematical_arena>;
     using basis_t     = canonical_right_handed_basis<free_module_type_of_t<space_t>>;
-    using coords_t    = coordinates<space_t, basis_t, identity_representation<no_bounds<T>>, identity_validator>;
+    using coords_t    = coordinates<space_t, basis_t, canonical_representation<no_bounds<T>>, identity_validator>;
 
     const auto vals{utilities::make_array<T, D>([](auto) { return T(1); })};
     

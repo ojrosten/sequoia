@@ -46,7 +46,7 @@ namespace sequoia::testing
     test_vector_quantity<si::electrical_current<double>>();
     test_vector_quantity<si::angle<float>>();
     test_vector_quantity<euclidean_1d_vector_quantity<float>>();
-    test_vector_quantity<dimensionless_quantity<euclidean_vector_space<float, 2>, no_unit_t, identity_representation<no_bounds<float>>>>();
+    test_vector_quantity<dimensionless_quantity<euclidean_vector_space<float, 2>, no_unit_t, canonical_representation<no_bounds<float>>>>();
 
     test_trig<float>();
     test_trig<double>();

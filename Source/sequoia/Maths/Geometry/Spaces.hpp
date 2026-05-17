@@ -1699,14 +1699,14 @@ namespace sequoia::maths
 
   template<auto Bounds>
     requires bounds<decltype(Bounds)>
-  struct identity_representation
+  struct canonical_representation
   {
     constexpr static auto bounds_v{Bounds};
     using bounds_type = decltype(Bounds);
     using value_type = bounds_type::value_type;
 
     template<auto OtherBounds>
-    using rebind_type = identity_representation<OtherBounds>;
+    using rebind_type = canonical_representation<OtherBounds>;
 
     template<weak_commutative_ring T, std::size_t D>
     [[nodiscard]]
@@ -1725,9 +1725,9 @@ namespace sequoia::maths
 
   template<auto Bounds>
     requires bounds_value<Bounds>
-  struct dual_of<identity_representation<Bounds>>
+  struct dual_of<canonical_representation<Bounds>>
   {
-    using type = identity_representation<reciprocal(Bounds)>;
+    using type = canonical_representation<reciprocal(Bounds)>;
   };
 
   template<
@@ -1735,6 +1735,7 @@ namespace sequoia::maths
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
     representation_for<ConvexSpace> Representation,
     validator_for<ConvexSpace, Representation> Validator,
+    // TO DO: propagate validator, or not? Only dubious value for a free module is nan, should it exist...
     class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<ConvexSpace>,
                                                           Basis,
                                                           representation_for_free_module_of_t<ConvexSpace, Representation>>
@@ -2552,5 +2553,5 @@ namespace sequoia::maths
   };
 
   template<std::floating_point T, std::size_t D, class Arena=mathematical_arena>
-  using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<euclidean_vector_space<T, D, Arena>>, identity_representation<no_bounds<T>>, Arena>;
+  using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<euclidean_vector_space<T, D, Arena>>, canonical_representation<no_bounds<T>>, Arena>;
 }
