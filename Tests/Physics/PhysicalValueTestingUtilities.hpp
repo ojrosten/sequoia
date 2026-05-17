@@ -20,7 +20,7 @@ namespace sequoia::testing
     maths::basis_for<maths::free_module_type_of_t<PhysicalValueSpace>> Basis,
     class Origin,
     maths::representation_for<PhysicalValueSpace> Representation,
-    maths::validator_for<PhysicalValueSpace> Validator
+    maths::validator_for<PhysicalValueSpace, Representation> Validator
   >
   struct value_tester<physics::physical_value<PhysicalValueSpace, Unit, Basis, Origin, Representation, Validator>>
   {

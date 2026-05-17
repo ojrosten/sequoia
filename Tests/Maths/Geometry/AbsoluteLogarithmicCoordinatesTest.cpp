@@ -17,36 +17,37 @@ namespace sequoia::testing
 
   namespace
   {
-    template<weak_commutative_ring T, auto Bounds=no_bounds<T>>
-      requires bounds<Bounds>
+    template<auto Bounds>
+      requires bounds<decltype(Bounds)>
     struct logarithmic_representation
     {
-      using value_type = T;
-      constexpr static coordinate_bounds<T> bounds_v{no_bounds<T>};
+      constexpr static auto bounds_v{Bounds};
+      using bounds_type = decltype(Bounds);
+      using value_type = bounds_value_type_t<bounds_type>;
 
       template<auto OtherBounds>
-      using rebind_type = logarithmic_representation<T, OtherBounds>;
+      using rebind_type = logarithmic_representation<OtherBounds>;
 
       [[nodiscard]]
-      constexpr static T to_underlying(T val)
+      constexpr static value_type to_underlying(value_type val)
       {
         return std::exp(val);
       }
 
       [[nodiscard]]
-      constexpr static T from_underlying(T val)
+      constexpr static value_type from_underlying(value_type val)
       {
         return std::log(val);
       }
 
       [[nodiscard]]
-      static constexpr T add(T lhs, T rhs)
+      static constexpr value_type add(value_type lhs, value_type rhs)
       {
         return lhs + rhs;
       }
 
       [[nodiscard]]
-      static constexpr T sub(T lhs, T rhs)
+      static constexpr value_type sub(value_type lhs, value_type rhs)
       {
         return lhs - rhs;
       }
@@ -69,9 +70,9 @@ namespace sequoia::testing
   void absolute_logarithmic_coordinates_test::test_absolute_logarithmic()
   {
     using space_t     = euclidean_nonnegative_space<T, 1, mathematical_arena>;
-    using rep_t       = logarithmic_representation<T>;
+    using rep_t       = logarithmic_representation<no_bounds<T>>;
     using basis_t     = canonical_right_handed_basis<free_module_type_of_t<space_t>>;
-    using coords_t    = coordinates<space_t, basis_t, rep_t, throwing_validator<rep_t::bounds_v>>;
+    using coords_t    = coordinates<space_t, basis_t, rep_t, throwing_validator>;
     using delta_t     = coords_t::displacement_coordinates_type;
     using value_t     = T;
 

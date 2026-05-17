@@ -720,73 +720,50 @@ namespace sequoia::maths
 
    */
 
-  template<auto Bounds>
+  template<class Bounds>
+  inline constexpr bool checks_single_val_against_bounds_v{
+    requires (const Bounds& b) {
+      { b(std::declval<typename Bounds::value_type>()) } -> std::convertible_to<bool>;
+    }
+  };
+
+  template<class Bounds, std::size_t D>
+  inline constexpr bool checks_array_against_bounds_v{
+    requires (const Bounds& b) {
+      { b(std::declval<std::array<typename Bounds::value_type, D>>()) } -> std::convertible_to<bool>;
+    }
+  };
+
+  template<class Bounds>
   concept bounds
-    =    has_value_type_v<decltype(Bounds)>
-      && requires {
-           { Bounds.lower } -> std::convertible_to<typename decltype(Bounds)::value_type>;
-           { Bounds.upper } -> std::convertible_to<typename decltype(Bounds)::value_type>;
-           requires (Bounds.lower < Bounds.upper);
+    =    has_value_type_v<Bounds>
+      && requires (const Bounds& b) {
+           { b.lower } -> std::convertible_to<typename Bounds::value_type>;
+           { b.upper } -> std::convertible_to<typename Bounds::value_type>;
+           //requires (b.lower < b.upper);
          };
 
   template<auto Bounds>
-  inline constexpr bool checks_single_val_against_bounds_v{
-    requires {
-      { Bounds(std::declval<typename decltype(Bounds)::value_type>()) } -> std::convertible_to<bool>;
-    }
-  };
+  concept bounds_value = bounds<decltype(Bounds)> && (Bounds.lower < Bounds.upper);
 
-  template<auto Bounds, std::size_t D>
-  inline constexpr bool checks_array_against_bounds_v{
-    requires {
-      { Bounds(std::declval<std::array<typename decltype(Bounds)::value_type, D>>()) } -> std::convertible_to<bool>;
-    }
-  };
-
-  template<auto Bounds, class ConvexSpace>
+  template<class Bounds, class ConvexSpace>
   concept bounds_for
     =      bounds<Bounds> && convex_space<ConvexSpace>
         && (   ((dimension_of<ConvexSpace> == 1) && checks_single_val_against_bounds_v<Bounds>)
             || ((dimension_of<ConvexSpace>  > 1) && checks_array_against_bounds_v<Bounds, dimension_of<ConvexSpace>>));
-  
-  namespace impl
-  {
-    template<auto Bounds, class T>
-    struct range_of_bounds;
 
-    template<auto Bounds, class T>
-    inline constexpr bool range_of_bounds_v{range_of_bounds<Bounds, T>::value};
-
-    template<auto Bounds, std::size_t... Is>
-    struct range_of_bounds<Bounds, std::index_sequence<Is...>> : std::bool_constant<(bounds<Bounds[Is]> && ...)>
-    {      
-    };
-  }
-
-  template<auto Bounds>
-  inline constexpr bool range_of_bounds_v{
-       std::ranges::range<decltype(Bounds)>
-    && requires {
-         requires impl::range_of_bounds_v<Bounds, std::make_index_sequence<Bounds.size()>>;
-       }
-  };
-
-  template<auto Bounds>
+  template<bounds Bounds>
   struct bounds_value_type
   {
-    using bounds_type = decltype(Bounds);
-    using type = bounds_type::value_type;
+    using type = Bounds::value_type;
   };
 
-  template<auto Bounds>
+  template<bounds Bounds>
   using bounds_value_type_t = bounds_value_type<Bounds>::type;
 
-  template<auto Bounds>
-    requires range_of_bounds_v<Bounds>
-  struct bounds_value_type<Bounds>
+  template<bounds Bounds, std::size_t D>
+  struct bounds_value_type<std::array<Bounds, D>> : bounds_value_type<Bounds>
   {
-    using range_of_bounds_type = decltype(Bounds);
-    using type = range_of_bounds_type::value_type::value_type;
   };
 
   template<weak_commutative_ring T>
@@ -969,161 +946,9 @@ namespace sequoia::maths
   
   template<class T>
   inline constexpr bool has_bounds_v{
-    requires {
-      T::bounds_v;
-      requires bounds<T::bounds_v>;
-    }
+      bounds_value<T::bounds_v>
   };
   
-  /** @defgroup Validators Validators
-      @brief Validators are central to dealing with spaces where the C++ representation could produce values outside the underlying set.
-
-      As an example, consider a half-line. Suppose the C++ representation involves
-      floating-point values. Since these can be both positive and negative, runtime
-      validation is required to ensure that invalid states of the half-line aren't
-      constructed.
-
-      One natural approach is for validators to throw if they encounter a value out
-      of range. However, this is by no means necessary. In some situations it may
-      be more appropriate to clamp, particularly if the size of a violation is the
-      order of magnitude of the expected (floating-point) precision.
-
-      For cases such as affine and vector spaces where validation is unnecessary
-      (blithely ignoring the fact that NaN may be a representable floating-point
-      value) std::identity holds a privileged position, indicating a transparent
-      validator that performs no actual checking. However, its privileged status
-      is determined by a trait, so that careful clients could implement their
-      own, even for vector/affine spaces,  to deal with edge cases such as NaN.
-   */
-
-  /** @ingroup Validators
-      @brief Validators for spaces of dimension 1 must provide an operator() for validating single values.
-
-      Let the type of the commutative ring associated with a space be space_value_type.
-      The validator must expose an operator() that consumes a single value of
-      space_value_type, and its return type must be convertible to space_value_type.
-   */
-  template<class V, class ConvexSpace>
-  inline constexpr bool validator_for_single_value{
-       (dimension_of<ConvexSpace> == 1)
-    && requires(V& v, const space_value_type<ConvexSpace>& val) { { v(val) } -> std::convertible_to<decltype(val)>; }
-  };
-
-  /** @ingroup Validators
-      @brief Validators for spaces of dimension d>1 must provide an operator() for an array of d values.
-
-      Let the type of the commutative ring associated with a space be space_value_type.
-      Denote a d-dimensional std::array of such values by A. The validator must expose
-      an operator() that consumes a single value of type A and its return type must be
-      convertible to A.
-   */
-  template<class V, class ConvexSpace>
-  inline constexpr bool validator_for_array{
-    requires (V& v, const std::array<space_value_type<ConvexSpace>, dimension_of<ConvexSpace>>& values) {
-      { v(values) } -> std::convertible_to<decltype(values)>;
-    }
-  };
-
-  /** @ingroup Validators
-      @brief concept to check if a validator is compatible with a convex space.
-   */
-  template<class V, class ConvexSpace>
-  concept validator_for =
-       convex_space<ConvexSpace>
-    && std::default_initializable<V>
-    && std::constructible_from<V, V>
-    && (validator_for_single_value<V, ConvexSpace> || validator_for_array<V, ConvexSpace>);
-
-  /** @ingroup Validators
-      @brief Trait for validators that behave like the identity.
-   */
-  template<class T>
-  struct defines_identity_validator : std::false_type {};
-
-  template<class T>
-  using defines_identity_validator_t = defines_identity_validator<T>::type;
-
-  template<class T>
-  inline constexpr bool defines_identity_validator_v{defines_identity_validator<T>::value};
-
-  template<>
-  struct defines_identity_validator<std::identity> : std::true_type {};
-
-  template<auto Bounds>
-  struct throwing_validator;
-
-  // TO DO: probably move template to operator()
-  template<auto Bounds>
-    requires bounds<Bounds>
-  struct throwing_validator<Bounds>
-  {
-    using bounds_type = decltype(Bounds);
-    using value_type  = bounds_type::value_type;
-
-    // TO DO: hopefully get rid of this
-    template<auto OtherBounds>
-    using rebind_type = throwing_validator<OtherBounds>;
- 
-    constexpr value_type operator()(const value_type val) const
-    {
-      return validate(val);
-    }
-
-    template<std::size_t D>
-    constexpr const std::array<value_type, D>& operator()(const std::array<value_type, D>& vals) const
-    {      
-      return validate(vals);
-    }
-  private:
-    template<class T>
-    constexpr const T& validate(const T& t) const
-    {
-      if(!Bounds(t))
-        throw std::domain_error{std::format("Input {} outside permitted domain [{}, {}]", Bounds.format_input(t), Bounds.lower, Bounds.upper)};
-
-      return t;
-    }
-  };
-
-  template<auto RangeOfBounds>
-    requires range_of_bounds_v<RangeOfBounds>
-  struct throwing_validator<RangeOfBounds>
-  {
-    using bounds_type = decltype(RangeOfBounds)::value_type;
-    using value_type  = bounds_type::value_type;
-    constexpr static std::size_t D{RangeOfBounds.size()};
-
-    constexpr const std::array<value_type, D>& operator()(const std::array<value_type, D>& vals) const
-    {
-      [&]<std::size_t... Is>(std::index_sequence<Is...>) {
-        (throwing_validator<RangeOfBounds[Is]>{}(vals[Is]), ...);
-      }(std::make_index_sequence<RangeOfBounds.size()>());
-
-      return vals;
-    }
-  };
-
-  template<auto Bounds>
-  struct identity_validator
-  {
-    using bounds_type = decltype(Bounds);
-    using value_type  = bounds_type::value_type;
-
-    // TO DO: hopefully get rid of this
-    template<auto OtherBounds>
-    using rebind_type = identity_validator<OtherBounds>;
- 
-    constexpr value_type operator()(const value_type val) const
-    {
-      return val;
-    }
-
-    template<std::size_t D>
-    constexpr const std::array<value_type, D>& operator()(const std::array<value_type, D>& vals) const
-    {      
-      return vals;
-    }
-  };
 
   /** @defgroup Representation Representation
       @brief Representations allow coordinates to be represented using a bijective mapping with respect to an underlying basis.
@@ -1255,6 +1080,137 @@ namespace sequoia::maths
          { r.sub(lhs, rhs) } -> std::convertible_to<commutative_ring_type_of_t<ConvexSpace>>;
        }
   };
+
+    /** @defgroup Validators Validators
+      @brief Validators are central to dealing with spaces where the C++ representation could produce values outside the underlying set.
+
+      As an example, consider a half-line. Suppose the C++ representation involves
+      floating-point values. Since these can be both positive and negative, runtime
+      validation is required to ensure that invalid states of the half-line aren't
+      constructed.
+
+      One natural approach is for validators to throw if they encounter a value out
+      of range. However, this is by no means necessary. In some situations it may
+      be more appropriate to clamp, particularly if the size of a violation is the
+      order of magnitude of the expected (floating-point) precision.
+
+      For cases such as affine and vector spaces where validation is unnecessary
+      (blithely ignoring the fact that NaN may be a representable floating-point
+      value) std::identity holds a privileged position, indicating a transparent
+      validator that performs no actual checking. However, its privileged status
+      is determined by a trait, so that careful clients could implement their
+      own, even for vector/affine spaces,  to deal with edge cases such as NaN.
+   */
+
+  /** @ingroup Validators
+      @brief Validators for spaces of dimension 1 must provide an operator() for validating single values.
+
+      Let the type of the commutative ring associated with a space be space_value_type.
+      The validator must expose an operator() that consumes a single value of
+      space_value_type, and its return type must be convertible to space_value_type.
+   */
+  template<class V, convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
+  inline constexpr bool validator_for_single_value{
+       (dimension_of<ConvexSpace> == 1)
+    && requires(V& v, const space_value_type<ConvexSpace>& val) { { v(Representation::bounds_v, val) } -> std::convertible_to<decltype(val)>; }
+  };
+
+  /** @ingroup Validators
+      @brief Validators for spaces of dimension d>1 must provide an operator() for an array of d values.
+
+      Let the type of the commutative ring associated with a space be space_value_type.
+      Denote a d-dimensional std::array of such values by A. The validator must expose
+      an operator() that consumes a single value of type A and its return type must be
+      convertible to A.
+   */
+  template<class V, convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
+  inline constexpr bool validator_for_array{
+    requires (V& v, const std::array<space_value_type<ConvexSpace>, dimension_of<ConvexSpace>>& values) {
+      { v(Representation::bounds_v, values) } -> std::convertible_to<decltype(values)>;
+    }
+  };
+
+  /** @ingroup Validators
+      @brief concept to check if a validator is compatible with a convex space.
+   */
+  template<class V, class ConvexSpace, class Representation>
+  concept validator_for =
+       convex_space<ConvexSpace>
+    && representation_for<Representation, ConvexSpace>
+    && std::default_initializable<V>
+    && std::constructible_from<V, V>
+    && (validator_for_single_value<V, ConvexSpace, Representation> || validator_for_array<V, ConvexSpace, Representation>);
+
+  /** @ingroup Validators
+      @brief Trait for validators that behave like the identity.
+   */
+  template<class T>
+  struct defines_identity_validator : std::false_type {};
+
+  template<class T>
+  using defines_identity_validator_t = defines_identity_validator<T>::type;
+
+  template<class T>
+  inline constexpr bool defines_identity_validator_v{defines_identity_validator<T>::value};
+
+  
+  struct throwing_validator
+  {
+    template<bounds Bounds, weak_commutative_ring T>
+    constexpr T operator()(Bounds bnds, T val) const
+    {
+      return validate(bnds, val);
+    }
+
+    template<bounds Bounds, weak_commutative_ring T, std::size_t D>
+    constexpr const std::array<T, D>& operator()(Bounds bnds, const std::array<T, D>& vals) const
+    {      
+      return validate(bnds, vals);
+    }
+
+    // TO DO: consider moving this elsewhere
+    template<bounds Bounds, weak_commutative_ring T, std::size_t D>
+    constexpr const std::array<T, D>& operator()(const std::array<Bounds, D>& bnds, const std::array<T, D>& vals) const
+    {
+      for(auto [bnd, val] : std::views::zip(bnds, vals))
+        validate(bnd, val);
+        
+      return vals;
+    }
+  private:
+    template<bounds Bounds, class T>
+    constexpr const T& validate(Bounds bnds, const T& t) const
+    {
+      if(!bnds(t))
+        throw std::domain_error{std::format("Input {} outside permitted domain [{}, {}]", bnds.format_input(t), bnds.lower, bnds.upper)};
+
+      return t;
+    }
+  };
+
+  struct identity_validator
+  {
+    template<bounds Bounds, weak_commutative_ring T>
+    constexpr T operator()(Bounds, T val) const noexcept
+    {
+      return val;
+    }
+
+    template<bounds Bounds, weak_commutative_ring T, std::size_t D>
+    constexpr const std::array<T, D>& operator()(Bounds, const std::array<T, D>& vals) const noexcept
+    {      
+      return vals;
+    }
+
+    template<bounds Bounds, weak_commutative_ring T, std::size_t D>
+    constexpr const std::array<T, D>& operator()(const std::array<Bounds, D>&, const std::array<T, D>& vals) const
+    {        
+      return vals;
+    }
+  };
+
+  template<>
+  struct defines_identity_validator<identity_validator> : std::true_type {};
   
   /** @defgroup DirectProduct Direct Product
       @brief Direct Products are one way in which spaces can be composed to create new spaces.
@@ -1740,38 +1696,37 @@ namespace sequoia::maths
   template<basis B, class Rep, class... Args>
   inline constexpr bool is_units_terminated_pack_v{is_units_terminated_pack<B, Rep, Args...>::value};
 
-  // TO DO: T extraneous
-  template<weak_commutative_ring T, auto Bounds>
-    requires bounds<Bounds>
+  template<auto Bounds>
+    requires bounds<decltype(Bounds)>
   struct identity_representation
   {
     constexpr static auto bounds_v{Bounds};
     using bounds_type = decltype(Bounds);
-    using value_type = T;
+    using value_type = bounds_type::value_type;
 
     template<auto OtherBounds>
-    using rebind_type = identity_representation<T, OtherBounds>;
+    using rebind_type = identity_representation<OtherBounds>;
 
-    template<std::size_t D>
+    template<weak_commutative_ring T, std::size_t D>
     [[nodiscard]]
     constexpr static std::array<T, D> to_underlying(std::span<const T, D> in) noexcept
     {
       return utilities::to_array(in);
     }
 
-    template<std::size_t D>
+    template<weak_commutative_ring T, std::size_t D>
     [[nodiscard]]
-    constexpr static std::array<T, D> from_underlying(std::span<const T, D> in) noexcept
+    constexpr static std::array<T,  D> from_underlying(std::span<const T, D> in) noexcept
     {
       return utilities::to_array(in);
     }
   };
 
-  template<weak_commutative_ring T, auto Bounds>
-    requires bounds<Bounds>
-  struct dual_of<identity_representation<T, Bounds>>
+  template<auto Bounds>
+    requires bounds_value<Bounds>
+  struct dual_of<identity_representation<Bounds>>
   {
-    using type = identity_representation<T, reciprocal(Bounds)>;
+    using type = identity_representation<reciprocal(Bounds)>;
   };
 
   template<
@@ -1835,7 +1790,7 @@ namespace sequoia::maths
     {}
 
     constexpr coordinates_base(value_type val, basis_isomorphism_type) noexcept(has_identity_validator)
-      : m_Values{m_Validator(val)}
+      : m_Values{m_Validator(representation_type::bounds_v, val)}
     {}
 
     template<class Self>
@@ -2163,7 +2118,7 @@ namespace sequoia::maths
 
     template<std::size_t... Is, class... Args> 
     constexpr coordinates_base(std::index_sequence<Is...>, const std::tuple<Args...>& args)
-      : m_Values{m_Validator(std::array<value_type, D>{static_cast<value_type>(std::get<Is>(args))...})}
+      : m_Values{m_Validator(representation_type::bounds_v, std::array<value_type, D>{static_cast<value_type>(std::get<Is>(args))...})}
     {}
     
     [[nodiscard]]
@@ -2175,10 +2130,15 @@ namespace sequoia::maths
     [[nodiscard]]
     static std::array<value_type, D> validate(std::array<value_type, D> vals, validator_type& validator)
     {
-      if constexpr(validator_for_array<validator_type, ConvexSpace>)
-        return validator(vals);
+      constexpr static auto bounds_v{representation_type::bounds_v};
+      if constexpr(validator_for_array<validator_type, space_type, representation_type>)
+        return validator(bounds_v, vals);
       else
-        return {validator(vals.front())};
+      {
+        static_assert(validator_for_single_value<validator_type, space_type, representation_type>);
+        static_assert(D == 1);
+        return {validator(bounds_v, vals.front())};
+      }
     }
 
     [[nodiscard]]
@@ -2290,20 +2250,20 @@ namespace sequoia::maths
   >
     requires (!free_module<AffineSpace>)
   class coordinates<AffineSpace, Basis, Origin, Representation> final
-    : public coordinates_base<AffineSpace, Basis, Representation, std::identity>
+    : public coordinates_base<AffineSpace, Basis, Representation, identity_validator> // TO DO: generalize validator
   {
   public:
     using origin_type = Origin;
     
-    using coordinates_base<AffineSpace, Basis, Representation, std::identity>::coordinates_base;
+    using coordinates_base<AffineSpace, Basis, Representation, identity_validator>::coordinates_base;
   };
 
   template<free_module M, basis_for<free_module_type_of_t<M>> Basis, representation_for<M> Representation>    
   class coordinates<M, Basis, Representation> final
-    : public coordinates_base<M, Basis, Representation, std::identity>
+    : public coordinates_base<M, Basis, Representation, identity_validator>
   {
   public:
-    using coordinates_base<M, Basis, Representation, std::identity>::coordinates_base;
+    using coordinates_base<M, Basis, Representation, identity_validator>::coordinates_base;
   };
 
   template<class From, class To>
@@ -2529,7 +2489,7 @@ namespace sequoia::maths
   using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<T, D, Arena>, Basis, Representation>;
 
   template<std::floating_point T, std::size_t D, basis Basis, class Representation, class Arena=mathematical_arena>
-  using euclidean_nonnegative_coordinates = coordinates<euclidean_nonnegative_space<T, D, Arena>, Basis, Representation, std::identity>;
+  using euclidean_nonnegative_coordinates = coordinates<euclidean_nonnegative_space<T, D, Arena>, Basis, Representation, identity_validator>;
 
   /** @brief Right-handed bases for arbitrary D, built recursively from 1D
 
@@ -2591,5 +2551,5 @@ namespace sequoia::maths
   };
 
   template<std::floating_point T, std::size_t D, class Arena=mathematical_arena>
-  using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<euclidean_vector_space<T, D, Arena>>, identity_representation<T, no_bounds<T>>, Arena>;
+  using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<euclidean_vector_space<T, D, Arena>>, identity_representation<no_bounds<T>>, Arena>;
 }

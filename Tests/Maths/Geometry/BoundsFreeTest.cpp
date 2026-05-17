@@ -43,41 +43,41 @@ namespace sequoia::testing
 
   void bounds_free_test::run_tests()
   {
-    STATIC_CHECK( bounds<coordinate_bounds{0.0, 1.0}>);
-    STATIC_CHECK(!bounds<coordinate_bounds{2.0, 1.0}>);
-    STATIC_CHECK( bounds<annulus_bounds{1.0, 2.0}>);
-    STATIC_CHECK(!bounds<annulus_bounds{2.1, 2.0}>);
-    STATIC_CHECK( bounds_for<coordinate_bounds{0.0, 1.0}, euclidean_vector_space<double, 1>>);
-    STATIC_CHECK( bounds_for<coordinate_bounds{0.0, 1.0}, euclidean_vector_space<double, 2>>);
-    STATIC_CHECK( bounds_for<annulus_bounds{0.0, 1.0}, euclidean_vector_space<double, 2>>);
-    STATIC_CHECK(!bounds_for<annulus_bounds{0.0, 1.0}, euclidean_vector_space<double, 1>>);
-    STATIC_CHECK(!bounds_for<annulus_bounds{0.0, 1.0}, euclidean_vector_space<double, 3>>);
+    STATIC_CHECK( bounds<coordinate_bounds<float>>);
+    STATIC_CHECK( bounds<coordinate_bounds<double>>);
+    STATIC_CHECK( bounds<annulus_bounds<float>>);
+    STATIC_CHECK( bounds<annulus_bounds<double>>);
+    STATIC_CHECK( bounds_for<coordinate_bounds<double>, euclidean_vector_space<double, 1>>);
+    STATIC_CHECK( bounds_for<coordinate_bounds<double>, euclidean_vector_space<double, 2>>);
+    STATIC_CHECK( bounds_for<annulus_bounds<double>, euclidean_vector_space<double, 2>>);
+    STATIC_CHECK(!bounds_for<annulus_bounds<double>, euclidean_vector_space<double, 1>>);
+    STATIC_CHECK(!bounds_for<annulus_bounds<double>, euclidean_vector_space<double, 3>>);
 
     check_exception_thrown<std::domain_error>(
       "",
       [](){
-        throwing_validator<coordinate_bounds{0.0, 1.0}>{}(2.0);
+        throwing_validator{}(coordinate_bounds<double>{0.0, 1.0}, 2.0);
       }
     );
 
     check_exception_thrown<std::domain_error>(
       "",
       [](){
-        throwing_validator<coordinate_bounds<double>{0.0, 1.0}>{}(std::array{2.0, 1.0});
+        throwing_validator{}(coordinate_bounds<double>{0.0, 1.0}, std::array{2.0, 1.0});
       }
     );
 
     check_exception_thrown<std::domain_error>(
       "",
       [](){
-        throwing_validator<annulus_bounds{1.0, 2.0}>{}(std::array{3.0, 4.0});
+        throwing_validator{}(annulus_bounds{1.0, 2.0}, std::array{3.0, 4.0});
       }
     );
 
     check_exception_thrown<std::domain_error>(
       "",
       [](){
-        throwing_validator<std::array{coordinate_bounds{0.0, 1.0}, coordinate_bounds{-1.0, 0.0},}>{}(std::array{-1.0, 0.0});
+        throwing_validator{}(std::array{coordinate_bounds{0.0, 1.0}, coordinate_bounds{-1.0, 0.0}}, std::array{-1.0, 0.0});
       }
     );
   }

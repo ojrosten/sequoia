@@ -74,7 +74,7 @@ namespace sequoia::testing
         unit_defined_right_handed_basis<free_module_type_of_t<dual<space_type>>, dual<units_type>>,
         dual<origin_type>,
         repr_t,
-        identity_validator<repr_t::bounds_v>
+        std::identity
       >
     );
   }

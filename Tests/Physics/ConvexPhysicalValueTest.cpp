@@ -48,7 +48,7 @@ namespace
         normalized_colour_t<N>,
         unit_defined_right_handed_basis<free_module_type_of_t<colour_space<T, N, Arena>>, normalized_colour_t<N>>,
         to_origin_type_t<colour_space<T, N, Arena>>,
-        identity_representation<T, coordinate_bounds{T(0.0), T(1.0)}>
+        identity_representation<coordinate_bounds{T(0.0), T(1.0)}>
       >;
 }
 
@@ -161,7 +161,7 @@ namespace sequoia::testing
         unit_defined_right_handed_basis<free_module_type_of_t<dual<space_t>>, dual<units_t>>,
         to_origin_type_t<dual<space_t>>,
         dual_of_t<repr_t>,
-        throwing_validator<repr_t::bounds_v>
+        throwing_validator
       >
     );
     STATIC_CHECK( can_multiply<value_t, units_t>);

@@ -100,8 +100,8 @@ namespace sequoia::testing
     using dual_euc_vec_space_qty  = dimensionless_quantity<dual<euclidean_vector_space<value_t, 1, arena_t>>, no_unit_t>;
     using pseudo_qty_t            = decltype(qty_t{} * euc_vec_space_qty{});
     using pseudo_inv_qty_t        = decltype(euc_vec_space_qty{} /qty_t{});
-    using unsafe_qty_t            = quantity<units_t, value_t, identity_representation<value_t, no_bounds<value_t>>, identity_validator<no_bounds<value_t>>>;
-    using unsafe_inv_qty_t        = quantity<inv_units_t, value_t, identity_representation<value_t, no_bounds<value_t>>, identity_validator<no_bounds<value_t>>>;
+    using unsafe_qty_t            = quantity<units_t, value_t, identity_representation<no_bounds<value_t>>>;
+    using unsafe_inv_qty_t        = quantity<inv_units_t, value_t, identity_representation<no_bounds<value_t>>, identity_validator>;
     using q2_t                    = decltype(physical_value{value_t{}, units_t{} * units_t{}});
     using q3_t                    = decltype(physical_value{value_t{}, units_t{} * units_t{} * units_t{}});
     using dq2_t                   = decltype(delta_qty_t{value_t{}, units_t{}} * delta_qty_t{value_t{}, units_t{}});

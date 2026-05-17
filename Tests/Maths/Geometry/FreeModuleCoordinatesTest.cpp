@@ -35,7 +35,7 @@ namespace sequoia::testing
     STATIC_CHECK(std::same_as<free_module_type_of_t<free_module_t>, free_module_t>);
     STATIC_CHECK(basis_for<basis_t, free_module_t>);
     
-    using module_coords_t = free_module_coordinates<free_module_t, basis_t, identity_representation<Ring, no_bounds<Ring>>>;
+    using module_coords_t = free_module_coordinates<free_module_t, basis_t, identity_representation<no_bounds<Ring>>>;
     coordinates_operations<module_coords_t>{*this}.execute();
   }
 }
