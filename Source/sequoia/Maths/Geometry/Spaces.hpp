@@ -854,20 +854,18 @@ namespace sequoia::maths
   template<weak_commutative_ring T>
   inline constexpr coordinate_bounds<T> negative_half_line_bounds{coordinate_bounds<T>::least_lower_bound, T{}};
   
-  template<weak_commutative_ring T>
+  template<std::floating_point T>
   [[nodiscard]]
   constexpr coordinate_bounds<T> reciprocal(const coordinate_bounds<T>& b) noexcept
   {
-    constexpr auto llb{coordinate_bounds<T>::least_lower_bound},
-                   gub{coordinate_bounds<T>::greatest_upper_bound};
-
     if((b == no_bounds<T>) || (b == half_line_bounds<T>) || (b == negative_half_line_bounds<T>))
       return b;
-
-    // TO DO: fix this!
       
     auto invert{
       [b](T val){
+        constexpr auto llb{coordinate_bounds<T>::least_lower_bound},
+                       gub{coordinate_bounds<T>::greatest_upper_bound};
+
         if((val == llb) || (val == gub))
           return T{};
 
@@ -878,14 +876,10 @@ namespace sequoia::maths
       }
     };
 
-    if(b.lower >= 0)
+    if((b.lower >= 0) || (b.upper <= 0))
       return {invert(b.upper), invert(b.lower)};
-    else if(b.upper > 0)
-      return {invert(b.lower), invert(b.upper)};
-    else if(b.upper == 0)
-      return {llb, invert(b.lower)};
-    else
-      return {invert(b.upper), invert(b.lower)};
+
+    return no_bounds<T>;
   }
 
   // TO DO: rename the fix
