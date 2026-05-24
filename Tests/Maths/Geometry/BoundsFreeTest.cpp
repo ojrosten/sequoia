@@ -112,5 +112,10 @@ namespace sequoia::testing
     check(equality, "[a >  0, b == infty]", reciprocal(coordinate_bounds{2.0, inf}), coordinate_bounds{0.0, 0.5});
     check(equality, "[a == 0, b <  infty]", reciprocal(coordinate_bounds{0.0, 2.0}), coordinate_bounds{0.5, inf});
     check(equality, "[a == 0, b == infty]", reciprocal(coordinate_bounds{0.0, inf}), coordinate_bounds{0.0, inf});
+
+    check(equality, "[a >  -inf, b <  0]", reciprocal(coordinate_bounds{-2.0, -1.0}), coordinate_bounds{-1.0, -0.5});
+    check(equality, "[a >  -inf, b == 0]", reciprocal(coordinate_bounds{-2.0,  0.0}), coordinate_bounds{-inf, -0.5});
+    check(equality, "[a == -inf, b <  0]", reciprocal(coordinate_bounds{-inf, -1.0}), coordinate_bounds{-1.0,  0.0});
+    check(equality, "[a == -inf, b == 0]", reciprocal(coordinate_bounds{-inf,  0.0}), coordinate_bounds{-inf,  0.0});
   }
 }
