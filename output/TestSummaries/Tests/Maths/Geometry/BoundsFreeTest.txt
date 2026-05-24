@@ -1,2 +1,203 @@
 Bounds Free Test
-Standard Top Level Checks:                51;  Failures:  0  [Deep checks: 127]
+Standard Top Level Checks:                65;  Failures: 10  [Deep checks: 169]
+
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 134
+-ve, finite / infinite
+
+[sequoia::maths::coordinate_bounds<float>]
+operator== returned false
+
+  Lower
+  [float]
+  operator== returned false
+  Obtained : -inf
+  Predicted: 0.5
+
+  Upper
+  [float]
+  operator== returned false
+  Obtained : 2
+  Predicted: inf
+
+=======================================
+
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 135
+semi-ve, finite / infinite
+
+[sequoia::maths::coordinate_bounds<float>]
+operator== returned false
+
+  Lower
+  [float]
+  operator== returned false
+  Obtained : -inf
+  Predicted: 0
+
+  Upper
+  [float]
+  operator== returned false
+  Obtained : 2
+  Predicted: inf
+
+=======================================
+
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 136
+semi-ve, finite / infinite
+
+[sequoia::maths::coordinate_bounds<float>]
+operator== returned false
+
+  Lower
+  [float]
+  operator== returned false
+  Obtained : -inf
+  Predicted: 0
+
+  Upper
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: inf
+
+=======================================
+
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 137
+semi-ve, infinite / infinite
+
+[sequoia::maths::coordinate_bounds<float>]
+operator== returned false
+
+  Lower
+  [float]
+  operator== returned false
+  Obtained : -inf
+  Predicted: 0
+
+  Upper
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: inf
+
+=======================================
+
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 138
+semi-ve, infinite / infinite
+
+[sequoia::maths::coordinate_bounds<float>]
+operator== returned false
+
+  Lower
+  [float]
+  operator== returned false
+  Obtained : -inf
+  Predicted: 0
+
+  Upper
+  [float]
+  operator== returned false
+  Obtained : 0
+  Predicted: inf
+
+=======================================
+
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 134
+-ve, finite / infinite
+
+[sequoia::maths::coordinate_bounds<double>]
+operator== returned false
+
+  Lower
+  [double]
+  operator== returned false
+  Obtained : -inf
+  Predicted: 0.5
+
+  Upper
+  [double]
+  operator== returned false
+  Obtained : 2
+  Predicted: inf
+
+=======================================
+
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 135
+semi-ve, finite / infinite
+
+[sequoia::maths::coordinate_bounds<double>]
+operator== returned false
+
+  Lower
+  [double]
+  operator== returned false
+  Obtained : -inf
+  Predicted: 0
+
+  Upper
+  [double]
+  operator== returned false
+  Obtained : 2
+  Predicted: inf
+
+=======================================
+
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 136
+semi-ve, finite / infinite
+
+[sequoia::maths::coordinate_bounds<double>]
+operator== returned false
+
+  Lower
+  [double]
+  operator== returned false
+  Obtained : -inf
+  Predicted: 0
+
+  Upper
+  [double]
+  operator== returned false
+  Obtained : 0
+  Predicted: inf
+
+=======================================
+
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 137
+semi-ve, infinite / infinite
+
+[sequoia::maths::coordinate_bounds<double>]
+operator== returned false
+
+  Lower
+  [double]
+  operator== returned false
+  Obtained : -inf
+  Predicted: 0
+
+  Upper
+  [double]
+  operator== returned false
+  Obtained : 0
+  Predicted: inf
+
+=======================================
+
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 138
+semi-ve, infinite / infinite
+
+[sequoia::maths::coordinate_bounds<double>]
+operator== returned false
+
+  Lower
+  [double]
+  operator== returned false
+  Obtained : -inf
+  Predicted: 0
+
+  Upper
+  [double]
+  operator== returned false
+  Obtained : 0
+  Predicted: inf
+
+=======================================
+

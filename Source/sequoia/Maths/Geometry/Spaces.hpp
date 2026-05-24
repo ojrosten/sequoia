@@ -909,7 +909,7 @@ namespace sequoia::maths
           if((v == llb) || (w == llb))
             return llb;
 
-          return v > gub / w ? gub : v * w;
+          return v < gub / w ? gub : v * w;
         }
 
         if((v > 0) && (w < 0))
