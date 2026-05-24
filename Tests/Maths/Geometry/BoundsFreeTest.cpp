@@ -11,7 +11,20 @@
 #include "sequoia/Maths/Geometry/Spaces.hpp"
 
 namespace sequoia::testing
-{  
+{
+  template<maths::weak_commutative_ring T>
+  struct value_tester<maths::coordinate_bounds<T>>
+  {
+    using bounds_type = maths::coordinate_bounds<T>;
+    
+    template<test_mode Mode>
+    static void test(equality_check_t, test_logger<Mode>& logger, const bounds_type& actual, const bounds_type& prediction)
+    {
+      check(equality, "Lower", logger, actual.lower, prediction.lower);
+      check(equality, "Lower", logger, actual.upper, prediction.upper);
+    }
+  };
+  
   using namespace maths;
 
   template<std::floating_point T>
@@ -43,6 +56,13 @@ namespace sequoia::testing
 
   void bounds_free_test::run_tests()
   {
+    test_meta();
+    test_exceptions();
+    test_invert();
+  }
+
+  void bounds_free_test::test_meta()
+  {
     STATIC_CHECK( bounds<coordinate_bounds<float>>);
     STATIC_CHECK( bounds<coordinate_bounds<double>>);
     STATIC_CHECK( bounds<annulus_bounds<float>>);
@@ -52,7 +72,10 @@ namespace sequoia::testing
     STATIC_CHECK( bounds_for<annulus_bounds<double>, euclidean_vector_space<double, 2>>);
     STATIC_CHECK(!bounds_for<annulus_bounds<double>, euclidean_vector_space<double, 1>>);
     STATIC_CHECK(!bounds_for<annulus_bounds<double>, euclidean_vector_space<double, 3>>);
+  }
 
+  void bounds_free_test::test_exceptions()
+  {
     check_exception_thrown<std::domain_error>(
       "",
       [](){
@@ -80,5 +103,14 @@ namespace sequoia::testing
         throwing_validator{}(std::array{coordinate_bounds{0.0, 1.0}, coordinate_bounds{-1.0, 0.0}}, std::array{-1.0, 0.0});
       }
     );
+  }
+
+  void bounds_free_test::test_invert()
+  {
+    constexpr static auto inf{std::numeric_limits<double>::infinity()};
+    check(equality, "[a >  0, b <  infty]", reciprocal(coordinate_bounds{1.0, 2.0}), coordinate_bounds{0.5, 1.0});
+    check(equality, "[a >  0, b == infty]", reciprocal(coordinate_bounds{2.0, inf}), coordinate_bounds{0.0, 0.5});
+    check(equality, "[a == 0, b <  infty]", reciprocal(coordinate_bounds{0.0, 2.0}), coordinate_bounds{0.5, inf});
+    check(equality, "[a == 0, b == infty]", reciprocal(coordinate_bounds{0.0, inf}), coordinate_bounds{0.0, inf});
   }
 }

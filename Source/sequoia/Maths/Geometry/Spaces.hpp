@@ -495,7 +495,6 @@ namespace sequoia::maths
   /** @ingroup Spaces
       @brief concept for a vector space, which is a special case of a free module
    */
-  // TO DO: rework this so that this becomes a refinement of affine which is a refinement of convex
   template<class T>
   concept vector_space = free_module<T> && defines_field_v<T>;
 
