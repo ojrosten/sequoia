@@ -121,20 +121,30 @@ namespace sequoia::testing
     constexpr static auto inf{std::numeric_limits<double>::infinity()};
     using cb = coordinate_bounds<T>;
 
-    check(equality, "+ve, finite non-overlapping",  cb(1.0, 2.0) * cb{3.0, 4.0}, cb(3.0, 8.0));
-    check(equality, "+ve, finite overlapping",      cb(1.0, 4.0) * cb{2.0, 3.0}, cb(2.0, 12.0));
-    check(equality, "+ve, finite / infinite",       cb(1.0, 4.0) * cb{0.5, inf}, cb(0.5, inf));
-    check(equality, "semi+ve, finite / infinite",   cb(0.0, 4.0) * cb{0.5, inf}, cb(0.0, inf));
-    check(equality, "semi+ve, finite / infinite",   cb(1.0, 4.0) * cb{0.0, inf}, cb(0.0, inf));
-    check(equality, "semi+ve, infinite / infinite", cb(1.0, inf) * cb{0.0, inf}, cb(0.0, inf));
-    check(equality, "semi+ve, infinite / infinite", cb(0.0, inf) * cb{0.0, inf}, cb(0.0, inf));
+    check(equality, "+ve, finite non-overlapping",  cb{1.0, 2.0} * cb{3.0, 4.0}, cb{3.0, 8.0});
+    check(equality, "+ve, finite overlapping",      cb{1.0, 4.0} * cb{2.0, 3.0}, cb{2.0, 12.0});
+    check(equality, "+ve, finite / infinite",       cb{1.0, 4.0} * cb{0.5, inf}, cb{0.5, inf});
+    check(equality, "semi+ve, finite / infinite",   cb{0.0, 4.0} * cb{0.5, inf}, cb{0.0, inf});
+    check(equality, "semi+ve, finite / infinite",   cb{1.0, 4.0} * cb{0.0, inf}, cb{0.0, inf});
+    check(equality, "semi+ve, infinite / infinite", cb{1.0, inf} * cb{0.0, inf}, cb{0.0, inf});
+    check(equality, "semi+ve, infinite / infinite", cb{0.0, inf} * cb{0.0, inf}, cb{0.0, inf});
 
-    check(equality, "-ve, finite non-overlapping",  cb(-2.0, -1.0) * cb{-4.0, -3.0}, cb(3.0, 8.0));
-    check(equality, "-ve, finite overlapping",      cb(-4.0, -1.0) * cb{-3.0, -2.0}, cb(2.0, 12.0));
-    check(equality, "-ve, finite / infinite",       cb(-4.0, -1.0) * cb{-inf, -0.5}, cb(0.5, inf));
-    check(equality, "semi-ve, finite / infinite",   cb(-4.0,  0.0) * cb{-inf, -0.5}, cb(0.0, inf));
-    check(equality, "semi-ve, finite / infinite",   cb(-4.0, -1.0) * cb{-inf,  0.0}, cb(0.0, inf));
-    check(equality, "semi-ve, infinite / infinite", cb(-inf, -1.0) * cb{-inf,  0.0}, cb(0.0, inf));
-    check(equality, "semi-ve, infinite / infinite", cb(-inf,  0.0) * cb{-inf,  0.0}, cb(0.0, inf));
+    check(equality, "-ve, finite non-overlapping",  cb{-2.0, -1.0} * cb{-4.0, -3.0}, cb{3.0, 8.0});
+    check(equality, "-ve, finite overlapping",      cb{-4.0, -1.0} * cb{-3.0, -2.0}, cb{2.0, 12.0});
+    check(equality, "-ve, finite / infinite",       cb{-4.0, -1.0} * cb{-inf, -0.5}, cb{0.5, inf});
+    check(equality, "semi-ve, finite / infinite",   cb{-4.0,  0.0} * cb{-inf, -0.5}, cb{0.0, inf});
+    check(equality, "semi-ve, finite / infinite",   cb{-4.0, -1.0} * cb{-inf,  0.0}, cb{0.0, inf});
+    check(equality, "semi-ve, infinite / infinite", cb{-inf, -1.0} * cb{-inf,  0.0}, cb{0.0, inf});
+    check(equality, "semi-ve, infinite / infinite", cb{-inf,  0.0} * cb{-inf,  0.0}, cb{0.0, inf});
+
+    check(equality, "+ve/-ve, finite",                      cb{1.0, 2.0} * cb{-3.0, -0.5}, cb{-6.0, -0.5});
+    check(equality, "+ve finite / -ve, infinite",           cb{1.0, 2.0} * cb{-inf, -0.5}, cb{-inf, -0.5});
+    check(equality, "+ve finite / semi-ve, infinite",       cb{1.0, 2.0} * cb{-inf,  0.0}, cb{-inf,  0.0});
+    check(equality, "+ve infinite / -ve, finite",           cb{1.0, inf} * cb{-3.0, -1.0}, cb{-inf, -1.0});
+    check(equality, "semi+ve infinite / -ve, finite",       cb{0.0, inf} * cb{-3.0, -1.0}, cb{-inf,  0.0});
+    check(equality, "+ve infinite / -ve, infinite",         cb{1.0, inf} * cb{-inf, -1.0}, cb{-inf, -1.0});
+    check(equality, "semi+ve infinite / -ve, infinite",     cb{0.0, inf} * cb{-inf, -1.0}, cb{-inf,  0.0});
+    check(equality, "+ve infinite / semi-ve, infinite",     cb{1.0, inf} * cb{-inf,  0.0}, cb{-inf,  0.0});
+    check(equality, "semi+ve infinite / semi-ve, infinite", cb{0.0, inf} * cb{-inf, 0.0},  cb{-inf,  0.0});
   }
 }
