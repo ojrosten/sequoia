@@ -131,10 +131,10 @@ namespace sequoia::testing
 
     check(equality, "-ve, finite non-overlapping",  cb(-2.0, -1.0) * cb{-4.0, -3.0}, cb(3.0, 8.0));
     check(equality, "-ve, finite overlapping",      cb(-4.0, -1.0) * cb{-3.0, -2.0}, cb(2.0, 12.0));
-    /*check(equality, "-ve, finite / infinite",       cb(-4.0, -1.0) * cb{-inf, -0.5}, cb(0.5, inf));
+    check(equality, "-ve, finite / infinite",       cb(-4.0, -1.0) * cb{-inf, -0.5}, cb(0.5, inf));
     check(equality, "semi-ve, finite / infinite",   cb(-4.0,  0.0) * cb{-inf, -0.5}, cb(0.0, inf));
     check(equality, "semi-ve, finite / infinite",   cb(-4.0, -1.0) * cb{-inf,  0.0}, cb(0.0, inf));
     check(equality, "semi-ve, infinite / infinite", cb(-inf, -1.0) * cb{-inf,  0.0}, cb(0.0, inf));
-    check(equality, "semi-ve, infinite / infinite", cb(-inf,  0.0) * cb{-inf,  0.0}, cb(0.0, inf));*/
+    check(equality, "semi-ve, infinite / infinite", cb(-inf,  0.0) * cb{-inf,  0.0}, cb(0.0, inf));
   }
 }
