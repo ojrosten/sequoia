@@ -45,7 +45,10 @@ namespace sequoia::testing
   {
     test_meta();
     test_exceptions();
-    test_invert();
+    test_invert<float>();
+    test_invert<double>();
+    test_multiply_fp<float>();
+    test_multiply_fp<double>();
   }
 
   void bounds_free_test::test_meta()
@@ -92,22 +95,38 @@ namespace sequoia::testing
     );
   }
 
+  template<std::floating_point T>
   void bounds_free_test::test_invert()
   {
     constexpr static auto inf{std::numeric_limits<double>::infinity()};
-    check(equality, "[a >  0, b <  infty]", reciprocal(coordinate_bounds{1.0, 2.0}), coordinate_bounds{0.5, 1.0});
-    check(equality, "[a >  0, b == infty]", reciprocal(coordinate_bounds{2.0, inf}), coordinate_bounds{0.0, 0.5});
-    check(equality, "[a == 0, b <  infty]", reciprocal(coordinate_bounds{0.0, 2.0}), coordinate_bounds{0.5, inf});
-    check(equality, "[a == 0, b == infty]", reciprocal(coordinate_bounds{0.0, inf}), coordinate_bounds{0.0, inf});
+    check(equality, "[a >  0, b <  infty]", reciprocal(coordinate_bounds{T(1.0), T(2.0)}), coordinate_bounds{T(0.5), T(1.0)});
+    check(equality, "[a >  0, b == infty]", reciprocal(coordinate_bounds{T(2.0), T(inf)}), coordinate_bounds{T(0.0), T(0.5)});
+    check(equality, "[a == 0, b <  infty]", reciprocal(coordinate_bounds{T(0.0), T(2.0)}), coordinate_bounds{T(0.5), T(inf)});
+    check(equality, "[a == 0, b == infty]", reciprocal(coordinate_bounds{T(0.0), T(inf)}), coordinate_bounds{T(0.0), T(inf)});
 
-    check(equality, "[a >  -inf, b <  0]", reciprocal(coordinate_bounds{-2.0, -1.0}), coordinate_bounds{-1.0, -0.5});
-    check(equality, "[a >  -inf, b == 0]", reciprocal(coordinate_bounds{-2.0,  0.0}), coordinate_bounds{-inf, -0.5});
-    check(equality, "[a == -inf, b <  0]", reciprocal(coordinate_bounds{-inf, -1.0}), coordinate_bounds{-1.0,  0.0});
-    check(equality, "[a == -inf, b == 0]", reciprocal(coordinate_bounds{-inf,  0.0}), coordinate_bounds{-inf,  0.0});
+    check(equality, "[a >  -inf, b <  0]", reciprocal(coordinate_bounds{T(-2.0), T(-1.0)}), coordinate_bounds{T(-1.0), T(-0.5)});
+    check(equality, "[a >  -inf, b == 0]", reciprocal(coordinate_bounds{T(-2.0), T( 0.0)}), coordinate_bounds{T(-inf), T(-0.5)});
+    check(equality, "[a == -inf, b <  0]", reciprocal(coordinate_bounds{T(-inf), T(-1.0)}), coordinate_bounds{T(-1.0), T( 0.0)});
+    check(equality, "[a == -inf, b == 0]", reciprocal(coordinate_bounds{T(-inf), T( 0.0)}), coordinate_bounds{T(-inf), T(0.0)});
 
-    check(equality, "[a == -inf, b == inf]", reciprocal(coordinate_bounds{-inf, inf}), coordinate_bounds{-inf, inf});
-    check(equality, "[a == -2,   b == inf]", reciprocal(coordinate_bounds{-2.0, inf}), coordinate_bounds{-inf, inf});
-    check(equality, "[a == -inf, b == 3]",   reciprocal(coordinate_bounds{-inf, 3.0}), coordinate_bounds{-inf, inf});
-    check(equality, "[a == -1,   b == 1]",   reciprocal(coordinate_bounds{-1.0, 1.0}), coordinate_bounds{-inf, inf});
+    check(equality, "[a == -inf, b == inf]", reciprocal(coordinate_bounds{T(-inf), T(inf)}), coordinate_bounds{T(-inf), T(inf)});
+    check(equality, "[a == -2,   b == inf]", reciprocal(coordinate_bounds{T(-2.0), T(inf)}), coordinate_bounds{T(-inf), T(inf)});
+    check(equality, "[a == -inf, b == 3]",   reciprocal(coordinate_bounds{T(-inf), T(3.0)}), coordinate_bounds{T(-inf), T(inf)});
+    check(equality, "[a == -1,   b == 1]",   reciprocal(coordinate_bounds{T(-1.0), T(1.0)}), coordinate_bounds{T(-inf), T(inf)});
+  }
+
+  template<std::floating_point T>
+  void bounds_free_test::test_multiply_fp()
+  {
+    constexpr static auto inf{std::numeric_limits<double>::infinity()};
+    using cb = coordinate_bounds<T>;
+
+    check(equality, "+ve, finite non-overlapping",  cb(1.0, 2.0) * cb{3.0, 4.0}, cb(3.0, 8.0));
+    check(equality, "+ve, finite overlapping",      cb(1.0, 4.0) * cb{2.0, 3.0}, cb(2.0, 12.0));
+    check(equality, "+ve, finite / infinite",       cb(1.0, 4.0) * cb{0.5, inf}, cb(0.5, inf));
+    check(equality, "semi+ve, finite / infinite",   cb(0.0, 4.0) * cb{0.5, inf}, cb(0.0, inf));
+    check(equality, "semi+ve, finite / infinite",   cb(1.0, 4.0) * cb{0.0, inf}, cb(0.0, inf));
+    check(equality, "semi+ve, infinite / infinite", cb(1.0, inf) * cb{0.0, inf}, cb(0.0, inf));
+    check(equality, "semi+ve, infinite / infinite", cb(0.0, inf) * cb{0.0, inf}, cb(0.0, inf));
   }
 }

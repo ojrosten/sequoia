@@ -27,6 +27,10 @@ namespace sequoia::testing
 
     void test_exceptions();
 
+    template<std::floating_point T>
     void test_invert();
+
+    template<std::floating_point T>
+    void test_multiply_fp();
   };
 }
