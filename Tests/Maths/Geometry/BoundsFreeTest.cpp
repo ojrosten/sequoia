@@ -156,5 +156,12 @@ namespace sequoia::testing
     check(equality, "-ve / semi+ve infinite, infinite",     cb{-inf, -1.0} * cb{0.0, inf}, cb{-inf,  0.0});
     check(equality, "semi-ve / +ve infinite, infinite",     cb{-inf,  0.0} * cb{1.0, inf}, cb{-inf,  0.0});
     check(equality, "semi-ve / semi+ve infinite, infinite", cb{-inf,  0.0} * cb{0.0, inf}, cb{-inf,  0.0});
+
+    check(equality, "Finite, +ve",              cb{-3.0, 0.5} * cb{ 1.0,  2.0}, cb{-6.0, 1.0});
+    check(equality, "Finite, -ve",              cb{-3.0, 0.5} * cb{-2.0, -1.0}, cb{-1.0, 6.0});
+    check(equality, "Finite, finte",            cb{-3.0, 0.5} * cb{-1.0,  2.0}, cb{-6.0, 3.0});
+    check(equality, "-ve infnite, +ve",         cb{-inf, 0.5} * cb{ 1.0,  2.0}, cb{-inf, 1.0});
+    check(equality, "-ve infnite, +ve infinte", cb{-inf, 0.5} * cb{ 1.0,  inf}, cb{-inf, inf});
+    check(equality, "Infnite, +infinte",        cb{-inf, inf} * cb{-inf,  inf}, cb{-inf, inf});
   }
 }
