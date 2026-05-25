@@ -94,6 +94,22 @@ namespace sequoia::testing
         throwing_validator{}(std::array{coordinate_bounds{0.0, 1.0}, coordinate_bounds{-1.0, 0.0}}, std::array{-1.0, 0.0});
       }
     );
+
+    constexpr auto nan{std::numeric_limits<double>::quiet_NaN()};
+
+    check_exception_thrown<std::domain_error>(
+      "",
+      [](){
+        throwing_validator{}(coordinate_bounds<double>{0.0, 1.0}, nan);
+      }
+    );
+
+    check_exception_thrown<std::domain_error>(
+      "",
+      [](){
+        throwing_validator{}(coordinate_bounds<double>{0.0, 1.0}, std::array{2.0, nan});
+      }
+    );
   }
 
   template<std::floating_point T>

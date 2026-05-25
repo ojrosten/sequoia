@@ -30,3 +30,19 @@ Input -1 outside permitted domain [0, 1]
 
 =======================================
 
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 101
+
+Expected Exception Type:
+[std::domain_error]
+Input nan outside permitted domain [0, 1]
+
+=======================================
+
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 108
+
+Expected Exception Type:
+[std::domain_error]
+Input [2, nan] has at least one value outside permitted domain [0, 1]
+
+=======================================
+

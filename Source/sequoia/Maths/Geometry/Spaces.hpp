@@ -780,19 +780,19 @@ namespace sequoia::maths
     using type = T;
   };
 
-  template<weak_commutative_ring T>
+  template<arithmetic T>
   struct coordinate_bounds;
 
-  template<weak_commutative_ring T>
+  template<arithmetic T>
   inline constexpr coordinate_bounds<T> no_bounds{coordinate_bounds<T>::least_lower_bound, coordinate_bounds<T>::greatest_upper_bound};
 
-  template<weak_commutative_ring T>
+  template<arithmetic T>
   inline constexpr coordinate_bounds<T> half_line_bounds{T{}, coordinate_bounds<T>::greatest_upper_bound};
 
-  template<weak_commutative_ring T>
+  template<arithmetic T>
   inline constexpr coordinate_bounds<T> negative_half_line_bounds{coordinate_bounds<T>::least_lower_bound, T{}};
 
-  template<weak_commutative_ring T>
+  template<arithmetic T>
   struct coordinate_bounds
   {
     using value_type = T;
@@ -807,11 +807,17 @@ namespace sequoia::maths
 
     T lower{}, upper{greatest_upper_bound};
 
-    template<weak_commutative_ring U>
+    template<arithmetic U>
       requires initializable_from<T, U>
     [[nodiscard]]
     constexpr bool operator()(U val) const noexcept
     {
+      if constexpr(std::floating_point<U>)
+      {
+        if(std::isnan(val))
+          return false;
+      }
+      
       if(lower > least_lower_bound)
       {
         if(const U uLower{static_cast<U>(lower)}; val < uLower)
@@ -827,7 +833,7 @@ namespace sequoia::maths
       return true;
     }
 
-    template<weak_commutative_ring U, std::size_t D>
+    template<arithmetic U, std::size_t D>
       requires initializable_from<T, U>
     [[nodiscard]]
     constexpr bool operator()(const std::array<U, D>& vals) const noexcept
@@ -836,7 +842,7 @@ namespace sequoia::maths
       return !std::ranges::contains(v, false);
     }
 
-    template<weak_commutative_ring U>
+    template<arithmetic U>
       requires initializable_from<T, U>
     [[nodiscard]]
     std::string format_input(const U val) const
@@ -844,7 +850,7 @@ namespace sequoia::maths
       return std::format("{}", val);
     }
 
-    template<weak_commutative_ring U, std::size_t D>
+    template<arithmetic U, std::size_t D>
       requires initializable_from<T, U>
     [[nodiscard]]
     std::string format_input(const std::array<U, D>& vals) const
@@ -855,7 +861,7 @@ namespace sequoia::maths
     [[nodiscard]]
     friend constexpr bool operator==(const coordinate_bounds&, const coordinate_bounds&) noexcept = default;
 
-    template<weak_commutative_ring U>
+    template<arithmetic U>
     [[nodiscard]]
     friend constexpr coordinate_bounds<std::common_type_t<T, U>> operator*(const coordinate_bounds<T>& a, const coordinate_bounds<U>& b)
     {
