@@ -32,5 +32,8 @@ namespace sequoia::testing
 
     template<std::floating_point T>
     void test_multiply_fp();
+
+    template<std::floating_point T, std::floating_point U>
+    void test_multiply_mixed_fp();
   };
 }

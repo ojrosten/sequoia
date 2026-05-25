@@ -49,6 +49,7 @@ namespace sequoia::testing
     test_invert<double>();
     test_multiply_fp<float>();
     test_multiply_fp<double>();
+    test_multiply_mixed_fp<float, double>();
   }
 
   void bounds_free_test::test_meta()
@@ -163,5 +164,22 @@ namespace sequoia::testing
     check(equality, "-ve infnite, +ve",         cb{-inf, 0.5} * cb{ 1.0,  2.0}, cb{-inf, 1.0});
     check(equality, "-ve infnite, +ve infinte", cb{-inf, 0.5} * cb{ 1.0,  inf}, cb{-inf, inf});
     check(equality, "Infnite, +infinte",        cb{-inf, inf} * cb{-inf,  inf}, cb{-inf, inf});
+  }
+
+  template<std::floating_point T, std::floating_point U>
+  void bounds_free_test::test_multiply_mixed_fp()
+  {
+    using common_t = std::common_type_t<T, U>;
+    using cb_T     = coordinate_bounds<T>;
+    using cb_U     = coordinate_bounds<U>;
+    using cb_TU    = coordinate_bounds<common_t>;
+    constexpr static auto infT{std::numeric_limits<T>::infinity()};
+    constexpr static auto infU{std::numeric_limits<U>::infinity()};
+    constexpr static auto infTU{std::numeric_limits<common_t>::infinity()};
+
+    check(equality, "Semi+ve, semi+ve", cb_T{ 0.0, infT} * cb_U{0.0, infU}, cb_TU{ 0.0, infTU});
+    check(equality, "Semi+ve, semi+ve", cb_U{ 0.0, infU} * cb_T{0.0, infT}, cb_TU{ 0.0, infTU});
+    check(equality, "Finite, +ve",      cb_T{-3.0,  0.5} * cb_U{1.0,  2.0}, cb_TU{-6.0,   1.0});
+    check(equality, "Finite, +ve",      cb_U{-3.0,  0.5} * cb_T{1.0,  2.0}, cb_TU{-6.0,   1.0});
   }
 }
