@@ -1157,20 +1157,20 @@ namespace sequoia::maths
   
   struct throwing_validator
   {
-    template<bounds Bounds, weak_commutative_ring T>
+    template<bounds Bounds, arithmetic T>
     constexpr T operator()(Bounds bnds, T val) const
     {
       return validate(bnds, val);
     }
 
-    template<bounds Bounds, weak_commutative_ring T, std::size_t D>
+    template<bounds Bounds, arithmetic T, std::size_t D>
     constexpr const std::array<T, D>& operator()(Bounds bnds, const std::array<T, D>& vals) const
     {      
       return validate(bnds, vals);
     }
 
     // TO DO: consider moving this elsewhere
-    template<bounds Bounds, weak_commutative_ring T, std::size_t D>
+    template<bounds Bounds, arithmetic T, std::size_t D>
     constexpr const std::array<T, D>& operator()(const std::array<Bounds, D>& bnds, const std::array<T, D>& vals) const
     {
       for(auto [bnd, val] : std::views::zip(bnds, vals))
