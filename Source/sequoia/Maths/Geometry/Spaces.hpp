@@ -739,7 +739,7 @@ namespace sequoia::maths
       && requires (const Bounds& b) {
            { b.lower } -> std::convertible_to<typename Bounds::value_type>;
            { b.upper } -> std::convertible_to<typename Bounds::value_type>;
-           //requires (b.lower < b.upper);
+           // TO DO
          };
 
   template<auto Bounds>
@@ -947,7 +947,10 @@ namespace sequoia::maths
   
   template<class T>
   inline constexpr bool has_bounds_v{
-      bounds_value<T::bounds_v>
+    requires {
+      T::bounds_v;
+      requires bounds_value<T::bounds_v>;
+     }
   };
   
 
@@ -980,8 +983,8 @@ namespace sequoia::maths
   concept representation_for
     =    convex_space<ConvexSpace>
       && std::is_default_constructible_v<R>
-    //&& has_bounds_v<R> TO DO
-    // && bounds_for<typename R::bounds_type, ConvexSpace>
+      && has_bounds_v<R>
+    //&& bounds_for<typename R::bounds_type, ConvexSpace>
       && (representation_for_single_value<R, ConvexSpace> || representation_for_span<R, ConvexSpace>);
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
