@@ -984,7 +984,7 @@ namespace sequoia::maths
     =    convex_space<ConvexSpace>
       && std::is_default_constructible_v<R>
       && has_bounds_v<R>
-    //&& bounds_for<typename R::bounds_type, ConvexSpace>
+      && bounds_for<decltype(R::bounds_v), ConvexSpace>
       && (representation_for_single_value<R, ConvexSpace> || representation_for_span<R, ConvexSpace>);
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
