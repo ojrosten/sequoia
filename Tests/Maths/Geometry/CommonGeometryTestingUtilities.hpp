@@ -104,12 +104,12 @@ namespace sequoia::testing
     constexpr static std::size_t dimension{Dim};
     constexpr static std::size_t D{dimension};
 
-    template<maths::basis Basis, class Representation>
+    template<maths::basis Basis, maths::representation_for<my_vec_space> Representation, maths::validator_for<my_vec_space, Representation> Validator>
       requires std::floating_point<field_type>&& is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type inner_product(
-      const maths::vector_coordinates<my_vec_space, Basis, Representation>& lhs,
-      const maths::vector_coordinates<my_vec_space, Basis, Representation>& rhs
+      const maths::vector_coordinates<my_vec_space, Basis, Representation, Validator>& lhs,
+      const maths::vector_coordinates<my_vec_space, Basis, Representation, Validator>& rhs
     )
     {
       return
@@ -120,12 +120,12 @@ namespace sequoia::testing
        );
     }
 
-    template<maths::basis Basis, class Representation>
+    template<maths::basis Basis, maths::representation_for<my_vec_space> Representation, maths::validator_for<my_vec_space, Representation> Validator>
       requires is_complex_v<field_type>&& is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type inner_product(
-      const maths::vector_coordinates<my_vec_space, Basis, Representation>& lhs,
-      const maths::vector_coordinates<my_vec_space, Basis, Representation>& rhs
+      const maths::vector_coordinates<my_vec_space, Basis, Representation, Validator>& lhs,
+      const maths::vector_coordinates<my_vec_space, Basis, Representation, Validator>& rhs
     )
     {
       return

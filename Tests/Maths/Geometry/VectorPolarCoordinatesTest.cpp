@@ -85,17 +85,17 @@ namespace sequoia::testing
 
   void vector_polar_coordinates_test::run_tests()
   {
-    test_vec<sets::R<2>, float , 2, basic_polar_representation<float>>();
-    test_vec<sets::R<2>, double, 2, polar_representation<double>>();
+    test_vec<sets::R<2>, float , 2, basic_polar_representation<float>, identity_validator>();
+    test_vec<sets::R<2>, double, 2, polar_representation<double>, identity_validator>();
 
-    test_refined<float>();
+    test_refined<float, identity_validator>();
   }
 
-  template<class Set, maths::weak_field Field, std::size_t D, class Representation>
+  template<class Set, maths::weak_field Field, std::size_t D, class Representation, class Validator>
   void vector_polar_coordinates_test::test_vec()
   {
     using vec_space_t = my_vec_space<Set, Field, D>;
-    using vec_t       = vector_coordinates<vec_space_t, canonical_basis<Set, Field, D>, Representation>;
+    using vec_t       = vector_coordinates<vec_space_t, canonical_basis<Set, Field, D>, Representation, Validator>;
     using value_t     = Field;
     using delta_t     = vec_t::displacement_coordinates_type;
 
@@ -133,11 +133,11 @@ namespace sequoia::testing
     );
   }
 
-  template<maths::weak_field Field>
+  template<maths::weak_field Field, class Validator>
   void vector_polar_coordinates_test::test_refined()
   {
     using vec_space_t = my_vec_space<sets::R<2>, Field, 2>;
-    using vec_t       = vector_coordinates<vec_space_t, canonical_basis<sets::R<2>, Field, 2>, polar_representation<Field>>;
+    using vec_t       = vector_coordinates<vec_space_t, canonical_basis<sets::R<2>, Field, 2>, polar_representation<Field>, Validator>;
 
     static_assert(defines_scalar_multiplication_for_v<vec_space_t, polar_representation<Field>>);
     

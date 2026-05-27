@@ -23,10 +23,10 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    template<class Set, maths::weak_field Field, std::size_t D, class Representation>
+    template<class Set, maths::weak_field Field, std::size_t D, class Representation, class Validator>
     void test_vec();
 
-    template<maths::weak_field Field>
+    template<maths::weak_field Field, class Validator>
     void test_refined();
   };
 }

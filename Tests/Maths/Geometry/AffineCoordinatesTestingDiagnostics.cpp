@@ -28,13 +28,13 @@ namespace sequoia::testing
   {
     {
       using basis_t  = canonical_basis<float, float, 1>;
-      using coords_t = affine_coordinates<my_affine_space<float, float, 1>, basis_t, alice, canonical_representation<no_bounds<float>>>;
+      using coords_t = affine_coordinates<my_affine_space<float, float, 1>, basis_t, alice, canonical_representation<no_bounds<float>>, identity_validator>;
       test_affine_1<coords_t>();
     }
 
     {
       using basis_t =  canonical_right_handed_basis<euclidean_vector_space<float, 1>>;
-      using coords_t = euclidean_affine_coordinates<float, 1, basis_t, alice, canonical_representation<no_bounds<float>>>;
+      using coords_t = euclidean_affine_coordinates<float, 1, basis_t, alice, canonical_representation<no_bounds<float>>, identity_validator>;
       test_affine_1<coords_t>();
     }
   }

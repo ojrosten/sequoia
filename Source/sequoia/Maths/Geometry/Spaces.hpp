@@ -1633,21 +1633,36 @@ namespace sequoia::maths
       The basis belongs to the associated vector space, allowing the coordinates type for the affine
       space to be aware of the type of the coordinate representation for displacements
    */
-  // TO DO: consider propagating validator since clients may want to check for nan?
-  template<affine_space AffineSpace, basis_for<free_module_type_of_t<AffineSpace>> Basis, class Origin, representation_for<AffineSpace> Representation>
-  using affine_coordinates = coordinates<AffineSpace, Basis, Origin, Representation>;
+  template<
+    affine_space AffineSpace,
+    basis_for<free_module_type_of_t<AffineSpace>> Basis,
+    class Origin,
+    representation_for<AffineSpace> Representation,
+    validator_for<AffineSpace, Representation> Validator
+  >
+  using affine_coordinates = coordinates<AffineSpace, Basis, Origin, Representation, Validator>;
 
   /** @ingroup Coordinates
       @brief Alias for coordinates of an element of a vector space with respect to a particular basis.
    */
-  template<vector_space VectorSpace, basis_for<free_module_type_of_t<VectorSpace>> Basis, representation_for<VectorSpace> Representation>
-  using vector_coordinates = coordinates<VectorSpace, Basis, Representation>;
+  template<
+    vector_space VectorSpace,
+    basis_for<free_module_type_of_t<VectorSpace>> Basis,
+    representation_for<VectorSpace> Representation,
+    validator_for<VectorSpace, Representation> Validator
+  >
+  using vector_coordinates = coordinates<VectorSpace, Basis, Representation, Validator>;
 
   /** @ingroup Coordinates
       @brief Alias for coordinates of an element of a free module with respect to a particular basis.
    */
-  template<free_module FreeModule, basis_for<free_module_type_of_t<FreeModule>> Basis, representation_for<FreeModule> Representation>
-  using free_module_coordinates = coordinates<FreeModule, Basis, Representation>;
+  template<
+    free_module FreeModule,
+    basis_for<free_module_type_of_t<FreeModule>> Basis,
+    representation_for<FreeModule> Representation,
+    validator_for<FreeModule, Representation> Validator
+  >
+  using free_module_coordinates = coordinates<FreeModule, Basis, Representation, Validator>;
   
   /** @ingroup Coordinates
       @brief Class designed for inheritance by concerete coordinate types.
@@ -1739,10 +1754,10 @@ namespace sequoia::maths
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
     representation_for<ConvexSpace> Representation,
     validator_for<ConvexSpace, Representation> Validator,
-    // TO DO: propagate validator, or not? Only dubious value for a free module is nan, should it exist...
     class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<ConvexSpace>,
                                                           Basis,
-                                                          representation_for_free_module_of_t<ConvexSpace, Representation>>
+                                                          representation_for_free_module_of_t<ConvexSpace, Representation>,
+                                                          Validator>
   >
   class coordinates_base
   {
@@ -2223,7 +2238,7 @@ namespace sequoia::maths
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
     class Origin,
     representation_for<ConvexSpace> Representation,
-    class Validator
+    validator_for<ConvexSpace, Representation> Validator
   >
   class coordinates<ConvexSpace, Basis, Origin, Representation, Validator> final
     : public coordinates_base<ConvexSpace, Basis, Representation, Validator>
@@ -2238,7 +2253,7 @@ namespace sequoia::maths
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
     representation_for<ConvexSpace> Representation,
-    class Validator
+    validator_for<ConvexSpace, Representation> Validator
   >
     requires has_distinguished_origin_v<ConvexSpace> && (!free_module<ConvexSpace>)
   class coordinates<ConvexSpace, Basis, Representation, Validator> final
@@ -2252,24 +2267,30 @@ namespace sequoia::maths
     affine_space AffineSpace,
     basis_for<free_module_type_of_t<AffineSpace>> Basis,
     class Origin,    
-    representation_for<AffineSpace> Representation
+    representation_for<AffineSpace> Representation,
+    validator_for<AffineSpace, Representation> Validator
   >
     requires (!free_module<AffineSpace>)
-  class coordinates<AffineSpace, Basis, Origin, Representation> final
-    : public coordinates_base<AffineSpace, Basis, Representation, identity_validator> // TO DO: generalize validator
+  class coordinates<AffineSpace, Basis, Origin, Representation, Validator> final
+    : public coordinates_base<AffineSpace, Basis, Representation, Validator>
   {
   public:
     using origin_type = Origin;
     
-    using coordinates_base<AffineSpace, Basis, Representation, identity_validator>::coordinates_base;
+    using coordinates_base<AffineSpace, Basis, Representation, Validator>::coordinates_base;
   };
 
-  template<free_module M, basis_for<free_module_type_of_t<M>> Basis, representation_for<M> Representation>    
-  class coordinates<M, Basis, Representation> final
-    : public coordinates_base<M, Basis, Representation, identity_validator>
+  template<
+    free_module M,
+    basis_for<free_module_type_of_t<M>> Basis,
+    representation_for<M> Representation,
+    validator_for<M, Representation> Validator
+  >    
+  class coordinates<M, Basis, Representation, Validator> final
+    : public coordinates_base<M, Basis, Representation, Validator>
   {
   public:
-    using coordinates_base<M, Basis, Representation, identity_validator>::coordinates_base;
+    using coordinates_base<M, Basis, Representation, Validator>::coordinates_base;
   };
 
   template<class From, class To>
@@ -2357,14 +2378,14 @@ namespace sequoia::maths
 
   template<vector_space V>
   inline constexpr bool has_norm_v{
-    requires (const vector_coordinates<V, arbitary_basis<V>, arbitrary_representation<V>>& v) {
+    requires (const vector_coordinates<V, arbitary_basis<V>, arbitrary_representation<V>, identity_validator>& v) {
       { norm(v) } -> std::convertible_to<typename V::field_type>;
     }
   };
 
   template<vector_space V>
   inline constexpr bool has_inner_product_v{
-    requires (const vector_coordinates<V, arbitary_basis<V>, arbitrary_representation<V>>& v) {
+    requires (const vector_coordinates<V, arbitary_basis<V>, arbitrary_representation<V>, identity_validator>& v) {
       { inner_product(v, v) } -> std::convertible_to<typename V::field_type>;
     }
   };
@@ -2388,12 +2409,12 @@ namespace sequoia::maths
     using admits_canonical_basis = std::true_type;
     constexpr static std::size_t dimension{D};
 
-    template<basis Basis, representation_for<euclidean_vector_space> Representation>
+    template<basis Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type inner_product(
-      const vector_coordinates<euclidean_vector_space, Basis, Representation>& v,
-      const vector_coordinates<euclidean_vector_space, Basis, Representation>& w
+      const vector_coordinates<euclidean_vector_space, Basis, Representation, Validator>& v,
+      const vector_coordinates<euclidean_vector_space, Basis, Representation, Validator>& w
     )
     {
       return
@@ -2404,21 +2425,21 @@ namespace sequoia::maths
         );
     }
 
-    template<basis Basis, representation_for<euclidean_vector_space> Representation>
+    template<basis Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type dot(
-      const vector_coordinates<euclidean_vector_space, Basis, Representation>& v,
-      const vector_coordinates<euclidean_vector_space, Basis, Representation>& w
+      const vector_coordinates<euclidean_vector_space, Basis, Representation, Validator>& v,
+      const vector_coordinates<euclidean_vector_space, Basis, Representation, Validator>& w
     )
     {
       return inner_product(v, w);
     }
 
-    template<basis Basis, representation_for<euclidean_vector_space> Representation>
+    template<basis Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
-    friend constexpr field_type norm(const vector_coordinates<euclidean_vector_space, Basis, Representation>& v)
+    friend constexpr field_type norm(const vector_coordinates<euclidean_vector_space, Basis, Representation, Validator>& v)
     {
       // TO DO: transform_view using repr. or be smarter...
       if constexpr(D == 1)
@@ -2488,14 +2509,36 @@ namespace sequoia::maths
     using type = std::common_type_t<arena_type_of_t<Ts>...>;
   };
   
-  template<std::floating_point T, std::size_t D, basis Basis, class Origin, class Representation, class Arena=mathematical_arena>
-  using euclidean_affine_coordinates = affine_coordinates<euclidean_affine_space<T, D, Arena>, Basis, Origin, Representation>;
+  template<
+    std::floating_point T,
+    std::size_t D,
+    basis Basis,
+    class Origin,
+    class Representation,
+    class Validator,
+    class Arena=mathematical_arena
+  >
+  using euclidean_affine_coordinates = affine_coordinates<euclidean_affine_space<T, D, Arena>, Basis, Origin, Representation, Validator>;
 
-  template<std::floating_point T, std::size_t D, basis Basis, class Representation, class Arena=mathematical_arena>
-  using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<T, D, Arena>, Basis, Representation>;
+  template<
+    std::floating_point T,
+    std::size_t D,
+    basis Basis,
+    class Representation,
+    class Validator,
+    class Arena=mathematical_arena
+  >
+  using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<T, D, Arena>, Basis, Representation, Validator>;
 
-  template<std::floating_point T, std::size_t D, basis Basis, class Representation, class Arena=mathematical_arena>
-  using euclidean_nonnegative_coordinates = coordinates<euclidean_nonnegative_space<T, D, Arena>, Basis, Representation, identity_validator>;
+  template<
+    std::floating_point T,
+    std::size_t D,
+    basis Basis,
+    class Representation,
+    class Validator,
+    class Arena=mathematical_arena
+  >
+  using euclidean_nonnegative_coordinates = coordinates<euclidean_nonnegative_space<T, D, Arena>, Basis, Representation, Validator>;
 
   /** @brief Right-handed bases for arbitrary D, built recursively from 1D
 
@@ -2556,6 +2599,6 @@ namespace sequoia::maths
     using free_module_type     = M;
   };
 
-  template<std::floating_point T, std::size_t D, class Arena=mathematical_arena>
-  using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<euclidean_vector_space<T, D, Arena>>, canonical_representation<no_bounds<T>>, Arena>;
+  template<std::floating_point T, std::size_t D, class Validator=identity_validator, class Arena=mathematical_arena>
+  using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<euclidean_vector_space<T, D, Arena>>, canonical_representation<no_bounds<T>>, Validator, Arena>;
 }
