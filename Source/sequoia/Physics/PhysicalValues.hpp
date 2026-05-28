@@ -1401,13 +1401,41 @@ namespace sequoia::physics
     representation_for<ValueSpace> Representation       = default_representation_t<ValueSpace, Unit>,
     validator_for<ValueSpace, Representation> Validator = throwing_validator
   >
-  using dimensionless_quantity = physical_value<ValueSpace, Unit, unit_defined_right_handed_basis<free_module_type_of_t<ValueSpace>, Unit>, to_origin_type_t<ValueSpace>, Representation, Validator>;
+  using dimensionless_quantity
+    = physical_value<
+        ValueSpace,
+        Unit,
+        unit_defined_right_handed_basis<free_module_type_of_t<ValueSpace>, Unit>,
+        to_origin_type_t<ValueSpace>,
+        Representation,
+        Validator
+      >;
   
-  template<std::floating_point Rep, class Arena=implicit_common_arena>
-  using euclidean_1d_vector_quantity = dimensionless_quantity<euclidean_vector_space<Rep, 1, Arena>, no_unit_t, canonical_representation<no_bounds<Rep>>/*, identity_validator*/>;
+  template<
+    std::floating_point Rep,
+    class Validator = throwing_validator,
+    class Arena     = implicit_common_arena
+  >
+  using euclidean_1d_vector_quantity
+    = dimensionless_quantity<
+        euclidean_vector_space<Rep, 1, Arena>,
+        no_unit_t,
+        canonical_representation<no_bounds<Rep>>,
+        Validator
+       >;
 
-  template<std::floating_point Rep, class Arena=implicit_common_arena>
-  using euclidean_half_line_quantity = dimensionless_quantity<euclidean_half_line<Rep, Arena>, no_unit_t>;
+  template<
+    std::floating_point Rep,
+    class Validator = throwing_validator,
+    class Arena     = implicit_common_arena
+  >
+  using euclidean_half_line_quantity
+    = dimensionless_quantity<
+        euclidean_half_line<Rep, Arena>,
+        no_unit_t,
+        canonical_representation<half_line_bounds<Rep>>,
+        Validator
+      >;
 
   template<physical_unit Unit, arithmetic Rep>
     requires has_default_space_v<Unit, Rep>
