@@ -1418,7 +1418,7 @@ namespace sequoia::physics
   }
 
   template<arithmetic Rep, physical_unit Unit>
-    requires has_default_space_v<Unit, Rep> //&& permissible_value_space_v<default_space_t<Unit, Rep>> rules out 1/Delta Celsius
+    requires has_default_space_v<Unit, Rep> && permissible_value_space_v<dual_of_t<default_space_t<Unit, Rep>>>
   [[nodiscard]]
   quantity<dual_of_t<Unit>, Rep> operator/(Rep val, Unit)
   {
