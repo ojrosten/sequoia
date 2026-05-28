@@ -165,10 +165,9 @@ namespace sequoia::physics
     using type = canonical_representation<R::bounds_v * S::bounds_v>;
   };
 
-  // TO DO rename this
   template<convex_space ValueSpace>
-  inline constexpr bool has_consistent_space{
-    (!is_dual_v<ValueSpace>) || has_distinguished_origin_v<ValueSpace> //vector_space<ValueSpace> || (!affine_space<ValueSpace>)
+  inline constexpr bool permissible_value_space_v{
+    (!is_dual_v<ValueSpace>) || (has_distinguished_origin_v<ValueSpace> && (dimension_of<ValueSpace> == 1))
   };
   
   template<
@@ -179,7 +178,7 @@ namespace sequoia::physics
     representation_for<ValueSpace> Representation,
     validator_for<ValueSpace, Representation> Validator
   >
-    requires has_consistent_space<ValueSpace>
+    requires permissible_value_space_v<ValueSpace>
   class physical_value;
 
   struct unit_defined_origin{};
@@ -410,7 +409,7 @@ namespace sequoia::physics
     representation_for<ValueSpace> Representation       = default_representation_t<ValueSpace, Unit>,
     validator_for<ValueSpace, Representation> Validator = throwing_validator
   >
-    requires has_consistent_space<ValueSpace>
+    requires permissible_value_space_v<ValueSpace>
   class physical_value final
     : public to_coordinates_base_type<ValueSpace, Unit, Basis, Representation, Validator>
   {
@@ -1419,7 +1418,7 @@ namespace sequoia::physics
   }
 
   template<arithmetic Rep, physical_unit Unit>
-    requires has_default_space_v<Unit, Rep> //&& has_consistent_space<default_space_t<Unit, Rep>> rules out 1/Delta Celsius
+    requires has_default_space_v<Unit, Rep> //&& permissible_value_space_v<default_space_t<Unit, Rep>> rules out 1/Delta Celsius
   [[nodiscard]]
   quantity<dual_of_t<Unit>, Rep> operator/(Rep val, Unit)
   {
