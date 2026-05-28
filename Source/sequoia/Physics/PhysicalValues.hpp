@@ -118,58 +118,39 @@ namespace sequoia::physics
     using non_negative_orthant = std::bool_constant<(is_non_negative_orthant_v<Ts> && ...)>;
   };
 
-  // TO DO: combine these?
-
-  // Units
-  template<physical_unit... Us>
+  // Units & Spaces
+  template<class... Us>
+    requires (physical_unit<Us> && ...) || (convex_space<Us> && ...)
   struct reduction<direct_product<Us...>>
   {
     using type = impl::simplify_t<direct_product<Us...>>;
   };
  
-  template<physical_unit... Ts, physical_unit U>
-  struct reduction<direct_product<composite_unit<Ts...>, U>>
+  template<class... Ts, class U, template<class...> class TT>
+    requires (std::same_as<TT<Ts...>, composite_unit <Ts...>> && physical_unit<U>)
+          || (std::same_as<TT<Ts...>, composite_space<Ts...>> &&  convex_space<U>)
+  struct reduction<direct_product<TT<Ts...>, U>>
   {
     using type = impl::simplify_t<direct_product<Ts...>, direct_product<U>>;
   };
 
-  template<physical_unit T, physical_unit... Us>
-  struct reduction<direct_product<T, composite_unit<Us...>>>
+  template<class T, class... Us, template<class...> class TT>
+    requires (std::same_as<TT<Us...>, composite_unit <Us...>> && physical_unit<T>)
+          || (std::same_as<TT<Us...>, composite_space<Us...>> &&  convex_space<T>)
+  struct reduction<direct_product<T, TT<Us...>>>
   {
     using type = impl::simplify_t<direct_product<T>, direct_product<Us...>>;
   };
 
-  template<physical_unit... Ts, physical_unit... Us>
-  struct reduction<direct_product<composite_unit<Ts...>, composite_unit<Us...>>>
+  template<class... Ts, class... Us, template<class...> class TT>
+    requires (std::same_as<TT<Ts...>, composite_unit <Ts...>> && std::same_as<TT<Us...>, composite_unit <Us...>>)
+          || (std::same_as<TT<Ts...>, composite_space<Ts...>> && std::same_as<TT<Us...>, composite_space<Us...>>)
+  struct reduction<direct_product<TT<Ts...>, TT<Us...>>>
   {
     using type = impl::simplify_t<direct_product<Ts...>, direct_product<Us...>>;
   };
 
-  // Spaces
-  template<convex_space... Ts>
-  struct reduction<direct_product<Ts...>>
-  {
-    using type = impl::simplify_t<direct_product<Ts...>>;
-  };
-
-  template<convex_space... Ts, convex_space U>
-  struct reduction<direct_product<composite_space<Ts...>, U>>
-  {
-    using type = impl::simplify_t<direct_product<Ts...>, direct_product<U>>;
-  };
-
-  template<convex_space T, convex_space... Us>
-  struct reduction<direct_product<T, composite_space<Us...>>>
-  {
-    using type = impl::simplify_t<direct_product<Us...>, direct_product<T>>;
-  };  
-
-  template<convex_space... Ts, convex_space... Us>
-  struct reduction<direct_product<composite_space<Ts...>, composite_space<Us...>>>
-  {
-    using type = impl::simplify_t<direct_product<Ts...>, direct_product<Us...>>;
-  };
-
+  // Bounds
   template<auto LHBounds, auto RHBounds>
     requires bounds_value<LHBounds> && bounds_value<RHBounds>
   struct reduction<direct_product<canonical_representation<LHBounds>, canonical_representation<RHBounds>>>
@@ -177,6 +158,7 @@ namespace sequoia::physics
     using type = canonical_representation<LHBounds * RHBounds>;
   };
 
+  // Representations
   template<representation R, representation S>
   struct reduction<direct_product<R, S>>
   {
