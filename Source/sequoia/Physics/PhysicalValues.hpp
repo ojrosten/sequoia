@@ -180,7 +180,7 @@ namespace sequoia::physics
   template<representation R, representation S>
   struct reduction<direct_product<R, S>>
   {
-    using type = canonical_representation<R::bounds_v * S::bounds_v>; // TO DO
+    using type = canonical_representation<R::bounds_v * S::bounds_v>;
   };
 
   // TO DO rename this
@@ -320,12 +320,16 @@ namespace sequoia::physics
   };
   
   template<
-    convex_space LHSValueSpace, physical_unit LHSUnit, basis_for<free_module_type_of_t<LHSValueSpace>> LHSBasis, class LHSRepresentation, class LHSValidator,
-    convex_space RHSValueSpace, physical_unit RHSUnit, basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, class RHSRepresentation, class RHSValidator
+    convex_space LHSValueSpace, physical_unit LHSUnit, basis_for<free_module_type_of_t<LHSValueSpace>> LHSBasis, representation_for<LHSValueSpace> LHSRepresentation, class Validator,
+    convex_space RHSValueSpace, physical_unit RHSUnit, basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, representation_for<RHSValueSpace> RHSRepresentation
   >
-    requires consistent_bases_v<LHSBasis, RHSBasis> && has_distinguished_origin_v<LHSValueSpace> && has_distinguished_origin_v<RHSValueSpace>
-  struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSBasis, distinguished_origin, LHSRepresentation, LHSValidator>,
-                                physical_value<RHSValueSpace, RHSUnit, RHSBasis, distinguished_origin, RHSRepresentation, RHSValidator>>
+    requires consistent_bases_v<LHSBasis, RHSBasis>
+          && has_distinguished_origin_v<LHSValueSpace>
+          && has_distinguished_origin_v<RHSValueSpace>
+          && validator_for<Validator, LHSValueSpace,  LHSRepresentation>
+          && validator_for<Validator, RHSValueSpace,  RHSRepresentation>
+  struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSBasis, distinguished_origin, LHSRepresentation, Validator>,
+                                physical_value<RHSValueSpace, RHSUnit, RHSBasis, distinguished_origin, RHSRepresentation, Validator>>
   {
     using value_space_type    = impl::to_composite_space_t<reduction_t<direct_product<LHSValueSpace, RHSValueSpace>>>;
     using units_type          = impl::to_composite_space_t<reduction_t<direct_product<LHSUnit, RHSUnit>>>;
@@ -337,7 +341,7 @@ namespace sequoia::physics
           typename consistent_bases<LHSBasis, RHSBasis>::template rebind_type<free_module_type_of_t<value_space_type>, units_type>,
           distinguished_origin,
           representation_type,
-          LHSValidator // TO DO must combine validators!
+          Validator
         >;
   };
 
