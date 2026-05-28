@@ -56,7 +56,7 @@ namespace sequoia::testing
     using unsafe_inv_quantity_t = quantity<inv_unit_t, value_type, canonical_representation<no_bounds<value_type>>, identity_validator>;
     coordinates_operations<unsafe_inv_quantity_t>{*this}.execute();
 
-    using euc_hf_space_t = euclidean_half_space<value_type, implicit_common_arena>;
+    using euc_hf_space_t = euclidean_half_line<value_type, implicit_common_arena>;
     using euc_vec_space_t = euclidean_vector_space<value_type, 1, implicit_common_arena>;
 
     // TO DO: canonical basis should work here...?

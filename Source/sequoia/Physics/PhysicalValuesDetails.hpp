@@ -395,7 +395,7 @@ namespace sequoia::physics::impl
       std::conditional_t<
         anyFreeModule,
         direct_product<euclidean_vector_space<std::common_type_t<commutative_ring_type_of_t<Ts>...>, 1, std::common_type_t<arena_type_of_t<Ts>...>>>,
-        direct_product<euclidean_half_space<std::common_type_t<commutative_ring_type_of_t<Ts>...>, std::common_type_t<arena_type_of_t<Ts>...>>>
+        direct_product<euclidean_half_line<std::common_type_t<commutative_ring_type_of_t<Ts>...>, std::common_type_t<arena_type_of_t<Ts>...>>>
       >;
     
     using type

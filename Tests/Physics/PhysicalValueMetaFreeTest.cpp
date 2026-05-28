@@ -29,7 +29,7 @@ namespace sequoia::testing
     using electrical_current_space_t
                   = electrical_current_space<float, implicit_common_arena>;
 
-    using euc_half_space_t = euclidean_half_space<float, implicit_common_arena>;
+    using euc_half_space_t = euclidean_half_line<float, implicit_common_arena>;
     using euc_vec_space_t  = euclidean_vector_space<float, 1, implicit_common_arena>;
 
     using delta_mass_space_t = associated_displacement_space<mass_space_t>;
@@ -168,7 +168,7 @@ namespace sequoia::testing
                                 direct_product<mass_space_t, mass_space_t>>);
 
     STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<mass_space_t, dual<mass_space_t>>>>,
-                                direct_product<euclidean_half_space<float, implicit_common_arena>>>);
+                                direct_product<euclidean_half_line<float, implicit_common_arena>>>);
 
     STATIC_CHECK(std::is_same_v<reduce_t<count_and_combine_t<direct_product<mass_space_t, dual<delta_mass_space_t>>>>,
                                 direct_product<euclidean_vector_space<float, 1, implicit_common_arena>>>);
@@ -330,10 +330,10 @@ namespace sequoia::testing
                                   reduction<direct_product<delta_len_space_t, delta_mass_space_t, delta_temp_space_t, delta_time_space_t>>>);
 
     STATIC_CHECK(std::is_same_v<to_composite_space_t<reduction_t<direct_product<composite_space<mass_space_t, mass_space_t>, composite_space<dual<mass_space_t>, dual<mass_space_t>>>>>,
-                                euclidean_half_space<float, implicit_common_arena>>);
+                                euclidean_half_line<float, implicit_common_arena>>);
 
     STATIC_CHECK(std::is_same_v<to_composite_space_t<reduction_t<direct_product<composite_space<mass_space_t, mass_space_t>, dual_of_t<composite_space<mass_space_t, mass_space_t>>>>>,
-                                euclidean_half_space<float, implicit_common_arena>>);
+                                euclidean_half_line<float, implicit_common_arena>>);
     
     STATIC_CHECK(convex_space<to_composite_space_t<reduction_t<direct_product<mass_space_t, length_space_t>>>>);
     STATIC_CHECK(vector_space<to_composite_space_t<reduction_t<direct_product<delta_mass_space_t, delta_len_space_t>>>>);

@@ -2473,9 +2473,8 @@ namespace sequoia::maths
     using non_negative_orthant = std::true_type;
   };
 
-  // TO DO rename line
   template<std::floating_point T, class Arena=mathematical_arena>
-  using euclidean_half_space = euclidean_nonnegative_space<T, 1, Arena>;
+  using euclidean_half_line = euclidean_nonnegative_space<T, 1, Arena>;
 
   template<class T>
   inline constexpr bool has_arena_type_v{

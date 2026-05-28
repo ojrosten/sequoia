@@ -1422,7 +1422,7 @@ namespace sequoia::physics
   using euclidean_1d_vector_quantity = dimensionless_quantity<euclidean_vector_space<Rep, 1, Arena>, no_unit_t, canonical_representation<no_bounds<Rep>>/*, identity_validator*/>;
 
   template<std::floating_point Rep, class Arena=implicit_common_arena>
-  using euclidean_half_line_quantity = dimensionless_quantity<euclidean_half_space<Rep, Arena>, no_unit_t>;
+  using euclidean_half_line_quantity = dimensionless_quantity<euclidean_half_line<Rep, Arena>, no_unit_t>;
 
   template<physical_unit Unit, arithmetic Rep>
     requires has_default_space_v<Unit, Rep>

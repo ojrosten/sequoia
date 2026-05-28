@@ -95,7 +95,7 @@ namespace sequoia::testing
     using inv_qty_t               = quantity<inv_units_t, value_t>;
     using delta_inv_qty_t         = inv_qty_t::displacement_type;
     using euc_half_line_qty       = euclidean_half_line_quantity<value_t>;    
-    using dual_euc_half_line_qty  = dimensionless_quantity<dual<euclidean_half_space<value_t, arena_t>>, no_unit_t>;
+    using dual_euc_half_line_qty  = dimensionless_quantity<dual<euclidean_half_line<value_t, arena_t>>, no_unit_t>;
     using euc_vec_space_qty       = euclidean_1d_vector_quantity<value_t>;
     using dual_euc_vec_space_qty  = dimensionless_quantity<dual<euclidean_vector_space<value_t, 1, arena_t>>, no_unit_t>;
     using pseudo_qty_t            = decltype(qty_t{} * euc_vec_space_qty{});
