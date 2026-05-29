@@ -32,6 +32,9 @@ namespace sequoia::maths
     constexpr auto llb{least_lower_bound<value_t>},
                    gub{greatest_upper_bound<value_t>};
 
+    if(std::isnan(x) || std::isnan(y))
+      return std::numeric_limits<value_t>::quiet_NaN();
+
     if((x > 0) && (y > 0))
     {
       if((x == gub) || (y == gub))

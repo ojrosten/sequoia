@@ -78,6 +78,11 @@ int main(int argc, char** argv)
       integral_physical_value_test{"Integral Physical Value Test"}
     );
 
+    runner.add_test_suite(
+      "Saturating Arithmetic",
+      saturating_arithmetic_free_test{"Saturating Arithmetic Free Test"}
+    );
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)

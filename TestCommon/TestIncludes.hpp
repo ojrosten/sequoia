@@ -44,6 +44,7 @@
 #include "FileSystem/NormalPathTest.hpp"
 #include "FileSystem/NormalPathTestingDiagnostics.hpp"
 #include "Maths/Algebra/RatioFreeTest.hpp"
+#include "Maths/Arithmetic/SaturatingArithmeticFreeTest.hpp"
 #include "Maths/Geometry/AbsoluteCoordinatesTest.hpp"
 #include "Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.hpp"
 #include "Maths/Geometry/AbsoluteLogarithmicCoordinatesTest.hpp"

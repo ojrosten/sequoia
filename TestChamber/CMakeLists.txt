@@ -13,6 +13,7 @@ set(TestDir ${CMAKE_CURRENT_LIST_DIR}/../Tests)
 
 target_sources(TestChamber PRIVATE            
                ${TestDir}/Maths/Algebra/RatioFreeTest.cpp
+               ${TestDir}/Maths/Arithmetic/SaturatingArithmeticFreeTest.cpp
                ${TestDir}/Maths/Geometry/AbsoluteCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.cpp
                ${TestDir}/Maths/Geometry/AbsoluteLogarithmicCoordinatesTest.cpp

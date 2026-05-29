@@ -439,6 +439,11 @@ int main(int argc, char** argv)
       mem_ordered_tuple_test{"Unit Test"}
     );
 
+    runner.add_test_suite(
+      "Saturating Arithmetic",
+      saturating_arithmetic_free_test{"Saturating Arithmetic Free Test"}
+    );
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)
