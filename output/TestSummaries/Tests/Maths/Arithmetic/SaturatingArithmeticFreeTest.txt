@@ -1,2 +1,2 @@
 Saturating Arithmetic Free Test
-Standard Top Level Checks:                92;  Failures:  0  [Deep checks: 92]
+Standard Top Level Checks:               156;  Failures:  0  [Deep checks: 156]

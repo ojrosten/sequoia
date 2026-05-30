@@ -26,7 +26,8 @@ namespace sequoia::testing
     test_mul<float, double>();
     test_mul<int, int>();
     test_mul<unsigned int, unsigned int>();
-    //test_mul<unsigned int, int>();
+    test_mul<unsigned int, long>();
+    test_mul<long, unsigned int>();
 
     test_div<double>();
     test_add<double>();
@@ -39,7 +40,9 @@ namespace sequoia::testing
     using value_t = std::common_type_t<T, U>;
     constexpr value_t
       gub{greatest_upper_bound<value_t>},
-      llb{least_lower_bound<value_t>};
+      llb{least_lower_bound<value_t>},
+      max{std::numeric_limits<value_t>::max()},
+      low{std::numeric_limits<value_t>::lowest()};
     constexpr T
       gubT{greatest_upper_bound<T>},
       llbT{least_lower_bound<T>},
@@ -53,26 +56,35 @@ namespace sequoia::testing
 
     check(equality, "", saturating_mul(gubT,  U{}), value_t{});
     check(equality, "", saturating_mul(T{},  gubU), value_t{});
-    check(equality, "", saturating_mul(gubT, U{2}), gub);
-    check(equality, "", saturating_mul(T{2}, gubU), gub);    
+    check(equality, "", saturating_mul(gubT, U{2}), gubT < gub ? gubT * U{2} : gub);
+    check(equality, "", saturating_mul(T{2}, gubU), gubU < gub ? T{2} * gubU : gub);
+    check(equality, "", saturating_mul(gubT, maxU), gub);
+    check(equality, "", saturating_mul(maxT, gubU), gub);
+    check(equality, "", saturating_mul(T{2}, maxU), maxU < max ? T{2} * maxU : gub);
+    check(equality, "", saturating_mul(maxT, U{2}), maxT < max ? maxT * U{2} : gub);
     check(equality, "", saturating_mul(maxT, maxU), gub);
-    check(equality, "", saturating_mul(T{2}, maxU), gub);
     check(equality, "", saturating_mul(gubT, gubU), gub);
-    check(equality, "", saturating_mul(gubT, llbU), llb);
-    check(equality, "", saturating_mul(llbT, gubU), llb);
+    check(equality, "", saturating_mul(gubT, llbU), llbU == 0 ? value_t{} : llb);
+    check(equality, "", saturating_mul(llbT, gubU), llbT == 0 ? value_t{} : llb);
 
     check(equality, "", saturating_mul(llbT,  U{}), value_t{});
     check(equality, "", saturating_mul(T{},  llbU), value_t{});
-    check(equality, "", saturating_mul(llbT, maxU), llb);
-    check(equality, "", saturating_mul(lowT, maxU), llb);
-    check(equality, "", saturating_mul(T{2}, lowU), llb);
-    check(equality, "", saturating_mul(T{2}, llbU), llb);
+    check(equality, "", saturating_mul(llbT, maxU), llbT == 0 ? value_t{} : llb);
+    check(equality, "", saturating_mul(lowT, maxU), lowT == 0 ? value_t{} : llb);
+    check(equality, "", saturating_mul(T{2}, lowU), lowU > low ? T{2} * lowU : llb);
+    check(equality, "", saturating_mul(lowT, U{2}), lowT > low ? lowT * U{2} : llb);
+    check(equality, "", saturating_mul(T{2}, llbU), llbU > llb ? T{2} * llbU : llb);
+    check(equality, "", saturating_mul(llbT, U{2}), llbT > llb ? llbT * U{2} : llb);
 
-    if constexpr(std::is_signed_v<T>)
+    if constexpr(std::is_signed_v<value_t>)
     {
-      check(equality, "", saturating_mul(gubT, U(-2)), llb);
-      check(equality, "", saturating_mul(T{-2}, gubU), llb);
-      check(equality, "", saturating_mul(llbT,  llbU), gub);     
+      if constexpr(std::is_signed_v<U>)
+        check(equality, "", saturating_mul(gubT, U{-2}), gubT < gub ? gubT * U{-2} :llb);
+
+      if constexpr(std::is_signed_v<T>)
+        check(equality, "", saturating_mul(T{-2}, gubU), llbU > llb ? T{-2} * gubU : llb);
+
+      check(equality, "", saturating_mul(llbT, llbU), (llbT == 0) || (llbU == 0) ? value_t{} : gub);     
     }
     else
     {

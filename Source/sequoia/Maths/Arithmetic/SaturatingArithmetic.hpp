@@ -26,6 +26,10 @@ namespace sequoia::maths
   };
   
   template<arithmetic T, arithmetic U>
+    requires (std::is_signed_v<T>   && std::is_signed_v<U>)
+          || (std::is_unsigned_v<T> && std::is_unsigned_v<U>)
+          || (std::is_signed_v<T> && (sizeof(T) > sizeof(U)))
+          || (std::is_signed_v<U> && (sizeof(T) < sizeof(U)))
   [[nodiscard]]
   constexpr std::common_type_t<T, U> saturating_mul(T x, U y) noexcept
   {
@@ -34,7 +38,7 @@ namespace sequoia::maths
     constexpr auto llb{least_lower_bound<value_t>},
                    gub{greatest_upper_bound<value_t>};
 
-    if constexpr(std::is_signed_v<T>)
+    if constexpr(std::numeric_limits<value_t>::has_quiet_NaN)
     {
       if(std::isnan(x) || std::isnan(y))
         return std::numeric_limits<value_t>::quiet_NaN();
@@ -42,33 +46,21 @@ namespace sequoia::maths
 
     if((x > 0) && (y > 0))
     {
-      if((x == gub) || (y == gub))
-        return gub;
-
       return x > gub / y ? gub : x * y;
     }
    
     if((x < 0) && (y < 0))
     {
-      if((x == llb) || (y == llb))
-        return gub;
-
       return x < gub / y ? gub : x * y;
     }
    
     if((x > 0) && (y < 0))
     {
-      if((x == gub) || (y == llb))
-        return llb;
-
       return x > llb / y ? llb : x * y;
     }
    
     if((x < 0) && (y > 0))
     {
-      if((x == llb) || (y == gub))
-        return llb;
-
       return y > llb / x ? llb : x * y;
     }
    
