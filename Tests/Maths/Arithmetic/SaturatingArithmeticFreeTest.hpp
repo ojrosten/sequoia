@@ -23,7 +23,7 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    template<arithmetic T>
+    template<arithmetic T, arithmetic U>
     void test_mul();
 
     template<arithmetic T>
