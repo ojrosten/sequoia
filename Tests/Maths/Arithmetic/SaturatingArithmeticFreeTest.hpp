@@ -23,16 +23,16 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    template<class T>
+    template<arithmetic T>
     void test_mul();
 
-    template<class T>
+    template<arithmetic T>
     void test_div();
 
-    template<class T>
+    template<arithmetic T>
     void test_add();
 
-    template<class T>
+    template<arithmetic T>
     void test_sub();
   };
 }

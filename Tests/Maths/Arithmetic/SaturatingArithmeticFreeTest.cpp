@@ -23,29 +23,62 @@ namespace sequoia::testing
   void saturating_arithmetic_free_test::run_tests()
   {
     test_mul<double>();
+    test_mul<int>();
+    test_mul<unsigned int>();
+
     test_div<double>();
     test_add<double>();
     test_sub<double>();
   }
 
-  template<class T>
+  template<arithmetic T>
   void saturating_arithmetic_free_test::test_mul()
   {
-    constexpr auto gub{greatest_upper_bound<T>};
-    check(equality, "", saturating_mul(gub, 2), gub);
+    constexpr auto gub{greatest_upper_bound<T>},
+      llb{least_lower_bound<T>},
+      max{std::numeric_limits<T>::max()},
+      low{std::numeric_limits<T>::lowest()};
+
+    check(equality, "", saturating_mul(gub,  T{}), T{});
+    check(equality, "", saturating_mul(T{},  gub), T{});
+    check(equality, "", saturating_mul(gub, T{2}), gub);
+    check(equality, "", saturating_mul(max, T{2}), gub);
+    check(equality, "", saturating_mul(T{2}, gub), gub);
+    check(equality, "", saturating_mul(gub,  gub), gub);
+    check(equality, "", saturating_mul(gub,  llb), llb);
+    check(equality, "", saturating_mul(llb,  gub), llb);
+    if constexpr(std::is_signed_v<T>)
+    {
+      check(equality, "", saturating_mul(gub, T(-2)), llb);
+    }
+
+    check(equality, "", saturating_mul(llb,  T{}), T{});
+    check(equality, "", saturating_mul(T{},  llb), T{});
+    check(equality, "", saturating_mul(llb, T{2}), llb);
+    check(equality, "", saturating_mul(low, T{2}), llb);
+    check(equality, "", saturating_mul(T{2}, llb), llb);
+
+    if constexpr(std::is_signed_v<T>)
+    {
+      check(equality, "", saturating_mul(llb,  llb), gub);
+    }
+    else
+    {
+      check(equality, "", saturating_mul(llb,  llb), T{});
+    }
   }
 
-  template<class T>
+  template<arithmetic T>
   void saturating_arithmetic_free_test::test_div()
   {
   }
 
-  template<class T>
+  template<arithmetic T>
   void saturating_arithmetic_free_test::test_add()
   {
   }
 
-  template<class T>
+  template<arithmetic T>
   void saturating_arithmetic_free_test::test_sub()
   {
   }

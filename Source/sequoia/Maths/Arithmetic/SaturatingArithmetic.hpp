@@ -23,11 +23,11 @@ namespace sequoia::maths
     std::numeric_limits<T>::has_infinity ? -std::numeric_limits<T>::infinity() : std::numeric_limits<T>::lowest()
   };
   
-  template<arithmetic T, arithmetic U>
+  template<arithmetic T>
   [[nodiscard]]
-  constexpr std::common_type_t<T, U> saturating_mul(T x, U y) noexcept
+  constexpr T saturating_mul(T x, T y) noexcept
   {
-    using value_t = std::common_type_t<T, U>;
+    using value_t = T;
 
     constexpr auto llb{least_lower_bound<value_t>},
                    gub{greatest_upper_bound<value_t>};
