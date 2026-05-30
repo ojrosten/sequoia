@@ -154,6 +154,7 @@
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Meta/TypeAlgorithms.hpp"
 #include "sequoia/Maths/Algebra/Ratio.hpp"
+#include "sequoia/Maths/Arithmetic/SaturatingArithmetic.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <algorithm>
@@ -862,55 +863,22 @@ namespace sequoia::maths
     friend constexpr bool operator==(const coordinate_bounds&, const coordinate_bounds&) noexcept = default;
 
     template<arithmetic U>
+      requires has_saturating_mul_v<T, U>
     [[nodiscard]]
     friend constexpr coordinate_bounds<std::common_type_t<T, U>> operator*(const coordinate_bounds<T>& a, const coordinate_bounds<U>& b)
     {
-      using common_value_type = std::common_type_t<T, U>;
-      constexpr auto llb{coordinate_bounds<common_value_type>::least_lower_bound},
-                     gub{coordinate_bounds<common_value_type>::greatest_upper_bound};
+      using value_t = std::common_type_t<T, U>;
    
       if((a == no_bounds<T>) || (b == no_bounds<U>))
-        return no_bounds<common_value_type>;
+        return no_bounds<value_t>;
    
-      auto mul{
-        [](common_value_type v, common_value_type w) -> common_value_type {        
-          if((v > 0) && (w > 0))
-          {
-            if((v == gub) || (w == gub))
-              return gub;
-   
-            return v > gub / w ? gub : v * w;
-          }
-   
-          if((v < 0) && (w < 0))
-          {
-            if((v == llb) || (w == llb))
-              return gub;
-   
-            return v < gub / w ? gub : v * w;
-          }
-   
-          if((v > 0) && (w < 0))
-          {
-            if((v == gub) || (w == llb))
-               return llb;
-   
-            return v > llb / w ? llb : v * w;
-          }
-   
-          if((v < 0) && (w > 0))
-          {
-            if((v == llb) || (w == gub))
-               return llb;
-   
-            return w > llb / v ? llb : v * w;
-          }
-   
-          return {};
-        }
+      const std::array
+        products{
+          saturating_mul(a.lower, b.lower),
+          saturating_mul(a.lower, b.upper),
+          saturating_mul(a.upper, b.lower),
+          saturating_mul(a.upper, b.upper)
       };
-   
-      const std::array products{mul(a.lower, b.lower), mul(a.lower, b.upper), mul(a.upper, b.lower), mul(a.upper, b.upper)};
    
       return {std::ranges::min(products), std::ranges::max(products)};
     }

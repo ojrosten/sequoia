@@ -54,6 +54,13 @@ namespace sequoia::testing
       maxU{std::numeric_limits<U>::max()},
       lowU{std::numeric_limits<U>::lowest()};
 
+    STATIC_CHECK(saturating_mul(gubT,  U{}) == value_t{});    
+    STATIC_CHECK(saturating_mul(T{},  gubU) == value_t{});
+    STATIC_CHECK(saturating_mul(gubT, gubU) ==  gub);
+    STATIC_CHECK(saturating_mul(gubT, llbU) == (llbU == 0 ? value_t{} : llb));
+    STATIC_CHECK(saturating_mul(llbT, gubU) == (llbT == 0 ? value_t{} : llb));
+    STATIC_CHECK(saturating_mul(llbT, llbU) == (((llbT == 0) || (llbU == 0))? value_t{} : gub));
+
     check(equality, "", saturating_mul(gubT,  U{}), value_t{});
     check(equality, "", saturating_mul(T{},  gubU), value_t{});
     check(equality, "", saturating_mul(gubT, U{2}), gubT < gub ? gubT * U{2} : gub);
@@ -75,6 +82,7 @@ namespace sequoia::testing
     check(equality, "", saturating_mul(lowT, U{2}), lowT > low ? lowT * U{2} : llb);
     check(equality, "", saturating_mul(T{2}, llbU), llbU > llb ? T{2} * llbU : llb);
     check(equality, "", saturating_mul(llbT, U{2}), llbT > llb ? llbT * U{2} : llb);
+    check(equality, "", saturating_mul(llbT, llbU), ((llbT == 0) || (llbU == 0))? value_t{} : gub);
 
     if constexpr(std::is_signed_v<value_t>)
     {
