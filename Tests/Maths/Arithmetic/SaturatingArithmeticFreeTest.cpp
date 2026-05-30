@@ -47,10 +47,6 @@ namespace sequoia::testing
     check(equality, "", saturating_mul(gub,  gub), gub);
     check(equality, "", saturating_mul(gub,  llb), llb);
     check(equality, "", saturating_mul(llb,  gub), llb);
-    if constexpr(std::is_signed_v<T>)
-    {
-      check(equality, "", saturating_mul(gub, T(-2)), llb);
-    }
 
     check(equality, "", saturating_mul(llb,  T{}), T{});
     check(equality, "", saturating_mul(T{},  llb), T{});
@@ -60,11 +56,28 @@ namespace sequoia::testing
 
     if constexpr(std::is_signed_v<T>)
     {
-      check(equality, "", saturating_mul(llb,  llb), gub);
+      check(equality, "", saturating_mul(gub, T(-2)), llb);
+      check(equality, "", saturating_mul(llb,  llb), gub);     
     }
     else
     {
       check(equality, "", saturating_mul(llb,  llb), T{});
+    }
+
+    if constexpr(std::floating_point<T>)
+    {
+      constexpr T nan{std::numeric_limits<T>::quiet_NaN()};
+      check("", std::isnan(saturating_mul(  nan, T(-1))));
+      check("", std::isnan(saturating_mul(  nan,   T{})));
+      check("", std::isnan(saturating_mul(  nan,  T{1})));
+      check("", std::isnan(saturating_mul(T{-1},   nan)));
+      check("", std::isnan(saturating_mul(  T{},   nan)));
+      check("", std::isnan(saturating_mul( T{1},   nan)));
+      check("", std::isnan(saturating_mul(  nan,   nan)));
+      check("", std::isnan(saturating_mul(  gub,   nan)));
+      check("", std::isnan(saturating_mul(  nan,   gub)));
+      check("", std::isnan(saturating_mul(  llb,   nan)));
+      check("", std::isnan(saturating_mul(  nan,   llb)));
     }
   }
 

@@ -11,6 +11,8 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 
+#include <cmath>
+
 namespace sequoia::maths
 {
   template<arithmetic T>
@@ -32,8 +34,11 @@ namespace sequoia::maths
     constexpr auto llb{least_lower_bound<value_t>},
                    gub{greatest_upper_bound<value_t>};
 
-    if(std::isnan(x) || std::isnan(y))
-      return std::numeric_limits<value_t>::quiet_NaN();
+    if constexpr(std::is_signed_v<T>)
+    {
+      if(std::isnan(x) || std::isnan(y))
+        return std::numeric_limits<value_t>::quiet_NaN();
+    }
 
     if((x > 0) && (y > 0))
     {
