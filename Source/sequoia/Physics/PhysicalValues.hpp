@@ -1029,7 +1029,7 @@ namespace sequoia::physics
   
   template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
     requires (!has_distinguished_origin_v<C>)
-  || (!has_identity_translation_v<root_transform_t<FromUnit>> && !has_identity_translation_v<root_transform_t<ToUnit>>)
+          || (!has_identity_translation_v<root_transform_t<FromUnit>> && !has_identity_translation_v<root_transform_t<ToUnit>>)
   struct conversion_space<C, FromUnit, ToUnit>
   {
     using type = C;
