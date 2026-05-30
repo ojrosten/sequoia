@@ -36,7 +36,7 @@ namespace sequoia::testing
 
   void integral_physical_value_test::run_tests()
   {
-    test_integral_quantity<physical_value<length_space<std::size_t, graphics::texture_arena>, graphics::units::texel>>();
+    test_integral_quantity<physical_value<length_space<unsigned, graphics::texture_arena>, graphics::units::texel>>();
   }
 
   template<class Quantity>

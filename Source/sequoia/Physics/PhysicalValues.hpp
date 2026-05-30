@@ -381,20 +381,37 @@ namespace sequoia::physics
   template<physical_unit U>
   using root_transform_t = root_transform<U>::transform_type;
 
-  template<auto Bounds, class T>
-  struct synthesised_bounds;
+  template<class...>
+  struct coordinate_transform;
 
+  template<auto Displacement>
+    requires arithmetic<std::remove_const_t<decltype(Displacement)>>
+  struct translation
+  {
+    using displacement_type = std::remove_const_t<decltype(Displacement)>;
+    constexpr static auto displacement{Displacement};
+  };
+
+  template<arithmetic T, physical_unit Unit, class Ratio, auto Displacement>
+  [[nodiscard]]
+  constexpr coordinate_bounds<T> transform_bounds(coordinate_bounds<T> b, const coordinate_transform<Unit, dilatation<Ratio>, translation<Displacement>>&)
+  {
+    auto transform{
+      [](T val) -> T {
+        return saturating_mul(val / Ratio::den, Ratio::num) + Displacement;
+      }
+    };
+
+    return {transform(b.lower), transform(b.upper)};
+  }
   
-  template<auto Bounds, class T>
-  inline constexpr auto synthesised_bounds_v{synthesised_bounds<Bounds, T>::bounds_v};
-
   template<convex_space ValueSpace, physical_unit Unit>
     requires (!free_module<ValueSpace> && !affine_space<ValueSpace>)
   struct default_representation<ValueSpace, Unit>
   {
     using ring_t = commutative_ring_type_of_t<ValueSpace>;
     using transform_t = root_transform_t<Unit>;
-    constexpr static auto bounds_v{synthesised_bounds_v<half_line_bounds<to_bounds_value_type_t<ring_t>>, transform_t>};
+    constexpr static auto bounds_v{transform_bounds(half_line_bounds<to_bounds_value_type_t<ring_t>>, transform_t{})};
     using type = canonical_representation<bounds_v>;
   };
 
@@ -881,56 +898,11 @@ namespace sequoia::physics
   {
     using type = dilatation<std::ratio<Den, Num>>;
   };
-  
-  template<auto Displacement>
-    requires arithmetic<std::remove_const_t<decltype(Displacement)>>
-  struct translation
-  {
-    using displacement_type = std::remove_const_t<decltype(Displacement)>;
-    constexpr static auto displacement{Displacement};
-  };
 
   template<auto Displacement>
   struct inverse<translation<Displacement>>
   {
     using type = translation<-Displacement>;
-  };
-
-  template<auto Bounds, class T>
-  struct synthesised_bounds;
-
-  template<class...>
-  struct coordinate_transform;
-
-  // TO DO: a lot of this should simplify
-  template<auto Bounds, physical_unit U, class Ratio, auto Displacement>
-    requires scale_invariant_bounds_v<Bounds> && (translation_invariant_bounds_v<Bounds> || !Displacement)
-  struct synthesised_bounds<Bounds, coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
-  {
-    constexpr static auto bounds_v{Bounds};
-  };
-
-  template<auto Bounds, physical_unit U, class Ratio, auto Displacement>
-    requires scale_invariant_bounds_v<Bounds> && (Displacement != 0)
-  struct synthesised_bounds<Bounds, coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
-  {
-    using value_type = decltype(Bounds)::value_type;    
-    constexpr static coordinate_bounds<value_type> bounds_v{Displacement, Bounds.upper};
-  };
-
-  template<auto Bounds, physical_unit U, class Ratio, auto Displacement>
-  requires (!scale_invariant_bounds_v<Bounds>) //&& is_interval_validator_v<typename U::validator_type>
-  struct synthesised_bounds<Bounds, coordinate_transform<U, dilatation<Ratio>, translation<Displacement>>>
-  {    
-    using underlying_validator_type = U::validator_type;
-    using value_type = decltype(Bounds)::value_type;
-
-    [[nodiscard]]
-    constexpr static value_type transform(value_type val) {
-      return (val * Ratio::num / Ratio::den) + Displacement;
-    }
-
-    constexpr static coordinate_bounds<value_type> bounds_v{transform(Bounds.lower), transform(Bounds.upper)};
   };
 
   template<physical_unit U, class Ratio, auto Displacement>
@@ -1229,7 +1201,7 @@ namespace sequoia::physics
     using position = physical_value<position_space<T, D, Arena>, units::metre_t, Basis, Origin, canonical_representation<no_bounds<T>>>;
   }
 
-  // TO DO: see commnent above si namespace
+  // TO DO: see comment above si namespace
   inline namespace non_si
   {
     inline namespace units
