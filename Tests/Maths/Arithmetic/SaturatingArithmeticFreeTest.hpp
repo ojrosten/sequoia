@@ -13,26 +13,70 @@
 
 namespace sequoia::testing
 {
-  class saturating_arithmetic_free_test final : public free_test
+  template<std::derived_from<free_test> Test>
+  class saturating_arithmetic_free_test : public Test
+  {
+  public:
+    using Test::Test;
+
+    void run_tests()
+    {
+      Test::template execute_tests<double, double>();
+      Test::template execute_tests<float, double>();
+      Test::template execute_tests<double, float>();
+      Test::template execute_tests<int, int>();
+      Test::template execute_tests<unsigned, unsigned>();
+      Test::template execute_tests<unsigned, long>();
+      Test::template execute_tests<long, unsigned>();
+      Test::template execute_tests<double, int>();
+      Test::template execute_tests<int, double>();
+      Test::template execute_tests<double, unsigned>();
+      Test::template execute_tests<unsigned, double>();
+      // TO DO: float, int etc
+    }
+  protected:
+    saturating_arithmetic_free_test(saturating_arithmetic_free_test&&) noexcept = default;
+
+    saturating_arithmetic_free_test& operator=(saturating_arithmetic_free_test&&) noexcept = default;
+
+    ~saturating_arithmetic_free_test() = default;    
+  };
+
+  class saturating_mul_test_base : public free_test
   {
   public:
     using free_test::free_test;
 
+  protected:
+    template<arithmetic T, arithmetic U>
+    void execute_tests();
+  };
+
+  class saturating_add_test_base : public free_test
+  {
+  public:
+    using free_test::free_test;
+
+  protected:
+    template<arithmetic T, arithmetic U>
+    void execute_tests();
+  };
+
+  class saturating_mul_free_test : public saturating_arithmetic_free_test<saturating_mul_test_base>
+  {
+  public:
+    using saturating_arithmetic_free_test<saturating_mul_test_base>::saturating_arithmetic_free_test;
+
     [[nodiscard]]
     std::filesystem::path source_file() const;
+  };
 
-    void run_tests();
-  private:
-    template<arithmetic T, arithmetic U>
-    void test_mul();
+  class saturating_add_free_test : public saturating_arithmetic_free_test<saturating_add_test_base>
+  {
+  public:
+    using saturating_arithmetic_free_test<saturating_add_test_base>::saturating_arithmetic_free_test;
 
-    template<arithmetic T, arithmetic U>
-    void test_div();
-
-    template<arithmetic T, arithmetic U>
-    void test_add();
-
-    template<arithmetic T, arithmetic U>
-    void test_sub();
+    [[nodiscard]]
+    std::filesystem::path source_file() const;
   };
 }

@@ -1,2 +1,4 @@
-Saturating Arithmetic Free Test
-Standard Top Level Checks:               267;  Failures:  0  [Deep checks: 267]
+Saturating Mul Free Test
+Standard Top Level Checks:               374;  Failures:  0  [Deep checks: 374]
+Saturating Add Free Test
+Standard Top Level Checks:                44;  Failures:  0  [Deep checks: 44]

@@ -441,7 +441,8 @@ int main(int argc, char** argv)
 
     runner.add_test_suite(
       "Saturating Arithmetic",
-      saturating_arithmetic_free_test{"Saturating Arithmetic Free Test"}
+      saturating_mul_free_test{"Saturating Mul Free Test"},
+      saturating_add_free_test{"Saturating Add Free Test"}
     );
 
     runner.execute(timer_resolution{1ms});

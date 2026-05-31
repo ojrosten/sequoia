@@ -25,8 +25,9 @@ namespace sequoia::maths
     std::numeric_limits<T>::has_infinity ? -std::numeric_limits<T>::infinity() : std::numeric_limits<T>::lowest()
   };
 
+  // TO DO: refine this; probably drop it and replace with a runtime checked conversion
   template<arithmetic T, arithmetic U>
-  inline constexpr bool has_saturating_arithmetic_v{
+  inline constexpr bool has_saturating_arithmetic_v{    
        (std::is_signed_v<T>   && std::is_signed_v<U>)
     || (std::is_unsigned_v<T> && std::is_unsigned_v<U>)
     || (std::is_signed_v<T>   && (sizeof(T) > sizeof(U)))

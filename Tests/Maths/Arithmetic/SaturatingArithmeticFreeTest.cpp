@@ -15,36 +15,19 @@ namespace sequoia::testing
   using namespace maths;
   
   [[nodiscard]]
-  std::filesystem::path saturating_arithmetic_free_test::source_file() const
+  std::filesystem::path saturating_mul_free_test::source_file() const
   {
     return std::source_location::current().file_name();
   }
 
-  void saturating_arithmetic_free_test::run_tests()
+    [[nodiscard]]
+  std::filesystem::path saturating_add_free_test::source_file() const
   {
-    test_mul<double, double>();
-    test_mul<float, double>();
-    test_mul<double, float>();
-    test_mul<int, int>();
-    test_mul<unsigned int, unsigned int>();
-    test_mul<unsigned int, long>();
-    test_mul<long, unsigned int>();
-
-    test_div<double, double>();
-
-    test_add<double, double>();
-    test_add<float, double>();
-    test_add<double, float>();
-    test_add<int, int>();
-    test_add<unsigned int, unsigned int>();
-    test_add<unsigned int, long>();
-    test_add<long, unsigned int>();
-
-    test_sub<double, double>();
+    return std::source_location::current().file_name();
   }
 
   template<arithmetic T, arithmetic U>
-  void saturating_arithmetic_free_test::test_mul()
+  void saturating_mul_test_base::execute_tests()
   {
     using value_t = std::common_type_t<T, U>;
     constexpr value_t
@@ -108,31 +91,30 @@ namespace sequoia::testing
       check(equality, "", saturating_mul(llbT,  llbU), value_t{});
     }
 
-    if constexpr(std::floating_point<T>)
+    if constexpr(std::numeric_limits<T>::has_quiet_NaN)
     {
       constexpr T nanT{std::numeric_limits<T>::quiet_NaN()};
-      constexpr U nanU{std::numeric_limits<U>::quiet_NaN()};
+
       check("", std::isnan(saturating_mul( nanT, U(-1))));
       check("", std::isnan(saturating_mul( nanT,   U{})));
       check("", std::isnan(saturating_mul( nanT,  U{1})));
-      check("", std::isnan(saturating_mul(T{-1},  nanU)));
-      check("", std::isnan(saturating_mul(  T{},  nanU)));
-      check("", std::isnan(saturating_mul( T{1},  nanU)));
-      check("", std::isnan(saturating_mul( nanT,  nanU)));
-      check("", std::isnan(saturating_mul( gubT,  nanU)));
       check("", std::isnan(saturating_mul( nanT,  gubU)));
-      check("", std::isnan(saturating_mul( llbT,  nanU)));
       check("", std::isnan(saturating_mul( nanT,  llbU)));
+    }
+    if constexpr(std::numeric_limits<U>::has_quiet_NaN)
+    {     
+      constexpr U nanU{std::numeric_limits<U>::quiet_NaN()};
+
+      check("", std::isnan(saturating_mul(T(-1),  nanU)));
+      check("", std::isnan(saturating_mul(  T{},  nanU)));
+      check("", std::isnan(saturating_mul( T{1},  nanU)));      
+      check("", std::isnan(saturating_mul( gubT,  nanU)));      
+      check("", std::isnan(saturating_mul( llbT,  nanU)));
     }
   }
 
   template<arithmetic T, arithmetic U>
-  void saturating_arithmetic_free_test::test_div()
-  {
-  }
-
-  template<arithmetic T, arithmetic U>
-  void saturating_arithmetic_free_test::test_add()
+  void saturating_add_test_base::execute_tests()
   {
     using value_t = std::common_type_t<T, U>;
     constexpr value_t
@@ -152,8 +134,6 @@ namespace sequoia::testing
     check(equality, "", saturating_add(llbT,  llbU), llb);
   }
 
-  template<arithmetic T, arithmetic U>
-  void saturating_arithmetic_free_test::test_sub()
-  {
-  }
+  template class saturating_arithmetic_free_test<saturating_mul_test_base>;
+  template class saturating_arithmetic_free_test<saturating_add_test_base>;
 }
