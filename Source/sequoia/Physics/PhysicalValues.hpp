@@ -398,7 +398,7 @@ namespace sequoia::physics
   {
     auto transform{
       [](T val) -> T {
-        return saturating_mul(val / Ratio::den, Ratio::num) + Displacement;
+        return saturating_add(saturating_mul(val / Ratio::den, Ratio::num), Displacement);
       }
     };
 

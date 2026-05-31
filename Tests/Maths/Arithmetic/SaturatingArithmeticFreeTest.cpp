@@ -24,14 +24,23 @@ namespace sequoia::testing
   {
     test_mul<double, double>();
     test_mul<float, double>();
+    test_mul<double, float>();
     test_mul<int, int>();
     test_mul<unsigned int, unsigned int>();
     test_mul<unsigned int, long>();
     test_mul<long, unsigned int>();
 
-    test_div<double>();
-    test_add<double>();
-    test_sub<double>();
+    test_div<double, double>();
+
+    test_add<double, double>();
+    test_add<float, double>();
+    test_add<double, float>();
+    test_add<int, int>();
+    test_add<unsigned int, unsigned int>();
+    test_add<unsigned int, long>();
+    test_add<long, unsigned int>();
+
+    test_sub<double, double>();
   }
 
   template<arithmetic T, arithmetic U>
@@ -117,17 +126,33 @@ namespace sequoia::testing
     }
   }
 
-  template<arithmetic T>
+  template<arithmetic T, arithmetic U>
   void saturating_arithmetic_free_test::test_div()
   {
   }
 
-  template<arithmetic T>
+  template<arithmetic T, arithmetic U>
   void saturating_arithmetic_free_test::test_add()
   {
+    using value_t = std::common_type_t<T, U>;
+    constexpr value_t
+      gub{greatest_upper_bound<value_t>},
+      llb{least_lower_bound<value_t>};
+    constexpr T
+      gubT{greatest_upper_bound<T>},
+      llbT{least_lower_bound<T>};
+    constexpr U
+      gubU{greatest_upper_bound<U>},
+      llbU{least_lower_bound<U>};
+
+    STATIC_CHECK(saturating_add(gubT,  gubU) == gub);
+    STATIC_CHECK(saturating_add(llbT,  llbU) == llb);
+
+    check(equality, "", saturating_add(gubT,  gubU), gub);
+    check(equality, "", saturating_add(llbT,  llbU), llb);
   }
 
-  template<arithmetic T>
+  template<arithmetic T, arithmetic U>
   void saturating_arithmetic_free_test::test_sub()
   {
   }

@@ -26,13 +26,13 @@ namespace sequoia::testing
     template<arithmetic T, arithmetic U>
     void test_mul();
 
-    template<arithmetic T>
+    template<arithmetic T, arithmetic U>
     void test_div();
 
-    template<arithmetic T>
+    template<arithmetic T, arithmetic U>
     void test_add();
 
-    template<arithmetic T>
+    template<arithmetic T, arithmetic U>
     void test_sub();
   };
 }

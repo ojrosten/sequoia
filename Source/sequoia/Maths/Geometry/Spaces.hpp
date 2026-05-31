@@ -863,7 +863,7 @@ namespace sequoia::maths
     friend constexpr bool operator==(const coordinate_bounds&, const coordinate_bounds&) noexcept = default;
 
     template<arithmetic U>
-      requires has_saturating_mul_v<T, U>
+      requires has_saturating_arithmetic_v<T, U>
     [[nodiscard]]
     friend constexpr coordinate_bounds<std::common_type_t<T, U>> operator*(const coordinate_bounds<T>& a, const coordinate_bounds<U>& b)
     {
