@@ -24,15 +24,22 @@ namespace sequoia::testing
       Test::template execute_tests<double, double>();
       Test::template execute_tests<float, double>();
       Test::template execute_tests<double, float>();
+      
       Test::template execute_tests<int, int>();
       Test::template execute_tests<unsigned, unsigned>();
       Test::template execute_tests<unsigned, long>();
       Test::template execute_tests<long, unsigned>();
+      
       Test::template execute_tests<double, int>();
       Test::template execute_tests<int, double>();
       Test::template execute_tests<double, unsigned>();
       Test::template execute_tests<unsigned, double>();
-      // TO DO: float, int etc
+      // TO DO
+      /*Test::template execute_tests<float, int>();
+      Test::template execute_tests<int, float>();
+      Test::template execute_tests<float, unsigned>();
+      Test::template execute_tests<unsigned, float>();
+      */
     }
   protected:
     saturating_arithmetic_free_test(saturating_arithmetic_free_test&&) noexcept = default;

@@ -46,7 +46,7 @@ namespace sequoia::testing
       maxU{std::numeric_limits<U>::max()},
       lowU{std::numeric_limits<U>::lowest()};
 
-    STATIC_CHECK(saturating_mul(gubT,  U{}) == value_t{});    
+    STATIC_CHECK(saturating_mul(gubT,  U{}) == value_t{});
     STATIC_CHECK(saturating_mul(T{},  gubU) == value_t{});
     STATIC_CHECK(saturating_mul(gubT, gubU) ==  gub);
     STATIC_CHECK(saturating_mul(gubT, llbU) == (llbU == 0 ? value_t{} : llb));

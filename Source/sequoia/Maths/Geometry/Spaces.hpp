@@ -1832,7 +1832,8 @@ namespace sequoia::maths
             && (!std::is_unsigned_v<value_type>)
     [[nodiscard]]
     constexpr Self operator-(this const Self& self) noexcept(has_identity_validator)
-    {
+    {      
+      // TO DO: enable refinement through representation
       return Self{self}.for_each_element([](value_type& t) { t = -t; });
     }
 

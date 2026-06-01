@@ -25,7 +25,12 @@ namespace sequoia::maths
     std::numeric_limits<T>::has_infinity ? -std::numeric_limits<T>::infinity() : std::numeric_limits<T>::lowest()
   };
 
-  // TO DO: refine this; probably drop it and replace with a runtime checked conversion
+  // TO DO: refine this, esp for mixed floating-point / integral
+  // The current logic is adapted to the fact that the impl uses
+  // std::common_type. The common type of int and unsigned is
+  // unsigned - wich is undesriable - whereas that of long and
+  // unsigned is long - which is desirable. Hence the sizeof
+  // conditions
   template<arithmetic T, arithmetic U>
   inline constexpr bool has_saturating_arithmetic_v{    
        (std::is_signed_v<T>   && std::is_signed_v<U>)
