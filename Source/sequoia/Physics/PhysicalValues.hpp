@@ -328,7 +328,7 @@ namespace sequoia::physics
 
   template<class From, class To>
   inline constexpr bool has_quantity_conversion_v{
-    has_coordinate_transformation_v<From, To> //&& std::constructible_from<coordinate_transformation<From, To>>
+    has_coordinate_transformation_v<From, To>
   };
 
   template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
@@ -505,16 +505,22 @@ namespace sequoia::physics
       }(std::make_index_sequence<D>{});
     }
 
-    template<convex_space RHSValueSpace, physical_unit RHSUnit, basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, class RHSOrigin, class RHSRepresentation, class RHSValidator>
-      requires is_multipicable_with<RHSValueSpace, RHSBasis> // include repr here and validator
+    template<
+      convex_space RHSValueSpace,
+      physical_unit RHSUnit,
+      basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis,
+      class RHSOrigin,
+      representation_for<RHSValueSpace> RHSRepresentation
+    >
+      requires is_multipicable_with<RHSValueSpace, RHSBasis> // TO DO: include repr, origin
     [[nodiscard]]
     friend constexpr auto operator*(const physical_value& lhs,
-                                    const physical_value<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSRepresentation, RHSValidator>& rhs)
+                                    const physical_value<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSRepresentation, validator_type>& rhs)
     {
       using physical_value_t
         = physical_value_product_t<
             physical_value,
-            physical_value<RHSValueSpace,RHSUnit, RHSBasis, RHSOrigin, RHSRepresentation, RHSValidator>
+            physical_value<RHSValueSpace,RHSUnit, RHSBasis, RHSOrigin, RHSRepresentation, validator_type>
           >;
 
       using derived_units_type = physical_value_t::units_type;
@@ -526,19 +532,18 @@ namespace sequoia::physics
       physical_unit RHSUnit,
       basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis,
       class RHSOrigin,
-      representation_for<RHSValueSpace> RHSRepresentation,
-      validator_for<ValueSpace, RHSRepresentation> RHSValidator
+      representation_for<RHSValueSpace> RHSRepresentation
     >
-    requires is_divisible_with<RHSValueSpace, RHSBasis> // constrain rhsorigin
+      requires is_divisible_with<RHSValueSpace, RHSBasis> // TO DO: include repr, origin
     [[nodiscard]]
     friend constexpr auto operator/(const physical_value& lhs,
-                                    const physical_value<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSRepresentation, RHSValidator>& rhs)
+                                    const physical_value<RHSValueSpace, RHSUnit, RHSBasis, RHSOrigin, RHSRepresentation, validator_type>& rhs)
     {
       using dual_rep_t = dual_of_t<RHSRepresentation>;
       using physical_value_t
         = physical_value_product_t<
             physical_value,
-        physical_value<dual_of_t<RHSValueSpace>, dual_of_t<RHSUnit>, dual_of_t<RHSBasis>, distinguished_origin, dual_rep_t, RHSValidator>
+        physical_value<dual_of_t<RHSValueSpace>, dual_of_t<RHSUnit>, dual_of_t<RHSBasis>, distinguished_origin, dual_rep_t, validator_type>
           >;
       using derived_units_type = physical_value_t::units_type;
 
@@ -992,7 +997,6 @@ namespace sequoia::physics
   };
 
   template<physical_unit... Us>
-  //requires (scale_invariant_validator_v<typename Us::validator_type> && ...)
   struct root_transform<composite_unit<Us...>>
   {
     using units_type = decltype((root_transform_unit_t<Us>{} * ...));
@@ -1457,7 +1461,6 @@ namespace sequoia::maths
     using to_type         = physical_value<ValueSpaceTo, to_units_type, BasisTo, OriginTo, RepresentationTo, ValidatorTo>;
     using transform_type  = product_t<root_transform_t<UnitTo>, inverse_t<root_transform_t<UnitFrom>>>;
 
-    // TO DO
     constexpr static auto to_displacement() noexcept {
       if constexpr(free_module<ValueSpaceFrom>)
         return value_type{};
