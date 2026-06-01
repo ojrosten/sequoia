@@ -1832,7 +1832,7 @@ namespace sequoia::maths
             && (!std::is_unsigned_v<value_type>)
     [[nodiscard]]
     constexpr Self operator-(this const Self& self) noexcept(has_identity_validator)
-    {      
+    {
       // TO DO: enable refinement through representation
       return Self{self}.for_each_element([](value_type& t) { t = -t; });
     }
@@ -2006,6 +2006,10 @@ namespace sequoia::maths
     [[nodiscard]]
     constexpr value_type& operator[](std::size_t i) requires has_freely_mutable_components { return m_Values[i]; }
 
+    // TO DO: reconsider these (and the above, related, functions) for physical values
+    // (more generally, when the basis isomorphism type is non-trivial). The const
+    // overloads could use a custom iterator that dereferences to a 'quantity'. But
+    // what of the mutable ones?
     [[nodiscard]]
     constexpr auto begin() const noexcept { return m_Values.begin(); }
 
