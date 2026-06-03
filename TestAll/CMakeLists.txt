@@ -126,6 +126,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Physics/PhysicalValueMetaFreeTest.cpp               
                ${TestDir}/Physics/PhysicalValueTestingDiagnostics.cpp
                ${TestDir}/Physics/UnsafeAbsolutePhysicalValueTest.cpp
+               ${TestDir}/Physics/VectorNonlinearRepresentationsTest.cpp
                ${TestDir}/Physics/VectorPhysicalValueTest.cpp
                ${TestDir}/Runtime/ShellCommandsTest.cpp
                ${TestDir}/Runtime/ShellCommandsTestingDiagnostics.cpp

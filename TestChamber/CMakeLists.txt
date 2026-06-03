@@ -33,6 +33,7 @@ target_sources(TestChamber PRIVATE
                ${TestDir}/Physics/PhysicalValueMetaFreeTest.cpp               
                ${TestDir}/Physics/PhysicalValueTestingDiagnostics.cpp
                ${TestDir}/Physics/UnsafeAbsolutePhysicalValueTest.cpp
+               ${TestDir}/Physics/VectorNonlinearRepresentationsTest.cpp
                ${TestDir}/Physics/VectorPhysicalValueTest.cpp)
 
 sequoia_finalize_self(TestChamber ${TestDir}/Experimental Experimental)

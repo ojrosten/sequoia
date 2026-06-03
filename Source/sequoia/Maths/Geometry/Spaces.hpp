@@ -162,6 +162,7 @@
 #include <concepts>
 #include <complex>
 #include <format>
+#include <numbers>
 #include <ranges>
 #include <span>
 
@@ -1715,6 +1716,66 @@ namespace sequoia::maths
   struct dual_of<canonical_representation<Bounds>>
   {
     using type = canonical_representation<reciprocal(Bounds)>;
+  };
+
+  template<weak_commutative_ring T, auto Bounds=no_bounds<T>>
+  struct basic_polar_representation
+  {
+    using value_type = T;
+    constexpr static auto bounds_v{Bounds};
+
+    template<auto OtherBounds>
+    using rebind_type = basic_polar_representation<T, OtherBounds>;
+          
+    [[nodiscard]]
+    constexpr static std::array<T, 2> to_underlying(std::span<const T, 2> polar)
+    {
+      return {polar[0] * std::cos(polar[1]), polar[0] * std::sin(polar[1])};
+    }
+
+    [[nodiscard]]
+    constexpr static std::array<T, 2> from_underlying(std::span<const T, 2> cartesian)
+    {
+      T theta{(!cartesian[0] && !cartesian[1]) ? T{} : std::atan2(cartesian[1], cartesian[0])};
+      if(theta < 0) theta += T{2} * std::numbers::pi_v<T>;
+        
+      return {std::sqrt(cartesian[0] * cartesian[0] + cartesian[1] * cartesian[1]), theta};
+    }
+  };
+
+  template<weak_commutative_ring T, auto Bounds=no_bounds<T>>
+  struct polar_representation : basic_polar_representation<T, Bounds>
+  {
+    template<auto OtherBounds>
+    using rebind_type = polar_representation<T, OtherBounds>;
+
+    [[nodiscard]]
+    static constexpr T compute_angle(T theta, T scale)
+    {
+      if(!scale)
+        return T{};
+
+      constexpr auto pi{std::numbers::pi_v<T>};
+
+      return
+          scale > T{} ? theta
+        : theta >= pi ? theta - pi
+        : theta + pi;
+    }
+
+    // TO DO: unary minus, with corresponding change to coordinates_base
+      
+    [[nodiscard]]
+    static constexpr std::array<T, 2> mul(std::span<const T, 2> lhs, T scale)
+    {
+      return {lhs[0] * std::abs(scale), compute_angle(lhs[1], scale)};
+    }
+
+    [[nodiscard]]
+    static constexpr std::array<T, 2> div(std::span<const T, 2> lhs, T scale)
+    {
+      return {lhs[0] / std::abs(scale), compute_angle(lhs[1], scale)};
+    }
   };
 
   template<

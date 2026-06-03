@@ -117,6 +117,7 @@
 #include "Physics/PhysicalValueMetaFreeTest.hpp"
 #include "Physics/PhysicalValueTestingDiagnostics.hpp"
 #include "Physics/UnsafeAbsolutePhysicalValueTest.hpp"
+#include "Physics/VectorNonlinearRepresentationsTest.hpp"
 #include "Physics/VectorPhysicalValueTest.hpp"
 #include "Runtime/ShellCommandsTest.hpp"
 #include "Runtime/ShellCommandsTestingDiagnostics.hpp"

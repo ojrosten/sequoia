@@ -84,6 +84,11 @@ int main(int argc, char** argv)
       saturating_add_free_test{"Saturating Add Free Test"}
     );
 
+    runner.add_test_suite(
+      "Vector_nonlinear_representations",
+      vector_nonlinear_representations_free_test{"Vector Nonlinear Representations Free Test"}
+    );
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)

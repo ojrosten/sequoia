@@ -9,73 +9,9 @@
 
 #include "VectorPolarCoordinatesTest.hpp"
 
-#include <cmath>
-#include <numbers>
-
 namespace sequoia::testing
 {
   using namespace maths;
-  
-  namespace
-  {
-    template<weak_commutative_ring T, auto Bounds=no_bounds<T>> // TO DO: improve bounds std::array should be made to work...
-    struct basic_polar_representation
-    {
-      using value_type = T;
-      constexpr static auto bounds_v{Bounds};
-
-      template<auto OtherBounds>
-      using rebind_type = basic_polar_representation<T, OtherBounds>;
-          
-      [[nodiscard]]
-      constexpr static std::array<T, 2> to_underlying(std::span<const T, 2> polar)
-      {
-        return {polar[0] * std::cos(polar[1]), polar[0] * std::sin(polar[1])};
-      }
-
-      [[nodiscard]]
-      constexpr static std::array<T, 2> from_underlying(std::span<const T, 2> cartesian)
-      {
-        T theta{(!cartesian[0] && !cartesian[1]) ? T{} : std::atan2(cartesian[1], cartesian[0])};
-        if(theta < 0) theta += T{2} * std::numbers::pi_v<T>;
-        
-        return {std::sqrt(cartesian[0] * cartesian[0] + cartesian[1] * cartesian[1]), theta};
-      }
-    };
-
-    template<weak_commutative_ring T, auto Bounds=no_bounds<T>>
-    struct polar_representation : basic_polar_representation<T, Bounds>
-    {
-      template<auto OtherBounds>
-      using rebind_type = polar_representation<T, OtherBounds>;
-
-      [[nodiscard]]
-      static constexpr T compute_angle(T theta, T scale)
-      {
-        if(!scale)
-          return T{};
-
-        constexpr auto pi{std::numbers::pi_v<T>};
-
-        return
-            scale > T{} ? theta
-          : theta >= pi ? theta - pi
-                        : theta + pi;
-      }
-      
-      [[nodiscard]]
-      static constexpr std::array<T, 2> mul(std::span<const T, 2> lhs, T scale)
-      {
-        return {lhs[0] * std::abs(scale), compute_angle(lhs[1], scale)};
-      }
-
-      [[nodiscard]]
-      static constexpr std::array<T, 2> div(std::span<const T, 2> lhs, T scale)
-      {
-        return {lhs[0] / std::abs(scale), compute_angle(lhs[1], scale)};
-      }
-    };
-  }
   
   [[nodiscard]]
   std::filesystem::path vector_polar_coordinates_test::source_file() const
@@ -89,6 +25,8 @@ namespace sequoia::testing
     test_vec<sets::R<2>, double, 2, polar_representation<double>, identity_validator>();
 
     test_refined<float, identity_validator>();
+
+    // TO DO: test different bounds
   }
 
   template<class Set, maths::weak_field Field, std::size_t D, class Representation, class Validator>
