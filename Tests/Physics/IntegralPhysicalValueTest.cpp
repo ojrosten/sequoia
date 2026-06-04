@@ -47,6 +47,8 @@ namespace sequoia::testing
     using space_type = quantity_t::space_type;
     using value_type = quantity_t::value_type;
 
+    STATIC_CHECK(std::is_unsigned_v<value_type>);
+    STATIC_CHECK(std::is_unsigned_v<typename quantity_t::representation_type::value_type>);
     STATIC_CHECK(convex_space<space_type>);
     STATIC_CHECK(free_module<free_module_type_of_t<space_type>>);
     STATIC_CHECK(can_multiply<quantity_t, value_type>);

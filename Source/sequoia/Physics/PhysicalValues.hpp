@@ -250,7 +250,7 @@ namespace sequoia::physics
           Unit,
           Basis,
           distinguished_origin,
-          typename Representation::template rebind_type<no_bounds<commutative_ring_type_of_t<ValueSpace>>>,
+          typename Representation::free_module_representation,
           Validator
         >
       >;
@@ -427,9 +427,9 @@ namespace sequoia::physics
     requires (!free_module<ValueSpace> && !affine_space<ValueSpace>)
   struct default_representation<ValueSpace, Unit>
   {
-    using ring_t = commutative_ring_type_of_t<ValueSpace>;
+    using value_t = value_type_of_t<ValueSpace>;
     using transform_t = root_transform_t<Unit>;
-    constexpr static auto bounds_v{transform_bounds(half_line_bounds<to_bounds_value_type_t<ring_t>>, transform_t{})};
+    constexpr static auto bounds_v{transform_bounds(half_line_bounds<to_bounds_value_type_t<value_t>>, transform_t{})};
     using type = canonical_representation<bounds_v>;
   };
 
@@ -443,7 +443,7 @@ namespace sequoia::physics
       requires std::same_as<typename Representation::coordinates_type, std::tuple<PhysicalValues...>>;
     }
   };
-  
+
   template<
     convex_space ValueSpace,
     physical_unit Unit,
@@ -465,8 +465,11 @@ namespace sequoia::physics
     using displacement_space_type  = free_module_type_of_t<ValueSpace>;
     using representation_type      = Representation;
     using validator_type           = Validator;
+    // TO DO: ring_type (associated with the free module) and value_type have now been spearated out
+    // They need to differ in the case of unsigned integral quantities. But this needs to be properly
+    // thought through
     using ring_type                = commutative_ring_type_of_t<ValueSpace>;
-    using value_type               = ring_type;
+    using value_type               = value_type_of_t<ValueSpace>;
     using displacement_type        = coordinates_type::displacement_coordinates_type;
 
     constexpr static std::size_t dimension{displacement_space_type::dimension};
@@ -726,7 +729,7 @@ namespace sequoia::physics
   {
     constexpr static std::size_t dimension{Space::dimension};
     using set_type              = sets::classical::differences<typename Space::set_type>;
-    using commutative_ring_type = Space::representation_type;
+    using commutative_ring_type = free_module_representation_value_type_t<typename Space::value_type>;
     using is_free_module        = std::true_type;
     using arena_type            = Space::arena_type;
   };
@@ -737,7 +740,7 @@ namespace sequoia::physics
   {
     constexpr static std::size_t dimension{Space::dimension};
     using set_type              = sets::classical::differences<typename Space::set_type>;
-    using commutative_ring_type = Space::representation_type;
+    using commutative_ring_type = free_module_representation_value_type_t<typename Space::value_type>;
     using is_free_module        = std::true_type;
     using base_space            = associated_displacement_space<typename Space::base_space>;
     using arena_type            = Space::arena_type;
@@ -748,7 +751,7 @@ namespace sequoia::physics
   {
     constexpr static std::size_t dimension{D};
     using set_type            = PhysicalValueSet;
-    using representation_type = Rep;
+    using value_type          = Rep;
     using free_module_type    = associated_displacement_space<Derived>;
     using is_convex_space     = std::true_type;
     using arena_type          = PhysicalValueSet::arena_type;
@@ -759,7 +762,7 @@ namespace sequoia::physics
   {
     constexpr static std::size_t dimension{D};
     using set_type            = PhysicalValueSet;
-    using representation_type = Rep;
+    using value_type          = Rep;
     using free_module_type    = associated_displacement_space<Derived>;
     using is_affine_space     = std::true_type;
     using arena_type          = PhysicalValueSet::arena_type;
@@ -770,7 +773,7 @@ namespace sequoia::physics
   {
     constexpr static std::size_t dimension{D};
     using set_type            = PhysicalValueSet;
-    using representation_type = Rep;
+    using value_type          = Rep;
     using field_type          = Rep;
     using is_vector_space     = std::true_type;
   };

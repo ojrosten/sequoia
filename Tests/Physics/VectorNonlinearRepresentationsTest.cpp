@@ -28,7 +28,8 @@ namespace sequoia::testing
       using angle_type  = physical_value<angular_space<T, implicit_common_arena>, UnitOfAngle>;
       
       using coordinates_type = std::tuple<radius_type, angle_type>;
-      
+
+      using free_module_representation = physical_polar_representation;
       template<auto OtherBounds>
       using rebind_type = physical_polar_representation<T, UnitOfLength, UnitOfAngle, OtherBounds>;
     };

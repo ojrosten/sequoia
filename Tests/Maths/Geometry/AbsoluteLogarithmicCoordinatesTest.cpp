@@ -25,8 +25,7 @@ namespace sequoia::testing
       using bounds_type = decltype(Bounds);
       using value_type = bounds_value_type_t<bounds_type>;
 
-      template<auto OtherBounds>
-      using rebind_type = logarithmic_representation<OtherBounds>;
+      using free_module_representation = logarithmic_representation<bounds_v>;
 
       [[nodiscard]]
       constexpr static value_type to_underlying(value_type val)

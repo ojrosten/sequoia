@@ -34,6 +34,7 @@ namespace sequoia::testing
     using ring_t              = coords_t::commutative_ring_type;
     using units_t             = coords_t::basis_isomorphism_type;
     using representation_t    = coords_t::representation_type;
+    using value_t             = representation_t::value_type; // TO DO: only just made distinct from ring_t. Needs to be properly reasoned through
     using validator_t         = coords_t::validator_type;
     using basis_isomorphism_t = coords_t::basis_isomorphism_type;
     using variant_t           = std::conditional_t<std::same_as<coords_t, disp_t>, std::variant<coords_t>, std::variant<coords_t, disp_t>>;
@@ -42,7 +43,7 @@ namespace sequoia::testing
     constexpr static bool orderable{(dimension == 1) && std::totally_ordered<ring_t>};
     constexpr static bool has_distinguished_origin{maths::has_distinguished_origin_v<space_t>};
     constexpr static auto bounds_v{representation_t::bounds_v};
-    constexpr static bool has_identity_repr{std::same_as<representation_t, maths::canonical_representation<bounds_v>>};
+    constexpr static bool has_canonical_rep{std::same_as<representation_t, maths::canonical_representation<bounds_v>>};
 
     regular_test& m_Test;
     graph_type m_Graph;
@@ -92,7 +93,7 @@ namespace sequoia::testing
     {
       return std::same_as<T, float> ? T(1e-6) : T(1e-12);
     }
-    
+
     [[nodiscard]]
     auto make_checker() const
     {
@@ -114,7 +115,7 @@ namespace sequoia::testing
       {
         return
           [&test=m_Test, tol](std::string_view description, const variant_t& obtained, const variant_t& prediction, const variant_t& parent, std::weak_ordering ordering) {
-            if constexpr(has_identity_repr)
+            if constexpr(has_canonical_rep)
               test.check(equality, description, obtained, prediction);
             else
               test.check(within_tolerance{tol}, description, obtained, prediction);
@@ -127,7 +128,7 @@ namespace sequoia::testing
       {
         return
           [&test=m_Test, tol](std::string_view description, const variant_t& obtained, const variant_t& prediction, const variant_t& parent, std::size_t host, std::size_t target) {
-            if constexpr(has_identity_repr)
+            if constexpr(has_canonical_rep)
               test.check(equality, description, obtained, prediction);
             else
               test.check(within_tolerance{tol}, description, obtained, prediction);
@@ -148,9 +149,9 @@ namespace sequoia::testing
         {
           disp_t{from_underlying(ring_t(1)), units_t{}},
           disp_t{from_underlying(ring_t()), units_t{}},
-          coords_t{from_underlying(ring_t(2)), units_t{}},
-          coords_t{from_underlying(ring_t(1)), units_t{}},
-          coords_t{from_underlying(ring_t{}), units_t{}},          
+          coords_t{from_underlying(value_t(2)), units_t{}},
+          coords_t{from_underlying(value_t(1)), units_t{}},
+          coords_t{from_underlying(value_t{}), units_t{}},          
           disp_t{from_underlying(ring_t(-1)), units_t{}},
           disp_t{from_underlying(ring_t(-2)), units_t{}}
         }
@@ -163,7 +164,7 @@ namespace sequoia::testing
       {
         add_dim_1_negative_transitions(g, test);
       }
-      else if constexpr((representation_t::bounds_v == maths::half_line_bounds<ring_t>) && std::is_signed_v<ring_t>)
+      else if constexpr((representation_t::bounds_v == maths::half_line_bounds<value_t>) && std::is_signed_v<value_t>)
       {
         add_dim_1_attempted_negative_transitions(g, test);
       }
@@ -210,7 +211,7 @@ namespace sequoia::testing
         dim_1_label::zero,
         dim_1_label::delta_neg_two,
         test.report("(0) - (2)"),
-        [](variant_t p) -> variant_t { return std::get<coords_t>(p) - coords_t{from_underlying(ring_t(2)), units_t{}}; }
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) - coords_t{from_underlying(value_t(2)), units_t{}}; }
       );
 
       // Joins from one
@@ -272,7 +273,7 @@ namespace sequoia::testing
         dim_1_label::delta_neg_one,
         dim_1_label::zero,
         test.report("delta(-1) + (1)"),
-        [](variant_t p) -> variant_t { return std::get<disp_t>(p) + coords_t{from_underlying(ring_t(1)), units_t{}}; }
+        [](variant_t p) -> variant_t { return std::get<disp_t>(p) + coords_t{from_underlying(value_t(1)), units_t{}}; }
       );
     }
 
@@ -658,7 +659,7 @@ namespace sequoia::testing
       // TO DO: relax last condition, but test values will need ammending.
       // E.g. (1, 1) -> (sqrt(2), pi/4)
       // multiplying last cmpt by 0 -> (sqrt(2), 0)
-      if constexpr(Coordinates::has_freely_mutable_components && has_identity_repr)
+      if constexpr(Coordinates::has_freely_mutable_components && has_canonical_rep)
       {
         add_dim_2_free_mutations(g, test);
       }
