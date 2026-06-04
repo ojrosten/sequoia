@@ -979,7 +979,9 @@ namespace sequoia::maths
   template<convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
   struct representation_for_free_module_of
   {
-    using ring_t = free_module_ring_type_of_t<ConvexSpace>;    
+    using ring_t = free_module_ring_type_of_t<ConvexSpace>;
+    // TO DO: this rebinding may not be what's desired - consider the case
+    // of polar coordinates
     using type = Representation::template rebind_type<no_bounds<to_bounds_value_type_t<ring_t>>>;
   };
 
