@@ -16,16 +16,21 @@ namespace sequoia::testing
   
   namespace
   {
-    template<weak_commutative_ring T, auto Bounds=no_bounds<T>>
+    template<
+      weak_commutative_ring T,
+      physical_unit UnitOfLength = si::units::metre_t,
+      physical_unit UnitOfAngle  = si::units::radian_t,
+      auto Bounds                = no_bounds<T>
+    >
     struct physical_polar_representation : polar_representation<T, Bounds>
     {
-      using radius_type = physical_value<radius_space<T, implicit_common_arena>, si::units::metre_t>;
-      using angle_type = physical_value<angular_space<T, implicit_common_arena>, si::units::radian_t>;
+      using radius_type = physical_value< radius_space<T, implicit_common_arena>, UnitOfLength>;
+      using angle_type  = physical_value<angular_space<T, implicit_common_arena>, UnitOfAngle>;
       
       using coordinates_type = std::tuple<radius_type, angle_type>;
       
       template<auto OtherBounds>
-      using rebind_type = physical_polar_representation<T, OtherBounds>;
+      using rebind_type = physical_polar_representation<T, UnitOfLength, UnitOfAngle, OtherBounds>;
     };
   }
 
@@ -57,7 +62,7 @@ namespace sequoia::testing
     }
 
     {
-      using rep_t = physical_polar_representation<float, no_bounds<float>>;
+      using rep_t = physical_polar_representation<float>;
       using vec_t
         = physical_value<
             space_t,
