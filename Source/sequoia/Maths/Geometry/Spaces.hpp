@@ -946,7 +946,7 @@ namespace sequoia::maths
   };
 
   template<class R>
-  concept representation = has_value_type_v<R> && has_bounds_v<R>; // TO DO
+  concept representation = has_value_type_v<R> && has_bounds_v<R>; // TO DO has free module represnetation
 
   template<class R, class ConvexSpace>
   concept representation_for
@@ -1679,10 +1679,10 @@ namespace sequoia::maths
     constexpr static auto bounds_v{Bounds};
     using bounds_type          = decltype(Bounds);
     using value_type           = bounds_type::value_type;
-    using free_module_rep_type = free_module_representation_value_type_t<value_type>;
+    using free_module_rep_val_type = free_module_representation_value_type_t<value_type>;
 
     using free_module_representation
-      = canonical_representation<no_bounds<to_bounds_value_type_t<free_module_rep_type>>>;
+      = canonical_representation<no_bounds<to_bounds_value_type_t<free_module_rep_val_type>>>;
 
     template<weak_commutative_ring T, std::size_t D>
     [[nodiscard]]
