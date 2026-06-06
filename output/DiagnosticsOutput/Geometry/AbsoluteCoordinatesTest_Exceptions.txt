@@ -1,4 +1,4 @@
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 397
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 417
 
 Expected Exception Type:
 [std::domain_error]
@@ -6,7 +6,7 @@ Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 411
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 431
 
 Expected Exception Type:
 [std::domain_error]
@@ -14,7 +14,7 @@ Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 427
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 447
 
 Expected Exception Type:
 [std::domain_error]
@@ -22,7 +22,7 @@ Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 441
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 461
 
 Expected Exception Type:
 [std::domain_error]
@@ -30,7 +30,7 @@ Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 455
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 475
 
 Expected Exception Type:
 [std::domain_error]
@@ -38,7 +38,7 @@ Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 469
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 489
 
 Expected Exception Type:
 [std::domain_error]
@@ -46,7 +46,7 @@ Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 822
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 841
 
 Expected Exception Type:
 [std::domain_error]
