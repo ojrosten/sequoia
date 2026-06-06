@@ -97,11 +97,6 @@ namespace sequoia::testing
       STATIC_CHECK(has_unary_plus<vec_t>);
       STATIC_CHECK(has_unary_minus<vec_t>);
 
-      using radius_t = rep_t::radius_type;
-      using angle_t  = rep_t::angle_type;
-
-      vec_t v{radius_t{1.0f, metre}, angle_t{1.0f, radian}};
-
       coordinates_operations<vec_t>{*this}.execute();
     }
   }

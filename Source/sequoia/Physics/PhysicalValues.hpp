@@ -181,24 +181,6 @@ namespace sequoia::physics
     requires permissible_value_space_v<ValueSpace>
   class physical_value;
 
-  template<class T>
-  struct is_physical_value : std::false_type {};
-
-  template<class T>
-  inline constexpr bool is_physical_value_v{is_physical_value<T>::value};
-
-  template<
-    convex_space ValueSpace,
-    physical_unit Unit,
-    basis_for<free_module_type_of_t<ValueSpace>> Basis,
-    class Origin,
-    representation_for<ValueSpace> Representation,
-    validator_for<ValueSpace, Representation> Validator
-  >
-  struct is_physical_value<physical_value<ValueSpace, Unit, Basis, Origin, Representation, Validator>>
-    : std::true_type
-  {};
-
   struct unit_defined_origin{};
 
   struct implicit_affine_origin {};
@@ -436,14 +418,6 @@ namespace sequoia::physics
   template<convex_space ValueSpace, physical_unit Unit>
   using default_representation_t = default_representation<ValueSpace, Unit>::type;
 
-  template<representation Representation, class... PhysicalValues>
-  inline constexpr bool consistent_representation_v{
-    requires {
-      typename Representation::coordinates_type;
-      requires std::same_as<typename Representation::coordinates_type, std::tuple<PhysicalValues...>>;
-    }
-  };
-
   template<
     convex_space ValueSpace,
     physical_unit Unit,
@@ -499,20 +473,6 @@ namespace sequoia::physics
     };
 
     using coordinates_type::coordinates_type;
-
-    template<class... PhysicalVals>
-      requires (is_physical_value_v<PhysicalVals> && ...)
-            && (sizeof...(PhysicalVals) > 1)
-            && ((0 + ... + PhysicalVals::dimension) == dimension)
-            && ((PhysicalVals::dimension == 1) && ...) // TO DO: ultimately remove this restriction
-            && (consistent_bases_v<basis_type, typename PhysicalVals::basis_type> && ...)
-            // && origins
-            // && spaces / units / representations
-            && consistent_representation_v<representation_type, PhysicalVals...>
-            && (std::same_as<validator_type, typename PhysicalVals::validator_type> && ...)
-    physical_value(PhysicalVals... vals)
-      : coordinates_type{std::array{vals.value()...}}
-    {}
 
     template<convex_space OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
       requires (!std::same_as<space_type, OtherValueSpace>)

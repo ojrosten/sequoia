@@ -74,11 +74,29 @@ namespace sequoia::testing
       return representation_t{}.from_underlying(std::span{vals});
     }
 
+    template<class Coord, class T>
+    [[nodiscard]]
+    static Coord make_coord(T val) {
+      using individual_unit_t = Coord::units_type;
+      return Coord{val, individual_unit_t{}};
+    }
+
     template<class To, class T, std::size_t D>
     [[nodiscard]]
     static To from_underlying(const std::array<T, D>& vals)
     {
-      return To{from_underlying(vals), units_t{}};
+      if constexpr(maths::has_heterogeneous_representation_v<representation_t>)
+      {        
+        return
+          [&]<std::size_t... Is>(std::index_sequence<Is...>) {
+            using separate_coords_t = representation_t::coordinates_type;
+            return To{make_coord<std::tuple_element_t<Is, separate_coords_t>>(from_underlying(vals)[Is])...};
+          }(std::make_index_sequence<D>{});
+      }
+      else
+      {
+        return To{from_underlying(vals), units_t{}};
+      }
     }
 
     template<class T>
