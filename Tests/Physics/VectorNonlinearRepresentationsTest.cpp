@@ -50,17 +50,19 @@ namespace sequoia::testing
     using space_t = euclidean_vector_space<float, 2>;
     using unit_t  = metre_t;
 
-    {
+    {    
+      using rep_t = canonical_representation<no_bounds<float>>;
       using vec_t
         = physical_value<
             space_t,
             unit_t,
             unit_defined_right_handed_basis<free_module_type_of_t<space_t>, unit_t>,
             to_origin_type_t<space_t>,
-            canonical_representation<no_bounds<float>>,
+            rep_t,
             throwing_validator
           >;
 
+      STATIC_CHECK(!has_heterogeneous_representation_v<rep_t>);
       STATIC_CHECK(!std::constructible_from<vec_t, length<float>, length<float>>);
     }
 
@@ -80,6 +82,8 @@ namespace sequoia::testing
       using value_t = vec_t::value_type;
 
       STATIC_CHECK(free_module<free_module_type_of_t<space_t>>);
+      STATIC_CHECK(has_coordinates_type_v<rep_t>);
+      STATIC_CHECK(has_heterogeneous_representation_v<rep_t>);
       STATIC_CHECK(can_multiply<vec_t, value_t>);
       STATIC_CHECK(can_divide<vec_t, value_t>);
       STATIC_CHECK(!can_divide<vec_t, vec_t>);

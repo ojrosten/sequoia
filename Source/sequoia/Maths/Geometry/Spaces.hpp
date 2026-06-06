@@ -1781,6 +1781,34 @@ namespace sequoia::maths
     using type = Space::value_type;
   };
 
+  template<representation Rep>
+  inline constexpr bool has_coordinates_type_v {
+    requires { typename Rep::coordinates_type; }
+  };
+
+  template<class T>
+  struct heterogeneous_coordinates : std::false_type {};
+
+  template<class T>
+  inline constexpr bool heterogeneous_coordinates_v{heterogeneous_coordinates<T>::value};
+
+  template<class T, class... Us>
+  struct heterogeneous_coordinates<std::tuple<T, Us...>>
+    : std::bool_constant<((!std::is_same_v<T, Us>) || ...)>
+  {};
+
+  template<representation Rep>
+  struct has_heterogeneous_representation : std::false_type {};
+
+  template<representation Rep>
+  inline constexpr bool has_heterogeneous_representation_v{has_heterogeneous_representation<Rep>::value};
+
+  template<representation Rep>
+    requires has_coordinates_type_v<Rep>
+  struct has_heterogeneous_representation<Rep>
+    : std::bool_constant<heterogeneous_coordinates_v<typename Rep::coordinates_type>>
+  {};
+
   template<
     convex_space ConvexSpace,
     basis_for<free_module_type_of_t<ConvexSpace>> Basis,
