@@ -97,6 +97,8 @@ namespace sequoia::testing
       using angle_t  = rep_t::angle_type;
 
       vec_t v{radius_t{1.0f, metre}, angle_t{1.0f, radian}};
+
+      coordinates_operations<vec_t>{*this}.execute();
     }
   }
 }

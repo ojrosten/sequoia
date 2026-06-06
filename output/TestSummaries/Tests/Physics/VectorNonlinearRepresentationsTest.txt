@@ -1,2 +1,2 @@
 Vector Nonlinear Representations Free Test
-Standard Top Level Checks:                14;  Failures:  0  [Deep checks: 14]
+Standard Top Level Checks:                45;  Failures:  0  [Deep checks: 754]

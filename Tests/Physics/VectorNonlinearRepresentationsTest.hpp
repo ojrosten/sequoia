@@ -9,14 +9,14 @@
 
 /*! \file */
 
-#include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "sequoia/TestFramework/RegularTestCore.hpp"
 
 namespace sequoia::testing
 {
-  class vector_nonlinear_representations_free_test final : public free_test
+  class vector_nonlinear_representations_free_test final : public regular_test
   {
   public:
-    using free_test::free_test;
+    using regular_test::regular_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;
