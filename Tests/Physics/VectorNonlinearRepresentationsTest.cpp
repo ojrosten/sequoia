@@ -10,6 +10,8 @@
 #include "VectorNonlinearRepresentationsTest.hpp"
 #include "sequoia/Physics/PhysicalValues.hpp"
 
+#include "../Maths/Geometry/GeometryTestingUtilities.hpp"
+
 namespace sequoia::testing
 {
   using namespace physics;
@@ -74,9 +76,27 @@ namespace sequoia::testing
             throwing_validator
           >;
 
-      using radius_t = rep_t::radius_type;
+      using delta_t = vec_t::displacement_type;
+      using value_t = vec_t::value_type;
 
-      vec_t v{radius_t{1.0f, metre}, physical_value{1.0f, radian}};
+      STATIC_CHECK(free_module<free_module_type_of_t<space_t>>);
+      STATIC_CHECK(can_multiply<vec_t, value_t>);
+      STATIC_CHECK(can_divide<vec_t, value_t>);
+      STATIC_CHECK(!can_divide<vec_t, vec_t>);
+      STATIC_CHECK(!can_divide<vec_t, delta_t>);
+      STATIC_CHECK(!can_divide<delta_t, vec_t>);
+      STATIC_CHECK(!can_divide<delta_t, delta_t>);
+      STATIC_CHECK(can_add<vec_t, vec_t>);
+      STATIC_CHECK(can_add<vec_t, delta_t>);
+      STATIC_CHECK(can_subtract<vec_t, vec_t>);
+      STATIC_CHECK(can_subtract<vec_t, delta_t>);
+      STATIC_CHECK(has_unary_plus<vec_t>);
+      STATIC_CHECK(has_unary_minus<vec_t>);
+
+      using radius_t = rep_t::radius_type;
+      using angle_t  = rep_t::angle_type;
+
+      vec_t v{radius_t{1.0f, metre}, angle_t{1.0f, radian}};
     }
   }
 }
