@@ -19,7 +19,7 @@ namespace sequoia::testing
   namespace
   {
     template<
-      weak_commutative_ring T,
+      std::floating_point T,
       physical_unit UnitOfLength = si::units::metre_t,
       physical_unit UnitOfAngle  = si::units::radian_t,
       auto Bounds                = no_bounds<T>

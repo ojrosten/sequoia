@@ -1715,7 +1715,7 @@ namespace sequoia::maths
     using type = canonical_representation<reciprocal(Bounds)>;
   };
 
-  template<weak_commutative_ring T, auto Bounds=no_bounds<T>>
+  template<std::floating_point T, auto Bounds=no_bounds<T>>
   struct basic_polar_representation
   {
     using value_type = T;
@@ -1739,7 +1739,7 @@ namespace sequoia::maths
     }
   };
 
-  template<weak_commutative_ring T, auto Bounds=no_bounds<T>>
+  template<std::floating_point T, auto Bounds=no_bounds<T>>
   struct polar_representation : basic_polar_representation<T, Bounds>
   {
     using free_module_representation = polar_representation;
