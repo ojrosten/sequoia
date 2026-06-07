@@ -1882,6 +1882,7 @@ namespace sequoia::maths
     {}
 
     constexpr coordinates_base(value_type val, basis_isomorphism_type) noexcept(has_identity_validator)
+      requires (D == 1)
       : m_Values{m_Validator(representation_type::bounds_v, val)}
     {}
 
