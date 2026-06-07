@@ -945,15 +945,33 @@ namespace sequoia::maths
      }
   };
 
+  template<class T>
+  inline constexpr bool has_free_module_representation_v{
+    requires {
+      typename T::free_module_representation;
+    }
+  };
+
+  template<class T>
+  inline constexpr bool has_coordinates_type_v {
+    requires {
+      typename T::coordinates_type;
+      { std::tuple_size_v<T> } -> std::convertible_to<std::size_t>;
+    }
+  };
+  
+  // TO DO constrain coordinates_type to hold things satisfying a coords concept?
   template<class R>
-  concept representation = has_value_type_v<R> && has_bounds_v<R>; // TO DO has free module represnetation
+  concept representation = std::default_initializable<R>
+                        && has_value_type_v<R>
+                        && has_free_module_representation_v<R>
+                        && (has_coordinates_type_v<R> || has_bounds_v<R>);
 
   template<class R, class ConvexSpace>
   concept representation_for
     =    convex_space<ConvexSpace>
-      && std::is_default_constructible_v<R>
-      && has_bounds_v<R>
-      && bounds_for<decltype(R::bounds_v), ConvexSpace>
+      && representation<R>
+    // TO DO&& bounds_for<decltype(R::bounds_v), ConvexSpace>
       && (representation_for_single_value<R, ConvexSpace> || representation_for_span<R, ConvexSpace>);
 
   template<weak_commutative_ring T>
@@ -1108,7 +1126,9 @@ namespace sequoia::maths
     && representation_for<Representation, ConvexSpace>
     && std::default_initializable<V>
     && std::constructible_from<V, V>
-    && (validator_for_single_value<V, ConvexSpace, Representation> || validator_for_array<V, ConvexSpace, Representation>);
+    && (    (   has_coordinates_type_v<Representation>) // TO DO 
+         || (  !has_coordinates_type_v<Representation>
+             && (validator_for_single_value<V, ConvexSpace, Representation> || validator_for_array<V, ConvexSpace, Representation>)));
 
   /** @ingroup Validators
       @brief Trait for validators that behave like the identity.
@@ -1715,6 +1735,22 @@ namespace sequoia::maths
     using type = canonical_representation<reciprocal(Bounds)>;
   };
 
+  template<class T>
+  struct is_canonical_representation : std::false_type
+  {};
+
+  template<class T>
+  inline constexpr bool is_canonical_representation_v{is_canonical_representation<T>::value};
+
+  template<class T>
+  using is_canonical_representation_t = is_canonical_representation<T>::type;
+
+  template<auto Bounds>
+    requires bounds_value<Bounds>
+  struct is_canonical_representation<canonical_representation<Bounds>> : std::true_type
+  {};
+  
+
   template<std::floating_point T, auto Bounds=no_bounds<T>>
   struct basic_polar_representation
   {
@@ -1788,11 +1824,6 @@ namespace sequoia::maths
   struct value_type_of<Space>
   {
     using type = Space::value_type;
-  };
-
-  template<representation Rep>
-  inline constexpr bool has_coordinates_type_v {
-    requires { typename Rep::coordinates_type; }
   };
 
   template<class T>
@@ -1894,8 +1925,8 @@ namespace sequoia::maths
             && (consistent_bases_v<basis_type, typename Coords::basis_type> && ...)
             && consistent_representation_v<representation_type, Coords...>
             && (std::same_as<validator_type, typename Coords::validator_type> && ...)
-    constexpr coordinates_base(const Coords&... vals) noexcept(has_identity_validator)
-      :  m_Values{std::array{vals.value()...}} // TO DO validation per coordinate
+    constexpr coordinates_base(const Coords&... vals) noexcept
+      : m_Values{std::array{vals.value()...}} // Note: validation performed upstream
     {}
 
     template<class Self>
@@ -2212,7 +2243,14 @@ namespace sequoia::maths
       {
         auto tmp{to_underlying(self.m_Values)};
         std::ranges::for_each(std::views::zip(tmp, to_underlying(rhs)), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
-        self.m_Values = validate(from_underlying(tmp), self.m_Validator);
+        if constexpr(has_coordinates_type_v<representation_type>)
+        {
+          self.m_Values = from_underlying(tmp);
+        }
+        else
+        {
+          self.m_Values = validate(from_underlying(tmp), self.m_Validator);
+        }
       }
 
       return std::forward<Self>(self);
@@ -2231,7 +2269,20 @@ namespace sequoia::maths
       {
         auto tmp{to_underlying(self.m_Values)};
         std::ranges::for_each(tmp, f);
-        self.m_Values = validate(from_underlying(tmp), self.m_Validator);
+        // TO DO: ideally untangle the logic. This is all rather implicit
+        // The assumption is that if the representation defines coordinate_type,
+        // then from_underlying goes via said coordinates, which perform their
+        // own validation. But this is opaque & perhaps brittle. At the very least,
+        // constraints need to be checked to ensure consistency, perhaps with
+        // a static_assert or two below, for good measure...
+        if constexpr(has_coordinates_type_v<representation_type>)
+        {
+          self.m_Values = from_underlying(tmp);
+        }
+        else
+        {
+          self.m_Values = validate(from_underlying(tmp), self.m_Validator);
+        }
       }
 
       return self;

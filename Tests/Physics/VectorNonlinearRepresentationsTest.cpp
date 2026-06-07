@@ -21,16 +21,15 @@ namespace sequoia::testing
     template<
       std::floating_point T,
       physical_unit UnitOfLength = si::units::metre_t,
-      physical_unit UnitOfAngle  = si::units::radian_t,
-      auto Bounds                = no_bounds<T> // TO DO: figure out what to do with these
+      physical_unit UnitOfAngle  = si::units::radian_t
+      // TO DO: separate bounds for radius and angle, which are propagated
     >
-    struct physical_polar_representation //: polar_representation<T, Bounds>
+    struct physical_polar_representation
     {      
       using length_unit_type = UnitOfLength;
       using angle_unit_type  = UnitOfAngle;
 
       using value_type = T;
-      constexpr static auto bounds_v{Bounds};
       
       using radius_type = physical_value< radius_space<T, implicit_common_arena>, length_unit_type>;
       using angle_type  = physical_value<angular_space<T, implicit_common_arena>, angle_unit_type>;
@@ -38,9 +37,6 @@ namespace sequoia::testing
       using coordinates_type = std::tuple<radius_type, angle_type>;
 
       using free_module_representation = physical_polar_representation;
-
-      template<auto OtherBounds>
-      using rebind_type = physical_polar_representation<T, UnitOfLength, UnitOfAngle, OtherBounds>;
 
       [[nodiscard]]
       constexpr static std::array<T, 2> to_underlying(std::span<const T, 2> polar)
