@@ -983,12 +983,37 @@ namespace sequoia::maths
   template<weak_commutative_ring T>
   using free_module_representation_value_type_t = free_module_representation_value_type<T>::type;
 
+  // TO DO: Likely move this to the meta layer
+  template<class Unsigned, class Signed>
+  concept covered_by =     std::integral<Unsigned>
+                        && std::integral<Signed>
+                        && std::is_unsigned_v<Unsigned>
+                        && std::is_signed_v<Signed>
+                        && (sizeof(Signed) == 2 * sizeof(Unsigned));
+  
+  template<class T>
+  struct signed_covering_type;
+
+  template<class T>
+  using signed_covering_type_t = signed_covering_type<T>::type;
+  
+  template<covered_by<int> T>
+  struct signed_covering_type<T>
+  {
+    using type = int;
+  };
+
+  template<covered_by<long> T>
+  struct signed_covering_type<T>
+  {
+    using type = long;
+  };
+
   template<weak_commutative_ring T>
     requires std::integral<T> && std::is_unsigned_v<T>
   struct free_module_representation_value_type<T>
   {
-    // TO DO: this isn't sufficient; an int isn't big enough to serve as the delta for a uint
-    using type = std::make_signed_t<T>;
+    using type = signed_covering_type_t<T>;
   };
 
   template<representation Representation, class... Ts>
@@ -1593,15 +1618,6 @@ namespace sequoia::maths
    */
 
   /** @ingroup Coordinates
-      @brief Type to indicate a distinguished origin, relevant for free modules.
-
-      Unlike vector spaces, affine spaces do not have distinguished origin. Therefore, each
-      coordinate system for an affine space is with respect to a particular origin. This is
-      part of the type system to ensure that different coordinate systems cannot be
-      unwittingly mixed.      
-    */  
-
-  /** @ingroup Coordinates
       @brief Forward declaration for the coordinates class template.
    */
 
@@ -1706,8 +1722,8 @@ namespace sequoia::maths
   struct canonical_representation
   {
     constexpr static auto bounds_v{Bounds};
-    using bounds_type          = decltype(Bounds);
-    using value_type           = bounds_type::value_type;
+    using bounds_type              = decltype(Bounds);
+    using value_type               = bounds_type::value_type;
     using free_module_rep_val_type = free_module_representation_value_type_t<value_type>;
 
     using free_module_representation

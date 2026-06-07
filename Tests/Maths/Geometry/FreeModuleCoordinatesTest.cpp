@@ -22,7 +22,7 @@ namespace sequoia::testing
   void free_module_coordinates_test::run_tests()
   {    
     test_free_module<sets::Z<1>, int, 1>();
-    test_free_module<sets::N_0<1>, unsigned long, 1>();
+    test_free_module<sets::N_0<1>, unsigned, 1>();
   }
 
   template<class Set, maths::weak_commutative_ring Ring, std::size_t D>
