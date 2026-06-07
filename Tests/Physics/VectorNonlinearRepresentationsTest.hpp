@@ -11,6 +11,8 @@
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
+#include "sequoia/Physics/PhysicalValues.hpp"
+
 namespace sequoia::testing
 {
   class vector_nonlinear_representations_free_test final : public regular_test
@@ -22,5 +24,10 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
+  private:
+    void test_canonical_rep_meta();
+
+    template<std::floating_point T, physics::physical_unit AngleUnit>
+    void test_polar();
   };
 }

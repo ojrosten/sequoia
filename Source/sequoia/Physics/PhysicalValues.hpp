@@ -1321,47 +1321,47 @@ namespace sequoia::physics
     return {std::abs(q.value()), Unit{}};
   }
 
-  // TO DO: representation etc
-  template<std::floating_point T, class Arena=implicit_common_arena>
+  // TO DO: constrain the unit to be a coordinate transformation of radians
+  template<std::floating_point T, physical_unit U, class Arena=implicit_common_arena>
   [[nodiscard]]
-  constexpr T sin(physical_value<angular_space<T, Arena>, si::units::radian_t> theta)
+  constexpr T sin(physical_value<angular_space<T, Arena>, U> theta)
   {
-    return std::sin(theta.value());
+    return std::sin(theta.convert_to(si::units::radian_t{}).value());
   }
 
-  template<std::floating_point T, class Arena=implicit_common_arena>
+  template<std::floating_point T, physical_unit U, class Arena=implicit_common_arena>
   [[nodiscard]]
-  constexpr T cos(physical_value<angular_space<T, Arena>, si::units::radian_t> theta)
+  constexpr T cos(physical_value<angular_space<T, Arena>, U> theta)
   {
-    return std::cos(theta.value());
+    return std::cos(theta.convert_to(si::units::radian_t{}).value());
   }
 
-  template<std::floating_point T, class Arena=implicit_common_arena>
+  template<std::floating_point T, physical_unit U, class Arena=implicit_common_arena>
   [[nodiscard]]
-  constexpr T tan(physical_value<angular_space<T, Arena>, si::units::radian_t> theta)
+  constexpr T tan(physical_value<angular_space<T, Arena>, U> theta)
   {
-    return std::tan(theta.value());
+    return std::tan(theta.convert_to(si::units::radian_t{}).value());
   }
 
-  template<class Arena=implicit_common_arena, std::floating_point T>
+  template<physical_unit U = si::units::radian_t, class Arena=implicit_common_arena, std::floating_point T>
   [[nodiscard]]
-  constexpr physical_value<angular_space<T, Arena>, si::units::radian_t> asin(T x)
+  constexpr physical_value<angular_space<T, Arena>, U> asin(T x)
   {
-    return {std::asin(x), si::units::radian};
+    return {std::asin(x), U{}};
   }
 
-  template<class Arena=implicit_common_arena, std::floating_point T>
+  template<physical_unit U = si::units::radian_t, class Arena=implicit_common_arena, std::floating_point T>
   [[nodiscard]]
-  constexpr physical_value<angular_space<T, Arena>, si::units::radian_t> acos(T x)
+  constexpr physical_value<angular_space<T, Arena>, U> acos(T x)
   {
-    return {std::acos(x), si::units::radian};
+    return {std::acos(x), U{}};
   }
 
-  template<class Arena=implicit_common_arena, std::floating_point T>
+  template<physical_unit U = si::units::radian_t, class Arena=implicit_common_arena, std::floating_point T>
   [[nodiscard]]
-  constexpr physical_value<angular_space<T, Arena>, si::units::radian_t> atan(T x)
+  constexpr physical_value<angular_space<T, Arena>, U> atan(T x)
   {
-    return {std::atan(x), si::units::radian};
+    return {std::atan(x), U{}};
   }
 
   template<
