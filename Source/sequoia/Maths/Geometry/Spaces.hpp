@@ -1004,9 +1004,17 @@ namespace sequoia::maths
   };
 
   template<covered_by<long> T>
+    requires (sizeof(long) > sizeof(int))
   struct signed_covering_type<T>
   {
     using type = long;
+  };
+
+  template<covered_by<long long> T>
+    requires (sizeof(long long) > sizeof(long))
+  struct signed_covering_type<T>
+  {
+    using type = long long;
   };
 
   template<weak_commutative_ring T>
