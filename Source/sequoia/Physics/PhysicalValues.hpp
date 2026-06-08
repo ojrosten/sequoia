@@ -593,7 +593,7 @@ namespace sequoia::physics
     }
 
     [[nodiscard]]
-    constexpr physical_value convert_to(Unit) const noexcept { return *this; }
+    constexpr physical_value convert_to(units_type) const noexcept { return *this; }
   };
 
   template<physical_unit Unit, class Rep>
