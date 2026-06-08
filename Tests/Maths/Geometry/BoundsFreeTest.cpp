@@ -135,7 +135,7 @@ namespace sequoia::testing
   template<std::floating_point T>
   void bounds_free_test::test_multiply_fp()
   {
-    constexpr static auto inf{std::numeric_limits<double>::infinity()};
+    constexpr static auto inf{std::numeric_limits<T>::infinity()};
     using cb = coordinate_bounds<T>;
 
     check(equality, "+ve, finite non-overlapping",  cb{1.0, 2.0} * cb{3.0, 4.0}, cb{3.0, 8.0});
