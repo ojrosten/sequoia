@@ -21,14 +21,16 @@ namespace sequoia::testing
 
     void run_tests()
     {
+      using long_t = std::conditional_t<(sizeof(long) > sizeof(int)), long, long long>;
+
       Test::template execute_tests<double, double>();
       Test::template execute_tests<float, double>();
       Test::template execute_tests<double, float>();
       
       Test::template execute_tests<int, int>();
       Test::template execute_tests<unsigned, unsigned>();
-      Test::template execute_tests<unsigned, long>();
-      Test::template execute_tests<long, unsigned>();
+      Test::template execute_tests<unsigned, long_t>();
+      Test::template execute_tests<long_t, unsigned>();
       
       Test::template execute_tests<double, int>();
       Test::template execute_tests<int, double>();

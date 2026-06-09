@@ -956,7 +956,7 @@ namespace sequoia::maths
   inline constexpr bool has_coordinates_type_v {
     requires {
       typename T::coordinates_type;
-      { std::tuple_size_v<T> } -> std::convertible_to<std::size_t>;
+      { std::tuple_size_v<typename T::coordinates_type> } -> std::convertible_to<std::size_t>;
     }
   };
   

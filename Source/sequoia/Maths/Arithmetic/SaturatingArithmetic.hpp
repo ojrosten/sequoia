@@ -25,6 +25,19 @@ namespace sequoia::maths
     std::numeric_limits<T>::has_infinity ? -std::numeric_limits<T>::infinity() : std::numeric_limits<T>::lowest()
   };
 
+  // Hack to work around various MSVC issues:
+  // 1. isnan isn't constexpr
+  // 2. Constraining the template crashes the compiler :)
+  template<class T>
+  constexpr bool isnan(T val) noexcept
+  {
+#if defined(_MSC_VER)
+    return !(val == val);
+#else
+    return std::isnan(val);
+#endif
+  }
+
   // TO DO: refine this, esp for mixed floating-point / integral
   // The current logic is adapted to the fact that the impl uses
   // std::common_type. The common type of int and unsigned is
@@ -51,7 +64,7 @@ namespace sequoia::maths
 
     if constexpr(std::numeric_limits<value_t>::has_quiet_NaN)
     {
-      if(std::isnan(x) || std::isnan(y))
+      if(isnan(x) || isnan(y))
         return std::numeric_limits<value_t>::quiet_NaN();
     }
 
@@ -86,7 +99,7 @@ namespace sequoia::maths
 
     if constexpr(std::numeric_limits<value_t>::has_quiet_NaN)
     {
-      if(std::isnan(x) || std::isnan(y))
+      if(isnan(x) || isnan(y))
         return std::numeric_limits<value_t>::quiet_NaN();
     }
 
