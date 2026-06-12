@@ -53,6 +53,13 @@ namespace sequoia::testing
     STATIC_CHECK(saturating_mul(llbT, gubU) == (llbT == 0 ? value_t{} : llb));
     STATIC_CHECK(saturating_mul(llbT, llbU) == (((llbT == 0) || (llbU == 0))? value_t{} : gub));
 
+    // Suppress unhelpful MSVC warning coming from integer overflow
+    // on branchesin ternarys that can be sinply proven not to occur, statically 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4307)
+#endif
+
     check(equality, "", saturating_mul(gubT,  U{}), value_t{});
     check(equality, "", saturating_mul(T{},  gubU), value_t{});
     check(equality, "", saturating_mul(gubT, U{2}), gubT < gub ? gubT * U{2} : gub);
@@ -84,6 +91,10 @@ namespace sequoia::testing
       if constexpr(std::is_signed_v<T>)
         check(equality, "", saturating_mul(T{-2}, gubU), llbU > llb ? T{-2} * gubU : llb);
 
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
       check(equality, "", saturating_mul(llbT, llbU), (llbT == 0) || (llbU == 0) ? value_t{} : gub);     
     }
     else
@@ -107,8 +118,8 @@ namespace sequoia::testing
 
       check("", std::isnan(saturating_mul(T(-1),  nanU)));
       check("", std::isnan(saturating_mul(  T{},  nanU)));
-      check("", std::isnan(saturating_mul( T{1},  nanU)));      
-      check("", std::isnan(saturating_mul( gubT,  nanU)));      
+      check("", std::isnan(saturating_mul( T{1},  nanU)));
+      check("", std::isnan(saturating_mul( gubT,  nanU)));
       check("", std::isnan(saturating_mul( llbT,  nanU)));
     }
   }

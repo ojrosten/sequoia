@@ -22,6 +22,12 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
+
+    [[nodiscard]]
+    std::string output_discriminator() const
+    {
+      return compiler_name();
+    }
   private:
     template<class VecCoords>
     void test_vec_1();

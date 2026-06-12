@@ -30,7 +30,7 @@ target_sources(TestChamber PRIVATE
                ${TestDir}/Physics/ConvexPhysicalValueTest.cpp
                ${TestDir}/Physics/IntegralPhysicalValueTest.cpp
                ${TestDir}/Physics/MixedPhysicalValueTest.cpp
-               ${TestDir}/Physics/PhysicalValueMetaFreeTest.cpp               
+               ${TestDir}/Physics/PhysicalValueMetaFreeTest.cpp
                ${TestDir}/Physics/PhysicalValueTestingDiagnostics.cpp
                ${TestDir}/Physics/UnsafeAbsolutePhysicalValueTest.cpp
                ${TestDir}/Physics/VectorNonlinearRepresentationsTest.cpp

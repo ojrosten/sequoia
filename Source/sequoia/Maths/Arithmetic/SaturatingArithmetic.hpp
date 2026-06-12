@@ -22,13 +22,18 @@ namespace sequoia::maths
 
   template<arithmetic T>
   inline  constexpr T least_lower_bound{
-    std::numeric_limits<T>::has_infinity ? -std::numeric_limits<T>::infinity() : std::numeric_limits<T>::lowest()
+    // Use IIL toa avoid unhelpful MSVC warning from ternary
+    [](){
+      if constexpr(std::numeric_limits<T>::has_infinity)
+        return -std::numeric_limits<T>::infinity();
+      else
+        return  std::numeric_limits<T>::lowest();
+    }()
   };
 
-  // Hack to work around various MSVC issues:
-  // 1. isnan isn't constexpr
-  // 2. Constraining the template crashes the compiler :)
-  template<class T>
+  // Hack to work around various the fact that, for MSVC:
+  // isnan isn't constexpr
+  template<arithmetic T>
   constexpr bool isnan(T val) noexcept
   {
 #if defined(_MSC_VER)
