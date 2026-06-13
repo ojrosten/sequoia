@@ -21,8 +21,8 @@ namespace sequoia::maths
   };
 
   template<arithmetic T>
-  inline  constexpr T least_lower_bound{
-    // Use IIL toa avoid unhelpful MSVC warning from ternary
+  inline constexpr T least_lower_bound{
+    // Use IIL to avoid unhelpful MSVC warning from ternary
     [](){
       if constexpr(std::numeric_limits<T>::has_infinity)
         return -std::numeric_limits<T>::infinity();

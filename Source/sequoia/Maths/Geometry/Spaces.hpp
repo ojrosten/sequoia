@@ -786,28 +786,20 @@ namespace sequoia::maths
   struct coordinate_bounds;
 
   template<arithmetic T>
-  inline constexpr coordinate_bounds<T> no_bounds{coordinate_bounds<T>::least_lower_bound, coordinate_bounds<T>::greatest_upper_bound};
+  inline constexpr coordinate_bounds<T> no_bounds{least_lower_bound<T>, greatest_upper_bound<T>};
 
   template<arithmetic T>
-  inline constexpr coordinate_bounds<T> half_line_bounds{T{}, coordinate_bounds<T>::greatest_upper_bound};
+  inline constexpr coordinate_bounds<T> half_line_bounds{T{}, greatest_upper_bound<T>};
 
   template<arithmetic T>
-  inline constexpr coordinate_bounds<T> negative_half_line_bounds{coordinate_bounds<T>::least_lower_bound, T{}};
+  inline constexpr coordinate_bounds<T> negative_half_line_bounds{least_lower_bound<T>, T{}};
 
   template<arithmetic T>
   struct coordinate_bounds
   {
     using value_type = T;
 
-    constexpr static T greatest_upper_bound{
-      std::numeric_limits<T>::has_infinity ? std::numeric_limits<T>::infinity() : std::numeric_limits<T>::max()
-    };
-
-    constexpr static T least_lower_bound{
-      std::numeric_limits<T>::has_infinity ? -std::numeric_limits<T>::infinity() : std::numeric_limits<T>::lowest()
-    };
-
-    T lower{}, upper{greatest_upper_bound};
+    T lower{}, upper{greatest_upper_bound<T>};
 
     template<arithmetic U>
       requires initializable_from<T, U>
@@ -820,13 +812,13 @@ namespace sequoia::maths
           return false;
       }
       
-      if(lower > least_lower_bound)
+      if(lower > least_lower_bound<T>)
       {
         if(const U uLower{static_cast<U>(lower)}; val < uLower)
           return false;
       }
 
-      if(upper < greatest_upper_bound)
+      if(upper < greatest_upper_bound<T>)
       {
         if(const U uUpper{static_cast<U>(upper)}; val > uUpper)
           return false;
@@ -894,8 +886,8 @@ namespace sequoia::maths
       
     auto invert{
       [b](T val){
-        constexpr auto llb{coordinate_bounds<T>::least_lower_bound},
-                       gub{coordinate_bounds<T>::greatest_upper_bound};
+        constexpr auto llb{least_lower_bound<T>},
+                       gub{greatest_upper_bound<T>};
 
         if((val == llb) || (val == gub))
           return T{};
