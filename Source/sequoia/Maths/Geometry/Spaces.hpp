@@ -895,7 +895,7 @@ namespace sequoia::maths
         if(val)
           return T(1) / val;
 
-        return b.upper ? gub : llb;      
+        return b.upper ? gub : llb;
       }
     };
 
@@ -1879,8 +1879,8 @@ namespace sequoia::maths
   {
   public:
     using space_type                    = ConvexSpace;
-    using basis_type                    = Basis;    
-    using representation_type           = Representation;    
+    using basis_type                    = Basis;
+    using representation_type           = Representation;
     using displacement_coordinates_type = DisplacementCoordinates;
     using set_type                      = ConvexSpace::set_type;
     using free_module_type              = free_module_type_of_t<ConvexSpace>;
@@ -2010,7 +2010,7 @@ namespace sequoia::maths
       using disp_t = Derived::displacement_coordinates_type;
 
       return
-        [&] <std::size_t... Is>(std::index_sequence<Is...>) -> disp_t {      
+        [&] <std::size_t... Is>(std::index_sequence<Is...>) -> disp_t {
           if constexpr(defines_subtraction_for_v<space_type, representation_type>)
           {
             return {representation_type{}.sub(lhs.values(), rhs.values()), basis_isomorphism_type{}};
@@ -2042,7 +2042,36 @@ namespace sequoia::maths
       }
       else
       {
-        return Derived{c}.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs += rhs; });
+        auto adder{
+          [&c](value_type& lhs, commutative_ring_type rhs) {
+            if constexpr((std::is_unsigned_v<value_type> && std::is_signed_v<commutative_ring_type>))
+            {
+              static_assert(2 * sizeof(value_type) == sizeof(commutative_ring_type));
+              const commutative_ring_type rhsToUse{
+                [&c, lhs, rhs](){
+                  if constexpr(!has_identity_validator)
+                  {
+                    const auto lhsAsSigned{static_cast<commutative_ring_type>(lhs)};
+                    const auto bnds{coordinate_bounds<commutative_ring_type>{-lhsAsSigned, greatest_upper_bound<commutative_ring_type> -lhsAsSigned}};
+                    return c.validator()(bnds, rhs);
+                  }
+                  else
+                  {
+                    return rhs;
+                  }
+                }()
+              };
+
+              lhs += static_cast<value_type>(rhsToUse);
+            }
+            else
+            {
+              lhs += rhs;
+            }
+          }
+        };
+
+        return Derived{c}.apply_to_each_element(v.values(), adder);
       }
     }
 
@@ -2090,7 +2119,7 @@ namespace sequoia::maths
       }
       else
       {
-        return Derived{c}.apply_to_each_element(v.values(), [](value_type& lhs, value_type rhs){ lhs -= rhs; });
+        return Derived{c}.apply_to_each_element(v.values(), [](value_type& lhs, commutative_ring_type rhs){ lhs -= rhs; });
       }
     }
 
@@ -2258,7 +2287,9 @@ namespace sequoia::maths
       else
       {
         auto tmp{to_underlying(self.m_Values)};
-        std::ranges::for_each(std::views::zip(tmp, to_underlying(rhs)), [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
+        std::ranges::for_each(std::views::zip(tmp,
+          to_underlying(rhs)),
+          [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); });
         if constexpr(has_coordinates_type_v<representation_type>)
         {
           self.m_Values = from_underlying(tmp);
