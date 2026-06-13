@@ -2119,7 +2119,36 @@ namespace sequoia::maths
       }
       else
       {
-        return Derived{c}.apply_to_each_element(v.values(), [](value_type& lhs, commutative_ring_type rhs){ lhs -= rhs; });
+        auto subtractor{
+          [&c](value_type& lhs, commutative_ring_type rhs) {
+            if constexpr((std::is_unsigned_v<value_type> && std::is_signed_v<commutative_ring_type>))
+            {
+              static_assert(2 * sizeof(value_type) == sizeof(commutative_ring_type));
+              const commutative_ring_type rhsToUse{
+                [&c, lhs, rhs](){
+                  if constexpr(!has_identity_validator)
+                  {
+                    const auto lhsAsSigned{static_cast<commutative_ring_type>(lhs)};
+                    const auto bnds{coordinate_bounds<commutative_ring_type>{least_lower_bound<commutative_ring_type> + lhsAsSigned, lhsAsSigned}};
+                    return c.validator()(bnds, rhs);
+                  }
+                  else
+                  {
+                    return rhs;
+                  }
+                }()
+              };
+
+              lhs -= static_cast<value_type>(rhsToUse);
+            }
+            else
+            {
+              lhs -= rhs;
+            }
+          }
+        };
+        
+        return Derived{c}.apply_to_each_element(v.values(), subtractor);
       }
     }
 
