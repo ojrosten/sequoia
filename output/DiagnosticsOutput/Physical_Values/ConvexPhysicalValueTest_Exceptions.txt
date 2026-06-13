@@ -1,4 +1,4 @@
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 93
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 95
 
 Expected Exception Type:
 [std::domain_error]
@@ -6,7 +6,7 @@ Input -273.16 outside permitted domain [-273.15, inf]
 
 =======================================
 
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 98
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 100
 
 Expected Exception Type:
 [std::domain_error]
@@ -14,7 +14,7 @@ Input -460 outside permitted domain [-459.67, inf]
 
 =======================================
 
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 122
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 124
 
 Expected Exception Type:
 [std::domain_error]
@@ -22,7 +22,7 @@ Input [0, 0.5, -0.1] has at least one value outside permitted domain [0, 1]
 
 =======================================
 
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 127
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 129
 
 Expected Exception Type:
 [std::domain_error]
@@ -30,7 +30,7 @@ Input [1.1, 0.5, 0.1] has at least one value outside permitted domain [0, 1]
 
 =======================================
 
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 93
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 95
 
 Expected Exception Type:
 [std::domain_error]
@@ -38,15 +38,15 @@ Input -273.16 outside permitted domain [-273.15, inf]
 
 =======================================
 
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 98
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 100
 
 Expected Exception Type:
 [std::domain_error]
-Input -460 outside permitted domain [-459.66999999999996, inf]
+Input -460 outside permitted domain [-459.67, inf]
 
 =======================================
 
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 122
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 124
 
 Expected Exception Type:
 [std::domain_error]
@@ -54,7 +54,7 @@ Input [0, 0.5, -0.1] has at least one value outside permitted domain [0, 1]
 
 =======================================
 
-Tests/Physics/ConvexPhysicalValueTest.cpp, Line 127
+Tests/Physics/ConvexPhysicalValueTest.cpp, Line 129
 
 Expected Exception Type:
 [std::domain_error]

@@ -9,7 +9,9 @@
 
 #include "ConvexPhysicalValueTest.hpp"
 
-#include "../Maths/Geometry/GeometryTestingUtilities.hpp"
+#include "Maths/Geometry/GeometryTestingUtilities.hpp"
+
+#include "sequoia/TextProcessing/Patterns.hpp"
 
 #include <charconv>
 
@@ -103,14 +105,14 @@ namespace sequoia::testing
           if(message.size() < 2)
             return message;
 
-          if(const auto pos{message.rfind(' ', message.size() - 2)}; pos != std::string::npos)
+          if(const auto [begin, end]{find_sandwiched_text(message, "[", ",")}; begin != end)
           {
             double val{};
-            const auto[ptr,ec]{std::from_chars(message.data() + pos + 1, message.data() + message.size(), val)};
+            const auto[ptr,ec]{std::from_chars(message.data() + begin, message.data() + end, val)};
             if(ec != std::errc{})
               throw std::runtime_error{"Unable to extract final double from error message: " +  message};
-            
-            message.replace(pos + 1, message.size() - pos - 2, std::format("{:.2f}", val));
+
+            message.replace(begin, end - begin, std::format("{:.2f}", val));
           }
         }
 
