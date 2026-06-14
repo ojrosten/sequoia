@@ -2022,6 +2022,10 @@ namespace sequoia::maths
           else
           {
             const auto transLHS{Derived::to_underlying(lhs.values())}, transRHS{Derived::to_underlying(rhs.values())};
+            /*if constexpr(std::is_unsigned_v<value_type>)
+            {
+              static_assert(sizeof(commutative_ring_type) >= 2 * sizeof(value_type));
+            }*/
             return {Derived::from_underlying(std::array{(static_cast<commutative_ring_type>(transLHS[Is]) - static_cast<commutative_ring_type>(transRHS[Is]))...}), basis_isomorphism_type{}};
           }
       }(std::make_index_sequence<D>{});
@@ -2052,7 +2056,7 @@ namespace sequoia::maths
                   if constexpr(!has_identity_validator)
                   {
                     const auto lhsAsSigned{static_cast<commutative_ring_type>(lhs)};
-                    const auto bnds{coordinate_bounds<commutative_ring_type>{-lhsAsSigned, greatest_upper_bound<commutative_ring_type> -lhsAsSigned}};
+                    const auto bnds{coordinate_bounds<commutative_ring_type>{-lhsAsSigned, greatest_upper_bound<commutative_ring_type> - lhsAsSigned}};
                     return c.validator()(bnds, rhs);
                   }
                   else

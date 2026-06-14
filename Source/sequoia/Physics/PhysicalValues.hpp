@@ -398,7 +398,15 @@ namespace sequoia::physics
   {
     auto transform{
       [](T val) -> T {
-        return saturating_add(saturating_mul(val / Ratio::den, Ratio::num), Displacement);
+        const auto transformedVal{saturating_add(saturating_mul(val / Ratio::den, Ratio::num), Displacement)};
+        using transformed_t = decltype(transformedVal);
+        if constexpr(std::is_signed_v<transformed_t> && std::is_unsigned_v<T>)
+        {
+          if(transformedVal < transformed_t{})
+            throw std::runtime_error{std::format("Illegal coordinate transform: try to set an unsigned integral type to {}", transformedVal)};
+        }
+
+        return static_cast<T>(transformedVal);
       }
     };
 
