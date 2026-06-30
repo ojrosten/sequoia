@@ -363,7 +363,7 @@ namespace sequoia::maths
   inline constexpr bool has_commutative_ring_type_v{
     requires { 
       typename T::commutative_ring_type;
-      requires weak_commutative_ring<typename T::commutative_ring_type>;
+      //requires weak_commutative_ring<typename T::commutative_ring_type>;
     }
   };
 
@@ -374,7 +374,7 @@ namespace sequoia::maths
   inline constexpr bool has_field_type_v{
     requires { 
       typename T::field_type;
-      requires weak_field<typename T::field_type>;
+      //requires weak_field<typename T::field_type>;
     }
   };
 
@@ -399,7 +399,7 @@ namespace sequoia::maths
         has_field_type_v<T>
     || requires { 
           typename T::commutative_ring_type;
-          requires weak_field<typename T::commutative_ring_type>;
+          // TO DO requires weak_field<typename T::commutative_ring_type>;
         }
   };
 
@@ -607,8 +607,8 @@ namespace sequoia::maths
   template<convex_space ConvexSpace>
   using commutative_ring_type_of_t = commutative_ring_type_of<ConvexSpace>::type;
 
-  template<convex_space ConvexSpace>
-  using space_value_type = commutative_ring_type_of_t<ConvexSpace>;
+  //template<convex_space ConvexSpace>
+  //using space_value_type = commutative_ring_type_of_t<ConvexSpace>;
   
   /** @ingroup PropertiesOfSpaces
       @brief Helper to extract the dimension of the free module associated with a convex space.
@@ -714,6 +714,7 @@ namespace sequoia::maths
   template<class B, class M>
   concept basis_for
     =    basis<B>
+      && free_module<M>
       && (admits_canonical_basis_v<free_module_type_of_t<B>> || has_isomorphism_type_v<B>)
       && requires { requires std::is_same_v<free_module_type_of_t<B>, M>; };
 
@@ -920,10 +921,11 @@ namespace sequoia::maths
 
    */
 
+  // TO DO free mod value_type as well
   template<class R, class ConvexSpace>
   inline constexpr bool representation_for_single_value{
         (dimension_of<ConvexSpace> == 1)
-     && requires(R& r, const space_value_type<ConvexSpace>& val) {
+     && requires(R& r, const typename R::value_type& val) {
           { r.to_underlying(val)   } -> std::convertible_to<decltype(val)>;
           { r.from_underlying(val) } -> std::convertible_to<decltype(val)>;
         }
@@ -931,9 +933,9 @@ namespace sequoia::maths
 
   template<class R, class ConvexSpace>
   inline constexpr bool representation_for_span{
-     requires(R& r, std::span<const space_value_type<ConvexSpace>, dimension_of<ConvexSpace>> vals) {
-       { r.to_underlying(vals)   } -> std::convertible_to<std::array<space_value_type<ConvexSpace>, dimension_of<ConvexSpace>>>;
-       { r.from_underlying(vals) } -> std::convertible_to<std::array<space_value_type<ConvexSpace>, dimension_of<ConvexSpace>>>;
+     requires(R& r, std::span<const typename R::value_type, dimension_of<ConvexSpace>> vals) {
+       { r.to_underlying(vals)   } -> std::convertible_to<std::array<typename R::value_type, dimension_of<ConvexSpace>>>;
+       { r.from_underlying(vals) } -> std::convertible_to<std::array<typename R::value_type, dimension_of<ConvexSpace>>>;
      }
   };
 
@@ -975,11 +977,12 @@ namespace sequoia::maths
   template<weak_commutative_ring T>
   using free_module_representation_value_type_t = free_module_representation_value_type<T>::type;
 
-  // TO DO: Likely move this to the meta layer
+  // TO DO: rename unsigned since it could be signed, now
+  // Maybe rename
   template<class Unsigned, class Signed>
   concept covered_by =     std::integral<Unsigned>
                         && std::integral<Signed>
-                        && std::is_unsigned_v<Unsigned>
+    /*&& std::is_unsigned_v<Unsigned>*/
                         && std::is_signed_v<Signed>
                         && (sizeof(Signed) == 2 * sizeof(Unsigned));
   
@@ -1025,71 +1028,78 @@ namespace sequoia::maths
     }
   };
 
+  template<class T>
+    requires has_value_type_v<T>
+  struct value_type_of
+  {
+    using type = T::value_type;
+  };
+
+  template<class T>
+    requires has_value_type_v<T>
+  using value_type_of_t = value_type_of<T>::type;
+
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_scalar_multiplication_for_v{
-    requires(const R& r, std::span<const commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>> vals, commutative_ring_type_of_t<ConvexSpace> s) {
-      { r.mul(vals, s) } -> std::convertible_to<std::array<commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>>>;
+    requires(const R& r, std::span<const value_type_of_t<R>, dimension_of<ConvexSpace>> vals, value_type_of_t<R> s) {
+      { r.mul(vals, s) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of<ConvexSpace>>>;
     }
   };
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_scalar_multiplication_for_single_value_v{
        (dimension_of<ConvexSpace> == 1)
-       && requires(const R& r, commutative_ring_type_of_t<ConvexSpace> val, commutative_ring_type_of_t<ConvexSpace> s) {
-         { r.mul(val, s) } -> std::convertible_to<commutative_ring_type_of_t<ConvexSpace>>;
+       && requires(const R& r, value_type_of_t<R> val, value_type_of_t<R> s) {
+         { r.mul(val, s) } -> std::convertible_to<value_type_of_t<R>>;
        }
   };
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_scalar_division_for_v{
-    requires(const R& r, std::span<const commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>> vals, commutative_ring_type_of_t<ConvexSpace> s) {
-      { r.div(vals, s) } -> std::convertible_to<std::array<commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>>>;
+    requires(const R& r, std::span<const value_type_of_t<R>, dimension_of<ConvexSpace>> vals, value_type_of_t<R> s) {
+      { r.div(vals, s) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of<ConvexSpace>>>;
     }
   };
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_scalar_division_for_single_value_v{
        (dimension_of<ConvexSpace> == 1)
-    && requires(const R& r, commutative_ring_type_of_t<ConvexSpace> val, commutative_ring_type_of_t<ConvexSpace> s) {
-         { r.div(val, s) } -> std::convertible_to<commutative_ring_type_of_t<ConvexSpace>>;
+    && requires(const R& r, value_type_of_t<R> val, value_type_of_t<R> s) {
+         { r.div(val, s) } -> std::convertible_to<value_type_of_t<R>>;
        }
   };
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_addition_for_v{
     requires(const R& r,
-             std::span<const commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>> lhs,
-             std::span<const commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>> rhs) {
-      { r.add(lhs, rhs) } -> std::convertible_to<std::array<commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>>>;
+             std::span<const value_type_of_t<R>, dimension_of<ConvexSpace>> lhs,
+             std::span<const value_type_of_t<R>, dimension_of<ConvexSpace>> rhs) {
+      { r.add(lhs, rhs) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of<ConvexSpace>>>;
     }
   };
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_addition_for_single_value_v{
     (dimension_of<ConvexSpace> == 1)
-    && requires(const R& r,
-                commutative_ring_type_of_t<ConvexSpace> lhs,
-                commutative_ring_type_of_t<ConvexSpace> rhs) {
-        { r.add(lhs, rhs) } -> std::convertible_to<commutative_ring_type_of_t<ConvexSpace>>;
+    && requires(const R& r, value_type_of_t<R> lhs, value_type_of_t<R> rhs) {
+        { r.add(lhs, rhs) } -> std::convertible_to<value_type_of_t<R>>;
       }
   };
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_subtraction_for_v{
     requires(const R& r,
-             std::span<const commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>> lhs,
-             std::span<const commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>> rhs) {
-      { r.sub(lhs, rhs) } -> std::convertible_to<std::array<commutative_ring_type_of_t<ConvexSpace>, dimension_of<ConvexSpace>>>;
+             std::span<const value_type_of_t<R>, dimension_of<ConvexSpace>> lhs,
+             std::span<const value_type_of_t<R>, dimension_of<ConvexSpace>> rhs) {
+      { r.sub(lhs, rhs) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of<ConvexSpace>>>;
     }
   };
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_subtraction_for_single_value_v{
        (dimension_of<ConvexSpace> == 1)
-    && requires(const R& r,
-                commutative_ring_type_of_t<ConvexSpace> lhs,
-                commutative_ring_type_of_t<ConvexSpace> rhs) {
-         { r.sub(lhs, rhs) } -> std::convertible_to<commutative_ring_type_of_t<ConvexSpace>>;
+    && requires(const R& r, value_type_of_t<R> lhs, value_type_of_t<R> rhs) {
+         { r.sub(lhs, rhs) } -> std::convertible_to<value_type_of_t<R>>;
        }
   };
 
@@ -1124,7 +1134,8 @@ namespace sequoia::maths
   template<class V, convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
   inline constexpr bool validator_for_single_value{
        (dimension_of<ConvexSpace> == 1)
-    && requires(V& v, const space_value_type<ConvexSpace>& val) { { v(Representation::bounds_v, val) } -> std::convertible_to<decltype(val)>; }
+       // TO DO: also free module val type? Also define value_type_of
+       && requires(V& v, const typename Representation::value_type& val) { { v(Representation::bounds_v, val) } -> std::convertible_to<decltype(val)>; }
   };
 
   /** @ingroup Validators
@@ -1137,7 +1148,7 @@ namespace sequoia::maths
    */
   template<class V, convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
   inline constexpr bool validator_for_array{
-    requires (V& v, const std::array<space_value_type<ConvexSpace>, dimension_of<ConvexSpace>>& values) {
+    requires (V& v, const std::array<typename Representation::value_type, dimension_of<ConvexSpace>>& values) {
       { v(Representation::bounds_v, values) } -> std::convertible_to<decltype(values)>;
     }
   };
@@ -1261,11 +1272,11 @@ namespace sequoia::maths
   };
 
   template<free_module... Ts>
-    requires (sizeof...(Ts) >= 1) && has_common_ring_v<commutative_ring_type_of_t<Ts>...>
+  requires (sizeof...(Ts) >= 1) // TO DO&& has_common_ring_v<commutative_ring_type_of_t<Ts>...>
   struct direct_product<Ts...>
   {
     using set_type              = direct_product<typename Ts::set_type...>;
-    using commutative_ring_type = std::common_type_t<commutative_ring_type_of_t<Ts>...>;
+    using commutative_ring_type = direct_product<commutative_ring_type_of_t<Ts>...>;// TO DO std::common_type_t<commutative_ring_type_of_t<Ts>...>;
     using is_free_module        = std::true_type;
     constexpr static std::size_t dimension{(Ts::dimension + ...)};
   };
@@ -1470,7 +1481,7 @@ namespace sequoia::maths
   };
 
   template<class T>
-    requires (!convex_space<T>) || (convex_space<T> && weak_field<commutative_ring_type_of_t<T>>)
+  requires (!convex_space<T>) || (convex_space<T> /* TO DO && weak_field<commutative_ring_type_of_t<T>>*/)
   struct dual_of<dual<T>> {
     using type = T;
   };
@@ -1637,8 +1648,8 @@ namespace sequoia::maths
   template<
     affine_space AffineSpace,
     basis_for<free_module_type_of_t<AffineSpace>> Basis,
+    representation_for<AffineSpace> Representation,    
     class Origin,
-    representation_for<AffineSpace> Representation,
     validator_for<AffineSpace, Representation> Validator
   >
   using affine_coordinates = coordinates<AffineSpace, Basis, Origin, Representation, Validator>;
@@ -1717,26 +1728,30 @@ namespace sequoia::maths
   template<basis B, class Rep, class... Args>
   inline constexpr bool is_units_terminated_pack_v{is_units_terminated_pack<B, Rep, Args...>::value};
 
-  template<auto Bounds>
+  template<weak_commutative_ring RingRep, auto Bounds>
     requires bounds<decltype(Bounds)>
   struct canonical_representation
   {
     constexpr static auto bounds_v{Bounds};
-    using bounds_type              = decltype(Bounds);
-    using value_type               = bounds_type::value_type;
+    using value_type        = RingRep;
+    using bounds_type       = decltype(Bounds);
+    using bounds_value_type = bounds_type::value_type;
+
     using free_module_rep_val_type = free_module_representation_value_type_t<value_type>;
 
     using free_module_representation
-      = canonical_representation<no_bounds<to_bounds_value_type_t<free_module_rep_val_type>>>;
+      = canonical_representation<free_module_rep_val_type, no_bounds<to_bounds_value_type_t<free_module_rep_val_type>>>;
 
-    template<weak_commutative_ring T, std::size_t D>
+    template<class T, std::size_t D>
+      requires std::same_as<T, value_type> || std::same_as<T, free_module_rep_val_type>
     [[nodiscard]]
     constexpr static std::array<T, D> to_underlying(std::span<const T, D> in) noexcept
     {
       return utilities::to_array(in);
     }
 
-    template<weak_commutative_ring T, std::size_t D>
+    template<class T, std::size_t D>
+      requires std::same_as<T, value_type> || std::same_as<T, free_module_rep_val_type>
     [[nodiscard]]
     constexpr static std::array<T,  D> from_underlying(std::span<const T, D> in) noexcept
     {
@@ -1744,11 +1759,11 @@ namespace sequoia::maths
     }
   };
 
-  template<auto Bounds>
+  template<weak_commutative_ring T, auto Bounds>
     requires bounds_value<Bounds>
-  struct dual_of<canonical_representation<Bounds>>
+  struct dual_of<canonical_representation<T, Bounds>>
   {
-    using type = canonical_representation<reciprocal(Bounds)>;
+    using type = canonical_representation<T, reciprocal(Bounds)>;
   };
 
   template<class T>
@@ -1761,9 +1776,9 @@ namespace sequoia::maths
   template<class T>
   using is_canonical_representation_t = is_canonical_representation<T>::type;
 
-  template<auto Bounds>
+  template<weak_commutative_ring T, auto Bounds>
     requires bounds_value<Bounds>
-  struct is_canonical_representation<canonical_representation<Bounds>> : std::true_type
+  struct is_canonical_representation<canonical_representation<T, Bounds>> : std::true_type
   {};
   
 
@@ -1825,23 +1840,6 @@ namespace sequoia::maths
     }
   };
 
-    
-  template<convex_space Space>
-  struct value_type_of
-  {
-    using type = commutative_ring_type_of_t<Space>;
-  };
-
-  template<convex_space Space>
-  using value_type_of_t = value_type_of<Space>::type;
-
-  template<convex_space Space>
-    requires has_value_type_v<Space> && std::is_unsigned_v<typename Space::value_type>
-  struct value_type_of<Space>
-  {
-    using type = Space::value_type;
-  };
-
   template<class T>
   struct heterogeneous_coordinates : std::false_type {};
 
@@ -1884,8 +1882,8 @@ namespace sequoia::maths
     using displacement_coordinates_type = DisplacementCoordinates;
     using set_type                      = ConvexSpace::set_type;
     using free_module_type              = free_module_type_of_t<ConvexSpace>;
-    using commutative_ring_type         = commutative_ring_type_of_t<ConvexSpace>;
-    using value_type                    = value_type_of_t<ConvexSpace>;
+    using value_type                    = Representation::value_type;    
+    using displacement_value_type       = Representation::free_module_representation::value_type;
     using basis_isomorphism_type        = basis_isomorphism_type_of_t<Basis>;
     using validator_type                = Validator;
 
@@ -1975,6 +1973,8 @@ namespace sequoia::maths
 
     template<class Self>
       requires (!std::same_as<Self, coordinates_base>)  && vector_space<free_module_type>
+    // TO DO: remove this: it's a temporary hack while the field / commutative_ring concepts are sorted out
+    && (!std::integral<value_type>)
     constexpr Self& operator/=(this Self& self, value_type u)
     {
       return self = (self / u);
@@ -2022,11 +2022,11 @@ namespace sequoia::maths
           else
           {
             const auto transLHS{Derived::to_underlying(lhs.values())}, transRHS{Derived::to_underlying(rhs.values())};
-            /*if constexpr(std::is_unsigned_v<value_type>)
+            if constexpr(std::is_unsigned_v<value_type>)
             {
-              static_assert(sizeof(commutative_ring_type) >= 2 * sizeof(value_type));
-            }*/
-            return {Derived::from_underlying(std::array{(static_cast<commutative_ring_type>(transLHS[Is]) - static_cast<commutative_ring_type>(transRHS[Is]))...}), basis_isomorphism_type{}};
+              static_assert(sizeof(displacement_value_type) >= 2 * sizeof(value_type));
+            }
+            return {Derived::from_underlying(std::array{(static_cast<displacement_value_type>(transLHS[Is]) - static_cast<displacement_value_type>(transRHS[Is]))...}), basis_isomorphism_type{}};
           }
       }(std::make_index_sequence<D>{});
     }
@@ -2047,16 +2047,16 @@ namespace sequoia::maths
       else
       {
         auto adder{
-          [&c](value_type& lhs, commutative_ring_type rhs) {
-            if constexpr((std::is_unsigned_v<value_type> && std::is_signed_v<commutative_ring_type>))
+          [&c](value_type& lhs, displacement_value_type rhs) {
+            if constexpr((std::is_unsigned_v<value_type> && std::is_signed_v<displacement_value_type>))
             {
-              static_assert(2 * sizeof(value_type) == sizeof(commutative_ring_type));
-              const commutative_ring_type rhsToUse{
+              static_assert(2 * sizeof(value_type) == sizeof(displacement_value_type));
+              const displacement_value_type rhsToUse{
                 [&c, lhs, rhs](){
                   if constexpr(!has_identity_validator)
                   {
-                    const auto lhsAsSigned{static_cast<commutative_ring_type>(lhs)};
-                    const auto bnds{coordinate_bounds<commutative_ring_type>{-lhsAsSigned, greatest_upper_bound<commutative_ring_type> - lhsAsSigned}};
+                    const auto lhsAsSigned{static_cast<displacement_value_type>(lhs)};
+                    const auto bnds{coordinate_bounds<displacement_value_type>{-lhsAsSigned, greatest_upper_bound<displacement_value_type> - lhsAsSigned}};
                     return c.validator()(bnds, rhs);
                   }
                   else
@@ -2124,16 +2124,16 @@ namespace sequoia::maths
       else
       {
         auto subtractor{
-          [&c](value_type& lhs, commutative_ring_type rhs) {
-            if constexpr((std::is_unsigned_v<value_type> && std::is_signed_v<commutative_ring_type>))
+          [&c](value_type& lhs, displacement_value_type rhs) {
+            if constexpr((std::is_unsigned_v<value_type> && std::is_signed_v<displacement_value_type>))
             {
-              static_assert(2 * sizeof(value_type) == sizeof(commutative_ring_type));
-              const commutative_ring_type rhsToUse{
+              static_assert(2 * sizeof(value_type) == sizeof(displacement_value_type));
+              const displacement_value_type rhsToUse{
                 [&c, lhs, rhs](){
                   if constexpr(!has_identity_validator)
                   {
-                    const auto lhsAsSigned{static_cast<commutative_ring_type>(lhs)};
-                    const auto bnds{coordinate_bounds<commutative_ring_type>{least_lower_bound<commutative_ring_type> + lhsAsSigned, lhsAsSigned}};
+                    const auto lhsAsSigned{static_cast<displacement_value_type>(lhs)};
+                    const auto bnds{coordinate_bounds<displacement_value_type>{least_lower_bound<displacement_value_type> + lhsAsSigned, lhsAsSigned}};
                     return c.validator()(bnds, rhs);
                   }
                   else
@@ -2192,6 +2192,8 @@ namespace sequoia::maths
 
     template<class Derived>
       requires std::derived_from<Derived, coordinates_base> && vector_space<free_module_type> && has_distinguished_origin
+    // TO DO: remove this: it's a temporary hack while the field / commutative_ring concepts are sorted out
+    && (!std::integral<value_type>)
     [[nodiscard]]
     friend constexpr Derived operator/(const Derived& v, value_type u)
     {
@@ -2306,7 +2308,7 @@ namespace sequoia::maths
     
     template<class Self, class Fn>
       requires std::invocable<Fn, value_type&, value_type>
-    constexpr Self&& apply_to_each_element(this Self&& self, std::span<const commutative_ring_type, D> rhs, Fn f)
+    constexpr Self&& apply_to_each_element(this Self&& self, std::span<const displacement_value_type, D> rhs, Fn f)
     {
       if constexpr(has_identity_validator)
       {
@@ -2557,7 +2559,7 @@ namespace sequoia::maths
   template<class From, class To>
   inline constexpr bool has_coordinate_transformation_v{
     requires (const From& f){
-      { std::declval<coordinate_transformation<From, To>>()(f) } -> std::convertible_to<To>;
+      { std::declval<coordinate_transformation<From, To>>()(f) };// TO DO  -> std::convertible_to<To>;
     }
   };
 
@@ -2569,6 +2571,9 @@ namespace sequoia::maths
     }
   };
 
+  // TO DO: reconsider whether we really want these as sets or something with more explicitly stated
+  // struct e.g. commutative_rings...?
+  // Probably want trait displcement_space_of_t
   namespace sets
   {
     /** @ingroup Sets
@@ -2583,19 +2588,28 @@ namespace sequoia::maths
     /** @ingroup Sets
         @brief Class template for giving a name to the set of semi-positive integers and its generalization to other dimensionalities
      */
-    template<std::size_t D>
+    template<std::size_t N>
     struct N_0
     {
-      constexpr static std::size_t dimension{D};
+      constexpr static std::size_t dimension{N};
     };
 
     /** @ingroup Sets
         @brief Class template for giving a name to the set of real numbers and its generalization to other dimensionalities
      */
-    template<std::size_t D>
+    template<std::size_t N>
     struct R
     {
-      constexpr static std::size_t dimension{D};
+      constexpr static std::size_t dimension{N};
+    };
+
+    /** @ingroup Sets
+        @brief Class template for giving a name to the set of real numbers considered as an affine space and its generalization to other dimensionalities
+     */
+    template<std::size_t N>
+    struct E
+    {
+      constexpr static std::size_t dimension{N};
     };
 
 
@@ -2611,10 +2625,10 @@ namespace sequoia::maths
     /** @ingroup Sets
         @brief Class template for giving a name to the set of complex numbers and its generalization to other dimensionalities
      */
-    template<std::size_t D>
+    template<std::size_t N>
     struct C
     {
-      constexpr static std::size_t dimension{D};
+      constexpr static std::size_t dimension{N};
     };
   }
 
@@ -2655,11 +2669,11 @@ namespace sequoia::maths
   // TO DO: reconsider whether this is necessary
   struct mathematical_arena {};
 
-  template<std::floating_point T, std::size_t D, class Arena=mathematical_arena>
+  template<std::size_t D, class Arena=mathematical_arena>
   struct euclidean_vector_space
   {
-    using set_type               = sets::R<D>;
-    using field_type             = T;
+    using set_type               = sets::E<D>;
+    using field_type             = sets::R<1>;
     using is_vector_space        = std::true_type;
     using arena_type             = Arena;
     using admits_canonical_basis = std::true_type;
@@ -2709,28 +2723,28 @@ namespace sequoia::maths
     }
   };
 
-  template<std::floating_point T, std::size_t D, class Arena=mathematical_arena>
+  template<std::size_t D, class Arena=mathematical_arena>
   struct euclidean_affine_space
   {
     using set_type          = sets::R<D>;
-    using vector_space_type = euclidean_vector_space<T, D, Arena>;
+    using vector_space_type = euclidean_vector_space<D, Arena>;
     using is_affine_space   = std::true_type;
     using arena_type        = Arena;
   };
 
-  template<std::floating_point T, std::size_t D, class Arena=mathematical_arena>
+  template<std::size_t D, class Arena=mathematical_arena>
   struct euclidean_nonnegative_space
   {
     using set_type             = sets::orthant<D>;
-    using vector_space_type    = euclidean_vector_space<T, D, Arena>;
+    using vector_space_type    = euclidean_vector_space<D, Arena>;
     using is_convex_space      = std::true_type;
     using arena_type           = Arena;
     using distinguished_origin = std::true_type;
     using non_negative_orthant = std::true_type;
   };
 
-  template<std::floating_point T, class Arena=mathematical_arena>
-  using euclidean_half_line = euclidean_nonnegative_space<T, 1, Arena>;
+  template<class Arena=mathematical_arena>
+  using euclidean_half_line = euclidean_nonnegative_space<1, Arena>;
 
   template<class T>
   inline constexpr bool has_arena_type_v{
@@ -2765,35 +2779,34 @@ namespace sequoia::maths
   };
   
   template<
-    std::floating_point T,
     std::size_t D,
     basis Basis,
+    representation Representation,
     class Origin,
-    class Representation,
     class Validator,
     class Arena=mathematical_arena
   >
-  using euclidean_affine_coordinates = affine_coordinates<euclidean_affine_space<T, D, Arena>, Basis, Origin, Representation, Validator>;
+  using euclidean_affine_coordinates = affine_coordinates<euclidean_affine_space<D, Arena>, Basis, Representation, Origin, Validator>;
 
   template<
-    std::floating_point T,
     std::size_t D,
     basis Basis,
-    class Representation,
+    representation Representation,
     class Validator,
     class Arena=mathematical_arena
   >
-  using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<T, D, Arena>, Basis, Representation, Validator>;
+    requires (dimension_of<free_module_type_of_t<Basis>> == D)
+  using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<D, Arena>, Basis, Representation, Validator>;
 
   template<
-    std::floating_point T,
     std::size_t D,
     basis Basis,
-    class Representation,
+    representation Representation,
     class Validator,
     class Arena=mathematical_arena
   >
-  using euclidean_nonnegative_coordinates = coordinates<euclidean_nonnegative_space<T, D, Arena>, Basis, Representation, Validator>;
+    requires (dimension_of<free_module_type_of_t<Basis>> == D)
+  using euclidean_nonnegative_coordinates = coordinates<euclidean_nonnegative_space<D, Arena>, Basis, Representation, Validator>;
 
   /** @brief Right-handed bases for arbitrary D, built recursively from 1D
 
@@ -2855,5 +2868,6 @@ namespace sequoia::maths
   };
 
   template<std::floating_point T, std::size_t D, class Validator=identity_validator, class Arena=mathematical_arena>
-  using vec_coords = euclidean_vector_coordinates<T, D, canonical_right_handed_basis<euclidean_vector_space<T, D, Arena>>, canonical_representation<no_bounds<T>>, Validator, Arena>;
+  using vec_coords
+    = euclidean_vector_coordinates<D, canonical_right_handed_basis<euclidean_vector_space<D, Arena>>, canonical_representation<T, no_bounds<T>>, Validator, Arena>;
 }

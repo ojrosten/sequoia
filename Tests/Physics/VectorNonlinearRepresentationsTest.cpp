@@ -31,8 +31,8 @@ namespace sequoia::testing
 
       using value_type = T;
       
-      using radius_type = physical_value< radius_space<T, implicit_common_arena>, length_unit_type>;
-      using angle_type  = physical_value<angular_space<T, implicit_common_arena>, angle_unit_type>;
+      using radius_type = basic_quantity< radius_space<implicit_common_arena>, length_unit_type, value_type, throwing_validator>;
+      using angle_type  = basic_quantity<angular_space<implicit_common_arena>, angle_unit_type , value_type, throwing_validator>;
       
       using coordinates_type = std::tuple<radius_type, angle_type>;
 
@@ -74,16 +74,16 @@ namespace sequoia::testing
 
   void vector_nonlinear_representations_free_test::test_canonical_rep_meta()
   {
-    using space_t = euclidean_vector_space<float, 2>;
+    using space_t = euclidean_vector_space<2>;
     
-    using rep_t = canonical_representation<no_bounds<float>>;
+    using rep_t = canonical_representation<float, no_bounds<float>>;
     using vec_t
       = physical_value<
           space_t,
           si::units::metre_t,
           unit_defined_right_handed_basis<free_module_type_of_t<space_t>, si::units::metre_t>,
-          to_origin_type_t<space_t>,
           rep_t,
+          to_origin_type_t<space_t>,
           throwing_validator
         >;
 
@@ -94,7 +94,7 @@ namespace sequoia::testing
   template<std::floating_point T, physics::physical_unit AngleUnit>
   void vector_nonlinear_representations_free_test::test_polar()  
   {
-    using space_t = euclidean_vector_space<T, 2>;
+    using space_t = euclidean_vector_space<2>;
     using rep_t = physical_polar_representation<T, si::units::metre_t, AngleUnit>;
 
     using vec_t
@@ -102,8 +102,8 @@ namespace sequoia::testing
           space_t,
           si::units::metre_t,
           unit_defined_right_handed_basis<free_module_type_of_t<space_t>, si::units::metre_t>,
-          to_origin_type_t<space_t>,
           rep_t,
+          to_origin_type_t<space_t>,
           throwing_validator
         >;
 

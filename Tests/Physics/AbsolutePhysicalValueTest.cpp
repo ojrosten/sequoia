@@ -95,13 +95,13 @@ namespace sequoia::testing
     using inv_qty_t               = quantity<inv_units_t, value_t>;
     using delta_inv_qty_t         = inv_qty_t::displacement_type;
     using euc_half_line_qty       = euclidean_half_line_quantity<value_t>;    
-    using dual_euc_half_line_qty  = dimensionless_quantity<dual<euclidean_half_line<value_t, arena_t>>, no_unit_t>;
+    using dual_euc_half_line_qty  = dimensionless_quantity<dual<euclidean_half_line<arena_t>>, no_unit_t, value_t>;
     using euc_vec_space_qty       = euclidean_1d_vector_quantity<value_t>;
-    using dual_euc_vec_space_qty  = dimensionless_quantity<dual<euclidean_vector_space<value_t, 1, arena_t>>, no_unit_t>;
+    using dual_euc_vec_space_qty  = dimensionless_quantity<dual<euclidean_vector_space<1, arena_t>>, no_unit_t, value_t>;
     using pseudo_qty_t            = decltype(qty_t{} * euc_vec_space_qty{});
     using pseudo_inv_qty_t        = decltype(euc_vec_space_qty{} /qty_t{});
-    using unsafe_qty_t            = quantity<units_t, value_t, canonical_representation<no_bounds<value_t>>>;
-    using unsafe_inv_qty_t        = quantity<inv_units_t, value_t, canonical_representation<no_bounds<value_t>>, identity_validator>;
+    using unsafe_qty_t            = quantity<units_t, value_t, canonical_representation<value_t, no_bounds<value_t>>>;
+    using unsafe_inv_qty_t        = quantity<inv_units_t, value_t, canonical_representation<value_t, no_bounds<value_t>>, identity_validator>;
     using q2_t                    = decltype(physical_value{value_t{}, units_t{} * units_t{}});
     using q3_t                    = decltype(physical_value{value_t{}, units_t{} * units_t{} * units_t{}});
     using dq2_t                   = decltype(delta_qty_t{value_t{}, units_t{}} * delta_qty_t{value_t{}, units_t{}});

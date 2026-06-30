@@ -152,29 +152,12 @@ namespace sequoia::testing
     using orthonormal = std::true_type;
   };
 
-  template<class Set, maths::weak_commutative_ring Ring, std::size_t D>
-  struct my_free_module
-  {
-    using set_type               = Set;
-    using commutative_ring_type  = Ring;
-    using is_free_module         = std::true_type;
-    using admits_canonical_basis = std::true_type;
-    constexpr static std::size_t dimension{D};
-  };
-
-  template<class Set, maths::weak_commutative_ring Ring, std::size_t D>
-  struct canonical_free_module_basis
-  {
-    using is_basis         = std::true_type;
-    using free_module_type = my_free_module<Set, Ring, D>;
-  };
-
   template<maths::convex_space ConvexSpace, maths::basis Basis, class... Ts>
     requires maths::basis_for<Basis, maths::free_module_type_of_t<ConvexSpace>>
   struct value_tester<maths::coordinates<ConvexSpace, Basis, Ts...>>
   {
     using coord_type = maths::coordinates<ConvexSpace, Basis, Ts...>;
-    using commutative_ring_type = typename coord_type::commutative_ring_type;
+    using displacement_value_type = typename coord_type::displacement_value_type;
     constexpr static std::size_t D{coord_type::dimension};
 
     template<test_mode Mode>
@@ -184,7 +167,7 @@ namespace sequoia::testing
       if constexpr(D == 1)
       {
         check(equality, "Wrapped value", logger, actual.value(), prediction.value());
-        if constexpr(std::convertible_to<commutative_ring_type, bool>)
+        if constexpr(std::convertible_to<displacement_value_type, bool>)
           check(equality, "Conversion to bool", logger, static_cast<bool>(actual), static_cast<bool>(prediction));
       }
 
@@ -194,10 +177,10 @@ namespace sequoia::testing
       }
     }
 
-    template<test_mode Mode>
-    static void test(equivalence_check_t, test_logger<Mode>& logger, const coord_type& actual, const std::array<commutative_ring_type, D>& prediction)
+    template<test_mode Mode, maths::weak_commutative_ring RingRep>
+    static void test(equivalence_check_t, test_logger<Mode>& logger, const coord_type& actual, const std::array<RingRep, D>& prediction)
     {
-      check(equality, "Wrapped values", logger, actual.values(), std::span<const commutative_ring_type, D>{prediction});
+      check(equality, "Wrapped values", logger, actual.values(), std::span<const RingRep, D>{prediction});
       check(equivalence, "Iterators",    logger, std::ranges::subrange{actual.begin(),  actual.end()},    prediction);
       check(equivalence, "c-Iterators",  logger, std::ranges::subrange{actual.cbegin(),  actual.cend()},  prediction);
       check(equivalence, "r-Iterators",  logger, std::ranges::subrange{actual.rbegin(),  actual.rend()},  prediction);
@@ -246,10 +229,10 @@ namespace sequoia::testing
     requires std::convertible_to<Label, std::size_t>
   void add_transition(Graph& g, Label From, Label To, std::string_view message, Fn f, inverted_ordering invert={})
   {
-    using ring_t = Coords::commutative_ring_type;
+    using disp_value_t = Coords::displacement_value_type;
     constexpr static auto dimension{Coords::dimension};
 
-    if constexpr((dimension == 1) && std::totally_ordered<ring_t>)
+    if constexpr((dimension == 1) && std::totally_ordered<disp_value_t>)
     {
       impl::do_add_transition(g, From, To, message, f, to_ordering(From, To, invert));
     }

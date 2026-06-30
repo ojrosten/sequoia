@@ -28,13 +28,13 @@ namespace sequoia::testing
   {
     {
       using basis_t  = canonical_basis<float, float, 1>;
-      using coords_t = affine_coordinates<my_affine_space<float, float, 1>, basis_t, alice, canonical_representation<no_bounds<float>>, identity_validator>;
+      using coords_t = affine_coordinates<my_affine_space<float, float, 1>, basis_t, canonical_representation<float, no_bounds<float>>, alice, identity_validator>;
       test_affine_1<coords_t>();
     }
 
     {
-      using basis_t =  canonical_right_handed_basis<euclidean_vector_space<float, 1>>;
-      using coords_t = euclidean_affine_coordinates<float, 1, basis_t, alice, canonical_representation<no_bounds<float>>, identity_validator>;
+      using basis_t =  canonical_right_handed_basis<euclidean_vector_space<1>>;
+      using coords_t = euclidean_affine_coordinates<1, basis_t, canonical_representation<float, no_bounds<float>>, alice, identity_validator>;
       test_affine_1<coords_t>();
     }
   }
@@ -42,10 +42,10 @@ namespace sequoia::testing
   template<class AffineCoords>
   void affine_coordinates_false_negative_test::test_affine_1()
   {
-    using field_t = AffineCoords::commutative_ring_type;
-    using array_t = std::array<field_t, 1>;
+    using value_t = AffineCoords::value_type;
+    using array_t = std::array<value_t, 1>;
 
-    AffineCoords x{}, y{field_t(1)};
+    AffineCoords x{}, y{value_t(1)};
     check(equivalence, "", x, array_t{1});
     check(equality, "", x, y);
   }

@@ -315,27 +315,27 @@ namespace sequoia::physics::impl
   {
   };
 
-  template<class T, class Arena, int I>
+  template<class Arena, int I>
     requires (I != 0)
-  struct potentially_prunable<type_counter<euclidean_vector_space<T, 1, Arena>, I>> : std::true_type
+  struct potentially_prunable<type_counter<euclidean_vector_space<1, Arena>, I>> : std::true_type
   {
   };
 
-  template<class T, class Arena, int I>
+  template<class Arena, int I>
     requires (I != 0)
-  struct potentially_prunable<type_counter<dual<euclidean_vector_space<T, 1, Arena>>, I>> : std::true_type
+  struct potentially_prunable<type_counter<dual<euclidean_vector_space<1, Arena>>, I>> : std::true_type
   {
   };
 
-  template<class T, class Arena, int I>
+  template<class Arena, int I>
     requires (I != 0)
-  struct potentially_prunable<type_counter<euclidean_nonnegative_space<T, 1, Arena>, I>> : std::true_type
+  struct potentially_prunable<type_counter<euclidean_nonnegative_space<1, Arena>, I>> : std::true_type
   {
   };
 
-  template<class T, class Arena, int I>
+  template<class Arena, int I>
     requires (I != 0)
-  struct potentially_prunable<type_counter<dual<euclidean_nonnegative_space<T, 1, Arena>>, I>> : std::true_type
+  struct potentially_prunable<type_counter<dual<euclidean_nonnegative_space<1, Arena>>, I>> : std::true_type
   {
   };
 
@@ -394,8 +394,8 @@ namespace sequoia::physics::impl
     using root_space_t =
       std::conditional_t<
         anyFreeModule,
-        direct_product<euclidean_vector_space<std::common_type_t<commutative_ring_type_of_t<Ts>...>, 1, std::common_type_t<arena_type_of_t<Ts>...>>>,
-        direct_product<euclidean_half_line<std::common_type_t<commutative_ring_type_of_t<Ts>...>, std::common_type_t<arena_type_of_t<Ts>...>>>
+        direct_product<euclidean_vector_space<1, std::common_type_t<arena_type_of_t<Ts>...>>>,
+        direct_product<euclidean_half_line<std::common_type_t<arena_type_of_t<Ts>...>>>
       >;
     
     using type

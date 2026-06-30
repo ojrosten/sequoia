@@ -23,7 +23,10 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    template<class Set, maths::weak_commutative_ring Ring, std::size_t D>
+    template<class Set, class Ring, std::integral SetRep, std::size_t D>
     void test_free_module();
+
+    template<class Set, class Ring, std::integral SetRep, std::size_t D>
+    void test_convex();
   };
 }

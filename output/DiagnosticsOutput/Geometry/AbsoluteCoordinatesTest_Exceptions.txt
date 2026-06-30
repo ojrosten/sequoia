@@ -46,7 +46,7 @@ Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 858
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 861
 
 Expected Exception Type:
 [std::domain_error]

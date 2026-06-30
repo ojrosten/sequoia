@@ -77,7 +77,8 @@ namespace sequoia::testing
     using vec_space_t = my_vec_space<sets::R<2>, Field, 2>;
     using vec_t       = vector_coordinates<vec_space_t, canonical_basis<sets::R<2>, Field, 2>, polar_representation<Field>, Validator>;
 
-    static_assert(defines_scalar_multiplication_for_v<vec_space_t, polar_representation<Field>>);
+    STATIC_CHECK(defines_scalar_multiplication_for_v<vec_space_t, polar_representation<Field>>);
+    STATIC_CHECK(      defines_scalar_division_for_v<vec_space_t, polar_representation<Field>>);
     
     check(equality, "", vec_t{1, 1} * 2, vec_t{2, 1});
   }

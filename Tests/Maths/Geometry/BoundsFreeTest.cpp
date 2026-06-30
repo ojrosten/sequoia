@@ -58,11 +58,11 @@ namespace sequoia::testing
     STATIC_CHECK( bounds<coordinate_bounds<double>>);
     STATIC_CHECK( bounds<annulus_bounds<float>>);
     STATIC_CHECK( bounds<annulus_bounds<double>>);
-    STATIC_CHECK( bounds_for<coordinate_bounds<double>, euclidean_vector_space<double, 1>>);
-    STATIC_CHECK( bounds_for<coordinate_bounds<double>, euclidean_vector_space<double, 2>>);
-    STATIC_CHECK( bounds_for<annulus_bounds<double>, euclidean_vector_space<double, 2>>);
-    STATIC_CHECK(!bounds_for<annulus_bounds<double>, euclidean_vector_space<double, 1>>);
-    STATIC_CHECK(!bounds_for<annulus_bounds<double>, euclidean_vector_space<double, 3>>);
+    STATIC_CHECK( bounds_for<coordinate_bounds<double>, euclidean_vector_space<1>>);
+    STATIC_CHECK( bounds_for<coordinate_bounds<double>, euclidean_vector_space<2>>);
+    STATIC_CHECK( bounds_for<annulus_bounds<double>, euclidean_vector_space<2>>);
+    STATIC_CHECK(!bounds_for<annulus_bounds<double>, euclidean_vector_space<1>>);
+    STATIC_CHECK(!bounds_for<annulus_bounds<double>, euclidean_vector_space<3>>);
   }
 
   void bounds_free_test::test_exceptions()

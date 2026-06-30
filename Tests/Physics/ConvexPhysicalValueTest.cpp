@@ -28,9 +28,9 @@ namespace
     };
   }
 
-  template<std::floating_point Rep, std::size_t N, class Arena>
+  template<std::size_t N, class Arena>
   struct colour_space
-    : physical_value_convex_space<sets::colours<N, Arena>, Rep, N, colour_space<Rep, N, Arena>>
+    : physical_value_convex_space<sets::colours<N, Arena>,N, colour_space<N, Arena>>
   {
     using arena_type           = Arena;
     using base_space           = colour_space;
@@ -46,11 +46,11 @@ namespace
   template<std::floating_point T, std::size_t N, class Arena=implicit_common_arena>
   using colours
     = physical_value<
-        colour_space<T, N, Arena>,
+        colour_space<N, Arena>,
         normalized_colour_t<N>,
-        unit_defined_right_handed_basis<free_module_type_of_t<colour_space<T, N, Arena>>, normalized_colour_t<N>>,
-        to_origin_type_t<colour_space<T, N, Arena>>,
-        canonical_representation<coordinate_bounds{T(0.0), T(1.0)}>
+        unit_defined_right_handed_basis<free_module_type_of_t<colour_space<N, Arena>>, normalized_colour_t<N>>,    
+        canonical_representation<T, coordinate_bounds{T(0.0), T(1.0)}>,
+        to_origin_type_t<colour_space<N, Arena>>
       >;
 }
 
@@ -59,7 +59,7 @@ namespace sequoia::physics
   template<std::floating_point T, std::size_t N>
   struct default_space<normalized_colour_t<N>, T>
   {
-    using type = colour_space<T, N, implicit_common_arena>;
+    using type = colour_space<N, implicit_common_arena>;
   };
 }
 

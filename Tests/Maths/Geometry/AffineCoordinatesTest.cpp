@@ -40,11 +40,11 @@ namespace sequoia::maths
     validator_for<A, Representation> Validator
   >
   struct coordinate_transformation<
-    affine_coordinates<A, Basis, alice<A>, Representation, Validator>,
-    affine_coordinates<A, Basis, bob<A>, Representation, Validator>
+    affine_coordinates<A, Basis, Representation, alice<A>, Validator>,
+    affine_coordinates<A, Basis,Representation, bob<A>, Validator>
   >
   {
-    using disp_type = affine_coordinates<A, Basis, alice<A>, Representation, Validator>::displacement_coordinates_type;
+    using disp_type = affine_coordinates<A, Basis, Representation, alice<A>, Validator>::displacement_coordinates_type;
 
     disp_type displacement{};
 
@@ -53,10 +53,10 @@ namespace sequoia::maths
     {}
       
     [[nodiscard]]
-    constexpr affine_coordinates<A, Basis, bob<A>, Representation, Validator>
-      operator()(const affine_coordinates<A, Basis, alice<A>, Representation, Validator>& c) const noexcept
+    constexpr affine_coordinates<A, Basis, Representation, bob<A>, Validator>
+      operator()(const affine_coordinates<A, Basis, Representation, alice<A>, Validator>& c) const noexcept
       {     
-        return affine_coordinates<A, Basis, bob<A>, Representation, Validator>{(c + displacement).values()};
+        return affine_coordinates<A, Basis, Representation, bob<A>, Validator>{(c + displacement).values()};
       }
   };
 }
@@ -82,7 +82,7 @@ namespace sequoia::testing
   {
     using space_t  = my_affine_space<Element, Field, D>;
     using basis_t  = canonical_basis<Element, Field, D>;
-    using affine_t = affine_coordinates<space_t, basis_t, alice<space_t>, canonical_representation<no_bounds<to_bounds_value_type_t<Field>>>, identity_validator>;
+    using affine_t = affine_coordinates<space_t, basis_t, canonical_representation<Field, no_bounds<to_bounds_value_type_t<Field>>>, alice<space_t>, identity_validator>;
     using delta_t  = affine_t::displacement_coordinates_type;
     using value_t  = Field;
     STATIC_CHECK(!can_multiply<affine_t, value_t>);
@@ -100,7 +100,7 @@ namespace sequoia::testing
     
     coordinates_operations<affine_t>{*this}.execute();
 
-    using affine2_t = affine_coordinates<space_t, basis_t, bob<space_t>, canonical_representation<no_bounds<to_bounds_value_type_t<Field>>>, identity_validator>;
+    using affine2_t = affine_coordinates<space_t, basis_t, canonical_representation<Field, no_bounds<to_bounds_value_type_t<Field>>>, bob<space_t>, identity_validator>;
     affine2_t bob_coords{coordinate_transformation<affine_t, affine2_t>{delta_t{Field{-1.0}}}(affine_t{})};
 
     check(equality, "", bob_coords, affine2_t{Field{-1.0}});

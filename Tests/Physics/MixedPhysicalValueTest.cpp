@@ -25,7 +25,7 @@ namespace sequoia::testing
   void mixed_physical_value_test::run_tests()
   {
     // TO DO: put this somewhere better!
-    STATIC_CHECK(representation<canonical_representation<no_bounds<float>>>);
+    STATIC_CHECK(representation<canonical_representation<float, no_bounds<float>>>);
     
     test_mixed();
     test_mixed_vector();

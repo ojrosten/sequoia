@@ -68,7 +68,7 @@ namespace sequoia::testing
   template<std::floating_point T>
   void absolute_logarithmic_coordinates_test::test_absolute_logarithmic()
   {
-    using space_t     = euclidean_nonnegative_space<T, 1, mathematical_arena>;
+    using space_t     = euclidean_nonnegative_space<1, mathematical_arena>;
     using rep_t       = logarithmic_representation<no_bounds<T>>;
     using basis_t     = canonical_right_handed_basis<free_module_type_of_t<space_t>>;
     using coords_t    = coordinates<space_t, basis_t, rep_t, throwing_validator>;
@@ -89,6 +89,8 @@ namespace sequoia::testing
     STATIC_CHECK(has_unary_plus<coords_t>);
     STATIC_CHECK(!has_unary_minus<coords_t>);
     STATIC_CHECK(!coords_t::has_freely_mutable_components);
+    STATIC_CHECK(defines_addition_for_single_value_v<space_t, logarithmic_representation<no_bounds<T>>>);
+    STATIC_CHECK(defines_subtraction_for_single_value_v<space_t, logarithmic_representation<no_bounds<T>>>);
 
     using variant_t  = std::variant<coords_t, delta_t>;
     using graph_type = transition_checker<variant_t>::transition_graph;
