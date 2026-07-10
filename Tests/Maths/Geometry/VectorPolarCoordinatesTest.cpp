@@ -21,20 +21,21 @@ namespace sequoia::testing
 
   void vector_polar_coordinates_test::run_tests()
   {
-    test_vec<sets::R<2>, float , 2, basic_polar_representation<float>, identity_validator>();
-    test_vec<sets::R<2>, double, 2, polar_representation<double>, identity_validator>();
+    test_vec<sets::R<2>, sets::R<1>, 2, basic_polar_representation<float >, identity_validator>();
+    test_vec<sets::R<2>, sets::R<1>, 2,       polar_representation<double>, identity_validator>();
 
     test_refined<float, identity_validator>();
 
     // TO DO: test different bounds
   }
 
-  template<class Set, maths::weak_field Field, std::size_t D, class Representation, class Validator>
+  template<class Set, class Field, std::size_t D, class Representation, class Validator>
+    requires maths::identifies_as_field_v<Field>
   void vector_polar_coordinates_test::test_vec()
   {
     using vec_space_t = my_vec_space<Set, Field, D>;
     using vec_t       = vector_coordinates<vec_space_t, canonical_basis<Set, Field, D>, Representation, Validator>;
-    using value_t     = Field;
+    using value_t     = Representation::value_type;
     using delta_t     = vec_t::displacement_coordinates_type;
 
     STATIC_CHECK(representation_for_span<Representation, vec_space_t>);
@@ -58,10 +59,10 @@ namespace sequoia::testing
     coordinates_operations<vec_t>{*this}.execute();
        
     check(
-      within_tolerance{std::same_as<Field, float> ? value_t(1e-7) : value_t(1e-14)},
+      within_tolerance{std::same_as<value_t, float> ? value_t(1e-7) : value_t(1e-14)},
       "The resultant angle may be within the tolerance of either 0 or 2pi, depending",
       []() {
-        constexpr auto pi{std::numbers::pi_v<Field>};
+        constexpr auto pi{std::numbers::pi_v<value_t>};
         constexpr vec_t u{1, 0}, v{1, pi};
         auto w{u-v};      
         w[1] = std::fmod(w[1], 2*pi);
@@ -71,14 +72,14 @@ namespace sequoia::testing
     );
   }
 
-  template<maths::weak_field Field, class Validator>
+  template<std::floating_point ValType, class Validator>
   void vector_polar_coordinates_test::test_refined()
   {
-    using vec_space_t = my_vec_space<sets::R<2>, Field, 2>;
-    using vec_t       = vector_coordinates<vec_space_t, canonical_basis<sets::R<2>, Field, 2>, polar_representation<Field>, Validator>;
+    using vec_space_t = my_vec_space<sets::R<2>, sets::R<1>, 2>;
+    using vec_t       = vector_coordinates<vec_space_t, canonical_basis<sets::R<2>, sets::R<1>, 2>, polar_representation<ValType>, Validator>;
 
-    STATIC_CHECK(defines_scalar_multiplication_for_v<vec_space_t, polar_representation<Field>>);
-    STATIC_CHECK(      defines_scalar_division_for_v<vec_space_t, polar_representation<Field>>);
+    STATIC_CHECK(defines_scalar_multiplication_for_v<vec_space_t, polar_representation<ValType>>);
+    STATIC_CHECK(      defines_scalar_division_for_v<vec_space_t, polar_representation<ValType>>);
     
     check(equality, "", vec_t{1, 1} * 2, vec_t{2, 1});
   }

@@ -94,7 +94,8 @@ namespace sequoia::testing
     }
   };
   
-  template<class Set, maths::weak_field Field, std::size_t Dim>
+  template<class Set, class Field, std::size_t Dim>
+    requires maths::identifies_as_field_v<Field>
   struct my_vec_space
   {
     using set_type               = Set;
@@ -104,39 +105,44 @@ namespace sequoia::testing
     constexpr static std::size_t dimension{Dim};
     constexpr static std::size_t D{dimension};
 
-    template<maths::basis Basis, maths::representation_for<my_vec_space> Representation, maths::validator_for<my_vec_space, Representation> Validator>
-      requires std::floating_point<field_type>&& is_orthonormal_basis_v<Basis>
+    template<maths::basis Basis, maths::representation_for<my_vec_space> Representation, maths::validator_for<my_vec_space, Representation> Validator, std::floating_point ValType=Representation::value_type>
+      requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
-    friend constexpr field_type inner_product(
+    friend constexpr ValType inner_product(
       const maths::vector_coordinates<my_vec_space, Basis, Representation, Validator>& lhs,
       const maths::vector_coordinates<my_vec_space, Basis, Representation, Validator>& rhs
     )
     {
+      using value_t = ValType;
+
       return
         std::ranges::fold_left(
           std::views::zip(lhs.values(), rhs.values()), // TO DO: use Representation
-          field_type{},
-          [](field_type f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); }
+          value_t{},
+          [](value_t f, const auto& z){ return f + std::get<0>(z) * std::get<1>(z); }
        );
     }
 
-    template<maths::basis Basis, maths::representation_for<my_vec_space> Representation, maths::validator_for<my_vec_space, Representation> Validator>
-      requires is_complex_v<field_type>&& is_orthonormal_basis_v<Basis>
+    template<maths::basis Basis, maths::representation_for<my_vec_space> Representation, maths::validator_for<my_vec_space, Representation> Validator, class ValType=Representation::value_type>
+      requires is_complex_v<ValType> && is_orthonormal_basis_v<Basis>
     [[nodiscard]]
-    friend constexpr field_type inner_product(
+    friend constexpr ValType inner_product(
       const maths::vector_coordinates<my_vec_space, Basis, Representation, Validator>& lhs,
       const maths::vector_coordinates<my_vec_space, Basis, Representation, Validator>& rhs
     )
     {
+      using value_t = ValType;
+
       return
         std::ranges::fold_left(
           std::views::zip(lhs.values(), rhs.values()), // TO DO: use Representation
-          field_type{},
-          [](field_type f, const auto& z){ return f + conj(std::get<0>(z)) * std::get<1>(z); });
+          value_t{},
+          [](value_t f, const auto& z){ return f + conj(std::get<0>(z)) * std::get<1>(z); });
     }
   };
 
-  template<class Set, maths::weak_field Field, std::size_t D>
+  template<class Set, class Field, std::size_t D>
+    requires maths::identifies_as_field_v<Field>
   struct my_affine_space
   {
     using set_type          = Set;
@@ -144,7 +150,8 @@ namespace sequoia::testing
     using is_affine_space   = std::true_type;
   };
 
-  template<class Set, maths::weak_field Field, std::size_t D>
+  template<class Set, class Field, std::size_t D>
+    requires maths::identifies_as_field_v<Field>
   struct canonical_basis
   {
     using vector_space_type = my_vec_space<Set, Field, D>;

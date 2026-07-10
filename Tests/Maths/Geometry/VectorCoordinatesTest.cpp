@@ -62,25 +62,26 @@ namespace sequoia::testing
 
   void vector_coordinates_test::run_tests()
   {
-    test_vec<sets::R<1>, float, 1>();
-    test_vec<sets::R<1>, double, 1>();
-    test_vec<sets::C<1>, std::complex<float>, 1>();
+    test_vec<sets::R<1>, sets::R<1>, 1, float>();
+    test_vec<sets::R<1>, sets::R<1>, 1, double>();
+    test_vec<sets::C<1>, sets::C<1>, 1, std::complex<float>>();
 
-    test_vec<sets::R<2>, float, 2>();
-    test_vec<sets::C<2>, std::complex<double>, 2>();
-    test_vec<sets::C<1>, double, 2>(); // Complex numbers over the reals
+    test_vec<sets::R<2>, sets::R<1>, 2, float>();
+    test_vec<sets::C<2>, sets::C<1>, 2, std::complex<double>>();
+    test_vec<sets::C<1>, sets::R<1>, 2, double>(); // Complex numbers over the reals
 
-    test_real_vec_1_inner_prod<sets::R<1>, float>();
-    test_complex_vec_1_inner_prod<sets::C<1>, std::complex<double>>();
+    test_real_vec_1_inner_prod   <sets::R<1>, sets::R<1>, float>();
+    test_complex_vec_1_inner_prod<sets::C<1>, sets::C<1>, std::complex<double>>();
   }
 
-  template<class Set, maths::weak_field Field, std::size_t D>
+  template<class Set, class Field, std::size_t D, class Rep>
+    requires maths::identifies_as_field_v<Field>
   void vector_coordinates_test::test_vec()
   {
     using vec_space_t = my_vec_space<Set, Field, D>;
     using basis_t     = canonical_basis<Set, Field, D>;
-    using vec_t       = vector_coordinates<vec_space_t, basis_t, canonical_representation<Field, no_bounds<to_bounds_value_type_t<Field>>>, identity_validator>;
-    using value_t     = Field;
+    using vec_t       = vector_coordinates<vec_space_t, basis_t, canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>, identity_validator>;
+    using value_t     = Rep;
     using delta_t     = vec_t::displacement_coordinates_type;
 
     STATIC_CHECK(vector_space<direct_product<vec_space_t, vec_space_t>>);
@@ -102,30 +103,33 @@ namespace sequoia::testing
     coordinates_operations<vec_t>{*this}.execute();
   }
 
-  template<class Set, std::floating_point Field>
+  template<class Set, class Field, std::floating_point Rep>
+      requires maths::identifies_as_field_v<Field>
   void vector_coordinates_test::test_real_vec_1_inner_prod()
   {
     using basis_t = canonical_basis<Set, Field, 1>;
-    using vec_t   = vector_coordinates<my_vec_space<Set, Field, 1>, basis_t, canonical_representation<Field, no_bounds<to_bounds_value_type_t<Field>>>, identity_validator>;
+    using vec_t   = vector_coordinates<my_vec_space<Set, Field, 1>, basis_t, canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>, identity_validator>;
+    using value_t = Rep;
 
     STATIC_CHECK(basis_for<canonical_basis<Set, Field, 1>, my_vec_space<Set, Field, 1>>);
 
-    check(equality, "", inner_product(vec_t{}, vec_t{Field(1)}), Field{});
-    check(equality, "", inner_product(vec_t{Field(1)}, vec_t{}), Field{});
-    check(equality, "", inner_product(vec_t{Field(-1)}, vec_t{Field(1)}), Field{-1});
-    check(equality, "", inner_product(vec_t{Field(1)}, vec_t{Field(-1)}), Field{-1});
-    check(equality, "", inner_product(vec_t{Field(1)}, vec_t{Field(1)}), Field{1});
-    check(equality, "", inner_product(vec_t{Field(-7)}, vec_t{Field(42)}), Field{-294});
+    check(equality, "", inner_product(vec_t{}           , vec_t{value_t(1)}) , value_t{});
+    check(equality, "", inner_product(vec_t{value_t(1)} , vec_t{})           , value_t{});
+    check(equality, "", inner_product(vec_t{value_t(-1)}, vec_t{value_t(1)}) , value_t{-1});
+    check(equality, "", inner_product(vec_t{value_t(1)} , vec_t{value_t(-1)}), value_t{-1});
+    check(equality, "", inner_product(vec_t{value_t(1)} , vec_t{value_t(1)}) , value_t{1});
+    check(equality, "", inner_product(vec_t{value_t(-7)}, vec_t{value_t(42)}), value_t{-294});
   }
 
-  template<class Set, class Field>
-    requires is_complex_v<Field>
+  template<class Set, class Field, class Rep>
+      requires maths::identifies_as_field_v<Field>
   void vector_coordinates_test::test_complex_vec_1_inner_prod()
   {
     using basis_t = canonical_basis<Set, Field, 1>;
-    using vec_t   = vector_coordinates<my_vec_space<Set, Field, 1>, basis_t, canonical_representation<Field, no_bounds<to_bounds_value_type_t<Field>>>, identity_validator>;
+    using vec_t   = vector_coordinates<my_vec_space<Set, Field, 1>, basis_t, canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>, identity_validator>;
+    using value_t = Rep;
 
-    check(equality, "", inner_product(vec_t{Field(1, 1)}, vec_t{Field(1, 1)}), Field{2});
-    check(equality, "", inner_product(vec_t{Field(1, -1)}, vec_t{Field(1, 1)}), Field{0, 2});
+    check(equality, "", inner_product(vec_t{value_t(1, 1)} , vec_t{value_t(1, 1)}), value_t{2});
+    check(equality, "", inner_product(vec_t{value_t(1, -1)}, vec_t{value_t(1, 1)}), value_t{0, 2});
   }
 }

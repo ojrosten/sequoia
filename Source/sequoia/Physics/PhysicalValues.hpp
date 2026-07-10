@@ -701,6 +701,7 @@ namespace sequoia::physics
     struct differences
     {
       using physical_value_set_type = PhysicalValueSet;
+      using is_field = std::true_type; // TO DO: generalize this
     };
   }
   
@@ -709,7 +710,7 @@ namespace sequoia::physics
   {
     constexpr static std::size_t dimension{Space::dimension};
     using set_type              = sets::classical::differences<typename Space::set_type>;
-    using commutative_ring_type = maths::sets::R<dimension>;//TO DO - total hack. Should be something like associated_disp_space_of_t<Space>
+    using commutative_ring_type = sets::classical::differences<typename Space::set_type>;
     using is_free_module        = std::true_type;
     using arena_type            = Space::arena_type;
   };
@@ -720,7 +721,7 @@ namespace sequoia::physics
   {
     constexpr static std::size_t dimension{Space::dimension};
     using set_type              = sets::classical::differences<typename Space::set_type>;
-    using commutative_ring_type = maths::sets::R<dimension>;//TO DO - total hack. Should be something like associated_disp_space_of_t<Space>
+    using commutative_ring_type = sets::classical::differences<typename Space::set_type>;
     using is_free_module        = std::true_type;
     using base_space            = associated_displacement_space<typename Space::base_space>;
     using arena_type            = Space::arena_type;
@@ -1537,6 +1538,29 @@ namespace sequoia::maths
     }
   };
 }
+
+namespace sequoia::maths
+{
+  // TO DO Generalize this
+  template<class S, class T>
+  struct common_ring<physics::sets::classical::differences<S>, physics::sets::classical::differences<T>>
+  {
+    using type = sets::R<1>;
+  };
+
+  template<class T>
+  struct common_ring<sets::R<1>, physics::sets::classical::differences<T>>
+  {
+    using type = sets::R<1>;
+  };
+
+  template<class T>
+  struct common_ring<physics::sets::classical::differences<T>, sets::R<1>>
+  {
+    using type = sets::R<1>;
+  };
+}
+
 
 template<
   sequoia::maths::convex_space ValueSpace,

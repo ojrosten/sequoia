@@ -23,10 +23,12 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    template<class Set, maths::weak_field Field, std::size_t D, class Representation, class Validator>
+    // TO DO: infer D
+    template<class Set, class Field, std::size_t D, class Representation, class Validator>
+      requires maths::identifies_as_field_v<Field>
     void test_vec();
 
-    template<maths::weak_field Field, class Validator>
+    template<std::floating_point ValType, class Validator>
     void test_refined();
   };
 }

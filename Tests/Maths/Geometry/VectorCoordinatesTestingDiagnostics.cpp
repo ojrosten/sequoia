@@ -22,8 +22,8 @@ namespace sequoia::testing
   void vector_coordinates_false_negative_test::run_tests()
   {
     {
-      using basis_t  = canonical_basis<sets::R<1>, float, 1>;
-      using coords_t = vector_coordinates<my_vec_space<sets::R<1>, float, 1>, basis_t, canonical_representation<float, no_bounds<float>>, identity_validator>;
+      using basis_t  = canonical_basis<sets::R<1>, sets::R<1>, 1>;
+      using coords_t = vector_coordinates<my_vec_space<sets::R<1>, sets::R<1>, 1>, basis_t, canonical_representation<float, no_bounds<float>>, identity_validator>;
       test_vec_1<coords_t>();
     }
 

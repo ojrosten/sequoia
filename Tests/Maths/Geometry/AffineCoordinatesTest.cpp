@@ -71,20 +71,21 @@ namespace sequoia::testing
 
   void affine_coordinates_test::run_tests()
   {
-    test_affine<float, float, 1>();
-    test_affine<double, double, 1>();
-    test_affine<std::complex<float>, std::complex<float>, 1>();
-    test_affine<std::complex<float>, float, 2>();
+    test_affine<sets::R<1>, sets::R<1>, 1, float>();
+    test_affine<sets::R<1>, sets::R<1>, 1, double>();
+    test_affine<sets::C<1>, sets::C<1>, 1, std::complex<float>>();
+    test_affine<sets::C<1>, sets::R<1>, 2, float>();
   }
 
-  template<class Element, maths::weak_field Field, std::size_t D>
+  template<class Set, class Field, std::size_t D, class Rep>
+    requires maths::identifies_as_field_v<Field>
   void affine_coordinates_test::test_affine()
   {
-    using space_t  = my_affine_space<Element, Field, D>;
-    using basis_t  = canonical_basis<Element, Field, D>;
-    using affine_t = affine_coordinates<space_t, basis_t, canonical_representation<Field, no_bounds<to_bounds_value_type_t<Field>>>, alice<space_t>, identity_validator>;
+    using space_t  = my_affine_space<Set, Field, D>;
+    using basis_t  = canonical_basis<Set, Field, D>;
+    using affine_t = affine_coordinates<space_t, basis_t, canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>, alice<space_t>, identity_validator>;
     using delta_t  = affine_t::displacement_coordinates_type;
-    using value_t  = Field;
+    using value_t  = Rep;
     STATIC_CHECK(!can_multiply<affine_t, value_t>);
     STATIC_CHECK(!can_divide<affine_t, value_t>);
     STATIC_CHECK(!can_divide<affine_t, affine_t>);
@@ -100,9 +101,9 @@ namespace sequoia::testing
     
     coordinates_operations<affine_t>{*this}.execute();
 
-    using affine2_t = affine_coordinates<space_t, basis_t, canonical_representation<Field, no_bounds<to_bounds_value_type_t<Field>>>, bob<space_t>, identity_validator>;
-    affine2_t bob_coords{coordinate_transformation<affine_t, affine2_t>{delta_t{Field{-1.0}}}(affine_t{})};
+    using affine2_t = affine_coordinates<space_t, basis_t, canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>, bob<space_t>, identity_validator>;
+    affine2_t bob_coords{coordinate_transformation<affine_t, affine2_t>{delta_t{Rep{-1.0}}}(affine_t{})};
 
-    check(equality, "", bob_coords, affine2_t{Field{-1.0}});
+    check(equality, "", bob_coords, affine2_t{Rep{-1.0}});
   }
 }

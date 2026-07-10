@@ -276,6 +276,28 @@ namespace sequoia::maths
       This includes all the arithmetic types, with the unsigned one behaving precisely as an abelian group
       under addition.
    */
+
+  template<class T>
+  inline constexpr bool identifies_as_commutative_ring_v{
+     requires {
+      typename T::is_commutative_ring;
+      requires std::convertible_to<typename T::is_commutative_ring, std::true_type>;
+    }
+  };
+
+  template<class T>
+  inline constexpr bool identifies_as_field_v{
+     requires {
+      typename T::is_field;
+      requires std::convertible_to<typename T::is_field, std::true_type>;
+    }
+  };
+
+  template<class T>
+  inline constexpr bool is_commutative_ring_v{
+    identifies_as_commutative_ring_v<T> || identifies_as_field_v<T>
+  };
+
   template<class T>
   struct weakly_abelian_group_under_addition : std::false_type {};
 
@@ -363,7 +385,7 @@ namespace sequoia::maths
   inline constexpr bool has_commutative_ring_type_v{
     requires { 
       typename T::commutative_ring_type;
-      //requires weak_commutative_ring<typename T::commutative_ring_type>;
+      requires is_commutative_ring_v<typename T::commutative_ring_type>;
     }
   };
 
@@ -374,7 +396,7 @@ namespace sequoia::maths
   inline constexpr bool has_field_type_v{
     requires { 
       typename T::field_type;
-      //requires weak_field<typename T::field_type>;
+      requires identifies_as_field_v<typename T::field_type>;
     }
   };
 
@@ -1262,21 +1284,49 @@ namespace sequoia::maths
    */
 
   template<class... Ts>
+  struct common_ring
+  {
+  };
+  
+  template<class... Ts>
+  using common_ring_t = common_ring<Ts...>::type;
+
+  template<class T>
+    requires is_commutative_ring_v<T>
+  struct common_ring<T>
+  {
+    using type = T;
+  };
+
+  template<class T, class U, class V>
+    requires is_commutative_ring_v<T> && is_commutative_ring_v<U> && is_commutative_ring_v<V>
+  struct common_ring<T, U, V> : common_ring<common_ring_t<T, U>, V>
+  {
+  };
+
+  template<class T, class U, class V, class... Ws>
+    requires is_commutative_ring_v<T> && is_commutative_ring_v<U> && is_commutative_ring_v<V>
+  struct common_ring<T, U, V, Ws...> : common_ring<common_ring_t<T, U>, common_ring_t<V, Ws...>>
+  {
+  };
+
+  // TO DO: this really needs to become tensor_product
+  template<class... Ts>
   struct direct_product
   {
   };
 
-  template<weak_commutative_ring... Rs>
+  /*template<weak_commutative_ring... Rs>
   inline constexpr bool has_common_ring_v{
     ((weak_field<Rs> && ...) || (!weak_field<Rs> && ...)) && requires { typename std::common_type<Rs...>::type; }
-  };
+    };*/
 
   template<free_module... Ts>
-  requires (sizeof...(Ts) >= 1) // TO DO&& has_common_ring_v<commutative_ring_type_of_t<Ts>...>
+    requires (sizeof...(Ts) >= 1)
   struct direct_product<Ts...>
   {
     using set_type              = direct_product<typename Ts::set_type...>;
-    using commutative_ring_type = direct_product<commutative_ring_type_of_t<Ts>...>;// TO DO std::common_type_t<commutative_ring_type_of_t<Ts>...>;
+    using commutative_ring_type = common_ring_t<commutative_ring_type_of_t<Ts>...>;
     using is_free_module        = std::true_type;
     constexpr static std::size_t dimension{(Ts::dimension + ...)};
   };
@@ -2579,10 +2629,11 @@ namespace sequoia::maths
     /** @ingroup Sets
         @brief Class template for giving a name to the set of integers and its generalization to other dimensionalities
      */
-    template<std::size_t D>
+    template<std::size_t N>
     struct Z
     {
-      constexpr static std::size_t dimension{D};
+      constexpr static std::size_t dimension{N};
+      using is_commutative_ring = std::true_type;
     };
 
     /** @ingroup Sets
@@ -2601,6 +2652,7 @@ namespace sequoia::maths
     struct R
     {
       constexpr static std::size_t dimension{N};
+      using is_field = std::true_type;
     };
 
     /** @ingroup Sets
@@ -2616,10 +2668,10 @@ namespace sequoia::maths
     /** @ingroup Sets
         @brief Class template for giving a name to the set of non-negative real numbers and its generalization to other dimensionalities
      */
-    template<std::size_t D>
+    template<std::size_t N>
     struct orthant
     {
-      constexpr static std::size_t dimension{D};
+      constexpr static std::size_t dimension{N};
     };
 
     /** @ingroup Sets
@@ -2629,8 +2681,73 @@ namespace sequoia::maths
     struct C
     {
       constexpr static std::size_t dimension{N};
+      using is_field = std::true_type;
     };
   }
+
+  template<>
+  struct common_ring<sets::R<1>, sets::R<1>>
+  {
+    using type = sets::R<1>;
+  };
+
+  template<>
+  struct common_ring<sets::Z<1>, sets::R<1>>
+  {
+    using type = sets::R<1>;
+  };
+
+  template<>
+  struct common_ring<sets::R<1>, sets::Z<1>> : common_ring<sets::Z<1>, sets::R<1>>
+  {
+  };
+
+  template<>
+  struct common_ring<sets::C<1>, sets::C<1>>
+  {
+    using type = sets::C<1>;
+  };
+
+  template<>
+  struct common_ring<sets::C<1>, sets::R<1>>
+  {
+    using type = sets::C<1>;
+  };
+
+  template<>
+  struct common_ring<sets::R<1>, sets::C<1>> : common_ring<sets::C<1>, sets::R<1>>
+  {
+  };
+
+  template<class T>
+  struct displacement_space_of;
+
+  template<class T>
+  using displacement_space_of_t = displacement_space_of<T>::type;
+
+  template<class T>
+    requires identifies_as_field_v<T>
+  struct displacement_space_of<T>
+  {
+    using type = T;
+  };
+
+  template<std::size_t N>
+  struct displacement_space_of<sets::Z<N>>
+  {
+    using type = sets::R<N>;
+  };
+
+  template<class Rep, class Ring>
+  struct weak_representation_of
+  {
+  };
+
+  template<class Rep, class Ring>
+  using weak_representation_of_t = weak_representation_of<Rep, Ring>::type;
+
+  template<std::floating_point R>
+  struct weak_representation_of<R, sets::R<1>> : std::true_type {};
 
   template<class B>
   inline constexpr bool is_orthonormal_basis_v{
