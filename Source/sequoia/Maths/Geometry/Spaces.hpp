@@ -392,7 +392,8 @@ namespace sequoia::maths
 
   /** @ingroup PropertiesOfSpaces
       @brief Compile time constant reflecting whether a type exposes a nested type named commutative_ring_type which satisifes the weak_commutative_ring concept.
-   */ 
+   */
+
   template<class T>
   inline constexpr bool has_commutative_ring_type_v{
     requires { 
@@ -433,7 +434,7 @@ namespace sequoia::maths
         has_field_type_v<T>
     || requires { 
           typename T::commutative_ring_type;
-          // TO DO requires weak_field<typename T::commutative_ring_type>;
+          identifies_as_field_v<typename T::commutative_ring_type>;
         }
   };
 
