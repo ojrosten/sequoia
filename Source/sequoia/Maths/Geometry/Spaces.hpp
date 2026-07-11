@@ -1258,7 +1258,8 @@ namespace sequoia::maths
 
   template<>
   struct defines_identity_validator<identity_validator> : std::true_type {};
-  
+
+  // Redo this, since we've switched to tensor product
   /** @defgroup DirectProduct Direct Product
       @brief Direct Products are one way in which spaces can be composed to create new spaces.
 
@@ -1310,69 +1311,43 @@ namespace sequoia::maths
   {
   };
 
-  // TO DO: this really needs to become tensor_product
   template<class... Ts>
-  struct direct_product
+  struct tensor_product
   {
   };
-
-  /*template<weak_commutative_ring... Rs>
-  inline constexpr bool has_common_ring_v{
-    ((weak_field<Rs> && ...) || (!weak_field<Rs> && ...)) && requires { typename std::common_type<Rs...>::type; }
-    };*/
 
   template<free_module... Ts>
     requires (sizeof...(Ts) >= 1)
-  struct direct_product<Ts...>
+  struct tensor_product<Ts...>
   {
-    using set_type              = direct_product<typename Ts::set_type...>;
+    using set_type              = tensor_product<typename Ts::set_type...>;
     using commutative_ring_type = common_ring_t<commutative_ring_type_of_t<Ts>...>;
     using is_free_module        = std::true_type;
-    constexpr static std::size_t dimension{(Ts::dimension + ...)};
-  };
-
-  template<affine_space... Ts>
-    requires (sizeof...(Ts) >= 1) && (!free_module<Ts> && ...)
-  struct direct_product<Ts...>
-  {
-    using set_type         = direct_product<typename Ts::set_type...>;
-    using free_module_type = direct_product<free_module_type_of_t<Ts>...>;
-    using is_affine_space  = std::true_type;
+    constexpr static std::size_t dimension{(Ts::dimension * ...)};
   };
 
   template<convex_space... Ts>
     requires (sizeof...(Ts) >= 1)
+  // TO DO: distinguished origin
           && ((!affine_space<Ts> && ...) || ((free_module<Ts> || ...) && (!free_module<Ts> || ...)))
-  struct direct_product<Ts...>
+  struct tensor_product<Ts...>
   {
-    using set_type         = direct_product<typename Ts::set_type...>;
-    using free_module_type = direct_product<free_module_type_of_t<Ts>...>;
+    using set_type         = tensor_product<typename Ts::set_type...>;
+    using free_module_type = tensor_product<free_module_type_of_t<Ts>...>;
     using is_convex_space  = std::true_type;
   };
 
   template<class T>
-  struct is_direct_product : std::false_type {};
+  struct is_tensor_product : std::false_type {};
 
   template<class... Ts>
-  struct is_direct_product<direct_product<Ts...>> : std::true_type {};
+  struct is_tensor_product<tensor_product<Ts...>> : std::true_type {};
 
   template<class T>
-  using is_direct_product_t = is_direct_product<T>::type;
+  using is_tensor_product_t = is_tensor_product<T>::type;
 
   template<class T>
-  inline constexpr bool is_direct_product_v = is_direct_product<T>::value;
-
-  template<class T>
-  struct direct_product_cardinality;
-
-  template<class T>
-  inline constexpr std::size_t direct_product_cardinality_v{direct_product_cardinality<T>::value};
-
-  template<class... Ts>
-  struct direct_product_cardinality<direct_product<Ts...>>
-  {
-    constexpr static auto value{sizeof...(Ts)};
-  };
+  inline constexpr bool is_tensor_product_v = is_tensor_product<T>::value;
 
   /** @defgroup DualSpaces Dual Spaces
       @brief Dual vector spaces and various generalizations.
@@ -2889,8 +2864,8 @@ namespace sequoia::maths
   };
 
   template<convex_space... Ts>
-    requires (!has_arena_type_v<direct_product<Ts...>>)
-  struct arena_type_of<direct_product<Ts...>>
+    requires (!has_arena_type_v<tensor_product<Ts...>>)
+  struct arena_type_of<tensor_product<Ts...>>
   {
     using type = std::common_type_t<arena_type_of_t<Ts>...>;
   };

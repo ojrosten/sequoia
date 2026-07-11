@@ -39,9 +39,9 @@ namespace sequoia::testing
     using delta_t     = vec_t::displacement_coordinates_type;
 
     STATIC_CHECK(representation_for_span<Representation, vec_space_t>);
-    STATIC_CHECK(vector_space<direct_product<vec_space_t, vec_space_t>>);
-    STATIC_CHECK(!vector_space<direct_product<vec_t, vec_t>>);
-    STATIC_CHECK(vector_space<direct_product<direct_product<vec_space_t, vec_space_t>, vec_space_t>>);
+    STATIC_CHECK(vector_space<tensor_product<vec_space_t, vec_space_t>>);
+    STATIC_CHECK(!vector_space<tensor_product<vec_t, vec_t>>);
+    STATIC_CHECK(vector_space<tensor_product<tensor_product<vec_space_t, vec_space_t>, vec_space_t>>);
     STATIC_CHECK(can_multiply<vec_t, value_t>);
     STATIC_CHECK(can_divide<vec_t, value_t>);
     STATIC_CHECK(!can_divide<vec_t, vec_t>);

@@ -75,8 +75,8 @@ namespace sequoia::maths
   template<convex_space... Ts>
   struct to_base_space<physics::composite_space<Ts...>>
   {
-    using sorted_direct_product_t = meta::stable_sort_t<direct_product<to_base_space_t<Ts>...>,  meta::type_comparator>;
-    using type = physics::impl::to_composite_space_t<physics::reduction_t<physics::impl::reduce_t<physics::impl::count_and_combine_t<sorted_direct_product_t>>>>;
+    using sorted_tensor_product_t = meta::stable_sort_t<tensor_product<to_base_space_t<Ts>...>,  meta::type_comparator>;
+    using type = physics::impl::to_composite_space_t<physics::reduction_t<physics::impl::reduce_t<physics::impl::count_and_combine_t<sorted_tensor_product_t>>>>;
   };
 }
 
@@ -97,11 +97,11 @@ namespace sequoia::physics
     requires (free_module<Ts> ||  ...)
   struct composite_space<Ts...>
   {    
-    using direct_product_t      = direct_product<Ts...>;
-    using set_type              = reduction<typename direct_product_t::set_type>;
-    using commutative_ring_type = commutative_ring_type_of_t<direct_product_t>;
+    using tensor_product_t      = tensor_product<Ts...>;
+    using set_type              = reduction<typename tensor_product_t::set_type>;
+    using commutative_ring_type = commutative_ring_type_of_t<tensor_product_t>;
     using is_free_module        = std::true_type;
-    using arena_type            = arena_type_of_t<direct_product<Ts...>>;
+    using arena_type            = arena_type_of_t<tensor_product<Ts...>>;
     constexpr static std::size_t dimension{std::ranges::max({dimension_of<Ts>...})};
   };
 
@@ -109,11 +109,11 @@ namespace sequoia::physics
     requires (!affine_space<Ts> && ...)
   struct composite_space<Ts...>
   {
-    using direct_product_t     = direct_product<Ts...>;
-    using set_type             = reduction<typename direct_product_t::set_type>;
+    using tensor_product_t     = tensor_product<Ts...>;
+    using set_type             = reduction<typename tensor_product_t::set_type>;
     using free_module_type     = composite_space<free_module_type_of_t<Ts>...>;
     using is_convex_space      = std::true_type;
-    using arena_type           = arena_type_of_t<direct_product<Ts...>>;
+    using arena_type           = arena_type_of_t<tensor_product<Ts...>>;
     using distinguished_origin = std::bool_constant<(has_distinguished_origin_v<Ts> && ...)>;
     using non_negative_orthant = std::bool_constant<(is_non_negative_orthant_v<Ts> && ...)>;
   };
@@ -121,39 +121,39 @@ namespace sequoia::physics
   // Units & Spaces
   template<class... Us>
     requires (physical_unit<Us> && ...) || (convex_space<Us> && ...)
-  struct reduction<direct_product<Us...>>
+  struct reduction<tensor_product<Us...>>
   {
-    using type = impl::simplify_t<direct_product<Us...>>;
+    using type = impl::simplify_t<tensor_product<Us...>>;
   };
  
   template<class... Ts, class U, template<class...> class TT>
     requires (std::same_as<TT<Ts...>, composite_unit <Ts...>> && physical_unit<U>)
           || (std::same_as<TT<Ts...>, composite_space<Ts...>> &&  convex_space<U>)
-  struct reduction<direct_product<TT<Ts...>, U>>
+  struct reduction<tensor_product<TT<Ts...>, U>>
   {
-    using type = impl::simplify_t<direct_product<Ts...>, direct_product<U>>;
+    using type = impl::simplify_t<tensor_product<Ts...>, tensor_product<U>>;
   };
 
   template<class T, class... Us, template<class...> class TT>
     requires (std::same_as<TT<Us...>, composite_unit <Us...>> && physical_unit<T>)
           || (std::same_as<TT<Us...>, composite_space<Us...>> &&  convex_space<T>)
-  struct reduction<direct_product<T, TT<Us...>>>
+  struct reduction<tensor_product<T, TT<Us...>>>
   {
-    using type = impl::simplify_t<direct_product<T>, direct_product<Us...>>;
+    using type = impl::simplify_t<tensor_product<T>, tensor_product<Us...>>;
   };
 
   template<class... Ts, class... Us, template<class...> class TT>
     requires (std::same_as<TT<Ts...>, composite_unit <Ts...>> && std::same_as<TT<Us...>, composite_unit <Us...>>)
           || (std::same_as<TT<Ts...>, composite_space<Ts...>> && std::same_as<TT<Us...>, composite_space<Us...>>)
-  struct reduction<direct_product<TT<Ts...>, TT<Us...>>>
+  struct reduction<tensor_product<TT<Ts...>, TT<Us...>>>
   {
-    using type = impl::simplify_t<direct_product<Ts...>, direct_product<Us...>>;
+    using type = impl::simplify_t<tensor_product<Ts...>, tensor_product<Us...>>;
   };
 
   // Bounds TO DO: this is actually Reps
   template<weak_commutative_ring LHRingRep, auto LHBounds, weak_commutative_ring RHRingRep, auto RHBounds>
     requires bounds_value<LHBounds> && bounds_value<RHBounds>
-  struct reduction<direct_product<canonical_representation<LHRingRep, LHBounds>, canonical_representation<RHRingRep, RHBounds>>>
+  struct reduction<tensor_product<canonical_representation<LHRingRep, LHBounds>, canonical_representation<RHRingRep, RHBounds>>>
   {
     using value_type = std::common_type_t<LHRingRep, RHRingRep>; // TO DO: rethink this
     using type = canonical_representation<value_type, LHBounds * RHBounds>;
@@ -161,7 +161,7 @@ namespace sequoia::physics
 
   // Representations - TO DO looks superflous
   template<representation R, representation S>
-  struct reduction<direct_product<R, S>>
+  struct reduction<tensor_product<R, S>>
   {
     using value_type = std::common_type_t<typename R::value_type, typename S::value_type>; // TO DO: rethink this
     using type = canonical_representation<value_type, R::bounds_v * S::bounds_v>;
@@ -267,7 +267,7 @@ namespace sequoia::physics
   template<physical_unit LHS, physical_unit RHS>
   constexpr auto operator*(LHS, RHS) noexcept
   {
-    return impl::to_composite_space_t<reduction_t<direct_product<LHS, RHS>>>{};
+    return impl::to_composite_space_t<reduction_t<tensor_product<LHS, RHS>>>{};
   }
 
   template<physical_unit LHS>
@@ -286,7 +286,7 @@ namespace sequoia::physics
   template<physical_unit LHS, physical_unit RHS>
   constexpr auto operator/(LHS, RHS) noexcept
   {
-    return impl::to_composite_space_t<reduction_t<direct_product<LHS, dual_of_t<RHS>>>>{};
+    return impl::to_composite_space_t<reduction_t<tensor_product<LHS, dual_of_t<RHS>>>>{};
   }
 
   template<physical_unit LHS>
@@ -314,9 +314,9 @@ namespace sequoia::physics
   struct physical_value_product<physical_value<LHSValueSpace, LHSUnit, LHSBasis, LHSRepresentation, distinguished_origin, Validator>,
                                 physical_value<RHSValueSpace, RHSUnit, RHSBasis, RHSRepresentation, distinguished_origin, Validator>>
   {
-    using value_space_type    = impl::to_composite_space_t<reduction_t<direct_product<LHSValueSpace, RHSValueSpace>>>;
-    using units_type          = impl::to_composite_space_t<reduction_t<direct_product<LHSUnit, RHSUnit>>>;
-    using representation_type = reduction_t<direct_product<LHSRepresentation, RHSRepresentation>>;
+    using value_space_type    = impl::to_composite_space_t<reduction_t<tensor_product<LHSValueSpace, RHSValueSpace>>>;
+    using units_type          = impl::to_composite_space_t<reduction_t<tensor_product<LHSUnit, RHSUnit>>>;
+    using representation_type = reduction_t<tensor_product<LHSRepresentation, RHSRepresentation>>;
     using type
       = physical_value<
           value_space_type,
@@ -631,7 +631,7 @@ namespace sequoia::physics
     requires (has_default_space_v<Ts, Rep> && ...)
   struct default_space<composite_unit<Ts...>, Rep>
   {
-    using type = impl::to_composite_space_t<reduction_t<direct_product<default_space_t<Ts, Rep>...>>>;
+    using type = impl::to_composite_space_t<reduction_t<tensor_product<default_space_t<Ts, Rep>...>>>;
   };
 
   // TO DO: a default valiator?

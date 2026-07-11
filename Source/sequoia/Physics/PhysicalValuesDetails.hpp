@@ -172,64 +172,64 @@ namespace sequoia::physics::impl
   using count_and_combine_t = count_and_combine<Ts...>::type;
 
   template<>
-  struct count_and_combine<direct_product<>>
+  struct count_and_combine<tensor_product<>>
   {
-    using type = direct_product<>;
+    using type = tensor_product<>;
   };
 
   template<class T>
   struct count_and_combine<T>
   {
-    using type = direct_product<type_counter<T, 1>>;
+    using type = tensor_product<type_counter<T, 1>>;
   };
 
   template<class T>
-  struct count_and_combine<direct_product<T>>
+  struct count_and_combine<tensor_product<T>>
   {
-    using type = direct_product<type_counter<T, 1>>;
+    using type = tensor_product<type_counter<T, 1>>;
   };
     
   template<class T, class... Ts>
-  struct count_and_combine<direct_product<T, Ts...>>
-    : count_and_combine<direct_product<Ts...>, count_and_combine_t<T>> 
+  struct count_and_combine<tensor_product<T, Ts...>>
+    : count_and_combine<tensor_product<Ts...>, count_and_combine_t<T>> 
   {};
 
   template<class T, class... Us, int... Is>
-  struct count_and_combine<direct_product<T>, direct_product<type_counter<Us, Is>...>>
-    : count_and_combine<T, direct_product<type_counter<Us, Is>...>>
+  struct count_and_combine<tensor_product<T>, tensor_product<type_counter<Us, Is>...>>
+    : count_and_combine<T, tensor_product<type_counter<Us, Is>...>>
   {};
 
   template<class T, class... Ts, class... Us, int... Is>
     requires (sizeof...(Ts) > 0)
-  struct count_and_combine<direct_product<T, Ts...>, direct_product<type_counter<Us, Is>...>>
-    : count_and_combine<direct_product<Ts...>, count_and_combine_t<T, direct_product<type_counter<Us, Is>...>>>
+  struct count_and_combine<tensor_product<T, Ts...>, tensor_product<type_counter<Us, Is>...>>
+    : count_and_combine<tensor_product<Ts...>, count_and_combine_t<T, tensor_product<type_counter<Us, Is>...>>>
   {};
 
   template<class S, class T, int I, class... Ts, int... Is>
-    requires (!is_direct_product_v<S> && !is_dual_v<S> && !std::is_same_v<S, T> && !std::is_same_v<S, associated_displacement_space<T>>)
-  struct count_and_combine<S, direct_product<type_counter<T, I>, type_counter<Ts, Is>...>>
+    requires (!is_tensor_product_v<S> && !is_dual_v<S> && !std::is_same_v<S, T> && !std::is_same_v<S, associated_displacement_space<T>>)
+  struct count_and_combine<S, tensor_product<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
-    using type = direct_product<type_counter<S, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
+    using type = tensor_product<type_counter<S, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
   };
 
   template<class S, class T, int I, class... Ts, int... Is>
   requires (!std::is_same_v<S, T> && !std::is_same_v<S, dual_of_t<T>> && !std::is_same_v<S, associated_displacement_space<T>> && !std::is_same_v<S, dual_of_t<associated_displacement_space<T>>> && !std::is_same_v<S, associated_displacement_space<dual_of_t<T>>>
                                   && !std::is_same_v<T, dual_of_t<S>> && !std::is_same_v<T, associated_displacement_space<S>> && !std::is_same_v<T, dual_of_t<associated_displacement_space<S>>> && !std::is_same_v<T, associated_displacement_space<dual_of_t<S>>>) 
-  struct count_and_combine<dual<S>, direct_product<type_counter<T, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<dual<S>, tensor_product<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
-    using type = direct_product<type_counter<dual<S>, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
+    using type = tensor_product<type_counter<dual<S>, 1>, type_counter<T, I>, type_counter<Ts, Is>...>;
   };
 
   template<class T, int I, class... Ts, int... Is>
-  struct count_and_combine<T, direct_product<type_counter<T, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<T, tensor_product<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
-    using type = direct_product<type_counter<T, I+1>, type_counter<Ts, Is>...>;
+    using type = tensor_product<type_counter<T, I+1>, type_counter<Ts, Is>...>;
   };
 
   template<class T, int I, class... Ts, int... Is>
-  struct count_and_combine<dual<T>, direct_product<type_counter<T, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<dual<T>, tensor_product<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
-    using type = direct_product<type_counter<T, I-1>, type_counter<Ts, Is>...>;
+    using type = tensor_product<type_counter<T, I-1>, type_counter<Ts, Is>...>;
   };
   
   // TO DO: associated_displacement_space is specific to physical quantities so
@@ -237,30 +237,30 @@ namespace sequoia::physics::impl
 
   /// Promote all T to associated_displacement_space<T>
   template<class T, int I, class... Ts, int... Is>
-  struct count_and_combine<associated_displacement_space<T>, direct_product<type_counter<T, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<associated_displacement_space<T>, tensor_product<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
-    using type = direct_product<type_counter<associated_displacement_space<T>, I+1>, type_counter<Ts, Is>...>;
+    using type = tensor_product<type_counter<associated_displacement_space<T>, I+1>, type_counter<Ts, Is>...>;
   };
 
   /// Promote all T to associated_displacement_space<T>
   template<class T, int I, class... Ts, int... Is>
-  struct count_and_combine<dual<associated_displacement_space<T>>, direct_product<type_counter<T, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<dual<associated_displacement_space<T>>, tensor_product<type_counter<T, I>, type_counter<Ts, Is>...>>
   {
-    using type = direct_product<type_counter<associated_displacement_space<T>, I-1>, type_counter<Ts, Is>...>;
+    using type = tensor_product<type_counter<associated_displacement_space<T>, I-1>, type_counter<Ts, Is>...>;
   };
 
   /// Promote dual<T> to associated_displacement_space<T>
   template<class T, int I, class... Ts, int... Is>
-  struct count_and_combine<dual<T>, direct_product<type_counter<associated_displacement_space<T>, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<dual<T>, tensor_product<type_counter<associated_displacement_space<T>, I>, type_counter<Ts, Is>...>>
   {
-    using type = direct_product<type_counter<associated_displacement_space<T>, I-1>, type_counter<Ts, Is>...>;
+    using type = tensor_product<type_counter<associated_displacement_space<T>, I-1>, type_counter<Ts, Is>...>;
   };
 
   /// Promote dual<T> to dual<associated_displacement_space<T>>
   template<class T, int I, class... Ts, int... Is>
-  struct count_and_combine<dual<associated_displacement_space<T>>, direct_product<type_counter<dual<T>, I>, type_counter<Ts, Is>...>>
+  struct count_and_combine<dual<associated_displacement_space<T>>, tensor_product<type_counter<dual<T>, I>, type_counter<Ts, Is>...>>
   {
-    using type = direct_product<type_counter<dual<associated_displacement_space<T>>, I+1>, type_counter<Ts, Is>...>;
+    using type = tensor_product<type_counter<dual<associated_displacement_space<T>>, I+1>, type_counter<Ts, Is>...>;
   };
 
   /// Unpack counted types into direct products
@@ -274,33 +274,33 @@ namespace sequoia::physics::impl
 
   template<class T, int I>
     requires (I > 0)
-  struct unpack<type_counter<T, I>> : unpack<type_counter<T, I - 1>, direct_product<T>>
+  struct unpack<type_counter<T, I>> : unpack<type_counter<T, I - 1>, tensor_product<T>>
   {};
 
   template<class T, int I>
     requires (I < 0)
-  struct unpack<type_counter<T, I>> : unpack<type_counter<T, I + 1>, direct_product<dual<T>>>
+  struct unpack<type_counter<T, I>> : unpack<type_counter<T, I + 1>, tensor_product<dual<T>>>
   {};
 
   template<class T, int I, class... Ts>
     requires (I > 0)
-  struct unpack<type_counter<T, I>, direct_product<Ts...>> : unpack<type_counter<T, I - 1>, direct_product<T, Ts...>>
+  struct unpack<type_counter<T, I>, tensor_product<Ts...>> : unpack<type_counter<T, I - 1>, tensor_product<T, Ts...>>
   {};
 
   template<class T, int I, class... Ts>
     requires (I < 0)
-  struct unpack<type_counter<T, I>, direct_product<Ts...>> : unpack<type_counter<T, I + 1>, direct_product<dual<T>, Ts...>>
+  struct unpack<type_counter<T, I>, tensor_product<Ts...>> : unpack<type_counter<T, I + 1>, tensor_product<dual<T>, Ts...>>
   {};
 
   template<class T, class... Ts>
-  struct unpack<type_counter<T, 0>, direct_product<Ts...>>
+  struct unpack<type_counter<T, 0>, tensor_product<Ts...>>
   {
-    using type = direct_product<Ts...>;
+    using type = tensor_product<Ts...>;
   };
 
   template<class... Ts, int... Is>
-  struct unpack<direct_product<type_counter<Ts, Is>...>>
-    : meta::flatten<direct_product<unpack_t<type_counter<Ts, Is>>...>>
+  struct unpack<tensor_product<type_counter<Ts, Is>...>>
+    : meta::flatten<tensor_product<unpack_t<type_counter<Ts, Is>>...>>
   {
   };
 
@@ -356,26 +356,26 @@ namespace sequoia::physics::impl
   using reduce_t = reduce<Ts...>::type;
 
   template<physical_unit U>
-  struct reduce<direct_product<type_counter<U, 0>>>
+  struct reduce<tensor_product<type_counter<U, 0>>>
   {
-    using type = direct_product<no_unit_t>;
+    using type = tensor_product<no_unit_t>;
   };
 
   template<physical_unit U, int I>
     requires std::derived_from<U, no_unit_t> && (I > 0)
-  struct reduce<direct_product<type_counter<U, I>>>
+  struct reduce<tensor_product<type_counter<U, I>>>
   {
-    using type = direct_product<U>;
+    using type = tensor_product<U>;
   };
 
   template<physics::physical_unit... Ts, int... Is>
-  struct reduce<direct_product<type_counter<Ts, Is>...>>
+  struct reduce<tensor_product<type_counter<Ts, Is>...>>
   {
-    using type = unpack_t<meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, not_potentially_prunable>>;
+    using type = unpack_t<meta::filter_by_trait_t<tensor_product<type_counter<Ts, Is>...>, not_potentially_prunable>>;
   };
 
   template<convex_space... Ts, int... Is>
-  struct reduce<direct_product<type_counter<Ts, Is>...>>
+  struct reduce<tensor_product<type_counter<Ts, Is>...>>
   {
     // TO DO; potential problem here if reducible modules are floating-point but everything else is integral
     // Depends where we do any arithmetic promotions; ideally below using common_type
@@ -385,7 +385,7 @@ namespace sequoia::physics::impl
     constexpr static bool allOfNotReducibleOrNotFreeModule{((!free_module<Ts>               || !potentially_prunable_v<type_counter<Ts, Is>>) && ...)};
     constexpr static bool allOfNotReducibleOrNotHalfLine  {((!is_non_negative_orthant_v<Ts> || !potentially_prunable_v<type_counter<Ts, Is>>) && ...)};
     
-    using filtered_t = meta::filter_by_trait_t<direct_product<type_counter<Ts, Is>...>, not_potentially_prunable>;
+    using filtered_t = meta::filter_by_trait_t<tensor_product<type_counter<Ts, Is>...>, not_potentially_prunable>;
 
     using unpacked_t = unpack_t<filtered_t>;
 
@@ -394,8 +394,8 @@ namespace sequoia::physics::impl
     using root_space_t =
       std::conditional_t<
         anyFreeModule,
-        direct_product<euclidean_vector_space<1, std::common_type_t<arena_type_of_t<Ts>...>>>,
-        direct_product<euclidean_half_line<std::common_type_t<arena_type_of_t<Ts>...>>>
+        tensor_product<euclidean_vector_space<1, std::common_type_t<arena_type_of_t<Ts>...>>>,
+        tensor_product<euclidean_half_line<std::common_type_t<arena_type_of_t<Ts>...>>>
       >;
     
     using type
@@ -414,41 +414,41 @@ namespace sequoia::physics::impl
   using simplify_t = simplify<Ts...>::type;
 
   template<class... Ts>
-  struct simplify<direct_product<Ts...>>
+  struct simplify<tensor_product<Ts...>>
   {
-    using type = reduction<meta::reverse_t<reduce_t<count_and_combine_t<meta::stable_sort_t<direct_product<Ts...>, meta::type_comparator>>>>>;
+    using type = reduction<meta::reverse_t<reduce_t<count_and_combine_t<meta::stable_sort_t<tensor_product<Ts...>, meta::type_comparator>>>>>;
   };
 
-  // Assume direct_products are already sorted
+  // Assume tensor_products are already sorted
   template<class... Ts, class... Us>
-  struct simplify<direct_product<Ts...>, direct_product<Us...>>
+  struct simplify<tensor_product<Ts...>, tensor_product<Us...>>
   {
-    using type = reduction<meta::reverse_t<reduce_t<count_and_combine_t<meta::merge_t<direct_product<Ts...>, direct_product<Us...>, meta::type_comparator>>>>>;
+    using type = reduction<meta::reverse_t<reduce_t<count_and_combine_t<meta::merge_t<tensor_product<Ts...>, tensor_product<Us...>, meta::type_comparator>>>>>;
   };
 
   template<class T>
   struct to_composite_space;
 
   template<convex_space... Ts>
-  struct to_composite_space<reduction<direct_product<Ts...>>>
+  struct to_composite_space<reduction<tensor_product<Ts...>>>
   {
     using type = composite_space<Ts...>;
   };
 
   template<physical_unit... Ts>
-  struct to_composite_space<reduction<direct_product<Ts...>>>
+  struct to_composite_space<reduction<tensor_product<Ts...>>>
   {
     using type = composite_unit<Ts...>;
   };
 
   template<representation... Ts>
-  struct to_composite_space<reduction<direct_product<Ts...>>>
+  struct to_composite_space<reduction<tensor_product<Ts...>>>
   {
     using type = composite_representation<Ts...>;
   };
 
   template<class T>
-  struct to_composite_space<reduction<direct_product<T>>>
+  struct to_composite_space<reduction<tensor_product<T>>>
   {
     using type = T;
   };
