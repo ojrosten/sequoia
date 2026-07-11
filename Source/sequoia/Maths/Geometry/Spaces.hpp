@@ -2670,6 +2670,24 @@ namespace sequoia::maths
       constexpr static std::size_t dimension{N};
       using is_field = std::true_type;
     };
+
+    enum boundedness { negative_infty, negative_finite, zero, positive_finite, positve_infy };
+
+    template<boundedness Lower, boundedness Upper>
+    struct real_line_segment
+    {
+      constexpr static std::size_t dimension{1};
+      boundedness lower_boundedness{Lower},
+                  upper_boundedness{Upper};
+    };
+
+    template<boundedness Lower, boundedness Upper>
+    struct integral_line_segment
+    {
+      constexpr static std::size_t dimension{1};
+      boundedness lower_boundedness{Lower},
+                  upper_boundedness{Upper};
+    };
   }
 
   template<std::integral Rep>
@@ -2689,6 +2707,17 @@ namespace sequoia::maths
   template<std::floating_point Rep>
   struct weakly_representated_by<sets::orthant<1>, Rep> : std::true_type {};
 
+  template<sets::boundedness Lower, sets::boundedness Upper, std::floating_point Rep>
+  struct weakly_representated_by<sets::real_line_segment<Lower, Upper>, Rep>
+    : std::true_type
+  {};
+
+  template<sets::boundedness Lower, sets::boundedness Upper, std::integral Rep>
+  requires    (     ((Lower == sets::boundedness::negative_infty) && (Lower == sets::boundedness::negative_finite))  && std::is_signed_v<Rep>  )
+           || (not (((Lower == sets::boundedness::negative_infty) && (Lower == sets::boundedness::negative_finite))) && std::is_unsigned_v<Rep>)
+  struct weakly_representated_by<sets::integral_line_segment<Lower, Upper>, Rep>
+    : std::true_type
+  {};
 
   template<>
   struct common_ring<sets::R<1>, sets::R<1>>
