@@ -1284,6 +1284,72 @@ namespace sequoia::maths
       sense.
    */
 
+   /** @defgroup SpacesUtilities Convex Space Utilities
+      @brief Utilites for extracting properties of convex spaces
+   */
+
+  template<convex_space C>
+  struct is_non_negative_orthant : std::false_type
+  {};
+
+  template<convex_space C>
+  using is_non_negative_orthant_t = is_non_negative_orthant<C>::type;
+
+  template<convex_space C>
+  inline constexpr bool is_non_negative_orthant_v{is_non_negative_orthant<C>::value};
+
+  template<convex_space Space>
+  inline constexpr bool has_non_negative_orthant_type_v{
+    requires {
+      typename Space::non_negative_orthant;
+    }
+  };
+
+  template<convex_space C>
+      requires has_non_negative_orthant_type_v<C> && std::convertible_to<typename C::non_negative_orthant, std::true_type>
+  struct is_non_negative_orthant<C> : std::true_type
+  {
+    static_assert(!affine_space<C>);
+  };  
+
+  template<convex_space Space>
+  inline constexpr bool has_distinguished_origin_type_v{
+    requires {
+      typename Space::distinguished_origin;
+    }
+  };
+  
+  template<convex_space Space>
+  struct has_distinguished_origin : std::false_type
+  {};
+  
+  template<convex_space Space>
+  using has_distinguished_origin_t = has_distinguished_origin<Space>::type;
+
+  template<convex_space Space>
+  inline constexpr bool has_distinguished_origin_v{has_distinguished_origin<Space>::value};
+
+  template<convex_space Space>
+    requires has_distinguished_origin_type_v<Space> && std::convertible_to<typename Space::distinguished_origin, std::true_type>
+  struct has_distinguished_origin<Space> : std::true_type
+  {
+  };
+
+  template<convex_space Space>
+    requires (!has_distinguished_origin_type_v<Space>) && is_non_negative_orthant_v<Space>
+  struct has_distinguished_origin<Space> : std::true_type
+  {
+  };
+
+  template<free_module Space>
+  struct has_distinguished_origin<Space> : std::true_type
+  {};
+
+  template<affine_space Space>
+    requires (!free_module<Space>)
+  struct has_distinguished_origin<Space> : std::false_type
+  {};
+
   template<class... Ts>
   struct common_ring
   {
@@ -1328,6 +1394,7 @@ namespace sequoia::maths
 
   template<convex_space... Ts>
     requires (sizeof...(Ts) >= 1)
+  && (has_distinguished_origin_v<Ts> && ...)
   // TO DO: distinguished origin
           && ((!affine_space<Ts> && ...) || ((free_module<Ts> || ...) && (!free_module<Ts> || ...)))
   struct tensor_product<Ts...>
@@ -1471,6 +1538,16 @@ namespace sequoia::maths
     constexpr static auto dimension{V::dimension};
   };
 
+  template<convex_space Space>
+  struct has_distinguished_origin<dual<Space>> : has_distinguished_origin<Space>
+  {
+  };
+
+  template<convex_space C>
+  struct is_non_negative_orthant<dual<C>> : is_non_negative_orthant<C>
+  {
+  };
+
   /** @ingroup DualSpaces
       @brief Helper to detect if a type is defined as a dual of something else
    */
@@ -1550,83 +1627,6 @@ namespace sequoia::maths
   
   template<convex_space T, convex_space U>
   inline constexpr bool have_compatible_base_spaces_v{std::same_as<to_base_space_t<T>, to_base_space_t<U>>};
-  
-  /** @defgroup SpacesUtilities Convex Space Utilities
-      @brief Utilites for extracting properties of convex spaces
-   */
-
-  template<convex_space C>
-  struct is_non_negative_orthant : std::false_type
-  {};
-
-  template<convex_space C>
-  using is_non_negative_orthant_t = is_non_negative_orthant<C>::type;
-
-  template<convex_space C>
-  inline constexpr bool is_non_negative_orthant_v{is_non_negative_orthant<C>::value};
-
-  template<convex_space Space>
-  inline constexpr bool has_non_negative_orthant_type_v{
-    requires {
-      typename Space::non_negative_orthant;
-    }
-  };
-
-  template<convex_space C>
-      requires has_non_negative_orthant_type_v<C> && std::convertible_to<typename C::non_negative_orthant, std::true_type>
-  struct is_non_negative_orthant<C> : std::true_type
-  {
-    static_assert(!affine_space<C>);
-  };
-  
-  template<convex_space C>
-  struct is_non_negative_orthant<dual<C>> : is_non_negative_orthant<C>
-  {
-  };
-  
-
-  template<convex_space Space>
-  inline constexpr bool has_distinguished_origin_type_v{
-    requires {
-      typename Space::distinguished_origin;
-    }
-  };
-  
-  template<convex_space Space>
-  struct has_distinguished_origin : std::false_type
-  {};
-  
-  template<convex_space Space>
-  using has_distinguished_origin_t = has_distinguished_origin<Space>::type;
-
-  template<convex_space Space>
-  inline constexpr bool has_distinguished_origin_v{has_distinguished_origin<Space>::value};
-
-  template<convex_space Space>
-    requires has_distinguished_origin_type_v<Space> && std::convertible_to<typename Space::distinguished_origin, std::true_type>
-  struct has_distinguished_origin<Space> : std::true_type
-  {
-  };
-
-  template<convex_space Space>
-    requires (!has_distinguished_origin_type_v<Space>) && is_non_negative_orthant_v<Space>
-  struct has_distinguished_origin<Space> : std::true_type
-  {
-  };
-
-  template<free_module Space>
-  struct has_distinguished_origin<Space> : std::true_type
-  {};
-
-  template<affine_space Space>
-    requires (!free_module<Space>)
-  struct has_distinguished_origin<Space> : std::false_type
-  {};
-
-  template<convex_space Space>
-  struct has_distinguished_origin<dual<Space>> : has_distinguished_origin<Space>
-  {
-  };
 
   /** @defgroup Coordinates Coordinates
       @brief Coordinates are the bridge between the abstract mathematics of spaces and practical application.

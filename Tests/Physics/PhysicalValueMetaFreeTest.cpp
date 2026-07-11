@@ -23,8 +23,8 @@ namespace sequoia::testing
     };
 
     using mass_space_t   =        mass_space<implicit_common_arena>;
-    using length_space_t =      length_space<implicit_common_arena>;
-    using temp_space_t   = temperature_space<implicit_common_arena>;
+    using length_space_t =               length_space<implicit_common_arena>;
+    using abs_temp_space_t   = absolute_temperature_space<implicit_common_arena>;
     using time_space_t   =        time_space<implicit_common_arena>;
     using electrical_current_space_t
                   = electrical_current_space<implicit_common_arena>;
@@ -34,7 +34,7 @@ namespace sequoia::testing
 
     using delta_mass_space_t = associated_displacement_space<mass_space_t>;
     using delta_len_space_t  = associated_displacement_space<length_space_t>;
-    using delta_temp_space_t = associated_displacement_space<temp_space_t>;
+    using delta_abs_temp_space_t = associated_displacement_space<abs_temp_space_t>;
     using delta_time_space_t = associated_displacement_space<time_space_t>;
   }
 
@@ -137,8 +137,8 @@ namespace sequoia::testing
     STATIC_CHECK(std::is_same_v<count_and_combine_t<tensor_product<dual<length_space_t>, mass_space_t, dual<mass_space_t>>>,
                                  tensor_product<type_counter<mass_space_t, 0>, type_counter<dual<length_space_t>, 1>>>);
 
-    STATIC_CHECK(std::is_same_v<count_and_combine_t<tensor_product<length_space_t, mass_space_t, dual<mass_space_t>, temp_space_t>>,
-                                 tensor_product<type_counter<temp_space_t, 1>, type_counter<mass_space_t, 0>, type_counter<length_space_t, 1>>>);
+    STATIC_CHECK(std::is_same_v<count_and_combine_t<tensor_product<length_space_t, mass_space_t, dual<mass_space_t>, abs_temp_space_t>>,
+                                 tensor_product<type_counter<abs_temp_space_t, 1>, type_counter<mass_space_t, 0>, type_counter<length_space_t, 1>>>);
 
     STATIC_CHECK(std::is_same_v<count_and_combine_t<tensor_product<euc_vec_space_t, dual<mass_space_t>>>,
                                 tensor_product<type_counter<dual<mass_space_t>, 1>, type_counter<euc_vec_space_t, 1>>>);
@@ -212,9 +212,14 @@ namespace sequoia::testing
   }
 
   void physical_value_meta_free_test::test_simplify()
-  {
-    STATIC_CHECK(std::is_same_v<simplify_t<tensor_product<length_space_t, mass_space_t>, tensor_product<dual<mass_space_t>, temp_space_t>>,
-                                reduction<tensor_product<length_space_t, temp_space_t>>>);
+  {    
+    STATIC_CHECK(
+      std::is_same_v<
+        simplify_t<tensor_product<length_space_t, mass_space_t>, tensor_product<abs_temp_space_t, dual<mass_space_t>>>,
+        reduction<tensor_product<abs_temp_space_t, length_space_t>>
+      >,
+      "Note assumption that tensor products are already sorted"
+    );
   }
 
   void physical_value_meta_free_test::test_space_reduction()
@@ -301,33 +306,74 @@ namespace sequoia::testing
     STATIC_CHECK(std::is_same_v<to_composite_space_t<reduction_t<tensor_product<mass_space_t, dual<delta_mass_space_t>>>>,
                                 euclidean_vector_space<1, implicit_common_arena>>);
     
-    STATIC_CHECK(std::is_same_v<reduction_t<tensor_product<delta_temp_space_t, composite_space<delta_len_space_t, delta_mass_space_t>>>,
-                                  reduction<tensor_product<delta_len_space_t, delta_mass_space_t, delta_temp_space_t>>>);
+    STATIC_CHECK(
+      std::is_same_v<
+        reduction_t<tensor_product<delta_abs_temp_space_t, composite_space<delta_len_space_t, delta_mass_space_t>>>,
+        reduction<tensor_product<delta_abs_temp_space_t, delta_len_space_t, delta_mass_space_t>>
+      >,
+      "Note assumption that tensor products are already sorted"
+    );
 
-    STATIC_CHECK(std::is_same_v<reduction_t<tensor_product<composite_space<delta_len_space_t, delta_mass_space_t>, delta_temp_space_t>>,
-                                  reduction<tensor_product<delta_len_space_t, delta_mass_space_t, delta_temp_space_t>>>);
+    STATIC_CHECK(
+      std::is_same_v<
+        reduction_t<tensor_product<composite_space<delta_len_space_t, delta_mass_space_t>, delta_abs_temp_space_t>>,
+        reduction<tensor_product<delta_abs_temp_space_t, delta_len_space_t, delta_mass_space_t>>
+      >,
+      "Note assumption that tensor products are already sorted"
+    );
     
-    STATIC_CHECK(std::is_same_v<reduction_t<tensor_product<temp_space_t, composite_space<length_space_t, mass_space_t>>>,
-                                  reduction<tensor_product<length_space_t, mass_space_t, temp_space_t>>>);
+    STATIC_CHECK(
+      std::is_same_v<
+        reduction_t<tensor_product<abs_temp_space_t, composite_space<length_space_t, mass_space_t>>>,
+        reduction<tensor_product<abs_temp_space_t, length_space_t, mass_space_t>>
+      >
+    );
 
-    STATIC_CHECK(std::is_same_v<reduction_t<tensor_product<length_space_t, composite_space<mass_space_t, temp_space_t>>>,
-                                  reduction<tensor_product<length_space_t, mass_space_t, temp_space_t>>>);
+    STATIC_CHECK(
+      std::is_same_v<
+        reduction_t<tensor_product<abs_temp_space_t, composite_space<length_space_t, mass_space_t>>>,
+        reduction<tensor_product<abs_temp_space_t, length_space_t, mass_space_t>>
+      >
+    );
     
-    STATIC_CHECK(std::is_same_v<to_composite_space_t<reduction_t<tensor_product<composite_space<length_space_t, mass_space_t>, mass_space_t>>>,
-                                composite_space<length_space_t, mass_space_t, mass_space_t>>);
+    STATIC_CHECK(
+      std::is_same_v<
+        to_composite_space_t<reduction_t<tensor_product<composite_space<length_space_t, mass_space_t>, mass_space_t>>>,
+        composite_space<length_space_t, mass_space_t, mass_space_t>
+      >
+    );
 
-    STATIC_CHECK(std::is_same_v<reduction_t<tensor_product<composite_space<delta_len_space_t, delta_mass_space_t>,
-                                                           composite_space<delta_temp_space_t, delta_time_space_t>>>,
-                                  reduction<tensor_product<delta_len_space_t, delta_mass_space_t, delta_temp_space_t, delta_time_space_t>>>);
+    STATIC_CHECK(
+      std::is_same_v<
+        reduction_t<
+          tensor_product<
+            composite_space<delta_len_space_t, delta_mass_space_t>,
+            composite_space<delta_abs_temp_space_t, delta_time_space_t>
+          >
+        >,
+        reduction<tensor_product<delta_abs_temp_space_t, delta_len_space_t, delta_mass_space_t, delta_time_space_t>>
+      >
+    );
 
     
-    STATIC_CHECK(std::is_same_v<reduction_t<tensor_product<composite_space<length_space_t, mass_space_t>,
-                                                           composite_space<electrical_current_space_t, temp_space_t>>>,
-                                  reduction<tensor_product<electrical_current_space_t, length_space_t, mass_space_t, temp_space_t>>>);
+    STATIC_CHECK(
+      std::is_same_v<
+      reduction_t<tensor_product<composite_space<abs_temp_space_t, length_space_t>, composite_space<electrical_current_space_t, mass_space_t>>>,
+        reduction<tensor_product<abs_temp_space_t, electrical_current_space_t, length_space_t, mass_space_t>>
+      >
+    );
 
-    STATIC_CHECK(std::is_same_v<reduction_t<tensor_product<delta_len_space_t,
-                                                           to_composite_space_t<reduction_t<tensor_product<delta_mass_space_t, composite_space<delta_temp_space_t, delta_time_space_t>>>>>>,
-                                  reduction<tensor_product<delta_len_space_t, delta_mass_space_t, delta_temp_space_t, delta_time_space_t>>>);
+    STATIC_CHECK(
+      std::is_same_v<
+        reduction_t<
+          tensor_product<
+            delta_len_space_t,
+            to_composite_space_t<reduction_t<tensor_product<delta_mass_space_t, composite_space<delta_abs_temp_space_t, delta_time_space_t>>>>
+          >
+        >,
+        reduction<tensor_product<delta_abs_temp_space_t, delta_len_space_t, delta_mass_space_t, delta_time_space_t>>
+      >
+    );
 
     STATIC_CHECK(std::is_same_v<to_composite_space_t<reduction_t<tensor_product<composite_space<mass_space_t, mass_space_t>, composite_space<dual<mass_space_t>, dual<mass_space_t>>>>>,
                                 euclidean_half_line<implicit_common_arena>>);
