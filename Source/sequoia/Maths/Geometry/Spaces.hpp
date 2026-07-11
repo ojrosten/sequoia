@@ -269,13 +269,6 @@ namespace sequoia::maths
       
       Entertaingly, the only fundamental type in C++ which exacly models a field is bool.
    */
-  
-  /** @ingroup AlgebraicTraits
-      @brief Trait for specifying whether a type behaves (appoximately) as an abelian group under addition.
-
-      This includes all the arithmetic types, with the unsigned one behaving precisely as an abelian group
-      under addition.
-   */
 
   template<class T>
   inline constexpr bool identifies_as_commutative_ring_v{
@@ -297,6 +290,13 @@ namespace sequoia::maths
   inline constexpr bool is_commutative_ring_v{
     identifies_as_commutative_ring_v<T> || identifies_as_field_v<T>
   };
+
+  /** @ingroup AlgebraicTraits
+      @brief Trait for specifying whether a type behaves (appoximately) as an abelian group under addition.
+
+      This includes all the arithmetic types, with the unsigned one behaving precisely as an abelian group
+      under addition.
+   */
 
   template<class T>
   struct weakly_abelian_group_under_addition : std::false_type {};
@@ -373,6 +373,18 @@ namespace sequoia::maths
 
   template<class T>
   concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && is_divisible_v<T>;
+
+  template<class Algebra, class Rep>
+  struct weakly_representated_by : std::false_type {};
+
+  template<class Algebra, class Rep>
+  using weakly_representated_by_t = weakly_representated_by<Algebra, Rep>::type;
+
+  template<class Algebra, class Rep>
+  inline constexpr bool weakly_representated_by_v = weakly_representated_by<Algebra, Rep>::value;
+
+  template<class Rep, class Algebra>
+  concept weak_representation_for = weakly_representated_by_v<Algebra, Rep>;
 
   /** @defgroup PropertiesOfSpaces Properties of Spaces
       @brief Tools to reflect on whether types expose other types typically associated with various spaces.
@@ -2659,6 +2671,24 @@ namespace sequoia::maths
       using is_field = std::true_type;
     };
   }
+
+  template<std::integral Rep>
+    requires std::is_signed_v<Rep>
+  struct weakly_representated_by<sets::Z<1>, Rep> : std::true_type {};
+
+  template<std::integral Rep>
+    requires std::is_unsigned_v<Rep>
+  struct weakly_representated_by<sets::N_0<1>, Rep> : std::true_type {};
+
+  template<std::floating_point Rep>
+  struct weakly_representated_by<sets::R<1>, Rep> : std::true_type {};
+
+  template<std::floating_point F>
+  struct weakly_representated_by<sets::C<1>, std::complex<F>> : std::true_type {};
+
+  template<std::floating_point Rep>
+  struct weakly_representated_by<sets::orthant<1>, Rep> : std::true_type {};
+
 
   template<>
   struct common_ring<sets::R<1>, sets::R<1>>
