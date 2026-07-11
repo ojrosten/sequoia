@@ -58,7 +58,7 @@ namespace sequoia::testing
     test_convex     <sets::N_0<1>, sets::Z<1>, unsigned, 1>();
   }
 
-  template<class Set, class Ring, std::integral SetRep, std::size_t D>
+  template<class Set, class Ring, maths::weak_representation_for<Set> SetRep, std::size_t D>
   void free_module_coordinates_test::test_free_module()
   {
     using free_module_t = my_free_module<Set, Ring, D>;
@@ -69,15 +69,20 @@ namespace sequoia::testing
     STATIC_CHECK(basis_for<basis_t, free_module_t>);
     
     using module_coords_t = free_module_coordinates<free_module_t, basis_t, canonical_representation<SetRep, no_bounds<SetRep>>, identity_validator>;
+    using displacement_value_t = module_coords_t::displacement_coordinates_type::value_type;
+    STATIC_CHECK(maths::weak_representation_for<displacement_value_t, Ring>);
+    
     coordinates_operations<module_coords_t>{*this}.execute();
   }
 
-  template<class Set, class Ring, std::integral SetRep, std::size_t D>
+  template<class Set, class Ring, maths::weak_representation_for<Set> SetRep, std::size_t D>
   void free_module_coordinates_test::test_convex()
   {
     using space_t  = my_convex_space<Set, Ring, D>;
     using basis_t  = canonical_free_module_basis<Set, Ring, D>;
     using coords_t = coordinates<space_t, basis_t, canonical_representation<SetRep, half_line_bounds<SetRep>>, throwing_validator>;
+    using displacement_value_t = coords_t::displacement_coordinates_type::value_type;
+    STATIC_CHECK(maths::weak_representation_for<displacement_value_t, Ring>);
 
     coordinates_operations<coords_t>{*this}.execute();
   }
