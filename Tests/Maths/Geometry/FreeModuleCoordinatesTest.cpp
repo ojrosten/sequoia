@@ -63,7 +63,7 @@ namespace sequoia::testing
   {
     using free_module_t = my_free_module<Set, Ring, D>;
     using basis_t       = canonical_free_module_basis<Set, Ring, D>;
-    // TO DO: STATIC_CHECK(!vector_space<free_module_t>);
+    STATIC_CHECK(!vector_space<free_module_t>);
     STATIC_CHECK(free_module<free_module_t>);
     STATIC_CHECK(std::same_as<free_module_type_of_t<free_module_t>, free_module_t>);
     STATIC_CHECK(basis_for<basis_t, free_module_t>);
