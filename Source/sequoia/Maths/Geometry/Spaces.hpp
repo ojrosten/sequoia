@@ -396,10 +396,7 @@ namespace sequoia::maths
 
   template<class T>
   inline constexpr bool has_commutative_ring_type_v{
-    requires { 
-      typename T::commutative_ring_type;
-      requires is_commutative_ring_v<typename T::commutative_ring_type>;
-    }
+    requires { typename T::commutative_ring_type; }
   };
 
   /** @ingroup PropertiesOfSpaces
@@ -407,10 +404,7 @@ namespace sequoia::maths
    */ 
   template<class T>
   inline constexpr bool has_field_type_v{
-    requires { 
-      typename T::field_type;
-      requires identifies_as_field_v<typename T::field_type>;
-    }
+    requires { typename T::field_type; }
   };
 
   /** @ingroup PropertiesOfSpaces
@@ -419,9 +413,12 @@ namespace sequoia::maths
       The point here is that a field is a special case of a ring. Therefore, anything which defines
       a field is implicitly defining a ring.
     */
-  template<class T>
-  inline constexpr bool defines_commutative_ring_v{has_commutative_ring_type_v<T> || has_field_type_v<T>};
+  
 
+
+  //     requires is_commutative_ring_v<typename T::commutative_ring_type>;
+  //    requires identifies_as_field_v<typename T::field_type>;
+  
   /** @ingroup PropertiesOfSpaces
       @brief Reports whether a type exposes a nested type with the properties of a field.
 
@@ -431,11 +428,14 @@ namespace sequoia::maths
    */
   template<class T>
   inline constexpr bool defines_field_v{
-        has_field_type_v<T>
-    || requires { 
-          typename T::commutative_ring_type;
-          identifies_as_field_v<typename T::commutative_ring_type>;
-        }
+       (has_commutative_ring_type_v<T> && requires { requires identifies_as_field_v<typename T::commutative_ring_type>; } )
+    || (has_field_type_v<T>            && requires { requires identifies_as_field_v<typename T::field_type>;            } )
+  };
+
+  template<class T>
+  inline constexpr bool defines_commutative_ring_v{
+       defines_field_v<T>
+    || (has_commutative_ring_type_v<T> && requires { requires identifies_as_commutative_ring_v<typename T::commutative_ring_type>; } )
   };
 
   /** @ingroup PropertiesOfSpaces
