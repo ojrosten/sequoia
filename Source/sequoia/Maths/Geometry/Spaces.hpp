@@ -454,6 +454,16 @@ namespace sequoia::maths
     requires { typename T::set_type; }
   };
 
+  template<class T>
+    requires has_set_type_v<T>
+  struct set_type_of
+  {
+    using type = T::set_type;
+  };
+
+  template<class T>
+  using set_type_of_t = set_type_of<T>::type;
+
   /** @defgroup IdentifiesAsSpace Self-identification of Spaces
       @brief Compile time constants to capture whether types self-identify as various spaces.
 
@@ -1000,7 +1010,10 @@ namespace sequoia::maths
   concept representation_for
     =    convex_space<ConvexSpace>
       && representation<R>
-    // TO DO&& bounds_for<decltype(R::bounds_v), ConvexSpace>
+    // TO DO not this, since the set could be anything and the rep applies to the coordintes
+    // but maybe something along these lines
+    // && weak_representation_for<value_type_of_t<R>, set_type_of_t<ConvexSpace>>
+      && bounds_for<decltype(R::bounds_v), ConvexSpace>
       && (representation_for_single_value<R, ConvexSpace> || representation_for_span<R, ConvexSpace>);
 
   template<weak_commutative_ring T>
@@ -1062,17 +1075,6 @@ namespace sequoia::maths
       requires std::same_as<typename Representation::coordinates_type, std::tuple<Ts...>>;
     }
   };
-
-  template<class T>
-    requires has_value_type_v<T>
-  struct value_type_of
-  {
-    using type = T::value_type;
-  };
-
-  template<class T>
-    requires has_value_type_v<T>
-  using value_type_of_t = value_type_of<T>::type;
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_scalar_multiplication_for_v{
@@ -2695,8 +2697,8 @@ namespace sequoia::maths
     requires std::is_signed_v<Rep>
   struct weakly_representated_by<sets::Z<1>, Rep> : std::true_type {};
 
+  // Allow signed as well as unsigned
   template<std::integral Rep>
-    requires std::is_unsigned_v<Rep>
   struct weakly_representated_by<sets::N_0<1>, Rep> : std::true_type {};
 
   template<std::floating_point Rep>

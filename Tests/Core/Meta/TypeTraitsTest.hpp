@@ -39,5 +39,7 @@ namespace sequoia::testing
     void test_is_compatible();
 
     void test_are_same();
+
+    void test_value_type_of();
   };
 }

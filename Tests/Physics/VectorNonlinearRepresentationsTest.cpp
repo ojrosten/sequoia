@@ -25,7 +25,8 @@ namespace sequoia::testing
       // TO DO: separate bounds for radius and angle, which are propagated
     >
     struct physical_polar_representation
-    {      
+    {
+      constexpr static auto bounds_v{no_bounds<T>};
       using length_unit_type = UnitOfLength;
       using angle_unit_type  = UnitOfAngle;
 

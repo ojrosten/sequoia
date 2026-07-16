@@ -122,6 +122,17 @@ namespace sequoia
   template<class T>
   inline constexpr bool has_value_type_v{requires { typename T::value_type; }};
 
+  /*! \brief Extracts the dependent type `value_type` */
+  template<class T>
+    requires has_value_type_v<T>
+  struct value_type_of
+  {
+    using type = T::value_type;
+  };
+
+  template<class T>
+  using value_type_of_t = value_type_of<T>::type;
+
   /*! \brief Checks for dependent type `element_type` */
   template<class T>
   inline constexpr bool has_element_type_v{requires { typename T::element_type; }};

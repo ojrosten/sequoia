@@ -40,6 +40,7 @@ namespace sequoia::testing
     test_has_allocator_type();
     test_is_compatible();
     test_are_same();
+    test_value_type_of();
   }
 
   void type_traits_test::test_resolve_to_copy()
@@ -431,5 +432,12 @@ namespace sequoia::testing
     STATIC_CHECK(are_same_v<float, float>);
     STATIC_CHECK(!are_same_v<int, float>);
     STATIC_CHECK(std::same_as<are_same_t<int, float>, std::false_type>);
+  }
+
+  void type_traits_test::test_value_type_of()
+  {
+    struct foo{ using value_type = int; };
+
+    STATIC_CHECK(std::is_same_v<value_type_of_t<foo>, int>);
   }
 }
