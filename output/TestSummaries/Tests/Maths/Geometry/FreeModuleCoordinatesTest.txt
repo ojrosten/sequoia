@@ -1,2 +1,2 @@
 Free Module Test
-Standard Top Level Checks:                89;  Failures:  0  [Deep checks: 3673]
+Standard Top Level Checks:               148;  Failures:  0  [Deep checks: 6112]

@@ -44,6 +44,8 @@ namespace sequoia::testing
       using distinguished_origin  = std::true_type;
       using non_negative_orthant  = std::true_type;
     };
+
+    struct my_random_set {};
   }
 
   [[nodiscard]]
@@ -54,8 +56,9 @@ namespace sequoia::testing
 
   void free_module_coordinates_test::run_tests()
   {    
-    test_free_module<sets::Z<1>  , sets::Z<1>, int     , 1>();
-    test_convex     <sets::N_0<1>, sets::Z<1>, unsigned, 1>();
+    test_free_module<sets::Z<1>   , sets::Z<1>, int     , 1>();
+    test_free_module<my_random_set, sets::Z<1>, int     , 1>();
+    test_convex     <sets::N_0<1> , sets::Z<1>, unsigned, 1>();
   }
 
   template<class Set, class Ring, class SetRep, std::size_t D>
