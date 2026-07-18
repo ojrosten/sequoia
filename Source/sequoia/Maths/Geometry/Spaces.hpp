@@ -1314,14 +1314,15 @@ namespace sequoia::maths
   inline constexpr bool is_non_negative_orthant_v{is_non_negative_orthant<C>::value};
 
   template<convex_space Space>
-  inline constexpr bool has_non_negative_orthant_type_v{
+  inline constexpr bool identifies_as_non_negative_orthant_v{
     requires {
       typename Space::non_negative_orthant;
+      requires std::convertible_to<typename Space::non_negative_orthant, std::true_type>;
     }
   };
 
   template<convex_space C>
-      requires has_non_negative_orthant_type_v<C> && std::convertible_to<typename C::non_negative_orthant, std::true_type>
+      requires identifies_as_non_negative_orthant_v<C>
   struct is_non_negative_orthant<C> : std::true_type
   {
     static_assert(!affine_space<C>);
@@ -2633,6 +2634,7 @@ namespace sequoia::maths
     struct N_0
     {
       constexpr static std::size_t dimension{N};
+      using non_negative_orthant = std::true_type;
     };
 
     /** @ingroup Sets
@@ -2662,6 +2664,7 @@ namespace sequoia::maths
     struct orthant
     {
       constexpr static std::size_t dimension{N};
+      using non_negative_orthant = std::true_type;
     };
 
     /** @ingroup Sets
