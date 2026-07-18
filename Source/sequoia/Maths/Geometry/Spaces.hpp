@@ -1013,7 +1013,7 @@ namespace sequoia::maths
     // TO DO not this, since the set could be anything and the rep applies to the coordintes
     // but maybe something along these lines
     // && weak_representation_for<value_type_of_t<R>, set_type_of_t<ConvexSpace>>
-      && bounds_for<decltype(R::bounds_v), ConvexSpace>
+    // TO DO: this seems to massively slow down compilation  && bounds_for<decltype(R::bounds_v), ConvexSpace>
       && (representation_for_single_value<R, ConvexSpace> || representation_for_span<R, ConvexSpace>);
 
   template<weak_commutative_ring T>
