@@ -2711,8 +2711,8 @@ namespace sequoia::maths
   struct weakly_representated_by<commutative_rings::integers<1>, Rep> : std::true_type {};
 
   // Allow signed as well as unsigned
-  template<std::integral Rep>
-  struct weakly_representated_by<sets::N_0<1>, Rep> : std::true_type {};
+  //template<std::integral Rep>
+  //struct weakly_representated_by<sets::N_0<1>, Rep> : std::true_type {};
 
   template<std::floating_point Rep>
   struct weakly_representated_by<commutative_rings::reals<1>, Rep> : std::true_type {};
@@ -2720,10 +2720,10 @@ namespace sequoia::maths
   template<std::floating_point F>
   struct weakly_representated_by<commutative_rings::complexes, std::complex<F>> : std::true_type {};
 
-  template<std::floating_point Rep>
-  struct weakly_representated_by<sets::orthant<1>, Rep> : std::true_type {};
+  //template<std::floating_point Rep>
+  //struct weakly_representated_by<sets::orthant<1>, Rep> : std::true_type {};
 
-  template<sets::boundedness Lower, sets::boundedness Upper, std::floating_point Rep>
+  /*template<sets::boundedness Lower, sets::boundedness Upper, std::floating_point Rep>
   struct weakly_representated_by<sets::real_line_segment<Lower, Upper>, Rep>
     : std::true_type
   {};
@@ -2734,6 +2734,7 @@ namespace sequoia::maths
   struct weakly_representated_by<sets::integral_line_segment<Lower, Upper>, Rep>
     : std::true_type
   {};
+  */
 
   template<>
   struct common_ring<commutative_rings::reals<1>, commutative_rings::reals<1>>
@@ -2789,18 +2790,6 @@ namespace sequoia::maths
   {
     using type = sets::R<N>;
   };
-
-  // TO DO: what even is this?
-  template<class Rep, class Ring>
-  struct weak_representation_of
-  {
-  };
-
-  template<class Rep, class Ring>
-  using weak_representation_of_t = weak_representation_of<Rep, Ring>::type;
-
-  template<std::floating_point R>
-  struct weak_representation_of<R, commutative_rings::reals<1>> : std::true_type {};
 
   template<class B>
   inline constexpr bool is_orthonormal_basis_v{
