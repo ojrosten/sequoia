@@ -658,7 +658,10 @@ namespace sequoia::maths
   /** @ingroup PropertiesOfSpaces
       @brief Helper to extract the dimension of the free module associated with a convex space.
    */
-  
+
+  // TO DO: for free modules this should really be rank. The latter could be used as
+  // a general term but could create confusion. Something like basis_cardinality may be
+  // more neutral.
   template<convex_space ConvexSpace>
   inline constexpr std::size_t dimension_of{free_module_type_of_t<ConvexSpace>::dimension};
 
@@ -2612,9 +2615,6 @@ namespace sequoia::maths
     }
   };
 
-  // TO DO: reconsider whether we really want these as sets or something with more explicitly stated
-  // struct e.g. commutative_rings...?
-  // Probably want trait displcement_space_of_t
   namespace sets
   {
     /** @ingroup Sets
@@ -2623,8 +2623,8 @@ namespace sequoia::maths
     template<std::size_t N>
     struct Z
     {
+      // TO DO: rename --> rank
       constexpr static std::size_t dimension{N};
-      using is_commutative_ring = std::true_type;
     };
 
     /** @ingroup Sets
@@ -2634,7 +2634,6 @@ namespace sequoia::maths
     struct N_0
     {
       constexpr static std::size_t dimension{N};
-      using non_negative_orthant = std::true_type;
     };
 
     /** @ingroup Sets
@@ -2644,18 +2643,7 @@ namespace sequoia::maths
     struct R
     {
       constexpr static std::size_t dimension{N};
-      using is_field = std::true_type;
     };
-
-    /** @ingroup Sets
-        @brief Class template for giving a name to the set of real numbers considered as an affine space and its generalization to other dimensionalities
-     */
-    template<std::size_t N>
-    struct E
-    {
-      constexpr static std::size_t dimension{N};
-    };
-
 
     /** @ingroup Sets
         @brief Class template for giving a name to the set of non-negative real numbers and its generalization to other dimensionalities
@@ -2664,7 +2652,6 @@ namespace sequoia::maths
     struct orthant
     {
       constexpr static std::size_t dimension{N};
-      using non_negative_orthant = std::true_type;
     };
 
     /** @ingroup Sets
@@ -2674,7 +2661,6 @@ namespace sequoia::maths
     struct C
     {
       constexpr static std::size_t dimension{N};
-      using is_field = std::true_type;
     };
 
     enum boundedness { negative_infty, negative_finite, zero, positive_finite, positve_infy };
@@ -2696,19 +2682,43 @@ namespace sequoia::maths
     };
   }
 
+  namespace commutative_rings
+  {
+    template<std::size_t N>
+      requires (0 < N) && (N <= 2)
+    struct reals
+    {
+      using set_type = sets::R<N>;
+      using is_field = std::true_type;
+    };
+
+    template<std::size_t N>
+    struct integers
+    {
+      using set_type            = sets::Z<N>;
+      using is_commutative_ring = std::true_type;
+    };
+
+    struct complexes
+    {
+      using set_type = sets::C<1>;
+      using is_field = std::true_type;
+    };
+  }
+
   template<std::integral Rep>
     requires std::is_signed_v<Rep>
-  struct weakly_representated_by<sets::Z<1>, Rep> : std::true_type {};
+  struct weakly_representated_by<commutative_rings::integers<1>, Rep> : std::true_type {};
 
   // Allow signed as well as unsigned
   template<std::integral Rep>
   struct weakly_representated_by<sets::N_0<1>, Rep> : std::true_type {};
 
   template<std::floating_point Rep>
-  struct weakly_representated_by<sets::R<1>, Rep> : std::true_type {};
+  struct weakly_representated_by<commutative_rings::reals<1>, Rep> : std::true_type {};
 
   template<std::floating_point F>
-  struct weakly_representated_by<sets::C<1>, std::complex<F>> : std::true_type {};
+  struct weakly_representated_by<commutative_rings::complexes, std::complex<F>> : std::true_type {};
 
   template<std::floating_point Rep>
   struct weakly_representated_by<sets::orthant<1>, Rep> : std::true_type {};
@@ -2726,36 +2736,38 @@ namespace sequoia::maths
   {};
 
   template<>
-  struct common_ring<sets::R<1>, sets::R<1>>
+  struct common_ring<commutative_rings::reals<1>, commutative_rings::reals<1>>
   {
-    using type = sets::R<1>;
+    using type = commutative_rings::reals<1>;
   };
 
   template<>
-  struct common_ring<sets::Z<1>, sets::R<1>>
+  struct common_ring<commutative_rings::integers<1>, commutative_rings::integers<1>>
   {
-    using type = sets::R<1>;
+    using type = commutative_rings::integers<1>;
   };
 
   template<>
-  struct common_ring<sets::R<1>, sets::Z<1>> : common_ring<sets::Z<1>, sets::R<1>>
+  struct common_ring<commutative_rings::reals<1>, commutative_rings::integers<1>>
+    : common_ring<commutative_rings::integers<1>, commutative_rings::reals<1>>
   {
   };
 
   template<>
-  struct common_ring<sets::C<1>, sets::C<1>>
+  struct common_ring<commutative_rings::complexes, commutative_rings::complexes>
   {
-    using type = sets::C<1>;
+    using type = commutative_rings::complexes;
   };
 
   template<>
-  struct common_ring<sets::C<1>, sets::R<1>>
+  struct common_ring<commutative_rings::complexes, commutative_rings::reals<1>>
   {
-    using type = sets::C<1>;
+    using type = commutative_rings::complexes;
   };
 
   template<>
-  struct common_ring<sets::R<1>, sets::C<1>> : common_ring<sets::C<1>, sets::R<1>>
+  struct common_ring<commutative_rings::reals<1>, commutative_rings::complexes>
+    : common_ring<commutative_rings::complexes, commutative_rings::reals<1>>
   {
   };
 
@@ -2778,6 +2790,7 @@ namespace sequoia::maths
     using type = sets::R<N>;
   };
 
+  // TO DO: what even is this?
   template<class Rep, class Ring>
   struct weak_representation_of
   {
@@ -2787,7 +2800,7 @@ namespace sequoia::maths
   using weak_representation_of_t = weak_representation_of<Rep, Ring>::type;
 
   template<std::floating_point R>
-  struct weak_representation_of<R, sets::R<1>> : std::true_type {};
+  struct weak_representation_of<R, commutative_rings::reals<1>> : std::true_type {};
 
   template<class B>
   inline constexpr bool is_orthonormal_basis_v{
@@ -2829,8 +2842,8 @@ namespace sequoia::maths
   template<std::size_t D, class Arena=mathematical_arena>
   struct euclidean_vector_space
   {
-    using set_type               = sets::E<D>;
-    using field_type             = sets::R<1>;
+    using set_type               = sets::R<D>;
+    using field_type             = commutative_rings::reals<1>;
     using is_vector_space        = std::true_type;
     using arena_type             = Arena;
     using admits_canonical_basis = std::true_type;

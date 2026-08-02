@@ -21,8 +21,8 @@ namespace sequoia::testing
 
   void vector_polar_coordinates_test::run_tests()
   {
-    test_vec<sets::R<2>, sets::R<1>, 2, basic_polar_representation<float >, identity_validator>();
-    test_vec<sets::R<2>, sets::R<1>, 2,       polar_representation<double>, identity_validator>();
+    test_vec<sets::R<2>, commutative_rings::reals<1>, 2, basic_polar_representation<float >, identity_validator>();
+    test_vec<sets::R<2>, commutative_rings::reals<1>, 2,       polar_representation<double>, identity_validator>();
 
     test_refined<float, identity_validator>();
 
@@ -75,8 +75,8 @@ namespace sequoia::testing
   template<std::floating_point ValType, class Validator>
   void vector_polar_coordinates_test::test_refined()
   {
-    using vec_space_t = my_vec_space<sets::R<2>, sets::R<1>, 2>;
-    using vec_t       = vector_coordinates<vec_space_t, canonical_basis<sets::R<2>, sets::R<1>, 2>, polar_representation<ValType>, Validator>;
+    using vec_space_t = my_vec_space<sets::R<2>, commutative_rings::reals<1>, 2>;
+    using vec_t       = vector_coordinates<vec_space_t, canonical_basis<sets::R<2>, commutative_rings::reals<1>, 2>, polar_representation<ValType>, Validator>;
 
     STATIC_CHECK(defines_scalar_multiplication_for_v<vec_space_t, polar_representation<ValType>>);
     STATIC_CHECK(      defines_scalar_division_for_v<vec_space_t, polar_representation<ValType>>);

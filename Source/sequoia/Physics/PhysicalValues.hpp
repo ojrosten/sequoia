@@ -792,14 +792,14 @@ namespace sequoia::physics
   
   template<class Arena>
   struct electrical_current_space
-    : physical_value_vector_space<sets::classical::electrical_currents<Arena>, maths::sets::R<1>, 1, electrical_current_space<Arena>>
+    : physical_value_vector_space<sets::classical::electrical_currents<Arena>, maths::commutative_rings::reals<1>, 1, electrical_current_space<Arena>>
   {
     using arena_type = Arena;
     using base_space = electrical_current_space;
   };
 
   template<class Arena>
-  struct angular_space : physical_value_vector_space<sets::classical::angles<Arena>, maths::sets::R<1>, 1, angular_space<Arena>>
+  struct angular_space : physical_value_vector_space<sets::classical::angles<Arena>, maths::commutative_rings::reals<1>, 1, angular_space<Arena>>
   {
     using arena_type = Arena;
     using base_space = angular_space;
@@ -1545,19 +1545,19 @@ namespace sequoia::maths
   template<class S, class T>
   struct common_ring<physics::sets::classical::differences<S>, physics::sets::classical::differences<T>>
   {
-    using type = sets::R<1>;
+    using type = commutative_rings::reals<1>;
   };
 
   template<class T>
-  struct common_ring<sets::R<1>, physics::sets::classical::differences<T>>
+  struct common_ring<commutative_rings::reals<1>, physics::sets::classical::differences<T>>
   {
-    using type = sets::R<1>;
+    using type = commutative_rings::reals<1>;
   };
 
   template<class T>
-  struct common_ring<physics::sets::classical::differences<T>, sets::R<1>>
+  struct common_ring<physics::sets::classical::differences<T>, commutative_rings::reals<1>>
+    : common_ring<commutative_rings::reals<1>, physics::sets::classical::differences<T>>
   {
-    using type = sets::R<1>;
   };
 }
 

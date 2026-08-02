@@ -71,10 +71,10 @@ namespace sequoia::testing
 
   void affine_coordinates_test::run_tests()
   {
-    test_affine<sets::R<1>, sets::R<1>, 1, float>();
-    test_affine<sets::R<1>, sets::R<1>, 1, double>();
-    test_affine<sets::C<1>, sets::C<1>, 1, std::complex<float>>();
-    test_affine<sets::C<1>, sets::R<1>, 2, float>();
+    test_affine<sets::R<1>, commutative_rings::reals<1> , 1, float>();
+    test_affine<sets::R<1>, commutative_rings::reals<1> , 1, double>();
+    test_affine<sets::C<1>, commutative_rings::complexes, 1, std::complex<float>>();
+    test_affine<sets::C<1>, commutative_rings::reals<1> , 2, float>();
   }
 
   template<class Set, class Field, std::size_t D, class Rep>

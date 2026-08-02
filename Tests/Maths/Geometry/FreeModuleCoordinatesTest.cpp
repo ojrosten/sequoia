@@ -56,9 +56,9 @@ namespace sequoia::testing
 
   void free_module_coordinates_test::run_tests()
   {    
-    test_free_module<sets::Z<1>   , sets::Z<1>, int     , 1>();
-    test_free_module<my_random_set, sets::Z<1>, int     , 1>();
-    test_convex     <sets::N_0<1> , sets::Z<1>, unsigned, 1>();
+    test_free_module<sets::Z<1>   , commutative_rings::integers<1>, int     , 1>();
+    test_free_module<my_random_set, commutative_rings::integers<1>, int     , 1>();
+    test_convex     <sets::N_0<1> , commutative_rings::integers<1>, unsigned, 1>();
   }
 
   template<class Set, class Ring, class SetRep, std::size_t D>

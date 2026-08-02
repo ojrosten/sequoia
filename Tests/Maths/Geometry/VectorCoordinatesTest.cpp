@@ -62,16 +62,17 @@ namespace sequoia::testing
 
   void vector_coordinates_test::run_tests()
   {
-    test_vec<sets::R<1>, sets::R<1>, 1, float>();
-    test_vec<sets::R<1>, sets::R<1>, 1, double>();
-    test_vec<sets::C<1>, sets::C<1>, 1, std::complex<float>>();
+    using namespace commutative_rings;
+    test_vec<sets::R<1>, reals<1> , 1, float>();
+    test_vec<sets::R<1>, reals<1> , 1, double>();
+    test_vec<sets::C<1>, complexes, 1, std::complex<float>>();
 
-    test_vec<sets::R<2>, sets::R<1>, 2, float>();
-    test_vec<sets::C<2>, sets::C<1>, 2, std::complex<double>>();
-    test_vec<sets::C<1>, sets::R<1>, 2, double>(); // Complex numbers over the reals
+    test_vec<sets::R<2>, reals<1> , 2, float>();
+    test_vec<sets::C<2>, complexes, 2, std::complex<double>>();
+    test_vec<sets::C<1>, reals<1> , 2, double>(); // Complex numbers over the reals
 
-    test_real_vec_1_inner_prod   <sets::R<1>, sets::R<1>, float>();
-    test_complex_vec_1_inner_prod<sets::C<1>, sets::C<1>, std::complex<double>>();
+    test_real_vec_1_inner_prod   <sets::R<1>, reals<1>, float>();
+    test_complex_vec_1_inner_prod<sets::C<1>, complexes, std::complex<double>>();
   }
 
   template<class Set, class Field, std::size_t D, class Rep>
