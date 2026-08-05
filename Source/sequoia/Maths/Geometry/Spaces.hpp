@@ -82,6 +82,7 @@
     C++ types such as float and double model the real numbers imperfectly. Nevertheless,
     the burden has been shifted from attempting to represent things in C++ that may
     be completely infeasible to things which can be done to reasonable approximation.
+    Generally we will speak of e.g. the doubles weakly representing the reals.
 
     Vector spaces are just one of the things treated in the code that follows. There
     are several important generalizations. First, there are affine spaces, which comprise
@@ -94,7 +95,7 @@
     origin. Neither is more right than the other since this space has no distinguished origin.
     Alice and Bob will, in general, disagree about the coordinates of points in the space.
     However, they will agree on the vector which translates from one point to another (though
-    if they compare vector coordinates, they may have ton contend with using different bases
+    if they compare vector coordinates, they may have to contend with using different bases
     on the vector space!).
 
     An affine space is sometimes described as a vector space which has forgotten its origin.
@@ -106,23 +107,42 @@
     and so it is this that will be reflected by the concepts defined below: the affine
     space concept depends on the vector_space concent, and not vice-versa.
 
-    It will be useful for our purposes to generalize affine spaces. Consider taking a
+    It will be useful for our purposes to generalize affine spaces. To start, onsider taking a
     convex subset, C, of an affine space. We may translate from any point in C to any
     other by adding the appropriate vector from V. However, there are elements of V
     which, when added to a point in C will take us outside of C and into the broader
     affine space into which it is a part. However, we do not want define Convex spaces
-    via an embedding in a bigger space. There seems to be a solution which fits neatly
-    into a C++ implementation. Define a convex space, C, to comprise:
-    1. The union, S', of a set of points, S, and an exception state, E
-    2. A vector space, V
-    such that:
-    A. The difference of any two points in S is in V
-    B. An element of V, when added to S remains either in S or maps to E
-    Note that, since every point in S is mapped by elements of V into E, and there is
-    no mapping from E back into S, the action of the additive group of V is not bijective,
-    violating one of the axioms of affine spaces.
+    via an embedding in a bigger space. There are a variety of solutions to this, a
+    selection of which is listed, all of which have reasonable representations in C++.
 
-    The other interesting generialization is to consider relaxing a vector space's field
+    1. Take the action of V to be a partial action; as such, it is simply not defined
+       for elements of V which would take points of C outside of C. While we cannot literally
+       restrict the domain of a C++ function such as operator+ in this way, we can furnish
+       them with a precondition. The behaviour when called out of contract is undefined; not
+       quite in the mathematical sense but at least in a sense which seems to map rather well
+       onto our intuition.
+
+    2. Supplement the underlying set, S, with an exceptional state, E such that
+    a. The difference of any two points in S is in V
+    b. An element of V, when added to S remains either in S or maps to E.
+       Note that, since every point in S is mapped by elements of V into E, and there is
+       no mapping from E back into S, the action of the additive group of V is not bijective,
+       violating one of the axioms of affine spaces.
+
+    3. Define operations which would otherwise be out of bounds to clamp to the boundary. There
+    are two subsidiary options:
+    a. Projective clamping, whereby the nearest point to the putative point outside of the space is selected.
+    (Notions of nearness require additional structure to exist on the space.)
+    
+    b. Ray-tracing, whereby the point on the boundary struck by the ray from the starting
+    point along the deisplacement vector is selected
+
+    4. Periodic remapping
+
+    5. Anti-periodic remapping
+
+    There are now two further generalizations that it will be profitable to explore. First,
+    is to consider relaxing a vector space's field
     to a ring. The resulting construction is called a module, which is a generalization
     of a vector space. Our motivation for this is that the integers form a commutative
     ring and not a field, since integers do not, in general, have multiplicative inverses
@@ -133,6 +153,11 @@
 
     In line with the above, we also consider affine spaces over free modules and their
     convex generalization where the action of the free module is not bijective.
+
+    The last generalization is to relax the constraint of convexity. This leads us to our
+    most primitive abstraction: a partial M-Torsor. Partial because the the torsor may not
+    be complete or may require additional structure to be completed. 'M' to indicate that
+    the partial torsor is over a free module.
 
     The final issue to address is that question of why to bother modelling concepts such
     as vector spaces in the abstract sense if it is their coordinates which are the things
