@@ -15,7 +15,7 @@
     space is nothing but a set with some additional structure defined. However,
     sets of objects are not straightforward to represent, in general, in C++.
 
-    Consider the real numbers. In C++ we can give a name to the is set
+    Consider the real numbers. In C++ we can give a name to the set
     by using the type system.
 
     struct R {};
@@ -105,7 +105,7 @@
     with the vector space being a refinement. However, a vector space is part of the
     definition of an affine space (a set and a vector space, satisfying certain conditions)
     and so it is this that will be reflected by the concepts defined below: the affine
-    space concept depends on the vector_space concent, and not vice-versa.
+    space concept depends on the vector_space concept, and not vice-versa.
 
     It will be useful for our purposes to generalize affine spaces. To start, onsider taking a
     convex subset, C, of an affine space. We may translate from any point in C to any
@@ -159,7 +159,7 @@
     be complete or may require additional structure to be completed. 'M' to indicate that
     the partial torsor is over a free module.
 
-    The final issue to address is that question of why to bother modelling concepts such
+    The final introductory issue to address is the question of why to bother modelling concepts such
     as vector spaces in the abstract sense if it is their coordinates which are the things
     of use from the perspective of practical computation. The point is that, for example,
     vector spaces and affine spaces admit different operations: whereas elements of a vector
@@ -167,7 +167,7 @@
     affine space. By introducing concepts for the abstract algebraic constructs, we can treat
     coordinates on all of these spaces in a common way by using constraints to enable
     or disable specific operations. Thus, the coordinates class template is templated on,
-    amongst other things, a convex_space. To define such a space just requires introducing
+    amongst other things, a partial_m_torsor. To define such a space just requires introducing
     a struct exposing a small amount of data (types and values) known at compile time.
     These data determines whether we intend to model a vector space, a free module over a
     commutative space, an affine space or whatever. This is sufficient for the coordinates
@@ -222,7 +222,7 @@ namespace sequoia::maths
    */
 
   /** @ingroup ArithmeticProperties
-      @brief Compile time constant for addability
+      @brief Compile time constant for addability of instances of two types
    */
 
   template<class U, class T>
@@ -231,7 +231,11 @@ namespace sequoia::maths
       { t + u } -> std::convertible_to<T>; 
     }
   };
-  
+
+  /** @ingroup ArithmeticProperties
+      @brief Compile time constant for addability of two instances of the same type
+   */
+
   template<class T>
   inline constexpr bool is_addable_v{
        is_addable_to_v<T, T>
@@ -241,7 +245,7 @@ namespace sequoia::maths
   };
 
   /** @ingroup ArithmeticProperties
-      @brief Compile time constant for subtractability
+      @brief Compile time constant for subtractability of instances of two types
    */
 
   template<class U, class T>
@@ -251,6 +255,10 @@ namespace sequoia::maths
     }
   };
 
+  /** @ingroup ArithmeticProperties
+      @brief Compile time constant for subtractability of two instances of the same type
+   */
+  
   template<class T>
   inline constexpr bool is_subtractable_v{
        is_subtractable_from_v<T, T>
@@ -262,6 +270,7 @@ namespace sequoia::maths
   /** @ingroup ArithmeticProperties
       @brief Compile time constant for multiplicability
    */
+
   template<class T>
   inline constexpr bool is_multiplicable_v{
     requires(T& t) {
@@ -282,17 +291,148 @@ namespace sequoia::maths
   };
 
   /** @defgroup AlgebraicTraits Algebraic Traits
-      @brief Traits and concepts for basic elements of abstract algebra.
+      @brief Traits and concepts for types attempting to model algebraic types.
 
-      A fundamental problem of attempting this classification on a computer is the difference
+      This section seeks to provides compile time mechanisms to specify (and subsequently query)
+      whether arithmetic types, be they built-in (int, float etc) or user-defined, exhibit various properties.
+      A fundamental problem of attempting this is the difference
       between a mathematical structure and an approximate representation of that structure.
+      This is sharpened in the current context of attempting to do this in code:     
       ints model the integers, but not exactly since there is a maximum representable value.
       Similarly, floating-point numbers model the reals but only in an approximate sense.
-      To signify the fact that neither integer nor floating-point addition exactly models an
-      abelian group, the term 'weak' is used. Note, however, that addition of unsigned integral
+      However, it is useful to capture such 'best efforts', for which we use the signifer
+      'weak'. For example to signify the fact that neither integer nor floating-point addition exactly models an
+      abelian group, trait `weakly_abelian_group_under_addition` is used. Note, however, that addition of unsigned integral
       types does precisely model an abelian group and so 'weak' is a minimum requirement.
       
       Entertaingly, the only fundamental type in C++ which exacly models a field is bool.
+   */
+
+  /** @defgroup WeaklyAbelianGroupUnderAddition Subgroup weakly abelian group under addition
+      @ingroup AlgebraicTraits
+      @brief Trait for specifying whether a type behaves (appoximately) as an abelian group under addition.
+
+      This includes all the arithmetic types, with the unsigned one behaving precisely as an abelian group
+      under addition.
+
+      @{
+   */
+
+  template<class T>
+  struct weakly_abelian_group_under_addition : std::false_type {};
+
+  template<class T>
+  using weakly_abelian_group_under_addition_t = typename weakly_abelian_group_under_addition<T>::type;
+  
+  template<class T>
+  inline constexpr bool weakly_abelian_group_under_addition_v{weakly_abelian_group_under_addition<T>::value};
+
+  template<arithmetic T>
+  struct weakly_abelian_group_under_addition<T> : std::true_type {};
+
+  template<std::floating_point T>
+  struct weakly_abelian_group_under_addition<std::complex<T>> : std::true_type {};
+
+  /** @} */ // end of group WeaklyAbelianGroupUnderAddition
+
+  /** @defgroup WeaklyAbelianGroupUnderMultiplication Subgroup weakly abelian group under multiplication
+      @ingroup AlgebraicTraits
+      @brief Trait for specifying whether a type behaves (appoximately) as an abelian group under multiplication.
+
+      The floating-point types are taken to weakly model an abelian group under multiplication,
+      since they attempt to approximate the reals.
+      
+      The only integral type modelling this (exactly, as it transpires) is bool. It is the only type in C++
+      modelling Z/Zn where n is a prime. The other integral types do not model this in a reasonable sense.
+
+      @{
+   */
+
+  template<class T>
+  struct weakly_abelian_group_under_multiplication : std::false_type {};
+
+  template<class T>
+  using weakly_abelian_group_under_multiplication_t = typename weakly_abelian_group_under_multiplication<T>::type;
+
+  template<class T>
+  inline constexpr bool weakly_abelian_group_under_multiplication_v{weakly_abelian_group_under_multiplication<T>::value};
+
+  template<std::floating_point T>
+  struct weakly_abelian_group_under_multiplication<T> : std::true_type {};
+
+  template<std::floating_point T>
+  struct weakly_abelian_group_under_multiplication<std::complex<T>> : std::true_type {};
+
+  template<>
+  struct weakly_abelian_group_under_multiplication<bool> : std::true_type {};
+
+  /** @} */ // end of group WeaklyAbelianGroupUnderMultiplication
+  
+  /** @defgroup MultiplicationWeaklyDistributiveOverAddition Subgroup multiplication weakly distributive over addition
+      @ingroup AlgebraicTraits
+      @brief Trait for specifying whether a type exhibits multiplication that (approximately) distributes over addition.
+
+      Unlike the previous two traits, this one is taken to be true by default. Therefore, in the
+      event of a user-defined type that doesn't satisfy this, they must opt out.
+
+      @{
+   */
+
+  template<class T>
+  struct multiplication_weakly_distributive_over_addition : std::true_type {};
+
+  template<class T>
+  using multiplication_weakly_distributive_over_addition_t = typename multiplication_weakly_distributive_over_addition<T>::type;
+
+  template<class T>
+  inline constexpr bool multiplication_weakly_distributive_over_addition_v{multiplication_weakly_distributive_over_addition<T>::value};
+
+  /** @} */ // end of group MultiplicationWeaklyDistributiveOverAddition
+
+  /** @ingroup AlgebraicTraits
+      @brief concept representing reasonable approximations to a commutative ring.
+   */
+  
+  template<class T>
+  concept weak_commutative_ring 
+    =    std::regular<T>
+      && weakly_abelian_group_under_addition_v<T>
+      && multiplication_weakly_distributive_over_addition_v<T>
+      && is_addable_v<T>
+      && is_subtractable_v<T>
+      && is_multiplicable_v<T>;
+
+  /** @ingroup AlgebraicTraits
+      @brief concept representing reasonable approximations to a field.
+   */
+
+  template<class T>
+  concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && is_divisible_v<T>;
+
+  /** @defgroup PropertiesOfSpaces Properties of Spaces
+      @brief Tools to reflect on whether types expose other types typically associated with various spaces.
+   */
+
+  /** @ingroup PropertiesOfSpaces
+      @brief Compile time constant reflecting whether a type exposes a nested type named commutative_ring_type.
+   */
+
+  template<class T>
+  inline constexpr bool has_commutative_ring_type_v{
+    requires { typename T::commutative_ring_type; }
+  };
+
+  /** @ingroup PropertiesOfSpaces
+      @brief Compile time constant reflecting whether a type exposes a nested type named field_type.
+   */ 
+
+  template<class T>
+  inline constexpr bool has_field_type_v{
+    requires { typename T::field_type; }
+  };
+  
+  /** @ingroup PropertiesOfSpaces
+      @brief Reports whether a type exposes a nested type with the right name and type to be considered a commutative ring.
    */
 
   template<class T>
@@ -315,142 +455,7 @@ namespace sequoia::maths
   inline constexpr bool is_commutative_ring_v{
     identifies_as_commutative_ring_v<T> || identifies_as_field_v<T>
   };
-
-  /** @ingroup AlgebraicTraits
-      @brief Trait for specifying whether a type behaves (appoximately) as an abelian group under addition.
-
-      This includes all the arithmetic types, with the unsigned one behaving precisely as an abelian group
-      under addition.
-   */
-
-  template<class T>
-  struct weakly_abelian_group_under_addition : std::false_type {};
-
-  template<class T>
-  using weakly_abelian_group_under_addition_t = typename weakly_abelian_group_under_addition<T>::type;
   
-  template<class T>
-  inline constexpr bool weakly_abelian_group_under_addition_v{weakly_abelian_group_under_addition<T>::value};
-
-  template<arithmetic T>
-  struct weakly_abelian_group_under_addition<T> : std::true_type {};
-
-  template<std::floating_point T>
-  struct weakly_abelian_group_under_addition<std::complex<T>> : std::true_type {};
-
-  /** @ingroup AlgebraicTraits
-      @brief Trait for specifying whether a type behaves (appoximately) as an abelian group under multiplication.
-
-      The floating-point types are taken to weakly model an abelian group under multiplication,
-      since they attempt to approximate the reals.
-      
-      The only integral type modelling this (exactly, as it transpires) is bool. It is the only type in C++
-      modelling Z/Zn where n is a prime. The other integral types do not model this even in an approximate sense.
-   */
-
-  template<class T>
-  struct weakly_abelian_group_under_multiplication : std::false_type {};
-
-  template<class T>
-  using weakly_abelian_group_under_multiplication_t = typename weakly_abelian_group_under_multiplication<T>::type;
-
-  template<class T>
-  inline constexpr bool weakly_abelian_group_under_multiplication_v{weakly_abelian_group_under_multiplication<T>::value};
-
-  template<std::floating_point T>
-  struct weakly_abelian_group_under_multiplication<T> : std::true_type {};
-
-  template<std::floating_point T>
-  struct weakly_abelian_group_under_multiplication<std::complex<T>> : std::true_type {};
-
-  template<>
-  struct weakly_abelian_group_under_multiplication<bool> : std::true_type {};
-  
-  /** @ingroup AlgebraicTraits
-      @brief Trait for specifying whether a type exhibits multiplication that (approximately) distributes over addition.
-   */
-
-  template<class T>
-  struct multiplication_weakly_distributive_over_addition : std::true_type {};
-
-  template<class T>
-  using multiplication_weakly_distributive_over_addition_t = typename multiplication_weakly_distributive_over_addition<T>::type;
-
-  template<class T>
-  inline constexpr bool multiplication_weakly_distributive_over_addition_v{multiplication_weakly_distributive_over_addition<T>::value};
-
-  /** @ingroup AlgebraicTraits
-      @brief concept representing reasonable approximations to a commutative ring.
-   */
-  
-  template<class T>
-  concept weak_commutative_ring 
-    =    std::regular<T>
-      && weakly_abelian_group_under_addition_v<T>
-      && multiplication_weakly_distributive_over_addition_v<T>
-      && is_addable_v<T>
-      && is_subtractable_v<T>
-      && is_multiplicable_v<T>;
-
-  /** @ingroup AlgebraicTraits
-      @brief concept representing reasonable approximations to a field.
-   */
-
-  template<class T>
-  concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && is_divisible_v<T>;
-
-  template<class Algebra, class Rep>
-  struct weakly_representated_by : std::false_type {};
-
-  template<class Algebra, class Rep>
-  using weakly_representated_by_t = weakly_representated_by<Algebra, Rep>::type;
-
-  template<class Algebra, class Rep>
-  inline constexpr bool weakly_representated_by_v = weakly_representated_by<Algebra, Rep>::value;
-
-  template<class Rep, class Algebra>
-  concept weak_representation_for = weakly_representated_by_v<Algebra, Rep>;
-
-  /** @defgroup PropertiesOfSpaces Properties of Spaces
-      @brief Tools to reflect on whether types expose other types typically associated with various spaces.
-   */
-
-  /** @ingroup PropertiesOfSpaces
-      @brief Compile time constant reflecting whether a type exposes a nested type named commutative_ring_type which satisifes the weak_commutative_ring concept.
-   */
-
-  template<class T>
-  inline constexpr bool has_commutative_ring_type_v{
-    requires { typename T::commutative_ring_type; }
-  };
-
-  /** @ingroup PropertiesOfSpaces
-      @brief Compile time constant reflecting whether a type exposes a nested type named field_type which satisifes the weak_field concept.
-   */ 
-  template<class T>
-  inline constexpr bool has_field_type_v{
-    requires { typename T::field_type; }
-  };
-
-  /** @ingroup PropertiesOfSpaces
-      @brief Compile time constant reflecting whether a type exposes a nested type with the properties of a commutative ring.
-
-      The point here is that a field is a special case of a ring. Therefore, anything which defines
-      a field is implicitly defining a ring.
-    */
-  
-
-
-  //     requires is_commutative_ring_v<typename T::commutative_ring_type>;
-  //    requires identifies_as_field_v<typename T::field_type>;
-  
-  /** @ingroup PropertiesOfSpaces
-      @brief Reports whether a type exposes a nested type with the properties of a field.
-
-      The point here is to capture the case where a type exposes a nested type commutative_ring_type
-      but the latter satisfies not just the weak_commutative_ring concept but also the strong
-      weak_field concept.
-   */
   template<class T>
   inline constexpr bool defines_field_v{
        (has_commutative_ring_type_v<T> && requires { requires identifies_as_field_v<typename T::commutative_ring_type>; } )
@@ -676,9 +681,6 @@ namespace sequoia::maths
 
   template<convex_space ConvexSpace>
   using commutative_ring_type_of_t = commutative_ring_type_of<ConvexSpace>::type;
-
-  //template<convex_space ConvexSpace>
-  //using space_value_type = commutative_ring_type_of_t<ConvexSpace>;
   
   /** @ingroup PropertiesOfSpaces
       @brief Helper to extract the dimension of the free module associated with a convex space.
@@ -1026,6 +1028,20 @@ namespace sequoia::maths
       { std::tuple_size_v<typename T::coordinates_type> } -> std::convertible_to<std::size_t>;
     }
   };
+
+  
+  
+  template<class Algebra, class Rep>
+  struct weakly_representated_by : std::false_type {};
+
+  template<class Algebra, class Rep>
+  using weakly_representated_by_t = weakly_representated_by<Algebra, Rep>::type;
+
+  template<class Algebra, class Rep>
+  inline constexpr bool weakly_representated_by_v = weakly_representated_by<Algebra, Rep>::value;
+
+  template<class Rep, class Algebra>
+  concept weak_representation_for = weakly_representated_by_v<Algebra, Rep>;
   
   // TO DO constrain coordinates_type to hold things satisfying a coords concept?
   template<class R>
