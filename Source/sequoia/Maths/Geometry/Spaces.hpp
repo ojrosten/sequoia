@@ -214,15 +214,17 @@ namespace sequoia::maths
           ordered_field
    */
 
-  /** @ingroup MathematicalStructure
-      @brief Intended for use as a nested type to indicate self-identification as a commutative ring.
+  /** @defgroup CommutativeRingTags Subgroup commutative ring tag hierarchy
+      @ingroup MathematicalStructure
+      @brief Hierarchy for the purpose of self-identification as a commutative ring.
+
+      @{
    */
   struct commutative_ring_tag_t {};
 
-  /** @ingroup MathematicalStructure
-      @brief Intended for use as a nested type to indicate self-identification as a commutative ring.
-   */
   struct field_tag_t : virtual commutative_ring_tag_t {};
+
+  /** @} */
 
   /** @ingroup MathematicalStructure
       @brief Detects if a types has a nested type called `structure`
@@ -232,12 +234,13 @@ namespace sequoia::maths
     requires { typename T::structure; }
   };
   
-  /** @ingroup MathematicalStructure
-      @brief Captures the conditions under which a type considers itself to be a commutative ring.
+  /** @defgroup CommutatitiveRingIdentification Subgroup Commutative ring identification
+      @ingroup MathematicalStructure
+      @brief Captures the conditions under which types considers themselves to be a commutative ring or refinement thereof.
 
-      This is designed in such a way that if the nested type identifies as, say, a field, it
-      is still recognized as a commutative ring.
+      @{
    */
+  
   template<class T>
   inline constexpr bool identifies_as_commutative_ring_v{
        has_structure_type_v<T>
@@ -246,9 +249,6 @@ namespace sequoia::maths
        }
   };
 
-  /** @ingroup Structure
-      @brief Captures the conditions under which a type considers itself to be a commutative ring.
-   */
   template<class T>
   inline constexpr bool identifies_as_field_v{
         has_structure_type_v<T>
@@ -257,6 +257,14 @@ namespace sequoia::maths
        }
   };
 
+  /** @} */
+
+  /** @defgroup TorsorTags Subgroup partial M-Torsor tag hierarchy
+      @ingroup MathematicalStructure
+      @brief Hierarchy for the purpose of self-identification as a commutative ring.
+
+      @{
+   */
   struct partial_m_torsor_tag_t {};
 
   struct convex_space_tag_t : virtual partial_m_torsor_tag_t {};
@@ -267,6 +275,15 @@ namespace sequoia::maths
 
   struct vector_space_tag_t : virtual affine_space_tag_t, virtual free_module_tag_t {};
 
+  /** @} */
+
+  /** @defgroup PartialMTorsorIdentification Partial M-torsor identification
+      @ingroup MathematicalStructure
+      @brief Captures the conditions under which types considers themselves to be a partial M-torsor or refinement thereof.
+
+      @{
+   */
+  
   template<class T>
   inline constexpr bool identifies_as_partial_m_torsor_v{
        has_structure_type_v<T>
@@ -307,6 +324,8 @@ namespace sequoia::maths
        }
   };
 
+  /** @} */
+  
   /** @defgroup ArithmeticProperties Arithmetic Properties
       @brief Tools to reflect on whether types expose the standard arithmetic operations.
 
