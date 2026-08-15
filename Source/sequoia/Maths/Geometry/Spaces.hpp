@@ -650,15 +650,15 @@ namespace sequoia::maths
       @brief concept for convex spaces
 
       A convex space may be a free module. Otherwise, it comprises a set and a
-      free module (which may be a vector space), and must identify as either a convex
-      or affine space.      
+      free module (which may be a vector space), and must identify as a convex
+      space.      
    */
   template<class T>
   concept convex_space
     =    free_module<T>
       || (    has_set_type_v<T>
-          && (has_vector_space_type_v<T>      || has_free_module_type_v<T>)
-          && (identifies_as_convex_space_v<T> || identifies_as_affine_space_v<T>));
+          && identifies_as_convex_space_v<T>
+          && (has_vector_space_type_v<T> || has_free_module_type_v<T>));
 
   /** @ingroup Spaces
       @brief concept for affine spaces
