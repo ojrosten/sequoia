@@ -602,24 +602,6 @@ namespace sequoia::maths
   template<class T>
   using set_type_of_t = set_type_of<T>::type;
 
-  /** @defgroup IdentifiesAsSpace Self-identification of Spaces
-      @brief Compile time constants to capture whether types self-identify as various spaces.
-
-      It is straightforward to say that a type, T, exposes nested types, say set_type
-      and field_type. This is suggestive of a vector space but to do able to unequivocally
-      identify T as a vector space requires additional information, since we have no way
-      of knowing, a priori, whether the vector space axioms are satisfied. Indeed, it may
-      not be straightforward to provide the operations for addition and multiplication as
-      they apply to the elements of the underlying set: practically speaking, we are usually
-      dealing with operations on coordinates with respect to some basis.
-
-      Therefore, the approach taken is to demand that various spaces self identify as such.
-      For a free module this would mean exposing a type, is_free_module, convertible to
-      std::true_type. Note, though, that this is not sufficient for T to be a free module,
-      as there are additional requirements that must be met (see the free_module concept).      
-   */
-
-
   /** @defgroup Spaces Spaces
       @brief Concepts and helpers pertaining to vector spaces, affine spaces and certain generalizations.    
    */
