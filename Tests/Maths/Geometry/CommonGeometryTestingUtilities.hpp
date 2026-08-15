@@ -95,7 +95,7 @@ namespace sequoia::testing
   };
   
   template<class Set, class Field, std::size_t Dim>
-    requires maths::identifies_as_field_v<Field>
+    requires maths::is_field_v<Field>
   struct my_vec_space
   {
     using set_type               = Set;
@@ -142,7 +142,7 @@ namespace sequoia::testing
   };
 
   template<class Set, class Field, std::size_t D>
-    requires maths::identifies_as_field_v<Field>
+    requires maths::is_field_v<Field>
   struct my_affine_space
   {
     using set_type          = Set;
@@ -151,7 +151,7 @@ namespace sequoia::testing
   };
 
   template<class Set, class Field, std::size_t D>
-    requires maths::identifies_as_field_v<Field>
+    requires maths::is_field_v<Field>
   struct canonical_basis
   {
     using vector_space_type = my_vec_space<Set, Field, D>;

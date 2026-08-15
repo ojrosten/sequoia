@@ -26,7 +26,7 @@ namespace sequoia::testing
     // TO DO: infer D
     template<class Set, class Field, std::size_t D, class Rep>
     // TO DO rep_for<Field> Rep
-      requires maths::identifies_as_field_v<Field>
+      requires maths::is_field_v<Field>
     void test_affine();
   };
 }

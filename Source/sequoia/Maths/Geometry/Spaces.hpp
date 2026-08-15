@@ -193,6 +193,62 @@
 
 namespace sequoia::maths
 {
+  /** @defgroup AlgebraicStructure
+      @brief Traits to indicate whether types self-identify as various algebraic structure.
+
+      As outlined in the introductory remarks, there is a crucial distinction between
+      using a type to name a set e.g. `struct reals {};` and a represententation of
+      the elements of the set e.g. `float` or `double`. In the case of the former,
+      it is natural to use compile time data to express various abstract properties.
+      This set of definitions pertains to how such a type identifies itself; for example,
+      perhaps as a field or a commutative ring.
+
+      To model the fact that algebraic properties relate to one another according to a DAG,
+      we use virtual inheritance. This allows us to represent diamond hierarchies, which
+      naturally occur e.g.
+
+         commutative_ring
+            /         \
+      ordered_ring  field
+            \         /
+          ordered_field
+   */
+
+  /** @ingroup AlgebraicStructure
+      @brief Used to indicate that a type self-identifies as a commutative ring.
+   */
+  struct identifies_as_commutative_ring_t {};
+
+  /** @ingroup AlgebraicStructure
+      @brief Used to indicate that a type self-identifies as a field.
+   */
+  struct identifies_as_field_t : virtual identifies_as_commutative_ring_t {};
+
+  /** @ingroup AlgebraicStructure
+      @brief Captures the conditions under which a type considers itself to be a commutative ring.
+
+      This is designed in such a way that if the nested type identifies as, say, a field, it
+      is still recognized as a commutative ring.
+   */
+  template<class T>
+  inline constexpr bool is_commutative_ring_v{
+    requires {
+      typename T::algebraic_structure;
+      requires std::derived_from<typename T::algebraic_structure, identifies_as_commutative_ring_t>;
+    }
+  };
+
+  /** @ingroup AlgebraicStructure
+      @brief Captures the conditions under which a type considers itself to be a commutative ring.
+   */
+  template<class T>
+  inline constexpr bool is_field_v{
+    requires {
+      typename T::algebraic_structure;
+      requires std::convertible_to<typename T::algebraic_structure, identifies_as_field_t>;
+    }
+  };
+
   /** @defgroup ArithmeticProperties Arithmetic Properties
       @brief Tools to reflect on whether types expose the standard arithmetic operations.
 
@@ -431,41 +487,16 @@ namespace sequoia::maths
     requires { typename T::field_type; }
   };
   
-  /** @ingroup PropertiesOfSpaces
-      @brief Reports whether a type exposes a nested type with the right name and type to be considered a commutative ring.
-   */
-
-  template<class T>
-  inline constexpr bool identifies_as_commutative_ring_v{
-     requires {
-      typename T::is_commutative_ring;
-      requires std::convertible_to<typename T::is_commutative_ring, std::true_type>;
-    }
-  };
-
-  template<class T>
-  inline constexpr bool identifies_as_field_v{
-     requires {
-      typename T::is_field;
-      requires std::convertible_to<typename T::is_field, std::true_type>;
-    }
-  };
-
-  template<class T>
-  inline constexpr bool is_commutative_ring_v{
-    identifies_as_commutative_ring_v<T> || identifies_as_field_v<T>
-  };
-  
   template<class T>
   inline constexpr bool defines_field_v{
-       (has_commutative_ring_type_v<T> && requires { requires identifies_as_field_v<typename T::commutative_ring_type>; } )
-    || (has_field_type_v<T>            && requires { requires identifies_as_field_v<typename T::field_type>;            } )
+       (has_commutative_ring_type_v<T> && requires { requires is_field_v<typename T::commutative_ring_type>; } )
+    || (has_field_type_v<T>            && requires { requires is_field_v<typename T::field_type>;            } )
   };
 
   template<class T>
   inline constexpr bool defines_commutative_ring_v{
        defines_field_v<T>
-    || (has_commutative_ring_type_v<T> && requires { requires identifies_as_commutative_ring_v<typename T::commutative_ring_type>; } )
+    || (has_commutative_ring_type_v<T> && requires { requires is_commutative_ring_v<typename T::commutative_ring_type>; } )
   };
 
   /** @ingroup PropertiesOfSpaces
@@ -2729,21 +2760,21 @@ namespace sequoia::maths
       requires (0 < N) && (N <= 2)
     struct reals
     {
-      using set_type = sets::R<N>;
-      using is_field = std::true_type;
+      using set_type            = sets::R<N>;
+      using algebraic_structure = identifies_as_field_t;
     };
 
     template<std::size_t N>
     struct integers
     {
       using set_type            = sets::Z<N>;
-      using is_commutative_ring = std::true_type;
+      using algebraic_structure = identifies_as_commutative_ring_t;
     };
 
     struct complexes
     {
-      using set_type = sets::C<1>;
-      using is_field = std::true_type;
+      using set_type            = sets::C<1>;
+      using algebraic_structure = identifies_as_field_t;
     };
   }
 
@@ -2820,7 +2851,7 @@ namespace sequoia::maths
   using displacement_space_of_t = displacement_space_of<T>::type;
 
   template<class T>
-    requires identifies_as_field_v<T>
+    requires is_field_v<T>
   struct displacement_space_of<T>
   {
     using type = T;

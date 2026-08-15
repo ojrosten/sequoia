@@ -30,7 +30,7 @@ namespace sequoia::testing
   }
 
   template<class Set, class Field, std::size_t D, class Representation, class Validator>
-    requires maths::identifies_as_field_v<Field>
+    requires maths::is_field_v<Field>
   void vector_polar_coordinates_test::test_vec()
   {
     using vec_space_t = my_vec_space<Set, Field, D>;

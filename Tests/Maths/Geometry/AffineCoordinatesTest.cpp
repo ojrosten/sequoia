@@ -78,7 +78,7 @@ namespace sequoia::testing
   }
 
   template<class Set, class Field, std::size_t D, class Rep>
-    requires maths::identifies_as_field_v<Field>
+    requires maths::is_field_v<Field>
   void affine_coordinates_test::test_affine()
   {
     using space_t  = my_affine_space<Set, Field, D>;
