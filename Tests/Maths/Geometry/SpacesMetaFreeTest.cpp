@@ -20,21 +20,21 @@ namespace sequoia::testing
     struct distinguished_origin_space {
       using set_type             = sets::R<1>;
       using free_module_type     = euclidean_vector_space<1>;
-      using is_convex_space      = std::true_type;
+      using structure            = convex_space_tag_t;
       using distinguished_origin = std::true_type;
     };
 
     struct half_line_space {
       using set_type             = sets::R<1>;
       using free_module_type     = euclidean_vector_space<1>;
-      using is_convex_space      = std::true_type;
+      using structure            = convex_space_tag_t;
       using non_negative_orthant = std::true_type;
     };
 
     struct unremarkable_space {
       using set_type         = sets::R<1>;
       using free_module_type = euclidean_vector_space<1>;
-      using is_convex_space  = std::true_type;
+      using structure        = convex_space_tag_t;
     };
   }
   

@@ -22,7 +22,7 @@ namespace sequoia::testing
     {
       using set_type               = Set;
       using commutative_ring_type  = Ring;
-      using is_free_module         = std::true_type;
+      using structure              = free_module_tag_t;
       using admits_canonical_basis = std::true_type;
       constexpr static std::size_t dimension{D};
     };
@@ -40,7 +40,7 @@ namespace sequoia::testing
       constexpr static std::size_t dimension{D};
       using set_type              = Set;
       using free_module_type      = my_free_module<Set, Ring, D>;
-      using is_convex_space       = std::true_type;
+      using structure             = convex_space_tag_t;
       using distinguished_origin  = std::true_type;
       using non_negative_orthant  = std::true_type;
     };

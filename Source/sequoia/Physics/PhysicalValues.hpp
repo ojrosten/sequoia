@@ -100,7 +100,7 @@ namespace sequoia::physics
     using tensor_product_t      = tensor_product<Ts...>;
     using set_type              = reduction<typename tensor_product_t::set_type>;
     using commutative_ring_type = commutative_ring_type_of_t<tensor_product_t>;
-    using is_free_module        = std::true_type;
+    using structure             = free_module_tag_t;
     using arena_type            = arena_type_of_t<tensor_product<Ts...>>;
     constexpr static std::size_t dimension{std::ranges::max({dimension_of<Ts>...})};
   };
@@ -112,7 +112,7 @@ namespace sequoia::physics
     using tensor_product_t     = tensor_product<Ts...>;
     using set_type             = reduction<typename tensor_product_t::set_type>;
     using free_module_type     = composite_space<free_module_type_of_t<Ts>...>;
-    using is_convex_space      = std::true_type;
+    using structure            = convex_space_tag_t;
     using arena_type           = arena_type_of_t<tensor_product<Ts...>>;
     using distinguished_origin = std::bool_constant<(has_distinguished_origin_v<Ts> && ...)>;
     using non_negative_orthant = std::bool_constant<(is_non_negative_orthant_v<Ts> && ...)>;
@@ -711,7 +711,7 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{Space::dimension};
     using set_type              = sets::classical::differences<typename Space::set_type>;
     using commutative_ring_type = sets::classical::differences<typename Space::set_type>;
-    using is_free_module        = std::true_type;
+    using structure             = free_module_tag_t;
     using arena_type            = Space::arena_type;
   };
 
@@ -722,7 +722,7 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{Space::dimension};
     using set_type              = sets::classical::differences<typename Space::set_type>;
     using commutative_ring_type = sets::classical::differences<typename Space::set_type>;
-    using is_free_module        = std::true_type;
+    using structure             = free_module_tag_t;
     using base_space            = associated_displacement_space<typename Space::base_space>;
     using arena_type            = Space::arena_type;
   };
@@ -733,7 +733,7 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{D};
     using set_type            = PhysicalValueSet;
     using free_module_type    = associated_displacement_space<Derived>;
-    using is_convex_space     = std::true_type;
+    using structure           = convex_space_tag_t;
     using arena_type          = PhysicalValueSet::arena_type;
   };
 
@@ -743,7 +743,7 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{D};
     using set_type            = PhysicalValueSet;
     using free_module_type    = associated_displacement_space<Derived>;
-    using is_affine_space     = std::true_type;
+    using structure           = affine_space_tag_t;
     using arena_type          = PhysicalValueSet::arena_type;
   };
 
@@ -754,7 +754,7 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{D};
     using set_type            = PhysicalValueSet;
     using field_type          = Field;
-    using is_vector_space     = std::true_type;
+    using structure           = vector_space_tag_t;
   };
 
   template<class Arena>

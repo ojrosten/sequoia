@@ -100,7 +100,7 @@ namespace sequoia::testing
   {
     using set_type               = Set;
     using field_type             = Field;
-    using is_vector_space        = std::true_type;
+    using structure              = maths::vector_space_tag_t;
     using admits_canonical_basis = std::true_type;
     constexpr static std::size_t dimension{Dim};
     constexpr static std::size_t D{dimension};
@@ -147,7 +147,7 @@ namespace sequoia::testing
   {
     using set_type          = Set;
     using vector_space_type = my_vec_space<Set, Field, D>;
-    using is_affine_space   = std::true_type;
+    using structure         = maths::affine_space_tag_t;
   };
 
   template<class Set, class Field, std::size_t D>

@@ -257,27 +257,53 @@ namespace sequoia::maths
        }
   };
 
-  struct identifies_as_partial_m_torsor_t {};
+  struct partial_m_torsor_tag_t {};
 
-  struct identifies_as_convex_space_t : virtual identifies_as_partial_m_torsor_t {};
+  struct convex_space_tag_t : virtual partial_m_torsor_tag_t {};
 
-  struct identifies_as_affine_space_t : virtual identifies_as_convex_space_t {};
+  struct free_module_tag_t : virtual partial_m_torsor_tag_t {};
 
-  struct identifies_as_vector_space_t : virtual identifies_as_affine_space_t {};
+  struct affine_space_tag_t : virtual convex_space_tag_t {};
+
+  struct vector_space_tag_t : virtual affine_space_tag_t, virtual free_module_tag_t {};
 
   template<class T>
-  inline constexpr bool is_partial_m_torsor_v{
+  inline constexpr bool identifies_as_partial_m_torsor_v{
        has_structure_type_v<T>
     && requires {
-         requires std::derived_from<typename T::structure, identifies_as_partial_m_torsor_t>;
+         requires std::derived_from<typename T::structure, partial_m_torsor_tag_t>;
        }
   };
 
   template<class T>
-  inline constexpr bool is_convex_space_v{
+  inline constexpr bool identifies_as_convex_space_v{
        has_structure_type_v<T>
     && requires {
-         requires std::derived_from<typename T::structure, identifies_as_convex_space_t>;
+         requires std::derived_from<typename T::structure, convex_space_tag_t>;
+       }
+  };
+
+  template<class T>
+  inline constexpr bool identifies_as_affine_space_v{
+       has_structure_type_v<T>
+    && requires {
+         requires std::derived_from<typename T::structure, affine_space_tag_t>;
+       }
+  };
+
+  template<class T>
+  inline constexpr bool identifies_as_free_module_v{
+       has_structure_type_v<T>
+    && requires {
+         requires std::derived_from<typename T::structure, free_module_tag_t>;
+       }
+  };
+
+  template<class T>
+  inline constexpr bool identifies_as_vector_space_v{
+       has_structure_type_v<T>
+    && requires {
+         requires std::derived_from<typename T::structure, vector_space_tag_t>;
        }
   };
 
@@ -574,50 +600,7 @@ namespace sequoia::maths
       as there are additional requirements that must be met (see the free_module concept).      
    */
 
-  /** @ingroup IdentifiesAsSpace
-      @brief Compile time constant reflecting whether a space self-identifies as convex.
-   */
-  template<class T>
-  inline constexpr bool identifies_as_convex_space_v{
-     requires {
-      typename T::is_convex_space;
-      requires std::convertible_to<typename T::is_convex_space, std::true_type>;
-    }
-  };
 
-  /** @ingroup IdentifiesAsSpace
-      @brief Compile time constant reflecting whether a space self-identifies as affine.
-   */
-  template<class T>
-  inline constexpr bool identifies_as_affine_space_v{
-     requires {
-      typename T::is_affine_space;
-      requires std::convertible_to<typename T::is_affine_space, std::true_type>;
-    }
-  };
-
-  /** @ingroup IdentifiesAsSpace
-      @brief Compile time constant reflecting whether a space self-identifies as a free module.
-   */
-  template<class T>
-  inline constexpr bool identifies_as_free_module_v{
-    requires {
-      typename T::is_free_module;
-      requires std::convertible_to<typename T::is_free_module, std::true_type>;
-    }
-  };
-
-  /** @ingroup IdentifiesAsSpace
-      @brief Compile time constant reflecting whether a space self-identifies as vector space.
-   */
-  template<class T>
-  inline constexpr bool identifies_as_vector_space_v{
-    requires {
-      typename T::is_vector_space;
-      requires std::convertible_to<typename T::is_vector_space, std::true_type>;
-    }
-  };
-  
   /** @defgroup Spaces Spaces
       @brief Concepts and helpers pertaining to vector spaces, affine spaces and certain generalizations.    
    */
@@ -630,7 +613,7 @@ namespace sequoia::maths
       "free module over a commutative ring".
    */
   template<class T>
-  concept free_module = has_set_type_v<T> && has_dimension_v<T> && defines_commutative_ring_v<T> && (identifies_as_free_module_v<T> || identifies_as_vector_space_v<T>);
+  concept free_module = has_set_type_v<T> && has_dimension_v<T> && defines_commutative_ring_v<T> && identifies_as_free_module_v<T>;
 
   /** @ingroup Spaces
       @brief concept for a vector space, which is a special case of a free module
@@ -1511,7 +1494,7 @@ namespace sequoia::maths
   {
     using set_type              = tensor_product<typename Ts::set_type...>;
     using commutative_ring_type = common_ring_t<commutative_ring_type_of_t<Ts>...>;
-    using is_free_module        = std::true_type;
+    using structure             = free_module_tag_t;
     constexpr static std::size_t dimension{(Ts::dimension * ...)};
   };
 
@@ -1524,7 +1507,7 @@ namespace sequoia::maths
   {
     using set_type         = tensor_product<typename Ts::set_type...>;
     using free_module_type = tensor_product<free_module_type_of_t<Ts>...>;
-    using is_convex_space  = std::true_type;
+    using structure        = convex_space_tag_t;
   };
 
   template<class T>
@@ -1632,9 +1615,9 @@ namespace sequoia::maths
     requires (!affine_space<C>)
   struct dual<C>
   {
-    using set_type             = sets::convex_functionals<C, commutative_ring_type_of_t<C>>;
-    using free_module_type     = dual<free_module_type_of_t<C>>;
-    using is_convex_space      = std::true_type;
+    using set_type         = sets::convex_functionals<C, commutative_ring_type_of_t<C>>;
+    using free_module_type = dual<free_module_type_of_t<C>>;
+    using structure        = convex_space_tag_t;
   };
 
    /** @ingroup DualSpaces
@@ -1646,7 +1629,7 @@ namespace sequoia::maths
   {
     using set_type         = sets::convex_functionals<A, commutative_ring_type_of_t<A>>;
     using free_module_type = dual<free_module_type_of_t<A>>;
-    using is_affine_space  = std::true_type;
+    using structure        = affine_space_tag_t;
   };
 
   /** @ingroup DualSpaces
@@ -1655,9 +1638,9 @@ namespace sequoia::maths
   template<vector_space V>
   struct dual<V>
   {    
-    using field_type      = commutative_ring_type_of_t<V>;
-    using set_type        = sets::linear_functionals<V, field_type>;
-    using is_vector_space = std::true_type;
+    using field_type = commutative_ring_type_of_t<V>;
+    using set_type   = sets::linear_functionals<V, field_type>;
+    using structure  = vector_space_tag_t;
     constexpr static auto dimension{V::dimension};
   };
 
@@ -2937,7 +2920,7 @@ namespace sequoia::maths
   {
     using set_type               = sets::R<D>;
     using field_type             = commutative_rings::reals<1>;
-    using is_vector_space        = std::true_type;
+    using structure              = vector_space_tag_t;
     using arena_type             = Arena;
     using admits_canonical_basis = std::true_type;
     constexpr static std::size_t dimension{D};
@@ -2991,7 +2974,7 @@ namespace sequoia::maths
   {
     using set_type          = sets::R<D>;
     using vector_space_type = euclidean_vector_space<D, Arena>;
-    using is_affine_space   = std::true_type;
+    using structure         = affine_space_tag_t;
     using arena_type        = Arena;
   };
 
@@ -3000,7 +2983,7 @@ namespace sequoia::maths
   {
     using set_type             = sets::orthant<D>;
     using vector_space_type    = euclidean_vector_space<D, Arena>;
-    using is_convex_space      = std::true_type;
+    using structure            = convex_space_tag_t;
     using arena_type           = Arena;
     using distinguished_origin = std::true_type;
     using non_negative_orthant = std::true_type;
