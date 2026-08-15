@@ -685,21 +685,21 @@ namespace sequoia::maths
   struct free_module_type_of;
 
   template<convex_space ConvexSpace>
-    requires identifies_as_free_module_v<ConvexSpace> || identifies_as_vector_space_v<ConvexSpace>
+    requires identifies_as_free_module_v<ConvexSpace>
   struct free_module_type_of<ConvexSpace>
   {
     using type = ConvexSpace;
   };
 
   template<convex_space ConvexSpace>
-    requires (!identifies_as_free_module_v<ConvexSpace> && !identifies_as_vector_space_v<ConvexSpace>) && has_free_module_type_v<ConvexSpace>
+    requires (!identifies_as_free_module_v<ConvexSpace>) && has_free_module_type_v<ConvexSpace>
   struct free_module_type_of<ConvexSpace>
   {
     using type = ConvexSpace::free_module_type;
   };
 
   template<convex_space ConvexSpace>
-    requires (!identifies_as_free_module_v<ConvexSpace> && !identifies_as_vector_space_v<ConvexSpace>) && has_vector_space_type_v<ConvexSpace>
+    requires (!identifies_as_free_module_v<ConvexSpace>) && has_vector_space_type_v<ConvexSpace>
   struct free_module_type_of<ConvexSpace>
   {
     using type = ConvexSpace::vector_space_type;
