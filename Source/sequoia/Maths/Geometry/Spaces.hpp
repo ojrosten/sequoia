@@ -225,6 +225,14 @@ namespace sequoia::maths
   struct identifies_as_field_t : virtual identifies_as_commutative_ring_t {};
 
   /** @ingroup AlgebraicStructure
+      @brief Detects if a types has a nested type called `structure`
+   */
+  template<class T>
+  inline constexpr bool has_structure_type_v{
+    requires { typename T::structure; }
+  };
+  
+  /** @ingroup AlgebraicStructure
       @brief Captures the conditions under which a type considers itself to be a commutative ring.
 
       This is designed in such a way that if the nested type identifies as, say, a field, it
@@ -232,10 +240,10 @@ namespace sequoia::maths
    */
   template<class T>
   inline constexpr bool is_commutative_ring_v{
-    requires {
-      typename T::algebraic_structure;
-      requires std::derived_from<typename T::algebraic_structure, identifies_as_commutative_ring_t>;
-    }
+       has_structure_type_v<T>
+    && requires {
+         requires std::derived_from<typename T::structure, identifies_as_commutative_ring_t>;
+       }
   };
 
   /** @ingroup AlgebraicStructure
@@ -243,10 +251,10 @@ namespace sequoia::maths
    */
   template<class T>
   inline constexpr bool is_field_v{
-    requires {
-      typename T::algebraic_structure;
-      requires std::convertible_to<typename T::algebraic_structure, identifies_as_field_t>;
-    }
+        has_structure_type_v<T>
+    && requires {
+         requires std::convertible_to<typename T::structure, identifies_as_field_t>;
+       }
   };
 
   /** @defgroup ArithmeticProperties Arithmetic Properties
@@ -2760,21 +2768,21 @@ namespace sequoia::maths
       requires (0 < N) && (N <= 2)
     struct reals
     {
-      using set_type            = sets::R<N>;
-      using algebraic_structure = identifies_as_field_t;
+      using set_type  = sets::R<N>;
+      using structure = identifies_as_field_t;
     };
 
     template<std::size_t N>
     struct integers
     {
-      using set_type            = sets::Z<N>;
-      using algebraic_structure = identifies_as_commutative_ring_t;
+      using set_type  = sets::Z<N>;
+      using structure = identifies_as_commutative_ring_t;
     };
 
     struct complexes
     {
-      using set_type            = sets::C<1>;
-      using algebraic_structure = identifies_as_field_t;
+      using set_type  = sets::C<1>;
+      using structure = identifies_as_field_t;
     };
   }
 
