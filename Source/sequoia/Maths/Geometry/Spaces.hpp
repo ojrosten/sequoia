@@ -193,7 +193,7 @@
 
 namespace sequoia::maths
 {
-  /** @defgroup AlgebraicStructure
+  /** @defgroup MathematicalStructure Structure
       @brief Traits to indicate whether types self-identify as various algebraic structure.
 
       As outlined in the introductory remarks, there is a crucial distinction between
@@ -214,17 +214,17 @@ namespace sequoia::maths
           ordered_field
    */
 
-  /** @ingroup AlgebraicStructure
-      @brief Used to indicate that a type self-identifies as a commutative ring.
+  /** @ingroup MathematicalStructure
+      @brief Intended for use as a nested type to indicate self-identification as a commutative ring.
    */
-  struct identifies_as_commutative_ring_t {};
+  struct commutative_ring_tag_t {};
 
-  /** @ingroup AlgebraicStructure
-      @brief Used to indicate that a type self-identifies as a field.
+  /** @ingroup MathematicalStructure
+      @brief Intended for use as a nested type to indicate self-identification as a commutative ring.
    */
-  struct identifies_as_field_t : virtual identifies_as_commutative_ring_t {};
+  struct field_tag_t : virtual commutative_ring_tag_t {};
 
-  /** @ingroup AlgebraicStructure
+  /** @ingroup MathematicalStructure
       @brief Detects if a types has a nested type called `structure`
    */
   template<class T>
@@ -232,28 +232,52 @@ namespace sequoia::maths
     requires { typename T::structure; }
   };
   
-  /** @ingroup AlgebraicStructure
+  /** @ingroup MathematicalStructure
       @brief Captures the conditions under which a type considers itself to be a commutative ring.
 
       This is designed in such a way that if the nested type identifies as, say, a field, it
       is still recognized as a commutative ring.
    */
   template<class T>
-  inline constexpr bool is_commutative_ring_v{
+  inline constexpr bool identifies_as_commutative_ring_v{
        has_structure_type_v<T>
     && requires {
-         requires std::derived_from<typename T::structure, identifies_as_commutative_ring_t>;
+         requires std::derived_from<typename T::structure, commutative_ring_tag_t>;
        }
   };
 
-  /** @ingroup AlgebraicStructure
+  /** @ingroup Structure
       @brief Captures the conditions under which a type considers itself to be a commutative ring.
    */
   template<class T>
-  inline constexpr bool is_field_v{
+  inline constexpr bool identifies_as_field_v{
         has_structure_type_v<T>
     && requires {
-         requires std::convertible_to<typename T::structure, identifies_as_field_t>;
+         requires std::convertible_to<typename T::structure, field_tag_t>;
+       }
+  };
+
+  struct identifies_as_partial_m_torsor_t {};
+
+  struct identifies_as_convex_space_t : virtual identifies_as_partial_m_torsor_t {};
+
+  struct identifies_as_affine_space_t : virtual identifies_as_convex_space_t {};
+
+  struct identifies_as_vector_space_t : virtual identifies_as_affine_space_t {};
+
+  template<class T>
+  inline constexpr bool is_partial_m_torsor_v{
+       has_structure_type_v<T>
+    && requires {
+         requires std::derived_from<typename T::structure, identifies_as_partial_m_torsor_t>;
+       }
+  };
+
+  template<class T>
+  inline constexpr bool is_convex_space_v{
+       has_structure_type_v<T>
+    && requires {
+         requires std::derived_from<typename T::structure, identifies_as_convex_space_t>;
        }
   };
 
@@ -497,14 +521,14 @@ namespace sequoia::maths
   
   template<class T>
   inline constexpr bool defines_field_v{
-       (has_commutative_ring_type_v<T> && requires { requires is_field_v<typename T::commutative_ring_type>; } )
-    || (has_field_type_v<T>            && requires { requires is_field_v<typename T::field_type>;            } )
+       (has_commutative_ring_type_v<T> && requires { requires identifies_as_field_v<typename T::commutative_ring_type>; } )
+    || (has_field_type_v<T>            && requires { requires identifies_as_field_v<typename T::field_type>;            } )
   };
 
   template<class T>
   inline constexpr bool defines_commutative_ring_v{
        defines_field_v<T>
-    || (has_commutative_ring_type_v<T> && requires { requires is_commutative_ring_v<typename T::commutative_ring_type>; } )
+    || (has_commutative_ring_type_v<T> && requires { requires identifies_as_commutative_ring_v<typename T::commutative_ring_type>; } )
   };
 
   /** @ingroup PropertiesOfSpaces
@@ -1458,20 +1482,20 @@ namespace sequoia::maths
   using common_ring_t = common_ring<Ts...>::type;
 
   template<class T>
-    requires is_commutative_ring_v<T>
+    requires identifies_as_commutative_ring_v<T>
   struct common_ring<T>
   {
     using type = T;
   };
 
   template<class T, class U, class V>
-    requires is_commutative_ring_v<T> && is_commutative_ring_v<U> && is_commutative_ring_v<V>
+    requires identifies_as_commutative_ring_v<T> && identifies_as_commutative_ring_v<U> && identifies_as_commutative_ring_v<V>
   struct common_ring<T, U, V> : common_ring<common_ring_t<T, U>, V>
   {
   };
 
   template<class T, class U, class V, class... Ws>
-    requires is_commutative_ring_v<T> && is_commutative_ring_v<U> && is_commutative_ring_v<V>
+    requires identifies_as_commutative_ring_v<T> && identifies_as_commutative_ring_v<U> && identifies_as_commutative_ring_v<V>
   struct common_ring<T, U, V, Ws...> : common_ring<common_ring_t<T, U>, common_ring_t<V, Ws...>>
   {
   };
@@ -2769,20 +2793,20 @@ namespace sequoia::maths
     struct reals
     {
       using set_type  = sets::R<N>;
-      using structure = identifies_as_field_t;
+      using structure = field_tag_t;
     };
 
     template<std::size_t N>
     struct integers
     {
       using set_type  = sets::Z<N>;
-      using structure = identifies_as_commutative_ring_t;
+      using structure = commutative_ring_tag_t;
     };
 
     struct complexes
     {
       using set_type  = sets::C<1>;
-      using structure = identifies_as_field_t;
+      using structure = field_tag_t;
     };
   }
 
@@ -2859,7 +2883,7 @@ namespace sequoia::maths
   using displacement_space_of_t = displacement_space_of<T>::type;
 
   template<class T>
-    requires is_field_v<T>
+    requires identifies_as_field_v<T>
   struct displacement_space_of<T>
   {
     using type = T;

@@ -76,7 +76,7 @@ namespace sequoia::testing
   }
 
   template<class Set, class Field, std::size_t D, class Rep>
-    requires maths::is_field_v<Field>
+    requires maths::identifies_as_field_v<Field>
   void vector_coordinates_test::test_vec()
   {
     using vec_space_t = my_vec_space<Set, Field, D>;
@@ -105,7 +105,7 @@ namespace sequoia::testing
   }
 
   template<class Set, class Field, std::floating_point Rep>
-      requires maths::is_field_v<Field>
+      requires maths::identifies_as_field_v<Field>
   void vector_coordinates_test::test_real_vec_1_inner_prod()
   {
     using basis_t = canonical_basis<Set, Field, 1>;
@@ -123,7 +123,7 @@ namespace sequoia::testing
   }
 
   template<class Set, class Field, class Rep>
-      requires maths::is_field_v<Field>
+      requires maths::identifies_as_field_v<Field>
   void vector_coordinates_test::test_complex_vec_1_inner_prod()
   {
     using basis_t = canonical_basis<Set, Field, 1>;

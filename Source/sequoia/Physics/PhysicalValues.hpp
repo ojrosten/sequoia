@@ -701,7 +701,7 @@ namespace sequoia::physics
     struct differences
     {
       using physical_value_set_type = PhysicalValueSet;
-      using structure               = identifies_as_field_t; // TO DO: generalize this
+      using structure               = field_tag_t; // TO DO: generalize this
     };
   }
   

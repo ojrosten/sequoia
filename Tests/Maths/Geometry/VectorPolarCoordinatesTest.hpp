@@ -25,7 +25,7 @@ namespace sequoia::testing
   private:
     // TO DO: infer D
     template<class Set, class Field, std::size_t D, class Representation, class Validator>
-      requires maths::is_field_v<Field>
+      requires maths::identifies_as_field_v<Field>
     void test_vec();
 
     template<std::floating_point ValType, class Validator>
