@@ -697,7 +697,99 @@ namespace sequoia::maths
       return rank;
     }()
   };
+
+  /** @defgroup Basis Basis
+      @brief Concepts and helpers for bases of free modules.
+   */
+
+  /** @ingroup Basis
+      @brief Compile time constant reflecting whether a type self-identifies as a basis.
+   */
+  template<class T>
+  inline constexpr bool identifies_as_basis_v{
+    requires {
+      typename T::is_basis;
+      requires std::convertible_to<typename T::is_basis, std::true_type>;
+    }
+  };
+   /** @ingroup Basis
+      @brief A basis must identify the free module to which it corresponds.
+
+      This takes into account that a vector space is a special case of a free module.
+   */
+  template<class B>
+  concept basis = identifies_as_basis_v<B> && defines_free_module_v<B>;
+
+  template<basis B>
+    requires defines_free_module_v<B>
+  struct free_module_type_of<B>
+  {
+    using type = nested_free_module_type_t<B>;
+  };
+
+  template<class T>
+  inline constexpr bool has_isomorphism_type_v{
+    requires { typename T::isomorphism_type; }
+  };
+    
+  template<free_module V>
+  inline constexpr bool has_admits_canonical_basis_v{
+    requires{
+      typename V::admits_canonical_basis;
+    }
+  };
+
+  template<free_module M>
+  struct admits_canonical_basis : std::false_type {};
+
+  template<free_module M>
+    requires has_admits_canonical_basis_v<M> && std::convertible_to<typename M::admits_canonical_basis, std::true_type>
+  struct admits_canonical_basis<M> : std::true_type {};
+
+  template<free_module M>
+  using admits_canonical_basis_t = admits_canonical_basis<M>::type;
+
+  template<free_module M>
+  inline constexpr bool admits_canonical_basis_v{admits_canonical_basis<M>::value};
+
+  struct identity_isomorphism {};
+
+  template<basis B>
+  struct basis_isomorphism_type_of;
   
+  template<basis B>
+    requires admits_canonical_basis_v<free_module_type_of_t<B>>
+  struct basis_isomorphism_type_of<B>
+  {
+    using type = identity_isomorphism;
+  };
+
+  template<basis B>
+  using basis_isomorphism_type_of_t = basis_isomorphism_type_of<B>::type;
+
+  template<basis B>
+    requires (!admits_canonical_basis_v<free_module_type_of_t<B>>) && has_isomorphism_type_v<B>
+  struct basis_isomorphism_type_of<B>
+  {
+    using type = B::isomorphism_type;
+  };
+
+  template<basis Basis1, basis Basis2>
+  struct consistent_bases : std::false_type {};
+
+  template<basis Basis1, basis Basis2>
+  inline constexpr bool consistent_bases_v{consistent_bases<Basis1, Basis2>::value};
+
+  /** @ingroup Basis
+      @brief A concept to determine if a basis is appropriate for a particular free module.
+  */
+  template<class B, class M>
+  concept basis_for
+    =    basis<B>
+      && free_module<M>
+      && (admits_canonical_basis_v<free_module_type_of_t<B>> || has_isomorphism_type_v<B>)
+      && requires { requires std::is_same_v<free_module_type_of_t<B>, M>; };
+
   /** @defgroup ArithmeticProperties Arithmetic Properties
       @brief Tools to reflect on whether types expose the standard arithmetic operations.
 
@@ -913,102 +1005,6 @@ namespace sequoia::maths
 
   template<class T>
   concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && is_divisible_v<T>;
-
-  
-  
-  
-  template<free_module V>
-  inline constexpr bool has_admits_canonical_basis_v{
-    requires{
-      typename V::admits_canonical_basis;
-    }
-  };
-
-  template<free_module M>
-  struct admits_canonical_basis : std::false_type {};
-
-  template<free_module M>
-    requires has_admits_canonical_basis_v<M> && std::convertible_to<typename M::admits_canonical_basis, std::true_type>
-  struct admits_canonical_basis<M> : std::true_type {};
-
-  template<free_module M>
-  using admits_canonical_basis_t = admits_canonical_basis<M>::type;
-
-  template<free_module M>
-  inline constexpr bool admits_canonical_basis_v{admits_canonical_basis<M>::value};
-
-  /** @defgroup Basis Basis
-      @brief Concepts and helpers for bases of free modules.
-   */
-
-  /** @ingroup Basis
-      @brief Compile time constant reflecting whether a type self-identifies as a basis.
-   */
-  template<class T>
-  inline constexpr bool identifies_as_basis_v{
-    requires {
-      typename T::is_basis;
-      requires std::convertible_to<typename T::is_basis, std::true_type>;
-    }
-  };
-  
-  /** @ingroup Basis
-      @brief A basis must identify the free module to which it corresponds.
-
-      This takes into account that a vector space is a special case of a free module.
-   */
-  template<class B>
-  concept basis = identifies_as_basis_v<B> && defines_free_module_v<B>;
-
-  template<basis B>
-    requires defines_free_module_v<B>
-  struct free_module_type_of<B>
-  {
-    using type = nested_free_module_type_t<B>;
-  };
-
-  template<class T>
-  inline constexpr bool has_isomorphism_type_v{
-    requires { typename T::isomorphism_type; }
-  };
-
-  struct identity_isomorphism {};
-
-  template<basis B>
-  struct basis_isomorphism_type_of;
-  
-  template<basis B>
-    requires admits_canonical_basis_v<free_module_type_of_t<B>>
-  struct basis_isomorphism_type_of<B>
-  {
-    using type = identity_isomorphism;
-  };
-
-  template<basis B>
-  using basis_isomorphism_type_of_t = basis_isomorphism_type_of<B>::type;
-
-  template<basis B>
-    requires (!admits_canonical_basis_v<free_module_type_of_t<B>>) && has_isomorphism_type_v<B>
-  struct basis_isomorphism_type_of<B>
-  {
-    using type = B::isomorphism_type;
-  };
-
-  template<basis Basis1, basis Basis2>
-  struct consistent_bases : std::false_type {};
-
-  template<basis Basis1, basis Basis2>
-  inline constexpr bool consistent_bases_v{consistent_bases<Basis1, Basis2>::value};
-
-  /** @ingroup Basis
-      @brief A concept to determine if a basis is appropriate for a particular free module.
-  */
-  template<class B, class M>
-  concept basis_for
-    =    basis<B>
-      && free_module<M>
-      && (admits_canonical_basis_v<free_module_type_of_t<B>> || has_isomorphism_type_v<B>)
-      && requires { requires std::is_same_v<free_module_type_of_t<B>, M>; };
 
   /** @defgroup Bounds Bounds
 
