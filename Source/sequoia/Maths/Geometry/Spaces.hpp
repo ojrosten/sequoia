@@ -634,33 +634,37 @@ namespace sequoia::maths
   template<class T>
   concept affine_space = vector_space<T> || (convex_space<T> && identifies_as_affine_space_v<T>);
  
-  /** @ingroup PropertiesOfSpace
-      @brief Helper to extract the free module type associated with a convex space.
+  /** @defgroup FeeModuleTypeOf Subgroup Free module type of
+      @ingroup PropertiesOfSpace
+      @brief ExtractS the free module type associated with a convex space.
 
-      This takes into account that a vector space is a special case of a free module.
+      This takes into account that if the convex space is a free module, then the
+      associated free module type is just the space itself.
+
+      @{
    */
   template<class>
-  struct free_module_type_of;
+  struct free_module_type_of {};
 
-  template<convex_space ConvexSpace>
-    requires identifies_as_free_module_v<ConvexSpace>
+  template<class T>
+  using free_module_type_of_t = free_module_type_of<T>::type;
+
+  template<free_module ConvexSpace>
   struct free_module_type_of<ConvexSpace>
   {
     using type = ConvexSpace;
   };
 
   template<convex_space ConvexSpace>
-    requires (!identifies_as_free_module_v<ConvexSpace>) && defines_free_module_v<ConvexSpace>
   struct free_module_type_of<ConvexSpace>
   {
     using type = nested_free_module_type_t<ConvexSpace>;
   };
 
-  template<class T>
-  using free_module_type_of_t = free_module_type_of<T>::type;
-  
+  /** @} */
+
   /** @ingroup PropertiesOfSpaces
-      @brief Helper to extract the commutative ring type of the free module associated with a convex space.
+      @brief ExtractS the commutative ring type of the free module associated with a convex space.
 
       This takes into account that if the free module is a vector space, then the commutative ring is actually a field. 
    */
