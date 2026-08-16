@@ -700,8 +700,8 @@ namespace sequoia::physics
     template<class PhysicalValueSet>
     struct differences
     {
-      using physical_value_set_type = PhysicalValueSet;
-      using structure               = field_tag_t; // TO DO: generalize this
+      using set_type  = PhysicalValueSet;
+      using structure = field_tag_t; // TO DO: generalize this
     };
   }
   

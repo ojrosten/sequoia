@@ -77,5 +77,8 @@ namespace sequoia::testing
     STATIC_CHECK(!is_non_negative_orthant_v<unremarkable_space>);
     STATIC_CHECK(!has_distinguished_origin_v<dual<unremarkable_space>>);
     STATIC_CHECK(!is_non_negative_orthant_v<dual<unremarkable_space>>);
+
+    STATIC_CHECK(commutative_ring<commutative_rings::reals<1>>);
+    STATIC_CHECK(field<commutative_rings::reals<1>>);
   }
 }

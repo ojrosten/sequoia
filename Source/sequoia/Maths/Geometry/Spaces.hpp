@@ -227,14 +227,22 @@ namespace sequoia::maths
   /** @} */
 
   /** @ingroup MathematicalStructure
-      @brief Detects if a types has a nested type called `structure`
+      @brief Compile time constant reflecting whether a type has a nested type called `structure`.
    */
   template<class T>
   inline constexpr bool has_structure_type_v{
     requires { typename T::structure; }
   };
+
+  /** @ingroup MathematicalStructure
+      @brief Compile time constant reflecting whether a type has a nested type called `set_type`.
+   */
+  template<class T>
+  inline constexpr bool has_set_type_v{
+    requires { typename T::set_type; }
+  };
   
-  /** @defgroup CommutatitiveRingIdentification Subgroup Commutative ring identification
+  /** @defgroup CommutatitiveRingIdentification Subgroup Commutative Ring identification
       @ingroup MathematicalStructure
       @brief Captures the conditions under which types considers themselves to be a commutative ring or refinement thereof.
 
@@ -253,9 +261,24 @@ namespace sequoia::maths
   inline constexpr bool identifies_as_field_v{
         has_structure_type_v<T>
     && requires {
-         requires std::convertible_to<typename T::structure, field_tag_t>;
+         requires std::derived_from<typename T::structure, field_tag_t>;
        }
   };
+
+  /** @} */
+
+  /** @defgroup CommutatitiveRing Subgroup Commutative Ring 
+      @ingroup MathematicalStructure
+      @brief concepts for commutative ring and refinements thereof.
+
+      @{
+   */
+
+  template<class T>
+  concept commutative_ring = has_set_type_v<T> && identifies_as_commutative_ring_v<T>;
+
+  template<class T>
+  concept field = commutative_ring<T> && identifies_as_field_v<T>;
 
   /** @} */
 
@@ -325,6 +348,210 @@ namespace sequoia::maths
   };
 
   /** @} */
+
+
+  /** @defgroup PropertiesOfSpaces Properties of Spaces
+      @brief Tools to reflect on whether types expose other types typically associated with various spaces.
+   */
+
+  /** @defgroup NestedCommutativeRing Subgroup Nested Commutative Ring
+      @ingroup PropertiesOfSpaces
+      @brief Captures whether a nested type named commutative_ring_type, or a refinement thereof, exists.
+
+      @{
+   */
+
+  template<class T>
+  inline constexpr bool has_commutative_ring_type_v{
+    requires { typename T::commutative_ring_type; }
+  };
+
+  template<class T>
+  inline constexpr bool has_field_type_v{
+    requires { typename T::field_type; }
+  };
+
+  /** @} */
+
+  /** @defgroup DefinesCommutativeRing Subgroup Defines Commutative Ring
+      @ingroup PropertiesOfSpaces
+      @brief Captures whether a nested type exists satisfying the commutative ring concept, or refinement thereof.
+
+      @{
+   */
+
+  template<class T>
+  inline constexpr bool defines_field_v{
+       (has_commutative_ring_type_v<T> && requires { requires field<typename T::commutative_ring_type>; } )
+    || (has_field_type_v<T>            && requires { requires field<typename T::field_type>;            } )
+  };
+
+  template<class T>
+  inline constexpr bool defines_commutative_ring_v{
+       defines_field_v<T>
+    || (has_commutative_ring_type_v<T> && requires { requires commutative_ring<typename T::commutative_ring_type>; } )
+  };
+
+  /** @} */
+
+  /** @ingroup PropertiesOfSpaces
+      @brief Compile time constant reflecting whether a type exposes a nested value, dimension, convertible to a std::size_t
+   */
+  template<class T>
+  inline constexpr bool has_dimension_v{
+    requires { { T::dimension } -> std::convertible_to<std::size_t>; }
+  };
+
+  template<class T>
+  struct set_type_of;
+
+  template<class T>
+    requires has_set_type_v<T>
+  struct set_type_of<T>
+  {
+    using type = T::set_type;
+  };
+
+  template<class T>
+  using set_type_of_t = set_type_of<T>::type;
+
+  /** @defgroup Spaces Spaces
+      @brief Concepts and helpers pertaining to vector spaces, affine spaces and certain generalizations.    
+   */
+
+  /** @ingroup Spaces
+      @brief concept for a free module, implicitly understood to be over a commutative ring.
+
+      Free modules admit a basis. Our particular interest is in free modules over a commutative
+      ring. For want of a better term we slightly abuse free module to stand for
+      "free module over a commutative ring".
+   */
+  template<class T>
+  concept free_module = has_set_type_v<T> && has_dimension_v<T> && defines_commutative_ring_v<T> && identifies_as_free_module_v<T>;
+
+  /** @ingroup Spaces
+      @brief concept for a vector space, which is a special case of a free module
+   */
+  template<class T>
+  concept vector_space = free_module<T> && defines_field_v<T>;
+
+  /** @ingroup PropertiesOfSpaces
+      @brief Compile time constant reflecting whether a type exposes a nested
+             vector_space_type which satisfies the vector_space concept.
+   */
+  template<class T>
+  inline constexpr bool has_vector_space_type_v{
+    requires {
+      typename T::vector_space_type;
+      requires vector_space<typename T::vector_space_type>;
+    }
+  };
+
+  /** @ingroup PropertiesOfSpaces
+      @brief Compile time constant reflecting whether a type exposes a nested
+             free_modul_type which satisfies the vector_space concept.
+   */
+  template<class T>
+  inline constexpr bool has_free_module_type_v{
+    requires {
+      typename T::free_module_type;
+      requires free_module<typename T::free_module_type>;
+    }
+  };
+
+  /** @ingroup Spaces
+      @brief concept for convex spaces
+
+      A convex space may be a free module. Otherwise, it comprises a set and a
+      free module (which may be a vector space), and must identify as a convex
+      space.      
+   */
+  template<class T>
+  concept convex_space
+    =    free_module<T>
+      || (    has_set_type_v<T>
+          && identifies_as_convex_space_v<T>
+          && (has_vector_space_type_v<T> || has_free_module_type_v<T>));
+
+  /** @ingroup Spaces
+      @brief concept for affine spaces
+
+      A vector space is an affine space over itself; beyond that, according to our
+      definitions, an affine space is a refinement of a convex space.
+   */
+  template<class T>
+  concept affine_space = vector_space<T> || (convex_space<T> && identifies_as_affine_space_v<T>);
+  
+  /** @ingroup Spaces
+      @brief Helper that universal template parameters will obviate the need for
+    */
+  template<class T>
+  struct is_free_module : std::integral_constant<bool, free_module<T>> {};
+
+ 
+  /** @ingroup PropertiesOfSpace
+      @brief Helper to extract the free module type associated with a convex space.
+
+      This takes into account that a vector space is a special case of a free module.
+   */
+  template<class>
+  struct free_module_type_of;
+
+  template<convex_space ConvexSpace>
+    requires identifies_as_free_module_v<ConvexSpace>
+  struct free_module_type_of<ConvexSpace>
+  {
+    using type = ConvexSpace;
+  };
+
+  template<convex_space ConvexSpace>
+    requires (!identifies_as_free_module_v<ConvexSpace>) && has_free_module_type_v<ConvexSpace>
+  struct free_module_type_of<ConvexSpace>
+  {
+    using type = ConvexSpace::free_module_type;
+  };
+
+  template<convex_space ConvexSpace>
+    requires (!identifies_as_free_module_v<ConvexSpace>) && has_vector_space_type_v<ConvexSpace>
+  struct free_module_type_of<ConvexSpace>
+  {
+    using type = ConvexSpace::vector_space_type;
+  };
+
+  template<class T>
+  using free_module_type_of_t = free_module_type_of<T>::type;
+  
+  /** @ingroup PropertiesOfSpaces
+      @brief Helper to extract the commutative ring type of the free module associated with a convex space.
+
+      This takes into account that if the free module is a vector space, then the commutative ring is actually a field. 
+   */
+  template<convex_space ConvexSpace>
+  struct commutative_ring_type_of
+  {
+    using type = free_module_type_of_t<ConvexSpace>::commutative_ring_type;
+  };
+
+  template<convex_space ConvexSpace>
+    requires vector_space<free_module_type_of_t<ConvexSpace>> && has_field_type_v<free_module_type_of_t<ConvexSpace>>
+  struct commutative_ring_type_of<ConvexSpace>
+  {
+    using type = free_module_type_of_t<ConvexSpace>::field_type;
+  };
+
+  template<convex_space ConvexSpace>
+  using commutative_ring_type_of_t = commutative_ring_type_of<ConvexSpace>::type;
+  
+  /** @ingroup PropertiesOfSpaces
+      @brief Helper to extract the dimension of the free module associated with a convex space.
+   */
+
+  // TO DO: for free modules this should really be rank. The latter could be used as
+  // a general term but could create confusion. Something like basis_cardinality may be
+  // more neutral.
+  template<convex_space ConvexSpace>
+  inline constexpr std::size_t dimension_of{free_module_type_of_t<ConvexSpace>::dimension};
+
   
   /** @defgroup ArithmeticProperties Arithmetic Properties
       @brief Tools to reflect on whether types expose the standard arithmetic operations.
@@ -542,203 +769,8 @@ namespace sequoia::maths
   template<class T>
   concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && is_divisible_v<T>;
 
-  /** @defgroup PropertiesOfSpaces Properties of Spaces
-      @brief Tools to reflect on whether types expose other types typically associated with various spaces.
-   */
-
-  /** @ingroup PropertiesOfSpaces
-      @brief Compile time constant reflecting whether a type exposes a nested type named commutative_ring_type.
-   */
-
-  template<class T>
-  inline constexpr bool has_commutative_ring_type_v{
-    requires { typename T::commutative_ring_type; }
-  };
-
-  /** @ingroup PropertiesOfSpaces
-      @brief Compile time constant reflecting whether a type exposes a nested type named field_type.
-   */ 
-
-  template<class T>
-  inline constexpr bool has_field_type_v{
-    requires { typename T::field_type; }
-  };
   
-  template<class T>
-  inline constexpr bool defines_field_v{
-       (has_commutative_ring_type_v<T> && requires { requires identifies_as_field_v<typename T::commutative_ring_type>; } )
-    || (has_field_type_v<T>            && requires { requires identifies_as_field_v<typename T::field_type>;            } )
-  };
-
-  template<class T>
-  inline constexpr bool defines_commutative_ring_v{
-       defines_field_v<T>
-    || (has_commutative_ring_type_v<T> && requires { requires identifies_as_commutative_ring_v<typename T::commutative_ring_type>; } )
-  };
-
-  /** @ingroup PropertiesOfSpaces
-      @brief Compile time constant reflecting whether a type exposes a nested value, dimension, convertible to a std::size_t
-   */
-  template<class T>
-  inline constexpr bool has_dimension_v{
-    requires { { T::dimension } -> std::convertible_to<std::size_t>; }
-  };
-
-  /** @ingroup PropertiesOfSpaces
-      @brief Compile time constant reflecting whether a type exposes a nested type named set_type.
-   */
-  template<class T>
-  inline constexpr bool has_set_type_v{
-    requires { typename T::set_type; }
-  };
-
-  template<class T>
-    requires has_set_type_v<T>
-  struct set_type_of
-  {
-    using type = T::set_type;
-  };
-
-  template<class T>
-  using set_type_of_t = set_type_of<T>::type;
-
-  /** @defgroup Spaces Spaces
-      @brief Concepts and helpers pertaining to vector spaces, affine spaces and certain generalizations.    
-   */
-
-  /** @ingroup Spaces
-      @brief concept for a free module, implicitly understood to be over a commutative ring.
-
-      Free modules admit a basis. Our particular interest is in free modules over a commutative
-      ring. For want of a better term we slightly abuse free module to stand for
-      "free module over a commutative ring".
-   */
-  template<class T>
-  concept free_module = has_set_type_v<T> && has_dimension_v<T> && defines_commutative_ring_v<T> && identifies_as_free_module_v<T>;
-
-  /** @ingroup Spaces
-      @brief concept for a vector space, which is a special case of a free module
-   */
-  template<class T>
-  concept vector_space = free_module<T> && defines_field_v<T>;
-
-  /** @ingroup PropertiesOfSpaces
-      @brief Compile time constant reflecting whether a type exposes a nested
-             vector_space_type which satisfies the vector_space concept.
-   */
-  template<class T>
-  inline constexpr bool has_vector_space_type_v{
-    requires {
-      typename T::vector_space_type;
-      requires vector_space<typename T::vector_space_type>;
-    }
-  };
-
-  /** @ingroup PropertiesOfSpaces
-      @brief Compile time constant reflecting whether a type exposes a nested
-             free_modul_type which satisfies the vector_space concept.
-   */
-  template<class T>
-  inline constexpr bool has_free_module_type_v{
-    requires {
-      typename T::free_module_type;
-      requires free_module<typename T::free_module_type>;
-    }
-  };
-
-  /** @ingroup Spaces
-      @brief concept for convex spaces
-
-      A convex space may be a free module. Otherwise, it comprises a set and a
-      free module (which may be a vector space), and must identify as a convex
-      space.      
-   */
-  template<class T>
-  concept convex_space
-    =    free_module<T>
-      || (    has_set_type_v<T>
-          && identifies_as_convex_space_v<T>
-          && (has_vector_space_type_v<T> || has_free_module_type_v<T>));
-
-  /** @ingroup Spaces
-      @brief concept for affine spaces
-
-      A vector space is an affine space over itself; beyond that, according to our
-      definitions, an affine space is a refinement of a convex space.
-   */
-  template<class T>
-  concept affine_space = vector_space<T> || (convex_space<T> && identifies_as_affine_space_v<T>);
   
-  /** @ingroup Spaces
-      @brief Helper that universal template parameters will obviate the need for
-    */
-  template<class T>
-  struct is_free_module : std::integral_constant<bool, free_module<T>> {};
-
- 
-  /** @ingroup PropertiesOfSpace
-      @brief Helper to extract the free module type associated with a convex space.
-
-      This takes into account that a vector space is a special case of a free module.
-   */
-  template<class>
-  struct free_module_type_of;
-
-  template<convex_space ConvexSpace>
-    requires identifies_as_free_module_v<ConvexSpace>
-  struct free_module_type_of<ConvexSpace>
-  {
-    using type = ConvexSpace;
-  };
-
-  template<convex_space ConvexSpace>
-    requires (!identifies_as_free_module_v<ConvexSpace>) && has_free_module_type_v<ConvexSpace>
-  struct free_module_type_of<ConvexSpace>
-  {
-    using type = ConvexSpace::free_module_type;
-  };
-
-  template<convex_space ConvexSpace>
-    requires (!identifies_as_free_module_v<ConvexSpace>) && has_vector_space_type_v<ConvexSpace>
-  struct free_module_type_of<ConvexSpace>
-  {
-    using type = ConvexSpace::vector_space_type;
-  };
-
-  template<class T>
-  using free_module_type_of_t = free_module_type_of<T>::type;
-  
-  /** @ingroup PropertiesOfSpaces
-      @brief Helper to extract the commutative ring type of the free module associated with a convex space.
-
-      This takes into account that if the free module is a vector space, then the commutative ring is actually a field. 
-   */
-  template<convex_space ConvexSpace>
-  struct commutative_ring_type_of
-  {
-    using type = free_module_type_of_t<ConvexSpace>::commutative_ring_type;
-  };
-
-  template<convex_space ConvexSpace>
-    requires vector_space<free_module_type_of_t<ConvexSpace>> && has_field_type_v<free_module_type_of_t<ConvexSpace>>
-  struct commutative_ring_type_of<ConvexSpace>
-  {
-    using type = free_module_type_of_t<ConvexSpace>::field_type;
-  };
-
-  template<convex_space ConvexSpace>
-  using commutative_ring_type_of_t = commutative_ring_type_of<ConvexSpace>::type;
-  
-  /** @ingroup PropertiesOfSpaces
-      @brief Helper to extract the dimension of the free module associated with a convex space.
-   */
-
-  // TO DO: for free modules this should really be rank. The latter could be used as
-  // a general term but could create confusion. Something like basis_cardinality may be
-  // more neutral.
-  template<convex_space ConvexSpace>
-  inline constexpr std::size_t dimension_of{free_module_type_of_t<ConvexSpace>::dimension};
-
   
   template<free_module V>
   inline constexpr bool has_admits_canonical_basis_v{
