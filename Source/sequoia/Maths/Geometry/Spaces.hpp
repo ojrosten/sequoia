@@ -634,7 +634,7 @@ namespace sequoia::maths
   template<class T>
   concept affine_space = vector_space<T> || (convex_space<T> && identifies_as_affine_space_v<T>);
  
-  /** @defgroup FeeModuleTypeOf Subgroup Free module type of
+  /** @defgroup FreeModuleTypeOf Subgroup Free module type of
       @ingroup PropertiesOfSpace
       @brief Extracts the free module type associated with a convex space.
 
@@ -712,14 +712,16 @@ namespace sequoia::maths
       requires std::convertible_to<typename T::is_basis, std::true_type>;
     }
   };
-   /** @ingroup Basis
-      @brief A basis must identify the free module to which it corresponds.
 
-      This takes into account that a vector space is a special case of a free module.
+  /** @ingroup Basis
+      @brief A basis must identify the free module to which it corresponds.
    */
   template<class B>
   concept basis = identifies_as_basis_v<B> && defines_free_module_v<B>;
 
+  /** @ingroup Basis FreeModuleTypeOf
+      @brief Specialization to extract the free module type associated with a basis.
+   */
   template<basis B>
     requires defines_free_module_v<B>
   struct free_module_type_of<B>
