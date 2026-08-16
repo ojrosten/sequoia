@@ -636,7 +636,7 @@ namespace sequoia::maths
  
   /** @defgroup FeeModuleTypeOf Subgroup Free module type of
       @ingroup PropertiesOfSpace
-      @brief ExtractS the free module type associated with a convex space.
+      @brief Extracts the free module type associated with a convex space.
 
       This takes into account that if the convex space is a free module, then the
       associated free module type is just the space itself.
@@ -664,28 +664,24 @@ namespace sequoia::maths
   /** @} */
 
   /** @ingroup PropertiesOfSpaces
-      @brief ExtractS the commutative ring type of the free module associated with a convex space.
+      @brief Extracts the commutative ring type of the free module associated with a convex space.
 
       This takes into account that if the free module is a vector space, then the commutative ring is actually a field. 
    */
   template<convex_space ConvexSpace>
   struct commutative_ring_type_of
   {
-    using type = free_module_type_of_t<ConvexSpace>::commutative_ring_type;
-  };
-
-  template<convex_space ConvexSpace>
-    requires vector_space<free_module_type_of_t<ConvexSpace>> && has_field_type_v<free_module_type_of_t<ConvexSpace>>
-  struct commutative_ring_type_of<ConvexSpace>
-  {
-    using type = free_module_type_of_t<ConvexSpace>::field_type;
+    using type = nested_commutative_ring_type_t<free_module_type_of_t<ConvexSpace>>;
   };
 
   template<convex_space ConvexSpace>
   using commutative_ring_type_of_t = commutative_ring_type_of<ConvexSpace>::type;
   
   /** @ingroup PropertiesOfSpaces
-      @brief Helper to extract the dimension of the free module associated with a convex space.
+      @brief Extracts the dimension of the free module associated with a convex space.
+
+      The program is ill-formed if the space defines its own dimension (rank) that
+      is inconsistent with the free module's dimension.
    */
 
   template<convex_space ConvexSpace>
