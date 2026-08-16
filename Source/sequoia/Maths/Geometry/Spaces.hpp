@@ -305,7 +305,7 @@ namespace sequoia::maths
 
   /** @} */
 
-  /** @defgroup CommutatitiveRing Subgroup Commutative Ring 
+  /** @defgroup CommutativeRing Subgroup Commutative Ring 
       @ingroup MathematicalStructure
       @brief concepts for commutative ring and refinements thereof.
 
