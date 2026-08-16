@@ -24,7 +24,7 @@ namespace sequoia::testing
       using commutative_ring_type  = Ring;
       using structure              = free_module_tag_t;
       using admits_canonical_basis = std::true_type;
-      constexpr static std::size_t dimension{D};
+      constexpr static std::size_t rank{D};
     };
 
     template<class Set, class Ring, std::size_t D>

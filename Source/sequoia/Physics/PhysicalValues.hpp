@@ -102,7 +102,7 @@ namespace sequoia::physics
     using commutative_ring_type = commutative_ring_type_of_t<tensor_product_t>;
     using structure             = free_module_tag_t;
     using arena_type            = arena_type_of_t<tensor_product<Ts...>>;
-    constexpr static std::size_t dimension{std::ranges::max({dimension_of<Ts>...})};
+    constexpr static std::size_t dimension{std::ranges::max({dimension_of_v<Ts>...})};
   };
 
   template<convex_space... Ts>
@@ -169,7 +169,7 @@ namespace sequoia::physics
 
   template<convex_space ValueSpace>
   inline constexpr bool permissible_value_space_v{
-    (!is_dual_v<ValueSpace>) || (has_distinguished_origin_v<ValueSpace> && (dimension_of<ValueSpace> == 1))
+    (!is_dual_v<ValueSpace>) || (has_distinguished_origin_v<ValueSpace> && (dimension_of_v<ValueSpace> == 1))
   };
 
   template<
@@ -1357,7 +1357,7 @@ namespace sequoia::physics
   };
   
   template<vector_space ValueSpace, physical_unit Unit, basis_for<free_module_type_of_t<ValueSpace>> Basis, class Origin, representation_for<ValueSpace> Representation, validator_for<ValueSpace, Representation> Validator>
-    requires (dimension_of<ValueSpace> == 1)
+    requires (dimension_of_v<ValueSpace> == 1)
   [[nodiscard]]
   constexpr physical_value<ValueSpace, Unit, Basis, Representation, Origin, Validator> abs(physical_value<ValueSpace, Unit, Basis, Representation, Origin, Validator> q)
   {
@@ -1573,7 +1573,7 @@ template<
 struct std::formatter<sequoia::physics::physical_value<ValueSpace, Unit, Basis, Representation, Origin, Validator>>
 {
   using physical_value_type = sequoia::physics::physical_value<ValueSpace, Unit, Basis, Representation, Origin, Validator>;
-  constexpr static auto dimension{sequoia::maths::dimension_of<ValueSpace> };
+  constexpr static auto dimension{sequoia::maths::dimension_of_v<ValueSpace> };
 
   constexpr auto parse(auto& ctx)
   {

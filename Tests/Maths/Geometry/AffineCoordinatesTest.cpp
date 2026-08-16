@@ -86,6 +86,8 @@ namespace sequoia::testing
     using affine_t = affine_coordinates<space_t, basis_t, canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>, alice<space_t>, identity_validator>;
     using delta_t  = affine_t::displacement_coordinates_type;
     using value_t  = Rep;
+    
+    STATIC_CHECK(not defines_rank_v<space_t>);
     STATIC_CHECK(!can_multiply<affine_t, value_t>);
     STATIC_CHECK(!can_divide<affine_t, value_t>);
     STATIC_CHECK(!can_divide<affine_t, affine_t>);

@@ -354,9 +354,9 @@ namespace sequoia::maths
       @brief Tools to reflect on whether types expose other types typically associated with various spaces.
    */
 
-  /** @defgroup HasNestedCommutativeRing Subgroup Nested Commutative Ring
+  /** @defgroup HasCommutativeRing Subgroup Has Commutative Ring
       @ingroup PropertiesOfSpaces
-      @brief Captures whether a nested type named commutative_ring_type, or a refinement thereof, exists.
+      @brief Compile time constants reflecting whether a nested type named commutative_ring_type, or a refinement thereof, exists.
 
       @{
    */
@@ -404,7 +404,8 @@ namespace sequoia::maths
 
   /** @defgroup DefinesCommutativeRing Subgroup Defines Commutative Ring
       @ingroup PropertiesOfSpaces
-      @brief Captures whether an appropriately named nested type exists satisfying the commutative ring concept, or refinement thereof.
+      @brief Compile time constants reflecting whether an appropriately named nested type
+      exists satisfying the commutative ring concept, or refinement thereof.
 
       @{
    */
@@ -421,14 +422,72 @@ namespace sequoia::maths
 
   /** @} */
 
-  /** @ingroup PropertiesOfSpaces
-      @brief Compile time constant reflecting whether a type exposes a nested value, dimension, convertible to a std::size_t
+  /** @defgroup HasRankValue Subgroup Has rank value
+      @ingroup PropertiesOfSpaces
+      @brief Compile time constants reflecting whether a nested value
+      convertible to a std::size_t exists, named rank or a refinment thereof.
+
+      Whereas one speaks of the dimension of a vector space, for free modules the
+      term rank is generally preferred. As such, we cater for the appearance of
+      both terms.
    */
+
+  /** @defgroup HasRank Subgroup Has Rank
+      @ingroup PropertiesOfSpaces
+      @brief Compile time constants reflecting whether a nested type named
+      rank, or a refinement thereof, exists.
+
+      @{
+   */
+
+  template<class T>
+  inline constexpr bool has_rank_v{
+    requires { { T::rank } -> std::convertible_to<std::size_t>; }
+  };
+
   template<class T>
   inline constexpr bool has_dimension_v{
     requires { { T::dimension } -> std::convertible_to<std::size_t>; }
   };
 
+  /** @} */
+
+  /** @defgroup RankOf Subgroup Rank Of
+      @ingroup PropertiesOfSpaces
+      @brief Utilities for extracting the rank of a type, be it named rank or a refinement thereof.
+
+      @{
+   */
+  
+  template<class T>
+  struct rank_of {};
+
+  template<class T>
+  inline constexpr std::size_t rank_of_v{rank_of<T>::value};
+
+  template<class T>
+    requires has_rank_v<T>
+  struct rank_of<T>
+  {
+    constexpr static std::size_t value{T::rank};
+  };
+
+  template<class T>
+    requires has_dimension_v<T>
+  struct rank_of<T>
+  {
+    constexpr static std::size_t value{T::dimension};
+  };
+
+  template<class T>
+  inline constexpr bool defines_rank_v{
+    requires { { rank_of<T>::value } -> std::convertible_to<std::size_t>; }
+  };
+
+  /** @} */
+
+
+  
   template<class T>
   struct set_type_of;
 
@@ -454,7 +513,7 @@ namespace sequoia::maths
       "free module over a commutative ring".
    */
   template<class T>
-  concept free_module = has_set_type_v<T> && has_dimension_v<T> && defines_commutative_ring_v<T> && identifies_as_free_module_v<T>;
+  concept free_module = has_set_type_v<T> && defines_rank_v<T> && defines_commutative_ring_v<T> && identifies_as_free_module_v<T>;
 
   /** @ingroup Spaces
       @brief concept for a vector space, which is a special case of a free module
@@ -573,12 +632,19 @@ namespace sequoia::maths
       @brief Helper to extract the dimension of the free module associated with a convex space.
    */
 
-  // TO DO: for free modules this should really be rank. The latter could be used as
-  // a general term but could create confusion. Something like basis_cardinality may be
-  // more neutral.
   template<convex_space ConvexSpace>
-  inline constexpr std::size_t dimension_of{free_module_type_of_t<ConvexSpace>::dimension};
+  inline constexpr std::size_t dimension_of_v{
+    [](){
+      constexpr std::size_t rank{rank_of_v<free_module_type_of_t<ConvexSpace>>};
 
+      if constexpr(defines_rank_v<ConvexSpace>)
+      {
+        static_assert(rank_of_v<ConvexSpace> == rank);
+      }
+
+      return rank;
+    }()
+  };
   
   /** @defgroup ArithmeticProperties Arithmetic Properties
       @brief Tools to reflect on whether types expose the standard arithmetic operations.
@@ -932,8 +998,8 @@ namespace sequoia::maths
   template<class Bounds, class ConvexSpace>
   concept bounds_for
     =      bounds<Bounds> && convex_space<ConvexSpace>
-        && (   ((dimension_of<ConvexSpace> == 1) && checks_single_val_against_bounds_v<Bounds>)
-            || ((dimension_of<ConvexSpace>  > 1) && checks_array_against_bounds_v<Bounds, dimension_of<ConvexSpace>>));
+        && (   ((dimension_of_v<ConvexSpace> == 1) && checks_single_val_against_bounds_v<Bounds>)
+            || ((dimension_of_v<ConvexSpace>  > 1) && checks_array_against_bounds_v<Bounds, dimension_of_v<ConvexSpace>>));
 
   template<bounds Bounds>
   struct bounds_value_type
@@ -1105,7 +1171,7 @@ namespace sequoia::maths
   // TO DO free mod value_type as well
   template<class R, class ConvexSpace>
   inline constexpr bool representation_for_single_value{
-        (dimension_of<ConvexSpace> == 1)
+        (dimension_of_v<ConvexSpace> == 1)
      && requires(R& r, const typename R::value_type& val) {
           { r.to_underlying(val)   } -> std::convertible_to<decltype(val)>;
           { r.from_underlying(val) } -> std::convertible_to<decltype(val)>;
@@ -1114,9 +1180,9 @@ namespace sequoia::maths
 
   template<class R, class ConvexSpace>
   inline constexpr bool representation_for_span{
-     requires(R& r, std::span<const typename R::value_type, dimension_of<ConvexSpace>> vals) {
-       { r.to_underlying(vals)   } -> std::convertible_to<std::array<typename R::value_type, dimension_of<ConvexSpace>>>;
-       { r.from_underlying(vals) } -> std::convertible_to<std::array<typename R::value_type, dimension_of<ConvexSpace>>>;
+     requires(R& r, std::span<const typename R::value_type, dimension_of_v<ConvexSpace>> vals) {
+       { r.to_underlying(vals)   } -> std::convertible_to<std::array<typename R::value_type, dimension_of_v<ConvexSpace>>>;
+       { r.from_underlying(vals) } -> std::convertible_to<std::array<typename R::value_type, dimension_of_v<ConvexSpace>>>;
      }
   };
 
@@ -1228,14 +1294,14 @@ namespace sequoia::maths
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_scalar_multiplication_for_v{
-    requires(const R& r, std::span<const value_type_of_t<R>, dimension_of<ConvexSpace>> vals, value_type_of_t<R> s) {
-      { r.mul(vals, s) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of<ConvexSpace>>>;
+    requires(const R& r, std::span<const value_type_of_t<R>, dimension_of_v<ConvexSpace>> vals, value_type_of_t<R> s) {
+      { r.mul(vals, s) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of_v<ConvexSpace>>>;
     }
   };
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_scalar_multiplication_for_single_value_v{
-       (dimension_of<ConvexSpace> == 1)
+       (dimension_of_v<ConvexSpace> == 1)
        && requires(const R& r, value_type_of_t<R> val, value_type_of_t<R> s) {
          { r.mul(val, s) } -> std::convertible_to<value_type_of_t<R>>;
        }
@@ -1243,14 +1309,14 @@ namespace sequoia::maths
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_scalar_division_for_v{
-    requires(const R& r, std::span<const value_type_of_t<R>, dimension_of<ConvexSpace>> vals, value_type_of_t<R> s) {
-      { r.div(vals, s) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of<ConvexSpace>>>;
+    requires(const R& r, std::span<const value_type_of_t<R>, dimension_of_v<ConvexSpace>> vals, value_type_of_t<R> s) {
+      { r.div(vals, s) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of_v<ConvexSpace>>>;
     }
   };
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_scalar_division_for_single_value_v{
-       (dimension_of<ConvexSpace> == 1)
+       (dimension_of_v<ConvexSpace> == 1)
     && requires(const R& r, value_type_of_t<R> val, value_type_of_t<R> s) {
          { r.div(val, s) } -> std::convertible_to<value_type_of_t<R>>;
        }
@@ -1259,15 +1325,15 @@ namespace sequoia::maths
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_addition_for_v{
     requires(const R& r,
-             std::span<const value_type_of_t<R>, dimension_of<ConvexSpace>> lhs,
-             std::span<const value_type_of_t<R>, dimension_of<ConvexSpace>> rhs) {
-      { r.add(lhs, rhs) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of<ConvexSpace>>>;
+             std::span<const value_type_of_t<R>, dimension_of_v<ConvexSpace>> lhs,
+             std::span<const value_type_of_t<R>, dimension_of_v<ConvexSpace>> rhs) {
+      { r.add(lhs, rhs) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of_v<ConvexSpace>>>;
     }
   };
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_addition_for_single_value_v{
-    (dimension_of<ConvexSpace> == 1)
+    (dimension_of_v<ConvexSpace> == 1)
     && requires(const R& r, value_type_of_t<R> lhs, value_type_of_t<R> rhs) {
         { r.add(lhs, rhs) } -> std::convertible_to<value_type_of_t<R>>;
       }
@@ -1276,15 +1342,15 @@ namespace sequoia::maths
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_subtraction_for_v{
     requires(const R& r,
-             std::span<const value_type_of_t<R>, dimension_of<ConvexSpace>> lhs,
-             std::span<const value_type_of_t<R>, dimension_of<ConvexSpace>> rhs) {
-      { r.sub(lhs, rhs) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of<ConvexSpace>>>;
+             std::span<const value_type_of_t<R>, dimension_of_v<ConvexSpace>> lhs,
+             std::span<const value_type_of_t<R>, dimension_of_v<ConvexSpace>> rhs) {
+      { r.sub(lhs, rhs) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of_v<ConvexSpace>>>;
     }
   };
 
   template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
   inline constexpr bool defines_subtraction_for_single_value_v{
-       (dimension_of<ConvexSpace> == 1)
+       (dimension_of_v<ConvexSpace> == 1)
     && requires(const R& r, value_type_of_t<R> lhs, value_type_of_t<R> rhs) {
          { r.sub(lhs, rhs) } -> std::convertible_to<value_type_of_t<R>>;
        }
@@ -1320,7 +1386,7 @@ namespace sequoia::maths
    */
   template<class V, convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
   inline constexpr bool validator_for_single_value{
-       (dimension_of<ConvexSpace> == 1)
+       (dimension_of_v<ConvexSpace> == 1)
        // TO DO: also free module val type? Also define value_type_of
        && requires(V& v, const typename Representation::value_type& val) { { v(Representation::bounds_v, val) } -> std::convertible_to<decltype(val)>; }
   };
@@ -1335,7 +1401,7 @@ namespace sequoia::maths
    */
   template<class V, convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
   inline constexpr bool validator_for_array{
-    requires (V& v, const std::array<typename Representation::value_type, dimension_of<ConvexSpace>>& values) {
+    requires (V& v, const std::array<typename Representation::value_type, dimension_of_v<ConvexSpace>>& values) {
       { v(Representation::bounds_v, values) } -> std::convertible_to<decltype(values)>;
     }
   };
@@ -2085,7 +2151,7 @@ namespace sequoia::maths
     constexpr static bool has_homogeneous_rep{!has_heterogeneous_representation_v<representation_type>};
     constexpr static bool admits_canonical_basis{admits_canonical_basis_v<free_module_type>};
 
-    constexpr static std::size_t dimension{free_module_type::dimension};
+    constexpr static std::size_t dimension{rank_of_v<free_module_type>};
     constexpr static std::size_t D{dimension};
 
     constexpr coordinates_base() noexcept = default;
@@ -3101,7 +3167,7 @@ namespace sequoia::maths
     class Validator,
     class Arena=mathematical_arena
   >
-    requires (dimension_of<free_module_type_of_t<Basis>> == D)
+    requires (dimension_of_v<free_module_type_of_t<Basis>> == D)
   using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<D, Arena>, Basis, Representation, Validator>;
 
   template<
@@ -3111,7 +3177,7 @@ namespace sequoia::maths
     class Validator,
     class Arena=mathematical_arena
   >
-    requires (dimension_of<free_module_type_of_t<Basis>> == D)
+    requires (dimension_of_v<free_module_type_of_t<Basis>> == D)
   using euclidean_nonnegative_coordinates = coordinates<euclidean_nonnegative_space<D, Arena>, Basis, Representation, Validator>;
 
   /** @brief Right-handed bases for arbitrary D, built recursively from 1D
