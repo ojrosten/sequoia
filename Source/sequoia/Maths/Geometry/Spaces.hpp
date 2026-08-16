@@ -819,7 +819,7 @@ namespace sequoia::maths
    */
 
   /** @ingroup ArithmeticProperties
-      @brief Compile time constant for addability of instances of two types
+      @brief Compile time constant for addability of instances of two types.
    */
 
   template<class U, class T>
@@ -830,7 +830,7 @@ namespace sequoia::maths
   };
 
   /** @ingroup ArithmeticProperties
-      @brief Compile time constant for addability of two instances of the same type
+      @brief Compile time constant for addability of two instances of the same type.
    */
 
   template<class T>
@@ -842,7 +842,7 @@ namespace sequoia::maths
   };
 
   /** @ingroup ArithmeticProperties
-      @brief Compile time constant for subtractability of instances of two types
+      @brief Compile time constant for subtractability of instances of two types.
    */
 
   template<class U, class T>
@@ -853,7 +853,7 @@ namespace sequoia::maths
   };
 
   /** @ingroup ArithmeticProperties
-      @brief Compile time constant for subtractability of two instances of the same type
+      @brief Compile time constant for subtractability of two instances of the same type.
    */
   
   template<class T>
@@ -865,7 +865,17 @@ namespace sequoia::maths
   };
 
   /** @ingroup ArithmeticProperties
-      @brief Compile time constant for multiplicability
+      @brief Compile time constant for multiplicability.
+
+      Note that there is not a two template paramter analogue of
+      is_addable_to_v. The problem is that for any putative
+      `is_multiplicable_by_v`, there doesn't seem to be any
+      reasonable concept satisfied by the return value. (Multiplying
+      an n * m matrix by an m * p matrix is one example of why this
+      is problemtic.) We could just require that t * u exists, but
+      without being able to say anything about the return value,
+      this seems to be too weak a constraint. Besides which, we don't
+      need it.
    */
 
   template<class T>
@@ -877,7 +887,7 @@ namespace sequoia::maths
   };
 
   /** @ingroup ArithmeticProperties
-      @brief Compile time constant for divisibility
+      @brief Compile time constant for divisibility.
    */
   template<class T>
   inline constexpr bool is_divisible_v{
