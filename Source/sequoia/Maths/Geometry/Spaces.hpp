@@ -633,13 +633,6 @@ namespace sequoia::maths
    */
   template<class T>
   concept affine_space = vector_space<T> || (convex_space<T> && identifies_as_affine_space_v<T>);
-  
-  /** @ingroup Spaces
-      @brief Helper that universal template parameters will obviate the need for
-    */
-  template<class T>
-  struct is_free_module : std::integral_constant<bool, free_module<T>> {};
-
  
   /** @ingroup PropertiesOfSpace
       @brief Helper to extract the free module type associated with a convex space.
