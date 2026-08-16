@@ -326,6 +326,7 @@ namespace sequoia::maths
 
       @{
    */
+
   struct partial_m_torsor_tag_t {};
 
   struct convex_space_tag_t : virtual partial_m_torsor_tag_t {};
@@ -443,7 +444,7 @@ namespace sequoia::maths
   /** @defgroup DefinesCommutativeRing Subgroup Defines Commutative Ring
       @ingroup PropertiesOfSpaces
       @brief Compile time constants reflecting whether an appropriately named nested type
-      exists satisfying the commutative ring concept, or refinement thereof.
+      exists satisfying the commutative ring concept, or a refinement thereof.
 
       @{
    */
@@ -544,30 +545,75 @@ namespace sequoia::maths
   template<class T>
   concept vector_space = free_module<T> && defines_field_v<T>;
 
-  /** @ingroup PropertiesOfSpaces
-      @brief Compile time constant reflecting whether a type exposes a nested
-             vector_space_type which satisfies the vector_space concept.
-   */
-  template<class T>
-  inline constexpr bool has_vector_space_type_v{
-    requires {
-      typename T::vector_space_type;
-      requires vector_space<typename T::vector_space_type>;
-    }
-  };
+  /** @defgroup HasFreeModuleType Subgroup Has Free Module Type
+      @ingroup PropertiesOfSpaces
+      @brief Compile time constants reflecting whether a nested type named
+      `free_module_type`, or a refinement thereof, exists.
 
-  /** @ingroup PropertiesOfSpaces
-      @brief Compile time constant reflecting whether a type exposes a nested
-             free_modul_type which satisfies the vector_space concept.
+      @{
    */
+
   template<class T>
   inline constexpr bool has_free_module_type_v{
-    requires {
-      typename T::free_module_type;
-      requires free_module<typename T::free_module_type>;
-    }
+    requires { typename T::free_module_type; }
   };
 
+  template<class T>
+  inline constexpr bool has_vector_space_type_v{
+    requires { typename T::vector_space_type; }
+  };
+
+  /** @} */
+
+  /** @defgroup NestedFreeModuleType Subgroup Nested Free Module Type
+      @ingroup PropertiesOfSpaces
+      @brief Extracts a nested type named free_module_type, or a refinement thereof, if it exists.
+
+      @{
+   */
+  
+  template<class T>
+  struct nested_free_module_type {};
+
+  template<class T>
+  using nested_free_module_type_t = nested_free_module_type<T>::type;
+
+  template<class T>
+    requires has_free_module_type_v<T>
+  struct nested_free_module_type<T>
+  {
+    using type = T::free_module_type;
+  };
+
+  template<class T>
+    requires has_vector_space_type_v<T>
+  struct nested_free_module_type<T>
+  {
+    using type = T::vector_space_type;
+  };
+
+  /** @} */
+
+  /** @defgroup DefinesFreeModule Subgroup Defines Free Module
+      @ingroup PropertiesOfSpaces
+      @brief Compile time constants reflecting whether an appropriately named nested type
+      exists satisfying the free module concept, or a refinement thereof.
+
+      @{
+   */
+
+  template<class T>
+  inline constexpr bool defines_free_module_v{
+    requires { requires free_module<nested_free_module_type_t<T>>; }
+  };
+
+  template<class T>
+  inline constexpr bool defines_vector_space_v{
+    requires { requires vector_space<nested_free_module_type_t<T>>; }
+  };
+
+  /** @} */
+  
   /** @ingroup Spaces
       @brief concept for convex spaces
 
@@ -577,10 +623,7 @@ namespace sequoia::maths
    */
   template<class T>
   concept convex_space
-    =    free_module<T>
-      || (    has_set_type_v<T>
-          && identifies_as_convex_space_v<T>
-          && (has_vector_space_type_v<T> || has_free_module_type_v<T>));
+    =  free_module<T> || (has_set_type_v<T> && identifies_as_convex_space_v<T> && defines_free_module_v<T>);
 
   /** @ingroup Spaces
       @brief concept for affine spaces
@@ -614,17 +657,10 @@ namespace sequoia::maths
   };
 
   template<convex_space ConvexSpace>
-    requires (!identifies_as_free_module_v<ConvexSpace>) && has_free_module_type_v<ConvexSpace>
+    requires (!identifies_as_free_module_v<ConvexSpace>) && defines_free_module_v<ConvexSpace>
   struct free_module_type_of<ConvexSpace>
   {
-    using type = ConvexSpace::free_module_type;
-  };
-
-  template<convex_space ConvexSpace>
-    requires (!identifies_as_free_module_v<ConvexSpace>) && has_vector_space_type_v<ConvexSpace>
-  struct free_module_type_of<ConvexSpace>
-  {
-    using type = ConvexSpace::vector_space_type;
+    using type = nested_free_module_type_t<ConvexSpace>;
   };
 
   template<class T>
@@ -917,7 +953,7 @@ namespace sequoia::maths
    */
   template<class T>
   inline constexpr bool identifies_as_basis_v{
-     requires {
+    requires {
       typename T::is_basis;
       requires std::convertible_to<typename T::is_basis, std::true_type>;
     }
@@ -929,20 +965,13 @@ namespace sequoia::maths
       This takes into account that a vector space is a special case of a free module.
    */
   template<class B>
-  concept basis = identifies_as_basis_v<B> && (has_free_module_type_v<B> || has_vector_space_type_v<B>);
+  concept basis = identifies_as_basis_v<B> && defines_free_module_v<B>;
 
   template<basis B>
-    requires has_free_module_type_v<B>
+    requires defines_free_module_v<B>
   struct free_module_type_of<B>
   {
-    using type = B::free_module_type;
-  };
-
-  template<basis B>
-    requires has_vector_space_type_v<B>
-  struct free_module_type_of<B>
-  {
-    using type = B::vector_space_type;
+    using type = nested_free_module_type_t<B>;
   };
 
   template<class T>
