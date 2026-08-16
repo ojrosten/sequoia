@@ -354,7 +354,7 @@ namespace sequoia::maths
       @brief Tools to reflect on whether types expose other types typically associated with various spaces.
    */
 
-  /** @defgroup NestedCommutativeRing Subgroup Nested Commutative Ring
+  /** @defgroup HasNestedCommutativeRing Subgroup Nested Commutative Ring
       @ingroup PropertiesOfSpaces
       @brief Captures whether a nested type named commutative_ring_type, or a refinement thereof, exists.
 
@@ -373,23 +373,50 @@ namespace sequoia::maths
 
   /** @} */
 
+  /** @defgroup NestedCommutativeRingType Subgroup Nested Commutative Ring Type
+      @ingroup PropertiesOfSpaces
+      @brief Extracts a nested type named commutative_ring_type, or a refinement thereof, if it exists.
+
+      @{
+   */
+  
+  template<class T>
+  struct nested_commutative_ring_type {};
+
+  template<class T>
+  using nested_commutative_ring_type_t = nested_commutative_ring_type<T>::type;
+
+  template<class T>
+    requires has_commutative_ring_type_v<T>
+  struct nested_commutative_ring_type<T>
+  {
+    using type = T::commutative_ring_type;
+  };
+
+  template<class T>
+    requires has_field_type_v<T>
+  struct nested_commutative_ring_type<T>
+  {
+    using type = T::field_type;
+  };
+
+  /** @} */
+
   /** @defgroup DefinesCommutativeRing Subgroup Defines Commutative Ring
       @ingroup PropertiesOfSpaces
-      @brief Captures whether a nested type exists satisfying the commutative ring concept, or refinement thereof.
+      @brief Captures whether an appropriately named nested type exists satisfying the commutative ring concept, or refinement thereof.
 
       @{
    */
 
   template<class T>
-  inline constexpr bool defines_field_v{
-       (has_commutative_ring_type_v<T> && requires { requires field<typename T::commutative_ring_type>; } )
-    || (has_field_type_v<T>            && requires { requires field<typename T::field_type>;            } )
+  inline constexpr bool defines_commutative_ring_v{
+    requires { requires commutative_ring<nested_commutative_ring_type_t<T>>; }
   };
 
   template<class T>
-  inline constexpr bool defines_commutative_ring_v{
-       defines_field_v<T>
-    || (has_commutative_ring_type_v<T> && requires { requires commutative_ring<typename T::commutative_ring_type>; } )
+  inline constexpr bool defines_field_v{
+    requires { requires field<nested_commutative_ring_type_t<T>>; }
   };
 
   /** @} */
