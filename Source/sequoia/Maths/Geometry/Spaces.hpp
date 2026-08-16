@@ -1624,43 +1624,16 @@ namespace sequoia::maths
   {};
 
   template<class... Ts>
-  struct common_ring
-  {
-  };
-  
-  template<class... Ts>
-  using common_ring_t = common_ring<Ts...>::type;
-
-  template<class T>
-    requires identifies_as_commutative_ring_v<T>
-  struct common_ring<T>
-  {
-    using type = T;
-  };
-
-  template<class T, class U, class V>
-    requires identifies_as_commutative_ring_v<T> && identifies_as_commutative_ring_v<U> && identifies_as_commutative_ring_v<V>
-  struct common_ring<T, U, V> : common_ring<common_ring_t<T, U>, V>
-  {
-  };
-
-  template<class T, class U, class V, class... Ws>
-    requires identifies_as_commutative_ring_v<T> && identifies_as_commutative_ring_v<U> && identifies_as_commutative_ring_v<V>
-  struct common_ring<T, U, V, Ws...> : common_ring<common_ring_t<T, U>, common_ring_t<V, Ws...>>
-  {
-  };
-
-  template<class... Ts>
   struct tensor_product
   {
   };
 
   template<free_module... Ts>
-    requires (sizeof...(Ts) >= 1)
+    requires (sizeof...(Ts) >= 1) && are_same_v<commutative_ring_type_of_t<Ts>...>
   struct tensor_product<Ts...>
   {
     using set_type              = tensor_product<typename Ts::set_type...>;
-    using commutative_ring_type = common_ring_t<commutative_ring_type_of_t<Ts>...>;
+    using commutative_ring_type = std::common_type_t<commutative_ring_type_of_t<Ts>...>;
     using structure             = free_module_tag_t;
     constexpr static std::size_t dimension{(Ts::dimension * ...)};
   };
@@ -2989,42 +2962,6 @@ namespace sequoia::maths
     : std::true_type
   {};
   */
-
-  template<>
-  struct common_ring<commutative_rings::reals<1>, commutative_rings::reals<1>>
-  {
-    using type = commutative_rings::reals<1>;
-  };
-
-  template<>
-  struct common_ring<commutative_rings::integers<1>, commutative_rings::integers<1>>
-  {
-    using type = commutative_rings::integers<1>;
-  };
-
-  template<>
-  struct common_ring<commutative_rings::reals<1>, commutative_rings::integers<1>>
-    : common_ring<commutative_rings::integers<1>, commutative_rings::reals<1>>
-  {
-  };
-
-  template<>
-  struct common_ring<commutative_rings::complexes, commutative_rings::complexes>
-  {
-    using type = commutative_rings::complexes;
-  };
-
-  template<>
-  struct common_ring<commutative_rings::complexes, commutative_rings::reals<1>>
-  {
-    using type = commutative_rings::complexes;
-  };
-
-  template<>
-  struct common_ring<commutative_rings::reals<1>, commutative_rings::complexes>
-    : common_ring<commutative_rings::complexes, commutative_rings::reals<1>>
-  {
-  };
 
   template<class T>
   struct displacement_space_of;
