@@ -655,10 +655,11 @@ namespace sequoia::maths
     using type = ConvexSpace;
   };
 
-  template<convex_space ConvexSpace>
-  struct free_module_type_of<ConvexSpace>
+  template<class T>
+    requires defines_free_module_v<T>
+  struct free_module_type_of<T>
   {
-    using type = nested_free_module_type_t<ConvexSpace>;
+    using type = nested_free_module_type_t<T>;
   };
 
   /** @} */
@@ -713,32 +714,14 @@ namespace sequoia::maths
     }
   };
 
-  /** @ingroup Basis
-      @brief A basis must identify the free module to which it corresponds.
-   */
-  template<class B>
-  concept basis = identifies_as_basis_v<B> && defines_free_module_v<B>;
-
-  /** @ingroup Basis FreeModuleTypeOf
-      @brief Specialization to extract the free module type associated with a basis.
-   */
-  template<basis B>
-    requires defines_free_module_v<B>
-  struct free_module_type_of<B>
-  {
-    using type = nested_free_module_type_t<B>;
-  };
-
   template<class T>
   inline constexpr bool has_isomorphism_type_v{
     requires { typename T::isomorphism_type; }
   };
     
-  template<free_module V>
+  template<class T>
   inline constexpr bool has_admits_canonical_basis_v{
-    requires{
-      typename V::admits_canonical_basis;
-    }
+    requires{ typename T::admits_canonical_basis; }
   };
 
   template<free_module M>
@@ -753,6 +736,19 @@ namespace sequoia::maths
 
   template<free_module M>
   inline constexpr bool admits_canonical_basis_v{admits_canonical_basis<M>::value};
+
+  /** @ingroup Basis
+      @brief A basis must identify the free module to which it corresponds.
+   */
+  template<class B>
+  concept basis = identifies_as_basis_v<B> && defines_free_module_v<B>
+               && (admits_canonical_basis_v<free_module_type_of_t<B>> || has_isomorphism_type_v<B>);
+  
+  /** @ingroup Basis
+      @brief A concept to determine if a basis is appropriate for a particular free module.
+  */
+  template<class B, class M>
+  concept basis_for = basis<B> && free_module<M> && std::same_as<free_module_type_of_t<B>, M>;
 
   struct identity_isomorphism {};
 
@@ -781,16 +777,6 @@ namespace sequoia::maths
 
   template<basis Basis1, basis Basis2>
   inline constexpr bool consistent_bases_v{consistent_bases<Basis1, Basis2>::value};
-
-  /** @ingroup Basis
-      @brief A concept to determine if a basis is appropriate for a particular free module.
-  */
-  template<class B, class M>
-  concept basis_for
-    =    basis<B>
-      && free_module<M>
-      && (admits_canonical_basis_v<free_module_type_of_t<B>> || has_isomorphism_type_v<B>)
-      && requires { requires std::is_same_v<free_module_type_of_t<B>, M>; };
 
   /** @defgroup ArithmeticProperties Arithmetic Properties
       @brief Tools to reflect on whether types expose the standard arithmetic operations.
