@@ -226,21 +226,59 @@ namespace sequoia::maths
 
   /** @} */
 
-  /** @ingroup MathematicalStructure
-      @brief Compile time constant reflecting whether a type has a nested type called `structure`.
+  /** @defgroup HasStructureType Subgroup Has structure type
+      @ingroup MathematicalStructure
+      @brief Compile time tools for reflecting on whether a type has a nested type called `structure_type`, and extracting it.
+
+      @{
    */
+
   template<class T>
   inline constexpr bool has_structure_type_v{
     requires { typename T::structure; }
   };
 
-  /** @ingroup MathematicalStructure
-      @brief Compile time constant reflecting whether a type has a nested type called `set_type`.
-   */
+  template<class T>
+  struct structure_of {};
+  
+  template<class T>
+  using structure_of_t = structure_of<T>::type;
+
+  template<class T>
+    requires has_structure_type_v<T>
+  struct structure_of<T>
+  {
+    using type = T::set_type;
+  };
+
+  /** @} */
+  
+  /** @defgroup HasSetType Subgroup Has set type
+      @ingroup MathematicalStructure
+      @brief Compile time tools for reflecting on whether a type has a nested type called `set_type`, and extracting it.
+
+      @{
+  */
+
   template<class T>
   inline constexpr bool has_set_type_v{
     requires { typename T::set_type; }
   };
+  
+  template<class T>
+  struct set_type_of {};
+  
+  template<class T>
+  using set_type_of_t = set_type_of<T>::type;
+
+  template<class T>
+    requires has_set_type_v<T>
+  struct set_type_of<T>
+  {
+    using type = T::set_type;
+  };
+
+  /** @} */
   
   /** @defgroup CommutatitiveRingIdentification Subgroup Commutative Ring identification
       @ingroup MathematicalStructure
@@ -485,21 +523,6 @@ namespace sequoia::maths
   };
 
   /** @} */
-
-
-  
-  template<class T>
-  struct set_type_of;
-
-  template<class T>
-    requires has_set_type_v<T>
-  struct set_type_of<T>
-  {
-    using type = T::set_type;
-  };
-
-  template<class T>
-  using set_type_of_t = set_type_of<T>::type;
 
   /** @defgroup Spaces Spaces
       @brief Concepts and helpers pertaining to vector spaces, affine spaces and certain generalizations.    
