@@ -735,42 +735,50 @@ namespace sequoia::maths
       coordinates and hence concerte values.
    */
 
+   /** @ingroup Basis
+       @brief Compile time constant reflecting whether a nested type named 'is_basis' exist.
+    */
+  template<class T>
+  inline constexpr bool has_is_basis_v{
+    requires { typename T::is_basis; }
+  };
+
   /** @ingroup Basis
-      @brief Compile time constant reflecting whether a type self-identifies as a basis.
+      @brief Compile time constant reflecting whether a nested type self-identifies as a basis.
    */
   template<class T>
   inline constexpr bool identifies_as_basis_v{
-    requires {
-      typename T::is_basis;
-      requires std::convertible_to<typename T::is_basis, std::true_type>;
-    }
+       has_is_basis_v<T>
+    && requires { requires std::convertible_to<typename T::is_basis, std::true_type>; }
   };
 
+  /** @ingroup Basis
+      @brief Compile time constant reflecting whether a nested type named `isomorphism_type` exists.
+   */
   template<class T>
   inline constexpr bool has_isomorphism_type_v{
     requires { typename T::isomorphism_type; }
   };
-    
+
+  /** @ingroup Basis
+      @brief Compile time constant reflecting whether a nested type named `admits_canonical_basis` exists.
+   */
   template<class T>
   inline constexpr bool has_admits_canonical_basis_v{
     requires{ typename T::admits_canonical_basis; }
   };
 
+  /** @ingroup Basis
+      @brief Compile time constant reflecting whether a nested type admits a canonical basis.
+   */
   template<free_module M>
-  struct admits_canonical_basis : std::false_type {};
-
-  template<free_module M>
-    requires has_admits_canonical_basis_v<M> && std::convertible_to<typename M::admits_canonical_basis, std::true_type>
-  struct admits_canonical_basis<M> : std::true_type {};
-
-  template<free_module M>
-  using admits_canonical_basis_t = admits_canonical_basis<M>::type;
-
-  template<free_module M>
-  inline constexpr bool admits_canonical_basis_v{admits_canonical_basis<M>::value};
+  inline constexpr bool admits_canonical_basis_v{
+       has_admits_canonical_basis_v<M>
+    && requires { requires std::convertible_to<typename M::admits_canonical_basis, std::true_type>; }
+  };
 
   /** @ingroup Basis
-      @brief A basis must identify the free module to which it corresponds.
+      @brief concept for a basis associated with a free module.
    */
   template<class B>
   concept basis = identifies_as_basis_v<B> && defines_free_module_v<B>
