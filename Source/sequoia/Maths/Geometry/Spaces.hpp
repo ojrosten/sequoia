@@ -701,6 +701,29 @@ namespace sequoia::maths
 
   /** @defgroup Basis Basis
       @brief Concepts and helpers for bases of free modules.
+
+      By definition, free modules admit a basis and the latter are an
+      essential ingredient in our approach. The introduction describes
+      the primary considerations; here we focus on the nuances. A type
+      is considered to be a basis if it satifies three conditions. The
+      first two are simple to state:
+      1. The type self-identifies as a basis, by appropriately exposing a type;
+
+      2. The type defines a type satisying the free module concept (this is
+      the free module to which the basis applies).
+
+      To understand the third condition, consider R^n, understood to be a vector space.
+      This space admits a *canonical* basis: we can take the unit vector along each of the cartesian
+      axes (though it remains up to us whether we choose a left-handed or
+      right-handed system). But now consider a space, V,  which is isomorphic to R^n:
+      it may be the case that there is no canonical basis for V itself. A good
+      example comes from physics. Consider electrical current, which can be
+      positive or negative. The space of electrical currents is isomorphic to R^1,
+      but to do the mapping requires specifying the unit of current, for which there
+      is no canonical choice. This implies that the third condition is as follows
+      3a. Either the free module associated with the basis admits a canonical basis; or
+       b. There exists an isomorphism that takes us to a canonical basis.
+
    */
 
   /** @ingroup Basis
