@@ -52,19 +52,23 @@
     space. Let the basis elements be denoted b_0, ..., b_{n-1}. Any vector in the space
     may be written as a linear combination:
 
-    v = a_0 b_0 + ... + a_{n-1} b_{n-1},
+    \f[
+      v = a_0 b_0 + ... + a_{n-1} b_{n-1},
+    \f]
 
-    where the a_i are valued in the field, F. The set of these values [a_0, ..., a_{n-1}]
+    where the a_i are valued in the field, F. The set of these values \f$ [a_0, ..., a_{n-1}] \f$
     are none other than the coordinates of v with respect to this particular basis.
-    The [a_0, ..., a_{n-1}] are often informally referred to as a vector. However
-    stricty speaking this is an abuse of terminology and conflates two distinct concepts:
+    The \f$ [a_0, ..., a_{n-1}] \f$ are often informally referred to as a vector. However
+    stricty speaking this risks an abuse of terminology since it may conflates two distinct concepts:
     an actual vector which is an element of the set which forms the vector space,
     and a representation of this vector via the coordinates with respect to a
     particular basis. This distinction can be further reinforced by pointing out that
     two observers who agree they are talking about the same vector (i.e. set element)
     will nevertheless disagree on the coordinates if they are using different bases -
     as they are entirely entitled to do! To further add to the confusion, the coordinates
-    may be referred to as a coordinate vector which is perhaps unfortunate.
+    may be referred to as a coordinate vector which is perhaps unfortunate. (To add to
+    the fun, in the case of R^d, a tuple of values (v(0), ..., v(d-1)) can have a
+    different interpretation, which we shall gloss over for now but return to in \ref Basis "Basis".)
 
     Regardless, from the perspective of performing actual calculations, the coordinates
     are key. An crucial point to make is that, when dealing with the coordinates,
@@ -705,34 +709,100 @@ namespace sequoia::maths
       By definition, free modules admit a basis and the latter are an
       essential ingredient in our approach. The introduction describes
       the primary considerations; here we focus on the nuances. A type
-      is considered to be a basis if it satifies three conditions. The
+      is considered to be a basis if it satifies several conditions. The
       first two are simple to state:
       1. The type self-identifies as a basis, by appropriately exposing a type;
 
       2. The type defines a type satisying the free module concept (this is
       the free module to which the basis applies).
 
-      To understand the third condition, consider R^n, understood to be a vector space.
-      This space admits a *canonical* basis: we can take the unit vector along each of the cartesian
-      axes (though it remains up to us whether we choose a left-handed or
-      right-handed system). But now consider a space, V,  which is isomorphic to R^n:
-      it may be the case that there is no canonical basis for V itself. A good
-      example comes from physics. Consider electrical current, which can be
-      positive or negative. The space of electrical currents is isomorphic to R^1,
-      but to do the mapping requires specifying the unit of current, for which there
-      is no canonical choice. This implies that the third condition is as follows
-      3a. Either the free module associated with the basis admits a canonical basis; or
-       b. There exists an isomorphism that takes us to a canonical basis.
+      To understand the remaining conditions requires a detailed understanding of
+      various subtleties. Consider first the case of R^d, understood to be a vector space.
+      (This latter statement is to avoid the ambiguity whereby by \f$ \bb{R}^d \f$ we could just
+      mean the set, without any additional structure.) Really, \f$ \bb{R}^d \f$ is a shorthand
+      for \f$ \bb{R}^S \f$, understood as follows (assuming finite S):
+      a. S is an index set, an example of which would be {0, ..., d-1}
+      b. \f$ \bb{R}^S \f$ is the set of all functions from \f$ S -> \bb{R} \f$
 
-      It is reasonable for the datum as to whether the free module admits a canonical
-      basis to be associated with the free module itself. When this is not the case, it
-      is tempting to similarly associate the isomorphism between the underlying
-      commutative ring and something like Z or R. But this would seem to be a mistake.
-      In code, it would amount to templating the abstract space associated with (say) a physical
-      quantity on the unit. It seems preferable to instead associate the isomporhism (unit) with
-      the basis: for it is the basis that provides the bridge between abstract mathematics
-      and computation. Once the basis is specified, we can meaningfully talk about
-      coordinates and hence concerte values.
+      Though seemingly very abstract, this maps nicely onto C++ intuition:
+      a. Take an element of \f$ \bb{R}^S \f$, v - a vector
+      b. Take an element of S, i - an index
+      c. Consider the function v(i) (from a C++ perspective v[i] may be even more natural):
+         this returns the ith coordinate, which in this example is just a real number.
+
+      As a concrete example in d=2, suppose we take v = (0.5, -0.5). Then v(0) = 0.5, v(1) = -0.5.
+      But thinking about this more carefully seems to suggest a paradox.
+      We claimed in the introduction that the components of a vector must be written with
+      respect to a basis. And yet here we haven't introduced a basis, just a function which
+      in no way requires a basis for its definition. As is so often the case, much of the
+      resolution of the apparent paradox is notational. In this context what we have done is the following:
+      a. Taken the mathematical definition of a d-tuple to be a function on {0, ..., d-1}.
+      b. Taken the notation for a 2-tuple to be (x, y)
+
+      This is a perfectly reasonable thing to do. The problem, suggestive of a paradox,
+      is that we may also quite reasonably take (0.5, -0.5) to mean the coordinates of a
+      vector with respect to some basis which is implicitly taken to be part of the context
+      of the discussion. Henceforth, to be completely clear, we will only ever understand
+      (x, y, z) in this latter sense. Should we need to express the other case, we will
+      be completely explicit:
+
+      \f[
+        v : {0, 1} -> R, v(0) = 0.5, v(1) = -0.5.
+      \f]
+
+      To emphasise: this is completely independent of any basis. Nevertheless, the
+      presentation of the space as R^s canonically determines a distinguished basis. We
+      simply run through the elements of the index set, defining the indicators to be
+      the vectors whose components are all zeros except at the place of the index, where
+      the component is 1.
+
+      \f[
+        e_s : \{0, ..., d-1\} -> R,   e_{st} = \delta_{st}
+      \f]
+
+      Put differently, \f$ \bb{R}^S \f$ admits a canonical basis.
+
+      With this established, we are now in a position to talk about changes of basis. This
+      will be specified by an isomorphism, which in this case is technically an automorphism
+      since the mapping is from a space to itself. This will be am element of \f$ GL(S) \f$.
+
+      The final issue to discuss before moving on from \f$ \bb{R}^S \f$ is that of ordered versus
+      unordered bases. Thus far we have been tacitly assuming that the index set has the
+      structure {0, ..., d-1}. This defines an ordering and this can be carried through to
+      give an ordered basis \f$ \{e_0, .., e_{d-1}\} \f$. But the index set may not carry an
+      intrinsic ordering, for example \f$ \{foo, bar, baz \} \f$. Of course, there is nothing
+      to stop us from imposing an order, which is typically what we do in the case
+      \f${x, y, z}\f$. But that is a choice and it would be equally valid (if peverse) to
+      identify \f$e_x\f$ with \f$e_2\f$.
+
+      To summarize what we have discovered for \f$ \bb{R}^S \f$: a basis requires specification of
+      A. An index set;
+      B. An automorphism (which could be the identity).
+
+      Noting that all our considerations carry over to free modules over a commutative ring,
+      let us move to the more general case: an arbitrary free module, M,  over a
+      commutative ring, R, of rank d. In this case, since the most we can say about \f$ \bb{R}^S \f$
+      (where, as before, the cardinality of S is d) is that M is isomorphic to it, defining
+      a basis requires an additional ingredient:
+      C. An isomorphism from M to \f$ \bb{R}^S \f$, which we shall call the basepoint.
+      
+      We are now in a position to state the requirements on a type that satisifies the basis concept.
+      Such a type:
+      1. Self-identifies as a basis, by appropriately exposing a type;
+
+      2. Defines a type satisying the free module concept (this is
+      the free module to which the basis applies);
+
+      3. Defines a type `index_set`, which must define d values (say an `index_sequence`,
+      or an enumeration);
+
+      4. Defines a type `base_point`. This defines the isomorphism from V to \f$ \bb{R}^S \f$,
+      where R is the (commutative) ring associated with the (free) module.
+      a. If V is \f$ \bb{R}^S \f$,
+      then the concept is only satisifed if the base_point is the identity_isomorphism.
+
+      5. Defines a type `automorphism`, understood to explicitly or implicitly name an element
+      of \f$ GL(S) \f$.
    */
 
    /** @ingroup Basis
@@ -3201,11 +3271,12 @@ namespace sequoia::maths
       In 1D, x is taken to run from left to right. Therefore, in 2D, y must go up
       and, building on this, in 3D z comes out from the page.
    */
-  template<free_module M>
+  template<free_module M, class Isomorphism>
   struct canonical_right_handed_basis
   {
     using is_basis         = std::true_type;
     using free_module_type = M;
+    using isomorphism_type = Isomorphism;
   };
 
   template<free_module M>
