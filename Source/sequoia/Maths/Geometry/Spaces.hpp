@@ -724,6 +724,15 @@ namespace sequoia::maths
       3a. Either the free module associated with the basis admits a canonical basis; or
        b. There exists an isomorphism that takes us to a canonical basis.
 
+      It is reasonable for the datum as to whether the free module admits a canonical
+      basis to be associated with the free module itself. When this is not the case, it
+      is tempting to similarly associate the isomorphism between the underlying
+      commutative ring and something like Z or R. But this would seem to be a mistake.
+      In code, it would amount to templating the abstract space associated with (say) a physical
+      quantity on the unit. It seems preferable to instead associate the isomporhism (unit) with
+      the basis: for it is the basis that provides the bridge between abstract mathematics
+      and computation. Once the basis is specified, we can meaningfully talk about
+      coordinates and hence concerte values.
    */
 
   /** @ingroup Basis
