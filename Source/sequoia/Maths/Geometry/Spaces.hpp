@@ -3271,12 +3271,11 @@ namespace sequoia::maths
       In 1D, x is taken to run from left to right. Therefore, in 2D, y must go up
       and, building on this, in 3D z comes out from the page.
    */
-  template<free_module M, class Isomorphism>
+  template<free_module M>
   struct canonical_right_handed_basis
   {
     using is_basis         = std::true_type;
     using free_module_type = M;
-    using isomorphism_type = Isomorphism;
   };
 
   template<free_module M>
