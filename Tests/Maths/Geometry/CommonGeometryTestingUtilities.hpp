@@ -105,8 +105,13 @@ namespace sequoia::testing
     constexpr static std::size_t dimension{Dim};
     constexpr static std::size_t D{dimension};
 
-    template<maths::basis Basis, maths::representation_for<my_vec_space> Representation, maths::validator_for<my_vec_space, Representation> Validator, std::floating_point ValType=Representation::value_type>
-      requires is_orthonormal_basis_v<Basis>
+    template<
+      maths::basis Basis,
+      maths::representation_for<my_vec_space> Representation,
+      maths::validator_for<my_vec_space, Representation> Validator,
+      std::floating_point ValType=Representation::value_type
+    >
+    // TO DO:  requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr ValType inner_product(
       const maths::vector_coordinates<my_vec_space, Basis, Representation, Validator>& lhs,
@@ -123,8 +128,13 @@ namespace sequoia::testing
        );
     }
 
-    template<maths::basis Basis, maths::representation_for<my_vec_space> Representation, maths::validator_for<my_vec_space, Representation> Validator, class ValType=Representation::value_type>
-      requires is_complex_v<ValType> && is_orthonormal_basis_v<Basis>
+    template<
+      maths::basis Basis,
+      maths::representation_for<my_vec_space> Representation,
+      maths::validator_for<my_vec_space, Representation> Validator,
+      class ValType=Representation::value_type
+    >
+    requires is_complex_v<ValType> // TO DO && is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr ValType inner_product(
       const maths::vector_coordinates<my_vec_space, Basis, Representation, Validator>& lhs,
@@ -148,15 +158,6 @@ namespace sequoia::testing
     using set_type          = Set;
     using vector_space_type = my_vec_space<Set, Field, D>;
     using structure         = maths::affine_space_tag_t;
-  };
-
-  template<class Set, class Field, std::size_t D>
-    requires maths::identifies_as_field_v<Field>
-  struct canonical_basis
-  {
-    using vector_space_type = my_vec_space<Set, Field, D>;
-    using is_basis    = std::true_type;
-    using orthonormal = std::true_type;
   };
 
   template<maths::convex_space ConvexSpace, maths::basis Basis, class... Ts>

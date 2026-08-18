@@ -82,8 +82,9 @@ namespace sequoia::testing
   void affine_coordinates_test::test_affine()
   {
     using space_t  = my_affine_space<Set, Field, D>;
-    using basis_t  = canonical_basis<Set, Field, D>;
-    using affine_t = affine_coordinates<space_t, basis_t, canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>, alice<space_t>, identity_validator>;
+    using basis_t  = canonical_right_handed_basis<free_module_type_of_t<space_t>>;
+    using rep_t    = canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>;
+    using affine_t = affine_coordinates<space_t, basis_t, rep_t, alice<space_t>, identity_validator>;
     using delta_t  = affine_t::displacement_coordinates_type;
     using value_t  = Rep;
     

@@ -33,15 +33,16 @@ namespace sequoia::testing
     requires maths::identifies_as_field_v<Field>
   void vector_polar_coordinates_test::test_vec()
   {
-    using vec_space_t = my_vec_space<Set, Field, D>;
-    using vec_t       = vector_coordinates<vec_space_t, canonical_basis<Set, Field, D>, Representation, Validator>;
-    using value_t     = Representation::value_type;
-    using delta_t     = vec_t::displacement_coordinates_type;
+    using space_t = my_vec_space<Set, Field, D>;
+    using basis_t = canonical_right_handed_basis<free_module_type_of_t<space_t>>;
+    using vec_t   = vector_coordinates<space_t, basis_t, Representation, Validator>;
+    using value_t = Representation::value_type;
+    using delta_t = vec_t::displacement_coordinates_type;
 
-    STATIC_CHECK(representation_for_span<Representation, vec_space_t>);
-    STATIC_CHECK(vector_space<tensor_product<vec_space_t, vec_space_t>>);
+    STATIC_CHECK(representation_for_span<Representation, space_t>);
+    STATIC_CHECK(vector_space<tensor_product<space_t, space_t>>);
     STATIC_CHECK(!vector_space<tensor_product<vec_t, vec_t>>);
-    STATIC_CHECK(vector_space<tensor_product<tensor_product<vec_space_t, vec_space_t>, vec_space_t>>);
+    STATIC_CHECK(vector_space<tensor_product<tensor_product<space_t, space_t>, space_t>>);
     STATIC_CHECK(can_multiply<vec_t, value_t>);
     STATIC_CHECK(can_divide<vec_t, value_t>);
     STATIC_CHECK(!can_divide<vec_t, vec_t>);
@@ -75,11 +76,13 @@ namespace sequoia::testing
   template<std::floating_point ValType, class Validator>
   void vector_polar_coordinates_test::test_refined()
   {
-    using vec_space_t = my_vec_space<sets::R<2>, commutative_rings::reals<1>, 2>;
-    using vec_t       = vector_coordinates<vec_space_t, canonical_basis<sets::R<2>, commutative_rings::reals<1>, 2>, polar_representation<ValType>, Validator>;
+    using space_t = my_vec_space<sets::R<2>, commutative_rings::reals<1>, 2>;
+    using basis_t = canonical_right_handed_basis<free_module_type_of_t<space_t>>;
+    using rep_t   = polar_representation<ValType>;
+    using vec_t   = vector_coordinates<space_t, basis_t, rep_t, Validator>;
 
-    STATIC_CHECK(defines_scalar_multiplication_for_v<vec_space_t, polar_representation<ValType>>);
-    STATIC_CHECK(      defines_scalar_division_for_v<vec_space_t, polar_representation<ValType>>);
+    STATIC_CHECK(defines_scalar_multiplication_for_v<space_t, polar_representation<ValType>>);
+    STATIC_CHECK(      defines_scalar_division_for_v<space_t, polar_representation<ValType>>);
     
     check(equality, "", vec_t{1, 1} * 2, vec_t{2, 1});
   }

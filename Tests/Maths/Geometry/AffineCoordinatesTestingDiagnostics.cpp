@@ -27,14 +27,19 @@ namespace sequoia::testing
   void affine_coordinates_false_negative_test::run_tests()
   {
     {
-      using basis_t  = canonical_basis<sets::R<1>, commutative_rings::reals<1>, 1>;
-      using coords_t = affine_coordinates<my_affine_space<sets::R<1>, commutative_rings::reals<1>, 1>, basis_t, canonical_representation<float, no_bounds<float>>, alice, identity_validator>;
+      using space_t       = my_affine_space<sets::R<1>, commutative_rings::reals<1>, 1>;
+      using free_module_t = free_module_type_of_t<space_t>;      
+      using basis_t       = canonical_right_handed_basis<free_module_t>;
+      using rep_t         = canonical_representation<float, no_bounds<float>>;
+      using coords_t      = affine_coordinates<space_t, basis_t, rep_t, alice, identity_validator>;
+
       test_affine_1<coords_t>();
     }
 
     {
-      using basis_t =  canonical_right_handed_basis<euclidean_vector_space<1>>;
-      using coords_t = euclidean_affine_coordinates<1, basis_t, canonical_representation<float, no_bounds<float>>, alice, identity_validator>;
+      using basis_t  =  canonical_right_handed_basis<euclidean_vector_space<1>>;
+      using rep_t    = canonical_representation<float, no_bounds<float>>;
+      using coords_t = euclidean_affine_coordinates<1, basis_t, rep_t, alice, identity_validator>;
       test_affine_1<coords_t>();
     }
   }

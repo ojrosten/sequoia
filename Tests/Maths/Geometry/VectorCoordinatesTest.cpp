@@ -80,8 +80,9 @@ namespace sequoia::testing
   void vector_coordinates_test::test_vec()
   {
     using vec_space_t = my_vec_space<Set, Field, D>;
-    using basis_t     = canonical_basis<Set, Field, D>;
-    using vec_t       = vector_coordinates<vec_space_t, basis_t, canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>, identity_validator>;
+    using basis_t     = canonical_right_handed_basis<free_module_type_of_t<vec_space_t>>;
+    using rep_t       = canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>;
+    using vec_t       = vector_coordinates<vec_space_t, basis_t, rep_t, identity_validator>;
     using value_t     = Rep;
     using delta_t     = vec_t::displacement_coordinates_type;
 
@@ -108,11 +109,11 @@ namespace sequoia::testing
       requires maths::identifies_as_field_v<Field>
   void vector_coordinates_test::test_real_vec_1_inner_prod()
   {
-    using basis_t = canonical_basis<Set, Field, 1>;
-    using vec_t   = vector_coordinates<my_vec_space<Set, Field, 1>, basis_t, canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>, identity_validator>;
+    using space_t = my_vec_space<Set, Field, 1>;
+    using basis_t = canonical_right_handed_basis<free_module_type_of_t<space_t>>;
+    using rep_t   = canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>;
+    using vec_t   = vector_coordinates<space_t, basis_t, rep_t, identity_validator>;
     using value_t = Rep;
-
-    STATIC_CHECK(basis_for<canonical_basis<Set, Field, 1>, my_vec_space<Set, Field, 1>>);
 
     check(equality, "", inner_product(vec_t{}           , vec_t{value_t(1)}) , value_t{});
     check(equality, "", inner_product(vec_t{value_t(1)} , vec_t{})           , value_t{});
@@ -126,8 +127,10 @@ namespace sequoia::testing
       requires maths::identifies_as_field_v<Field>
   void vector_coordinates_test::test_complex_vec_1_inner_prod()
   {
-    using basis_t = canonical_basis<Set, Field, 1>;
-    using vec_t   = vector_coordinates<my_vec_space<Set, Field, 1>, basis_t, canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>, identity_validator>;
+    using space_t = my_vec_space<Set, Field, 1>;
+    using basis_t = canonical_right_handed_basis<free_module_type_of_t<space_t>>;
+    using rep_t   = canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>;
+    using vec_t   = vector_coordinates<space_t, basis_t, rep_t, identity_validator>;
     using value_t = Rep;
 
     check(equality, "", inner_product(vec_t{value_t(1, 1)} , vec_t{value_t(1, 1)}), value_t{2});
