@@ -784,7 +784,9 @@ namespace sequoia::maths
       commutative ring, R, of rank d. In this case, since the most we can say about \f$ \bb{R}^S \f$
       (where, as before, the cardinality of S is d) is that M is isomorphic to it, defining
       a basis requires an additional ingredient:
-      C. An isomorphism from M to \f$ \bb{R}^S \f$, which we shall call the basepoint.
+      C. An isomorphism from \f$ \bb{R}^S \f$ to M. This goes by a few different names, with
+      basepoint being found in the torsor literature. However, we opt for the term prefered by
+      differential geometry, frame.
       
       We are now in a position to state the requirements on a type that satisifies the basis concept.
       Such a type:
@@ -796,7 +798,7 @@ namespace sequoia::maths
       3. Defines a type `index_set`, which must define d values (say an `index_sequence`,
       or an enumeration);
 
-      4. Defines a type `base_point`. This defines the isomorphism from V to \f$ \bb{R}^S \f$,
+      4. Defines a type `frame`. This defines the isomorphism from V to \f$ \bb{R}^S \f$,
       where R is the (commutative) ring associated with the (free) module.
       a. If V is \f$ \bb{R}^S \f$,
       then the concept is only satisifed if the base_point is the identity_isomorphism.
@@ -804,10 +806,29 @@ namespace sequoia::maths
       5. Defines a type `automorphism`, understood to explicitly or implicitly name an element
       of \f$ GL(S) \f$.
    */
+  
+  struct identity_isomorphism {};
 
-   /** @ingroup Basis
-       @brief Compile time constant reflecting whether a nested type named 'is_basis' exist.
-    */
+  // TO DO: make the transform a matrix, which can be done by taking the outer product of
+  // two vector spaces
+  template<
+    free_module M,
+    class IndexSet=std::index_sequence<M::dimension>,
+    class Frame=identity_isomorphism,
+    class BasisTransform=identity_isomorphism
+  >
+  struct general_basis
+  {
+    using is_basis         = std::true_type;
+    using free_module_type = M;
+    using index_set        = IndexSet;
+    using frame            = Frame;
+    using basis_transform  = BasisTransform; 
+  };
+
+  /** @ingroup Basis
+      @brief Compile time constant reflecting whether a nested type named 'is_basis' exist.
+   */
   template<class T>
   inline constexpr bool has_is_basis_v{
     requires { typename T::is_basis; }
@@ -859,8 +880,6 @@ namespace sequoia::maths
   */
   template<class B, class M>
   concept basis_for = basis<B> && free_module<M> && std::same_as<free_module_type_of_t<B>, M>;
-
-  struct identity_isomorphism {};
 
   template<basis B>
   struct basis_isomorphism_type_of;
@@ -3266,28 +3285,16 @@ namespace sequoia::maths
     requires (dimension_of_v<free_module_type_of_t<Basis>> == D)
   using euclidean_nonnegative_coordinates = coordinates<euclidean_nonnegative_space<D, Arena>, Basis, Representation, Validator>;
 
-  /** @brief Right-handed bases for arbitrary D, built recursively from 1D
-
-      In 1D, x is taken to run from left to right. Therefore, in 2D, y must go up
-      and, building on this, in 3D z comes out from the page.
-   */
   template<free_module M>
-  struct canonical_right_handed_basis
+  struct dual_of<general_basis<M>>
   {
-    using is_basis         = std::true_type;
-    using free_module_type = M;
+    using type = general_basis<dual_of_t<M>>;
   };
 
   template<free_module M>
-  struct dual_of<canonical_right_handed_basis<M>>
+  struct dual_of<general_basis<dual<M>>>
   {
-    using type = canonical_right_handed_basis<dual_of_t<M>>;
-  };
-
-  template<free_module M>
-  struct dual_of<canonical_right_handed_basis<dual<M>>>
-  {
-    using type = canonical_right_handed_basis<M>;
+    using type = general_basis<M>;
   };
 
   template<class T>
@@ -3327,5 +3334,5 @@ namespace sequoia::maths
 
   template<std::floating_point T, std::size_t D, class Validator=identity_validator, class Arena=mathematical_arena>
   using vec_coords
-    = euclidean_vector_coordinates<D, canonical_right_handed_basis<euclidean_vector_space<D, Arena>>, canonical_representation<T, no_bounds<T>>, Validator, Arena>;
+    = euclidean_vector_coordinates<D, general_basis<euclidean_vector_space<D, Arena>>, canonical_representation<T, no_bounds<T>>, Validator, Arena>;
 }

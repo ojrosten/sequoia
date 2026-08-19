@@ -70,7 +70,7 @@ namespace sequoia::testing
   {
     using space_t     = euclidean_nonnegative_space<1, mathematical_arena>;
     using rep_t       = logarithmic_representation<no_bounds<T>>;
-    using basis_t     = canonical_right_handed_basis<free_module_type_of_t<space_t>>;
+    using basis_t     = general_basis<free_module_type_of_t<space_t>>;
     using coords_t    = coordinates<space_t, basis_t, rep_t, throwing_validator>;
     using delta_t     = coords_t::displacement_coordinates_type;
     using value_t     = T;

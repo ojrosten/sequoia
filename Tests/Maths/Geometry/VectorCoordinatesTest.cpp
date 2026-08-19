@@ -80,7 +80,7 @@ namespace sequoia::testing
   void vector_coordinates_test::test_vec()
   {
     using vec_space_t = my_vec_space<Set, Field, D>;
-    using basis_t     = canonical_right_handed_basis<free_module_type_of_t<vec_space_t>>;
+    using basis_t     = general_basis<free_module_type_of_t<vec_space_t>>;
     using rep_t       = canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>;
     using vec_t       = vector_coordinates<vec_space_t, basis_t, rep_t, identity_validator>;
     using value_t     = Rep;
@@ -110,7 +110,7 @@ namespace sequoia::testing
   void vector_coordinates_test::test_real_vec_1_inner_prod()
   {
     using space_t = my_vec_space<Set, Field, 1>;
-    using basis_t = canonical_right_handed_basis<free_module_type_of_t<space_t>>;
+    using basis_t = general_basis<free_module_type_of_t<space_t>>;
     using rep_t   = canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>;
     using vec_t   = vector_coordinates<space_t, basis_t, rep_t, identity_validator>;
     using value_t = Rep;
@@ -128,7 +128,7 @@ namespace sequoia::testing
   void vector_coordinates_test::test_complex_vec_1_inner_prod()
   {
     using space_t = my_vec_space<Set, Field, 1>;
-    using basis_t = canonical_right_handed_basis<free_module_type_of_t<space_t>>;
+    using basis_t = general_basis<free_module_type_of_t<space_t>>;
     using rep_t   = canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>;
     using vec_t   = vector_coordinates<space_t, basis_t, rep_t, identity_validator>;
     using value_t = Rep;
