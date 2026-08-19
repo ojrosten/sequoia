@@ -18,9 +18,11 @@
     Consider the real numbers. In C++ we can give a name to the set
     by using the type system.
 
-    struct R {};
+    @code
+    struct reals {};
+    @endcode
 
-    But what of the elements of R? Here we run into an immediate difficulty. We
+    But what of the elements of `reals`? Here we run into an immediate difficulty. We
     would like to associate them with the values of a type. But to truly do so
     we require a type with an infinite number of values (and uncountably so, in this
     case). Therefore, when seeking representations, particularly of infinite sets,
@@ -49,17 +51,17 @@
 
     Every vector space admits at least one basis. For a vector space of dimension d,
     a basis is a set of d elements which are linearly independent and so span the
-    space. Let the basis elements be denoted b_0, ..., b_{n-1}. Any vector in the space
+    space. Let the basis elements be denoted \f$ b_0, \ldots, b_{d-1} \f$. Any vector in the space
     may be written as a linear combination:
 
     \f[
-      v = a_0 b_0 + ... + a_{n-1} b_{n-1},
+      v = a_0 b_0 + \ldots + a_{d-1} b_{d-1},
     \f]
 
-    where the a_i are valued in the field, F. The set of these values \f$ [a_0, ..., a_{n-1}] \f$
+    where the \f$ a_i \f$ are valued in the field, F. The set of these values \f$ [a_0, \ldots, a_{d-1}] \f$
     are none other than the coordinates of v with respect to this particular basis.
-    The \f$ [a_0, ..., a_{n-1}] \f$ are often informally referred to as a vector. However
-    stricty speaking this risks an abuse of terminology since it may conflates two distinct concepts:
+    The \f$ [a_0, \ldots, a_{d-1}] \f$ are often informally referred to as a vector. However
+    strictly speaking this risks an abuse of terminology since it may conflate two distinct concepts:
     an actual vector which is an element of the set which forms the vector space,
     and a representation of this vector via the coordinates with respect to a
     particular basis. This distinction can be further reinforced by pointing out that
@@ -67,11 +69,11 @@
     will nevertheless disagree on the coordinates if they are using different bases -
     as they are entirely entitled to do! To further add to the confusion, the coordinates
     may be referred to as a coordinate vector which is perhaps unfortunate. (To add to
-    the fun, in the case of R^d, a tuple of values (v(0), ..., v(d-1)) can have a
+    the fun, in the case of \f$ \bb{R}^d \f$, a tuple of values \f$ (v(0), \ldots, v(d-1)) \f$ can have a
     different interpretation, which we shall gloss over for now but return to in \ref Basis "Basis".)
 
     Regardless, from the perspective of performing actual calculations, the coordinates
-    are key. An crucial point to make is that, when dealing with the coordinates,
+    are key. A crucial point to make is that, when dealing with the coordinates,
     the underlying elements of the set, V, make no explicit appearance. This is a
     manifestation of the fact that two vector spaces of the same dimension and over
     the same field are isomorphic. This is incredibly helpful since, for many practical
@@ -91,7 +93,7 @@
     Vector spaces are just one of the things treated in the code that follows. There
     are several important generalizations. First, there are affine spaces, which comprise
     a set, A, together with a vector space, V, whose additive group acts freely and
-    transitively on A. Intuitvely, we can start at any point in A and translate to
+    transitively on A. Intuitively, we can start at any point in A and translate to
     any other point by adding the appropriate vector. In fact, the relationship is
     stronger than this: choosing any point in A and adding any vector in V will give
     a point in A. A nice example of an affine space is Euclidean space. Two observers
@@ -111,41 +113,36 @@
     and so it is this that will be reflected by the concepts defined below: the affine
     space concept depends on the vector_space concept, and not vice-versa.
 
-    It will be useful for our purposes to generalize affine spaces. To start, onsider taking a
+    It will be useful for our purposes to generalize affine spaces. To start, consider taking a
     convex subset, C, of an affine space. We may translate from any point in C to any
     other by adding the appropriate vector from V. However, there are elements of V
     which, when added to a point in C will take us outside of C and into the broader
-    affine space into which it is a part. However, we do not want define Convex spaces
+    affine space of which it is a part. However, we do not want to define convex spaces
     via an embedding in a bigger space. There are a variety of solutions to this, a
     selection of which is listed, all of which have reasonable representations in C++.
 
-    1. Take the action of V to be a partial action; as such, it is simply not defined
+    -# Take the action of V to be a partial action; as such, it is simply not defined
        for elements of V which would take points of C outside of C. While we cannot literally
        restrict the domain of a C++ function such as operator+ in this way, we can furnish
        them with a precondition. The behaviour when called out of contract is undefined; not
        quite in the mathematical sense but at least in a sense which seems to map rather well
        onto our intuition.
+    -# Supplement the underlying set, S, with an exceptional state, E such that
+       -# The difference of any two points in S is in V
+       -# An element of V, when added to S remains either in S or maps to E.
+          Note that, since every point in S is mapped by elements of V into E, and there is
+          no mapping from E back into S, the action of the additive group of V is not bijective,
+          violating one of the axioms of affine spaces.
+    -# Define operations which would otherwise be out of bounds to clamp to the boundary. There
+       are two subsidiary options:
+       -# Projective clamping, whereby the nearest point to the putative point outside of the
+          space is selected. (Notions of nearness require additional structure to exist on the space.)
+       -# Ray-tracing, whereby the point on the boundary struck by the ray from the starting
+          point along the displacement vector is selected.
+    -# Periodic remapping
+    -# Anti-periodic remapping
 
-    2. Supplement the underlying set, S, with an exceptional state, E such that
-    a. The difference of any two points in S is in V
-    b. An element of V, when added to S remains either in S or maps to E.
-       Note that, since every point in S is mapped by elements of V into E, and there is
-       no mapping from E back into S, the action of the additive group of V is not bijective,
-       violating one of the axioms of affine spaces.
-
-    3. Define operations which would otherwise be out of bounds to clamp to the boundary. There
-    are two subsidiary options:
-    a. Projective clamping, whereby the nearest point to the putative point outside of the space is selected.
-    (Notions of nearness require additional structure to exist on the space.)
-    
-    b. Ray-tracing, whereby the point on the boundary struck by the ray from the starting
-    point along the deisplacement vector is selected
-
-    4. Periodic remapping
-
-    5. Anti-periodic remapping
-
-    There are now two further generalizations that it will be profitable to explore. First,
+    There are now two further generalizations that it will be profitable to explore. The first
     is to consider relaxing a vector space's field
     to a ring. The resulting construction is called a module, which is a generalization
     of a vector space. Our motivation for this is that the integers form a commutative
@@ -159,7 +156,7 @@
     convex generalization where the action of the free module is not bijective.
 
     The last generalization is to relax the constraint of convexity. This leads us to our
-    most primitive abstraction: a partial M-Torsor. Partial because the the torsor may not
+    most primitive abstraction: a partial M-torsor. Partial because the torsor may not
     be complete or may require additional structure to be completed. 'M' to indicate that
     the partial torsor is over a free module.
 
@@ -173,8 +170,8 @@
     or disable specific operations. Thus, the coordinates class template is templated on,
     amongst other things, a partial_m_torsor. To define such a space just requires introducing
     a struct exposing a small amount of data (types and values) known at compile time.
-    These data determines whether we intend to model a vector space, a free module over a
-    commutative space, an affine space or whatever. This is sufficient for the coordinates
+    These data determine whether we intend to model a vector space, a free module over a
+    commutative ring, an affine space or whatever. This is sufficient for the coordinates
     implementation to expose the correct set of operations.
  */
 
@@ -201,7 +198,7 @@ namespace sequoia::maths
       @brief Traits to indicate whether types self-identify as various algebraic structure.
 
       As outlined in the introductory remarks, there is a crucial distinction between
-      using a type to name a set e.g. `struct reals {};` and a represententation of
+      using a type to name a set e.g. `struct reals {};` and a representation of
       the elements of the set e.g. `float` or `double`. In the case of the former,
       it is natural to use compile time data to express various abstract properties.
       This set of definitions pertains to how such a type identifies itself; for example,
@@ -211,11 +208,13 @@ namespace sequoia::maths
       we use virtual inheritance. This allows us to represent diamond hierarchies, which
       naturally occur e.g.
 
+      @verbatim
          commutative_ring
             /         \
       ordered_ring  field
             \         /
           ordered_field
+      @endverbatim
    */
 
   /** @defgroup CommutativeRingTags Subgroup commutative ring tag hierarchy
@@ -232,7 +231,7 @@ namespace sequoia::maths
 
   /** @defgroup HasStructureType Subgroup Has structure type
       @ingroup MathematicalStructure
-      @brief Compile time tools for reflecting on whether a type has a nested type called `structure_type`, and extracting it.
+      @brief Compile time tools for reflecting on whether a type has a nested type called `structure`, and extracting it.
 
       @{
    */
@@ -244,7 +243,7 @@ namespace sequoia::maths
 
   template<class T>
   struct structure_of {};
-  
+
   template<class T>
   using structure_of_t = structure_of<T>::type;
 
@@ -252,11 +251,11 @@ namespace sequoia::maths
     requires has_structure_type_v<T>
   struct structure_of<T>
   {
-    using type = T::set_type;
+    using type = T::structure;
   };
 
   /** @} */
-  
+
   /** @defgroup HasSetType Subgroup Has set type
       @ingroup MathematicalStructure
       @brief Compile time tools for reflecting on whether a type has a nested type called `set_type`, and extracting it.
@@ -268,10 +267,10 @@ namespace sequoia::maths
   inline constexpr bool has_set_type_v{
     requires { typename T::set_type; }
   };
-  
+
   template<class T>
   struct set_type_of {};
-  
+
   template<class T>
   using set_type_of_t = set_type_of<T>::type;
 
@@ -283,14 +282,14 @@ namespace sequoia::maths
   };
 
   /** @} */
-  
-  /** @defgroup CommutatitiveRingIdentification Subgroup Commutative Ring identification
+
+  /** @defgroup CommutativeRingIdentification Subgroup Commutative Ring identification
       @ingroup MathematicalStructure
-      @brief Captures the conditions under which types considers themselves to be a commutative ring or refinement thereof.
+      @brief Captures the conditions under which types consider themselves to be a commutative ring or refinement thereof.
 
       @{
    */
-  
+
   template<class T>
   inline constexpr bool identifies_as_commutative_ring_v{
        has_structure_type_v<T>
@@ -309,9 +308,9 @@ namespace sequoia::maths
 
   /** @} */
 
-  /** @defgroup CommutativeRing Subgroup Commutative Ring 
+  /** @defgroup CommutativeRing Subgroup Commutative Ring
       @ingroup MathematicalStructure
-      @brief concepts for commutative ring and refinements thereof.
+      @brief Concepts for commutative ring and refinements thereof.
 
       @{
    */
@@ -324,9 +323,9 @@ namespace sequoia::maths
 
   /** @} */
 
-  /** @defgroup TorsorTags Subgroup partial M-Torsor tag hierarchy
+  /** @defgroup TorsorTags Subgroup partial M-torsor tag hierarchy
       @ingroup MathematicalStructure
-      @brief Hierarchy for the purpose of self-identification as a commutative ring.
+      @brief Hierarchy for the purpose of self-identification as a partial M-torsor, or a refinement thereof.
 
       @{
    */
@@ -345,11 +344,11 @@ namespace sequoia::maths
 
   /** @defgroup PartialMTorsorIdentification Partial M-torsor identification
       @ingroup MathematicalStructure
-      @brief Captures the conditions under which types considers themselves to be a partial M-torsor or refinement thereof.
+      @brief Captures the conditions under which types consider themselves to be a partial M-torsor or refinement thereof.
 
       @{
    */
-  
+
   template<class T>
   inline constexpr bool identifies_as_partial_m_torsor_v{
        has_structure_type_v<T>
@@ -422,7 +421,7 @@ namespace sequoia::maths
 
       @{
    */
-  
+
   template<class T>
   struct nested_commutative_ring_type {};
 
@@ -465,20 +464,14 @@ namespace sequoia::maths
 
   /** @} */
 
-  /** @defgroup HasRankValue Subgroup Has rank value
+  /** @defgroup HasRank Subgroup Has Rank
       @ingroup PropertiesOfSpaces
-      @brief Compile time constants reflecting whether a nested value
-      convertible to a std::size_t exists, named rank or a refinment thereof.
+      @brief Compile time constants reflecting whether a nested value convertible
+      to a std::size_t exists, named rank or a refinement thereof.
 
       Whereas one speaks of the dimension of a vector space, for free modules the
       term rank is generally preferred. As such, we cater for the appearance of
       both terms.
-   */
-
-  /** @defgroup HasRank Subgroup Has Rank
-      @ingroup PropertiesOfSpaces
-      @brief Compile time constants reflecting whether a nested type named
-      rank, or a refinement thereof, exists.
 
       @{
    */
@@ -501,7 +494,7 @@ namespace sequoia::maths
 
       @{
    */
-  
+
   template<class T>
   struct rank_of {};
 
@@ -530,7 +523,7 @@ namespace sequoia::maths
   /** @} */
 
   /** @defgroup Spaces Spaces
-      @brief Concepts and helpers pertaining to vector spaces, affine spaces and certain generalizations.    
+      @brief Concepts and helpers pertaining to vector spaces, affine spaces and certain generalizations.
    */
 
   /** @ingroup Spaces
@@ -575,7 +568,7 @@ namespace sequoia::maths
 
       @{
    */
-  
+
   template<class T>
   struct nested_free_module_type {};
 
@@ -617,13 +610,13 @@ namespace sequoia::maths
   };
 
   /** @} */
-  
+
   /** @ingroup Spaces
       @brief concept for convex spaces
 
       A convex space may be a free module. Otherwise, it comprises a set and a
       free module (which may be a vector space), and must identify as a convex
-      space.      
+      space.
    */
   template<class T>
   concept convex_space
@@ -637,9 +630,9 @@ namespace sequoia::maths
    */
   template<class T>
   concept affine_space = vector_space<T> || (convex_space<T> && identifies_as_affine_space_v<T>);
- 
+
   /** @defgroup FreeModuleTypeOf Subgroup Free module type of
-      @ingroup PropertiesOfSpace
+      @ingroup PropertiesOfSpaces
       @brief Extracts the free module type associated with a convex space.
 
       This takes into account that if the convex space is a free module, then the
@@ -671,7 +664,9 @@ namespace sequoia::maths
   /** @ingroup PropertiesOfSpaces
       @brief Extracts the commutative ring type of the free module associated with a convex space.
 
-      This takes into account that if the free module is a vector space, then the commutative ring is actually a field. 
+      This takes into account that if the free module is a vector space, then the commutative ring is actually a field.
+
+      @{
    */
   template<convex_space ConvexSpace>
   struct commutative_ring_type_of
@@ -681,14 +676,16 @@ namespace sequoia::maths
 
   template<convex_space ConvexSpace>
   using commutative_ring_type_of_t = commutative_ring_type_of<ConvexSpace>::type;
-  
+
+  /** @} */
+
+
   /** @ingroup PropertiesOfSpaces
       @brief Extracts the dimension of the free module associated with a convex space.
 
       The program is ill-formed if the space defines its own dimension (rank) that
       is inconsistent with the free module's dimension.
    */
-
   template<convex_space ConvexSpace>
   inline constexpr std::size_t dimension_of_v{
     [](){
@@ -709,25 +706,24 @@ namespace sequoia::maths
       By definition, free modules admit a basis and the latter are an
       essential ingredient in our approach. The introduction describes
       the primary considerations; here we focus on the nuances. A type
-      is considered to be a basis if it satifies several conditions. The
+      is considered to be a basis if it satisfies several conditions. The
       first two are simple to state:
-      1. The type self-identifies as a basis, by appropriately exposing a type;
-
-      2. The type defines a type satisying the free module concept (this is
-      the free module to which the basis applies).
+      -# The type self-identifies as a basis, by appropriately exposing a type;
+      -# The type defines a type satisfying the free module concept (this is
+         the free module to which the basis applies).
 
       To understand the remaining conditions requires a detailed understanding of
-      various subtleties. Consider first the case of R^d, understood to be a vector space.
-      (This latter statement is to avoid the ambiguity whereby by \f$ \bb{R}^d \f$ we could just
+      various subtleties. Consider first the case of \f$ \bb{R}^d \f$, understood to be a vector space.
+      (This latter statement is to avoid the ambiguity whereby, by \f$ \bb{R}^d \f$, we could just
       mean the set, without any additional structure.) Really, \f$ \bb{R}^d \f$ is a shorthand
       for \f$ \bb{R}^S \f$, understood as follows (assuming finite S):
-      a. S is an index set, an example of which would be {0, ..., d-1}
-      b. \f$ \bb{R}^S \f$ is the set of all functions from \f$ S -> \bb{R} \f$
+      -# S is an index set, an example of which would be \f$ \{0, \ldots, d-1\} \f$
+      -# \f$ \bb{R}^S \f$ is the set of all functions from \f$ S \to \bb{R} \f$
 
       Though seemingly very abstract, this maps nicely onto C++ intuition:
-      a. Take an element of \f$ \bb{R}^S \f$, v - a vector
-      b. Take an element of S, i - an index
-      c. Consider the function v(i) (from a C++ perspective v[i] may be even more natural):
+      -# Take an element of \f$ \bb{R}^S \f$, v - a vector
+      -# Take an element of S, i - an index
+      -# Consider the function v(i) (from a C++ perspective v[i] may be even more natural):
          this returns the ith coordinate, which in this example is just a real number.
 
       As a concrete example in d=2, suppose we take v = (0.5, -0.5). Then v(0) = 0.5, v(1) = -0.5.
@@ -736,8 +732,8 @@ namespace sequoia::maths
       respect to a basis. And yet here we haven't introduced a basis, just a function which
       in no way requires a basis for its definition. As is so often the case, much of the
       resolution of the apparent paradox is notational. In this context what we have done is the following:
-      a. Taken the mathematical definition of a d-tuple to be a function on {0, ..., d-1}.
-      b. Taken the notation for a 2-tuple to be (x, y)
+      -# Taken the mathematical definition of a d-tuple to be a function on \f$ \{0, \ldots, d-1\} \f$.
+      -# Taken the notation for a 2-tuple to be (x, y)
 
       This is a perfectly reasonable thing to do. The problem, suggestive of a paradox,
       is that we may also quite reasonably take (0.5, -0.5) to mean the coordinates of a
@@ -747,66 +743,65 @@ namespace sequoia::maths
       be completely explicit:
 
       \f[
-        v : {0, 1} -> R, v(0) = 0.5, v(1) = -0.5.
+        v : \{0, 1\} \to \bb{R}, \quad v(0) = 0.5, \quad v(1) = -0.5.
       \f]
 
       To emphasise: this is completely independent of any basis. Nevertheless, the
-      presentation of the space as R^s canonically determines a distinguished basis. We
+      presentation of the space as \f$ \bb{R}^S \f$ canonically determines a distinguished basis. We
       simply run through the elements of the index set, defining the indicators to be
       the vectors whose components are all zeros except at the place of the index, where
       the component is 1.
 
       \f[
-        e_s : \{0, ..., d-1\} -> R,   e_{st} = \delta_{st}
+        e_s : \{0, \ldots, d-1\} \to \bb{R}, \quad e_{st} = \delta_{st}
       \f]
 
       Put differently, \f$ \bb{R}^S \f$ admits a canonical basis.
 
       With this established, we are now in a position to talk about changes of basis. This
       will be specified by an isomorphism, which in this case is technically an automorphism
-      since the mapping is from a space to itself. This will be am element of \f$ GL(S) \f$.
+      since the mapping is from a space to itself. This will be an element of \f$ GL(S) \f$.
 
       The final issue to discuss before moving on from \f$ \bb{R}^S \f$ is that of ordered versus
       unordered bases. Thus far we have been tacitly assuming that the index set has the
-      structure {0, ..., d-1}. This defines an ordering and this can be carried through to
-      give an ordered basis \f$ \{e_0, .., e_{d-1}\} \f$. But the index set may not carry an
-      intrinsic ordering, for example \f$ \{foo, bar, baz \} \f$. Of course, there is nothing
+      structure \f$ \{0, \ldots, d-1\} \f$. This defines an ordering and this can be carried through to
+      give an ordered basis \f$ \{e_0, \ldots, e_{d-1}\} \f$. But the index set may not carry an
+      intrinsic ordering, for example \f$ \{\mathrm{foo}, \mathrm{bar}, \mathrm{baz}\} \f$. Of course, there is nothing
       to stop us from imposing an order, which is typically what we do in the case
-      \f${x, y, z}\f$. But that is a choice and it would be equally valid (if peverse) to
-      identify \f$e_x\f$ with \f$e_2\f$.
+      \f$ \{x, y, z\} \f$. But that is a choice and it would be equally valid (if perverse) to
+      identify \f$ e_x \f$ with \f$ e_2 \f$.
 
       To summarize what we have discovered for \f$ \bb{R}^S \f$: a basis requires specification of
-      A. An index set;
-      B. An automorphism (which could be the identity).
+
+      - A. An index set;
+      - B. An automorphism (which could be the identity).
 
       Noting that all our considerations carry over to free modules over a commutative ring,
-      let us move to the more general case: an arbitrary free module, M,  over a
-      commutative ring, R, of rank d. In this case, since the most we can say about \f$ \bb{R}^S \f$
+      let us move to the more general case: an arbitrary free module, M, over a
+      commutative ring, R, of rank d. In this case, since the most we can say about \f$ R^S \f$
       (where, as before, the cardinality of S is d) is that M is isomorphic to it, defining
       a basis requires an additional ingredient:
-      C. An isomorphism from \f$ \bb{R}^S \f$ to M. This goes by a few different names, with
-      basepoint being found in the torsor literature. However, we opt for the term prefered by
-      differential geometry, frame.
-      
-      We are now in a position to state the requirements on a type that satisifies the basis concept.
+
+      - C. An isomorphism from \f$ R^S \f$ to M. This goes by a few different names, with
+        basepoint being found in the torsor literature. However, we opt for the term preferred by
+        differential geometry, frame.
+
+
+      We are now in a position to state the requirements on a type that satisfies the basis concept.
       Such a type:
-      1. Self-identifies as a basis, by appropriately exposing a type;
-
-      2. Defines a type satisying the free module concept (this is
-      the free module to which the basis applies);
-
-      3. Defines a type `index_set`, which must define d values (say an `index_sequence`,
-      or an enumeration);
-
-      4. Defines a type `frame`. This defines the isomorphism from V to \f$ \bb{R}^S \f$,
-      where R is the (commutative) ring associated with the (free) module.
-      a. If V is \f$ \bb{R}^S \f$,
-      then the concept is only satisifed if the base_point is the identity_isomorphism.
-
-      5. Defines a type `automorphism`, understood to explicitly or implicitly name an element
-      of \f$ GL(S) \f$.
+      -# Self-identifies as a basis, by appropriately exposing a type;
+      -# Defines a type satisfying the free module concept (this is
+         the free module to which the basis applies);
+      -# Defines a type `index_set`, which must define d values (say an `index_sequence`,
+         or an enumeration);
+      -# Defines a type `frame`. This defines the isomorphism from M to \f$ R^S \f$,
+         where R is the (commutative) ring associated with the (free) module. If M is
+         \f$ R^S \f$, then the concept is only satisfied if the frame is the
+         identity_isomorphism.
+      -# Defines a type `automorphism`, understood to explicitly or implicitly name an element
+         of \f$ GL(S) \f$.
    */
-  
+
   struct identity_isomorphism {};
 
   // TO DO: make the transform a matrix, which can be done by taking the outer product of
@@ -823,7 +818,7 @@ namespace sequoia::maths
     using free_module_type = M;
     using index_set        = IndexSet;
     using frame            = Frame;
-    using basis_transform  = BasisTransform; 
+    using basis_transform  = BasisTransform;
   };
 
   /** @ingroup Basis
