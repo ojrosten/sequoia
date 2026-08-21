@@ -156,13 +156,25 @@ namespace sequoia::testing
     STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
     STATIC_CHECK(has_unary_plus<quantity_t>);
     STATIC_CHECK(!has_unary_minus<quantity_t>);
+    using basis_t     = quantity_t::basis_type;
+    using origin_t    = quantity_t::origin_type;
+    using validator_t = quantity_t::validator_type;
+
+    // Positive control, as in the affine case: pins that the negative check
+    // below fails because of the space and not because of a stray argument.
+    STATIC_CHECK(
+      defines_physical_value_v<space_t, units_t, basis_t, repr_t, origin_t, validator_t>);
+
+    // Representation and Origin were transposed here. The check passed anyway,
+    // because a transposition is just as inadmissible as the dual it was meant
+    // to be testing.
     STATIC_CHECK(
       !defines_physical_value_v<
         dual<space_t>,
         dual<units_t>,
         unit_defined_right_handed_basis<free_module_type_of_t<dual<space_t>>, dual<units_t>>,
-        to_origin_type_t<dual<space_t>>,
         dual_of_t<repr_t>,
+        to_origin_type_t<dual<space_t>>,
         throwing_validator
       >
     );

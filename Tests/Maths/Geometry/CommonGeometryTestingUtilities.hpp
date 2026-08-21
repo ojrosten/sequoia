@@ -160,11 +160,34 @@ namespace sequoia::testing
     using structure         = maths::affine_space_tag_t;
   };
 
-  template<maths::convex_space ConvexSpace, maths::basis Basis, class... Ts>
-    requires maths::basis_for<Basis, maths::free_module_type_of_t<ConvexSpace>>
-  struct value_tester<maths::coordinates<ConvexSpace, Basis, Ts...>>
+  template<class Set, class Ring, std::size_t D>
+  struct my_module
   {
-    using coord_type = maths::coordinates<ConvexSpace, Basis, Ts...>;
+    using set_type               = Set;
+    using commutative_ring_type  = Ring;
+    using structure              = maths::free_module_tag_t;
+    using admits_canonical_basis = std::true_type;
+    constexpr static std::size_t rank{D};
+  };
+
+  /*! The action of the free module is total, exactly as for an affine space, but
+      the ring is deliberately not a field: this is the case which only the
+      M-affine concept admits.
+   */
+  template<class Set, class Ring, std::size_t D>
+    requires (!maths::identifies_as_field_v<Ring>)
+  struct my_m_affine_space
+  {
+    using set_type         = Set;
+    using free_module_type = my_module<Set, Ring, D>;
+    using structure        = maths::m_affine_space_tag_t;
+  };
+
+  template<maths::partial_m_torsor Space, maths::basis Basis, class... Ts>
+    requires maths::basis_for<Basis, maths::free_module_type_of_t<Space>>
+  struct value_tester<maths::coordinates<Space, Basis, Ts...>>
+  {
+    using coord_type = maths::coordinates<Space, Basis, Ts...>;
     using displacement_value_type = typename coord_type::displacement_value_type;
     constexpr static std::size_t D{coord_type::dimension};
 

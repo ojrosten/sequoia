@@ -8,6 +8,7 @@
 /*! \file */
 
 #include "PhysicalValueMetaFreeTest.hpp"
+#include "PhysicalValueTestingUtilities.hpp"
 #include "sequoia/Physics/PhysicalValues.hpp"
 
 namespace sequoia::testing
@@ -46,6 +47,13 @@ namespace sequoia::testing
 
   void physical_value_meta_free_test::run_tests()
   {
+    // defines_physical_value_v must answer, not explode, for arguments which
+    // come nowhere near fitting: it exists to be asked about arguments which may
+    // not fit, and every use of it is a negative check. It was previously
+    // constrained on its own parameters, so such a question was a hard error.
+    STATIC_CHECK(!defines_physical_value_v<int, int, int, int, int, int>);
+    STATIC_CHECK(!defines_physical_value_v<mass_space_t, int, int, int, int, int>);
+
     test_type_comparator();
     test_space_properties();
     test_count_and_combine();

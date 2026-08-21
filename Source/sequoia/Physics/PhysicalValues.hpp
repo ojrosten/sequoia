@@ -72,7 +72,7 @@ namespace sequoia::maths
     using rebind_type = physics::unit_defined_right_handed_basis<M, U>;
   };
 
-  template<convex_space... Ts>
+  template<partial_m_torsor... Ts>
   struct to_base_space<physics::composite_space<Ts...>>
   {
     using sorted_tensor_product_t = meta::stable_sort_t<tensor_product<to_base_space_t<Ts>...>,  meta::type_comparator>;
@@ -93,7 +93,7 @@ namespace sequoia::physics
   template<class... Ts>
   struct composite_space;
 
-  template<convex_space... Ts>
+  template<partial_m_torsor... Ts>
     requires (free_module<Ts> ||  ...)
   struct composite_space<Ts...>
   {    
@@ -105,14 +105,14 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{std::ranges::max({dimension_of_v<Ts>...})};
   };
 
-  template<convex_space... Ts>
+  template<partial_m_torsor... Ts>
     requires (!affine_space<Ts> && ...)
   struct composite_space<Ts...>
   {
     using tensor_product_t     = tensor_product<Ts...>;
     using set_type             = reduction<typename tensor_product_t::set_type>;
     using free_module_type     = composite_space<free_module_type_of_t<Ts>...>;
-    using structure            = convex_space_tag_t;
+    using structure            = std::conditional_t<(convex_space<Ts> && ...), convex_space_tag_t, partial_m_torsor_tag_t>;
     using arena_type           = arena_type_of_t<tensor_product<Ts...>>;
     using distinguished_origin = std::bool_constant<(has_distinguished_origin_v<Ts> && ...)>;
     using non_negative_orthant = std::bool_constant<(is_non_negative_orthant_v<Ts> && ...)>;
@@ -120,7 +120,7 @@ namespace sequoia::physics
 
   // Units & Spaces
   template<class... Us>
-    requires (physical_unit<Us> && ...) || (convex_space<Us> && ...)
+    requires (physical_unit<Us> && ...) || (partial_m_torsor<Us> && ...)
   struct reduction<tensor_product<Us...>>
   {
     using type = impl::simplify_t<tensor_product<Us...>>;
@@ -128,7 +128,7 @@ namespace sequoia::physics
  
   template<class... Ts, class U, template<class...> class TT>
     requires (std::same_as<TT<Ts...>, composite_unit <Ts...>> && physical_unit<U>)
-          || (std::same_as<TT<Ts...>, composite_space<Ts...>> &&  convex_space<U>)
+          || (std::same_as<TT<Ts...>, composite_space<Ts...>> &&  partial_m_torsor<U>)
   struct reduction<tensor_product<TT<Ts...>, U>>
   {
     using type = impl::simplify_t<tensor_product<Ts...>, tensor_product<U>>;
@@ -136,7 +136,7 @@ namespace sequoia::physics
 
   template<class T, class... Us, template<class...> class TT>
     requires (std::same_as<TT<Us...>, composite_unit <Us...>> && physical_unit<T>)
-          || (std::same_as<TT<Us...>, composite_space<Us...>> &&  convex_space<T>)
+          || (std::same_as<TT<Us...>, composite_space<Us...>> &&  partial_m_torsor<T>)
   struct reduction<tensor_product<T, TT<Us...>>>
   {
     using type = impl::simplify_t<tensor_product<T>, tensor_product<Us...>>;
@@ -167,13 +167,13 @@ namespace sequoia::physics
     using type = canonical_representation<value_type, R::bounds_v * S::bounds_v>;
   };
 
-  template<convex_space ValueSpace>
+  template<partial_m_torsor ValueSpace>
   inline constexpr bool permissible_value_space_v{
     (!is_dual_v<ValueSpace>) || (has_distinguished_origin_v<ValueSpace> && (dimension_of_v<ValueSpace> == 1))
   };
 
   template<
-    convex_space ValueSpace,
+    partial_m_torsor ValueSpace,
     physical_unit Unit,
     basis_for<free_module_type_of_t<ValueSpace>> Basis,    
     representation_for<ValueSpace> Representation,
@@ -189,27 +189,27 @@ namespace sequoia::physics
 
   struct distinguished_origin {};
 
-  template<convex_space ValueSpace>
+  template<partial_m_torsor ValueSpace>
   struct to_origin_type;
   
-  template<convex_space ValueSpace>
+  template<partial_m_torsor ValueSpace>
   using to_origin_type_t = to_origin_type<ValueSpace>::type;
 
-  template<convex_space ValueSpace>
+  template<partial_m_torsor ValueSpace>
     requires (!has_distinguished_origin_v<ValueSpace>) && (!affine_space<ValueSpace>)
   struct to_origin_type<ValueSpace>
   {
     using type = unit_defined_origin;
   };
 
-  template<convex_space ValueSpace>
+  template<partial_m_torsor ValueSpace>
     requires has_distinguished_origin_v<ValueSpace>
   struct to_origin_type<ValueSpace>
   {
     using type = distinguished_origin;
   };
 
-  template<convex_space ValueSpace>
+  template<partial_m_torsor ValueSpace>
     requires (!has_distinguished_origin_v<ValueSpace> && affine_space<ValueSpace>)
   struct to_origin_type<ValueSpace>
   {
@@ -217,7 +217,7 @@ namespace sequoia::physics
   };
   
   template<
-    convex_space ValueSpace,
+    partial_m_torsor ValueSpace,
     physical_unit Unit,
     basis_for<free_module_type_of_t<ValueSpace>> Basis,
     representation_for<ValueSpace> Representation,
@@ -239,19 +239,19 @@ namespace sequoia::physics
         >
       >;
 
-  template<convex_space T, convex_space U>
+  template<partial_m_torsor T, partial_m_torsor U>
   struct to_displacement_space;
 
-  template<convex_space T, convex_space U>
+  template<partial_m_torsor T, partial_m_torsor U>
   using to_displacement_space_t = to_displacement_space<T, U>::type;
 
-  template<convex_space T>
+  template<partial_m_torsor T>
   struct to_displacement_space<T, T>
   {
     using type = free_module_type_of_t<T>;
   };
 
-  template<convex_space T, convex_space U>
+  template<partial_m_torsor T, partial_m_torsor U>
     requires (!std::is_same_v<T, U>) && have_compatible_base_spaces_v<T, U>
   struct to_displacement_space<T, U>
   {
@@ -303,8 +303,8 @@ namespace sequoia::physics
   };
   
   template<
-    convex_space LHSValueSpace, physical_unit LHSUnit, basis_for<free_module_type_of_t<LHSValueSpace>> LHSBasis, representation_for<LHSValueSpace> LHSRepresentation, class Validator,
-    convex_space RHSValueSpace, physical_unit RHSUnit, basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, representation_for<RHSValueSpace> RHSRepresentation
+    partial_m_torsor LHSValueSpace, physical_unit LHSUnit, basis_for<free_module_type_of_t<LHSValueSpace>> LHSBasis, representation_for<LHSValueSpace> LHSRepresentation, class Validator,
+    partial_m_torsor RHSValueSpace, physical_unit RHSUnit, basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, representation_for<RHSValueSpace> RHSRepresentation
   >
     requires consistent_bases_v<LHSBasis, RHSBasis>
           && has_distinguished_origin_v<LHSValueSpace>
@@ -333,13 +333,13 @@ namespace sequoia::physics
     has_coordinate_transformation_v<From, To>
   };
 
-  template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
+  template<partial_m_torsor C, physical_unit FromUnit, physical_unit ToUnit>
   struct conversion_space
   {
     using type = C;
   };
 
-  template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
+  template<partial_m_torsor C, physical_unit FromUnit, physical_unit ToUnit>
   using conversion_space_t = conversion_space<C, FromUnit, ToUnit>::type;
 
   namespace impl
@@ -404,20 +404,20 @@ namespace sequoia::physics
     return {transform(b.lower), transform(b.upper)};
   }
 
-  template<convex_space ValueSpace, weak_commutative_ring ValueType, physical_unit Unit>
+  template<partial_m_torsor ValueSpace, weak_commutative_ring ValueType, physical_unit Unit>
   struct default_representation;
 
-  template<convex_space ValueSpace, weak_commutative_ring ValueType, physical_unit Unit>
+  template<partial_m_torsor ValueSpace, weak_commutative_ring ValueType, physical_unit Unit>
   using default_representation_t = default_representation<ValueSpace, ValueType, Unit>::type;
 
-  template<convex_space ValueSpace, weak_commutative_ring ValueType, physical_unit Unit>
+  template<partial_m_torsor ValueSpace, weak_commutative_ring ValueType, physical_unit Unit>
     requires free_module<ValueSpace> || affine_space<ValueSpace>
   struct default_representation<ValueSpace, ValueType, Unit>
   {
     using type = canonical_representation<ValueType, no_bounds<to_bounds_value_type_t<ValueType>>>;
   };
   
-  template<convex_space ValueSpace, weak_commutative_ring ValueType, physical_unit Unit>
+  template<partial_m_torsor ValueSpace, weak_commutative_ring ValueType, physical_unit Unit>
     requires (!free_module<ValueSpace> && !affine_space<ValueSpace>)
   struct default_representation<ValueSpace, ValueType, Unit>
   {
@@ -427,7 +427,7 @@ namespace sequoia::physics
   };
 
   template<
-    convex_space ValueSpace,
+    partial_m_torsor ValueSpace,
     physical_unit Unit,
     basis_for<free_module_type_of_t<ValueSpace>> Basis,// = unit_defined_right_handed_basis<free_module_type_of_t<ValueSpace>, Unit>,    
     representation_for<ValueSpace> Representation,//       = default_representation_t<ValueSpace, ValueType, Unit>,
@@ -456,20 +456,20 @@ namespace sequoia::physics
 
     constexpr static bool has_identity_validator{coordinates_type::has_identity_validator};
 
-    template<convex_space RHSValueSpace, class RHSBasis>
+    template<partial_m_torsor RHSValueSpace, class RHSBasis>
     constexpr static bool is_composable_with{
          consistent_bases_v<basis_type, RHSBasis>
       && (is_non_negative_orthant_v<space_type>    || vector_space<space_type>)
       && (is_non_negative_orthant_v<RHSValueSpace> || vector_space<RHSValueSpace>)
     };
 
-    template<convex_space RHSValueSpace, class RHSBasis>
+    template<partial_m_torsor RHSValueSpace, class RHSBasis>
     constexpr static bool is_multipicable_with{
          is_composable_with<RHSValueSpace, RHSBasis>
       && ((D == 1) || (free_module_type_of_t<RHSValueSpace>::dimension == 1))
     };
 
-    template<convex_space RHSValueSpace, class RHSRepresentation, class RHSBasis>
+    template<partial_m_torsor RHSValueSpace, class RHSRepresentation, class RHSBasis>
     constexpr static bool is_divisible_with{
          weak_field<displacement_value_type>
       && weak_field<typename RHSRepresentation::value_type>
@@ -479,7 +479,7 @@ namespace sequoia::physics
 
     using coordinates_type::coordinates_type;
 
-    template<convex_space OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
+    template<partial_m_torsor OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
       requires (!std::same_as<space_type, OtherValueSpace>)
            && has_distinguished_origin_v<space_type>
            && have_compatible_base_spaces_v<space_type, OtherValueSpace>
@@ -516,7 +516,7 @@ namespace sequoia::physics
     }
 
     template<
-      convex_space RHSValueSpace,
+      partial_m_torsor RHSValueSpace,
       physical_unit RHSUnit,
       basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis,      
       representation_for<RHSValueSpace> RHSRepresentation,
@@ -539,7 +539,7 @@ namespace sequoia::physics
     }
 
     template<
-      convex_space RHSValueSpace,
+      partial_m_torsor RHSValueSpace,
       physical_unit RHSUnit,
       basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis,
       class RHSOrigin,
@@ -586,7 +586,7 @@ namespace sequoia::physics
 
     template<
       physical_unit OtherUnit,
-      convex_space OtherSpace                                       = conversion_space_t<ValueSpace, Unit, OtherUnit>,
+      partial_m_torsor OtherSpace                                       = conversion_space_t<ValueSpace, Unit, OtherUnit>,
       basis_for<free_module_type_of_t<OtherSpace>> OtherBasis       = unit_defined_right_handed_basis<free_module_type_of_t<OtherSpace>, OtherUnit>,      
       representation_for<OtherSpace> OtherRepresentation            = default_representation_t<OtherSpace, value_type, OtherUnit>,
       class OtherOrigin                                             = to_origin_type_t<OtherSpace>,
@@ -776,7 +776,7 @@ namespace sequoia::physics
     using non_negative_orthant = std::true_type;
   };
 
-  template<convex_space C>
+  template<partial_m_torsor C>
     requires has_distinguished_origin_v<C>
   struct relaxed_space : C
   {
@@ -1058,7 +1058,7 @@ namespace sequoia::physics
     : std::bool_constant<Displacement == 0>
   {}; 
   
-  template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
+  template<partial_m_torsor C, physical_unit FromUnit, physical_unit ToUnit>
     requires (!has_distinguished_origin_v<C>)
           || (!has_identity_translation_v<root_transform_t<FromUnit>> && !has_identity_translation_v<root_transform_t<ToUnit>>)
   struct conversion_space<C, FromUnit, ToUnit>
@@ -1066,7 +1066,7 @@ namespace sequoia::physics
     using type = C;
   };
 
-  template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
+  template<partial_m_torsor C, physical_unit FromUnit, physical_unit ToUnit>
     requires has_distinguished_origin_v<C>
   && (has_identity_translation_v<root_transform_t<FromUnit>> && !has_identity_translation_v<root_transform_t<ToUnit>>)
   struct conversion_space<C, FromUnit, ToUnit>
@@ -1074,7 +1074,7 @@ namespace sequoia::physics
     using type = relaxed_space<C>;
   };
 
-  template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
+  template<partial_m_torsor C, physical_unit FromUnit, physical_unit ToUnit>
     requires has_distinguished_origin_v<C> && has_identity_translation_v<root_transform_t<ToUnit>>
   struct conversion_space<relaxed_space<C>, FromUnit, ToUnit>
   {
@@ -1181,16 +1181,16 @@ namespace sequoia::physics
       inline constexpr kilotonne_t kilotonne{};
     }
 
-    template<convex_space Space, physical_unit Unit>
+    template<partial_m_torsor Space, physical_unit Unit>
     struct default_basis
     {
       using type = unit_defined_right_handed_basis<free_module_type_of_t<Space>, Unit>;
     };
 
-    template<convex_space Space, physical_unit Unit>
+    template<partial_m_torsor Space, physical_unit Unit>
     using default_basis_t = default_basis<Space, Unit>::type;
 
-    template<convex_space Space, physical_unit Unit, weak_commutative_ring Rep, class Validator>
+    template<partial_m_torsor Space, physical_unit Unit, weak_commutative_ring Rep, class Validator>
     using basic_quantity
       = physical_value<
           Space,
@@ -1296,7 +1296,7 @@ namespace sequoia::physics
     using temperature_farenheight = basic_quantity<temperature_space<Arena>, units::farenheight_t, T, Validator>;
   }
 
-  template<convex_space C, physical_unit FromUnit, physical_unit ToUnit>
+  template<partial_m_torsor C, physical_unit FromUnit, physical_unit ToUnit>
   struct conversion_space<associated_displacement_space<C>, FromUnit, ToUnit>
   {
     using type = associated_displacement_space<conversion_space_t<C, FromUnit, ToUnit>>;
@@ -1424,7 +1424,7 @@ namespace sequoia::physics
       >;
 
   template<
-    convex_space ValueSpace,
+    partial_m_torsor ValueSpace,
     physical_unit Unit,
     weak_commutative_ring ValueType,
     class Validator = throwing_validator
@@ -1487,13 +1487,13 @@ namespace sequoia::maths
   using namespace physics;
 
   template<
-    convex_space ValueSpaceFrom,
+    partial_m_torsor ValueSpaceFrom,
     physical_unit UnitFrom,
     basis_for<free_module_type_of_t<ValueSpaceFrom>> BasisFrom,    
     representation_for<ValueSpaceFrom> RepresentationFrom,  
     class OriginFrom,
     validator_for<ValueSpaceFrom, RepresentationFrom> ValidatorFrom,
-    convex_space ValueSpaceTo,
+    partial_m_torsor ValueSpaceTo,
     basis_for<free_module_type_of_t<ValueSpaceTo>> BasisTo,
     physical_unit UnitTo,    
     representation_for<ValueSpaceTo> RepresentationTo,
@@ -1539,7 +1539,7 @@ namespace sequoia::maths
 }
 
 template<
-  sequoia::maths::convex_space ValueSpace,
+  sequoia::maths::partial_m_torsor ValueSpace,
   sequoia::physics::physical_unit Unit,
   sequoia::maths::basis_for<sequoia::maths::free_module_type_of_t<ValueSpace>> Basis,  
   sequoia::maths::representation_for<ValueSpace> Representation,

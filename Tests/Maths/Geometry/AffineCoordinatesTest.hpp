@@ -28,5 +28,9 @@ namespace sequoia::testing
     // TO DO rep_for<Field> Rep
       requires maths::identifies_as_field_v<Field>
     void test_affine();
+
+    template<class Set, class Ring, std::size_t D, class Rep>
+      requires (!maths::identifies_as_field_v<Ring>)
+    void test_m_affine();
   };
 }

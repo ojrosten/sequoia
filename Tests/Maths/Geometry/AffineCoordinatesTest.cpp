@@ -15,13 +15,13 @@ namespace sequoia::testing
 
   namespace
   {
-    template<affine_space A>
+    template<m_affine_space A>
     struct alice
     {
       using space_type = A;
     };
 
-    template<affine_space A>
+    template<m_affine_space A>
     struct bob
     {
       using space_type = A;
@@ -75,6 +75,9 @@ namespace sequoia::testing
     test_affine<sets::R<1>, commutative_rings::reals<1> , 1, double>();
     test_affine<sets::C<1>, commutative_rings::complexes, 1, std::complex<float>>();
     test_affine<sets::C<1>, commutative_rings::reals<1> , 2, float>();
+
+    test_m_affine<sets::Z<1>, commutative_rings::integers<1>, 1, int>();
+    test_m_affine<sets::Z<2>, commutative_rings::integers<2>, 2, int>();
   }
 
   template<class Set, class Field, std::size_t D, class Rep>
@@ -108,5 +111,51 @@ namespace sequoia::testing
     affine2_t bob_coords{coordinate_transformation<affine_t, affine2_t>{delta_t{Rep{-1.0}}}(affine_t{})};
 
     check(equality, "", bob_coords, affine2_t{Rep{-1.0}});
+  }
+
+  /*! An M-affine space is an affine space over a free module rather than a vector
+      space. The action of the module remains total, so the arithmetic available is
+      exactly that of the affine case; what is lost is division, since the ring is
+      not a field.
+   */
+  template<class Set, class Ring, std::size_t D, class Rep>
+    requires (!maths::identifies_as_field_v<Ring>)
+  void affine_coordinates_test::test_m_affine()
+  {
+    using space_t    = my_m_affine_space<Set, Ring, D>;
+    using module_t   = free_module_type_of_t<space_t>;
+    using basis_t    = general_basis<module_t>;
+    using rep_t      = canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>;
+    using m_affine_t = m_affine_coordinates<space_t, basis_t, rep_t, alice<space_t>, identity_validator>;
+    using delta_t    = m_affine_t::displacement_coordinates_type;
+    using value_t    = Rep;
+
+    STATIC_CHECK(m_affine_space<space_t>);
+    STATIC_CHECK(!affine_space<space_t>);
+    STATIC_CHECK(!free_module<space_t>);
+    STATIC_CHECK(free_module<module_t>);
+    STATIC_CHECK(!vector_space<module_t>);
+    STATIC_CHECK(basis_for<basis_t, module_t>);
+    STATIC_CHECK(not defines_rank_v<space_t>);
+    STATIC_CHECK(dimension_of_v<space_t> == D);
+
+    // The affine arithmetic, unchanged by the weakening of the field to a ring.
+    STATIC_CHECK(!can_add<m_affine_t, m_affine_t>);
+    STATIC_CHECK(can_add<m_affine_t, delta_t>);
+    STATIC_CHECK(can_subtract<m_affine_t, m_affine_t>);
+    STATIC_CHECK(can_subtract<m_affine_t, delta_t>);
+    STATIC_CHECK(has_unary_plus<m_affine_t>);
+    STATIC_CHECK(!has_unary_minus<m_affine_t>);
+    STATIC_CHECK(!can_multiply<m_affine_t, value_t>);
+    STATIC_CHECK(!can_divide<m_affine_t, value_t>);
+
+    // Displacements form the module, so they scale by ring elements but, unlike
+    // the vector space case, cannot be divided by them.
+    STATIC_CHECK(can_multiply<delta_t, value_t>);
+    STATIC_CHECK(!can_divide<delta_t, value_t>);
+    STATIC_CHECK(!can_divide<delta_t, delta_t>);
+    STATIC_CHECK(has_unary_minus<delta_t>);
+
+    coordinates_operations<m_affine_t>{*this}.execute();
   }
 }

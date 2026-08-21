@@ -22,5 +22,7 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
+  private:
+    void test_spaces_dag();
   };
 }

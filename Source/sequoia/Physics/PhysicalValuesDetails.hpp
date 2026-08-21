@@ -374,7 +374,7 @@ namespace sequoia::physics::impl
     using type = unpack_t<meta::filter_by_trait_t<tensor_product<type_counter<Ts, Is>...>, not_potentially_prunable>>;
   };
 
-  template<convex_space... Ts, int... Is>
+  template<partial_m_torsor... Ts, int... Is>
   struct reduce<tensor_product<type_counter<Ts, Is>...>>
   {
     // TO DO; potential problem here if reducible modules are floating-point but everything else is integral
@@ -429,7 +429,7 @@ namespace sequoia::physics::impl
   template<class T>
   struct to_composite_space;
 
-  template<convex_space... Ts>
+  template<partial_m_torsor... Ts>
   struct to_composite_space<reduction<tensor_product<Ts...>>>
   {
     using type = composite_space<Ts...>;
@@ -459,7 +459,7 @@ namespace sequoia::physics::impl
 
 namespace sequoia::maths
 {
-  template<convex_space... Ts>
+  template<partial_m_torsor... Ts>
   struct dual_of<physics::composite_space<Ts...>>
   {
     using type = physics::composite_space<dual_of_t<Ts>...>;

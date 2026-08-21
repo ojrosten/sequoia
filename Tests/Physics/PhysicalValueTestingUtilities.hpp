@@ -15,7 +15,7 @@
 namespace sequoia::testing
 {
   template<
-    maths::convex_space PhysicalValueSpace,
+    maths::partial_m_torsor PhysicalValueSpace,
     physics::physical_unit Unit,
     maths::basis_for<maths::free_module_type_of_t<PhysicalValueSpace>> Basis,  
     maths::representation_for<PhysicalValueSpace> Representation,
@@ -56,10 +56,19 @@ namespace sequoia::testing
     }
   };
 
+  /*! Answers whether physics::physical_value can be formed from these arguments.
+
+      Deliberately unconstrained. The whole purpose of the predicate is to be
+      asked about arguments which may not fit, so constraining its own parameters
+      defeats it: a negative check on arguments failing those constraints is a
+      hard error rather than the `false` the caller is asking for. In particular
+      `maths::basis_for<maths::free_module_type_of_t<ValueSpace>> Basis` is
+      ill-formed for any ValueSpace which is not a space at all.
+   */
   template<
-    maths::convex_space ValueSpace,
+    class ValueSpace,
     class Unit,
-    maths::basis_for<maths::free_module_type_of_t<ValueSpace>> Basis,    
+    class Basis,
     class Representation,
     class Origin,
     class Validator

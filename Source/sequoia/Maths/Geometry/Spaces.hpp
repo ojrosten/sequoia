@@ -419,6 +419,7 @@
 #include <numbers>
 #include <ranges>
 #include <span>
+#include <type_traits>
 
 namespace sequoia::maths
 {
@@ -447,13 +448,22 @@ namespace sequoia::maths
 
   /** @defgroup CommutativeRingTags Subgroup commutative ring tag hierarchy
       @ingroup MathematicalStructure
-      @brief Hierarchy for the purpose of self-identification as a commutative ring.
+      @brief Hierarchy for the purpose of self-identification as a commutative ring,
+      or a refinement thereof.
+
+      This realizes the diamond drawn in \ref MathematicalStructure "Structure":
+      being ordered and being a field are independent refinements of a commutative
+      ring, and an ordered field is both.
 
       @{
    */
   struct commutative_ring_tag_t {};
 
+  struct ordered_ring_tag_t : virtual commutative_ring_tag_t {};
+
   struct field_tag_t : virtual commutative_ring_tag_t {};
+
+  struct ordered_field_tag_t : virtual ordered_ring_tag_t, virtual field_tag_t {};
 
   /** @} */
 
@@ -527,10 +537,26 @@ namespace sequoia::maths
   };
 
   template<class T>
+  inline constexpr bool identifies_as_ordered_ring_v{
+        has_structure_type_v<T>
+    && requires {
+         requires std::derived_from<typename T::structure, ordered_ring_tag_t>;
+       }
+  };
+
+  template<class T>
   inline constexpr bool identifies_as_field_v{
         has_structure_type_v<T>
     && requires {
          requires std::derived_from<typename T::structure, field_tag_t>;
+       }
+  };
+
+  template<class T>
+  inline constexpr bool identifies_as_ordered_field_v{
+        has_structure_type_v<T>
+    && requires {
+         requires std::derived_from<typename T::structure, ordered_field_tag_t>;
        }
   };
 
@@ -546,8 +572,22 @@ namespace sequoia::maths
   template<class T>
   concept commutative_ring = has_set_type_v<T> && identifies_as_commutative_ring_v<T>;
 
+  /** @brief A commutative ring equipped with a total order compatible with its
+             operations.
+
+      Orderability cannot be deduced from the ring's other properties and so, like
+      the structures themselves, is a matter of self-identification. The integers
+      are an ordered ring; the complex numbers admit no order compatible with their
+      arithmetic and so are a field which is not an ordered field.
+   */
+  template<class T>
+  concept ordered_ring = commutative_ring<T> && identifies_as_ordered_ring_v<T>;
+
   template<class T>
   concept field = commutative_ring<T> && identifies_as_field_v<T>;
+
+  template<class T>
+  concept ordered_field = field<T> && ordered_ring<T> && identifies_as_ordered_field_v<T>;
 
   /** @} */
 
@@ -562,9 +602,11 @@ namespace sequoia::maths
 
   struct convex_space_tag_t : virtual partial_m_torsor_tag_t {};
 
-  struct free_module_tag_t : virtual partial_m_torsor_tag_t {};
+  struct m_affine_space_tag_t : virtual partial_m_torsor_tag_t {};
 
-  struct affine_space_tag_t : virtual convex_space_tag_t {};
+  struct free_module_tag_t : virtual m_affine_space_tag_t {};
+
+  struct affine_space_tag_t : virtual m_affine_space_tag_t {};
 
   struct vector_space_tag_t : virtual affine_space_tag_t, virtual free_module_tag_t {};
 
@@ -590,6 +632,14 @@ namespace sequoia::maths
        has_structure_type_v<T>
     && requires {
          requires std::derived_from<typename T::structure, convex_space_tag_t>;
+       }
+  };
+
+  template<class T>
+  inline constexpr bool identifies_as_m_affine_space_v{
+       has_structure_type_v<T>
+    && requires {
+         requires std::derived_from<typename T::structure, m_affine_space_tag_t>;
        }
   };
 
@@ -840,24 +890,26 @@ namespace sequoia::maths
   /** @} */
 
   /** @ingroup Spaces
-      @brief concept for convex spaces
+      @brief concept for partial M-torsors, the most primitive of the spaces
 
-      A convex space may be a free module. Otherwise, it comprises a set and a
-      free module (which may be a vector space), and must identify as a convex
-      space.
+      A partial M-torsor may be a free module. Otherwise, it comprises a set and
+      a free module (which may be a vector space), and must identify as a partial
+      M-torsor or a refinement thereof.
    */
   template<class T>
-  concept convex_space
-    =  free_module<T> || (has_set_type_v<T> && identifies_as_convex_space_v<T> && defines_free_module_v<T>);
+  concept partial_m_torsor
+    =  free_module<T> || (has_set_type_v<T> && identifies_as_partial_m_torsor_v<T> && defines_free_module_v<T>);
 
   /** @ingroup Spaces
-      @brief concept for affine spaces
+      @brief concept for M-affine spaces, being affine spaces over a free module
 
-      A vector space is an affine space over itself; beyond that, according to our
-      definitions, an affine space is a refinement of a convex space.
+      Whereas a partial M-torsor admits only a partial action of its free module,
+      for an M-affine space the action is total: any displacement may be applied
+      to any point and any pair of points is separated by a displacement. A free
+      module is an M-affine space over itself.
    */
   template<class T>
-  concept affine_space = vector_space<T> || (convex_space<T> && identifies_as_affine_space_v<T>);
+  concept m_affine_space = free_module<T> || (partial_m_torsor<T> && identifies_as_m_affine_space_v<T>);
 
   /** @defgroup FreeModuleTypeOf Subgroup Free module type of
       @ingroup PropertiesOfSpaces
@@ -874,10 +926,10 @@ namespace sequoia::maths
   template<class T>
   using free_module_type_of_t = free_module_type_of<T>::type;
 
-  template<free_module ConvexSpace>
-  struct free_module_type_of<ConvexSpace>
+  template<free_module Space>
+  struct free_module_type_of<Space>
   {
-    using type = ConvexSpace;
+    using type = Space;
   };
 
   template<class T>
@@ -896,16 +948,55 @@ namespace sequoia::maths
 
       @{
    */
-  template<convex_space ConvexSpace>
+  template<partial_m_torsor Space>
   struct commutative_ring_type_of
   {
-    using type = nested_commutative_ring_type_t<free_module_type_of_t<ConvexSpace>>;
+    using type = nested_commutative_ring_type_t<free_module_type_of_t<Space>>;
   };
 
-  template<convex_space ConvexSpace>
-  using commutative_ring_type_of_t = commutative_ring_type_of<ConvexSpace>::type;
+  template<partial_m_torsor Space>
+  using commutative_ring_type_of_t = commutative_ring_type_of<Space>::type;
 
   /** @} */
+
+  /** @ingroup Spaces
+      @brief concept for affine spaces, being the M-affine spaces over a field
+
+      A vector space is an affine space over itself. Otherwise, an affine space
+      is an M-affine space which identifies as such and whose commutative ring is
+      a field; an M-affine space over a ring which is not a field is not affine.
+
+      Note that the requirement on the ring is why this concept, unlike its
+      neighbours, is defined here rather than alongside them: it needs
+      commutative_ring_type_of_t.
+   */
+  template<class T>
+  concept affine_space =    vector_space<T>
+                         || (   m_affine_space<T>
+                             && identifies_as_affine_space_v<T>
+                             && field<commutative_ring_type_of_t<T>>);
+
+  /** @ingroup Spaces
+      @brief concept for convex spaces
+
+      Convexity is closure under linear interpolation between pairs of points.
+      Two things are required, and neither implies the other.
+
+      First, the commutative ring must be an ordered field, so that the
+      interpolation \f$ r = (1 - t)p + t q \f$ both makes sense and yields
+      points properly between \f$ p \f$ and \f$ q \f$; see the introduction
+      for why anything weaker will not do.
+
+      Secondly, the space must be closed under that operation, which no amount
+      of reflection on the ring can establish: a partial M-torsor over the reals
+      is free to comprise, say, two disjoint intervals. Hence a space must
+      identify as convex - unless it is affine, for which the action of the free
+      module is total and closure is therefore automatic.
+   */
+  template<class T>
+  concept convex_space =    partial_m_torsor<T>
+                         && (affine_space<T> || identifies_as_convex_space_v<T>)
+                         && ordered_field<commutative_ring_type_of_t<T>>;
 
 
   /** @ingroup PropertiesOfSpaces
@@ -914,14 +1005,14 @@ namespace sequoia::maths
       The program is ill-formed if the space defines its own dimension (rank) that
       is inconsistent with the free module's dimension.
    */
-  template<convex_space ConvexSpace>
+  template<partial_m_torsor Space>
   inline constexpr std::size_t dimension_of_v{
     [](){
-      constexpr std::size_t rank{rank_of_v<free_module_type_of_t<ConvexSpace>>};
+      constexpr std::size_t rank{rank_of_v<free_module_type_of_t<Space>>};
 
-      if constexpr(defines_rank_v<ConvexSpace>)
+      if constexpr(defines_rank_v<Space>)
       {
-        static_assert(rank_of_v<ConvexSpace> == rank);
+        static_assert(rank_of_v<Space> == rank);
       }
 
       return rank;
@@ -1036,7 +1127,7 @@ namespace sequoia::maths
   // two vector spaces
   template<
     free_module M,
-    class IndexSet=std::index_sequence<M::dimension>,
+    class IndexSet=std::index_sequence<rank_of_v<M>>,
     class Frame=identity_isomorphism,
     class BasisTransform=identity_isomorphism
   >
@@ -1386,11 +1477,11 @@ namespace sequoia::maths
   template<auto Bounds>
   concept bounds_value = bounds<decltype(Bounds)> && (Bounds.lower < Bounds.upper);
 
-  template<class Bounds, class ConvexSpace>
+  template<class Bounds, class Space>
   concept bounds_for
-    =      bounds<Bounds> && convex_space<ConvexSpace>
-        && (   ((dimension_of_v<ConvexSpace> == 1) && checks_single_val_against_bounds_v<Bounds>)
-            || ((dimension_of_v<ConvexSpace>  > 1) && checks_array_against_bounds_v<Bounds, dimension_of_v<ConvexSpace>>));
+    =      bounds<Bounds> && partial_m_torsor<Space>
+        && (   ((dimension_of_v<Space> == 1) && checks_single_val_against_bounds_v<Bounds>)
+            || ((dimension_of_v<Space>  > 1) && checks_array_against_bounds_v<Bounds, dimension_of_v<Space>>));
 
   template<bounds Bounds>
   struct bounds_value_type
@@ -1560,20 +1651,20 @@ namespace sequoia::maths
    */
 
   // TO DO free mod value_type as well
-  template<class R, class ConvexSpace>
+  template<class R, class Space>
   inline constexpr bool representation_for_single_value{
-        (dimension_of_v<ConvexSpace> == 1)
+        (dimension_of_v<Space> == 1)
      && requires(R& r, const typename R::value_type& val) {
           { r.to_underlying(val)   } -> std::convertible_to<decltype(val)>;
           { r.from_underlying(val) } -> std::convertible_to<decltype(val)>;
         }
   };
 
-  template<class R, class ConvexSpace>
+  template<class R, class Space>
   inline constexpr bool representation_for_span{
-     requires(R& r, std::span<const typename R::value_type, dimension_of_v<ConvexSpace>> vals) {
-       { r.to_underlying(vals)   } -> std::convertible_to<std::array<typename R::value_type, dimension_of_v<ConvexSpace>>>;
-       { r.from_underlying(vals) } -> std::convertible_to<std::array<typename R::value_type, dimension_of_v<ConvexSpace>>>;
+     requires(R& r, std::span<const typename R::value_type, dimension_of_v<Space>> vals) {
+       { r.to_underlying(vals)   } -> std::convertible_to<std::array<typename R::value_type, dimension_of_v<Space>>>;
+       { r.from_underlying(vals) } -> std::convertible_to<std::array<typename R::value_type, dimension_of_v<Space>>>;
      }
   };
 
@@ -1613,15 +1704,15 @@ namespace sequoia::maths
                         && has_free_module_representation_v<R>
                         && (has_coordinates_type_v<R> || has_bounds_v<R>);
 
-  template<class R, class ConvexSpace>
+  template<class R, class Space>
   concept representation_for
-    =    convex_space<ConvexSpace>
+    =    partial_m_torsor<Space>
       && representation<R>
     // TO DO not this, since the set could be anything and the rep applies to the coordintes
     // but maybe something along these lines
-    // && weak_representation_for<value_type_of_t<R>, set_type_of_t<ConvexSpace>>
-    // TO DO: this seems to massively slow down compilation  && bounds_for<decltype(R::bounds_v), ConvexSpace>
-      && (representation_for_single_value<R, ConvexSpace> || representation_for_span<R, ConvexSpace>);
+    // && weak_representation_for<value_type_of_t<R>, set_type_of_t<Space>>
+    // TO DO: this seems to massively slow down compilation  && bounds_for<decltype(R::bounds_v), Space>
+      && (representation_for_single_value<R, Space> || representation_for_span<R, Space>);
 
   template<weak_commutative_ring T>
   struct free_module_representation_value_type
@@ -1683,65 +1774,65 @@ namespace sequoia::maths
     }
   };
 
-  template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
+  template<partial_m_torsor Space, representation_for<Space> R>
   inline constexpr bool defines_scalar_multiplication_for_v{
-    requires(const R& r, std::span<const value_type_of_t<R>, dimension_of_v<ConvexSpace>> vals, value_type_of_t<R> s) {
-      { r.mul(vals, s) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of_v<ConvexSpace>>>;
+    requires(const R& r, std::span<const value_type_of_t<R>, dimension_of_v<Space>> vals, value_type_of_t<R> s) {
+      { r.mul(vals, s) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of_v<Space>>>;
     }
   };
 
-  template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
+  template<partial_m_torsor Space, representation_for<Space> R>
   inline constexpr bool defines_scalar_multiplication_for_single_value_v{
-       (dimension_of_v<ConvexSpace> == 1)
+       (dimension_of_v<Space> == 1)
        && requires(const R& r, value_type_of_t<R> val, value_type_of_t<R> s) {
          { r.mul(val, s) } -> std::convertible_to<value_type_of_t<R>>;
        }
   };
 
-  template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
+  template<partial_m_torsor Space, representation_for<Space> R>
   inline constexpr bool defines_scalar_division_for_v{
-    requires(const R& r, std::span<const value_type_of_t<R>, dimension_of_v<ConvexSpace>> vals, value_type_of_t<R> s) {
-      { r.div(vals, s) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of_v<ConvexSpace>>>;
+    requires(const R& r, std::span<const value_type_of_t<R>, dimension_of_v<Space>> vals, value_type_of_t<R> s) {
+      { r.div(vals, s) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of_v<Space>>>;
     }
   };
 
-  template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
+  template<partial_m_torsor Space, representation_for<Space> R>
   inline constexpr bool defines_scalar_division_for_single_value_v{
-       (dimension_of_v<ConvexSpace> == 1)
+       (dimension_of_v<Space> == 1)
     && requires(const R& r, value_type_of_t<R> val, value_type_of_t<R> s) {
          { r.div(val, s) } -> std::convertible_to<value_type_of_t<R>>;
        }
   };
 
-  template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
+  template<partial_m_torsor Space, representation_for<Space> R>
   inline constexpr bool defines_addition_for_v{
     requires(const R& r,
-             std::span<const value_type_of_t<R>, dimension_of_v<ConvexSpace>> lhs,
-             std::span<const value_type_of_t<R>, dimension_of_v<ConvexSpace>> rhs) {
-      { r.add(lhs, rhs) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of_v<ConvexSpace>>>;
+             std::span<const value_type_of_t<R>, dimension_of_v<Space>> lhs,
+             std::span<const value_type_of_t<R>, dimension_of_v<Space>> rhs) {
+      { r.add(lhs, rhs) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of_v<Space>>>;
     }
   };
 
-  template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
+  template<partial_m_torsor Space, representation_for<Space> R>
   inline constexpr bool defines_addition_for_single_value_v{
-    (dimension_of_v<ConvexSpace> == 1)
+    (dimension_of_v<Space> == 1)
     && requires(const R& r, value_type_of_t<R> lhs, value_type_of_t<R> rhs) {
         { r.add(lhs, rhs) } -> std::convertible_to<value_type_of_t<R>>;
       }
   };
 
-  template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
+  template<partial_m_torsor Space, representation_for<Space> R>
   inline constexpr bool defines_subtraction_for_v{
     requires(const R& r,
-             std::span<const value_type_of_t<R>, dimension_of_v<ConvexSpace>> lhs,
-             std::span<const value_type_of_t<R>, dimension_of_v<ConvexSpace>> rhs) {
-      { r.sub(lhs, rhs) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of_v<ConvexSpace>>>;
+             std::span<const value_type_of_t<R>, dimension_of_v<Space>> lhs,
+             std::span<const value_type_of_t<R>, dimension_of_v<Space>> rhs) {
+      { r.sub(lhs, rhs) } -> std::convertible_to<std::array<value_type_of_t<R>, dimension_of_v<Space>>>;
     }
   };
 
-  template<convex_space ConvexSpace, representation_for<ConvexSpace> R>
+  template<partial_m_torsor Space, representation_for<Space> R>
   inline constexpr bool defines_subtraction_for_single_value_v{
-       (dimension_of_v<ConvexSpace> == 1)
+       (dimension_of_v<Space> == 1)
     && requires(const R& r, value_type_of_t<R> lhs, value_type_of_t<R> rhs) {
          { r.sub(lhs, rhs) } -> std::convertible_to<value_type_of_t<R>>;
        }
@@ -1775,9 +1866,9 @@ namespace sequoia::maths
       The validator must expose an operator() that consumes a single value of
       space_value_type, and its return type must be convertible to space_value_type.
    */
-  template<class V, convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
+  template<class V, partial_m_torsor Space, representation_for<Space> Representation>
   inline constexpr bool validator_for_single_value{
-       (dimension_of_v<ConvexSpace> == 1)
+       (dimension_of_v<Space> == 1)
        // TO DO: also free module val type? Also define value_type_of
        && requires(V& v, const typename Representation::value_type& val) { { v(Representation::bounds_v, val) } -> std::convertible_to<decltype(val)>; }
   };
@@ -1790,9 +1881,9 @@ namespace sequoia::maths
       an operator() that consumes a single value of type A and its return type must be
       convertible to A.
    */
-  template<class V, convex_space ConvexSpace, representation_for<ConvexSpace> Representation>
+  template<class V, partial_m_torsor Space, representation_for<Space> Representation>
   inline constexpr bool validator_for_array{
-    requires (V& v, const std::array<typename Representation::value_type, dimension_of_v<ConvexSpace>>& values) {
+    requires (V& v, const std::array<typename Representation::value_type, dimension_of_v<Space>>& values) {
       { v(Representation::bounds_v, values) } -> std::convertible_to<decltype(values)>;
     }
   };
@@ -1800,15 +1891,15 @@ namespace sequoia::maths
   /** @ingroup Validators
       @brief concept to check if a validator is compatible with a convex space.
    */
-  template<class V, class ConvexSpace, class Representation>
+  template<class V, class Space, class Representation>
   concept validator_for =
-       convex_space<ConvexSpace>
-    && representation_for<Representation, ConvexSpace>
+       partial_m_torsor<Space>
+    && representation_for<Representation, Space>
     && std::default_initializable<V>
     && std::constructible_from<V, V>
     && (    (   has_coordinates_type_v<Representation>) // TO DO 
          || (  !has_coordinates_type_v<Representation>
-             && (validator_for_single_value<V, ConvexSpace, Representation> || validator_for_array<V, ConvexSpace, Representation>)));
+             && (validator_for_single_value<V, Space, Representation> || validator_for_array<V, Space, Representation>)));
 
   /** @ingroup Validators
       @brief Trait for validators that behave like the identity.
@@ -1910,17 +2001,17 @@ namespace sequoia::maths
       @brief Utilites for extracting properties of convex spaces
    */
 
-  template<convex_space C>
+  template<partial_m_torsor C>
   struct is_non_negative_orthant : std::false_type
   {};
 
-  template<convex_space C>
+  template<partial_m_torsor C>
   using is_non_negative_orthant_t = is_non_negative_orthant<C>::type;
 
-  template<convex_space C>
+  template<partial_m_torsor C>
   inline constexpr bool is_non_negative_orthant_v{is_non_negative_orthant<C>::value};
 
-  template<convex_space Space>
+  template<partial_m_torsor Space>
   inline constexpr bool identifies_as_non_negative_orthant_v{
     requires {
       typename Space::non_negative_orthant;
@@ -1928,37 +2019,37 @@ namespace sequoia::maths
     }
   };
 
-  template<convex_space C>
+  template<partial_m_torsor C>
       requires identifies_as_non_negative_orthant_v<C>
   struct is_non_negative_orthant<C> : std::true_type
   {
     static_assert(!affine_space<C>);
   };  
 
-  template<convex_space Space>
+  template<partial_m_torsor Space>
   inline constexpr bool has_distinguished_origin_type_v{
     requires {
       typename Space::distinguished_origin;
     }
   };
   
-  template<convex_space Space>
+  template<partial_m_torsor Space>
   struct has_distinguished_origin : std::false_type
   {};
   
-  template<convex_space Space>
+  template<partial_m_torsor Space>
   using has_distinguished_origin_t = has_distinguished_origin<Space>::type;
 
-  template<convex_space Space>
+  template<partial_m_torsor Space>
   inline constexpr bool has_distinguished_origin_v{has_distinguished_origin<Space>::value};
 
-  template<convex_space Space>
+  template<partial_m_torsor Space>
     requires has_distinguished_origin_type_v<Space> && std::convertible_to<typename Space::distinguished_origin, std::true_type>
   struct has_distinguished_origin<Space> : std::true_type
   {
   };
 
-  template<convex_space Space>
+  template<partial_m_torsor Space>
     requires (!has_distinguished_origin_type_v<Space>) && is_non_negative_orthant_v<Space>
   struct has_distinguished_origin<Space> : std::true_type
   {
@@ -1988,7 +2079,7 @@ namespace sequoia::maths
     constexpr static std::size_t dimension{(Ts::dimension * ...)};
   };
 
-  template<convex_space... Ts>
+  template<partial_m_torsor... Ts>
     requires (sizeof...(Ts) >= 1)
   && (has_distinguished_origin_v<Ts> && ...)
   // TO DO: distinguished origin
@@ -1997,7 +2088,7 @@ namespace sequoia::maths
   {
     using set_type         = tensor_product<typename Ts::set_type...>;
     using free_module_type = tensor_product<free_module_type_of_t<Ts>...>;
-    using structure        = convex_space_tag_t;
+    using structure        = std::conditional_t<(convex_space<Ts> && ...), convex_space_tag_t, partial_m_torsor_tag_t>;
   };
 
   template<class T>
@@ -2070,11 +2161,14 @@ namespace sequoia::maths
     /** @ingroup Sets
         @brief Class template for giving a name to convex functionals.
 
-        It is tempting to constrain the class To to be a convex space. However,
-        without additional work, rings and fields do not satisfy the convex_space
+        It is tempting to constrain the class To to be a partial M-torsor. However,
+        without additional work, rings and fields do not satisfy the partial_m_torsor
         concept as introduced, above.
+
+        TO DO: now that the domain is a partial M-torsor rather than a convex
+        space, the name of this template overstates what it holds.
      */
-    template<convex_space From, class To>
+    template<partial_m_torsor From, class To>
     struct convex_functionals
     {
     };
@@ -2099,15 +2193,15 @@ namespace sequoia::maths
   struct dual;
 
   /** @ingroup DualSpaces
-      @brief Specialization for defining duals of convex spaces via convex functionals
+      @brief Specialization for defining duals of partial M-torsors via convex functionals
    */
-  template<convex_space C>
+  template<partial_m_torsor C>
     requires (!affine_space<C>)
   struct dual<C>
   {
     using set_type         = sets::convex_functionals<C, commutative_ring_type_of_t<C>>;
     using free_module_type = dual<free_module_type_of_t<C>>;
-    using structure        = convex_space_tag_t;
+    using structure        = std::conditional_t<convex_space<C>, convex_space_tag_t, partial_m_torsor_tag_t>;
   };
 
    /** @ingroup DualSpaces
@@ -2134,12 +2228,12 @@ namespace sequoia::maths
     constexpr static auto dimension{V::dimension};
   };
 
-  template<convex_space Space>
+  template<partial_m_torsor Space>
   struct has_distinguished_origin<dual<Space>> : has_distinguished_origin<Space>
   {
   };
 
-  template<convex_space C>
+  template<partial_m_torsor C>
   struct is_non_negative_orthant<dual<C>> : is_non_negative_orthant<C>
   {
   };
@@ -2179,7 +2273,7 @@ namespace sequoia::maths
   };
 
   template<class T>
-  requires (!convex_space<T>) || (convex_space<T> /* TO DO && weak_field<commutative_ring_type_of_t<T>>*/)
+  requires (!partial_m_torsor<T>) || (partial_m_torsor<T> /* TO DO && weak_field<commutative_ring_type_of_t<T>>*/)
   struct dual_of<dual<T>> {
     using type = T;
   };
@@ -2192,36 +2286,36 @@ namespace sequoia::maths
     requires { typename T::base_space; }
   };
 
-  template<convex_space T>
+  template<partial_m_torsor T>
   struct to_base_space
   {
     using type = T;
   };
 
-  template<convex_space T>
+  template<partial_m_torsor T>
   using to_base_space_t = to_base_space<T>::type;
 
-  template<convex_space T>
+  template<partial_m_torsor T>
     requires has_base_space_v<T>
   struct to_base_space<T>
   {
     using type = T::base_space;
   };
 
-  template<convex_space T>
+  template<partial_m_torsor T>
   struct to_base_space<dual<T>>
   {
     using type = dual<T>;
   };
 
-  template<convex_space T>
+  template<partial_m_torsor T>
     requires has_base_space_v<T>
   struct to_base_space<dual<T>>
   {
     using type = dual<typename T::base_space>;
   };
   
-  template<convex_space T, convex_space U>
+  template<partial_m_torsor T, partial_m_torsor U>
   inline constexpr bool have_compatible_base_spaces_v{std::same_as<to_base_space_t<T>, to_base_space_t<U>>};
 
   /** @defgroup Coordinates Coordinates
@@ -2254,11 +2348,26 @@ namespace sequoia::maths
    */
 
   template<
-    convex_space ConvexSpace,
-    basis_for<free_module_type_of_t<ConvexSpace>> Basis,
+    partial_m_torsor Space,
+    basis_for<free_module_type_of_t<Space>> Basis,
     class... Ts
   >
   class coordinates;
+
+  /** @ingroup Coordinates
+      @brief Alias for coordinates of a point in an M-affine space with respect to a particular origin.
+
+      The basis belongs to the associated free module, allowing the coordinates type for the
+      M-affine space to be aware of the type of the coordinate representation for displacements
+   */
+  template<
+    m_affine_space MAffineSpace,
+    basis_for<free_module_type_of_t<MAffineSpace>> Basis,
+    representation_for<MAffineSpace> Representation,
+    class Origin,
+    validator_for<MAffineSpace, Representation> Validator
+  >
+  using m_affine_coordinates = coordinates<MAffineSpace, Basis, Origin, Representation, Validator>;
 
   /** @ingroup Coordinates
       @brief Alias for coordinates of a point in an affine space with respect to a particular origin.
@@ -2485,11 +2594,11 @@ namespace sequoia::maths
   {};
 
   template<
-    convex_space ConvexSpace,
-    basis_for<free_module_type_of_t<ConvexSpace>> Basis,
-    representation_for<ConvexSpace> Representation,
-    validator_for<ConvexSpace, Representation> Validator,
-    class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<ConvexSpace>,
+    partial_m_torsor Space,
+    basis_for<free_module_type_of_t<Space>> Basis,
+    representation_for<Space> Representation,
+    validator_for<Space, Representation> Validator,
+    class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<Space>,
                                                           Basis,
                                                           typename Representation::free_module_representation,
                                                           Validator>
@@ -2497,12 +2606,12 @@ namespace sequoia::maths
   class coordinates_base
   {
   public:
-    using space_type                    = ConvexSpace;
+    using space_type                    = Space;
     using basis_type                    = Basis;
     using representation_type           = Representation;
     using displacement_coordinates_type = DisplacementCoordinates;
-    using set_type                      = ConvexSpace::set_type;
-    using free_module_type              = free_module_type_of_t<ConvexSpace>;
+    using set_type                      = Space::set_type;
+    using free_module_type              = free_module_type_of_t<Space>;
     using value_type                    = Representation::value_type;    
     using displacement_value_type       = Representation::free_module_representation::value_type;
     using basis_isomorphism_type        = basis_isomorphism_type_of_t<Basis>;
@@ -3113,33 +3222,33 @@ namespace sequoia::maths
    */
   
   template<
-    convex_space ConvexSpace,
-    basis_for<free_module_type_of_t<ConvexSpace>> Basis,
+    partial_m_torsor Space,
+    basis_for<free_module_type_of_t<Space>> Basis,
     class Origin,
-    representation_for<ConvexSpace> Representation,
-    validator_for<ConvexSpace, Representation> Validator
+    representation_for<Space> Representation,
+    validator_for<Space, Representation> Validator
   >
-  class coordinates<ConvexSpace, Basis, Origin, Representation, Validator> final
-    : public coordinates_base<ConvexSpace, Basis, Representation, Validator>
+  class coordinates<Space, Basis, Origin, Representation, Validator> final
+    : public coordinates_base<Space, Basis, Representation, Validator>
   {
   public:
     using origin_type = Origin;
 
-    using coordinates_base<ConvexSpace, Basis, Representation, Validator>::coordinates_base;
+    using coordinates_base<Space, Basis, Representation, Validator>::coordinates_base;
   };
 
   template<
-    convex_space ConvexSpace,
-    basis_for<free_module_type_of_t<ConvexSpace>> Basis,
-    representation_for<ConvexSpace> Representation,
-    validator_for<ConvexSpace, Representation> Validator
+    partial_m_torsor Space,
+    basis_for<free_module_type_of_t<Space>> Basis,
+    representation_for<Space> Representation,
+    validator_for<Space, Representation> Validator
   >
-    requires has_distinguished_origin_v<ConvexSpace> && (!free_module<ConvexSpace>)
-  class coordinates<ConvexSpace, Basis, Representation, Validator> final
-    : public coordinates_base<ConvexSpace, Basis, Representation, Validator>
+    requires has_distinguished_origin_v<Space> && (!free_module<Space>)
+  class coordinates<Space, Basis, Representation, Validator> final
+    : public coordinates_base<Space, Basis, Representation, Validator>
   {
   public:
-    using coordinates_base<ConvexSpace, Basis, Representation, Validator>::coordinates_base;
+    using coordinates_base<Space, Basis, Representation, Validator>::coordinates_base;
   };
 
   template<
@@ -3266,14 +3375,14 @@ namespace sequoia::maths
     struct reals
     {
       using set_type  = sets::R<N>;
-      using structure = field_tag_t;
+      using structure = ordered_field_tag_t;
     };
 
     template<std::size_t N>
     struct integers
     {
       using set_type  = sets::Z<N>;
-      using structure = commutative_ring_tag_t;
+      using structure = ordered_ring_tag_t;
     };
 
     struct complexes
@@ -3464,14 +3573,14 @@ namespace sequoia::maths
     using type = T::arena_type;
   };
 
-  template<convex_space T>
+  template<partial_m_torsor T>
     requires (!has_arena_type_v<dual<T>>)
   struct arena_type_of<dual<T>>
   {
     using type = arena_type_of_t<T>;
   };
 
-  template<convex_space... Ts>
+  template<partial_m_torsor... Ts>
     requires (!has_arena_type_v<tensor_product<Ts...>>)
   struct arena_type_of<tensor_product<Ts...>>
   {

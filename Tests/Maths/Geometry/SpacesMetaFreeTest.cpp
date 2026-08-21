@@ -36,6 +36,58 @@ namespace sequoia::testing
       using free_module_type = euclidean_vector_space<1>;
       using structure        = convex_space_tag_t;
     };
+
+    // Fixtures occupying the nodes of the DAG of spaces set out in the
+    // introduction to Spaces.hpp. Those over the integers cannot be affine,
+    // whatever else they are, since the integers are not a field.
+
+    struct integral_module {
+      using set_type              = sets::Z<1>;
+      using commutative_ring_type = commutative_rings::integers<1>;
+      using structure             = free_module_tag_t;
+      constexpr static std::size_t rank{1};
+    };
+
+    struct integral_partial_m_torsor {
+      using set_type         = sets::Z<1>;
+      using free_module_type = integral_module;
+      using structure        = partial_m_torsor_tag_t;
+    };
+
+    struct integral_m_affine_space {
+      using set_type         = sets::Z<1>;
+      using free_module_type = integral_module;
+      using structure        = m_affine_space_tag_t;
+    };
+
+    // Tagged as affine, but over a ring which is not a field: the tag alone
+    // must not be enough.
+    struct integral_pseudo_affine_space {
+      using set_type         = sets::Z<1>;
+      using free_module_type = integral_module;
+      using structure        = affine_space_tag_t;
+    };
+
+    // Tagged as convex, but over the integers: an ordered ring is not an ordered
+    // field, so here too the tag alone must not be enough.
+    struct integral_pseudo_convex_space {
+      using set_type         = sets::N_0<1>;
+      using free_module_type = integral_module;
+      using structure        = convex_space_tag_t;
+    };
+
+    struct complex_vector_space {
+      using set_type   = sets::C<1>;
+      using field_type = commutative_rings::complexes;
+      using structure  = vector_space_tag_t;
+      constexpr static std::size_t dimension{1};
+    };
+
+    struct complex_affine_space {
+      using set_type          = sets::C<1>;
+      using vector_space_type = complex_vector_space;
+      using structure         = affine_space_tag_t;
+    };
   }
   
   [[nodiscard]]
@@ -80,5 +132,119 @@ namespace sequoia::testing
 
     STATIC_CHECK(commutative_ring<commutative_rings::reals<1>>);
     STATIC_CHECK(field<commutative_rings::reals<1>>);
+
+    // The commutative-ring diamond of the introduction. Being ordered and being a
+    // field are independent: the integers have the first, the complexes the
+    // second, and only the reals have both.
+    STATIC_CHECK( commutative_ring<commutative_rings::integers<1>>);
+    STATIC_CHECK( ordered_ring<commutative_rings::integers<1>>);
+    STATIC_CHECK(!field<commutative_rings::integers<1>>);
+    STATIC_CHECK(!ordered_field<commutative_rings::integers<1>>);
+
+    STATIC_CHECK( commutative_ring<commutative_rings::complexes>);
+    STATIC_CHECK(!ordered_ring<commutative_rings::complexes>);
+    STATIC_CHECK( field<commutative_rings::complexes>);
+    STATIC_CHECK(!ordered_field<commutative_rings::complexes>);
+
+    STATIC_CHECK( ordered_ring<commutative_rings::reals<1>>);
+    STATIC_CHECK( ordered_field<commutative_rings::reals<1>>);
+
+    test_spaces_dag();
+  }
+
+  /*! Pins the DAG of spaces. For each node there is a fixture which sits at
+      precisely that node, and for each fixture every one of the six concepts
+      is asserted, whether it holds or not. The negatives carry most of the
+      weight: the hierarchy has previously drifted by a refinement quietly
+      acquiring a parent it should not have.
+   */
+  void spaces_meta_free_test::test_spaces_dag()
+  {
+    // A partial M-torsor and nothing more: the free module acts only
+    // partially, so there is no sense in which any displacement may be applied
+    // to any point.
+    STATIC_CHECK( partial_m_torsor<integral_partial_m_torsor>);
+    STATIC_CHECK(!convex_space<integral_partial_m_torsor>);
+    STATIC_CHECK(!m_affine_space<integral_partial_m_torsor>);
+    STATIC_CHECK(!affine_space<integral_partial_m_torsor>);
+    STATIC_CHECK(!free_module<integral_partial_m_torsor>);
+    STATIC_CHECK(!vector_space<integral_partial_m_torsor>);
+
+    // Identifying as convex is necessary but not sufficient: interpolation needs
+    // an ordered field, and the integers are only an ordered ring.
+    STATIC_CHECK( partial_m_torsor<integral_pseudo_convex_space>);
+    STATIC_CHECK(!convex_space<integral_pseudo_convex_space>);
+    STATIC_CHECK(!m_affine_space<integral_pseudo_convex_space>);
+    STATIC_CHECK(!affine_space<integral_pseudo_convex_space>);
+    STATIC_CHECK(!free_module<integral_pseudo_convex_space>);
+    STATIC_CHECK(!vector_space<integral_pseudo_convex_space>);
+
+    // M-affine but not affine: the action is total, but the integers are not a
+    // field. This is the case the unqualified name would have excluded.
+    STATIC_CHECK( partial_m_torsor<integral_m_affine_space>);
+    STATIC_CHECK(!convex_space<integral_m_affine_space>);
+    STATIC_CHECK( m_affine_space<integral_m_affine_space>);
+    STATIC_CHECK(!affine_space<integral_m_affine_space>);
+    STATIC_CHECK(!free_module<integral_m_affine_space>);
+    STATIC_CHECK(!vector_space<integral_m_affine_space>);
+
+    // Identifying as affine does not make a space affine if the ring is not a
+    // field; what remains is the M-affine structure the tag also implies.
+    STATIC_CHECK( partial_m_torsor<integral_pseudo_affine_space>);
+    STATIC_CHECK(!convex_space<integral_pseudo_affine_space>);
+    STATIC_CHECK( m_affine_space<integral_pseudo_affine_space>);
+    STATIC_CHECK(!affine_space<integral_pseudo_affine_space>);
+    STATIC_CHECK(!free_module<integral_pseudo_affine_space>);
+    STATIC_CHECK(!vector_space<integral_pseudo_affine_space>);
+
+    // A free module is an M-affine space over itself.
+    STATIC_CHECK( partial_m_torsor<integral_module>);
+    STATIC_CHECK(!convex_space<integral_module>);
+    STATIC_CHECK( m_affine_space<integral_module>);
+    STATIC_CHECK(!affine_space<integral_module>);
+    STATIC_CHECK( free_module<integral_module>);
+    STATIC_CHECK(!vector_space<integral_module>);
+
+    // An affine space over the complex numbers. C is a field, so this is
+    // affine; C cannot be ordered, so this can never be convex.
+    STATIC_CHECK( partial_m_torsor<complex_affine_space>);
+    STATIC_CHECK(!convex_space<complex_affine_space>);
+    STATIC_CHECK( m_affine_space<complex_affine_space>);
+    STATIC_CHECK( affine_space<complex_affine_space>);
+    STATIC_CHECK(!free_module<complex_affine_space>);
+    STATIC_CHECK(!vector_space<complex_affine_space>);
+
+    // The same holds of the vector space it is modelled on, which is
+    // additionally a free module.
+    STATIC_CHECK( partial_m_torsor<complex_vector_space>);
+    STATIC_CHECK(!convex_space<complex_vector_space>);
+    STATIC_CHECK( m_affine_space<complex_vector_space>);
+    STATIC_CHECK( affine_space<complex_vector_space>);
+    STATIC_CHECK( free_module<complex_vector_space>);
+    STATIC_CHECK( vector_space<complex_vector_space>);
+
+    // The spaces defined by Spaces.hpp itself sit where they should.
+    STATIC_CHECK( partial_m_torsor<euclidean_vector_space<1>>);
+    STATIC_CHECK( convex_space<euclidean_vector_space<1>>);
+    STATIC_CHECK( m_affine_space<euclidean_vector_space<1>>);
+    STATIC_CHECK( affine_space<euclidean_vector_space<1>>);
+    STATIC_CHECK( free_module<euclidean_vector_space<1>>);
+    STATIC_CHECK( vector_space<euclidean_vector_space<1>>);
+
+    // Convex without carrying the tag: the action is total and the reals are an
+    // ordered field, so closure under interpolation is automatic.
+    STATIC_CHECK( partial_m_torsor<euclidean_affine_space<1>>);
+    STATIC_CHECK( convex_space<euclidean_affine_space<1>>);
+    STATIC_CHECK( m_affine_space<euclidean_affine_space<1>>);
+    STATIC_CHECK( affine_space<euclidean_affine_space<1>>);
+    STATIC_CHECK(!free_module<euclidean_affine_space<1>>);
+    STATIC_CHECK(!vector_space<euclidean_affine_space<1>>);
+
+    STATIC_CHECK( partial_m_torsor<euclidean_nonnegative_space<1>>);
+    STATIC_CHECK( convex_space<euclidean_nonnegative_space<1>>);
+    STATIC_CHECK(!m_affine_space<euclidean_nonnegative_space<1>>);
+    STATIC_CHECK(!affine_space<euclidean_nonnegative_space<1>>);
+    STATIC_CHECK(!free_module<euclidean_nonnegative_space<1>>);
+    STATIC_CHECK(!vector_space<euclidean_nonnegative_space<1>>);
   }
 }
