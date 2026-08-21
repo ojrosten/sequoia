@@ -8,38 +8,40 @@
 #pragma once
 
 /** @file
-    @brief Abstractions pertaining to vector spaces, affine spaces and their generalizations.
+    @brief Abstractions pertaining to vector spaces, affine spaces and their
+           generalizations.
 
     Representing abstract algebraic structures in C++ presents an interesting
     challenge. At root, the fundamental abstraction is a set; indeed, a vector
     space is nothing but a set with some additional structure defined. However,
     sets of objects are not straightforward to represent, in general, in C++.
 
-    Consider the real numbers. In C++ we can give a name to the set
-    by using the type system.
+    Consider the real numbers. In C++ we can give a name to the set by using
+    the type system.
 
     @code
     struct reals {};
     @endcode
 
-    But what of the elements of `reals`? Here we run into an immediate difficulty. We
-    would like to associate them with the values of a type. But to truly do so
-    we require a type with an infinite number of values (and uncountably so, in this
-    case). Therefore, when seeking representations, particularly of infinite sets,
-    we are generally reduced to approximations.
+    But what of the elements of `reals`? Here we run into an immediate
+    difficulty. We would like to associate them with the values of a type. But
+    to truly do so we require a type with an infinite number of values (and
+    uncountably so, in this case). Therefore, when seeking representations,
+    particularly of infinite sets, we are generally reduced to approximations.
 
-    However, at least in so far as the set underpinning a particular vector space
-    goes, it turns out that, for our purposes, we need go no further than naming it.
-    As we will explain momentarily, this is because when dealing with vector spaces
-    in practice, we are almost always interested in the _coordinates_ of a vector
-    with respect to a particular basis and not the abstract entities comprising
-    the elements of the underlying set.
+    However, at least in so far as the set underpinning a particular vector
+    space goes, it turns out that, for our purposes, we need go no further than
+    naming it. As we will explain momentarily, this is because when dealing
+    with vector spaces in practice, we are almost always interested in the
+    _coordinates_ of a vector with respect to a particular basis and not the
+    abstract entities comprising the elements of the underlying set.
 
-    Before discussing coordinate systems, it is helpful to be more precise about
-    the fundamental definition of a vector space. The axioms governing addition pertain
-    just to the elements of the underlying set and amount to stating that a vector
-    space is an abelian group under addition. Thus, vector addition is associative and
-    commutative, there is an identity element and every element admits an inverse.
+    Before discussing coordinate systems, it is helpful to be more precise
+    about the fundamental definition of a vector space. The axioms governing
+    addition pertain just to the elements of the underlying set and amount to
+    stating that a vector space is an abelian group under addition. Thus,
+    vector addition is associative and commutative, there is an identity
+    element and every element admits an inverse.
 
     However, the remaining properties of a vector space require not just the
     underlying set, V, but also a field, F. As such, we speak of a vector space
@@ -99,18 +101,21 @@
 
     where the \f$ a_i \f$ are valued in the field, F. The tuple of these
     values, \f$ [a_0, \ldots, a_{d-1}] \f$, is none other than the coordinates
-    of \f$ \vc{v} \f$ with respect to this particular basis.
-    The \f$ [a_0, \ldots, a_{d-1}] \f$ are often informally referred to as a vector. However
-    strictly speaking this risks an abuse of terminology since it may conflate two distinct concepts:
-    an actual vector which is an element of the set which forms the vector space,
-    and a representation of this vector via the coordinates with respect to a
-    particular basis. This distinction can be further reinforced by pointing out that
-    two observers who agree they are talking about the same vector (i.e. set element)
-    will nevertheless disagree on the coordinates if they are using different bases -
-    as they are entirely entitled to do! To further add to the confusion, the coordinates
-    may be referred to as a coordinate vector which is perhaps unfortunate. (To add to
-    the fun, in the case of \f$ \bb{R}^d \f$, a tuple of values \f$ (v(0), \ldots, v(d-1)) \f$ can have a
-    different interpretation, which we shall gloss over for now but return to in \ref Basis "Basis".)
+    of \f$ \vc{v} \f$ with respect to this particular basis. The
+    \f$ [a_0, \ldots, a_{d-1}] \f$ are often informally referred to as a
+    vector. However strictly speaking this risks an abuse of terminology since
+    it may conflate two distinct concepts: an actual vector which is an element
+    of the set which forms the vector space, and a representation of this
+    vector via the coordinates with respect to a particular basis. This
+    distinction can be further reinforced by pointing out that two observers
+    who agree they are talking about the same vector (i.e. set element) will
+    nevertheless disagree on the coordinates if they are using different bases
+    - as they are entirely entitled to do! To further add to the confusion, the
+    coordinates may be referred to as a coordinate vector which is perhaps
+    unfortunate. (To add to the fun, in the case of \f$ \bb{R}^d \f$, a tuple
+    of values \f$ (v(0), \ldots, v(d-1)) \f$ can have a different
+    interpretation, which we shall gloss over for now but return to in
+    \ref Basis "Basis".)
 
     Regardless, from the perspective of performing actual calculations, the
     coordinates are key. A crucial point to make is that, when dealing with the
@@ -126,20 +131,21 @@
     this vector space in C++ is completely circumvented.
 
     However, that is not to say that subtleties of imperfect representations of
-    mathematical abstractions are entirely avoided; indeed, quite the contrary! The
-    coordinates are valued in a field and so at this stage we must deal with the fact that
-    C++ types such as float and double model the real numbers imperfectly. Nevertheless,
-    the burden has been shifted from attempting to represent things in C++ that may
-    be completely infeasible to things which can be done to reasonable approximation.
-    Generally we will speak of e.g. the doubles weakly representing the reals.
+    mathematical abstractions are entirely avoided; indeed, quite the contrary!
+    The coordinates are valued in a field and so at this stage we must deal
+    with the fact that C++ types such as float and double model the real
+    numbers imperfectly. Nevertheless, the burden has been shifted from
+    attempting to represent things in C++ that may be completely infeasible to
+    things which can be done to reasonable approximation. Generally we will
+    speak of e.g. the doubles weakly representing the reals.
 
-    Vector spaces are just one of the things treated in the code that follows. There
-    are several important generalizations. First, there are affine spaces, which
-    comprise a set, A, together with a vector space, V, whose additive group acts
-    freely and transitively on A. Intuitively, we can start at any point in A and
-    translate to any other point by adding the appropriate vector.
-    \anchor freeTransitiveAction There are three separate things being
-    asserted:
+    Vector spaces are just one of the things treated in the code that follows.
+    There are several important generalizations. First, there are affine
+    spaces, which comprise a set, A, together with a vector space, V, whose
+    additive group acts freely and transitively on A. Intuitively, we can start
+    at any point in A and translate to any other point by adding the
+    appropriate vector. \anchor FreeTransitiveAction There are three separate
+    things being asserted:
     -# That V acts at all: adding any vector in V to any point of A gives a
        point of A;
 
@@ -153,155 +159,248 @@
     The last two together say that the vector translating between any two
     points is unique.
 
-    A nice example of an affine space is Euclidean space. Two observers
-    in this space, Alice and Bob, are entirely entitled to define their location as the
-    origin. Neither is more right than the other since this space has no distinguished origin.
-    Alice and Bob will, in general, disagree about the coordinates of points in the space.
-    However, they will agree on the vector which translates from one point to another (though
-    if they compare vector coordinates, they may have to contend with using different bases
-    on the vector space!).
+    A nice example of an affine space is Euclidean space. Two observers in this
+    space, Alice and Bob, are entirely entitled to define their location as the
+    origin. Neither is more right than the other since this space has no
+    distinguished origin. Alice and Bob will, in general, disagree about the
+    coordinates of points in the space. However, they will agree on the vector
+    which translates from one point to another (though if they compare vector
+    coordinates, they may have to contend with using different bases on the
+    vector space!).
 
-    An affine space is sometimes described as a vector space which has forgotten its origin.
-    Indeed, a vector space is an affine space over itself. This is interesting in terms
-    of representing these concepts in C++. Since a vector space is a special case of
-    an affine space, this suggests that an affine space concept is more fundamental,
-    with the vector space being a refinement. However, a vector space is part of the
-    definition of an affine space (a set and a vector space, satisfying certain conditions)
-    and so it is this that will be reflected by the concepts defined below: the affine
-    space concept depends on the vector_space concept, and not vice-versa.
+    An affine space is sometimes described as a vector space which has
+    forgotten its origin. Indeed, a vector space is an affine space over
+    itself. This is interesting in terms of representing these concepts in C++.
+    Since a vector space is a special case of an affine space, this suggests
+    that an affine space concept is more fundamental, with the vector space
+    being a refinement. However, a vector space is part of the definition of an
+    affine space (a set and a vector space, satisfying certain conditions) and
+    so it is this that will be reflected by the concepts defined below: the
+    affine space concept depends on the vector_space concept, and not
+    vice-versa.
 
-    It will be useful for our purposes to generalize affine spaces. To start, consider
-    taking a convex subset, C, of an affine space. We may translate from any point in C
-    to any other by adding the appropriate vector from V. However, there are elements
-    of V which, when added to a point in C, will take us outside of C and into the
-    broader affine space of which it is a part. Yet we do not want to define such a
-    space via an embedding in a bigger one; we would like to characterize it in its own
-    right.
+    It will be useful for our purposes to generalize affine spaces. To start,
+    consider taking a convex subset, C, of an affine space. We may translate
+    from any point in C to any other by adding the appropriate vector from V.
+    However, there are elements of V which, when added to a point in C, will
+    take us outside of C and into the broader affine space of which it is a
+    part. Yet we do not want to define such a space via an embedding in a
+    bigger one; we would like to characterize it in its own right.
 
-    The way forward is to relax the requirement that the action of V be defined for
-    every combination of point and vector. Of the three properties relating to a
-    \ref freeTransitiveAction "free and transitive action", the last two survive: for any two
-    points of C there is still a unique vector which translates from the first to the
-    second. What is lost is the first, that any point and any vector may be combined
-    to give a point. Retaining uniqueness but not totality leaves us with:
+    The way forward is to relax the requirement that the action of V be defined
+    for every combination of point and vector. Of the three properties relating
+    to a \ref FreeTransitiveAction "free and transitive action", the last two
+    survive: for any two points of C there is still a unique vector which
+    translates from the first to the second. What is lost is the first, that
+    any point and any vector may be combined to give a point. Retaining
+    uniqueness but not totality leaves us with:
     -# A set, A, together with a vector space, V;
 
     -# The difference of any two points of A, which is an element of V;
 
-    -# The sum of a point, p, of A and a vector, \f$ \vc{v} \f$, which is defined
-       precisely when \f$ \vc{v} \f$ is the difference of some point of A and p.
+    -# The sum of a point, p, of A and a vector, \f$ \vc{v} \f$, which is
+       defined precisely when \f$ \vc{v} \f$ is the difference of some point of
+       A and p.
 
-    The last of these is what is meant by saying that V acts partially on A. Here
-    partial carries its usual mathematical sense of "not necessarily defined
-    everywhere", much as a partial order need not order every pair of elements. A total
-    action is therefore a partial action, and affine spaces are recovered as precisely
-    those cases for which the sum is defined for every point and every vector.
+    The last of these is what is meant by saying that V acts partially on A.
+    Here partial carries its usual mathematical sense of "not necessarily
+    defined everywhere", much as a partial order need not order every pair of
+    elements. A total action is therefore a partial action, and affine spaces
+    are recovered as precisely those cases for which the sum is defined for
+    every point and every vector.
 
-    The mathematical structure we have arrived at is a partial torsor over a vector
-    space. There are two important points to bear in mind:
-    -# The construction does not require embedding in a bigger space: there is no
-    need to consider the set, A, as a subset of anything else.
+    The mathematical structure we have arrived at is a partial torsor over a
+    vector space. There are two important points to bear in mind:
+    -# The construction does not require embedding in a bigger space: there is
+       no need to consider the set, A, as a subset of anything else.
 
-    -# While convexity is a useful property of some spaces, and provided a hook into
-    this discussion, it is not a requirement placed on our partial
-    torsor: our construction is more general and flexible than that.
+    -# While convexity is a useful property of some spaces, and provided a hook
+       into this discussion, it is not a requirement placed on our partial
+       torsor: our construction is more general and flexible than that.
 
     The notion of a partial action is a standard one, and comes with a useful
-    theorem: every partial action of a group on a set can be considered to arise
-    from restricting a total action to a subset. While we have deliberately avoided
-    explicitly embedding the torsor into an affine space as part of our construction,
-    this option is retrospectively available, for free.
+    theorem: every partial action of a group on a set can be considered to
+    arise from restricting a total action to a subset. While we have
+    deliberately avoided explicitly embedding the torsor into an affine space
+    as part of our construction, this option is retrospectively available, for
+    free, providing useful intuition.
 
-    In C++ we cannot literally restrict the domain of a function such as operator+, but
-    we can furnish it with a precondition. The behaviour when called out of contract is
-    undefined; not quite in the mathematical sense, but in a sense which maps rather
-    well onto our intuition.
+    There is a second generalization that it will be profitable to explore,
+    namely relaxing a vector space's field to a ring. The resulting
+    construction is called a module, which is a generalization of a vector
+    space. Our motivation for this is that the integers form a commutative ring
+    and not a field, since integers do not, in general, have multiplicative
+    inverses valued within the integers. Rather than attempting to deal with
+    modules in full generality, we restrict our attention to what may be the
+    most useful, practical cases in the context of C++: free modules over
+    commutative rings. Free modules are those which admit a basis.
 
-    There is a second generalization that it will be profitable to explore, namely
-    relaxing a vector space's field to a ring. The resulting construction is called a
-    module, which is a generalization of a vector space. Our motivation for this is
-    that the integers form a commutative ring and not a field, since integers do not,
-    in general, have multiplicative inverses valued within the integers. Rather than
-    attempting to deal with modules in full generality, we restrict our attention to
-    what may be the most useful, practical cases in the context of C++: free modules
-    over commutative rings. Free modules are those which admit a basis.
-
-    Combining the two generalizations brings us to the most primitive abstraction with
-    which the code deals: the partial M-torsor. A torsor is a set upon which a group
-    acts freely and transitively; allowing for partiality, this is exactly the
-    structure described above. The 'M' indicates that the group in question is the
-    additive group of a free module rather than of a vector space. In the same spirit
-    we speak of affine spaces over free modules - a mild extension of the usual
-    terminology, in which an affine space is over a vector space.
+    Combining the two generalizations brings us to the most primitive
+    abstraction with which the code deals: the partial M-torsor. A torsor is a
+    set upon which a group acts
+    \ref FreeTransitiveAction "freely and transitively"; allowing partiality
+    gives the structure described above. The 'M' indicates that the group in
+    question is the additive group of a free module, M, rather than of a vector
+    space. In the same spirit, it is useful to delineate affine spaces over a
+    field from those over a free module; we refer to the latter as M-affine
+    spaces. This is a mild extension of the usual terminology, in which an
+    affine space is over a vector space.
 
     Convexity remains a useful refinement, and appears as one in the code: a
-    convex space sits between affine spaces and partial M-torsors, the additional
-    requirement being that whenever two points belong to the space, so do the points
-    lying between them. Betweenness presupposes that the scalars can be ordered, which
-    is why ordered rings and ordered fields appear amongst the algebraic structures
-    below.
+    convex space is a partial M-torsor for which, whenever two points belong
+    to the space, so do the points lying between them. Intuitively, this
+    corresponds to being able to linearly interpolate (lerp): given two points
+    p and q
+    and a parameter t in the range [0, 1], we may construct intermediate
+    points, r, using the recipe
+    \f[
+        r = (1 - t)p + t q.
+    \f]
+    However, any notion that r is between p and q requires the ring to
+    which t belongs
+    -# To be ordered;
 
-    Finally, it is worth recording what else may be done when a translation would leave
-    the set, since the alternatives are neither hypothetical nor exotic: they are, more
-    or less exactly, the wrapping modes which graphics hardware offers for texture
-    coordinates. Each faces the same difficulty - the sum of a point and a vector need
-    not be a point of the set - and each resolves it by giving something up.
-    -# Restrict the domain and keep the algebra. This is the partial torsor arrived at
-       above; the price is that some sums are simply not defined.
+    -# To admit values between zero and one other than these two. Indeed, if
+       t is an element of the integers, the above formula degenerates to only
+       ever producing p or q.
 
-    -# Supplement the set with an exceptional state, E, to which any out-of-range
-       translation maps and from which there is no return. Every sum is now defined,
-       but the group law is broken: if \f$ \vc{w} \f$ takes a point to E and
-       \f$ \vc{v} \f$ would bring it back, then adding \f$ \vc{w} \f$ and then
-       \f$ \vc{v} \f$ gives E, whereas adding \f$ \vc{v} + \vc{w} \f$ may give a
-       perfectly good point. The familiar analogue is NaN: every operation returns
-       something, and the cost is paid in the algebra. Graphics hardware calls this
-       clamping to a border colour.
+    While there are useful generalizations of convexity that apply when the
+    second condition is not satisfied, we do not pursue them. However, there
+    is nothing to prohibit appropriate concepts being added in the future.
+    Therefore, we define convex spaces to be refinements of a partial
+    M-torsor for which the commutative ring is an ordered field. (Note: this
+    rules out the case of the dyadic rationals which satisfy both
+    conditions above; if a use case for these ever arises the framework can
+    be enhanced.)
 
-    -# Clamp to the boundary, by composing the translation with a map back onto the
-       set. Again every sum is defined and again the group law fails: in the interval
-       [0,1], translating 0.5 by -1 and then by +1 arrives at 1 rather than at 0.5.
-       Saturating integer arithmetic is the same structure and fails in the same way.
-       Note that this option, alone among those listed, genuinely requires the
-       embedding we were at pains to avoid, since the point outside the set must be
-       formed before it can be clamped back. A variant selects the point at which the
-       ray from the starting point strikes the boundary; this depends on the path taken
-       and so is not even a function of the net displacement.
+    The relationships between the structures introduced above form a DAG, in
+    which refinements appear below that which they refine:
+    @verbatim
+                partial M-torsor
+               /                \
+     (M-convex space)       M-affine space
+            |                 /        \
+       convex space   affine space   free module
+                             \          /
+                             vector space
+    @endverbatim
+    The bracketed entry marks where an M-convex space would sit, were the
+    generalizations of convexity alluded to above pursued. Note also that
+    affine spaces are not, in general, convex spaces: the latter require an
+    ordered field, whereas there is nothing untoward about an affine space
+    over the complex numbers.
 
-    -# Remap periodically, identifying points which differ by a vector of some
-       lattice, L. Here nothing is restricted and nothing is broken; rather,
-       the space has changed. The action of V is total and transitive but no
-       longer free, since every vector of L translates every point to itself.
-       What we have is a torsor over the quotient V/L - for two periodic
-       coordinates, a torus.
+    We now turn to the important question of how to deal with translations
+    which would take us outside the underlying space. Up to this point of our
+    rather abstract analysis, we have simply declared that such operations do
+    not exist. But this is not a luxury we have in the world of C++; moreover,
+    there may be physical or mathematical reasons to introduce additional
+    behaviour. For example, consider the convex space comprising a
+    one-dimensional interval and the associated free module of translations.
+    Perhaps we represent the interval by all the `double`s in the range [0.0,
+    1.0]. What happens if we start at the point 0.5 and use `operator+` to
+    perform the translation 0.5 + 1.0? We must decide, since there is no way
+    for us to stop clients from writing such an expression. Broadly speaking,
+    there are four approaches:
+    -# Treat this as undefined behaviour;
 
-    -# Remap anti-periodically, so that the coordinate reverses direction each time it
-       would leave the set. This also changes the space, but more drastically: the
-       group which acts now contains reflections as well as translations, and the
-       translations of V do not survive the quotient. Taking the unit interval again,
-       translating 0.9 by 0.2 twice gives 0.9, whereas translating once by 0.4 gives
-       0.7. The interval is best regarded as a fundamental domain for this larger group
-       rather than as a set on which V acts.
+    -# Treat the behaviour as exceptional;
 
-    Only the first of these leaves V acting on the set by translations. The second and
-    third retain totality at the expense of the group law, while the fourth and fifth
-    retain the group law by changing the space and, with it, the group which acts. This
-    is why it is the partial torsor, rather than any of the alternatives, which
+    -# Adjoin an absorbing state to the space;
+
+    -# Recognize that there is additional physical or mathematical structure
+       which remaps the answer back into the space.
+
+    Let us expand on these in turn.
+
+    @par Undefined behaviour
+    In C++ we cannot literally restrict the domain of a function such as
+    operator+, but we can furnish it with a precondition. The behaviour when
+    called out of contract is undefined; not quite in the mathematical sense,
+    but in a sense which maps rather well onto our intuition. Since C++26, this
+    precondition may be expressible in code.
+
+    @par Exceptional behaviour
+    Two things are in play here - the mathematics and its C++ representation -
+    and it is worth being clear about which is which. A partial function is the
+    same thing as a total function whose codomain has been enlarged by a single
+    extra element, \f$ \bot \f$, signalling that there is no result. To widen
+    the codomain in this sense is not to change the mathematics but to restate
+    it: the space is untouched, and \f$ \bot \f$ is emphatically not a point of
+    it, so nothing can be translated from it. Gratifyingly, C++ can transcribe
+    the mathematics exactly, by having `operator+` return `std::expected`;
+    specifying it to throw expresses the same thing through a different
+    mechanism. Note, though, that `operator+=` cannot return anything of the
+    sort, since it must write its result back into a point: either it throws,
+    or the extra element is admitted into the space itself, which brings us to
+    the next option.
+
+    @par Absorbing states
+    We can supplement the set underpinning the space in question with an
+    absorbing state. In C++, an example would be to use NaN. While adding a
+    displacement to a point is now always mathematically defined, the group law
+    is broken whenever this state is involved. Consider our previous example
+    where 0.5 + 1.0 goes outside the space. As such, suppose we return NaN.
+    This is what absorbing means: subtracting 1.0 still leaves us with NaN and
+    does not take us back to 0.5. Consequently, translating by 1.0 and then by
+    -1.0 no longer agrees with translating by their sum, 0.0, which does
+    nothing at all; and it is precisely such agreement that an action of a
+    group demands. What makes this a genuine change to the space, rather than a
+    way of reporting an error, is that the absorbing state is a value like any
+    other: it may be stored, passed on and translated from.
+
+    @par Remapping
+    Here there are many options, of which we single out three particularly
+    natural ones, analogous to the wrapping modes which graphics hardware
+    offers for texture coordinates.
+
+    -# Clamp to the boundary. Again every sum is defined and again the group
+       law fails: in the interval [0.0, 1.0], translating 0.5 by 1.0 and then
+       by -1.0 arrives at 0.0 rather than at 0.5. Note that this option alone
+       requires the embedding in a larger space which we have avoided when not
+       strictly necessary, since the point outside the set must be formed
+       before it can be clamped back. A variant selects the point at which the
+       ray from the starting point strikes the boundary.
+
+    -# Remap periodically, identifying points which differ by an element of
+       some lattice, L. This changes the nature of the space. The action of M
+       remains total and transitive but no longer free, since every element of
+       L translates every point to itself. What we have is a torsor over the
+       quotient M/L.
+
+    -# Remap anti-periodically, so that the coordinate reverses direction each
+       time it would leave the set. This also changes the space, but more
+       drastically: the group which acts now contains reflections as well as
+       translations, and the translations of M do not survive the quotient.
+       Taking the unit interval again, translating 0.9 by 0.2 twice gives 0.9,
+       whereas translating once by 0.4 gives 0.7. The interval is best regarded
+       as a fundamental domain for this larger group rather than as a set on
+       which M acts.
+
+    Of the six possibilities canvassed, only the first two - which between them
+    leave the mathematics as the partial torsor - keep M acting on the set by
+    translations. The absorbing state and clamping retain totality at the
+    expense of the group law, while the two periodic remappings retain the
+    group law by changing the space and, with it, the group which acts. This is
+    why it is the partial torsor, rather than any of the alternatives, which
     generalizes an affine space.
 
-    The final introductory issue to address is the question of why to bother modelling concepts such
-    as vector spaces in the abstract sense if it is their coordinates which are the things
-    of use from the perspective of practical computation. The point is that, for example,
-    vector spaces and affine spaces admit different operations: whereas elements of a vector
-    space can be added, the same is not true of the elements of the set underpinning an
-    affine space. By introducing concepts for the abstract algebraic constructs, we can treat
-    coordinates on all of these spaces in a common way by using constraints to enable
-    or disable specific operations. Thus, the coordinates class template is templated on,
-    amongst other things, a partial_m_torsor. To define such a space just requires introducing
-    a struct exposing a small amount of data (types and values) known at compile time.
-    These data determine whether we intend to model a vector space, a free module over a
-    commutative ring, an affine space or whatever. This is sufficient for the coordinates
-    implementation to expose the correct set of operations.
+    The final introductory issue to address is the question of why to bother
+    modelling concepts such as vector spaces in the abstract sense if it is
+    their coordinates which are the things of use from the perspective of
+    practical computation. The point is that, for example, vector spaces and
+    affine spaces admit different operations: whereas elements of a vector
+    space can be added, the same is not true of the elements of the set
+    underpinning an affine space. By introducing concepts for the abstract
+    algebraic constructs, we can treat coordinates on all of these spaces in a
+    common way by using constraints to enable or disable specific operations.
+    Thus, the coordinates class template is templated on, amongst other things,
+    a partial_m_torsor. To define such a space just requires introducing a
+    struct exposing a small amount of data (types and values) known at compile
+    time. These data determine whether we intend to model a vector space, a
+    free module over a commutative ring, an affine space or whatever. This is
+    sufficient for the coordinates implementation to expose the correct set of
+    operations, giving a high degree of both type safety and expressivity.
  */
 
 
