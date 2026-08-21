@@ -149,6 +149,20 @@ namespace sequoia::testing
     STATIC_CHECK( ordered_ring<commutative_rings::reals<1>>);
     STATIC_CHECK( ordered_field<commutative_rings::reals<1>>);
 
+    // Only R itself is a field: R^2 under componentwise multiplication has zero
+    // divisors, and its product order is not total.
+    STATIC_CHECK( commutative_ring<commutative_rings::reals<2>>);
+    STATIC_CHECK(!ordered_ring<commutative_rings::reals<2>>);
+    STATIC_CHECK(!field<commutative_rings::reals<2>>);
+    STATIC_CHECK(!ordered_field<commutative_rings::reals<2>>);
+
+    // The basis concept requires index_set to define d values. Pin the count
+    // rather than the spelling, since it is the count the contract states and
+    // nothing in the codebase reads the type.
+    STATIC_CHECK(general_basis<euclidean_vector_space<1>>::index_set::size() == 1);
+    STATIC_CHECK(general_basis<euclidean_vector_space<3>>::index_set::size() == 3);
+    STATIC_CHECK(general_basis<integral_module>::index_set::size() == integral_module::rank);
+
     test_spaces_dag();
   }
 

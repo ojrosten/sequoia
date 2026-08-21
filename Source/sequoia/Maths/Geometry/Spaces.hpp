@@ -1127,7 +1127,7 @@ namespace sequoia::maths
   // two vector spaces
   template<
     free_module M,
-    class IndexSet=std::index_sequence<rank_of_v<M>>,
+    class IndexSet=std::make_index_sequence<rank_of_v<M>>,
     class Frame=identity_isomorphism,
     class BasisTransform=identity_isomorphism
   >
@@ -3375,7 +3375,10 @@ namespace sequoia::maths
     struct reals
     {
       using set_type  = sets::R<N>;
-      using structure = ordered_field_tag_t;
+      // Only \f$ \bb{R} \f$ itself is a field. Under componentwise multiplication
+      // \f$ \bb{R}^N \f$ has zero divisors, and its product order is not total, so
+      // for N > 1 the weakest honest claim is a commutative ring.
+      using structure = std::conditional_t<N == 1, ordered_field_tag_t, commutative_ring_tag_t>;
     };
 
     template<std::size_t N>
