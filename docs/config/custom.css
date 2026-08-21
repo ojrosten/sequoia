@@ -1,0 +1,16 @@
+/* Constrain the measure of running prose.
+ *
+ * Doxygen's default stylesheet places no upper bound on the width of a
+ * description block, so on a wide display the documentation renders at 150+
+ * characters per line. Typographic guidance puts the comfortable range at
+ * 45-75 characters: beyond that the return sweep at the end of a line becomes
+ * unreliable and the eye tracks to the wrong line. 52em is around 70
+ * characters at the default size.
+ *
+ * Only running prose is constrained. Member tables, indexes and navigation are
+ * left alone, as they are scanned rather than read.
+ */
+div.textblock,
+div.memdoc {
+    max-width: 52em;
+}
