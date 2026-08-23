@@ -968,10 +968,6 @@ namespace sequoia::maths
       Note that there is no need for the space to identify as anything beyond
       an M-affine space. The fact that the free module is required to be
       over a field fixes the space as an affine space.
-
-      Note that the requirement on the ring is why this concept, unlike its
-      neighbours, is defined here rather than alongside them: it needs
-      commutative_ring_type_of_t.
    */
   template<class T>
   concept affine_space = m_affine_space<T> && field<commutative_ring_type_of_t<T>>;
