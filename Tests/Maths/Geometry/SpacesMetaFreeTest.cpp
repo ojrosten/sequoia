@@ -39,6 +39,27 @@ namespace sequoia::testing
       using structure        = convex_space_tag_t;
     };
 
+    // Space-shaped but for the absent structure, and so a sharper negative than
+    // an unrelated type: it looks like a space yet satisfies nothing.
+    struct structureless_space {
+      using set_type         = sets::R<1>;
+      using free_module_type = euclidean_vector_space<1>;
+    };
+
+    template<class T>
+    inline constexpr bool structure_is_extractable_v{requires { typename structure_of_t<T>; }};
+
+    // A free module naming its rank, and a vector space built upon it which
+    // additionally names its dimension. Both members are then visible, which
+    // must be allowed.
+    struct ranked_module_base {
+      constexpr static std::size_t rank{3};
+    };
+
+    struct dimensioned_derived_space : ranked_module_base {
+      constexpr static std::size_t dimension{3};
+    };
+
     // Fixtures occupying the nodes of the DAG of spaces set out in the
     // introduction to Spaces.hpp. Those over the integers cannot be affine,
     // whatever else they are, since the integers are not a field.
@@ -125,6 +146,8 @@ namespace sequoia::testing
   void spaces_meta_free_test::run_tests()
   {
     test_arithmetic_traits();
+    test_structure_trait();
+    test_rank_traits();
     test_origin_and_orthant_traits();
     test_commutative_rings();
     test_basis_traits();
@@ -152,6 +175,94 @@ namespace sequoia::testing
     STATIC_CHECK(weakly_abelian_group_under_multiplication_v<double>);
     STATIC_CHECK(weakly_abelian_group_under_multiplication_v<std::complex<float>>);
     STATIC_CHECK(weakly_abelian_group_under_multiplication_v<std::complex<double>>);
+  }
+
+  /** Every concept in the header is gated on a nested `structure`, so a type
+      which fails to expose one does not fail loudly: it silently satisfies
+      nothing. The negative checks therefore carry as much weight as the
+      positive ones. Note that the trait detects the nested type and no more -
+      it does not, and cannot, check that the tag is the right one.
+   */
+  void spaces_meta_free_test::test_structure_trait()
+  {
+    STATIC_CHECK( has_structure_v<unremarkable_space>);
+    STATIC_CHECK(!has_structure_v<structureless_space>);
+    STATIC_CHECK(!has_structure_v<int>);
+
+    // The underlying set is not the space: it carries a dimension, so it
+    // answers other traits in this family, but it declares no structure.
+    STATIC_CHECK(!has_structure_v<sets::R<1>>);
+
+    // Giving structure_of's primary template a fallback type would break the
+    // correspondence with the trait; this is the check which would notice.
+    STATIC_CHECK( structure_is_extractable_v<unremarkable_space>);
+    STATIC_CHECK(!structure_is_extractable_v<structureless_space>);
+
+    // What it extracts, node by node.
+    STATIC_CHECK(std::is_same_v<structure_of_t<integral_partial_m_torsor>,     partial_m_torsor_tag_t>);
+    STATIC_CHECK(std::is_same_v<structure_of_t<integral_m_affine_space>,       m_affine_space_tag_t>);
+    STATIC_CHECK(std::is_same_v<structure_of_t<integral_module>,               free_module_tag_t>);
+    STATIC_CHECK(std::is_same_v<structure_of_t<complex_vector_space>,          vector_space_tag_t>);
+    STATIC_CHECK(std::is_same_v<structure_of_t<euclidean_vector_space<1>>,     vector_space_tag_t>);
+    STATIC_CHECK(std::is_same_v<structure_of_t<euclidean_affine_space<1>>,     m_affine_space_tag_t>);
+    STATIC_CHECK(std::is_same_v<structure_of_t<euclidean_nonnegative_space<1>>, convex_space_tag_t>);
+
+    // The family is not confined to spaces: the commutative rings declare
+    // their structure the same way, and it is this that test_commutative_rings
+    // reads indirectly through the concepts.
+    STATIC_CHECK(std::is_same_v<structure_of_t<commutative_rings::integers<1>>, ordered_ring_tag_t>);
+    STATIC_CHECK(std::is_same_v<structure_of_t<commutative_rings::complexes>,   field_tag_t>);
+    STATIC_CHECK(std::is_same_v<structure_of_t<commutative_rings::reals<1>>,    ordered_field_tag_t>);
+    STATIC_CHECK(std::is_same_v<structure_of_t<commutative_rings::reals<2>>,    commutative_ring_tag_t>);
+
+    // Derived spaces compute their tag rather than declaring it. The concept
+    // checks in test_derived_spaces observe that computation only through its
+    // consequences; these pin the result itself.
+    STATIC_CHECK(std::is_same_v<structure_of_t<dual<half_line_space>>,        convex_space_tag_t>);
+    STATIC_CHECK(std::is_same_v<structure_of_t<dual<complex_pointed_torsor>>, partial_m_torsor_tag_t>);
+    STATIC_CHECK(std::is_same_v<structure_of_t<dual<complex_affine_space>>,   m_affine_space_tag_t>);
+    STATIC_CHECK(std::is_same_v<structure_of_t<dual<complex_vector_space>>,   vector_space_tag_t>);
+
+    STATIC_CHECK(std::is_same_v<structure_of_t<tensor_product<distinguished_origin_space, distinguished_origin_space>>, convex_space_tag_t>);
+    STATIC_CHECK(std::is_same_v<structure_of_t<tensor_product<complex_pointed_torsor, complex_pointed_torsor>>,         partial_m_torsor_tag_t>);
+    STATIC_CHECK(std::is_same_v<structure_of_t<tensor_product<euclidean_vector_space<1>, euclidean_vector_space<1>>>,   free_module_tag_t>);
+  }
+
+  /** Rank and dimension are one notion under two names, the first preferred for
+      free modules and the second for vector spaces. A type may therefore name
+      either, and - through inheritance - both. What it may not do is name both
+      and disagree.
+   */
+  void spaces_meta_free_test::test_rank_traits()
+  {
+    STATIC_CHECK( has_rank_v<integral_module>);
+    STATIC_CHECK(!has_dimension_v<integral_module>);
+    STATIC_CHECK( rank_of_v<integral_module> == 1);
+
+    STATIC_CHECK(!has_rank_v<complex_vector_space>);
+    STATIC_CHECK( has_dimension_v<complex_vector_space>);
+    STATIC_CHECK( rank_of_v<complex_vector_space> == 1);
+    STATIC_CHECK( rank_of_v<euclidean_vector_space<3>> == 3);
+
+    // The underlying sets name a dimension, so they answer this family despite
+    // not being spaces at all - compare test_structure_trait, where the same
+    // types answer nothing.
+    STATIC_CHECK( rank_of_v<sets::R<3>> == 3);
+
+    // Both names visible, by inheritance, and agreeing. rank takes precedence.
+    STATIC_CHECK( has_rank_v<dimensioned_derived_space>);
+    STATIC_CHECK( has_dimension_v<dimensioned_derived_space>);
+    STATIC_CHECK( rank_of_v<dimensioned_derived_space> == 3);
+
+    // Consistency is trivially satisfied when at most one name is present.
+    STATIC_CHECK( rank_and_dimension_consistent_v<dimensioned_derived_space>);
+    STATIC_CHECK( rank_and_dimension_consistent_v<integral_module>);
+    STATIC_CHECK( rank_and_dimension_consistent_v<complex_vector_space>);
+    STATIC_CHECK( rank_and_dimension_consistent_v<int>);
+
+    STATIC_CHECK( defines_rank_v<integral_module>);
+    STATIC_CHECK( defines_rank_v<dimensioned_derived_space>);
+    STATIC_CHECK(!defines_rank_v<int>);
   }
 
   void spaces_meta_free_test::test_origin_and_orthant_traits()

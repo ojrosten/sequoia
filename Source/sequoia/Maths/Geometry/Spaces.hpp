@@ -127,8 +127,8 @@
     considerations are incredibly helpful since, for many practical purposes,
     we need not represent the underlying set beyond, at most, perhaps giving it
     a name. For example, consider the vector space formed by functions which
-    map some set into a field: the question of how to represent the elements of
-    this vector space in C++ is completely circumvented.
+    map some finite set into a field: the question of how to represent the
+    elements of this vector space in C++ is completely circumvented.
 
     However, that is not to say that subtleties of imperfect representations of
     mathematical abstractions are entirely avoided; indeed, quite the contrary!
@@ -137,7 +137,8 @@
     numbers imperfectly. Nevertheless, the burden has been shifted from
     attempting to represent things in C++ that may be completely infeasible to
     things which can be done to reasonable approximation. Generally we will
-    speak of e.g. the doubles weakly representing the reals.
+    speak of e.g. the doubles \ref AlgebraicTraits "weakly" representing the
+    reals.
 
     Vector spaces are just one of the things treated in the code that follows.
     There are several important generalizations. First, there are affine
@@ -359,8 +360,8 @@
        by -1.0 arrives at 0.0 rather than at 0.5. Note that this option alone
        requires the embedding in a larger space which we have avoided when not
        strictly necessary, since the point outside the set must be formed
-       before it can be clamped back. A variant selects the point at which the
-       ray from the starting point strikes the boundary.
+       before it can be clamped back. A variant selects the first point at
+       which the ray from the starting point strikes the boundary.
 
     -# Remap periodically, identifying points which differ by an element of
        some lattice, L. This changes the nature of the space. The action of M
@@ -467,7 +468,7 @@ namespace sequoia::maths
 
   /** @} */
 
-  /** @defgroup HasStructureType Subgroup Has structure type
+  /** @defgroup HasStructure Subgroup Has structure
       @ingroup MathematicalStructure
       @brief Compile time tools for reflecting on whether a type has a nested type called `structure`, and extracting it.
 
@@ -475,7 +476,7 @@ namespace sequoia::maths
    */
 
   template<class T>
-  inline constexpr bool has_structure_type_v{
+  inline constexpr bool has_structure_v{
     requires { typename T::structure; }
   };
 
@@ -486,7 +487,7 @@ namespace sequoia::maths
   using structure_of_t = structure_of<T>::type;
 
   template<class T>
-    requires has_structure_type_v<T>
+    requires has_structure_v<T>
   struct structure_of<T>
   {
     using type = T::structure;
@@ -530,7 +531,7 @@ namespace sequoia::maths
 
   template<class T>
   inline constexpr bool identifies_as_commutative_ring_v{
-       has_structure_type_v<T>
+       has_structure_v<T>
     && requires {
          requires std::derived_from<typename T::structure, commutative_ring_tag_t>;
        }
@@ -538,7 +539,7 @@ namespace sequoia::maths
 
   template<class T>
   inline constexpr bool identifies_as_ordered_ring_v{
-        has_structure_type_v<T>
+        has_structure_v<T>
     && requires {
          requires std::derived_from<typename T::structure, ordered_ring_tag_t>;
        }
@@ -546,7 +547,7 @@ namespace sequoia::maths
 
   template<class T>
   inline constexpr bool identifies_as_field_v{
-        has_structure_type_v<T>
+        has_structure_v<T>
     && requires {
          requires std::derived_from<typename T::structure, field_tag_t>;
        }
@@ -554,7 +555,7 @@ namespace sequoia::maths
 
   template<class T>
   inline constexpr bool identifies_as_ordered_field_v{
-        has_structure_type_v<T>
+        has_structure_v<T>
     && requires {
          requires std::derived_from<typename T::structure, ordered_field_tag_t>;
        }
@@ -619,7 +620,7 @@ namespace sequoia::maths
 
   template<class T>
   inline constexpr bool identifies_as_partial_m_torsor_v{
-       has_structure_type_v<T>
+       has_structure_v<T>
     && requires {
          requires std::derived_from<typename T::structure, partial_m_torsor_tag_t>;
        }
@@ -627,7 +628,7 @@ namespace sequoia::maths
 
   template<class T>
   inline constexpr bool identifies_as_convex_space_v{
-       has_structure_type_v<T>
+       has_structure_v<T>
     && requires {
          requires std::derived_from<typename T::structure, convex_space_tag_t>;
        }
@@ -635,7 +636,7 @@ namespace sequoia::maths
 
   template<class T>
   inline constexpr bool identifies_as_m_affine_space_v{
-       has_structure_type_v<T>
+       has_structure_v<T>
     && requires {
          requires std::derived_from<typename T::structure, m_affine_space_tag_t>;
        }
@@ -643,7 +644,7 @@ namespace sequoia::maths
 
   template<class T>
   inline constexpr bool identifies_as_free_module_v{
-       has_structure_type_v<T>
+       has_structure_v<T>
     && requires {
          requires std::derived_from<typename T::structure, free_module_tag_t>;
        }
@@ -651,7 +652,7 @@ namespace sequoia::maths
 
   template<class T>
   inline constexpr bool identifies_as_vector_space_v{
-       has_structure_type_v<T>
+       has_structure_v<T>
     && requires {
          requires std::derived_from<typename T::structure, vector_space_tag_t>;
        }
@@ -763,6 +764,15 @@ namespace sequoia::maths
       @{
    */
 
+  /** @brief Whether a type naming both rank and dimension agrees on their value. */
+  template<class T>
+  inline constexpr bool rank_and_dimension_consistent_v{
+    []() {
+      if constexpr(has_rank_v<T> && has_dimension_v<T>) return T::rank == T::dimension;
+      else                                              return true;
+    }()
+  };
+
   template<class T>
   struct rank_of {};
 
@@ -773,11 +783,14 @@ namespace sequoia::maths
     requires has_rank_v<T>
   struct rank_of<T>
   {
+    static_assert(rank_and_dimension_consistent_v<T>,
+                  "A type naming both rank and dimension must agree on their value");
+
     constexpr static std::size_t value{T::rank};
   };
 
   template<class T>
-    requires has_dimension_v<T>
+    requires (!has_rank_v<T>) && has_dimension_v<T>
   struct rank_of<T>
   {
     constexpr static std::size_t value{T::dimension};
@@ -987,10 +1000,11 @@ namespace sequoia::maths
 
 
   /** @ingroup PropertiesOfSpaces
-      @brief Extracts the dimension of the free module associated with a partial M-torsor.
+      @brief Extracts the rank of the free module associated with a partial
+             M-torsor; for a vector space, this is the dimension.
 
-      The program is ill-formed if the space defines its own dimension (rank) that
-      is inconsistent with the free module's dimension.
+      The program is ill-formed if the space defines its own rank inconsistently
+      with that of the free module.
    */
   template<partial_m_torsor Space>
   inline constexpr std::size_t dimension_of_v{
@@ -1285,12 +1299,12 @@ namespace sequoia::maths
   /** @ingroup ArithmeticProperties
       @brief Compile time constant for multiplicability.
 
-      Note that there is not a two template paramter analogue of
+      Note that there is not a two template parameter analogue of
       is_addable_to_v. The problem is that for any putative
       `is_multiplicable_by_v`, there doesn't seem to be any
       reasonable concept satisfied by the return value. (Multiplying
       an n * m matrix by an m * p matrix is one example of why this
-      is problemtic.) We could just require that t * u exists, but
+      is problematic.) We could just require that t * u exists, but
       without being able to say anything about the return value,
       this seems to be too weak a constraint. Besides which, we don't
       need it.
@@ -1318,24 +1332,24 @@ namespace sequoia::maths
   /** @defgroup AlgebraicTraits Algebraic Traits
       @brief Traits and concepts for types attempting to model algebraic types.
 
-      This section seeks to provides compile time mechanisms to specify (and subsequently query)
+      This section seeks to provide compile time mechanisms to specify (and subsequently query)
       whether arithmetic types, be they built-in (int, float etc) or user-defined, exhibit various properties.
       A fundamental problem of attempting this is the difference
       between a mathematical structure and an approximate representation of that structure.
       This is sharpened in the current context of attempting to do this in code:     
       ints model the integers, but not exactly since there is a maximum representable value.
       Similarly, floating-point numbers model the reals but only in an approximate sense.
-      However, it is useful to capture such 'best efforts', for which we use the signifer
+      However, it is useful to capture such 'best efforts', for which we use the signifier
       'weak'. For example to signify the fact that neither integer nor floating-point addition exactly models an
       abelian group, trait `weakly_abelian_group_under_addition` is used. Note, however, that addition of unsigned integral
       types does precisely model an abelian group and so 'weak' is a minimum requirement.
       
-      Entertaingly, the only fundamental type in C++ which exacly models a field is bool.
+      Entertainingly, the only fundamental type in C++ which exactly models a field is bool.
    */
 
   /** @defgroup WeaklyAbelianGroupUnderAddition Subgroup weakly abelian group under addition
       @ingroup AlgebraicTraits
-      @brief Trait for specifying whether a type behaves (appoximately) as an abelian group under addition.
+      @brief Trait for specifying whether a type behaves (approximately) as an abelian group under addition.
 
       This includes all the arithmetic types, with the unsigned one behaving precisely as an abelian group
       under addition.
@@ -1362,7 +1376,7 @@ namespace sequoia::maths
 
   /** @defgroup WeaklyAbelianGroupUnderMultiplication Subgroup weakly abelian group under multiplication
       @ingroup AlgebraicTraits
-      @brief Trait for specifying whether a type behaves (appoximately) as an abelian group under multiplication.
+      @brief Trait for specifying whether a type behaves (approximately) as an abelian group under multiplication.
 
       The floating-point types are taken to weakly model an abelian group under multiplication,
       since they attempt to approximate the reals.
@@ -1673,16 +1687,16 @@ namespace sequoia::maths
   
   
   template<class Algebra, class Rep>
-  struct weakly_representated_by : std::false_type {};
+  struct weakly_represented_by : std::false_type {};
 
   template<class Algebra, class Rep>
-  using weakly_representated_by_t = weakly_representated_by<Algebra, Rep>::type;
+  using weakly_represented_by_t = weakly_represented_by<Algebra, Rep>::type;
 
   template<class Algebra, class Rep>
-  inline constexpr bool weakly_representated_by_v = weakly_representated_by<Algebra, Rep>::value;
+  inline constexpr bool weakly_represented_by_v = weakly_represented_by<Algebra, Rep>::value;
 
   template<class Rep, class Algebra>
-  concept weak_representation_for = weakly_representated_by_v<Algebra, Rep>;
+  concept weak_representation_for = weakly_represented_by_v<Algebra, Rep>;
   
   // TO DO constrain coordinates_type to hold things satisfying a coords concept?
   template<class R>
@@ -1695,7 +1709,7 @@ namespace sequoia::maths
   concept representation_for
     =    partial_m_torsor<Space>
       && representation<R>
-    // TO DO not this, since the set could be anything and the rep applies to the coordintes
+    // TO DO not this, since the set could be anything and the rep applies to the coordinates
     // but maybe something along these lines
     // && weak_representation_for<value_type_of_t<R>, set_type_of_t<Space>>
     // TO DO: this seems to massively slow down compilation  && bounds_for<decltype(R::bounds_v), Space>
@@ -1977,15 +1991,15 @@ namespace sequoia::maths
       it is possible to construct a module via direct product, in this case, over R.
       However, in general this is not allowed.
 
-      For now, we do not handle the general case. Thus, we may only consruct the direct
+      For now, we do not handle the general case. Thus, we may only construct the direct
       product of free modules if they are, roughly speaking, over the same ring. To be
-      precise, the free modules' commutative rings must either all satsify the weak_field
+      precise, the free modules' commutative rings must either all satisfy the weak_field
       concept or none of them do; on top of which they must share a common type in the C++
       sense.
    */
 
    /** @defgroup SpacesUtilities Convex Space Utilities
-      @brief Utilites for extracting properties of partial M-torsors
+      @brief Utilities for extracting properties of partial M-torsors
    */
 
   template<partial_m_torsor C>
@@ -2114,7 +2128,7 @@ namespace sequoia::maths
       of the original vector space. The set underlying the dual vector
       space seems more problematic: how do we represent the set of linear
       functionals? But actually, this is not an issue within our approach
-      since all we are required to do is name the strcuture and not attempt
+      since all we are required to do is name the structure and not attempt
       the far more difficult task of somehow specifying the elements. It
       is therefore sufficient for our purposes to create a class template,
       linear_functionals, the template parameters of which specify the spaces
@@ -2243,7 +2257,7 @@ namespace sequoia::maths
   /** @ingroup DualSpaces
       @brief Helper to generate the dual of a space, taking into account that the dual of the dual may be related to the original space.
 
-      The dual of the dual of a finite dimensional vector space, V, is isomporphic
+      The dual of the dual of a finite dimensional vector space, V, is isomorphic
       to V. We take this double dual to be just V itself. Similarly for the affine
       and convex generalizations, though insisting that the ring is a field.
       Clients can override this behaviour with the appropriate specializations.
@@ -2394,11 +2408,11 @@ namespace sequoia::maths
   using free_module_coordinates = coordinates<FreeModule, Basis, Representation, Validator>;
   
   /** @ingroup Coordinates
-      @brief Class designed for inheritance by concerete coordinate types.
+      @brief Class designed for inheritance by concrete coordinate types.
 
       The type has protected special member functions (including the destructor) and uses
       deducing-this patterns as a type-rich alternative to virtual dispatch. The purpose
-      of this approach is solely code reduction. In the maths namespace the coordintates
+      of this approach is solely code reduction. In the maths namespace the coordinates
       namespace derives from coordinates_base, and it turns out to be convenient for
       the former to have several different specializations.
 
@@ -2407,7 +2421,7 @@ namespace sequoia::maths
       useful in terms of reducing what would otherwise be very significant code duplication.
 
       One of the novelties in the context of physics is the notion of units and quantities
-      of different types that can nevertheless be multipled and in some cases (like widths
+      of different types that can nevertheless be multiplied and in some cases (like widths
       and heights) added.
 
       Morally, for a space of dimension D, coordinates_base wraps D values of the appropriate
@@ -3384,30 +3398,30 @@ namespace sequoia::maths
 
   template<std::integral Rep>
     requires std::is_signed_v<Rep>
-  struct weakly_representated_by<commutative_rings::integers<1>, Rep> : std::true_type {};
+  struct weakly_represented_by<commutative_rings::integers<1>, Rep> : std::true_type {};
 
   // Allow signed as well as unsigned
   //template<std::integral Rep>
-  //struct weakly_representated_by<sets::N_0<1>, Rep> : std::true_type {};
+  //struct weakly_represented_by<sets::N_0<1>, Rep> : std::true_type {};
 
   template<std::floating_point Rep>
-  struct weakly_representated_by<commutative_rings::reals<1>, Rep> : std::true_type {};
+  struct weakly_represented_by<commutative_rings::reals<1>, Rep> : std::true_type {};
 
   template<std::floating_point F>
-  struct weakly_representated_by<commutative_rings::complexes, std::complex<F>> : std::true_type {};
+  struct weakly_represented_by<commutative_rings::complexes, std::complex<F>> : std::true_type {};
 
   //template<std::floating_point Rep>
-  //struct weakly_representated_by<sets::orthant<1>, Rep> : std::true_type {};
+  //struct weakly_represented_by<sets::orthant<1>, Rep> : std::true_type {};
 
   /*template<sets::boundedness Lower, sets::boundedness Upper, std::floating_point Rep>
-  struct weakly_representated_by<sets::real_line_segment<Lower, Upper>, Rep>
+  struct weakly_represented_by<sets::real_line_segment<Lower, Upper>, Rep>
     : std::true_type
   {};
 
   template<sets::boundedness Lower, sets::boundedness Upper, std::integral Rep>
   requires    (     ((Lower == sets::boundedness::negative_infty) && (Lower == sets::boundedness::negative_finite))  && std::is_signed_v<Rep>  )
            || (not (((Lower == sets::boundedness::negative_infty) && (Lower == sets::boundedness::negative_finite))) && std::is_unsigned_v<Rep>)
-  struct weakly_representated_by<sets::integral_line_segment<Lower, Upper>, Rep>
+  struct weakly_represented_by<sets::integral_line_segment<Lower, Upper>, Rep>
     : std::true_type
   {};
   */
