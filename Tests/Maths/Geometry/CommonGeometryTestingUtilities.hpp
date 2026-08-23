@@ -170,13 +170,6 @@ namespace sequoia::testing
     constexpr static std::size_t rank{D};
   };
 
-  template<class Set, class Ring, std::size_t D>
-  struct my_canonical_module_basis
-  {
-    using is_basis         = std::true_type;
-    using free_module_type = my_module<Set, Ring, D>;
-  };
-
   /*! The action of the free module is total, exactly as for an affine space, but
       the ring is deliberately not a field: this is the case which only the
       M-affine concept admits.

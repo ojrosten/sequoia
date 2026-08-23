@@ -38,7 +38,7 @@ namespace sequoia::testing
   void free_module_coordinates_test::test_free_module()
   {
     using free_module_t = my_module<Set, Ring, D>;
-    using basis_t       = my_canonical_module_basis<Set, Ring, D>;
+    using basis_t       = general_basis<free_module_t>;
 
     STATIC_CHECK(!vector_space<free_module_t>);
     STATIC_CHECK(free_module<free_module_t>);
