@@ -21,6 +21,8 @@ target_sources(TestChamber PRIVATE
                ${TestDir}/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp
                ${TestDir}/Maths/Geometry/BoundsFreeTest.cpp
                ${TestDir}/Maths/Geometry/FreeModuleCoordinatesTest.cpp
+               ${TestDir}/Maths/Geometry/M_AffineCoordinatesTest.cpp
+               ${TestDir}/Maths/Geometry/PartialMTorsorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/SpacesMetaFreeTest.cpp
                ${TestDir}/Maths/Geometry/VectorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp

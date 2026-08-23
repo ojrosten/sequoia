@@ -17,6 +17,8 @@ namespace sequoia::testing
 
   namespace
   {
+    // Fixtures for the origin and orthant traits.
+
     struct distinguished_origin_space {
       using set_type             = sets::R<1>;
       using free_module_type     = euclidean_vector_space<1>;
@@ -60,20 +62,31 @@ namespace sequoia::testing
       using structure        = m_affine_space_tag_t;
     };
 
-    // Tagged as affine, but over a ring which is not a field: the tag alone
-    // must not be enough.
-    struct integral_pseudo_affine_space {
-      using set_type         = sets::Z<1>;
-      using free_module_type = integral_module;
-      using structure        = affine_space_tag_t;
-    };
-
     // Tagged as convex, but over the integers: an ordered ring is not an ordered
-    // field, so here too the tag alone must not be enough.
+    // field, so the tag alone must not be enough.
     struct integral_pseudo_convex_space {
       using set_type         = sets::N_0<1>;
       using free_module_type = integral_module;
       using structure        = convex_space_tag_t;
+    };
+
+    // The action is total and the reals are an ordered field, so this is affine
+    // and convex without saying so. Only the M-affine tag is available to say it
+    // with, there being no affine tag: the promotion to affine is settled by the
+    // ring.
+    struct real_m_affine_space {
+      using set_type         = sets::R<1>;
+      using free_module_type = euclidean_vector_space<1>;
+      using structure        = m_affine_space_tag_t;
+    };
+
+    // Over an ordered field, yet not convex: the action is only partial, so the
+    // space is free to comprise, say, two disjoint intervals. This is why
+    // convexity must remain a tag and cannot be read off the ring.
+    struct real_partial_m_torsor {
+      using set_type         = sets::R<1>;
+      using free_module_type = euclidean_vector_space<1>;
+      using structure        = partial_m_torsor_tag_t;
     };
 
     struct complex_vector_space {
@@ -86,7 +99,20 @@ namespace sequoia::testing
     struct complex_affine_space {
       using set_type          = sets::C<1>;
       using vector_space_type = complex_vector_space;
-      using structure         = affine_space_tag_t;
+      using structure         = m_affine_space_tag_t;
+    };
+
+    /*! A partial M-torsor over the complex numbers, and pointed, tensor products
+        requiring a distinguished origin of their factors. The ring being a field
+        but not an ordered one, this is the cheapest space which is admissible
+        everywhere yet convex nowhere - which is what makes it the right probe for
+        the non-convex branch of the derived spaces below.
+     */
+    struct complex_pointed_torsor {
+      using set_type             = sets::C<1>;
+      using free_module_type     = complex_vector_space;
+      using structure            = partial_m_torsor_tag_t;
+      using distinguished_origin = std::true_type;
     };
   }
   
@@ -97,6 +123,16 @@ namespace sequoia::testing
   }
 
   void spaces_meta_free_test::run_tests()
+  {
+    test_arithmetic_traits();
+    test_origin_and_orthant_traits();
+    test_commutative_rings();
+    test_basis_traits();
+    test_spaces_dag();
+    test_derived_spaces();
+  }
+
+  void spaces_meta_free_test::test_arithmetic_traits()
   {
     STATIC_CHECK(is_addable_v<int>);
     STATIC_CHECK(is_subtractable_v<int>);
@@ -116,7 +152,10 @@ namespace sequoia::testing
     STATIC_CHECK(weakly_abelian_group_under_multiplication_v<double>);
     STATIC_CHECK(weakly_abelian_group_under_multiplication_v<std::complex<float>>);
     STATIC_CHECK(weakly_abelian_group_under_multiplication_v<std::complex<double>>);
+  }
 
+  void spaces_meta_free_test::test_origin_and_orthant_traits()
+  {
     STATIC_CHECK(has_distinguished_origin_v<distinguished_origin_space>);
     STATIC_CHECK(!is_non_negative_orthant_v<distinguished_origin_space>);
 
@@ -129,13 +168,14 @@ namespace sequoia::testing
     STATIC_CHECK(!is_non_negative_orthant_v<unremarkable_space>);
     STATIC_CHECK(!has_distinguished_origin_v<dual<unremarkable_space>>);
     STATIC_CHECK(!is_non_negative_orthant_v<dual<unremarkable_space>>);
+  }
 
-    STATIC_CHECK(commutative_ring<commutative_rings::reals<1>>);
-    STATIC_CHECK(field<commutative_rings::reals<1>>);
-
-    // The commutative-ring diamond of the introduction. Being ordered and being a
-    // field are independent: the integers have the first, the complexes the
-    // second, and only the reals have both.
+  /*! The commutative-ring diamond of the introduction. Being ordered and being a
+      field are independent: the integers have the first, the complexes the
+      second, and only the reals have both.
+   */
+  void spaces_meta_free_test::test_commutative_rings()
+  {
     STATIC_CHECK( commutative_ring<commutative_rings::integers<1>>);
     STATIC_CHECK( ordered_ring<commutative_rings::integers<1>>);
     STATIC_CHECK(!field<commutative_rings::integers<1>>);
@@ -146,7 +186,9 @@ namespace sequoia::testing
     STATIC_CHECK( field<commutative_rings::complexes>);
     STATIC_CHECK(!ordered_field<commutative_rings::complexes>);
 
+    STATIC_CHECK( commutative_ring<commutative_rings::reals<1>>);
     STATIC_CHECK( ordered_ring<commutative_rings::reals<1>>);
+    STATIC_CHECK( field<commutative_rings::reals<1>>);
     STATIC_CHECK( ordered_field<commutative_rings::reals<1>>);
 
     // Only R itself is a field: R^2 under componentwise multiplication has zero
@@ -155,15 +197,19 @@ namespace sequoia::testing
     STATIC_CHECK(!ordered_ring<commutative_rings::reals<2>>);
     STATIC_CHECK(!field<commutative_rings::reals<2>>);
     STATIC_CHECK(!ordered_field<commutative_rings::reals<2>>);
+  }
 
+  void spaces_meta_free_test::test_basis_traits()
+  {
     // The basis concept requires index_set to define d values. Pin the count
     // rather than the spelling, since it is the count the contract states and
     // nothing in the codebase reads the type.
     STATIC_CHECK(general_basis<euclidean_vector_space<1>>::index_set::size() == 1);
     STATIC_CHECK(general_basis<euclidean_vector_space<3>>::index_set::size() == 3);
-    STATIC_CHECK(general_basis<integral_module>::index_set::size() == integral_module::rank);
+    STATIC_CHECK(general_basis<integral_module>::index_set::size() == 1);
 
-    test_spaces_dag();
+    STATIC_CHECK(basis_for<general_basis<euclidean_vector_space<3>>, euclidean_vector_space<3>>);
+    STATIC_CHECK(!basis_for<general_basis<euclidean_vector_space<3>>, euclidean_vector_space<1>>);
   }
 
   /*! Pins the DAG of spaces. For each node there is a fixture which sits at
@@ -184,6 +230,15 @@ namespace sequoia::testing
     STATIC_CHECK(!free_module<integral_partial_m_torsor>);
     STATIC_CHECK(!vector_space<integral_partial_m_torsor>);
 
+    // The same node, but over an ordered field. Convexity still fails, and can
+    // only fail on the tag: this is the fixture which keeps the tag honest.
+    STATIC_CHECK( partial_m_torsor<real_partial_m_torsor>);
+    STATIC_CHECK(!convex_space<real_partial_m_torsor>);
+    STATIC_CHECK(!m_affine_space<real_partial_m_torsor>);
+    STATIC_CHECK(!affine_space<real_partial_m_torsor>);
+    STATIC_CHECK(!free_module<real_partial_m_torsor>);
+    STATIC_CHECK(!vector_space<real_partial_m_torsor>);
+
     // Identifying as convex is necessary but not sufficient: interpolation needs
     // an ordered field, and the integers are only an ordered ring.
     STATIC_CHECK( partial_m_torsor<integral_pseudo_convex_space>);
@@ -202,14 +257,14 @@ namespace sequoia::testing
     STATIC_CHECK(!free_module<integral_m_affine_space>);
     STATIC_CHECK(!vector_space<integral_m_affine_space>);
 
-    // Identifying as affine does not make a space affine if the ring is not a
-    // field; what remains is the M-affine structure the tag also implies.
-    STATIC_CHECK( partial_m_torsor<integral_pseudo_affine_space>);
-    STATIC_CHECK(!convex_space<integral_pseudo_affine_space>);
-    STATIC_CHECK( m_affine_space<integral_pseudo_affine_space>);
-    STATIC_CHECK(!affine_space<integral_pseudo_affine_space>);
-    STATIC_CHECK(!free_module<integral_pseudo_affine_space>);
-    STATIC_CHECK(!vector_space<integral_pseudo_affine_space>);
+    // The same node over the reals, and therefore affine, and therefore convex.
+    // Nothing marks it as either; the ring settles both.
+    STATIC_CHECK( partial_m_torsor<real_m_affine_space>);
+    STATIC_CHECK( convex_space<real_m_affine_space>);
+    STATIC_CHECK( m_affine_space<real_m_affine_space>);
+    STATIC_CHECK( affine_space<real_m_affine_space>);
+    STATIC_CHECK(!free_module<real_m_affine_space>);
+    STATIC_CHECK(!vector_space<real_m_affine_space>);
 
     // A free module is an M-affine space over itself.
     STATIC_CHECK( partial_m_torsor<integral_module>);
@@ -245,8 +300,6 @@ namespace sequoia::testing
     STATIC_CHECK( free_module<euclidean_vector_space<1>>);
     STATIC_CHECK( vector_space<euclidean_vector_space<1>>);
 
-    // Convex without carrying the tag: the action is total and the reals are an
-    // ordered field, so closure under interpolation is automatic.
     STATIC_CHECK( partial_m_torsor<euclidean_affine_space<1>>);
     STATIC_CHECK( convex_space<euclidean_affine_space<1>>);
     STATIC_CHECK( m_affine_space<euclidean_affine_space<1>>);
@@ -260,5 +313,24 @@ namespace sequoia::testing
     STATIC_CHECK(!affine_space<euclidean_nonnegative_space<1>>);
     STATIC_CHECK(!free_module<euclidean_nonnegative_space<1>>);
     STATIC_CHECK(!vector_space<euclidean_nonnegative_space<1>>);
+  }
+
+  /*! Duals and tensor products decide their own structure tag from that of the
+      spaces they are built from. Everything else in the suite is built over the
+      reals, so without these the convex branch of that decision is the only one
+      ever taken.
+   */
+  void spaces_meta_free_test::test_derived_spaces()
+  {
+    STATIC_CHECK( convex_space<dual<half_line_space>>);
+    STATIC_CHECK( convex_space<dual<unremarkable_space>>);
+
+    STATIC_CHECK( partial_m_torsor<dual<complex_pointed_torsor>>);
+    STATIC_CHECK(!convex_space<dual<complex_pointed_torsor>>);
+
+    STATIC_CHECK( convex_space<tensor_product<distinguished_origin_space, distinguished_origin_space>>);
+
+    STATIC_CHECK( partial_m_torsor<tensor_product<complex_pointed_torsor, complex_pointed_torsor>>);
+    STATIC_CHECK(!convex_space<tensor_product<complex_pointed_torsor, complex_pointed_torsor>>);
   }
 }

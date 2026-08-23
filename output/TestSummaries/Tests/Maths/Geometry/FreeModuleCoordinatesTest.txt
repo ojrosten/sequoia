@@ -1,2 +1,2 @@
-Free Module Test
-Standard Top Level Checks:               148;  Failures:  0  [Deep checks: 6112]
+Free Module Coordinates Test
+Standard Top Level Checks:               152;  Failures:  0  [Deep checks: 4912]

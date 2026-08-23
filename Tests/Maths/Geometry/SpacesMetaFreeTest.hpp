@@ -23,6 +23,16 @@ namespace sequoia::testing
 
     void run_tests();
   private:
+    void test_arithmetic_traits();
+
+    void test_origin_and_orthant_traits();
+
+    void test_commutative_rings();
+
+    void test_basis_traits();
+
     void test_spaces_dag();
+
+    void test_derived_spaces();
   };
 }

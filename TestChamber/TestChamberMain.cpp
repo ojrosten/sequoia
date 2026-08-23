@@ -54,8 +54,16 @@ int main(int argc, char** argv)
         affine_coordinates_test{"Affine Coordinates Test"}
       },
       suite{
+        "M-Affine Coordinates",
+        m_affine_coordinates_test{"M-Affine Coordinates Test"}
+      },
+      suite{
         "Free Module Coordinates",
-        free_module_coordinates_test{"Free Module Test"}
+        free_module_coordinates_test{"Free Module Coordinates Test"}
+      },
+      suite{
+        "Partial M-Torsor Coordinates",
+        partial_m_torsor_coordinates_test{"Partial M-Torsor Coordinates Test"}
       },
       suite{
         "Absolute Coordinates",

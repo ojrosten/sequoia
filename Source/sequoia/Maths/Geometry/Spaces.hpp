@@ -606,9 +606,7 @@ namespace sequoia::maths
 
   struct free_module_tag_t : virtual m_affine_space_tag_t {};
 
-  struct affine_space_tag_t : virtual m_affine_space_tag_t {};
-
-  struct vector_space_tag_t : virtual affine_space_tag_t, virtual free_module_tag_t {};
+  struct vector_space_tag_t : virtual free_module_tag_t {};
 
   /** @} */
 
@@ -640,14 +638,6 @@ namespace sequoia::maths
        has_structure_type_v<T>
     && requires {
          requires std::derived_from<typename T::structure, m_affine_space_tag_t>;
-       }
-  };
-
-  template<class T>
-  inline constexpr bool identifies_as_affine_space_v{
-       has_structure_type_v<T>
-    && requires {
-         requires std::derived_from<typename T::structure, affine_space_tag_t>;
        }
   };
 
@@ -913,10 +903,10 @@ namespace sequoia::maths
 
   /** @defgroup FreeModuleTypeOf Subgroup Free module type of
       @ingroup PropertiesOfSpaces
-      @brief Extracts the free module type associated with a convex space.
+      @brief Extracts the free module type associated with a partial M-torsor.
 
-      This takes into account that if the convex space is a free module, then the
-      associated free module type is just the space itself.
+      This takes into account that if the partial M-torsor is a free module, then
+      the associated free module type is just the space itself.
 
       @{
    */
@@ -942,7 +932,7 @@ namespace sequoia::maths
   /** @} */
 
   /** @ingroup PropertiesOfSpaces
-      @brief Extracts the commutative ring type of the free module associated with a convex space.
+      @brief Extracts the commutative ring type of the free module associated with a partial M-torsor.
 
       This takes into account that if the free module is a vector space, then the commutative ring is actually a field.
 
@@ -960,21 +950,18 @@ namespace sequoia::maths
   /** @} */
 
   /** @ingroup Spaces
-      @brief concept for affine spaces, being the M-affine spaces over a field
+      @brief concept for affine spaces: M-affine spaces over a field.
 
-      A vector space is an affine space over itself. Otherwise, an affine space
-      is an M-affine space which identifies as such and whose commutative ring is
-      a field; an M-affine space over a ring which is not a field is not affine.
+      Note that there is no need for the space to identify as anything beyond
+      an M-affine space. The fact that the free module is required to be
+      over a field fixes the space as an affine space.
 
       Note that the requirement on the ring is why this concept, unlike its
       neighbours, is defined here rather than alongside them: it needs
       commutative_ring_type_of_t.
    */
   template<class T>
-  concept affine_space =    vector_space<T>
-                         || (   m_affine_space<T>
-                             && identifies_as_affine_space_v<T>
-                             && field<commutative_ring_type_of_t<T>>);
+  concept affine_space = m_affine_space<T> && field<commutative_ring_type_of_t<T>>;
 
   /** @ingroup Spaces
       @brief concept for convex spaces
@@ -1000,7 +987,7 @@ namespace sequoia::maths
 
 
   /** @ingroup PropertiesOfSpaces
-      @brief Extracts the dimension of the free module associated with a convex space.
+      @brief Extracts the dimension of the free module associated with a partial M-torsor.
 
       The program is ill-formed if the space defines its own dimension (rank) that
       is inconsistent with the free module's dimension.
@@ -1889,7 +1876,7 @@ namespace sequoia::maths
   };
 
   /** @ingroup Validators
-      @brief concept to check if a validator is compatible with a convex space.
+      @brief concept to check if a validator is compatible with a partial M-torsor.
    */
   template<class V, class Space, class Representation>
   concept validator_for =
@@ -1998,7 +1985,7 @@ namespace sequoia::maths
    */
 
    /** @defgroup SpacesUtilities Convex Space Utilities
-      @brief Utilites for extracting properties of convex spaces
+      @brief Utilites for extracting properties of partial M-torsors
    */
 
   template<partial_m_torsor C>
@@ -2076,7 +2063,7 @@ namespace sequoia::maths
     using set_type              = tensor_product<typename Ts::set_type...>;
     using commutative_ring_type = std::common_type_t<commutative_ring_type_of_t<Ts>...>;
     using structure             = free_module_tag_t;
-    constexpr static std::size_t dimension{(Ts::dimension * ...)};
+    constexpr static std::size_t dimension{(rank_of_v<Ts> * ...)};
   };
 
   template<partial_m_torsor... Ts>
@@ -2213,7 +2200,7 @@ namespace sequoia::maths
   {
     using set_type         = sets::convex_functionals<A, commutative_ring_type_of_t<A>>;
     using free_module_type = dual<free_module_type_of_t<A>>;
-    using structure        = affine_space_tag_t;
+    using structure        = m_affine_space_tag_t;
   };
 
   /** @ingroup DualSpaces
@@ -3540,7 +3527,7 @@ namespace sequoia::maths
   {
     using set_type          = sets::R<D>;
     using vector_space_type = euclidean_vector_space<D, Arena>;
-    using structure         = affine_space_tag_t;
+    using structure         = m_affine_space_tag_t;
     using arena_type        = Arena;
   };
 

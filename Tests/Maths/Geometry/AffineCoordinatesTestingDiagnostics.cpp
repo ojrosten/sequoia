@@ -9,11 +9,6 @@
 
 #include "AffineCoordinatesTestingDiagnostics.hpp"
 
-namespace
-{
-  struct alice {};
-}
-
 namespace sequoia::testing
 {
   using namespace maths;

@@ -1,2 +1,2 @@
 Affine Coordinates Test
-Standard Top Level Checks:               214;  Failures:  0  [Deep checks: 4295]
+Standard Top Level Checks:               163;  Failures:  0  [Deep checks: 2867]

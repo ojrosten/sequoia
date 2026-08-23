@@ -25,8 +25,5 @@ namespace sequoia::testing
   private:
     template<class Set, class Ring, class SetRep, std::size_t D>
     void test_free_module();
-
-    template<class Set, class Ring, class SetRep, std::size_t D>
-    void test_convex();
   };
 }

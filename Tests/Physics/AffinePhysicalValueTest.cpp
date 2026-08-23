@@ -18,7 +18,6 @@ namespace sequoia::testing
   namespace
   {
     struct tina_arena{};
-    struct alice {};
   }
 
   [[nodiscard]]

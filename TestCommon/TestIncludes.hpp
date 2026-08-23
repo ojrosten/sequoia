@@ -52,6 +52,8 @@
 #include "Maths/Geometry/AffineCoordinatesTestingDiagnostics.hpp"
 #include "Maths/Geometry/BoundsFreeTest.hpp"
 #include "Maths/Geometry/FreeModuleCoordinatesTest.hpp"
+#include "Maths/Geometry/M_AffineCoordinatesTest.hpp"
+#include "Maths/Geometry/PartialMTorsorCoordinatesTest.hpp"
 #include "Maths/Geometry/SpacesMetaFreeTest.hpp"
 #include "Maths/Geometry/VectorCoordinatesTest.hpp"
 #include "Maths/Geometry/VectorCoordinatesTestingDiagnostics.hpp"

@@ -742,7 +742,7 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{D};
     using set_type            = PhysicalValueSet;
     using free_module_type    = associated_displacement_space<Derived>;
-    using structure           = affine_space_tag_t;
+    using structure           = m_affine_space_tag_t;
     using arena_type          = PhysicalValueSet::arena_type;
   };
 

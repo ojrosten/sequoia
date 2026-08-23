@@ -22,15 +22,11 @@ namespace sequoia::testing
     std::filesystem::path source_file() const;
 
     void run_tests();
-
+  private:
     // TO DO: infer D
     template<class Set, class Field, std::size_t D, class Rep>
     // TO DO rep_for<Field> Rep
       requires maths::identifies_as_field_v<Field>
     void test_affine();
-
-    template<class Set, class Ring, std::size_t D, class Rep>
-      requires (!maths::identifies_as_field_v<Ring>)
-    void test_m_affine();
   };
 }

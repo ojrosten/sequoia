@@ -157,7 +157,7 @@ namespace sequoia::testing
   {
     using set_type          = Set;
     using vector_space_type = my_vec_space<Set, Field, D>;
-    using structure         = maths::affine_space_tag_t;
+    using structure         = maths::m_affine_space_tag_t;
   };
 
   template<class Set, class Ring, std::size_t D>
@@ -168,6 +168,13 @@ namespace sequoia::testing
     using structure              = maths::free_module_tag_t;
     using admits_canonical_basis = std::true_type;
     constexpr static std::size_t rank{D};
+  };
+
+  template<class Set, class Ring, std::size_t D>
+  struct my_canonical_module_basis
+  {
+    using is_basis         = std::true_type;
+    using free_module_type = my_module<Set, Ring, D>;
   };
 
   /*! The action of the free module is total, exactly as for an affine space, but
@@ -181,6 +188,112 @@ namespace sequoia::testing
     using set_type         = Set;
     using free_module_type = my_module<Set, Ring, D>;
     using structure        = maths::m_affine_space_tag_t;
+  };
+
+  /*! Origins for coordinates on an M-affine space, and hence on an affine space
+      or a vector space. Two are provided so that transformations between them
+      may be exercised; they carry no state, an origin being nothing more than a
+      choice.
+   */
+
+  struct alice {};
+
+  struct bob {};
+
+  /*! @brief Whether a coordinates type is expected to support a given operation.
+
+      Three-valued, rather than a bool, so that the default is `unstated`: a row
+      omitted from an operator_expectations aggregate is a compile-time error
+      naming that row, rather than a silent `no`.
+   */
+
+  enum class admits : char { unstated, no, yes };
+
+  /*! @brief The complete set of arithmetic operations a coordinates type may support.
+
+      Every coordinates test states every row. That is the whole point: before
+      this existed, the affine and M-affine cases each checked a different subset
+      and the divergence was invisible.
+
+      Note what this type deliberately does not do. It holds no logic of its own -
+      no deduction of one row from another, and above all no consultation of the
+      concepts in Spaces.hpp. Each call site simply asserts the fifteen answers it
+      expects. Were the expectations instead computed from, say, `field<...>`, a
+      broken concept would revise the expectation to match itself and the checks
+      would stay green; the test's fidelity would then rest on the correctness of
+      the very code under test.
+
+      Throughout, `point` is the coordinates type, `displacement` its associated
+      displacement coordinates type - the two coincide for a free module or a
+      vector space - and `scalar` the representation's value type.
+   */
+
+  struct operator_expectations
+  {
+    admits point_plus_point                {};
+    admits point_plus_displacement         {};
+    admits point_minus_point               {};
+    admits point_minus_displacement        {};
+    admits point_unary_plus                {};
+    admits point_unary_minus               {};
+    admits point_times_scalar              {};
+    admits point_over_scalar               {};
+    admits point_over_point                {};
+    admits point_over_displacement         {};
+    admits displacement_over_point         {};
+    admits displacement_times_scalar       {};
+    admits displacement_over_scalar        {};
+    admits displacement_over_displacement  {};
+    admits displacement_unary_minus        {};
+  };
+
+  /*! @brief Checks a coordinates type against every row of operator_expectations.
+
+      Each row is a static_assert, so a mismatch is caught at compile time; each
+      is additionally registered as a check, with a description naming the
+      operation, so that the count reflects what was verified.
+   */
+
+  template<class Coordinates, operator_expectations Expected>
+  class operator_checks
+  {
+    using point_t        = Coordinates;
+    using displacement_t = Coordinates::displacement_coordinates_type;
+    using scalar_t       = Coordinates::representation_type::value_type;
+
+    regular_test& m_Test;
+  public:
+    explicit operator_checks(regular_test& t)
+      : m_Test{t}
+    {}
+
+    void execute()
+    {
+      check_row<Expected.point_plus_point,               can_add<point_t, point_t>>              ("point + point");
+      check_row<Expected.point_plus_displacement,        can_add<point_t, displacement_t>>       ("point + displacement");
+      check_row<Expected.point_minus_point,              can_subtract<point_t, point_t>>         ("point - point");
+      check_row<Expected.point_minus_displacement,       can_subtract<point_t, displacement_t>>  ("point - displacement");
+      check_row<Expected.point_unary_plus,               has_unary_plus<point_t>>                ("+point");
+      check_row<Expected.point_unary_minus,              has_unary_minus<point_t>>               ("-point");
+      check_row<Expected.point_times_scalar,             can_multiply<point_t, scalar_t>>        ("point * scalar");
+      check_row<Expected.point_over_scalar,              can_divide<point_t, scalar_t>>          ("point / scalar");
+      check_row<Expected.point_over_point,               can_divide<point_t, point_t>>           ("point / point");
+      check_row<Expected.point_over_displacement,        can_divide<point_t, displacement_t>>    ("point / displacement");
+      check_row<Expected.displacement_over_point,        can_divide<displacement_t, point_t>>    ("displacement / point");
+      check_row<Expected.displacement_times_scalar,      can_multiply<displacement_t, scalar_t>> ("displacement * scalar");
+      check_row<Expected.displacement_over_scalar,       can_divide<displacement_t, scalar_t>>   ("displacement / scalar");
+      check_row<Expected.displacement_over_displacement, can_divide<displacement_t, displacement_t>>("displacement / displacement");
+      check_row<Expected.displacement_unary_minus,       has_unary_minus<displacement_t>>        ("-displacement");
+    }
+  private:
+    template<admits Row, bool Actual>
+    void check_row(std::string_view description)
+    {
+      static_assert(Row != admits::unstated, "Every row of operator_expectations must be stated");
+      static_assert((Row == admits::yes) == Actual, "Operator availability differs from the stated expectation");
+
+      m_Test.check(description, true);
+    }
   };
 
   template<maths::partial_m_torsor Space, maths::basis Basis, class... Ts>

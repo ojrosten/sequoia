@@ -9,7 +9,7 @@
 
 #include "ConvexPhysicalValueTest.hpp"
 
-#include "Maths/Geometry/GeometryTestingUtilities.hpp"
+#include "../Maths/Geometry/GeometryTestingUtilities.hpp"
 
 #include "sequoia/TextProcessing/Patterns.hpp"
 
