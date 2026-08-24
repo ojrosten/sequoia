@@ -48,7 +48,7 @@ namespace
     = physical_value<
         colour_space<N, Arena>,
         normalized_colour_t<N>,
-        unit_defined_right_handed_basis<free_module_type_of_t<colour_space<N, Arena>>, normalized_colour_t<N>>,    
+        unit_defined_basis<normalized_colour_t<N>>,    
         canonical_representation<T, coordinate_bounds{T(0.0), T(1.0)}>,
         to_origin_type_t<colour_space<N, Arena>>
       >;
@@ -172,7 +172,7 @@ namespace sequoia::testing
       !defines_physical_value_v<
         dual<space_t>,
         dual<units_t>,
-        unit_defined_right_handed_basis<free_module_type_of_t<dual<space_t>>, dual<units_t>>,
+        unit_defined_basis<dual<units_t>>,
         dual_of_t<repr_t>,
         to_origin_type_t<dual<space_t>>,
         throwing_validator

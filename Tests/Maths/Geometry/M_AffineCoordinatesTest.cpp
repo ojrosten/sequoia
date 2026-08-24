@@ -36,7 +36,7 @@ namespace sequoia::testing
   {
     using space_t    = my_m_affine_space<Set, Ring, D>;
     using module_t   = free_module_type_of_t<space_t>;
-    using basis_t    = general_basis<module_t>;
+    using basis_t    = canonical_basis;
     using rep_t      = canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>;
     using m_affine_t = m_affine_coordinates<space_t, basis_t, rep_t, alice, identity_validator>;
 
@@ -45,7 +45,7 @@ namespace sequoia::testing
     STATIC_CHECK(!free_module<space_t>);
     STATIC_CHECK(free_module<module_t>);
     STATIC_CHECK(!vector_space<module_t>);
-    STATIC_CHECK(basis_for<basis_t, module_t>);
+    STATIC_CHECK(basis_data_for<basis_t, module_t>);
     STATIC_CHECK(not defines_rank_v<space_t>);
     STATIC_CHECK(dimension_of_v<space_t> == D);
 

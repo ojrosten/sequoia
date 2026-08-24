@@ -48,7 +48,7 @@ namespace sequoia::testing
   void partial_m_torsor_coordinates_test::test_partial_m_torsor()
   {
     using space_t  = my_partial_m_torsor<Set, Ring, D>;
-    using basis_t  = general_basis<free_module_type_of_t<space_t>>;
+    using basis_t  = canonical_basis;
     using coords_t = coordinates<space_t, basis_t, canonical_representation<SetRep, half_line_bounds<SetRep>>, throwing_validator>;
 
     STATIC_CHECK( partial_m_torsor<space_t>);

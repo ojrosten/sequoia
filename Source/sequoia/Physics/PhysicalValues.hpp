@@ -15,13 +15,11 @@
 
 namespace sequoia::physics
 {
-  template<free_module M, physical_unit U>
-  struct unit_defined_right_handed_basis
+  template<physical_unit U>
+  struct unit_defined_basis
   {
-    using is_basis         = std::true_type;
-    using free_module_type = M;
-    using units_type       = U;
-    using isomorphism_type = units_type;
+    using units_type = U;
+    using frame      = units_type;
   };
 
   struct no_unit_t : identity_isomorphism
@@ -47,16 +45,16 @@ namespace sequoia::maths
     using is_unit = std::true_type;
   };
 
-  template<free_module M, physics::physical_unit U>
-  struct dual_of<physics::unit_defined_right_handed_basis<M, U>>
+  template<physics::physical_unit U>
+  struct dual_of<physics::unit_defined_basis<U>>
   {
-    using type = physics::unit_defined_right_handed_basis<dual_of_t<M>, dual_of_t<U>>;
+    using type = physics::unit_defined_basis<dual_of_t<U>>;
   };
 
-  template<free_module M, physics::physical_unit U>
-  struct dual_of<physics::unit_defined_right_handed_basis<dual<M>, dual<U>>>
+  template<physics::physical_unit U>
+  struct dual_of<physics::unit_defined_basis<dual<U>>>
   {
-    using type = physics::unit_defined_right_handed_basis<M, U>;
+    using type = physics::unit_defined_basis<U>;
   };
 
   template<>
@@ -65,11 +63,11 @@ namespace sequoia::maths
     using type = physics::no_unit_t;
   };
 
-  template<free_module M1, physics::physical_unit U1, free_module M2, physics::physical_unit U2>
-  struct consistent_bases<physics::unit_defined_right_handed_basis<M1, U1>, physics::unit_defined_right_handed_basis<M2, U2>> : std::true_type
+  template<physics::physical_unit U1, physics::physical_unit U2>
+  struct consistent_bases<physics::unit_defined_basis<U1>, physics::unit_defined_basis<U2>> : std::true_type
   {
-    template<free_module M, physics::physical_unit U>
-    using rebind_type = physics::unit_defined_right_handed_basis<M, U>;
+    template<physics::physical_unit U>
+    using rebind_type = physics::unit_defined_basis<U>;
   };
 
   template<partial_m_torsor... Ts>
@@ -175,7 +173,7 @@ namespace sequoia::physics
   template<
     partial_m_torsor ValueSpace,
     physical_unit Unit,
-    basis_for<free_module_type_of_t<ValueSpace>> Basis,    
+    basis_data_for<free_module_type_of_t<ValueSpace>> Basis,    
     representation_for<ValueSpace> Representation,
     class Origin,
     validator_for<ValueSpace, Representation> Validator
@@ -219,7 +217,7 @@ namespace sequoia::physics
   template<
     partial_m_torsor ValueSpace,
     physical_unit Unit,
-    basis_for<free_module_type_of_t<ValueSpace>> Basis,
+    basis_data_for<free_module_type_of_t<ValueSpace>> Basis,
     representation_for<ValueSpace> Representation,
     class Validator
   >
@@ -303,8 +301,8 @@ namespace sequoia::physics
   };
   
   template<
-    partial_m_torsor LHSValueSpace, physical_unit LHSUnit, basis_for<free_module_type_of_t<LHSValueSpace>> LHSBasis, representation_for<LHSValueSpace> LHSRepresentation, class Validator,
-    partial_m_torsor RHSValueSpace, physical_unit RHSUnit, basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, representation_for<RHSValueSpace> RHSRepresentation
+    partial_m_torsor LHSValueSpace, physical_unit LHSUnit, basis_data_for<free_module_type_of_t<LHSValueSpace>> LHSBasis, representation_for<LHSValueSpace> LHSRepresentation, class Validator,
+    partial_m_torsor RHSValueSpace, physical_unit RHSUnit, basis_data_for<free_module_type_of_t<RHSValueSpace>> RHSBasis, representation_for<RHSValueSpace> RHSRepresentation
   >
     requires consistent_bases_v<LHSBasis, RHSBasis>
           && has_distinguished_origin_v<LHSValueSpace>
@@ -321,7 +319,7 @@ namespace sequoia::physics
       = physical_value<
           value_space_type,
           units_type,
-          typename consistent_bases<LHSBasis, RHSBasis>::template rebind_type<free_module_type_of_t<value_space_type>, units_type>,      
+          typename consistent_bases<LHSBasis, RHSBasis>::template rebind_type<units_type>,      
           representation_type,
           distinguished_origin,
           Validator
@@ -429,7 +427,7 @@ namespace sequoia::physics
   template<
     partial_m_torsor ValueSpace,
     physical_unit Unit,
-    basis_for<free_module_type_of_t<ValueSpace>> Basis,// = unit_defined_right_handed_basis<free_module_type_of_t<ValueSpace>, Unit>,    
+    basis_data_for<free_module_type_of_t<ValueSpace>> Basis,// = unit_defined_basis<Unit>,    
     representation_for<ValueSpace> Representation,//       = default_representation_t<ValueSpace, ValueType, Unit>,
     class Origin                                        = to_origin_type_t<ValueSpace>,
     validator_for<ValueSpace, Representation> Validator = throwing_validator
@@ -442,7 +440,7 @@ namespace sequoia::physics
     using coordinates_type         = to_coordinates_base_type<ValueSpace, Unit, Basis, Representation, Validator>;
     using space_type               = ValueSpace;
     using units_type               = Unit;
-    using basis_type               = Basis;
+    using basis_data_type          = Basis;
     using origin_type              = Origin;
     using displacement_space_type  = free_module_type_of_t<ValueSpace>;
     using representation_type      = Representation;
@@ -458,7 +456,7 @@ namespace sequoia::physics
 
     template<partial_m_torsor RHSValueSpace, class RHSBasis>
     constexpr static bool is_composable_with{
-         consistent_bases_v<basis_type, RHSBasis>
+         consistent_bases_v<basis_data_type, RHSBasis>
       && (is_non_negative_orthant_v<space_type>    || vector_space<space_type>)
       && (is_non_negative_orthant_v<RHSValueSpace> || vector_space<RHSValueSpace>)
     };
@@ -479,17 +477,17 @@ namespace sequoia::physics
 
     using coordinates_type::coordinates_type;
 
-    template<partial_m_torsor OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
+    template<partial_m_torsor OtherValueSpace, basis_data_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
       requires (!std::same_as<space_type, OtherValueSpace>)
            && has_distinguished_origin_v<space_type>
            && have_compatible_base_spaces_v<space_type, OtherValueSpace>
-           && consistent_bases_v<basis_type, OtherBasis>
+           && consistent_bases_v<basis_data_type, OtherBasis>
     [[nodiscard]]
     // TO DO: refine this
     friend constexpr auto operator+(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasis, representation_type, OtherOrigin, validator_type>& rhs)
     {
       using value_space_t    = to_base_space_t<space_type>;
-      using basis_t          = consistent_bases<basis_type, OtherBasis>::template rebind_type<free_module_type_of_t<value_space_t>, Unit>;
+      using basis_t          = consistent_bases<basis_data_type, OtherBasis>::template rebind_type<Unit>;
       using physical_value_t = physical_value<value_space_t, Unit, basis_t, representation_type, to_origin_type_t<value_space_t>, validator_type>;
 
       return [&] <std::size_t... Is>(std::index_sequence<Is...>) {
@@ -497,18 +495,18 @@ namespace sequoia::physics
       }(std::make_index_sequence<D>{});
     }
 
-    template<class OtherValueSpace, basis_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
+    template<class OtherValueSpace, basis_data_for<free_module_type_of_t<OtherValueSpace>> OtherBasis, class OtherOrigin>
       requires (!std::same_as<space_type, OtherValueSpace>)
             && (!std::same_as<displacement_space_type, OtherValueSpace>)
             && have_compatible_base_spaces_v<space_type, OtherValueSpace>
-            && consistent_bases_v<basis_type, OtherBasis>
+            && consistent_bases_v<basis_data_type, OtherBasis>
     [[nodiscard]]
     // TO DO: refine this
     friend constexpr auto operator-(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasis, representation_type, OtherOrigin, validator_type>& rhs)
       noexcept(has_identity_validator)
     {
       using disp_space_t = to_displacement_space_t<ValueSpace, OtherValueSpace>;
-      using basis_t      = consistent_bases<basis_type, OtherBasis>::template rebind_type<free_module_type_of_t<disp_space_t>, Unit>;
+      using basis_t      = consistent_bases<basis_data_type, OtherBasis>::template rebind_type<Unit>;
       using disp_t       = to_coordinates_base_type<disp_space_t, Unit, basis_t, representation_type, Validator>::displacement_coordinates_type;
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
         return disp_t{std::array{(lhs.values()[Is] - rhs.values()[Is])...}, units_type{}};
@@ -518,7 +516,7 @@ namespace sequoia::physics
     template<
       partial_m_torsor RHSValueSpace,
       physical_unit RHSUnit,
-      basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis,      
+      basis_data_for<free_module_type_of_t<RHSValueSpace>> RHSBasis,      
       representation_for<RHSValueSpace> RHSRepresentation,
       class RHSOrigin
     >
@@ -541,7 +539,7 @@ namespace sequoia::physics
     template<
       partial_m_torsor RHSValueSpace,
       physical_unit RHSUnit,
-      basis_for<free_module_type_of_t<RHSValueSpace>> RHSBasis,
+      basis_data_for<free_module_type_of_t<RHSValueSpace>> RHSBasis,
       class RHSOrigin,
       representation_for<RHSValueSpace> RHSRepresentation
     >
@@ -567,13 +565,13 @@ namespace sequoia::physics
       requires ((D == 1) && (is_non_negative_orthant_v<space_type> || vector_space<ValueSpace>))
     {
       using dual_rep_t = dual_of_t<representation_type>;
-      using physical_value_t = physical_value<dual_of_t<ValueSpace>, dual_of_t<Unit>, dual_of_t<basis_type>, dual_rep_t, distinguished_origin, validator_type>;
+      using physical_value_t = physical_value<dual_of_t<ValueSpace>, dual_of_t<Unit>, dual_of_t<basis_data_type>, dual_rep_t, distinguished_origin, validator_type>;
       using derived_units_type = physical_value_t::units_type;
       return physical_value_t{value / rhs.value(), derived_units_type{}};
     }
  
-    template<class Self, class LoweredValueSpace, basis_for<free_module_type_of_t<LoweredValueSpace>> OtherBasis>    
-      requires std::same_as<to_base_space_t<space_type>, LoweredValueSpace> && consistent_bases_v<basis_type, OtherBasis>
+    template<class Self, class LoweredValueSpace, basis_data_for<free_module_type_of_t<LoweredValueSpace>> OtherBasis>    
+      requires std::same_as<to_base_space_t<space_type>, LoweredValueSpace> && consistent_bases_v<basis_data_type, OtherBasis>
     [[nodiscard]]
     constexpr operator physical_value<LoweredValueSpace, Unit, OtherBasis, representation_type, Origin, validator_type>(this const Self& self) noexcept
     {
@@ -587,7 +585,7 @@ namespace sequoia::physics
     template<
       physical_unit OtherUnit,
       partial_m_torsor OtherSpace                                       = conversion_space_t<ValueSpace, Unit, OtherUnit>,
-      basis_for<free_module_type_of_t<OtherSpace>> OtherBasis       = unit_defined_right_handed_basis<free_module_type_of_t<OtherSpace>, OtherUnit>,      
+      basis_data_for<free_module_type_of_t<OtherSpace>> OtherBasis       = unit_defined_basis<OtherUnit>,      
       representation_for<OtherSpace> OtherRepresentation            = default_representation_t<OtherSpace, value_type, OtherUnit>,
       class OtherOrigin                                             = to_origin_type_t<OtherSpace>,
       validator_for<OtherSpace, OtherRepresentation> OtherValidator = throwing_validator
@@ -641,7 +639,7 @@ namespace sequoia::physics
     -> physical_value<
          default_space_t<Unit, T>,
          Unit,
-         unit_defined_right_handed_basis<free_module_type_of_t<default_space_t<Unit, T>>, Unit>,
+         unit_defined_basis<Unit>,
          default_representation_t<default_space_t<Unit, T>, T, Unit>,
          to_origin_type_t<default_space_t<Unit, T>>,
          throwing_validator
@@ -1184,7 +1182,7 @@ namespace sequoia::physics
     template<partial_m_torsor Space, physical_unit Unit>
     struct default_basis
     {
-      using type = unit_defined_right_handed_basis<free_module_type_of_t<Space>, Unit>;
+      using type = unit_defined_basis<Unit>;
     };
 
     template<partial_m_torsor Space, physical_unit Unit>
@@ -1238,7 +1236,7 @@ namespace sequoia::physics
       = physical_value<
           time_space<Arena>,
           units::second_t,
-          unit_defined_right_handed_basis<free_module_type_of_t<time_space<Arena>>, units::second_t>,      
+          unit_defined_basis<units::second_t>,      
           canonical_representation<T, no_bounds<T>>,
           Origin,
           Validator
@@ -1247,10 +1245,12 @@ namespace sequoia::physics
     template<      
       std::floating_point T,
       std::size_t D,
-      class Arena  = implicit_common_arena,      
-      basis_for<free_module_type_of_t<position_space<D, Arena>>> Basis = unit_defined_right_handed_basis<free_module_type_of_t<position_space<D, Arena>>, units::metre_t>,
-      class Origin = implicit_affine_origin,      
-      class Validator=throwing_validator
+      class Arena     = implicit_common_arena,
+      class Origin    = implicit_affine_origin,
+      class Validator = throwing_validator,
+      // Last, so that the 95% case - the basis the unit itself defines - never has to be
+      // named. Reaching Origin previously forced clients to spell it out redundantly.
+      basis_data_for<free_module_type_of_t<position_space<D, Arena>>> Basis = unit_defined_basis<units::metre_t>
     >
     using position = physical_value<position_space<D, Arena>, units::metre_t, Basis, canonical_representation<T, no_bounds<T>>, Origin, Validator>;
   }
@@ -1355,7 +1355,7 @@ namespace sequoia::physics
     using type = electrical_current_space<implicit_common_arena>;
   };
   
-  template<vector_space ValueSpace, physical_unit Unit, basis_for<free_module_type_of_t<ValueSpace>> Basis, class Origin, representation_for<ValueSpace> Representation, validator_for<ValueSpace, Representation> Validator>
+  template<vector_space ValueSpace, physical_unit Unit, basis_data_for<free_module_type_of_t<ValueSpace>> Basis, class Origin, representation_for<ValueSpace> Representation, validator_for<ValueSpace, Representation> Validator>
     requires (dimension_of_v<ValueSpace> == 1)
   [[nodiscard]]
   constexpr physical_value<ValueSpace, Unit, Basis, Representation, Origin, Validator> abs(physical_value<ValueSpace, Unit, Basis, Representation, Origin, Validator> q)
@@ -1417,7 +1417,7 @@ namespace sequoia::physics
     = physical_value<
         default_space_t<Unit, Rep>,
         Unit,
-        unit_defined_right_handed_basis<free_module_type_of_t<default_space_t<Unit, Rep>>, Unit>,
+        unit_defined_basis<Unit>,
         Representation,
         to_origin_type_t<default_space_t<Unit, Rep>>,
         Validator
@@ -1433,7 +1433,7 @@ namespace sequoia::physics
     = physical_value<
         ValueSpace,
         Unit,
-        unit_defined_right_handed_basis<free_module_type_of_t<ValueSpace>, Unit>,    
+        unit_defined_basis<Unit>,    
         default_representation_t<ValueSpace, ValueType, Unit>,
         to_origin_type_t<ValueSpace>,
         Validator
@@ -1489,12 +1489,12 @@ namespace sequoia::maths
   template<
     partial_m_torsor ValueSpaceFrom,
     physical_unit UnitFrom,
-    basis_for<free_module_type_of_t<ValueSpaceFrom>> BasisFrom,    
+    basis_data_for<free_module_type_of_t<ValueSpaceFrom>> BasisFrom,    
     representation_for<ValueSpaceFrom> RepresentationFrom,  
     class OriginFrom,
     validator_for<ValueSpaceFrom, RepresentationFrom> ValidatorFrom,
     partial_m_torsor ValueSpaceTo,
-    basis_for<free_module_type_of_t<ValueSpaceTo>> BasisTo,
+    basis_data_for<free_module_type_of_t<ValueSpaceTo>> BasisTo,
     physical_unit UnitTo,    
     representation_for<ValueSpaceTo> RepresentationTo,
     class OriginTo,
@@ -1541,7 +1541,7 @@ namespace sequoia::maths
 template<
   sequoia::maths::partial_m_torsor ValueSpace,
   sequoia::physics::physical_unit Unit,
-  sequoia::maths::basis_for<sequoia::maths::free_module_type_of_t<ValueSpace>> Basis,  
+  sequoia::maths::basis_data_for<sequoia::maths::free_module_type_of_t<ValueSpace>> Basis,  
   sequoia::maths::representation_for<ValueSpace> Representation,
   class Origin,
   sequoia::maths::validator_for<ValueSpace, Representation> Validator

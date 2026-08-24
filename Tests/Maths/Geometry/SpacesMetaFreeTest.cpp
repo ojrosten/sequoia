@@ -8,6 +8,8 @@
 /*! \file */
 
 #include "SpacesMetaFreeTest.hpp"
+#include "CommonGeometryTestingUtilities.hpp"
+
 #include "sequoia/Maths/Geometry/Spaces.hpp"
 
 namespace sequoia::testing
@@ -315,12 +317,51 @@ namespace sequoia::testing
     // The basis concept requires index_set to define d values. Pin the count
     // rather than the spelling, since it is the count the contract states and
     // nothing in the codebase reads the type.
-    STATIC_CHECK(general_basis<euclidean_vector_space<1>>::index_set::size() == 1);
-    STATIC_CHECK(general_basis<euclidean_vector_space<3>>::index_set::size() == 3);
-    STATIC_CHECK(general_basis<integral_module>::index_set::size() == 1);
+    STATIC_CHECK(basis<euclidean_vector_space<1>>::index_set::size() == 1);
+    STATIC_CHECK(basis<euclidean_vector_space<3>>::index_set::size() == 3);
+    STATIC_CHECK(basis<integral_module, nominated_basis>::index_set::size() == 1);
 
-    STATIC_CHECK(basis_for<general_basis<euclidean_vector_space<3>>, euclidean_vector_space<3>>);
-    STATIC_CHECK(!basis_for<general_basis<euclidean_vector_space<3>>, euclidean_vector_space<1>>);
+    // Basis data is recognised by its frame alone; the index set is optional.
+    STATIC_CHECK( is_basis_data_v<canonical_basis>);
+    STATIC_CHECK( is_basis_data_v<alices_basis<>>);
+    STATIC_CHECK( is_basis_data_v<alices_basis<reflection>>);
+    STATIC_CHECK(!is_basis_data_v<euclidean_vector_space<3>>);
+    STATIC_CHECK(!has_index_set_v<canonical_basis>);
+    STATIC_CHECK( has_index_set_v<mismatched_basis>);
+
+    // Absent an index set, one index per basis element is supplied from the rank of the
+    // module the data is paired with - which is why the data itself need not name it.
+    STATIC_CHECK(basis<euclidean_vector_space<3>, alices_basis<>>::index_set::size() == 3);
+    STATIC_CHECK(std::same_as<basis<euclidean_vector_space<3>, alices_basis<reflection>>::frame,
+                              alices_frame<reflection>>);
+
+    // Pairing: the cardinality of a supplied index set must match the rank.
+    STATIC_CHECK( basis_data_for<canonical_basis, euclidean_vector_space<3>>);
+    STATIC_CHECK( basis_data_for<alices_basis<reflection>, euclidean_vector_space<3>>);
+    STATIC_CHECK(!basis_data_for<mismatched_basis, euclidean_vector_space<3>>);
+    STATIC_CHECK( basis_data_for<mismatched_basis, euclidean_vector_space<7>>);
+    STATIC_CHECK(!basis_data_for<euclidean_vector_space<3>, euclidean_vector_space<3>>);
+
+    // Naming the identity as the frame asserts the module *is* R^S. Only a module which
+    // declares as much may do so; an abstract free module must nominate a frame, and has
+    // no default to fall back on.
+    STATIC_CHECK( admits_canonical_basis_v<euclidean_vector_space<3>>);
+    STATIC_CHECK(!admits_canonical_basis_v<integral_module>);
+    STATIC_CHECK( basis_data_for<canonical_basis,  euclidean_vector_space<3>>);
+    STATIC_CHECK(!basis_data_for<canonical_basis,  integral_module>);
+    STATIC_CHECK( basis_data_for<nominated_basis,  integral_module>);
+    STATIC_CHECK( has_default_basis_data_v<euclidean_vector_space<3>>);
+    STATIC_CHECK(!has_default_basis_data_v<integral_module>);
+    STATIC_CHECK(std::same_as<default_basis_data_t<euclidean_vector_space<3>>, canonical_basis>);
+
+    // Comparability is exactly agreement on the frame template. Two bases over Alice's
+    // convention are related whatever their automorphisms; Bob's convention is not
+    // related to Alice's, which is the static prohibition.
+    STATIC_CHECK( consistent_bases_v<alices_basis<>, alices_basis<>>);
+    STATIC_CHECK( consistent_bases_v<alices_basis<>, alices_basis<reflection>>);
+    STATIC_CHECK(!consistent_bases_v<alices_basis<>, bobs_basis<>>);
+    STATIC_CHECK(!consistent_bases_v<alices_basis<reflection>, bobs_basis<reflection>>);
+    STATIC_CHECK(!consistent_bases_v<alices_basis<>, canonical_basis>);
   }
 
   /*! Pins the DAG of spaces. For each node there is a fixture which sits at

@@ -34,7 +34,7 @@ namespace sequoia::testing
   void vector_polar_coordinates_test::test_vec()
   {
     using space_t = my_vec_space<Set, Field, D>;
-    using basis_t = general_basis<free_module_type_of_t<space_t>>;
+    using basis_t = canonical_basis;
     using vec_t   = vector_coordinates<space_t, basis_t, Representation, Validator>;
     using value_t = Representation::value_type;
     using delta_t = vec_t::displacement_coordinates_type;
@@ -77,7 +77,7 @@ namespace sequoia::testing
   void vector_polar_coordinates_test::test_refined()
   {
     using space_t = my_vec_space<sets::R<2>, commutative_rings::reals<1>, 2>;
-    using basis_t = general_basis<free_module_type_of_t<space_t>>;
+    using basis_t = canonical_basis;
     using rep_t   = polar_representation<ValType>;
     using vec_t   = vector_coordinates<space_t, basis_t, rep_t, Validator>;
 

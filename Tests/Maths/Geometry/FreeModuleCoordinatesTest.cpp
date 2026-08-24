@@ -38,14 +38,14 @@ namespace sequoia::testing
   void free_module_coordinates_test::test_free_module()
   {
     using free_module_t = my_module<Set, Ring, D>;
-    using basis_t       = general_basis<free_module_t>;
+    using basis_t       = canonical_basis;
 
     STATIC_CHECK(!vector_space<free_module_t>);
     STATIC_CHECK(free_module<free_module_t>);
     STATIC_CHECK(m_affine_space<free_module_t>);
     STATIC_CHECK(!affine_space<free_module_t>);
     STATIC_CHECK(std::same_as<free_module_type_of_t<free_module_t>, free_module_t>);
-    STATIC_CHECK(basis_for<basis_t, free_module_t>);
+    STATIC_CHECK(basis_data_for<basis_t, free_module_t>);
     
     using module_coords_t = free_module_coordinates<free_module_t, basis_t, canonical_representation<SetRep, no_bounds<SetRep>>, identity_validator>;
     using displacement_value_t = module_coords_t::displacement_coordinates_type::value_type;

@@ -17,7 +17,7 @@ namespace sequoia::testing
   template<
     maths::partial_m_torsor PhysicalValueSpace,
     physics::physical_unit Unit,
-    maths::basis_for<maths::free_module_type_of_t<PhysicalValueSpace>> Basis,  
+    maths::basis_data_for<maths::free_module_type_of_t<PhysicalValueSpace>> Basis,  
     maths::representation_for<PhysicalValueSpace> Representation,
     class Origin,
     maths::validator_for<PhysicalValueSpace, Representation> Validator
@@ -62,7 +62,7 @@ namespace sequoia::testing
       asked about arguments which may not fit, so constraining its own parameters
       defeats it: a negative check on arguments failing those constraints is a
       hard error rather than the `false` the caller is asking for. In particular
-      `maths::basis_for<maths::free_module_type_of_t<ValueSpace>> Basis` is
+      `maths::basis_data_for<maths::free_module_type_of_t<ValueSpace>> Basis` is
       ill-formed for any ValueSpace which is not a space at all.
    */
   template<

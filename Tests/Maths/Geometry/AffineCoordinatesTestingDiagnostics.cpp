@@ -24,7 +24,7 @@ namespace sequoia::testing
     {
       using space_t       = my_affine_space<sets::R<1>, commutative_rings::reals<1>, 1>;
       using free_module_t = free_module_type_of_t<space_t>;      
-      using basis_t       = general_basis<free_module_t>;
+      using basis_t       = canonical_basis;
       using rep_t         = canonical_representation<float, no_bounds<float>>;
       using coords_t      = affine_coordinates<space_t, basis_t, rep_t, alice, identity_validator>;
 
@@ -32,7 +32,7 @@ namespace sequoia::testing
     }
 
     {
-      using basis_t  =  general_basis<euclidean_vector_space<1>>;
+      using basis_t  = canonical_basis;
       using rep_t    = canonical_representation<float, no_bounds<float>>;
       using coords_t = euclidean_affine_coordinates<1, basis_t, rep_t, alice, identity_validator>;
       test_affine_1<coords_t>();

@@ -16,8 +16,58 @@
 
 #include <complex>
 
+namespace sequoia::maths
+{
+  /*! Experimental: two bases built from the same frame template share a basepoint, so
+      the transition between them is determined by their automorphisms. Bases built from
+      different frame templates remain inconsistent, which is the static prohibition.
+   */
+  template<template<class...> class F, class... G1, class... G2>
+  struct consistent_bases<F<G1...>, F<G2...>> : std::true_type {};
+}
+
 namespace sequoia::testing
 {
+  /*! Basis data for a client-nominated frame. The frame is a template, parameterised on
+      the automorphism, so that the basepoint is carried by the template and the
+      displacement from the reference basis by its argument.
+   */
+  template<class Automorphism=maths::identity_isomorphism>
+  struct alices_frame {};
+
+  template<class Automorphism=maths::identity_isomorphism>
+  struct alices_basis
+  {
+    using frame = alices_frame<Automorphism>;
+  };
+
+  /*! A second, independently chosen convention. Nothing relates it to alices_frame. */
+  template<class Automorphism=maths::identity_isomorphism>
+  struct bobs_frame {};
+
+  template<class Automorphism=maths::identity_isomorphism>
+  struct bobs_basis
+  {
+    using frame = bobs_frame<Automorphism>;
+  };
+
+  /*! A nominated reference frame, for spaces which admit no canonical basis and whose
+      clients must therefore name a convention of their own.
+   */
+  struct nominated_frame {};
+
+  struct nominated_basis
+  {
+    using frame = nominated_frame;
+  };
+
+  /*! Basis data whose index set has the wrong cardinality for the module it is paired with. */
+  struct mismatched_basis
+  {
+    using frame     = maths::identity_isomorphism;
+    using index_set = std::make_index_sequence<7>;
+  };
+
   template<class T, class U>
   inline constexpr bool can_multiply{
     requires(const T& t, const U& u) { t * u; }
@@ -106,7 +156,7 @@ namespace sequoia::testing
     constexpr static std::size_t D{dimension};
 
     template<
-      maths::basis Basis,
+      maths::basis_data Basis,
       maths::representation_for<my_vec_space> Representation,
       maths::validator_for<my_vec_space, Representation> Validator,
       std::floating_point ValType=Representation::value_type
@@ -129,7 +179,7 @@ namespace sequoia::testing
     }
 
     template<
-      maths::basis Basis,
+      maths::basis_data Basis,
       maths::representation_for<my_vec_space> Representation,
       maths::validator_for<my_vec_space, Representation> Validator,
       class ValType=Representation::value_type
@@ -289,8 +339,8 @@ namespace sequoia::testing
     }
   };
 
-  template<maths::partial_m_torsor Space, maths::basis Basis, class... Ts>
-    requires maths::basis_for<Basis, maths::free_module_type_of_t<Space>>
+  template<maths::partial_m_torsor Space, maths::basis_data Basis, class... Ts>
+    requires maths::basis_data_for<Basis, maths::free_module_type_of_t<Space>>
   struct value_tester<maths::coordinates<Space, Basis, Ts...>>
   {
     using coord_type = maths::coordinates<Space, Basis, Ts...>;

@@ -1039,147 +1039,182 @@ namespace sequoia::maths
   /** @defgroup Basis Basis
       @brief Concepts and helpers for bases of free modules.
 
-      By definition, free modules admit a basis and the latter are an
-      essential ingredient in our approach. The introduction describes
-      the primary considerations; here we focus on the nuances. A type
-      is considered to be a basis if it satisfies several conditions. The
-      first two are simple to state:
-      -# The type self-identifies as a basis, by appropriately exposing a type;
-      -# The type defines a type satisfying the free module concept (this is
-         the free module to which the basis applies).
+      By definition, a free module admits a basis, and bases are an essential
+      ingredient in our approach. The introduction describes the primary
+      considerations; here we focus on the nuances.
 
-      To understand the remaining conditions requires a detailed understanding of
-      various subtleties. Consider first the case of \f$ \bb{R}^d \f$, understood to be a vector space.
-      (This latter statement is to avoid the ambiguity whereby, by \f$ \bb{R}^d \f$, we could just
-      mean the set, without any additional structure.) Really, \f$ \bb{R}^d \f$ is a shorthand
-      for \f$ \bb{R}^S \f$, understood as follows (assuming finite S):
-      -# S is an index set, an example of which would be \f$ \{0, \ldots, d-1\} \f$
-      -# \f$ \bb{R}^S \f$ is the set of all functions from \f$ S \to \bb{R} \f$
+      Understanding how to specify a basis requires some care. Consider first
+      the case of \f$ \bb{R}^d \f$, understood to be a vector space. (This
+      latter statement is to avoid the ambiguity whereby, by \f$ \bb{R}^d \f$,
+      we could just mean the set, without any additional structure.) Really,
+      \f$ \bb{R}^d \f$ is the special case of \f$ \bb{R}^S \f$ in which
+      \f$ S \f$ is \f$ \{0, \ldots, d-1\} \f$. The general construction runs as
+      follows:
+      -# \f$ S \f$ is an index set of cardinality \f$ d \f$;
+      -# \f$ \bb{R}^S \f$ is the set of all functions from
+         \f$ S \to \bb{R} \f$, equipped with pointwise addition and scalar
+         multiplication.
 
       Though seemingly very abstract, this maps nicely onto C++ intuition:
-      -# Take an element of \f$ \bb{R}^S \f$, v - a vector
-      -# Take an element of S, i - an index
-      -# Consider the function v(i) (from a C++ perspective v[i] may be even more natural):
-         this returns the ith coordinate, which in this example is just a real number.
+      -# Take an element of \f$ \bb{R}^S \f$, \f$ v \f$ - a vector;
+      -# Take an element of \f$ S \f$, \f$ i \f$ - an index;
+      -# Consider \f$ v(i) \f$ (from a C++ perspective \f$ v[i] \f$ may be even
+         more natural): this returns the ith coordinate, which in this example
+         is just a real number.
 
-      As a concrete example in d=2, suppose we take v = (0.5, -0.5). Then v(0) = 0.5, v(1) = -0.5.
-      But thinking about this more carefully seems to suggest a paradox.
-      We claimed in the introduction that the components of a vector must be written with
-      respect to a basis. And yet here we haven't introduced a basis, just a function which
-      in no way requires a basis for its definition. As is so often the case, much of the
-      resolution of the apparent paradox is notational. In this context what we have done is the following:
-      -# Taken the mathematical definition of a d-tuple to be a function on \f$ \{0, \ldots, d-1\} \f$.
-      -# Taken the notation for a 2-tuple to be (x, y)
+      As a concrete example in \f$ d = 2 \f$, suppose we take
+      \f$ v(0) = 0.5 \f$ and \f$ v(1) = -0.5 \f$, which we might express as
+      \f$ v = (0.5, -0.5) \f$. But thinking about this more carefully seems to
+      suggest a paradox. We claimed in the introduction that the components of
+      a vector must be written with respect to a basis. And yet here we haven't
+      introduced a basis, just a function which in no way requires a basis for
+      its definition.
 
-      This is a perfectly reasonable thing to do. The problem, suggestive of a paradox,
-      is that we may also quite reasonably take (0.5, -0.5) to mean the coordinates of a
-      vector with respect to some basis which is implicitly taken to be part of the context
-      of the discussion. Henceforth, to be completely clear, we will only ever understand
-      (x, y, z) in this latter sense. Should we need to express the other case, we will
-      be completely explicit:
+      Resolving the apparent paradox requires carefully picking apart both what
+      we have done, and the notation we have used to express it. A function on
+      \f$ S \f$ needs no basis; but presenting the space as \f$ \bb{R}^S \f$
+      amounts to a choice of structure that carries a distinguished basis. With
+      respect to that basis, the values \f$ v(s) \f$ *are* the coordinates.
+      Notationally, when we write \f$ v = (0.5, -0.5) \f$ we are adopting the
+      following convention:
+
+      -# Taking the mathematical definition of a d-tuple to be a *function* on
+         \f$ \{0, \ldots, d-1\} \f$;
+      -# Taking the notation for a 2-tuple to be \f$ (x, y) \f$.
+
+      This is a perfectly reasonable thing to do. The problem is that
+      \f$ (0.5, -0.5) \f$ may also quite plausibly be read as the coordinates
+      of a vector with respect to some basis which is implicitly part of the
+      context of the discussion. We took care to anticipate this in the
+      introduction to by writing coordinates with square brackets, viz.
+      \f$ [0.5, -0.5] \f$. Nevertheless, devoid of context, there is a danger
+      that round brackets may be misinterpreted. Therefore, unless stated
+      otherwise, we will interpret round brackets in the same way as square
+      ones, generally preferring to be completely explicit if we want the
+      function interpretation:
 
       \f[
         v : \{0, 1\} \to \bb{R}, \quad v(0) = 0.5, \quad v(1) = -0.5.
       \f]
 
-      To emphasise: this is completely independent of any basis. Nevertheless, the
-      presentation of the space as \f$ \bb{R}^S \f$ canonically determines a distinguished basis. We
-      simply run through the elements of the index set, defining the indicators to be
-      the vectors whose components are all zeros except at the place of the index, where
-      the component is 1.
+      The distinguished basis promised above is built by running through the
+      elements of the index set, taking the basis vector at \f$ s \f$ to be the
+      function whose values are all zero except at \f$ s \f$, where the value
+      is 1. These are the standard, or canonical, basis vectors:
 
       \f[
-        e_s : \{0, \ldots, d-1\} \to \bb{R}, \quad e_{st} = \delta_{st}
+        e_s : S \to \bb{R}, \quad e_s(t) = \delta_{st},
       \f]
 
-      Put differently, \f$ \bb{R}^S \f$ admits a canonical basis.
+      where \f$ \delta_{st} \f$, the Kronecker delta, is 1 when \f$ s = t \f$
+      and 0 otherwise. Put differently, \f$ \bb{R}^S \f$ admits a canonical
+      basis.
 
-      With this established, we are now in a position to talk about changes of basis. This
-      will be specified by an isomorphism, which in this case is technically an automorphism
-      since the mapping is from a space to itself. This will be an element of \f$ GL(S) \f$.
+      With this established, we are now in a position to talk about changes of
+      basis. It is the canonical basis which makes this possible: with one
+      basis distinguished, any other may be specified by an isomorphism of the
+      space to itself. Such a special case is known as an automorphism, and
+      here is an element of \f$ GL(\bb{R}^S) \f$.
 
-      The final issue to discuss before moving on from \f$ \bb{R}^S \f$ is that of ordered versus
-      unordered bases. Thus far we have been tacitly assuming that the index set has the
-      structure \f$ \{0, \ldots, d-1\} \f$. This defines an ordering and this can be carried through to
-      give an ordered basis \f$ \{e_0, \ldots, e_{d-1}\} \f$. But the index set may not carry an
-      intrinsic ordering, for example \f$ \{\mathrm{foo}, \mathrm{bar}, \mathrm{baz}\} \f$. Of course, there is nothing
-      to stop us from imposing an order, which is typically what we do in the case
-      \f$ \{x, y, z\} \f$. But that is a choice and it would be equally valid (if perverse) to
-      identify \f$ e_x \f$ with \f$ e_2 \f$.
+      The final issue to discuss before moving on from \f$ \bb{R}^S \f$ is that
+      of ordered versus unordered bases. Nothing so far has required \f$ S \f$
+      to be more than a set of cardinality \f$ d \f$. We can impose the
+      structure \f$ \{0, \ldots, d-1\} \f$, thereby defining an ordering, which
+      can be carried through to give an ordered basis
+      \f$ (e_0, \ldots, e_{d-1}) \f$ - a tuple in the sense described above,
+      with the parentheses marking that the order is now part of the data. But
+      the index set may not carry an intrinsic ordering, for example
+      \f$ \{\mathrm{foo}, \mathrm{bar}, \mathrm{baz}\} \f$. Of course, there is
+      nothing to stop us from imposing an order, which is typically what we do
+      in the case \f$ \{x, y, z\} \f$. But that is a choice and it would be
+      equally valid (if perverse) to identify \f$ e_x \f$ with \f$ e_2 \f$. C++
+      naturally supplies such an order, as the members of an index set are
+      necessarily declared in some sequence. Henceforth we adopt the convention
+      that a basis is ordered according to the order in which its index set is
+      stated.
 
-      To summarize what we have discovered for \f$ \bb{R}^S \f$: a basis requires specification of
+      To summarize what we have discovered for \f$ \bb{R}^S \f$: a basis is
+      specified by an index set together with an automorphism, which may be the
+      identity.
 
-      - A. An index set;
-      - B. An automorphism (which could be the identity).
+      Let us now move to the general case: an arbitrary free module, \f$ M \f$,
+      of rank \f$ d \f$ over a commutative ring, \f$ R \f$. The considerations
+      of this section carry over unchanged, but with one key difference. For
+      \f$ R^S \f$ we were able to name a basis by associating it with an
+      automorphism because there is a canonical basis against which to measure
+      it. However, for \f$ M \f$ the most we can say is that it is isomorphic
+      to \f$ R^S \f$, and no one such isomorphism is singled out. The
+      isomorphism is therefore part of the specification of a basis, which
+      requires stating:
+      -# An index set, \f$ S \f$, of cardinality \f$ d \f$;
+      -# An isomorphism \f$ \varphi : R^S \to M \f$. This goes by a few
+         different names; we opt for the one preferred by differential
+         geometry, frame.
 
-      Noting that all our considerations carry over to free modules over a commutative ring,
-      let us move to the more general case: an arbitrary free module, M, over a
-      commutative ring, R, of rank d. In this case, since the most we can say about \f$ R^S \f$
-      (where, as before, the cardinality of S is d) is that M is isomorphic to it, defining
-      a basis requires an additional ingredient:
+      The automorphisms have not disappeared; they are subsumed by the
+      isomorphism \f$ \varphi : R^S \to M \f$. If two bases share a frame, so
+      that one is \f$ \varphi \f$ and the other \f$ \varphi \circ g \f$, then
+      \f$ g \f$ is the automorphism specifying the change of basis. If they do
+      not share a frame, nothing relates them: the frames form a torsor under
+      \f$ GL(R^S) \f$, and in a torsor a group element is meaningful only as a
+      difference, so an automorphism measured against one frame says nothing
+      about coordinates referred to another.
 
-      - C. An isomorphism from \f$ R^S \f$ to M. This goes by a few different names, with
-        basepoint being found in the torsor literature. However, we opt for the term preferred by
-        differential geometry, frame.
-
-
-      We are now in a position to state the requirements on a type that satisfies the basis concept.
-      Such a type:
-      -# Self-identifies as a basis, by appropriately exposing a type;
-      -# Defines a type satisfying the free module concept (this is
-         the free module to which the basis applies);
-      -# Defines a type `index_set`, which must define d values (say an `index_sequence`,
-         or an enumeration);
-      -# Defines a type `frame`. This defines the isomorphism from M to \f$ R^S \f$,
-         where R is the (commutative) ring associated with the (free) module. If M is
-         \f$ R^S \f$, then the concept is only satisfied if the frame is the
-         identity_isomorphism.
-      -# Defines a type `automorphism`, understood to explicitly or implicitly name an element
-         of \f$ GL(S) \f$.
+      Whether a client must nominate a frame at all depends on the module. One
+      presented as \f$ R^S \f$ carries the canonical basis, which serves as its
+      default and needs no nomination. One presented abstractly carries no
+      distinguished basis, so there is nothing for a default to name and the
+      client has to choose.
    */
 
   struct identity_isomorphism {};
 
-  // TO DO: make the transform a matrix, which can be done by taking the outer product of
-  // two vector spaces
-  template<
-    free_module M,
-    class IndexSet=std::make_index_sequence<rank_of_v<M>>,
-    class Frame=identity_isomorphism,
-    class BasisTransform=identity_isomorphism
-  >
-  struct general_basis
+  // TO DO: temporary. A stand-in for a genuine element of GL(S) - the
+  // automorphism negating every coordinate - pending machinery for specifying
+  // such elements. It exists to exercise the client experience of a
+  // non-identity automorphism.
+  struct reflection {};
+
+  /** @ingroup Basis
+      @brief Compile time constant reflecting whether a nested type named `frame` exists.
+   */
+  template<class T>
+  inline constexpr bool has_frame_v{
+    requires { typename T::frame; }
+  };
+
+  /** @ingroup Basis
+      @brief Compile time constant reflecting whether a nested type named `index_set` exists.
+   */
+  template<class T>
+  inline constexpr bool has_index_set_v{
+    requires { typename T::index_set; }
+  };
+
+  /** @ingroup Basis
+      @brief Compile time constant reflecting whether a type supplies the data defining a basis.
+
+      The frame is required; the index set is optional, defaulting to one index per
+      element of the rank of the free module the basis is ultimately paired with.
+   */
+  template<class T>
+  inline constexpr bool is_basis_data_v{has_frame_v<T>};
+
+  /** @ingroup Basis
+      @brief Thin concept wrapper over is_basis_data_v, for use in constrained parameters.
+   */
+  template<class T>
+  concept basis_data = is_basis_data_v<T>;
+
+  /** @ingroup Basis
+      @brief The basis data for the canonical basis of a free module presented as \f$ R^S \f$.
+
+      Available only to those modules which declare that they admit a canonical basis. A
+      free module presented abstractly does not, and its clients must nominate a frame.
+   */
+  struct canonical_basis
   {
-    using is_basis         = std::true_type;
-    using free_module_type = M;
-    using index_set        = IndexSet;
-    using frame            = Frame;
-    using basis_transform  = BasisTransform;
-  };
-
-  /** @ingroup Basis
-      @brief Compile time constant reflecting whether a nested type named 'is_basis' exist.
-   */
-  template<class T>
-  inline constexpr bool has_is_basis_v{
-    requires { typename T::is_basis; }
-  };
-
-  /** @ingroup Basis
-      @brief Compile time constant reflecting whether a nested type self-identifies as a basis.
-   */
-  template<class T>
-  inline constexpr bool identifies_as_basis_v{
-       has_is_basis_v<T>
-    && requires { requires std::convertible_to<typename T::is_basis, std::true_type>; }
-  };
-
-  /** @ingroup Basis
-      @brief Compile time constant reflecting whether a nested type named `isomorphism_type` exists.
-   */
-  template<class T>
-  inline constexpr bool has_isomorphism_type_v{
-    requires { typename T::isomorphism_type; }
+    using frame = identity_isomorphism;
   };
 
   /** @ingroup Basis
@@ -1199,44 +1234,114 @@ namespace sequoia::maths
     && requires { requires std::convertible_to<typename M::admits_canonical_basis, std::true_type>; }
   };
 
+  namespace impl
+  {
+    template<class M, class D>
+    struct index_set_of
+    {
+      using type = std::make_index_sequence<rank_of_v<M>>;
+    };
+
+    template<class M, class D>
+      requires has_index_set_v<D>
+    struct index_set_of<M, D>
+    {
+      using type = D::index_set;
+    };
+  }
+
   /** @ingroup Basis
-      @brief concept for a basis associated with a free module.
+      @brief The basis data a free module falls back on when none is supplied.
+
+      Deliberately defined only for those modules admitting a canonical basis: absent one
+      there is no distinguished choice, so there is nothing for a default to name and the
+      client must nominate a frame.
+   */
+  template<free_module M>
+  struct default_basis_data {};
+
+  template<free_module M>
+    requires admits_canonical_basis_v<M>
+  struct default_basis_data<M>
+  {
+    using type = canonical_basis;
+  };
+
+  template<free_module M>
+  using default_basis_data_t = default_basis_data<M>::type;
+
+  /** @ingroup Basis
+      @brief Compile time constant reflecting whether a free module has default basis data.
+
+      False precisely for those modules admitting no canonical basis, whose clients must
+      nominate a frame.
+   */
+  template<class M>
+  inline constexpr bool has_default_basis_data_v{
+    requires { typename default_basis_data<M>::type; }
+  };
+
+  /** @ingroup Basis
+      @brief The basis of a free module, M, determined by supplied basis data.
+
+      Clients supply only the basis data; the association with M is made here, since it is
+      fixed by the space the coordinates belong to.
+   */
+  template<free_module M, basis_data D=default_basis_data_t<M>>
+  struct basis
+  {
+    using free_module_type = M;
+    using basis_data_type  = D;
+    using index_set        = impl::index_set_of<M, D>::type;
+    using frame            = D::frame;
+  };
+
+  /** @ingroup Basis
+      @brief Compile time constant reflecting whether basis data is appropriate for a free module.
+
+      The index set must supply exactly one index per basis element, of which there are
+      rank(M).
+   */
+  template<class D, class M>
+  inline constexpr bool is_basis_data_for_v{
+       is_basis_data_v<D>
+    && free_module<M>
+    && (   !requires { impl::index_set_of<M, D>::type::size(); }
+        || (impl::index_set_of<M, D>::type::size() == rank_of_v<M>))
+       // Naming the identity as the frame asserts that M *is* R^S, so only a module
+       // which declares as much may do so; otherwise a frame must be nominated.
+    && (   !requires { requires std::same_as<typename D::frame, identity_isomorphism>; }
+        || admits_canonical_basis_v<M>)
+  };
+
+  /** @ingroup Basis
+      @brief Thin concept wrapper over is_basis_data_for_v, for use in constrained parameters.
+  */
+  template<class D, class M>
+  concept basis_data_for = is_basis_data_for_v<D, M>;
+
+  /** @ingroup Basis
+      @brief The isomorphism type associated with a basis.
+
+      Where the free module admits a canonical basis, this is the identity; otherwise it is
+      the frame nominated by the basis data.
    */
   template<class B>
-  concept basis = identifies_as_basis_v<B> && defines_free_module_v<B>
-               && (admits_canonical_basis_v<free_module_type_of_t<B>> || has_isomorphism_type_v<B>);
-  
-  /** @ingroup Basis
-      @brief A concept to determine if a basis is appropriate for a particular free module.
-  */
-  template<class B, class M>
-  concept basis_for = basis<B> && free_module<M> && std::same_as<free_module_type_of_t<B>, M>;
-
-  template<basis B>
-  struct basis_isomorphism_type_of;
-  
-  template<basis B>
-    requires admits_canonical_basis_v<free_module_type_of_t<B>>
-  struct basis_isomorphism_type_of<B>
+  struct basis_isomorphism_type_of
   {
-    using type = identity_isomorphism;
+    using type = std::conditional_t<admits_canonical_basis_v<free_module_type_of_t<B>>,
+                                    identity_isomorphism,
+                                    typename B::frame>;
   };
 
-  template<basis B>
+  template<class B>
   using basis_isomorphism_type_of_t = basis_isomorphism_type_of<B>::type;
 
-  template<basis B>
-    requires (!admits_canonical_basis_v<free_module_type_of_t<B>>) && has_isomorphism_type_v<B>
-  struct basis_isomorphism_type_of<B>
-  {
-    using type = B::isomorphism_type;
-  };
-
-  template<basis Basis1, basis Basis2>
+  template<class BasisData1, class BasisData2>
   struct consistent_bases : std::false_type {};
 
-  template<basis Basis1, basis Basis2>
-  inline constexpr bool consistent_bases_v{consistent_bases<Basis1, Basis2>::value};
+  template<class BasisData1, class BasisData2>
+  inline constexpr bool consistent_bases_v{consistent_bases<BasisData1, BasisData2>::value};
 
   /** @defgroup ArithmeticProperties Arithmetic Properties
       @brief Tools to reflect on whether types expose the standard arithmetic operations.
@@ -2366,7 +2471,7 @@ namespace sequoia::maths
 
   template<
     partial_m_torsor Space,
-    basis_for<free_module_type_of_t<Space>> Basis,
+    basis_data_for<free_module_type_of_t<Space>> Basis,
     class... Ts
   >
   class coordinates;
@@ -2379,7 +2484,7 @@ namespace sequoia::maths
    */
   template<
     m_affine_space MAffineSpace,
-    basis_for<free_module_type_of_t<MAffineSpace>> Basis,
+    basis_data_for<free_module_type_of_t<MAffineSpace>> Basis,
     representation_for<MAffineSpace> Representation,
     class Origin,
     validator_for<MAffineSpace, Representation> Validator
@@ -2394,7 +2499,7 @@ namespace sequoia::maths
    */
   template<
     affine_space AffineSpace,
-    basis_for<free_module_type_of_t<AffineSpace>> Basis,
+    basis_data_for<free_module_type_of_t<AffineSpace>> Basis,
     representation_for<AffineSpace> Representation,    
     class Origin,
     validator_for<AffineSpace, Representation> Validator
@@ -2406,7 +2511,7 @@ namespace sequoia::maths
    */
   template<
     vector_space VectorSpace,
-    basis_for<free_module_type_of_t<VectorSpace>> Basis,
+    basis_data_for<free_module_type_of_t<VectorSpace>> Basis,
     representation_for<VectorSpace> Representation,
     validator_for<VectorSpace, Representation> Validator
   >
@@ -2417,7 +2522,7 @@ namespace sequoia::maths
    */
   template<
     free_module FreeModule,
-    basis_for<free_module_type_of_t<FreeModule>> Basis,
+    basis_data_for<free_module_type_of_t<FreeModule>> Basis,
     representation_for<FreeModule> Representation,
     validator_for<FreeModule, Representation> Validator
   >
@@ -2450,10 +2555,10 @@ namespace sequoia::maths
 
   namespace impl
   {
-    template<basis B, class Rep, class...>
+    template<basis_data B, class Rep, class...>
     struct is_units_terminated_pack : std::false_type {};
 
-    template<basis B, class Rep, class... Args, std::size_t... Is>
+    template<basis_data B, class Rep, class... Args, std::size_t... Is>
       requires (sizeof...(Args) == sizeof...(Is) + 1)
             && std::same_as<std::tuple_element_t<sizeof...(Is), std::tuple<Args...>>, basis_isomorphism_type_of_t<B>>
             && (std::convertible_to<std::tuple_element_t<Is, std::tuple<Args...>>, Rep> && ...)
@@ -2462,17 +2567,17 @@ namespace sequoia::maths
     };
   }
 
-  template<basis B, class Rep, class... Args>
+  template<basis_data B, class Rep, class... Args>
   struct is_units_terminated_pack : std::false_type
   {};
   
-  template<basis B, class Rep, class... Args>
+  template<basis_data B, class Rep, class... Args>
     requires (sizeof...(Args) > 1)
   struct is_units_terminated_pack<B, Rep, Args...>
     : impl::is_units_terminated_pack<B, Rep, std::tuple<Args...>, std::make_index_sequence<sizeof...(Args) - 1>>
   {};
 
-  template<basis B, class Rep, class... Args>
+  template<basis_data B, class Rep, class... Args>
   inline constexpr bool is_units_terminated_pack_v{is_units_terminated_pack<B, Rep, Args...>::value};
 
   template<weak_commutative_ring RingRep, auto Bounds>
@@ -2612,7 +2717,7 @@ namespace sequoia::maths
 
   template<
     partial_m_torsor Space,
-    basis_for<free_module_type_of_t<Space>> Basis,
+    basis_data_for<free_module_type_of_t<Space>> Basis,
     representation_for<Space> Representation,
     validator_for<Space, Representation> Validator,
     class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<Space>,
@@ -2624,14 +2729,15 @@ namespace sequoia::maths
   {
   public:
     using space_type                    = Space;
-    using basis_type                    = Basis;
+    using basis_data_type               = Basis;
+    using basis_type                    = basis<free_module_type_of_t<Space>, Basis>;
     using representation_type           = Representation;
     using displacement_coordinates_type = DisplacementCoordinates;
     using set_type                      = Space::set_type;
     using free_module_type              = free_module_type_of_t<Space>;
     using value_type                    = Representation::value_type;    
     using displacement_value_type       = Representation::free_module_representation::value_type;
-    using basis_isomorphism_type        = basis_isomorphism_type_of_t<Basis>;
+    using basis_isomorphism_type        = basis_isomorphism_type_of_t<basis_type>;
     using validator_type                = Validator;
 
     // TO DO: improve conventions
@@ -2683,7 +2789,7 @@ namespace sequoia::maths
                // TO DO: requires that these fulfill a coords concept
             && ((0 + ... + Coords::dimension) == dimension)
             && ((Coords::dimension == 1) && ...) // TO DO: ultimately remove this restriction
-            && (consistent_bases_v<basis_type, typename Coords::basis_type> && ...)
+            && (consistent_bases_v<basis_data_type, typename Coords::basis_data_type> && ...)
             && consistent_representation_v<representation_type, Coords...>
             && (std::same_as<validator_type, typename Coords::validator_type> && ...)
     constexpr coordinates_base(const Coords&... vals) noexcept
@@ -3240,7 +3346,7 @@ namespace sequoia::maths
   
   template<
     partial_m_torsor Space,
-    basis_for<free_module_type_of_t<Space>> Basis,
+    basis_data_for<free_module_type_of_t<Space>> Basis,
     class Origin,
     representation_for<Space> Representation,
     validator_for<Space, Representation> Validator
@@ -3256,7 +3362,7 @@ namespace sequoia::maths
 
   template<
     partial_m_torsor Space,
-    basis_for<free_module_type_of_t<Space>> Basis,
+    basis_data_for<free_module_type_of_t<Space>> Basis,
     representation_for<Space> Representation,
     validator_for<Space, Representation> Validator
   >
@@ -3270,7 +3376,7 @@ namespace sequoia::maths
 
   template<
     affine_space AffineSpace,
-    basis_for<free_module_type_of_t<AffineSpace>> Basis,
+    basis_data_for<free_module_type_of_t<AffineSpace>> Basis,
     class Origin,    
     representation_for<AffineSpace> Representation,
     validator_for<AffineSpace, Representation> Validator
@@ -3287,7 +3393,7 @@ namespace sequoia::maths
 
   template<
     free_module M,
-    basis_for<free_module_type_of_t<M>> Basis,
+    basis_data_for<free_module_type_of_t<M>> Basis,
     representation_for<M> Representation,
     validator_for<M, Representation> Validator
   >    
@@ -3508,7 +3614,7 @@ namespace sequoia::maths
     using admits_canonical_basis = std::true_type;
     constexpr static std::size_t dimension{D};
 
-    template<basis Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
+    template<basis_data Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type inner_product(
@@ -3524,7 +3630,7 @@ namespace sequoia::maths
         );
     }
 
-    template<basis Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
+    template<basis_data Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type dot(
@@ -3535,7 +3641,7 @@ namespace sequoia::maths
       return inner_product(v, w);
     }
 
-    template<basis Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
+    template<basis_data Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type norm(const vector_coordinates<euclidean_vector_space, Basis, Representation, Validator>& v)
@@ -3609,7 +3715,7 @@ namespace sequoia::maths
   
   template<
     std::size_t D,
-    basis Basis,
+    basis_data Basis,
     representation Representation,
     class Origin,
     class Validator,
@@ -3619,34 +3725,26 @@ namespace sequoia::maths
 
   template<
     std::size_t D,
-    basis Basis,
+    basis_data Basis,
     representation Representation,
     class Validator,
     class Arena=mathematical_arena
   >
-    requires (dimension_of_v<free_module_type_of_t<Basis>> == D)
   using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<D, Arena>, Basis, Representation, Validator>;
 
   template<
     std::size_t D,
-    basis Basis,
+    basis_data Basis,
     representation Representation,
     class Validator,
     class Arena=mathematical_arena
   >
-    requires (dimension_of_v<free_module_type_of_t<Basis>> == D)
   using euclidean_nonnegative_coordinates = coordinates<euclidean_nonnegative_space<D, Arena>, Basis, Representation, Validator>;
 
-  template<free_module M>
-  struct dual_of<general_basis<M>>
+  template<>
+  struct dual_of<canonical_basis>
   {
-    using type = general_basis<dual_of_t<M>>;
-  };
-
-  template<free_module M>
-  struct dual_of<general_basis<dual<M>>>
-  {
-    using type = general_basis<M>;
+    using type = canonical_basis;
   };
 
   template<class T>
@@ -3676,15 +3774,14 @@ namespace sequoia::maths
   template<class...>
   struct orthogonal_basis;
 
-  template<free_module M, class Ratio, basis_for<M> ReferenceBasis>
-  struct orthogonal_basis<M, orthogonal_similarity_transformation<dilatation<Ratio>>, ReferenceBasis>
+  template<class Ratio, basis_data ReferenceBasis>
+  struct orthogonal_basis<orthogonal_similarity_transformation<dilatation<Ratio>>, ReferenceBasis>
   {
     using reference_basis_type = ReferenceBasis;
-    using is_basis             = std::true_type;
-    using free_module_type     = M;
+    using frame                = ReferenceBasis::frame;
   };
 
   template<std::floating_point T, std::size_t D, class Validator=identity_validator, class Arena=mathematical_arena>
   using vec_coords
-    = euclidean_vector_coordinates<D, general_basis<euclidean_vector_space<D, Arena>>, canonical_representation<T, no_bounds<T>>, Validator, Arena>;
+    = euclidean_vector_coordinates<D, canonical_basis, canonical_representation<T, no_bounds<T>>, Validator, Arena>;
 }

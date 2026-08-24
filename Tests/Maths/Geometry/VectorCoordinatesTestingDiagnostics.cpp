@@ -23,7 +23,7 @@ namespace sequoia::testing
   {
     {
       using space_t  = my_vec_space<sets::R<1>, commutative_rings::reals<1>, 1>;
-      using basis_t  = general_basis<free_module_type_of_t<space_t>>;
+      using basis_t  = canonical_basis;
       using rep_t    = canonical_representation<float, no_bounds<float>>;
       using coords_t = vector_coordinates<space_t, basis_t, rep_t, identity_validator>;
       test_vec_1<coords_t>();

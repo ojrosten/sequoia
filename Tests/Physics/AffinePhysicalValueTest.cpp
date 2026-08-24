@@ -32,7 +32,7 @@ namespace sequoia::testing
     test_affine_quantity<si::time<double>>();
     test_affine_quantity<si::position<float, 1>>();
     test_affine_quantity<si::position<float, 2>>();
-    test_affine_quantity<si::position<float, 2, tina_arena, unit_defined_right_handed_basis<free_module_type_of_t<position_space<2, tina_arena>>, si::units::metre_t>, alice>>();
+    test_affine_quantity<si::position<float, 2, tina_arena, alice>>();
   }
 
   template<class Quantity>
@@ -84,7 +84,7 @@ namespace sequoia::testing
       !defines_physical_value_v<
         dual<space_type>,
         dual<units_type>,
-        unit_defined_right_handed_basis<free_module_type_of_t<dual<space_type>>, dual<units_type>>,
+        unit_defined_basis<dual<units_type>>,
         repr_t,
         dual<origin_type>,
         validator_type
