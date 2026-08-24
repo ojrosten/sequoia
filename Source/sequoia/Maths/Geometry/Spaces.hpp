@@ -291,6 +291,26 @@
     ordered field, whereas there is nothing untoward about an affine space
     over the complex numbers.
 
+    The diagram orders the structures by refinement alone, and the order in
+    which they must be defined runs the other way: a partial M-torsor is a
+    set together with a free module acting on it, so free modules are prior
+    to everything above them here, just as vector spaces are prior to affine
+    spaces. There is no circularity: free modules and vector spaces appear as
+    nodes at all only because a free module is an M-affine space over itself.
+
+    Nor are the edges all of a kind. Most impose a condition: that the action
+    is total, or that the ring is a field or an ordered field. The two edges
+    descending into a free module and into a vector space are not of this
+    sort: every M-affine space can be turned into a free module by nominating
+    any one of its points as the origin and transporting the structure there.
+    What separates a free module from an M-affine space is therefore not a
+    condition but a choice. The distinction manifests if the diagram is read
+    upwards. A vector space regarded as a free module is the very same object,
+    with a requirement merely no longer in force; regarded as an affine space,
+    it has given up its origin and with it the ability to add one point to
+    another. That is the sense in which an affine space is a vector space
+    which has forgotten its origin.
+
     We now turn to the important question of how to deal with translations
     which would take us outside the underlying space. Up to this point of our
     rather abstract analysis, we have simply declared that such operations do
