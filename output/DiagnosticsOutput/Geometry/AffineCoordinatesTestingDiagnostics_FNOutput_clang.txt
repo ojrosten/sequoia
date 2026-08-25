@@ -1,4 +1,4 @@
-Tests/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp, Line 49
+Tests/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp, Line 48
 
 Comparison performed using:
 [sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::testing::my_affine_space<sequoia::maths::sets::R<1>, sequoia::maths::commutative_rings::reals<1>, 1>, sequoia::maths::canonical_basis, sequoia::testing::alice, sequoia::maths::canonical_representation<float, sequoia::maths::coordinate_bounds<float>{-inff, inff}>, sequoia::maths::identity_validator> >]
@@ -57,7 +57,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp, Line 50
+Tests/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp, Line 49
 
 [sequoia::maths::coordinates<sequoia::testing::my_affine_space<sequoia::maths::sets::R<1>, sequoia::maths::commutative_rings::reals<1>, 1>, sequoia::maths::canonical_basis, sequoia::testing::alice, sequoia::maths::canonical_representation<float, sequoia::maths::coordinate_bounds<float>{-inff, inff}>, sequoia::maths::identity_validator>]
 operator== returned false
@@ -90,7 +90,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp, Line 49
+Tests/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp, Line 48
 
 Comparison performed using:
 [sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::maths::euclidean_affine_space<1, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_basis, sequoia::testing::alice, sequoia::maths::canonical_representation<float, sequoia::maths::coordinate_bounds<float>{-inff, inff}>, sequoia::maths::identity_validator> >]
@@ -149,7 +149,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp, Line 50
+Tests/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp, Line 49
 
 [sequoia::maths::coordinates<sequoia::maths::euclidean_affine_space<1, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_basis, sequoia::testing::alice, sequoia::maths::canonical_representation<float, sequoia::maths::coordinate_bounds<float>{-inff, inff}>, sequoia::maths::identity_validator>]
 operator== returned false

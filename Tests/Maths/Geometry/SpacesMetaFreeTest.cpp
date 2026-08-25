@@ -335,7 +335,13 @@ namespace sequoia::testing
     STATIC_CHECK(std::same_as<basis<euclidean_vector_space<3>, alices_basis<reflection>>::frame,
                               alices_frame<reflection>>);
 
-    // Pairing: the cardinality of a supplied index set must match the rank.
+    // Pairing, condition one: a supplied index set must have one index per basis element.
+    STATIC_CHECK( has_consistent_index_set_v<mismatched_basis, euclidean_vector_space<7>>);
+    STATIC_CHECK(!has_consistent_index_set_v<mismatched_basis, euclidean_vector_space<3>>);
+    // TO DO: false once the enumerators can be counted; pinned so that the day they can,
+    // this line fails and says so.
+    STATIC_CHECK( has_consistent_index_set_v<enumerated_basis, euclidean_vector_space<3>>);
+
     STATIC_CHECK( basis_data_for<canonical_basis, euclidean_vector_space<3>>);
     STATIC_CHECK( basis_data_for<alices_basis<reflection>, euclidean_vector_space<3>>);
     STATIC_CHECK(!basis_data_for<mismatched_basis, euclidean_vector_space<3>>);
@@ -347,6 +353,8 @@ namespace sequoia::testing
     // no default to fall back on.
     STATIC_CHECK( admits_canonical_basis_v<euclidean_vector_space<3>>);
     STATIC_CHECK(!admits_canonical_basis_v<integral_module>);
+    STATIC_CHECK( names_admissible_frame_v<nominated_basis, integral_module>);
+    STATIC_CHECK(!names_admissible_frame_v<canonical_basis, integral_module>);
     STATIC_CHECK( basis_data_for<canonical_basis,  euclidean_vector_space<3>>);
     STATIC_CHECK(!basis_data_for<canonical_basis,  integral_module>);
     STATIC_CHECK( basis_data_for<nominated_basis,  integral_module>);

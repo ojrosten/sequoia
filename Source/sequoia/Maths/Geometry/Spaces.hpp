@@ -1221,44 +1221,76 @@ namespace sequoia::maths
 
   namespace impl
   {
-    template<class M, class D>
+    template<class M, class BasisData>
     struct index_set_of
     {
       using type = std::make_index_sequence<rank_of_v<M>>;
     };
 
-    template<class M, class D>
-      requires has_index_set_v<D>
-    struct index_set_of<M, D>
+    template<class M, class BasisData>
+      requires has_index_set_v<BasisData>
+    struct index_set_of<M, BasisData>
     {
-      using type = D::index_set;
+      using type = BasisData::index_set;
     };
   }
+
+  /** @ingroup Basis
+      @brief Whether the index set is consistent with the rank of M.
+
+      A basis of M has rank(M) elements, so an index set must supply exactly
+      that many indices. When the basis data names no index set, one is
+      generated from the rank and so agrees by construction. An
+      `index_sequence` can be asked its size; an enumeration - the natural way
+      to write an index set whose elements have names rather than numbers -
+      cannot be similarly queried, at least until reflection is supported.
+   */
+  template<class BasisData, free_module M>
+  inline constexpr bool has_consistent_index_set_v{
+    []{
+      using index_set_type = impl::index_set_of<M, BasisData>::type;
+
+      if constexpr(requires { index_set_type::size(); })
+        return index_set_type::size() == rank_of_v<M>;
+      else if constexpr(std::is_enum_v<index_set_type>)
+        return true; // TO DO std::meta::enumerators_of(^^index_set_type).size() == rank_of_v<M>;
+      else
+        return true;
+    }()
+  };
+
+  /** @ingroup Basis
+      @brief Whether the frame named by the basis data is one M may legitimately be given.
+
+      Naming the identity asserts that M *is* \f$ R^S \f$, so only a module
+      which declares as much may do so. Any other frame is a nomination, and a
+      client may always nominate.
+   */
+  template<class BasisData, free_module M>
+    requires has_frame_v<BasisData>
+  inline constexpr bool names_admissible_frame_v{
+       !std::same_as<typename BasisData::frame, identity_isomorphism>
+    || admits_canonical_basis_v<M>
+  };
 
   /** @ingroup Basis
       @brief Concept for data specifying a basis of a particular free module.
 
       A type supplies basis data by naming a frame; an index set is optional,
       defaulting to one index per element of the rank of the module the data is
-      paired with. For the pairing to be legitimate:
-      -# a supplied index set must define exactly one index per basis element,
-         of which there are rank(M);
-      -# naming the identity as the frame asserts that M *is* \f$ R^S \f$, so
-         only a module which declares as much may do so; otherwise a frame must
-         be nominated.
+      paired with.
 
-      Both arguments may be arbitrary types: the conditions are checked in the
-      order stated, so a type which is neither basis data nor a free module
-      yields false rather than a hard error.
+      Both arguments may be arbitrary types. The conditions are checked in the
+      order stated, which is what allows the two on the right to assume a frame
+      and a module respectively - each is constrained to say so, rather than
+      trusting this ordering silently.
    */
-  template<class D, class M>
+  template<class BasisData, class M>
   concept basis_data_for
-    =  has_frame_v<D>
+    =  has_frame_v<BasisData>
     && free_module<M>
-    && (   !requires { impl::index_set_of<M, D>::type::size(); }
-        || (impl::index_set_of<M, D>::type::size() == rank_of_v<M>))
-    && (   !std::same_as<typename D::frame, identity_isomorphism>
-        || admits_canonical_basis_v<M>);
+    && has_consistent_index_set_v<BasisData, M>
+    && names_admissible_frame_v<BasisData, M>;
 
   /** @ingroup Basis
       @brief The basis of a free module, M, determined by supplied basis data.
@@ -1267,16 +1299,16 @@ namespace sequoia::maths
       since it is fixed by the space the coordinates belong to. A module
       presented as \f$ R^S \f$ carries the canonical basis, which therefore
       serves as the default. One presented abstractly has no distinguished
-      basis, so the constraint on D rejects the default and clients must
+      basis, so the constraint on the data rejects the default and clients must
       nominate a frame.
    */
-  template<free_module M, basis_data_for<M> D=canonical_basis>
+  template<free_module M, basis_data_for<M> BasisData=canonical_basis>
   struct basis
   {
     using free_module_type = M;
-    using basis_data_type  = D;
-    using index_set        = impl::index_set_of<M, D>::type;
-    using frame            = D::frame;
+    using basis_data_type  = BasisData;
+    using index_set        = impl::index_set_of<M, BasisData>::type;
+    using frame            = BasisData::frame;
   };
 
   /** @ingroup Basis

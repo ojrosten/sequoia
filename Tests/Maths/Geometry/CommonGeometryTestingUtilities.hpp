@@ -68,6 +68,18 @@ namespace sequoia::testing
     using index_set = std::make_index_sequence<7>;
   };
 
+  /*! Basis data whose index set is an enumeration, and whose cardinality is wrong. An
+      enumeration cannot be asked how many enumerators it has, so this is the case the
+      cardinality check cannot yet catch.
+   */
+  struct enumerated_basis
+  {
+    enum class axes { x, y };
+
+    using frame     = maths::identity_isomorphism;
+    using index_set = axes;
+  };
+
   template<class T, class U>
   inline constexpr bool can_multiply{
     requires(const T& t, const U& u) { t * u; }
