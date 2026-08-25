@@ -29,9 +29,9 @@ namespace sequoia::testing
   template<std::floating_point T, std::size_t D>
   void absolute_coordinates_false_negative_test::test_absolute()
   {
-    using space_t     = euclidean_nonnegative_space<D, mathematical_arena>;
-    using basis_t     = canonical_basis;
-    using coords_t    = coordinates<space_t, basis_t, canonical_representation<T, no_bounds<T>>, identity_validator>;
+    using space_t      = euclidean_nonnegative_space<D, mathematical_arena>;
+    using basis_data_t = canonical_basis_data<D>;
+    using coords_t     = coordinates<space_t, basis_data_t, canonical_representation<T, no_bounds<T>>, identity_validator>;
 
     const auto vals{utilities::make_array<T, D>([](auto) { return T(1); })};
     

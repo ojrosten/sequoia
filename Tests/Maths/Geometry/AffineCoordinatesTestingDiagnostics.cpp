@@ -22,18 +22,18 @@ namespace sequoia::testing
   void affine_coordinates_false_negative_test::run_tests()
   {
     {
-      using space_t  = my_affine_space<sets::R<1>, commutative_rings::reals<1>, 1>;
-      using basis_t  = canonical_basis;
-      using rep_t    = canonical_representation<float, no_bounds<float>>;
-      using coords_t = affine_coordinates<space_t, basis_t, rep_t, alice, identity_validator>;
+      using space_t      = my_affine_space<sets::R<1>, commutative_rings::reals<1>, 1>;
+      using basis_data_t = canonical_basis_data<1>;
+      using rep_t        = canonical_representation<float, no_bounds<float>>;
+      using coords_t     = affine_coordinates<space_t, basis_data_t, rep_t, alice, identity_validator>;
 
       test_affine_1<coords_t>();
     }
 
     {
-      using basis_t  = canonical_basis;
-      using rep_t    = canonical_representation<float, no_bounds<float>>;
-      using coords_t = euclidean_affine_coordinates<1, basis_t, rep_t, alice, identity_validator>;
+      using basis_data_t = canonical_basis_data<1>;
+      using rep_t        = canonical_representation<float, no_bounds<float>>;
+      using coords_t     = euclidean_affine_coordinates<1, basis_data_t, rep_t, alice, identity_validator>;
       test_affine_1<coords_t>();
     }
   }

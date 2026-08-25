@@ -34,18 +34,18 @@ namespace sequoia::testing
     requires (!maths::identifies_as_field_v<Ring>)
   void m_affine_coordinates_test::test_m_affine()
   {
-    using space_t    = my_m_affine_space<Set, Ring, D>;
-    using module_t   = free_module_type_of_t<space_t>;
-    using basis_t    = canonical_basis;
-    using rep_t      = canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>;
-    using m_affine_t = m_affine_coordinates<space_t, basis_t, rep_t, alice, identity_validator>;
+    using space_t      = my_m_affine_space<Set, Ring, D>;
+    using module_t     = free_module_type_of_t<space_t>;
+    using basis_data_t = canonical_basis_data<D>;
+    using rep_t        = canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>;
+    using m_affine_t   = m_affine_coordinates<space_t, basis_data_t, rep_t, alice, identity_validator>;
 
     STATIC_CHECK(m_affine_space<space_t>);
     STATIC_CHECK(!affine_space<space_t>);
     STATIC_CHECK(!free_module<space_t>);
     STATIC_CHECK(free_module<module_t>);
     STATIC_CHECK(!vector_space<module_t>);
-    STATIC_CHECK(basis_data_for<basis_t, module_t>);
+    STATIC_CHECK(basis_data_for<basis_data_t, module_t>);
     STATIC_CHECK(not defines_rank_v<space_t>);
     STATIC_CHECK(dimension_of_v<space_t> == D);
 

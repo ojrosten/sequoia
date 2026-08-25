@@ -1192,14 +1192,19 @@ namespace sequoia::maths
   };
 
   /** @ingroup Basis
-      @brief The basis data for the canonical basis of a free module presented as \f$ R^S \f$.
+      @brief The basis data for the canonical basis of a free module of rank \f$ d \f$,
+             presented as \f$ R^S \f$.
 
-      Available only to those modules which declare that they admit a canonical basis. A
-      free module presented abstractly does not, and its clients must nominate a frame.
+      Only admissible for modules which declare that they admit a canonical basis; one
+      presented abstractly does not, and its clients must nominate a frame. The rank is
+      supplied by the client, since basis data is written independently of the module it will
+      be paired with; `basis_data_for` checks that the two agree.
    */
-  struct canonical_basis
+  template<std::size_t D>
+  struct canonical_basis_data
   {
-    using frame = identity_isomorphism;
+    using frame     = identity_isomorphism;
+    using index_set = std::make_index_sequence<D>;
   };
 
   /** @ingroup Basis
@@ -1219,43 +1224,28 @@ namespace sequoia::maths
     && requires { requires std::convertible_to<typename M::admits_canonical_basis, std::true_type>; }
   };
 
-  namespace impl
-  {
-    template<class M, class BasisData>
-    struct index_set_of
-    {
-      using type = std::make_index_sequence<rank_of_v<M>>;
-    };
-
-    template<class M, class BasisData>
-      requires has_index_set_v<BasisData>
-    struct index_set_of<M, BasisData>
-    {
-      using type = BasisData::index_set;
-    };
-  }
-
   /** @ingroup Basis
       @brief Whether the index set is consistent with the rank of M.
 
       A basis of M has rank(M) elements, so an index set must supply exactly
-      that many indices. When the basis data names no index set, one is
-      generated from the rank and so agrees by construction. An
-      `index_sequence` can be asked its size; an enumeration - the natural way
-      to write an index set whose elements have names rather than numbers -
-      cannot be similarly queried, at least until reflection is supported.
+      that many indices. An `index_sequence` can be asked its size; an
+      enumeration - the natural way to write an index set whose elements have
+      names rather than numbers - cannot be similarly queried, at least until
+      reflection is supported. Anything else is not an index set at all.
    */
   template<class BasisData, free_module M>
+    requires has_index_set_v<BasisData>
   inline constexpr bool has_consistent_index_set_v{
     []{
-      using index_set_type = impl::index_set_of<M, BasisData>::type;
+      using index_set_type = BasisData::index_set;
 
       if constexpr(requires { index_set_type::size(); })
         return index_set_type::size() == rank_of_v<M>;
       else if constexpr(std::is_enum_v<index_set_type>)
-        return true; // TO DO std::meta::enumerators_of(^^index_set_type).size() == rank_of_v<M>;
-      else
+        // TO DO std::meta::enumerators_of(^^index_set_type).size() == rank_of_v<M>;
         return true;
+      else
+        return false;
     }()
   };
 
@@ -1276,18 +1266,19 @@ namespace sequoia::maths
   /** @ingroup Basis
       @brief Concept for data specifying a basis of a particular free module.
 
-      A type supplies basis data by naming a frame; an index set is optional,
-      defaulting to one index per element of the rank of the module the data is
-      paired with.
+      A type supplies basis data by naming an index set and a frame - precisely
+      the two ingredients the introduction identifies.
 
       Both arguments may be arbitrary types. The conditions are checked in the
-      order stated, which is what allows the two on the right to assume a frame
-      and a module respectively - each is constrained to say so, rather than
-      trusting this ordering silently.
+      order stated, so that each of the last two finds what it needs already
+      established: an index set and a module for the first, a frame and a module
+      for the second. Each is nevertheless constrained to say what it assumes,
+      rather than trusting this ordering silently.
    */
   template<class BasisData, class M>
   concept basis_data_for
     =  has_frame_v<BasisData>
+    && has_index_set_v<BasisData>
     && free_module<M>
     && has_consistent_index_set_v<BasisData, M>
     && names_admissible_frame_v<BasisData, M>;
@@ -1302,30 +1293,34 @@ namespace sequoia::maths
       basis, so the constraint on the data rejects the default and clients must
       nominate a frame.
    */
-  template<free_module M, basis_data_for<M> BasisData=canonical_basis>
+  template<free_module M, basis_data_for<M> BasisData=canonical_basis_data<rank_of_v<M>>>
   struct basis
   {
     using free_module_type = M;
     using basis_data_type  = BasisData;
-    using index_set        = impl::index_set_of<M, BasisData>::type;
-    using frame            = BasisData::frame;
+    using frame_type       = BasisData::frame;
+    using index_set_type   = BasisData::index_set;
   };
 
   /** @ingroup Basis
-      @brief The frame of a basis.
+      @brief Whether two sets of basis data may be compared, and how to rebuild one of them.
 
-      This is the isomorphism \f$ \varphi : R^S \to M \f$ which, together with the index
-      set, specifies the basis. For a module presented as \f$ R^S \f$ and left to its
-      canonical basis it is the identity; otherwise it is whatever the client nominated.
+      Frames are opaque: nothing about a type named as a frame reveals how it is related to
+      any other. So this is a customisation point, false until a client specialises it to
+      declare that two conventions are related. That is a library policy rather than a
+      mathematical fact - see the discussion of torsors in the group introduction.
+
+      A `true_type` specialisation declares the two comparable, and that is all most clients
+      need. An operation which *combines* two coordinate types to make a third additionally
+      requires the specialisation to supply
+      `template<class U, std::size_t D> using rebind_type`, naming data of the same kind for
+      unit `U` over a module of rank `D` - the third space's rank being neither operand's.
    */
-  template<class B>
-  using frame_of_t = B::frame;
+  template<class BasisData1, class BasisData2>
+  struct consistent_basis_data : std::false_type {};
 
   template<class BasisData1, class BasisData2>
-  struct consistent_bases : std::false_type {};
-
-  template<class BasisData1, class BasisData2>
-  inline constexpr bool consistent_bases_v{consistent_bases<BasisData1, BasisData2>::value};
+  inline constexpr bool consistent_basis_data_v{consistent_basis_data<BasisData1, BasisData2>::value};
 
   /** @defgroup ArithmeticProperties Arithmetic Properties
       @brief Tools to reflect on whether types expose the standard arithmetic operations.
@@ -2455,7 +2450,7 @@ namespace sequoia::maths
 
   template<
     partial_m_torsor Space,
-    basis_data_for<free_module_type_of_t<Space>> Basis,
+    basis_data_for<free_module_type_of_t<Space>> BasisData,
     class... Ts
   >
   class coordinates;
@@ -2468,12 +2463,12 @@ namespace sequoia::maths
    */
   template<
     m_affine_space MAffineSpace,
-    basis_data_for<free_module_type_of_t<MAffineSpace>> Basis,
+    basis_data_for<free_module_type_of_t<MAffineSpace>> BasisData,
     representation_for<MAffineSpace> Representation,
     class Origin,
     validator_for<MAffineSpace, Representation> Validator
   >
-  using m_affine_coordinates = coordinates<MAffineSpace, Basis, Origin, Representation, Validator>;
+  using m_affine_coordinates = coordinates<MAffineSpace, BasisData, Origin, Representation, Validator>;
 
   /** @ingroup Coordinates
       @brief Alias for coordinates of a point in an affine space with respect to a particular origin.
@@ -2483,34 +2478,34 @@ namespace sequoia::maths
    */
   template<
     affine_space AffineSpace,
-    basis_data_for<free_module_type_of_t<AffineSpace>> Basis,
+    basis_data_for<free_module_type_of_t<AffineSpace>> BasisData,
     representation_for<AffineSpace> Representation,    
     class Origin,
     validator_for<AffineSpace, Representation> Validator
   >
-  using affine_coordinates = coordinates<AffineSpace, Basis, Origin, Representation, Validator>;
+  using affine_coordinates = coordinates<AffineSpace, BasisData, Origin, Representation, Validator>;
 
   /** @ingroup Coordinates
       @brief Alias for coordinates of an element of a vector space with respect to a particular basis.
    */
   template<
     vector_space VectorSpace,
-    basis_data_for<free_module_type_of_t<VectorSpace>> Basis,
+    basis_data_for<free_module_type_of_t<VectorSpace>> BasisData,
     representation_for<VectorSpace> Representation,
     validator_for<VectorSpace, Representation> Validator
   >
-  using vector_coordinates = coordinates<VectorSpace, Basis, Representation, Validator>;
+  using vector_coordinates = coordinates<VectorSpace, BasisData, Representation, Validator>;
 
   /** @ingroup Coordinates
       @brief Alias for coordinates of an element of a free module with respect to a particular basis.
    */
   template<
     free_module FreeModule,
-    basis_data_for<free_module_type_of_t<FreeModule>> Basis,
+    basis_data_for<free_module_type_of_t<FreeModule>> BasisData,
     representation_for<FreeModule> Representation,
     validator_for<FreeModule, Representation> Validator
   >
-  using free_module_coordinates = coordinates<FreeModule, Basis, Representation, Validator>;
+  using free_module_coordinates = coordinates<FreeModule, BasisData, Representation, Validator>;
   
   /** @ingroup Coordinates
       @brief Class designed for inheritance by concrete coordinate types.
@@ -2544,7 +2539,7 @@ namespace sequoia::maths
 
     template<class B, class Rep, class... Args, std::size_t... Is>
       requires (sizeof...(Args) == sizeof...(Is) + 1)
-            && std::same_as<std::tuple_element_t<sizeof...(Is), std::tuple<Args...>>, frame_of_t<B>>
+            && std::same_as<std::tuple_element_t<sizeof...(Is), std::tuple<Args...>>, typename B::frame_type>
             && (std::convertible_to<std::tuple_element_t<Is, std::tuple<Args...>>, Rep> && ...)
     struct is_units_terminated_pack<B, Rep, std::tuple<Args...>, std::index_sequence<Is...>> : std::true_type
     {
@@ -2701,11 +2696,11 @@ namespace sequoia::maths
 
   template<
     partial_m_torsor Space,
-    basis_data_for<free_module_type_of_t<Space>> Basis,
+    basis_data_for<free_module_type_of_t<Space>> BasisData,
     representation_for<Space> Representation,
     validator_for<Space, Representation> Validator,
     class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<Space>,
-                                                          Basis,
+                                                          BasisData,
                                                           typename Representation::free_module_representation,
                                                           Validator>
   >
@@ -2713,15 +2708,15 @@ namespace sequoia::maths
   {
   public:
     using space_type                    = Space;
-    using basis_data_type               = Basis;
-    using basis_type                    = basis<free_module_type_of_t<Space>, Basis>;
+    using basis_data_type               = BasisData;
+    using basis_type                    = basis<free_module_type_of_t<Space>, BasisData>;
     using representation_type           = Representation;
     using displacement_coordinates_type = DisplacementCoordinates;
     using set_type                      = Space::set_type;
     using free_module_type              = free_module_type_of_t<Space>;
     using value_type                    = Representation::value_type;    
     using displacement_value_type       = Representation::free_module_representation::value_type;
-    using frame_type                    = frame_of_t<basis_type>;
+    using frame_type                    = basis_type::frame_type;
     using validator_type                = Validator;
 
     // TO DO: improve conventions
@@ -2773,7 +2768,7 @@ namespace sequoia::maths
                // TO DO: requires that these fulfill a coords concept
             && ((0 + ... + Coords::dimension) == dimension)
             && ((Coords::dimension == 1) && ...) // TO DO: ultimately remove this restriction
-            && (consistent_bases_v<basis_data_type, typename Coords::basis_data_type> && ...)
+            && (consistent_basis_data_v<basis_data_type, typename Coords::basis_data_type> && ...)
             && consistent_representation_v<representation_type, Coords...>
             && (std::same_as<validator_type, typename Coords::validator_type> && ...)
     constexpr coordinates_base(const Coords&... vals) noexcept
@@ -3330,62 +3325,62 @@ namespace sequoia::maths
   
   template<
     partial_m_torsor Space,
-    basis_data_for<free_module_type_of_t<Space>> Basis,
+    basis_data_for<free_module_type_of_t<Space>> BasisData,
     class Origin,
     representation_for<Space> Representation,
     validator_for<Space, Representation> Validator
   >
-  class coordinates<Space, Basis, Origin, Representation, Validator> final
-    : public coordinates_base<Space, Basis, Representation, Validator>
+  class coordinates<Space, BasisData, Origin, Representation, Validator> final
+    : public coordinates_base<Space, BasisData, Representation, Validator>
   {
   public:
     using origin_type = Origin;
 
-    using coordinates_base<Space, Basis, Representation, Validator>::coordinates_base;
+    using coordinates_base<Space, BasisData, Representation, Validator>::coordinates_base;
   };
 
   template<
     partial_m_torsor Space,
-    basis_data_for<free_module_type_of_t<Space>> Basis,
+    basis_data_for<free_module_type_of_t<Space>> BasisData,
     representation_for<Space> Representation,
     validator_for<Space, Representation> Validator
   >
     requires has_distinguished_origin_v<Space> && (!free_module<Space>)
-  class coordinates<Space, Basis, Representation, Validator> final
-    : public coordinates_base<Space, Basis, Representation, Validator>
+  class coordinates<Space, BasisData, Representation, Validator> final
+    : public coordinates_base<Space, BasisData, Representation, Validator>
   {
   public:
-    using coordinates_base<Space, Basis, Representation, Validator>::coordinates_base;
+    using coordinates_base<Space, BasisData, Representation, Validator>::coordinates_base;
   };
 
   template<
     affine_space AffineSpace,
-    basis_data_for<free_module_type_of_t<AffineSpace>> Basis,
+    basis_data_for<free_module_type_of_t<AffineSpace>> BasisData,
     class Origin,    
     representation_for<AffineSpace> Representation,
     validator_for<AffineSpace, Representation> Validator
   >
     requires (!free_module<AffineSpace>)
-  class coordinates<AffineSpace, Basis, Origin, Representation, Validator> final
-    : public coordinates_base<AffineSpace, Basis, Representation, Validator>
+  class coordinates<AffineSpace, BasisData, Origin, Representation, Validator> final
+    : public coordinates_base<AffineSpace, BasisData, Representation, Validator>
   {
   public:
     using origin_type = Origin;
     
-    using coordinates_base<AffineSpace, Basis, Representation, Validator>::coordinates_base;
+    using coordinates_base<AffineSpace, BasisData, Representation, Validator>::coordinates_base;
   };
 
   template<
     free_module M,
-    basis_data_for<free_module_type_of_t<M>> Basis,
+    basis_data_for<free_module_type_of_t<M>> BasisData,
     representation_for<M> Representation,
     validator_for<M, Representation> Validator
   >    
-  class coordinates<M, Basis, Representation, Validator> final
-    : public coordinates_base<M, Basis, Representation, Validator>
+  class coordinates<M, BasisData, Representation, Validator> final
+    : public coordinates_base<M, BasisData, Representation, Validator>
   {
   public:
-    using coordinates_base<M, Basis, Representation, Validator>::coordinates_base;
+    using coordinates_base<M, BasisData, Representation, Validator>::coordinates_base;
   };
 
   template<class From, class To>
@@ -3598,12 +3593,12 @@ namespace sequoia::maths
     using admits_canonical_basis = std::true_type;
     constexpr static std::size_t dimension{D};
 
-    template<class Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
-      requires is_orthonormal_basis_v<Basis>
+    template<class BasisData, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
+      requires is_orthonormal_basis_v<BasisData>
     [[nodiscard]]
     friend constexpr field_type inner_product(
-      const vector_coordinates<euclidean_vector_space, Basis, Representation, Validator>& v,
-      const vector_coordinates<euclidean_vector_space, Basis, Representation, Validator>& w
+      const vector_coordinates<euclidean_vector_space, BasisData, Representation, Validator>& v,
+      const vector_coordinates<euclidean_vector_space, BasisData, Representation, Validator>& w
     )
     {
       return
@@ -3614,21 +3609,21 @@ namespace sequoia::maths
         );
     }
 
-    template<class Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
-      requires is_orthonormal_basis_v<Basis>
+    template<class BasisData, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
+      requires is_orthonormal_basis_v<BasisData>
     [[nodiscard]]
     friend constexpr field_type dot(
-      const vector_coordinates<euclidean_vector_space, Basis, Representation, Validator>& v,
-      const vector_coordinates<euclidean_vector_space, Basis, Representation, Validator>& w
+      const vector_coordinates<euclidean_vector_space, BasisData, Representation, Validator>& v,
+      const vector_coordinates<euclidean_vector_space, BasisData, Representation, Validator>& w
     )
     {
       return inner_product(v, w);
     }
 
-    template<class Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
-      requires is_orthonormal_basis_v<Basis>
+    template<class BasisData, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
+      requires is_orthonormal_basis_v<BasisData>
     [[nodiscard]]
-    friend constexpr field_type norm(const vector_coordinates<euclidean_vector_space, Basis, Representation, Validator>& v)
+    friend constexpr field_type norm(const vector_coordinates<euclidean_vector_space, BasisData, Representation, Validator>& v)
     {
       // TO DO: transform_view using repr. or be smarter...
       if constexpr(D == 1)
@@ -3699,36 +3694,36 @@ namespace sequoia::maths
   
   template<
     std::size_t D,
-    class Basis,
+    class BasisData,
     representation Representation,
     class Origin,
     class Validator,
     class Arena=mathematical_arena
   >
-  using euclidean_affine_coordinates = affine_coordinates<euclidean_affine_space<D, Arena>, Basis, Representation, Origin, Validator>;
+  using euclidean_affine_coordinates = affine_coordinates<euclidean_affine_space<D, Arena>, BasisData, Representation, Origin, Validator>;
 
   template<
     std::size_t D,
-    class Basis,
+    class BasisData,
     representation Representation,
     class Validator,
     class Arena=mathematical_arena
   >
-  using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<D, Arena>, Basis, Representation, Validator>;
+  using euclidean_vector_coordinates = vector_coordinates<euclidean_vector_space<D, Arena>, BasisData, Representation, Validator>;
 
   template<
     std::size_t D,
-    class Basis,
+    class BasisData,
     representation Representation,
     class Validator,
     class Arena=mathematical_arena
   >
-  using euclidean_nonnegative_coordinates = coordinates<euclidean_nonnegative_space<D, Arena>, Basis, Representation, Validator>;
+  using euclidean_nonnegative_coordinates = coordinates<euclidean_nonnegative_space<D, Arena>, BasisData, Representation, Validator>;
 
-  template<>
-  struct dual_of<canonical_basis>
+  template<std::size_t D>
+  struct dual_of<canonical_basis_data<D>>
   {
-    using type = canonical_basis;
+    using type = canonical_basis_data<D>;
   };
 
   template<class T>
@@ -3767,5 +3762,5 @@ namespace sequoia::maths
 
   template<std::floating_point T, std::size_t D, class Validator=identity_validator, class Arena=mathematical_arena>
   using vec_coords
-    = euclidean_vector_coordinates<D, canonical_basis, canonical_representation<T, no_bounds<T>>, Validator, Arena>;
+    = euclidean_vector_coordinates<D, canonical_basis_data<D>, canonical_representation<T, no_bounds<T>>, Validator, Arena>;
 }

@@ -82,7 +82,7 @@ namespace sequoia::testing
       = physical_value<
           space_t,
           si::units::metre_t,
-          unit_defined_basis<si::units::metre_t>,
+          unit_defined_basis_data_for<space_t, si::units::metre_t>,
           rep_t,
           to_origin_type_t<space_t>,
           throwing_validator
@@ -102,7 +102,7 @@ namespace sequoia::testing
       = physical_value<
           space_t,
           si::units::metre_t,
-          unit_defined_basis<si::units::metre_t>,
+          unit_defined_basis_data_for<space_t, si::units::metre_t>,
           rep_t,
           to_origin_type_t<space_t>,
           throwing_validator

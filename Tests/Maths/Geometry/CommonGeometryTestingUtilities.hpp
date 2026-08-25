@@ -16,16 +16,6 @@
 
 #include <complex>
 
-namespace sequoia::maths
-{
-  /*! Experimental: two bases built from the same frame template share a basepoint, so
-      the transition between them is determined by their automorphisms. Bases built from
-      different frame templates remain inconsistent, which is the static prohibition.
-   */
-  template<template<class...> class F, class... G1, class... G2>
-  struct consistent_bases<F<G1...>, F<G2...>> : std::true_type {};
-}
-
 namespace sequoia::testing
 {
   /*! Basis data for a client-nominated frame. The frame is a template, parameterised on
@@ -35,20 +25,22 @@ namespace sequoia::testing
   template<class Automorphism=maths::identity_isomorphism>
   struct alices_frame {};
 
-  template<class Automorphism=maths::identity_isomorphism>
-  struct alices_basis
+  template<std::size_t D, class Automorphism=maths::identity_isomorphism>
+  struct alices_basis_data
   {
-    using frame = alices_frame<Automorphism>;
+    using frame     = alices_frame<Automorphism>;
+    using index_set = std::make_index_sequence<D>;
   };
 
   /*! A second, independently chosen convention. Nothing relates it to alices_frame. */
   template<class Automorphism=maths::identity_isomorphism>
   struct bobs_frame {};
 
-  template<class Automorphism=maths::identity_isomorphism>
-  struct bobs_basis
+  template<std::size_t D, class Automorphism=maths::identity_isomorphism>
+  struct bobs_basis_data
   {
-    using frame = bobs_frame<Automorphism>;
+    using frame     = bobs_frame<Automorphism>;
+    using index_set = std::make_index_sequence<D>;
   };
 
   /*! A nominated reference frame, for spaces which admit no canonical basis and whose
@@ -56,13 +48,15 @@ namespace sequoia::testing
    */
   struct nominated_frame {};
 
-  struct nominated_basis
+  template<std::size_t D=1>
+  struct nominated_basis_data
   {
-    using frame = nominated_frame;
+    using frame     = nominated_frame;
+    using index_set = std::make_index_sequence<D>;
   };
 
   /*! Basis data whose index set has the wrong cardinality for the module it is paired with. */
-  struct mismatched_basis
+  struct mismatched_basis_data
   {
     using frame     = maths::identity_isomorphism;
     using index_set = std::make_index_sequence<7>;
@@ -72,7 +66,7 @@ namespace sequoia::testing
       enumeration cannot be asked how many enumerators it has, so this is the case the
       cardinality check cannot yet catch.
    */
-  struct enumerated_basis
+  struct enumerated_basis_data
   {
     enum class axes { x, y };
 
@@ -80,6 +74,32 @@ namespace sequoia::testing
     using index_set = axes;
   };
 
+  /*! Basis data naming something which is not an index set at all: it can neither be asked
+      its size nor enumerated, so there is no cardinality to compare with the rank.
+   */
+  struct unindexable_basis_data
+  {
+    using frame     = maths::identity_isomorphism;
+    using index_set = int;
+  };
+}
+
+namespace sequoia::maths
+{
+  /*! Two bases over Alice's convention are related whatever their automorphisms or ranks;
+      Bob's convention is unrelated to Alice's, which is the static prohibition. Stated for
+      each convention explicitly: matching on the frame *template* would relate any two
+      instantiations of any class template whatsoever.
+   */
+  template<std::size_t D1, class A1, std::size_t D2, class A2>
+  struct consistent_basis_data<testing::alices_basis_data<D1, A1>, testing::alices_basis_data<D2, A2>> : std::true_type {};
+
+  template<std::size_t D1, class A1, std::size_t D2, class A2>
+  struct consistent_basis_data<testing::bobs_basis_data<D1, A1>, testing::bobs_basis_data<D2, A2>> : std::true_type {};
+}
+
+namespace sequoia::testing
+{
   template<class T, class U>
   inline constexpr bool can_multiply{
     requires(const T& t, const U& u) { t * u; }

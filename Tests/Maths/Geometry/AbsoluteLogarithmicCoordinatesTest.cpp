@@ -68,12 +68,12 @@ namespace sequoia::testing
   template<std::floating_point T>
   void absolute_logarithmic_coordinates_test::test_absolute_logarithmic()
   {
-    using space_t     = euclidean_nonnegative_space<1, mathematical_arena>;
-    using rep_t       = logarithmic_representation<no_bounds<T>>;
-    using basis_t     = canonical_basis;
-    using coords_t    = coordinates<space_t, basis_t, rep_t, throwing_validator>;
-    using delta_t     = coords_t::displacement_coordinates_type;
-    using value_t     = T;
+    using space_t      = euclidean_nonnegative_space<1, mathematical_arena>;
+    using rep_t        = logarithmic_representation<no_bounds<T>>;
+    using basis_data_t = canonical_basis_data<1>;
+    using coords_t     = coordinates<space_t, basis_data_t, rep_t, throwing_validator>;
+    using delta_t      = coords_t::displacement_coordinates_type;
+    using value_t      = T;
 
     STATIC_CHECK(representation_for_single_value<rep_t, space_t>);
     STATIC_CHECK(can_multiply<coords_t, value_t>);

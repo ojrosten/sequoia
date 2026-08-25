@@ -64,10 +64,10 @@ namespace sequoia::testing
 
     coordinates_operations<quantity_t>{*this}.execute();
 
-    using units_type     = quantity_t::units_type;
-    using origin_type    = quantity_t::origin_type;
-    using basis_type     = quantity_t::basis_type;
-    using validator_type = quantity_t::validator_type;
+    using units_type      = quantity_t::units_type;
+    using origin_type     = quantity_t::origin_type;
+    using basis_data_type = quantity_t::basis_data_type;
+    using validator_type  = quantity_t::validator_type;
 
     // Why the dual is inadmissible, stated directly rather than left to be
     // inferred from a failure to compile.
@@ -78,13 +78,13 @@ namespace sequoia::testing
     // readily if one of its arguments were merely wrong, rather than the space
     // being inadmissible.
     STATIC_CHECK(
-      defines_physical_value_v<space_type, units_type, basis_type, repr_t, origin_type, validator_type>);
+      defines_physical_value_v<space_type, units_type, basis_data_type, repr_t, origin_type, validator_type>);
 
     STATIC_CHECK(
       !defines_physical_value_v<
         dual<space_type>,
         dual<units_type>,
-        unit_defined_basis<dual<units_type>>,
+        unit_defined_basis_data_for<dual<space_type>, dual<units_type>>,
         repr_t,
         dual<origin_type>,
         validator_type

@@ -66,11 +66,11 @@ namespace sequoia::testing
     requires maths::identifies_as_field_v<Field>
   void affine_coordinates_test::test_affine()
   {
-    using space_t  = my_affine_space<Set, Field, D>;
-    using basis_t  = canonical_basis;
-    using rep_t    = canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>;
-    using affine_t = affine_coordinates<space_t, basis_t, rep_t, alice, identity_validator>;
-    using delta_t  = affine_t::displacement_coordinates_type;
+    using space_t      = my_affine_space<Set, Field, D>;
+    using basis_data_t = canonical_basis_data<D>;
+    using rep_t        = canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>;
+    using affine_t     = affine_coordinates<space_t, basis_data_t, rep_t, alice, identity_validator>;
+    using delta_t      = affine_t::displacement_coordinates_type;
 
     STATIC_CHECK(m_affine_space<space_t>);
     STATIC_CHECK(affine_space<space_t>);
@@ -99,7 +99,7 @@ namespace sequoia::testing
 
     coordinates_operations<affine_t>{*this}.execute();
 
-    using affine2_t = affine_coordinates<space_t, basis_t, rep_t, bob, identity_validator>;
+    using affine2_t = affine_coordinates<space_t, basis_data_t, rep_t, bob, identity_validator>;
     affine2_t bob_coords{coordinate_transformation<affine_t, affine2_t>{delta_t{Rep{-1.0}}}(affine_t{})};
 
     check(equality, "Translation of alice's origin to bob's", bob_coords, affine2_t{Rep{-1.0}});

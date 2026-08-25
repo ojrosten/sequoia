@@ -48,7 +48,7 @@ namespace
     = physical_value<
         colour_space<N, Arena>,
         normalized_colour_t<N>,
-        unit_defined_basis<normalized_colour_t<N>>,    
+        unit_defined_basis_data_for<colour_space<N, Arena>, normalized_colour_t<N>>,
         canonical_representation<T, coordinate_bounds{T(0.0), T(1.0)}>,
         to_origin_type_t<colour_space<N, Arena>>
       >;
@@ -156,14 +156,14 @@ namespace sequoia::testing
     STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
     STATIC_CHECK(has_unary_plus<quantity_t>);
     STATIC_CHECK(!has_unary_minus<quantity_t>);
-    using basis_t     = quantity_t::basis_type;
-    using origin_t    = quantity_t::origin_type;
-    using validator_t = quantity_t::validator_type;
+    using basis_data_t = quantity_t::basis_data_type;
+    using origin_t     = quantity_t::origin_type;
+    using validator_t  = quantity_t::validator_type;
 
     // Positive control, as in the affine case: pins that the negative check
     // below fails because of the space and not because of a stray argument.
     STATIC_CHECK(
-      defines_physical_value_v<space_t, units_t, basis_t, repr_t, origin_t, validator_t>);
+      defines_physical_value_v<space_t, units_t, basis_data_t, repr_t, origin_t, validator_t>);
 
     // Representation and Origin were transposed here. The check passed anyway,
     // because a transposition is just as inadmissible as the dual it was meant
@@ -172,7 +172,7 @@ namespace sequoia::testing
       !defines_physical_value_v<
         dual<space_t>,
         dual<units_t>,
-        unit_defined_basis<dual<units_t>>,
+        unit_defined_basis_data_for<dual<space_t>, dual<units_t>>,
         dual_of_t<repr_t>,
         to_origin_type_t<dual<space_t>>,
         throwing_validator

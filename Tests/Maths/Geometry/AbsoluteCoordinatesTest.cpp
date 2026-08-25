@@ -28,11 +28,11 @@ namespace sequoia::testing
   template<std::floating_point T, std::size_t D>
   void absolute_coordinates_test::test_absolute()
   {
-    using space_t     = euclidean_nonnegative_space<D, mathematical_arena>;
-    using basis_t     = canonical_basis;
-    using coords_t    = coordinates<space_t, basis_t, canonical_representation<T, half_line_bounds<T>>, throwing_validator>;
-    using delta_t     = coords_t::displacement_coordinates_type;
-    using value_t     = T;
+    using space_t      = euclidean_nonnegative_space<D, mathematical_arena>;
+    using basis_data_t = canonical_basis_data<D>;
+    using coords_t     = coordinates<space_t, basis_data_t, canonical_representation<T, half_line_bounds<T>>, throwing_validator>;
+    using delta_t      = coords_t::displacement_coordinates_type;
+    using value_t      = T;
     STATIC_CHECK(can_multiply<coords_t, value_t>);
     STATIC_CHECK(can_divide<coords_t, value_t>);
     STATIC_CHECK(!can_divide<coords_t, coords_t>);

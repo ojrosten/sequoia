@@ -33,11 +33,11 @@ namespace sequoia::testing
     requires maths::identifies_as_field_v<Field>
   void vector_polar_coordinates_test::test_vec()
   {
-    using space_t = my_vec_space<Set, Field, D>;
-    using basis_t = canonical_basis;
-    using vec_t   = vector_coordinates<space_t, basis_t, Representation, Validator>;
-    using value_t = Representation::value_type;
-    using delta_t = vec_t::displacement_coordinates_type;
+    using space_t      = my_vec_space<Set, Field, D>;
+    using basis_data_t = canonical_basis_data<D>;
+    using vec_t        = vector_coordinates<space_t, basis_data_t, Representation, Validator>;
+    using value_t      = Representation::value_type;
+    using delta_t      = vec_t::displacement_coordinates_type;
 
     STATIC_CHECK(representation_for_span<Representation, space_t>);
     STATIC_CHECK(vector_space<tensor_product<space_t, space_t>>);
@@ -76,10 +76,10 @@ namespace sequoia::testing
   template<std::floating_point ValType, class Validator>
   void vector_polar_coordinates_test::test_refined()
   {
-    using space_t = my_vec_space<sets::R<2>, commutative_rings::reals<1>, 2>;
-    using basis_t = canonical_basis;
-    using rep_t   = polar_representation<ValType>;
-    using vec_t   = vector_coordinates<space_t, basis_t, rep_t, Validator>;
+    using space_t      = my_vec_space<sets::R<2>, commutative_rings::reals<1>, 2>;
+    using basis_data_t = canonical_basis_data<2>;
+    using rep_t        = polar_representation<ValType>;
+    using vec_t        = vector_coordinates<space_t, basis_data_t, rep_t, Validator>;
 
     STATIC_CHECK(defines_scalar_multiplication_for_v<space_t, polar_representation<ValType>>);
     STATIC_CHECK(      defines_scalar_division_for_v<space_t, polar_representation<ValType>>);
