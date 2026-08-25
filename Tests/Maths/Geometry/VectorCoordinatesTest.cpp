@@ -30,7 +30,7 @@ namespace sequoia::testing
       using vector_space_type = world_vector_space;
       constexpr static std::size_t dimension{D};
 
-      template<maths::basis_data Basis>
+      template<class Basis>
         requires is_orthonormal_basis_v<Basis>
       [[nodiscard]]
       // We want Units^2
@@ -47,10 +47,10 @@ namespace sequoia::testing
       using vector_space_type = world_vector_space<D, T, Units>;
     };
 
-    template<std::size_t D, std::floating_point T, class Units, basis_data Basis, class Origin>
+    template<std::size_t D, std::floating_point T, class Units, class Basis, class Origin>
     using world_affine_coordinates = affine_coordinates<world_affine_space<D, T, Units>, Basis, Origin>;
 
-    template<std::size_t D, std::floating_point T, class Units, basis_data Basis>
+    template<std::size_t D, std::floating_point T, class Units, class Basis>
     using world_vector_coordinates = vector_coordinates<world_vector_space<D, T, Units>, Basis>;
     }*/
 

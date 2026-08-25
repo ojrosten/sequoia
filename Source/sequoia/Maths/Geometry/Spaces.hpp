@@ -1059,8 +1059,8 @@ namespace sequoia::maths
       -# Take an element of \f$ \bb{R}^S \f$, \f$ v \f$ - a vector;
       -# Take an element of \f$ S \f$, \f$ i \f$ - an index;
       -# Consider \f$ v(i) \f$ (from a C++ perspective \f$ v[i] \f$ may be even
-         more natural): this returns the ith coordinate, which in this example
-         is just a real number.
+         more natural): this returns the \f$ i \f$th coordinate, which in this
+         example is just a real number.
 
       As a concrete example in \f$ d = 2 \f$, suppose we take
       \f$ v(0) = 0.5 \f$ and \f$ v(1) = -0.5 \f$, which we might express as
@@ -1086,7 +1086,7 @@ namespace sequoia::maths
       \f$ (0.5, -0.5) \f$ may also quite plausibly be read as the coordinates
       of a vector with respect to some basis which is implicitly part of the
       context of the discussion. We took care to anticipate this in the
-      introduction to by writing coordinates with square brackets, viz.
+      introduction by writing coordinates with square brackets, viz.
       \f$ [0.5, -0.5] \f$. Nevertheless, devoid of context, there is a danger
       that round brackets may be misinterpreted. Therefore, unless stated
       otherwise, we will interpret round brackets in the same way as square
@@ -1148,8 +1148,8 @@ namespace sequoia::maths
       requires stating:
       -# An index set, \f$ S \f$, of cardinality \f$ d \f$;
       -# An isomorphism \f$ \varphi : R^S \to M \f$. This goes by a few
-         different names; we opt for the one preferred by differential
-         geometry, frame.
+         different names - basepoint in the torsor literature - but we opt for
+         the one preferred by differential geometry, frame.
 
       The automorphisms have not disappeared; they are subsumed by the
       isomorphism \f$ \varphi : R^S \to M \f$. If two bases share a frame, so
@@ -1190,21 +1190,6 @@ namespace sequoia::maths
   inline constexpr bool has_index_set_v{
     requires { typename T::index_set; }
   };
-
-  /** @ingroup Basis
-      @brief Compile time constant reflecting whether a type supplies the data defining a basis.
-
-      The frame is required; the index set is optional, defaulting to one index per
-      element of the rank of the free module the basis is ultimately paired with.
-   */
-  template<class T>
-  inline constexpr bool is_basis_data_v{has_frame_v<T>};
-
-  /** @ingroup Basis
-      @brief Thin concept wrapper over is_basis_data_v, for use in constrained parameters.
-   */
-  template<class T>
-  concept basis_data = is_basis_data_v<T>;
 
   /** @ingroup Basis
       @brief The basis data for the canonical basis of a free module presented as \f$ R^S \f$.
@@ -1251,43 +1236,41 @@ namespace sequoia::maths
   }
 
   /** @ingroup Basis
-      @brief The basis data a free module falls back on when none is supplied.
+      @brief Concept for data specifying a basis of a particular free module.
 
-      Deliberately defined only for those modules admitting a canonical basis: absent one
-      there is no distinguished choice, so there is nothing for a default to name and the
-      client must nominate a frame.
+      A type supplies basis data by naming a frame; an index set is optional,
+      defaulting to one index per element of the rank of the module the data is
+      paired with. For the pairing to be legitimate:
+      -# a supplied index set must define exactly one index per basis element,
+         of which there are rank(M);
+      -# naming the identity as the frame asserts that M *is* \f$ R^S \f$, so
+         only a module which declares as much may do so; otherwise a frame must
+         be nominated.
+
+      Both arguments may be arbitrary types: the conditions are checked in the
+      order stated, so a type which is neither basis data nor a free module
+      yields false rather than a hard error.
    */
-  template<free_module M>
-  struct default_basis_data {};
-
-  template<free_module M>
-    requires admits_canonical_basis_v<M>
-  struct default_basis_data<M>
-  {
-    using type = canonical_basis;
-  };
-
-  template<free_module M>
-  using default_basis_data_t = default_basis_data<M>::type;
-
-  /** @ingroup Basis
-      @brief Compile time constant reflecting whether a free module has default basis data.
-
-      False precisely for those modules admitting no canonical basis, whose clients must
-      nominate a frame.
-   */
-  template<class M>
-  inline constexpr bool has_default_basis_data_v{
-    requires { typename default_basis_data<M>::type; }
-  };
+  template<class D, class M>
+  concept basis_data_for
+    =  has_frame_v<D>
+    && free_module<M>
+    && (   !requires { impl::index_set_of<M, D>::type::size(); }
+        || (impl::index_set_of<M, D>::type::size() == rank_of_v<M>))
+    && (   !std::same_as<typename D::frame, identity_isomorphism>
+        || admits_canonical_basis_v<M>);
 
   /** @ingroup Basis
       @brief The basis of a free module, M, determined by supplied basis data.
 
-      Clients supply only the basis data; the association with M is made here, since it is
-      fixed by the space the coordinates belong to.
+      Clients supply only the basis data; the association with M is made here,
+      since it is fixed by the space the coordinates belong to. A module
+      presented as \f$ R^S \f$ carries the canonical basis, which therefore
+      serves as the default. One presented abstractly has no distinguished
+      basis, so the constraint on D rejects the default and clients must
+      nominate a frame.
    */
-  template<free_module M, basis_data D=default_basis_data_t<M>>
+  template<free_module M, basis_data_for<M> D=canonical_basis>
   struct basis
   {
     using free_module_type = M;
@@ -1297,45 +1280,14 @@ namespace sequoia::maths
   };
 
   /** @ingroup Basis
-      @brief Compile time constant reflecting whether basis data is appropriate for a free module.
+      @brief The frame of a basis.
 
-      The index set must supply exactly one index per basis element, of which there are
-      rank(M).
-   */
-  template<class D, class M>
-  inline constexpr bool is_basis_data_for_v{
-       is_basis_data_v<D>
-    && free_module<M>
-    && (   !requires { impl::index_set_of<M, D>::type::size(); }
-        || (impl::index_set_of<M, D>::type::size() == rank_of_v<M>))
-       // Naming the identity as the frame asserts that M *is* R^S, so only a module
-       // which declares as much may do so; otherwise a frame must be nominated.
-    && (   !requires { requires std::same_as<typename D::frame, identity_isomorphism>; }
-        || admits_canonical_basis_v<M>)
-  };
-
-  /** @ingroup Basis
-      @brief Thin concept wrapper over is_basis_data_for_v, for use in constrained parameters.
-  */
-  template<class D, class M>
-  concept basis_data_for = is_basis_data_for_v<D, M>;
-
-  /** @ingroup Basis
-      @brief The isomorphism type associated with a basis.
-
-      Where the free module admits a canonical basis, this is the identity; otherwise it is
-      the frame nominated by the basis data.
+      This is the isomorphism \f$ \varphi : R^S \to M \f$ which, together with the index
+      set, specifies the basis. For a module presented as \f$ R^S \f$ and left to its
+      canonical basis it is the identity; otherwise it is whatever the client nominated.
    */
   template<class B>
-  struct basis_isomorphism_type_of
-  {
-    using type = std::conditional_t<admits_canonical_basis_v<free_module_type_of_t<B>>,
-                                    identity_isomorphism,
-                                    typename B::frame>;
-  };
-
-  template<class B>
-  using basis_isomorphism_type_of_t = basis_isomorphism_type_of<B>::type;
+  using frame_of_t = B::frame;
 
   template<class BasisData1, class BasisData2>
   struct consistent_bases : std::false_type {};
@@ -2555,29 +2507,29 @@ namespace sequoia::maths
 
   namespace impl
   {
-    template<basis_data B, class Rep, class...>
+    template<class B, class Rep, class...>
     struct is_units_terminated_pack : std::false_type {};
 
-    template<basis_data B, class Rep, class... Args, std::size_t... Is>
+    template<class B, class Rep, class... Args, std::size_t... Is>
       requires (sizeof...(Args) == sizeof...(Is) + 1)
-            && std::same_as<std::tuple_element_t<sizeof...(Is), std::tuple<Args...>>, basis_isomorphism_type_of_t<B>>
+            && std::same_as<std::tuple_element_t<sizeof...(Is), std::tuple<Args...>>, frame_of_t<B>>
             && (std::convertible_to<std::tuple_element_t<Is, std::tuple<Args...>>, Rep> && ...)
     struct is_units_terminated_pack<B, Rep, std::tuple<Args...>, std::index_sequence<Is...>> : std::true_type
     {
     };
   }
 
-  template<basis_data B, class Rep, class... Args>
+  template<class B, class Rep, class... Args>
   struct is_units_terminated_pack : std::false_type
   {};
   
-  template<basis_data B, class Rep, class... Args>
+  template<class B, class Rep, class... Args>
     requires (sizeof...(Args) > 1)
   struct is_units_terminated_pack<B, Rep, Args...>
     : impl::is_units_terminated_pack<B, Rep, std::tuple<Args...>, std::make_index_sequence<sizeof...(Args) - 1>>
   {};
 
-  template<basis_data B, class Rep, class... Args>
+  template<class B, class Rep, class... Args>
   inline constexpr bool is_units_terminated_pack_v{is_units_terminated_pack<B, Rep, Args...>::value};
 
   template<weak_commutative_ring RingRep, auto Bounds>
@@ -2737,7 +2689,7 @@ namespace sequoia::maths
     using free_module_type              = free_module_type_of_t<Space>;
     using value_type                    = Representation::value_type;    
     using displacement_value_type       = Representation::free_module_representation::value_type;
-    using basis_isomorphism_type        = basis_isomorphism_type_of_t<basis_type>;
+    using frame_type                    = frame_of_t<basis_type>;
     using validator_type                = Validator;
 
     // TO DO: improve conventions
@@ -2754,10 +2706,10 @@ namespace sequoia::maths
 
     constexpr explicit coordinates_base(std::span<const value_type, D> vals) noexcept(has_identity_validator)
       requires admits_canonical_basis && has_homogeneous_rep
-      : coordinates_base{vals, basis_isomorphism_type{}}
+      : coordinates_base{vals, frame_type{}}
     {}
 
-    constexpr coordinates_base(std::span<const value_type, D> vals, basis_isomorphism_type) noexcept(has_identity_validator)
+    constexpr coordinates_base(std::span<const value_type, D> vals, frame_type) noexcept(has_identity_validator)
       requires has_homogeneous_rep
       : m_Values{validate(vals, m_Validator)}
     {}
@@ -2765,7 +2717,7 @@ namespace sequoia::maths
     template<class... Ts>
       requires admits_canonical_basis && has_homogeneous_rep && (D > 1) && (std::convertible_to<Ts, value_type> && ...)
     constexpr explicit(sizeof...(Ts) == 1) coordinates_base(Ts... ts) noexcept(has_identity_validator)
-      : coordinates_base{ts..., basis_isomorphism_type{}}
+      : coordinates_base{ts..., frame_type{}}
     {}
 
     template<class... Ts>
@@ -2776,10 +2728,10 @@ namespace sequoia::maths
 
     constexpr explicit coordinates_base(value_type val) noexcept(has_identity_validator)      
       requires admits_canonical_basis && (D == 1)
-      : coordinates_base{val, basis_isomorphism_type{}}
+      : coordinates_base{val, frame_type{}}
     {}
 
-    constexpr coordinates_base(value_type val, basis_isomorphism_type) noexcept(has_identity_validator)
+    constexpr coordinates_base(value_type val, frame_type) noexcept(has_identity_validator)
       requires (D == 1)
       : m_Values{m_Validator(representation_type::bounds_v, val)}
     {}
@@ -2866,11 +2818,11 @@ namespace sequoia::maths
         [&] <std::size_t... Is>(std::index_sequence<Is...>) -> disp_t {
           if constexpr(defines_subtraction_for_v<space_type, representation_type>)
           {
-            return {representation_type{}.sub(lhs.values(), rhs.values()), basis_isomorphism_type{}};
+            return {representation_type{}.sub(lhs.values(), rhs.values()), frame_type{}};
           }
           else if constexpr(defines_subtraction_for_single_value_v<space_type, representation_type>)
           {
-            return {representation_type{}.sub(lhs.values()[0], rhs.values()[0]), basis_isomorphism_type{}};
+            return {representation_type{}.sub(lhs.values()[0], rhs.values()[0]), frame_type{}};
           }
           else
           {
@@ -2879,7 +2831,7 @@ namespace sequoia::maths
             {
               static_assert(sizeof(displacement_value_type) >= 2 * sizeof(value_type));
             }
-            return {Derived::from_underlying(std::array{(static_cast<displacement_value_type>(transLHS[Is]) - static_cast<displacement_value_type>(transRHS[Is]))...}), basis_isomorphism_type{}};
+            return {Derived::from_underlying(std::array{(static_cast<displacement_value_type>(transLHS[Is]) - static_cast<displacement_value_type>(transRHS[Is]))...}), frame_type{}};
           }
       }(std::make_index_sequence<D>{});
     }
@@ -2891,11 +2843,11 @@ namespace sequoia::maths
     {
       if constexpr(defines_addition_for_v<space_type, representation_type>)
       {
-        return {representation_type{}.add(c.values(), v.values()), basis_isomorphism_type{}};
+        return {representation_type{}.add(c.values(), v.values()), frame_type{}};
       }
       else if constexpr(defines_addition_for_single_value_v<space_type, representation_type>)
       {
-        return {representation_type{}.add(c.values()[0], v.values()[0]), basis_isomorphism_type{}};
+        return {representation_type{}.add(c.values()[0], v.values()[0]), frame_type{}};
       }
       else
       {
@@ -2949,11 +2901,11 @@ namespace sequoia::maths
     {
       if constexpr(defines_addition_for_v<space_type, representation_type>)
       {
-        return {representation_type{}.add(c.values(), v.values()), basis_isomorphism_type{}};
+        return {representation_type{}.add(c.values(), v.values()), frame_type{}};
       }
       else if constexpr(defines_addition_for_single_value_v<space_type, representation_type>)
       {
-        return {representation_type{}.add(c.values()[0], v.values()[0]), basis_isomorphism_type{}};
+        return {representation_type{}.add(c.values()[0], v.values()[0]), frame_type{}};
       }
       else
       {
@@ -2968,11 +2920,11 @@ namespace sequoia::maths
     {
       if constexpr(defines_subtraction_for_v<space_type, representation_type>)
       {
-        return {representation_type{}.sub(c.values(), v.values()), basis_isomorphism_type{}};
+        return {representation_type{}.sub(c.values(), v.values()), frame_type{}};
       }
       else if constexpr(defines_subtraction_for_single_value_v<space_type, representation_type>)
       {
-        return {representation_type{}.sub(c.values()[0], v.values()[0]), basis_isomorphism_type{}};
+        return {representation_type{}.sub(c.values()[0], v.values()[0]), frame_type{}};
       }
       else
       {
@@ -3017,7 +2969,7 @@ namespace sequoia::maths
       if constexpr(defines_scalar_multiplication_for_v<space_type, representation_type>)
       {
         if constexpr(has_homogeneous_rep)
-          return {representation_type{}.mul(v.values(), u), basis_isomorphism_type{}};
+          return {representation_type{}.mul(v.values(), u), frame_type{}};
         else
           return
             make_from_separate_coords(v,
@@ -3027,7 +2979,7 @@ namespace sequoia::maths
       }
       else if constexpr(defines_scalar_multiplication_for_single_value_v<space_type, representation_type>)
       {
-        return {representation_type{}.mul(v.values()[0], u), basis_isomorphism_type{}};
+        return {representation_type{}.mul(v.values()[0], u), frame_type{}};
       }
       else
       {
@@ -3053,7 +3005,7 @@ namespace sequoia::maths
       if constexpr(defines_scalar_division_for_v<space_type, representation_type>)
       {
         if constexpr(has_homogeneous_rep)
-          return {representation_type{}.div(v.values(), u), basis_isomorphism_type{}};
+          return {representation_type{}.div(v.values(), u), frame_type{}};
         else
           return
             make_from_separate_coords(v,
@@ -3063,7 +3015,7 @@ namespace sequoia::maths
       }
       else if constexpr(defines_scalar_division_for_single_value_v<space_type, representation_type>)
       {
-        return {representation_type{}.div(v.values()[0], u), basis_isomorphism_type{}};
+        return {representation_type{}.div(v.values()[0], u), frame_type{}};
       }
       else
       {
@@ -3614,7 +3566,7 @@ namespace sequoia::maths
     using admits_canonical_basis = std::true_type;
     constexpr static std::size_t dimension{D};
 
-    template<basis_data Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
+    template<class Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type inner_product(
@@ -3630,7 +3582,7 @@ namespace sequoia::maths
         );
     }
 
-    template<basis_data Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
+    template<class Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type dot(
@@ -3641,7 +3593,7 @@ namespace sequoia::maths
       return inner_product(v, w);
     }
 
-    template<basis_data Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
+    template<class Basis, representation_for<euclidean_vector_space> Representation, validator_for<euclidean_vector_space, Representation> Validator>
       requires is_orthonormal_basis_v<Basis>
     [[nodiscard]]
     friend constexpr field_type norm(const vector_coordinates<euclidean_vector_space, Basis, Representation, Validator>& v)
@@ -3715,7 +3667,7 @@ namespace sequoia::maths
   
   template<
     std::size_t D,
-    basis_data Basis,
+    class Basis,
     representation Representation,
     class Origin,
     class Validator,
@@ -3725,7 +3677,7 @@ namespace sequoia::maths
 
   template<
     std::size_t D,
-    basis_data Basis,
+    class Basis,
     representation Representation,
     class Validator,
     class Arena=mathematical_arena
@@ -3734,7 +3686,7 @@ namespace sequoia::maths
 
   template<
     std::size_t D,
-    basis_data Basis,
+    class Basis,
     representation Representation,
     class Validator,
     class Arena=mathematical_arena
@@ -3774,7 +3726,7 @@ namespace sequoia::maths
   template<class...>
   struct orthogonal_basis;
 
-  template<class Ratio, basis_data ReferenceBasis>
+  template<class Ratio, class ReferenceBasis>
   struct orthogonal_basis<orthogonal_similarity_transformation<dilatation<Ratio>>, ReferenceBasis>
   {
     using reference_basis_type = ReferenceBasis;

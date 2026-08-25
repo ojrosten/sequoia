@@ -156,7 +156,7 @@ namespace sequoia::testing
     constexpr static std::size_t D{dimension};
 
     template<
-      maths::basis_data Basis,
+      class Basis,
       maths::representation_for<my_vec_space> Representation,
       maths::validator_for<my_vec_space, Representation> Validator,
       std::floating_point ValType=Representation::value_type
@@ -179,7 +179,7 @@ namespace sequoia::testing
     }
 
     template<
-      maths::basis_data Basis,
+      class Basis,
       maths::representation_for<my_vec_space> Representation,
       maths::validator_for<my_vec_space, Representation> Validator,
       class ValType=Representation::value_type
@@ -339,7 +339,7 @@ namespace sequoia::testing
     }
   };
 
-  template<maths::partial_m_torsor Space, maths::basis_data Basis, class... Ts>
+  template<maths::partial_m_torsor Space, class Basis, class... Ts>
     requires maths::basis_data_for<Basis, maths::free_module_type_of_t<Space>>
   struct value_tester<maths::coordinates<Space, Basis, Ts...>>
   {

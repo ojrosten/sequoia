@@ -314,7 +314,7 @@ namespace sequoia::testing
 
   void spaces_meta_free_test::test_basis_traits()
   {
-    // The basis concept requires index_set to define d values. Pin the count
+    // A basis defines an index set with one index per basis element. Pin the count
     // rather than the spelling, since it is the count the contract states and
     // nothing in the codebase reads the type.
     STATIC_CHECK(basis<euclidean_vector_space<1>>::index_set::size() == 1);
@@ -322,10 +322,10 @@ namespace sequoia::testing
     STATIC_CHECK(basis<integral_module, nominated_basis>::index_set::size() == 1);
 
     // Basis data is recognised by its frame alone; the index set is optional.
-    STATIC_CHECK( is_basis_data_v<canonical_basis>);
-    STATIC_CHECK( is_basis_data_v<alices_basis<>>);
-    STATIC_CHECK( is_basis_data_v<alices_basis<reflection>>);
-    STATIC_CHECK(!is_basis_data_v<euclidean_vector_space<3>>);
+    STATIC_CHECK( has_frame_v<canonical_basis>);
+    STATIC_CHECK( has_frame_v<alices_basis<>>);
+    STATIC_CHECK( has_frame_v<alices_basis<reflection>>);
+    STATIC_CHECK(!has_frame_v<euclidean_vector_space<3>>);
     STATIC_CHECK(!has_index_set_v<canonical_basis>);
     STATIC_CHECK( has_index_set_v<mismatched_basis>);
 
@@ -350,9 +350,16 @@ namespace sequoia::testing
     STATIC_CHECK( basis_data_for<canonical_basis,  euclidean_vector_space<3>>);
     STATIC_CHECK(!basis_data_for<canonical_basis,  integral_module>);
     STATIC_CHECK( basis_data_for<nominated_basis,  integral_module>);
-    STATIC_CHECK( has_default_basis_data_v<euclidean_vector_space<3>>);
-    STATIC_CHECK(!has_default_basis_data_v<integral_module>);
-    STATIC_CHECK(std::same_as<default_basis_data_t<euclidean_vector_space<3>>, canonical_basis>);
+
+    // The canonical basis is therefore what a basis defaults to, and the default stands
+    // or falls with the module's declaration. The falling case cannot be pinned here:
+    // naming basis<integral_module> is ill-formed rather than merely false, which is the
+    // point - the client is told, at the point of use, which rule they have broken.
+    STATIC_CHECK(std::same_as<basis<euclidean_vector_space<3>>::basis_data_type, canonical_basis>);
+
+    // Pairing is answerable for arbitrary types, yielding false rather than a hard error.
+    STATIC_CHECK(!basis_data_for<canonical_basis, int>);
+    STATIC_CHECK(!basis_data_for<int, euclidean_vector_space<3>>);
 
     // Comparability is exactly agreement on the frame template. Two bases over Alice's
     // convention are related whatever their automorphisms; Bob's convention is not

@@ -16,8 +16,8 @@ namespace sequoia::testing
   template<class Coordinates>
   inline constexpr bool supports_multiplicative_syntactic_sugar{
     requires {
-      requires can_multiply<typename Coordinates::value_type, typename Coordinates::basis_isomorphism_type>;
-      requires std::same_as<decltype(std::declval<typename Coordinates::value_type>() * std::declval<typename Coordinates::basis_isomorphism_type>()), Coordinates>;
+      requires can_multiply<typename Coordinates::value_type, typename Coordinates::frame_type>;
+      requires std::same_as<decltype(std::declval<typename Coordinates::value_type>() * std::declval<typename Coordinates::frame_type>()), Coordinates>;
     }
   };
   
@@ -27,18 +27,17 @@ namespace sequoia::testing
     enum dim_1_label{ delta_one, delta_zero, two, one, zero, delta_neg_one, delta_neg_two, neg_one };
     enum dim_2_label{ one_two, one_one, one_zero, zero_one, zero_zero, zero_neg_one, neg_one_zero, neg_one_neg_one };
     
-    using coords_t            = Coordinates;
-    using space_t             = Coordinates::space_type;
-    using disp_t              = coords_t::displacement_coordinates_type;
-    using module_t            = coords_t::free_module_type;
-    using disp_value_t        = coords_t::displacement_value_type;
-    using units_t             = coords_t::basis_isomorphism_type;
-    using representation_t    = coords_t::representation_type;
-    using value_t             = representation_t::value_type; // TO DO: only just made distinct from disp_value_t. Needs to be properly reasoned through
-    using validator_t         = coords_t::validator_type;
-    using basis_isomorphism_t = coords_t::basis_isomorphism_type;
-    using variant_t           = std::conditional_t<std::same_as<coords_t, disp_t>, std::variant<coords_t>, std::variant<coords_t, disp_t>>;
-    using graph_type          = transition_checker<variant_t>::transition_graph;
+    using coords_t         = Coordinates;
+    using space_t          = Coordinates::space_type;
+    using disp_t           = coords_t::displacement_coordinates_type;
+    using module_t         = coords_t::free_module_type;
+    using disp_value_t     = coords_t::displacement_value_type;
+    using representation_t = coords_t::representation_type;
+    using value_t          = representation_t::value_type; // TO DO: only just made distinct from disp_value_t. Needs to be properly reasoned through
+    using validator_t      = coords_t::validator_type;
+    using frame_t          = coords_t::frame_type;
+    using variant_t        = std::conditional_t<std::same_as<coords_t, disp_t>, std::variant<coords_t>, std::variant<coords_t, disp_t>>;
+    using graph_type       = transition_checker<variant_t>::transition_graph;
     constexpr static std::size_t dimension{Coordinates::dimension};
     constexpr static bool orderable{(dimension == 1) && std::totally_ordered<disp_value_t>};
     constexpr static bool has_distinguished_origin{maths::has_distinguished_origin_v<space_t>};
@@ -94,7 +93,7 @@ namespace sequoia::testing
       }
       else
       {
-        return To{from_underlying(vals), units_t{}};
+        return To{from_underlying(vals), frame_t{}};
       }
     }
 
@@ -116,11 +115,11 @@ namespace sequoia::testing
     static To from_underlying(T val) {
       if constexpr(maths::representation_for_span<representation_t, space_t>)
       {
-        return To{from_underlying(std::array{val})[0], units_t{}};
+        return To{from_underlying(std::array{val})[0], frame_t{}};
       }
       else
       {
-        return To{from_underlying(val), units_t{}};
+        return To{from_underlying(val), frame_t{}};
       }
     }
     
@@ -323,7 +322,7 @@ namespace sequoia::testing
           dim_1_label::zero,
           dim_1_label::zero,
           test.report("0 * unit"),
-          [](const variant_t&) -> variant_t { return from_underlying(disp_value_t{}) * basis_isomorphism_t{}; }
+          [](const variant_t&) -> variant_t { return from_underlying(disp_value_t{}) * frame_t{}; }
         );
 
         add_transition<coords_t>(
@@ -331,7 +330,7 @@ namespace sequoia::testing
           dim_1_label::zero,
           dim_1_label::zero,
           test.report("0 / dual<unit>"),
-          [](const variant_t&) -> variant_t { return from_underlying(disp_value_t{}) / maths::dual_of_t<basis_isomorphism_t>{}; }
+          [](const variant_t&) -> variant_t { return from_underlying(disp_value_t{}) / maths::dual_of_t<frame_t>{}; }
         );
 
         add_transition<coords_t>(
@@ -339,7 +338,7 @@ namespace sequoia::testing
           dim_1_label::one,
           dim_1_label::one,
           test.report("1 * unit"),
-          [](const variant_t&) -> variant_t { return from_underlying(disp_value_t(1)) * basis_isomorphism_t{}; }
+          [](const variant_t&) -> variant_t { return from_underlying(disp_value_t(1)) * frame_t{}; }
         );
 
         add_transition<coords_t>(
@@ -347,7 +346,7 @@ namespace sequoia::testing
           dim_1_label::one,
           dim_1_label::one,
           test.report("1 / dual<unit>"),
-          [](const variant_t&) -> variant_t { return from_underlying(disp_value_t(1)) / maths::dual_of_t<basis_isomorphism_t>{}; }
+          [](const variant_t&) -> variant_t { return from_underlying(disp_value_t(1)) / maths::dual_of_t<frame_t>{}; }
         );
       }
     }
