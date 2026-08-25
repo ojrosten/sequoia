@@ -177,6 +177,17 @@ namespace sequoia::testing
     STATIC_CHECK(weakly_abelian_group_under_multiplication_v<double>);
     STATIC_CHECK(weakly_abelian_group_under_multiplication_v<std::complex<float>>);
     STATIC_CHECK(weakly_abelian_group_under_multiplication_v<std::complex<double>>);
+
+    STATIC_CHECK( weak_commutative_ring<int>);
+    STATIC_CHECK(!weak_field<int>);
+    STATIC_CHECK( weak_field<double>);
+
+    // bool is the one fundamental type whose value set carries a field, and the one whose
+    // operators decline to supply it: `true + true` is `true`.
+    STATIC_CHECK(!weakly_abelian_group_under_addition_v<bool>);
+    STATIC_CHECK( weakly_abelian_group_under_multiplication_v<bool>);
+    STATIC_CHECK(!weak_commutative_ring<bool>);
+    STATIC_CHECK(!weak_field<bool>);
   }
 
   /** Every concept in the header is gated on a nested `structure`, so a type

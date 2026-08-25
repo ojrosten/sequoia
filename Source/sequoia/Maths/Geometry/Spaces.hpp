@@ -1325,29 +1325,38 @@ namespace sequoia::maths
   /** @defgroup ArithmeticProperties Arithmetic Properties
       @brief Tools to reflect on whether types expose the standard arithmetic operations.
 
-      The main subtlety for the topics that will concern us is division. From the perspective
-      of abstract algebra,  multiplication is the more primitive operation. If each element of
-      a set has a multiplicative inverse then for each element, a, there exists a single element,
-      a^{-1}, such that
+      The main subtlety for the topics that will concern us is division. From
+      the perspective of abstract algebra, multiplication is the more primitive
+      operation: whenever an element \f$ b \f$ has a multiplicative inverse - a
+      unique \f$ b^{-1} \f$ for which \f$ b \, b^{-1} = 1 \f$ - division by
+      \f$ b \f$ follows, according to
 
-          a * a^{-1} = 1
+      \f[
+        a / b = a \, b^{-1}.
+      \f]
 
-      From this, a division operation can be defined according to
+      In a field every element save zero has such an inverse; zero never does.
 
-          a / b = a  * b^{-1}
+      However, there are common types that we will deal with - such as ints and
+      size_ts - for which most elements do not have multiplicative inverses
+      valued within the type. A simple example is int x = 2. The multiplicative
+      inverse is 1/2, which is not an int.
 
-      However, there are common types that we will deal with - such as ints and size_ts - for
-      which most elements do not have multiplicative inverses valued within the type. A simple
-      example is int x = 2. The multiplicative inverse is 1/2, which is not an int.
+      Nevertheless, C++'s arithmetic types define division. For the signed
+      integral types, `/` yields the quotient of a division algorithm for
+      \f$ \bb{Z} \f$ - a Euclidean domain - under the convention that
+      truncation is towards zero. The unsigned types wrap, and so are
+      \f$ \bb{Z}/2^n\bb{Z} \f$, in which only the odd elements are invertible;
+      `/` is therefore not division in that ring but, once again, the division
+      algorithm, this time applied to the representatives
+      \f$ 0, \ldots, 2^n - 1 \f$. These are the natural numbers, which have no
+      additive inverses and so constitute no domain to name.
 
-      Nevertheless, C++'s arithmetic types define division. For signed types this corresponds to a
-      so-called Euclidean domain. For the unsigned types the operation is algorithmically the
-      same, but I actually don't know the name for the associated mathematical structure.
-
-      Regardless, the purpose of the utilities in the following set is simply naive reflection on
-      whether particular operations exist in the C++ language and not the nuanced semantics.
-      Therefore, it would be _incorrect_ to conclude that, just because a type is addable,
-      subtractable, multiplicable and divisible that it models a field.
+      Regardless, the purpose of the utilities in this group is simply naive
+      reflection on whether particular operations exist in the C++ language and
+      not the nuanced semantics. Therefore, it would be _incorrect_ to conclude
+      that, just because a type is addable, subtractable, multiplicable and
+      divisible, it models a field.
    */
 
   /** @ingroup ArithmeticProperties
@@ -1357,7 +1366,7 @@ namespace sequoia::maths
   template<class U, class T>
   inline constexpr bool is_addable_to_v{
     requires(const T& t, const U& u) {
-      { t + u } -> std::convertible_to<T>; 
+      { t + u } -> std::convertible_to<T>;
     }
   };
 
@@ -1368,8 +1377,8 @@ namespace sequoia::maths
   template<class T>
   inline constexpr bool is_addable_v{
        is_addable_to_v<T, T>
-    && requires(T& t) {
-         { t += t } -> std::same_as<T&>;
+    && requires(T& t, const T& u) {
+         { t += u } -> std::same_as<T&>;
        }
   };
 
@@ -1380,7 +1389,7 @@ namespace sequoia::maths
   template<class U, class T>
   inline constexpr bool is_subtractable_from_v{
     requires(const T& t, const U& u) {
-      { t - u } -> std::convertible_to<T>; 
+      { t - u } -> std::convertible_to<T>;
     }
   };
 
@@ -1391,8 +1400,8 @@ namespace sequoia::maths
   template<class T>
   inline constexpr bool is_subtractable_v{
        is_subtractable_from_v<T, T>
-    && requires(T& t) {
-         { t -= t } -> std::same_as<T&>;
+    && requires(T& t, const T& u) {
+         { t -= u } -> std::same_as<T&>;
        }
   };
 
@@ -1412,9 +1421,9 @@ namespace sequoia::maths
 
   template<class T>
   inline constexpr bool is_multiplicable_v{
-    requires(T& t) {
-      { t *= t } -> std::same_as<T&>;
-      { t * t }  -> std::convertible_to<T>;
+    requires(T& t, const T& u) {
+      { t *= u } -> std::same_as<T&>;
+      { u * u }  -> std::convertible_to<T>;
     }
   };
 
@@ -1423,36 +1432,56 @@ namespace sequoia::maths
    */
   template<class T>
   inline constexpr bool is_divisible_v{
-    requires(T& t) {
-      { t /= t } -> std::same_as<T&>;
-      { t / t }  -> std::convertible_to<T>;
+    requires(T& t, const T& u) {
+      { t /= u } -> std::same_as<T&>;
+      { u / u }  -> std::convertible_to<T>;
     }
   };
 
   /** @defgroup AlgebraicTraits Algebraic Traits
-      @brief Traits and concepts for types attempting to model algebraic types.
+      @brief Traits and concepts for types attempting to model algebraic
+             structures.
 
-      This section seeks to provide compile time mechanisms to specify (and subsequently query)
-      whether arithmetic types, be they built-in (int, float etc) or user-defined, exhibit various properties.
-      A fundamental problem of attempting this is the difference
-      between a mathematical structure and an approximate representation of that structure.
-      This is sharpened in the current context of attempting to do this in code:     
-      ints model the integers, but not exactly since there is a maximum representable value.
-      Similarly, floating-point numbers model the reals but only in an approximate sense.
-      However, it is useful to capture such 'best efforts', for which we use the signifier
-      'weak'. For example to signify the fact that neither integer nor floating-point addition exactly models an
-      abelian group, trait `weakly_abelian_group_under_addition` is used. Note, however, that addition of unsigned integral
-      types does precisely model an abelian group and so 'weak' is a minimum requirement.
-      
-      Entertainingly, the only fundamental type in C++ which exactly models a field is bool.
+      This section seeks to provide compile time mechanisms to specify (and
+      subsequently query) whether a type supporting arithmetic operations - be
+      it built-in (int, float etc) or user-defined - exhibits various
+      properties. A fundamental problem of attempting this is the difference
+      between a mathematical structure and an approximate representation of
+      that structure. This is sharpened in the current context of attempting to
+      do this in code: ints model the integers, but not exactly since there is
+      a maximum representable value. Similarly, floating-point numbers model
+      the reals but only in an approximate sense. However, it is useful to
+      capture such 'best efforts', for which we use the signifier 'weak'. For
+      example to signify the fact that neither integer nor floating-point
+      addition exactly models an abelian group, trait
+      `weakly_abelian_group_under_addition` is used. Note, however, that
+      addition of the unsigned integral types - bool aside, on which see
+      below - does precisely model an abelian group and so 'weak' is a minimum
+      requirement.
+
+      These traits are for the types which *represent* elements of an algebraic
+      structure, not for the types which *name* one. A space names its ring as
+      an ideal object - `commutative_rings::reals<1>` - which supports no
+      arithmetic whatsoever, and which is served instead by the exact concepts
+      of @ref CommutativeRing "the commutative ring group". Asking a `weak_`
+      trait about such a type is a category error, and it will simply answer
+      false.
+
+      Entertainingly, bool is the only fundamental type whose value set carries
+      a field, \f$ \bb{Z}/n\bb{Z} \f$ being a field precisely when \f$ n \f$ is
+      prime. Its operators do not supply one, though: `true + true` promotes to
+      int and converts back to `true`, whereas the field demands
+      \f$ 1 + 1 = 0 \f$. That field's addition is exclusive-or - which is to
+      say `!=`, an operator none of the traits below consults.
    */
 
   /** @defgroup WeaklyAbelianGroupUnderAddition Subgroup weakly abelian group under addition
       @ingroup AlgebraicTraits
       @brief Trait for specifying whether a type behaves (approximately) as an abelian group under addition.
 
-      This includes all the arithmetic types, with the unsigned one behaving precisely as an abelian group
-      under addition.
+      This includes all the arithmetic types bar one. The unsigned integral
+      types wrap, and so behave precisely as an abelian group under addition.
+      bool, which counts as unsigned but does not wrap, is excluded outright.
 
       @{
    */
@@ -1469,6 +1498,9 @@ namespace sequoia::maths
   template<arithmetic T>
   struct weakly_abelian_group_under_addition<T> : std::true_type {};
 
+  template<>
+  struct weakly_abelian_group_under_addition<bool> : std::false_type {};
+
   template<std::floating_point T>
   struct weakly_abelian_group_under_addition<std::complex<T>> : std::true_type {};
 
@@ -1476,13 +1508,20 @@ namespace sequoia::maths
 
   /** @defgroup WeaklyAbelianGroupUnderMultiplication Subgroup weakly abelian group under multiplication
       @ingroup AlgebraicTraits
-      @brief Trait for specifying whether a type behaves (approximately) as an abelian group under multiplication.
+      @brief Trait for specifying whether a type's non-zero elements behave
+             (approximately) as an abelian group under multiplication.
 
-      The floating-point types are taken to weakly model an abelian group under multiplication,
-      since they attempt to approximate the reals.
-      
-      The only integral type modelling this (exactly, as it transpires) is bool. It is the only type in C++
-      modelling Z/Zn where n is a prime. The other integral types do not model this in a reasonable sense.
+      Zero is excluded throughout: it has no multiplicative inverse in any ring
+      in which \f$ 0 \neq 1 \f$, so it is the remaining elements which form the
+      group.
+
+      The floating-point types are taken to weakly model such a group, since
+      they attempt to approximate the reals.
+
+      Among the integral types only bool is admitted, and there it is exact:
+      its single non-zero element is its own inverse. (Its addition, by
+      contrast, is not a group at all - see the group description above.) The
+      other integral types do not model this in a reasonable sense.
 
       @{
    */
@@ -1511,8 +1550,10 @@ namespace sequoia::maths
       @ingroup AlgebraicTraits
       @brief Trait for specifying whether a type exhibits multiplication that (approximately) distributes over addition.
 
-      Unlike the previous two traits, this one is taken to be true by default. Therefore, in the
-      event of a user-defined type that doesn't satisfy this, they must opt out.
+      Unlike the previous two traits, this one is taken to be true by default:
+      whereas group structure genuinely varies from type to type, a type
+      offering both operations but no distributivity is a rarity. The author of
+      such a type must therefore opt out.
 
       @{
    */
@@ -1549,7 +1590,15 @@ namespace sequoia::maths
   concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && is_divisible_v<T>;
 
   /** @defgroup Bounds Bounds
+      @brief Types which delimit the values a representation may take, together
+             with the traits which detect them.
 
+      A bounds type names a `value_type` and carries `lower` and `upper`
+      members; those used to constrain a space are additionally callable,
+      reporting whether a value - or an array of them, one per dimension - lies
+      within range. `coordinate_bounds` is the concrete instance, from which
+      `no_bounds`, `half_line_bounds` and `negative_half_line_bounds` are
+      formed. Enforcement is the business of the validators.
    */
 
   template<class Bounds>
@@ -2091,11 +2140,10 @@ namespace sequoia::maths
       it is possible to construct a module via direct product, in this case, over R.
       However, in general this is not allowed.
 
-      For now, we do not handle the general case. Thus, we may only construct the direct
-      product of free modules if they are, roughly speaking, over the same ring. To be
-      precise, the free modules' commutative rings must either all satisfy the weak_field
-      concept or none of them do; on top of which they must share a common type in the C++
-      sense.
+      For now, we do not handle the general case. Thus, we may only construct
+      the direct product of free modules if they are over the same ring - and,
+      to be precise, the same ring in the C++ sense too, since the constraint
+      is that the modules' commutative ring types are all identical.
    */
 
    /** @defgroup SpacesUtilities Convex Space Utilities
