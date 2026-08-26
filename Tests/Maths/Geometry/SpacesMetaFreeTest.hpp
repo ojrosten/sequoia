@@ -25,6 +25,8 @@ namespace sequoia::testing
   private:
     void test_arithmetic_traits();
 
+    void test_integral_coverings();
+
     void test_structure_trait();
 
     void test_rank_traits();

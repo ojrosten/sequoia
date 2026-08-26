@@ -248,7 +248,7 @@ namespace sequoia::physics
           free_module_type_of_t<ValueSpace>,
           Unit,
           BasisData,
-          typename Representation::free_module_representation,
+          displacement_representation_t<ValueSpace, Representation>,
           distinguished_origin,
           Validator
         >
@@ -524,7 +524,11 @@ namespace sequoia::physics
     {
       using disp_space_t = to_displacement_space_t<ValueSpace, OtherValueSpace>;
       using basis_t      = consistent_basis_data<basis_data_type, OtherBasisData>::template rebind_type<Unit, rank_of_v<free_module_type_of_t<disp_space_t>>>;
-      using disp_t       = to_coordinates_base_type<disp_space_t, Unit, basis_t, representation_type, Validator>::displacement_coordinates_type;
+      // disp_space_t is a free module, so it is its own free module and will not
+      // strip the bounds from a point representation: hand it the displacement
+      // representation of the space the points came from.
+      using disp_rep_t   = displacement_representation_t<ValueSpace, representation_type>;
+      using disp_t       = to_coordinates_base_type<disp_space_t, Unit, basis_t, disp_rep_t, Validator>::displacement_coordinates_type;
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
         return disp_t{std::array{(lhs.values()[Is] - rhs.values()[Is])...}, units_type{}};
       }(std::make_index_sequence<D>{});

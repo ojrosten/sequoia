@@ -1589,6 +1589,125 @@ namespace sequoia::maths
   template<class T>
   concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && is_divisible_v<T>;
 
+  /** @ingroup AlgebraicTraits
+      @brief Concept for whether every value of one integral type is
+             representable by another.
+
+      Braced-initialization is the arbiter: a conversion which may lose
+      information is narrowing and so ill-formed, leaving `covered_by`
+      satisfied precisely when `Covering` can represent the entire value set
+      of `T`. The relation is reflexive, and depends on the platform - whether
+      `unsigned int` is covered by `long` turns on whether `long` is the wider
+      of the two.
+
+      `bool` is not admitted. Every other integral type covers its two values,
+      but to no purpose: it is not a number, which is why `std::in_range` and
+      the `std::cmp_*` family refuse it too, and why the weak algebraic traits
+      above answer false for it. The character types are admitted, `signed
+      char` and `unsigned char` among them, the standard offering 8-bit
+      arithmetic no other spelling.
+   */
+
+  template<class T, class Covering>
+  concept covered_by =    std::integral<T>
+                       && (!std::same_as<T, bool>)
+                       && std::integral<Covering>
+                       && initializable_from<Covering, T>;
+
+  /** @ingroup AlgebraicTraits
+      @brief Whether every difference of two `T` values is representable by
+             `Difference`.
+
+      The differences of an *n*-bit integral type span \f$ \pm(2^n - 1) \f$
+      whether it is signed or unsigned, that being the value range of the
+      unsigned type of the same width. The question therefore reduces to
+      whether `Difference` covers `std::make_unsigned_t<T>`. For an unsigned
+      `T` that is the same as covering `T` itself, which is why the two
+      coincide for a half line and part company for a whole one: `int` covers
+      its own values reflexively, yet holds only half their differences.
+
+      Types which are not integral are admitted unconditionally, their
+      differences being approximate in the same sense their sums are.
+   */
+
+  template<class T, class Difference>
+  inline constexpr bool differences_covered_by_v{
+    []{
+      if constexpr(std::integral<T> && std::integral<Difference>)
+        return covered_by<std::make_unsigned_t<T>, Difference>;
+      else
+        return true;
+    }()
+  };
+
+  /** @defgroup SignedCoveringType Subgroup signed covering type
+      @ingroup AlgebraicTraits
+      @brief The narrowest standard signed integral type whose value set
+             covers that of `T`.
+
+      Narrowest is meant literally, down to `signed char`, since the width of a
+      representation states the scale which matters and widening past it would
+      spend memory its author chose not to. No unsigned type fits within a
+      `signed char`, which is therefore reached only by types no wider than
+      itself; for the unsigned types the answer is always the next width up,
+      `unsigned char` on `short` and `unsigned short` on `int`.
+
+      Where no standard signed type suffices - `unsigned long long`, and
+      `std::size_t` on the 64-bit platforms - there is no specialization. The
+      primary is defined all the same, and names no type, so the absence is a
+      soft failure rather than an incomplete type, which
+      `has_signed_covering_type_v` may report.
+
+      @{
+   */
+
+  template<class T>
+  struct signed_covering_type {};
+
+  template<class T>
+  using signed_covering_type_t = signed_covering_type<T>::type;
+
+  template<class T>
+  inline constexpr bool has_signed_covering_type_v{
+    requires { typename signed_covering_type<T>::type; }
+  };
+
+  template<covered_by<signed char> T>
+  struct signed_covering_type<T>
+  {
+    using type = signed char;
+  };
+
+  template<covered_by<short> T>
+    requires (!covered_by<T, signed char>)
+  struct signed_covering_type<T>
+  {
+    using type = short;
+  };
+
+  template<covered_by<int> T>
+    requires (!covered_by<T, short>)
+  struct signed_covering_type<T>
+  {
+    using type = int;
+  };
+
+  template<covered_by<long> T>
+    requires (!covered_by<T, int>)
+  struct signed_covering_type<T>
+  {
+    using type = long;
+  };
+
+  template<covered_by<long long> T>
+    requires (!covered_by<T, long>)
+  struct signed_covering_type<T>
+  {
+    using type = long long;
+  };
+
+  /** @} */ // end of group SignedCoveringType
+
   /** @defgroup Bounds Bounds
       @brief Types which delimit the values a representation may take, together
              with the traits which detect them.
@@ -1864,6 +1983,19 @@ namespace sequoia::maths
     // TO DO: this seems to massively slow down compilation  && bounds_for<decltype(R::bounds_v), Space>
       && (representation_for_single_value<R, Space> || representation_for_span<R, Space>);
 
+  /** @ingroup Representation
+      @brief The value type of the free module over a representation whose
+             values are of type `T`.
+
+      The differences of an integral `T` need a signed type wide enough to hold
+      them, namely `signed_covering_type_t<std::make_unsigned_t<T>>`. Where no
+      standard signed type is that wide, and for every `T` which is not
+      integral, `T` keeps itself. That is the right answer for a free module,
+      whose elements are their own differences, and the wrong one for the
+      points of any other space - which is why the requirement is asserted by
+      @ref displacement_representation, where the space is known.
+   */
+
   template<weak_commutative_ring T>
   struct free_module_representation_value_type
   {
@@ -1873,47 +2005,45 @@ namespace sequoia::maths
   template<weak_commutative_ring T>
   using free_module_representation_value_type_t = free_module_representation_value_type<T>::type;
 
-  // TO DO: rename unsigned since it could be signed, now
-  // Maybe rename
-  template<class Unsigned, class Signed>
-  concept covered_by =     std::integral<Unsigned>
-                        && std::integral<Signed>
-    /*&& std::is_unsigned_v<Unsigned>*/
-                        && std::is_signed_v<Signed>
-                        && (sizeof(Signed) == 2 * sizeof(Unsigned));
-  
-  template<class T>
-  struct signed_covering_type;
-
-  template<class T>
-  using signed_covering_type_t = signed_covering_type<T>::type;
-  
-  template<covered_by<int> T>
-  struct signed_covering_type<T>
-  {
-    using type = int;
-  };
-
-  template<covered_by<long> T>
-    requires (sizeof(long) > sizeof(int))
-  struct signed_covering_type<T>
-  {
-    using type = long;
-  };
-
-  template<covered_by<long long> T>
-    requires (sizeof(long long) > sizeof(long))
-  struct signed_covering_type<T>
-  {
-    using type = long long;
-  };
-
   template<weak_commutative_ring T>
-    requires std::integral<T> && std::is_unsigned_v<T>
+    requires std::integral<T> && has_signed_covering_type_v<std::make_unsigned_t<T>>
   struct free_module_representation_value_type<T>
   {
-    using type = signed_covering_type_t<T>;
+    using type = signed_covering_type_t<std::make_unsigned_t<T>>;
   };
+
+  /** @ingroup Representation
+      @brief The representation of the displacements of a space.
+
+      A free module is its own free module: its elements are their own
+      differences, and the representation is unchanged. Only where a space is
+      distinct from its free module - a half line, an affine line - do the
+      displacements need a representation of their own, and only there must
+      that representation be wide enough to hold them. Hence the requirement is
+      imposed here rather than on the representation, which cannot know which
+      of the two roles it is playing.
+   */
+
+  template<class Space, class Representation>
+  struct displacement_representation
+  {
+    using type = Representation::free_module_representation;
+
+    static_assert(differences_covered_by_v<typename Representation::value_type,
+                                           typename type::value_type>,
+                  "The points of a space which is not its own free module are separated by "
+                  "displacements this representation cannot hold: no standard signed integral "
+                  "type is wide enough for the differences of its value type");
+  };
+
+  template<free_module Space, class Representation>
+  struct displacement_representation<Space, Representation>
+  {
+    using type = Representation;
+  };
+
+  template<class Space, class Representation>
+  using displacement_representation_t = displacement_representation<Space, Representation>::type;
 
   template<representation Representation, class... Ts>
   // TO DO: constrain Ts to a coordinates concept
@@ -2749,7 +2879,7 @@ namespace sequoia::maths
     validator_for<Space, Representation> Validator,
     class DisplacementCoordinates=free_module_coordinates<free_module_type_of_t<Space>,
                                                           BasisData,
-                                                          typename Representation::free_module_representation,
+                                                          displacement_representation_t<Space, Representation>,
                                                           Validator>
   >
   class coordinates_base
@@ -2763,7 +2893,7 @@ namespace sequoia::maths
     using set_type                      = Space::set_type;
     using free_module_type              = free_module_type_of_t<Space>;
     using value_type                    = Representation::value_type;    
-    using displacement_value_type       = Representation::free_module_representation::value_type;
+    using displacement_value_type       = displacement_representation_t<Space, Representation>::value_type;
     using frame_type                    = basis_type::frame_type;
     using validator_type                = Validator;
 
@@ -2930,7 +3060,7 @@ namespace sequoia::maths
           [&c](value_type& lhs, displacement_value_type rhs) {
             if constexpr((std::is_unsigned_v<value_type> && std::is_signed_v<displacement_value_type>))
             {
-              static_assert(2 * sizeof(value_type) == sizeof(displacement_value_type));
+              static_assert(covered_by<value_type, displacement_value_type>);
               const displacement_value_type rhsToUse{
                 [&c, lhs, rhs](){
                   if constexpr(!has_identity_validator)
@@ -3007,7 +3137,7 @@ namespace sequoia::maths
           [&c](value_type& lhs, displacement_value_type rhs) {
             if constexpr((std::is_unsigned_v<value_type> && std::is_signed_v<displacement_value_type>))
             {
-              static_assert(2 * sizeof(value_type) == sizeof(displacement_value_type));
+              static_assert(covered_by<value_type, displacement_value_type>);
               const displacement_value_type rhsToUse{
                 [&c, lhs, rhs](){
                   if constexpr(!has_identity_validator)

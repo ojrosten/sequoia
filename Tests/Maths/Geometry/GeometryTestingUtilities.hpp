@@ -79,21 +79,24 @@ namespace sequoia::testing
       return Coord{val, individual_unit_t{}};
     }
 
+    // The target's own representation, not the point representation: the two have
+    // distinct value types wherever a space is not its own free module.
     template<class To, class T, std::size_t D>
     [[nodiscard]]
     static To from_underlying(const std::array<T, D>& vals)
     {
-      if constexpr(maths::has_heterogeneous_representation_v<representation_t>)
+      using to_representation_t = To::representation_type;
+      if constexpr(maths::has_heterogeneous_representation_v<to_representation_t>)
       {        
         return
           [&]<std::size_t... Is>(std::index_sequence<Is...>) {
-            using separate_coords_t = representation_t::coordinates_type;
-            return To{make_coord<std::tuple_element_t<Is, separate_coords_t>>(from_underlying(vals)[Is])...};
+            using separate_coords_t = to_representation_t::coordinates_type;
+            return To{make_coord<std::tuple_element_t<Is, separate_coords_t>>(to_representation_t{}.from_underlying(std::span{vals})[Is])...};
           }(std::make_index_sequence<D>{});
       }
       else
       {
-        return To{from_underlying(vals), frame_t{}};
+        return To{to_representation_t{}.from_underlying(std::span{vals}), frame_t{}};
       }
     }
 
@@ -113,13 +116,15 @@ namespace sequoia::testing
     template<class To, class T>
     [[nodiscard]]
     static To from_underlying(T val) {
-      if constexpr(maths::representation_for_span<representation_t, space_t>)
+      using to_representation_t = To::representation_type;
+      if constexpr(maths::representation_for_span<to_representation_t, typename To::space_type>)
       {
-        return To{from_underlying(std::array{val})[0], frame_t{}};
+        const std::array vals{val};
+        return To{to_representation_t{}.from_underlying(std::span{vals})[0], frame_t{}};
       }
       else
       {
-        return To{from_underlying(val), frame_t{}};
+        return To{to_representation_t{}.from_underlying(val), frame_t{}};
       }
     }
     
@@ -672,11 +677,11 @@ namespace sequoia::testing
           }, 
         },
         {
-          from_underlying<coords_t>(std::array{disp_value_t(1),  disp_value_t(2)}),     
-          from_underlying<coords_t>(std::array{disp_value_t(1),  disp_value_t(1)}),
-          from_underlying<coords_t>(std::array{disp_value_t(1),  disp_value_t{ }}),
-          from_underlying<coords_t>(std::array{disp_value_t{},   disp_value_t(1)}),
-          from_underlying<coords_t>(std::array{disp_value_t{},   disp_value_t{ }})          
+          from_underlying<coords_t>(std::array{value_t(1),  value_t(2)}),     
+          from_underlying<coords_t>(std::array{value_t(1),  value_t(1)}),
+          from_underlying<coords_t>(std::array{value_t(1),  value_t{ }}),
+          from_underlying<coords_t>(std::array{value_t{},   value_t(1)}),
+          from_underlying<coords_t>(std::array{value_t{},   value_t{ }})          
         }
       };
 
@@ -712,9 +717,9 @@ namespace sequoia::testing
 
     static void add_dim_2_negative_transitions(maths::network auto& g, regular_test& test)
     {      
-      g.add_node(from_underlying<coords_t>(std::array{disp_value_t{},   disp_value_t(-1)}));
-      g.add_node(from_underlying<coords_t>(std::array{disp_value_t(-1), disp_value_t{}}));
-      g.add_node(from_underlying<coords_t>(std::array{disp_value_t(-1), disp_value_t(-1)}));
+      g.add_node(from_underlying<coords_t>(std::array{value_t{},   value_t(-1)}));
+      g.add_node(from_underlying<coords_t>(std::array{value_t(-1), value_t{}}));
+      g.add_node(from_underlying<coords_t>(std::array{value_t(-1), value_t(-1)}));
 
       // (-1, -1) --> (-1, -1)
       add_transition<coords_t>(

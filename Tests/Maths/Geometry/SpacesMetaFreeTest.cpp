@@ -148,6 +148,7 @@ namespace sequoia::testing
   void spaces_meta_free_test::run_tests()
   {
     test_arithmetic_traits();
+    test_integral_coverings();
     test_structure_trait();
     test_rank_traits();
     test_origin_and_orthant_traits();
@@ -188,6 +189,69 @@ namespace sequoia::testing
     STATIC_CHECK( weakly_abelian_group_under_multiplication_v<bool>);
     STATIC_CHECK(!weak_commutative_ring<bool>);
     STATIC_CHECK(!weak_field<bool>);
+  }
+
+  void spaces_meta_free_test::test_integral_coverings()
+  {
+    STATIC_CHECK( covered_by<int, int>);
+    STATIC_CHECK( covered_by<unsigned char, int>);
+    STATIC_CHECK( covered_by<unsigned char, long>);
+    STATIC_CHECK(!covered_by<int, unsigned>);
+    STATIC_CHECK(!covered_by<unsigned, int>);
+
+    // No standard signed type is wider, so half the values are lost; this is why
+    // std::size_t has no signed covering type on the 64-bit platforms.
+    STATIC_CHECK(!covered_by<unsigned long long, long long>);
+
+    // Only the integral types participate, whatever the ranges may be.
+    STATIC_CHECK(!covered_by<float, double>);
+    STATIC_CHECK(!covered_by<int, double>);
+
+    // bool aside: every integral type covers its two values, but it is not a number.
+    STATIC_CHECK(!covered_by<bool, int>);
+
+    // Every candidate from short upwards covers unsigned char; the narrowest wins,
+    // and for the unsigned types that is always the next width up.
+    STATIC_CHECK(std::same_as<signed_covering_type_t<signed char>,    signed char>);
+    STATIC_CHECK(std::same_as<signed_covering_type_t<unsigned char>,  short>);
+    STATIC_CHECK(std::same_as<signed_covering_type_t<short>,          short>);
+    STATIC_CHECK(std::same_as<signed_covering_type_t<unsigned short>, int>);
+    STATIC_CHECK(std::same_as<signed_covering_type_t<int>,            int>);
+
+    // char is signed char or short according to whether the implementation gives
+    // char a sign, so only the width is portable.
+    STATIC_CHECK(sizeof(signed_covering_type_t<char>) <= sizeof(short));
+
+    // Which of long and long long covers unsigned varies with the data model, so
+    // only the defining properties are portable.
+    STATIC_CHECK(std::is_signed_v<signed_covering_type_t<unsigned>>);
+    STATIC_CHECK(covered_by<unsigned, signed_covering_type_t<unsigned>>);
+    STATIC_CHECK(sizeof(signed_covering_type_t<unsigned>) > sizeof(unsigned));
+
+    STATIC_CHECK( has_signed_covering_type_v<unsigned char>);
+    STATIC_CHECK(!has_signed_covering_type_v<unsigned long long>);
+
+    // Covering a type's values is not covering its differences, save when it is
+    // unsigned: int covers its own values reflexively and holds half their spread.
+    STATIC_CHECK( differences_covered_by_v<unsigned char, short>);
+    STATIC_CHECK( differences_covered_by_v<int, long long>);
+    STATIC_CHECK(!differences_covered_by_v<int, int>);
+    STATIC_CHECK(!differences_covered_by_v<unsigned, int>);
+    STATIC_CHECK( differences_covered_by_v<double, double>);
+
+    STATIC_CHECK(std::same_as<free_module_representation_value_type_t<double>,         double>);
+    STATIC_CHECK(std::same_as<free_module_representation_value_type_t<signed char>,    short>);
+    STATIC_CHECK(std::same_as<free_module_representation_value_type_t<unsigned char>,  short>);
+    STATIC_CHECK(std::same_as<free_module_representation_value_type_t<short>,          int>);
+    STATIC_CHECK(std::same_as<free_module_representation_value_type_t<unsigned short>, int>);
+    STATIC_CHECK(std::same_as<free_module_representation_value_type_t<int>,
+                              signed_covering_type_t<unsigned>>);
+    STATIC_CHECK(std::same_as<free_module_representation_value_type_t<unsigned>,
+                              signed_covering_type_t<unsigned>>);
+
+    // Nothing is wide enough, so the widening declines and the type keeps itself -
+    // right for a module, and caught by displacement_representation for anything else.
+    STATIC_CHECK(std::same_as<free_module_representation_value_type_t<long long>, long long>);
   }
 
   /** Every concept in the header is gated on a nested `structure`, so a type

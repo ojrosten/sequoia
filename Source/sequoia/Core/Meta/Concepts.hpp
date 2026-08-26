@@ -76,7 +76,7 @@ namespace sequoia
     T{std::declval<Args>()...};
   };
 
-  /// \brieft A concept for arithmetic types
+  /// \brief A concept for arithmetic types
   template<class T>
   concept arithmetic = std::is_arithmetic_v<T>;
 
