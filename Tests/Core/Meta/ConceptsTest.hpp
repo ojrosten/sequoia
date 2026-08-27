@@ -35,5 +35,7 @@ namespace sequoia::testing
     void test_deep_totally_ordered();
 
     void test_initializable_from();
+
+    void test_integer();
   };
 }

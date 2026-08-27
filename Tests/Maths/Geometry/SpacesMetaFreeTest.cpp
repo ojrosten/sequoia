@@ -19,6 +19,10 @@ namespace sequoia::testing
 
   namespace
   {
+    // Not integral, yet its differences overflow like any integer's: the sharpest
+    // case for the trait declining to vouch for a mixture.
+    enum class narrow_enum : unsigned char {};
+
     // Fixtures for the origin and orthant traits.
 
     struct distinguished_origin_space {
@@ -189,6 +193,14 @@ namespace sequoia::testing
     STATIC_CHECK( weakly_abelian_group_under_multiplication_v<bool>);
     STATIC_CHECK(!weak_commutative_ring<bool>);
     STATIC_CHECK(!weak_field<bool>);
+
+    // std::is_arithmetic_v sees through cv-qualification, whereas an explicit
+    // specialisation matches only the unqualified type. bool's treatment is therefore
+    // stated against std::remove_cv_t, or const bool would answer the other way.
+    STATIC_CHECK(!weakly_abelian_group_under_addition_v<const bool>);
+    STATIC_CHECK( weakly_abelian_group_under_multiplication_v<const bool>);
+    STATIC_CHECK( weakly_abelian_group_under_addition_v<const int>);
+    STATIC_CHECK( weakly_abelian_group_under_addition_v<volatile double>);
   }
 
   void spaces_meta_free_test::test_integral_coverings()
@@ -248,12 +260,83 @@ namespace sequoia::testing
     STATIC_CHECK(!differences_covered_by_v<int, int>);
     STATIC_CHECK(!differences_covered_by_v<unsigned, int>);
     STATIC_CHECK(!differences_covered_by_v<int, unsigned>);
-    STATIC_CHECK(!differences_covered_by_v<bool, int>);
     STATIC_CHECK(!differences_covered_by_v<char, short>);
     STATIC_CHECK( differences_covered_by_v<signed char, short>);
+
+    // Neither type integral: the question goes unasked. A mixture is refused, so
+    // the trait no longer answers opposite to covered_by on the same enumeration.
+    STATIC_CHECK(!differences_covered_by_v<double, short>);
+    STATIC_CHECK(!differences_covered_by_v<long long, float>);
+    STATIC_CHECK(!covered_by<narrow_enum, signed char>);
+
+    // A type supplying no arithmetic cannot be asked about differences at all: the
+    // trait's parameters are constrained, so naming it is a compilation error rather
+    // than an answer. That is not something STATIC_CHECK can state, so pin the door.
+    STATIC_CHECK(!weak_commutative_ring<narrow_enum>);
+    STATIC_CHECK(!weak_commutative_ring<commutative_rings::reals<1>>);
+
+    // std::integral sees through cv-qualification where std::same_as does not, so
+    // the exclusions are written against the unqualified type.
+    STATIC_CHECK(!integer<const bool>);
+    STATIC_CHECK(!integer<const char>);
+    STATIC_CHECK( integer<const int>);
     STATIC_CHECK( differences_covered_by_v<double, double>);
     STATIC_CHECK( differences_covered_by_v<float, double>);
-    STATIC_CHECK( differences_covered_by_v<double, float>);
+    STATIC_CHECK(!differences_covered_by_v<double, float>);
+
+    // Braced initialization settles the floating-point cases too. The families do
+    // not mix, and are not meant to: weakly_represented_by gives the integers an
+    // integral representation and the reals a floating-point one, so a difference
+    // type from the other family is refused whether or not the digits would suffice.
+    STATIC_CHECK(!differences_covered_by_v<signed char, float>);
+    STATIC_CHECK(!differences_covered_by_v<int, double>);
+    STATIC_CHECK(!differences_covered_by_v<int, float>);
+    STATIC_CHECK(!differences_covered_by_v<long long, double>);
+    STATIC_CHECK(!differences_covered_by_v<float, int>);
+    STATIC_CHECK(!differences_covered_by_v<double, int>);
+
+    // Neither integral nor floating point: nothing to count, so only an unwidened
+    // covering is admitted.
+    STATIC_CHECK( differences_covered_by_v<std::complex<double>, std::complex<double>>);
+    STATIC_CHECK( differences_covered_by_v<std::complex<float>,  std::complex<double>>);
+    STATIC_CHECK(!differences_covered_by_v<std::complex<double>, std::complex<float>>);
+    STATIC_CHECK(!differences_covered_by_v<std::complex<double>, double>);
+
+    // The reals sit inside the complexes, so a complex covering of no lesser rank
+    // holds a floating-point type's differences. An integral type's it does not,
+    // a signed integral covering being demanded, which keeps the families apart.
+    STATIC_CHECK( differences_covered_by_v<double, std::complex<double>>);
+    STATIC_CHECK( differences_covered_by_v<float,  std::complex<double>>);
+    STATIC_CHECK(!differences_covered_by_v<double, std::complex<float>>);
+    STATIC_CHECK(!differences_covered_by_v<int,    std::complex<double>>);
+
+    // Reversals of every pair above. Both relations are antisymmetric on these
+    // types - apart from covered_by's reflexivity no pair holds both ways - so all
+    // of these are false. It is the reversal which catches a criterion that has
+    // quietly lost a hypothesis, so they are enumerated rather than chosen.
+    STATIC_CHECK(!covered_by<long, unsigned char>);
+    STATIC_CHECK(!covered_by<long long, unsigned long long>);
+    STATIC_CHECK(!covered_by<double, float>);
+    STATIC_CHECK(!covered_by<double, int>);
+    STATIC_CHECK(!covered_by<int, bool>);
+    STATIC_CHECK(!covered_by<int, char8_t>);
+    STATIC_CHECK(!covered_by<int, char16_t>);
+    STATIC_CHECK(!covered_by<long long, char32_t>);
+    STATIC_CHECK(!covered_by<long long, wchar_t>);
+    STATIC_CHECK(!covered_by<int, signed char>);
+    STATIC_CHECK(!covered_by<int, unsigned char>);
+    STATIC_CHECK(!covered_by<signed char, narrow_enum>);
+    STATIC_CHECK(!covered_by<signed_covering_type_t<unsigned>, unsigned>);
+
+    STATIC_CHECK(!differences_covered_by_v<short, char>);
+    STATIC_CHECK(!differences_covered_by_v<short, signed char>);
+    STATIC_CHECK(!differences_covered_by_v<short, double>);
+    STATIC_CHECK(!differences_covered_by_v<float, long long>);
+    STATIC_CHECK(!differences_covered_by_v<float, signed char>);
+    STATIC_CHECK(!differences_covered_by_v<double, long long>);
+    STATIC_CHECK(!differences_covered_by_v<std::complex<double>, float>);
+    STATIC_CHECK(!differences_covered_by_v<std::complex<float>,  double>);
+    STATIC_CHECK(!differences_covered_by_v<std::complex<double>, int>);
 
     STATIC_CHECK(std::same_as<free_module_representation_value_type_t<double>,         double>);
     STATIC_CHECK(std::same_as<free_module_representation_value_type_t<signed char>,    short>);
@@ -401,6 +484,23 @@ namespace sequoia::testing
     STATIC_CHECK(!ordered_ring<commutative_rings::reals<2>>);
     STATIC_CHECK(!field<commutative_rings::reals<2>>);
     STATIC_CHECK(!ordered_field<commutative_rings::reals<2>>);
+
+    // Which representations each ring will accept. The integers demand a signed
+    // integer type: char and wchar_t are integral and may well be signed, but what
+    // they represent is not a number, and whether they are signed at all is left to
+    // the implementation - so a space over one would mean different things on
+    // different platforms.
+    STATIC_CHECK( weakly_represented_by_v<commutative_rings::integers<1>, int>);
+    STATIC_CHECK( weakly_represented_by_v<commutative_rings::integers<1>, signed char>);
+    STATIC_CHECK(!weakly_represented_by_v<commutative_rings::integers<1>, unsigned>);
+    STATIC_CHECK(!weakly_represented_by_v<commutative_rings::integers<1>, char>);
+    STATIC_CHECK(!weakly_represented_by_v<commutative_rings::integers<1>, wchar_t>);
+    STATIC_CHECK(!weakly_represented_by_v<commutative_rings::integers<1>, double>);
+
+    STATIC_CHECK( weakly_represented_by_v<commutative_rings::reals<1>, double>);
+    STATIC_CHECK(!weakly_represented_by_v<commutative_rings::reals<1>, int>);
+    STATIC_CHECK( weakly_represented_by_v<commutative_rings::complexes, std::complex<double>>);
+    STATIC_CHECK(!weakly_represented_by_v<commutative_rings::complexes, double>);
   }
 
   void spaces_meta_free_test::test_basis_traits()

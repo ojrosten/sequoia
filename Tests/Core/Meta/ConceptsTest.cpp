@@ -12,6 +12,7 @@
 #include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <complex>
+#include <cstdint>
 #include <set>
 #include <map>
 #include <vector>
@@ -69,6 +70,7 @@ namespace sequoia::testing
     test_deep_equality_comparable();
     test_deep_totally_ordered();
     test_initializable_from();
+    test_integer();
   }
 
   void concepts_test::test_is_range()
@@ -139,5 +141,41 @@ namespace sequoia::testing
     STATIC_CHECK(initializable_from<aggregate, int, double>);
     STATIC_CHECK(!initializable_from<aggregate, int, double, char>);
     STATIC_CHECK(initializable_from<move_only_init, std::vector<int>>);
+  }
+
+  void concepts_test::test_integer()
+  {
+    // The standard's own distinction: these six are integral types but not integer
+    // types, and it is the line std::in_range and the std::cmp_* family draw.
+    STATIC_CHECK(!integer<bool>);
+    STATIC_CHECK(!integer<char>);
+    STATIC_CHECK(!integer<wchar_t>);
+    STATIC_CHECK(!integer<char8_t>);
+    STATIC_CHECK(!integer<char16_t>);
+    STATIC_CHECK(!integer<char32_t>);
+
+    // signed char and unsigned char fall the other side, which is what keeps
+    // std::int8_t - being signed char - admitted.
+    STATIC_CHECK(integer<signed char>);
+    STATIC_CHECK(integer<unsigned char>);
+    STATIC_CHECK(integer<std::int8_t>);
+    STATIC_CHECK(integer<std::uint8_t>);
+
+    STATIC_CHECK(integer<short>);
+    STATIC_CHECK(integer<int>);
+    STATIC_CHECK(integer<unsigned>);
+    STATIC_CHECK(integer<long long>);
+
+    // std::integral sees through cv-qualification where std::same_as does not, so
+    // the exclusions are written against the unqualified type.
+    STATIC_CHECK(!integer<const bool>);
+    STATIC_CHECK(!integer<volatile char>);
+    STATIC_CHECK( integer<const int>);
+
+    STATIC_CHECK(!integer<float>);
+    STATIC_CHECK(!integer<double>);
+    STATIC_CHECK(!integer<bar>);
+    STATIC_CHECK(!integer<int*>);
+    STATIC_CHECK(!integer<int&>);
   }
 }

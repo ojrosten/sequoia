@@ -1496,10 +1496,8 @@ namespace sequoia::maths
   inline constexpr bool weakly_abelian_group_under_addition_v{weakly_abelian_group_under_addition<T>::value};
 
   template<arithmetic T>
+    requires (!std::same_as<std::remove_cv_t<T>, bool>)
   struct weakly_abelian_group_under_addition<T> : std::true_type {};
-
-  template<>
-  struct weakly_abelian_group_under_addition<bool> : std::false_type {};
 
   template<std::floating_point T>
   struct weakly_abelian_group_under_addition<std::complex<T>> : std::true_type {};
@@ -1541,8 +1539,9 @@ namespace sequoia::maths
   template<std::floating_point T>
   struct weakly_abelian_group_under_multiplication<std::complex<T>> : std::true_type {};
 
-  template<>
-  struct weakly_abelian_group_under_multiplication<bool> : std::true_type {};
+  template<class T>
+    requires std::same_as<std::remove_cv_t<T>, bool>
+  struct weakly_abelian_group_under_multiplication<T> : std::true_type {};
 
   /** @} */ // end of group WeaklyAbelianGroupUnderMultiplication
   
@@ -1595,14 +1594,15 @@ namespace sequoia::maths
 
       Braced-initialization is the arbiter: a conversion which may lose
       information is narrowing and so ill-formed, leaving `covered_by`
-      satisfied precisely when `Covering` can represent the entire value set
-      of `T`. The relation is reflexive, and depends on the platform - whether
+      satisfied precisely when `Covering` can represent the entire value set of
+      `T`. The relation is reflexive, and depends on the platform - whether
       `unsigned int` is covered by `long` turns on whether `long` is the wider
       of the two.
 
-      Both sides must be `integer` types rather than merely integral ones, which
-      is the line `std::in_range` and the `std::cmp_*` family draw: `bool` and
-      the character types are out, `signed char` and `unsigned char` in.
+      Both sides must be `integer` types rather than merely integral ones,
+      which is the line `std::in_range` and the `std::cmp_*` family draw: the
+      concept is not satisfied by `bool`, nor by the character types, and is
+      satisfied by `signed char` and `unsigned char`.
    */
 
   template<class T, class Covering>
@@ -1612,42 +1612,90 @@ namespace sequoia::maths
       @brief Whether every difference of two `T` values is representable by
              `Covering`.
 
-      The differences of an *n*-bit, integral type `T` span \f$ \pm(2^n - 1) \f$
-      whether it is signed or unsigned. The first conclusion is that any
-      integral type covering differences must be signed. Suppose this to be true.
-      Now consider the type built from `std::make_unsigned_t<T>`. If `T` is
-      unsigned, this is just an identity. On the other hand suppose `T` is signed.
-      Whereas `T` has a maximum value of \f$ 2^{n - 1} - 1 \f$, its unsigned
-      counterpart has a maximum value of \f$ 2^n - 1 \f$. In both cases -
-      signed or unsigned `T` - `std::make_unsigned_t<T>` has a maximum value
-      corresponding to the maximum value of the difference type. It follows that
-      any type covering the difference type must therefore cover
-      `std::make_unsigned_t<T>`.
-      
-      Types which are not integral are admitted unconditionally, their
-      differences being approximate in the same sense their sums are. Integral
-      types which are not `integer` types are refused, as they are by
-      `covered_by`, and the refusal must precede the reduction rather than
-      follow it: `std::make_unsigned_t<bool>` is ill-formed.
+      The differences of an *n*-bit, integral type `T` span
+      \f$ \pm(2^n - 1) \f$ whether it is signed or unsigned. The first
+      conclusion is that any integral type covering differences must be signed.
+      Suppose this to be true. Now consider the type built from
+      `std::make_unsigned_t<T>`. If `T` is unsigned, this is just an identity.
+      On the other hand suppose `T` is signed. Whereas `T` has a maximum value
+      of \f$ 2^{n - 1} - 1 \f$, its unsigned counterpart has a maximum value of
+      \f$ 2^n - 1 \f$. In both cases - signed or unsigned `T` -
+      `std::make_unsigned_t<T>` has a maximum value corresponding to the
+      maximum value of the difference type. It follows that any type covering
+      the difference type must therefore cover `std::make_unsigned_t<T>`.
+
+      Both parameters are constrained to `weak_commutative_ring`, so a type
+      which supplies no arithmetic cannot be asked the question at all: naming
+      `differences_covered_by_v<std::vector<foo>, std::vector<foo>>` is a
+      compilation error rather than an answer, which is what a meaningless
+      question deserves. `bool` is stopped at the same door, having been
+      expelled from the weak ring hierarchy for supplying the wrong addition.
+
+      An integral `T` which is not an `integer` type - that is, one of the
+      character types, `bool` being already gone - is admitted through the door
+      but the trait is false for it, just as `covered_by` is not satisfied by
+      one.
+
+      Now suppose that one or both types are floating point. Braced
+      initialization settles these cases too. Suppose first that `T` is
+      floating point: it initializes a `Covering` of no lesser rank but not one
+      of greater, so `double` covers the differences of `float` whereas `float`
+      does not cover those of `double`. Conversion to an integer type is
+      narrowing whatever the values involved, so the trait is false for every
+      integral `Covering`.
+
+      Suppose instead that `T` is integral and `Covering` floating point. This
+      conversion is narrowing unless the source is a constant expression, and
+      `std::declval` is not one, so the trait is false here too. That `double`
+      has digits enough for every difference of an `int` does not make this a
+      concession. A free module over the integers takes an integral
+      representation and a vector space over the reals a floating-point one, as
+      `weakly_represented_by` insists, so a difference type drawn from the
+      other family would be a category error before ever being a question of
+      precision.
+
+      `std::complex` is the one compound type the trait judges, and it reduces
+      to its parts: `std::complex<double>` covers the differences of
+      `std::complex<float>` precisely when `double` covers those of `float`.
+      Braced initialization cannot serve here, `std::complex<float>` having an
+      *explicit* constructor from `std::complex<double>` which
+      direct-list-initialization duly considers - so it would pronounce each of
+      the two capable of holding the other's differences.
+
+      The trait is true, too, for a floating-point `T` and a `std::complex`
+      covering of no lesser rank: the reals sit inside the complexes, and
+      braced initialization agrees, `std::complex` having a non-explicit
+      constructor from a scalar. For an integral `T` it is false, a signed
+      integral covering being demanded - which keeps the two families apart, as
+      above.
+
+      Where `T` is neither integral, floating point, nor a `std::complex`,
+      there is nothing to count, and the trait is true only when `Covering` is
+      `T` itself - which is what a representation receives when no widening was
+      attempted.
    */
 
-  template<class T, class Covering>
+  template<weak_commutative_ring T, weak_commutative_ring Covering>
   inline constexpr bool differences_covered_by_v{
     []{
-      if constexpr(std::integral<T> && std::integral<Covering>)
-        if constexpr(integer<T> && std::is_signed_v<Covering>)
-          return covered_by<std::make_unsigned_t<T>, Covering>;
-        else
-          return false;
+      if constexpr(std::floating_point<T>)
+        return initializable_from<Covering, T>;
+      else if constexpr(integer<T>)
+        return std::signed_integral<Covering> && covered_by<std::make_unsigned_t<T>, Covering>;
       else
-        return true;
+        return std::same_as<T, Covering>;
     }()
+  };
+
+  template<std::floating_point T, std::floating_point Covering>
+  inline constexpr bool differences_covered_by_v<std::complex<T>, std::complex<Covering>>{
+    differences_covered_by_v<T, Covering>
   };
 
   /** @defgroup SignedCoveringType Subgroup signed covering type
       @ingroup AlgebraicTraits
-      @brief The narrowest standard signed integral type whose value set
-             covers that of `T`.
+      @brief The narrowest standard signed integral type whose value set covers
+             that of `T`.
 
       Where no standard signed type suffices - `unsigned long long`, and
       `std::size_t` on the 64-bit platforms - there is no specialization. The
@@ -3029,9 +3077,9 @@ namespace sequoia::maths
           else
           {
             const auto transLHS{Derived::to_underlying(lhs.values())}, transRHS{Derived::to_underlying(rhs.values())};
-            if constexpr(std::is_unsigned_v<value_type>)
+            if constexpr(std::is_unsigned_v<value_type> && std::is_signed_v<displacement_value_type>)
             {
-              static_assert(sizeof(displacement_value_type) >= 2 * sizeof(value_type));
+              static_assert(differences_covered_by_v<value_type, displacement_value_type>);
             }
             return {Derived::from_underlying(std::array{(static_cast<displacement_value_type>(transLHS[Is]) - static_cast<displacement_value_type>(transRHS[Is]))...}), frame_type{}};
           }
@@ -3672,7 +3720,7 @@ namespace sequoia::maths
     };
   }
 
-  template<std::integral Rep>
+  template<integer Rep>
     requires std::is_signed_v<Rep>
   struct weakly_represented_by<commutative_rings::integers<1>, Rep> : std::true_type {};
 

@@ -1,2 +1,2 @@
 Spaces Meta Free Test
-Standard Top Level Checks:               250;  Failures:  0  [Deep checks: 250]
+Standard Top Level Checks:               307;  Failures:  0  [Deep checks: 307]
