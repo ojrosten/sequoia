@@ -677,10 +677,10 @@ namespace sequoia::testing
           }, 
         },
         {
-          from_underlying<coords_t>(std::array{value_t(1),  value_t(2)}),     
-          from_underlying<coords_t>(std::array{value_t(1),  value_t(1)}),
-          from_underlying<coords_t>(std::array{value_t(1),  value_t{ }}),
-          from_underlying<coords_t>(std::array{value_t{},   value_t(1)}),
+          from_underlying<coords_t>(std::array{value_t{1},  value_t{2}}),     
+          from_underlying<coords_t>(std::array{value_t{1},  value_t{1}}),
+          from_underlying<coords_t>(std::array{value_t{1},  value_t{ }}),
+          from_underlying<coords_t>(std::array{value_t{},   value_t{1}}),
           from_underlying<coords_t>(std::array{value_t{},   value_t{ }})          
         }
       };
@@ -717,9 +717,9 @@ namespace sequoia::testing
 
     static void add_dim_2_negative_transitions(maths::network auto& g, regular_test& test)
     {      
-      g.add_node(from_underlying<coords_t>(std::array{value_t{},   value_t(-1)}));
-      g.add_node(from_underlying<coords_t>(std::array{value_t(-1), value_t{}}));
-      g.add_node(from_underlying<coords_t>(std::array{value_t(-1), value_t(-1)}));
+      g.add_node(from_underlying<coords_t>(std::array{value_t{},   value_t{-1}}));
+      g.add_node(from_underlying<coords_t>(std::array{value_t{-1}, value_t{}}));
+      g.add_node(from_underlying<coords_t>(std::array{value_t{-1}, value_t{-1}}));
 
       // (-1, -1) --> (-1, -1)
       add_transition<coords_t>(
