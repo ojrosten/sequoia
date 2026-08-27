@@ -194,7 +194,6 @@ namespace sequoia::testing
   void spaces_meta_free_test::test_integral_coverings()
   {
     STATIC_CHECK( covered_by<int, int>);
-    STATIC_CHECK( covered_by<unsigned char, int>);
     STATIC_CHECK( covered_by<unsigned char, long>);
     STATIC_CHECK(!covered_by<int, unsigned>);
     STATIC_CHECK(!covered_by<unsigned, int>);
@@ -207,8 +206,18 @@ namespace sequoia::testing
     STATIC_CHECK(!covered_by<float, double>);
     STATIC_CHECK(!covered_by<int, double>);
 
-    // bool aside: every integral type covers its two values, but it is not a number.
-    STATIC_CHECK(!covered_by<bool, int>);
+    // The line std::in_range draws: bool and the character types are integral but
+    // not integer types. signed char and unsigned char are integer types, which is
+    // what keeps std::int8_t - being signed char - admitted.
+    STATIC_CHECK(!covered_by<bool,     int>);
+    STATIC_CHECK(!covered_by<char,     int>);
+    STATIC_CHECK(!covered_by<char8_t,  int>);
+    STATIC_CHECK(!covered_by<char16_t, int>);
+    STATIC_CHECK(!covered_by<char32_t, long long>);
+    STATIC_CHECK(!covered_by<wchar_t,  long long>);
+    STATIC_CHECK(!covered_by<int,      char>);
+    STATIC_CHECK( covered_by<signed char,   int>);
+    STATIC_CHECK( covered_by<unsigned char, int>);
 
     // Every candidate from short upwards covers unsigned char; the narrowest wins,
     // and for the unsigned types that is always the next width up.
@@ -218,9 +227,8 @@ namespace sequoia::testing
     STATIC_CHECK(std::same_as<signed_covering_type_t<unsigned short>, int>);
     STATIC_CHECK(std::same_as<signed_covering_type_t<int>,            int>);
 
-    // char is signed char or short according to whether the implementation gives
-    // char a sign, so only the width is portable.
-    STATIC_CHECK(sizeof(signed_covering_type_t<char>) <= sizeof(short));
+    // char is not an integer type, so nothing covers it, whatever its width.
+    STATIC_CHECK(!has_signed_covering_type_v<char>);
 
     // Which of long and long long covers unsigned varies with the data model, so
     // only the defining properties are portable.
@@ -240,6 +248,9 @@ namespace sequoia::testing
     STATIC_CHECK(!differences_covered_by_v<int, int>);
     STATIC_CHECK(!differences_covered_by_v<unsigned, int>);
     STATIC_CHECK(!differences_covered_by_v<int, unsigned>);
+    STATIC_CHECK(!differences_covered_by_v<bool, int>);
+    STATIC_CHECK(!differences_covered_by_v<char, short>);
+    STATIC_CHECK( differences_covered_by_v<signed char, short>);
     STATIC_CHECK( differences_covered_by_v<double, double>);
     STATIC_CHECK( differences_covered_by_v<float, double>);
     STATIC_CHECK( differences_covered_by_v<double, float>);

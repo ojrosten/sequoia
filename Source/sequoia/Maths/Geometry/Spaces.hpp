@@ -1600,19 +1600,17 @@ namespace sequoia::maths
       `unsigned int` is covered by `long` turns on whether `long` is the wider
       of the two.
 
-      The shape of this is similar to `std::in_range` and the `std::cmp_*`
-      family: `bool` and a selection of `char` types are excluded.
+      Both sides must be `integer` types rather than merely integral ones, which
+      is the line `std::in_range` and the `std::cmp_*` family draw: `bool` and
+      the character types are out, `signed char` and `unsigned char` in.
    */
 
   template<class T, class Covering>
-  concept covered_by =    std::integral<T>
-                       && (!std::same_as<T, bool>)
-                       && std::integral<Covering>
-                       && initializable_from<Covering, T>;
+  concept covered_by = integer<T> && integer<Covering> && initializable_from<Covering, T>;
 
   /** @ingroup AlgebraicTraits
       @brief Whether every difference of two `T` values is representable by
-             `Difference`.
+             `Covering`.
 
       The differences of an *n*-bit, integral type `T` span \f$ \pm(2^n - 1) \f$
       whether it is signed or unsigned. The first conclusion is that any
@@ -1627,14 +1625,17 @@ namespace sequoia::maths
       `std::make_unsigned_t<T>`.
       
       Types which are not integral are admitted unconditionally, their
-      differences being approximate in the same sense their sums are.
+      differences being approximate in the same sense their sums are. Integral
+      types which are not `integer` types are refused, as they are by
+      `covered_by`, and the refusal must precede the reduction rather than
+      follow it: `std::make_unsigned_t<bool>` is ill-formed.
    */
 
   template<class T, class Covering>
   inline constexpr bool differences_covered_by_v{
     []{
       if constexpr(std::integral<T> && std::integral<Covering>)
-        if constexpr(std::is_signed_v<Covering>)
+        if constexpr(integer<T> && std::is_signed_v<Covering>)
           return covered_by<std::make_unsigned_t<T>, Covering>;
         else
           return false;
@@ -2002,7 +2003,7 @@ namespace sequoia::maths
   using free_module_representation_value_type_t = free_module_representation_value_type<T>::type;
 
   template<weak_commutative_ring T>
-    requires std::integral<T> && has_signed_covering_type_v<std::make_unsigned_t<T>>
+    requires integer<T> && has_signed_covering_type_v<std::make_unsigned_t<T>>
   struct free_module_representation_value_type<T>
   {
     using type = signed_covering_type_t<std::make_unsigned_t<T>>;

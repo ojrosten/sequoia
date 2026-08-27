@@ -80,6 +80,25 @@ namespace sequoia
   template<class T>
   concept arithmetic = std::is_arithmetic_v<T>;
 
+  /*! \brief A concept for the integer types, as distinct from the integral types.
+
+      The standard separates the two: bool, char, wchar_t, char8_t, char16_t and
+      char32_t are integral but not integer types, the integer types being the signed
+      and unsigned ones, standard and extended. `std::in_range` and the `std::cmp_*`
+      family mandate integer types on both sides ([utility.intcmp]), and this draws the
+      same line. Note which side the narrow types fall: `signed char` and `unsigned char`
+      are integer types, so `std::int8_t`, which is `signed char`, stays admitted - the
+      standard gives 8-bit arithmetic no other spelling.
+   */
+  template<class T>
+  concept integer =    std::integral<T>
+                    && (!std::same_as<T, bool>)
+                    && (!std::same_as<T, char>)
+                    && (!std::same_as<T, wchar_t>)
+                    && (!std::same_as<T, char8_t>)
+                    && (!std::same_as<T, char16_t>)
+                    && (!std::same_as<T, char32_t>);
+
   /*! \brief Similar to std::range but excludes the case where dereferencing yields the same type as the range.
   
       This avoids treating std::filesystem::path as a range in circumstances where, to do so, would be inappropriate.
