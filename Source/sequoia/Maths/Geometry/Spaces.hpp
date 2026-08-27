@@ -1600,12 +1600,8 @@ namespace sequoia::maths
       `unsigned int` is covered by `long` turns on whether `long` is the wider
       of the two.
 
-      `bool` is not admitted. Every other integral type covers its two values,
-      but to no purpose: it is not a number, which is why `std::in_range` and
-      the `std::cmp_*` family refuse it too, and why the weak algebraic traits
-      above answer false for it. The character types are admitted, `signed
-      char` and `unsigned char` among them, the standard offering 8-bit
-      arithmetic no other spelling.
+      The shape of this is similar to `std::in_range` and the `std::cmp_*`
+      family: `bool` and a selection of `char` types are excluded.
    */
 
   template<class T, class Covering>
@@ -1618,23 +1614,30 @@ namespace sequoia::maths
       @brief Whether every difference of two `T` values is representable by
              `Difference`.
 
-      The differences of an *n*-bit integral type span \f$ \pm(2^n - 1) \f$
-      whether it is signed or unsigned, that being the value range of the
-      unsigned type of the same width. The question therefore reduces to
-      whether `Difference` covers `std::make_unsigned_t<T>`. For an unsigned
-      `T` that is the same as covering `T` itself, which is why the two
-      coincide for a half line and part company for a whole one: `int` covers
-      its own values reflexively, yet holds only half their differences.
-
+      The differences of an *n*-bit, integral type `T` span \f$ \pm(2^n - 1) \f$
+      whether it is signed or unsigned. The first conclusion is that any
+      integral type covering differences must be signed. Suppose this to be true.
+      Now consider the type built from `std::make_unsigned_t<T>`. If `T` is
+      unsigned, this is just an identity. On the other hand suppose `T` is signed.
+      Whereas `T` has a maximum value of \f$ 2^{n - 1} - 1 \f$, its unsigned
+      counterpart has a maximum value of \f$ 2^n - 1 \f$. In both cases -
+      signed or unsigned `T` - `std::make_unsigned_t<T>` has a maximum value
+      corresponding to the maximum value of the difference type. It follows that
+      any type covering the difference type must therefore cover
+      `std::make_unsigned_t<T>`.
+      
       Types which are not integral are admitted unconditionally, their
       differences being approximate in the same sense their sums are.
    */
 
-  template<class T, class Difference>
+  template<class T, class Covering>
   inline constexpr bool differences_covered_by_v{
     []{
-      if constexpr(std::integral<T> && std::integral<Difference>)
-        return covered_by<std::make_unsigned_t<T>, Difference>;
+      if constexpr(std::integral<T> && std::integral<Covering>)
+        if constexpr(std::is_signed_v<Covering>)
+          return covered_by<std::make_unsigned_t<T>, Covering>;
+        else
+          return false;
       else
         return true;
     }()
@@ -1644,13 +1647,6 @@ namespace sequoia::maths
       @ingroup AlgebraicTraits
       @brief The narrowest standard signed integral type whose value set
              covers that of `T`.
-
-      Narrowest is meant literally, down to `signed char`, since the width of a
-      representation states the scale which matters and widening past it would
-      spend memory its author chose not to. No unsigned type fits within a
-      `signed char`, which is therefore reached only by types no wider than
-      itself; for the unsigned types the answer is always the next width up,
-      `unsigned char` on `short` and `unsigned short` on `int`.
 
       Where no standard signed type suffices - `unsigned long long`, and
       `std::size_t` on the 64-bit platforms - there is no specialization. The
@@ -2857,7 +2853,7 @@ namespace sequoia::maths
 
   template<class T, class... Us>
   struct heterogeneous_coordinates<std::tuple<T, Us...>>
-    : std::bool_constant<((!std::is_same_v<T, Us>) || ...)>
+    : std::bool_constant<!are_same_v<T, Us...>>
   {};
 
   template<representation Rep>

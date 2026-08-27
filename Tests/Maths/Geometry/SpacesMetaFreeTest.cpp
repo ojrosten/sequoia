@@ -234,10 +234,15 @@ namespace sequoia::testing
     // Covering a type's values is not covering its differences, save when it is
     // unsigned: int covers its own values reflexively and holds half their spread.
     STATIC_CHECK( differences_covered_by_v<unsigned char, short>);
+    STATIC_CHECK(!differences_covered_by_v<short, unsigned char>);
     STATIC_CHECK( differences_covered_by_v<int, long long>);
+    STATIC_CHECK(!differences_covered_by_v<long long, int>);
     STATIC_CHECK(!differences_covered_by_v<int, int>);
     STATIC_CHECK(!differences_covered_by_v<unsigned, int>);
+    STATIC_CHECK(!differences_covered_by_v<int, unsigned>);
     STATIC_CHECK( differences_covered_by_v<double, double>);
+    STATIC_CHECK( differences_covered_by_v<float, double>);
+    STATIC_CHECK( differences_covered_by_v<double, float>);
 
     STATIC_CHECK(std::same_as<free_module_representation_value_type_t<double>,         double>);
     STATIC_CHECK(std::same_as<free_module_representation_value_type_t<signed char>,    short>);
