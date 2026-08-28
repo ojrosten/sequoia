@@ -92,6 +92,63 @@ namespace sequoia::testing
       requires { typename bounds_value_type<std::array<Bounds, D>>::type; }
     };
 
+    /** Whether `signed_covering_type` kept its promise for `T`. Where a covering exists
+        it must be signed, must cover `T`, and must be no wider than it has to be: a
+        signed type is covered by one of its own width - itself - and an unsigned one
+        needs a strictly wider signed type, there being no other way to hold its top
+        half. Where none exists, that must be because nothing standard is wide enough,
+        which can happen only for an unsigned type as wide as `long long`.
+
+        Written with `if constexpr` rather than `&&`: naming
+        `signed_covering_type_t<T>` where there is none is ill-formed, and `&&`
+        short-circuits at evaluation while still requiring every operand to be a valid
+        expression.
+     */
+    template<class T>
+    inline constexpr bool signed_covering_is_sound_v{
+      []{
+        if constexpr(has_signed_covering_type_v<T>)
+        {
+          using covering_t = signed_covering_type_t<T>;
+          return    std::is_signed_v<covering_t>
+                 && covered_by<T, covering_t>
+                 && (std::is_signed_v<T> ? (sizeof(covering_t) == sizeof(T))
+                                         : (sizeof(covering_t)  > sizeof(T)))
+                 // Narrowest: no candidate which covers T is narrower than the one
+                 // chosen. Stated by width, so that two candidates of equal width -
+                 // long and long long, on the Unix 64-bit model - are both admissible,
+                 // which they are, having the same range.
+                 && (!covered_by<T, signed char> || (sizeof(covering_t) <= sizeof(signed char)))
+                 && (!covered_by<T, short>       || (sizeof(covering_t) <= sizeof(short)))
+                 && (!covered_by<T, int>         || (sizeof(covering_t) <= sizeof(int)))
+                 && (!covered_by<T, long>        || (sizeof(covering_t) <= sizeof(long)))
+                 && (!covered_by<T, long long>   || (sizeof(covering_t) <= sizeof(long long)));
+        }
+        else
+        {
+          return (!std::is_signed_v<T>) && (sizeof(T) == sizeof(long long));
+        }
+      }()
+    };
+
+    /** Whether the widening a free module's representation performs is sound for `T`.
+        This is the contract displacement_representation asserts, stated once over the
+        whole family rather than type by type: either a wider signed type exists, and
+        the widened type holds the differences, or none does, and the representation
+        keeps `T` - which then cannot hold them, and must not claim to.
+     */
+    template<class T>
+    inline constexpr bool free_module_widening_is_sound_v{
+      []{
+        using widened_t = free_module_representation_value_type_t<T>;
+
+        if constexpr(has_signed_covering_type_v<std::make_unsigned_t<T>>)
+          return differences_covered_by_v<T, widened_t>;
+        else
+          return std::same_as<widened_t, T> && (!differences_covered_by_v<T, widened_t>);
+      }()
+    };
+
     // A free module naming its rank, and a vector space built upon it which
     // additionally names its dimension. Both members are then visible, which
     // must be allowed.
@@ -319,6 +376,7 @@ namespace sequoia::testing
   {
     test_arithmetic_traits();
     test_coverings();
+    test_integral_covering_invariants();
     test_structure_trait();
     test_set_trait();
     test_rank_traits();
@@ -660,6 +718,227 @@ namespace sequoia::testing
     STATIC_CHECK(std::same_as<free_module_representation_value_type_t<long long>, long long>);
   }
 
+  /** The covering machinery over every standard integral type, and over the
+      fixed-width aliases. Two things are being asked, and they answer different
+      questions.
+
+      The first is the verdict for each type in turn. Much of it is portable - the
+      standard nests the signed types' ranges by rank - but the wide end is not:
+      `long` and `int` have the same range on the 64-bit Windows data model and
+      different ranges on the Unix one, so `covered_by<long, int>` genuinely differs
+      between the two. Where that happens the assertion is written against `sizeof`,
+      which states the dependence rather than picking a side.
+
+      The second is a family of invariants, each checked over every type. These
+      carry most of the weight. A verdict which drifts on one type is a puzzle; an
+      invariant which fails names the rule that broke, and it does so here rather than
+      as a static_assert deep inside a coordinates test, where the type in hand is
+      three aliases removed from the one that went wrong.
+   */
+  void spaces_meta_free_test::test_integral_covering_invariants()
+  {
+    // Reflexive on every integral type, as on every numeric ring: a type represents
+    // its own values.
+    STATIC_CHECK(covered_by<signed char,        signed char>);
+    STATIC_CHECK(covered_by<unsigned char,      unsigned char>);
+    STATIC_CHECK(covered_by<short,              short>);
+    STATIC_CHECK(covered_by<unsigned short,     unsigned short>);
+    STATIC_CHECK(covered_by<int,                int>);
+    STATIC_CHECK(covered_by<unsigned,           unsigned>);
+    STATIC_CHECK(covered_by<long,               long>);
+    STATIC_CHECK(covered_by<unsigned long,      unsigned long>);
+    STATIC_CHECK(covered_by<long long,          long long>);
+    STATIC_CHECK(covered_by<unsigned long long, unsigned long long>);
+
+    // The standard nests the signed types by rank, so the ascent holds everywhere,
+    // adjacent steps and distant ones alike.
+    STATIC_CHECK(covered_by<signed char, short>);
+    STATIC_CHECK(covered_by<short,       int>);
+    STATIC_CHECK(covered_by<int,         long>);
+    STATIC_CHECK(covered_by<long,        long long>);
+    STATIC_CHECK(covered_by<signed char, long long>);
+    STATIC_CHECK(covered_by<short,       long long>);
+
+    // And nests the unsigned types likewise.
+    STATIC_CHECK(covered_by<unsigned char,  unsigned short>);
+    STATIC_CHECK(covered_by<unsigned short, unsigned>);
+    STATIC_CHECK(covered_by<unsigned,       unsigned long>);
+    STATIC_CHECK(covered_by<unsigned long,  unsigned long long>);
+    STATIC_CHECK(covered_by<unsigned char,  unsigned long long>);
+
+    // No signed type is covered by any unsigned type, however wide: the negative half
+    // has nowhere to go. This is the one direction which needs no width argument at
+    // all, and so the one which is portable without qualification.
+    STATIC_CHECK(!covered_by<signed char, unsigned char>);
+    STATIC_CHECK(!covered_by<signed char, unsigned long long>);
+    STATIC_CHECK(!covered_by<short,       unsigned short>);
+    STATIC_CHECK(!covered_by<int,         unsigned>);
+    STATIC_CHECK(!covered_by<long,        unsigned long>);
+    STATIC_CHECK(!covered_by<long long,   unsigned long long>);
+
+    // An unsigned type needs a strictly wider signed one. At the narrow end the widths
+    // are pinned by the standard's minima, so these hold everywhere...
+    STATIC_CHECK( covered_by<unsigned char,  short>);
+    STATIC_CHECK( covered_by<unsigned char,  int>);
+    STATIC_CHECK( covered_by<unsigned short, int>);
+    STATIC_CHECK(!covered_by<unsigned long long, long long>);
+
+    /* ...and at the wide end they do not, which is the whole of the data model's
+       effect on this machinery. On the 64-bit Windows model `long` is 32 bits and
+       these are true; on the Unix one it is 64 and they are false. Stating them
+       against `sizeof` says which, and would catch a covering that had stopped
+       consulting the compiler's narrowing rules on either platform - where naming one
+       answer would test only the platform it was written on.
+     */
+    STATIC_CHECK(covered_by<unsigned,      long>      == (sizeof(long)      > sizeof(unsigned)));
+    STATIC_CHECK(covered_by<unsigned long, long long> == (sizeof(long long) > sizeof(unsigned long)));
+    STATIC_CHECK(covered_by<long,          int>       == (sizeof(long)      == sizeof(int)));
+    STATIC_CHECK(covered_by<long long,     long>      == (sizeof(long long) == sizeof(long)));
+
+    // Descending is refused wherever the widths genuinely differ, which at the narrow
+    // end they always do.
+    STATIC_CHECK(!covered_by<short,          signed char>);
+    STATIC_CHECK(!covered_by<int,            short>);
+    STATIC_CHECK(!covered_by<long long,      signed char>);
+    STATIC_CHECK(!covered_by<unsigned short, unsigned char>);
+    STATIC_CHECK(!covered_by<unsigned,       unsigned short>);
+
+    // At the wide end it is refused only where the widths differ, exactly as for the
+    // signed types, and for the same reason.
+    STATIC_CHECK(covered_by<unsigned long, unsigned>
+                   == (sizeof(unsigned long) == sizeof(unsigned)));
+    STATIC_CHECK(covered_by<unsigned long long, unsigned long>
+                   == (sizeof(unsigned long long) == sizeof(unsigned long)));
+
+    /* The fixed-width aliases. Their value here is not that they are more types: it is
+       that their widths are *exact*, where `int` and `long` are only bounded below. So
+       they state strictly-wider and strictly-narrower portably, which the standard
+       types cannot.
+
+       That `std::int8_t` is `signed char` is the reason the `integer` concept admits
+       the two narrow char types while excluding `char` itself: the standard gives
+       8-bit arithmetic no other spelling, so excluding them would exclude int8_t.
+     */
+    STATIC_CHECK(std::is_same_v<std::int8_t,  signed char>);
+    STATIC_CHECK(std::is_same_v<std::uint8_t, unsigned char>);
+    STATIC_CHECK( numeric_ring<std::int8_t>);
+    STATIC_CHECK( numeric_ring<std::uint8_t>);
+    STATIC_CHECK(!numeric_ring<char>);
+
+    STATIC_CHECK( covered_by<std::int8_t,   std::int16_t>);
+    STATIC_CHECK( covered_by<std::int16_t,  std::int32_t>);
+    STATIC_CHECK( covered_by<std::int32_t,  std::int64_t>);
+    STATIC_CHECK(!covered_by<std::int16_t,  std::int8_t>);
+    STATIC_CHECK(!covered_by<std::int32_t,  std::int16_t>);
+    STATIC_CHECK(!covered_by<std::int64_t,  std::int32_t>);
+    STATIC_CHECK( covered_by<std::uint8_t,  std::int16_t>);
+    STATIC_CHECK( covered_by<std::uint16_t, std::int32_t>);
+    STATIC_CHECK( covered_by<std::uint32_t, std::int64_t>);
+    STATIC_CHECK(!covered_by<std::uint16_t, std::int16_t>);
+    STATIC_CHECK(!covered_by<std::uint32_t, std::int32_t>);
+    STATIC_CHECK(!covered_by<std::uint64_t, std::int64_t>);
+
+    // std::size_t has a signed covering precisely when it is not already as wide as
+    // anything standard, which on the 64-bit platforms it is.
+    STATIC_CHECK( numeric_ring<std::size_t>);
+    STATIC_CHECK( numeric_ring<std::ptrdiff_t>);
+    STATIC_CHECK( covered_by<std::ptrdiff_t, std::ptrdiff_t>);
+    STATIC_CHECK(!covered_by<std::size_t,    std::ptrdiff_t>);
+    STATIC_CHECK(has_signed_covering_type_v<std::size_t> == (sizeof(std::size_t) < sizeof(long long)));
+
+    // Every integral type is a weak commutative ring and none is a weak field: integer
+    // division exists, but it is not the inverse of multiplication.
+    STATIC_CHECK( weak_commutative_ring<signed char>);
+    STATIC_CHECK( weak_commutative_ring<unsigned char>);
+    STATIC_CHECK( weak_commutative_ring<short>);
+    STATIC_CHECK( weak_commutative_ring<unsigned short>);
+    STATIC_CHECK( weak_commutative_ring<unsigned long>);
+    STATIC_CHECK( weak_commutative_ring<long long>);
+    STATIC_CHECK( weak_commutative_ring<unsigned long long>);
+    STATIC_CHECK(!weak_field<signed char>);
+    STATIC_CHECK(!weak_field<unsigned char>);
+    STATIC_CHECK(!weak_field<long long>);
+    STATIC_CHECK(!weak_field<unsigned long long>);
+
+    STATIC_CHECK( numeric_ring<short>);
+    STATIC_CHECK( numeric_ring<unsigned short>);
+    STATIC_CHECK( numeric_ring<long>);
+    STATIC_CHECK( numeric_ring<unsigned long>);
+    STATIC_CHECK( numeric_ring<long long>);
+    STATIC_CHECK( numeric_ring<unsigned long long>);
+
+    /* First invariant: no integer type holds its own differences. For a signed type
+       the spread is twice the range; for an unsigned one the differences are signed
+       and the type is not. So the two relations disagree on every integral type,
+       reflexively - which is the sharpest statement of what separates them, and the
+       reason a free module over the integers cannot represent its own displacements
+       without widening.
+     */
+    STATIC_CHECK(!differences_covered_by_v<signed char,        signed char>);
+    STATIC_CHECK(!differences_covered_by_v<unsigned char,      unsigned char>);
+    STATIC_CHECK(!differences_covered_by_v<short,              short>);
+    STATIC_CHECK(!differences_covered_by_v<unsigned short,     unsigned short>);
+    STATIC_CHECK(!differences_covered_by_v<int,                int>);
+    STATIC_CHECK(!differences_covered_by_v<unsigned,           unsigned>);
+    STATIC_CHECK(!differences_covered_by_v<long,               long>);
+    STATIC_CHECK(!differences_covered_by_v<unsigned long,      unsigned long>);
+    STATIC_CHECK(!differences_covered_by_v<long long,          long long>);
+    STATIC_CHECK(!differences_covered_by_v<unsigned long long, unsigned long long>);
+
+    // The floating-point types are the contrast, and the reason the trait cannot
+    // simply be defined as irreflexive.
+    STATIC_CHECK(differences_covered_by_v<float,  float>);
+    STATIC_CHECK(differences_covered_by_v<double, double>);
+
+    // Second invariant: signed_covering_type is signed, covering, and no wider than it
+    // must be - or absent, and then only because nothing standard is wide enough.
+    STATIC_CHECK(signed_covering_is_sound_v<signed char>);
+    STATIC_CHECK(signed_covering_is_sound_v<unsigned char>);
+    STATIC_CHECK(signed_covering_is_sound_v<short>);
+    STATIC_CHECK(signed_covering_is_sound_v<unsigned short>);
+    STATIC_CHECK(signed_covering_is_sound_v<int>);
+    STATIC_CHECK(signed_covering_is_sound_v<unsigned>);
+    STATIC_CHECK(signed_covering_is_sound_v<long>);
+    STATIC_CHECK(signed_covering_is_sound_v<unsigned long>);
+    STATIC_CHECK(signed_covering_is_sound_v<long long>);
+    STATIC_CHECK(signed_covering_is_sound_v<unsigned long long>);
+    STATIC_CHECK(signed_covering_is_sound_v<std::size_t>);
+    STATIC_CHECK(signed_covering_is_sound_v<std::ptrdiff_t>);
+
+    // The negative control, without which the predicate above would be indistinguishable
+    // from one that is true of everything. char has no covering, and not for the reason
+    // the absent branch admits: it is one byte wide, and excluded for what its values
+    // denote rather than for want of anything to hold them.
+    STATIC_CHECK(!signed_covering_is_sound_v<char>);
+
+    /* Third invariant, and the one with a client: the widening a free module's
+       representation performs either yields a type wide enough for the differences, or
+       declines and hands back the type it was given. displacement_representation
+       asserts exactly this, one type at a time, deep inside the coordinates it is
+       building; asserted here it is a property of the machinery.
+     */
+    STATIC_CHECK(free_module_widening_is_sound_v<signed char>);
+    STATIC_CHECK(free_module_widening_is_sound_v<unsigned char>);
+    STATIC_CHECK(free_module_widening_is_sound_v<short>);
+    STATIC_CHECK(free_module_widening_is_sound_v<unsigned short>);
+    STATIC_CHECK(free_module_widening_is_sound_v<int>);
+    STATIC_CHECK(free_module_widening_is_sound_v<unsigned>);
+    STATIC_CHECK(free_module_widening_is_sound_v<long>);
+    STATIC_CHECK(free_module_widening_is_sound_v<unsigned long>);
+    STATIC_CHECK(free_module_widening_is_sound_v<long long>);
+    STATIC_CHECK(free_module_widening_is_sound_v<unsigned long long>);
+    STATIC_CHECK(free_module_widening_is_sound_v<std::int8_t>);
+    STATIC_CHECK(free_module_widening_is_sound_v<std::size_t>);
+
+    // The declining case named concretely, since it is the one a client meets as a
+    // static_assert. At the widest end there is nothing to widen to, and an unsigned
+    // type is handed back unsigned - which no space but a free module may use.
+    STATIC_CHECK(std::same_as<free_module_representation_value_type_t<long long>, long long>);
+    STATIC_CHECK(std::same_as<free_module_representation_value_type_t<unsigned long long>,
+                              unsigned long long>);
+    STATIC_CHECK(!has_signed_covering_type_v<unsigned long long>);
+  }
+
   /** Every concept in the header is gated on a nested `structure`, so a type
       which fails to expose one does not fail loudly: it silently satisfies
       nothing. The negative checks therefore carry as much weight as the
@@ -824,7 +1103,7 @@ namespace sequoia::testing
     STATIC_CHECK(std::is_same_v<is_non_negative_orthant_t<half_line_space>,            std::true_type>);
   }
 
-  /*! Whether a type *identifies* as a ring, and whether it *names* one, are two
+  /** Whether a type *identifies* as a ring, and whether it *names* one, are two
       questions, and neither is the concept. Identification reads the structure tag
       and so inherits the tag hierarchy's derivations for free; naming reads a
       nested type and cannot tell a ring from an int. The concepts are what put
@@ -984,7 +1263,7 @@ namespace sequoia::testing
     STATIC_CHECK( weak_representation_for<std::complex<double>, commutative_rings::complexes>);
   }
 
-  /*! The counterpart of test_ring_traits, one level up: how a space identifies
+  /** The counterpart of test_ring_traits, one level up: how a space identifies
       itself, how it names its free module, and how the two are read back. The
       concepts built on all this are pinned by test_spaces_dag; what is pinned here
       is the tag hierarchy those concepts consult, which no concept check can
@@ -1197,7 +1476,7 @@ namespace sequoia::testing
     STATIC_CHECK(!consistent_basis_data_v<alices_basis_data<3>, canonical_basis_data<3>>);
   }
 
-  /*! A representation is a bijection between a space's coordinates and the values
+  /** A representation is a bijection between a space's coordinates and the values
       of some C++ type, and the concept naming one is a conjunction of four
       requirements over an interface with two shapes - single value and span. The
       fixtures below drop one requirement each, and supply one shape each, since a
@@ -1344,7 +1623,7 @@ namespace sequoia::testing
     STATIC_CHECK(!defines_subtraction_for_v<euclidean_vector_space<1>, single_value_representation>);
   }
 
-  /*! A validator stands between a representation's values and the space's underlying
+  /** A validator stands between a representation's values and the space's underlying
       set. Which of its two interfaces is required depends on the dimension, and only
       one is needed, so the negative cases here are as much about which door was open
       as about the validator itself.

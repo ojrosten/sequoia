@@ -27,6 +27,8 @@ namespace sequoia::testing
 
     void test_coverings();
 
+    void test_integral_covering_invariants();
+
     void test_structure_trait();
 
     void test_set_trait();
