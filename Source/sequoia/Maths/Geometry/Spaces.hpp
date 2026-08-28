@@ -1589,33 +1589,97 @@ namespace sequoia::maths
   concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && is_divisible_v<T>;
 
   /** @ingroup AlgebraicTraits
-      @brief Concept for whether every value of one integral type is
-             representable by another.
+      @brief The weak commutative rings whose values are numbers.
+
+      Two questions are easily conflated, and this concept is where they are
+      kept apart. Whether `+` behaves approximately as an abelian group is a
+      question of behaviour, on which `char` and the `charN_t` types are small
+      integers which wrap, exactly like `short`; `weak_commutative_ring` asks
+      that one, and admits them. Whether one should build a space over such a
+      type is a question of what its values are taken to *denote*, and the
+      answer is no: a character is not a number, and whether `char` is signed
+      at all is left to the implementation. `integer` draws that second line -
+      the one `std::in_range` and the `std::cmp_*` family draw - and this
+      concept applies it, leaving `signed char` and `unsigned char` admitted,
+      since the standard gives 8-bit arithmetic no other spelling.
+
+      `bool` needs no mention here, having already failed to be a weak
+      commutative ring: its addition is not that of the field its value set
+      carries.
+   */
+
+  template<class T>
+  concept numeric_ring = weak_commutative_ring<T> && (integer<T> || (!std::integral<T>));
+
+  /** @defgroup CoveredBy Subgroup covered by
+      @ingroup AlgebraicTraits
+      @brief Whether every value of one numeric ring is representable by
+             another.
 
       Braced-initialization is the arbiter: a conversion which may lose
-      information is narrowing and so ill-formed, leaving `covered_by`
+      information is narrowing and so ill-formed, leaving the relation
       satisfied precisely when `Covering` can represent the entire value set of
-      `T`. The relation is reflexive, and depends on the platform - whether
+      `T`. It is reflexive, and depends on the platform - whether
       `unsigned int` is covered by `long` turns on whether `long` is the wider
       of the two.
 
-      Both sides must be `integer` types rather than merely integral ones,
-      which is the line `std::in_range` and the `std::cmp_*` family draw: the
-      concept is not satisfied by `bool`, nor by the character types, and is
-      satisfied by `signed char` and `unsigned char`.
+      Each family is thereby kept to itself without a word being said. An
+      integral `T` does not initialize a floating-point `Covering`, the
+      conversion being narrowing unless the source is a constant expression and
+      `std::declval` not being one; that `double` has digits enough for every
+      `int` does not make this a concession, since a free module over the
+      integers takes an integral representation and a vector space over the
+      reals a floating-point one, as `weakly_represented_by` insists. In the
+      other direction a floating-point `T` yields a narrowing conversion to any
+      integral `Covering` whatever the values involved. What remains within a
+      family is settled by rank: `double` covers `float` and not conversely.
+
+      `std::complex` is the one compound type here, and it is the one case
+      braced initialization cannot be left to settle, `std::complex<float>`
+      having an *explicit* constructor from `std::complex<double>` which
+      direct-list-initialization duly considers - so it would pronounce each of
+      the two capable of holding the other. The specialization below therefore
+      reduces the question to the parts. The reals sitting inside the
+      complexes needs no such help: `std::complex` has a non-explicit
+      constructor from a scalar, so `std::complex<double>` covers `float` and
+      the primary says so.
+
+      Where `T` is none of these, the answer is whatever braced initialization
+      makes of it, which for a ring with no widening to offer is its own copy
+      constructor and nothing else.
+
+      @{
    */
 
+  template<numeric_ring T, numeric_ring Covering>
+  inline constexpr bool covered_by_v{initializable_from<Covering, T>};
+
+  template<std::floating_point T, std::floating_point Covering>
+  inline constexpr bool covered_by_v<std::complex<T>, std::complex<Covering>>{
+    covered_by_v<T, Covering>
+  };
+
   template<class T, class Covering>
-  concept covered_by = integer<T> && integer<Covering> && initializable_from<Covering, T>;
+  concept covered_by = numeric_ring<T> && numeric_ring<Covering> && covered_by_v<T, Covering>;
+
+  /** @} */ // end of group CoveredBy
 
   /** @ingroup AlgebraicTraits
       @brief Whether every difference of two `T` values is representable by
              `Covering`.
 
-      The differences of an *n*-bit, integral type `T` span
-      \f$ \pm(2^n - 1) \f$ whether it is signed or unsigned. The first
-      conclusion is that any integral type covering differences must be signed.
-      Suppose this to be true. Now consider the type built from
+      For every ring but the integral ones this is `covered_by` and no more: a
+      difference of two values is a value, and no widening is on offer which
+      would make it more so. Floating-point subtraction can overflow, as
+      floating-point addition can; that is what the `weak` in
+      `weak_commutative_ring` is for, and it is not what is being asked about
+      here.
+
+      The integral case is the exception, and the whole of the difference
+      between this and `covered_by`. The differences of an *n*-bit, integral
+      type `T` span \f$ \pm(2^n - 1) \f$ whether it is signed or unsigned. The
+      first conclusion is that any integral type covering differences must be
+      signed. Suppose this to be true. Now consider the type built from
       `std::make_unsigned_t<T>`. If `T` is unsigned, this is just an identity.
       On the other hand suppose `T` is signed. Whereas `T` has a maximum value
       of \f$ 2^{n - 1} - 1 \f$, its unsigned counterpart has a maximum value of
@@ -1624,72 +1688,19 @@ namespace sequoia::maths
       maximum value of the difference type. It follows that any type covering
       the difference type must therefore cover `std::make_unsigned_t<T>`.
 
-      Both parameters are constrained to `weak_commutative_ring`, so a type
-      which supplies no arithmetic cannot be asked the question at all: naming
-      `differences_covered_by_v<std::vector<foo>, std::vector<foo>>` is a
-      compilation error rather than an answer, which is what a meaningless
-      question deserves. `bool` is stopped at the same door, having been
-      expelled from the weak ring hierarchy for supplying the wrong addition.
-
-      An integral `T` which is not an `integer` type - that is, one of the
-      character types, `bool` being already gone - is admitted through the door
-      but the trait is false for it, just as `covered_by` is not satisfied by
-      one.
-
-      Now suppose that one or both types are floating point. Braced
-      initialization settles these cases too. Suppose first that `T` is
-      floating point: it initializes a `Covering` of no lesser rank but not one
-      of greater, so `double` covers the differences of `float` whereas `float`
-      does not cover those of `double`. Conversion to an integer type is
-      narrowing whatever the values involved, so the trait is false for every
-      integral `Covering`.
-
-      Suppose instead that `T` is integral and `Covering` floating point. This
-      conversion is narrowing unless the source is a constant expression, and
-      `std::declval` is not one, so the trait is false here too. That `double`
-      has digits enough for every difference of an `int` does not make this a
-      concession. A free module over the integers takes an integral
-      representation and a vector space over the reals a floating-point one, as
-      `weakly_represented_by` insists, so a difference type drawn from the
-      other family would be a category error before ever being a question of
-      precision.
-
-      `std::complex` is the one compound type the trait judges, and it reduces
-      to its parts: `std::complex<double>` covers the differences of
-      `std::complex<float>` precisely when `double` covers those of `float`.
-      Braced initialization cannot serve here, `std::complex<float>` having an
-      *explicit* constructor from `std::complex<double>` which
-      direct-list-initialization duly considers - so it would pronounce each of
-      the two capable of holding the other's differences.
-
-      The trait is true, too, for a floating-point `T` and a `std::complex`
-      covering of no lesser rank: the reals sit inside the complexes, and
-      braced initialization agrees, `std::complex` having a non-explicit
-      constructor from a scalar. For an integral `T` it is false, a signed
-      integral covering being demanded - which keeps the two families apart, as
-      above.
-
-      Where `T` is neither integral, floating point, nor a `std::complex`,
-      there is nothing to count, and the trait is true only when `Covering` is
-      `T` itself - which is what a representation receives when no widening was
-      attempted.
+      Note that a `T` which is integral but not an `integer` type takes the
+      first branch, not the second, and is refused there: it is not a
+      `numeric_ring`, so `covered_by` is unsatisfied for it.
    */
 
   template<weak_commutative_ring T, weak_commutative_ring Covering>
   inline constexpr bool differences_covered_by_v{
     []{
-      if constexpr(std::floating_point<T>)
-        return initializable_from<Covering, T>;
-      else if constexpr(integer<T>)
+      if constexpr(integer<T>)
         return std::signed_integral<Covering> && covered_by<std::make_unsigned_t<T>, Covering>;
       else
-        return std::same_as<T, Covering>;
+        return covered_by<T, Covering>;
     }()
-  };
-
-  template<std::floating_point T, std::floating_point Covering>
-  inline constexpr bool differences_covered_by_v<std::complex<T>, std::complex<Covering>>{
-    differences_covered_by_v<T, Covering>
   };
 
   /** @defgroup SignedCoveringType Subgroup signed covering type
