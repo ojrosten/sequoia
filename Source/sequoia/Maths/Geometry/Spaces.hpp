@@ -1396,7 +1396,7 @@ namespace sequoia::maths
   /** @ingroup ArithmeticProperties
       @brief Compile time constant for subtractability of two instances of the same type.
    */
-  
+
   template<class T>
   inline constexpr bool is_subtractable_v{
        is_subtractable_from_v<T, T>
@@ -1469,19 +1469,21 @@ namespace sequoia::maths
 
       Entertainingly, bool is the only fundamental type whose value set carries
       a field, \f$ \bb{Z}/n\bb{Z} \f$ being a field precisely when \f$ n \f$ is
-      prime. Its operators do not supply one, though: `true + true` promotes to
-      int and converts back to `true`, whereas the field demands
-      \f$ 1 + 1 = 0 \f$. That field's addition is exclusive-or - which is to
-      say `!=`, an operator none of the traits below consults.
+      prime. Its operators do not supply one, though: `true + true` is not even
+      a bool, promoting to int; force the result back - as `+=` does - and it
+      is `true`, whereas the field demands \f$ 1 + 1 = 0 \f$. That field's
+      addition is exclusive-or - which is to say `!=`, an operator none of the
+      traits below consults.
    */
 
   /** @defgroup WeaklyAbelianGroupUnderAddition Subgroup weakly abelian group under addition
       @ingroup AlgebraicTraits
       @brief Trait for specifying whether a type behaves (approximately) as an abelian group under addition.
 
-      This includes all the arithmetic types bar one. The unsigned integral
-      types wrap, and so behave precisely as an abelian group under addition.
-      bool, which counts as unsigned but does not wrap, is excluded outright.
+      This includes all the arithmetic types bar one, together with
+      `std::complex` of a floating-point type. The unsigned integral types
+      wrap, and so behave precisely as an abelian group under addition. bool,
+      which counts as unsigned but does not wrap, is excluded outright.
 
       @{
    */
@@ -1491,7 +1493,7 @@ namespace sequoia::maths
 
   template<class T>
   using weakly_abelian_group_under_addition_t = typename weakly_abelian_group_under_addition<T>::type;
-  
+
   template<class T>
   inline constexpr bool weakly_abelian_group_under_addition_v{weakly_abelian_group_under_addition<T>::value};
 
@@ -1513,13 +1515,14 @@ namespace sequoia::maths
       in which \f$ 0 \neq 1 \f$, so it is the remaining elements which form the
       group.
 
-      The floating-point types are taken to weakly model such a group, since
-      they attempt to approximate the reals.
+      The floating-point types, and `std::complex` of them, are taken to weakly
+      model such a group, since they attempt to approximate the reals.
 
       Among the integral types only bool is admitted, and there it is exact:
       its single non-zero element is its own inverse. (Its addition, by
-      contrast, is not a group at all - see the group description above.) The
-      other integral types do not model this in a reasonable sense.
+      contrast, is not a group at all - see the introduction to
+      @ref AlgebraicTraits.) The other integral types do not model this in a
+      reasonable sense.
 
       @{
    */
@@ -1544,12 +1547,12 @@ namespace sequoia::maths
   struct weakly_abelian_group_under_multiplication<T> : std::true_type {};
 
   /** @} */ // end of group WeaklyAbelianGroupUnderMultiplication
-  
+
   /** @defgroup MultiplicationWeaklyDistributiveOverAddition Subgroup multiplication weakly distributive over addition
       @ingroup AlgebraicTraits
       @brief Trait for specifying whether a type exhibits multiplication that (approximately) distributes over addition.
 
-      Unlike the previous two traits, this one is taken to be true by default:
+      Unlike the two group traits, this one is taken to be true by default:
       whereas group structure genuinely varies from type to type, a type
       offering both operations but no distributivity is a rarity. The author of
       such a type must therefore opt out.
@@ -1568,14 +1571,48 @@ namespace sequoia::maths
 
   /** @} */ // end of group MultiplicationWeaklyDistributiveOverAddition
 
+  /** @defgroup MultiplicationWeaklyCommutative Subgroup multiplication weakly commutative
+      @ingroup AlgebraicTraits
+      @brief Trait for specifying whether a type exhibits multiplication which (approximately) commutes.
+
+      True by default, as for distributivity, so that it is the author of a
+      type whose multiplication does not commute who must opt out. Such types
+      are not exotic - square matrices and the quaternions are both rings - but
+      a default of false would oblige every other representation to say so.
+
+      Associativity of multiplication and the existence of a unit have no trait
+      and are assumed outright: the rings one might plausibly reach for as a
+      representation give up commutativity and keep both.
+
+      @{
+   */
+
+  template<class T>
+  struct multiplication_weakly_commutative : std::true_type {};
+
+  template<class T>
+  using multiplication_weakly_commutative_t = typename multiplication_weakly_commutative<T>::type;
+
+  template<class T>
+  inline constexpr bool multiplication_weakly_commutative_v{multiplication_weakly_commutative<T>::value};
+
+  /** @} */ // end of group MultiplicationWeaklyCommutative
+
   /** @ingroup AlgebraicTraits
       @brief concept representing reasonable approximations to a commutative ring.
+
+      Three of the ring's requirements are settled by traits rather than by
+      inspection of the type, no amount of which could establish them: that
+      addition forms an abelian group, that multiplication commutes, and that
+      it distributes over addition. Associativity of multiplication and the
+      existence of a unit are assumed outright, having no trait.
    */
-  
+
   template<class T>
-  concept weak_commutative_ring 
+  concept weak_commutative_ring
     =    std::regular<T>
       && weakly_abelian_group_under_addition_v<T>
+      && multiplication_weakly_commutative_v<T>
       && multiplication_weakly_distributive_over_addition_v<T>
       && is_addable_v<T>
       && is_subtractable_v<T>
@@ -1586,26 +1623,29 @@ namespace sequoia::maths
    */
 
   template<class T>
-  concept weak_field = weak_commutative_ring<T> && weakly_abelian_group_under_multiplication_v<T> && is_divisible_v<T>;
+  concept weak_field
+    =    weak_commutative_ring<T>
+      && weakly_abelian_group_under_multiplication_v<T>
+      && is_divisible_v<T>;
 
   /** @ingroup AlgebraicTraits
       @brief The weak commutative rings whose values are numbers.
 
       Two questions are easily conflated, and this concept is where they are
       kept apart. Whether `+` behaves approximately as an abelian group is a
-      question of behaviour, on which `char` and the `charN_t` types are small
-      integers which wrap, exactly like `short`; `weak_commutative_ring` asks
-      that one, and admits them. Whether one should build a space over such a
-      type is a question of what its values are taken to *denote*, and the
-      answer is no: a character is not a number, and whether `char` is signed
-      at all is left to the implementation. `integer` draws that second line -
-      the one `std::in_range` and the `std::cmp_*` family draw - and this
-      concept applies it, leaving `signed char` and `unsigned char` admitted,
-      since the standard gives 8-bit arithmetic no other spelling.
+      question of behaviour, on which `char`, `wchar_t` and the `charN_t` types
+      behave exactly as the integer type of their width and signedness does;
+      `weak_commutative_ring` asks that one, and admits them. Whether one
+      should build a space over such a type is a question of what its values
+      are taken to *denote*, and the answer is no: a character is not a number,
+      and whether `char` is signed at all is left to the implementation.
+      `integer` draws that second line - the one `std::in_range` and the
+      `std::cmp_*` family draw - and this concept applies it, leaving
+      `signed char` and `unsigned char` admitted, since the standard gives
+      8-bit arithmetic no other spelling.
 
-      `bool` needs no mention here, having already failed to be a weak
-      commutative ring: its addition is not that of the field its value set
-      carries.
+      `bool` is excluded twice over: `integer` refuses it, and it is not a weak
+      commutative ring to begin with.
    */
 
   template<class T>
@@ -1632,17 +1672,18 @@ namespace sequoia::maths
       reals a floating-point one, as `weakly_represented_by` insists. In the
       other direction a floating-point `T` yields a narrowing conversion to any
       integral `Covering` whatever the values involved. What remains within a
-      family is settled by rank: `double` covers `float` and not conversely.
+      family is settled by width and signedness: `double` covers `float` and
+      not conversely, while `int` and `unsigned int`, of equal width, cover
+      each other neither way.
 
       `std::complex` is the one compound type here, and it is the one case
       braced initialization cannot be left to settle, `std::complex<float>`
       having an *explicit* constructor from `std::complex<double>` which
       direct-list-initialization duly considers - so it would pronounce each of
       the two capable of holding the other. The specialization below therefore
-      reduces the question to the parts. The reals sitting inside the
-      complexes needs no such help: `std::complex` has a non-explicit
-      constructor from a scalar, so `std::complex<double>` covers `float` and
-      the primary says so.
+      reduces the question to the parts. The reals sitting inside the complexes
+      needs no such help: `std::complex` has a non-explicit constructor from a
+      scalar, so `std::complex<double>` covers `float` and the primary says so.
 
       Where `T` is none of these, the answer is whatever braced initialization
       makes of it, which for a ring with no widening to offer is its own copy
@@ -1679,18 +1720,27 @@ namespace sequoia::maths
       between this and `covered_by`. The differences of an *n*-bit, integral
       type `T` span \f$ \pm(2^n - 1) \f$ whether it is signed or unsigned. The
       first conclusion is that any integral type covering differences must be
-      signed. Suppose this to be true. Now consider the type built from
+      signed. Grant that, and consider the type built from
       `std::make_unsigned_t<T>`. If `T` is unsigned, this is just an identity.
       On the other hand suppose `T` is signed. Whereas `T` has a maximum value
       of \f$ 2^{n - 1} - 1 \f$, its unsigned counterpart has a maximum value of
       \f$ 2^n - 1 \f$. In both cases - signed or unsigned `T` -
       `std::make_unsigned_t<T>` has a maximum value corresponding to the
       maximum value of the difference type. It follows that any type covering
-      the difference type must therefore cover `std::make_unsigned_t<T>`.
+      the difference type covers `std::make_unsigned_t<T>`. The converse holds
+      as well, so that the two conditions are the whole answer and not merely
+      necessary: a signed type whose maximum reaches \f$ 2^n - 1 \f$ has a
+      minimum at least as negative, and so accommodates the differences of
+      either sign.
 
-      Note that a `T` which is integral but not an `integer` type takes the
-      first branch, not the second, and is refused there: it is not a
-      `numeric_ring`, so `covered_by` is unsatisfied for it.
+      The constraint here is `weak_commutative_ring` and not the `numeric_ring`
+      which `covered_by` demands, deliberately so. A `T` which is integral but
+      not an `integer` type - `char`, say - therefore reaches the `covered_by`
+      branch rather than the integral one and is answered false there,
+      `covered_by` being unsatisfied for it. A representation resting on such a
+      type consequently fails the static assertion in
+      `displacement_representation`, and reports its message, rather than
+      tripping a constraint here.
    */
 
   template<weak_commutative_ring T, weak_commutative_ring Covering>
@@ -1708,11 +1758,12 @@ namespace sequoia::maths
       @brief The narrowest standard signed integral type whose value set covers
              that of `T`.
 
-      Where no standard signed type suffices - `unsigned long long`, and
-      `std::size_t` on the 64-bit platforms - there is no specialization. The
-      primary is defined all the same, and names no type, so the absence is a
-      soft failure rather than an incomplete type, which
-      `has_signed_covering_type_v` may report.
+      Where no standard signed type suffices - any unsigned type as wide as
+      `long long`, which on the 64-bit platforms means `unsigned long` and
+      `std::size_t` as well as `unsigned long long` - there is no
+      specialization. The primary is defined all the same, and names no type,
+      so the absence is a soft failure rather than an incomplete type;
+      `has_signed_covering_type_v` reports it.
 
       @{
    */

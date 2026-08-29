@@ -14,7 +14,72 @@
 
 namespace sequoia::testing
 {
-  
+  namespace
+  {
+    /** The counterexample `multiplication_weakly_commutative` exists for: the two by
+        two matrices over the integers, whose multiplication does not commute. Nothing
+        about the type says so - it is regular, it adds, subtracts and multiplies, and
+        so meets every requirement of `weak_commutative_ring` which can be established
+        by inspection. The remaining one must therefore be opted out of by hand.
+
+        The struct holds nothing and the operations are declared but never defined.
+        Every question asked of these types is answered at compile time, so no value
+        is ever formed, and an implementation would only restate the name.
+     */
+    struct matrix_2x2
+    {
+      [[nodiscard]]
+      friend bool operator==(const matrix_2x2&, const matrix_2x2&) noexcept = default;
+
+      // No [[nodiscard]] on the three below: the attribute is permitted on a friend
+      // definition, as on the defaulted comparison above, but not on a friend
+      // declaration.
+      matrix_2x2& operator+=(const matrix_2x2&);
+      matrix_2x2& operator-=(const matrix_2x2&);
+      matrix_2x2& operator*=(const matrix_2x2&);
+
+      friend matrix_2x2 operator+(const matrix_2x2&, const matrix_2x2&);
+      friend matrix_2x2 operator-(const matrix_2x2&, const matrix_2x2&);
+      friend matrix_2x2 operator*(const matrix_2x2&, const matrix_2x2&);
+    };
+
+    /** The control, and of the same kind: the diagonal two by two matrices form a
+        subring whose multiplication does commute, and which therefore has nothing to
+        opt out of. Without it, `matrix_2x2` failing `weak_commutative_ring` would be
+        equally consistent with the shape having been insufficient all along.
+     */
+    struct diagonal_matrix_2x2
+    {
+      [[nodiscard]]
+      friend bool operator==(const diagonal_matrix_2x2&, const diagonal_matrix_2x2&) noexcept = default;
+
+      diagonal_matrix_2x2& operator+=(const diagonal_matrix_2x2&);
+      diagonal_matrix_2x2& operator-=(const diagonal_matrix_2x2&);
+      diagonal_matrix_2x2& operator*=(const diagonal_matrix_2x2&);
+
+      friend diagonal_matrix_2x2 operator+(const diagonal_matrix_2x2&, const diagonal_matrix_2x2&);
+      friend diagonal_matrix_2x2 operator-(const diagonal_matrix_2x2&, const diagonal_matrix_2x2&);
+      friend diagonal_matrix_2x2 operator*(const diagonal_matrix_2x2&, const diagonal_matrix_2x2&);
+    };
+  }
+}
+
+namespace sequoia::maths
+{
+  /** That addition forms a group is a statement about behaviour which no inspection
+      could make, so both rings must say it for themselves. Without this neither would
+      be a `weak_commutative_ring`, and the pair below would separate nothing.
+   */
+  template<> struct weakly_abelian_group_under_addition<testing::matrix_2x2>          : std::true_type {};
+  template<> struct weakly_abelian_group_under_addition<testing::diagonal_matrix_2x2> : std::true_type {};
+
+  /** The single respect in which the two differ. */
+  template<> struct multiplication_weakly_commutative<testing::matrix_2x2> : std::false_type {};
+}
+
+namespace sequoia::testing
+{
+
   using namespace maths;
 
   namespace
@@ -414,7 +479,8 @@ namespace sequoia::testing
 
 
     // bool is the one fundamental type whose value set carries a field, and the one whose
-    // operators decline to supply it: `true + true` is `true`.
+    // operators decline to supply it: `true + true` is not even a bool, and forced back
+    // into one it is `true`.
     STATIC_CHECK(!weakly_abelian_group_under_addition_v<bool>);
     STATIC_CHECK( weakly_abelian_group_under_multiplication_v<bool>);
     STATIC_CHECK(!weak_commutative_ring<bool>);
@@ -439,11 +505,56 @@ namespace sequoia::testing
     STATIC_CHECK( multiplication_weakly_distributive_over_addition_v<double>);
     STATIC_CHECK( multiplication_weakly_distributive_over_addition_v<std::complex<double>>);
 
-    // Alone among the three, this one is true by default, so it is answered even for
-    // types with no multiplication to distribute. An author who has both operations
-    // and no distributivity must opt out; nothing here can detect the omission.
+    // True by default, so it is answered even for types with no multiplication to
+    // distribute. An author who has both operations and no distributivity must opt
+    // out; nothing here can detect the omission.
     STATIC_CHECK( multiplication_weakly_distributive_over_addition_v<narrow_enum>);
     STATIC_CHECK( multiplication_weakly_distributive_over_addition_v<commutative_rings::reals<1>>);
+
+    // Commutativity of multiplication is the second trait of this shape, and is
+    // answered the same way for the same reason.
+    STATIC_CHECK( multiplication_weakly_commutative_v<int>);
+    STATIC_CHECK( multiplication_weakly_commutative_v<double>);
+    STATIC_CHECK( multiplication_weakly_commutative_v<std::complex<double>>);
+    STATIC_CHECK( multiplication_weakly_commutative_v<narrow_enum>);
+    STATIC_CHECK( multiplication_weakly_commutative_v<commutative_rings::reals<1>>);
+    STATIC_CHECK(std::is_same_v<multiplication_weakly_commutative_t<int>,        std::true_type>);
+    STATIC_CHECK(std::is_same_v<multiplication_weakly_commutative_t<matrix_2x2>, std::false_type>);
+
+    /* Every other requirement of weak_commutative_ring holds for matrix_2x2, and is
+       checked here one at a time, so that the refusal which follows can be laid at
+       the door of the commutativity opt-out and nothing else.
+     */
+    STATIC_CHECK( std::regular<matrix_2x2>);
+    STATIC_CHECK( weakly_abelian_group_under_addition_v<matrix_2x2>);
+    STATIC_CHECK( multiplication_weakly_distributive_over_addition_v<matrix_2x2>);
+    STATIC_CHECK( is_addable_v<matrix_2x2>);
+    STATIC_CHECK( is_subtractable_v<matrix_2x2>);
+    STATIC_CHECK( is_multiplicable_v<matrix_2x2>);
+    STATIC_CHECK(!multiplication_weakly_commutative_v<matrix_2x2>);
+    STATIC_CHECK(!weak_commutative_ring<matrix_2x2>);
+    STATIC_CHECK(!weak_field<matrix_2x2>);
+    STATIC_CHECK(!numeric_ring<matrix_2x2>);
+
+    // The control: identical in shape and in every trait but the one, and admitted.
+    STATIC_CHECK( multiplication_weakly_commutative_v<diagonal_matrix_2x2>);
+    STATIC_CHECK( weak_commutative_ring<diagonal_matrix_2x2>);
+
+    // numeric_ring's second clause excludes the integral types which are not integers;
+    // a user-defined ring passes it by not being integral at all, which is what lets a
+    // space be built over one.
+    STATIC_CHECK( numeric_ring<diagonal_matrix_2x2>);
+
+    // Not a field either, and for a reason with nothing to do with commutativity:
+    // the integers do not divide.
+    STATIC_CHECK(!is_divisible_v<diagonal_matrix_2x2>);
+    STATIC_CHECK(!weak_field<diagonal_matrix_2x2>);
+
+    // As for bool, an explicit specialization matches only the unqualified type, so
+    // const matrix_2x2 reaches the primary and answers true. Harmless, since regularity
+    // fails first: a const type is not assignable, so the concept refuses it anyway.
+    STATIC_CHECK( multiplication_weakly_commutative_v<const matrix_2x2>);
+    STATIC_CHECK(!weak_commutative_ring<const matrix_2x2>);
 
     // The two-parameter forms ask whether a T can absorb a U, which is not symmetric:
     // a complex number takes a double and returns a complex, whereas the reverse
