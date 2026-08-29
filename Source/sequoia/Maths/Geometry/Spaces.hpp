@@ -2107,7 +2107,7 @@ namespace sequoia::maths
     // TO DO not this, since the set could be anything and the rep applies to the coordinates
     // but maybe something along these lines
     // && weak_representation_for<value_type_of_t<R>, set_type_of_t<Space>>
-    // TO DO: this seems to massively slow down compilation  && bounds_for<decltype(R::bounds_v), Space>
+      && bounds_for<decltype(R::bounds_v), Space>
       && (representation_for_single_value<R, Space> || representation_for_span<R, Space>);
 
   /** @ingroup Representation
