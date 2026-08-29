@@ -30,7 +30,7 @@
       "hidden": true,
       "generator": "Ninja",
       "cacheVariables": {
-        "CMAKE_CXX_FLAGS": "$env{CXX_ASAN_FLAGS} $env{CXX_COVERAGE_FLAGS} $env{CXX_COLOUR_FLAGS}",
+        "CMAKE_CXX_FLAGS": "$env{CXX_ASAN_FLAGS} $env{CXX_COVERAGE_FLAGS} $env{CXX_TIME_TRACE_FLAGS} $env{CXX_COLOUR_FLAGS}",
         "CMAKE_EXE_LINKER_FLAGS": "$env{LINKER_ASAN_FLAGS} $env{LINKER_COVERAGE_FLAGS}"
       },
       "warnings": {
@@ -62,6 +62,13 @@
       },
       "cacheVariables": {
         "CODE_COVERAGE": "ON"
+      }
+    },
+    {
+      "name": "base-time-trace",
+      "hidden": true,
+      "environment": {
+        "CXX_TIME_TRACE_FLAGS": "-ftime-trace"
       }
     },
     {
@@ -125,6 +132,12 @@
       "description": "Configure for ${displayName}",
       "inherits": ["macos-homebrew-llvm", "base-asan-unix"]
     },  
+    {
+      "name": "macos-homebrew-llvm-time-trace",
+      "displayName": "macOS Homebrew LLVM [Debug, time-trace]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["macos-homebrew-llvm", "base-time-trace"]
+    },
     {
       "name": "macos-homebrew-llvm-release",
       "displayName": "macOS Homebrew LLVM [Release]",
@@ -245,6 +258,12 @@
       "name": "run-macos-homebrew-llvm-asan",
       "displayName": "Run macOS Homebrew LLVM [Debug, asan]",
       "inherits": ["macos-homebrew-llvm-asan", "base-run"]
+    },
+    {
+      "name": "macos-homebrew-llvm-time-trace",
+      "displayName": "macOS Homebrew LLVM [Debug, time-trace]",
+      "configurePreset": "macos-homebrew-llvm-time-trace",
+      "inherits": ["base-ninja"]
     },
     {
       "name": "macos-homebrew-llvm-release",
@@ -427,6 +446,19 @@
         {
           "type": "build",
           "name": "run-macos-homebrew-llvm-asan"
+        }
+      ]
+    },
+    {
+      "name": "macos-homebrew-llvm-time-trace",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos-homebrew-llvm-time-trace"
+        },
+        {
+          "type": "build",
+          "name": "macos-homebrew-llvm-time-trace"
         }
       ]
     },
