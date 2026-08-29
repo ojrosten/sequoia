@@ -38,7 +38,7 @@ namespace sequoia::testing
   {
     {
       using beast = perfectly_normal_beast<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
-      using allocator = typename beast::allocator_type;
+      using allocator = beast::allocator_type;
 
       auto allocGetter{ [](const beast& b){ return b.x.get_allocator(); } };
       auto mutator{[](auto& b) { b.x.push_back(1); }};
@@ -54,7 +54,7 @@ namespace sequoia::testing
 
     {
       using beast = perfectly_normal_beast<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
-      using allocator = typename beast::allocator_type;
+      using allocator = beast::allocator_type;
 
       auto allocGetter{ [](const beast& b){ return b.x.get_allocator(); } };
       auto mutator{[](auto& b) { b.x.push_back(1); }};
@@ -84,8 +84,8 @@ namespace sequoia::testing
     {
       using handle = std::shared_ptr<int>;
       using beast = perfectly_sharing_beast<int, handle, shared_counting_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
-      using allocator = typename beast::allocator_type;
-      using getter = typename beast::alloc_acquirer;
+      using allocator = beast::allocator_type;
+      using getter = beast::alloc_acquirer;
 
       auto m{ [](beast& b) { *b.x.front() = 9; } };
 

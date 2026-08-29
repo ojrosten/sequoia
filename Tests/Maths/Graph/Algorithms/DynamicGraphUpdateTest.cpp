@@ -110,7 +110,7 @@ namespace sequoia::testing
   template<class Graph>
   void test_graph_update::check_setup(const Graph& graph)
   {
-    using ei_t = typename Graph::edge_init_type;
+    using ei_t = Graph::edge_init_type;
     using flavour = maths::graph_flavour;
     constexpr auto GraphFlavour{Graph::flavour};
 
@@ -225,7 +225,7 @@ namespace sequoia::testing
     //      16                  15
 
     using namespace maths;
-    using ei_t = typename Graph::edge_init_type;
+    using ei_t = Graph::edge_init_type;
     using flavour = maths::graph_flavour;
     constexpr auto GraphFlavour{Graph::flavour};
     constexpr bool undirected{!maths::is_directed(GraphFlavour)};
@@ -416,7 +416,7 @@ namespace sequoia::testing
     //(1)2-------4(3)    (1)2--------4(3)
     //      16                  15
 
-    using ei_t = typename Graph::edge_init_type;
+    using ei_t = Graph::edge_init_type;
     using flavour = maths::graph_flavour;
     constexpr auto GraphFlavour{Graph::flavour};
     constexpr bool undirected{!maths::is_directed(GraphFlavour)};
@@ -554,7 +554,7 @@ namespace sequoia::testing
     //(1)2-------4(3)    (1)2--------4(3)
     //      17                  16
 
-    using ei_t = typename Graph::edge_init_type;
+    using ei_t = Graph::edge_init_type;
     using flavour = maths::graph_flavour;
     constexpr auto GraphFlavour{Graph::flavour};
 
@@ -740,7 +740,7 @@ namespace sequoia::testing
     //   /   \
     //  0=====0
 
-    using ei_t = typename Graph::edge_init_type;
+    using ei_t = Graph::edge_init_type;
     constexpr auto GraphFlavour{Graph::flavour};
 
     if constexpr(GraphFlavour == graph_flavour::undirected)
@@ -891,7 +891,7 @@ namespace sequoia::testing
 
     traverse(breadth_first, graph, find_disconnected_t{}, null_func_obj{}, null_func_obj{}, null_func_obj{}, edgeFn2);
 
-    using ei_t = typename Graph::edge_init_type;
+    using ei_t = Graph::edge_init_type;
     using ew_t = std::vector<double>;
     constexpr auto GraphFlavour{Graph::flavour};
 

@@ -422,7 +422,7 @@ namespace sequoia::meta
   template<class> struct reverse;
 
   template<class T>
-  using reverse_t = typename reverse<T>::type;
+  using reverse_t = reverse<T>::type;
 
   template<template<class...> class TT>
   struct reverse<TT<>>

@@ -64,7 +64,7 @@ namespace sequoia::testing
   void static_directed_graph_fundamental_weight_test::test_empty()
   {
     using graph_t = static_directed_graph<0, 0, EdgeWeight, NodeWeight>;
-    using edge_t = typename graph_t::edge_init_type;
+    using edge_t = graph_t::edge_init_type;
     using edges_init_t = std::initializer_list<std::initializer_list<edge_t>>;
 
     check_exception_thrown<std::logic_error>("", [](){ graph_t{{}}; });
@@ -80,10 +80,10 @@ namespace sequoia::testing
     enum graph_description { node=0, nodew};
 
     using graph_t = static_directed_graph<0, 1, EdgeWeight, NodeWeight>;
-    using edge_t = typename graph_t::edge_init_type;
+    using edge_t = graph_t::edge_init_type;
     using edges_init_t = std::initializer_list<std::initializer_list<edge_t>>;
     using nodes_init_t = std::initializer_list<NodeWeight>;
-    using transition_graph = typename transition_checker<graph_t>::transition_graph;
+    using transition_graph = transition_checker<graph_t>::transition_graph;
 
     check_exception_thrown<std::logic_error>("", [](){ graph_t{{edge_t{0}}}; });
 
@@ -165,9 +165,9 @@ namespace sequoia::testing
     enum graph_description { node_0=0, node_0x, nodew_0x, nodew_0 };
 
     using graph_t = static_directed_graph<1, 1, EdgeWeight, NodeWeight>;
-    using edge_t = typename graph_t::edge_init_type;
+    using edge_t = graph_t::edge_init_type;
     using edges_init_t = std::initializer_list<std::initializer_list<edge_t>>;
-    using transition_graph = typename transition_checker<graph_t>::transition_graph;
+    using transition_graph = transition_checker<graph_t>::transition_graph;
 
     check_exception_thrown<std::logic_error>("", [](){ graph_t{{edge_t{0}, edge_t{0}}}; });
 
@@ -272,10 +272,10 @@ namespace sequoia::testing
     enum graph_description { node_0_0=0, nodew_0_0, node_0x_0, node_0x_0y, node_0y_0x};
 
     using graph_t = static_directed_graph<2, 1, float, double>;
-    using edge_t = typename graph_t::edge_init_type;
+    using edge_t = graph_t::edge_init_type;
     using edges_init_t = std::initializer_list<std::initializer_list<edge_t>>;
     using nodes_init_t = std::initializer_list<double>;
-    using transition_graph = typename transition_checker<graph_t>::transition_graph;
+    using transition_graph = transition_checker<graph_t>::transition_graph;
 
     transition_graph trg{
       {
@@ -395,10 +395,10 @@ namespace sequoia::testing
    enum graph_description { node_node=0, nodew_node, nodew_nodex, nodex_nodew};
 
     using graph_t = static_directed_graph<0, 2, float, double>;
-    using edge_t = typename graph_t::edge_init_type;
+    using edge_t = graph_t::edge_init_type;
     using edges_init_t = std::initializer_list<std::initializer_list<edge_t>>;
     using nodes_init_t = std::initializer_list<double>;
-    using transition_graph = typename transition_checker<graph_t>::transition_graph;
+    using transition_graph = transition_checker<graph_t>::transition_graph;
 
     check_exception_thrown<std::logic_error>("", [](){ graph_t{{}}; });
 
@@ -495,10 +495,10 @@ namespace sequoia::testing
     enum graph_description { node_1_node = 0, node_1u_node, node_node_0u, nodew_1u_nodex, nodex_nodew_0u };
 
     using graph_t = static_directed_graph<1, 2, float, double>;
-    using edge_t = typename graph_t::edge_init_type;
+    using edge_t = graph_t::edge_init_type;
     using edges_init_t = std::initializer_list<std::initializer_list<edge_t>>;
     using nodes_init_t = std::initializer_list<double>;
-    using transition_graph = typename transition_checker<graph_t>::transition_graph;
+    using transition_graph = transition_checker<graph_t>::transition_graph;
 
     check_exception_thrown<std::logic_error>("", [](){ graph_t{{}}; });
     check_exception_thrown<std::logic_error>("", [](){ graph_t{{edge_t{1}}}; });
@@ -605,10 +605,10 @@ namespace sequoia::testing
     enum graph_description { node_1_node_0 = 0, node_1_node_0u, node_1u_node_0, nodew_1_node_0u, node_1u_nodew_0 };
 
     using graph_t = static_directed_graph<2, 2, float, double>;
-    using edge_t = typename graph_t::edge_init_type;
+    using edge_t = graph_t::edge_init_type;
     using edges_init_t = std::initializer_list<std::initializer_list<edge_t>>;
     using nodes_init_t = std::initializer_list<double>;
-    using transition_graph = typename transition_checker<graph_t>::transition_graph;
+    using transition_graph = transition_checker<graph_t>::transition_graph;
 
     transition_graph trg{
       {
@@ -727,10 +727,10 @@ namespace sequoia::testing
     enum graph_description { nodew_1_nodex_2u_node_0v = 0, node_2v_nodex_0u_nodew_1 };
 
     using graph_t = static_directed_graph<3, 3, float, double>;
-    using edge_t = typename graph_t::edge_init_type;
+    using edge_t = graph_t::edge_init_type;
     using edges_init_t = std::initializer_list<std::initializer_list<edge_t>>;
     using nodes_init_t = std::initializer_list<double>;
-    using transition_graph = typename transition_checker<graph_t>::transition_graph;
+    using transition_graph = transition_checker<graph_t>::transition_graph;
 
     transition_graph trg{
       {

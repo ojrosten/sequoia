@@ -94,7 +94,7 @@ namespace sequoia::testing
   void threading_models_test::test_exceptions(std::string_view message, Args&&... args)
   {
     ThreadModel model{std::forward<Args>(args)...};
-    using R = typename ThreadModel::return_type;
+    using R = ThreadModel::return_type;
 
     auto fut{model.push([]() -> R { throw std::runtime_error{"Error!"}; })};
 
@@ -104,7 +104,7 @@ namespace sequoia::testing
   template<class ThreadModel, class... Args>
   void threading_models_test::test_execution(std::string_view message, Args&&... args)
   {
-    using R = typename ThreadModel::return_type;
+    using R = ThreadModel::return_type;
     ThreadModel model{std::forward<Args>(args)...};
 
     if constexpr(std::is_void_v<R>)

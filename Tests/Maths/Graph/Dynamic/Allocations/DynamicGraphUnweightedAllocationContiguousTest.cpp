@@ -45,7 +45,7 @@ namespace sequoia::testing
   {
     using namespace maths;
     using edge_partitions_allocator = decltype(Graph{}.get_edge_allocator(partitions_allocator_tag{}));
-    using edge_allocator = typename Graph::edge_allocator_type;
+    using edge_allocator = Graph::edge_allocator_type;
     constexpr auto GraphFlavour{Graph::flavour};
 
     // null
@@ -64,7 +64,7 @@ namespace sequoia::testing
     check(equality, "May fail if stl implementation doesn't actually shrink to fit!", g.edges_capacity(), 0uz);
     check(equality, "May fail if stl implementation doesn't actually shrink to fit!", g.node_capacity(), 0uz);
 
-    using edge_init_t = typename Graph::edge_init_type;
+    using edge_init_t = Graph::edge_init_type;
 
     auto nodeMaker{ [](Graph& gr) { gr.add_node(); } };
 

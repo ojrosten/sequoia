@@ -48,8 +48,8 @@ namespace sequoia::testing
     };
 
     using transition_checker_type = transition_checker<tree_type>;
-    using tree_state_graph        = typename transition_checker_type::transition_graph;
-    using edge_t                  = typename transition_checker_type::edge;
+    using tree_state_graph        = transition_checker_type::transition_graph;
+    using edge_t                  = transition_checker_type::edge;
 
     tree_state_graph g{
       {
@@ -139,8 +139,8 @@ namespace sequoia::testing
     };
 
     using transition_checker_type = transition_checker<tree_type>;
-    using tree_state_graph        = typename transition_checker_type::transition_graph;
-    using edge_t                  = typename transition_checker_type::edge;
+    using tree_state_graph        = transition_checker_type::transition_graph;
+    using edge_t                  = transition_checker_type::edge;
 
     tree_state_graph g{
       {

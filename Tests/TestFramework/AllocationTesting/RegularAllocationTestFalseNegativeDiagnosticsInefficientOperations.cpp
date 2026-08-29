@@ -40,7 +40,7 @@ namespace sequoia::testing
 
       {
         using beast = inefficient_equality<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
-        using allocator = typename beast::allocator_type;
+        using allocator = beast::allocator_type;
 
         auto allocGetter{
           [](const beast& b){ return b.x.get_allocator(); }
@@ -51,7 +51,7 @@ namespace sequoia::testing
 
       {
         using beast = inefficient_inequality<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
-        using allocator = typename beast::allocator_type;
+        using allocator = beast::allocator_type;
 
         auto allocGetter{
           [](const beast& b){ return b.x.get_allocator(); }
@@ -62,7 +62,7 @@ namespace sequoia::testing
 
       {
         using beast = inefficient_copy<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
-        using allocator = typename beast::allocator_type;
+        using allocator = beast::allocator_type;
 
         auto allocGetter{
           [](const beast& b){ return b.x.get_allocator(); }
@@ -81,7 +81,7 @@ namespace sequoia::testing
 
       {
         using beast = inefficient_move<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
-        using allocator = typename beast::allocator_type;
+        using allocator = beast::allocator_type;
 
         auto allocGetter{
           [](const beast& b){ return b.x.get_allocator(); }
@@ -92,7 +92,7 @@ namespace sequoia::testing
 
       {
         using beast = inefficient_para_copy<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
-        using allocator = typename beast::allocator_type;
+        using allocator = beast::allocator_type;
 
         auto allocGetter{
           [](const beast& b){ return b.x.get_allocator(); }
@@ -110,7 +110,7 @@ namespace sequoia::testing
 
       {
         using beast = inefficient_para_move<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
-        using allocator = typename beast::allocator_type;
+        using allocator = beast::allocator_type;
 
         auto allocGetter{
           [](const beast& b){ return b.x.get_allocator(); }
@@ -128,7 +128,7 @@ namespace sequoia::testing
 
       {
         using beast = inefficient_serialization<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
-        using allocator = typename beast::allocator_type;
+        using allocator = beast::allocator_type;
 
         auto allocGetter{ [](const beast& b){ return b.x.get_allocator(); } };
 

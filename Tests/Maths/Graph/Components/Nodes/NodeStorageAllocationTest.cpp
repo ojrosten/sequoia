@@ -37,7 +37,7 @@ namespace sequoia::testing
     using namespace maths::graph_impl;
 
     using storage = node_storage_tester<Weight, PropagateCopy, PropagateMove, PropagateSwap>;
-    using allocator = typename storage::allocator_type;
+    using allocator = storage::allocator_type;
 
     auto mutator{
       [](storage& s){ s.add_node(); }

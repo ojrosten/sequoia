@@ -169,7 +169,7 @@ namespace sequoia::testing
   struct value_tester<edge_tracker<G, Flavour>>
   {
     using type = edge_tracker<G, Flavour>;
-    using prediction_type = typename type::result_type;
+    using prediction_type = type::result_type;
 
     template<test_mode Mode>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& tracker, const prediction_type& prediction)

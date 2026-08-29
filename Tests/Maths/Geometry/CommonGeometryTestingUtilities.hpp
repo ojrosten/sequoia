@@ -166,7 +166,7 @@ namespace sequoia::testing
   inline constexpr bool is_complex_v{is_complex<T>::value};
 
   template<class T>
-  using is_complex_t = typename is_complex<T>::type;
+  using is_complex_t = is_complex<T>::type;
 
   template<class B>
   inline constexpr bool is_orthonormal_basis_v{
@@ -376,7 +376,7 @@ namespace sequoia::testing
   struct value_tester<maths::coordinates<Space, Basis, Ts...>>
   {
     using coord_type = maths::coordinates<Space, Basis, Ts...>;
-    using displacement_value_type = typename coord_type::displacement_value_type;
+    using displacement_value_type = coord_type::displacement_value_type;
     constexpr static std::size_t D{coord_type::dimension};
 
     template<test_mode Mode>

@@ -41,8 +41,8 @@ namespace sequoia::testing
       {
         using handle = std::shared_ptr<int>;
         using beast = broken_copy_value_semantics<int, handle, shared_counting_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
-        using allocator = typename beast::allocator_type;
-        using getter = typename beast::alloc_acquirer;
+        using allocator = beast::allocator_type;
+        using getter = beast::alloc_acquirer;
 
         static_assert(std::is_same_v<alloc_equivalence_class_generator_t<beast, getter>, allocation_equivalence_classes::container_of_pointers<allocator>>);
 
@@ -58,7 +58,7 @@ namespace sequoia::testing
       {
         using handle = std::shared_ptr<int>;
         using beast = broken_copy_assignment_value_semantics<int, handle, shared_counting_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
-        using allocator = typename beast::allocator_type;
+        using allocator = beast::allocator_type;
 
         auto allocGetter{
           [](const beast& b){ return b.x.get_allocator(); }
@@ -77,7 +77,7 @@ namespace sequoia::testing
         if constexpr(PropagateCopy != PropagateMove)
         {
           using beast = broken_copy_assignment_propagation<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
-          using allocator = typename beast::allocator_type;
+          using allocator = beast::allocator_type;
 
           auto allocGetter{[](const beast& b) { return b.x.get_allocator(); }};
 

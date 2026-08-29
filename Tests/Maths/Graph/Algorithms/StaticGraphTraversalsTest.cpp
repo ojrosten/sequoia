@@ -26,7 +26,7 @@ namespace sequoia::testing
     using namespace maths;
 
     using g_type = static_directed_graph<1, 2, null_weight, null_weight>;
-    using edge_t = typename g_type::edge_init_type;
+    using edge_t = g_type::edge_init_type;
 
     std::array<std::size_t, 2> ordering{};
     std::size_t index{};
@@ -78,7 +78,7 @@ namespace sequoia::testing
   {
     using namespace maths;
     using g_type = static_undirected_graph<3, 4, null_weight, int>;
-    using edge_t = typename g_type::edge_init_type;
+    using edge_t = g_type::edge_init_type;
 
     // 6  4  2
     //  \ | /

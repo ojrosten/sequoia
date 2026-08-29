@@ -61,8 +61,8 @@ namespace sequoia::testing::impl
   public:
     using value_type       = T;
     using alloc_info       = allocation_info<T, Getter>;
-    using predictions_type = typename alloc_info::predictions_type;
-    using allocator_type   = typename alloc_info::allocator_type;
+    using predictions_type = alloc_info::predictions_type;
+    using allocator_type   = alloc_info::allocator_type;
 
     dual_allocation_checker(alloc_info i, const T& x, const T& y)
       : m_Info{std::move(i)}
@@ -188,8 +188,8 @@ namespace sequoia::testing::impl
   public:
     using value_type       = T;
     using alloc_info       = allocation_info<T, Getter>;
-    using predictions_type = typename alloc_info::predictions_type;
-    using allocator_type   = typename alloc_info::allocator_type;
+    using predictions_type = alloc_info::predictions_type;
+    using allocator_type   = alloc_info::allocator_type;
 
     allocation_checker(alloc_info i, const int priorCount=0)
       : m_Info{std::move(i)}

@@ -73,11 +73,11 @@ namespace sequoia::utilities
     requires requires { typename Deref::pointer; }
   struct pointer_type<Iterator, Deref>
   {
-    using type = typename Deref::pointer;
+    using type = Deref::pointer;
   };
 
   template<class Iterator, dereference_policy_for<Iterator> Deref>
-  using pointer_type_t = typename pointer_type<Iterator, Deref>::type;
+  using pointer_type_t = pointer_type<Iterator, Deref>::type;
 
   /*! \brief Detects difference_type */
 
@@ -91,18 +91,18 @@ namespace sequoia::utilities
     requires has_difference_type<Deref>
   struct difference_type<Iterator, Deref>
   {
-    using type = typename Deref::difference_type;
+    using type = Deref::difference_type;
   };
 
   template<class Iterator, dereference_policy_for<Iterator> Deref>
     requires (!has_difference_type<Deref> && std::input_or_output_iterator<Iterator>)
   struct difference_type<Iterator, Deref>
   {
-    using type = typename std::iterator_traits<Iterator>::difference_type;
+    using type = std::iterator_traits<Iterator>::difference_type;
   };
 
   template<class Iterator, dereference_policy_for<Iterator> Deref>
-  using difference_type_t = typename difference_type<Iterator, Deref>::type;
+  using difference_type_t = difference_type<Iterator, Deref>::type;
 
   /*! \brief Detects value_type */
 
@@ -123,11 +123,11 @@ namespace sequoia::utilities
     requires (!std::input_or_output_iterator<T> && has_value_type_v<T>)
   struct value_type<T>
   {
-    using type = typename T::value_type;
+    using type = T::value_type;
   };
 
   template<class T>
-  using value_type_t = typename value_type<T>::type;
+  using value_type_t = value_type<T>::type;
 
   /*! \brief Detects reference_type */
 
@@ -151,11 +151,11 @@ namespace sequoia::utilities
     requires (!std::input_or_output_iterator<T> && has_reference_type<T>)
   struct reference_type<T>
   {
-    using type = typename T::reference;
+    using type = T::reference;
   };
 
   template<class T>
-  using reference_type_t = typename reference_type<T>::type;
+  using reference_type_t = reference_type<T>::type;
 
   /*! \brief Policy representing absence of additional data carried by the`identity_dereference_policy` */
 
@@ -182,9 +182,9 @@ namespace sequoia::utilities
     using base_iterator_type    = Iterator;
     using auxiliary_data_policy = AuxiliaryDataPolicy;
 
-    using value_type = typename std::iterator_traits<Iterator>::value_type;
-    using reference  = typename std::iterator_traits<Iterator>::reference;
-    using pointer    = typename std::iterator_traits<Iterator>::pointer;
+    using value_type = std::iterator_traits<Iterator>::value_type;
+    using reference  = std::iterator_traits<Iterator>::reference;
+    using pointer    = std::iterator_traits<Iterator>::pointer;
 
     template<class... Args>
       requires (!resolve_to_copy_v<identity_dereference_policy, Args...>)
@@ -236,8 +236,8 @@ namespace sequoia::utilities
     using base_iterator_type      = Iterator;
     using dereference_policy_type = DereferencePolicy;
 
-    using value_type      = typename DereferencePolicy::value_type;
-    using reference       = typename DereferencePolicy::reference;
+    using value_type      = DereferencePolicy::value_type;
+    using reference       = DereferencePolicy::reference;
     using difference_type = difference_type_t<Iterator, DereferencePolicy>;
     using pointer         = pointer_type_t<Iterator, DereferencePolicy>;
 

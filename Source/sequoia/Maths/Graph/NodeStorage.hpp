@@ -38,14 +38,14 @@ namespace sequoia::maths
   public:
     using weight_type                = Weight;
     using node_weight_container_type = Container;
-    using size_type                  = typename node_weight_container_type::size_type;
+    using size_type                  = node_weight_container_type::size_type;
 
-    using iterator           = typename node_weight_container_type::iterator;
-    using reverse_iterator   = typename node_weight_container_type::reverse_iterator;
+    using iterator           = node_weight_container_type::iterator;
+    using reverse_iterator   = node_weight_container_type::reverse_iterator;
     using node_weights_range = std::ranges::subrange<iterator>;
 
-    using const_iterator           = typename node_weight_container_type::const_iterator;
-    using const_reverse_iterator   = typename node_weight_container_type::const_reverse_iterator;
+    using const_iterator           = node_weight_container_type::const_iterator;
+    using const_reverse_iterator   = node_weight_container_type::const_reverse_iterator;
     using const_node_weights_range = std::ranges::subrange<const_iterator>;
 
     [[nodiscard]]
@@ -272,8 +272,8 @@ namespace sequoia::maths
   {
     using base_t = node_storage_base<Weight, Container>;
   public:
-    using size_type   = typename base_t::size_type;
-    using weight_type = typename base_t::weight_type;
+    using size_type   = base_t::size_type;
+    using weight_type = base_t::weight_type;
 
     using node_storage_base<Weight, Container>::node_storage_base;
 

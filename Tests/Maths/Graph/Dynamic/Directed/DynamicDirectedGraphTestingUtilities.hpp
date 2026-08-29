@@ -172,9 +172,9 @@ namespace sequoia::testing
   {
   public:
     using graph_t            = maths::directed_graph<EdgeWeight, NodeWeight,EdgeStorageConfig, NodeWeightStorage>;
-    using edge_t             = typename graph_t::edge_init_type;
+    using edge_t             = graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
-    using transition_graph   = typename transition_checker<graph_t>::transition_graph;
+    using transition_graph   = transition_checker<graph_t>::transition_graph;
 
     static void check_initialization_exceptions(regular_test& t)
     {

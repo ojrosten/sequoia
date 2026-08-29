@@ -60,7 +60,7 @@ namespace sequoia::testing
   template<class Storage>
   struct bucket_alloc_getter
   {
-    using allocator = typename Storage::allocator_type;
+    using allocator = Storage::allocator_type;
     using alloc_equivalence_class = allocation_equivalence_classes::container_of_values<allocator>;
 
     [[nodiscard]]
@@ -73,7 +73,7 @@ namespace sequoia::testing
   template<class Storage>
   struct contiguous_alloc_getter
   {
-    using allocator = typename Storage::allocator_type;
+    using allocator = Storage::allocator_type;
     using alloc_equivalence_class = allocation_equivalence_classes::container_of_values<allocator>;
 
     [[nodiscard]]
@@ -86,7 +86,7 @@ namespace sequoia::testing
   template<class Storage>
   struct partitions_alloc_getter
   {
-    using allocator = typename Storage::partitions_allocator_type;
+    using allocator = Storage::partitions_allocator_type;
     using alloc_equivalence_class = allocation_equivalence_classes::container_of_values<allocator>;
 
     [[nodiscard]]

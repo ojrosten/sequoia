@@ -30,7 +30,7 @@ namespace sequoia
       {
       public:
         using graph_type      = graph_primitive<Connectivity, Nodes>;
-        using index_type      = typename graph_type::edge_index_type;
+        using index_type      = graph_type::edge_index_type;
         using difference_type = std::make_signed_t<index_type>;
         using value_type      = index_type;
         using reference       = index_type;
@@ -106,13 +106,13 @@ namespace sequoia
     class SEQUOIA_MSVC_EMPTY_BASE_HACK graph_primitive : public Connectivity, public Nodes
     {
     private:
-      using node_weight_type = typename Nodes::weight_type;
+      using node_weight_type = Nodes::weight_type;
 
     public:
       using connectivity_type = Connectivity;
       using nodes_type        = Nodes;
-      using edge_init_type    = typename Connectivity::edge_init_type;
-      using edge_index_type   = typename Connectivity::edge_index_type;
+      using edge_init_type    = Connectivity::edge_init_type;
+      using edge_index_type   = Connectivity::edge_index_type;
       using size_type         = std::common_type_t<typename Connectivity::size_type, typename Nodes::size_type>;
       using pseudo_iterator   = graph_impl::pseudo_iterator<Connectivity, Nodes>;
 

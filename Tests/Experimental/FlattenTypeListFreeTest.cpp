@@ -22,7 +22,7 @@ namespace sequoia::testing
   };
 
   template<class... Ts>
-  using flatten_t = typename flatten<Ts...>::type;
+  using flatten_t = flatten<Ts...>::type;
 
   template<class T>
   struct flatten<T>

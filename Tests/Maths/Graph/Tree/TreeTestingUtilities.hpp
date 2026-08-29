@@ -20,8 +20,8 @@ namespace sequoia::testing
   struct tree_tester : graph_value_tester_base<Tree>
   {
     using tree_type = Tree;
-    using size_type = typename tree_type::size_type;
-    using node_weight_type = typename Tree::node_weight_type;   
+    using size_type = tree_type::size_type;
+    using node_weight_type = Tree::node_weight_type;   
     using graph_value_tester_base<tree_type>::test;
 
     constexpr static maths::tree_link_direction link_dir{Tree::link_dir};
@@ -32,7 +32,7 @@ namespace sequoia::testing
       check_node(flavour, logger, 0, tree_type::npos, actual, prediction);
     }
   private:
-    using edge_iterator = typename tree_type::const_edge_iterator;
+    using edge_iterator = tree_type::const_edge_iterator;
 
     template<class CheckType, test_mode Mode>
     static size_type check_node(CheckType flavour, test_logger<Mode>& logger, size_type node, size_type parent, const tree_type& actual, const maths::tree_initializer<node_weight_type>& prediction)

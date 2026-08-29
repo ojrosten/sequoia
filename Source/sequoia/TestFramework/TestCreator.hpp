@@ -264,5 +264,5 @@ namespace sequoia::testing
 
 
   using nascent_test_factory = object::factory<nascent_semantics_test, nascent_allocation_test, nascent_behavioural_test>;
-  using nascent_test_vessel = typename nascent_test_factory::vessel;
+  using nascent_test_vessel = nascent_test_factory::vessel;
 }

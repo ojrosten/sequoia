@@ -33,7 +33,7 @@ namespace sequoia::testing
   void tree_false_negative_test::test_tree()
   {
     using tree_type = Tree;
-    using node_weight_type = typename  Tree::node_weight_type;
+    using node_weight_type = Tree::node_weight_type;
     using initializer = tree_initializer<node_weight_type>;
 
     tree_type x{}, y{{1}}, z{{1, {{2}}}}, w{{1, {{2, {{4}, {5}}}, {3}}}};

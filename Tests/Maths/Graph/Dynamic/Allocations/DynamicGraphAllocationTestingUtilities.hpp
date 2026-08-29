@@ -31,7 +31,7 @@ namespace sequoia::testing
   template<class Graph>
   struct edge_alloc_getter
   {
-    using edge_allocator = typename Graph::edge_allocator_type;
+    using edge_allocator = Graph::edge_allocator_type;
 
     using alloc_equivalence_class = allocation_equivalence_classes::container_of_pointers<edge_allocator>;
 
@@ -58,7 +58,7 @@ namespace sequoia::testing
   template<class Graph>
   struct node_alloc_getter
   {
-    using node_allocator = typename Graph::node_weight_allocator_type;
+    using node_allocator = Graph::node_weight_allocator_type;
     using alloc_equivalence_class = allocation_equivalence_classes::container_of_values<node_allocator>;
 
     [[nodiscard]]
@@ -75,5 +75,5 @@ namespace sequoia::testing
   };
 
   template<class T>
-  using node_storage_generator_t = typename node_storage_generator<T>::type;
+  using node_storage_generator_t = node_storage_generator<T>::type;
 }

@@ -173,7 +173,7 @@ namespace sequoia::testing
   {
     using double_graph = transition_checker<double>::transition_graph;
     using edge_t       = transition_checker<double>::edge;
-    using edges        = typename double_graph::edges_initializer;
+    using edges        = double_graph::edges_initializer;
 
     double_graph g{
       edges{

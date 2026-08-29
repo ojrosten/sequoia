@@ -35,7 +35,7 @@ namespace sequoia
     struct is_type_list<type_list<Ts...>> : std::true_type {};
 
     template<class T>
-    using is_type_list_t = typename is_type_list<T>::type;
+    using is_type_list_t = is_type_list<T>::type;
 
     template<class T>
     inline constexpr bool is_type_list_v = is_type_list<T>::value;
@@ -51,7 +51,7 @@ namespace sequoia
     struct build_faithful_type_list;
 
     template<class... Ts>
-    using faithful_type_list = typename build_faithful_type_list<Ts...>::type;
+    using faithful_type_list = build_faithful_type_list<Ts...>::type;
 
     template<>
     struct build_faithful_type_list<>
@@ -101,7 +101,7 @@ namespace sequoia
     struct type_list_union;
 
     template<class... Ts>
-    using type_list_union_t = typename type_list_union<Ts...>::type;
+    using type_list_union_t = type_list_union<Ts...>::type;
 
     template<class... Ts>
     struct type_list_union<type_list<Ts...>>
@@ -133,7 +133,7 @@ namespace sequoia
     struct to_variant;
 
     template<class... Ts>
-    using to_variant_t = typename to_variant<Ts...>::type;
+    using to_variant_t = to_variant<Ts...>::type;
 
     template<class... Ts>
     struct to_variant<type_list<Ts...>>
@@ -145,7 +145,7 @@ namespace sequoia
     struct to_tuple;
 
     template<class... Ts>
-    using to_tuple_t = typename to_tuple<Ts...>::type;
+    using to_tuple_t = to_tuple<Ts...>::type;
 
     template<class... Ts>
     struct to_tuple<type_list<Ts...>>

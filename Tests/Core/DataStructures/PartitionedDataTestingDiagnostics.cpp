@@ -34,7 +34,7 @@ namespace sequoia::testing
 
   template<class PartitionedData> void partitioned_data_false_negative_test::test()
   {
-    using value_type = typename PartitionedData::value_type;
+    using value_type = PartitionedData::value_type;
     using expected_t = std::initializer_list<std::initializer_list<value_type>>;
 
     PartitionedData

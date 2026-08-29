@@ -108,7 +108,7 @@ namespace sequoia::testing
     class EdgeStorageConfig,
     class NodeWeightStorage
   >
-  using graph_type_generator_t = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>::graph_type;
+  using graph_type_generator_t = graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>::graph_type;
 
   template <class EdgeWeight, class NodeWeight, concrete_test Test>
   class graph_test_helper
@@ -171,8 +171,8 @@ namespace sequoia::testing
   template<maths::network G>
   struct graph_initialization_checker
   {
-    using edge_type        = typename G::edge_init_type;
-    using node_weight_type = typename G::node_weight_type;
+    using edge_type        = G::edge_init_type;
+    using node_weight_type = G::node_weight_type;
 
     template<class Test>
     [[nodiscard]]

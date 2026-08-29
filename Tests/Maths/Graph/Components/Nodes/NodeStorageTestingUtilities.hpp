@@ -171,9 +171,9 @@ namespace sequoia::testing
   private:
     using base_t = maths::node_storage_base<Weight, std::vector<Weight, shared_counting_allocator<Weight, PropagateCopy, PropagateMove, PropagateSwap>>>;
   public:
-    using allocator_type = typename base_t::node_weight_container_type::allocator_type;
-    using size_type      = typename base_t::size_type;
-    using weight_type    = typename base_t::weight_type;
+    using allocator_type = base_t::node_weight_container_type::allocator_type;
+    using size_type      = base_t::size_type;
+    using weight_type    = base_t::weight_type;
 
     node_storage_tester() = default;
 

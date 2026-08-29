@@ -27,10 +27,10 @@ namespace sequoia::maths
     using value_type     = T;
     using container_type = C;
     using compare_type   = Compare;
-    using size_type      = typename C::size_type;
+    using size_type      = C::size_type;
 
-    using const_iterator         = typename C::const_iterator;
-    using const_reverse_iterator = typename C::const_reverse_iterator;
+    using const_iterator         = C::const_iterator;
+    using const_reverse_iterator = C::const_reverse_iterator;
 
     constexpr monotonic_sequence_base() = default;
 
@@ -250,7 +250,7 @@ namespace sequoia::maths
   public:
     static_assert(has_allocator_type_v<C>);
 
-    using allocator_type = typename C::allocator_type;
+    using allocator_type = C::allocator_type;
 
     monotonic_sequence() = default;
 

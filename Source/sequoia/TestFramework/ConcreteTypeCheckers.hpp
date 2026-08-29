@@ -77,8 +77,8 @@ namespace sequoia::testing
     template<class Allocator>
     using string_type      = std::basic_string<Char, Traits, Allocator>;
   private:
-    using iter_type = typename string_view_type::const_iterator;
-    using size_type = typename string_view_type::size_type;
+    using iter_type = string_view_type::const_iterator;
+    using size_type = string_view_type::size_type;
 
     static void appender(std::string& mess, string_view_type sv, size_type pos, size_type count)
     {

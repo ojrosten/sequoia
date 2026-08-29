@@ -49,8 +49,8 @@ namespace sequoia::testing
   {
     using namespace data_structures;
 
-    using storage    = typename custom_bucketed_sequence_generator<T, PropagateCopy, PropagateMove, PropagateSwap>::storage_type;
-    using allocator  = typename storage::allocator_type;
+    using storage    = custom_bucketed_sequence_generator<T, PropagateCopy, PropagateMove, PropagateSwap>::storage_type;
+    using allocator  = storage::allocator_type;
     using prediction = std::initializer_list<std::initializer_list<int>>;
 
     auto partitionMaker{ [](storage& s) { s.add_slot(); } };

@@ -45,7 +45,7 @@ namespace sequoia::testing
     using namespace maths;
 
     using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>;
-    using edge_init_t = typename graph_type::edge_init_type;
+    using edge_init_t = graph_type::edge_init_type;
     using edge_init_list_t = std::initializer_list<std::initializer_list<edge_init_t>>;
 
     graph_type graph{};

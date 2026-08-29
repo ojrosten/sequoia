@@ -22,7 +22,7 @@ namespace sequoia::testing
   struct value_tester<maths::connectivity<Flavour, EdgeStorage>>
   {
     using type            = maths::connectivity<Flavour, EdgeStorage>;
-    using edge_index_type = typename type::edge_index_type;
+    using edge_index_type = type::edge_index_type;
 
     template<class E>
     using connectivity_equivalent_type = std::initializer_list<std::initializer_list<E>>;
@@ -62,7 +62,7 @@ namespace sequoia::testing
 
           if constexpr((type::flavour == maths::graph_flavour::directed) && !std::is_empty_v<typename E::weight_type>)
           {
-            using init_iterator    = typename std::initializer_list<E>::iterator;
+            using init_iterator    = std::initializer_list<E>::iterator;
             using weight_iterator  = utilities::iterator<init_iterator, maths::edge_weight_dereference_policy<init_iterator>>;
             using rinit_iterator   = std::reverse_iterator<init_iterator>;
             using rweight_iterator = utilities::iterator<rinit_iterator, maths::edge_weight_dereference_policy<rinit_iterator>>;
@@ -93,8 +93,8 @@ namespace sequoia::testing
     template<class E>
     using connectivity_equivalent_type = std::initializer_list<std::initializer_list<E>>;
 
-    using connectivity_type = typename type::connectivity_type;
-    using nodes_type = typename type::nodes_type;
+    using connectivity_type = type::connectivity_type;
+    using nodes_type = type::nodes_type;
 
     template<class CheckType, test_mode Mode, maths::network G>
       requires std::is_same_v<Graph, G> // inhibit implicit conversions

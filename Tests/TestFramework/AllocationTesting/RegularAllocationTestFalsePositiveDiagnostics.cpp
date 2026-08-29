@@ -38,7 +38,7 @@ namespace sequoia::testing
   {
     {
       using beast = perfectly_normal_beast<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
-      using allocator = typename beast::allocator_type;
+      using allocator = beast::allocator_type;
 
       auto allocGetter{
         [](const beast& b){ return b.x.get_allocator(); }
@@ -70,8 +70,8 @@ namespace sequoia::testing
     {
       using handle = std::shared_ptr<int>;
       using beast = perfectly_sharing_beast<int, handle, shared_counting_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
-      using allocator = typename beast::allocator_type;
-      using getter = typename beast::alloc_acquirer;
+      using allocator = beast::allocator_type;
+      using getter = beast::alloc_acquirer;
 
       auto mutator{
         [](beast& b) {
@@ -108,7 +108,7 @@ namespace sequoia::testing
 
     {
       using beast = inefficient_copy<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
-      using allocator = typename beast::allocator_type;
+      using allocator = beast::allocator_type;
 
       auto allocGetter{
         [](const beast& b){ return b.x.get_allocator(); }
@@ -127,7 +127,7 @@ namespace sequoia::testing
 
     {
       using beast = inefficient_para_copy<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
-      using allocator = typename beast::allocator_type;
+      using allocator = beast::allocator_type;
 
       auto allocGetter{
         [](const beast& b){ return b.x.get_allocator(); }
@@ -146,7 +146,7 @@ namespace sequoia::testing
 
     {
       using beast = inefficient_para_move<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
-      using allocator = typename beast::allocator_type;
+      using allocator = beast::allocator_type;
 
       auto allocGetter{
         [](const beast& b){ return b.x.get_allocator(); }
@@ -166,8 +166,8 @@ namespace sequoia::testing
 
     {
       using beast = doubly_normal_beast<int, double, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>, shared_counting_allocator<double, PropagateCopy, PropagateMove, PropagateSwap>>;
-      using xAllocator = typename beast::x_allocator_type;
-      using yAllocator = typename beast::y_allocator_type;
+      using xAllocator = beast::x_allocator_type;
+      using yAllocator = beast::y_allocator_type;
 
       auto xAllocGetter{
         [](const beast& b){ return b.x.get_allocator(); }

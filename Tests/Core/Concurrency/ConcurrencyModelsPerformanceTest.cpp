@@ -20,7 +20,7 @@ namespace sequoia::testing
     class waiting_task
     {
     public:
-      using return_type = typename ThreadModel::return_type;
+      using return_type = ThreadModel::return_type;
 
       template<class... ModelArgs>
       waiting_task(const std::size_t nTasks, Task t, ModelArgs&&... args)

@@ -51,7 +51,7 @@ namespace sequoia
     {
     public:
       using weight_handler_type = WeightHandler;
-      using weight_type         = typename WeightHandler::value_type;
+      using weight_type         = WeightHandler::value_type;
 
       [[nodiscard]]
       constexpr const weight_type& weight() const noexcept { return WeightHandler::get(m_Weight); }
@@ -125,7 +125,7 @@ namespace sequoia
     {
     public:
       using weight_handler_type = WeightHandler;
-      using weight_type         = typename WeightHandler::value_type;
+      using weight_type         = WeightHandler::value_type;
 
       [[nodiscard]]
       friend constexpr bool operator==(const weighting&, const weighting&) noexcept = default;
@@ -153,7 +153,7 @@ namespace sequoia
     {
     public:
       using index_type  = IndexType;
-      using weight_type = typename weighting<WeightHandler, IndexType>::weight_type;
+      using weight_type = weighting<WeightHandler, IndexType>::weight_type;
 
       template<class... Args>
         requires (!resolve_to_copy_v<partial_edge_base, Args...>)
@@ -218,7 +218,7 @@ namespace sequoia
     public:
       using index_type     = IndexType;
       using meta_data_type = MetaData;
-      using weight_type    = typename partial_edge_base<WeightHandler, IndexType>::weight_type;
+      using weight_type    = partial_edge_base<WeightHandler, IndexType>::weight_type;
 
       constexpr explicit decorated_partial_edge_base(const index_type target)
         requires is_initializable_v<MetaData> && is_initializable_v<weight_type>
@@ -304,7 +304,7 @@ namespace sequoia
     public:
       constexpr static edge_flavour flavour{edge_flavour::partial};
 
-      using weight_type    = typename decorated_partial_edge_base<WeightHandler, MetaData, IndexType>::weight_type;
+      using weight_type    = decorated_partial_edge_base<WeightHandler, MetaData, IndexType>::weight_type;
       using meta_data_type = MetaData;
       using index_type     = IndexType;
 
@@ -329,7 +329,7 @@ namespace sequoia
     public:
       constexpr static edge_flavour flavour{edge_flavour::partial_embedded};
 
-      using weight_type    = typename decorated_partial_edge_base<WeightHandler, MetaData, IndexType>::weight_type;
+      using weight_type    = decorated_partial_edge_base<WeightHandler, MetaData, IndexType>::weight_type;
       using meta_data_type = MetaData;
       using index_type     = IndexType;
 

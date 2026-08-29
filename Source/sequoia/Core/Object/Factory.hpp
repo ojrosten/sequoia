@@ -31,7 +31,7 @@ namespace sequoia::object
   class factory_dereference_policy
   {
   public:
-    using value_type      = typename std::iterator_traits<Iterator>::value_type;
+    using value_type      = std::iterator_traits<Iterator>::value_type;
     using reference       = std::string;
 
     constexpr factory_dereference_policy() = default;
@@ -83,7 +83,7 @@ namespace sequoia::object
     using creator_variant = std::variant<product_creator<Products>...>;
     using element = std::pair<key, creator_variant>;
     using storage = std::array<element, size()>;
-    using const_storage_iterator = typename storage::const_iterator;
+    using const_storage_iterator = storage::const_iterator;
   public:
     using names_iterator = utilities::iterator<const_storage_iterator, factory_dereference_policy<const_storage_iterator>>;
 

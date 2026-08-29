@@ -335,7 +335,7 @@ namespace sequoia::testing
     };
 
     Graph g{};
-    using edge_order = typename edge_tracker<Graph, Traverser::flavour>::result_type;
+    using edge_order = edge_tracker<Graph, Traverser::flavour>::result_type;
     using node_order = std::vector<std::size_t>;
 
 
@@ -487,7 +487,7 @@ namespace sequoia::testing
     using traverser_t = Traverser<bfs_type::value>;
     const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<traverser_t>(g, maths::ignore_disconnected_t{start})};
 
-    using edge_order = typename decltype(edgeDiscovery1)::result_type;
+    using edge_order = decltype(edgeDiscovery1)::result_type;
     std::vector<std::size_t> nodeAnswers;
     edge_order edgeAnswers;
     if constexpr(!maths::is_directed(G::flavour))
@@ -534,7 +534,7 @@ namespace sequoia::testing
     using traverser_t = Traverser<dfs_type::value>;
     const auto [nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2] {traverse_graph<traverser_t>(g, maths::ignore_disconnected_t{start})};
 
-    using edge_order = typename decltype(edgeDiscovery1)::result_type;
+    using edge_order = decltype(edgeDiscovery1)::result_type;
     std::vector<std::size_t> nodeAnswers, nodeAnswers2;
     edge_order edgeAnswers;
     if constexpr(!maths::is_directed(G::flavour))
@@ -580,7 +580,7 @@ namespace sequoia::testing
     using traverser_t = Traverser<pdfs_type::value>;
     const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<traverser_t>(g, maths::ignore_disconnected_t{start})};
 
-    using edge_order = typename decltype(edgeDiscovery1)::result_type;
+    using edge_order = decltype(edgeDiscovery1)::result_type;
     std::vector<std::size_t> nodeAnswers;
     edge_order edgeAnswers;
     if constexpr(!maths::is_directed(G::flavour))

@@ -128,7 +128,7 @@ namespace sequoia::concurrency
     template<class R, bool MultiChannel> struct queue_details
     {
       using Q_t = task_queue<R>;
-      using task_t = typename Q_t::task_t;
+      using task_t = Q_t::task_t;
       using queue_type = std::vector<Q_t>;
 
       std::size_t push_cycles{};
@@ -137,7 +137,7 @@ namespace sequoia::concurrency
     template<class R> struct queue_details<R, false>
     {
       using Q_t = task_queue<R>;
-      using task_t = typename Q_t::task_t;
+      using task_t = Q_t::task_t;
       using queue_type = Q_t;
     };
   }
@@ -272,8 +272,8 @@ namespace sequoia::concurrency
       joined = true;
     }
   private:
-    using task_t   = typename impl::queue_details<R, MultiPipeline>::task_t;
-    using Queues_t = typename impl::queue_details<R, MultiPipeline>::queue_type;
+    using task_t   = impl::queue_details<R, MultiPipeline>::task_t;
+    using Queues_t = impl::queue_details<R, MultiPipeline>::queue_type;
 
     Queues_t m_Queues;
     std::vector<std::thread> m_Threads;

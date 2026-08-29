@@ -79,10 +79,10 @@ namespace sequoia::testing
     using transition_graph
       = maths::directed_graph<transition_info<T, std::function<T(const T&)>, CheckOrdering>, object_generator<T>>;
 
-    using size_type = typename transition_graph::size_type;
+    using size_type = transition_graph::size_type;
 
   private:
-    using edge_iterator = typename transition_graph::const_edge_iterator;
+    using edge_iterator = transition_graph::const_edge_iterator;
 
     template<class CheckFn, class... Args>
     static void invoke_check_fn(const transition_graph& g, edge_iterator i, CheckFn fn, const std::string& message, object_generator<T> parentGenerator, size_type target, Args... args)
@@ -106,7 +106,7 @@ namespace sequoia::testing
          std::move(args)...);
     }
   public:
-    using edge = typename transition_graph::edge_type;
+    using edge = transition_graph::edge_type;
 
     template<std::invocable<std::string, T, T> CheckFn>
     static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)

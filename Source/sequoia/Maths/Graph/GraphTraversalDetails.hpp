@@ -147,7 +147,7 @@ namespace sequoia::maths
   {
   public:
     using model_type = ConcurrencyModel;
-    using return_type = typename model_type::return_type;
+    using return_type = model_type::return_type;
 
     explicit results_accumulator(ConcurrencyModel& model)
       : m_Model{&model}
@@ -238,8 +238,8 @@ namespace sequoia::maths::graph_impl
   template<network G, traversal_flavour F, class... QArgs>
   struct traversal_traits : traversal_traits_base<G, F, QArgs...>
   {
-    using queue_type      = typename traversal_traits_base<G, F, QArgs...>::queue_type;
-    using edge_index_type = typename G::edge_index_type;
+    using queue_type      = traversal_traits_base<G, F, QArgs...>::queue_type;
+    using edge_index_type = G::edge_index_type;
 
     [[nodiscard]]
     constexpr static queue_type make(QArgs... args)
@@ -308,7 +308,7 @@ namespace sequoia::maths::graph_impl
     [[nodiscard]]
     constexpr static bool loop_matched(Iter begin, Iter current)
     {
-      using index_type = typename G::edge_index_type;
+      using index_type = G::edge_index_type;
       const auto dist{static_cast<index_type>(std::ranges::distance(begin, current))};
       return (current->complementary_index() < dist);
     }
@@ -333,8 +333,8 @@ namespace sequoia::maths::graph_impl
   class traversal_helper
   {
   public:
-    using edge_index_type     = typename G::edge_index_type;
-    using const_edge_iterator = typename G::const_edge_iterator;
+    using edge_index_type     = G::edge_index_type;
+    using const_edge_iterator = G::const_edge_iterator;
 
     template
     <

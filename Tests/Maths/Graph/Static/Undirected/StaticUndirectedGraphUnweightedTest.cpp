@@ -37,7 +37,7 @@ namespace sequoia::testing
   void static_undirected_graph_unweighted_test::test_empty()
   {
     using graph_t = static_undirected_graph<0, 0, null_weight, null_weight>;
-    using edge_t = typename graph_t::edge_init_type;
+    using edge_t = graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
     check_exception_thrown<std::logic_error>("", [](){ graph_t{{}}; });
@@ -50,7 +50,7 @@ namespace sequoia::testing
   void static_undirected_graph_unweighted_test::test_node()
   {
     using graph_t = static_undirected_graph<0, 1, null_weight, null_weight>;
-    using edge_t = typename graph_t::edge_init_type;
+    using edge_t = graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
     check_exception_thrown<std::logic_error>("", [](){ graph_t{{edge_t{0}}}; });
@@ -63,7 +63,7 @@ namespace sequoia::testing
   void static_undirected_graph_unweighted_test::test_node_0()
   {
     using graph_t = static_undirected_graph<1, 1, null_weight, null_weight>;
-    using edge_t = typename graph_t::edge_init_type;
+    using edge_t = graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
     check_exception_thrown<std::logic_error>("", [](){ graph_t{{edge_t{0}}}; });
@@ -77,7 +77,7 @@ namespace sequoia::testing
   void static_undirected_graph_unweighted_test::test_node_0_0()
   {
     using graph_t = static_undirected_graph<2, 1, null_weight, null_weight>;
-    using edge_t = typename graph_t::edge_init_type;
+    using edge_t = graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
     constexpr graph_t g{{edge_t{0}, edge_t{0}, edge_t{0}, edge_t{0}}};
@@ -88,7 +88,7 @@ namespace sequoia::testing
   void static_undirected_graph_unweighted_test::test_node_node()
   {
     using graph_t = static_undirected_graph<0, 2, null_weight, null_weight>;
-    using edge_t = typename graph_t::edge_init_type;
+    using edge_t = graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
     check_exception_thrown<std::logic_error>("", [](){ graph_t{{}}; });
@@ -101,7 +101,7 @@ namespace sequoia::testing
   void static_undirected_graph_unweighted_test::test_node_1_node_0()
   {
     using graph_t = static_undirected_graph<1, 2, null_weight, null_weight>;
-    using edge_t = typename graph_t::edge_init_type;
+    using edge_t = graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
     constexpr graph_t g{{edge_t{1}}, {edge_t{0}}};
@@ -112,7 +112,7 @@ namespace sequoia::testing
   void static_undirected_graph_unweighted_test::test_node_1_1_node_0_0()
   {
     using graph_t = static_undirected_graph<2, 2, null_weight, null_weight>;
-    using edge_t = typename graph_t::edge_init_type;
+    using edge_t = graph_t::edge_init_type;
     using edges_equivalent_t = std::initializer_list<std::initializer_list<edge_t>>;
 
     constexpr graph_t g{{edge_t{1}, edge_t{1}}, {edge_t{0}, edge_t{0}}};

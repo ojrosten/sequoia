@@ -64,10 +64,10 @@ namespace sequoia
     public:
       using value_type     = T;
       using container_type = Container;
-      using bucket_type    = typename container_type::value_type;
-      using size_type      = typename container_type::size_type;
+      using bucket_type    = container_type::value_type;
+      using size_type      = container_type::size_type;
       using index_type     = size_type;
-      using allocator_type = typename container_type::allocator_type;
+      using allocator_type = container_type::allocator_type;
       //using partitions_allocator_type = typename bucket_type::allocator_type;
 
       using partition_iterator               = data_structures::partition_iterator<bucket_type, size_type>;
@@ -491,7 +491,7 @@ namespace sequoia
       using value_type      = T;
       using container_type  = Container;
       using partitions_type = Partitions;
-      using index_type      = typename partitions_type::value_type;
+      using index_type      = partitions_type::value_type;
       using size_type       = std::common_type_t<index_type, typename container_type::size_type>;
 
       using partition_iterator               = data_structures::partition_iterator<container_type, index_type>;
@@ -992,10 +992,10 @@ namespace sequoia
     private:
       using base_t = partitioned_sequence_base<T, Container, Partitions>;
     public:
-      using container_type            = typename partitioned_sequence_base<T, Container, Partitions>::container_type;
-      using partitions_type           = typename partitioned_sequence_base<T, Container, Partitions>::partitions_type;
-      using allocator_type            = typename container_type::allocator_type;
-      using partitions_allocator_type = typename partitions_type::allocator_type;
+      using container_type            = partitioned_sequence_base<T, Container, Partitions>::container_type;
+      using partitions_type           = partitioned_sequence_base<T, Container, Partitions>::partitions_type;
+      using allocator_type            = container_type::allocator_type;
+      using partitions_allocator_type = partitions_type::allocator_type;
 
       partitioned_sequence() = default;
 
@@ -1099,10 +1099,10 @@ namespace sequoia
     {
       using base_t = partitioned_sequence_base<T, std::array<T, Nelements>, Partitions>;
     public:
-      using container_type  = typename base_t::container_type;
-      using partitions_type = typename base_t::partitions_type;
-      using size_type       = typename base_t::size_type;
-      using index_type      = typename base_t::index_type;
+      using container_type  = base_t::container_type;
+      using partitions_type = base_t::partitions_type;
+      using size_type       = base_t::size_type;
+      using index_type      = base_t::index_type;
 
       constexpr static std::size_t num_partitions_v{Npartitions};
       constexpr static std::size_t num_elements_v{Nelements};

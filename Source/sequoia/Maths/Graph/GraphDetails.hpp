@@ -53,7 +53,7 @@ namespace sequoia
     };
 
     template<class T>
-    using edge_init_type_generator_t = typename edge_init_type_generator<T>::type;
+    using edge_init_type_generator_t = edge_init_type_generator<T>::type;
 
     namespace graph_impl
     {
@@ -100,7 +100,7 @@ namespace sequoia
 
       template<graph_flavour GraphFlavour, class Handler, class MetaData, std::integral IndexType>
         requires object::handler<Handler>
-      using flavour_to_edge_t = typename flavour_to_edge<GraphFlavour, Handler, MetaData, IndexType>::edge_type;
+      using flavour_to_edge_t = flavour_to_edge<GraphFlavour, Handler, MetaData, IndexType>::edge_type;
 
       template
       <
@@ -141,7 +141,7 @@ namespace sequoia
         std::integral IndexType,
         class EdgeStorageConfig
       >
-      using edge_storage_generator_t = typename edge_storage_generator<GraphFlavour, EdgeWeight, EdgeMetaData, IndexType, EdgeStorageConfig>::storage_type;
+      using edge_storage_generator_t = edge_storage_generator<GraphFlavour, EdgeWeight, EdgeMetaData, IndexType, EdgeStorageConfig>::storage_type;
 
       template<class T>
       inline constexpr bool has_reservable_partitions = requires(T& t) {

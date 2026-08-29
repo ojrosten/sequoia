@@ -39,7 +39,7 @@ namespace sequoia
   inline constexpr bool resolve_to_copy_v{resolve_to_copy<T, Args...>::value};
 
   template<class T, class... Args>
-  using resolve_to_copy_t = typename resolve_to_copy<T, Args...>::type;
+  using resolve_to_copy_t = resolve_to_copy<T, Args...>::type;
 
 
   /*! \brief Primary class template for determining if a type is a `const` pointer */
@@ -62,7 +62,7 @@ namespace sequoia
   inline constexpr bool is_const_pointer_v{is_const_pointer<T>::value};
 
   template<class T>
-  using is_const_pointer_t = typename is_const_pointer<T>::type;
+  using is_const_pointer_t = is_const_pointer<T>::type;
 
   /*! \brief class template for determining if a type is a `const` reference */
   template<class T>
@@ -74,7 +74,7 @@ namespace sequoia
   inline constexpr bool is_const_reference_v{is_const_reference<T>::value};
 
   template<class T>
-  using is_const_reference_t = typename is_const_reference<T>::type;
+  using is_const_reference_t = is_const_reference<T>::type;
 
   /*! \brief Primary class template for determining if a type is a `std::tuple` */
   template<class T>
@@ -84,7 +84,7 @@ namespace sequoia
   struct is_tuple<std::tuple<Ts...>> : std::true_type{};
 
   template<class... Ts>
-  using is_tuple_t = typename is_tuple<Ts...>::type;
+  using is_tuple_t = is_tuple<Ts...>::type;
 
   template<class... Ts>
   inline constexpr bool is_tuple_v{is_tuple<Ts...>::value};
@@ -101,7 +101,7 @@ namespace sequoia
   struct is_initializable<T, Args...> : std::true_type {};
 
   template<class T, class... Args>
-  using is_initializable_t = typename is_initializable<T, Args...>::type;
+  using is_initializable_t = is_initializable<T, Args...>::type;
 
   template<class T, class... Args>
   inline constexpr bool is_initializable_v{is_initializable<T, Args...>::value};
@@ -113,7 +113,7 @@ namespace sequoia
   {};
 
   template<class T>
-  using has_allocator_type_t = typename has_allocator_type<T>::type;
+  using has_allocator_type_t = has_allocator_type<T>::type;
 
   template<class T>
   inline constexpr bool has_allocator_type_v{has_allocator_type<T>::value};
@@ -162,7 +162,7 @@ namespace sequoia
   inline constexpr bool is_deep_equality_comparable_v{is_deep_equality_comparable<T>::value};
 
   template<class T>
-  using is_deep_equality_comparable_t = typename is_deep_equality_comparable<T>::type;
+  using is_deep_equality_comparable_t = is_deep_equality_comparable<T>::type;
 
   template<class T, std::size_t... I>
   inline constexpr bool heterogeneous_deep_equality_v{
@@ -210,7 +210,7 @@ namespace sequoia
   inline constexpr bool is_deep_totally_ordered_v{is_deep_totally_ordered<T>::value};
 
   template<class T>
-  using is_deep_totally_ordered_t = typename is_deep_totally_ordered<T>::type;
+  using is_deep_totally_ordered_t = is_deep_totally_ordered<T>::type;
 
   template<class T, std::size_t... I>
   inline constexpr bool heterogeneous_deep_total_order_v{
@@ -262,7 +262,7 @@ namespace sequoia
   struct is_compatible : std::bool_constant<!std::is_same_v<U, bool> && ((std::floating_point<U> && is_initializable_v<T, U>) || std::is_integral_v<U>)> {};
 
   template<std::floating_point T, class U>
-  using is_compatible_t = typename is_compatible<T, U>::type;
+  using is_compatible_t = is_compatible<T, U>::type;
 
   template<std::floating_point T, class U>
   inline constexpr bool is_compatible_v{is_compatible<T, U>::value};

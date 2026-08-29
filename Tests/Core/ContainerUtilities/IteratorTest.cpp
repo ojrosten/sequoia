@@ -20,8 +20,8 @@ namespace sequoia::testing
     class scaling_dereference_policy
     {
     public:
-      using value_type = typename std::iterator_traits<Iterator>::value_type;
-      using pointer    = typename std::iterator_traits<Iterator>::pointer;
+      using value_type = std::iterator_traits<Iterator>::value_type;
+      using pointer    = std::iterator_traits<Iterator>::pointer;
       using reference  = value_type;
 
       constexpr scaling_dereference_policy() = default;
@@ -268,8 +268,8 @@ namespace sequoia::testing
   {
     using namespace std;
 
-    using value_type = typename std::iterator_traits<Iter>::value_type;
-    using deref_pol = typename CustomIter::dereference_policy_type;
+    using value_type = std::iterator_traits<Iter>::value_type;
+    using deref_pol = CustomIter::dereference_policy_type;
 
     if(!check(equality, append_lines(message, "Contract violated"), distance(begin, end), ptrdiff_t{3}))
       return;

@@ -253,7 +253,7 @@ namespace sequoia::testing
     STATIC_CHECK(std::same_as<root_transform_unit_t<non_si::units::farenheight_t>, si::units::kelvin_t>);
 
     using farenheight_transform_t = non_si::units::farenheight_t::transform_type;
-    using farenheight_nested_transform_t = typename root_transform<non_si::units::farenheight_t>::nested_transform_type;
+    using farenheight_nested_transform_t = root_transform<non_si::units::farenheight_t>::nested_transform_type;
       
     STATIC_CHECK(std::same_as<root_transform<non_si::units::farenheight_t>::wrt_type, si::units::celsius_t>);
     STATIC_CHECK(

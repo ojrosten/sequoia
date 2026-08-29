@@ -1037,7 +1037,7 @@ namespace sequoia::physics
           && derives_from_another_unit_v<typename U::with_respect_to_type>
   struct root_transform<U> : root_transform<typename U::with_respect_to_type>
   {
-    using wrt_type = typename U::with_respect_to_type;
+    using wrt_type = U::with_respect_to_type;
     using nested_transform_type = root_transform_t<wrt_type>;
     using transform_type = product_t<typename U::transform_type, nested_transform_type>;
   };
@@ -1527,7 +1527,7 @@ namespace sequoia::maths
     physical_value<ValueSpaceTo,   UnitTo,   BasisTo,   RepresentationTo,   OriginTo,   ValidatorTo>
   >
   {
-    using value_type      = typename RepresentationFrom::value_type;
+    using value_type      = RepresentationFrom::value_type;
     using from_units_type = UnitFrom;
     using from_type       = physical_value<ValueSpaceFrom, from_units_type, BasisFrom, RepresentationFrom, OriginFrom, ValidatorFrom>;
     using to_units_type   = UnitTo;

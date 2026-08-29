@@ -84,7 +84,7 @@ namespace sequoia::testing
   };
 
   template<class T>
-  using type_normalizer_t = typename type_normalizer<T>::type;
+  using type_normalizer_t = type_normalizer<T>::type;
 
   template<std::integral T>
   [[nodiscard]]

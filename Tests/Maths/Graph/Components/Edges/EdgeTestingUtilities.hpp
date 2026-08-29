@@ -44,7 +44,7 @@ namespace sequoia::testing
   struct value_tester<maths::partial_edge<WeightHandler, MetaData, IndexType>>
   {
     using type        = maths::partial_edge<WeightHandler, MetaData, IndexType>;
-    using weight_type = typename type::weight_type;
+    using weight_type = type::weight_type;
 
     template<class CheckerType, test_mode Mode>
     static void test(CheckerType flavour, test_logger<Mode>& logger, const type& edge, const type& prediction)
@@ -97,7 +97,7 @@ namespace sequoia::testing
   struct value_tester<maths::embedded_partial_edge<WeightHandler, MetaData, IndexType>>
   {
     using type = maths::embedded_partial_edge<WeightHandler, MetaData, IndexType>;
-    using weight_type = typename type::weight_type;
+    using weight_type = type::weight_type;
 
     template<class CheckerType, test_mode Mode>
     static void test(CheckerType flavour, test_logger<Mode>& logger, const type& edge, const type& prediction)

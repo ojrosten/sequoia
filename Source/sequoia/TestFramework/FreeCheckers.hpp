@@ -611,7 +611,7 @@ namespace sequoia::testing
     }
     else if constexpr(checkable_against_fallback<CheckType, Mode, T, U, tutor<Advisor>>)
     {
-      using fallback = typename CheckType::fallback;
+      using fallback = CheckType::fallback;
       return check(fallback{},
                    std::move(description),
                    logger,

@@ -1492,7 +1492,7 @@ namespace sequoia::maths
   struct weakly_abelian_group_under_addition : std::false_type {};
 
   template<class T>
-  using weakly_abelian_group_under_addition_t = typename weakly_abelian_group_under_addition<T>::type;
+  using weakly_abelian_group_under_addition_t = weakly_abelian_group_under_addition<T>::type;
 
   template<class T>
   inline constexpr bool weakly_abelian_group_under_addition_v{weakly_abelian_group_under_addition<T>::value};
@@ -1531,7 +1531,7 @@ namespace sequoia::maths
   struct weakly_abelian_group_under_multiplication : std::false_type {};
 
   template<class T>
-  using weakly_abelian_group_under_multiplication_t = typename weakly_abelian_group_under_multiplication<T>::type;
+  using weakly_abelian_group_under_multiplication_t = weakly_abelian_group_under_multiplication<T>::type;
 
   template<class T>
   inline constexpr bool weakly_abelian_group_under_multiplication_v{weakly_abelian_group_under_multiplication<T>::value};
@@ -1564,7 +1564,7 @@ namespace sequoia::maths
   struct multiplication_weakly_distributive_over_addition : std::true_type {};
 
   template<class T>
-  using multiplication_weakly_distributive_over_addition_t = typename multiplication_weakly_distributive_over_addition<T>::type;
+  using multiplication_weakly_distributive_over_addition_t = multiplication_weakly_distributive_over_addition<T>::type;
 
   template<class T>
   inline constexpr bool multiplication_weakly_distributive_over_addition_v{multiplication_weakly_distributive_over_addition<T>::value};
@@ -1591,7 +1591,7 @@ namespace sequoia::maths
   struct multiplication_weakly_commutative : std::true_type {};
 
   template<class T>
-  using multiplication_weakly_commutative_t = typename multiplication_weakly_commutative<T>::type;
+  using multiplication_weakly_commutative_t = multiplication_weakly_commutative<T>::type;
 
   template<class T>
   inline constexpr bool multiplication_weakly_commutative_v{multiplication_weakly_commutative<T>::value};

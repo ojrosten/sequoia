@@ -341,20 +341,20 @@ namespace sequoia::testing
     requires requires { typename Getter::alloc_equivalence_class; }
   struct alloc_equivalence_class_generator<T, Getter>
   {
-    using type = typename Getter::alloc_equivalence_class;
+    using type = Getter::alloc_equivalence_class;
   };
 
   template<movable_comparable T, alloc_getter<T> Getter>
-  using alloc_equivalence_class_generator_t = typename alloc_equivalence_class_generator<T, Getter>::type;
+  using alloc_equivalence_class_generator_t = alloc_equivalence_class_generator<T, Getter>::type;
 
   template<class T>
   struct type_to_allocation_predictions;
 
   template<class T>
-  using type_to_allocation_predictions_t = typename type_to_allocation_predictions<T>::predictions_type;
+  using type_to_allocation_predictions_t = type_to_allocation_predictions<T>::predictions_type;
 
   template<class T>
-  using type_to_inner_allocation_predictions_t = typename type_to_allocation_predictions<T>::inner_predictions_type;
+  using type_to_inner_allocation_predictions_t = type_to_allocation_predictions<T>::inner_predictions_type;
 
   /*! \brief Base class for use with both plain (shared counting) allocators and std::scoped_allocator_adaptor
 
@@ -427,7 +427,7 @@ namespace sequoia::testing
     using base_t = allocation_info_base<T, Getter>;
   public:
     using value_type             = T;
-    using allocator_type         = typename base_t::allocator_type;
+    using allocator_type         = base_t::allocator_type;
     using predictions_type       = type_to_allocation_predictions_t<T>;
     using inner_predictions_type = type_to_inner_allocation_predictions_t<T>;
 
@@ -505,7 +505,7 @@ namespace sequoia::testing
     using base_t = allocation_info_base<T, Getter>;
   public:
     using value_type             = T;
-    using allocator_type         = typename base_t::allocator_type;
+    using allocator_type         = base_t::allocator_type;
     using predictions_type       = type_to_allocation_predictions_t<T>;
     using inner_predictions_type = type_to_inner_allocation_predictions_t<T>;
 

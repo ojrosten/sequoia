@@ -261,7 +261,7 @@ namespace sequoia::testing
   {
   public:
     using base_type = basic_test<Mode, performance_extender<Mode>>;
-    using duration  = typename base_type::duration;
+    using duration  = base_type::duration;
 
     using base_type::base_type;
 

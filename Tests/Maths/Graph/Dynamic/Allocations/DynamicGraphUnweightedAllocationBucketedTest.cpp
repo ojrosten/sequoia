@@ -44,7 +44,7 @@ namespace sequoia::testing
   void unweighted_graph_allocation_bucketed_test::bucketed_memory()
   {
     using namespace maths;
-    using edge_allocator = typename Graph::edge_allocator_type;
+    using edge_allocator = Graph::edge_allocator_type;
     constexpr auto GraphFlavour{Graph::flavour};
 
     Graph g{edge_allocator{}};
@@ -71,8 +71,8 @@ namespace sequoia::testing
     g.insert_node(0u);
     check(equality, "", g, Graph{{{}, {}}, edge_allocator{}});
 
-    using edge_init_t = typename Graph::edge_init_type;
-    using edge_allocator = typename Graph::edge_allocator_type;
+    using edge_init_t = Graph::edge_init_type;
+    using edge_allocator = Graph::edge_allocator_type;
 
     auto nodeMaker{
       [](Graph& gr) { gr.add_node(); }

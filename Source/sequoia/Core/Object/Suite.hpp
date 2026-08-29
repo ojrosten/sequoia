@@ -28,7 +28,7 @@ namespace sequoia::object
   struct is_suite : std::false_type {};
 
   template<class T>
-  using is_suite_t = typename is_suite<T>::type;
+  using is_suite_t = is_suite<T>::type;
 
   template<class T>
   inline constexpr bool is_suite_v{is_suite<T>::value};
@@ -67,7 +67,7 @@ namespace sequoia::object
   struct leaf_extractor;
 
   template<class... Ts>
-  using leaf_extractor_t = typename leaf_extractor<Ts...>::type;
+  using leaf_extractor_t = leaf_extractor<Ts...>::type;
 
   template<class... Ts>
   struct leaf_extractor<std::tuple<Ts...>>
@@ -116,7 +116,7 @@ namespace sequoia::object
   struct leaves_to_variant_or_unique_type;
 
   template<class T, class Transform>
-  using leaves_to_variant_or_unique_type_t = typename leaves_to_variant_or_unique_type<T, Transform>::type;
+  using leaves_to_variant_or_unique_type_t = leaves_to_variant_or_unique_type<T, Transform>::type;
 
   template<class... Ts, class Transform>
     requires (std::invocable<Transform, Ts> && ...)
@@ -135,7 +135,7 @@ namespace sequoia::object
   template<class... Ts, class Transform>
   struct leaves_to_variant_or_unique_type<suite<Ts...>, Transform>
   {
-    using type = typename leaves_to_variant_or_unique_type<leaf_extractor_t<suite<Ts...>>, Transform>::type;
+    using type = leaves_to_variant_or_unique_type<leaf_extractor_t<suite<Ts...>>, Transform>::type;
   };
 
 
@@ -143,7 +143,7 @@ namespace sequoia::object
   struct faithful_variant;
 
   template<class... Ts>
-  using faithful_variant_t = typename faithful_variant<Ts...>::type;
+  using faithful_variant_t = faithful_variant<Ts...>::type;
 
   template<>
   struct faithful_variant<>
@@ -188,7 +188,7 @@ namespace sequoia::object
   };
 
   template<class T, class Transform>
-  using to_variant_or_unique_type_t = typename to_variant_or_unique_type<T, Transform>::type;
+  using to_variant_or_unique_type_t = to_variant_or_unique_type<T, Transform>::type;
 
   template<class... Ts, std::invocable<suite<Ts...>> Transform>
   struct to_variant_or_unique_type<suite<Ts...>, Transform>
@@ -350,8 +350,8 @@ namespace sequoia::object
     using items_key_type  = ItemKeyType;
     using suites_map_type = std::vector<std::pair<std::string, bool>>;
     using items_map_type  = std::vector<std::pair<ItemKeyType, bool>>;
-    using selected_suites_iterator = typename suites_map_type::const_iterator;
-    using selected_items_iterator  = typename items_map_type::const_iterator;
+    using selected_suites_iterator = suites_map_type::const_iterator;
+    using selected_items_iterator  = items_map_type::const_iterator;
     using optional_suite_selection = std::optional<std::vector<std::string>>;
     using optional_item_selection  = std::optional<std::vector<items_key_type>>;
 
@@ -422,7 +422,7 @@ namespace sequoia::object
     template<class Key>
     static void add(opt_map_type<Key>& map, Key k)
     {
-      using map_type = typename opt_map_type<Key>::value_type;
+      using map_type = opt_map_type<Key>::value_type;
       if(!map) map = map_type{};
 
       map->emplace_back(std::move(k), false);

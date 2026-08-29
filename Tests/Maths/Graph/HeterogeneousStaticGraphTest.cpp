@@ -32,7 +32,7 @@ namespace sequoia::testing
     using namespace maths;
 
     using graph_t = heterogeneous_undirected_graph<1, 3, float, null_meta_data, float, int, double>;
-    using edge = typename graph_t::edge_init_type;
+    using edge = graph_t::edge_init_type;
 
     graph_t g{{{edge{1, 0.5f}}, {edge{0, 0.5f}}, {}}, 6.6f, -5, 10.2};
 
@@ -50,7 +50,7 @@ namespace sequoia::testing
     using namespace maths;
 
     using graph_t = heterogeneous_embedded_graph<1, 3, float, null_meta_data, float, int, double>;
-    using edge = typename graph_t::edge_init_type;
+    using edge = graph_t::edge_init_type;
 
     graph_t g{{{edge{1, 0, 0.5f}}, {edge{0, 0, 0.5f}}, {}}, 6.6f, -5, 10.2};
 
@@ -68,7 +68,7 @@ namespace sequoia::testing
     using namespace maths;
 
     using graph_t = heterogeneous_directed_graph<1, 3, float, float, int, double>;
-    using edge = typename graph_t::edge_init_type;
+    using edge = graph_t::edge_init_type;
 
     graph_t g{{{edge{1, 0.5f}}, {}, {}}, 6.6f, -5, 10.2};
 
@@ -88,7 +88,7 @@ namespace sequoia::testing
 
     {
       using graph_t = heterogeneous_undirected_graph<1, 2, float, null_meta_data, int, double>;
-      using edge = typename graph_t::edge_init_type;
+      using edge = graph_t::edge_init_type;
 
       constexpr graph_t g{{edge{1, 0.5f}}, {edge{0, 0.5f}}};
 
@@ -97,13 +97,13 @@ namespace sequoia::testing
 
     {
       constexpr auto g{make_undirected_graph()};
-      using edge = typename decltype(g)::edge_init_type;
+      using edge = decltype(g)::edge_init_type;
       check_graph("", g, {{edge{1, -0.3f}}, {edge{0, -0.3f}}, {}}, std::tuple<float, int, double>{9.9f, -6, 11.2});
     }
 
     {
       using graph_t = heterogeneous_undirected_graph<1, 1, float, null_meta_data, function_object>;
-      using edge = typename graph_t::edge_init_type;
+      using edge = graph_t::edge_init_type;
 
       constexpr graph_t g{ {{edge{0, 0.2f}, edge{0, 0.2f}}}, function_object{}};
       check(equality, "", 4, g.get_node_weight<0>()(2));
@@ -116,7 +116,7 @@ namespace sequoia::testing
 
     {
       using graph_t = heterogeneous_embedded_graph<1, 2, float, null_meta_data, int, double>;
-      using edge = typename graph_t::edge_init_type;
+      using edge = graph_t::edge_init_type;
 
       constexpr graph_t g{{edge{1, 0, 0.5f}}, {edge{0, 0, 0.5f}}};
 
@@ -125,7 +125,7 @@ namespace sequoia::testing
 
     {
       constexpr auto g{make_undirected_embedded_graph()};
-      using edge = typename decltype(g)::edge_init_type;
+      using edge = decltype(g)::edge_init_type;
       check_graph(report(""), g, {{edge{1, 0, -0.3f}}, {edge{0, 0, -0.3f}}, {}}, std::tuple<float, int, double>{9.9f, -6, 11.2});
     }
   }
@@ -136,7 +136,7 @@ namespace sequoia::testing
 
     {
       using graph_t = heterogeneous_directed_graph<1, 2, float, int, double>;
-      using edge = typename graph_t::edge_init_type;
+      using edge = graph_t::edge_init_type;
 
       constexpr graph_t g{{edge{1, 0.5f}}, {}};
 
@@ -145,7 +145,7 @@ namespace sequoia::testing
 
     {
       constexpr auto g{make_directed_graph()};
-      using edge = typename decltype(g)::edge_init_type;
+      using edge = decltype(g)::edge_init_type;
       check_graph(report(""), g, {{edge{1, -0.3f}}, {}, {}}, std::tuple<float, int, double>{9.9f, -6, 11.2});
     }
   }

@@ -241,7 +241,7 @@ namespace sequoia::testing
   struct is_parallelizable;
 
   template<class T>
-  using is_parallelizable_t = typename is_parallelizable<T>::type;
+  using is_parallelizable_t = is_parallelizable<T>::type;
 
   template<class T>
   inline constexpr bool is_parallelizable_v{is_parallelizable<T>::value};

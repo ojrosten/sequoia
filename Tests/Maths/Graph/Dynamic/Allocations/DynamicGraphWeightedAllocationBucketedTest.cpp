@@ -69,8 +69,8 @@ namespace sequoia::testing
   template<maths::dynamic_network Graph>
   void weighted_graph_allocation_bucketed_test::bucketed_memory()
   {
-    using edge_allocator = typename Graph::edge_allocator_type;
-    using node_allocator = typename Graph::node_weight_allocator_type;
+    using edge_allocator = Graph::edge_allocator_type;
+    using node_allocator = Graph::node_weight_allocator_type;
 
     Graph g{edge_allocator{}, node_allocator{}};
 
@@ -97,9 +97,9 @@ namespace sequoia::testing
     check(equality, "", g, Graph{{{}, {}}, edge_allocator{}, node_allocator{}});
 
     // x----x
-    using edge_init_t = typename Graph::edge_init_type;
+    using edge_init_t = Graph::edge_init_type;
     using namespace maths;
-    using edge_allocator = typename Graph::edge_allocator_type;
+    using edge_allocator = Graph::edge_allocator_type;
 
     auto nodeMaker{
       [](Graph& gr) { gr.add_node(); }

@@ -48,7 +48,7 @@ namespace sequoia::maths
           NodeWeightStorage
         >;
   public:
-    using size_type = typename base_type::size_type;
+    using size_type = base_type::size_type;
 
     constexpr static tree_link_direction link_dir{TreeLinkDir};
 
@@ -226,7 +226,7 @@ namespace sequoia::maths
   public:
     using value_type = Tree;
 
-    using size_type = typename Tree::size_type;
+    using size_type = Tree::size_type;
 
     basic_tree_adaptor() = default;
 
@@ -310,7 +310,7 @@ namespace sequoia::maths
     using proxy               = TreeAdaptor;
     using value_type          = proxy;
     using reference           = proxy;
-    using tree_reference_type = typename TreeAdaptor::value_type&;
+    using tree_reference_type = TreeAdaptor::value_type&;
 
     constexpr forest_from_tree_dereference_policy() = default;
     constexpr forest_from_tree_dereference_policy(tree_reference_type tree) : m_pTree{&tree} {}

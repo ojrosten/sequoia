@@ -77,9 +77,9 @@ namespace sequoia::testing
   {
   public:
     using data_t           = PartitionedData;
-    using value_type       = typename PartitionedData::value_type;
+    using value_type       = PartitionedData::value_type;
     using equiv_t          = std::initializer_list<std::initializer_list<value_type>>;
-    using transition_graph = typename transition_checker<data_t>::transition_graph;
+    using transition_graph = transition_checker<data_t>::transition_graph;
 
     static void execute_operations(regular_test& t)
     {

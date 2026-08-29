@@ -26,8 +26,8 @@ namespace sequoia::maths
   {
     using base_t = node_storage_base<Weight, std::array<Weight, N>>;
   public:
-    using size_type   = typename base_t::size_type;
-    using weight_type = typename base_t::weight_type;
+    using size_type   = base_t::size_type;
+    using weight_type = base_t::weight_type;
 
     constexpr static_node_storage() = default;
 

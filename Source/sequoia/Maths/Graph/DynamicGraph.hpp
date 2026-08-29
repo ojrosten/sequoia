@@ -60,10 +60,10 @@ namespace sequoia::maths
     using primitive_type    = graph_primitive<connectivity_type, node_storage_type>;
 
     using node_weight_type    = NodeWeight;
-    using size_type           = typename primitive_type::size_type;
-    using edges_initializer   = typename primitive_type::edges_initializer;
-    using edge_storage_type   = typename connectivity_type::edge_storage_type;
-    using edge_allocator_type = typename edge_storage_type::allocator_type;
+    using size_type           = primitive_type::size_type;
+    using edges_initializer   = primitive_type::edges_initializer;
+    using edge_storage_type   = connectivity_type::edge_storage_type;
+    using edge_allocator_type = edge_storage_type::allocator_type;
 
     graph_base() = default;
 
@@ -176,11 +176,11 @@ namespace sequoia::maths
     using primitive_type    = graph_primitive<connectivity_type, node_storage_type>;
 
     using node_weight_type           = NodeWeight;
-    using size_type                  = typename primitive_type::size_type;
-    using edges_initializer          = typename primitive_type::edges_initializer;
-    using edge_storage_type          = typename connectivity_type::edge_storage_type;
-    using edge_allocator_type        = typename edge_storage_type::allocator_type;
-    using node_weight_allocator_type = typename node_storage_type::node_weight_container_type::allocator_type;
+    using size_type                  = primitive_type::size_type;
+    using edges_initializer          = primitive_type::edges_initializer;
+    using edge_storage_type          = connectivity_type::edge_storage_type;
+    using edge_allocator_type        = edge_storage_type::allocator_type;
+    using node_weight_allocator_type = node_storage_type::node_weight_container_type::allocator_type;
 
     graph_base() = default;
 

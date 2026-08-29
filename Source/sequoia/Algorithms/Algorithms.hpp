@@ -117,7 +117,7 @@ namespace sequoia
     requires merge_sortable<Iter, Comp, Proj>
   constexpr void stable_sort(Iter first, Iter last, Comp compare = {}, Proj proj = {})
   {
-    using T = typename std::iterator_traits<Iter>::value_type;
+    using T = std::iterator_traits<Iter>::value_type;
     auto v{
       [first, last](){
         if      constexpr (is_initializable_v<T>)           return std::vector<T>(std::ranges::distance(first, last));

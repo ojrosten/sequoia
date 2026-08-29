@@ -57,7 +57,7 @@ NAMESPACE_SEQUOIA_AS_BITMASK
 
   template<class T>
     requires std::is_enum_v<T>
-  using as_bitmask_t = typename as_bitmask<T>::type;
+  using as_bitmask_t = as_bitmask<T>::type;
 
   template<class T>
     requires std::is_enum_v<T>

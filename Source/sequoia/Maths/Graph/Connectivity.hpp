@@ -51,11 +51,11 @@ namespace sequoia
       class edge_maker
       {
         using edge_type           = EdgeType;
-        using edge_weight_type    = typename edge_type::weight_type;
-        using edge_index_type     = typename edge_type::index_type;
+        using edge_weight_type    = edge_type::weight_type;
+        using edge_index_type     = edge_type::index_type;
         using edge_storage_type   = EdgeStorageType;
-        using const_edge_iterator = typename edge_storage_type::const_partition_iterator;
-        using size_type           = typename edge_storage_type::size_type;
+        using const_edge_iterator = edge_storage_type::const_partition_iterator;
+        using size_type           = edge_storage_type::size_type;
 
         struct data
         {
@@ -126,7 +126,7 @@ namespace sequoia
       class [[nodiscard]] join_sentinel
       {
       public:
-        using edge_index_type = typename Edges::index_type;
+        using edge_index_type = Edges::index_type;
 
         join_sentinel(Edges& e, const edge_index_type node1, const edge_index_type pos)
           : m_Edges{e}
@@ -154,7 +154,7 @@ namespace sequoia
         [[nodiscard]]
         constexpr bool operator()(const Edge& e1, const Edge& e2) const noexcept
         {
-          using edge_weight_type = typename Edge::weight_type;
+          using edge_weight_type = Edge::weight_type;
           constexpr bool sort_weights{!std::is_empty_v<edge_weight_type> && deep_totally_ordered<edge_weight_type>};
 
           if constexpr(!sort_weights)
@@ -186,16 +186,16 @@ namespace sequoia
     public:
       using edge_storage_type = EdgeStorage;
 
-      using edge_type           = typename edge_storage_type::value_type;
-      using edge_weight_type    = typename edge_type::weight_type;
-      using edge_meta_data_type = typename edge_type::meta_data_type;
-      using edge_index_type     = typename edge_type::index_type;
+      using edge_type           = edge_storage_type::value_type;
+      using edge_weight_type    = edge_type::weight_type;
+      using edge_meta_data_type = edge_type::meta_data_type;
+      using edge_index_type     = edge_type::index_type;
       using edge_init_type      = edge_init_type_generator_t<edge_type>;
       using edges_initializer   = std::initializer_list<std::initializer_list<edge_init_type>>;
 
-      using size_type                   = typename edge_storage_type::size_type;
-      using const_edge_iterator         = typename edge_storage_type::const_partition_iterator;
-      using const_reverse_edge_iterator = typename edge_storage_type::const_reverse_partition_iterator;
+      using size_type                   = edge_storage_type::size_type;
+      using const_edge_iterator         = edge_storage_type::const_partition_iterator;
+      using const_reverse_edge_iterator = edge_storage_type::const_reverse_partition_iterator;
       using const_edges_range           = std::ranges::subrange<const_edge_iterator>;
 
       static_assert(std::is_unsigned_v<edge_index_type>);
@@ -353,8 +353,8 @@ namespace sequoia
         return lhs.m_Edges == rhs.m_Edges;
       }
     protected:
-      using edge_iterator         = typename edge_storage_type::partition_iterator;
-      using reverse_edge_iterator = typename edge_storage_type::reverse_partition_iterator;
+      using edge_iterator         = edge_storage_type::partition_iterator;
+      using reverse_edge_iterator = edge_storage_type::reverse_partition_iterator;
       using edges_range = std::ranges::subrange<edge_iterator>;
 
       template<alloc... Allocators>
@@ -1615,7 +1615,7 @@ namespace sequoia
     public:
       constexpr static bool is_const{is_const_reference_v<typename std::iterator_traits<Iterator>::reference>};
 
-      using value_type = typename std::iterator_traits<Iterator>::value_type::weight_type;
+      using value_type = std::iterator_traits<Iterator>::value_type::weight_type;
       using reference  = std::conditional_t<is_const, const value_type&, value_type&>;
 
       constexpr edge_weight_dereference_policy() = default;
@@ -1659,7 +1659,7 @@ namespace sequoia
       using edge_weights_range                 = std::ranges::subrange<edge_weight_iterator>;
       using const_edge_weights_range           = std::ranges::subrange<const_edge_weight_iterator>;
 
-      using edge_index_type = typename base_type::edge_index_type;
+      using edge_index_type = base_type::edge_index_type;
 
       [[nodiscard]]
       constexpr edge_weight_iterator begin_edge_weights(const edge_index_type node)

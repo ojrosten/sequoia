@@ -19,7 +19,7 @@ namespace sequoia::testing
     template<class PartitionedData>
     struct bucketed_operations : partitioned_data_operations<PartitionedData>
     {
-      using data_t = typename partitioned_data_operations<PartitionedData>::data_t;
+      using data_t = partitioned_data_operations<PartitionedData>::data_t;
 
       static void execute(regular_test& t)
       {
