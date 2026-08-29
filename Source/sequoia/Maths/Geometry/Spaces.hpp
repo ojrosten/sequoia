@@ -1580,9 +1580,9 @@ namespace sequoia::maths
       are not exotic - square matrices and the quaternions are both rings - but
       a default of false would oblige every other representation to say so.
 
-      Associativity of multiplication and the existence of a unit have no trait
-      and are assumed outright: the rings one might plausibly reach for as a
-      representation give up commutativity and keep both.
+      It is commutativity, rather than associativity or the existence of a
+      unit, which gets a trait: the rings one might plausibly reach for as a
+      representation give up the first and keep the other two.
 
       @{
    */
@@ -1657,11 +1657,13 @@ namespace sequoia::maths
              another.
 
       Braced-initialization is the arbiter: a conversion which may lose
-      information is narrowing and so ill-formed, leaving the relation
-      satisfied precisely when `Covering` can represent the entire value set of
-      `T`. It is reflexive, and depends on the platform - whether
-      `unsigned int` is covered by `long` turns on whether `long` is the wider
-      of the two.
+      information is narrowing and so ill-formed, which for the arithmetic
+      types leaves the relation satisfied precisely when `Covering` can
+      represent the entire value set of `T`. For those types only: narrowing
+      is a property of the standard conversions, so a ring whose own conversion
+      operator loses information is taken at its word. It is reflexive, and
+      depends on the platform - whether `unsigned int` is covered by `long`
+      turns on whether `long` is the wider of the two.
 
       Each family is thereby kept to itself without a word being said. An
       integral `T` does not initialize a floating-point `Covering`, the
@@ -1672,9 +1674,13 @@ namespace sequoia::maths
       reals a floating-point one, as `weakly_represented_by` insists. In the
       other direction a floating-point `T` yields a narrowing conversion to any
       integral `Covering` whatever the values involved. What remains within a
-      family is settled by width and signedness: `double` covers `float` and
-      not conversely, while `int` and `unsigned int`, of equal width, cover
-      each other neither way.
+      family is settled by the narrowing rules, which read the two families
+      differently. Among the integral types they read the value sets, so `int`
+      and `unsigned int`, of equal width, cover each other neither way. Among
+      the floating-point types they read conversion rank, which is a property
+      of the types and not of the platform: `double` covers `float` and not
+      conversely, and `long double` is not covered by `double` even where, as
+      on 64-bit Arm, the two have identical value sets.
 
       `std::complex` is the one compound type here, and it is the one case
       braced initialization cannot be left to settle, `std::complex<float>`
@@ -1686,8 +1692,9 @@ namespace sequoia::maths
       scalar, so `std::complex<double>` covers `float` and the primary says so.
 
       Where `T` is none of these, the answer is whatever braced initialization
-      makes of it, which for a ring with no widening to offer is its own copy
-      constructor and nothing else.
+      makes of it: for a ring with no widening to offer, its copy constructor,
+      and if it is an aggregate its aggregate initialization besides - so a
+      single-member aggregate covers the type of its member.
 
       @{
    */
@@ -1728,10 +1735,11 @@ namespace sequoia::maths
       `std::make_unsigned_t<T>` has a maximum value corresponding to the
       maximum value of the difference type. It follows that any type covering
       the difference type covers `std::make_unsigned_t<T>`. The converse holds
-      as well, so that the two conditions are the whole answer and not merely
-      necessary: a signed type whose maximum reaches \f$ 2^n - 1 \f$ has a
-      minimum at least as negative, and so accommodates the differences of
-      either sign.
+      as well, so that for an `integer` type - which is what the branch below
+      tests, integral not being enough - the two conditions are the whole
+      answer and not merely necessary: a signed type whose maximum reaches
+      \f$ 2^n - 1 \f$ has a minimum at least as negative, and so accommodates
+      the differences of either sign.
 
       The constraint here is `weak_commutative_ring` and not the `numeric_ring`
       which `covered_by` demands, deliberately so. A `T` which is integral but
@@ -1740,7 +1748,9 @@ namespace sequoia::maths
       `covered_by` being unsatisfied for it. A representation resting on such a
       type consequently fails the static assertion in
       `displacement_representation`, and reports its message, rather than
-      tripping a constraint here.
+      tripping a constraint here. `bool` and the cv-qualified forms do not get
+      that far: they are not weak commutative rings, so they trip the
+      constraint on this template instead.
    */
 
   template<weak_commutative_ring T, weak_commutative_ring Covering>
@@ -1758,17 +1768,26 @@ namespace sequoia::maths
       @brief The narrowest standard signed integral type whose value set covers
              that of `T`.
 
-      Where no standard signed type suffices - any unsigned type as wide as
-      `long long`, which on the 64-bit platforms means `unsigned long` and
-      `std::size_t` as well as `unsigned long long` - there is no
-      specialization. The primary is defined all the same, and names no type,
-      so the absence is a soft failure rather than an incomplete type;
+      For the built-in integer types, and constrained to them. The chain of
+      specializations below assumes covering is monotone - that whatever
+      `signed char` covers, `short` covers too - which the built-in types
+      satisfy and an arbitrary ring need not: one offering conversions to
+      `signed char` and to `int` but not to `short` would match two
+      specializations and make the choice ambiguous. `integer` keeps them out,
+      so such a type answers false rather than failing to compile.
+
+      Where no standard signed type suffices - any type whose values outrun
+      `long long`'s, which means the unsigned types as wide as `long long` (on
+      the 64-bit platforms `unsigned long` and `std::size_t` as well as
+      `unsigned long long`) and any extended integer type wider still - there
+      is no specialization. The primary is defined all the same, and names no
+      type, so the absence is a soft failure rather than an incomplete type;
       `has_signed_covering_type_v` reports it.
 
       @{
    */
 
-  template<class T>
+  template<integer T>
   struct signed_covering_type {};
 
   template<class T>
@@ -1780,34 +1799,35 @@ namespace sequoia::maths
   };
 
   template<covered_by<signed char> T>
+    requires integer<T>
   struct signed_covering_type<T>
   {
     using type = signed char;
   };
 
   template<covered_by<short> T>
-    requires (!covered_by<T, signed char>)
+    requires integer<T> && (!covered_by<T, signed char>)
   struct signed_covering_type<T>
   {
     using type = short;
   };
 
   template<covered_by<int> T>
-    requires (!covered_by<T, short>)
+    requires integer<T> && (!covered_by<T, short>)
   struct signed_covering_type<T>
   {
     using type = int;
   };
 
   template<covered_by<long> T>
-    requires (!covered_by<T, int>)
+    requires integer<T> && (!covered_by<T, int>)
   struct signed_covering_type<T>
   {
     using type = long;
   };
 
   template<covered_by<long long> T>
-    requires (!covered_by<T, long>)
+    requires integer<T> && (!covered_by<T, long>)
   struct signed_covering_type<T>
   {
     using type = long long;

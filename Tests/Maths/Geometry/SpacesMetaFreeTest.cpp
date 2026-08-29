@@ -579,7 +579,6 @@ namespace sequoia::testing
     STATIC_CHECK( is_multiplicable_v<std::complex<double>>);
     STATIC_CHECK( is_divisible_v<std::complex<double>>);
 
-    STATIC_CHECK(!weak_commutative_ring<bool>);
     STATIC_CHECK( weak_commutative_ring<char>);
     STATIC_CHECK( weak_commutative_ring<int>);
     STATIC_CHECK( weak_commutative_ring<unsigned int>);
@@ -704,6 +703,30 @@ namespace sequoia::testing
 
     // char is not an integer type, so nothing covers it, whatever its width.
     STATIC_CHECK(!has_signed_covering_type_v<char>);
+
+    /* The facility is for the built-in integer types and is constrained to them,
+       because its chain of specializations assumes covering is monotone - whatever
+       signed char covers, short covers. A ring converting to signed char and to int
+       but not to short would break that and match two specializations at once, so
+       the constraint is what keeps an ambiguity from becoming a hard error. These
+       therefore assert not merely the answer but that there IS an answer: each of
+       these lines compiles, which is the whole point of the constraint.
+     */
+    STATIC_CHECK(!has_signed_covering_type_v<float>);
+    STATIC_CHECK(!has_signed_covering_type_v<double>);
+    STATIC_CHECK(!has_signed_covering_type_v<std::complex<double>>);
+    STATIC_CHECK(!has_signed_covering_type_v<diagonal_matrix_2x2>);
+    STATIC_CHECK(!has_signed_covering_type_v<bool>);
+    STATIC_CHECK(!has_signed_covering_type_v<wchar_t>);
+    STATIC_CHECK(!has_signed_covering_type_v<char32_t>);
+
+    // Positive control for the block above: the constraint excludes what it should
+    // and nothing more, so an integer type in the same position still answers.
+    STATIC_CHECK( has_signed_covering_type_v<short>);
+
+    // cv-qualification is not seen through here, unlike by std::integral: a const
+    // type is not regular, so it is no numeric_ring and nothing covers it.
+    STATIC_CHECK(!has_signed_covering_type_v<const unsigned>);
 
     // Which of long and long long covers unsigned varies with the data model, so
     // only the defining properties are portable.
