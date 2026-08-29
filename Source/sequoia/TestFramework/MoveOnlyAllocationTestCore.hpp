@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Extension for checking allocations for types with move-only semantics.
 
     Move-only semantics are defined \ref move_only_definition "here".
@@ -19,7 +19,7 @@
 
 namespace sequoia::testing
 {
-  /*! \brief class template for plugging into the \ref checker_primary "checker"
+  /** \brief class template for plugging into the \ref checker_primary "checker"
       class template to provide allocation checks for move-only types.
 
       \anchor move_only_allocation_extender_primary
@@ -249,7 +249,7 @@ namespace sequoia::testing
     move_only_allocation_extender& operator=(move_only_allocation_extender&&) noexcept = default;
   };
 
-  /*!  \brief Templated on the test_mode, this forms the basis of all allocation tests for move-only types.
+  /**  \brief Templated on the test_mode, this forms the basis of all allocation tests for move-only types.
 
        This class template provides a mechanism to help with the automatic generation of checks with
        all 4 combinations of the allocation propagation flags relevant to move-only types. To utilize
@@ -292,7 +292,7 @@ namespace sequoia::testing
     }
   };
 
-   /*! \anchor move_only_allocation_test_alias */
+   /** \anchor move_only_allocation_test_alias */
   using move_only_allocation_test                = basic_move_only_allocation_test<test_mode::standard>;
   using move_only_allocation_false_positive_test = basic_move_only_allocation_test<test_mode::false_positive>;
   using move_only_allocation_false_negative_test = basic_move_only_allocation_test<test_mode::false_negative>;

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file */
+/** \file */
 
 #include "sequoia/Core/Meta/TypeAlgorithms.hpp"
 #include "sequoia/Maths/Geometry/Spaces.hpp"

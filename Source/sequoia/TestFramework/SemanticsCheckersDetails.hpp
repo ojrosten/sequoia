@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Implementation details for semantics checks that cleanly supports types which do/do not have allocators.
 
     The general pattern in this file is of paired function templates of the form

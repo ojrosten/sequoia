@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Classes implementing the concept of a linear sequence.
  */
 

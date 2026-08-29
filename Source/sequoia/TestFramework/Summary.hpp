@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Utilities for summarizing results of tests.
 */
 
@@ -18,7 +18,7 @@
 
 namespace sequoia::testing
 {
-  /*! bit mask for the level of detail */
+  /** bit mask for the level of detail */
   enum class summary_detail { none=0, absent_checks=1, failure_messages=2, timings=4};
 }
 

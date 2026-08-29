@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Utilities for checking regular semantics.
  */
 
@@ -19,7 +19,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string regular_message(std::string_view description);
 
-  /*! \brief Extender for testing classes exhibiting regular/std::totally_ordered semantics.
+  /** \brief Extender for testing classes exhibiting regular/std::totally_ordered semantics.
 
        This class is designed to be plugged into the
        \ref checker_primary "checker" class template, in order to extend
@@ -47,7 +47,7 @@ namespace sequoia::testing
                                optional_ref<const T>{});
     }
 
-    /*! Prerequisites:
+    /** Prerequisites:
           x != y
           x equivalent to xEquivalent
           y equivalent to yEquivalent
@@ -71,7 +71,7 @@ namespace sequoia::testing
                                optional_ref<const T>{});
     }
 
-    /*! Prerequisites:
+    /** Prerequisites:
           x != y
           x equivalent to xEquivalent
           y equivalent to yEquivalent
@@ -111,7 +111,7 @@ namespace sequoia::testing
                                order);
     }
 
-    /*! Prerequisites:
+    /** Prerequisites:
           x != y, with values consistent with order
           x equivalent to xEquivalent
           y equivalent to yEquivalent
@@ -137,7 +137,7 @@ namespace sequoia::testing
                                order);
     }
 
-    /*! Prerequisites:
+    /** Prerequisites:
           x != y, with values consistent with order
           x equivalent to xEquivalent
           y equivalent to yEquivalent
@@ -178,7 +178,7 @@ namespace sequoia::testing
                                std::move(m));
     }
 
-    /*! Prerequisites:
+    /** Prerequisites:
           x != y
           x equivalent to xEquivalent
           y equivalent to yEquivalent
@@ -204,7 +204,7 @@ namespace sequoia::testing
                                std::move(m));
     }
 
-    /*! Prerequisites:
+    /** Prerequisites:
           x != y
           x equivalent to xEquivalent
           y equivalent to yEquivalent
@@ -247,7 +247,7 @@ namespace sequoia::testing
                                std::move(m));
     }
 
-    /*! Prerequisites:
+    /** Prerequisites:
           x != y, with values consistent with order
           x equivalent to xEquivalent
           y equivalent to yEquivalent
@@ -275,7 +275,7 @@ namespace sequoia::testing
                                std::move(m));
     }
 
-    /*! Prerequisites:
+    /** Prerequisites:
           x != y
           x equivalent to xEquivalent
           y equivalent to yEquivalent
@@ -314,7 +314,7 @@ namespace sequoia::testing
   template<test_mode mode>
   using canonical_regular_test = basic_test<mode, regular_extender<mode>>;
 
-  /*! \anchor regular_test_alias */
+  /** \anchor regular_test_alias */
   using regular_test                = canonical_regular_test<test_mode::standard>;
   using regular_false_positive_test = canonical_regular_test<test_mode::false_positive>;
   using regular_false_negative_test = canonical_regular_test<test_mode::false_negative>;

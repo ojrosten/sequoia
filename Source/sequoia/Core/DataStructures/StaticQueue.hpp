@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file StaticQueue.hpp
+/** \file StaticQueue.hpp
     \brief A constexpr queue.
 
  */
@@ -17,7 +17,7 @@
 
 namespace sequoia::data_structures
 {
-  /*! \class static_queue
+  /** \class static_queue
       \brief A queue suitable for constexpr contexts.
 
    */

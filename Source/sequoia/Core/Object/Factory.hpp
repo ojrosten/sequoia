@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Factory implementation(s)
  */
 
@@ -26,7 +26,7 @@
 
 namespace sequoia::object
 {
-  /*! \brief Policy to allow iteration over the names of factory products */
+  /** \brief Policy to allow iteration over the names of factory products */
   template<std::input_or_output_iterator Iterator>
   class factory_dereference_policy
   {
@@ -54,7 +54,7 @@ namespace sequoia::object
     constexpr factory_dereference_policy& operator=(factory_dereference_policy&&) noexcept = default;
   };
 
-  /*! \brief Generic factory with statically defined products.
+  /** \brief Generic factory with statically defined products.
 
       The constructor requires a list of unique key which are internally mapped to the
       products. To generate a product, clients should call one of `make` / `make_or`.

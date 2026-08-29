@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Common utilities for creating both Projects and Tests.
  */
 

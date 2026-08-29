@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file StaticPriorityQueue.hpp
+/** \file StaticPriorityQueue.hpp
     \brief A constexpr prority queue.
 
  */
@@ -19,7 +19,7 @@
 
 namespace sequoia::data_structures
 {
-  /*! \class static_priority_queue
+  /** \class static_priority_queue
       \brief A priority_queue suitable for constexpr contexts.
 
    */

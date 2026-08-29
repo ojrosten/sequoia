@@ -15,18 +15,18 @@
 #include <utility>
 #include <variant>
 
-/*! \file
+/** \file
     \brief Traits which are sufficiently general to appear in the `sequoia` namespace.
 
  */
 
 namespace sequoia
 {
-  /*! \brief Standard meta-programming utility */
+  /** \brief Standard meta-programming utility */
   template<class T>
   struct dependent_false : std::false_type {};
 
-  /*! \brief class template for determining whether a constructor template should resolve to the copy constructor */
+  /** \brief class template for determining whether a constructor template should resolve to the copy constructor */
   template<class T, class... Args>
   struct resolve_to_copy
     : std::bool_constant<
@@ -42,7 +42,7 @@ namespace sequoia
   using resolve_to_copy_t = resolve_to_copy<T, Args...>::type;
 
 
-  /*! \brief Primary class template for determining if a type is a `const` pointer */
+  /** \brief Primary class template for determining if a type is a `const` pointer */
   template<class T>
   struct is_const_pointer : std::false_type {};
 
@@ -64,7 +64,7 @@ namespace sequoia
   template<class T>
   using is_const_pointer_t = is_const_pointer<T>::type;
 
-  /*! \brief class template for determining if a type is a `const` reference */
+  /** \brief class template for determining if a type is a `const` reference */
   template<class T>
   struct is_const_reference
     : std::bool_constant<std::is_reference_v<T> && std::is_const_v<std::remove_reference_t<T>>>
@@ -76,7 +76,7 @@ namespace sequoia
   template<class T>
   using is_const_reference_t = is_const_reference<T>::type;
 
-  /*! \brief Primary class template for determining if a type is a `std::tuple` */
+  /** \brief Primary class template for determining if a type is a `std::tuple` */
   template<class T>
   struct is_tuple : std::false_type{};
 
@@ -89,7 +89,7 @@ namespace sequoia
   template<class... Ts>
   inline constexpr bool is_tuple_v{is_tuple<Ts...>::value};
 
-  /*! \brief Primary class template for determining if a type can be brace-initialized
+  /** \brief Primary class template for determining if a type can be brace-initialized
       by Args...
  ` */
   template<class T, class... Args>
@@ -107,7 +107,7 @@ namespace sequoia
   inline constexpr bool is_initializable_v{is_initializable<T, Args...>::value};
 
 
-  /*! \brief Class template for determining if a type defines a nested type `allocator_type` */
+  /** \brief Class template for determining if a type defines a nested type `allocator_type` */
   template<class T>
   struct has_allocator_type : std::bool_constant< requires { typename T::allocator_type; } >
   {};
@@ -118,11 +118,11 @@ namespace sequoia
   template<class T>
   inline constexpr bool has_allocator_type_v{has_allocator_type<T>::value};
 
-  /*! \brief Checks for dependent type `value_type` */
+  /** \brief Checks for dependent type `value_type` */
   template<class T>
   inline constexpr bool has_value_type_v{requires { typename T::value_type; }};
 
-  /*! \brief Extracts the dependent type `value_type` */
+  /** \brief Extracts the dependent type `value_type` */
   template<class T>
     requires has_value_type_v<T>
   struct value_type_of
@@ -133,14 +133,14 @@ namespace sequoia
   template<class T>
   using value_type_of_t = value_type_of<T>::type;
 
-  /*! \brief Checks for dependent type `element_type` */
+  /** \brief Checks for dependent type `element_type` */
   template<class T>
   inline constexpr bool has_element_type_v{requires { typename T::element_type; }};
 
   // Machinery for deep equality checking, which will hopefully one day
   // be obviated if the stl properly constrains operator==
 
-  /*! @defgroup deep_equality The deep_equality Group
+  /** @defgroup deep_equality The deep_equality Group
       The stl currently underconstrains `operator==`. For example, consider
       a type, `T`, which is not equality comparable. Nevertheless, In C++20, `std::vector<T>`
       counter-intuitively satisfies the `std::equality_comparable` concept.
@@ -199,9 +199,9 @@ namespace sequoia
   struct is_deep_equality_comparable<T<Ts...>> : std::bool_constant<std::equality_comparable<T<Ts...>> && heterogeneous_deep_equality<T<Ts...>>::value>
   {};
 
-  /*! @} */ // end of deep_equality group
+  /** @} */ // end of deep_equality group
 
-  /*! @defgroup deep_totally_ordered The deep_totally_ordered Group */
+  /** @defgroup deep_totally_ordered The deep_totally_ordered Group */
   
   template<class T>
   struct is_deep_totally_ordered;
@@ -247,9 +247,9 @@ namespace sequoia
   struct is_deep_totally_ordered<T<Ts...>> : std::bool_constant<std::totally_ordered<T<Ts...>> && heterogeneous_deep_total_order<T<Ts...>>::value>
   {};
   
-  /*! @} */ // end of deep_totally_ordered group
+  /** @} */ // end of deep_totally_ordered group
 
-  /*! \brief class template for determining if a type is compatible with a floating-point type.
+  /** \brief class template for determining if a type is compatible with a floating-point type.
   
       The goal is to forbid e.g. multiplication of a float by a double, but to allow multiplication
       of a float by an integral type, even though the latter operation may also lead to a loss of

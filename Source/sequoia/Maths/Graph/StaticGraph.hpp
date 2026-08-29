@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Classes for static graphs with homogeneous node weights.
 
  */

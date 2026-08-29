@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Various edge types for use by graphs.
 
     The fundamental building block of the edge types is the edge_base. This
@@ -34,7 +34,7 @@ namespace sequoia
 {
   namespace maths
   {
-    /*! \class weighting
+    /** \class weighting
         \brief A class to store non-trivial edge weights.
 
         This class is designed to wrap an edge but in a manner which is flexible
@@ -114,7 +114,7 @@ namespace sequoia
       typename WeightHandler::product_type m_Weight;
     };
 
-    /*! \class weighting<WeightHandler, IndexType, true>
+    /** \class weighting<WeightHandler, IndexType, true>
         \brief An empty (base) class for edges without a weight.
 
      */
@@ -142,7 +142,7 @@ namespace sequoia
 
     //===================================Partial Edge Base===================================//
 
-    /*! \class partial_edge_base
+    /** \class partial_edge_base
         \brief Combines the edge_base and weighting class
 
      */
@@ -292,7 +292,7 @@ namespace sequoia
 
     //===================================Partial Edge===================================//
 
-    /*! \class partial_edge
+    /** \class partial_edge
         \brief A concrete edge containing a target index and, optionally, a weight
 
      */
@@ -316,7 +316,7 @@ namespace sequoia
 
     //===================================Embedded Partial Edge===================================//
 
-    /*! \class embedded_partial_edge
+    /** \class embedded_partial_edge
         \brief Decoration of a partial_edge to record the location on the target node into
                which the edge is embedded.
 

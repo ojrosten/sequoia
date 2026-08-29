@@ -7,5 +7,5 @@
 
 #pragma once
 
-/*! \file */
+/** \file */
 

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file */
+/** \file */
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "curlew/Stuff/Things.hpp"

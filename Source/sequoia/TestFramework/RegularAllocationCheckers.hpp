@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Utilities for performing allocation checks for regular types,
     see \ref regular_semantics_definition "here".
 */

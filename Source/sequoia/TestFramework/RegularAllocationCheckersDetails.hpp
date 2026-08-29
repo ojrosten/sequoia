@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Implementation details for allocation checks of regular types.
 */
 
@@ -16,7 +16,7 @@
 
 namespace sequoia::testing::impl
 {
-  /*! \brief Extends allocation_actions for types with copy semantics. */
+  /** \brief Extends allocation_actions for types with copy semantics. */
   template<pseudoregular T>
   struct regular_allocation_actions : allocation_actions<T>
   {
@@ -44,7 +44,7 @@ namespace sequoia::testing::impl
     }
   };
 
-  /*! Provides an extra level of indirection in order that the current number of allocation
+  /** Provides an extra level of indirection in order that the current number of allocation
        may be acquired before proceeding.
    */
   template<test_mode Mode, class Actions, pseudoregular T, alloc_getter<T>... Getters>

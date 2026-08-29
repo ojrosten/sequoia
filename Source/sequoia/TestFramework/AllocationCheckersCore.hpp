@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Core components for the Allocation Testing framework
 
     The allocation testing framework is built upon the idea of supplying and testing
@@ -67,7 +67,7 @@ namespace sequoia::testing
 
   enum class null_allocation_event { comparison, spectator, serialization, swap };
 
-  /*! Type-safe wrapper for allocation predictions, to avoid mixing different allocation events */
+  /** Type-safe wrapper for allocation predictions, to avoid mixing different allocation events */
   template<auto Event>
   class alloc_prediction
   {

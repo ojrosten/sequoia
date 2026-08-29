@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/*! \file */
+/** \file */
 
 #include "DynamicGraphUpdateTest.hpp"
 #include "Maths/Graph/Dynamic/DynamicGraphTestingUtilities.hpp"

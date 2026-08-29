@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/*! \file */
+/** \file */
 
 #include "M_AffineCoordinatesTest.hpp"
 
@@ -25,7 +25,7 @@ namespace sequoia::testing
     test_m_affine<sets::Z<2>, commutative_rings::integers<2>, 2, int>();
   }
 
-  /*! An M-affine space is an affine space over a free module rather than a vector
+  /** An M-affine space is an affine space over a free module rather than a vector
       space. The action of the module remains total, so the arithmetic available on
       points is exactly that of the affine case; the sole difference lies with the
       displacements, which may no longer be divided by a ring element.

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief A collection of functions for formatting test output.
  */
 
@@ -17,7 +17,7 @@
 
 namespace sequoia
 {
-  /*! \brief Type-safe mechanism for indentations */
+  /** \brief Type-safe mechanism for indentations */
   class indentation
   {
   public:
@@ -73,7 +73,7 @@ namespace sequoia
   [[nodiscard]]
   std::string indent(std::string_view sv, indentation ind);
 
-  /*! \param s1 The target for appending
+  /** \param s1 The target for appending
       \param s2 The text to append
       \param indentation The absolute (not relative) indentation of s2
 

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file */
+/** \file */
 
 #include "sequoia/Core/ContainerUtilities/Iterator.hpp"
 

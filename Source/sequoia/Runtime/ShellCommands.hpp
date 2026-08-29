@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Utilties for creating, composing and invoking commandline input.
  */
 

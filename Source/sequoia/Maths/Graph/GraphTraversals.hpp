@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file GraphTraversals.hpp
+/** \file GraphTraversals.hpp
     \brief Headers for traversals of both static and dynamic graphs.
 
  */

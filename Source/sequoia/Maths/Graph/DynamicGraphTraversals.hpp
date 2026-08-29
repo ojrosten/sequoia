@@ -8,7 +8,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Headers for traversals of dynamic graphs.
  */
 

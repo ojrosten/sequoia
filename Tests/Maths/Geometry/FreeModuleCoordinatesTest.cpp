@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/*! \file */
+/** \file */
 
 #include "FreeModuleCoordinatesTest.hpp"
 
@@ -30,7 +30,7 @@ namespace sequoia::testing
     test_free_module<my_random_set, commutative_rings::integers<1>, int, 1>();
   }
 
-  /*! A free module is an M-affine space over itself, so points and displacements
+  /** A free module is an M-affine space over itself, so points and displacements
       coincide. Relative to a vector space, what is lost is division by a scalar,
       the ring not being a field.
    */

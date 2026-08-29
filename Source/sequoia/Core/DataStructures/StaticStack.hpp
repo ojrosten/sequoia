@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file StaticStack.hpp
+/** \file StaticStack.hpp
     \brief A constexpr stack.
 
  */
@@ -17,7 +17,7 @@
 
 namespace sequoia::data_structures
 {
-  /*! \class static_stack
+  /** \class static_stack
       \brief A stack suitable for constexpr contexts.
 
    */

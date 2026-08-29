@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file PartitionedDataDetails.hpp
+/** \file PartitionedDataDetails.hpp
     \brief Metaprogramming components for partitioned data.
  */
 

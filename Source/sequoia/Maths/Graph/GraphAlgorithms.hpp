@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file GraphAlgorithms.hpp
+/** \file GraphAlgorithms.hpp
     \brief A collection of graph algorithms that fall outside the specific groupings.
 
  */

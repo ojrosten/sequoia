@@ -7,13 +7,13 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Define the test_mode enum class
  */
 
 namespace sequoia::testing
 {
-  /*! \brief Specifies whether tests are run as standard tests or in false postive/negative mode.
+  /** \brief Specifies whether tests are run as standard tests or in false postive/negative mode.
 
       \anchor test_mode_enum
    */

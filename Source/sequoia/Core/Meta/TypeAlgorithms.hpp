@@ -13,7 +13,7 @@
 #include <string_view>
 #include <tuple>
 
-/*! \file */
+/** \file */
 
 namespace sequoia::meta
 {

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Includes for dynamic, static and heterogeneous graphs.
  */
 

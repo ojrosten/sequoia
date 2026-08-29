@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/*! \file */
+/** \file */
 
 #include "PhysicalValueMetaFreeTest.hpp"
 #include "PhysicalValueTestingUtilities.hpp"
@@ -57,7 +57,7 @@ namespace sequoia::testing
     test_simplify();
   }
 
-  /*! defines_physical_value_v must answer, not explode, for arguments which come
+  /** defines_physical_value_v must answer, not explode, for arguments which come
       nowhere near fitting: it exists to be asked about arguments which may not
       fit, and every use of it is a negative check. It was previously constrained
       on its own parameters, so such a question was a hard error.

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file */
+/** \file */
 
 #include "Maths/Graph/Dynamic/DynamicGraphTestingUtilities.hpp"
 #include "Core/DataStructures/PartitionedDataAllocationTestingUtilities.hpp"

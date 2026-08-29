@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Implementation details specific to allocation checks for move-only types.
 */
 

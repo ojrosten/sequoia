@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file */
+/** \file */
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/Physics/PhysicalValues.hpp"
@@ -56,7 +56,7 @@ namespace sequoia::testing
     }
   };
 
-  /*! Answers whether physics::physical_value can be formed from these arguments.
+  /** Answers whether physics::physical_value can be formed from these arguments.
 
       Deliberately unconstrained. The whole purpose of the predicate is to be
       asked about arguments which may not fit, so constraining its own parameters

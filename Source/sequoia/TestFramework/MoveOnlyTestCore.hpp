@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Extension for testing classes exhibiting move-only semantics.
 
     This class is designed to be plugged into the checker class template, in order to extend
@@ -24,7 +24,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string move_only_message(std::string description);
 
-  /*! \brief class template for plugging into the \ref checker_primary "checker"
+  /** \brief class template for plugging into the \ref checker_primary "checker"
       class template to provide allocation checks for move-only types,
       see \ref move_only_definition "here".
 
@@ -38,7 +38,7 @@ namespace sequoia::testing
 
     move_only_extender() = default;
     
-    /*! Prerequisites:
+    /** Prerequisites:
           x != y
           x equivalent to xEquivalent
           y equivalent to yEquivalent
@@ -66,7 +66,7 @@ namespace sequoia::testing
              );
     }
 
-    /*! Prerequisites:
+    /** Prerequisites:
           x != y
           x equivalent to xEquivalent
           y equivalent to yEquivalent
@@ -127,7 +127,7 @@ namespace sequoia::testing
       return self.check_semantics(description, xFn(), yFn(), xFn(), yFn());
     }
 
-    /*! Prerequisites:
+    /** Prerequisites:
           x != y, with values consistent with order
           x equivalent to xEquivalent
           y equivalent to yEquivalent
@@ -157,7 +157,7 @@ namespace sequoia::testing
              );
     }
 
-    /*! Prerequisites:
+    /** Prerequisites:
           x != y, with values consistent with order
           x equivalent to xEquivalent
           y equivalent to yEquivalent
@@ -185,7 +185,7 @@ namespace sequoia::testing
              );
     }
 
-    /*! Prerequisites:
+    /** Prerequisites:
           x != y, with values consistent with order
           x equivalent to xEquivalent
           y equivalent to yEquivalent
@@ -243,7 +243,7 @@ namespace sequoia::testing
   template<test_mode mode>
   using canonical_move_only_test = basic_test<mode, move_only_extender<mode>>;
 
-  /*! \anchor move_only_test_alias */
+  /** \anchor move_only_test_alias */
   using move_only_test                = canonical_move_only_test<test_mode::standard>;
   using move_only_false_positive_test = canonical_move_only_test<test_mode::false_positive>;
   using move_only_false_negative_test = canonical_move_only_test<test_mode::false_negative>;

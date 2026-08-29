@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Meta-programming elements for graph implementation.
 
  */

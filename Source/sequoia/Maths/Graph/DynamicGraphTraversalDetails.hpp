@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Meta-prorgamming utilities for traversals of dynamic graphs.
 
  */

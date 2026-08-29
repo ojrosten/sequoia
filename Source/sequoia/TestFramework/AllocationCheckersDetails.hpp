@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Implementation details for allocation checks.
 
     For more information see \ref AllocationCheckersCore.hpp
@@ -43,7 +43,7 @@ namespace sequoia::testing::impl
     return check(equality, message, logger, current - previous - delta, unshifted, tutor{allocation_advice{}});
   }
 
-  /*! \brief Wraps allocation_info, together with two prior allocation counts.
+  /** \brief Wraps allocation_info, together with two prior allocation counts.
 
       Consider two containers, x and y, which in some way interact e.g. via copy/move or swap
       followed by mutation. The class holds allocation counts (for
@@ -172,7 +172,7 @@ namespace sequoia::testing::impl
   dual_allocation_checker(allocation_info<T, Getter>, const T&, const T&)
     -> dual_allocation_checker<T, Getter>;
 
-  /*! \brief Wraps allocation_info, together with the prior allocation count.
+  /** \brief Wraps allocation_info, together with the prior allocation count.
 
       Consider a container, x, on which some potentially allocating operation is performed.
       Prior to this operation, an instantiation of the allocation_checker class template
@@ -597,7 +597,7 @@ namespace sequoia::testing::impl
   }
 
 
-  /*! \brief actions common to both move-only and regular types. */
+  /** \brief actions common to both move-only and regular types. */
   template<movable_comparable T>
   struct allocation_actions : auxiliary_data_policy<T>
   {
@@ -656,7 +656,7 @@ namespace sequoia::testing::impl
     }
   };
 
-  /*! \name OverloadSet
+  /** \name OverloadSet
 
       Functions for performing allocation checks which are common to types with both regular and
       move-only semantics. These functions provide an extra level of indirection in order that

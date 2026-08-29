@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file Preprocessor logic for dealing with different platforms */
+/** \file Preprocessor logic for dealing with different platforms */
 
 #include "PlatformDiscriminators.hpp"
 

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Classes implementing the concept of a linearly partitioned sequence of data.
  */
 

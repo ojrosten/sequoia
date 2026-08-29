@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Classes with a queue-like behaviour to which tasks can be pushed and results recovered, possibly
            following concurrent execution
 
@@ -27,7 +27,7 @@
 namespace sequoia::concurrency
 {
 
-  /*! \brief a task queue designed for use by multiple threads.
+  /** \brief a task queue designed for use by multiple threads.
 
       This class supports both aggressive pushing and popping and also speculative versions which
       do not necessarily acquire the underlying mutex and may therefore fail.
@@ -144,7 +144,7 @@ namespace sequoia::concurrency
 
   //===================================Serial Execution Model===================================//
 
-  /*! \brief Tasks may be `push`ed, upon which they are immediately invoked */
+  /** \brief Tasks may be `push`ed, upon which they are immediately invoked */
 
   template<class R>  class serial
   {
@@ -162,7 +162,7 @@ namespace sequoia::concurrency
 
   //==================================Asynchronous Execution==================================//
 
-  /*! \brief Tasks may be `push`ed, upon which they are fed to std::async */
+  /** \brief Tasks may be `push`ed, upon which they are fed to std::async */
 
   template<class R>
   class asynchronous
@@ -188,7 +188,7 @@ namespace sequoia::concurrency
 
   //=======================================Thread Pool========================================//
 
-  /*! \brief Supports either a single pipeline or a pipeline for each thread, together with task
+  /** \brief Supports either a single pipeline or a pipeline for each thread, together with task
       stealing.
    */
 

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Free functions for performing checks, together with the 'checker' class template which wraps them.
 
     Given a type, `T`, any reasonable testing framework must provide a mechanism for checking whether or
@@ -72,7 +72,7 @@
 namespace sequoia::testing
 {
 
-  /*! \brief class template, specializations of which implement various comparisons for the specified type.
+  /** \brief class template, specializations of which implement various comparisons for the specified type.
       \anchor value_tester_primary
    */
   template<class T> struct value_tester;
@@ -211,7 +211,7 @@ namespace sequoia::testing
     || checkable_against<weak_equivalence_check_t, Mode, T, U, Tutor>
   };
 
-  /*! \brief class template, specializations of which extract messages from various exception types.
+  /** \brief class template, specializations of which extract messages from various exception types.
      \anchor exception_message_extractor_primary
   */
   template<class>
@@ -251,7 +251,7 @@ namespace sequoia::testing
     }
   }
 
-  /*! \brief generic function that generates a check from any class providing a static check method.
+  /** \brief generic function that generates a check from any class providing a static check method.
 
       This employs a \ref test_logger_primary "sentinel" and so can be used naively.
    */
@@ -357,12 +357,12 @@ namespace sequoia::testing
     }
   }
 
-  /*! \brief Condition for applying a check across a range of values */
+  /** \brief Condition for applying a check across a range of values */
 
   template<class CheckType, test_mode Mode, std::input_or_output_iterator Iter, std::input_or_output_iterator PredictionIter, class Advisor>
   inline constexpr bool supports_iterator_range_check{checkable_against<CheckType, Mode, std::iter_value_t<Iter>, std::iter_value_t<PredictionIter>, tutor<Advisor>>};
   
-  /*! \brief The workhorse for comparing the contents of ranges.
+  /** \brief The workhorse for comparing the contents of ranges.
 
   */
 
@@ -416,7 +416,7 @@ namespace sequoia::testing
     return equal;
   }
 
-  /*! \brief The workhorse for performing a check with respect to a user-specified binary operator 
+  /** \brief The workhorse for performing a check with respect to a user-specified binary operator 
   
       The comparison object either implements binary comparison for T or it is fed into the overload for ranges.
    */
@@ -449,7 +449,7 @@ namespace sequoia::testing
     return !sentry.failure_detected();
   }
 
-  /*! \brief Condition for applying a container check
+  /** \brief Condition for applying a container check
 
       An extra level of indirection is required here to avoid recursive concept checks
       for type like filesystem which satisfy the range concept but not sequoia::faithul_range
@@ -475,7 +475,7 @@ namespace sequoia::testing
   template<class CheckType, test_mode Mode, class T, class U, class Advisor>
   inline constexpr bool supports_range_check_v{supports_range_check<CheckType, Mode, T, U, Advisor>::value};
   
-  /*! \brief Condition for applying an equality check */
+  /** \brief Condition for applying an equality check */
 
   template<test_mode Mode, class T, class Advisor>
   inline constexpr bool supports_equality_check{
@@ -484,7 +484,7 @@ namespace sequoia::testing
     || supports_range_check_v<equality_check_t, Mode, T, T, Advisor>
   };
 
-  /*! \brief The workhorse of equality checking, which takes responsibility for reflecting upon types
+  /** \brief The workhorse of equality checking, which takes responsibility for reflecting upon types
       and then dispatching, appropriately.
 
       The input type, T, must either
@@ -531,7 +531,7 @@ namespace sequoia::testing
     return !sentry.failure_detected();
   }
 
-  /*! \brief Condition for applying an equality check */
+  /** \brief Condition for applying an equality check */
 
   template<test_mode Mode, class T, class Advisor>
   inline constexpr bool supports_simple_equality_check{
@@ -539,7 +539,7 @@ namespace sequoia::testing
     || supports_range_check_v<simple_equality_check_t, Mode, T, T, Advisor>
   };
 
-  /*! \brief The workhorse for checking simple equality. */
+  /** \brief The workhorse for checking simple equality. */
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
     requires supports_simple_equality_check<Mode, T, Advisor>
@@ -563,7 +563,7 @@ namespace sequoia::testing
     return !sentry.failure_detected();
   }
 
-  /*! \brief The workhorse for (weak) equivalence checking
+  /** \brief The workhorse for (weak) equivalence checking
 
       This function will reflect on whether an appropriate invocation of 
       `check(equivalence_check_t,...)` or `check(weak_equivalence_check_t,...)` exists.
@@ -575,7 +575,7 @@ namespace sequoia::testing
 
    */
 
-  /*! \brief Condition for applying a generalized equivalance check */
+  /** \brief Condition for applying a generalized equivalance check */
 
   template<class CheckType, test_mode Mode, class T, class U, class Advisor>
   inline constexpr bool supports_generalized_equivalence_check{
@@ -625,7 +625,7 @@ namespace sequoia::testing
     }
   }  
 
-  /*! \brief Condition for applying the best available check */
+  /** \brief Condition for applying the best available check */
 
   template<minimal_reporting_permitted MinimalReporting, test_mode Mode, class T, class U, class Advisor>
   inline constexpr bool supports_best_available_check{
@@ -636,7 +636,7 @@ namespace sequoia::testing
     || ((MinimalReporting == minimal_reporting_permitted::yes) && std::equality_comparable_with<T, U>)
   };
   
-  /*! \brief The workhorse for dispatching to the strongest available type of check. */
+  /** \brief The workhorse for dispatching to the strongest available type of check. */
 
   template<minimal_reporting_permitted MinimalReporting, test_mode Mode, class T, class U, class Advisor=null_advisor>
     requires supports_best_available_check<MinimalReporting, Mode, T, U, Advisor>
@@ -696,7 +696,7 @@ namespace sequoia::testing
     return check(equality, std::move(description), logger, obtained, true, std::move(advisor));
   }
 
-  /*! \brief Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.
+  /** \brief Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.
 
       This class template is templated on the enum class test_mode, with an Extender which will become
       variadic as soon as variadic friends are available.

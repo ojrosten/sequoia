@@ -1,6 +1,6 @@
 #pragma once
 
-/*! \file */
+/** \file */
 
 #include "EdgeTestingUtilities.hpp"
 

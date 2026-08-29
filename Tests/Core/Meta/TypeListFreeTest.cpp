@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/*! \file */
+/** \file */
 
 #include "TypeListFreeTest.hpp"
 #include "sequoia/Core/Meta/TypeList.hpp"

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Restriction of Dynamic Graphs to Trees 
 */
 

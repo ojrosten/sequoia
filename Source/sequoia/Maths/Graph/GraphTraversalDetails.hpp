@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Meta-programming urilities and underlying function for graph traversals.
 
  */

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Functions for checking semantics of types lacking copy semantics but which are otherwise regular.
 
     Within this library, a type is defined to have move-only semantics if possesses the following:
@@ -40,7 +40,7 @@
 
 namespace sequoia::testing
 {
-  /*! Prerequisites:
+  /** Prerequisites:
       x != y
       x equivalent to xEquivalent
       y equivalent to yEquivalent
@@ -76,7 +76,7 @@ namespace sequoia::testing
            );
   }
   
-  /*! Prerequisites:
+  /** Prerequisites:
       x != y
       x equivalent to xEquivalent
       y equivalent to yEquivalent

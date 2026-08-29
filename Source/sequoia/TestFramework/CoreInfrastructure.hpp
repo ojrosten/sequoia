@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Core declarations / definitions used in the testing framework
 
  */
@@ -20,7 +20,7 @@
 
 namespace sequoia::testing
 {
-  /*! \brief Specialize this struct template to provide custom serialization of a given class.
+  /** \brief Specialize this struct template to provide custom serialization of a given class.
       \anchor serializer_primary
    */
 
@@ -62,7 +62,7 @@ namespace sequoia::testing
     return serializer<T>::make(value);
   }
 
-  /*! \brief Primary class template for converting unsigned types of implementation-defined size into fixed-width types. */
+  /** \brief Primary class template for converting unsigned types of implementation-defined size into fixed-width types. */
   template<class T>
   struct type_normalizer
   {

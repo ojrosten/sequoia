@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Traits, Concepts and basic utilities for the creation of objects.
  */
 
@@ -65,7 +65,7 @@ namespace sequoia::object
     }
   };
 
-  /*! \brief Creates a `product` for `T`.
+  /** \brief Creates a `product` for `T`.
   
    */
 

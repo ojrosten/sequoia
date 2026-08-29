@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief A collection of functions for finding patterns within text.
  */
 

@@ -11,7 +11,7 @@
 
 #include <iterator>
 
-/*! \file
+/** \file
     \brief Implementation for an iterator with policies controlling dereferencing and auxiliary data.
  */
 
@@ -61,7 +61,7 @@ namespace sequoia::utilities
     initializable_from<impl::aggregator<Policy1>, impl::aggregator<Policy2>>
   };
 
-  /*! \brief Detects pointer_type */
+  /** \brief Detects pointer_type */
 
   template<class Iterator, dereference_policy_for<Iterator> Deref>
   struct pointer_type
@@ -79,7 +79,7 @@ namespace sequoia::utilities
   template<class Iterator, dereference_policy_for<Iterator> Deref>
   using pointer_type_t = pointer_type<Iterator, Deref>::type;
 
-  /*! \brief Detects difference_type */
+  /** \brief Detects difference_type */
 
   template<class T>
   inline constexpr bool has_difference_type{requires { typename T::difference_type; }};
@@ -104,7 +104,7 @@ namespace sequoia::utilities
   template<class Iterator, dereference_policy_for<Iterator> Deref>
   using difference_type_t = difference_type<Iterator, Deref>::type;
 
-  /*! \brief Detects value_type */
+  /** \brief Detects value_type */
 
   template<class T>
   struct value_type
@@ -129,7 +129,7 @@ namespace sequoia::utilities
   template<class T>
   using value_type_t = value_type<T>::type;
 
-  /*! \brief Detects reference_type */
+  /** \brief Detects reference_type */
 
   template<class T>
   inline constexpr bool has_reference_type{requires { typename T::reference; }};
@@ -157,7 +157,7 @@ namespace sequoia::utilities
   template<class T>
   using reference_type_t = reference_type<T>::type;
 
-  /*! \brief Policy representing absence of additional data carried by the`identity_dereference_policy` */
+  /** \brief Policy representing absence of additional data carried by the`identity_dereference_policy` */
 
   struct null_data_policy
   {
@@ -219,7 +219,7 @@ namespace sequoia::utilities
          && !std::indirectly_writable<reference_type_t<DereferencePolicy>, value_type_t<DereferencePolicy>>)
   };
 
-  /*! \class iterator
+  /** \class iterator
       \brief An iterator with policies controlling dereferencing and auxiliary data.
 
       The DereferencePolicy allows customisation of the various dereferencing operators. In principle

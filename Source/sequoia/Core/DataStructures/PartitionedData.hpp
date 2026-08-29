@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Classes implementing the concept of a sequence of data which is divided into partitions.
  */
 
@@ -55,7 +55,7 @@ namespace sequoia
 
     //===================================Storage using buckets===================================//
 
-    /*! \brief Storage for partitioned data such that data within each partition is contiguous.
+    /** \brief Storage for partitioned data such that data within each partition is contiguous.
      */
 
     template<class T, class Container=std::vector<std::vector<T>>>
@@ -481,7 +481,7 @@ namespace sequoia
 
     //===================================Contiguous storage===================================//
 
-    /*! \brief Base class for partitioned sequences where data is contiguous across all partitions.
+    /** \brief Base class for partitioned sequences where data is contiguous across all partitions.
      */
 
     template<class T, class Container, class Partitions>
@@ -982,7 +982,7 @@ namespace sequoia
       }
     };
 
-    /*! \class
+    /** \class
     
      */
 

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Classes to allow homogeneous treatment of graphs with empty/non-empty node weights.
 
     These classes are designed to be inherited from publically, in order that graphs may aggregate

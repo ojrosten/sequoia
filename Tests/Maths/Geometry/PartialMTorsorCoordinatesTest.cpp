@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/*! \file */
+/** \file */
 
 #include "PartialMTorsorCoordinatesTest.hpp"
 
@@ -15,7 +15,7 @@ namespace sequoia::testing
 
   namespace
   {
-    /*! The non-negative orthant of a free module over the integers. The action of
+    /** The non-negative orthant of a free module over the integers. The action of
         the module is only partial - subtracting a large enough displacement leaves
         the orthant - so this sits at the root of the DAG and nowhere below it. Note
         in particular that it is not convex: interpolation requires an ordered field,

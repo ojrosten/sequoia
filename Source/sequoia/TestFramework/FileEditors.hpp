@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Contains utilities for automatically editing certain files as part of the test creation process.
  */
 

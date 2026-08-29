@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file StatisticalAlgorithms.hpp
+/** \file StatisticalAlgorithms.hpp
     \brief Tools for statistical analysis.
 */
 

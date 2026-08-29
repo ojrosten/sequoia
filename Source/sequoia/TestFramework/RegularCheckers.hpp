@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Functions for checking regular semantics.
 
     Types exhibiting regular semantics are pleasant to reason about. Within this
@@ -64,7 +64,7 @@ namespace sequoia::testing
                           impl::null_mutator{});
   }
 
-  /*! Prerequisites:
+  /** Prerequisites:
         x != y
         x equivalent to xEquivalent
         y equivalent to yEquivalent
@@ -113,7 +113,7 @@ namespace sequoia::testing
                           impl::null_mutator{});
   }
 
-  /*! Prerequisites:
+  /** Prerequisites:
         x != y, with values consistent with order
         x equivalent to xEquivalent
         y equivalent to yEquivalent
@@ -163,7 +163,7 @@ namespace sequoia::testing
                           yMutator);
   }
 
-  /*! Prerequisites:
+  /** Prerequisites:
         x != y
         x equivalent to xEquivalent
         y equivalent to yEquivalent
@@ -214,7 +214,7 @@ namespace sequoia::testing
                           yMutator);
   }
 
-  /*! Prerequisites:
+  /** Prerequisites:
         x != y, with values consistent with order
         x equivalent to xEquivalent
         y equivalent to yEquivalent

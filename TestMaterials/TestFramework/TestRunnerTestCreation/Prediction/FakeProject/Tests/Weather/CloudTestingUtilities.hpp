@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file */
+/** \file */
 
 #include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
 #include "fakeProject/Weather/Cloud.hpp"

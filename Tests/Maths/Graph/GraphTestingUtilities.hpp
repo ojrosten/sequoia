@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file */
+/** \file */
 
 #include "Components/Edges/EdgeTestingUtilities.hpp"
 #include "Components/Nodes/NodeStorageTestingUtilities.hpp"

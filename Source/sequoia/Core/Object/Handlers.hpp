@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Structs to enable homogenous treatment of data which is/is not
     handled via shared pointers.
 

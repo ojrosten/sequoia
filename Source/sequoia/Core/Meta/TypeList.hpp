@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file 
+/** \file 
     \brief type_list and various associated operations 
  */
 
@@ -18,12 +18,12 @@ namespace sequoia
 {
     //================================================ type_list ================================================//
 
-    /*! \class */
+    /** \class */
 
     template<class... Ts>
     struct type_list {};
 
-    /*! @defgroup is_type_list The is_type_list Group
+    /** @defgroup is_type_list The is_type_list Group
         This group provides a mechanism for determining if a type is a type_list
         @{
      */
@@ -40,9 +40,9 @@ namespace sequoia
     template<class T>
     inline constexpr bool is_type_list_v = is_type_list<T>::value;
 
-    /*! @} */ // end of is_type_list group
+    /** @} */ // end of is_type_list group
 
-     /*! @defgroup faithful_type_list The faithful_type_list Group
+     /** @defgroup faithful_type_list The faithful_type_list Group
         This group provides a mechanism for constructing faithful type lists: each type occurs exactly once
         @{
      */
@@ -90,9 +90,9 @@ namespace sequoia
         using type = faithful_type_list<type_list<T>, Ts...>;
     };
 
-    /*! @} */ // end of faithful_type_list group
+    /** @} */ // end of faithful_type_list group
 
-    /*! @defgroup is_type_list The type_list_union Group
+    /** @defgroup is_type_list The type_list_union Group
         This group provides a mechanism for constructing unions of `type_list`s
         @{
      */
@@ -122,9 +122,9 @@ namespace sequoia
         using type = type_list_union_t<type_list_union_t<type_list<Ts...>, type_list<Us...>>, Vs...>;
     };
 
-    /*! @} */ // end of type_list_union group
+    /** @} */ // end of type_list_union group
 
-    /*! @defgroup type_list_conversions The type_list_conversions Group
+    /** @defgroup type_list_conversions The type_list_conversions Group
        This group provides mechanisms for converting type_lists to other types
        @{
     */
@@ -153,5 +153,5 @@ namespace sequoia
         using type = std::tuple<Ts...>;
     };
 
-    /*! @} */ // end of type_list_conversions group
+    /** @} */ // end of type_list_conversions group
 }

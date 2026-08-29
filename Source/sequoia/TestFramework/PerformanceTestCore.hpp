@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Extension of the testing framework for perfomance testing.
 */
 
@@ -32,7 +32,7 @@ namespace sequoia::testing
     return t.time_elapsed();
   }
 
-  /*! \brief Function for comparing the performance of a fast task to a slow task.
+  /** \brief Function for comparing the performance of a fast task to a slow task.
 
        \param minSpeedUp  the minimum predicted speed up of fast over slow; must be > 1
        \param maxSpeedUp  the maximum predicted speed up of fast over slow; must be > minSpeedUp
@@ -228,7 +228,7 @@ namespace sequoia::testing
     return target;
   }
 
-  /*! \brief class template for plugging into the checker class template
+  /** \brief class template for plugging into the checker class template
       \anchor performance_extender_primary
    */
   template<test_mode Mode>
@@ -254,7 +254,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput);
 
-  /*!\brief class template from which all concrete tests should derive */
+  /**\brief class template from which all concrete tests should derive */
 
   template<test_mode Mode>
   class basic_performance_test : public basic_test<Mode, performance_extender<Mode>>
@@ -274,7 +274,7 @@ namespace sequoia::testing
     basic_performance_test& operator=(basic_performance_test&&) noexcept = default;
   };
 
-  /*! \anchor performance_test_alias */
+  /** \anchor performance_test_alias */
   using performance_test                = basic_performance_test<test_mode::standard>;
   using performance_false_positive_test = basic_performance_test<test_mode::false_positive>;
   using performance_false_negative_test = basic_performance_test<test_mode::false_negative>;

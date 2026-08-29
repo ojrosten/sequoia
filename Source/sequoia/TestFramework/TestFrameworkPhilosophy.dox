@@ -1,4 +1,4 @@
-/*! \page testframeworkpage The Testing Framework
+/** \page testframeworkpage The Testing Framework
 
     The `sequoia` testing framework is designed for
     \ref sec_scale "scale"

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Edge & Node storage traits, base class and final classes for dynamic graphs.
 
 */

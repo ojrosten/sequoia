@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Implementation for a partitioned sequence of edges, which represents
     a graph's connectivity.
 
@@ -171,7 +171,7 @@ namespace sequoia
 
     struct partitions_allocator_tag{};
 
-    /*! \brief Graph connectivity_base, used as a building block for concrete graphs.
+    /** \brief Graph connectivity_base, used as a building block for concrete graphs.
     
         This class is flexible, allowing for representations of many different flavours
         of connectivity. It is designed for inheritance by concrete graphs; therefore

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Extension for checking allocations for types with regular semantics,
     see \ref regular_semantics_definition "here".
 */
@@ -18,7 +18,7 @@
 
 namespace sequoia::testing
 {
-  /*! \brief class template for plugging into the \ref checker_primary "checker"
+  /** \brief class template for plugging into the \ref checker_primary "checker"
       class template to provide allocation checks for regular types.
 
       \anchor regular_allocation_extender_primary
@@ -81,7 +81,7 @@ namespace sequoia::testing
     regular_allocation_extender& operator=(regular_allocation_extender&&) noexcept = default;
   };
 
-  /*!  \brief Templated on the test_mode, this forms the basis of all allocation tests for regular types.
+  /**  \brief Templated on the test_mode, this forms the basis of all allocation tests for regular types.
 
        This class template provides a mechanism to help with the automatic generation of checks with
        all 8 combinations of the allocation propagation flags. To utilize this, derived classes need
@@ -125,7 +125,7 @@ namespace sequoia::testing
     }
   };
 
-  /*! \anchor regular_allocation_test_alias */
+  /** \anchor regular_allocation_test_alias */
   using regular_allocation_test                = basic_regular_allocation_test<test_mode::standard>;
   using regular_allocation_false_positive_test = basic_regular_allocation_test<test_mode::false_positive>;
   using regular_allocation_false_negative_test = basic_regular_allocation_test<test_mode::false_negative>;

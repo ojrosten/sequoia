@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Core functionality for the testing framework.
 
     This header defines the basic_test class template, from which all concrete tests derive.
@@ -40,7 +40,7 @@ namespace sequoia::testing
     time_point m_Start;
   };
 
-  /*! \brief class from which all tests ultimately derive
+  /** \brief class from which all tests ultimately derive
 
       The primary purpose of this class is to reduce code which is templated.
    */
@@ -125,7 +125,7 @@ namespace sequoia::testing
     test_summary_path m_SummaryFile{};
   };
 
-  /*! \brief class template from which all concrete tests should derive.
+  /** \brief class template from which all concrete tests should derive.
   
       The design is such that additional checking functionality should be provided
       by the Extender (which will become variadic once variadic friends are adopted).
@@ -208,7 +208,7 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Temporary workaround while waiting for variadic friends */
+  /** \brief Temporary workaround while waiting for variadic friends */
   class trivial_extender
   {
   public:
@@ -223,7 +223,7 @@ namespace sequoia::testing
   template<test_mode Mode>
   using basic_free_test = basic_test<Mode, trivial_extender>;
 
-  /*! \anchor free_test_alias */
+  /** \anchor free_test_alias */
   using free_test                = basic_free_test<test_mode::standard>;
   using free_false_positive_test = basic_free_test<test_mode::false_positive>;
   using free_false_negative_test = basic_free_test<test_mode::false_negative>;
@@ -236,7 +236,7 @@ namespace sequoia::testing
       }
   };
 
-  /*! \anchor is_parallelizable primary class tempate */
+  /** \anchor is_parallelizable primary class tempate */
   template<class T>
   struct is_parallelizable;
 

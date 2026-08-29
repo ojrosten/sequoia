@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file Utilities.hpp
+/** \file Utilities.hpp
     \brief Meta-programming utilities
  */
 

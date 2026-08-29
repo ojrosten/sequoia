@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file */
+/** \file */
 
 #include "PartitionedDataTestingUtilities.hpp"
 #include "sequoia/TestFramework/RegularAllocationTestCore.hpp"

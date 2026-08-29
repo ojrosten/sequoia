@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Concepts which are sufficiently general to appear in the `sequoia` namespace.
  */
 
@@ -80,7 +80,7 @@ namespace sequoia
   template<class T>
   concept arithmetic = std::is_arithmetic_v<T>;
 
-  /*! \brief A concept for the integer types, as distinct from the integral
+  /** \brief A concept for the integer types, as distinct from the integral
              types.
 
       The standard separates the two: bool, char, wchar_t, char8_t, char16_t
@@ -107,7 +107,7 @@ namespace sequoia
   template<class T>
   concept integer = std::integral<T> && (!impl::bool_or_character_type_v<std::remove_cv_t<T>>);
 
-  /*! \brief Similar to std::range but excludes the case where dereferencing yields the same type as the range.
+  /** \brief Similar to std::range but excludes the case where dereferencing yields the same type as the range.
   
       This avoids treating std::filesystem::path as a range in circumstances where, to do so, would be inappropriate.
       The implementation of `faithful_range` is not complete; it deals with the simplest circular case but
@@ -122,16 +122,16 @@ namespace sequoia
     requires (!std::same_as<std::remove_cvref_t<decltype(*std::ranges::begin(t))>, std::remove_cvref_t<T>>);
   };
 
-  /*! \addtogroup deep_equality
+  /** \addtogroup deep_equality
   
       @{
    */
 
-  /*! \brief Concept to work around the fact that currently the stl typically underconstrains `operator== `. */
+  /** \brief Concept to work around the fact that currently the stl typically underconstrains `operator== `. */
   template<class T>
   concept deep_equality_comparable = is_deep_equality_comparable_v<T>;
 
-  /*! @} */
+  /** @} */
 
   template<class T>
   concept deep_totally_ordered = deep_equality_comparable<T> && is_deep_totally_ordered_v<T>;

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief A collection of functions for formatting test output.
  */
 
@@ -235,7 +235,7 @@ namespace sequoia::testing
     return demangle<type_normalizer_t<T>>([](std::string name) -> std::string { return tidy_name(name, compiler_constant{}); });
   }
 
-  /*! \brief Specialize this struct template to customize the way in which type info is generated for a given class.
+  /** \brief Specialize this struct template to customize the way in which type info is generated for a given class.
       This is particularly useful for class templates where standard de-mangling may be hard to read!
 
       \anchor type_demangler_primary

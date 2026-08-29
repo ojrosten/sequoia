@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Utilities for performing checks with respect to a binary operator
 
     This header provides utilities for performing a comparison between two instances of
@@ -33,7 +33,7 @@ namespace sequoia::testing
   template<class T, class NormType>
   inline constexpr static bool has_abs{abs_detail::has_abs<T, NormType>};
 
-  /*! \brief Specialize this struct template to provide custom reporting for comparisons
+  /** \brief Specialize this struct template to provide custom reporting for comparisons
              performed with a binary operator.
 
      \anchor failure_reporter_primary
@@ -47,7 +47,7 @@ namespace sequoia::testing
     static std::string reporter(final_message_constant<IsFinalMessage>, const Compare&, const T&, const T&) = delete;
   };
 
-  /*! \brief Function object for performing comparisons within an absolute tolerance
+  /** \brief Function object for performing comparisons within an absolute tolerance
 
       \anchor within_tolerance_primary
    */

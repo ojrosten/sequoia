@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Client-facing utilities for performing allocation checks.
 
     For more information see \ref AllocationCheckersCore.hpp
@@ -163,7 +163,7 @@ namespace sequoia::testing
   namespace allocation_equivalence_classes
   {
     ///@{
-    /*! Types in the namespace `allocation_equivalence_classes` act as tags for containers
+    /** Types in the namespace `allocation_equivalence_classes` act as tags for containers
         with different semantics. The purpose for this is to provide a mechanism to specialize
         how allocation predictions are shifted, e.g. for the MSVC debug build.
         Two common cases are supplied with `sequoia`: containers of values and containers of
@@ -208,7 +208,7 @@ namespace sequoia::testing
 
   enum class top_level { no, yes };
 
-  /*! \brief class template for shifting allocation predictions, especially for MSVC debug builds.
+  /** \brief class template for shifting allocation predictions, especially for MSVC debug builds.
 
       \anchor alloc_prediction_shifter_primary
    */
@@ -356,7 +356,7 @@ namespace sequoia::testing
   template<class T>
   using type_to_inner_allocation_predictions_t = type_to_allocation_predictions<T>::inner_predictions_type;
 
-  /*! \brief Base class for use with both plain (shared counting) allocators and std::scoped_allocator_adaptor
+  /** \brief Base class for use with both plain (shared counting) allocators and std::scoped_allocator_adaptor
 
       This class wraps one of the essential ingredients for allocation testing: a function
       object which can acquire a copy of a container's allocator. Note that a container with
@@ -414,7 +414,7 @@ namespace sequoia::testing
     Getter m_AllocatorGetter;
   };
 
-  /*! \brief Class for use with a container possessing a (shared counting) allocator
+  /** \brief Class for use with a container possessing a (shared counting) allocator
 
       By inheriting from allocation_info_base, this class is able to acquire a copy
       of an allocator from a container. On top of this, the class holds predictions
@@ -491,7 +491,7 @@ namespace sequoia::testing
     Getter getter;
   };
 
-  /*! \brief A specialization of allocation_info appropriate for std::scoped_allocator_adaptor
+  /** \brief A specialization of allocation_info appropriate for std::scoped_allocator_adaptor
 
       The essential difference to the primary template is that multiple sets of predictions must
       be supplied, one for each level within the scoped_allocator_adaptor.

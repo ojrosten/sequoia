@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Extensions to the std::filesystem library
  */
 
@@ -52,7 +52,7 @@ namespace sequoia
     return *--p.end();
   }
 
-  /*! This function has slightly peculiar semantics, due to the fact that path::iterator isn't
+  /** This function has slightly peculiar semantics, due to the fact that path::iterator isn't
       strictly bidirectional - which MSVC exploits. Therefore, it returns a forward iterator
       to the last instance of a pattern or end, otherwise.
   */

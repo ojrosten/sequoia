@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Utilities to aid logical operations
   */
 
@@ -22,7 +22,7 @@
 NAMESPACE_SEQUOIA_AS_BITMASK
 {
 
-  /*! Specialize this class template, and inherit from `std::true_type`, to cause an `enum`
+  /** Specialize this class template, and inherit from `std::true_type`, to cause an `enum`
       to be automatically useable as a bit mask. If `EXPOSE_SEQUOIA_BITMASK` is not defined,
       this must be done in the `sequoia` namespace. If `EXPOSE_SEQUOIA_BITMASK` is defined,
       then `as_bitmask` lives in the namespace `sequoia_bitmask`, which is inlined. This

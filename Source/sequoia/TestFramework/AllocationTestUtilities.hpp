@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Utilities for allocation testing.
  */
 
@@ -15,7 +15,7 @@
 
 namespace sequoia::testing
 {
-  /*! \brief Somewhat similar to std::allocator but logs (de)allocations via an counter
+  /** \brief Somewhat similar to std::allocator but logs (de)allocations via an counter
       which is shared upon copying.
 
       A fundamental ingredient of the allocation testing framework is the capactity to

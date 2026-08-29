@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Useful specializations for the class template value_tester.
 
     The specializations in this header are for various types defined in `std`. Internally,
@@ -64,7 +64,7 @@
 
 namespace sequoia::testing
 {
-  /*! \brief Comparisons for `std::basic_string_view`
+  /** \brief Comparisons for `std::basic_string_view`
   
       Some support is offered for wide string views etc., though test failures are ultimately reported
       using normal strings, which has its limitations when the character type is bigger than a `char`. 
@@ -228,7 +228,7 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Comparisons for `std::basic_string`
+  /** \brief Comparisons for `std::basic_string`
 
       Some support is offered for wide string views etc., though test failures are ultimately reported
       using normal strings, which has its limitations when the character type is bigger than a `char`.
@@ -264,7 +264,7 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Compares instances of `std::pair` */
+  /** \brief Compares instances of `std::pair` */
 
   template<class S, class T>
   struct value_tester<std::pair<S, T>>
@@ -292,7 +292,7 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Compares instances of `std::tuple` */
+  /** \brief Compares instances of `std::tuple` */
 
   template<class... T>
   struct value_tester<std::tuple<T...>>
@@ -328,7 +328,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string path_check_preamble(std::string_view prefix, const std::filesystem::path& path, const std::filesystem::path& prediction);
 
-  /*! \brief Function object for comparing files via reading their contents into strings. */
+  /** \brief Function object for comparing files via reading their contents into strings. */
 
   struct string_based_file_comparer
   {
@@ -352,7 +352,7 @@ namespace sequoia::testing
     std::invocable<T, test_logger<test_mode::standard>&, std::filesystem::path, std::filesystem::path>
   };
 
-  /*! \brief A file checker, which accepts a variadic set of file comparison function objects
+  /** \brief A file checker, which accepts a variadic set of file comparison function objects
    */
 
   template<class DefaultComparer, class... Comparers>
@@ -390,7 +390,7 @@ namespace sequoia::testing
   template<class DefaultComparer, class... Comparers>
   using weak_equivalence_with_bespoke_file_checker_t = general_weak_equivalence_check_t<general_file_checker<DefaultComparer, Comparers...>>;
 
-  /*! \brief Checks equivalence of filesystem paths.
+  /** \brief Checks equivalence of filesystem paths.
 
       For the overloads of `test` accepting either `equivalence` or `weak_equivalence` as the
       first argument, all file comparisons are performed using string_based_file_comparer.
@@ -557,7 +557,7 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Compares instances of `std::variant` */
+  /** \brief Compares instances of `std::variant` */
 
   template<class... Ts>
   struct value_tester<std::variant<Ts...>>
@@ -596,7 +596,7 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Compares instances of `std::optional` */
+  /** \brief Compares instances of `std::optional` */
 
   template<class T>
   struct value_tester<std::optional<T>>
@@ -623,7 +623,7 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Compares an instance of `std::any` to the value of the type it purportedly holds
+  /** \brief Compares an instance of `std::any` to the value of the type it purportedly holds
 
       The semantics are such that, under the hood, `with_best_available` is utilized. Therefore,
       the equivalence of `std::any` to the value of a purported type may ultimately delegate
@@ -653,7 +653,7 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Compares instance of pointers
+  /** \brief Compares instance of pointers
 
      Testing equality is performed via `binary_comparison`, and so does not require this
      specialization of `value_tester`.
@@ -689,7 +689,7 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Helper for testing smart pointers
+  /** \brief Helper for testing smart pointers
   
       The general pattern for smart pointers is that `test(equality, ...)` checks for equality
       of the underlying pointers, whereas `test(equivalence, ...) checks the pointees, using
@@ -729,7 +729,7 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Compares instance of `std::unique_ptr`
+  /** \brief Compares instance of `std::unique_ptr`
 
       The `test(equality_check_t,...)` overload checks that the underlying pointers point to the same thing.
 
@@ -753,7 +753,7 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Compares instance of `std::shared_ptr`
+  /** \brief Compares instance of `std::shared_ptr`
 
       The `test(equality_check_t,...)` overload checks that the underlying pointers point to the same thing.
 
@@ -777,7 +777,7 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Compares instance of `std::weak_ptr`
+  /** \brief Compares instance of `std::weak_ptr`
 
       Comparison is performed by calling lock on the `obtained` and `predicted`
       `std::weak_ptr`s and then comparing the nascent `std::shared_ptr`s.
@@ -802,7 +802,7 @@ namespace sequoia::testing
   };
 
 
-  /*! \brief Provides a `weak_equivalence` test for `std::function`
+  /** \brief Provides a `weak_equivalence` test for `std::function`
 
       Two instances of `std::function<R (Args...)>` are taken to be weakly equivalent
       if they are either both null or both not null.
@@ -823,7 +823,7 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Compares instance of `std::chrono::time_point`
+  /** \brief Compares instance of `std::chrono::time_point`
 
       For the advice to be invoked, `tutor` must be constructed by a function object
       with an overload `operator()(std::chrono::nanoseconds, std::chrono::nanoseconds)`.

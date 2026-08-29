@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Helper for dealing with allocator propagation during copy assignment.
 
     Consider a type which wraps one or containers. If the enclosing type is
@@ -41,7 +41,7 @@ namespace sequoia::impl
 
 namespace sequoia
 {
-  /*! \brief Helper class to assist with copy assignment for allocator-aware types.
+  /** \brief Helper class to assist with copy assignment for allocator-aware types.
   
       Consider a type, `T`, which is allocator-aware and for which copy assignment cannot
       be defaulted. Suppose that `T` wraps containers `Cs...`. To utilize the this helper,
@@ -65,7 +65,7 @@ namespace sequoia
 
   struct assignment_helper
   {
-    /*! Can be used to implement non-defaultable copy assignment for allocator-aware classes */
+    /** Can be used to implement non-defaultable copy assignment for allocator-aware classes */
     template<class T, std::invocable<T>... AllocGetters>
     constexpr static void assign(T& to, const T& from, [[maybe_unused]] AllocGetters... allocGetters)
     {

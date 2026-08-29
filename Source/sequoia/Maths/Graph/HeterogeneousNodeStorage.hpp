@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Node storage for graphs with heterogeneous node weights.
 
  */
@@ -16,7 +16,7 @@
 
 namespace sequoia::maths
 {
-  /*! class heterogeneous_node_storage
+  /** class heterogeneous_node_storage
       \brief Storage for heterogeneous node weights.
    */
 

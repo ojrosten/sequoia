@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/*! \file
+/** \file
     \brief Definitions for Helpers.hpp
 */
 
@@ -14,7 +14,7 @@
 #ifdef _MSC_VER
   #include "Windows.h"
 #endif
-/*! \file Utilities dependent on platform-specific macros */
+/** \file Utilities dependent on platform-specific macros */
 
 namespace sequoia
 {

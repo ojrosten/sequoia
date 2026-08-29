@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Underlying class for the various different graph flavour.
  */
 

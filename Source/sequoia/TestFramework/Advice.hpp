@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Utilities for the advice framework, which provides hints for certain failures.
 
     When a check fails, there may be some instances where the nature of the failure
@@ -92,7 +92,7 @@ namespace sequoia::testing
   struct null_advisor
   {};
 
-  /*! \brief class template used to wrap function objects which proffer advice.
+  /** \brief class template used to wrap function objects which proffer advice.
 
       An appropriate instantiation of this class template may be supplied as the
       final argument of many of the check methods. For example, consider

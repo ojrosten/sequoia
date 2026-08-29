@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Parsing of commandline arguments.
 
     The philosophy is to specify a forest whose nodes are instance of sequoia::parsing::commandline::option.
@@ -28,7 +28,7 @@
 
 namespace sequoia::parsing::commandline
 {
-  /*! \brief Class which wraps a `std::string` and enforces the invariant that the `std::string` be non-empty. */
+  /** \brief Class which wraps a `std::string` and enforces the invariant that the `std::string` be non-empty. */
   class proper_string
   {
   public:
@@ -64,7 +64,7 @@ namespace sequoia::parsing::commandline
 
   using executor = std::function<void (const arg_list&)>;
 
-  /*! \brief Used to specify a forest of options, against which the runtime commandline arguments are parsed.
+  /** \brief Used to specify a forest of options, against which the runtime commandline arguments are parsed.
   
       This possesses:
         -# A `name` and a set of `aliases`.
@@ -85,7 +85,7 @@ namespace sequoia::parsing::commandline
              late{};
   };
 
-  /*! \brief Used to build a forest of operations which will be invoked at the end of the parsing process.
+  /** \brief Used to build a forest of operations which will be invoked at the end of the parsing process.
 
       As the command line arguments are parsed, a forest of `operation`s is constructed. Each operation
       comprises:
@@ -110,7 +110,7 @@ namespace sequoia::parsing::commandline
   using operations_sub_tree = maths::tree_adaptor<operations_tree>;
   using operations_forest   = std::vector<operations_tree>;
 
-  /*! \brief The result of parsing command line arguments to build an \ref operation forest
+  /** \brief The result of parsing command line arguments to build an \ref operation forest
 
       In addition to the forest, the zeroth command line argument (typically the path of the
       executable) is recorded, together with `help`, if appropriate.
@@ -171,7 +171,7 @@ namespace sequoia::parsing::commandline
     return help;
   }
 
-  /*! \brief Parses command line arguments, building \ref outcome from an \ref option forest. */
+  /** \brief Parses command line arguments, building \ref outcome from an \ref option forest. */
   class argument_parser
   {
   public:

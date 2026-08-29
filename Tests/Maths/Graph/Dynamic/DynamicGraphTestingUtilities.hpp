@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file */
+/** \file */
 
 
 #include "Core/DataStructures/PartitionedDataTestingUtilities.hpp"

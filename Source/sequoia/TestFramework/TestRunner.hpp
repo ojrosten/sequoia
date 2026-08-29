@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Utilities for running tests from the command line.
 */
 
@@ -243,7 +243,7 @@ namespace sequoia::testing
       return std::nullopt;
   }
 
-  /*! \brief Consumes command-line arguments and holds all test suites.
+  /** \brief Consumes command-line arguments and holds all test suites.
 
       If no arguments are specified, all tests are run; run with --help
       for information on the various options.

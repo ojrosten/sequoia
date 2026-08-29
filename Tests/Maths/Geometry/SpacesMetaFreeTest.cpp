@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/*! \file */
+/** \file */
 
 #include "SpacesMetaFreeTest.hpp"
 #include "CommonGeometryTestingUtilities.hpp"
@@ -299,7 +299,7 @@ namespace sequoia::testing
       using structure         = m_affine_space_tag_t;
     };
 
-    /*! A partial M-torsor over the complex numbers, and pointed, tensor products
+    /** A partial M-torsor over the complex numbers, and pointed, tensor products
         requiring a distinguished origin of their factors. The ring being a field
         but not an ordered one, this is the cheapest space which is admissible
         everywhere yet convex nowhere - which is what makes it the right probe for
@@ -1335,7 +1335,7 @@ namespace sequoia::testing
     STATIC_CHECK(std::is_same_v<commutative_ring_type_of_t<complex_affine_space>,           commutative_rings::complexes>);
   }
 
-  /*! The commutative-ring diamond of the introduction. Being ordered and being a
+  /** The commutative-ring diamond of the introduction. Being ordered and being a
       field are independent: the integers have the first, the complexes the
       second, and only the reals have both.
    */
@@ -1815,7 +1815,7 @@ namespace sequoia::testing
     STATIC_CHECK(std::is_same_v<defines_identity_validator_t<identity_validator>, std::true_type>);
   }
 
-  /*! Pins the DAG of spaces. For each node there is a fixture which sits at
+  /** Pins the DAG of spaces. For each node there is a fixture which sits at
       precisely that node, and for each fixture every one of the six concepts
       is asserted, whether it holds or not. The negatives carry most of the
       weight: the hierarchy has previously drifted by a refinement quietly
@@ -1918,7 +1918,7 @@ namespace sequoia::testing
     STATIC_CHECK(!vector_space<euclidean_nonnegative_space<1>>);
   }
 
-  /*! Duals and tensor products decide their own structure tag from that of the
+  /** Duals and tensor products decide their own structure tag from that of the
       spaces they are built from. Everything else in the suite is built over the
       reals, so without these the convex branch of that decision is the only one
       ever taken.

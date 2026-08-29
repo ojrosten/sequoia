@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file StaticGraphTraversals.hpp
+/** \file StaticGraphTraversals.hpp
     \brief Headers for traversals of static graphs.
  */
 

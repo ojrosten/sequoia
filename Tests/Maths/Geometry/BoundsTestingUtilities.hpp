@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/*! \file */
+/** \file */
 
 #include "sequoia/Maths/Geometry/Spaces.hpp"
 #include "sequoia/TestFramework/RegularTestCore.hpp"

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Breadth first, depth first and priority searches.
 
  */

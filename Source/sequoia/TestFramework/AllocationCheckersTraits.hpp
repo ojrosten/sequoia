@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Traits and Concepts for allocation checks.
 */
 

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file */
+/** \file */
 
 #include "sequoia/TestFramework/TestCreator.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"

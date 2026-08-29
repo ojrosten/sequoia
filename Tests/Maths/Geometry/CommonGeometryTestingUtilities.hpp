@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file */
+/** \file */
 
 #include "sequoia/Maths/Geometry/Spaces.hpp"
 
@@ -18,7 +18,7 @@
 
 namespace sequoia::testing
 {
-  /*! Basis data for a client-nominated frame. The frame is a template, parameterised on
+  /** Basis data for a client-nominated frame. The frame is a template, parameterised on
       the automorphism, so that the basepoint is carried by the template and the
       displacement from the reference basis by its argument.
    */
@@ -32,7 +32,7 @@ namespace sequoia::testing
     using index_set = std::make_index_sequence<D>;
   };
 
-  /*! A second, independently chosen convention. Nothing relates it to alices_frame. */
+  /** A second, independently chosen convention. Nothing relates it to alices_frame. */
   template<class Automorphism=maths::identity_isomorphism>
   struct bobs_frame {};
 
@@ -43,7 +43,7 @@ namespace sequoia::testing
     using index_set = std::make_index_sequence<D>;
   };
 
-  /*! A nominated reference frame, for spaces which admit no canonical basis and whose
+  /** A nominated reference frame, for spaces which admit no canonical basis and whose
       clients must therefore name a convention of their own.
    */
   struct nominated_frame {};
@@ -55,14 +55,14 @@ namespace sequoia::testing
     using index_set = std::make_index_sequence<D>;
   };
 
-  /*! Basis data whose index set has the wrong cardinality for the module it is paired with. */
+  /** Basis data whose index set has the wrong cardinality for the module it is paired with. */
   struct mismatched_basis_data
   {
     using frame     = maths::identity_isomorphism;
     using index_set = std::make_index_sequence<7>;
   };
 
-  /*! Basis data whose index set is an enumeration, and whose cardinality is wrong. An
+  /** Basis data whose index set is an enumeration, and whose cardinality is wrong. An
       enumeration cannot be asked how many enumerators it has, so this is the case the
       cardinality check cannot yet catch.
    */
@@ -74,7 +74,7 @@ namespace sequoia::testing
     using index_set = axes;
   };
 
-  /*! Basis data naming something which is not an index set at all: it can neither be asked
+  /** Basis data naming something which is not an index set at all: it can neither be asked
       its size nor enumerated, so there is no cardinality to compare with the rank.
    */
   struct unindexable_basis_data
@@ -86,7 +86,7 @@ namespace sequoia::testing
 
 namespace sequoia::maths
 {
-  /*! Two bases over Alice's convention are related whatever their automorphisms or ranks;
+  /** Two bases over Alice's convention are related whatever their automorphisms or ranks;
       Bob's convention is unrelated to Alice's, which is the static prohibition. Stated for
       each convention explicitly: matching on the frame *template* would relate any two
       instantiations of any class template whatsoever.
@@ -252,7 +252,7 @@ namespace sequoia::testing
     constexpr static std::size_t rank{D};
   };
 
-  /*! The action of the free module is total, exactly as for an affine space, but
+  /** The action of the free module is total, exactly as for an affine space, but
       the ring is deliberately not a field: this is the case which only the
       M-affine concept admits.
    */
@@ -265,7 +265,7 @@ namespace sequoia::testing
     using structure        = maths::m_affine_space_tag_t;
   };
 
-  /*! Origins for coordinates on an M-affine space, and hence on an affine space
+  /** Origins for coordinates on an M-affine space, and hence on an affine space
       or a vector space. Two are provided so that transformations between them
       may be exercised; they carry no state, an origin being nothing more than a
       choice.
@@ -275,7 +275,7 @@ namespace sequoia::testing
 
   struct bob {};
 
-  /*! @brief Whether a coordinates type is expected to support a given operation.
+  /** @brief Whether a coordinates type is expected to support a given operation.
 
       Three-valued, rather than a bool, so that the default is `unstated`: a row
       omitted from an operator_expectations aggregate is a compile-time error
@@ -284,7 +284,7 @@ namespace sequoia::testing
 
   enum class admits : char { unstated, no, yes };
 
-  /*! @brief The complete set of arithmetic operations a coordinates type may support.
+  /** @brief The complete set of arithmetic operations a coordinates type may support.
 
       Every coordinates test states every row. That is the whole point: before
       this existed, the affine and M-affine cases each checked a different subset
@@ -322,7 +322,7 @@ namespace sequoia::testing
     admits displacement_unary_minus        {};
   };
 
-  /*! @brief Checks a coordinates type against every row of operator_expectations.
+  /** @brief Checks a coordinates type against every row of operator_expectations.
 
       Each row is a static_assert, so a mismatch is caught at compile time; each
       is additionally registered as a check, with a description naming the
@@ -412,7 +412,7 @@ namespace sequoia::testing
     }
   };
 
-  /*! Helper functions for building state-transition graphs*/
+  /** Helper functions for building state-transition graphs*/
 
   enum class inverted_ordering : bool {no, yes};
 

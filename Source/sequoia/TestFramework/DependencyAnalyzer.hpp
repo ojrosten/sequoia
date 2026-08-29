@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Facility to detect changes on disk and only run the relevant tests.
 
  */

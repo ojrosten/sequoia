@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief Facility to define tests via a graph comprising states of an object and transitions between them.
  */
 

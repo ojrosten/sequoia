@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file
+/** \file
     \brief File paths pertaining to a `sequoia` project.
  */
 
@@ -21,7 +21,7 @@ namespace sequoia::testing
 {
   inline constexpr std::string_view seqpat{".seqpat"};
 
-  /*! \brief Paths which are potentially discoverable from the commandline arguments */
+  /** \brief Paths which are potentially discoverable from the commandline arguments */
 
   class discoverable_paths
   {
@@ -59,7 +59,7 @@ namespace sequoia::testing
     static discoverable_paths make(int argc, char** argv);
   };
 
-  /*! \brief Paths relating to the `main` cpp */
+  /** \brief Paths relating to the `main` cpp */
 
   class main_paths
   {
@@ -94,7 +94,7 @@ namespace sequoia::testing
     std::filesystem::path m_File{}, m_Dir{}, m_CommonIncludes{};
   };
 
-  /*! \brief Paths relating to the source directory */
+  /** \brief Paths relating to the source directory */
 
   class source_paths
   {
@@ -127,7 +127,7 @@ namespace sequoia::testing
     static std::filesystem::path repo(std::filesystem::path projectRoot);
   };
 
-  /*! \brief Paths relating to the Tests directory */
+  /** \brief Paths relating to the Tests directory */
 
   class tests_paths
   {
@@ -151,7 +151,7 @@ namespace sequoia::testing
     std::filesystem::path m_Repo;
   };
 
-  /*! \brief Paths relating to the dependencies directory */
+  /** \brief Paths relating to the dependencies directory */
 
   class dependencies_paths
   {
@@ -178,7 +178,7 @@ namespace sequoia::testing
     std::filesystem::path m_Repo;
   };
 
-  /*! \brief Paths relating to the TestMaterials directory */
+  /** \brief Paths relating to the TestMaterials directory */
 
   class test_materials_paths
   {
@@ -199,7 +199,7 @@ namespace sequoia::testing
     std::filesystem::path m_Repo;
   };
 
-  /*! \brief Paths relating to the build_system directory */
+  /** \brief Paths relating to the build_system directory */
 
   class build_system_paths
   {
@@ -220,7 +220,7 @@ namespace sequoia::testing
     std::filesystem::path m_Repo;
   };
 
-  /*! \brief Paths relating to the build directory */
+  /** \brief Paths relating to the build directory */
 
   class build_paths
   {
@@ -250,7 +250,7 @@ namespace sequoia::testing
     std::filesystem::path m_Dir{}, m_ExecutableDir{}, m_CMakeCacheDir{};
   };
 
-  /*! \brief Paths for auxiliary materials, used in creating projects/tests */
+  /** \brief Paths for auxiliary materials, used in creating projects/tests */
 
   class auxiliary_paths
   {
@@ -305,7 +305,7 @@ namespace sequoia::testing
       m_ProjectTemplate{};
   };
 
-  /*! \brief Holds details of the file to which the last successfully completed test is registered.
+  /** \brief Holds details of the file to which the last successfully completed test is registered.
 
     If a check causes a crash, the recovery file may be used to provide a clue as to where this
     happened.
@@ -338,7 +338,7 @@ namespace sequoia::testing
     std::filesystem::path m_Dir{};
   };
 
-  /*! \brief Paths used when using dependencies to prune the number of tests */
+  /** \brief Paths used when using dependencies to prune the number of tests */
 
   class prune_paths
   {
@@ -381,7 +381,7 @@ namespace sequoia::testing
   };
 
 
-  /*! \brief Paths in the output directory */
+  /** \brief Paths in the output directory */
 
   class output_paths
   {
@@ -461,7 +461,7 @@ namespace sequoia::testing
       m_InstabilityAnalysis{};
   };
 
-  /*! \brief Paths used by the project */
+  /** \brief Paths used by the project */
 
   class project_paths
   {

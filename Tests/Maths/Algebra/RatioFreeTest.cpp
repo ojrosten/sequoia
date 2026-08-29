@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/*! \file */
+/** \file */
 
 #include "RatioFreeTest.hpp"
 #include "sequoia/Maths/Algebra/Ratio.hpp"
