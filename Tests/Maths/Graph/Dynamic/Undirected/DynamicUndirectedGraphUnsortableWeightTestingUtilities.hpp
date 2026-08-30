@@ -17,58 +17,58 @@ namespace sequoia::testing
     /// Convention: the indices following 'node' - separated by underscores - give the target node of the associated edges
     enum unsortable_weight_graph_description : std::size_t {
       // x
-      nodew = graph_description::end,
+      us_nodew = graph_description::end,
 
       //  /\
       //  \/
       //  x
-      node_0w,
+      us_node_0w,
 
       //  /\ /\
       //  \/ \/
       //    x
-      node_0w_0w,
+      us_node_0w_0w,
 
       //  /\ /\
       //  \/ \/
       //    x
-      node_0_0w,
+      us_node_0_0w,
 
       //  /\ /\
       //  \/ \/
       //    x
-      node_0w_0,
+      us_node_0w_0,
 
       //   /\
       //   \/
       //   x --- x
-      node_0w_1_node_0,
+      us_node_0w_1_node_0,
 
       //   /\
       //   \/
       //   x --- x
-      node_0_1w_node_0w,
+      us_node_0_1w_node_0w,
 
       //         /\
       //         \/
       //   x --- x
-      node_1_node_1w_0,
+      us_node_1_node_1w_0,
 
       //  x ==== x
-      node_1_1w_node_0_0w,
+      us_node_1_1w_node_0_0w,
 
       //  x ==== x
-      node_1w_1_node_0_0w,
+      us_node_1w_1_node_0_0w,
 
       //    ====
       //  x ==== x
-      node_1_1_1w_1w_node_0w_0w_0_0,
+      us_node_1_1_1w_1w_node_0w_0w_0_0,
 
       // /-\
       // \ /
       //  x ==== x
       //    ====
-      node_0w_1_1_1w_1w_node_0w_0w_0_0
+      us_node_0w_1_1_1w_1w_node_0w_0w_0_0
     };
   }
 
@@ -135,16 +135,16 @@ namespace sequoia::testing
 
       check_initialization_exceptions(t);
 
-      // 'unsortable_weight_graph_description::nodew'
+      // 'unsortable_weight_graph_description::us_nodew'
       trg.add_node(make_and_check(t, t.report(""), {{}}, {{1.0, -1.0}}));
 
-      // 'unsortable_weight_graph_description::node_0w'
+      // 'unsortable_weight_graph_description::us_node_0w'
       trg.add_node(make_and_check(t, t.report(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}}));
 
-      // 'unsortable_weight_graph_description::node_0w_0w'
+      // 'unsortable_weight_graph_description::us_node_0w_0w'
       trg.add_node(make_and_check(t, t.report(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}}));
 
-      // 'unsortable_weight_graph_description::node_0_0w'
+      // 'unsortable_weight_graph_description::us_node_0_0w'
       trg.add_node(
         [&t](){
           auto g{make_and_check(t, t.report(""), {{{0, 0.0, 0.0}, {0, 0.0, 0.0}, {0, 1.0, -1.0}, {0, 1.0, -1.0}}}, {{0.0}})};
@@ -152,7 +152,7 @@ namespace sequoia::testing
           return g;
         }());
       
-      // 'unsortable_weight_graph_description::node_0w_0'
+      // 'unsortable_weight_graph_description::us_node_0w_0'
       trg.add_node(
         [&t](){
           auto g{make_and_check(t, t.report(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}}}, {{0.0}})};
@@ -160,10 +160,10 @@ namespace sequoia::testing
           return g;
         }());
 
-      // 'unsortable_weight_graph_description::node_0w_1_node_0'
+      // 'unsortable_weight_graph_description::us_node_0w_1_node_0'
       trg.add_node(make_and_check(t, t.report(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}}}, {{}, {}}));
 
-      // 'unsortable_weight_graph_description::node_0_1w_node_0w'
+      // 'unsortable_weight_graph_description::us_node_0_1w_node_0w'
       trg.add_node(
         [&t](){
           auto g{make_and_check(t, t.report(""), {{{0, 1.0, -1.0}, {0, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}}}, {{}, {}})};
@@ -171,7 +171,7 @@ namespace sequoia::testing
           return g;
         }());
 
-      // 'unsortable_weight_graph_description::node_1_node_1w_0,'
+      // 'unsortable_weight_graph_description::us_node_1_node_1w_0,'
       trg.add_node(
         [&t](){
           auto g{make_and_check(t, t.report(""), {{{1, 0.0, 0.0}}, {{0, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}}}, {{}, {}})};
@@ -179,13 +179,13 @@ namespace sequoia::testing
           return g;
         }());
 
-      // 'unsortable_weight_graph_description::node_1_1w_node_0_0w'
+      // 'unsortable_weight_graph_description::us_node_1_1w_node_0_0w'
       trg.add_node(make_and_check(t, t.report(""), {{{1, 0.0, 0.0}, {1, 1.0, -1.0}}, {{0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{}, {}}));
 
-      // 'unsortable_weight_graph_description::node_1w_1_node_0_0w'
+      // 'unsortable_weight_graph_description::us_node_1w_1_node_0_0w'
       trg.add_node(make_and_check(t, t.report(""), {{{1, 1.0, -1.0}, {1, 0.0, 0.0}}, {{0, 0.0, 0.0}, {0, 1.0, -1.0}}}, {{}, {}}));
 
-      // 'unsortable_weight_graph_description::node_1_1_1w_1w_node_0w_0w_0_0,'
+      // 'unsortable_weight_graph_description::us_node_1_1_1w_1w_node_0w_0w_0_0,'
       trg.add_node(
         [&t](){
           auto g{make_and_check(t, t.report(""), {{{1, 0.0, 0.0}, {1, 0.0, 0.0}, {1, 1.0, -1.0}, {1, 1.0, -1.0}}, {{0, 1.0, -1.0}, {0, 1.0, -1.0}, {0, 0.0, 0.0}, {0, 0.0, 0.0}}}, {{}, {}})};
@@ -198,7 +198,7 @@ namespace sequoia::testing
           return g;
         }());
 
-      // 'unsortable_weight_graph_description::node_0w_1_1_1w_1w_node_0w_0w_0_0,'
+      // 'unsortable_weight_graph_description::us_node_0w_1_1_1w_1w_node_0w_0w_0_0,'
       trg.add_node(
         [&t](){
           auto g{make_and_check(t,
