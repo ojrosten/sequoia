@@ -79,20 +79,21 @@ namespace sequoia::testing
       }
     }
 
-    /** Directories of sequoia which a dependent project cannot use.
+    /** Directories of sequoia which a created project has no use for.
 
         `docs` is the committed doxygen render and `coverage_reports` the committed lcov
-        html: generated output which a project that merely builds against sequoia has no
-        use for. `.git` is sequoia's own history, and copying it into a directory beneath
-        another project's repository is worse than useless - the new project runs `git
-        init` of its own, and a nested repository which is not a submodule is a trap for
-        whoever next runs `git status` there.
+        html: generated output, of no interest to a project which merely builds against
+        sequoia, and between them the overwhelming majority of the repository by size and
+        by file count. `.git` is sequoia's own history, which the new project cannot act
+        on: it runs `git init` of its own, and the copy is vendored rather than referenced
+        - `dependencies/sequoia/.keep` ships in the project template, so that path is
+        already tracked by the time sequoia arrives and git never forms a gitlink for it.
 
-        Between them these are the overwhelming majority of the repository by size, and
-        the cost of copying them is paid on every run of the end-to-end test.
+        The cost of copying all this is paid on every run of the end-to-end test, which is
+        why it is worth excluding rather than merely untidy.
      */
     [[nodiscard]]
-    bool is_not_for_dependents(const fs::path& dir)
+    bool excluded_from_created_projects(const fs::path& dir)
     {
       const auto name{back(dir).generic_string()};
       return (name == "docs") || (name == "coverage_reports") || (name == ".git");
@@ -116,7 +117,7 @@ namespace sequoia::testing
           {
             copy_sequoia_output(stream, parentProjectPaths, output_paths{seqLocation}, entry);
           }
-          else if((entry.path() != parentProjectPaths.build().dir()) && !is_not_for_dependents(entry.path()))
+          else if((entry.path() != parentProjectPaths.build().dir()) && !excluded_from_created_projects(entry.path()))
           {
             copy_sequoia_subdir(stream, seqLocation, entry);
           }
