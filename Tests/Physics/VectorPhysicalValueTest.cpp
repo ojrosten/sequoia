@@ -65,22 +65,22 @@ namespace sequoia::testing
     using value_type = quantity_t::value_type;
     using units_type = quantity_t::units_type;
 
-    STATIC_CHECK(vector_space<space_type>);
-    STATIC_CHECK(can_multiply<quantity_t, value_type>);
-    STATIC_CHECK(can_divide<quantity_t, value_type>);
+    check_static<(vector_space<space_type>)>();
+    check_static<(can_multiply<quantity_t, value_type>)>();
+    check_static<(can_divide<quantity_t, value_type>)>();
     if constexpr(Quantity::dimension == 1)
     {
-      STATIC_CHECK(can_divide<quantity_t, quantity_t>);
-      STATIC_CHECK(can_divide<quantity_t, delta_q_t>);
-      STATIC_CHECK(can_divide<delta_q_t, quantity_t>);
-      STATIC_CHECK(can_divide<delta_q_t, delta_q_t>);
+      check_static<(can_divide<quantity_t, quantity_t>)>();
+      check_static<(can_divide<quantity_t, delta_q_t>)>();
+      check_static<(can_divide<delta_q_t, quantity_t>)>();
+      check_static<(can_divide<delta_q_t, delta_q_t>)>();
     }
-    STATIC_CHECK(can_add<quantity_t, quantity_t>);
-    STATIC_CHECK(can_add<quantity_t, delta_q_t>);
-    STATIC_CHECK(can_subtract<quantity_t, quantity_t>);
-    STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
-    STATIC_CHECK(has_unary_plus<quantity_t>);
-    STATIC_CHECK(has_unary_minus<quantity_t>);
+    check_static<(can_add<quantity_t, quantity_t>)>();
+    check_static<(can_add<quantity_t, delta_q_t>)>();
+    check_static<(can_subtract<quantity_t, quantity_t>)>();
+    check_static<(can_subtract<quantity_t, delta_q_t>)>();
+    check_static<(has_unary_plus<quantity_t>)>();
+    check_static<(has_unary_minus<quantity_t>)>();
 
     coordinates_operations<quantity_t>{*this}.execute();
 
@@ -167,12 +167,12 @@ namespace sequoia::testing
   template<std::floating_point T>
   void vector_physical_value_test::test_conversions()
   {
-    STATIC_CHECK(std::same_as<root_transform_unit_t<alternative::gradian_t>, si::units::radian_t>);
-    STATIC_CHECK(std::same_as<root_transform_unit_t<non_si::units::gradian_t>, si::units::radian_t>);
-    STATIC_CHECK(std::same_as<root_transform_t<gradian_t>, coordinate_transform<si::units::radian_t, dilatation<ratio<std::intmax_t{200}, std::numbers::pi_v<long double>>>, translation<0>>>);
-    STATIC_CHECK(std::same_as<root_transform_t<degree_t>, coordinate_transform<si::units::radian_t, dilatation<ratio<std::intmax_t{180}, std::numbers::pi_v<long double>>>, translation<0>>>);       
-    STATIC_CHECK(std::same_as<root_transform_unit_t<milli<si::units::radian_t>>, si::units::radian_t>);
-    STATIC_CHECK(std::same_as<root_transform_unit_t<milli<milli<si::units::radian_t>>>, si::units::radian_t>);
+    check_static<(std::same_as<root_transform_unit_t<alternative::gradian_t>, si::units::radian_t>)>();
+    check_static<(std::same_as<root_transform_unit_t<non_si::units::gradian_t>, si::units::radian_t>)>();
+    check_static<(std::same_as<root_transform_t<gradian_t>, coordinate_transform<si::units::radian_t, dilatation<ratio<std::intmax_t{200}, std::numbers::pi_v<long double>>>, translation<0>>>)>();
+    check_static<(std::same_as<root_transform_t<degree_t>, coordinate_transform<si::units::radian_t, dilatation<ratio<std::intmax_t{180}, std::numbers::pi_v<long double>>>, translation<0>>>)>();       
+    check_static<(std::same_as<root_transform_unit_t<milli<si::units::radian_t>>, si::units::radian_t>)>();
+    check_static<(std::same_as<root_transform_unit_t<milli<milli<si::units::radian_t>>>, si::units::radian_t>)>();
 
     using angle_t = si::angle<T>;
     using namespace si::units;

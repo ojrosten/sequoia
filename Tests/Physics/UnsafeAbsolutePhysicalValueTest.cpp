@@ -37,18 +37,18 @@ namespace sequoia::testing
     using delta_q_t    = unsafe_qty_t::displacement_type;
     using units_t      = unsafe_qty_t::units_type;
 
-    STATIC_CHECK(can_multiply<unsafe_qty_t, value_type>);
-    STATIC_CHECK(can_divide<unsafe_qty_t, value_type>);
-    STATIC_CHECK(can_divide<unsafe_qty_t, unsafe_qty_t>);
-    STATIC_CHECK(can_divide<unsafe_qty_t, delta_q_t>);
-    STATIC_CHECK(can_divide<delta_q_t, unsafe_qty_t>);
-    STATIC_CHECK(can_divide<delta_q_t, delta_q_t>);
-    STATIC_CHECK(can_add<unsafe_qty_t, unsafe_qty_t>);
-    STATIC_CHECK(can_add<unsafe_qty_t, delta_q_t>);
-    STATIC_CHECK(can_subtract<unsafe_qty_t, unsafe_qty_t>);
-    STATIC_CHECK(can_subtract<unsafe_qty_t, delta_q_t>);
-    STATIC_CHECK(has_unary_plus<unsafe_qty_t>);
-    STATIC_CHECK(!has_unary_minus<unsafe_qty_t>);
+    check_static<(can_multiply<unsafe_qty_t, value_type>)>();
+    check_static<(can_divide<unsafe_qty_t, value_type>)>();
+    check_static<(can_divide<unsafe_qty_t, unsafe_qty_t>)>();
+    check_static<(can_divide<unsafe_qty_t, delta_q_t>)>();
+    check_static<(can_divide<delta_q_t, unsafe_qty_t>)>();
+    check_static<(can_divide<delta_q_t, delta_q_t>)>();
+    check_static<(can_add<unsafe_qty_t, unsafe_qty_t>)>();
+    check_static<(can_add<unsafe_qty_t, delta_q_t>)>();
+    check_static<(can_subtract<unsafe_qty_t, unsafe_qty_t>)>();
+    check_static<(can_subtract<unsafe_qty_t, delta_q_t>)>();
+    check_static<(has_unary_plus<unsafe_qty_t>)>();
+    check_static<(!has_unary_minus<unsafe_qty_t>)>();
 
     coordinates_operations<unsafe_qty_t>{*this}.execute();
 

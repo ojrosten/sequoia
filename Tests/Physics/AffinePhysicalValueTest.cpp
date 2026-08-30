@@ -43,24 +43,24 @@ namespace sequoia::testing
     using space_type  = quantity_t::space_type;
     using repr_t      = quantity_t::representation_type;
 
-    STATIC_CHECK(affine_space<space_type>);
-    STATIC_CHECK(vector_space<free_module_type_of_t<space_type>>);
-    STATIC_CHECK(!can_multiply<quantity_t, float>);
-    STATIC_CHECK(!can_divide<quantity_t, float>);
-    STATIC_CHECK(!can_divide<quantity_t, quantity_t>);
-    STATIC_CHECK(!can_divide<quantity_t, delta_q_t>);
-    STATIC_CHECK(!can_divide<delta_q_t, quantity_t>);
-    STATIC_CHECK(has_unary_plus<quantity_t>);
-    STATIC_CHECK(!has_unary_minus<quantity_t>);
+    check_static<(affine_space<space_type>)>();
+    check_static<(vector_space<free_module_type_of_t<space_type>>)>();
+    check_static<(!can_multiply<quantity_t, float>)>();
+    check_static<(!can_divide<quantity_t, float>)>();
+    check_static<(!can_divide<quantity_t, quantity_t>)>();
+    check_static<(!can_divide<quantity_t, delta_q_t>)>();
+    check_static<(!can_divide<delta_q_t, quantity_t>)>();
+    check_static<(has_unary_plus<quantity_t>)>();
+    check_static<(!has_unary_minus<quantity_t>)>();
 
     if constexpr(quantity_t::dimension == 1)
     {
-      STATIC_CHECK(can_divide<delta_q_t, delta_q_t>);
+      check_static<(can_divide<delta_q_t, delta_q_t>)>();
     }
-    STATIC_CHECK(!can_add<quantity_t, quantity_t>);
-    STATIC_CHECK(can_add<quantity_t, delta_q_t>);
-    STATIC_CHECK(can_subtract<quantity_t, quantity_t>);
-    STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
+    check_static<(!can_add<quantity_t, quantity_t>)>();
+    check_static<(can_add<quantity_t, delta_q_t>)>();
+    check_static<(can_subtract<quantity_t, quantity_t>)>();
+    check_static<(can_subtract<quantity_t, delta_q_t>)>();
 
     coordinates_operations<quantity_t>{*this}.execute();
 
@@ -71,24 +71,14 @@ namespace sequoia::testing
 
     // Why the dual is inadmissible, stated directly rather than left to be
     // inferred from a failure to compile.
-    STATIC_CHECK(!has_distinguished_origin_v<space_type>);
-    STATIC_CHECK(!permissible_value_space_v<dual<space_type>>);
+    check_static<(!has_distinguished_origin_v<space_type>)>();
+    check_static<(!permissible_value_space_v<dual<space_type>>)>();
 
     // Positive control. Without it the negative check below would pass just as
     // readily if one of its arguments were merely wrong, rather than the space
     // being inadmissible.
-    STATIC_CHECK(
-      defines_physical_value_v<space_type, units_type, basis_data_type, repr_t, origin_type, validator_type>);
+    check_static<(defines_physical_value_v<space_type, units_type, basis_data_type, repr_t, origin_type, validator_type>)>();
 
-    STATIC_CHECK(
-      !defines_physical_value_v<
-        dual<space_type>,
-        dual<units_type>,
-        unit_defined_basis_data_for<dual<space_type>, dual<units_type>>,
-        repr_t,
-        dual<origin_type>,
-        validator_type
-      >
-    );
+    check_static<(!defines_physical_value_v< dual<space_type>, dual<units_type>, unit_defined_basis_data_for<dual<space_type>, dual<units_type>>, repr_t, dual<origin_type>, validator_type >)>();
   }
 }

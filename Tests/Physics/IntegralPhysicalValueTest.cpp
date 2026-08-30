@@ -47,22 +47,22 @@ namespace sequoia::testing
     using space_type = quantity_t::space_type;
     using value_type = quantity_t::value_type;
 
-    STATIC_CHECK(std::is_unsigned_v<value_type>);
-    STATIC_CHECK(std::is_unsigned_v<typename quantity_t::representation_type::value_type>);
-    STATIC_CHECK(convex_space<space_type>);
-    STATIC_CHECK(free_module<free_module_type_of_t<space_type>>);
-    STATIC_CHECK(can_multiply<quantity_t, value_type>);
-    STATIC_CHECK(!can_divide<quantity_t, value_type>);
-    STATIC_CHECK(!can_divide<quantity_t, quantity_t>);
-    STATIC_CHECK(!can_divide<quantity_t, delta_q_t>);
-    STATIC_CHECK(!can_divide<delta_q_t, quantity_t>);
-    STATIC_CHECK(!can_divide<delta_q_t, delta_q_t>);
-    STATIC_CHECK(can_add<quantity_t, quantity_t>);
-    STATIC_CHECK(can_add<quantity_t, delta_q_t>);
-    STATIC_CHECK(can_subtract<quantity_t, quantity_t>);
-    STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
-    STATIC_CHECK(has_unary_plus<quantity_t>);
-    STATIC_CHECK(!has_unary_minus<quantity_t>);
+    check_static<(std::is_unsigned_v<value_type>)>();
+    check_static<(std::is_unsigned_v<typename quantity_t::representation_type::value_type>)>();
+    check_static<(convex_space<space_type>)>();
+    check_static<(free_module<free_module_type_of_t<space_type>>)>();
+    check_static<(can_multiply<quantity_t, value_type>)>();
+    check_static<(!can_divide<quantity_t, value_type>)>();
+    check_static<(!can_divide<quantity_t, quantity_t>)>();
+    check_static<(!can_divide<quantity_t, delta_q_t>)>();
+    check_static<(!can_divide<delta_q_t, quantity_t>)>();
+    check_static<(!can_divide<delta_q_t, delta_q_t>)>();
+    check_static<(can_add<quantity_t, quantity_t>)>();
+    check_static<(can_add<quantity_t, delta_q_t>)>();
+    check_static<(can_subtract<quantity_t, quantity_t>)>();
+    check_static<(can_subtract<quantity_t, delta_q_t>)>();
+    check_static<(has_unary_plus<quantity_t>)>();
+    check_static<(!has_unary_minus<quantity_t>)>();
     
     coordinates_operations<Quantity>{*this}.execute();
   }

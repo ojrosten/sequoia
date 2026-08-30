@@ -72,11 +72,11 @@ namespace sequoia::testing
     using affine_t     = affine_coordinates<space_t, basis_data_t, rep_t, alice, identity_validator>;
     using delta_t      = affine_t::displacement_coordinates_type;
 
-    STATIC_CHECK(m_affine_space<space_t>);
-    STATIC_CHECK(affine_space<space_t>);
-    STATIC_CHECK(!free_module<space_t>);
-    STATIC_CHECK(not defines_rank_v<space_t>);
-    STATIC_CHECK(dimension_of_v<space_t> == D);
+    check_static<(m_affine_space<space_t>)>();
+    check_static<(affine_space<space_t>)>();
+    check_static<(!free_module<space_t>)>();
+    check_static<(not defines_rank_v<space_t>)>();
+    check_static<(dimension_of_v<space_t> == D)>();
 
     operator_checks<affine_t, operator_expectations{
         .point_plus_point               = admits::no,

@@ -33,18 +33,18 @@ namespace sequoia::testing
     using coords_t     = coordinates<space_t, basis_data_t, canonical_representation<T, half_line_bounds<T>>, throwing_validator>;
     using delta_t      = coords_t::displacement_coordinates_type;
     using value_t      = T;
-    STATIC_CHECK(can_multiply<coords_t, value_t>);
-    STATIC_CHECK(can_divide<coords_t, value_t>);
-    STATIC_CHECK(!can_divide<coords_t, coords_t>);
-    STATIC_CHECK(!can_divide<coords_t, delta_t>);
-    STATIC_CHECK(!can_divide<delta_t, coords_t>);
-    STATIC_CHECK(!can_divide<delta_t, delta_t>);
-    STATIC_CHECK(can_add<coords_t, coords_t>);
-    STATIC_CHECK(can_add<coords_t, delta_t>);
-    STATIC_CHECK(can_subtract<coords_t, coords_t>);
-    STATIC_CHECK(can_subtract<coords_t, delta_t>);
-    STATIC_CHECK(has_unary_plus<coords_t>);
-    STATIC_CHECK(!has_unary_minus<coords_t>);
+    check_static<(can_multiply<coords_t, value_t>)>();
+    check_static<(can_divide<coords_t, value_t>)>();
+    check_static<(!can_divide<coords_t, coords_t>)>();
+    check_static<(!can_divide<coords_t, delta_t>)>();
+    check_static<(!can_divide<delta_t, coords_t>)>();
+    check_static<(!can_divide<delta_t, delta_t>)>();
+    check_static<(can_add<coords_t, coords_t>)>();
+    check_static<(can_add<coords_t, delta_t>)>();
+    check_static<(can_subtract<coords_t, coords_t>)>();
+    check_static<(can_subtract<coords_t, delta_t>)>();
+    check_static<(has_unary_plus<coords_t>)>();
+    check_static<(!has_unary_minus<coords_t>)>();
     
     coordinates_operations<coords_t>{*this}.execute();
   }

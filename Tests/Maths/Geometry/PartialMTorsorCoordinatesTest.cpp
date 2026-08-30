@@ -51,16 +51,16 @@ namespace sequoia::testing
     using basis_data_t = canonical_basis_data<D>;
     using coords_t     = coordinates<space_t, basis_data_t, canonical_representation<SetRep, half_line_bounds<SetRep>>, throwing_validator>;
 
-    STATIC_CHECK( partial_m_torsor<space_t>);
-    STATIC_CHECK(!convex_space<space_t>);
-    STATIC_CHECK(!m_affine_space<space_t>);
-    STATIC_CHECK(!affine_space<space_t>);
-    STATIC_CHECK(!free_module<space_t>);
-    STATIC_CHECK( has_distinguished_origin_v<space_t>);
-    STATIC_CHECK( is_non_negative_orthant_v<space_t>);
+    check_static<(partial_m_torsor<space_t>)>();
+    check_static<(!convex_space<space_t>)>();
+    check_static<(!m_affine_space<space_t>)>();
+    check_static<(!affine_space<space_t>)>();
+    check_static<(!free_module<space_t>)>();
+    check_static<(has_distinguished_origin_v<space_t>)>();
+    check_static<(is_non_negative_orthant_v<space_t>)>();
 
     using displacement_value_t = coords_t::displacement_coordinates_type::value_type;
-    STATIC_CHECK(maths::weak_representation_for<displacement_value_t, Ring>);
+    check_static<(maths::weak_representation_for<displacement_value_t, Ring>)>();
 
     // A distinguished origin makes points addable, but the ring is not a field,
     // so neither points nor displacements may be divided by a scalar.

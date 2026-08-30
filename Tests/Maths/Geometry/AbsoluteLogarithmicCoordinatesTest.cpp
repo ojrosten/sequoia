@@ -75,22 +75,22 @@ namespace sequoia::testing
     using delta_t      = coords_t::displacement_coordinates_type;
     using value_t      = T;
 
-    STATIC_CHECK(representation_for_single_value<rep_t, space_t>);
-    STATIC_CHECK(can_multiply<coords_t, value_t>);
-    STATIC_CHECK(can_divide<coords_t, value_t>);
-    STATIC_CHECK(!can_divide<coords_t, coords_t>);
-    STATIC_CHECK(!can_divide<coords_t, delta_t>);
-    STATIC_CHECK(!can_divide<delta_t, coords_t>);
-    STATIC_CHECK(!can_divide<delta_t, delta_t>);
-    STATIC_CHECK(can_add<coords_t, coords_t>);
-    STATIC_CHECK(can_add<coords_t, delta_t>);
-    STATIC_CHECK(can_subtract<coords_t, coords_t>);
-    STATIC_CHECK(can_subtract<coords_t, delta_t>);
-    STATIC_CHECK(has_unary_plus<coords_t>);
-    STATIC_CHECK(!has_unary_minus<coords_t>);
-    STATIC_CHECK(!coords_t::has_freely_mutable_components);
-    STATIC_CHECK(defines_addition_for_single_value_v<space_t, logarithmic_representation<no_bounds<T>>>);
-    STATIC_CHECK(defines_subtraction_for_single_value_v<space_t, logarithmic_representation<no_bounds<T>>>);
+    check_static<(representation_for_single_value<rep_t, space_t>)>();
+    check_static<(can_multiply<coords_t, value_t>)>();
+    check_static<(can_divide<coords_t, value_t>)>();
+    check_static<(!can_divide<coords_t, coords_t>)>();
+    check_static<(!can_divide<coords_t, delta_t>)>();
+    check_static<(!can_divide<delta_t, coords_t>)>();
+    check_static<(!can_divide<delta_t, delta_t>)>();
+    check_static<(can_add<coords_t, coords_t>)>();
+    check_static<(can_add<coords_t, delta_t>)>();
+    check_static<(can_subtract<coords_t, coords_t>)>();
+    check_static<(can_subtract<coords_t, delta_t>)>();
+    check_static<(has_unary_plus<coords_t>)>();
+    check_static<(!has_unary_minus<coords_t>)>();
+    check_static<(!coords_t::has_freely_mutable_components)>();
+    check_static<(defines_addition_for_single_value_v<space_t, logarithmic_representation<no_bounds<T>>>)>();
+    check_static<(defines_subtraction_for_single_value_v<space_t, logarithmic_representation<no_bounds<T>>>)>();
 
     using variant_t  = std::variant<coords_t, delta_t>;
     using graph_type = transition_checker<variant_t>::transition_graph;

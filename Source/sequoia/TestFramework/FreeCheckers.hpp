@@ -811,7 +811,20 @@ namespace sequoia::testing
       return testing::check_exception_thrown<E>(self.report(description), self.m_Logger, std::forward<Fn>(function), self.get_project_paths(), std::move(postprocessor));
     }
     
-#define STATIC_CHECK(...) (check("", [&](){ static_assert(__VA_ARGS__); return true; }()))
+/** \brief Compile-time check, reported like any other.
+
+        Takes the condition as a template argument rather than as macro text. The
+        static_assert therefore sees a `bool` and not the expression that produced it,
+        so a failure says less than the macro it replaces; that is the price of being
+        an ordinary function, and of being visible through a module, which a macro is
+        not.
+     */
+    template<bool Condition, class Self>
+    bool check_static(this Self& self, const reporter& description = "")
+    {
+      static_assert(Condition);
+      return self.check(description, Condition);
+    }
 
     template<class Stream>
       requires serializable_to<Stream, test_logger<Mode>>

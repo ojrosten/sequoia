@@ -25,7 +25,7 @@ namespace sequoia::testing
   void mixed_physical_value_test::run_tests()
   {
     // TO DO: put this somewhere better!
-    STATIC_CHECK(representation<canonical_representation<float, no_bounds<float>>>);
+    check_static<(representation<canonical_representation<float, no_bounds<float>>>)>();
     
     test_mixed();
     test_mixed_vector();
@@ -102,12 +102,10 @@ namespace sequoia::testing
     using height_t   = si::height<float>;
     using d_height_t = height_t::displacement_type;
 
-    STATIC_CHECK( addition_combinable<length_t, width_t>);
-    STATIC_CHECK(!subtraction_combinable<length_t, width_t>,
-                 "If implemented, the result would have to be length_t&; however, subtraction gives delta length_t"
-                 "Inconsistency between operator-= and operator- is undesirable");
-    STATIC_CHECK( can_add<length_t, width_t>);
-    STATIC_CHECK( can_subtract<length_t, width_t>);
+    check_static<(addition_combinable<length_t, width_t>)>();
+    check_static<(!subtraction_combinable<length_t, width_t>)>("If implemented, the result would have to be length_t&; however, subtraction gives delta length_t" "Inconsistency between operator-= and operator- is undesirable");
+    check_static<(can_add<length_t, width_t>)>();
+    check_static<(can_subtract<length_t, width_t>)>();
 
     check(equality, "", physical_value{2.0f, si::units::metre * si::units::metre}, length_t{1.0, metre} *  length_t{2.0, metre});
     check(equality, "", physical_value{2.0f, si::units::metre * si::units::metre}, length_t{2.0, metre} *  length_t{1.0, metre});
@@ -131,14 +129,14 @@ namespace sequoia::testing
     check(equality, "", static_cast<euc_half_line_qty>(height_t{0.5, metre} /  width_t{0.5, metre}), euc_half_line_qty{1.0, no_unit});
     check(equality, "", static_cast<euc_half_line_qty>( width_t{0.5, metre} / height_t{0.5, metre}), euc_half_line_qty{1.0});
 
-    STATIC_CHECK(!std::is_same_v<d_len_t, d_width_t>);
+    check_static<(!std::is_same_v<d_len_t, d_width_t>)>();
     check(equality, "", static_cast<d_len_t>(d_width_t{0.5, metre}), d_len_t{0.5, metre});
 
-    STATIC_CHECK(!std::is_same_v<d_len_t, d_height_t>);
+    check_static<(!std::is_same_v<d_len_t, d_height_t>)>();
     check(equality, "", static_cast<d_len_t>(d_height_t{1.5, metre}), d_len_t{1.5, metre});
 
     using euc_qty = euclidean_1d_vector_quantity<float>;
-    STATIC_CHECK(!std::is_same_v<decltype(d_width_t{} / d_height_t{}), euc_qty>);
+    check_static<(!std::is_same_v<decltype(d_width_t{} / d_height_t{}), euc_qty>)>();
     check(equality, "", static_cast<euc_qty>(d_width_t{1.5, metre}/d_height_t{0.5, metre}), euc_qty{3.0, no_unit});
   }
 
@@ -155,7 +153,7 @@ namespace sequoia::testing
     auto acc{9.81 * v / delta_t};
     auto pe{mass * acc * si::height<double>{1.0, metre}};
 
-    STATIC_CHECK(!std::same_as<decltype(pe), decltype(ke)>);
+    check_static<(!std::same_as<decltype(pe), decltype(ke)>)>();
     
     check(equality, "", pe + ke, (9.81+0.5)*mass*v*v);
     check(equality, "", ke + pe, (9.81+0.5)*mass*v*v);
