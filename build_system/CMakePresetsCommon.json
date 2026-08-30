@@ -30,7 +30,7 @@
       "hidden": true,
       "generator": "Ninja",
       "cacheVariables": {
-        "CMAKE_CXX_FLAGS": "$env{CXX_ASAN_FLAGS} $env{CXX_COVERAGE_FLAGS} $env{CXX_TIME_TRACE_FLAGS} $env{CXX_COLOUR_FLAGS}",
+        "CMAKE_CXX_FLAGS": "$env{CXX_ASAN_FLAGS} $env{CXX_COVERAGE_FLAGS} $env{CXX_COLOUR_FLAGS}",
         "CMAKE_EXE_LINKER_FLAGS": "$env{LINKER_ASAN_FLAGS} $env{LINKER_COVERAGE_FLAGS}"
       },
       "warnings": {
@@ -67,8 +67,8 @@
     {
       "name": "base-time-trace",
       "hidden": true,
-      "environment": {
-        "CXX_TIME_TRACE_FLAGS": "-ftime-trace"
+      "cacheVariables": {
+        "TIME_TRACE": "ON"
       }
     },
     {

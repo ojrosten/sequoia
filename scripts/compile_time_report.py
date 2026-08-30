@@ -33,13 +33,24 @@ LOC = re.compile(r"<(?P<file>[^:<>]+):(?P<line>\d+):\d+")
 
 
 def traces(build_dir):
-    """Every -ftime-trace JSON under build_dir, keyed by translation unit."""
+    """Every -ftime-trace JSON under build_dir, keyed by translation unit.
+
+    A trace counts only if the object file it was emitted beside is still
+    there. CMake's own compiler checks are compiled with the project's flags
+    and leave traces of their own in the build tree - `-.json` from a check
+    that compiles to stdout, and `a-CMakeCXXCompilerId.json` - which are
+    indistinguishable from real ones by name or content, and which inflated
+    the unit count by two before this check existed. The object is the
+    evidence that something in the project was actually built.
+    """
     out = {}
     for root, _, files in os.walk(build_dir):
         for f in files:
             if not f.endswith(".json") or f == "compile_commands.json":
                 continue
             path = os.path.join(root, f)
+            if not os.path.exists(path[:-len(".json")] + ".o"):
+                continue
             try:
                 with open(path, encoding="utf-8") as fh:
                     d = json.load(fh)
@@ -236,14 +247,15 @@ def main():
                     help="which translation unit --detail should recompile")
     ap.add_argument("--self", metavar="FRAGMENT", nargs="?", const="",
                     help="exclusive time per phase and entity for one translation unit")
-    ap.add_argument("--out-dir", default="/tmp", help="where --detail puts its probe")
+    ap.add_argument("--out-dir", default=None,
+                    help="where --detail puts its probe (default: inside the build directory)")
     a = ap.parse_args()
 
     if a.self is not None:
         show_self(a.build_dir, a.self, a.top)
         return
     if a.detail:
-        detail(a.build_dir, a.detail, a.source, a.top, a.out_dir)
+        detail(a.build_dir, a.detail, a.source, a.top, a.out_dir or a.build_dir)
         return
     agg = summarize(a.build_dir, a.top)
     if a.baseline:

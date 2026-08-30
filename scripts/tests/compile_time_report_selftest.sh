@@ -28,8 +28,11 @@ check() { # check <name> <yes|no> <pattern>
 }
 
 trace() { # trace <file> <json-array-of-events>
+  # The sibling object matters: a trace without one is a CMake compiler check,
+  # not a translation unit, so the fixtures have to look like real builds.
   mkdir -p "$(dirname "$1")"
   printf '{"traceEvents": %s}\n' "$2" > "$1"
+  : > "${1%.json}.o"
 }
 
 b="$tmp/build"
@@ -92,6 +95,21 @@ echo '{"not":"a trace"}' > "$b/compile_commands.json"
 echo 'not json at all'   > "$b/stray.json"
 python3 "$script" "$b" --top 3 > "$tmp/out" 2>&1
 check "non-trace JSON ignored" yes "2 translation units"
+
+# A well-formed trace with no object beside it is one of CMake's own compiler
+# checks - `-.json` from a check compiled to stdout, or the compiler-id probe.
+# They are real traces and indistinguishable by content, so only the missing
+# object tells them apart. Two of these inflated the unit count before the
+# check existed.
+trace "$b/-.json" '[
+ {"ph":"X","name":"Total ExecuteCompiler","ts":0,"dur":900000,"args":{"count":1}}]'
+rm -f "$b/-.o"
+trace "$b/a-CMakeCXXCompilerId.json" '[
+ {"ph":"X","name":"Total ExecuteCompiler","ts":0,"dur":900000,"args":{"count":1}}]'
+rm -f "$b/a-CMakeCXXCompilerId.o"
+python3 "$script" "$b" --top 5 > "$tmp/out" 2>&1
+check "objectless traces are not units" yes "2 translation units"
+check "compiler check not ranked"        no  "CMakeCXXCompilerId"
 
 if [[ $fails -eq 0 ]]; then echo "compile_time_report selftest: all controls pass"; else
   echo "compile_time_report selftest: $fails control(s) failed"; fi

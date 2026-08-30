@@ -81,12 +81,24 @@ FUNCTION(sequoia_add_coverage_options target)
     endif()
 ENDFUNCTION()
 
+# Applied per target rather than through CMAKE_CXX_FLAGS so that CMake's own
+# compiler checks never see it. Those compile to stdout, and -ftime-trace names
+# its output after the output file, so a global flag drops a stray '-.json' in
+# whichever directory cmake was invoked from - and puts the check's own traces
+# in the build tree, where they are indistinguishable from translation units.
+FUNCTION(sequoia_add_time_trace_options target)
+    if(TIME_TRACE)
+        target_compile_options(${target} PRIVATE -ftime-trace)
+    endif()
+ENDFUNCTION()
+
 FUNCTION(sequoia_finalize_tests target sourceGroupRoot sourceGroupPrefix)
     sequoia_compile_features(${target})
     sequoia_set_compile_options(${target})
     sequoia_set_properties(${target})
     sequoia_set_ide_source_groups_with_prefix(${target} ${sourceGroupRoot} ${sourceGroupPrefix})
     sequoia_add_coverage_options(${target})
+    sequoia_add_time_trace_options(${target})
     if(CODE_COVERAGE)
         add_test(NAME ${target} COMMAND ${target} "--serial")
     endif()
@@ -109,6 +121,7 @@ FUNCTION(sequoia_finalize_library target)
     sequoia_link_libraries(${target})
     sequoia_set_ide_source_groups(${target} ${CMAKE_CURRENT_LIST_DIR})
     sequoia_add_coverage_options(${target})
+    sequoia_add_time_trace_options(${target})
 ENDFUNCTION()
 
 FUNCTION(sequoia_finalize_executable target)
