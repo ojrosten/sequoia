@@ -11,6 +11,9 @@
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/Core/Object/Factory.hpp"
+#include "sequoia/TestFramework/SumTypeCheckers.hpp"
+#include "sequoia/TestFramework/StringCheckers.hpp"
+#include "sequoia/TestFramework/ProductTypeCheckers.hpp"
 
 #include <map>
 

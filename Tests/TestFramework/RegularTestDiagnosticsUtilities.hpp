@@ -13,6 +13,8 @@
 
 #include "sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp"
 #include "sequoia/TestFramework/AllocationCheckers.hpp"
+#include "sequoia/TestFramework/StringCheckers.hpp"
+#include "sequoia/TestFramework/ProductTypeCheckers.hpp"
 
 #include <vector>
 

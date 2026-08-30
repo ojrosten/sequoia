@@ -10,6 +10,7 @@
 #include "PartitionIteratorTest.hpp"
 
 #include "PartitionedDataTestingUtilities.hpp"
+#include "sequoia/Core/Object/Handlers.hpp"
 
 namespace sequoia::testing
 {

@@ -12,6 +12,7 @@
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
 namespace sequoia::testing
 {

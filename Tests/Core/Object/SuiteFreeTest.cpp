@@ -12,6 +12,7 @@
 #include "Maths/Graph/Tree/TreeTestingUtilities.hpp"
 
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
+#include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
 namespace fs = std::filesystem;
 

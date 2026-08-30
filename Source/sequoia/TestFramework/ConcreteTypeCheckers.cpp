@@ -9,7 +9,7 @@
     \brief Definitions for ConcreteTypeCheckers.hpp
  */
 
-#include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
+#include "sequoia/TestFramework/PathCheckers.hpp"
 
 namespace sequoia::testing
 {

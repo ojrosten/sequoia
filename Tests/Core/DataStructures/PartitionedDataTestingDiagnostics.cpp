@@ -8,6 +8,7 @@
 /** \file */
 
 #include "PartitionedDataTestingDiagnostics.hpp"
+#include "sequoia/Core/Object/Handlers.hpp"
 
 namespace sequoia::testing
 {

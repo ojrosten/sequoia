@@ -22,6 +22,8 @@
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
+#include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
 #include <fstream>
 

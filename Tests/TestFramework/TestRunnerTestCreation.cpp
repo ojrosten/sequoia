@@ -14,6 +14,7 @@
 #include "sequoia/TestFramework/TestCreator.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
+#include "sequoia/Streaming/Streaming.hpp"
 
 #include <fstream>
 

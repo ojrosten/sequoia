@@ -9,6 +9,8 @@
 
 #include "MaterialsUpdaterFreeTest.hpp"
 #include "sequoia/TestFramework/MaterialsUpdater.hpp"
+#include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
 namespace sequoia::testing
 {

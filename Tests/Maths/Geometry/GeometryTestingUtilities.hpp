@@ -10,6 +10,7 @@
 /** \file */
 
 #include "CommonGeometryTestingUtilities.hpp"
+#include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
 namespace sequoia::testing
 {

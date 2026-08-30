@@ -11,6 +11,7 @@
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/TestRunner.hpp"
+#include "sequoia/Streaming/Streaming.hpp"
 
 #include <charconv>
 #include <fstream>

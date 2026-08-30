@@ -10,6 +10,8 @@
 */
 
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
+#include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TestFramework/PathCheckers.hpp"
 
 namespace sequoia::testing
 {

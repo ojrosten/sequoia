@@ -11,6 +11,7 @@
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
+#include "sequoia/Streaming/Streaming.hpp"
 
 #include <fstream>
 

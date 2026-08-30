@@ -1,4 +1,4 @@
-Tests/Streaming/StreamingFreeTest.cpp, Line 34
+Tests/Streaming/StreamingFreeTest.cpp, Line 35
 
 Expected Exception Type:
 [std::runtime_error]
@@ -6,7 +6,7 @@ Unable to open file output/TestsTemporaryData/Streaming/StreamingFreeTest/Workin
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 38
+Tests/Streaming/StreamingFreeTest.cpp, Line 39
 
 Expected Exception Type:
 [std::runtime_error]

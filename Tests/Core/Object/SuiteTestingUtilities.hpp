@@ -12,6 +12,8 @@
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/Core/Object/Suite.hpp"
+#include "sequoia/TestFramework/PathCheckers.hpp"
+#include "sequoia/TestFramework/ProductTypeCheckers.hpp"
 
 namespace sequoia::testing
 {

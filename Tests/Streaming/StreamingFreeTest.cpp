@@ -10,6 +10,7 @@
 #include "StreamingFreeTest.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
+#include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
 #include <fstream>
 
