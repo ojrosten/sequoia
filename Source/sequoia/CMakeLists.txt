@@ -14,6 +14,7 @@ set(SourceList
     TestFramework/AllocationCheckersCore.cpp
     TestFramework/AllocationCheckersDetails.cpp
     TestFramework/Commands.cpp
+    TestFramework/CoreInfrastructure.cpp
     TestFramework/ConcreteTypeCheckers.cpp
     TestFramework/DependencyAnalyzer.cpp
     TestFramework/FailureInfo.cpp

@@ -16,6 +16,8 @@
 
 #include <format>
 #include <filesystem>
+#include <string>
+#include <string_view>
 #include <sstream>
 
 namespace sequoia::testing
@@ -27,7 +29,52 @@ namespace sequoia::testing
   template<class T>
   struct serializer;
 
+  /** \brief Out-of-line serialization for the elementary types.
+
+      `std::format` is instantiated afresh for every type it is asked about, and the
+      framework asks about a great many. Routing the types whose formatting is fixed
+      through ordinary functions, declared here and defined in the associated cpp,
+      keeps that instantiation to one place. The definitions use `std::format`, so the
+      output is identical by construction rather than by inspection.
+   */
+
+  namespace impl
+  {
+    [[nodiscard]] std::string serialize(bool);
+    [[nodiscard]] std::string serialize(char);
+    [[nodiscard]] std::string serialize(long long);
+    [[nodiscard]] std::string serialize(unsigned long long);
+    [[nodiscard]] std::string serialize(float);
+    [[nodiscard]] std::string serialize(double);
+    [[nodiscard]] std::string serialize(long double);
+    [[nodiscard]] std::string serialize(std::string_view);
+  }
+
+  /** \brief Types whose serialization is delegated to an ordinary function. */
+  template<class T>
+  inline constexpr bool elementary_serializable_v{
+       (std::integral<T> || std::floating_point<T>)
+    || std::same_as<T, std::string> || std::same_as<T, std::string_view>
+  };
+
+  template<class T>
+    requires elementary_serializable_v<T>
+  struct serializer<T>
+  {
+    [[nodiscard]]
+    static std::string make(const T& val)
+    {
+      if      constexpr(std::same_as<T, bool>)             return impl::serialize(val);
+      else if constexpr(std::same_as<T, char>)             return impl::serialize(val);
+      else if constexpr(std::signed_integral<T>)           return impl::serialize(static_cast<long long>(val));
+      else if constexpr(std::unsigned_integral<T>)         return impl::serialize(static_cast<unsigned long long>(val));
+      else if constexpr(std::floating_point<T>)            return impl::serialize(val);
+      else                                                 return impl::serialize(std::string_view{val});
+    }
+  };
+
   template<std::formattable<char> T>
+    requires (!elementary_serializable_v<T>)
   struct serializer<T>
   {
     [[nodiscard]]
@@ -38,7 +85,7 @@ namespace sequoia::testing
   };
 
   template<serializable_to<std::stringstream> T>
-    requires (!std::formattable<T, char>)
+    requires (!std::formattable<T, char>) && (!elementary_serializable_v<T>)
   struct serializer<T>
   {
     [[nodiscard]]
