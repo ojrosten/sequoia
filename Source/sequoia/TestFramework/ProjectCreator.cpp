@@ -79,6 +79,21 @@ namespace sequoia::testing
       }
     }
 
+    /** Directories of sequoia which a dependent project cannot use.
+
+        Everything here is generated output: `docs` is the committed doxygen render and
+        `coverage_reports` the committed lcov html. Between them they are the bulk of the
+        repository by size and by file count, and a project which merely builds against
+        sequoia has no use for either. Copying them is pure cost, and the cost is paid on
+        every run of the end-to-end test.
+     */
+    [[nodiscard]]
+    bool is_generated_output_dir(const fs::path& dir)
+    {
+      const auto name{back(dir).generic_string()};
+      return (name == "docs") || (name == "coverage_reports");
+    }
+
     void copy_sequoia(std::ostream& stream, const project_paths& parentProjectPaths, const project_data& data)
     {
       const std::filesystem::path seqLocation{dependencies_paths{data.project_root}.sequoia_root()};
@@ -97,7 +112,7 @@ namespace sequoia::testing
           {
             copy_sequoia_output(stream, parentProjectPaths, output_paths{seqLocation}, entry);
           }
-          else if(entry.path() != parentProjectPaths.build().dir())
+          else if((entry.path() != parentProjectPaths.build().dir()) && !is_generated_output_dir(entry.path()))
           {
             copy_sequoia_subdir(stream, seqLocation, entry);
           }
