@@ -16,6 +16,8 @@
 
 #include <queue>
 #include <stack>
+#include <concepts>
+#include <type_traits>
 
 namespace sequoia::maths::graph_impl
 {

@@ -12,6 +12,8 @@
 #include <numeric>
 #include <ratio>
 
+#include "sequoia/Core/Meta/Concepts.hpp"
+
 namespace sequoia::maths
 {
   template<auto Num, auto Den>

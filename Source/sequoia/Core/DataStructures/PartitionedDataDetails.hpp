@@ -11,7 +11,10 @@
     \brief Metaprogramming components for partitioned data.
  */
 
+#include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Meta/TypeTraits.hpp"
+
+#include <memory>
 
 namespace sequoia::data_structures::partition_impl
 {

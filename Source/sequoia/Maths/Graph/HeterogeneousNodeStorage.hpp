@@ -14,6 +14,8 @@
 
 #include <tuple>
 
+#include "sequoia/Core/Meta/TypeTraits.hpp"
+
 namespace sequoia::maths
 {
   /** class heterogeneous_node_storage

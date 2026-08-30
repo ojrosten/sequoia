@@ -31,6 +31,7 @@
 #include "sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp"
 #include "sequoia/Core/Object/HandlerTraits.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
+#include "sequoia/Core/DataStructures/PartitionedData.hpp"
 
 #include <limits>
 #include <stdexcept>

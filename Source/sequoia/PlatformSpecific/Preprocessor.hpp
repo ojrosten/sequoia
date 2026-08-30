@@ -9,7 +9,7 @@
 
 /** \file Preprocessor logic for dealing with different platforms */
 
-#include "PlatformDiscriminators.hpp"
+#include "sequoia/PlatformSpecific/PlatformDiscriminators.hpp"
 
 #include <execution>
 #include <vector>

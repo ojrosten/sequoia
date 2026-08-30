@@ -14,3 +14,6 @@
 
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 #include "sequoia/Maths/Graph/DynamicGraphTraversalDetails.hpp"
+
+#include <concepts>
+#include <type_traits>

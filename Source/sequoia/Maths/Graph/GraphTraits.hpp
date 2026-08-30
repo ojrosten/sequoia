@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include <concepts>
+#include <type_traits>
+
 /** \file
     \brief Traits and Concepts for graphs.
 

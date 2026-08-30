@@ -13,6 +13,9 @@
 
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 
+#include <memory>
+#include <string>
+
 namespace sequoia::testing
 {
   /** \brief Somewhat similar to std::allocator but logs (de)allocations via an counter

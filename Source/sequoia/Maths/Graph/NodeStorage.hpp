@@ -22,6 +22,7 @@
 
 #include <type_traits>
 #include <algorithm>
+#include <vector>
 
 namespace sequoia::maths
 {

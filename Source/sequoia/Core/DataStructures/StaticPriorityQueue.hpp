@@ -14,6 +14,7 @@
 
 #include "sequoia/Algorithms/Algorithms.hpp"
 #include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
+#include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <functional>
 

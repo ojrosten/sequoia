@@ -12,6 +12,7 @@
  */
 
 #include "sequoia/Maths/Graph/StaticGraphDetails.hpp"
+#include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
 
 namespace sequoia::maths
 {

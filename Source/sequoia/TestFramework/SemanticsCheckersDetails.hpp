@@ -194,7 +194,7 @@ namespace sequoia::testing::impl
 
   template<test_mode Mode, class Actions, pseudoregular T, class... Args>
   [[nodiscard]]
-  static bool check_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  bool check_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
     return check_equality_prerequisites(logger, actions, x, y, args...);
   }
@@ -202,14 +202,14 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Actions, pseudoregular T, class... Args>
     requires deep_totally_ordered<T>
   [[nodiscard]]
-  static bool check_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  bool check_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
     return check_orderable_prerequisites(logger, actions, x, y, args...);
   }
 
   template<test_mode Mode, class Actions, moveonly T, class U, class... Args>
   [[nodiscard]]
-  static bool check_prerequisites(test_logger<Mode>& logger,  const Actions& actions, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent, const Args&... args)
+  bool check_prerequisites(test_logger<Mode>& logger,  const Actions& actions, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent, const Args&... args)
   {
     return check_equality_prerequisites(logger, actions, x, y, xEquivalent, yEquivalent, args...);
   }
@@ -217,14 +217,14 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Actions, moveonly T, class U, class... Args>
     requires deep_totally_ordered<T>
   [[nodiscard]]
-  static bool check_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent, const Args&... args)
+  bool check_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const U& xEquivalent, const U& yEquivalent, const Args&... args)
   {
     return check_orderable_prerequisites(logger, actions, x, y, xEquivalent, yEquivalent, args...);
   }
 
   template<test_mode Mode, class Actions, moveonly T, class... Args>
   [[nodiscard]]
-  static bool check_prerequisites(test_logger<Mode>& logger,  const Actions& actions, const T& x, const T& y, const Args&... args)
+  bool check_prerequisites(test_logger<Mode>& logger,  const Actions& actions, const T& x, const T& y, const Args&... args)
   {
     return check_equality_prerequisites(logger, actions, x, y, args...);
   }
@@ -232,7 +232,7 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Actions, moveonly T, class... Args>
     requires deep_totally_ordered<T>
   [[nodiscard]]
-  static bool check_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  bool check_prerequisites(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
     return check_orderable_prerequisites(logger, actions, x, y, args...);
   }

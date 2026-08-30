@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <concepts>
+
 /** \file
     \brief Classes implementing the concept of a linear sequence.
  */
