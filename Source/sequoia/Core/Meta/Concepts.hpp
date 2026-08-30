@@ -11,11 +11,11 @@
     \brief Concepts which are sufficiently general to appear in the `sequoia` namespace.
  */
 
-#include "sequoia/Core/Meta/TypeTraits.hpp"
-
 #include <utility>
 #include <functional>
 #include <concepts>
+
+import sequoia.core.meta.type_traits;
 
 namespace sequoia
 {

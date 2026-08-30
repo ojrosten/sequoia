@@ -39,6 +39,12 @@ FUNCTION(sequoia_set_ide_source_groups_with_prefix target directory sourceGroupP
         source_group(TREE ${directory} PREFIX ${sourceGroupPrefix} FILES ${SourceFiles})
 ENDFUNCTION()
 
+# EXPERIMENT: consumers of a named module must be scanned for module
+# dependencies, and CMake does not scan a target that provides none of its own.
+FUNCTION(sequoia_enable_module_scanning target)
+    set_target_properties(${target} PROPERTIES CXX_SCAN_FOR_MODULES ON)
+ENDFUNCTION()
+
 FUNCTION(sequoia_compile_features target)
     if(WIN32)
         target_compile_features(${target} PUBLIC cxx_std_23)
@@ -99,6 +105,7 @@ FUNCTION(sequoia_finalize_tests target sourceGroupRoot sourceGroupPrefix)
     sequoia_set_ide_source_groups_with_prefix(${target} ${sourceGroupRoot} ${sourceGroupPrefix})
     sequoia_add_coverage_options(${target})
     sequoia_add_time_trace_options(${target})
+    sequoia_enable_module_scanning(${target})
     if(CODE_COVERAGE)
         add_test(NAME ${target} COMMAND ${target} "--serial")
     endif()
@@ -122,6 +129,7 @@ FUNCTION(sequoia_finalize_library target)
     sequoia_set_ide_source_groups(${target} ${CMAKE_CURRENT_LIST_DIR})
     sequoia_add_coverage_options(${target})
     sequoia_add_time_trace_options(${target})
+    sequoia_enable_module_scanning(${target})
 ENDFUNCTION()
 
 FUNCTION(sequoia_finalize_executable target)

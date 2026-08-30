@@ -40,6 +40,15 @@ set(SourceList
 
 add_library(sequoia STATIC ${SourceList})
 
+# EXPERIMENT: named modules. Bridge modules over existing headers, so a
+# consumer may include or import and still get the same entities.
+target_sources(sequoia
+    PUBLIC
+    FILE_SET sequoia_modules TYPE CXX_MODULES
+    BASE_DIRS ${CMAKE_CURRENT_LIST_DIR}
+    FILES
+        Modules/TypeTraits.cppm)
+
 target_include_directories(sequoia PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../)
 
 sequoia_finalize_library(sequoia)
