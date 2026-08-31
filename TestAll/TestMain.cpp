@@ -398,6 +398,10 @@ int main(int argc, char** argv)
         bounds_free_test{"Bounds Free Test"}
       },
       suite{
+        "Validators",
+        validators_free_test{"Validators Free Test"}
+      },
+      suite{
         "Vector Coordinates",
         vector_coordinates_false_negative_test{"Vector Coordinates False negative Test"},
         vector_coordinates_test{"Vector Coordinates Test"},

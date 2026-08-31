@@ -8,6 +8,7 @@
 /** \file */
 
 #include "SpacesMetaFreeTest.hpp"
+#include "ValidatorTestingUtilities.hpp"
 #include "CommonGeometryTestingUtilities.hpp"
 
 #include "sequoia/Maths/Geometry/Spaces.hpp"
@@ -417,18 +418,6 @@ namespace sequoia::testing
       using coordinates_type = std::tuple<double, double>;
     };
 
-    // A validator which checks nothing but is not the identity: it accepts a single value
-    // and no array, so it separates validator_for's two disjuncts and, being unprivileged,
-    // shows that defines_identity_validator_v is a declaration rather than an inference.
-    struct single_value_validator {
-      template<maths::bounds Bounds>
-      [[nodiscard]] constexpr double operator()(Bounds, double val) const noexcept { return val; }
-    };
-
-    // Callable, but on nothing the framework will ever offer it.
-    struct unusable_validator {
-      [[nodiscard]] constexpr int operator()(int i) const noexcept { return i; }
-    };
   }
   
   [[nodiscard]]
@@ -1814,14 +1803,6 @@ namespace sequoia::testing
     STATIC_CHECK(!defines_identity_validator_v<single_value_validator>);
     STATIC_CHECK(std::is_same_v<defines_identity_validator_t<identity_validator>, std::true_type>);
 
-    // ...and the behaviour behind that declaration, which the traits above cannot
-    // state: single_value_validator really does pass its value through. So "not
-    // privileged" is a claim about what it declares, never about what it does - and
-    // this is the only place that distinction is demonstrated rather than asserted.
-    check(equality,
-          "single_value_validator is transparent in fact, if not by declaration",
-          single_value_validator{}(no_bounds<double>, 42.0),
-          42.0);
   }
 
   /** Pins the DAG of spaces. For each node there is a fixture which sits at

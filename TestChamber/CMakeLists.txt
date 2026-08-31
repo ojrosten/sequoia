@@ -24,6 +24,7 @@ target_sources(TestChamber PRIVATE
                ${TestDir}/Maths/Geometry/M_AffineCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/PartialMTorsorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/SpacesMetaFreeTest.cpp
+               ${TestDir}/Maths/Geometry/ValidatorsFreeTest.cpp
                ${TestDir}/Maths/Geometry/VectorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp
                ${TestDir}/Maths/Geometry/VectorPolarCoordinatesTest.cpp
