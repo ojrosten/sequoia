@@ -30,7 +30,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  stringified_duration stringify(const log_summary::duration& d)
+  stringified_duration stringify_duration(const log_summary::duration& d)
   {
     using namespace std::chrono;
     const auto count{duration_cast<nanoseconds>(d).count()};
@@ -47,11 +47,11 @@ namespace sequoia::testing
     std::string mess{};
     if(duration)
     {
-      const auto [dur, unit]{stringify(*duration)};
+      const auto [dur, unit]{stringify_duration(*duration)};
       mess.append("[Total Run Time: ").append(dur).append(unit).append("]\n");
     }
 
-    const auto[dur, unit]{stringify(log.execution_time())};
+    const auto[dur, unit]{stringify_duration(log.execution_time())};
     mess.append("[Execution Time: ").append(dur).append(unit).append("]\n");
 
     return mess;

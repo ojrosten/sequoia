@@ -1022,7 +1022,7 @@ namespace sequoia::testing
       break;
     case prune_outcome::success:
       {
-        const auto [dur, unit] {testing::stringify(t.time_elapsed())};
+        const auto [dur, unit] {testing::stringify_duration(t.time_elapsed())};
         stream() << "[" << dur << unit << "]\n\n";
       }
       break;

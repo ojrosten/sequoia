@@ -65,7 +65,7 @@ namespace sequoia::testing
   };
 
   [[nodiscard]]
-  stringified_duration stringify(const log_summary::duration& d);
+  stringified_duration stringify_duration(const log_summary::duration& d);
 
   [[nodiscard]]
   std::string report_time(const log_summary& log, opt_duration duration);
