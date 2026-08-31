@@ -96,9 +96,15 @@ FUNCTION(sequoia_copy_asan_runtime target)
         get_filename_component(toolchain_bin "${CMAKE_CXX_COMPILER}" DIRECTORY)
         file(GLOB asan_runtimes "${toolchain_bin}/clang_rt.asan*_dynamic-*.dll")
         if(NOT asan_runtimes)
-            message(WARNING
-                "ASan requested but no clang_rt.asan*_dynamic-*.dll found in ${toolchain_bin}; "
-                "${target} will not start unless the runtime is on PATH.")
+            # Fatal rather than a warning: the symptom this function exists to
+            # remove is a binary that links, builds and then dies at startup
+            # with 0xC0000135 and nothing else to go on. A warning here buys a
+            # green build and reinstates exactly that failure, one step later
+            # and further from its cause.
+            message(FATAL_ERROR
+                "ASan requested but no clang_rt.asan*_dynamic-*.dll found in ${toolchain_bin}. "
+                "${target} would link and then fail at startup with 0xC0000135 unless the "
+                "runtime happens to be on PATH.")
         endif()
         foreach(runtime ${asan_runtimes})
             add_custom_command(TARGET ${target} POST_BUILD
