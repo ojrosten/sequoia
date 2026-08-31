@@ -30,7 +30,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string run_cmd()
     {
-      return with_msvc_v ? "TestAll.exe" : "./TestAll";
+      return with_msvc_v ? ".\\TestAll.exe" : "./TestAll";
     }
 
     [[nodiscard]]

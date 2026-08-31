@@ -880,7 +880,10 @@ namespace sequoia::maths
     requires has_free_module_type_v<T>
   struct nested_free_module_type<T>
   {
-    using type = T::free_module_type;
+    // typename is redundant in C++20 but MSVC 14.51 needs it here: when T is itself
+    // named free_module_type - as physics::radius_space::free_module_type is - it takes
+    // the qualified name for a constructor rather than the injected-class-name.
+    using type = typename T::free_module_type;
   };
 
   template<class T>
@@ -956,7 +959,7 @@ namespace sequoia::maths
   };
 
   template<class T>
-    requires defines_free_module_v<T>
+    requires (!free_module<T>) && defines_free_module_v<T>
   struct free_module_type_of<T>
   {
     using type = nested_free_module_type_t<T>;

@@ -3,6 +3,6 @@
 (?=compiler: ).*
 -- Performing .*\n
 -- Found Threads: .*\n
-\d.\ds
+\d+\.\d+s
 (?= to: ).*
 Preset((.|\n|)*?)(?=--)
