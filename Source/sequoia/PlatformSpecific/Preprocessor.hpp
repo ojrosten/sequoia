@@ -9,6 +9,7 @@
 
 /** \file Preprocessor logic for dealing with different platforms */
 
+#include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/PlatformSpecific/PlatformDiscriminators.hpp"
 
 #include <execution>
@@ -25,10 +26,6 @@ namespace sequoia
     {
       return _ITERATOR_DEBUG_LEVEL;
     }
-
-    #define SEQUOIA_MSVC_EMPTY_BASE_HACK __declspec(empty_bases)
-
-    #define SEQUOIA_NO_UNIQUE_ADDRESS [[msvc::no_unique_address]]
   #else
     #if defined(__clang__)
       using compiler_constant = clang_type;
@@ -39,10 +36,6 @@ namespace sequoia
     #endif
 
     int iterator_debug_level() noexcept;
-
-    #define SEQUOIA_MSVC_EMPTY_BASE_HACK
-
-    #define SEQUOIA_NO_UNIQUE_ADDRESS [[no_unique_address]]
   #endif
 
   #if defined(__clang__)
