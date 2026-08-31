@@ -23,7 +23,10 @@
     {
       "name": "base-binary",
       "hidden": true,
-      "binaryDir": "${sourceDir}/../build/${sourceDirName}/${presetName}"
+      "binaryDir": "${sourceDir}/../build/${sourceDirName}/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPERIMENTAL_CXX_IMPORT_STD": "d0edc3af-4c50-42ea-a356-e2862fe7a444"
+      }
     },
     {
       "name": "base-unix",
@@ -103,6 +106,15 @@
       "inherits": ["base-unix"]
     },
     {
+      "name": "base-homebrew-gcc",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "/opt/homebrew/bin/gcc-16",
+        "CMAKE_CXX_COMPILER": "/opt/homebrew/bin/g++-16"
+      },
+      "inherits": ["base-gcc"]
+    },
+    {
       "name": "base-linux-pkg-gcc",
       "hidden": true,
       "cacheVariables": {
@@ -149,6 +161,11 @@
       "displayName": "macOS Homebrew LLVM [Release, asan]",
       "description": "Configure for ${displayName}",
       "inherits": ["macos-homebrew-llvm-release", "base-asan-unix"]
+    },
+    {
+      "name": "macos-homebrew-gcc",
+      "displayName": "macOS Homebrew GCC [Debug]",
+      "inherits": ["base-homebrew-gcc", "base-debug"]
     },
     {
       "name": "linux-pkg-gcc",
@@ -341,6 +358,12 @@
       "name": "run-linux-gcc-release-asan",
       "displayName": "Run Linux g++ [Release, asan]",
       "inherits": ["linux-gcc-release-asan", "base-run"]
+    },
+    {
+      "name": "macos-homebrew-gcc",
+      "displayName": "macOS Homebrew GCC [Debug]",
+      "configurePreset": "macos-homebrew-gcc",
+      "inherits": ["base-ninja"]
     },
     {
       "name": "linux-pkg-gcc",

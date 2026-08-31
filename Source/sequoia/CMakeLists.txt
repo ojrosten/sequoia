@@ -190,9 +190,6 @@ target_sources(sequoia PUBLIC FILE_SET CXX_MODULES
                               BASE_DIRS ${CMAKE_CURRENT_LIST_DIR}
                               FILES ${ModuleList})
 
-sequoia_add_std_module()
-target_link_libraries(sequoia PUBLIC sequoia_std)
-
 target_include_directories(sequoia PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../)
 
 sequoia_finalize_library(sequoia)

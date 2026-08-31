@@ -162,15 +162,24 @@ Creating files for new test:
 
 Running CMake...
 
--- The CXX compiler identification is Clang 21.1.3
+-- The CXX compiler identification is Clang 23.1.0
 -- Detecting CXX compiler ABI info
 -- Detecting CXX compiler ABI info - done
 -- Check for working CXX compiler: /opt/homebrew/opt/llvm/bin/clang++ - skipped
 -- Detecting CXX compile features
+CMake Warning (dev) at /opt/homebrew/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake:248 (cmake_language):
+  CMake's support for `import std;` in C++23 and newer is experimental.  It
+  is meant only for experimentation and feedback to CMake developers.
+Call Stack (most recent call first):
+  /opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerSupport.cmake:113 (cmake_create_cxx_import_std)
+  /opt/homebrew/share/cmake/Modules/CMakeTestCXXCompiler.cmake:83 (CMAKE_DETERMINE_COMPILER_SUPPORT)
+  CMakeLists.txt:3 (project)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
 -- Detecting CXX compile features - done
 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
 -- Found Threads: TRUE
--- Configuring done (0.5s)
+-- Configuring done (0.7s)
 -- Generating done (0.0s)
 -- Build files have been written to: /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/Auxiliary/FakeProject/build/TestSandbox/macos-homebrew-llvm

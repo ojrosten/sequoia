@@ -115,31 +115,83 @@ FUNCTION(sequoia_copy_asan_runtime target)
     endif()
 ENDFUNCTION()
 
-# `import std;` needs the standard library's own module compiled once and linked
-# in. CMake can do this itself via CXX_MODULE_STD, but only when it can locate
-# libc++.modules.json through `clang++ -print-file-name`, and Homebrew's LLVM
-# installs the C++ libraries under lib/c++ where that lookup does not reach - it
-# fails for libc++.a too, so this is not specific to the manifest. Until that is
-# resolved upstream, std.cppm is compiled as an ordinary module of our own,
-# which is what CMake's support does anyway.
+# `import std;` is supplied one of two ways, and which one depends on the
+# toolchain rather than on us.
+#
+# Preferred: CMake builds the standard library module itself, when it can locate
+# the library's modules manifest through `<compiler> -print-file-name`. Measured
+# 2026-08-31: g++-16 resolves libstdc++.modules.json and this path works.
+#
+# Fallback: Homebrew's LLVM installs the C++ libraries under lib/c++, where that
+# lookup does not reach - it fails for libc++.a equally, so the manifest is not
+# special - and CMake therefore declines. There we compile the standard
+# library's own module source as an ordinary module target, which is what
+# CMake's support does anyway.
+#
+# Both need CMAKE_EXPERIMENTAL_CXX_IMPORT_STD, which must be set before the CXX
+# language is enabled and so lives in the presets, not here.
+FUNCTION(sequoia_enable_import_std target)
+    if(TARGET __CMAKE::CXX26 OR TARGET __CMAKE::CXX23)
+        set_target_properties(${target} PROPERTIES CXX_MODULE_STD ON)
+        return()
+    endif()
+
+    sequoia_add_std_module()
+    if(TARGET sequoia_std AND NOT "${target}" STREQUAL "sequoia_std")
+        target_link_libraries(${target} PUBLIC sequoia_std)
+    endif()
+ENDFUNCTION()
+
+# Locate the standard library's own module source. Each implementation ships one
+# and puts it somewhere different; none of these paths is guessed - the libc++
+# and libstdc++ ones are verified on this machine, and the MSVC one is where the
+# toolset documents std.ixx, to be confirmed on Windows.
+FUNCTION(sequoia_find_std_module_source out)
+    get_filename_component(toolchain_bin "${CMAKE_CXX_COMPILER}" DIRECTORY)
+
+    if(MSVC)
+        # $(VCToolsInstallDir)modules/std.ixx. UNVERIFIED: no Windows machine here.
+        file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" vc_tools)
+        set(candidates "${vc_tools}/modules/std.ixx")
+    elseif(CMAKE_CXX_STANDARD_LIBRARY STREQUAL "libstdc++")
+        file(GLOB candidates "${toolchain_bin}/../include/c++/*/bits/std.cc")
+    else()
+        set(candidates "${toolchain_bin}/../share/libc++/v1/std.cppm")
+    endif()
+
+    foreach(candidate ${candidates})
+        if(EXISTS "${candidate}")
+            set(${out} "${candidate}" PARENT_SCOPE)
+            return()
+        endif()
+    endforeach()
+    set(${out} "" PARENT_SCOPE)
+ENDFUNCTION()
+
 FUNCTION(sequoia_add_std_module)
     if(TARGET sequoia_std)
         return()
     endif()
-    get_filename_component(toolchain_bin "${CMAKE_CXX_COMPILER}" DIRECTORY)
-    set(std_cppm "${toolchain_bin}/../share/libc++/v1/std.cppm")
-    if(NOT EXISTS "${std_cppm}")
+
+    sequoia_find_std_module_source(std_source)
+    if(NOT std_source)
         message(FATAL_ERROR
-            "import std requires std.cppm, not found at ${std_cppm}. "
-            "It ships with libc++; a toolchain without it cannot build this project.")
+            "`import std` is unavailable: CMake could not build the standard library "
+            "module for this toolchain, and no module source was found for "
+            "${CMAKE_CXX_COMPILER_ID}/${CMAKE_CXX_STANDARD_LIBRARY} either. Sequoia "
+            "imports std throughout, so this is fatal rather than a fallback to headers.")
     endif()
-    get_filename_component(std_dir "${std_cppm}" DIRECTORY)
+
+    get_filename_component(std_dir "${std_source}" DIRECTORY)
     add_library(sequoia_std STATIC)
     target_sources(sequoia_std PUBLIC FILE_SET CXX_MODULES
                                       BASE_DIRS "${std_dir}"
-                                      FILES "${std_cppm}")
-    # std.cppm names a reserved module; the warning is for our code, not libc++'s.
-    target_compile_options(sequoia_std PRIVATE -Wno-reserved-module-identifier)
+                                      FILES "${std_source}")
+    # `std` is a reserved module name; the warning is aimed at our code, not the
+    # standard library's own module. Only clang spells it this way.
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        target_compile_options(sequoia_std PRIVATE -Wno-reserved-module-identifier)
+    endif()
     sequoia_compile_features(sequoia_std)
 ENDFUNCTION()
 
@@ -168,6 +220,7 @@ FUNCTION(sequoia_finalize_tests target sourceGroupRoot sourceGroupPrefix)
     sequoia_set_ide_source_groups_with_prefix(${target} ${sourceGroupRoot} ${sourceGroupPrefix})
     sequoia_add_coverage_options(${target})
     sequoia_add_time_trace_options(${target})
+    sequoia_enable_import_std(${target})
     if(CODE_COVERAGE)
         add_test(NAME ${target} COMMAND ${target} "--serial")
     endif()
@@ -192,6 +245,7 @@ FUNCTION(sequoia_finalize_library target)
     sequoia_set_ide_source_groups(${target} ${CMAKE_CURRENT_LIST_DIR})
     sequoia_add_coverage_options(${target})
     sequoia_add_time_trace_options(${target})
+    sequoia_enable_import_std(${target})
 ENDFUNCTION()
 
 FUNCTION(sequoia_finalize_executable target)
