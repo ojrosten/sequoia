@@ -28,7 +28,8 @@ DEFN    = re.compile(r'^[ \t]*(?:template\s*<[^;{}]*>[ \t]*\n?)?[ \t]*(?:class|s
 # They are included in the global module fragment of anything that needs them.
 # (path in the repo, how it is spelled on the include path)
 MACRO_HDRS = [("Source/sequoia/PlatformSpecific/Macros.hpp", "sequoia/PlatformSpecific/Macros.hpp"),
-              ("Tests/Maths/Graph/Static/MSVC_Workarounds.hpp", "Maths/Graph/Static/MSVC_Workarounds.hpp")]
+              ("Tests/Maths/Graph/Static/MSVC_Workarounds.hpp", "Maths/Graph/Static/MSVC_Workarounds.hpp"),
+              ("Source/sequoia/TestFramework/Macros.hpp", "sequoia/TestFramework/Macros.hpp")]
 MACRO_PATHS = {p for p, _ in MACRO_HDRS}
 
 # Core/Object and Maths/Graph are mutually dependent; they are one component.
