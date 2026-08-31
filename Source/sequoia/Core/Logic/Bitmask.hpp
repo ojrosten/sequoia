@@ -7,17 +7,14 @@
 
 #pragma once
 
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
 /** \file
     \brief Utilities to aid logical operations
   */
 
 #include <type_traits>
 
-#ifdef EXPOSE_SEQUOIA_BITMASK
-#define NAMESPACE_SEQUOIA_AS_BITMASK inline namespace sequoia_bitmask
-#else
-#define NAMESPACE_SEQUOIA_AS_BITMASK namespace sequoia
-#endif
 
 NAMESPACE_SEQUOIA_AS_BITMASK
 {
