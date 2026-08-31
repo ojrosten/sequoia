@@ -7,11 +7,11 @@
 
 /** \file */
 
-#include "MaybeTest.hpp"
-
 #include <compare>
 #include <filesystem>
 #include <source_location>
+
+#include "MaybeTest.hpp"
 
 namespace fakeProject::testing
 {
@@ -25,7 +25,7 @@ namespace fakeProject::testing
     {
         // For example:
 
-        // other::functional::maybe<T> x{args}, y{different args};
+        // ::other::functional::maybe<T> x{args}, y{different args};
         // check(equivalence, "Useful Description", x, something equivalent);
         // check(equivalence,"Useful Description", y, something equivalent);
         // For orderable type, with x < y:

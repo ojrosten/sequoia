@@ -9,9 +9,9 @@
 
 /** \file */
 
-#include "ProbabilityTestingUtilities.hpp"
-
 #include <filesystem>
+
+#include "ProbabilityTestingUtilities.hpp"
 
 namespace fakeProject::testing
 {

@@ -9,9 +9,9 @@
 
 /** \file */
 
-#include "MaybeTestingUtilities.hpp"
-
 #include <filesystem>
+
+#include "MaybeTestingUtilities.hpp"
 
 namespace fakeProject::testing
 {

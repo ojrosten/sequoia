@@ -9,14 +9,15 @@
 
 /** \file */
 
-import sequoia.test_framework;
 #include "curlew/Weather/Cloud.hpp"
+
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {
-    template<> struct value_tester<cloud>
+    template<> struct value_tester<::cloud>
     {
-        using type = cloud;
+        using type = ::cloud;
 
         template<test_mode Mode>
         static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)

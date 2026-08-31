@@ -5,9 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "?ClassTestingUtilities.hpp"
-
 #include <filesystem>
+
+#include "?ClassTestingUtilities.hpp"
 
 namespace sequoia::testing
 {

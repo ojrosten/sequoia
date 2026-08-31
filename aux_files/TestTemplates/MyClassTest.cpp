@@ -7,11 +7,11 @@
 
 /** \file */
 
-#include "?ClassTest.hpp"
-
 #include <compare>
 #include <filesystem>
 #include <source_location>
+
+#include "?ClassTest.hpp"
 
 namespace ?::testing
 {

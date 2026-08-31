@@ -5,6 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+#include <filesystem>
+#include <source_location>
+
 #include "ProbabilityTestingDiagnostics.hpp"
 
 namespace generatedProject::testing
@@ -17,7 +20,7 @@ namespace generatedProject::testing
 
 	void probability_false_negative_test::run_tests()
 	{
-		maths::probability x{0.5}, y{1.0};
+		::maths::probability x{0.5}, y{1.0};
 		check(equivalence, "", x, 0.6);
 		check(equality, "", x, y);
 	}

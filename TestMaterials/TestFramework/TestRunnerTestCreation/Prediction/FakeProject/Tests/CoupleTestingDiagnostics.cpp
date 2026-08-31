@@ -7,10 +7,10 @@
 
 /** \file */
 
-#include "CoupleTestingDiagnostics.hpp"
-
 #include <filesystem>
 #include <source_location>
+
+#include "CoupleTestingDiagnostics.hpp"
 
 namespace fakeProject::testing
 {
@@ -24,7 +24,7 @@ namespace fakeProject::testing
     {
         // For example:
 
-        // other::couple<S, T> x{args}, y{different args};
+        // ::other::couple<S, T> x{args}, y{different args};
         // check(equivalence, "Useful Description", x, something inequivalent - ordinarily this would fail);
         // check(equality, "Useful Description", x, y);
     }

@@ -7,10 +7,10 @@
 
 /** \file */
 
-#include "ContainerAllocationTest.hpp"
-
 #include <filesystem>
 #include <source_location>
+
+#include "ContainerAllocationTest.hpp"
 
 namespace curlew::testing
 {

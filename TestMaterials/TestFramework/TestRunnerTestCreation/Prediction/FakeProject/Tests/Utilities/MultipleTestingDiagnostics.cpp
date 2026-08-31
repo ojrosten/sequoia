@@ -7,10 +7,10 @@
 
 /** \file */
 
-#include "MultipleTestingDiagnostics.hpp"
-
 #include <filesystem>
 #include <source_location>
+
+#include "MultipleTestingDiagnostics.hpp"
 
 namespace fakeProject::testing
 {
@@ -24,8 +24,8 @@ namespace fakeProject::testing
     {
         // For example:
 
-        // auto x = []() { return multiple<T...>{args}; };
-        // auto y = []() { return multiple<T...>{different args}; };
+        // auto x = []() { return ::multiple<T...>{args}; };
+        // auto y = []() { return ::multiple<T...>{different args}; };
         // check(equivalence, "Useful Description", x(), something inequivalent - ordinarily this would fail);
         // check(equality, "Useful Description", x(), y());
     }

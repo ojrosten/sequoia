@@ -9,15 +9,16 @@
 
 /** \file */
 
-import sequoia.test_framework;
 #include "curlew/Stuff/Foo.h"
+
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {
     template<maths::floating_point T>
-    struct value_tester<bar::baz::foo<T>>
+    struct value_tester<::bar::baz::foo<T>>
     {
-        using type = bar::baz::foo<T>;
+        using type = ::bar::baz::foo<T>;
 
         template<test_mode Mode>
         static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)

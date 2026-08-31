@@ -9,9 +9,9 @@
 
 /** \file */
 
-#include "CloudTestingUtilities.hpp"
-
 #include <filesystem>
+
+#include "CloudTestingUtilities.hpp"
 
 namespace fakeProject::testing
 {

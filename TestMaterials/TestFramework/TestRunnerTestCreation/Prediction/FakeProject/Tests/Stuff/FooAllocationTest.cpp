@@ -7,10 +7,10 @@
 
 /** \file */
 
-#include "FooAllocationTest.hpp"
-
 #include <filesystem>
 #include <source_location>
+
+#include "FooAllocationTest.hpp"
 
 namespace fakeProject::testing
 {

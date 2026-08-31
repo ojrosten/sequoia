@@ -7,11 +7,11 @@
 
 /** \file */
 
-#include "ThingummyTest.hpp"
-
 #include <compare>
 #include <filesystem>
 #include <source_location>
+
+#include "ThingummyTest.hpp"
 
 namespace curlew::testing
 {
@@ -25,7 +25,7 @@ namespace curlew::testing
     {
         // For example:
 
-        // stuff::thingummy<T> x{args}, y{different args};
+        // ::stuff::thingummy<T> x{args}, y{different args};
         // check(equivalence, "Useful Description", x, something equivalent);
         // check(equivalence,"Useful Description", y, something equivalent);
         // For orderable type, with x < y:

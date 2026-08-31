@@ -7,11 +7,11 @@
 
 /** \file */
 
-#include "WidgetTest.hpp"
-
 #include <compare>
 #include <filesystem>
 #include <source_location>
+
+#include "WidgetTest.hpp"
 
 namespace curlew::testing
 {
@@ -25,7 +25,7 @@ namespace curlew::testing
     {
         // For example:
 
-        // stuff::widget x{args}, y{different args};
+        // ::stuff::widget x{args}, y{different args};
         // check(equivalence, "Useful Description", x, something equivalent);
         // check(equivalence,"Useful Description", y, something equivalent);
         // For orderable type, with x < y:

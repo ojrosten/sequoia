@@ -9,14 +9,15 @@
 
 /** \file */
 
-import sequoia.test_framework;
 #include "curlew/Maths/Angle.hpp"
+
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {
-    template<> struct value_tester<maths::angle>
+    template<> struct value_tester<::maths::angle>
     {
-        using type = maths::angle;
+        using type = ::maths::angle;
 
         template<test_mode Mode>
         static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)

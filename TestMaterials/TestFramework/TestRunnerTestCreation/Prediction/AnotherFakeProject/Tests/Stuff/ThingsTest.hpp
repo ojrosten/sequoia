@@ -9,9 +9,9 @@
 
 /** \file */
 
-#include "ThingsTestingUtilities.hpp"
-
 #include <filesystem>
+
+#include "ThingsTestingUtilities.hpp"
 
 namespace curlew::testing
 {

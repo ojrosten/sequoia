@@ -7,10 +7,10 @@
 
 /** \file */
 
-#include "VariadicTestingDiagnostics.hpp"
-
 #include <filesystem>
 #include <source_location>
+
+#include "VariadicTestingDiagnostics.hpp"
 
 namespace fakeProject::testing
 {
@@ -24,8 +24,8 @@ namespace fakeProject::testing
     {
         // For example:
 
-        // auto x = []() { return variadic<T...>{args}; };
-        // auto y = []() { return variadic<T...>{different args}; };
+        // auto x = []() { return ::variadic<T...>{args}; };
+        // auto y = []() { return ::variadic<T...>{different args}; };
         // check(equivalence, "Useful Description", x(), something inequivalent - ordinarily this would fail);
         // check(equality, "Useful Description", x(), y());
     }

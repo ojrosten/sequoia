@@ -7,10 +7,10 @@
 
 /** \file */
 
-#include "AngleTestingDiagnostics.hpp"
-
 #include <filesystem>
 #include <source_location>
+
+#include "AngleTestingDiagnostics.hpp"
 
 namespace curlew::testing
 {
@@ -24,7 +24,7 @@ namespace curlew::testing
     {
         // For example:
 
-        // maths::angle x{args}, y{different args};
+        // ::maths::angle x{args}, y{different args};
         // check(equivalence, "Useful Description", x, something inequivalent - ordinarily this would fail);
         // check(equality, "Useful Description", x, y);
     }

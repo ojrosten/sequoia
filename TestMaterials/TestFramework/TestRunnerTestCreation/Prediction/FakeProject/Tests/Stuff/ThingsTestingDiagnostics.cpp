@@ -7,10 +7,10 @@
 
 /** \file */
 
-#include "ThingsTestingDiagnostics.hpp"
-
 #include <filesystem>
 #include <source_location>
+
+#include "ThingsTestingDiagnostics.hpp"
 
 namespace fakeProject::testing
 {
@@ -24,7 +24,7 @@ namespace fakeProject::testing
     {
         // For example:
 
-        // bar::things x{args}, y{different args};
+        // ::bar::things x{args}, y{different args};
         // check(equivalence, "Useful Description", x, something inequivalent - ordinarily this would fail);
         // check(equality, "Useful Description", x, y);
     }

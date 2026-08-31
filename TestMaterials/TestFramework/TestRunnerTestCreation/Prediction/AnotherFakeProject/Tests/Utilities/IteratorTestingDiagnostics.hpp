@@ -9,9 +9,9 @@
 
 /** \file */
 
-#include "IteratorTestingUtilities.hpp"
-
 #include <filesystem>
+
+#include "IteratorTestingUtilities.hpp"
 
 namespace curlew::testing
 {

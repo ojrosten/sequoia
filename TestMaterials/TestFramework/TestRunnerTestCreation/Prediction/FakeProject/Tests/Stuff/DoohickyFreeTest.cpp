@@ -7,11 +7,11 @@
 
 /** \file */
 
-#include "DoohickyFreeTest.hpp"
-#include "fakeProject/Stuff/Doohicky.hpp"
-
 #include <filesystem>
 #include <source_location>
+
+#include "DoohickyFreeTest.hpp"
+#include "fakeProject/Stuff/Doohicky.hpp"
 
 namespace fakeProject::testing
 {

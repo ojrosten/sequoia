@@ -651,7 +651,15 @@ namespace sequoia::testing
 
     make_common_replacements(text);
 
-    replace_all(text, replacement{"::?_class", m_QualifiedName},
+    // Root-qualify: the specialization sits inside sequoia::testing, so an
+    // unqualified `maths::probability` is looked up there first and finds
+    // sequoia::maths - a namespace the framework module now makes visible even
+    // though no #include ever did. Importing a component brings in names a
+    // targeted include did not, and this is where that bites a client.
+    const std::string rootQualified{
+      m_QualifiedName.starts_with("::") ? m_QualifiedName : std::string{"::"}.append(m_QualifiedName)};
+
+    replace_all(text, replacement{"::?_class", rootQualified},
                       replacement{"?Class.hpp", header_path().generic_string()},
                       replacement{"?Class", camel_name()},
                       replacement{"?Test", to_camel_case(test_type()).append("Test")},

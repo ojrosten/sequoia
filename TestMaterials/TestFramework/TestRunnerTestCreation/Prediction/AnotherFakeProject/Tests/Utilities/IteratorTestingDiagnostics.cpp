@@ -7,10 +7,10 @@
 
 /** \file */
 
-#include "IteratorTestingDiagnostics.hpp"
-
 #include <filesystem>
 #include <source_location>
+
+#include "IteratorTestingDiagnostics.hpp"
 
 namespace curlew::testing
 {
@@ -24,7 +24,7 @@ namespace curlew::testing
     {
         // For example:
 
-        // utilities::iterator x{args}, y{different args};
+        // ::utilities::iterator x{args}, y{different args};
         // check(equivalence, "Useful Description", x, something inequivalent - ordinarily this would fail);
         // check(equality, "Useful Description", x, y);
     }

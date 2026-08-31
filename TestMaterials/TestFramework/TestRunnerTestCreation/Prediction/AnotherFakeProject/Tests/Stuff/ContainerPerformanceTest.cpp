@@ -7,11 +7,11 @@
 
 /** \file */
 
-#include "ContainerPerformanceTest.hpp"
-#include "curlew/Stuff/Container.hpp"
-
 #include <filesystem>
 #include <source_location>
+
+#include "ContainerPerformanceTest.hpp"
+#include "curlew/Stuff/Container.hpp"
 
 namespace curlew::testing
 {

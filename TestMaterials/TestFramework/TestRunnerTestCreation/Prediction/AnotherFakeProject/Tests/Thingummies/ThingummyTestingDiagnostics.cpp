@@ -7,10 +7,10 @@
 
 /** \file */
 
-#include "ThingummyTestingDiagnostics.hpp"
-
 #include <filesystem>
 #include <source_location>
+
+#include "ThingummyTestingDiagnostics.hpp"
 
 namespace curlew::testing
 {
@@ -24,7 +24,7 @@ namespace curlew::testing
     {
         // For example:
 
-        // stuff::thingummy<T> x{args}, y{different args};
+        // ::stuff::thingummy<T> x{args}, y{different args};
         // check(equivalence, "Useful Description", x, something inequivalent - ordinarily this would fail);
         // check(equality, "Useful Description", x, y);
     }

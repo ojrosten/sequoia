@@ -9,15 +9,16 @@
 
 /** \file */
 
-import sequoia.test_framework;
 #include "curlew/Thingummies/Thingummy.hpp"
+
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {
     template<class T>
-    struct value_tester<stuff::thingummy<T>>
+    struct value_tester<::stuff::thingummy<T>>
     {
-        using type = stuff::thingummy<T>;
+        using type = ::stuff::thingummy<T>;
 
         template<test_mode Mode>
         static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)

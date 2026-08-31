@@ -7,11 +7,11 @@
 
 /** \file */
 
-#include "FooTest.hpp"
-
 #include <compare>
 #include <filesystem>
 #include <source_location>
+
+#include "FooTest.hpp"
 
 namespace curlew::testing
 {
@@ -25,8 +25,8 @@ namespace curlew::testing
     {
         // For example:
 
-        // auto x = []() { return bar::baz::foo<T>{args}; };
-        // auto y = []() { return bar::baz::foo<T>{different args}; };
+        // auto x = []() { return ::bar::baz::foo<T>{args}; };
+        // auto y = []() { return ::bar::baz::foo<T>{different args}; };
         // check(equivalence, "Useful Description", x(), something equivalent);
         // check(equivalence, "Useful Description", y(), something equivalent);
         // For orderable type, with x < y:

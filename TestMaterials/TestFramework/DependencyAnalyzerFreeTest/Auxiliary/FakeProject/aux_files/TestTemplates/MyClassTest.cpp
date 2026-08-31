@@ -5,11 +5,11 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "?ClassTest.hpp"
-
 #include <compare>
 #include <filesystem>
 #include <source_location>
+
+#include "?ClassTest.hpp"
 
 namespace sequoia::testing
 {

@@ -7,10 +7,10 @@
 
 /** \file */
 
-#include "CloudTestingDiagnostics.hpp"
-
 #include <filesystem>
 #include <source_location>
+
+#include "CloudTestingDiagnostics.hpp"
 
 namespace fakeProject::testing
 {
@@ -24,8 +24,8 @@ namespace fakeProject::testing
     {
         // For example:
 
-        // auto x = []() { return cloud{args}; };
-        // auto y = []() { return cloud{different args}; };
+        // auto x = []() { return ::cloud{args}; };
+        // auto y = []() { return ::cloud{different args}; };
         // check(equivalence, "Useful Description", x(), something inequivalent - ordinarily this would fail);
         // check(equality, "Useful Description", x(), y());
     }

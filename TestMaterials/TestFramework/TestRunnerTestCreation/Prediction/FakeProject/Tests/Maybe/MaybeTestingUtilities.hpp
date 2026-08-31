@@ -9,15 +9,16 @@
 
 /** \file */
 
-import sequoia.test_framework;
 #include "fakeProject/Maybe/Maybe.hpp"
+
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {
     template<class T>
-    struct value_tester<other::functional::maybe<T>>
+    struct value_tester<::other::functional::maybe<T>>
     {
-        using type = other::functional::maybe<T>;
+        using type = ::other::functional::maybe<T>;
 
         template<test_mode Mode>
         static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)

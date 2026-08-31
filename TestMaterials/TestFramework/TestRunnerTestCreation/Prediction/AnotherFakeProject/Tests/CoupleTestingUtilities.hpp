@@ -9,15 +9,16 @@
 
 /** \file */
 
-import sequoia.test_framework;
 #include "curlew/Couple.h"
+
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {
     template<class S, class T>
-    struct value_tester<other::couple<S, T>>
+    struct value_tester<::other::couple<S, T>>
     {
-        using type = other::couple<S, T>;
+        using type = ::other::couple<S, T>;
 
         template<test_mode Mode>
         static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)

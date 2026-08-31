@@ -9,9 +9,9 @@
 
 /** \file */
 
-#include "AngleTestingUtilities.hpp"
-
 #include <filesystem>
+
+#include "AngleTestingUtilities.hpp"
 
 namespace fakeProject::testing
 {

@@ -7,11 +7,11 @@
 
 /** \file */
 
-#include "AngleFreeDiagnostics.hpp"
-#include "fakeProject/Maths/Angle.hpp"
-
 #include <filesystem>
 #include <source_location>
+
+#include "AngleFreeDiagnostics.hpp"
+#include "fakeProject/Maths/Angle.hpp"
 
 namespace fakeProject::testing
 {

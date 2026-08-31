@@ -5,6 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+#include <filesystem>
+#include <source_location>
+
 #include "FooTest.hpp"
 
 import sequoia.test_framework;

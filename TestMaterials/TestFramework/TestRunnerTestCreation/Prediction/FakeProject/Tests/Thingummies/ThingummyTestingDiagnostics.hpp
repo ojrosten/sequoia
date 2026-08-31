@@ -9,9 +9,9 @@
 
 /** \file */
 
-#include "ThingummyTestingUtilities.hpp"
-
 #include <filesystem>
+
+#include "ThingummyTestingUtilities.hpp"
 
 namespace fakeProject::testing
 {

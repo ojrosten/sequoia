@@ -5,6 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+#include <filesystem>
+
 #include "UniqueThingTestingUtilities.hpp"
 
 namespace generatedProject::testing

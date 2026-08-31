@@ -7,11 +7,11 @@
 
 /** \file */
 
-#include "BazzerFreeTest.hpp"
-#include "curlew/Stuff/Baz.h"
-
 #include <filesystem>
 #include <source_location>
+
+#include "BazzerFreeTest.hpp"
+#include "curlew/Stuff/Baz.h"
 
 namespace curlew::testing
 {

@@ -7,11 +7,11 @@
 
 /** \file */
 
-#include "MultipleTest.hpp"
-
 #include <compare>
 #include <filesystem>
 #include <source_location>
+
+#include "MultipleTest.hpp"
 
 namespace fakeProject::testing
 {
@@ -25,8 +25,8 @@ namespace fakeProject::testing
     {
         // For example:
 
-        // auto x = []() { return multiple<T...>{args}; };
-        // auto y = []() { return multiple<T...>{different args}; };
+        // auto x = []() { return ::multiple<T...>{args}; };
+        // auto y = []() { return ::multiple<T...>{different args}; };
         // check(equivalence, "Useful Description", x(), something equivalent);
         // check(equivalence, "Useful Description", y(), something equivalent);
         // For orderable type, with x < y:

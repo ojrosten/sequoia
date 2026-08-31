@@ -7,10 +7,10 @@
 
 /** \file */
 
-#include "FooTestingDiagnostics.hpp"
-
 #include <filesystem>
 #include <source_location>
+
+#include "FooTestingDiagnostics.hpp"
 
 namespace fakeProject::testing
 {
@@ -24,8 +24,8 @@ namespace fakeProject::testing
     {
         // For example:
 
-        // auto x = []() { return bar::baz::foo<T>{args}; };
-        // auto y = []() { return bar::baz::foo<T>{different args}; };
+        // auto x = []() { return ::bar::baz::foo<T>{args}; };
+        // auto y = []() { return ::bar::baz::foo<T>{different args}; };
         // check(equivalence, "Useful Description", x(), something inequivalent - ordinarily this would fail);
         // check(equality, "Useful Description", x(), y());
     }

@@ -7,10 +7,10 @@
 
 /** \file */
 
-#include "MaybeTestingDiagnostics.hpp"
-
 #include <filesystem>
 #include <source_location>
+
+#include "MaybeTestingDiagnostics.hpp"
 
 namespace fakeProject::testing
 {
@@ -24,7 +24,7 @@ namespace fakeProject::testing
     {
         // For example:
 
-        // other::functional::maybe<T> x{args}, y{different args};
+        // ::other::functional::maybe<T> x{args}, y{different args};
         // check(equivalence, "Useful Description", x, something inequivalent - ordinarily this would fail);
         // check(equality, "Useful Description", x, y);
     }

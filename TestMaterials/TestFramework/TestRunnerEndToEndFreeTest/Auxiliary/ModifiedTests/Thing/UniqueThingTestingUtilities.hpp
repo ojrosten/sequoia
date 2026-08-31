@@ -7,8 +7,11 @@
 
 #pragma once
 
-import sequoia.test_framework;
+#include <string>
+
 #include "generatedProject/Utilities/Thing/UniqueThing.hpp"
+
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

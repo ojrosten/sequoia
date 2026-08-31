@@ -7,14 +7,15 @@
 
 #pragma once
 
-import sequoia.test_framework;
 #include "generatedProject/Maths/Probability.hpp"
+
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {
-	template<> struct value_tester<maths::probability>
+	template<> struct value_tester<::maths::probability>
 	{
-		using type = maths::probability;
+		using type = ::maths::probability;
 
 		template<test_mode Mode>
 		static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)

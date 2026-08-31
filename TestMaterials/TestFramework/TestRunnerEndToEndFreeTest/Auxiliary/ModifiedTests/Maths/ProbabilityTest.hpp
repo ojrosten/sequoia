@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <filesystem>
+
 #include "ProbabilityTestingUtilities.hpp"
 
 namespace generatedProject::testing

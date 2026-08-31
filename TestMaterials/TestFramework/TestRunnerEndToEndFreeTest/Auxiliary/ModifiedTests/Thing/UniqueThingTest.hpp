@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <filesystem>
+
 #include "UniqueThingTestingUtilities.hpp"
 
 namespace generatedProject::testing

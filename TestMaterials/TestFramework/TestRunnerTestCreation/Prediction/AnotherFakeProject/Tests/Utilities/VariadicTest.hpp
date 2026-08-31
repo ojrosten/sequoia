@@ -9,9 +9,9 @@
 
 /** \file */
 
-#include "VariadicTestingUtilities.hpp"
-
 #include <filesystem>
+
+#include "VariadicTestingUtilities.hpp"
 
 namespace curlew::testing
 {

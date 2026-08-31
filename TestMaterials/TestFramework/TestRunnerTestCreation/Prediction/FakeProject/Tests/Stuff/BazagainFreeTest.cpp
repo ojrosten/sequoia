@@ -7,11 +7,11 @@
 
 /** \file */
 
-#include "BazagainFreeTest.hpp"
-#include "fakeProject/Stuff/Baz.h"
-
 #include <filesystem>
 #include <source_location>
+
+#include "BazagainFreeTest.hpp"
+#include "fakeProject/Stuff/Baz.h"
 
 namespace fakeProject::testing
 {

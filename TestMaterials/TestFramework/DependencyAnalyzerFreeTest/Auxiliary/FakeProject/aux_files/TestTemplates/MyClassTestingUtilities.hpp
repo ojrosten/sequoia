@@ -7,8 +7,9 @@
 
 #pragma once
 
-import sequoia.test_framework;
 #include "?Class.hpp"
+
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

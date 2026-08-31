@@ -9,15 +9,16 @@
 
 /** \file */
 
-import sequoia.test_framework;
 #include "fakeProject/Stuff/Container.hpp"
+
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {
     template<class T>
-    struct value_tester<container<T>>
+    struct value_tester<::container<T>>
     {
-        using type = container<T>;
+        using type = ::container<T>;
 
         template<test_mode Mode>
         static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)

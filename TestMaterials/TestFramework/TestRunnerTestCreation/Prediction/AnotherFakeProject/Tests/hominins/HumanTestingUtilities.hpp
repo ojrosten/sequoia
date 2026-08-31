@@ -9,14 +9,15 @@
 
 /** \file */
 
-import sequoia.test_framework;
 #include "curlew/hominins/Human.hpp"
+
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {
-    template<> struct value_tester<human>
+    template<> struct value_tester<::human>
     {
-        using type = human;
+        using type = ::human;
 
         template<test_mode Mode>
         static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)

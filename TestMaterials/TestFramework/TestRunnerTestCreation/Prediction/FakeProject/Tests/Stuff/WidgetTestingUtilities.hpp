@@ -9,14 +9,15 @@
 
 /** \file */
 
-import sequoia.test_framework;
 #include "fakeProject/Stuff/Widget.hpp"
+
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {
-    template<> struct value_tester<stuff::widget>
+    template<> struct value_tester<::stuff::widget>
     {
-        using type = stuff::widget;
+        using type = ::stuff::widget;
 
         template<test_mode Mode>
         static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)

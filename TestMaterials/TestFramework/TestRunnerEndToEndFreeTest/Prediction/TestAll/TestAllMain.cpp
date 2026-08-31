@@ -7,6 +7,9 @@
 
 /** \file */
 
+#include <chrono>
+#include <exception>
+#include <iostream>
 #include "HouseAllocationTest.hpp"
 #include "Maths/ProbabilityTest.hpp"
 #include "Maths/ProbabilityTestingDiagnostics.hpp"
@@ -24,9 +27,6 @@
 #include "Utilities/Thing/UniqueThingTestingDiagnostics.hpp"
 #include "Utilities/UsefulThingsFreeTest.hpp"
 #include "Utilities/UtilitiesFreeTest.hpp"
-#include <chrono>
-#include <exception>
-#include <iostream>
 
 import sequoia.test_framework;
 
