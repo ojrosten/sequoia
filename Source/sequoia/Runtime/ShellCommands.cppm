@@ -5,17 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <filesystem>
-#include <optional>
-
 export module sequoia.runtime:ShellCommands;
+
+import std;
 
 /** \file
     \brief Utilties for creating, composing and invoking commandline input.
  */
-
 
 export namespace sequoia::runtime
 {

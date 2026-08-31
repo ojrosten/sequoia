@@ -2,10 +2,10 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 191us]
+[Execution Time: 192us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 269
 	Always fails
 
 	[bool]
@@ -17,8 +17,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 465us]
-[Execution Time: 191us]
+[Total Run Time: 466us]
+[Execution Time: 192us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -29,10 +29,10 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 74.5us]
+[Execution Time: 73.3us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 269
 	Always fails
 
 	[bool]
@@ -44,8 +44,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 364us]
-[Execution Time: 74.5us]
+[Total Run Time: 312us]
+[Execution Time: 73.3us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

@@ -5,23 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <filesystem>
-#include <functional>
-#include <iterator>
-#include <optional>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.test_framework:FileEditors;
+
+import std;
 
 export import sequoia.core.meta;
 export import sequoia.text_processing;
@@ -29,8 +15,6 @@ export import sequoia.text_processing;
 /** \file
     \brief Contains utilities for automatically editing certain files as part of the test creation process.
  */
-
-
 
 export namespace sequoia::testing
 {
@@ -44,7 +28,6 @@ export namespace sequoia::testing
                     std::string_view cmakeEntryPrexfix);
 
   void add_to_suite(const std::filesystem::path& file, std::string_view suiteName, indentation indent, const std::vector<std::string>& tests);
-
 
   struct reduced_file_contents
   {

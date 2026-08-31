@@ -5,26 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 module sequoia.test_framework;
+
+import std;
 
 /** \file
     \brief Definitions for AllocationCheckersCore.hpp
 */
-
-
 
 namespace sequoia::testing
 {

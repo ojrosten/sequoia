@@ -9,7 +9,7 @@
 
 #include "RelationalTestDiagnostics.hpp"
 
-#include <vector>
+import std;
 
 namespace sequoia::testing
 {

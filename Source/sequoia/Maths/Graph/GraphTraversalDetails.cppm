@@ -5,26 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <condition_variable>
-#include <functional>
-#include <future>
-#include <iterator>
-#include <memory>
-#include <mutex>
-#include <queue>
-#include <stdexcept>
-#include <thread>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.maths.graph:GraphTraversalDetails;
+
+import std;
 
 import :Edge;
 import :EdgesAndNodesUtilities;
@@ -38,8 +21,6 @@ export import sequoia.core.object;
     \brief Meta-programming urilities and underlying function for graph traversals.
 
  */
-
-
 
 export namespace sequoia::maths
 {
@@ -253,7 +234,6 @@ export namespace sequoia::maths::graph_impl
     [[nodiscard]]
     constexpr static auto end(const G& graph, const typename G::edge_index_type nodeIndex) { return graph.crend_edges(nodeIndex); }
   };
-
 
   template<network G, traversal_flavour F, class... QArgs>
   struct traversal_traits_base;

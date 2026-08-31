@@ -1,3 +1,4 @@
+import std;
 ////////////////////////////////////////////////////////////////////
 //                Copyright Oliver J. Rosten 2021.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
@@ -8,8 +9,6 @@
 #pragma once
 
 /** \file */
-
-#include <compare>
 
 namespace
 ?{

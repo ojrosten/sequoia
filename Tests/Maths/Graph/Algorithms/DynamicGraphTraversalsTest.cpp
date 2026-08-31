@@ -10,22 +10,8 @@
 #include "DynamicGraphTraversalsTest.hpp"
 #include "Maths/Graph/Dynamic/DynamicGraphTestingUtilities.hpp"
 
-
-#include <array>
-#include <concepts>
-#include <condition_variable>
-#include <future>
-#include <iterator>
-#include <mutex>
-#include <queue>
-#include <thread>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
+import std;
 import sequoia.core.concurrency;
-
 
 namespace sequoia::testing
 {
@@ -125,7 +111,6 @@ namespace sequoia::testing
 
       return graph;
     }
-
 
     template<maths::dynamic_network Graph>
     Graph generate_priority_test_graph()
@@ -352,7 +337,6 @@ namespace sequoia::testing
     Graph g{};
     using edge_order = edge_tracker<Graph, Traverser::flavour>::result_type;
     using node_order = std::vector<std::size_t>;
-
 
     {
       const auto[nodeDiscovery1, nodeDiscovery2, edgeDiscovery1, edgeDiscovery2]{traverse_graph<Traverser>(g, find_disconnected_t{})};
@@ -756,7 +740,6 @@ namespace sequoia::testing
       check(equality, "Pool edge first task expected", poolResults, expected);
 
     }
-
 
     //================================ Now check performance =========================//
 

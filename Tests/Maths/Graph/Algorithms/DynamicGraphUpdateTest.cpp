@@ -48,7 +48,7 @@ namespace sequoia::testing
     }
 
     {
-      graph_test_helper<size_t, size_t, test_graph_update> helper{*this};
+      graph_test_helper<std::size_t, std::size_t, test_graph_update> helper{*this};
       helper.run_tests();
     }
   }

@@ -5,20 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <stdexcept>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.maths.graph:StaticGraphDetails;
+
+import std;
 
 import :Edge;
 import :EdgesAndNodesUtilities;
@@ -30,7 +19,6 @@ export import sequoia.core.object;
 /** \file
     \brief Implementatoin details for static graphs.
  */
-
 
 export namespace data_structures
 {

@@ -9,9 +9,9 @@
 
 /** \file */
 
-#include <filesystem>
-
 #include "AngleTestingUtilities.hpp"
+
+import std;
 
 namespace curlew::testing
 {

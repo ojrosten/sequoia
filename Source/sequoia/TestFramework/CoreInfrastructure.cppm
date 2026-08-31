@@ -5,21 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <sstream>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.test_framework:CoreInfrastructure;
+
+import std;
 
 export import sequoia.core.meta;
 
@@ -27,8 +15,6 @@ export import sequoia.core.meta;
     \brief Core declarations / definitions used in the testing framework
 
  */
-
-
 
 export namespace sequoia::testing
 {
@@ -82,17 +68,17 @@ export namespace sequoia::testing
   };
 
   template<class T>
-    requires (std::is_unsigned_v<T> && (sizeof(T) == sizeof(uint64_t)))
+    requires (std::is_unsigned_v<T> && (sizeof(T) == sizeof(std::uint64_t)))
   struct type_normalizer<T>
   {
-    using type = uint64_t;
+    using type = std::uint64_t;
   };
 
   template<class T>
-    requires (std::is_unsigned_v<T> && (sizeof(T) == sizeof(uint32_t)))
+    requires (std::is_unsigned_v<T> && (sizeof(T) == sizeof(std::uint32_t)))
   struct type_normalizer<T>
   {
-    using type = uint32_t;
+    using type = std::uint32_t;
   };
 
   template<class T>

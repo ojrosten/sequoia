@@ -11,27 +11,8 @@
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <execution>
-#include <functional>
-#include <iterator>
-#include <limits>
-#include <memory>
-#include <numeric>
-#include <ranges>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
+import std;
 import sequoia.maths.graph;
-
 
 namespace sequoia::testing
 {
@@ -124,7 +105,6 @@ namespace sequoia::testing
     using handler_type = shared_to_handler_t<true, EdgeWeight>;
     static_assert(std::is_same_v<edge_t, EdgeType<handler_type, EdgeMetaData, std::size_t>>);
   }
-
 
   template
   <

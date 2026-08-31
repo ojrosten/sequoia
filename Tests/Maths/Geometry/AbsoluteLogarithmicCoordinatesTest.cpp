@@ -9,7 +9,7 @@
 
 #include "AbsoluteLogarithmicCoordinatesTest.hpp"
 
-#include <cmath>
+import std;
 
 namespace sequoia::testing
 {

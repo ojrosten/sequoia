@@ -1,4 +1,4 @@
-Tests/TestFramework/ComplexFreeDiagnostics.cpp, Line 57
+Tests/TestFramework/ComplexFreeDiagnostics.cpp, Line 30
 
 [std::complex<double>]
 operator== returned false
@@ -7,7 +7,7 @@ Predicted: (1,0)
 
 =======================================
 
-Tests/TestFramework/ComplexFreeDiagnostics.cpp, Line 58
+Tests/TestFramework/ComplexFreeDiagnostics.cpp, Line 31
 
 [std::complex<double>]
 operator== returned false
@@ -16,7 +16,7 @@ Predicted: (1,2)
 
 =======================================
 
-Tests/TestFramework/ComplexFreeDiagnostics.cpp, Line 59
+Tests/TestFramework/ComplexFreeDiagnostics.cpp, Line 32
 
 [std::complex<double>]
 operator== returned false

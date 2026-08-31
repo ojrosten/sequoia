@@ -5,23 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.maths.sequences:MonotonicSequence;
+
+import std;
 
 import :MonotonicSequenceDetails;
 export import sequoia.algorithms;
@@ -31,8 +17,6 @@ export import sequoia.core.meta;
 /** \file
     \brief Classes implementing the concept of a monotonic sequence.
  */
-
-
 
 export namespace sequoia::maths
 {
@@ -258,7 +242,6 @@ export namespace sequoia::maths
       }
     }
   };
-
 
   template<class T, class Compare=std::ranges::less, class C=std::vector<T>>
   class monotonic_sequence : public monotonic_sequence_base<T, C, Compare>

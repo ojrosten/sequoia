@@ -5,17 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <iterator>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.maths.graph:HeterogeneousNodeStorage;
+
+import std;
 
 export import sequoia.core.meta;
 
@@ -23,8 +15,6 @@ export import sequoia.core.meta;
     \brief Node storage for graphs with heterogeneous node weights.
 
  */
-
-
 
 export namespace sequoia::maths
 {

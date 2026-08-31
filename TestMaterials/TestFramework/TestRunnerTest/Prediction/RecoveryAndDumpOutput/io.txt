@@ -2,9 +2,9 @@
 Running tests, synchronously...
 
 Bar:
-[Execution Time: 601us]
+[Execution Time: 354us]
 	Free Test
-	[Execution Time: 601us]
+	[Execution Time: 354us]
 		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
 
 ******  Critical Failures:  1  ******
@@ -16,7 +16,7 @@ Bar:
 		Exception thrown after check completed
 		Last Recorded Message:
 
-		Tests/Tests/TestFramework/TestRunnerDiagnosticsUtilities.hpp, Line 75
+		Tests/Tests/TestFramework/TestRunnerDiagnosticsUtilities.hpp, Line 41
 		Phoney equality check
 
 		[int]
@@ -24,9 +24,9 @@ Bar:
 		=======================================
 
 Foo:
-[Execution Time: 350us]
+[Execution Time: 288us]
 	Unit Test
-	[Execution Time: 350us]
+	[Execution Time: 288us]
 		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 0]
 
 ******  Critical Failures:  1  ******
@@ -47,8 +47,8 @@ Foo:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 1.57ms]
-[Execution Time: 951us]
+[Total Run Time: 1.06ms]
+[Execution Time: 642us]
 	Standard Top Level Checks:                 4;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

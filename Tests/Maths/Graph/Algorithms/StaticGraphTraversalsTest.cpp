@@ -13,31 +13,7 @@
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <condition_variable>
-#include <execution>
-#include <functional>
-#include <future>
-#include <iterator>
-#include <limits>
-#include <memory>
-#include <mutex>
-#include <numeric>
-#include <queue>
-#include <ranges>
-#include <span>
-#include <stack>
-#include <stdexcept>
-#include <string>
-#include <thread>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
+import std;
 import sequoia.maths.graph;
 
 namespace sequoia::testing
@@ -136,7 +112,6 @@ namespace sequoia::testing
 
     return orderedNodeWeights;
   }
-
 
   void test_static_graph_traversals::run_tests()
   {

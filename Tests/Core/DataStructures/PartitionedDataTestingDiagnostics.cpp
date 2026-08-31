@@ -9,17 +9,7 @@
 
 #include "PartitionedDataTestingDiagnostics.hpp"
 
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
+import std;
 import sequoia.core.object;
 
 namespace sequoia::testing
@@ -62,7 +52,6 @@ namespace sequoia::testing
       cg{{value_type{1}, value_type{2}}},
       ch{{value_type{1}}, {value_type{2}}};
 
-
     check(equivalence, "Empty data inequivalent to non-empty data ", d, expected_t{{value_type{1}}});
     check(equivalence, "Non-empty data inequivalent to empty data ", e, expected_t{{}});
     check(equivalence, "Single partitions holding different elements compare not equal", f, expected_t{{value_type{1}}});
@@ -104,7 +93,6 @@ namespace sequoia::testing
     check(equality, "", *h.rbegin_partition(1), value_type{1});
     check(equality, "", *h.crbegin_partition(1), value_type{1});
     check(equality, "", h[1][0], value_type{1});
-
 
     check(equality, "", *ce.begin_partition(0), value_type{2});
     check(equality, "", *ce.rbegin_partition(0), value_type{2});

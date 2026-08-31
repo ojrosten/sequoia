@@ -9,13 +9,7 @@
 
 /** \file */
 
-
-#include <vector>
-
-
-#include <memory>
-#include <utility>
-
+import std;
 import sequoia.core.container_utilities;
 
 namespace sequoia::testing

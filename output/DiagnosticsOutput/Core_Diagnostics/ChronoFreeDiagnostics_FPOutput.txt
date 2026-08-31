@@ -1,12 +1,12 @@
 False Negative Failure:
-Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 75
+Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 49
 
 [std::chrono::duration<long long, std::ratio<1, 1> >]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 78
+Tests/TestFramework/ChronoFreeDiagnostics.cpp, Line 52
 Time point
 
 [std::chrono::time_point<std::chrono::steady_clock, std::chrono::duration<long long, std::ratio<1, 1000000000> > >]

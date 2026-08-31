@@ -10,30 +10,9 @@ module;
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/TestFramework/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <chrono>
-#include <cmath>
-#include <compare>
-#include <concepts>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <optional>
-#include <scoped_allocator>
-#include <source_location>
-#include <span>
-#include <sstream>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.test_framework:AllocationCheckersDetails;
+
+import std;
 
 import :Advice;
 import :AllocationCheckersCore;
@@ -56,7 +35,6 @@ export import sequoia.text_processing;
 
     For more information see \ref AllocationCheckersCore.hpp
 */
-
 
 export namespace sequoia::testing::impl
 {
@@ -637,7 +615,6 @@ export namespace sequoia::testing::impl
     (checkFn(checkers), ...);
   }
 
-
   /** \brief actions common to both move-only and regular types. */
   template<movable_comparable T>
   struct allocation_actions : auxiliary_data_policy<T>
@@ -728,7 +705,6 @@ export namespace sequoia::testing::impl
 
     return !sentry.failure_detected();
   }
-
 
   template<test_mode Mode, class Actions, movable_comparable T, class U, alloc_getter<T>... Getters>
     requires checkable_against_for_semantics<Mode, T, U> && (sizeof...(Getters) > 0)

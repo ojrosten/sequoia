@@ -9,22 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <execution>
-#include <functional>
-#include <iterator>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.core.data_structures:StaticPriorityQueue;
+
+import std;
 
 export import sequoia.algorithms;
 export import sequoia.core.container_utilities;
@@ -35,8 +22,6 @@ export import sequoia.platform_specific;
     \brief A constexpr prority queue.
 
  */
-
-
 
 export namespace sequoia::data_structures
 {

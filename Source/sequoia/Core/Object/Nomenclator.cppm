@@ -5,17 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <string>
-#include <type_traits>
-
 export module sequoia.core.object:Nomenclator;
+
+import std;
 
 /** \file
     \brief Utilities for associating types with names
 */
-
 
 export namespace sequoia::object
 {

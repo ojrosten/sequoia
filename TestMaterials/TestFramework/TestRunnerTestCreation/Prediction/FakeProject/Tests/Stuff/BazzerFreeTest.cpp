@@ -7,11 +7,10 @@
 
 /** \file */
 
-#include <filesystem>
-#include <source_location>
-
 #include "BazzerFreeTest.hpp"
 #include "fakeProject/Stuff/Baz.h"
+
+import std;
 
 namespace fakeProject::testing
 {

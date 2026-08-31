@@ -9,24 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <execution>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <numeric>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.core.data_structures:PartitionedData;
+
+import std;
 
 import :PartitionedDataDetails;
 export import sequoia.algorithms;
@@ -38,8 +23,6 @@ export import sequoia.platform_specific;
 /** \file
     \brief Classes implementing the concept of a sequence of data which is divided into partitions.
  */
-
-
 
 export namespace sequoia
 {
@@ -70,7 +53,6 @@ export namespace sequoia
       = utilities::iterator<
           typename Container::const_reverse_iterator,
           utilities::identity_dereference_policy<typename Container::const_reverse_iterator, partition_impl::partition_index_policy<true, IndexType>>>;
-
 
     //===================================Storage using buckets===================================//
 
@@ -747,7 +729,7 @@ export namespace sequoia
         m_Partitions.push_back(m_Data.size());
       }
 
-      void insert_slot(const size_t pos)
+      void insert_slot(const std::size_t pos)
       {
         if(pos < num_partitions())
         {
@@ -1172,7 +1154,6 @@ export namespace sequoia
           return {partitions, container_type{}};
         }
       }
-
 
       [[nodiscard]]
       constexpr static T make_element(size_type i, std::initializer_list<std::initializer_list<T>> list, const partitions_type& partitions, index_type& partitionIndex)

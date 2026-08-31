@@ -9,19 +9,8 @@
 
 #include "EdgeTestingDiagnostics.hpp"
 
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
+import std;
 import sequoia.core.object;
-
 
 namespace sequoia::testing
 {
@@ -50,7 +39,6 @@ namespace sequoia::testing
     test_embedded_partial_edge_indep_weight_meta_data();
     test_embedded_partial_edge_shared_weight_meta_data();
   }
-
 
   void test_edge_false_negatives::test_plain_partial_edge()
   {

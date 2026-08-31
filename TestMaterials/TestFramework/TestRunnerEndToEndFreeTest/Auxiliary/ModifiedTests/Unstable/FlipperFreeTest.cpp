@@ -5,11 +5,10 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include <filesystem>
-#include <source_location>
-
 #include "FlipperFreeTest.hpp"
 #include "generatedProject/Unstable/Flipper.hpp"
+
+import std;
 
 namespace generatedProject::testing
 {

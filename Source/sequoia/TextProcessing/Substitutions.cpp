@@ -5,24 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 module sequoia.text_processing;
+
+import std;
 
 /** \file
     \brief Definitions for Substitutions.hpp
  */
-
 
 namespace sequoia
 {

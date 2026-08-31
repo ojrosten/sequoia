@@ -5,25 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <cmath>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.maths.arithmetic:SaturatingArithmetic;
+
+import std;
 
 export import sequoia.core.meta;
 
 /** \file */
-
-
 
 export namespace sequoia::maths
 {

@@ -5,28 +5,15 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.algorithms;
+
+import std;
 
 export import sequoia.core.meta;
 
 /** \file
     \brief A collection of constexpr algorithms.
 */
-
-
 
 export namespace sequoia
 {

@@ -9,10 +9,7 @@
 
 #include "TypeListFreeTest.hpp"
 
-
-#include <tuple>
-#include <variant>
-
+import std;
 import sequoia.core.meta;
 
 namespace sequoia::testing

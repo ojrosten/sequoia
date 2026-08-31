@@ -11,8 +11,7 @@
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
-#include <cstdlib>
-#include <fstream>
+import std;
 
 namespace sequoia::testing
 {

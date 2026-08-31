@@ -11,27 +11,8 @@
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <execution>
-#include <functional>
-#include <iterator>
-#include <limits>
-#include <memory>
-#include <numeric>
-#include <ranges>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
+import std;
 import sequoia.maths.graph;
-
 
 namespace sequoia::testing
 {
@@ -47,7 +28,6 @@ namespace sequoia::testing
     test_generic_embedded_undirected();
     test_generic_directed();
   }
-
 
   constexpr auto test_heterogeneous_static_graph::make_undirected_graph()
   {
@@ -102,7 +82,6 @@ namespace sequoia::testing
 
     return g;
   }
-
 
   void test_heterogeneous_static_graph::test_generic_undirected()
   {

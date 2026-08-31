@@ -5,12 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <memory>
-#include <utility>
-
 export module sequoia.core.container_utilities:AssignmentUtilities;
+
+import std;
 
 export import sequoia.core.meta;
 
@@ -22,8 +19,6 @@ export import sequoia.core.meta;
     be defaulted is non-trivial. This file defines the class sequoia::assignment_helper
     to help with this.
  */
-
-
 
 export namespace sequoia::impl
 {

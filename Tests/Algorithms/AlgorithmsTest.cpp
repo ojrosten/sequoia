@@ -7,26 +7,10 @@
 
 /** \file */
 
-
 #include "AlgorithmsTest.hpp"
 #include "../Maths/Graph/Components/Edges/EdgeTestingUtilities.hpp"
 
-
-#include <array>
-
-
-#include <algorithm>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <stdexcept>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
+import std;
 import sequoia.algorithms;
 import sequoia.core.object;
 import sequoia.maths.graph;

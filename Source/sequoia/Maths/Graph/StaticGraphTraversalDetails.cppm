@@ -9,28 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <condition_variable>
-#include <execution>
-#include <functional>
-#include <future>
-#include <iterator>
-#include <memory>
-#include <mutex>
-#include <queue>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <thread>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.maths.graph:StaticGraphTraversalDetails;
+
+import std;
 
 import :Edge;
 import :EdgesAndNodesUtilities;
@@ -49,7 +30,6 @@ export import sequoia.platform_specific;
     \brief Meta-programming utilities for traversals of static graphs.
 
  */
-
 
 export namespace sequoia::maths::graph_impl
 {

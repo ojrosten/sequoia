@@ -5,15 +5,11 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <tuple>
-#include <utility>
-
 export module sequoia.core.data_structures:MemOrderedTuple;
 
-/** @file */
+import std;
 
+/** @file */
 
 #ifndef __cpp_pack_indexing
 #endif

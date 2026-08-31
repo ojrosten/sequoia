@@ -22,7 +22,8 @@
 #include "Utilities/UsefulThingsFreeTest.hpp"
 #include "Utilities/UtilitiesFreeTest.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
-#include <iostream>
+
+import std;
 
 int main(int argc, char** argv)
 {

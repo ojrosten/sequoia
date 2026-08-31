@@ -10,7 +10,7 @@
 #include "DynamicGraphWeightedAllocationContiguousTest.hpp"
 #include "DynamicGraphAllocationTestingUtilities.hpp"
 
-#include <complex>
+import std;
 
 namespace sequoia::testing
 {

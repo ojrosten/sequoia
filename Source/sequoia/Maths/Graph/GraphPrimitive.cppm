@@ -9,26 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <execution>
-#include <functional>
-#include <iterator>
-#include <limits>
-#include <memory>
-#include <numeric>
-#include <ranges>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.maths.graph:GraphPrimitive;
+
+import std;
 
 import :Connectivity;
 import :Edge;
@@ -47,7 +30,6 @@ export import sequoia.platform_specific;
 /** \file
     \brief Underlying class for the various different graph flavour.
  */
-
 
 export namespace sequoia
 {

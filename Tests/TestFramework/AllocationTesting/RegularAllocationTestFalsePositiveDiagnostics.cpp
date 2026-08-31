@@ -12,7 +12,7 @@
 #include "../RegularTestDiagnosticsUtilities.hpp"
 #include "AllocationTestDiagnosticsUtilities.hpp"
 
-#include <vector>
+import std;
 
 namespace sequoia::testing
 {
@@ -121,7 +121,6 @@ namespace sequoia::testing
         }
       };
 
-
       check_semantics("", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {2_c, {2_c,1_mu,1_pc,1_pm}, {1_anp,1_awp}}});
     }
 
@@ -159,10 +158,8 @@ namespace sequoia::testing
         }
       };
 
-
       check_semantics("", beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu,1_pc,2_pm}, {1_anp,1_awp}}});
     }
-
 
     {
       using beast = doubly_normal_beast<int, double, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>, shared_counting_allocator<double, PropagateCopy, PropagateMove, PropagateSwap>>;
@@ -194,6 +191,5 @@ namespace sequoia::testing
                       allocation_info{yAllocGetter, {1_c, {1_c,1_mu}, {1_anp,1_awp}}});
     }
   }
-
 
 }

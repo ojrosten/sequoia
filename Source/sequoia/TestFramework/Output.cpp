@@ -9,30 +9,12 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <bit>
-#include <charconv>
-#include <cmath>
-#include <concepts>
-#include <cstdlib>
+// Not a standard-library header, so import std does not supply it.
 #include <cxxabi.h>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <numeric>
-#include <source_location>
-#include <sstream>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
 
 module sequoia.test_framework;
+
+import std;
 
 import sequoia.file_system;
 import sequoia.text_processing;
@@ -40,9 +22,6 @@ import sequoia.text_processing;
 /** \file
     \brief Definitions for Output.hpp
  */
-
-
-
 
 #ifndef _MSC_VER
 #endif
@@ -233,7 +212,7 @@ namespace sequoia::testing
       remove_enum_spec(name);
       auto openPos{name.find('(')};
       auto pos{openPos};
-      int64_t open{};
+      std::int64_t open{};
       while(pos != npos)
       {
         if(name[pos] == '(')      ++open;

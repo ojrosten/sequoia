@@ -11,7 +11,7 @@
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
-#include <fstream>
+import std;
 
 namespace sequoia::testing
 {
@@ -215,7 +215,6 @@ namespace sequoia::testing
         check(equality, {"Period 4"}, periodic<4>{}.x, 1);
       }
     };
-
 
     class multi_periodic_free_test final : public free_test
     {
@@ -813,7 +812,6 @@ namespace sequoia::testing
     };
 
     commandline_arguments args{argGenerator()};
-
 
     test_runner runner{args.size(),
                        args.get(),

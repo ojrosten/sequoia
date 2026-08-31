@@ -7,11 +7,10 @@
 
 /** \file */
 
-#include <filesystem>
-#include <source_location>
-
 #include "AngleFreeDiagnostics.hpp"
 #include "curlew/Maths/Angle.hpp"
+
+import std;
 
 namespace curlew::testing
 {

@@ -5,17 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <iterator>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.core.meta:TypeTraits;
+
+import std;
 
 /** \file
     \brief Traits which are sufficiently general to appear in the `sequoia` namespace.
@@ -42,7 +34,6 @@ export namespace sequoia
 
   template<class T, class... Args>
   using resolve_to_copy_t = resolve_to_copy<T, Args...>::type;
-
 
   /** \brief Primary class template for determining if a type is a `const` pointer */
   template<class T>
@@ -107,7 +98,6 @@ export namespace sequoia
 
   template<class T, class... Args>
   inline constexpr bool is_initializable_v{is_initializable<T, Args...>::value};
-
 
   /** \brief Class template for determining if a type defines a nested type `allocator_type` */
   template<class T>

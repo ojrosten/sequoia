@@ -9,24 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <execution>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <numeric>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.core.data_structures:StaticLinearlyPartitionedSequence;
+
+import std;
 
 import :PartitionedData;
 import :PartitionedDataDetails;
@@ -39,7 +24,6 @@ export import sequoia.platform_specific;
 /** \file
     \brief Classes implementing the concept of a linearly partitioned sequence of data.
  */
-
 
 export namespace sequoia::data_structures
 {

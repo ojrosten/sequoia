@@ -9,31 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <cmath>
-#include <complex>
-#include <concepts>
-#include <execution>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <numbers>
-#include <numeric>
-#include <ranges>
-#include <ratio>
-#include <source_location>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.maths.geometry:Spaces;
+
+import std;
 
 export import sequoia.core.container_utilities;
 export import sequoia.core.meta;
@@ -458,9 +436,6 @@ export import sequoia.platform_specific;
     operations, giving a high degree of both type safety and expressivity.
  */
 
-
-
-
 export namespace sequoia::maths
 {
   /** @defgroup MathematicalStructure Structure
@@ -698,7 +673,6 @@ export namespace sequoia::maths
   };
 
   /** @} */
-
 
   /** @defgroup PropertiesOfSpaces Properties of Spaces
       @brief Tools to reflect on whether types expose other types typically associated with various spaces.
@@ -1035,7 +1009,6 @@ export namespace sequoia::maths
   concept convex_space =    partial_m_torsor<T>
                          && (affine_space<T> || identifies_as_convex_space_v<T>)
                          && ordered_field<commutative_ring_type_of_t<T>>;
-
 
   /** @ingroup PropertiesOfSpaces
       @brief Extracts the rank of the free module associated with a partial
@@ -2858,7 +2831,6 @@ export namespace sequoia::maths
       that it wraps the appropriately promoted arithmetic type.
    */
 
-
   namespace impl
   {
     template<class B, class Rep, class...>
@@ -3445,7 +3417,6 @@ export namespace sequoia::maths
 
     [[nodiscard]]
     constexpr auto rend() noexcept requires has_freely_mutable_components { return m_Values.rend(); }
-
 
     [[nodiscard]]
     friend constexpr bool operator==(const coordinates_base& lhs, const coordinates_base& rhs) noexcept { return lhs.m_Values == rhs.m_Values; }

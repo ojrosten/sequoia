@@ -7,11 +7,10 @@
 
 /** \file */
 
-#include <filesystem>
-#include <source_location>
-
 #include "UtilitiesFreeTest.hpp"
 #include "curlew/Utilities/Utilities.h"
+
+import std;
 
 namespace curlew::testing
 {

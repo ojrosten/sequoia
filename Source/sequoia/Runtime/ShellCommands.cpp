@@ -9,23 +9,15 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <execution>
-#include <filesystem>
-#include <iostream>
-#include <optional>
-#include <type_traits>
-#include <vector>
-
 module sequoia.runtime;
+
+import std;
 
 import sequoia.platform_specific;
 
 /** \file
     \brief Definitions for ShellCommands.hpp
 */
-
-
-
 
 namespace sequoia::runtime
 {

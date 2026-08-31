@@ -5,22 +5,14 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <type_traits>
-#include <utility>
-
 export module sequoia.core.container_utilities:ArrayUtilities;
+
+import std;
 
 /** \file
     \brief Utility to convert an initializer_list into an array, potentially transforming
     the initializer_list in the process
  */
-
 
 export namespace sequoia::utilities
 {

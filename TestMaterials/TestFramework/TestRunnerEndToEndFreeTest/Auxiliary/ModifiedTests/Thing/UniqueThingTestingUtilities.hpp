@@ -7,10 +7,9 @@
 
 #pragma once
 
-#include <string>
-
 #include "generatedProject/Utilities/Thing/UniqueThing.hpp"
 
+import std;
 import sequoia.test_framework;
 
 namespace sequoia::testing

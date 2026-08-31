@@ -7,10 +7,9 @@
 
 /** \file */
 
-#include <filesystem>
-#include <source_location>
-
 #include "ThingsTestingDiagnostics.hpp"
+
+import std;
 
 namespace fakeProject::testing
 {

@@ -9,28 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <chrono>
-#include <cmath>
-#include <concepts>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <optional>
-#include <source_location>
-#include <span>
-#include <sstream>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.test_framework:Summary;
+
+import std;
 
 import :CoreInfrastructure;
 import :FailureInfo;
@@ -46,8 +27,6 @@ export import sequoia.text_processing;
 /** \file
     \brief Utilities for summarizing results of tests.
 */
-
-
 
 export namespace sequoia::testing
 {

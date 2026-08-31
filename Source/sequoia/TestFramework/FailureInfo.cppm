@@ -5,23 +5,15 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <filesystem>
-#include <optional>
-#include <span>
-#include <string>
-#include <vector>
-
 export module sequoia.test_framework:FailureInfo;
+
+import std;
 
 import :ProjectPaths;
 
 /** \file
     \brief Utilities for recording information from test failures.
  */
-
-
 
 export namespace sequoia::testing
 {

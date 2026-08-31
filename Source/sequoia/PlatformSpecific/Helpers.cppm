@@ -5,16 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <chrono>
-
 export module sequoia.platform_specific:Helpers;
+
+import std;
 
 /** \file
     \brief Platform-dependent utilities
  */
-
 
 export namespace sequoia
 {

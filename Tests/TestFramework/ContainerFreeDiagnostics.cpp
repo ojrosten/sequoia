@@ -11,40 +11,10 @@
 #include "ElementaryFreeDiagnosticsUtilities.hpp"
 #include "RegularTestDiagnosticsUtilities.hpp"
 
-
-#include <complex>
-#include <list>
-#include <set>
-
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/TestFramework/Macros.hpp"
 
-#include <algorithm>
-#include <any>
-#include <array>
-#include <chrono>
-#include <cmath>
-#include <concepts>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <optional>
-#include <scoped_allocator>
-#include <source_location>
-#include <span>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
+import std;
 import sequoia.test_framework;
 
 namespace sequoia::testing
@@ -172,7 +142,6 @@ namespace sequoia::testing
           std::list<foo>{ {42}},
           std::array<double, 1>{41},
           tutor{bland{}});
-
 
     using beast = perfectly_normal_beast<int>;
     check(weak_equivalence, "", beast{1, 2}, std::initializer_list<int>{1, 1});

@@ -11,7 +11,7 @@
 
 #include "../Maths/Geometry/GeometryTestingUtilities.hpp"
 
-#include <numbers>
+import std;
 
 namespace sequoia::testing
 {

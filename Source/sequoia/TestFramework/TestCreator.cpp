@@ -9,39 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <chrono>
-#include <concepts>
-#include <condition_variable>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <future>
-#include <iterator>
-#include <limits>
-#include <memory>
-#include <mutex>
-#include <numeric>
-#include <optional>
-#include <ostream>
-#include <queue>
-#include <ranges>
-#include <scoped_allocator>
-#include <span>
-#include <sstream>
-#include <stack>
-#include <stdexcept>
-#include <string>
-#include <thread>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 module sequoia.test_framework;
+
+import std;
 
 import sequoia.parsing;
 import sequoia.streaming;
@@ -50,10 +20,6 @@ import sequoia.text_processing;
 /** \file
     \brief Definitions for TestCreator.hpp
  */
-
-
-
-
 
 namespace sequoia::testing
 {
@@ -155,7 +121,7 @@ namespace sequoia::testing
       }
     }
 
-    constexpr std::array<std::string_view, 10> types{"std::size_t", "size_t", "uint8_t", "uint16_t", "uint32_t", "uint64_t", "int8_t", "int16_t", "int32_t", "int64_t"};
+    constexpr std::array<std::string_view, 10> types{"std::size_t", "std::size_t", "std::uint8_t", "std::uint16_t", "std::uint32_t", "std::uint64_t", "std::int8_t", "std::int16_t", "std::int32_t", "std::int64_t"};
     for(auto t : types)
     {
       if(type == t) return false;
@@ -270,7 +236,6 @@ namespace sequoia::testing
 
     return cmake(projPaths.main(), projPaths.build());
   }
-
 
   //=========================================== nascent_test_base ===========================================//
 

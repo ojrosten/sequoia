@@ -9,26 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <cmath>
-#include <concepts>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <source_location>
-#include <sstream>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.test_framework:AllocationTestUtilities;
+
+import std;
 
 import :CoreInfrastructure;
 import :Output;
@@ -39,8 +22,6 @@ export import sequoia.text_processing;
 /** \file
     \brief Utilities for allocation testing.
  */
-
-
 
 export namespace sequoia::testing
 {

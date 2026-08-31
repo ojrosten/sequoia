@@ -5,26 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <numeric>
-#include <ratio>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.maths.algebra:Ratio;
+
+import std;
 
 export import sequoia.core.meta;
 
 /** \file */
-
-
 
 export namespace sequoia::maths
 {
@@ -157,7 +144,6 @@ export namespace sequoia::maths
       : ratio_product<Relaxed, ratio<Num1, Den1>, ratio<Num2, Den2>>
     {
     };
-
 
     template<allow_ratio_fp_conversion Relaxed, std::intmax_t Num1, std::intmax_t Den1, std::intmax_t Num2, std::intmax_t Den2>
     struct ratio_product<Relaxed, std::ratio<Num1, Den1>, std::ratio<Num2, Den2>>

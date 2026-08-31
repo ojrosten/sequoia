@@ -5,26 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <filesystem>
-#include <functional>
-#include <iterator>
-#include <optional>
-#include <scoped_allocator>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.test_framework:TestCreator;
+
+import std;
 
 import :ProjectPaths;
 export import sequoia.core.container_utilities;
@@ -36,9 +19,6 @@ export import sequoia.text_processing;
 /** \file
     \brief Utilities for creating new tests, especially from the commandline.
   */
-
-
-
 
 export namespace sequoia::testing
 {
@@ -281,7 +261,6 @@ export namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path when_header_absent(const std::filesystem::path& filename);
    };
-
 
   using nascent_test_factory = object::factory<nascent_semantics_test, nascent_allocation_test, nascent_behavioural_test>;
   using nascent_test_vessel = nascent_test_factory::vessel;

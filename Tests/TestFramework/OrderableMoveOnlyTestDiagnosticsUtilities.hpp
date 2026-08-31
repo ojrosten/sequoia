@@ -11,7 +11,7 @@
 
 #include "SemanticsTestDiagnosticsUtilities.hpp"
 
-#include <vector>
+import std;
 
 namespace sequoia::testing
 {

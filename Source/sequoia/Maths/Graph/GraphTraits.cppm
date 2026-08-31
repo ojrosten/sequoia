@@ -5,12 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <concepts>
-#include <type_traits>
-
 export module sequoia.maths.graph:GraphTraits;
+
+import std;
 
 /** \file
     \brief Traits and Concepts for graphs.

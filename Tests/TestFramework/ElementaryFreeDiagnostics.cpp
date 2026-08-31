@@ -10,25 +10,7 @@
 #include "ElementaryFreeDiagnostics.hpp"
 #include "ElementaryFreeDiagnosticsUtilities.hpp"
 
-
-#include <complex>
-#include <list>
-#include <filesystem>
-#include <optional>
-#include <set>
-#include <variant>
-#include <vector>
-
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-
+import std;
 import sequoia.text_processing;
 
 namespace sequoia::testing
@@ -296,7 +278,6 @@ namespace sequoia::testing
           only_weakly_checkable{41, 3.13},
           tutor{bland{}});
   }
-
 
   void elementary_false_negative_free_diagnostics::test_with_best_available_checks()
   {

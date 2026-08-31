@@ -10,20 +10,8 @@
 #include "NodeStorageAllocationTest.hpp"
 #include "NodeStorageAllocationTestingUtilities.hpp"
 
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <stdexcept>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
+import std;
 import sequoia.maths.graph;
-
 
 namespace sequoia::testing
 {

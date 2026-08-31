@@ -9,25 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <cmath>
-#include <concepts>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <source_location>
-#include <sstream>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.test_framework:Advice;
+
+import std;
 
 import :CoreInfrastructure;
 import :Output;
@@ -45,7 +29,6 @@ export import sequoia.text_processing;
     achieved by passing an instance of \ref tutor_primary "tutor" to the appropriate
     `check` call.
  */
-
 
 export namespace sequoia::testing
 {
@@ -197,7 +180,6 @@ export namespace sequoia::testing
              && is_teacher_v<decltype(std::get<sizeof...(U) - 1>(std::declval<std::tuple<std::remove_cvref_t<U>&...>>()))>
   struct ends_with_tutor<U...> : std::true_type
   {};
-
 
   template<class... U>
   inline constexpr bool ends_with_tutor_v{ends_with_tutor<U...>::value};

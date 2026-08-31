@@ -9,15 +9,7 @@
 
 #include "StatisticalAlgorithmsTest.hpp"
 
-
-#include <vector>
-
-
-#include <cmath>
-#include <iterator>
-#include <numeric>
-#include <optional>
-
+import std;
 import sequoia.maths.statistics;
 
 namespace sequoia::testing

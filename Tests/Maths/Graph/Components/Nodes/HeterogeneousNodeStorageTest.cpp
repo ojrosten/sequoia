@@ -9,17 +9,8 @@
 
 #include "HeterogeneousNodeStorageTest.hpp"
 
-
-#include <array>
-#include <concepts>
-#include <iterator>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
+import std;
 import sequoia.maths.graph;
-
 
 namespace sequoia::testing
 {

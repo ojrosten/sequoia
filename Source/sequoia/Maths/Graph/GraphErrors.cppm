@@ -5,18 +5,14 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <stdexcept>
-#include <string>
-
 export module sequoia.maths.graph:GraphErrors;
+
+import std;
 
 /** \file
     \brief Error messages for graphs
 
  */
-
 
 export namespace sequoia::maths::graph_errors
 {

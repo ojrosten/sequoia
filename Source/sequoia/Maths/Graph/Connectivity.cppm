@@ -9,26 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <execution>
-#include <functional>
-#include <iterator>
-#include <limits>
-#include <memory>
-#include <numeric>
-#include <ranges>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.maths.graph:Connectivity;
+
+import std;
 
 import :Edge;
 import :EdgesAndNodesUtilities;
@@ -57,8 +40,6 @@ export import sequoia.platform_specific;
     the node weights.
 
  */
-
-
 
 export namespace sequoia
 {
@@ -351,14 +332,12 @@ export namespace sequoia
         set_edge_meta_data(to_const_edge_iterator(criter), std::forward<Args>(args)...);
       }
 
-
       template<std::invocable<edge_meta_data_type&> Fn>
         requires (!std::is_empty_v<edge_meta_data_type>)
       constexpr std::invoke_result_t<Fn, edge_meta_data_type&> mutate_edge_meta_data(const_edge_iterator citer, Fn fn)
       {
         return to_edge_iterator(citer)->mutate_meta_data(std::move(fn));
       }
-
 
       template<std::invocable<edge_meta_data_type&> Fn>
         requires (!std::is_empty_v<edge_meta_data_type>)
@@ -1105,7 +1084,6 @@ export namespace sequoia
         return edges;
       }
 
-
       template<class Edges>
       using partition_iterator_range = std::ranges::subrange<typename Edges::const_partition_iterator>;
 
@@ -1496,7 +1474,6 @@ export namespace sequoia
           m_Edges.push_back_to_partition(node2, node1, compIndex, std::move(md)..., *crbegin_edges(node1));
         }
       }
-
 
       template<class... MetaData>
         requires (is_embedded(flavour) && std::is_copy_constructible_v<edge_type> && (std::is_same_v<edge_meta_data_type, MetaData> && ...))

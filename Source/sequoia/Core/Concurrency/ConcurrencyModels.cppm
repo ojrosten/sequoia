@@ -5,22 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <condition_variable>
-#include <future>
-#include <iterator>
-#include <mutex>
-#include <queue>
-#include <thread>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.core.concurrency:ConcurrencyModels;
+
+import std;
 
 export import sequoia.core.meta;
 
@@ -32,8 +19,6 @@ export import sequoia.core.meta;
            and sequoia::concurrencythread_pool have a common interface for pushing tasks via the `push`
            method.
  */
-
-
 
 export namespace sequoia::concurrency
 {

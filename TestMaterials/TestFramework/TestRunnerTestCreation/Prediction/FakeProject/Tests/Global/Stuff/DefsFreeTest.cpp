@@ -7,11 +7,10 @@
 
 /** \file */
 
-#include <filesystem>
-#include <source_location>
-
 #include "DefsFreeTest.hpp"
 #include "fakeProject/Global/Stuff/Defs.hpp"
+
+import std;
 
 namespace fakeProject::testing
 {

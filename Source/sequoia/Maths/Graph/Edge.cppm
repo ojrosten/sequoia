@@ -5,19 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <stdexcept>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.maths.graph:Edge;
+
+import std;
 
 import :EdgesAndNodesUtilities;
 export import sequoia.core.meta;
@@ -38,8 +28,6 @@ export import sequoia.core.object;
     2. An index recording the location on the target node into which the edge is
     embedded.
 */
-
-
 
 export namespace sequoia
 {
@@ -254,7 +242,6 @@ export namespace sequoia
         , m_MetaData{std::move(m)}
       {}
 
-
       template<class OtherHandler>
         requires (object::handler<OtherHandler> && !std::is_same_v<WeightHandler, OtherHandler>  && std::is_same_v<typename OtherHandler::value_type, typename WeightHandler::value_type>)
       constexpr decorated_partial_edge_base(const decorated_partial_edge_base<OtherHandler, MetaData, IndexType>& other)
@@ -264,7 +251,6 @@ export namespace sequoia
 
       constexpr decorated_partial_edge_base(const decorated_partial_edge_base&)            = default;
       constexpr decorated_partial_edge_base& operator=(const decorated_partial_edge_base&) = default;
-
 
       [[nodiscard]]
       constexpr const MetaData& meta_data() const noexcept { return m_MetaData; }

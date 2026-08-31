@@ -5,15 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <filesystem>
-#include <optional>
-#include <span>
-#include <string>
-#include <vector>
-
 export module sequoia.test_framework:IndividualTestPaths;
+
+import std;
 
 import :ProjectPaths;
 import :TestMode;
@@ -21,7 +15,6 @@ import :TestMode;
 /** \file
     \brief File paths pertaining to individual tests.
  */
-
 
 export namespace sequoia::testing
 {

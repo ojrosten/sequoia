@@ -10,39 +10,11 @@
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/TestFramework/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <chrono>
-#include <cmath>
-#include <compare>
-#include <concepts>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <optional>
-#include <scoped_allocator>
-#include <source_location>
-#include <span>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
+import std;
 import sequoia.maths.graph;
 import sequoia.test_framework;
 
 /** \file */
-
-
-
 
 namespace sequoia::testing
 {
@@ -265,7 +237,6 @@ namespace sequoia::testing
     using maths::static_node_storage<Weight, N>::static_node_storage;
   };
 
-
   template<class Weight, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   struct value_tester<node_storage_tester<Weight, PropagateCopy, PropagateMove, PropagateSwap>>
     : impl::node_value_tester<node_storage_tester<Weight, PropagateCopy, PropagateMove, PropagateSwap>>
@@ -274,8 +245,6 @@ namespace sequoia::testing
     using impl::node_value_tester<node_storage_tester<Weight, PropagateCopy, PropagateMove, PropagateSwap>>::test;
     using impl::node_equivalence_checker<node_storage_tester<Weight, PropagateCopy, PropagateMove, PropagateSwap>>::test;
   };
-
-
 
   template<class Weight, std::size_t N>
   struct value_tester<static_node_storage_tester<Weight, N>>

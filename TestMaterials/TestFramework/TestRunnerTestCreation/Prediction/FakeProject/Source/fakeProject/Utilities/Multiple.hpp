@@ -1,3 +1,4 @@
+import std;
 ////////////////////////////////////////////////////////////////////
 //               Copyright Oliver Jacob Rosten 2026.              //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
@@ -8,8 +9,6 @@
 #pragma once
 
 /** \file */
-
-#include <compare>
 
 template<class... T>
 class multiple

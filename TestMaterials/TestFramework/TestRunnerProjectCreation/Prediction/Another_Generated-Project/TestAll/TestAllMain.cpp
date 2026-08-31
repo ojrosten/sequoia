@@ -7,10 +7,7 @@
 
 /** \file */
 
-#include <chrono>
-#include <exception>
-#include <iostream>
-
+import std;
 import sequoia.test_framework;
 
 namespace another_Generated-Project::testing{};

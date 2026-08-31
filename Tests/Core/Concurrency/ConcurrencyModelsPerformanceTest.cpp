@@ -9,20 +9,7 @@
 
 #include "ConcurrencyModelsPerformanceTest.hpp"
 
-
-#include <array>
-#include <concepts>
-#include <condition_variable>
-#include <future>
-#include <iterator>
-#include <mutex>
-#include <queue>
-#include <thread>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
+import std;
 import sequoia.core.concurrency;
 
 namespace sequoia::testing

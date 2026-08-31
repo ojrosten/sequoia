@@ -10,46 +10,10 @@
 #include "TestRunnerEndToEndFreeTest.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
-
-#include <fstream>
-#include <numeric>
-#include <thread>
-
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/TestFramework/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <chrono>
-#include <cmath>
-#include <compare>
-#include <concepts>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <future>
-#include <iostream>
-#include <iterator>
-#include <limits>
-#include <memory>
-#include <optional>
-#include <random>
-#include <ranges>
-#include <scoped_allocator>
-#include <set>
-#include <source_location>
-#include <span>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
+import std;
 import sequoia.test_framework;
 
 namespace sequoia::testing
@@ -253,7 +217,6 @@ namespace sequoia::testing
 
     fs::copy(generated_project() / "GenerationOutput.txt", working_materials() /= "InitOutput");
     check(equivalence, "", working_materials() /= "InitOutput", predictive_materials() /= "InitOutput");
-
 
     //=================== Run the test executable ===================//
 

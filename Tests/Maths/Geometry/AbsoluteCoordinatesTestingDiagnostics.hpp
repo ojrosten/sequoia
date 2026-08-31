@@ -13,12 +13,8 @@
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <execution>
-#include <type_traits>
-#include <vector>
-
+import std;
 import sequoia.platform_specific;
-
 
 namespace sequoia::testing
 {

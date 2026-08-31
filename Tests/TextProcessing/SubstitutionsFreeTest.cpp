@@ -9,17 +9,7 @@
 
 #include "SubstitutionsFreeTest.hpp"
 
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
+import std;
 import sequoia.text_processing;
 
 namespace sequoia::testing

@@ -115,6 +115,34 @@ FUNCTION(sequoia_copy_asan_runtime target)
     endif()
 ENDFUNCTION()
 
+# `import std;` needs the standard library's own module compiled once and linked
+# in. CMake can do this itself via CXX_MODULE_STD, but only when it can locate
+# libc++.modules.json through `clang++ -print-file-name`, and Homebrew's LLVM
+# installs the C++ libraries under lib/c++ where that lookup does not reach - it
+# fails for libc++.a too, so this is not specific to the manifest. Until that is
+# resolved upstream, std.cppm is compiled as an ordinary module of our own,
+# which is what CMake's support does anyway.
+FUNCTION(sequoia_add_std_module)
+    if(TARGET sequoia_std)
+        return()
+    endif()
+    get_filename_component(toolchain_bin "${CMAKE_CXX_COMPILER}" DIRECTORY)
+    set(std_cppm "${toolchain_bin}/../share/libc++/v1/std.cppm")
+    if(NOT EXISTS "${std_cppm}")
+        message(FATAL_ERROR
+            "import std requires std.cppm, not found at ${std_cppm}. "
+            "It ships with libc++; a toolchain without it cannot build this project.")
+    endif()
+    get_filename_component(std_dir "${std_cppm}" DIRECTORY)
+    add_library(sequoia_std STATIC)
+    target_sources(sequoia_std PUBLIC FILE_SET CXX_MODULES
+                                      BASE_DIRS "${std_dir}"
+                                      FILES "${std_cppm}")
+    # std.cppm names a reserved module; the warning is for our code, not libc++'s.
+    target_compile_options(sequoia_std PRIVATE -Wno-reserved-module-identifier)
+    sequoia_compile_features(sequoia_std)
+ENDFUNCTION()
+
 FUNCTION(sequoia_add_coverage_options target)
     if(CODE_COVERAGE)
         target_compile_options(${target} PRIVATE -coverage)

@@ -5,20 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <stdexcept>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.maths.graph:GraphDetails;
+
+import std;
 
 import :Edge;
 import :EdgesAndNodesUtilities;
@@ -29,7 +18,6 @@ export import sequoia.core.object;
     \brief Meta-programming elements for graph implementation.
 
  */
-
 
 export namespace sequoia
 {

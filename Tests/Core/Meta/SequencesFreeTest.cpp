@@ -9,9 +9,7 @@
 
 #include "SequencesFreeTest.hpp"
 
-
-#include <utility>
-
+import std;
 import sequoia.core.meta;
 
 namespace sequoia::testing

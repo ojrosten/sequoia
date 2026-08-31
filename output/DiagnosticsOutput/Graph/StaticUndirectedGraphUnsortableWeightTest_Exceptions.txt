@@ -1,4 +1,4 @@
-Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 94
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 67
 
 Expected Exception Type:
 [std::logic_error]
@@ -6,7 +6,7 @@ Inconsistent number of elements supplied by initializer lists: expected 0 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 111
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 84
 
 Expected Exception Type:
 [std::logic_error]
@@ -14,7 +14,7 @@ Inconsistent number of elements supplied by initializer lists: expected 0 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 195
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 168
 
 Expected Exception Type:
 [std::logic_error]
@@ -22,7 +22,7 @@ Inconsistent number of elements supplied by initializer lists: expected 2 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 196
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 169
 
 Expected Exception Type:
 [std::logic_error]
@@ -30,7 +30,7 @@ connectivity::connectivity_base: Odd number of loop edges for node 0
 
 =======================================
 
-Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 197
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 170
 
 Expected Exception Type:
 [std::logic_error]
@@ -38,7 +38,7 @@ connectivity::connectivity_base: Odd number of loop edges for node 0
 
 =======================================
 
-Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 431
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 404
 
 Expected Exception Type:
 [std::logic_error]

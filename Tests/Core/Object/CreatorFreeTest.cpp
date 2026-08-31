@@ -9,16 +9,7 @@
 
 #include "CreatorFreeTest.hpp"
 
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
+import std;
 import sequoia.core.object;
 
 namespace
@@ -32,7 +23,6 @@ namespace
   };
 }
 
-
 namespace std {
   template<>
   struct formatter<aggregate_type> {
@@ -43,7 +33,6 @@ namespace std {
     }
   };
 }
-
 
 namespace sequoia::testing
 {

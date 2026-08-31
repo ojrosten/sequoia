@@ -5,17 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <cstdint>
-#include <string>
-
 module sequoia.text_processing;
+
+import std;
 
 /** \file
     \brief Definitions for Patterns.hpp
  */
-
 
 namespace sequoia
 {
@@ -27,7 +23,7 @@ namespace sequoia
 
     if(const std::string::size_type openPos{text.find(open, pos)}; openPos != npos)
     {
-      int64_t openCount{1};
+      std::int64_t openCount{1};
       pos = openPos+1;
       while(pos < text.size())
       {

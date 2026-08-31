@@ -5,11 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <concepts>
-
 export module sequoia.maths.sequences:LinearSequence;
+
+import std;
 
 /** \file
     \brief Classes implementing the concept of a linear sequence.
@@ -46,7 +44,6 @@ export namespace sequoia::maths
   private:
     T m_Start, m_Step;
   };
-
 
   template<class T, T Start, T Step, std::size_t Size, std::integral Index>
   struct static_linear_sequence

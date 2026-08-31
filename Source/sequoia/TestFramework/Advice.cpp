@@ -9,30 +9,13 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <cmath>
-#include <concepts>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <source_location>
-#include <sstream>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 module sequoia.test_framework;
+
+import std;
 
 /** \file
     \brief Definitions for Advice.hpp
  */
-
 
 namespace sequoia::testing
 {

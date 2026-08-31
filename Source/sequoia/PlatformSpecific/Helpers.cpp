@@ -10,14 +10,14 @@ module;
 #ifdef _MSC_VER
   #include "Windows.h"
 #endif
-#include <chrono>
 
 module sequoia.platform_specific;
+
+import std;
 
 /** \file
     \brief Definitions for Helpers.hpp
 */
-
 
 /** \file Utilities dependent on platform-specific macros */
 

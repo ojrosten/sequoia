@@ -9,32 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <condition_variable>
-#include <execution>
-#include <functional>
-#include <future>
-#include <iterator>
-#include <limits>
-#include <memory>
-#include <mutex>
-#include <numeric>
-#include <queue>
-#include <ranges>
-#include <span>
-#include <stack>
-#include <stdexcept>
-#include <string>
-#include <thread>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.test_framework:StateTransitionUtilities;
+
+import std;
 
 export import sequoia.algorithms;
 export import sequoia.core.concurrency;
@@ -50,7 +27,6 @@ export import sequoia.text_processing;
 /** \file
     \brief Facility to define tests via a graph comprising states of an object and transitions between them.
  */
-
 
 export namespace sequoia::testing
 {
@@ -217,7 +193,6 @@ export namespace sequoia::testing
 
       check(g, edgeFn);
     }
-
 
   private:
     template<std::invocable<edge_iterator> EdgeFn>

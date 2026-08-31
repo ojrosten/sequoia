@@ -1,4 +1,4 @@
-Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 53
+Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 28
 Exception expected but nothing thrown
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ No exception thrown
 
 =======================================
 
-Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 54
+Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 29
 Exception thrown but of wrong type
 
 Expected Exception Type:
@@ -17,7 +17,7 @@ Unexpected exception thrown (caught by std::exception&):
 
 =======================================
 
-Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 55
+Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 30
 Exception thrown but of unknown type
 
 Expected Exception Type:

@@ -9,32 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <condition_variable>
-#include <execution>
-#include <functional>
-#include <future>
-#include <iterator>
-#include <limits>
-#include <memory>
-#include <mutex>
-#include <numeric>
-#include <queue>
-#include <ranges>
-#include <span>
-#include <stack>
-#include <stdexcept>
-#include <string>
-#include <thread>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.parsing:CommandLineArguments;
+
+import std;
 
 export import sequoia.algorithms;
 export import sequoia.core.concurrency;
@@ -54,9 +31,6 @@ export import sequoia.platform_specific;
     whose nodes are instances of sequoia::parsing::commandline::operation.
     This tree is then traversed, and the function objects held by the `operation`s invoked.
 */
-
-
-
 
 export namespace sequoia::parsing::commandline
 {
@@ -171,7 +145,6 @@ export namespace sequoia::parsing::commandline
 
   [[nodiscard]]
   outcome parse(int argc, char** argv, const options_forest& options);
-
 
   template<std::invocable<std::string> Fn>
   [[nodiscard]]

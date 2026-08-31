@@ -5,18 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.core.object:HandlerTraits;
+
+import std;
 
 export import sequoia.core.meta;
 
@@ -24,7 +15,6 @@ export import sequoia.core.meta;
     \brief Traits and Concepts for Sharing Policies.
 
  */
-
 
 export namespace sequoia::object
 {

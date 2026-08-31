@@ -1,4 +1,4 @@
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 65
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 40
 Empty and non-empty strings
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -18,7 +18,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 66
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 41
 Empty and non-empty strings
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -38,7 +38,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 67
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 42
 Strings of differing length
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -56,7 +56,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 68
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 43
 Differing strings of same length
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -74,7 +74,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 69
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 44
 Advice
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -93,7 +93,7 @@ Advice: Foo, my old nemesis
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 75
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 50
 Empty string compared with long string
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -113,7 +113,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 76
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 51
 Long string with empty string
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -133,7 +133,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 78
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 53
 Short string compared with long string
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -153,7 +153,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 79
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 54
 Long string with short string
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -173,7 +173,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 81
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 56
 Strings differing by a newline
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -191,7 +191,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 82
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 57
 Strings differing by a newline
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -209,7 +209,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 83
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 58
 Strings differing by a newline at the start
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -227,7 +227,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 84
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 59
 Strings differing by a newline at the start
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -245,7 +245,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 85
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 60
 Empty string compared with newline
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -265,7 +265,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 86
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 61
 Empty string compared with newline
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -285,7 +285,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 87
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 62
 Strings differing from newline onwards
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -303,7 +303,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 88
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 63
 Strings differing from newline onwards
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -321,7 +321,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 89
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 64
 Strings differing from newline onwards
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -339,7 +339,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 90
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 65
 Strings differing from newline onwards
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -357,7 +357,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 91
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 66
 Output suppressed by a new line
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -375,7 +375,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 92
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 67
 Difference on the second line
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -393,7 +393,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 93
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 68
 Missing line
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -411,7 +411,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 94
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 69
 Extra line
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -429,7 +429,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 96
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 71
 Long strings compared with difference near middle
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -447,7 +447,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 97
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 72
 Long strings compared with difference near middle
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -465,7 +465,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 99
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 74
 Long strings compared with difference near end
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -483,7 +483,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 100
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 75
 Long strings compared with difference near end
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -501,7 +501,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 102
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 77
 
 Comparison performed using:
 [sequoia::testing::value_tester@sequoia.test_framework<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
@@ -522,7 +522,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 103
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 78
 
 Comparison performed using:
 [sequoia::testing::value_tester@sequoia.test_framework<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
@@ -542,7 +542,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 65
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 40
 Empty and non-empty strings
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -562,7 +562,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 66
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 41
 Empty and non-empty strings
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -582,7 +582,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 67
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 42
 Strings of differing length
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -600,7 +600,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 68
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 43
 Differing strings of same length
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -618,7 +618,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 69
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 44
 Advice
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -637,7 +637,7 @@ Advice: Foo, my old nemesis
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 75
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 50
 Empty string compared with long string
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -657,7 +657,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 76
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 51
 Long string with empty string
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -677,7 +677,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 78
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 53
 Short string compared with long string
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -697,7 +697,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 79
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 54
 Long string with short string
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -717,7 +717,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 81
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 56
 Strings differing by a newline
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -735,7 +735,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 82
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 57
 Strings differing by a newline
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -753,7 +753,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 83
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 58
 Strings differing by a newline at the start
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -771,7 +771,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 84
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 59
 Strings differing by a newline at the start
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -789,7 +789,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 85
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 60
 Empty string compared with newline
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -809,7 +809,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 86
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 61
 Empty string compared with newline
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -829,7 +829,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 87
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 62
 Strings differing from newline onwards
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -847,7 +847,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 88
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 63
 Strings differing from newline onwards
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -865,7 +865,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 89
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 64
 Strings differing from newline onwards
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -883,7 +883,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 90
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 65
 Strings differing from newline onwards
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -901,7 +901,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 91
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 66
 Output suppressed by a new line
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -919,7 +919,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 92
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 67
 Difference on the second line
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -937,7 +937,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 93
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 68
 Missing line
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -955,7 +955,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 94
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 69
 Extra line
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -973,7 +973,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 96
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 71
 Long strings compared with difference near middle
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -991,7 +991,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 97
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 72
 Long strings compared with difference near middle
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -1009,7 +1009,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 99
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 74
 Long strings compared with difference near end
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -1027,7 +1027,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 100
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 75
 Long strings compared with difference near end
 
 [std::basic_string_view<char, std::char_traits<char> >]
@@ -1045,7 +1045,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 102
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 77
 
 [std::basic_string_view<char, std::char_traits<char> >]
 
@@ -1057,7 +1057,7 @@ Tests/TestFramework/StringFreeDiagnostics.cpp, Line 102
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 103
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 78
 
 [std::basic_string_view<char, std::char_traits<char> >]
 
@@ -1069,7 +1069,7 @@ Tests/TestFramework/StringFreeDiagnostics.cpp, Line 103
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 111
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 86
 Differing strings of same length
 
 [std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >]
@@ -1087,7 +1087,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 112
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 87
 Advice
 
 [std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >]
@@ -1106,7 +1106,7 @@ Advice: Foo, my old nemesis
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 113
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 88
 Missing line
 
 [std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >]
@@ -1124,7 +1124,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 114
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 89
 Extra line
 
 [std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >]
@@ -1142,7 +1142,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 111
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 86
 Differing strings of same length
 
 [std::basic_string_view<wchar_t, std::char_traits<wchar_t> >]
@@ -1160,7 +1160,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 112
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 87
 Advice
 
 [std::basic_string_view<wchar_t, std::char_traits<wchar_t> >]
@@ -1179,7 +1179,7 @@ Advice: Foo, my old nemesis
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 113
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 88
 Missing line
 
 [std::basic_string_view<wchar_t, std::char_traits<wchar_t> >]
@@ -1197,7 +1197,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 114
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 89
 Extra line
 
 [std::basic_string_view<wchar_t, std::char_traits<wchar_t> >]
@@ -1215,7 +1215,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 121
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 96
 
 Comparison performed using:
 [sequoia::testing::value_tester@sequoia.test_framework<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
@@ -1234,7 +1234,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 122
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 97
 
 Comparison performed using:
 [sequoia::testing::value_tester@sequoia.test_framework<std::basic_string_view<char, std::char_traits<char> > >]
@@ -1253,7 +1253,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 127
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 102
 
 Comparison performed using:
 [sequoia::testing::value_tester@sequoia.test_framework<std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> > >]
@@ -1272,7 +1272,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 128
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 103
 
 Comparison performed using:
 [sequoia::testing::value_tester@sequoia.test_framework<std::basic_string_view<wchar_t, std::char_traits<wchar_t> > >]

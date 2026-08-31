@@ -5,16 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <string>
-
 export module sequoia.text_processing:Patterns;
+
+import std;
 
 /** \file
     \brief A collection of functions for finding patterns within text.
  */
-
 
 export namespace sequoia
 {

@@ -9,26 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <execution>
-#include <functional>
-#include <iterator>
-#include <limits>
-#include <memory>
-#include <numeric>
-#include <ranges>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.maths.graph:GraphAlgorithms;
+
+import std;
 
 import :Connectivity;
 import :DynamicGraph;
@@ -51,7 +34,6 @@ export import sequoia.platform_specific;
     \brief A collection of graph algorithms that fall outside the specific groupings.
 
  */
-
 
 export namespace sequoia::maths
 {

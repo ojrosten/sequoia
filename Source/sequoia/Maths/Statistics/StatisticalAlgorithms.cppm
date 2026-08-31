@@ -5,19 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <cmath>
-#include <iterator>
-#include <numeric>
-#include <optional>
-
 export module sequoia.maths.statistics:StatisticalAlgorithms;
+
+import std;
 
 /** \file
     \brief Tools for statistical analysis.
 */
-
 
 export namespace sequoia::maths
 {

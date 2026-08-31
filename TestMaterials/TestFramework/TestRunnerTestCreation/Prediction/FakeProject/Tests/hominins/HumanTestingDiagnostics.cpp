@@ -7,10 +7,9 @@
 
 /** \file */
 
-#include <filesystem>
-#include <source_location>
-
 #include "HumanTestingDiagnostics.hpp"
+
+import std;
 
 namespace fakeProject::testing
 {

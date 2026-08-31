@@ -10,7 +10,7 @@
 #include "DynamicUndirectedGraphMetaDataTest.hpp"
 #include "DynamicUndirectedGraphMetaDataTestingUtilities.hpp"
 
-#include <complex>
+import std;
 
 namespace sequoia::testing
 {

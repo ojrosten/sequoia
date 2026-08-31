@@ -5,27 +5,15 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.text_processing:Substitutions;
+
+import std;
 
 export import sequoia.core.meta;
 
 /** \file
     \brief A collection of functions for making substitutions within text.
  */
-
-
 
 export namespace sequoia
 {

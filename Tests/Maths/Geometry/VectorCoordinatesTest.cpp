@@ -9,7 +9,7 @@
 
 #include "VectorCoordinatesTest.hpp"
 
-#include <complex>
+import std;
 
 namespace sequoia::testing
 {

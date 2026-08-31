@@ -10,37 +10,9 @@ module;
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/TestFramework/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <chrono>
-#include <cmath>
-#include <compare>
-#include <concepts>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <future>
-#include <iterator>
-#include <memory>
-#include <numeric>
-#include <optional>
-#include <random>
-#include <scoped_allocator>
-#include <source_location>
-#include <span>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <thread>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.test_framework:PerformanceTestCore;
+
+import std;
 
 import :Advice;
 import :BinaryRelationships;
@@ -75,8 +47,6 @@ export import sequoia.text_processing;
 /** \file
     \brief Extension of the testing framework for perfomance testing.
 */
-
-
 
 export namespace sequoia::testing
 {

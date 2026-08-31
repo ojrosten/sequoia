@@ -10,39 +10,11 @@
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/TestFramework/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <chrono>
-#include <cmath>
-#include <compare>
-#include <concepts>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <numeric>
-#include <optional>
-#include <scoped_allocator>
-#include <source_location>
-#include <span>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
+import std;
 import sequoia.core.data_structures;
 import sequoia.test_framework;
 
 /** \file */
-
-
 
 namespace sequoia::testing
 {
@@ -64,7 +36,7 @@ namespace sequoia::testing
 
           if(check(flavour, append_lines(message, "iterator (const)"), logger, data.begin_partition(i), data.end_partition(i), prediction.begin_partition(i), prediction.end_partition(i)))
           {
-            for(int64_t j{}; j<std::ranges::distance(prediction.partition(i)); ++j)
+            for(std::int64_t j{}; j<std::ranges::distance(prediction.partition(i)); ++j)
             {
               check(flavour, append_lines(message,"[] (const)"), logger, data[i][j], prediction[i][j]);
             }
@@ -81,7 +53,7 @@ namespace sequoia::testing
           auto& d{const_cast<PartitionedData&>(data)};
           if(check(flavour, append_lines(message, "iterator"), logger, d.begin_partition(i), d.end_partition(i), r.begin_partition(i), r.end_partition(i)))
           {
-            for(int64_t j{}; j<std::ranges::distance(r.partition(i)); ++j)
+            for(std::int64_t j{}; j<std::ranges::distance(r.partition(i)); ++j)
             {
               check(flavour, append_lines(message,"[]"), logger, d[i][j], r[i][j]);
             }

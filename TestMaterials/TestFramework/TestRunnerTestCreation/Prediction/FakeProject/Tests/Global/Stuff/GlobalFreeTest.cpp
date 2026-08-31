@@ -7,11 +7,10 @@
 
 /** \file */
 
-#include <filesystem>
-#include <source_location>
-
 #include "GlobalFreeTest.hpp"
 #include "fakeProject/Global/Stuff/Global.hpp"
+
+import std;
 
 namespace fakeProject::testing
 {

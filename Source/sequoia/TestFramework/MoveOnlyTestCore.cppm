@@ -10,33 +10,9 @@ module;
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/TestFramework/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <chrono>
-#include <cmath>
-#include <compare>
-#include <concepts>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <optional>
-#include <scoped_allocator>
-#include <source_location>
-#include <span>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.test_framework:MoveOnlyTestCore;
+
+import std;
 
 import :Advice;
 import :BinaryRelationships;
@@ -72,8 +48,6 @@ export import sequoia.text_processing;
     This class is designed to be plugged into the checker class template, in order to extend
     its functionality. See MoveOnlyCheckers.hpp for further information.
 */
-
-
 
 export namespace sequoia::testing
 {

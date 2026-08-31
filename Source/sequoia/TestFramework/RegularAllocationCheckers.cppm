@@ -10,31 +10,9 @@ module;
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/TestFramework/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <chrono>
-#include <cmath>
-#include <compare>
-#include <concepts>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <optional>
-#include <scoped_allocator>
-#include <source_location>
-#include <span>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.test_framework:RegularAllocationCheckers;
+
+import std;
 
 import :Advice;
 import :AllocationCheckers;
@@ -61,7 +39,6 @@ export import sequoia.text_processing;
     \brief Utilities for performing allocation checks for regular types,
     see \ref regular_semantics_definition "here".
 */
-
 
 export namespace sequoia::testing
 {
@@ -125,7 +102,6 @@ export namespace sequoia::testing
     move_assign_no_prop_prediction move_without_propagation{};
     move_assign_prediction move{};
   };
-
 
   template<class T>
   [[nodiscard]]

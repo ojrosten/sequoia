@@ -5,26 +5,15 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.core.meta:Concepts;
+
+import std;
 
 import :TypeTraits;
 
 /** \file
     \brief Concepts which are sufficiently general to appear in the `sequoia` namespace.
  */
-
-
 
 export namespace sequoia
 {
@@ -50,7 +39,6 @@ export namespace sequoia
   /// \brief The move-only version of sequoia::pseudoregular.
   template <class T>
   concept moveonly = movable_comparable<T> && !std::copyable<T>;
-
 
   /// \brief A concept for allocators
   template <class A>

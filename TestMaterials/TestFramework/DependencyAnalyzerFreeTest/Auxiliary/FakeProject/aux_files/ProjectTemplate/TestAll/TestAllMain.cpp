@@ -5,8 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include <iostream>
-
+import std;
 import sequoia.test_framework;
 
 int main(int argc, char** argv)

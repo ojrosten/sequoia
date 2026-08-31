@@ -5,17 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <filesystem>
-#include <functional>
-
 export module sequoia.file_system;
+
+import std;
 
 /** \file
     \brief Extensions to the std::filesystem library
  */
-
 
 export namespace sequoia
 {

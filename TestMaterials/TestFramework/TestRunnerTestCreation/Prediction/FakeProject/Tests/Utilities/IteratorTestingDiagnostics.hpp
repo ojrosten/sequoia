@@ -9,9 +9,9 @@
 
 /** \file */
 
-#include <filesystem>
-
 #include "IteratorTestingUtilities.hpp"
+
+import std;
 
 namespace fakeProject::testing
 {

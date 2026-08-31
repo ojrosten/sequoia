@@ -9,7 +9,7 @@
 
 #include "Some/External/MathematicalDependency.hpp"
 
-#include <compare>
+import std;
 
 namespace maths
 {

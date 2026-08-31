@@ -5,21 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <sstream>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.test_framework:FileSystemUtilities;
+
+import std;
 
 import :CoreInfrastructure;
 export import sequoia.core.meta;
@@ -27,8 +15,6 @@ export import sequoia.core.meta;
 /** \file
     \brief File paths and related utilities.
  */
-
-
 
 export namespace sequoia::testing
 {

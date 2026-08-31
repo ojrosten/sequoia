@@ -9,9 +9,9 @@
 
 /** \file */
 
-#include <filesystem>
-
 #include "VariadicTestingUtilities.hpp"
+
+import std;
 
 namespace fakeProject::testing
 {

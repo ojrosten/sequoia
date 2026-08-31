@@ -9,19 +9,7 @@
 
 #include "FileSystemUtilitiesFreeTest.hpp"
 
-
-#include <array>
-#include <concepts>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <sstream>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
+import std;
 import sequoia.test_framework;
 
 namespace sequoia::testing

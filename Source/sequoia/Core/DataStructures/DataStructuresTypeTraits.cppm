@@ -5,16 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <type_traits>
-
 export module sequoia.core.data_structures:DataStructuresTypeTraits;
+
+import std;
 
 /** \file
     \brief Traits for data structures.
  */
-
 
 export namespace sequoia
 {

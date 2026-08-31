@@ -10,44 +10,10 @@
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/TestFramework/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <chrono>
-#include <cmath>
-#include <compare>
-#include <concepts>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <future>
-#include <iostream>
-#include <iterator>
-#include <limits>
-#include <memory>
-#include <numeric>
-#include <optional>
-#include <random>
-#include <ranges>
-#include <scoped_allocator>
-#include <set>
-#include <source_location>
-#include <span>
-#include <sstream>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <thread>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
+import std;
 import sequoia.test_framework;
 
 /** \file */
-
 
 namespace sequoia::testing
 {

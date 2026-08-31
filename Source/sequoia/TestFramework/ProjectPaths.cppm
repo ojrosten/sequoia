@@ -5,20 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <filesystem>
-#include <optional>
-#include <span>
-#include <string>
-#include <vector>
-
 export module sequoia.test_framework:ProjectPaths;
+
+import std;
 
 /** \file
     \brief File paths pertaining to a `sequoia` project.
  */
-
 
 export namespace sequoia::testing
 {
@@ -382,7 +375,6 @@ export namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path make_path(std::optional<std::size_t> id, std::string_view extension) const;
   };
-
 
   /** \brief Paths in the output directory */
 

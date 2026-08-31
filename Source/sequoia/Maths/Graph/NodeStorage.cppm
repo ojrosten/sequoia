@@ -5,20 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.maths.graph:NodeStorage;
+
+import std;
 
 import :EdgesAndNodesUtilities;
 export import sequoia.core.container_utilities;
@@ -33,8 +22,6 @@ export import sequoia.core.meta;
     wasted.
 
  */
-
-
 
 export namespace sequoia::maths
 {
@@ -179,7 +166,7 @@ export namespace sequoia::maths
     {}
 
     template<alloc Allocator>
-    constexpr node_storage_base(const size_t n, const Allocator& allocator)
+    constexpr node_storage_base(const std::size_t n, const Allocator& allocator)
       : m_NodeWeights(n, allocator)
     {}
 

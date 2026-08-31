@@ -9,11 +9,7 @@
 
 #include "IndentFreeTest.hpp"
 
-
-#include <algorithm>
-#include <string>
-#include <utility>
-
+import std;
 import sequoia.text_processing;
 
 namespace sequoia::testing

@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 155
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 120
 Pushing back to non-existent partition throws
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ bucketed_sequence::push_back_to_partitionindex 0 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 163
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 128
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ bucketed_sequence::begin_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 171
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 136
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -178,7 +178,7 @@ bucketed_sequence::erase_from_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 213
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 178
 Pushing back to non-existent partition throws
 
 Expected Exception Type:
@@ -187,7 +187,7 @@ bucketed_sequence::push_back_to_partitionindex 1 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 221
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 186
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -196,7 +196,7 @@ bucketed_sequence::insert_to_partitionindex 18446744073709551615 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 229
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 194
 Inserting to non-existent partition throws
 
 Expected Exception Type:
@@ -205,7 +205,7 @@ bucketed_sequence::insert_to_partitionindex 1 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 289
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 254
 
 Expected Exception Type:
 [std::domain_error]
@@ -213,7 +213,7 @@ bucketed_sequence::erase - Invalid range specified by iterators belonging to par
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 297
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 262
 
 Expected Exception Type:
 [std::domain_error]
@@ -221,7 +221,7 @@ bucketed_sequence::erase - Invalid range specified by iterators belonging to par
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 654
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 619
 
 Expected Exception Type:
 [std::domain_error]

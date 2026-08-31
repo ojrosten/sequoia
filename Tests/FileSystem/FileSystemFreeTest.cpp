@@ -9,10 +9,7 @@
 
 #include "FileSystemFreeTest.hpp"
 
-
-#include <filesystem>
-#include <functional>
-
+import std;
 import sequoia.file_system;
 
 namespace sequoia::testing

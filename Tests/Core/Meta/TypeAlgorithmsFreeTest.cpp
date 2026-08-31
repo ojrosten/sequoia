@@ -9,12 +9,7 @@
 
 #include "TypeAlgorithmsFreeTest.hpp"
 
-
-#include <source_location>
-#include <string_view>
-#include <tuple>
-#include <utility>
-
+import std;
 import sequoia.core.meta;
 
 namespace sequoia::testing

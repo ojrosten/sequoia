@@ -5,19 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.core.object:Handlers;
+
+import std;
 
 import :Creator;
 import :HandlerTraits;
@@ -28,8 +18,6 @@ export import sequoia.core.meta;
     handled via shared pointers.
 
  */
-
-
 
 export namespace sequoia::object
 {

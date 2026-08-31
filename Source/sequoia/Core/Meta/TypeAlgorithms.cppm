@@ -5,14 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <source_location>
-#include <string_view>
-#include <tuple>
-#include <utility>
-
 export module sequoia.core.meta:TypeAlgorithms;
+
+import std;
 
 import :Sequences;
 

@@ -1,4 +1,4 @@
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 97
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 72
 Inequivalence of two different paths, neither of which exists
 
 Comparison performed using:
@@ -14,7 +14,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 102
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 77
 Inequivalence of two different paths, one of which exists
 
 Comparison performed using:
@@ -34,7 +34,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 107
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 82
 Inequivalence of directory/file
 
 Comparison performed using:
@@ -54,7 +54,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 112
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 87
 Inequivalence of differently named files
 
 Comparison performed using:
@@ -74,7 +74,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 117
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 92
 Inequivalence of file contents
 
 Comparison performed using:
@@ -102,7 +102,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 122
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 97
 Inequivalence of differently named directories with the same contents
 
 Comparison performed using:
@@ -118,7 +118,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 127
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 102
 Inequivalence of directories with the same files but different contents
 
 Comparison performed using:
@@ -146,7 +146,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 132
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 107
 Inequivalence of directories with some common files
 
 Comparison performed using:
@@ -168,7 +168,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 137
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 112
 Inequivalence of directories with some common files
 
 Comparison performed using:
@@ -190,7 +190,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 142
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 117
 File inequivalence when default file checking is used
 
 Comparison performed using:
@@ -218,7 +218,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 147
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 122
 Range inequivalence when default file checking us used
 
 [std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
@@ -249,7 +249,7 @@ Range inequivalence when default file checking us used
 
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 152
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 127
 Weak inequivalence of directories with some common files
 
 Comparison performed using:
@@ -271,7 +271,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 157
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 132
 Directory weak inequivalence when default file checking is used
 
 Comparison performed using:
@@ -299,7 +299,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 162
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 137
 Weak inequivalence of range when default file checking is used
 
 [std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]

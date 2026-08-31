@@ -9,18 +9,7 @@
 
 #include "RatioFreeTest.hpp"
 
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <numeric>
-#include <ratio>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
+import std;
 import sequoia.maths.algebra;
 
 namespace sequoia::testing

@@ -5,16 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <type_traits>
-
 export module sequoia.platform_specific:PlatformDiscriminators;
+
+import std;
 
 /** \file
     \brief Types to descriminate different compilers
  */
-
 
 export namespace sequoia
 {

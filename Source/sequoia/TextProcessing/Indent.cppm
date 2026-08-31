@@ -5,18 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <algorithm>
-#include <string>
-#include <utility>
-
 export module sequoia.text_processing:Indent;
+
+import std;
 
 /** \file
     \brief A collection of functions for formatting test output.
  */
-
 
 export namespace sequoia
 {

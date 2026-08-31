@@ -7,11 +7,10 @@
 
 /** \file */
 
-#include <filesystem>
-#include <source_location>
-
 #include "DefsFreeTest.hpp"
 #include "curlew/Global/Stuff/Defs.hpp"
+
+import std;
 
 namespace curlew::testing
 {

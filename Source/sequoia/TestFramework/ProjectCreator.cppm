@@ -5,17 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <algorithm>
-#include <filesystem>
-#include <optional>
-#include <span>
-#include <string>
-#include <utility>
-#include <vector>
-
 export module sequoia.test_framework:ProjectCreator;
+
+import std;
 
 import :Commands;
 import :ProjectPaths;
@@ -25,8 +17,6 @@ export import sequoia.text_processing;
 /** \file
     \brief Utilities for creating new projects, especially from the commandline.
   */
-
-
 
 export namespace sequoia::testing
 {

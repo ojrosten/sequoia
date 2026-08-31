@@ -9,21 +9,7 @@
 
 #include "TypeTraitsTest.hpp"
 
-
-#include <array>
-#include <complex>
-#include <map>
-#include <set>
-#include <vector>
-
-
-#include <concepts>
-#include <iterator>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
+import std;
 import sequoia.core.meta;
 
 namespace sequoia::testing
@@ -208,8 +194,6 @@ namespace sequoia::testing
       );
     }
   }
-
-
 
   void type_traits_test::test_is_const_pointer()
   {

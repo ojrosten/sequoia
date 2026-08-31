@@ -7,10 +7,9 @@
 
 /** \file */
 
-#include <filesystem>
-#include <source_location>
-
 #include "?ClassTestingDiagnostics.hpp"
+
+import std;
 
 namespace ?::testing
 {

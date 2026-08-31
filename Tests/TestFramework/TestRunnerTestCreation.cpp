@@ -11,27 +11,7 @@
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
-
-#include <fstream>
-
-
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <filesystem>
-#include <functional>
-#include <iterator>
-#include <optional>
-#include <scoped_allocator>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
+import std;
 import sequoia.streaming;
 import sequoia.test_framework;
 import sequoia.text_processing;

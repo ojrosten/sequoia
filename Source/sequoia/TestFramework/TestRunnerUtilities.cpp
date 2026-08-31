@@ -5,19 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <chrono>
-#include <ostream>
-#include <string>
-
 module sequoia.test_framework;
+
+import std;
 
 /** \file
     \brief Definitions for TestRunnerUtilities.hpp
  */
-
-
 
 namespace sequoia::testing
 {

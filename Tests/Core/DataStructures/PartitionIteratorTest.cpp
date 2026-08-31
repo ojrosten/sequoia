@@ -11,17 +11,7 @@
 
 #include "PartitionedDataTestingUtilities.hpp"
 
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
+import std;
 import sequoia.core.object;
 
 namespace sequoia::testing

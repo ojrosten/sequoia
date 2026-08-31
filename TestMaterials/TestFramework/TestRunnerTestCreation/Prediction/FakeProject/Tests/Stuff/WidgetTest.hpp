@@ -9,9 +9,9 @@
 
 /** \file */
 
-#include <filesystem>
-
 #include "WidgetTestingUtilities.hpp"
+
+import std;
 
 namespace fakeProject::testing
 {

@@ -9,26 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <execution>
-#include <functional>
-#include <iterator>
-#include <limits>
-#include <memory>
-#include <numeric>
-#include <ranges>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.maths.graph:DynamicTree;
+
+import std;
 
 import :Connectivity;
 import :DynamicGraph;
@@ -50,7 +33,6 @@ export import sequoia.platform_specific;
 /** \file
     \brief Restriction of Dynamic Graphs to Trees 
 */
-
 
 export namespace sequoia::maths
 {
@@ -378,7 +360,6 @@ export namespace sequoia::maths
 
   template<std::input_or_output_iterator Iterator, class Adaptor>
   using forest_from_tree_iterator = utilities::iterator<Iterator, forest_from_tree_dereference_policy<Iterator, Adaptor>>;
-
 
   template<std::input_or_output_iterator Iterator, class TreeAdaptor>
   class forest_dereference_policy

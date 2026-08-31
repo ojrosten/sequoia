@@ -9,9 +9,7 @@
 
 #include "PatternsFreeTest.hpp"
 
-
-#include <string>
-
+import std;
 import sequoia.text_processing;
 
 namespace sequoia::testing

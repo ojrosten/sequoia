@@ -7,11 +7,10 @@
 
 /** \file */
 
-#include <filesystem>
-#include <source_location>
-
 #include "?BehaviouralDiagnostics.hpp"
 #include "?Header.hpp"
+
+import std;
 
 namespace ?::testing
 {

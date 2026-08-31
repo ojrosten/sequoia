@@ -5,25 +5,15 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.maths.sequences:MonotonicSequenceDetails;
+
+import std;
 
 export import sequoia.core.meta;
 
 /** \file
     \brief Implementation details for monotonic sequences.
  */
-
 
 export namespace sequoia::maths::impl
 {

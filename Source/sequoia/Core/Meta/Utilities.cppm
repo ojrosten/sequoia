@@ -5,19 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <scoped_allocator>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.core.meta:Utilities;
+
+import std;
 
 import :Concepts;
 import :TypeTraits;
@@ -25,8 +15,6 @@ import :TypeTraits;
 /** \file
     \brief Meta-programming utilities
  */
-
-
 
 export namespace sequoia
 {

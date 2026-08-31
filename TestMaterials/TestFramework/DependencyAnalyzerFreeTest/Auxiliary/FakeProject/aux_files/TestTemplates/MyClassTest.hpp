@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include <filesystem>
-
 #include "?ClassTestingUtilities.hpp"
+
+import std;
 
 namespace sequoia::testing
 {

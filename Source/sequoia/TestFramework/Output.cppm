@@ -9,25 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <cmath>
-#include <concepts>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <source_location>
-#include <sstream>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.test_framework:Output;
+
+import std;
 
 import :CoreInfrastructure;
 export import sequoia.core.meta;
@@ -37,8 +21,6 @@ export import sequoia.text_processing;
 /** \file
     \brief A collection of functions for formatting test output.
  */
-
-
 
 export namespace sequoia::testing
 {
@@ -271,7 +253,6 @@ export namespace sequoia::testing
       return demangle<T>();
     }
   };
-
 
   /// Demangles T; if U... is not empty, appends each demangled element of U on a new line
   template<class T, class... U>

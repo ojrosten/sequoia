@@ -1,4 +1,4 @@
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 64
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 38
 Equality for null vs. not null
 
 [std::unique_ptr<int, std::default_delete<int> >]
@@ -12,7 +12,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 65
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 39
 Equality for not null vs. null 
 
 [std::unique_ptr<int, std::default_delete<int> >]
@@ -26,7 +26,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 66
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 40
 Equality for different pointers
 
 [std::unique_ptr<int, std::default_delete<int> >]
@@ -39,7 +39,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 67
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 41
 Equivalence for null vs. not null
 
 Comparison performed using:
@@ -56,7 +56,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 68
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 42
 Equivalence for not null vs. null 
 
 Comparison performed using:
@@ -73,7 +73,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 69
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 43
 Different pointers pointing to different values
 
 Comparison performed using:
@@ -89,7 +89,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 72
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 46
 Advice for different pointers pointing to different values
 
 Comparison performed using:
@@ -106,7 +106,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 80
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 54
 Different pointers pointing to different values
 
 Comparison performed using:
@@ -128,7 +128,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 87
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 61
 Different pointers pointing to different values
 
 Comparison performed using:
@@ -156,7 +156,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 95
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 69
 Different pointers pointing to different values
 
 Comparison performed using:
@@ -204,7 +204,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 105
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 79
 Equality for null vs. not null
 
 [std::shared_ptr<int>]
@@ -218,7 +218,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 106
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 80
 Equality for not null vs. null 
 
 [std::shared_ptr<int>]
@@ -232,7 +232,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 107
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 81
 Equality for different pointers
 
 [std::shared_ptr<int>]
@@ -245,7 +245,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 108
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 82
 Equivalence for null vs. not null
 
 Comparison performed using:
@@ -262,7 +262,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 109
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 83
 Equivalence for not null vs. null 
 
 Comparison performed using:
@@ -279,7 +279,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 110
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 84
 Different pointers pointing to different values
 
 Comparison performed using:
@@ -295,7 +295,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 113
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 87
 Advice for different pointers pointing to different values
 
 Comparison performed using:
@@ -312,7 +312,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 122
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 96
 Different pointers pointing to different values
 
 Comparison performed using:
@@ -360,7 +360,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 137
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 111
 Equality for null vs. not null
 
 [std::weak_ptr<int>]
@@ -376,7 +376,7 @@ Equality for null vs. not null
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 138
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 112
 Equality for not null vs. null 
 
 [std::weak_ptr<int>]
@@ -392,7 +392,7 @@ Equality for not null vs. null
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 139
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 113
 Equality for different pointers
 
 [std::weak_ptr<int>]
@@ -407,7 +407,7 @@ Equality for different pointers
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 140
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 114
 Equivalence for null vs. not null
 
 Comparison performed using:
@@ -430,7 +430,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 141
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 115
 Equivalence for not null vs. null 
 
 Comparison performed using:
@@ -453,7 +453,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 142
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 116
 Different pointers pointing to different values
 
 Comparison performed using:

@@ -5,14 +5,11 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <utility>
-
 export module sequoia.core.meta:Sequences;
 
-/** \file */
+import std;
 
+/** \file */
 
 export namespace sequoia
 {
@@ -103,7 +100,6 @@ export namespace sequoia
 
   template<class T>
   using rotate_sequence_t = rotate_sequence<T>::type;
-
 
   //==================================================== reverse_sequence ===================================================//
 

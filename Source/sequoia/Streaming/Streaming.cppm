@@ -5,28 +5,15 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <filesystem>
-#include <functional>
-#include <iterator>
-#include <optional>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.streaming;
+
+import std;
 
 export import sequoia.core.meta;
 
 /** \file
     \brief Utilities for reading/writing to files.
  */
-
-
 
 export namespace sequoia
 {
@@ -35,7 +22,6 @@ export namespace sequoia
 
   [[nodiscard]]
   std::string report_failed_write(const std::filesystem::path& file);
-
 
   [[nodiscard]]
   std::optional<std::string> read_to_string(const std::filesystem::path& file);

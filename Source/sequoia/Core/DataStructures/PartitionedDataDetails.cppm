@@ -5,27 +5,15 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.core.data_structures:PartitionedDataDetails;
+
+import std;
 
 export import sequoia.core.meta;
 
 /** \file
     \brief Metaprogramming components for partitioned data.
  */
-
-
 
 export namespace sequoia::data_structures::partition_impl
 {

@@ -2,10 +2,10 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 644us]
+[Execution Time: 545us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 269
 	Always fails
 
 	[bool]
@@ -17,8 +17,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 1.38ms]
-[Execution Time: 644us]
+[Total Run Time: 1.19ms]
+[Execution Time: 545us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -29,10 +29,10 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 343us]
+[Execution Time: 217us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 269
 	Always fails
 
 	[bool]
@@ -52,7 +52,7 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 233
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 232
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -64,8 +64,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 1.11ms]
-[Execution Time: 343us]
+[Total Run Time: 605us]
+[Execution Time: 217us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -76,10 +76,10 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 285us]
+[Execution Time: 178us]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 269
 	Always fails
 
 	[bool]
@@ -89,7 +89,7 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 234
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 233
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -101,8 +101,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 936us]
-[Execution Time: 285us]
+[Total Run Time: 523us]
+[Execution Time: 178us]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -113,10 +113,10 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 326us]
+[Execution Time: 218us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 269
 	Always fails
 
 	[bool]
@@ -136,7 +136,7 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 233
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 232
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -148,8 +148,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 938us]
-[Execution Time: 326us]
+[Total Run Time: 597us]
+[Execution Time: 218us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -160,10 +160,10 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 240us]
+[Execution Time: 187us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 269
 	Always fails
 
 	[bool]
@@ -175,8 +175,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 842us]
-[Execution Time: 240us]
+[Total Run Time: 601us]
+[Execution Time: 187us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -187,10 +187,10 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 302us]
+[Execution Time: 208us]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 269
 	Always fails
 
 	[bool]
@@ -210,7 +210,7 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 233
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 232
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -220,7 +220,7 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 234
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 233
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -232,8 +232,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 900us]
-[Execution Time: 302us]
+[Total Run Time: 634us]
+[Execution Time: 208us]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -269,7 +269,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 233
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 232
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -281,7 +281,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 233
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 232
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -291,7 +291,7 @@ vs.
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 234
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 233
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -303,7 +303,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 234
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 233
 	Period 3: Pass/Pass/Fail
 
 	[bool]

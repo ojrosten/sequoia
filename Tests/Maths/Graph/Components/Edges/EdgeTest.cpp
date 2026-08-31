@@ -11,22 +11,7 @@
 
 #include "EdgeTestingUtilities.hpp"
 
-
-#include <complex>
-#include <list>
-#include <vector>
-
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
+import std;
 import sequoia.core.object;
 
 namespace sequoia
@@ -276,7 +261,6 @@ namespace sequoia
       edge_a edge{edge_b{1, 0.6f, 5.5}};
       check(equivalence, "", edge, std::tuple{1, 0.6f, 5.5});
     }
-
 
     void test_edges::test_plain_embedded_partial_edge()
     {

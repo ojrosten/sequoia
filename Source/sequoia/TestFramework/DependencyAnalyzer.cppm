@@ -5,19 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <chrono>
-#include <filesystem>
-#include <format>
-#include <iostream>
-#include <limits>
-#include <optional>
-#include <span>
-#include <string>
-#include <vector>
-
 export module sequoia.test_framework:DependencyAnalyzer;
+
+import std;
 
 import :ProjectPaths;
 
@@ -25,8 +15,6 @@ import :ProjectPaths;
     \brief Facility to detect changes on disk and only run the relevant tests.
 
  */
-
-
 
 export namespace sequoia::testing
 {

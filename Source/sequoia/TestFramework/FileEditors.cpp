@@ -9,29 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <cmath>
-#include <concepts>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <fstream>
-#include <functional>
-#include <iterator>
-#include <optional>
-#include <regex>
-#include <source_location>
-#include <span>
-#include <sstream>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 module sequoia.test_framework;
+
+import std;
 
 import sequoia.streaming;
 import sequoia.text_processing;
@@ -39,8 +19,6 @@ import sequoia.text_processing;
 /** \file
     \brief Definitions for FileEditors.hpp
  */
-
-
 
 namespace sequoia::testing
 {
@@ -121,7 +99,6 @@ namespace sequoia::testing
         auto contents{read_to_string(file)};
         if(!contents)
           throw std::runtime_error{report_failed_read(file)};
-
 
         std::string& contentsStr{contents.value()};
         replace(contentsStr, "", "");

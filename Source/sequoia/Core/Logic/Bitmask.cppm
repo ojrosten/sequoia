@@ -9,15 +9,13 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <type_traits>
-
 export module sequoia.core.logic:Bitmask;
+
+import std;
 
 /** \file
     \brief Utilities to aid logical operations
   */
-
-
 
 export NAMESPACE_SEQUOIA_AS_BITMASK
 {

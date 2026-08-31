@@ -10,7 +10,7 @@
 #include "MoveOnlyAllocationTestDiagnostics.hpp"
 #include "../MoveOnlyTestDiagnosticsUtilities.hpp"
 
-#include <vector>
+import std;
 
 namespace sequoia::testing
 {
@@ -99,7 +99,6 @@ namespace sequoia::testing
       check_semantics("Broken move assignment", beast{1}, beast{2}, beast{1}, beast{2}, mutator,
                       allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
     }
-
 
     if constexpr(PropagateSwap)
     {

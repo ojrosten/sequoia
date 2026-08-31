@@ -2,10 +2,10 @@
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 209us]
+[Execution Time: 203us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 251
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 250
 	Always fails
 
 	[bool]
@@ -17,8 +17,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 474us]
-[Execution Time: 209us]
+[Total Run Time: 518us]
+[Execution Time: 203us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -29,10 +29,10 @@ Suite:
 Running tests, synchronously...
 
 Suite:
-[Execution Time: 97.8us]
+[Execution Time: 89.4us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 251
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 250
 	Always fails
 
 	[bool]
@@ -42,7 +42,7 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 253
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 252
 	Flipper
 
 	[bool]
@@ -54,8 +54,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 286us]
-[Execution Time: 97.8us]
+[Total Run Time: 381us]
+[Execution Time: 89.4us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -67,7 +67,7 @@ Instability detected in file "Free_Test.cpp"
 Outcome frequencies:
 [50.0%,50.0%]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 251
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 250
 	Always fails
 
 	[bool]
@@ -79,7 +79,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 251
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 250
 	Always fails
 
 	[bool]
@@ -89,7 +89,7 @@ vs.
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 253
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 252
 	Flipper
 
 	[bool]

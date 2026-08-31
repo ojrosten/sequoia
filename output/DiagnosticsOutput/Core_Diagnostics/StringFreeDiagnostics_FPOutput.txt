@@ -1,5 +1,5 @@
 False Negative Failure:
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 147
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 122
 Differing strings
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -7,7 +7,7 @@ Differing strings
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 148
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 123
 
 Comparison performed using:
 [sequoia::testing::value_tester@sequoia.test_framework<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
@@ -17,7 +17,7 @@ Checking for equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 155
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 130
 
 Comparison performed using:
 [sequoia::testing::value_tester@sequoia.test_framework<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
@@ -27,7 +27,7 @@ Checking for equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/StringFreeDiagnostics.cpp, Line 160
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 135
 
 Comparison performed using:
 [sequoia::testing::value_tester@sequoia.test_framework<std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> > >]

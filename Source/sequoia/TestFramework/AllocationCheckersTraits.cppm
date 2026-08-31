@@ -5,25 +5,15 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.test_framework:AllocationCheckersTraits;
+
+import std;
 
 export import sequoia.core.meta;
 
 /** \file
     \brief Traits and Concepts for allocation checks.
 */
-
 
 export namespace sequoia::testing
 {

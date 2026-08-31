@@ -9,26 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <execution>
-#include <functional>
-#include <iterator>
-#include <limits>
-#include <memory>
-#include <numeric>
-#include <ranges>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.core.object.suite;
+
+import std;
 
 export import sequoia.algorithms;
 export import sequoia.core.container_utilities;
@@ -42,9 +25,6 @@ export import sequoia.platform_specific;
 /** \file
     \brief Utilities for defining a suite of objects, filtered at runtime
  */
-
-
-
 
 export namespace sequoia::object
 {
@@ -85,7 +65,6 @@ export namespace sequoia::object
     [[nodiscard]]
     std::tuple<Ts...>& values() noexcept { return m_Values; }
   };
-
 
   template<class... Ts>
   struct leaf_extractor;
@@ -162,7 +141,6 @@ export namespace sequoia::object
     using type = leaves_to_variant_or_unique_type<leaf_extractor_t<suite<Ts...>>, Transform>::type;
   };
 
-
   template<class...>
   struct faithful_variant;
 
@@ -203,7 +181,6 @@ export namespace sequoia::object
   {
     using type = faithful_variant_t<std::variant<T>, Ts...>;
   };
-
 
   template<class T, std::invocable<T> Transform>
   struct to_variant_or_unique_type
@@ -276,7 +253,6 @@ export namespace sequoia::object
 
       return std::forward<Tree>(tree);
     }
-
 
     template<class... Ts, class Filter, class Transform, class Tree, std::integral SizeType = typename Tree::size_type, class... PreviousSuites>
       requires maths::dynamic_tree<std::remove_cvref_t<Tree>> && (is_suite_v<PreviousSuites> && ...) && ((!is_suite_v<Ts>) && ...)

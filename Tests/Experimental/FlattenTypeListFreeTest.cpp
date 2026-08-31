@@ -9,10 +9,7 @@
 
 #include "FlattenTypeListFreeTest.hpp"
 
-
-#include <tuple>
-#include <variant>
-
+import std;
 import sequoia.core.meta;
 
 namespace sequoia::testing
@@ -104,7 +101,6 @@ namespace sequoia::testing
 
     static_assert(std::is_same_v<flatten_t<int, double, type_list<char, float>>, type_list<int, double, char, float>>);
     static_assert(std::is_same_v<flatten_t<type_list<char, float>, int, double>, type_list<char, float, int, double>>);
-
 
     static_assert(std::is_same_v<flatten_t<type_list<int, type_list<char, float>>>, type_list<int, char, float>>);
 

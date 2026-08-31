@@ -5,23 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.maths.graph:StaticNodeStorage;
+
+import std;
 
 import :EdgesAndNodesUtilities;
 import :NodeStorage;
@@ -32,7 +18,6 @@ export import sequoia.core.meta;
     \brief Classes for node storage that may be used in a constexpr context.
 
  */
-
 
 export namespace sequoia::maths
 {

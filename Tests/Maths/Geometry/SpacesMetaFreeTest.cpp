@@ -13,32 +13,8 @@
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <cmath>
-#include <complex>
-#include <concepts>
-#include <execution>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <numbers>
-#include <numeric>
-#include <ranges>
-#include <ratio>
-#include <source_location>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
+import std;
 import sequoia.maths.geometry;
-
 
 namespace sequoia::testing
 {
@@ -492,7 +468,6 @@ namespace sequoia::testing
     STATIC_CHECK(weakly_abelian_group_under_multiplication_v<double>);
     STATIC_CHECK(weakly_abelian_group_under_multiplication_v<std::complex<float>>);
     STATIC_CHECK(weakly_abelian_group_under_multiplication_v<std::complex<double>>);
-
 
     // bool is the one fundamental type whose value set carries a field, and the one whose
     // operators decline to supply it: `true + true` is not even a bool, and forced back
@@ -967,7 +942,7 @@ namespace sequoia::testing
 
        That `std::int8_t` is `signed char` is the reason the `integer` concept admits
        the two narrow char types while excluding `char` itself: the standard gives
-       8-bit arithmetic no other spelling, so excluding them would exclude int8_t.
+       8-bit arithmetic no other spelling, so excluding them would exclude std::int8_t.
      */
     STATIC_CHECK(std::is_same_v<std::int8_t,  signed char>);
     STATIC_CHECK(std::is_same_v<std::uint8_t, unsigned char>);

@@ -7,11 +7,9 @@
 
 /** \file */
 
-#include <compare>
-#include <filesystem>
-#include <source_location>
-
 #include "ContainerTest.hpp"
+
+import std;
 
 namespace curlew::testing
 {

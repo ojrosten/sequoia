@@ -9,17 +9,13 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <execution>
-#include <type_traits>
-#include <vector>
-
 export module sequoia.platform_specific:Preprocessor;
+
+import std;
 
 import :PlatformDiscriminators;
 
 /** \file Preprocessor logic for dealing with different platforms */
-
-
 
 export namespace sequoia
 {

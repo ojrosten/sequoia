@@ -5,17 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <tuple>
-#include <variant>
-
 export module sequoia.core.meta:TypeList;
+
+import std;
 
 /** \file 
     \brief type_list and various associated operations 
  */
-
 
 export namespace sequoia
 {

@@ -5,15 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <filesystem>
-#include <optional>
-#include <span>
-#include <string>
-#include <vector>
-
 export module sequoia.test_framework:Commands;
+
+import std;
 
 import :ProjectPaths;
 export import sequoia.runtime;
@@ -21,8 +15,6 @@ export import sequoia.runtime;
 /** \file
     \brief Shell Command specifically for the testing framework
  */
-
-
 
 export namespace sequoia::testing
 {

@@ -9,26 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <execution>
-#include <functional>
-#include <iterator>
-#include <limits>
-#include <memory>
-#include <numeric>
-#include <ranges>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.maths.graph:DynamicGraph;
+
+import std;
 
 import :Connectivity;
 import :Edge;
@@ -51,7 +34,6 @@ export import sequoia.platform_specific;
 
 */
 
-
 export namespace sequoia::maths
 {
   struct contiguous_edge_storage_config
@@ -67,7 +49,6 @@ export namespace sequoia::maths
 
     constexpr static edge_sharing_preference edge_sharing{edge_sharing_preference::agnostic};
   };
-
 
   template<class Storage>
   concept allocatable_partitions = requires{
@@ -278,7 +259,6 @@ export namespace sequoia::maths
     graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{in, edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator}
     {}
-
 
     graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{std::move(in), edgeAllocator, nodeWeightAllocator}

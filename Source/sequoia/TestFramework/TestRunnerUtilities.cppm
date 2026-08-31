@@ -5,17 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <ostream>
-#include <string>
-
 export module sequoia.test_framework:TestRunnerUtilities;
+
+import std;
 
 /** \file
     \brief Common utilities for creating both Projects and Tests.
  */
-
 
 export namespace sequoia::testing
 {

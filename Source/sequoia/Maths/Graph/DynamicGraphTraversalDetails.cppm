@@ -5,27 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <condition_variable>
-#include <functional>
-#include <future>
-#include <iterator>
-#include <memory>
-#include <mutex>
-#include <queue>
-#include <stack>
-#include <stdexcept>
-#include <thread>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.maths.graph:DynamicGraphTraversalDetails;
+
+import std;
 
 import :Edge;
 import :EdgesAndNodesUtilities;
@@ -40,8 +22,6 @@ export import sequoia.core.object;
     \brief Meta-prorgamming utilities for traversals of dynamic graphs.
 
  */
-
-
 
 export namespace sequoia::maths::graph_impl
 {
@@ -79,7 +59,7 @@ export namespace sequoia::maths::graph_impl
   template<dynamic_network G, class Compare>
   struct traversal_traits_base<G, traversal_flavour::priority, Compare>
   {
-    using queue_type = std::priority_queue<std::size_t, std::vector<size_t>, Compare>;
+    using queue_type = std::priority_queue<std::size_t, std::vector<std::size_t>, Compare>;
 
     [[nodiscard]]
     static auto get_container_element(const queue_type& q) { return q.top(); }

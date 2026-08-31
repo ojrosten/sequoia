@@ -12,7 +12,7 @@
 #include "../RegularTestDiagnosticsUtilities.hpp"
 #include "AllocationTestDiagnosticsUtilities.hpp"
 
-#include <vector>
+import std;
 
 namespace sequoia::testing
 {

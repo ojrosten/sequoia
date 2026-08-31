@@ -5,16 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <filesystem>
-
 export module sequoia.test_framework:MaterialsUpdater;
+
+import std;
 
 /** \file
     \brief Contains utilities for updating test materials.
  */
-
 
 export namespace sequoia::testing
 {

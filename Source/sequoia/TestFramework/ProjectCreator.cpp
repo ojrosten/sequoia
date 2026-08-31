@@ -9,26 +9,9 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <functional>
-#include <iterator>
-#include <optional>
-#include <ostream>
-#include <span>
-#include <sstream>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 module sequoia.test_framework;
+
+import std;
 
 import sequoia.file_system;
 import sequoia.platform_specific;
@@ -38,8 +21,6 @@ import sequoia.text_processing;
 /** \file
     \brief Definitions for ProjectCreator.hpp
  */
-
-
 
 namespace sequoia::testing
 {

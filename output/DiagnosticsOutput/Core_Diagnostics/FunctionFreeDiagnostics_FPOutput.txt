@@ -1,5 +1,5 @@
 False Negative Failure:
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 103
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 78
 Both bound
 
 Comparison performed using:
@@ -10,7 +10,7 @@ Checking for weak equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 104
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 79
 Neither bound
 
 Comparison performed using:
@@ -21,7 +21,7 @@ Checking for weak equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 109
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 84
 Both bound
 
 Comparison performed using:
@@ -32,7 +32,7 @@ Checking for weak equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 110
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 85
 Neither bound
 
 Comparison performed using:
@@ -43,7 +43,7 @@ Checking for weak equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 115
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 90
 Both bound
 
 Comparison performed using:
@@ -54,7 +54,7 @@ Checking for weak equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 116
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 91
 Neither bound
 
 Comparison performed using:

@@ -5,24 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <algorithm>
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <memory>
-#include <span>
-#include <stdexcept>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 export module sequoia.maths.graph:StaticGraphConfig;
+
+import std;
 
 import :Edge;
 import :EdgesAndNodesUtilities;
@@ -37,7 +22,6 @@ export import sequoia.maths.sequences;
 /** \file
     \brief Edge configuration for static graphs.
  */
-
 
 export namespace sequoia::maths
 {

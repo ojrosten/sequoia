@@ -1,4 +1,4 @@
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 63
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 44
 Empty vs non-empty
 
 Comparison performed using:
@@ -14,7 +14,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 64
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 45
 Incorrect weight
 
 Comparison performed using:
@@ -30,7 +30,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 65
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 46
 Too many children
 
 Comparison performed using:
@@ -46,7 +46,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 66
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 47
 Incorrect child weight
 
 Comparison performed using:
@@ -62,7 +62,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 67
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 48
 Too few children
 
 Comparison performed using:
@@ -78,7 +78,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 69
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 50
 Too many grand children
 
 Comparison performed using:
@@ -94,7 +94,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 70
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 51
 Incorrect grand child weight
 
 Comparison performed using:
@@ -116,7 +116,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 71
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 52
 Too few grand children
 
 Comparison performed using:
@@ -132,7 +132,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 73
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 54
 
 [sequoia::maths::directed_tree@sequoia.maths.graph<1, sequoia::maths::null_weight@sequoia.maths.graph, int, sequoia::maths::bucketed_edge_storage_config@sequoia.maths.graph, sequoia::maths::node_storage@sequoia.maths.graph<int, std::vector<int, std::allocator<int> > > >]
 operator== returned false
@@ -165,7 +165,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 74
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 55
 
 [sequoia::maths::directed_tree@sequoia.maths.graph<1, sequoia::maths::null_weight@sequoia.maths.graph, int, sequoia::maths::bucketed_edge_storage_config@sequoia.maths.graph, sequoia::maths::node_storage@sequoia.maths.graph<int, std::vector<int, std::allocator<int> > > >]
 operator== returned false
@@ -204,7 +204,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 63
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 44
 Empty vs non-empty
 
 Comparison performed using:
@@ -220,7 +220,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 64
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 45
 Incorrect weight
 
 Comparison performed using:
@@ -236,7 +236,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 65
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 46
 Too many children
 
 Comparison performed using:
@@ -252,7 +252,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 66
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 47
 Incorrect child weight
 
 Comparison performed using:
@@ -268,7 +268,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 67
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 48
 Too few children
 
 Comparison performed using:
@@ -284,7 +284,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 69
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 50
 Too many grand children
 
 Comparison performed using:
@@ -300,7 +300,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 70
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 51
 Incorrect grand child weight
 
 Comparison performed using:
@@ -322,7 +322,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 71
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 52
 Too few grand children
 
 Comparison performed using:
@@ -338,7 +338,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 73
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 54
 
 [sequoia::maths::directed_tree@sequoia.maths.graph<2, sequoia::maths::null_weight@sequoia.maths.graph, int, sequoia::maths::bucketed_edge_storage_config@sequoia.maths.graph, sequoia::maths::node_storage@sequoia.maths.graph<int, std::vector<int, std::allocator<int> > > >]
 operator== returned false
@@ -371,7 +371,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 74
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 55
 
 [sequoia::maths::directed_tree@sequoia.maths.graph<2, sequoia::maths::null_weight@sequoia.maths.graph, int, sequoia::maths::bucketed_edge_storage_config@sequoia.maths.graph, sequoia::maths::node_storage@sequoia.maths.graph<int, std::vector<int, std::allocator<int> > > >]
 operator== returned false
@@ -410,7 +410,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 63
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 44
 Empty vs non-empty
 
 Comparison performed using:
@@ -426,7 +426,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 64
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 45
 Incorrect weight
 
 Comparison performed using:
@@ -442,7 +442,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 65
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 46
 Too many children
 
 Comparison performed using:
@@ -458,7 +458,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 66
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 47
 Incorrect child weight
 
 Comparison performed using:
@@ -474,7 +474,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 67
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 48
 Too few children
 
 Comparison performed using:
@@ -490,7 +490,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 69
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 50
 Too many grand children
 
 Comparison performed using:
@@ -506,7 +506,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 70
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 51
 Incorrect grand child weight
 
 Comparison performed using:
@@ -528,7 +528,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 71
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 52
 Too few grand children
 
 Comparison performed using:
@@ -544,7 +544,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 73
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 54
 
 [sequoia::maths::directed_tree@sequoia.maths.graph<0, sequoia::maths::null_weight@sequoia.maths.graph, int, sequoia::maths::bucketed_edge_storage_config@sequoia.maths.graph, sequoia::maths::node_storage@sequoia.maths.graph<int, std::vector<int, std::allocator<int> > > >]
 operator== returned false
@@ -577,7 +577,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 74
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 55
 
 [sequoia::maths::directed_tree@sequoia.maths.graph<0, sequoia::maths::null_weight@sequoia.maths.graph, int, sequoia::maths::bucketed_edge_storage_config@sequoia.maths.graph, sequoia::maths::node_storage@sequoia.maths.graph<int, std::vector<int, std::allocator<int> > > >]
 operator== returned false
@@ -616,7 +616,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 63
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 44
 Empty vs non-empty
 
 Comparison performed using:
@@ -632,7 +632,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 64
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 45
 Incorrect weight
 
 Comparison performed using:
@@ -648,7 +648,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 65
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 46
 Too many children
 
 Comparison performed using:
@@ -664,7 +664,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 66
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 47
 Incorrect child weight
 
 Comparison performed using:
@@ -680,7 +680,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 67
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 48
 Too few children
 
 Comparison performed using:
@@ -696,7 +696,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 69
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 50
 Too many grand children
 
 Comparison performed using:
@@ -712,7 +712,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 70
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 51
 Incorrect grand child weight
 
 Comparison performed using:
@@ -734,7 +734,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 71
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 52
 Too few grand children
 
 Comparison performed using:
@@ -750,7 +750,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 73
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 54
 
 [sequoia::maths::undirected_tree@sequoia.maths.graph<0, sequoia::maths::null_weight@sequoia.maths.graph, int, sequoia::maths::null_meta_data@sequoia.maths.graph, sequoia::maths::bucketed_edge_storage_config@sequoia.maths.graph, sequoia::maths::node_storage@sequoia.maths.graph<int, std::vector<int, std::allocator<int> > > >]
 operator== returned false
@@ -783,7 +783,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 74
+Tests/Maths/Graph/Tree/TreeTestingDiagnostics.cpp, Line 55
 
 [sequoia::maths::undirected_tree@sequoia.maths.graph<0, sequoia::maths::null_weight@sequoia.maths.graph, int, sequoia::maths::null_meta_data@sequoia.maths.graph, sequoia::maths::bucketed_edge_storage_config@sequoia.maths.graph, sequoia::maths::node_storage@sequoia.maths.graph<int, std::vector<int, std::allocator<int> > > >]
 operator== returned false

@@ -5,19 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-module;
-
-#include <array>
-#include <concepts>
-#include <functional>
-#include <iterator>
-#include <string>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-
 export module sequoia.test_framework:AllocationCheckersCore;
+
+import std;
 
 import :AllocationCheckersTraits;
 export import sequoia.core.meta;
@@ -61,8 +51,6 @@ export import sequoia.core.meta;
     supplied and the framework shifts this appropriately. The implementation is sufficiently
     for flexible clients to define their own allocation shifts, should the need arise.
  */
-
-
 
 export namespace sequoia::testing
 {

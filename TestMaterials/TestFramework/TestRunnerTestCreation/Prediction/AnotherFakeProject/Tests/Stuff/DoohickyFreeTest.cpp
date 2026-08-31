@@ -7,11 +7,10 @@
 
 /** \file */
 
-#include <filesystem>
-#include <source_location>
-
 #include "DoohickyFreeTest.hpp"
 #include "curlew/Stuff/Doohicky.hpp"
+
+import std;
 
 namespace curlew::testing
 {

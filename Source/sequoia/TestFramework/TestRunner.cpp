@@ -10,46 +10,9 @@ module;
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/TestFramework/Macros.hpp"
 
-#include <algorithm>
-#include <array>
-#include <chrono>
-#include <cmath>
-#include <compare>
-#include <concepts>
-#include <condition_variable>
-#include <execution>
-#include <filesystem>
-#include <format>
-#include <fstream>
-#include <functional>
-#include <future>
-#include <iostream>
-#include <iterator>
-#include <limits>
-#include <memory>
-#include <mutex>
-#include <numeric>
-#include <optional>
-#include <queue>
-#include <random>
-#include <ranges>
-#include <scoped_allocator>
-#include <set>
-#include <source_location>
-#include <span>
-#include <sstream>
-#include <stack>
-#include <stdexcept>
-#include <string>
-#include <string_view>
-#include <thread>
-#include <tuple>
-#include <type_traits>
-#include <utility>
-#include <variant>
-#include <vector>
-
 module sequoia.test_framework;
+
+import std;
 
 import sequoia.core.concurrency;
 import sequoia.parsing;
@@ -61,10 +24,6 @@ import sequoia.text_processing;
 /** \file
     \brief Definitions for TestRunner.hpp
 */
-
-
-
-
 
 namespace sequoia::testing
 {
@@ -160,7 +119,6 @@ namespace sequoia::testing
       test_runner& runner;
       std::vector<nascent_test_vessel>& nascent_tests;
     };
-
 
     nascent_test_data::nascent_test_data(std::string type, std::string subType, test_runner& r, std::vector<nascent_test_vessel>& nascentTests)
       : genus{std::move(type)}
@@ -343,7 +301,6 @@ namespace sequoia::testing
 
     return materials;
   }
-
 
   void test_vessel::versioned_write(const std::filesystem::path& file, std::string_view text)
   {
