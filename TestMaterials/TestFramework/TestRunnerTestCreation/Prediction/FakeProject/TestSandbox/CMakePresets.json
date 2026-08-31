@@ -404,10 +404,20 @@
       "configuration": "Debug"
     },
     {
+      "name": "run-msvc",
+      "displayName": "Run MSVC [Debug]",
+      "inherits": ["msvc", "base-run"]
+    },
+    {
       "name": "msvc-asan",
       "displayName": "MSVC [Debug, asan]",
       "configurePreset": "msvc-asan",
       "configuration": "Debug"
+    },
+    {
+      "name": "run-msvc-asan",
+      "displayName": "Run MSVC [Debug, asan]",
+      "inherits": ["msvc-asan", "base-run"]
     },
     {
       "name": "msvc-release",
@@ -416,10 +426,20 @@
       "configuration": "Release"
     },
     {
+      "name": "run-msvc-release",
+      "displayName": "Run MSVC [Release]",
+      "inherits": ["msvc-release", "base-run"]
+    },
+    {
       "name": "msvc-release-asan",
       "displayName": "MSVC [Release, asan]",
       "configurePreset": "msvc-asan",
       "configuration": "Release"
+    },
+    {
+      "name": "run-msvc-release-asan",
+      "displayName": "Run MSVC [Release, asan]",
+      "inherits": ["msvc-release-asan", "base-run"]
     }
   ],
   "workflowPresets": [
@@ -627,7 +647,7 @@
         },
         {
           "type": "build",
-          "name": "msvc"
+          "name": "run-msvc"
         }
       ]
     },
@@ -640,7 +660,7 @@
         },
         {
           "type": "build",
-          "name": "msvc-asan"
+          "name": "run-msvc-asan"
         }
       ]
     },
@@ -653,7 +673,7 @@
         },
         {
           "type": "build",
-          "name": "msvc-release"
+          "name": "run-msvc-release"
         }
       ]
     },
@@ -666,7 +686,7 @@
         },
         {
           "type": "build",
-          "name": "msvc-release-asan"
+          "name": "run-msvc-release-asan"
         }
       ]
     }
