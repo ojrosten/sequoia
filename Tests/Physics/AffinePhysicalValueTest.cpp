@@ -77,8 +77,18 @@ namespace sequoia::testing
     // Positive control. Without it the negative check below would pass just as
     // readily if one of its arguments were merely wrong, rather than the space
     // being inadmissible.
-    STATIC_CHECK(defines_physical_value_v<space_type, units_type, basis_data_type, repr_t, origin_type, validator_type>);
+    STATIC_CHECK(
+      defines_physical_value_v<space_type, units_type, basis_data_type, repr_t, origin_type, validator_type>);
 
-    STATIC_CHECK(!defines_physical_value_v< dual<space_type>, dual<units_type>, unit_defined_basis_data_for<dual<space_type>, dual<units_type>>, repr_t, dual<origin_type>, validator_type >);
+    STATIC_CHECK(
+      !defines_physical_value_v<
+        dual<space_type>,
+        dual<units_type>,
+        unit_defined_basis_data_for<dual<space_type>, dual<units_type>>,
+        repr_t,
+        dual<origin_type>,
+        validator_type
+      >
+    );
   }
 }

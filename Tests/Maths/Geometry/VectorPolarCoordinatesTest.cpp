@@ -82,7 +82,7 @@ namespace sequoia::testing
     using vec_t        = vector_coordinates<space_t, basis_data_t, rep_t, Validator>;
 
     STATIC_CHECK(defines_scalar_multiplication_for_v<space_t, polar_representation<ValType>>);
-    STATIC_CHECK(defines_scalar_division_for_v<space_t, polar_representation<ValType>>);
+    STATIC_CHECK(      defines_scalar_division_for_v<space_t, polar_representation<ValType>>);
     
     check(equality, "", vec_t{1, 1} * 2, vec_t{2, 1});
   }
