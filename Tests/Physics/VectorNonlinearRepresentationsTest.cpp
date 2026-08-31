@@ -130,7 +130,7 @@ namespace sequoia::testing
     using radius_t = rep_t::radius_type;
     using angle_t  = rep_t::angle_type;
     STATIC_CHECK(!std::constructible_from<vec_t, radius_t, radius_t>);
-    STATIC_CHECK(std::constructible_from<vec_t, radius_t, angle_t>);
+    STATIC_CHECK( std::constructible_from<vec_t, radius_t, angle_t>);
 
     coordinates_operations<vec_t>{*this}.execute();
   }

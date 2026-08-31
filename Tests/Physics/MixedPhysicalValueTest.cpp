@@ -102,10 +102,12 @@ namespace sequoia::testing
     using height_t   = si::height<float>;
     using d_height_t = height_t::displacement_type;
 
-    STATIC_CHECK(addition_combinable<length_t, width_t>);
-    STATIC_CHECK(!subtraction_combinable<length_t, width_t>, "If implemented, the result would have to be length_t&; however, subtraction gives delta length_t" "Inconsistency between operator-= and operator- is undesirable");
-    STATIC_CHECK(can_add<length_t, width_t>);
-    STATIC_CHECK(can_subtract<length_t, width_t>);
+    STATIC_CHECK( addition_combinable<length_t, width_t>);
+    STATIC_CHECK(!subtraction_combinable<length_t, width_t>,
+                 "If implemented, the result would have to be length_t&; however, subtraction gives delta length_t"
+                 "Inconsistency between operator-= and operator- is undesirable");
+    STATIC_CHECK( can_add<length_t, width_t>);
+    STATIC_CHECK( can_subtract<length_t, width_t>);
 
     check(equality, "", physical_value{2.0f, si::units::metre * si::units::metre}, length_t{1.0, metre} *  length_t{2.0, metre});
     check(equality, "", physical_value{2.0f, si::units::metre * si::units::metre}, length_t{2.0, metre} *  length_t{1.0, metre});

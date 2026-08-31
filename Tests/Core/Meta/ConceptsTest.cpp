@@ -172,7 +172,7 @@ namespace sequoia::testing
     // the exclusions are written against the unqualified type.
     STATIC_CHECK(!integer<const bool>);
     STATIC_CHECK(!integer<volatile char>);
-    STATIC_CHECK(integer<const int>);
+    STATIC_CHECK( integer<const int>);
 
     STATIC_CHECK(!integer<float>);
     STATIC_CHECK(!integer<double>);

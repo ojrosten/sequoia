@@ -54,34 +54,34 @@ namespace sequoia::testing
 
   void bounds_free_test::test_meta()
   {
-    STATIC_CHECK(bounds<coordinate_bounds<float>>);
-    STATIC_CHECK(bounds<coordinate_bounds<double>>);
-    STATIC_CHECK(bounds<annulus_bounds<float>>);
-    STATIC_CHECK(bounds<annulus_bounds<double>>);
+    STATIC_CHECK( bounds<coordinate_bounds<float>>);
+    STATIC_CHECK( bounds<coordinate_bounds<double>>);
+    STATIC_CHECK( bounds<annulus_bounds<float>>);
+    STATIC_CHECK( bounds<annulus_bounds<double>>);
     // Being a set of bounds is a property of the type; being usable at a given
     // dimension is a property of what it can be called with. Which of the two
     // interfaces bounds_for consults is settled by the space's dimension, and only a
     // type supplying just one of them shows that both branches are live: coordinate
     // bounds apply componentwise at any width, whereas an annulus is a condition on
     // two coordinates jointly and so has no single-value form at all.
-    STATIC_CHECK(checks_single_val_against_bounds_v<coordinate_bounds<double>>);
-    STATIC_CHECK(checks_array_against_bounds_v<coordinate_bounds<double>, 2>);
-    STATIC_CHECK(checks_array_against_bounds_v<coordinate_bounds<double>, 3>);
+    STATIC_CHECK( checks_single_val_against_bounds_v<coordinate_bounds<double>>);
+    STATIC_CHECK( checks_array_against_bounds_v<coordinate_bounds<double>, 2>);
+    STATIC_CHECK( checks_array_against_bounds_v<coordinate_bounds<double>, 3>);
     STATIC_CHECK(!checks_single_val_against_bounds_v<annulus_bounds<double>>);
-    STATIC_CHECK(checks_array_against_bounds_v<annulus_bounds<double>, 2>);
+    STATIC_CHECK( checks_array_against_bounds_v<annulus_bounds<double>, 2>);
     STATIC_CHECK(!checks_array_against_bounds_v<annulus_bounds<double>, 3>);
 
-    STATIC_CHECK(bounds_for<coordinate_bounds<double>, euclidean_vector_space<1>>);
-    STATIC_CHECK(bounds_for<coordinate_bounds<double>, euclidean_vector_space<2>>);
-    STATIC_CHECK(bounds_for<annulus_bounds<double>, euclidean_vector_space<2>>);
+    STATIC_CHECK( bounds_for<coordinate_bounds<double>, euclidean_vector_space<1>>);
+    STATIC_CHECK( bounds_for<coordinate_bounds<double>, euclidean_vector_space<2>>);
+    STATIC_CHECK( bounds_for<annulus_bounds<double>, euclidean_vector_space<2>>);
     STATIC_CHECK(!bounds_for<annulus_bounds<double>, euclidean_vector_space<1>>);
     STATIC_CHECK(!bounds_for<annulus_bounds<double>, euclidean_vector_space<3>>);
 
     // bounds_value is a constraint on a *value*, not a type: the bounds must be a
     // genuine interval, so a degenerate one is refused however well-formed the type.
-    STATIC_CHECK(bounds_value<no_bounds<double>>);
-    STATIC_CHECK(bounds_value<half_line_bounds<double>>);
-    STATIC_CHECK(bounds_value<negative_half_line_bounds<double>>);
+    STATIC_CHECK( bounds_value<no_bounds<double>>);
+    STATIC_CHECK( bounds_value<half_line_bounds<double>>);
+    STATIC_CHECK( bounds_value<negative_half_line_bounds<double>>);
     STATIC_CHECK(!bounds_value<coordinate_bounds<double>{1.0, 1.0}>);
     STATIC_CHECK(!bounds_value<coordinate_bounds<double>{2.0, 1.0}>);
   }

@@ -162,16 +162,26 @@ namespace sequoia::testing
 
     // Positive control, as in the affine case: pins that the negative check
     // below fails because of the space and not because of a stray argument.
-    STATIC_CHECK(defines_physical_value_v<space_t, units_t, basis_data_t, repr_t, origin_t, validator_t>);
+    STATIC_CHECK(
+      defines_physical_value_v<space_t, units_t, basis_data_t, repr_t, origin_t, validator_t>);
 
     // Representation and Origin were transposed here. The check passed anyway,
     // because a transposition is just as inadmissible as the dual it was meant
     // to be testing.
-    STATIC_CHECK(!defines_physical_value_v< dual<space_t>, dual<units_t>, unit_defined_basis_data_for<dual<space_t>, dual<units_t>>, dual_of_t<repr_t>, to_origin_type_t<dual<space_t>>, throwing_validator >);
-    STATIC_CHECK(can_multiply<value_t, units_t>);
+    STATIC_CHECK(
+      !defines_physical_value_v<
+        dual<space_t>,
+        dual<units_t>,
+        unit_defined_basis_data_for<dual<space_t>, dual<units_t>>,
+        dual_of_t<repr_t>,
+        to_origin_type_t<dual<space_t>>,
+        throwing_validator
+      >
+    );
+    STATIC_CHECK( can_multiply<value_t, units_t>);
     // TO DO: think if this can be reinstated. The problem is that we
     // want to exclude for Celsius as a point but not as a Delta
-    //STATIC_CHECK(!can_divide <value_t, units_t>);
+    //STATIC_CHECK(!can_divide  <value_t, units_t>);
 
     coordinates_operations<quantity_t>{*this}.execute();
   }
@@ -185,7 +195,12 @@ namespace sequoia::testing
     
     STATIC_CHECK(has_quantity_conversion_v<si::temperature<value_t>, quantity_t>);
     STATIC_CHECK(has_quantity_conversion_v<quantity_t, si::temperature<value_t>>);
-    STATIC_CHECK(std::same_as< root_transform_t<si::units::celsius_t>, coordinate_transform<si::units::kelvin_t, dilatation<std::ratio<1, 1>>, translation<-273.15L>> >);
+    STATIC_CHECK(
+      std::same_as<
+        root_transform_t<si::units::celsius_t>,
+        coordinate_transform<si::units::kelvin_t, dilatation<std::ratio<1, 1>>, translation<-273.15L>>
+      >
+    );
     STATIC_CHECK(!has_quantity_conversion_v<quantity_t, si::mass<value_t>>);
 
     using absolute_temp_t       = si::temperature<value_t>;
@@ -230,21 +245,43 @@ namespace sequoia::testing
     using value_t       = T;
     using farenheight_wrt_t = non_si::units::farenheight_t::with_respect_to_type;
 
-    STATIC_CHECK(derives_from_another_unit_v<non_si::units::farenheight_t> && derives_from_another_unit_v<farenheight_wrt_t>);
+    STATIC_CHECK(   derives_from_another_unit_v<non_si::units::farenheight_t>
+                 && derives_from_another_unit_v<farenheight_wrt_t>);
 
-    STATIC_CHECK(derives_from_another_unit_v<si::units::celsius_t> && !derives_from_another_unit_v<typename si::units::celsius_t::with_respect_to_type>);
+    STATIC_CHECK(   derives_from_another_unit_v<si::units::celsius_t>
+                 && !derives_from_another_unit_v<typename si::units::celsius_t::with_respect_to_type>);
     STATIC_CHECK(std::same_as<root_transform_unit_t<non_si::units::farenheight_t>, si::units::kelvin_t>);
 
     using farenheight_transform_t = non_si::units::farenheight_t::transform_type;
     using farenheight_nested_transform_t = root_transform<non_si::units::farenheight_t>::nested_transform_type;
       
     STATIC_CHECK(std::same_as<root_transform<non_si::units::farenheight_t>::wrt_type, si::units::celsius_t>);
-    STATIC_CHECK(std::same_as< farenheight_transform_t, coordinate_transform<si::units::celsius_t, dilatation<std::ratio<9, 5>>, translation<32.0L>> >);
-    STATIC_CHECK(std::same_as< farenheight_nested_transform_t, coordinate_transform<si::units::kelvin_t, dilatation<std::ratio<1,1>>, translation<-273.15L>> >);
+    STATIC_CHECK(
+      std::same_as<
+        farenheight_transform_t,
+        coordinate_transform<si::units::celsius_t, dilatation<std::ratio<9, 5>>, translation<32.0L>>
+      >
+    );
+    STATIC_CHECK(
+      std::same_as<
+        farenheight_nested_transform_t,
+        coordinate_transform<si::units::kelvin_t, dilatation<std::ratio<1,1>>, translation<-273.15L>>
+      >
+    );
 
-    STATIC_CHECK(std::same_as< root_transform_t<non_si::units::farenheight_t>, coordinate_transform<si::units::kelvin_t, dilatation<maths::ratio<std::intmax_t{9}, std::intmax_t{5}>>, translation<32.0L - 273.15L*9/5>> >);
+    STATIC_CHECK(
+      std::same_as<
+        root_transform_t<non_si::units::farenheight_t>,
+        coordinate_transform<si::units::kelvin_t, dilatation<maths::ratio<std::intmax_t{9}, std::intmax_t{5}>>, translation<32.0L - 273.15L*9/5>>
+      >
+    );
 
-    STATIC_CHECK(std::same_as< inverse_t<root_transform_t<non_si::units::farenheight_t>>, coordinate_transform<si::units::kelvin_t, dilatation<maths::ratio<std::intmax_t{5}, std::intmax_t{9}>>, translation<(273.15L*9/5 - 32.0L)*5/9>> >);
+    STATIC_CHECK(
+      std::same_as<
+        inverse_t<root_transform_t<non_si::units::farenheight_t>>,
+      coordinate_transform<si::units::kelvin_t, dilatation<maths::ratio<std::intmax_t{5}, std::intmax_t{9}>>, translation<(273.15L*9/5 - 32.0L)*5/9>>
+      >
+    );
 
     STATIC_CHECK(has_quantity_conversion_v<si::temperature<value_t>, farenheight_t>);
     STATIC_CHECK(has_quantity_conversion_v<farenheight_t, si::temperature<value_t>>);

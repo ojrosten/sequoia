@@ -72,7 +72,7 @@ namespace sequoia::testing
     STATIC_CHECK(has_unary_plus<quantity_t>);
     STATIC_CHECK(!has_unary_minus<quantity_t>);
     STATIC_CHECK(std::same_as<units_t, no_unit_t> ? !can_multiply<value_t, units_t> : can_multiply<value_t, units_t>);
-    STATIC_CHECK(std::same_as<units_t, no_unit_t> ? ! can_divide<value_t, units_t> : can_divide<value_t, units_t>);
+    STATIC_CHECK(std::same_as<units_t, no_unit_t> ? !  can_divide<value_t, units_t> :   can_divide<value_t, units_t>);
 
     coordinates_operations<quantity_t>{*this}.execute();
 
