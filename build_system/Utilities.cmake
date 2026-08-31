@@ -74,6 +74,41 @@ FUNCTION(sequoia_set_run_target exectuable)
     )
 ENDFUNCTION()
 
+# MSVC's address sanitizer is a *dynamic* runtime: the executable links against
+# clang_rt.asan*.dll, which ships beside the compiler and is not on PATH unless the
+# build happened to be launched from a shell that put it there. Absent the DLL the
+# binary dies at startup with 0xc0000135 and no message worth reading - so an ASan
+# build that works from the IDE fails from the 'run' target, or vice versa, purely
+# on how it was invoked.
+#
+# The source directory is derived from CMAKE_CXX_COMPILER rather than from PATH, so
+# it is correct by construction and cannot go stale as toolchains come and go.
+#
+# Whatever the toolchain ships is copied, rather than one named file, so that no
+# mapping from configuration to runtime variant is encoded here. Measured with
+# dumpbin on 14.51: a Debug build imports clang_rt.asan_dynamic-x86_64.dll - the
+# plain one - even though it links the debug CRT (MSVCP140D, ucrtbased), so the
+# obvious guess that /MDd pairs with the _dbg_ runtime is wrong, and a guess is not
+# what a build should rest on. The files are ~2MB each and copy_if_different makes
+# the steady state a no-op.
+FUNCTION(sequoia_copy_asan_runtime target)
+    if(MSVC AND CMAKE_CXX_FLAGS MATCHES "fsanitize=address")
+        get_filename_component(toolchain_bin "${CMAKE_CXX_COMPILER}" DIRECTORY)
+        file(GLOB asan_runtimes "${toolchain_bin}/clang_rt.asan*_dynamic-*.dll")
+        if(NOT asan_runtimes)
+            message(WARNING
+                "ASan requested but no clang_rt.asan*_dynamic-*.dll found in ${toolchain_bin}; "
+                "${target} will not start unless the runtime is on PATH.")
+        endif()
+        foreach(runtime ${asan_runtimes})
+            add_custom_command(TARGET ${target} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                        "${runtime}" "$<TARGET_FILE_DIR:${target}>"
+                VERBATIM)
+        endforeach()
+    endif()
+ENDFUNCTION()
+
 FUNCTION(sequoia_add_coverage_options target)
     if(CODE_COVERAGE)
         target_compile_options(${target} PRIVATE -coverage)
@@ -103,6 +138,7 @@ FUNCTION(sequoia_finalize_tests target sourceGroupRoot sourceGroupPrefix)
         add_test(NAME ${target} COMMAND ${target} "--serial")
     endif()
     sequoia_set_run_target(${target})
+    sequoia_copy_asan_runtime(${target})
 ENDFUNCTION()
 
 FUNCTION(sequoia_finalize_self target sourceGroupRoot sourceGroupPrefix)
@@ -128,4 +164,5 @@ FUNCTION(sequoia_finalize_executable target)
     sequoia_finalize_library(${target})
     sequoia_set_properties(${target})
     sequoia_set_run_target(${target})
+    sequoia_copy_asan_runtime(${target})
 ENDFUNCTION()
