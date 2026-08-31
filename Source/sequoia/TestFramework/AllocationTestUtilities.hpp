@@ -12,6 +12,7 @@
  */
 
 #include "sequoia/Core/Meta/TypeTraits.hpp"
+#include "sequoia/TestFramework/Output.hpp"
 
 #include <memory>
 #include <string>
