@@ -7,6 +7,7 @@
 
 /** \file */
 
+#include <iostream>
 #include "HouseAllocationTest.hpp"
 #include "Maths/ProbabilityTest.hpp"
 #include "Maths/ProbabilityTestingDiagnostics.hpp"
@@ -25,7 +26,6 @@
 #include "Utilities/UsefulThingsFreeTest.hpp"
 #include "Utilities/UtilitiesFreeTest.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
-#include <iostream>
 
 namespace generatedProject::testing{};
 

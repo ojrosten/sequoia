@@ -46,10 +46,18 @@ namespace sequoia::testing
           }
         }
 
+        // Standard headers first.  Cosmetic today; load-bearing the moment the
+        // modules migration lands, because a quoted include here names a test
+        // header and a test header will import the framework.  A textual
+        // #include *after* an import re-parses whatever the module carried in
+        // its global module fragment - the include guards were consumed in the
+        // module's preprocessing context, not this one - and everything those
+        // headers define is then defined twice.  Angled before quoted keeps
+        // every textual include ahead of the first import.
         std::ranges::sort(entries, [](const std::string& lhs, const std::string& rhs) {
-            auto lAnglePos{lhs.find('<')}, rAnglePos{rhs.find('>')};
-            if((lAnglePos < npos) && (rAnglePos == npos)) return false;
-            if((lAnglePos == npos) && (rAnglePos < npos)) return true;
+            const auto lAnglePos{lhs.find('<')}, rAnglePos{rhs.find('<')};
+            if((lAnglePos < npos) && (rAnglePos == npos)) return true;
+            if((lAnglePos == npos) && (rAnglePos < npos)) return false;
 
             return lhs < rhs;
           });
