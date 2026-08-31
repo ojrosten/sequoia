@@ -12,6 +12,7 @@
 #include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <complex>
+#include <sstream>
 #include <cstdint>
 #include <set>
 #include <map>
@@ -26,8 +27,9 @@ namespace sequoia::testing
 
     struct serializable_thing
     {
-      template<class Stream>
-      friend Stream& operator<<(Stream& s, const serializable_thing&)
+      // An ordinary streaming operator, not a template: the concept is checked
+      // against one stream type, so genericity was never part of the claim.
+      friend std::ostream& operator<<(std::ostream& s, const serializable_thing&)
       {
         return s;
       }

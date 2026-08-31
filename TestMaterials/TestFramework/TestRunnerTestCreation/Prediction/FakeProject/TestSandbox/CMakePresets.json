@@ -78,7 +78,7 @@
         "CXX_COLOUR_FLAGS": "-fcolor-diagnostics"
       },
       "cacheVariables": { 
-        "WARNING_SUPPRESSIONS": "-Wno-missing-braces;-Wno-braced-scalar-init;-Wno-unused-function;-Wno-unused-lambda-capture;-Wno-unused-template"
+        "WARNING_SUPPRESSIONS": "-Wno-missing-braces;-Wno-braced-scalar-init;-Wno-unused-function;-Wno-unused-lambda-capture"
       },
       "inherits": ["base-unix"]
     },
