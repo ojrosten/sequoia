@@ -40,16 +40,16 @@ namespace sequoia::testing
     using free_module_t = my_module<Set, Ring, D>;
     using basis_data_t  = canonical_basis_data<D>;
 
-    check_static<(!vector_space<free_module_t>)>();
-    check_static<(free_module<free_module_t>)>();
-    check_static<(m_affine_space<free_module_t>)>();
-    check_static<(!affine_space<free_module_t>)>();
-    check_static<(std::same_as<free_module_type_of_t<free_module_t>, free_module_t>)>();
-    check_static<(basis_data_for<basis_data_t, free_module_t>)>();
+    STATIC_CHECK(!vector_space<free_module_t>);
+    STATIC_CHECK(free_module<free_module_t>);
+    STATIC_CHECK(m_affine_space<free_module_t>);
+    STATIC_CHECK(!affine_space<free_module_t>);
+    STATIC_CHECK(std::same_as<free_module_type_of_t<free_module_t>, free_module_t>);
+    STATIC_CHECK(basis_data_for<basis_data_t, free_module_t>);
     
     using module_coords_t      = free_module_coordinates<free_module_t, basis_data_t, canonical_representation<SetRep, no_bounds<SetRep>>, identity_validator>;
     using displacement_value_t = module_coords_t::displacement_coordinates_type::value_type;
-    check_static<(maths::weak_representation_for<displacement_value_t, Ring>)>();
+    STATIC_CHECK(maths::weak_representation_for<displacement_value_t, Ring>);
 
     operator_checks<module_coords_t, operator_expectations{
         .point_plus_point               = admits::yes,

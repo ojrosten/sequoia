@@ -422,22 +422,22 @@ namespace sequoia::testing
 
   void type_traits_test::test_are_same()
   {
-    check_static<(are_same_v<int>)>();
-    check_static<(std::same_as<are_same_t<int>, std::true_type>)>();
+    STATIC_CHECK(are_same_v<int>);
+    STATIC_CHECK(std::same_as<are_same_t<int>, std::true_type>);
 
-    check_static<(are_same_v<float>)>();
-    check_static<(are_same_v<int, int>)>();
-    check_static<(std::same_as<are_same_t<int, int>, std::true_type>)>();
+    STATIC_CHECK(are_same_v<float>);
+    STATIC_CHECK(are_same_v<int, int>);
+    STATIC_CHECK(std::same_as<are_same_t<int, int>, std::true_type>);
 
-    check_static<(are_same_v<float, float>)>();
-    check_static<(!are_same_v<int, float>)>();
-    check_static<(std::same_as<are_same_t<int, float>, std::false_type>)>();
+    STATIC_CHECK(are_same_v<float, float>);
+    STATIC_CHECK(!are_same_v<int, float>);
+    STATIC_CHECK(std::same_as<are_same_t<int, float>, std::false_type>);
   }
 
   void type_traits_test::test_value_type_of()
   {
     struct foo{ using value_type = int; };
 
-    check_static<(std::is_same_v<value_type_of_t<foo>, int>)>();
+    STATIC_CHECK(std::is_same_v<value_type_of_t<foo>, int>);
   }
 }

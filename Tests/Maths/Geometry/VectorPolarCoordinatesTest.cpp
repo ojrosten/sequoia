@@ -39,23 +39,23 @@ namespace sequoia::testing
     using value_t      = Representation::value_type;
     using delta_t      = vec_t::displacement_coordinates_type;
 
-    check_static<(representation_for_span<Representation, space_t>)>();
-    check_static<(vector_space<tensor_product<space_t, space_t>>)>();
-    check_static<(!vector_space<tensor_product<vec_t, vec_t>>)>();
-    check_static<(vector_space<tensor_product<tensor_product<space_t, space_t>, space_t>>)>();
-    check_static<(can_multiply<vec_t, value_t>)>();
-    check_static<(can_divide<vec_t, value_t>)>();
-    check_static<(!can_divide<vec_t, vec_t>)>();
-    check_static<(!can_divide<vec_t, delta_t>)>();
-    check_static<(!can_divide<delta_t, vec_t>)>();
-    check_static<(!can_divide<delta_t, delta_t>)>();
-    check_static<(can_add<vec_t, vec_t>)>();
-    check_static<(can_add<vec_t, delta_t>)>();
-    check_static<(can_subtract<vec_t, vec_t>)>();
-    check_static<(can_subtract<vec_t, delta_t>)>();
-    check_static<(has_unary_plus<vec_t>)>();
-    check_static<(has_unary_minus<vec_t>)>();
-    check_static<(vec_t::has_freely_mutable_components)>();
+    STATIC_CHECK(representation_for_span<Representation, space_t>);
+    STATIC_CHECK(vector_space<tensor_product<space_t, space_t>>);
+    STATIC_CHECK(!vector_space<tensor_product<vec_t, vec_t>>);
+    STATIC_CHECK(vector_space<tensor_product<tensor_product<space_t, space_t>, space_t>>);
+    STATIC_CHECK(can_multiply<vec_t, value_t>);
+    STATIC_CHECK(can_divide<vec_t, value_t>);
+    STATIC_CHECK(!can_divide<vec_t, vec_t>);
+    STATIC_CHECK(!can_divide<vec_t, delta_t>);
+    STATIC_CHECK(!can_divide<delta_t, vec_t>);
+    STATIC_CHECK(!can_divide<delta_t, delta_t>);
+    STATIC_CHECK(can_add<vec_t, vec_t>);
+    STATIC_CHECK(can_add<vec_t, delta_t>);
+    STATIC_CHECK(can_subtract<vec_t, vec_t>);
+    STATIC_CHECK(can_subtract<vec_t, delta_t>);
+    STATIC_CHECK(has_unary_plus<vec_t>);
+    STATIC_CHECK(has_unary_minus<vec_t>);
+    STATIC_CHECK(vec_t::has_freely_mutable_components);
 
     coordinates_operations<vec_t>{*this}.execute();
        
@@ -81,8 +81,8 @@ namespace sequoia::testing
     using rep_t        = polar_representation<ValType>;
     using vec_t        = vector_coordinates<space_t, basis_data_t, rep_t, Validator>;
 
-    check_static<(defines_scalar_multiplication_for_v<space_t, polar_representation<ValType>>)>();
-    check_static<(defines_scalar_division_for_v<space_t, polar_representation<ValType>>)>();
+    STATIC_CHECK(defines_scalar_multiplication_for_v<space_t, polar_representation<ValType>>);
+    STATIC_CHECK(defines_scalar_division_for_v<space_t, polar_representation<ValType>>);
     
     check(equality, "", vec_t{1, 1} * 2, vec_t{2, 1});
   }

@@ -88,8 +88,8 @@ namespace sequoia::testing
           throwing_validator
         >;
 
-    check_static<(!has_heterogeneous_representation_v<rep_t>)>();
-    check_static<(!std::constructible_from<vec_t, length<float>, length<float>>)>();
+    STATIC_CHECK(!has_heterogeneous_representation_v<rep_t>);
+    STATIC_CHECK(!std::constructible_from<vec_t, length<float>, length<float>>);
   }
   
   template<std::floating_point T, physics::physical_unit AngleUnit>
@@ -111,26 +111,26 @@ namespace sequoia::testing
     using delta_t = vec_t::displacement_type;
     using value_t = vec_t::value_type;
 
-    check_static<(free_module<free_module_type_of_t<space_t>>)>();
-    check_static<(has_coordinates_type_v<rep_t>)>();
-    check_static<(has_heterogeneous_representation_v<rep_t>)>();
-    check_static<(can_multiply<vec_t, value_t>)>();
-    check_static<(can_divide<vec_t, value_t>)>();
-    check_static<(!can_divide<vec_t, vec_t>)>();
-    check_static<(!can_divide<vec_t, delta_t>)>();
-    check_static<(!can_divide<delta_t, vec_t>)>();
-    check_static<(!can_divide<delta_t, delta_t>)>();
-    check_static<(can_add<vec_t, vec_t>)>();
-    check_static<(can_add<vec_t, delta_t>)>();
-    check_static<(can_subtract<vec_t, vec_t>)>();
-    check_static<(can_subtract<vec_t, delta_t>)>();
-    check_static<(has_unary_plus<vec_t>)>();
-    check_static<(has_unary_minus<vec_t>)>();
+    STATIC_CHECK(free_module<free_module_type_of_t<space_t>>);
+    STATIC_CHECK(has_coordinates_type_v<rep_t>);
+    STATIC_CHECK(has_heterogeneous_representation_v<rep_t>);
+    STATIC_CHECK(can_multiply<vec_t, value_t>);
+    STATIC_CHECK(can_divide<vec_t, value_t>);
+    STATIC_CHECK(!can_divide<vec_t, vec_t>);
+    STATIC_CHECK(!can_divide<vec_t, delta_t>);
+    STATIC_CHECK(!can_divide<delta_t, vec_t>);
+    STATIC_CHECK(!can_divide<delta_t, delta_t>);
+    STATIC_CHECK(can_add<vec_t, vec_t>);
+    STATIC_CHECK(can_add<vec_t, delta_t>);
+    STATIC_CHECK(can_subtract<vec_t, vec_t>);
+    STATIC_CHECK(can_subtract<vec_t, delta_t>);
+    STATIC_CHECK(has_unary_plus<vec_t>);
+    STATIC_CHECK(has_unary_minus<vec_t>);
 
     using radius_t = rep_t::radius_type;
     using angle_t  = rep_t::angle_type;
-    check_static<(!std::constructible_from<vec_t, radius_t, radius_t>)>();
-    check_static<(std::constructible_from<vec_t, radius_t, angle_t>)>();
+    STATIC_CHECK(!std::constructible_from<vec_t, radius_t, radius_t>);
+    STATIC_CHECK(std::constructible_from<vec_t, radius_t, angle_t>);
 
     coordinates_operations<vec_t>{*this}.execute();
   }

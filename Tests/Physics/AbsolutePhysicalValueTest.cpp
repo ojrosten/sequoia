@@ -57,22 +57,22 @@ namespace sequoia::testing
     using units_t    = quantity_t::units_type;
     using value_t    = quantity_t::value_type;
 
-    check_static<(convex_space<space_t>)>();
-    check_static<(vector_space<free_module_type_of_t<space_t>>)>();
-    check_static<(can_multiply<quantity_t, value_t>)>();
-    check_static<(can_divide<quantity_t, value_t>)>();
-    check_static<(can_divide<quantity_t, quantity_t>)>();
-    check_static<(can_divide<quantity_t, delta_q_t>)>();
-    check_static<(can_divide<delta_q_t, quantity_t>)>();
-    check_static<(can_divide<delta_q_t, delta_q_t>)>();
-    check_static<(can_add<quantity_t, quantity_t>)>();
-    check_static<(can_add<quantity_t, delta_q_t>)>();
-    check_static<(can_subtract<quantity_t, quantity_t>)>();
-    check_static<(can_subtract<quantity_t, delta_q_t>)>();
-    check_static<(has_unary_plus<quantity_t>)>();
-    check_static<(!has_unary_minus<quantity_t>)>();
-    check_static<(std::same_as<units_t, no_unit_t> ? !can_multiply<value_t, units_t> : can_multiply<value_t, units_t>)>();
-    check_static<(std::same_as<units_t, no_unit_t> ? ! can_divide<value_t, units_t> : can_divide<value_t, units_t>)>();
+    STATIC_CHECK(convex_space<space_t>);
+    STATIC_CHECK(vector_space<free_module_type_of_t<space_t>>);
+    STATIC_CHECK(can_multiply<quantity_t, value_t>);
+    STATIC_CHECK(can_divide<quantity_t, value_t>);
+    STATIC_CHECK(can_divide<quantity_t, quantity_t>);
+    STATIC_CHECK(can_divide<quantity_t, delta_q_t>);
+    STATIC_CHECK(can_divide<delta_q_t, quantity_t>);
+    STATIC_CHECK(can_divide<delta_q_t, delta_q_t>);
+    STATIC_CHECK(can_add<quantity_t, quantity_t>);
+    STATIC_CHECK(can_add<quantity_t, delta_q_t>);
+    STATIC_CHECK(can_subtract<quantity_t, quantity_t>);
+    STATIC_CHECK(can_subtract<quantity_t, delta_q_t>);
+    STATIC_CHECK(has_unary_plus<quantity_t>);
+    STATIC_CHECK(!has_unary_minus<quantity_t>);
+    STATIC_CHECK(std::same_as<units_t, no_unit_t> ? !can_multiply<value_t, units_t> : can_multiply<value_t, units_t>);
+    STATIC_CHECK(std::same_as<units_t, no_unit_t> ? ! can_divide<value_t, units_t> : can_divide<value_t, units_t>);
 
     coordinates_operations<quantity_t>{*this}.execute();
 
@@ -625,7 +625,7 @@ namespace sequoia::testing
 
   void absolute_physical_value_test::test_mass_conversions()
   {
-    check_static<(!noexcept(si::mass<float>{}.convert_to(si::units::tonne)))>();
+    STATIC_CHECK(!noexcept(si::mass<float>{}.convert_to(si::units::tonne)));
     
     check(
       equality,

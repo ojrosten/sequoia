@@ -86,21 +86,21 @@ namespace sequoia::testing
     using value_t      = Rep;
     using delta_t      = vec_t::displacement_coordinates_type;
 
-    check_static<(vector_space<tensor_product<vec_space_t, vec_space_t>>)>();
-    check_static<(!vector_space<tensor_product<vec_t, vec_t>>)>();
-    check_static<(vector_space<tensor_product<tensor_product<vec_space_t, vec_space_t>, vec_space_t>>)>();
-    check_static<(can_multiply<vec_t, value_t>)>();
-    check_static<(can_divide<vec_t, value_t>)>();
-    check_static<(!can_divide<vec_t, vec_t>)>();
-    check_static<(!can_divide<vec_t, delta_t>)>();
-    check_static<(!can_divide<delta_t, vec_t>)>();
-    check_static<(!can_divide<delta_t, delta_t>)>();
-    check_static<(can_add<vec_t, vec_t>)>();
-    check_static<(can_add<vec_t, delta_t>)>();
-    check_static<(can_subtract<vec_t, vec_t>)>();
-    check_static<(can_subtract<vec_t, delta_t>)>();
-    check_static<(has_unary_plus<vec_t>)>();
-    check_static<(has_unary_minus<vec_t>)>();
+    STATIC_CHECK(vector_space<tensor_product<vec_space_t, vec_space_t>>);
+    STATIC_CHECK(!vector_space<tensor_product<vec_t, vec_t>>);
+    STATIC_CHECK(vector_space<tensor_product<tensor_product<vec_space_t, vec_space_t>, vec_space_t>>);
+    STATIC_CHECK(can_multiply<vec_t, value_t>);
+    STATIC_CHECK(can_divide<vec_t, value_t>);
+    STATIC_CHECK(!can_divide<vec_t, vec_t>);
+    STATIC_CHECK(!can_divide<vec_t, delta_t>);
+    STATIC_CHECK(!can_divide<delta_t, vec_t>);
+    STATIC_CHECK(!can_divide<delta_t, delta_t>);
+    STATIC_CHECK(can_add<vec_t, vec_t>);
+    STATIC_CHECK(can_add<vec_t, delta_t>);
+    STATIC_CHECK(can_subtract<vec_t, vec_t>);
+    STATIC_CHECK(can_subtract<vec_t, delta_t>);
+    STATIC_CHECK(has_unary_plus<vec_t>);
+    STATIC_CHECK(has_unary_minus<vec_t>);
   
     coordinates_operations<vec_t>{*this}.execute();
   }
