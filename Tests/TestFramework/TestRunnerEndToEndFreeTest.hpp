@@ -74,11 +74,6 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path source_file() const;
 
-    [[nodiscard]]
-    std::string summary_discriminator() const
-    {
-      return with_msvc_v ? "msvc" : std::string{};
-    }
 
     void run_tests();
   private:
@@ -95,6 +90,5 @@ namespace sequoia::testing
 
     void rebuild_run_and_check(std::string_view description, const cmd_builder& b, std::string_view relOutputDir, std::string_view CMakeOutput, std::string_view BuildOutput, std::string_view options);
 
-    void check_project_files(std::string_view description, const cmd_builder& b);
   };
 }

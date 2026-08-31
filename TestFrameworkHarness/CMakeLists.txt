@@ -15,6 +15,7 @@ add_executable(TestFrameworkHarness TestFrameworkHarnessMain.cpp)
 set(TestDir ${CMAKE_CURRENT_LIST_DIR}/../Tests)
 
 target_sources(TestFrameworkHarness PRIVATE ${TestDir}/TestFramework/TestRunnerEndToEndFreeTest.cpp
+                                            ${TestDir}/TestFramework/TestRunnerProjectFiles.cpp
                                             ${TestDir}/Parsing/CommandLineArgumentsTestingUtilities.cpp)
 
 sequoia_finalize_self(TestFrameworkHarness ${TestDir} Tests)

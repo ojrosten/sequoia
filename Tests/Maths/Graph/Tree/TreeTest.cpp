@@ -94,13 +94,13 @@ namespace sequoia::testing
           edge_t{0, report("Prune both nodes"),  [](tree_type t) { t.prune(0); return t; }}
         }, // end node 2 edges
         {
-          edge_t{4, report("Insert node"), [](tree_type t) {
+          edge_t{4, report("Insert node"), [](tree_type t) -> tree_type {
               t.insert_node(1, 0, -7);
               t.sort_edges(t.cbegin_edges(0), t.cend_edges(0), [](const auto& l, const auto& r) { return l.target_node() < r.target_node(); });
               return t;
             }
           },
-          edge_t{4, report("Insert node"), [](tree_type t) {
+          edge_t{4, report("Insert node"), [](tree_type t) -> tree_type {
               t.insert_node(1, 0, -7);
               t.stable_sort_edges(t.cbegin_edges(0), t.cend_edges(0), [](const auto& l, const auto& r) { return l.target_node() < r.target_node(); });
               return t;

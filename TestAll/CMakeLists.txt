@@ -181,6 +181,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnosticsUtilities.cpp
                ${TestDir}/TestFramework/TestRunnerEndToEndFreeTest.cpp
+               ${TestDir}/TestFramework/TestRunnerProjectFiles.cpp
                ${TestDir}/TestFramework/TestRunnerPerformanceTest.cpp
                ${TestDir}/TestFramework/TestRunnerProjectCreation.cpp
                ${TestDir}/TestFramework/TestRunnerTest.cpp
