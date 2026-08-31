@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "sequoia/TestFramework/TestRunner.hpp"
+import sequoia.test_framework;
 
 #include <iostream>
 

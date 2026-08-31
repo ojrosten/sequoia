@@ -40,7 +40,7 @@ Predicted: true
 Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 50
 Empty stack versus populated stack
 
-[sequoia::data_structures::static_stack<int, 1>]
+[sequoia::data_structures::static_stack@sequoia.core.data_structures<int, 1>]
 operator== returned false
 
   Emptiness incorrect
@@ -66,7 +66,7 @@ operator== returned false
 Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 53
 Differing elements
 
-[sequoia::data_structures::static_stack<int, 1>]
+[sequoia::data_structures::static_stack@sequoia.core.data_structures<int, 1>]
 operator== returned false
 
   Top element incorrect
@@ -86,7 +86,7 @@ operator== returned false
 Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 56
 Empty stack versus populated stack
 
-[sequoia::data_structures::static_stack<int, 1>]
+[sequoia::data_structures::static_stack@sequoia.core.data_structures<int, 1>]
 operator== returned false
 
   Emptiness incorrect

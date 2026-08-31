@@ -9,6 +9,9 @@
 
 #include "FooAllocationTest.hpp"
 
+#include <filesystem>
+#include <source_location>
+
 namespace fakeProject::testing
 {
     [[nodiscard]]

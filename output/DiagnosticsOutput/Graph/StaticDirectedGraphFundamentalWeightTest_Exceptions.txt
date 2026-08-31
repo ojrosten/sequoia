@@ -1,4 +1,4 @@
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 70
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 98
 
 Expected Exception Type:
 [std::logic_error]
@@ -6,7 +6,7 @@ Inconsistent number of elements supplied by initializer lists: expected 0 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 70
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 98
 
 Expected Exception Type:
 [std::logic_error]
@@ -14,7 +14,7 @@ Inconsistent number of elements supplied by initializer lists: expected 0 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 70
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 98
 
 Expected Exception Type:
 [std::logic_error]
@@ -22,7 +22,7 @@ Inconsistent number of elements supplied by initializer lists: expected 0 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 88
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 116
 
 Expected Exception Type:
 [std::logic_error]
@@ -30,7 +30,7 @@ Inconsistent number of elements supplied by initializer lists: expected 0 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 88
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 116
 
 Expected Exception Type:
 [std::logic_error]
@@ -38,7 +38,7 @@ Inconsistent number of elements supplied by initializer lists: expected 0 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 172
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 200
 
 Expected Exception Type:
 [std::logic_error]
@@ -46,7 +46,7 @@ Inconsistent number of elements supplied by initializer lists: expected 1 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 172
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 200
 
 Expected Exception Type:
 [std::logic_error]
@@ -54,7 +54,7 @@ Inconsistent number of elements supplied by initializer lists: expected 1 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 403
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 431
 
 Expected Exception Type:
 [std::logic_error]
@@ -62,7 +62,7 @@ Inconsistent number of elements supplied by initializer lists: expected 2 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 503
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 531
 
 Expected Exception Type:
 [std::logic_error]
@@ -70,7 +70,7 @@ Inconsistent number of elements supplied by initializer lists: expected 2 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 504
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 532
 
 Expected Exception Type:
 [std::logic_error]
@@ -78,7 +78,7 @@ connectivity::process_edges [node: 0, edge: 0]: target index 1 out of range - ma
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 505
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphFundamentalWeightTest.cpp, Line 533
 
 Expected Exception Type:
 [std::logic_error]

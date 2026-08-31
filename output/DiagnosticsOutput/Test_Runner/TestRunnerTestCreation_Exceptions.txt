@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 48
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 66
 Empty string
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Equivalent type is unspecified
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 49
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 67
 Just spaces
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Equivalent type is unspecified
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 71
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 89
 Unmatched <
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 73
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 91
 Backwards delimiters
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 75
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 93
 Missing symbol
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 77
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 95
 Missing symbol
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 183
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 201
 Plurgh.h does not exist
 
 Expected Exception Type:
@@ -62,7 +62,7 @@ Unable to locate file Plurgh.h or Plurgh.hpp or Plurgh.hxx in the source reposit
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 192
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 210
 Typo in specified class header
 
 Expected Exception Type:

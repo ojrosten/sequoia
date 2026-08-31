@@ -1,4 +1,4 @@
-Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 36
+Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 66
 
 Expected Exception Type:
 [std::runtime_error]
@@ -6,7 +6,7 @@ Error
 
 =======================================
 
-Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 38
+Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 68
 
 Expected Exception Type:
 [int]

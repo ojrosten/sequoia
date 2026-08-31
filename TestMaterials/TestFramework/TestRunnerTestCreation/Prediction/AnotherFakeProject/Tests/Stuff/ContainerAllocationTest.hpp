@@ -9,7 +9,9 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/RegularAllocationTestCore.hpp"
+#include <filesystem>
+
+import sequoia.test_framework;
 
 namespace curlew::testing
 {

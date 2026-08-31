@@ -11,6 +11,8 @@
 
 #include "ThingummyTestingUtilities.hpp"
 
+#include <filesystem>
+
 namespace curlew::testing
 {
     using namespace sequoia::testing;

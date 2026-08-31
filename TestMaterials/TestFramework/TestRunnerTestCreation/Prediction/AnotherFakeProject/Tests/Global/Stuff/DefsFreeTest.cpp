@@ -10,6 +10,9 @@
 #include "DefsFreeTest.hpp"
 #include "curlew/Global/Stuff/Defs.hpp"
 
+#include <filesystem>
+#include <source_location>
+
 namespace curlew::testing
 {
     [[nodiscard]]

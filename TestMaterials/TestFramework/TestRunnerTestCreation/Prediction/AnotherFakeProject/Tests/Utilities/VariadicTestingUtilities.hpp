@@ -9,7 +9,7 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
+import sequoia.test_framework;
 #include "curlew/Utilities/Variadic.hpp"
 
 namespace sequoia::testing

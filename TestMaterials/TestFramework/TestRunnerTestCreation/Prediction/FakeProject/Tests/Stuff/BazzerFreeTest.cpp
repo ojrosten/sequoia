@@ -10,6 +10,9 @@
 #include "BazzerFreeTest.hpp"
 #include "fakeProject/Stuff/Baz.h"
 
+#include <filesystem>
+#include <source_location>
+
 namespace fakeProject::testing
 {
     [[nodiscard]]

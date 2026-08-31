@@ -9,7 +9,9 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/PerformanceTestCore.hpp"
+#include <filesystem>
+
+import sequoia.test_framework;
 
 namespace fakeProject::testing
 {

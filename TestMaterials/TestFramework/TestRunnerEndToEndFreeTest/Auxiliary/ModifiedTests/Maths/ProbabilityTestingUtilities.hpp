@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
+import sequoia.test_framework;
 #include "generatedProject/Maths/Probability.hpp"
 
 namespace sequoia::testing

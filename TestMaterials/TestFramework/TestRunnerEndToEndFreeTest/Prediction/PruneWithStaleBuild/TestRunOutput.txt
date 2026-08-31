@@ -1,5 +1,8 @@
 
 Analyzing dependencies...
-Executable is out of date; please build it!
-Executable time stamp: 2025-10-12 09:12:26.535665000
-/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/Source/generatedProject/Utilities/UsefulThings.hpp time stamp: 2025-10-12 09:12:27.205154000
+  Warning: Time stamp of previous run does not exist, so unable to prune.
+           This should be automatically rectified for the next successful run.
+           No action required.
+
+Nothing to do: try creating some tests!
+Run with --help to see options

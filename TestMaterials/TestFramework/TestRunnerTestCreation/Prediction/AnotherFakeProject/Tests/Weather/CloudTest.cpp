@@ -9,6 +9,10 @@
 
 #include "CloudTest.hpp"
 
+#include <compare>
+#include <filesystem>
+#include <source_location>
+
 namespace curlew::testing
 {
     [[nodiscard]]

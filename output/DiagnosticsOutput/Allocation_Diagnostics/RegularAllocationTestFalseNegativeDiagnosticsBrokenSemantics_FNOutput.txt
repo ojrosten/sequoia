@@ -2,7 +2,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken equality
 
 --Regular Semantics--
-[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
 
   operator== is inconsistent (x)
   [bool]
@@ -22,7 +22,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken inequality
 
 --Regular Semantics--
-[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
 
   operator!= is inconsistent (x)
   [bool]
@@ -42,10 +42,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken copy
 
 --Regular Semantics--
-[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
 
   Inconsistent copy constructor (x)
-  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
   operator== returned false
   Obtained : 
   Predicted: 1 
@@ -56,10 +56,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken para-copy
 
 --Regular Semantics--
-[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
 
   Inconsistent para-copy construction
-  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -70,10 +70,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken move
 
 --Regular Semantics--
-[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
 
   Inconsistent move construction
-  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -84,10 +84,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken para-move
 
 --Regular Semantics--
-[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
 
   Inconsistent para-move construction
-  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -98,10 +98,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken copy assignment
 
 --Regular Semantics--
-[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
 
   Inconsistent copy assignment (from y)
-  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
   operator== returned false
   Obtained : 1 
   Predicted: 5 6 
@@ -112,10 +112,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken move assignment
 
 --Regular Semantics--
-[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
 
   Inconsistent move assignment (from y)
-  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
   operator== returned false
   Obtained : 1 
   Predicted: 5 6 
@@ -126,7 +126,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken equality
 
 --Regular Semantics--
-[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
 
   operator== is inconsistent (x)
   [bool]
@@ -146,7 +146,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken inequality
 
 --Regular Semantics--
-[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
 
   operator!= is inconsistent (x)
   [bool]
@@ -166,10 +166,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken copy
 
 --Regular Semantics--
-[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
 
   Inconsistent copy constructor (x)
-  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
   operator== returned false
   Obtained : 
   Predicted: 1 
@@ -180,10 +180,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken para-copy
 
 --Regular Semantics--
-[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
 
   Inconsistent para-copy construction
-  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -194,10 +194,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken move
 
 --Regular Semantics--
-[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
 
   Inconsistent move construction
-  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -208,10 +208,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken para-move
 
 --Regular Semantics--
-[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
 
   Inconsistent para-move construction
-  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -222,10 +222,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken copy assignment
 
 --Regular Semantics--
-[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
 
   Inconsistent copy assignment (from y)
-  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
   operator== returned false
   Obtained : 1 
   Predicted: 5 6 
@@ -236,10 +236,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken move assignment
 
 --Regular Semantics--
-[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
 
   Inconsistent move assignment (from y)
-  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
   operator== returned false
   Obtained : 1 
   Predicted: 5 6 
@@ -250,7 +250,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken equality
 
 --Regular Semantics--
-[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
 
   operator== is inconsistent (x)
   [bool]
@@ -270,7 +270,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken inequality
 
 --Regular Semantics--
-[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
 
   operator!= is inconsistent (x)
   [bool]
@@ -290,10 +290,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken copy
 
 --Regular Semantics--
-[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
 
   Inconsistent copy constructor (x)
-  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
   operator== returned false
   Obtained : 
   Predicted: 1 
@@ -304,10 +304,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken para-copy
 
 --Regular Semantics--
-[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
 
   Inconsistent para-copy construction
-  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -318,10 +318,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken move
 
 --Regular Semantics--
-[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
 
   Inconsistent move construction
-  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -332,10 +332,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken para-move
 
 --Regular Semantics--
-[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
 
   Inconsistent para-move construction
-  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -346,10 +346,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken copy assignment
 
 --Regular Semantics--
-[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
 
   Inconsistent copy assignment (from y)
-  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
   operator== returned false
   Obtained : 1 
   Predicted: 5 6 
@@ -360,10 +360,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken move assignment
 
 --Regular Semantics--
-[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
 
   Inconsistent move assignment (from y)
-  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
   operator== returned false
   Obtained : 1 
   Predicted: 5 6 
@@ -374,7 +374,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken equality
 
 --Regular Semantics--
-[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
 
   operator== is inconsistent (x)
   [bool]
@@ -394,7 +394,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken inequality
 
 --Regular Semantics--
-[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
 
   operator!= is inconsistent (x)
   [bool]
@@ -414,10 +414,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken copy
 
 --Regular Semantics--
-[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
 
   Inconsistent copy constructor (x)
-  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
   operator== returned false
   Obtained : 
   Predicted: 1 
@@ -428,10 +428,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken para-copy
 
 --Regular Semantics--
-[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
 
   Inconsistent para-copy construction
-  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -442,10 +442,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken move
 
 --Regular Semantics--
-[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
 
   Inconsistent move construction
-  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -456,10 +456,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken para-move
 
 --Regular Semantics--
-[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
 
   Inconsistent para-move construction
-  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -470,10 +470,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken copy assignment
 
 --Regular Semantics--
-[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
 
   Inconsistent copy assignment (from y)
-  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
   operator== returned false
   Obtained : 1 
   Predicted: 5 6 
@@ -484,10 +484,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken move assignment
 
 --Regular Semantics--
-[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
 
   Inconsistent move assignment (from y)
-  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
   operator== returned false
   Obtained : 1 
   Predicted: 5 6 
@@ -498,7 +498,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken equality
 
 --Regular Semantics--
-[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
 
   operator== is inconsistent (x)
   [bool]
@@ -518,7 +518,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken inequality
 
 --Regular Semantics--
-[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
 
   operator!= is inconsistent (x)
   [bool]
@@ -538,10 +538,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken copy
 
 --Regular Semantics--
-[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
 
   Inconsistent copy constructor (x)
-  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
   operator== returned false
   Obtained : 
   Predicted: 1 
@@ -552,10 +552,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken para-copy
 
 --Regular Semantics--
-[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
 
   Inconsistent para-copy construction
-  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -566,10 +566,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken move
 
 --Regular Semantics--
-[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
 
   Inconsistent move construction
-  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -580,10 +580,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken para-move
 
 --Regular Semantics--
-[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
 
   Inconsistent para-move construction
-  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -594,10 +594,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken copy assignment
 
 --Regular Semantics--
-[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
 
   Inconsistent copy assignment (from y)
-  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
   operator== returned false
   Obtained : 1 
   Predicted: 5 6 
@@ -608,10 +608,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken move assignment
 
 --Regular Semantics--
-[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
 
   Inconsistent move assignment (from y)
-  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
   operator== returned false
   Obtained : 1 
   Predicted: 5 6 
@@ -622,7 +622,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken equality
 
 --Regular Semantics--
-[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
 
   operator== is inconsistent (x)
   [bool]
@@ -642,7 +642,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken inequality
 
 --Regular Semantics--
-[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
 
   operator!= is inconsistent (x)
   [bool]
@@ -662,10 +662,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken copy
 
 --Regular Semantics--
-[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
 
   Inconsistent copy constructor (x)
-  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
   operator== returned false
   Obtained : 
   Predicted: 1 
@@ -676,10 +676,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken para-copy
 
 --Regular Semantics--
-[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
 
   Inconsistent para-copy construction
-  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -690,10 +690,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken move
 
 --Regular Semantics--
-[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
 
   Inconsistent move construction
-  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -704,10 +704,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken para-move
 
 --Regular Semantics--
-[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
 
   Inconsistent para-move construction
-  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -718,10 +718,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken copy assignment
 
 --Regular Semantics--
-[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
 
   Inconsistent copy assignment (from y)
-  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
   operator== returned false
   Obtained : 1 
   Predicted: 5 6 
@@ -732,10 +732,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken move assignment
 
 --Regular Semantics--
-[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
 
   Inconsistent move assignment (from y)
-  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
   operator== returned false
   Obtained : 1 
   Predicted: 5 6 
@@ -746,7 +746,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken equality
 
 --Regular Semantics--
-[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
 
   operator== is inconsistent (x)
   [bool]
@@ -766,7 +766,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken inequality
 
 --Regular Semantics--
-[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
 
   operator!= is inconsistent (x)
   [bool]
@@ -786,10 +786,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken copy
 
 --Regular Semantics--
-[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
 
   Inconsistent copy constructor (x)
-  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
   operator== returned false
   Obtained : 
   Predicted: 1 
@@ -800,10 +800,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken para-copy
 
 --Regular Semantics--
-[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
 
   Inconsistent para-copy construction
-  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -814,10 +814,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken move
 
 --Regular Semantics--
-[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
 
   Inconsistent move construction
-  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -828,10 +828,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken para-move
 
 --Regular Semantics--
-[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
 
   Inconsistent para-move construction
-  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -842,10 +842,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken copy assignment
 
 --Regular Semantics--
-[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
 
   Inconsistent copy assignment (from y)
-  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
   operator== returned false
   Obtained : 1 
   Predicted: 5 6 
@@ -856,10 +856,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken move assignment
 
 --Regular Semantics--
-[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
 
   Inconsistent move assignment (from y)
-  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
   operator== returned false
   Obtained : 1 
   Predicted: 5 6 
@@ -870,7 +870,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken equality
 
 --Regular Semantics--
-[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
 
   operator== is inconsistent (x)
   [bool]
@@ -890,7 +890,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken inequality
 
 --Regular Semantics--
-[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
 
   operator!= is inconsistent (x)
   [bool]
@@ -910,10 +910,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken copy
 
 --Regular Semantics--
-[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
 
   Inconsistent copy constructor (x)
-  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+  [sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
   operator== returned false
   Obtained : 
   Predicted: 1 
@@ -924,10 +924,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken para-copy
 
 --Regular Semantics--
-[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
 
   Inconsistent para-copy construction
-  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+  [sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -938,10 +938,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken move
 
 --Regular Semantics--
-[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
 
   Inconsistent move construction
-  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+  [sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -952,10 +952,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken para-move
 
 --Regular Semantics--
-[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
 
   Inconsistent para-move construction
-  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+  [sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
   operator== returned false
   Obtained : 
   Predicted: 5 6 
@@ -966,10 +966,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken copy assignment
 
 --Regular Semantics--
-[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
 
   Inconsistent copy assignment (from y)
-  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+  [sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
   operator== returned false
   Obtained : 1 
   Predicted: 5 6 
@@ -980,10 +980,10 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken move assignment
 
 --Regular Semantics--
-[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
 
   Inconsistent move assignment (from y)
-  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+  [sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
   operator== returned false
   Obtained : 1 
   Predicted: 5 6 

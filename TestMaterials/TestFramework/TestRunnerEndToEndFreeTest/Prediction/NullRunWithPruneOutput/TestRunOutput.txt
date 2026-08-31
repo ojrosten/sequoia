@@ -1,5 +1,8 @@
 
 Analyzing dependencies...
-[27.7ms]
+  Warning: Time stamp of previous run does not exist, so unable to prune.
+           This should be automatically rectified for the next successful run.
+           No action required.
 
-Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests
+Nothing to do: try creating some tests!
+Run with --help to see options

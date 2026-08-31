@@ -11,6 +11,8 @@
 
 #include "AngleTestingUtilities.hpp"
 
+#include <filesystem>
+
 namespace curlew::testing
 {
     using namespace sequoia::testing;

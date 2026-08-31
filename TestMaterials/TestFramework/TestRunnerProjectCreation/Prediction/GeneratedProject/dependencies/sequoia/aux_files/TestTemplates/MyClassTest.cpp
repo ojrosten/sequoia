@@ -9,6 +9,10 @@
 
 #include "?ClassTest.hpp"
 
+#include <compare>
+#include <filesystem>
+#include <source_location>
+
 namespace ?::testing
 {
 	[[nodiscard]]

@@ -9,6 +9,9 @@
 
 #include "?ClassTestingDiagnostics.hpp"
 
+#include <filesystem>
+#include <source_location>
+
 namespace ?::testing
 {
 	[[nodiscard]]

@@ -11,6 +11,8 @@
 
 #include "?ClassTestingUtilities.hpp"
 
+#include <filesystem>
+
 namespace ?::testing
 {
 	using namespace sequoia::testing;class ?forename_false_negative_?surname final : public ?_false_negative_test

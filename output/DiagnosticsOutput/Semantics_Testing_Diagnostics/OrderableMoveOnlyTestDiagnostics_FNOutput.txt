@@ -150,7 +150,7 @@ Incorrect moved-from state post construction
 
   Incorrect moved-from value after move construction
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -174,7 +174,7 @@ Incorrect moved-from state post construction
 
   Incorrect moved-from value after move construction
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -212,7 +212,7 @@ Incorrect moved-from state post construction
 
   Incorrect moved-from value after move construction
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -250,7 +250,7 @@ Incorrect moved-from state post assignment
 
   Incorrect moved-from value after move assignment
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -274,7 +274,7 @@ Incorrect moved-from state post assignment
 
   Incorrect moved-from value after move assignment
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -312,7 +312,7 @@ Incorrect moved-from state post assignment
 
   Incorrect moved-from value after move assignment
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::move_only_orderable_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 

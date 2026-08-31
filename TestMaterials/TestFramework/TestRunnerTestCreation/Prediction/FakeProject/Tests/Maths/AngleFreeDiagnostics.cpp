@@ -10,6 +10,9 @@
 #include "AngleFreeDiagnostics.hpp"
 #include "fakeProject/Maths/Angle.hpp"
 
+#include <filesystem>
+#include <source_location>
+
 namespace fakeProject::testing
 {
     [[nodiscard]]

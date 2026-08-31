@@ -1,156 +1,156 @@
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 143
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 173
 
 [std::variant<int, double>]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 144
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 174
 
 [std::variant<int, double>]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 145
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 175
 
 [std::variant<int, double>]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 146
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 176
 
 [std::variant<int, double>]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 147
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 177
 
 [std::variant<int, double>]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 153
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 183
 
 [std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 154
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 184
 
 [std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 155
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 185
 
 [std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 161
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 191
 
 [std::variant<float>]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 170
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 200
 
 [std::optional<int>]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 171
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 201
 
 [std::optional<int>]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 172
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 202
 
 [std::optional<int>]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 178
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 208
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::optional<sequoia::testing::only_equivalence_checkable> >]
+[sequoia::testing::value_tester@sequoia.test_framework<std::optional<sequoia::testing::only_equivalence_checkable> >]
 Checking for equivalence with:
 [std::optional<sequoia::testing::only_equivalence_checkable>]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 179
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 209
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::optional<sequoia::testing::only_equivalence_checkable> >]
+[sequoia::testing::value_tester@sequoia.test_framework<std::optional<sequoia::testing::only_equivalence_checkable> >]
 Checking for equivalence with:
 [std::optional<sequoia::testing::only_equivalence_checkable>]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 180
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 210
 
 [std::optional<sequoia::testing::only_equivalence_checkable>]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 186
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 216
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::optional<sequoia::testing::only_weakly_checkable> >]
+[sequoia::testing::value_tester@sequoia.test_framework<std::optional<sequoia::testing::only_weakly_checkable> >]
 Checking for weak equivalence with:
 [std::optional<sequoia::testing::only_weakly_checkable>]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 187
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 217
 
 [std::optional<sequoia::testing::only_weakly_checkable>]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 193
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 223
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::any>]
+[sequoia::testing::value_tester@sequoia.test_framework<std::any>]
 Checking for equivalence with:
 [int]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 194
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 224
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::any>]
+[sequoia::testing::value_tester@sequoia.test_framework<std::any>]
 Checking for equivalence with:
 [sequoia::testing::only_equivalence_checkable]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 195
+Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 225
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::any>]
+[sequoia::testing::value_tester@sequoia.test_framework<std::any>]
 Checking for equivalence with:
 [sequoia::testing::only_weakly_checkable]
 

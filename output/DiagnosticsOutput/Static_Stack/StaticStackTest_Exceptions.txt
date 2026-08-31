@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/StaticStackTest.cpp, Line 39
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 55
 Can't push to null stack
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Attempting to exceed max stack depth
 
 =======================================
 
-Tests/Core/DataStructures/StaticStackTest.cpp, Line 40
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 56
 Can't construct non-null null stack
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ initializer_list of size 1 too big for array: expected at most 0 elements
 
 =======================================
 
-Tests/Core/DataStructures/StaticStackTest.cpp, Line 54
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 70
 Trying to push two elements to stack of depth 1
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Attempting to exceed max stack depth
 
 =======================================
 
-Tests/Core/DataStructures/StaticStackTest.cpp, Line 55
+Tests/Core/DataStructures/StaticStackTest.cpp, Line 71
 Can't construct stack of depth 1 with 2 elements
 
 Expected Exception Type:

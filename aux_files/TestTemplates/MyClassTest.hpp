@@ -11,6 +11,8 @@
 
 #include "?ClassTestingUtilities.hpp"
 
+#include <filesystem>
+
 namespace ?::testing
 {
 	using namespace sequoia::testing;class ?forename_?surname final : public ?_test

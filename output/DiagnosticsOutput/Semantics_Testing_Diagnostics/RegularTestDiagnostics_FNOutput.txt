@@ -220,7 +220,7 @@ Incorrect x value
 
   x not equivalent to xEquivalent
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
   Checking for weak equivalence with:
   [std::initializer_list<int>]
 
@@ -240,7 +240,7 @@ Incorrect y value
 
   y not equivalent to yEquivalent
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
   Checking for weak equivalence with:
   [std::initializer_list<int>]
 
@@ -260,7 +260,7 @@ Incorrect x value; mutator
 
   x not equivalent to xEquivalent
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
   Checking for weak equivalence with:
   [std::initializer_list<int>]
 
@@ -280,7 +280,7 @@ Incorrect y value; mutator
 
   y not equivalent to yEquivalent
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
   Checking for weak equivalence with:
   [std::initializer_list<int>]
 
@@ -300,7 +300,7 @@ Incorrect moved-from state post construction
 
   Incorrect moved-from value after move construction
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -338,7 +338,7 @@ Incorrect moved-from state post construction
 
   Incorrect moved-from value after move construction
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -376,7 +376,7 @@ Incorrect moved-from state post assignment
 
   Incorrect moved-from value after move assignment
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 
@@ -414,7 +414,7 @@ Incorrect moved-from state post assignment
 
   Incorrect moved-from value after move assignment
   Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
+  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
   [std::vector<int, std::allocator<int> >]
 

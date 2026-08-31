@@ -10,6 +10,9 @@
 #include "ContainerPerformanceTest.hpp"
 #include "fakeProject/Stuff/Container.hpp"
 
+#include <filesystem>
+#include <source_location>
+
 namespace fakeProject::testing
 {
     [[nodiscard]]

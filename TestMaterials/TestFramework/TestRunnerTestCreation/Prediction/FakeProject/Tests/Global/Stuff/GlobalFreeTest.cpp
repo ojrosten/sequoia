@@ -10,6 +10,9 @@
 #include "GlobalFreeTest.hpp"
 #include "fakeProject/Global/Stuff/Global.hpp"
 
+#include <filesystem>
+#include <source_location>
+
 namespace fakeProject::testing
 {
     [[nodiscard]]

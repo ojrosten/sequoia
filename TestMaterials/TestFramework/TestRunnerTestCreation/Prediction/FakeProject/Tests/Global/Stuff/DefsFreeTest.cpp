@@ -10,6 +10,9 @@
 #include "DefsFreeTest.hpp"
 #include "fakeProject/Global/Stuff/Defs.hpp"
 
+#include <filesystem>
+#include <source_location>
+
 namespace fakeProject::testing
 {
     [[nodiscard]]

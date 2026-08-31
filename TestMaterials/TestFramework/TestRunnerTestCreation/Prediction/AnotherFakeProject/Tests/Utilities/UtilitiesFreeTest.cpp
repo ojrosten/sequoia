@@ -10,6 +10,9 @@
 #include "UtilitiesFreeTest.hpp"
 #include "curlew/Utilities/Utilities.h"
 
+#include <filesystem>
+#include <source_location>
+
 namespace curlew::testing
 {
     [[nodiscard]]

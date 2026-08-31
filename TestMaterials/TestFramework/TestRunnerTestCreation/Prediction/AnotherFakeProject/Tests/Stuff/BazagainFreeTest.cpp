@@ -10,6 +10,9 @@
 #include "BazagainFreeTest.hpp"
 #include "curlew/Stuff/Baz.h"
 
+#include <filesystem>
+#include <source_location>
+
 namespace curlew::testing
 {
     [[nodiscard]]

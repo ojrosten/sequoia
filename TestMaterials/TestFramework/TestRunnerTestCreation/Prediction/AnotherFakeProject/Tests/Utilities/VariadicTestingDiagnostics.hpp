@@ -11,6 +11,8 @@
 
 #include "VariadicTestingUtilities.hpp"
 
+#include <filesystem>
+
 namespace curlew::testing
 {
     using namespace sequoia::testing;

@@ -1,19 +1,8 @@
 
 Analyzing dependencies...
-[13.7ms]
+  Warning: Time stamp of previous run does not exist, so unable to prune.
+           This should be automatically rectified for the next successful run.
+           No action required.
 
-
-Running tests...
-
-Foo:
-	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
-
------------Grand Totals-----------
-[Total Run Time: 12.3ms]
-[Execution Time: 10.6ms]
-	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
-	Standard Performance Checks:               0;  Failures:  0
-	False Positive Checks:                     0;  Failures:  0
-	False Positive Performance Checks:         0;  Failures:  0
-	False Negative Checks:                     0;  Failures:  0
-	False Negative Performance Checks:         0;  Failures:  0
+Nothing to do: try creating some tests!
+Run with --help to see options

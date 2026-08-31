@@ -9,6 +9,9 @@
 
 #include "MultipleTestingDiagnostics.hpp"
 
+#include <filesystem>
+#include <source_location>
+
 namespace curlew::testing
 {
     [[nodiscard]]

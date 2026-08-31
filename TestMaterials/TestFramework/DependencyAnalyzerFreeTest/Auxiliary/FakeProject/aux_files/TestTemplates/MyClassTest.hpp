@@ -9,6 +9,8 @@
 
 #include "?ClassTestingUtilities.hpp"
 
+#include <filesystem>
+
 namespace sequoia::testing
 {
 	class ?_class_test final : public ?_test

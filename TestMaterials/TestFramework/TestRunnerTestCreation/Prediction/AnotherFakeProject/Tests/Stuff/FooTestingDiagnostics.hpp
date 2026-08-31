@@ -11,6 +11,8 @@
 
 #include "FooTestingUtilities.hpp"
 
+#include <filesystem>
+
 namespace curlew::testing
 {
     using namespace sequoia::testing;

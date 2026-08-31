@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "sequoia/TestFramework/?TestCore.hpp"
+import sequoia.test_framework;
 #include "?Class.hpp"
 
 namespace sequoia::testing

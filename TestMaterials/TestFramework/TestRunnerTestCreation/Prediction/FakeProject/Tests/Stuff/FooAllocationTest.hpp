@@ -9,7 +9,9 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/MoveOnlyAllocationTestCore.hpp"
+#include <filesystem>
+
+import sequoia.test_framework;
 
 namespace fakeProject::testing
 {

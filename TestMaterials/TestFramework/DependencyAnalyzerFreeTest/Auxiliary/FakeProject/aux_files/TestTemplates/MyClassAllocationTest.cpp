@@ -7,6 +7,9 @@
 
 #include "?ClassAllocationTest.hpp"
 
+#include <filesystem>
+#include <source_location>
+
 namespace sequoia::testing
 {
 	[[nodiscard]]

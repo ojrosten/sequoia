@@ -10,6 +10,9 @@
 #include "GlobalFreeTest.hpp"
 #include "curlew/Global/Stuff/Global.hpp"
 
+#include <filesystem>
+#include <source_location>
+
 namespace curlew::testing
 {
     [[nodiscard]]

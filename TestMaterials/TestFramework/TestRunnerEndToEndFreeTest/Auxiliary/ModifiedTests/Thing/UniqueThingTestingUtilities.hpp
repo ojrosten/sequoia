@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
+import sequoia.test_framework;
 #include "generatedProject/Utilities/Thing/UniqueThing.hpp"
 
 namespace sequoia::testing

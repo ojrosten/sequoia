@@ -9,6 +9,10 @@
 
 #include "IteratorTest.hpp"
 
+#include <compare>
+#include <filesystem>
+#include <source_location>
+
 namespace fakeProject::testing
 {
     [[nodiscard]]

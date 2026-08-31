@@ -10,6 +10,9 @@
 #include "?BehaviouralDiagnostics.hpp"
 #include "?Header.hpp"
 
+#include <filesystem>
+#include <source_location>
+
 namespace ?::testing
 {
 	[[nodiscard]]

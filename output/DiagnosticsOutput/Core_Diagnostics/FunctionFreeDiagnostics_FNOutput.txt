@@ -1,8 +1,8 @@
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 26
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 56
 Obtained bound but prediction not
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::function<void ()> >]
+[sequoia::testing::value_tester@sequoia.test_framework<std::function<void ()> >]
 Checking for weak equivalence with:
 [std::function<void ()>]
 
@@ -15,11 +15,11 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 31
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 61
 Prediction bound but obtained not
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::function<void ()> >]
+[sequoia::testing::value_tester@sequoia.test_framework<std::function<void ()> >]
 Checking for weak equivalence with:
 [std::function<void ()>]
 
@@ -32,11 +32,11 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 39
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 69
 Obtained bound but prediction not
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::function<int ()> >]
+[sequoia::testing::value_tester@sequoia.test_framework<std::function<int ()> >]
 Checking for weak equivalence with:
 [std::function<int ()>]
 
@@ -49,11 +49,11 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 44
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 74
 Prediction bound but obtained not
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::function<int ()> >]
+[sequoia::testing::value_tester@sequoia.test_framework<std::function<int ()> >]
 Checking for weak equivalence with:
 [std::function<int ()>]
 
@@ -66,11 +66,11 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 52
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 82
 Obtained bound but prediction not
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::function<void (int)> >]
+[sequoia::testing::value_tester@sequoia.test_framework<std::function<void (int)> >]
 Checking for weak equivalence with:
 [std::function<void (int)>]
 
@@ -83,11 +83,11 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 57
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 87
 Prediction bound but obtained not
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::function<void (int)> >]
+[sequoia::testing::value_tester@sequoia.test_framework<std::function<void (int)> >]
 Checking for weak equivalence with:
 [std::function<void (int)>]
 

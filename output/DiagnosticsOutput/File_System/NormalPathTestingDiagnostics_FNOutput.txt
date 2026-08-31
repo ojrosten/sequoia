@@ -1,7 +1,7 @@
 Tests/FileSystem/NormalPathTestingDiagnostics.cpp, Line 25
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::normal_path>]
+[sequoia::testing::value_tester@sequoia.test_framework<sequoia::normal_path@sequoia.file_system>]
 Checking for equivalence with:
 [std::filesystem::path]
 
@@ -22,7 +22,7 @@ Checking for equivalence with:
 Tests/FileSystem/NormalPathTestingDiagnostics.cpp, Line 26
 Useful Description
 
-[sequoia::normal_path]
+[sequoia::normal_path@sequoia.file_system]
 operator== returned false
 
   Wrapped Path

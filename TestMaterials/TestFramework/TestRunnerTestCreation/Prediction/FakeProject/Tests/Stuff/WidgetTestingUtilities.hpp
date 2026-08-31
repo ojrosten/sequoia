@@ -9,7 +9,7 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
+import sequoia.test_framework;
 #include "fakeProject/Stuff/Widget.hpp"
 
 namespace sequoia::testing

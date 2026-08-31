@@ -10,6 +10,9 @@
 #include "UtilitiesFreeTest.hpp"
 #include "fakeProject/Utilities/Utilities.h"
 
+#include <filesystem>
+#include <source_location>
+
 namespace fakeProject::testing
 {
     [[nodiscard]]

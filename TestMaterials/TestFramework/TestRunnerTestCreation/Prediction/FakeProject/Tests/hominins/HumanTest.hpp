@@ -11,6 +11,8 @@
 
 #include "HumanTestingUtilities.hpp"
 
+#include <filesystem>
+
 namespace fakeProject::testing
 {
     using namespace sequoia::testing;

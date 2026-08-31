@@ -1,11 +1,11 @@
 Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 28
 Wrong species
 
-[std::vector<sequoia::testing::template_spec, std::allocator<sequoia::testing::template_spec> >]
+[std::vector<sequoia::testing::template_spec@sequoia.test_framework, std::allocator<sequoia::testing::template_spec@sequoia.test_framework> >]
 operator== returned false
 
   Element 0 of range incorrect
-  [sequoia::testing::template_spec]
+  [sequoia::testing::template_spec@sequoia.test_framework]
   operator== returned false
 
     Species
@@ -27,11 +27,11 @@ operator== returned false
 Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 31
 Wrong symbol
 
-[std::vector<sequoia::testing::template_spec, std::allocator<sequoia::testing::template_spec> >]
+[std::vector<sequoia::testing::template_spec@sequoia.test_framework, std::allocator<sequoia::testing::template_spec@sequoia.test_framework> >]
 operator== returned false
 
   Element 0 of range incorrect
-  [sequoia::testing::template_spec]
+  [sequoia::testing::template_spec@sequoia.test_framework]
   operator== returned false
 
     Symbol

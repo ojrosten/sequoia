@@ -9,7 +9,7 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
+import sequoia.test_framework;
 #include "curlew/Utilities/Iterator.hpp"
 
 namespace sequoia::testing

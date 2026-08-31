@@ -7,8 +7,8 @@
 
 #include "FooTest.hpp"
 
-#include "sequoia/TestFramework/FileEditors.hpp"
-#include "sequoia/TextProcessing/Substitutions.hpp"
+import sequoia.test_framework;
+import sequoia.text_processing;
 
 namespace generatedProject::testing
 {

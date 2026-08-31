@@ -11,6 +11,8 @@
 
 #include "HumanTestingUtilities.hpp"
 
+#include <filesystem>
+
 namespace curlew::testing
 {
     using namespace sequoia::testing;

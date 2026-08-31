@@ -9,7 +9,9 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/?TestCore.hpp"
+#include <filesystem>
+
+import sequoia.test_framework;
 
 namespace ?::testing
 {

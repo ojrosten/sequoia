@@ -1,4 +1,4 @@
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 181
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 219
 Zeroth partial index of edge out of range
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ connectivity::process_edges [node: 0, edge: 0]: target index 1 out of range - ma
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 182
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 220
 First partial index of edge out of range
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ connectivity::process_edges [node: 0, edge: 1]: target index 1 out of range - ma
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 183
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 221
 First partial index of edge out of range
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ connectivity::process_edges [node: 0, edge: 1]: target index 2 out of range - ma
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 184
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 222
 Zeroth partial index of node 1's edge out of range
 
 Expected Exception Type:
@@ -130,7 +130,7 @@ Please ensure these numbers are the same
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 221
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 259
 cbegin_edges throws for empty graph
 
 Expected Exception Type:
@@ -139,7 +139,7 @@ connectivity::cbegin_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 229
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 267
 cend_edges throws for empty graph
 
 Expected Exception Type:
@@ -148,7 +148,7 @@ connectivity::cend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 237
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 275
 crbegin_edges throws for empty graph
 
 Expected Exception Type:
@@ -157,7 +157,7 @@ connectivity::crbegin_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 245
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 283
 crend_edges throws for empty graph
 
 Expected Exception Type:
@@ -166,7 +166,7 @@ connectivity::crend_edges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 253
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 291
 cedges throws for empty graph
 
 Expected Exception Type:
@@ -175,7 +175,7 @@ connectivity::cedges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 261
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 299
 swapping nodes throws for empty graph
 
 Expected Exception Type:
@@ -184,7 +184,7 @@ node_storage::swap - index out of range
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 269
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 307
 swapping edges throws for empty graph
 
 Expected Exception Type:
@@ -193,7 +193,7 @@ connectivity::cedges: node index 0 out of range - graph order is 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 277
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 315
 joining nodes throws for empty graph
 
 Expected Exception Type:
@@ -220,7 +220,7 @@ node_storage::mutate_node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 311
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 349
 cbegin_edges throws when index is out of range
 
 Expected Exception Type:
@@ -229,7 +229,7 @@ connectivity::cbegin_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 319
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 357
 cend_edges throws when index is out of range
 
 Expected Exception Type:
@@ -238,7 +238,7 @@ connectivity::cend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 327
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 365
 crbegin_edges throws when index is out of range
 
 Expected Exception Type:
@@ -247,7 +247,7 @@ connectivity::crbegin_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 335
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 373
 crend_edges throws when index is out of range
 
 Expected Exception Type:
@@ -256,7 +256,7 @@ connectivity::crend_edges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 343
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 381
 cedges throws when index is out of range
 
 Expected Exception Type:
@@ -265,7 +265,7 @@ connectivity::cedges: node index 1 out of range - graph order is 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 351
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 389
 swapping nodes throws if first index out of range
 
 Expected Exception Type:
@@ -274,7 +274,7 @@ node_storage::swap - index out of range
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 359
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 397
 swapping nodes throws if second index out of range
 
 Expected Exception Type:
@@ -283,7 +283,7 @@ node_storage::swap - index out of range
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 367
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 405
 joining nodes throws if first index out of range
 
 Expected Exception Type:
@@ -292,7 +292,7 @@ connectivity::join: at least one node index [1, 0] out of range - graph order is
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 375
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 413
 joining nodes throws if second index out of range
 
 Expected Exception Type:
@@ -319,7 +319,7 @@ node_storage::mutate_node_weight - index out of range!
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 505
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 543
 swapping edges throws for first edge index out of range
 
 Expected Exception Type:
@@ -328,7 +328,7 @@ swap_edges: edge index 1 out of range for node 0, which has 1 edge(s)
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 513
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 551
 swapping edges throws for second edge index out of range
 
 Expected Exception Type:
@@ -337,7 +337,7 @@ swap_edges: edge index 1 out of range for node 0, which has 1 edge(s)
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 521
+Tests/Maths/Graph/Dynamic/Directed/DynamicDirectedGraphTestingUtilities.hpp, Line 559
 swapping edges throws for node index out of range
 
 Expected Exception Type:

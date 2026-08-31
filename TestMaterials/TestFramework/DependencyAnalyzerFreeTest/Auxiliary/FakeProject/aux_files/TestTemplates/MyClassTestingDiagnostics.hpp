@@ -7,6 +7,8 @@
 
 #include "?ClassTestingUtilities.hpp"
 
+#include <filesystem>
+
 namespace sequoia::testing
 {
 	class ?_class_false_positive_test final : public ?_false_positive_test

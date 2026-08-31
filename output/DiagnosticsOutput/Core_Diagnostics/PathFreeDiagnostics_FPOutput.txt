@@ -1,60 +1,60 @@
 False Negative Failure:
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 159
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 189
 Equivalence of a file to itself
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::filesystem::path>]
+[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 164
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 194
 Equivalence of a directory to itself
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::filesystem::path>]
+[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 169
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 199
 Equivalence of a directory, with sub-directories to itself
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::filesystem::path>]
+[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 174
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 204
 Equivalence of identical directories in different locations
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::filesystem::path>]
+[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 179
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 209
 File equivalence when .ignore is ignored
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::filesystem::path>]
+[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 184
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 214
 Range equivalence when .ignore is ignored
 
 [std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]
@@ -62,29 +62,29 @@ Range equivalence when .ignore is ignored
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 189
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 219
 Weak equivalence of directories in with the same contents but different names
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::filesystem::path>]
+[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
 Checking for weak equivalence with:
 [std::filesystem::path]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 194
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 224
 Weak equivalence when .ignore is ignored
 
 Comparison performed using:
-[sequoia::testing::value_tester<std::filesystem::path>]
+[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
 Checking for weak equivalence with:
 [std::filesystem::path]
 
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/PathFreeDiagnostics.cpp, Line 199
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 229
 Weak equivalence of range when .ignore is ignored
 
 [std::vector<std::filesystem::path, std::allocator<std::filesystem::path> >]

@@ -1,7 +1,7 @@
 Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 34
 Empty queue versus populated queue
 
-[sequoia::data_structures::static_priority_queue<int, 1, std::ranges::less>]
+[sequoia::data_structures::static_priority_queue@sequoia.core.data_structures<int, 1, std::ranges::less>]
 operator== returned false
 
   Emptiness incorrect
@@ -33,7 +33,7 @@ operator== returned false
 Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 37
 Differing elements
 
-[sequoia::data_structures::static_priority_queue<int, 1, std::ranges::less>]
+[sequoia::data_structures::static_priority_queue@sequoia.core.data_structures<int, 1, std::ranges::less>]
 operator== returned false
 
   Top element incorrect
@@ -59,7 +59,7 @@ operator== returned false
 Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 40
 Empty queue versus populated queue
 
-[sequoia::data_structures::static_priority_queue<int, 1, std::ranges::less>]
+[sequoia::data_structures::static_priority_queue@sequoia.core.data_structures<int, 1, std::ranges::less>]
 operator== returned false
 
   Emptiness incorrect
@@ -91,7 +91,7 @@ operator== returned false
 Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 48
 Two element queue versus one element queue
 
-[sequoia::data_structures::static_priority_queue<int, 2, std::ranges::less>]
+[sequoia::data_structures::static_priority_queue@sequoia.core.data_structures<int, 2, std::ranges::less>]
 operator== returned false
 
   Size incorrect

@@ -10,6 +10,9 @@
 #include "DoohickyFreeTest.hpp"
 #include "curlew/Stuff/Doohicky.hpp"
 
+#include <filesystem>
+#include <source_location>
+
 namespace curlew::testing
 {
     [[nodiscard]]

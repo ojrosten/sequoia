@@ -7,9 +7,11 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/TestRunner.hpp"
-
+#include <chrono>
+#include <exception>
 #include <iostream>
+
+import sequoia.test_framework;
 
 namespace another_Generated-Project::testing{};
 
