@@ -13,6 +13,7 @@
 
 #include <algorithm>
 #include <array>
+#include <format>
 
 namespace sequoia::testing
 {
@@ -23,9 +24,7 @@ namespace sequoia::testing
     std::string to_string(const log_summary::duration& d)
     {
       using namespace std::chrono;
-      std::stringstream ss{};
-      ss << std::setprecision(3) << duration_cast<duration<double, Period>>(d).count();
-      return ss.str();
+      return std::format("{:.3}", duration_cast<duration<double, Period>>(d).count());
     }
   }
 

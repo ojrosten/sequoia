@@ -1813,6 +1813,15 @@ namespace sequoia::testing
     STATIC_CHECK(!defines_identity_validator_v<throwing_validator>);
     STATIC_CHECK(!defines_identity_validator_v<single_value_validator>);
     STATIC_CHECK(std::is_same_v<defines_identity_validator_t<identity_validator>, std::true_type>);
+
+    // ...and the behaviour behind that declaration, which the traits above cannot
+    // state: single_value_validator really does pass its value through. So "not
+    // privileged" is a claim about what it declares, never about what it does - and
+    // this is the only place that distinction is demonstrated rather than asserted.
+    check(equality,
+          "single_value_validator is transparent in fact, if not by declaration",
+          single_value_validator{}(no_bounds<double>, 42.0),
+          42.0);
   }
 
   /** Pins the DAG of spaces. For each node there is a fixture which sits at
