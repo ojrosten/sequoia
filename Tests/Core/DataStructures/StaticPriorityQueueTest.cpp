@@ -10,7 +10,25 @@
 #include "StaticPriorityQueueTest.hpp"
 #include "StaticPriorityQueueTestingUtilities.hpp"
 
-#include "sequoia/Core/DataStructures/StaticPriorityQueue.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+#include <algorithm>
+#include <array>
+#include <concepts>
+#include <execution>
+#include <functional>
+#include <iterator>
+#include <span>
+#include <stdexcept>
+#include <string>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+import sequoia.core.data_structures;
+
 
 namespace sequoia::testing
 {

@@ -5,24 +5,55 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+module;
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+#include <algorithm>
+#include <array>
+#include <chrono>
+#include <concepts>
+#include <condition_variable>
+#include <execution>
+#include <filesystem>
+#include <format>
+#include <functional>
+#include <future>
+#include <iterator>
+#include <limits>
+#include <memory>
+#include <mutex>
+#include <numeric>
+#include <optional>
+#include <ostream>
+#include <queue>
+#include <ranges>
+#include <scoped_allocator>
+#include <span>
+#include <sstream>
+#include <stack>
+#include <stdexcept>
+#include <string>
+#include <thread>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+module sequoia.test_framework;
+
+import sequoia.parsing;
+import sequoia.streaming;
+import sequoia.text_processing;
+
 /** \file
     \brief Definitions for TestCreator.hpp
  */
 
-#include "sequoia/TestFramework/TestCreator.hpp"
 
-#include "sequoia/TestFramework/FileEditors.hpp"
-#include "sequoia/TestFramework/FileSystemUtilities.hpp"
-#include "sequoia/TestFramework/TestRunnerUtilities.hpp"
 
-#include "sequoia/Parsing/CommandLineArguments.hpp"
-#include "sequoia/TestFramework/Commands.hpp"
-#include "sequoia/Streaming/Streaming.hpp"
-#include "sequoia/TextProcessing/Substitutions.hpp"
 
-#include <array>
-#include <chrono>
-#include <stdexcept>
 
 namespace sequoia::testing
 {

@@ -5,19 +5,33 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+module;
+
+#include <algorithm>
+#include <array>
+#include <concepts>
+#include <filesystem>
+#include <format>
+#include <functional>
+#include <iterator>
+#include <optional>
+#include <span>
+#include <sstream>
+#include <string>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+module sequoia.test_framework;
+
 /** \file
     \brief Definitions for MaterialsUpdater.hpp
 */
 
-#include "sequoia/TestFramework/MaterialsUpdater.hpp"
 
-#include "sequoia/TestFramework/CoreInfrastructure.hpp"
-#include "sequoia/TestFramework/FileEditors.hpp"
-#include "sequoia/TestFramework/FileSystemUtilities.hpp"
-#include "sequoia/TestFramework/ProjectPaths.hpp"
 
-#include <algorithm>
-#include <format>
 
 namespace sequoia::testing
 {

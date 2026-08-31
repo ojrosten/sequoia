@@ -10,7 +10,16 @@
 #include "ArrayUtilitiesTest.hpp"
 #include "Utilities/TestUtilities.hpp"
 
-#include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
+
+#include <array>
+#include <span>
+#include <stdexcept>
+#include <string>
+#include <type_traits>
+#include <utility>
+
+import sequoia.core.container_utilities;
+
 
 namespace sequoia::testing
 {  

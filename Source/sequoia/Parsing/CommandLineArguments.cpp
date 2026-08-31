@@ -5,15 +5,44 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+module;
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+#include <algorithm>
+#include <array>
+#include <concepts>
+#include <condition_variable>
+#include <execution>
+#include <functional>
+#include <future>
+#include <iterator>
+#include <limits>
+#include <memory>
+#include <mutex>
+#include <numeric>
+#include <queue>
+#include <ranges>
+#include <span>
+#include <stack>
+#include <stdexcept>
+#include <string>
+#include <thread>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+module sequoia.parsing;
+
+import sequoia.text_processing;
+
 /** \file
     \brief Definitions for CommandLineArguments.hpp
 */
 
-#include "sequoia/Parsing/CommandLineArguments.hpp"
-#include "sequoia/TextProcessing/Indent.hpp"
 
-#include <stdexcept>
-#include <iterator>
 
 namespace sequoia::parsing::commandline
 {

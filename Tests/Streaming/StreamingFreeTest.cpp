@@ -8,11 +8,38 @@
 /** \file */
 
 #include "StreamingFreeTest.hpp"
-#include "sequoia/Streaming/Streaming.hpp"
-#include "sequoia/TextProcessing/Substitutions.hpp"
-#include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
 #include <fstream>
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
+
+#include <algorithm>
+#include <any>
+#include <array>
+#include <chrono>
+#include <cmath>
+#include <concepts>
+#include <execution>
+#include <filesystem>
+#include <format>
+#include <functional>
+#include <iterator>
+#include <optional>
+#include <scoped_allocator>
+#include <source_location>
+#include <span>
+#include <sstream>
+#include <string>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+import sequoia.streaming;
+import sequoia.test_framework;
+import sequoia.text_processing;
 
 namespace sequoia::testing
 {

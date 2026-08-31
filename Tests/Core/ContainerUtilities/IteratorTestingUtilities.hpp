@@ -7,9 +7,20 @@
 
 #pragma once
 
+
+#include <array>
+#include <concepts>
+#include <functional>
+#include <iterator>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+
+import sequoia.core.container_utilities;
+
 /** \file */
 
-#include "sequoia/Core/ContainerUtilities/Iterator.hpp"
 
 namespace sequoia::testing
 {

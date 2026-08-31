@@ -10,7 +10,6 @@
 #include "ElementaryFreeDiagnostics.hpp"
 #include "ElementaryFreeDiagnosticsUtilities.hpp"
 
-#include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <complex>
 #include <list>
@@ -19,6 +18,18 @@
 #include <set>
 #include <variant>
 #include <vector>
+
+
+#include <array>
+#include <concepts>
+#include <functional>
+#include <iterator>
+#include <string>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+
+import sequoia.text_processing;
 
 namespace sequoia::testing
 {

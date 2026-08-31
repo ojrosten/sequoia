@@ -5,12 +5,17 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+module;
+
+#include <cstdint>
+#include <string>
+
+module sequoia.text_processing;
+
 /** \file
     \brief Definitions for Patterns.hpp
  */
 
-#include "sequoia/TextProcessing/Patterns.hpp"
-#include <cstdint>
 
 namespace sequoia
 {

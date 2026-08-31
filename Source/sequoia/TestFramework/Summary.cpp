@@ -5,15 +5,38 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+module;
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+#include <algorithm>
+#include <array>
+#include <chrono>
+#include <cmath>
+#include <concepts>
+#include <execution>
+#include <filesystem>
+#include <format>
+#include <functional>
+#include <iterator>
+#include <optional>
+#include <source_location>
+#include <span>
+#include <sstream>
+#include <string>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+module sequoia.test_framework;
+
 /** \file
     \brief Definitions for Summary.hpp
 */
 
-#include "sequoia/TestFramework/Summary.hpp"
 
-#include <algorithm>
-#include <array>
-#include <format>
 
 namespace sequoia::testing
 {

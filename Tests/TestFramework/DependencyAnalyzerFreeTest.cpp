@@ -10,11 +10,48 @@
 #include "DependencyAnalyzerFreeTest.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
-#include "sequoia/TestFramework/StateTransitionUtilities.hpp"
-#include "sequoia/TextProcessing/Patterns.hpp"
-#include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
 #include <fstream>
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
+
+#include <algorithm>
+#include <any>
+#include <array>
+#include <chrono>
+#include <cmath>
+#include <concepts>
+#include <condition_variable>
+#include <execution>
+#include <filesystem>
+#include <format>
+#include <functional>
+#include <future>
+#include <iterator>
+#include <limits>
+#include <memory>
+#include <mutex>
+#include <numeric>
+#include <optional>
+#include <queue>
+#include <ranges>
+#include <scoped_allocator>
+#include <source_location>
+#include <span>
+#include <sstream>
+#include <stack>
+#include <stdexcept>
+#include <string>
+#include <thread>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+import sequoia.test_framework;
+import sequoia.text_processing;
 
 namespace sequoia::testing
 {

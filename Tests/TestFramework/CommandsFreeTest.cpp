@@ -8,8 +8,16 @@
 /** \file */
 
 #include "CommandsFreeTest.hpp"
-#include "sequoia/TestFramework/Commands.hpp"
-#include "sequoia/TextProcessing/Patterns.hpp"
+
+
+#include <filesystem>
+#include <optional>
+#include <span>
+#include <string>
+#include <vector>
+
+import sequoia.test_framework;
+import sequoia.text_processing;
 
 namespace sequoia::testing
 {

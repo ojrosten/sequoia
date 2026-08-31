@@ -9,7 +9,6 @@
 
 #include "ConceptsTest.hpp"
 
-#include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <complex>
 #include <sstream>
@@ -17,6 +16,18 @@
 #include <set>
 #include <map>
 #include <vector>
+
+
+#include <array>
+#include <concepts>
+#include <functional>
+#include <iterator>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+
+import sequoia.core.meta;
 
 
 namespace sequoia::testing

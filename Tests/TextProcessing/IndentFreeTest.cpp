@@ -8,7 +8,13 @@
 /** \file */
 
 #include "IndentFreeTest.hpp"
-#include "sequoia/TextProcessing/Indent.hpp"
+
+
+#include <algorithm>
+#include <string>
+#include <utility>
+
+import sequoia.text_processing;
 
 namespace sequoia::testing
 {

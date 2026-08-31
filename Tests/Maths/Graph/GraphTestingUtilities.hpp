@@ -12,9 +12,30 @@
 #include "Components/Edges/EdgeTestingUtilities.hpp"
 #include "Components/Nodes/NodeStorageTestingUtilities.hpp"
 
-#include "sequoia/Core/DataStructures/PartitionedData.hpp"
-#include "sequoia/Maths/Graph/GraphPrimitive.hpp"
-#include "sequoia/Maths/Graph/GraphTraits.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+#include <algorithm>
+#include <array>
+#include <concepts>
+#include <execution>
+#include <functional>
+#include <iterator>
+#include <limits>
+#include <memory>
+#include <numeric>
+#include <ranges>
+#include <span>
+#include <stdexcept>
+#include <string>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+import sequoia.core.data_structures;
+import sequoia.maths.graph;
+
 
 namespace sequoia::testing
 {

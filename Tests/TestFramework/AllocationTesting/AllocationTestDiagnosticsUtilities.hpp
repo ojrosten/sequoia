@@ -9,9 +9,14 @@
 
 /** \file */
 
-#include "sequoia/Core/ContainerUtilities/AssignmentUtilities.hpp"
 
 #include <vector>
+
+
+#include <memory>
+#include <utility>
+
+import sequoia.core.container_utilities;
 
 namespace sequoia::testing
 {

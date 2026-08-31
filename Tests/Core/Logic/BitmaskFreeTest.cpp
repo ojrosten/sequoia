@@ -9,8 +9,36 @@
 
 #include "BitmaskFreeTest.hpp"
 
-#include "sequoia/Core/Logic/Bitmask.hpp"
-#include "sequoia/TestFramework/StateTransitionUtilities.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+#include <algorithm>
+#include <array>
+#include <concepts>
+#include <condition_variable>
+#include <execution>
+#include <functional>
+#include <future>
+#include <iterator>
+#include <limits>
+#include <memory>
+#include <mutex>
+#include <numeric>
+#include <queue>
+#include <ranges>
+#include <span>
+#include <stack>
+#include <stdexcept>
+#include <string>
+#include <thread>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+import sequoia.core.logic;
+import sequoia.test_framework;
+
 
 namespace
 {

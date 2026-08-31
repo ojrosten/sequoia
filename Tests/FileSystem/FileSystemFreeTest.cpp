@@ -8,7 +8,12 @@
 /** \file */
 
 #include "FileSystemFreeTest.hpp"
-#include "sequoia/FileSystem/FileSystem.hpp"
+
+
+#include <filesystem>
+#include <functional>
+
+import sequoia.file_system;
 
 namespace sequoia::testing
 {

@@ -8,7 +8,12 @@
 /** \file */
 
 #include "TypeListFreeTest.hpp"
-#include "sequoia/Core/Meta/TypeList.hpp"
+
+
+#include <tuple>
+#include <variant>
+
+import sequoia.core.meta;
 
 namespace sequoia::testing
 {

@@ -5,21 +5,44 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+module;
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <concepts>
+#include <execution>
+#include <filesystem>
+#include <format>
+#include <functional>
+#include <iterator>
+#include <numeric>
+#include <optional>
+#include <ranges>
+#include <source_location>
+#include <span>
+#include <sstream>
+#include <string>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+module sequoia.test_framework;
+
+import sequoia.file_system;
+import sequoia.text_processing;
+
 /** \file
     \brief Definitions for ProjectPaths.hpp
  */
 
-#include "sequoia/TestFramework/ProjectPaths.hpp"
 
-#include "sequoia/FileSystem/FileSystem.hpp"
-#include "sequoia/TestFramework/FileSystemUtilities.hpp"
-#include "sequoia/TestFramework/Output.hpp"
 
-#include "sequoia/TextProcessing/Substitutions.hpp"
 
-#include <algorithm>
-#include <numeric>
-#include <ranges>
 
 namespace sequoia::testing
 {

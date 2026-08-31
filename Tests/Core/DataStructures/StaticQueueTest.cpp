@@ -10,7 +10,23 @@
 #include "StaticQueueTest.hpp"
 #include "StaticQueueTestingUtilities.hpp"
 
-#include "sequoia/Core/DataStructures/StaticQueue.hpp"
+
+#include <algorithm>
+#include <array>
+#include <concepts>
+#include <functional>
+#include <iterator>
+#include <span>
+#include <stdexcept>
+#include <string>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+import sequoia.core.data_structures;
+
 
 namespace sequoia::testing
 {

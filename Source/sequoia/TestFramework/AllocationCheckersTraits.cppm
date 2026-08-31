@@ -1,0 +1,39 @@
+////////////////////////////////////////////////////////////////////
+//                Copyright Oliver J. Rosten 2020.                //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
+module;
+
+#include <array>
+#include <concepts>
+#include <functional>
+#include <iterator>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+
+export module sequoia.test_framework:AllocationCheckersTraits;
+
+export import sequoia.core.meta;
+
+/** \file
+    \brief Traits and Concepts for allocation checks.
+*/
+
+
+export namespace sequoia::testing
+{
+  template <class A>
+  concept counting_alloc = alloc<A> && requires(const std::remove_reference_t<A>& a) {
+     a.allocs();
+  };
+
+  template<class Fn, class T>
+  concept alloc_getter = requires(Fn fn, const std::remove_reference_t<T>& t) {
+    { fn(t) } -> counting_alloc;
+  };
+}

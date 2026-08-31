@@ -9,13 +9,22 @@
 
 #include "TypeTraitsTest.hpp"
 
-#include "sequoia/Core/Meta/TypeTraits.hpp"
 
 #include <array>
 #include <complex>
 #include <map>
 #include <set>
 #include <vector>
+
+
+#include <concepts>
+#include <iterator>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+
+import sequoia.core.meta;
 
 namespace sequoia::testing
 {

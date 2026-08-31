@@ -10,7 +10,15 @@
 #include "IndividualTestPathsFreeTest.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
-#include "sequoia/TestFramework/IndividualTestPaths.hpp"
+
+#include <filesystem>
+#include <optional>
+#include <span>
+#include <string>
+#include <vector>
+
+import sequoia.test_framework;
+
 
 namespace sequoia::testing
 {

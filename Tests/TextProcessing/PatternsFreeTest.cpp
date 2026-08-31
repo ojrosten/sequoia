@@ -8,7 +8,11 @@
 /** \file */
 
 #include "PatternsFreeTest.hpp"
-#include "sequoia/TextProcessing/Patterns.hpp"
+
+
+#include <string>
+
+import sequoia.text_processing;
 
 namespace sequoia::testing
 {

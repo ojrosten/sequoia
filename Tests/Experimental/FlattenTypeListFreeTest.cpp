@@ -8,12 +8,15 @@
 /** \file */
 
 #include "FlattenTypeListFreeTest.hpp"
-#include "sequoia/Core/Meta/TypeList.hpp"
+
+
+#include <tuple>
+#include <variant>
+
+import sequoia.core.meta;
 
 namespace sequoia::testing
 {
-  template<class... Ts>
-  struct flatten;
 
   template<class... Ts>
   struct flatten

@@ -5,11 +5,18 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+module;
+
+#include <algorithm>
+#include <string>
+#include <utility>
+
+module sequoia.text_processing;
+
 /** \file
     \brief Definitions for Indent.hpp
  */
 
-#include "sequoia/TextProcessing/Indent.hpp"
 
 namespace sequoia
 {

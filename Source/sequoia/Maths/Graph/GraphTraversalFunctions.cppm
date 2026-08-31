@@ -1,0 +1,233 @@
+////////////////////////////////////////////////////////////////////
+//                Copyright Oliver J. Rosten 2018.                //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
+module;
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+#include <algorithm>
+#include <array>
+#include <concepts>
+#include <condition_variable>
+#include <execution>
+#include <functional>
+#include <future>
+#include <iterator>
+#include <memory>
+#include <mutex>
+#include <queue>
+#include <span>
+#include <stack>
+#include <stdexcept>
+#include <string>
+#include <thread>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+export module sequoia.maths.graph:GraphTraversalFunctions;
+
+import :DynamicGraphTraversalDetails;
+import :Edge;
+import :EdgesAndNodesUtilities;
+import :GraphDetails;
+import :GraphTraits;
+import :GraphTraversalDetails;
+import :StaticGraphTraversalDetails;
+export import sequoia.algorithms;
+export import sequoia.core.concurrency;
+export import sequoia.core.container_utilities;
+export import sequoia.core.data_structures;
+export import sequoia.core.meta;
+export import sequoia.core.object;
+export import sequoia.platform_specific;
+
+/** \file
+    \brief Breadth first, depth first and priority searches.
+
+ */
+
+
+export namespace sequoia::maths
+{
+  template
+  <
+    class TaskProcessingModel = concurrency::serial<void>,
+    traversal_flavour F,
+    network G,
+    disconnected_discovery_mode Mode,
+    class NBEF = null_func_obj,
+    class NAEF = null_func_obj,
+    class EFTF = null_func_obj,
+    class ESTF = null_func_obj
+  >
+    requires (!is_directed(G::flavour))
+          && (std::invocable<NBEF, typename G::edge_index_type>)
+          && (std::invocable<NAEF, typename G::edge_index_type>)
+          && (std::invocable<EFTF, typename G::const_edge_iterator>)
+          && (std::invocable<ESTF, typename G::const_edge_iterator>)
+  constexpr auto traverse(traversal_constant<F> tc,
+                          const G& graph,
+                          const traversal_conditions<Mode> conditions,
+                          NBEF&& nodeBeforeEdgesFn                  = {},
+                          NAEF&& nodeAfterEdgesFn                   = {},
+                          EFTF&& edgeFirstTraversalFn               = {},
+                          ESTF&& edgeSecondTraversalFn              = {},
+                          TaskProcessingModel&& taskProcessingModel = {})
+  {
+    return graph_impl::traversal_helper<G>{}.traverse(
+             tc,
+             graph,
+             conditions,
+             std::forward<NBEF>(nodeBeforeEdgesFn),
+             std::forward<NAEF>(nodeAfterEdgesFn),
+             std::forward<EFTF>(edgeFirstTraversalFn),
+             std::forward<ESTF>(edgeSecondTraversalFn),
+             std::forward<TaskProcessingModel>(taskProcessingModel)
+           );
+  }
+
+  template
+  <
+    class TaskProcessingModel = concurrency::serial<void>,
+    traversal_flavour F,
+    network G,
+    disconnected_discovery_mode Mode,
+    class NBEF = null_func_obj,
+    class NAEF = null_func_obj,
+    class EFTF = null_func_obj
+  >
+    requires (is_directed(G::flavour))
+          && (std::invocable<NBEF, typename G::edge_index_type>)
+          && (std::invocable<NAEF, typename G::edge_index_type>)
+          && (std::invocable<EFTF, typename G::const_edge_iterator>)
+  constexpr auto traverse(traversal_constant<F> tc,
+                          const G& graph,
+                          const traversal_conditions<Mode> conditions,
+                          NBEF&& nodeBeforeEdgesFn                  = {},
+                          NAEF&& nodeAfterEdgesFn                   = {},
+                          EFTF&& edgeFirstTraversalFn               = {},
+                          TaskProcessingModel&& taskProcessingModel = {})
+  {
+    return graph_impl::traversal_helper<G>{}.traverse(
+             tc,
+             graph,
+             conditions,
+             std::forward<NBEF>(nodeBeforeEdgesFn),
+             std::forward<NAEF>(nodeAfterEdgesFn),
+             std::forward<EFTF>(edgeFirstTraversalFn),
+             null_func_obj{},
+             std::forward<TaskProcessingModel>(taskProcessingModel)
+           );
+  }
+
+  template
+  <
+    class TaskProcessingModel = concurrency::serial<void>,
+    network G,
+    disconnected_discovery_mode Mode,
+    class NBEF = null_func_obj,
+    class NAEF = null_func_obj,
+    class ETUN = null_func_obj
+  >
+    requires (std::invocable<NBEF, typename G::edge_index_type>)
+          && (std::invocable<NAEF, typename G::edge_index_type>)
+          && (std::invocable<ETUN, typename G::const_edge_iterator>)
+    constexpr auto traverse(depth_first_search_type,
+                            const G& graph,
+                            const traversal_conditions<Mode> conditions,
+                            NBEF&& nodeBeforeEdgesFn                  = {},
+                            NAEF&& nodeAfterEdgesFn                   = {},
+                            ETUN&& edgeToUndiscoveredNodeFn           = {},
+                            TaskProcessingModel&& taskProcessingModel = {})
+  {
+    return graph_impl::traversal_helper<G>{}.traverse(
+      depth_first,
+      graph,
+      conditions,
+      std::forward<NBEF>(nodeBeforeEdgesFn),
+      std::forward<NAEF>(nodeAfterEdgesFn),
+      std::forward<ETUN>(edgeToUndiscoveredNodeFn),
+      std::forward<TaskProcessingModel>(taskProcessingModel)
+    );
+  }
+
+  template
+  <
+    class TaskProcessingModel = concurrency::serial<void>,
+    network G,
+    disconnected_discovery_mode Mode,
+    class NBEF     = null_func_obj,
+    class NAEF     = null_func_obj,
+    class EFTF     = null_func_obj,
+    class ESTF     = null_func_obj,
+    class QCompare = graph_impl::node_comparer<G, std::ranges::less>
+  >
+    requires (!is_directed(G::flavour))
+          && (std::invocable<NBEF, typename G::edge_index_type>)
+          && (std::invocable<NAEF, typename G::edge_index_type>)
+          && (std::invocable<EFTF, typename G::const_edge_iterator>)
+          && (std::invocable<ESTF, typename G::const_edge_iterator>)
+  constexpr auto traverse(priority_first_search_type,
+                          const G& graph,
+                          const traversal_conditions<Mode> conditions,
+                          NBEF&& nodeBeforeEdgesFn                  = {},
+                          NAEF&& nodeAfterEdgesFn                   = {},
+                          EFTF&& edgeFirstTraversalFn               = {},
+                          ESTF&& edgeSecondTraversalFn              = {},
+                          TaskProcessingModel&& taskProcessingModel = {})
+  {
+    return graph_impl::traversal_helper<G>{}.traverse(
+             priority_first,
+             graph,
+             conditions,
+             std::forward<NBEF>(nodeBeforeEdgesFn),
+             std::forward<NAEF>(nodeAfterEdgesFn),
+             std::forward<EFTF>(edgeFirstTraversalFn),
+             std::forward<ESTF>(edgeSecondTraversalFn),
+             std::forward<TaskProcessingModel>(taskProcessingModel),
+             QCompare{graph}
+           );
+  }
+
+  template
+  <
+    class TaskProcessingModel = concurrency::serial<void>,
+    network G,
+    disconnected_discovery_mode Mode,
+    class NBEF     = null_func_obj,
+    class NAEF     = null_func_obj,
+    class EFTF     = null_func_obj,
+    class QCompare = graph_impl::node_comparer<G, std::ranges::less>
+  >
+    requires (is_directed(G::flavour))
+          && (std::invocable<NBEF, typename G::edge_index_type>)
+          && (std::invocable<NAEF, typename G::edge_index_type>)
+          && (std::invocable<EFTF, typename G::const_edge_iterator>)
+  constexpr auto traverse(priority_first_search_type,
+                          const G& graph,
+                          const traversal_conditions<Mode> conditions,
+                          NBEF&& nodeBeforeEdgesFn                  = {},
+                          NAEF&& nodeAfterEdgesFn                   = {},
+                          EFTF&& edgeFirstTraversalFn               = {},
+                          TaskProcessingModel&& taskProcessingModel = {})
+  {
+    return graph_impl::traversal_helper<G>{}.traverse(
+             priority_first,
+             graph,
+             conditions,
+             std::forward<NBEF>(nodeBeforeEdgesFn),
+             std::forward<NAEF>(nodeAfterEdgesFn),
+             std::forward<EFTF>(edgeFirstTraversalFn),
+             null_func_obj{},
+             std::forward<TaskProcessingModel>(taskProcessingModel),
+             QCompare{graph}
+           );
+  }
+}

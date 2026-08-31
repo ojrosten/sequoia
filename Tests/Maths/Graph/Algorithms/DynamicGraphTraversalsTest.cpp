@@ -10,7 +10,22 @@
 #include "DynamicGraphTraversalsTest.hpp"
 #include "Maths/Graph/Dynamic/DynamicGraphTestingUtilities.hpp"
 
-#include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
+
+#include <array>
+#include <concepts>
+#include <condition_variable>
+#include <future>
+#include <iterator>
+#include <mutex>
+#include <queue>
+#include <thread>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+
+import sequoia.core.concurrency;
+
 
 namespace sequoia::testing
 {

@@ -11,11 +11,23 @@
 
 #include "EdgeTestingUtilities.hpp"
 
-#include "sequoia/Core/Object/Handlers.hpp"
 
 #include <complex>
 #include <list>
 #include <vector>
+
+
+#include <array>
+#include <concepts>
+#include <functional>
+#include <iterator>
+#include <memory>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+
+import sequoia.core.object;
 
 namespace sequoia
 {

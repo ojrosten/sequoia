@@ -8,7 +8,19 @@
 /** \file */
 
 #include "SaturatingArithmeticFreeTest.hpp"
-#include "sequoia/Maths/Arithmetic/SaturatingArithmetic.hpp"
+
+
+#include <array>
+#include <cmath>
+#include <concepts>
+#include <functional>
+#include <iterator>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+
+import sequoia.maths.arithmetic;
 
 namespace sequoia::testing
 {

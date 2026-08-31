@@ -8,7 +8,19 @@
 /** \file */
 
 #include "SubstitutionsFreeTest.hpp"
-#include "sequoia/TextProcessing/Substitutions.hpp"
+
+
+#include <array>
+#include <concepts>
+#include <functional>
+#include <iterator>
+#include <string>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+
+import sequoia.text_processing;
 
 namespace sequoia::testing
 {

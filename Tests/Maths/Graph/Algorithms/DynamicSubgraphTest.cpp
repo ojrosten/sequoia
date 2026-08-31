@@ -9,9 +9,31 @@
 
 #include "DynamicSubgraphTest.hpp"
 
-#include "sequoia/Maths/Graph/GraphAlgorithms.hpp"
 
 #include <complex>
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+#include <algorithm>
+#include <array>
+#include <concepts>
+#include <execution>
+#include <functional>
+#include <iterator>
+#include <limits>
+#include <memory>
+#include <numeric>
+#include <ranges>
+#include <span>
+#include <stdexcept>
+#include <string>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+import sequoia.maths.graph;
 
 namespace sequoia::testing
 {

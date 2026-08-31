@@ -8,7 +8,21 @@
 /** \file */
 
 #include "FileSystemUtilitiesFreeTest.hpp"
-#include "sequoia/TestFramework/FileSystemUtilities.hpp"
+
+
+#include <array>
+#include <concepts>
+#include <filesystem>
+#include <format>
+#include <functional>
+#include <iterator>
+#include <sstream>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

@@ -8,7 +8,11 @@
 /** \file */
 
 #include "SequencesFreeTest.hpp"
-#include "sequoia/Core/Meta/Sequences.hpp"
+
+
+#include <utility>
+
+import sequoia.core.meta;
 
 namespace sequoia::testing
 {

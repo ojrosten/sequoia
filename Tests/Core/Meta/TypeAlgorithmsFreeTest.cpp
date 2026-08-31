@@ -8,7 +8,14 @@
 /** \file */
 
 #include "TypeAlgorithmsFreeTest.hpp"
-#include "sequoia/Core/Meta/TypeAlgorithms.hpp"
+
+
+#include <source_location>
+#include <string_view>
+#include <tuple>
+#include <utility>
+
+import sequoia.core.meta;
 
 namespace sequoia::testing
 {

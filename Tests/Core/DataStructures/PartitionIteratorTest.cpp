@@ -10,7 +10,19 @@
 #include "PartitionIteratorTest.hpp"
 
 #include "PartitionedDataTestingUtilities.hpp"
-#include "sequoia/Core/Object/Handlers.hpp"
+
+
+#include <array>
+#include <concepts>
+#include <functional>
+#include <iterator>
+#include <memory>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+
+import sequoia.core.object;
 
 namespace sequoia::testing
 {

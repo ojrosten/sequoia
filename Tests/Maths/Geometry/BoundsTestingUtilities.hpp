@@ -1,3 +1,40 @@
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
+
+#include <algorithm>
+#include <array>
+#include <chrono>
+#include <cmath>
+#include <compare>
+#include <complex>
+#include <concepts>
+#include <execution>
+#include <filesystem>
+#include <format>
+#include <functional>
+#include <iterator>
+#include <memory>
+#include <numbers>
+#include <numeric>
+#include <optional>
+#include <ranges>
+#include <ratio>
+#include <scoped_allocator>
+#include <source_location>
+#include <span>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+import sequoia.maths.geometry;
+import sequoia.test_framework;
 ////////////////////////////////////////////////////////////////////
 //                Copyright Oliver J. Rosten 2026.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
@@ -7,8 +44,6 @@
 
 /** \file */
 
-#include "sequoia/Maths/Geometry/Spaces.hpp"
-#include "sequoia/TestFramework/RegularTestCore.hpp"
 
 namespace sequoia::testing
 {

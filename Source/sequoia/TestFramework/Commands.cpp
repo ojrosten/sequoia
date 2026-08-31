@@ -5,21 +5,55 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+module;
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+#include <algorithm>
+#include <array>
+#include <concepts>
+#include <condition_variable>
+#include <execution>
+#include <filesystem>
+#include <format>
+#include <functional>
+#include <future>
+#include <iostream>
+#include <iterator>
+#include <limits>
+#include <memory>
+#include <mutex>
+#include <numeric>
+#include <optional>
+#include <print>
+#include <queue>
+#include <ranges>
+#include <span>
+#include <sstream>
+#include <stack>
+#include <stdexcept>
+#include <string>
+#include <thread>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+module sequoia.test_framework;
+
+import sequoia.file_system;
+import sequoia.parsing;
+import sequoia.platform_specific;
+import sequoia.streaming;
+import sequoia.text_processing;
+
 /** \file
     \brief Definitions for Commands.hpp
  */
 
-#include "sequoia/TestFramework/Commands.hpp"
 
-#include "sequoia/FileSystem/FileSystem.hpp"
-#include "sequoia/Parsing/CommandLineArguments.hpp"
-#include "sequoia/PlatformSpecific/Preprocessor.hpp"
-#include "sequoia/Streaming/Streaming.hpp"
-#include "sequoia/TestFramework/FileSystemUtilities.hpp"
-#include "sequoia/TextProcessing/Patterns.hpp"
 
-#include <iostream>
-#include <print>
 
 namespace sequoia::testing
 {

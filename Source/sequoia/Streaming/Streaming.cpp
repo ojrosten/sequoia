@@ -5,14 +5,28 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+module;
+
+#include <array>
+#include <concepts>
+#include <filesystem>
+#include <fstream>
+#include <functional>
+#include <iterator>
+#include <optional>
+#include <sstream>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+
+module sequoia.streaming;
+
 /** \file
     \brief Definitions for Streaming.hpp
 */
 
-#include "sequoia/Streaming/Streaming.hpp"
 
-#include <fstream>
-#include <sstream>
 
 namespace sequoia
 {

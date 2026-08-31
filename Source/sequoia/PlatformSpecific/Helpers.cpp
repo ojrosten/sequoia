@@ -5,15 +5,20 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file
-    \brief Definitions for Helpers.hpp
-*/
-
-#include "sequoia/PlatformSpecific/Helpers.hpp"
+module;
 
 #ifdef _MSC_VER
   #include "Windows.h"
 #endif
+#include <chrono>
+
+module sequoia.platform_specific;
+
+/** \file
+    \brief Definitions for Helpers.hpp
+*/
+
+
 /** \file Utilities dependent on platform-specific macros */
 
 namespace sequoia

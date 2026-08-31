@@ -11,9 +11,13 @@
 
 #include "../Maths/Geometry/GeometryTestingUtilities.hpp"
 
-#include "sequoia/TextProcessing/Patterns.hpp"
 
 #include <charconv>
+
+
+#include <string>
+
+import sequoia.text_processing;
 
 using namespace sequoia::physics;
 

@@ -5,15 +5,27 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+module;
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+#include <execution>
+#include <filesystem>
+#include <iostream>
+#include <optional>
+#include <type_traits>
+#include <vector>
+
+module sequoia.runtime;
+
+import sequoia.platform_specific;
+
 /** \file
     \brief Definitions for ShellCommands.hpp
 */
 
-#include "sequoia/Runtime/ShellCommands.hpp"
 
-#include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
-#include <iostream>
 
 namespace sequoia::runtime
 {

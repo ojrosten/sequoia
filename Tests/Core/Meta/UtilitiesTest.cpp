@@ -9,7 +9,19 @@
 
 #include "UtilitiesTest.hpp"
 
-#include "sequoia/Core/Meta/Utilities.hpp"
+
+#include <array>
+#include <concepts>
+#include <functional>
+#include <iterator>
+#include <scoped_allocator>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+
+import sequoia.core.meta;
+
 
 namespace sequoia::testing
 {

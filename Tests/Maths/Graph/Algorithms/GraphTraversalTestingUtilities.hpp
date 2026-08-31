@@ -10,7 +10,32 @@
 /** \file */
 
 #include "Maths/Graph/GraphTestingUtilities.hpp"
-#include "sequoia/Maths/Graph/DynamicGraphTraversals.hpp"
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+#include <algorithm>
+#include <array>
+#include <concepts>
+#include <condition_variable>
+#include <execution>
+#include <functional>
+#include <future>
+#include <iterator>
+#include <memory>
+#include <mutex>
+#include <queue>
+#include <span>
+#include <stack>
+#include <stdexcept>
+#include <string>
+#include <thread>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+import sequoia.maths.graph;
 
 namespace sequoia::testing
 {

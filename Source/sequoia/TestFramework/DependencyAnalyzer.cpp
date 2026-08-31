@@ -5,19 +5,53 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+module;
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+#include <algorithm>
+#include <array>
+#include <chrono>
+#include <concepts>
+#include <condition_variable>
+#include <execution>
+#include <filesystem>
+#include <format>
+#include <fstream>
+#include <functional>
+#include <future>
+#include <iostream>
+#include <iterator>
+#include <limits>
+#include <memory>
+#include <mutex>
+#include <numeric>
+#include <optional>
+#include <queue>
+#include <ranges>
+#include <span>
+#include <sstream>
+#include <stack>
+#include <stdexcept>
+#include <string>
+#include <thread>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <variant>
+#include <vector>
+
+module sequoia.test_framework;
+
+import sequoia.maths.graph;
+import sequoia.streaming;
+
 /** \file
     \brief Definitions for DependencyAnalyzer.hpp
  */
 
-#include "sequoia/TestFramework/DependencyAnalyzer.hpp"
-#include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
-#include "sequoia/Maths/Graph/DynamicGraph.hpp"
-#include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
-#include "sequoia/Streaming/Streaming.hpp"
 
-#include <chrono>
-#include <fstream>
 
 namespace sequoia::testing
 {
