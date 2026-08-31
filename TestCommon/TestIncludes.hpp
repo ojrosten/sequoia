@@ -168,6 +168,7 @@
 #include "TestFramework/SumTypesFreeDiagnostics.hpp"
 #include "TestFramework/TestRunnerDiagnostics.hpp"
 #include "TestFramework/TestRunnerEndToEndFreeTest.hpp"
+#include "TestFramework/TestRunnerProjectFiles.hpp"
 #include "TestFramework/TestRunnerPerformanceTest.hpp"
 #include "TestFramework/TestRunnerProjectCreation.hpp"
 #include "TestFramework/TestRunnerTest.hpp"
