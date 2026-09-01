@@ -213,6 +213,33 @@ FUNCTION(sequoia_add_time_trace_options target)
     endif()
 ENDFUNCTION()
 
+# Everything GCC asks for in a bug report that is a compiler flag, applied per
+# target for the same reason -ftime-trace is: through CMAKE_CXX_FLAGS these would
+# also reach CMake's own compiler checks, and -save-temps would scatter .ii and
+# .s files wherever those run.
+#
+#   -D_GLIBCXX_ASSERTIONS  requested of all C++ bug reports
+#   -v                     the verbose output the report must include
+#
+# **-save-temps is deliberately absent, and cannot be added.** In a CMake modules
+# build every compile already carries -MD -MF <out>.d together with
+# -fdeps-file=<out>.ddi for the scanner, and -save-temps makes g++-16 reject the
+# combination outright:
+#
+#   error: '-MF' and '-fdeps-file=' cannot share an output file
+#
+# Measured 2026-09-01: it fails 24 of 137 translation units that way, before any
+# of them reaches the front end. The preprocessed source GCC asks for therefore
+# has to come from compiling the *reduced* repro directly, outside CMake, which
+# is what gcc-bugs/ does.
+#
+# Not for ordinary use: -v makes the log unreadable.
+FUNCTION(sequoia_add_bug_report_options target)
+    if(BUG_REPORT)
+        target_compile_options(${target} PRIVATE -D_GLIBCXX_ASSERTIONS -v)
+    endif()
+ENDFUNCTION()
+
 FUNCTION(sequoia_finalize_tests target sourceGroupRoot sourceGroupPrefix)
     sequoia_compile_features(${target})
     sequoia_set_compile_options(${target})
@@ -220,6 +247,7 @@ FUNCTION(sequoia_finalize_tests target sourceGroupRoot sourceGroupPrefix)
     sequoia_set_ide_source_groups_with_prefix(${target} ${sourceGroupRoot} ${sourceGroupPrefix})
     sequoia_add_coverage_options(${target})
     sequoia_add_time_trace_options(${target})
+    sequoia_add_bug_report_options(${target})
     sequoia_enable_import_std(${target})
     if(CODE_COVERAGE)
         add_test(NAME ${target} COMMAND ${target} "--serial")
@@ -245,6 +273,7 @@ FUNCTION(sequoia_finalize_library target)
     sequoia_set_ide_source_groups(${target} ${CMAKE_CURRENT_LIST_DIR})
     sequoia_add_coverage_options(${target})
     sequoia_add_time_trace_options(${target})
+    sequoia_add_bug_report_options(${target})
     sequoia_enable_import_std(${target})
 ENDFUNCTION()
 

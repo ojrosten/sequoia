@@ -68,6 +68,13 @@
       }
     },
     {
+      "name": "base-bug-report",
+      "hidden": true,
+      "cacheVariables": {
+        "BUG_REPORT": "ON"
+      }
+    },
+    {
       "name": "base-time-trace",
       "hidden": true,
       "cacheVariables": {
@@ -166,6 +173,11 @@
       "name": "macos-homebrew-gcc",
       "displayName": "macOS Homebrew GCC [Debug]",
       "inherits": ["base-homebrew-gcc", "base-debug"]
+    },
+    {
+      "name": "macos-homebrew-gcc-bug-report",
+      "displayName": "macOS Homebrew GCC [Debug, bug report]",
+      "inherits": ["macos-homebrew-gcc", "base-bug-report"]
     },
     {
       "name": "linux-pkg-gcc",
@@ -363,6 +375,12 @@
       "name": "macos-homebrew-gcc",
       "displayName": "macOS Homebrew GCC [Debug]",
       "configurePreset": "macos-homebrew-gcc",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "macos-homebrew-gcc-bug-report",
+      "displayName": "macOS Homebrew GCC [Debug, bug report]",
+      "configurePreset": "macos-homebrew-gcc-bug-report",
       "inherits": ["base-ninja"]
     },
     {
