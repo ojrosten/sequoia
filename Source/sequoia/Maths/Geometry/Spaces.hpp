@@ -3210,7 +3210,11 @@ namespace sequoia::maths
             }
             else
             {
-              lhs += rhs;
+              // Explicit, as in the sibling branch above: displacement_value_type may be
+              // wider than value_type - a Z-module with int components and __int64
+              // displacements, say - and the conversion happens either way. MSVC /W4
+              // reports the implicit form as C4244.
+              lhs += static_cast<value_type>(rhs);
             }
           }
         };
@@ -3287,7 +3291,11 @@ namespace sequoia::maths
             }
             else
             {
-              lhs -= rhs;
+              // Explicit, as in the sibling branch above: displacement_value_type may be
+              // wider than value_type - a Z-module with int components and __int64
+              // displacements, say - and the conversion happens either way. MSVC /W4
+              // reports the implicit form as C4244.
+              lhs -= static_cast<value_type>(rhs);
             }
           }
         };
