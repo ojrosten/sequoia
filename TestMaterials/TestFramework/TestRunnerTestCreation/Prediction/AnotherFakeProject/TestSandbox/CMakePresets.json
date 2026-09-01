@@ -241,14 +241,14 @@
     },
     {
       "name": "msvc",
-      "displayName": "Visual Studio",
-      "description": "Configure for ${displayName}",
-      "generator": "Visual Studio 18 2026",
+      "displayName": "MSVC",
+      "description": "Configure for ${displayName}. Ninja, not the Visual Studio generator: CMake's `import std` support is gated on `CMAKE_GENERATOR MATCHES \"Ninja\"`, so the VS generator cannot supply the standard library module at all. Run from a Developer Command Prompt, or any shell where vcvars has been sourced, so that cl.exe and INCLUDE/LIB are on the environment.",
+      "generator": "Ninja Multi-Config",
       "inherits": ["base-binary"]
     },
     {
       "name": "msvc-asan",
-      "displayName": "Visual Studio [asan]",
+      "displayName": "MSVC [asan]",
       "description": "Configure for ${displayName}",
       "inherits": ["msvc", "base-asan-msvc"]
     }

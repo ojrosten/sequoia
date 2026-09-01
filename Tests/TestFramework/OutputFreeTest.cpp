@@ -9,8 +9,6 @@
 
 #include "OutputFreeTest.hpp"
 
-#include "print"
-
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
 import std;
