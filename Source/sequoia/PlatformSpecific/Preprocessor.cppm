@@ -9,6 +9,16 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
+// `import std` exports declarations, not macros, so _ITERATOR_DEBUG_LEVEL has
+// to come from the header that owns it. <yvals.h> is the MSVC STL's config
+// header: it derives the macro from _HAS_ITERATOR_DEBUGGING and _SECURE_SCL,
+// and pulls in nothing but CRT configuration, so it cannot collide with the
+// declarations `import std` supplies. Deriving the level ourselves would risk
+// silently disagreeing with the STL, and the allocation tests branch on it.
+#if defined(_MSC_VER)
+  #include <yvals.h>
+#endif
+
 export module sequoia.platform_specific:Preprocessor;
 
 import std;

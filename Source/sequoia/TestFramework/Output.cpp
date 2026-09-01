@@ -9,8 +9,11 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-// Not a standard-library header, so import std does not supply it.
-#include <cxxabi.h>
+// Not a standard-library header, so import std does not supply it; and it is
+// the libstdc++/libc++ ABI header, which MSVC does not ship.
+#ifndef _MSC_VER
+  #include <cxxabi.h>
+#endif
 
 module sequoia.test_framework;
 
@@ -22,9 +25,6 @@ import sequoia.text_processing;
 /** \file
     \brief Definitions for Output.hpp
  */
-
-#ifndef _MSC_VER
-#endif
 
 namespace sequoia::testing
 {

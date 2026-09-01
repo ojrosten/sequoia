@@ -147,6 +147,20 @@ export namespace sequoia
   template<class T>
   inline constexpr bool has_gettable_elements{requires (T & t) { std::get<0>(t); }};
 
+  /** \brief The type of the `I`th element of `T`, as yielded by `std::get`.
+
+      Written as an alias rather than spelled inline as
+      `std::remove_cvref_t<decltype(std::get<I>(t))>` inside the requires-expressions
+      below, to work around an MSVC bug: with the `decltype` written inline, a fold over
+      the index pack evaluates to `false` for `std::variant` whenever the enclosing
+      variable template is instantiated across a module boundary. Hoisting it here makes
+      the fold correct again. `std::tuple`, `std::pair` and `std::array` are unaffected,
+      as is the same code in a single translation unit. Reduced repro: sequoia-LLM
+      `msvc-bugs/E-module-fold-get.cpp`, MSVC 19.51.36256.
+   */
+  template<class T, std::size_t I>
+  using gettable_element_t = std::remove_cvref_t<decltype(std::get<I>(std::declval<T&>()))>;
+
   template<class T>
   struct is_deep_equality_comparable;
 
@@ -159,7 +173,7 @@ export namespace sequoia
   template<class T, std::size_t... I>
   inline constexpr bool heterogeneous_deep_equality_v{
     requires(T & t, std::index_sequence<I...>) {
-      requires (is_deep_equality_comparable_v<std::remove_cvref_t<decltype(std::get<I>(t))>> && ...);
+      requires (is_deep_equality_comparable_v<gettable_element_t<T, I>> && ...);
     }
   };
 
@@ -207,7 +221,7 @@ export namespace sequoia
   template<class T, std::size_t... I>
   inline constexpr bool heterogeneous_deep_total_order_v{
     requires(T & t, std::index_sequence<I...>) {
-      requires (is_deep_totally_ordered_v<std::remove_cvref_t<decltype(std::get<I>(t))>> && ...);
+      requires (is_deep_totally_ordered_v<gettable_element_t<T, I>> && ...);
     }
   };
 

@@ -21,9 +21,16 @@ namespace sequoia::testing
 {
   namespace
   {
+    // Not named `to_string`: ADL on a std::chrono::duration reaches namespace
+    // std, and `import std` makes every standard declaration visible - including
+    // C++23's to_string(const basic_stacktrace<Allocator>&). An explicit template
+    // argument then matches that overload, and forming its parameter type
+    // instantiates basic_stacktrace<std::ratio<1,1>>, which is a hard error
+    // outside the immediate context. Textual includes hid this only by never
+    // dragging in <stacktrace>.
     template<class Period>
     [[nodiscard]]
-    std::string to_string(const log_summary::duration& d)
+    std::string duration_to_string(const log_summary::duration& d)
     {
       using namespace std::chrono;
       return std::format("{:.3}", duration_cast<duration<double, Period>>(d).count());
@@ -35,9 +42,9 @@ namespace sequoia::testing
   {
     using namespace std::chrono;
     const auto count{duration_cast<nanoseconds>(d).count()};
-    if(count >= 1'000'000'000) return {to_string<std::ratio<1>>(d), "s"};
-    if(count >= 1'000'000)     return {to_string<std::milli>(d),   "ms"};
-    if(count >= 1'000)         return {to_string<std::micro>(d),   "us"};
+    if(count >= 1'000'000'000) return {duration_to_string<std::ratio<1>>(d), "s"};
+    if(count >= 1'000'000)     return {duration_to_string<std::milli>(d),   "ms"};
+    if(count >= 1'000)         return {duration_to_string<std::micro>(d),   "us"};
 
     return {std::to_string(count), "ns"};
   }
