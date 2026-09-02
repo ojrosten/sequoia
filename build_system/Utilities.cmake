@@ -52,6 +52,13 @@ FUNCTION(sequoia_set_compile_options target)
         target_compile_options(${target} PUBLIC /W4)
         target_compile_options(${target} PUBLIC /bigobj)
         target_compile_options(${target} PUBLIC /MP)
+
+        # C4702 fires on template code where a specialization makes a branch dead - a
+        # container of compile-time length zero, say - and the optimizer attributes it to
+        # the line of the *inlined* function rather than the dead call site, so the
+        # reported location misleads.  This is a suppression rather than a fix, so it is
+        # confined to the configurations that can raise it; unoptimized builds cannot.
+        target_compile_options(${target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/wd4702>)
     else()
         target_compile_options(${target} PUBLIC -Wall -Wextra -Wpedantic -Wshadow)
     endif()
