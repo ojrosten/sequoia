@@ -76,7 +76,26 @@ namespace sequoia::testing
         }
         else
         {
-          text.insert(endBlock, sorted);
+          // Nothing to extend.  Anchor on the first import rather than on endBlock:
+          // with no #include anywhere in the file, rfind yields npos and endBlock
+          // degenerates to text.size(), which appends the block after main() and
+          // leaves whatever the header declares undeclared at every point of use.
+          // The ordering above says includes belong ahead of the first import, and
+          // that is where they go when there is no block to join.
+          constexpr std::string_view importDecl{"import "};
+          const auto firstImportPos{
+            [&text, importDecl]() {
+              if(text.starts_with(importDecl)) return std::string::size_type{};
+
+              const auto pos{text.find(std::string{'\n'}.append(importDecl))};
+              return pos == npos ? npos : pos + 1;
+            }()
+          };
+
+          if(firstImportPos < npos)
+            text.insert(firstImportPos, std::string{sorted}.append("\n"));
+          else
+            text.insert(endBlock, sorted);
         }
       }
     };

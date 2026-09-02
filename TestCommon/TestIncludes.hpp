@@ -5,6 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+#include "TestFramework/FileEditorsFreeTest.hpp"
 #include "Algorithms/AlgorithmsTest.hpp"
 #include "Core/Concurrency/ConcurrencyModelsPerformanceTest.hpp"
 #include "Core/Concurrency/ConcurrencyModelsTest.hpp"
@@ -168,9 +169,9 @@
 #include "TestFramework/SumTypesFreeDiagnostics.hpp"
 #include "TestFramework/TestRunnerDiagnostics.hpp"
 #include "TestFramework/TestRunnerEndToEndFreeTest.hpp"
-#include "TestFramework/TestRunnerProjectFiles.hpp"
 #include "TestFramework/TestRunnerPerformanceTest.hpp"
 #include "TestFramework/TestRunnerProjectCreation.hpp"
+#include "TestFramework/TestRunnerProjectFiles.hpp"
 #include "TestFramework/TestRunnerTest.hpp"
 #include "TestFramework/TestRunnerTestCreation.hpp"
 #include "TextProcessing/IndentFreeTest.hpp"
