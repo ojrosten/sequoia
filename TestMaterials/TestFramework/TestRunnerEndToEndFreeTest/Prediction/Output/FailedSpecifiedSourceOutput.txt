@@ -4,5 +4,3 @@
   Warning: Test File 'Plurgh.cpp' not found
   Warning: Test File 'Foo' not found
     If trying to test a suite use 'test' rather than 'select'
-Nothing to do: try creating some tests!
-Run with --help to see options

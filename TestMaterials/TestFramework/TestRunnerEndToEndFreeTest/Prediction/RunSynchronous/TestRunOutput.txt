@@ -1,2 +1,35 @@
-Nothing to do: try creating some tests!
-Run with --help to see options
+
+Running tests, synchronously...
+
+Utilities:
+[Execution Time: 19.9us]
+Useful Things:
+[Execution Time: 19us]
+Bar:
+[Execution Time: 19.4us]
+Unstable:
+[Execution Time: 25.9us]
+Maybe:
+[Execution Time: 48.1us]
+Oldschool:
+[Execution Time: 41.5us]
+Probability:
+[Execution Time: 41.1us]
+Foo:
+[Execution Time: 40.7us]
+Unique Thing:
+[Execution Time: 42.3us]
+Container:
+[Execution Time: 42.6us]
+House:
+[Execution Time: 20us]
+
+-----------Grand Totals-----------
+[Total Run Time: 33.7ms]
+[Execution Time: 360us]
+	Standard Top Level Checks:                 0;  Failures:  0
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

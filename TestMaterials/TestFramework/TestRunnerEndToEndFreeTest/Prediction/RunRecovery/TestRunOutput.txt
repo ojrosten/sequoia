@@ -1,0 +1,72 @@
+
+Running tests, synchronously...
+
+Utilities:
+[Execution Time: 24.1us]
+Useful Things:
+[Execution Time: 1.32ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
+
+	[int]
+	operator== returned false
+	Obtained : 43
+	Predicted: 42
+
+	=======================================
+
+Bar:
+[Execution Time: 19.8us]
+Unstable:
+[Execution Time: 1.11ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+Maybe:
+[Execution Time: 44.5us]
+Oldschool:
+[Execution Time: 41.5us]
+Probability:
+[Execution Time: 3.92ms]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+	False Negative Checks:                     2;  Failures:  0
+Foo:
+[Execution Time: 7.39ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+
+	Tests/Stuff/FooTest.cpp, Line 43
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::filesystem::path>]
+	Checking for equivalence with:
+	[std::filesystem::path]
+
+	  Path type
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/WorkingCopy/RepresentativeCases
+	  vs
+	  C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/TestMaterials/Stuff/FooTest/Prediction/RepresentativeCases
+
+	  [std::filesystem::file_type]
+	  operator== returned false
+	  Obtained : not found
+	  Predicted: directory
+
+	=======================================
+
+Unique Thing:
+[Execution Time: 11.4ms]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
+	False Negative Checks:                     2;  Failures:  0
+Container:
+[Execution Time: 42.7us]
+House:
+[Execution Time: 17.9us]
+
+-----------Grand Totals-----------
+[Total Run Time: 60.4ms]
+[Execution Time: 25.4ms]
+	Standard Top Level Checks:                12;  Failures:  2  [Deep checks: 82]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     4;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

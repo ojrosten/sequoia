@@ -78,7 +78,25 @@ namespace sequoia::testing
         }
         else
         {
-          text.insert(endBlock, sorted);
+          // Nothing to extend.  The block must still precede every import, for the
+          // reason given above, so anchor on the first import rather than on
+          // endBlock: with no #include anywhere in the file, rfind yields npos and
+          // endBlock degenerates to text.size(), which appends the includes after
+          // main() and leaves every test class undeclared at its point of use.
+          constexpr std::string_view importDecl{"import "};
+          const auto firstImportPos{
+            [&text, importDecl]() {
+              if(text.starts_with(importDecl)) return std::string::size_type{};
+
+              const auto pos{text.find(std::string{'\n'}.append(importDecl))};
+              return pos == npos ? npos : pos + 1;
+            }()
+          };
+
+          if(firstImportPos < npos)
+            text.insert(firstImportPos, std::string{sorted}.append("\n"));
+          else
+            text.insert(endBlock, sorted);
         }
       }
     };

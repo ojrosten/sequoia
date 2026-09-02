@@ -504,7 +504,7 @@ operator== returned false
 Tests/TestFramework/StringFreeDiagnostics.cpp, Line 77
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
+[sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
 Checking for equivalence with:
 [char [3]]
 
@@ -525,7 +525,7 @@ Checking for equivalence with:
 Tests/TestFramework/StringFreeDiagnostics.cpp, Line 78
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
+[sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
 Checking for equivalence with:
 [char [4]]
 
@@ -1218,7 +1218,7 @@ operator== returned false
 Tests/TestFramework/StringFreeDiagnostics.cpp, Line 96
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
+[sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
 Checking for equivalence with:
 [std::basic_string_view<char, std::char_traits<char> >]
 
@@ -1237,7 +1237,7 @@ Checking for equivalence with:
 Tests/TestFramework/StringFreeDiagnostics.cpp, Line 97
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::basic_string_view<char, std::char_traits<char> > >]
+[sequoia::testing::value_tester<std::basic_string_view<char, std::char_traits<char> > >]
 Checking for equivalence with:
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 
@@ -1256,7 +1256,7 @@ Checking for equivalence with:
 Tests/TestFramework/StringFreeDiagnostics.cpp, Line 102
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> > >]
+[sequoia::testing::value_tester<std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> > >]
 Checking for equivalence with:
 [std::basic_string_view<wchar_t, std::char_traits<wchar_t> >]
 
@@ -1275,7 +1275,7 @@ Checking for equivalence with:
 Tests/TestFramework/StringFreeDiagnostics.cpp, Line 103
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::basic_string_view<wchar_t, std::char_traits<wchar_t> > >]
+[sequoia::testing::value_tester<std::basic_string_view<wchar_t, std::char_traits<wchar_t> > >]
 Checking for equivalence with:
 [std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> >]
 

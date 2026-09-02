@@ -1,0 +1,7 @@
+Check started:
+Tests/Utilities/Thing/UniqueThingTest.cpp, Line 27
+
+--Move-only Semantics--
+[stuff::unique_thing]
+
+Check ended

@@ -380,7 +380,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 110
 Equivalence for null vs. non-null pointer
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<int*>]
+[sequoia::testing::value_tester<int*>]
 Checking for equivalence with:
 [int*]
 
@@ -397,7 +397,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 111
 Different pointers pointing to different values
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<int*>]
+[sequoia::testing::value_tester<int*>]
 Checking for equivalence with:
 [int*]
 
@@ -442,7 +442,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 120
 Equivalence for null vs. non-null pointer
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<int const*>]
+[sequoia::testing::value_tester<int const*>]
 Checking for equivalence with:
 [int const*]
 
@@ -459,7 +459,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 121
 Different pointers pointing to different values
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<int const*>]
+[sequoia::testing::value_tester<int const*>]
 Checking for equivalence with:
 [int const*]
 
@@ -504,7 +504,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 130
 Equivalence for null vs. non-null pointer
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<int*>]
+[sequoia::testing::value_tester<int*>]
 Checking for equivalence with:
 [int*]
 
@@ -521,7 +521,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 131
 Different pointers pointing to different values
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<int*>]
+[sequoia::testing::value_tester<int*>]
 Checking for equivalence with:
 [int*]
 
@@ -566,7 +566,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 140
 Equivalence for null vs. non-null pointer
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<int const*>]
+[sequoia::testing::value_tester<int const*>]
 Checking for equivalence with:
 [int const*]
 
@@ -583,7 +583,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 141
 Different pointers pointing to different values
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<int const*>]
+[sequoia::testing::value_tester<int const*>]
 Checking for equivalence with:
 [int const*]
 
@@ -832,7 +832,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 218
 Equivalence checking
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_equivalence_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
 Checking for equivalence with:
 [int]
 
@@ -848,7 +848,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 220
 Equivalence checking with advice
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_equivalence_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
 Checking for equivalence with:
 [int]
 
@@ -865,7 +865,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 225
 Self-equivalence checking
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_equivalence_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
 Checking for equivalence with:
 [sequoia::testing::only_equivalence_checkable]
 
@@ -881,7 +881,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 227
 Self-equivalence checking with advice requiring implicit conversion
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_equivalence_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
 Checking for equivalence with:
 [sequoia::testing::only_equivalence_checkable]
 
@@ -898,7 +898,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 232
 Self-equivalence checking with advice
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_equivalence_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
 Checking for equivalence with:
 [sequoia::testing::only_equivalence_checkable]
 
@@ -915,7 +915,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 237
 Equivalence checking via fallback
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_equivalence_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
 Checking for equivalence with:
 [int]
 
@@ -931,7 +931,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 239
 Equivalence checking via fallback with advice
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_equivalence_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
 Checking for equivalence with:
 [int]
 
@@ -948,7 +948,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 244
 Self-equivalence checking via fallback
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_equivalence_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
 Checking for equivalence with:
 [sequoia::testing::only_equivalence_checkable]
 
@@ -964,7 +964,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 246
 Self-equivalence checking via fallback with advice requiring implicit conversion
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_equivalence_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
 Checking for equivalence with:
 [sequoia::testing::only_equivalence_checkable]
 
@@ -981,7 +981,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 251
 Self-equivalence checking via fallback with advice
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_equivalence_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
 Checking for equivalence with:
 [sequoia::testing::only_equivalence_checkable]
 
@@ -998,7 +998,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 260
 Weak equivalence checking
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_weakly_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
 Checking for weak equivalence with:
 [std::pair<int, double>]
 
@@ -1020,7 +1020,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 264
 Weak equivalence checking with advice
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_weakly_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
 Checking for weak equivalence with:
 [std::pair<int, double>]
 
@@ -1044,7 +1044,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 269
 Self-weak-equivalence checking
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_weakly_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
 Checking for weak equivalence with:
 [sequoia::testing::only_weakly_checkable]
 
@@ -1066,7 +1066,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 271
 Self-weak-equivalence checking with advice ignored because implicit conversions from either int or double to only_weakly_checkable don't exist
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_weakly_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
 Checking for weak equivalence with:
 [sequoia::testing::only_weakly_checkable]
 
@@ -1088,7 +1088,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 276
 Self-weak-equivalence checking with advice
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_weakly_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
 Checking for weak equivalence with:
 [sequoia::testing::only_weakly_checkable]
 
@@ -1133,7 +1133,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 288
 Best available for only_equivalence_checkable
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_equivalence_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
 Checking for equivalence with:
 [sequoia::testing::only_equivalence_checkable]
 
@@ -1149,7 +1149,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 292
 Best available for only_equivalence_checkable with advice requiring implicit conversion
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_equivalence_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
 Checking for equivalence with:
 [sequoia::testing::only_equivalence_checkable]
 
@@ -1166,7 +1166,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 297
 Best available for only_equivalence_checkable compared with an int
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_equivalence_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
 Checking for equivalence with:
 [int]
 
@@ -1182,7 +1182,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 302
 Best available for only_weakly_checkable
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_weakly_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
 Checking for weak equivalence with:
 [sequoia::testing::only_weakly_checkable]
 
@@ -1204,7 +1204,7 @@ Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 306
 Best available for only_weakly_checkable with advice
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_weakly_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
 Checking for weak equivalence with:
 [sequoia::testing::only_weakly_checkable]
 

@@ -33,7 +33,7 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 285
 Advice for range equivalence, where the containerized form is explicitly specialized
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::vector<sequoia::testing::(anonymous namespace)::foo, std::allocator<sequoia::testing::(anonymous namespace)::foo> > >]
+[sequoia::testing::value_tester<std::vector<sequoia::testing::(anonymous namespace)::foo, std::allocator<sequoia::testing::(anonymous namespace)::foo> > >]
 Checking for equivalence with:
 [std::vector<int, std::allocator<int> >]
 
@@ -51,7 +51,7 @@ False Negative Failure:
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 297
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
+[sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
 Checking for weak equivalence with:
 [std::initializer_list<int>]
 
@@ -69,7 +69,7 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 302
 Advice for weak equivalence checking
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_weakly_checkable>]
+[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
 Checking for weak equivalence with:
 [std::pair<int, double>]
 

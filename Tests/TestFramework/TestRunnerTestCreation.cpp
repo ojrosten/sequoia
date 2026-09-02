@@ -142,7 +142,7 @@ namespace sequoia::testing
                                , "create", "regular_test", "other::couple<class S, class T>", "std::pair<S, T>",
                                               "-s", "partners", "-h", "Couple.hpp"
                                , "create", "regular_test", "bar::things", "double", "-h", std::format("{}/Stuff/Things.hpp", sourceFolderName)
-                               , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--suite", "Iterator"
+                               , "create", "move_only_test", "bar::baz::foo<::maths::floating_point T>", "T", "--suite", "Iterator"
                                , "create", "move_only", "variadic<class... T>", "std::tuple<T...>"
                                , "create", "move_only_test", "multiple<class... T>", "std::tuple<T...>", "gen-source", "Utilities"
                                , "create", "move_only_test", "cloud", "double", "gen-source", "Weather"

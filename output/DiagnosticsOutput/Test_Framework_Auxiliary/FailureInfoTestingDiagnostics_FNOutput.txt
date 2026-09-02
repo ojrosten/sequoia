@@ -1,7 +1,7 @@
 Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 25
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::failure_info@sequoia.test_framework>]
+[sequoia::testing::value_tester<sequoia::testing::failure_info>]
 Checking for equivalence with:
 [std::pair<int, std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
 
@@ -16,7 +16,7 @@ Checking for equivalence with:
 Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 26
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::failure_info@sequoia.test_framework>]
+[sequoia::testing::value_tester<sequoia::testing::failure_info>]
 Checking for equivalence with:
 [std::pair<int, std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
 
@@ -41,7 +41,7 @@ Checking for equivalence with:
 Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 27
 check_index differs
 
-[sequoia::testing::failure_info@sequoia.test_framework]
+[sequoia::testing::failure_info]
 operator== returned false
 
   Check index
@@ -55,7 +55,7 @@ operator== returned false
 Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 28
 message differs
 
-[sequoia::testing::failure_info@sequoia.test_framework]
+[sequoia::testing::failure_info]
 operator== returned false
 
   Message

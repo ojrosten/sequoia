@@ -2,7 +2,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken check invariant
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
@@ -16,7 +16,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect init allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -84,7 +84,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -104,7 +104,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy y allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -124,7 +124,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect mutation allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -144,7 +144,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -176,7 +176,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 0, 0, 0> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -196,7 +196,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy y allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 0, 0, 0> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -216,7 +216,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect mutation allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 0, 0, 0> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -236,7 +236,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 0, 0, 0> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 0> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -268,7 +268,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken check invariant
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
@@ -282,7 +282,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect init allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -350,7 +350,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -370,7 +370,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy y allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -390,7 +390,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect mutation allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -422,7 +422,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -454,7 +454,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 0, 0, 1> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -474,7 +474,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy y allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 0, 0, 1> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -494,7 +494,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect mutation allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 0, 0, 1> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -526,7 +526,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 0, 0, 1> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 0, 1> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -558,7 +558,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken check invariant
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
@@ -572,7 +572,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect init allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -628,7 +628,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -648,7 +648,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy y allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -668,7 +668,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect mutation allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -688,7 +688,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -708,7 +708,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 0, 1, 0> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -728,7 +728,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy y allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 0, 1, 0> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -748,7 +748,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect mutation allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 0, 1, 0> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -768,7 +768,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 0, 1, 0> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 0> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -788,7 +788,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken check invariant
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
@@ -802,7 +802,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect init allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -858,7 +858,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -878,7 +878,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy y allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -898,7 +898,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect mutation allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -930,7 +930,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -950,7 +950,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 0, 1, 1> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -970,7 +970,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy y allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 0, 1, 1> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -990,7 +990,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect mutation allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 0, 1, 1> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -1022,7 +1022,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 0, 1, 1> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 0, 1, 1> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -1042,7 +1042,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken check invariant
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
@@ -1056,7 +1056,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect init allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1124,7 +1124,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1144,7 +1144,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy y allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1164,7 +1164,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect mutation allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1184,7 +1184,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1216,7 +1216,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 1, 0, 0> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -1236,7 +1236,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy y allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 1, 0, 0> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -1256,7 +1256,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect mutation allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 1, 0, 0> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -1276,7 +1276,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 1, 0, 0> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 0> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -1308,7 +1308,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken check invariant
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
@@ -1322,7 +1322,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect init allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1390,7 +1390,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1410,7 +1410,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy y allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1430,7 +1430,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect mutation allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1462,7 +1462,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1494,7 +1494,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 1, 0, 1> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -1514,7 +1514,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy y allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 1, 0, 1> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -1534,7 +1534,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect mutation allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 1, 0, 1> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -1566,7 +1566,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 1, 0, 1> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 0, 1> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -1598,7 +1598,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken check invariant
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
@@ -1612,7 +1612,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect init allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1668,7 +1668,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1688,7 +1688,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy y allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1708,7 +1708,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect mutation allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1728,7 +1728,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1760,7 +1760,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 1, 1, 0> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -1780,7 +1780,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy y allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 1, 1, 0> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -1800,7 +1800,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect mutation allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 1, 1, 0> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -1820,7 +1820,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 1, 1, 0> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 0> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -1852,7 +1852,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Broken check invariant
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
   Prerequisite - for checking semantics, x and y are assumed to be different
   [bool]
@@ -1866,7 +1866,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect init allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1922,7 +1922,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1942,7 +1942,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy y allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1962,7 +1962,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect mutation allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1994,7 +1994,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
+[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -2026,7 +2026,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 1, 1, 1> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -2046,7 +2046,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy y allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 1, 1, 1> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -2066,7 +2066,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect mutation allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 1, 1, 1> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,
@@ -2098,7 +2098,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Incorrect copy assign y to x allocs
 
 --Regular Semantics--
-[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator@sequoia.test_framework<std::shared_ptr<int>, 1, 1, 1> >]
+[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, 1, 1, 1> >]
 
   [shared_counting_allocator<
   		std::shared_ptr<int>,

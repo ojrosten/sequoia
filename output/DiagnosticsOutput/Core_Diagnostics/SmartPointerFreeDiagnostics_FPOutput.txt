@@ -19,7 +19,7 @@ Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 140
 Different pointers pointing to identical values
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::unique_ptr<int, std::default_delete<int> > >]
+[sequoia::testing::value_tester<std::unique_ptr<int, std::default_delete<int> > >]
 Checking for equivalence with:
 [std::unique_ptr<int, std::default_delete<int> >]
 
@@ -30,7 +30,7 @@ Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 145
 Different pointers pointing to identical values
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::unique_ptr<sequoia::testing::only_equivalence_checkable, std::default_delete<sequoia::testing::only_equivalence_checkable> > >]
+[sequoia::testing::value_tester<std::unique_ptr<sequoia::testing::only_equivalence_checkable, std::default_delete<sequoia::testing::only_equivalence_checkable> > >]
 Checking for equivalence with:
 [std::unique_ptr<sequoia::testing::only_equivalence_checkable, std::default_delete<sequoia::testing::only_equivalence_checkable> >]
 
@@ -41,7 +41,7 @@ Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 152
 Different pointers pointing to identical values
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::unique_ptr<sequoia::testing::only_weakly_checkable, std::default_delete<sequoia::testing::only_weakly_checkable> > >]
+[sequoia::testing::value_tester<std::unique_ptr<sequoia::testing::only_weakly_checkable, std::default_delete<sequoia::testing::only_weakly_checkable> > >]
 Checking for equivalence with:
 [std::unique_ptr<sequoia::testing::only_weakly_checkable, std::default_delete<sequoia::testing::only_weakly_checkable> >]
 
@@ -52,7 +52,7 @@ Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 160
 Different pointers pointing to identical values
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::unique_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>, std::default_delete<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > > >]
+[sequoia::testing::value_tester<std::unique_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>, std::default_delete<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > > >]
 Checking for equivalence with:
 [std::unique_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>, std::default_delete<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > >]
 
@@ -79,7 +79,7 @@ Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 173
 Different pointers pointing to identical values
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::shared_ptr<int> >]
+[sequoia::testing::value_tester<std::shared_ptr<int> >]
 Checking for equivalence with:
 [std::shared_ptr<int>]
 
@@ -90,7 +90,7 @@ Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 179
 Different pointers pointing to identical values
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::shared_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > >]
+[sequoia::testing::value_tester<std::shared_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > >]
 Checking for equivalence with:
 [std::shared_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> >]
 
@@ -109,7 +109,7 @@ Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 195
 Different pointers weakly pointing to identical values
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::weak_ptr<int> >]
+[sequoia::testing::value_tester<std::weak_ptr<int> >]
 Checking for equivalence with:
 [std::weak_ptr<int>]
 

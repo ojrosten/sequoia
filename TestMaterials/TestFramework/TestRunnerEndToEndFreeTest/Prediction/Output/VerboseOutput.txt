@@ -1,2 +1,58 @@
-Nothing to do: try creating some tests!
-Run with --help to see options
+
+Running tests...
+
+Utilities:
+	Utilities Free Test
+	[Execution Time: 18.7us]
+Useful Things:
+	Useful Things Free Test
+	[Execution Time: 42.7us]
+Bar:
+	Bar Free Test
+	[Execution Time: 33.9us]
+Unstable:
+	Flipper Free Test
+	[Execution Time: 14.7us]
+Maybe:
+	False Negative Test
+	[Execution Time: 18.2us]
+	Unit Test
+	[Execution Time: 36.9us]
+Oldschool:
+	False Negative Test
+	[Execution Time: 44.3us]
+	Unit Test
+	[Execution Time: 14.8us]
+Probability:
+	False Negative Test
+	[Execution Time: 35us]
+	Unit Test
+	[Execution Time: 42.1us]
+Foo:
+	False Negative Test
+	[Execution Time: 33.8us]
+	Unit Test
+	[Execution Time: 31.2us]
+Unique Thing:
+	False Negative Test
+	[Execution Time: 31.5us]
+	Unit Test
+	[Execution Time: 42.2us]
+Container:
+	Container Performance Test
+	[Execution Time: 19.1us]
+	Allocation Test
+	[Execution Time: 36.3us]
+House:
+	Allocation Test
+	[Execution Time: 24.1us]
+
+-----------Grand Totals-----------
+[Total Run Time: 34.6ms]
+[Execution Time: 1.29ms]
+	Standard Top Level Checks:                 0;  Failures:  0
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

@@ -1,8 +1,5 @@
 
 Analyzing dependencies...
-  Warning: Time stamp of previous run does not exist, so unable to prune.
-           This should be automatically rectified for the next successful run.
-           No action required.
-
-Nothing to do: try creating some tests!
-Run with --help to see options
+Executable is out of date; please build it!
+Executable time stamp: 2026-09-02 07:56:52.9905883
+C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/Source/generatedProject/Utilities/UsefulThings.hpp time stamp: 2026-09-02 07:56:53.8023252

@@ -1,3 +1,4 @@
+CMake Warning \(dev\)(.|\n)*?-Wno-dev to suppress it\.\n\n
 -- Selecting .*\n
 (?=is ).*
 (?=compiler: ).*

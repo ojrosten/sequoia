@@ -100,7 +100,7 @@ Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 66
 [std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
   Variant Contents
   Comparison performed using:
-  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_equivalence_checkable>]
+  [sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
   Checking for equivalence with:
   [sequoia::testing::only_equivalence_checkable]
 
@@ -117,7 +117,7 @@ Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 67
 [std::variant<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>]
   Variant Contents
   Comparison performed using:
-  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_weakly_checkable>]
+  [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
   Checking for weak equivalence with:
   [sequoia::testing::only_weakly_checkable]
 
@@ -214,7 +214,7 @@ Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 98
 Empty vs non-empty std::optional
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::optional<sequoia::testing::only_equivalence_checkable> >]
+[sequoia::testing::value_tester<std::optional<sequoia::testing::only_equivalence_checkable> >]
 Checking for equivalence with:
 [std::optional<sequoia::testing::only_equivalence_checkable>]
 
@@ -231,7 +231,7 @@ Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 99
 Non-empty vs empty std::optional
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::optional<sequoia::testing::only_equivalence_checkable> >]
+[sequoia::testing::value_tester<std::optional<sequoia::testing::only_equivalence_checkable> >]
 Checking for equivalence with:
 [std::optional<sequoia::testing::only_equivalence_checkable>]
 
@@ -248,13 +248,13 @@ Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 100
 Two std::optionals holdings different values
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::optional<sequoia::testing::only_equivalence_checkable> >]
+[sequoia::testing::value_tester<std::optional<sequoia::testing::only_equivalence_checkable> >]
 Checking for equivalence with:
 [std::optional<sequoia::testing::only_equivalence_checkable>]
 
   Contents of optional
   Comparison performed using:
-  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_equivalence_checkable>]
+  [sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
   Checking for equivalence with:
   [sequoia::testing::only_equivalence_checkable]
 
@@ -270,7 +270,7 @@ Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 106
 Empty vs non-empty std::optional
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::optional<sequoia::testing::only_weakly_checkable> >]
+[sequoia::testing::value_tester<std::optional<sequoia::testing::only_weakly_checkable> >]
 Checking for weak equivalence with:
 [std::optional<sequoia::testing::only_weakly_checkable>]
 
@@ -287,7 +287,7 @@ Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 107
 Non-empty vs empty std::optional
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::optional<sequoia::testing::only_weakly_checkable> >]
+[sequoia::testing::value_tester<std::optional<sequoia::testing::only_weakly_checkable> >]
 Checking for weak equivalence with:
 [std::optional<sequoia::testing::only_weakly_checkable>]
 
@@ -304,13 +304,13 @@ Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 108
 Two std::optionals holdings different values
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::optional<sequoia::testing::only_weakly_checkable> >]
+[sequoia::testing::value_tester<std::optional<sequoia::testing::only_weakly_checkable> >]
 Checking for weak equivalence with:
 [std::optional<sequoia::testing::only_weakly_checkable>]
 
   Contents of optional
   Comparison performed using:
-  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_weakly_checkable>]
+  [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
   Checking for weak equivalence with:
   [sequoia::testing::only_weakly_checkable]
 
@@ -332,7 +332,7 @@ Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 114
 Empty std::any
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::any>]
+[sequoia::testing::value_tester<std::any>]
 Checking for equivalence with:
 [int]
 
@@ -348,7 +348,7 @@ Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 115
 std::any holding the wrong type
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::any>]
+[sequoia::testing::value_tester<std::any>]
 Checking for equivalence with:
 [double]
 
@@ -364,7 +364,7 @@ Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 116
 std::any holding the wrong value
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::any>]
+[sequoia::testing::value_tester<std::any>]
 Checking for equivalence with:
 [int]
 
@@ -379,13 +379,13 @@ Checking for equivalence with:
 Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 118
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::any>]
+[sequoia::testing::value_tester<std::any>]
 Checking for equivalence with:
 [sequoia::testing::only_equivalence_checkable]
 
   Value held by std::any
   Comparison performed using:
-  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_equivalence_checkable>]
+  [sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
   Checking for equivalence with:
   [sequoia::testing::only_equivalence_checkable]
 
@@ -400,13 +400,13 @@ Checking for equivalence with:
 Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 119
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::any>]
+[sequoia::testing::value_tester<std::any>]
 Checking for equivalence with:
 [sequoia::testing::only_weakly_checkable]
 
   Value held by std::any
   Comparison performed using:
-  [sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::only_weakly_checkable>]
+  [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
   Checking for weak equivalence with:
   [sequoia::testing::only_weakly_checkable]
 
@@ -428,7 +428,7 @@ Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 122
 Advice for std::any holding the wrong value
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::any>]
+[sequoia::testing::value_tester<std::any>]
 Checking for equivalence with:
 [int]
 

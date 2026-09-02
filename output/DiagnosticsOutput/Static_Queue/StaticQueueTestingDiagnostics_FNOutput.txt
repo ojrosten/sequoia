@@ -21,7 +21,7 @@ Predicted: 1
 Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 44
 Empty queue versus populated queue
 
-[sequoia::data_structures::static_queue@sequoia.core.data_structures<int, 1>]
+[sequoia::data_structures::static_queue<int, 1>]
 operator== returned false
 
   Emptiness incorrect
@@ -53,7 +53,7 @@ operator== returned false
 Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 47
 Differing elements
 
-[sequoia::data_structures::static_queue@sequoia.core.data_structures<int, 1>]
+[sequoia::data_structures::static_queue<int, 1>]
 operator== returned false
 
   Front element incorrect
@@ -85,7 +85,7 @@ operator== returned false
 Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 50
 Empty queue versus populated queue
 
-[sequoia::data_structures::static_queue@sequoia.core.data_structures<int, 1>]
+[sequoia::data_structures::static_queue<int, 1>]
 operator== returned false
 
   Emptiness incorrect

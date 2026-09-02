@@ -86,7 +86,7 @@ False Negative Failure:
 Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 181
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::optional<sequoia::testing::only_equivalence_checkable> >]
+[sequoia::testing::value_tester<std::optional<sequoia::testing::only_equivalence_checkable> >]
 Checking for equivalence with:
 [std::optional<sequoia::testing::only_equivalence_checkable>]
 
@@ -96,7 +96,7 @@ False Negative Failure:
 Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 182
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::optional<sequoia::testing::only_equivalence_checkable> >]
+[sequoia::testing::value_tester<std::optional<sequoia::testing::only_equivalence_checkable> >]
 Checking for equivalence with:
 [std::optional<sequoia::testing::only_equivalence_checkable>]
 
@@ -113,7 +113,7 @@ False Negative Failure:
 Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 189
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::optional<sequoia::testing::only_weakly_checkable> >]
+[sequoia::testing::value_tester<std::optional<sequoia::testing::only_weakly_checkable> >]
 Checking for weak equivalence with:
 [std::optional<sequoia::testing::only_weakly_checkable>]
 
@@ -130,7 +130,7 @@ False Negative Failure:
 Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 196
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::any>]
+[sequoia::testing::value_tester<std::any>]
 Checking for equivalence with:
 [int]
 
@@ -140,7 +140,7 @@ False Negative Failure:
 Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 197
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::any>]
+[sequoia::testing::value_tester<std::any>]
 Checking for equivalence with:
 [sequoia::testing::only_equivalence_checkable]
 
@@ -150,7 +150,7 @@ False Negative Failure:
 Tests/TestFramework/SumTypesFreeDiagnostics.cpp, Line 198
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::any>]
+[sequoia::testing::value_tester<std::any>]
 Checking for equivalence with:
 [sequoia::testing::only_weakly_checkable]
 

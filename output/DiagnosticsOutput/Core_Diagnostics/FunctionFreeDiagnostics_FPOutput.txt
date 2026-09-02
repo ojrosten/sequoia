@@ -3,7 +3,7 @@ Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 78
 Both bound
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::function<void ()> >]
+[sequoia::testing::value_tester<std::function<void ()> >]
 Checking for weak equivalence with:
 [std::function<void ()>]
 
@@ -14,7 +14,7 @@ Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 79
 Neither bound
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::function<void ()> >]
+[sequoia::testing::value_tester<std::function<void ()> >]
 Checking for weak equivalence with:
 [std::function<void ()>]
 
@@ -25,7 +25,7 @@ Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 84
 Both bound
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::function<int ()> >]
+[sequoia::testing::value_tester<std::function<int ()> >]
 Checking for weak equivalence with:
 [std::function<int ()>]
 
@@ -36,7 +36,7 @@ Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 85
 Neither bound
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::function<int ()> >]
+[sequoia::testing::value_tester<std::function<int ()> >]
 Checking for weak equivalence with:
 [std::function<int ()>]
 
@@ -47,7 +47,7 @@ Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 90
 Both bound
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::function<void (int)> >]
+[sequoia::testing::value_tester<std::function<void (int)> >]
 Checking for weak equivalence with:
 [std::function<void (int)>]
 
@@ -58,7 +58,7 @@ Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 91
 Neither bound
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::function<void (int)> >]
+[sequoia::testing::value_tester<std::function<void (int)> >]
 Checking for weak equivalence with:
 [std::function<void (int)>]
 

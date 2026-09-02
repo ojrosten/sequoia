@@ -1,0 +1,52 @@
+
+Running tests, synchronously...
+
+Utilities:
+[Execution Time: 20.1us]
+Useful Things:
+[Execution Time: 1.45ms]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
+
+	[int]
+	operator== returned false
+	Obtained : 43
+	Predicted: 42
+
+	=======================================
+
+Bar:
+[Execution Time: 24us]
+Unstable:
+[Execution Time: 1.05ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+Maybe:
+[Execution Time: 55.6us]
+Oldschool:
+[Execution Time: 54.3us]
+Probability:
+[Execution Time: 16.1ms]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+	False Negative Checks:                     2;  Failures:  0
+Foo:
+[Execution Time: 21.8ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
+Unique Thing:
+[Execution Time: 15.1ms]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
+	False Negative Checks:                     2;  Failures:  0
+Container:
+[Execution Time: 51.2us]
+House:
+[Execution Time: 23.4us]
+
+-----------Grand Totals-----------
+[Total Run Time: 95.9ms]
+[Execution Time: 55.7ms]
+	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 118]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     4;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

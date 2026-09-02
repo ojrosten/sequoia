@@ -1,21 +1,2 @@
 End to End Test
-Standard Top Level Checks:                37;  Failures:  0  [Deep checks: 495]
-
-******  Critical Failures:  1  ******
-
-
-Error -- Unexpected Exception:
-filesystem error: in copy: No such file or directory ["/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/output/DiagnosticsOutput/Useful_Things"] ["/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/DiagnosticsOutput_0/Useful_Things"]
-
-Exception thrown after check completed
-Last Recorded Message:
-
-Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp, Line 329
-
-Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
-Checking for equivalence with:
-[std::filesystem::path]
-
-=======================================
-
+Standard Top Level Checks:                60;  Failures:  0  [Deep checks: 885]

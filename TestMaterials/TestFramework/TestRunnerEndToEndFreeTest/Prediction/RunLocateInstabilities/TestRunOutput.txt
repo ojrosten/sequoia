@@ -1,0 +1,120 @@
+
+Running tests...
+
+Utilities:
+Useful Things:
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
+
+	[int]
+	operator== returned false
+	Obtained : 43
+	Predicted: 42
+
+	=======================================
+
+Bar:
+Unstable:
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+Maybe:
+Oldschool:
+Probability:
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+	False Negative Checks:                     2;  Failures:  0
+Foo:
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
+Unique Thing:
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
+	False Negative Checks:                     2;  Failures:  0
+Container:
+House:
+
+-----------Grand Totals-----------
+[Total Run Time: 60.8ms]
+[Execution Time: 26.8ms]
+	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 118]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     4;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Running tests...
+
+Utilities:
+Useful Things:
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
+
+	[int]
+	operator== returned false
+	Obtained : 43
+	Predicted: 42
+
+	=======================================
+
+Bar:
+Unstable:
+	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
+
+	Tests/Unstable/FlipperFreeTest.cpp, Line 26
+
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
+
+	=======================================
+
+	Tests/Unstable/FlipperFreeTest.cpp, Line 27
+
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
+
+	=======================================
+
+Maybe:
+Oldschool:
+Probability:
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+	False Negative Checks:                     2;  Failures:  0
+Foo:
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
+Unique Thing:
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
+	False Negative Checks:                     2;  Failures:  0
+Container:
+House:
+
+-----------Grand Totals-----------
+[Total Run Time: 57.7ms]
+[Execution Time: 25.2ms]
+	Standard Top Level Checks:                12;  Failures:  3  [Deep checks: 118]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     4;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Instability detected in file "FlipperFreeTest.cpp"
+Outcome frequencies:
+[50.0%,50.0%]
+
+--No failures--
+
+vs.
+
+	Tests/Unstable/FlipperFreeTest.cpp, Line 26
+
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
+
+	=======================================
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$

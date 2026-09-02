@@ -2,7 +2,7 @@ Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 31
 Obtained bound but prediction not
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::function<void ()> >]
+[sequoia::testing::value_tester<std::function<void ()> >]
 Checking for weak equivalence with:
 [std::function<void ()>]
 
@@ -19,7 +19,7 @@ Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 36
 Prediction bound but obtained not
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::function<void ()> >]
+[sequoia::testing::value_tester<std::function<void ()> >]
 Checking for weak equivalence with:
 [std::function<void ()>]
 
@@ -36,7 +36,7 @@ Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 44
 Obtained bound but prediction not
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::function<int ()> >]
+[sequoia::testing::value_tester<std::function<int ()> >]
 Checking for weak equivalence with:
 [std::function<int ()>]
 
@@ -53,7 +53,7 @@ Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 49
 Prediction bound but obtained not
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::function<int ()> >]
+[sequoia::testing::value_tester<std::function<int ()> >]
 Checking for weak equivalence with:
 [std::function<int ()>]
 
@@ -70,7 +70,7 @@ Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 57
 Obtained bound but prediction not
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::function<void (int)> >]
+[sequoia::testing::value_tester<std::function<void (int)> >]
 Checking for weak equivalence with:
 [std::function<void (int)>]
 
@@ -87,7 +87,7 @@ Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 62
 Prediction bound but obtained not
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::function<void (int)> >]
+[sequoia::testing::value_tester<std::function<void (int)> >]
 Checking for weak equivalence with:
 [std::function<void (int)>]
 

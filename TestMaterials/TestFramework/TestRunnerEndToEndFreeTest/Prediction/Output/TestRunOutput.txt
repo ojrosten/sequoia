@@ -1,2 +1,24 @@
-Nothing to do: try creating some tests!
-Run with --help to see options
+
+Running tests...
+
+Utilities:
+Useful Things:
+Bar:
+Unstable:
+Maybe:
+Oldschool:
+Probability:
+Foo:
+Unique Thing:
+Container:
+House:
+
+-----------Grand Totals-----------
+[Total Run Time: 38.1ms]
+[Execution Time: 1.21ms]
+	Standard Top Level Checks:                 0;  Failures:  0
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

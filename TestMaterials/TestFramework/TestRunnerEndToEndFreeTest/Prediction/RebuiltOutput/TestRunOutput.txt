@@ -1,8 +1,39 @@
 
 Analyzing dependencies...
-  Warning: Time stamp of previous run does not exist, so unable to prune.
-           This should be automatically rectified for the next successful run.
-           No action required.
+[34.8ms]
 
-Nothing to do: try creating some tests!
-Run with --help to see options
+
+Running tests...
+
+Utilities:
+Useful Things:
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 23
+
+	[int]
+	operator== returned false
+	Obtained : 43
+	Predicted: 42
+
+	=======================================
+
+Unstable:
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+Probability:
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+	False Negative Checks:                     2;  Failures:  0
+Unique Thing:
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
+	False Negative Checks:                     2;  Failures:  0
+Container:
+
+-----------Grand Totals-----------
+[Total Run Time: 23.8ms]
+[Execution Time: 2.98ms]
+	Standard Top Level Checks:                10;  Failures:  1  [Deep checks: 80]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     4;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

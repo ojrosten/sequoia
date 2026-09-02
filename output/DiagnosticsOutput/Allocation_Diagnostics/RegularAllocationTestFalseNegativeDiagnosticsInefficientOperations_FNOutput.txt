@@ -2,7 +2,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient equality
 
 --Regular Semantics--
-[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
+[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -34,7 +34,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient inequality
 
 --Regular Semantics--
-[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
+[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -66,7 +66,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -86,7 +86,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -106,7 +106,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient move
 
 --Regular Semantics--
-[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
+[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -126,7 +126,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient para-copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
+[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -146,7 +146,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient para-move
 
 --Regular Semantics--
-[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
+[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -166,7 +166,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient serialization
 
 --Regular Semantics--
-[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 0> >]
+[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -186,7 +186,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient equality
 
 --Regular Semantics--
-[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
+[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -218,7 +218,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient inequality
 
 --Regular Semantics--
-[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
+[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -250,7 +250,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -270,7 +270,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -290,7 +290,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient move
 
 --Regular Semantics--
-[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
+[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -310,7 +310,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient para-copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
+[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -330,7 +330,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient para-move
 
 --Regular Semantics--
-[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
+[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -350,7 +350,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient serialization
 
 --Regular Semantics--
-[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 0, 1> >]
+[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -370,7 +370,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient equality
 
 --Regular Semantics--
-[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
+[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -402,7 +402,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient inequality
 
 --Regular Semantics--
-[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
+[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -434,7 +434,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -454,7 +454,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -474,7 +474,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient move
 
 --Regular Semantics--
-[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
+[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -494,7 +494,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient para-copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
+[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -514,7 +514,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient para-move
 
 --Regular Semantics--
-[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
+[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -534,7 +534,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient serialization
 
 --Regular Semantics--
-[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 0> >]
+[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -554,7 +554,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient equality
 
 --Regular Semantics--
-[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
+[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -586,7 +586,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient inequality
 
 --Regular Semantics--
-[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
+[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -618,7 +618,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -638,7 +638,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -658,7 +658,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient move
 
 --Regular Semantics--
-[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
+[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -678,7 +678,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient para-copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
+[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -698,7 +698,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient para-move
 
 --Regular Semantics--
-[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
+[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -718,7 +718,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient serialization
 
 --Regular Semantics--
-[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 0, 1, 1> >]
+[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -738,7 +738,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient equality
 
 --Regular Semantics--
-[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
+[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -770,7 +770,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient inequality
 
 --Regular Semantics--
-[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
+[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -802,7 +802,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -822,7 +822,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -842,7 +842,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient move
 
 --Regular Semantics--
-[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
+[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -862,7 +862,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient para-copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
+[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -882,7 +882,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient para-move
 
 --Regular Semantics--
-[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
+[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -902,7 +902,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient serialization
 
 --Regular Semantics--
-[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 0> >]
+[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -922,7 +922,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient equality
 
 --Regular Semantics--
-[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
+[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -954,7 +954,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient inequality
 
 --Regular Semantics--
-[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
+[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -986,7 +986,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1006,7 +1006,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1026,7 +1026,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient move
 
 --Regular Semantics--
-[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
+[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1046,7 +1046,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient para-copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
+[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1066,7 +1066,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient para-move
 
 --Regular Semantics--
-[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
+[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1086,7 +1086,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient serialization
 
 --Regular Semantics--
-[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 0, 1> >]
+[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1106,7 +1106,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient equality
 
 --Regular Semantics--
-[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
+[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1138,7 +1138,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient inequality
 
 --Regular Semantics--
-[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
+[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1170,7 +1170,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1190,7 +1190,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1210,7 +1210,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient move
 
 --Regular Semantics--
-[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
+[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1230,7 +1230,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient para-copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
+[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1250,7 +1250,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient para-move
 
 --Regular Semantics--
-[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
+[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1270,7 +1270,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient serialization
 
 --Regular Semantics--
-[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 0> >]
+[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
 
   [shared_counting_allocator<
   		int,
@@ -1290,7 +1290,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient equality
 
 --Regular Semantics--
-[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
+[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1322,7 +1322,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient inequality
 
 --Regular Semantics--
-[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
+[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1354,7 +1354,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1374,7 +1374,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
+[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1394,7 +1394,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient move
 
 --Regular Semantics--
-[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
+[sequoia::testing::inefficient_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1414,7 +1414,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient para-copy
 
 --Regular Semantics--
-[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
+[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1434,7 +1434,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient para-move
 
 --Regular Semantics--
-[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
+[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
   [shared_counting_allocator<
   		int,
@@ -1454,7 +1454,7 @@ Tests/TestFramework/AllocationTesting/RegularAllocationTestFalseNegativeDiagnost
 Inefficient serialization
 
 --Regular Semantics--
-[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator@sequoia.test_framework<int, 1, 1, 1> >]
+[sequoia::testing::inefficient_serialization<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
 
   [shared_counting_allocator<
   		int,

@@ -49,7 +49,7 @@ Predicted: (0,0)
 Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 232
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<sequoia::testing::(anonymous namespace)::broken_constructor>]
+[sequoia::testing::value_tester<sequoia::testing::(anonymous namespace)::broken_constructor>]
 Checking for equivalence with:
 [int]
 

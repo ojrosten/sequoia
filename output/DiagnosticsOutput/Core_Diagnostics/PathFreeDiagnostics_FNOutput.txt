@@ -2,7 +2,7 @@ Tests/TestFramework/PathFreeDiagnostics.cpp, Line 72
 Inequivalence of two different paths, neither of which exists
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
+[sequoia::testing::value_tester<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
@@ -18,7 +18,7 @@ Tests/TestFramework/PathFreeDiagnostics.cpp, Line 77
 Inequivalence of two different paths, one of which exists
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
+[sequoia::testing::value_tester<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
@@ -38,7 +38,7 @@ Tests/TestFramework/PathFreeDiagnostics.cpp, Line 82
 Inequivalence of directory/file
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
+[sequoia::testing::value_tester<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
@@ -58,7 +58,7 @@ Tests/TestFramework/PathFreeDiagnostics.cpp, Line 87
 Inequivalence of differently named files
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
+[sequoia::testing::value_tester<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
@@ -78,7 +78,7 @@ Tests/TestFramework/PathFreeDiagnostics.cpp, Line 92
 Inequivalence of file contents
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
+[sequoia::testing::value_tester<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
@@ -106,7 +106,7 @@ Tests/TestFramework/PathFreeDiagnostics.cpp, Line 97
 Inequivalence of differently named directories with the same contents
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
+[sequoia::testing::value_tester<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
@@ -122,7 +122,7 @@ Tests/TestFramework/PathFreeDiagnostics.cpp, Line 102
 Inequivalence of directories with the same files but different contents
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
+[sequoia::testing::value_tester<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
@@ -150,7 +150,7 @@ Tests/TestFramework/PathFreeDiagnostics.cpp, Line 107
 Inequivalence of directories with some common files
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
+[sequoia::testing::value_tester<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
@@ -172,7 +172,7 @@ Tests/TestFramework/PathFreeDiagnostics.cpp, Line 112
 Inequivalence of directories with some common files
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
+[sequoia::testing::value_tester<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
@@ -194,7 +194,7 @@ Tests/TestFramework/PathFreeDiagnostics.cpp, Line 117
 File inequivalence when default file checking is used
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
+[sequoia::testing::value_tester<std::filesystem::path>]
 Checking for equivalence with:
 [std::filesystem::path]
 
@@ -225,7 +225,7 @@ Range inequivalence when default file checking us used
 
   Element 0 of range incorrect
   Comparison performed using:
-  [sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
+  [sequoia::testing::value_tester<std::filesystem::path>]
   Checking for equivalence with:
   [std::filesystem::path]
 
@@ -253,7 +253,7 @@ Tests/TestFramework/PathFreeDiagnostics.cpp, Line 127
 Weak inequivalence of directories with some common files
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
+[sequoia::testing::value_tester<std::filesystem::path>]
 Checking for weak equivalence with:
 [std::filesystem::path]
 
@@ -275,7 +275,7 @@ Tests/TestFramework/PathFreeDiagnostics.cpp, Line 132
 Directory weak inequivalence when default file checking is used
 
 Comparison performed using:
-[sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
+[sequoia::testing::value_tester<std::filesystem::path>]
 Checking for weak equivalence with:
 [std::filesystem::path]
 
@@ -306,7 +306,7 @@ Weak inequivalence of range when default file checking is used
 
   Element 0 of range incorrect
   Comparison performed using:
-  [sequoia::testing::value_tester@sequoia.test_framework<std::filesystem::path>]
+  [sequoia::testing::value_tester<std::filesystem::path>]
   Checking for weak equivalence with:
   [std::filesystem::path]
 

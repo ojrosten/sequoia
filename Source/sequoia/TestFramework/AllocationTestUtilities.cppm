@@ -9,6 +9,16 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
+// Modules do not carry macros, so _ITERATOR_DEBUG_LEVEL is undefined here unless the
+// header that owns it is included in this fragment - and an undefined macro in an #if
+// is simply 0, so the MSVC conversion operator below would be compiled out in silence
+// rather than diagnosed. That operator is what the debug STL needs to rebind this
+// allocator to std::_Container_proxy, so without it every container test using
+// shared_counting_allocator fails to compile in a debug build.
+#if defined(_MSC_VER)
+  #include <yvals.h>
+#endif
+
 export module sequoia.test_framework:AllocationTestUtilities;
 
 import std;

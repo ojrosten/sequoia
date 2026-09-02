@@ -15,7 +15,7 @@ import sequoia.test_framework;
 
 namespace sequoia::testing
 {
-    template<maths::floating_point T>
+    template<::maths::floating_point T>
     struct value_tester<::bar::baz::foo<T>>
     {
         using type = ::bar::baz::foo<T>;

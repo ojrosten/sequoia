@@ -7,6 +7,24 @@
 
 /** \file */
 
+#include "HouseAllocationTest.hpp"
+#include "Maths/ProbabilityTest.hpp"
+#include "Maths/ProbabilityTestingDiagnostics.hpp"
+#include "Maybe/MaybeTest.hpp"
+#include "Maybe/MaybeTestingDiagnostics.hpp"
+#include "Stuff/BarFreeTest.hpp"
+#include "Stuff/FooTest.hpp"
+#include "Stuff/FooTestingDiagnostics.hpp"
+#include "Stuff/OldschoolTest.hpp"
+#include "Stuff/OldschoolTestingDiagnostics.hpp"
+#include "Unstable/FlipperFreeTest.hpp"
+#include "Utilities/ContainerAllocationTest.hpp"
+#include "Utilities/ContainerPerformanceTest.hpp"
+#include "Utilities/Thing/UniqueThingTest.hpp"
+#include "Utilities/Thing/UniqueThingTestingDiagnostics.hpp"
+#include "Utilities/UsefulThingsFreeTest.hpp"
+#include "Utilities/UtilitiesFreeTest.hpp"
+
 import std;
 import sequoia.test_framework;
 
@@ -96,20 +114,3 @@ int main(int argc, char** argv)
 	return 0;
 }
 
-#include "HouseAllocationTest.hpp"
-#include "Maths/ProbabilityTest.hpp"
-#include "Maths/ProbabilityTestingDiagnostics.hpp"
-#include "Maybe/MaybeTest.hpp"
-#include "Maybe/MaybeTestingDiagnostics.hpp"
-#include "Stuff/BarFreeTest.hpp"
-#include "Stuff/FooTest.hpp"
-#include "Stuff/FooTestingDiagnostics.hpp"
-#include "Stuff/OldschoolTest.hpp"
-#include "Stuff/OldschoolTestingDiagnostics.hpp"
-#include "Unstable/FlipperFreeTest.hpp"
-#include "Utilities/ContainerAllocationTest.hpp"
-#include "Utilities/ContainerPerformanceTest.hpp"
-#include "Utilities/Thing/UniqueThingTest.hpp"
-#include "Utilities/Thing/UniqueThingTestingDiagnostics.hpp"
-#include "Utilities/UsefulThingsFreeTest.hpp"
-#include "Utilities/UtilitiesFreeTest.hpp"

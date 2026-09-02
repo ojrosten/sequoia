@@ -193,6 +193,65 @@ namespace sequoia::testing
       }
     }
 
+    // Named modules make compilers stamp module ownership into type names, and they
+    // do it differently: MSVC appends `[sequoia.maths.geometry]` after the entity,
+    // clang inserts `@sequoia.maths.geometry` directly after it. The ownership is
+    // real, but it is noise in a failure report and - the reason this exists - it
+    // differs per compiler in the *undiscriminated* output files, which are supposed
+    // to be byte-identical everywhere. 42 shared baselines diverged on nothing else.
+    //
+    // gcc is expected to use clang's form, both being Itanium ABI, but that is
+    // unverified: gcc 16 cannot yet build a modules tree. If it turns out to spell it
+    // some third way, this is where that goes.
+    //
+    // A module name is an identifier with optional dots. Insisting that it start with
+    // a letter or underscore is what leaves `char [3]` alone.
+    std::string& remove_module_spec(std::string& name)
+    {
+      auto isModuleName{
+        [&name](size_type first, size_type last) {
+          if(first >= last) return false;
+
+          if(const auto c{static_cast<unsigned char>(name[first])}; !(std::isalpha(c) || (c == '_')))
+            return false;
+
+          for(auto i{first + 1}; i < last; ++i)
+          {
+            const auto c{static_cast<unsigned char>(name[i])};
+            if(!(std::isalnum(c) || (c == '_') || (c == '.'))) return false;
+          }
+
+          return true;
+        }
+      };
+
+      for(auto pos{name.find('[')}; pos != npos; pos = name.find('[', pos))
+      {
+        if(const auto close{name.find(']', pos)}; (close != npos) && isModuleName(pos + 1, close))
+          name.erase(pos, close + 1 - pos);
+        else
+          ++pos;
+      }
+
+      for(auto pos{name.find('@')}; pos != npos; pos = name.find('@', pos))
+      {
+        auto end{pos + 1};
+        while(end < name.size())
+        {
+          const auto c{static_cast<unsigned char>(name[end])};
+          if(!(std::isalnum(c) || (c == '_') || (c == '.'))) break;
+          ++end;
+        }
+
+        if(isModuleName(pos + 1, end))
+          name.erase(pos, end - pos);
+        else
+          ++pos;
+      }
+
+      return name;
+    }
+
     std::string& tidy_name(std::string& name)
     {
       if constexpr(sizeof(unsigned long) == sizeof(unsigned long long))
@@ -209,6 +268,7 @@ namespace sequoia::testing
       replace_all(name, " <", "true", ",>", "1");
       replace_all(name, " <", "false", ",>", "0");
 
+      remove_module_spec(name);
       remove_enum_spec(name);
       auto openPos{name.find('(')};
       auto pos{openPos};
@@ -441,6 +501,13 @@ namespace sequoia::testing
     replace_all(name, "__cdecl", "");
 
     process_array_iterators(name);
+    remove_module_spec(name);
+    // Must follow remove_module_spec, and mirrors what the clang and gcc paths do.
+    // MSVC separates adjacent closing brackets with a space only when nothing else
+    // is between them, so stripping `>[sequoia.test_framework]>` leaves `>>` where
+    // the other compilers have `> >`. Without this the decoration is gone but the
+    // shared baselines still disagree.
+    replace_all_recursive(name, ">>", "> >");
 
     return name;
   }
