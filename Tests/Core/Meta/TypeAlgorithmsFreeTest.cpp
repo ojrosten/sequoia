@@ -22,6 +22,21 @@ namespace sequoia::testing
     
     template<class T>
     struct is_int : std::is_same<T, int> {};
+
+    template<class T>
+    struct is_not_int : std::bool_constant<!std::is_same_v<T, int>> {};
+
+    template<class T>
+    struct always_true : std::true_type {};
+
+    template<class T>
+    struct always_false : std::false_type {};
+
+    /** A binary template which is never instantiated: `zip` should form the pairs without
+        requiring them to be complete, which is what lets it carry types a `std::pair` could not.
+     */
+    template<class T, class U>
+    struct incomplete_pair;
   }
   
   using namespace meta;
@@ -71,6 +86,15 @@ namespace sequoia::testing
 
     test_flatten<std::tuple>();
     test_flatten<std::variant>();
+
+    test_all_of<std::tuple>();
+    test_all_of<std::variant>();
+
+    test_any_of<std::tuple>();
+    test_any_of<std::variant>();
+
+    test_zip<std::tuple>();
+    test_zip<std::variant>();
 
     test_concat<std::tuple>();
     test_concat<std::variant>();
@@ -196,6 +220,89 @@ namespace sequoia::testing
     STATIC_CHECK((find_if_v<TT<float, double, int>,  std::is_integral>       == 2));
     STATIC_CHECK((find_if_v<TT<int, double, float>,  std::is_pointer>        == 3));
     STATIC_CHECK((find_if_v<TT<int, double, int>,    std::is_integral>       == 0));
+  }
+
+  template<template<class...> class TT>
+  void type_algorithms_free_test::test_all_of()
+  {
+    STATIC_CHECK( all_of_v<TT<>,                    is_int>);
+    STATIC_CHECK( all_of_v<TT<int>,                 is_int>);
+    STATIC_CHECK(!all_of_v<TT<float>,               is_int>);
+    STATIC_CHECK( all_of_v<TT<int, int>,            is_int>);
+    STATIC_CHECK(!all_of_v<TT<int, float>,          is_int>);
+    STATIC_CHECK(!all_of_v<TT<float, int>,          is_int>);
+    STATIC_CHECK(!all_of_v<TT<float, double>,       is_int>);
+    STATIC_CHECK( all_of_v<TT<int, int, int>,       is_int>);
+    STATIC_CHECK(!all_of_v<TT<int, int, float>,     is_int>);
+
+    // Vacuous truth is the value an empty list must take for `all_of` to compose.
+    STATIC_CHECK( all_of_v<TT<>,                    always_false>);
+    STATIC_CHECK(!all_of_v<TT<int>,                 always_false>);
+    STATIC_CHECK( all_of_v<TT<int, float, double>,  always_true>);
+
+    STATIC_CHECK(std::same_as<all_of_t<TT<int>, is_int>,   std::true_type>);
+    STATIC_CHECK(std::same_as<all_of_t<TT<float>, is_int>, std::false_type>);
+  }
+
+  template<template<class...> class TT>
+  void type_algorithms_free_test::test_any_of()
+  {
+    STATIC_CHECK(!any_of_v<TT<>,                    is_int>);
+    STATIC_CHECK( any_of_v<TT<int>,                 is_int>);
+    STATIC_CHECK(!any_of_v<TT<float>,               is_int>);
+    STATIC_CHECK( any_of_v<TT<int, int>,            is_int>);
+    STATIC_CHECK( any_of_v<TT<int, float>,          is_int>);
+    STATIC_CHECK( any_of_v<TT<float, int>,          is_int>);
+    STATIC_CHECK(!any_of_v<TT<float, double>,       is_int>);
+    STATIC_CHECK( any_of_v<TT<float, double, int>,  is_int>);
+    STATIC_CHECK(!any_of_v<TT<float, double, char>, is_int>);
+
+    // Vacuous falsity, dual to `all_of`'s vacuous truth.
+    STATIC_CHECK(!any_of_v<TT<>,                    always_true>);
+    STATIC_CHECK( any_of_v<TT<int>,                 always_true>);
+    STATIC_CHECK(!any_of_v<TT<int, float, double>,  always_false>);
+
+    // De Morgan, over the same lists: `any_of` is the dual of `all_of`.
+    STATIC_CHECK(any_of_v<TT<int, float>, is_int> == !all_of_v<TT<int, float>, is_not_int>);
+    STATIC_CHECK(any_of_v<TT<int, int>,   is_int> == !all_of_v<TT<int, int>,   is_not_int>);
+    STATIC_CHECK(any_of_v<TT<float>,      is_int> == !all_of_v<TT<float>,      is_not_int>);
+    STATIC_CHECK(any_of_v<TT<>,           is_int> == !all_of_v<TT<>,           is_not_int>);
+
+    STATIC_CHECK(std::same_as<any_of_t<TT<int>, is_int>,   std::true_type>);
+    STATIC_CHECK(std::same_as<any_of_t<TT<float>, is_int>, std::false_type>);
+  }
+
+  template<template<class...> class TT>
+  void type_algorithms_free_test::test_zip()
+  {
+    STATIC_CHECK(std::same_as<zip_t<TT<>, TT<>, std::pair>, TT<>>);
+
+    STATIC_CHECK(std::same_as<zip_t<TT<int>, TT<float>, std::pair>,
+                              TT<std::pair<int, float>>>);
+
+    STATIC_CHECK(std::same_as<zip_t<TT<int, float>, TT<char, double>, std::pair>,
+                              TT<std::pair<int, char>, std::pair<float, double>>>);
+
+    // Not symmetric: the pairs keep the order of the arguments.
+    STATIC_CHECK(std::same_as<zip_t<TT<char, double>, TT<int, float>, std::pair>,
+                              TT<std::pair<char, int>, std::pair<double, float>>>);
+
+    STATIC_CHECK(std::same_as<zip_t<TT<int, int>, TT<int, int>, std::pair>,
+                              TT<std::pair<int, int>, std::pair<int, int>>>);
+
+    // The pairing template is the caller's, and need not be instantiable.
+    STATIC_CHECK(std::same_as<zip_t<TT<int, float>, TT<char, double>, incomplete_pair>,
+                              TT<incomplete_pair<int, char>, incomplete_pair<float, double>>>);
+
+    // Unequal lengths are ill-formed rather than truncating, in either direction.
+    STATIC_CHECK(!requires{ typename zip<TT<int>,      TT<>,           std::pair>::type; });
+    STATIC_CHECK(!requires{ typename zip<TT<>,         TT<int>,        std::pair>::type; });
+    STATIC_CHECK(!requires{ typename zip<TT<int, int>, TT<int>,        std::pair>::type; });
+    STATIC_CHECK(!requires{ typename zip<TT<int>,      TT<int, int>,   std::pair>::type; });
+
+    // Zipping a list with itself, then reading the result back, recovers it.
+    STATIC_CHECK(std::same_as<zip_t<TT<int, float>, TT<int, float>, std::pair>,
+                              TT<std::pair<int, int>, std::pair<float, float>>>);
   }
 
   template<template<class...> class TT>

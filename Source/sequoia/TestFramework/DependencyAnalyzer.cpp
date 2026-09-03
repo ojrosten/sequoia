@@ -360,6 +360,30 @@ namespace sequoia::testing
       return std::nullopt;
     }
 
+    /** How much earlier than the recorded prune stamp a modification may be and still have happened
+        after the run which wrote it.
+
+        The stamp is written from a full-resolution clock reading, so whatever comes back is what
+        the filesystem was able to store: a whole number of seconds means the implementation
+        truncates - libstdc++ does so on macOS, where libc++ records nanoseconds - and a
+        modification made after the run began can therefore carry a timestamp up to a second before
+        it. Comparing the two directly loses such a change, and loses it in the direction which
+        makes `prune` skip a test whose materials really did move.
+
+        Reading the granularity off the stamp itself costs nothing and is exact where it matters: a
+        filesystem which records sub-second times yields zero here, so nothing is widened on a
+        platform which can already tell the difference.
+     */
+    [[nodiscard]]
+    fs::file_time_type::duration timestamp_granularity(const fs::file_time_type stamp)
+    {
+      using namespace std::chrono;
+      const auto subSecond{stamp.time_since_epoch() - floor<seconds>(stamp.time_since_epoch())};
+
+      return (subSecond == fs::file_time_type::duration::zero()) ? duration_cast<fs::file_time_type::duration>(seconds{1})
+                                                                 : fs::file_time_type::duration::zero();
+    }
+
     [[nodiscard]]
     std::vector<fs::path> find_stale_tests(fs::file_time_type pruneTimeStamp, const project_paths& projPaths, std::string_view cutoff)
     {
@@ -618,7 +642,12 @@ namespace sequoia::testing
 
     if(!pruneTimeStamp) return std::nullopt;
 
-    const auto staleTests{find_stale_tests(pruneTimeStamp.value(), projPaths, cutoff)};
+    // Every staleness test is `modification > stamp`; widening the stamp by the granularity is what
+    // makes that correct on a filesystem which cannot represent the difference, and a no-op on one
+    // which can.
+    const auto stamp{pruneTimeStamp.value() - timestamp_granularity(pruneTimeStamp.value())};
+
+    const auto staleTests{find_stale_tests(stamp, projPaths, cutoff)};
 
     const std::vector<fs::path> failingTests{
       std::views::transform(read_tests(prunePaths.failures(std::nullopt)), path_projector{}) | std::ranges::to<std::vector>()

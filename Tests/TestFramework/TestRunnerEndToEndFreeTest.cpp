@@ -24,6 +24,32 @@ namespace sequoia::testing
 
   namespace
   {
+    /** Block until the filesystem can record a time strictly later than it records when the call
+        begins.
+
+        Timestamp resolution is a property of the standard library and filesystem rather than of the
+        clock: libstdc++ on macOS records whole seconds where libc++ records nanoseconds, and WSL's
+        mounted volumes are coarse too. Where it is coarse, a material modified in the same tick as
+        the previous run's prune stamp is indistinguishable from one modified before it, so whether
+        `prune` notices the change is decided by where the tick boundary happens to fall. This test
+        asserts `prune`'s exact output, so it needs that boundary crossed rather than gambled on.
+
+        Self-calibrating rather than a sleep keyed to a platform: one short sleep where the
+        resolution is fine, and only as long as it must be where it is coarse. The probe is written
+        outside the generated project, since a file appearing inside it would itself be a change.
+     */
+    void await_timestamp_tick(const std::filesystem::path& probeDir)
+    {
+      namespace fs = std::filesystem;
+      const auto probe{probeDir / "TimestampProbe.tmp"};
+      auto stamp{[&probe]() { std::ofstream{probe}; return fs::last_write_time(probe); }};
+
+      const auto start{stamp()};
+      while(stamp() <= start) std::this_thread::sleep_for(10ms);
+
+      fs::remove(probe);
+    }
+
     [[nodiscard]]
     std::string run_cmd()
     {
@@ -125,6 +151,8 @@ namespace sequoia::testing
 
   void test_runner_end_to_end_test::copy_aux_materials(const std::filesystem::path& relativeFrom, const std::filesystem::path& relativeTo) const
   {
+    await_timestamp_tick(generated_project().parent_path());
+
     const auto absoluteFrom{auxiliary_materials() /= relativeFrom};
     const auto absoluteTo{generated_project() / relativeTo};
     fs::copy(absoluteFrom, absoluteTo, fs::copy_options::recursive | fs::copy_options::overwrite_existing);

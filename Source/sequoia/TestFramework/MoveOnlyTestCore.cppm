@@ -122,7 +122,7 @@ export namespace sequoia::testing
     <
       std::regular_invocable xMaker,      
       moveonly T=std::invoke_result_t<xMaker>,
-      regular_invocable_r<T> yMaker,
+      regular_invocable_exactly_r<T> yMaker,
       class U,
       class Self
     >
@@ -149,7 +149,7 @@ export namespace sequoia::testing
     <
       std::regular_invocable xMaker,
       moveonly T=std::invoke_result_t<xMaker>,
-      regular_invocable_r<T> yMaker,
+      regular_invocable_exactly_r<T> yMaker,
       class Self
     >
     bool check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn)
@@ -224,7 +224,7 @@ export namespace sequoia::testing
     <
       std::regular_invocable xMaker,
       moveonly T=std::invoke_result_t<xMaker>,
-      regular_invocable_r<T> yMaker,
+      regular_invocable_exactly_r<T> yMaker,
       class U,
       class Self
     >
@@ -255,7 +255,7 @@ export namespace sequoia::testing
       class Self,
       std::regular_invocable xMaker,
       moveonly T=std::invoke_result_t<xMaker>,
-      regular_invocable_r<T> yMaker
+      regular_invocable_exactly_r<T> yMaker
     >
       requires deep_totally_ordered<T>
     bool check_semantics(this Self& self, const reporter& description, xMaker xFn, yMaker yFn, std::weak_ordering order)

@@ -32,18 +32,18 @@ export namespace sequoia::testing
 {
   enum class check_ordering : bool {no, yes};
   
-  template<class T, invocable_r<T, const T&> TransitionFn>
+  template<class T, invocable_exactly_r<T, const T&> TransitionFn>
   struct transition_info_base
   {
     std::string description;
     TransitionFn fn;
   };
 
-  template<class T, invocable_r<T, const T&> TransitionFn, check_ordering=check_ordering{deep_totally_ordered<T>}>
+  template<class T, invocable_exactly_r<T, const T&> TransitionFn, check_ordering=check_ordering{deep_totally_ordered<T>}>
   struct transition_info : transition_info_base<T, TransitionFn>
   {};
 
-  template<deep_totally_ordered T, invocable_r<T, const T&> TransitionFn>
+  template<deep_totally_ordered T, invocable_exactly_r<T, const T&> TransitionFn>
   struct transition_info<T, TransitionFn, check_ordering::yes> : transition_info_base<T, TransitionFn>
   {
     std::weak_ordering ordering;
@@ -81,7 +81,7 @@ export namespace sequoia::testing
     [[nodiscard]]
     decltype(auto) operator()() const { return m_Fn(); }
   private:
-    std::function<T()> m_Fn;
+    object::copyable_function<T() const> m_Fn;
   };
 
   template<class T, check_ordering CheckOrdering=check_ordering{deep_totally_ordered<T>}>
@@ -89,7 +89,7 @@ export namespace sequoia::testing
   {
   public:
     using transition_graph
-      = maths::directed_graph<transition_info<T, std::function<T(const T&)>, CheckOrdering>, object_generator<T>>;
+      = maths::directed_graph<transition_info<T, object::copyable_function<T(const T&) const>, CheckOrdering>, object_generator<T>>;
 
     using size_type = transition_graph::size_type;
 

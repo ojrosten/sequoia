@@ -471,6 +471,11 @@ int main(int argc, char** argv)
       vector_nonlinear_representations_free_test{"Vector Nonlinear Representations Free Test"}
     );
 
+    runner.add_test_suite(
+      "Object",
+      copyable_function_free_test{"Copyable Function Free Test"}
+    );
+
     runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)

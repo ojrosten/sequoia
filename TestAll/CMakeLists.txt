@@ -44,6 +44,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Meta/TypeListFreeTest.cpp
                ${TestDir}/Core/Meta/TypeTraitsTest.cpp
                ${TestDir}/Core/Meta/UtilitiesTest.cpp
+               ${TestDir}/Core/Object/CopyableFunctionFreeTest.cpp
                ${TestDir}/Core/Object/CreatorFreeTest.cpp               
                ${TestDir}/Core/Object/FactoryTest.cpp
                ${TestDir}/Core/Object/FactoryTestingDiagnostics.cpp

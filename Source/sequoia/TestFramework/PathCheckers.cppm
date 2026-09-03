@@ -179,7 +179,7 @@ export namespace sequoia::testing
     static const general_equivalence_check_t<basic_file_checker_t>      basic_path_equivalence;
     static const general_weak_equivalence_check_t<basic_file_checker_t> basic_path_weak_equivalence;
 
-    template<test_mode Mode, class Customization, invocable_r<bool, std::filesystem::path, std::filesystem::path> FinalTokenComparison>
+    template<test_mode Mode, class Customization, invocable_exactly_r<bool, std::filesystem::path, std::filesystem::path> FinalTokenComparison>
     static void check_path(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction, FinalTokenComparison compare)
     {
       namespace fs = std::filesystem;
@@ -212,7 +212,7 @@ export namespace sequoia::testing
       }
     }
 
-    template<test_mode Mode, class Customization, invocable_r<bool, std::filesystem::path, std::filesystem::path> FinalTokenComparison>
+    template<test_mode Mode, class Customization, invocable_exactly_r<bool, std::filesystem::path, std::filesystem::path> FinalTokenComparison>
     static void check_directory(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& dir, const std::filesystem::path& prediction, FinalTokenComparison compare)
     {
       namespace fs = std::filesystem;

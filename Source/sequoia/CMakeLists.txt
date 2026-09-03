@@ -68,6 +68,7 @@ set(ModuleList
     Core/Meta/TypeList.cppm
     Core/Meta/TypeTraits.cppm
     Core/Meta/Utilities.cppm
+    Core/Object/CopyableFunction.cppm
     Core/Object/Creator.cppm
     Core/Object/Factory.cppm
     Core/Object/HandlerTraits.cppm

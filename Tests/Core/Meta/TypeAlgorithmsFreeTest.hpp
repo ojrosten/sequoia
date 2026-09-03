@@ -66,6 +66,15 @@ namespace sequoia::testing
     void test_flatten();
 
     template<template<class...> class TT>
+    void test_all_of();
+
+    template<template<class...> class TT>
+    void test_any_of();
+
+    template<template<class...> class TT>
+    void test_zip();
+
+    template<template<class...> class TT>
     void test_concat();
 
     template<template<class...> class TT>

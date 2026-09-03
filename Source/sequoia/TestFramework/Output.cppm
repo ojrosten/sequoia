@@ -224,7 +224,7 @@ export namespace sequoia::testing
   [[nodiscard]]
   std::string demangle(std::string mangled);
 
-  template<class T, invocable_r<std::string, std::string> Tidy>
+  template<class T, invocable_exactly_r<std::string, std::string> Tidy>
   [[nodiscard]]
   std::string demangle(Tidy tidy)
   {

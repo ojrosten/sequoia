@@ -123,8 +123,8 @@ export namespace sequoia::testing
     <
       class Self,
       moveonly T,
-      regular_invocable_r<T> xMaker,
-      regular_invocable_r<T> yMaker,
+      regular_invocable_exactly_r<T> xMaker,
+      regular_invocable_exactly_r<T> yMaker,
       std::invocable<T&> Mutator,
       alloc_getter<T>... Getters
     >
@@ -152,8 +152,8 @@ export namespace sequoia::testing
     <
       class Self,
       moveonly T,
-      regular_invocable_r<T> xMaker,
-      regular_invocable_r<T> yMaker,
+      regular_invocable_exactly_r<T> xMaker,
+      regular_invocable_exactly_r<T> yMaker,
       std::invocable<T&> Mutator,
       alloc_getter<T>... Getters
     >
@@ -226,8 +226,8 @@ export namespace sequoia::testing
     <
       class Self,
       moveonly T,
-      regular_invocable_r<T> xMaker,
-      regular_invocable_r<T> yMaker,
+      regular_invocable_exactly_r<T> xMaker,
+      regular_invocable_exactly_r<T> yMaker,
       std::invocable<T&> Mutator,
       alloc_getter<T>... Getters
     >
@@ -257,8 +257,8 @@ export namespace sequoia::testing
     <
       class Self,
       moveonly T,
-      regular_invocable_r<T> xMaker,
-      regular_invocable_r<T> yMaker,
+      regular_invocable_exactly_r<T> xMaker,
+      regular_invocable_exactly_r<T> yMaker,
       std::invocable<T&> Mutator,
       alloc_getter<T>... Getters
     >

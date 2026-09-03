@@ -687,7 +687,7 @@ export namespace sequoia::testing::impl
     comparison_flavour C,
     class Actions,
     movable_comparable T,
-    invocable_r<bool, T> Fn,
+    invocable_exactly_r<bool, T> Fn,
     class... Getters
   >
   bool check_comparison_consistency(test_logger<Mode>& logger,
