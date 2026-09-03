@@ -37,6 +37,7 @@ int main(int argc, char** argv)
 
     runner.add_test_suite(
       "Test Framework Auxiliary",
+      file_editors_free_test{"File Editors Free Test"},
       individual_test_paths_free_test{"Individual Test Paths Free Test"},
       basic_test_interface_free_test{"Basic Test Interface Free Test"},
       commands_free_test{"Commands Free Test"},
@@ -392,6 +393,7 @@ int main(int argc, char** argv)
       "Geometry",
       suite{
         "Spaces",        
+        numeric_rings_meta_free_test{"Numeric Rings Meta Free Test"},
         spaces_meta_free_test{"Spaces Meta Free Test"}
       },
       suite{
@@ -436,6 +438,7 @@ int main(int argc, char** argv)
 
     runner.add_test_suite(
       "Physical Values",
+      space_ordering_meta_free_test{"Space Ordering Meta Free Test"},
       physical_value_meta_free_test{"Physical Value Meta Free Test"},
       physical_value_false_negative_test{"False Negative Test"},
       physical_value_conversions_free_test{"Physical Value Conversions Free Test"},

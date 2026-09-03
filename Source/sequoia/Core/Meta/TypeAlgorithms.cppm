@@ -364,7 +364,7 @@ export namespace sequoia::meta
     constexpr static std::size_t index{U<T>::value ? 0 : 1 + find_if_v<TT<Ts...>, U>};
   };
 
-  //==================================================== find_if ===================================================//
+  //==================================================== contains ===================================================//
 
   template<class T, class U>
   struct contains;

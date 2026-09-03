@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-//                Copyright Oliver J. Rosten 2024.                //
+//                Copyright Oliver J. Rosten 2026.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
@@ -7,26 +7,27 @@
 
 #pragma once
 
-/** \file */
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
 
-#include "PhysicalValueTestingUtilities.hpp"
+import std;
+import sequoia.test_framework;
+
+/** \file */
 
 namespace sequoia::testing
 {
-  /** \brief Products and quotients of vector-valued physical values, together with the
-      coordinates of the inverse spaces which division brings into being.
-   */
-  class vector_physical_value_compositions_test final : public regular_test
+  class file_editors_free_test final : public free_test
   {
   public:
-    using regular_test::regular_test;
+    using free_test::free_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;
 
     void run_tests();
   private:
-    template<class Quantity>
-    void test_compositions();
+    void test_add_include_without_an_existing_block();
+    void test_add_include_to_an_existing_block();
   };
 }

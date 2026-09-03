@@ -17,7 +17,15 @@ import sequoia.test_framework;
 
 namespace sequoia::testing
 {
-  class spaces_meta_free_test final : public free_test
+  /** \brief The scalars beneath the spaces: which types add and multiply, which of them form
+      commutative rings, and which of them cover which.
+
+      Split out of `spaces_meta_free_test`, whose subject begins one level up. Nothing here mentions
+      a space; everything here is about `int`, `float`, `std::complex` and the covering relation,
+      which is what a space's scalars are drawn from. `test_ring_traits` stayed behind for exactly
+      that reason: extracting a ring *from a space* is a question about the space.
+   */
+  class numeric_rings_meta_free_test final : public free_test
   {
   public:
     using free_test::free_test;
@@ -27,26 +35,12 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    void test_structure_trait();
+    void test_arithmetic_traits();
 
-    void test_set_trait();
+    void test_commutative_rings();
 
-    void test_rank_traits();
+    void test_coverings();
 
-    void test_origin_and_orthant_traits();
-
-    void test_ring_traits();
-
-    void test_free_module_traits();
-
-    void test_basis_traits();
-
-    void test_spaces_dag();
-
-    void test_derived_spaces();
-
-    void test_representation_traits();
-
-    void test_validator_traits();
+    void test_integral_covering_invariants();
   };
 }

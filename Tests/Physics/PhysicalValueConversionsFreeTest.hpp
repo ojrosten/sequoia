@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  /*! \brief Conversion between units, which is a coordinate transform on a fixed space and so
+  /** \brief Conversion between units, which is a coordinate transform on a fixed space and so
       independent of whether that space is absolute, affine or vector.
    */
   class physical_value_conversions_free_test final : public free_test

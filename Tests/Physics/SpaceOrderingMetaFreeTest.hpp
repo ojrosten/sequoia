@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-//                Copyright Oliver J. Rosten 2025.                //
+//                Copyright Oliver J. Rosten 2026.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
@@ -17,7 +17,14 @@ import sequoia.test_framework;
 
 namespace sequoia::testing
 {
-  class spaces_meta_free_test final : public free_test
+  /** \brief The order `meta::type_comparator` imposes on the spaces which can appear in a tensor
+      product.
+
+      That order is what makes \f$A \otimes B\f$ and \f$B \otimes A\f$ the same type, so it is
+      the precondition for everything `physical_value_meta_free_test` checks about reduction rather
+      than a part of it.
+   */
+  class space_ordering_meta_free_test final : public free_test
   {
   public:
     using free_test::free_test;
@@ -27,26 +34,8 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    void test_structure_trait();
+    void test_type_comparator();
 
-    void test_set_trait();
-
-    void test_rank_traits();
-
-    void test_origin_and_orthant_traits();
-
-    void test_ring_traits();
-
-    void test_free_module_traits();
-
-    void test_basis_traits();
-
-    void test_spaces_dag();
-
-    void test_derived_spaces();
-
-    void test_representation_traits();
-
-    void test_validator_traits();
+    void test_type_comparator_ordering_laws();
   };
 }

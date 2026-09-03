@@ -2,6 +2,7 @@ CMake Warning \(dev\)(.|\n)*?-Wno-dev to suppress it\.\n\n
 -- Selecting .*\n
 (?=is ).*
 (?=compiler: ).*
+-- Checking whether .*\n
 -- Performing .*\n
 -- Found Threads: .*\n
 \d+\.\d+s

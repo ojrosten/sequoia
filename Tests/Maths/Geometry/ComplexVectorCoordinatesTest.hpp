@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  /*! \brief Coordinates on vector spaces over the complex numbers, including the case of
+  /** \brief Coordinates on vector spaces over the complex numbers, including the case of
       \f$\mathbb{C}\f$ regarded as a two-dimensional space over \f$\mathbb{R}\f$.
    */
   class complex_vector_coordinates_test final : public regular_test
