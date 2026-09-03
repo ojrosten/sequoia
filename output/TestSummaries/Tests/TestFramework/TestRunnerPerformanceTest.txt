@@ -1,11 +1,2 @@
 Test Runner Performance Test
-Standard Top Level Checks:                 8;  Failures:  1  [Deep checks: 36]
-
-Tests/TestFramework/TestRunnerPerformanceTest.cpp, Line 198
-
-[double]
-Obtained : 247
-Predicted: 220 +/- 20
-
-=======================================
-
+Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 36]
