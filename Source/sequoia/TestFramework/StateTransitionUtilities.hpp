@@ -12,7 +12,7 @@
  */
 
 #include "sequoia/Core/Meta/Concepts.hpp"
-#include "sequoia/Core/Object/ErasedFunction.hpp"
+#include "sequoia/Core/Object/CopyableFunction.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
@@ -70,7 +70,7 @@ namespace sequoia::testing
     [[nodiscard]]
     decltype(auto) operator()() const { return m_Fn(); }
   private:
-    object::erased_function<T()> m_Fn;
+    object::copyable_function<T() const> m_Fn;
   };
 
   template<class T, check_ordering CheckOrdering=check_ordering{deep_totally_ordered<T>}>
@@ -78,7 +78,7 @@ namespace sequoia::testing
   {
   public:
     using transition_graph
-      = maths::directed_graph<transition_info<T, object::erased_function<T(const T&)>, CheckOrdering>, object_generator<T>>;
+      = maths::directed_graph<transition_info<T, object::copyable_function<T(const T&) const>, CheckOrdering>, object_generator<T>>;
 
     using size_type = transition_graph::size_type;
 
