@@ -13,7 +13,11 @@
 
 namespace sequoia::testing
 {
-  class absolute_physical_value_test final : public regular_test
+  /*! \brief Quotients of absolute physical values whose representation carries neither bounds
+      nor a validator, together with the coordinates of the inverse spaces division brings into
+      being.
+   */
+  class unsafe_absolute_physical_value_compositions_test final : public regular_test
   {
   public:
     using regular_test::regular_test;
@@ -24,6 +28,6 @@ namespace sequoia::testing
     void run_tests();
   private:
     template<class Quantity>
-    void test_absolute_quantity();
+    void test_compositions();
   };
 }

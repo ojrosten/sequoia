@@ -23,6 +23,7 @@ target_sources(TestChamber PRIVATE
                ${TestDir}/Maths/Geometry/AffineCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp
                ${TestDir}/Maths/Geometry/BoundsFreeTest.cpp
+               ${TestDir}/Maths/Geometry/ComplexVectorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/FreeModuleCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/M_AffineCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/PartialMTorsorCoordinatesTest.cpp
@@ -32,14 +33,18 @@ target_sources(TestChamber PRIVATE
                ${TestDir}/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp
                ${TestDir}/Maths/Geometry/VectorPolarCoordinatesTest.cpp
                ${TestDir}/Physics/AbsolutePhysicalValueTest.cpp
+               ${TestDir}/Physics/AbsolutePhysicalValueCompositionsTest.cpp
                ${TestDir}/Physics/AffinePhysicalValueTest.cpp
                ${TestDir}/Physics/ConvexPhysicalValueTest.cpp
                ${TestDir}/Physics/IntegralPhysicalValueTest.cpp
                ${TestDir}/Physics/MixedPhysicalValueTest.cpp
                ${TestDir}/Physics/PhysicalValueMetaFreeTest.cpp
+               ${TestDir}/Physics/PhysicalValueConversionsFreeTest.cpp
                ${TestDir}/Physics/PhysicalValueTestingDiagnostics.cpp
                ${TestDir}/Physics/UnsafeAbsolutePhysicalValueTest.cpp
+               ${TestDir}/Physics/UnsafeAbsolutePhysicalValueCompositionsTest.cpp
                ${TestDir}/Physics/VectorNonlinearRepresentationsTest.cpp
-               ${TestDir}/Physics/VectorPhysicalValueTest.cpp)
+               ${TestDir}/Physics/VectorPhysicalValueTest.cpp
+               ${TestDir}/Physics/VectorPhysicalValueCompositionsTest.cpp)
 
 sequoia_finalize_self(TestChamber ${TestDir}/Experimental Experimental)

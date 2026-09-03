@@ -9,11 +9,14 @@
 
 /** \file */
 
-#include "PhysicalValueTestingUtilities.hpp"
+#include "GeometryTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  class absolute_physical_value_test final : public regular_test
+  /*! \brief Coordinates on vector spaces over the complex numbers, including the case of
+      \f$\mathbb{C}\f$ regarded as a two-dimensional space over \f$\mathbb{R}\f$.
+   */
+  class complex_vector_coordinates_test final : public regular_test
   {
   public:
     using regular_test::regular_test;
@@ -23,7 +26,12 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    template<class Quantity>
-    void test_absolute_quantity();
+    template<class Set, class Field, std::size_t D, class Rep>
+      requires maths::identifies_as_field_v<Field>
+    void test_vec();
+
+    template<class Set, class Field, class Rep>
+      requires maths::identifies_as_field_v<Field>
+    void test_complex_vec_1_inner_prod();
   };
 }
