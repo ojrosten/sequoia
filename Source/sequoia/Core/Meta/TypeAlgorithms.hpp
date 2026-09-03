@@ -403,6 +403,59 @@ namespace sequoia::meta
   {
   };
 
+  //==================================================== all_of ===================================================//
+
+  template<class T, template<class> class Trait>
+  struct all_of;
+
+  template<class T, template<class> class Trait>
+  inline constexpr bool all_of_v{all_of<T, Trait>::value};
+
+  template<class T, template<class> class Trait>
+  using all_of_t = all_of<T, Trait>::type;
+
+  template<template<class...> class TT, class... Ts, template<class> class Trait>
+  struct all_of<TT<Ts...>, Trait> : std::bool_constant<(Trait<Ts>::value && ...)>
+  {};
+
+  //==================================================== any_of ===================================================//
+
+  template<class T, template<class> class Trait>
+  struct any_of;
+
+  template<class T, template<class> class Trait>
+  inline constexpr bool any_of_v{any_of<T, Trait>::value};
+
+  template<class T, template<class> class Trait>
+  using any_of_t = any_of<T, Trait>::type;
+
+  template<template<class...> class TT, class... Ts, template<class> class Trait>
+  struct any_of<TT<Ts...>, Trait> : std::bool_constant<(Trait<Ts>::value || ...)>
+  {};
+
+  //==================================================== zip ===================================================//
+
+  /*! \brief Pairs two packs element-wise, under a binary template of the caller's choosing.
+
+      `Pair` is explicit rather than defaulted because what a zipped element should *be* is the
+      caller's business: `std::pair` for a value-like pairing, but equally a trait to be evaluated
+      over the pairs, or a template which is never instantiated and serves only to carry the two
+      types. The lists must be of equal length, and of the same template, as they must be for
+      `merge` and `concat`.
+   */
+  template<class T, class U, template<class, class> class Pair>
+  struct zip;
+
+  template<class T, class U, template<class, class> class Pair>
+  using zip_t = zip<T, U, Pair>::type;
+
+  template<template<class...> class TT, class... Ts, class... Us, template<class, class> class Pair>
+    requires (sizeof...(Ts) == sizeof...(Us))
+  struct zip<TT<Ts...>, TT<Us...>, Pair>
+  {
+    using type = TT<Pair<Ts, Us>...>;
+  };
+
   //==================================================== concat ===================================================//
   
   template<class, class>
