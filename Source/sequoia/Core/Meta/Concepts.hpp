@@ -19,16 +19,37 @@
 
 namespace sequoia
 {
-  /// \brief Supplements `std::invocable`.
+  /*! \brief Supplements `std::invocable`, with the same relationship to `R` as
+      `std::is_invocable_r_v`.
+
+      The result must be *convertible* to `R`, not identical to it, which is what the standard's
+      `_r` facilities mean and what any wrapper over a callable needs: a generator returning
+      `const T&` satisfies a signature of `T()`.
+   */
   template <class F, class R, class... Args>
   concept invocable_r =
     requires(F&& f, Args&&... args) {
-      { std::invoke(std::forward<F>(f), std::forward<Args>(args)...) } -> std::same_as<R>;
+      { std::invoke(std::forward<F>(f), std::forward<Args>(args)...) } -> std::convertible_to<R>;
   };
 
   /// \brief Supplements `std::regular_invocable`.
   template <class F, class R, class... Args>
   concept regular_invocable_r = invocable_r<F, R, Args...>;
+
+  /*! \brief `invocable_r`, tightened so that the result is exactly `R`.
+
+      Where a callable is a *source of values* rather than something to be wrapped, conversion is
+      usually the wrong latitude: a maker which returns a reference to a shared object satisfies
+      `invocable_r<T>` and is not what such a facility wants. Every site which predates
+      `invocable_r` acquiring the standard's meaning uses this, so that widening the concept changed
+      no existing behaviour; which of them genuinely need exactness is [[sequoia-roadmap]] item 99.
+   */
+  template <class F, class R, class... Args>
+  concept invocable_exactly_r = invocable_r<F, R, Args...> && std::same_as<std::invoke_result_t<F, Args...>, R>;
+
+  /// \brief `regular_invocable_r`, tightened so that the result is exactly `R`.
+  template <class F, class R, class... Args>
+  concept regular_invocable_exactly_r = invocable_exactly_r<F, R, Args...>;
 
   /// \brief Building block for concepts related to `std::regular` but without the requirement of default constructibility.
   template <class T>

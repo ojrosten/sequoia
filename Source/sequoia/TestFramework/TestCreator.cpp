@@ -87,7 +87,7 @@ namespace sequoia::testing
       throw std::logic_error{"Unrecognized option for nascent_test_flavour"};
     }
 
-    template<std::invocable<fs::path> Amender, invocable_r<fs::path, main_paths> PathGenerator>
+    template<std::invocable<fs::path> Amender, invocable_exactly_r<fs::path, main_paths> PathGenerator>
     void ammend_file(const project_paths& projPaths, Amender f, PathGenerator g)
     {
       f(g(projPaths.main()));
@@ -325,7 +325,7 @@ namespace sequoia::testing
     return std::string{"\""}.append(stringify(outputFile)).append("\"");
   }
 
-  template<invocable_r<std::filesystem::path, std::filesystem::path> WhenAbsent, std::invocable<std::string&> FileTransformer>
+  template<invocable_exactly_r<std::filesystem::path, std::filesystem::path> WhenAbsent, std::invocable<std::string&> FileTransformer>
   void nascent_test_base::finalize(WhenAbsent fn,
                                    const std::vector<std::string>& stubs,
                                    const std::vector<std::string>& constructors,
