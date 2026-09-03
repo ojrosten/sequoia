@@ -123,6 +123,7 @@
 #include "Physics/PhysicalValueConversionsFreeTest.hpp"
 #include "Physics/PhysicalValueMetaFreeTest.hpp"
 #include "Physics/PhysicalValueTestingDiagnostics.hpp"
+#include "Physics/SpaceOrderingMetaFreeTest.hpp"
 #include "Physics/UnsafeAbsolutePhysicalValueCompositionsTest.hpp"
 #include "Physics/UnsafeAbsolutePhysicalValueTest.hpp"
 #include "Physics/VectorNonlinearRepresentationsTest.hpp"

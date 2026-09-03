@@ -38,12 +38,30 @@ namespace sequoia::testing
     using mass_t        = si::mass<float>;
     using d_mass_t      = mass_t::displacement_type;
     using length_t      = si::length<float>;
+    using d_len_t       = length_t::displacement_type;
     using current_t     = si::electrical_current<float>;
     using temperature_t = si::temperature<float>;
 
     using euc_vec_t     = euclidean_1d_vector_quantity<float>;
     using pseudo_mass_t = decltype(mass_t{} * euc_vec_t{});
     using pseudo_len_t  = decltype(length_t{} * euc_vec_t{});
+
+    /** Multiplication must be commutative in the type as well as the value. These are the only
+        products here which multiply the inverse of an increment by a space of a different kind,
+        the case in which the canonical order is settled by the formations rather than by the
+        names.
+     */
+    STATIC_CHECK(std::same_as<decltype((1.0f / d_mass_t{}) * (1.0f / length_t{})),
+                              decltype((1.0f / length_t{}) * (1.0f / d_mass_t{}))>);
+    STATIC_CHECK(std::same_as<decltype((1.0f / d_len_t{})  * d_mass_t{}),
+                              decltype(d_mass_t{} * (1.0f / d_len_t{}))>);
+
+    check(
+      equality,
+      "The inverse of a mass increment times the inverse of a length, either way round",
+      (1.0f / d_mass_t{2.0, kilogram}) * (1.0f / length_t{4.0, metre}),
+      (1.0f / length_t{4.0, metre}) * (1.0f / d_mass_t{2.0, kilogram})
+    );
 
     auto ml = mass_t{1.0, kilogram} * length_t{2.0, metre},
          lm = length_t{2.0, metre} * mass_t{1.0, kilogram};

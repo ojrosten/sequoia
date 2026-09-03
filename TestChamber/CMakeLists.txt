@@ -39,6 +39,7 @@ target_sources(TestChamber PRIVATE
                ${TestDir}/Physics/PhysicalValueConversionsFreeTest.cpp
                ${TestDir}/Physics/PhysicalValueMetaFreeTest.cpp
                ${TestDir}/Physics/PhysicalValueTestingDiagnostics.cpp
+               ${TestDir}/Physics/SpaceOrderingMetaFreeTest.cpp
                ${TestDir}/Physics/UnsafeAbsolutePhysicalValueCompositionsTest.cpp
                ${TestDir}/Physics/UnsafeAbsolutePhysicalValueTest.cpp
                ${TestDir}/Physics/VectorNonlinearRepresentationsTest.cpp

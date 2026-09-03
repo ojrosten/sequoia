@@ -438,6 +438,7 @@ int main(int argc, char** argv)
 
     runner.add_test_suite(
       "Physical Values",
+      space_ordering_meta_free_test{"Space Ordering Meta Free Test"},
       physical_value_meta_free_test{"Physical Value Meta Free Test"},
       physical_value_false_negative_test{"False Negative Test"},
       physical_value_conversions_free_test{"Physical Value Conversions Free Test"},
