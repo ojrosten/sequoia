@@ -23,12 +23,6 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    void test_arithmetic_traits();
-
-    void test_coverings();
-
-    void test_integral_covering_invariants();
-
     void test_structure_trait();
 
     void test_set_trait();
@@ -38,8 +32,6 @@ namespace sequoia::testing
     void test_origin_and_orthant_traits();
 
     void test_ring_traits();
-
-    void test_commutative_rings();
 
     void test_free_module_traits();
 

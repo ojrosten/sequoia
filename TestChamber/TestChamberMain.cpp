@@ -36,6 +36,7 @@ int main(int argc, char** argv)
       "Geometry",
       suite{
         "Spaces",        
+        numeric_rings_meta_free_test{"Numeric Rings Meta Free Test"},
         spaces_meta_free_test{"Spaces Meta Free Test"}
       },
       suite{
