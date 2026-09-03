@@ -76,6 +76,13 @@ namespace sequoia::object
         difference is load-bearing: `invocable_r` demands `std::same_as<..., R>`, whereas a wrapper
         must accept a target whose result is merely *convertible* to `R`. A generator returning
         `const T&` for a signature of `T()` is exactly that case, and `invocable_r` would reject it.
+        A `void` signature is the same rule at its limit, admitting any result and discarding it.
+
+        `resolve_to_copy_v` excludes the wrapper's own type, as the standard's specification of this
+        constructor does. A `copyable_function` is itself a valid target, so without it this
+        template would be a candidate for copying and moving one; the non-template constructors win
+        that tiebreaker regardless, which is why removing the clause breaks no test - it states the
+        intent rather than repairing an overload.
      */
     template<class Fn>
       requires (!resolve_to_copy_v<copyable_function, Fn>) && std::is_invocable_r_v<R, const Fn&, Args...>
@@ -120,6 +127,10 @@ namespace sequoia::object
      */
     friend void swap(copyable_function& lhs, copyable_function& rhs) noexcept
     {
+      // Without this, a self-swap moves the target out of the buffer and then straight back out of
+      // the buffer it has just vacated.
+      if(&lhs == &rhs) return;
+
       alignas(std::max_align_t) std::byte tmp[buffer_size];
       const auto lv{lhs.m_Vtable}, rv{rhs.m_Vtable};
       if(lv) lv->manage(op::move, tmp, lhs.m_Buffer);
@@ -154,18 +165,25 @@ namespace sequoia::object
       void (*manage)(op, std::byte*, const std::byte*);
     };
 
-    /** Where the target lives is decided by `if constexpr` **in place**, and the branches repeat
-        the expression rather than sharing a helper. Every helper here would be another entity
-        carrying `Fn` in its name - a member function template obviously so, but at `-O0` a lambda
-        too, which nothing inlines away. Measured on `TestAll` under asan: writing the two casts
+    /** Where the target lives is decided by `if constexpr` **in place**, and the manager's branches
+        repeat their expressions rather than sharing a helper. Every helper here would be another
+        entity carrying `Fn` in its name - a member function template obviously so, but at `-O0` a
+        lambda too, which nothing inlines away. Measured on `TestAll` under asan: writing the casts
         through lambdas instead cost **61,281 symbols and 20.5 MB**, 613.1 against 592.6. The
-        duplication below is much the cheaper of the two.
+        duplication below is much the cheaper of the two; a local variable, which carries no name
+        into the symbol table, is cheaper still where one will serve.
      */
     template<class Fn>
     constexpr static vtable vtable_for{
       [](const std::byte* b, Args&&... args) -> R {
-        if constexpr(fits<Fn>) return (*reinterpret_cast<const Fn*>(b))(std::forward<Args>(args)...);
-        else                   return (**reinterpret_cast<const Fn* const*>(b))(std::forward<Args>(args)...);
+        const Fn* target{};
+        if constexpr(fits<Fn>) target = reinterpret_cast<const Fn*>(b);
+        else                   target = *reinterpret_cast<const Fn* const*>(b);
+
+        // A void signature discards whatever the target returns, exactly as `std::is_invocable_r_v`
+        // - and so the constructor's constraint - already promises it may.
+        if constexpr(std::is_void_v<R>)        (*target)(std::forward<Args>(args)...);
+        else                            return (*target)(std::forward<Args>(args)...);
       },
       [](op o, std::byte* to, const std::byte* from) {
         switch(o)
