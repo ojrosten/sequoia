@@ -30,8 +30,8 @@
       "hidden": true,
       "generator": "Ninja",
       "cacheVariables": {
-        "CMAKE_CXX_FLAGS": "$env{CXX_ASAN_FLAGS} $env{CXX_COVERAGE_FLAGS} $env{CXX_COLOUR_FLAGS}",
-        "CMAKE_EXE_LINKER_FLAGS": "$env{LINKER_ASAN_FLAGS} $env{LINKER_COVERAGE_FLAGS}"
+        "CMAKE_CXX_FLAGS": "$env{CXX_ASAN_FLAGS} $env{CXX_UBSAN_FLAGS} $env{CXX_COVERAGE_FLAGS} $env{CXX_COLOUR_FLAGS}",
+        "CMAKE_EXE_LINKER_FLAGS": "$env{LINKER_ASAN_FLAGS} $env{LINKER_UBSAN_FLAGS} $env{LINKER_COVERAGE_FLAGS}"
       },
       "warnings": {
         "unusedCli": false
@@ -44,6 +44,14 @@
       "environment": {
           "CXX_ASAN_FLAGS": "-fsanitize=address",
           "LINKER_ASAN_FLAGS": "-fsanitize=address"
+      }
+    },
+    {
+      "name": "base-ubsan-unix",
+      "hidden": true,
+      "environment": {
+          "CXX_UBSAN_FLAGS": "-fsanitize=undefined -fno-sanitize-recover=undefined",
+          "LINKER_UBSAN_FLAGS": "-fsanitize=undefined"
       }
     },
     {
@@ -158,6 +166,12 @@
       "displayName": "macOS Homebrew LLVM [Release, asan]",
       "description": "Configure for ${displayName}",
       "inherits": ["macos-homebrew-llvm-release", "base-asan-unix"]
+    },
+    {
+      "name": "macos-homebrew-llvm-ubsan",
+      "displayName": "macOS Homebrew LLVM [Debug, ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["macos-homebrew-llvm", "base-ubsan-unix"]
     },
     {
       "name": "macos-homebrew-gcc",
@@ -364,6 +378,17 @@
       "inherits": ["linux-gcc-release-asan", "base-run"]
     },
     {
+      "name": "macos-homebrew-llvm-ubsan",
+      "displayName": "macOS Homebrew LLVM [Debug, ubsan]",
+      "configurePreset": "macos-homebrew-llvm-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-llvm-ubsan",
+      "displayName": "Run macOS Homebrew LLVM [Debug, ubsan]",
+      "inherits": ["macos-homebrew-llvm-ubsan", "base-run"]
+    },
+    {
       "name": "macos-homebrew-gcc",
       "displayName": "macOS Homebrew GCC [Debug]",
       "configurePreset": "macos-homebrew-gcc",
@@ -486,6 +511,19 @@
     }
   ],
   "workflowPresets": [
+    {
+      "name": "macos-homebrew-llvm-ubsan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos-homebrew-llvm-ubsan"
+        },
+        {
+          "type": "build",
+          "name": "run-macos-homebrew-llvm-ubsan"
+        }
+      ]
+    },
     {
       "name": "macos-homebrew-gcc",
       "steps": [
