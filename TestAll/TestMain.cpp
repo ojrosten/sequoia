@@ -407,6 +407,7 @@ int main(int argc, char** argv)
         "Vector Coordinates",
         vector_coordinates_false_negative_test{"Vector Coordinates False negative Test"},
         vector_coordinates_test{"Vector Coordinates Test"},
+        complex_vector_coordinates_test{"Complex Vector Coordinates Test"},
         vector_polar_coordinates_test{"Vector Polar Coordinates Test"}
       },
       suite{
@@ -438,11 +439,15 @@ int main(int argc, char** argv)
       "Physical Values",
       physical_value_meta_free_test{"Physical Value Meta Free Test"},
       physical_value_false_negative_test{"False Negative Test"},
+      physical_value_conversions_free_test{"Physical Value Conversions Free Test"},
       absolute_physical_value_test{"Absolute Physical Value Test"},
+      absolute_physical_value_compositions_test{"Absolute Physical Value Compositions Test"},
       unsafe_absolute_physical_value_test{"Unsafe Absolute Physical Value Test"},
+      unsafe_absolute_physical_value_compositions_test{"Unsafe Absolute Physical Value Compositions Test"},
       affine_physical_value_test{"Affine Physical Value Test"},
       convex_physical_value_test{"Convex Physical Value Test"},
       vector_physical_value_test{"Vector Physical Value Test"},
+      vector_physical_value_compositions_test{"Vector Physical Value Compositions Test"},
       mixed_physical_value_test{"Mixed Physical Value Test"},
       integral_physical_value_test{"Integral Physical Value Test"}
     );

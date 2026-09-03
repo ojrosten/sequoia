@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class absolute_physical_value_test final : public regular_test
+  class absolute_physical_value_compositions_test final : public regular_test
   {
   public:
     using regular_test::regular_test;
@@ -24,6 +24,6 @@ namespace sequoia::testing
     void run_tests();
   private:
     template<class Quantity>
-    void test_absolute_quantity();
+    void test_compositions();
   };
 }

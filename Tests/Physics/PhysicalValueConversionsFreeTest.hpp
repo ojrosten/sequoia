@@ -13,17 +13,26 @@
 
 namespace sequoia::testing
 {
-  class absolute_physical_value_test final : public regular_test
+  /*! \brief Conversion between units, which is a coordinate transform on a fixed space and so
+      independent of whether that space is absolute, affine or vector.
+   */
+  class physical_value_conversions_free_test final : public free_test
   {
   public:
-    using regular_test::regular_test;
+    using free_test::free_test;
 
     [[nodiscard]]
     std::filesystem::path source_file() const;
 
     void run_tests();
   private:
-    template<class Quantity>
-    void test_absolute_quantity();
+    void test_mass_conversions();
+
+    void test_length_conversions();
+
+    void test_area_conversions();
+
+    template<std::floating_point T>
+    void test_angle_conversions();
   };
 }

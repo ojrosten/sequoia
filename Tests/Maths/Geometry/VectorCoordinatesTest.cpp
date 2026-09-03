@@ -9,8 +9,6 @@
 
 #include "VectorCoordinatesTest.hpp"
 
-#include <complex>
-
 namespace sequoia::testing
 {
   using namespace maths;
@@ -65,14 +63,9 @@ namespace sequoia::testing
     using namespace commutative_rings;
     test_vec<sets::R<1>, reals<1> , 1, float>();
     test_vec<sets::R<1>, reals<1> , 1, double>();
-    test_vec<sets::C<1>, complexes, 1, std::complex<float>>();
-
     test_vec<sets::R<2>, reals<1> , 2, float>();
-    test_vec<sets::C<2>, complexes, 2, std::complex<double>>();
-    test_vec<sets::C<1>, reals<1> , 2, double>(); // Complex numbers over the reals
 
-    test_real_vec_1_inner_prod   <sets::R<1>, reals<1>, float>();
-    test_complex_vec_1_inner_prod<sets::C<1>, complexes, std::complex<double>>();
+    test_real_vec_1_inner_prod<sets::R<1>, reals<1>, float>();
   }
 
   template<class Set, class Field, std::size_t D, class Rep>
@@ -121,19 +114,5 @@ namespace sequoia::testing
     check(equality, "", inner_product(vec_t{value_t(1)} , vec_t{value_t(-1)}), value_t{-1});
     check(equality, "", inner_product(vec_t{value_t(1)} , vec_t{value_t(1)}) , value_t{1});
     check(equality, "", inner_product(vec_t{value_t(-7)}, vec_t{value_t(42)}), value_t{-294});
-  }
-
-  template<class Set, class Field, class Rep>
-      requires maths::identifies_as_field_v<Field>
-  void vector_coordinates_test::test_complex_vec_1_inner_prod()
-  {
-    using space_t      = my_vec_space<Set, Field, 1>;
-    using basis_data_t = canonical_basis_data<1>;
-    using rep_t        = canonical_representation<Rep, no_bounds<to_bounds_value_type_t<Rep>>>;
-    using vec_t        = vector_coordinates<space_t, basis_data_t, rep_t, identity_validator>;
-    using value_t      = Rep;
-
-    check(equality, "", inner_product(vec_t{value_t(1, 1)} , vec_t{value_t(1, 1)}), value_t{2});
-    check(equality, "", inner_product(vec_t{value_t(1, -1)}, vec_t{value_t(1, 1)}), value_t{0, 2});
   }
 }
