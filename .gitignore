@@ -24,3 +24,6 @@ out
 #ignore various coverage files
 *.func.html
 *.func-c.html
+
+#ignore python bytecode caches, which the scripts leave beside themselves
+__pycache__/

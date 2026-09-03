@@ -23,6 +23,7 @@ target_sources(TestChamber PRIVATE
                ${TestDir}/Maths/Geometry/ComplexVectorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/FreeModuleCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/M_AffineCoordinatesTest.cpp
+               ${TestDir}/Maths/Geometry/NumericRingsMetaFreeTest.cpp
                ${TestDir}/Maths/Geometry/PartialMTorsorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/SpacesMetaFreeTest.cpp
                ${TestDir}/Maths/Geometry/ValidatorsFreeTest.cpp
@@ -38,6 +39,7 @@ target_sources(TestChamber PRIVATE
                ${TestDir}/Physics/PhysicalValueConversionsFreeTest.cpp
                ${TestDir}/Physics/PhysicalValueMetaFreeTest.cpp
                ${TestDir}/Physics/PhysicalValueTestingDiagnostics.cpp
+               ${TestDir}/Physics/SpaceOrderingMetaFreeTest.cpp
                ${TestDir}/Physics/UnsafeAbsolutePhysicalValueCompositionsTest.cpp
                ${TestDir}/Physics/UnsafeAbsolutePhysicalValueTest.cpp
                ${TestDir}/Physics/VectorNonlinearRepresentationsTest.cpp

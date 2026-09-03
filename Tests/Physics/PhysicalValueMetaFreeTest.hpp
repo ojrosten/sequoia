@@ -25,8 +25,6 @@ namespace sequoia::testing
 
     void test_defines_physical_value();
 
-    void test_type_comparator();
-
     void test_space_properties();
 
     void test_count_and_combine();

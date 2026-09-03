@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  /*! \brief Products and quotients of vector-valued physical values, together with the
+  /** \brief Products and quotients of vector-valued physical values, together with the
       coordinates of the inverse spaces which division brings into being.
    */
   class vector_physical_value_compositions_test final : public regular_test

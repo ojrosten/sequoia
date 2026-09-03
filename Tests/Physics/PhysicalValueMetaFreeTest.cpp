@@ -37,6 +37,7 @@ namespace sequoia::testing
     using delta_len_space_t  = associated_displacement_space<length_space_t>;
     using delta_abs_temp_space_t = associated_displacement_space<abs_temp_space_t>;
     using delta_time_space_t = associated_displacement_space<time_space_t>;
+
   }
 
   [[nodiscard]]
@@ -48,7 +49,6 @@ namespace sequoia::testing
   void physical_value_meta_free_test::run_tests()
   {
     test_defines_physical_value();
-    test_type_comparator();
     test_space_properties();
     test_count_and_combine();
     test_reduce();
@@ -66,26 +66,6 @@ namespace sequoia::testing
   {
     STATIC_CHECK(!defines_physical_value_v<int, int, int, int, int, int>);
     STATIC_CHECK(!defines_physical_value_v<mass_space_t, int, int, int, int, int>);
-  }
-
-  void physical_value_meta_free_test::test_type_comparator()
-  {
-    STATIC_CHECK(meta::type_comparator_v<mass_space_t, dual<mass_space_t>>);
-    STATIC_CHECK(!meta::type_comparator_v<dual<mass_space_t>, mass_space_t>);
-    STATIC_CHECK(meta::type_comparator_v<mass_space_t, delta_mass_space_t>);
-    STATIC_CHECK(!meta::type_comparator_v<delta_mass_space_t, mass_space_t>);
-    STATIC_CHECK(meta::type_comparator_v<mass_space_t, dual<delta_mass_space_t>>);
-    STATIC_CHECK(!meta::type_comparator_v<dual<delta_mass_space_t>, mass_space_t>);
-
-    STATIC_CHECK(meta::type_comparator_v<delta_mass_space_t, dual<mass_space_t>>);
-    STATIC_CHECK(!meta::type_comparator_v<dual<mass_space_t>, delta_mass_space_t>);    
-    STATIC_CHECK(meta::type_comparator_v<delta_mass_space_t, dual<delta_mass_space_t>>);
-    STATIC_CHECK(!meta::type_comparator_v<dual<delta_mass_space_t>, delta_mass_space_t>);
-    STATIC_CHECK(meta::type_comparator_v<dual<mass_space_t>, dual<delta_mass_space_t>>);
-    STATIC_CHECK(!meta::type_comparator_v<dual<delta_mass_space_t>, dual<mass_space_t>>);
-
-    STATIC_CHECK(meta::type_comparator_v<delta_mass_space_t, dual<delta_mass_space_t>>);
-    STATIC_CHECK(!meta::type_comparator_v<dual<delta_mass_space_t>, delta_mass_space_t>);
   }
 
   void physical_value_meta_free_test::test_space_properties()
@@ -254,6 +234,20 @@ namespace sequoia::testing
 
     STATIC_CHECK(std::is_same_v<reduction_t<tensor_product<euc_half_space_t, length_space_t>>,
                                   reduction<tensor_product<length_space_t>>>);
+
+    /** The cross-space pairs in which both spaces are formed, and formed differently: the cases
+        where the comparison is settled neither by a common provenance nor by an obvious difference
+        in kind. Stated as an equality between a product and its reverse, which is the property the
+        sorting exists to supply.
+     */
+    STATIC_CHECK(std::is_same_v<reduction_t<tensor_product<dual<delta_len_space_t>, delta_mass_space_t>>,
+                                reduction_t<tensor_product<delta_mass_space_t, dual<delta_len_space_t>>>>);
+
+    STATIC_CHECK(std::is_same_v<reduction_t<tensor_product<dual<delta_len_space_t>, dual<mass_space_t>>>,
+                                reduction_t<tensor_product<dual<mass_space_t>, dual<delta_len_space_t>>>>);
+
+    STATIC_CHECK(std::is_same_v<reduction_t<tensor_product<dual<length_space_t>, dual<delta_mass_space_t>>>,
+                                reduction_t<tensor_product<dual<delta_mass_space_t>, dual<length_space_t>>>>);
 
     STATIC_CHECK(std::is_same_v<reduction_t<tensor_product<euc_half_space_t, euc_half_space_t>>,
                                   reduction<tensor_product<euc_half_space_t>>>);

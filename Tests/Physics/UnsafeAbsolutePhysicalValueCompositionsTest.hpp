@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  /*! \brief Quotients of absolute physical values whose representation carries neither bounds
+  /** \brief Quotients of absolute physical values whose representation carries neither bounds
       nor a validator, together with the coordinates of the inverse spaces division brings into
       being.
    */

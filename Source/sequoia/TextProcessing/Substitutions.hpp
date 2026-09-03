@@ -26,7 +26,7 @@ namespace sequoia
     }
   };
 
-  template<invocable_r<char, char> OnUpper=char_to_char>
+  template<invocable_exactly_r<char, char> OnUpper=char_to_char>
   std::string& camel_to_words(std::string& text, std::string_view separator = " ", OnUpper onUpper = OnUpper{})
   {
     auto i{text.begin()};
@@ -49,7 +49,7 @@ namespace sequoia
     return text;
   }
 
-  template<invocable_r<char, char> OnUpper = char_to_char>
+  template<invocable_exactly_r<char, char> OnUpper = char_to_char>
   [[nodiscard]]
   std::string camel_to_words(std::string_view text, std::string_view separator = " ", OnUpper onUpper = OnUpper{})
   {
@@ -120,7 +120,7 @@ namespace sequoia
   [[nodiscard]]
   std::string replace_all(std::string_view text, std::string_view anyOfLeft, std::string_view from, std::string_view anyOfRight, std::string_view to);
 
-  template<invocable_r<bool, char> LeftPred, invocable_r<bool, char> RightPred>
+  template<invocable_exactly_r<bool, char> LeftPred, invocable_exactly_r<bool, char> RightPred>
   std::string& replace_all(std::string& text, LeftPred lPred, std::string_view from, RightPred rPred, std::string_view to)
   {
     constexpr auto npos{std::string::npos};
@@ -144,7 +144,7 @@ namespace sequoia
     return text;
   }
 
-  template<invocable_r<bool, char> LeftPred, invocable_r<bool, char> RightPred>
+  template<invocable_exactly_r<bool, char> LeftPred, invocable_exactly_r<bool, char> RightPred>
   [[nodiscard]]
   std::string replace_all(std::string_view text, LeftPred lPred, std::string_view from, RightPred rPred, std::string_view to)
   {

@@ -21,18 +21,18 @@ namespace sequoia::testing
 {
   enum class check_ordering : bool {no, yes};
   
-  template<class T, invocable_r<T, const T&> TransitionFn>
+  template<class T, invocable_exactly_r<T, const T&> TransitionFn>
   struct transition_info_base
   {
     std::string description;
     TransitionFn fn;
   };
 
-  template<class T, invocable_r<T, const T&> TransitionFn, check_ordering=check_ordering{deep_totally_ordered<T>}>
+  template<class T, invocable_exactly_r<T, const T&> TransitionFn, check_ordering=check_ordering{deep_totally_ordered<T>}>
   struct transition_info : transition_info_base<T, TransitionFn>
   {};
 
-  template<deep_totally_ordered T, invocable_r<T, const T&> TransitionFn>
+  template<deep_totally_ordered T, invocable_exactly_r<T, const T&> TransitionFn>
   struct transition_info<T, TransitionFn, check_ordering::yes> : transition_info_base<T, TransitionFn>
   {
     std::weak_ordering ordering;

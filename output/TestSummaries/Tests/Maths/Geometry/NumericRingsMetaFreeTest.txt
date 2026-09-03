@@ -1,0 +1,2 @@
+Numeric Rings Meta Free Test
+Standard Top Level Checks:               384;  Failures:  0  [Deep checks: 384]

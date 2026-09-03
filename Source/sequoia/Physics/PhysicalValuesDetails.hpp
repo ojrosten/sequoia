@@ -19,18 +19,6 @@ namespace sequoia::physics
   template<class Space>
   struct associated_displacement_space;
 
-  template<class Space>
-  struct is_associated_displacement_space : std::false_type {};
-
-  template<class Space>
-  struct is_associated_displacement_space<associated_displacement_space<Space>> : std::true_type {};
-
-  template<class Space>
-  using is_associated_displacement_space_t = is_associated_displacement_space<Space>::type;
-
-  template<class Space>
-  inline constexpr bool is_associated_displacement_space_v{is_associated_displacement_space<Space>::value};
-
   template<class T>
   inline constexpr bool identifies_as_unit_v{
     requires {
@@ -57,103 +45,84 @@ namespace sequoia::physics
   struct no_unit_t;
 }
 
+namespace sequoia::physics
+{
+  /** \brief The manner in which a space is formed from its provenance, in the order in which
+      spaces of a common provenance are sorted.
+
+      A space appears in a tensor product either bare, as the displacement space associated with a
+      point space, as a dual, or as the dual of a displacement space. Ordering the formations is
+      half of ordering the spaces; the other half is the name of the provenance itself.
+   */
+  enum class space_formation : std::size_t { itself, displacement, dual, dual_displacement };
+
+  /** \brief Primary class template decomposing a space into the space it is formed from and the
+      manner of its formation.
+
+      `provenance_of_t` is not to be confused with `maths::to_base_space_t`, which is a
+      different question with a similar shape: that one asks what a space reduces *to* when a
+      product is formed, and answers for composites; this one strips a space back to the one it is
+      formed from.
+   */
+  template<class Space>
+  struct provenance_of
+  {
+    using type = Space;
+    constexpr static space_formation formation{space_formation::itself};
+  };
+
+  template<class Space>
+  struct provenance_of<associated_displacement_space<Space>>
+  {
+    using type = Space;
+    constexpr static space_formation formation{space_formation::displacement};
+  };
+
+  template<class Space>
+  struct provenance_of<dual<Space>>
+  {
+    using type = Space;
+    constexpr static space_formation formation{space_formation::dual};
+  };
+
+  template<class Space>
+  struct provenance_of<dual<associated_displacement_space<Space>>>
+  {
+    using type = Space;
+    constexpr static space_formation formation{space_formation::dual_displacement};
+  };
+  
+  template<class Space>
+  using provenance_of_t = provenance_of<Space>::type;
+
+  template<class Space>
+  inline constexpr space_formation formation_of_v{provenance_of<Space>::formation};
+
+  template<class Space>
+  inline constexpr bool is_formed_space_v{!std::is_same_v<Space, provenance_of_t<Space>>};
+}
+
 namespace sequoia::meta
 {
+  /** \brief Orders spaces formed from a common space by their provenance, and spaces formed from
+      different ones by the space they are formed from.
+
+      Sorting a tensor product is what makes \f$A \otimes B\f$ and \f$B \otimes A\f$ the same
+      type, so the comparator must be a strict weak ordering over every space which can appear in
+      one. Deriving both halves of the comparison from `provenance_of` supplies that by
+      construction: the provenances are totally ordered because `type_name` is, and the formations
+      are totally ordered because `space_formation` is an enumeration. Ordering the two
+      independently is what makes the comparison total - a pair left unordered would leave the
+      canonical form of a product dependent on the order in which it was written.
+   */
   template<class T, class U>
-    requires (!std::is_same_v<T, U>)
-  struct type_comparator<maths::dual<T>, U> : std::bool_constant<type_name<T>() < type_name<U>()>
-  {};
-
-  template<class T, class U>
-    requires (!std::is_same_v<T, U>) && (!physics::is_associated_displacement_space_v<T>) && (!physics::is_associated_displacement_space_v<U>)
-  struct type_comparator<T, maths::dual<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
-  {};
-
-  template<class T, class U>
-  struct type_comparator<maths::dual<T>, maths::dual<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
-  {};
-
-  template<class T, class U>    
-    requires (!maths::is_dual_v<U>)
-  struct type_comparator<physics::associated_displacement_space<T>, U> : std::bool_constant<type_name<T>() < type_name<U>()>
-  {};
-
-  template<class T, class U>
-    requires (!maths::is_dual_v<T>)
-  struct type_comparator<T, physics::associated_displacement_space<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
-  {};
-
-  template<class T, class U>
-    requires (!std::is_same_v<physics::associated_displacement_space<T>, U>) && (!physics::is_associated_displacement_space_v<U>)
-  struct type_comparator<physics::associated_displacement_space<T>, maths::dual<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
-  {};
-
-  template<class T, class U>
-    requires (!std::is_same_v<T, physics::associated_displacement_space<U>>)
-  struct type_comparator<maths::dual<T>, physics::associated_displacement_space<U>> : std::bool_constant<type_name<T>() < type_name<U>()>
-  {};
-
-  template<class T, class U>
-    requires (!std::is_same_v<physics::associated_displacement_space<T>, U>)
-  struct type_comparator<maths::dual<physics::associated_displacement_space<T>>, U>
-  : std::bool_constant<type_name<T>() < type_name<U>()>
-  {};
-
-  template<class T, class U>
-    requires (!std::is_same_v<T, physics::associated_displacement_space<U>>) && (!physics::is_associated_displacement_space_v<T>)
-  struct type_comparator<T, maths::dual<physics::associated_displacement_space<U>>>
-  : std::bool_constant<type_name<T>() < type_name<U>()>
-  {};
-
-  template<class T, class U>
-  struct type_comparator<physics::associated_displacement_space<T>, physics::associated_displacement_space<U>>
-    : std::bool_constant<type_name<T>() < type_name<U>()>
-  {};
-
-  template<class T, class U>
-  struct type_comparator<maths::dual<physics::associated_displacement_space<T>>, maths::dual<physics::associated_displacement_space<U>>>
-    : std::bool_constant<type_name<T>() < type_name<U>()>
-  {};
-
-  // Ordering is T, associated_displacement_space<T>, dual<T>, dual<associated_displacement_space<T>>
-  template<class T>
-  struct type_comparator<T, maths::dual<T>> : std::true_type
-  {};
-
-  template<class T>
-  struct type_comparator<maths::dual<T>, T> : std::false_type
-  {};
-
-  template<class T>
-  struct type_comparator<T, physics::associated_displacement_space<T>> : std::true_type
-  {};
-
-  template<class T>
-  struct type_comparator<physics::associated_displacement_space<T>, T> : std::false_type
-  {};
-    
-  template<class T>
-  struct type_comparator<T, maths::dual<physics::associated_displacement_space<T>>> : std::true_type
-  {};
-
-  template<class T>
-  struct type_comparator<maths::dual<physics::associated_displacement_space<T>>, T> : std::false_type
-  {};
-    
-  template<class T>
-  struct type_comparator<physics::associated_displacement_space<T>, maths::dual<T>> : std::true_type
-  {};
-
-  template<class T>
-  struct type_comparator<maths::dual<T>, physics::associated_displacement_space<T>> : std::false_type
-  {};
-
-  template<class T>
-  struct type_comparator<maths::dual<T>, maths::dual<physics::associated_displacement_space<T>>> : std::true_type
-  {};
-
-  template<class T>
-  struct type_comparator<maths::dual<physics::associated_displacement_space<T>>, maths::dual<T>> : std::false_type
+    requires (physics::is_formed_space_v<T> || physics::is_formed_space_v<U>)
+  struct type_comparator<T, U>
+    : std::bool_constant<
+           std::is_same_v<physics::provenance_of_t<T>, physics::provenance_of_t<U>>
+        ? (physics::formation_of_v<T> < physics::formation_of_v<U>)
+        : (type_name<physics::provenance_of_t<T>>() < type_name<physics::provenance_of_t<U>>())
+      >
   {};
 }
 
