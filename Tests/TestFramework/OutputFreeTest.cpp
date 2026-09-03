@@ -10,8 +10,6 @@
 #include "OutputFreeTest.hpp"
 #include "sequoia/TestFramework/Output.hpp"
 
-#include "print"
-
 namespace sequoia::testing
 {
   using namespace std::string_literals;

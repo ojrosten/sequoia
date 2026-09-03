@@ -30,7 +30,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string run_cmd()
     {
-      return with_msvc_v ? "TestAll.exe" : "./TestAll";
+      return with_msvc_v ? ".\\TestAll.exe" : "./TestAll";
     }
 
     [[nodiscard]]
@@ -181,20 +181,6 @@ namespace sequoia::testing
     check(append_lines(description, "Build output existance"), fs::exists(b.get_main_paths().dir() / BuildOutput));
   }
 
-  void test_runner_end_to_end_test::check_project_files(std::string_view description, const cmd_builder& b)
-  {
-    if constexpr(with_msvc_v)
-    {
-      const std::filesystem::path subdirs{"ProjectFiles" / back(get_project_paths().build().cmake_cache_dir())};
-      fs::create_directories(working_materials() /= subdirs);
-
-      const auto projFile{b.cmake_cache_dir() / "TestAll.vcxproj"};
-      fs::copy(projFile, working_materials() /= subdirs);
-
-      check(equivalence, description, working_materials() /= subdirs, predictive_materials() /= subdirs);
-    }
-  }
-
   void test_runner_end_to_end_test::run_tests()
   {
     test_project_creation();
@@ -235,7 +221,6 @@ namespace sequoia::testing
     fs::copy(generated_project() / "GenerationOutput.txt", working_materials() /= "InitOutput");
     check(equivalence, "", working_materials() /= "InitOutput", predictive_materials() /= "InitOutput");
 
-    check_project_files(report("Project Files"), b);
 
     //=================== Run the test executable ===================//
 

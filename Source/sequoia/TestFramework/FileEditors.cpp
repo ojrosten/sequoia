@@ -46,10 +46,18 @@ namespace sequoia::testing
           }
         }
 
+        // Standard headers first.  Cosmetic today; load-bearing the moment the
+        // modules migration lands, because a quoted include here names a test
+        // header and a test header will import the framework.  A textual
+        // #include *after* an import re-parses whatever the module carried in
+        // its global module fragment - the include guards were consumed in the
+        // module's preprocessing context, not this one - and everything those
+        // headers define is then defined twice.  Angled before quoted keeps
+        // every textual include ahead of the first import.
         std::ranges::sort(entries, [](const std::string& lhs, const std::string& rhs) {
-            auto lAnglePos{lhs.find('<')}, rAnglePos{rhs.find('>')};
-            if((lAnglePos < npos) && (rAnglePos == npos)) return false;
-            if((lAnglePos == npos) && (rAnglePos < npos)) return true;
+            const auto lAnglePos{lhs.find('<')}, rAnglePos{rhs.find('<')};
+            if((lAnglePos < npos) && (rAnglePos == npos)) return true;
+            if((lAnglePos == npos) && (rAnglePos < npos)) return false;
 
             return lhs < rhs;
           });
@@ -68,7 +76,26 @@ namespace sequoia::testing
         }
         else
         {
-          text.insert(endBlock, sorted);
+          // Nothing to extend.  Anchor on the first import rather than on endBlock:
+          // with no #include anywhere in the file, rfind yields npos and endBlock
+          // degenerates to text.size(), which appends the block after main() and
+          // leaves whatever the header declares undeclared at every point of use.
+          // The ordering above says includes belong ahead of the first import, and
+          // that is where they go when there is no block to join.
+          constexpr std::string_view importDecl{"import "};
+          const auto firstImportPos{
+            [&text, importDecl]() {
+              if(text.starts_with(importDecl)) return std::string::size_type{};
+
+              const auto pos{text.find(std::string{'\n'}.append(importDecl))};
+              return pos == npos ? npos : pos + 1;
+            }()
+          };
+
+          if(firstImportPos < npos)
+            text.insert(firstImportPos, std::string{sorted}.append("\n"));
+          else
+            text.insert(endBlock, sorted);
         }
       }
     };

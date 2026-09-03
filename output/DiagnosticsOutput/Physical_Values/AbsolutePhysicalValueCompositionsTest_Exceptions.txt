@@ -1,0 +1,54 @@
+Tests/Physics/AbsolutePhysicalValueCompositionsTest.cpp, Line 86
+Attempting to make negative quantity
+
+Expected Exception Type:
+[std::domain_error]
+Input -1 outside permitted domain [0, inf]
+
+=======================================
+
+Tests/Physics/AbsolutePhysicalValueCompositionsTest.cpp, Line 95
+Attempting to shift quantity negative
+
+Expected Exception Type:
+[std::domain_error]
+Input [-1] has at least one value outside permitted domain [0, inf]
+
+=======================================
+
+Tests/Physics/AbsolutePhysicalValueCompositionsTest.cpp, Line 226
+Negative quantity
+
+Expected Exception Type:
+[std::domain_error]
+Input [-1] has at least one value outside permitted domain [0, inf]
+
+=======================================
+
+Tests/Physics/AbsolutePhysicalValueCompositionsTest.cpp, Line 86
+Attempting to make negative quantity
+
+Expected Exception Type:
+[std::domain_error]
+Input -1 outside permitted domain [0, inf]
+
+=======================================
+
+Tests/Physics/AbsolutePhysicalValueCompositionsTest.cpp, Line 95
+Attempting to shift quantity negative
+
+Expected Exception Type:
+[std::domain_error]
+Input [-1] has at least one value outside permitted domain [0, inf]
+
+=======================================
+
+Tests/Physics/AbsolutePhysicalValueCompositionsTest.cpp, Line 226
+Negative quantity
+
+Expected Exception Type:
+[std::domain_error]
+Input [-1] has at least one value outside permitted domain [0, inf]
+
+=======================================
+

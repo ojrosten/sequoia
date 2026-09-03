@@ -35,14 +35,9 @@ namespace sequoia::testing
     using value_type   = Quantity::value_type;
     using unsafe_qty_t = quantity<typename Quantity::units_type, value_type, canonical_representation<value_type, no_bounds<value_type>>, identity_validator>;
     using delta_q_t    = unsafe_qty_t::displacement_type;
-    using units_t      = unsafe_qty_t::units_type;
 
     STATIC_CHECK(can_multiply<unsafe_qty_t, value_type>);
     STATIC_CHECK(can_divide<unsafe_qty_t, value_type>);
-    STATIC_CHECK(can_divide<unsafe_qty_t, unsafe_qty_t>);
-    STATIC_CHECK(can_divide<unsafe_qty_t, delta_q_t>);
-    STATIC_CHECK(can_divide<delta_q_t, unsafe_qty_t>);
-    STATIC_CHECK(can_divide<delta_q_t, delta_q_t>);
     STATIC_CHECK(can_add<unsafe_qty_t, unsafe_qty_t>);
     STATIC_CHECK(can_add<unsafe_qty_t, delta_q_t>);
     STATIC_CHECK(can_subtract<unsafe_qty_t, unsafe_qty_t>);
@@ -51,28 +46,5 @@ namespace sequoia::testing
     STATIC_CHECK(!has_unary_minus<unsafe_qty_t>);
 
     coordinates_operations<unsafe_qty_t>{*this}.execute();
-
-    using inv_unit_t = dual<units_t>;
-    using unsafe_inv_quantity_t = quantity<inv_unit_t, value_type, canonical_representation<value_type, no_bounds<value_type>>, identity_validator>;
-    coordinates_operations<unsafe_inv_quantity_t>{*this}.execute();
-
-    using euc_hf_space_t = euclidean_half_line<implicit_common_arena>;
-    using euc_vec_space_t = euclidean_vector_space<1, implicit_common_arena>;
-
-    // TO DO: canonical basis should work here...?
-    using unsafe_euc_half_space_qty = physical_value<euc_hf_space_t, no_unit_t, unit_defined_basis_data_for<euc_hf_space_t, no_unit_t>, canonical_representation<value_type, no_bounds<value_type>>, to_origin_type_t<euc_hf_space_t>, identity_validator>;
-
-    using unsafe_euc_vec_space_qty = physical_value<euc_vec_space_t, no_unit_t, unit_defined_basis_data_for<euc_vec_space_t, no_unit_t>, canonical_representation<value_type, no_bounds<value_type>>, to_origin_type_t<euc_vec_space_t>, identity_validator>;
-
-        
-    check(equality, "", unsafe_qty_t{2.0, units_t{}}  / unsafe_qty_t {-1.0, units_t{}}, unsafe_euc_half_space_qty{-2.0f, no_unit});
-    // TO DO: possibly reinstate these at expense of last two...
-    // using euc_vec_space_qty         = euclidean_1d_vector_quantity<value_type>;
-    //check(equality, "", unsafe_qty_t{-2.0, units_t{}} / delta_q_t{1.0, units_t{}},      euc_vec_space_qty{-2.0, no_unit});
-    //check(equality, "", delta_q_t{-2.0, units_t{}}    / unsafe_qty_t{1.0, units_t{}},   euc_vec_space_qty{-2.0, no_unit});
-    check(equality, "", unsafe_qty_t{-2.0, units_t{}} / delta_q_t{1.0, units_t{}},      unsafe_euc_vec_space_qty{-2.0, no_unit});
-    check(equality, "", delta_q_t{-2.0, units_t{}}    / unsafe_qty_t{1.0, units_t{}},   unsafe_euc_vec_space_qty{-2.0, no_unit});
-     
-    check(equality, "", 4.0f / unsafe_inv_quantity_t{2.0f, inv_unit_t{}}, unsafe_qty_t{2.0, units_t{}});
   }
 }

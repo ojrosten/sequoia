@@ -21,25 +21,25 @@ namespace sequoia::testing
     // Letters near the start of the alphabet distinguish meta-data values
     enum meta_data_graph_description : std::size_t {
 
-      empty = 0,
+      md_empty = 0,
 
       // x
-      node,
+      md_node,
 
       //  /\
       //  \/
       //  x
-      node_0a_0a,
+      md_node_0a_0a,
 
       //  /\
       //  \/
       //  x
-      node_0a_0b,
+      md_node_0a_0b,
 
       //  /\
       //  \/
       //  x
-      node_0b_0a,
+      md_node_0b_0a,
     };
   }
 
@@ -103,11 +103,11 @@ namespace sequoia::testing
 
       return transition_graph{
         {
-          {  // begin 'meta_data_graph_description::empty'
-          }, // end 'meta_data_graph_description::empty' 
-          {  // begin 'meta_data_graph_description::node'
+          {  // begin 'meta_data_graph_description::md_empty'
+          }, // end 'meta_data_graph_description::md_empty' 
+          {  // begin 'meta_data_graph_description::md_node'
             {
-              meta_data_graph_description::node_0a_0b,
+              meta_data_graph_description::md_node_0a_0b,
               t.report("Add loop"),
               [](graph_t g) -> graph_t {
                 g.join(0, 0, 0.0f, 0.5f);
@@ -115,17 +115,17 @@ namespace sequoia::testing
               }
             },
             {
-              meta_data_graph_description::node_0b_0a,
+              meta_data_graph_description::md_node_0b_0a,
               t.report("Add loop"),
               [](graph_t g) -> graph_t {
                 g.join(0, 0, 0.5f, 0.0f);
                 return g;
               }
             }
-          }, // end 'meta_data_graph_description::node'
-          {  // begin 'meta_data_graph_description::node_0a_0a'
+          }, // end 'meta_data_graph_description::md_node'
+          {  // begin 'meta_data_graph_description::md_node_0a_0a'
             {
-              meta_data_graph_description::node_0b_0a,
+              meta_data_graph_description::md_node_0b_0a,
               t.report("Set edge meta data"),
               [](graph_t g) -> graph_t {
                 g.set_edge_meta_data(g.cbegin_edges(0), 0.5f);
@@ -133,7 +133,7 @@ namespace sequoia::testing
               }
             },
             {
-              meta_data_graph_description::node_0b_0a,
+              meta_data_graph_description::md_node_0b_0a,
               t.report("Set edge meta data"),
               [](graph_t g) -> graph_t {
                 g.set_edge_meta_data(g.cbegin_edges(0), meta_data_t{0.5f});
@@ -141,7 +141,7 @@ namespace sequoia::testing
               }
             },
             {
-              meta_data_graph_description::node_0b_0a,
+              meta_data_graph_description::md_node_0b_0a,
               t.report("Mutate edge meta data"),
               [&t](graph_t g) -> graph_t {
                 t.check(equality, "Mutate return value", g.mutate_edge_meta_data(g.cbegin_edges(0), [](meta_data_t& m) { m += 0.5f; return 42; }), 42);
@@ -149,7 +149,7 @@ namespace sequoia::testing
               }
             },
             {
-              meta_data_graph_description::node_0a_0b,
+              meta_data_graph_description::md_node_0a_0b,
               t.report("Set meta data via reverse iterator"),
               [](graph_t g) -> graph_t {
                 g.set_edge_meta_data(g.crbegin_edges(0), 0.5f);
@@ -157,18 +157,18 @@ namespace sequoia::testing
               }
             },
             {
-              meta_data_graph_description::node_0a_0b,
+              meta_data_graph_description::md_node_0a_0b,
               t.report("Mutate edge meta data via reverse iterator"),
               [&t](graph_t g) -> graph_t {
                 t.check(equality, "Mutate return value", g.mutate_edge_meta_data(g.crbegin_edges(0), [](meta_data_t& m) { m += 0.5f; return 42; }), 42);
                 return g;
               }
             }
-          }, // end 'meta_data_graph_description::node_0a_0a'
-          {  // begin 'meta_data_graph_description::node_0a_0b'
-          }, // end 'meta_data_graph_description::node_0a_0b'
-          {  // begin 'meta_data_graph_description::node_0b_0a'
-          }, // end 'meta_data_graph_description::node_0b_0a'
+          }, // end 'meta_data_graph_description::md_node_0a_0a'
+          {  // begin 'meta_data_graph_description::md_node_0a_0b'
+          }, // end 'meta_data_graph_description::md_node_0a_0b'
+          {  // begin 'meta_data_graph_description::md_node_0b_0a'
+          }, // end 'meta_data_graph_description::md_node_0b_0a'
         },
         {
           //  'empty'

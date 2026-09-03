@@ -31,11 +31,13 @@ int main(int argc, char** argv)
       test_runner_performance_test{"Test Runner Performance Test"},
       test_runner_test_creation{"Test Creation"},
       test_runner_project_creation{"Project Creation"},
-      test_runner_end_to_end_test{"End to End Test"}
+      test_runner_end_to_end_test{"End to End Test"},
+      test_runner_project_files{"Project Files Test"}
     );
 
     runner.add_test_suite(
       "Test Framework Auxiliary",
+      file_editors_free_test{"File Editors Free Test"},
       individual_test_paths_free_test{"Individual Test Paths Free Test"},
       basic_test_interface_free_test{"Basic Test Interface Free Test"},
       commands_free_test{"Commands Free Test"},
@@ -398,9 +400,14 @@ int main(int argc, char** argv)
         bounds_free_test{"Bounds Free Test"}
       },
       suite{
+        "Validators",
+        validators_free_test{"Validators Free Test"}
+      },
+      suite{
         "Vector Coordinates",
         vector_coordinates_false_negative_test{"Vector Coordinates False negative Test"},
         vector_coordinates_test{"Vector Coordinates Test"},
+        complex_vector_coordinates_test{"Complex Vector Coordinates Test"},
         vector_polar_coordinates_test{"Vector Polar Coordinates Test"}
       },
       suite{
@@ -432,11 +439,15 @@ int main(int argc, char** argv)
       "Physical Values",
       physical_value_meta_free_test{"Physical Value Meta Free Test"},
       physical_value_false_negative_test{"False Negative Test"},
+      physical_value_conversions_free_test{"Physical Value Conversions Free Test"},
       absolute_physical_value_test{"Absolute Physical Value Test"},
+      absolute_physical_value_compositions_test{"Absolute Physical Value Compositions Test"},
       unsafe_absolute_physical_value_test{"Unsafe Absolute Physical Value Test"},
+      unsafe_absolute_physical_value_compositions_test{"Unsafe Absolute Physical Value Compositions Test"},
       affine_physical_value_test{"Affine Physical Value Test"},
       convex_physical_value_test{"Convex Physical Value Test"},
       vector_physical_value_test{"Vector Physical Value Test"},
+      vector_physical_value_compositions_test{"Vector Physical Value Compositions Test"},
       mixed_physical_value_test{"Mixed Physical Value Test"},
       integral_physical_value_test{"Integral Physical Value Test"}
     );

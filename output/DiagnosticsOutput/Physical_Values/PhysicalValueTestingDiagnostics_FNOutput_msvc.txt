@@ -1,7 +1,7 @@
 Tests/Physics/PhysicalValueTestingDiagnostics.cpp, Line 25
 
 Comparison performed using:
-[sequoia::testing::value_tester<sequoia::physics::physical_value<sequoia::physics::mass_space<float, sequoia::physics::implicit_common_arena>, sequoia::physics::si::units::kilogram_t, sequoia::physics::unit_defined_right_handed_basis<sequoia::physics::associated_displacement_space<sequoia::physics::mass_space<float, sequoia::physics::implicit_common_arena> >, sequoia::physics::si::units::kilogram_t>, sequoia::physics::distinguished_origin, sequoia::maths::canonical_representation<sequoia::maths::coordinate_bounds<float>{float:0.000000, float:inf}>, sequoia::maths::throwing_validator> >]
+[sequoia::testing::value_tester<sequoia::physics::physical_value<sequoia::physics::mass_space<sequoia::physics::implicit_common_arena>, sequoia::physics::si::units::kilogram_t, sequoia::physics::unit_defined_basis_data<sequoia::physics::si::units::kilogram_t, 1>, sequoia::maths::canonical_representation<float, sequoia::maths::coordinate_bounds<float>{float:0.000000, float:inf}>, sequoia::physics::distinguished_origin, sequoia::maths::throwing_validator> >]
 Checking for equivalence with:
 [float]
 
@@ -15,7 +15,7 @@ Checking for equivalence with:
 
 Tests/Physics/PhysicalValueTestingDiagnostics.cpp, Line 26
 
-[sequoia::physics::physical_value<sequoia::physics::mass_space<float, sequoia::physics::implicit_common_arena>, sequoia::physics::si::units::kilogram_t, sequoia::physics::unit_defined_right_handed_basis<sequoia::physics::associated_displacement_space<sequoia::physics::mass_space<float, sequoia::physics::implicit_common_arena> >, sequoia::physics::si::units::kilogram_t>, sequoia::physics::distinguished_origin, sequoia::maths::canonical_representation<sequoia::maths::coordinate_bounds<float>{float:0.000000, float:inf}>, sequoia::maths::throwing_validator>]
+[sequoia::physics::physical_value<sequoia::physics::mass_space<sequoia::physics::implicit_common_arena>, sequoia::physics::si::units::kilogram_t, sequoia::physics::unit_defined_basis_data<sequoia::physics::si::units::kilogram_t, 1>, sequoia::maths::canonical_representation<float, sequoia::maths::coordinate_bounds<float>{float:0.000000, float:inf}>, sequoia::physics::distinguished_origin, sequoia::maths::throwing_validator>]
 operator== returned false
 
   Wrapped Value

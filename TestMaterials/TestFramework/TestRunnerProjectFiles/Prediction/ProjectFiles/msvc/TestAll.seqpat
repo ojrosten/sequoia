@@ -5,3 +5,4 @@
 <WindowsTargetPlatformVersion>.*</WindowsTargetPlatformVersion>
 <Project>.*</Project>
 C:\\.*\\sequoia
+TestsTemporaryData.*?GeneratedProject

@@ -12,6 +12,7 @@ add_executable(TestFrameworkDiagnostics TestFrameworkDiagnosticsMain.cpp)
 set(TestDir ${CMAKE_CURRENT_LIST_DIR}/../Tests)
 
 target_sources(TestFrameworkDiagnostics PRIVATE
+               ${TestDir}/TestFramework/FileEditorsFreeTest.cpp
                ${TestDir}/Core/Object/FactoryTest.cpp
                ${TestDir}/Core/Object/FactoryTestingDiagnostics.cpp
                ${TestDir}/Parsing/CommandLineArgumentsDiagnostics.cpp

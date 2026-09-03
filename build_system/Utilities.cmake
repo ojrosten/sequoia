@@ -52,6 +52,13 @@ FUNCTION(sequoia_set_compile_options target)
         target_compile_options(${target} PUBLIC /W4)
         target_compile_options(${target} PUBLIC /bigobj)
         target_compile_options(${target} PUBLIC /MP)
+
+        # C4702 fires on template code where a specialization makes a branch dead - a
+        # container of compile-time length zero, say - and the optimizer attributes it to
+        # the line of the *inlined* function rather than the dead call site, so the
+        # reported location misleads.  This is a suppression rather than a fix, so it is
+        # confined to the configurations that can raise it; unoptimized builds cannot.
+        target_compile_options(${target} PRIVATE $<$<NOT:$<CONFIG:Debug>>:/wd4702>)
     else()
         target_compile_options(${target} PUBLIC -Wall -Wextra -Wpedantic -Wshadow)
     endif()
@@ -72,6 +79,47 @@ FUNCTION(sequoia_set_run_target exectuable)
         COMMAND $<TARGET_FILE:${exectuable}> ${EXEC_ARGS}
         DEPENDS ${exectuable}
     )
+ENDFUNCTION()
+
+# MSVC's address sanitizer is a *dynamic* runtime: the executable links against
+# clang_rt.asan*.dll, which ships beside the compiler and is not on PATH unless the
+# build happened to be launched from a shell that put it there. Absent the DLL the
+# binary dies at startup with 0xc0000135 and no message worth reading - so an ASan
+# build that works from the IDE fails from the 'run' target, or vice versa, purely
+# on how it was invoked.
+#
+# The source directory is derived from CMAKE_CXX_COMPILER rather than from PATH, so
+# it is correct by construction and cannot go stale as toolchains come and go.
+#
+# Whatever the toolchain ships is copied, rather than one named file, so that no
+# mapping from configuration to runtime variant is encoded here. Measured with
+# dumpbin on 14.51: a Debug build imports clang_rt.asan_dynamic-x86_64.dll - the
+# plain one - even though it links the debug CRT (MSVCP140D, ucrtbased), so the
+# obvious guess that /MDd pairs with the _dbg_ runtime is wrong, and a guess is not
+# what a build should rest on. The files are ~2MB each and copy_if_different makes
+# the steady state a no-op.
+FUNCTION(sequoia_copy_asan_runtime target)
+    if(MSVC AND CMAKE_CXX_FLAGS MATCHES "fsanitize=address")
+        get_filename_component(toolchain_bin "${CMAKE_CXX_COMPILER}" DIRECTORY)
+        file(GLOB asan_runtimes "${toolchain_bin}/clang_rt.asan*_dynamic-*.dll")
+        if(NOT asan_runtimes)
+            # Fatal rather than a warning: the symptom this function exists to
+            # remove is a binary that links, builds and then dies at startup
+            # with 0xC0000135 and nothing else to go on. A warning here buys a
+            # green build and reinstates exactly that failure, one step later
+            # and further from its cause.
+            message(FATAL_ERROR
+                "ASan requested but no clang_rt.asan*_dynamic-*.dll found in ${toolchain_bin}. "
+                "${target} would link and then fail at startup with 0xC0000135 unless the "
+                "runtime happens to be on PATH.")
+        endif()
+        foreach(runtime ${asan_runtimes})
+            add_custom_command(TARGET ${target} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                        "${runtime}" "$<TARGET_FILE_DIR:${target}>"
+                VERBATIM)
+        endforeach()
+    endif()
 ENDFUNCTION()
 
 FUNCTION(sequoia_add_coverage_options target)
@@ -103,6 +151,7 @@ FUNCTION(sequoia_finalize_tests target sourceGroupRoot sourceGroupPrefix)
         add_test(NAME ${target} COMMAND ${target} "--serial")
     endif()
     sequoia_set_run_target(${target})
+    sequoia_copy_asan_runtime(${target})
 ENDFUNCTION()
 
 FUNCTION(sequoia_finalize_self target sourceGroupRoot sourceGroupPrefix)
@@ -128,4 +177,5 @@ FUNCTION(sequoia_finalize_executable target)
     sequoia_finalize_library(${target})
     sequoia_set_properties(${target})
     sequoia_set_run_target(${target})
+    sequoia_copy_asan_runtime(${target})
 ENDFUNCTION()

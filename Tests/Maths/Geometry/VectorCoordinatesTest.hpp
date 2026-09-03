@@ -30,9 +30,5 @@ namespace sequoia::testing
     template<class Set, class Field, std::floating_point Rep>
       requires maths::identifies_as_field_v<Field>
     void test_real_vec_1_inner_prod();
-
-    template<class Set, class Field, class Rep>
-      requires maths::identifies_as_field_v<Field>
-    void test_complex_vec_1_inner_prod();
   };
 }

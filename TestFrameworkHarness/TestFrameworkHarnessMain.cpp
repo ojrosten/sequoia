@@ -25,7 +25,8 @@ int main(int argc, char** argv)
 
     runner.add_test_suite(
       "Test Runner",
-      test_runner_end_to_end_test("End to End Test")
+      test_runner_end_to_end_test("End to End Test"),
+      test_runner_project_files("Project Files Test")
     );
 
     runner.execute(timer_resolution{1ms});

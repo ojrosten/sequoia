@@ -58,10 +58,12 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Geometry/AffineCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp
                ${TestDir}/Maths/Geometry/BoundsFreeTest.cpp
+               ${TestDir}/Maths/Geometry/ComplexVectorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/FreeModuleCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/M_AffineCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/PartialMTorsorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/SpacesMetaFreeTest.cpp
+               ${TestDir}/Maths/Geometry/ValidatorsFreeTest.cpp
                ${TestDir}/Maths/Geometry/VectorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp
                ${TestDir}/Maths/Geometry/VectorPolarCoordinatesTest.cpp
@@ -120,15 +122,19 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Parsing/CommandLineArgumentsDiagnostics.cpp
                ${TestDir}/Parsing/CommandLineArgumentsTest.cpp
                ${TestDir}/Parsing/CommandLineArgumentsTestingUtilities.cpp
+               ${TestDir}/Physics/AbsolutePhysicalValueCompositionsTest.cpp
                ${TestDir}/Physics/AbsolutePhysicalValueTest.cpp
                ${TestDir}/Physics/AffinePhysicalValueTest.cpp
                ${TestDir}/Physics/ConvexPhysicalValueTest.cpp
                ${TestDir}/Physics/IntegralPhysicalValueTest.cpp
                ${TestDir}/Physics/MixedPhysicalValueTest.cpp
+               ${TestDir}/Physics/PhysicalValueConversionsFreeTest.cpp
                ${TestDir}/Physics/PhysicalValueMetaFreeTest.cpp               
                ${TestDir}/Physics/PhysicalValueTestingDiagnostics.cpp
+               ${TestDir}/Physics/UnsafeAbsolutePhysicalValueCompositionsTest.cpp
                ${TestDir}/Physics/UnsafeAbsolutePhysicalValueTest.cpp
                ${TestDir}/Physics/VectorNonlinearRepresentationsTest.cpp
+               ${TestDir}/Physics/VectorPhysicalValueCompositionsTest.cpp
                ${TestDir}/Physics/VectorPhysicalValueTest.cpp
                ${TestDir}/Runtime/ShellCommandsTest.cpp
                ${TestDir}/Runtime/ShellCommandsTestingDiagnostics.cpp
@@ -156,6 +162,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/ExceptionsFreeDiagnostics.cpp
                ${TestDir}/TestFramework/FailureInfoTest.cpp
                ${TestDir}/TestFramework/FailureInfoTestingDiagnostics.cpp
+               ${TestDir}/TestFramework/FileEditorsFreeTest.cpp
                ${TestDir}/TestFramework/FileSystemUtilitiesFreeTest.cpp
                ${TestDir}/TestFramework/FreeCheckersMetaFreeTest.cpp
                ${TestDir}/TestFramework/FunctionFreeDiagnostics.cpp
@@ -179,6 +186,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/TestRunnerEndToEndFreeTest.cpp
                ${TestDir}/TestFramework/TestRunnerPerformanceTest.cpp
                ${TestDir}/TestFramework/TestRunnerProjectCreation.cpp
+               ${TestDir}/TestFramework/TestRunnerProjectFiles.cpp
                ${TestDir}/TestFramework/TestRunnerTest.cpp
                ${TestDir}/TestFramework/TestRunnerTestCreation.cpp
                ${TestDir}/TextProcessing/IndentFreeTest.cpp

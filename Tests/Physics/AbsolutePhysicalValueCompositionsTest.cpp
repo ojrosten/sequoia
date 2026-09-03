@@ -1,0 +1,568 @@
+////////////////////////////////////////////////////////////////////
+//                Copyright Oliver J. Rosten 2024.                //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
+/** \file */
+
+#include "AbsolutePhysicalValueCompositionsTest.hpp"
+
+#include "../Maths/Geometry/GeometryTestingUtilities.hpp"
+
+namespace sequoia::testing
+{
+  using namespace physics;
+
+  [[nodiscard]]
+  std::filesystem::path absolute_physical_value_compositions_test::source_file() const
+  {
+    return std::source_location::current().file_name();
+  }
+
+  void absolute_physical_value_compositions_test::run_tests()
+  {
+    test_compositions<si::mass<double>>();
+    test_compositions<si::temperature<float>>();
+  }
+
+  template<class Quantity>
+  void absolute_physical_value_compositions_test::test_compositions()
+  {
+    using qty_t                   = Quantity;
+    using delta_qty_t             = qty_t::displacement_type;
+    using value_t                 = qty_t::value_type;
+    using arena_t                 = qty_t::space_type::arena_type;
+    using units_t                 = qty_t::units_type;
+    using inv_units_t             = dual<units_t>;
+    using inv_qty_t               = quantity<inv_units_t, value_t>;
+    using delta_inv_qty_t         = inv_qty_t::displacement_type;
+    using euc_half_line_qty       = euclidean_half_line_quantity<value_t>;    
+    using dual_euc_half_line_qty  = dimensionless_quantity<dual<euclidean_half_line<arena_t>>, no_unit_t, value_t>;
+    using euc_vec_space_qty       = euclidean_1d_vector_quantity<value_t>;
+    using dual_euc_vec_space_qty  = dimensionless_quantity<dual<euclidean_vector_space<1, arena_t>>, no_unit_t, value_t>;
+    using pseudo_qty_t            = decltype(qty_t{} * euc_vec_space_qty{});
+    using pseudo_inv_qty_t        = decltype(euc_vec_space_qty{} /qty_t{});
+    using unsafe_qty_t            = quantity<units_t, value_t, canonical_representation<value_t, no_bounds<value_t>>>;
+    using unsafe_inv_qty_t        = quantity<inv_units_t, value_t, canonical_representation<value_t, no_bounds<value_t>>, identity_validator>;
+    using q2_t                    = decltype(physical_value{value_t{}, units_t{} * units_t{}});
+    using q3_t                    = decltype(physical_value{value_t{}, units_t{} * units_t{} * units_t{}});
+    using dq2_t                   = decltype(delta_qty_t{value_t{}, units_t{}} * delta_qty_t{value_t{}, units_t{}});
+    using inv_q2_t                = decltype(value_t{} / q2_t{value_t{}, units_t{} *units_t{}});
+
+    using variant_t
+      = std::variant<
+          qty_t,
+          delta_qty_t,
+          inv_qty_t,
+          delta_inv_qty_t,
+          euc_half_line_qty,      
+          dual_euc_half_line_qty,
+          euc_vec_space_qty,
+          dual_euc_vec_space_qty,
+          pseudo_qty_t,
+          pseudo_inv_qty_t,
+          unsafe_qty_t,
+          unsafe_inv_qty_t,
+          q2_t,
+          dq2_t,
+          inv_q2_t,  
+          q3_t
+        >;
+    using graph_type = transition_checker<variant_t>::transition_graph;
+    using edge_t     = transition_checker<variant_t>::edge;
+
+    enum qty_label { qty, dq, inv, dinvq, euc_half, dual_euc_half, euc_vec, dual_euc_vec, pseudo, pseudo_inv, unsafe, unsafe_inv, q2, dq2, inv_q2, q3 };
+    
+    graph_type g{
+      {
+        {
+          // Start qty
+          edge_t{
+            qty_label::qty,
+            this->report("Assigning from an attempt to create a negative quantity"),
+            [this](variant_t v) -> variant_t {
+              check_exception_thrown<std::domain_error>("Attempting to make negative quantity", [&v](){ std::get<qty_t>(v) = qty_t{-1.0, units_t{}}; });
+              return v;
+            },
+            std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::qty,
+            this->report("Quantity left unaffected by attempting to turn it negative"),
+            [this](variant_t v) -> variant_t {
+              check_exception_thrown<std::domain_error>("Attempting to shift quantity negative", [&v](){ std::get<qty_t>(v) += delta_qty_t{-2.0, units_t{}}; });
+              return v;
+            },
+            std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::qty,
+            this->report("qty * half_line_qty"),
+            [this](variant_t v) -> variant_t { return std::get<qty_t>(v) * euc_half_line_qty{1.0}; },
+            std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::qty,
+            this->report("qty / half_line_qty"),
+            [this](variant_t v) -> variant_t { return std::get<qty_t>(v) / euc_half_line_qty{1.0}; },
+            std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::pseudo,
+            this->report("qty * vec_space_qty"),
+            [this](variant_t v) -> variant_t { return std::get<qty_t>(v) * euc_vec_space_qty{-1.0}; },
+            std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::pseudo,
+            this->report("qty / vec_space_qty: not that the space is being taken as the same space assoicated with qty * vec_space_qty"),
+            [this](variant_t v) -> variant_t { return std::get<qty_t>(v) / euc_vec_space_qty{-1.0}; },
+            std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::inv,
+            this->report("0.5 / qty"),
+            [](variant_t v) -> variant_t { return value_t{2.0} / std::get<qty_t>(v); },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::inv,
+            this->report("qty / qty^2"),
+            [](variant_t v) -> variant_t { return std::get<qty_t>(v) / physical_value{value_t{0.5}, units_t{} * units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::dinvq,
+            this->report("qty / dq^2"),
+            [](variant_t v) -> variant_t { return std::get<qty_t>(v) / (delta_qty_t{2.0, units_t{}} * delta_qty_t{2.0, units_t{}}); },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_half,
+            this->report("qty / qty"),
+            [](variant_t v) -> variant_t { return std::get<qty_t>(v) / qty_t{2.0, units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("qty / d_qty"),
+            [](variant_t v) -> variant_t { return std::get<qty_t>(v) / delta_qty_t{2.0, units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("d_qty / qty"),
+            [](variant_t v) -> variant_t { return delta_qty_t{0.5, units_t{}} / std::get<qty_t>(v); },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_half,
+            this->report("qty * inv_qty"),
+            [](variant_t v) -> variant_t { return std::get<qty_t>(v) * inv_qty_t{0.5, inv_units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_half,
+            this->report("inv_qty * qty"),
+            [](variant_t v) -> variant_t { return inv_qty_t{0.5, inv_units_t{}} * std::get<qty_t>(v); },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("qty * d_inv_qty"),
+            [](variant_t v) -> variant_t { return std::get<qty_t>(v) * delta_inv_qty_t{0.5, inv_units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("d_inv_qty * qty"),
+            [](variant_t v) -> variant_t { return delta_inv_qty_t{0.5, inv_units_t{}} * std::get<qty_t>(v); },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::q2,
+            this->report("qty * qty"),
+            [](variant_t v) -> variant_t { return std::get<qty_t>(v) * qty_t{4.0, units_t{}}; },
+            std::weak_ordering::less
+          }
+          // End qty
+        },
+        {
+          // Start dq
+          edge_t{
+            qty_label::dinvq,
+            this->report("0.125 / d_q"),
+            [](variant_t v) -> variant_t { return value_t{0.125} / std::get<delta_qty_t>(v); },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("d_qty / d_qty"),
+            [](variant_t v) -> variant_t { return std::get<delta_qty_t>(v) / delta_qty_t{1.0, units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("d_qty * d_inv_qty"),
+            [](variant_t v) -> variant_t { return std::get<delta_qty_t>(v) * delta_inv_qty_t{1.0, inv_units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report(" d_inv_qty * d_qty"),
+            [](variant_t v) -> variant_t { return delta_inv_qty_t{1.0, inv_units_t{}} * std::get<delta_qty_t>(v); },
+            std::weak_ordering::less
+          }
+          // End dq
+        },
+        {
+          // Start inv_q
+          edge_t{
+            qty_label::inv,
+            this->report("Inv quantity left unaffected by attempting to turn it negative"),
+            [this](variant_t v) -> variant_t {
+              check_exception_thrown<std::domain_error>("Negative quantity", [&v](){ return std::get<inv_qty_t>(v) += delta_inv_qty_t{-3.0, inv_units_t{}}; });
+              return v;
+            },
+            std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::qty,
+            this->report("2.0 / invq"),
+            [](variant_t v) -> variant_t { return value_t{2.0} / std::get<inv_qty_t>(v); },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::euc_half,
+            this->report("inv_qty / inv_qty"),
+            [](variant_t v) -> variant_t { return std::get<inv_qty_t>(v) / inv_qty_t{4.0, inv_units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("inv_qty / d_inv_qty"),
+            [](variant_t v) -> variant_t { return std::get<inv_qty_t>(v) / delta_inv_qty_t{4.0, inv_units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("d_inv_qty / inv_qty"),
+            [](variant_t v) -> variant_t { return delta_inv_qty_t{1.0, inv_units_t{}} / std::get<inv_qty_t>(v); },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::inv_q2,
+            this->report("invq * invq"),
+            [](variant_t v) -> variant_t { return std::get<inv_qty_t>(v) * inv_qty_t{0.25, inv_units_t{}}; },
+            std::weak_ordering::less
+          },
+          // End inv_q
+        },
+        { // Start d_inv_q
+          edge_t{
+            qty_label::dq,
+            this->report("0.125 / dinvq"),
+            [](variant_t v) -> variant_t { return value_t{0.125} / std::get<delta_inv_qty_t>(v); },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("d_inv_qty / d_inv_qty"),
+            [](variant_t v) -> variant_t { return std::get<delta_inv_qty_t>(v) / delta_inv_qty_t{0.5, inv_units_t{}}; },
+            std::weak_ordering::less
+          },
+          // Start d_inv_q
+        },
+        { // Start euc_half_line
+          edge_t{
+            qty_label::euc_half,
+            this->report("euc_half_line * euc_half_line"),
+            [](variant_t v) -> variant_t { return std::get<euc_half_line_qty>(v) * euc_half_line_qty{1.0}; },
+            std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::euc_half,
+            this->report("euc_half_line / euc_half_line"),
+            [](variant_t v) -> variant_t { return std::get<euc_half_line_qty>(v) / euc_half_line_qty{1.0}; },
+            std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::dual_euc_half,
+            this->report("0.5 / euc_half_line"),
+            [](variant_t v) -> variant_t { return value_t{0.5f} / std::get<euc_half_line_qty>(v); },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("euc_half_line * euc_vec"),
+            [](variant_t v) -> variant_t { return std::get<euc_half_line_qty>(v) * euc_vec_space_qty{1.0}; },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("euc_half_line / euc_vec"),
+            [](variant_t v) -> variant_t { return std::get<euc_half_line_qty>(v) / euc_vec_space_qty{1.0}; },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::qty,
+            this->report("euc_half * qty"),
+            [](variant_t v) -> variant_t { return std::get<euc_half_line_qty>(v) * qty_t{2.0, units_t{}}; },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::qty,
+            this->report("qty * euc_half"),
+            [](variant_t v) -> variant_t { return qty_t{2.0, units_t{}} * std::get<euc_half_line_qty>(v); },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::inv,
+            this->report("euc_half * inv_qty"),
+            [](variant_t v) -> variant_t { return std::get<euc_half_line_qty>(v) * inv_qty_t{4.0, inv_units_t{}}; },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::inv,
+            this->report("inv_qty * euc_half"),
+            [](variant_t v) -> variant_t { return inv_qty_t{4.0, inv_units_t{}} * std::get<euc_half_line_qty>(v); },
+            std::weak_ordering::greater
+          }
+          // End euc_half_line
+        },
+        { // Start dual_euc_half
+        },// End dual_euc_half
+        {
+          // Start euc_vec
+          edge_t{
+            qty_label::euc_vec,
+            this->report("euc_vec * euc_vec"),
+            [](variant_t v) -> variant_t { return std::get<euc_vec_space_qty>(v) * euc_vec_space_qty{1.0}; },
+            std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("euc_vec / euc_vec"),
+            [](variant_t v) -> variant_t { return std::get<euc_vec_space_qty>(v) / euc_vec_space_qty{1.0}; },
+            std::weak_ordering::equivalent
+          },
+          edge_t{
+            qty_label::dual_euc_vec,
+            this->report("-1.0 / euc_vec"),
+            [](variant_t v) -> variant_t { return value_t{-1.0} / std::get<euc_vec_space_qty>(v); },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::dq,
+            this->report("euc_vec * d_qty"),
+            [](variant_t v) -> variant_t { return std::get<euc_vec_space_qty>(v) * delta_qty_t{1.0, units_t{}}; },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::dq,
+            this->report("d_qty * euc_vec"),
+            [](variant_t v) -> variant_t { return delta_qty_t{1.0, units_t{}} * std::get<euc_vec_space_qty>(v); },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::dinvq,
+            this->report("euc_vec * d_inv_qty"),
+            [](variant_t v) -> variant_t { return std::get<euc_vec_space_qty>(v) * delta_inv_qty_t{0.5, inv_units_t{}}; },
+            std::weak_ordering::greater
+            },
+          edge_t{
+            qty_label::dinvq,
+            this->report("d_inv_qty * euc_vec"),
+            [](variant_t v) -> variant_t { return delta_inv_qty_t{0.5, inv_units_t{}} * std::get<euc_vec_space_qty>(v); },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::pseudo,
+            this->report("euc_vec * qty"),
+            [](variant_t v) -> variant_t { return -std::get<euc_vec_space_qty>(v) * qty_t{2.0, units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::pseudo_inv,
+            this->report("euc_vec * inv_qty"),
+            [](variant_t v) -> variant_t { return -std::get<euc_vec_space_qty>(v) * inv_qty_t{4.0, inv_units_t{}}; },
+            std::weak_ordering::less
+          },
+          // End euc_vec
+        },
+        {
+          // Start dual_euc_vec
+          // End dual_euc_vec
+        },
+        {
+          // Start pseudo
+          // End pseudo
+        },
+        {
+          // Start pseudo_inv
+          // End pseudo_inv
+        },
+        { 
+          // Start unsafe q
+          // End unsafe q
+        },
+        {
+          // Start unsafe inv q
+          // End unsafe inv q
+        },
+        {
+          // Start q^2
+          edge_t{
+            qty_label::qty,
+            this->report("qty^2 / qty"),
+            [](variant_t v) -> variant_t { return std::get<q2>(v) / qty_t{4.0, units_t{}}; },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::qty,
+            this->report("qty^2 * inv_qty"),
+            [](variant_t v) -> variant_t { return std::get<q2>(v) * inv_qty_t{0.25, inv_units_t{}}; },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::euc_half,
+            this->report("qty^2 / qty^2"),
+            [](variant_t v) -> variant_t { return std::get<q2>(v) / physical_value{value_t{8.0}, units_t{} * units_t{}}; },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::inv,
+            this->report("qty^2 / qty^3"),
+            [](variant_t v) -> variant_t { return std::get<q2>(v) / physical_value{value_t{2.0}, units_t{} * units_t{} * units_t{}}; },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::q3,
+            this->report("qty^2 * qty"),
+            [](variant_t v) -> variant_t { return std::get<q2>(v) * qty_t{2.0, units_t{}}; },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::q3,
+            this->report("qty * qty^2"),
+            [](variant_t v) -> variant_t { return qty_t{2.0, units_t{}} * std::get<q2>(v); },
+            std::weak_ordering::less
+          },
+          edge_t{
+            qty_label::dq,
+            this->report("qty^2 / dq"),
+            [](variant_t v) -> variant_t { return std::get<q2>(v) / delta_qty_t{8.0, units_t{}}; },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::dinvq,
+            this->report("dq / qty^2"),
+            [](variant_t v) -> variant_t { return delta_qty_t{1.0, units_t{}} / std::get<q2>(v); },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("qty^2 / dq^2"),
+            [](variant_t v) -> variant_t { return std::get<q2>(v) / (delta_qty_t{2.0, units_t{}} * delta_qty_t{4.0, units_t{}}); },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("dq^2 / qty^2"),
+            [](variant_t v) -> variant_t { return (delta_qty_t{2.0, units_t{}} * delta_qty_t{1.0, units_t{}}) / std::get<q2>(v); },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("qty^2 / (qty * dq)"),
+            [](variant_t v) -> variant_t { return std::get<q2>(v) / (qty_t{2.0, units_t{}} * delta_qty_t{4.0, units_t{}}); },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("qty^2 / (dq * qty)"),
+            [](variant_t v) -> variant_t { return std::get<q2>(v) / (delta_qty_t{4.0, units_t{}} * qty_t{2.0, units_t{}}); },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::euc_vec,
+            this->report("qty^2 * (dinvq * inv)"),
+            [](variant_t v) -> variant_t { return std::get<q2>(v) * (delta_inv_qty_t{0.25, inv_units_t{}} * inv_qty_t{0.5, inv_units_t{}}); },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::inv_q2,
+            this->report("2.0 / qty^2"),
+            [](variant_t v) -> variant_t { return value_t{2.0} / std::get<q2>(v); },
+            std::weak_ordering::less
+          },
+          // End q^2
+        },
+        {
+          // Start (dq)^2
+          edge_t{
+            qty_label::dq,
+            this->report("(dq)^2 / qty"),
+            [](variant_t v) -> variant_t { return -std::get<dq2>(v) / qty_t{8.0, units_t{}}; },
+            std::weak_ordering::greater
+          }
+          // End (dq)^2
+        },
+        {
+          // Start inv_q2
+          edge_t{
+            qty_label::inv,
+            this->report("invq^2 * qty"),
+            [](variant_t v) -> variant_t { return std::get<inv_q2>(v) * qty_t{4.0, units_t{}}; },
+            std::weak_ordering::greater
+          },
+          edge_t{
+            qty_label::q2,
+            this->report("2.0 / inv_qty^2"),
+            [](variant_t v) -> variant_t { return value_t{2.0} / std::get<inv_q2>(v); },
+            std::weak_ordering::greater
+          },
+          // End   inv_q2
+        },
+        {
+          // Start q^3
+          edge_t{
+            qty_label::q2,
+            this->report("qty^3 / qty"),
+            [](variant_t v) -> variant_t { return std::get<q3>(v) / qty_t{2.0, units_t{}}; },
+            std::weak_ordering::greater
+          }
+          // End q^3
+        },
+      },
+      {
+        variant_t{                 qty_t{1.0, units_t{}}},                        // qty
+        variant_t{           delta_qty_t{0.5, units_t{}}},                        // dq
+        variant_t{             inv_qty_t{2.0, inv_units_t{}}},                    // inv
+        variant_t{       delta_inv_qty_t{0.25, inv_units_t{}}},                   // dinvq
+        variant_t{     euc_half_line_qty{0.5, no_unit}},                          // euc_half        
+        variant_t{dual_euc_half_line_qty{1.0, no_unit}},                          // dual_euc_half 
+        variant_t{     euc_vec_space_qty{0.5, no_unit}},                          // euc_vec        
+        variant_t{dual_euc_vec_space_qty{-2.0, no_unit}},                         // dual_euc_vec
+        variant_t{          pseudo_qty_t{-1.0, units_t{}}},                       // pseudo
+        variant_t{      pseudo_inv_qty_t{-2.0, inv_units_t{}}},                   // pseudo_inv
+        variant_t{          unsafe_qty_t{-1.0, units_t{}}},                       // unsafe
+        variant_t{      unsafe_inv_qty_t{-2.0, inv_units_t{}}},                   // unsafe_inv
+        variant_t{                  q2_t{4.0, units_t{} * units_t{}}},            // q2
+        variant_t{                 dq2_t{-4.0, units_t{} * units_t{}}},           // dq2
+        variant_t{              inv_q2_t{0.5, inv_units_t{} * inv_units_t{}}},    // inv_q2
+        variant_t{                  q3_t{8.0, units_t{} * units_t{} * units_t{}}} // q3
+      }
+    };
+
+    auto checkerFn{
+      [this](std::string_view description, const variant_t& obtained, const variant_t& prediction) {
+        this->check(equality, description, obtained, prediction);
+      }
+    };
+    
+    transition_checker<variant_t>::check("", g, checkerFn);
+  }
+}
