@@ -155,6 +155,17 @@ namespace sequoia
   template<class T>
   inline constexpr bool has_gettable_elements{requires (T & t) { std::get<0>(t); }};
 
+  /** \brief The `I`th element of a heterogeneous container, as a value type.
+
+      Named rather than spelled inline at each use, where the same `decltype` appeared twice.
+      Backported from `modules-native`, which needs it for a further reason that does not apply
+      here: MSVC evaluates the inline form as `false` for `std::variant` when the enclosing
+      variable template is instantiated across a module boundary. Reduced repro in `sequoia-LLM`,
+      `msvc-bugs/E-module-fold-get.cpp`.
+   */
+  template<class T, std::size_t I>
+  using gettable_element_t = std::remove_cvref_t<decltype(std::get<I>(std::declval<T&>()))>;
+
   template<class T>
   struct is_deep_equality_comparable;
 
@@ -167,7 +178,7 @@ namespace sequoia
   template<class T, std::size_t... I>
   inline constexpr bool heterogeneous_deep_equality_v{
     requires(T & t, std::index_sequence<I...>) {
-      requires (is_deep_equality_comparable_v<std::remove_cvref_t<decltype(std::get<I>(t))>> && ...);
+      requires (is_deep_equality_comparable_v<gettable_element_t<T, I>> && ...);
     }
   };
 
@@ -215,7 +226,7 @@ namespace sequoia
   template<class T, std::size_t... I>
   inline constexpr bool heterogeneous_deep_total_order_v{
     requires(T & t, std::index_sequence<I...>) {
-      requires (is_deep_totally_ordered_v<std::remove_cvref_t<decltype(std::get<I>(t))>> && ...);
+      requires (is_deep_totally_ordered_v<gettable_element_t<T, I>> && ...);
     }
   };
 
