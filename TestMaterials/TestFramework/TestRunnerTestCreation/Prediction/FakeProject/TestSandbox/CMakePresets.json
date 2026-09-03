@@ -103,6 +103,15 @@
       "inherits": ["base-unix"]
     },
     {
+      "name": "base-homebrew-gcc",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "/opt/homebrew/bin/gcc-16",
+        "CMAKE_CXX_COMPILER": "/opt/homebrew/bin/g++-16"
+      },
+      "inherits": ["base-gcc"]
+    },
+    {
       "name": "base-linux-pkg-gcc",
       "hidden": true,
       "cacheVariables": {
@@ -149,6 +158,18 @@
       "displayName": "macOS Homebrew LLVM [Release, asan]",
       "description": "Configure for ${displayName}",
       "inherits": ["macos-homebrew-llvm-release", "base-asan-unix"]
+    },
+    {
+      "name": "macos-homebrew-gcc",
+      "displayName": "macOS Homebrew GCC [Debug]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-homebrew-gcc", "base-debug"]
+    },
+    {
+      "name": "macos-homebrew-gcc-asan",
+      "displayName": "macOS Homebrew GCC [Debug, asan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["macos-homebrew-gcc", "base-asan-unix"]
     },
     {
       "name": "linux-pkg-gcc",
@@ -343,6 +364,28 @@
       "inherits": ["linux-gcc-release-asan", "base-run"]
     },
     {
+      "name": "macos-homebrew-gcc",
+      "displayName": "macOS Homebrew GCC [Debug]",
+      "configurePreset": "macos-homebrew-gcc",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-gcc",
+      "displayName": "Run macOS Homebrew GCC [Debug]",
+      "inherits": ["macos-homebrew-gcc", "base-run"]
+    },
+    {
+      "name": "macos-homebrew-gcc-asan",
+      "displayName": "macOS Homebrew GCC [Debug, asan]",
+      "configurePreset": "macos-homebrew-gcc-asan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-gcc-asan",
+      "displayName": "Run macOS Homebrew GCC [Debug, asan]",
+      "inherits": ["macos-homebrew-gcc-asan", "base-run"]
+    },
+    {
       "name": "linux-pkg-gcc",
       "displayName": "Linux g++-15 [Debug]",
       "configurePreset": "linux-pkg-gcc",
@@ -443,6 +486,32 @@
     }
   ],
   "workflowPresets": [
+    {
+      "name": "macos-homebrew-gcc",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos-homebrew-gcc"
+        },
+        {
+          "type": "build",
+          "name": "run-macos-homebrew-gcc"
+        }
+      ]
+    },
+    {
+      "name": "macos-homebrew-gcc-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos-homebrew-gcc-asan"
+        },
+        {
+          "type": "build",
+          "name": "run-macos-homebrew-gcc-asan"
+        }
+      ]
+    },
     {
       "name": "macos-homebrew-llvm",
       "steps": [

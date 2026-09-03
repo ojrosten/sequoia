@@ -1,6 +1,7 @@
 -- Selecting .*\n
 (?=is ).*
 (?=compiler: ).*
+-- Checking whether .*\n
 -- Performing .*\n
 -- Found Threads: .*\n
 \d+\.\d+s
