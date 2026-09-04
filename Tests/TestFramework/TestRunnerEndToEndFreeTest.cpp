@@ -37,17 +37,36 @@ namespace sequoia::testing
         Self-calibrating rather than a sleep keyed to a platform: one short sleep where the
         resolution is fine, and only as long as it must be where it is coarse. The probe is written
         outside the generated project, since a file appearing inside it would itself be a change.
+
+        Bounded, because the alternative to giving up is a suite which hangs rather than reports.
+        The bound is far above any resolution a filesystem plausibly has, so reaching it means the
+        probe is not measuring what it thinks it is.
      */
-    void await_timestamp_tick(const std::filesystem::path& probeDir)
+    void await_timestamp_tick(const fs::path& probeDir)
     {
-      namespace fs = std::filesystem;
-      const auto probe{probeDir / "TimestampProbe.tmp"};
-      auto stamp{[&probe]() { std::ofstream{probe}; return fs::last_write_time(probe); }};
+      constexpr auto pollInterval{10ms};
 
-      const auto start{stamp()};
-      while(stamp() <= start) std::this_thread::sleep_for(10ms);
+      const auto stamp{
+        [probe{probeDir / "TimestampProbe.tmp"}]() {
+          if(std::ofstream file{probe}; !file)
+            throw std::runtime_error{std::format("Unable to write the timestamp probe {}", probe.generic_string())};
 
-      fs::remove(probe);
+          const auto probeStamp{fs::last_write_time(probe)};
+          fs::remove(probe);
+
+          return probeStamp;
+        }
+      };
+
+      const auto initialStamp{stamp()};
+      for(auto requestedSleep{0ms}; stamp() <= initialStamp; requestedSleep += pollInterval)
+      {
+        constexpr auto timeOut{10s};
+        if(requestedSleep > timeOut)
+          throw std::runtime_error{std::format("Filesystem timestamps under {} did not advance within {}", probeDir.generic_string(), timeOut)};
+
+        std::this_thread::sleep_for(pollInterval);
+      }
     }
 
     [[nodiscard]]
@@ -149,10 +168,21 @@ namespace sequoia::testing
     return working_materials().parent_path() /= "GeneratedProject";
   }
 
-  void test_runner_end_to_end_test::copy_aux_materials(const std::filesystem::path& relativeFrom, const std::filesystem::path& relativeTo) const
+  /** Cross a filesystem timestamp tick, so that everything written afterwards is distinguishable
+      from everything the previous run wrote.
+
+      Required once before each batch of changes, not once per change: what `prune` compares against
+      is the stamp of the previous run, so copies made back to back need no separation from each
+      other. On a filesystem with whole-second resolution each call costs up to a second, which is
+      why this is not simply folded into `copy_aux_materials`.
+   */
+  void test_runner_end_to_end_test::await_tick_past_previous_run() const
   {
     await_timestamp_tick(generated_project().parent_path());
+  }
 
+  void test_runner_end_to_end_test::copy_aux_materials(const std::filesystem::path& relativeFrom, const std::filesystem::path& relativeTo) const
+  {
     const auto absoluteFrom{auxiliary_materials() /= relativeFrom};
     const auto absoluteTo{generated_project() / relativeTo};
     fs::copy(absoluteFrom, absoluteTo, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
@@ -295,6 +325,7 @@ namespace sequoia::testing
 
     //=================== Change some test materials and run with prune ===================//
 
+    await_tick_past_previous_run();
     copy_aux_materials("ModifiedTests/Stuff/FooTest.cpp", "Tests/Stuff");
     copy_aux_materials("TestMaterials", "TestMaterials");
 
@@ -327,11 +358,13 @@ namespace sequoia::testing
 
     //=================== Change a file, don't build and run with prune ===================//
 
+    await_tick_past_previous_run();
     copy_aux_materials("ModifiedSource/UsefulThings.hpp", "Source/generatedProject/Utilities");
     run_and_check(report("Attempt to prune when build is out of date"), b, "PruneWithStaleBuild", "prune");
 
     //=================== Change several of the tests, and some of the source, rebuild and run asynchronously, with prune ===================//
 
+    await_tick_past_previous_run();
     copy_aux_materials("ModifiedSource/UsefulThings.cpp", "Source/generatedProject/Utilities");
     copy_aux_materials("ModifiedSource/Maths",            "Source/generatedProject/Maths");
     copy_aux_materials("ModifiedSource/Thing",            "Source/generatedProject/Utilities/Thing");
@@ -427,6 +460,7 @@ namespace sequoia::testing
 
     //=================== Change one of the failing tests, and 'select' it at the same time as breaking a different test ===================//
 
+    await_tick_past_previous_run();
     copy_aux_materials("FurtherModifiedTests/UsefulThingsFreeTest.cpp", "Tests/Utilities");
     copy_aux_materials("FurtherModifiedTests/ProbabilityTest.cpp", "Tests/Maths");
     rebuild_run_and_check(report("Rebuild, run and 'select' after fixing a test"), b, "RunSelectedFixedTest", "CMakeOutput5.txt", "BuildOutput5.txt", "select UsefulThingsFreeTest.cpp");
@@ -453,6 +487,7 @@ namespace sequoia::testing
 
     //=================== Fix the final failing test and 'test' it ===================//
 
+    await_tick_past_previous_run();
     copy_aux_materials("ModifiedTests/Maths/ProbabilityTest.cpp", "Tests/Maths");
     rebuild_run_and_check(report("Rebuild, run and 'test' after fixing a test"), b, "RunSuiteWithFixedTest", "CMakeOutput6.txt", "BuildOutput6.txt", "test Probability");
 

@@ -331,7 +331,7 @@ export namespace sequoia::testing
     class E,
     test_mode Mode,
     class Fn,
-    invocable_exactly_r<std::string, project_paths, std::string> Postprocessor=default_exception_message_postprocessor
+    invocable_exact_r<std::string, project_paths, std::string> Postprocessor=default_exception_message_postprocessor
   >
   bool check_exception_thrown(std::string description, test_logger<Mode>& logger, Fn&& function, const project_paths& projPaths, Postprocessor postprocessor={})
   {
@@ -814,7 +814,7 @@ export namespace sequoia::testing
     <
       class E,
       class Fn,
-      invocable_exactly_r<std::string, project_paths, std::string> Postprocessor=default_exception_message_postprocessor,
+      invocable_exact_r<std::string, project_paths, std::string> Postprocessor=default_exception_message_postprocessor,
       class Self
     >
     bool check_exception_thrown(this Self& self, const reporter& description, Fn&& function, Postprocessor postprocessor={})

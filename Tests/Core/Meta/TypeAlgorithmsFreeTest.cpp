@@ -107,6 +107,9 @@ namespace sequoia::testing
   {
     STATIC_CHECK((type_comparator_v<char, void>));
     STATIC_CHECK((!type_comparator_v<int, char>));
+
+    STATIC_CHECK((std::same_as<type_comparator_t<char, void>, std::true_type>));
+    STATIC_CHECK((std::same_as<type_comparator_t<int, char>,  std::false_type>));
   }
   
   template<template<class...> class TT>
@@ -240,7 +243,8 @@ namespace sequoia::testing
     STATIC_CHECK(!all_of_v<TT<int>,                 always_false>);
     STATIC_CHECK( all_of_v<TT<int, float, double>,  always_true>);
 
-    STATIC_CHECK(std::same_as<all_of_t<TT<int>, is_int>,   std::true_type>);
+    STATIC_CHECK(std::same_as<all_of_t<TT<>,      is_int>, std::true_type>);
+    STATIC_CHECK(std::same_as<all_of_t<TT<int>,   is_int>, std::true_type>);
     STATIC_CHECK(std::same_as<all_of_t<TT<float>, is_int>, std::false_type>);
   }
 
@@ -268,7 +272,8 @@ namespace sequoia::testing
     STATIC_CHECK(any_of_v<TT<float>,      is_int> == !all_of_v<TT<float>,      is_not_int>);
     STATIC_CHECK(any_of_v<TT<>,           is_int> == !all_of_v<TT<>,           is_not_int>);
 
-    STATIC_CHECK(std::same_as<any_of_t<TT<int>, is_int>,   std::true_type>);
+    STATIC_CHECK(std::same_as<any_of_t<TT<>,      is_int>, std::false_type>);
+    STATIC_CHECK(std::same_as<any_of_t<TT<int>,   is_int>, std::true_type>);
     STATIC_CHECK(std::same_as<any_of_t<TT<float>, is_int>, std::false_type>);
   }
 

@@ -49,6 +49,18 @@ namespace sequoia::testing
 
       std::vector<int> i;
     };
+
+    struct neither_copyable_nor_movable
+    {
+      neither_copyable_nor_movable() = default;
+      neither_copyable_nor_movable(const neither_copyable_nor_movable&) = delete;
+      neither_copyable_nor_movable(neither_copyable_nor_movable&&)      = delete;
+    };
+
+    [[nodiscard]] neither_copyable_nor_movable make_immovable() { return {}; }
+    [[nodiscard]] const std::vector<int>&  shared_vector()   { static const std::vector<int> v{}; return v; }
+    [[nodiscard]] std::vector<int>         fresh_vector()    { return {}; }
+    [[nodiscard]] int                      make_int()        { return 0; }
   }
 
   [[nodiscard]]
@@ -66,6 +78,30 @@ namespace sequoia::testing
     test_deep_totally_ordered();
     test_initializable_from();
     test_integer();
+    test_invocable_r_concepts();
+  }
+
+  void concepts_test::test_invocable_r_concepts()
+  {
+    // A function handing back a reference to a shared object satisfies the signature under
+    // conversion, but not precisely.
+    STATIC_CHECK(invocable_r<decltype(&shared_vector), std::vector<int>>);
+    STATIC_CHECK(!invocable_exact_r<decltype(&shared_vector), std::vector<int>>);
+
+    STATIC_CHECK(invocable_r<decltype(&fresh_vector), std::vector<int>>);
+    STATIC_CHECK(invocable_exact_r<decltype(&fresh_vector), std::vector<int>>);
+
+    // Ordinary conversions are admitted under the first, and not under the second.
+    STATIC_CHECK(invocable_r<decltype(&make_int), double>);
+    STATIC_CHECK(!invocable_exact_r<decltype(&make_int), double>);
+
+    // std::convertible_to<T, T> is false when T has neither a copy nor a move constructor, though
+    // such a T may still be returned by value.
+    STATIC_CHECK(!invocable_r<decltype(&make_immovable), neither_copyable_nor_movable>);
+    STATIC_CHECK(invocable_exact_r<decltype(&make_immovable), neither_copyable_nor_movable>);
+
+    STATIC_CHECK(!invocable_exact_r<decltype(&make_int), int, int>);
+    STATIC_CHECK(!invocable_r<int, int>);
   }
 
   void concepts_test::test_is_range()

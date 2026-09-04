@@ -46,6 +46,29 @@ export namespace sequoia::testing
     }
   };
 
+  /** \brief The time against which a modification is judged to have happened after the run which
+             wrote the prune stamp.
+
+      The stamp is written from a full-resolution clock reading, so whatever comes back is what the
+      filesystem was able to store: a whole number of seconds means the implementation truncates -
+      libstdc++ does so on macOS, where libc++ records nanoseconds - and a modification made after
+      the run began can therefore carry a timestamp up to a second before it. Comparing against the
+      stamp itself loses such a change, and loses it in the direction which makes `prune` skip a
+      test whose materials really did move. So where the filesystem truncates, the threshold is a
+      second earlier than the stamp, which resolves the ambiguous cases as stale.
+
+      One stamp can only separate "sub-second" from "at least a second". A filesystem coarser still
+      - two seconds on exFAT, and on some network mounts - reveals itself identically here and
+      remains partly exposed; establishing more would mean writing a probe and reading it back,
+      which is what the end-to-end test does.
+
+      Where the filesystem records sub-second times the stamp carries them and the threshold is the
+      stamp itself. The exception is a stamp landing exactly on a second, which is indistinguishable
+      from a truncated one and is treated as coarse: that costs an over-run, never a missed test.
+   */
+  [[nodiscard]]
+  std::filesystem::file_time_type staleness_threshold(std::filesystem::file_time_type stamp);
+
   [[nodiscard]]
   std::vector<prune_record> read_tests(const std::filesystem::path& file);
 

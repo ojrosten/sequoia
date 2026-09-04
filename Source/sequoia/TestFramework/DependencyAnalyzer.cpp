@@ -32,7 +32,7 @@ namespace sequoia::testing
     };
     
     [[nodiscard]]
-    bool is_stale(const fs::path& file, const fs::file_time_type& lastImplicitModTime, const fs::file_time_type& pruneTimeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
+    bool is_stale(const fs::path& file, const fs::file_time_type& lastImplicitModTime, const fs::file_time_type& stalenessThreshold, const std::optional<fs::file_time_type>& exeTimeStamp)
     {
       if(exeTimeStamp.has_value() && (lastImplicitModTime >= exeTimeStamp.value()))
         throw std::runtime_error{
@@ -44,15 +44,15 @@ namespace sequoia::testing
                 )
               };
 
-      return lastImplicitModTime > pruneTimeStamp;
+      return lastImplicitModTime > stalenessThreshold;
     }
 
     struct file_info
     {
-      file_info(fs::path f, const fs::file_time_type& pruneTimeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
+      file_info(fs::path f, const fs::file_time_type& stalenessThreshold, const std::optional<fs::file_time_type>& exeTimeStamp)
         : file{std::move(f)}
         , implicit_modification_time{fs::last_write_time(file)}
-        , stale{is_stale(file, implicit_modification_time, pruneTimeStamp, exeTimeStamp)}
+        , stale{is_stale(file, implicit_modification_time, stalenessThreshold, exeTimeStamp)}
       {}
 
       file_info(fs::path f)
@@ -204,14 +204,14 @@ namespace sequoia::testing
     using tests_dependency_graph = maths::directed_graph<maths::null_weight, file_info>;
     using node_iterator = tests_dependency_graph::iterator;
 
-    void add_files(std::vector<file_info>& info, const fs::path& repo, const fs::file_time_type& pruneTimeStamp, const std::optional<fs::file_time_type>& exeTimeStamp)
+    void add_files(std::vector<file_info>& info, const fs::path& repo, const fs::file_time_type& stalenessThreshold, const std::optional<fs::file_time_type>& exeTimeStamp)
     {
       for(const auto& entry : fs::recursive_directory_iterator(repo))
       {
         const auto file{entry.path()};
         if(is_cpp(file) || is_header(file))
         {
-          info.emplace_back(file, pruneTimeStamp, exeTimeStamp);
+          info.emplace_back(file, stalenessThreshold, exeTimeStamp);
         }
       }
     }
@@ -307,14 +307,14 @@ namespace sequoia::testing
     [[nodiscard]]
     bool materials_modified(const fs::path& relFilePath,
                             const fs::path& materialsRepo,
-                            const fs::file_time_type pruneTimeStamp)
+                            const fs::file_time_type stalenessThreshold)
     {
       const auto materials{materialsRepo / fs::path{relFilePath}.replace_extension("")};
       if(fs::exists(materials))
       {
         for(const auto& entry : fs::recursive_directory_iterator(materials))
         {
-          if(fs::last_write_time(entry) > pruneTimeStamp) return true;
+          if(fs::last_write_time(entry) > stalenessThreshold) return true;
         }
       }
 
@@ -360,32 +360,8 @@ namespace sequoia::testing
       return std::nullopt;
     }
 
-    /** How much earlier than the recorded prune stamp a modification may be and still have happened
-        after the run which wrote it.
-
-        The stamp is written from a full-resolution clock reading, so whatever comes back is what
-        the filesystem was able to store: a whole number of seconds means the implementation
-        truncates - libstdc++ does so on macOS, where libc++ records nanoseconds - and a
-        modification made after the run began can therefore carry a timestamp up to a second before
-        it. Comparing the two directly loses such a change, and loses it in the direction which
-        makes `prune` skip a test whose materials really did move.
-
-        Reading the granularity off the stamp itself costs nothing and is exact where it matters: a
-        filesystem which records sub-second times yields zero here, so nothing is widened on a
-        platform which can already tell the difference.
-     */
     [[nodiscard]]
-    fs::file_time_type::duration timestamp_granularity(const fs::file_time_type stamp)
-    {
-      using namespace std::chrono;
-      const auto subSecond{stamp.time_since_epoch() - floor<seconds>(stamp.time_since_epoch())};
-
-      return (subSecond == fs::file_time_type::duration::zero()) ? duration_cast<fs::file_time_type::duration>(seconds{1})
-                                                                 : fs::file_time_type::duration::zero();
-    }
-
-    [[nodiscard]]
-    std::vector<fs::path> find_stale_tests(fs::file_time_type pruneTimeStamp, const project_paths& projPaths, std::string_view cutoff)
+    std::vector<fs::path> find_stale_tests(fs::file_time_type stalenessThreshold, const project_paths& projPaths, std::string_view cutoff)
     {
       using namespace maths;
 
@@ -394,11 +370,11 @@ namespace sequoia::testing
       const auto exeTimeStamp{get_stamp(projPaths.executable())};
       std::vector<file_info> files{};
 
-      add_files(files, projPaths.source().repo(), pruneTimeStamp, exeTimeStamp);
-      add_files(files, projPaths.tests().repo(), pruneTimeStamp, exeTimeStamp);
+      add_files(files, projPaths.source().repo(), stalenessThreshold, exeTimeStamp);
+      add_files(files, projPaths.tests().repo(), stalenessThreshold, exeTimeStamp);
       for(const auto& p : projPaths.additional_dependency_analysis_paths())
       {
-        add_files(files, p, pruneTimeStamp, exeTimeStamp);
+        add_files(files, p, stalenessThreshold, exeTimeStamp);
       }
 
       std::ranges::sort(
@@ -452,7 +428,7 @@ namespace sequoia::testing
           if(passesStamp && std::ranges::binary_search(passingTestsFromFile, relPath, {}, path_projector{}))
           {
             const auto materialsWriteTime{materials_max_write_time(relPath, projPaths.test_materials().repo())};
-            if(!weight.stale && (materialsWriteTime > pruneTimeStamp))
+            if(!weight.stale && (materialsWriteTime > stalenessThreshold))
               i->stale = true;
 
             const auto maxModificationTime{materialsWriteTime ? std::ranges::max(materialsWriteTime.value(), weight.implicit_modification_time) : weight.implicit_modification_time};
@@ -462,7 +438,7 @@ namespace sequoia::testing
           }
           else if(!weight.stale)
           {
-            if(materials_modified(relPath, projPaths.test_materials().repo(), pruneTimeStamp))
+            if(materials_modified(relPath, projPaths.test_materials().repo(), stalenessThreshold))
             {
               i->stale = true;
             }
@@ -555,6 +531,17 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  fs::file_time_type staleness_threshold(const fs::file_time_type stamp)
+  {
+    using namespace std::chrono;
+    const auto subSecond{stamp.time_since_epoch() - floor<seconds>(stamp.time_since_epoch())};
+
+    return (subSecond == fs::file_time_type::duration::zero())
+      ? stamp - duration_cast<fs::file_time_type::duration>(seconds{1})
+      : stamp;
+  }
+
+  [[nodiscard]]
   std::vector<prune_record> read_tests(const fs::path& file)
   {
     std::vector<prune_record> tests{};
@@ -642,12 +629,7 @@ namespace sequoia::testing
 
     if(!pruneTimeStamp) return std::nullopt;
 
-    // Every staleness test is `modification > stamp`; widening the stamp by the granularity is what
-    // makes that correct on a filesystem which cannot represent the difference, and a no-op on one
-    // which can.
-    const auto stamp{pruneTimeStamp.value() - timestamp_granularity(pruneTimeStamp.value())};
-
-    const auto staleTests{find_stale_tests(stamp, projPaths, cutoff)};
+    const auto staleTests{find_stale_tests(staleness_threshold(pruneTimeStamp.value()), projPaths, cutoff)};
 
     const std::vector<fs::path> failingTests{
       std::views::transform(read_tests(prunePaths.failures(std::nullopt)), path_projector{}) | std::ranges::to<std::vector>()
