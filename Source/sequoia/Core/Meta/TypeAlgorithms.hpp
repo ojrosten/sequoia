@@ -435,7 +435,7 @@ namespace sequoia::meta
 
   //==================================================== zip ===================================================//
 
-  /*! \brief Pairs two packs element-wise, under a binary template of the caller's choosing.
+  /** \brief Pairs two packs element-wise, under a binary template of the caller's choosing.
 
       `Pair` is explicit rather than defaulted because what a zipped element should *be* is the
       caller's business: `std::pair` for a value-like pairing, but equally a trait to be evaluated
