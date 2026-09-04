@@ -76,16 +76,17 @@ namespace sequoia::testing
         return std::source_location::current().file_name();
       }
 
-      /** The sleep is long relative to the accuracy of `sleep_for`, and that ratio is the whole
-          point of the number. Each call overshoots by a few ms - a per-call cost, near-independent
-          of the duration requested - so the eight calls a serial run makes contribute an error
-          which is fixed in absolute terms and therefore shrinks, as a fraction of the total, the
-          longer each sleep is. At 25ms that error was most of the budget these tests allow
-          themselves; at 100ms it is a few percent.
+      /** `sleep_for` overshoots by a few ms per call, and that cost is **per call and independent
+          of the duration requested**: eight of them contribute ~25ms whether each asks for 25ms or
+          for 100ms. Since the tolerances below are absolute, lengthening the sleeps would buy no
+          margin whatsoever - it would only shrink the error as a *fraction* of a total nothing
+          measures. So the sleeps are as short as the timings below can resolve, the overshoot is
+          absorbed by the tolerances, and anyone tempted to stabilise these checks by sleeping
+          longer will pay in run time and get nothing.
 
-          The number also fixes the lower bound of every timing check below. Each is centred so
-          that its *lower* bound is exactly the nominal time for that execution model - 100ms for
-          eight tasks run concurrently, 400ms for eight tasks over a pool of two, 800ms for eight
+          The duration also fixes the lower bound of every timing check below. Each is centred so
+          that its *lower* bound is exactly the nominal time for that execution model - 25ms for
+          eight tasks run concurrently, 100ms for eight tasks over a pool of two, 200ms for eight
           run serially. So the lower half of each tolerance is not slack: it asserts that the
           acceleration being claimed is real, and a run finishing faster than physics allows is a
           failure rather than a bonus.
@@ -93,7 +94,7 @@ namespace sequoia::testing
       void run_tests()
       {
         using namespace std::chrono_literals;
-        std::this_thread::sleep_for(100ms);
+        std::this_thread::sleep_for(25ms);
         check(equality, {"Integer equality"}, I, I);
       }
     };
@@ -179,7 +180,7 @@ namespace sequoia::testing
     runner.execute();
 
     auto outputFile{check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream)};
-    check(within_tolerance{30.0}, "", get_timing(outputFile), 130.0);
+    check(within_tolerance{35.0}, "", get_timing(outputFile), 60.0);
   }
 
   void test_runner_performance_test::test_thread_pool_acceleration()
@@ -190,7 +191,7 @@ namespace sequoia::testing
       runner.execute();
 
       auto outputFile{check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream)};
-      check(within_tolerance{25.0}, "", get_timing(outputFile), 125.0);
+      check(within_tolerance{30.0}, "", get_timing(outputFile), 55.0);
     }
 
     {
@@ -199,7 +200,7 @@ namespace sequoia::testing
       runner.execute();
 
       auto outputFile{check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream)};
-      check(within_tolerance{50.0}, "", get_timing(outputFile), 450.0);
+      check(within_tolerance{40.0}, "", get_timing(outputFile), 140.0);
     }
   }
 
@@ -210,6 +211,6 @@ namespace sequoia::testing
     runner.execute();
 
     auto outputFile{check_output(report({"Serial Output"}), "Serial Output", outputStream)};
-    check(within_tolerance{55.0}, "", get_timing(outputFile), 855.0);
+    check(within_tolerance{55.0}, "", get_timing(outputFile), 255.0);
   }
 }
