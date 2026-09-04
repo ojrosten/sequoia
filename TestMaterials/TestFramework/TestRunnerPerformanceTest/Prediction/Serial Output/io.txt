@@ -2,12 +2,12 @@
 Running tests, synchronously...
 
 Slow Suite:
-[Execution Time: 205ms]
+[Execution Time: 830ms]
 	Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 8]
 
 -----------Grand Totals-----------
-[Total Run Time: 216ms]
-[Execution Time: 205ms]
+[Total Run Time: 841ms]
+[Execution Time: 830ms]
 	Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 8]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
