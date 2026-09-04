@@ -54,6 +54,8 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path generated_project() const;
 
+    void await_tick_past_previous_run() const;
+
     void copy_aux_materials(const std::filesystem::path& relativeFrom, const std::filesystem::path& relativeTo) const;
 
     void create_run_and_check(std::string_view description, const cmd_builder& b);
