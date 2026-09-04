@@ -12,6 +12,7 @@
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
+#include "sequoia/TestFramework/ChronoCheckers.hpp"
 #include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
 #include <fstream>
