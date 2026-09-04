@@ -405,6 +405,12 @@ namespace sequoia::meta
 
   //==================================================== all_of ===================================================//
 
+  /** \brief Whether `Trait` holds for every element of the list.
+
+      `Trait` must be well-formed for every element, and not merely up to the
+      first for which it is false. Short-circuiting would make well-formedness
+      depend on the order of a list over which the answer does not depend.
+   */
   template<class T, template<class> class Trait>
   struct all_of;
 
@@ -420,6 +426,10 @@ namespace sequoia::meta
 
   //==================================================== any_of ===================================================//
 
+  /** \brief Whether `Trait` holds for at least one element of the list.
+
+      As for `all_of`, `Trait` must be well-formed for every element.
+   */
   template<class T, template<class> class Trait>
   struct any_of;
 
