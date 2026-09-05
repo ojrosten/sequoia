@@ -66,4 +66,4 @@ demangle=(--demangle-cpp)
 [[ -x "${gnu_cxxfilt}" ]] && demangle+=("${gnu_cxxfilt}")
 
 # Generate HTML report
-genhtml "${demangle[@]}" -o "${output_dir}" "${test_exe_dir}/coverage.info" --ignore-errors inconsistent --ignore-errors range --ignore-errors empty
+genhtml "${demangle[@]}" --suppress-aliases -o "${output_dir}" "${test_exe_dir}/coverage.info" --ignore-errors inconsistent --ignore-errors range --ignore-errors empty
