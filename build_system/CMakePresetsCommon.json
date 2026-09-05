@@ -21,6 +21,13 @@
       }
     },
     {
+      "name": "base-relwithdebinfo",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
       "name": "base-binary",
       "hidden": true,
       "binaryDir": "${sourceDir}/../build/${sourceDirName}/${presetName}"
@@ -65,7 +72,7 @@
       "name": "base-coverage",
       "hidden": true,
       "environment": {
-        "CXX_COVERAGE_FLAGS": "-coverage",
+        "CXX_COVERAGE_FLAGS": "-coverage -fprofile-update=atomic",
         "LINKER_COVERAGE_FLAGS": "-coverage"
       },
       "cacheVariables": {
@@ -176,16 +183,28 @@
       "inherits": ["base-homebrew-llvm", "base-release"]
     },
     {
-      "name": "macos-homebrew-llvm-release-asan",
-      "displayName": "macOS Homebrew LLVM [Release, asan]",
+      "name": "macos-homebrew-llvm-relwithdebinfo-asan",
+      "displayName": "macOS Homebrew LLVM [RelWithDebInfo, asan]",
       "description": "Configure for ${displayName}",
-      "inherits": ["macos-homebrew-llvm-release", "base-asan-unix"]
+      "inherits": ["base-homebrew-llvm", "base-relwithdebinfo", "base-asan-unix"]
     },
     {
       "name": "macos-homebrew-llvm-ubsan",
       "displayName": "macOS Homebrew LLVM [Debug, ubsan]",
       "description": "Configure for ${displayName}",
       "inherits": ["macos-homebrew-llvm", "base-ubsan-unix"]
+    },
+    {
+      "name": "macos-homebrew-llvm-relwithdebinfo-ubsan",
+      "displayName": "macOS Homebrew LLVM [RelWithDebInfo, ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-homebrew-llvm", "base-relwithdebinfo", "base-ubsan-unix"]
+    },
+    {
+      "name": "macos-homebrew-llvm-asan-ubsan",
+      "displayName": "macOS Homebrew LLVM [Debug, asan+ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["macos-homebrew-llvm", "base-asan-unix", "base-ubsan-unix"]
     },
     {
       "name": "macos-homebrew-gcc",
@@ -224,10 +243,10 @@
       "inherits": ["base-linux-pkg-gcc", "base-release"]
     },
     {
-      "name": "linux-pkg-gcc-release-asan",
-      "displayName": "Linux g++-15 [Release, asan]",
+      "name": "linux-pkg-gcc-relwithdebinfo-asan",
+      "displayName": "Linux g++-15 [RelWithDebInfo, asan]",
       "description": "Configure for ${displayName}",
-      "inherits": ["linux-pkg-gcc-release", "base-asan-unix"]
+      "inherits": ["base-linux-pkg-gcc", "base-relwithdebinfo", "base-asan-unix"]
     },
     {
       "name": "linux-gcc",
@@ -254,10 +273,10 @@
       "inherits": ["base-linux-gcc", "base-release"]
     },
     {
-      "name": "linux-gcc-release-asan",
-      "displayName": "Linux g++ [Release, asan]",
+      "name": "linux-gcc-relwithdebinfo-asan",
+      "displayName": "Linux g++ [RelWithDebInfo, asan]",
       "description": "Configure for ${displayName}",
-      "inherits": ["linux-gcc-release", "base-asan-unix"]
+      "inherits": ["base-linux-gcc", "base-relwithdebinfo", "base-asan-unix"]
     },
     {
       "name": "msvc",
@@ -337,15 +356,15 @@
       "inherits": ["macos-homebrew-llvm-release", "base-run"]
     },
     {
-      "name": "macos-homebrew-llvm-release-asan",
-      "displayName": "macOS Homebrew LLVM [Release, asan]",
-      "configurePreset": "macos-homebrew-llvm-release-asan",
+      "name": "macos-homebrew-llvm-relwithdebinfo-asan",
+      "displayName": "macOS Homebrew LLVM [RelWithDebInfo, asan]",
+      "configurePreset": "macos-homebrew-llvm-relwithdebinfo-asan",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-macos-homebrew-llvm-release-asan",
-      "displayName": "Run macOS Homebrew LLVM [Release, asan]",
-      "inherits": ["macos-homebrew-llvm-release-asan", "base-run"]
+      "name": "run-macos-homebrew-llvm-relwithdebinfo-asan",
+      "displayName": "Run macOS Homebrew LLVM [RelWithDebInfo, asan]",
+      "inherits": ["macos-homebrew-llvm-relwithdebinfo-asan", "base-run"]
     },
     {
       "name": "linux-gcc",
@@ -392,15 +411,15 @@
       "inherits": ["linux-gcc-release", "base-run"]
     },
     {
-      "name": "linux-gcc-release-asan",
-      "displayName": "Linux g++ [Release, asan]",
-      "configurePreset": "linux-gcc-release-asan",
+      "name": "linux-gcc-relwithdebinfo-asan",
+      "displayName": "Linux g++ [RelWithDebInfo, asan]",
+      "configurePreset": "linux-gcc-relwithdebinfo-asan",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-linux-gcc-release-asan",
-      "displayName": "Run Linux g++ [Release, asan]",
-      "inherits": ["linux-gcc-release-asan", "base-run"]
+      "name": "run-linux-gcc-relwithdebinfo-asan",
+      "displayName": "Run Linux g++ [RelWithDebInfo, asan]",
+      "inherits": ["linux-gcc-relwithdebinfo-asan", "base-run"]
     },
     {
       "name": "macos-homebrew-llvm-ubsan",
@@ -412,6 +431,28 @@
       "name": "run-macos-homebrew-llvm-ubsan",
       "displayName": "Run macOS Homebrew LLVM [Debug, ubsan]",
       "inherits": ["macos-homebrew-llvm-ubsan", "base-run"]
+    },
+    {
+      "name": "macos-homebrew-llvm-relwithdebinfo-ubsan",
+      "displayName": "macOS Homebrew LLVM [RelWithDebInfo, ubsan]",
+      "configurePreset": "macos-homebrew-llvm-relwithdebinfo-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-llvm-relwithdebinfo-ubsan",
+      "displayName": "Run macOS Homebrew LLVM [RelWithDebInfo, ubsan]",
+      "inherits": ["macos-homebrew-llvm-relwithdebinfo-ubsan", "base-run"]
+    },
+    {
+      "name": "macos-homebrew-llvm-asan-ubsan",
+      "displayName": "macOS Homebrew LLVM [Debug, asan+ubsan]",
+      "configurePreset": "macos-homebrew-llvm-asan-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-llvm-asan-ubsan",
+      "displayName": "Run macOS Homebrew LLVM [Debug, asan+ubsan]",
+      "inherits": ["macos-homebrew-llvm-asan-ubsan", "base-run"]
     },
     {
       "name": "macos-homebrew-gcc",
@@ -480,15 +521,15 @@
       "inherits": ["linux-pkg-gcc-release", "base-run"]
     },
     {
-      "name": "linux-pkg-gcc-release-asan",
-      "displayName": "Linux g++-15 [Release, asan]",
-      "configurePreset": "linux-pkg-gcc-release-asan",
+      "name": "linux-pkg-gcc-relwithdebinfo-asan",
+      "displayName": "Linux g++-15 [RelWithDebInfo, asan]",
+      "configurePreset": "linux-pkg-gcc-relwithdebinfo-asan",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-linux-pkg-gcc-release-asan",
-      "displayName": "Run Linux g++-15 [Release, asan]",
-      "inherits": ["linux-pkg-gcc-release-asan", "base-run"]
+      "name": "run-linux-pkg-gcc-relwithdebinfo-asan",
+      "displayName": "Run Linux g++-15 [RelWithDebInfo, asan]",
+      "inherits": ["linux-pkg-gcc-relwithdebinfo-asan", "base-run"]
     },
     {
       "name": "msvc",
@@ -524,15 +565,15 @@
       "inherits": ["msvc-release", "base-run"]
     },
     {
-      "name": "msvc-release-asan",
-      "displayName": "MSVC [Release, asan]",
+      "name": "msvc-relwithdebinfo-asan",
+      "displayName": "MSVC [RelWithDebInfo, asan]",
       "configurePreset": "msvc-asan",
-      "configuration": "Release"
+      "configuration": "RelWithDebInfo"
     },
     {
-      "name": "run-msvc-release-asan",
-      "displayName": "Run MSVC [Release, asan]",
-      "inherits": ["msvc-release-asan", "base-run"]
+      "name": "run-msvc-relwithdebinfo-asan",
+      "displayName": "Run MSVC [RelWithDebInfo, asan]",
+      "inherits": ["msvc-relwithdebinfo-asan", "base-run"]
     }
   ],
   "workflowPresets": [
@@ -546,6 +587,32 @@
         {
           "type": "build",
           "name": "run-macos-homebrew-llvm-ubsan"
+        }
+      ]
+    },
+    {
+      "name": "macos-homebrew-llvm-relwithdebinfo-ubsan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos-homebrew-llvm-relwithdebinfo-ubsan"
+        },
+        {
+          "type": "build",
+          "name": "run-macos-homebrew-llvm-relwithdebinfo-ubsan"
+        }
+      ]
+    },
+    {
+      "name": "macos-homebrew-llvm-asan-ubsan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos-homebrew-llvm-asan-ubsan"
+        },
+        {
+          "type": "build",
+          "name": "run-macos-homebrew-llvm-asan-ubsan"
         }
       ]
     },
@@ -641,15 +708,15 @@
       ]
     },
     {
-      "name": "macos-homebrew-llvm-release-asan",
+      "name": "macos-homebrew-llvm-relwithdebinfo-asan",
       "steps": [
         {
           "type": "configure",
-          "name": "macos-homebrew-llvm-release-asan"
+          "name": "macos-homebrew-llvm-relwithdebinfo-asan"
         },
         {
           "type": "build",
-          "name": "run-macos-homebrew-llvm-release-asan"
+          "name": "run-macos-homebrew-llvm-relwithdebinfo-asan"
         }
       ]
     },
@@ -706,15 +773,15 @@
       ]
     },
     {
-      "name": "linux-gcc-release-asan",
+      "name": "linux-gcc-relwithdebinfo-asan",
       "steps": [
         {
           "type": "configure",
-          "name": "linux-gcc-release-asan"
+          "name": "linux-gcc-relwithdebinfo-asan"
         },
         {
           "type": "build",
-          "name": "run-linux-gcc-release-asan"
+          "name": "run-linux-gcc-relwithdebinfo-asan"
         }
       ]
     },  
@@ -771,15 +838,15 @@
       ]
     },
     {
-      "name": "linux-pkg-gcc-release-asan",
+      "name": "linux-pkg-gcc-relwithdebinfo-asan",
       "steps": [
         {
           "type": "configure",
-          "name": "linux-pkg-gcc-release-asan"
+          "name": "linux-pkg-gcc-relwithdebinfo-asan"
         },
         {
           "type": "build",
-          "name": "run-linux-pkg-gcc-release-asan"
+          "name": "run-linux-pkg-gcc-relwithdebinfo-asan"
         }
       ]
     },
@@ -823,7 +890,7 @@
       ]
     },
     {
-      "name": "msvc-release-asan",
+      "name": "msvc-relwithdebinfo-asan",
       "steps": [
         {
           "type": "configure",
@@ -831,7 +898,7 @@
         },
         {
           "type": "build",
-          "name": "run-msvc-release-asan"
+          "name": "run-msvc-relwithdebinfo-asan"
         }
       ]
     }

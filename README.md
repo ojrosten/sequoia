@@ -25,7 +25,7 @@ git 2.40.0
 CMake 3.31.6 / 4.2 (for MSVC)  
 clang 21.1.5  
 g++ 15.2.0  
-Visual Studio 2028, 18.5.1
+Visual Studio 2026, 18.5.1
 
 ## Dependencies
 

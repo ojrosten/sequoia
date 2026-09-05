@@ -227,8 +227,8 @@ namespace sequoia::testing
   <
     test_mode Mode,
     moveonly T,
-    regular_invocable_exactly_r<T> xMaker,
-    regular_invocable_exactly_r<T> yMaker,
+    regular_invocable_exact_r<T> xMaker,
+    regular_invocable_exact_r<T> yMaker,
     std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >
@@ -257,8 +257,8 @@ namespace sequoia::testing
   <
     test_mode Mode,
     moveonly T,
-    regular_invocable_exactly_r<T> xMaker,
-    regular_invocable_exactly_r<T> yMaker,
+    regular_invocable_exact_r<T> xMaker,
+    regular_invocable_exact_r<T> yMaker,
     std::invocable<T&> Mutator,
     alloc_getter<T>... Getters
   >

@@ -239,7 +239,7 @@ namespace sequoia::testing::impl
 
   //================================ comparisons ================================//
 
-  template<test_mode Mode, comparison_flavour C, class Actions, movable_comparable T, invocable_exactly_r<bool, T> Fn, class... Args>
+  template<test_mode Mode, comparison_flavour C, class Actions, movable_comparable T, invocable_exact_r<bool, T> Fn, class... Args>
   bool do_check_comparison_consistency(test_logger<Mode>& logger, comparison_constant<C> comparison, [[maybe_unused]] const Actions& actions, const T& x, std::string_view tag, Fn fn, [[maybe_unused]] const Args&... args)
   {
     if(!check(std::string{"operator"}.append(to_string(comparison.value)).append(" is inconsistent ").append(tag), logger, fn(x)))
@@ -254,7 +254,7 @@ namespace sequoia::testing::impl
     return true;
   }
 
-  template<test_mode Mode, comparison_flavour C, class Actions, movable_comparable T, invocable_exactly_r<bool, T> Fn>
+  template<test_mode Mode, comparison_flavour C, class Actions, movable_comparable T, invocable_exact_r<bool, T> Fn>
   bool check_comparison_consistency(test_logger<Mode>& logger, comparison_constant<C> comparison, const Actions& actions, const T& x, const T& y, Fn fn)
   {
     sentinel sentry{logger, ""};

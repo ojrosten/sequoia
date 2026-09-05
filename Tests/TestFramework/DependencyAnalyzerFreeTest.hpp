@@ -54,9 +54,13 @@ namespace sequoia::testing
 
     std::filesystem::file_time_type m_ResetTime{};
 
+    void test_staleness_threshold();
+
     void test_exceptions(const project_paths& projPaths);
 
     void test_dependencies(const project_paths& projPaths);
+
+    void test_stamp_on_second_boundary(const project_paths& projPaths);
 
     void test_prune_update(const project_paths& projPaths);
 

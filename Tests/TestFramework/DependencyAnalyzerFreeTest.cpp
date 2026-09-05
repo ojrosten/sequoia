@@ -12,6 +12,7 @@
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
+#include "sequoia/TestFramework/ChronoCheckers.hpp"
 #include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
 #include <fstream>
@@ -22,13 +23,33 @@ namespace sequoia::testing
 
   namespace
   {
+    /* A timeline, in seconds either side of m_ResetTime, at which the fake project's files are
+       stamped. Every unmodified file sits at the reset time and every modification after the prune
+       stamp, so the ordering is what each check is really about.
+
+       The gap either side of the stamp is two seconds because a coarse filesystem forces it to be.
+       Where `last_write_time` is truncated to whole seconds - libstdc++ does this on macOS - a
+       modification made in the same second as the stamp is indistinguishable from one made during
+       the run which wrote it, and `staleness_threshold` resolves that ambiguity by moving the
+       threshold a second earlier. So an unmodified file must be a clear second below the threshold,
+       and a modification a clear second above it. The boundary itself - a file whose stamp equals
+       the threshold exactly - is deliberately not asserted on here: its answer is a property of the
+       filesystem rather than of the analyzer.
+    */
     constexpr auto earlyExecutableOffset{std::chrono::seconds{-1}};
     constexpr auto resetOffset{std::chrono::seconds{0}};
-    constexpr auto earlyPassOffset{std::chrono::seconds{1}}; // very_early
-    constexpr auto earlyEditOffset{std::chrono::seconds{2}};  // early
-    constexpr auto lateExecutableOffset{std::chrono::seconds{3}};
-    constexpr auto latePassOffset{std::chrono::seconds{4}};   // late
-    constexpr auto lateEditOffset{std::chrono::seconds{5}};   // very_late
+    constexpr auto pruneStampOffset{std::chrono::seconds{2}};
+    constexpr auto earlyPassOffset{std::chrono::seconds{3}}; // very_early
+    constexpr auto earlyEditOffset{std::chrono::seconds{4}};  // early
+    constexpr auto lateExecutableOffset{std::chrono::seconds{5}};
+    constexpr auto latePassOffset{std::chrono::seconds{6}};   // late
+    constexpr auto lateEditOffset{std::chrono::seconds{7}};   // very_late
+
+    [[nodiscard]]
+    constexpr fs::file_time_type stamp_at(std::chrono::milliseconds sinceEpoch)
+    {
+      return fs::file_time_type{} + std::chrono::duration_cast<fs::file_time_type::duration>(sinceEpoch);
+    }
 
     enum node_names : std::size_t
     {
@@ -146,6 +167,8 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::run_tests()
   {
+    test_staleness_threshold();
+
     m_ResetTime = std::chrono::file_clock::now() + resetOffset;
 
     const auto fake{auxiliary_materials() /= "FakeProject"};
@@ -164,10 +187,40 @@ namespace sequoia::testing
       fs::last_write_time(entry.path(), m_ResetTime);
     }
 
+    // The loop above reaches the stamp too, since the prune directory is inside the fake project;
+    // set it afterwards so that it, rather than the reset time, marks the start of the run.
+    fs::last_write_time(prunePaths.stamp(), m_ResetTime + pruneStampOffset);
+
     test_exceptions(projPaths);
     test_dependencies(projPaths);
+    test_stamp_on_second_boundary(projPaths);
     test_prune_update(projPaths);
     test_instability_analysis_prune_upate(projPaths);
+  }
+
+  void dependency_analyzer_free_test::test_staleness_threshold()
+  {
+    using namespace std::chrono_literals;
+
+    check(equality,
+          "A stamp on a second boundary cannot be told from a truncated one, so it is widened",
+          staleness_threshold(stamp_at(0ms)),
+          stamp_at(-1000ms));
+
+    check(equality,
+          "A stamp carrying sub-second information is its own threshold",
+          staleness_threshold(stamp_at(1500ms)),
+          stamp_at(1500ms));
+
+    check(equality,
+          "Sub-second information before the clock's epoch, where a truncation towards zero would lose it",
+          staleness_threshold(stamp_at(-1500ms)),
+          stamp_at(-1500ms));
+
+    check(equality,
+          "A whole number of seconds before the clock's epoch is still on a boundary",
+          staleness_threshold(stamp_at(-2000ms)),
+          stamp_at(-3000ms));
   }
 
   void dependency_analyzer_free_test::test_exceptions(const project_paths& projPaths)
@@ -452,6 +505,33 @@ namespace sequoia::testing
                        {{"HouseAllocationTest.cpp"  , m_ResetTime + to_duration(modification_time::very_early)},
                         {"Maths/ProbabilityTest.cpp", m_ResetTime + to_duration(modification_time::late)}});
 
+  }
+
+  void dependency_analyzer_free_test::test_stamp_on_second_boundary(const project_paths& projPaths)
+  {
+    /* A stamp which sits on a second boundary cannot be told from one a truncating filesystem
+       produced, so a modification recorded at exactly that time must be treated as stale. This
+       holds whatever the filesystem's resolution actually is, since the stamp is written on the
+       boundary either way - which is what makes it the one check that observes
+       `staleness_threshold` through the analyzer rather than calling it directly. Without it,
+       removing the widening from `tests_to_run` would leave every check here passing.
+    */
+    using namespace std::chrono;
+    const fs::file_time_type boundary{floor<seconds>(m_ResetTime + pruneStampOffset)};
+    const auto stalePath{projPaths.tests().repo() / "HouseAllocationTest.cpp"};
+
+    fs::last_write_time(projPaths.prune().stamp(), boundary);
+    fs::last_write_time(stalePath, boundary);
+
+    check(equality,
+          "A modification recorded at a stamp which lies on a second boundary is stale",
+          tests_to_run(projPaths, ""),
+          opt_test_list{test_list{{"HouseAllocationTest.cpp"}}});
+
+    fs::last_write_time(stalePath, m_ResetTime);
+    fs::last_write_time(projPaths.prune().stamp(), m_ResetTime + pruneStampOffset);
+
+    check(equality, "Nothing Stale", tests_to_run(projPaths, ""), opt_test_list{test_list{}});
   }
 
   void dependency_analyzer_free_test::test_prune_update(const project_paths& projPaths)

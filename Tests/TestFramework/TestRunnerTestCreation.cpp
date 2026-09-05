@@ -122,6 +122,7 @@ namespace sequoia::testing
 
     fs::copy(templateMain.file(), fakeMain.file());
     fs::copy(templateMain.cmake_lists(), fakeMain.cmake_lists());
+    fs::copy(templateMain.dir() / "CMakePresets.json", fakeMain.dir());
     read_modify_write(
       fakeMain.cmake_lists(),
       [projectName,&sourceFolder](std::string& text) {
@@ -129,8 +130,6 @@ namespace sequoia::testing
         replace_all(text, "myProject", sourceFolder ? sourceFolder.value() : uncapitalize(projectName));
       }
     );
-
-    fs::copy(get_project_paths().build_system().repo() / "CMakePresetsCommon.json", fakeMain.dir() / "CMakePresets.json");
 
     commandline_arguments args{{zeroth_arg(projectName)
                                , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"

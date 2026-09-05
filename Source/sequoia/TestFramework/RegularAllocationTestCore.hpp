@@ -42,8 +42,8 @@ namespace sequoia::testing
     <
       class Self,
       pseudoregular T,
-      invocable_exactly_r<T> xMaker,
-      invocable_exactly_r<T> yMaker,
+      invocable_exact_r<T> xMaker,
+      invocable_exact_r<T> yMaker,
       std::invocable<T&> Mutator,
       alloc_getter<T>... Getters
     >
@@ -64,8 +64,8 @@ namespace sequoia::testing
     <
       class Self,
       pseudoregular T,
-      invocable_exactly_r<T> xMaker,
-      invocable_exactly_r<T> yMaker,
+      invocable_exact_r<T> xMaker,
+      invocable_exact_r<T> yMaker,
       std::invocable<T&> Mutator,
       alloc_getter<T>... Getters
     >
