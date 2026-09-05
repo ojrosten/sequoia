@@ -73,6 +73,13 @@
       }
     },
     {
+      "name": "base-optimised-debug",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS_DEBUG": "-g -Og"
+      }
+    },
+    {
       "name": "base-time-trace",
       "hidden": true,
       "cacheVariables": {
@@ -155,6 +162,12 @@
       "displayName": "macOS Homebrew LLVM [Debug, time-trace]",
       "description": "Configure for ${displayName}",
       "inherits": ["macos-homebrew-llvm", "base-time-trace"]
+    },
+    {
+      "name": "macos-homebrew-llvm-optimised-debug-asan",
+      "displayName": "macOS Homebrew LLVM [Debug at -Og, asan]",
+      "description": "Configure for ${displayName}. Debug semantics with the optimiser on: assertions, the sanitizers and the debug standard library all stay, but the template instantiations nothing calls are no longer emitted. On TestAll that is 569.5 MB -> 159.0 MB, for a build roughly 2.4x longer.",
+      "inherits": ["macos-homebrew-llvm-asan", "base-optimised-debug"]
     },
     {
       "name": "macos-homebrew-llvm-release",
@@ -294,6 +307,17 @@
       "name": "run-macos-homebrew-llvm-asan",
       "displayName": "Run macOS Homebrew LLVM [Debug, asan]",
       "inherits": ["macos-homebrew-llvm-asan", "base-run"]
+    },
+    {
+      "name": "macos-homebrew-llvm-optimised-debug-asan",
+      "displayName": "macOS Homebrew LLVM [Debug at -Og, asan]",
+      "configurePreset": "macos-homebrew-llvm-optimised-debug-asan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-llvm-optimised-debug-asan",
+      "displayName": "Run macOS Homebrew LLVM [Debug at -Og, asan]",
+      "inherits": ["macos-homebrew-llvm-optimised-debug-asan", "base-run"]
     },
     {
       "name": "macos-homebrew-llvm-time-trace",
@@ -574,6 +598,19 @@
         {
           "type": "build",
           "name": "run-macos-homebrew-llvm-asan"
+        }
+      ]
+    },
+    {
+      "name": "macos-homebrew-llvm-optimised-debug-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos-homebrew-llvm-optimised-debug-asan"
+        },
+        {
+          "type": "build",
+          "name": "run-macos-homebrew-llvm-optimised-debug-asan"
         }
       ]
     },
