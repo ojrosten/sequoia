@@ -191,7 +191,7 @@
     {
       "name": "macos-homebrew-llvm-optimised-debug-asan",
       "displayName": "macOS Homebrew LLVM [Debug at -Og, asan]",
-      "description": "Configure for ${displayName}. Debug semantics with the optimiser on: assertions, the sanitizers and the debug standard library all stay, but the template instantiations nothing calls are no longer emitted. On TestAll that is 569.5 MB -> 159.0 MB, for a build roughly 2.4x longer.",
+      "description": "Configure for ${displayName}. Debug semantics with the optimiser on: assertions, sanitizers and the debug standard library all stay. Much smaller binaries, longer builds.",
       "inherits": ["macos-homebrew-llvm-asan", "base-optimised-debug"]
     },
     {
