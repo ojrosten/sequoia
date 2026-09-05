@@ -129,7 +129,7 @@
       "inherits": ["base-unix"]
     },
     {
-      "name": "base-homebrew-gcc",
+      "name": "base-homebrew-gcc-16",
       "hidden": true,
       "cacheVariables": {
         "CMAKE_C_COMPILER": "/opt/homebrew/bin/gcc-16",
@@ -222,28 +222,28 @@
       "inherits": ["macos-homebrew-llvm", "base-asan-unix", "base-ubsan-unix"]
     },
     {
-      "name": "macos-homebrew-gcc",
-      "displayName": "macOS Homebrew GCC [Debug]",
+      "name": "macos-homebrew-gcc-16",
+      "displayName": "macOS Homebrew GCC 16 [Debug]",
       "description": "Configure for ${displayName}",
-      "inherits": ["base-homebrew-gcc", "base-debug"]
+      "inherits": ["base-homebrew-gcc-16", "base-debug"]
     },
     {
-      "name": "macos-homebrew-gcc-coverage",
-      "displayName": "macOS Homebrew GCC [Debug,coverage]",
+      "name": "macos-homebrew-gcc-16-coverage",
+      "displayName": "macOS Homebrew GCC 16 [Debug,coverage]",
       "description": "Configure for ${displayName}",
-      "inherits": ["macos-homebrew-gcc", "base-coverage"]
+      "inherits": ["macos-homebrew-gcc-16", "base-coverage"]
     },
     {
-      "name": "macos-homebrew-gcc-asan",
-      "displayName": "macOS Homebrew GCC [Debug, asan]",
+      "name": "macos-homebrew-gcc-16-asan",
+      "displayName": "macOS Homebrew GCC 16 [Debug, asan]",
       "description": "Configure for ${displayName}",
-      "inherits": ["macos-homebrew-gcc", "base-asan-unix"]
+      "inherits": ["macos-homebrew-gcc-16", "base-asan-unix"]
     },
     {
-      "name": "macos-homebrew-gcc-bug-report",
-      "displayName": "macOS Homebrew GCC [Debug, bug report]",
+      "name": "macos-homebrew-gcc-16-bug-report",
+      "displayName": "macOS Homebrew GCC 16 [Debug, bug report]",
       "description": "Configure for ${displayName}",
-      "inherits": ["macos-homebrew-gcc", "base-bug-report"]
+      "inherits": ["macos-homebrew-gcc-16", "base-bug-report"]
     },
     {
       "name": "linux-gcc-15",
@@ -504,43 +504,43 @@
       "inherits": ["macos-homebrew-llvm-asan-ubsan", "base-run"]
     },
     {
-      "name": "macos-homebrew-gcc",
-      "displayName": "macOS Homebrew GCC [Debug]",
-      "configurePreset": "macos-homebrew-gcc",
+      "name": "macos-homebrew-gcc-16",
+      "displayName": "macOS Homebrew GCC 16 [Debug]",
+      "configurePreset": "macos-homebrew-gcc-16",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "macos-homebrew-gcc-bug-report",
-      "displayName": "macOS Homebrew GCC [Debug, bug report]",
-      "configurePreset": "macos-homebrew-gcc-bug-report",
+      "name": "macos-homebrew-gcc-16-bug-report",
+      "displayName": "macOS Homebrew GCC 16 [Debug, bug report]",
+      "configurePreset": "macos-homebrew-gcc-16-bug-report",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-macos-homebrew-gcc",
-      "displayName": "Run macOS Homebrew GCC [Debug]",
-      "inherits": ["macos-homebrew-gcc", "base-run"]
+      "name": "run-macos-homebrew-gcc-16",
+      "displayName": "Run macOS Homebrew GCC 16 [Debug]",
+      "inherits": ["macos-homebrew-gcc-16", "base-run"]
     },
     {
-      "name": "macos-homebrew-gcc-coverage",
-      "displayName": "macOS Homebrew GCC [Debug, coverage]",
-      "configurePreset": "macos-homebrew-gcc-coverage",
+      "name": "macos-homebrew-gcc-16-coverage",
+      "displayName": "macOS Homebrew GCC 16 [Debug, coverage]",
+      "configurePreset": "macos-homebrew-gcc-16-coverage",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-macos-homebrew-gcc-coverage",
-      "displayName": "Run macOS Homebrew GCC [Debug, coverage]",
-      "inherits": ["macos-homebrew-gcc-coverage", "base-run"]
+      "name": "run-macos-homebrew-gcc-16-coverage",
+      "displayName": "Run macOS Homebrew GCC 16 [Debug, coverage]",
+      "inherits": ["macos-homebrew-gcc-16-coverage", "base-run"]
     },
     {
-      "name": "macos-homebrew-gcc-asan",
-      "displayName": "macOS Homebrew GCC [Debug, asan]",
-      "configurePreset": "macos-homebrew-gcc-asan",
+      "name": "macos-homebrew-gcc-16-asan",
+      "displayName": "macOS Homebrew GCC 16 [Debug, asan]",
+      "configurePreset": "macos-homebrew-gcc-16-asan",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-macos-homebrew-gcc-asan",
-      "displayName": "Run macOS Homebrew GCC [Debug, asan]",
-      "inherits": ["macos-homebrew-gcc-asan", "base-run"]
+      "name": "run-macos-homebrew-gcc-16-asan",
+      "displayName": "Run macOS Homebrew GCC 16 [Debug, asan]",
+      "inherits": ["macos-homebrew-gcc-16-asan", "base-run"]
     },
     {
       "name": "linux-gcc-15",
@@ -683,41 +683,41 @@
       ]
     },
     {
-      "name": "macos-homebrew-gcc",
+      "name": "macos-homebrew-gcc-16",
       "steps": [
         {
           "type": "configure",
-          "name": "macos-homebrew-gcc"
+          "name": "macos-homebrew-gcc-16"
         },
         {
           "type": "build",
-          "name": "run-macos-homebrew-gcc"
+          "name": "run-macos-homebrew-gcc-16"
         }
       ]
     },
     {
-      "name": "macos-homebrew-gcc-coverage",
+      "name": "macos-homebrew-gcc-16-coverage",
       "steps": [
         {
           "type": "configure",
-          "name": "macos-homebrew-gcc-coverage"
+          "name": "macos-homebrew-gcc-16-coverage"
         },
         {
           "type": "build",
-          "name": "run-macos-homebrew-gcc-coverage"
+          "name": "run-macos-homebrew-gcc-16-coverage"
         }
       ]
     },
     {
-      "name": "macos-homebrew-gcc-asan",
+      "name": "macos-homebrew-gcc-16-asan",
       "steps": [
         {
           "type": "configure",
-          "name": "macos-homebrew-gcc-asan"
+          "name": "macos-homebrew-gcc-16-asan"
         },
         {
           "type": "build",
-          "name": "run-macos-homebrew-gcc-asan"
+          "name": "run-macos-homebrew-gcc-16-asan"
         }
       ]
     },
