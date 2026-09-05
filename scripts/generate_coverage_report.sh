@@ -39,10 +39,31 @@ pushd "${test_exe_dir}"
 ctest -T Test
 popd
 
+# gcov must match the compiler which produced the .gcda files, so take it from the build itself
+if [[ -z "${gcov_tool}" ]]; then
+  cxx=$(sed -n 's/^CMAKE_CXX_COMPILER:[^=]*=//p' "${test_exe_dir}/CMakeCache.txt")
+  case "${cxx##*/}" in
+    g++-*)    gcov_tool="${cxx%/*}/gcov-${cxx##*g++-}" ;;
+    clang++)  gcov_tool="${cxx%/*}/llvm-cov gcov"      ;;
+    *)        gcov_tool="gcov"                         ;;
+  esac
+fi
+echo "gcov: ${gcov_tool}"
+
 # Generate lcov coverage report
-lcov --directory "${test_exe_dir}"  --capture --output-file "${test_exe_dir}/coverage.info" --keep-going --filter range --rc geninfo_unexecuted_blocks=1 --ignore-errors empty --gcov-tool /usr/bin/gcov-15
+lcov --directory "${test_exe_dir}"  --capture --output-file "${test_exe_dir}/coverage.info" --keep-going --filter range --rc geninfo_unexecuted_blocks=1 --ignore-errors empty --gcov-tool ${gcov_tool}
+foreign=('/usr/*')
+if [[ "$(uname -s)" == Darwin ]]; then
+  foreign+=('/opt/homebrew/*' '/Library/Developer/*' '/Applications/Xcode.app/*')
+fi
+
 # The doubling is deliberate: it suppresses display too, leaving genhtml the sole reporter
-lcov --remove  "${test_exe_dir}/coverage.info" '/usr/*' --output-file "${test_exe_dir}/coverage.info" --ignore-errors inconsistent,inconsistent --ignore-errors empty
+lcov --remove  "${test_exe_dir}/coverage.info" "${foreign[@]}" --output-file "${test_exe_dir}/coverage.info" --ignore-errors inconsistent,inconsistent --ignore-errors empty
+
+# lcov forces --no-strip-underscores on Darwin, which only GNU c++filt accepts
+gnu_cxxfilt="/opt/homebrew/opt/binutils/bin/c++filt"
+demangle=(--demangle-cpp)
+[[ -x "${gnu_cxxfilt}" ]] && demangle+=("${gnu_cxxfilt}")
 
 # Generate HTML report
-genhtml --demangle-cpp -o "${output_dir}" "${test_exe_dir}/coverage.info" --ignore-errors inconsistent --ignore-errors range --ignore-errors empty
+genhtml "${demangle[@]}" -o "${output_dir}" "${test_exe_dir}/coverage.info" --ignore-errors inconsistent --ignore-errors range --ignore-errors empty
