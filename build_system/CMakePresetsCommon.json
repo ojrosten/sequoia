@@ -126,7 +126,7 @@
       "inherits": ["base-unix"]
     },
     {
-      "name": "base-homebrew-gcc",
+      "name": "base-homebrew-gcc-16",
       "hidden": true,
       "cacheVariables": {
         "CMAKE_C_COMPILER": "/opt/homebrew/bin/gcc-16",
@@ -135,7 +135,7 @@
       "inherits": ["base-gcc"]
     },
     {
-      "name": "base-linux-pkg-gcc",
+      "name": "base-linux-gcc-15",
       "hidden": true,
       "cacheVariables": {
         "CMAKE_C_COMPILER": "/usr/bin/gcc-15",
@@ -151,6 +151,24 @@
         "CMAKE_CXX_COMPILER": "/usr/bin/g++"
       },
       "inherits": ["base-gcc"]
+    },
+    {
+      "name": "env-gcc",
+      "displayName": "GCC from the environment [Debug]",
+      "description": "Configure for ${displayName}. Set CC and CXX: unset, CMake picks the platform default, which may not be GCC.",
+      "inherits": ["base-gcc", "base-debug"]
+    },
+    {
+      "name": "env-gcc-coverage",
+      "displayName": "GCC from the environment [Debug,coverage]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["env-gcc", "base-coverage"]
+    },
+    {
+      "name": "env-llvm",
+      "displayName": "LLVM from the environment [Debug]",
+      "description": "Configure for ${displayName}. Set CC and CXX: unset, CMake picks the platform default.",
+      "inherits": ["base-llvm", "base-debug"]
     },
     {
       "name": "macos-homebrew-llvm",
@@ -207,46 +225,52 @@
       "inherits": ["macos-homebrew-llvm", "base-asan-unix", "base-ubsan-unix"]
     },
     {
-      "name": "macos-homebrew-gcc",
-      "displayName": "macOS Homebrew GCC [Debug]",
+      "name": "macos-homebrew-gcc-16",
+      "displayName": "macOS Homebrew GCC 16 [Debug]",
       "description": "Configure for ${displayName}",
-      "inherits": ["base-homebrew-gcc", "base-debug"]
+      "inherits": ["base-homebrew-gcc-16", "base-debug"]
     },
     {
-      "name": "macos-homebrew-gcc-asan",
-      "displayName": "macOS Homebrew GCC [Debug, asan]",
+      "name": "macos-homebrew-gcc-16-coverage",
+      "displayName": "macOS Homebrew GCC 16 [Debug,coverage]",
       "description": "Configure for ${displayName}",
-      "inherits": ["macos-homebrew-gcc", "base-asan-unix"]
+      "inherits": ["macos-homebrew-gcc-16", "base-coverage"]
     },
     {
-      "name": "linux-pkg-gcc",
+      "name": "macos-homebrew-gcc-16-asan",
+      "displayName": "macOS Homebrew GCC 16 [Debug, asan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["macos-homebrew-gcc-16", "base-asan-unix"]
+    },
+    {
+      "name": "linux-gcc-15",
       "displayName": "Linux g++-15 [Debug]",
       "description": "Configure for ${displayName}",
-      "inherits": ["base-linux-pkg-gcc", "base-debug"]
+      "inherits": ["base-linux-gcc-15", "base-debug"]
     },
     {
-      "name": "linux-pkg-gcc-asan",
+      "name": "linux-gcc-15-asan",
       "displayName": "Linux g++-15 [Debug, asan]",
       "description": "Configure for ${displayName}",
-      "inherits": ["linux-pkg-gcc", "base-asan-unix"]
+      "inherits": ["linux-gcc-15", "base-asan-unix"]
     },
     {
-      "name": "linux-pkg-gcc-coverage",
+      "name": "linux-gcc-15-coverage",
       "displayName": "Linux g++-15 [Debug,coverage]",
       "description": "Configure for ${displayName}",
-      "inherits": ["linux-pkg-gcc", "base-coverage"]
+      "inherits": ["linux-gcc-15", "base-coverage"]
     },
     {
-      "name": "linux-pkg-gcc-release",
+      "name": "linux-gcc-15-release",
       "displayName": "Linux g++-15 [Release]",
       "description": "Configure for ${displayName}",
-      "inherits": ["base-linux-pkg-gcc", "base-release"]
+      "inherits": ["base-linux-gcc-15", "base-release"]
     },
     {
-      "name": "linux-pkg-gcc-relwithdebinfo-asan",
+      "name": "linux-gcc-15-relwithdebinfo-asan",
       "displayName": "Linux g++-15 [RelWithDebInfo, asan]",
       "description": "Configure for ${displayName}",
-      "inherits": ["base-linux-pkg-gcc", "base-relwithdebinfo", "base-asan-unix"]
+      "inherits": ["base-linux-gcc-15", "base-relwithdebinfo", "base-asan-unix"]
     },
     {
       "name": "linux-gcc",
@@ -304,6 +328,39 @@
       "name": "base-run",
       "hidden": true,
       "targets": "run"
+    },
+    {
+      "name": "env-gcc",
+      "displayName": "GCC from the environment [Debug]",
+      "configurePreset": "env-gcc",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-gcc",
+      "displayName": "Run GCC from the environment [Debug]",
+      "inherits": ["env-gcc", "base-run"]
+    },
+    {
+      "name": "env-gcc-coverage",
+      "displayName": "GCC from the environment [Debug, coverage]",
+      "configurePreset": "env-gcc-coverage",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-gcc-coverage",
+      "displayName": "Run GCC from the environment [Debug, coverage]",
+      "inherits": ["env-gcc-coverage", "base-run"]
+    },
+    {
+      "name": "env-llvm",
+      "displayName": "LLVM from the environment [Debug]",
+      "configurePreset": "env-llvm",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-llvm",
+      "displayName": "Run LLVM from the environment [Debug]",
+      "inherits": ["env-llvm", "base-run"]
     },
     {
       "name": "macos-homebrew-llvm",
@@ -455,81 +512,92 @@
       "inherits": ["macos-homebrew-llvm-asan-ubsan", "base-run"]
     },
     {
-      "name": "macos-homebrew-gcc",
-      "displayName": "macOS Homebrew GCC [Debug]",
-      "configurePreset": "macos-homebrew-gcc",
+      "name": "macos-homebrew-gcc-16",
+      "displayName": "macOS Homebrew GCC 16 [Debug]",
+      "configurePreset": "macos-homebrew-gcc-16",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-macos-homebrew-gcc",
-      "displayName": "Run macOS Homebrew GCC [Debug]",
-      "inherits": ["macos-homebrew-gcc", "base-run"]
+      "name": "run-macos-homebrew-gcc-16",
+      "displayName": "Run macOS Homebrew GCC 16 [Debug]",
+      "inherits": ["macos-homebrew-gcc-16", "base-run"]
     },
     {
-      "name": "macos-homebrew-gcc-asan",
-      "displayName": "macOS Homebrew GCC [Debug, asan]",
-      "configurePreset": "macos-homebrew-gcc-asan",
+      "name": "macos-homebrew-gcc-16-coverage",
+      "displayName": "macOS Homebrew GCC 16 [Debug, coverage]",
+      "configurePreset": "macos-homebrew-gcc-16-coverage",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-macos-homebrew-gcc-asan",
-      "displayName": "Run macOS Homebrew GCC [Debug, asan]",
-      "inherits": ["macos-homebrew-gcc-asan", "base-run"]
+      "name": "run-macos-homebrew-gcc-16-coverage",
+      "displayName": "Run macOS Homebrew GCC 16 [Debug, coverage]",
+      "inherits": ["macos-homebrew-gcc-16-coverage", "base-run"]
     },
     {
-      "name": "linux-pkg-gcc",
+      "name": "macos-homebrew-gcc-16-asan",
+      "displayName": "macOS Homebrew GCC 16 [Debug, asan]",
+      "configurePreset": "macos-homebrew-gcc-16-asan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-gcc-16-asan",
+      "displayName": "Run macOS Homebrew GCC 16 [Debug, asan]",
+      "inherits": ["macos-homebrew-gcc-16-asan", "base-run"]
+    },
+    {
+      "name": "linux-gcc-15",
       "displayName": "Linux g++-15 [Debug]",
-      "configurePreset": "linux-pkg-gcc",
+      "configurePreset": "linux-gcc-15",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-linux-pkg-gcc",
+      "name": "run-linux-gcc-15",
       "displayName": "Run Linux g++-15 [Debug]",
-      "inherits": ["linux-pkg-gcc", "base-run"]
+      "inherits": ["linux-gcc-15", "base-run"]
     },
     {
-      "name": "linux-pkg-gcc-asan",
+      "name": "linux-gcc-15-asan",
       "displayName": "Linux g++-15 [Debug, asan]",
-      "configurePreset": "linux-pkg-gcc-asan",
+      "configurePreset": "linux-gcc-15-asan",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-linux-pkg-gcc-asan",
+      "name": "run-linux-gcc-15-asan",
       "displayName": "Run Linux g++-15 [Debug, asan]",
-      "inherits": ["linux-pkg-gcc-asan", "base-run"]
+      "inherits": ["linux-gcc-15-asan", "base-run"]
     },
     {
-      "name": "linux-pkg-gcc-coverage",
+      "name": "linux-gcc-15-coverage",
       "displayName": "Linux g++-15 [Debug, coverage]",
-      "configurePreset": "linux-pkg-gcc-coverage",
+      "configurePreset": "linux-gcc-15-coverage",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-linux-pkg-gcc-coverage",
+      "name": "run-linux-gcc-15-coverage",
       "displayName": "Run Linux g++-15 [Debug, coverage]",
-      "inherits": ["linux-pkg-gcc-coverage", "base-run"]
+      "inherits": ["linux-gcc-15-coverage", "base-run"]
     },
     {
-      "name": "linux-pkg-gcc-release",
+      "name": "linux-gcc-15-release",
       "displayName": "Linux g++-15 [Release]",
-      "configurePreset": "linux-pkg-gcc-release",
+      "configurePreset": "linux-gcc-15-release",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-linux-pkg-gcc-release",
+      "name": "run-linux-gcc-15-release",
       "displayName": "Run Linux g++-15 [Release]",
-      "inherits": ["linux-pkg-gcc-release", "base-run"]
+      "inherits": ["linux-gcc-15-release", "base-run"]
     },
     {
-      "name": "linux-pkg-gcc-relwithdebinfo-asan",
+      "name": "linux-gcc-15-relwithdebinfo-asan",
       "displayName": "Linux g++-15 [RelWithDebInfo, asan]",
-      "configurePreset": "linux-pkg-gcc-relwithdebinfo-asan",
+      "configurePreset": "linux-gcc-15-relwithdebinfo-asan",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-linux-pkg-gcc-relwithdebinfo-asan",
+      "name": "run-linux-gcc-15-relwithdebinfo-asan",
       "displayName": "Run Linux g++-15 [RelWithDebInfo, asan]",
-      "inherits": ["linux-pkg-gcc-relwithdebinfo-asan", "base-run"]
+      "inherits": ["linux-gcc-15-relwithdebinfo-asan", "base-run"]
     },
     {
       "name": "msvc",
@@ -617,29 +685,63 @@
       ]
     },
     {
-      "name": "macos-homebrew-gcc",
+      "name": "macos-homebrew-gcc-16",
       "steps": [
         {
           "type": "configure",
-          "name": "macos-homebrew-gcc"
+          "name": "macos-homebrew-gcc-16"
         },
         {
           "type": "build",
-          "name": "run-macos-homebrew-gcc"
+          "name": "run-macos-homebrew-gcc-16"
         }
       ]
     },
     {
-      "name": "macos-homebrew-gcc-asan",
+      "name": "macos-homebrew-gcc-16-coverage",
       "steps": [
         {
           "type": "configure",
-          "name": "macos-homebrew-gcc-asan"
+          "name": "macos-homebrew-gcc-16-coverage"
         },
         {
           "type": "build",
-          "name": "run-macos-homebrew-gcc-asan"
+          "name": "run-macos-homebrew-gcc-16-coverage"
         }
+      ]
+    },
+    {
+      "name": "macos-homebrew-gcc-16-asan",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos-homebrew-gcc-16-asan"
+        },
+        {
+          "type": "build",
+          "name": "run-macos-homebrew-gcc-16-asan"
+        }
+      ]
+    },
+    {
+      "name": "env-gcc",
+      "steps": [
+        { "type": "configure", "name": "env-gcc" },
+        { "type": "build",     "name": "run-env-gcc" }
+      ]
+    },
+    {
+      "name": "env-gcc-coverage",
+      "steps": [
+        { "type": "configure", "name": "env-gcc-coverage" },
+        { "type": "build",     "name": "run-env-gcc-coverage" }
+      ]
+    },
+    {
+      "name": "env-llvm",
+      "steps": [
+        { "type": "configure", "name": "env-llvm" },
+        { "type": "build",     "name": "run-env-llvm" }
       ]
     },
     {
@@ -786,67 +888,67 @@
       ]
     },  
     {
-      "name": "linux-pkg-gcc",
+      "name": "linux-gcc-15",
       "steps": [
         {
           "type": "configure",
-          "name": "linux-pkg-gcc"
+          "name": "linux-gcc-15"
         },
         {
           "type": "build",
-          "name": "run-linux-pkg-gcc"
+          "name": "run-linux-gcc-15"
         }
       ]
     },
     {
-      "name": "linux-pkg-gcc-asan",
+      "name": "linux-gcc-15-asan",
       "steps": [
         {
           "type": "configure",
-          "name": "linux-pkg-gcc-asan"
+          "name": "linux-gcc-15-asan"
         },
         {
           "type": "build",
-          "name": "run-linux-pkg-gcc-asan"
+          "name": "run-linux-gcc-15-asan"
         }
       ]
     },
     {
-      "name": "linux-pkg-gcc-coverage",
+      "name": "linux-gcc-15-coverage",
       "steps": [
         {
           "type": "configure",
-          "name": "linux-pkg-gcc-coverage"
+          "name": "linux-gcc-15-coverage"
         },
         {
           "type": "build",
-          "name": "run-linux-pkg-gcc-coverage"
+          "name": "run-linux-gcc-15-coverage"
         }
       ]
     },
     {
-      "name": "linux-pkg-gcc-release",
+      "name": "linux-gcc-15-release",
       "steps": [
         {
           "type": "configure",
-          "name": "linux-pkg-gcc-release"
+          "name": "linux-gcc-15-release"
         },
         {
           "type": "build",
-          "name": "run-linux-pkg-gcc-release"
+          "name": "run-linux-gcc-15-release"
         }
       ]
     },
     {
-      "name": "linux-pkg-gcc-relwithdebinfo-asan",
+      "name": "linux-gcc-15-relwithdebinfo-asan",
       "steps": [
         {
           "type": "configure",
-          "name": "linux-pkg-gcc-relwithdebinfo-asan"
+          "name": "linux-gcc-15-relwithdebinfo-asan"
         },
         {
           "type": "build",
-          "name": "run-linux-pkg-gcc-relwithdebinfo-asan"
+          "name": "run-linux-gcc-15-relwithdebinfo-asan"
         }
       ]
     },
