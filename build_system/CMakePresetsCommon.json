@@ -210,6 +210,12 @@
       "inherits": ["base-homebrew-gcc", "base-debug"]
     },
     {
+      "name": "macos-homebrew-gcc-coverage",
+      "displayName": "macOS Homebrew GCC [Debug,coverage]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["macos-homebrew-gcc", "base-coverage"]
+    },
+    {
       "name": "macos-homebrew-gcc-asan",
       "displayName": "macOS Homebrew GCC [Debug, asan]",
       "description": "Configure for ${displayName}",
@@ -464,6 +470,17 @@
       "inherits": ["macos-homebrew-gcc", "base-run"]
     },
     {
+      "name": "macos-homebrew-gcc-coverage",
+      "displayName": "macOS Homebrew GCC [Debug, coverage]",
+      "configurePreset": "macos-homebrew-gcc-coverage",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-gcc-coverage",
+      "displayName": "Run macOS Homebrew GCC [Debug, coverage]",
+      "inherits": ["macos-homebrew-gcc-coverage", "base-run"]
+    },
+    {
       "name": "macos-homebrew-gcc-asan",
       "displayName": "macOS Homebrew GCC [Debug, asan]",
       "configurePreset": "macos-homebrew-gcc-asan",
@@ -624,6 +641,19 @@
         {
           "type": "build",
           "name": "run-macos-homebrew-gcc"
+        }
+      ]
+    },
+    {
+      "name": "macos-homebrew-gcc-coverage",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "macos-homebrew-gcc-coverage"
+        },
+        {
+          "type": "build",
+          "name": "run-macos-homebrew-gcc-coverage"
         }
       ]
     },
