@@ -20,9 +20,16 @@
     callable with `std::function` instantiates `std::__function::__func<Fn, std::allocator<Fn>,
     Signature>`, a class whose several members each carry the closure type *and* the allocator in
     their mangled names; across a test suite which erases a callable per tested type that dominated
-    the symbol table. Erasing through a pair of function pointers instead - a caller and a single
-    manager taking copy/move/destroy as an argument - contributes **two** symbols per erased type
-    rather than eight, with no allocator in any of them.
+    the symbol table. Erasing through a pair of function pointers instead - a caller and a manager
+    taking copy/move/destroy as an argument - contributes **one** symbol per erased type rather than
+    eight, with no allocator in any of them: the caller is all that must know the target's type,
+    because the manager is shared by every target which can be managed without knowing it, and the
+    two pointers are held in the object rather than in a per-target table.
+
+    On `TestAll` under asan, against the version which gave every target its own manager and reached
+    them through a table: **593.5 MB -> 569.4 MB and 69,900 fewer symbols**, of which the shared
+    manager is 17.7 MB and dropping the table 6.4 MB. Of 12,844 erased types in that suite only 287
+    need a manager of their own.
 
     The design of the standard facility, and in particular the decision to hold the manager as one
     function taking an operation rather than one function per operation, follows libstdc++'s
@@ -43,6 +50,7 @@
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 
 #include <cstddef>
+#include <cstring>
 #include <new>
 #include <type_traits>
 #include <utility>
@@ -87,21 +95,22 @@ namespace sequoia::object
     template<class Fn>
       requires (!resolve_to_copy_v<copyable_function, Fn>) && std::is_invocable_r_v<R, const Fn&, Args...>
     copyable_function(Fn fn)
-      : m_Vtable{&vtable_for<Fn>}
+      : m_Call{caller_for<Fn>}, m_Manage{manager_for<Fn>()}
     {
       if constexpr(fits<Fn>) ::new (static_cast<void*>(m_Buffer)) Fn{std::move(fn)};
       else                   *reinterpret_cast<Fn**>(m_Buffer) = new Fn{std::move(fn)};
     }
 
-    copyable_function(const copyable_function& other) : m_Vtable{other.m_Vtable}
+    copyable_function(const copyable_function& other) : m_Call{other.m_Call}, m_Manage{other.m_Manage}
     {
-      if(m_Vtable) m_Vtable->manage(op::copy, m_Buffer, other.m_Buffer);
+      if(m_Manage) m_Manage(op::copy, m_Buffer, other.m_Buffer);
     }
 
-    copyable_function(copyable_function&& other) noexcept : m_Vtable{other.m_Vtable}
+    copyable_function(copyable_function&& other) noexcept : m_Call{other.m_Call}, m_Manage{other.m_Manage}
     {
-      if(m_Vtable) m_Vtable->manage(op::move, m_Buffer, other.m_Buffer);
-      other.m_Vtable = nullptr;
+      if(m_Manage) m_Manage(op::move, m_Buffer, other.m_Buffer);
+      other.m_Call   = nullptr;
+      other.m_Manage = nullptr;
     }
 
     copyable_function& operator=(copyable_function other) noexcept
@@ -110,20 +119,24 @@ namespace sequoia::object
       return *this;
     }
 
-    ~copyable_function() { if(m_Vtable) m_Vtable->manage(op::destroy, m_Buffer, m_Buffer); }
+    ~copyable_function() { if(m_Manage) m_Manage(op::destroy, m_Buffer, m_Buffer); }
 
     R operator()(Args... args) const
     {
-      return m_Vtable->call(m_Buffer, std::forward<Args>(args)...);
+      return m_Call(m_Buffer, std::forward<Args>(args)...);
     }
 
     [[nodiscard]]
-    explicit operator bool() const noexcept { return m_Vtable != nullptr; }
+    explicit operator bool() const noexcept { return m_Call != nullptr; }
 
-    /** `op::move` leaves a small target destroyed but a large one's pointer still in the source
-        buffer, since the caller always overwrites or abandons what it moved from. Each of the three
-        moves below therefore hands ownership on exactly once, and the vtable pointers - which is
-        what decides whether a buffer is ever destroyed - are exchanged last.
+    /** `op::move` hands ownership on exactly once, and the thunk pointers - which are what decide
+        whether a buffer is ever destroyed - are exchanged last, so each of the three moves below is
+        safe.
+
+        What `op::move` leaves behind differs by manager, and deliberately: the general one destroys
+        a small source and leaves a large one's pointer in place, while the shared one leaves the
+        source's bytes alone. Both are correct because the caller always overwrites or abandons what
+        it moved from, and because a trivially managed target has nothing to destroy.
      */
     friend void swap(copyable_function& lhs, copyable_function& rhs) noexcept
     {
@@ -132,12 +145,12 @@ namespace sequoia::object
       if(&lhs == &rhs) return;
 
       alignas(std::max_align_t) std::byte tmp[buffer_size];
-      const auto lv{lhs.m_Vtable}, rv{rhs.m_Vtable};
-      if(lv) lv->manage(op::move, tmp, lhs.m_Buffer);
-      if(rv) rv->manage(op::move, lhs.m_Buffer, rhs.m_Buffer);
-      if(lv) lv->manage(op::move, rhs.m_Buffer, tmp);
-      lhs.m_Vtable = rv;
-      rhs.m_Vtable = lv;
+      const auto lm{lhs.m_Manage}, rm{rhs.m_Manage};
+      if(lm) lm(op::move, tmp, lhs.m_Buffer);
+      if(rm) rm(op::move, lhs.m_Buffer, rhs.m_Buffer);
+      if(lm) lm(op::move, rhs.m_Buffer, tmp);
+      std::swap(lhs.m_Call,   rhs.m_Call);
+      std::swap(lhs.m_Manage, rhs.m_Manage);
     }
   private:
     constexpr static std::size_t buffer_size{3 * sizeof(void*)};
@@ -150,42 +163,55 @@ namespace sequoia::object
                                && (alignof(Fn) <= alignof(std::max_align_t))
                                && std::is_nothrow_move_constructible_v<Fn>};
 
-    enum class op { copy, move, destroy };
+    /** A target which is trivially copyable and lives in the buffer can be managed **without
+        knowing its type**: copy and move are a byte copy, and destruction is nothing. Such targets
+        can therefore share a single manager rather than instantiating one apiece, which matters
+        because the closures erased here are overwhelmingly of this kind - a lambda capturing one
+        or two references is trivially copyable.
 
-    /** One manager per erased type rather than one function per operation.
-
-        Each distinct callable contributes exactly two symbols - this and the caller - where a
-        function per operation contributes four, and every one of them carries the closure type in
-        its name. Collapsing four thunks into one was worth more than the original swap away from
-        `std::function`, which is why the operation is a runtime argument rather than four entries.
-     */
-    struct vtable
-    {
-      R    (*call)(const std::byte*, Args&&...);
-      void (*manage)(op, std::byte*, const std::byte*);
-    };
-
-    /** Where the target lives is decided by `if constexpr` **in place**, and the manager's branches
-        repeat their expressions rather than sharing a helper. Every helper here would be another
-        entity carrying `Fn` in its name - a member function template obviously so, but at `-O0` a
-        lambda too, which nothing inlines away. Measured on `TestAll` under asan: writing the casts
-        through lambdas instead cost **61,281 symbols and 20.5 MB**, 613.1 against 592.6. The
-        duplication below is much the cheaper of the two; a local variable, which carries no name
-        into the symbol table, is cheaper still where one will serve.
+        Trivial copyability subsumes trivial destructibility, so it is the only condition needed
+        beyond fitting.
      */
     template<class Fn>
-    constexpr static vtable vtable_for{
-      [](const std::byte* b, Args&&... args) -> R {
-        const Fn* target{};
-        if constexpr(fits<Fn>) target = reinterpret_cast<const Fn*>(b);
-        else                   target = *reinterpret_cast<const Fn* const*>(b);
+    constexpr static bool trivially_managed{fits<Fn> && std::is_trivially_copyable_v<Fn>};
 
-        // A void signature discards whatever the target returns, exactly as `std::is_invocable_r_v`
-        // - and so the constructor's constraint - already promises it may.
-        if constexpr(std::is_void_v<R>)        (*target)(std::forward<Args>(args)...);
-        else                            return (*target)(std::forward<Args>(args)...);
-      },
-      [](op o, std::byte* to, const std::byte* from) {
+    enum class op { copy, move, destroy };
+
+    /** One manager taking the operation as an argument, rather than one function per operation.
+
+        A function per operation contributes four entities per erased type, each carrying the
+        closure type in its name; collapsing them into one was worth more than the original swap
+        away from `std::function`, which is why the operation is a runtime argument.
+
+        The two thunks are held **directly**, rather than behind a pointer to a per-target table.
+        Such a table is itself an entity carrying `Fn` in its name, so it costs a long symbol per
+        erased type; the price of removing it is one extra pointer per `copyable_function`, which
+        for a suite erasing a callable per tested type is the better side of the trade.
+     */
+    using call_thunk    = R    (*)(const std::byte*, Args&&...);
+    using manage_thunk  = void (*)(op, std::byte*, const std::byte*);
+
+    /** The manager shared by every trivially-managed target, and so **not** a template: one symbol
+        per signature rather than one per erased type.
+
+        Copying the whole buffer rather than `sizeof(Fn)` bytes is what makes the sharing possible,
+        and it is reading and writing within a `std::byte` array which is always fully initialized,
+        never past the end of an object.
+     */
+    static void manage_trivially(op o, std::byte* to, const std::byte* from)
+    {
+      if(o != op::destroy) std::memcpy(to, from, buffer_size);
+    }
+
+    /** Chosen with `if constexpr` rather than a ternary, so that the general manager is instantiated
+        only for the targets which actually need it - a ternary would odr-use both operands and
+        defeat the sharing entirely. `consteval` guarantees this function is itself never emitted.
+     */
+    template<class Fn>
+    consteval static manage_thunk manager_for()
+    {
+      if constexpr(trivially_managed<Fn>) return &manage_trivially;
+      else return +[](op o, std::byte* to, const std::byte* from) {
         switch(o)
         {
         case op::copy:
@@ -206,10 +232,36 @@ namespace sequoia::object
           else                   delete *reinterpret_cast<Fn* const*>(from);
           break;
         }
+      };
+    }
+
+    /** Where the target lives is decided by `if constexpr` **in place**, and the manager's branches
+        repeat their expressions rather than sharing a helper. Every helper here would be another
+        entity carrying `Fn` in its name - a member function template obviously so, but at `-O0` a
+        lambda too, which nothing inlines away. Measured on `TestAll` under asan: writing the casts
+        through lambdas instead cost **61,281 symbols and 20.5 MB**, 613.1 against 592.6. The
+        duplication below is much the cheaper of the two; a local variable, which carries no name
+        into the symbol table, is cheaper still where one will serve.
+     */
+    template<class Fn>
+    constexpr static call_thunk caller_for{
+      [](const std::byte* b, Args&&... args) -> R {
+        const Fn* target{};
+        if constexpr(fits<Fn>) target = reinterpret_cast<const Fn*>(b);
+        else                   target = *reinterpret_cast<const Fn* const*>(b);
+
+        // A void signature discards whatever the target returns, exactly as `std::is_invocable_r_v`
+        // - and so the constructor's constraint - already promises it may.
+        if constexpr(std::is_void_v<R>)        (*target)(std::forward<Args>(args)...);
+        else                            return (*target)(std::forward<Args>(args)...);
       }
     };
 
+    // Both thunks are set by the converting constructor and cleared by a move, always together, so
+    // either serves as the test for whether a target is held; each use below reads whichever one it
+    // is about to need.
     alignas(std::max_align_t) std::byte m_Buffer[buffer_size]{};
-    const vtable* m_Vtable{};
+    call_thunk   m_Call{};
+    manage_thunk m_Manage{};
   };
 }
