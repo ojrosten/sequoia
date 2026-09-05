@@ -170,6 +170,12 @@
       "inherits": ["base-homebrew-llvm", "base-debug"]
     },
     {
+      "name": "macos-homebrew-llvm-coverage",
+      "displayName": "macOS Homebrew LLVM [Debug,coverage]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["macos-homebrew-llvm", "base-coverage"]
+    },
+    {
       "name": "macos-homebrew-llvm-asan",
       "displayName": "macOS Homebrew LLVM [Debug, asan]",
       "description": "Configure for ${displayName}",
@@ -359,6 +365,17 @@
       "name": "run-macos-homebrew-llvm",
       "displayName": "Run macOS Homebrew LLVM [Debug]",
       "inherits": ["macos-homebrew-llvm", "base-run"]
+    },
+    {
+      "name": "macos-homebrew-llvm-coverage",
+      "displayName": "macOS Homebrew LLVM [Debug, coverage]",
+      "configurePreset": "macos-homebrew-llvm-coverage",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-llvm-coverage",
+      "displayName": "Run macOS Homebrew LLVM [Debug, coverage]",
+      "inherits": ["macos-homebrew-llvm-coverage", "base-run"]
     },
     {
       "name": "macos-homebrew-llvm-asan",
@@ -731,6 +748,13 @@
           "type": "build",
           "name": "run-macos-homebrew-llvm"
         }
+      ]
+    },
+    {
+      "name": "macos-homebrew-llvm-coverage",
+      "steps": [
+        { "type": "configure", "name": "macos-homebrew-llvm-coverage" },
+        { "type": "build",     "name": "run-macos-homebrew-llvm-coverage" }
       ]
     },
     {
