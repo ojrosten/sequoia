@@ -72,7 +72,7 @@
       "name": "base-coverage",
       "hidden": true,
       "environment": {
-        "CXX_COVERAGE_FLAGS": "-coverage",
+        "CXX_COVERAGE_FLAGS": "-coverage -fprofile-update=atomic",
         "LINKER_COVERAGE_FLAGS": "-coverage"
       },
       "cacheVariables": {
