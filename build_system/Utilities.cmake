@@ -74,10 +74,10 @@ FUNCTION(sequoia_set_properties target)
     endif()
 ENDFUNCTION()
 
-FUNCTION(sequoia_set_run_target exectuable)
+FUNCTION(sequoia_set_run_target executable)
     add_custom_target(run 
-        COMMAND $<TARGET_FILE:${exectuable}> ${EXEC_ARGS}
-        DEPENDS ${exectuable}
+        COMMAND $<TARGET_FILE:${executable}> ${EXEC_ARGS}
+        DEPENDS ${executable}
     )
 ENDFUNCTION()
 
