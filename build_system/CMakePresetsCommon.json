@@ -138,9 +138,8 @@
       "inherits": ["base-gcc"]
     },
     {
-      "name": "base-linux-pkg-gcc",
+      "name": "base-linux-gcc-15",
       "hidden": true,
-      "description": "Pinned to 15 deliberately: it is the only gcc clean for both modules bugs, predating the ICE which regresses at 15.3 and the mangling conflict which starts at 16.1. Do not bump without re-checking those.",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "/usr/bin/gcc-15",
         "CMAKE_CXX_COMPILER": "/usr/bin/g++-15"
@@ -159,7 +158,7 @@
     {
       "name": "env-gcc",
       "displayName": "GCC from the environment [Debug]",
-      "description": "Configure for ${displayName}. Names no compiler, so CC and CXX decide: for CI, for containers, and for any machine whose layout the pinned columns do not match. Set them - an unset CXX gets the platform default, which on macOS is AppleClang rather than any GCC.",
+      "description": "Configure for ${displayName}. Set CC and CXX: unset, CMake picks the platform default, which may not be GCC.",
       "inherits": ["base-gcc", "base-debug"]
     },
     {
@@ -171,7 +170,7 @@
     {
       "name": "env-llvm",
       "displayName": "LLVM from the environment [Debug]",
-      "description": "Configure for ${displayName}. Names no compiler, so CC and CXX decide.",
+      "description": "Configure for ${displayName}. Set CC and CXX: unset, CMake picks the platform default.",
       "inherits": ["base-llvm", "base-debug"]
     },
     {
@@ -247,34 +246,34 @@
       "inherits": ["macos-homebrew-gcc", "base-bug-report"]
     },
     {
-      "name": "linux-pkg-gcc",
+      "name": "linux-gcc-15",
       "displayName": "Linux g++-15 [Debug]",
       "description": "Configure for ${displayName}",
-      "inherits": ["base-linux-pkg-gcc", "base-debug"]
+      "inherits": ["base-linux-gcc-15", "base-debug"]
     },
     {
-      "name": "linux-pkg-gcc-asan",
+      "name": "linux-gcc-15-asan",
       "displayName": "Linux g++-15 [Debug, asan]",
       "description": "Configure for ${displayName}",
-      "inherits": ["linux-pkg-gcc", "base-asan-unix"]
+      "inherits": ["linux-gcc-15", "base-asan-unix"]
     },
     {
-      "name": "linux-pkg-gcc-coverage",
+      "name": "linux-gcc-15-coverage",
       "displayName": "Linux g++-15 [Debug,coverage]",
       "description": "Configure for ${displayName}",
-      "inherits": ["linux-pkg-gcc", "base-coverage"]
+      "inherits": ["linux-gcc-15", "base-coverage"]
     },
     {
-      "name": "linux-pkg-gcc-release",
+      "name": "linux-gcc-15-release",
       "displayName": "Linux g++-15 [Release]",
       "description": "Configure for ${displayName}",
-      "inherits": ["base-linux-pkg-gcc", "base-release"]
+      "inherits": ["base-linux-gcc-15", "base-release"]
     },
     {
-      "name": "linux-pkg-gcc-relwithdebinfo-asan",
+      "name": "linux-gcc-15-relwithdebinfo-asan",
       "displayName": "Linux g++-15 [RelWithDebInfo, asan]",
       "description": "Configure for ${displayName}",
-      "inherits": ["base-linux-pkg-gcc", "base-relwithdebinfo", "base-asan-unix"]
+      "inherits": ["base-linux-gcc-15", "base-relwithdebinfo", "base-asan-unix"]
     },
     {
       "name": "linux-gcc",
@@ -544,59 +543,59 @@
       "inherits": ["macos-homebrew-gcc-asan", "base-run"]
     },
     {
-      "name": "linux-pkg-gcc",
+      "name": "linux-gcc-15",
       "displayName": "Linux g++-15 [Debug]",
-      "configurePreset": "linux-pkg-gcc",
+      "configurePreset": "linux-gcc-15",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-linux-pkg-gcc",
+      "name": "run-linux-gcc-15",
       "displayName": "Run Linux g++-15 [Debug]",
-      "inherits": ["linux-pkg-gcc", "base-run"]
+      "inherits": ["linux-gcc-15", "base-run"]
     },
     {
-      "name": "linux-pkg-gcc-asan",
+      "name": "linux-gcc-15-asan",
       "displayName": "Linux g++-15 [Debug, asan]",
-      "configurePreset": "linux-pkg-gcc-asan",
+      "configurePreset": "linux-gcc-15-asan",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-linux-pkg-gcc-asan",
+      "name": "run-linux-gcc-15-asan",
       "displayName": "Run Linux g++-15 [Debug, asan]",
-      "inherits": ["linux-pkg-gcc-asan", "base-run"]
+      "inherits": ["linux-gcc-15-asan", "base-run"]
     },
     {
-      "name": "linux-pkg-gcc-coverage",
+      "name": "linux-gcc-15-coverage",
       "displayName": "Linux g++-15 [Debug, coverage]",
-      "configurePreset": "linux-pkg-gcc-coverage",
+      "configurePreset": "linux-gcc-15-coverage",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-linux-pkg-gcc-coverage",
+      "name": "run-linux-gcc-15-coverage",
       "displayName": "Run Linux g++-15 [Debug, coverage]",
-      "inherits": ["linux-pkg-gcc-coverage", "base-run"]
+      "inherits": ["linux-gcc-15-coverage", "base-run"]
     },
     {
-      "name": "linux-pkg-gcc-release",
+      "name": "linux-gcc-15-release",
       "displayName": "Linux g++-15 [Release]",
-      "configurePreset": "linux-pkg-gcc-release",
+      "configurePreset": "linux-gcc-15-release",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-linux-pkg-gcc-release",
+      "name": "run-linux-gcc-15-release",
       "displayName": "Run Linux g++-15 [Release]",
-      "inherits": ["linux-pkg-gcc-release", "base-run"]
+      "inherits": ["linux-gcc-15-release", "base-run"]
     },
     {
-      "name": "linux-pkg-gcc-relwithdebinfo-asan",
+      "name": "linux-gcc-15-relwithdebinfo-asan",
       "displayName": "Linux g++-15 [RelWithDebInfo, asan]",
-      "configurePreset": "linux-pkg-gcc-relwithdebinfo-asan",
+      "configurePreset": "linux-gcc-15-relwithdebinfo-asan",
       "inherits": ["base-ninja"]
     },
     {
-      "name": "run-linux-pkg-gcc-relwithdebinfo-asan",
+      "name": "run-linux-gcc-15-relwithdebinfo-asan",
       "displayName": "Run Linux g++-15 [RelWithDebInfo, asan]",
-      "inherits": ["linux-pkg-gcc-relwithdebinfo-asan", "base-run"]
+      "inherits": ["linux-gcc-15-relwithdebinfo-asan", "base-run"]
     },
     {
       "name": "msvc",
@@ -874,67 +873,67 @@
       ]
     },  
     {
-      "name": "linux-pkg-gcc",
+      "name": "linux-gcc-15",
       "steps": [
         {
           "type": "configure",
-          "name": "linux-pkg-gcc"
+          "name": "linux-gcc-15"
         },
         {
           "type": "build",
-          "name": "run-linux-pkg-gcc"
+          "name": "run-linux-gcc-15"
         }
       ]
     },
     {
-      "name": "linux-pkg-gcc-asan",
+      "name": "linux-gcc-15-asan",
       "steps": [
         {
           "type": "configure",
-          "name": "linux-pkg-gcc-asan"
+          "name": "linux-gcc-15-asan"
         },
         {
           "type": "build",
-          "name": "run-linux-pkg-gcc-asan"
+          "name": "run-linux-gcc-15-asan"
         }
       ]
     },
     {
-      "name": "linux-pkg-gcc-coverage",
+      "name": "linux-gcc-15-coverage",
       "steps": [
         {
           "type": "configure",
-          "name": "linux-pkg-gcc-coverage"
+          "name": "linux-gcc-15-coverage"
         },
         {
           "type": "build",
-          "name": "run-linux-pkg-gcc-coverage"
+          "name": "run-linux-gcc-15-coverage"
         }
       ]
     },
     {
-      "name": "linux-pkg-gcc-release",
+      "name": "linux-gcc-15-release",
       "steps": [
         {
           "type": "configure",
-          "name": "linux-pkg-gcc-release"
+          "name": "linux-gcc-15-release"
         },
         {
           "type": "build",
-          "name": "run-linux-pkg-gcc-release"
+          "name": "run-linux-gcc-15-release"
         }
       ]
     },
     {
-      "name": "linux-pkg-gcc-relwithdebinfo-asan",
+      "name": "linux-gcc-15-relwithdebinfo-asan",
       "steps": [
         {
           "type": "configure",
-          "name": "linux-pkg-gcc-relwithdebinfo-asan"
+          "name": "linux-gcc-15-relwithdebinfo-asan"
         },
         {
           "type": "build",
-          "name": "run-linux-pkg-gcc-relwithdebinfo-asan"
+          "name": "run-linux-gcc-15-relwithdebinfo-asan"
         }
       ]
     },
