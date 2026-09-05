@@ -192,17 +192,17 @@ namespace sequoia::testing
                     const std::filesystem::path& file,
                     std::string_view patternOpen,
                     std::string_view patternClose,
-                    std::string_view cmakeEntryPrexfix)
+                    std::string_view cmakeEntryPrefix)
   {
     auto addEntry{
-      [file{file.lexically_relative(hostDir)}, &cmakeLists, patternOpen, patternClose, cmakeEntryPrexfix] (std::string& text) {
+      [file{file.lexically_relative(hostDir)}, &cmakeLists, patternOpen, patternClose, cmakeEntryPrefix] (std::string& text) {
         constexpr auto npos{std::string::npos};
 
         if(auto startPos{text.find(patternOpen)}; startPos != npos)
         {
           if(auto endPos{text.find(patternClose, startPos + patternOpen.size())}; endPos != npos)
           {
-            std::vector<std::string> entries{{std::string{cmakeEntryPrexfix}.append(file.generic_string())}};
+            std::vector<std::string> entries{{std::string{cmakeEntryPrefix}.append(file.generic_string())}};
             auto newlinePos{npos}, next{startPos + patternOpen.size()};
             while((newlinePos = text.find("\n", next)) < endPos)
             {

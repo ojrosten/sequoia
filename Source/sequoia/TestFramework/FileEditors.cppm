@@ -25,7 +25,7 @@ export namespace sequoia::testing
                     const std::filesystem::path& file,
                     std::string_view patternOpen,
                     std::string_view patternClose,
-                    std::string_view cmakeEntryPrexfix);
+                    std::string_view cmakeEntryPrefix);
 
   void add_to_suite(const std::filesystem::path& file, std::string_view suiteName, indentation indent, const std::vector<std::string>& tests);
 
