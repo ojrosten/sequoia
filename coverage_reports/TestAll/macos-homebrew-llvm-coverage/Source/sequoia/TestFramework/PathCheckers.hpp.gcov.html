@@ -1,0 +1,341 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - Source/sequoia/TestFramework/PathCheckers.hpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../index.html" title="Click to go to top-level">top level</a> - <a href="index.html" title="Click to go to directory Source/sequoia/TestFramework">Source/sequoia/TestFramework</a> - PathCheckers.hpp<span style="font-size: 80%;"> (source / <a href="PathCheckers.hpp.func-c.html" title="Click to go to function table">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">90.8&nbsp;%</td>
+            <td class="headerCovTableEntry">87</td>
+            <td class="headerCovTableEntry">79</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-05 21:33:51</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">95.9&nbsp;%</td>
+            <td class="headerCovTableEntry">74</td>
+            <td class="headerCovTableEntry">71</td>
+          </tr>
+                  <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : ////////////////////////////////////////////////////////////////////</span>
+<span id="L2"><span class="lineNum">       2</span>              : //                Copyright Oliver J. Rosten 2020.                //</span>
+<span id="L3"><span class="lineNum">       3</span>              : // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //</span>
+<span id="L4"><span class="lineNum">       4</span>              : //    (See accompanying file LICENSE.md or copy at                //</span>
+<span id="L5"><span class="lineNum">       5</span>              : //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //</span>
+<span id="L6"><span class="lineNum">       6</span>              : ////////////////////////////////////////////////////////////////////</span>
+<span id="L7"><span class="lineNum">       7</span>              : </span>
+<span id="L8"><span class="lineNum">       8</span>              : #pragma once</span>
+<span id="L9"><span class="lineNum">       9</span>              : </span>
+<span id="L10"><span class="lineNum">      10</span>              : /** \file</span>
+<span id="L11"><span class="lineNum">      11</span>              :     \brief Specializations of the class template value_tester for `std::filesystem::path`, and the file comparers it dispatches to.</span>
+<span id="L12"><span class="lineNum">      12</span>              : </span>
+<span id="L13"><span class="lineNum">      13</span>              :     See ConcreteTypeCheckers.hpp for how nested checks dispatch, and for a single</span>
+<span id="L14"><span class="lineNum">      14</span>              :     header pulling in every specialization at once.</span>
+<span id="L15"><span class="lineNum">      15</span>              :  */</span>
+<span id="L16"><span class="lineNum">      16</span>              : </span>
+<span id="L17"><span class="lineNum">      17</span>              : #include &quot;sequoia/TestFramework/FreeCheckers.hpp&quot;</span>
+<span id="L18"><span class="lineNum">      18</span>              : #include &quot;sequoia/TestFramework/FileEditors.hpp&quot;</span>
+<span id="L19"><span class="lineNum">      19</span>              : #include &quot;sequoia/TestFramework/FileSystemUtilities.hpp&quot;</span>
+<span id="L20"><span class="lineNum">      20</span>              : #include &quot;sequoia/TestFramework/StringCheckers.hpp&quot;</span>
+<span id="L21"><span class="lineNum">      21</span>              : #include &quot;sequoia/Core/Object/Factory.hpp&quot;</span>
+<span id="L22"><span class="lineNum">      22</span>              : #include &quot;sequoia/FileSystem/FileSystem.hpp&quot;</span>
+<span id="L23"><span class="lineNum">      23</span>              : #include &quot;sequoia/Streaming/Streaming.hpp&quot;</span>
+<span id="L24"><span class="lineNum">      24</span>              : </span>
+<span id="L25"><span class="lineNum">      25</span>              : #include &lt;array&gt;</span>
+<span id="L26"><span class="lineNum">      26</span>              : #include &lt;filesystem&gt;</span>
+<span id="L27"><span class="lineNum">      27</span>              : #include &lt;format&gt;</span>
+<span id="L28"><span class="lineNum">      28</span>              : </span>
+<span id="L29"><span class="lineNum">      29</span>              : namespace sequoia::testing</span>
+<span id="L30"><span class="lineNum">      30</span>              : {</span>
+<span id="L31"><span class="lineNum">      31</span>              :   /** \brief The common preamble to a path-comparison failure message. */</span>
+<span id="L32"><span class="lineNum">      32</span>              : </span>
+<span id="L33"><span class="lineNum">      33</span>              :   [[nodiscard]]</span>
+<span id="L34"><span class="lineNum">      34</span>              :   std::string path_check_preamble(std::string_view prefix, const std::filesystem::path&amp; path, const std::filesystem::path&amp; prediction);</span>
+<span id="L35"><span class="lineNum">      35</span>              : </span>
+<span id="L36"><span class="lineNum">      36</span>              :   /** \brief Function object for comparing files via reading their contents into strings. */</span>
+<span id="L37"><span class="lineNum">      37</span>              : </span>
+<span id="L38"><span class="lineNum">      38</span>              :   struct string_based_file_comparer</span>
+<span id="L39"><span class="lineNum">      39</span>              :   {</span>
+<span id="L40"><span class="lineNum">      40</span>              :     template&lt;test_mode Mode&gt;</span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         510 :     void operator()(test_logger&lt;Mode&gt;&amp; logger, const std::filesystem::path&amp; file, const std::filesystem::path&amp; prediction) const</span></span>
+<span id="L42"><span class="lineNum">      42</span>              :     {</span>
+<span id="L43"><span class="lineNum">      43</span> <span class="tlaGNC">         510 :       const auto [reducedWorking, reducedPrediction] {get_reduced_file_content(file, prediction)};</span></span>
+<span id="L44"><span class="lineNum">      44</span>              : </span>
+<span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">         510 :       testing::check(report_failed_read(file),       logger, static_cast&lt;bool&gt;(reducedWorking));</span></span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">         510 :       testing::check(report_failed_read(prediction), logger, static_cast&lt;bool&gt;(reducedPrediction));</span></span>
+<span id="L47"><span class="lineNum">      47</span>              : </span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">         510 :       if(reducedWorking &amp;&amp; reducedPrediction)</span></span>
+<span id="L49"><span class="lineNum">      49</span>              :       {</span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">         510 :         check(equality, path_check_preamble(&quot;Contents of&quot;, file, prediction), logger, reducedWorking.value(), reducedPrediction.value());</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">         510 :       }</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">         510 :     }</span></span>
+<span id="L53"><span class="lineNum">      53</span>              :   };</span>
+<span id="L54"><span class="lineNum">      54</span>              : </span>
+<span id="L55"><span class="lineNum">      55</span>              :   template&lt;class T&gt;</span>
+<span id="L56"><span class="lineNum">      56</span>              :   inline constexpr bool is_file_comparer_v{</span>
+<span id="L57"><span class="lineNum">      57</span>              :     std::invocable&lt;T, test_logger&lt;test_mode::standard&gt;&amp;, std::filesystem::path, std::filesystem::path&gt;</span>
+<span id="L58"><span class="lineNum">      58</span>              :   };</span>
+<span id="L59"><span class="lineNum">      59</span>              : </span>
+<span id="L60"><span class="lineNum">      60</span>              :   /** \brief A file checker, which accepts a variadic set of file comparison function objects</span>
+<span id="L61"><span class="lineNum">      61</span>              :    */</span>
+<span id="L62"><span class="lineNum">      62</span>              : </span>
+<span id="L63"><span class="lineNum">      63</span>              :   template&lt;class DefaultComparer, class... Comparers&gt;</span>
+<span id="L64"><span class="lineNum">      64</span>              :     requires (is_file_comparer_v&lt;DefaultComparer&gt; &amp;&amp; (is_file_comparer_v&lt;Comparers&gt; &amp;&amp; ...))</span>
+<span id="L65"><span class="lineNum">      65</span>              :   class general_file_checker</span>
+<span id="L66"><span class="lineNum">      66</span>              :   {</span>
+<span id="L67"><span class="lineNum">      67</span>              :   public:</span>
+<span id="L68"><span class="lineNum">      68</span>              :     [[nodiscard]]</span>
+<span id="L69"><span class="lineNum">      69</span>              :     constexpr static std::size_t size() noexcept</span>
+<span id="L70"><span class="lineNum">      70</span>              :     {</span>
+<span id="L71"><span class="lineNum">      71</span>              :       return 1 + sizeof...(Comparers);</span>
+<span id="L72"><span class="lineNum">      72</span>              :     }</span>
+<span id="L73"><span class="lineNum">      73</span>              : </span>
+<span id="L74"><span class="lineNum">      74</span>              :     template&lt;class... Extensions&gt;</span>
+<span id="L75"><span class="lineNum">      75</span>              :         requires (sizeof...(Extensions) == size()) &amp;&amp; (std::is_constructible_v&lt;std::string, Extensions&gt; &amp;&amp; ...)</span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">           4 :     general_file_checker(Extensions... extensions)</span></span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">           2 :       : m_Factory{std::move(extensions)...}</span></span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">           4 :     {}</span></span>
+<span id="L79"><span class="lineNum">      79</span>              : </span>
+<span id="L80"><span class="lineNum">      80</span>              :     template&lt;test_mode Mode&gt;</span>
+<span id="L81"><span class="lineNum">      81</span> <span class="tlaGNC">         514 :     void check_file(test_logger&lt;Mode&gt;&amp; logger, const std::filesystem::path&amp; file, const std::filesystem::path&amp; prediction) const</span></span>
+<span id="L82"><span class="lineNum">      82</span>              :     {</span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">         514 :       const auto checker{m_Factory.template make_or&lt;DefaultComparer&gt;(file.extension().string())};</span></span>
+<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">        1028 :       std::visit([&amp;logger, &amp;file, &amp;prediction](auto&amp;&amp; fn){ fn(logger, file, prediction); }, checker);</span></span>
+<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">         514 :     }</span></span>
+<span id="L86"><span class="lineNum">      86</span>              :   private:</span>
+<span id="L87"><span class="lineNum">      87</span>              :     using factory = object::factory&lt;DefaultComparer, Comparers...&gt;;</span>
+<span id="L88"><span class="lineNum">      88</span>              : </span>
+<span id="L89"><span class="lineNum">      89</span>              :     factory m_Factory;</span>
+<span id="L90"><span class="lineNum">      90</span>              :   };</span>
+<span id="L91"><span class="lineNum">      91</span>              : </span>
+<span id="L92"><span class="lineNum">      92</span>              :   template&lt;class DefaultComparer, class... Comparers&gt;</span>
+<span id="L93"><span class="lineNum">      93</span>              :   using equivalence_with_bespoke_file_checker_t = general_equivalence_check_t&lt;general_file_checker&lt;DefaultComparer, Comparers...&gt;&gt;;</span>
+<span id="L94"><span class="lineNum">      94</span>              : </span>
+<span id="L95"><span class="lineNum">      95</span>              :   template&lt;class DefaultComparer, class... Comparers&gt;</span>
+<span id="L96"><span class="lineNum">      96</span>              :   using weak_equivalence_with_bespoke_file_checker_t = general_weak_equivalence_check_t&lt;general_file_checker&lt;DefaultComparer, Comparers...&gt;&gt;;</span>
+<span id="L97"><span class="lineNum">      97</span>              : </span>
+<span id="L98"><span class="lineNum">      98</span>              :   /** \brief Checks equivalence of filesystem paths.</span>
+<span id="L99"><span class="lineNum">      99</span>              : </span>
+<span id="L100"><span class="lineNum">     100</span>              :       For the overloads of `test` accepting either `equivalence` or `weak_equivalence` as the</span>
+<span id="L101"><span class="lineNum">     101</span>              :       first argument, all file comparisons are performed using string_based_file_comparer.</span>
+<span id="L102"><span class="lineNum">     102</span>              :       Other overloads allow clients to customize the way in which files are compared.</span>
+<span id="L103"><span class="lineNum">     103</span>              : </span>
+<span id="L104"><span class="lineNum">     104</span>              :       Files are considered equivalent if they have the same name and the same contents;</span>
+<span id="L105"><span class="lineNum">     105</span>              :       similarly directories.</span>
+<span id="L106"><span class="lineNum">     106</span>              : </span>
+<span id="L107"><span class="lineNum">     107</span>              :       Files are considered weakly equivalent if they have the same contents;</span>
+<span id="L108"><span class="lineNum">     108</span>              :       similarly directories. The names of both are ignored.</span>
+<span id="L109"><span class="lineNum">     109</span>              :    */</span>
+<span id="L110"><span class="lineNum">     110</span>              : </span>
+<span id="L111"><span class="lineNum">     111</span>              :   template&lt;&gt;</span>
+<span id="L112"><span class="lineNum">     112</span>              :   struct value_tester&lt;std::filesystem::path&gt;</span>
+<span id="L113"><span class="lineNum">     113</span>              :   {</span>
+<span id="L114"><span class="lineNum">     114</span>              :     template&lt;class DefaultComparer, class... Comparers, test_mode Mode&gt;</span>
+<span id="L115"><span class="lineNum">     115</span> <span class="tlaGNC">         103 :     static void test(equivalence_with_bespoke_file_checker_t&lt;DefaultComparer, Comparers...&gt; checker,</span></span>
+<span id="L116"><span class="lineNum">     116</span>              :                      test_logger&lt;Mode&gt;&amp; logger,</span>
+<span id="L117"><span class="lineNum">     117</span>              :                      const std::filesystem::path&amp; path,</span>
+<span id="L118"><span class="lineNum">     118</span>              :                      const std::filesystem::path&amp; prediction)</span>
+<span id="L119"><span class="lineNum">     119</span>              :     {</span>
+<span id="L120"><span class="lineNum">     120</span>              :       namespace fs = std::filesystem;</span>
+<span id="L121"><span class="lineNum">     121</span>              : </span>
+<span id="L122"><span class="lineNum">     122</span>              :       auto pred{</span>
+<span id="L123"><span class="lineNum">     123</span> <span class="tlaGNC">         851 :         [&amp;logger](const fs::path&amp; pathFinalToken, const fs::path&amp; predictionFinalToken)</span></span>
+<span id="L124"><span class="lineNum">     124</span>              :         {</span>
+<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC">         748 :            return check(equality, &quot;Final path token&quot;, logger, pathFinalToken, predictionFinalToken);</span></span>
+<span id="L126"><span class="lineNum">     126</span> <span class="tlaUNC">           0 :         }</span></span>
+<span id="L127"><span class="lineNum">     127</span>              :       };</span>
+<span id="L128"><span class="lineNum">     128</span>              : </span>
+<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">         103 :       check_path(logger, checker.customizer, path, prediction, pred);</span></span>
+<span id="L130"><span class="lineNum">     130</span> <span class="tlaGNC">         103 :     }</span></span>
+<span id="L131"><span class="lineNum">     131</span>              : </span>
+<span id="L132"><span class="lineNum">     132</span>              :     template&lt;test_mode Mode&gt;</span>
+<span id="L133"><span class="lineNum">     133</span> <span class="tlaGNC">         101 :     static void test(equivalence_check_t, test_logger&lt;Mode&gt;&amp; logger, const std::filesystem::path&amp; path, const std::filesystem::path&amp; prediction)</span></span>
+<span id="L134"><span class="lineNum">     134</span>              :     {</span>
+<span id="L135"><span class="lineNum">     135</span> <span class="tlaGNC">         101 :       test(basic_path_equivalence, logger, path, prediction);</span></span>
+<span id="L136"><span class="lineNum">     136</span> <span class="tlaGNC">         101 :     }</span></span>
+<span id="L137"><span class="lineNum">     137</span>              : </span>
+<span id="L138"><span class="lineNum">     138</span>              :     template&lt;class DefaultComparer, class... Comparers, test_mode Mode&gt;</span>
+<span id="L139"><span class="lineNum">     139</span> <span class="tlaGNC">           8 :     static void test(weak_equivalence_with_bespoke_file_checker_t&lt;DefaultComparer, Comparers...&gt; checker,</span></span>
+<span id="L140"><span class="lineNum">     140</span>              :                      test_logger&lt;Mode&gt;&amp; logger,</span>
+<span id="L141"><span class="lineNum">     141</span>              :                      const std::filesystem::path&amp; path,</span>
+<span id="L142"><span class="lineNum">     142</span>              :                      const std::filesystem::path&amp; prediction)</span>
+<span id="L143"><span class="lineNum">     143</span>              :     {</span>
+<span id="L144"><span class="lineNum">     144</span>              :       namespace fs = std::filesystem;</span>
+<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">           8 :       check_path(logger, checker.customizer, path, prediction, [](const fs::path&amp;, const fs::path&amp;) { return true; });</span></span>
+<span id="L146"><span class="lineNum">     146</span> <span class="tlaGNC">           8 :     }</span></span>
+<span id="L147"><span class="lineNum">     147</span>              : </span>
+<span id="L148"><span class="lineNum">     148</span>              :     template&lt;test_mode Mode&gt;</span>
+<span id="L149"><span class="lineNum">     149</span> <span class="tlaGNC">           6 :     static void test(weak_equivalence_check_t, test_logger&lt;Mode&gt;&amp; logger, const std::filesystem::path&amp; path, const std::filesystem::path&amp; prediction)</span></span>
+<span id="L150"><span class="lineNum">     150</span>              :     {</span>
+<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">           6 :       test(basic_path_weak_equivalence, logger, path, prediction);</span></span>
+<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">           6 :     }</span></span>
+<span id="L153"><span class="lineNum">     153</span>              :   private:</span>
+<span id="L154"><span class="lineNum">     154</span>              :     constexpr static std::array&lt;std::string_view, 2&gt;</span>
+<span id="L155"><span class="lineNum">     155</span>              :       excluded_files{&quot;.DS_Store&quot;, &quot;.keep&quot;};</span>
+<span id="L156"><span class="lineNum">     156</span>              : </span>
+<span id="L157"><span class="lineNum">     157</span>              :     constexpr static std::array&lt;std::string_view, 1&gt;</span>
+<span id="L158"><span class="lineNum">     158</span>              :       excluded_extensions{seqpat};</span>
+<span id="L159"><span class="lineNum">     159</span>              : </span>
+<span id="L160"><span class="lineNum">     160</span>              :     using basic_file_checker_t = general_file_checker&lt;string_based_file_comparer&gt;;</span>
+<span id="L161"><span class="lineNum">     161</span>              : </span>
+<span id="L162"><span class="lineNum">     162</span>              :     static const basic_file_checker_t basic_file_checker;</span>
+<span id="L163"><span class="lineNum">     163</span>              : </span>
+<span id="L164"><span class="lineNum">     164</span>              :     static const general_equivalence_check_t&lt;basic_file_checker_t&gt;      basic_path_equivalence;</span>
+<span id="L165"><span class="lineNum">     165</span>              :     static const general_weak_equivalence_check_t&lt;basic_file_checker_t&gt; basic_path_weak_equivalence;</span>
+<span id="L166"><span class="lineNum">     166</span>              : </span>
+<span id="L167"><span class="lineNum">     167</span>              :     template&lt;test_mode Mode, class Customization, invocable_exact_r&lt;bool, std::filesystem::path, std::filesystem::path&gt; FinalTokenComparison&gt;</span>
+<span id="L168"><span class="lineNum">     168</span> <span class="tlaGNC">         793 :     static void check_path(test_logger&lt;Mode&gt;&amp; logger, const Customization&amp; custom, const std::filesystem::path&amp; path, const std::filesystem::path&amp; prediction, FinalTokenComparison compare)</span></span>
+<span id="L169"><span class="lineNum">     169</span>              :     {</span>
+<span id="L170"><span class="lineNum">     170</span>              :       namespace fs = std::filesystem;</span>
+<span id="L171"><span class="lineNum">     171</span>              : </span>
+<span id="L172"><span class="lineNum">     172</span> <span class="tlaGNC">         793 :       const auto pathType{fs::status(path).type()};</span></span>
+<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">         793 :       const auto predictionType{fs::status(prediction).type()};</span></span>
+<span id="L174"><span class="lineNum">     174</span>              : </span>
+<span id="L175"><span class="lineNum">     175</span> <span class="tlaGNC">         793 :       if(check(equality, path_check_preamble(&quot;Path type&quot;, path, prediction), logger, pathType, predictionType))</span></span>
+<span id="L176"><span class="lineNum">     176</span>              :       {</span>
+<span id="L177"><span class="lineNum">     177</span> <span class="tlaGNC">         790 :         if(!path.empty())</span></span>
+<span id="L178"><span class="lineNum">     178</span>              :         {</span>
+<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">         790 :           const auto pathFinalToken{back(path)};</span></span>
+<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">         790 :           const auto predictionFinalToken{back(prediction)};</span></span>
+<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">         748 :           if(compare(pathFinalToken, predictionFinalToken))</span></span>
+<span id="L182"><span class="lineNum">     182</span>              :           {</span>
+<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">         788 :             switch(pathType)</span></span>
+<span id="L184"><span class="lineNum">     184</span>              :             {</span>
+<span id="L185"><span class="lineNum">     185</span>              :             case fs::file_type::regular:</span>
+<span id="L186"><span class="lineNum">     186</span> <span class="tlaGNC">         514 :               check_file(logger, custom, path, prediction);</span></span>
+<span id="L187"><span class="lineNum">     187</span> <span class="tlaGNC">         514 :               break;</span></span>
+<span id="L188"><span class="lineNum">     188</span>              :             case fs::file_type::directory:</span>
+<span id="L189"><span class="lineNum">     189</span> <span class="tlaGNC">         274 :               check_directory(logger, custom, path, prediction, compare);</span></span>
+<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">         274 :               break;</span></span>
+<span id="L191"><span class="lineNum">     191</span>              :             default:</span>
+<span id="L192"><span class="lineNum">     192</span> <span class="tlaUNC">           0 :               throw std::logic_error{std::string{&quot;Detailed equivalance check for paths of type '&quot;}</span></span>
+<span id="L193"><span class="lineNum">     193</span> <span class="tlaUNC">           0 :                 .append(serializer&lt;fs::file_type&gt;::make(pathType)).append(&quot;' not currently implemented&quot;)};</span></span>
+<span id="L194"><span class="lineNum">     194</span>              :             }</span>
+<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC">         746 :           }</span></span>
+<span id="L196"><span class="lineNum">     196</span> <span class="tlaGNC">         790 :         }</span></span>
+<span id="L197"><span class="lineNum">     197</span> <span class="tlaGNC">         790 :       }</span></span>
+<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC">         793 :     }</span></span>
+<span id="L199"><span class="lineNum">     199</span>              : </span>
+<span id="L200"><span class="lineNum">     200</span>              :     template&lt;test_mode Mode, class Customization, invocable_exact_r&lt;bool, std::filesystem::path, std::filesystem::path&gt; FinalTokenComparison&gt;</span>
+<span id="L201"><span class="lineNum">     201</span> <span class="tlaGNC">         274 :     static void check_directory(test_logger&lt;Mode&gt;&amp; logger, const Customization&amp; custom, const std::filesystem::path&amp; dir, const std::filesystem::path&amp; prediction, FinalTokenComparison compare)</span></span>
+<span id="L202"><span class="lineNum">     202</span>              :     {</span>
+<span id="L203"><span class="lineNum">     203</span>              :       namespace fs = std::filesystem;</span>
+<span id="L204"><span class="lineNum">     204</span>              : </span>
+<span id="L205"><span class="lineNum">     205</span> <span class="tlaGNC">         274 :       auto generator{</span></span>
+<span id="L206"><span class="lineNum">     206</span> <span class="tlaGNC">         548 :         [](const fs::path&amp; dirPath) {</span></span>
+<span id="L207"><span class="lineNum">     207</span> <span class="tlaGNC">         548 :           std::vector&lt;fs::path&gt; paths{};</span></span>
+<span id="L208"><span class="lineNum">     208</span> <span class="tlaGNC">        2132 :           for(const auto&amp; p : fs::directory_iterator(dirPath))</span></span>
+<span id="L209"><span class="lineNum">     209</span>              :           {</span>
+<span id="L210"><span class="lineNum">     210</span> <span class="tlaGNC">        3052 :             if(    std::ranges::find(excluded_files,      p.path().filename())  == excluded_files.end()</span></span>
+<span id="L211"><span class="lineNum">     211</span> <span class="tlaGNC">        1584 :                 &amp;&amp; std::ranges::find(excluded_extensions, p.path().extension()) == excluded_extensions.end())</span></span>
+<span id="L212"><span class="lineNum">     212</span>              :             {</span>
+<span id="L213"><span class="lineNum">     213</span> <span class="tlaGNC">        1384 :                paths.push_back(p);</span></span>
+<span id="L214"><span class="lineNum">     214</span> <span class="tlaGNC">        1384 :             }</span></span>
+<span id="L215"><span class="lineNum">     215</span>              :           }</span>
+<span id="L216"><span class="lineNum">     216</span>              : </span>
+<span id="L217"><span class="lineNum">     217</span> <span class="tlaGNC">         548 :           std::ranges::sort(paths);</span></span>
+<span id="L218"><span class="lineNum">     218</span>              : </span>
+<span id="L219"><span class="lineNum">     219</span> <span class="tlaGNC">         548 :           return paths;</span></span>
+<span id="L220"><span class="lineNum">     220</span> <span class="tlaGNC">         548 :         }</span></span>
+<span id="L221"><span class="lineNum">     221</span>              :       };</span>
+<span id="L222"><span class="lineNum">     222</span>              : </span>
+<span id="L223"><span class="lineNum">     223</span> <span class="tlaGNC">         274 :       const std::vector&lt;fs::path&gt; paths{generator(dir)}, predictedPaths{generator(prediction)};</span></span>
+<span id="L224"><span class="lineNum">     224</span>              : </span>
+<span id="L225"><span class="lineNum">     225</span> <span class="tlaGNC">         274 :       check(</span></span>
+<span id="L226"><span class="lineNum">     226</span>              :         equality,</span>
+<span id="L227"><span class="lineNum">     227</span> <span class="tlaGNC">         274 :         std::string{&quot;Number of directory entries for &quot;}.append(dir.generic_string()),</span></span>
+<span id="L228"><span class="lineNum">     228</span> <span class="tlaGNC">         274 :         logger,</span></span>
+<span id="L229"><span class="lineNum">     229</span> <span class="tlaGNC">         274 :         paths.size(),</span></span>
+<span id="L230"><span class="lineNum">     230</span> <span class="tlaGNC">         274 :         predictedPaths.size()</span></span>
+<span id="L231"><span class="lineNum">     231</span>              :       );</span>
+<span id="L232"><span class="lineNum">     232</span>              : </span>
+<span id="L233"><span class="lineNum">     233</span> <span class="tlaGNC">         274 :       const auto iters{std::ranges::mismatch(paths, predictedPaths,</span></span>
+<span id="L234"><span class="lineNum">     234</span> <span class="tlaGNC">         960 :           [&amp;dir,&amp;prediction](const fs::path&amp; lhs, const fs::path&amp; rhs) {</span></span>
+<span id="L235"><span class="lineNum">     235</span> <span class="tlaGNC">         686 :             return fs::relative(lhs, dir) == fs::relative(rhs, prediction);</span></span>
+<span id="L236"><span class="lineNum">     236</span> <span class="tlaUNC">           0 :           })};</span></span>
+<span id="L237"><span class="lineNum">     237</span> <span class="tlaGNC">         274 :       if((iters.in1 != paths.end()) &amp;&amp; (iters.in2 != predictedPaths.end()))</span></span>
+<span id="L238"><span class="lineNum">     238</span>              :       {</span>
+<span id="L239"><span class="lineNum">     239</span> <span class="tlaGNC">           4 :         check(equality, &quot;First directory entry mismatch&quot;, logger, *iters.in1, *iters.in2);</span></span>
+<span id="L240"><span class="lineNum">     240</span> <span class="tlaGNC">           4 :       }</span></span>
+<span id="L241"><span class="lineNum">     241</span> <span class="tlaGNC">         270 :       else if(iters.in1 != paths.end())</span></span>
+<span id="L242"><span class="lineNum">     242</span>              :       {</span>
+<span id="L243"><span class="lineNum">     243</span> <span class="tlaUNC">           0 :         check(equality, &quot;First directory entry mismatch&quot;, logger, *iters.in1, fs::path{});</span></span>
+<span id="L244"><span class="lineNum">     244</span> <span class="tlaUNC">           0 :       }</span></span>
+<span id="L245"><span class="lineNum">     245</span> <span class="tlaGNC">         270 :       else if(iters.in2 != predictedPaths.end())</span></span>
+<span id="L246"><span class="lineNum">     246</span>              :       {</span>
+<span id="L247"><span class="lineNum">     247</span> <span class="tlaUNC">           0 :         check(equality, &quot;First directory entry mismatch&quot;, logger, fs::path{}, *iters.in2);</span></span>
+<span id="L248"><span class="lineNum">     248</span> <span class="tlaUNC">           0 :       }</span></span>
+<span id="L249"><span class="lineNum">     249</span>              :       else</span>
+<span id="L250"><span class="lineNum">     250</span>              :       {</span>
+<span id="L251"><span class="lineNum">     251</span> <span class="tlaGNC">         952 :         for(std::size_t i{}; i &lt; paths.size(); ++i)</span></span>
+<span id="L252"><span class="lineNum">     252</span>              :         {</span>
+<span id="L253"><span class="lineNum">     253</span> <span class="tlaGNC">         682 :           check_path(logger, custom, paths[i], predictedPaths[i], compare);</span></span>
+<span id="L254"><span class="lineNum">     254</span> <span class="tlaGNC">         682 :         }</span></span>
+<span id="L255"><span class="lineNum">     255</span>              :       }</span>
+<span id="L256"><span class="lineNum">     256</span> <span class="tlaGNC">         274 :     }</span></span>
+<span id="L257"><span class="lineNum">     257</span>              : </span>
+<span id="L258"><span class="lineNum">     258</span>              :     template&lt;test_mode Mode, class Customization&gt;</span>
+<span id="L259"><span class="lineNum">     259</span> <span class="tlaGNC">         514 :     static void check_file(test_logger&lt;Mode&gt;&amp; logger, const Customization&amp; custom, const std::filesystem::path&amp; file, const std::filesystem::path&amp; prediction)</span></span>
+<span id="L260"><span class="lineNum">     260</span>              :     {</span>
+<span id="L261"><span class="lineNum">     261</span> <span class="tlaGNC">         514 :       custom.check_file(logger, file, prediction);</span></span>
+<span id="L262"><span class="lineNum">     262</span> <span class="tlaGNC">         514 :     }</span></span>
+<span id="L263"><span class="lineNum">     263</span>              :   };</span>
+<span id="L264"><span class="lineNum">     264</span>              : </span>
+<span id="L265"><span class="lineNum">     265</span>              : }</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com/linux-test-project/lcov" target="_parent">LCOV version 2.5-0</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

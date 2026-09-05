@@ -1,0 +1,298 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - Tests/Maths/Geometry/BoundsFreeTest.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../index.html" title="Click to go to top-level">top level</a> - <a href="index.html" title="Click to go to directory Tests/Maths/Geometry">Tests/Maths/Geometry</a> - BoundsFreeTest.cpp<span style="font-size: 80%;"> (source / <a href="BoundsFreeTest.cpp.func-c.html" title="Click to go to function table">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">131</td>
+            <td class="headerCovTableEntry">131</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-05 21:33:51</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">39</td>
+            <td class="headerCovTableEntry">39</td>
+          </tr>
+                  <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : ////////////////////////////////////////////////////////////////////</span>
+<span id="L2"><span class="lineNum">       2</span>              : //                Copyright Oliver J. Rosten 2026.                //</span>
+<span id="L3"><span class="lineNum">       3</span>              : // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //</span>
+<span id="L4"><span class="lineNum">       4</span>              : //    (See accompanying file LICENSE.md or copy at                //</span>
+<span id="L5"><span class="lineNum">       5</span>              : //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //</span>
+<span id="L6"><span class="lineNum">       6</span>              : ////////////////////////////////////////////////////////////////////</span>
+<span id="L7"><span class="lineNum">       7</span>              : </span>
+<span id="L8"><span class="lineNum">       8</span>              : /** \file */</span>
+<span id="L9"><span class="lineNum">       9</span>              : </span>
+<span id="L10"><span class="lineNum">      10</span>              : #include &quot;BoundsFreeTest.hpp&quot;</span>
+<span id="L11"><span class="lineNum">      11</span>              : #include &quot;BoundsTestingUtilities.hpp&quot;</span>
+<span id="L12"><span class="lineNum">      12</span>              : </span>
+<span id="L13"><span class="lineNum">      13</span>              : namespace sequoia::testing</span>
+<span id="L14"><span class="lineNum">      14</span>              : {  </span>
+<span id="L15"><span class="lineNum">      15</span>              :   using namespace maths;</span>
+<span id="L16"><span class="lineNum">      16</span>              : </span>
+<span id="L17"><span class="lineNum">      17</span>              :   template&lt;std::floating_point T&gt;</span>
+<span id="L18"><span class="lineNum">      18</span>              :   struct annulus_bounds</span>
+<span id="L19"><span class="lineNum">      19</span>              :   {</span>
+<span id="L20"><span class="lineNum">      20</span>              :     using value_type = T;</span>
+<span id="L21"><span class="lineNum">      21</span>              :     </span>
+<span id="L22"><span class="lineNum">      22</span>              :     T lower{}, upper{};</span>
+<span id="L23"><span class="lineNum">      23</span>              : </span>
+<span id="L24"><span class="lineNum">      24</span>              :     [[nodiscard]]</span>
+<span id="L25"><span class="lineNum">      25</span> <span class="tlaGNC">           1 :     constexpr bool operator()(const std::array&lt;T, 2&gt;&amp; vals) const noexcept</span></span>
+<span id="L26"><span class="lineNum">      26</span>              :     {</span>
+<span id="L27"><span class="lineNum">      27</span> <span class="tlaGNC">           1 :       const T r{vals[0] * vals[0] + vals[1] * vals[1]};</span></span>
+<span id="L28"><span class="lineNum">      28</span> <span class="tlaGNC">           1 :       return (r &gt;= lower*lower) &amp;&amp; (r &lt;= upper*upper);</span></span>
+<span id="L29"><span class="lineNum">      29</span>              :     };</span>
+<span id="L30"><span class="lineNum">      30</span>              : </span>
+<span id="L31"><span class="lineNum">      31</span>              :     [[nodiscard]]</span>
+<span id="L32"><span class="lineNum">      32</span> <span class="tlaGNC">           1 :     std::string format_input(std::span&lt;const T, 2&gt; vals) const</span></span>
+<span id="L33"><span class="lineNum">      33</span>              :     {</span>
+<span id="L34"><span class="lineNum">      34</span> <span class="tlaGNC">           1 :       return std::format(&quot;{0} --&gt; sqrt({1}*{1} + {2}*{2}) = {3}&quot;, vals, vals[0], vals[1], std::sqrt(vals[0] * vals[0] + vals[1] * vals[1]));</span></span>
+<span id="L35"><span class="lineNum">      35</span>              :     }</span>
+<span id="L36"><span class="lineNum">      36</span>              :   };</span>
+<span id="L37"><span class="lineNum">      37</span>              :   </span>
+<span id="L38"><span class="lineNum">      38</span>              :   [[nodiscard]]</span>
+<span id="L39"><span class="lineNum">      39</span> <span class="tlaGNC">           4 :   std::filesystem::path bounds_free_test::source_file() const</span></span>
+<span id="L40"><span class="lineNum">      40</span>              :   {</span>
+<span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">           4 :     return std::source_location::current().file_name();</span></span>
+<span id="L42"><span class="lineNum">      42</span>              :   }</span>
+<span id="L43"><span class="lineNum">      43</span>              : </span>
+<span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">           1 :   void bounds_free_test::run_tests()</span></span>
+<span id="L45"><span class="lineNum">      45</span>              :   {</span>
+<span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">           1 :     test_meta();</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">           1 :     test_exceptions();</span></span>
+<span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">           1 :     test_invert&lt;float&gt;();</span></span>
+<span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">           1 :     test_invert&lt;double&gt;();</span></span>
+<span id="L50"><span class="lineNum">      50</span> <span class="tlaGNC">           1 :     test_multiply_fp&lt;float&gt;();</span></span>
+<span id="L51"><span class="lineNum">      51</span> <span class="tlaGNC">           1 :     test_multiply_fp&lt;double&gt;();</span></span>
+<span id="L52"><span class="lineNum">      52</span> <span class="tlaGNC">           1 :     test_multiply_mixed_fp&lt;float, double&gt;();</span></span>
+<span id="L53"><span class="lineNum">      53</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L54"><span class="lineNum">      54</span>              : </span>
+<span id="L55"><span class="lineNum">      55</span> <span class="tlaGNC">           1 :   void bounds_free_test::test_meta()</span></span>
+<span id="L56"><span class="lineNum">      56</span>              :   {</span>
+<span id="L57"><span class="lineNum">      57</span> <span class="tlaGNC">           2 :     STATIC_CHECK( bounds&lt;coordinate_bounds&lt;float&gt;&gt;);</span></span>
+<span id="L58"><span class="lineNum">      58</span> <span class="tlaGNC">           2 :     STATIC_CHECK( bounds&lt;coordinate_bounds&lt;double&gt;&gt;);</span></span>
+<span id="L59"><span class="lineNum">      59</span> <span class="tlaGNC">           2 :     STATIC_CHECK( bounds&lt;annulus_bounds&lt;float&gt;&gt;);</span></span>
+<span id="L60"><span class="lineNum">      60</span> <span class="tlaGNC">           2 :     STATIC_CHECK( bounds&lt;annulus_bounds&lt;double&gt;&gt;);</span></span>
+<span id="L61"><span class="lineNum">      61</span>              :     // Being a set of bounds is a property of the type; being usable at a given</span>
+<span id="L62"><span class="lineNum">      62</span>              :     // dimension is a property of what it can be called with. Which of the two</span>
+<span id="L63"><span class="lineNum">      63</span>              :     // interfaces bounds_for consults is settled by the space's dimension, and only a</span>
+<span id="L64"><span class="lineNum">      64</span>              :     // type supplying just one of them shows that both branches are live: coordinate</span>
+<span id="L65"><span class="lineNum">      65</span>              :     // bounds apply componentwise at any width, whereas an annulus is a condition on</span>
+<span id="L66"><span class="lineNum">      66</span>              :     // two coordinates jointly and so has no single-value form at all.</span>
+<span id="L67"><span class="lineNum">      67</span> <span class="tlaGNC">           2 :     STATIC_CHECK( checks_single_val_against_bounds_v&lt;coordinate_bounds&lt;double&gt;&gt;);</span></span>
+<span id="L68"><span class="lineNum">      68</span> <span class="tlaGNC">           2 :     STATIC_CHECK( checks_array_against_bounds_v&lt;coordinate_bounds&lt;double&gt;, 2&gt;);</span></span>
+<span id="L69"><span class="lineNum">      69</span> <span class="tlaGNC">           2 :     STATIC_CHECK( checks_array_against_bounds_v&lt;coordinate_bounds&lt;double&gt;, 3&gt;);</span></span>
+<span id="L70"><span class="lineNum">      70</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!checks_single_val_against_bounds_v&lt;annulus_bounds&lt;double&gt;&gt;);</span></span>
+<span id="L71"><span class="lineNum">      71</span> <span class="tlaGNC">           2 :     STATIC_CHECK( checks_array_against_bounds_v&lt;annulus_bounds&lt;double&gt;, 2&gt;);</span></span>
+<span id="L72"><span class="lineNum">      72</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!checks_array_against_bounds_v&lt;annulus_bounds&lt;double&gt;, 3&gt;);</span></span>
+<span id="L73"><span class="lineNum">      73</span>              : </span>
+<span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">           2 :     STATIC_CHECK( bounds_for&lt;coordinate_bounds&lt;double&gt;, euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L75"><span class="lineNum">      75</span> <span class="tlaGNC">           2 :     STATIC_CHECK( bounds_for&lt;coordinate_bounds&lt;double&gt;, euclidean_vector_space&lt;2&gt;&gt;);</span></span>
+<span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">           2 :     STATIC_CHECK( bounds_for&lt;annulus_bounds&lt;double&gt;, euclidean_vector_space&lt;2&gt;&gt;);</span></span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!bounds_for&lt;annulus_bounds&lt;double&gt;, euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!bounds_for&lt;annulus_bounds&lt;double&gt;, euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L79"><span class="lineNum">      79</span>              : </span>
+<span id="L80"><span class="lineNum">      80</span>              :     // bounds_value is a constraint on a *value*, not a type: the bounds must be a</span>
+<span id="L81"><span class="lineNum">      81</span>              :     // genuine interval, so a degenerate one is refused however well-formed the type.</span>
+<span id="L82"><span class="lineNum">      82</span> <span class="tlaGNC">           2 :     STATIC_CHECK( bounds_value&lt;no_bounds&lt;double&gt;&gt;);</span></span>
+<span id="L83"><span class="lineNum">      83</span> <span class="tlaGNC">           2 :     STATIC_CHECK( bounds_value&lt;half_line_bounds&lt;double&gt;&gt;);</span></span>
+<span id="L84"><span class="lineNum">      84</span> <span class="tlaGNC">           2 :     STATIC_CHECK( bounds_value&lt;negative_half_line_bounds&lt;double&gt;&gt;);</span></span>
+<span id="L85"><span class="lineNum">      85</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!bounds_value&lt;coordinate_bounds&lt;double&gt;{1.0, 1.0}&gt;);</span></span>
+<span id="L86"><span class="lineNum">      86</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!bounds_value&lt;coordinate_bounds&lt;double&gt;{2.0, 1.0}&gt;);</span></span>
+<span id="L87"><span class="lineNum">      87</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L88"><span class="lineNum">      88</span>              : </span>
+<span id="L89"><span class="lineNum">      89</span> <span class="tlaGNC">           1 :   void bounds_free_test::test_exceptions()</span></span>
+<span id="L90"><span class="lineNum">      90</span>              :   {</span>
+<span id="L91"><span class="lineNum">      91</span> <span class="tlaGNC">           1 :     check_exception_thrown&lt;std::domain_error&gt;(</span></span>
+<span id="L92"><span class="lineNum">      92</span> <span class="tlaGNC">           1 :       &quot;&quot;,</span></span>
+<span id="L93"><span class="lineNum">      93</span> <span class="tlaGNC">           1 :       [](){</span></span>
+<span id="L94"><span class="lineNum">      94</span> <span class="tlaGNC">           1 :         throwing_validator{}(coordinate_bounds&lt;double&gt;{0.0, 1.0}, 2.0);</span></span>
+<span id="L95"><span class="lineNum">      95</span> <span class="tlaGNC">           1 :       }</span></span>
+<span id="L96"><span class="lineNum">      96</span>              :     );</span>
+<span id="L97"><span class="lineNum">      97</span>              : </span>
+<span id="L98"><span class="lineNum">      98</span> <span class="tlaGNC">           1 :     check_exception_thrown&lt;std::domain_error&gt;(</span></span>
+<span id="L99"><span class="lineNum">      99</span> <span class="tlaGNC">           1 :       &quot;&quot;,</span></span>
+<span id="L100"><span class="lineNum">     100</span> <span class="tlaGNC">           1 :       [](){</span></span>
+<span id="L101"><span class="lineNum">     101</span> <span class="tlaGNC">           1 :         throwing_validator{}(coordinate_bounds&lt;double&gt;{0.0, 1.0}, std::array{2.0, 1.0});</span></span>
+<span id="L102"><span class="lineNum">     102</span> <span class="tlaGNC">           1 :       }</span></span>
+<span id="L103"><span class="lineNum">     103</span>              :     );</span>
+<span id="L104"><span class="lineNum">     104</span>              : </span>
+<span id="L105"><span class="lineNum">     105</span> <span class="tlaGNC">           1 :     check_exception_thrown&lt;std::domain_error&gt;(</span></span>
+<span id="L106"><span class="lineNum">     106</span> <span class="tlaGNC">           1 :       &quot;&quot;,</span></span>
+<span id="L107"><span class="lineNum">     107</span> <span class="tlaGNC">           1 :       [](){</span></span>
+<span id="L108"><span class="lineNum">     108</span> <span class="tlaGNC">           1 :         throwing_validator{}(annulus_bounds{1.0, 2.0}, std::array{3.0, 4.0});</span></span>
+<span id="L109"><span class="lineNum">     109</span> <span class="tlaGNC">           1 :       }</span></span>
+<span id="L110"><span class="lineNum">     110</span>              :     );</span>
+<span id="L111"><span class="lineNum">     111</span>              : </span>
+<span id="L112"><span class="lineNum">     112</span> <span class="tlaGNC">           1 :     check_exception_thrown&lt;std::domain_error&gt;(</span></span>
+<span id="L113"><span class="lineNum">     113</span> <span class="tlaGNC">           1 :       &quot;&quot;,</span></span>
+<span id="L114"><span class="lineNum">     114</span> <span class="tlaGNC">           1 :       [](){</span></span>
+<span id="L115"><span class="lineNum">     115</span> <span class="tlaGNC">           1 :         throwing_validator{}(std::array{coordinate_bounds{0.0, 1.0}, coordinate_bounds{-1.0, 0.0}}, std::array{-1.0, 0.0});</span></span>
+<span id="L116"><span class="lineNum">     116</span> <span class="tlaGNC">           1 :       }</span></span>
+<span id="L117"><span class="lineNum">     117</span>              :     );</span>
+<span id="L118"><span class="lineNum">     118</span>              : </span>
+<span id="L119"><span class="lineNum">     119</span> <span class="tlaGNC">           1 :     constexpr auto nan{std::numeric_limits&lt;double&gt;::quiet_NaN()};</span></span>
+<span id="L120"><span class="lineNum">     120</span>              : </span>
+<span id="L121"><span class="lineNum">     121</span> <span class="tlaGNC">           1 :     check_exception_thrown&lt;std::domain_error&gt;(</span></span>
+<span id="L122"><span class="lineNum">     122</span> <span class="tlaGNC">           1 :       &quot;&quot;,</span></span>
+<span id="L123"><span class="lineNum">     123</span> <span class="tlaGNC">           1 :       [](){</span></span>
+<span id="L124"><span class="lineNum">     124</span> <span class="tlaGNC">           1 :         throwing_validator{}(coordinate_bounds&lt;double&gt;{0.0, 1.0}, nan);</span></span>
+<span id="L125"><span class="lineNum">     125</span> <span class="tlaGNC">           1 :       }</span></span>
+<span id="L126"><span class="lineNum">     126</span>              :     );</span>
+<span id="L127"><span class="lineNum">     127</span>              : </span>
+<span id="L128"><span class="lineNum">     128</span> <span class="tlaGNC">           1 :     check_exception_thrown&lt;std::domain_error&gt;(</span></span>
+<span id="L129"><span class="lineNum">     129</span> <span class="tlaGNC">           1 :       &quot;&quot;,</span></span>
+<span id="L130"><span class="lineNum">     130</span> <span class="tlaGNC">           1 :       [](){</span></span>
+<span id="L131"><span class="lineNum">     131</span> <span class="tlaGNC">           1 :         throwing_validator{}(coordinate_bounds&lt;double&gt;{0.0, 1.0}, std::array{2.0, nan});</span></span>
+<span id="L132"><span class="lineNum">     132</span> <span class="tlaGNC">           1 :       }</span></span>
+<span id="L133"><span class="lineNum">     133</span>              :     );</span>
+<span id="L134"><span class="lineNum">     134</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L135"><span class="lineNum">     135</span>              : </span>
+<span id="L136"><span class="lineNum">     136</span>              :   template&lt;std::floating_point T&gt;</span>
+<span id="L137"><span class="lineNum">     137</span> <span class="tlaGNC">           2 :   void bounds_free_test::test_invert()</span></span>
+<span id="L138"><span class="lineNum">     138</span>              :   {</span>
+<span id="L139"><span class="lineNum">     139</span>              :     constexpr static auto inf{std::numeric_limits&lt;double&gt;::infinity()};</span>
+<span id="L140"><span class="lineNum">     140</span> <span class="tlaGNC">           2 :     check(equality, &quot;[a &gt;  0, b &lt;  infty]&quot;, reciprocal(coordinate_bounds{T(1.0), T(2.0)}), coordinate_bounds{T(0.5), T(1.0)});</span></span>
+<span id="L141"><span class="lineNum">     141</span> <span class="tlaGNC">           2 :     check(equality, &quot;[a &gt;  0, b == infty]&quot;, reciprocal(coordinate_bounds{T(2.0), T(inf)}), coordinate_bounds{T(0.0), T(0.5)});</span></span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">           2 :     check(equality, &quot;[a == 0, b &lt;  infty]&quot;, reciprocal(coordinate_bounds{T(0.0), T(2.0)}), coordinate_bounds{T(0.5), T(inf)});</span></span>
+<span id="L143"><span class="lineNum">     143</span> <span class="tlaGNC">           2 :     check(equality, &quot;[a == 0, b == infty]&quot;, reciprocal(coordinate_bounds{T(0.0), T(inf)}), coordinate_bounds{T(0.0), T(inf)});</span></span>
+<span id="L144"><span class="lineNum">     144</span>              : </span>
+<span id="L145"><span class="lineNum">     145</span> <span class="tlaGNC">           2 :     check(equality, &quot;[a &gt;  -inf, b &lt;  0]&quot;, reciprocal(coordinate_bounds{T(-2.0), T(-1.0)}), coordinate_bounds{T(-1.0), T(-0.5)});</span></span>
+<span id="L146"><span class="lineNum">     146</span> <span class="tlaGNC">           2 :     check(equality, &quot;[a &gt;  -inf, b == 0]&quot;, reciprocal(coordinate_bounds{T(-2.0), T( 0.0)}), coordinate_bounds{T(-inf), T(-0.5)});</span></span>
+<span id="L147"><span class="lineNum">     147</span> <span class="tlaGNC">           2 :     check(equality, &quot;[a == -inf, b &lt;  0]&quot;, reciprocal(coordinate_bounds{T(-inf), T(-1.0)}), coordinate_bounds{T(-1.0), T( 0.0)});</span></span>
+<span id="L148"><span class="lineNum">     148</span> <span class="tlaGNC">           2 :     check(equality, &quot;[a == -inf, b == 0]&quot;, reciprocal(coordinate_bounds{T(-inf), T( 0.0)}), coordinate_bounds{T(-inf), T(0.0)});</span></span>
+<span id="L149"><span class="lineNum">     149</span>              : </span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">           2 :     check(equality, &quot;[a == -inf, b == inf]&quot;, reciprocal(coordinate_bounds{T(-inf), T(inf)}), coordinate_bounds{T(-inf), T(inf)});</span></span>
+<span id="L151"><span class="lineNum">     151</span> <span class="tlaGNC">           2 :     check(equality, &quot;[a == -2,   b == inf]&quot;, reciprocal(coordinate_bounds{T(-2.0), T(inf)}), coordinate_bounds{T(-inf), T(inf)});</span></span>
+<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">           2 :     check(equality, &quot;[a == -inf, b == 3]&quot;,   reciprocal(coordinate_bounds{T(-inf), T(3.0)}), coordinate_bounds{T(-inf), T(inf)});</span></span>
+<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">           2 :     check(equality, &quot;[a == -1,   b == 1]&quot;,   reciprocal(coordinate_bounds{T(-1.0), T(1.0)}), coordinate_bounds{T(-inf), T(inf)});</span></span>
+<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">           2 :   }</span></span>
+<span id="L155"><span class="lineNum">     155</span>              : </span>
+<span id="L156"><span class="lineNum">     156</span>              :   template&lt;std::floating_point T&gt;</span>
+<span id="L157"><span class="lineNum">     157</span> <span class="tlaGNC">           2 :   void bounds_free_test::test_multiply_fp()</span></span>
+<span id="L158"><span class="lineNum">     158</span>              :   {</span>
+<span id="L159"><span class="lineNum">     159</span>              :     constexpr static auto inf{std::numeric_limits&lt;T&gt;::infinity()};</span>
+<span id="L160"><span class="lineNum">     160</span>              :     using cb = coordinate_bounds&lt;T&gt;;</span>
+<span id="L161"><span class="lineNum">     161</span>              : </span>
+<span id="L162"><span class="lineNum">     162</span> <span class="tlaGNC">           2 :     check(equality, &quot;+ve, finite non-overlapping&quot;,  cb{1.0, 2.0} * cb{3.0, 4.0}, cb{3.0, 8.0});</span></span>
+<span id="L163"><span class="lineNum">     163</span> <span class="tlaGNC">           2 :     check(equality, &quot;+ve, finite overlapping&quot;,      cb{1.0, 4.0} * cb{2.0, 3.0}, cb{2.0, 12.0});</span></span>
+<span id="L164"><span class="lineNum">     164</span> <span class="tlaGNC">           2 :     check(equality, &quot;+ve, finite / infinite&quot;,       cb{1.0, 4.0} * cb{0.5, inf}, cb{0.5, inf});</span></span>
+<span id="L165"><span class="lineNum">     165</span> <span class="tlaGNC">           2 :     check(equality, &quot;semi+ve, finite / infinite&quot;,   cb{0.0, 4.0} * cb{0.5, inf}, cb{0.0, inf});</span></span>
+<span id="L166"><span class="lineNum">     166</span> <span class="tlaGNC">           2 :     check(equality, &quot;semi+ve, finite / infinite&quot;,   cb{1.0, 4.0} * cb{0.0, inf}, cb{0.0, inf});</span></span>
+<span id="L167"><span class="lineNum">     167</span> <span class="tlaGNC">           2 :     check(equality, &quot;semi+ve, infinite / infinite&quot;, cb{1.0, inf} * cb{0.0, inf}, cb{0.0, inf});</span></span>
+<span id="L168"><span class="lineNum">     168</span> <span class="tlaGNC">           2 :     check(equality, &quot;semi+ve, infinite / infinite&quot;, cb{0.0, inf} * cb{0.0, inf}, cb{0.0, inf});</span></span>
+<span id="L169"><span class="lineNum">     169</span>              : </span>
+<span id="L170"><span class="lineNum">     170</span> <span class="tlaGNC">           2 :     check(equality, &quot;-ve, finite non-overlapping&quot;,  cb{-2.0, -1.0} * cb{-4.0, -3.0}, cb{3.0, 8.0});</span></span>
+<span id="L171"><span class="lineNum">     171</span> <span class="tlaGNC">           2 :     check(equality, &quot;-ve, finite overlapping&quot;,      cb{-4.0, -1.0} * cb{-3.0, -2.0}, cb{2.0, 12.0});</span></span>
+<span id="L172"><span class="lineNum">     172</span> <span class="tlaGNC">           2 :     check(equality, &quot;-ve, finite / infinite&quot;,       cb{-4.0, -1.0} * cb{-inf, -0.5}, cb{0.5, inf});</span></span>
+<span id="L173"><span class="lineNum">     173</span> <span class="tlaGNC">           2 :     check(equality, &quot;semi-ve, finite / infinite&quot;,   cb{-4.0,  0.0} * cb{-inf, -0.5}, cb{0.0, inf});</span></span>
+<span id="L174"><span class="lineNum">     174</span> <span class="tlaGNC">           2 :     check(equality, &quot;semi-ve, finite / infinite&quot;,   cb{-4.0, -1.0} * cb{-inf,  0.0}, cb{0.0, inf});</span></span>
+<span id="L175"><span class="lineNum">     175</span> <span class="tlaGNC">           2 :     check(equality, &quot;semi-ve, infinite / infinite&quot;, cb{-inf, -1.0} * cb{-inf,  0.0}, cb{0.0, inf});</span></span>
+<span id="L176"><span class="lineNum">     176</span> <span class="tlaGNC">           2 :     check(equality, &quot;semi-ve, infinite / infinite&quot;, cb{-inf,  0.0} * cb{-inf,  0.0}, cb{0.0, inf});</span></span>
+<span id="L177"><span class="lineNum">     177</span>              : </span>
+<span id="L178"><span class="lineNum">     178</span> <span class="tlaGNC">           2 :     check(equality, &quot;+ve/-ve, finite&quot;,                      cb{1.0, 2.0} * cb{-3.0, -0.5}, cb{-6.0, -0.5});</span></span>
+<span id="L179"><span class="lineNum">     179</span> <span class="tlaGNC">           2 :     check(equality, &quot;+ve finite / -ve, infinite&quot;,           cb{1.0, 2.0} * cb{-inf, -0.5}, cb{-inf, -0.5});</span></span>
+<span id="L180"><span class="lineNum">     180</span> <span class="tlaGNC">           2 :     check(equality, &quot;+ve finite / semi-ve, infinite&quot;,       cb{1.0, 2.0} * cb{-inf,  0.0}, cb{-inf,  0.0});</span></span>
+<span id="L181"><span class="lineNum">     181</span> <span class="tlaGNC">           2 :     check(equality, &quot;+ve infinite / -ve, finite&quot;,           cb{1.0, inf} * cb{-3.0, -1.0}, cb{-inf, -1.0});</span></span>
+<span id="L182"><span class="lineNum">     182</span> <span class="tlaGNC">           2 :     check(equality, &quot;semi+ve infinite / -ve, finite&quot;,       cb{0.0, inf} * cb{-3.0, -1.0}, cb{-inf,  0.0});</span></span>
+<span id="L183"><span class="lineNum">     183</span> <span class="tlaGNC">           2 :     check(equality, &quot;+ve infinite / -ve, infinite&quot;,         cb{1.0, inf} * cb{-inf, -1.0}, cb{-inf, -1.0});</span></span>
+<span id="L184"><span class="lineNum">     184</span> <span class="tlaGNC">           2 :     check(equality, &quot;semi+ve infinite / -ve, infinite&quot;,     cb{0.0, inf} * cb{-inf, -1.0}, cb{-inf,  0.0});</span></span>
+<span id="L185"><span class="lineNum">     185</span> <span class="tlaGNC">           2 :     check(equality, &quot;+ve infinite / semi-ve, infinite&quot;,     cb{1.0, inf} * cb{-inf,  0.0}, cb{-inf,  0.0});</span></span>
+<span id="L186"><span class="lineNum">     186</span> <span class="tlaGNC">           2 :     check(equality, &quot;semi+ve infinite / semi-ve, infinite&quot;, cb{0.0, inf} * cb{-inf,  0.0}, cb{-inf,  0.0});</span></span>
+<span id="L187"><span class="lineNum">     187</span>              : </span>
+<span id="L188"><span class="lineNum">     188</span> <span class="tlaGNC">           2 :     check(equality, &quot;-ve/+ve, finite&quot;,                      cb{-3.0, -0.5} * cb{1.0, 2.0}, cb{-6.0, -0.5});</span></span>
+<span id="L189"><span class="lineNum">     189</span> <span class="tlaGNC">           2 :     check(equality, &quot;-ve / +ve finite, infinite&quot;,           cb{-inf, -0.5} * cb{1.0, 2.0}, cb{-inf, -0.5});</span></span>
+<span id="L190"><span class="lineNum">     190</span> <span class="tlaGNC">           2 :     check(equality, &quot;semi-ve / +ve finite, infinite&quot;,       cb{-inf,  0.0} * cb{1.0, 2.0}, cb{-inf,  0.0});</span></span>
+<span id="L191"><span class="lineNum">     191</span> <span class="tlaGNC">           2 :     check(equality, &quot;-ve / +ve infinite, finite&quot;,           cb{-3.0, -1.0} * cb{1.0, inf}, cb{-inf, -1.0});</span></span>
+<span id="L192"><span class="lineNum">     192</span> <span class="tlaGNC">           2 :     check(equality, &quot;-ve / semi+ve infinite, finite&quot;,       cb{-3.0, -1.0} * cb{0.0, inf}, cb{-inf,  0.0});</span></span>
+<span id="L193"><span class="lineNum">     193</span> <span class="tlaGNC">           2 :     check(equality, &quot;-ve / +ve infinite, infinite&quot;,         cb{-inf, -1.0} * cb{1.0, inf}, cb{-inf, -1.0});</span></span>
+<span id="L194"><span class="lineNum">     194</span> <span class="tlaGNC">           2 :     check(equality, &quot;-ve / semi+ve infinite, infinite&quot;,     cb{-inf, -1.0} * cb{0.0, inf}, cb{-inf,  0.0});</span></span>
+<span id="L195"><span class="lineNum">     195</span> <span class="tlaGNC">           2 :     check(equality, &quot;semi-ve / +ve infinite, infinite&quot;,     cb{-inf,  0.0} * cb{1.0, inf}, cb{-inf,  0.0});</span></span>
+<span id="L196"><span class="lineNum">     196</span> <span class="tlaGNC">           2 :     check(equality, &quot;semi-ve / semi+ve infinite, infinite&quot;, cb{-inf,  0.0} * cb{0.0, inf}, cb{-inf,  0.0});</span></span>
+<span id="L197"><span class="lineNum">     197</span>              : </span>
+<span id="L198"><span class="lineNum">     198</span> <span class="tlaGNC">           2 :     check(equality, &quot;Finite, +ve&quot;,              cb{-3.0, 0.5} * cb{ 1.0,  2.0}, cb{-6.0, 1.0});</span></span>
+<span id="L199"><span class="lineNum">     199</span> <span class="tlaGNC">           2 :     check(equality, &quot;Finite, -ve&quot;,              cb{-3.0, 0.5} * cb{-2.0, -1.0}, cb{-1.0, 6.0});</span></span>
+<span id="L200"><span class="lineNum">     200</span> <span class="tlaGNC">           2 :     check(equality, &quot;Finite, finte&quot;,            cb{-3.0, 0.5} * cb{-1.0,  2.0}, cb{-6.0, 3.0});</span></span>
+<span id="L201"><span class="lineNum">     201</span> <span class="tlaGNC">           2 :     check(equality, &quot;-ve infnite, +ve&quot;,         cb{-inf, 0.5} * cb{ 1.0,  2.0}, cb{-inf, 1.0});</span></span>
+<span id="L202"><span class="lineNum">     202</span> <span class="tlaGNC">           2 :     check(equality, &quot;-ve infnite, +ve infinte&quot;, cb{-inf, 0.5} * cb{ 1.0,  inf}, cb{-inf, inf});</span></span>
+<span id="L203"><span class="lineNum">     203</span> <span class="tlaGNC">           2 :     check(equality, &quot;Infnite, +infinte&quot;,        cb{-inf, inf} * cb{-inf,  inf}, cb{-inf, inf});</span></span>
+<span id="L204"><span class="lineNum">     204</span> <span class="tlaGNC">           2 :   }</span></span>
+<span id="L205"><span class="lineNum">     205</span>              : </span>
+<span id="L206"><span class="lineNum">     206</span>              :   template&lt;std::floating_point T, std::floating_point U&gt;</span>
+<span id="L207"><span class="lineNum">     207</span> <span class="tlaGNC">           1 :   void bounds_free_test::test_multiply_mixed_fp()</span></span>
+<span id="L208"><span class="lineNum">     208</span>              :   {</span>
+<span id="L209"><span class="lineNum">     209</span>              :     using common_t = std::common_type_t&lt;T, U&gt;;</span>
+<span id="L210"><span class="lineNum">     210</span>              :     using cb_T     = coordinate_bounds&lt;T&gt;;</span>
+<span id="L211"><span class="lineNum">     211</span>              :     using cb_U     = coordinate_bounds&lt;U&gt;;</span>
+<span id="L212"><span class="lineNum">     212</span>              :     using cb_TU    = coordinate_bounds&lt;common_t&gt;;</span>
+<span id="L213"><span class="lineNum">     213</span>              :     constexpr static auto infT{std::numeric_limits&lt;T&gt;::infinity()};</span>
+<span id="L214"><span class="lineNum">     214</span>              :     constexpr static auto infU{std::numeric_limits&lt;U&gt;::infinity()};</span>
+<span id="L215"><span class="lineNum">     215</span>              :     constexpr static auto infTU{std::numeric_limits&lt;common_t&gt;::infinity()};</span>
+<span id="L216"><span class="lineNum">     216</span>              : </span>
+<span id="L217"><span class="lineNum">     217</span> <span class="tlaGNC">           1 :     check(equality, &quot;Semi+ve, semi+ve&quot;, cb_T{ 0.0, infT} * cb_U{0.0, infU}, cb_TU{ 0.0, infTU});</span></span>
+<span id="L218"><span class="lineNum">     218</span> <span class="tlaGNC">           1 :     check(equality, &quot;Semi+ve, semi+ve&quot;, cb_U{ 0.0, infU} * cb_T{0.0, infT}, cb_TU{ 0.0, infTU});</span></span>
+<span id="L219"><span class="lineNum">     219</span> <span class="tlaGNC">           1 :     check(equality, &quot;Finite, +ve&quot;,      cb_T{-3.0,  0.5} * cb_U{1.0,  2.0}, cb_TU{-6.0,   1.0});</span></span>
+<span id="L220"><span class="lineNum">     220</span> <span class="tlaGNC">           1 :     check(equality, &quot;Finite, +ve&quot;,      cb_U{-3.0,  0.5} * cb_T{1.0,  2.0}, cb_TU{-6.0,   1.0});</span></span>
+<span id="L221"><span class="lineNum">     221</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L222"><span class="lineNum">     222</span>              : }</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com/linux-test-project/lcov" target="_parent">LCOV version 2.5-0</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

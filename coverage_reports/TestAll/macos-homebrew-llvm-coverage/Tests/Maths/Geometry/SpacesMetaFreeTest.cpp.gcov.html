@@ -1,0 +1,1274 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - Tests/Maths/Geometry/SpacesMetaFreeTest.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../../../gcov.css">
+</head>
+
+<body>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="title">LCOV - code coverage report</td></tr>
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+            <tr>
+              <td width="100%">
+                <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="10%" class="headerValue"><a href="../../../index.html" title="Click to go to top-level">top level</a> - <a href="index.html" title="Click to go to directory Tests/Maths/Geometry">Tests/Maths/Geometry</a> - SpacesMetaFreeTest.cpp<span style="font-size: 80%;"> (source / <a href="SpacesMetaFreeTest.cpp.func-c.html" title="Click to go to function table">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="5%"></td>
+            <td width="5%" class="headerCovTableHead">Coverage</td>
+            <td width="5%" class="headerCovTableHead" title="Covered + Uncovered code">Total</td>
+            <td width="5%" class="headerCovTableHead" title="Exercised code only">Hit</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">509</td>
+            <td class="headerCovTableEntry">509</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test Date:</td>
+            <td class="headerValue">2026-09-05 21:33:51</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
+            <td class="headerCovTableEntry">487</td>
+            <td class="headerCovTableEntry">487</td>
+          </tr>
+                  <tr><td><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+          </table>
+
+          <table cellpadding=0 cellspacing=0 border=0>
+            <tr>
+              <td><br></td>
+            </tr>
+            <tr>
+              <td>
+<pre class="sourceHeading">            Line data    Source code</pre>
+<pre class="source">
+<span id="L1"><span class="lineNum">       1</span>              : ////////////////////////////////////////////////////////////////////</span>
+<span id="L2"><span class="lineNum">       2</span>              : //                Copyright Oliver J. Rosten 2025.                //</span>
+<span id="L3"><span class="lineNum">       3</span>              : // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //</span>
+<span id="L4"><span class="lineNum">       4</span>              : //    (See accompanying file LICENSE.md or copy at                //</span>
+<span id="L5"><span class="lineNum">       5</span>              : //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //</span>
+<span id="L6"><span class="lineNum">       6</span>              : ////////////////////////////////////////////////////////////////////</span>
+<span id="L7"><span class="lineNum">       7</span>              : </span>
+<span id="L8"><span class="lineNum">       8</span>              : /** \file */</span>
+<span id="L9"><span class="lineNum">       9</span>              : </span>
+<span id="L10"><span class="lineNum">      10</span>              : #include &quot;SpacesMetaFreeTest.hpp&quot;</span>
+<span id="L11"><span class="lineNum">      11</span>              : #include &quot;ValidatorTestingUtilities.hpp&quot;</span>
+<span id="L12"><span class="lineNum">      12</span>              : #include &quot;CommonGeometryTestingUtilities.hpp&quot;</span>
+<span id="L13"><span class="lineNum">      13</span>              : </span>
+<span id="L14"><span class="lineNum">      14</span>              : #include &quot;sequoia/Maths/Geometry/Spaces.hpp&quot;</span>
+<span id="L15"><span class="lineNum">      15</span>              : </span>
+<span id="L16"><span class="lineNum">      16</span>              : namespace sequoia::testing</span>
+<span id="L17"><span class="lineNum">      17</span>              : {</span>
+<span id="L18"><span class="lineNum">      18</span>              : </span>
+<span id="L19"><span class="lineNum">      19</span>              :   using namespace maths;</span>
+<span id="L20"><span class="lineNum">      20</span>              : </span>
+<span id="L21"><span class="lineNum">      21</span>              :   namespace</span>
+<span id="L22"><span class="lineNum">      22</span>              :   {</span>
+<span id="L23"><span class="lineNum">      23</span>              : </span>
+<span id="L24"><span class="lineNum">      24</span>              :     // Fixtures for the origin and orthant traits.</span>
+<span id="L25"><span class="lineNum">      25</span>              : </span>
+<span id="L26"><span class="lineNum">      26</span>              :     struct distinguished_origin_space {</span>
+<span id="L27"><span class="lineNum">      27</span>              :       using set_type             = sets::R&lt;1&gt;;</span>
+<span id="L28"><span class="lineNum">      28</span>              :       using free_module_type     = euclidean_vector_space&lt;1&gt;;</span>
+<span id="L29"><span class="lineNum">      29</span>              :       using structure            = convex_space_tag_t;</span>
+<span id="L30"><span class="lineNum">      30</span>              :       using distinguished_origin = std::true_type;</span>
+<span id="L31"><span class="lineNum">      31</span>              :     };</span>
+<span id="L32"><span class="lineNum">      32</span>              : </span>
+<span id="L33"><span class="lineNum">      33</span>              :     struct half_line_space {</span>
+<span id="L34"><span class="lineNum">      34</span>              :       using set_type             = sets::R&lt;1&gt;;</span>
+<span id="L35"><span class="lineNum">      35</span>              :       using free_module_type     = euclidean_vector_space&lt;1&gt;;</span>
+<span id="L36"><span class="lineNum">      36</span>              :       using structure            = convex_space_tag_t;</span>
+<span id="L37"><span class="lineNum">      37</span>              :       using non_negative_orthant = std::true_type;</span>
+<span id="L38"><span class="lineNum">      38</span>              :     };</span>
+<span id="L39"><span class="lineNum">      39</span>              : </span>
+<span id="L40"><span class="lineNum">      40</span>              :     struct unremarkable_space {</span>
+<span id="L41"><span class="lineNum">      41</span>              :       using set_type         = sets::R&lt;1&gt;;</span>
+<span id="L42"><span class="lineNum">      42</span>              :       using free_module_type = euclidean_vector_space&lt;1&gt;;</span>
+<span id="L43"><span class="lineNum">      43</span>              :       using structure        = convex_space_tag_t;</span>
+<span id="L44"><span class="lineNum">      44</span>              :     };</span>
+<span id="L45"><span class="lineNum">      45</span>              : </span>
+<span id="L46"><span class="lineNum">      46</span>              :     // Names both markers and denies both. Omitting a marker and setting it false are</span>
+<span id="L47"><span class="lineNum">      47</span>              :     // different statements which the traits must merge, and only a fixture making the</span>
+<span id="L48"><span class="lineNum">      48</span>              :     // second can show that they do.</span>
+<span id="L49"><span class="lineNum">      49</span>              :     struct explicitly_ordinary_space {</span>
+<span id="L50"><span class="lineNum">      50</span>              :       using set_type             = sets::R&lt;1&gt;;</span>
+<span id="L51"><span class="lineNum">      51</span>              :       using free_module_type     = euclidean_vector_space&lt;1&gt;;</span>
+<span id="L52"><span class="lineNum">      52</span>              :       using structure            = convex_space_tag_t;</span>
+<span id="L53"><span class="lineNum">      53</span>              :       using distinguished_origin = std::false_type;</span>
+<span id="L54"><span class="lineNum">      54</span>              :       using non_negative_orthant = std::false_type;</span>
+<span id="L55"><span class="lineNum">      55</span>              :     };</span>
+<span id="L56"><span class="lineNum">      56</span>              : </span>
+<span id="L57"><span class="lineNum">      57</span>              :     // Distinct from unremarkable_space and reducing to it. Coordinates in a space and</span>
+<span id="L58"><span class="lineNum">      58</span>              :     // in its base are comparable, which is what makes the reduction worth performing.</span>
+<span id="L59"><span class="lineNum">      59</span>              :     struct refinement_of_unremarkable_space {</span>
+<span id="L60"><span class="lineNum">      60</span>              :       using set_type         = sets::R&lt;1&gt;;</span>
+<span id="L61"><span class="lineNum">      61</span>              :       using free_module_type = euclidean_vector_space&lt;1&gt;;</span>
+<span id="L62"><span class="lineNum">      62</span>              :       using structure        = convex_space_tag_t;</span>
+<span id="L63"><span class="lineNum">      63</span>              :       using base_space       = unremarkable_space;</span>
+<span id="L64"><span class="lineNum">      64</span>              :     };</span>
+<span id="L65"><span class="lineNum">      65</span>              : </span>
+<span id="L66"><span class="lineNum">      66</span>              :     // Space-shaped but for the absent structure, and so a sharper negative than</span>
+<span id="L67"><span class="lineNum">      67</span>              :     // an unrelated type: it looks like a space yet satisfies nothing.</span>
+<span id="L68"><span class="lineNum">      68</span>              :     struct structureless_space {</span>
+<span id="L69"><span class="lineNum">      69</span>              :       using set_type         = sets::R&lt;1&gt;;</span>
+<span id="L70"><span class="lineNum">      70</span>              :       using free_module_type = euclidean_vector_space&lt;1&gt;;</span>
+<span id="L71"><span class="lineNum">      71</span>              :     };</span>
+<span id="L72"><span class="lineNum">      72</span>              : </span>
+<span id="L73"><span class="lineNum">      73</span>              :     template&lt;class T&gt;</span>
+<span id="L74"><span class="lineNum">      74</span>              :     inline constexpr bool structure_is_extractable_v{requires { typename structure_of_t&lt;T&gt;; }};</span>
+<span id="L75"><span class="lineNum">      75</span>              : </span>
+<span id="L76"><span class="lineNum">      76</span>              :     template&lt;class T&gt;</span>
+<span id="L77"><span class="lineNum">      77</span>              :     inline constexpr bool set_type_is_extractable_v{requires { typename set_type_of_t&lt;T&gt;; }};</span>
+<span id="L78"><span class="lineNum">      78</span>              : </span>
+<span id="L79"><span class="lineNum">      79</span>              :     template&lt;class T&gt;</span>
+<span id="L80"><span class="lineNum">      80</span>              :     inline constexpr bool ring_type_is_extractable_v{requires { typename nested_commutative_ring_type_t&lt;T&gt;; }};</span>
+<span id="L81"><span class="lineNum">      81</span>              : </span>
+<span id="L82"><span class="lineNum">      82</span>              :     template&lt;class T&gt;</span>
+<span id="L83"><span class="lineNum">      83</span>              :     inline constexpr bool module_type_is_extractable_v{requires { typename nested_free_module_type_t&lt;T&gt;; }};</span>
+<span id="L84"><span class="lineNum">      84</span>              : </span>
+<span id="L85"><span class="lineNum">      85</span>              :     template&lt;class T&gt;</span>
+<span id="L86"><span class="lineNum">      86</span>              :     inline constexpr bool free_module_is_extractable_v{requires { typename free_module_type_of_t&lt;T&gt;; }};</span>
+<span id="L87"><span class="lineNum">      87</span>              : </span>
+<span id="L88"><span class="lineNum">      88</span>              :     template&lt;class Bounds, std::size_t D&gt;</span>
+<span id="L89"><span class="lineNum">      89</span>              :     inline constexpr bool array_bounds_value_type_is_extractable_v{</span>
+<span id="L90"><span class="lineNum">      90</span>              :       requires { typename bounds_value_type&lt;std::array&lt;Bounds, D&gt;&gt;::type; }</span>
+<span id="L91"><span class="lineNum">      91</span>              :     };</span>
+<span id="L92"><span class="lineNum">      92</span>              : </span>
+<span id="L93"><span class="lineNum">      93</span>              :     // A free module naming its rank, and a vector space built upon it which</span>
+<span id="L94"><span class="lineNum">      94</span>              :     // additionally names its dimension. Both members are then visible, which</span>
+<span id="L95"><span class="lineNum">      95</span>              :     // must be allowed.</span>
+<span id="L96"><span class="lineNum">      96</span>              :     struct ranked_module_base {</span>
+<span id="L97"><span class="lineNum">      97</span>              :       constexpr static std::size_t rank{3};</span>
+<span id="L98"><span class="lineNum">      98</span>              :     };</span>
+<span id="L99"><span class="lineNum">      99</span>              : </span>
+<span id="L100"><span class="lineNum">     100</span>              :     struct dimensioned_derived_space : ranked_module_base {</span>
+<span id="L101"><span class="lineNum">     101</span>              :       constexpr static std::size_t dimension{3};</span>
+<span id="L102"><span class="lineNum">     102</span>              :     };</span>
+<span id="L103"><span class="lineNum">     103</span>              : </span>
+<span id="L104"><span class="lineNum">     104</span>              :     // Fixtures occupying the nodes of the DAG of spaces set out in the</span>
+<span id="L105"><span class="lineNum">     105</span>              :     // introduction to Spaces.hpp. Those over the integers cannot be affine,</span>
+<span id="L106"><span class="lineNum">     106</span>              :     // whatever else they are, since the integers are not a field.</span>
+<span id="L107"><span class="lineNum">     107</span>              : </span>
+<span id="L108"><span class="lineNum">     108</span>              :     struct integral_module {</span>
+<span id="L109"><span class="lineNum">     109</span>              :       using set_type              = sets::Z&lt;1&gt;;</span>
+<span id="L110"><span class="lineNum">     110</span>              :       using commutative_ring_type = commutative_rings::integers&lt;1&gt;;</span>
+<span id="L111"><span class="lineNum">     111</span>              :       using structure             = free_module_tag_t;</span>
+<span id="L112"><span class="lineNum">     112</span>              :       constexpr static std::size_t rank{1};</span>
+<span id="L113"><span class="lineNum">     113</span>              :     };</span>
+<span id="L114"><span class="lineNum">     114</span>              : </span>
+<span id="L115"><span class="lineNum">     115</span>              :     // The same statement, made about the canonical basis.</span>
+<span id="L116"><span class="lineNum">     116</span>              :     struct canonical_basis_declining_module : integral_module {</span>
+<span id="L117"><span class="lineNum">     117</span>              :       using admits_canonical_basis = std::false_type;</span>
+<span id="L118"><span class="lineNum">     118</span>              :     };</span>
+<span id="L119"><span class="lineNum">     119</span>              : </span>
+<span id="L120"><span class="lineNum">     120</span>              :     // Nothing in the codebase declares itself orthonormal, so without this the trait</span>
+<span id="L121"><span class="lineNum">     121</span>              :     // which gates the inner product has no positive case anywhere.</span>
+<span id="L122"><span class="lineNum">     122</span>              :     struct orthonormal_basis_data : canonical_basis_data&lt;3&gt; {</span>
+<span id="L123"><span class="lineNum">     123</span>              :       using orthonormal = std::true_type;</span>
+<span id="L124"><span class="lineNum">     124</span>              :     };</span>
+<span id="L125"><span class="lineNum">     125</span>              : </span>
+<span id="L126"><span class="lineNum">     126</span>              :     struct integral_partial_m_torsor {</span>
+<span id="L127"><span class="lineNum">     127</span>              :       using set_type         = sets::Z&lt;1&gt;;</span>
+<span id="L128"><span class="lineNum">     128</span>              :       using free_module_type = integral_module;</span>
+<span id="L129"><span class="lineNum">     129</span>              :       using structure        = partial_m_torsor_tag_t;</span>
+<span id="L130"><span class="lineNum">     130</span>              :     };</span>
+<span id="L131"><span class="lineNum">     131</span>              : </span>
+<span id="L132"><span class="lineNum">     132</span>              :     struct integral_m_affine_space {</span>
+<span id="L133"><span class="lineNum">     133</span>              :       using set_type         = sets::Z&lt;1&gt;;</span>
+<span id="L134"><span class="lineNum">     134</span>              :       using free_module_type = integral_module;</span>
+<span id="L135"><span class="lineNum">     135</span>              :       using structure        = m_affine_space_tag_t;</span>
+<span id="L136"><span class="lineNum">     136</span>              :     };</span>
+<span id="L137"><span class="lineNum">     137</span>              : </span>
+<span id="L138"><span class="lineNum">     138</span>              :     // Tagged as convex, but over the integers: an ordered ring is not an ordered</span>
+<span id="L139"><span class="lineNum">     139</span>              :     // field, so the tag alone must not be enough.</span>
+<span id="L140"><span class="lineNum">     140</span>              :     struct integral_pseudo_convex_space {</span>
+<span id="L141"><span class="lineNum">     141</span>              :       using set_type         = sets::N_0&lt;1&gt;;</span>
+<span id="L142"><span class="lineNum">     142</span>              :       using free_module_type = integral_module;</span>
+<span id="L143"><span class="lineNum">     143</span>              :       using structure        = convex_space_tag_t;</span>
+<span id="L144"><span class="lineNum">     144</span>              :     };</span>
+<span id="L145"><span class="lineNum">     145</span>              : </span>
+<span id="L146"><span class="lineNum">     146</span>              :     // The action is total and the reals are an ordered field, so this is affine</span>
+<span id="L147"><span class="lineNum">     147</span>              :     // and convex without saying so. Only the M-affine tag is available to say it</span>
+<span id="L148"><span class="lineNum">     148</span>              :     // with, there being no affine tag: the promotion to affine is settled by the</span>
+<span id="L149"><span class="lineNum">     149</span>              :     // ring.</span>
+<span id="L150"><span class="lineNum">     150</span>              :     struct real_m_affine_space {</span>
+<span id="L151"><span class="lineNum">     151</span>              :       using set_type         = sets::R&lt;1&gt;;</span>
+<span id="L152"><span class="lineNum">     152</span>              :       using free_module_type = euclidean_vector_space&lt;1&gt;;</span>
+<span id="L153"><span class="lineNum">     153</span>              :       using structure        = m_affine_space_tag_t;</span>
+<span id="L154"><span class="lineNum">     154</span>              :     };</span>
+<span id="L155"><span class="lineNum">     155</span>              : </span>
+<span id="L156"><span class="lineNum">     156</span>              :     // Over an ordered field, yet not convex: the action is only partial, so the</span>
+<span id="L157"><span class="lineNum">     157</span>              :     // space is free to comprise, say, two disjoint intervals. This is why</span>
+<span id="L158"><span class="lineNum">     158</span>              :     // convexity must remain a tag and cannot be read off the ring.</span>
+<span id="L159"><span class="lineNum">     159</span>              :     struct real_partial_m_torsor {</span>
+<span id="L160"><span class="lineNum">     160</span>              :       using set_type         = sets::R&lt;1&gt;;</span>
+<span id="L161"><span class="lineNum">     161</span>              :       using free_module_type = euclidean_vector_space&lt;1&gt;;</span>
+<span id="L162"><span class="lineNum">     162</span>              :       using structure        = partial_m_torsor_tag_t;</span>
+<span id="L163"><span class="lineNum">     163</span>              :     };</span>
+<span id="L164"><span class="lineNum">     164</span>              : </span>
+<span id="L165"><span class="lineNum">     165</span>              :     struct complex_vector_space {</span>
+<span id="L166"><span class="lineNum">     166</span>              :       using set_type   = sets::C&lt;1&gt;;</span>
+<span id="L167"><span class="lineNum">     167</span>              :       using field_type = commutative_rings::complexes;</span>
+<span id="L168"><span class="lineNum">     168</span>              :       using structure  = vector_space_tag_t;</span>
+<span id="L169"><span class="lineNum">     169</span>              :       constexpr static std::size_t dimension{1};</span>
+<span id="L170"><span class="lineNum">     170</span>              :     };</span>
+<span id="L171"><span class="lineNum">     171</span>              : </span>
+<span id="L172"><span class="lineNum">     172</span>              :     struct complex_affine_space {</span>
+<span id="L173"><span class="lineNum">     173</span>              :       using set_type          = sets::C&lt;1&gt;;</span>
+<span id="L174"><span class="lineNum">     174</span>              :       using vector_space_type = complex_vector_space;</span>
+<span id="L175"><span class="lineNum">     175</span>              :       using structure         = m_affine_space_tag_t;</span>
+<span id="L176"><span class="lineNum">     176</span>              :     };</span>
+<span id="L177"><span class="lineNum">     177</span>              : </span>
+<span id="L178"><span class="lineNum">     178</span>              :     /** A partial M-torsor over the complex numbers, and pointed, tensor products</span>
+<span id="L179"><span class="lineNum">     179</span>              :         requiring a distinguished origin of their factors. The ring being a field</span>
+<span id="L180"><span class="lineNum">     180</span>              :         but not an ordered one, this is the cheapest space which is admissible</span>
+<span id="L181"><span class="lineNum">     181</span>              :         everywhere yet convex nowhere - which is what makes it the right probe for</span>
+<span id="L182"><span class="lineNum">     182</span>              :         the non-convex branch of the derived spaces below.</span>
+<span id="L183"><span class="lineNum">     183</span>              :      */</span>
+<span id="L184"><span class="lineNum">     184</span>              :     struct complex_pointed_torsor {</span>
+<span id="L185"><span class="lineNum">     185</span>              :       using set_type             = sets::C&lt;1&gt;;</span>
+<span id="L186"><span class="lineNum">     186</span>              :       using free_module_type     = complex_vector_space;</span>
+<span id="L187"><span class="lineNum">     187</span>              :       using structure            = partial_m_torsor_tag_t;</span>
+<span id="L188"><span class="lineNum">     188</span>              :       using distinguished_origin = std::true_type;</span>
+<span id="L189"><span class="lineNum">     189</span>              :     };</span>
+<span id="L190"><span class="lineNum">     190</span>              : </span>
+<span id="L191"><span class="lineNum">     191</span>              :     // Fixtures separating detection of a name from satisfaction of the concept it is</span>
+<span id="L192"><span class="lineNum">     192</span>              :     // supposed to name. Each declares the right member, spelled the right way, holding</span>
+<span id="L193"><span class="lineNum">     193</span>              :     // a type which is nothing of the kind: the has_ traits therefore answer true and</span>
+<span id="L194"><span class="lineNum">     194</span>              :     // the defines_ traits false, which is the whole of the difference between them.</span>
+<span id="L195"><span class="lineNum">     195</span>              : </span>
+<span id="L196"><span class="lineNum">     196</span>              :     struct spurious_ring_module {</span>
+<span id="L197"><span class="lineNum">     197</span>              :       using set_type              = sets::Z&lt;1&gt;;</span>
+<span id="L198"><span class="lineNum">     198</span>              :       using commutative_ring_type = int;</span>
+<span id="L199"><span class="lineNum">     199</span>              :       using structure             = free_module_tag_t;</span>
+<span id="L200"><span class="lineNum">     200</span>              :       constexpr static std::size_t rank{1};</span>
+<span id="L201"><span class="lineNum">     201</span>              :     };</span>
+<span id="L202"><span class="lineNum">     202</span>              : </span>
+<span id="L203"><span class="lineNum">     203</span>              :     struct spurious_module_torsor {</span>
+<span id="L204"><span class="lineNum">     204</span>              :       using set_type         = sets::Z&lt;1&gt;;</span>
+<span id="L205"><span class="lineNum">     205</span>              :       using free_module_type = int;</span>
+<span id="L206"><span class="lineNum">     206</span>              :       using structure        = partial_m_torsor_tag_t;</span>
+<span id="L207"><span class="lineNum">     207</span>              :     };</span>
+<span id="L208"><span class="lineNum">     208</span>              : </span>
+<span id="L209"><span class="lineNum">     209</span>              :     // Tagged a field, yet naming no set. Identification is necessary for the ring</span>
+<span id="L210"><span class="lineNum">     210</span>              :     // concepts and not sufficient, and this is the fixture which says so.</span>
+<span id="L211"><span class="lineNum">     211</span>              :     struct setless_field {</span>
+<span id="L212"><span class="lineNum">     212</span>              :       using structure = field_tag_t;</span>
+<span id="L213"><span class="lineNum">     213</span>              :     };</span>
+<span id="L214"><span class="lineNum">     214</span>              : </span>
+<span id="L215"><span class="lineNum">     215</span>              :     // A one-dimensional representation supplying only the single-value interface, and a</span>
+<span id="L216"><span class="lineNum">     216</span>              :     // two-dimensional one supplying only the span interface. Between them they separate</span>
+<span id="L217"><span class="lineNum">     217</span>              :     // representation_for's two disjuncts, which canonical_representation - offering both -</span>
+<span id="L218"><span class="lineNum">     218</span>              :     // cannot.</span>
+<span id="L219"><span class="lineNum">     219</span>              : </span>
+<span id="L220"><span class="lineNum">     220</span>              :     struct single_value_representation {</span>
+<span id="L221"><span class="lineNum">     221</span>              :       using value_type = double;</span>
+<span id="L222"><span class="lineNum">     222</span>              :       using free_module_representation = single_value_representation;</span>
+<span id="L223"><span class="lineNum">     223</span>              :       constexpr static auto bounds_v{no_bounds&lt;double&gt;};</span>
+<span id="L224"><span class="lineNum">     224</span>              : </span>
+<span id="L225"><span class="lineNum">     225</span>              :       [[nodiscard]] constexpr static double to_underlying(double val)   noexcept { return val; }</span>
+<span id="L226"><span class="lineNum">     226</span>              :       [[nodiscard]] constexpr static double from_underlying(double val) noexcept { return val; }</span>
+<span id="L227"><span class="lineNum">     227</span>              : </span>
+<span id="L228"><span class="lineNum">     228</span>              :       // The four optional operations, in their single-value form only, so that each</span>
+<span id="L229"><span class="lineNum">     229</span>              :       // defines_..._for_single_value_v is true and its span counterpart false.</span>
+<span id="L230"><span class="lineNum">     230</span>              :       [[nodiscard]] constexpr static double mul(double val, double s) noexcept { return val * s; }</span>
+<span id="L231"><span class="lineNum">     231</span>              :       [[nodiscard]] constexpr static double div(double val, double s) noexcept { return val / s; }</span>
+<span id="L232"><span class="lineNum">     232</span>              :       [[nodiscard]] constexpr static double add(double lhs, double rhs) noexcept { return lhs + rhs; }</span>
+<span id="L233"><span class="lineNum">     233</span>              :       [[nodiscard]] constexpr static double sub(double lhs, double rhs) noexcept { return lhs - rhs; }</span>
+<span id="L234"><span class="lineNum">     234</span>              :     };</span>
+<span id="L235"><span class="lineNum">     235</span>              : </span>
+<span id="L236"><span class="lineNum">     236</span>              :     struct span_representation {</span>
+<span id="L237"><span class="lineNum">     237</span>              :       using value_type = double;</span>
+<span id="L238"><span class="lineNum">     238</span>              :       using free_module_representation = span_representation;</span>
+<span id="L239"><span class="lineNum">     239</span>              :       constexpr static auto bounds_v{no_bounds&lt;double&gt;};</span>
+<span id="L240"><span class="lineNum">     240</span>              : </span>
+<span id="L241"><span class="lineNum">     241</span>              :       [[nodiscard]]</span>
+<span id="L242"><span class="lineNum">     242</span>              :       constexpr static std::array&lt;double, 2&gt; to_underlying(std::span&lt;const double, 2&gt; vals) noexcept</span>
+<span id="L243"><span class="lineNum">     243</span>              :       {</span>
+<span id="L244"><span class="lineNum">     244</span>              :         return {vals[0], vals[1]};</span>
+<span id="L245"><span class="lineNum">     245</span>              :       }</span>
+<span id="L246"><span class="lineNum">     246</span>              : </span>
+<span id="L247"><span class="lineNum">     247</span>              :       [[nodiscard]]</span>
+<span id="L248"><span class="lineNum">     248</span>              :       constexpr static std::array&lt;double, 2&gt; from_underlying(std::span&lt;const double, 2&gt; vals) noexcept</span>
+<span id="L249"><span class="lineNum">     249</span>              :       {</span>
+<span id="L250"><span class="lineNum">     250</span>              :         return {vals[0], vals[1]};</span>
+<span id="L251"><span class="lineNum">     251</span>              :       }</span>
+<span id="L252"><span class="lineNum">     252</span>              :     };</span>
+<span id="L253"><span class="lineNum">     253</span>              : </span>
+<span id="L254"><span class="lineNum">     254</span>              :     /* Each of representation's four requirements, dropped one at a time. The concept</span>
+<span id="L255"><span class="lineNum">     255</span>              :        is a conjunction, so only a fixture failing exactly one clause shows that clause</span>
+<span id="L256"><span class="lineNum">     256</span>              :        is live - which is why each retains the bounds it does not need. Retaining them</span>
+<span id="L257"><span class="lineNum">     257</span>              :        means they are read by a trait and never odr-used, hence the attribute.</span>
+<span id="L258"><span class="lineNum">     258</span>              :      */</span>
+<span id="L259"><span class="lineNum">     259</span>              : </span>
+<span id="L260"><span class="lineNum">     260</span>              :     struct representation_without_value_type {</span>
+<span id="L261"><span class="lineNum">     261</span>              :       using free_module_representation = representation_without_value_type;</span>
+<span id="L262"><span class="lineNum">     262</span>              :       [[maybe_unused]] constexpr static auto bounds_v{no_bounds&lt;double&gt;};</span>
+<span id="L263"><span class="lineNum">     263</span>              :     };</span>
+<span id="L264"><span class="lineNum">     264</span>              : </span>
+<span id="L265"><span class="lineNum">     265</span>              :     struct representation_without_free_module {</span>
+<span id="L266"><span class="lineNum">     266</span>              :       using value_type = double;</span>
+<span id="L267"><span class="lineNum">     267</span>              :       [[maybe_unused]] constexpr static auto bounds_v{no_bounds&lt;double&gt;};</span>
+<span id="L268"><span class="lineNum">     268</span>              :     };</span>
+<span id="L269"><span class="lineNum">     269</span>              : </span>
+<span id="L270"><span class="lineNum">     270</span>              :     struct representation_without_bounds_or_coordinates {</span>
+<span id="L271"><span class="lineNum">     271</span>              :       using value_type = double;</span>
+<span id="L272"><span class="lineNum">     272</span>              :       using free_module_representation = representation_without_bounds_or_coordinates;</span>
+<span id="L273"><span class="lineNum">     273</span>              :     };</span>
+<span id="L274"><span class="lineNum">     274</span>              : </span>
+<span id="L275"><span class="lineNum">     275</span>              :     struct uninitializable_representation {</span>
+<span id="L276"><span class="lineNum">     276</span>              :       using value_type = double;</span>
+<span id="L277"><span class="lineNum">     277</span>              :       using free_module_representation = uninitializable_representation;</span>
+<span id="L278"><span class="lineNum">     278</span>              :       [[maybe_unused]] constexpr static auto bounds_v{no_bounds&lt;double&gt;};</span>
+<span id="L279"><span class="lineNum">     279</span>              : </span>
+<span id="L280"><span class="lineNum">     280</span>              :       uninitializable_representation() = delete;</span>
+<span id="L281"><span class="lineNum">     281</span>              :     };</span>
+<span id="L282"><span class="lineNum">     282</span>              : </span>
+<span id="L283"><span class="lineNum">     283</span>              :     // Names coordinates rather than bounds, which is representation's other disjunct.</span>
+<span id="L284"><span class="lineNum">     284</span>              :     struct heterogeneous_representation {</span>
+<span id="L285"><span class="lineNum">     285</span>              :       using value_type = double;</span>
+<span id="L286"><span class="lineNum">     286</span>              :       using free_module_representation = heterogeneous_representation;</span>
+<span id="L287"><span class="lineNum">     287</span>              :       using coordinates_type = std::tuple&lt;double, float&gt;;</span>
+<span id="L288"><span class="lineNum">     288</span>              :     };</span>
+<span id="L289"><span class="lineNum">     289</span>              : </span>
+<span id="L290"><span class="lineNum">     290</span>              :     struct homogeneous_tuple_representation {</span>
+<span id="L291"><span class="lineNum">     291</span>              :       using value_type = double;</span>
+<span id="L292"><span class="lineNum">     292</span>              :       using free_module_representation = homogeneous_tuple_representation;</span>
+<span id="L293"><span class="lineNum">     293</span>              :       using coordinates_type = std::tuple&lt;double, double&gt;;</span>
+<span id="L294"><span class="lineNum">     294</span>              :     };</span>
+<span id="L295"><span class="lineNum">     295</span>              : </span>
+<span id="L296"><span class="lineNum">     296</span>              :   }</span>
+<span id="L297"><span class="lineNum">     297</span>              :   </span>
+<span id="L298"><span class="lineNum">     298</span>              :   [[nodiscard]]</span>
+<span id="L299"><span class="lineNum">     299</span> <span class="tlaGNC">           4 :   std::filesystem::path spaces_meta_free_test::source_file() const</span></span>
+<span id="L300"><span class="lineNum">     300</span>              :   {</span>
+<span id="L301"><span class="lineNum">     301</span> <span class="tlaGNC">           4 :     return std::source_location::current().file_name();</span></span>
+<span id="L302"><span class="lineNum">     302</span>              :   }</span>
+<span id="L303"><span class="lineNum">     303</span>              : </span>
+<span id="L304"><span class="lineNum">     304</span> <span class="tlaGNC">           1 :   void spaces_meta_free_test::run_tests()</span></span>
+<span id="L305"><span class="lineNum">     305</span>              :   {</span>
+<span id="L306"><span class="lineNum">     306</span> <span class="tlaGNC">           1 :     test_structure_trait();</span></span>
+<span id="L307"><span class="lineNum">     307</span> <span class="tlaGNC">           1 :     test_set_trait();</span></span>
+<span id="L308"><span class="lineNum">     308</span> <span class="tlaGNC">           1 :     test_rank_traits();</span></span>
+<span id="L309"><span class="lineNum">     309</span> <span class="tlaGNC">           1 :     test_origin_and_orthant_traits();</span></span>
+<span id="L310"><span class="lineNum">     310</span> <span class="tlaGNC">           1 :     test_ring_traits();</span></span>
+<span id="L311"><span class="lineNum">     311</span> <span class="tlaGNC">           1 :     test_free_module_traits();</span></span>
+<span id="L312"><span class="lineNum">     312</span> <span class="tlaGNC">           1 :     test_basis_traits();</span></span>
+<span id="L313"><span class="lineNum">     313</span> <span class="tlaGNC">           1 :     test_spaces_dag();</span></span>
+<span id="L314"><span class="lineNum">     314</span> <span class="tlaGNC">           1 :     test_derived_spaces();</span></span>
+<span id="L315"><span class="lineNum">     315</span> <span class="tlaGNC">           1 :     test_representation_traits();</span></span>
+<span id="L316"><span class="lineNum">     316</span> <span class="tlaGNC">           1 :     test_validator_traits();</span></span>
+<span id="L317"><span class="lineNum">     317</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L318"><span class="lineNum">     318</span>              : </span>
+<span id="L319"><span class="lineNum">     319</span>              :   /** The covering machinery over every standard integral type, and over the</span>
+<span id="L320"><span class="lineNum">     320</span>              :       fixed-width aliases. Two things are being asked, and they answer different</span>
+<span id="L321"><span class="lineNum">     321</span>              :       questions.</span>
+<span id="L322"><span class="lineNum">     322</span>              : </span>
+<span id="L323"><span class="lineNum">     323</span>              :       The first is the verdict for each type in turn. Much of it is portable - the</span>
+<span id="L324"><span class="lineNum">     324</span>              :       standard nests the signed types' ranges by rank - but the wide end is not:</span>
+<span id="L325"><span class="lineNum">     325</span>              :       `long` and `int` have the same range on the 64-bit Windows data model and</span>
+<span id="L326"><span class="lineNum">     326</span>              :       different ranges on the Unix one, so `covered_by&lt;long, int&gt;` genuinely differs</span>
+<span id="L327"><span class="lineNum">     327</span>              :       between the two. Where that happens the assertion is written against `sizeof`,</span>
+<span id="L328"><span class="lineNum">     328</span>              :       which states the dependence rather than picking a side.</span>
+<span id="L329"><span class="lineNum">     329</span>              : </span>
+<span id="L330"><span class="lineNum">     330</span>              :       The second is a family of invariants, each checked over every type. These</span>
+<span id="L331"><span class="lineNum">     331</span>              :       carry most of the weight. A verdict which drifts on one type is a puzzle; an</span>
+<span id="L332"><span class="lineNum">     332</span>              :       invariant which fails names the rule that broke, and it does so here rather than</span>
+<span id="L333"><span class="lineNum">     333</span>              :       as a static_assert deep inside a coordinates test, where the type in hand is</span>
+<span id="L334"><span class="lineNum">     334</span>              :       three aliases removed from the one that went wrong.</span>
+<span id="L335"><span class="lineNum">     335</span>              :    */</span>
+<span id="L336"><span class="lineNum">     336</span>              : </span>
+<span id="L337"><span class="lineNum">     337</span>              :   /** Every concept in the header is gated on a nested `structure`, so a type</span>
+<span id="L338"><span class="lineNum">     338</span>              :       which fails to expose one does not fail loudly: it silently satisfies</span>
+<span id="L339"><span class="lineNum">     339</span>              :       nothing. The negative checks therefore carry as much weight as the</span>
+<span id="L340"><span class="lineNum">     340</span>              :       positive ones. Note that the trait detects the nested type and no more -</span>
+<span id="L341"><span class="lineNum">     341</span>              :       it does not, and cannot, check that the tag is the right one.</span>
+<span id="L342"><span class="lineNum">     342</span>              :    */</span>
+<span id="L343"><span class="lineNum">     343</span> <span class="tlaGNC">           1 :   void spaces_meta_free_test::test_structure_trait()</span></span>
+<span id="L344"><span class="lineNum">     344</span>              :   {</span>
+<span id="L345"><span class="lineNum">     345</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_structure_v&lt;unremarkable_space&gt;);</span></span>
+<span id="L346"><span class="lineNum">     346</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_structure_v&lt;structureless_space&gt;);</span></span>
+<span id="L347"><span class="lineNum">     347</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_structure_v&lt;int&gt;);</span></span>
+<span id="L348"><span class="lineNum">     348</span>              : </span>
+<span id="L349"><span class="lineNum">     349</span>              :     // The underlying set is not the space: it carries a dimension, so it</span>
+<span id="L350"><span class="lineNum">     350</span>              :     // answers other traits in this family, but it declares no structure.</span>
+<span id="L351"><span class="lineNum">     351</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_structure_v&lt;sets::R&lt;1&gt;&gt;);</span></span>
+<span id="L352"><span class="lineNum">     352</span>              : </span>
+<span id="L353"><span class="lineNum">     353</span>              :     // Giving structure_of's primary template a fallback type would break the</span>
+<span id="L354"><span class="lineNum">     354</span>              :     // correspondence with the trait; this is the check which would notice.</span>
+<span id="L355"><span class="lineNum">     355</span> <span class="tlaGNC">           2 :     STATIC_CHECK( structure_is_extractable_v&lt;unremarkable_space&gt;);</span></span>
+<span id="L356"><span class="lineNum">     356</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!structure_is_extractable_v&lt;structureless_space&gt;);</span></span>
+<span id="L357"><span class="lineNum">     357</span>              : </span>
+<span id="L358"><span class="lineNum">     358</span>              :     // What it extracts, node by node.</span>
+<span id="L359"><span class="lineNum">     359</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;integral_partial_m_torsor&gt;,     partial_m_torsor_tag_t&gt;);</span></span>
+<span id="L360"><span class="lineNum">     360</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;integral_m_affine_space&gt;,       m_affine_space_tag_t&gt;);</span></span>
+<span id="L361"><span class="lineNum">     361</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;integral_module&gt;,               free_module_tag_t&gt;);</span></span>
+<span id="L362"><span class="lineNum">     362</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;complex_vector_space&gt;,          vector_space_tag_t&gt;);</span></span>
+<span id="L363"><span class="lineNum">     363</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;euclidean_vector_space&lt;1&gt;&gt;,     vector_space_tag_t&gt;);</span></span>
+<span id="L364"><span class="lineNum">     364</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;euclidean_affine_space&lt;1&gt;&gt;,     m_affine_space_tag_t&gt;);</span></span>
+<span id="L365"><span class="lineNum">     365</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;euclidean_nonnegative_space&lt;1&gt;&gt;, convex_space_tag_t&gt;);</span></span>
+<span id="L366"><span class="lineNum">     366</span>              : </span>
+<span id="L367"><span class="lineNum">     367</span>              :     // The family is not confined to spaces: the commutative rings declare</span>
+<span id="L368"><span class="lineNum">     368</span>              :     // their structure the same way, and it is this that test_commutative_rings</span>
+<span id="L369"><span class="lineNum">     369</span>              :     // reads indirectly through the concepts.</span>
+<span id="L370"><span class="lineNum">     370</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;commutative_rings::integers&lt;1&gt;&gt;, ordered_ring_tag_t&gt;);</span></span>
+<span id="L371"><span class="lineNum">     371</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;commutative_rings::complexes&gt;,   field_tag_t&gt;);</span></span>
+<span id="L372"><span class="lineNum">     372</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;commutative_rings::reals&lt;1&gt;&gt;,    ordered_field_tag_t&gt;);</span></span>
+<span id="L373"><span class="lineNum">     373</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;commutative_rings::reals&lt;2&gt;&gt;,    commutative_ring_tag_t&gt;);</span></span>
+<span id="L374"><span class="lineNum">     374</span>              : </span>
+<span id="L375"><span class="lineNum">     375</span>              :     // Derived spaces compute their tag rather than declaring it. The concept</span>
+<span id="L376"><span class="lineNum">     376</span>              :     // checks in test_derived_spaces observe that computation only through its</span>
+<span id="L377"><span class="lineNum">     377</span>              :     // consequences; these pin the result itself.</span>
+<span id="L378"><span class="lineNum">     378</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;dual&lt;half_line_space&gt;&gt;,        convex_space_tag_t&gt;);</span></span>
+<span id="L379"><span class="lineNum">     379</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;dual&lt;complex_pointed_torsor&gt;&gt;, partial_m_torsor_tag_t&gt;);</span></span>
+<span id="L380"><span class="lineNum">     380</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;dual&lt;complex_affine_space&gt;&gt;,   m_affine_space_tag_t&gt;);</span></span>
+<span id="L381"><span class="lineNum">     381</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;dual&lt;complex_vector_space&gt;&gt;,   vector_space_tag_t&gt;);</span></span>
+<span id="L382"><span class="lineNum">     382</span>              : </span>
+<span id="L383"><span class="lineNum">     383</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;tensor_product&lt;distinguished_origin_space, distinguished_origin_space&gt;&gt;, convex_space_tag_t&gt;);</span></span>
+<span id="L384"><span class="lineNum">     384</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;tensor_product&lt;complex_pointed_torsor, complex_pointed_torsor&gt;&gt;,         partial_m_torsor_tag_t&gt;);</span></span>
+<span id="L385"><span class="lineNum">     385</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;structure_of_t&lt;tensor_product&lt;euclidean_vector_space&lt;1&gt;, euclidean_vector_space&lt;1&gt;&gt;&gt;,   free_module_tag_t&gt;);</span></span>
+<span id="L386"><span class="lineNum">     386</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L387"><span class="lineNum">     387</span>              : </span>
+<span id="L388"><span class="lineNum">     388</span>              :   /** The companion to test_structure_trait, and deliberately its mirror image: a</span>
+<span id="L389"><span class="lineNum">     389</span>              :       space names both its structure and its underlying set, and the two traits</span>
+<span id="L390"><span class="lineNum">     390</span>              :       differ only in which member they read. What separates them is where each</span>
+<span id="L391"><span class="lineNum">     391</span>              :       says nothing - a set names a dimension but no set of its own, whereas the</span>
+<span id="L392"><span class="lineNum">     392</span>              :       commutative rings name a set and no free module.</span>
+<span id="L393"><span class="lineNum">     393</span>              :    */</span>
+<span id="L394"><span class="lineNum">     394</span> <span class="tlaGNC">           1 :   void spaces_meta_free_test::test_set_trait()</span></span>
+<span id="L395"><span class="lineNum">     395</span>              :   {</span>
+<span id="L396"><span class="lineNum">     396</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_set_type_v&lt;unremarkable_space&gt;);</span></span>
+<span id="L397"><span class="lineNum">     397</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_set_type_v&lt;commutative_rings::reals&lt;1&gt;&gt;);</span></span>
+<span id="L398"><span class="lineNum">     398</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_set_type_v&lt;int&gt;);</span></span>
+<span id="L399"><span class="lineNum">     399</span>              : </span>
+<span id="L400"><span class="lineNum">     400</span>              :     // The one fixture which separates this trait from has_structure_v: it names a set</span>
+<span id="L401"><span class="lineNum">     401</span>              :     // and no structure, so it answers here and nowhere in test_structure_trait.</span>
+<span id="L402"><span class="lineNum">     402</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_set_type_v&lt;structureless_space&gt;);</span></span>
+<span id="L403"><span class="lineNum">     403</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_structure_v&lt;structureless_space&gt;);</span></span>
+<span id="L404"><span class="lineNum">     404</span>              : </span>
+<span id="L405"><span class="lineNum">     405</span>              :     // A set is not a space, and does not name a set of its own - the point at which</span>
+<span id="L406"><span class="lineNum">     406</span>              :     // the recursion stops.</span>
+<span id="L407"><span class="lineNum">     407</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_set_type_v&lt;sets::R&lt;1&gt;&gt;);</span></span>
+<span id="L408"><span class="lineNum">     408</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_set_type_v&lt;sets::orthant&lt;2&gt;&gt;);</span></span>
+<span id="L409"><span class="lineNum">     409</span>              : </span>
+<span id="L410"><span class="lineNum">     410</span> <span class="tlaGNC">           2 :     STATIC_CHECK( set_type_is_extractable_v&lt;unremarkable_space&gt;);</span></span>
+<span id="L411"><span class="lineNum">     411</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!set_type_is_extractable_v&lt;sets::R&lt;1&gt;&gt;);</span></span>
+<span id="L412"><span class="lineNum">     412</span>              : </span>
+<span id="L413"><span class="lineNum">     413</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;set_type_of_t&lt;euclidean_vector_space&lt;3&gt;&gt;,      sets::R&lt;3&gt;&gt;);</span></span>
+<span id="L414"><span class="lineNum">     414</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;set_type_of_t&lt;euclidean_affine_space&lt;3&gt;&gt;,      sets::R&lt;3&gt;&gt;);</span></span>
+<span id="L415"><span class="lineNum">     415</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;set_type_of_t&lt;euclidean_nonnegative_space&lt;2&gt;&gt;, sets::orthant&lt;2&gt;&gt;);</span></span>
+<span id="L416"><span class="lineNum">     416</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;set_type_of_t&lt;integral_module&gt;,                sets::Z&lt;1&gt;&gt;);</span></span>
+<span id="L417"><span class="lineNum">     417</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;set_type_of_t&lt;integral_pseudo_convex_space&gt;,   sets::N_0&lt;1&gt;&gt;);</span></span>
+<span id="L418"><span class="lineNum">     418</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;set_type_of_t&lt;complex_vector_space&gt;,           sets::C&lt;1&gt;&gt;);</span></span>
+<span id="L419"><span class="lineNum">     419</span>              : </span>
+<span id="L420"><span class="lineNum">     420</span>              :     // The rings answer too, which is what makes the underlying set common to both</span>
+<span id="L421"><span class="lineNum">     421</span>              :     // families rather than a property of spaces.</span>
+<span id="L422"><span class="lineNum">     422</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;set_type_of_t&lt;commutative_rings::integers&lt;1&gt;&gt;, sets::Z&lt;1&gt;&gt;);</span></span>
+<span id="L423"><span class="lineNum">     423</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;set_type_of_t&lt;commutative_rings::reals&lt;2&gt;&gt;,    sets::R&lt;2&gt;&gt;);</span></span>
+<span id="L424"><span class="lineNum">     424</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;set_type_of_t&lt;commutative_rings::complexes&gt;,   sets::C&lt;1&gt;&gt;);</span></span>
+<span id="L425"><span class="lineNum">     425</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L426"><span class="lineNum">     426</span>              : </span>
+<span id="L427"><span class="lineNum">     427</span>              :   /** Rank and dimension are one notion under two names, the first preferred for</span>
+<span id="L428"><span class="lineNum">     428</span>              :       free modules and the second for vector spaces. A type may therefore name</span>
+<span id="L429"><span class="lineNum">     429</span>              :       either, and - through inheritance - both. What it may not do is name both</span>
+<span id="L430"><span class="lineNum">     430</span>              :       and disagree.</span>
+<span id="L431"><span class="lineNum">     431</span>              :    */</span>
+<span id="L432"><span class="lineNum">     432</span> <span class="tlaGNC">           1 :   void spaces_meta_free_test::test_rank_traits()</span></span>
+<span id="L433"><span class="lineNum">     433</span>              :   {</span>
+<span id="L434"><span class="lineNum">     434</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_rank_v&lt;integral_module&gt;);</span></span>
+<span id="L435"><span class="lineNum">     435</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_dimension_v&lt;integral_module&gt;);</span></span>
+<span id="L436"><span class="lineNum">     436</span> <span class="tlaGNC">           2 :     STATIC_CHECK( rank_of_v&lt;integral_module&gt; == 1);</span></span>
+<span id="L437"><span class="lineNum">     437</span>              : </span>
+<span id="L438"><span class="lineNum">     438</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_rank_v&lt;complex_vector_space&gt;);</span></span>
+<span id="L439"><span class="lineNum">     439</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_dimension_v&lt;complex_vector_space&gt;);</span></span>
+<span id="L440"><span class="lineNum">     440</span> <span class="tlaGNC">           2 :     STATIC_CHECK( rank_of_v&lt;complex_vector_space&gt; == 1);</span></span>
+<span id="L441"><span class="lineNum">     441</span> <span class="tlaGNC">           2 :     STATIC_CHECK( rank_of_v&lt;euclidean_vector_space&lt;3&gt;&gt; == 3);</span></span>
+<span id="L442"><span class="lineNum">     442</span>              : </span>
+<span id="L443"><span class="lineNum">     443</span>              :     // The underlying sets name a dimension, so they answer this family despite</span>
+<span id="L444"><span class="lineNum">     444</span>              :     // not being spaces at all - compare test_structure_trait, where the same</span>
+<span id="L445"><span class="lineNum">     445</span>              :     // types answer nothing.</span>
+<span id="L446"><span class="lineNum">     446</span> <span class="tlaGNC">           2 :     STATIC_CHECK( rank_of_v&lt;sets::R&lt;3&gt;&gt; == 3);</span></span>
+<span id="L447"><span class="lineNum">     447</span>              : </span>
+<span id="L448"><span class="lineNum">     448</span>              :     // Both names visible, by inheritance, and agreeing. rank takes precedence.</span>
+<span id="L449"><span class="lineNum">     449</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_rank_v&lt;dimensioned_derived_space&gt;);</span></span>
+<span id="L450"><span class="lineNum">     450</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_dimension_v&lt;dimensioned_derived_space&gt;);</span></span>
+<span id="L451"><span class="lineNum">     451</span> <span class="tlaGNC">           2 :     STATIC_CHECK( rank_of_v&lt;dimensioned_derived_space&gt; == 3);</span></span>
+<span id="L452"><span class="lineNum">     452</span>              : </span>
+<span id="L453"><span class="lineNum">     453</span>              :     // Consistency is trivially satisfied when at most one name is present.</span>
+<span id="L454"><span class="lineNum">     454</span> <span class="tlaGNC">           2 :     STATIC_CHECK( rank_and_dimension_consistent_v&lt;dimensioned_derived_space&gt;);</span></span>
+<span id="L455"><span class="lineNum">     455</span> <span class="tlaGNC">           2 :     STATIC_CHECK( rank_and_dimension_consistent_v&lt;integral_module&gt;);</span></span>
+<span id="L456"><span class="lineNum">     456</span> <span class="tlaGNC">           2 :     STATIC_CHECK( rank_and_dimension_consistent_v&lt;complex_vector_space&gt;);</span></span>
+<span id="L457"><span class="lineNum">     457</span> <span class="tlaGNC">           2 :     STATIC_CHECK( rank_and_dimension_consistent_v&lt;int&gt;);</span></span>
+<span id="L458"><span class="lineNum">     458</span>              : </span>
+<span id="L459"><span class="lineNum">     459</span> <span class="tlaGNC">           2 :     STATIC_CHECK( defines_rank_v&lt;integral_module&gt;);</span></span>
+<span id="L460"><span class="lineNum">     460</span> <span class="tlaGNC">           2 :     STATIC_CHECK( defines_rank_v&lt;dimensioned_derived_space&gt;);</span></span>
+<span id="L461"><span class="lineNum">     461</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_rank_v&lt;int&gt;);</span></span>
+<span id="L462"><span class="lineNum">     462</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L463"><span class="lineNum">     463</span>              : </span>
+<span id="L464"><span class="lineNum">     464</span> <span class="tlaGNC">           1 :   void spaces_meta_free_test::test_origin_and_orthant_traits()</span></span>
+<span id="L465"><span class="lineNum">     465</span>              :   {</span>
+<span id="L466"><span class="lineNum">     466</span> <span class="tlaGNC">           2 :     STATIC_CHECK(has_distinguished_origin_v&lt;distinguished_origin_space&gt;);</span></span>
+<span id="L467"><span class="lineNum">     467</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!is_non_negative_orthant_v&lt;distinguished_origin_space&gt;);</span></span>
+<span id="L468"><span class="lineNum">     468</span>              : </span>
+<span id="L469"><span class="lineNum">     469</span> <span class="tlaGNC">           2 :     STATIC_CHECK(has_distinguished_origin_v&lt;half_line_space&gt;);</span></span>
+<span id="L470"><span class="lineNum">     470</span> <span class="tlaGNC">           2 :     STATIC_CHECK(is_non_negative_orthant_v&lt;half_line_space&gt;);</span></span>
+<span id="L471"><span class="lineNum">     471</span> <span class="tlaGNC">           2 :     STATIC_CHECK(has_distinguished_origin_v&lt;dual&lt;half_line_space&gt;&gt;);</span></span>
+<span id="L472"><span class="lineNum">     472</span> <span class="tlaGNC">           2 :     STATIC_CHECK(is_non_negative_orthant_v&lt;dual&lt;half_line_space&gt;&gt;);</span></span>
+<span id="L473"><span class="lineNum">     473</span>              : </span>
+<span id="L474"><span class="lineNum">     474</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_distinguished_origin_v&lt;unremarkable_space&gt;);</span></span>
+<span id="L475"><span class="lineNum">     475</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!is_non_negative_orthant_v&lt;unremarkable_space&gt;);</span></span>
+<span id="L476"><span class="lineNum">     476</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_distinguished_origin_v&lt;dual&lt;unremarkable_space&gt;&gt;);</span></span>
+<span id="L477"><span class="lineNum">     477</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!is_non_negative_orthant_v&lt;dual&lt;unremarkable_space&gt;&gt;);</span></span>
+<span id="L478"><span class="lineNum">     478</span>              : </span>
+<span id="L479"><span class="lineNum">     479</span>              :     // An orthant has a distinguished origin whether or not it says so: the half line</span>
+<span id="L480"><span class="lineNum">     480</span>              :     // names only the orthant marker, and the second specialization supplies the rest.</span>
+<span id="L481"><span class="lineNum">     481</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_distinguished_origin_type_v&lt;half_line_space&gt;);</span></span>
+<span id="L482"><span class="lineNum">     482</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_non_negative_orthant_v&lt;half_line_space&gt;);</span></span>
+<span id="L483"><span class="lineNum">     483</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_distinguished_origin_v&lt;half_line_space&gt;);</span></span>
+<span id="L484"><span class="lineNum">     484</span>              : </span>
+<span id="L485"><span class="lineNum">     485</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_distinguished_origin_type_v&lt;distinguished_origin_space&gt;);</span></span>
+<span id="L486"><span class="lineNum">     486</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_non_negative_orthant_v&lt;distinguished_origin_space&gt;);</span></span>
+<span id="L487"><span class="lineNum">     487</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_distinguished_origin_type_v&lt;unremarkable_space&gt;);</span></span>
+<span id="L488"><span class="lineNum">     488</span>              : </span>
+<span id="L489"><span class="lineNum">     489</span>              :     // Declaring a marker false is not omitting it. Both traits must read the value,</span>
+<span id="L490"><span class="lineNum">     490</span>              :     // and the first would answer true were it satisfied by the name alone.</span>
+<span id="L491"><span class="lineNum">     491</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_distinguished_origin_type_v&lt;explicitly_ordinary_space&gt;);</span></span>
+<span id="L492"><span class="lineNum">     492</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_distinguished_origin_v&lt;explicitly_ordinary_space&gt;);</span></span>
+<span id="L493"><span class="lineNum">     493</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_non_negative_orthant_v&lt;explicitly_ordinary_space&gt;);</span></span>
+<span id="L494"><span class="lineNum">     494</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!is_non_negative_orthant_v&lt;explicitly_ordinary_space&gt;);</span></span>
+<span id="L495"><span class="lineNum">     495</span>              : </span>
+<span id="L496"><span class="lineNum">     496</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;has_distinguished_origin_t&lt;half_line_space&gt;,           std::true_type&gt;);</span></span>
+<span id="L497"><span class="lineNum">     497</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;has_distinguished_origin_t&lt;explicitly_ordinary_space&gt;, std::false_type&gt;);</span></span>
+<span id="L498"><span class="lineNum">     498</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;is_non_negative_orthant_t&lt;half_line_space&gt;,            std::true_type&gt;);</span></span>
+<span id="L499"><span class="lineNum">     499</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L500"><span class="lineNum">     500</span>              : </span>
+<span id="L501"><span class="lineNum">     501</span>              :   /** Whether a type *identifies* as a ring, and whether it *names* one, are two</span>
+<span id="L502"><span class="lineNum">     502</span>              :       questions, and neither is the concept. Identification reads the structure tag</span>
+<span id="L503"><span class="lineNum">     503</span>              :       and so inherits the tag hierarchy's derivations for free; naming reads a</span>
+<span id="L504"><span class="lineNum">     504</span>              :       nested type and cannot tell a ring from an int. The concepts are what put</span>
+<span id="L505"><span class="lineNum">     505</span>              :       the two together, and are checked next door in test_commutative_rings.</span>
+<span id="L506"><span class="lineNum">     506</span>              :    */</span>
+<span id="L507"><span class="lineNum">     507</span> <span class="tlaGNC">           1 :   void spaces_meta_free_test::test_ring_traits()</span></span>
+<span id="L508"><span class="lineNum">     508</span>              :   {</span>
+<span id="L509"><span class="lineNum">     509</span>              :     // The four tags, read off each ring in turn. Since ordered_field_tag_t derives</span>
+<span id="L510"><span class="lineNum">     510</span>              :     // from both ordered_ring_tag_t and field_tag_t, the reals answer to all four,</span>
+<span id="L511"><span class="lineNum">     511</span>              :     // and it is the two rings which answer to exactly one refinement apiece that</span>
+<span id="L512"><span class="lineNum">     512</span>              :     // show the derivations are being read rather than the tag matched.</span>
+<span id="L513"><span class="lineNum">     513</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_commutative_ring_v&lt;commutative_rings::integers&lt;1&gt;&gt;);</span></span>
+<span id="L514"><span class="lineNum">     514</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_ordered_ring_v&lt;commutative_rings::integers&lt;1&gt;&gt;);</span></span>
+<span id="L515"><span class="lineNum">     515</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_field_v&lt;commutative_rings::integers&lt;1&gt;&gt;);</span></span>
+<span id="L516"><span class="lineNum">     516</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_ordered_field_v&lt;commutative_rings::integers&lt;1&gt;&gt;);</span></span>
+<span id="L517"><span class="lineNum">     517</span>              : </span>
+<span id="L518"><span class="lineNum">     518</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_commutative_ring_v&lt;commutative_rings::complexes&gt;);</span></span>
+<span id="L519"><span class="lineNum">     519</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_ordered_ring_v&lt;commutative_rings::complexes&gt;);</span></span>
+<span id="L520"><span class="lineNum">     520</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_field_v&lt;commutative_rings::complexes&gt;);</span></span>
+<span id="L521"><span class="lineNum">     521</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_ordered_field_v&lt;commutative_rings::complexes&gt;);</span></span>
+<span id="L522"><span class="lineNum">     522</span>              : </span>
+<span id="L523"><span class="lineNum">     523</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_commutative_ring_v&lt;commutative_rings::reals&lt;1&gt;&gt;);</span></span>
+<span id="L524"><span class="lineNum">     524</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_ordered_ring_v&lt;commutative_rings::reals&lt;1&gt;&gt;);</span></span>
+<span id="L525"><span class="lineNum">     525</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_field_v&lt;commutative_rings::reals&lt;1&gt;&gt;);</span></span>
+<span id="L526"><span class="lineNum">     526</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_ordered_field_v&lt;commutative_rings::reals&lt;1&gt;&gt;);</span></span>
+<span id="L527"><span class="lineNum">     527</span>              : </span>
+<span id="L528"><span class="lineNum">     528</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_commutative_ring_v&lt;commutative_rings::reals&lt;2&gt;&gt;);</span></span>
+<span id="L529"><span class="lineNum">     529</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_ordered_ring_v&lt;commutative_rings::reals&lt;2&gt;&gt;);</span></span>
+<span id="L530"><span class="lineNum">     530</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_field_v&lt;commutative_rings::reals&lt;2&gt;&gt;);</span></span>
+<span id="L531"><span class="lineNum">     531</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_ordered_field_v&lt;commutative_rings::reals&lt;2&gt;&gt;);</span></span>
+<span id="L532"><span class="lineNum">     532</span>              : </span>
+<span id="L533"><span class="lineNum">     533</span>              :     // The space tags form a disjoint hierarchy, so a space identifies as no ring at</span>
+<span id="L534"><span class="lineNum">     534</span>              :     // all - and a type with no structure answers nothing, rather than failing loudly.</span>
+<span id="L535"><span class="lineNum">     535</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_commutative_ring_v&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L536"><span class="lineNum">     536</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_field_v&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L537"><span class="lineNum">     537</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_commutative_ring_v&lt;int&gt;);</span></span>
+<span id="L538"><span class="lineNum">     538</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_ordered_field_v&lt;int&gt;);</span></span>
+<span id="L539"><span class="lineNum">     539</span>              : </span>
+<span id="L540"><span class="lineNum">     540</span>              :     // Identification is necessary and not sufficient: the concepts additionally</span>
+<span id="L541"><span class="lineNum">     541</span>              :     // demand an underlying set, and this is the fixture which has the tag without it.</span>
+<span id="L542"><span class="lineNum">     542</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_field_v&lt;setless_field&gt;);</span></span>
+<span id="L543"><span class="lineNum">     543</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_commutative_ring_v&lt;setless_field&gt;);</span></span>
+<span id="L544"><span class="lineNum">     544</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!commutative_ring&lt;setless_field&gt;);</span></span>
+<span id="L545"><span class="lineNum">     545</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!field&lt;setless_field&gt;);</span></span>
+<span id="L546"><span class="lineNum">     546</span>              : </span>
+<span id="L547"><span class="lineNum">     547</span>              :     // Naming a ring. A free module names commutative_ring_type and a vector space</span>
+<span id="L548"><span class="lineNum">     548</span>              :     // field_type; nested_commutative_ring_type reads whichever is present, which is</span>
+<span id="L549"><span class="lineNum">     549</span>              :     // what lets everything downstream ask one question instead of two.</span>
+<span id="L550"><span class="lineNum">     550</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_commutative_ring_type_v&lt;integral_module&gt;);</span></span>
+<span id="L551"><span class="lineNum">     551</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_field_type_v&lt;integral_module&gt;);</span></span>
+<span id="L552"><span class="lineNum">     552</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_commutative_ring_type_v&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L553"><span class="lineNum">     553</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_field_type_v&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L554"><span class="lineNum">     554</span>              : </span>
+<span id="L555"><span class="lineNum">     555</span>              :     // A space built over a module names neither: it reaches its ring through the</span>
+<span id="L556"><span class="lineNum">     556</span>              :     // module, which is what commutative_ring_type_of does below.</span>
+<span id="L557"><span class="lineNum">     557</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_commutative_ring_type_v&lt;euclidean_affine_space&lt;1&gt;&gt;);</span></span>
+<span id="L558"><span class="lineNum">     558</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_field_type_v&lt;euclidean_affine_space&lt;1&gt;&gt;);</span></span>
+<span id="L559"><span class="lineNum">     559</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_commutative_ring_type_v&lt;int&gt;);</span></span>
+<span id="L560"><span class="lineNum">     560</span>              : </span>
+<span id="L561"><span class="lineNum">     561</span> <span class="tlaGNC">           2 :     STATIC_CHECK( ring_type_is_extractable_v&lt;integral_module&gt;);</span></span>
+<span id="L562"><span class="lineNum">     562</span> <span class="tlaGNC">           2 :     STATIC_CHECK( ring_type_is_extractable_v&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L563"><span class="lineNum">     563</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!ring_type_is_extractable_v&lt;euclidean_affine_space&lt;1&gt;&gt;);</span></span>
+<span id="L564"><span class="lineNum">     564</span>              : </span>
+<span id="L565"><span class="lineNum">     565</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;nested_commutative_ring_type_t&lt;integral_module&gt;,           commutative_rings::integers&lt;1&gt;&gt;);</span></span>
+<span id="L566"><span class="lineNum">     566</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;nested_commutative_ring_type_t&lt;euclidean_vector_space&lt;1&gt;&gt;, commutative_rings::reals&lt;1&gt;&gt;);</span></span>
+<span id="L567"><span class="lineNum">     567</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;nested_commutative_ring_type_t&lt;complex_vector_space&gt;,      commutative_rings::complexes&gt;);</span></span>
+<span id="L568"><span class="lineNum">     568</span>              : </span>
+<span id="L569"><span class="lineNum">     569</span>              :     // The extraction is naive, and is meant to be: it hands back whatever the member</span>
+<span id="L570"><span class="lineNum">     570</span>              :     // names. Only defines_commutative_ring_v asks whether that is a ring.</span>
+<span id="L571"><span class="lineNum">     571</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;nested_commutative_ring_type_t&lt;spurious_ring_module&gt;, int&gt;);</span></span>
+<span id="L572"><span class="lineNum">     572</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_commutative_ring_type_v&lt;spurious_ring_module&gt;);</span></span>
+<span id="L573"><span class="lineNum">     573</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_commutative_ring_v&lt;spurious_ring_module&gt;);</span></span>
+<span id="L574"><span class="lineNum">     574</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!free_module&lt;spurious_ring_module&gt;);</span></span>
+<span id="L575"><span class="lineNum">     575</span>              : </span>
+<span id="L576"><span class="lineNum">     576</span> <span class="tlaGNC">           2 :     STATIC_CHECK( defines_commutative_ring_v&lt;integral_module&gt;);</span></span>
+<span id="L577"><span class="lineNum">     577</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_field_v&lt;integral_module&gt;);</span></span>
+<span id="L578"><span class="lineNum">     578</span> <span class="tlaGNC">           2 :     STATIC_CHECK( defines_commutative_ring_v&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L579"><span class="lineNum">     579</span> <span class="tlaGNC">           2 :     STATIC_CHECK( defines_field_v&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L580"><span class="lineNum">     580</span> <span class="tlaGNC">           2 :     STATIC_CHECK( defines_field_v&lt;complex_vector_space&gt;);</span></span>
+<span id="L581"><span class="lineNum">     581</span>              : </span>
+<span id="L582"><span class="lineNum">     582</span>              :     // Nothing named at all: false rather than ill-formed, since the nested alias is</span>
+<span id="L583"><span class="lineNum">     583</span>              :     // reached through a defined-but-empty primary.</span>
+<span id="L584"><span class="lineNum">     584</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_commutative_ring_v&lt;euclidean_affine_space&lt;1&gt;&gt;);</span></span>
+<span id="L585"><span class="lineNum">     585</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_field_v&lt;int&gt;);</span></span>
+<span id="L586"><span class="lineNum">     586</span>              : </span>
+<span id="L587"><span class="lineNum">     587</span>              :     // commutative_ring_type_of reaches through the space to the free module, so every</span>
+<span id="L588"><span class="lineNum">     588</span>              :     // space over a given module answers with that module's ring, whatever else</span>
+<span id="L589"><span class="lineNum">     589</span>              :     // separates them.</span>
+<span id="L590"><span class="lineNum">     590</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;commutative_ring_type_of_t&lt;integral_module&gt;,                commutative_rings::integers&lt;1&gt;&gt;);</span></span>
+<span id="L591"><span class="lineNum">     591</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;commutative_ring_type_of_t&lt;integral_partial_m_torsor&gt;,      commutative_rings::integers&lt;1&gt;&gt;);</span></span>
+<span id="L592"><span class="lineNum">     592</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;commutative_ring_type_of_t&lt;integral_m_affine_space&gt;,        commutative_rings::integers&lt;1&gt;&gt;);</span></span>
+<span id="L593"><span class="lineNum">     593</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;commutative_ring_type_of_t&lt;euclidean_vector_space&lt;1&gt;&gt;,      commutative_rings::reals&lt;1&gt;&gt;);</span></span>
+<span id="L594"><span class="lineNum">     594</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;commutative_ring_type_of_t&lt;euclidean_affine_space&lt;3&gt;&gt;,      commutative_rings::reals&lt;1&gt;&gt;);</span></span>
+<span id="L595"><span class="lineNum">     595</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;commutative_ring_type_of_t&lt;euclidean_nonnegative_space&lt;2&gt;&gt;, commutative_rings::reals&lt;1&gt;&gt;);</span></span>
+<span id="L596"><span class="lineNum">     596</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;commutative_ring_type_of_t&lt;complex_affine_space&gt;,           commutative_rings::complexes&gt;);</span></span>
+<span id="L597"><span class="lineNum">     597</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L598"><span class="lineNum">     598</span>              : </span>
+<span id="L599"><span class="lineNum">     599</span>              :   /** The counterpart of test_ring_traits, one level up: how a space identifies</span>
+<span id="L600"><span class="lineNum">     600</span>              :       itself, how it names its free module, and how the two are read back. The</span>
+<span id="L601"><span class="lineNum">     601</span>              :       concepts built on all this are pinned by test_spaces_dag; what is pinned here</span>
+<span id="L602"><span class="lineNum">     602</span>              :       is the tag hierarchy those concepts consult, which no concept check can</span>
+<span id="L603"><span class="lineNum">     603</span>              :       isolate, since every concept reads several tags at once.</span>
+<span id="L604"><span class="lineNum">     604</span>              :    */</span>
+<span id="L605"><span class="lineNum">     605</span> <span class="tlaGNC">           1 :   void spaces_meta_free_test::test_free_module_traits()</span></span>
+<span id="L606"><span class="lineNum">     606</span>              :   {</span>
+<span id="L607"><span class="lineNum">     607</span>              :     // The tag DAG, node by node. Convexity branches off the root and the module</span>
+<span id="L608"><span class="lineNum">     608</span>              :     // refinements descend through m_affine, so the two are never both true here -</span>
+<span id="L609"><span class="lineNum">     609</span>              :     // whereas convex_space and m_affine_space, the concepts, can be.</span>
+<span id="L610"><span class="lineNum">     610</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_partial_m_torsor_v&lt;integral_partial_m_torsor&gt;);</span></span>
+<span id="L611"><span class="lineNum">     611</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_convex_space_v&lt;integral_partial_m_torsor&gt;);</span></span>
+<span id="L612"><span class="lineNum">     612</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_m_affine_space_v&lt;integral_partial_m_torsor&gt;);</span></span>
+<span id="L613"><span class="lineNum">     613</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_free_module_v&lt;integral_partial_m_torsor&gt;);</span></span>
+<span id="L614"><span class="lineNum">     614</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_vector_space_v&lt;integral_partial_m_torsor&gt;);</span></span>
+<span id="L615"><span class="lineNum">     615</span>              : </span>
+<span id="L616"><span class="lineNum">     616</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_partial_m_torsor_v&lt;integral_pseudo_convex_space&gt;);</span></span>
+<span id="L617"><span class="lineNum">     617</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_convex_space_v&lt;integral_pseudo_convex_space&gt;);</span></span>
+<span id="L618"><span class="lineNum">     618</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_m_affine_space_v&lt;integral_pseudo_convex_space&gt;);</span></span>
+<span id="L619"><span class="lineNum">     619</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_free_module_v&lt;integral_pseudo_convex_space&gt;);</span></span>
+<span id="L620"><span class="lineNum">     620</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_vector_space_v&lt;integral_pseudo_convex_space&gt;);</span></span>
+<span id="L621"><span class="lineNum">     621</span>              : </span>
+<span id="L622"><span class="lineNum">     622</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_partial_m_torsor_v&lt;integral_m_affine_space&gt;);</span></span>
+<span id="L623"><span class="lineNum">     623</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_convex_space_v&lt;integral_m_affine_space&gt;);</span></span>
+<span id="L624"><span class="lineNum">     624</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_m_affine_space_v&lt;integral_m_affine_space&gt;);</span></span>
+<span id="L625"><span class="lineNum">     625</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_free_module_v&lt;integral_m_affine_space&gt;);</span></span>
+<span id="L626"><span class="lineNum">     626</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_vector_space_v&lt;integral_m_affine_space&gt;);</span></span>
+<span id="L627"><span class="lineNum">     627</span>              : </span>
+<span id="L628"><span class="lineNum">     628</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_partial_m_torsor_v&lt;integral_module&gt;);</span></span>
+<span id="L629"><span class="lineNum">     629</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_convex_space_v&lt;integral_module&gt;);</span></span>
+<span id="L630"><span class="lineNum">     630</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_m_affine_space_v&lt;integral_module&gt;);</span></span>
+<span id="L631"><span class="lineNum">     631</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_free_module_v&lt;integral_module&gt;);</span></span>
+<span id="L632"><span class="lineNum">     632</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_vector_space_v&lt;integral_module&gt;);</span></span>
+<span id="L633"><span class="lineNum">     633</span>              : </span>
+<span id="L634"><span class="lineNum">     634</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_partial_m_torsor_v&lt;complex_vector_space&gt;);</span></span>
+<span id="L635"><span class="lineNum">     635</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_convex_space_v&lt;complex_vector_space&gt;);</span></span>
+<span id="L636"><span class="lineNum">     636</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_m_affine_space_v&lt;complex_vector_space&gt;);</span></span>
+<span id="L637"><span class="lineNum">     637</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_free_module_v&lt;complex_vector_space&gt;);</span></span>
+<span id="L638"><span class="lineNum">     638</span> <span class="tlaGNC">           2 :     STATIC_CHECK( identifies_as_vector_space_v&lt;complex_vector_space&gt;);</span></span>
+<span id="L639"><span class="lineNum">     639</span>              : </span>
+<span id="L640"><span class="lineNum">     640</span>              :     // A ring identifies as no space, and a type with no structure as nothing at all.</span>
+<span id="L641"><span class="lineNum">     641</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_partial_m_torsor_v&lt;commutative_rings::reals&lt;1&gt;&gt;);</span></span>
+<span id="L642"><span class="lineNum">     642</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_vector_space_v&lt;commutative_rings::reals&lt;1&gt;&gt;);</span></span>
+<span id="L643"><span class="lineNum">     643</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_partial_m_torsor_v&lt;int&gt;);</span></span>
+<span id="L644"><span class="lineNum">     644</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!identifies_as_free_module_v&lt;structureless_space&gt;);</span></span>
+<span id="L645"><span class="lineNum">     645</span>              : </span>
+<span id="L646"><span class="lineNum">     646</span>              :     // Naming a free module. As with the ring, the member is spelled one way by a space</span>
+<span id="L647"><span class="lineNum">     647</span>              :     // over a module and another by one over a vector space, and a free module names</span>
+<span id="L648"><span class="lineNum">     648</span>              :     // neither, being its own.</span>
+<span id="L649"><span class="lineNum">     649</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_free_module_type_v&lt;integral_m_affine_space&gt;);</span></span>
+<span id="L650"><span class="lineNum">     650</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_vector_space_type_v&lt;integral_m_affine_space&gt;);</span></span>
+<span id="L651"><span class="lineNum">     651</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_free_module_type_v&lt;euclidean_affine_space&lt;1&gt;&gt;);</span></span>
+<span id="L652"><span class="lineNum">     652</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_vector_space_type_v&lt;euclidean_affine_space&lt;1&gt;&gt;);</span></span>
+<span id="L653"><span class="lineNum">     653</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_free_module_type_v&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L654"><span class="lineNum">     654</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_vector_space_type_v&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L655"><span class="lineNum">     655</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_free_module_type_v&lt;integral_module&gt;);</span></span>
+<span id="L656"><span class="lineNum">     656</span>              : </span>
+<span id="L657"><span class="lineNum">     657</span> <span class="tlaGNC">           2 :     STATIC_CHECK( module_type_is_extractable_v&lt;integral_partial_m_torsor&gt;);</span></span>
+<span id="L658"><span class="lineNum">     658</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!module_type_is_extractable_v&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L659"><span class="lineNum">     659</span>              : </span>
+<span id="L660"><span class="lineNum">     660</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;nested_free_module_type_t&lt;integral_partial_m_torsor&gt;, integral_module&gt;);</span></span>
+<span id="L661"><span class="lineNum">     661</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;nested_free_module_type_t&lt;euclidean_affine_space&lt;3&gt;&gt;, euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L662"><span class="lineNum">     662</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;nested_free_module_type_t&lt;complex_affine_space&gt;,      complex_vector_space&gt;);</span></span>
+<span id="L663"><span class="lineNum">     663</span>              : </span>
+<span id="L664"><span class="lineNum">     664</span>              :     // Naive again, and again separated from the concept by defines_free_module_v.</span>
+<span id="L665"><span class="lineNum">     665</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;nested_free_module_type_t&lt;spurious_module_torsor&gt;, int&gt;);</span></span>
+<span id="L666"><span class="lineNum">     666</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_free_module_type_v&lt;spurious_module_torsor&gt;);</span></span>
+<span id="L667"><span class="lineNum">     667</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_free_module_v&lt;spurious_module_torsor&gt;);</span></span>
+<span id="L668"><span class="lineNum">     668</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!partial_m_torsor&lt;spurious_module_torsor&gt;);</span></span>
+<span id="L669"><span class="lineNum">     669</span>              : </span>
+<span id="L670"><span class="lineNum">     670</span> <span class="tlaGNC">           2 :     STATIC_CHECK( defines_free_module_v&lt;integral_m_affine_space&gt;);</span></span>
+<span id="L671"><span class="lineNum">     671</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_vector_space_v&lt;integral_m_affine_space&gt;);</span></span>
+<span id="L672"><span class="lineNum">     672</span> <span class="tlaGNC">           2 :     STATIC_CHECK( defines_free_module_v&lt;euclidean_affine_space&lt;1&gt;&gt;);</span></span>
+<span id="L673"><span class="lineNum">     673</span> <span class="tlaGNC">           2 :     STATIC_CHECK( defines_vector_space_v&lt;euclidean_affine_space&lt;1&gt;&gt;);</span></span>
+<span id="L674"><span class="lineNum">     674</span> <span class="tlaGNC">           2 :     STATIC_CHECK( defines_vector_space_v&lt;complex_affine_space&gt;);</span></span>
+<span id="L675"><span class="lineNum">     675</span>              : </span>
+<span id="L676"><span class="lineNum">     676</span>              :     // A free module defines no module of its own: it *is* one, which is a distinction</span>
+<span id="L677"><span class="lineNum">     677</span>              :     // free_module_type_of makes and defines_free_module_v does not.</span>
+<span id="L678"><span class="lineNum">     678</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_free_module_v&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L679"><span class="lineNum">     679</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_free_module_v&lt;int&gt;);</span></span>
+<span id="L680"><span class="lineNum">     680</span>              : </span>
+<span id="L681"><span class="lineNum">     681</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;free_module_type_of_t&lt;euclidean_vector_space&lt;3&gt;&gt;,      euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L682"><span class="lineNum">     682</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;free_module_type_of_t&lt;integral_module&gt;,                integral_module&gt;);</span></span>
+<span id="L683"><span class="lineNum">     683</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;free_module_type_of_t&lt;euclidean_affine_space&lt;3&gt;&gt;,      euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L684"><span class="lineNum">     684</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;free_module_type_of_t&lt;euclidean_nonnegative_space&lt;2&gt;&gt;, euclidean_vector_space&lt;2&gt;&gt;);</span></span>
+<span id="L685"><span class="lineNum">     685</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;free_module_type_of_t&lt;integral_partial_m_torsor&gt;,      integral_module&gt;);</span></span>
+<span id="L686"><span class="lineNum">     686</span>              : </span>
+<span id="L687"><span class="lineNum">     687</span> <span class="tlaGNC">           2 :     STATIC_CHECK( free_module_is_extractable_v&lt;integral_partial_m_torsor&gt;);</span></span>
+<span id="L688"><span class="lineNum">     688</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!free_module_is_extractable_v&lt;spurious_module_torsor&gt;);</span></span>
+<span id="L689"><span class="lineNum">     689</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!free_module_is_extractable_v&lt;int&gt;);</span></span>
+<span id="L690"><span class="lineNum">     690</span>              : </span>
+<span id="L691"><span class="lineNum">     691</span>              :     // Dimension is likewise read through the free module, so a space need not - and</span>
+<span id="L692"><span class="lineNum">     692</span>              :     // mostly does not - name one of its own.</span>
+<span id="L693"><span class="lineNum">     693</span> <span class="tlaGNC">           2 :     STATIC_CHECK(dimension_of_v&lt;euclidean_vector_space&lt;3&gt;&gt;      == 3);</span></span>
+<span id="L694"><span class="lineNum">     694</span> <span class="tlaGNC">           2 :     STATIC_CHECK(dimension_of_v&lt;euclidean_affine_space&lt;3&gt;&gt;      == 3);</span></span>
+<span id="L695"><span class="lineNum">     695</span> <span class="tlaGNC">           2 :     STATIC_CHECK(dimension_of_v&lt;euclidean_nonnegative_space&lt;2&gt;&gt; == 2);</span></span>
+<span id="L696"><span class="lineNum">     696</span> <span class="tlaGNC">           2 :     STATIC_CHECK(dimension_of_v&lt;integral_module&gt;                == 1);</span></span>
+<span id="L697"><span class="lineNum">     697</span> <span class="tlaGNC">           2 :     STATIC_CHECK(dimension_of_v&lt;integral_partial_m_torsor&gt;      == 1);</span></span>
+<span id="L698"><span class="lineNum">     698</span> <span class="tlaGNC">           2 :     STATIC_CHECK(dimension_of_v&lt;complex_affine_space&gt;           == 1);</span></span>
+<span id="L699"><span class="lineNum">     699</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L700"><span class="lineNum">     700</span>              : </span>
+<span id="L701"><span class="lineNum">     701</span> <span class="tlaGNC">           1 :   void spaces_meta_free_test::test_basis_traits()</span></span>
+<span id="L702"><span class="lineNum">     702</span>              :   {</span>
+<span id="L703"><span class="lineNum">     703</span>              :     // A basis defines an index set with one index per basis element. Pin the count</span>
+<span id="L704"><span class="lineNum">     704</span>              :     // rather than the spelling, since it is the count the contract states and</span>
+<span id="L705"><span class="lineNum">     705</span>              :     // nothing in the codebase reads the type.</span>
+<span id="L706"><span class="lineNum">     706</span> <span class="tlaGNC">           2 :     STATIC_CHECK(basis&lt;euclidean_vector_space&lt;1&gt;&gt;::index_set_type::size() == 1);</span></span>
+<span id="L707"><span class="lineNum">     707</span> <span class="tlaGNC">           2 :     STATIC_CHECK(basis&lt;euclidean_vector_space&lt;3&gt;&gt;::index_set_type::size() == 3);</span></span>
+<span id="L708"><span class="lineNum">     708</span> <span class="tlaGNC">           2 :     STATIC_CHECK(basis&lt;integral_module, nominated_basis_data&lt;&gt;&gt;::index_set_type::size() == 1);</span></span>
+<span id="L709"><span class="lineNum">     709</span>              : </span>
+<span id="L710"><span class="lineNum">     710</span>              :     // Basis data names both ingredients the introduction identifies: an index set and a frame.</span>
+<span id="L711"><span class="lineNum">     711</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_frame_v&lt;canonical_basis_data&lt;3&gt;&gt;);</span></span>
+<span id="L712"><span class="lineNum">     712</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_index_set_v&lt;canonical_basis_data&lt;3&gt;&gt;);</span></span>
+<span id="L713"><span class="lineNum">     713</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_frame_v&lt;alices_basis_data&lt;3&gt;&gt;);</span></span>
+<span id="L714"><span class="lineNum">     714</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_frame_v&lt;alices_basis_data&lt;3, reflection&gt;&gt;);</span></span>
+<span id="L715"><span class="lineNum">     715</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_frame_v&lt;euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L716"><span class="lineNum">     716</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_index_set_v&lt;euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L717"><span class="lineNum">     717</span>              : </span>
+<span id="L718"><span class="lineNum">     718</span> <span class="tlaGNC">           2 :     STATIC_CHECK(basis&lt;euclidean_vector_space&lt;3&gt;, alices_basis_data&lt;3&gt;&gt;::index_set_type::size() == 3);</span></span>
+<span id="L719"><span class="lineNum">     719</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::same_as&lt;basis&lt;euclidean_vector_space&lt;3&gt;, alices_basis_data&lt;3, reflection&gt;&gt;::frame_type,</span></span>
+<span id="L720"><span class="lineNum">     720</span>              :                               alices_frame&lt;reflection&gt;&gt;);</span>
+<span id="L721"><span class="lineNum">     721</span>              : </span>
+<span id="L722"><span class="lineNum">     722</span>              :     // A basis is not basis data. It names frame_type/index_set_type where data names</span>
+<span id="L723"><span class="lineNum">     723</span>              :     // frame/index_set, so the two cannot be passed for one another - which they silently</span>
+<span id="L724"><span class="lineNum">     724</span>              :     // could when both spelled the members the same way.</span>
+<span id="L725"><span class="lineNum">     725</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_frame_v&lt;basis&lt;euclidean_vector_space&lt;3&gt;&gt;&gt;);</span></span>
+<span id="L726"><span class="lineNum">     726</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_index_set_v&lt;basis&lt;euclidean_vector_space&lt;3&gt;&gt;&gt;);</span></span>
+<span id="L727"><span class="lineNum">     727</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!basis_data_for&lt;basis&lt;euclidean_vector_space&lt;3&gt;&gt;, euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L728"><span class="lineNum">     728</span>              : </span>
+<span id="L729"><span class="lineNum">     729</span>              :     // Pairing, condition one: a supplied index set must have one index per basis element.</span>
+<span id="L730"><span class="lineNum">     730</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_consistent_index_set_v&lt;mismatched_basis_data, euclidean_vector_space&lt;7&gt;&gt;);</span></span>
+<span id="L731"><span class="lineNum">     731</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_consistent_index_set_v&lt;mismatched_basis_data, euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L732"><span class="lineNum">     732</span>              :     // TO DO: false once the enumerators can be counted; pinned so that the day they can,</span>
+<span id="L733"><span class="lineNum">     733</span>              :     // this line fails and says so.</span>
+<span id="L734"><span class="lineNum">     734</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_consistent_index_set_v&lt;enumerated_basis_data, euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L735"><span class="lineNum">     735</span>              :     // Neither sized nor an enumeration, so not an index set: rejected rather than waved through.</span>
+<span id="L736"><span class="lineNum">     736</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_consistent_index_set_v&lt;unindexable_basis_data, euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L737"><span class="lineNum">     737</span>              : </span>
+<span id="L738"><span class="lineNum">     738</span> <span class="tlaGNC">           2 :     STATIC_CHECK( basis_data_for&lt;canonical_basis_data&lt;3&gt;, euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L739"><span class="lineNum">     739</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!basis_data_for&lt;canonical_basis_data&lt;2&gt;, euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L740"><span class="lineNum">     740</span> <span class="tlaGNC">           2 :     STATIC_CHECK( basis_data_for&lt;alices_basis_data&lt;3, reflection&gt;, euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L741"><span class="lineNum">     741</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!basis_data_for&lt;mismatched_basis_data, euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L742"><span class="lineNum">     742</span> <span class="tlaGNC">           2 :     STATIC_CHECK( basis_data_for&lt;mismatched_basis_data, euclidean_vector_space&lt;7&gt;&gt;);</span></span>
+<span id="L743"><span class="lineNum">     743</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!basis_data_for&lt;euclidean_vector_space&lt;3&gt;, euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L744"><span class="lineNum">     744</span>              : </span>
+<span id="L745"><span class="lineNum">     745</span>              :     // Naming the identity as the frame asserts the module *is* R^S. Only a module which</span>
+<span id="L746"><span class="lineNum">     746</span>              :     // declares as much may do so; an abstract free module must nominate a frame, and has</span>
+<span id="L747"><span class="lineNum">     747</span>              :     // no default to fall back on.</span>
+<span id="L748"><span class="lineNum">     748</span> <span class="tlaGNC">           2 :     STATIC_CHECK( admits_canonical_basis_v&lt;euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L749"><span class="lineNum">     749</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!admits_canonical_basis_v&lt;integral_module&gt;);</span></span>
+<span id="L750"><span class="lineNum">     750</span>              : </span>
+<span id="L751"><span class="lineNum">     751</span>              :     // The declaration and its value, again separated: omitting the marker and setting</span>
+<span id="L752"><span class="lineNum">     752</span>              :     // it false are different statements which the trait deliberately merges.</span>
+<span id="L753"><span class="lineNum">     753</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_admits_canonical_basis_v&lt;euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L754"><span class="lineNum">     754</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_admits_canonical_basis_v&lt;integral_module&gt;);</span></span>
+<span id="L755"><span class="lineNum">     755</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_admits_canonical_basis_v&lt;canonical_basis_declining_module&gt;);</span></span>
+<span id="L756"><span class="lineNum">     756</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!admits_canonical_basis_v&lt;canonical_basis_declining_module&gt;);</span></span>
+<span id="L757"><span class="lineNum">     757</span> <span class="tlaGNC">           2 :     STATIC_CHECK( names_admissible_frame_v&lt;nominated_basis_data&lt;&gt;, integral_module&gt;);</span></span>
+<span id="L758"><span class="lineNum">     758</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!names_admissible_frame_v&lt;canonical_basis_data&lt;1&gt;, integral_module&gt;);</span></span>
+<span id="L759"><span class="lineNum">     759</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!basis_data_for&lt;canonical_basis_data&lt;1&gt;, integral_module&gt;);</span></span>
+<span id="L760"><span class="lineNum">     760</span> <span class="tlaGNC">           2 :     STATIC_CHECK( basis_data_for&lt;nominated_basis_data&lt;&gt;,       integral_module&gt;);</span></span>
+<span id="L761"><span class="lineNum">     761</span>              : </span>
+<span id="L762"><span class="lineNum">     762</span>              :     // The canonical basis is therefore what a basis defaults to, and the default stands</span>
+<span id="L763"><span class="lineNum">     763</span>              :     // or falls with the module's declaration. The falling case cannot be pinned here:</span>
+<span id="L764"><span class="lineNum">     764</span>              :     // naming basis&lt;integral_module&gt; is ill-formed rather than merely false, which is the</span>
+<span id="L765"><span class="lineNum">     765</span>              :     // point - the client is told, at the point of use, which rule they have broken.</span>
+<span id="L766"><span class="lineNum">     766</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::same_as&lt;basis&lt;euclidean_vector_space&lt;3&gt;&gt;::basis_data_type, canonical_basis_data&lt;3&gt;&gt;);</span></span>
+<span id="L767"><span class="lineNum">     767</span>              : </span>
+<span id="L768"><span class="lineNum">     768</span>              :     // Pairing is answerable for arbitrary types, yielding false rather than a hard error.</span>
+<span id="L769"><span class="lineNum">     769</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!basis_data_for&lt;canonical_basis_data&lt;3&gt;, int&gt;);</span></span>
+<span id="L770"><span class="lineNum">     770</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!basis_data_for&lt;int, euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L771"><span class="lineNum">     771</span>              : </span>
+<span id="L772"><span class="lineNum">     772</span>              :     /* Orthonormality is declared by the basis data, and gates the inner product,</span>
+<span id="L773"><span class="lineNum">     773</span>              :        the dot product and the norm on euclidean_vector_space. TO DO: nothing in</span>
+<span id="L774"><span class="lineNum">     774</span>              :        Source declares it, so those three hidden friends are unreachable today and</span>
+<span id="L775"><span class="lineNum">     775</span>              :        the four traits built on them are false for every space. The fixture supplies</span>
+<span id="L776"><span class="lineNum">     776</span>              :        the only positive case there is; the negatives below record the gap, and will</span>
+<span id="L777"><span class="lineNum">     777</span>              :        fail the day it is closed.</span>
+<span id="L778"><span class="lineNum">     778</span>              :      */</span>
+<span id="L779"><span class="lineNum">     779</span> <span class="tlaGNC">           2 :     STATIC_CHECK( is_orthonormal_basis_v&lt;orthonormal_basis_data&gt;);</span></span>
+<span id="L780"><span class="lineNum">     780</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!is_orthonormal_basis_v&lt;canonical_basis_data&lt;3&gt;&gt;);</span></span>
+<span id="L781"><span class="lineNum">     781</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!is_orthonormal_basis_v&lt;alices_basis_data&lt;3&gt;&gt;);</span></span>
+<span id="L782"><span class="lineNum">     782</span>              : </span>
+<span id="L783"><span class="lineNum">     783</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_norm_v&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L784"><span class="lineNum">     784</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_inner_product_v&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L785"><span class="lineNum">     785</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!normed_vector_space&lt;euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L786"><span class="lineNum">     786</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!inner_product_space&lt;euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L787"><span class="lineNum">     787</span>              : </span>
+<span id="L788"><span class="lineNum">     788</span>              :     /* A basis's frame terminates the argument packs which physics uses to build</span>
+<span id="L789"><span class="lineNum">     789</span>              :        coordinates from a list of values followed by a frame. The trait lives here</span>
+<span id="L790"><span class="lineNum">     790</span>              :        because it is the basis which supplies the terminator; the packs themselves</span>
+<span id="L791"><span class="lineNum">     791</span>              :        are assembled in PhysicalValues.hpp.</span>
+<span id="L792"><span class="lineNum">     792</span>              :      */</span>
+<span id="L793"><span class="lineNum">     793</span>              :     using basis_t = basis&lt;euclidean_vector_space&lt;2&gt;&gt;;</span>
+<span id="L794"><span class="lineNum">     794</span> <span class="tlaGNC">           2 :     STATIC_CHECK( is_units_terminated_pack_v&lt;basis_t, double, double, double, identity_isomorphism&gt;);</span></span>
+<span id="L795"><span class="lineNum">     795</span> <span class="tlaGNC">           2 :     STATIC_CHECK( is_units_terminated_pack_v&lt;basis_t, double, int, double, identity_isomorphism&gt;);</span></span>
+<span id="L796"><span class="lineNum">     796</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!is_units_terminated_pack_v&lt;basis_t, double, double, double&gt;);</span></span>
+<span id="L797"><span class="lineNum">     797</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!is_units_terminated_pack_v&lt;basis_t, double, double, identity_isomorphism, double&gt;);</span></span>
+<span id="L798"><span class="lineNum">     798</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!is_units_terminated_pack_v&lt;basis_t, double, double, double, reflection&gt;);</span></span>
+<span id="L799"><span class="lineNum">     799</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!is_units_terminated_pack_v&lt;basis_t, double, identity_isomorphism&gt;);</span></span>
+<span id="L800"><span class="lineNum">     800</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!is_units_terminated_pack_v&lt;basis_t, double, nominated_frame, identity_isomorphism&gt;);</span></span>
+<span id="L801"><span class="lineNum">     801</span>              : </span>
+<span id="L802"><span class="lineNum">     802</span>              :     // Comparability is exactly agreement on the convention. Two bases over Alice's</span>
+<span id="L803"><span class="lineNum">     803</span>              :     // convention are related whatever their automorphisms; Bob's convention is not</span>
+<span id="L804"><span class="lineNum">     804</span>              :     // related to Alice's, which is the static prohibition.</span>
+<span id="L805"><span class="lineNum">     805</span> <span class="tlaGNC">           2 :     STATIC_CHECK( consistent_basis_data_v&lt;alices_basis_data&lt;3&gt;, alices_basis_data&lt;3&gt;&gt;);</span></span>
+<span id="L806"><span class="lineNum">     806</span> <span class="tlaGNC">           2 :     STATIC_CHECK( consistent_basis_data_v&lt;alices_basis_data&lt;3&gt;, alices_basis_data&lt;3, reflection&gt;&gt;);</span></span>
+<span id="L807"><span class="lineNum">     807</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!consistent_basis_data_v&lt;alices_basis_data&lt;3&gt;, bobs_basis_data&lt;3&gt;&gt;);</span></span>
+<span id="L808"><span class="lineNum">     808</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!consistent_basis_data_v&lt;alices_basis_data&lt;3, reflection&gt;, bobs_basis_data&lt;3, reflection&gt;&gt;);</span></span>
+<span id="L809"><span class="lineNum">     809</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!consistent_basis_data_v&lt;alices_basis_data&lt;3&gt;, canonical_basis_data&lt;3&gt;&gt;);</span></span>
+<span id="L810"><span class="lineNum">     810</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L811"><span class="lineNum">     811</span>              : </span>
+<span id="L812"><span class="lineNum">     812</span>              :   /** A representation is a bijection between a space's coordinates and the values</span>
+<span id="L813"><span class="lineNum">     813</span>              :       of some C++ type, and the concept naming one is a conjunction of four</span>
+<span id="L814"><span class="lineNum">     814</span>              :       requirements over an interface with two shapes - single value and span. The</span>
+<span id="L815"><span class="lineNum">     815</span>              :       fixtures below drop one requirement each, and supply one shape each, since a</span>
+<span id="L816"><span class="lineNum">     816</span>              :       conjunction is only shown to be live by a case which fails exactly one term.</span>
+<span id="L817"><span class="lineNum">     817</span>              :    */</span>
+<span id="L818"><span class="lineNum">     818</span> <span class="tlaGNC">           1 :   void spaces_meta_free_test::test_representation_traits()</span></span>
+<span id="L819"><span class="lineNum">     819</span>              :   {</span>
+<span id="L820"><span class="lineNum">     820</span>              :     using rep_t     = canonical_representation&lt;double, no_bounds&lt;double&gt;&gt;;</span>
+<span id="L821"><span class="lineNum">     821</span>              :     using int_rep_t = canonical_representation&lt;int, no_bounds&lt;int&gt;&gt;;</span>
+<span id="L822"><span class="lineNum">     822</span>              : </span>
+<span id="L823"><span class="lineNum">     823</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_value_type_v&lt;rep_t&gt;);</span></span>
+<span id="L824"><span class="lineNum">     824</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_free_module_representation_v&lt;rep_t&gt;);</span></span>
+<span id="L825"><span class="lineNum">     825</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_bounds_v&lt;rep_t&gt;);</span></span>
+<span id="L826"><span class="lineNum">     826</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_coordinates_type_v&lt;rep_t&gt;);</span></span>
+<span id="L827"><span class="lineNum">     827</span> <span class="tlaGNC">           2 :     STATIC_CHECK( representation&lt;rep_t&gt;);</span></span>
+<span id="L828"><span class="lineNum">     828</span>              : </span>
+<span id="L829"><span class="lineNum">     829</span>              :     // One requirement missing apiece.</span>
+<span id="L830"><span class="lineNum">     830</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_value_type_v&lt;representation_without_value_type&gt;);</span></span>
+<span id="L831"><span class="lineNum">     831</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!representation&lt;representation_without_value_type&gt;);</span></span>
+<span id="L832"><span class="lineNum">     832</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_free_module_representation_v&lt;representation_without_free_module&gt;);</span></span>
+<span id="L833"><span class="lineNum">     833</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!representation&lt;representation_without_free_module&gt;);</span></span>
+<span id="L834"><span class="lineNum">     834</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_bounds_v&lt;representation_without_bounds_or_coordinates&gt;);</span></span>
+<span id="L835"><span class="lineNum">     835</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_coordinates_type_v&lt;representation_without_bounds_or_coordinates&gt;);</span></span>
+<span id="L836"><span class="lineNum">     836</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!representation&lt;representation_without_bounds_or_coordinates&gt;);</span></span>
+<span id="L837"><span class="lineNum">     837</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!std::default_initializable&lt;uninitializable_representation&gt;);</span></span>
+<span id="L838"><span class="lineNum">     838</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!representation&lt;uninitializable_representation&gt;);</span></span>
+<span id="L839"><span class="lineNum">     839</span>              : </span>
+<span id="L840"><span class="lineNum">     840</span>              :     // Bounds and coordinates are alternatives, so naming coordinates and no bounds</span>
+<span id="L841"><span class="lineNum">     841</span>              :     // satisfies the concept just as well.</span>
+<span id="L842"><span class="lineNum">     842</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_bounds_v&lt;heterogeneous_representation&gt;);</span></span>
+<span id="L843"><span class="lineNum">     843</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_coordinates_type_v&lt;heterogeneous_representation&gt;);</span></span>
+<span id="L844"><span class="lineNum">     844</span> <span class="tlaGNC">           2 :     STATIC_CHECK( representation&lt;heterogeneous_representation&gt;);</span></span>
+<span id="L845"><span class="lineNum">     845</span>              : </span>
+<span id="L846"><span class="lineNum">     846</span>              :     // The two shapes of the interface. Each fixture supplies one and is therefore a</span>
+<span id="L847"><span class="lineNum">     847</span>              :     // representation for a space of exactly one dimensionality; canonical_representation,</span>
+<span id="L848"><span class="lineNum">     848</span>              :     // taking a span whatever the width, answers only to the second.</span>
+<span id="L849"><span class="lineNum">     849</span> <span class="tlaGNC">           2 :     STATIC_CHECK( representation_for_single_value&lt;single_value_representation, euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L850"><span class="lineNum">     850</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!representation_for_span&lt;single_value_representation, euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L851"><span class="lineNum">     851</span> <span class="tlaGNC">           2 :     STATIC_CHECK( representation_for&lt;single_value_representation, euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L852"><span class="lineNum">     852</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!representation_for&lt;single_value_representation, euclidean_vector_space&lt;2&gt;&gt;);</span></span>
+<span id="L853"><span class="lineNum">     853</span>              : </span>
+<span id="L854"><span class="lineNum">     854</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!representation_for_single_value&lt;span_representation, euclidean_vector_space&lt;2&gt;&gt;);</span></span>
+<span id="L855"><span class="lineNum">     855</span> <span class="tlaGNC">           2 :     STATIC_CHECK( representation_for_span&lt;span_representation, euclidean_vector_space&lt;2&gt;&gt;);</span></span>
+<span id="L856"><span class="lineNum">     856</span> <span class="tlaGNC">           2 :     STATIC_CHECK( representation_for&lt;span_representation, euclidean_vector_space&lt;2&gt;&gt;);</span></span>
+<span id="L857"><span class="lineNum">     857</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!representation_for&lt;span_representation, euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L858"><span class="lineNum">     858</span>              : </span>
+<span id="L859"><span class="lineNum">     859</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!representation_for_single_value&lt;rep_t, euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L860"><span class="lineNum">     860</span> <span class="tlaGNC">           2 :     STATIC_CHECK( representation_for_span&lt;rep_t, euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L861"><span class="lineNum">     861</span> <span class="tlaGNC">           2 :     STATIC_CHECK( representation_for&lt;rep_t, euclidean_vector_space&lt;3&gt;&gt;);</span></span>
+<span id="L862"><span class="lineNum">     862</span>              : </span>
+<span id="L863"><span class="lineNum">     863</span>              :     // Being a representation is not being a representation for a space: the space</span>
+<span id="L864"><span class="lineNum">     864</span>              :     // must be a partial M-torsor, which the underlying set is not.</span>
+<span id="L865"><span class="lineNum">     865</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!representation_for&lt;rep_t, sets::R&lt;1&gt;&gt;);</span></span>
+<span id="L866"><span class="lineNum">     866</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!representation_for&lt;rep_t, commutative_rings::reals&lt;1&gt;&gt;);</span></span>
+<span id="L867"><span class="lineNum">     867</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!representation_for&lt;heterogeneous_representation, euclidean_vector_space&lt;2&gt;&gt;);</span></span>
+<span id="L868"><span class="lineNum">     868</span>              : </span>
+<span id="L869"><span class="lineNum">     869</span>              :     // The value type a set of bounds is stated in, and the value type a representation's</span>
+<span id="L870"><span class="lineNum">     870</span>              :     // bounds must be stated in. They differ for the complexes, which are unordered: the</span>
+<span id="L871"><span class="lineNum">     871</span>              :     // bounds are on the modulus, and so are real whatever the representation holds.</span>
+<span id="L872"><span class="lineNum">     872</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;bounds_value_type_t&lt;coordinate_bounds&lt;double&gt;&gt;, double&gt;);</span></span>
+<span id="L873"><span class="lineNum">     873</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;bounds_value_type_t&lt;coordinate_bounds&lt;float&gt;&gt;,  float&gt;);</span></span>
+<span id="L874"><span class="lineNum">     874</span>              : </span>
+<span id="L875"><span class="lineNum">     875</span>              :     /* TO DO: bounds_value_type has a partial specialization for std::array&lt;Bounds, D&gt;,</span>
+<span id="L876"><span class="lineNum">     876</span>              :        intended for the per-component bounds of a multi-dimensional space. Both the</span>
+<span id="L877"><span class="lineNum">     877</span>              :        primary and the alias are constrained on `bounds`, which an array of bounds is</span>
+<span id="L878"><span class="lineNum">     878</span>              :        not, so nothing can name it. Pinned as unreachable so that the day the</span>
+<span id="L879"><span class="lineNum">     879</span>              :        constraint is relaxed, this line fails and says so.</span>
+<span id="L880"><span class="lineNum">     880</span>              :      */</span>
+<span id="L881"><span class="lineNum">     881</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!bounds&lt;std::array&lt;coordinate_bounds&lt;double&gt;, 3&gt;&gt;);</span></span>
+<span id="L882"><span class="lineNum">     882</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!array_bounds_value_type_is_extractable_v&lt;coordinate_bounds&lt;double&gt;, 3&gt;);</span></span>
+<span id="L883"><span class="lineNum">     883</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;to_bounds_value_type_t&lt;double&gt;,                                double&gt;);</span></span>
+<span id="L884"><span class="lineNum">     884</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;to_bounds_value_type_t&lt;int&gt;,                                   int&gt;);</span></span>
+<span id="L885"><span class="lineNum">     885</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;to_bounds_value_type_t&lt;std::complex&lt;double&gt;&gt;,                  double&gt;);</span></span>
+<span id="L886"><span class="lineNum">     886</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;to_bounds_value_type_t&lt;std::complex&lt;float&gt;&gt;,                   float&gt;);</span></span>
+<span id="L887"><span class="lineNum">     887</span>              : </span>
+<span id="L888"><span class="lineNum">     888</span> <span class="tlaGNC">           2 :     STATIC_CHECK( is_canonical_representation_v&lt;rep_t&gt;);</span></span>
+<span id="L889"><span class="lineNum">     889</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;is_canonical_representation_t&lt;rep_t&gt;,                     std::true_type&gt;);</span></span>
+<span id="L890"><span class="lineNum">     890</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;is_canonical_representation_t&lt;polar_representation&lt;double&gt;&gt;, std::false_type&gt;);</span></span>
+<span id="L891"><span class="lineNum">     891</span> <span class="tlaGNC">           2 :     STATIC_CHECK( is_canonical_representation_v&lt;int_rep_t&gt;);</span></span>
+<span id="L892"><span class="lineNum">     892</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!is_canonical_representation_v&lt;polar_representation&lt;double&gt;&gt;);</span></span>
+<span id="L893"><span class="lineNum">     893</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!is_canonical_representation_v&lt;single_value_representation&gt;);</span></span>
+<span id="L894"><span class="lineNum">     894</span>              : </span>
+<span id="L895"><span class="lineNum">     895</span>              :     // Heterogeneity is a property of the coordinates a representation names, so a</span>
+<span id="L896"><span class="lineNum">     896</span>              :     // representation naming none is homogeneous by default rather than ill-formed.</span>
+<span id="L897"><span class="lineNum">     897</span> <span class="tlaGNC">           2 :     STATIC_CHECK( heterogeneous_coordinates_v&lt;std::tuple&lt;double, float&gt;&gt;);</span></span>
+<span id="L898"><span class="lineNum">     898</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!heterogeneous_coordinates_v&lt;std::tuple&lt;double, double&gt;&gt;);</span></span>
+<span id="L899"><span class="lineNum">     899</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!heterogeneous_coordinates_v&lt;std::tuple&lt;double&gt;&gt;);</span></span>
+<span id="L900"><span class="lineNum">     900</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_heterogeneous_representation_v&lt;heterogeneous_representation&gt;);</span></span>
+<span id="L901"><span class="lineNum">     901</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_heterogeneous_representation_v&lt;homogeneous_tuple_representation&gt;);</span></span>
+<span id="L902"><span class="lineNum">     902</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_heterogeneous_representation_v&lt;rep_t&gt;);</span></span>
+<span id="L903"><span class="lineNum">     903</span>              : </span>
+<span id="L904"><span class="lineNum">     904</span>              :     // Consistency is agreement between the representation's coordinates and a</span>
+<span id="L905"><span class="lineNum">     905</span>              :     // supplied pack - in order, which is what the reversal below establishes.</span>
+<span id="L906"><span class="lineNum">     906</span> <span class="tlaGNC">           2 :     STATIC_CHECK( consistent_representation_v&lt;heterogeneous_representation, double, float&gt;);</span></span>
+<span id="L907"><span class="lineNum">     907</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!consistent_representation_v&lt;heterogeneous_representation, float, double&gt;);</span></span>
+<span id="L908"><span class="lineNum">     908</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!consistent_representation_v&lt;heterogeneous_representation, double&gt;);</span></span>
+<span id="L909"><span class="lineNum">     909</span> <span class="tlaGNC">           2 :     STATIC_CHECK( consistent_representation_v&lt;homogeneous_tuple_representation, double, double&gt;);</span></span>
+<span id="L910"><span class="lineNum">     910</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!consistent_representation_v&lt;rep_t, double&gt;);</span></span>
+<span id="L911"><span class="lineNum">     911</span>              : </span>
+<span id="L912"><span class="lineNum">     912</span>              :     // A free module is its own free module, so its displacements keep the very</span>
+<span id="L913"><span class="lineNum">     913</span>              :     // representation the points have; anywhere else the free-module representation is</span>
+<span id="L914"><span class="lineNum">     914</span>              :     // taken, and must be wide enough for the differences.</span>
+<span id="L915"><span class="lineNum">     915</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;displacement_representation_t&lt;euclidean_vector_space&lt;1&gt;, rep_t&gt;, rep_t&gt;);</span></span>
+<span id="L916"><span class="lineNum">     916</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;displacement_representation_t&lt;integral_module, int_rep_t&gt;,       int_rep_t&gt;);</span></span>
+<span id="L917"><span class="lineNum">     917</span>              : </span>
+<span id="L918"><span class="lineNum">     918</span>              :     // For a floating-point value type the widening is a no-op, so the two coincide</span>
+<span id="L919"><span class="lineNum">     919</span>              :     // even where the space is not its own free module. It is the integral case which</span>
+<span id="L920"><span class="lineNum">     920</span>              :     // separates them.</span>
+<span id="L921"><span class="lineNum">     921</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;displacement_representation_t&lt;euclidean_affine_space&lt;1&gt;, rep_t&gt;, rep_t&gt;);</span></span>
+<span id="L922"><span class="lineNum">     922</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;value_type_of_t&lt;displacement_representation_t&lt;integral_m_affine_space, int_rep_t&gt;&gt;,</span></span>
+<span id="L923"><span class="lineNum">     923</span>              :                                 signed_covering_type_t&lt;unsigned&gt;&gt;);</span>
+<span id="L924"><span class="lineNum">     924</span>              : </span>
+<span id="L925"><span class="lineNum">     925</span>              :     // The optional operations. canonical_representation supplies none of them, which</span>
+<span id="L926"><span class="lineNum">     926</span>              :     // is why the coordinates fall back on the value type's own arithmetic.</span>
+<span id="L927"><span class="lineNum">     927</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_scalar_multiplication_for_v&lt;euclidean_vector_space&lt;1&gt;, rep_t&gt;);</span></span>
+<span id="L928"><span class="lineNum">     928</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_scalar_division_for_v&lt;euclidean_vector_space&lt;1&gt;, rep_t&gt;);</span></span>
+<span id="L929"><span class="lineNum">     929</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_addition_for_v&lt;euclidean_vector_space&lt;1&gt;, rep_t&gt;);</span></span>
+<span id="L930"><span class="lineNum">     930</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_subtraction_for_v&lt;euclidean_vector_space&lt;1&gt;, rep_t&gt;);</span></span>
+<span id="L931"><span class="lineNum">     931</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_scalar_multiplication_for_single_value_v&lt;euclidean_vector_space&lt;1&gt;, rep_t&gt;);</span></span>
+<span id="L932"><span class="lineNum">     932</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_scalar_division_for_single_value_v&lt;euclidean_vector_space&lt;1&gt;, rep_t&gt;);</span></span>
+<span id="L933"><span class="lineNum">     933</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_addition_for_single_value_v&lt;euclidean_vector_space&lt;1&gt;, rep_t&gt;);</span></span>
+<span id="L934"><span class="lineNum">     934</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_subtraction_for_single_value_v&lt;euclidean_vector_space&lt;1&gt;, rep_t&gt;);</span></span>
+<span id="L935"><span class="lineNum">     935</span>              : </span>
+<span id="L936"><span class="lineNum">     936</span>              :     // The polar pair is exactly this distinction in production code: scaling a polar</span>
+<span id="L937"><span class="lineNum">     937</span>              :     // coordinate is not scaling its components, so polar_representation supplies mul</span>
+<span id="L938"><span class="lineNum">     938</span>              :     // and div where its base does not. Neither supplies addition, which in polar</span>
+<span id="L939"><span class="lineNum">     939</span>              :     // coordinates has no componentwise form at all.</span>
+<span id="L940"><span class="lineNum">     940</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_scalar_multiplication_for_v&lt;euclidean_vector_space&lt;2&gt;, basic_polar_representation&lt;double&gt;&gt;);</span></span>
+<span id="L941"><span class="lineNum">     941</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_scalar_division_for_v&lt;euclidean_vector_space&lt;2&gt;, basic_polar_representation&lt;double&gt;&gt;);</span></span>
+<span id="L942"><span class="lineNum">     942</span> <span class="tlaGNC">           2 :     STATIC_CHECK( defines_scalar_multiplication_for_v&lt;euclidean_vector_space&lt;2&gt;, polar_representation&lt;double&gt;&gt;);</span></span>
+<span id="L943"><span class="lineNum">     943</span> <span class="tlaGNC">           2 :     STATIC_CHECK( defines_scalar_division_for_v&lt;euclidean_vector_space&lt;2&gt;, polar_representation&lt;double&gt;&gt;);</span></span>
+<span id="L944"><span class="lineNum">     944</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_addition_for_v&lt;euclidean_vector_space&lt;2&gt;, polar_representation&lt;double&gt;&gt;);</span></span>
+<span id="L945"><span class="lineNum">     945</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_subtraction_for_v&lt;euclidean_vector_space&lt;2&gt;, polar_representation&lt;double&gt;&gt;);</span></span>
+<span id="L946"><span class="lineNum">     946</span>              : </span>
+<span id="L947"><span class="lineNum">     947</span>              :     // And the single-value forms, which no production representation currently</span>
+<span id="L948"><span class="lineNum">     948</span>              :     // supplies, so only a fixture can show they are reachable.</span>
+<span id="L949"><span class="lineNum">     949</span> <span class="tlaGNC">           2 :     STATIC_CHECK( defines_scalar_multiplication_for_single_value_v&lt;euclidean_vector_space&lt;1&gt;, single_value_representation&gt;);</span></span>
+<span id="L950"><span class="lineNum">     950</span> <span class="tlaGNC">           2 :     STATIC_CHECK( defines_scalar_division_for_single_value_v&lt;euclidean_vector_space&lt;1&gt;, single_value_representation&gt;);</span></span>
+<span id="L951"><span class="lineNum">     951</span> <span class="tlaGNC">           2 :     STATIC_CHECK( defines_addition_for_single_value_v&lt;euclidean_vector_space&lt;1&gt;, single_value_representation&gt;);</span></span>
+<span id="L952"><span class="lineNum">     952</span> <span class="tlaGNC">           2 :     STATIC_CHECK( defines_subtraction_for_single_value_v&lt;euclidean_vector_space&lt;1&gt;, single_value_representation&gt;);</span></span>
+<span id="L953"><span class="lineNum">     953</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_scalar_multiplication_for_v&lt;euclidean_vector_space&lt;1&gt;, single_value_representation&gt;);</span></span>
+<span id="L954"><span class="lineNum">     954</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_scalar_division_for_v&lt;euclidean_vector_space&lt;1&gt;, single_value_representation&gt;);</span></span>
+<span id="L955"><span class="lineNum">     955</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_addition_for_v&lt;euclidean_vector_space&lt;1&gt;, single_value_representation&gt;);</span></span>
+<span id="L956"><span class="lineNum">     956</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_subtraction_for_v&lt;euclidean_vector_space&lt;1&gt;, single_value_representation&gt;);</span></span>
+<span id="L957"><span class="lineNum">     957</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L958"><span class="lineNum">     958</span>              : </span>
+<span id="L959"><span class="lineNum">     959</span>              :   /** A validator stands between a representation's values and the space's underlying</span>
+<span id="L960"><span class="lineNum">     960</span>              :       set. Which of its two interfaces is required depends on the dimension, and only</span>
+<span id="L961"><span class="lineNum">     961</span>              :       one is needed, so the negative cases here are as much about which door was open</span>
+<span id="L962"><span class="lineNum">     962</span>              :       as about the validator itself.</span>
+<span id="L963"><span class="lineNum">     963</span>              :    */</span>
+<span id="L964"><span class="lineNum">     964</span> <span class="tlaGNC">           1 :   void spaces_meta_free_test::test_validator_traits()</span></span>
+<span id="L965"><span class="lineNum">     965</span>              :   {</span>
+<span id="L966"><span class="lineNum">     966</span>              :     using rep_t         = canonical_representation&lt;double, no_bounds&lt;double&gt;&gt;;</span>
+<span id="L967"><span class="lineNum">     967</span>              :     using complex_rep_t = canonical_representation&lt;std::complex&lt;double&gt;, no_bounds&lt;double&gt;&gt;;</span>
+<span id="L968"><span class="lineNum">     968</span>              :     using space_t       = euclidean_vector_space&lt;1&gt;;</span>
+<span id="L969"><span class="lineNum">     969</span>              : </span>
+<span id="L970"><span class="lineNum">     970</span> <span class="tlaGNC">           2 :     STATIC_CHECK( validator_for_single_value&lt;identity_validator, space_t, rep_t&gt;);</span></span>
+<span id="L971"><span class="lineNum">     971</span> <span class="tlaGNC">           2 :     STATIC_CHECK( validator_for_array&lt;identity_validator, space_t, rep_t&gt;);</span></span>
+<span id="L972"><span class="lineNum">     972</span> <span class="tlaGNC">           2 :     STATIC_CHECK( validator_for&lt;identity_validator, space_t, rep_t&gt;);</span></span>
+<span id="L973"><span class="lineNum">     973</span>              : </span>
+<span id="L974"><span class="lineNum">     974</span> <span class="tlaGNC">           2 :     STATIC_CHECK( validator_for_single_value&lt;throwing_validator, space_t, rep_t&gt;);</span></span>
+<span id="L975"><span class="lineNum">     975</span> <span class="tlaGNC">           2 :     STATIC_CHECK( validator_for_array&lt;throwing_validator, space_t, rep_t&gt;);</span></span>
+<span id="L976"><span class="lineNum">     976</span> <span class="tlaGNC">           2 :     STATIC_CHECK( validator_for&lt;throwing_validator, space_t, rep_t&gt;);</span></span>
+<span id="L977"><span class="lineNum">     977</span>              : </span>
+<span id="L978"><span class="lineNum">     978</span>              :     // Only the single-value door is open, and one open door is enough.</span>
+<span id="L979"><span class="lineNum">     979</span> <span class="tlaGNC">           2 :     STATIC_CHECK( validator_for_single_value&lt;single_value_validator, space_t, rep_t&gt;);</span></span>
+<span id="L980"><span class="lineNum">     980</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!validator_for_array&lt;single_value_validator, space_t, rep_t&gt;);</span></span>
+<span id="L981"><span class="lineNum">     981</span> <span class="tlaGNC">           2 :     STATIC_CHECK( validator_for&lt;single_value_validator, space_t, rep_t&gt;);</span></span>
+<span id="L982"><span class="lineNum">     982</span>              : </span>
+<span id="L983"><span class="lineNum">     983</span>              :     // At dimension two the single-value form is unavailable whatever the validator</span>
+<span id="L984"><span class="lineNum">     984</span>              :     // offers, so only the array form can answer.</span>
+<span id="L985"><span class="lineNum">     985</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!validator_for_single_value&lt;identity_validator, euclidean_vector_space&lt;2&gt;, rep_t&gt;);</span></span>
+<span id="L986"><span class="lineNum">     986</span> <span class="tlaGNC">           2 :     STATIC_CHECK( validator_for_array&lt;identity_validator, euclidean_vector_space&lt;2&gt;, rep_t&gt;);</span></span>
+<span id="L987"><span class="lineNum">     987</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!validator_for&lt;single_value_validator, euclidean_vector_space&lt;2&gt;, rep_t&gt;);</span></span>
+<span id="L988"><span class="lineNum">     988</span>              : </span>
+<span id="L989"><span class="lineNum">     989</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!validator_for_single_value&lt;unusable_validator, space_t, rep_t&gt;);</span></span>
+<span id="L990"><span class="lineNum">     990</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!validator_for_array&lt;unusable_validator, space_t, rep_t&gt;);</span></span>
+<span id="L991"><span class="lineNum">     991</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!validator_for&lt;unusable_validator, space_t, rep_t&gt;);</span></span>
+<span id="L992"><span class="lineNum">     992</span>              : </span>
+<span id="L993"><span class="lineNum">     993</span>              :     // The representation must be one for the space before the validator is consulted</span>
+<span id="L994"><span class="lineNum">     994</span>              :     // at all, so a mismatch there refuses every validator.</span>
+<span id="L995"><span class="lineNum">     995</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!validator_for&lt;identity_validator, euclidean_vector_space&lt;2&gt;, single_value_representation&gt;);</span></span>
+<span id="L996"><span class="lineNum">     996</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!validator_for&lt;identity_validator, sets::R&lt;1&gt;, rep_t&gt;);</span></span>
+<span id="L997"><span class="lineNum">     997</span>              : </span>
+<span id="L998"><span class="lineNum">     998</span>              :     /* The two production validators part company over the complex numbers:</span>
+<span id="L999"><span class="lineNum">     999</span>              :        throwing_validator is written against `arithmetic`, which std::complex is not,</span>
+<span id="L1000"><span class="lineNum">    1000</span>              :        whereas identity_validator is written against `weak_commutative_ring`, which it</span>
+<span id="L1001"><span class="lineNum">    1001</span>              :        is. A complex space can therefore be represented, but not range-checked - which</span>
+<span id="L1002"><span class="lineNum">    1002</span>              :        is the honest answer, an ordering being what a range needs and the complexes</span>
+<span id="L1003"><span class="lineNum">    1003</span>              :        having none.</span>
+<span id="L1004"><span class="lineNum">    1004</span>              :      */</span>
+<span id="L1005"><span class="lineNum">    1005</span> <span class="tlaGNC">           2 :     STATIC_CHECK( representation_for&lt;complex_rep_t, complex_vector_space&gt;);</span></span>
+<span id="L1006"><span class="lineNum">    1006</span> <span class="tlaGNC">           2 :     STATIC_CHECK( validator_for&lt;identity_validator, complex_vector_space, complex_rep_t&gt;);</span></span>
+<span id="L1007"><span class="lineNum">    1007</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!validator_for&lt;throwing_validator, complex_vector_space, complex_rep_t&gt;);</span></span>
+<span id="L1008"><span class="lineNum">    1008</span>              : </span>
+<span id="L1009"><span class="lineNum">    1009</span>              :     // Transparency is declared, not inferred: single_value_validator checks nothing</span>
+<span id="L1010"><span class="lineNum">    1010</span>              :     // either, and says nothing, so it is not privileged.</span>
+<span id="L1011"><span class="lineNum">    1011</span> <span class="tlaGNC">           2 :     STATIC_CHECK( defines_identity_validator_v&lt;identity_validator&gt;);</span></span>
+<span id="L1012"><span class="lineNum">    1012</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_identity_validator_v&lt;throwing_validator&gt;);</span></span>
+<span id="L1013"><span class="lineNum">    1013</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!defines_identity_validator_v&lt;single_value_validator&gt;);</span></span>
+<span id="L1014"><span class="lineNum">    1014</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;defines_identity_validator_t&lt;identity_validator&gt;, std::true_type&gt;);</span></span>
+<span id="L1015"><span class="lineNum">    1015</span>              : </span>
+<span id="L1016"><span class="lineNum">    1016</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L1017"><span class="lineNum">    1017</span>              : </span>
+<span id="L1018"><span class="lineNum">    1018</span>              :   /** Pins the DAG of spaces. For each node there is a fixture which sits at</span>
+<span id="L1019"><span class="lineNum">    1019</span>              :       precisely that node, and for each fixture every one of the six concepts</span>
+<span id="L1020"><span class="lineNum">    1020</span>              :       is asserted, whether it holds or not. The negatives carry most of the</span>
+<span id="L1021"><span class="lineNum">    1021</span>              :       weight: the hierarchy has previously drifted by a refinement quietly</span>
+<span id="L1022"><span class="lineNum">    1022</span>              :       acquiring a parent it should not have.</span>
+<span id="L1023"><span class="lineNum">    1023</span>              :    */</span>
+<span id="L1024"><span class="lineNum">    1024</span> <span class="tlaGNC">           1 :   void spaces_meta_free_test::test_spaces_dag()</span></span>
+<span id="L1025"><span class="lineNum">    1025</span>              :   {</span>
+<span id="L1026"><span class="lineNum">    1026</span>              :     // A partial M-torsor and nothing more: the free module acts only</span>
+<span id="L1027"><span class="lineNum">    1027</span>              :     // partially, so there is no sense in which any displacement may be applied</span>
+<span id="L1028"><span class="lineNum">    1028</span>              :     // to any point.</span>
+<span id="L1029"><span class="lineNum">    1029</span> <span class="tlaGNC">           2 :     STATIC_CHECK( partial_m_torsor&lt;integral_partial_m_torsor&gt;);</span></span>
+<span id="L1030"><span class="lineNum">    1030</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!convex_space&lt;integral_partial_m_torsor&gt;);</span></span>
+<span id="L1031"><span class="lineNum">    1031</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!m_affine_space&lt;integral_partial_m_torsor&gt;);</span></span>
+<span id="L1032"><span class="lineNum">    1032</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!affine_space&lt;integral_partial_m_torsor&gt;);</span></span>
+<span id="L1033"><span class="lineNum">    1033</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!free_module&lt;integral_partial_m_torsor&gt;);</span></span>
+<span id="L1034"><span class="lineNum">    1034</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!vector_space&lt;integral_partial_m_torsor&gt;);</span></span>
+<span id="L1035"><span class="lineNum">    1035</span>              : </span>
+<span id="L1036"><span class="lineNum">    1036</span>              :     // The same node, but over an ordered field. Convexity still fails, and can</span>
+<span id="L1037"><span class="lineNum">    1037</span>              :     // only fail on the tag: this is the fixture which keeps the tag honest.</span>
+<span id="L1038"><span class="lineNum">    1038</span> <span class="tlaGNC">           2 :     STATIC_CHECK( partial_m_torsor&lt;real_partial_m_torsor&gt;);</span></span>
+<span id="L1039"><span class="lineNum">    1039</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!convex_space&lt;real_partial_m_torsor&gt;);</span></span>
+<span id="L1040"><span class="lineNum">    1040</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!m_affine_space&lt;real_partial_m_torsor&gt;);</span></span>
+<span id="L1041"><span class="lineNum">    1041</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!affine_space&lt;real_partial_m_torsor&gt;);</span></span>
+<span id="L1042"><span class="lineNum">    1042</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!free_module&lt;real_partial_m_torsor&gt;);</span></span>
+<span id="L1043"><span class="lineNum">    1043</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!vector_space&lt;real_partial_m_torsor&gt;);</span></span>
+<span id="L1044"><span class="lineNum">    1044</span>              : </span>
+<span id="L1045"><span class="lineNum">    1045</span>              :     // Identifying as convex is necessary but not sufficient: interpolation needs</span>
+<span id="L1046"><span class="lineNum">    1046</span>              :     // an ordered field, and the integers are only an ordered ring.</span>
+<span id="L1047"><span class="lineNum">    1047</span> <span class="tlaGNC">           2 :     STATIC_CHECK( partial_m_torsor&lt;integral_pseudo_convex_space&gt;);</span></span>
+<span id="L1048"><span class="lineNum">    1048</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!convex_space&lt;integral_pseudo_convex_space&gt;);</span></span>
+<span id="L1049"><span class="lineNum">    1049</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!m_affine_space&lt;integral_pseudo_convex_space&gt;);</span></span>
+<span id="L1050"><span class="lineNum">    1050</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!affine_space&lt;integral_pseudo_convex_space&gt;);</span></span>
+<span id="L1051"><span class="lineNum">    1051</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!free_module&lt;integral_pseudo_convex_space&gt;);</span></span>
+<span id="L1052"><span class="lineNum">    1052</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!vector_space&lt;integral_pseudo_convex_space&gt;);</span></span>
+<span id="L1053"><span class="lineNum">    1053</span>              : </span>
+<span id="L1054"><span class="lineNum">    1054</span>              :     // M-affine but not affine: the action is total, but the integers are not a</span>
+<span id="L1055"><span class="lineNum">    1055</span>              :     // field. This is the case the unqualified name would have excluded.</span>
+<span id="L1056"><span class="lineNum">    1056</span> <span class="tlaGNC">           2 :     STATIC_CHECK( partial_m_torsor&lt;integral_m_affine_space&gt;);</span></span>
+<span id="L1057"><span class="lineNum">    1057</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!convex_space&lt;integral_m_affine_space&gt;);</span></span>
+<span id="L1058"><span class="lineNum">    1058</span> <span class="tlaGNC">           2 :     STATIC_CHECK( m_affine_space&lt;integral_m_affine_space&gt;);</span></span>
+<span id="L1059"><span class="lineNum">    1059</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!affine_space&lt;integral_m_affine_space&gt;);</span></span>
+<span id="L1060"><span class="lineNum">    1060</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!free_module&lt;integral_m_affine_space&gt;);</span></span>
+<span id="L1061"><span class="lineNum">    1061</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!vector_space&lt;integral_m_affine_space&gt;);</span></span>
+<span id="L1062"><span class="lineNum">    1062</span>              : </span>
+<span id="L1063"><span class="lineNum">    1063</span>              :     // The same node over the reals, and therefore affine, and therefore convex.</span>
+<span id="L1064"><span class="lineNum">    1064</span>              :     // Nothing marks it as either; the ring settles both.</span>
+<span id="L1065"><span class="lineNum">    1065</span> <span class="tlaGNC">           2 :     STATIC_CHECK( partial_m_torsor&lt;real_m_affine_space&gt;);</span></span>
+<span id="L1066"><span class="lineNum">    1066</span> <span class="tlaGNC">           2 :     STATIC_CHECK( convex_space&lt;real_m_affine_space&gt;);</span></span>
+<span id="L1067"><span class="lineNum">    1067</span> <span class="tlaGNC">           2 :     STATIC_CHECK( m_affine_space&lt;real_m_affine_space&gt;);</span></span>
+<span id="L1068"><span class="lineNum">    1068</span> <span class="tlaGNC">           2 :     STATIC_CHECK( affine_space&lt;real_m_affine_space&gt;);</span></span>
+<span id="L1069"><span class="lineNum">    1069</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!free_module&lt;real_m_affine_space&gt;);</span></span>
+<span id="L1070"><span class="lineNum">    1070</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!vector_space&lt;real_m_affine_space&gt;);</span></span>
+<span id="L1071"><span class="lineNum">    1071</span>              : </span>
+<span id="L1072"><span class="lineNum">    1072</span>              :     // A free module is an M-affine space over itself.</span>
+<span id="L1073"><span class="lineNum">    1073</span> <span class="tlaGNC">           2 :     STATIC_CHECK( partial_m_torsor&lt;integral_module&gt;);</span></span>
+<span id="L1074"><span class="lineNum">    1074</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!convex_space&lt;integral_module&gt;);</span></span>
+<span id="L1075"><span class="lineNum">    1075</span> <span class="tlaGNC">           2 :     STATIC_CHECK( m_affine_space&lt;integral_module&gt;);</span></span>
+<span id="L1076"><span class="lineNum">    1076</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!affine_space&lt;integral_module&gt;);</span></span>
+<span id="L1077"><span class="lineNum">    1077</span> <span class="tlaGNC">           2 :     STATIC_CHECK( free_module&lt;integral_module&gt;);</span></span>
+<span id="L1078"><span class="lineNum">    1078</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!vector_space&lt;integral_module&gt;);</span></span>
+<span id="L1079"><span class="lineNum">    1079</span>              : </span>
+<span id="L1080"><span class="lineNum">    1080</span>              :     // An affine space over the complex numbers. C is a field, so this is</span>
+<span id="L1081"><span class="lineNum">    1081</span>              :     // affine; C cannot be ordered, so this can never be convex.</span>
+<span id="L1082"><span class="lineNum">    1082</span> <span class="tlaGNC">           2 :     STATIC_CHECK( partial_m_torsor&lt;complex_affine_space&gt;);</span></span>
+<span id="L1083"><span class="lineNum">    1083</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!convex_space&lt;complex_affine_space&gt;);</span></span>
+<span id="L1084"><span class="lineNum">    1084</span> <span class="tlaGNC">           2 :     STATIC_CHECK( m_affine_space&lt;complex_affine_space&gt;);</span></span>
+<span id="L1085"><span class="lineNum">    1085</span> <span class="tlaGNC">           2 :     STATIC_CHECK( affine_space&lt;complex_affine_space&gt;);</span></span>
+<span id="L1086"><span class="lineNum">    1086</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!free_module&lt;complex_affine_space&gt;);</span></span>
+<span id="L1087"><span class="lineNum">    1087</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!vector_space&lt;complex_affine_space&gt;);</span></span>
+<span id="L1088"><span class="lineNum">    1088</span>              : </span>
+<span id="L1089"><span class="lineNum">    1089</span>              :     // The same holds of the vector space it is modelled on, which is</span>
+<span id="L1090"><span class="lineNum">    1090</span>              :     // additionally a free module.</span>
+<span id="L1091"><span class="lineNum">    1091</span> <span class="tlaGNC">           2 :     STATIC_CHECK( partial_m_torsor&lt;complex_vector_space&gt;);</span></span>
+<span id="L1092"><span class="lineNum">    1092</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!convex_space&lt;complex_vector_space&gt;);</span></span>
+<span id="L1093"><span class="lineNum">    1093</span> <span class="tlaGNC">           2 :     STATIC_CHECK( m_affine_space&lt;complex_vector_space&gt;);</span></span>
+<span id="L1094"><span class="lineNum">    1094</span> <span class="tlaGNC">           2 :     STATIC_CHECK( affine_space&lt;complex_vector_space&gt;);</span></span>
+<span id="L1095"><span class="lineNum">    1095</span> <span class="tlaGNC">           2 :     STATIC_CHECK( free_module&lt;complex_vector_space&gt;);</span></span>
+<span id="L1096"><span class="lineNum">    1096</span> <span class="tlaGNC">           2 :     STATIC_CHECK( vector_space&lt;complex_vector_space&gt;);</span></span>
+<span id="L1097"><span class="lineNum">    1097</span>              : </span>
+<span id="L1098"><span class="lineNum">    1098</span>              :     // The spaces defined by Spaces.hpp itself sit where they should.</span>
+<span id="L1099"><span class="lineNum">    1099</span> <span class="tlaGNC">           2 :     STATIC_CHECK( partial_m_torsor&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L1100"><span class="lineNum">    1100</span> <span class="tlaGNC">           2 :     STATIC_CHECK( convex_space&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L1101"><span class="lineNum">    1101</span> <span class="tlaGNC">           2 :     STATIC_CHECK( m_affine_space&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L1102"><span class="lineNum">    1102</span> <span class="tlaGNC">           2 :     STATIC_CHECK( affine_space&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L1103"><span class="lineNum">    1103</span> <span class="tlaGNC">           2 :     STATIC_CHECK( free_module&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L1104"><span class="lineNum">    1104</span> <span class="tlaGNC">           2 :     STATIC_CHECK( vector_space&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L1105"><span class="lineNum">    1105</span>              : </span>
+<span id="L1106"><span class="lineNum">    1106</span> <span class="tlaGNC">           2 :     STATIC_CHECK( partial_m_torsor&lt;euclidean_affine_space&lt;1&gt;&gt;);</span></span>
+<span id="L1107"><span class="lineNum">    1107</span> <span class="tlaGNC">           2 :     STATIC_CHECK( convex_space&lt;euclidean_affine_space&lt;1&gt;&gt;);</span></span>
+<span id="L1108"><span class="lineNum">    1108</span> <span class="tlaGNC">           2 :     STATIC_CHECK( m_affine_space&lt;euclidean_affine_space&lt;1&gt;&gt;);</span></span>
+<span id="L1109"><span class="lineNum">    1109</span> <span class="tlaGNC">           2 :     STATIC_CHECK( affine_space&lt;euclidean_affine_space&lt;1&gt;&gt;);</span></span>
+<span id="L1110"><span class="lineNum">    1110</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!free_module&lt;euclidean_affine_space&lt;1&gt;&gt;);</span></span>
+<span id="L1111"><span class="lineNum">    1111</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!vector_space&lt;euclidean_affine_space&lt;1&gt;&gt;);</span></span>
+<span id="L1112"><span class="lineNum">    1112</span>              : </span>
+<span id="L1113"><span class="lineNum">    1113</span> <span class="tlaGNC">           2 :     STATIC_CHECK( partial_m_torsor&lt;euclidean_nonnegative_space&lt;1&gt;&gt;);</span></span>
+<span id="L1114"><span class="lineNum">    1114</span> <span class="tlaGNC">           2 :     STATIC_CHECK( convex_space&lt;euclidean_nonnegative_space&lt;1&gt;&gt;);</span></span>
+<span id="L1115"><span class="lineNum">    1115</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!m_affine_space&lt;euclidean_nonnegative_space&lt;1&gt;&gt;);</span></span>
+<span id="L1116"><span class="lineNum">    1116</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!affine_space&lt;euclidean_nonnegative_space&lt;1&gt;&gt;);</span></span>
+<span id="L1117"><span class="lineNum">    1117</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!free_module&lt;euclidean_nonnegative_space&lt;1&gt;&gt;);</span></span>
+<span id="L1118"><span class="lineNum">    1118</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!vector_space&lt;euclidean_nonnegative_space&lt;1&gt;&gt;);</span></span>
+<span id="L1119"><span class="lineNum">    1119</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L1120"><span class="lineNum">    1120</span>              : </span>
+<span id="L1121"><span class="lineNum">    1121</span>              :   /** Duals and tensor products decide their own structure tag from that of the</span>
+<span id="L1122"><span class="lineNum">    1122</span>              :       spaces they are built from. Everything else in the suite is built over the</span>
+<span id="L1123"><span class="lineNum">    1123</span>              :       reals, so without these the convex branch of that decision is the only one</span>
+<span id="L1124"><span class="lineNum">    1124</span>              :       ever taken.</span>
+<span id="L1125"><span class="lineNum">    1125</span>              :    */</span>
+<span id="L1126"><span class="lineNum">    1126</span> <span class="tlaGNC">           1 :   void spaces_meta_free_test::test_derived_spaces()</span></span>
+<span id="L1127"><span class="lineNum">    1127</span>              :   {</span>
+<span id="L1128"><span class="lineNum">    1128</span> <span class="tlaGNC">           2 :     STATIC_CHECK( convex_space&lt;dual&lt;half_line_space&gt;&gt;);</span></span>
+<span id="L1129"><span class="lineNum">    1129</span> <span class="tlaGNC">           2 :     STATIC_CHECK( convex_space&lt;dual&lt;unremarkable_space&gt;&gt;);</span></span>
+<span id="L1130"><span class="lineNum">    1130</span>              : </span>
+<span id="L1131"><span class="lineNum">    1131</span> <span class="tlaGNC">           2 :     STATIC_CHECK( partial_m_torsor&lt;dual&lt;complex_pointed_torsor&gt;&gt;);</span></span>
+<span id="L1132"><span class="lineNum">    1132</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!convex_space&lt;dual&lt;complex_pointed_torsor&gt;&gt;);</span></span>
+<span id="L1133"><span class="lineNum">    1133</span>              : </span>
+<span id="L1134"><span class="lineNum">    1134</span> <span class="tlaGNC">           2 :     STATIC_CHECK( convex_space&lt;tensor_product&lt;distinguished_origin_space, distinguished_origin_space&gt;&gt;);</span></span>
+<span id="L1135"><span class="lineNum">    1135</span>              : </span>
+<span id="L1136"><span class="lineNum">    1136</span> <span class="tlaGNC">           2 :     STATIC_CHECK( partial_m_torsor&lt;tensor_product&lt;complex_pointed_torsor, complex_pointed_torsor&gt;&gt;);</span></span>
+<span id="L1137"><span class="lineNum">    1137</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!convex_space&lt;tensor_product&lt;complex_pointed_torsor, complex_pointed_torsor&gt;&gt;);</span></span>
+<span id="L1138"><span class="lineNum">    1138</span>              : </span>
+<span id="L1139"><span class="lineNum">    1139</span>              :     // Which of the two a space was built by, and whether it was built at all.</span>
+<span id="L1140"><span class="lineNum">    1140</span> <span class="tlaGNC">           2 :     STATIC_CHECK( is_dual_v&lt;dual&lt;unremarkable_space&gt;&gt;);</span></span>
+<span id="L1141"><span class="lineNum">    1141</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!is_dual_v&lt;unremarkable_space&gt;);</span></span>
+<span id="L1142"><span class="lineNum">    1142</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!is_dual_v&lt;int&gt;);</span></span>
+<span id="L1143"><span class="lineNum">    1143</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;is_dual_t&lt;dual&lt;unremarkable_space&gt;&gt;, std::true_type&gt;);</span></span>
+<span id="L1144"><span class="lineNum">    1144</span>              : </span>
+<span id="L1145"><span class="lineNum">    1145</span> <span class="tlaGNC">           2 :     STATIC_CHECK( is_tensor_product_v&lt;tensor_product&lt;complex_pointed_torsor, complex_pointed_torsor&gt;&gt;);</span></span>
+<span id="L1146"><span class="lineNum">    1146</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!is_tensor_product_v&lt;dual&lt;unremarkable_space&gt;&gt;);</span></span>
+<span id="L1147"><span class="lineNum">    1147</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!is_tensor_product_v&lt;int&gt;);</span></span>
+<span id="L1148"><span class="lineNum">    1148</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;is_tensor_product_t&lt;tensor_product&lt;complex_vector_space, complex_vector_space&gt;&gt;,</span></span>
+<span id="L1149"><span class="lineNum">    1149</span>              :                                 std::true_type&gt;);</span>
+<span id="L1150"><span class="lineNum">    1150</span>              : </span>
+<span id="L1151"><span class="lineNum">    1151</span>              :     // Taking the dual twice returns the space, a finite-dimensional space being</span>
+<span id="L1152"><span class="lineNum">    1152</span>              :     // naturally isomorphic to its double dual - so dual_of is not simply dual.</span>
+<span id="L1153"><span class="lineNum">    1153</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;dual_of_t&lt;unremarkable_space&gt;,       dual&lt;unremarkable_space&gt;&gt;);</span></span>
+<span id="L1154"><span class="lineNum">    1154</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;dual_of_t&lt;dual&lt;unremarkable_space&gt;&gt;, unremarkable_space&gt;);</span></span>
+<span id="L1155"><span class="lineNum">    1155</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;dual_of_t&lt;complex_vector_space&gt;,     dual&lt;complex_vector_space&gt;&gt;);</span></span>
+<span id="L1156"><span class="lineNum">    1156</span>              : </span>
+<span id="L1157"><span class="lineNum">    1157</span>              :     // A space reduces to its base space, and to itself where it names none. Duality</span>
+<span id="L1158"><span class="lineNum">    1158</span>              :     // is carried through the reduction rather than discarded by it, which is what</span>
+<span id="L1159"><span class="lineNum">    1159</span>              :     // keeps a dual comparable with the dual of its base and not with the base.</span>
+<span id="L1160"><span class="lineNum">    1160</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_base_space_v&lt;refinement_of_unremarkable_space&gt;);</span></span>
+<span id="L1161"><span class="lineNum">    1161</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_base_space_v&lt;unremarkable_space&gt;);</span></span>
+<span id="L1162"><span class="lineNum">    1162</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;to_base_space_t&lt;unremarkable_space&gt;,                  unremarkable_space&gt;);</span></span>
+<span id="L1163"><span class="lineNum">    1163</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;to_base_space_t&lt;refinement_of_unremarkable_space&gt;,     unremarkable_space&gt;);</span></span>
+<span id="L1164"><span class="lineNum">    1164</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;to_base_space_t&lt;dual&lt;unremarkable_space&gt;&gt;,             dual&lt;unremarkable_space&gt;&gt;);</span></span>
+<span id="L1165"><span class="lineNum">    1165</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;to_base_space_t&lt;dual&lt;refinement_of_unremarkable_space&gt;&gt;, dual&lt;unremarkable_space&gt;&gt;);</span></span>
+<span id="L1166"><span class="lineNum">    1166</span>              : </span>
+<span id="L1167"><span class="lineNum">    1167</span> <span class="tlaGNC">           2 :     STATIC_CHECK( have_compatible_base_spaces_v&lt;refinement_of_unremarkable_space, unremarkable_space&gt;);</span></span>
+<span id="L1168"><span class="lineNum">    1168</span> <span class="tlaGNC">           2 :     STATIC_CHECK( have_compatible_base_spaces_v&lt;unremarkable_space, refinement_of_unremarkable_space&gt;);</span></span>
+<span id="L1169"><span class="lineNum">    1169</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!have_compatible_base_spaces_v&lt;refinement_of_unremarkable_space, half_line_space&gt;);</span></span>
+<span id="L1170"><span class="lineNum">    1170</span> <span class="tlaGNC">           2 :     STATIC_CHECK( have_compatible_base_spaces_v&lt;dual&lt;refinement_of_unremarkable_space&gt;, dual&lt;unremarkable_space&gt;&gt;);</span></span>
+<span id="L1171"><span class="lineNum">    1171</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!have_compatible_base_spaces_v&lt;dual&lt;refinement_of_unremarkable_space&gt;, unremarkable_space&gt;);</span></span>
+<span id="L1172"><span class="lineNum">    1172</span>              : </span>
+<span id="L1173"><span class="lineNum">    1173</span>              :     // The arena is likewise inherited by the derived spaces, neither of which names</span>
+<span id="L1174"><span class="lineNum">    1174</span>              :     // one, so that a client need declare it only on the spaces it writes down.</span>
+<span id="L1175"><span class="lineNum">    1175</span> <span class="tlaGNC">           2 :     STATIC_CHECK( has_arena_type_v&lt;euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L1176"><span class="lineNum">    1176</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_arena_type_v&lt;unremarkable_space&gt;);</span></span>
+<span id="L1177"><span class="lineNum">    1177</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_arena_type_v&lt;dual&lt;euclidean_vector_space&lt;1&gt;&gt;&gt;);</span></span>
+<span id="L1178"><span class="lineNum">    1178</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;arena_type_of_t&lt;euclidean_vector_space&lt;1&gt;&gt;,       mathematical_arena&gt;);</span></span>
+<span id="L1179"><span class="lineNum">    1179</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;arena_type_of_t&lt;dual&lt;euclidean_vector_space&lt;1&gt;&gt;&gt;, mathematical_arena&gt;);</span></span>
+<span id="L1180"><span class="lineNum">    1180</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;arena_type_of_t&lt;tensor_product&lt;euclidean_vector_space&lt;1&gt;, euclidean_vector_space&lt;1&gt;&gt;&gt;,</span></span>
+<span id="L1181"><span class="lineNum">    1181</span>              :                                 mathematical_arena&gt;);</span>
+<span id="L1182"><span class="lineNum">    1182</span>              : </span>
+<span id="L1183"><span class="lineNum">    1183</span>              :     /* A transformation between coordinates in two spaces is supplied by</span>
+<span id="L1184"><span class="lineNum">    1184</span>              :        specializing coordinate_transformation, whose primary is empty. Geometry</span>
+<span id="L1185"><span class="lineNum">    1185</span>              :        specializes it nowhere - the positive cases all live in PhysicalValues.hpp -</span>
+<span id="L1186"><span class="lineNum">    1186</span>              :        so what is pinned here is that the primary answers false rather than failing.</span>
+<span id="L1187"><span class="lineNum">    1187</span>              :      */</span>
+<span id="L1188"><span class="lineNum">    1188</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_coordinate_transformation_v&lt;euclidean_vector_space&lt;1&gt;, euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L1189"><span class="lineNum">    1189</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_coordinate_transformation_v&lt;euclidean_vector_space&lt;1&gt;, euclidean_affine_space&lt;1&gt;&gt;);</span></span>
+<span id="L1190"><span class="lineNum">    1190</span> <span class="tlaGNC">           2 :     STATIC_CHECK(!has_noexcept_coordinate_transformation_v&lt;euclidean_vector_space&lt;1&gt;, euclidean_vector_space&lt;1&gt;&gt;);</span></span>
+<span id="L1191"><span class="lineNum">    1191</span>              : </span>
+<span id="L1192"><span class="lineNum">    1192</span>              :     // The displacements of a space over the integers are real: a difference of</span>
+<span id="L1193"><span class="lineNum">    1193</span>              :     // integer points need not be an integer point of the space it came from.</span>
+<span id="L1194"><span class="lineNum">    1194</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;displacement_space_of_t&lt;sets::Z&lt;3&gt;&gt;, sets::R&lt;3&gt;&gt;);</span></span>
+<span id="L1195"><span class="lineNum">    1195</span> <span class="tlaGNC">           2 :     STATIC_CHECK(std::is_same_v&lt;displacement_space_of_t&lt;commutative_rings::complexes&gt;,</span></span>
+<span id="L1196"><span class="lineNum">    1196</span>              :                                 commutative_rings::complexes&gt;);</span>
+<span id="L1197"><span class="lineNum">    1197</span> <span class="tlaGNC">           1 :   }</span></span>
+<span id="L1198"><span class="lineNum">    1198</span>              : }</span>
+        </pre>
+              </td>
+            </tr>
+          </table>
+          <br>
+
+          <table width="100%" border=0 cellspacing=0 cellpadding=0>
+            <tr><td class="ruler"><img src="../../../glass.png" width=3 height=3 alt=""></td></tr>
+            <tr><td class="versionInfo">Generated by: <a href="https://github.com/linux-test-project/lcov" target="_parent">LCOV version 2.5-0</a></td></tr>
+          </table>
+          <br>
+
+</body>
+</html>

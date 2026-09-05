@@ -1,0 +1,1 @@
+genhtml --demangle-cpp /opt/homebrew/opt/binutils/bin/c++filt --suppress-aliases -o /Users/oliver/sequoia//coverage_reports/TestAll/macos-homebrew-llvm-coverage /Users/oliver/sequoia/build/TestAll/macos-homebrew-llvm-coverage/coverage.info --ignore-errors inconsistent --ignore-errors range --ignore-errors empty --ignore-errors category
