@@ -34,16 +34,14 @@ mkdir -p "${output_dir}"
 # Cleanup lcov
 lcov --zerocounters --directory "${test_exe_dir}"
 
-# Run the tests to generate fresh .gcda files. lcov does its own capture below, so CTest's
-# built-in coverage step is not wanted: it reports a figure of its own which nothing reads.
+# Run the tests to generate fresh .gcda files
 pushd "${test_exe_dir}"
 ctest -T Test
 popd
 
 # Generate lcov coverage report
 lcov --directory "${test_exe_dir}"  --capture --output-file "${test_exe_dir}/coverage.info" --keep-going --filter range --rc geninfo_unexecuted_blocks=1 --ignore-errors empty --gcov-tool /usr/bin/gcov-15
-# The doubled 'inconsistent' suppresses display as well as the error, so that genhtml below is the
-# single place each structural warning is reported rather than the second of two.
+# The doubling is deliberate: it suppresses display too, leaving genhtml the sole reporter
 lcov --remove  "${test_exe_dir}/coverage.info" '/usr/*' --output-file "${test_exe_dir}/coverage.info" --ignore-errors inconsistent,inconsistent --ignore-errors empty
 
 # Generate HTML report

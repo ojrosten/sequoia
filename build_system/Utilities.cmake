@@ -147,10 +147,6 @@ FUNCTION(sequoia_finalize_tests target sourceGroupRoot sourceGroupPrefix)
     sequoia_set_ide_source_groups_with_prefix(${target} ${sourceGroupRoot} ${sourceGroupPrefix})
     sequoia_add_coverage_options(${target})
     sequoia_add_time_trace_options(${target})
-    # Registered unconditionally. Gated on CODE_COVERAGE, a plain ctest in any other build
-    # directory reports success having executed nothing at all - which is the one failure mode a
-    # test-running step must not have, since a green result is what nobody examines. --serial stays
-    # coverage-specific: it is gcov's counters that want the serialization, not the tests.
     if(CODE_COVERAGE)
         add_test(NAME ${target} COMMAND ${target} "--serial")
     else()
