@@ -140,6 +140,7 @@
     {
       "name": "base-linux-pkg-gcc",
       "hidden": true,
+      "description": "Pinned to 15 deliberately: it is the only gcc clean for both modules bugs, predating the ICE which regresses at 15.3 and the mangling conflict which starts at 16.1. Do not bump without re-checking those.",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "/usr/bin/gcc-15",
         "CMAKE_CXX_COMPILER": "/usr/bin/g++-15"
@@ -154,6 +155,24 @@
         "CMAKE_CXX_COMPILER": "/usr/bin/g++"
       },
       "inherits": ["base-gcc"]
+    },
+    {
+      "name": "env-gcc",
+      "displayName": "GCC from the environment [Debug]",
+      "description": "Configure for ${displayName}. Names no compiler, so CC and CXX decide: for CI, for containers, and for any machine whose layout the pinned columns do not match. Set them - an unset CXX gets the platform default, which on macOS is AppleClang rather than any GCC.",
+      "inherits": ["base-gcc", "base-debug"]
+    },
+    {
+      "name": "env-gcc-coverage",
+      "displayName": "GCC from the environment [Debug,coverage]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["env-gcc", "base-coverage"]
+    },
+    {
+      "name": "env-llvm",
+      "displayName": "LLVM from the environment [Debug]",
+      "description": "Configure for ${displayName}. Names no compiler, so CC and CXX decide.",
+      "inherits": ["base-llvm", "base-debug"]
     },
     {
       "name": "macos-homebrew-llvm",
@@ -313,6 +332,39 @@
       "name": "base-run",
       "hidden": true,
       "targets": "run"
+    },
+    {
+      "name": "env-gcc",
+      "displayName": "GCC from the environment [Debug]",
+      "configurePreset": "env-gcc",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-gcc",
+      "displayName": "Run GCC from the environment [Debug]",
+      "inherits": ["env-gcc", "base-run"]
+    },
+    {
+      "name": "env-gcc-coverage",
+      "displayName": "GCC from the environment [Debug, coverage]",
+      "configurePreset": "env-gcc-coverage",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-gcc-coverage",
+      "displayName": "Run GCC from the environment [Debug, coverage]",
+      "inherits": ["env-gcc-coverage", "base-run"]
+    },
+    {
+      "name": "env-llvm",
+      "displayName": "LLVM from the environment [Debug]",
+      "configurePreset": "env-llvm",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-llvm",
+      "displayName": "Run LLVM from the environment [Debug]",
+      "inherits": ["env-llvm", "base-run"]
     },
     {
       "name": "macos-homebrew-llvm",
@@ -668,6 +720,27 @@
           "type": "build",
           "name": "run-macos-homebrew-gcc-asan"
         }
+      ]
+    },
+    {
+      "name": "env-gcc",
+      "steps": [
+        { "type": "configure", "name": "env-gcc" },
+        { "type": "build",     "name": "run-env-gcc" }
+      ]
+    },
+    {
+      "name": "env-gcc-coverage",
+      "steps": [
+        { "type": "configure", "name": "env-gcc-coverage" },
+        { "type": "build",     "name": "run-env-gcc-coverage" }
+      ]
+    },
+    {
+      "name": "env-llvm",
+      "steps": [
+        { "type": "configure", "name": "env-llvm" },
+        { "type": "build",     "name": "run-env-llvm" }
       ]
     },
     {
