@@ -468,9 +468,14 @@ namespace sequoia::testing
       if(std::ifstream ifile{file})
       {
         using iter_t = std::istream_iterator<prune_record>;
+        // A call rather than a pipe, to stay identical to `modules-native`. The pipe is
+        // fine here and is rejected there: under `import std`, g++ 15.2 reports
+        // "use of operator| ... before deduction of 'auto'" whenever the adaptor carries a
+        // lambda - a named predicate pipes fine. See gcc-bugs/E in the sequoia-LLM
+        // repository; unreported upstream as of 2026-09-04.
         tests.append_range(
-            std::ranges::subrange{iter_t{ifile}, iter_t{}}
-          | std::views::filter([](const prune_record& record) {return !record.test_path.empty();})
+            std::views::filter(std::ranges::subrange{iter_t{ifile}, iter_t{}},
+                               [](const prune_record& record) {return !record.test_path.empty();})
         );
       }
 

@@ -22,6 +22,7 @@
 
 #include <array>
 #include <chrono>
+#include <format>
 #include <stdexcept>
 
 namespace sequoia::testing
@@ -32,6 +33,25 @@ namespace sequoia::testing
 
   namespace
   {
+    /*! \brief Wraps a string in quotation marks, escaping nothing.
+
+        `std::quoted` would do here, and this spelling exists only to stay identical to
+        `modules-native`, where it cannot: libstdc++'s module std exports the manipulator
+        but not the `operator<<` for the `std::__detail::_Quoted_string` it returns, so
+        under `import std` the manipulator is visible and unusable. See gcc-bugs/D in the
+        sequoia-LLM repository; unreported upstream as of 2026-09-04.
+
+        This is not a general substitute. `std::quoted` escapes `"` and `\`; this escapes
+        nothing, and would be wrong for a string containing either. It is exact for what
+        both call sites pass - a project-relative `generic_string()` - and the generated
+        `io.txt` is byte-identical either way, which was checked rather than assumed.
+     */
+    [[nodiscard]]
+    std::string quote_without_escapes(std::string_view relativePath)
+    {
+      return std::format("\"{}\"", relativePath);
+    }
+
     void process_namespace(std::string& text, std::string_view nameSpace)
     {
       if(nameSpace.empty())
@@ -404,7 +424,7 @@ namespace sequoia::testing
   {
     const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
 
-    stream() << std::quoted(fs::relative(srcPath, paths().project_root()) .generic_string()) << '\n';
+    stream() << quote_without_escapes(fs::relative(srcPath, paths().project_root()).generic_string()) << '\n';
     fs::copy_file(paths().aux_paths().source_templates() / "MyCpp.cpp", srcPath);
 
     auto setCppText{
@@ -519,7 +539,7 @@ namespace sequoia::testing
 
     const auto headerPath{filename.is_absolute() ? filename : paths().source().project() / rebase_from(m_SourceDir / filename, paths().source().project())};
 
-    stream() << std::quoted(fs::relative(headerPath, paths().project_root()).generic_string()) << '\n';
+    stream() << quote_without_escapes(fs::relative(headerPath, paths().project_root()).generic_string()) << '\n';
     fs::create_directories(headerPath.parent_path());
     fs::copy_file(paths().aux_paths().source_templates() / headerTemplate, headerPath);
 
