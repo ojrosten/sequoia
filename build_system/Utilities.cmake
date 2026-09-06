@@ -202,9 +202,12 @@ FUNCTION(sequoia_add_std_module)
     sequoia_compile_features(sequoia_std)
 ENDFUNCTION()
 
+# Applied per target rather than through CMAKE_CXX_FLAGS, so that CMake's own
+# compiler checks never see it. -fprofile-update=atomic keeps gcov's counters
+# from being torn by the threading inside sequoia.
 FUNCTION(sequoia_add_coverage_options target)
     if(CODE_COVERAGE)
-        target_compile_options(${target} PRIVATE -coverage)
+        target_compile_options(${target} PRIVATE -coverage -fprofile-update=atomic)
         target_link_options(${target} PRIVATE -coverage)
     endif()
 ENDFUNCTION()

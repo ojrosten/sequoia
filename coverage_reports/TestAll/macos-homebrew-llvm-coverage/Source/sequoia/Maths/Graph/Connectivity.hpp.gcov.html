@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-05 21:33:51</td>
+            <td class="headerValue">2026-09-06 08:59:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">97.0&nbsp;%</td>
@@ -136,7 +136,7 @@
 <span id="L74"><span class="lineNum">      74</span> <span class="tlaGNC">       15588 :         void operator()(const size_type node, const_edge_iterator first, const_edge_iterator i)</span></span>
 <span id="L75"><span class="lineNum">      75</span>              :         {</span>
 <span id="L76"><span class="lineNum">      76</span> <span class="tlaGNC">       15588 :           auto weightPtr{&amp;i-&gt;weight()};</span></span>
-<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">       47868 :           auto found{std::ranges::lower_bound(m_WeightMap, weightPtr, [](const edge_weight_type* lhs, const edge_weight_type* rhs) { return lhs &lt; rhs; }, [](const data&amp; d) { return d.m_WeightPtr; })};</span></span>
+<span id="L77"><span class="lineNum">      77</span> <span class="tlaGNC">       47668 :           auto found{std::ranges::lower_bound(m_WeightMap, weightPtr, [](const edge_weight_type* lhs, const edge_weight_type* rhs) { return lhs &lt; rhs; }, [](const data&amp; d) { return d.m_WeightPtr; })};</span></span>
 <span id="L78"><span class="lineNum">      78</span> <span class="tlaGNC">       15588 :           if((found == m_WeightMap.end()) || (found-&gt;m_WeightPtr != weightPtr))</span></span>
 <span id="L79"><span class="lineNum">      79</span>              :           {</span>
 <span id="L80"><span class="lineNum">      80</span> <span class="tlaGNC">       15588 :             auto appender{[=, this](auto e){</span></span>

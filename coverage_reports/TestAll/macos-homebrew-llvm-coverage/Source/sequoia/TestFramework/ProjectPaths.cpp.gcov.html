@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-05 21:33:51</td>
+            <td class="headerValue">2026-09-06 08:59:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">96.4&nbsp;%</td>
@@ -106,7 +106,7 @@
 <span id="L44"><span class="lineNum">      44</span> <span class="tlaGNC">          48 :       auto get{</span></span>
 <span id="L45"><span class="lineNum">      45</span> <span class="tlaGNC">          48 :         [](const fs::path&amp; dir) -&gt; opt_path {</span></span>
 <span id="L46"><span class="lineNum">      46</span> <span class="tlaGNC">          48 :           auto entries{fs::directory_iterator{dir}};</span></span>
-<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">         158 :           auto found{std::ranges::find(entries, fs::path{&quot;CMakeCache.txt&quot;}, [](const fs::directory_entry&amp; entry){ return entry.path().filename(); })};</span></span>
+<span id="L47"><span class="lineNum">      47</span> <span class="tlaGNC">         154 :           auto found{std::ranges::find(entries, fs::path{&quot;CMakeCache.txt&quot;}, [](const fs::directory_entry&amp; entry){ return entry.path().filename(); })};</span></span>
 <span id="L48"><span class="lineNum">      48</span> <span class="tlaGNC">          48 :           return found != fs::directory_iterator{} ? opt_path{*found} : std::nullopt;</span></span>
 <span id="L49"><span class="lineNum">      49</span> <span class="tlaGNC">          48 :         }</span></span>
 <span id="L50"><span class="lineNum">      50</span>              :       };</span>

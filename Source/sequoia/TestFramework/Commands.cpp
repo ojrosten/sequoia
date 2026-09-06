@@ -30,16 +30,10 @@ namespace sequoia::testing
   namespace fs = std::filesystem;
 
   [[nodiscard]]
-  shell_command cmake_cmd(const build_paths& buildPaths,
-                          const fs::path& output,
-                          const std::optional<std::string>& args)
+  shell_command cmake_cmd(const build_paths& buildPaths, const fs::path& output)
   {
-    std::string cmd{std::format("cmake --preset {}", back(buildPaths.cmake_cache_dir()).generic_string())};
-    if(args.has_value())
-      cmd.append(std::format( "-D EXEC_ARGS {}", args.value()));
-    
     return {"Running CMake...",
-            cmd,
+            std::format("cmake --preset {}", back(buildPaths.cmake_cache_dir()).generic_string()),
             output};
   }
 
@@ -51,11 +45,4 @@ namespace sequoia::testing
             output};
   }
 
-  [[nodiscard]]
-  shell_command build_and_run_cmd(const build_paths& buildPaths, const fs::path& output)
-  {
-    return {"Building...",
-            std::format("cmake --build --preset {} --target run", back(buildPaths.executable_dir()).generic_string()),
-            output};
-  }
 }

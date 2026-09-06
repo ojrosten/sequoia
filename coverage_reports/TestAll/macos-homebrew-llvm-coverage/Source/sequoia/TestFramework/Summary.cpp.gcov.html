@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-05 21:33:51</td>
+            <td class="headerValue">2026-09-06 08:59:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -97,7 +97,7 @@
 <span id="L35"><span class="lineNum">      35</span> <span class="tlaGNC">         170 :     const auto count{duration_cast&lt;nanoseconds&gt;(d).count()};</span></span>
 <span id="L36"><span class="lineNum">      36</span> <span class="tlaGNC">         170 :     if(count &gt;= 1'000'000'000) return {to_string&lt;std::ratio&lt;1&gt;&gt;(d), &quot;s&quot;};</span></span>
 <span id="L37"><span class="lineNum">      37</span> <span class="tlaGNC">         164 :     if(count &gt;= 1'000'000)     return {to_string&lt;std::milli&gt;(d),   &quot;ms&quot;};</span></span>
-<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">         133 :     if(count &gt;= 1'000)         return {to_string&lt;std::micro&gt;(d),   &quot;us&quot;};</span></span>
+<span id="L38"><span class="lineNum">      38</span> <span class="tlaGNC">         132 :     if(count &gt;= 1'000)         return {to_string&lt;std::micro&gt;(d),   &quot;us&quot;};</span></span>
 <span id="L39"><span class="lineNum">      39</span>              : </span>
 <span id="L40"><span class="lineNum">      40</span> <span class="tlaUNC">           0 :     return {std::to_string(count), &quot;ns&quot;};</span></span>
 <span id="L41"><span class="lineNum">      41</span> <span class="tlaGNC">         170 :   }</span></span>
