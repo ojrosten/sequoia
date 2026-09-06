@@ -302,8 +302,8 @@ namespace sequoia::testing
 
     // `{}` rather than `= default`, to stay identical to `modules-native`, where the
     // defaulted constructor of this class is emitted in no translation unit at all and
-    // the link fails. See gcc-bugs/F in the sequoia-LLM repository; unreported upstream
-    // as of 2026-09-04. The two spellings differ in value-initialisation - `{}` is
+    // the link fails. See gcc-bugs/F in the sequoia-LLM repository; fixed upstream in
+    // gcc 15.3. The two spellings differ in value-initialisation - `{}` is
     // user-provided, so members without initialisers would not be zero-initialised - but
     // every member below has one, so the object state is identical.
     log_summary() {}

@@ -472,7 +472,7 @@ namespace sequoia::testing
         // fine here and is rejected there: under `import std`, g++ 15.2 reports
         // "use of operator| ... before deduction of 'auto'" whenever the adaptor carries a
         // lambda - a named predicate pipes fine. See gcc-bugs/E in the sequoia-LLM
-        // repository; unreported upstream as of 2026-09-04.
+        // repository, and PR 120318; fixed in gcc 16.1.
         tests.append_range(
             std::views::filter(std::ranges::subrange{iter_t{ifile}, iter_t{}},
                                [](const prune_record& record) {return !record.test_path.empty();})

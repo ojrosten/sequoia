@@ -283,7 +283,7 @@ namespace sequoia::maths
     // inline - and is written to stay identical to `modules-native`, where g++ 15.2 loses
     // that for a class template and emits this in every translation unit which
     // instantiates one, giving "multiple definition" at link time. See gcc-bugs/G in the
-    // sequoia-LLM repository; unreported upstream as of 2026-09-04.
+    // sequoia-LLM repository, and PR 122819; fixed in gcc 16.1.
     friend inline void swap(monotonic_sequence& lhs, monotonic_sequence& rhs) noexcept(noexcept(lhs.swap(rhs)))
     {
       lhs.swap(rhs);
