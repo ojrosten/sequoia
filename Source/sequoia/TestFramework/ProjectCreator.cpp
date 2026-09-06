@@ -255,7 +255,7 @@ namespace sequoia::testing
         const main_paths main{data.project_root / main_paths::default_main_cpp_from_root()};
 
         invoke(cd_cmd(main.dir())
-            && cmake_cmd(build, data.output)
+            && cmake_cmd(build, data.output, "CODE_COVERAGE=OFF")
             && build_cmd(build, data.output)
             && ((data.do_build == build_invocation::launch_ide) ? launch_cmd(parentProjectPaths, data.project_root, build.cmake_cache_dir()) : shell_command{})
         );

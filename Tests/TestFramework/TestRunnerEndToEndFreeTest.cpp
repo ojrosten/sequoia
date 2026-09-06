@@ -148,7 +148,7 @@ namespace sequoia::testing
   {
     invoke(
          cd_cmd(get_main_paths().dir())
-      && cmake_cmd(get_build_paths(), cmakeOutput)
+      && cmake_cmd(get_build_paths(), cmakeOutput, "CODE_COVERAGE=OFF")
       && build_cmd(get_build_paths(), buildOutput)
     );
 

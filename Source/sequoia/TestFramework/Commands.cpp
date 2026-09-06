@@ -28,11 +28,14 @@ namespace sequoia::testing
   namespace fs = std::filesystem;
 
   [[nodiscard]]
-  shell_command cmake_cmd(const build_paths& buildPaths, const fs::path& output)
+  shell_command cmake_cmd(const build_paths& buildPaths,
+                          const fs::path& output,
+                          const std::optional<std::string>& cacheOverride)
   {
-    return {"Running CMake...",
-            std::format("cmake --preset {}", back(buildPaths.cmake_cache_dir()).generic_string()),
-            output};
+    auto cmd{std::format("cmake --preset {}", back(buildPaths.cmake_cache_dir()).generic_string())};
+    if(cacheOverride) cmd.append(" -D ").append(cacheOverride.value());
+
+    return {"Running CMake...", cmd, output};
   }
 
   [[nodiscard]]
