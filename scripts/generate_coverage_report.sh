@@ -34,14 +34,40 @@ mkdir -p "${output_dir}"
 # Cleanup lcov
 lcov --zerocounters --directory "${test_exe_dir}"
 
-# Run ctest in coverage mode
+# Run the tests to generate fresh .gcda files
 pushd "${test_exe_dir}"
-ctest -T Test -T Coverage
+ctest -T Test
 popd
 
+# gcov must match the compiler which produced the .gcda files, so take it from the build itself
+if [[ -z "${gcov_tool}" ]]; then
+  cxx=$(sed -n 's/^CMAKE_CXX_COMPILER:[^=]*=//p' "${test_exe_dir}/CMakeCache.txt")
+  case "${cxx##*/}" in
+    g++-*)    gcov_tool="${cxx%/*}/gcov-${cxx##*g++-}" ;;
+    # lcov invokes the tool with the .gcda as its first argument, so the two-word
+    # 'llvm-cov gcov' has to be wrapped rather than passed
+    clang++)  gcov_tool="${test_exe_dir}/llvm-gcov.sh"
+              printf '#!/bin/sh\nexec "%s/llvm-cov" gcov "$@"\n' "${cxx%/*}" > "${gcov_tool}"
+              chmod +x "${gcov_tool}"                  ;;
+    *)        gcov_tool="gcov"                         ;;
+  esac
+fi
+echo "gcov: ${gcov_tool}"
+
 # Generate lcov coverage report
-lcov --directory "${test_exe_dir}"  --capture --output-file "${test_exe_dir}/coverage.info" --keep-going --filter range --rc geninfo_unexecuted_blocks=1 --ignore-errors empty --gcov-tool /usr/bin/gcov-15
-lcov --remove  "${test_exe_dir}/coverage.info" '/usr/*' --output-file "${test_exe_dir}/coverage.info" --ignore-errors inconsistent --ignore-errors empty 
+lcov --directory "${test_exe_dir}"  --capture --output-file "${test_exe_dir}/coverage.info" --keep-going --filter range --rc geninfo_unexecuted_blocks=1 --ignore-errors empty --ignore-errors inconsistent,inconsistent --ignore-errors format,format --gcov-tool "${gcov_tool}"
+foreign=('/usr/*')
+if [[ "$(uname -s)" == Darwin ]]; then
+  foreign+=('/opt/homebrew/*' '/Library/Developer/*' '/Applications/Xcode.app/*')
+fi
+
+# The doubling is deliberate: it suppresses display too, leaving genhtml the sole reporter
+lcov --remove  "${test_exe_dir}/coverage.info" "${foreign[@]}" --output-file "${test_exe_dir}/coverage.info" --keep-going --ignore-errors inconsistent,inconsistent --ignore-errors empty
+
+# lcov forces --no-strip-underscores on Darwin, which only GNU c++filt accepts
+gnu_cxxfilt="/opt/homebrew/opt/binutils/bin/c++filt"
+demangle=(--demangle-cpp)
+[[ -x "${gnu_cxxfilt}" ]] && demangle+=("${gnu_cxxfilt}")
 
 # Generate HTML report
-genhtml --demangle-cpp -o "${output_dir}" "${test_exe_dir}/coverage.info" --ignore-errors inconsistent --ignore-errors range --ignore-errors empty
+genhtml "${demangle[@]}" --suppress-aliases -o "${output_dir}" "${test_exe_dir}/coverage.info" --ignore-errors inconsistent --ignore-errors range --ignore-errors empty --ignore-errors category

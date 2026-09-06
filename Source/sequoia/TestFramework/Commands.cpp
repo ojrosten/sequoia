@@ -32,15 +32,12 @@ namespace sequoia::testing
   [[nodiscard]]
   shell_command cmake_cmd(const build_paths& buildPaths,
                           const fs::path& output,
-                          const std::optional<std::string>& args)
+                          const std::optional<std::string>& cacheOverride)
   {
-    std::string cmd{std::format("cmake --preset {}", back(buildPaths.cmake_cache_dir()).generic_string())};
-    if(args.has_value())
-      cmd.append(std::format( "-D EXEC_ARGS {}", args.value()));
-    
-    return {"Running CMake...",
-            cmd,
-            output};
+    auto cmd{std::format("cmake --preset {}", back(buildPaths.cmake_cache_dir()).generic_string())};
+    if(cacheOverride) cmd.append(" -D ").append(cacheOverride.value());
+
+    return {"Running CMake...", cmd, output};
   }
 
   [[nodiscard]]
@@ -51,11 +48,4 @@ namespace sequoia::testing
             output};
   }
 
-  [[nodiscard]]
-  shell_command build_and_run_cmd(const build_paths& buildPaths, const fs::path& output)
-  {
-    return {"Building...",
-            std::format("cmake --build --preset {} --target run", back(buildPaths.executable_dir()).generic_string()),
-            output};
-  }
 }

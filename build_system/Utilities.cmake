@@ -74,10 +74,10 @@ FUNCTION(sequoia_set_properties target)
     endif()
 ENDFUNCTION()
 
-FUNCTION(sequoia_set_run_target exectuable)
+FUNCTION(sequoia_set_run_target executable)
     add_custom_target(run 
-        COMMAND $<TARGET_FILE:${exectuable}> ${EXEC_ARGS}
-        DEPENDS ${exectuable}
+        COMMAND $<TARGET_FILE:${executable}> ${EXEC_ARGS}
+        DEPENDS ${executable}
     )
 ENDFUNCTION()
 
@@ -207,9 +207,12 @@ FUNCTION(sequoia_add_std_module)
     sequoia_compile_features(sequoia_std)
 ENDFUNCTION()
 
+# Applied per target rather than through CMAKE_CXX_FLAGS, so that CMake's own
+# compiler checks never see it. -fprofile-update=atomic keeps gcov's counters
+# from being torn by the threading inside sequoia.
 FUNCTION(sequoia_add_coverage_options target)
     if(CODE_COVERAGE)
-        target_compile_options(${target} PRIVATE -coverage)
+        target_compile_options(${target} PRIVATE -coverage -fprofile-update=atomic)
         target_link_options(${target} PRIVATE -coverage)
     endif()
 ENDFUNCTION()
@@ -263,6 +266,8 @@ FUNCTION(sequoia_finalize_tests target sourceGroupRoot sourceGroupPrefix)
     sequoia_enable_import_std(${target})
     if(CODE_COVERAGE)
         add_test(NAME ${target} COMMAND ${target} "--serial")
+    else()
+        add_test(NAME ${target} COMMAND ${target})
     endif()
     sequoia_set_run_target(${target})
     sequoia_copy_asan_runtime(${target})

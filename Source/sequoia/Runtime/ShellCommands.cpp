@@ -40,7 +40,7 @@ namespace sequoia::runtime
       [&]() -> shell_command {
         if(!preamble.empty())
         {
-          const std::string newline{with_msvc_v ? "echo/" : "echo"};
+          const std::string newline{with_windows_v ? "echo/" : "echo"};
           return shell_command{newline, output, app}
               && shell_command{std::string{"echo "}.append(preamble), output, append_mode::yes}
               && shell_command{newline, output, append_mode::yes};

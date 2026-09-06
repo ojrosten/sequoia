@@ -124,7 +124,7 @@ export namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path build_source_path(const std::filesystem::path& filename) const;
 
-    template<invocable_exactly_r<std::filesystem::path, std::filesystem::path> WhenAbsent,std::invocable<std::string&> FileTransformer>
+    template<invocable_exact_r<std::filesystem::path, std::filesystem::path> WhenAbsent,std::invocable<std::string&> FileTransformer>
     void finalize(WhenAbsent fn,
                   const std::vector<std::string>& stubs,
                   const std::vector<std::string>& constructors,
