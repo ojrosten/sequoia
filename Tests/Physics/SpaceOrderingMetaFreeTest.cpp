@@ -16,6 +16,7 @@ import sequoia.physics;
 
 namespace sequoia::testing
 {
+  using namespace maths;
   using namespace physics;
 
   namespace

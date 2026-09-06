@@ -306,7 +306,13 @@ export namespace sequoia::testing
   public:
     using duration = std::chrono::steady_clock::duration;
 
-    log_summary() = default;
+    // Spelt with an empty body rather than `= default` to work around a g++ 15.2
+    // modules bug: the defaulted default constructor of this module-attached class is
+    // emitted in no translation unit, so suite_node's constructor in TestRunner.cppm
+    // fails to link with `undefined reference to log_summary::log_summary()`. See
+    // gcc-bugs/F in the sequoia-LLM repository; unreported upstream as of 2026-09-04.
+    // Restore `log_summary() = default;` once the bug is fixed.
+    log_summary() {}
 
     explicit log_summary(std::string_view name);
 

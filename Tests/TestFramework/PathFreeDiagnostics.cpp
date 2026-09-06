@@ -19,7 +19,14 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
-  namespace
+  // This namespace is named rather than anonymous solely to work around a g++ 15.2
+  // bug. Under `import std`, a std::variant with a TU-local alternative - one with
+  // internal or no linkage, which is what an anonymous namespace gives - cannot be
+  // accessed: `_Variant_storage<...>::_M_u is inaccessible within this context`.
+  // Giving the namespace a name is enough. See gcc-bugs/C in the sequoia-LLM
+  // repository; unreported upstream as of 2026-09-04. Restore the anonymous form,
+  // and delete the using-directive below, once the bug is fixed.
+  namespace path_free_diagnostics_local
   {
     struct dummy_file_comparer
     {
@@ -35,6 +42,8 @@ namespace sequoia::testing
     const general_equivalence_check_t<bespoke_file_checker_t>      bespoke_path_equivalence{bespoke_file_checker};
     const general_weak_equivalence_check_t<bespoke_file_checker_t> bespoke_path_weak_equivalence{bespoke_file_checker};
   }
+
+  using namespace path_free_diagnostics_local;
 
   log_summary& postprocess(log_summary& summary, const std::filesystem::path& projectRoot)
   {

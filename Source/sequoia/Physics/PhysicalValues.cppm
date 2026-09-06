@@ -25,6 +25,8 @@ export import sequoia.platform_specific;
 
 export namespace sequoia::physics
 {
+  using namespace maths;
+
   /** @brief The basis data defined by a unit, for a free module of rank \f$ D \f$.
 
       The unit is the frame: naming metres rather than feet is precisely the choice of
@@ -107,8 +109,6 @@ export namespace sequoia::maths
 
 export namespace sequoia::physics
 {
-  using namespace maths;
-
   template<physical_unit... Ts>
   struct composite_unit
   {

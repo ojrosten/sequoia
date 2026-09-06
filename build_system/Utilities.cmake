@@ -160,7 +160,12 @@ FUNCTION(sequoia_find_std_module_source out)
         # $(VCToolsInstallDir)modules/std.ixx. UNVERIFIED: no Windows machine here.
         file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" vc_tools)
         set(candidates "${vc_tools}/modules/std.ixx")
-    elseif(CMAKE_CXX_STANDARD_LIBRARY STREQUAL "libstdc++")
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
+           OR CMAKE_CXX_STANDARD_LIBRARY STREQUAL "libstdc++")
+        # GNU has to be named outright. CMAKE_CXX_STANDARD_LIBRARY is set only for
+        # compilers which let the standard library be chosen, so under gcc it is
+        # empty rather than "libstdc++", and the libc++ branch below would take a
+        # gcc toolchain and hunt for a file it cannot have.
         file(GLOB candidates "${toolchain_bin}/../include/c++/*/bits/std.cc")
     else()
         set(candidates "${toolchain_bin}/../share/libc++/v1/std.cppm")

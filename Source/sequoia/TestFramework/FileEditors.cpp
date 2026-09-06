@@ -9,6 +9,20 @@ module;
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
+// <regex> is included textually, ahead of `import std`, purely to work around a
+// g++ 15.2 bug: the regex algorithms are friends of basic_regex/match_results, and
+// when the instantiation is reached through the std *module* the friendship is not
+// honoured - `_M_automaton is private within this context`, ten errors from inside
+// regex.tcc, for a plain `std::regex_search(std::string, std::regex)`. The textual
+// include repairs it, as does -fno-module-lazy. See gcc-bugs/D in the sequoia-LLM
+// repository; unreported upstream as of 2026-09-04. Delete this include, and rely on
+// `import std` alone, once the bug is fixed.
+//
+// It must precede the import: a global module fragment carries its includes into the
+// BMI, so including a standard header *after* importing a module which already has it
+// defines everything twice.
+#include <regex>
+
 module sequoia.test_framework;
 
 import std;

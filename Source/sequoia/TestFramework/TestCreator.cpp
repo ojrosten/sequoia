@@ -29,6 +29,31 @@ namespace sequoia::testing
 
   namespace
   {
+    /*! \brief Wraps a string in quotation marks, escaping nothing.
+
+        This exists only because `std::quoted` cannot be used under `import std`.
+        libstdc++ exports the manipulator but not the `operator<<` for the
+        `std::__detail::_Quoted_string` it returns: in `bits/std.cc` the `<iomanip>`
+        block lists the seven manipulators and no operators, where sibling blocks
+        export theirs explicitly. The manipulator is therefore visible and unusable
+        in an importer, and the diagnostic is an overload failure over 97 candidates
+        naming `_Quoted_string`. Unreported upstream as of 2026-09-04: no bug on gcc
+        Bugzilla has a summary naming `_Quoted_string` or `std::quoted`.
+
+        The call sites should read, and should be restored to,
+
+            stream() << std::quoted(relativePath) << '\n';
+
+        This is not a general substitute. `std::quoted` escapes `"` and `\`; this
+        escapes nothing, and would be wrong for a string containing either. It is
+        exact for what both call sites pass - a project-relative `generic_string()`.
+     */
+    [[nodiscard]]
+    std::string quote_without_escapes(std::string_view relativePath)
+    {
+      return std::format("\"{}\"", relativePath);
+    }
+
     void process_namespace(std::string& text, std::string_view nameSpace)
     {
       if(nameSpace.empty())
@@ -400,7 +425,7 @@ namespace sequoia::testing
   {
     const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
 
-    stream() << std::quoted(fs::relative(srcPath, paths().project_root()) .generic_string()) << '\n';
+    stream() << quote_without_escapes(fs::relative(srcPath, paths().project_root()).generic_string()) << '\n';
     fs::copy_file(paths().aux_paths().source_templates() / "MyCpp.cpp", srcPath);
 
     auto setCppText{
@@ -515,7 +540,7 @@ namespace sequoia::testing
 
     const auto headerPath{filename.is_absolute() ? filename : paths().source().project() / rebase_from(m_SourceDir / filename, paths().source().project())};
 
-    stream() << std::quoted(fs::relative(headerPath, paths().project_root()).generic_string()) << '\n';
+    stream() << quote_without_escapes(fs::relative(headerPath, paths().project_root()).generic_string()) << '\n';
     fs::create_directories(headerPath.parent_path());
     fs::copy_file(paths().aux_paths().source_templates() / headerTemplate, headerPath);
 

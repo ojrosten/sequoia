@@ -14,6 +14,7 @@
 import std;
 import sequoia.text_processing;
 
+using namespace sequoia::maths;
 using namespace sequoia::physics;
 
 namespace

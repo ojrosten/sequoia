@@ -15,7 +15,14 @@ namespace sequoia::testing
 {
   using namespace maths;
 
-  namespace
+  // This namespace is named rather than anonymous solely to work around a g++ 15.2
+  // bug. Under `import std`, a std::variant with a TU-local alternative - one with
+  // internal or no linkage, which is what an anonymous namespace gives - cannot be
+  // accessed: `_Variant_storage<...>::_M_u is inaccessible within this context`.
+  // Giving the namespace a name is enough. See gcc-bugs/C in the sequoia-LLM
+  // repository; unreported upstream as of 2026-09-04. Restore the anonymous form,
+  // and delete the using-directive below, once the bug is fixed.
+  namespace absolute_logarithmic_coordinates_local
   {
     template<auto Bounds>
       requires bounds<decltype(Bounds)>
@@ -52,6 +59,8 @@ namespace sequoia::testing
       }
     };
   }
+
+  using namespace absolute_logarithmic_coordinates_local;
   
   [[nodiscard]]
   std::filesystem::path absolute_logarithmic_coordinates_test::source_file() const

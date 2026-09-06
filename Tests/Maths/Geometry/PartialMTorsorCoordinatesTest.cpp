@@ -13,7 +13,14 @@ namespace sequoia::testing
 {
   using namespace maths;
 
-  namespace
+  // This namespace is named rather than anonymous solely to work around a g++ 15.2
+  // bug. Under `import std`, a std::variant with a TU-local alternative - one with
+  // internal or no linkage, which is what an anonymous namespace gives - cannot be
+  // accessed: `_Variant_storage<...>::_M_u is inaccessible within this context`.
+  // Giving the namespace a name is enough. See gcc-bugs/C in the sequoia-LLM
+  // repository; unreported upstream as of 2026-09-04. Restore the anonymous form,
+  // and delete the using-directive below, once the bug is fixed.
+  namespace partial_m_torsor_coordinates_local
   {
     /** The non-negative orthant of a free module over the integers. The action of
         the module is only partial - subtracting a large enough displacement leaves
@@ -32,6 +39,8 @@ namespace sequoia::testing
       using non_negative_orthant  = std::true_type;
     };
   }
+
+  using namespace partial_m_torsor_coordinates_local;
 
   [[nodiscard]]
   std::filesystem::path partial_m_torsor_coordinates_test::source_file() const

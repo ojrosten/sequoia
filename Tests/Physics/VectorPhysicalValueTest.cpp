@@ -15,6 +15,7 @@ import std;
 
 namespace sequoia::testing
 {
+  using namespace maths;
   using namespace physics;
 
   [[nodiscard]]

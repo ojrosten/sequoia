@@ -38,8 +38,17 @@ export namespace sequoia::testing
     friend auto operator<=>(const prune_record&, const prune_record&) noexcept = default;
 
     friend std::istream& operator>>(std::istream& s, prune_record& record) {
+      // Extraction goes via std::string rather than directly into the path because
+      // libstdc++'s module std does not export the operator>> that
+      // std::filesystem::operator>>(std::istream&, path&) reaches through
+      // std::quoted, so that instantiation is ill-formed in an importer (gcc 15.2).
+      // The writer above emits an unquoted generic_string(), for which the two
+      // extractions agree.
+      std::string path{};
       std::size_t duration{};
-      s >> record.test_path >> duration;
+      s >> path >> duration;
+
+      record.test_path = path;
 
       record.time_stamp = {stamp_t{} + duration_t{duration}};
       return s;

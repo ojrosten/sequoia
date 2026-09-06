@@ -18,9 +18,17 @@ import sequoia.physics;
 
 namespace sequoia::testing
 {
+  using namespace maths;
   using namespace physics;
   
-  namespace
+  // This namespace is named rather than anonymous solely to work around a g++ 15.2
+  // bug. Under `import std`, a std::variant with a TU-local alternative - one with
+  // internal or no linkage, which is what an anonymous namespace gives - cannot be
+  // accessed: `_Variant_storage<...>::_M_u is inaccessible within this context`.
+  // Giving the namespace a name is enough. See gcc-bugs/C in the sequoia-LLM
+  // repository; unreported upstream as of 2026-09-04. Restore the anonymous form,
+  // and delete the using-directive below, once the bug is fixed.
+  namespace vector_nonlinear_representations_local
   {
     template<
       std::floating_point T,
@@ -63,6 +71,8 @@ namespace sequoia::testing
       }
     };
   }
+
+  using namespace vector_nonlinear_representations_local;
 
   [[nodiscard]]
   std::filesystem::path vector_nonlinear_representations_free_test::source_file() const
