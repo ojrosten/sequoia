@@ -2,3 +2,4 @@
 to:.*
  \(.*\)
 Preset((.|\n|)*?)(?=--)
+CMake Warning((.|\n)*?)import std;((.|\n)*?)-Wno-dev to suppress it\.\n\n

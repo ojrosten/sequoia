@@ -30,7 +30,10 @@
     {
       "name": "base-binary",
       "hidden": true,
-      "binaryDir": "${sourceDir}/../build/${sourceDirName}/${presetName}"
+      "binaryDir": "${sourceDir}/../build/${sourceDirName}/${presetName}",
+      "cacheVariables": {
+        "CMAKE_EXPERIMENTAL_CXX_IMPORT_STD": "d0edc3af-4c50-42ea-a356-e2862fe7a444"
+      }
     },
     {
       "name": "base-unix",

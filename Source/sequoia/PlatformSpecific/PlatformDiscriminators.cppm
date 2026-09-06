@@ -28,13 +28,18 @@ export namespace sequoia
   using msvc_type           = compiler_flavour_constant<compiler_flavour::msvc>;
   using other_compiler_type = compiler_flavour_constant<compiler_flavour::other>;
 
-  enum class operating_system { windows, macos, linux, other };
+  // `gnu_linux`, not `linux`, because GCC predefines `linux` as `1` in its GNU
+  // dialects - which is what CMake selects unless CXX_EXTENSIONS is off - so an
+  // enumerator of that name expands to a numeric constant on the very platform it
+  // names. Undefining the macro here would keep the prettier spelling and hand the
+  // same trap to every client writing `operating_system::linux`.
+  enum class operating_system { windows, macos, gnu_linux, other };
 
   template<operating_system S>
   using operating_system_constant = std::integral_constant<operating_system, S>;
 
   using windows_type      = operating_system_constant<operating_system::windows>;
   using macos_type        = operating_system_constant<operating_system::macos>;
-  using linux_type        = operating_system_constant<operating_system::linux>;
+  using linux_type        = operating_system_constant<operating_system::gnu_linux>;
   using other_os_type     = operating_system_constant<operating_system::other>;
 }
