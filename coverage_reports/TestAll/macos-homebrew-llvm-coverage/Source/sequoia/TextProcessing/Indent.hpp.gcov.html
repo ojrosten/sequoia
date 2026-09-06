@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Test Date:</td>
-            <td class="headerValue">2026-09-05 21:33:51</td>
+            <td class="headerValue">2026-09-06 08:59:20</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntryHi">100.0&nbsp;%</td>
@@ -123,7 +123,7 @@
 <span id="L61"><span class="lineNum">      61</span> <span class="tlaUNC">           0 :     }</span></span>
 <span id="L62"><span class="lineNum">      62</span>              : </span>
 <span id="L63"><span class="lineNum">      63</span>              :     [[nodiscard]]</span>
-<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">      974129 :     friend bool operator==(const indentation&amp;, const indentation&amp;) noexcept = default;</span></span>
+<span id="L64"><span class="lineNum">      64</span> <span class="tlaGNC">      974128 :     friend bool operator==(const indentation&amp;, const indentation&amp;) noexcept = default;</span></span>
 <span id="L65"><span class="lineNum">      65</span>              :   private:</span>
 <span id="L66"><span class="lineNum">      66</span>              :     std::string m_Data;</span>
 <span id="L67"><span class="lineNum">      67</span>              :   };</span>
@@ -201,19 +201,19 @@
 <span id="L139"><span class="lineNum">     139</span>              : </span>
 <span id="L140"><span class="lineNum">     140</span>              :   template&lt;class... Ts&gt;</span>
 <span id="L141"><span class="lineNum">     141</span>              :     requires (sizeof...(Ts) &gt; 0)</span>
-<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">      979622 :   std::string&amp; append_lines(std::string&amp; s, Ts&amp;&amp;... strs)</span></span>
+<span id="L142"><span class="lineNum">     142</span> <span class="tlaGNC">      979621 :   std::string&amp; append_lines(std::string&amp; s, Ts&amp;&amp;... strs)</span></span>
 <span id="L143"><span class="lineNum">     143</span>              :   {</span>
-<span id="L144"><span class="lineNum">     144</span> <span class="tlaGNC">      979622 :     return append_indented(s, std::forward&lt;Ts&gt;(strs)..., no_indent);</span></span>
+<span id="L144"><span class="lineNum">     144</span> <span class="tlaGNC">      979621 :     return append_indented(s, std::forward&lt;Ts&gt;(strs)..., no_indent);</span></span>
 <span id="L145"><span class="lineNum">     145</span> <span class="tlaUNC">           0 :   }</span></span>
 <span id="L146"><span class="lineNum">     146</span>              : </span>
 <span id="L147"><span class="lineNum">     147</span>              :   template&lt;class... Ts&gt;</span>
 <span id="L148"><span class="lineNum">     148</span>              :     requires (sizeof...(Ts) &gt; 0)</span>
 <span id="L149"><span class="lineNum">     149</span>              :   [[nodiscard]]</span>
-<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">      935854 :   std::string append_lines(std::string_view sv, Ts&amp;&amp;... strs)</span></span>
+<span id="L150"><span class="lineNum">     150</span> <span class="tlaGNC">      935853 :   std::string append_lines(std::string_view sv, Ts&amp;&amp;... strs)</span></span>
 <span id="L151"><span class="lineNum">     151</span>              :   {</span>
-<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">      935854 :     std::string str{sv};</span></span>
-<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">      935854 :     return append_lines(str, std::forward&lt;Ts&gt;(strs)...);</span></span>
-<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">      935854 :   }</span></span>
+<span id="L152"><span class="lineNum">     152</span> <span class="tlaGNC">      935853 :     std::string str{sv};</span></span>
+<span id="L153"><span class="lineNum">     153</span> <span class="tlaGNC">      935853 :     return append_lines(str, std::forward&lt;Ts&gt;(strs)...);</span></span>
+<span id="L154"><span class="lineNum">     154</span> <span class="tlaGNC">      935853 :   }</span></span>
 <span id="L155"><span class="lineNum">     155</span>              : </span>
 <span id="L156"><span class="lineNum">     156</span>              :   std::string&amp; tabs_to_spacing(std::string&amp; text, std::string_view spacing);</span>
 <span id="L157"><span class="lineNum">     157</span>              : }</span>
