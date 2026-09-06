@@ -46,15 +46,25 @@ namespace sequoia::testing
     using pseudo_mass_t = decltype(mass_t{} * euc_vec_t{});
     using pseudo_len_t  = decltype(length_t{} * euc_vec_t{});
 
+    /* The inverses below are named rather than written inline in the STATIC_CHECKs which follow.
+       MSVC loses the intermediate of a chained operator call within a single unevaluated operand,
+       so `decltype((1.0f / d_mass_t{}) * (1.0f / length_t{}))` is rejected while the very same
+       product in an evaluated context - the check beneath - compiles. Naming the intermediate is
+       the workaround the reduction identifies; see `msvc-bugs/D-decltype-chain.cpp`.
+    */
+    using inv_d_mass_t  = decltype(1.0f / d_mass_t{});
+    using inv_length_t  = decltype(1.0f / length_t{});
+    using inv_d_len_t   = decltype(1.0f / d_len_t{});
+
     /** Multiplication must be commutative in the type as well as the value. These are the only
         products here which multiply the inverse of an increment by a space of a different kind,
         the case in which the canonical order is settled by the formations rather than by the
         names.
      */
-    STATIC_CHECK(std::same_as<decltype((1.0f / d_mass_t{}) * (1.0f / length_t{})),
-                              decltype((1.0f / length_t{}) * (1.0f / d_mass_t{}))>);
-    STATIC_CHECK(std::same_as<decltype((1.0f / d_len_t{})  * d_mass_t{}),
-                              decltype(d_mass_t{} * (1.0f / d_len_t{}))>);
+    STATIC_CHECK(std::same_as<decltype(inv_d_mass_t{} * inv_length_t{}),
+                              decltype(inv_length_t{} * inv_d_mass_t{})>);
+    STATIC_CHECK(std::same_as<decltype(inv_d_len_t{}  * d_mass_t{}),
+                              decltype(d_mass_t{} * inv_d_len_t{})>);
 
     check(
       equality,
