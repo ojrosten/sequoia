@@ -37,8 +37,8 @@
       "hidden": true,
       "generator": "Ninja",
       "cacheVariables": {
-        "CMAKE_CXX_FLAGS": "$env{CXX_ASAN_FLAGS} $env{CXX_UBSAN_FLAGS} $env{CXX_COLOUR_FLAGS}",
-        "CMAKE_EXE_LINKER_FLAGS": "$env{LINKER_ASAN_FLAGS} $env{LINKER_UBSAN_FLAGS}"
+        "CMAKE_CXX_FLAGS": "$env{CXX_ASAN_FLAGS} $env{CXX_UBSAN_FLAGS} $env{CXX_TSAN_FLAGS} $env{CXX_COLOUR_FLAGS}",
+        "CMAKE_EXE_LINKER_FLAGS": "$env{LINKER_ASAN_FLAGS} $env{LINKER_UBSAN_FLAGS} $env{LINKER_TSAN_FLAGS}"
       },
       "warnings": {
         "unusedCli": false
@@ -66,6 +66,14 @@
       "hidden": true,
       "cacheVariables": {
           "CMAKE_CXX_FLAGS": "/fsanitize=address /EHsc"
+      }
+    },
+    {
+      "name": "base-tsan-unix",
+      "hidden": true,
+      "environment": {
+        "CXX_TSAN_FLAGS": "-fsanitize=thread",
+        "LINKER_TSAN_FLAGS": "-fsanitize=thread"
       }
     },
     {
@@ -177,6 +185,13 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
+      "name": "gcc-16-homebrew-tsan",
+      "displayName": "Homebrew GCC 16 [Debug, tsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["gcc-16-homebrew", "base-tsan-unix"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
       "name": "gcc-16-homebrew-coverage",
       "displayName": "Homebrew GCC 16 [Debug, coverage]",
       "description": "Configure for ${displayName}",
@@ -212,6 +227,13 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
+      "name": "gcc-16-homebrew-relwithdebinfo-tsan",
+      "displayName": "Homebrew GCC 16 [RelWithDebInfo, tsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-gcc-16-homebrew", "base-relwithdebinfo", "base-tsan-unix"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
       "name": "gcc-15-system",
       "displayName": "System g++-15 [Debug]",
       "description": "Configure for ${displayName}",
@@ -237,6 +259,13 @@
       "displayName": "System g++-15 [Debug, asan+ubsan]",
       "description": "Configure for ${displayName}",
       "inherits": ["gcc-15-system", "base-asan-unix", "base-ubsan-unix"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
+    },
+    {
+      "name": "gcc-15-system-tsan",
+      "displayName": "System g++-15 [Debug, tsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["gcc-15-system", "base-tsan-unix"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
     },
     {
@@ -268,6 +297,13 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
     },
     {
+      "name": "gcc-15-system-relwithdebinfo-tsan",
+      "displayName": "System g++-15 [RelWithDebInfo, tsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-gcc-15-system", "base-relwithdebinfo", "base-tsan-unix"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
+    },
+    {
       "name": "gcc-system",
       "displayName": "System g++ [Debug]",
       "description": "Configure for ${displayName}",
@@ -293,6 +329,13 @@
       "displayName": "System g++ [Debug, asan+ubsan]",
       "description": "Configure for ${displayName}",
       "inherits": ["gcc-system", "base-asan-unix", "base-ubsan-unix"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
+    },
+    {
+      "name": "gcc-system-tsan",
+      "displayName": "System g++ [Debug, tsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["gcc-system", "base-tsan-unix"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
     },
     {
@@ -324,6 +367,13 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
     },
     {
+      "name": "gcc-system-relwithdebinfo-tsan",
+      "displayName": "System g++ [RelWithDebInfo, tsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-gcc-system", "base-relwithdebinfo", "base-tsan-unix"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
+    },
+    {
       "name": "gcc-env",
       "displayName": "GCC from the environment [Debug]",
       "description": "Configure for ${displayName}. Set CC and CXX: unset, CMake picks the platform default, which may not be GCC.",
@@ -348,6 +398,12 @@
       "inherits": ["gcc-env", "base-asan-unix", "base-ubsan-unix"]
     },
     {
+      "name": "gcc-env-tsan",
+      "displayName": "GCC from the environment [Debug, tsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["gcc-env", "base-tsan-unix"]
+    },
+    {
       "name": "gcc-env-coverage",
       "displayName": "GCC from the environment [Debug, coverage]",
       "description": "Configure for ${displayName}",
@@ -370,6 +426,12 @@
       "displayName": "GCC from the environment [RelWithDebInfo, ubsan]",
       "description": "Configure for ${displayName}",
       "inherits": ["base-gcc", "base-relwithdebinfo", "base-ubsan-unix"]
+    },
+    {
+      "name": "gcc-env-relwithdebinfo-tsan",
+      "displayName": "GCC from the environment [RelWithDebInfo, tsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-gcc", "base-relwithdebinfo", "base-tsan-unix"]
     },
     {
       "name": "llvm-homebrew",
@@ -397,6 +459,13 @@
       "displayName": "Homebrew LLVM [Debug, asan+ubsan]",
       "description": "Configure for ${displayName}",
       "inherits": ["llvm-homebrew", "base-asan-unix", "base-ubsan-unix"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "llvm-homebrew-tsan",
+      "displayName": "Homebrew LLVM [Debug, tsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["llvm-homebrew", "base-tsan-unix"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
@@ -435,6 +504,13 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
+      "name": "llvm-homebrew-relwithdebinfo-tsan",
+      "displayName": "Homebrew LLVM [RelWithDebInfo, tsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-llvm-homebrew", "base-relwithdebinfo", "base-tsan-unix"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
       "name": "llvm-env",
       "displayName": "LLVM from the environment [Debug]",
       "description": "Configure for ${displayName}. Set CC and CXX: unset, CMake picks the platform default.",
@@ -457,6 +533,12 @@
       "displayName": "LLVM from the environment [Debug, asan+ubsan]",
       "description": "Configure for ${displayName}",
       "inherits": ["llvm-env", "base-asan-unix", "base-ubsan-unix"]
+    },
+    {
+      "name": "llvm-env-tsan",
+      "displayName": "LLVM from the environment [Debug, tsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["llvm-env", "base-tsan-unix"]
     },
     {
       "name": "llvm-env-coverage",
@@ -487,6 +569,12 @@
       "displayName": "LLVM from the environment [RelWithDebInfo, ubsan]",
       "description": "Configure for ${displayName}",
       "inherits": ["base-llvm", "base-relwithdebinfo", "base-ubsan-unix"]
+    },
+    {
+      "name": "llvm-env-relwithdebinfo-tsan",
+      "displayName": "LLVM from the environment [RelWithDebInfo, tsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-llvm", "base-relwithdebinfo", "base-tsan-unix"]
     },
     {
       "name": "msvc",
@@ -546,6 +634,19 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
+      "name": "gcc-16-homebrew-tsan",
+      "displayName": "Homebrew GCC 16 [Debug, tsan]",
+      "configurePreset": "gcc-16-homebrew-tsan",
+      "inherits": ["base-ninja"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "run-gcc-16-homebrew-tsan",
+      "displayName": "Run Homebrew GCC 16 [Debug, tsan]",
+      "inherits": ["gcc-16-homebrew-tsan", "base-run"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
       "name": "gcc-16-homebrew-coverage",
       "displayName": "Homebrew GCC 16 [Debug, coverage]",
       "configurePreset": "gcc-16-homebrew-coverage",
@@ -581,6 +682,19 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
+      "name": "gcc-16-homebrew-relwithdebinfo-tsan",
+      "displayName": "Homebrew GCC 16 [RelWithDebInfo, tsan]",
+      "configurePreset": "gcc-16-homebrew-relwithdebinfo-tsan",
+      "inherits": ["base-ninja"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "run-gcc-16-homebrew-relwithdebinfo-tsan",
+      "displayName": "Run Homebrew GCC 16 [RelWithDebInfo, tsan]",
+      "inherits": ["gcc-16-homebrew-relwithdebinfo-tsan", "base-run"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
       "name": "gcc-15-system",
       "displayName": "System g++-15 [Debug]",
       "configurePreset": "gcc-15-system",
@@ -606,6 +720,19 @@
       "displayName": "System g++-15 [Debug, asan+ubsan]",
       "configurePreset": "gcc-15-system-asan-ubsan",
       "inherits": ["base-ninja"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
+    },
+    {
+      "name": "gcc-15-system-tsan",
+      "displayName": "System g++-15 [Debug, tsan]",
+      "configurePreset": "gcc-15-system-tsan",
+      "inherits": ["base-ninja"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
+    },
+    {
+      "name": "run-gcc-15-system-tsan",
+      "displayName": "Run System g++-15 [Debug, tsan]",
+      "inherits": ["gcc-15-system-tsan", "base-run"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
     },
     {
@@ -637,6 +764,19 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
     },
     {
+      "name": "gcc-15-system-relwithdebinfo-tsan",
+      "displayName": "System g++-15 [RelWithDebInfo, tsan]",
+      "configurePreset": "gcc-15-system-relwithdebinfo-tsan",
+      "inherits": ["base-ninja"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
+    },
+    {
+      "name": "run-gcc-15-system-relwithdebinfo-tsan",
+      "displayName": "Run System g++-15 [RelWithDebInfo, tsan]",
+      "inherits": ["gcc-15-system-relwithdebinfo-tsan", "base-run"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
+    },
+    {
       "name": "gcc-system",
       "displayName": "System g++ [Debug]",
       "configurePreset": "gcc-system",
@@ -662,6 +802,19 @@
       "displayName": "System g++ [Debug, asan+ubsan]",
       "configurePreset": "gcc-system-asan-ubsan",
       "inherits": ["base-ninja"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
+    },
+    {
+      "name": "gcc-system-tsan",
+      "displayName": "System g++ [Debug, tsan]",
+      "configurePreset": "gcc-system-tsan",
+      "inherits": ["base-ninja"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
+    },
+    {
+      "name": "run-gcc-system-tsan",
+      "displayName": "Run System g++ [Debug, tsan]",
+      "inherits": ["gcc-system-tsan", "base-run"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
     },
     {
@@ -693,6 +846,19 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
     },
     {
+      "name": "gcc-system-relwithdebinfo-tsan",
+      "displayName": "System g++ [RelWithDebInfo, tsan]",
+      "configurePreset": "gcc-system-relwithdebinfo-tsan",
+      "inherits": ["base-ninja"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
+    },
+    {
+      "name": "run-gcc-system-relwithdebinfo-tsan",
+      "displayName": "Run System g++ [RelWithDebInfo, tsan]",
+      "inherits": ["gcc-system-relwithdebinfo-tsan", "base-run"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" }
+    },
+    {
       "name": "gcc-env",
       "displayName": "GCC from the environment [Debug]",
       "configurePreset": "gcc-env",
@@ -717,6 +883,17 @@
       "inherits": ["base-ninja"]
     },
     {
+      "name": "gcc-env-tsan",
+      "displayName": "GCC from the environment [Debug, tsan]",
+      "configurePreset": "gcc-env-tsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-gcc-env-tsan",
+      "displayName": "Run GCC from the environment [Debug, tsan]",
+      "inherits": ["gcc-env-tsan", "base-run"]
+    },
+    {
       "name": "gcc-env-coverage",
       "displayName": "GCC from the environment [Debug, coverage]",
       "configurePreset": "gcc-env-coverage",
@@ -739,6 +916,17 @@
       "displayName": "GCC from the environment [RelWithDebInfo, ubsan]",
       "configurePreset": "gcc-env-relwithdebinfo-ubsan",
       "inherits": ["base-ninja"]
+    },
+    {
+      "name": "gcc-env-relwithdebinfo-tsan",
+      "displayName": "GCC from the environment [RelWithDebInfo, tsan]",
+      "configurePreset": "gcc-env-relwithdebinfo-tsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-gcc-env-relwithdebinfo-tsan",
+      "displayName": "Run GCC from the environment [RelWithDebInfo, tsan]",
+      "inherits": ["gcc-env-relwithdebinfo-tsan", "base-run"]
     },
     {
       "name": "llvm-homebrew",
@@ -766,6 +954,19 @@
       "displayName": "Homebrew LLVM [Debug, asan+ubsan]",
       "configurePreset": "llvm-homebrew-asan-ubsan",
       "inherits": ["base-ninja"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "llvm-homebrew-tsan",
+      "displayName": "Homebrew LLVM [Debug, tsan]",
+      "configurePreset": "llvm-homebrew-tsan",
+      "inherits": ["base-ninja"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "run-llvm-homebrew-tsan",
+      "displayName": "Run Homebrew LLVM [Debug, tsan]",
+      "inherits": ["llvm-homebrew-tsan", "base-run"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
@@ -804,6 +1005,19 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
+      "name": "llvm-homebrew-relwithdebinfo-tsan",
+      "displayName": "Homebrew LLVM [RelWithDebInfo, tsan]",
+      "configurePreset": "llvm-homebrew-relwithdebinfo-tsan",
+      "inherits": ["base-ninja"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "run-llvm-homebrew-relwithdebinfo-tsan",
+      "displayName": "Run Homebrew LLVM [RelWithDebInfo, tsan]",
+      "inherits": ["llvm-homebrew-relwithdebinfo-tsan", "base-run"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
       "name": "llvm-env",
       "displayName": "LLVM from the environment [Debug]",
       "configurePreset": "llvm-env",
@@ -826,6 +1040,17 @@
       "displayName": "LLVM from the environment [Debug, asan+ubsan]",
       "configurePreset": "llvm-env-asan-ubsan",
       "inherits": ["base-ninja"]
+    },
+    {
+      "name": "llvm-env-tsan",
+      "displayName": "LLVM from the environment [Debug, tsan]",
+      "configurePreset": "llvm-env-tsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-llvm-env-tsan",
+      "displayName": "Run LLVM from the environment [Debug, tsan]",
+      "inherits": ["llvm-env-tsan", "base-run"]
     },
     {
       "name": "llvm-env-coverage",
@@ -856,6 +1081,17 @@
       "displayName": "LLVM from the environment [RelWithDebInfo, ubsan]",
       "configurePreset": "llvm-env-relwithdebinfo-ubsan",
       "inherits": ["base-ninja"]
+    },
+    {
+      "name": "llvm-env-relwithdebinfo-tsan",
+      "displayName": "LLVM from the environment [RelWithDebInfo, tsan]",
+      "configurePreset": "llvm-env-relwithdebinfo-tsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-llvm-env-relwithdebinfo-tsan",
+      "displayName": "Run LLVM from the environment [RelWithDebInfo, tsan]",
+      "inherits": ["llvm-env-relwithdebinfo-tsan", "base-run"]
     },
     {
       "name": "msvc",
@@ -1197,6 +1433,13 @@
       ]
     },
     {
+      "name": "gcc-16-homebrew-tsan",
+      "steps": [
+        { "type": "configure", "name": "gcc-16-homebrew-tsan" },
+        { "type": "build",     "name": "run-gcc-16-homebrew-tsan" }
+      ]
+    },
+    {
       "name": "gcc-16-homebrew-coverage",
       "steps": [
         {
@@ -1228,6 +1471,13 @@
       "steps": [
         { "type": "configure", "name": "gcc-16-homebrew-relwithdebinfo-ubsan" },
         { "type": "build",     "name": "run-macos-homebrew-gcc-16-relwithdebinfo-ubsan" }
+      ]
+    },
+    {
+      "name": "gcc-16-homebrew-relwithdebinfo-tsan",
+      "steps": [
+        { "type": "configure", "name": "gcc-16-homebrew-relwithdebinfo-tsan" },
+        { "type": "build",     "name": "run-gcc-16-homebrew-relwithdebinfo-tsan" }
       ]
     },
     {
@@ -1268,6 +1518,13 @@
       "steps": [
         { "type": "configure", "name": "gcc-15-system-asan-ubsan" },
         { "type": "build",     "name": "run-linux-gcc-15-asan-ubsan" }
+      ]
+    },
+    {
+      "name": "gcc-15-system-tsan",
+      "steps": [
+        { "type": "configure", "name": "gcc-15-system-tsan" },
+        { "type": "build",     "name": "run-gcc-15-system-tsan" }
       ]
     },
     {
@@ -1317,6 +1574,13 @@
       ]
     },
     {
+      "name": "gcc-15-system-relwithdebinfo-tsan",
+      "steps": [
+        { "type": "configure", "name": "gcc-15-system-relwithdebinfo-tsan" },
+        { "type": "build",     "name": "run-gcc-15-system-relwithdebinfo-tsan" }
+      ]
+    },
+    {
       "name": "gcc-system",
       "steps": [
         {
@@ -1354,6 +1618,13 @@
       "steps": [
         { "type": "configure", "name": "gcc-system-asan-ubsan" },
         { "type": "build",     "name": "run-linux-gcc-asan-ubsan" }
+      ]
+    },
+    {
+      "name": "gcc-system-tsan",
+      "steps": [
+        { "type": "configure", "name": "gcc-system-tsan" },
+        { "type": "build",     "name": "run-gcc-system-tsan" }
       ]
     },
     {
@@ -1403,6 +1674,13 @@
       ]
     },
     {
+      "name": "gcc-system-relwithdebinfo-tsan",
+      "steps": [
+        { "type": "configure", "name": "gcc-system-relwithdebinfo-tsan" },
+        { "type": "build",     "name": "run-gcc-system-relwithdebinfo-tsan" }
+      ]
+    },
+    {
       "name": "gcc-env",
       "steps": [
         { "type": "configure", "name": "gcc-env" },
@@ -1431,6 +1709,13 @@
       ]
     },
     {
+      "name": "gcc-env-tsan",
+      "steps": [
+        { "type": "configure", "name": "gcc-env-tsan" },
+        { "type": "build",     "name": "run-gcc-env-tsan" }
+      ]
+    },
+    {
       "name": "gcc-env-coverage",
       "steps": [
         { "type": "configure", "name": "gcc-env-coverage" },
@@ -1456,6 +1741,13 @@
       "steps": [
         { "type": "configure", "name": "gcc-env-relwithdebinfo-ubsan" },
         { "type": "build",     "name": "run-env-gcc-relwithdebinfo-ubsan" }
+      ]
+    },
+    {
+      "name": "gcc-env-relwithdebinfo-tsan",
+      "steps": [
+        { "type": "configure", "name": "gcc-env-relwithdebinfo-tsan" },
+        { "type": "build",     "name": "run-gcc-env-relwithdebinfo-tsan" }
       ]
     },
     {
@@ -1508,6 +1800,13 @@
           "type": "build",
           "name": "run-macos-homebrew-llvm-asan-ubsan"
         }
+      ]
+    },
+    {
+      "name": "llvm-homebrew-tsan",
+      "steps": [
+        { "type": "configure", "name": "llvm-homebrew-tsan" },
+        { "type": "build",     "name": "run-llvm-homebrew-tsan" }
       ]
     },
     {
@@ -1570,6 +1869,13 @@
       ]
     },
     {
+      "name": "llvm-homebrew-relwithdebinfo-tsan",
+      "steps": [
+        { "type": "configure", "name": "llvm-homebrew-relwithdebinfo-tsan" },
+        { "type": "build",     "name": "run-llvm-homebrew-relwithdebinfo-tsan" }
+      ]
+    },
+    {
       "name": "llvm-env",
       "steps": [
         { "type": "configure", "name": "llvm-env" },
@@ -1595,6 +1901,13 @@
       "steps": [
         { "type": "configure", "name": "llvm-env-asan-ubsan" },
         { "type": "build",     "name": "run-env-llvm-asan-ubsan" }
+      ]
+    },
+    {
+      "name": "llvm-env-tsan",
+      "steps": [
+        { "type": "configure", "name": "llvm-env-tsan" },
+        { "type": "build",     "name": "run-llvm-env-tsan" }
       ]
     },
     {
@@ -1630,6 +1943,13 @@
       "steps": [
         { "type": "configure", "name": "llvm-env-relwithdebinfo-ubsan" },
         { "type": "build",     "name": "run-env-llvm-relwithdebinfo-ubsan" }
+      ]
+    },
+    {
+      "name": "llvm-env-relwithdebinfo-tsan",
+      "steps": [
+        { "type": "configure", "name": "llvm-env-relwithdebinfo-tsan" },
+        { "type": "build",     "name": "run-llvm-env-relwithdebinfo-tsan" }
       ]
     },
     {
