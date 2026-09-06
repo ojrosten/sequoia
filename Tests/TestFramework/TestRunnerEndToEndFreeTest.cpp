@@ -74,10 +74,15 @@ namespace sequoia::testing
       }
     }
 
+    // The executable suffix and the path separator are properties of the platform, not of the
+    // compiler which produced the binary: clang builds for Windows too.
     [[nodiscard]]
     std::string run_cmd()
     {
-      return with_msvc_v ? ".\\TestAll.exe" : "./TestAll";
+      std::filesystem::path exe{std::filesystem::path{"."} / "TestAll"};
+      if constexpr(with_windows_v) exe.replace_extension("exe");
+
+      return exe.make_preferred().string();
     }
 
     [[nodiscard]]
