@@ -472,8 +472,8 @@ namespace sequoia::testing
         // Spelt as a call rather than a pipe. Under `import std`, g++ 15.2 rejects
         // `range | views::filter(closure)` with "use of operator| ... before deduction
         // of 'auto'"; a *named* predicate pipes fine, so it is the TU-local closure
-        // type that defeats it. See gcc-bugs/E in the sequoia-LLM repository -
-        // unreported upstream as of 2026-09-04. The ideal line is:
+        // type that defeats it. See gcc-bugs/E in the sequoia-LLM repository, and
+        // PR 120318; fixed in gcc 16.1. The ideal line is:
         //
         //     std::ranges::subrange{iter_t{ifile}, iter_t{}}
         //   | std::views::filter([](const prune_record& record) {return !record.test_path.empty();})

@@ -37,8 +37,8 @@ namespace sequoia::testing
         block lists the seven manipulators and no operators, where sibling blocks
         export theirs explicitly. The manipulator is therefore visible and unusable
         in an importer, and the diagnostic is an overload failure over 97 candidates
-        naming `_Quoted_string`. Unreported upstream as of 2026-09-04: no bug on gcc
-        Bugzilla has a summary naming `_Quoted_string` or `std::quoted`.
+        naming `_Quoted_string`. Fixed upstream in gcc 16.1, with no bug report ever
+        filed - see gcc-bugs/D, which is the same libstdc++ export gap.
 
         The call sites should read, and should be restored to,
 

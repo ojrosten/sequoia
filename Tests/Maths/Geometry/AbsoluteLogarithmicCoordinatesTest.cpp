@@ -20,8 +20,8 @@ namespace sequoia::testing
   // internal or no linkage, which is what an anonymous namespace gives - cannot be
   // accessed: `_Variant_storage<...>::_M_u is inaccessible within this context`.
   // Giving the namespace a name is enough. See gcc-bugs/C in the sequoia-LLM
-  // repository; unreported upstream as of 2026-09-04. Restore the anonymous form,
-  // and delete the using-directive below, once the bug is fixed.
+  // repository. Fixed upstream in gcc 16.1 (r16-504): restore the anonymous form
+  // and delete the using-directive below once 16.1 is the minimum gcc.
   namespace absolute_logarithmic_coordinates_local
   {
     template<auto Bounds>
