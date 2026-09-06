@@ -62,9 +62,23 @@ export namespace sequoia
     }
   #endif
 
+  #if defined(_WIN32)
+    using platform_constant = windows_type;
+  #elif defined(__APPLE__)
+    using platform_constant = macos_type;
+  #elif defined(__linux__)
+    using platform_constant = linux_type;
+  #else
+    using platform_constant = other_os_type;
+  #endif
+
   inline constexpr bool with_msvc_v{std::is_same_v<compiler_constant, msvc_type>};
   inline constexpr bool with_clang_v{std::is_same_v<compiler_constant, clang_type>};
   inline constexpr bool with_gcc_v{std::is_same_v<compiler_constant, gcc_type>};
+
+  inline constexpr bool with_windows_v{std::is_same_v<platform_constant, windows_type>};
+  inline constexpr bool with_macos_v{std::is_same_v<platform_constant, macos_type>};
+  inline constexpr bool with_linux_v{std::is_same_v<platform_constant, linux_type>};
 
   [[nodiscard]]
   inline std::string compiler_name()

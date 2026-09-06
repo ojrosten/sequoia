@@ -10,7 +10,10 @@ export module sequoia.platform_specific:PlatformDiscriminators;
 import std;
 
 /** \file
-    \brief Types to descriminate different compilers
+    \brief Types to discriminate different compilers and operating systems
+
+    The two are independent axes and must not stand in for one another: clang builds for Windows,
+    and an executable's `.exe` suffix is a property of the platform rather than of the compiler.
  */
 
 export namespace sequoia
@@ -24,4 +27,14 @@ export namespace sequoia
   using gcc_type            = compiler_flavour_constant<compiler_flavour::gcc>;
   using msvc_type           = compiler_flavour_constant<compiler_flavour::msvc>;
   using other_compiler_type = compiler_flavour_constant<compiler_flavour::other>;
+
+  enum class operating_system { windows, macos, linux, other };
+
+  template<operating_system S>
+  using operating_system_constant = std::integral_constant<operating_system, S>;
+
+  using windows_type      = operating_system_constant<operating_system::windows>;
+  using macos_type        = operating_system_constant<operating_system::macos>;
+  using linux_type        = operating_system_constant<operating_system::linux>;
+  using other_os_type     = operating_system_constant<operating_system::other>;
 }

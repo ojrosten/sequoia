@@ -158,8 +158,44 @@
       "inherits": ["base-gcc", "base-debug"]
     },
     {
+      "name": "env-gcc-asan",
+      "displayName": "GCC from the environment [Debug, asan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["env-gcc", "base-asan-unix"]
+    },
+    {
+      "name": "env-gcc-ubsan",
+      "displayName": "GCC from the environment [Debug, ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["env-gcc", "base-ubsan-unix"]
+    },
+    {
+      "name": "env-gcc-asan-ubsan",
+      "displayName": "GCC from the environment [Debug, asan+ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["env-gcc", "base-asan-unix", "base-ubsan-unix"]
+    },
+    {
+      "name": "env-gcc-release",
+      "displayName": "GCC from the environment [Release]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-gcc", "base-release"]
+    },
+    {
+      "name": "env-gcc-relwithdebinfo-asan",
+      "displayName": "GCC from the environment [RelWithDebInfo, asan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-gcc", "base-relwithdebinfo", "base-asan-unix"]
+    },
+    {
+      "name": "env-gcc-relwithdebinfo-ubsan",
+      "displayName": "GCC from the environment [RelWithDebInfo, ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-gcc", "base-relwithdebinfo", "base-ubsan-unix"]
+    },
+    {
       "name": "env-gcc-coverage",
-      "displayName": "GCC from the environment [Debug,coverage]",
+      "displayName": "GCC from the environment [Debug, coverage]",
       "description": "Configure for ${displayName}",
       "inherits": ["env-gcc", "base-coverage"]
     },
@@ -170,6 +206,54 @@
       "inherits": ["base-llvm", "base-debug"]
     },
     {
+      "name": "env-llvm-asan",
+      "displayName": "LLVM from the environment [Debug, asan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["env-llvm", "base-asan-unix"]
+    },
+    {
+      "name": "env-llvm-ubsan",
+      "displayName": "LLVM from the environment [Debug, ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["env-llvm", "base-ubsan-unix"]
+    },
+    {
+      "name": "env-llvm-asan-ubsan",
+      "displayName": "LLVM from the environment [Debug, asan+ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["env-llvm", "base-asan-unix", "base-ubsan-unix"]
+    },
+    {
+      "name": "env-llvm-coverage",
+      "displayName": "LLVM from the environment [Debug, coverage]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["env-llvm", "base-coverage"]
+    },
+    {
+      "name": "env-llvm-time-trace",
+      "displayName": "LLVM from the environment [Debug, time-trace]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["env-llvm", "base-time-trace"]
+    },
+    {
+      "name": "env-llvm-release",
+      "displayName": "LLVM from the environment [Release]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-llvm", "base-release"]
+    },
+    {
+      "name": "env-llvm-relwithdebinfo-asan",
+      "displayName": "LLVM from the environment [RelWithDebInfo, asan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-llvm", "base-relwithdebinfo", "base-asan-unix"]
+    },
+    {
+      "name": "env-llvm-relwithdebinfo-ubsan",
+      "displayName": "LLVM from the environment [RelWithDebInfo, ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-llvm", "base-relwithdebinfo", "base-ubsan-unix"]
+    },
+    {
       "name": "macos-homebrew-llvm",
       "displayName": "macOS Homebrew LLVM [Debug]",
       "description": "Configure for ${displayName}",
@@ -177,7 +261,7 @@
     },
     {
       "name": "macos-homebrew-llvm-coverage",
-      "displayName": "macOS Homebrew LLVM [Debug,coverage]",
+      "displayName": "macOS Homebrew LLVM [Debug, coverage]",
       "description": "Configure for ${displayName}",
       "inherits": ["macos-homebrew-llvm", "base-coverage"]
     },
@@ -230,8 +314,38 @@
       "inherits": ["base-homebrew-gcc-16", "base-debug"]
     },
     {
+      "name": "macos-homebrew-gcc-16-ubsan",
+      "displayName": "macOS Homebrew GCC 16 [Debug, ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["macos-homebrew-gcc-16", "base-ubsan-unix"]
+    },
+    {
+      "name": "macos-homebrew-gcc-16-asan-ubsan",
+      "displayName": "macOS Homebrew GCC 16 [Debug, asan+ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["macos-homebrew-gcc-16", "base-asan-unix", "base-ubsan-unix"]
+    },
+    {
+      "name": "macos-homebrew-gcc-16-release",
+      "displayName": "macOS Homebrew GCC 16 [Release]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-homebrew-gcc-16", "base-release"]
+    },
+    {
+      "name": "macos-homebrew-gcc-16-relwithdebinfo-asan",
+      "displayName": "macOS Homebrew GCC 16 [RelWithDebInfo, asan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-homebrew-gcc-16", "base-relwithdebinfo", "base-asan-unix"]
+    },
+    {
+      "name": "macos-homebrew-gcc-16-relwithdebinfo-ubsan",
+      "displayName": "macOS Homebrew GCC 16 [RelWithDebInfo, ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-homebrew-gcc-16", "base-relwithdebinfo", "base-ubsan-unix"]
+    },
+    {
       "name": "macos-homebrew-gcc-16-coverage",
-      "displayName": "macOS Homebrew GCC 16 [Debug,coverage]",
+      "displayName": "macOS Homebrew GCC 16 [Debug, coverage]",
       "description": "Configure for ${displayName}",
       "inherits": ["macos-homebrew-gcc-16", "base-coverage"]
     },
@@ -254,6 +368,24 @@
       "inherits": ["base-linux-gcc-15", "base-debug"]
     },
     {
+      "name": "linux-gcc-15-ubsan",
+      "displayName": "Linux g++-15 [Debug, ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["linux-gcc-15", "base-ubsan-unix"]
+    },
+    {
+      "name": "linux-gcc-15-asan-ubsan",
+      "displayName": "Linux g++-15 [Debug, asan+ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["linux-gcc-15", "base-asan-unix", "base-ubsan-unix"]
+    },
+    {
+      "name": "linux-gcc-15-relwithdebinfo-ubsan",
+      "displayName": "Linux g++-15 [RelWithDebInfo, ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-linux-gcc-15", "base-relwithdebinfo", "base-ubsan-unix"]
+    },
+    {
       "name": "linux-gcc-15-asan",
       "displayName": "Linux g++-15 [Debug, asan]",
       "description": "Configure for ${displayName}",
@@ -261,7 +393,7 @@
     },
     {
       "name": "linux-gcc-15-coverage",
-      "displayName": "Linux g++-15 [Debug,coverage]",
+      "displayName": "Linux g++-15 [Debug, coverage]",
       "description": "Configure for ${displayName}",
       "inherits": ["linux-gcc-15", "base-coverage"]
     },
@@ -284,6 +416,24 @@
       "inherits": ["base-linux-gcc", "base-debug"]
     },
     {
+      "name": "linux-gcc-ubsan",
+      "displayName": "Linux g++ [Debug, ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["linux-gcc", "base-ubsan-unix"]
+    },
+    {
+      "name": "linux-gcc-asan-ubsan",
+      "displayName": "Linux g++ [Debug, asan+ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["linux-gcc", "base-asan-unix", "base-ubsan-unix"]
+    },
+    {
+      "name": "linux-gcc-relwithdebinfo-ubsan",
+      "displayName": "Linux g++ [RelWithDebInfo, ubsan]",
+      "description": "Configure for ${displayName}",
+      "inherits": ["base-linux-gcc", "base-relwithdebinfo", "base-ubsan-unix"]
+    },
+    {
       "name": "linux-gcc-asan",
       "displayName": "Linux g++ [Debug, asan]",
       "description": "Configure for ${displayName}",
@@ -291,7 +441,7 @@
     },
     {
       "name": "linux-gcc-coverage",
-      "displayName": "Linux g++ [Debug,coverage]",
+      "displayName": "Linux g++ [Debug, coverage]",
       "description": "Configure for ${displayName}",
       "inherits": ["linux-gcc", "base-coverage"]
     },
@@ -341,6 +491,72 @@
       "inherits": ["base-ninja"]
     },
     {
+      "name": "env-gcc-asan",
+      "displayName": "GCC from the environment [Debug, asan]",
+      "configurePreset": "env-gcc-asan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-gcc-asan",
+      "displayName": "Run GCC from the environment [Debug, asan]",
+      "inherits": ["env-gcc-asan", "base-run"]
+    },
+    {
+      "name": "env-gcc-ubsan",
+      "displayName": "GCC from the environment [Debug, ubsan]",
+      "configurePreset": "env-gcc-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-gcc-ubsan",
+      "displayName": "Run GCC from the environment [Debug, ubsan]",
+      "inherits": ["env-gcc-ubsan", "base-run"]
+    },
+    {
+      "name": "env-gcc-asan-ubsan",
+      "displayName": "GCC from the environment [Debug, asan+ubsan]",
+      "configurePreset": "env-gcc-asan-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-gcc-asan-ubsan",
+      "displayName": "Run GCC from the environment [Debug, asan+ubsan]",
+      "inherits": ["env-gcc-asan-ubsan", "base-run"]
+    },
+    {
+      "name": "env-gcc-release",
+      "displayName": "GCC from the environment [Release]",
+      "configurePreset": "env-gcc-release",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-gcc-release",
+      "displayName": "Run GCC from the environment [Release]",
+      "inherits": ["env-gcc-release", "base-run"]
+    },
+    {
+      "name": "env-gcc-relwithdebinfo-asan",
+      "displayName": "GCC from the environment [RelWithDebInfo, asan]",
+      "configurePreset": "env-gcc-relwithdebinfo-asan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-gcc-relwithdebinfo-asan",
+      "displayName": "Run GCC from the environment [RelWithDebInfo, asan]",
+      "inherits": ["env-gcc-relwithdebinfo-asan", "base-run"]
+    },
+    {
+      "name": "env-gcc-relwithdebinfo-ubsan",
+      "displayName": "GCC from the environment [RelWithDebInfo, ubsan]",
+      "configurePreset": "env-gcc-relwithdebinfo-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-gcc-relwithdebinfo-ubsan",
+      "displayName": "Run GCC from the environment [RelWithDebInfo, ubsan]",
+      "inherits": ["env-gcc-relwithdebinfo-ubsan", "base-run"]
+    },
+    {
       "name": "run-env-gcc",
       "displayName": "Run GCC from the environment [Debug]",
       "inherits": ["env-gcc", "base-run"]
@@ -361,6 +577,94 @@
       "displayName": "LLVM from the environment [Debug]",
       "configurePreset": "env-llvm",
       "inherits": ["base-ninja"]
+    },
+    {
+      "name": "env-llvm-asan",
+      "displayName": "LLVM from the environment [Debug, asan]",
+      "configurePreset": "env-llvm-asan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-llvm-asan",
+      "displayName": "Run LLVM from the environment [Debug, asan]",
+      "inherits": ["env-llvm-asan", "base-run"]
+    },
+    {
+      "name": "env-llvm-ubsan",
+      "displayName": "LLVM from the environment [Debug, ubsan]",
+      "configurePreset": "env-llvm-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-llvm-ubsan",
+      "displayName": "Run LLVM from the environment [Debug, ubsan]",
+      "inherits": ["env-llvm-ubsan", "base-run"]
+    },
+    {
+      "name": "env-llvm-asan-ubsan",
+      "displayName": "LLVM from the environment [Debug, asan+ubsan]",
+      "configurePreset": "env-llvm-asan-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-llvm-asan-ubsan",
+      "displayName": "Run LLVM from the environment [Debug, asan+ubsan]",
+      "inherits": ["env-llvm-asan-ubsan", "base-run"]
+    },
+    {
+      "name": "env-llvm-coverage",
+      "displayName": "LLVM from the environment [Debug, coverage]",
+      "configurePreset": "env-llvm-coverage",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-llvm-coverage",
+      "displayName": "Run LLVM from the environment [Debug, coverage]",
+      "inherits": ["env-llvm-coverage", "base-run"]
+    },
+    {
+      "name": "env-llvm-time-trace",
+      "displayName": "LLVM from the environment [Debug, time-trace]",
+      "configurePreset": "env-llvm-time-trace",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-llvm-time-trace",
+      "displayName": "Run LLVM from the environment [Debug, time-trace]",
+      "inherits": ["env-llvm-time-trace", "base-run"]
+    },
+    {
+      "name": "env-llvm-release",
+      "displayName": "LLVM from the environment [Release]",
+      "configurePreset": "env-llvm-release",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-llvm-release",
+      "displayName": "Run LLVM from the environment [Release]",
+      "inherits": ["env-llvm-release", "base-run"]
+    },
+    {
+      "name": "env-llvm-relwithdebinfo-asan",
+      "displayName": "LLVM from the environment [RelWithDebInfo, asan]",
+      "configurePreset": "env-llvm-relwithdebinfo-asan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-llvm-relwithdebinfo-asan",
+      "displayName": "Run LLVM from the environment [RelWithDebInfo, asan]",
+      "inherits": ["env-llvm-relwithdebinfo-asan", "base-run"]
+    },
+    {
+      "name": "env-llvm-relwithdebinfo-ubsan",
+      "displayName": "LLVM from the environment [RelWithDebInfo, ubsan]",
+      "configurePreset": "env-llvm-relwithdebinfo-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-env-llvm-relwithdebinfo-ubsan",
+      "displayName": "Run LLVM from the environment [RelWithDebInfo, ubsan]",
+      "inherits": ["env-llvm-relwithdebinfo-ubsan", "base-run"]
     },
     {
       "name": "run-env-llvm",
@@ -433,6 +737,39 @@
       "displayName": "Linux g++ [Debug]",
       "configurePreset": "linux-gcc",
       "inherits": ["base-ninja"]
+    },
+    {
+      "name": "linux-gcc-ubsan",
+      "displayName": "Linux g++ [Debug, ubsan]",
+      "configurePreset": "linux-gcc-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-linux-gcc-ubsan",
+      "displayName": "Run Linux g++ [Debug, ubsan]",
+      "inherits": ["linux-gcc-ubsan", "base-run"]
+    },
+    {
+      "name": "linux-gcc-asan-ubsan",
+      "displayName": "Linux g++ [Debug, asan+ubsan]",
+      "configurePreset": "linux-gcc-asan-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-linux-gcc-asan-ubsan",
+      "displayName": "Run Linux g++ [Debug, asan+ubsan]",
+      "inherits": ["linux-gcc-asan-ubsan", "base-run"]
+    },
+    {
+      "name": "linux-gcc-relwithdebinfo-ubsan",
+      "displayName": "Linux g++ [RelWithDebInfo, ubsan]",
+      "configurePreset": "linux-gcc-relwithdebinfo-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-linux-gcc-relwithdebinfo-ubsan",
+      "displayName": "Run Linux g++ [RelWithDebInfo, ubsan]",
+      "inherits": ["linux-gcc-relwithdebinfo-ubsan", "base-run"]
     },
     {
       "name": "run-linux-gcc",
@@ -529,6 +866,61 @@
       "inherits": ["base-ninja"]
     },
     {
+      "name": "macos-homebrew-gcc-16-ubsan",
+      "displayName": "macOS Homebrew GCC 16 [Debug, ubsan]",
+      "configurePreset": "macos-homebrew-gcc-16-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-gcc-16-ubsan",
+      "displayName": "Run macOS Homebrew GCC 16 [Debug, ubsan]",
+      "inherits": ["macos-homebrew-gcc-16-ubsan", "base-run"]
+    },
+    {
+      "name": "macos-homebrew-gcc-16-asan-ubsan",
+      "displayName": "macOS Homebrew GCC 16 [Debug, asan+ubsan]",
+      "configurePreset": "macos-homebrew-gcc-16-asan-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-gcc-16-asan-ubsan",
+      "displayName": "Run macOS Homebrew GCC 16 [Debug, asan+ubsan]",
+      "inherits": ["macos-homebrew-gcc-16-asan-ubsan", "base-run"]
+    },
+    {
+      "name": "macos-homebrew-gcc-16-release",
+      "displayName": "macOS Homebrew GCC 16 [Release]",
+      "configurePreset": "macos-homebrew-gcc-16-release",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-gcc-16-release",
+      "displayName": "Run macOS Homebrew GCC 16 [Release]",
+      "inherits": ["macos-homebrew-gcc-16-release", "base-run"]
+    },
+    {
+      "name": "macos-homebrew-gcc-16-relwithdebinfo-asan",
+      "displayName": "macOS Homebrew GCC 16 [RelWithDebInfo, asan]",
+      "configurePreset": "macos-homebrew-gcc-16-relwithdebinfo-asan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-gcc-16-relwithdebinfo-asan",
+      "displayName": "Run macOS Homebrew GCC 16 [RelWithDebInfo, asan]",
+      "inherits": ["macos-homebrew-gcc-16-relwithdebinfo-asan", "base-run"]
+    },
+    {
+      "name": "macos-homebrew-gcc-16-relwithdebinfo-ubsan",
+      "displayName": "macOS Homebrew GCC 16 [RelWithDebInfo, ubsan]",
+      "configurePreset": "macos-homebrew-gcc-16-relwithdebinfo-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-macos-homebrew-gcc-16-relwithdebinfo-ubsan",
+      "displayName": "Run macOS Homebrew GCC 16 [RelWithDebInfo, ubsan]",
+      "inherits": ["macos-homebrew-gcc-16-relwithdebinfo-ubsan", "base-run"]
+    },
+    {
       "name": "run-macos-homebrew-gcc-16",
       "displayName": "Run macOS Homebrew GCC 16 [Debug]",
       "inherits": ["macos-homebrew-gcc-16", "base-run"]
@@ -560,6 +952,39 @@
       "displayName": "Linux g++-15 [Debug]",
       "configurePreset": "linux-gcc-15",
       "inherits": ["base-ninja"]
+    },
+    {
+      "name": "linux-gcc-15-ubsan",
+      "displayName": "Linux g++-15 [Debug, ubsan]",
+      "configurePreset": "linux-gcc-15-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-linux-gcc-15-ubsan",
+      "displayName": "Run Linux g++-15 [Debug, ubsan]",
+      "inherits": ["linux-gcc-15-ubsan", "base-run"]
+    },
+    {
+      "name": "linux-gcc-15-asan-ubsan",
+      "displayName": "Linux g++-15 [Debug, asan+ubsan]",
+      "configurePreset": "linux-gcc-15-asan-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-linux-gcc-15-asan-ubsan",
+      "displayName": "Run Linux g++-15 [Debug, asan+ubsan]",
+      "inherits": ["linux-gcc-15-asan-ubsan", "base-run"]
+    },
+    {
+      "name": "linux-gcc-15-relwithdebinfo-ubsan",
+      "displayName": "Linux g++-15 [RelWithDebInfo, ubsan]",
+      "configurePreset": "linux-gcc-15-relwithdebinfo-ubsan",
+      "inherits": ["base-ninja"]
+    },
+    {
+      "name": "run-linux-gcc-15-relwithdebinfo-ubsan",
+      "displayName": "Run Linux g++-15 [RelWithDebInfo, ubsan]",
+      "inherits": ["linux-gcc-15-relwithdebinfo-ubsan", "base-run"]
     },
     {
       "name": "run-linux-gcc-15",
@@ -709,6 +1134,41 @@
       ]
     },
     {
+      "name": "macos-homebrew-gcc-16-ubsan",
+      "steps": [
+        { "type": "configure", "name": "macos-homebrew-gcc-16-ubsan" },
+        { "type": "build",     "name": "run-macos-homebrew-gcc-16-ubsan" }
+      ]
+    },
+    {
+      "name": "macos-homebrew-gcc-16-asan-ubsan",
+      "steps": [
+        { "type": "configure", "name": "macos-homebrew-gcc-16-asan-ubsan" },
+        { "type": "build",     "name": "run-macos-homebrew-gcc-16-asan-ubsan" }
+      ]
+    },
+    {
+      "name": "macos-homebrew-gcc-16-release",
+      "steps": [
+        { "type": "configure", "name": "macos-homebrew-gcc-16-release" },
+        { "type": "build",     "name": "run-macos-homebrew-gcc-16-release" }
+      ]
+    },
+    {
+      "name": "macos-homebrew-gcc-16-relwithdebinfo-asan",
+      "steps": [
+        { "type": "configure", "name": "macos-homebrew-gcc-16-relwithdebinfo-asan" },
+        { "type": "build",     "name": "run-macos-homebrew-gcc-16-relwithdebinfo-asan" }
+      ]
+    },
+    {
+      "name": "macos-homebrew-gcc-16-relwithdebinfo-ubsan",
+      "steps": [
+        { "type": "configure", "name": "macos-homebrew-gcc-16-relwithdebinfo-ubsan" },
+        { "type": "build",     "name": "run-macos-homebrew-gcc-16-relwithdebinfo-ubsan" }
+      ]
+    },
+    {
       "name": "macos-homebrew-gcc-16-coverage",
       "steps": [
         {
@@ -742,6 +1202,48 @@
       ]
     },
     {
+      "name": "env-gcc-asan",
+      "steps": [
+        { "type": "configure", "name": "env-gcc-asan" },
+        { "type": "build",     "name": "run-env-gcc-asan" }
+      ]
+    },
+    {
+      "name": "env-gcc-ubsan",
+      "steps": [
+        { "type": "configure", "name": "env-gcc-ubsan" },
+        { "type": "build",     "name": "run-env-gcc-ubsan" }
+      ]
+    },
+    {
+      "name": "env-gcc-asan-ubsan",
+      "steps": [
+        { "type": "configure", "name": "env-gcc-asan-ubsan" },
+        { "type": "build",     "name": "run-env-gcc-asan-ubsan" }
+      ]
+    },
+    {
+      "name": "env-gcc-release",
+      "steps": [
+        { "type": "configure", "name": "env-gcc-release" },
+        { "type": "build",     "name": "run-env-gcc-release" }
+      ]
+    },
+    {
+      "name": "env-gcc-relwithdebinfo-asan",
+      "steps": [
+        { "type": "configure", "name": "env-gcc-relwithdebinfo-asan" },
+        { "type": "build",     "name": "run-env-gcc-relwithdebinfo-asan" }
+      ]
+    },
+    {
+      "name": "env-gcc-relwithdebinfo-ubsan",
+      "steps": [
+        { "type": "configure", "name": "env-gcc-relwithdebinfo-ubsan" },
+        { "type": "build",     "name": "run-env-gcc-relwithdebinfo-ubsan" }
+      ]
+    },
+    {
       "name": "env-gcc-coverage",
       "steps": [
         { "type": "configure", "name": "env-gcc-coverage" },
@@ -753,6 +1255,62 @@
       "steps": [
         { "type": "configure", "name": "env-llvm" },
         { "type": "build",     "name": "run-env-llvm" }
+      ]
+    },
+    {
+      "name": "env-llvm-asan",
+      "steps": [
+        { "type": "configure", "name": "env-llvm-asan" },
+        { "type": "build",     "name": "run-env-llvm-asan" }
+      ]
+    },
+    {
+      "name": "env-llvm-ubsan",
+      "steps": [
+        { "type": "configure", "name": "env-llvm-ubsan" },
+        { "type": "build",     "name": "run-env-llvm-ubsan" }
+      ]
+    },
+    {
+      "name": "env-llvm-asan-ubsan",
+      "steps": [
+        { "type": "configure", "name": "env-llvm-asan-ubsan" },
+        { "type": "build",     "name": "run-env-llvm-asan-ubsan" }
+      ]
+    },
+    {
+      "name": "env-llvm-coverage",
+      "steps": [
+        { "type": "configure", "name": "env-llvm-coverage" },
+        { "type": "build",     "name": "run-env-llvm-coverage" }
+      ]
+    },
+    {
+      "name": "env-llvm-time-trace",
+      "steps": [
+        { "type": "configure", "name": "env-llvm-time-trace" },
+        { "type": "build",     "name": "run-env-llvm-time-trace" }
+      ]
+    },
+    {
+      "name": "env-llvm-release",
+      "steps": [
+        { "type": "configure", "name": "env-llvm-release" },
+        { "type": "build",     "name": "run-env-llvm-release" }
+      ]
+    },
+    {
+      "name": "env-llvm-relwithdebinfo-asan",
+      "steps": [
+        { "type": "configure", "name": "env-llvm-relwithdebinfo-asan" },
+        { "type": "build",     "name": "run-env-llvm-relwithdebinfo-asan" }
+      ]
+    },
+    {
+      "name": "env-llvm-relwithdebinfo-ubsan",
+      "steps": [
+        { "type": "configure", "name": "env-llvm-relwithdebinfo-ubsan" },
+        { "type": "build",     "name": "run-env-llvm-relwithdebinfo-ubsan" }
       ]
     },
     {
@@ -841,6 +1399,27 @@
       ]
     },
     {
+      "name": "linux-gcc-ubsan",
+      "steps": [
+        { "type": "configure", "name": "linux-gcc-ubsan" },
+        { "type": "build",     "name": "run-linux-gcc-ubsan" }
+      ]
+    },
+    {
+      "name": "linux-gcc-asan-ubsan",
+      "steps": [
+        { "type": "configure", "name": "linux-gcc-asan-ubsan" },
+        { "type": "build",     "name": "run-linux-gcc-asan-ubsan" }
+      ]
+    },
+    {
+      "name": "linux-gcc-relwithdebinfo-ubsan",
+      "steps": [
+        { "type": "configure", "name": "linux-gcc-relwithdebinfo-ubsan" },
+        { "type": "build",     "name": "run-linux-gcc-relwithdebinfo-ubsan" }
+      ]
+    },
+    {
       "name": "linux-gcc-asan",
       "steps": [
         {
@@ -903,6 +1482,27 @@
           "type": "build",
           "name": "run-linux-gcc-15"
         }
+      ]
+    },
+    {
+      "name": "linux-gcc-15-ubsan",
+      "steps": [
+        { "type": "configure", "name": "linux-gcc-15-ubsan" },
+        { "type": "build",     "name": "run-linux-gcc-15-ubsan" }
+      ]
+    },
+    {
+      "name": "linux-gcc-15-asan-ubsan",
+      "steps": [
+        { "type": "configure", "name": "linux-gcc-15-asan-ubsan" },
+        { "type": "build",     "name": "run-linux-gcc-15-asan-ubsan" }
+      ]
+    },
+    {
+      "name": "linux-gcc-15-relwithdebinfo-ubsan",
+      "steps": [
+        { "type": "configure", "name": "linux-gcc-15-relwithdebinfo-ubsan" },
+        { "type": "build",     "name": "run-linux-gcc-15-relwithdebinfo-ubsan" }
       ]
     },
     {
