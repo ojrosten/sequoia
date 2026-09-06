@@ -20,7 +20,14 @@ export namespace sequoia::testing
 {
 
   [[nodiscard]]
-  runtime::shell_command cmake_cmd(const build_paths& buildPaths, const std::filesystem::path& output);
+  /** \brief Configures a project, optionally overriding a cache variable.
+
+      \param cacheOverride spelled `VAR=VALUE`, as `cmake -D` expects it.
+   */
+  [[nodiscard]]
+  runtime::shell_command cmake_cmd(const build_paths& buildPaths,
+                                   const std::filesystem::path& output,
+                                   const std::optional<std::string>& cacheOverride = {});
 
   [[nodiscard]]
   runtime::shell_command build_cmd(const build_paths& buildPaths, const std::filesystem::path& output);
