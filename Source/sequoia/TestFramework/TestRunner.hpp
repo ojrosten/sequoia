@@ -320,14 +320,19 @@ namespace sequoia::testing
       extract_suite_tree(m_Filter, suite{std::string{name}, std::move(s)...});
     }
 
+    [[nodiscard]]
     return_code execute([[maybe_unused]] timer_resolution r={});
 
+    [[nodiscard]]
     std::ostream& stream() noexcept { return *m_Stream; }
 
+    [[nodiscard]]
     const project_paths& proj_paths() const noexcept { return m_ProjPaths; }
 
+    [[nodiscard]]
     const std::string& copyright() const noexcept { return m_Copyright; }
 
+    [[nodiscard]]
     const indentation& code_indent() const noexcept { return m_CodeIndent; }
 
   private:

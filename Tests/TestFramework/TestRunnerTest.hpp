@@ -10,6 +10,7 @@
 /** \file */
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "sequoia/TestFramework/TestRunner.hpp"
 
 namespace sequoia::testing
 {
@@ -52,6 +53,7 @@ namespace sequoia::testing
     void test_instability_analysis(std::string_view message,
                                    std::string_view outputDirName,
                                    std::string_view numRuns,
+                                   return_code expected,
                                    std::initializer_list<std::string_view> extraArgs,
                                    Manipulator manipulator,
                                    Ts&&... ts);
@@ -60,6 +62,7 @@ namespace sequoia::testing
     void test_instability_analysis(std::string_view message,
                                    std::string_view outputDirName,
                                    std::string_view numRuns,
+                                   return_code expected,
                                    std::initializer_list<std::string_view> extraArgs,
                                    Ts&&... ts);
 
@@ -67,6 +70,7 @@ namespace sequoia::testing
     void test_instability_analysis(std::string_view message,
                                    std::string_view outputDirName,
                                    std::string_view numRuns,
+                                   return_code expected,
                                    Ts&&... ts);
 
     [[nodiscard]]

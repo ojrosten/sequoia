@@ -478,14 +478,14 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       reporter{"Invalid repetitions for instability analysis"},
       [this](){
-        test_instability_analysis("", "", "foo", critical_free_test{"Free Test"});
+        test_instability_analysis("", "", "foo", return_code::critical_failures, critical_free_test{"Free Test"});
       }
     );
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Insufficient repetitions for instability analysis"},
       [this](){
-        test_instability_analysis("", "",  "1", critical_free_test{"Free Test"});
+        test_instability_analysis("", "",  "1", return_code::critical_failures, critical_free_test{"Free Test"});
       }
     );
   }
@@ -523,7 +523,7 @@ namespace sequoia::testing
         foo_test{"Unit Test"}
       );
 
-      runner.execute();
+      check(equality, "Recovery and dump return code", runner.execute(), return_code::critical_failures);
     }
 
     const auto outputDir{working_materials() /= "RecoveryAndDumpOutput"};
@@ -557,7 +557,7 @@ namespace sequoia::testing
                        {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
-    runner.execute();
+    check(equality, "No tests return code", runner.execute(), return_code::success);
     check_output("No Tests", "NoTests", outputStream);
 
     runner.add_test_suite(
@@ -567,7 +567,7 @@ namespace sequoia::testing
       failing_fn_test{"False negative Test"}
     );
 
-    runner.execute();
+    check(equality, "Basic output return code", runner.execute(), return_code::soft_failures);
     check_output("Basic Output", "BasicOutput", outputStream);
   }
 
@@ -576,7 +576,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     auto runner{make_failing_suite({{(minimal_fake_path()).generic_string(), "-v"}}, outputStream)};
 
-    runner.execute();
+    check(equality, "Verbose output return code", runner.execute(), return_code::soft_failures);
     check_output("Basic Verbose Output", "BasicVerboseOutput", outputStream);
   }
 
@@ -585,7 +585,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     auto runner{make_failing_suite({{(minimal_fake_path()).generic_string(), "-v", "--serial"}}, outputStream)};
 
-    runner.execute();
+    check(equality, "Serial verbose output return code", runner.execute(), return_code::soft_failures);
     check_output("Basic Serial Verbose Output", "BasicSerialVerboseOutput", outputStream);
   }
 
@@ -607,7 +607,7 @@ namespace sequoia::testing
       platform_specific_throwing_test{"Platform Specific Throwing Test"}
     );
 
-    runner.execute();
+    check(equality, "Throwing tests return code", runner.execute(), return_code::success);
     check_output("Throwing Output", "ThrowingOutput", outputStream);
 
     const fs::path diagnosticsDir{working_materials() /= "Throwing_Suite_Diagnostics"};
@@ -641,7 +641,7 @@ namespace sequoia::testing
       failing_fn_test{"False negative Test"}
     );
 
-    runner.execute();
+    check(equality, "Filtered suites return code", runner.execute(), return_code::soft_failures);
     check_output("Filtered Suite Output", "FilteredSuiteOutput", outputStream);
   }
 
@@ -659,10 +659,10 @@ namespace sequoia::testing
                        {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
-    runner.execute();
+    check(equality, "Prune with no stamp return code", runner.execute(), return_code::success);
     check_output("Prune with no stamp", "PruneWithNoStamp", outputStream);
 
-    runner.execute();
+    check(equality, "Prune with no tests return code", runner.execute(), return_code::success);
     check_output("Prune with no tests", "PruneWithNoTests", outputStream);
   }
 
@@ -691,7 +691,7 @@ namespace sequoia::testing
         }
       );
 
-      runner.execute();
+      check(equality, "Nested suite return code", runner.execute(), return_code::soft_failures);
       check_output("Basic Nested Output", "BasicNestedOutput", outputStream);
   }
 
@@ -720,7 +720,7 @@ namespace sequoia::testing
       }
     );
 
-    runner.execute();
+    check(equality, "Nested suite verbose return code", runner.execute(), return_code::soft_failures);
     check_output("Verbose Nested Output", "VerboseNestedOutput", outputStream);
   }
 
@@ -729,48 +729,56 @@ namespace sequoia::testing
     test_instability_analysis("Instability comprising pass/failure",
                               "BinaryInstabilityAnalysis",
                               "2",
+                              return_code::soft_failures,
                               {"--serial"},
                               flipper_free_test{"Free Test"});
 
     test_instability_analysis("Instability comprising pass/multiple distinct failures",
                               "MultiInstabilityAnalysis",
                               "4",
+                              return_code::soft_failures,
                               {"--serial"},
                               periodic_free_test{"Free Test"});
 
     test_instability_analysis("Instability comprising failures from two checks",
                               "MultiCheckInstabilityAnalysis",
                               "6",
+                              return_code::soft_failures,
                               {"--serial"},
                               multi_periodic_free_test{"Free Test"});
 
     test_instability_analysis("Instability following consistent failure",
                               "BinaryInstabilityFollowingFailures",
                               "2",
+                              return_code::soft_failures,
                               {"--serial"},
                               failing_plus_instabilities_free_test{"Free Test"});
 
     test_instability_analysis("Failure but no instability",
                               "ConsistentFailureNoInstability",
                               "2",
+                              return_code::soft_failures,
                               {"--serial"},
                               consistently_failing_free_test{"Free Test"});
 
     test_instability_analysis("Always passes",
                               "ConsistentSuccessNoInstability",
                               "2",
+                              return_code::success,
                               {"--serial"},
                               consistently_passing_free_test<0>{"Free Test"});
 
     test_instability_analysis("Critical failure instability",
                               "CriticalFailureInstability",
                               "2",
+                              return_code::critical_failures,
                               {"--serial"},
                               critical_free_test{"Free Test"});
 
     test_instability_analysis("Two tests always passing",
                               "ConsistentSuccessTwoTests",
                               "2",
+                              return_code::success,
                               {"--serial"},
                               consistently_passing_free_test<0>{"Free Test 0"},
                               consistently_passing_free_test<1>{"Free Test 1"});
@@ -778,6 +786,7 @@ namespace sequoia::testing
     test_instability_analysis("Consistent success/consistent failure/instability",
                               "MixedBag",
                               "6",
+                              return_code::soft_failures,
                               {"--serial"},
                               consistently_passing_free_test<0>{"Passing Free Test"},
                               consistently_failing_free_test{"Failing Free Test"},
@@ -788,6 +797,7 @@ namespace sequoia::testing
     test_instability_analysis("Suite selection",
                               "InstabilitySuiteSelection",
                               "2",
+                              return_code::soft_failures,
                               {"test", "Another Suite"},
                               [](test_runner& r){ r.add_test_suite("Another Suite", flipper_free_test{"Flipper Free Test"}); },
                               flipper_free_test{"Flipper Free Test"}
@@ -798,6 +808,7 @@ namespace sequoia::testing
   void test_runner_test::test_instability_analysis(std::string_view message,
                                                    std::string_view outputDirName,
                                                    std::string_view numRuns,
+                                                   return_code expected,
                                                    std::initializer_list<std::string_view> extraArgs,
                                                    Manipulator manipulator,
                                                    Ts&&... ts)
@@ -829,7 +840,7 @@ namespace sequoia::testing
 
     manipulator(runner);
 
-    runner.execute();
+    check(equality, reporter{append_lines(message, "Return code")}, runner.execute(), expected);
 
     const auto outputDir{working_materials() /= outputDirName};
     fs::create_directory(outputDir);
@@ -848,18 +859,20 @@ namespace sequoia::testing
   void test_runner_test::test_instability_analysis(std::string_view message,
                                                    std::string_view outputDirName,
                                                    std::string_view numRuns,
+                                                   return_code expected,
                                                    std::initializer_list<std::string_view> extraArgs,
                                                    Ts&&... ts)
   {
-    test_instability_analysis(message, outputDirName, numRuns, extraArgs, [](test_runner&){}, std::forward<Ts>(ts)...);
+    test_instability_analysis(message, outputDirName, numRuns, expected, extraArgs, [](test_runner&){}, std::forward<Ts>(ts)...);
   }
 
   template<concrete_test... Ts>
   void test_runner_test::test_instability_analysis(std::string_view message,
                                                    std::string_view outputDirName,
                                                    std::string_view numRuns,
+                                                   return_code expected,
                                                    Ts&&... ts)
   {
-    test_instability_analysis(message, outputDirName, numRuns, {}, [](test_runner&){}, std::forward<Ts>(ts)...);
+    test_instability_analysis(message, outputDirName, numRuns, expected, {}, [](test_runner&){}, std::forward<Ts>(ts)...);
   }
 }

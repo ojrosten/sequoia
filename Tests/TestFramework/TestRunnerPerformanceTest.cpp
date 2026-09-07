@@ -176,7 +176,7 @@ namespace sequoia::testing
   {
     std::stringstream outputStream{};
     auto runner{make_slow_suite({{(minimal_fake_path()).generic_string()}}, outputStream)};
-    runner.execute();
+    check(equality, "Parallel acceleration return code", runner.execute(), return_code::success);
 
     auto outputFile{check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream)};
     check(within_tolerance{35.0}, "", get_timing(outputFile), 60.0);
@@ -187,7 +187,7 @@ namespace sequoia::testing
     {
       std::stringstream outputStream{};
       auto runner{make_slow_suite({{(minimal_fake_path()).generic_string(), "--thread-pool", "8"}}, outputStream)};
-      runner.execute();
+      check(equality, "Thread pool (8) return code", runner.execute(), return_code::success);
 
       auto outputFile{check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream)};
       check(within_tolerance{30.0}, "", get_timing(outputFile), 55.0);
@@ -196,7 +196,7 @@ namespace sequoia::testing
     {
       std::stringstream outputStream{};
       auto runner{make_slow_suite({{(minimal_fake_path()).generic_string(), "--thread-pool", "2"}}, outputStream)};
-      runner.execute();
+      check(equality, "Thread pool (2) return code", runner.execute(), return_code::success);
 
       auto outputFile{check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream)};
       check(within_tolerance{40.0}, "", get_timing(outputFile), 140.0);
@@ -207,7 +207,7 @@ namespace sequoia::testing
   {
     std::stringstream outputStream{};
     auto runner{make_slow_suite({{(minimal_fake_path()).generic_string(), "--serial"}}, outputStream)};
-    runner.execute();
+    check(equality, "Serial execution return code", runner.execute(), return_code::success);
 
     auto outputFile{check_output(report({"Serial Output"}), "Serial Output", outputStream)};
     check(within_tolerance{55.0}, "", get_timing(outputFile), 255.0);

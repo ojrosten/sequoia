@@ -163,7 +163,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     test_runner tr{args.size(), args.get(), "Oliver Jacob Rosten", "    ",  {.source_folder{sourceFolder}, .main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
 
-    tr.execute();
+    check(equality, "Test creation return code", tr.execute(), return_code::success);
 
     if(std::ofstream file{projectPath / "output" / "io.txt"})
     {
@@ -184,7 +184,7 @@ namespace sequoia::testing
           std::stringstream outputStream{};
           commandline_arguments args{{zeroth_arg("FakeProject"), "create", "free", "Plurgh.h"}};
           test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
-          tr.execute();
+          return tr.execute();
         });
 
       check_exception_thrown<std::runtime_error>(
