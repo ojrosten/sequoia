@@ -194,6 +194,7 @@ namespace sequoia::testing
     test_exceptions(projPaths);
     test_dependencies(projPaths);
     test_stamp_on_second_boundary(projPaths);
+    test_pass_recorded_in_the_modification_second(projPaths);
     test_prune_update(projPaths);
     test_instability_analysis_prune_upate(projPaths);
   }
@@ -532,6 +533,37 @@ namespace sequoia::testing
     fs::last_write_time(projPaths.prune().stamp(), m_ResetTime + pruneStampOffset);
 
     check(equality, "Nothing Stale", tests_to_run(projPaths, ""), opt_test_list{test_list{}});
+  }
+
+  void dependency_analyzer_free_test::test_pass_recorded_in_the_modification_second(const project_paths& projPaths)
+  {
+    /* The record of a test passing is necessarily written after the modification which made it run,
+       but on a filesystem which truncates `last_write_time` to whole seconds - libstdc++ does, on
+       macOS - the two land on the same value. The record must still count as post-dating the
+       change, or the test is selected again by every later run and never settles.
+
+       The situation is constructed rather than waited for, so that it is asserted on every platform
+       and not only where the filesystem happens to be coarse. Note the two times are distinct: the
+       *file's* stamp ties the modification, which is what a truncating filesystem produces, while
+       the record inside it is later, which is what the run wrote.
+    */
+    using namespace std::chrono;
+
+    const auto passesFile{projPaths.prune().selected_passes(std::nullopt)};
+    const auto testFile{projPaths.tests().repo() / "HouseAllocationTest.cpp"};
+    const auto modified{m_ResetTime + earlyEditOffset};
+
+    fs::last_write_time(testFile, modified);
+    write_tests(projPaths, passesFile, std::vector<prune_record>{{"HouseAllocationTest.cpp", modified + seconds{1}}});
+    fs::last_write_time(passesFile, modified);
+
+    check(equality,
+          "A pass whose record ties the modification still post-dates it, so the test is not re-run",
+          tests_to_run(projPaths, ""),
+          opt_test_list{test_list{}});
+
+    fs::last_write_time(testFile, m_ResetTime);
+    fs::remove(passesFile);
   }
 
   void dependency_analyzer_free_test::test_prune_update(const project_paths& projPaths)

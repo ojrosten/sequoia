@@ -432,7 +432,15 @@ namespace sequoia::testing
 
             const auto maxModificationTime{materialsWriteTime ? std::ranges::max(materialsWriteTime.value(), weight.implicit_modification_time) : weight.implicit_modification_time};
 
-            if(weight.stale && (passesStamp.value() > maxModificationTime))
+            /* `>=`, not `>`: the question is whether the record of this test passing is older
+               than the newest modification. Both sides come from `last_write_time`, and the record
+               is written after the modification it supersedes, so wherever the filesystem can
+               represent that difference the two spellings agree. Where it cannot - libstdc++
+               truncates to whole seconds on macOS - "after" collapses onto "equal", and `>` then
+               rejects a record which does post-date the change, so the test is selected again by
+               every later run and never settles.
+            */
+            if(weight.stale && (passesStamp.value() >= maxModificationTime))
               consider_passing_tests(i, relPath, passingTestsFromFile, maxModificationTime);
           }
           else if(!weight.stale)
