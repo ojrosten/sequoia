@@ -23,7 +23,7 @@
 #include <sstream>
 
 #ifndef _MSC_VER
-  #include <cxxabi.h>
+  #include "cxxabi.h"
 #endif
 
 namespace sequoia::testing

@@ -33,7 +33,7 @@ namespace sequoia::testing
 
   namespace
   {
-    /*! \brief Wraps a string in quotation marks, escaping nothing.
+    /** \brief Wraps a string in quotation marks, escaping nothing.
 
         `std::quoted` would do here, and this spelling exists only to stay identical to
         `modules-native`, where it cannot: libstdc++'s module std exports the manipulator

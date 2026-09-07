@@ -27,11 +27,11 @@
 
 namespace sequoia::testing
 {
-  enum class runner_mode { none=0, help=1, test=2, create=4, init=8};
+  enum class runner_mode : unsigned { none=0, help=1, test=2, create=4, init=8};
 
   enum class update_mode { none = 0, soft };
 
-  enum class recovery_mode { none = 0, recovery = 1, dump = 2 };
+  enum class recovery_mode : unsigned { none = 0, recovery = 1, dump = 2 };
 
   enum class prune_outcome { not_attempted, no_time_stamp, success };
 
@@ -40,6 +40,8 @@ namespace sequoia::testing
     dynamic,   /// determined implicitly by the stl
     fixed      /// fixed-size thread pool
   };
+
+  enum class return_code : unsigned { success=0, output_diffs=1, soft_failures=2, critical_failures=4, incomplete_run=8};
 }
 
 NAMESPACE_SEQUOIA_AS_BITMASK
@@ -49,10 +51,19 @@ NAMESPACE_SEQUOIA_AS_BITMASK
 
   template<>
   struct as_bitmask<sequoia::testing::recovery_mode> : std::true_type {};
+
+  template<>
+  struct as_bitmask<sequoia::testing::return_code> : std::true_type {};
 }
 
 namespace sequoia::testing
 {
+  [[nodiscard]]
+  return_code to_return_code(const log_summary& summary) noexcept;
+
+  [[nodiscard]]
+  int to_exit_code(return_code code) noexcept;
+
   individual_materials_paths set_materials(const std::filesystem::path& sourceFile, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths);
 
   class test_vessel
@@ -285,7 +296,7 @@ namespace sequoia::testing
       extract_suite_tree(m_Filter, suite{std::string{name}, std::move(s)...});
     }
 
-    void execute([[maybe_unused]] timer_resolution r={});
+    return_code execute([[maybe_unused]] timer_resolution r={});
 
     std::ostream& stream() noexcept { return *m_Stream; }
 
@@ -369,6 +380,9 @@ namespace sequoia::testing
     void reset_tests();
 
     void run_tests(std::optional<std::size_t> id);
+
+    [[nodiscard]]
+    const log_summary& root_summary() const;
 
     [[nodiscard]]
     bool nothing_to_do();

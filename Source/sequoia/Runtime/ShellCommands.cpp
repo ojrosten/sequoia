@@ -15,8 +15,25 @@
 
 #include <iostream>
 
+#ifndef _WIN32
+  #include "sys/wait.h"
+#endif
+
 namespace sequoia::runtime
 {
+  namespace
+  {
+    [[nodiscard]]
+    int child_exit_status([[maybe_unused]] const int systemResult) noexcept
+    {
+    #ifdef _WIN32
+      return systemResult;
+    #else
+      return WIFEXITED(systemResult) ? WEXITSTATUS(systemResult) : -1;
+    #endif
+    }
+  }
+
   shell_command::shell_command(std::string cmd, const std::filesystem::path& output, append_mode app)
     : m_Command{std::move(cmd)}
   {
@@ -49,10 +66,12 @@ namespace sequoia::runtime
     *this = pre && shell_command{std::move(cmd), output, !pre.empty() ? append_mode::yes : app};
   }
 
-  void invoke(const shell_command& cmd)
+  int invoke(const shell_command& cmd)
   {
     std::cout << std::flush;
-    if(cmd.m_Command.data()) std::system(cmd.m_Command.data());
+    if(cmd.empty()) return 0;
+
+    return child_exit_status(std::system(cmd.m_Command.data()));
   }
 
   [[nodiscard]]

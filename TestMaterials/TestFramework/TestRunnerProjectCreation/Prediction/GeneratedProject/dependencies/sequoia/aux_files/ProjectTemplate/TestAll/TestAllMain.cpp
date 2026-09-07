@@ -15,6 +15,8 @@ namespace myProject::testing{};
 
 int main(int argc, char** argv)
 {
+	auto code{sequoia::testing::return_code::incomplete_run};
+
 	try
 	{
 		using namespace myProject::testing;
@@ -22,7 +24,7 @@ int main(int argc, char** argv)
 
 		sequoia::testing::test_runner runner{argc, argv, "Oliver J. Rosten", "\t"};
 
-		runner.execute(sequoia::timer_resolution{1ms});
+		code = runner.execute(sequoia::timer_resolution{1ms});
 	}
 	catch(const std::exception& e)
 	{
@@ -33,6 +35,6 @@ int main(int argc, char** argv)
 		std::cout << "Unrecognized error\n"; 
 	}
 
-	return 0;
+	return sequoia::testing::to_exit_code(code);
 }
 
