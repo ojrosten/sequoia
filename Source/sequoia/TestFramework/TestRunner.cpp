@@ -681,6 +681,9 @@ namespace sequoia::testing
                         m_ConcurrencyMode = concurrency_mode::serial;
                     }
                   }}},
+                  {{{"--check-versioned-output", {}, {},
+                    [this](const arg_list&) { m_VersionedOutputMode = versioned_output_mode::checked; }
+                  }}},
                   {{{"--serial",  {}, {}, [this](const arg_list&) { m_ConcurrencyMode = concurrency_mode::serial; }}}},
                   {{{"--thread-pool", {}, {"Number of threads, must be >= 1"},
                     [this](const arg_list& args) {
@@ -695,7 +698,7 @@ namespace sequoia::testing
                       }
                     }
                   }}},
-                  {{{"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_OutputMode = output_mode::verbose; }}}}
+                  {{{"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_Verbosity = verbosity::verbose; }}}}
                 },
                 [](std::string_view){})
         };
@@ -806,6 +809,8 @@ namespace sequoia::testing
 
     if(nothing_to_do()) return return_code::success;
 
+    const auto baseline{versioned_output_baseline()};
+
     auto code{return_code::success};
 
     if((m_InstabilityMode != instability_mode::sandbox))
@@ -880,7 +885,29 @@ namespace sequoia::testing
       stream() << instability_analysis(outputDir, m_NumReps);
     }
 
-    return code;
+    return code | report_versioned_output_changes(baseline);
+  }
+
+  [[nodiscard]]
+  std::optional<versioned_output_snapshot> test_runner::versioned_output_baseline() const
+  {
+    if(m_VersionedOutputMode != versioned_output_mode::checked) return std::nullopt;
+
+    return take_versioned_output_snapshot(proj_paths().output());
+  }
+
+  [[nodiscard]]
+  return_code test_runner::report_versioned_output_changes(const std::optional<versioned_output_snapshot>& baseline)
+  {
+    if(!baseline) return return_code::success;
+
+    const auto differences{compare_versioned_output(*baseline, take_versioned_output_snapshot(proj_paths().output()))};
+
+    if(differences.empty()) return return_code::success;
+
+    stream() << "\nVersioned output written by this run differs from what was on disk:\n" << to_string(differences);
+
+    return return_code::versioned_output_diffs;
   }
 
   [[nodiscard]]
@@ -986,7 +1013,7 @@ namespace sequoia::testing
 
     traverse(depth_first, m_Suites, find_disconnected_t{}, nodeEarly, nodeLate, null_func_obj{});
 
-    if(m_OutputMode == output_mode::verbose)
+    if(m_Verbosity == verbosity::verbose)
     {
       indentation indent0{no_indent}, indent1{tab};
       auto printNode{

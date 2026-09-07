@@ -14,6 +14,7 @@
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
 #include <map>
+#include <string>
 #include <vector>
 
 namespace sequoia::testing
@@ -38,4 +39,11 @@ namespace sequoia::testing
 
   [[nodiscard]]
   versioned_output_differences compare_versioned_output(const versioned_output_snapshot& before, const versioned_output_snapshot& after);
+
+  /** The differences, listed under a heading for each non-empty group; empty if there are none.
+      Paths are rendered generically, since this is written both to the console and to files which
+      are compared across platforms.
+   */
+  [[nodiscard]]
+  std::string to_string(const versioned_output_differences& differences);
 }

@@ -35,6 +35,7 @@ locate-instabilities | locate | number of repetitions >= 2
   --runner-id private option, best avoided
 recover
 dump
+--check-versioned-output
 --serial
 --thread-pool Number of threads, must be >= 1
 --verbose | -v |

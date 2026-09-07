@@ -10,6 +10,7 @@
 #include "TestRunnerEndToEndFreeTest.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
+#include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
@@ -318,6 +319,27 @@ namespace sequoia::testing
     // --> async depth should be automatically set to "suite" since number of families is > 4
 
     run_and_check(report("Run synchronously"), b, "RunSynchronous", "--serial", return_code::success);
+
+    //=================== Rerun, checking the versioned output ===================//
+    // The previous run settled output/, so a run writing the same thing again must report nothing.
+    // Without this control, a check which fired on every run would look just as green as one which
+    // works.
+
+    run_and_check(report("Versioned output checked, nothing having drifted"), b, "CheckVersionedOutputStable",
+                  "--check-versioned-output", return_code::success);
+
+    //=================== Perturb the versioned output, and check again ===================//
+    // Rewriting one summary file and deleting another makes the next run's writes respectively a
+    // modification and an addition. Drift is a property of what is on disk rather than of the code,
+    // so it is induced here without touching a test - and it is repaired by the very run which
+    // detects it, leaving nothing downstream to accommodate.
+
+    const auto summaries{generated_project() /= "output/TestSummaries/Tests"};
+    write_to_file(summaries / "Stuff" / "FooTest.txt", "Not what the run will write\n");
+    fs::remove(summaries / "Maybe" / "MaybeTest.txt");
+
+    run_and_check(report("Versioned output checked, having drifted"), b, "CheckVersionedOutputDrifted",
+                  "--check-versioned-output", return_code::versioned_output_diffs);
 
     //=================== Rerun with async selecting 3 tests from 3 families ===================//
     // --> async depth should be automatically set to "test" since number of families is < 4

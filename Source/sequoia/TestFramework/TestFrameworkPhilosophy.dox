@@ -196,6 +196,15 @@
 	"exception_message_extractor" is provided to allow customized extraction of error messages
 	from exceptions of arbitrary types.
 
+	Version control is the natural home for all of these files, but it is not the only way to notice
+	when one of them moves. A run invoked with `--check-versioned-output` compares the content of
+	every such file before and after it writes, reports whatever was added, removed or modified, and
+	sets the corresponding bit in the value returned from `main`. This is deliberately off by default:
+	a run which legitimately changes the output - adding a check, adding a test, rewording a
+	diagnostic - would otherwise break the build until the new output had been committed. It exists
+	for continuous integration, where a change to these files is something to be looked at rather
+	than a routine step of the development loop.
+
     \section sec_extensible Extensibility
 
     There are several ways in which the testing framework may be extended. Suppose that a

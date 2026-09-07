@@ -14,6 +14,7 @@
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
 #include "sequoia/TestFramework/TestLogger.hpp"
+#include "sequoia/TestFramework/VersionedOutput.hpp"
 
 #include "sequoia/Core/Logic/Bitmask.hpp"
 #include "sequoia/Core/Object/Suite.hpp"
@@ -24,6 +25,7 @@
 #include <chrono>
 #include <format>
 #include <iostream>
+#include <optional>
 #include <set>
 #include <string>
 
@@ -336,8 +338,9 @@ namespace sequoia::testing
     const indentation& code_indent() const noexcept { return m_CodeIndent; }
 
   private:
-    enum class output_mode { standard = 0, verbose = 1 };
+    enum class verbosity { standard = 0, verbose = 1 };
     enum class instability_mode { none = 0, single_instance, coordinator, sandbox };
+    enum class versioned_output_mode { unchecked = 0, checked = 1 };
 
     struct prune_info
     {
@@ -384,12 +387,13 @@ namespace sequoia::testing
     filter_type m_Filter{path_equivalence{proj_paths().tests().repo()}, test_to_path{}};
     prune_info m_PruneInfo{};
 
-    runner_mode      m_RunnerMode{runner_mode::none};
-    output_mode      m_OutputMode{output_mode::standard};
-    update_mode      m_UpdateMode{update_mode::none};
-    recovery_mode    m_RecoveryMode{recovery_mode::none};
-    concurrency_mode m_ConcurrencyMode{concurrency_mode::dynamic};
-    instability_mode m_InstabilityMode{instability_mode::none};
+    runner_mode           m_RunnerMode{runner_mode::none};
+    verbosity             m_Verbosity{verbosity::standard};
+    update_mode           m_UpdateMode{update_mode::none};
+    recovery_mode         m_RecoveryMode{recovery_mode::none};
+    concurrency_mode      m_ConcurrencyMode{concurrency_mode::dynamic};
+    instability_mode      m_InstabilityMode{instability_mode::none};
+    versioned_output_mode m_VersionedOutputMode{versioned_output_mode::unchecked};
 
     std::size_t m_NumReps{1},
                 m_RunnerID{},
@@ -412,6 +416,17 @@ namespace sequoia::testing
 
     [[nodiscard]]
     const log_summary& root_summary() const;
+
+    /** The state to compare the run's writes against, or nothing at all if the versioned output is
+        not being checked - which is a different thing from an empty snapshot, since a project with
+        no versioned output yet legitimately has one of those. This is the sole place the mode is
+        consulted, and the files are read only when something will be done with them.
+     */
+    [[nodiscard]]
+    std::optional<versioned_output_snapshot> versioned_output_baseline() const;
+
+    [[nodiscard]]
+    return_code report_versioned_output_changes(const std::optional<versioned_output_snapshot>& baseline);
 
     [[nodiscard]]
     bool nothing_to_do();
