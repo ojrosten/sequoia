@@ -150,16 +150,19 @@ FUNCTION(sequoia_enable_import_std target)
 ENDFUNCTION()
 
 # Locate the standard library's own module source. Each implementation ships one
-# and puts it somewhere different; none of these paths is guessed - the libc++
-# and libstdc++ ones are verified on this machine, and the MSVC one is where the
-# toolset documents std.ixx, to be confirmed on Windows.
+# and puts it somewhere different.
 FUNCTION(sequoia_find_std_module_source out)
     get_filename_component(toolchain_bin "${CMAKE_CXX_COMPILER}" DIRECTORY)
 
     if(MSVC)
-        # $(VCToolsInstallDir)modules/std.ixx. UNVERIFIED: no Windows machine here.
-        file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" vc_tools)
-        set(candidates "${vc_tools}/modules/std.ixx")
+        # <toolset root>/modules/std.ixx, the root being three levels above the
+        # compiler's directory. Derived from the compiler rather than read from
+        # $ENV{VCToolsInstallDir}, which only vcvars sets.
+        set(candidates "${toolchain_bin}/../../../modules/std.ixx")
+        if(DEFINED ENV{VCToolsInstallDir})
+            file(TO_CMAKE_PATH "$ENV{VCToolsInstallDir}" vc_tools)
+            list(APPEND candidates "${vc_tools}/modules/std.ixx")
+        endif()
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU"
            OR CMAKE_CXX_STANDARD_LIBRARY STREQUAL "libstdc++")
         # GNU has to be named outright. CMAKE_CXX_STANDARD_LIBRARY is set only for
