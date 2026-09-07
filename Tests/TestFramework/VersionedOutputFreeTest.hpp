@@ -29,6 +29,8 @@ namespace sequoia::testing
   private:
     void test_comparisons();
 
+    void test_reporting();
+
     void test_snapshot();
   };
 }

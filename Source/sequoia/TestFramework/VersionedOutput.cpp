@@ -66,6 +66,14 @@ namespace sequoia::testing
 
       return keys;
     }
+
+    void append_group(std::string& text, std::string_view heading, const std::vector<fs::path>& paths)
+    {
+      if(paths.empty()) return;
+
+      text.append(heading).append(":\n");
+      for(const auto& p : paths) text.append("  ").append(p.generic_string()).append("\n");
+    }
   }
 
   [[nodiscard]]
@@ -90,5 +98,17 @@ namespace sequoia::testing
     return {.added    = keys_only_in(after, before),
             .removed  = keys_only_in(before, after),
             .modified = after | std::views::filter(changed) | std::views::keys | std::ranges::to<std::vector>()};
+  }
+
+  [[nodiscard]]
+  std::string to_string(const versioned_output_differences& differences)
+  {
+    std::string text{};
+
+    append_group(text, "Added",    differences.added);
+    append_group(text, "Removed",  differences.removed);
+    append_group(text, "Modified", differences.modified);
+
+    return text;
   }
 }

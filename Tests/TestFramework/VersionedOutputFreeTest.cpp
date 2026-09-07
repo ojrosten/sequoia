@@ -25,6 +25,7 @@ namespace sequoia::testing
   void versioned_output_free_test::run_tests()
   {
     test_comparisons();
+    test_reporting();
     test_snapshot();
   }
 
@@ -60,6 +61,25 @@ namespace sequoia::testing
     check_differences("One of each, reported separately",
                       compare_versioned_output(two, versioned_output_snapshot{{"a.txt", "not alpha"}, {"c.txt", "gamma"}}),
                       {"c.txt"}, {"b.txt"}, {"a.txt"});
+  }
+
+  void versioned_output_free_test::test_reporting()
+  {
+    namespace fs = std::filesystem;
+
+    check(equality, "Nothing to report", to_string(versioned_output_differences{}), std::string{});
+
+    // `fs::path{"Sub"} / "b.txt"` carries the platform's separator, which is what `fs::relative`
+    // yields when a snapshot is taken; the report must nevertheless read the same everywhere.
+    check(equality,
+          "Only the groups with something in them are listed",
+          to_string({.modified{"a.txt", fs::path{"Sub"} / "b.txt"}}),
+          std::string{"Modified:\n  a.txt\n  Sub/b.txt\n"});
+
+    check(equality,
+          "Each group under its own heading, in a fixed order",
+          to_string({.added{"c.txt"}, .removed{"d.txt"}, .modified{"a.txt"}}),
+          std::string{"Added:\n  c.txt\nRemoved:\n  d.txt\nModified:\n  a.txt\n"});
   }
 
   void versioned_output_free_test::test_snapshot()

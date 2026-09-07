@@ -65,6 +65,8 @@ namespace sequoia::testing
 
     void test_stamp_on_second_boundary(const project_paths& projPaths);
 
+    void test_pass_recorded_in_the_modification_second(const project_paths& projPaths);
+
     void test_prune_update(const project_paths& projPaths);
 
     void test_instability_analysis_prune_upate(const project_paths& projPaths);
