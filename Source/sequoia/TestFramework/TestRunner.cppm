@@ -97,7 +97,7 @@ namespace std
   {
     constexpr auto parse(auto& ctx) { return ctx.begin(); }
 
-    auto format(sequoia::testing::return_code code, auto& ctx) const
+    auto format(sequoia::testing::return_code code, auto& ctx) const -> decltype(ctx.out())
     {
       return std::format_to(ctx.out(), "{}", sequoia::testing::to_string(code));
     }
