@@ -25,8 +25,11 @@
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
+#include <algorithm>
+#include <array>
 #include <format>
 #include <fstream>
+#include <utility>
 
 namespace sequoia::testing
 {
@@ -157,6 +160,21 @@ namespace sequoia::testing
       nascent_tests.emplace_back(std::move(nascentTest));
     }
 
+    constexpr std::array<std::pair<return_code, std::string_view>, 4> return_code_names{{
+      {return_code::output_diffs,      "output_diffs"     },
+      {return_code::soft_failures,     "soft_failures"    },
+      {return_code::critical_failures, "critical_failures"},
+      {return_code::incomplete_run,    "incomplete_run"   }
+    }};
+
+    constexpr return_code dirty_return_codes{
+      std::ranges::fold_left(
+        return_code_names,
+        return_code::success,
+        [](return_code acc, const auto& entry) { return acc | entry.first; }
+      )
+    };
+
     [[nodiscard]]
     std::string to_async_option(concurrency_mode mode, std::size_t threadPoolSize)
     {
@@ -171,22 +189,6 @@ namespace sequoia::testing
       }
 
       throw std::logic_error{"Illegal option for concurrency_mode"};
-    }
-
-    [[nodiscard]]
-    return_code child_return_code(const int exitStatus)
-    {
-      constexpr auto dirty{  return_code::output_diffs
-                           | return_code::soft_failures
-                           | return_code::critical_failures
-                           | return_code::incomplete_run};
-
-      const auto code{static_cast<return_code>(exitStatus)};
-
-      if((exitStatus < 0) || ((code & ~dirty) != return_code::success))
-        throw std::runtime_error{std::format("Unrecognized return code from child process: {}", exitStatus)};
-
-      return code;
     }
 
     const std::string& convert(const std::string& s) { return s; }
@@ -289,6 +291,41 @@ namespace sequoia::testing
         }
       }
     };
+  }
+
+  std::string to_string(const return_code code)
+  {
+    if((code & ~dirty_return_codes) != return_code::success)
+      throw std::logic_error{std::format("Unrecognized bits in return_code: {}", std::to_underlying(code))};
+
+    if(code == return_code::success) return "success";
+
+    return std::ranges::fold_left(
+             return_code_names,
+             std::string{},
+             [code](std::string name, const auto& entry) {
+               const auto& [bit, text] {entry};
+
+               if((code & bit) == bit)
+               {
+                 if(!name.empty()) name.append("|");
+                 name.append(text);
+               }
+
+               return name;
+             }
+           );
+  }
+
+  [[nodiscard]]
+  return_code child_return_code(const int exitStatus)
+  {
+    const auto code{static_cast<return_code>(exitStatus)};
+
+    if((exitStatus < 0) || ((code & ~dirty_return_codes) != return_code::success))
+      throw std::runtime_error{std::format("Unrecognized return code from child process: {}", exitStatus)};
+
+    return code;
   }
 
   [[nodiscard]]

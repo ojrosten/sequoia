@@ -21,9 +21,11 @@
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
-#include <iostream>
 #include <chrono>
+#include <format>
+#include <iostream>
 #include <set>
+#include <string>
 
 namespace sequoia::testing
 {
@@ -42,6 +44,9 @@ namespace sequoia::testing
   };
 
   enum class return_code : unsigned { success=0, output_diffs=1, soft_failures=2, critical_failures=4, incomplete_run=8};
+
+  [[nodiscard]]
+  std::string to_string(return_code code);
 }
 
 NAMESPACE_SEQUOIA_AS_BITMASK
@@ -56,10 +61,29 @@ NAMESPACE_SEQUOIA_AS_BITMASK
   struct as_bitmask<sequoia::testing::return_code> : std::true_type {};
 }
 
+namespace std
+{
+  template<>
+  struct formatter<sequoia::testing::return_code>
+  {
+    constexpr auto parse(auto& ctx) { return ctx.begin(); }
+
+    auto format(sequoia::testing::return_code code, auto& ctx) const
+    {
+      return std::format_to(ctx.out(), "{}", sequoia::testing::to_string(code));
+    }
+  };
+}
+
 namespace sequoia::testing
 {
   [[nodiscard]]
   return_code to_return_code(const log_summary& summary) noexcept;
+
+  /** Maps the exit status of a process which ran a sequoia test runner back to the code it
+      reported, throwing if the status is not one a runner can produce. */
+  [[nodiscard]]
+  return_code child_return_code(int exitStatus);
 
   [[nodiscard]]
   int to_exit_code(return_code code) noexcept;
