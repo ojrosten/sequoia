@@ -161,10 +161,10 @@ namespace sequoia::testing
     }
 
     constexpr std::array<std::pair<return_code, std::string_view>, 4> return_code_names{{
-      {return_code::output_diffs,      "output_diffs"     },
-      {return_code::soft_failures,     "soft_failures"    },
-      {return_code::critical_failures, "critical_failures"},
-      {return_code::incomplete_run,    "incomplete_run"   }
+      {return_code::versioned_output_diffs, "versioned_output_diffs"},
+      {return_code::soft_failures,          "soft_failures"         },
+      {return_code::critical_failures,      "critical_failures"     },
+      {return_code::incomplete_run,         "incomplete_run"        }
     }};
 
     constexpr return_code dirty_return_codes{

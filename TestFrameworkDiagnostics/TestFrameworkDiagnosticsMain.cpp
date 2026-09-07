@@ -36,6 +36,7 @@ int main(int argc, char** argv)
 
     runner.add_test_suite(
       "Test Framework Auxiliary",
+      versioned_output_free_test{"Versioned Output Free Test"},
       file_editors_free_test{"File Editors Free Test"},
       individual_test_paths_free_test{"Individual Test Paths Free Test"},
       basic_test_interface_free_test{"Basic Test Interface Free Test"},

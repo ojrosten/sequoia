@@ -43,7 +43,7 @@ namespace sequoia::testing
     fixed      /// fixed-size thread pool
   };
 
-  enum class return_code : unsigned { success=0, output_diffs=1, soft_failures=2, critical_failures=4, incomplete_run=8};
+  enum class return_code : unsigned { success=0, versioned_output_diffs=1, soft_failures=2, critical_failures=4, incomplete_run=8};
 
   [[nodiscard]]
   std::string to_string(return_code code);

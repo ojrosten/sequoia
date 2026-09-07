@@ -34,6 +34,7 @@ set(SourceList
     TestFramework/TestLogger.cpp
     TestFramework/TestRunner.cpp
     TestFramework/TestRunnerUtilities.cpp
+    TestFramework/VersionedOutput.cpp
     TextProcessing/Indent.cpp
     TextProcessing/Patterns.cpp
     TextProcessing/Substitutions.cpp)

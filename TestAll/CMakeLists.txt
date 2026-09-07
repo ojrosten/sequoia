@@ -191,6 +191,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/TestRunnerProjectFiles.cpp
                ${TestDir}/TestFramework/TestRunnerTest.cpp
                ${TestDir}/TestFramework/TestRunnerTestCreation.cpp
+               ${TestDir}/TestFramework/VersionedOutputFreeTest.cpp
                ${TestDir}/TextProcessing/IndentFreeTest.cpp
                ${TestDir}/TextProcessing/PatternsFreeTest.cpp
                ${TestDir}/TextProcessing/SubstitutionsFreeTest.cpp)
