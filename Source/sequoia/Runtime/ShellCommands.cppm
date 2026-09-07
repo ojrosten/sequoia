@@ -56,7 +56,8 @@ export namespace sequoia::runtime
       return lhs && shell_command{std::move(rhs)};
     }
 
-    friend void invoke(const shell_command& cmd);
+    /** Returns the exit status of the command, or -1 if it did not run to completion. */
+    friend int invoke(const shell_command& cmd);
   private:
     std::string m_Command;
 

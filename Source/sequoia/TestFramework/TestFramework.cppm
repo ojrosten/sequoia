@@ -59,4 +59,5 @@ export import :TestLogger;
 export import :TestMode;
 export import :TestPreprocessorDefinitions;
 export import :TestRunner;
+export import :VersionedOutput;
 export import :TestRunnerUtilities;

@@ -153,6 +153,21 @@ namespace sequoia::testing
       nascent_tests.emplace_back(std::move(nascentTest));
     }
 
+    constexpr std::array<std::pair<return_code, std::string_view>, 4> return_code_names{{
+      {return_code::versioned_output_diffs, "versioned_output_diffs"},
+      {return_code::soft_failures,          "soft_failures"         },
+      {return_code::critical_failures,      "critical_failures"     },
+      {return_code::incomplete_run,         "incomplete_run"        }
+    }};
+
+    constexpr return_code dirty_return_codes{
+      std::ranges::fold_left(
+        return_code_names,
+        return_code::success,
+        [](return_code acc, const auto& entry) { return acc | entry.first; }
+      )
+    };
+
     [[nodiscard]]
     std::string to_async_option(concurrency_mode mode, std::size_t threadPoolSize)
     {
@@ -163,7 +178,7 @@ namespace sequoia::testing
       case concurrency_mode::dynamic:
         return "";
       case concurrency_mode::fixed:
-        return " --thread-pool " + std::to_string(threadPoolSize);
+        return std::format(" --thread-pool {}", threadPoolSize);
       }
 
       throw std::logic_error{"Illegal option for concurrency_mode"};
@@ -269,6 +284,58 @@ namespace sequoia::testing
         }
       }
     };
+  }
+
+  std::string to_string(const return_code code)
+  {
+    if((code & ~dirty_return_codes) != return_code::success)
+      throw std::logic_error{std::format("Unrecognized bits in return_code: {}", std::to_underlying(code))};
+
+    if(code == return_code::success) return "success";
+
+    return std::ranges::fold_left(
+             return_code_names,
+             std::string{},
+             [code](std::string name, const auto& entry) {
+               const auto& [bit, text] {entry};
+
+               if((code & bit) == bit)
+               {
+                 if(!name.empty()) name.append("|");
+                 name.append(text);
+               }
+
+               return name;
+             }
+           );
+  }
+
+  [[nodiscard]]
+  return_code child_return_code(const int exitStatus)
+  {
+    const auto code{static_cast<return_code>(exitStatus)};
+
+    if((exitStatus < 0) || ((code & ~dirty_return_codes) != return_code::success))
+      throw std::runtime_error{std::format("Unrecognized return code from child process: {}", exitStatus)};
+
+    return code;
+  }
+
+  [[nodiscard]]
+  return_code to_return_code(const log_summary& summary) noexcept
+  {
+    auto code{return_code::success};
+
+    if(summary.soft_failures())     code |= return_code::soft_failures;
+    if(summary.critical_failures()) code |= return_code::critical_failures;
+
+    return code;
+  }
+
+  [[nodiscard]]
+  int to_exit_code(const return_code code) noexcept
+  {
+    return static_cast<int>(code);
   }
 
   individual_materials_paths set_materials(const std::filesystem::path& sourceFile, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)
@@ -721,15 +788,17 @@ namespace sequoia::testing
     );
   }
 
-  void test_runner::execute([[maybe_unused]] timer_resolution r)
+  return_code test_runner::execute([[maybe_unused]] timer_resolution r)
   {
     if(!in_mode(runner_mode::test))
-      return;
+      return return_code::success;
 
     fs::create_directories(proj_paths().prune().dir());
     check_for_missing_tests();
 
-    if(nothing_to_do()) return;
+    if(nothing_to_do()) return return_code::success;
+
+    auto code{return_code::success};
 
     if((m_InstabilityMode != instability_mode::sandbox))
     {
@@ -767,9 +836,10 @@ namespace sequoia::testing
 
       for(std::size_t i{}; i < m_NumReps; ++i)
       {
-        invoke(runtime::shell_command(proj_paths().executable().string().append(" locate ").append(std::to_string(m_NumReps))
-                                                               .append(" --runner-id ").append(std::to_string(i)).append(specified)
-                                                               .append(to_async_option(m_ConcurrencyMode, m_PoolSize))));
+        code |= child_return_code(
+                  invoke(runtime::shell_command(proj_paths().executable().string().append(" locate ").append(std::to_string(m_NumReps))
+                                                                         .append(" --runner-id ").append(std::to_string(i)).append(specified)
+                                                                         .append(to_async_option(m_ConcurrencyMode, m_PoolSize)))));
       }
     }
     else
@@ -779,6 +849,7 @@ namespace sequoia::testing
       if(m_InstabilityMode == instability_mode::sandbox)
       {
         run_tests(m_RunnerID);
+        code |= to_return_code(root_summary());
       }
       else
       {
@@ -788,6 +859,7 @@ namespace sequoia::testing
 
           const auto optIndex{m_NumReps > 1 ? std::optional<std::size_t>{i} : std::nullopt};
           run_tests(optIndex);
+          code |= to_return_code(root_summary());
         }
       }
     }
@@ -799,6 +871,14 @@ namespace sequoia::testing
       const auto outputDir{proj_paths().output().instability_analysis()};
       stream() << instability_analysis(outputDir, m_NumReps);
     }
+
+    return code;
+  }
+
+  [[nodiscard]]
+  const log_summary& test_runner::root_summary() const
+  {
+    return m_Suites.cbegin_node_weights()->summary;
   }
 
   void test_runner::sort_tests()
@@ -945,7 +1025,7 @@ namespace sequoia::testing
     if(asyncDuration) m_Suites.begin_node_weights()->summary.execution_time(*asyncDuration);
 
     stream() << "\n-----------Grand Totals-----------\n";
-    stream() << summarize(m_Suites.cbegin_node_weights()->summary, "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+    stream() << summarize(root_summary(), "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
   }
 
   [[nodiscard]]

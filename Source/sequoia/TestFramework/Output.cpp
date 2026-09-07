@@ -12,7 +12,7 @@ module;
 // Not a standard-library header, so import std does not supply it; and it is
 // the libstdc++/libc++ ABI header, which MSVC does not ship.
 #ifndef _MSC_VER
-  #include <cxxabi.h>
+  #include "cxxabi.h"
 #endif
 
 module sequoia.test_framework;

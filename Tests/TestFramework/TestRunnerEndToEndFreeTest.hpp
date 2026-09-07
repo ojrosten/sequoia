@@ -22,11 +22,14 @@ namespace sequoia::testing
   public:
     cmd_builder(const std::filesystem::path& projRoot, const build_paths& applicationBuildPaths);
 
-    void create_build_run(const std::filesystem::path& creationOutput, std::string_view buildOutput, const std::filesystem::path& output) const;
+    [[nodiscard]]
+    return_code create_build_run(const std::filesystem::path& creationOutput, std::string_view buildOutput, const std::filesystem::path& output) const;
 
-    void rebuild_run(const std::filesystem::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const;
+    [[nodiscard]]
+    return_code rebuild_run(const std::filesystem::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const;
 
-    void run_executable(const std::filesystem::path& outputDir, std::string_view options) const;
+    [[nodiscard]]
+    return_code run_executable(const std::filesystem::path& outputDir, std::string_view options) const;
 
     [[nodiscard]]
     const std::filesystem::path& cmake_cache_dir() const;
@@ -39,6 +42,9 @@ namespace sequoia::testing
   private:
     main_paths m_Main;
     build_paths m_Build;
+
+    [[nodiscard]]
+    return_code run_nested(std::string_view options, const std::filesystem::path& outputFile) const;
   };
 
   class test_runner_end_to_end_test final : public free_test
@@ -62,9 +68,9 @@ namespace sequoia::testing
 
     void create_run_and_check(std::string_view description, const cmd_builder& b);
 
-    void run_and_check(std::string_view description, const cmd_builder& b, std::string_view relOutputDir, std::string_view options);
+    void run_and_check(std::string_view description, const cmd_builder& b, std::string_view relOutputDir, std::string_view options, return_code expected);
 
-    void rebuild_run_and_check(std::string_view description, const cmd_builder& b, std::string_view relOutputDir, std::string_view CMakeOutput, std::string_view BuildOutput, std::string_view options);
+    void rebuild_run_and_check(std::string_view description, const cmd_builder& b, std::string_view relOutputDir, std::string_view CMakeOutput, std::string_view BuildOutput, std::string_view options, return_code expected);
 
   };
 }

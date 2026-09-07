@@ -31,7 +31,7 @@ export import sequoia.text_processing;
 export namespace sequoia::testing
 {
   /** bit mask for the level of detail */
-  enum class summary_detail { none=0, absent_checks=1, failure_messages=2, timings=4};
+  enum class summary_detail : unsigned { none=0, absent_checks=1, failure_messages=2, timings=4};
 }
 
 export NAMESPACE_SEQUOIA_AS_BITMASK

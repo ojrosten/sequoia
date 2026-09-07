@@ -38,6 +38,7 @@ set(SourceList
     TestFramework/TestLogger.cpp
     TestFramework/TestRunner.cpp
     TestFramework/TestRunnerUtilities.cpp
+    TestFramework/VersionedOutput.cpp
     TextProcessing/Indent.cpp
     TextProcessing/Patterns.cpp
     TextProcessing/Substitutions.cpp)
@@ -177,6 +178,7 @@ set(ModuleList
     TestFramework/TestMode.cppm
     TestFramework/TestPreprocessorDefinitions.cppm
     TestFramework/TestRunner.cppm
+    TestFramework/VersionedOutput.cppm
     TestFramework/TestRunnerUtilities.cppm
     TextProcessing/Indent.cppm
     TextProcessing/Patterns.cppm
