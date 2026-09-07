@@ -81,7 +81,7 @@ export namespace sequoia::testing
     [[nodiscard]]
     decltype(auto) operator()() const { return m_Fn(); }
   private:
-    object::copyable_function<T() const> m_Fn;
+    std::function<T()> m_Fn;
   };
 
   template<class T, check_ordering CheckOrdering=check_ordering{deep_totally_ordered<T>}>
@@ -89,7 +89,7 @@ export namespace sequoia::testing
   {
   public:
     using transition_graph
-      = maths::directed_graph<transition_info<T, object::copyable_function<T(const T&) const>, CheckOrdering>, object_generator<T>>;
+      = maths::directed_graph<transition_info<T, std::function<T(const T&)>, CheckOrdering>, object_generator<T>>;
 
     using size_type = transition_graph::size_type;
 

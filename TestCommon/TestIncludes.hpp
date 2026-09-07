@@ -34,7 +34,6 @@
 #include "Core/Meta/TypeListFreeTest.hpp"
 #include "Core/Meta/TypeTraitsTest.hpp"
 #include "Core/Meta/UtilitiesTest.hpp"
-#include "Core/Object/CopyableFunctionFreeTest.hpp"
 #include "Core/Object/CreatorFreeTest.hpp"
 #include "Core/Object/FactoryTest.hpp"
 #include "Core/Object/FactoryTestingDiagnostics.hpp"

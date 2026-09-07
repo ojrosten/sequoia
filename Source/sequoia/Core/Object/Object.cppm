@@ -9,7 +9,6 @@
 
 export module sequoia.core.object;
 
-export import :CopyableFunction;
 export import :Creator;
 export import :Factory;
 export import :HandlerTraits;
