@@ -14,6 +14,7 @@
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <algorithm>
+#include <iterator>
 #include <ranges>
 #include <stdexcept>
 
@@ -61,9 +62,12 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    auto absent_from(const versioned_output_snapshot& snapshot)
+    std::vector<fs::path> keys_only_in(const versioned_output_snapshot& snapshot, const versioned_output_snapshot& other)
     {
-      return [&snapshot](const fs::path& path) { return !snapshot.contains(path); };
+      std::vector<fs::path> keys{};
+      std::ranges::set_difference(snapshot | std::views::keys, other | std::views::keys, std::back_inserter(keys));
+
+      return keys;
     }
   }
 
@@ -86,8 +90,8 @@ namespace sequoia::testing
       }
     };
 
-    return {.added    = after  | std::views::keys | std::views::filter(absent_from(before)) | std::ranges::to<std::vector>(),
-            .removed  = before | std::views::keys | std::views::filter(absent_from(after))  | std::ranges::to<std::vector>(),
-            .modified = after  | std::views::filter(changed) | std::views::keys | std::ranges::to<std::vector>()};
+    return {.added    = keys_only_in(after, before),
+            .removed  = keys_only_in(before, after),
+            .modified = after | std::views::filter(changed) | std::views::keys | std::ranges::to<std::vector>()};
   }
 }
