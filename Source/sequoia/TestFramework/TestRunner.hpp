@@ -414,6 +414,18 @@ namespace sequoia::testing
 
     void run_tests(std::optional<std::size_t> id);
 
+    /** The `select`/`test` options which reproduce this run's filter, for handing to a child process. */
+    [[nodiscard]]
+    std::string selection_options() const;
+
+    /** Runs the tests in child processes, one per repetition, each isolated from the others. */
+    [[nodiscard]]
+    return_code run_tests_in_sandboxes();
+
+    /** Runs the tests here: once if this process is itself a sandbox, otherwise once per repetition. */
+    [[nodiscard]]
+    return_code run_tests_in_this_process();
+
     [[nodiscard]]
     const log_summary& root_summary() const;
 

@@ -809,83 +809,90 @@ namespace sequoia::testing
 
     if(nothing_to_do()) return return_code::success;
 
-    const auto baseline{versioned_output_baseline()};
-
-    auto code{return_code::success};
-
-    if((m_InstabilityMode != instability_mode::sandbox))
-    {
+    if(m_InstabilityMode != instability_mode::sandbox)
       fs::remove_all(proj_paths().output().instability_analysis());
-    }
 
-    if(m_InstabilityMode == instability_mode::coordinator)
-    {
-      if(proj_paths().executable().empty())
-        throw std::runtime_error{"Unable to run in sandbox mode, as executable cannot be found"};
-
-      const auto specified{
-        [&filter=m_Filter] () -> std::string {
-          std::string srcs{};
-
-          if(auto items{filter.selected_items()})
-          {
-            for(const auto&[file, found] : *items)
-            {
-              if(found) srcs.append(" select " + file.path().generic_string());
-            }
-          }
-
-          if(auto suites{filter.selected_suites()})
-          {
-            for(const auto&[name, found] : *suites)
-            {
-              if(found) srcs.append(" test " + name);
-            }
-          }
-
-          return srcs;
-        }()
-      };
-
-      for(std::size_t i{}; i < m_NumReps; ++i)
-      {
-        code |= child_return_code(
-                  invoke(runtime::shell_command(proj_paths().executable().string().append(" locate ").append(std::to_string(m_NumReps))
-                                                                         .append(" --runner-id ").append(std::to_string(i)).append(specified)
-                                                                         .append(to_async_option(m_ConcurrencyMode, m_PoolSize)))));
-      }
-    }
-    else
-    {
-      if(concurrent_execution()) sort_tests();
-
-      if(m_InstabilityMode == instability_mode::sandbox)
-      {
-        run_tests(m_RunnerID);
-        code |= to_return_code(root_summary());
-      }
-      else
-      {
-        for(std::size_t i{}; i < m_NumReps; ++i)
-        {
-          if(i) reset_tests();
-
-          const auto optIndex{m_NumReps > 1 ? std::optional<std::size_t>{i} : std::nullopt};
-          run_tests(optIndex);
-          code |= to_return_code(root_summary());
-        }
-      }
-    }
+    const auto baseline{versioned_output_baseline()};
+    const auto code{  m_InstabilityMode == instability_mode::coordinator
+                    ? run_tests_in_sandboxes()
+                    : run_tests_in_this_process()};
 
     if(   (m_InstabilityMode == instability_mode::single_instance)
        || (m_InstabilityMode == instability_mode::coordinator))
     {
       aggregate_instability_analysis_prune_files(proj_paths(), m_PruneInfo.mode, entry_time_stamp, m_NumReps);
-      const auto outputDir{proj_paths().output().instability_analysis()};
-      stream() << instability_analysis(outputDir, m_NumReps);
+      stream() << instability_analysis(proj_paths().output().instability_analysis(), m_NumReps);
     }
 
     return code | report_versioned_output_changes(baseline);
+  }
+
+  [[nodiscard]]
+  std::string test_runner::selection_options() const
+  {
+    std::string options{};
+
+    if(auto items{m_Filter.selected_items()})
+    {
+      for(const auto& [file, found] : *items)
+      {
+        if(found) options += std::format(" select {}", file.path().generic_string());
+      }
+    }
+
+    if(auto suites{m_Filter.selected_suites()})
+    {
+      for(const auto& [name, found] : *suites)
+      {
+        if(found) options += std::format(" test {}", name);
+      }
+    }
+
+    return options;
+  }
+
+  [[nodiscard]]
+  return_code test_runner::run_tests_in_sandboxes()
+  {
+    if(proj_paths().executable().empty())
+      throw std::runtime_error{"Unable to run in sandbox mode, as executable cannot be found"};
+
+    const auto selection{selection_options()},
+               async{to_async_option(m_ConcurrencyMode, m_PoolSize)};
+
+    auto code{return_code::success};
+    for(std::size_t i{}; i < m_NumReps; ++i)
+    {
+      code |= child_return_code(
+                invoke(runtime::shell_command{std::format("{} locate {} --runner-id {}{}{}",
+                                                          proj_paths().executable().string(), m_NumReps, i, selection, async)}));
+    }
+
+    return code;
+  }
+
+  [[nodiscard]]
+  return_code test_runner::run_tests_in_this_process()
+  {
+    if(concurrent_execution()) sort_tests();
+
+    if(m_InstabilityMode == instability_mode::sandbox)
+    {
+      run_tests(m_RunnerID);
+      return to_return_code(root_summary());
+    }
+
+    auto code{return_code::success};
+    for(std::size_t i{}; i < m_NumReps; ++i)
+    {
+      if(i) reset_tests();
+
+      const auto optIndex{m_NumReps > 1 ? std::optional<std::size_t>{i} : std::nullopt};
+      run_tests(optIndex);
+      code |= to_return_code(root_summary());
+    }
+
+    return code;
   }
 
   [[nodiscard]]
