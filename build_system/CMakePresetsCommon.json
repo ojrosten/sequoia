@@ -576,6 +576,14 @@
       "description": "Configure for ${displayName}",
       "inherits": ["msvc", "base-asan-msvc"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+    },
+    {
+      "name": "msvc-ninja",
+      "displayName": "MSVC with Ninja",
+      "description": "Configure for ${displayName}. Needs cl.exe on PATH - a developer command prompt, or a shell vcvars has been applied to - because with Ninja CMake finds the compiler there rather than through the generator. Unqualified 'msvc' stays the Visual Studio generator, which is what a client working in the IDE wants; Ninja is for everything else, CI included, and it separates cl.exe's cost from msbuild's.",
+      "generator": "Ninja",
+      "inherits": ["base-debug", "base-binary"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
     }
   ],
   "buildPresets": [
@@ -1096,6 +1104,19 @@
       "name": "run-msvc-asan",
       "displayName": "Run MSVC [Debug, asan]",
       "inherits": ["msvc-asan", "base-run"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+    },
+    {
+      "name": "msvc-ninja",
+      "displayName": "MSVC with Ninja [Debug]",
+      "configurePreset": "msvc-ninja",
+      "inherits": ["base-ninja"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+    },
+    {
+      "name": "run-msvc-ninja",
+      "displayName": "Run MSVC with Ninja [Debug]",
+      "inherits": ["msvc-ninja", "base-run"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
     },
     {
@@ -1812,6 +1833,13 @@
       "steps": [
         { "type": "configure", "name": "msvc-asan" },
         { "type": "build",     "name": "run-msvc-asan" }
+      ]
+    },
+    {
+      "name": "msvc-ninja",
+      "steps": [
+        { "type": "configure", "name": "msvc-ninja" },
+        { "type": "build",     "name": "run-msvc-ninja" }
       ]
     },
     {

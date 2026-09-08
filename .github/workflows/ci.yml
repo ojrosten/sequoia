@@ -48,6 +48,14 @@ jobs:
           - name: Windows / MSVC / Debug
             os: windows-latest
             preset: msvc
+          # Paired with the row above on the same commit and image, because the
+          # Windows column differs from the other two in build system as well as
+          # compiler: `msvc` is the Visual Studio generator, everything else is
+          # Ninja. Without both, a slow Windows column cannot be attributed to
+          # cl.exe rather than to msbuild's per-project overhead.
+          - name: Windows / MSVC / Ninja
+            os: windows-latest
+            preset: msvc-ninja
 
     # bash everywhere, including Windows, so that one set of steps serves all
     # three columns rather than each acquiring a shell dialect of its own.
@@ -76,6 +84,8 @@ jobs:
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
           sudo apt-get install -y "$CXX" ninja-build libtbb-dev
+          echo "CC=${{ matrix.cc }}"   >> "$GITHUB_ENV"
+          echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"
         env:
           CXX: ${{ matrix.cxx }}
 
@@ -104,10 +114,46 @@ jobs:
             -all -products '*' -property displayName || true
           cmake --version
 
+      # With the Visual Studio generator CMake finds the toolset itself; with
+      # Ninja it looks for cl.exe on PATH, which nothing puts there. vcvars sets
+      # it, but only within the cmd session that runs it, so its effect has to be
+      # captured and handed forward.
+      #
+      # Named variables rather than a whole `set` dump, so this cannot silently
+      # clobber the runner's own environment; and PATH goes to GITHUB_PATH rather
+      # than GITHUB_ENV, because a Windows-form PATH written into the environment
+      # of a later bash step is a good way to lose every command at once.
+      - name: Enter the MSVC environment
+        if: matrix.preset == 'msvc-ninja'
+        run: |
+          vswhere="/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe"
+          root=$("$vswhere" -latest -products '*'                    -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64                    -property installationPath)
+          [ -n "$root" ] || { echo "::error::no VC toolset reported by vswhere"; exit 1; }
+          vcvars="$(cygpath -u "$root")/VC/Auxiliary/Build/vcvars64.bat"
+          [ -f "$vcvars" ] || { echo "::error::$vcvars does not exist"; exit 1; }
+
+          dump=$(cmd //c "call \"$(cygpath -w "$vcvars")\" >nul && set" | tr -d '\r')
+          printf '%s\n' "$dump" | grep -iE '^(INCLUDE|LIB|LIBPATH|VCToolsInstallDir|VCINSTALLDIR|VSINSTALLDIR|WindowsSdkDir|WindowsSDKVersion|UCRTVersion|UniversalCRTSdkDir)=' >> "$GITHUB_ENV"
+          printf '%s\n' "$dump" | grep -iE '^PATH=' | head -1 | sed 's/^[Pp][Aa][Tt][Hh]=//'             | tr ';' '\n' | grep -v '^$' >> "$GITHUB_PATH"
+
+      - name: Make sure ninja is present
+        if: matrix.preset == 'msvc-ninja'
+        run: |
+          if command -v ninja; then ninja --version; else
+            echo "ninja is not on this image; installing it"
+            choco install ninja -y
+          fi
+
       # The install step's exit status is not evidence that a compiler exists;
-      # this is. `timeout` is checked here because the suite's ceiling below
-      # depends on it, and a missing coreutils on the Windows bash would
-      # otherwise surface as a failure of the test run.
+      # this is.
+      #
+      # And `--version` is not evidence of which compiler it is. Ubuntu ships
+      # post-release snapshots of a branch under the release's version number: a
+      # g++ reporting 15.2.0 was found on another machine to be "git 20250917 from
+      # the gcc-15 branch", already carrying a regression the 15.2.0 tarball does
+      # not. The Debian changelog says which, so it is printed rather than
+      # inferred - the distinction decides whether this column can ever stand in
+      # for a known compiler release.
       - name: Report the toolchain actually in use
         run: |
           if [ -n "${CXX:-}" ]; then
@@ -117,7 +163,10 @@ jobs:
             echo "No CXX set; the preset selects the compiler (Windows/MSVC)."
           fi
           cmake --version
-          command -v timeout || { echo "::error::timeout(1) absent"; exit 1; }
+
+      - name: What the distribution's g++ actually is
+        if: runner.os == 'Linux'
+        run: zcat /usr/share/doc/gcc-15/changelog.Debian.gz | head -20
 
       # The generated project's `git init` is followed by a commit, and git refuses
       # to commit without an identity: it prints "Author identity unknown", fails,
@@ -150,13 +199,19 @@ jobs:
       # `run` target, whose command is the test executable. The binary is already
       # built, so this step is the suite and nothing else.
       #
-      # The timeout is the suite's own, well below the job's: a non-terminating
+      # The suite carries its own ceiling, well below the job's: a non-terminating
       # test otherwise arrives as an unattributed job timeout with no output at
       # all. One Windows branch has already spun for 36 minutes against an 18s
       # baseline, producing nothing.
+      #
+      # `timeout-minutes` on the step rather than timeout(1) around the command:
+      # macOS ships no GNU coreutils, so the utility is absent on one of the three
+      # columns, and the step form additionally distinguishes "the suite timed
+      # out" from "the job timed out" in the run summary.
       - name: Run the suite
         working-directory: TestAll
-        run: timeout --signal=TERM --kill-after=30 1800 cmake --build --preset run-${{ matrix.preset }}
+        timeout-minutes: 30
+        run: cmake --build --preset run-${{ matrix.preset }}
 
       # The switch above fails the run on drift but only says that a bit is set;
       # this names the files. It also sees the whole tree, where the switch sees
