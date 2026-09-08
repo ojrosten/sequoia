@@ -1,0 +1,29 @@
+name: coarse
+
+# Every push, every branch. The question is only "does it build and does the suite
+# pass?", on the two platforms that disagree with each other: clang and gcc share
+# enough heritage that their agreement is weak evidence about MSVC, and the
+# divergences catalogued for this project run to seven distinct families.
+#
+# No drift check and no sanitizer - those are what fine and rigorous add. Running
+# on main and staging too gives cheap post-merge confirmation of what landed.
+#
+# Note a push to a branch with an open PR fires both `push` and `synchronize`, so
+# coarse and the PR's tier both run. Coarse is a subset, so the cost is real but
+# the answer is not wrong, and there is no native way to suppress it.
+on:
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - 'coverage_reports/**'
+  workflow_dispatch:
+
+jobs:
+  coarse:
+    uses: ./.github/workflows/tests.yml
+    with:
+      columns: >-
+        [
+          {"name": "Linux · GCC · Debug",   "os": "ubuntu-latest",  "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc",   "build": "msvc"}
+        ]

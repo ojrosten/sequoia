@@ -1,0 +1,30 @@
+name: fine
+
+# The gate on staging. Coarse's two columns, plus everything coarse leaves out
+# that is cheap enough to ask on every change:
+#
+#   - --check-versioned-output, so a change which moves committed diagnostics
+#     fails here rather than being noticed later as a git diff;
+#   - an ASan column, since that is what the author runs locally by default and
+#     it is behaviour-neutral on this suite.
+#
+# Strictly a superset of coarse. That nesting is the point of the three tiers and
+# is maintained by hand: keep coarse's columns identical to the first entries here.
+on:
+  pull_request:
+    branches: [staging]
+    paths-ignore:
+      - 'docs/**'
+      - 'coverage_reports/**'
+
+jobs:
+  fine:
+    uses: ./.github/workflows/tests.yml
+    with:
+      exec_args: '--check-versioned-output'
+      columns: >-
+        [
+          {"name": "Linux · GCC · Debug",    "os": "ubuntu-latest",  "configure": "gcc-env",      "build": "gcc-env",      "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "Windows · MSVC · Debug",  "os": "windows-latest", "configure": "msvc",        "build": "msvc"},
+          {"name": "Linux · GCC · ASan",      "os": "ubuntu-latest",  "configure": "gcc-env-asan", "build": "gcc-env-asan", "cc": "gcc-15", "cxx": "g++-15"}
+        ]
