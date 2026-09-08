@@ -12,75 +12,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Where a GCC new enough for sequoia can be got on a hosted image. The README
-  # pins g++ 15.2.0; noble carries 14 and nothing newer, so a source for 15 has to
-  # be found rather than assumed.
-  #
-  # Package presence is tested against `apt-cache pkgnames`, which matches names
-  # exactly. `apt-get install` and `apt-cache policy` do not: given a name with
-  # regex metacharacters that matches no package, they fall back to treating it as
-  # a regex - so `g++-15` on noble resolves to clang-15, flang-15 and llvm-15, and
-  # apt-get installs all three and exits 0. That is how the first run of this
-  # workflow reported a successful toolchain install and then failed to find a
-  # compiler.
-  gcc-source-probe:
-    name: Probe - where GCC 15 comes from
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    steps:
-      - name: The image
-        run: |
-          cat /etc/os-release | head -2
-          cmake --version | head -1
-          ninja --version 2>/dev/null || echo "ninja: absent"
-
-      - name: Stock archives
-        run: |
-          sudo apt-get update -qq
-          apt-cache pkgnames | grep -E '^g\+\+-[0-9]+$' | sort -V || echo "no versioned g++ at all"
-
-      - name: With ubuntu-toolchain-r/test added
-        run: |
-          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-          sudo apt-get update -qq
-          echo "--- versioned g++ now offered:"
-          apt-cache pkgnames | grep -E '^g\+\+-[0-9]+$' | sort -V
-          echo "--- candidate for each:"
-          for v in 15 16; do
-            if apt-cache pkgnames | grep -qx "g++-$v"; then
-              apt-cache madison "g++-$v" | head -3
-            else
-              echo "g++-$v: not offered"
-            fi
-          done
-
-  # The alternative source, and the one that would pin a version rather than take
-  # whatever a distribution happens to ship. Also settles whether the image carries
-  # the rest of what sequoia needs.
-  container-probe:
-    name: Probe - the official gcc container
-    runs-on: ubuntu-latest
-    container: gcc:15
-    timeout-minutes: 15
-    steps:
-      - name: What the container has
-        run: |
-          cat /etc/os-release | head -2
-          g++ --version | head -1
-          cmake --version 2>/dev/null | head -1 || echo "cmake: absent"
-          ninja --version 2>/dev/null || echo "ninja: absent"
-          git --version
-      - name: What it can install
-        run: |
-          apt-get update -qq
-          for pkg in cmake ninja-build libtbb-dev; do
-            if apt-cache pkgnames | grep -qx "$pkg"; then
-              apt-cache madison "$pkg" | head -1
-            else
-              echo "$pkg: not offered"
-            fi
-          done
-
   # The first real column: Linux, GCC, Debug, no sanitizer.
   #
   # GCC rather than Clang deliberately. Clang-on-Linux means libstdc++, a pairing
@@ -124,6 +55,17 @@ jobs:
           "$CXX" --version
           cmake --version
           ninja --version
+
+      # The generated project's `git init` is followed by a commit, and git refuses
+      # to commit without an identity: it prints "Author identity unknown", fails,
+      # and the creation path carries on regardless - so the only trace is the
+      # captured text TestRunnerEndToEndFreeTest compares against. Every developer
+      # machine has an identity configured; a fresh runner does not.
+      - name: Give git an identity
+        run: |
+          git config --global user.name "sequoia CI"
+          git config --global user.email "ci@example.invalid"
+          git config --global init.defaultBranch trunk
 
       - name: Configure
         working-directory: TestAll
