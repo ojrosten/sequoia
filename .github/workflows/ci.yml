@@ -187,12 +187,21 @@ jobs:
       # and neither can anything else, manifest or no manifest: sequoia declares
       # itself long-path aware in resources/win/longpaths.manifest, but Windows
       # also requires the machine-wide switch below.
+      #
+      # In PowerShell, not the bash the other steps use: Git bash's MSYS layer
+      # rewrites bare switches like /v and /f into Windows paths before reg.exe
+      # sees them, which is the same argument mangling that broke the vcvars
+      # capture. Setting the value natively sidesteps the conversion rather than
+      # escaping around it.
       - name: Let Windows and git see long paths
         if: runner.os == 'Windows'
+        shell: pwsh
         run: |
           git config --global core.longpaths true
-          reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" \
-                  /v LongPathsEnabled /t REG_DWORD /d 1 /f
+          New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' `
+                           -Name LongPathsEnabled -Value 1 -PropertyType DWord -Force | Out-Null
+          Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' `
+                           -Name LongPathsEnabled
 
       # --check-versioned-output makes the runner compare every versioned output
       # file before and after it writes, and set return_code::versioned_output_diffs.
