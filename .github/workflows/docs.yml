@@ -25,13 +25,13 @@ jobs:
           fetch-depth: 1
           ref: ${{ inputs.ref }}
 
-      # texlive because USE_MATHJAX is off, so formulas are rendered through LaTeX.
-      # Without it doxygen reports "Problems running latex" and every formula is
-      # silently wrong - which is the failure this job exists to catch.
+      # USE_MATHJAX is off, so formulas go through LaTeX and then Ghostscript.
+      # Missing either leaves every formula silently wrong, which is the failure
+      # this job exists to catch.
       - name: Install doxygen
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y doxygen texlive-latex-base texlive-latex-extra
+          sudo apt-get install -y doxygen texlive-latex-base texlive-latex-extra ghostscript
           doxygen --version
 
       # The Doxyfile's INPUT is relative to its own directory, so doxygen runs from
@@ -66,13 +66,13 @@ jobs:
             echo "### Doxygen: $defects defect(s)"
             if [ "$defects" -gt 0 ]; then
               echo '```'
-              sed 's#.*/sequoia/##' "$log" | head -40
+              sed -n '1,40s#.*/sequoia/##p' "$log"
               echo '```'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
           if [ "$defects" -gt 0 ]; then
             echo "::error title=Doxygen::$defects documentation defect(s)"
-            sed 's#.*/sequoia/##' "$log" | head -20
+            sed -n '1,20s#.*/sequoia/##p' "$log"
             exit 1
           fi
           echo "No documentation defects."
