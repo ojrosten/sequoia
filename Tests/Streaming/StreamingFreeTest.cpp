@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "StreamingFreeTest.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"

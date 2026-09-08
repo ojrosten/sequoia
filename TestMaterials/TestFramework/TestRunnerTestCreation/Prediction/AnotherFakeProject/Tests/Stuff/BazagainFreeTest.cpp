@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "BazagainFreeTest.hpp"
 #include "curlew/Stuff/Baz.h"
 
