@@ -48,14 +48,6 @@ jobs:
           - name: Windows / MSVC / Debug
             os: windows-latest
             preset: msvc
-          # Paired with the row above on the same commit and image, because the
-          # Windows column differs from the other two in build system as well as
-          # compiler: `msvc` is the Visual Studio generator, everything else is
-          # Ninja. Without both, a slow Windows column cannot be attributed to
-          # cl.exe rather than to msbuild's per-project overhead.
-          - name: Windows / MSVC / Ninja
-            os: windows-latest
-            preset: msvc-ninja
 
     # bash everywhere, including Windows, so that one set of steps serves all
     # three columns rather than each acquiring a shell dialect of its own.
@@ -188,6 +180,20 @@ jobs:
           git config --global user.email "ci@example.invalid"
           git config --global init.defaultBranch trunk
 
+      # sequoia's own TestMaterials go deep enough to pass 260 characters once a
+      # generated project vendors a copy of sequoia inside itself, and the runner
+      # ships with long paths off. git then cannot traverse them - the end-to-end
+      # test's captured output carried seventeen "Filename too long" warnings -
+      # and neither can anything else, manifest or no manifest: sequoia declares
+      # itself long-path aware in resources/win/longpaths.manifest, but Windows
+      # also requires the machine-wide switch below.
+      - name: Let Windows and git see long paths
+        if: runner.os == 'Windows'
+        run: |
+          git config --global core.longpaths true
+          reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" \
+                  /v LongPathsEnabled /t REG_DWORD /d 1 /f
+
       # --check-versioned-output makes the runner compare every versioned output
       # file before and after it writes, and set return_code::versioned_output_diffs.
       # It is off by default because always-on would break the ordinary development
@@ -237,7 +243,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ runner.os }}-output
+          name: ${{ matrix.preset }}-output
           path: |
             output/TestSummaries/
             output/DiagnosticsOutput/
