@@ -9,7 +9,13 @@ name: rigorous
 # reach staging through the fine gate, and one promotion asks the expensive
 # questions once. A schedule would answer them at times nobody is promoting.
 #
-# Strictly a superset of fine. Deliberately incomplete for now - no macOS column,
+# At least as strict as fine, which is the invariant - not "contains fine's
+# columns". Fine's two sanitized columns carry over unchanged; rigorous adds the
+# two questions a sanitized Debug build cannot answer: TSan, which is mutually
+# exclusive with ASan and so needs a build of its own, and Release, where the
+# optimizer is a different compiler in practice.
+#
+# Deliberately incomplete for now - no macOS column,
 # since its performance tests cannot hold on a hosted runner; no coverage; no
 # `locate`; no Windows Release, which needs a build preset distinct from its
 # configure preset. Each is an addition, not a redesign.
@@ -28,10 +34,8 @@ jobs:
       exec_args: '--check-versioned-output'
       columns: >-
         [
-          {"name": "Linux · GCC · Debug",    "os": "ubuntu-latest",  "configure": "gcc-env",         "build": "gcc-env",         "cc": "gcc-15", "cxx": "g++-15"},
-          {"name": "Windows · MSVC · Debug",  "os": "windows-latest", "configure": "msvc",           "build": "msvc"},
-          {"name": "Linux · GCC · ASan",      "os": "ubuntu-latest",  "configure": "gcc-env-asan",    "build": "gcc-env-asan",    "cc": "gcc-15", "cxx": "g++-15"},
-          {"name": "Linux · GCC · UBSan",     "os": "ubuntu-latest",  "configure": "gcc-env-ubsan",   "build": "gcc-env-ubsan",   "cc": "gcc-15", "cxx": "g++-15"},
-          {"name": "Linux · GCC · TSan",      "os": "ubuntu-latest",  "configure": "gcc-env-tsan",    "build": "gcc-env-tsan",    "cc": "gcc-15", "cxx": "g++-15"},
-          {"name": "Linux · GCC · Release",   "os": "ubuntu-latest",  "configure": "gcc-env-release", "build": "gcc-env-release", "cc": "gcc-15", "cxx": "g++-15"}
+          {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan"},
+          {"name": "Linux · GCC · TSan",       "os": "ubuntu-latest",  "configure": "gcc-env-tsan",       "build": "gcc-env-tsan",       "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15"}
         ]

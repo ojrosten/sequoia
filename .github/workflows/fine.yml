@@ -1,15 +1,23 @@
 name: fine
 
-# The gate on staging. Coarse's two columns, plus everything coarse leaves out
-# that is cheap enough to ask on every change:
+# The gate on staging: the same two platforms coarse runs, sanitized, plus
+# --check-versioned-output so a change which moves committed diagnostics fails
+# here rather than being noticed later as a git diff.
 #
-#   - --check-versioned-output, so a change which moves committed diagnostics
-#     fails here rather than being noticed later as a git diff;
-#   - an ASan column, since that is what the author runs locally by default and
-#     it is behaviour-neutral on this suite.
+# The columns *replace* coarse's rather than extending them, because a sanitized
+# build dominates the plain one it is built from: same compiler, same flags plus
+# instrumentation, so nothing the plain leg catches at compile time is missed, and
+# ASan is behaviour-neutral on this suite - the same check counts, and the same
+# output/, since output_discriminator() keys on compiler_name() regardless of
+# sanitizer. A plain leg here would cost a build and detect nothing extra.
 #
-# Strictly a superset of coarse. That nesting is the point of the three tiers and
-# is maintained by hand: keep coarse's columns identical to the first entries here.
+# So the invariant across the tiers is **at least as strict as**, not "contains the
+# columns of". Coarse is deliberately the weak, fast tier - uninstrumented because
+# uninstrumented builds are quicker - and this is where strictness starts.
+#
+# ASan and UBSan are combined into one build rather than run as two columns; TSan
+# cannot join them, since it is mutually exclusive with ASan, so it stays a column
+# of its own in rigorous.
 on:
   pull_request:
     branches: [staging]
@@ -24,7 +32,6 @@ jobs:
       exec_args: '--check-versioned-output'
       columns: >-
         [
-          {"name": "Linux · GCC · Debug",    "os": "ubuntu-latest",  "configure": "gcc-env",      "build": "gcc-env",      "cc": "gcc-15", "cxx": "g++-15"},
-          {"name": "Windows · MSVC · Debug",  "os": "windows-latest", "configure": "msvc",        "build": "msvc"},
-          {"name": "Linux · GCC · ASan",      "os": "ubuntu-latest",  "configure": "gcc-env-asan", "build": "gcc-env-asan", "cc": "gcc-15", "cxx": "g++-15"}
+          {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan"}
         ]
