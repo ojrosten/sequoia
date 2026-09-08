@@ -25,10 +25,13 @@ jobs:
           fetch-depth: 1
           ref: ${{ inputs.ref }}
 
+      # texlive because USE_MATHJAX is off, so formulas are rendered through LaTeX.
+      # Without it doxygen reports "Problems running latex" and every formula is
+      # silently wrong - which is the failure this job exists to catch.
       - name: Install doxygen
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y doxygen
+          sudo apt-get install -y doxygen texlive-latex-base texlive-latex-extra
           doxygen --version
 
       # The Doxyfile's INPUT is relative to its own directory, so doxygen runs from
@@ -58,7 +61,7 @@ jobs:
         run: |
           log="$DOXY_LOG"
           [ -f "$log" ] || { echo "::error::doxygen produced no warning log"; exit 1; }
-          defects=$(grep -c 'warning' "$log" || true)
+          defects=$(grep -cE 'warning|error' "$log" || true)
           {
             echo "### Doxygen: $defects defect(s)"
             if [ "$defects" -gt 0 ]; then

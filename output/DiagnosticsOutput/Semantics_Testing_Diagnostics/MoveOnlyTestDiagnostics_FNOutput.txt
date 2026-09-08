@@ -1,4 +1,4 @@
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 29
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 27
 Broken equality
 
 --Move-only Semantics--
@@ -18,7 +18,7 @@ Broken equality
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 30
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 28
 Broken inequality
 
 --Move-only Semantics--
@@ -50,7 +50,7 @@ Broken inequality
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 31
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 29
 Broken move
 
 --Move-only Semantics--
@@ -64,7 +64,7 @@ Broken move
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 32
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 30
 Broken swap
 
 --Move-only Semantics--
@@ -84,7 +84,7 @@ Broken swap
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 33
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 31
 Broken move assignment
 
 --Move-only Semantics--
@@ -98,7 +98,7 @@ Broken move assignment
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 34
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 32
 Broken check invariant
 
 --Move-only Semantics--
@@ -112,7 +112,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 35
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 33
 Broken check invariant
 
 --Move-only Semantics--
@@ -127,7 +127,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 36
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 34
 Broken check invariant
 
 --Move-only Semantics--
@@ -142,7 +142,21 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 73
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 71
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::resource_binder<0>]
+
+  Incorrect moved-from value after move construction
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 72
 Incorrect moved-from state post construction
 
 --Move-only Semantics--
@@ -157,20 +171,6 @@ Incorrect moved-from state post construction
 =======================================
 
 Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 74
-Incorrect moved-from state post construction
-
---Move-only Semantics--
-[sequoia::testing::resource_binder<0>]
-
-  Incorrect moved-from value after move construction
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
-
-=======================================
-
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 76
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
@@ -184,7 +184,7 @@ Incorrect moved-from state post assignment
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 77
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 75
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
@@ -198,7 +198,21 @@ Incorrect moved-from state post assignment
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 73
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 71
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::resource_binder<1>]
+
+  Incorrect moved-from value after move construction
+  [sequoia::testing::resource_binder<1>]
+  operator== returned false
+  Obtained : 0
+  Predicted: 3
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 72
 Incorrect moved-from state post construction
 
 --Move-only Semantics--
@@ -213,20 +227,6 @@ Incorrect moved-from state post construction
 =======================================
 
 Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 74
-Incorrect moved-from state post construction
-
---Move-only Semantics--
-[sequoia::testing::resource_binder<1>]
-
-  Incorrect moved-from value after move construction
-  [sequoia::testing::resource_binder<1>]
-  operator== returned false
-  Obtained : 0
-  Predicted: 3
-
-=======================================
-
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 76
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
@@ -240,7 +240,7 @@ Incorrect moved-from state post assignment
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 77
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 75
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
@@ -254,7 +254,7 @@ Incorrect moved-from state post assignment
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 44
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 42
 Broken equality
 
 --Move-only Semantics--
@@ -274,7 +274,7 @@ Broken equality
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 45
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 43
 Broken inequality
 
 --Move-only Semantics--
@@ -306,7 +306,7 @@ Broken inequality
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 46
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 44
 Broken move
 
 --Move-only Semantics--
@@ -330,7 +330,7 @@ Broken move
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 47
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 45
 Broken swap
 
 --Move-only Semantics--
@@ -370,7 +370,7 @@ Broken swap
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 48
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 46
 Broken move assignment
 
 --Move-only Semantics--
@@ -394,7 +394,7 @@ Broken move assignment
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 49
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 47
 Broken check invariant
 
 --Move-only Semantics--
@@ -408,7 +408,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 50
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 48
 Broken check invariant
 
 --Move-only Semantics--
@@ -448,7 +448,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 51
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 49
 Broken check invariant
 
 --Move-only Semantics--
@@ -488,7 +488,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 55
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 53
 Incorrect moved-from state post construction
 
 --Move-only Semantics--
@@ -509,6 +509,44 @@ Incorrect moved-from state post construction
       operator== returned false
       Obtained : 0
       Predicted: 1
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 54
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move construction
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 55
+Incorrect moved-from state post construction
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move construction
+  [sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 1
 
 =======================================
 
@@ -550,45 +588,7 @@ Incorrect moved-from state post construction
 
 =======================================
 
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 58
-Incorrect moved-from state post construction
-
---Move-only Semantics--
-[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
-
-  Incorrect moved-from value after move construction
-  Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> > >]
-  Checking for equivalence with:
-  [std::vector<int, std::allocator<int> >]
-
-    Wrapped vector
-    [std::vector<int, std::allocator<int> >]
-    operator== returned false
-
-      Container size wrong
-      [unsigned long long]
-      operator== returned false
-      Obtained : 0
-      Predicted: 1
-
-=======================================
-
 Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 59
-Incorrect moved-from state post construction
-
---Move-only Semantics--
-[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
-
-  Incorrect moved-from value after move construction
-  [sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
-  operator== returned false
-  Obtained : 
-  Predicted: 1
-
-=======================================
-
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 61
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--
@@ -609,6 +609,44 @@ Incorrect moved-from state post assignment
       operator== returned false
       Obtained : 0
       Predicted: 1
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 60
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move assignment
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> > >]
+  Checking for equivalence with:
+  [std::vector<int, std::allocator<int> >]
+
+    Wrapped vector
+    [std::vector<int, std::allocator<int> >]
+    operator== returned false
+
+      Container size wrong
+      [unsigned long long]
+      operator== returned false
+      Obtained : 0
+      Predicted: 1
+
+=======================================
+
+Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 61
+Incorrect moved-from state post assignment
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move assignment
+  [sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 2
 
 =======================================
 
@@ -637,44 +675,6 @@ Incorrect moved-from state post assignment
 =======================================
 
 Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 63
-Incorrect moved-from state post assignment
-
---Move-only Semantics--
-[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
-
-  Incorrect moved-from value after move assignment
-  [sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
-  operator== returned false
-  Obtained : 
-  Predicted: 2
-
-=======================================
-
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 64
-Incorrect moved-from state post assignment
-
---Move-only Semantics--
-[sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> >]
-
-  Incorrect moved-from value after move assignment
-  Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::move_only_specified_moved_from_beast<int, std::allocator<int> > >]
-  Checking for equivalence with:
-  [std::vector<int, std::allocator<int> >]
-
-    Wrapped vector
-    [std::vector<int, std::allocator<int> >]
-    operator== returned false
-
-      Container size wrong
-      [unsigned long long]
-      operator== returned false
-      Obtained : 0
-      Predicted: 1
-
-=======================================
-
-Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 65
 Incorrect moved-from state post assignment
 
 --Move-only Semantics--

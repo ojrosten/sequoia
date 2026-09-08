@@ -1,4 +1,4 @@
-Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 25
+Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 23
 
 Comparison performed using:
 [sequoia::testing::value_tester<sequoia::testing::failure_info>]
@@ -13,7 +13,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 26
+Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 24
 
 Comparison performed using:
 [sequoia::testing::value_tester<sequoia::testing::failure_info>]
@@ -38,7 +38,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 27
+Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 25
 check_index differs
 
 [sequoia::testing::failure_info]
@@ -52,7 +52,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 28
+Tests/TestFramework/FailureInfoTestingDiagnostics.cpp, Line 26
 message differs
 
 [sequoia::testing::failure_info]
