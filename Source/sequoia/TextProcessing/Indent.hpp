@@ -75,7 +75,7 @@ namespace sequoia
 
   /** \param s1 The target for appending
       \param s2 The text to append
-      \param indentation The absolute (not relative) indentation of s2
+      \param ind The absolute (not relative) indentation of s2
 
       If s1 and s2 are both non-empty, a new line is appended to s1, followed by the indentation
       and then s2.

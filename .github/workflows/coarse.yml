@@ -37,3 +37,9 @@ jobs:
           {"name": "Linux · GCC · Debug",   "os": "ubuntu-latest",  "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15"},
           {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc",   "build": "msvc"}
         ]
+
+  # Doxygen here as well as in rigorous: it costs seconds and no compilation, so
+  # there is no reason to learn at promotion time that a comment written weeks ago
+  # was malformed.
+  docs:
+    uses: ./.github/workflows/docs.yml

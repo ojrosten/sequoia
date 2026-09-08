@@ -1,0 +1,85 @@
+name: docs
+
+# Doxygen is seconds of work and no compilation, so there is no reason to learn
+# late that a comment is malformed. It runs in coarse, on every push, as well as in
+# rigorous before a promotion - the first for feedback, the second because
+# docs/html is committed and public, so a defect here ships.
+#
+# Built into a temporary directory and discarded: regenerating the committed render
+# would produce 7710 files of drift and answer a different question from the one
+# being asked, which is whether the documentation is well-formed.
+on:
+  workflow_call:
+    inputs:
+      ref:
+        required: false
+        type: string
+        default: ''
+
+jobs:
+  doxygen:
+    name: Docs · Doxygen
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          ref: ${{ inputs.ref }}
+
+      - name: Install doxygen
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y doxygen
+          doxygen --version
+
+      # The Doxyfile's INPUT is relative to its own directory, so doxygen runs from
+      # there; the overrides go in on stdin rather than by editing the file, so what
+      # is tested is the committed configuration.
+      #
+      # WARN_IF_UNDOCUMENTED is off here. Per-file documentation is openly in
+      # progress and those notices numbered 6569 against 55 real defects, so leaving
+      # them on would bury the signal in the thing everyone already knows.
+      - name: Generate, into a directory nobody keeps
+        working-directory: docs/config
+        run: |
+          out="$RUNNER_TEMP/doxygen"
+          mkdir -p "$out"
+          { cat Doxyfile
+            echo "OUTPUT_DIRECTORY=$out"
+            echo "WARN_LOGFILE=$out/warnings.txt"
+            echo "WARN_IF_UNDOCUMENTED=NO"
+            echo "QUIET=YES"
+          } | doxygen -
+          echo "DOXY_LOG=$out/warnings.txt" >> "$GITHUB_ENV"
+
+      # Reported, not gated. 31 of the 33 remaining are one doxygen limitation
+      # rather than a defect: it does not resolve namespace aliases, so every
+      # out-of-line definition spelled `fs::path` fails to match a declaration
+      # spelled std::filesystem::path. A baseline is worth setting once this
+      # doxygen's own count is known - a count from another version is not it.
+      - name: Report what doxygen said
+        if: always()
+        run: |
+          log="$DOXY_LOG"
+          [ -f "$log" ] || { echo "No warning log produced."; exit 0; }
+          total=$(grep -c 'warning' "$log" || true)
+          alias_limit=$(grep -c 'matching class member' "$log" || true)
+          real=$(( total - alias_limit ))
+          echo "::warning title=Doxygen::$real defect(s), plus $alias_limit unresolved-alias notices"
+          {
+            echo "### Doxygen"
+            echo "- **$real** documentation defect(s)"
+            echo "- $alias_limit \`fs::\` namespace-alias notices (a doxygen limitation, not a defect)"
+            echo '```'
+            grep 'warning' "$log" | grep -v 'matching class member' | sed 's#.*/sequoia/##' | head -40
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the warning log
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: doxygen-warnings-${{ github.job }}
+          path: ${{ env.DOXY_LOG }}
+          if-no-files-found: warn

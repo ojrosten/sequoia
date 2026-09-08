@@ -14,7 +14,9 @@
 #ifdef _MSC_VER
   #include "Windows.h"
 #endif
-/** \file Utilities dependent on platform-specific macros */
+/** \file
+    \brief Utilities dependent on platform-specific macros
+ */
 
 namespace sequoia
 {

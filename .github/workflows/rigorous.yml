@@ -42,69 +42,8 @@ jobs:
           {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15"}
         ]
 
-  # Doxygen, before a promotion rather than after: docs/html is committed and
-  # public, so a defect here ships. Built into a temporary directory and thrown
-  # away - regenerating the committed render in CI would produce 7710 files of
-  # drift and answer a different question.
-  #
-  # Reporting rather than gating, for now. WARN_IF_UNDOCUMENTED is off in this run
-  # because per-file documentation is openly in progress and 6569 such notices
-  # would bury the 55 real defects among them - malformed commands, and verbatim
-  # blocks left unterminated so that doxygen mis-parses the rest of the file and
-  # silently drops what follows. Those are worth a baseline once CI's own count is
-  # known; a count taken on a different doxygen version is not that baseline.
   docs:
-    name: Docs · Doxygen
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 1
-
-      - name: Install doxygen
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y doxygen
-          doxygen --version
-
-      # The Doxyfile's INPUT is relative to its own directory, so doxygen is run
-      # from there; the overrides are appended on stdin rather than by editing the
-      # file, so the committed configuration is what is being tested.
-      - name: Generate, into a directory nobody keeps
-        working-directory: docs/config
-        run: |
-          out="$RUNNER_TEMP/doxygen"
-          mkdir -p "$out"
-          { cat Doxyfile
-            echo "OUTPUT_DIRECTORY=$out"
-            echo "WARN_LOGFILE=$out/warnings.txt"
-            echo "WARN_IF_UNDOCUMENTED=NO"
-            echo "QUIET=YES"
-          } | doxygen -
-          echo "DOXY_LOG=$out/warnings.txt" >> "$GITHUB_ENV"
-
-      - name: Report what doxygen said
-        if: always()
-        run: |
-          log="$DOXY_LOG"
-          [ -f "$log" ] || { echo "No warning log produced."; exit 0; }
-          defects=$(grep -c 'warning' "$log" || true)
-          echo "::warning title=Doxygen::$defects documentation defect(s)"
-          {
-            echo "### Doxygen: $defects defect(s), undocumented entities excluded"
-            echo '```'
-            sed 's#.*/sequoia/##' "$log" | head -60
-            echo '```'
-          } >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Upload the warning log
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: doxygen-warnings
-          path: ${{ env.DOXY_LOG }}
-          if-no-files-found: warn
+    uses: ./.github/workflows/docs.yml
 
   # Coverage, measured and published but gating nothing. Phase one deliberately:
   # thresholds picked before anyone has seen the distribution would be round

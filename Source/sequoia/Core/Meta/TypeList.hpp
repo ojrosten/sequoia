@@ -18,8 +18,6 @@ namespace sequoia
 {
     //================================================ type_list ================================================//
 
-    /** \class */
-
     template<class... Ts>
     struct type_list {};
 
@@ -92,7 +90,7 @@ namespace sequoia
 
     /** @} */ // end of faithful_type_list group
 
-    /** @defgroup is_type_list The type_list_union Group
+    /** @defgroup type_list_union The type_list_union Group
         This group provides a mechanism for constructing unions of `type_list`s
         @{
      */
