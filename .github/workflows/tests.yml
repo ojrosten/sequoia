@@ -154,7 +154,7 @@ jobs:
         if: ${{ !inputs.warnings_as_errors }}
         run: |
           log="$RUNNER_TEMP/build.log"
-          sites=$(grep -oE '[^ ]+:[0-9]+:[0-9]+: warning:|warning C[0-9]+' "$log" | sort -u | wc -l | tr -d ' ')
+          sites=$({ grep -oE '[^ ]+:[0-9]+:[0-9]+: warning:|warning C[0-9]+' "$log" || true; } | sort -u | wc -l | tr -d ' ')
           total=$(grep -cE 'warning:|warning C[0-9]+' "$log" || true)
           if [ "${sites:-0}" -gt 0 ]; then
             echo "::warning title=Compiler warnings::${{ matrix.name }}: $sites distinct site(s), $total line(s)"

@@ -19,7 +19,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string regular_message(std::string_view description);
 
-  /** \brief Extender for testing classes exhibiting regular/std::totally_ordered semantics.
+  /** \brief Extender for testing classes exhibiting regular/`std::totally_ordered` semantics.
 
        This class is designed to be plugged into the
        \ref checker_primary "checker" class template, in order to extend
