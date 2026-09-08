@@ -582,6 +582,10 @@
       "displayName": "MSVC with Ninja",
       "description": "Configure for ${displayName}. Needs cl.exe on PATH - a developer command prompt, or a shell vcvars has been applied to - because with Ninja CMake finds the compiler there rather than through the generator. Unqualified 'msvc' stays the Visual Studio generator, which is what a client working in the IDE wants; Ninja is for everything else, CI included, and it separates cl.exe's cost from msbuild's.",
       "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "cl",
+        "CMAKE_CXX_COMPILER": "cl"
+      },
       "inherits": ["base-debug", "base-binary"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
     }
