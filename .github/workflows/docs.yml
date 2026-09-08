@@ -53,28 +53,35 @@ jobs:
           } | doxygen -
           echo "DOXY_LOG=$out/warnings.txt" >> "$GITHUB_ENV"
 
-      # Reported, not gated. 31 of the 33 remaining are one doxygen limitation
-      # rather than a defect: it does not resolve namespace aliases, so every
-      # out-of-line definition spelled `fs::path` fails to match a declaration
-      # spelled std::filesystem::path. A baseline is worth setting once this
-      # doxygen's own count is known - a count from another version is not it.
-      - name: Report what doxygen said
+      # Gating on zero, which is the only baseline that cannot drift. It was 55
+      # before the documentation was repaired and the scope corrected; a threshold
+      # of "no more than 55" would have been a number nobody could later justify,
+      # and would have quietly permitted the 56th.
+      #
+      # Undocumented entities remain excluded above - 6569 of them, with per-file
+      # documentation openly in progress. This gate is about documentation which is
+      # *wrong*, not documentation which is absent: absence is schedulable, error is
+      # a defect.
+      - name: Fail on any documentation defect
         if: always()
         run: |
           log="$DOXY_LOG"
-          [ -f "$log" ] || { echo "No warning log produced."; exit 0; }
-          total=$(grep -c 'warning' "$log" || true)
-          alias_limit=$(grep -c 'matching class member' "$log" || true)
-          real=$(( total - alias_limit ))
-          echo "::warning title=Doxygen::$real defect(s), plus $alias_limit unresolved-alias notices"
+          [ -f "$log" ] || { echo "::error::doxygen produced no warning log"; exit 1; }
+          defects=$(grep -c 'warning' "$log" || true)
           {
-            echo "### Doxygen"
-            echo "- **$real** documentation defect(s)"
-            echo "- $alias_limit \`fs::\` namespace-alias notices (a doxygen limitation, not a defect)"
-            echo '```'
-            grep 'warning' "$log" | grep -v 'matching class member' | sed 's#.*/sequoia/##' | head -40
-            echo '```'
+            echo "### Doxygen: $defects defect(s)"
+            if [ "$defects" -gt 0 ]; then
+              echo '```'
+              sed 's#.*/sequoia/##' "$log" | head -40
+              echo '```'
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$defects" -gt 0 ]; then
+            echo "::error title=Doxygen::$defects documentation defect(s)"
+            sed 's#.*/sequoia/##' "$log" | head -20
+            exit 1
+          fi
+          echo "No documentation defects."
 
       - name: Upload the warning log
         if: always()

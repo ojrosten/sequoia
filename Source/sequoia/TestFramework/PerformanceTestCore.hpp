@@ -34,6 +34,10 @@ namespace sequoia::testing
 
   /** \brief Function for comparing the performance of a fast task to a slow task.
 
+       \param description the description reported with the check
+       \param logger      the logger to which the result is reported
+       \param fast        the task predicted to be the faster of the two
+       \param slow        the task against which fast is compared
        \param minSpeedUp  the minimum predicted speed up of fast over slow; must be > 1
        \param maxSpeedUp  the maximum predicted speed up of fast over slow; must be > minSpeedUp
        \param trials      the number of trial used for the statistical analysis
