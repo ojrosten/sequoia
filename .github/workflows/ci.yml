@@ -1,8 +1,11 @@
 name: CI
 
-# Push-triggered on every branch while the matrix is being grown: the workflow can
-# only be exercised on a branch that carries it, so restricting this to the trunk
-# would make it untestable before it lands there.
+# Work reaches main only through a pull request, so that is where the checks have
+# to run: a push-triggered run tests the branch, while a pull_request run tests the
+# *merge* of the branch into main, which is the question a gate should ask - it
+# catches the case where main moved underneath you. The push trigger is kept for
+# main alone, to verify what actually landed; a run on every branch as well would
+# double every PR's cost to answer a weaker question.
 #
 # docs/ is 96MB and 7710 files of committed doxygen render, and coverage_reports/
 # is generated too. A commit that only regenerates either builds nothing. This is
@@ -10,6 +13,11 @@ name: CI
 # what the commit touched, not on an assertion about what someone ran.
 on:
   push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - 'coverage_reports/**'
+  pull_request:
     paths-ignore:
       - 'docs/**'
       - 'coverage_reports/**'
