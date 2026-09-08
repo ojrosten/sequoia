@@ -27,6 +27,11 @@ jobs:
   coarse:
     uses: ./.github/workflows/tests.yml
     with:
+      # Warnings are counted and surfaced as annotations here, not turned into
+      # errors: a red coarse run should mean the code is broken, not that it is
+      # untidy, or the tier stops being the fast signal it exists to be. The gates
+      # below refuse them outright, so nothing accumulates.
+      warnings_as_errors: false
       columns: >-
         [
           {"name": "Linux · GCC · Debug",   "os": "ubuntu-latest",  "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15"},

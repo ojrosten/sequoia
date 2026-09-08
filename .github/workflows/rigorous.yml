@@ -31,6 +31,8 @@ jobs:
   rigorous:
     uses: ./.github/workflows/tests.yml
     with:
+      # Warnings are errors, as in fine.
+      warnings_as_errors: true
       exec_args: '--check-versioned-output'
       columns: >-
         [

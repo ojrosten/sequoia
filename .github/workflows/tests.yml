@@ -16,6 +16,11 @@ on:
         required: false
         type: string
         default: ''
+      warnings_as_errors:
+        description: 'Fail the build on any compiler warning. The gating tiers set this; the reporting tier counts them instead.'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   build-and-test:
@@ -125,13 +130,41 @@ jobs:
       # default: one command rather than a conditional that differs per tier.
       - name: Configure
         working-directory: TestAll
-        run: cmake --preset ${{ matrix.configure }} "-DEXEC_ARGS=${{ inputs.exec_args }}"
+        run: |
+          cmake --preset ${{ matrix.configure }} \
+                "-DEXEC_ARGS=${{ inputs.exec_args }}" \
+                -DWARNINGS_AS_ERRORS=${{ inputs.warnings_as_errors && 'ON' || 'OFF' }}
 
       # Separate from the run below so a compile failure and a test failure are
       # distinguishable at a glance, and so the suite can carry its own ceiling.
+      # Where warnings are not errors they are still not nothing: the log is kept so
+      # the count can be reported. A warning nobody sees is a warning nobody fixes,
+      # and the tier which does not fail on them is exactly the tier where they
+      # would otherwise pass unnoticed.
       - name: Build
         working-directory: TestAll
-        run: cmake --build --preset ${{ matrix.build }}
+        run: cmake --build --preset ${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/build.log"
+
+      # Distinct sites rather than raw lines: gcc and clang repeat a warning once per
+      # instantiation, so a raw count says more about templates than about code.
+      # MSVC spells it "warning Cnnnn"; the others "warning:".
+      - name: Report compiler warnings
+        if: ${{ !inputs.warnings_as_errors }}
+        run: |
+          log="$RUNNER_TEMP/build.log"
+          sites=$(grep -oE '[^ ]+:[0-9]+:[0-9]+: warning:|warning C[0-9]+' "$log" | sort -u | wc -l | tr -d ' ')
+          total=$(grep -cE 'warning:|warning C[0-9]+' "$log" || true)
+          if [ "${sites:-0}" -gt 0 ]; then
+            echo "::warning title=Compiler warnings::${{ matrix.name }}: $sites distinct site(s), $total line(s)"
+            {
+              echo "### ${{ matrix.name }}: $sites distinct warning site(s)"
+              echo '```'
+              grep -E 'warning:|warning C[0-9]+' "$log" | sort -u | head -40
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No compiler warnings."
+          fi
 
       # A `run-` preset is named `run-` plus the preset it runs, and builds the
       # `run` target, whose command is the test executable; the binary is already

@@ -29,6 +29,9 @@ jobs:
   fine:
     uses: ./.github/workflows/tests.yml
     with:
+      # Warnings are errors here and in rigorous: this is the gate, so it is where
+      # accumulation is cheap to prevent and where the interruption falls on nobody.
+      warnings_as_errors: true
       exec_args: '--check-versioned-output'
       columns: >-
         [
