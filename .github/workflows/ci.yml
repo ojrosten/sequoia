@@ -132,7 +132,14 @@ jobs:
           vcvars="$(cygpath -u "$root")/VC/Auxiliary/Build/vcvars64.bat"
           [ -f "$vcvars" ] || { echo "::error::$vcvars does not exist"; exit 1; }
 
-          dump=$(cmd //c "call \"$(cygpath -w "$vcvars")\" >nul && set" | tr -d '\r')
+          # Via a batch file in RUNNER_TEMP rather than `cmd //c "call ... && set"`:
+          # Git bash's MSYS layer re-quotes an argument containing spaces and
+          # quotes, and cmd then sees the escaping literally. The wrapper's own
+          # path has no spaces, so there is nothing left to mangle.
+          bat="$RUNNER_TEMP/vcvars_dump.bat"
+          printf '@echo off\r\ncall "%s" >nul || exit /b 1\r\nset\r\n' \
+                 "$(cygpath -w "$vcvars")" > "$bat"
+          dump=$(cmd //c "$(cygpath -w "$bat")" | tr -d '\r')
           printf '%s\n' "$dump" | grep -iE '^(INCLUDE|LIB|LIBPATH|VCToolsInstallDir|VCINSTALLDIR|VSINSTALLDIR|WindowsSdkDir|WindowsSDKVersion|UCRTVersion|UniversalCRTSdkDir)=' >> "$GITHUB_ENV"
           printf '%s\n' "$dump" | grep -iE '^PATH=' | head -1 | sed 's/^[Pp][Aa][Tt][Hh]=//'             | tr ';' '\n' | grep -v '^$' >> "$GITHUB_PATH"
 
@@ -166,7 +173,9 @@ jobs:
 
       - name: What the distribution's g++ actually is
         if: runner.os == 'Linux'
-        run: zcat /usr/share/doc/gcc-15/changelog.Debian.gz | head -20
+        # sed rather than head: head exits early, gzip takes SIGPIPE, and
+        # `-o pipefail` turns a report into a failed job.
+        run: zcat /usr/share/doc/gcc-15/changelog.Debian.gz | sed -n '1,20p'
 
       # The generated project's `git init` is followed by a commit, and git refuses
       # to commit without an identity: it prints "Author identity unknown", fails,
@@ -232,4 +241,5 @@ jobs:
           path: |
             output/TestSummaries/
             output/DiagnosticsOutput/
+            output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/InitOutput/
           if-no-files-found: warn
