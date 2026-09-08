@@ -16,6 +16,11 @@ on:
         required: false
         type: string
         default: ''
+      ref:
+        description: 'Branch to check out. Empty means the triggering ref. Needed because a scheduled run always fires from the default branch, so a nightly against staging has to ask for it.'
+        required: false
+        type: string
+        default: ''
       warnings_as_errors:
         description: 'Fail the build on any compiler warning. The gating tiers set this; the reporting tier counts them instead.'
         required: false
@@ -45,6 +50,7 @@ jobs:
         with:
           # docs/ is ~96MB of committed doxygen render; nothing here reads it.
           fetch-depth: 1
+          ref: ${{ inputs.ref }}
 
       # Package presence is tested against `apt-cache pkgnames`, which matches
       # names exactly. `apt-get install` does not: given a name with regex

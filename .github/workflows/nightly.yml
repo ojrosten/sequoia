@@ -1,0 +1,41 @@
+name: nightly
+
+# TSan every night, whether or not anything was promoted.
+#
+# The reason is not "in case we forgot to run it": a race detector is a
+# *probabilistic* instrument, and each run is an independent trial. A schedule
+# therefore buys something no promotion gate can - repetition - and it buys it
+# against accumulation, since races are not introduced at merge time but drift in
+# over weeks. Rigorous still runs TSan on a promotion; that answers "is this
+# promotable", where this answers "has anything crept in".
+#
+# The Windows column is here for a specific open question rather than for breadth:
+# the suite hung once for thirty minutes on trunk content and has not been seen to
+# do so since. An intermittent hang needs trials, and this is the only job that
+# provides them.
+#
+# A scheduled workflow always fires from the default branch, so testing staging
+# means asking for it explicitly - hence the `ref`.
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch to test'
+        required: false
+        type: string
+        default: 'staging'
+
+jobs:
+  nightly:
+    uses: ./.github/workflows/tests.yml
+    with:
+      ref: ${{ inputs.ref || 'staging' }}
+      warnings_as_errors: false
+      exec_args: '--check-versioned-output'
+      columns: >-
+        [
+          {"name": "Linux · GCC · TSan",     "os": "ubuntu-latest",  "configure": "gcc-env-tsan", "build": "gcc-env-tsan", "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc",         "build": "msvc"}
+        ]
