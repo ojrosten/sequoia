@@ -1,0 +1,271 @@
+name: CI
+
+# Work reaches main only through a pull request, so that is where the checks have
+# to run: a push-triggered run tests the branch, while a pull_request run tests the
+# *merge* of the branch into main, which is the question a gate should ask - it
+# catches the case where main moved underneath you. The push trigger is kept for
+# main alone, to verify what actually landed; a run on every branch as well would
+# double every PR's cost to answer a weaker question.
+#
+# docs/ is 96MB and 7710 files of committed doxygen render, and coverage_reports/
+# is generated too. A commit that only regenerates either builds nothing. This is
+# the one kind of skipping that cannot lie about what was tested: it is keyed on
+# what the commit touched, not on an assertion about what someone ran.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - 'coverage_reports/**'
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - 'coverage_reports/**'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # One job over three columns rather than three jobs, because everything after
+  # the toolchain is identical: configure, build, run, drift, upload. Only the
+  # install differs, and it differs per platform rather than per column.
+  #
+  # TestAll rather than all four executables: its source set is a strict superset
+  # of TestChamber, TestFrameworkDiagnostics and TestFrameworkHarness, so the
+  # others would add build time and no coverage.
+  build-and-test:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    strategy:
+      # Every column reports. A first matrix run exists to collect three answers,
+      # and cancelling the others on the first red would collect one.
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux / GCC / Debug
+            os: ubuntu-latest
+            preset: gcc-env
+            cc: gcc-15
+            cxx: g++-15
+          - name: Windows / MSVC / Debug
+            os: windows-latest
+            preset: msvc
+
+    # bash everywhere, including Windows, so that one set of steps serves all
+    # three columns rather than each acquiring a shell dialect of its own.
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      # Package presence is tested against `apt-cache pkgnames`, which matches
+      # names exactly. `apt-get install` does not: given a name with regex
+      # metacharacters that matches no package, it treats it as a regex - so
+      # `g++-15` on noble resolves to clang-15, flang-15 and llvm-15, installs all
+      # three and exits 0. That is how the first run of this workflow reported a
+      # successful toolchain install and then failed to find a compiler.
+      - name: Install the toolchain (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo apt-get update -qq
+          for pkg in "$CXX" ninja-build libtbb-dev; do
+            apt-cache pkgnames | grep -qx "$pkg" \
+              || { echo "::error::$pkg is not available on this image"; exit 1; }
+          done
+          sudo apt-get install -y "$CXX" ninja-build libtbb-dev
+          echo "CC=${{ matrix.cc }}"   >> "$GITHUB_ENV"
+          echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"
+        env:
+          CXX: ${{ matrix.cxx }}
+
+      # Retained though no column currently selects macOS, because the reason for
+      # its absence is temporary and recorded: the suite's performance tests cannot
+      # hold on a hosted runner, where sleep_for(25ms) was measured taking ~137ms,
+      # and there is as yet no way to run everything except them. Deleting the step
+      # would make restoring the column a research exercise rather than one line.
+      #
+      # The image carries Apple clang, which is not what sequoia is developed
+      # against; Homebrew LLVM is. CC/CXX are exported for later steps rather than
+      # hard-coded, so the preset stays the environment-driven one.
+      - name: Install the toolchain (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew list ninja >/dev/null 2>&1 || brew install ninja
+          brew list tbb   >/dev/null 2>&1 || brew install tbb
+          brew list llvm  >/dev/null 2>&1 || brew install llvm
+          echo "CC=$(brew --prefix llvm)/bin/clang"   >> "$GITHUB_ENV"
+          echo "CXX=$(brew --prefix llvm)/bin/clang++" >> "$GITHUB_ENV"
+
+      # Nothing to install - MSVC needs no TBB, since Utilities.cmake takes the
+      # winmm path on WIN32 - but the `msvc` preset names a generator by version,
+      # so which Visual Studio the image carries decides whether configure works
+      # at all. Reported rather than assumed.
+      - name: Report Visual Studio and CMake (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          "/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" \
+            -all -products '*' -property catalog_productDisplayVersion || true
+          "/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe" \
+            -all -products '*' -property displayName || true
+          cmake --version
+
+      # With the Visual Studio generator CMake finds the toolset itself; with
+      # Ninja it looks for cl.exe on PATH, which nothing puts there. vcvars sets
+      # it, but only within the cmd session that runs it, so its effect has to be
+      # captured and handed forward.
+      #
+      # Named variables rather than a whole `set` dump, so this cannot silently
+      # clobber the runner's own environment; and PATH goes to GITHUB_PATH rather
+      # than GITHUB_ENV, because a Windows-form PATH written into the environment
+      # of a later bash step is a good way to lose every command at once.
+      - name: Enter the MSVC environment
+        if: matrix.preset == 'msvc-ninja'
+        run: |
+          vswhere="/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe"
+          root=$("$vswhere" -latest -products '*'                    -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64                    -property installationPath)
+          [ -n "$root" ] || { echo "::error::no VC toolset reported by vswhere"; exit 1; }
+          vcvars="$(cygpath -u "$root")/VC/Auxiliary/Build/vcvars64.bat"
+          [ -f "$vcvars" ] || { echo "::error::$vcvars does not exist"; exit 1; }
+
+          # Via a batch file in RUNNER_TEMP rather than `cmd //c "call ... && set"`:
+          # Git bash's MSYS layer re-quotes an argument containing spaces and
+          # quotes, and cmd then sees the escaping literally. The wrapper's own
+          # path has no spaces, so there is nothing left to mangle.
+          bat="$RUNNER_TEMP/vcvars_dump.bat"
+          printf '@echo off\r\ncall "%s" >nul || exit /b 1\r\nset\r\n' \
+                 "$(cygpath -w "$vcvars")" > "$bat"
+          dump=$(cmd //c "$(cygpath -w "$bat")" | tr -d '\r')
+          printf '%s\n' "$dump" | grep -iE '^(INCLUDE|LIB|LIBPATH|VCToolsInstallDir|VCINSTALLDIR|VSINSTALLDIR|WindowsSdkDir|WindowsSDKVersion|UCRTVersion|UniversalCRTSdkDir)=' >> "$GITHUB_ENV"
+          printf '%s\n' "$dump" | grep -iE '^PATH=' | head -1 | sed 's/^[Pp][Aa][Tt][Hh]=//'             | tr ';' '\n' | grep -v '^$' >> "$GITHUB_PATH"
+
+      - name: Make sure ninja is present
+        if: matrix.preset == 'msvc-ninja'
+        run: |
+          if command -v ninja; then ninja --version; else
+            echo "ninja is not on this image; installing it"
+            choco install ninja -y
+          fi
+
+      # The install step's exit status is not evidence that a compiler exists;
+      # this is.
+      #
+      # And `--version` is not evidence of which compiler it is. Ubuntu ships
+      # post-release snapshots of a branch under the release's version number: a
+      # g++ reporting 15.2.0 was found on another machine to be "git 20250917 from
+      # the gcc-15 branch", already carrying a regression the 15.2.0 tarball does
+      # not. The Debian changelog says which, so it is printed rather than
+      # inferred - the distinction decides whether this column can ever stand in
+      # for a known compiler release.
+      - name: Report the toolchain actually in use
+        run: |
+          if [ -n "${CXX:-}" ]; then
+            command -v "$CXX" || { echo "::error::$CXX is not on PATH"; exit 1; }
+            "$CXX" --version
+          else
+            echo "No CXX set; the preset selects the compiler (Windows/MSVC)."
+          fi
+          cmake --version
+
+      - name: What the distribution's g++ actually is
+        if: runner.os == 'Linux'
+        # sed rather than head: head exits early, gzip takes SIGPIPE, and
+        # `-o pipefail` turns a report into a failed job.
+        run: zcat /usr/share/doc/gcc-15/changelog.Debian.gz | sed -n '1,20p'
+
+      # The generated project's `git init` is followed by a commit, and git refuses
+      # to commit without an identity: it prints "Author identity unknown", fails,
+      # and the creation path carries on regardless - so the only trace is the
+      # captured text TestRunnerEndToEndFreeTest compares against. Every developer
+      # machine has an identity configured; a fresh runner does not.
+      - name: Give git an identity
+        run: |
+          git config --global user.name "sequoia CI"
+          git config --global user.email "ci@example.invalid"
+          git config --global init.defaultBranch trunk
+
+      # sequoia's own TestMaterials go deep enough to pass 260 characters once a
+      # generated project vendors a copy of sequoia inside itself, and the runner
+      # ships with long paths off. git then cannot traverse them - the end-to-end
+      # test's captured output carried seventeen "Filename too long" warnings -
+      # and neither can anything else, manifest or no manifest: sequoia declares
+      # itself long-path aware in resources/win/longpaths.manifest, but Windows
+      # also requires the machine-wide switch below.
+      #
+      # In PowerShell, not the bash the other steps use: Git bash's MSYS layer
+      # rewrites bare switches like /v and /f into Windows paths before reg.exe
+      # sees them, which is the same argument mangling that broke the vcvars
+      # capture. Setting the value natively sidesteps the conversion rather than
+      # escaping around it.
+      - name: Let Windows and git see long paths
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          git config --global core.longpaths true
+          New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' `
+                           -Name LongPathsEnabled -Value 1 -PropertyType DWord -Force | Out-Null
+          Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' `
+                           -Name LongPathsEnabled
+
+      # --check-versioned-output makes the runner compare every versioned output
+      # file before and after it writes, and set return_code::versioned_output_diffs.
+      # It is off by default because always-on would break the ordinary development
+      # loop, so CI is its only consumer: a job that does not pass it gets no drift
+      # detection. Demonstrated to fail on a real perturbation, not assumed.
+      - name: Configure
+        working-directory: TestAll
+        run: cmake --preset ${{ matrix.preset }} -DEXEC_ARGS=--check-versioned-output
+
+      # Separate from the run below so that a compile failure and a test failure
+      # are distinguishable at a glance, and so the suite can carry its own
+      # wall-clock ceiling.
+      - name: Build
+        working-directory: TestAll
+        run: cmake --build --preset ${{ matrix.preset }}
+
+      # A `run-` preset is named `run-` plus the preset it runs, and builds the
+      # `run` target, whose command is the test executable. The binary is already
+      # built, so this step is the suite and nothing else.
+      #
+      # The suite carries its own ceiling, well below the job's: a non-terminating
+      # test otherwise arrives as an unattributed job timeout with no output at
+      # all. One Windows branch has already spun for 36 minutes against an 18s
+      # baseline, producing nothing.
+      #
+      # `timeout-minutes` on the step rather than timeout(1) around the command:
+      # macOS ships no GNU coreutils, so the utility is absent on one of the three
+      # columns, and the step form additionally distinguishes "the suite timed
+      # out" from "the job timed out" in the run summary.
+      - name: Run the suite
+        working-directory: TestAll
+        timeout-minutes: 30
+        run: cmake --build --preset run-${{ matrix.preset }}
+
+      # The switch above fails the run on drift but only says that a bit is set;
+      # this names the files. It also sees the whole tree, where the switch sees
+      # only what this toolchain rewrites - a Linux column cannot notice the _msvc
+      # forks going stale. Hence both, and hence `git diff` rather than
+      # `git status`, which reports every output file as modified on Windows,
+      # where every run rewrites output/ with CRLF and .gitattributes normalizes
+      # it back on check-in.
+      - name: Name any file whose versioned output moved
+        if: always()
+        run: git diff --stat -- output/ TestMaterials/ || true
+
+      - name: Upload the run's output
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.preset }}-output
+          path: |
+            output/TestSummaries/
+            output/DiagnosticsOutput/
+            output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/InitOutput/
+          if-no-files-found: warn
