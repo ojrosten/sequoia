@@ -176,7 +176,12 @@ jobs:
       # macOS ships no GNU coreutils, and the step form additionally distinguishes
       # "the suite timed out" from "the job timed out" in the run summary. One
       # branch has already spun for 36 minutes against an 18s baseline.
+      # A column may set `run: false` to build and not run. Intended for a platform
+      # whose failures are understood and being worked on, so that the build is
+      # still guarded while the suite is not: better than removing the column,
+      # which would stop compiling there too.
       - name: Run the suite
+        if: ${{ matrix.run != false }}
         working-directory: TestAll
         timeout-minutes: 30
         run: cmake --build --preset run-${{ matrix.build }}
