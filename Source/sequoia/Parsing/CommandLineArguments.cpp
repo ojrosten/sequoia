@@ -5,10 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file
-    \brief Definitions for CommandLineArguments.hpp
-*/
-
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 

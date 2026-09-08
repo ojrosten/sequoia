@@ -5,19 +5,11 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file
-    \brief Definitions for Helpers.hpp
-*/
-
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 
 #ifdef _MSC_VER
   #include "Windows.h"
 #endif
-/** \file
-    \brief Utilities dependent on platform-specific macros
- */
-
 namespace sequoia
 {
   timer_resolution::timer_resolution(std::chrono::milliseconds t)

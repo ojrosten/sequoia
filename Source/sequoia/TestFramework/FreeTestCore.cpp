@@ -5,10 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file
-    \brief Definitions for FreeTestCore.hpp
-*/
-
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
