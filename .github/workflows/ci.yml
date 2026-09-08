@@ -42,9 +42,6 @@ jobs:
             preset: gcc-env
             cc: gcc-15
             cxx: g++-15
-          - name: macOS / Clang / Debug
-            os: macos-latest
-            preset: llvm-env
           - name: Windows / MSVC / Debug
             os: windows-latest
             preset: msvc
@@ -81,6 +78,12 @@ jobs:
         env:
           CXX: ${{ matrix.cxx }}
 
+      # Retained though no column currently selects macOS, because the reason for
+      # its absence is temporary and recorded: the suite's performance tests cannot
+      # hold on a hosted runner, where sleep_for(25ms) was measured taking ~137ms,
+      # and there is as yet no way to run everything except them. Deleting the step
+      # would make restoring the column a research exercise rather than one line.
+      #
       # The image carries Apple clang, which is not what sequoia is developed
       # against; Homebrew LLVM is. CC/CXX are exported for later steps rather than
       # hard-coded, so the preset stays the environment-driven one.
