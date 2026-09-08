@@ -105,3 +105,83 @@ jobs:
           name: doxygen-warnings
           path: ${{ env.DOXY_LOG }}
           if-no-files-found: warn
+
+  # Coverage, measured and published but gating nothing. Phase one deliberately:
+  # thresholds picked before anyone has seen the distribution would be round
+  # numbers rather than judgements.
+  #
+  # What it produces is chosen for what comes next. coverage.info is an lcov
+  # tracefile, which is both the baseline a per-file regression rule would compare
+  # against and the input `diff-cover` reads to answer "how well is *new* code
+  # covered" - so the artifact is the thing phase two consumes, not a screenshot of
+  # a number.
+  #
+  # The toolchain steps repeat tests.yml rather than reusing it, because this job
+  # is a different shape: coverage runs the suite through ctest, serially, not
+  # through the `run` target.
+  coverage:
+    name: Coverage · Linux · GCC
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      CC: gcc-15
+      CXX: g++-15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+
+      - name: Install the toolchain
+        run: |
+          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo apt-get update -qq
+          for pkg in g++-15 ninja-build libtbb-dev lcov; do
+            apt-cache pkgnames | grep -qx "$pkg" \
+              || { echo "::error::$pkg is not available on this image"; exit 1; }
+          done
+          sudo apt-get install -y g++-15 ninja-build libtbb-dev lcov
+          g++-15 --version | head -1
+          lcov --version
+
+      - name: Give git an identity
+        run: |
+          git config --global user.name "sequoia CI"
+          git config --global user.email "ci@example.invalid"
+          git config --global init.defaultBranch trunk
+
+      - name: Configure and build
+        working-directory: TestAll
+        run: |
+          cmake --preset gcc-env-coverage
+          cmake --build --preset gcc-env-coverage
+
+      # The script runs the suite through ctest itself, so there is no separate run
+      # step; Utilities.cmake registers the test with --serial under CODE_COVERAGE,
+      # which is why this is slower than the ordinary columns.
+      - name: Measure
+        run: ./scripts/generate_coverage_report.sh build/TestAll/gcc-env-coverage
+
+      - name: Report
+        if: always()
+        run: |
+          info=build/TestAll/gcc-env-coverage/coverage.info
+          [ -f "$info" ] || { echo "::error::no tracefile at $info"; exit 1; }
+          summary=$(lcov --summary "$info" 2>&1 | grep -E 'lines|functions' || true)
+          echo "$summary"
+          {
+            echo "### Coverage"
+            echo '```'
+            echo "$summary"
+            echo '```'
+            echo "_Reported only. No threshold is applied yet._"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the tracefile and the report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage
+          path: |
+            build/TestAll/gcc-env-coverage/coverage.info
+            coverage_reports/
+          if-no-files-found: warn
