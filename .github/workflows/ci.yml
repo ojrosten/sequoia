@@ -1,0 +1,127 @@
+name: CI
+
+# Push-triggered on every branch while the matrix is being grown: the workflow can
+# only be exercised on a branch that carries it, so restricting this to the trunk
+# would make it untestable before it lands there.
+on:
+  push:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # What the hosted image actually provides, printed rather than assumed. The
+  # README pins compiler and CMake versions no image is guaranteed to carry, so
+  # this job exists to make the gap between the pinned set and the available one
+  # a fact in the log rather than a guess in the install step. It is seconds long
+  # and does not gate anything.
+  inventory:
+    name: Ubuntu image inventory
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Image and hardware
+        run: |
+          cat /etc/os-release
+          uname -a
+          echo "nproc: $(nproc)"
+          free -g
+
+      - name: Build tools already present
+        run: |
+          cmake --version
+          ninja --version || echo "ninja: absent"
+          git --version
+
+      - name: Compilers already present
+        run: |
+          ls -l /usr/bin/g++* /usr/bin/clang* 2>&1 || true
+
+      - name: What the archives offer
+        run: |
+          sudo apt-get update
+          for pkg in g++-14 g++-15 g++-16 libtbb-dev cmake ninja-build; do
+            echo "=== $pkg"
+            apt-cache policy "$pkg"
+          done
+
+  # The first real column: Linux, GCC, Debug, no sanitizer.
+  #
+  # GCC rather than Clang deliberately. Clang-on-Linux means libstdc++, a pairing
+  # sequoia has never been built with, so a Clang column would be red on its first
+  # run for reasons unrelated to CI - and a leg that has never passed teaches its
+  # readers to ignore it. The Clang/libstdc++ column is tracked separately.
+  #
+  # TestAll rather than all four executables: its source set is a strict superset
+  # of TestChamber, TestFrameworkDiagnostics and TestFrameworkHarness, so the other
+  # three would add build time and no coverage.
+  linux-gcc:
+    name: Linux / GCC / Debug
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      CC: gcc-15
+      CXX: g++-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # docs/html is ~96MB of committed doxygen render; nothing here reads it.
+          fetch-depth: 1
+
+      - name: Install the toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libtbb-dev
+          if ! sudo apt-get install -y g++-15; then
+            echo "g++-15 is not in this image's archives; adding ubuntu-toolchain-r/test"
+            sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+            sudo apt-get update
+            sudo apt-get install -y g++-15
+          fi
+
+      - name: Report the toolchain actually in use
+        run: |
+          "$CXX" --version
+          cmake --version
+          ninja --version
+
+      - name: Configure
+        working-directory: TestAll
+        run: cmake --preset gcc-env
+
+      # Separate from the run below so that a compile failure and a test failure
+      # are distinguishable at a glance, and so the suite can carry its own
+      # wall-clock ceiling.
+      - name: Build
+        working-directory: TestAll
+        run: cmake --build --preset gcc-env
+
+      # `run-gcc-env` builds the `run` target, whose command is the test executable;
+      # the binary is already built, so this step is the suite and nothing else.
+      #
+      # The timeout is the suite's own, well below the job's: a non-terminating test
+      # otherwise arrives as an unattributed job timeout with no output at all.
+      # `--signal=TERM -k 30` gives the runner a chance to flush before SIGKILL.
+      - name: Run the suite
+        working-directory: TestAll
+        run: timeout --signal=TERM --kill-after=30 1800 cmake --build --preset run-gcc-env
+
+      # The runner rewrites versioned output as it goes. A Linux column regenerates
+      # the `_gcc` forks, which have been frozen since macOS last wrote them, so a
+      # diff here is expected on the first run and is information, not failure.
+      # Drift is gated behind --check-versioned-output and is not enabled yet.
+      - name: Report any movement in the versioned output
+        if: always()
+        run: git diff --stat -- output/ TestMaterials/ || true
+
+      - name: Upload the run's output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-gcc-output
+          path: |
+            output/TestSummaries/
+            output/DiagnosticsOutput/
+          if-no-files-found: warn
