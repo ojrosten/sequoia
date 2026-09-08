@@ -30,7 +30,7 @@ jobs:
       CC: gcc-15
       CXX: g++-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # docs/html is ~96MB of committed doxygen render; nothing here reads it.
           fetch-depth: 1
@@ -67,9 +67,13 @@ jobs:
           git config --global user.email "ci@example.invalid"
           git config --global init.defaultBranch trunk
 
+      # --check-versioned-output makes the runner compare every versioned output file
+      # before and after it writes, and set return_code::versioned_output_diffs. It is
+      # off by default because always-on would break the ordinary development loop, so
+      # CI is its only consumer: a job that does not pass it gets no drift detection.
       - name: Configure
         working-directory: TestAll
-        run: cmake --preset gcc-env
+        run: cmake --preset gcc-env -DEXEC_ARGS=--check-versioned-output
 
       # Separate from the run below so that a compile failure and a test failure
       # are distinguishable at a glance, and so the suite can carry its own
@@ -87,17 +91,18 @@ jobs:
         working-directory: TestAll
         run: timeout --signal=TERM --kill-after=30 1800 cmake --build --preset run-gcc-env
 
-      # The runner rewrites versioned output as it goes. A Linux column regenerates
-      # the `_gcc` forks, which have been frozen since macOS last wrote them, so a
-      # diff here is expected on the first run and is information, not failure.
-      # Drift is gated behind --check-versioned-output and is not enabled yet.
-      - name: Report any movement in the versioned output
+      # The switch above fails the run on drift but only says that a bit is set; this
+      # names the files. It also sees the whole tree, where the switch sees only what
+      # this toolchain rewrites - a Linux column cannot notice the _msvc forks going
+      # stale. Hence both, and hence `git diff` rather than `git status`, which reports
+      # every output file as modified on a Windows checkout.
+      - name: Name any file whose versioned output moved
         if: always()
         run: git diff --stat -- output/ TestMaterials/ || true
 
       - name: Upload the run's output
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: linux-gcc-output
           path: |
