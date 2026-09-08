@@ -14,6 +14,7 @@
 #include "sequoia/Core/Object/Nomenclator.hpp"
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
 
 #include <algorithm>
 #include <ranges>
@@ -411,8 +412,8 @@ namespace sequoia::object
       return m_SelectedSuites || m_SelectedItems;
     }
   private:
-    [[no_unique_address]] ItemCompare m_Compare{};
-    [[no_unique_address]] ItemProjector m_Proj{};
+    SEQUOIA_NO_UNIQUE_ADDRESS ItemCompare m_Compare{};
+    SEQUOIA_NO_UNIQUE_ADDRESS ItemProjector m_Proj{};
     std::optional<suites_map_type> m_SelectedSuites{};
     std::optional<items_map_type>  m_SelectedItems{};
 
