@@ -1,21 +1,16 @@
 name: coarse
 
-# Every push, every branch. The question is only "does it build and does the suite
-# pass?", on the two platforms that disagree with each other: clang and gcc share
-# enough heritage that their agreement is weak evidence about MSVC, and the
-# divergences catalogued for this project run to seven distinct families.
+# Every push, every branch: does it build, and does the suite pass? Uninstrumented,
+# because this tier is bought for latency, and because it is the only per-push
+# build running at native speed with the system allocator.
 #
-# No drift check and no sanitizer: this is the tier that trades strictness for
-# latency, and an uninstrumented build is the quickest one there is. Fine does not
-# extend these columns, it replaces them with sanitized builds of the same two
-# platforms - a sanitized build dominates the plain one, so keeping both would buy
-# nothing. The invariant across tiers is therefore "at least as strict as", not
-# "contains the columns of". Running on main and staging too gives cheap
-# post-merge confirmation of what landed.
+# Windows is here rather than only in the gates because clang and gcc agreeing is
+# weak evidence about MSVC.
 #
-# Note a push to a branch with an open PR fires both `push` and `synchronize`, so
-# coarse and the PR's tier both run. Coarse is a subset, so the cost is real but
-# the answer is not wrong, and there is no native way to suppress it.
+# A push to a branch with an open PR fires both `push` and `synchronize`, so this
+# runs alongside that PR's tier. There is no native way to suppress it, and it is
+# not wasted: it is what keeps an uninstrumented build in the picture once a branch
+# is under review.
 on:
   push:
     paths-ignore:
@@ -27,10 +22,8 @@ jobs:
   coarse:
     uses: ./.github/workflows/tests.yml
     with:
-      # Warnings are counted and surfaced as annotations here, not turned into
-      # errors: a red coarse run should mean the code is broken, not that it is
-      # untidy, or the tier stops being the fast signal it exists to be. The gates
-      # below refuse them outright, so nothing accumulates.
+      # Counted and annotated, not fatal: a red run here should mean the code is
+      # broken rather than untidy. The gates refuse warnings outright.
       warnings_as_errors: false
       columns: >-
         [
@@ -38,8 +31,7 @@ jobs:
           {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc",   "build": "msvc"}
         ]
 
-  # Doxygen here as well as in rigorous: it costs seconds and no compilation, so
-  # there is no reason to learn at promotion time that a comment written weeks ago
-  # was malformed.
+  # Also in rigorous. It costs seconds and no compilation, so there is no reason to
+  # defer it to promotion time.
   docs:
     uses: ./.github/workflows/docs.yml

@@ -1,13 +1,11 @@
 name: docs
 
-# Doxygen is seconds of work and no compilation, so there is no reason to learn
-# late that a comment is malformed. It runs in coarse, on every push, as well as in
-# rigorous before a promotion - the first for feedback, the second because
-# docs/html is committed and public, so a defect here ships.
+# Called by coarse and by rigorous. docs/html is committed and published, so a
+# defect here ships.
 #
 # Built into a temporary directory and discarded: regenerating the committed render
-# would produce 7710 files of drift and answer a different question from the one
-# being asked, which is whether the documentation is well-formed.
+# would answer a different question from the one asked here, which is whether the
+# documentation is well-formed.
 on:
   workflow_call:
     inputs:
@@ -37,9 +35,8 @@ jobs:
       # there; the overrides go in on stdin rather than by editing the file, so what
       # is tested is the committed configuration.
       #
-      # WARN_IF_UNDOCUMENTED is off here. Per-file documentation is openly in
-      # progress and those notices numbered 6569 against 55 real defects, so leaving
-      # them on would bury the signal in the thing everyone already knows.
+      # WARN_IF_UNDOCUMENTED is off: per-file documentation is in progress, and
+      # those notices outnumber real defects by three orders of magnitude.
       - name: Generate, into a directory nobody keeps
         working-directory: docs/config
         run: |
@@ -53,15 +50,9 @@ jobs:
           } | doxygen -
           echo "DOXY_LOG=$out/warnings.txt" >> "$GITHUB_ENV"
 
-      # Gating on zero, which is the only baseline that cannot drift. It was 55
-      # before the documentation was repaired and the scope corrected; a threshold
-      # of "no more than 55" would have been a number nobody could later justify,
-      # and would have quietly permitted the 56th.
-      #
-      # Undocumented entities remain excluded above - 6569 of them, with per-file
-      # documentation openly in progress. This gate is about documentation which is
-      # *wrong*, not documentation which is absent: absence is schedulable, error is
-      # a defect.
+      # Zero, which is the only threshold that cannot drift. The gate is on
+      # documentation which is wrong, not documentation which is absent - absence
+      # is excluded above.
       - name: Fail on any documentation defect
         if: always()
         run: |

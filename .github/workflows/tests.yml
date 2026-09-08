@@ -1,9 +1,13 @@
 name: tests
 
-# The one place that knows how to build and run sequoia. The tiers - coarse, fine,
-# rigorous - are callers that differ only in which columns they ask for and what
-# they pass to the runner, so a change to the toolchain setup is made once rather
-# than three times, and the tiers cannot drift apart in how they build.
+# The one place that knows how to build and run sequoia. coarse, fine, rigorous and
+# nightly are callers differing only in which columns they ask for and what they
+# pass the runner, so the tiers cannot drift apart in how they build.
+#
+# The tiers are ordered by strictness, not by containment: fine and rigorous replace
+# coarse's plain columns with sanitized ones rather than adding to them. A tier must
+# be at least as strict as the one below, or a pass at one says nothing about the
+# next.
 on:
   workflow_call:
     inputs:
@@ -70,11 +74,10 @@ jobs:
           echo "CC=${{ matrix.cc }}"   >> "$GITHUB_ENV"
           echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"
 
-      # Retained though no column currently selects macOS: the reason for its
-      # absence is temporary and recorded - the suite's performance tests cannot
-      # hold on a hosted runner, where sleep_for(25ms) was measured taking ~137ms,
-      # and there is as yet no way to run everything except them. Deleting this
-      # would make restoring the column a research exercise rather than one line.
+      # Retained though no column currently selects macOS. Its absence is temporary:
+      # the suite's performance tests cannot hold on a hosted runner, and there is
+      # no way yet to run everything except them. Keeping this step makes restoring
+      # the column one matrix entry.
       - name: Install the toolchain (macOS)
         if: runner.os == 'macOS'
         run: |
@@ -84,11 +87,7 @@ jobs:
           echo "CC=$(brew --prefix llvm)/bin/clang"    >> "$GITHUB_ENV"
           echo "CXX=$(brew --prefix llvm)/bin/clang++" >> "$GITHUB_ENV"
 
-      # An exit status says the tool ran, not that it did what was asked; and
-      # `--version` does not say which compiler it is. Ubuntu ships post-release
-      # snapshots of a branch under the release's number - the g++-15 here reports
-      # 15.2.0 and is "git 20260223 from the gcc-15 branch" - so the changelog is
-      # printed rather than inferred.
+      # An exit status says the tool ran, not that it did what was asked.
       - name: Report the toolchain actually in use
         run: |
           if [ -n "${CXX:-}" ]; then
@@ -99,6 +98,9 @@ jobs:
           fi
           cmake --version
 
+      # `--version` does not identify the compiler: Ubuntu ships post-release
+      # snapshots of a branch under the release's version number, so a g++ reporting
+      # 15.2.0 may be well beyond it. The changelog says which.
       - name: What the distribution's g++ actually is
         if: runner.os == 'Linux'
         # sed, not head: head exits early, gzip takes SIGPIPE, and `-o pipefail`
@@ -106,9 +108,8 @@ jobs:
         run: zcat /usr/share/doc/gcc-15/changelog.Debian.gz | sed -n '1,20p'
 
       # The generated project's `git init` is followed by a commit, and git refuses
-      # to commit without an identity: it prints "Author identity unknown", fails,
-      # and the creation path carries on regardless, so the only trace is captured
-      # text. Every developer machine has one; a fresh runner does not.
+      # to commit without an identity. Every developer machine has one configured;
+      # a fresh runner does not.
       - name: Give git an identity
         run: |
           git config --global user.name "sequoia CI"
@@ -132,8 +133,6 @@ jobs:
           Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' `
                            -Name LongPathsEnabled
 
-      # EXEC_ARGS is passed unconditionally, empty included, since that is its
-      # default: one command rather than a conditional that differs per tier.
       - name: Configure
         working-directory: TestAll
         run: |
@@ -142,11 +141,8 @@ jobs:
                 -DWARNINGS_AS_ERRORS=${{ inputs.warnings_as_errors && 'ON' || 'OFF' }}
 
       # Separate from the run below so a compile failure and a test failure are
-      # distinguishable at a glance, and so the suite can carry its own ceiling.
-      # Where warnings are not errors they are still not nothing: the log is kept so
-      # the count can be reported. A warning nobody sees is a warning nobody fixes,
-      # and the tier which does not fail on them is exactly the tier where they
-      # would otherwise pass unnoticed.
+      # distinguishable, and so the suite can carry its own ceiling. The log is kept
+      # so warnings can be counted where they are not fatal.
       - name: Build
         working-directory: TestAll
         run: cmake --build --preset ${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/build.log"

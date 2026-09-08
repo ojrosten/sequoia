@@ -1,23 +1,15 @@
 name: fine
 
-# The gate on staging: the same two platforms coarse runs, sanitized, plus
-# --check-versioned-output so a change which moves committed diagnostics fails
-# here rather than being noticed later as a git diff.
+# The gate on staging: coarse's two platforms, sanitized, plus
+# --check-versioned-output so a change which moves committed diagnostics fails here
+# rather than surfacing later as a git diff.
 #
-# The columns *replace* coarse's rather than extending them, because a sanitized
-# build dominates the plain one it is built from: same compiler, same flags plus
-# instrumentation, so nothing the plain leg catches at compile time is missed, and
-# ASan is behaviour-neutral on this suite - the same check counts, and the same
-# output/, since output_discriminator() keys on compiler_name() regardless of
-# sanitizer. A plain leg here would cost a build and detect nothing extra.
+# These columns replace coarse's rather than adding to them - a sanitized build
+# misses nothing the plain one catches, and ASan is behaviour-neutral on this suite,
+# leaving check counts and output/ unchanged.
 #
-# So the invariant across the tiers is **at least as strict as**, not "contains the
-# columns of". Coarse is deliberately the weak, fast tier - uninstrumented because
-# uninstrumented builds are quicker - and this is where strictness starts.
-#
-# ASan and UBSan are combined into one build rather than run as two columns; TSan
-# cannot join them, since it is mutually exclusive with ASan, so it stays a column
-# of its own in rigorous.
+# ASan and UBSan share one build. TSan cannot join them, being mutually exclusive
+# with ASan, so it is a column of its own in rigorous.
 on:
   pull_request:
     branches: [staging]
@@ -29,8 +21,7 @@ jobs:
   fine:
     uses: ./.github/workflows/tests.yml
     with:
-      # Warnings are errors here and in rigorous: this is the gate, so it is where
-      # accumulation is cheap to prevent and where the interruption falls on nobody.
+      # Fatal at the gates, where preventing accumulation interrupts nobody's work.
       warnings_as_errors: true
       exec_args: '--check-versioned-output'
       columns: >-

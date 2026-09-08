@@ -1,24 +1,14 @@
 name: rigorous
 
-# The gate on main, and therefore the definition of what main means: main only
-# advances by promoting staging, and a promotion only merges when this is green.
-# So main is not "the latest work" but "the last state verified this thoroughly",
-# which is the property a client needs from it.
+# The gate on main, and so the definition of what main means: main advances only by
+# promoting staging, and a promotion merges only when this is green. main is
+# therefore the last state verified this thoroughly, not the latest work.
 #
-# Promotion-triggered rather than scheduled because it is batched: several changes
-# reach staging through the fine gate, and one promotion asks the expensive
-# questions once. A schedule would answer them at times nobody is promoting.
+# Promotion-triggered rather than scheduled, so the expensive columns are paid for
+# once per promotion rather than once per change.
 #
-# At least as strict as fine, which is the invariant - not "contains fine's
-# columns". Fine's two sanitized columns carry over unchanged; rigorous adds the
-# two questions a sanitized Debug build cannot answer: TSan, which is mutually
-# exclusive with ASan and so needs a build of its own, and Release, where the
-# optimizer is a different compiler in practice.
-#
-# Deliberately incomplete for now - no macOS column,
-# since its performance tests cannot hold on a hosted runner; no coverage; no
-# `locate`; no Windows Release, which needs a build preset distinct from its
-# configure preset. Each is an addition, not a redesign.
+# Over fine, this adds the two questions a sanitized Debug build cannot answer:
+# races, and what the optimizer does.
 on:
   pull_request:
     branches: [main]
@@ -31,7 +21,6 @@ jobs:
   rigorous:
     uses: ./.github/workflows/tests.yml
     with:
-      # Warnings are errors, as in fine.
       warnings_as_errors: true
       exec_args: '--check-versioned-output'
       columns: >-
@@ -45,19 +34,12 @@ jobs:
   docs:
     uses: ./.github/workflows/docs.yml
 
-  # Coverage, measured and published but gating nothing. Phase one deliberately:
-  # thresholds picked before anyone has seen the distribution would be round
-  # numbers rather than judgements.
+  # Measured and published; no threshold is applied. The uploaded coverage.info is
+  # an lcov tracefile, which is what both a per-file regression rule and diff-cover
+  # would read.
   #
-  # What it produces is chosen for what comes next. coverage.info is an lcov
-  # tracefile, which is both the baseline a per-file regression rule would compare
-  # against and the input `diff-cover` reads to answer "how well is *new* code
-  # covered" - so the artifact is the thing phase two consumes, not a screenshot of
-  # a number.
-  #
-  # The toolchain steps repeat tests.yml rather than reusing it, because this job
-  # is a different shape: coverage runs the suite through ctest, serially, not
-  # through the `run` target.
+  # The toolchain steps repeat tests.yml rather than calling it: coverage runs the
+  # suite through ctest, serially, not through the `run` target.
   coverage:
     name: Coverage · Linux · GCC
     runs-on: ubuntu-latest
@@ -95,8 +77,7 @@ jobs:
           cmake --build --preset gcc-env-coverage
 
       # The script runs the suite through ctest itself, so there is no separate run
-      # step; Utilities.cmake registers the test with --serial under CODE_COVERAGE,
-      # which is why this is slower than the ordinary columns.
+      # step. Utilities.cmake registers the test with --serial under CODE_COVERAGE.
       - name: Measure
         run: ./scripts/generate_coverage_report.sh build/TestAll/gcc-env-coverage
 
