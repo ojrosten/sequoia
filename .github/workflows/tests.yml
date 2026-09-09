@@ -176,15 +176,91 @@ jobs:
       # macOS ships no GNU coreutils, and the step form additionally distinguishes
       # "the suite timed out" from "the job timed out" in the run summary. One
       # branch has already spun for 36 minutes against an 18s baseline.
-      # A column may set `run: false` to build and not run. Intended for a platform
-      # whose failures are understood and being worked on, so that the build is
-      # still guarded while the suite is not: better than removing the column,
-      # which would stop compiling there too.
+      # A column may set `run: false` to build and not run, or `advisory: true` to
+      # run without gating on the result. Both exist for a platform whose failures
+      # are understood and being worked on; advisory is the better of the two,
+      # because a suite that is not run tells you nothing, whereas one that is run
+      # and reported tells you what is still wrong.
+      #
+      # The tee is safe only because `shell: bash` runs steps under
+      # `--noprofile --norc -eo pipefail`: without pipefail the tee would donate its
+      # own exit status to the step, which is how a red suite comes to look green.
+      # The Build step above already depends on this; it is written down here
+      # because the dependency is invisible at the call site.
       - name: Run the suite
         if: ${{ matrix.run != false }}
+        continue-on-error: ${{ matrix.advisory == true }}
         working-directory: TestAll
         timeout-minutes: 30
-        run: cmake --build --preset run-${{ matrix.build }}
+        run: cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/run.log"
+
+      # An advisory column still has to be *read*, and its failures are not equally
+      # acceptable. The performance tests assert absolute wall-clock times - eight
+      # 25ms sleeps against a 60ms +- 35 window - which a shared hosted runner
+      # cannot hold; the same commit has returned 196ms and 603ms. Everything else
+      # is a defect. So the two are counted apart and only the second is raised as
+      # an error annotation, which is loud without turning the column into a gate.
+      #
+      # The six rows are matched by name rather than on the word "Failures",
+      # because `Critical Failures:  2` contains `Failures:  2` and a naive sum
+      # would count it twice.
+      - name: Triage the advisory run
+        if: ${{ always() && matrix.advisory == true && matrix.run != false }}
+        run: |
+          log="$RUNNER_TEMP/run.log"
+          if [ ! -f "$log" ]; then
+            echo "::error title=Advisory run::${{ matrix.name }}: the suite produced no log"
+            exit 0
+          fi
+
+          row() { { grep -F "$1" "$log" || true; } | tail -1 | sed -nE 's/.*Failures:[[:space:]]*([0-9]+).*/\1/p'; }
+          num() { echo "${1:-0}"; }
+
+          std=$(num "$(row 'Standard Top Level Checks:')")
+          fp=$(num  "$(row 'False Positive Checks:')")
+          fn=$(num  "$(row 'False Negative Checks:')")
+          pstd=$(num "$(row 'Standard Performance Checks:')")
+          pfp=$(num  "$(row 'False Positive Performance Checks:')")
+          pfn=$(num  "$(row 'False Negative Performance Checks:')")
+          crit=$({ grep -oE 'Critical Failures:[[:space:]]*[0-9]+' "$log" || true; } \
+                   | grep -oE '[0-9]+$' | awk '{ s += $1 } END { print s + 0 }')
+
+          actionable=$((std + fp + fn + crit))
+          tolerated=$((pstd + pfp + pfn))
+
+          {
+            echo "### ${{ matrix.name }} - advisory run"
+            echo ""
+            echo "| | failures |"
+            echo "|---|---|"
+            echo "| Standard top level | $std |"
+            echo "| False positive | $fp |"
+            echo "| False negative | $fn |"
+            echo "| Critical | $crit |"
+            echo "| Performance (tolerated) | $tolerated |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$actionable" -gt 0 ]; then
+            echo "::error title=Advisory run needs action::${{ matrix.name }}: $actionable non-performance failure(s). This column does not gate, so the job is green; the failures are real."
+            {
+              echo ""
+              echo '```'
+              sed -n '/Grand Totals/,$p' "$log" | head -20
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$tolerated" -gt 0 ]; then
+            echo "::warning title=Advisory run::${{ matrix.name }}: $tolerated performance failure(s) only, which this runner cannot hold. Nothing to act on."
+          else
+            echo "::notice title=Advisory run::${{ matrix.name }}: the suite passed outright."
+          fi
+
+      # Kept with the artifact so an advisory column can be reviewed after the fact,
+      # rather than only through the annotations.
+      - name: Keep the run log
+        if: always()
+        run: |
+          mkdir -p run-log
+          cp "$RUNNER_TEMP/run.log" run-log/ 2>/dev/null || true
 
       # Where drift detection is on, the switch fails the run but reports only
       # that a bit is set; this names the files. It also sees the whole tree,
@@ -204,4 +280,5 @@ jobs:
             output/TestSummaries/
             output/DiagnosticsOutput/
             output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/InitOutput/
+            run-log/
           if-no-files-found: warn
