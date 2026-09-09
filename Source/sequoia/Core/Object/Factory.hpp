@@ -19,6 +19,7 @@
 
 #include <variant>
 #include <array>
+#include <map>
 #include <vector>
 #include <tuple>
 #include <stdexcept>
@@ -210,5 +211,114 @@ namespace sequoia::object
       return {std::move(name), product_creator<Product>{}};
     }
   };
-}
 
+  /** \brief Factory whose products are registered one at a time and erased into a vessel.
+
+      The sibling above fixes its products in its own type, which buys a compile-time guarantee that
+      nothing outside the list can be made. That guarantee costs a template parameter per product,
+      so it does not survive a product set numbered in thousands - which is what a test runner for a
+      large project is.
+
+      What replaces it is narrower but not nothing: every `add` is type-checked where it is written,
+      since the product must be constructible from the arguments *and* fit the vessel. What is given
+      up is the closed world - the ability to ask, at compile time, whether some type is among the
+      products.
+
+      The creation arguments are fixed by the factory's own type rather than by each call, which is
+      where the sibling's requirement that every product be initializable from one common argument
+      list reappears: there, a constraint checked per call; here, a signature.
+
+      There is no counterpart to `make_or`. Naming a fallback product means finding the entry which
+      makes that type, and erasure is precisely the loss of that knowledge; a caller wanting one can
+      supply a fallback vessel instead.
+   */
+
+  template<class Vessel, class... Args>
+  class erased_factory
+  {
+  private:
+    using creator = Vessel(*)(const Args&...);
+    using storage = std::map<std::string, creator, std::less<>>;
+    using const_storage_iterator = storage::const_iterator;
+  public:
+    using key    = std::string;
+    using vessel = Vessel;
+
+    using names_iterator = utilities::iterator<const_storage_iterator, factory_dereference_policy<const_storage_iterator>>;
+
+    /** \brief Registers a product under a name, which must be neither empty nor already taken. */
+
+    template<class Product>
+      requires initializable_from<Product, const Args&...> && std::constructible_from<Vessel, Product>
+    void add(key name)
+    {
+      if(name.empty())
+        throw std::logic_error{"Factory product names must not be empty!"};
+
+      constexpr creator make_product{[](const Args&... args) -> Vessel { return Vessel{Product{args...}}; }};
+
+      if(!m_Creators.emplace(std::move(name), make_product).second)
+        throw std::logic_error{"Factory product names must be unique!"};
+    }
+
+    [[nodiscard]]
+    std::size_t size() const noexcept
+    {
+      return m_Creators.size();
+    }
+
+    [[nodiscard]]
+    Vessel make(std::string_view name, const Args&... args) const
+    {
+      const auto found{m_Creators.find(name)};
+
+      if(found == m_Creators.end())
+        throw std::runtime_error{std::string{"Factory unable to make product of name '"}.append(name).append("'")};
+
+      return found->second(args...);
+    }
+
+    /** \brief Every product whose name satisfies the predicate, in name order. */
+
+    template<class Predicate>
+      requires std::predicate<Predicate, std::string_view>
+    [[nodiscard]]
+    std::vector<Vessel> make_if(Predicate pred, const Args&... args) const
+    {
+      std::vector<Vessel> products{};
+      products.reserve(size());
+
+      for(const auto& [name, make_product] : m_Creators)
+      {
+        if(pred(std::string_view{name})) products.push_back(make_product(args...));
+      }
+
+      return products;
+    }
+
+    /** \brief Every product, in name order. */
+
+    [[nodiscard]]
+    std::vector<Vessel> make_all(const Args&... args) const
+    {
+      return make_if([](std::string_view){ return true; }, args...);
+    }
+
+    [[nodiscard]]
+    friend bool operator==(const erased_factory&, const erased_factory&) noexcept = default;
+
+    [[nodiscard]]
+    names_iterator begin_names() const noexcept
+    {
+      return names_iterator{m_Creators.begin()};
+    }
+
+    [[nodiscard]]
+    names_iterator end_names() const noexcept
+    {
+      return names_iterator{m_Creators.end()};
+    }
+  private:
+    storage m_Creators{};
+  };
+}

@@ -23,6 +23,8 @@ namespace sequoia::testing
 
     void run_tests();
   private:
+    void test_erased_factory();
+
     /** Checks bulk creation against the same prediction the individual `make` checks use, so the
         two cannot drift apart. Written once and instantiated for each factory the test builds.
      */

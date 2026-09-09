@@ -221,5 +221,70 @@ namespace sequoia::testing
 
       check_bulk_creation("Products named by nomenclator", f, prediction_type{ {{"foo-int", foo<int>{}}, {"foo-double", foo<double>{}}} });
     }
+
+    test_erased_factory();
+  }
+
+  void factory_test::test_erased_factory()
+  {
+    {
+      using vessel          = std::variant<int, double>;
+      using prediction_type = std::array<std::pair<std::string, vessel>, 2>;
+      using factory_type    = erased_factory<vessel>;
+
+      factory_type f{}, g{};
+      f.add<int>("int");
+      f.add<double>("double");
+      g.add<int>("bar");
+      g.add<double>("foo");
+
+      check(equality, "Number of products", f.size(), std::size_t{2});
+
+      // The prediction the typed factory is held to, and the helper written for it.
+      check_bulk_creation("Erased over the same products", f, prediction_type{{{"int", 0}, {"double", 0.0}}});
+      check_bulk_creation("Erased, named differently", g, prediction_type{{{"bar", 0}, {"foo", 0.0}}});
+
+      check_semantics("", f, g);
+
+      check_exception_thrown<std::runtime_error>("Unknown name", [&f](){ return f.make("plurgh"); });
+      check_exception_thrown<std::logic_error>("Empty name", [&f](){ f.add<int>(""); });
+      check_exception_thrown<std::logic_error>("Duplicated name", [&f](){ f.add<int>("int"); });
+
+      // None of those took effect.
+      check(equality, "Number of products after the refusals", f.size(), std::size_t{2});
+    }
+
+    {
+      using vessel          = std::variant<regular_type, move_only_type>;
+      using prediction_type = std::array<std::pair<std::string, vessel>, 2>;
+
+      erased_factory<vessel, int> f{};
+      f.add<regular_type>("x");
+      f.add<move_only_type>("y");
+
+      check_bulk_creation("Erased, taking an argument, one product move-only",
+                          f,
+                          prediction_type{{{"x", regular_type{1}}, {"y", move_only_type{1}}}},
+                          1);
+    }
+
+    {
+      // Registered out of order, and with the two product types alternating once sorted, so that
+      // an ordering error changes which alternative each element holds. Five identical products
+      // would make this check unfalsifiable.
+      using vessel          = std::variant<int, double>;
+      using prediction_type = std::array<std::pair<std::string, vessel>, 5>;
+
+      erased_factory<vessel> f{};
+      f.add<double>("epsilon");
+      f.add<double>("beta");
+      f.add<int>("delta");
+      f.add<int>("alpha");
+      f.add<int>("gamma");
+
+      check_bulk_creation("Erased, registered out of order",
+                          f,
+                          prediction_type{{{"epsilon", 0.0}, {"beta", 0.0}, {"delta", 0}, {"alpha", 0}, {"gamma", 0}}});
+    }
   }
 }
