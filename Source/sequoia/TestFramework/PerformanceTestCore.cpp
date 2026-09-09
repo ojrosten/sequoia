@@ -5,10 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file
-    \brief Definitions for PerformanceTestCore.hpp
-*/
-
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/PathCheckers.hpp"

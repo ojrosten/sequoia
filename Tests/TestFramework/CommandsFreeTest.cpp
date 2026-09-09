@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "CommandsFreeTest.hpp"
 #include "sequoia/TestFramework/Commands.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"

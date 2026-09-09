@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 52
 Empty data inequivalent to non-empty data 
 
 Comparison performed using:
@@ -20,7 +20,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 53
 Non-empty data inequivalent to empty data 
 
 Comparison performed using:
@@ -59,7 +59,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 Single partitions holding different elements compare not equal
 
 Comparison performed using:
@@ -85,7 +85,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 Identical elements divided between different partitions compare notequal
 
 Comparison performed using:
@@ -101,7 +101,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 Identical elements divided between different partitions compare notequal
 
 Comparison performed using:
@@ -117,7 +117,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 
 [sequoia::data_structures::bucketed_sequence<int, std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > > >]
 operator== returned false
@@ -142,7 +142,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 59
 
 [sequoia::data_structures::bucketed_sequence<int, std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > > >]
 operator== returned false
@@ -221,7 +221,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 
 [sequoia::data_structures::bucketed_sequence<int, std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > > >]
 operator== returned false
@@ -234,7 +234,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 Size 0 should not compare equal to 1
 
 [unsigned long long]
@@ -244,8 +244,26 @@ Predicted: 1
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 63
 Size 1 should not compare equal to 0
+
+[unsigned long long]
+operator== returned false
+Obtained : 1
+Predicted: 0
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
+
+[unsigned long long]
+operator== returned false
+Obtained : 0
+Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 66
 
 [unsigned long long]
 operator== returned false
@@ -258,8 +276,8 @@ Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
 [unsigned long long]
 operator== returned false
-Obtained : 0
-Predicted: 1
+Obtained : 1
+Predicted: 2
 
 =======================================
 
@@ -267,26 +285,26 @@ Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
 [unsigned long long]
 operator== returned false
-Obtained : 1
-Predicted: 0
+Obtained : 2
+Predicted: 1
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
-[unsigned long long]
+[int]
 operator== returned false
 Obtained : 1
 Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 71
 
-[unsigned long long]
+[int]
 operator== returned false
-Obtained : 2
-Predicted: 1
+Obtained : 1
+Predicted: 2
 
 =======================================
 
@@ -317,21 +335,21 @@ Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
-
-[int]
-operator== returned false
-Obtained : 1
-Predicted: 2
-
-=======================================
-
 Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 
 [int]
 operator== returned false
-Obtained : 1
-Predicted: 2
+Obtained : 2
+Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 77
+
+[int]
+operator== returned false
+Obtained : 2
+Predicted: 1
 
 =======================================
 
@@ -339,8 +357,8 @@ Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 
 [int]
 operator== returned false
-Obtained : 2
-Predicted: 1
+Obtained : 1
+Predicted: 2
 
 =======================================
 
@@ -348,8 +366,8 @@ Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 
 [int]
 operator== returned false
-Obtained : 2
-Predicted: 1
+Obtained : 1
+Predicted: 2
 
 =======================================
 
@@ -357,17 +375,8 @@ Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 
 [int]
 operator== returned false
-Obtained : 1
-Predicted: 2
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
-
-[int]
-operator== returned false
-Obtained : 1
-Predicted: 2
+Obtained : 2
+Predicted: 1
 
 =======================================
 
@@ -375,8 +384,17 @@ Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 
 [int]
 operator== returned false
-Obtained : 2
-Predicted: 1
+Obtained : 1
+Predicted: 2
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 83
+
+[int]
+operator== returned false
+Obtained : 1
+Predicted: 2
 
 =======================================
 
@@ -407,21 +425,21 @@ Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
-
-[int]
-operator== returned false
-Obtained : 1
-Predicted: 2
-
-=======================================
-
 Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 
 [int]
 operator== returned false
-Obtained : 1
-Predicted: 2
+Obtained : 2
+Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 89
+
+[int]
+operator== returned false
+Obtained : 2
+Predicted: 1
 
 =======================================
 
@@ -452,21 +470,21 @@ Predicted: 1
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 95
 
 [int]
 operator== returned false
-Obtained : 2
-Predicted: 1
+Obtained : 1
+Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 96
 
 [int]
 operator== returned false
-Obtained : 2
-Predicted: 1
+Obtained : 1
+Predicted: 2
 
 =======================================
 
@@ -479,16 +497,16 @@ Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 
 [int]
 operator== returned false
-Obtained : 1
-Predicted: 2
+Obtained : 2
+Predicted: 1
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 100
 
 [int]
 operator== returned false
@@ -506,7 +524,7 @@ Predicted: 1
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 
 [int]
 operator== returned false
@@ -515,12 +533,12 @@ Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 104
 
 [int]
 operator== returned false
-Obtained : 2
-Predicted: 1
+Obtained : 1
+Predicted: 2
 
 =======================================
 
@@ -533,21 +551,21 @@ Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
-
-[int]
-operator== returned false
-Obtained : 1
-Predicted: 2
-
-=======================================
-
 Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 
 [int]
 operator== returned false
-Obtained : 1
-Predicted: 2
+Obtained : 2
+Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 108
+
+[int]
+operator== returned false
+Obtained : 2
+Predicted: 1
 
 =======================================
 
@@ -560,25 +578,7 @@ Predicted: 1
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
-
-[int]
-operator== returned false
-Obtained : 2
-Predicted: 1
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
-
-[int]
-operator== returned false
-Obtained : 2
-Predicted: 1
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 52
 Empty data inequivalent to non-empty data 
 
 Comparison performed using:
@@ -600,7 +600,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 53
 Non-empty data inequivalent to empty data 
 
 Comparison performed using:
@@ -639,7 +639,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 Single partitions holding different elements compare not equal
 
 Comparison performed using:
@@ -665,7 +665,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 Identical elements divided between different partitions compare notequal
 
 Comparison performed using:
@@ -681,7 +681,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 Identical elements divided between different partitions compare notequal
 
 Comparison performed using:
@@ -697,7 +697,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 
 [sequoia::data_structures::partitioned_sequence<int, std::vector<int, std::allocator<int> >, sequoia::maths::monotonic_sequence<unsigned long long, std::ranges::greater, std::vector<unsigned long long, std::allocator<unsigned long long> > > >]
 operator== returned false
@@ -722,7 +722,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 59
 
 [sequoia::data_structures::partitioned_sequence<int, std::vector<int, std::allocator<int> >, sequoia::maths::monotonic_sequence<unsigned long long, std::ranges::greater, std::vector<unsigned long long, std::allocator<unsigned long long> > > >]
 operator== returned false
@@ -801,7 +801,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 
 [sequoia::data_structures::partitioned_sequence<int, std::vector<int, std::allocator<int> >, sequoia::maths::monotonic_sequence<unsigned long long, std::ranges::greater, std::vector<unsigned long long, std::allocator<unsigned long long> > > >]
 operator== returned false
@@ -814,7 +814,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 Size 0 should not compare equal to 1
 
 [unsigned long long]
@@ -824,8 +824,26 @@ Predicted: 1
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 63
 Size 1 should not compare equal to 0
+
+[unsigned long long]
+operator== returned false
+Obtained : 1
+Predicted: 0
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
+
+[unsigned long long]
+operator== returned false
+Obtained : 0
+Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 66
 
 [unsigned long long]
 operator== returned false
@@ -838,8 +856,8 @@ Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
 [unsigned long long]
 operator== returned false
-Obtained : 0
-Predicted: 1
+Obtained : 1
+Predicted: 2
 
 =======================================
 
@@ -847,26 +865,26 @@ Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
 [unsigned long long]
 operator== returned false
-Obtained : 1
-Predicted: 0
+Obtained : 2
+Predicted: 1
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
-[unsigned long long]
+[int]
 operator== returned false
 Obtained : 1
 Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 71
 
-[unsigned long long]
+[int]
 operator== returned false
-Obtained : 2
-Predicted: 1
+Obtained : 1
+Predicted: 2
 
 =======================================
 
@@ -897,21 +915,21 @@ Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
-
-[int]
-operator== returned false
-Obtained : 1
-Predicted: 2
-
-=======================================
-
 Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 
 [int]
 operator== returned false
-Obtained : 1
-Predicted: 2
+Obtained : 2
+Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 77
+
+[int]
+operator== returned false
+Obtained : 2
+Predicted: 1
 
 =======================================
 
@@ -919,8 +937,8 @@ Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 
 [int]
 operator== returned false
-Obtained : 2
-Predicted: 1
+Obtained : 1
+Predicted: 2
 
 =======================================
 
@@ -928,8 +946,8 @@ Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 
 [int]
 operator== returned false
-Obtained : 2
-Predicted: 1
+Obtained : 1
+Predicted: 2
 
 =======================================
 
@@ -937,17 +955,8 @@ Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 
 [int]
 operator== returned false
-Obtained : 1
-Predicted: 2
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
-
-[int]
-operator== returned false
-Obtained : 1
-Predicted: 2
+Obtained : 2
+Predicted: 1
 
 =======================================
 
@@ -955,8 +964,17 @@ Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 
 [int]
 operator== returned false
-Obtained : 2
-Predicted: 1
+Obtained : 1
+Predicted: 2
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 83
+
+[int]
+operator== returned false
+Obtained : 1
+Predicted: 2
 
 =======================================
 
@@ -987,21 +1005,21 @@ Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
-
-[int]
-operator== returned false
-Obtained : 1
-Predicted: 2
-
-=======================================
-
 Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 
 [int]
 operator== returned false
-Obtained : 1
-Predicted: 2
+Obtained : 2
+Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 89
+
+[int]
+operator== returned false
+Obtained : 2
+Predicted: 1
 
 =======================================
 
@@ -1032,21 +1050,21 @@ Predicted: 1
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 95
 
 [int]
 operator== returned false
-Obtained : 2
-Predicted: 1
+Obtained : 1
+Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 96
 
 [int]
 operator== returned false
-Obtained : 2
-Predicted: 1
+Obtained : 1
+Predicted: 2
 
 =======================================
 
@@ -1059,16 +1077,16 @@ Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 
 [int]
 operator== returned false
-Obtained : 1
-Predicted: 2
+Obtained : 2
+Predicted: 1
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 100
 
 [int]
 operator== returned false
@@ -1086,7 +1104,7 @@ Predicted: 1
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 
 [int]
 operator== returned false
@@ -1095,12 +1113,12 @@ Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 104
 
 [int]
 operator== returned false
-Obtained : 2
-Predicted: 1
+Obtained : 1
+Predicted: 2
 
 =======================================
 
@@ -1113,21 +1131,21 @@ Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
-
-[int]
-operator== returned false
-Obtained : 1
-Predicted: 2
-
-=======================================
-
 Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 
 [int]
 operator== returned false
-Obtained : 1
-Predicted: 2
+Obtained : 2
+Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 108
+
+[int]
+operator== returned false
+Obtained : 2
+Predicted: 1
 
 =======================================
 
@@ -1140,25 +1158,7 @@ Predicted: 1
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
-
-[int]
-operator== returned false
-Obtained : 2
-Predicted: 1
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
-
-[int]
-operator== returned false
-Obtained : 2
-Predicted: 1
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 52
 Empty data inequivalent to non-empty data 
 
 Comparison performed using:
@@ -1180,7 +1180,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 53
 Non-empty data inequivalent to empty data 
 
 Comparison performed using:
@@ -1219,7 +1219,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 Single partitions holding different elements compare not equal
 
 Comparison performed using:
@@ -1249,7 +1249,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 Identical elements divided between different partitions compare notequal
 
 Comparison performed using:
@@ -1265,7 +1265,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 Identical elements divided between different partitions compare notequal
 
 Comparison performed using:
@@ -1281,7 +1281,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 
 [sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, std::vector<std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >, std::allocator<std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > > > > >]
 operator== returned false
@@ -1306,7 +1306,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 59
 
 [sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, std::vector<std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >, std::allocator<std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > > > > >]
 operator== returned false
@@ -1417,7 +1417,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 
 [sequoia::data_structures::bucketed_sequence<std::vector<double, std::allocator<double> >, std::vector<std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >, std::allocator<std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > > > > >]
 operator== returned false
@@ -1430,7 +1430,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 Size 0 should not compare equal to 1
 
 [unsigned long long]
@@ -1440,8 +1440,26 @@ Predicted: 1
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 63
 Size 1 should not compare equal to 0
+
+[unsigned long long]
+operator== returned false
+Obtained : 1
+Predicted: 0
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
+
+[unsigned long long]
+operator== returned false
+Obtained : 0
+Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 66
 
 [unsigned long long]
 operator== returned false
@@ -1454,8 +1472,8 @@ Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
 [unsigned long long]
 operator== returned false
-Obtained : 0
-Predicted: 1
+Obtained : 1
+Predicted: 2
 
 =======================================
 
@@ -1463,26 +1481,34 @@ Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
 [unsigned long long]
 operator== returned false
-Obtained : 1
-Predicted: 0
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
-
-[unsigned long long]
-operator== returned false
-Obtained : 1
-Predicted: 2
+Obtained : 2
+Predicted: 1
 
 =======================================
 
 Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
-[unsigned long long]
+[std::vector<double, std::allocator<double> >]
 operator== returned false
-Obtained : 2
-Predicted: 1
+
+  Element 0 of range incorrect
+  [double]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 71
+
+[std::vector<double, std::allocator<double> >]
+operator== returned false
+
+  Element 0 of range incorrect
+  [double]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
 
 =======================================
 
@@ -1525,19 +1551,6 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
-
-[std::vector<double, std::allocator<double> >]
-operator== returned false
-
-  Element 0 of range incorrect
-  [double]
-  operator== returned false
-  Obtained : 1
-  Predicted: 2
-
-=======================================
-
 Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 
 [std::vector<double, std::allocator<double> >]
@@ -1546,8 +1559,21 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 1
-  Predicted: 2
+  Obtained : 2
+  Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 77
+
+[std::vector<double, std::allocator<double> >]
+operator== returned false
+
+  Element 0 of range incorrect
+  [double]
+  operator== returned false
+  Obtained : 2
+  Predicted: 1
 
 =======================================
 
@@ -1559,8 +1585,8 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 2
-  Predicted: 1
+  Obtained : 1
+  Predicted: 2
 
 =======================================
 
@@ -1572,8 +1598,8 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 2
-  Predicted: 1
+  Obtained : 1
+  Predicted: 2
 
 =======================================
 
@@ -1585,21 +1611,8 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 1
-  Predicted: 2
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
-
-[std::vector<double, std::allocator<double> >]
-operator== returned false
-
-  Element 0 of range incorrect
-  [double]
-  operator== returned false
-  Obtained : 1
-  Predicted: 2
+  Obtained : 2
+  Predicted: 1
 
 =======================================
 
@@ -1611,8 +1624,21 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 2
-  Predicted: 1
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 83
+
+[std::vector<double, std::allocator<double> >]
+operator== returned false
+
+  Element 0 of range incorrect
+  [double]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
 
 =======================================
 
@@ -1655,19 +1681,6 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
-
-[std::vector<double, std::allocator<double> >]
-operator== returned false
-
-  Element 0 of range incorrect
-  [double]
-  operator== returned false
-  Obtained : 1
-  Predicted: 2
-
-=======================================
-
 Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 
 [std::vector<double, std::allocator<double> >]
@@ -1676,8 +1689,21 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 1
-  Predicted: 2
+  Obtained : 2
+  Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 89
+
+[std::vector<double, std::allocator<double> >]
+operator== returned false
+
+  Element 0 of range incorrect
+  [double]
+  operator== returned false
+  Obtained : 2
+  Predicted: 1
 
 =======================================
 
@@ -1720,7 +1746,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 95
 
 [std::vector<double, std::allocator<double> >]
 operator== returned false
@@ -1728,12 +1754,12 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 2
-  Predicted: 1
+  Obtained : 1
+  Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 96
 
 [std::vector<double, std::allocator<double> >]
 operator== returned false
@@ -1741,8 +1767,8 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 2
-  Predicted: 1
+  Obtained : 1
+  Predicted: 2
 
 =======================================
 
@@ -1759,7 +1785,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 
 [std::vector<double, std::allocator<double> >]
 operator== returned false
@@ -1767,12 +1793,12 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 1
-  Predicted: 2
+  Obtained : 2
+  Predicted: 1
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 100
 
 [std::vector<double, std::allocator<double> >]
 operator== returned false
@@ -1798,19 +1824,6 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
-
-[std::vector<double, std::allocator<double> >]
-operator== returned false
-
-  Element 0 of range incorrect
-  [double]
-  operator== returned false
-  Obtained : 1
-  Predicted: 2
-
-=======================================
-
 Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 
 [std::vector<double, std::allocator<double> >]
@@ -1819,12 +1832,12 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 2
-  Predicted: 1
+  Obtained : 1
+  Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 104
 
 [std::vector<double, std::allocator<double> >]
 operator== returned false
@@ -1837,7 +1850,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 
 [std::vector<double, std::allocator<double> >]
 operator== returned false
@@ -1858,8 +1871,21 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 1
-  Predicted: 2
+  Obtained : 2
+  Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 108
+
+[std::vector<double, std::allocator<double> >]
+operator== returned false
+
+  Element 0 of range incorrect
+  [double]
+  operator== returned false
+  Obtained : 2
+  Predicted: 1
 
 =======================================
 
@@ -1876,33 +1902,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
-
-[std::vector<double, std::allocator<double> >]
-operator== returned false
-
-  Element 0 of range incorrect
-  [double]
-  operator== returned false
-  Obtained : 2
-  Predicted: 1
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
-
-[std::vector<double, std::allocator<double> >]
-operator== returned false
-
-  Element 0 of range incorrect
-  [double]
-  operator== returned false
-  Obtained : 2
-  Predicted: 1
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 52
 Empty data inequivalent to non-empty data 
 
 Comparison performed using:
@@ -1924,7 +1924,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 53
 Non-empty data inequivalent to empty data 
 
 Comparison performed using:
@@ -1963,7 +1963,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 Single partitions holding different elements compare not equal
 
 Comparison performed using:
@@ -1993,7 +1993,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 Identical elements divided between different partitions compare notequal
 
 Comparison performed using:
@@ -2009,7 +2009,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 Identical elements divided between different partitions compare notequal
 
 Comparison performed using:
@@ -2025,7 +2025,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 
 [sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >, sequoia::maths::monotonic_sequence<unsigned long long, std::ranges::greater, std::vector<unsigned long long, std::allocator<unsigned long long> > > >]
 operator== returned false
@@ -2050,7 +2050,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 59
 
 [sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >, sequoia::maths::monotonic_sequence<unsigned long long, std::ranges::greater, std::vector<unsigned long long, std::allocator<unsigned long long> > > >]
 operator== returned false
@@ -2161,7 +2161,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 
 [sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >, sequoia::maths::monotonic_sequence<unsigned long long, std::ranges::greater, std::vector<unsigned long long, std::allocator<unsigned long long> > > >]
 operator== returned false
@@ -2174,7 +2174,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 Size 0 should not compare equal to 1
 
 [unsigned long long]
@@ -2184,8 +2184,26 @@ Predicted: 1
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 63
 Size 1 should not compare equal to 0
+
+[unsigned long long]
+operator== returned false
+Obtained : 1
+Predicted: 0
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
+
+[unsigned long long]
+operator== returned false
+Obtained : 0
+Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 66
 
 [unsigned long long]
 operator== returned false
@@ -2198,8 +2216,8 @@ Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
 [unsigned long long]
 operator== returned false
-Obtained : 0
-Predicted: 1
+Obtained : 1
+Predicted: 2
 
 =======================================
 
@@ -2207,26 +2225,34 @@ Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
 [unsigned long long]
 operator== returned false
-Obtained : 1
-Predicted: 0
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
-
-[unsigned long long]
-operator== returned false
-Obtained : 1
-Predicted: 2
+Obtained : 2
+Predicted: 1
 
 =======================================
 
 Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
-[unsigned long long]
+[std::vector<double, std::allocator<double> >]
 operator== returned false
-Obtained : 2
-Predicted: 1
+
+  Element 0 of range incorrect
+  [double]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 71
+
+[std::vector<double, std::allocator<double> >]
+operator== returned false
+
+  Element 0 of range incorrect
+  [double]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
 
 =======================================
 
@@ -2269,19 +2295,6 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
-
-[std::vector<double, std::allocator<double> >]
-operator== returned false
-
-  Element 0 of range incorrect
-  [double]
-  operator== returned false
-  Obtained : 1
-  Predicted: 2
-
-=======================================
-
 Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 
 [std::vector<double, std::allocator<double> >]
@@ -2290,8 +2303,21 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 1
-  Predicted: 2
+  Obtained : 2
+  Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 77
+
+[std::vector<double, std::allocator<double> >]
+operator== returned false
+
+  Element 0 of range incorrect
+  [double]
+  operator== returned false
+  Obtained : 2
+  Predicted: 1
 
 =======================================
 
@@ -2303,8 +2329,8 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 2
-  Predicted: 1
+  Obtained : 1
+  Predicted: 2
 
 =======================================
 
@@ -2316,8 +2342,8 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 2
-  Predicted: 1
+  Obtained : 1
+  Predicted: 2
 
 =======================================
 
@@ -2329,21 +2355,8 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 1
-  Predicted: 2
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
-
-[std::vector<double, std::allocator<double> >]
-operator== returned false
-
-  Element 0 of range incorrect
-  [double]
-  operator== returned false
-  Obtained : 1
-  Predicted: 2
+  Obtained : 2
+  Predicted: 1
 
 =======================================
 
@@ -2355,8 +2368,21 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 2
-  Predicted: 1
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 83
+
+[std::vector<double, std::allocator<double> >]
+operator== returned false
+
+  Element 0 of range incorrect
+  [double]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
 
 =======================================
 
@@ -2399,19 +2425,6 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
-
-[std::vector<double, std::allocator<double> >]
-operator== returned false
-
-  Element 0 of range incorrect
-  [double]
-  operator== returned false
-  Obtained : 1
-  Predicted: 2
-
-=======================================
-
 Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 
 [std::vector<double, std::allocator<double> >]
@@ -2420,8 +2433,21 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 1
-  Predicted: 2
+  Obtained : 2
+  Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 89
+
+[std::vector<double, std::allocator<double> >]
+operator== returned false
+
+  Element 0 of range incorrect
+  [double]
+  operator== returned false
+  Obtained : 2
+  Predicted: 1
 
 =======================================
 
@@ -2464,7 +2490,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 95
 
 [std::vector<double, std::allocator<double> >]
 operator== returned false
@@ -2472,12 +2498,12 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 2
-  Predicted: 1
+  Obtained : 1
+  Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 96
 
 [std::vector<double, std::allocator<double> >]
 operator== returned false
@@ -2485,8 +2511,8 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 2
-  Predicted: 1
+  Obtained : 1
+  Predicted: 2
 
 =======================================
 
@@ -2503,7 +2529,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 
 [std::vector<double, std::allocator<double> >]
 operator== returned false
@@ -2511,12 +2537,12 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 1
-  Predicted: 2
+  Obtained : 2
+  Predicted: 1
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 100
 
 [std::vector<double, std::allocator<double> >]
 operator== returned false
@@ -2542,19 +2568,6 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
-
-[std::vector<double, std::allocator<double> >]
-operator== returned false
-
-  Element 0 of range incorrect
-  [double]
-  operator== returned false
-  Obtained : 1
-  Predicted: 2
-
-=======================================
-
 Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 
 [std::vector<double, std::allocator<double> >]
@@ -2563,12 +2576,12 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 2
-  Predicted: 1
+  Obtained : 1
+  Predicted: 2
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 104
 
 [std::vector<double, std::allocator<double> >]
 operator== returned false
@@ -2581,7 +2594,7 @@ operator== returned false
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 
 [std::vector<double, std::allocator<double> >]
 operator== returned false
@@ -2602,38 +2615,25 @@ operator== returned false
   Element 0 of range incorrect
   [double]
   operator== returned false
-  Obtained : 1
-  Predicted: 2
+  Obtained : 2
+  Predicted: 1
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 108
+
+[std::vector<double, std::allocator<double> >]
+operator== returned false
+
+  Element 0 of range incorrect
+  [double]
+  operator== returned false
+  Obtained : 2
+  Predicted: 1
 
 =======================================
 
 Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
-
-[std::vector<double, std::allocator<double> >]
-operator== returned false
-
-  Element 0 of range incorrect
-  [double]
-  operator== returned false
-  Obtained : 2
-  Predicted: 1
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
-
-[std::vector<double, std::allocator<double> >]
-operator== returned false
-
-  Element 0 of range incorrect
-  [double]
-  operator== returned false
-  Obtained : 2
-  Predicted: 1
-
-=======================================
-
-Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
 
 [std::vector<double, std::allocator<double> >]
 operator== returned false

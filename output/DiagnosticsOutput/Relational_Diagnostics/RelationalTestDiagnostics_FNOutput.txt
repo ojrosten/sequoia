@@ -1,4 +1,4 @@
-Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 31
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 29
 
 [double]
 Obtained : 3
@@ -6,7 +6,7 @@ Predicted: 5 +/- 1
 
 =======================================
 
-Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 32
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 30
 
 [double]
 Obtained : 7
@@ -15,7 +15,7 @@ Advice: Tweak your tolerance!
 
 =======================================
 
-Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 36
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 34
 <
 
 [int]
@@ -24,7 +24,7 @@ Predicted: < 4
 
 =======================================
 
-Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 37
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 35
 <=
 
 [int]
@@ -33,7 +33,7 @@ Predicted: <= 4
 
 =======================================
 
-Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 38
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 36
 >
 
 [int]
@@ -42,7 +42,7 @@ Predicted: > 5
 
 =======================================
 
-Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 39
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 37
 >=
 
 [int]
@@ -51,7 +51,7 @@ Predicted: >= 5
 
 =======================================
 
-Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 46
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 44
 
   Element 0 of range incorrect
   [double]
@@ -60,7 +60,7 @@ Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 46
 
 =======================================
 
-Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 47
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 45
 
   Element 0 of range incorrect
   [double]
@@ -70,7 +70,7 @@ Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 47
 
 =======================================
 
-Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 52
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 50
 
   Element 1 of range incorrect
   [double]
@@ -79,7 +79,7 @@ Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 52
 
 =======================================
 
-Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 57
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 55
 <
 
   Element 1 of range incorrect
@@ -89,7 +89,7 @@ Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 57
 
 =======================================
 
-Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 63
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 61
 
 [std::vector<double, std::allocator<double> >]
   Element 1 of range incorrect
@@ -99,7 +99,7 @@ Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 63
 
 =======================================
 
-Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 66
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 64
 
 [std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
   Element 1 of range incorrect

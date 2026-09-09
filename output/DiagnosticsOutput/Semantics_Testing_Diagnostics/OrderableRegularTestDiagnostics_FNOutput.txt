@@ -1,4 +1,4 @@
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 31
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 29
 Broken check invariant
 
 --Regular Semantics--
@@ -12,7 +12,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 32
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 30
 Broken check invariant
 
 --Regular Semantics--
@@ -26,7 +26,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 38
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 36
 
 --Regular Semantics--
 [sequoia::testing::regular_broken_less<int, std::allocator<int> >]
@@ -51,7 +51,7 @@ Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 38
 
 =======================================
 
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 44
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 42
 
 --Regular Semantics--
 [sequoia::testing::regular_broken_lesseq<int, std::allocator<int> >]
@@ -64,7 +64,7 @@ Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 44
 
 =======================================
 
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 50
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 48
 
 --Regular Semantics--
 [sequoia::testing::regular_broken_greater<int, std::allocator<int> >]
@@ -77,7 +77,7 @@ Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 50
 
 =======================================
 
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 56
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 54
 
 --Regular Semantics--
 [sequoia::testing::regular_broken_greatereq<int, std::allocator<int> >]
@@ -90,7 +90,7 @@ Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 56
 
 =======================================
 
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 62
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 60
 
 --Regular Semantics--
 [sequoia::testing::regular_inverted_comparisons<int, std::allocator<int> >]
@@ -103,7 +103,7 @@ Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 62
 
 =======================================
 
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 68
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 66
 
 --Regular Semantics--
 [sequoia::testing::regular_broken_spaceship<int, std::allocator<int> >]
@@ -116,7 +116,7 @@ Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 68
 
 =======================================
 
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 75
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 73
 Incorrect x value
 
 --Regular Semantics--
@@ -136,7 +136,7 @@ Incorrect x value
 
 =======================================
 
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 76
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 74
 Incorrect y value
 
 --Regular Semantics--
@@ -156,7 +156,7 @@ Incorrect y value
 
 =======================================
 
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 77
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 75
 Incorrect x value; mutator
 
 --Regular Semantics--
@@ -176,7 +176,7 @@ Incorrect x value; mutator
 
 =======================================
 
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 78
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 76
 Incorrect y value; mutator
 
 --Regular Semantics--
@@ -196,7 +196,7 @@ Incorrect y value; mutator
 
 =======================================
 
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 84
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 82
 Incorrect moved-from state post construction
 
 --Regular Semantics--
@@ -217,6 +217,20 @@ Incorrect moved-from state post construction
       operator== returned false
       Obtained : 0
       Predicted: 1
+
+=======================================
+
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 83
+Incorrect moved-from state post construction
+
+--Regular Semantics--
+[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move construction
+  [sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 1
 
 =======================================
 
@@ -227,20 +241,6 @@ Incorrect moved-from state post construction
 [sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move construction
-  [sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
-  operator== returned false
-  Obtained : 
-  Predicted: 1
-
-=======================================
-
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 87
-Incorrect moved-from state post construction
-
---Regular Semantics--
-[sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> >]
-
-  Incorrect moved-from value after move construction
   Comparison performed using:
   [sequoia::testing::value_tester<sequoia::testing::orderable_specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
@@ -258,7 +258,7 @@ Incorrect moved-from state post construction
 
 =======================================
 
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 90
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 88
 Incorrect moved-from state post construction
 
 --Regular Semantics--
@@ -272,7 +272,7 @@ Incorrect moved-from state post construction
 
 =======================================
 
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 93
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 91
 Incorrect moved-from state post assignment
 
 --Regular Semantics--
@@ -296,7 +296,7 @@ Incorrect moved-from state post assignment
 
 =======================================
 
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 94
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 92
 Incorrect moved-from state post assignment
 
 --Regular Semantics--
@@ -310,7 +310,7 @@ Incorrect moved-from state post assignment
 
 =======================================
 
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 96
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 94
 Incorrect moved-from state post assignment
 
 --Regular Semantics--
@@ -334,7 +334,7 @@ Incorrect moved-from state post assignment
 
 =======================================
 
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 99
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 97
 Incorrect moved-from state post assignment
 
 --Regular Semantics--

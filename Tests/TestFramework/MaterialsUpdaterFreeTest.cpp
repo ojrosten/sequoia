@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "MaterialsUpdaterFreeTest.hpp"
 #include "sequoia/TestFramework/MaterialsUpdater.hpp"
 #include "sequoia/Streaming/Streaming.hpp"

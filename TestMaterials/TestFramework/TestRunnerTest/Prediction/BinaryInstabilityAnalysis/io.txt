@@ -21,7 +21,7 @@ Suite:
 [Execution Time: 89.5us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 190
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 188
 	Flipper
 
 	[bool]
@@ -50,7 +50,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 190
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 188
 	Flipper
 
 	[bool]

@@ -5,10 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file
-    \brief Definitions for ProjectPaths.hpp
- */
-
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
 #include "sequoia/FileSystem/FileSystem.hpp"

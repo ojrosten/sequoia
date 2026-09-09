@@ -7,7 +7,9 @@
 
 #pragma once
 
-/** \file Preprocessor logic for dealing with different platforms */
+/** \file
+    \brief Preprocessor logic for dealing with different platforms
+ */
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/PlatformSpecific/PlatformDiscriminators.hpp"

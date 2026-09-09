@@ -5,10 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file
-    \brief Definitions for TestRunner.hpp
-*/
-
 #include "sequoia/TestFramework/TestRunner.hpp"
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"

@@ -1,4 +1,4 @@
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 28
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 26
 Broken check invariant
 
 --Regular Semantics--
@@ -12,7 +12,7 @@ Broken check invariant
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 29
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 27
 Broken equality
 
 --Regular Semantics--
@@ -32,7 +32,7 @@ Broken equality
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 30
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 28
 Broken inequality
 
 --Regular Semantics--
@@ -52,7 +52,7 @@ Broken inequality
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 31
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 29
 Broken copy
 
 --Regular Semantics--
@@ -66,7 +66,7 @@ Broken copy
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 32
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 30
 Broken move
 
 --Regular Semantics--
@@ -80,7 +80,7 @@ Broken move
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 33
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 31
 Broken copy assignment
 
 --Regular Semantics--
@@ -94,7 +94,7 @@ Broken copy assignment
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 34
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 32
 Broken move assignment
 
 --Regular Semantics--
@@ -108,7 +108,7 @@ Broken move assignment
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 35
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 33
 Broken self copy assignment
 
 --Regular Semantics--
@@ -122,7 +122,7 @@ Broken self copy assignment
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 36
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 34
 Broken swap
 
 --Regular Semantics--
@@ -142,7 +142,7 @@ Broken swap
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 37
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 35
 Broken self swap
 
 --Regular Semantics--
@@ -156,7 +156,7 @@ Broken self swap
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 38
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 36
 Broken copy value semantics
 
 --Regular Semantics--
@@ -170,7 +170,7 @@ Broken copy value semantics
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 39
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 37
 Broken copy assignment value semantics
 
 --Regular Semantics--
@@ -184,7 +184,7 @@ Broken copy assignment value semantics
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 40
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 38
 Broken serialization
 
 --Regular Semantics--
@@ -198,7 +198,7 @@ Broken serialization
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 41
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 39
 Broken deserialization
 
 --Regular Semantics--
@@ -212,7 +212,7 @@ Broken deserialization
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 45
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 43
 Incorrect x value
 
 --Regular Semantics--
@@ -232,7 +232,7 @@ Incorrect x value
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 46
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 44
 Incorrect y value
 
 --Regular Semantics--
@@ -252,7 +252,7 @@ Incorrect y value
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 47
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 45
 Incorrect x value; mutator
 
 --Regular Semantics--
@@ -272,7 +272,7 @@ Incorrect x value; mutator
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 48
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 46
 Incorrect y value; mutator
 
 --Regular Semantics--
@@ -292,7 +292,7 @@ Incorrect y value; mutator
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 54
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 52
 Incorrect moved-from state post construction
 
 --Regular Semantics--
@@ -313,6 +313,20 @@ Incorrect moved-from state post construction
       operator== returned false
       Obtained : 0
       Predicted: 1
+
+=======================================
+
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 53
+Incorrect moved-from state post construction
+
+--Regular Semantics--
+[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+
+  Incorrect moved-from value after move construction
+  [sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
+  operator== returned false
+  Obtained : 
+  Predicted: 1
 
 =======================================
 
@@ -323,20 +337,6 @@ Incorrect moved-from state post construction
 [sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
 
   Incorrect moved-from value after move construction
-  [sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
-  operator== returned false
-  Obtained : 
-  Predicted: 1
-
-=======================================
-
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 57
-Incorrect moved-from state post construction
-
---Regular Semantics--
-[sequoia::testing::specified_moved_from_beast<int, std::allocator<int> >]
-
-  Incorrect moved-from value after move construction
   Comparison performed using:
   [sequoia::testing::value_tester<sequoia::testing::specified_moved_from_beast<int, std::allocator<int> > >]
   Checking for equivalence with:
@@ -354,7 +354,7 @@ Incorrect moved-from state post construction
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 58
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 56
 Incorrect moved-from state post construction
 
 --Regular Semantics--
@@ -368,7 +368,7 @@ Incorrect moved-from state post construction
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 60
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 58
 Incorrect moved-from state post assignment
 
 --Regular Semantics--
@@ -392,7 +392,7 @@ Incorrect moved-from state post assignment
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 61
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 59
 Incorrect moved-from state post assignment
 
 --Regular Semantics--
@@ -406,7 +406,7 @@ Incorrect moved-from state post assignment
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 63
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 61
 Incorrect moved-from state post assignment
 
 --Regular Semantics--
@@ -430,7 +430,7 @@ Incorrect moved-from state post assignment
 
 =======================================
 
-Tests/TestFramework/RegularTestDiagnostics.cpp, Line 64
+Tests/TestFramework/RegularTestDiagnostics.cpp, Line 62
 Incorrect moved-from state post assignment
 
 --Regular Semantics--

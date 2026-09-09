@@ -133,7 +133,7 @@ namespace sequoia::physics::impl
   template<class T, int I>
   struct type_counter {};
 
-  /// \class Primary class template for counting and combining instances of various types
+  /// \brief Primary class template for counting and combining instances of various types
   template<class...>
   struct count_and_combine {};
 
@@ -317,7 +317,7 @@ namespace sequoia::physics::impl
   template<class T>
   struct not_potentially_prunable : std::negation<potentially_prunable<T>> {};
   
-  /// \class Primary class template for aiding the reduction of direct products to a lower dimensional space    
+  /// \brief Primary class template for aiding the reduction of direct products to a lower dimensional space    
   template<class...>
   struct reduce;
 
@@ -375,7 +375,7 @@ namespace sequoia::physics::impl
         >;
   };
 
-  /// \class Primary class template to aid reduction of direct products and composite units
+  /// \brief Primary class template to aid reduction of direct products and composite units
   template<class...>
   struct simplify;
 

@@ -500,5 +500,7 @@
 	states of the type under test. Directed edges define transitions between nodes. When invoked,
 	a breadth-first search is performed, invoking specified checks at each node and determining
 	whether the transition from the previous state matches the expected state specified by the
-	latest node. An example may be found in \ref RegularStateTransitionDiagnostics.cpp.
+	latest node. An example follows.
+
+	\include{lineno} RegularStateTransitionDiagnostics.cpp
  */

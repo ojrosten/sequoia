@@ -1,4 +1,4 @@
-Tests/Runtime/ShellCommandsTestingDiagnostics.cpp, Line 26
+Tests/Runtime/ShellCommandsTestingDiagnostics.cpp, Line 24
 
 Comparison performed using:
 [sequoia::testing::value_tester<sequoia::runtime::shell_command>]
@@ -23,7 +23,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Runtime/ShellCommandsTestingDiagnostics.cpp, Line 27
+Tests/Runtime/ShellCommandsTestingDiagnostics.cpp, Line 25
 
 [sequoia::runtime::shell_command]
 operator== returned false

@@ -1,4 +1,20 @@
 False Negative Failure:
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 118
+
+--Regular Semantics--
+[sequoia::testing::orderable_regular_beast<int, std::allocator<int> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 119
+
+--Regular Semantics--
+[sequoia::testing::orderable_regular_beast<int, std::allocator<int> >]
+
+=======================================
+
+False Negative Failure:
 Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 120
 
 --Regular Semantics--
@@ -16,22 +32,6 @@ Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 121
 
 False Negative Failure:
 Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 122
-
---Regular Semantics--
-[sequoia::testing::orderable_regular_beast<int, std::allocator<int> >]
-
-=======================================
-
-False Negative Failure:
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 123
-
---Regular Semantics--
-[sequoia::testing::orderable_regular_beast<int, std::allocator<int> >]
-
-=======================================
-
-False Negative Failure:
-Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 124
 
 --Regular Semantics--
 [sequoia::testing::orderable_regular_beast<int, std::allocator<int> >]

@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 
 #include "AlgorithmsTest.hpp"
 #include "../Maths/Graph/Components/Edges/EdgeTestingUtilities.hpp"
