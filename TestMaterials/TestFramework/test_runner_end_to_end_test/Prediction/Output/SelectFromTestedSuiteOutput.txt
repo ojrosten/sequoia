@@ -1,15 +1,14 @@
+  Warning: Test Suite 'Foo' not found
 
 Running tests...
 
-Foo:
-	foo_false_negative_test
-	[Execution Time: 2.67us]
+Stuff:
 	foo_test
-	[Execution Time: 2.17us]
+	[Execution Time: 1us]
 
 -----------Grand Totals-----------
-[Total Run Time: 417us]
-[Execution Time: 55.2us]
+[Total Run Time: 256us]
+[Execution Time: 4.71us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

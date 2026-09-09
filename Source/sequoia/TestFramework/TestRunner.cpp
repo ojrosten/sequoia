@@ -23,6 +23,9 @@
 
 #include <algorithm>
 #include <array>
+#include <map>
+#include <set>
+#include <ranges>
 #include <format>
 #include <fstream>
 #include <utility>
@@ -804,6 +807,7 @@ namespace sequoia::testing
       return return_code::success;
 
     fs::create_directories(proj_paths().prune().dir());
+    build_suite_tree();
     check_for_missing_tests();
 
     if(nothing_to_do()) return return_code::success;
@@ -1158,12 +1162,7 @@ namespace sequoia::testing
         m_Filter.add_selected_item(src);
       }
 
-      if(!m_Filter)
-      {
-        using suite_t = filter_type::optional_suite_selection::value_type;
-        using items_t = filter_type::optional_item_selection::value_type;
-        m_Filter = filter_type{{suite_t{}}, {items_t{}}, path_equivalence{proj_paths().tests().repo()}, test_to_path{}};
-      }
+      if(!m_Filter) m_Filter.select_nothing();
 
       return prune_outcome::success;
     }
@@ -1173,15 +1172,44 @@ namespace sequoia::testing
     return prune_outcome::no_time_stamp;
   }
 
-  [[nodiscard]]
-  std::string test_runner::duplication_message(std::string_view testName, const fs::path& source)
+  void test_runner::build_suite_tree()
   {
-    using namespace parsing::commandline;
+    std::vector<fs::path> materialsPaths{};
+    std::map<fs::path, suite_type::size_type> groups{};
 
-    return error(std::string{"Test: \""}.append(testName).append("\"\n")
-                  .append("Source file: \"").append(source.generic_string()).append("\"\n")
-                  .append("A test's name is that of its class, and determines where its output is"
-                    " written, so each may be registered only once.\n"));
+    // A runner may be executed more than once, with tests registered in between.
+    m_Suites = suite_type{};
+    m_Suites.add_node(suite_type::npos);
+
+    for(auto& vessel : m_Factory.make_all())
+    {
+      const auto directory{rebase_from(vessel.source_file(), proj_paths().tests().repo()).parent_path()};
+      const auto names{directory | std::views::transform([](const fs::path& p){ return p.generic_string(); })
+                                 | std::ranges::to<std::vector>()};
+
+      if(!m_Filter(vessel.source_file(), names)) continue;
+
+      auto parent{suite_type::size_type{}};
+      fs::path sofar{};
+      for(const auto& component : directory)
+      {
+        sofar /= component;
+
+        if(const auto found{groups.find(sofar)}; found != groups.end())
+        {
+          parent = found->second;
+        }
+        else
+        {
+          parent = groups.emplace(sofar, m_Suites.add_node(parent, suite_node{.summary{log_summary{component.generic_string()}}})).first->second;
+        }
+      }
+
+      vessel.initialize(proj_paths(), materialsPaths, m_RecoveryMode);
+
+      auto name{vessel.name()};
+      m_Suites.add_node(parent, suite_node{.summary{log_summary{std::move(name)}}, .optTest{std::move(vessel)}});
+    }
   }
 
   [[nodiscard]]

@@ -1,54 +1,68 @@
 
 Running tests, synchronously...
 
-Bar:
-[Execution Time: 311us]
-	bar_free_test
-	[Execution Time: 311us]
-		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
+..:
+[Execution Time: 483us]
+	..:
+	[Execution Time: 483us]
+		..:
+		[Execution Time: 483us]
+			..:
+			[Execution Time: 483us]
+				..:
+				[Execution Time: 483us]
+					..:
+					[Execution Time: 483us]
+						..:
+						[Execution Time: 483us]
+							Tests:
+							[Execution Time: 483us]
+								TestFramework:
+								[Execution Time: 264us]
+									bar_free_test
+									[Execution Time: 264us]
+										Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
 
 ******  Critical Failures:  1  ******
 
 
-		Error -- Unexpected Exception:
-		Throw after check
+										Error -- Unexpected Exception:
+										Throw after check
 
-		Exception thrown after check completed
-		Last Recorded Message:
+										Exception thrown after check completed
+										Last Recorded Message:
 
-		Tests/Tests/TestFramework/TestRunnerDiagnosticsUtilities.hpp, Line 39
-		Phoney equality check
+										Tests/Tests/TestFramework/TestRunnerDiagnosticsUtilities.hpp, Line 39
+										Phoney equality check
 
-		[int]
+										[int]
 
-		=======================================
+										=======================================
 
-Foo:
-[Execution Time: 241us]
-	foo_test
-	[Execution Time: 241us]
-		Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 0]
+								foo_test
+								[Execution Time: 219us]
+									Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 0]
 
 ******  Critical Failures:  1  ******
 
 
-		Error -- Unexpected Exception:
-		This is bad
+									Error -- Unexpected Exception:
+									This is bad
 
-		Exception thrown during last check
-		Last Recorded Message:
+									Exception thrown during last check
+									Last Recorded Message:
 
-		Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 62
-		Throw during check
+									Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 62
+									Throw during check
 
-		[sequoia::testing::(anonymous namespace)::foo]
+									[sequoia::testing::(anonymous namespace)::foo]
 
-		=======================================
+									=======================================
 
 
 -----------Grand Totals-----------
-[Total Run Time: 980us]
-[Execution Time: 552us]
+[Total Run Time: 938us]
+[Execution Time: 483us]
 	Standard Top Level Checks:                 4;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

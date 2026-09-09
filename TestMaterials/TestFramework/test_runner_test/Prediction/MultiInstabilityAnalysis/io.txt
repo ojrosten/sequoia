@@ -1,13 +1,13 @@
 
 Running tests, synchronously...
 
-Suite:
-[Execution Time: 136us]
+..:
+[Execution Time: 126us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 316us]
-[Execution Time: 136us]
+[Total Run Time: 293us]
+[Execution Time: 126us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -17,8 +17,8 @@ Suite:
 
 Running tests, synchronously...
 
-Suite:
-[Execution Time: 70.9us]
+..:
+[Execution Time: 63us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 219
@@ -33,8 +33,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 302us]
-[Execution Time: 70.9us]
+[Total Run Time: 242us]
+[Execution Time: 63us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -44,8 +44,8 @@ Suite:
 
 Running tests, synchronously...
 
-Suite:
-[Execution Time: 75.8us]
+..:
+[Execution Time: 63.8us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 219
@@ -60,8 +60,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 326us]
-[Execution Time: 75.8us]
+[Total Run Time: 244us]
+[Execution Time: 63.8us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -71,8 +71,8 @@ Suite:
 
 Running tests, synchronously...
 
-Suite:
-[Execution Time: 67.9us]
+..:
+[Execution Time: 59.1us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 219
@@ -87,8 +87,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 252us]
-[Execution Time: 67.9us]
+[Total Run Time: 250us]
+[Execution Time: 59.1us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

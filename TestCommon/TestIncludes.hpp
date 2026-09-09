@@ -38,7 +38,6 @@
 #include "Core/Object/CreatorFreeTest.hpp"
 #include "Core/Object/FactoryTest.hpp"
 #include "Core/Object/FactoryTestingDiagnostics.hpp"
-#include "Core/Object/SuiteFreeTest.hpp"
 #include "Experimental/ExperimentalTest.hpp"
 #include "Experimental/FlattenTypeListFreeTest.hpp"
 #include "FileSystem/FileSystemFreeTest.hpp"

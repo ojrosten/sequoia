@@ -1,36 +1,8 @@
 
 Running tests, synchronously...
 
-Utilities:
-[Execution Time: 1.08us]
-Useful Things:
-[Execution Time: 210us]
-	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
-
-	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
-
-	[int]
-	operator== returned false
-	Obtained : 43
-	Predicted: 42
-
-	=======================================
-
-Bar:
-[Execution Time: 1.17us]
-Unstable:
-[Execution Time: 135us]
-	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
-Maybe:
-[Execution Time: 2.04us]
-Oldschool:
-[Execution Time: 1.96us]
-Probability:
-[Execution Time: 399us]
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
-	False Negative Checks:                     2;  Failures:  0
-Foo:
-[Execution Time: 508us]
+Stuff:
+[Execution Time: 726us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Stuff/FooTest.cpp, Line 42
@@ -41,9 +13,9 @@ Foo:
 	[std::filesystem::path]
 
 	  Path type
-	  /Users/oliver/sequoia/.claude/worktrees/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/foo_test/WorkingCopy/RepresentativeCases
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/foo_test/WorkingCopy/RepresentativeCases
 	  vs
-	  /Users/oliver/sequoia/.claude/worktrees/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/foo_test/Prediction/RepresentativeCases
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/foo_test/Prediction/RepresentativeCases
 
 	  [std::filesystem::file_type]
 	  operator== returned false
@@ -52,18 +24,35 @@ Foo:
 
 	=======================================
 
-Unique Thing:
-[Execution Time: 304us]
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
+Utilities:
+[Execution Time: 521us]
+	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 39]
 	False Negative Checks:                     2;  Failures:  0
-Container:
-[Execution Time: 2.75us]
-House:
-[Execution Time: 1.38us]
+
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
+
+	[int]
+	operator== returned false
+	Obtained : 43
+	Predicted: 42
+
+	=======================================
+
+Unstable:
+[Execution Time: 136us]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+house_allocation_test:
+[Execution Time: 1.58us]
+Maybe:
+[Execution Time: 2.46us]
+Maths:
+[Execution Time: 362us]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+	False Negative Checks:                     2;  Failures:  0
 
 -----------Grand Totals-----------
-[Total Run Time: 3.24ms]
-[Execution Time: 1.57ms]
+[Total Run Time: 3.47ms]
+[Execution Time: 1.75ms]
 	Standard Top Level Checks:                12;  Failures:  2  [Deep checks: 82]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

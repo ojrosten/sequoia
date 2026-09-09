@@ -37,68 +37,12 @@ int main(int argc, char** argv)
 		using namespace std::literals::chrono_literals;
 
 		sequoia::testing::test_runner runner{argc, argv, "Oliver Jacob Rosten", "\t"};
-
-		runner.add_test_suite(
-			"Utilities",
-			utilities_free_test{}
-		);
-
-		runner.add_test_suite(
-			"Useful Things",
-			useful_things_free_test{}
-		);
-
-		runner.add_test_suite(
-			"Bar",
-			bar_free_test{}
-		);
-
-		runner.add_test_suite(
-			"Unstable",
-			flipper_free_test{}
-		);
-
-		runner.add_test_suite(
-			"Maybe",
-			maybe_false_negative_test{},
-			maybe_test{}
-		);
-
-		runner.add_test_suite(
-			"Oldschool",
-			oldschool_false_negative_test{},
-			oldschool_test{}
-		);
-
-		runner.add_test_suite(
-			"Probability",
-			probability_false_negative_test{},
-			probability_test{}
-		);
-
-		runner.add_test_suite(
-			"Foo",
-			foo_false_negative_test{},
-			foo_test{}
-		);
-
-		runner.add_test_suite(
-			"Unique Thing",
-			unique_thing_false_negative_test{},
-			unique_thing_test{}
-		);
-
-		runner.add_test_suite(
-			"Container",
-			container_performance_test{},
-			container_allocation_test{}
-		);
-
-		runner.add_test_suite(
-			"House",
-			house_allocation_test{}
-		);
-
+runner.register_test<utilities_free_test>();runner.register_test<useful_things_free_test>();runner.register_test<bar_free_test>();runner.register_test<flipper_free_test>();runner.register_test<maybe_false_negative_test>();
+		runner.register_test<maybe_test>();runner.register_test<oldschool_false_negative_test>();
+		runner.register_test<oldschool_test>();runner.register_test<probability_false_negative_test>();
+		runner.register_test<probability_test>();runner.register_test<foo_false_negative_test>();
+		runner.register_test<foo_test>();runner.register_test<unique_thing_false_negative_test>();
+		runner.register_test<unique_thing_test>();runner.register_test<container_allocation_test>();runner.register_test<house_allocation_test>();runner.register_test<container_performance_test>();
 		code = runner.execute(sequoia::timer_resolution{1ms});
 	}
 	catch(const std::exception& e)

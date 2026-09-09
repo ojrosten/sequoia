@@ -1,13 +1,13 @@
 
 Analyzing dependencies...
-[8.41ms]
+[3.21ms]
 
 
 Running tests...
 
 Utilities:
-Useful Things:
-	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 39]
+	False Negative Checks:                     2;  Failures:  0
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
 
@@ -20,17 +20,13 @@ Useful Things:
 
 Unstable:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
-Probability:
+Maths:
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Negative Checks:                     2;  Failures:  0
-Unique Thing:
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
-	False Negative Checks:                     2;  Failures:  0
-Container:
 
 -----------Grand Totals-----------
-[Total Run Time: 3.22ms]
-[Execution Time: 756us]
+[Total Run Time: 1.46ms]
+[Execution Time: 439us]
 	Standard Top Level Checks:                10;  Failures:  1  [Deep checks: 80]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

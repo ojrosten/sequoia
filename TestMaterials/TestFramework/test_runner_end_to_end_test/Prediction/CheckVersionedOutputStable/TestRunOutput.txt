@@ -1,21 +1,16 @@
 
 Running tests...
 
+Stuff:
 Utilities:
-Useful Things:
-Bar:
 Unstable:
+house_allocation_test:
 Maybe:
-Oldschool:
-Probability:
-Foo:
-Unique Thing:
-Container:
-House:
+Maths:
 
 -----------Grand Totals-----------
-[Total Run Time: 2.05ms]
-[Execution Time: 446us]
+[Total Run Time: 1.35ms]
+[Execution Time: 162us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

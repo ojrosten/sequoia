@@ -1,12 +1,12 @@
 
 Running tests...
 
-Foo:
+Stuff:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
 
 -----------Grand Totals-----------
-[Total Run Time: 1.95ms]
-[Execution Time: 1.63ms]
+[Total Run Time: 1.86ms]
+[Execution Time: 1.57ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

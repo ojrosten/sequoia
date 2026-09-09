@@ -1,8 +1,8 @@
 
 Running tests, synchronously...
 
-Suite:
-[Execution Time: 190us]
+..:
+[Execution Time: 144us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 0]
 
 ******  Critical Failures:  1  ******
@@ -12,14 +12,14 @@ Suite:
 	Error
 
 	Exception thrown before any checks performed in file
-	/Users/oliver/sequoia/.claude/worktrees/sequoia/Tests/critical_free_test.cpp
+	/Users/oliver/sequoia/Tests/critical_free_test.cpp
 
 	=======================================
 
 
 -----------Grand Totals-----------
-[Total Run Time: 477us]
-[Execution Time: 190us]
+[Total Run Time: 339us]
+[Execution Time: 144us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 0]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -32,12 +32,12 @@ Suite:
 
 Running tests, synchronously...
 
-Suite:
-[Execution Time: 39.3us]
+..:
+[Execution Time: 38us]
 
 -----------Grand Totals-----------
-[Total Run Time: 223us]
-[Execution Time: 39.3us]
+[Total Run Time: 181us]
+[Execution Time: 38us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -57,7 +57,7 @@ vs.
 	Error
 
 	Exception thrown before any checks performed in file
-	/Users/oliver/sequoia/.claude/worktrees/sequoia/Tests/critical_free_test.cpp
+	/Users/oliver/sequoia/Tests/critical_free_test.cpp
 
 	=======================================
 

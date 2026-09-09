@@ -25,11 +25,8 @@ int main(int argc, char** argv)
                        "  ",
                        {.main_cpp{"TestFrameworkHarness/TestFrameworkHarnessMain.cpp"}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
 
-    runner.add_test_suite(
-      "Test Runner",
-      test_runner_end_to_end_test{},
-      test_runner_project_files{}
-    );
+    runner.register_test<test_runner_end_to_end_test>();
+    runner.register_test<test_runner_project_files>();
 
     code = runner.execute(timer_resolution{1ms});
   }

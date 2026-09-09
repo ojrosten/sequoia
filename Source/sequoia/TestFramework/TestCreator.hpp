@@ -127,7 +127,7 @@ namespace sequoia::testing
     template<invocable_exact_r<std::filesystem::path, std::filesystem::path> WhenAbsent,std::invocable<std::string&> FileTransformer>
     void finalize(WhenAbsent fn,
                   const std::vector<std::string>& stubs,
-                  const std::vector<std::string>& constructors,
+                  const std::vector<std::string>& testClasses,
                   std::string_view nameStub,
                   FileTransformer transformer);
 
@@ -196,7 +196,7 @@ namespace sequoia::testing
     void finalize();
 
     [[nodiscard]]
-    std::vector<std::string> constructors() const;
+    std::vector<std::string> test_classes() const;
 
     [[nodiscard]]
     friend bool operator==(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
@@ -231,7 +231,7 @@ namespace sequoia::testing
     void finalize();
 
     [[nodiscard]]
-    std::vector<std::string> constructors() const;
+    std::vector<std::string> test_classes() const;
   private:
     void transform_file(std::string& text) const;
   };
@@ -244,7 +244,7 @@ namespace sequoia::testing
     void finalize();
 
     [[nodiscard]]
-    std::vector<std::string> constructors() const;
+    std::vector<std::string> test_classes() const;
 
     [[nodiscard]]
     friend bool operator==(const nascent_behavioural_test&, const nascent_behavioural_test&) noexcept = default;

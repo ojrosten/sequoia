@@ -1,13 +1,13 @@
 
 Running tests, synchronously...
 
-Suite:
-[Execution Time: 2.82ms]
+..:
+[Execution Time: 255us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[Total Run Time: 5.82ms]
-[Execution Time: 2.82ms]
+[Total Run Time: 550us]
+[Execution Time: 255us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -17,13 +17,13 @@ Suite:
 
 Running tests, synchronously...
 
-Suite:
-[Execution Time: 1.96ms]
+..:
+[Execution Time: 80.6us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[Total Run Time: 10.9ms]
-[Execution Time: 1.96ms]
+[Total Run Time: 300us]
+[Execution Time: 80.6us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

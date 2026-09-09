@@ -1,12 +1,12 @@
 
 Running tests...
 
-Throwing Suite:
+..:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[Total Run Time: 3.85ms]
-[Execution Time: 775us]
+[Total Run Time: 398us]
+[Execution Time: 177us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

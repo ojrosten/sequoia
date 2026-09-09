@@ -344,7 +344,7 @@ namespace sequoia::testing
   template<invocable_exact_r<std::filesystem::path, std::filesystem::path> WhenAbsent, std::invocable<std::string&> FileTransformer>
   void nascent_test_base::finalize(WhenAbsent fn,
                                    const std::vector<std::string>& stubs,
-                                   const std::vector<std::string>& constructors,
+                                   const std::vector<std::string>& testClasses,
                                    std::string_view nameStub,
                                    FileTransformer transformer)
   {
@@ -369,13 +369,13 @@ namespace sequoia::testing
       stream() << create_file(nameStub, stub, transformer) << '\n';
     }
 
-    auto addToSuite{
-      [this, &constructors](const fs::path& mainCpp) {
-        add_to_suite(mainCpp, suite(), m_CodeIndent, constructors);
+    auto registerTests{
+      [this, &testClasses](const fs::path& mainCpp) {
+        add_test_registrations(mainCpp, m_CodeIndent, testClasses);
       }
     };
 
-    ammend_file(m_Paths, addToSuite, [](const main_paths& info) { return info.file(); });
+    ammend_file(m_Paths, registerTests, [](const main_paths& info) { return info.file(); });
 
     stream() << '\n';
   }
@@ -523,7 +523,7 @@ namespace sequoia::testing
 
     nascent_test_base::finalize([this, &nameSpace](const fs::path& filename) { return when_header_absent(filename, nameSpace); },
                                 to_stubs(*this),
-                                constructors(),
+                                test_classes(),
                                 "MyClass",
                                 [this](std::string& text) { transform_file(text); });
   }
@@ -550,10 +550,10 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::vector<std::string> nascent_semantics_test::constructors() const
+  std::vector<std::string> nascent_semantics_test::test_classes() const
   {
-    return { {std::string{forename()}.append("_false_negative_").append(surname()).append("{}")},
-             {std::string{forename()}.append("_").append(surname()).append("{}")}};
+    return { {std::string{forename()}.append("_false_negative_").append(surname())},
+             {std::string{forename()}.append("_").append(surname())}};
   }
 
   void nascent_semantics_test::transform_file(std::string& text) const
@@ -679,15 +679,15 @@ namespace sequoia::testing
 
     nascent_test_base::finalize([](const fs::path& p) { return p; },
                                 to_stubs(*this),
-                                constructors(),
+                                test_classes(),
                                 "MyClass",
                                 [this](std::string& text) { transform_file(text); });
   }
 
   [[nodiscard]]
-  std::vector<std::string> nascent_allocation_test::constructors() const
+  std::vector<std::string> nascent_allocation_test::test_classes() const
   {
-    return { {std::string{forename()}.append("_").append(surname()).append("{}")} };
+    return { {std::string{forename()}.append("_").append(surname())} };
   }
 
   void nascent_allocation_test::transform_file(std::string& text) const
@@ -727,7 +727,7 @@ namespace sequoia::testing
 
     nascent_test_base::finalize([this](const fs::path& filename) { return when_header_absent(filename); },
                                 to_stubs(*this),
-                                constructors(),
+                                test_classes(),
                                 "MyBehavioural",
                                 [this](std::string& text) { transform_file(text); });
   }
@@ -752,7 +752,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::vector<std::string> nascent_behavioural_test::constructors() const
+  std::vector<std::string> nascent_behavioural_test::test_classes() const
   {
     auto makeClassName{
       [this](std::string_view middlename) -> std::string {
@@ -764,7 +764,7 @@ namespace sequoia::testing
 
     auto make{
       [makeClassName](std::string_view middlename) -> std::string {
-        return makeClassName(middlename).append("{}");
+        return makeClassName(middlename);
       }
     };
 

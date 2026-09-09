@@ -1,32 +1,22 @@
 
 Running tests, synchronously...
 
+Stuff:
+[Execution Time: 5.83us]
 Utilities:
-[Execution Time: 15.7us]
-Useful Things:
-[Execution Time: 17.3us]
-Bar:
-[Execution Time: 15.3us]
+[Execution Time: 6.96us]
 Unstable:
-[Execution Time: 17.3us]
+[Execution Time: 1.25us]
+house_allocation_test:
+[Execution Time: 1.21us]
 Maybe:
-[Execution Time: 30.9us]
-Oldschool:
-[Execution Time: 31.2us]
-Probability:
-[Execution Time: 33.9us]
-Foo:
-[Execution Time: 31.9us]
-Unique Thing:
-[Execution Time: 32.9us]
-Container:
-[Execution Time: 41us]
-House:
-[Execution Time: 14.8us]
+[Execution Time: 1.71us]
+Maths:
+[Execution Time: 1.83us]
 
 -----------Grand Totals-----------
-[Total Run Time: 14.2ms]
-[Execution Time: 282us]
+[Total Run Time: 1.3ms]
+[Execution Time: 18.8us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

@@ -1,29 +1,11 @@
 
 Analyzing dependencies...
-[4.5ms]
+[2.95ms]
 
 
 Running tests...
 
-Probability:
-	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 39]
-
-	Tests/Maths/ProbabilityTest.cpp, Line 22
-
-	Comparison performed using:
-	[sequoia::testing::value_tester<maths::probability>]
-	Checking for equivalence with:
-	[double]
-
-	  Description
-	  [double]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0.9
-
-	=======================================
-
-Foo:
+Stuff:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 ******  Critical Failures:  1  ******
@@ -44,10 +26,28 @@ Foo:
 
 	=======================================
 
+Maths:
+	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 39]
+
+	Tests/Maths/ProbabilityTest.cpp, Line 22
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<maths::probability>]
+	Checking for equivalence with:
+	[double]
+
+	  Description
+	  [double]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0.9
+
+	=======================================
+
 
 -----------Grand Totals-----------
-[Total Run Time: 1.34ms]
-[Execution Time: 759us]
+[Total Run Time: 1.21ms]
+[Execution Time: 756us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 41]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

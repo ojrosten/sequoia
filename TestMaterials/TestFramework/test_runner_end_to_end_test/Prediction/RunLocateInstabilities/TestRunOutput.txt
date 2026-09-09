@@ -1,9 +1,11 @@
 
 Running tests...
 
+Stuff:
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
 Utilities:
-Useful Things:
-	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 39]
+	False Negative Checks:                     2;  Failures:  0
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
 
@@ -14,25 +16,17 @@ Useful Things:
 
 	=======================================
 
-Bar:
 Unstable:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+house_allocation_test:
 Maybe:
-Oldschool:
-Probability:
+Maths:
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Negative Checks:                     2;  Failures:  0
-Foo:
-	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
-Unique Thing:
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
-	False Negative Checks:                     2;  Failures:  0
-Container:
-House:
 
 -----------Grand Totals-----------
-[Total Run Time: 3.83ms]
-[Execution Time: 2.46ms]
+[Total Run Time: 3.99ms]
+[Execution Time: 2.37ms]
 	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 118]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -42,9 +36,11 @@ House:
 
 Running tests...
 
+Stuff:
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
 Utilities:
-Useful Things:
-	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 39]
+	False Negative Checks:                     2;  Failures:  0
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
 
@@ -55,7 +51,6 @@ Useful Things:
 
 	=======================================
 
-Bar:
 Unstable:
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
@@ -77,22 +72,15 @@ Unstable:
 
 	=======================================
 
+house_allocation_test:
 Maybe:
-Oldschool:
-Probability:
+Maths:
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	False Negative Checks:                     2;  Failures:  0
-Foo:
-	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
-Unique Thing:
-	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
-	False Negative Checks:                     2;  Failures:  0
-Container:
-House:
 
 -----------Grand Totals-----------
 [Total Run Time: 3.33ms]
-[Execution Time: 1.98ms]
+[Execution Time: 1.88ms]
 	Standard Top Level Checks:                12;  Failures:  3  [Deep checks: 118]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

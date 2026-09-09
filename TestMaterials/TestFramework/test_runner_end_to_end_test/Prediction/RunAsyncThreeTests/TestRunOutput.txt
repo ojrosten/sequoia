@@ -1,13 +1,13 @@
 
 Running tests...
 
+house_allocation_test:
 Maybe:
-Probability:
-House:
+Maths:
 
 -----------Grand Totals-----------
-[Total Run Time: 3.68ms]
-[Execution Time: 179us]
+[Total Run Time: 460us]
+[Execution Time: 62us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

@@ -1,21 +1,16 @@
 
 Running tests...
 
+Stuff:
 Utilities:
-Useful Things:
-Bar:
 Unstable:
+house_allocation_test:
 Maybe:
-Oldschool:
-Probability:
-Foo:
-Unique Thing:
-Container:
-House:
+Maths:
 
 -----------Grand Totals-----------
-[Total Run Time: 20ms]
-[Execution Time: 6.99ms]
+[Total Run Time: 2.95ms]
+[Execution Time: 1.65ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -25,21 +20,16 @@ House:
 
 Running tests...
 
+Stuff:
 Utilities:
-Useful Things:
-Bar:
 Unstable:
+house_allocation_test:
 Maybe:
-Oldschool:
-Probability:
-Foo:
-Unique Thing:
-Container:
-House:
+Maths:
 
 -----------Grand Totals-----------
-[Total Run Time: 16.3ms]
-[Execution Time: 3.71ms]
+[Total Run Time: 1.76ms]
+[Execution Time: 483us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

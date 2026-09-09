@@ -180,17 +180,14 @@ namespace sequoia::testing
                          {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                          outputStream};
 
-      runner.add_test_suite(
-        "Slow Suite",
-        slow_test_0{},
-        slow_test_1{},
-        slow_test_2{},
-        slow_test_3{},
-        slow_test_4{},
-        slow_test_5{},
-        slow_test_6{},
-        slow_test_7{}
-      );
+      runner.register_test<slow_test_0>();
+      runner.register_test<slow_test_1>();
+      runner.register_test<slow_test_2>();
+      runner.register_test<slow_test_3>();
+      runner.register_test<slow_test_4>();
+      runner.register_test<slow_test_5>();
+      runner.register_test<slow_test_6>();
+      runner.register_test<slow_test_7>();
 
       return runner;
     }

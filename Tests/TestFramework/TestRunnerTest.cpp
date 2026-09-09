@@ -29,8 +29,8 @@ namespace sequoia::testing
 
     template<concrete_test T>
     [[nodiscard]]
-    fs::path make_fake_file_path() {
-      return fs::path{std::source_location::current().file_name()}.parent_path().parent_path() / (test_name<T>() + ".cpp");
+    fs::path make_fake_file_path(std::string_view group = "") {
+      return fs::path{std::source_location::current().file_name()}.parent_path().parent_path() / group / (test_name<T>() + ".cpp");
     }
   }
 
@@ -88,7 +88,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return make_fake_file_path<failing_test>();
+        return make_fake_file_path<failing_test>("Failing");
       }
 
       void run_tests()
@@ -145,7 +145,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return make_fake_file_path<failing_fp_test>();
+        return make_fake_file_path<failing_fp_test>("Failing");
       }
 
       void run_tests()
@@ -162,7 +162,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const
       {
-        return make_fake_file_path<failing_fn_test>();
+        return make_fake_file_path<failing_fn_test>("Failing");
       }
 
       void run_tests()
@@ -340,12 +340,9 @@ namespace sequoia::testing
                          {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                          outputStream};
 
-      runner.add_test_suite(
-        "Failing Suite",
-        failing_test{},
-        failing_fp_test{},
-        failing_fn_test{}
-      );
+      runner.register_test<failing_test>();
+      runner.register_test<failing_fp_test>();
+      runner.register_test<failing_fn_test>();
 
       return runner;
     }
@@ -479,7 +476,7 @@ namespace sequoia::testing
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
       });
 
-    check_exception_thrown<std::runtime_error>(
+    check_exception_thrown<std::logic_error>(
       reporter{"The same test registered twice"},
       [this](){
         commandline_arguments args{{zeroth_arg()}};
@@ -492,11 +489,8 @@ namespace sequoia::testing
                            {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                            outputStream};
 
-        runner.add_test_suite(
-          "Duplicates",
-          foo_test{},
-          foo_test{}
-        );
+        runner.register_test<foo_test>();
+        runner.register_test<foo_test>();
       });
 
     check_exception_thrown<std::runtime_error>(
@@ -521,9 +515,7 @@ namespace sequoia::testing
     // This is scoped to ensure destruction of the runner - and therefore loggers -
     // before dumping output to a file. The destructors are not trivial in recovery mode.
     {
-      commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v", "recover", "dump",
-                                 "test", "Bar",
-                                 "test", "Foo"}};
+      commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v", "recover", "dump"}};
   
       test_runner runner{args.size(),
                          args.get(),
@@ -532,20 +524,8 @@ namespace sequoia::testing
                          {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                          outputStream};
 
-      runner.add_test_suite(
-        "Bar",
-        bar_free_test{}
-      );
-
-      runner.add_test_suite(
-        "Foo",
-        foo_test{}
-      );
-
-      runner.add_test_suite(
-        "Baz",
-        foo_test{}
-      );
+      runner.register_test<bar_free_test>();
+      runner.register_test<foo_test>();
 
       check(equality, "Recovery and dump return code", runner.execute(), return_code::critical_failures);
     }
@@ -584,12 +564,9 @@ namespace sequoia::testing
     check(equality, "No tests return code", runner.execute(), return_code::success);
     check_output("No Tests", "NoTests", outputStream);
 
-    runner.add_test_suite(
-      "Failing Suite",
-      failing_test{},
-      failing_fp_test{},
-      failing_fn_test{}
-    );
+    runner.register_test<failing_test>();
+    runner.register_test<failing_fp_test>();
+    runner.register_test<failing_fn_test>();
 
     check(equality, "Basic output return code", runner.execute(), return_code::soft_failures);
     check_output("Basic Output", "BasicOutput", outputStream);
@@ -625,11 +602,8 @@ namespace sequoia::testing
                        {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
-    runner.add_test_suite(
-      "Throwing Suite",
-      throwing_test{},
-      platform_specific_throwing_test{}
-    );
+    runner.register_test<throwing_test>();
+    runner.register_test<platform_specific_throwing_test>();
 
     check(equality, "Throwing tests return code", runner.execute(), return_code::success);
     check_output("Throwing Output", "ThrowingOutput", outputStream);
@@ -644,7 +618,7 @@ namespace sequoia::testing
   void test_runner_test::test_filtered_suites()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Failing Suite"}};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Failing"}};
 
     test_runner runner{args.size(),
                        args.get(),
@@ -653,17 +627,11 @@ namespace sequoia::testing
                        {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
-    runner.add_test_suite(
-      "Passing Suite",
-      passing_test{}
-    );
+    runner.register_test<passing_test>();
 
-    runner.add_test_suite(
-      "Failing Suite",
-      failing_test{},
-      failing_fp_test{},
-      failing_fn_test{}
-    );
+    runner.register_test<failing_test>();
+    runner.register_test<failing_fp_test>();
+    runner.register_test<failing_fn_test>();
 
     check(equality, "Filtered suites return code", runner.execute(), return_code::soft_failures);
     check_output("Filtered Suite Output", "FilteredSuiteOutput", outputStream);
@@ -704,16 +672,9 @@ namespace sequoia::testing
 
       using namespace object;
 
-      runner.add_test_suite(
-        "Failing Suite",
-        suite{"Free Suite",
-              failing_test{}
-        },
-        suite{"Diagnostics Suite",
-              failing_fp_test{},
-              failing_fn_test{}
-        }
-      );
+      runner.register_test<failing_test>();
+      runner.register_test<failing_fp_test>();
+      runner.register_test<failing_fn_test>();
 
       check(equality, "Nested suite return code", runner.execute(), return_code::soft_failures);
       check_output("Basic Nested Output", "BasicNestedOutput", outputStream);
@@ -733,16 +694,9 @@ namespace sequoia::testing
 
     using namespace object;
 
-    runner.add_test_suite(
-      "Failing Suite",
-      suite{"Free Suite",
-            failing_test{}
-      },
-      suite{"Diagnostics Suite",
-            failing_fp_test{},
-            failing_fn_test{}
-      }
-    );
+    runner.register_test<failing_test>();
+    runner.register_test<failing_fp_test>();
+    runner.register_test<failing_fn_test>();
 
     check(equality, "Nested suite verbose return code", runner.execute(), return_code::soft_failures);
     check_output("Verbose Nested Output", "VerboseNestedOutput", outputStream);
@@ -817,15 +771,6 @@ namespace sequoia::testing
                               flipper_free_test{},
                               multi_periodic_free_test{}
                              );
-
-    test_instability_analysis("Suite selection",
-                              "InstabilitySuiteSelection",
-                              "2",
-                              return_code::soft_failures,
-                              {"test", "Another Suite"},
-                              [](test_runner& r){ r.add_test_suite("Another Suite", flipper_free_test{}); },
-                              flipper_free_test{}
-                             );
   }
 
   template<std::invocable<test_runner&> Manipulator, concrete_test... Ts>
@@ -835,7 +780,7 @@ namespace sequoia::testing
                                                    return_code expected,
                                                    std::initializer_list<std::string_view> extraArgs,
                                                    Manipulator manipulator,
-                                                   Ts&&... ts)
+                                                   Ts&&...)
   {
     std::stringstream outputStream{};
 
@@ -857,10 +802,7 @@ namespace sequoia::testing
                        {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
-    runner.add_test_suite(
-      "Suite",
-      std::forward<Ts>(ts)...
-    );
+    (runner.register_test<std::remove_cvref_t<Ts>>(), ...);
 
     manipulator(runner);
 

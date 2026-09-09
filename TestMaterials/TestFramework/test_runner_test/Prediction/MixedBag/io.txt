@@ -1,8 +1,8 @@
 
 Running tests, synchronously...
 
-Suite:
-[Execution Time: 527us]
+..:
+[Execution Time: 474us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 274
@@ -17,8 +17,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 1.12ms]
-[Execution Time: 527us]
+[Total Run Time: 933us]
+[Execution Time: 474us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -28,8 +28,8 @@ Suite:
 
 Running tests, synchronously...
 
-Suite:
-[Execution Time: 276us]
+..:
+[Execution Time: 268us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 274
@@ -64,8 +64,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 1.05ms]
-[Execution Time: 276us]
+[Total Run Time: 708us]
+[Execution Time: 268us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -75,8 +75,8 @@ Suite:
 
 Running tests, synchronously...
 
-Suite:
-[Execution Time: 307us]
+..:
+[Execution Time: 181us]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 274
@@ -101,8 +101,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 1.03ms]
-[Execution Time: 307us]
+[Total Run Time: 514us]
+[Execution Time: 181us]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -112,8 +112,8 @@ Suite:
 
 Running tests, synchronously...
 
-Suite:
-[Execution Time: 290us]
+..:
+[Execution Time: 189us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 274
@@ -148,8 +148,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 1.01ms]
-[Execution Time: 290us]
+[Total Run Time: 532us]
+[Execution Time: 189us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -159,8 +159,8 @@ Suite:
 
 Running tests, synchronously...
 
-Suite:
-[Execution Time: 286us]
+..:
+[Execution Time: 159us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 274
@@ -175,8 +175,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 970us]
-[Execution Time: 286us]
+[Total Run Time: 476us]
+[Execution Time: 159us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -186,8 +186,8 @@ Suite:
 
 Running tests, synchronously...
 
-Suite:
-[Execution Time: 284us]
+..:
+[Execution Time: 201us]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 274
@@ -232,8 +232,8 @@ Suite:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 846us]
-[Execution Time: 284us]
+[Total Run Time: 533us]
+[Execution Time: 201us]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

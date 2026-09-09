@@ -17,7 +17,7 @@
 #include "sequoia/TestFramework/VersionedOutput.hpp"
 
 #include "sequoia/Core/Logic/Bitmask.hpp"
-#include "sequoia/Core/Object/Suite.hpp"
+#include "sequoia/Core/Object/Factory.hpp"
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
@@ -26,7 +26,7 @@
 #include <format>
 #include <iostream>
 #include <optional>
-#include <set>
+#include <span>
 #include <string>
 
 namespace sequoia::testing
@@ -327,22 +327,12 @@ namespace sequoia::testing
     test_runner& operator=(const test_runner&)     = delete;
     test_runner& operator=(test_runner&&) noexcept = default;
 
-    template<concrete_test... Tests>
-      requires (sizeof...(Tests) > 0)
-    void add_test_suite(std::string_view name, Tests&&... tests)
+    /** \brief Registers a test, which is grouped by where its source file lives. */
+
+    template<concrete_test T>
+    void register_test()
     {
-      using namespace object;
-
-      extract_suite_tree(name, m_Filter, std::forward<Tests>(tests)...);
-    }
-
-    template<class... Suites>
-      requires (object::is_suite_v<Suites> && ...)
-    void add_test_suite(std::string_view name, Suites... s)
-    {
-      using namespace object;
-
-      extract_suite_tree(m_Filter, suite{std::string{name}, std::move(s)...});
+      m_Factory.register_product<T>(test_name<T>());
     }
 
     [[nodiscard]]
@@ -371,13 +361,6 @@ namespace sequoia::testing
       std::string include_cutoff{};
     };
 
-    struct test_to_path
-    {
-      template<concrete_test Test>
-      [[nodiscard]]
-      normal_path operator()(const Test& test) const { return test.source_file(); }
-    };
-
     class path_equivalence
     {
     public:
@@ -392,14 +375,98 @@ namespace sequoia::testing
       const std::filesystem::path* m_Repo;
     };
 
+    /** \brief Selection by source file, or by the name of a directory containing it. */
+
+    class test_filter
+    {
+    public:
+      using items_map_type  = std::vector<std::pair<normal_path, bool>>;
+      using suites_map_type = std::vector<std::pair<std::string, bool>>;
+
+      explicit test_filter(path_equivalence equivalent) : m_Equivalent{equivalent} {}
+
+      void add_selected_suite(std::string name) { add(m_SelectedSuites, std::move(name)); }
+
+      void add_selected_item(normal_path source) { add(m_SelectedItems, std::move(source)); }
+
+      /** \brief Selects nothing, which is not the same as selecting everything. */
+
+      void select_nothing()
+      {
+        m_SelectedItems.emplace();
+        m_SelectedSuites.emplace();
+      }
+
+      [[nodiscard]]
+      bool operator()(const normal_path& source, std::span<const std::string> groups)
+      {
+        if(!m_SelectedItems && !m_SelectedSuites) return true;
+
+        // Both are evaluated: an unreported selection is one nobody can be warned about.
+        const std::array<bool, 2> found{
+          mark(m_SelectedItems,  [this, &source](const normal_path& selected){ return m_Equivalent(selected, source); }),
+          mark(m_SelectedSuites, [groups](const std::string& selected){ return std::ranges::find(groups, selected) != groups.end(); })
+        };
+
+        return std::ranges::any_of(found, [](bool b){ return b; });
+      }
+
+      [[nodiscard]]
+      std::optional<std::ranges::subrange<items_map_type::const_iterator>> selected_items() const noexcept
+      {
+        return as_range(m_SelectedItems);
+      }
+
+      [[nodiscard]]
+      std::optional<std::ranges::subrange<suites_map_type::const_iterator>> selected_suites() const noexcept
+      {
+        return as_range(m_SelectedSuites);
+      }
+
+      [[nodiscard]]
+      operator bool() const noexcept { return m_SelectedItems.has_value() || m_SelectedSuites.has_value(); }
+    private:
+      template<class Map>
+      static void add(std::optional<Map>& map, typename Map::value_type::first_type key)
+      {
+        if(!map) map = Map{};
+
+        map->emplace_back(std::move(key), false);
+      }
+
+      template<class Map, class Predicate>
+      static bool mark(std::optional<Map>& map, Predicate pred)
+      {
+        if(!map) return false;
+
+        auto found{std::ranges::find_if(*map, [&pred](const auto& e){ return pred(e.first); })};
+        if(found == map->end()) return false;
+
+        found->second = true;
+        return true;
+      }
+
+      template<class Map>
+      [[nodiscard]]
+      static std::optional<std::ranges::subrange<typename Map::const_iterator>> as_range(const std::optional<Map>& map) noexcept
+      {
+        if(!map) return std::nullopt;
+
+        return std::ranges::subrange{map->begin(), map->end()};
+      }
+
+      std::optional<items_map_type>  m_SelectedItems{};
+      std::optional<suites_map_type> m_SelectedSuites{};
+      path_equivalence m_Equivalent;
+    };
+
     struct suite_node
     {
       log_summary summary{};
       std::optional<test_vessel> optTest{};
     };
 
-    using suite_type  = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, suite_node>;
-    using filter_type = object::granular_filter<normal_path, path_equivalence, test_to_path>;
+    using suite_type = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, suite_node>;
 
     std::string      m_Copyright{};
     project_paths    m_ProjPaths;
@@ -407,8 +474,8 @@ namespace sequoia::testing
     std::ostream*    m_Stream;
 
     suite_type m_Suites{};
-    std::set<std::string> m_TestNames{};
-    filter_type m_Filter{path_equivalence{proj_paths().tests().repo()}, test_to_path{}};
+    object::erasing_factory<test_vessel> m_Factory{};
+    test_filter m_Filter{path_equivalence{proj_paths().tests().repo()}};
     prune_info m_PruneInfo{};
 
     runner_mode           m_RunnerMode{runner_mode::none};
@@ -475,52 +542,7 @@ namespace sequoia::testing
     [[nodiscard]]
     prune_outcome do_prune();
 
-    template<class Filter, class Suite>
-      requires object::is_suite_v<Suite>
-    void extract_suite_tree(Filter&& filter, Suite&& testSuite)
-    {
-      using namespace object;
+    void build_suite_tree();
 
-      if(!m_Suites.order())
-      {
-        m_Suites.add_node(suite_type::npos);
-      }
-
-      std::vector<std::filesystem::path> materialsPaths{};
-
-      extract_tree(std::forward<Suite>(testSuite),
-                   std::forward<Filter>(filter),
-                   overloaded{
-                     [] <class... Ts> (const suite<Ts...>& s) -> suite_node { return {.summary{log_summary{s.name()}}}; },
-                     [this, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
-                       auto name{test_name<T>()};
-
-                       if(!m_TestNames.insert(name).second)
-                         throw std::runtime_error{duplication_message(name, test.source_file())};
-
-                       test = T{name,
-                                test.source_file(),
-                                proj_paths(),
-                                set_materials(test.source_file(), name, proj_paths(), materialsPaths),
-                                make_active_recovery_paths(m_RecoveryMode, proj_paths()),
-                                get_output_discriminator(test),
-                                get_reduction_discriminator(test)};
-                   
-                       return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};
-                     }
-                   },
-                   m_Suites,
-                   0);
-    }
-
-    template<class Filter, concrete_test... Tests>
-      requires (sizeof...(Tests) > 0)
-    void extract_suite_tree(std::string_view name, Filter&& filter, Tests&&... tests)
-    {
-      extract_suite_tree(std::forward<Filter>(filter), object::suite{std::string{name}, std::forward<Tests>(tests)...});
-    }
-
-    [[nodiscard]]
-    static std::string duplication_message(std::string_view testName, const std::filesystem::path& source);
  };
 }
