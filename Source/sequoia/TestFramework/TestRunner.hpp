@@ -195,7 +195,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const final
       {
-        return m_Test.source_file();
+        return Test::source_file();
       }
 
       [[nodiscard]]

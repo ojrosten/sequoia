@@ -11,7 +11,7 @@
 namespace ?::testing
 {
 	[[nodiscard]]
-	std::filesystem::path ?forename_false_negative_?surname::source_file() const
+	std::filesystem::path ?forename_false_negative_?surname::source_file()
 	{
 		return std::source_location::current().file_name();
 	}
@@ -22,7 +22,7 @@ namespace ?::testing
 	}
 
 	[[nodiscard]]
-	std::filesystem::path ?forename_false_negative_?surname::source_file() const
+	std::filesystem::path ?forename_false_negative_?surname::source_file()
 	{
 		return std::source_location::current().file_name();
 	}

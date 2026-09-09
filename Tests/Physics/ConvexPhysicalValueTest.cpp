@@ -64,7 +64,7 @@ namespace sequoia::physics
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path convex_physical_value_test::source_file() const
+  std::filesystem::path convex_physical_value_test::source_file()
   {
     return std::source_location::current().file_name();
   }

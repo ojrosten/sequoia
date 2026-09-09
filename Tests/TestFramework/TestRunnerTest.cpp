@@ -52,7 +52,7 @@ namespace sequoia::testing
       using regular_test::regular_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
         return make_fake_file_path<foo_test>();
       }
@@ -69,7 +69,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
         return make_fake_file_path<passing_test>();
       }
@@ -86,7 +86,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
         return make_fake_file_path<failing_test>("Failing");
       }
@@ -103,7 +103,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
         return make_fake_file_path<throwing_test>();
       }
@@ -120,7 +120,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
         return make_fake_file_path<platform_specific_throwing_test>();
       }
@@ -143,7 +143,7 @@ namespace sequoia::testing
       using free_false_negative_test::free_false_negative_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
         return make_fake_file_path<failing_fp_test>("Failing");
       }
@@ -160,7 +160,7 @@ namespace sequoia::testing
       using free_false_positive_test::free_false_positive_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
         return make_fake_file_path<failing_fn_test>("Failing");
       }
@@ -184,7 +184,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
         return make_fake_file_path<flipper_free_test>();
       }
@@ -209,7 +209,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
         return make_fake_file_path<periodic_free_test>();
       }
@@ -227,7 +227,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
         return make_fake_file_path<multi_periodic_free_test>();
       }
@@ -245,7 +245,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
         return make_fake_file_path<failing_plus_instabilities_free_test>();
       }
@@ -264,7 +264,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
         return make_fake_file_path<consistently_failing_free_test>();
       }
@@ -285,7 +285,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
         return make_fake_file_path<consistently_passing_free_test>();
       }
@@ -302,7 +302,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
         return make_fake_file_path<another_consistently_passing_free_test>();
       }
@@ -319,7 +319,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
         return make_fake_file_path<critical_free_test>();
       }
@@ -349,7 +349,7 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  std::filesystem::path test_runner_test::source_file() const
+  std::filesystem::path test_runner_test::source_file()
   {
     return std::source_location::current().file_name();
   }

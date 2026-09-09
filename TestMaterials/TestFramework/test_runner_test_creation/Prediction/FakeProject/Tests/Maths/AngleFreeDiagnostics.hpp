@@ -21,7 +21,7 @@ namespace fakeProject::testing
         using free_false_negative_test::free_false_negative_test;
 
         [[nodiscard]]
-        std::filesystem::path source_file() const;
+        static std::filesystem::path source_file();
 
         void run_tests();
     };
@@ -32,7 +32,7 @@ namespace fakeProject::testing
         using free_false_negative_test::free_false_negative_test;
 
         [[nodiscard]]
-        std::filesystem::path source_file() const;
+        static std::filesystem::path source_file();
 
         void run_tests();
     };

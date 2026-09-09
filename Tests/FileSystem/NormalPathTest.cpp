@@ -12,7 +12,7 @@ namespace sequoia::testing
   namespace fs = std::filesystem;
 
   [[nodiscard]]
-  std::filesystem::path normal_path_test::source_file() const
+  std::filesystem::path normal_path_test::source_file()
   {
     return std::source_location::current().file_name();
   }

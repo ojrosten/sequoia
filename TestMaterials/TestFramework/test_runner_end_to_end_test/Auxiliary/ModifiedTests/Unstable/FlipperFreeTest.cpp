@@ -14,7 +14,7 @@ namespace generatedProject::testing
 	using namespace unstable;
 
 	[[nodiscard]]
-	std::filesystem::path flipper_free_test::source_file() const
+	std::filesystem::path flipper_free_test::source_file()
 	{
 		return std::source_location::current().file_name();
 	}

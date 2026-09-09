@@ -33,7 +33,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path test_graph_update::source_file() const
+  std::filesystem::path test_graph_update::source_file()
   {
     return std::source_location::current().file_name();
   }

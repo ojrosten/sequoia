@@ -21,7 +21,7 @@ namespace fakeProject::testing
         using regular_false_negative_test::regular_false_negative_test;
 
         [[nodiscard]]
-        std::filesystem::path source_file() const;
+        static std::filesystem::path source_file();
 
         void run_tests();
     };

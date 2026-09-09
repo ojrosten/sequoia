@@ -21,7 +21,7 @@ namespace fakeProject::testing
         using move_only_test::move_only_test;
 
         [[nodiscard]]
-        std::filesystem::path source_file() const;
+        static std::filesystem::path source_file();
 
         void run_tests();
     };

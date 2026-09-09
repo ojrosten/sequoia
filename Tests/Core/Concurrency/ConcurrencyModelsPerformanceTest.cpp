@@ -114,7 +114,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path threading_models_performance_test::source_file() const
+  std::filesystem::path threading_models_performance_test::source_file()
   {
     return std::source_location::current().file_name();
   }

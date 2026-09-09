@@ -21,7 +21,7 @@ namespace fakeProject::testing
         using performance_test::performance_test;
 
         [[nodiscard]]
-        std::filesystem::path source_file() const;
+        static std::filesystem::path source_file();
 
         void run_tests();
     };

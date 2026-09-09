@@ -10,7 +10,7 @@
 namespace ?::testing
 {
 	[[nodiscard]]
-	std::filesystem::path ?forename_?surname::source_file() const
+	std::filesystem::path ?forename_?surname::source_file()
 	{
 		return std::source_location::current().file_name();
 	}

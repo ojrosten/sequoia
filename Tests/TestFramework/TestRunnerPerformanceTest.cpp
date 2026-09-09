@@ -77,7 +77,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
         return std::source_location::current().file_name();
       }
@@ -197,7 +197,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path test_runner_performance_test::source_file() const
+  std::filesystem::path test_runner_performance_test::source_file()
   {
     return std::source_location::current().file_name();
   }

@@ -11,7 +11,7 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path string_false_negative_free_diagnostics::source_file() const
+  std::filesystem::path string_false_negative_free_diagnostics::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -97,7 +97,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path string_false_positive_free_diagnostics::source_file() const
+  std::filesystem::path string_false_positive_free_diagnostics::source_file()
   {
     return std::source_location::current().file_name();
   }

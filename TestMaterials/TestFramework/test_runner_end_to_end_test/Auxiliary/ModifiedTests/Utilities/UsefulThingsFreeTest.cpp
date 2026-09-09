@@ -11,7 +11,7 @@
 namespace generatedProject::testing
 {
   [[nodiscard]]
-  std::filesystem::path useful_things_free_test::source_file() const
+  std::filesystem::path useful_things_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }

@@ -19,7 +19,7 @@ namespace sequoia::testing
     using regular_allocation_test::regular_allocation_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
 
     void run_tests();
   private:

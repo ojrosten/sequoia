@@ -24,7 +24,7 @@ namespace fakeProject::testing
         void test_allocation();
 
         [[nodiscard]]
-        std::filesystem::path source_file() const;
+        static std::filesystem::path source_file();
 
         void run_tests();
     };

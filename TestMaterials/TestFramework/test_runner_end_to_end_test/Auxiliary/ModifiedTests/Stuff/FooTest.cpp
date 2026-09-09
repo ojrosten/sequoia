@@ -13,7 +13,7 @@
 namespace generatedProject::testing
 {
   [[nodiscard]]
-  std::filesystem::path foo_test::source_file() const
+  std::filesystem::path foo_test::source_file()
   {
     return std::source_location::current().file_name();
   }

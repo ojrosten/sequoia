@@ -11,7 +11,7 @@
 namespace fakeProject::testing
 {
     [[nodiscard]]
-    std::filesystem::path angle_false_negative_free_diagnostics::source_file() const
+    std::filesystem::path angle_false_negative_free_diagnostics::source_file()
     {
         return std::source_location::current().file_name();
     }
@@ -22,7 +22,7 @@ namespace fakeProject::testing
     }
 
     [[nodiscard]]
-    std::filesystem::path angle_false_negative_free_diagnostics::source_file() const
+    std::filesystem::path angle_false_negative_free_diagnostics::source_file()
     {
         return std::source_location::current().file_name();
     }

@@ -192,7 +192,7 @@ namespace sequoia::testing
   concept concrete_test =
         requires (T& test){
           { test.run_tests() };
-          { test.source_file() } -> std::convertible_to<std::filesystem::path>;
+          { T::source_file() } -> std::convertible_to<std::filesystem::path>;
           { test.reset_results() };
         }
     && std::derived_from<T, test_base> && std::movable<T> && std::destructible<T>;
