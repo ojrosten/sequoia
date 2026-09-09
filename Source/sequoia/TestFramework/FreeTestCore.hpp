@@ -62,9 +62,7 @@ namespace sequoia::testing
       , m_Materials{std::move(materials)}
       , m_Diagnostics{m_ProjectPaths, m_Name, srcFile, mode, outputDiscriminator}
       , m_SummaryFile{srcFile, m_Name, m_ProjectPaths, summaryDiscriminator}
-    {
-      std::filesystem::create_directories(m_Diagnostics.false_positive_or_negative_file_path().parent_path());
-    }
+    {}
 
     test_base(const test_base&)            = delete;
     test_base& operator=(const test_base&) = delete;

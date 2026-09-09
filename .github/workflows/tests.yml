@@ -227,8 +227,11 @@ jobs:
           pstd=$(num "$(row 'Standard Performance Checks:')")
           pfp=$(num  "$(row 'False Positive Performance Checks:')")
           pfn=$(num  "$(row 'False Negative Performance Checks:')")
+          # awk on the matched lines, not a second grep: a grep with nothing to match exits 1,
+          # and under `-e -o pipefail` that kills the reporter exactly when it has nothing to
+          # report. The warning-counting step was bitten by this before.
           crit=$({ grep -oE 'Critical Failures:[[:space:]]*[0-9]+' "$log" || true; } \
-                   | grep -oE '[0-9]+$' | awk '{ s += $1 } END { print s + 0 }')
+                   | awk '{ s += $NF } END { print s + 0 }')
 
           actionable=$((std + fp + fn + crit))
           tolerated=$((pstd + pfp + pfn))
