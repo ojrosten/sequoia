@@ -91,7 +91,7 @@ namespace sequoia::testing
       return run_cmd().append(" create free_test Utilities.hpp"
         " create free_test \"Utilities/UsefulThings.hpp\" gen-source utils"
         " create free_test \"Source/generatedProject/Stuff/Bar.hpp\""
-        " create free \"Unstable/Flipper.hpp\" -s Unstable"
+        " create free \"Unstable/Flipper.hpp\""
         " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\" gen-source Maybe"
         " create regular_test \"stuff::oldschool\" double --header \"NoTemplate.hpp\""
         " create regular \"maths::probability\" double gen-source Maths"

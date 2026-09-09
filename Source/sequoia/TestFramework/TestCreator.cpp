@@ -380,15 +380,6 @@ namespace sequoia::testing
     stream() << '\n';
   }
 
-  void nascent_test_base::finalize_suite(std::string_view fallbackIngredient)
-  {
-    if(m_Suite.empty())
-    {
-      m_Suite = fallbackIngredient;
-      camel_to_words(m_Suite);
-    }
-  }
-
   void nascent_test_base::finalize_header(const std::filesystem::path& sourcePath)
   {
     const auto relSourcePath{fs::relative(sourcePath, m_Paths.source().project())};
@@ -518,7 +509,6 @@ namespace sequoia::testing
     if(surname().empty()) surname(to_surname(flavour()));
 
     camel_name(forename());
-    finalize_suite(camel_name());
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
     nascent_test_base::finalize([this, &nameSpace](const fs::path& filename) { return when_header_absent(filename, nameSpace); },
@@ -674,7 +664,6 @@ namespace sequoia::testing
   {
     if(surname().empty()) surname(std::string{"allocation_"}.append(to_surname(flavour())));
     camel_name(forename());
-    finalize_suite(camel_name());
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
     nascent_test_base::finalize([](const fs::path& p) { return p; },
@@ -717,7 +706,6 @@ namespace sequoia::testing
   void nascent_behavioural_test::finalize()
   {
     const auto fallbackSuite{capitalize(forename().empty() ? header().filename().replace_extension().string() : forename())};
-    finalize_suite(fallbackSuite);
 
     if(forename().empty()) forename(to_snake_case(fallbackSuite));
 

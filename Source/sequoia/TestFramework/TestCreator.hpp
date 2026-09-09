@@ -67,11 +67,6 @@ namespace sequoia::testing
     void flavour(nascent_test_flavour f) { m_Flavour = f; }
 
     [[nodiscard]]
-    const std::string& suite() const noexcept { return m_Suite; }
-
-    void suite(std::string name) { m_Suite = std::move(name); }
-
-    [[nodiscard]]
     const std::filesystem::path& header() const noexcept { return m_Header; }
 
     void header(std::filesystem::path h) { m_Header = std::move(h); }
@@ -150,8 +145,6 @@ namespace sequoia::testing
     [[nodiscard]]
     std::ostream& stream() noexcept { return *m_Stream; }
 
-    void finalize_suite(std::string_view fallbackIngredient);
-
     void make_common_replacements(std::string& text) const;
   private:
     constexpr static std::array<std::string_view, 3> st_HeaderExtensions{".hpp", ".h", ".hxx"};
@@ -163,7 +156,6 @@ namespace sequoia::testing
 
     nascent_test_flavour m_Flavour{nascent_test_flavour::standard};
     std::string 
-      m_Suite{},
       m_TestType{},
       m_Forename{},
       m_Surname{},

@@ -451,15 +451,6 @@ namespace sequoia::testing
     std::vector<nascent_test_vessel> nascentTests{};
     std::vector<project_data> nascentProjects{};
 
-    const option suiteOption{"--suite", {"-s"}, {"suite name"},
-      [&nascentTests](const arg_list& args){
-        if(nascentTests.empty())
-          throw std::logic_error{"Unable to find nascent test"};
-
-        std::visit(overloaded{[&args](auto& nascent){ nascent.suite(args[0]);}}, nascentTests.back());
-      }
-    };
-
     const option diagnosticsOption{"--framework-diagnostics", {"--diagnostics"}, {},
       [&nascentTests](const arg_list&) {
         if(nascentTests.empty())
@@ -529,10 +520,10 @@ namespace sequoia::testing
       }
     };
 
-    const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{suiteOption}, {headerOption}, {genSemanticsSourceOption}};
-    const std::initializer_list<maths::tree_initializer<option>> allocationOptions{{suiteOption}, {headerOption}};
-    const std::initializer_list<maths::tree_initializer<option>> performanceOptions{{suiteOption}};
-    const std::initializer_list<maths::tree_initializer<option>> freeOptions{{suiteOption}, {forenameOption}, {genFreeSourceOption}, {diagnosticsOption}};
+    const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{headerOption}, {genSemanticsSourceOption}};
+    const std::initializer_list<maths::tree_initializer<option>> allocationOptions{{headerOption}};
+    const std::initializer_list<maths::tree_initializer<option>> performanceOptions{};
+    const std::initializer_list<maths::tree_initializer<option>> freeOptions{{forenameOption}, {genFreeSourceOption}, {diagnosticsOption}};
 
     const auto help{
       parse_invoke_depth_first(argc, argv,
