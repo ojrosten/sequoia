@@ -38,7 +38,7 @@ namespace sequoia::testing
   using namespace meta;
   
   [[nodiscard]]
-  std::filesystem::path type_algorithms_free_test::source_file() const
+  std::filesystem::path type_algorithms_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }

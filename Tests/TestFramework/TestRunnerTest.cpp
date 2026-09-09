@@ -22,9 +22,15 @@ namespace sequoia::testing
       int x{};
     };
 
+    /** These doubles have no source file of their own, so they mint one. Keying it on the test's
+        class rather than on its display name keeps the two from drifting apart, and spares the
+        space-to-underscore substitution a class name never needs.
+     */
+
+    template<concrete_test T>
     [[nodiscard]]
-    fs::path make_fake_file_path(std::string_view testName) {
-      return fs::path{std::source_location::current().file_name()}.parent_path().parent_path() / replace_all(testName, " ", "_").append(".cpp");
+    fs::path make_fake_file_path(std::string_view group = "") {
+      return fs::path{std::source_location::current().file_name()}.parent_path().parent_path() / group / (std::string{test_name<T>()} + ".cpp");
     }
   }
 
@@ -46,9 +52,9 @@ namespace sequoia::testing
       using regular_test::regular_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
-        return make_fake_file_path(name());
+        return make_fake_file_path<foo_test>();
       }
 
       void run_tests()
@@ -63,9 +69,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
-        return make_fake_file_path(name());
+        return make_fake_file_path<passing_test>();
       }
 
       void run_tests()
@@ -80,9 +86,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
-        return make_fake_file_path(name());
+        return make_fake_file_path<failing_test>("Failing");
       }
 
       void run_tests()
@@ -97,9 +103,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
-        return make_fake_file_path(name());
+        return make_fake_file_path<throwing_test>();
       }
 
       void run_tests()
@@ -114,9 +120,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
-        return make_fake_file_path(name());
+        return make_fake_file_path<platform_specific_throwing_test>();
       }
 
       [[nodiscard]]
@@ -137,9 +143,9 @@ namespace sequoia::testing
       using free_false_negative_test::free_false_negative_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
-        return make_fake_file_path(name());
+        return make_fake_file_path<failing_fp_test>("Failing");
       }
 
       void run_tests()
@@ -154,9 +160,9 @@ namespace sequoia::testing
       using free_false_positive_test::free_false_positive_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
-        return make_fake_file_path(name());
+        return make_fake_file_path<failing_fn_test>("Failing");
       }
 
       void run_tests()
@@ -178,9 +184,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
-        return make_fake_file_path(name());
+        return make_fake_file_path<flipper_free_test>();
       }
 
       void run_tests()
@@ -203,9 +209,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
-        return make_fake_file_path(name());
+        return make_fake_file_path<periodic_free_test>();
       }
 
       void run_tests()
@@ -221,9 +227,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
-        return make_fake_file_path(name());
+        return make_fake_file_path<multi_periodic_free_test>();
       }
 
       void run_tests()
@@ -239,9 +245,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
-        return make_fake_file_path(name());
+        return make_fake_file_path<failing_plus_instabilities_free_test>();
       }
 
       void run_tests()
@@ -258,9 +264,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
-        return make_fake_file_path(name());
+        return make_fake_file_path<consistently_failing_free_test>();
       }
 
       void run_tests()
@@ -269,21 +275,58 @@ namespace sequoia::testing
       }
     };
 
-    template<std::size_t N>
+    /** Two classes rather than one template: the pair exists to be registered together, and a
+        test's name - and so its output path - now comes from its class.
+     */
+
     class consistently_passing_free_test final : public free_test
     {
     public:
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
-        return make_fake_file_path(name());
+        return make_fake_file_path<consistently_passing_free_test>();
       }
 
       void run_tests()
       {
         check({"Always passes"}, true);
+      }
+    };
+
+    class another_consistently_passing_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<another_consistently_passing_free_test>();
+      }
+
+      void run_tests()
+      {
+        check({"Always passes"}, true);
+      }
+    };
+
+    class fake_performance_test final : public performance_test
+    {
+    public:
+      using performance_test::performance_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<fake_performance_test>();
+      }
+
+      void run_tests()
+      {
+        check(equality, "Performance", 42, 42);
       }
     };
 
@@ -293,9 +336,9 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      std::filesystem::path source_file() const
+      static std::filesystem::path source_file()
       {
-        return make_fake_file_path(name());
+        return make_fake_file_path<critical_free_test>();
       }
 
       void run_tests()
@@ -314,19 +357,16 @@ namespace sequoia::testing
                          {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                          outputStream};
 
-      runner.add_test_suite(
-        "Failing Suite",
-        failing_test{"Free Test"},
-        failing_fp_test{"False positive Test"},
-        failing_fn_test{"False negative Test"}
-      );
+      runner.register_test<failing_test>();
+      runner.register_test<failing_fp_test>();
+      runner.register_test<failing_fn_test>();
 
       return runner;
     }
   }
   
   [[nodiscard]]
-  std::filesystem::path test_runner_test::source_file() const
+  std::filesystem::path test_runner_test::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -343,6 +383,7 @@ namespace sequoia::testing
     test_prune_basic_output();
     test_nested_suite();
     test_nested_suite_verbose();
+    test_excluded_performance_tests();
     test_instability_analysis();
   }
 
@@ -453,8 +494,8 @@ namespace sequoia::testing
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
       });
 
-    check_exception_thrown<std::runtime_error>(
-      reporter{"Neither name nor source unique"},
+    check_exception_thrown<std::logic_error>(
+      reporter{"The same test registered twice"},
       [this](){
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
@@ -466,24 +507,21 @@ namespace sequoia::testing
                            {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                            outputStream};
 
-        runner.add_test_suite(
-          "Duplicates",
-          foo_test{"Free Test"},
-          flipper_free_test{"Free Test"}
-        );
+        runner.register_test<foo_test>();
+        runner.register_test<foo_test>();
       });
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Invalid repetitions for instability analysis"},
       [this](){
-        test_instability_analysis("", "", "foo", return_code::critical_failures, critical_free_test{"Free Test"});
+        test_instability_analysis("", "", "foo", return_code::critical_failures, critical_free_test{});
       }
     );
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Insufficient repetitions for instability analysis"},
       [this](){
-        test_instability_analysis("", "",  "1", return_code::critical_failures, critical_free_test{"Free Test"});
+        test_instability_analysis("", "",  "1", return_code::critical_failures, critical_free_test{});
       }
     );
   }
@@ -495,9 +533,7 @@ namespace sequoia::testing
     // This is scoped to ensure destruction of the runner - and therefore loggers -
     // before dumping output to a file. The destructors are not trivial in recovery mode.
     {
-      commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v", "recover", "dump",
-                                 "test", "Bar",
-                                 "test", "Foo"}};
+      commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v", "recover", "dump"}};
   
       test_runner runner{args.size(),
                          args.get(),
@@ -506,20 +542,8 @@ namespace sequoia::testing
                          {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                          outputStream};
 
-      runner.add_test_suite(
-        "Bar",
-        bar_free_test{"Free Test"}
-      );
-
-      runner.add_test_suite(
-        "Foo",
-        foo_test{"Unit Test"}
-      );
-
-      runner.add_test_suite(
-        "Baz",
-        foo_test{"Unit Test"}
-      );
+      runner.register_test<bar_free_test>();
+      runner.register_test<foo_test>();
 
       check(equality, "Recovery and dump return code", runner.execute(), return_code::critical_failures);
     }
@@ -558,12 +582,9 @@ namespace sequoia::testing
     check(equality, "No tests return code", runner.execute(), return_code::success);
     check_output("No Tests", "NoTests", outputStream);
 
-    runner.add_test_suite(
-      "Failing Suite",
-      failing_test{"Free Test"},
-      failing_fp_test{"False positive Test"},
-      failing_fn_test{"False negative Test"}
-    );
+    runner.register_test<failing_test>();
+    runner.register_test<failing_fp_test>();
+    runner.register_test<failing_fn_test>();
 
     check(equality, "Basic output return code", runner.execute(), return_code::soft_failures);
     check_output("Basic Output", "BasicOutput", outputStream);
@@ -599,26 +620,23 @@ namespace sequoia::testing
                        {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
-    runner.add_test_suite(
-      "Throwing Suite",
-      throwing_test{"Throwing Free Test"},
-      platform_specific_throwing_test{"Platform Specific Throwing Test"}
-    );
+    runner.register_test<throwing_test>();
+    runner.register_test<platform_specific_throwing_test>();
 
     check(equality, "Throwing tests return code", runner.execute(), return_code::success);
     check_output("Throwing Output", "ThrowingOutput", outputStream);
 
-    const fs::path diagnosticsDir{working_materials() /= "Throwing_Suite_Diagnostics"};
+    const fs::path diagnosticsDir{working_materials() /= "ThrowingDiagnostics"};
     fs::create_directory(diagnosticsDir);
-    fs::copy(fake_project() / "output/DiagnosticsOutput/Throwing_Suite", diagnosticsDir);
+    fs::copy(fake_project() / "output/DiagnosticsOutput/Tests", diagnosticsDir);
 
-    check(equivalence, "Exception Output", predictive_materials() / "Throwing_Suite_Diagnostics", diagnosticsDir);
+    check(equivalence, "Exception Output", predictive_materials() / "ThrowingDiagnostics", diagnosticsDir);
   }
 
   void test_runner_test::test_filtered_suites()
   {
     std::stringstream outputStream{};
-    commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Failing Suite"}};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Failing"}};
 
     test_runner runner{args.size(),
                        args.get(),
@@ -627,17 +645,11 @@ namespace sequoia::testing
                        {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
-    runner.add_test_suite(
-      "Passing Suite",
-      passing_test{"Free Test"}
-    );
+    runner.register_test<passing_test>();
 
-    runner.add_test_suite(
-      "Failing Suite",
-      failing_test{"Free Test"},
-      failing_fp_test{"False positive Test"},
-      failing_fn_test{"False negative Test"}
-    );
+    runner.register_test<failing_test>();
+    runner.register_test<failing_fp_test>();
+    runner.register_test<failing_fn_test>();
 
     check(equality, "Filtered suites return code", runner.execute(), return_code::soft_failures);
     check_output("Filtered Suite Output", "FilteredSuiteOutput", outputStream);
@@ -678,16 +690,9 @@ namespace sequoia::testing
 
       using namespace object;
 
-      runner.add_test_suite(
-        "Failing Suite",
-        suite{"Free Suite",
-              failing_test{"Free Test"}
-        },
-        suite{"Diagnostics Suite",
-              failing_fp_test{"False positive Test"},
-              failing_fn_test{"False negative Test"}
-        }
-      );
+      runner.register_test<failing_test>();
+      runner.register_test<failing_fp_test>();
+      runner.register_test<failing_fn_test>();
 
       check(equality, "Nested suite return code", runner.execute(), return_code::soft_failures);
       check_output("Basic Nested Output", "BasicNestedOutput", outputStream);
@@ -707,19 +712,42 @@ namespace sequoia::testing
 
     using namespace object;
 
-    runner.add_test_suite(
-      "Failing Suite",
-      suite{"Free Suite",
-            failing_test{"Free Test"}
-      },
-      suite{"Diagnostics Suite",
-            failing_fp_test{"False positive Test"},
-            failing_fn_test{"False negative Test"}
-      }
-    );
+    runner.register_test<failing_test>();
+    runner.register_test<failing_fp_test>();
+    runner.register_test<failing_fn_test>();
 
     check(equality, "Nested suite verbose return code", runner.execute(), return_code::soft_failures);
     check_output("Verbose Nested Output", "VerboseNestedOutput", outputStream);
+  }
+
+  void test_runner_test::test_excluded_performance_tests()
+  {
+    auto run{
+      [this](std::string_view description, std::string_view outputDirName, std::initializer_list<std::string_view> extraArgs){
+        std::stringstream outputStream{};
+
+        std::vector<std::string> argList{(minimal_fake_path()).generic_string()};
+        argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
+        commandline_arguments args{argList};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<passing_test>();
+        runner.register_test<fake_performance_test>();
+
+        check(equality, append_lines(description, "Return code"), runner.execute(), return_code::success);
+        check_output(description, outputDirName, outputStream);
+      }
+    };
+
+    // The same registrations both ways, so the option is the only thing which differs.
+    run("Performance tests included", "IncludedPerformanceOutput", {});
+    run("Performance tests excluded", "ExcludedPerformanceOutput", {"--exclude-performance"});
   }
 
   void test_runner_test::test_instability_analysis()
@@ -729,76 +757,67 @@ namespace sequoia::testing
                               "2",
                               return_code::soft_failures,
                               {"--serial"},
-                              flipper_free_test{"Free Test"});
+                              flipper_free_test{});
 
     test_instability_analysis("Instability comprising pass/multiple distinct failures",
                               "MultiInstabilityAnalysis",
                               "4",
                               return_code::soft_failures,
                               {"--serial"},
-                              periodic_free_test{"Free Test"});
+                              periodic_free_test{});
 
     test_instability_analysis("Instability comprising failures from two checks",
                               "MultiCheckInstabilityAnalysis",
                               "6",
                               return_code::soft_failures,
                               {"--serial"},
-                              multi_periodic_free_test{"Free Test"});
+                              multi_periodic_free_test{});
 
     test_instability_analysis("Instability following consistent failure",
                               "BinaryInstabilityFollowingFailures",
                               "2",
                               return_code::soft_failures,
                               {"--serial"},
-                              failing_plus_instabilities_free_test{"Free Test"});
+                              failing_plus_instabilities_free_test{});
 
     test_instability_analysis("Failure but no instability",
                               "ConsistentFailureNoInstability",
                               "2",
                               return_code::soft_failures,
                               {"--serial"},
-                              consistently_failing_free_test{"Free Test"});
+                              consistently_failing_free_test{});
 
     test_instability_analysis("Always passes",
                               "ConsistentSuccessNoInstability",
                               "2",
                               return_code::success,
                               {"--serial"},
-                              consistently_passing_free_test<0>{"Free Test"});
+                              consistently_passing_free_test{});
 
     test_instability_analysis("Critical failure instability",
                               "CriticalFailureInstability",
                               "2",
                               return_code::critical_failures,
                               {"--serial"},
-                              critical_free_test{"Free Test"});
+                              critical_free_test{});
 
     test_instability_analysis("Two tests always passing",
                               "ConsistentSuccessTwoTests",
                               "2",
                               return_code::success,
                               {"--serial"},
-                              consistently_passing_free_test<0>{"Free Test 0"},
-                              consistently_passing_free_test<1>{"Free Test 1"});
+                              consistently_passing_free_test{},
+                              another_consistently_passing_free_test{});
 
     test_instability_analysis("Consistent success/consistent failure/instability",
                               "MixedBag",
                               "6",
                               return_code::soft_failures,
                               {"--serial"},
-                              consistently_passing_free_test<0>{"Passing Free Test"},
-                              consistently_failing_free_test{"Failing Free Test"},
-                              flipper_free_test{"Flipper Free Test"},
-                              multi_periodic_free_test("Free Test")
-                             );
-
-    test_instability_analysis("Suite selection",
-                              "InstabilitySuiteSelection",
-                              "2",
-                              return_code::soft_failures,
-                              {"test", "Another Suite"},
-                              [](test_runner& r){ r.add_test_suite("Another Suite", flipper_free_test{"Flipper Free Test"}); },
-                              flipper_free_test{"Flipper Free Test"}
+                              consistently_passing_free_test{},
+                              consistently_failing_free_test{},
+                              flipper_free_test{},
+                              multi_periodic_free_test{}
                              );
   }
 
@@ -809,7 +828,7 @@ namespace sequoia::testing
                                                    return_code expected,
                                                    std::initializer_list<std::string_view> extraArgs,
                                                    Manipulator manipulator,
-                                                   Ts&&... ts)
+                                                   Ts&&...)
   {
     std::stringstream outputStream{};
 
@@ -831,10 +850,7 @@ namespace sequoia::testing
                        {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
-    runner.add_test_suite(
-      "Suite",
-      std::forward<Ts>(ts)...
-    );
+    (runner.register_test<std::remove_cvref_t<Ts>>(), ...);
 
     manipulator(runner);
 

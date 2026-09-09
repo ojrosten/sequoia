@@ -1,0 +1,2 @@
+vector_coordinates_test
+Standard Top Level Checks:               210;  Failures:  0  [Deep checks: 6855]

@@ -15,7 +15,7 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path allocation_false_negative_diagnostics_inefficient_operations::source_file() const
+  std::filesystem::path allocation_false_negative_diagnostics_inefficient_operations::source_file()
   {
     return std::source_location::current().file_name();
   }

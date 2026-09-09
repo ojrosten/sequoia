@@ -1,0 +1,28 @@
+////////////////////////////////////////////////////////////////////
+//               Copyright Oliver Jacob Rosten 2026.              //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
+#pragma once
+
+/** \file */
+
+#include "HumanTestingUtilities.hpp"
+
+namespace fakeProject::testing
+{
+    using namespace sequoia::testing;
+
+    class human_test final : public regular_test
+    {
+    public:
+        using regular_test::regular_test;
+
+        [[nodiscard]]
+        static std::filesystem::path source_file();
+
+        void run_tests();
+    };
+}

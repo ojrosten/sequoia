@@ -15,7 +15,7 @@ namespace sequoia::testing
   using namespace si::units;
 
   [[nodiscard]]
-  std::filesystem::path mixed_physical_value_test::source_file() const
+  std::filesystem::path mixed_physical_value_test::source_file()
   {
     return std::source_location::current().file_name();
   }

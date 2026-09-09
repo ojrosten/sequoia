@@ -1,0 +1,2 @@
+sum_types_false_positive_free_diagnostics
+False Positive Checks:                    20;  Failures:  0

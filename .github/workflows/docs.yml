@@ -30,6 +30,11 @@ jobs:
       # this job exists to catch.
       - name: Install doxygen
         run: |
+          # The hosted image ships vendor repositories - Chrome and Microsoft - which
+          # nothing here installs from. A bad index served by one of them fails the
+          # update, and with it the job.
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
+                     /etc/apt/sources.list.d/microsoft-prod.list
           sudo apt-get update -qq
           sudo apt-get install -y doxygen texlive-latex-base texlive-latex-extra ghostscript
           doxygen --version

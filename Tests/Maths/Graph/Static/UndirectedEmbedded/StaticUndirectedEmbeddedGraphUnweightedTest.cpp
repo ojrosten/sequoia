@@ -16,7 +16,7 @@ namespace sequoia::testing
   using namespace maths;
 
   [[nodiscard]]
-  std::filesystem::path static_undirected_embedded_graph_unweighted_test::source_file() const
+  std::filesystem::path static_undirected_embedded_graph_unweighted_test::source_file()
   {
     return std::source_location::current().file_name();
   }

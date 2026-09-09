@@ -19,6 +19,16 @@
 
 namespace sequoia::testing
 {
+  /** Both factories are equal when they map the same names to the same products, and both report
+      their names the same way, so the arm which says so is written once.
+   */
+
+  template<test_mode Mode, class Factory>
+  void check_factory_names(test_logger<Mode>& logger, const Factory& actual, const Factory& prediction)
+  {
+    check(equality, "Names", logger, actual.begin_names(), actual.end_names(), prediction.begin_names(), prediction.end_names());
+  }
+
   template<class... Products>
   struct value_tester<sequoia::object::factory<Products...>>
   {
@@ -58,7 +68,19 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)
     {
-      check(equality, "Names", logger, actual.begin_names(), actual.end_names(), prediction.begin_names(), prediction.end_names());
+      check_factory_names(logger, actual, prediction);
+    }
+  };
+
+  template<class Vessel, class... Args>
+  struct value_tester<sequoia::object::erasing_factory<Vessel, Args...>>
+  {
+    using type = sequoia::object::erasing_factory<Vessel, Args...>;
+
+    template<test_mode Mode>
+    static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)
+    {
+      check_factory_names(logger, actual, prediction);
     }
   };
 }

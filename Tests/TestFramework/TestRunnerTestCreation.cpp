@@ -21,7 +21,7 @@ namespace sequoia::testing
   namespace fs = std::filesystem;
 
   [[nodiscard]]
-  std::filesystem::path test_runner_test_creation::source_file() const
+  std::filesystem::path test_runner_test_creation::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -139,21 +139,21 @@ namespace sequoia::testing
                                , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "g", "Thingummies"
                                , "create", "regular_test", "container<class T>", "const std::vector<T>"
                                , "create", "regular_test", "other::couple<class S, class T>", "std::pair<S, T>",
-                                              "-s", "partners", "-h", "Couple.hpp"
+                                              "-h", "Couple.hpp"
                                , "create", "regular_test", "bar::things", "double", "-h", std::format("{}/Stuff/Things.hpp", sourceFolderName)
-                               , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--suite", "Iterator"
+                               , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T"
                                , "create", "move_only", "variadic<class... T>", "std::tuple<T...>"
                                , "create", "move_only_test", "multiple<class... T>", "std::tuple<T...>", "gen-source", "Utilities"
                                , "create", "move_only_test", "cloud", "double", "gen-source", "Weather"
                                , "create", "free_test", "Utilities.h"
                                , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazzer"
-                               , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazagain", "--suite", "Bazzer"
+                               , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazagain"
                                , "create", "free_test", "Stuff/Doohicky.hpp", "gen-source", "bar::things"
                                , "create", "free_test", "Global/Stuff/Global.hpp", "gen-source", "::"
                                , "create", "free_test", "Global/Stuff/Defs.hpp", "gen-source", ""
                                , "create", "free", std::format("{}/Maths/Angle.hpp", sourceFolderName), "--diagnostics"
                                , "create", "regular_allocation_test", "container"
-                               , "create", "move_only_allocation_test", "foo", "--suite", "Iterator"
+                               , "create", "move_only_allocation_test", "foo"
                                , "create", "performance_test", "Container.hpp"
                                , "create", "performance_test", "Container.hpp"}
     };

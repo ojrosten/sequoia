@@ -10,12 +10,17 @@ name: rigorous
 # Over fine, this adds the two questions a sanitized Debug build cannot answer:
 # races, and what the optimizer does.
 #
-# The Windows columns build but do not run, temporarily. TestRunnerPerformanceTest
-# asserts absolute wall-clock times - 60ms +- 35 for eight 25ms sleeps run
-# concurrently - and the hosted Windows runner returned 196ms and then 603ms for
-# the same commit. No tolerance spans that and still means anything. Building is
-# still guarded, which is where MSVC divergences usually appear; restore `run` when
-# roadmap items 38 and 102 land.
+# The Windows column runs the suite with `--exclude-performance`. It is only the
+# timing assertions a hosted runner cannot hold - TestRunnerPerformanceTest asserts
+# 60ms +- 35 for eight 25ms sleeps run concurrently, and this runner returned 196ms
+# and then 603ms for the same commit - so excluding those buys back everything else.
+#
+# A column's `exec_args` replaces the tier's rather than adding to them, so this one
+# deliberately does not carry `--check-versioned-output`: the committed `_msvc` forks
+# of the diagnostics output are stale, and gating on their drift before an MSVC run
+# has ever refreshed them would block the gate on a known backlog. The Linux column
+# still carries it, so drift is caught. Give MSVC the flag once the forks it writes
+# have been reviewed and committed.
 on:
   pull_request:
     branches: [main]
@@ -33,7 +38,7 @@ jobs:
       columns: >-
         [
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15"},
-          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "run": false},
+          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--exclude-performance"},
           {"name": "Linux · GCC · TSan",       "os": "ubuntu-latest",  "configure": "gcc-env-tsan",       "build": "gcc-env-tsan",       "cc": "gcc-15", "cxx": "g++-15"},
           {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15"}
         ]
@@ -61,6 +66,11 @@ jobs:
 
       - name: Install the toolchain
         run: |
+          # The hosted image ships vendor repositories - Chrome and Microsoft - which
+          # nothing here installs from. A bad index served by one of them fails the
+          # update, and with it the job.
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
+                     /etc/apt/sources.list.d/microsoft-prod.list
           sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
           sudo apt-get update -qq
           for pkg in g++-15 ninja-build libtbb-dev lcov; do

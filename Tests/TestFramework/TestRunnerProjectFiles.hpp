@@ -27,7 +27,7 @@ namespace sequoia::testing
     using free_test::free_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
 
     /** Only this test's own check count varies by platform, and it is one check. */
     [[nodiscard]]

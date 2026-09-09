@@ -14,7 +14,7 @@ namespace sequoia::testing
   using namespace maths;
 
   [[nodiscard]]
-  std::filesystem::path complex_vector_coordinates_test::source_file() const
+  std::filesystem::path complex_vector_coordinates_test::source_file()
   {
     return std::source_location::current().file_name();
   }

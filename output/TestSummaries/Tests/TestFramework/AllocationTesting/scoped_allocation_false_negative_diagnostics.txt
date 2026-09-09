@@ -1,0 +1,2 @@
+scoped_allocation_false_negative_diagnostics
+False Negative Checks:                    96;  Failures:  0

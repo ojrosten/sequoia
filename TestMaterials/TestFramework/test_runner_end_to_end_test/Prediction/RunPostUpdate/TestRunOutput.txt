@@ -1,0 +1,64 @@
+
+Running tests, synchronously...
+
+bar_free_test:
+[Execution Time: 1.04us]
+foo_false_negative_test:
+[Execution Time: 1.21us]
+foo_test:
+[Execution Time: 2.27ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
+oldschool_false_negative_test:
+[Execution Time: 1.58us]
+oldschool_test:
+[Execution Time: 1.46us]
+container_allocation_test:
+[Execution Time: 1.21us]
+container_performance_test:
+[Execution Time: 1.12us]
+unique_thing_false_negative_test:
+[Execution Time: 133us]
+	False Negative Checks:                     2;  Failures:  0
+unique_thing_test:
+[Execution Time: 1.05ms]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
+useful_things_free_test:
+[Execution Time: 119us]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
+
+	[int]
+	operator== returned false
+	Obtained : 43
+	Predicted: 42
+
+	=======================================
+
+utilities_free_test:
+[Execution Time: 1.42us]
+flipper_free_test:
+[Execution Time: 99.9us]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+house_allocation_test:
+[Execution Time: 1.38us]
+maybe_false_negative_test:
+[Execution Time: 1.04us]
+maybe_test:
+[Execution Time: 1.08us]
+probability_false_negative_test:
+[Execution Time: 156us]
+	False Negative Checks:                     2;  Failures:  0
+probability_test:
+[Execution Time: 1.16ms]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+
+-----------Grand Totals-----------
+[Total Run Time: 6.82ms]
+[Execution Time: 5ms]
+	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 118]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     4;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

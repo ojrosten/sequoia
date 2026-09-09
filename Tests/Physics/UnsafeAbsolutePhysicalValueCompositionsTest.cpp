@@ -14,7 +14,7 @@ namespace sequoia::testing
   using namespace physics;
 
   [[nodiscard]]
-  std::filesystem::path unsafe_absolute_physical_value_compositions_test::source_file() const
+  std::filesystem::path unsafe_absolute_physical_value_compositions_test::source_file()
   {
     return std::source_location::current().file_name();
   }

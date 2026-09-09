@@ -12,7 +12,7 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path scoped_allocation_false_positive_diagnostics_three_level::source_file() const
+  std::filesystem::path scoped_allocation_false_positive_diagnostics_three_level::source_file()
   {
     return std::source_location::current().file_name();
   }

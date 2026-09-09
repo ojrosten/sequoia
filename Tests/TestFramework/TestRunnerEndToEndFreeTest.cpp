@@ -91,7 +91,7 @@ namespace sequoia::testing
       return run_cmd().append(" create free_test Utilities.hpp"
         " create free_test \"Utilities/UsefulThings.hpp\" gen-source utils"
         " create free_test \"Source/generatedProject/Stuff/Bar.hpp\""
-        " create free \"Unstable/Flipper.hpp\" -s Unstable"
+        " create free \"Unstable/Flipper.hpp\""
         " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\" gen-source Maybe"
         " create regular_test \"stuff::oldschool\" double --header \"NoTemplate.hpp\""
         " create regular \"maths::probability\" double gen-source Maths"
@@ -144,11 +144,11 @@ namespace sequoia::testing
       {"select ../../../Tests/HouseAllocationTest.cpp select Maybe/MaybeTest.cpp select FooTest.cpp",          "SpecifiedSourceOutput.txt"          },
       {"select FooTest.cpp prune",                                                                            "SelectedSourcePruneConflictOutput.txt"},
       {"select Plurgh.cpp test Absent select Foo test FooTest.cpp",                                            "FailedSpecifiedSourceOutput.txt"    },
-      {"test Foo",                                                                                            "SpecifiedSuiteOutput.txt"           },
-      {"test Foo prune",                                                                                      "SpecifiedSuitePruneConflictOutput.txt"},
+      {"test Stuff",                                                                                            "SpecifiedSuiteOutput.txt"           },
+      {"test Stuff prune",                                                                                      "SpecifiedSuitePruneConflictOutput.txt"},
       {"prune --cutoff namespace",                                                                             "FullyPrunedOutput.txt"             },
       {"-v",                                                                                                  "VerboseOutput.txt"                  },
-      {"-v select FooTest.cpp test Foo",                                                                       "SelectFromTestedSuiteOutput.txt"   },
+      {"-v select FooTest.cpp test Stuff",                                                                       "SelectFromTestedSuiteOutput.txt"   },
       {"--help",                                                                                              "HelpOutput.txt"                     }
     }};
 
@@ -180,7 +180,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path test_runner_end_to_end_test::source_file() const
+  std::filesystem::path test_runner_end_to_end_test::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -333,8 +333,8 @@ namespace sequoia::testing
     // detects it, leaving nothing downstream to accommodate.
 
     const auto summaries{generated_project() /= "output/TestSummaries/Tests"};
-    write_to_file(summaries / "Stuff" / "FooTest.txt", "Not what the run will write\n");
-    fs::remove(summaries / "Maybe" / "MaybeTest.txt");
+    write_to_file(summaries / "Stuff" / "foo_test.txt", "Not what the run will write\n");
+    fs::remove(summaries / "Maybe" / "maybe_test.txt");
 
     run_and_check(report("Versioned output checked, having drifted"), b, "CheckVersionedOutputDrifted",
                   "--check-versioned-output", return_code::versioned_output_diffs);
@@ -365,7 +365,7 @@ namespace sequoia::testing
 
     //=================== Rerun with async, selecting one suite ===================//
 
-    run_and_check(report("Run asynchronously with 1 suite"), b, "RunAsyncOneTestOneSuite", "test Probability", return_code::success);
+    run_and_check(report("Run asynchronously with 1 suite"), b, "RunAsyncOneTestOneSuite", "test Maths", return_code::success);
 
     //=================== Rerun, seeking instabilities in sandbox mode ===================//
 
@@ -437,10 +437,8 @@ namespace sequoia::testing
     fs::copy(generated_project() /= "output/TestSummaries", working_materials() /= "TestSummaries_1", fs::copy_options::recursive);
     check(equivalence, "", working_materials() /= "TestSummaries_1", predictive_materials() /= "TestSummaries_1");
 
-    fs::create_directories(working_materials() /= "DiagnosticsOutput_0/Useful_Things");
-    fs::create_directories(working_materials() /= "DiagnosticsOutput_0/Foo");
-    fs::copy(generated_project() /= "output/DiagnosticsOutput/Useful_Things", working_materials() /= "DiagnosticsOutput_0/Useful_Things", fs::copy_options::recursive);
-    fs::copy(generated_project() /= "output/DiagnosticsOutput/Foo", working_materials() /= "DiagnosticsOutput_0/Foo", fs::copy_options::recursive);
+    fs::create_directories(working_materials() /= "DiagnosticsOutput_0");
+    fs::copy(generated_project() /= "output/DiagnosticsOutput", working_materials() /= "DiagnosticsOutput_0", fs::copy_options::recursive);
     check(equivalence, "Diagnostics Output", working_materials() /= "DiagnosticsOutput_0", predictive_materials() /= "DiagnosticsOutput_0");
 
     //=================== Rerun with prune ===================//
@@ -473,11 +471,11 @@ namespace sequoia::testing
     check(equivalence, "Dump File", working_materials() /= "Dump", predictive_materials() /= "Dump");
 
     //=================== Rerun in the presence of an exception ===================//
-    // Rename generated_project() / TestMaterials / Stuff / FooTest / WorkingCopy / RepresentativeCases,
+    // Rename generated_project() / TestMaterials / Stuff / foo_test / WorkingCopy / RepresentativeCases,
     // in order to induce a failure in FooTest.cpp. Recovery mode will cause the final executed check
     // to be recorded.
 
-    const auto generatedWorkingCopy{generated_project() /= "TestMaterials/Stuff/FooTest/WorkingCopy"};
+    const auto generatedWorkingCopy{generated_project() /= "TestMaterials/Stuff/foo_test/WorkingCopy"};
     fs::copy(generatedWorkingCopy / "RepresentativeCases", generatedWorkingCopy / "RepresentativeCasesTemp", fs::copy_options::recursive);
     fs::remove_all(generatedWorkingCopy / "RepresentativeCases");
 
@@ -488,11 +486,11 @@ namespace sequoia::testing
     check(equivalence, "Recovery File", working_materials() /= "Recovery", predictive_materials() /= "Recovery");
 
     //=================== Rerun in the presence of an exception mid-check ===================//
-    // Rename generated_project() / TestMaterials / Stuff / FooTest / Prediction / RepresentativeCases,
+    // Rename generated_project() / TestMaterials / Stuff / foo_test / Prediction / RepresentativeCases,
     // in order to cause the check in FooTest.cpp to throw mid-check, thereby allowing the recovery
     // mode to be tested. Also test that the Exceptions file is not overwritten.
 
-    const auto generatedPredictive{generated_project() /= "TestMaterials/Stuff/FooTest/Prediction"};
+    const auto generatedPredictive{generated_project() /= "TestMaterials/Stuff/foo_test/Prediction"};
     fs::copy(generatedPredictive / "RepresentativeCases", generatedPredictive / "RepresentativeCasesTemp", fs::copy_options::recursive);
     fs::remove_all(generatedPredictive / "RepresentativeCases");
 
@@ -502,8 +500,8 @@ namespace sequoia::testing
     fs::copy(generated_project() /= "output/Recovery/Recovery.txt", working_materials() /= "RecoveryMidCheck");
     check(equivalence, "Recovery File", working_materials() /= "RecoveryMidCheck", predictive_materials() /= "RecoveryMidCheck");
 
-    fs::create_directories(working_materials() /= "DiagnosticsOutput_1/Foo");
-    fs::copy(generated_project() /= "output/DiagnosticsOutput/Foo", working_materials() /= "DiagnosticsOutput_1/Foo", fs::copy_options::recursive);
+    fs::create_directories(working_materials() /= "DiagnosticsOutput_1");
+    fs::copy(generated_project() /= "output/DiagnosticsOutput", working_materials() /= "DiagnosticsOutput_1", fs::copy_options::recursive);
     check(equivalence, "Diagnostics Output", working_materials() /= "DiagnosticsOutput_1", predictive_materials() /= "DiagnosticsOutput_1");
 
     //=================== Change one of the failing tests, and 'select' it at the same time as breaking a different test ===================//
@@ -537,7 +535,7 @@ namespace sequoia::testing
 
     await_tick_past_previous_run();
     copy_aux_materials("ModifiedTests/Maths/ProbabilityTest.cpp", "Tests/Maths");
-    rebuild_run_and_check(report("Rebuild, run and 'test' after fixing a test"), b, "RunSuiteWithFixedTest", "CMakeOutput6.txt", "BuildOutput6.txt", "test Probability", return_code::success);
+    rebuild_run_and_check(report("Rebuild, run and 'test' after fixing a test"), b, "RunSuiteWithFixedTest", "CMakeOutput6.txt", "BuildOutput6.txt", "test Maths", return_code::success);
 
     check(equivalence, "Fixed Test Output", working_materials() /= "RunSelectedFixedTest", predictive_materials() /= "RunSelectedFixedTest");
 

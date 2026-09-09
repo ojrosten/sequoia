@@ -23,6 +23,9 @@
 
 #include <algorithm>
 #include <array>
+#include <map>
+#include <set>
+#include <ranges>
 #include <format>
 #include <fstream>
 #include <utility>
@@ -341,9 +344,9 @@ namespace sequoia::testing
     return static_cast<int>(code);
   }
 
-  individual_materials_paths set_materials(const std::filesystem::path& sourceFile, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)
+  individual_materials_paths set_materials(const std::filesystem::path& sourceFile, std::string_view testName, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)
   {
-    individual_materials_paths materials{sourceFile, projPaths};
+    individual_materials_paths materials{sourceFile, testName, projPaths};
     if(!fs::exists(materials.original_materials())) return {};
 
     const auto workingCopy{materials.working()};
@@ -377,6 +380,9 @@ namespace sequoia::testing
   {
     if(!text.empty() || std::filesystem::exists(file))
     {
+      // An empty directory cannot be committed, so this one is made only when a file goes into it.
+      std::filesystem::create_directories(file.parent_path());
+
       write_to_file(file, text);
     }
   }
@@ -444,15 +450,6 @@ namespace sequoia::testing
 
     std::vector<nascent_test_vessel> nascentTests{};
     std::vector<project_data> nascentProjects{};
-
-    const option suiteOption{"--suite", {"-s"}, {"suite name"},
-      [&nascentTests](const arg_list& args){
-        if(nascentTests.empty())
-          throw std::logic_error{"Unable to find nascent test"};
-
-        std::visit(overloaded{[&args](auto& nascent){ nascent.suite(args[0]);}}, nascentTests.back());
-      }
-    };
 
     const option diagnosticsOption{"--framework-diagnostics", {"--diagnostics"}, {},
       [&nascentTests](const arg_list&) {
@@ -523,10 +520,10 @@ namespace sequoia::testing
       }
     };
 
-    const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{suiteOption}, {headerOption}, {genSemanticsSourceOption}};
-    const std::initializer_list<maths::tree_initializer<option>> allocationOptions{{suiteOption}, {headerOption}};
-    const std::initializer_list<maths::tree_initializer<option>> performanceOptions{{suiteOption}};
-    const std::initializer_list<maths::tree_initializer<option>> freeOptions{{suiteOption}, {forenameOption}, {genFreeSourceOption}, {diagnosticsOption}};
+    const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{headerOption}, {genSemanticsSourceOption}};
+    const std::initializer_list<maths::tree_initializer<option>> allocationOptions{{headerOption}};
+    const std::initializer_list<maths::tree_initializer<option>> performanceOptions{};
+    const std::initializer_list<maths::tree_initializer<option>> freeOptions{{forenameOption}, {genFreeSourceOption}, {diagnosticsOption}};
 
     const auto help{
       parse_invoke_depth_first(argc, argv,
@@ -680,6 +677,9 @@ namespace sequoia::testing
                   {{{"--check-versioned-output", {}, {},
                     [this](const arg_list&) { m_VersionedOutputMode = versioned_output_mode::checked; }
                   }}},
+                  {{{"--exclude-performance", {}, {},
+                    [this](const arg_list&) { m_Filter.exclude_performance_tests(); }
+                  }}},
                   {{{"--serial",  {}, {}, [this](const arg_list&) { m_ConcurrencyMode = concurrency_mode::serial; }}}},
                   {{{"--thread-pool", {}, {"Number of threads, must be >= 1"},
                     [this](const arg_list& args) {
@@ -801,6 +801,7 @@ namespace sequoia::testing
       return return_code::success;
 
     fs::create_directories(proj_paths().prune().dir());
+    build_suite_tree();
     check_for_missing_tests();
 
     if(nothing_to_do()) return return_code::success;
@@ -1052,12 +1053,18 @@ namespace sequoia::testing
     }
     else
     {
-      for(const auto& edge : m_Suites.cedges(0))
-      {
-        const auto detail{!concurrent_execution() ? summary_detail::failure_messages | summary_detail::timings : summary_detail::failure_messages};
-        auto targetNodeIter{std::ranges::next(m_Suites.cbegin_node_weights(), edge.target_node())};
-        stream() << summarize(targetNodeIter->summary, ":", detail, no_indent, tab);
-      }
+      const auto detail{!concurrent_execution() ? summary_detail::failure_messages | summary_detail::timings : summary_detail::failure_messages};
+
+      // Depth-first, so the tests are reported in the order they sit in the tree rather than in
+      // whichever order the concurrency sort left them.
+      auto printTest{
+        [&s = m_Suites, detail, &stream = stream()](auto n) {
+          if(const auto& wt{s.cbegin_node_weights()[n]}; wt.optTest)
+            stream << summarize(wt.summary, ":", detail, no_indent, tab);
+        }
+      };
+
+      traverse(depth_first, m_Suites, find_disconnected_t{}, printTest, null_func_obj{}, null_func_obj{});
     }
 
     if(asyncDuration) m_Suites.begin_node_weights()->summary.execution_time(*asyncDuration);
@@ -1069,12 +1076,12 @@ namespace sequoia::testing
   [[nodiscard]]
   bool test_runner::nothing_to_do()
   {
-    if(!m_Suites.order())
+    if(!m_Registered)
     {
       stream() << "Nothing to do: try creating some tests!\nRun with --help to see options\n";
       return true;
     }
-    else if(m_Suites.order() == 1)
+    else if(m_Suites.order() <= 1)
     {
       if(m_PruneInfo.mode == prune_mode::active)
         stream() << "Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests\n";
@@ -1155,12 +1162,7 @@ namespace sequoia::testing
         m_Filter.add_selected_item(src);
       }
 
-      if(!m_Filter)
-      {
-        using suite_t = filter_type::optional_suite_selection::value_type;
-        using items_t = filter_type::optional_item_selection::value_type;
-        m_Filter = filter_type{{suite_t{}}, {items_t{}}, path_equivalence{proj_paths().tests().repo()}, test_to_path{}};
-      }
+      if(!m_Filter) m_Filter.select_nothing();
 
       return prune_outcome::success;
     }
@@ -1171,20 +1173,65 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string test_runner::duplication_message(std::string_view suiteName, std::string_view testName, const fs::path& source)
+  std::vector<std::string> test_runner::groups_of(const fs::path& source) const
   {
-    using namespace parsing::commandline;
-
-    return error(std::string{"Suite/Test: \""}
-                  .append(suiteName).append("/").append(testName).append("\"\n")
-                  .append("Source file: \"").append(source.generic_string()).append("\"\n")
-                  .append("Please do not include tests in the same suite"
-                    " which both have the same name and are defined"
-                    " in the same source file.\n"));
+    return rebase_from(source, proj_paths().tests().repo()).parent_path()
+         | std::views::transform([](const fs::path& p){ return p.generic_string(); })
+         | std::ranges::to<std::vector>();
   }
 
   [[nodiscard]]
-  active_recovery_files test_runner::make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths)
+  std::string test_runner::duplication_message(std::string_view testName, const fs::path& source)
+  {
+    using namespace parsing::commandline;
+
+    return error(std::string{"Test: \""}.append(testName).append("\"\n")
+                  .append("Source file: \"").append(source.generic_string()).append("\"\n")
+                  .append("A test's name is that of its class, and determines where its output is"
+                    " written, so each may be registered only once.\n"));
+  }
+
+  void test_runner::build_suite_tree()
+  {
+    std::vector<fs::path> materialsPaths{};
+    std::map<fs::path, suite_type::size_type> groups{};
+
+    // A runner may be executed more than once, with tests registered in between.
+    m_Suites = suite_type{};
+    m_Suites.add_node(suite_type::npos);
+
+    // By name, so that where a registration sits in a main does not decide what the output says.
+    std::ranges::sort(m_Tests, {}, [](const test_vessel& v){ return v.name(); });
+
+    for(auto& vessel : m_Tests)
+    {
+      const auto directory{rebase_from(vessel.source_file(), proj_paths().tests().repo()).parent_path()};
+
+      auto parent{suite_type::size_type{}};
+      fs::path sofar{};
+      for(const auto& component : directory)
+      {
+        sofar /= component;
+
+        if(const auto found{groups.find(sofar)}; found != groups.end())
+        {
+          parent = found->second;
+        }
+        else
+        {
+          parent = groups.emplace(sofar, m_Suites.add_node(parent, suite_node{.summary{log_summary{component.generic_string()}}})).first->second;
+        }
+      }
+
+      vessel.initialize(proj_paths(), materialsPaths, m_RecoveryMode);
+
+      std::string name{vessel.name()};
+      m_Suites.add_node(parent, suite_node{.summary{log_summary{std::move(name)}}, .optTest{std::move(vessel)}});
+    }
+  }
+
+  [[nodiscard]]
+  active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths)
   {
     active_recovery_files paths{};
     if((mode & recovery_mode::recovery) == recovery_mode::recovery)

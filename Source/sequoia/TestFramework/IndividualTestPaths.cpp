@@ -35,64 +35,65 @@ namespace sequoia::testing
       throw std::logic_error{"Unrecognized case for test_mode"};
     }
 
-    [[nodiscard]]
-    fs::path versioned_diagnostics(fs::path dir, std::string_view suite, const fs::path& source, test_mode mode, std::string_view suffix,const std::optional<std::string>& platform)
-    {
-      const auto file{
-        fs::path{source}.filename()
-                        .replace_extension()
-                        .concat("_")
-                        .concat(to_tag(mode))
-                        .concat(suffix)
-                        .concat((platform && !platform->empty()) ? "_" + platform.value() : "")
-                        .concat(".txt")};
+    /** \brief The directory a test's versioned output belongs in: the mirror of its source
+               file's directory, beneath the relevant output root.
 
-      return (dir /= fs::path{replace_all(suite, " ", "_")}) /= file;
+        The source file names the directory but not the leaf, because a source file may hold more
+        than one test - the false-positive/false-negative pairs do - and keying the leaf on the
+        source would have them contend for it.
+     */
+
+    [[nodiscard]]
+    fs::path test_output_directory(const fs::path& sourceFile, const fs::path& outputRoot, const project_paths& projectPaths)
+    {
+      if(sourceFile.empty())
+        throw std::runtime_error{"Source files should have a non-trivial name!"};
+
+      if(!sourceFile.is_absolute())
+      {
+        if(const auto testRepo{projectPaths.tests().repo()}; !testRepo.empty())
+          return (outputRoot / back(testRepo) / rebase_from(sourceFile, testRepo)).parent_path();
+
+        return sourceFile.parent_path();
+      }
+
+      auto dir{outputRoot};
+      auto iters{std::ranges::mismatch(sourceFile, dir)};
+
+      while(iters.in1 != sourceFile.end())
+        dir /= *iters.in1++;
+
+      return dir.parent_path();
     }
 
     [[nodiscard]]
-    fs::path test_summary_filename(const fs::path& sourceFile, const project_paths& projectPaths, const std::optional<std::string>& discriminator)
+    fs::path versioned_diagnostics(const fs::path& source, std::string_view testName, const project_paths& projectPaths, test_mode mode, std::string_view suffix, const std::optional<std::string>& platform)
     {
+      const auto file{
+        fs::path{testName}.concat("_")
+                          .concat(to_tag(mode))
+                          .concat(suffix)
+                          .concat((platform && !platform->empty()) ? "_" + platform.value() : "")
+                          .concat(".txt")};
 
-      if(sourceFile.empty())
-        throw std::runtime_error("Source files should have a non-trivial name!");
+      return test_output_directory(source, output_paths::diagnostics(projectPaths.project_root()), projectPaths) /= file;
+    }
 
-      const auto name{
-          [&]() {
-            auto summaryFile{fs::path{sourceFile}.replace_extension(".txt")};
-            if(discriminator && !discriminator->empty())
-              summaryFile.replace_filename(summaryFile.stem().concat("_" + discriminator.value()).concat(summaryFile.extension().string()));
+    [[nodiscard]]
+    fs::path test_summary_filename(const fs::path& sourceFile, std::string_view testName, const project_paths& projectPaths, const std::optional<std::string>& discriminator)
+    {
+      const auto file{
+        fs::path{testName}.concat((discriminator && !discriminator->empty()) ? "_" + discriminator.value() : "")
+                          .concat(".txt")};
 
-            return summaryFile;
-          }()
-      };
-
-      if(!name.is_absolute())
-      {
-        if(const auto testRepo{projectPaths.tests().repo()}; !testRepo.empty())
-        {
-          return projectPaths.output().test_summaries() / back(testRepo) / rebase_from(name, testRepo);
-        }
-      }
-      else
-      {
-        auto summaryFile{projectPaths.output().test_summaries()};
-        auto iters{std::ranges::mismatch(name, summaryFile)};
-
-        while(iters.in1 != name.end())
-          summaryFile /= *iters.in1++;
-
-        return summaryFile;
-      }
-
-      return name;
+      return test_output_directory(sourceFile, projectPaths.output().test_summaries(), projectPaths) /= file;
     }
   }
 
   //===================================== individual_materials_paths =====================================//
 
-  individual_materials_paths::individual_materials_paths(fs::path sourceFile, const project_paths& projPaths)
-    : individual_materials_paths{rebase_from(sourceFile.replace_extension(), projPaths.tests().repo()), projPaths.test_materials(), projPaths.output()}
+  individual_materials_paths::individual_materials_paths(const fs::path& sourceFile, std::string_view testName, const project_paths& projPaths)
+    : individual_materials_paths{rebase_from(sourceFile, projPaths.tests().repo()).parent_path() /= testName, projPaths.test_materials(), projPaths.output()}
   {}
 
   individual_materials_paths::individual_materials_paths(const fs::path& relativePath, const test_materials_paths& materials, const output_paths& output)
@@ -138,14 +139,14 @@ namespace sequoia::testing
 
   //===================================== individual_diagnostics_paths =====================================//
 
-  individual_diagnostics_paths::individual_diagnostics_paths(const fs::path& projectRoot, std::string_view suite, const fs::path& source, test_mode mode, const std::optional<std::string>& platform)
-    : m_Diagnostics{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, mode, "Output", platform)}
-    , m_CaughtExceptions{versioned_diagnostics(output_paths::diagnostics(projectRoot), suite, source, mode, "Exceptions", platform)}
+  individual_diagnostics_paths::individual_diagnostics_paths(const project_paths& projPaths, std::string_view testName, const fs::path& source, test_mode mode, const std::optional<std::string>& platform)
+    : m_Diagnostics{versioned_diagnostics(source, testName, projPaths, mode, "Output", platform)}
+    , m_CaughtExceptions{versioned_diagnostics(source, testName, projPaths, mode, "Exceptions", platform)}
   {}
 
   //===================================== individual_diagnostics_paths =====================================//
 
-  test_summary_path::test_summary_path(const fs::path& sourceFile, const project_paths& projectPaths, const std::optional<std::string>& summaryDiscriminator)
-    : m_Summary{test_summary_filename(sourceFile, projectPaths, summaryDiscriminator)}
+  test_summary_path::test_summary_path(const fs::path& sourceFile, std::string_view testName, const project_paths& projectPaths, const std::optional<std::string>& summaryDiscriminator)
+    : m_Summary{test_summary_filename(sourceFile, testName, projectPaths, summaryDiscriminator)}
   {}
 }

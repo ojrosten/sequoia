@@ -16,7 +16,7 @@ namespace sequoia::testing
   using ndc_t = no_default_constructor;
 
   [[nodiscard]]
-  std::filesystem::path array_utilities_test::source_file() const
+  std::filesystem::path array_utilities_test::source_file()
   {
     return std::source_location::current().file_name();
   }
