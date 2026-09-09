@@ -1,0 +1,58 @@
+
+Running tests...
+
+Utilities:
+	utilities_free_test
+	[Execution Time: 2.88us]
+Useful Things:
+	useful_things_free_test
+	[Execution Time: 1.38us]
+Bar:
+	bar_free_test
+	[Execution Time: 1.12us]
+Unstable:
+	flipper_free_test
+	[Execution Time: 2.54us]
+Maybe:
+	maybe_false_negative_test
+	[Execution Time: 3.17us]
+	maybe_test
+	[Execution Time: 917ns]
+Oldschool:
+	oldschool_false_negative_test
+	[Execution Time: 1.54us]
+	oldschool_test
+	[Execution Time: 3.29us]
+Probability:
+	probability_false_negative_test
+	[Execution Time: 1.71us]
+	probability_test
+	[Execution Time: 1.5us]
+Foo:
+	foo_false_negative_test
+	[Execution Time: 1.12us]
+	foo_test
+	[Execution Time: 1.54us]
+Unique Thing:
+	unique_thing_false_negative_test
+	[Execution Time: 1.92us]
+	unique_thing_test
+	[Execution Time: 1.21us]
+Container:
+	container_performance_test
+	[Execution Time: 2.04us]
+	container_allocation_test
+	[Execution Time: 1.5us]
+House:
+	house_allocation_test
+	[Execution Time: 1.54us]
+
+-----------Grand Totals-----------
+[Total Run Time: 1.64ms]
+[Execution Time: 175us]
+	Standard Top Level Checks:                 0;  Failures:  0
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

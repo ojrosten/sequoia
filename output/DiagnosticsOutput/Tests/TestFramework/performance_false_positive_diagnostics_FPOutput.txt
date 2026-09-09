@@ -1,0 +1,18 @@
+False Negative Failure:
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 61
+Performance Test which should pass
+
+Fast Task duration: 0.00813764s +- 4 * 0.000836103s
+Slow Task duration: 0.0162766s +- 4 * 0.00137219s [2.00016; (1.8, 2.1)]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 62
+Performance Test which should pass
+
+Fast Task duration: 0.00862331s +- 4 * 0.000309842s
+Slow Task duration: 0.0314259s +- 4 * 0.000813536s [3.6443; (3.4, 4.1)]
+
+=======================================
+

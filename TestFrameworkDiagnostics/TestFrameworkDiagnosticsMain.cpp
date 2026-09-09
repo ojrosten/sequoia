@@ -27,137 +27,137 @@ int main(int argc, char** argv)
 
     runner.add_test_suite(
       "Test Runner",
-      test_runner_false_negative_test{"False Negative Diagnostics"},
-      test_runner_test{"Functionality Test"},
-      test_runner_performance_test{"Test Runner Performance Test"},
-      test_runner_test_creation{"Test Creation"},
-      test_runner_project_creation{"Project Creation"}
+      test_runner_false_negative_test{},
+      test_runner_test{},
+      test_runner_performance_test{},
+      test_runner_test_creation{},
+      test_runner_project_creation{}
     );
 
     runner.add_test_suite(
       "Test Framework Auxiliary",
-      versioned_output_free_test{"Versioned Output Free Test"},
-      file_editors_free_test{"File Editors Free Test"},
-      individual_test_paths_free_test{"Individual Test Paths Free Test"},
-      basic_test_interface_free_test{"Basic Test Interface Free Test"},
-      commands_free_test{"Commands Free Test"},
-      failure_info_test{"failure_info Unit Test"},
-      failure_info_false_negative_test{"failure_info False Negative Test"},
-      file_system_utilities_free_test{"File System Free Test"},
-      output_free_test{"Output Free Test"},
-      dependency_analyzer_free_test{"Dependency Analyzer Free Test"},
-      materials_updater_free_test{"Free Test"}
+      versioned_output_free_test{},
+      file_editors_free_test{},
+      individual_test_paths_free_test{},
+      basic_test_interface_free_test{},
+      commands_free_test{},
+      failure_info_test{},
+      failure_info_false_negative_test{},
+      file_system_utilities_free_test{},
+      output_free_test{},
+      dependency_analyzer_free_test{},
+      materials_updater_free_test{}
     );
 
     runner.add_test_suite(
       "Core Diagnostics",
-      free_checkers_meta_free_test{"Free Checkers Meta Free Test"},
-      elementary_false_negative_free_diagnostics{"Elementary False Negative Free Diagnostics"},
-      elementary_false_positive_free_diagnostics{"Elementary False Positive Free Diagnostics"},
-      exceptions_false_negative_free_diagnostics{"Exceptions False Negative Free Diagnostics"},
-      exceptions_false_positive_free_diagnostics{"Exceptions False Positive Free Diagnostics"},
-      chrono_false_negative_free_diagnostics{"Chrono False Negative Free Diagnostics"},
-      chrono_false_positive_free_diagnostics{"Chrono False Positive Free Diagnostics"},
-      complex_false_negative_free_diagnostics{"Complex False Negative Free Diagnostics"},
-      complex_false_positive_free_diagnostics{"Complex False Positive Free Diagnostics"},
-      container_false_negative_free_diagnostics{"Container False Negative Free Diagnostics"},
-      container_false_positive_free_diagnostics{"Container False Positive Free Diagnostics"},
-      path_false_negative_free_diagnostics{"Path False Negative Free Diagnostics"},
-      path_false_positive_free_diagnostics{"Path False Positive Free Diagnostics"},
-      string_false_negative_free_diagnostics{"String False Negative Free Diagnostics"},
-      string_false_positive_free_diagnostics{"String False Positive Free Diagnostics"},
-      sum_types_false_negative_free_diagnostics{"Sum Types False Negative Free Diagnostics"},
-      sum_types_false_positive_free_diagnostics{"Sum Types False Positive Free Diagnostics"},
-      smart_pointer_false_negative_free_diagnostics{"Smart Pointer False Negative Free Diagnostics"},
-      smart_pointer_false_positive_free_diagnostics{"Smart Pointer False Positive Free Diagnostics"},
-      function_false_negative_free_diagnostics{"Function False Negative Free Diagnostics"},
-      function_false_positive_free_diagnostics{"Function False Positive Free Diagnostics"}
+      free_checkers_meta_free_test{},
+      elementary_false_negative_free_diagnostics{},
+      elementary_false_positive_free_diagnostics{},
+      exceptions_false_negative_free_diagnostics{},
+      exceptions_false_positive_free_diagnostics{},
+      chrono_false_negative_free_diagnostics{},
+      chrono_false_positive_free_diagnostics{},
+      complex_false_negative_free_diagnostics{},
+      complex_false_positive_free_diagnostics{},
+      container_false_negative_free_diagnostics{},
+      container_false_positive_free_diagnostics{},
+      path_false_negative_free_diagnostics{},
+      path_false_positive_free_diagnostics{},
+      string_false_negative_free_diagnostics{},
+      string_false_positive_free_diagnostics{},
+      sum_types_false_negative_free_diagnostics{},
+      sum_types_false_positive_free_diagnostics{},
+      smart_pointer_false_negative_free_diagnostics{},
+      smart_pointer_false_positive_free_diagnostics{},
+      function_false_negative_free_diagnostics{},
+      function_false_positive_free_diagnostics{}
     );
 
     runner.add_test_suite(
       "Semantics Testing Diagnostics",
-      regular_false_negative_diagnostics{"Regular False Negative Diagnostics"},
-      move_only_false_negative_diagnostics{"Move-Only False Negative Diagnostics"},
-      orderable_move_only_false_negative_diagnostics{"Orderable Move-Only False Negative Diagnostics"},
-      orderable_regular_false_negative_diagnostics{"Orderable Regular False Negative Diagnostics"},
-      regular_false_positive_diagnostics{"Regular False Positive Diagnostics"},
-      move_only_false_positive_diagnostics{"Move-Only False Positive Diagnostics"},
-      orderable_move_only_false_positive_diagnostics{"Orderable Move-Only False Positive Diagnostics"},
-      orderable_regular_false_positive_diagnostics{"Orderable Regular False Positive Diagnostics"}
+      regular_false_negative_diagnostics{},
+      move_only_false_negative_diagnostics{},
+      orderable_move_only_false_negative_diagnostics{},
+      orderable_regular_false_negative_diagnostics{},
+      regular_false_positive_diagnostics{},
+      move_only_false_positive_diagnostics{},
+      orderable_move_only_false_positive_diagnostics{},
+      orderable_regular_false_positive_diagnostics{}
     );
 
     runner.add_test_suite(
       "Allocation Diagnostics",
-      allocation_false_negative_diagnostics{"Allocation False Negative Diagnostics"},
-      allocation_false_negative_diagnostics_broken_semantics{"Allocation False Negative Diagnostics: Broken Semantics"},
-      allocation_false_negative_diagnostics_broken_value_semantics{"Allocation False Negative Diagnostics: Broken Value Semantics"},
-      allocation_false_negative_diagnostics_inefficient_operations{"Allocation False Negative Diagnostics: Inefficient Operations"},
-      move_only_allocation_false_negative_diagnostics{"Move-Only Alloction False Negative Diagnostics"},
-      allocation_false_positive_diagnostics{"Allocation False Positive Diagnostics"},
-      move_only_allocation_false_positive_diagnostics{"Move-Only Allocation False Positive Diagnostics"}
+      allocation_false_negative_diagnostics{},
+      allocation_false_negative_diagnostics_broken_semantics{},
+      allocation_false_negative_diagnostics_broken_value_semantics{},
+      allocation_false_negative_diagnostics_inefficient_operations{},
+      move_only_allocation_false_negative_diagnostics{},
+      allocation_false_positive_diagnostics{},
+      move_only_allocation_false_positive_diagnostics{}
     );
 
     runner.add_test_suite(
       "Scoped Allocation Diagnostics",
-      scoped_allocation_false_negative_diagnostics{"Scoped Allocation False Negative Diagnostics"},
-      move_only_scoped_allocation_false_negative_diagnostics{"Move-Only Scoped Allocation False Negative Diagnostics"},
-      scoped_allocation_false_positive_diagnostics{"Scoped Allocation False Positive Diagnostics"},
-      scoped_allocation_false_positive_diagnostics_mixed{"Scoped Allocation False Positive Diagnostics: Mixed"},
-      scoped_allocation_false_positive_diagnostics_three_level{"Scoped Allocation False Positive Diagnostics: Three Level"},
-      move_only_scoped_allocation_false_positive_diagnostics{"Move-Only Scoped Allocation False Positive Diagnostics"}
+      scoped_allocation_false_negative_diagnostics{},
+      move_only_scoped_allocation_false_negative_diagnostics{},
+      scoped_allocation_false_positive_diagnostics{},
+      scoped_allocation_false_positive_diagnostics_mixed{},
+      scoped_allocation_false_positive_diagnostics_three_level{},
+      move_only_scoped_allocation_false_positive_diagnostics{}
     );
 
     runner.add_test_suite(
       "Extended Allocation Diagnostics",
-      orderable_move_only_allocation_false_positive_diagnostics{"Orderable Move-Only Allocation False Positive Diagnostics"},
-      orderable_regular_allocation_false_positive_diagnostics{"Orderable Regular Allocation False Positive Diagnostics"},
-      orderable_regular_allocation_false_negative_diagnostics{"Orderable Regular Allocation False Negative Diagnostics"}
+      orderable_move_only_allocation_false_positive_diagnostics{},
+      orderable_regular_allocation_false_positive_diagnostics{},
+      orderable_regular_allocation_false_negative_diagnostics{}
     );
 
     runner.add_test_suite(
       "Performance Diagnostics",
-      performance_false_negative_diagnostics{"Performance False Negative Diagnostics"},
-      performance_false_positive_diagnostics{"Performance False Positive Diagnostics"},
-      performance_utilities_test{"Performance Utilities"}
+      performance_false_negative_diagnostics{},
+      performance_false_positive_diagnostics{},
+      performance_utilities_test{}
     );
 
     runner.add_test_suite(
       "Relational Diagnostics",
-      relational_false_negative_diagnostics{"Relational False Negative Diagnostics"},
-      relational_false_positive_diagnostics{"Relational False Positive Diagnostics"}
+      relational_false_negative_diagnostics{},
+      relational_false_positive_diagnostics{}
     );
 
     runner.add_test_suite(
       "State Transition Utilities",
-      regular_state_transition_false_negative_diagnostics{"Regular False Negative Diagnostics"},
-      regular_state_transition_false_positive_diagnostics{"Regular False Positive Diagnostics"},
-      move_only_state_transition_false_positive_diagnostics{"Move-Only False Negative Diagnostics"},
-      move_only_state_transition_false_negative_diagnostics{"Move-Only False Positive Diagnostics"}
+      regular_state_transition_false_negative_diagnostics{},
+      regular_state_transition_false_positive_diagnostics{},
+      move_only_state_transition_false_positive_diagnostics{},
+      move_only_state_transition_false_negative_diagnostics{}
     );
 
     runner.add_test_suite(
       "CommandLine Arguments",
-      commandline_arguments_false_negative_test{"False Negative Test"},
-      commandline_arguments_test{"Unit Test"}
+      commandline_arguments_false_negative_test{},
+      commandline_arguments_test{}
     );
 
     runner.add_test_suite(
       "Factory",
-      factory_false_negative_test{"False Negative Test"},
-      factory_test{"Unit Test"}
+      factory_false_negative_test{},
+      factory_test{}
     );
 
     runner.add_test_suite(
       "Shell Commands",
-      shell_commands_false_negative_test{"False Negative Test"},
-      shell_commands_test{"Unit Test"}
+      shell_commands_false_negative_test{},
+      shell_commands_test{}
     );
 
     runner.add_test_suite(
       "Text Processing",
-      indent_free_test{"Indent Free Test"},
-      patterns_free_test{"Patterns Free Test"},
-      substitutions_free_test{"Substitutions Free Test"}
+      indent_free_test{},
+      patterns_free_test{},
+      substitutions_free_test{}
     );
 
     code = runner.execute(timer_resolution{1ms});

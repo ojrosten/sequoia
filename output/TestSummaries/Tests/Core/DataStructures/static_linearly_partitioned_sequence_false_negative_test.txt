@@ -1,0 +1,2 @@
+static_linearly_partitioned_sequence_false_negative_test
+False Negative Checks:                     3;  Failures:  0

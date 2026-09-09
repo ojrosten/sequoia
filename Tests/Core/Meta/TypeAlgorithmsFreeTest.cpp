@@ -10,6 +10,16 @@
 
 namespace sequoia::testing
 {
+  /** Probes for `type_name`. Deliberately *not* in an anonymous namespace: the three compilers
+      spell one of those three different ways, so the names would not be comparable.
+   */
+  namespace type_name_probes
+  {
+    class probe_class {};
+    struct probe_struct {};
+    enum class probe_enum { value };
+  }
+
   namespace
   {
     template<class T, class U>
@@ -45,6 +55,8 @@ namespace sequoia::testing
 
   void type_algorithms_free_test::run_tests()
   {    
+    test_type_name();
+
     test_type_comparator();
 
     test_lower_bound<std::tuple>();
@@ -97,6 +109,20 @@ namespace sequoia::testing
 
     test_reverse<std::tuple>();
     test_reverse<std::variant>();
+  }
+
+  /*! The elaborated-type-specifier these pin is emitted by MSVC alone, so on clang and gcc they
+      hold whether or not `type_name` peels it. Windows is the witness that can fail here.
+   */
+
+  void type_algorithms_free_test::test_type_name()
+  {
+    using namespace type_name_probes;
+
+    STATIC_CHECK(type_name<probe_class>()  == "sequoia::testing::type_name_probes::probe_class");
+    STATIC_CHECK(type_name<probe_struct>() == "sequoia::testing::type_name_probes::probe_struct");
+    STATIC_CHECK(type_name<probe_enum>()   == "sequoia::testing::type_name_probes::probe_enum");
+    STATIC_CHECK(type_name<int>()          == "int");
   }
 
   void type_algorithms_free_test::test_type_comparator()

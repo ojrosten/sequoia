@@ -28,367 +28,367 @@ int main(int argc, char** argv)
 
     runner.add_test_suite(
       "Test Runner",
-      test_runner_false_negative_test{"False Negative Diagnostics"},
-      test_runner_test{"Functionality Test"},
-      test_runner_performance_test{"Test Runner Performance Test"},
-      test_runner_test_creation{"Test Creation"},
-      test_runner_project_creation{"Project Creation"},
-      test_runner_end_to_end_test{"End to End Test"},
-      test_runner_project_files{"Project Files Test"}
+      test_runner_false_negative_test{},
+      test_runner_test{},
+      test_runner_performance_test{},
+      test_runner_test_creation{},
+      test_runner_project_creation{},
+      test_runner_end_to_end_test{},
+      test_runner_project_files{}
     );
 
     runner.add_test_suite(
       "Test Framework Auxiliary",
-      versioned_output_free_test{"Versioned Output Free Test"},
-      file_editors_free_test{"File Editors Free Test"},
-      individual_test_paths_free_test{"Individual Test Paths Free Test"},
-      basic_test_interface_free_test{"Basic Test Interface Free Test"},
-      commands_free_test{"Commands Free Test"},
-      failure_info_test{"failure_info Unit Test"},
-      failure_info_false_negative_test{"failure_info False Negative Test"},
-      file_system_utilities_free_test{"File System Free Test"},
-      output_free_test{"Output Free Test"},
-      dependency_analyzer_free_test{"Dependency Analyzer Free Test"},
-      materials_updater_free_test{"Free Test"}
+      versioned_output_free_test{},
+      file_editors_free_test{},
+      individual_test_paths_free_test{},
+      basic_test_interface_free_test{},
+      commands_free_test{},
+      failure_info_test{},
+      failure_info_false_negative_test{},
+      file_system_utilities_free_test{},
+      output_free_test{},
+      dependency_analyzer_free_test{},
+      materials_updater_free_test{}
     );
 
     runner.add_test_suite(
       "Core Diagnostics",
-      free_checkers_meta_free_test{"Free Checkers Meta Free Test"},
-      elementary_false_negative_free_diagnostics{"Elementary False Negative Free Diagnostics"},
-      elementary_false_positive_free_diagnostics{"Elementary False Positive Free Diagnostics"},
-      exceptions_false_negative_free_diagnostics{"Exceptions False Negative Free Diagnostics"},
-      exceptions_false_positive_free_diagnostics{"Exceptions False Positive Free Diagnostics"},
-      chrono_false_negative_free_diagnostics{"Chrono False Negative Free Diagnostics"},
-      chrono_false_positive_free_diagnostics{"Chrono False Positive Free Diagnostics"},
-      complex_false_negative_free_diagnostics{"Complex False Negative Free Diagnostics"},
-      complex_false_positive_free_diagnostics{"Complex False Positive Free Diagnostics"},
-      container_false_negative_free_diagnostics{"Container False Negative Free Diagnostics"},
-      container_false_positive_free_diagnostics{"Container False Positive Free Diagnostics"},
-      path_false_negative_free_diagnostics{"Path False Negative Free Diagnostics"},
-      path_false_positive_free_diagnostics{"Path False Positive Free Diagnostics"},
-      string_false_negative_free_diagnostics{"String False Negative Free Diagnostics"},
-      string_false_positive_free_diagnostics{"String False Positive Free Diagnostics"},
-      sum_types_false_negative_free_diagnostics{"Sum Types False Negative Free Diagnostics"},
-      sum_types_false_positive_free_diagnostics{"Sum Types False Positive Free Diagnostics"},
-      smart_pointer_false_negative_free_diagnostics{"Smart Pointer False Negative Free Diagnostics"},
-      smart_pointer_false_positive_free_diagnostics{"Smart Pointer False Positive Free Diagnostics"},
-      function_false_negative_free_diagnostics{"Function False Negative Free Diagnostics"},
-      function_false_positive_free_diagnostics{"Function False Positive Free Diagnostics"}
+      free_checkers_meta_free_test{},
+      elementary_false_negative_free_diagnostics{},
+      elementary_false_positive_free_diagnostics{},
+      exceptions_false_negative_free_diagnostics{},
+      exceptions_false_positive_free_diagnostics{},
+      chrono_false_negative_free_diagnostics{},
+      chrono_false_positive_free_diagnostics{},
+      complex_false_negative_free_diagnostics{},
+      complex_false_positive_free_diagnostics{},
+      container_false_negative_free_diagnostics{},
+      container_false_positive_free_diagnostics{},
+      path_false_negative_free_diagnostics{},
+      path_false_positive_free_diagnostics{},
+      string_false_negative_free_diagnostics{},
+      string_false_positive_free_diagnostics{},
+      sum_types_false_negative_free_diagnostics{},
+      sum_types_false_positive_free_diagnostics{},
+      smart_pointer_false_negative_free_diagnostics{},
+      smart_pointer_false_positive_free_diagnostics{},
+      function_false_negative_free_diagnostics{},
+      function_false_positive_free_diagnostics{}
     );
   
     runner.add_test_suite(
       "Semantics Testing Diagnostics",
-      regular_false_negative_diagnostics{"Regular False Negative Diagnostics"},
-      move_only_false_negative_diagnostics{"Move-Only False Negative Diagnostics"},
-      orderable_move_only_false_negative_diagnostics{"Orderable Move-Only False Negative Diagnostics"},
-      orderable_regular_false_negative_diagnostics{"Orderable Regular False Negative Diagnostics"},
-      regular_false_positive_diagnostics{"Regular False Positive Diagnostics"},
-      move_only_false_positive_diagnostics{"Move-Only False Positive Diagnostics"},
-      orderable_move_only_false_positive_diagnostics{"Orderable Move-Only False Positive Diagnostics"},
-      orderable_regular_false_positive_diagnostics{"Orderable Regular False Positive Diagnostics"}
+      regular_false_negative_diagnostics{},
+      move_only_false_negative_diagnostics{},
+      orderable_move_only_false_negative_diagnostics{},
+      orderable_regular_false_negative_diagnostics{},
+      regular_false_positive_diagnostics{},
+      move_only_false_positive_diagnostics{},
+      orderable_move_only_false_positive_diagnostics{},
+      orderable_regular_false_positive_diagnostics{}
     );
 
     runner.add_test_suite(
       "Allocation Diagnostics",
-      allocation_false_negative_diagnostics{"Allocation False Negative Diagnostics"},
-      allocation_false_negative_diagnostics_broken_semantics{"Allocation False Negative Diagnostics: Broken Semantics"},
-      allocation_false_negative_diagnostics_broken_value_semantics{"Allocation False Negative Diagnostics: Broken Value Semantics"},
-      allocation_false_negative_diagnostics_inefficient_operations{"Allocation False Negative Diagnostics: Inefficient Operations"},
-      move_only_allocation_false_negative_diagnostics{"Move-Only Alloction False Negative Diagnostics"},
-      allocation_false_positive_diagnostics{"Allocation False Positive Diagnostics"},
-      move_only_allocation_false_positive_diagnostics{"Move-Only Allocation False Positive Diagnostics"}
+      allocation_false_negative_diagnostics{},
+      allocation_false_negative_diagnostics_broken_semantics{},
+      allocation_false_negative_diagnostics_broken_value_semantics{},
+      allocation_false_negative_diagnostics_inefficient_operations{},
+      move_only_allocation_false_negative_diagnostics{},
+      allocation_false_positive_diagnostics{},
+      move_only_allocation_false_positive_diagnostics{}
     );
 
     runner.add_test_suite(
       "Scoped Allocation Diagnostics",
-      scoped_allocation_false_negative_diagnostics{"Scoped Allocation False Negative Diagnostics"},
-      move_only_scoped_allocation_false_negative_diagnostics{"Move-Only Scoped Allocation False Negative Diagnostics"},
-      scoped_allocation_false_positive_diagnostics{"Scoped Allocation False Positive Diagnostics"},
-      scoped_allocation_false_positive_diagnostics_mixed{"Scoped Allocation False Positive Diagnostics: Mixed"},
-      scoped_allocation_false_positive_diagnostics_three_level{"Scoped Allocation False Positive Diagnostics: Three Level"},
-      move_only_scoped_allocation_false_positive_diagnostics{"Move-Only Scoped Allocation False Positive Diagnostics"}
+      scoped_allocation_false_negative_diagnostics{},
+      move_only_scoped_allocation_false_negative_diagnostics{},
+      scoped_allocation_false_positive_diagnostics{},
+      scoped_allocation_false_positive_diagnostics_mixed{},
+      scoped_allocation_false_positive_diagnostics_three_level{},
+      move_only_scoped_allocation_false_positive_diagnostics{}
     );
 
     runner.add_test_suite(
       "Extended Allocation Diagnostics",
-      orderable_move_only_allocation_false_positive_diagnostics{"Orderable Move-Only Allocation False Positive Diagnostics"},
-      orderable_regular_allocation_false_positive_diagnostics{"Orderable Regular Allocation False Positive Diagnostics"},
-      orderable_regular_allocation_false_negative_diagnostics{"Orderable Regular Allocation False Negative Diagnostics"}
+      orderable_move_only_allocation_false_positive_diagnostics{},
+      orderable_regular_allocation_false_positive_diagnostics{},
+      orderable_regular_allocation_false_negative_diagnostics{}
     );
 
     runner.add_test_suite(
       "Performance Diagnostics",
-      performance_false_negative_diagnostics{"Performance False Negative Diagnostics"},
-      performance_false_positive_diagnostics{"Performance False Positive Diagnostics"},
-      performance_utilities_test{"Performance Utilities"}
+      performance_false_negative_diagnostics{},
+      performance_false_positive_diagnostics{},
+      performance_utilities_test{}
     );
 
     runner.add_test_suite(
       "Relational Diagnostics",
-      relational_false_negative_diagnostics{"Relational False Negative Diagnostics"},
-      relational_false_positive_diagnostics{"Relational False Positive Diagnostics"}
+      relational_false_negative_diagnostics{},
+      relational_false_positive_diagnostics{}
     );
 
     runner.add_test_suite(
       "State Transition Utilities",
-      regular_state_transition_false_negative_diagnostics{"Regular False Negative Diagnostics"},
-      regular_state_transition_false_positive_diagnostics{"Regular False Positive Diagnostics"},
-      move_only_state_transition_false_positive_diagnostics{"Move-Only False Negative Diagnostics"},
-      move_only_state_transition_false_negative_diagnostics{"Move-Only False Positive Diagnostics"}
+      regular_state_transition_false_negative_diagnostics{},
+      regular_state_transition_false_positive_diagnostics{},
+      move_only_state_transition_false_positive_diagnostics{},
+      move_only_state_transition_false_negative_diagnostics{}
     );
 
     runner.add_test_suite(
       "Text Processing",
-      indent_free_test{"Indent Free Test"},
-      patterns_free_test{"Patterns Free Test"},
-      substitutions_free_test{"Substitutions Free Test"}
+      indent_free_test{},
+      patterns_free_test{},
+      substitutions_free_test{}
     );
 
     runner.add_test_suite(
       "CommandLine Arguments",
-      commandline_arguments_false_negative_test{"False Negative Test"},
-      commandline_arguments_test{"Unit Test"}
+      commandline_arguments_false_negative_test{},
+      commandline_arguments_test{}
     );
 
     runner.add_test_suite(
       "Factory",
-      factory_false_negative_test{"False Negative Test"},
-      factory_test{"Unit Test"}
+      factory_false_negative_test{},
+      factory_test{}
     );
 
     runner.add_test_suite(
       "Shell Commands",
-      shell_commands_false_negative_test{"False Negative Test"},
-      shell_commands_test{"Unit Test"}
+      shell_commands_false_negative_test{},
+      shell_commands_test{}
     );
 
     runner.add_test_suite(
       "Meta",
-      sequences_free_test{"Sequences Free Test"},
-      type_algorithms_free_test{"Type Algorithms Free Test"},
-      type_list_free_test{"Type List Free Test"},
-      type_traits_test{"Type Traits"},
-      concepts_test{"Concepts"},
-      utilities_test{"Utilities"}
+      sequences_free_test{},
+      type_algorithms_free_test{},
+      type_list_free_test{},
+      type_traits_test{},
+      concepts_test{},
+      utilities_test{}
     );
 
     runner.add_test_suite(
       "Creator",
-      creator_free_test{"Free Test"}
+      creator_free_test{}
     );
     
     runner.add_test_suite(
       "Algorithms",
-      algorithms_test{"Unit Test"}
+      algorithms_test{}
     );
   
     runner.add_test_suite(
       "Statistical Algorithms",
-      statistical_algorithms_test{"Unit Test"}
+      statistical_algorithms_test{}
     );
 
     runner.add_test_suite(
       "Monotonic Sequence",
-      monotonic_sequence_false_negative_test{"False Negative Diagnostics"},
-      monotonic_sequence_test{"Unit Test"},
-      monotonic_sequence_allocation_test{"Allocation Test"}
+      monotonic_sequence_false_negative_test{},
+      monotonic_sequence_test{},
+      monotonic_sequence_allocation_test{}
     );
 
     runner.add_test_suite(
       "Linear Sequence",
-      linear_sequence_false_negative_test{"False Negative Diagnostics"},
-      linear_sequence_test{"Unit Test"}
+      linear_sequence_false_negative_test{},
+      linear_sequence_test{}
     );
 
     runner.add_test_suite(
       "Array Utilities",
-      array_utilities_test{"Unit Test"}
+      array_utilities_test{}
     );
     
     runner.add_test_suite(
         "Iterator",
-        iterator_test{"Unit Test"}
+        iterator_test{}
     );
 
     runner.add_test_suite(
       "Concurrency Models",
-      threading_models_test{"Unit Test"},
-      threading_models_performance_test{"Performance Test"}
+      threading_models_test{},
+      threading_models_performance_test{}
     );
 
     runner.add_test_suite(
       "Partitioned Data",
       suite{
         "Infrastructure",
-        partitioned_data_false_negative_test{"False Negative Diagnostics"},
-        static_linearly_partitioned_sequence_false_negative_test{"Linearly Partitioned False Negative Diagnostics"},
-        partition_iterator_test{"Iterator Test"},
+        partitioned_data_false_negative_test{},
+        static_linearly_partitioned_sequence_false_negative_test{},
+        partition_iterator_test{},
       },
       suite{
         "Bucketed",
-        bucketed_sequence_regular_test{"Bucketed Sequence Regular Test"},
-        bucketed_sequence_allocation_test{"Bucketed Sequence Allocation Test"},
+        bucketed_sequence_regular_test{},
+        bucketed_sequence_allocation_test{},
       },
       suite{
         "Contiguous",
-        partitioned_sequence_regular_test{"Partitioned Sequence Regular Test"},
-        partitioned_sequence_allocation_test{"Partitioned Sequence Allocation Test"},
+        partitioned_sequence_regular_test{},
+        partitioned_sequence_allocation_test{},
       },
       suite{
         "Static",
-        static_partitioned_sequence_test{"Static Partitioned Sequence Regular Test"},
-        static_linearly_partitioned_sequence_test{"Static Linearly Partitioned Sequence Regular Test"}
+        static_partitioned_sequence_test{},
+        static_linearly_partitioned_sequence_test{}
       }
     );
 
     runner.add_test_suite(
       "Static Stack",
-      test_static_stack_false_negatives{"False Negative Diagnostics"},
-      test_static_stack{"Unit Test"}
+      test_static_stack_false_negatives{},
+      test_static_stack{}
     );
 
     runner.add_test_suite(
       "Static Queue",
-      test_static_queue_false_negatives{"False Negative Diagnostics"},
-      test_static_queue{"Unit Test"}
+      test_static_queue_false_negatives{},
+      test_static_queue{}
     );
 
     runner.add_test_suite(
       "Static Priority Queue",
-      test_static_priority_queue_false_negatives{"False Negative Diagnostics"},
-      test_static_priority_queue{"Unit Test"}
+      test_static_priority_queue_false_negatives{},
+      test_static_priority_queue{}
     );
 
     runner.add_test_suite(
       "Graph",
       suite{
         "Infrastructure",
-        test_graph_false_negatives{"Graph false positive diagnostics"},
-        test_graph_meta{"Meta Test"}
+        test_graph_false_negatives{},
+        test_graph_meta{}
       },
       suite{
         "Edges",
-        test_edge_false_negatives{"False positive diagnostics"},
-        test_edges{"Unit Test"}
+        test_edge_false_negatives{},
+        test_edges{}
       },
       suite{
         "Node Storage",
-         node_storage_test{"Dynamic and Static"},
-         node_storage_allocation_test{"Allocation Test"},
-         test_heterogeneous_node_storage{"Heterogeneuous"}
+         node_storage_test{},
+         node_storage_allocation_test{},
+         test_heterogeneous_node_storage{}
       },
       suite{
         "Dynamic",
         suite{
           "Directed",
-          dynamic_directed_graph_unweighted_test{"Directed Graph Unweighted Test"},
-          dynamic_directed_graph_unweighted_contiguous_test{"Directed Graph Unweighted Contiguous Test"},
-          dynamic_directed_graph_fundamental_weight_test{"Directed Graph Fundamental Weight Test"},
-          dynamic_directed_graph_fundamental_weight_contiguous_test{"Directed Graph Fundamental Weight Contiguous Test"}
+          dynamic_directed_graph_unweighted_test{},
+          dynamic_directed_graph_unweighted_contiguous_test{},
+          dynamic_directed_graph_fundamental_weight_test{},
+          dynamic_directed_graph_fundamental_weight_contiguous_test{}
         },
         suite{
           "Undirected",
-          dynamic_undirected_graph_unweighted_test{"Undirected Graph Unweighted Test"},
-          dynamic_undirected_graph_unweighted_contiguous_test{"Undirected Graph Unweighted Contiguous Test"},
-          dynamic_undirected_graph_fundamental_weight_test{"Undirected Graph Fundamental Weight Test"},
-          dynamic_undirected_graph_fundamental_weight_contiguous_test{"Undirected Graph Fundamental Weight Contiguous Test"},
-          dynamic_undirected_graph_unsortable_weight_test{"Undirected Graph Unsortable Weight Test"},
-          dynamic_undirected_graph_shared_fundamental_weight_test{"Undirected Graph Shared Fundamental Weight Test"},
-          dynamic_undirected_graph_shared_fundamental_weight_contiguous_test{"Undirected Graph Shared Fundamental Weight Contiguous Test"},
-          dynamic_undirected_graph_shared_unsortable_weight_test{"Undirected Graph Shared Unsortable Weight Test"},
-          dynamic_undirected_graph_meta_data_test{"Undirected Graph Meta Data Test"}
+          dynamic_undirected_graph_unweighted_test{},
+          dynamic_undirected_graph_unweighted_contiguous_test{},
+          dynamic_undirected_graph_fundamental_weight_test{},
+          dynamic_undirected_graph_fundamental_weight_contiguous_test{},
+          dynamic_undirected_graph_unsortable_weight_test{},
+          dynamic_undirected_graph_shared_fundamental_weight_test{},
+          dynamic_undirected_graph_shared_fundamental_weight_contiguous_test{},
+          dynamic_undirected_graph_shared_unsortable_weight_test{},
+          dynamic_undirected_graph_meta_data_test{}
         },
         suite{
           "Undirected Embedded",
-          dynamic_undirected_embedded_graph_unweighted_test{"Undirected Embedded Graph Unweighted Test"},
-          dynamic_undirected_embedded_graph_unweighted_contiguous_test{"Undirected Embedded Graph Unweighted Contiguous Test"},
-          dynamic_undirected_embedded_graph_fundamental_weight_test{"Undirected Embedded Graph Fundamental Weight Test"},
-          dynamic_undirected_embedded_graph_fundamental_weight_contiguous_test{"Undirected Embedded Graph Fundamental Weight Contiguous Test"},
-          dynamic_undirected_embedded_graph_shared_fundamental_weight_test{"Undirected Embedded Graph Shared Fundamental Weight Test"},
-          dynamic_undirected_embedded_graph_shared_fundamental_weight_contiguous_test{"Undirected Embedded Graph Shared Fundamental Weight Contiguous Test"},
-          dynamic_undirected_embedded_graph_meta_data_test{"Undirected Graph Meta Data Test"}
+          dynamic_undirected_embedded_graph_unweighted_test{},
+          dynamic_undirected_embedded_graph_unweighted_contiguous_test{},
+          dynamic_undirected_embedded_graph_fundamental_weight_test{},
+          dynamic_undirected_embedded_graph_fundamental_weight_contiguous_test{},
+          dynamic_undirected_embedded_graph_shared_fundamental_weight_test{},
+          dynamic_undirected_embedded_graph_shared_fundamental_weight_contiguous_test{},
+          dynamic_undirected_embedded_graph_meta_data_test{}
         }
       },
       suite{
         "Static",
         suite{
           "Directed",
-          static_directed_graph_unweighted_test{"Static Directed Graph Unweighted Test"},
-          static_directed_graph_fundamental_weight_test{"Static Directed Graph Fundamental Weight Test"}
+          static_directed_graph_unweighted_test{},
+          static_directed_graph_fundamental_weight_test{}
         },
         suite{
           "Undirected",
-          static_undirected_graph_unweighted_test{"Static Undirected Graph Unweighted Test"},
-          static_undirected_graph_fundamental_weight_test{"Static Undirected Graph Fundamental Weight Test"},
-          static_undirected_graph_unsortable_weight_test{"Static Undirected Graph Unsortable Weight Test"}
+          static_undirected_graph_unweighted_test{},
+          static_undirected_graph_fundamental_weight_test{},
+          static_undirected_graph_unsortable_weight_test{}
         },
         suite{
           "Undirected Embedded",
-          static_undirected_embedded_graph_unweighted_test{"Static Undirected Embedded Graph Unweighted Test"},
-          static_undirected_embedded_graph_fundamental_weight_test{"Static Undirected Embedded Graph Fundamental Weight Test"}
+          static_undirected_embedded_graph_unweighted_test{},
+          static_undirected_embedded_graph_fundamental_weight_test{}
         }
       },
       suite{
         "Legacy",
-        test_heterogeneous_static_graph{"Heterogeneous Static Graphs"},
+        test_heterogeneous_static_graph{},
       },
       suite{
         "Allocations",
-        weighted_graph_allocation_bucketed_test{"Weighted Graph Allocation Bucketed Test"},
-        weighted_graph_allocation_contiguous_test{"Weighted Graph Allocation Contiguous Test"},
-        unweighted_graph_allocation_bucketed_test{"Unweighted Graph Allocation Bucketed Test"},
-        unweighted_graph_allocation_contiguous_test{"Unweighted Graph Allocation Contiguous Test"}
+        weighted_graph_allocation_bucketed_test{},
+        weighted_graph_allocation_contiguous_test{},
+        unweighted_graph_allocation_bucketed_test{},
+        unweighted_graph_allocation_contiguous_test{}
       }
     );
 
     runner.add_test_suite(
       "Graph Algorithms",
-      test_graph_traversals{"Traversals"},
-      test_static_graph_traversals{"Static Graph Traversals"},
-      test_graph_update{"Updates"},
-      test_subgraph{"Subgraph"}
+      test_graph_traversals{},
+      test_static_graph_traversals{},
+      test_graph_update{},
+      test_subgraph{}
     );
 
     runner.add_test_suite(
       "Experimental",
-      experimental_test{"Unit Test"},
-      flatten_type_list_free_test{"Free Test"}
+      experimental_test{},
+      flatten_type_list_free_test{}
     );
 
     runner.add_test_suite(
       "Streaming",
-      streaming_free_test{"Free Test"}
+      streaming_free_test{}
     );
 
     runner.add_test_suite(
       "Tree",
-      tree_false_negative_test{"False Negative Test"},
-      tree_test{"Unit Test"}
+      tree_false_negative_test{},
+      tree_test{}
     );
 
     runner.add_test_suite(
       "Bitmask",
-      bitmask_free_test{"Bitmask Free Test"}
+      bitmask_free_test{}
     );
 
     runner.add_test_suite(
       "Suite",
-      suite_free_test{"Suite Free Test"}
+      suite_free_test{}
     );
       
     runner.add_test_suite(
       "File System",
-      file_system_free_test{"File System Free Test"},
-      normal_path_false_negative_test{"False Negative Test"},
-      normal_path_test{"Unit Test"}
+      file_system_free_test{},
+      normal_path_false_negative_test{},
+      normal_path_test{}
     );
 
     runner.add_test_suite(
       "Algebra",
       suite{
         "Ratio",
-        ratio_free_test{"Ratio Free Test"}
+        ratio_free_test{}
       }
     );
     
@@ -396,82 +396,82 @@ int main(int argc, char** argv)
       "Geometry",
       suite{
         "Spaces",        
-        numeric_rings_meta_free_test{"Numeric Rings Meta Free Test"},
-        spaces_meta_free_test{"Spaces Meta Free Test"}
+        numeric_rings_meta_free_test{},
+        spaces_meta_free_test{}
       },
       suite{
         "Bounds",
-        bounds_free_test{"Bounds Free Test"}
+        bounds_free_test{}
       },
       suite{
         "Validators",
-        validators_free_test{"Validators Free Test"}
+        validators_free_test{}
       },
       suite{
         "Vector Coordinates",
-        vector_coordinates_false_negative_test{"Vector Coordinates False negative Test"},
-        vector_coordinates_test{"Vector Coordinates Test"},
-        complex_vector_coordinates_test{"Complex Vector Coordinates Test"},
-        vector_polar_coordinates_test{"Vector Polar Coordinates Test"}
+        vector_coordinates_false_negative_test{},
+        vector_coordinates_test{},
+        complex_vector_coordinates_test{},
+        vector_polar_coordinates_test{}
       },
       suite{
         "Affine Coordinates",
-        affine_coordinates_false_negative_test{"Affine Coordinates False negative Test"},
-        affine_coordinates_test{"Affine Coordinates Test"}
+        affine_coordinates_false_negative_test{},
+        affine_coordinates_test{}
       },
       suite{
         "M-Affine Coordinates",
-        m_affine_coordinates_test{"M-Affine Coordinates Test"}
+        m_affine_coordinates_test{}
       },
       suite{
         "Free Module Coordinates",
-        free_module_coordinates_test{"Free Module Coordinates Test"}
+        free_module_coordinates_test{}
       },
       suite{
         "Partial M-Torsor Coordinates",
-        partial_m_torsor_coordinates_test{"Partial M-Torsor Coordinates Test"}
+        partial_m_torsor_coordinates_test{}
       },
       suite{
         "Absolute Coordinates",
-        absolute_coordinates_false_negative_test{"Absolute Coordinates False negative Test"},
-        absolute_coordinates_test{"Absolute Coordinates Test"},
-        absolute_logarithmic_coordinates_test{"Absolute Logarithmic Coordinates Test"}
+        absolute_coordinates_false_negative_test{},
+        absolute_coordinates_test{},
+        absolute_logarithmic_coordinates_test{}
       }
     );
 
     runner.add_test_suite(
       "Physical Values",
-      space_ordering_meta_free_test{"Space Ordering Meta Free Test"},
-      physical_value_meta_free_test{"Physical Value Meta Free Test"},
-      physical_value_false_negative_test{"False Negative Test"},
-      physical_value_conversions_free_test{"Physical Value Conversions Free Test"},
-      absolute_physical_value_test{"Absolute Physical Value Test"},
-      absolute_physical_value_compositions_test{"Absolute Physical Value Compositions Test"},
-      unsafe_absolute_physical_value_test{"Unsafe Absolute Physical Value Test"},
-      unsafe_absolute_physical_value_compositions_test{"Unsafe Absolute Physical Value Compositions Test"},
-      affine_physical_value_test{"Affine Physical Value Test"},
-      convex_physical_value_test{"Convex Physical Value Test"},
-      vector_physical_value_test{"Vector Physical Value Test"},
-      vector_physical_value_compositions_test{"Vector Physical Value Compositions Test"},
-      mixed_physical_value_test{"Mixed Physical Value Test"},
-      integral_physical_value_test{"Integral Physical Value Test"}
+      space_ordering_meta_free_test{},
+      physical_value_meta_free_test{},
+      physical_value_false_negative_test{},
+      physical_value_conversions_free_test{},
+      absolute_physical_value_test{},
+      absolute_physical_value_compositions_test{},
+      unsafe_absolute_physical_value_test{},
+      unsafe_absolute_physical_value_compositions_test{},
+      affine_physical_value_test{},
+      convex_physical_value_test{},
+      vector_physical_value_test{},
+      vector_physical_value_compositions_test{},
+      mixed_physical_value_test{},
+      integral_physical_value_test{}
     );
 
     runner.add_test_suite(
       "Mem Ordered Tuple",
-      mem_ordered_tuple_false_negative_test{"False Negative Test"},
-      mem_ordered_tuple_test{"Unit Test"}
+      mem_ordered_tuple_false_negative_test{},
+      mem_ordered_tuple_test{}
     );
 
     runner.add_test_suite(
       "Saturating Arithmetic",
-      saturating_mul_free_test{"Saturating Mul Free Test"},
-      saturating_add_free_test{"Saturating Add Free Test"}
+      saturating_mul_free_test{},
+      saturating_add_free_test{}
     );
 
     runner.add_test_suite(
       "Vector_nonlinear_representations",
-      vector_nonlinear_representations_free_test{"Vector Nonlinear Representations Free Test"}
+      vector_nonlinear_representations_free_test{}
     );
 
     code = runner.execute(timer_resolution{1ms});

@@ -90,7 +90,7 @@ namespace sequoia::testing
   [[nodiscard]]
   int to_exit_code(return_code code) noexcept;
 
-  individual_materials_paths set_materials(const std::filesystem::path& sourceFile, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths);
+  individual_materials_paths set_materials(const std::filesystem::path& sourceFile, std::string_view testName, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths);
 
   class test_vessel
   {
@@ -237,7 +237,7 @@ namespace sequoia::testing
       void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) final
       {
         m_Test.reset_results();
-        set_materials(m_Test.source_file(), projPaths, materialsPaths);
+        set_materials(m_Test.source_file(), m_Test.name(), projPaths, materialsPaths);
       }
     private:
       log_summary write_versioned_output(const timer& t) const
@@ -307,8 +307,6 @@ namespace sequoia::testing
     void add_test_suite(std::string_view name, Tests&&... tests)
     {
       using namespace object;
-
-      check_for_duplicates(name, tests...);
 
       extract_suite_tree(name, m_Filter, std::forward<Tests>(tests)...);
     }
@@ -384,6 +382,7 @@ namespace sequoia::testing
     std::ostream*    m_Stream;
 
     suite_type m_Suites{};
+    std::set<std::string> m_TestNames{};
     filter_type m_Filter{path_equivalence{proj_paths().tests().repo()}, test_to_path{}};
     prune_info m_PruneInfo{};
 
@@ -464,19 +463,20 @@ namespace sequoia::testing
 
       std::vector<std::filesystem::path> materialsPaths{};
 
-      // TO DO: may need generalizing since suites can have arbitrary depth.
-      const std::string suiteName{testSuite.name()};
-
       extract_tree(std::forward<Suite>(testSuite),
                    std::forward<Filter>(filter),
                    overloaded{
                      [] <class... Ts> (const suite<Ts...>& s) -> suite_node { return {.summary{log_summary{s.name()}}}; },
-                     [this, &suiteName, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
-                       test = T{test.name(),
-                                suiteName,
+                     [this, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
+                       auto name{test_name<T>()};
+
+                       if(!m_TestNames.insert(name).second)
+                         throw std::runtime_error{duplication_message(name, test.source_file())};
+
+                       test = T{name,
                                 test.source_file(),
                                 proj_paths(),
-                                set_materials(test.source_file(), proj_paths(), materialsPaths),
+                                set_materials(test.source_file(), name, proj_paths(), materialsPaths),
                                 make_active_recovery_paths(m_RecoveryMode, proj_paths()),
                                 get_output_discriminator(test),
                                 get_reduction_discriminator(test)};
@@ -495,26 +495,8 @@ namespace sequoia::testing
       extract_suite_tree(std::forward<Filter>(filter), object::suite{std::string{name}, std::forward<Tests>(tests)...});
     }
 
-    template<concrete_test... Tests>
-      requires (sizeof...(Tests) > 0)
-    static void check_for_duplicates(std::string_view name, const Tests&... tests)
-    {
-      using duplicate_set = std::set<std::pair<std::string_view, std::filesystem::path>>;
-
-      duplicate_set namesAndSources{};
-
-      auto check{
-        [&,name](concrete_test auto const& test) {
-          if(!namesAndSources.emplace(test.name(), test.source_file()).second)
-            throw std::runtime_error{duplication_message(name, test.name(), test.source_file())};
-        }
-      };
-
-      (check(tests), ...);
-    }
-
     [[nodiscard]]
-    static std::string duplication_message(std::string_view suiteName, std::string_view testName, const std::filesystem::path& source);
+    static std::string duplication_message(std::string_view testName, const std::filesystem::path& source);
 
     [[nodiscard]]
     static active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);

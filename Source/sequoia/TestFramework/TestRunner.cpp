@@ -341,9 +341,9 @@ namespace sequoia::testing
     return static_cast<int>(code);
   }
 
-  individual_materials_paths set_materials(const std::filesystem::path& sourceFile, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)
+  individual_materials_paths set_materials(const std::filesystem::path& sourceFile, std::string_view testName, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)
   {
-    individual_materials_paths materials{sourceFile, projPaths};
+    individual_materials_paths materials{sourceFile, testName, projPaths};
     if(!fs::exists(materials.original_materials())) return {};
 
     const auto workingCopy{materials.working()};
@@ -1171,16 +1171,14 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string test_runner::duplication_message(std::string_view suiteName, std::string_view testName, const fs::path& source)
+  std::string test_runner::duplication_message(std::string_view testName, const fs::path& source)
   {
     using namespace parsing::commandline;
 
-    return error(std::string{"Suite/Test: \""}
-                  .append(suiteName).append("/").append(testName).append("\"\n")
+    return error(std::string{"Test: \""}.append(testName).append("\"\n")
                   .append("Source file: \"").append(source.generic_string()).append("\"\n")
-                  .append("Please do not include tests in the same suite"
-                    " which both have the same name and are defined"
-                    " in the same source file.\n"));
+                  .append("A test's name is that of its class, and determines where its output is"
+                    " written, so each may be registered only once.\n"));
   }
 
   [[nodiscard]]

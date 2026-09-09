@@ -552,8 +552,8 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> nascent_semantics_test::constructors() const
   {
-    return { {std::string{forename()}.append("_false_negative_").append(surname()).append("{\"False Negative Test\"}")},
-             {std::string{forename()}.append("_").append(surname()).append("{\"Unit Test\"}")}};
+    return { {std::string{forename()}.append("_false_negative_").append(surname()).append("{}")},
+             {std::string{forename()}.append("_").append(surname()).append("{}")}};
   }
 
   void nascent_semantics_test::transform_file(std::string& text) const
@@ -687,7 +687,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> nascent_allocation_test::constructors() const
   {
-    return { {std::string{forename()}.append("_").append(surname()).append("{\"Allocation Test\"}")} };
+    return { {std::string{forename()}.append("_").append(surname()).append("{}")} };
   }
 
   void nascent_allocation_test::transform_file(std::string& text) const
@@ -764,10 +764,7 @@ namespace sequoia::testing
 
     auto make{
       [makeClassName](std::string_view middlename) -> std::string {
-        const auto testClass{makeClassName(middlename)};
-        const auto testName{to_camel_case(testClass, " ")};
-
-        return std::string{testClass}.append("{\"").append(testName).append("\"}");
+        return makeClassName(middlename).append("{}");
       }
     };
 

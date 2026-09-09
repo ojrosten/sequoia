@@ -1,0 +1,8 @@
+Initializing Project(s)....
+
+Creating new project at location:
+/Users/oliver/sequoia/.claude/worktrees/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject
+
+
+Copying across sequoia...
+

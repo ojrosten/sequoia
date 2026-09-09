@@ -1,0 +1,2 @@
+move_only_allocation_false_positive_diagnostics
+False Positive Checks:                    36;  Failures:  0
