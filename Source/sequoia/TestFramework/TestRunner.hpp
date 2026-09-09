@@ -114,7 +114,7 @@ namespace sequoia::testing
     test_vessel& operator=(test_vessel&&) noexcept = default;
 
     [[nodiscard]]
-    const std::string& name() const noexcept
+    std::string_view name() const noexcept
     {
       return m_pTest->name();
     }
@@ -174,7 +174,7 @@ namespace sequoia::testing
     {
       virtual ~soul() = default;
 
-      virtual const std::string& name() const noexcept                    = 0;
+      virtual std::string_view name() const noexcept                      = 0;
       virtual const test_summary_path& summary_file_path() const noexcept = 0;
       virtual std::filesystem::path source_file() const                   = 0;
       virtual std::filesystem::path working_materials() const             = 0;
@@ -199,7 +199,7 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      const std::string& name() const noexcept final
+      std::string_view name() const noexcept final
       {
         return m_Name;
       }
@@ -253,19 +253,18 @@ namespace sequoia::testing
 
       void initialize(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths, recovery_mode mode) final
       {
-        const auto& name{m_Name};
         const auto source{Test::source_file()};
 
-        m_Test = Test{name,
+        m_Test = Test{m_Name,
                       source,
                       projPaths,
-                      set_materials(source, name, projPaths, materialsPaths),
+                      set_materials(source, m_Name, projPaths, materialsPaths),
                       make_active_recovery_paths(mode, projPaths),
                       get_output_discriminator(m_Test),
                       get_reduction_discriminator(m_Test)};
       }
     private:
-      std::string m_Name{test_name<Test>()};
+      static constexpr std::string_view m_Name{test_name<Test>()};
 
       log_summary write_versioned_output(const timer& t) const
       {

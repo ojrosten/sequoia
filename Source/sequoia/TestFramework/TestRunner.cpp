@@ -1225,7 +1225,7 @@ namespace sequoia::testing
 
       vessel.initialize(proj_paths(), materialsPaths, m_RecoveryMode);
 
-      auto name{vessel.name()};
+      std::string name{vessel.name()};
       m_Suites.add_node(parent, suite_node{.summary{log_summary{std::move(name)}}, .optTest{std::move(vessel)}});
     }
   }

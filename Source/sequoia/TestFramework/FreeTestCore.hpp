@@ -55,8 +55,8 @@ namespace sequoia::testing
   public:
     test_base() = default;
 
-    test_base(std::string name, test_mode mode, const normal_path& srcFile, project_paths projPaths, individual_materials_paths materials, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& summaryDiscriminator)
-      : m_Name{std::move(name)}
+    test_base(std::string_view name, test_mode mode, const normal_path& srcFile, project_paths projPaths, individual_materials_paths materials, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& summaryDiscriminator)
+      : m_Name{name}
       , m_ProjectPaths{std::move(projPaths)}
       , m_Materials{std::move(materials)}
       , m_Diagnostics{m_ProjectPaths, m_Name, srcFile, mode, outputDiscriminator}
@@ -67,7 +67,7 @@ namespace sequoia::testing
     test_base& operator=(const test_base&) = delete;
 
     [[nodiscard]]
-    const std::string& name() const noexcept
+    std::string_view name() const noexcept
     {
       return m_Name;
     }
@@ -151,8 +151,8 @@ namespace sequoia::testing
 
     basic_test() = default;
 
-    basic_test(std::string name, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& summaryDiscriminator)
-      : test_base{std::move(name), Mode, srcFile, projPaths, std::move(materials), outputDiscriminator, summaryDiscriminator}
+    basic_test(std::string_view name, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& summaryDiscriminator)
+      : test_base{name, Mode, srcFile, projPaths, std::move(materials), outputDiscriminator, summaryDiscriminator}
       , checker<Mode, Extender>{std::move(files)}
     {}
 

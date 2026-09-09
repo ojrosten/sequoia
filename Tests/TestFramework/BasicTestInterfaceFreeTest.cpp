@@ -74,7 +74,7 @@ namespace sequoia::testing
     const auto rebasedSource{rebase_from(source_file(), get_project_paths().project_root())};
 
     {
-      fake_test t{std::string{test_name<fake_test>()}, source_file(), projPaths, {}, {}, {}, {}};
+      fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, {}, {}};
 
       check(equality,
             reporter{"Summary File Path"},
@@ -88,7 +88,7 @@ namespace sequoia::testing
     }
 
     {
-      fake_test t{std::string{test_name<fake_test>()}, source_file(), projPaths, {}, {}, {""}, {""}};
+      fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, {""}, {""}};
 
       check(equality,
         reporter{"Summary File Path"},
@@ -102,7 +102,7 @@ namespace sequoia::testing
     }
 
     {
-      fake_test_with_discriminated_summary t{std::string{test_name<fake_test_with_discriminated_summary>()}, source_file(), projPaths, {}, {}, {}, {"bar"}};
+      fake_test_with_discriminated_summary t{test_name<fake_test_with_discriminated_summary>(), source_file(), projPaths, {}, {}, {}, {"bar"}};
 
       check(equality,
             reporter{"Summary File Path"},
@@ -116,7 +116,7 @@ namespace sequoia::testing
     }
 
     {
-      fake_test_with_discriminated_exceptions t{std::string{test_name<fake_test_with_discriminated_exceptions>()}, source_file(), projPaths, {}, {}, {"baz"}, {}};
+      fake_test_with_discriminated_exceptions t{test_name<fake_test_with_discriminated_exceptions>(), source_file(), projPaths, {}, {}, {"baz"}, {}};
 
       check(equality,
             reporter{"Summary File Path"},
