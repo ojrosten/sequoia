@@ -1,2 +1,2 @@
 factory_false_negative_test
-False Negative Checks:                     3;  Failures:  0
+False Negative Checks:                     5;  Failures:  0

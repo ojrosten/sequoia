@@ -8,6 +8,7 @@
 #include "FactoryTest.hpp"
 
 #include <complex>
+#include <numeric>
 
 namespace
 {
@@ -101,6 +102,48 @@ namespace sequoia::testing
   }
 
 
+  template<class Factory, std::size_t N, class... Args>
+  void factory_test::check_bulk_creation(std::string_view description,
+                                         const Factory& f,
+                                         const std::array<std::pair<std::string, typename Factory::vessel>, N>& prediction,
+                                         const Args&... args)
+  {
+    // A factory reports in name order; a prediction is written in declaration order. Indices are
+    // sorted rather than the prediction itself, which would require copying products that may be
+    // move-only.
+    std::array<std::size_t, N> byName{};
+    std::iota(byName.begin(), byName.end(), std::size_t{});
+    std::ranges::sort(byName, {}, [&prediction](std::size_t i){ return prediction[i].first; });
+
+    auto checkSelection{
+      [&](std::string_view mess, const std::vector<typename Factory::vessel>& actual, std::span<const std::size_t> expected){
+        if(check(equality, append_lines(description, mess, "Number created"), actual.size(), expected.size()))
+        {
+          for(std::size_t i{}; i < expected.size(); ++i)
+          {
+            check(equality, append_lines(description, mess, prediction[expected[i]].first), actual[i], prediction[expected[i]].second);
+          }
+        }
+      }
+    };
+
+    checkSelection("make_all", f.make_all(args...), byName);
+    checkSelection("make_if, admitting everything", f.make_if([](std::string_view){ return true; }, args...), byName);
+    checkSelection("make_if, admitting nothing", f.make_if([](std::string_view){ return false; }, args...), {});
+
+    const auto first{std::span{byName}.first(1)};
+    checkSelection("make_if, admitting the first name",
+                   f.make_if([&](std::string_view name){ return name == prediction[byName.front()].first; }, args...),
+                   first);
+
+    // Everything ordered before the midpoint, which is a genuine subset for N > 1 and exercises
+    // the claim that the results come back in the factory's order rather than the prediction's.
+    const auto lowerHalf{std::span{byName}.first(N / 2)};
+    checkSelection("make_if, admitting the names before the midpoint",
+                   f.make_if([&](std::string_view name){ return name < prediction[byName[N / 2]].first; }, args...),
+                   lowerHalf);
+  }
+
   void factory_test::run_tests()
   {
     {
@@ -116,6 +159,8 @@ namespace sequoia::testing
       check(equivalence, "", g, prediction_type{{{"bar", 0}, {"foo", 0.0}}});
 
       check_semantics("", f, g);
+
+      check_bulk_creation("Fundamental products", f, prediction_type{{{"int", 0}, {"double", 0.0}}});
 
       check_exception_thrown<std::runtime_error>("", [&f](){ return f.make("plurgh"); });
 
@@ -140,6 +185,10 @@ namespace sequoia::testing
                         prediction_type{{{"baz", std::vector<int>{}}, {"foo", 0}, {"bar", std::complex<float>{}}, {"huh", 0.0}}});
 
       check_semantics("", f, g);
+
+      check_bulk_creation("Four products",
+                          f,
+                          prediction_type{{{"vec", std::vector<int>{}}, {"int", 0}, {"complex", std::complex<float>{}}, {"double", 0.0}}});
     }
 
     {
@@ -152,6 +201,11 @@ namespace sequoia::testing
       check(check_type{2}, "", g, prediction_type{{{"make_x", regular_type{2}}, {"make_y", move_only_type{2}}}});
 
       check_semantics("", f, g);
+
+      check_bulk_creation("Products taking an argument, one of them move-only",
+                          f,
+                          prediction_type{{{"x", regular_type{1}}, {"y", move_only_type{1}}}},
+                          1);
     }
 
     {
@@ -164,6 +218,8 @@ namespace sequoia::testing
       check(check_type{42}, "", g, prediction_type{ {{"int", foo<int>{42}}, {"double", foo<double>{42}}} });
 
       check_semantics("", f, g);
+
+      check_bulk_creation("Products named by nomenclator", f, prediction_type{ {{"foo-int", foo<int>{}}, {"foo-double", foo<double>{}}} });
     }
   }
 }

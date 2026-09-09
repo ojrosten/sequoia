@@ -19,6 +19,7 @@
 
 #include <variant>
 #include <array>
+#include <vector>
 #include <tuple>
 #include <stdexcept>
 #include <algorithm>
@@ -114,7 +115,7 @@ namespace sequoia::object
       if(found == m_Creators.end())
         throw std::runtime_error{std::string{"Factory unable to make product of name '"}.append(name).append("'")};
 
-      return std::visit(overloaded{[&](const auto& v) { return vessel{v.make(std::forward<Args>(args)...)}; }}, found->second);
+      return make_from(found->second, std::forward<Args>(args)...);
     }
 
     template<class Product, class... Args>
@@ -129,7 +130,42 @@ namespace sequoia::object
         found = std::ranges::find_if(m_Creators, [](const element& e){ return std::holds_alternative<product_creator<Product>>(e.second); });
       }
 
-      return std::visit(overloaded{[&](const auto& v) { return vessel{v.make(std::forward<Args>(args)...)}; }}, found->second);
+      return make_from(found->second, std::forward<Args>(args)...);
+    }
+
+    /** \brief Every product whose name satisfies the predicate, in name order.
+
+        The order is the factory's own, which is sorted, so a caller which writes the results
+        somewhere reproducible gets the same sequence from one run to the next.
+
+        The arguments are passed to each product in turn rather than forwarded, since there are
+        several of them to make: what can be used once cannot necessarily be used *n* times.
+     */
+
+    template<class Predicate, class... Args>
+      requires std::predicate<Predicate, std::string_view> && (initializable_from<Products, const Args&...> && ...)
+    [[nodiscard]]
+    std::vector<vessel> make_if(Predicate pred, const Args&... args) const
+    {
+      std::vector<vessel> products{};
+      products.reserve(size());
+
+      for(const auto& [name, creator] : m_Creators)
+      {
+        if(pred(std::string_view{name})) products.push_back(make_from(creator, args...));
+      }
+
+      return products;
+    }
+
+    /** \brief Every product, in name order. */
+
+    template<class... Args>
+      requires (initializable_from<Products, const Args&...> && ...)
+    [[nodiscard]]
+    std::vector<vessel> make_all(const Args&... args) const
+    {
+      return make_if([](std::string_view){ return true; }, args...);
     }
 
     [[nodiscard]]
@@ -148,6 +184,13 @@ namespace sequoia::object
     }
   private:
     storage m_Creators{};
+
+    template<class... Args>
+    [[nodiscard]]
+    static vessel make_from(const creator_variant& creator, Args&&... args)
+    {
+      return std::visit(overloaded{[&](const auto& v) { return vessel{v.make(std::forward<Args>(args)...)}; }}, creator);
+    }
 
     [[nodiscard]]
     auto find(std::string_view name) const

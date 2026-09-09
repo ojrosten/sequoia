@@ -55,3 +55,49 @@ Checking for equivalence with:
 
 =======================================
 
+Tests/Core/Object/FactoryTestingDiagnostics.cpp, Line 46
+make_all
+
+[std::vector<std::variant<int, double>, std::allocator<std::variant<int, double> > >]
+operator== returned false
+
+  Element 0 of range incorrect
+  [std::variant<int, double>]
+  operator== returned false
+
+    Variant Contents
+    [double]
+    operator== returned false
+    Obtained : 0
+    Predicted: 5
+
+  Element 1 of range incorrect
+  [std::variant<int, double>]
+  operator== returned false
+
+    Variant Contents
+    [int]
+    operator== returned false
+    Obtained : 0
+    Predicted: 5
+
+=======================================
+
+Tests/Core/Object/FactoryTestingDiagnostics.cpp, Line 49
+make_if
+
+[std::vector<std::variant<int, double>, std::allocator<std::variant<int, double> > >]
+operator== returned false
+
+  Element 0 of range incorrect
+  [std::variant<int, double>]
+  operator== returned false
+
+    Variant Index
+    [unsigned long long]
+    operator== returned false
+    Obtained : 0
+    Predicted: 1
+
+=======================================
+
