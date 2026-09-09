@@ -92,6 +92,9 @@ namespace sequoia::testing
 
   individual_materials_paths set_materials(const std::filesystem::path& sourceFile, std::string_view testName, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths);
 
+  [[nodiscard]]
+  active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
+
   class test_vessel
   {
   public:
@@ -156,6 +159,13 @@ namespace sequoia::testing
     {
       m_pTest->reset(projPaths, materialsPaths);
     }
+
+    /** \brief Replaces the held test with one which knows where its files are. */
+
+    void initialize(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths, recovery_mode mode)
+    {
+      m_pTest->initialize(projPaths, materialsPaths, mode);
+    }
   private:
     static void versioned_write(const std::filesystem::path& file, const failure_output& output);
     static void versioned_write(const std::filesystem::path& file, std::string_view text);
@@ -172,6 +182,7 @@ namespace sequoia::testing
 
       virtual log_summary execute(std::optional<std::size_t> index) = 0;
       virtual void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) = 0;
+      virtual void initialize(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths, recovery_mode mode) = 0;
     };
 
     template<concrete_test Test>
@@ -238,6 +249,20 @@ namespace sequoia::testing
       {
         m_Test.reset_results();
         set_materials(m_Test.source_file(), m_Test.name(), projPaths, materialsPaths);
+      }
+
+      void initialize(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths, recovery_mode mode) final
+      {
+        auto name{test_name<Test>()};
+        const auto source{m_Test.source_file()};
+
+        m_Test = Test{name,
+                      source,
+                      projPaths,
+                      set_materials(source, name, projPaths, materialsPaths),
+                      make_active_recovery_paths(mode, projPaths),
+                      get_output_discriminator(m_Test),
+                      get_reduction_discriminator(m_Test)};
       }
     private:
       log_summary write_versioned_output(const timer& t) const
@@ -497,8 +522,5 @@ namespace sequoia::testing
 
     [[nodiscard]]
     static std::string duplication_message(std::string_view testName, const std::filesystem::path& source);
-
-    [[nodiscard]]
-    static active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
  };
 }
