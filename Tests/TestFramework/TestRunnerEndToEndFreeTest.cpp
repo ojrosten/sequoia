@@ -144,11 +144,11 @@ namespace sequoia::testing
       {"select ../../../Tests/HouseAllocationTest.cpp select Maybe/MaybeTest.cpp select FooTest.cpp",          "SpecifiedSourceOutput.txt"          },
       {"select FooTest.cpp prune",                                                                            "SelectedSourcePruneConflictOutput.txt"},
       {"select Plurgh.cpp test Absent select Foo test FooTest.cpp",                                            "FailedSpecifiedSourceOutput.txt"    },
-      {"test Foo",                                                                                            "SpecifiedSuiteOutput.txt"           },
-      {"test Foo prune",                                                                                      "SpecifiedSuitePruneConflictOutput.txt"},
+      {"test Stuff",                                                                                            "SpecifiedSuiteOutput.txt"           },
+      {"test Stuff prune",                                                                                      "SpecifiedSuitePruneConflictOutput.txt"},
       {"prune --cutoff namespace",                                                                             "FullyPrunedOutput.txt"             },
       {"-v",                                                                                                  "VerboseOutput.txt"                  },
-      {"-v select FooTest.cpp test Foo",                                                                       "SelectFromTestedSuiteOutput.txt"   },
+      {"-v select FooTest.cpp test Stuff",                                                                       "SelectFromTestedSuiteOutput.txt"   },
       {"--help",                                                                                              "HelpOutput.txt"                     }
     }};
 
@@ -365,7 +365,7 @@ namespace sequoia::testing
 
     //=================== Rerun with async, selecting one suite ===================//
 
-    run_and_check(report("Run asynchronously with 1 suite"), b, "RunAsyncOneTestOneSuite", "test Probability", return_code::success);
+    run_and_check(report("Run asynchronously with 1 suite"), b, "RunAsyncOneTestOneSuite", "test Maths", return_code::success);
 
     //=================== Rerun, seeking instabilities in sandbox mode ===================//
 
@@ -535,7 +535,7 @@ namespace sequoia::testing
 
     await_tick_past_previous_run();
     copy_aux_materials("ModifiedTests/Maths/ProbabilityTest.cpp", "Tests/Maths");
-    rebuild_run_and_check(report("Rebuild, run and 'test' after fixing a test"), b, "RunSuiteWithFixedTest", "CMakeOutput6.txt", "BuildOutput6.txt", "test Probability", return_code::success);
+    rebuild_run_and_check(report("Rebuild, run and 'test' after fixing a test"), b, "RunSuiteWithFixedTest", "CMakeOutput6.txt", "BuildOutput6.txt", "test Maths", return_code::success);
 
     check(equivalence, "Fixed Test Output", working_materials() /= "RunSelectedFixedTest", predictive_materials() /= "RunSelectedFixedTest");
 

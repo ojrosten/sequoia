@@ -1073,12 +1073,12 @@ namespace sequoia::testing
   [[nodiscard]]
   bool test_runner::nothing_to_do()
   {
-    if(!m_Suites.order())
+    if(!m_Factory.size())
     {
       stream() << "Nothing to do: try creating some tests!\nRun with --help to see options\n";
       return true;
     }
-    else if(m_Suites.order() == 1)
+    else if(m_Suites.order() <= 1)
     {
       if(m_PruneInfo.mode == prune_mode::active)
         stream() << "Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests\n";
