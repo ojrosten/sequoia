@@ -119,9 +119,9 @@ namespace sequoia::testing
       [&](std::string_view mess, const std::vector<typename Factory::vessel>& actual, std::span<const std::size_t> expected){
         if(check(equality, append_lines(description, mess, "Number created"), actual.size(), expected.size()))
         {
-          for(std::size_t i{}; i < expected.size(); ++i)
+          for(auto [product, index] : std::views::zip(actual, expected))
           {
-            check(equality, append_lines(description, mess, prediction[expected[i]].first), actual[i], prediction[expected[i]].second);
+            check(equality, append_lines(description, mess, prediction[index].first), product, prediction[index].second);
           }
         }
       }

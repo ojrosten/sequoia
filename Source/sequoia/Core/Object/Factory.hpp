@@ -20,6 +20,7 @@
 #include <variant>
 #include <array>
 #include <map>
+#include <ranges>
 #include <vector>
 #include <tuple>
 #include <stdexcept>
@@ -134,13 +135,13 @@ namespace sequoia::object
       return make_from(found->second, std::forward<Args>(args)...);
     }
 
-    /** \brief Every product whose name satisfies the predicate, in name order.
+    /** \brief Every product whose name satisfies the predicate.
 
-        The order is the factory's own, which is sorted, so a caller which writes the results
-        somewhere reproducible gets the same sequence from one run to the next.
+        The order is stable from one run to the next, so a caller which writes the results somewhere
+        reproducible gets the same sequence each time.
 
-        The arguments are passed to each product in turn rather than forwarded, since there are
-        several of them to make: what can be used once cannot necessarily be used *n* times.
+        Each product is initialized from the same arguments, which must therefore tolerate being
+        used more than once.
      */
 
     template<class Predicate, class... Args>
@@ -148,18 +149,13 @@ namespace sequoia::object
     [[nodiscard]]
     std::vector<vessel> make_if(Predicate pred, const Args&... args) const
     {
-      std::vector<vessel> products{};
-      products.reserve(size());
-
-      for(const auto& [name, creator] : m_Creators)
-      {
-        if(pred(std::string_view{name})) products.push_back(make_from(creator, args...));
-      }
-
-      return products;
+      return   m_Creators
+             | std::views::filter([&pred](const element& e){ return pred(std::string_view{e.first}); })
+             | std::views::transform([&](const element& e){ return make_from(e.second, args...); })
+             | std::ranges::to<std::vector>();
     }
 
-    /** \brief Every product, in name order. */
+    /** \brief Every product, in the same stable order as `make_if`. */
 
     template<class... Args>
       requires (initializable_from<Products, const Args&...> && ...)
@@ -278,25 +274,24 @@ namespace sequoia::object
       return found->second(args...);
     }
 
-    /** \brief Every product whose name satisfies the predicate, in name order. */
+    /** \brief Every product whose name satisfies the predicate.
+
+        As for the sibling above: the order is stable from one run to the next, and each product is
+        initialized from the same arguments, which must therefore tolerate being used more than once.
+     */
 
     template<class Predicate>
       requires std::predicate<Predicate, std::string_view>
     [[nodiscard]]
     std::vector<Vessel> make_if(Predicate pred, const Args&... args) const
     {
-      std::vector<Vessel> products{};
-      products.reserve(size());
-
-      for(const auto& [name, make_product] : m_Creators)
-      {
-        if(pred(std::string_view{name})) products.push_back(make_product(args...));
-      }
-
-      return products;
+      return   m_Creators
+             | std::views::filter([&pred](const auto& e){ return pred(std::string_view{e.first}); })
+             | std::views::transform([&](const auto& e){ return e.second(args...); })
+             | std::ranges::to<std::vector>();
     }
 
-    /** \brief Every product, in name order. */
+    /** \brief Every product, in the same stable order as `make_if`. */
 
     [[nodiscard]]
     std::vector<Vessel> make_all(const Args&... args) const
