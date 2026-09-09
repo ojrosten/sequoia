@@ -27,6 +27,8 @@ namespace sequoia::testing
 
     void test_display_character();
 
+    void test_elaborated_type_specifier();
+
     void test_tidy_name();
 
     void test_relative_reporting_path();

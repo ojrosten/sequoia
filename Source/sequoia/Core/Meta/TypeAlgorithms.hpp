@@ -45,33 +45,7 @@ namespace sequoia::meta
         return name<trial_type>().length() - prefix_length() - trial_type_name.length();
       }
     }
-
-    /// MSVC names a class type with an elaborated-type-specifier, where clang and gcc give the
-    /// bare name; the trial type, void, takes no such keyword and so cannot reveal this.
-    [[nodiscard]]
-    constexpr std::string_view without_elaborated_type_specifier(std::string_view name) noexcept
-    {
-      for(auto keyword : {std::string_view{"class "}, std::string_view{"struct "}, std::string_view{"enum "}})
-        if(name.starts_with(keyword)) return name.substr(keyword.size());
-
-      return name;
-    }
   }
-
-  /*! \brief The name of a type, spelt identically by clang, gcc and MSVC for non-templated
-             class, struct and enum types.
-
-      Two limits are worth knowing, since neither is repaired here.
-
-      Fundamental types are *not* normalized: gcc spells `unsigned long` as `long unsigned int`,
-      where clang and MSVC agree on `unsigned long`. Therefore this is not a general-purpose
-      name-for-output function; `testing::tidy_name` is that.
-
-      For a class template specialization only the leading elaborated-type-specifier is peeled,
-      so MSVC retains the inner ones: `foo<class bar>` against clang and gcc's `foo<bar>`. Since
-      such a name also carries characters no file system welcomes, deriving a path from one is
-      guarded at the point of use rather than here, where sorting templated types is legitimate.
-   */
 
   template<class T>
   [[nodiscard]]
@@ -81,7 +55,7 @@ namespace sequoia::meta
     constexpr auto wrappedName{name<T>()};
     constexpr auto prefixLength{prefix_length()};
     constexpr auto nameLength{wrappedName.length() - prefixLength - suffix_length()};
-    return impl::without_elaborated_type_specifier(wrappedName.substr(prefixLength, nameLength));
+    return wrappedName.substr(prefixLength, nameLength);
   }
 
   template<class T, class U>

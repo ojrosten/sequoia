@@ -35,7 +35,7 @@ namespace sequoia::testing
       throw std::logic_error{"Unrecognized case for test_mode"};
     }
 
-    /*! \brief The directory a test's versioned output belongs in: the mirror of its source
+    /** \brief The directory a test's versioned output belongs in: the mirror of its source
                file's directory, beneath the relevant output root.
 
         The source file names the directory but not the leaf, because a source file may hold more

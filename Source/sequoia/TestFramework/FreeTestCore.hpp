@@ -21,6 +21,7 @@
 #include "sequoia/TestFramework/ProductTypeCheckers.hpp"
 #include "sequoia/TestFramework/StringCheckers.hpp"
 #include "sequoia/TestFramework/IndividualTestPaths.hpp"
+#include "sequoia/TestFramework/Output.hpp"
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Meta/TypeAlgorithms.hpp"
@@ -199,7 +200,7 @@ namespace sequoia::testing
         }
     && std::derived_from<T, test_base> && std::movable<T> && std::destructible<T>;
 
-  /*! \brief The name of a test, synthesized from its class rather than supplied by hand.
+  /** \brief The name of a test, synthesized from its class rather than supplied by hand.
 
       A class name is unique within its namespace by fiat of the language, which is what makes this
       a sounder key than a hand-written string: two tests cannot silently come to share one, and
@@ -210,20 +211,31 @@ namespace sequoia::testing
       welcomes, and MSVC spells the inner ones differently from clang and gcc, so a path built from
       one would fork the versioned output per compiler. Relaxing this means deciding on a spelling,
       and this assertion is the single place that would have to change.
+
+      The space assertion is the one that earns its keep on Windows. It guards the *unqualified*
+      name, which is what becomes the file name, and it is instantiated for every registered test;
+      being a `static_assert`, a column which merely *builds* on MSVC therefore proves the peel did
+      its work across the whole suite. It has to come after the qualification is stripped, because
+      clang spells an anonymous namespace `(anonymous namespace)` - a space the file name never
+      sees.
    */
 
   template<std::derived_from<test_base> T>
   [[nodiscard]]
   std::string test_name()
   {
-    constexpr std::string_view qualified{meta::type_name<T>()};
+    constexpr std::string_view qualified{without_elaborated_type_specifier(meta::type_name<T>())};
 
     static_assert(qualified.find('<') == std::string_view::npos,
                   "A test must not be a class template: its name is used to build a file path");
 
     constexpr auto pos{qualified.rfind("::")};
+    constexpr std::string_view unqualified{pos == std::string_view::npos ? qualified : qualified.substr(pos + 2)};
 
-    return std::string{pos == std::string_view::npos ? qualified : qualified.substr(pos + 2)};
+    static_assert(unqualified.find(' ') == std::string_view::npos,
+                  "A test's name must be free of spaces to serve as a file name");
+
+    return std::string{unqualified};
   }
 
   template<concrete_test T>

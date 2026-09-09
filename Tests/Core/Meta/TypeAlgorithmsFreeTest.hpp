@@ -23,8 +23,6 @@ namespace sequoia::testing
 
     void run_tests();
 
-    void test_type_name();
-
     void test_type_comparator();
 
     template<template<class...> class TT>
