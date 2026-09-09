@@ -64,6 +64,11 @@ jobs:
       - name: Install the toolchain (Linux)
         if: runner.os == 'Linux'
         run: |
+          # The hosted image ships vendor repositories - Chrome and Microsoft - which
+          # nothing here installs from. A bad index served by one of them fails the
+          # update, and with it the job.
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
+                     /etc/apt/sources.list.d/microsoft-prod.list
           sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
           sudo apt-get update -qq
           for pkg in "${{ matrix.cxx }}" ninja-build libtbb-dev; do
