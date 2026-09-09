@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "ConcurrencyModelsPerformanceTest.hpp"
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 
@@ -127,6 +125,18 @@ namespace sequoia::testing
     test_waiting_task_return(std::chrono::milliseconds{15});
   }
 
+  /* The lower bounds sit further below the ideal speed-up than a symmetric tolerance would put
+     them, because a pool of N on a machine with N hardware threads has no headroom: the pool's
+     threads and the thread waiting on them are N+1 runnable entities on N cores, and
+     instrumentation costs the rest. A tighter bound does not distinguish a pool which failed to
+     parallelise from a machine with nothing spare, which is the distinction these checks exist
+     to make.
+
+     The upper bounds are not slack: exceeding the ideal would mean the serial baseline was wrong.
+
+     This is a holding position. Bounds which have to be widened whenever the hardware changes are
+     measuring the machine as much as the code; see roadmap items 38 and 102.
+  */
   void threading_models_performance_test::test_waiting_task(const std::chrono::milliseconds millisecs)
   {
     {
@@ -138,9 +148,9 @@ namespace sequoia::testing
 
       auto asyncFn{[millisecs]() { waiting_task<wait, asynchronous<void>>{2u, wait{millisecs}}(); }};
 
-      check_relative_performance("Two Waiting tasks; pool_2/null", threadPoolFn, nullThreadFn, 1.9, 2.1);
-      check_relative_performance("Two Waiting tasks; pool_2M/null", threadPoolMonoFn, nullThreadFn, 1.9, 2.1);
-      check_relative_performance("Two Waiting tasks; async/null", asyncFn, nullThreadFn, 1.9, 2.1);
+      check_relative_performance("Two Waiting tasks; pool_2/null", threadPoolFn, nullThreadFn, 1.8, 2.1);
+      check_relative_performance("Two Waiting tasks; pool_2M/null", threadPoolMonoFn, nullThreadFn, 1.8, 2.1);
+      check_relative_performance("Two Waiting tasks; async/null", asyncFn, nullThreadFn, 1.8, 2.1);
     }
 
     {
@@ -150,8 +160,8 @@ namespace sequoia::testing
 
       auto nullThreadFn{[millisecs]() { waiting_task<wait, serial<void>>{4u, wait{millisecs}}(); }};
 
-      check_relative_performance("Four Waiting tasks; pool_2/null", threadPoolFn, nullThreadFn, 1.9, 2.1);
-      check_relative_performance("Four Waiting tasks; pool_2M/null", threadPoolMonoFn, nullThreadFn, 1.9, 2.1);
+      check_relative_performance("Four Waiting tasks; pool_2/null", threadPoolFn, nullThreadFn, 1.8, 2.1);
+      check_relative_performance("Four Waiting tasks; pool_2M/null", threadPoolMonoFn, nullThreadFn, 1.8, 2.1);
     }
 
     {
@@ -161,8 +171,8 @@ namespace sequoia::testing
 
       auto nullThreadFn{[millisecs]() { waiting_task<wait, serial<void>>{4u, wait{millisecs}}(); }};
 
-      check_relative_performance("Four Waiting tasks; pool_4/null", threadPoolFn, nullThreadFn, 3.7, 4.1);
-      check_relative_performance("Four Waiting tasks; pool_4M/null", threadPoolMonoFn, nullThreadFn, 3.7, 4.1);
+      check_relative_performance("Four Waiting tasks; pool_4/null", threadPoolFn, nullThreadFn, 3.5, 4.1);
+      check_relative_performance("Four Waiting tasks; pool_4M/null", threadPoolMonoFn, nullThreadFn, 3.5, 4.1);
     }
   }
 
@@ -180,9 +190,9 @@ namespace sequoia::testing
 
       auto asyncFn{[waitReturnVal]() { return waiting_task<wait_return, asynchronous<int>>{2u, waitReturnVal}(); }};
 
-      check_relative_performance("Two Waiting tasks; pool_2/null", threadPoolFn, nullThreadFn, 1.9, 2.1);
-      check_relative_performance("Two Waiting tasks; pool_2M/null", threadPoolMonoFn, nullThreadFn, 1.9, 2.1);
-      check_relative_performance("Two Waiting tasks; async/null", asyncFn, nullThreadFn, 1.9, 2.1);
+      check_relative_performance("Two Waiting tasks; pool_2/null", threadPoolFn, nullThreadFn, 1.8, 2.1);
+      check_relative_performance("Two Waiting tasks; pool_2M/null", threadPoolMonoFn, nullThreadFn, 1.8, 2.1);
+      check_relative_performance("Two Waiting tasks; async/null", asyncFn, nullThreadFn, 1.8, 2.1);
     }
   }
 }

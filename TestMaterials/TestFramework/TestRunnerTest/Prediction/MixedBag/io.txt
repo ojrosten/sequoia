@@ -5,7 +5,7 @@ Suite:
 [Execution Time: 644us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 268
 	Always fails
 
 	[bool]
@@ -32,7 +32,7 @@ Suite:
 [Execution Time: 343us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 268
 	Always fails
 
 	[bool]
@@ -42,7 +42,7 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 190
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 188
 	Flipper
 
 	[bool]
@@ -52,7 +52,7 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 233
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 231
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -79,7 +79,7 @@ Suite:
 [Execution Time: 285us]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 268
 	Always fails
 
 	[bool]
@@ -89,7 +89,7 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 234
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 232
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -116,7 +116,7 @@ Suite:
 [Execution Time: 326us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 268
 	Always fails
 
 	[bool]
@@ -126,7 +126,7 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 190
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 188
 	Flipper
 
 	[bool]
@@ -136,7 +136,7 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 233
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 231
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -163,7 +163,7 @@ Suite:
 [Execution Time: 240us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 268
 	Always fails
 
 	[bool]
@@ -190,7 +190,7 @@ Suite:
 [Execution Time: 302us]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 270
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 268
 	Always fails
 
 	[bool]
@@ -200,7 +200,7 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 190
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 188
 	Flipper
 
 	[bool]
@@ -210,7 +210,7 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 233
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 231
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -220,7 +220,7 @@ Suite:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 234
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 232
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -249,7 +249,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 190
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 188
 	Flipper
 
 	[bool]
@@ -269,7 +269,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 233
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 231
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -281,7 +281,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 233
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 231
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -291,7 +291,7 @@ vs.
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 234
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 232
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -303,7 +303,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 234
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 232
 	Period 3: Pass/Pass/Fail
 
 	[bool]

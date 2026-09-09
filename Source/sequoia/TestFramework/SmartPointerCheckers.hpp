@@ -23,7 +23,7 @@ namespace sequoia::testing
   /** \brief Helper for testing smart pointers
   
       The general pattern for smart pointers is that `test(equality, ...)` checks for equality
-      of the underlying pointers, whereas `test(equivalence, ...) checks the pointees, using
+      of the underlying pointers, whereas `test(equivalence, ...)` checks the pointees, using
       the strongest available check.
    */
 

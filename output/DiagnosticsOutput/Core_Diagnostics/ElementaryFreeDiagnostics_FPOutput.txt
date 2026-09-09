@@ -1,5 +1,5 @@
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 349
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 347
 Boolean test
 
 [bool]
@@ -7,7 +7,15 @@ Boolean test
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 350
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 348
+Comparing booleans
+
+[bool]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 349
 Comparing booleans
 
 [bool]
@@ -16,14 +24,6 @@ Comparing booleans
 
 False Negative Failure:
 Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 351
-Comparing booleans
-
-[bool]
-
-=======================================
-
-False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 353
 Integer test
 
 [int]
@@ -31,7 +31,7 @@ Integer test
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 354
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 352
 Simple integer test
 
 [int]
@@ -39,7 +39,7 @@ Simple integer test
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 355
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 353
 Double test
 
 [double]
@@ -47,7 +47,7 @@ Double test
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 361
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 359
 Equality of null pointer with itself
 
 [int*]
@@ -55,7 +55,7 @@ Equality of null pointer with itself
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 362
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 360
 Equality of non-null pointer with itself
 
 [int*]
@@ -63,7 +63,7 @@ Equality of non-null pointer with itself
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 363
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 361
 Different pointers pointing to the same values
 
 Comparison performed using:
@@ -74,7 +74,7 @@ Checking for equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 368
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 366
 Built-in arrays of the same length
 
 [int [1]]
@@ -82,7 +82,7 @@ Built-in arrays of the same length
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 424
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 422
 Equality checking
 
 [sequoia::testing::perfectly_normal_type]
@@ -90,7 +90,7 @@ Equality checking
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 429
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 427
 Simple Equality Checking
 
 [sequoia::testing::perfectly_serializable_type]
@@ -98,7 +98,7 @@ Simple Equality Checking
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 430
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 428
 Simple Equality Checking
 
 [sequoia::testing::perfectly_nonserializable_type]
@@ -106,7 +106,7 @@ Simple Equality Checking
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 374
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 372
 Equivalence checking
 
 Comparison performed using:
@@ -117,7 +117,7 @@ Checking for equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 375
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 373
 Eequivalence checking with advice
 
 Comparison performed using:
@@ -128,7 +128,7 @@ Checking for equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 381
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 379
 Weak equivalence checking
 
 Comparison performed using:
@@ -139,7 +139,7 @@ Checking for weak equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 386
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 384
 Weak equivalence checking with advice
 
 Comparison performed using:
@@ -150,7 +150,7 @@ Checking for weak equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 394
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 392
 Best available for int
 
 [int]
@@ -158,7 +158,7 @@ Best available for int
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 397
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 395
 Best available for only_equivalence_checkable
 
 Comparison performed using:
@@ -169,7 +169,7 @@ Checking for equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 402
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 400
 Best available for only_equivalence_checkable compared with an int
 
 Comparison performed using:
@@ -180,7 +180,7 @@ Checking for equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 407
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 405
 Best available for only_weakly_checkable
 
 Comparison performed using:
@@ -191,7 +191,7 @@ Checking for weak equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 412
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 410
 Best available for only_weakly_checkable
 
 Comparison performed using:
@@ -202,7 +202,7 @@ Checking for weak equivalence with:
 =======================================
 
 False Negative Failure:
-Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 417
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 415
 Best available for perfectly_serializable_type
 
 [sequoia::testing::perfectly_serializable_type]

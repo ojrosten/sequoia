@@ -1,4 +1,4 @@
-Tests/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp, Line 44
+Tests/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp, Line 42
 
 Comparison performed using:
 [sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::testing::my_vec_space<sequoia::maths::sets::R<1>, sequoia::maths::commutative_rings::reals<1>, 1>, sequoia::maths::canonical_basis_data<1>, sequoia::maths::canonical_representation<float, sequoia::maths::coordinate_bounds<float>{-inff, inff}>, sequoia::maths::identity_validator> >]
@@ -57,7 +57,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp, Line 45
+Tests/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp, Line 43
 
 [sequoia::maths::coordinates<sequoia::testing::my_vec_space<sequoia::maths::sets::R<1>, sequoia::maths::commutative_rings::reals<1>, 1>, sequoia::maths::canonical_basis_data<1>, sequoia::maths::canonical_representation<float, sequoia::maths::coordinate_bounds<float>{-inff, inff}>, sequoia::maths::identity_validator>]
 operator== returned false
@@ -90,7 +90,7 @@ operator== returned false
 
 =======================================
 
-Tests/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp, Line 44
+Tests/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp, Line 42
 
 Comparison performed using:
 [sequoia::testing::value_tester<sequoia::maths::coordinates<sequoia::maths::euclidean_vector_space<1, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_basis_data<1>, sequoia::maths::canonical_representation<float, sequoia::maths::coordinate_bounds<float>{-inff, inff}>, sequoia::maths::identity_validator> >]
@@ -149,7 +149,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp, Line 45
+Tests/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp, Line 43
 
 [sequoia::maths::coordinates<sequoia::maths::euclidean_vector_space<1, sequoia::maths::mathematical_arena>, sequoia::maths::canonical_basis_data<1>, sequoia::maths::canonical_representation<float, sequoia::maths::coordinate_bounds<float>{-inff, inff}>, sequoia::maths::identity_validator>]
 operator== returned false

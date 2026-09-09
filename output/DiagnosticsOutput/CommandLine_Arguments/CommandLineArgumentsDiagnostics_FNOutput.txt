@@ -1,4 +1,4 @@
-Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 33
+Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 31
 Final argument missing
 
 Expected Exception Type:
@@ -8,7 +8,7 @@ Unexpected exception thrown (caught by std::exception&):
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 42
+Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 40
 Unexpected argument
 
 Expected Exception Type:
@@ -18,7 +18,7 @@ Unexpected exception thrown (caught by std::exception&):
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 50
+Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 48
 No bound function object
 
 Expected Exception Type:
@@ -28,7 +28,7 @@ Unexpected exception thrown (caught by std::exception&):
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 58
+Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 56
 Unexpected argument
 
 Expected Exception Type:
@@ -38,7 +38,7 @@ Unexpected exception thrown (caught by std::exception&):
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 64
+Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 62
 Mismatched zeroth argument
 
 Comparison performed using:
@@ -64,7 +64,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 70
+Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 68
 Early function object not generated
 
 Comparison performed using:
@@ -98,7 +98,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 72
+Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 70
 Late function object not generated
 
 Comparison performed using:
@@ -132,7 +132,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 74
+Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 72
 Unexpected early function object
 
 Comparison performed using:
@@ -176,7 +176,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 76
+Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 74
 Unexpected late function object
 
 Comparison performed using:
@@ -220,7 +220,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 78
+Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 76
 Mixed-up function objects
 
 Comparison performed using:
@@ -276,7 +276,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 84
+Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 82
 Help not generated
 
 Comparison performed using:

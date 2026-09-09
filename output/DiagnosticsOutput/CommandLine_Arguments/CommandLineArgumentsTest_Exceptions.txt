@@ -1,4 +1,4 @@
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 44
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 42
 Empty name
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Empty string detected
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 45
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 43
 Empty alias
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Empty string detected
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 46
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 44
 Empty parameter
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Empty string detected
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 80
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 78
 Typo in argument
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 84
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 82
 Alias mismatch
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 88
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 86
 Missing alias
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 92
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 90
 Extra space in argument
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 117
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 115
 Concatenated alias with only partial match
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 142
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 140
 Final argument missing
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 332
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 330
 Two options, one with nesting, illegal argument
 
 Expected Exception Type:

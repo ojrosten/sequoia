@@ -1,4 +1,4 @@
-Tests/FileSystem/NormalPathTestingDiagnostics.cpp, Line 25
+Tests/FileSystem/NormalPathTestingDiagnostics.cpp, Line 23
 
 Comparison performed using:
 [sequoia::testing::value_tester<sequoia::normal_path>]
@@ -19,7 +19,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/FileSystem/NormalPathTestingDiagnostics.cpp, Line 26
+Tests/FileSystem/NormalPathTestingDiagnostics.cpp, Line 24
 Useful Description
 
 [sequoia::normal_path]

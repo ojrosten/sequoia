@@ -1,4 +1,4 @@
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 81
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 79
 Empty vector check which should fail
 
 [std::vector<double, std::allocator<double> >]
@@ -12,7 +12,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 82
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 80
 One element vector check which should fail due to wrong value
 
 [std::vector<double, std::allocator<double> >]
@@ -26,7 +26,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 84
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 82
 Advice for one element vector check which should fail due to wrong value
 
 [std::vector<double, std::allocator<double> >]
@@ -41,7 +41,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 88
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 86
 One element vector check which should fail due to differing sizes
 
 [std::vector<double, std::allocator<double> >]
@@ -55,7 +55,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 89
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 87
 Multi-element vector comparison which should fail due to last element
 
 [std::vector<double, std::allocator<double> >]
@@ -69,7 +69,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 90
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 88
 Multi-element vector comparison which should fail due to first element
 
 [std::vector<double, std::allocator<double> >]
@@ -83,7 +83,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 91
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 89
 Multi-element vector comparison which should fail due to middle element
 
 [std::vector<double, std::allocator<double> >]
@@ -97,7 +97,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 92
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 90
 Multi-element vector comparison which should fail due to different sizes
 
 [std::vector<double, std::allocator<double> >]
@@ -111,7 +111,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 96
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 94
 Iterators demarcate differing numbers of elements
 
   Container size wrong
@@ -122,7 +122,7 @@ Iterators demarcate differing numbers of elements
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 97
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 95
 Iterators demarcate differing elements
 
   Element 0 of range incorrect
@@ -151,7 +151,7 @@ Iterators demarcate differing elements
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 99
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 97
 Spans over vectors of differing length
 
 [std::span<int const, -1>]
@@ -163,7 +163,7 @@ Spans over vectors of differing length
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 100
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 98
 Spans over vectors of differing elements
 
 [std::span<int const, -1>]
@@ -175,7 +175,7 @@ Spans over vectors of differing elements
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 103
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 101
 Range equivalence, where the containerized form is explicitly specialized
 
 [std::vector<sequoia::testing::(anonymous namespace)::foo, std::allocator<sequoia::testing::(anonymous namespace)::foo> >]
@@ -194,7 +194,7 @@ Range equivalence, where the containerized form is explicitly specialized
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 108
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 106
 Advice for range equivalence, where the containerized form is explicitly specialized
 
 Comparison performed using:
@@ -219,7 +219,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 114
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 112
 Range equivalence, where the containerized form is not explicitly specialized
 
 [std::set<sequoia::testing::(anonymous namespace)::foo, std::less<sequoia::testing::(anonymous namespace)::foo>, std::allocator<sequoia::testing::(anonymous namespace)::foo> >]
@@ -238,7 +238,7 @@ Range equivalence, where the containerized form is not explicitly specialized
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 119
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 117
 Advice for range equivalence, where the containerized form is not explicitly specialized
 
 [std::set<sequoia::testing::(anonymous namespace)::foo, std::less<sequoia::testing::(anonymous namespace)::foo>, std::allocator<sequoia::testing::(anonymous namespace)::foo> >]
@@ -258,7 +258,7 @@ Advice for range equivalence, where the containerized form is not explicitly spe
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 125
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 123
 Range weak equivalence, where the containerized form is explicitly specialized
 
 [std::vector<sequoia::testing::(anonymous namespace)::foo, std::allocator<sequoia::testing::(anonymous namespace)::foo> >]
@@ -277,7 +277,7 @@ Range weak equivalence, where the containerized form is explicitly specialized
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 130
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 128
 Advice for range weak equivalence, where the containerized form is explicitly specialized
 
 Comparison performed using:
@@ -302,7 +302,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 136
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 134
 Range weak equivalence, where the containerized form is not explicitly specialized
 
 [std::list<sequoia::testing::(anonymous namespace)::foo, std::allocator<sequoia::testing::(anonymous namespace)::foo> >]
@@ -321,7 +321,7 @@ Range weak equivalence, where the containerized form is not explicitly specializ
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 141
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 139
 Advice for range weak equivalence, where the containerized form is not explicitly specialized
 
 [std::list<sequoia::testing::(anonymous namespace)::foo, std::allocator<sequoia::testing::(anonymous namespace)::foo> >]
@@ -341,7 +341,7 @@ Advice for range weak equivalence, where the containerized form is not explicitl
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 148
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 146
 
 Comparison performed using:
 [sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -356,7 +356,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 149
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 147
 
 Comparison performed using:
 [sequoia::testing::value_tester<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -372,7 +372,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 154
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 152
 
 [std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -390,7 +390,7 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 154
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 157
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 155
 
 [std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -409,7 +409,7 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 157
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 170
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 168
 Pair for which the first element differs
 
 [std::pair<int, double>]
@@ -423,7 +423,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 171
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 169
 Pair for which the second element differs
 
 [std::pair<int, double>]
@@ -437,7 +437,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 172
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 170
 Pair for which both elements differs
 
 [std::pair<int, double>]
@@ -457,7 +457,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 173
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 171
 Pair for which both elements differs with advice
 
 [std::pair<int, double>]
@@ -479,7 +479,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 176
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 174
 Pair for which both elements differs via fallback
 
 Comparison performed using:
@@ -501,7 +501,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 180
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 178
 Pair for which both elements differs via fallback with advice
 
 Comparison performed using:
@@ -525,7 +525,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 186
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 184
 Pair for which both elements differs via two fallbacks
 
 Comparison performed using:
@@ -547,7 +547,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 190
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 188
 Pair for which both elements differs via two fallbacks with advice
 
 Comparison performed using:
@@ -571,7 +571,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 195
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 193
 Best available
 
 [std::pair<int, double>]
@@ -585,7 +585,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 196
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 194
 Best available with advice
 
 [std::pair<int, double>]
@@ -600,7 +600,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 203
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 201
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::pair<int const&, double> >]
@@ -621,7 +621,7 @@ Checking for equivalence with:
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 204
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 202
 
 Comparison performed using:
 [sequoia::testing::value_tester<std::pair<int const&, double> >]
@@ -642,7 +642,7 @@ Checking for weak equivalence with:
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 210
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 208
 
 [std::tuple<int, double, float>]
 operator== returned false
@@ -655,7 +655,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 211
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 209
 
 [std::tuple<int, double, float>]
 operator== returned false
@@ -669,7 +669,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 212
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 210
 
 [std::tuple<int, double, float>]
 operator== returned false
@@ -682,6 +682,34 @@ operator== returned false
 
 =======================================
 
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 216
+
+[std::pair<int, sequoia::testing::only_weakly_checkable>]
+  First element of pair is incorrect
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 0
+
+=======================================
+
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 217
+
+[std::pair<int, sequoia::testing::only_weakly_checkable>]
+  Second element of pair is incorrect
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+  Checking for weak equivalence with:
+  [sequoia::testing::only_weakly_checkable]
+
+    Wrapped double
+    [double]
+    operator== returned false
+    Obtained : 2
+    Predicted: 2.1
+
+=======================================
+
 Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 218
 
 [std::pair<int, sequoia::testing::only_weakly_checkable>]
@@ -690,6 +718,18 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 218
   operator== returned false
   Obtained : 1
   Predicted: 0
+
+  Second element of pair is incorrect
+  Comparison performed using:
+  [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+  Checking for weak equivalence with:
+  [sequoia::testing::only_weakly_checkable]
+
+    Wrapped double
+    [double]
+    operator== returned false
+    Obtained : 2
+    Predicted: 2.1
 
 =======================================
 
@@ -707,51 +747,11 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 219
     operator== returned false
     Obtained : 2
     Predicted: 2.1
-
-=======================================
-
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 220
-
-[std::pair<int, sequoia::testing::only_weakly_checkable>]
-  First element of pair is incorrect
-  [int]
-  operator== returned false
-  Obtained : 1
-  Predicted: 0
-
-  Second element of pair is incorrect
-  Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
-  Checking for weak equivalence with:
-  [sequoia::testing::only_weakly_checkable]
-
-    Wrapped double
-    [double]
-    operator== returned false
-    Obtained : 2
-    Predicted: 2.1
-
-=======================================
-
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 221
-
-[std::pair<int, sequoia::testing::only_weakly_checkable>]
-  Second element of pair is incorrect
-  Comparison performed using:
-  [sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
-  Checking for weak equivalence with:
-  [sequoia::testing::only_weakly_checkable]
-
-    Wrapped double
-    [double]
-    operator== returned false
-    Obtained : 2
-    Predicted: 2.1
     Advice: Double advice
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 227
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 225
 
 [std::pair<int, sequoia::testing::only_equivalence_checkable>]
   First element of pair is incorrect
@@ -762,7 +762,7 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 227
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 228
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 226
 
 [std::pair<int, sequoia::testing::only_equivalence_checkable>]
   Second element of pair is incorrect
@@ -779,7 +779,7 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 228
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 229
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 227
 
 [std::pair<int, sequoia::testing::only_equivalence_checkable>]
   First element of pair is incorrect
@@ -802,7 +802,7 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 229
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 230
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 228
 
 [std::pair<int, sequoia::testing::only_equivalence_checkable>]
   First element of pair is incorrect
@@ -814,7 +814,7 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 230
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 245
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 243
 
 [std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 operator== returned false
@@ -836,7 +836,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 250
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 248
 
 [std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 operator== returned false
@@ -854,7 +854,7 @@ operator== returned false
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 255
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 253
 
 [std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
 
@@ -876,7 +876,7 @@ Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 255
 
 =======================================
 
-Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 257
+Tests/TestFramework/ContainerFreeDiagnostics.cpp, Line 255
 
 [std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
 

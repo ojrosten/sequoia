@@ -5,10 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file
-    \brief Definitions for Streaming.hpp
-*/
-
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <fstream>

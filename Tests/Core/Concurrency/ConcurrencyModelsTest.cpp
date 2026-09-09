@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "ConcurrencyModelsTest.hpp"
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 

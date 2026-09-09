@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "SequencesFreeTest.hpp"
 #include "sequoia/Core/Meta/Sequences.hpp"
 

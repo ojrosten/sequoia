@@ -1,0 +1,207 @@
+name: tests
+
+# The one place that knows how to build and run sequoia. coarse, fine, rigorous and
+# nightly are callers differing only in which columns they ask for and what they
+# pass the runner, so the tiers cannot drift apart in how they build.
+#
+# The tiers are ordered by strictness, not by containment: fine and rigorous replace
+# coarse's plain columns with sanitized ones rather than adding to them. A tier must
+# be at least as strict as the one below, or a pass at one says nothing about the
+# next.
+on:
+  workflow_call:
+    inputs:
+      columns:
+        description: 'JSON array of matrix entries: name, os, configure, build, and cc/cxx where the preset takes them from the environment.'
+        required: true
+        type: string
+      exec_args:
+        description: 'Arguments for the test executable, via the EXEC_ARGS cache variable. Semicolon-separated for more than one.'
+        required: false
+        type: string
+        default: ''
+      ref:
+        description: 'Branch to check out. Empty means the triggering ref. Needed because a scheduled run always fires from the default branch, so a nightly against staging has to ask for it.'
+        required: false
+        type: string
+        default: ''
+      warnings_as_errors:
+        description: 'Fail the build on any compiler warning. The gating tiers set this; the reporting tier counts them instead.'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    strategy:
+      # Every column reports. Cancelling the rest on the first red would collect
+      # one answer where the point is to collect all of them.
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(inputs.columns) }}
+
+    # bash everywhere, Windows included, so one set of steps serves every column
+    # rather than each acquiring a shell dialect of its own.
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # docs/ is ~96MB of committed doxygen render; nothing here reads it.
+          fetch-depth: 1
+          ref: ${{ inputs.ref }}
+
+      # Package presence is tested against `apt-cache pkgnames`, which matches
+      # names exactly. `apt-get install` does not: given a name with regex
+      # metacharacters that matches no package it treats the name as a regex, so
+      # `g++-15` on noble resolves to clang-15, flang-15 and llvm-15, installs all
+      # three, and exits 0.
+      - name: Install the toolchain (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          sudo apt-get update -qq
+          for pkg in "${{ matrix.cxx }}" ninja-build libtbb-dev; do
+            apt-cache pkgnames | grep -qx "$pkg" \
+              || { echo "::error::$pkg is not available on this image"; exit 1; }
+          done
+          sudo apt-get install -y "${{ matrix.cxx }}" ninja-build libtbb-dev
+          echo "CC=${{ matrix.cc }}"   >> "$GITHUB_ENV"
+          echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"
+
+      # Retained though no column currently selects macOS. Its absence is temporary:
+      # the suite's performance tests cannot hold on a hosted runner, and there is
+      # no way yet to run everything except them. Keeping this step makes restoring
+      # the column one matrix entry.
+      - name: Install the toolchain (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew list ninja >/dev/null 2>&1 || brew install ninja
+          brew list tbb   >/dev/null 2>&1 || brew install tbb
+          brew list llvm  >/dev/null 2>&1 || brew install llvm
+          echo "CC=$(brew --prefix llvm)/bin/clang"    >> "$GITHUB_ENV"
+          echo "CXX=$(brew --prefix llvm)/bin/clang++" >> "$GITHUB_ENV"
+
+      # An exit status says the tool ran, not that it did what was asked.
+      - name: Report the toolchain actually in use
+        run: |
+          if [ -n "${CXX:-}" ]; then
+            command -v "$CXX" || { echo "::error::$CXX is not on PATH"; exit 1; }
+            "$CXX" --version
+          else
+            echo "No CXX set; the preset selects the compiler (Windows/MSVC)."
+          fi
+          cmake --version
+
+      # `--version` does not identify the compiler: Ubuntu ships post-release
+      # snapshots of a branch under the release's version number, so a g++ reporting
+      # 15.2.0 may be well beyond it. The changelog says which.
+      - name: What the distribution's g++ actually is
+        if: runner.os == 'Linux'
+        # sed, not head: head exits early, gzip takes SIGPIPE, and `-o pipefail`
+        # would turn a report into a failed job.
+        run: zcat /usr/share/doc/gcc-15/changelog.Debian.gz | sed -n '1,20p'
+
+      # The generated project's `git init` is followed by a commit, and git refuses
+      # to commit without an identity. Every developer machine has one configured;
+      # a fresh runner does not.
+      - name: Give git an identity
+        run: |
+          git config --global user.name "sequoia CI"
+          git config --global user.email "ci@example.invalid"
+          git config --global init.defaultBranch trunk
+
+      # Once a generated project vendors a copy of sequoia inside itself, the
+      # TestMaterials tree passes 260 characters. sequoia declares itself
+      # long-path aware in resources/win/longpaths.manifest, but Windows also
+      # requires the machine-wide switch, and git its own.
+      #
+      # In PowerShell because Git bash's MSYS layer rewrites bare switches like
+      # /v and /f into Windows paths before reg.exe sees them.
+      - name: Let Windows and git see long paths
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          git config --global core.longpaths true
+          New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' `
+                           -Name LongPathsEnabled -Value 1 -PropertyType DWord -Force | Out-Null
+          Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' `
+                           -Name LongPathsEnabled
+
+      - name: Configure
+        working-directory: TestAll
+        run: |
+          cmake --preset ${{ matrix.configure }} \
+                "-DEXEC_ARGS=${{ inputs.exec_args }}" \
+                -DWARNINGS_AS_ERRORS=${{ inputs.warnings_as_errors && 'ON' || 'OFF' }}
+
+      # Separate from the run below so a compile failure and a test failure are
+      # distinguishable, and so the suite can carry its own ceiling. The log is kept
+      # so warnings can be counted where they are not fatal.
+      - name: Build
+        working-directory: TestAll
+        run: cmake --build --preset ${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/build.log"
+
+      # Distinct sites rather than raw lines: gcc and clang repeat a warning once per
+      # instantiation, so a raw count says more about templates than about code.
+      # MSVC spells it "warning Cnnnn"; the others "warning:".
+      - name: Report compiler warnings
+        if: ${{ !inputs.warnings_as_errors }}
+        run: |
+          log="$RUNNER_TEMP/build.log"
+          sites=$({ grep -oE '[^ ]+:[0-9]+:[0-9]+: warning:|warning C[0-9]+' "$log" || true; } | sort -u | wc -l | tr -d ' ')
+          total=$(grep -cE 'warning:|warning C[0-9]+' "$log" || true)
+          if [ "${sites:-0}" -gt 0 ]; then
+            echo "::warning title=Compiler warnings::${{ matrix.name }}: $sites distinct site(s), $total line(s)"
+            {
+              echo "### ${{ matrix.name }}: $sites distinct warning site(s)"
+              echo '```'
+              grep -E 'warning:|warning C[0-9]+' "$log" | sort -u | head -40
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No compiler warnings."
+          fi
+
+      # A `run-` preset is named `run-` plus the preset it runs, and builds the
+      # `run` target, whose command is the test executable; the binary is already
+      # built, so this step is the suite and nothing else.
+      #
+      # timeout-minutes on the step rather than timeout(1) around the command:
+      # macOS ships no GNU coreutils, and the step form additionally distinguishes
+      # "the suite timed out" from "the job timed out" in the run summary. One
+      # branch has already spun for 36 minutes against an 18s baseline.
+      # A column may set `run: false` to build and not run. Intended for a platform
+      # whose failures are understood and being worked on, so that the build is
+      # still guarded while the suite is not: better than removing the column,
+      # which would stop compiling there too.
+      - name: Run the suite
+        if: ${{ matrix.run != false }}
+        working-directory: TestAll
+        timeout-minutes: 30
+        run: cmake --build --preset run-${{ matrix.build }}
+
+      # Where drift detection is on, the switch fails the run but reports only
+      # that a bit is set; this names the files. It also sees the whole tree,
+      # where the switch sees only what this toolchain rewrites. `git diff` and
+      # not `git status`, since a Windows run rewrites output/ with CRLF and
+      # .gitattributes normalizes it back on check-in.
+      - name: Name any file whose versioned output moved
+        if: always()
+        run: git diff --stat -- output/ TestMaterials/ || true
+
+      - name: Upload the run's output
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.build }}-output
+          path: |
+            output/TestSummaries/
+            output/DiagnosticsOutput/
+            output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/InitOutput/
+          if-no-files-found: warn
