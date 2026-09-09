@@ -1,7 +1,7 @@
 Initializing Project(s)....
 
 Creating new project at location:
-/Users/oliver/sequoia/.claude/worktrees/sequoia/output/TestsTemporaryData/TestFramework/test_runner_project_creation/WorkingCopy/GeneratedProject
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_project_creation/WorkingCopy/GeneratedProject
 
 
 Copying across sequoia...
