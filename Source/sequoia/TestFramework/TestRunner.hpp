@@ -17,7 +17,6 @@
 #include "sequoia/TestFramework/VersionedOutput.hpp"
 
 #include "sequoia/Core/Logic/Bitmask.hpp"
-#include <set>
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
@@ -26,6 +25,7 @@
 #include <format>
 #include <iostream>
 #include <optional>
+#include <set>
 #include <span>
 #include <string>
 
@@ -344,6 +344,11 @@ namespace sequoia::testing
       if(!m_TestNames.insert(name).second)
         throw std::logic_error{duplication_message(name, T::source_file())};
 
+      if constexpr(is_performance_test_v<T>)
+      {
+        if(m_PerformanceMode == performance_mode::excluded) return;
+      }
+
       if(m_Filter(T::source_file(), groups_of(T::source_file()))) m_Tests.emplace_back(T{});
     }
 
@@ -366,6 +371,7 @@ namespace sequoia::testing
     enum class verbosity { standard = 0, verbose = 1 };
     enum class instability_mode { none = 0, single_instance, coordinator, sandbox };
     enum class versioned_output_mode { unchecked = 0, checked = 1 };
+    enum class performance_mode { included = 0, excluded = 1 };
 
     struct prune_info
     {
@@ -499,6 +505,7 @@ namespace sequoia::testing
     concurrency_mode      m_ConcurrencyMode{concurrency_mode::dynamic};
     instability_mode      m_InstabilityMode{instability_mode::none};
     versioned_output_mode m_VersionedOutputMode{versioned_output_mode::unchecked};
+    performance_mode      m_PerformanceMode{performance_mode::included};
 
     std::size_t m_NumReps{1},
                 m_RunnerID{},

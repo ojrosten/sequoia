@@ -30,6 +30,7 @@ locate-instabilities | locate | number of repetitions >= 2
 recover
 dump
 --check-versioned-output
+--exclude-performance
 --serial
 --thread-pool Number of threads, must be >= 1
 --verbose | -v |

@@ -313,6 +313,23 @@ namespace sequoia::testing
       }
     };
 
+    class fake_performance_test final : public performance_test
+    {
+    public:
+      using performance_test::performance_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<fake_performance_test>();
+      }
+
+      void run_tests()
+      {
+        check(equality, "Performance", 42, 42);
+      }
+    };
+
     class critical_free_test final : public free_test
     {
     public:
@@ -366,6 +383,7 @@ namespace sequoia::testing
     test_prune_basic_output();
     test_nested_suite();
     test_nested_suite_verbose();
+    test_excluded_performance_tests();
     test_instability_analysis();
   }
 
@@ -700,6 +718,36 @@ namespace sequoia::testing
 
     check(equality, "Nested suite verbose return code", runner.execute(), return_code::soft_failures);
     check_output("Verbose Nested Output", "VerboseNestedOutput", outputStream);
+  }
+
+  void test_runner_test::test_excluded_performance_tests()
+  {
+    auto run{
+      [this](std::string_view description, std::string_view outputDirName, std::initializer_list<std::string_view> extraArgs){
+        std::stringstream outputStream{};
+
+        std::vector<std::string> argList{(minimal_fake_path()).generic_string()};
+        argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
+        commandline_arguments args{argList};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<passing_test>();
+        runner.register_test<fake_performance_test>();
+
+        check(equality, append_lines(description, "Return code"), runner.execute(), return_code::success);
+        check_output(description, outputDirName, outputStream);
+      }
+    };
+
+    // The same registrations both ways, so the option is the only thing which differs.
+    run("Performance tests included", "IncludedPerformanceOutput", {});
+    run("Performance tests excluded", "ExcludedPerformanceOutput", {"--exclude-performance"});
   }
 
   void test_runner_test::test_instability_analysis()

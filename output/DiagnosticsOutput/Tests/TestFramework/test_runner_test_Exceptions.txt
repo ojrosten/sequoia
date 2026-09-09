@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTest.cpp, Line 412
+Tests/TestFramework/TestRunnerTest.cpp, Line 430
 Test Main has empty path
 
 Expected Exception Type:
@@ -9,7 +9,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 420
+Tests/TestFramework/TestRunnerTest.cpp, Line 438
 Test Main does not exist
 
 Expected Exception Type:
@@ -20,7 +20,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 428
+Tests/TestFramework/TestRunnerTest.cpp, Line 446
 Include Target has empty path
 
 Expected Exception Type:
@@ -31,7 +31,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 436
+Tests/TestFramework/TestRunnerTest.cpp, Line 454
 Include Target does not exist
 
 Expected Exception Type:
@@ -42,7 +42,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 444
+Tests/TestFramework/TestRunnerTest.cpp, Line 462
 Project root is empty
 
 Expected Exception Type:
@@ -51,7 +51,7 @@ Unable to locate project root as no commandline arguments supplied.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 452
+Tests/TestFramework/TestRunnerTest.cpp, Line 470
 Project root does not exist
 
 Expected Exception Type:
@@ -60,7 +60,7 @@ canonical - file not found: /output/TestsTemporaryData/TestFramework/test_runner
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 471
+Tests/TestFramework/TestRunnerTest.cpp, Line 489
 Project root not findable
 
 Expected Exception Type:
@@ -71,7 +71,7 @@ Please ensure that the build directory is a subdirectory of <project>/build.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 480
+Tests/TestFramework/TestRunnerTest.cpp, Line 498
 The same test registered twice
 
 Expected Exception Type:
@@ -82,7 +82,7 @@ A test's name is that of its class, and determines where its output is written, 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 497
+Tests/TestFramework/TestRunnerTest.cpp, Line 515
 Invalid repetitions for instability analysis
 
 Expected Exception Type:
@@ -91,7 +91,7 @@ locate-instabilities: unable to interpret 'foo' as an integer number of repetiti
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 504
+Tests/TestFramework/TestRunnerTest.cpp, Line 522
 Insufficient repetitions for instability analysis
 
 Expected Exception Type:

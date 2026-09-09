@@ -1,0 +1,17 @@
+
+Running tests...
+
+fake_performance_test:
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+passing_test:
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+
+-----------Grand Totals-----------
+[Total Run Time: 330us]
+[Execution Time: 30us]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

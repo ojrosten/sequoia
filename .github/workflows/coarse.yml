@@ -16,13 +16,12 @@ name: coarse
 # gates - that is where MSVC divergences usually appear - while test failures are
 # reported and triaged rather than fatal.
 #
-# It is advisory because TestRunnerPerformanceTest asserts absolute wall-clock
-# times - 60ms +- 35 for eight 25ms sleeps run concurrently - and the hosted
-# Windows runner returned 196ms and then 603ms for the same commit. No tolerance
-# spans that and still means anything. The triage step separates those from
-# everything else, so a real Windows defect is raised as an error annotation
-# instead of being lost among them. Make this column gate once roadmap items 38
-# and 102 land.
+# The column runs with `--exclude-performance`, because TestRunnerPerformanceTest
+# asserts absolute wall-clock times - 60ms +- 35 for eight 25ms sleeps run
+# concurrently - and the hosted Windows runner returned 196ms and then 603ms for
+# the same commit. No tolerance spans that and still means anything. What remains
+# is advisory only until it has been green for long enough to gate on; the triage
+# step raises anything that fails as an error annotation meanwhile.
 on:
   push:
     paths-ignore:
@@ -40,7 +39,7 @@ jobs:
       columns: >-
         [
           {"name": "Linux · GCC · Debug",   "os": "ubuntu-latest",  "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15"},
-          {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc",   "build": "msvc", "advisory": true}
+          {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc",   "build": "msvc", "advisory": true, "exec_args": "--exclude-performance"}
         ]
 
   # Also in rigorous. It costs seconds and no compilation, so there is no reason to

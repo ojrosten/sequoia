@@ -79,10 +79,10 @@ jobs:
           echo "CC=${{ matrix.cc }}"   >> "$GITHUB_ENV"
           echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"
 
-      # Retained though no column currently selects macOS. Its absence is temporary:
-      # the suite's performance tests cannot hold on a hosted runner, and there is
-      # no way yet to run everything except them. Keeping this step makes restoring
-      # the column one matrix entry.
+      # Retained though no column currently selects macOS. Restoring the column is
+      # now one matrix entry, carrying `--exclude-performance` as the Windows one
+      # does: it is the suite's timing assertions, not the rest of it, which a
+      # hosted runner cannot hold.
       - name: Install the toolchain (macOS)
         if: runner.os == 'macOS'
         run: |
@@ -138,11 +138,15 @@ jobs:
           Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' `
                            -Name LongPathsEnabled
 
+      # A column may carry `exec_args` of its own, for a platform which cannot run the
+      # whole suite. It replaces the tier's rather than adding to them, so a column
+      # taking this route out of a tier which passes `--check-versioned-output` must
+      # repeat it.
       - name: Configure
         working-directory: TestAll
         run: |
           cmake --preset ${{ matrix.configure }} \
-                "-DEXEC_ARGS=${{ inputs.exec_args }}" \
+                "-DEXEC_ARGS=${{ matrix.exec_args || inputs.exec_args }}" \
                 -DWARNINGS_AS_ERRORS=${{ inputs.warnings_as_errors && 'ON' || 'OFF' }}
 
       # Separate from the run below so a compile failure and a test failure are

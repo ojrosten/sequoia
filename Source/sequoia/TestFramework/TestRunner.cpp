@@ -677,6 +677,9 @@ namespace sequoia::testing
                   {{{"--check-versioned-output", {}, {},
                     [this](const arg_list&) { m_VersionedOutputMode = versioned_output_mode::checked; }
                   }}},
+                  {{{"--exclude-performance", {}, {},
+                    [this](const arg_list&) { m_PerformanceMode = performance_mode::excluded; }
+                  }}},
                   {{{"--serial",  {}, {}, [this](const arg_list&) { m_ConcurrencyMode = concurrency_mode::serial; }}}},
                   {{{"--thread-pool", {}, {"Number of threads, must be >= 1"},
                     [this](const arg_list& args) {
