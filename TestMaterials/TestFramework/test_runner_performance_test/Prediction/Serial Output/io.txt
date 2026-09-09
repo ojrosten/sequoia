@@ -1,13 +1,34 @@
 
 Running tests, synchronously...
 
-..:
-[Execution Time: 275ms]
-	Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 8]
+slow_test_0:
+[Execution Time: 30ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+slow_test_1:
+[Execution Time: 30ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+slow_test_2:
+[Execution Time: 27ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+slow_test_3:
+[Execution Time: 30ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+slow_test_4:
+[Execution Time: 27ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+slow_test_5:
+[Execution Time: 30ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+slow_test_6:
+[Execution Time: 30ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+slow_test_7:
+[Execution Time: 30ms]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 276ms]
-[Execution Time: 275ms]
+[Total Run Time: 235ms]
+[Execution Time: 234ms]
 	Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 8]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

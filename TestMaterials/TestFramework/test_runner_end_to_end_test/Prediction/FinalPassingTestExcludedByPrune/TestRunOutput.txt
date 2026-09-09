@@ -1,16 +1,16 @@
 
 Analyzing dependencies...
-[3.03ms]
+[2.83ms]
 
 
 Running tests...
 
-Maths:
+probability_test:
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 
 -----------Grand Totals-----------
-[Total Run Time: 385us]
-[Execution Time: 123us]
+[Total Run Time: 352us]
+[Execution Time: 104us]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

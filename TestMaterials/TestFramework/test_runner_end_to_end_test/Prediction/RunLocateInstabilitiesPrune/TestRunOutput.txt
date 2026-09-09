@@ -1,13 +1,13 @@
 
 Analyzing dependencies...
-[2.69ms]
+[2.81ms]
 
 
 Running tests...
 
-Unstable:
+flipper_free_test:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
-Utilities:
+useful_things_free_test:
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -21,8 +21,8 @@ Utilities:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 802us]
-[Execution Time: 402us]
+[Total Run Time: 730us]
+[Execution Time: 354us]
 	Standard Top Level Checks:                 4;  Failures:  1  [Deep checks: 4]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -32,7 +32,7 @@ Utilities:
 
 Running tests...
 
-Unstable:
+flipper_free_test:
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
 	Tests/Unstable/FlipperFreeTest.cpp, Line 24
@@ -53,7 +53,7 @@ Unstable:
 
 	=======================================
 
-Utilities:
+useful_things_free_test:
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -67,8 +67,8 @@ Utilities:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 483us]
-[Execution Time: 175us]
+[Total Run Time: 523us]
+[Execution Time: 201us]
 	Standard Top Level Checks:                 4;  Failures:  3  [Deep checks: 4]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

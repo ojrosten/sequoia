@@ -1,12 +1,12 @@
 
 Running tests...
 
-Unstable:
+flipper_free_test:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[Total Run Time: 343us]
-[Execution Time: 126us]
+[Total Run Time: 412us]
+[Execution Time: 147us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -16,7 +16,7 @@ Unstable:
 
 Running tests...
 
-Unstable:
+flipper_free_test:
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Unstable/FlipperFreeTest.cpp, Line 25
@@ -30,8 +30,8 @@ Unstable:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 315us]
-[Execution Time: 118us]
+[Total Run Time: 360us]
+[Execution Time: 127us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

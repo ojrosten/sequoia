@@ -1,8 +1,8 @@
 
 Running tests, synchronously...
 
-..:
-[Execution Time: 155us]
+consistently_failing_free_test:
+[Execution Time: 171us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 274
@@ -17,8 +17,8 @@ Running tests, synchronously...
 
 
 -----------Grand Totals-----------
-[Total Run Time: 337us]
-[Execution Time: 155us]
+[Total Run Time: 388us]
+[Execution Time: 171us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -28,8 +28,8 @@ Running tests, synchronously...
 
 Running tests, synchronously...
 
-..:
-[Execution Time: 61.3us]
+consistently_failing_free_test:
+[Execution Time: 71.1us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 274
@@ -44,8 +44,8 @@ Running tests, synchronously...
 
 
 -----------Grand Totals-----------
-[Total Run Time: 244us]
-[Execution Time: 61.3us]
+[Total Run Time: 264us]
+[Execution Time: 71.1us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

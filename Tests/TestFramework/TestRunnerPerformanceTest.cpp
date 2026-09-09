@@ -47,7 +47,10 @@ namespace sequoia::testing
       {
         std::string_view contents{optContents.value()};
         constexpr std::string_view pattern{"Execution Time:"};
-        if(auto pos{contents.find(pattern)}; pos != std::string::npos)
+
+        // From the grand totals, since every test reports a time of its own and the run's total is
+        // the only one this measures.
+        if(auto pos{contents.find(pattern, contents.find("Grand Totals"))}; pos != std::string::npos)
         {
           auto start{pos + pattern.size() + 1};
           if(auto end{contents.find("ms]", start)}; end > start)

@@ -1,12 +1,14 @@
 
 Running tests...
 
-..:
-	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+platform_specific_throwing_test:
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+throwing_test:
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 398us]
-[Execution Time: 177us]
+[Total Run Time: 442us]
+[Execution Time: 170us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

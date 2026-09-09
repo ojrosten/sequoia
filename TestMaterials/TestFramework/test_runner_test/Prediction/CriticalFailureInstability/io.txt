@@ -1,8 +1,8 @@
 
 Running tests, synchronously...
 
-..:
-[Execution Time: 144us]
+critical_free_test:
+[Execution Time: 207us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 0]
 
 ******  Critical Failures:  1  ******
@@ -18,8 +18,8 @@ Running tests, synchronously...
 
 
 -----------Grand Totals-----------
-[Total Run Time: 339us]
-[Execution Time: 144us]
+[Total Run Time: 501us]
+[Execution Time: 207us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 0]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -32,12 +32,12 @@ Running tests, synchronously...
 
 Running tests, synchronously...
 
-..:
-[Execution Time: 38us]
+critical_free_test:
+[Execution Time: 50.6us]
 
 -----------Grand Totals-----------
-[Total Run Time: 181us]
-[Execution Time: 38us]
+[Total Run Time: 330us]
+[Execution Time: 50.6us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

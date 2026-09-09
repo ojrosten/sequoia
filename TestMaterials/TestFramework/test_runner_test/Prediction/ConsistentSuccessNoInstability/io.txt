@@ -1,13 +1,13 @@
 
 Running tests, synchronously...
 
-..:
-[Execution Time: 140us]
+consistently_passing_free_test:
+[Execution Time: 170us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 297us]
-[Execution Time: 140us]
+[Total Run Time: 340us]
+[Execution Time: 170us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -17,13 +17,13 @@ Running tests, synchronously...
 
 Running tests, synchronously...
 
-..:
-[Execution Time: 47.5us]
+consistently_passing_free_test:
+[Execution Time: 40.4us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 205us]
-[Execution Time: 47.5us]
+[Total Run Time: 202us]
+[Execution Time: 40.4us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

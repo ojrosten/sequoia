@@ -1,11 +1,11 @@
 
 Analyzing dependencies...
-[2.75ms]
+[2.85ms]
 
 
 Running tests...
 
-Stuff:
+foo_test:
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 
 	Tests/Stuff/FooTest.cpp, Line 42
@@ -109,8 +109,8 @@ Stuff:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 2.12ms]
-[Execution Time: 1.89ms]
+[Total Run Time: 2.01ms]
+[Execution Time: 1.78ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

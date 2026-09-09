@@ -1,13 +1,13 @@
 
 Running tests, synchronously...
 
-..:
-[Execution Time: 155us]
+flipper_free_test:
+[Execution Time: 220us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 328us]
-[Execution Time: 155us]
+[Total Run Time: 514us]
+[Execution Time: 220us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -17,8 +17,8 @@ Running tests, synchronously...
 
 Running tests, synchronously...
 
-..:
-[Execution Time: 60.7us]
+flipper_free_test:
+[Execution Time: 87.2us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 194
@@ -33,8 +33,8 @@ Running tests, synchronously...
 
 
 -----------Grand Totals-----------
-[Total Run Time: 231us]
-[Execution Time: 60.7us]
+[Total Run Time: 322us]
+[Execution Time: 87.2us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

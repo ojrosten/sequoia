@@ -2,11 +2,11 @@
 
 Running tests...
 
-Stuff:
+foo_test:
 
 -----------Grand Totals-----------
-[Total Run Time: 251us]
-[Execution Time: 4.58us]
+[Total Run Time: 286us]
+[Execution Time: 6.29us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

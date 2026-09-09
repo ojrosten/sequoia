@@ -1,11 +1,11 @@
 
 Analyzing dependencies...
-[2.44ms]
+[2.47ms]
 
 
 Running tests...
 
-Utilities:
+useful_things_free_test:
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -19,8 +19,8 @@ Utilities:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 465us]
-[Execution Time: 132us]
+[Total Run Time: 472us]
+[Execution Time: 124us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

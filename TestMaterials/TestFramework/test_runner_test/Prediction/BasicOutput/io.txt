@@ -1,10 +1,8 @@
 
 Running tests...
 
-..:
-	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+failing_fn_test:
 	False Positive Checks:                     1;  Failures:  1
-	False Negative Checks:                     1;  Failures:  1
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 170
 	False negative failure
@@ -16,6 +14,9 @@ Running tests...
 
 	=======================================
 
+failing_fp_test:
+	False Negative Checks:                     1;  Failures:  1
+
 	False Negative Failure:
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 153
 	False positive failure
@@ -23,6 +24,9 @@ Running tests...
 	[int]
 
 	=======================================
+
+failing_test:
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 96
 	Standard Failure
@@ -36,8 +40,8 @@ Running tests...
 
 
 -----------Grand Totals-----------
-[Total Run Time: 935us]
-[Execution Time: 131us]
+[Total Run Time: 622us]
+[Execution Time: 89.3us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     1;  Failures:  1

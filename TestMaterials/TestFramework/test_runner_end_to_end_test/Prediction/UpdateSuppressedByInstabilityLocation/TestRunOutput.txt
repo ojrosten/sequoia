@@ -1,12 +1,12 @@
   Warning: Update of materials suppressed when checking for instabilities
 
 Analyzing dependencies...
-[2.68ms]
+[2.79ms]
 
 
 Running tests...
 
-Stuff:
+foo_test:
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 
 	Tests/Stuff/FooTest.cpp, Line 42
@@ -110,8 +110,8 @@ Stuff:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 2.11ms]
-[Execution Time: 1.85ms]
+[Total Run Time: 1.87ms]
+[Execution Time: 1.58ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -121,7 +121,7 @@ Stuff:
 
 Running tests...
 
-Stuff:
+foo_test:
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 
 	Tests/Stuff/FooTest.cpp, Line 42
@@ -225,8 +225,8 @@ Stuff:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 1.67ms]
-[Execution Time: 1.46ms]
+[Total Run Time: 1.83ms]
+[Execution Time: 1.58ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 43]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

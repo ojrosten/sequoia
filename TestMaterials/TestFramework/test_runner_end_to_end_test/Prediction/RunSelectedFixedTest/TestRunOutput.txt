@@ -1,12 +1,12 @@
 
 Running tests...
 
-Utilities:
+useful_things_free_test:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[Total Run Time: 556us]
-[Execution Time: 235us]
+[Total Run Time: 527us]
+[Execution Time: 212us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

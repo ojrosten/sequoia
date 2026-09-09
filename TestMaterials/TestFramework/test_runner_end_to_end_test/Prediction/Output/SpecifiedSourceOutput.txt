@@ -1,13 +1,13 @@
 
 Running tests...
 
-Stuff:
+foo_test:
 house_allocation_test:
-Maybe:
+maybe_test:
 
 -----------Grand Totals-----------
-[Total Run Time: 571us]
-[Execution Time: 76.1us]
+[Total Run Time: 627us]
+[Execution Time: 81.1us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

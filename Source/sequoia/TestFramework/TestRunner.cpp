@@ -1050,12 +1050,18 @@ namespace sequoia::testing
     }
     else
     {
-      for(const auto& edge : m_Suites.cedges(0))
-      {
-        const auto detail{!concurrent_execution() ? summary_detail::failure_messages | summary_detail::timings : summary_detail::failure_messages};
-        auto targetNodeIter{std::ranges::next(m_Suites.cbegin_node_weights(), edge.target_node())};
-        stream() << summarize(targetNodeIter->summary, ":", detail, no_indent, tab);
-      }
+      const auto detail{!concurrent_execution() ? summary_detail::failure_messages | summary_detail::timings : summary_detail::failure_messages};
+
+      // Depth-first, so the tests are reported in the order they sit in the tree rather than in
+      // whichever order the concurrency sort left them.
+      auto printTest{
+        [&s = m_Suites, detail, &stream = stream()](auto n) {
+          if(const auto& wt{s.cbegin_node_weights()[n]}; wt.optTest)
+            stream << summarize(wt.summary, ":", detail, no_indent, tab);
+        }
+      };
+
+      traverse(depth_first, m_Suites, find_disconnected_t{}, printTest, null_func_obj{}, null_func_obj{});
     }
 
     if(asyncDuration) m_Suites.begin_node_weights()->summary.execution_time(*asyncDuration);

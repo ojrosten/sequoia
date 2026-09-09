@@ -2,11 +2,11 @@
 Running tests...
 
 house_allocation_test:
-Maths:
+probability_test:
 
 -----------Grand Totals-----------
-[Total Run Time: 413us]
-[Execution Time: 62.2us]
+[Total Run Time: 441us]
+[Execution Time: 61.7us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

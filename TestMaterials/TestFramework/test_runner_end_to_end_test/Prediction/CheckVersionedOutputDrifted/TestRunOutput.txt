@@ -1,16 +1,27 @@
 
 Running tests...
 
-Stuff:
-Utilities:
-Unstable:
+bar_free_test:
+foo_false_negative_test:
+foo_test:
+oldschool_false_negative_test:
+oldschool_test:
+container_allocation_test:
+container_performance_test:
+unique_thing_false_negative_test:
+unique_thing_test:
+useful_things_free_test:
+utilities_free_test:
+flipper_free_test:
 house_allocation_test:
-Maybe:
-Maths:
+maybe_false_negative_test:
+maybe_test:
+probability_false_negative_test:
+probability_test:
 
 -----------Grand Totals-----------
-[Total Run Time: 1.31ms]
-[Execution Time: 165us]
+[Total Run Time: 1.42ms]
+[Execution Time: 185us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
