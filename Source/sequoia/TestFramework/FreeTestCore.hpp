@@ -67,7 +67,7 @@ namespace sequoia::testing
     test_base& operator=(const test_base&) = delete;
 
     [[nodiscard]]
-    std::string_view name() const noexcept
+    const std::string& name() const noexcept
     {
       return m_Name;
     }
