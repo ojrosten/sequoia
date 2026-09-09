@@ -222,21 +222,21 @@ namespace sequoia::testing
       check_bulk_creation("Products named by nomenclator", f, prediction_type{ {{"foo-int", foo<int>{}}, {"foo-double", foo<double>{}}} });
     }
 
-    test_erased_factory();
+    test_erasing_factory();
   }
 
-  void factory_test::test_erased_factory()
+  void factory_test::test_erasing_factory()
   {
     {
       using vessel          = std::variant<int, double>;
       using prediction_type = std::array<std::pair<std::string, vessel>, 2>;
-      using factory_type    = erased_factory<vessel>;
+      using factory_type    = erasing_factory<vessel>;
 
       factory_type f{}, g{};
-      f.add<int>("int");
-      f.add<double>("double");
-      g.add<int>("bar");
-      g.add<double>("foo");
+      f.register_product<int>("int");
+      f.register_product<double>("double");
+      g.register_product<int>("bar");
+      g.register_product<double>("foo");
 
       check(equality, "Number of products", f.size(), std::size_t{2});
 
@@ -247,8 +247,8 @@ namespace sequoia::testing
       check_semantics("", f, g);
 
       check_exception_thrown<std::runtime_error>("Unknown name", [&f](){ return f.make("plurgh"); });
-      check_exception_thrown<std::logic_error>("Empty name", [&f](){ f.add<int>(""); });
-      check_exception_thrown<std::logic_error>("Duplicated name", [&f](){ f.add<int>("int"); });
+      check_exception_thrown<std::logic_error>("Empty name", [&f](){ f.register_product<int>(""); });
+      check_exception_thrown<std::logic_error>("Duplicated name", [&f](){ f.register_product<int>("int"); });
 
       // None of those took effect.
       check(equality, "Number of products after the refusals", f.size(), std::size_t{2});
@@ -258,9 +258,9 @@ namespace sequoia::testing
       using vessel          = std::variant<regular_type, move_only_type>;
       using prediction_type = std::array<std::pair<std::string, vessel>, 2>;
 
-      erased_factory<vessel, int> f{};
-      f.add<regular_type>("x");
-      f.add<move_only_type>("y");
+      erasing_factory<vessel, int> f{};
+      f.register_product<regular_type>("x");
+      f.register_product<move_only_type>("y");
 
       check_bulk_creation("Erased, taking an argument, one product move-only",
                           f,
@@ -275,12 +275,12 @@ namespace sequoia::testing
       using vessel          = std::variant<int, double>;
       using prediction_type = std::array<std::pair<std::string, vessel>, 5>;
 
-      erased_factory<vessel> f{};
-      f.add<double>("epsilon");
-      f.add<double>("beta");
-      f.add<int>("delta");
-      f.add<int>("alpha");
-      f.add<int>("gamma");
+      erasing_factory<vessel> f{};
+      f.register_product<double>("epsilon");
+      f.register_product<double>("beta");
+      f.register_product<int>("delta");
+      f.register_product<int>("alpha");
+      f.register_product<int>("gamma");
 
       check_bulk_creation("Erased, registered out of order",
                           f,

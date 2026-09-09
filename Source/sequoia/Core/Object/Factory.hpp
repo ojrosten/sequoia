@@ -137,11 +137,7 @@ namespace sequoia::object
 
     /** \brief Every product whose name satisfies the predicate.
 
-        The order is stable from one run to the next, so a caller which writes the results somewhere
-        reproducible gets the same sequence each time.
-
-        Each product is initialized from the same arguments, which must therefore tolerate being
-        used more than once.
+        The order is stable across invocations.
      */
 
     template<class Predicate, class... Args>
@@ -208,50 +204,39 @@ namespace sequoia::object
     }
   };
 
-  /** \brief Factory whose products are registered one at a time and erased into a vessel.
+  /** \brief Factory whose products are registered one at a time, each erased into a vessel.
 
-      The sibling above fixes its products in its own type, which buys a compile-time guarantee that
-      nothing outside the list can be made. That guarantee costs a template parameter per product,
-      so it does not survive a product set numbered in thousands - which is what a test runner for a
-      large project is.
+      Choose this over the sibling above where the products are too many, or too little known, to be
+      named in a template parameter list. What is given up is the closed world: there is no longer
+      any asking, at compile time, whether a type is among the products.
 
-      What replaces it is narrower but not nothing: every `add` is type-checked where it is written,
-      since the product must be constructible from the arguments *and* fit the vessel. What is given
-      up is the closed world - the ability to ask, at compile time, whether some type is among the
-      products.
-
-      The creation arguments are fixed by the factory's own type rather than by each call, which is
-      where the sibling's requirement that every product be initializable from one common argument
-      list reappears: there, a constraint checked per call; here, a signature.
-
-      There is no counterpart to `make_or`. Naming a fallback product means finding the entry which
-      makes that type, and erasure is precisely the loss of that knowledge; a caller wanting one can
-      supply a fallback vessel instead.
+      There is no counterpart to `make_or`, since naming a fallback product means finding the entry
+      which makes that type, and that is the knowledge erasure gives up.
    */
 
   template<class Vessel, class... Args>
-  class erased_factory
+  class erasing_factory
   {
-  private:
-    using creator = Vessel(*)(const Args&...);
-    using storage = std::map<std::string, creator, std::less<>>;
-    using const_storage_iterator = storage::const_iterator;
   public:
     using key    = std::string;
     using vessel = Vessel;
-
+  private:
+    using creator = vessel(*)(const Args&...);
+    using storage = std::map<key, creator, std::ranges::less>;
+    using const_storage_iterator = storage::const_iterator;
+  public:
     using names_iterator = utilities::iterator<const_storage_iterator, factory_dereference_policy<const_storage_iterator>>;
 
-    /** \brief Registers a product under a name, which must be neither empty nor already taken. */
+    /** \brief Registers a product, throwing if the name is empty or already taken. */
 
     template<class Product>
-      requires initializable_from<Product, const Args&...> && std::constructible_from<Vessel, Product>
-    void add(key name)
+      requires initializable_from<Product, const Args&...> && std::constructible_from<vessel, Product>
+    void register_product(key name)
     {
       if(name.empty())
         throw std::logic_error{"Factory product names must not be empty!"};
 
-      constexpr creator make_product{[](const Args&... args) -> Vessel { return Vessel{Product{args...}}; }};
+      constexpr creator make_product{[](const Args&... args) -> vessel { return vessel{Product{args...}}; }};
 
       if(!m_Creators.emplace(std::move(name), make_product).second)
         throw std::logic_error{"Factory product names must be unique!"};
@@ -264,7 +249,7 @@ namespace sequoia::object
     }
 
     [[nodiscard]]
-    Vessel make(std::string_view name, const Args&... args) const
+    vessel make(std::string_view name, const Args&... args) const
     {
       const auto found{m_Creators.find(name)};
 
@@ -276,14 +261,13 @@ namespace sequoia::object
 
     /** \brief Every product whose name satisfies the predicate.
 
-        As for the sibling above: the order is stable from one run to the next, and each product is
-        initialized from the same arguments, which must therefore tolerate being used more than once.
+        The order is stable across invocations.
      */
 
     template<class Predicate>
       requires std::predicate<Predicate, std::string_view>
     [[nodiscard]]
-    std::vector<Vessel> make_if(Predicate pred, const Args&... args) const
+    std::vector<vessel> make_if(Predicate pred, const Args&... args) const
     {
       return   m_Creators
              | std::views::filter([&pred](const auto& e){ return pred(std::string_view{e.first}); })
@@ -294,13 +278,13 @@ namespace sequoia::object
     /** \brief Every product, in the same stable order as `make_if`. */
 
     [[nodiscard]]
-    std::vector<Vessel> make_all(const Args&... args) const
+    std::vector<vessel> make_all(const Args&... args) const
     {
       return make_if([](std::string_view){ return true; }, args...);
     }
 
     [[nodiscard]]
-    friend bool operator==(const erased_factory&, const erased_factory&) noexcept = default;
+    friend bool operator==(const erasing_factory&, const erasing_factory&) noexcept = default;
 
     [[nodiscard]]
     names_iterator begin_names() const noexcept

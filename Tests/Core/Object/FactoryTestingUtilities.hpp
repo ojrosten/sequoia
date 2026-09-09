@@ -73,9 +73,9 @@ namespace sequoia::testing
   };
 
   template<class Vessel, class... Args>
-  struct value_tester<sequoia::object::erased_factory<Vessel, Args...>>
+  struct value_tester<sequoia::object::erasing_factory<Vessel, Args...>>
   {
-    using type = sequoia::object::erased_factory<Vessel, Args...>;
+    using type = sequoia::object::erasing_factory<Vessel, Args...>;
 
     template<test_mode Mode>
     static void test(equality_check_t, test_logger<Mode>& logger, const type& actual, const type& prediction)
