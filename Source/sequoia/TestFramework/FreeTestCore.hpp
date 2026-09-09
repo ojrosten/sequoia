@@ -219,7 +219,7 @@ namespace sequoia::testing
 
   template<std::derived_from<test_base> T>
   [[nodiscard]]
-  std::string test_name()
+  consteval std::string_view test_name()
   {
     constexpr std::string_view qualified{meta::tidy_type_name(meta::type_name<T>())};
 
@@ -232,7 +232,7 @@ namespace sequoia::testing
     static_assert(unqualified.find(' ') == std::string_view::npos,
                   "A test's name must be free of spaces to serve as a file name");
 
-    return std::string{unqualified};
+    return unqualified;
   }
 
   template<concrete_test T>

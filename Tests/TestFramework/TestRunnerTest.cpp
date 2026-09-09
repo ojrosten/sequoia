@@ -30,7 +30,7 @@ namespace sequoia::testing
     template<concrete_test T>
     [[nodiscard]]
     fs::path make_fake_file_path(std::string_view group = "") {
-      return fs::path{std::source_location::current().file_name()}.parent_path().parent_path() / group / (test_name<T>() + ".cpp");
+      return fs::path{std::source_location::current().file_name()}.parent_path().parent_path() / group / (std::string{test_name<T>()} + ".cpp");
     }
   }
 

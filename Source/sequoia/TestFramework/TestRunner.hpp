@@ -329,27 +329,18 @@ namespace sequoia::testing
     test_runner& operator=(const test_runner&)     = delete;
     test_runner& operator=(test_runner&&) noexcept = default;
 
-    /** \brief Registers a test, unless the filter rejects it.
-
-        The rejected are never constructed: a test's name and source file are properties of its
-        class, so the filter can be asked before there is an object to ask about.
-     */
-
     template<concrete_test T>
     void register_test()
     {
       ++m_Registered;
 
-      auto name{test_name<T>()};
+      constexpr std::string_view name{test_name<T>()};
       if(!m_TestNames.insert(name).second)
         throw std::logic_error{duplication_message(name, T::source_file())};
 
-      if constexpr(is_performance_test_v<T>)
-      {
-        if(m_PerformanceMode == performance_mode::excluded) return;
-      }
+      constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
 
-      if(m_Filter(T::source_file(), groups_of(T::source_file()))) m_Tests.emplace_back(T{});
+      if(m_Filter(T::source_file(), groups_of(T::source_file()), isPerformanceTest)) m_Tests.emplace_back(T{});
     }
 
     [[nodiscard]]
@@ -372,6 +363,7 @@ namespace sequoia::testing
     enum class instability_mode { none = 0, single_instance, coordinator, sandbox };
     enum class versioned_output_mode { unchecked = 0, checked = 1 };
     enum class performance_mode { included = 0, excluded = 1 };
+    enum class is_performance_test : bool { no, yes };
 
     struct prune_info
     {
@@ -415,9 +407,13 @@ namespace sequoia::testing
         m_SelectedSuites.emplace();
       }
 
+      void exclude_performance_tests() noexcept { m_PerformanceMode = performance_mode::excluded; }
+
       [[nodiscard]]
-      bool operator()(const normal_path& source, std::span<const std::string> groups)
+      bool operator()(const normal_path& source, std::span<const std::string> groups, is_performance_test isPerformanceTest)
       {
+        if((isPerformanceTest == is_performance_test::yes) && (m_PerformanceMode == performance_mode::excluded)) return false;
+
         if(!m_SelectedItems && !m_SelectedSuites) return true;
 
         // Both are evaluated: an unreported selection is one nobody can be warned about.
@@ -476,6 +472,7 @@ namespace sequoia::testing
       std::optional<items_map_type>  m_SelectedItems{};
       std::optional<suites_map_type> m_SelectedSuites{};
       path_equivalence m_Equivalent;
+      performance_mode m_PerformanceMode{performance_mode::included};
     };
 
     struct suite_node
@@ -493,7 +490,7 @@ namespace sequoia::testing
 
     suite_type m_Suites{};
     std::vector<test_vessel> m_Tests{};
-    std::set<std::string> m_TestNames{};
+    std::set<std::string_view> m_TestNames{};
     std::size_t m_Registered{};
     test_filter m_Filter{path_equivalence{proj_paths().tests().repo()}};
     prune_info m_PruneInfo{};
@@ -505,7 +502,6 @@ namespace sequoia::testing
     concurrency_mode      m_ConcurrencyMode{concurrency_mode::dynamic};
     instability_mode      m_InstabilityMode{instability_mode::none};
     versioned_output_mode m_VersionedOutputMode{versioned_output_mode::unchecked};
-    performance_mode      m_PerformanceMode{performance_mode::included};
 
     std::size_t m_NumReps{1},
                 m_RunnerID{},
