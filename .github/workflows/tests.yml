@@ -199,16 +199,15 @@ jobs:
         timeout-minutes: 30
         run: cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/run.log"
 
-      # An advisory column still has to be *read*, and its failures are not equally
-      # acceptable. The performance tests assert absolute wall-clock times - eight
-      # 25ms sleeps against a 60ms +- 35 window - which a shared hosted runner
-      # cannot hold; the same commit has returned 196ms and 603ms. Everything else
-      # is a defect. So the two are counted apart and only the second is raised as
-      # an error annotation, which is loud without turning the column into a gate.
+      # An advisory column still has to be *read*, and its failures are not equally acceptable.
+      # TestRunnerPerformanceTest asserts absolute wall-clock times - eight 25ms sleeps against a
+      # 60ms +- 35 window - which a shared hosted runner cannot hold; the same commit has returned
+      # 196ms and 603ms. Everything else is a defect.
       #
-      # The six rows are matched by name rather than on the word "Failures",
-      # because `Critical Failures:  2` contains `Failures:  2` and a naive sum
-      # would count it twice.
+      # Classified by the *test that failed*, not by the summary row: those timing assertions are
+      # `check(within_tolerance{...}, ...)`, which count in the standard row, since the performance
+      # rows count `check_relative_performance` alone. Every failing file is named either way, so a
+      # new one cannot hide behind a tolerated one.
       - name: Triage the advisory run
         if: ${{ always() && matrix.advisory == true && toJSON(matrix.run) != 'false' }}
         run: |
@@ -218,46 +217,34 @@ jobs:
             exit 0
           fi
 
-          row() { { grep -F "$1" "$log" || true; } | tail -1 | sed -nE 's/.*Failures:[[:space:]]*([0-9]+).*/\1/p'; }
-          num() { echo "${1:-0}"; }
+          # Tests whose failures are understood and tracked: roadmap items 38 and 102.
+          tolerated_tests='TestRunnerPerformanceTest\.cpp'
 
-          std=$(num "$(row 'Standard Top Level Checks:')")
-          fp=$(num  "$(row 'False Positive Checks:')")
-          fn=$(num  "$(row 'False Negative Checks:')")
-          pstd=$(num "$(row 'Standard Performance Checks:')")
-          pfp=$(num  "$(row 'False Positive Performance Checks:')")
-          pfn=$(num  "$(row 'False Negative Performance Checks:')")
-          # awk on the matched lines, not a second grep: a grep with nothing to match exits 1,
-          # and under `-e -o pipefail` that kills the reporter exactly when it has nothing to
-          # report. The warning-counting step was bitten by this before.
-          crit=$({ grep -oE 'Critical Failures:[[:space:]]*[0-9]+' "$log" || true; } \
-                   | awk '{ s += $NF } END { print s + 0 }')
-
-          actionable=$((std + fp + fn + crit))
-          tolerated=$((pstd + pfp + pfn))
+          failing=$({ grep -oE 'Tests/[A-Za-z0-9/_]+\.cpp, Line [0-9]+' "$log" || true; } \
+                      | sed 's/, Line.*//' | sort -u)
+          actionable=$({ echo "$failing" | grep -vE "$tolerated_tests" || true; } | sed '/^$/d')
 
           {
             echo "### ${{ matrix.name }} - advisory run"
             echo ""
-            echo "| | failures |"
-            echo "|---|---|"
-            echo "| Standard top level | $std |"
-            echo "| False positive | $fp |"
-            echo "| False negative | $fn |"
-            echo "| Critical | $crit |"
-            echo "| Performance (tolerated) | $tolerated |"
+            if [ -n "$failing" ]; then
+              echo "Failing tests:"
+              echo '```'
+              echo "$failing"
+              echo '```'
+            else
+              echo "No failing tests."
+            fi
+            echo ""
+            echo '```'
+            sed -n '/Grand Totals/,$p' "$log" | head -12
+            echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
-          if [ "$actionable" -gt 0 ]; then
-            echo "::error title=Advisory run needs action::${{ matrix.name }}: $actionable non-performance failure(s). This column does not gate, so the job is green; the failures are real."
-            {
-              echo ""
-              echo '```'
-              sed -n '/Grand Totals/,$p' "$log" | head -20
-              echo '```'
-            } >> "$GITHUB_STEP_SUMMARY"
-          elif [ "$tolerated" -gt 0 ]; then
-            echo "::warning title=Advisory run::${{ matrix.name }}: $tolerated performance failure(s) only, which this runner cannot hold. Nothing to act on."
+          if [ -n "$actionable" ]; then
+            echo "::error title=Advisory run needs action::${{ matrix.name }}: $(echo "$actionable" | tr '\n' ' '). This column does not gate, so the job is green; the failures are real."
+          elif [ -n "$failing" ]; then
+            echo "::warning title=Advisory run::${{ matrix.name }}: only the timing assertions this runner cannot hold (roadmap 38, 102). Nothing to act on."
           else
             echo "::notice title=Advisory run::${{ matrix.name }}: the suite passed outright."
           fi

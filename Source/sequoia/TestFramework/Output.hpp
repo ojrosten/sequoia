@@ -18,7 +18,6 @@
 #include <cmath>
 #include <filesystem>
 #include <source_location>
-#include <string_view>
 
 namespace sequoia::testing
 {
@@ -206,31 +205,6 @@ namespace sequoia::testing
     std::string m_Message{};
     std::optional<std::source_location> m_Loc{};
   };
-
-  /** \brief Removes a leading elaborated-type-specifier from a type's name.
-
-      MSVC writes one where clang and gcc do not, so a name taken from
-      `std::source_location::function_name()` reads `class foo` there and `foo` elsewhere. This is
-      the same divergence the MSVC arm of `tidy_name` peels off a demangled name, kept separate
-      because that path is a runtime `std::string` pipeline, whereas a name destined for a file path
-      is wanted at compile time.
-
-      Only the leading keyword goes: a template argument keeps its own, which is one reason a test
-      may not be a class template.
-
-      Where it bites is narrower than it looks. A name carrying a namespace loses the keyword anyway
-      when the qualification is stripped, so this matters for a type declared at global scope - which
-      a client's tests may well be, since a namespace is optional in a generated project.
-   */
-
-  [[nodiscard]]
-  constexpr std::string_view without_elaborated_type_specifier(std::string_view name) noexcept
-  {
-    for(auto keyword : {std::string_view{"class "}, std::string_view{"struct "}, std::string_view{"enum "}})
-      if(name.starts_with(keyword)) return name.substr(keyword.size());
-
-    return name;
-  }
 
   [[nodiscard]]
   std::string tidy_name(std::string name, clang_type);

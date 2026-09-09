@@ -377,9 +377,7 @@ namespace sequoia::testing
   {
     if(!text.empty() || std::filesystem::exists(file))
     {
-      // Here rather than when the test was constructed: a directory made for a test which turns
-      // out to write nothing is an empty directory, and git cannot store one of those, so it would
-      // be present for whoever generated it and absent in a fresh checkout.
+      // An empty directory cannot be committed, so this one is made only when a file goes into it.
       std::filesystem::create_directories(file.parent_path());
 
       write_to_file(file, text);

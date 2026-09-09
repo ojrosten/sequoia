@@ -39,6 +39,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Meta/SequencesFreeTest.cpp
                ${TestDir}/Core/Meta/TypeAlgorithmsFreeTest.cpp
                ${TestDir}/Core/Meta/TypeListFreeTest.cpp
+               ${TestDir}/Core/Meta/TypeNameFreeTest.cpp
                ${TestDir}/Core/Meta/TypeTraitsTest.cpp
                ${TestDir}/Core/Meta/UtilitiesTest.cpp
                ${TestDir}/Core/Object/CreatorFreeTest.cpp               

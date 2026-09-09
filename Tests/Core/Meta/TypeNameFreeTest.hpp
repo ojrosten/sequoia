@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-//                Copyright Oliver J. Rosten 2021.                //
+//                Copyright Oliver J. Rosten 2026.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class output_free_test final : public free_test
+  class type_name_free_test final : public free_test
   {
   public:
     using free_test::free_test;
@@ -23,14 +23,8 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    void test_emphasise();
+    void test_tidy_type_name();
 
-    void test_display_character();
-
-    void test_tidy_name();
-
-    void test_relative_reporting_path();
-
-    void test_absolute_reporting_path();
+    void test_type_name();
   };
 }

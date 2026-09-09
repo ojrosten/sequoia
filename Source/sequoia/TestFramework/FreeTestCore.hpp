@@ -21,10 +21,9 @@
 #include "sequoia/TestFramework/ProductTypeCheckers.hpp"
 #include "sequoia/TestFramework/StringCheckers.hpp"
 #include "sequoia/TestFramework/IndividualTestPaths.hpp"
-#include "sequoia/TestFramework/Output.hpp"
 
 #include "sequoia/Core/Meta/Concepts.hpp"
-#include "sequoia/Core/Meta/TypeAlgorithms.hpp"
+#include "sequoia/Core/Meta/TypeName.hpp"
 #include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
@@ -222,7 +221,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string test_name()
   {
-    constexpr std::string_view qualified{without_elaborated_type_specifier(meta::type_name<T>())};
+    constexpr std::string_view qualified{meta::tidy_type_name(meta::type_name<T>())};
 
     static_assert(qualified.find('<') == std::string_view::npos,
                   "A test must not be a class template: its name is used to build a file path");

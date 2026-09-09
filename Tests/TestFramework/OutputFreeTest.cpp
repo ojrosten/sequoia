@@ -23,7 +23,6 @@ namespace sequoia::testing
   {
     test_emphasise();
     test_display_character();
-    test_elaborated_type_specifier();
     test_tidy_name();
     test_relative_reporting_path();
     test_absolute_reporting_path();
@@ -41,23 +40,6 @@ namespace sequoia::testing
     check(equality, "", display_character('\t'), "'\\t'"s);
     check(equality, "", display_character('\0'), "'\\0'"s);
     check(equality, "", display_character(' '), "' '"s);
-  }
-
-  void output_free_test::test_elaborated_type_specifier()
-  {
-    STATIC_CHECK(without_elaborated_type_specifier("class foo")  == "foo");
-    STATIC_CHECK(without_elaborated_type_specifier("struct foo") == "foo");
-    STATIC_CHECK(without_elaborated_type_specifier("enum foo")   == "foo");
-    STATIC_CHECK(without_elaborated_type_specifier("foo")        == "foo");
-    STATIC_CHECK(without_elaborated_type_specifier("")           == "");
-
-    // The trailing space in each keyword is what spares a name merely beginning with one.
-    STATIC_CHECK(without_elaborated_type_specifier("classic")    == "classic");
-    STATIC_CHECK(without_elaborated_type_specifier("structure")  == "structure");
-    STATIC_CHECK(without_elaborated_type_specifier("enumerator") == "enumerator");
-
-    // Only the leading keyword: an argument keeps its own.
-    STATIC_CHECK(without_elaborated_type_specifier("class foo<class bar>") == "foo<class bar>");
   }
 
   void output_free_test::test_tidy_name()

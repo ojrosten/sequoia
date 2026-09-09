@@ -32,6 +32,7 @@
 #include "Core/Meta/SequencesFreeTest.hpp"
 #include "Core/Meta/TypeAlgorithmsFreeTest.hpp"
 #include "Core/Meta/TypeListFreeTest.hpp"
+#include "Core/Meta/TypeNameFreeTest.hpp"
 #include "Core/Meta/TypeTraitsTest.hpp"
 #include "Core/Meta/UtilitiesTest.hpp"
 #include "Core/Object/CreatorFreeTest.hpp"
