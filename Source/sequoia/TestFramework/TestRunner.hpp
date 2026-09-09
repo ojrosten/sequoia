@@ -17,7 +17,7 @@
 #include "sequoia/TestFramework/VersionedOutput.hpp"
 
 #include "sequoia/Core/Logic/Bitmask.hpp"
-#include "sequoia/Core/Object/Factory.hpp"
+#include <set>
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
@@ -201,7 +201,7 @@ namespace sequoia::testing
       [[nodiscard]]
       const std::string& name() const noexcept final
       {
-        return m_Test.name();
+        return m_Name;
       }
 
       [[nodiscard]]
@@ -253,8 +253,8 @@ namespace sequoia::testing
 
       void initialize(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths, recovery_mode mode) final
       {
-        auto name{test_name<Test>()};
-        const auto source{m_Test.source_file()};
+        const auto& name{m_Name};
+        const auto source{Test::source_file()};
 
         m_Test = Test{name,
                       source,
@@ -265,6 +265,8 @@ namespace sequoia::testing
                       get_reduction_discriminator(m_Test)};
       }
     private:
+      std::string m_Name{test_name<Test>()};
+
       log_summary write_versioned_output(const timer& t) const
       {
         auto summary{m_Test.summarize(t.time_elapsed())};
@@ -327,12 +329,22 @@ namespace sequoia::testing
     test_runner& operator=(const test_runner&)     = delete;
     test_runner& operator=(test_runner&&) noexcept = default;
 
-    /** \brief Registers a test, which is grouped by where its source file lives. */
+    /** \brief Registers a test, unless the filter rejects it.
+
+        The rejected are never constructed: a test's name and source file are properties of its
+        class, so the filter can be asked before there is an object to ask about.
+     */
 
     template<concrete_test T>
     void register_test()
     {
-      m_Factory.register_product<T>(test_name<T>());
+      ++m_Registered;
+
+      auto name{test_name<T>()};
+      if(!m_TestNames.insert(name).second)
+        throw std::logic_error{duplication_message(name, T::source_file())};
+
+      if(m_Filter(T::source_file(), groups_of(T::source_file()))) m_Tests.emplace_back(T{});
     }
 
     [[nodiscard]]
@@ -474,7 +486,9 @@ namespace sequoia::testing
     std::ostream*    m_Stream;
 
     suite_type m_Suites{};
-    object::erasing_factory<test_vessel> m_Factory{};
+    std::vector<test_vessel> m_Tests{};
+    std::set<std::string> m_TestNames{};
+    std::size_t m_Registered{};
     test_filter m_Filter{path_equivalence{proj_paths().tests().repo()}};
     prune_info m_PruneInfo{};
 
@@ -543,6 +557,12 @@ namespace sequoia::testing
     prune_outcome do_prune();
 
     void build_suite_tree();
+
+    [[nodiscard]]
+    std::vector<std::string> groups_of(const std::filesystem::path& source) const;
+
+    [[nodiscard]]
+    static std::string duplication_message(std::string_view testName, const std::filesystem::path& source);
 
  };
 }

@@ -1073,7 +1073,7 @@ namespace sequoia::testing
   [[nodiscard]]
   bool test_runner::nothing_to_do()
   {
-    if(!m_Factory.size())
+    if(!m_Registered)
     {
       stream() << "Nothing to do: try creating some tests!\nRun with --help to see options\n";
       return true;
@@ -1169,6 +1169,25 @@ namespace sequoia::testing
     return prune_outcome::no_time_stamp;
   }
 
+  [[nodiscard]]
+  std::vector<std::string> test_runner::groups_of(const fs::path& source) const
+  {
+    return rebase_from(source, proj_paths().tests().repo()).parent_path()
+         | std::views::transform([](const fs::path& p){ return p.generic_string(); })
+         | std::ranges::to<std::vector>();
+  }
+
+  [[nodiscard]]
+  std::string test_runner::duplication_message(std::string_view testName, const fs::path& source)
+  {
+    using namespace parsing::commandline;
+
+    return error(std::string{"Test: \""}.append(testName).append("\"\n")
+                  .append("Source file: \"").append(source.generic_string()).append("\"\n")
+                  .append("A test's name is that of its class, and determines where its output is"
+                    " written, so each may be registered only once.\n"));
+  }
+
   void test_runner::build_suite_tree()
   {
     std::vector<fs::path> materialsPaths{};
@@ -1178,13 +1197,12 @@ namespace sequoia::testing
     m_Suites = suite_type{};
     m_Suites.add_node(suite_type::npos);
 
-    for(auto& vessel : m_Factory.make_all())
+    // By name, so that where a registration sits in a main does not decide what the output says.
+    std::ranges::sort(m_Tests, {}, [](const test_vessel& v){ return v.name(); });
+
+    for(auto& vessel : m_Tests)
     {
       const auto directory{rebase_from(vessel.source_file(), proj_paths().tests().repo()).parent_path()};
-      const auto names{directory | std::views::transform([](const fs::path& p){ return p.generic_string(); })
-                                 | std::ranges::to<std::vector>()};
-
-      if(!m_Filter(vessel.source_file(), names)) continue;
 
       auto parent{suite_type::size_type{}};
       fs::path sofar{};

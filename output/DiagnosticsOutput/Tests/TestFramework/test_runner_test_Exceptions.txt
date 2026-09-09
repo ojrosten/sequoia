@@ -76,7 +76,9 @@ The same test registered twice
 
 Expected Exception Type:
 [std::logic_error]
-Factory product names must be unique!
+  Error: Test: "foo_test"
+Source file: "Tests/foo_test.cpp"
+A test's name is that of its class, and determines where its output is written, so each may be registered only once.
 
 =======================================
 
