@@ -408,14 +408,6 @@ namespace sequoia::testing
 
       void exclude_performance_tests() noexcept { m_PerformanceMode = performance_mode::excluded; }
 
-      /** \brief Excludes a single test by source file.
-
-          Deliberately minimal, and deliberately *inside* this filter rather than beside it: a second
-          mechanism for leaving tests out would have an order nobody chose, and only one of the two
-          could report what it matched. It is not the exclusion vocabulary roadmap items 121 and 133
-          call for - there is no composition, no categories, and exclusion simply beats selection.
-       */
-
       void exclude_item(normal_path source) { m_ExcludedItems.emplace_back(std::move(source)); }
 
       [[nodiscard]]
@@ -423,8 +415,6 @@ namespace sequoia::testing
       {
         if((isPerformanceTest == is_performance_test::yes) && (m_PerformanceMode == performance_mode::excluded)) return false;
 
-        // Exclusion is checked first and unconditionally, so that an excluded test stays excluded
-        // however it was reached - including via an explicit selection.
         if(std::ranges::any_of(m_ExcludedItems, [this, &source](const normal_path& excluded){ return m_Equivalent(excluded, source); }))
           return false;
 
