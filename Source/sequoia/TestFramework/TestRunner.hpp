@@ -408,10 +408,15 @@ namespace sequoia::testing
 
       void exclude_performance_tests() noexcept { m_PerformanceMode = performance_mode::excluded; }
 
+      void exclude_item(normal_path source) { m_ExcludedItems.emplace_back(std::move(source)); }
+
       [[nodiscard]]
       bool operator()(const normal_path& source, std::span<const std::string> groups, is_performance_test isPerformanceTest)
       {
         if((isPerformanceTest == is_performance_test::yes) && (m_PerformanceMode == performance_mode::excluded)) return false;
+
+        if(std::ranges::any_of(m_ExcludedItems, [this, &source](const normal_path& excluded){ return m_Equivalent(excluded, source); }))
+          return false;
 
         if(!m_SelectedItems && !m_SelectedSuites) return true;
 
@@ -439,6 +444,8 @@ namespace sequoia::testing
       [[nodiscard]]
       operator bool() const noexcept { return m_SelectedItems.has_value() || m_SelectedSuites.has_value(); }
     private:
+      std::vector<normal_path> m_ExcludedItems{};
+
       template<class Map>
       static void add(std::optional<Map>& map, typename Map::value_type::first_type key)
       {

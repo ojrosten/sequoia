@@ -40,15 +40,19 @@ namespace sequoia
     int iterator_debug_level() noexcept;
   #endif
 
-  #if defined(__clang__)
-    namespace execution
-    {
-      inline constexpr int par{0};
-    }
-  #else
+  #if defined(__cpp_lib_parallel_algorithm)
+    inline constexpr bool has_parallel_algorithms_v{true};
+
     namespace execution
     {
       inline constexpr auto par{std::execution::par};
+    }
+  #else
+    inline constexpr bool has_parallel_algorithms_v{false};
+
+    namespace execution
+    {
+      inline constexpr int par{0};
     }
   #endif
 
