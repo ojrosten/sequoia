@@ -22,6 +22,11 @@ name: fine
 # has ever refreshed them would block the gate on a known backlog. The Linux column
 # still carries it, so drift is caught. Give MSVC the flag once the forks it writes
 # have been reviewed and committed.
+# The Linux column carries `--exclude-performance` alongside the tier's flag:
+# TestRunnerPerformanceTest asserts 60ms +- 35 for eight 25ms sleeps run
+# concurrently, which a hosted runner cannot hold - this column returned 164ms on
+# 2026-09-10, under ASan's slowdown. Both flags are spelt out because a column's
+# `exec_args` REPLACES the tier's rather than adding to it.
 on:
   pull_request:
     branches: [staging]
@@ -38,6 +43,6 @@ jobs:
       exec_args: '--check-versioned-output'
       columns: >-
         [
-          {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
           {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--exclude-performance"}
         ]
