@@ -108,12 +108,22 @@ jobs:
 
       # `--version` does not identify the compiler: Ubuntu ships post-release
       # snapshots of a branch under the release's version number, so a g++ reporting
-      # 15.2.0 may be well beyond it. The changelog says which.
-      - name: What the distribution's g++ actually is
+      # 15.2.0 may be well beyond it. The changelog says which. The same is true of
+      # a distro clang, so this reads the changelog of whichever package the column
+      # installed rather than naming one compiler.
+      - name: What the distribution's compiler actually is
         if: runner.os == 'Linux'
-        # sed, not head: head exits early, gzip takes SIGPIPE, and `-o pipefail`
-        # would turn a report into a failed job.
-        run: zcat /usr/share/doc/gcc-15/changelog.Debian.gz | sed -n '1,20p'
+        # A report must not be able to fail the job - hence the trailing `|| true`,
+        # and `sed` rather than `head`, since head exits early, gzip takes SIGPIPE,
+        # and `-o pipefail` would turn a report into a failure.
+        run: |
+          pkg="${{ matrix.pkg || matrix.cxx }}"
+          log=$(dpkg -L "$pkg" 2>/dev/null | grep -m1 'changelog.Debian.gz$' || true)
+          if [ -n "$log" ]; then
+            zcat "$log" | sed -n '1,20p' || true
+          else
+            echo "No Debian changelog found for $pkg; $CXX --version above is all we have."
+          fi
 
       # The generated project's `git init` is followed by a commit, and git refuses
       # to commit without an identity. Every developer machine has one configured;
