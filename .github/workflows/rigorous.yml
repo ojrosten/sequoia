@@ -7,18 +7,10 @@ name: rigorous
 # Promotion-triggered rather than scheduled, so the expensive columns are paid for
 # once per promotion rather than once per change.
 #
-# Over fine, this is MEANT to add the two questions a sanitized Debug build cannot
-# answer: races, and what the optimizer does. Both columns are withdrawn as of
-# 2026-09-10 - see below - so at present it adds only the docs and coverage jobs,
-# and its build columns are identical to fine's in every respect: same two
-# entries, same warnings_as_errors, same exec_args.
-#
-# Say plainly what that costs, because the promotion model above is written as
-# though it were not true: while those columns are out, promoting staging to main
-# verifies nothing that merging into staging did not already verify, bar docs and
-# coverage. `main` still means "promoted deliberately", but it does not currently
-# mean "verified more thoroughly". Restoring the two columns is what makes the
-# sentence above true again.
+# Over fine, this adds the two questions a sanitized Debug build cannot answer:
+# races, and what the optimizer does. **Only the first of those is asked at
+# present**: the Release column is withdrawn - see below - so promotion is not
+# currently checking what the optimizer does to us.
 #
 # The Windows column runs the suite with `--exclude-performance`. It is only the
 # timing assertions a hosted runner cannot hold - TestRunnerPerformanceTest asserts
@@ -49,21 +41,40 @@ name: rigorous
 # the copyable_function work removes them without anything being suppressed.
 # Restore this column when those three sites are resolved or knowingly waived.
 #
-# Linux · GCC · TSan - roadmap item 136. Reports 54 data races, every one inside
-# oneAPI TBB - partitioner.h 28, blocked_range.h 13, parallel_for.h 10,
-# _small_object_pool.h 3 - and none in sequoia. Under GCC, sequoia::execution::par
-# is std::execution::par, which libstdc++ implements on TBB, so `accelerate`
-# takes std::for_each and TSan instruments a library it cannot see the
-# synchronisation of. Suppressing those frames would silence the column without
-# making it assert anything about us, since our own thread pool is the branch GCC
-# never takes.
+# The TSan column is macOS/Clang where every other column is Linux/GCC or MSVC,
+# and that is deliberate. `Preprocessor.hpp` gives `sequoia::execution::par` the
+# real `std::execution::par` only where `__cpp_lib_parallel_algorithm` is defined,
+# which is a property of the standard library: libstdc++ has the parallel
+# algorithms, on oneAPI TBB; libc++ does not. So under GCC, `accelerate` runs
+# `std::for_each(par, ...)` and TSan instruments TBB rather than us - it reported
+# 54 races on PR #41, 28 in partitioner.h, 13 in blocked_range.h, 10 in
+# parallel_for.h, 3 in _small_object_pool.h, and none in sequoia, because TSan
+# cannot see TBB's internal synchronisation unless TBB is built with TSan.
 #
-# The fix is to run TSan under CLANG, where `par` is a stand-in int and
-# `accelerate` routes to sequoia's thread_pool_policy - measured 2026-09-10 on
-# 63ec01258 with clang 23.1.0: zero ThreadSanitizer reports, 19588 checks, 0
-# failures. That is blocked only by sequoia not yet compiling under clang +
-# libstdc++, which is its own item. Restore this column AS A CLANG COLUMN when
-# that lands; restoring it as a GCC one would only bring the noise back.
+# Clang with libc++ takes the other branch, `thread_pool_policy`, so TSan
+# observes the concurrency we actually wrote. Measured 2026-09-10 on 63ec01258
+# with clang 23.1.0 on arm64: zero ThreadSanitizer reports, 19588 checks, 0
+# failures. Suppressing the TBB frames instead would have left the column
+# asserting nothing about our code, since our pool is the branch GCC never takes.
+#
+# It must be macOS rather than Linux, and that is the whole point: clang as
+# shipped means libc++ on macOS but **libstdc++ on Linux**, where the feature
+# macro is defined and TBB would come straight back. Do not "regularise" this to
+# ubuntu-latest.
+#
+# macOS was dropped on 2026-09-08 over the timing assertions a hosted runner
+# cannot hold; `--exclude-performance` is what buys it back, exactly as it does
+# for the Windows columns.
+#
+# Roadmap item 135 - Linux · GCC · Release - stays withdrawn. It dies at COMPILE
+# time, because `warnings_as_errors` meets three sites GCC only diagnoses at
+# Release-level inlining: MonotonicSequence.hpp:121 (-Wstringop-overflow, 53
+# lines), Spaces.hpp:3465 (-Wmaybe-uninitialized, 48) and Iterator.hpp:309
+# (-Warray-bounds, 6). Reproduced under gcc 16.2 as well as the image's gcc 15,
+# so not version-specific, and unchanged by swapping std::function for
+# copyable_function, so not library-specific either. 101 of those 107 lines are
+# demonstrable false positives. Restore the column when the three sites are
+# resolved or knowingly waived.
 on:
   pull_request:
     branches: [main]
@@ -81,7 +92,8 @@ jobs:
       columns: >-
         [
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15"},
-          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--exclude-performance"}
+          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--exclude-performance"},
+          {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--exclude-performance"}
         ]
 
   docs:
