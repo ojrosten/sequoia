@@ -8,6 +8,7 @@
 #pragma once
 
 #include "sequoia/Core/Meta/Concepts.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
 
 #include <iterator>
 
@@ -307,10 +308,7 @@ namespace sequoia::utilities
     // holds `__first + 16` inside `if(__last - __first > 16)`, and gcc evaluates that address for a
     // range which cannot reach it - a static graph has 2 edges. This wrapper knows no bounds, so
     // nothing here can be at fault.
-#if defined(__GNUG__) && !defined(__clang__)
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic ignored "-Warray-bounds"
-#endif
+SEQUOIA_GCC_SUPPRESS_BEGIN("-Warray-bounds")
     constexpr iterator& operator+=(const difference_type n)
       requires steppable<Iterator>
     {
@@ -325,9 +323,7 @@ namespace sequoia::utilities
       iterator tmp{it};
       return tmp+=n;
     }
-#if defined(__GNUG__) && !defined(__clang__)
-  #pragma GCC diagnostic pop
-#endif
+SEQUOIA_GCC_SUPPRESS_END
 
     [[nodiscard]]
     friend constexpr iterator operator+(const difference_type n, const iterator& it)
