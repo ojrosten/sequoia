@@ -49,12 +49,20 @@ name: rigorous
 # actually run at -O3 before, the column having always died at compile time; it
 # does now, 19588 checks, 0 failures.
 #
-# The Linux columns carry `--exclude-performance` alongside the tier's flag, for
-# the reason the Windows column always has: TestRunnerPerformanceTest asserts
-# 60ms +- 35 for eight 25ms sleeps run concurrently, and a hosted runner cannot
-# hold that - `fine`'s sanitized Linux column returned 164ms on 2026-09-10. Both
-# flags must be spelt out, because a column's `exec_args` REPLACES the tier's; a
-# column naming only the exclusion silently loses the drift check.
+# The performance tests run HERE and nowhere else in this tier, which is
+# deliberate. What makes them unreliable on a hosted runner is the slowdown, not
+# the platform: TestRunnerPerformanceTest asserts 60ms +- 35 for eight 25ms sleeps
+# run concurrently, and the sanitized columns cannot hold it - `fine`'s Linux
+# ASan+UBSan returned 164ms on 2026-09-10, and MSVC gave 196ms then 603ms for one
+# commit. Uninstrumented gcc can: `coarse`'s Linux Debug column has run them 20
+# times out of 20 since 2026-09-09. This column is uninstrumented gcc, so it is
+# the one that should carry them, and it is why the tier is not simply blind to
+# performance.
+#
+# Hence the asymmetry in `exec_args` below: the sanitized Linux column excludes
+# them and spells out BOTH flags, because a column's `exec_args` REPLACES the
+# tier's - naming only the exclusion would silently lose the drift check - while
+# this column names none and inherits the tier's flag alone.
 on:
   pull_request:
     branches: [main]
@@ -73,7 +81,7 @@ jobs:
         [
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
           {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--exclude-performance"},
-          {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"}
+          {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15"}
         ]
 
   docs:
