@@ -21,6 +21,28 @@ name: rigorous
 # has ever refreshed them would block the gate on a known backlog. The Linux column
 # still carries it, so drift is caught. Give MSVC the flag once the forks it writes
 # have been reviewed and committed.
+#
+# The TSan column is Clang where every other Linux column is GCC, and that is
+# deliberate rather than an oversight. `Preprocessor.hpp` defines
+# `sequoia::execution::par` as a stand-in `int` under Clang and as
+# `std::execution::par` otherwise, so `accelerate` (TestRunner.cpp) branches:
+# GCC runs `std::for_each(par, ...)`, which libstdc++ implements on oneAPI TBB,
+# while Clang runs sequoia's own `thread_pool_policy`.
+#
+# Under GCC, therefore, TSan instruments TBB and not us. It reported 54 races on
+# PR #41 - 28 in partitioner.h, 13 in blocked_range.h, 10 in parallel_for.h, 3 in
+# _small_object_pool.h, and none in sequoia - because TSan cannot see TBB's
+# internal synchronisation unless TBB is itself built with TSan. Suppressing
+# those frames would work, but it would leave the column asserting nothing about
+# our code, since our thread pool is the branch GCC never takes.
+#
+# Clang points TSan at the concurrency we actually own. Measured 2026-09-10 on
+# 63ec01258: zero ThreadSanitizer reports, 19588 checks, 0 failures.
+#
+# What would invalidate this: if `execution::par` stops being a stand-in under
+# Clang - libc++ gaining the parallel algorithms, say - this column silently goes
+# back to instrumenting somebody else's library. Re-read that `#if` before
+# trusting a green result here.
 on:
   pull_request:
     branches: [main]
@@ -39,7 +61,7 @@ jobs:
         [
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15"},
           {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--exclude-performance"},
-          {"name": "Linux · GCC · TSan",       "os": "ubuntu-latest",  "configure": "gcc-env-tsan",       "build": "gcc-env-tsan",       "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "Linux · Clang · TSan",     "os": "ubuntu-latest",  "configure": "llvm-env-tsan",      "build": "llvm-env-tsan",      "cc": "clang", "cxx": "clang++"},
           {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15"}
         ]
 

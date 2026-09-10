@@ -21,6 +21,13 @@ name: nightly
 # has ever refreshed them would block the gate on a known backlog. The Linux column
 # still carries it, so drift is caught. Give MSVC the flag once the forks it writes
 # have been reviewed and committed.
+#
+# The TSan column is Clang, for the reason set out at length in rigorous.yml: under
+# GCC, `sequoia::execution::par` is libstdc++'s TBB-backed `std::execution::par` and
+# TSan instruments TBB rather than us, whereas under Clang `par` is a stand-in and
+# `accelerate` runs sequoia's own thread pool. Keep the two tiers agreeing: a
+# nightly that instruments a different implementation from the gate is measuring
+# something the gate never checks.
 on:
   schedule:
     - cron: '0 3 * * *'
@@ -41,6 +48,6 @@ jobs:
       exec_args: '--check-versioned-output'
       columns: >-
         [
-          {"name": "Linux · GCC · TSan",     "os": "ubuntu-latest",  "configure": "gcc-env-tsan", "build": "gcc-env-tsan", "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "Linux · Clang · TSan",   "os": "ubuntu-latest",  "configure": "llvm-env-tsan", "build": "llvm-env-tsan", "cc": "clang", "cxx": "clang++"},
           {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc",         "build": "msvc", "exec_args": "--exclude-performance"}
         ]
