@@ -50,13 +50,17 @@ jobs:
         run: |
           out="$RUNNER_TEMP/doxygen"
           mkdir -p "$out"
+          # Recorded before doxygen runs, not after. If doxygen fails, the log it
+          # wrote is the only account of why, and a variable set on the next line
+          # would never be set at all - which is exactly how a failure on
+          # modules-native reported "doxygen produced no warning log" instead.
+          echo "DOXY_LOG=$out/warnings.txt" >> "$GITHUB_ENV"
           { cat Doxyfile
             echo "OUTPUT_DIRECTORY=$out"
             echo "WARN_LOGFILE=$out/warnings.txt"
             echo "WARN_IF_UNDOCUMENTED=NO"
             echo "QUIET=YES"
           } | doxygen -
-          echo "DOXY_LOG=$out/warnings.txt" >> "$GITHUB_ENV"
 
       # Zero, which is the only threshold that cannot drift. The gate is on
       # documentation which is wrong, not documentation which is absent - absence

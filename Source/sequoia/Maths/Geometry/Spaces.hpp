@@ -430,6 +430,7 @@
 #include "sequoia/Core/Meta/TypeAlgorithms.hpp"
 #include "sequoia/Maths/Algebra/Ratio.hpp"
 #include "sequoia/Maths/Arithmetic/SaturatingArithmetic.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <algorithm>
