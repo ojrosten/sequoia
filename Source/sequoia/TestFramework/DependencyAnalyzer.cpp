@@ -698,9 +698,12 @@ namespace sequoia::testing
         const auto elapsed{duration_cast<milliseconds>(steady_clock::now() - t0).count()};
         if(!ec)
         {
-          if(attempt > 1)
-            std::cout << "[probe " << site << "] succeeded on attempt " << attempt
-                      << " after " << elapsed << "ms\n";
+          // Report every call, not only the retried ones: a passing run then says how much
+          // headroom there is, and a run with no probe output at all would be indistinguishable
+          // from one where the instrumentation was not built.
+          std::cout << "[probe " << site << "] ok on attempt " << attempt
+                    << " after " << elapsed << "ms, entries removed from "
+                    << dir.generic_string() << "\n";
           return;
         }
 
