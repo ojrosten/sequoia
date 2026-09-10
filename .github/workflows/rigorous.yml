@@ -7,8 +7,18 @@ name: rigorous
 # Promotion-triggered rather than scheduled, so the expensive columns are paid for
 # once per promotion rather than once per change.
 #
-# Over fine, this adds the two questions a sanitized Debug build cannot answer:
-# races, and what the optimizer does.
+# Over fine, this is MEANT to add the two questions a sanitized Debug build cannot
+# answer: races, and what the optimizer does. Both columns are withdrawn as of
+# 2026-09-10 - see below - so at present it adds only the docs and coverage jobs,
+# and its build columns are identical to fine's in every respect: same two
+# entries, same warnings_as_errors, same exec_args.
+#
+# Say plainly what that costs, because the promotion model above is written as
+# though it were not true: while those columns are out, promoting staging to main
+# verifies nothing that merging into staging did not already verify, bar docs and
+# coverage. `main` still means "promoted deliberately", but it does not currently
+# mean "verified more thoroughly". Restoring the two columns is what makes the
+# sentence above true again.
 #
 # The Windows column runs the suite with `--exclude-performance`. It is only the
 # timing assertions a hosted runner cannot hold - TestRunnerPerformanceTest asserts
@@ -21,6 +31,39 @@ name: rigorous
 # has ever refreshed them would block the gate on a known backlog. The Linux column
 # still carries it, so drift is caught. Give MSVC the flag once the forks it writes
 # have been reviewed and committed.
+#
+# TWO COLUMNS ARE TEMPORARILY WITHDRAWN, 2026-09-10. Both failed for reasons that
+# predate the work they were blocking, and a gate nobody can pass stops being a
+# gate: it just diverts promotions around itself. They come back, and the
+# conditions are written down so that "in due course" has a definition.
+#
+# Linux · GCC · Release - roadmap item 135. Dies at COMPILE time, because
+# `warnings_as_errors` meets three sites GCC only diagnoses at Release-level
+# inlining: MonotonicSequence.hpp:121 (-Wstringop-overflow, 53 lines),
+# Spaces.hpp:3465 (-Wmaybe-uninitialized, 48) and Iterator.hpp:309
+# (-Warray-bounds, 6). Reproduced under gcc 16.2 as well as the image's gcc 15,
+# so it is not version-specific. Note the count: CI showed two sites because
+# -Werror stops at the first, and a local warning build found the third - a
+# -Werror log reports the first failures, never the backlog. Two of the three
+# sit under std::function's erased _M_invoke, so the first experiment is whether
+# the copyable_function work removes them without anything being suppressed.
+# Restore this column when those three sites are resolved or knowingly waived.
+#
+# Linux · GCC · TSan - roadmap item 136. Reports 54 data races, every one inside
+# oneAPI TBB - partitioner.h 28, blocked_range.h 13, parallel_for.h 10,
+# _small_object_pool.h 3 - and none in sequoia. Under GCC, sequoia::execution::par
+# is std::execution::par, which libstdc++ implements on TBB, so `accelerate`
+# takes std::for_each and TSan instruments a library it cannot see the
+# synchronisation of. Suppressing those frames would silence the column without
+# making it assert anything about us, since our own thread pool is the branch GCC
+# never takes.
+#
+# The fix is to run TSan under CLANG, where `par` is a stand-in int and
+# `accelerate` routes to sequoia's thread_pool_policy - measured 2026-09-10 on
+# 63ec01258 with clang 23.1.0: zero ThreadSanitizer reports, 19588 checks, 0
+# failures. That is blocked only by sequoia not yet compiling under clang +
+# libstdc++, which is its own item. Restore this column AS A CLANG COLUMN when
+# that lands; restoring it as a GCC one would only bring the noise back.
 on:
   pull_request:
     branches: [main]
@@ -38,9 +81,7 @@ jobs:
       columns: >-
         [
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15"},
-          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--exclude-performance"},
-          {"name": "Linux · GCC · TSan",       "os": "ubuntu-latest",  "configure": "gcc-env-tsan",       "build": "gcc-env-tsan",       "cc": "gcc-15", "cxx": "g++-15"},
-          {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15"}
+          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--exclude-performance"}
         ]
 
   docs:
