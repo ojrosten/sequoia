@@ -40,15 +40,38 @@ namespace sequoia
     int iterator_debug_level() noexcept;
   #endif
 
-  #if defined(__clang__)
-    namespace execution
-    {
-      inline constexpr int par{0};
-    }
-  #else
+  /** Whether the standard library supplies the parallel algorithms.
+
+      Ask the library, not the compiler. libstdc++ has them, on oneAPI TBB; libc++ does not. Which
+      of those a build gets is a property of the *library*, and a clang build may have either -
+      libc++ on macOS, libstdc++ on Linux - so `__clang__` answers a different question and answers
+      it wrongly for half its cases. `__cpp_lib_parallel_algorithm` (P0024R2) asks the one that
+      matters.
+
+      Keeping this as a single constant is what stops `par` and its consumers disagreeing. They did:
+      choosing the stand-in on `__clang__` while `accelerate` branched on `with_clang_v` meant
+      clang-targeting-Windows, which defines both `__clang__` and `_MSC_VER`, took the
+      `std::for_each` branch and handed it an `int` as an execution policy - roadmap item 122. With
+      one discriminator that class of mismatch cannot be written.
+   */
+
+  #if defined(__cpp_lib_parallel_algorithm)
+    inline constexpr bool has_parallel_algorithms_v{true};
+
     namespace execution
     {
       inline constexpr auto par{std::execution::par};
+    }
+  #else
+    inline constexpr bool has_parallel_algorithms_v{false};
+
+    /** A stand-in, so that a call taking an execution policy still compiles where there are no
+        parallel algorithms. Nothing may dereference it; `has_parallel_algorithms_v` gates its use.
+     */
+
+    namespace execution
+    {
+      inline constexpr int par{0};
     }
   #endif
 
