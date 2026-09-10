@@ -15,12 +15,6 @@ module sequoia.platform_specific;
 
 import std;
 
-/** \file
-    \brief Definitions for Helpers.hpp
-*/
-
-/** \file Utilities dependent on platform-specific macros */
-
 namespace sequoia
 {
   timer_resolution::timer_resolution(std::chrono::milliseconds t)

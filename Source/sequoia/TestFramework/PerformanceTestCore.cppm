@@ -62,6 +62,10 @@ export namespace sequoia::testing
 
   /** \brief Function for comparing the performance of a fast task to a slow task.
 
+       \param description the description reported with the check
+       \param logger      the logger to which the result is reported
+       \param fast        the task predicted to be the faster of the two
+       \param slow        the task against which fast is compared
        \param minSpeedUp  the minimum predicted speed up of fast over slow; must be > 1
        \param maxSpeedUp  the maximum predicted speed up of fast over slow; must be > minSpeedUp
        \param trials      the number of trial used for the statistical analysis
@@ -308,6 +312,9 @@ export namespace sequoia::testing
   using performance_false_negative_test = basic_performance_test<test_mode::false_negative>;
 
   template<concrete_test T>
-    requires std::is_base_of_v<basic_performance_test<T::mode>, T>
+  inline constexpr bool is_performance_test_v{std::derived_from<T, basic_performance_test<T::mode>>};
+
+  template<concrete_test T>
+    requires is_performance_test_v<T>
   struct is_parallelizable<T> : std::false_type {};
 }

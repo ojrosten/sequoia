@@ -9,10 +9,6 @@ module sequoia.text_processing;
 
 import std;
 
-/** \file
-    \brief Definitions for Substitutions.hpp
- */
-
 namespace sequoia
 {
   std::string& to_camel_case(std::string& text, std::string_view separator)

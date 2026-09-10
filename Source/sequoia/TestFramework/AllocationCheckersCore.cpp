@@ -9,10 +9,6 @@ module sequoia.test_framework;
 
 import std;
 
-/** \file
-    \brief Definitions for AllocationCheckersCore.hpp
-*/
-
 namespace sequoia::testing
 {
   [[nodiscard]]

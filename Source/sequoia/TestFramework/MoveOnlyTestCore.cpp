@@ -14,10 +14,6 @@ module sequoia.test_framework;
 
 import std;
 
-/** \file
-    \brief Definitions for MoveOnlyTestCore.hpp
-*/
-
 namespace sequoia::testing
 {
   [[nodiscard]]

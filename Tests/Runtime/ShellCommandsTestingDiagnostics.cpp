@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "ShellCommandsTestingDiagnostics.hpp"
 
 namespace sequoia::testing
@@ -15,7 +13,7 @@ namespace sequoia::testing
   using namespace std::string_literals;
 
   [[nodiscard]]
-  std::filesystem::path shell_commands_false_negative_test::source_file() const
+  std::filesystem::path shell_commands_false_negative_test::source_file()
   {
     return std::source_location::current().file_name();
   }

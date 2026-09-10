@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "PartitionIteratorTest.hpp"
 
 #include "PartitionedDataTestingUtilities.hpp"
@@ -20,7 +18,7 @@ namespace sequoia::testing
   using namespace object;
 
   [[nodiscard]]
-  std::filesystem::path partition_iterator_test::source_file() const
+  std::filesystem::path partition_iterator_test::source_file()
   {
     return std::source_location::current().file_name();
   }

@@ -1,2 +1,0 @@
-Unsafe Absolute Physical Value Compositions Test
-Standard Top Level Checks:               164;  Failures:  0  [Deep checks: 3516]

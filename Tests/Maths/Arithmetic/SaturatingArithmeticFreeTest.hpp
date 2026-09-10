@@ -81,7 +81,7 @@ namespace sequoia::testing
     using saturating_arithmetic_free_test<saturating_mul_test_base>::saturating_arithmetic_free_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
   };
 
   class saturating_add_free_test : public saturating_arithmetic_free_test<saturating_add_test_base>
@@ -90,6 +90,6 @@ namespace sequoia::testing
     using saturating_arithmetic_free_test<saturating_add_test_base>::saturating_arithmetic_free_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
   };
 }

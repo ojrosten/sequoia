@@ -14,10 +14,6 @@ module sequoia.test_framework;
 
 import std;
 
-/** \file 
-    \brief Definitions for ConcreteTypeCheckers.hpp
- */
-
 namespace sequoia::testing
 {
   namespace

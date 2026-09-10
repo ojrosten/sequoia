@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "PhysicalValueTestingDiagnostics.hpp"
 
 namespace sequoia::testing
@@ -15,7 +13,7 @@ namespace sequoia::testing
   using namespace physics;
 
   [[nodiscard]]
-  std::filesystem::path physical_value_false_negative_test::source_file() const
+  std::filesystem::path physical_value_false_negative_test::source_file()
   {
     return std::source_location::current().file_name();
   }

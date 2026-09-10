@@ -1,0 +1,51 @@
+False Negative Failure:
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 162
+
+--Move-only Semantics--
+[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 163
+Function object syntax
+
+--Move-only Semantics--
+[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 164
+
+--Move-only Semantics--
+[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 170
+Check moved-from state
+
+--Move-only Semantics--
+[sequoia::testing::orderable_resource_binder]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 171
+Check moved-from state
+
+--Move-only Semantics--
+[sequoia::testing::orderable_resource_binder]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 179
+
+--Move-only Semantics--
+[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
+
+=======================================
+

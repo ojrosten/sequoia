@@ -67,6 +67,7 @@ set(ModuleList
     Core/Meta/Sequences.cppm
     Core/Meta/TypeAlgorithms.cppm
     Core/Meta/TypeList.cppm
+    Core/Meta/TypeName.cppm
     Core/Meta/TypeTraits.cppm
     Core/Meta/Utilities.cppm
     Core/Object/Creator.cppm
@@ -75,7 +76,6 @@ set(ModuleList
     Core/Object/Handlers.cppm
     Core/Object/Nomenclator.cppm
     Core/Object/Object.cppm
-    Core/Object/Suite.cppm
     FileSystem/FileSystem.cppm
     Maths/Algebra/Algebra.cppm
     Maths/Algebra/Ratio.cppm

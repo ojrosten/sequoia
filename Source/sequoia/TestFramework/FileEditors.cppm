@@ -27,7 +27,7 @@ export namespace sequoia::testing
                     std::string_view patternClose,
                     std::string_view cmakeEntryPrefix);
 
-  void add_to_suite(const std::filesystem::path& file, std::string_view suiteName, indentation indent, const std::vector<std::string>& tests);
+  void add_test_registrations(const std::filesystem::path& file, indentation indent, const std::vector<std::string>& tests);
 
   struct reduced_file_contents
   {

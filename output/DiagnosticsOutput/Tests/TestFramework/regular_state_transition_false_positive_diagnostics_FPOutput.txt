@@ -1,0 +1,592 @@
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 77
+
+Transition from node 0 to 1
+Adding 1.1
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 77
+
+Transition from node 0 to 1
+Adding 1.1
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 77
+
+Transition from node 0 to 1
+Adding 1.1
+--Regular Semantics--
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 77
+
+Transition from node 1 to 0
+Subtracting 1.1
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 77
+
+Transition from node 1 to 0
+Subtracting 1.1
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 77
+
+Transition from node 1 to 0
+Subtracting 1.1
+--Regular Semantics--
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 77
+
+Transition from node 1 to 2
+Multiplying by 2
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 77
+
+Transition from node 1 to 2
+Multiplying by 2
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 77
+
+Transition from node 1 to 2
+Multiplying by 2
+--Regular Semantics--
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 77
+
+Transition from node 2 to 1
+Dividing by 2
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 77
+
+Transition from node 2 to 1
+Dividing by 2
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 77
+
+Transition from node 2 to 1
+Dividing by 2
+--Regular Semantics--
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 89
+
+Transition from node 0 to 1
+Adding 1.1
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 89
+
+Transition from node 0 to 1
+Adding 1.1
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 89
+
+Transition from node 0 to 1
+Adding 1.1
+--Regular Semantics--
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 89
+
+Transition from node 1 to 0
+Subtracting 1.1
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 89
+
+Transition from node 1 to 0
+Subtracting 1.1
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 89
+
+Transition from node 1 to 0
+Subtracting 1.1
+--Regular Semantics--
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 89
+
+Transition from node 1 to 2
+Multiplying by 2
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 89
+
+Transition from node 1 to 2
+Multiplying by 2
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 89
+
+Transition from node 1 to 2
+Multiplying by 2
+--Regular Semantics--
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 89
+
+Transition from node 2 to 1
+Dividing by 2
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 89
+
+Transition from node 2 to 1
+Dividing by 2
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 89
+
+Transition from node 2 to 1
+Dividing by 2
+--Regular Semantics--
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 100
+
+Transition from node 0 to 1
+Adding 1.1
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 100
+
+Transition from node 0 to 1
+Adding 1.1
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 100
+
+Transition from node 1 to 0
+Subtracting 1.1
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 100
+
+Transition from node 1 to 0
+Subtracting 1.1
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 100
+
+Transition from node 1 to 2
+Multiplying by 2
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 100
+
+Transition from node 1 to 2
+Multiplying by 2
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 100
+
+Transition from node 2 to 1
+Dividing by 2
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 100
+
+Transition from node 2 to 1
+Dividing by 2
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 131
+
+Transition from node 0 to 1
+Adding (1.1, -0.7)
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 131
+
+Transition from node 0 to 1
+Adding (1.1, -0.7)
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 131
+
+Transition from node 0 to 1
+Adding (1.1, -0.7)
+--Regular Semantics--
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 131
+
+Transition from node 1 to 0
+Subtracting (1.1, -0.7)
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 131
+
+Transition from node 1 to 0
+Subtracting (1.1, -0.7)
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 131
+
+Transition from node 1 to 0
+Subtracting (1.1, -0.7)
+--Regular Semantics--
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 131
+
+Transition from node 1 to 2
+Multiplying by 2
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 131
+
+Transition from node 1 to 2
+Multiplying by 2
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 131
+
+Transition from node 1 to 2
+Multiplying by 2
+--Regular Semantics--
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 131
+
+Transition from node 2 to 1
+Dividing by 2
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 131
+
+Transition from node 2 to 1
+Dividing by 2
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 131
+
+Transition from node 2 to 1
+Dividing by 2
+--Regular Semantics--
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 143
+
+Transition from node 0 to 1
+Adding (1.1, -0.7)
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 143
+
+Transition from node 0 to 1
+Adding (1.1, -0.7)
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 143
+
+Transition from node 0 to 1
+Adding (1.1, -0.7)
+--Regular Semantics--
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 143
+
+Transition from node 1 to 0
+Subtracting (1.1, -0.7)
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 143
+
+Transition from node 1 to 0
+Subtracting (1.1, -0.7)
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 143
+
+Transition from node 1 to 0
+Subtracting (1.1, -0.7)
+--Regular Semantics--
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 143
+
+Transition from node 1 to 2
+Multiplying by 2
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 143
+
+Transition from node 1 to 2
+Multiplying by 2
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 143
+
+Transition from node 1 to 2
+Multiplying by 2
+--Regular Semantics--
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 143
+
+Transition from node 2 to 1
+Dividing by 2
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 143
+
+Transition from node 2 to 1
+Dividing by 2
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 143
+
+Transition from node 2 to 1
+Dividing by 2
+--Regular Semantics--
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 154
+
+Transition from node 0 to 1
+Adding (1.1, -0.7)
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 154
+
+Transition from node 0 to 1
+Adding (1.1, -0.7)
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 154
+
+Transition from node 1 to 0
+Subtracting (1.1, -0.7)
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 154
+
+Transition from node 1 to 0
+Subtracting (1.1, -0.7)
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 154
+
+Transition from node 1 to 2
+Multiplying by 2
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 154
+
+Transition from node 1 to 2
+Multiplying by 2
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 154
+
+Transition from node 2 to 1
+Dividing by 2
+[std::complex<double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RegularStateTransitionDiagnostics.cpp, Line 154
+
+Transition from node 2 to 1
+Dividing by 2
+[std::complex<double>]
+
+=======================================
+

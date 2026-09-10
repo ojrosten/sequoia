@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "DependencyAnalyzerFreeTest.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
@@ -118,7 +116,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path dependency_analyzer_free_test::source_file() const
+  std::filesystem::path dependency_analyzer_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }

@@ -10,51 +10,11 @@ export module sequoia.core.meta:TypeAlgorithms;
 import std;
 
 import :Sequences;
-
-/** \file */
+import :TypeName;
 
 export namespace sequoia::meta
 {
   //==================================================== type_comparator ===================================================//
-
-  namespace impl
-  {
-    using trial_type = void;
-    constexpr std::string_view trial_type_name{"void"};
-
-    namespace wrapped_type
-    {
-      template <typename T>
-      [[nodiscard]]
-      constexpr std::string_view name() noexcept
-      {
-        return std::source_location::current().function_name();
-      }
-
-      [[nodiscard]]
-      constexpr std::size_t prefix_length() noexcept
-      { 
-        return name<trial_type>().find(trial_type_name); 
-      }
-
-      [[nodiscard]]
-      constexpr std::size_t suffix_length() noexcept
-      { 
-        return name<trial_type>().length() - prefix_length() - trial_type_name.length();
-      }
-    }
-  }
-
-  template<class T>
-  [[nodiscard]]
-  consteval std::string_view type_name()
-  {
-    using namespace impl::wrapped_type;
-    constexpr auto wrappedName{name<T>()};
-    constexpr auto prefixLength{prefix_length()};
-    constexpr auto nameLength{wrappedName.length() - prefixLength - suffix_length()};
-    return wrappedName.substr(prefixLength, nameLength);
-  }
 
   template<class T, class U>
   struct type_comparator : std::bool_constant<type_name<T>() < type_name<U>()>

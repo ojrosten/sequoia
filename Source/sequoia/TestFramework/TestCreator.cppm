@@ -67,11 +67,6 @@ export namespace sequoia::testing
     void flavour(nascent_test_flavour f) { m_Flavour = f; }
 
     [[nodiscard]]
-    const std::string& suite() const noexcept { return m_Suite; }
-
-    void suite(std::string name) { m_Suite = std::move(name); }
-
-    [[nodiscard]]
     const std::filesystem::path& header() const noexcept { return m_Header; }
 
     void header(std::filesystem::path h) { m_Header = std::move(h); }
@@ -127,7 +122,7 @@ export namespace sequoia::testing
     template<invocable_exact_r<std::filesystem::path, std::filesystem::path> WhenAbsent,std::invocable<std::string&> FileTransformer>
     void finalize(WhenAbsent fn,
                   const std::vector<std::string>& stubs,
-                  const std::vector<std::string>& constructors,
+                  const std::vector<std::string>& testClasses,
                   std::string_view nameStub,
                   FileTransformer transformer);
 
@@ -150,8 +145,6 @@ export namespace sequoia::testing
     [[nodiscard]]
     std::ostream& stream() noexcept { return *m_Stream; }
 
-    void finalize_suite(std::string_view fallbackIngredient);
-
     void make_common_replacements(std::string& text) const;
   private:
     constexpr static std::array<std::string_view, 3> st_HeaderExtensions{".hpp", ".h", ".hxx"};
@@ -163,7 +156,6 @@ export namespace sequoia::testing
 
     nascent_test_flavour m_Flavour{nascent_test_flavour::standard};
     std::string 
-      m_Suite{},
       m_TestType{},
       m_Forename{},
       m_Surname{},
@@ -196,7 +188,7 @@ export namespace sequoia::testing
     void finalize();
 
     [[nodiscard]]
-    std::vector<std::string> constructors() const;
+    std::vector<std::string> test_classes() const;
 
     [[nodiscard]]
     friend bool operator==(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
@@ -231,7 +223,7 @@ export namespace sequoia::testing
     void finalize();
 
     [[nodiscard]]
-    std::vector<std::string> constructors() const;
+    std::vector<std::string> test_classes() const;
   private:
     void transform_file(std::string& text) const;
   };
@@ -244,7 +236,7 @@ export namespace sequoia::testing
     void finalize();
 
     [[nodiscard]]
-    std::vector<std::string> constructors() const;
+    std::vector<std::string> test_classes() const;
 
     [[nodiscard]]
     friend bool operator==(const nascent_behavioural_test&, const nascent_behavioural_test&) noexcept = default;

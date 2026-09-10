@@ -56,7 +56,7 @@ export namespace sequoia::physics
   
   inline constexpr no_unit_t no_unit{};
 
-  /// @class Primary class template for the reduction of direct products to a lower dimensional space
+  /// @brief Primary class template for the reduction of direct products to a lower dimensional space
   template<class T>
   struct reduction;
 

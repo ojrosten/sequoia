@@ -5,14 +5,12 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "DynamicGraphTestingDiagnostics.hpp"
 
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path test_graph_false_negatives::source_file() const
+  std::filesystem::path test_graph_false_negatives::source_file()
   {
     return std::source_location::current().file_name();
   }

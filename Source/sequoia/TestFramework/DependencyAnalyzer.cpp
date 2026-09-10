@@ -16,10 +16,6 @@ import std;
 import sequoia.maths.graph;
 import sequoia.streaming;
 
-/** \file
-    \brief Definitions for DependencyAnalyzer.hpp
- */
-
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;

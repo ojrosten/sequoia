@@ -1,0 +1,7 @@
+Check started:
+Tests/Maths/ProbabilityTest.cpp, Line 25
+
+--Regular Semantics--
+[maths::probability]
+
+Check ended

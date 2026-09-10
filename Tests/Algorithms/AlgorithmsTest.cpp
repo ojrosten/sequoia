@@ -5,7 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
 
 #include "AlgorithmsTest.hpp"
 #include "../Maths/Graph/Components/Edges/EdgeTestingUtilities.hpp"
@@ -45,7 +44,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path algorithms_test::source_file() const
+  std::filesystem::path algorithms_test::source_file()
   {
     return std::source_location::current().file_name();
   }

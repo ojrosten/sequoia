@@ -9,10 +9,6 @@ module sequoia.text_processing;
 
 import std;
 
-/** \file
-    \brief Definitions for Indent.hpp
- */
-
 namespace sequoia
 {
   std::string indent(std::string_view sv, indentation ind)

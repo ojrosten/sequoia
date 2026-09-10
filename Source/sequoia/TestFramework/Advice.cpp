@@ -13,10 +13,6 @@ module sequoia.test_framework;
 
 import std;
 
-/** \file
-    \brief Definitions for Advice.hpp
- */
-
 namespace sequoia::testing
 {
   std::string& advice_data::append_to(std::string& message) const

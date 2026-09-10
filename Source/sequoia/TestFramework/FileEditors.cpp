@@ -30,10 +30,6 @@ import std;
 import sequoia.streaming;
 import sequoia.text_processing;
 
-/** \file
-    \brief Definitions for FileEditors.hpp
- */
-
 namespace sequoia::testing
 {
   void add_include(const std::filesystem::path& file, std::string_view includePath)
@@ -118,87 +114,43 @@ namespace sequoia::testing
     read_modify_write(file, inserter);
   }
 
-  void add_to_suite(const std::filesystem::path& file, std::string_view suiteName, indentation indent, const std::vector<std::string>& tests)
+  void add_test_registrations(const std::filesystem::path& file, indentation indent, const std::vector<std::string>& tests)
   {
-    namespace fs = std::filesystem;
-
     if(tests.empty())
-      throw std::logic_error{std::string{"No tests specified to be added to the test suite \""}.append(suiteName).append("\"")};
+      throw std::logic_error{"No tests specified for registration"};
 
-    const auto text{
-      [&file, suiteName, &tests, indent]() -> std::string {
-        constexpr auto npos{std::string::npos};
-        auto contents{read_to_string(file)};
-        if(!contents)
-          throw std::runtime_error{report_failed_read(file)};
+    auto contents{read_to_string(file)};
+    if(!contents)
+      throw std::runtime_error{report_failed_read(file)};
 
-        std::string& contentsStr{contents.value()};
-        replace(contentsStr, "", "");
-        const auto pattern{std::string{"\""}.append(suiteName).append("\",")};
-        if(auto pos{contentsStr.find(pattern)}; pos != npos)
+    std::string& contentsStr{contents.value()};
+
+    const auto pos{contentsStr.find("runner.execute")};
+    if(pos == std::string::npos)
+      throw std::runtime_error{std::string{"Unable to find the point of registration in "}.append(file.generic_string())};
+
+    const auto linePos{contentsStr.rfind('\n', pos)};
+    if(linePos == std::string::npos)
+      throw std::runtime_error{std::string{"Unable to find the point of registration in "}.append(file.generic_string())};
+
+    auto registrations{
+      [&tests, &contentsStr, indent](){
+        std::string str{};
+        for(const auto& test : tests)
         {
-          if(const auto linePos{contentsStr.rfind('\n', pos)}; linePos != npos)
-          {
-            std::string_view preamble{"add_test_suite("};
-            if((linePos > preamble.size()) && (contentsStr.find(preamble, linePos - preamble.size()) != npos))
-            {
-              if(const auto nextLinePos{contentsStr.find('\n', pos)}; nextLinePos != npos)
-              {
-                const auto endpos{contentsStr.find(");", pos)};
-                for(const auto& t : tests)
-                {
-                  std::string_view textView{contentsStr};
-                  std::string_view subtextView{textView.substr(pos, endpos - pos)};
-                  if(subtextView.find(t) == npos)
-                  {
-                    contentsStr.insert(nextLinePos + 1, std::string{indent + indent + indent}.append(t).append(",\n"));
-                  }
-                }
-
-                return contentsStr;
-              }
-            }
-          }
-        }
-        else if(pos = contentsStr.find("runner.execute"); pos != npos)
-        {
-          if(const auto linePos{contentsStr.rfind('\n', pos)}; linePos != npos)
-          {
-            auto builder{
-              [&tests, suiteName, indent](){
-                const indentation indent_0{indent + indent};
-                auto str{std::string{"\n"}.append(indent_0).append("runner.add_test_suite(")};
-                const indentation indent_1{indent_0 + indent};
-
-                append_indented(str, std::string{"\""}.append(suiteName).append("\","), indent_1);
-
-                for(auto i{tests.cbegin()}; i != tests.cend() - 1; ++i)
-                {
-                  append_indented(str, std::string{*i}.append(","), indent_1);
-                }
-
-                append_indented(str, tests.back(), indent_1);
-                append_indented(str, ");\n", indent_0);
-
-                return str;
-              }
-            };
-
-            contentsStr.insert(linePos, builder());
-            return contentsStr;
-          }
+          auto registration{std::string{"runner.register_test<"}.append(test).append(">();")};
+          if(contentsStr.find(registration) == std::string::npos)
+            append_indented(str, registration, indent + indent);
         }
 
-        return "";
+        return str;
       }()
     };
 
-    if(text.empty())
-    {
-      throw std::runtime_error{"Unable to find appropriate place to add test suite"};
-    }
+    if(registrations.empty()) return;
 
-    write_to_file(file, text);
+    contentsStr.insert(linePos, registrations);
+    write_to_file(file, contentsStr);
   }
 
   void add_to_cmake(const std::filesystem::path& cmakeLists,

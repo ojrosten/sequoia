@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "ShellCommandsTest.hpp"
 
 namespace sequoia::testing
@@ -14,7 +12,7 @@ namespace sequoia::testing
   using namespace runtime;
 
   [[nodiscard]]
-  std::filesystem::path shell_commands_test::source_file() const
+  std::filesystem::path shell_commands_test::source_file()
   {
     return std::source_location::current().file_name();
   }

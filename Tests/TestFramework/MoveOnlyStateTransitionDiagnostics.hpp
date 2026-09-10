@@ -23,7 +23,7 @@ namespace sequoia::testing
     using move_only_false_positive_test::move_only_false_positive_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
 
     void run_tests();
   private:
@@ -37,7 +37,7 @@ namespace sequoia::testing
     using move_only_false_negative_test::move_only_false_negative_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
 
     void run_tests();
   private:

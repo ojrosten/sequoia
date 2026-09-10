@@ -15,10 +15,6 @@ import std;
 
 import sequoia.text_processing;
 
-/** \file
-    \brief Definitions for CommandLineArguments.hpp
-*/
-
 namespace sequoia::parsing::commandline
 {
   namespace

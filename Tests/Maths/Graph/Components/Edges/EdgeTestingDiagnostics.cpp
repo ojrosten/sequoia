@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "EdgeTestingDiagnostics.hpp"
 
 import std;
@@ -18,7 +16,7 @@ namespace sequoia::testing
   using namespace object;
 
   [[nodiscard]]
-  std::filesystem::path test_edge_false_negatives::source_file() const
+  std::filesystem::path test_edge_false_negatives::source_file()
   {
     return std::source_location::current().file_name();
   }

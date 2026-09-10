@@ -10,6 +10,16 @@
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/TestFramework/Macros.hpp"
 
+/** \file
+    \brief What the validators *do*, as opposed to what they are.
+
+    SpacesMetaFreeTest asks the validators trait questions and BoundsFreeTest
+    pins the messages `throwing_validator` throws. Neither exercises a validator
+    which accepts, and until this test `identity_validator` had no run-time
+    coverage at all - which matters, because it is the validator every
+    unconstrained space uses.
+ */
+
 import std;
 import sequoia.test_framework;
 
@@ -23,7 +33,7 @@ namespace sequoia::testing
     using free_test::free_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
 
     void run_tests();
   private:

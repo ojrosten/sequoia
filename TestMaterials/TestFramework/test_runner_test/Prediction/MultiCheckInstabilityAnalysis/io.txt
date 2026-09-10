@@ -1,0 +1,204 @@
+
+Running tests, synchronously...
+
+multi_periodic_free_test:
+[Execution Time: 225us]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+
+-----------Grand Totals-----------
+[Total Run Time: 524us]
+[Execution Time: 225us]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Running tests, synchronously...
+
+multi_periodic_free_test:
+[Execution Time: 99.3us]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 236
+	Period 2: Pass/Fail/Pass
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[Total Run Time: 435us]
+[Execution Time: 99.3us]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Running tests, synchronously...
+
+multi_periodic_free_test:
+[Execution Time: 99.9us]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 237
+	Period 3: Pass/Pass/Fail
+
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[Total Run Time: 383us]
+[Execution Time: 99.9us]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Running tests, synchronously...
+
+multi_periodic_free_test:
+[Execution Time: 82us]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 236
+	Period 2: Pass/Fail/Pass
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[Total Run Time: 371us]
+[Execution Time: 82us]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Running tests, synchronously...
+
+multi_periodic_free_test:
+[Execution Time: 53.7us]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+
+-----------Grand Totals-----------
+[Total Run Time: 237us]
+[Execution Time: 53.7us]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Running tests, synchronously...
+
+multi_periodic_free_test:
+[Execution Time: 72.7us]
+	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 236
+	Period 2: Pass/Fail/Pass
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 237
+	Period 3: Pass/Pass/Fail
+
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[Total Run Time: 282us]
+[Execution Time: 72.7us]
+	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Instability detected in file "multi_periodic_free_test.cpp"
+Outcome frequencies:
+[33.3%,33.3%,16.7%,16.7%]
+
+--No failures--
+
+vs.
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 236
+	Period 2: Pass/Fail/Pass
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+vs.
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 236
+	Period 2: Pass/Fail/Pass
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 237
+	Period 3: Pass/Pass/Fail
+
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
+
+	=======================================
+
+vs.
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 237
+	Period 3: Pass/Pass/Fail
+
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
+
+	=======================================
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$

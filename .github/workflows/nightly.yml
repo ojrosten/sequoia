@@ -1,0 +1,53 @@
+name: nightly
+
+# A race detector is probabilistic and each run is an independent trial, so a
+# schedule buys repetition, which a promotion gate cannot. Rigorous also runs TSan;
+# that asks whether a change is promotable, this asks whether anything has crept in.
+#
+# Windows is here to accumulate trials against an intermittent hang - roadmap item
+# 128 - rather than for breadth.
+#
+# A scheduled workflow always fires from the default branch, so testing staging
+# requires asking for it: hence `ref`.
+#
+# The Windows column runs the suite with `--exclude-performance`. It is only the
+# timing assertions a hosted runner cannot hold - TestRunnerPerformanceTest asserts
+# 60ms +- 35 for eight 25ms sleeps run concurrently, and this runner returned 196ms
+# and then 603ms for the same commit - so excluding those buys back everything else.
+#
+# A column's `exec_args` replaces the tier's rather than adding to them, so this one
+# deliberately does not carry `--check-versioned-output`: the committed `_msvc` forks
+# of the diagnostics output are stale, and gating on their drift before an MSVC run
+# has ever refreshed them would block the gate on a known backlog. The Linux column
+# still carries it, so drift is caught. Give MSVC the flag once the forks it writes
+# have been reviewed and committed.
+#
+# The TSan column is macOS/Clang, for the reason set out at length in
+# rigorous.yml: `sequoia::execution::par` is the real `std::execution::par` only
+# where `__cpp_lib_parallel_algorithm` is defined, which libstdc++ defines and
+# libc++ does not, so under GCC TSan instruments oneAPI TBB rather than our own
+# thread pool. Keep the two tiers agreeing - a nightly instrumenting a different
+# implementation from the gate measures something the gate never checks.
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Branch to test'
+        required: false
+        type: string
+        default: 'staging'
+
+jobs:
+  nightly:
+    uses: ./.github/workflows/tests.yml
+    with:
+      ref: ${{ inputs.ref || 'staging' }}
+      warnings_as_errors: false
+      exec_args: '--check-versioned-output'
+      columns: >-
+        [
+          {"name": "macOS · Clang · TSan",   "os": "macos-latest",   "configure": "llvm-env-tsan", "build": "llvm-env-tsan", "exec_args": "--exclude-performance"},
+          {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc",         "build": "msvc", "exec_args": "--exclude-performance"}
+        ]

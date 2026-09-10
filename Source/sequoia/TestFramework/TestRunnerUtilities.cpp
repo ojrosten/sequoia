@@ -9,10 +9,6 @@ module sequoia.test_framework;
 
 import std;
 
-/** \file
-    \brief Definitions for TestRunnerUtilities.hpp
- */
-
 namespace sequoia::testing
 {
   void report(std::ostream& stream, std::string_view prefix, std::string_view message)

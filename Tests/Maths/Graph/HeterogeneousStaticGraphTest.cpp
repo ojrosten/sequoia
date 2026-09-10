@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "HeterogeneousStaticGraphTest.hpp"
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
@@ -17,7 +15,7 @@ import sequoia.maths.graph;
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path test_heterogeneous_static_graph::source_file() const
+  std::filesystem::path test_heterogeneous_static_graph::source_file()
   {
     return std::source_location::current().file_name();
   }

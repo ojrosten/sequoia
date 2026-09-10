@@ -42,12 +42,12 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Meta/SequencesFreeTest.cpp
                ${TestDir}/Core/Meta/TypeAlgorithmsFreeTest.cpp
                ${TestDir}/Core/Meta/TypeListFreeTest.cpp
+               ${TestDir}/Core/Meta/TypeNameFreeTest.cpp
                ${TestDir}/Core/Meta/TypeTraitsTest.cpp
                ${TestDir}/Core/Meta/UtilitiesTest.cpp
                ${TestDir}/Core/Object/CreatorFreeTest.cpp               
                ${TestDir}/Core/Object/FactoryTest.cpp
                ${TestDir}/Core/Object/FactoryTestingDiagnostics.cpp
-               ${TestDir}/Core/Object/SuiteFreeTest.cpp
                ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Experimental/FlattenTypeListFreeTest.cpp                              
                ${TestDir}/FileSystem/FileSystemFreeTest.cpp

@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "TestRunnerProjectCreation.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
@@ -16,7 +14,7 @@ import std;
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path test_runner_project_creation::source_file() const
+  std::filesystem::path test_runner_project_creation::source_file()
   {
     return std::source_location::current().file_name();
   }

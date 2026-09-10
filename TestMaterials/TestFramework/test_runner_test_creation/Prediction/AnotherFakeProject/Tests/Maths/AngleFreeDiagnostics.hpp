@@ -1,0 +1,40 @@
+////////////////////////////////////////////////////////////////////
+//               Copyright Oliver Jacob Rosten 2026.              //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
+#pragma once
+
+/** \file */
+
+import std;
+import sequoia.test_framework;
+
+namespace curlew::testing
+{
+    using namespace sequoia::testing;
+
+    class angle_false_negative_free_diagnostics final : public free_false_negative_test
+    {
+    public:
+        using free_false_negative_test::free_false_negative_test;
+
+        [[nodiscard]]
+        static std::filesystem::path source_file();
+
+        void run_tests();
+    };
+    
+    class angle_false_negative_free_diagnostics final : public free_false_negative_test
+    {
+    public:
+        using free_false_negative_test::free_false_negative_test;
+
+        [[nodiscard]]
+        static std::filesystem::path source_file();
+
+        void run_tests();
+    };
+}

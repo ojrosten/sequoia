@@ -9,11 +9,6 @@ module sequoia.maths.graph;
 
 import std;
 
-/** \file
-    \brief Definitions for GraphError.hpp
-
- */
-
 namespace sequoia::maths::graph_errors
 {
   namespace

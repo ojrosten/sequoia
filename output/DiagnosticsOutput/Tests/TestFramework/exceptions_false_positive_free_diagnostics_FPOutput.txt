@@ -1,0 +1,16 @@
+False Negative Failure:
+Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 39
+
+Expected Exception Type:
+[std::runtime_error]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ExceptionsFreeDiagnostics.cpp, Line 41
+
+Expected Exception Type:
+[int]
+
+=======================================
+

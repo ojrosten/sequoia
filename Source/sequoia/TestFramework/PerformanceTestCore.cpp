@@ -16,10 +16,6 @@ import std;
 
 import sequoia.streaming;
 
-/** \file
-    \brief Definitions for PerformanceTestCore.hpp
-*/
-
 namespace sequoia::testing
 {
   namespace

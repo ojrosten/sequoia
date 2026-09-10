@@ -5,15 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "TestRunnerDiagnostics.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path test_runner_false_negative_test::source_file() const
+  std::filesystem::path test_runner_false_negative_test::source_file()
   {
     return std::source_location::current().file_name();
   }

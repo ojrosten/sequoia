@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "SaturatingArithmeticFreeTest.hpp"
 
 import std;
@@ -17,13 +15,13 @@ namespace sequoia::testing
   using namespace maths;
   
   [[nodiscard]]
-  std::filesystem::path saturating_mul_free_test::source_file() const
+  std::filesystem::path saturating_mul_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }
 
     [[nodiscard]]
-  std::filesystem::path saturating_add_free_test::source_file() const
+  std::filesystem::path saturating_add_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }

@@ -9,10 +9,6 @@ module sequoia.test_framework;
 
 import std;
 
-/** \file
-    \brief Definitions for MaterialsUpdater.hpp
-*/
-
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;

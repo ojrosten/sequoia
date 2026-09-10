@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "RegularAllocationTestFalseNegativeDiagnostics.hpp"
 
 #include "../RegularTestDiagnosticsUtilities.hpp"
@@ -17,7 +15,7 @@ import std;
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path allocation_false_negative_diagnostics::source_file() const
+  std::filesystem::path allocation_false_negative_diagnostics::source_file()
   {
     return std::source_location::current().file_name();
   }

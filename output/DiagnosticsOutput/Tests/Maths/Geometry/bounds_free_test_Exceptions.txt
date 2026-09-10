@@ -1,0 +1,48 @@
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 90
+
+Expected Exception Type:
+[std::domain_error]
+Input 2 outside permitted domain [0, 1]
+
+=======================================
+
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 97
+
+Expected Exception Type:
+[std::domain_error]
+Input [2, 1] has at least one value outside permitted domain [0, 1]
+
+=======================================
+
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 104
+
+Expected Exception Type:
+[std::domain_error]
+Input [3, 4] --> sqrt(3*3 + 4*4) = 5 outside permitted domain [1, 2]
+
+=======================================
+
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 111
+
+Expected Exception Type:
+[std::domain_error]
+Input -1 outside permitted domain [0, 1]
+
+=======================================
+
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 120
+
+Expected Exception Type:
+[std::domain_error]
+Input nan outside permitted domain [0, 1]
+
+=======================================
+
+Tests/Maths/Geometry/BoundsFreeTest.cpp, Line 127
+
+Expected Exception Type:
+[std::domain_error]
+Input [2, nan] has at least one value outside permitted domain [0, 1]
+
+=======================================
+

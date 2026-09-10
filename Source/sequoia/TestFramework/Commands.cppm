@@ -18,11 +18,13 @@ export import sequoia.runtime;
 
 export namespace sequoia::testing
 {
-
-  [[nodiscard]]
   /** \brief Configures a project, optionally overriding a cache variable.
 
-      \param cacheOverride spelled `VAR=VALUE`, as `cmake -D` expects it.
+      \param buildPaths     the project to configure; the preset is the final component of its
+                            cmake cache directory, which is how the build tree names the
+                            configuration that produced it.
+      \param output         file to which the command's output is directed.
+      \param cacheOverride  spelled `VAR=VALUE`, as `cmake -D` expects it.
    */
   [[nodiscard]]
   runtime::shell_command cmake_cmd(const build_paths& buildPaths,

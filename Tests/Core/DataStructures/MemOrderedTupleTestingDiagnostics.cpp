@@ -5,14 +5,12 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "MemOrderedTupleTestingDiagnostics.hpp"
 
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path mem_ordered_tuple_false_negative_test::source_file() const
+  std::filesystem::path mem_ordered_tuple_false_negative_test::source_file()
   {
     return std::source_location::current().file_name();
   }

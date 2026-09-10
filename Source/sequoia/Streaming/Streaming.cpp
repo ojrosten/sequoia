@@ -9,10 +9,6 @@ module sequoia.streaming;
 
 import std;
 
-/** \file
-    \brief Definitions for Streaming.hpp
-*/
-
 namespace sequoia
 {
   namespace

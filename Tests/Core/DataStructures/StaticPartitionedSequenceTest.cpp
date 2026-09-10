@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "StaticPartitionedSequenceTest.hpp"
 #include "PartitionedDataTestingUtilities.hpp"
 #include "Utilities/TestUtilities.hpp"
@@ -16,7 +14,7 @@ namespace sequoia::testing
   using namespace data_structures;
 
   [[nodiscard]]
-  std::filesystem::path static_partitioned_sequence_test::source_file() const
+  std::filesystem::path static_partitioned_sequence_test::source_file()
   {
     return std::source_location::current().file_name();
   }

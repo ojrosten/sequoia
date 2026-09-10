@@ -24,7 +24,7 @@ namespace sequoia::testing
     using free_test::free_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
 
     void run_tests();
   private:
@@ -48,6 +48,8 @@ namespace sequoia::testing
     void test_nested_suite();
 
     void test_nested_suite_verbose();
+
+    void test_excluded_performance_tests();
 
     void test_instability_analysis();
 

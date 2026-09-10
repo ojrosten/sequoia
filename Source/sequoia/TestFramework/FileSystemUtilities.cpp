@@ -16,10 +16,6 @@ import std;
 import sequoia.file_system;
 import sequoia.text_processing;
 
-/** \file
-    \brief Definitions for FileSystemUtilities.hpp
- */
-
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;

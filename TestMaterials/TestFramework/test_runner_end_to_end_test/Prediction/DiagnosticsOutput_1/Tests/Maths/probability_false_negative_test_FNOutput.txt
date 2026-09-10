@@ -1,0 +1,27 @@
+Tests/Maths/ProbabilityTestingDiagnostics.cpp, Line 23
+
+Comparison performed using:
+[sequoia::testing::value_tester<maths::probability>]
+Checking for equivalence with:
+[double]
+
+  Description
+  [double]
+  operator== returned false
+  Obtained : 0.5
+  Predicted: 0.6
+
+=======================================
+
+Tests/Maths/ProbabilityTestingDiagnostics.cpp, Line 24
+
+[maths::probability]
+operator== returned false
+
+  [double]
+  operator== returned false
+  Obtained : 0.5
+  Predicted: 1
+
+=======================================
+

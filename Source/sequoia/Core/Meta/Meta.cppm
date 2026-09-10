@@ -13,5 +13,6 @@ export import :Concepts;
 export import :Sequences;
 export import :TypeAlgorithms;
 export import :TypeList;
+export import :TypeName;
 export import :TypeTraits;
 export import :Utilities;

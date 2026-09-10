@@ -983,10 +983,6 @@ export namespace sequoia
       }
     };
 
-    /** \class
-    
-     */
-
     template<class T, class Container=std::vector<T>, class Partitions=maths::monotonic_sequence<std::size_t, std::ranges::greater>>
     class partitioned_sequence : public partitioned_sequence_base<T, Container, Partitions>
     {

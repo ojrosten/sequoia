@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 #include "TestRunnerProjectFiles.hpp"
 #include "sequoia/PlatformSpecific/Macros.hpp"
@@ -20,7 +18,7 @@ namespace sequoia::testing
   namespace fs = std::filesystem;
 
   [[nodiscard]]
-  std::filesystem::path test_runner_project_files::source_file() const
+  std::filesystem::path test_runner_project_files::source_file()
   {
     return std::source_location::current().file_name();
   }

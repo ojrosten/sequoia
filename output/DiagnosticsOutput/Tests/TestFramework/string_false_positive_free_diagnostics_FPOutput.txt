@@ -1,0 +1,38 @@
+False Negative Failure:
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 120
+Differing strings
+
+[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 121
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
+Checking for equivalence with:
+[char [4]]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 128
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
+Checking for equivalence with:
+[std::basic_string_view<char, std::char_traits<char> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/StringFreeDiagnostics.cpp, Line 133
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::basic_string<wchar_t, std::char_traits<wchar_t>, std::allocator<wchar_t> > >]
+Checking for equivalence with:
+[std::basic_string_view<wchar_t, std::char_traits<wchar_t> >]
+
+=======================================
+

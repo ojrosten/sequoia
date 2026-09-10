@@ -1,0 +1,316 @@
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 217
+Move-only beast
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 220
+Move-only beast, as unique
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 223
+Move-only beast
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 226
+Move-only beast
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 232
+check_semantics return value (x)
+
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 233
+check_semantics return value (y)
+
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 244
+Check moved-from state
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 247
+Check moved-from state, as unique
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 250
+Check moved-from state
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 217
+Move-only beast
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 220
+Move-only beast, as unique
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 223
+Move-only beast
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 226
+Move-only beast
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 232
+check_semantics return value (x)
+
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 233
+check_semantics return value (y)
+
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 244
+Check moved-from state
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 247
+Check moved-from state, as unique
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 250
+Check moved-from state
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 217
+Move-only beast
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 220
+Move-only beast, as unique
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 223
+Move-only beast
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 226
+Move-only beast
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 232
+check_semantics return value (x)
+
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 233
+check_semantics return value (y)
+
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 244
+Check moved-from state
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 247
+Check moved-from state, as unique
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 250
+Check moved-from state
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 217
+Move-only beast
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 220
+Move-only beast, as unique
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 223
+Move-only beast
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 226
+Move-only beast
+
+--Move-only Semantics--
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 232
+check_semantics return value (x)
+
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 233
+check_semantics return value (y)
+
+[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 244
+Check moved-from state
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 247
+Check moved-from state, as unique
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/MoveOnlyAllocationTestDiagnostics.cpp, Line 250
+Check moved-from state
+
+--Move-only Semantics--
+[sequoia::testing::move_only_specified_moved_from_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+=======================================
+

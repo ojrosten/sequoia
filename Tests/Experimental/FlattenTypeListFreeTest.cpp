@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "FlattenTypeListFreeTest.hpp"
 
 import std;
@@ -78,7 +76,7 @@ namespace sequoia::testing
   };
 
   [[nodiscard]]
-  std::filesystem::path flatten_type_list_free_test::source_file() const
+  std::filesystem::path flatten_type_list_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }

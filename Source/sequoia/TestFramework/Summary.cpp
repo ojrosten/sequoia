@@ -13,10 +13,6 @@ module sequoia.test_framework;
 
 import std;
 
-/** \file
-    \brief Definitions for Summary.hpp
-*/
-
 namespace sequoia::testing
 {
   namespace

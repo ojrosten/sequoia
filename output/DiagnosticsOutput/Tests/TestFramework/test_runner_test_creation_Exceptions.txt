@@ -1,0 +1,74 @@
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 44
+Empty string
+
+Expected Exception Type:
+[std::logic_error]
+Equivalent type is unspecified
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 45
+Just spaces
+
+Expected Exception Type:
+[std::logic_error]
+Equivalent type is unspecified
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 67
+Unmatched <
+
+Expected Exception Type:
+[std::runtime_error]
+<: < not matched by >
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 69
+Backwards delimiters
+
+Expected Exception Type:
+[std::runtime_error]
+><: unable to parse template
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 71
+Missing symbol
+
+Expected Exception Type:
+[std::runtime_error]
+<class>:  Unable to locate species/symbol pair
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 73
+Missing symbol
+
+Expected Exception Type:
+[std::runtime_error]
+< class>:  Unable to locate species/symbol pair
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 178
+Plurgh.h does not exist
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to locate file Plurgh.h or Plurgh.hpp or Plurgh.hxx in the source repository
+../Source
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 187
+Typo in specified class header
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to locate file fakeProject/Stuff/Thingz.hpp or fakeProject/Stuff/Thingz.h or fakeProject/Stuff/Thingz.hxx in the source repository
+../Source
+
+=======================================
+

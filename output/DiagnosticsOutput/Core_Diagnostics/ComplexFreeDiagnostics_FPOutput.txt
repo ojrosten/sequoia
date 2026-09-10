@@ -1,7 +1,0 @@
-False Negative Failure:
-Tests/TestFramework/ComplexFreeDiagnostics.cpp, Line 45
-
-[std::complex<double>]
-
-=======================================
-

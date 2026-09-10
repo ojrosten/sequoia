@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "StaticGraphTraversalsTest.hpp"
 
 #include "Maths/Graph/GraphTestingUtilities.hpp"
@@ -19,7 +17,7 @@ import sequoia.maths.graph;
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path test_static_graph_traversals::source_file() const
+  std::filesystem::path test_static_graph_traversals::source_file()
   {
     return std::source_location::current().file_name();
   }

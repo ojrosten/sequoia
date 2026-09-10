@@ -18,10 +18,6 @@ import sequoia.platform_specific;
 import sequoia.streaming;
 import sequoia.text_processing;
 
-/** \file
-    \brief Definitions for ProjectCreator.hpp
- */
-
 namespace sequoia::testing
 {
   using namespace runtime;

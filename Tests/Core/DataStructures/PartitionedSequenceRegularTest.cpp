@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "PartitionedSequenceRegularTest.hpp"
 #include "PartitionedDataGenericTests.hpp"
 
@@ -142,7 +140,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path partitioned_sequence_regular_test::source_file() const
+  std::filesystem::path partitioned_sequence_regular_test::source_file()
   {
     return std::source_location::current().file_name();
   }

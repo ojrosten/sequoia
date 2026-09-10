@@ -21,10 +21,6 @@ import std;
 
 import sequoia.platform_specific;
 
-/** \file
-    \brief Definitions for ShellCommands.hpp
-*/
-
 namespace sequoia::runtime
 {
   namespace

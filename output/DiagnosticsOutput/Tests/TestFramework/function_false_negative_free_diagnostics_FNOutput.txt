@@ -1,0 +1,102 @@
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 29
+Obtained bound but prediction not
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::function<void ()> >]
+Checking for weak equivalence with:
+[std::function<void ()>]
+
+  Obtained : not null
+  Predicted: null
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 34
+Prediction bound but obtained not
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::function<void ()> >]
+Checking for weak equivalence with:
+[std::function<void ()>]
+
+  Obtained : null
+  Predicted: not null
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 42
+Obtained bound but prediction not
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::function<int ()> >]
+Checking for weak equivalence with:
+[std::function<int ()>]
+
+  Obtained : not null
+  Predicted: null
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 47
+Prediction bound but obtained not
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::function<int ()> >]
+Checking for weak equivalence with:
+[std::function<int ()>]
+
+  Obtained : null
+  Predicted: not null
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 55
+Obtained bound but prediction not
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::function<void (int)> >]
+Checking for weak equivalence with:
+[std::function<void (int)>]
+
+  Obtained : not null
+  Predicted: null
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 60
+Prediction bound but obtained not
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::function<void (int)> >]
+Checking for weak equivalence with:
+[std::function<void (int)>]
+
+  Obtained : null
+  Predicted: not null
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+

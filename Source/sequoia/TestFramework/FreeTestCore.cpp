@@ -16,10 +16,6 @@ import std;
 
 import sequoia.streaming;
 
-/** \file
-    \brief Definitions for FreeTestCore.hpp
-*/
-
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;

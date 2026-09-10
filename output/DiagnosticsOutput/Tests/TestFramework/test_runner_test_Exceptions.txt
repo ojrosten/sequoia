@@ -1,0 +1,102 @@
+Tests/TestFramework/TestRunnerTest.cpp, Line 429
+Test Main has empty path
+
+Expected Exception Type:
+[std::runtime_error]
+output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/  is not a regular file
+
+Try ensuring that the application is run from the appropriate directory
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 437
+Test Main does not exist
+
+Expected Exception Type:
+[std::runtime_error]
+output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/FooMain.cpp not found
+
+Try ensuring that the application is run from the appropriate directory
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 445
+Include Target has empty path
+
+Expected Exception Type:
+[std::runtime_error]
+output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/  is not a regular file
+
+Common includes not found
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 453
+Include Target does not exist
+
+Expected Exception Type:
+[std::runtime_error]
+output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/FooPath.hpp not found
+
+Common includes not found
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 461
+Project root is empty
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to locate project root as no commandline arguments supplied.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 469
+Project root does not exist
+
+Expected Exception Type:
+[std::runtime_error]
+canonical - file not found: /output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/FooRepo
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 488
+Project root not findable
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to locate project root from path:
+output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/TestShared
+Please ensure that the build directory is a subdirectory of <project>/build.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 497
+The same test registered twice
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Test: "foo_test"
+Source file: "Tests/foo_test.cpp"
+A test's name is that of its class, and determines where its output is written, so each may be registered only once.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 514
+Invalid repetitions for instability analysis
+
+Expected Exception Type:
+[std::runtime_error]
+locate-instabilities: unable to interpret 'foo' as an integer number of repetitions
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 521
+Insufficient repetitions for instability analysis
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: Number of repetitions, must be >= 2
+
+=======================================
+

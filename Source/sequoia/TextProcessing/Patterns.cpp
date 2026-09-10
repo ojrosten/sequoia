@@ -9,10 +9,6 @@ module sequoia.text_processing;
 
 import std;
 
-/** \file
-    \brief Definitions for Patterns.hpp
- */
-
 namespace sequoia
 {
   [[nodiscard]]

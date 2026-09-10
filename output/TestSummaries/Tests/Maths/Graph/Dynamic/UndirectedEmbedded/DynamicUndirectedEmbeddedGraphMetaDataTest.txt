@@ -1,2 +1,0 @@
-Undirected Graph Meta Data Test
-Standard Top Level Checks:                78;  Failures:  0  [Deep checks: 2860]

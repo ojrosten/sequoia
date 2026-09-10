@@ -3,6 +3,13 @@ set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
 include(CTest)
 
 option(CODE_COVERAGE "Build with Code Coverage" OFF)
+
+# Off by default, and deliberately so: -Werror belongs at a gate, never blanket. A
+# warning which stops a local build stops work on something unrelated to it, and the
+# usual response is to silence rather than to fix. CI turns this on for the tiers
+# which gate a merge, so the accumulation is prevented where prevention is cheap and
+# the interruption falls on nobody.
+option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 set(EXEC_ARGS "" CACHE STRING "Command-line arguments for the 'run' target.")
 
 FUNCTION(sequoia_init)
@@ -64,6 +71,16 @@ FUNCTION(sequoia_set_compile_options target)
     endif()
 
     target_compile_options(${target} PRIVATE ${WARNING_SUPPRESSIONS})
+
+    # After the suppressions, not before: a suppressed warning must not become an
+    # error, or WARNING_SUPPRESSIONS would silently stop meaning anything.
+    if(WARNINGS_AS_ERRORS)
+        if(MSVC)
+            target_compile_options(${target} PUBLIC /WX)
+        else()
+            target_compile_options(${target} PUBLIC -Werror)
+        endif()
+    endif()
 ENDFUNCTION()
 
 FUNCTION(sequoia_set_properties target)

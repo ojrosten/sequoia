@@ -1,0 +1,43 @@
+name: fine
+
+# The gate on staging: coarse's two platforms, sanitized, plus
+# --check-versioned-output so a change which moves committed diagnostics fails here
+# rather than surfacing later as a git diff.
+#
+# These columns replace coarse's rather than adding to them - a sanitized build
+# misses nothing the plain one catches, and ASan is behaviour-neutral on this suite,
+# leaving check counts and output/ unchanged.
+#
+# ASan and UBSan share one build. TSan cannot join them, being mutually exclusive
+# with ASan, so it is a column of its own in rigorous.
+#
+# The Windows column runs the suite with `--exclude-performance`. It is only the
+# timing assertions a hosted runner cannot hold - TestRunnerPerformanceTest asserts
+# 60ms +- 35 for eight 25ms sleeps run concurrently, and this runner returned 196ms
+# and then 603ms for the same commit - so excluding those buys back everything else.
+#
+# A column's `exec_args` replaces the tier's rather than adding to them, so this one
+# deliberately does not carry `--check-versioned-output`: the committed `_msvc` forks
+# of the diagnostics output are stale, and gating on their drift before an MSVC run
+# has ever refreshed them would block the gate on a known backlog. The Linux column
+# still carries it, so drift is caught. Give MSVC the flag once the forks it writes
+# have been reviewed and committed.
+on:
+  pull_request:
+    branches: [staging]
+    paths-ignore:
+      - 'docs/**'
+      - 'coverage_reports/**'
+
+jobs:
+  fine:
+    uses: ./.github/workflows/tests.yml
+    with:
+      # Fatal at the gates, where preventing accumulation interrupts nobody's work.
+      warnings_as_errors: true
+      exec_args: '--check-versioned-output'
+      columns: >-
+        [
+          {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--exclude-performance"}
+        ]

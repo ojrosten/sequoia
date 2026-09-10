@@ -16,10 +16,6 @@ import std;
 import sequoia.streaming;
 import sequoia.text_processing;
 
-/** \file
-    \brief Definitions for FailureInfo.hpp
-*/
-
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;

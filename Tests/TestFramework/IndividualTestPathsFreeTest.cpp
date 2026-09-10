@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "IndividualTestPathsFreeTest.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
@@ -18,7 +16,7 @@ namespace sequoia::testing
   namespace fs = std::filesystem;
 
   [[nodiscard]]
-  std::filesystem::path individual_test_paths_free_test::source_file() const
+  std::filesystem::path individual_test_paths_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -41,24 +39,24 @@ namespace sequoia::testing
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Empty file"},
-      []() { return test_summary_path{"", project_paths{}, std::nullopt}; }
+      []() { return test_summary_path{"", "foo_test", project_paths{}, std::nullopt}; }
     );
 
-    check(equality, "", test_summary_path{"Foo.cpp", project_paths{}, std::nullopt}.file_path().generic_string(), "Foo.txt"s);
-    check(equality, "", test_summary_path{"Foo.cpp", project_paths{}, "xyz"}.file_path().generic_string(), "Foo_xyz.txt"s);
+    check(equality, "", test_summary_path{"Foo.cpp", "foo_test", project_paths{}, std::nullopt}.file_path().generic_string(), "foo_test.txt"s);
+    check(equality, "", test_summary_path{"Foo.cpp", "foo_test", project_paths{}, "xyz"}.file_path().generic_string(), "foo_test_xyz.txt"s);
 
     {
       commandline_arguments args{{minimal_fake_path().generic_string()}};
       project_paths projPaths{args.size(), args.get(), {}};
       check(equality,
         reporter{"Absolute Path"},
-        test_summary_path{working_materials() / "Tests" / "Foo.cpp", projPaths, std::nullopt}.file_path(),
-        projPaths.output().test_summaries() / "Tests" / "Foo.txt");
+        test_summary_path{working_materials() / "Tests" / "Foo.cpp", "foo_test", projPaths, std::nullopt}.file_path(),
+        projPaths.output().test_summaries() / "Tests" / "foo_test.txt");
 
       check(equality,
         reporter{"Non-Absolute Path"},
-        test_summary_path{fs::path{"Tests/Foo.cpp"}, projPaths, std::nullopt}.file_path(),
-        projPaths.output().test_summaries() / "Tests" / "Foo.txt");
+        test_summary_path{fs::path{"Tests/Foo.cpp"}, "foo_test", projPaths, std::nullopt}.file_path(),
+        projPaths.output().test_summaries() / "Tests" / "foo_test.txt");
     }
 
   }

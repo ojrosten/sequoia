@@ -1,0 +1,71 @@
+Tests/Core/Object/FactoryTest.cpp, Line 151
+Empty string
+
+Expected Exception Type:
+[std::logic_error]
+Factory product names must not be empty!
+
+=======================================
+
+Tests/Core/Object/FactoryTest.cpp, Line 152
+Empty string
+
+Expected Exception Type:
+[std::logic_error]
+Factory product names must not be empty!
+
+=======================================
+
+Tests/Core/Object/FactoryTest.cpp, Line 153
+Duplicated names
+
+Expected Exception Type:
+[std::logic_error]
+Factory product names must be unique!
+
+=======================================
+
+Tests/Core/Object/FactoryTest.cpp, Line 164
+
+Expected Exception Type:
+[std::runtime_error]
+Factory unable to make product of name 'plurgh'
+
+=======================================
+
+Tests/Core/Object/FactoryTest.cpp, Line 175
+Duplicated names
+
+Expected Exception Type:
+[std::logic_error]
+Factory product names must be unique!
+
+=======================================
+
+Tests/Core/Object/FactoryTest.cpp, Line 248
+Unknown name
+
+Expected Exception Type:
+[std::runtime_error]
+Factory unable to make product of name 'plurgh'
+
+=======================================
+
+Tests/Core/Object/FactoryTest.cpp, Line 249
+Empty name
+
+Expected Exception Type:
+[std::logic_error]
+Factory product names must not be empty!
+
+=======================================
+
+Tests/Core/Object/FactoryTest.cpp, Line 250
+Duplicated name
+
+Expected Exception Type:
+[std::logic_error]
+Factory product names must be unique!
+
+=======================================
+

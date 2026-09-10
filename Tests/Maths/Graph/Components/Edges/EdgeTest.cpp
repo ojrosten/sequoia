@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "EdgeTest.hpp"
 
 #include "EdgeTestingUtilities.hpp"
@@ -22,7 +20,7 @@ namespace sequoia
     using namespace object;
 
     [[nodiscard]]
-    std::filesystem::path test_edges::source_file() const
+    std::filesystem::path test_edges::source_file()
     {
       return std::source_location::current().file_name();
     }

@@ -1,0 +1,66 @@
+False Negative Failure:
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 76
+Both bound
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::function<void ()> >]
+Checking for weak equivalence with:
+[std::function<void ()>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 77
+Neither bound
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::function<void ()> >]
+Checking for weak equivalence with:
+[std::function<void ()>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 82
+Both bound
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::function<int ()> >]
+Checking for weak equivalence with:
+[std::function<int ()>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 83
+Neither bound
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::function<int ()> >]
+Checking for weak equivalence with:
+[std::function<int ()>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 88
+Both bound
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::function<void (int)> >]
+Checking for weak equivalence with:
+[std::function<void (int)>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/FunctionFreeDiagnostics.cpp, Line 89
+Neither bound
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::function<void (int)> >]
+Checking for weak equivalence with:
+[std::function<void (int)>]
+
+=======================================
+

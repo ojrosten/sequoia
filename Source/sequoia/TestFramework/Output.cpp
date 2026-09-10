@@ -22,10 +22,6 @@ import std;
 import sequoia.file_system;
 import sequoia.text_processing;
 
-/** \file
-    \brief Definitions for Output.hpp
- */
-
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
