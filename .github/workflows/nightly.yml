@@ -48,6 +48,6 @@ jobs:
       exec_args: '--check-versioned-output'
       columns: >-
         [
-          {"name": "Linux · Clang · TSan",   "os": "ubuntu-latest",  "configure": "llvm-env-tsan", "build": "llvm-env-tsan", "cc": "clang", "cxx": "clang++"},
+          {"name": "Linux · Clang · TSan",   "os": "ubuntu-latest",  "configure": "llvm-env-tsan", "build": "llvm-env-tsan", "cc": "clang", "cxx": "clang++", "pkg": "clang"},
           {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc",         "build": "msvc", "exec_args": "--exclude-performance"}
         ]

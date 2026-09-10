@@ -61,7 +61,7 @@ jobs:
         [
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15"},
           {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--exclude-performance"},
-          {"name": "Linux · Clang · TSan",     "os": "ubuntu-latest",  "configure": "llvm-env-tsan",      "build": "llvm-env-tsan",      "cc": "clang", "cxx": "clang++"},
+          {"name": "Linux · Clang · TSan",     "os": "ubuntu-latest",  "configure": "llvm-env-tsan",      "build": "llvm-env-tsan",      "cc": "clang", "cxx": "clang++", "pkg": "clang"},
           {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15"}
         ]
 
