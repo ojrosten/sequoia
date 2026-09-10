@@ -24,6 +24,14 @@ name: rigorous
 # display name the naming branch retired, because it is the one output a Mac cannot
 # regenerate. It is fixed, so the flag can go on. A macOS run matched all 340.
 #
+# TestRunnerProjectFiles is left out of the MSVC Release column. It compares a
+# generated TestAll.vcxproj against a prediction stored per preset -
+# `ProjectFiles/<preset>`, taken from the build directory's name - and predictions
+# exist for `msvc` and `msvc-asan` only. A third would have to be generated on
+# Windows and committed; until then the column would be comparing against a
+# directory that does not exist. The test is a no-op on clang, so the macOS Release
+# column needs no such exclusion.
+#
 # Note the flag must be spelt out per column here, since `exec_args` REPLACES the
 # tier's rather than adding to it - a column naming only its exclusions silently
 # loses the drift check, which is how Windows came to be unchecked in the first
@@ -122,7 +130,7 @@ jobs:
           {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"},
           {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15"},
           {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance"},
+          {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerProjectFiles.cpp"},
           {"name": "macOS · Clang · Release",  "os": "macos-latest",   "configure": "llvm-env-release",   "build": "llvm-env-release", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
 
