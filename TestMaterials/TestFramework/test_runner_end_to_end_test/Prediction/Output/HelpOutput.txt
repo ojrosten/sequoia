@@ -31,6 +31,7 @@ recover
 dump
 --check-versioned-output
 --exclude-performance
+--exclude Source file of a test to leave out
 --serial
 --thread-pool Number of threads, must be >= 1
 --verbose | -v |

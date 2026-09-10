@@ -74,7 +74,7 @@ namespace sequoia::testing
     template<class ExecutionPolicy, class Weight, class UnaryFn>
     void accelerate(ExecutionPolicy&& policy, std::span<Weight> weights, UnaryFn f)
     {
-      if constexpr(!with_clang_v)
+      if constexpr(has_parallel_algorithms_v)
       {
         std::for_each(std::forward<ExecutionPolicy>(policy), weights.begin(), weights.end(), std::move(f));
       }
@@ -679,6 +679,9 @@ namespace sequoia::testing
                   }}},
                   {{{"--exclude-performance", {}, {},
                     [this](const arg_list&) { m_Filter.exclude_performance_tests(); }
+                  }}},
+                  {{{"--exclude", {}, {"Source file of a test to leave out"},
+                    [this](const arg_list& args) { m_Filter.exclude_item(normal_path{args.front()}); }
                   }}},
                   {{{"--serial",  {}, {}, [this](const arg_list&) { m_ConcurrencyMode = concurrency_mode::serial; }}}},
                   {{{"--thread-pool", {}, {"Number of threads, must be >= 1"},
