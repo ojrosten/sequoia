@@ -13,6 +13,8 @@
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <chrono>
+#include <iostream>
+#include <thread>
 #include <fstream>
 
 namespace sequoia::testing
@@ -676,10 +678,51 @@ namespace sequoia::testing
     );
   }
 
+
+  namespace
+  {
+    // RESEARCH INSTRUMENTATION - roadmap item 134. Not for merging.
+    //
+    // Answers, in one CI run, the question no amount of reading settles: is the failing
+    // remove_all transient or is something holding the directory permanently? Reports every
+    // attempt, so a success on attempt 2 says "contention" and eight failures say "a holder".
+    // Also lists what is still in the tree, since the offending entry names the writer.
+    void probe_remove_all(const std::filesystem::path& dir, std::string_view site)
+    {
+      using namespace std::chrono;
+      const auto t0{steady_clock::now()};
+      for(int attempt{1}; attempt <= 8; ++attempt)
+      {
+        std::error_code ec{};
+        fs::remove_all(dir, ec);
+        const auto elapsed{duration_cast<milliseconds>(steady_clock::now() - t0).count()};
+        if(!ec)
+        {
+          if(attempt > 1)
+            std::cout << "[probe " << site << "] succeeded on attempt " << attempt
+                      << " after " << elapsed << "ms\n";
+          return;
+        }
+
+        std::cout << "[probe " << site << "] attempt " << attempt << " at " << elapsed
+                  << "ms failed: " << ec.message() << " (" << ec.value() << ")\n";
+
+        std::error_code lec{};
+        for(const auto& e : fs::recursive_directory_iterator{dir, lec})
+          std::cout << "    still present: " << e.path().generic_string() << "\n";
+        if(lec) std::cout << "    (could not list: " << lec.message() << ")\n";
+
+        std::this_thread::sleep_for(milliseconds{25 * attempt});
+      }
+      std::cout << "[probe " << site << "] gave up after 8 attempts; rethrowing\n";
+      fs::remove_all(dir);
+    }
+  }
+
   void setup_instability_analysis_prune_folder(const project_paths& projPaths)
   {
     const auto dir{projPaths.prune().instability_analysis()};
-    fs::remove_all(dir);
+    probe_remove_all(dir, "setup");
     fs::create_directories(dir);
   }
 
@@ -713,6 +756,6 @@ namespace sequoia::testing
     }
     }
 
-    fs::remove_all(prunePaths.instability_analysis());
+    probe_remove_all(prunePaths.instability_analysis(), "aggregate");
   }
 }
