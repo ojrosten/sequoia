@@ -89,6 +89,13 @@ name: rigorous
 # actually run at -O3 before, the column having always died at compile time; it
 # does now, 19588 checks, 0 failures.
 #
+# This column carries NO flags - an explicitly empty `exec_args`, which is not the
+# same as omitting the key. It must not carry `--check-versioned-output`: gcc at
+# -O3 gives std::source_location the wrong call site, so a Release run rewrites a
+# diagnostics file with another translation unit's location and the drift check
+# fails every time. Roadmap item 139; clang at -O3 is clean, gcc Debug is clean.
+# Restore the flag when that is fixed.
+#
 # The performance tests run HERE and nowhere else in this tier, which is
 # deliberate. What makes them unreliable on a hosted runner is the slowdown, not
 # the platform: TestRunnerPerformanceTest asserts 60ms +- 35 for eight 25ms sleeps
@@ -128,7 +135,7 @@ jobs:
         [
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
           {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"},
-          {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15", "exec_args": ""},
           {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance"},
           {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerProjectFiles.cpp"},
           {"name": "macOS · Clang · Release",  "os": "macos-latest",   "configure": "llvm-env-release",   "build": "llvm-env-release", "exec_args": "--check-versioned-output;--exclude-performance"}
