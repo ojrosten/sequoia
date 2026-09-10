@@ -3460,10 +3460,15 @@ namespace sequoia::maths
     {
       if constexpr(has_identity_validator)
       {
+        // gcc's loop vectorizer makes -Wmaybe-uninitialized misread the zip's owning_view. The
+        // array cannot be uninitialized: to_array(span<const T, N>) is `array<T, N>{f(data[Is])...}`
+        // over make_index_sequence<N>, so every element is initialized from `data`.
+SEQUOIA_GCC_SUPPRESS_BEGIN("-Wmaybe-uninitialized")
         std::ranges::for_each(
           std::views::zip(to_underlying(self.m_Values), to_underlying(rhs)),
           [&f](auto&& z){ f(std::get<0>(z), std::get<1>(z)); }
         );
+SEQUOIA_GCC_SUPPRESS_END
 
         from_underlying(self.m_Values); 
       }
