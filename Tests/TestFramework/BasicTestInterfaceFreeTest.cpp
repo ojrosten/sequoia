@@ -41,7 +41,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path basic_test_interface_free_test::source_file() const
+  std::filesystem::path basic_test_interface_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -74,59 +74,59 @@ namespace sequoia::testing
     const auto rebasedSource{rebase_from(source_file(), get_project_paths().project_root())};
 
     {
-      fake_test t{"fake test", "foo suite", source_file(), projPaths, {}, {}, {}, {}};
+      fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, {}, {}};
 
       check(equality,
             reporter{"Summary File Path"},
             t.summary_file_path().file_path(),
-            (projPaths.output().test_summaries() / rebasedSource).replace_extension(".txt"));
+            projPaths.output().test_summaries() / rebasedSource.parent_path() / "fake_test.txt");
       
       check(equality,
             reporter{"Exceptions File Path"},
             t.diagnostics_file_paths().caught_exceptions_file_path(),
-            projPaths.output().diagnostics() / "foo_suite" / source_file().filename().stem().concat("_Exceptions.txt"));
+            projPaths.output().diagnostics() / rebasedSource.parent_path() / "fake_test_Exceptions.txt");
     }
 
     {
-      fake_test t{"fake test", "foo suite", source_file(), projPaths, {}, {}, {""}, {""}};
+      fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, {""}, {""}};
 
       check(equality,
         reporter{"Summary File Path"},
         t.summary_file_path().file_path(),
-        (projPaths.output().test_summaries() / rebasedSource).replace_extension(".txt"));
+        projPaths.output().test_summaries() / rebasedSource.parent_path() / "fake_test.txt");
 
       check(equality,
         reporter{"Exceptions File Path"},
         t.diagnostics_file_paths().caught_exceptions_file_path(),
-        projPaths.output().diagnostics() / "foo_suite" / source_file().filename().stem().concat("_Exceptions.txt"));
+        projPaths.output().diagnostics() / rebasedSource.parent_path() / "fake_test_Exceptions.txt");
     }
 
     {
-      fake_test_with_discriminated_summary t{"fake test", "foo suite", source_file(), projPaths, {}, {}, {}, {"bar"}};
+      fake_test_with_discriminated_summary t{test_name<fake_test_with_discriminated_summary>(), source_file(), projPaths, {}, {}, {}, {"bar"}};
 
       check(equality,
             reporter{"Summary File Path"},
             t.summary_file_path().file_path(),
-            (projPaths.output().test_summaries() / rebasedSource).replace_filename(source_file().stem().concat("_bar.txt")));
+            projPaths.output().test_summaries() / rebasedSource.parent_path() / "fake_test_with_discriminated_summary_bar.txt");
 
       check(equality,
             reporter{"Exceptions File Path"},
             t.diagnostics_file_paths().caught_exceptions_file_path(),
-            projPaths.output().diagnostics() / "foo_suite" / source_file().filename().stem().concat("_Exceptions.txt"));
+            projPaths.output().diagnostics() / rebasedSource.parent_path() / "fake_test_with_discriminated_summary_Exceptions.txt");
     }
 
     {
-      fake_test_with_discriminated_exceptions t{"fake test", "foo suite", source_file(), projPaths, {}, {}, {"baz"}, {}};
+      fake_test_with_discriminated_exceptions t{test_name<fake_test_with_discriminated_exceptions>(), source_file(), projPaths, {}, {}, {"baz"}, {}};
 
       check(equality,
             reporter{"Summary File Path"},
             t.summary_file_path().file_path(),
-            (projPaths.output().test_summaries() / rebasedSource).replace_extension(".txt"));
+            projPaths.output().test_summaries() / rebasedSource.parent_path() / "fake_test_with_discriminated_exceptions.txt");
 
       check(equality,
             reporter{"Exceptions File Path"},
             t.diagnostics_file_paths().caught_exceptions_file_path(),
-            projPaths.output().diagnostics() / "foo_suite" / source_file().filename().stem().concat("_Exceptions_baz.txt"));
+            projPaths.output().diagnostics() / rebasedSource.parent_path() / "fake_test_with_discriminated_exceptions_Exceptions_baz.txt");
     }
   }
 }

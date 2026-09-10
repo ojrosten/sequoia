@@ -1,0 +1,2 @@
+scoped_allocation_false_positive_diagnostics_three_level
+False Positive Checks:                     8;  Failures:  0

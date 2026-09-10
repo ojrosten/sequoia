@@ -23,6 +23,7 @@
 #include "sequoia/TestFramework/IndividualTestPaths.hpp"
 
 #include "sequoia/Core/Meta/Concepts.hpp"
+#include "sequoia/Core/Meta/TypeName.hpp"
 #include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
@@ -52,17 +53,15 @@ namespace sequoia::testing
   class test_base
   {
   public:
-    explicit test_base(std::string name) : m_Name{std::move(name)} {}
+    test_base() = default;
 
-    test_base(std::string name, test_mode mode, std::string_view suiteName, const normal_path& srcFile, project_paths projPaths, individual_materials_paths materials, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& summaryDiscriminator)
-      : m_Name{std::move(name)}
+    test_base(std::string_view name, test_mode mode, const normal_path& srcFile, project_paths projPaths, individual_materials_paths materials, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& summaryDiscriminator)
+      : m_Name{name}
       , m_ProjectPaths{std::move(projPaths)}
       , m_Materials{std::move(materials)}
-      , m_Diagnostics{get_project_paths().project_root(), suiteName, srcFile, mode, outputDiscriminator}
-      , m_SummaryFile{srcFile, m_ProjectPaths, summaryDiscriminator}
-    {
-      std::filesystem::create_directories(m_Diagnostics.false_positive_or_negative_file_path().parent_path());
-    }
+      , m_Diagnostics{m_ProjectPaths, m_Name, srcFile, mode, outputDiscriminator}
+      , m_SummaryFile{srcFile, m_Name, m_ProjectPaths, summaryDiscriminator}
+    {}
 
     test_base(const test_base&)            = delete;
     test_base& operator=(const test_base&) = delete;
@@ -150,10 +149,10 @@ namespace sequoia::testing
     using checker_type = checker<Mode, Extender>;
     constexpr static test_mode mode{Mode};
 
-    explicit basic_test(std::string name) : test_base{std::move(name)} {}
+    basic_test() = default;
 
-    basic_test(std::string name, std::string_view suiteName, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& summaryDiscriminator)
-      : test_base{std::move(name), Mode, suiteName, srcFile, projPaths, std::move(materials), outputDiscriminator, summaryDiscriminator}
+    basic_test(std::string_view name, const normal_path& srcFile, const project_paths& projPaths, individual_materials_paths materials, active_recovery_files files, const std::optional<std::string>& outputDiscriminator, const std::optional<std::string>& summaryDiscriminator)
+      : test_base{name, Mode, srcFile, projPaths, std::move(materials), outputDiscriminator, summaryDiscriminator}
       , checker<Mode, Extender>{std::move(files)}
     {}
 
@@ -193,10 +192,48 @@ namespace sequoia::testing
   concept concrete_test =
         requires (T& test){
           { test.run_tests() };
-          { test.source_file() } -> std::convertible_to<std::filesystem::path>;
+          { T::source_file() } -> std::convertible_to<std::filesystem::path>;
           { test.reset_results() };
         }
     && std::derived_from<T, test_base> && std::movable<T> && std::destructible<T>;
+
+  /** \brief The name of a test, synthesized from its class rather than supplied by hand.
+
+      A class name is unique within its namespace by fiat of the language, which is what makes this
+      a sounder key than a hand-written string: two tests cannot silently come to share one, and
+      none can drift from the class it names. The qualification is dropped, since the directory
+      holding the test's output already mirrors its source path and so supplies the context.
+
+      A class template is refused rather than mangled: its name carries characters no file system
+      welcomes, and MSVC spells the inner ones differently from clang and gcc, so a path built from
+      one would fork the versioned output per compiler. Relaxing this means deciding on a spelling,
+      and this assertion is the single place that would have to change.
+
+      The space assertion is the one that earns its keep on Windows. It guards the *unqualified*
+      name, which is what becomes the file name, and it is instantiated for every registered test;
+      being a `static_assert`, a column which merely *builds* on MSVC therefore proves the peel did
+      its work across the whole suite. It has to come after the qualification is stripped, because
+      clang spells an anonymous namespace `(anonymous namespace)` - a space the file name never
+      sees.
+   */
+
+  template<std::derived_from<test_base> T>
+  [[nodiscard]]
+  consteval std::string_view test_name()
+  {
+    constexpr std::string_view qualified{meta::tidy_type_name(meta::type_name<T>())};
+
+    static_assert(qualified.find('<') == std::string_view::npos,
+                  "A test must not be a class template: its name is used to build a file path");
+
+    constexpr auto pos{qualified.rfind("::")};
+    constexpr std::string_view unqualified{pos == std::string_view::npos ? qualified : qualified.substr(pos + 2)};
+
+    static_assert(unqualified.find(' ') == std::string_view::npos,
+                  "A test's name must be free of spaces to serve as a file name");
+
+    return unqualified;
+  }
 
   template<concrete_test T>
   inline constexpr bool has_discriminated_output_v{

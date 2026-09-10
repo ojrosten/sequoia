@@ -1,0 +1,84 @@
+
+Running tests, synchronously...
+
+bar_free_test:
+[Execution Time: 1.04us]
+foo_false_negative_test:
+[Execution Time: 1.42us]
+foo_test:
+[Execution Time: 671us]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+
+	Tests/Stuff/FooTest.cpp, Line 42
+
+	Comparison performed using:
+	[sequoia::testing::value_tester<std::filesystem::path>]
+	Checking for equivalence with:
+	[std::filesystem::path]
+
+	  Path type
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/foo_test/WorkingCopy/RepresentativeCases
+	  vs
+	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/foo_test/Prediction/RepresentativeCases
+
+	  [std::filesystem::file_type]
+	  operator== returned false
+	  Obtained : not found
+	  Predicted: directory
+
+	=======================================
+
+oldschool_false_negative_test:
+[Execution Time: 1.5us]
+oldschool_test:
+[Execution Time: 1.33us]
+container_allocation_test:
+[Execution Time: 2.08us]
+container_performance_test:
+[Execution Time: 1.71us]
+unique_thing_false_negative_test:
+[Execution Time: 161us]
+	False Negative Checks:                     2;  Failures:  0
+unique_thing_test:
+[Execution Time: 249us]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
+useful_things_free_test:
+[Execution Time: 137us]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
+
+	[int]
+	operator== returned false
+	Obtained : 43
+	Predicted: 42
+
+	=======================================
+
+utilities_free_test:
+[Execution Time: 1.42us]
+flipper_free_test:
+[Execution Time: 111us]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+house_allocation_test:
+[Execution Time: 1.46us]
+maybe_false_negative_test:
+[Execution Time: 1.12us]
+maybe_test:
+[Execution Time: 1.42us]
+probability_false_negative_test:
+[Execution Time: 131us]
+	False Negative Checks:                     2;  Failures:  0
+probability_test:
+[Execution Time: 205us]
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+
+-----------Grand Totals-----------
+[Total Run Time: 3.67ms]
+[Execution Time: 1.68ms]
+	Standard Top Level Checks:                12;  Failures:  2  [Deep checks: 82]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     4;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

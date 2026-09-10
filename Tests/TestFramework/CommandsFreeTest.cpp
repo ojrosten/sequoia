@@ -14,7 +14,7 @@ namespace sequoia::testing
   using namespace runtime;
 
   [[nodiscard]]
-  std::filesystem::path commands_free_test::source_file() const
+  std::filesystem::path commands_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }

@@ -69,7 +69,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path concepts_test::source_file() const
+  std::filesystem::path concepts_test::source_file()
   {
     return std::source_location::current().file_name();
   }

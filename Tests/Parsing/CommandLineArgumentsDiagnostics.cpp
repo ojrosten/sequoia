@@ -10,7 +10,7 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path commandline_arguments_false_negative_test::source_file() const
+  std::filesystem::path commandline_arguments_false_negative_test::source_file()
   {
     return std::source_location::current().file_name();
   }

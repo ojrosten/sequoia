@@ -69,5 +69,23 @@ gnu_cxxfilt="/opt/homebrew/opt/binutils/bin/c++filt"
 demangle=(--demangle-cpp)
 [[ -x "${gnu_cxxfilt}" ]] && demangle+=("${gnu_cxxfilt}")
 
+# genhtml's set of ignorable error categories varies by lcov version: 'range' is
+# accepted by 2.5 and rejected outright by the lcov in Ubuntu's archives, which
+# stopped a coverage run dead. Each category below was added for a reason, so the
+# list is filtered to what this genhtml accepts rather than trimmed to whatever
+# every version has in common. Unknown categories are refused during argument
+# parsing, before genhtml looks at its input, which is what makes the probe cheap.
+probe_dir=$(mktemp -d)
+ignore=()
+for category in inconsistent range empty category; do
+  if ! genhtml --ignore-errors "${category}" -o "${probe_dir}" /dev/null 2>&1 \
+       | grep -q "unknown argument for --ignore-errors"; then
+    ignore+=(--ignore-errors "${category}")
+  else
+    echo "genhtml does not support --ignore-errors ${category}; continuing without it"
+  fi
+done
+rm -rf "${probe_dir}"
+
 # Generate HTML report
-genhtml "${demangle[@]}" --suppress-aliases -o "${output_dir}" "${test_exe_dir}/coverage.info" --ignore-errors inconsistent --ignore-errors range --ignore-errors empty --ignore-errors category
+genhtml "${demangle[@]}" --suppress-aliases -o "${output_dir}" "${test_exe_dir}/coverage.info" "${ignore[@]}"

@@ -14,7 +14,7 @@ namespace sequoia::testing
   using namespace data_structures;
 
   [[nodiscard]]
-  std::filesystem::path static_partitioned_sequence_test::source_file() const
+  std::filesystem::path static_partitioned_sequence_test::source_file()
   {
     return std::source_location::current().file_name();
   }

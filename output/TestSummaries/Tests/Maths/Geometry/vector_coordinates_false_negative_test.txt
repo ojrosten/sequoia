@@ -1,0 +1,2 @@
+vector_coordinates_false_negative_test
+False Negative Checks:                     4;  Failures:  0

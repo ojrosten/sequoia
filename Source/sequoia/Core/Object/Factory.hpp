@@ -19,6 +19,9 @@
 
 #include <variant>
 #include <array>
+#include <map>
+#include <ranges>
+#include <vector>
 #include <tuple>
 #include <stdexcept>
 #include <algorithm>
@@ -114,7 +117,7 @@ namespace sequoia::object
       if(found == m_Creators.end())
         throw std::runtime_error{std::string{"Factory unable to make product of name '"}.append(name).append("'")};
 
-      return std::visit(overloaded{[&](const auto& v) { return vessel{v.make(std::forward<Args>(args)...)}; }}, found->second);
+      return make_from(found->second, std::forward<Args>(args)...);
     }
 
     template<class Product, class... Args>
@@ -129,7 +132,33 @@ namespace sequoia::object
         found = std::ranges::find_if(m_Creators, [](const element& e){ return std::holds_alternative<product_creator<Product>>(e.second); });
       }
 
-      return std::visit(overloaded{[&](const auto& v) { return vessel{v.make(std::forward<Args>(args)...)}; }}, found->second);
+      return make_from(found->second, std::forward<Args>(args)...);
+    }
+
+    /** \brief Every product whose name satisfies the predicate.
+
+        The order is stable across invocations.
+     */
+
+    template<class Predicate, class... Args>
+      requires std::predicate<Predicate, std::string_view> && (initializable_from<Products, const Args&...> && ...)
+    [[nodiscard]]
+    std::vector<vessel> make_if(Predicate pred, const Args&... args) const
+    {
+      return   m_Creators
+             | std::views::filter([&pred](const element& e){ return pred(std::string_view{e.first}); })
+             | std::views::transform([&](const element& e){ return make_from(e.second, args...); })
+             | std::ranges::to<std::vector>();
+    }
+
+    /** \brief Every product, in the same stable order as `make_if`. */
+
+    template<class... Args>
+      requires (initializable_from<Products, const Args&...> && ...)
+    [[nodiscard]]
+    std::vector<vessel> make_all(const Args&... args) const
+    {
+      return make_if([](std::string_view){ return true; }, args...);
     }
 
     [[nodiscard]]
@@ -149,6 +178,13 @@ namespace sequoia::object
   private:
     storage m_Creators{};
 
+    template<class... Args>
+    [[nodiscard]]
+    static vessel make_from(const creator_variant& creator, Args&&... args)
+    {
+      return std::visit(overloaded{[&](const auto& v) { return vessel{v.make(std::forward<Args>(args)...)}; }}, creator);
+    }
+
     [[nodiscard]]
     auto find(std::string_view name) const
     {
@@ -167,5 +203,101 @@ namespace sequoia::object
       return {std::move(name), product_creator<Product>{}};
     }
   };
-}
 
+  /** \brief Factory whose products are registered one at a time, each erased into a vessel.
+
+      Choose this over the sibling above where the products are too many, or too little known, to be
+      named in a template parameter list. What is given up is the closed world: there is no longer
+      any asking, at compile time, whether a type is among the products.
+
+      There is no counterpart to `make_or`, since naming a fallback product means finding the entry
+      which makes that type, and that is the knowledge erasure gives up.
+   */
+
+  template<class Vessel, class... Args>
+  class erasing_factory
+  {
+  public:
+    using key    = std::string;
+    using vessel = Vessel;
+  private:
+    using creator = vessel(*)(const Args&...);
+    using storage = std::map<key, creator, std::ranges::less>;
+    using const_storage_iterator = storage::const_iterator;
+  public:
+    using names_iterator = utilities::iterator<const_storage_iterator, factory_dereference_policy<const_storage_iterator>>;
+
+    /** \brief Registers a product, throwing if the name is empty or already taken. */
+
+    template<class Product>
+      requires initializable_from<Product, const Args&...> && std::constructible_from<vessel, Product>
+    void register_product(key name)
+    {
+      if(name.empty())
+        throw std::logic_error{"Factory product names must not be empty!"};
+
+      constexpr creator make_product{[](const Args&... args) -> vessel { return vessel{Product{args...}}; }};
+
+      if(!m_Creators.emplace(std::move(name), make_product).second)
+        throw std::logic_error{"Factory product names must be unique!"};
+    }
+
+    [[nodiscard]]
+    std::size_t size() const noexcept
+    {
+      return m_Creators.size();
+    }
+
+    [[nodiscard]]
+    vessel make(std::string_view name, const Args&... args) const
+    {
+      const auto found{m_Creators.find(name)};
+
+      if(found == m_Creators.end())
+        throw std::runtime_error{std::string{"Factory unable to make product of name '"}.append(name).append("'")};
+
+      return found->second(args...);
+    }
+
+    /** \brief Every product whose name satisfies the predicate.
+
+        The order is stable across invocations.
+     */
+
+    template<class Predicate>
+      requires std::predicate<Predicate, std::string_view>
+    [[nodiscard]]
+    std::vector<vessel> make_if(Predicate pred, const Args&... args) const
+    {
+      return   m_Creators
+             | std::views::filter([&pred](const auto& e){ return pred(std::string_view{e.first}); })
+             | std::views::transform([&](const auto& e){ return e.second(args...); })
+             | std::ranges::to<std::vector>();
+    }
+
+    /** \brief Every product, in the same stable order as `make_if`. */
+
+    [[nodiscard]]
+    std::vector<vessel> make_all(const Args&... args) const
+    {
+      return make_if([](std::string_view){ return true; }, args...);
+    }
+
+    [[nodiscard]]
+    friend bool operator==(const erasing_factory&, const erasing_factory&) noexcept = default;
+
+    [[nodiscard]]
+    names_iterator begin_names() const noexcept
+    {
+      return names_iterator{m_Creators.begin()};
+    }
+
+    [[nodiscard]]
+    names_iterator end_names() const noexcept
+    {
+      return names_iterator{m_Creators.end()};
+    }
+  private:
+    storage m_Creators{};
+  };
+}

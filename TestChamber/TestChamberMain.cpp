@@ -26,89 +26,40 @@ int main(int argc, char** argv)
                        "  ",
                        {.main_cpp{"TestChamber/TestChamberMain.cpp"}, .ancillary_main_cpps{{"TestAll/TestMain.cpp"}}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
 
-    runner.add_test_suite(
-      "Algebra",
-      suite{
-        "Ratio",
-        ratio_free_test{"Ratio Free Test"}
-      }
-    );
-    
-    runner.add_test_suite(
-      "Geometry",
-      suite{
-        "Spaces",        
-        numeric_rings_meta_free_test{"Numeric Rings Meta Free Test"},
-        spaces_meta_free_test{"Spaces Meta Free Test"}
-      },
-      suite{
-        "Bounds",
-        bounds_free_test{"Bounds Free Test"}
-      },
-      suite{
-        "Validators",
-        validators_free_test{"Validators Free Test"}
-      },
-      suite{
-        "Vector Coordinates",
-        vector_coordinates_false_negative_test{"Vector Coordinates False negative Test"},
-        vector_coordinates_test{"Vector Coordinates Test"},
-        complex_vector_coordinates_test{"Complex Vector Coordinates Test"},
-        vector_polar_coordinates_test{"Vector Polar Coordinates Test"}
-      },
-      suite{
-        "Affine Coordinates",
-        affine_coordinates_false_negative_test{"Affine Coordinates False negative Test"},
-        affine_coordinates_test{"Affine Coordinates Test"}
-      },
-      suite{
-        "M-Affine Coordinates",
-        m_affine_coordinates_test{"M-Affine Coordinates Test"}
-      },
-      suite{
-        "Free Module Coordinates",
-        free_module_coordinates_test{"Free Module Coordinates Test"}
-      },
-      suite{
-        "Partial M-Torsor Coordinates",
-        partial_m_torsor_coordinates_test{"Partial M-Torsor Coordinates Test"}
-      },
-      suite{
-        "Absolute Coordinates",
-        absolute_coordinates_false_negative_test{"Absolute Coordinates False negative Test"},
-        absolute_coordinates_test{"Absolute Coordinates Test"},
-        absolute_logarithmic_coordinates_test{"Absolute Logarithmic Coordinates Test"}
-      }
-    );
-
-    runner.add_test_suite(
-      "Physical Values",
-      space_ordering_meta_free_test{"Space Ordering Meta Free Test"},
-      physical_value_meta_free_test{"Physical Value Meta Free Test"},
-      physical_value_false_negative_test{"False Negative Test"},
-      physical_value_conversions_free_test{"Physical Value Conversions Free Test"},
-      absolute_physical_value_test{"Absolute Physical Value Test"},
-      absolute_physical_value_compositions_test{"Absolute Physical Value Compositions Test"},
-      unsafe_absolute_physical_value_test{"Unsafe Absolute Physical Value Test"},
-      unsafe_absolute_physical_value_compositions_test{"Unsafe Absolute Physical Value Compositions Test"},
-      affine_physical_value_test{"Affine Physical Value Test"},
-      convex_physical_value_test{"Convex Physical Value Test"},
-      vector_physical_value_test{"Vector Physical Value Test"},
-      vector_physical_value_compositions_test{"Vector Physical Value Compositions Test"},
-      mixed_physical_value_test{"Mixed Physical Value Test"},
-      integral_physical_value_test{"Integral Physical Value Test"}
-    );
-
-    runner.add_test_suite(
-      "Saturating Arithmetic",
-      saturating_mul_free_test{"Saturating Mul Free Test"},
-      saturating_add_free_test{"Saturating Add Free Test"}
-    );
-
-    runner.add_test_suite(
-      "Vector_nonlinear_representations",
-      vector_nonlinear_representations_free_test{"Vector Nonlinear Representations Free Test"}
-    );
+    runner.register_test<ratio_free_test>();
+    runner.register_test<numeric_rings_meta_free_test>();
+    runner.register_test<spaces_meta_free_test>();
+    runner.register_test<bounds_free_test>();
+    runner.register_test<validators_free_test>();
+    runner.register_test<vector_coordinates_false_negative_test>();
+    runner.register_test<vector_coordinates_test>();
+    runner.register_test<complex_vector_coordinates_test>();
+    runner.register_test<vector_polar_coordinates_test>();
+    runner.register_test<affine_coordinates_false_negative_test>();
+    runner.register_test<affine_coordinates_test>();
+    runner.register_test<m_affine_coordinates_test>();
+    runner.register_test<free_module_coordinates_test>();
+    runner.register_test<partial_m_torsor_coordinates_test>();
+    runner.register_test<absolute_coordinates_false_negative_test>();
+    runner.register_test<absolute_coordinates_test>();
+    runner.register_test<absolute_logarithmic_coordinates_test>();
+    runner.register_test<space_ordering_meta_free_test>();
+    runner.register_test<physical_value_meta_free_test>();
+    runner.register_test<physical_value_false_negative_test>();
+    runner.register_test<physical_value_conversions_free_test>();
+    runner.register_test<absolute_physical_value_test>();
+    runner.register_test<absolute_physical_value_compositions_test>();
+    runner.register_test<unsafe_absolute_physical_value_test>();
+    runner.register_test<unsafe_absolute_physical_value_compositions_test>();
+    runner.register_test<affine_physical_value_test>();
+    runner.register_test<convex_physical_value_test>();
+    runner.register_test<vector_physical_value_test>();
+    runner.register_test<vector_physical_value_compositions_test>();
+    runner.register_test<mixed_physical_value_test>();
+    runner.register_test<integral_physical_value_test>();
+    runner.register_test<saturating_mul_free_test>();
+    runner.register_test<saturating_add_free_test>();
+    runner.register_test<vector_nonlinear_representations_free_test>();
 
     code = runner.execute(timer_resolution{1ms});
   }

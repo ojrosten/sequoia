@@ -27,7 +27,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path integral_physical_value_test::source_file() const
+  std::filesystem::path integral_physical_value_test::source_file()
   {
     return std::source_location::current().file_name();
   }

@@ -12,7 +12,7 @@ on:
   workflow_call:
     inputs:
       columns:
-        description: 'JSON array of matrix entries: name, os, configure, build, and cc/cxx where the preset takes them from the environment.'
+        description: 'JSON array of matrix entries: name, os, configure, build, cc/cxx where the preset takes them from the environment, and pkg where the apt package providing the compiler is not spelt like the binary (clang++ comes from clang; g++-15 is its own package).'
         required: true
         type: string
       exec_args:
@@ -64,20 +64,28 @@ jobs:
       - name: Install the toolchain (Linux)
         if: runner.os == 'Linux'
         run: |
+          # The hosted image ships vendor repositories - Chrome and Microsoft - which
+          # nothing here installs from. A bad index served by one of them fails the
+          # update, and with it the job.
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
+                     /etc/apt/sources.list.d/microsoft-prod.list
           sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
           sudo apt-get update -qq
-          for pkg in "${{ matrix.cxx }}" ninja-build libtbb-dev; do
+          # The compiler binary and the package providing it are not the same string:
+          # g++-15 is both, but clang++ is shipped by `clang`. A column may therefore
+          # name the package separately, defaulting to the binary where they agree.
+          for pkg in "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev; do
             apt-cache pkgnames | grep -qx "$pkg" \
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
-          sudo apt-get install -y "${{ matrix.cxx }}" ninja-build libtbb-dev
+          sudo apt-get install -y "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev
           echo "CC=${{ matrix.cc }}"   >> "$GITHUB_ENV"
           echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"
 
-      # Retained though no column currently selects macOS. Its absence is temporary:
-      # the suite's performance tests cannot hold on a hosted runner, and there is
-      # no way yet to run everything except them. Keeping this step makes restoring
-      # the column one matrix entry.
+      # Retained though no column currently selects macOS. Restoring the column is
+      # now one matrix entry, carrying `--exclude-performance` as the Windows one
+      # does: it is the suite's timing assertions, not the rest of it, which a
+      # hosted runner cannot hold.
       - name: Install the toolchain (macOS)
         if: runner.os == 'macOS'
         run: |
@@ -100,12 +108,22 @@ jobs:
 
       # `--version` does not identify the compiler: Ubuntu ships post-release
       # snapshots of a branch under the release's version number, so a g++ reporting
-      # 15.2.0 may be well beyond it. The changelog says which.
-      - name: What the distribution's g++ actually is
+      # 15.2.0 may be well beyond it. The changelog says which. The same is true of
+      # a distro clang, so this reads the changelog of whichever package the column
+      # installed rather than naming one compiler.
+      - name: What the distribution's compiler actually is
         if: runner.os == 'Linux'
-        # sed, not head: head exits early, gzip takes SIGPIPE, and `-o pipefail`
-        # would turn a report into a failed job.
-        run: zcat /usr/share/doc/gcc-15/changelog.Debian.gz | sed -n '1,20p'
+        # A report must not be able to fail the job - hence the trailing `|| true`,
+        # and `sed` rather than `head`, since head exits early, gzip takes SIGPIPE,
+        # and `-o pipefail` would turn a report into a failure.
+        run: |
+          pkg="${{ matrix.pkg || matrix.cxx }}"
+          log=$(dpkg -L "$pkg" 2>/dev/null | grep -m1 'changelog.Debian.gz$' || true)
+          if [ -n "$log" ]; then
+            zcat "$log" | sed -n '1,20p' || true
+          else
+            echo "No Debian changelog found for $pkg; $CXX --version above is all we have."
+          fi
 
       # The generated project's `git init` is followed by a commit, and git refuses
       # to commit without an identity. Every developer machine has one configured;
@@ -133,11 +151,15 @@ jobs:
           Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' `
                            -Name LongPathsEnabled
 
+      # A column may carry `exec_args` of its own, for a platform which cannot run the
+      # whole suite. It replaces the tier's rather than adding to them, so a column
+      # taking this route out of a tier which passes `--check-versioned-output` must
+      # repeat it.
       - name: Configure
         working-directory: TestAll
         run: |
           cmake --preset ${{ matrix.configure }} \
-                "-DEXEC_ARGS=${{ inputs.exec_args }}" \
+                "-DEXEC_ARGS=${{ matrix.exec_args || inputs.exec_args }}" \
                 -DWARNINGS_AS_ERRORS=${{ inputs.warnings_as_errors && 'ON' || 'OFF' }}
 
       # Separate from the run below so a compile failure and a test failure are
@@ -176,15 +198,86 @@ jobs:
       # macOS ships no GNU coreutils, and the step form additionally distinguishes
       # "the suite timed out" from "the job timed out" in the run summary. One
       # branch has already spun for 36 minutes against an 18s baseline.
-      # A column may set `run: false` to build and not run. Intended for a platform
-      # whose failures are understood and being worked on, so that the build is
-      # still guarded while the suite is not: better than removing the column,
-      # which would stop compiling there too.
+      # A column may set `run: false` to build and not run, or `advisory: true` to
+      # run without gating on the result. Both exist for a platform whose failures
+      # are understood and being worked on; advisory is the better of the two,
+      # because a suite that is not run tells you nothing, whereas one that is run
+      # and reported tells you what is still wrong.
+      #
+      # The tee is safe only because `shell: bash` runs steps under
+      # `--noprofile --norc -eo pipefail`: without pipefail the tee would donate its
+      # own exit status to the step, which is how a red suite comes to look green.
+      # The Build step above already depends on this; it is written down here
+      # because the dependency is invisible at the call site.
+      # `toJSON`, and not `matrix.run != false`, because GitHub coerces both null and
+      # false to 0 when comparing across types: for a column that omits `run` the
+      # comparison is 0 != 0, so the step was skipped and the job went green having
+      # built and run nothing. Every tier was affected from the day it was written;
+      # `toJSON(null)` is the string "null", which does distinguish the two.
       - name: Run the suite
-        if: ${{ matrix.run != false }}
+        if: ${{ toJSON(matrix.run) != 'false' }}
+        continue-on-error: ${{ matrix.advisory == true }}
         working-directory: TestAll
         timeout-minutes: 30
-        run: cmake --build --preset run-${{ matrix.build }}
+        run: cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/run.log"
+
+      # An advisory column still has to be *read*, and its failures are not equally acceptable.
+      # TestRunnerPerformanceTest asserts absolute wall-clock times - eight 25ms sleeps against a
+      # 60ms +- 35 window - which a shared hosted runner cannot hold; the same commit has returned
+      # 196ms and 603ms. Everything else is a defect.
+      #
+      # Classified by the *test that failed*, not by the summary row: those timing assertions are
+      # `check(within_tolerance{...}, ...)`, which count in the standard row, since the performance
+      # rows count `check_relative_performance` alone. Every failing file is named either way, so a
+      # new one cannot hide behind a tolerated one.
+      - name: Triage the advisory run
+        if: ${{ always() && matrix.advisory == true && toJSON(matrix.run) != 'false' }}
+        run: |
+          log="$RUNNER_TEMP/run.log"
+          if [ ! -f "$log" ]; then
+            echo "::error title=Advisory run::${{ matrix.name }}: the suite produced no log"
+            exit 0
+          fi
+
+          # Tests whose failures are understood and tracked: roadmap items 38 and 102.
+          tolerated_tests='TestRunnerPerformanceTest\.cpp'
+
+          failing=$({ grep -oE 'Tests/[A-Za-z0-9/_]+\.cpp, Line [0-9]+' "$log" || true; } \
+                      | sed 's/, Line.*//' | sort -u)
+          actionable=$({ echo "$failing" | grep -vE "$tolerated_tests" || true; } | sed '/^$/d')
+
+          {
+            echo "### ${{ matrix.name }} - advisory run"
+            echo ""
+            if [ -n "$failing" ]; then
+              echo "Failing tests:"
+              echo '```'
+              echo "$failing"
+              echo '```'
+            else
+              echo "No failing tests."
+            fi
+            echo ""
+            echo '```'
+            sed -n '/Grand Totals/,$p' "$log" | head -12
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ -n "$actionable" ]; then
+            echo "::error title=Advisory run needs action::${{ matrix.name }}: $(echo "$actionable" | tr '\n' ' '). This column does not gate, so the job is green; the failures are real."
+          elif [ -n "$failing" ]; then
+            echo "::warning title=Advisory run::${{ matrix.name }}: only the timing assertions this runner cannot hold (roadmap 38, 102). Nothing to act on."
+          else
+            echo "::notice title=Advisory run::${{ matrix.name }}: the suite passed outright."
+          fi
+
+      # Kept with the artifact so an advisory column can be reviewed after the fact,
+      # rather than only through the annotations.
+      - name: Keep the run log
+        if: always()
+        run: |
+          mkdir -p run-log
+          cp "$RUNNER_TEMP/run.log" run-log/ 2>/dev/null || true
 
       # Where drift detection is on, the switch fails the run but reports only
       # that a bit is set; this names the files. It also sees the whole tree,
@@ -204,4 +297,5 @@ jobs:
             output/TestSummaries/
             output/DiagnosticsOutput/
             output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/InitOutput/
+            run-log/
           if-no-files-found: warn

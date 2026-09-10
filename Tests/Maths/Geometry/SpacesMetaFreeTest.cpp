@@ -294,7 +294,7 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  std::filesystem::path spaces_meta_free_test::source_file() const
+  std::filesystem::path spaces_meta_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }

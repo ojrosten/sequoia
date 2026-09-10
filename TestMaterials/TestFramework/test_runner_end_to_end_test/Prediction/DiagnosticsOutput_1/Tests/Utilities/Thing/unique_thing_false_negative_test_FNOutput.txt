@@ -1,0 +1,30 @@
+Tests/Utilities/Thing/UniqueThingTestingDiagnostics.cpp, Line 23
+Useful Description
+
+Comparison performed using:
+[sequoia::testing::value_tester<stuff::unique_thing>]
+Checking for equivalence with:
+[double]
+
+  Description
+  [double]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
+Tests/Utilities/Thing/UniqueThingTestingDiagnostics.cpp, Line 24
+Useful Description
+
+[stuff::unique_thing]
+operator== returned false
+
+  Description
+  [double]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+=======================================
+
