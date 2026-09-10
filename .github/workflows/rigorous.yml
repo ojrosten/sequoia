@@ -15,12 +15,19 @@ name: rigorous
 # every hosted column has them off bar one, and TestRunnerTest, whose teardown
 # Windows intermittently refuses - roadmap item 134.
 #
-# A column's `exec_args` replaces the tier's rather than adding to them, so this one
-# deliberately does not carry `--check-versioned-output`: the committed `_msvc` forks
-# of the diagnostics output are stale, and gating on their drift before an MSVC run
-# has ever refreshed them would block the gate on a known backlog. The Linux column
-# still carries it, so drift is caught. Give MSVC the flag once the forks it writes
-# have been reviewed and committed.
+# Every column carries `--check-versioned-output`, including the Windows and macOS
+# ones, which for a time did not. The reason they did not - that the committed
+# `_msvc` forks were stale - was measured and found false on 2026-09-10: of the 340
+# output files a real MSVC run writes, 339 already matched, and the four
+# `_FNOutput_msvc` forks long cited as decayed are byte-identical. The single
+# genuine straggler was `test_runner_project_files_msvc.txt`, still carrying the
+# display name the naming branch retired, because it is the one output a Mac cannot
+# regenerate. It is fixed, so the flag can go on. A macOS run matched all 340.
+#
+# Note the flag must be spelt out per column here, since `exec_args` REPLACES the
+# tier's rather than adding to it - a column naming only its exclusions silently
+# loses the drift check, which is how Windows came to be unchecked in the first
+# place.
 #
 # TWO COLUMNS ARE TEMPORARILY WITHDRAWN, 2026-09-10. Both failed for reasons that
 # predate the work they were blocking, and a gate nobody can pass stops being a
@@ -112,9 +119,11 @@ jobs:
       columns: >-
         [
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"},
+          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"},
           {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15"},
-          {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--exclude-performance"}
+          {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance"},
+          {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance"},
+          {"name": "macOS · Clang · Release",  "os": "macos-latest",   "configure": "llvm-env-release",   "build": "llvm-env-release", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
 
   docs:
