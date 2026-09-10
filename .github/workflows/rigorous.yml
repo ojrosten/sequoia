@@ -10,10 +10,10 @@ name: rigorous
 # Over fine, this adds the two questions a sanitized Debug build cannot answer:
 # races, and what the optimizer does.
 #
-# The Windows column runs the suite with `--exclude-performance`. It is only the
-# timing assertions a hosted runner cannot hold - TestRunnerPerformanceTest asserts
-# 60ms +- 35 for eight 25ms sleeps run concurrently, and this runner returned 196ms
-# and then 603ms for the same commit - so excluding those buys back everything else.
+# Which columns run which tests is set out below, at the point it is decided. Two
+# exclusions apply to the Windows column: the performance tests, for the reason
+# every hosted column has them off bar one, and TestRunnerTest, whose teardown
+# Windows intermittently refuses - roadmap item 134.
 #
 # A column's `exec_args` replaces the tier's rather than adding to them, so this one
 # deliberately does not carry `--check-versioned-output`: the committed `_msvc` forks
@@ -38,6 +38,31 @@ name: rigorous
 # sit under std::function's erased _M_invoke, so the first experiment is whether
 # the copyable_function work removes them without anything being suppressed.
 # Restore this column when those three sites are resolved or knowingly waived.
+#
+# The TSan column is macOS/Clang where every other column is Linux/GCC or MSVC,
+# and that is deliberate. `Preprocessor.hpp` gives `sequoia::execution::par` the
+# real `std::execution::par` only where `__cpp_lib_parallel_algorithm` is defined,
+# which is a property of the standard library: libstdc++ has the parallel
+# algorithms, on oneAPI TBB; libc++ does not. So under GCC, `accelerate` runs
+# `std::for_each(par, ...)` and TSan instruments TBB rather than us - it reported
+# 54 races on PR #41, 28 in partitioner.h, 13 in blocked_range.h, 10 in
+# parallel_for.h, 3 in _small_object_pool.h, and none in sequoia, because TSan
+# cannot see TBB's internal synchronisation unless TBB is built with TSan.
+#
+# Clang with libc++ takes the other branch, `thread_pool_policy`, so TSan
+# observes the concurrency we actually wrote. Measured 2026-09-10 on 63ec01258
+# with clang 23.1.0 on arm64: zero ThreadSanitizer reports, 19588 checks, 0
+# failures. Suppressing the TBB frames instead would have left the column
+# asserting nothing about our code, since our pool is the branch GCC never takes.
+#
+# It must be macOS rather than Linux, and that is the whole point: clang as
+# shipped means libc++ on macOS but **libstdc++ on Linux**, where the feature
+# macro is defined and TBB would come straight back. Do not "regularise" this to
+# ubuntu-latest.
+#
+# macOS was dropped on 2026-09-08 over the timing assertions a hosted runner
+# cannot hold; `--exclude-performance` is what buys it back, exactly as it does
+# for the Windows columns.
 #
 # The Release column exists because -O3 asks questions Debug cannot, and it was
 # withdrawn between 2026-09-10 and this commit while its warnings were understood.
@@ -88,7 +113,8 @@ jobs:
         [
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
           {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"},
-          {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15"}
+          {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--exclude-performance"}
         ]
 
   docs:
