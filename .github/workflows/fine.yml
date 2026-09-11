@@ -27,12 +27,12 @@ name: fine
 # 2026-09-10, under ASan's slowdown. Both flags are spelt out because a column's
 # `exec_args` REPLACES the tier's rather than adding to it.
 #
-# The MSVC ASan columns leave out TestRunnerTest: its instability-analysis cleanup
-# calls fs::remove_all on a folder a just-exited sandbox subprocess still has open,
-# and Windows refuses the delete. Every check in it passes - the run dies in
-# teardown - and it has cost 3 of 6 gating runs. It is ASan-specific: the
-# uninstrumented Windows column runs the same test to 55 checks and is green, so
-# the exclusion is scoped to the sanitized columns rather than to Windows.
+# The MSVC column leaves out TestRunnerTest: its instability-analysis cleanup
+# calls fs::remove_all on a folder something on Windows still has open, and the
+# delete is refused. Every check in it passes - the run dies in teardown - and it
+# is close to a coin toss. It was thought ASan-specific, on the strength of one
+# uninstrumented run passing; on 2026-09-11 the uninstrumented MSVC Release column
+# failed the same way, so it is Windows-wide and ASan only widens the window.
 # Roadmap item 134 tracks the fix; this is a stop-gap, not a verdict.
 on:
   pull_request:
