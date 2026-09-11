@@ -8,38 +8,37 @@ name: rigorous
 # once per promotion rather than once per change.
 #
 # Over fine, this adds the two questions a sanitized Debug build cannot answer:
-# races, and what the optimizer does. **Only the first of those is asked at
-# present**: the Release column is withdrawn - see below - so promotion is not
-# currently checking what the optimizer does to us.
+# races, and what the optimizer does.
 #
-# The Windows column runs the suite with `--exclude-performance`. It is only the
-# timing assertions a hosted runner cannot hold - TestRunnerPerformanceTest asserts
-# 60ms +- 35 for eight 25ms sleeps run concurrently, and this runner returned 196ms
-# and then 603ms for the same commit - so excluding those buys back everything else.
+# Which columns run which tests is set out below, at the point it is decided. Both
+# Windows columns exclude the performance tests, for the reason every hosted column
+# has them off bar one. Their other exclusions differ, and neither carries the
+# other's: MSVC ASan leaves out TestRunnerTest, whose teardown Windows
+# intermittently refuses - roadmap item 134 - and MSVC Release leaves out
+# TestRunnerProjectFiles, for the reason given below.
 #
-# A column's `exec_args` replaces the tier's rather than adding to them, so this one
-# deliberately does not carry `--check-versioned-output`: the committed `_msvc` forks
-# of the diagnostics output are stale, and gating on their drift before an MSVC run
-# has ever refreshed them would block the gate on a known backlog. The Linux column
-# still carries it, so drift is caught. Give MSVC the flag once the forks it writes
-# have been reviewed and committed.
+# Every column but Linux · GCC · Release carries `--check-versioned-output`,
+# including the Windows and macOS ones, which for a time did not. That one
+# exception is deliberate and is explained where it is set, below. The reason they did not - that the committed
+# `_msvc` forks were stale - was measured and found false on 2026-09-10: of the 340
+# output files a real MSVC run writes, 339 already matched, and the four
+# `_FNOutput_msvc` forks long cited as decayed are byte-identical. The single
+# genuine straggler was `test_runner_project_files_msvc.txt`, still carrying the
+# display name the naming branch retired, because it is the one output a Mac cannot
+# regenerate. It is fixed, so the flag can go on. A macOS run matched all 340.
 #
-# TWO COLUMNS ARE TEMPORARILY WITHDRAWN, 2026-09-10. Both failed for reasons that
-# predate the work they were blocking, and a gate nobody can pass stops being a
-# gate: it just diverts promotions around itself. They come back, and the
-# conditions are written down so that "in due course" has a definition.
+# TestRunnerProjectFiles is left out of the MSVC Release column. It compares a
+# generated TestAll.vcxproj against a prediction stored per preset -
+# `ProjectFiles/<preset>`, taken from the build directory's name - and predictions
+# exist for `msvc` and `msvc-asan` only. A third would have to be generated on
+# Windows and committed; until then the column would be comparing against a
+# directory that does not exist. The test is a no-op on clang, so the macOS Release
+# column needs no such exclusion.
 #
-# Linux · GCC · Release - roadmap item 135. Dies at COMPILE time, because
-# `warnings_as_errors` meets three sites GCC only diagnoses at Release-level
-# inlining: MonotonicSequence.hpp:121 (-Wstringop-overflow, 53 lines),
-# Spaces.hpp:3465 (-Wmaybe-uninitialized, 48) and Iterator.hpp:309
-# (-Warray-bounds, 6). Reproduced under gcc 16.2 as well as the image's gcc 15,
-# so it is not version-specific. Note the count: CI showed two sites because
-# -Werror stops at the first, and a local warning build found the third - a
-# -Werror log reports the first failures, never the backlog. Two of the three
-# sit under std::function's erased _M_invoke, so the first experiment is whether
-# the copyable_function work removes them without anything being suppressed.
-# Restore this column when those three sites are resolved or knowingly waived.
+# Note the flag must be spelt out per column here, since `exec_args` REPLACES the
+# tier's rather than adding to it - a column naming only its exclusions silently
+# loses the drift check, which is how Windows came to be unchecked in the first
+# place.
 #
 # The TSan column is macOS/Clang where every other column is Linux/GCC or MSVC,
 # and that is deliberate. `Preprocessor.hpp` gives `sequoia::execution::par` the
@@ -66,15 +65,45 @@ name: rigorous
 # cannot hold; `--exclude-performance` is what buys it back, exactly as it does
 # for the Windows columns.
 #
-# Roadmap item 135 - Linux · GCC · Release - stays withdrawn. It dies at COMPILE
-# time, because `warnings_as_errors` meets three sites GCC only diagnoses at
-# Release-level inlining: MonotonicSequence.hpp:121 (-Wstringop-overflow, 53
-# lines), Spaces.hpp:3465 (-Wmaybe-uninitialized, 48) and Iterator.hpp:309
-# (-Warray-bounds, 6). Reproduced under gcc 16.2 as well as the image's gcc 15,
-# so not version-specific, and unchanged by swapping std::function for
-# copyable_function, so not library-specific either. 101 of those 107 lines are
-# demonstrable false positives. Restore the column when the three sites are
-# resolved or knowingly waived.
+# The Release column exists because -O3 asks questions Debug cannot, and it was
+# withdrawn between 2026-09-10 and this commit while its warnings were understood.
+# All 107 lines were false positives from three sites: 101 from gcc's loop
+# vectorizer, which -fno-tree-loop-vectorize removes while leaving the diagnostics
+# enabled, and 6 from an address computed in a branch of libstdc++'s
+# __final_insertion_sort that a two-edge graph cannot reach. They are suppressed at
+# the sites, each saying why - see roadmap item 135. Note that the suite had never
+# actually run at -O3 before, the column having always died at compile time; it
+# does now, 19588 checks, 0 failures.
+#
+# This column carries NO flags - an explicitly empty `exec_args`, which is not the
+# same as omitting the key. It must not carry `--check-versioned-output`: gcc at
+# -O3 gives std::source_location the wrong call site, so a Release run rewrites a
+# diagnostics file with another translation unit's location and the drift check
+# fails every time. Roadmap item 139; clang at -O3 is clean, gcc Debug is clean.
+# Restore the flag when that is fixed.
+#
+# The performance tests run HERE and nowhere else in this tier, which is
+# deliberate. What makes them unreliable on a hosted runner is the slowdown, not
+# the platform: TestRunnerPerformanceTest asserts 60ms +- 35 for eight 25ms sleeps
+# run concurrently, and the sanitized columns cannot hold it - `fine`'s Linux
+# ASan+UBSan returned 164ms on 2026-09-10, and MSVC gave 196ms then 603ms for one
+# commit. Uninstrumented gcc can: `coarse`'s Linux Debug column has run them 20
+# times out of 20 since 2026-09-09. This column is uninstrumented gcc, so it is
+# the one that should carry them, and it is why the tier is not simply blind to
+# performance.
+#
+# Hence the asymmetry in `exec_args` below: the sanitized Linux column excludes
+# them and spells out BOTH flags, because a column's `exec_args` REPLACES the
+# tier's - naming only the exclusion would silently lose the drift check - while
+# this column carries an explicitly empty `exec_args`, which is not the same as
+# omitting the key: it runs with no flags at all, and inherits nothing.
+# The MSVC ASan columns leave out TestRunnerTest: its instability-analysis cleanup
+# calls fs::remove_all on a folder a just-exited sandbox subprocess still has open,
+# and Windows refuses the delete. Every check in it passes - the run dies in
+# teardown - and it has cost 3 of 6 gating runs. It is ASan-specific: the
+# uninstrumented Windows column runs the same test to 55 checks and is green, so
+# the exclusion is scoped to the sanitized columns rather than to Windows.
+# Roadmap item 134 tracks the fix; this is a stop-gap, not a verdict.
 on:
   pull_request:
     branches: [main]
@@ -91,9 +120,12 @@ jobs:
       exec_args: '--check-versioned-output'
       columns: >-
         [
-          {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15"},
-          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--exclude-performance"},
-          {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--exclude-performance"}
+          {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
+          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"},
+          {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15", "exec_args": ""},
+          {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance"},
+          {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc",               "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerProjectFiles.cpp"},
+          {"name": "macOS · Clang · Release",  "os": "macos-latest",   "configure": "llvm-env-release",   "build": "llvm-env-release", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
 
   docs:

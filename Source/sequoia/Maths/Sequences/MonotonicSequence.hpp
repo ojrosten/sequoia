@@ -13,6 +13,7 @@
 
 #include "sequoia/Maths/Sequences/MonotonicSequenceDetails.hpp"
 #include "sequoia/Core/ContainerUtilities/ArrayUtilities.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/Algorithms/Algorithms.hpp"
 
 #include <vector>
@@ -115,11 +116,16 @@ namespace sequoia::maths
     template<class UnaryOp>
     constexpr void mutate(unsafe_t, const_iterator first, const_iterator last, UnaryOp op)
     {
+      // gcc's loop vectorizer rewrites this into a form -Wstringop-overflow reads as a write into
+      // a zero-sized region. The bounds hold: swap_partitions, the caller on that path, checks both
+      // indices against num_partitions(), which is m_Partitions.size().
+SEQUOIA_GCC_SUPPRESS_BEGIN("-Wstringop-overflow=")
       while(first != last)
       {
         auto pos{m_Sequence.begin() + std::ranges::distance(cbegin(), first++)};
         *pos = op(*pos);
       }
+SEQUOIA_GCC_SUPPRESS_END
     }
 
     [[nodiscard]]
