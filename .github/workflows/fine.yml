@@ -42,6 +42,14 @@ on:
       - 'docs/**'
       - 'coverage_reports/**'
 
+# A push to a PR that already has a run in flight cancels that run: a superseded
+# run cannot gate anything, and its audit would otherwise compare its jobs
+# against the checks of a commit it is not testing. The group is per PR, so runs
+# for different PRs never cancel each other.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   fine:
     uses: ./.github/workflows/tests.yml
@@ -64,7 +72,7 @@ jobs:
   audit:
     name: Every job ran and every job gates
     needs: [fine]
-    if: always()
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -72,6 +80,7 @@ jobs:
       GH_REPO: ${{ github.repository }}
       RESULTS: ${{ toJSON(needs) }}
       PR: ${{ github.event.pull_request.number }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
     steps:
       - name: Check each job's result
         run: |
@@ -83,6 +92,17 @@ jobs:
 
       - name: Insist every job of this run is a required check on staging
         run: |
+          # A run whose head is no longer the PR's head has been superseded; the PR's
+          # required checks now belong to another commit, and this run gates nothing.
+          # Needed as well as cancel-in-progress, for the seconds before the
+          # cancellation lands and for a push matched by paths-ignore, which moves
+          # the head without starting a run - in which case nothing else will point
+          # at the PR now waiting on checks that never report (roadmap item 145).
+          current_head=$(gh pr view "$PR" --json headRefOid --jq .headRefOid)
+          if [ "$current_head" != "$HEAD_SHA" ]; then
+            echo "::warning::superseded: the PR's head is now $current_head, this run tested $HEAD_SHA. If no run appears for the new head, the PR is waiting on checks that will never report - see roadmap item 145."
+            exit 0
+          fi
           gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --paginate \
               --jq '.jobs[] | select(.conclusion != "skipped") | .name' \
             | sort > jobs.txt

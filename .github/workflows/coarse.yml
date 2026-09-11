@@ -33,6 +33,14 @@ on:
       - 'coverage_reports/**'
   workflow_dispatch:
 
+# A push to a branch that already has a run in flight cancels that run: it
+# answers a question nobody is asking any more, and Windows runners are scarce.
+# Runs on different branches never share a group; a dispatch on a branch shares
+# the branch's group, and tests the same head.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   coarse:
     uses: ./.github/workflows/tests.yml
@@ -58,7 +66,7 @@ jobs:
   audit:
     name: Every job ran
     needs: [coarse, docs]
-    if: always()
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
