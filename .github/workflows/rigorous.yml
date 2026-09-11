@@ -13,8 +13,13 @@ name: rigorous
 # fixed tree, and main is the tree that is supposed to be fixed. A scheduled run
 # fires from the default branch, so nothing here needs to name it.
 #
-# The nightly run also carries the promotion reminder, at the bottom. Work lands
-# on staging silently, so without a prompt it accumulates until someone remembers.
+# The scheduled run is one of two things, decided by whether staging is ahead of
+# main. If it is not, the columns run on main, as above. If it is, the run opens
+# the promotion PR instead - set to merge itself when green - and the columns run
+# on THAT, through the pull_request trigger, where the result is spendable as the
+# gate. The two are never both paid for on one night. Work lands on staging
+# silently, and without this it accumulated until someone remembered; the PR is
+# the notification, green or red.
 #
 # Over fine, this adds the two questions a sanitized Debug build cannot answer:
 # races, and what the optimizer does.
@@ -143,7 +148,32 @@ on:
     - cron: '0 3 * * *'
 
 jobs:
+  # Scheduled runs only: which of the two things this run is. The compare endpoint
+  # rather than a checkout, so the merge commits that promotion leaves on main and
+  # not on staging do not count as staging being behind.
+  staging:
+    name: Is staging ahead of main
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      ahead: ${{ steps.compare.outputs.ahead }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - id: compare
+        run: |
+          ahead=$(gh api "repos/$GH_REPO/compare/main...staging" --jq .ahead_by)
+          echo "staging is $ahead commit(s) ahead of main"
+          echo "ahead=$ahead" >> "$GITHUB_OUTPUT"
+
+  # `!cancelled()` rather than the implied success(): the job above is skipped on
+  # every event but the schedule, and a skipped dependency would otherwise skip
+  # these too.
   rigorous:
+    needs: staging
+    if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
     uses: ./.github/workflows/tests.yml
     with:
       warnings_as_errors: true
@@ -159,6 +189,8 @@ jobs:
         ]
 
   docs:
+    needs: staging
+    if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
     uses: ./.github/workflows/docs.yml
 
   # Measured and published; no threshold is applied. The uploaded coverage.info is
@@ -169,6 +201,8 @@ jobs:
   # suite through ctest, serially, not through the `run` target.
   coverage:
     name: Coverage · Linux · GCC
+    needs: staging
+    if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
@@ -238,54 +272,34 @@ jobs:
             coverage_reports/
           if-no-files-found: warn
 
-  # A prompt, not a promotion. Raising the PR itself would need a token other than
-  # GITHUB_TOKEN - a PR that token opens triggers no pull_request workflow, so the
-  # gate would never report on it - and would re-run this tier on every merge to
-  # staging while the PR stood open, which is the once-per-promotion economy given
-  # away. An issue costs nothing, notifies, and leaves the decision of what to
-  # promote, and when, with a person.
+  # Opens the promotion PR and sets it to merge itself once the gate is green.
+  # Needs a token other than GITHUB_TOKEN: a PR that token opens triggers no
+  # pull_request workflow, so the gate would never report on it. PROMOTION_TOKEN
+  # is a fine-grained PAT with Contents and Pull requests read/write on this
+  # repository; when it expires this step fails, loudly, which is the point.
   #
-  # Exactly one issue: refreshed while staging stays ahead, closed when it is not.
-  # The count comes from the compare endpoint rather than a checkout, so it is not
-  # confused by the merge commits promotion leaves on main and not on staging.
-  #
-  # Runs on dispatch as well as on the schedule so that it can be exercised on
-  # demand; it only ever states what is true of main...staging, so that is safe.
-  # Not on a promotion PR, where the answer is already known.
-  remind:
-    name: Promotion reminder
-    if: github.event_name != 'pull_request'
+  # One PR at a time. If one is already open it is left alone: the gate re-runs on
+  # it whenever staging moves, and if it is red that is the thing to look at.
+  promote:
+    name: Promote staging
+    needs: staging
+    if: github.event_name == 'schedule' && needs.staging.outputs.ahead != '0'
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    permissions:
-      issues: write
     env:
-      GH_TOKEN: ${{ github.token }}
+      GH_TOKEN: ${{ secrets.PROMOTION_TOKEN }}
       GH_REPO: ${{ github.repository }}
-      TITLE: Promote staging to main
+      AHEAD: ${{ needs.staging.outputs.ahead }}
     steps:
-      - name: Open, refresh or close the reminder
+      - name: Open the promotion PR, unless one is open
         run: |
-          ahead=$(gh api "repos/$GH_REPO/compare/main...staging" --jq .ahead_by)
-          open=$(gh issue list --state open --json number,title \
-                   --jq ".[] | select(.title == \"$TITLE\") | .number" | head -1)
-          echo "staging is $ahead commit(s) ahead of main; open reminder: ${open:-none}"
-
-          if [ "$ahead" -eq 0 ]; then
-            if [ -n "$open" ]; then
-              gh issue close "$open" --comment "staging and main agree."
-            fi
+          open=$(gh pr list --base main --head staging --state open --json number --jq '.[0].number')
+          if [ -n "$open" ]; then
+            echo "promotion PR #$open is already open"
             exit 0
           fi
-
-          body="As of $(date -u +%Y-%m-%d), \`staging\` is **$ahead** commit(s) ahead of \`main\`.
-
-          To promote: \`gh pr create --base main --head staging\`. The rigorous tier runs on the PR and it merges only when green.
-
-          Refreshed nightly; closes itself once the branches agree."
-
-          if [ -n "$open" ]; then
-            gh issue edit "$open" --body "$body"
-          else
-            gh issue create --title "$TITLE" --body "$body"
-          fi
+          url=$(gh pr create --base main --head staging \
+                  --title "Promote staging to main" \
+                  --body "Opened by the scheduled rigorous run: staging is $AHEAD commit(s) ahead of main. Merges itself when the gate is green.")
+          gh pr merge --auto --merge "$url"
+          echo "opened $url"
