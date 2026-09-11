@@ -49,6 +49,28 @@ namespace sequoia::testing
     }
   };
 
+  /** \brief The dependencies which the text of a single translation unit declares.
+
+      Lexed rather than preprocessed, so an `#include` behind a false `#if` or inside a string
+      literal is reported all the same: over-reporting costs a test which need not have run, where
+      under-reporting silently skips one which must. Three spellings do slip through - a header named
+      by a macro, one spliced across lines, and one whose tokens a comment separates - and none
+      occurs in a tree read today.
+   */
+  struct source_dependencies
+  {
+    /// Header names exactly as written, neither resolved against the including file nor filtered.
+    std::vector<std::filesystem::path> includes{};
+  };
+
+  /** \brief Lexes the dependencies declared by a translation unit.
+
+      Comments are skipped, as is everything from the first line containing `cutoff`; an empty
+      `cutoff` scans to the end.
+   */
+  [[nodiscard]]
+  source_dependencies scan_dependencies(std::istream& source, std::string_view cutoff);
+
   /** \brief The time against which a modification is judged to have happened after the run which
              wrote the prune stamp.
 

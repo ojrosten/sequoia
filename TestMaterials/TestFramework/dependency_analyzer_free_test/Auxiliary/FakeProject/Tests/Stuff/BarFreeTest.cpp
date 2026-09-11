@@ -8,6 +8,10 @@
 #include "BarFreeTest.hpp"
 #include "fakeProject/Stuff/Bar.hpp"
 
+// Legal spellings the scan once could not see; the canonical one above is the control.
+#	include "fakeProject/Stuff/Baz.hpp"
+#include"fakeProject/Stuff/Qux.hpp"
+
 /* #include "Stuff/FooTestingUtilities.hpp" */
 /** #include "Stuff/FooTestingUtilities.hpp" **/
 // #include "Stuff/FooTestingUtilities.hpp"
