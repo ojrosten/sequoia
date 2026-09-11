@@ -1,0 +1,93 @@
+name: false-negative
+
+# The control for the gate. A gate that has never been seen to go red has not
+# been shown to see anything: every one of its green runs is consistent with a
+# suite that was never run, a flag that never reached the runner, or a detector
+# that fires on nothing. sequoia's own test framework has a false-negative mode
+# for exactly this reason, and the gate gets the same treatment.
+#
+# This dispatches rigorous with `false_negative: true`, which corrupts one
+# versioned output and one prediction before building, then waits for the run
+# and reads its jobs back. Every column must have failed, and the column audit
+# within the run must have passed - the columns ran, and went red. A column that
+# comes back green here is a column that cannot see, and this job fails on it.
+#
+# Weekly rather than nightly: it costs a full rigorous run, and what it measures
+# - the gate's ability to fail - changes only when the workflows do. Run it by
+# hand after any change to them.
+#
+# Dispatching with GITHUB_TOKEN is allowed: the recursion guard that stops a
+# GITHUB_TOKEN push or PR from triggering workflows exempts workflow_dispatch.
+# Roadmap item 148.
+on:
+  schedule:
+    - cron: '0 5 * * 0'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+jobs:
+  control:
+    name: The gate can still go red
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Dispatch a rigorous run that must fail, and find it
+        id: dispatch
+        run: |
+          before=$(date -u +%Y-%m-%dT%H:%M:%S+00:00)
+          gh workflow run rigorous.yml --ref "$GITHUB_REF_NAME" -f false_negative=true
+
+          # The dispatch returns nothing; the run appears a few seconds later.
+          id=""
+          for _ in $(seq 1 12); do
+            sleep 10
+            id=$(gh run list --workflow rigorous.yml --branch "$GITHUB_REF_NAME" \
+                   --event workflow_dispatch --created ">=$before" \
+                   --json databaseId --jq '.[0].databaseId // empty')
+            [ -n "$id" ] && break
+          done
+          [ -n "$id" ] || { echo "::error::the dispatched run never appeared"; exit 1; }
+          echo "subject: https://github.com/$GH_REPO/actions/runs/$id"
+          echo "id=$id" >> "$GITHUB_OUTPUT"
+
+      # `gh run watch` exits by the run's own status only with --exit-status,
+      # which is not passed: the run is SUPPOSED to fail.
+      - name: Wait for it
+        run: gh run watch "${{ steps.dispatch.outputs.id }}" --interval 60 > /dev/null
+
+      - name: Every column failed, and the audit saw them all run
+        run: |
+          id=${{ steps.dispatch.outputs.id }}
+          gh api "repos/$GH_REPO/actions/runs/$id/jobs?per_page=100" --paginate --jq '.jobs[]' \
+            | jq -s . > jobs.json
+          echo "jobs in the subject run:"
+          jq -r '.[] | "  \(.name): \(.conclusion)"' jobs.json
+
+          # A column is a job that carries the suite step. At least one must exist,
+          # or this asserts over nothing; the audit inside the run holds the columns
+          # against their declared list, so "at least one" plus "the audit passed"
+          # is "all of them".
+          columns=$(jq -r '.[] | select(any(.steps[]; .name == "Run the suite")) | "\(.conclusion)\t\(.name)"' jobs.json)
+          [ -n "$columns" ] || { echo "::error::no job in the subject run carries a suite step"; exit 1; }
+
+          failed=0
+          while IFS=$'\t' read -r conclusion name; do
+            if [ "$conclusion" = failure ]; then
+              echo "ok    $name went red"
+            else
+              echo "::error::$name came back $conclusion on a corrupted tree: this column cannot see"; failed=1
+            fi
+          done <<<"$columns"
+
+          audit=$(jq -r '.[] | select(.name | endswith(" / Every column ran the suite")) | .conclusion' jobs.json)
+          if [ "$audit" = success ]; then
+            echo "ok    the column audit passed: every column ran"
+          else
+            echo "::error::the column audit concluded '${audit:-absent}'"; failed=1
+          fi
+          exit $failed

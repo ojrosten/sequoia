@@ -28,3 +28,5 @@ probability_test:
 	False Positive Performance Checks:         0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
+
+Versioned output written by this run matches what was on disk.

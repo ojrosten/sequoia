@@ -4,22 +4,36 @@ name: rigorous
 # promoting staging, and a promotion merges only when this is green. main is
 # therefore the last state verified this thoroughly, not the latest work.
 #
-# Promotion-triggered rather than scheduled, so the expensive columns are paid for
-# once per promotion rather than once per change.
+# Promotion-triggered, so the expensive columns are paid for once per promotion
+# rather than once per change - and scheduled, nightly, on main. The gate answers
+# "is this change promotable" once, on one day; that cannot tell whether the suite
+# passes CONSISTENTLY, since races and timings are probabilistic and each run is
+# one trial, nor whether it still passes on TODAY'S environment, since the hosted
+# images roll and the PPA's gcc-15 is a moving snapshot. Both need repetition on a
+# fixed tree, and main is the tree that is supposed to be fixed. A scheduled run
+# fires from the default branch, so nothing here needs to name it.
+#
+# The scheduled run is one of two things, decided by whether staging is ahead of
+# main. If it is not, the columns run on main, as above. If it is, the run opens
+# the promotion PR instead - set to merge itself when green - and the columns run
+# on THAT, through the pull_request trigger, where the result is spendable as the
+# gate. The two are never both paid for on one night. Work lands on staging
+# silently, and without this it accumulated until someone remembered; the PR is
+# the notification, green or red.
 #
 # Over fine, this adds the two questions a sanitized Debug build cannot answer:
 # races, and what the optimizer does.
 #
 # Which columns run which tests is set out below, at the point it is decided. Both
 # Windows columns exclude the performance tests, for the reason every hosted column
-# has them off bar one. Their other exclusions differ, and neither carries the
-# other's: MSVC ASan leaves out TestRunnerTest, whose teardown Windows
-# intermittently refuses - roadmap item 134 - and MSVC Release leaves out
+# has them off bar one. Both leave out TestRunnerTest, whose teardown Windows
+# intermittently refuses - roadmap item 134 - and MSVC Release also leaves out
 # TestRunnerProjectFiles, for the reason given below.
 #
 # Every column but Linux · GCC · Release carries `--check-versioned-output`,
 # including the Windows and macOS ones, which for a time did not. That one
-# exception is deliberate and is explained where it is set, below. The reason they did not - that the committed
+# exception is untested rather than justified, and is explained where it is set,
+# below. The reason they did not - that the committed
 # `_msvc` forks were stale - was measured and found false on 2026-09-10: of the 340
 # output files a real MSVC run writes, 339 already matched, and the four
 # `_FNOutput_msvc` forks long cited as decayed are byte-identical. The single
@@ -90,11 +104,15 @@ name: rigorous
 # does now, 19588 checks, 0 failures.
 #
 # This column carries NO flags - an explicitly empty `exec_args`, which is not the
-# same as omitting the key. It must not carry `--check-versioned-output`: gcc at
-# -O3 gives std::source_location the wrong call site, so a Release run rewrites a
-# diagnostics file with another translation unit's location and the drift check
-# fails every time. Roadmap item 139; clang at -O3 is clean, gcc Debug is clean.
-# Restore the flag when that is fixed.
+# same as omitting the key. The drift check was dropped here pre-emptively, off a
+# macOS measurement: gcc at -O3 there mis-attributes std::source_location, so a run
+# rewrites a diagnostics file with another translation unit's location. But the
+# mechanism is ld64 discarding a Mach-O atom, which has no ELF counterpart, and this
+# column has never actually tried the flag - every run that carried it died at
+# compile time instead. Reported 2026-09-11 as a further instance of
+# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=126723 (roadmap item 139); restore
+# the flag when gcc is fixed, and put it back sooner than that to find out whether
+# this column was ever affected.
 #
 # The performance tests run HERE and nowhere else in this tier, which is
 # deliberate. What makes them unreliable on a hosted runner is the slowdown, not
@@ -111,13 +129,14 @@ name: rigorous
 # tier's - naming only the exclusion would silently lose the drift check - while
 # this column carries an explicitly empty `exec_args`, which is not the same as
 # omitting the key: it runs with no flags at all, and inherits nothing.
-# The MSVC ASan columns leave out TestRunnerTest: its instability-analysis cleanup
-# calls fs::remove_all on a folder a just-exited sandbox subprocess still has open,
-# and Windows refuses the delete. Every check in it passes - the run dies in
-# teardown - and it has cost 3 of 6 gating runs. It is ASan-specific: the
-# uninstrumented Windows column runs the same test to 55 checks and is green, so
-# the exclusion is scoped to the sanitized columns rather than to Windows.
-# Roadmap item 134 tracks the fix; this is a stop-gap, not a verdict.
+# Both MSVC columns leave out TestRunnerTest: its instability-analysis cleanup
+# calls fs::remove_all on a folder something on Windows still has open, and the
+# delete is refused. Every check in it passes - the run dies in teardown - and it
+# is close to a coin toss. It was thought ASan-specific, on the strength of one
+# uninstrumented run passing, and the exclusion was scoped accordingly; on
+# 2026-09-11 the uninstrumented MSVC Release column failed the same way (run
+# 34607472086), so it is Windows-wide and ASan only widens the window. Roadmap
+# item 134 tracks the fix; this is a stop-gap, not a verdict.
 on:
   pull_request:
     branches: [main]
@@ -125,12 +144,46 @@ on:
       - 'docs/**'
       - 'coverage_reports/**'
   workflow_dispatch:
+    inputs:
+      false_negative:
+        description: 'Corrupt the checkout so that every column must go red. The control for the gate: see false-negative.yml.'
+        required: false
+        type: boolean
+        default: false
+  schedule:
+    - cron: '0 3 * * *'
 
 jobs:
+  # Scheduled runs only: which of the two things this run is. The compare endpoint
+  # rather than a checkout, so the merge commits that promotion leaves on main and
+  # not on staging do not count as staging being behind.
+  staging:
+    name: Is staging ahead of main
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      ahead: ${{ steps.compare.outputs.ahead }}
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - id: compare
+        run: |
+          ahead=$(gh api "repos/$GH_REPO/compare/main...staging" --jq .ahead_by)
+          echo "staging is $ahead commit(s) ahead of main"
+          echo "ahead=$ahead" >> "$GITHUB_OUTPUT"
+
+  # `!cancelled()` rather than the implied success(): the job above is skipped on
+  # every event but the schedule, and a skipped dependency would otherwise skip
+  # these too.
   rigorous:
+    needs: staging
+    if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
     uses: ./.github/workflows/tests.yml
     with:
       warnings_as_errors: true
+      false_negative: ${{ github.event_name == 'workflow_dispatch' && inputs.false_negative == true }}
       exec_args: '--check-versioned-output'
       columns: >-
         [
@@ -138,11 +191,13 @@ jobs:
           {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"},
           {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15", "exec_args": ""},
           {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerProjectFiles.cpp"},
+          {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerProjectFiles.cpp;--exclude;Tests/TestFramework/TestRunnerTest.cpp"},
           {"name": "macOS · Clang · Release",  "os": "macos-latest",   "configure": "llvm-env-release",   "build": "llvm-env-release", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
 
   docs:
+    needs: staging
+    if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
     uses: ./.github/workflows/docs.yml
 
   # Measured and published; no threshold is applied. The uploaded coverage.info is
@@ -153,6 +208,8 @@ jobs:
   # suite through ctest, serially, not through the `run` target.
   coverage:
     name: Coverage · Linux · GCC
+    needs: staging
+    if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
@@ -221,3 +278,110 @@ jobs:
             build/TestAll/gcc-env-coverage/coverage.info
             coverage_reports/
           if-no-files-found: warn
+
+  # Opens the promotion PR and sets it to merge itself once the gate is green.
+  # Needs a token other than GITHUB_TOKEN: a PR that token opens triggers no
+  # pull_request workflow, so the gate would never report on it. PROMOTION_TOKEN
+  # is a fine-grained PAT with Contents and Pull requests read/write on this
+  # repository; when it expires this step fails, loudly, which is the point.
+  #
+  # One PR at a time. If one is already open it is left alone: the gate re-runs on
+  # it whenever staging moves, and if it is red that is the thing to look at.
+  promote:
+    name: Promote staging
+    needs: staging
+    if: github.event_name == 'schedule' && needs.staging.outputs.ahead != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ secrets.PROMOTION_TOKEN }}
+      GH_REPO: ${{ github.repository }}
+      AHEAD: ${{ needs.staging.outputs.ahead }}
+    steps:
+      - name: Open the promotion PR, unless one is open
+        run: |
+          open=$(gh pr list --base main --head staging --state open --json number --jq '.[0].number')
+          if [ -n "$open" ]; then
+            echo "promotion PR #$open is already open"
+            exit 0
+          fi
+          url=$(gh pr create --base main --head staging \
+                  --title "Promote staging to main" \
+                  --body "Opened by the scheduled rigorous run: staging is $AHEAD commit(s) ahead of main. Merges itself when the gate is green.")
+          gh pr merge --auto --merge "$url"
+          echo "opened $url"
+
+  # The run's own shape, checked against what its mode requires. A job skipped by
+  # a wrong `if:` renders the same as one that passed, and the `needs:` chain
+  # above gives every job here an `if:`. So: in gate mode the columns, docs and
+  # coverage must have run and promote must not; in promote mode the reverse. Each
+  # job's result is read from `needs`, which reports `skipped` where the tick shows
+  # green. In the false-negative control the columns must have FAILED.
+  #
+  # On a promotion PR it also insists that every job of this run is a required
+  # check on main. Auto-merge waits on required checks only, so a column that is
+  # not required gates nothing, however red - and a column renamed in this file
+  # but not in the protection rule leaves a promotion waiting for a check that
+  # will never report.
+  audit:
+    name: Every job ran as this run's mode requires
+    needs: [staging, rigorous, docs, coverage, promote]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      EVENT: ${{ github.event_name }}
+      AHEAD: ${{ needs.staging.outputs.ahead }}
+      RESULTS: ${{ toJSON(needs) }}
+      PR: ${{ github.event.pull_request.number }}
+      FALSE_NEGATIVE: ${{ github.event_name == 'workflow_dispatch' && inputs.false_negative == true }}
+    steps:
+      - name: Check each job's result against the mode
+        run: |
+          if [ "$EVENT" = schedule ] && [ "$AHEAD" != 0 ]; then mode=promote; else mode=gate; fi
+          echo "event: $EVENT; mode: $mode; false-negative control: $FALSE_NEGATIVE"
+          jq -r 'to_entries[] | "  \(.key): \(.value.result)"' <<<"$RESULTS"
+
+          failed=0
+          expect() {
+            actual=$(jq -r --arg j "$1" '.[$j].result' <<<"$RESULTS")
+            if [ "$actual" = "$2" ]; then
+              echo "ok    $1: $actual"
+            else
+              echo "::error::$1: expected $2 in $mode mode, was $actual"; failed=1
+            fi
+          }
+          if [ "$EVENT" = schedule ]; then expect staging success; else expect staging skipped; fi
+          case "$mode" in
+            gate)
+              if [ "$FALSE_NEGATIVE" = true ]; then expect rigorous failure; else expect rigorous success; fi
+              expect docs success
+              expect coverage success
+              expect promote skipped;;
+            promote)
+              expect promote success
+              expect rigorous skipped
+              expect docs skipped
+              expect coverage skipped;;
+          esac
+          exit $failed
+
+      - name: On a promotion PR, insist every job of this run is a required check
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          # Only the jobs that ran: staging and promote are skipped on a PR by design.
+          gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --paginate \
+              --jq '.jobs[] | select(.conclusion != "skipped") | .name' \
+            | sort > jobs.txt
+          gh pr checks "$PR" --required --json name --jq '.[].name' | sort > required.txt
+          echo "jobs in this run:"; sed 's/^/  /' jobs.txt
+          echo "required on the base branch:"; sed 's/^/  /' required.txt
+          missing=$(comm -23 jobs.txt required.txt)
+          if [ -n "$missing" ]; then
+            echo "::error::these jobs run on every promotion but gate nothing, because main does not require them:"
+            echo "$missing" | sed 's/^/  /'
+            exit 1
+          fi
+          echo "every job of this run is required on the base branch"

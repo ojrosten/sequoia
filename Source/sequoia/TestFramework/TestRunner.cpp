@@ -910,7 +910,11 @@ namespace sequoia::testing
 
     const auto differences{compare_versioned_output(*baseline, take_versioned_output_snapshot(proj_paths().output()))};
 
-    if(differences.empty()) return return_code::success;
+    if(differences.empty())
+    {
+      stream() << "\nVersioned output written by this run matches what was on disk.\n";
+      return return_code::success;
+    }
 
     stream() << "\nVersioned output written by this run differs from what was on disk:\n" << to_string(differences);
 
