@@ -11,21 +11,18 @@ name: fine
 # ASan and UBSan share one build. TSan cannot join them, being mutually exclusive
 # with ASan, so it is a column of its own in rigorous.
 #
-# The Windows column runs the suite with `--exclude-performance`. It is only the
-# timing assertions a hosted runner cannot hold - TestRunnerPerformanceTest asserts
-# 60ms +- 35 for eight 25ms sleeps run concurrently, and this runner returned 196ms
-# and then 603ms for the same commit - so excluding those buys back everything else.
+# Every column runs with `--exclude-performance`: TestRunnerPerformanceTest
+# asserts 60ms +- 35 for eight 25ms sleeps run concurrently, which a hosted
+# runner cannot hold - Windows returned 196ms and then 603ms for the same
+# commit, and Linux 164ms under ASan's slowdown on 2026-09-10 - so excluding
+# those buys back everything else.
 #
-# Every column carries `--check-versioned-output`. The Windows one did not until
-# 2026-09-11, on the grounds that the committed `_msvc` forks were stale; that was
-# measured on 2026-09-10 and found false: of the 340 files a real MSVC run writes,
-# 339 already matched, and the one straggler is fixed.
-#
-# The Linux and macOS columns carry `--exclude-performance` alongside the tier's
-# flag: TestRunnerPerformanceTest asserts 60ms +- 35 for eight 25ms sleeps run
-# concurrently, which a hosted runner cannot hold - the Linux column returned
-# 164ms on 2026-09-10, under ASan's slowdown. Both flags are spelt out because a
-# column's `exec_args` REPLACES the tier's rather than adding to it.
+# Every column also carries `--check-versioned-output`, spelt out per column
+# because a column's `exec_args` REPLACES the tier's rather than adding to it.
+# The Windows one did not until 2026-09-11, on the grounds that the committed
+# `_msvc` forks were stale; that was measured on 2026-09-10 and found false: of
+# the 340 files a real MSVC run writes, 339 already matched, and the one
+# straggler is fixed.
 #
 # macOS joined on 2026-09-11, when work started arriving from a Windows machine
 # and "we develop on the Mac" stopped covering it; see coarse.yml.
@@ -53,9 +50,9 @@ jobs:
       exec_args: '--check-versioned-output'
       columns: >-
         [
-          {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "macOS · Clang · ASan+UBSan", "os": "macos-latest", "configure": "llvm-env-asan-ubsan", "build": "llvm-env-asan-ubsan", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"}
+          {"name": "Linux · GCC · ASan+UBSan",   "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan",  "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
+          {"name": "macOS · Clang · ASan+UBSan", "os": "macos-latest",   "configure": "llvm-env-asan-ubsan", "build": "llvm-env-asan-ubsan", "exec_args": "--check-versioned-output;--exclude-performance"},
+          {"name": "Windows · MSVC · ASan",      "os": "windows-latest", "configure": "msvc-asan",           "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"}
         ]
 
   # The tier's own shape, checked. A job skipped by a wrong `if:` renders the same
