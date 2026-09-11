@@ -27,13 +27,14 @@ name: fine
 # macOS joined on 2026-09-11, when work started arriving from a Windows machine
 # and "we develop on the Mac" stopped covering it; see coarse.yml.
 #
-# The MSVC column leaves out TestRunnerTest: its instability-analysis cleanup
-# calls fs::remove_all on a folder something on Windows still has open, and the
-# delete is refused. Every check in it passes - the run dies in teardown - and it
-# is close to a coin toss. It was thought ASan-specific, on the strength of one
-# uninstrumented run passing; on 2026-09-11 the uninstrumented MSVC Release column
-# failed the same way, so it is Windows-wide and ASan only widens the window.
-# Roadmap item 134 tracks the fix; this is a stop-gap, not a verdict.
+# The MSVC column runs TestRunnerTest again. From 2026-09-09 to 2026-09-11 it was
+# excluded: its teardown's fs::remove_all was refused on Windows, close to a coin
+# toss, because std::system spawned children with every open file inherited and a
+# spawn on one thread captured a file another thread had open. invoke now spawns
+# with a handle list naming only the standard streams (roadmap item 134). The
+# mechanism is witnessed by a deterministic test; the CI symptom is witnessed
+# only here, so a sharing violation in this column after 2026-09-11 is evidence
+# against the fix, not a flake to re-run.
 on:
   pull_request:
     branches: [staging]
@@ -52,7 +53,7 @@ jobs:
         [
           {"name": "Linux · GCC · ASan+UBSan",   "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan",  "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
           {"name": "macOS · Clang · ASan+UBSan", "os": "macos-latest",   "configure": "llvm-env-asan-ubsan", "build": "llvm-env-asan-ubsan", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · ASan",      "os": "windows-latest", "configure": "msvc-asan",           "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"}
+          {"name": "Windows · MSVC · ASan",      "os": "windows-latest", "configure": "msvc-asan",           "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
 
   # The tier's own shape, checked. A job skipped by a wrong `if:` renders the same

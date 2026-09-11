@@ -28,9 +28,8 @@ name: rigorous
 #
 # Which columns run which tests is set out below, at the point it is decided. Both
 # Windows columns exclude the performance tests, for the reason every hosted column
-# has them off bar one. Both leave out TestRunnerTest, whose teardown Windows
-# intermittently refuses - roadmap item 134 - and MSVC Release also leaves out
-# TestRunnerProjectFiles, for the reason given below.
+# has them off bar one. MSVC Release also leaves out TestRunnerProjectFiles, for
+# the reason given below.
 #
 # Every column but Linux · GCC · Release carries `--check-versioned-output`,
 # including the Windows and macOS ones, which for a time did not. That one
@@ -131,14 +130,15 @@ name: rigorous
 # tier's - naming only the exclusion would silently lose the drift check - while
 # this column carries an explicitly empty `exec_args`, which is not the same as
 # omitting the key: it runs with no flags at all, and inherits nothing.
-# Both MSVC columns leave out TestRunnerTest: its instability-analysis cleanup
-# calls fs::remove_all on a folder something on Windows still has open, and the
-# delete is refused. Every check in it passes - the run dies in teardown - and it
-# is close to a coin toss. It was thought ASan-specific, on the strength of one
-# uninstrumented run passing, and the exclusion was scoped accordingly; on
-# 2026-09-11 the uninstrumented MSVC Release column failed the same way (run
-# 34607472086), so it is Windows-wide and ASan only widens the window. Roadmap
-# item 134 tracks the fix; this is a stop-gap, not a verdict.
+# Both MSVC columns run TestRunnerTest again. From 2026-09-09 to 2026-09-11 it was
+# excluded: its teardown's fs::remove_all was refused on Windows, close to a coin
+# toss (ASan 2 of 4, Release 1 of 3, Debug 3 of 38), because std::system spawned
+# children with every open file inherited and a spawn on one thread captured a
+# file another thread had open. invoke now spawns with a handle list naming only
+# the standard streams (roadmap item 134). The mechanism is witnessed by a
+# deterministic test; the CI symptom is witnessed only here, so a sharing
+# violation in either column after 2026-09-11 is evidence against the fix, not a
+# flake to re-run.
 on:
   pull_request:
     branches: [main]
@@ -190,10 +190,10 @@ jobs:
       columns: >-
         [
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"},
+          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance"},
           {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15", "exec_args": ""},
           {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerProjectFiles.cpp;--exclude;Tests/TestFramework/TestRunnerTest.cpp"},
+          {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerProjectFiles.cpp"},
           {"name": "macOS · Clang · Release",  "os": "macos-latest",   "configure": "llvm-env-release",   "build": "llvm-env-release", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
 

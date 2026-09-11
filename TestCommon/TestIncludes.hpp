@@ -129,6 +129,8 @@
 #include "Physics/VectorNonlinearRepresentationsTest.hpp"
 #include "Physics/VectorPhysicalValueCompositionsTest.hpp"
 #include "Physics/VectorPhysicalValueTest.hpp"
+#include "Runtime/InvokeHandleInheritanceFreeTest.hpp"
+#include "Runtime/InvokeInterpreterResolutionFreeTest.hpp"
 #include "Runtime/ShellCommandsTest.hpp"
 #include "Runtime/ShellCommandsTestingDiagnostics.hpp"
 #include "Streaming/StreamingFreeTest.hpp"
