@@ -578,6 +578,22 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
     },
     {
+      "name": "msvc-release",
+      "displayName": "Visual Studio [Release]",
+      "description": "Configure for ${displayName}. A tree of its own, so its name carries the configuration: Commands.cpp names a nested project's presets after the build directory, and `msvc` would give it Debug. Its project-files prediction is not committed - roadmap item 142.",
+      "cacheVariables": { "CMAKE_CONFIGURATION_TYPES": "Release" },
+      "inherits": ["msvc"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+    },
+    {
+      "name": "msvc-relwithdebinfo-asan",
+      "displayName": "Visual Studio [RelWithDebInfo, asan]",
+      "description": "Configure for ${displayName}. A tree of its own, and no committed prediction, both for the reasons given on `msvc-release`.",
+      "cacheVariables": { "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo" },
+      "inherits": ["msvc-asan"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+    },
+    {
       "name": "msvc-ninja",
       "displayName": "MSVC with Ninja",
       "description": "Configure for ${displayName}. Needs cl.exe on PATH - a developer command prompt, or a shell vcvars has been applied to - because with Ninja CMake finds the compiler there rather than through the generator. Unqualified 'msvc' stays the Visual Studio generator, which is what a client working in the IDE wants; Ninja is for everything else, CI included, and it separates cl.exe's cost from msbuild's.",
@@ -1126,7 +1142,7 @@
     {
       "name": "msvc-release",
       "displayName": "MSVC [Release]",
-      "configurePreset": "msvc",
+      "configurePreset": "msvc-release",
       "configuration": "Release",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
     },
@@ -1139,7 +1155,7 @@
     {
       "name": "msvc-relwithdebinfo-asan",
       "displayName": "MSVC [RelWithDebInfo, asan]",
-      "configurePreset": "msvc-asan",
+      "configurePreset": "msvc-relwithdebinfo-asan",
       "configuration": "RelWithDebInfo",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
     },
@@ -1849,14 +1865,14 @@
     {
       "name": "msvc-release",
       "steps": [
-        { "type": "configure", "name": "msvc" },
+        { "type": "configure", "name": "msvc-release" },
         { "type": "build",     "name": "run-msvc-release" }
       ]
     },
     {
       "name": "msvc-relwithdebinfo-asan",
       "steps": [
-        { "type": "configure", "name": "msvc-asan" },
+        { "type": "configure", "name": "msvc-relwithdebinfo-asan" },
         { "type": "build",     "name": "run-msvc-relwithdebinfo-asan" }
       ]
     }
