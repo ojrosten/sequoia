@@ -15,12 +15,12 @@ name: nightly
 # 60ms +- 35 for eight 25ms sleeps run concurrently, and this runner returned 196ms
 # and then 603ms for the same commit - so excluding those buys back everything else.
 #
-# A column's `exec_args` replaces the tier's rather than adding to them, so this one
-# deliberately does not carry `--check-versioned-output`: the committed `_msvc` forks
-# of the diagnostics output are stale, and gating on their drift before an MSVC run
-# has ever refreshed them would block the gate on a known backlog. The Linux column
-# still carries it, so drift is caught. Give MSVC the flag once the forks it writes
-# have been reviewed and committed.
+# Both columns carry `--check-versioned-output`. Neither did until 2026-09-11: the
+# Windows one on the grounds that the committed `_msvc` forks were stale, measured
+# false on 2026-09-10 - 339 of the 340 files a real MSVC run writes already matched,
+# and the one straggler is fixed - and the TSan one by omission, a comment here
+# having claimed only Windows was without it. rigorous's MSVC columns, and its TSan
+# column which is this one exactly, have carried the flag, green, since.
 #
 # The TSan column is macOS/Clang, for the reason set out at length in
 # rigorous.yml: `sequoia::execution::par` is the real `std::execution::par` only
@@ -48,6 +48,6 @@ jobs:
       exec_args: '--check-versioned-output'
       columns: >-
         [
-          {"name": "macOS · Clang · TSan",   "os": "macos-latest",   "configure": "llvm-env-tsan", "build": "llvm-env-tsan", "exec_args": "--exclude-performance"},
-          {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc",         "build": "msvc", "exec_args": "--exclude-performance"}
+          {"name": "macOS · Clang · TSan",   "os": "macos-latest",   "configure": "llvm-env-tsan", "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance"},
+          {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc",         "build": "msvc", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]

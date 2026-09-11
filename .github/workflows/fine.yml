@@ -16,12 +16,12 @@ name: fine
 # 60ms +- 35 for eight 25ms sleeps run concurrently, and this runner returned 196ms
 # and then 603ms for the same commit - so excluding those buys back everything else.
 #
-# A column's `exec_args` replaces the tier's rather than adding to them, so this one
-# deliberately does not carry `--check-versioned-output`: the committed `_msvc` forks
-# of the diagnostics output are stale, and gating on their drift before an MSVC run
-# has ever refreshed them would block the gate on a known backlog. The Linux column
-# still carries it, so drift is caught. Give MSVC the flag once the forks it writes
-# have been reviewed and committed.
+# Every column carries `--check-versioned-output`. The Windows one did not until
+# 2026-09-11, on the grounds that the committed `_msvc` forks were stale; that was
+# measured on 2026-09-10 and found false - 339 of the 340 files a real MSVC run
+# writes already matched, and the one straggler is fixed - and rigorous's MSVC
+# columns have carried the flag, green, since. Catching MSVC drift here rather than
+# at promotion is what this tier is for.
 # The Linux column carries `--exclude-performance` alongside the tier's flag:
 # TestRunnerPerformanceTest asserts 60ms +- 35 for eight 25ms sleeps run
 # concurrently, which a hosted runner cannot hold - this column returned 164ms on
@@ -51,5 +51,5 @@ jobs:
       columns: >-
         [
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"}
+          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"}
         ]
