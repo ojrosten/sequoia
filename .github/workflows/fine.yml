@@ -16,23 +16,23 @@ name: fine
 # 60ms +- 35 for eight 25ms sleeps run concurrently, and this runner returned 196ms
 # and then 603ms for the same commit - so excluding those buys back everything else.
 #
-# A column's `exec_args` replaces the tier's rather than adding to them, so this one
-# deliberately does not carry `--check-versioned-output`: the committed `_msvc` forks
-# of the diagnostics output are stale, and gating on their drift before an MSVC run
-# has ever refreshed them would block the gate on a known backlog. The Linux column
-# still carries it, so drift is caught. Give MSVC the flag once the forks it writes
-# have been reviewed and committed.
+# Every column carries `--check-versioned-output`. The Windows one did not until
+# 2026-09-11, on the grounds that the committed `_msvc` forks were stale; that was
+# measured on 2026-09-10 and found false: of the 340 files a real MSVC run writes,
+# 339 already matched, and the one straggler is fixed.
+#
 # The Linux column carries `--exclude-performance` alongside the tier's flag:
 # TestRunnerPerformanceTest asserts 60ms +- 35 for eight 25ms sleeps run
 # concurrently, which a hosted runner cannot hold - this column returned 164ms on
 # 2026-09-10, under ASan's slowdown. Both flags are spelt out because a column's
 # `exec_args` REPLACES the tier's rather than adding to it.
-# The MSVC ASan columns leave out TestRunnerTest: its instability-analysis cleanup
-# calls fs::remove_all on a folder a just-exited sandbox subprocess still has open,
-# and Windows refuses the delete. Every check in it passes - the run dies in
-# teardown - and it has cost 3 of 6 gating runs. It is ASan-specific: the
-# uninstrumented Windows column runs the same test to 55 checks and is green, so
-# the exclusion is scoped to the sanitized columns rather than to Windows.
+#
+# The MSVC column leaves out TestRunnerTest: its instability-analysis cleanup
+# calls fs::remove_all on a folder something on Windows still has open, and the
+# delete is refused. Every check in it passes - the run dies in teardown - and it
+# is close to a coin toss. It was thought ASan-specific, on the strength of one
+# uninstrumented run passing; on 2026-09-11 the uninstrumented MSVC Release column
+# failed the same way, so it is Windows-wide and ASan only widens the window.
 # Roadmap item 134 tracks the fix; this is a stop-gap, not a verdict.
 on:
   pull_request:
@@ -51,5 +51,46 @@ jobs:
       columns: >-
         [
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"}
+          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"}
         ]
+
+  # The tier's own shape, checked. A job skipped by a wrong `if:` renders the same
+  # as one that passed; `needs` reports `skipped` where the tick shows green. And
+  # every job that ran must be a required check on staging: a column that is not
+  # required gates nothing, however red. Same shape as rigorous's audit, without
+  # the modes.
+  audit:
+    name: Every job ran and every job gates
+    needs: [fine]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RESULTS: ${{ toJSON(needs) }}
+      PR: ${{ github.event.pull_request.number }}
+    steps:
+      - name: Check each job's result
+        run: |
+          jq -r 'to_entries[] | "  \(.key): \(.value.result)"' <<<"$RESULTS"
+          actual=$(jq -r '.fine.result' <<<"$RESULTS")
+          if [ "$actual" != success ]; then
+            echo "::error::fine: expected success, was $actual"; exit 1
+          fi
+
+      - name: Insist every job of this run is a required check on staging
+        run: |
+          gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --paginate \
+              --jq '.jobs[] | select(.conclusion != "skipped") | .name' \
+            | sort > jobs.txt
+          gh pr checks "$PR" --required --json name --jq '.[].name' | sort > required.txt
+          echo "jobs in this run:"; sed 's/^/  /' jobs.txt
+          echo "required on the base branch:"; sed 's/^/  /' required.txt
+          missing=$(comm -23 jobs.txt required.txt)
+          if [ -n "$missing" ]; then
+            echo "::error::these jobs run on every PR to staging but gate nothing, because staging does not require them:"
+            echo "$missing" | sed 's/^/  /'
+            exit 1
+          fi
+          echo "every job of this run is required on the base branch"
