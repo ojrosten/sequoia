@@ -46,3 +46,25 @@ jobs:
   # defer it to promotion time.
   docs:
     uses: ./.github/workflows/docs.yml
+
+  # The tier's own shape, checked: a job skipped by a wrong `if:` renders the same
+  # as one that passed, and `needs` reports `skipped` where the tick shows green.
+  # Nothing here gates, so there is no required set to hold it against.
+  audit:
+    name: Every job ran
+    needs: [coarse, docs]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      RESULTS: ${{ toJSON(needs) }}
+    steps:
+      - name: Check each job's result
+        run: |
+          jq -r 'to_entries[] | "  \(.key): \(.value.result)"' <<<"$RESULTS"
+          failed=0
+          for job in coarse docs; do
+            actual=$(jq -r --arg j "$job" '.[$j].result' <<<"$RESULTS")
+            if [ "$actual" = success ]; then echo "ok    $job"; else echo "::error::$job: expected success, was $actual"; failed=1; fi
+          done
+          exit $failed

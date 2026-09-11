@@ -25,6 +25,11 @@ on:
         required: false
         type: boolean
         default: false
+      false_negative:
+        description: 'Corrupt the checkout so that every column MUST go red, one versioned output and one prediction. The control for the gate itself: a run in this mode that comes back green means the gate cannot see. Roadmap item 148.'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   build-and-test:
@@ -49,6 +54,25 @@ jobs:
         with:
           # docs/ is ~96MB of committed doxygen render; nothing here reads it.
           fetch-depth: 1
+
+      # Two corruptions, because the columns do not share a detector. The summary
+      # file is rewritten by every toolchain, so appending to it is drift wherever
+      # `--check-versioned-output` is on; the prediction is what StreamingFreeTest
+      # compares its output against, so rewriting it is a soft failure everywhere,
+      # including the column that carries no drift check. Each target is checked
+      # to exist first: a control that mutates nothing is the false negative it is
+      # meant to catch.
+      - name: Corrupt the tree, so that every column must go red
+        if: ${{ inputs.false_negative }}
+        run: |
+          summary=output/TestSummaries/Tests/Core/Meta/type_algorithms_free_test.txt
+          prediction=TestMaterials/Streaming/streaming_free_test/Prediction/Foo.txt
+          for f in "$summary" "$prediction"; do
+            [ -f "$f" ] || { echo "::error::$f is not where the control expects it"; exit 1; }
+          done
+          echo "false-negative control: the run must report this line as drift" >> "$summary"
+          echo "false-negative control: the test must fail against this" > "$prediction"
+          git diff --stat
 
       # Package presence is tested against `apt-cache pkgnames`, which matches
       # names exactly. `apt-get install` does not: given a name with regex
@@ -301,3 +325,44 @@ jobs:
             output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/InitOutput/
             run-log/
           if-no-files-found: warn
+
+  # A column that reported without running the suite looks exactly like one that
+  # passed: `gh run list` says success either way, and so does the tick. It has
+  # happened - for a day in 2026-09-08/09 every column of every tier skipped the
+  # run and went green. This reads the run's own jobs back through the API and
+  # insists that each column named in `columns` exists, once, and that its
+  # `Run the suite` step concluded - success or failure, but not skipped and not
+  # absent. Passing is the column's own business; RUNNING is checked here. The
+  # expectation is the columns input itself, so there is no second list to drift.
+  audit:
+    name: Every column ran the suite
+    needs: build-and-test
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      COLUMNS: ${{ inputs.columns }}
+    steps:
+      - name: Read this run's jobs back and check each column's suite step
+        run: |
+          gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --paginate --jq '.jobs[]' \
+            | jq -s . > jobs.json
+          echo "jobs in this run:"
+          jq -r '.[] | "  \(.name): \(.conclusion // .status)"' jobs.json
+
+          failed=0
+          while IFS= read -r column; do
+            verdict=$(jq -r --arg c "$column" '
+              [.[] | select(.name | endswith(" / " + $c))]
+              | if length != 1 then "JOBS:\(length)"
+                else ([.[0].steps[] | select(.name == "Run the suite") | .conclusion] | first) // "ABSENT"
+                end' jobs.json)
+            case "$verdict" in
+              success|failure) echo "ok    $column: Run the suite -> $verdict";;
+              JOBS:*)          echo "::error::$column: expected exactly one job, found ${verdict#JOBS:}"; failed=1;;
+              *)               echo "::error::$column: Run the suite -> $verdict; the column reported without running the suite"; failed=1;;
+            esac
+          done < <(jq -r '.[].name' <<<"$COLUMNS")
+          exit $failed

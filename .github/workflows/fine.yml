@@ -53,3 +53,44 @@ jobs:
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
           {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"}
         ]
+
+  # The tier's own shape, checked. A job skipped by a wrong `if:` renders the same
+  # as one that passed; `needs` reports `skipped` where the tick shows green. And
+  # every job that ran must be a required check on staging: a column that is not
+  # required gates nothing, however red. Same shape as rigorous's audit, without
+  # the modes.
+  audit:
+    name: Every job ran and every job gates
+    needs: [fine]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      RESULTS: ${{ toJSON(needs) }}
+      PR: ${{ github.event.pull_request.number }}
+    steps:
+      - name: Check each job's result
+        run: |
+          jq -r 'to_entries[] | "  \(.key): \(.value.result)"' <<<"$RESULTS"
+          actual=$(jq -r '.fine.result' <<<"$RESULTS")
+          if [ "$actual" != success ]; then
+            echo "::error::fine: expected success, was $actual"; exit 1
+          fi
+
+      - name: Insist every job of this run is a required check on staging
+        run: |
+          gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --paginate \
+              --jq '.jobs[] | select(.conclusion != "skipped") | .name' \
+            | sort > jobs.txt
+          gh pr checks "$PR" --required --json name --jq '.[].name' | sort > required.txt
+          echo "jobs in this run:"; sed 's/^/  /' jobs.txt
+          echo "required on the base branch:"; sed 's/^/  /' required.txt
+          missing=$(comm -23 jobs.txt required.txt)
+          if [ -n "$missing" ]; then
+            echo "::error::these jobs run on every PR to staging but gate nothing, because staging does not require them:"
+            echo "$missing" | sed 's/^/  /'
+            exit 1
+          fi
+          echo "every job of this run is required on the base branch"

@@ -144,6 +144,12 @@ on:
       - 'docs/**'
       - 'coverage_reports/**'
   workflow_dispatch:
+    inputs:
+      false_negative:
+        description: 'Corrupt the checkout so that every column must go red. The control for the gate: see false-negative.yml.'
+        required: false
+        type: boolean
+        default: false
   schedule:
     - cron: '0 3 * * *'
 
@@ -177,6 +183,7 @@ jobs:
     uses: ./.github/workflows/tests.yml
     with:
       warnings_as_errors: true
+      false_negative: ${{ github.event_name == 'workflow_dispatch' && inputs.false_negative == true }}
       exec_args: '--check-versioned-output'
       columns: >-
         [
@@ -303,3 +310,78 @@ jobs:
                   --body "Opened by the scheduled rigorous run: staging is $AHEAD commit(s) ahead of main. Merges itself when the gate is green.")
           gh pr merge --auto --merge "$url"
           echo "opened $url"
+
+  # The run's own shape, checked against what its mode requires. A job skipped by
+  # a wrong `if:` renders the same as one that passed, and the `needs:` chain
+  # above gives every job here an `if:`. So: in gate mode the columns, docs and
+  # coverage must have run and promote must not; in promote mode the reverse. Each
+  # job's result is read from `needs`, which reports `skipped` where the tick shows
+  # green. In the false-negative control the columns must have FAILED.
+  #
+  # On a promotion PR it also insists that every job of this run is a required
+  # check on main. Auto-merge waits on required checks only, so a column that is
+  # not required gates nothing, however red - and a column renamed in this file
+  # but not in the protection rule leaves a promotion waiting for a check that
+  # will never report.
+  audit:
+    name: Every job ran as this run's mode requires
+    needs: [staging, rigorous, docs, coverage, promote]
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      EVENT: ${{ github.event_name }}
+      AHEAD: ${{ needs.staging.outputs.ahead }}
+      RESULTS: ${{ toJSON(needs) }}
+      PR: ${{ github.event.pull_request.number }}
+      FALSE_NEGATIVE: ${{ github.event_name == 'workflow_dispatch' && inputs.false_negative == true }}
+    steps:
+      - name: Check each job's result against the mode
+        run: |
+          if [ "$EVENT" = schedule ] && [ "$AHEAD" != 0 ]; then mode=promote; else mode=gate; fi
+          echo "event: $EVENT; mode: $mode; false-negative control: $FALSE_NEGATIVE"
+          jq -r 'to_entries[] | "  \(.key): \(.value.result)"' <<<"$RESULTS"
+
+          failed=0
+          expect() {
+            actual=$(jq -r --arg j "$1" '.[$j].result' <<<"$RESULTS")
+            if [ "$actual" = "$2" ]; then
+              echo "ok    $1: $actual"
+            else
+              echo "::error::$1: expected $2 in $mode mode, was $actual"; failed=1
+            fi
+          }
+          if [ "$EVENT" = schedule ]; then expect staging success; else expect staging skipped; fi
+          case "$mode" in
+            gate)
+              if [ "$FALSE_NEGATIVE" = true ]; then expect rigorous failure; else expect rigorous success; fi
+              expect docs success
+              expect coverage success
+              expect promote skipped;;
+            promote)
+              expect promote success
+              expect rigorous skipped
+              expect docs skipped
+              expect coverage skipped;;
+          esac
+          exit $failed
+
+      - name: On a promotion PR, insist every job of this run is a required check
+        if: ${{ github.event_name == 'pull_request' }}
+        run: |
+          # Only the jobs that ran: staging and promote are skipped on a PR by design.
+          gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --paginate \
+              --jq '.jobs[] | select(.conclusion != "skipped") | .name' \
+            | sort > jobs.txt
+          gh pr checks "$PR" --required --json name --jq '.[].name' | sort > required.txt
+          echo "jobs in this run:"; sed 's/^/  /' jobs.txt
+          echo "required on the base branch:"; sed 's/^/  /' required.txt
+          missing=$(comm -23 jobs.txt required.txt)
+          if [ -n "$missing" ]; then
+            echo "::error::these jobs run on every promotion but gate nothing, because main does not require them:"
+            echo "$missing" | sed 's/^/  /'
+            exit 1
+          fi
+          echo "every job of this run is required on the base branch"
