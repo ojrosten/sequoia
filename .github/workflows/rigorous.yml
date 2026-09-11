@@ -29,11 +29,25 @@ name: rigorous
 #
 # TestRunnerProjectFiles is left out of the MSVC Release column. It compares a
 # generated TestAll.vcxproj against a prediction stored per preset -
-# `ProjectFiles/<preset>`, taken from the build directory's name - and predictions
-# exist for `msvc` and `msvc-asan` only. A third would have to be generated on
-# Windows and committed; until then the column would be comparing against a
-# directory that does not exist. The test is a no-op on clang, so the macOS Release
-# column needs no such exclusion.
+# `ProjectFiles/<preset>`, taken from the build directory's name, which for this
+# column is `msvc-release` - and predictions exist for `msvc` and `msvc-asan` only.
+# A third would have to be generated on Windows and committed; until then the column
+# would be comparing against a directory that does not exist. The test is a no-op on
+# clang, so the macOS Release column needs no such exclusion.
+#
+# Note this column configures with `msvc-release`, not `msvc`. The Visual Studio
+# generator is multi-config, so one configure preset can serve both Debug and
+# Release out of a single build tree - and Commands.cpp derives BOTH halves of the
+# nested project's build from that tree's NAME: `cmake --preset <dir>` at :31 and
+# `cmake --build --preset <dir>` at :41. That is why the fix had to add a configure
+# preset and not merely rename a build one: without `msvc-release` in the configure
+# namespace the nested configure would fail outright. Pointed at a
+# tree called `msvc`, it therefore rebuilt the nested end-to-end project as Debug
+# while this column was Release, so the executable was never where the test looked.
+# The run reported `versioned_output_diffs`, which was an artefact of
+# `child_return_code` casting a child's exit status of 1 straight onto the
+# bitmask - see roadmap item 146 - and not drift at all. A configure preset per
+# configuration keeps directory, preset and configuration in agreement.
 #
 # Note the flag must be spelt out per column here, since `exec_args` REPLACES the
 # tier's rather than adding to it - a column naming only its exclusions silently
@@ -124,7 +138,7 @@ jobs:
           {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"},
           {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15", "exec_args": ""},
           {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc",               "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerProjectFiles.cpp"},
+          {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerProjectFiles.cpp"},
           {"name": "macOS · Clang · Release",  "os": "macos-latest",   "configure": "llvm-env-release",   "build": "llvm-env-release", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
 
