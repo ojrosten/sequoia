@@ -18,15 +18,15 @@ name: fine
 #
 # Every column carries `--check-versioned-output`. The Windows one did not until
 # 2026-09-11, on the grounds that the committed `_msvc` forks were stale; that was
-# measured on 2026-09-10 and found false - 339 of the 340 files a real MSVC run
-# writes already matched, and the one straggler is fixed - and rigorous's MSVC
-# columns have carried the flag, green, since. Catching MSVC drift here rather than
-# at promotion is what this tier is for.
+# measured on 2026-09-10 and found false: of the 340 files a real MSVC run writes,
+# 339 already matched, and the one straggler is fixed.
+#
 # The Linux column carries `--exclude-performance` alongside the tier's flag:
 # TestRunnerPerformanceTest asserts 60ms +- 35 for eight 25ms sleeps run
 # concurrently, which a hosted runner cannot hold - this column returned 164ms on
 # 2026-09-10, under ASan's slowdown. Both flags are spelt out because a column's
 # `exec_args` REPLACES the tier's rather than adding to it.
+#
 # The MSVC ASan columns leave out TestRunnerTest: its instability-analysis cleanup
 # calls fs::remove_all on a folder a just-exited sandbox subprocess still has open,
 # and Windows refuses the delete. Every check in it passes - the run dies in

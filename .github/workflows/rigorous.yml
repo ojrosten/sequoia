@@ -4,8 +4,17 @@ name: rigorous
 # promoting staging, and a promotion merges only when this is green. main is
 # therefore the last state verified this thoroughly, not the latest work.
 #
-# Promotion-triggered rather than scheduled, so the expensive columns are paid for
-# once per promotion rather than once per change.
+# Promotion-triggered, so the expensive columns are paid for once per promotion
+# rather than once per change - and scheduled, nightly, on main. The gate answers
+# "is this change promotable" once, on one day; that cannot tell whether the suite
+# passes CONSISTENTLY, since races and timings are probabilistic and each run is
+# one trial, nor whether it still passes on TODAY'S environment, since the hosted
+# images roll and the PPA's gcc-15 is a moving snapshot. Both need repetition on a
+# fixed tree, and main is the tree that is supposed to be fixed. A scheduled run
+# fires from the default branch, so nothing here needs to name it.
+#
+# The nightly run also carries the promotion reminder, at the bottom. Work lands
+# on staging silently, so without a prompt it accumulates until someone remembers.
 #
 # Over fine, this adds the two questions a sanitized Debug build cannot answer:
 # races, and what the optimizer does.
@@ -130,6 +139,8 @@ on:
       - 'docs/**'
       - 'coverage_reports/**'
   workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * *'
 
 jobs:
   rigorous:
@@ -226,3 +237,55 @@ jobs:
             build/TestAll/gcc-env-coverage/coverage.info
             coverage_reports/
           if-no-files-found: warn
+
+  # A prompt, not a promotion. Raising the PR itself would need a token other than
+  # GITHUB_TOKEN - a PR that token opens triggers no pull_request workflow, so the
+  # gate would never report on it - and would re-run this tier on every merge to
+  # staging while the PR stood open, which is the once-per-promotion economy given
+  # away. An issue costs nothing, notifies, and leaves the decision of what to
+  # promote, and when, with a person.
+  #
+  # Exactly one issue: refreshed while staging stays ahead, closed when it is not.
+  # The count comes from the compare endpoint rather than a checkout, so it is not
+  # confused by the merge commits promotion leaves on main and not on staging.
+  #
+  # Runs on dispatch as well as on the schedule so that it can be exercised on
+  # demand; it only ever states what is true of main...staging, so that is safe.
+  # Not on a promotion PR, where the answer is already known.
+  remind:
+    name: Promotion reminder
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TITLE: Promote staging to main
+    steps:
+      - name: Open, refresh or close the reminder
+        run: |
+          ahead=$(gh api "repos/$GH_REPO/compare/main...staging" --jq .ahead_by)
+          open=$(gh issue list --state open --json number,title \
+                   --jq ".[] | select(.title == \"$TITLE\") | .number" | head -1)
+          echo "staging is $ahead commit(s) ahead of main; open reminder: ${open:-none}"
+
+          if [ "$ahead" -eq 0 ]; then
+            if [ -n "$open" ]; then
+              gh issue close "$open" --comment "staging and main agree."
+            fi
+            exit 0
+          fi
+
+          body="As of $(date -u +%Y-%m-%d), \`staging\` is **$ahead** commit(s) ahead of \`main\`.
+
+          To promote: \`gh pr create --base main --head staging\`. The rigorous tier runs on the PR and it merges only when green.
+
+          Refreshed nightly; closes itself once the branches agree."
+
+          if [ -n "$open" ]; then
+            gh issue edit "$open" --body "$body"
+          else
+            gh issue create --title "$TITLE" --body "$body"
+          fi

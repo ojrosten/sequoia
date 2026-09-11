@@ -1,8 +1,8 @@
 name: tests
 
-# The one place that knows how to build and run sequoia. coarse, fine, rigorous and
-# nightly are callers differing only in which columns they ask for and what they
-# pass the runner, so the tiers cannot drift apart in how they build.
+# The one place that knows how to build and run sequoia. coarse, fine and rigorous
+# are callers differing only in which columns they ask for and what they pass the
+# runner, so the tiers cannot drift apart in how they build.
 #
 # The tiers are ordered by strictness, not by containment: fine and rigorous replace
 # coarse's plain columns with sanitized ones rather than adding to them. A tier must
@@ -17,11 +17,6 @@ on:
         type: string
       exec_args:
         description: 'Arguments for the test executable, via the EXEC_ARGS cache variable. Semicolon-separated for more than one.'
-        required: false
-        type: string
-        default: ''
-      ref:
-        description: 'Branch to check out. Empty means the triggering ref. Needed because a scheduled run always fires from the default branch, so a nightly against staging has to ask for it.'
         required: false
         type: string
         default: ''
@@ -54,7 +49,6 @@ jobs:
         with:
           # docs/ is ~96MB of committed doxygen render; nothing here reads it.
           fetch-depth: 1
-          ref: ${{ inputs.ref }}
 
       # Package presence is tested against `apt-cache pkgnames`, which matches
       # names exactly. `apt-get install` does not: given a name with regex
@@ -82,10 +76,9 @@ jobs:
           echo "CC=${{ matrix.cc }}"   >> "$GITHUB_ENV"
           echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"
 
-      # Retained though no column currently selects macOS. Restoring the column is
-      # now one matrix entry, carrying `--exclude-performance` as the Windows one
-      # does: it is the suite's timing assertions, not the rest of it, which a
-      # hosted runner cannot hold.
+      # A macOS column carries `--exclude-performance` as the Windows ones do: it is
+      # the suite's timing assertions, not the rest of it, which a hosted runner
+      # cannot hold.
       - name: Install the toolchain (macOS)
         if: runner.os == 'macOS'
         run: |
