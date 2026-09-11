@@ -17,7 +17,9 @@ name: rigorous
 # main. If it is not, the columns run on main, as above. If it is, the run opens
 # the promotion PR instead - set to merge itself when green - and the columns run
 # on THAT, through the pull_request trigger, where the result is spendable as the
-# gate. The two are never both paid for on one night. Work lands on staging
+# gate. The two are never both paid for on one night. (A third case: staging is
+# ahead and the PR is already open, in which case nothing runs anywhere that
+# night; the PR re-runs the gate whenever staging moves.) Work lands on staging
 # silently, and without this it accumulated until someone remembered; the PR is
 # the notification, green or red.
 #
@@ -183,7 +185,7 @@ jobs:
     uses: ./.github/workflows/tests.yml
     with:
       warnings_as_errors: true
-      false_negative: ${{ github.event_name == 'workflow_dispatch' && inputs.false_negative == true }}
+      false_negative: ${{ inputs.false_negative == true }}
       exec_args: '--check-versioned-output'
       columns: >-
         [
@@ -286,7 +288,10 @@ jobs:
   # repository; when it expires this step fails, loudly, which is the point.
   #
   # One PR at a time. If one is already open it is left alone: the gate re-runs on
-  # it whenever staging moves, and if it is red that is the thing to look at.
+  # it whenever staging moves, and if it is red that is the thing to look at. But
+  # an open PR that is green and mergeable should already have merged itself, so
+  # that is reported as a failure rather than as "nothing to do" - the one shape
+  # in which a wedged promotion would otherwise look fine every night.
   promote:
     name: Promote staging
     needs: staging
@@ -300,9 +305,13 @@ jobs:
     steps:
       - name: Open the promotion PR, unless one is open
         run: |
-          open=$(gh pr list --base main --head staging --state open --json number --jq '.[0].number')
+          open=$(gh pr list --base main --head staging --state open --json number --jq '.[0].number // empty')
           if [ -n "$open" ]; then
-            echo "promotion PR #$open is already open"
+            state=$(gh pr view "$open" --json mergeStateStatus,createdAt --jq '"\(.mergeStateStatus) since \(.createdAt)"')
+            echo "promotion PR #$open is already open: $state"
+            case "$state" in
+              CLEAN*) echo "::error::PR #$open is green and mergeable but has not merged; auto-merge is not working"; exit 1;;
+            esac
             exit 0
           fi
           url=$(gh pr create --base main --head staging \
@@ -336,7 +345,7 @@ jobs:
       AHEAD: ${{ needs.staging.outputs.ahead }}
       RESULTS: ${{ toJSON(needs) }}
       PR: ${{ github.event.pull_request.number }}
-      FALSE_NEGATIVE: ${{ github.event_name == 'workflow_dispatch' && inputs.false_negative == true }}
+      FALSE_NEGATIVE: ${{ inputs.false_negative == true }}
     steps:
       - name: Check each job's result against the mode
         run: |
