@@ -5,23 +5,27 @@ name: coarse
 # build running at native speed with the system allocator.
 #
 # Windows is here rather than only in the gates because clang and gcc agreeing is
-# weak evidence about MSVC.
+# weak evidence about MSVC. macOS joined on 2026-09-11, when work started arriving
+# from a Windows machine as well as the Mac: "we develop on the Mac" had been the
+# reason a Mac column at the cheap tiers measured nothing new, and it stopped
+# being true - the absence "has gone from convenient to a glaring hole".
 #
 # A push to a branch with an open PR fires both `push` and `synchronize`, so this
 # runs alongside that PR's tier. There is no native way to suppress it, and it is
 # not wasted: it is what keeps an uninstrumented build in the picture once a branch
 # is under review.
 #
-# The Windows column runs the suite but does not gate on it. Compilation still
-# gates - that is where MSVC divergences usually appear - while test failures are
-# reported and triaged rather than fatal.
+# The Windows column is advisory: it runs the suite, but a test failure is
+# reported and triaged rather than fatal, until it has been green for long
+# enough to be made fatal. Compilation is still fatal - that is where MSVC
+# divergences usually appear. The Linux and macOS columns are fatal throughout.
 #
-# The column runs with `--exclude-performance`, because TestRunnerPerformanceTest
-# asserts absolute wall-clock times - 60ms +- 35 for eight 25ms sleeps run
-# concurrently - and the hosted Windows runner returned 196ms and then 603ms for
-# the same commit. No tolerance spans that and still means anything. What remains
-# is advisory only until it has been green for long enough to gate on; the triage
-# step raises anything that fails as an error annotation meanwhile.
+# The Windows and macOS columns run with `--exclude-performance`, because
+# TestRunnerPerformanceTest asserts absolute wall-clock times - 60ms +- 35 for
+# eight 25ms sleeps run concurrently - which a hosted runner cannot hold: Windows
+# returned 196ms and then 603ms for the same commit, and macOS 172ms, which is
+# what cost it its column on 2026-09-08. No tolerance spans that and still means
+# anything.
 on:
   push:
     paths-ignore:
@@ -39,6 +43,7 @@ jobs:
       columns: >-
         [
           {"name": "Linux · GCC · Debug",   "os": "ubuntu-latest",  "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "macOS · Clang · Debug", "os": "macos-latest",   "configure": "llvm-env", "build": "llvm-env", "exec_args": "--exclude-performance"},
           {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc",   "build": "msvc", "advisory": true, "exec_args": "--exclude-performance"}
         ]
 
