@@ -155,10 +155,10 @@ on:
   schedule:
     - cron: '0 3 * * *'
 
-# A push to staging while a promotion PR is open cancels that PR's run in flight:
-# a superseded run cannot gate anything, and its audit would otherwise compare
-# its jobs against the checks of a commit it is not testing. Scheduled and
-# dispatched runs each get a group of their own and are never cancelled.
+# A push to the head of an open PR into main cancels that PR's run in flight: a
+# superseded run cannot gate anything, and its audit would otherwise compare its
+# jobs against the checks of a commit it is not testing. Scheduled and dispatched
+# runs each get a group of their own, so nothing here ever cancels them.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
@@ -353,6 +353,7 @@ jobs:
       AHEAD: ${{ needs.staging.outputs.ahead }}
       RESULTS: ${{ toJSON(needs) }}
       PR: ${{ github.event.pull_request.number }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       FALSE_NEGATIVE: ${{ inputs.false_negative == true }}
     steps:
       - name: Check each job's result against the mode
@@ -390,9 +391,13 @@ jobs:
         run: |
           # A run whose head is no longer the PR's head has been superseded; the PR's
           # required checks now belong to another commit, and this run gates nothing.
-          head=$(gh pr view "$PR" --json headRefOid --jq .headRefOid)
-          if [ "$head" != "${{ github.event.pull_request.head.sha }}" ]; then
-            echo "superseded: the PR's head is now $head; nothing to hold this run against"
+          # Needed as well as cancel-in-progress, for the seconds before the
+          # cancellation lands and for a push matched by paths-ignore, which moves
+          # the head without starting a run - in which case nothing else will point
+          # at the PR now waiting on checks that never report (roadmap item 145).
+          current_head=$(gh pr view "$PR" --json headRefOid --jq .headRefOid)
+          if [ "$current_head" != "$HEAD_SHA" ]; then
+            echo "::warning::superseded: the PR's head is now $current_head, this run tested $HEAD_SHA. If no run appears for the new head, the PR is waiting on checks that will never report - see roadmap item 145."
             exit 0
           fi
           # Only the jobs that ran: staging and promote are skipped on a PR by design.
