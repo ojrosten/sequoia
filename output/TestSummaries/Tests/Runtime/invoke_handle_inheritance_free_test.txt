@@ -1,0 +1,2 @@
+invoke_handle_inheritance_free_test
+Standard Top Level Checks:                 9;  Failures:  0  [Deep checks: 9]
