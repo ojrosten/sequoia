@@ -29,6 +29,14 @@ on:
       - 'coverage_reports/**'
   workflow_dispatch:
 
+# A push to a branch that already has a run in flight cancels that run: a
+# superseded run cannot gate anything, and its audit would otherwise compare its
+# jobs against the checks of a commit it is not testing. Runs on different refs
+# never share a group.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   coarse:
     uses: ./.github/workflows/tests.yml
@@ -53,7 +61,7 @@ jobs:
   audit:
     name: Every job ran
     needs: [coarse, docs]
-    if: always()
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:

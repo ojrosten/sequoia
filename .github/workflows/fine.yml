@@ -41,6 +41,14 @@ on:
       - 'docs/**'
       - 'coverage_reports/**'
 
+# A push to a branch that already has a run in flight cancels that run: a
+# superseded run cannot gate anything, and its audit would otherwise compare its
+# jobs against the checks of a commit it is not testing. Runs on different refs
+# never share a group.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   fine:
     uses: ./.github/workflows/tests.yml
@@ -62,7 +70,7 @@ jobs:
   audit:
     name: Every job ran and every job gates
     needs: [fine]
-    if: always()
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -81,6 +89,13 @@ jobs:
 
       - name: Insist every job of this run is a required check on staging
         run: |
+          # A run whose head is no longer the PR's head has been superseded; the PR's
+          # required checks now belong to another commit, and this run gates nothing.
+          head=$(gh pr view "$PR" --json headRefOid --jq .headRefOid)
+          if [ "$head" != "${{ github.event.pull_request.head.sha }}" ]; then
+            echo "superseded: the PR's head is now $head; nothing to hold this run against"
+            exit 0
+          fi
           gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --paginate \
               --jq '.jobs[] | select(.conclusion != "skipped") | .name' \
             | sort > jobs.txt
