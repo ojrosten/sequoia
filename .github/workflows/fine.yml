@@ -1,6 +1,6 @@
 name: fine
 
-# The gate on staging: coarse's two platforms, sanitized, plus
+# The gate on staging: coarse's three platforms, sanitized, plus
 # --check-versioned-output so a change which moves committed diagnostics fails here
 # rather than surfacing later as a git diff.
 #
@@ -21,11 +21,14 @@ name: fine
 # measured on 2026-09-10 and found false: of the 340 files a real MSVC run writes,
 # 339 already matched, and the one straggler is fixed.
 #
-# The Linux column carries `--exclude-performance` alongside the tier's flag:
-# TestRunnerPerformanceTest asserts 60ms +- 35 for eight 25ms sleeps run
-# concurrently, which a hosted runner cannot hold - this column returned 164ms on
-# 2026-09-10, under ASan's slowdown. Both flags are spelt out because a column's
-# `exec_args` REPLACES the tier's rather than adding to it.
+# The Linux and macOS columns carry `--exclude-performance` alongside the tier's
+# flag: TestRunnerPerformanceTest asserts 60ms +- 35 for eight 25ms sleeps run
+# concurrently, which a hosted runner cannot hold - the Linux column returned
+# 164ms on 2026-09-10, under ASan's slowdown. Both flags are spelt out because a
+# column's `exec_args` REPLACES the tier's rather than adding to it.
+#
+# macOS joined on 2026-09-11, when work started arriving from a Windows machine
+# and "we develop on the Mac" stopped covering it; see coarse.yml.
 #
 # The MSVC column leaves out TestRunnerTest: its instability-analysis cleanup
 # calls fs::remove_all on a folder something on Windows still has open, and the
@@ -51,6 +54,7 @@ jobs:
       columns: >-
         [
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
+          {"name": "macOS · Clang · ASan+UBSan", "os": "macos-latest", "configure": "llvm-env-asan-ubsan", "build": "llvm-env-asan-ubsan", "exec_args": "--check-versioned-output;--exclude-performance"},
           {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"}
         ]
 
