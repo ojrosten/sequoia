@@ -96,7 +96,10 @@ name: rigorous
 # rewrites a diagnostics file with another translation unit's location. But the
 # mechanism is ld64 discarding a Mach-O atom, which has no ELF counterpart, and this
 # column has never actually tried the flag - every run that carried it died at
-# compile time instead. Roadmap item 139. Put it back and look.
+# compile time instead. Reported 2026-09-11 as a further instance of
+# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=126723 (roadmap item 139); restore
+# the flag when gcc is fixed, and put it back sooner than that to find out whether
+# this column was ever affected.
 #
 # The performance tests run HERE and nowhere else in this tier, which is
 # deliberate. What makes them unreliable on a hosted runner is the slowdown, not
