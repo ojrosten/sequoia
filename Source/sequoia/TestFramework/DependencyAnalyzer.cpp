@@ -13,6 +13,7 @@
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <chrono>
+#include <concepts>
 #include <fstream>
 
 namespace sequoia::testing
@@ -80,8 +81,9 @@ namespace sequoia::testing
       return (ext == ".hpp") || (ext == ".h") || (ext == ".hxx");
     }
 
-    [[nodiscard]]
-    std::string from_stream(std::istream& istr, std::string_view delimiters)
+    /// Accumulates characters while `pred` holds, leaving the first which fails it unconsumed.
+    template<std::predicate<char> Pred>
+    std::string read_while(std::istream& istr, Pred pred)
     {
       constexpr auto eof{std::ifstream::traits_type::eof()};
       using int_type = std::ifstream::int_type;
@@ -91,12 +93,73 @@ namespace sequoia::testing
       int_type c{};
       while((c = istr.get()) != eof)
       {
-        if(std::ranges::contains(delimiters, c)) break;
+        if(!pred(static_cast<char>(c)))
+        {
+          istr.unget();
+          break;
+        }
 
         str.push_back(static_cast<char>(c));
       }
 
       return str;
+    }
+
+    /// Accumulates characters up to the first delimiter, which is consumed.
+    [[nodiscard]]
+    std::string read_until(std::istream& istr, std::string_view delimiters)
+    {
+      const std::string str{read_while(istr, [delimiters](char c){ return !std::ranges::contains(delimiters, c); })};
+      istr.get();
+
+      return str;
+    }
+
+    /// Everything [cpp.pre] admits between a directive's tokens: any whitespace but the newline ending it.
+    [[nodiscard]]
+    bool is_directive_space(char c) noexcept
+    {
+      return (c == ' ') || (c == '\t') || (c == '\v') || (c == '\f');
+    }
+
+    /// The characters which may appear in an identifier; ASCII, and so independent of the locale.
+    [[nodiscard]]
+    bool is_identifier_char(char c) noexcept
+    {
+      return    ((c >= 'a') && (c <= 'z'))
+             || ((c >= 'A') && (c <= 'Z'))
+             || ((c >= '0') && (c <= '9'))
+             || (c == '_');
+    }
+
+    void skip_directive_space(std::istream& istr)
+    {
+      read_while(istr, [](char c){ return is_directive_space(c); });
+    }
+
+    /// Reads an identifier, leaving the first character which cannot extend one unconsumed.
+    [[nodiscard]]
+    std::string read_identifier(std::istream& istr)
+    {
+      return read_while(istr, [](char c){ return is_identifier_char(c); });
+    }
+
+    /** \brief Reads a header name, or nothing if the line ends before the closing delimiter does.
+
+        A header name cannot cross a newline [lex.header], so a `"` or `<` left unclosed on its
+        line opens none. The scan has no notion of a string literal, so without that bound
+        `std::string_view include{"#include"};` opens a header name at its closing quote,
+        consuming every `#include` up to the next quotation mark.
+     */
+    [[nodiscard]]
+    std::string read_header_name(std::istream& istr, char closing)
+    {
+      std::string name{read_while(istr, [closing](char c){ return (c != closing) && (c != '\n'); })};
+      if(istr.peek() != closing) return {};
+
+      istr.get();
+
+      return name;
     }
 
     /// No rebasing perfomed
@@ -115,81 +178,20 @@ namespace sequoia::testing
 
       if(std::ifstream ifile{file})
       {
-        constexpr auto eof{std::ifstream::traits_type::eof()};
-        using int_type = std::ifstream::int_type;
+        auto scanned{scan_dependencies(ifile, cutoff)};
 
-        int_type c{};
-        while((c = ifile.get()) != eof)
+        for(auto& includedFile : scanned.includes)
         {
-          if(c == '/')
+          // An extensionless name is a standard library header, which is never in the tree
+          if(!includedFile.has_extension()) continue;
+
+          if(includedFile.parent_path().empty())
           {
-            if(ifile.peek() == '/')
-            {
-              ifile.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            }
-            else if(ifile.peek() == '*')
-            {
-              ifile.get();
-              while(ifile)
-              {
-                ifile.ignore(std::numeric_limits<std::streamsize>::max(), '*');
-                if(ifile.peek() == '/')
-                {
-                  ifile.get();
-                  break;
-                }
-              }
-            }
+            // Maybe check if this file actually exists... if path is absolute
+            includedFile = file.parent_path() / includedFile;
           }
-          else if(c == '#')
-          {
-            // TO DO: Bug here with #endif
-            const auto followsHash{from_stream(ifile, " \n")};
-            if(followsHash == "include")
-            {
-              int_type ch{};
-              while(std::isspace(ch = ifile.get())) {};
 
-              if(ifile)
-              {
-                auto includedFile{
-                  [&ifile, ch]() -> fs::path {
-                    if(ch == '\"')
-                    {
-                      return from_stream(ifile, "\"");
-                    }
-                    else if(ch == '<')
-                    {
-                      return from_stream(ifile, ">");
-                    }
-
-                    return "";
-                  }()
-                };
-
-                if(includedFile.has_extension())
-                {
-                  if(includedFile.parent_path().empty())
-                  {
-                    // Maybe check if this file actually exists... if path is absolute
-                    includedFile = file.parent_path() / includedFile;
-                  }
-
-                  includes.push_back(includedFile);
-                }
-              }
-            }
-
-          }
-          else if(!cutoff.empty() && (c == cutoff.front()))
-          {
-            ifile.unget();
-            const auto pattern{from_stream(ifile, "\n")};
-            if(const auto pos{pattern.find(cutoff)}; pos != std::string::npos)
-            {
-              break;
-            }
-          }
+          includes.push_back(std::move(includedFile));
         }
       }
 
@@ -536,6 +538,69 @@ namespace sequoia::testing
 
       return intersection;
     }
+  }
+
+  [[nodiscard]]
+  source_dependencies scan_dependencies(std::istream& source, std::string_view cutoff)
+  {
+    constexpr auto eof{std::ifstream::traits_type::eof()};
+    using int_type = std::ifstream::int_type;
+
+    source_dependencies dependencies{};
+
+    int_type c{};
+    while((c = source.get()) != eof)
+    {
+      if(c == '/')
+      {
+        if(source.peek() == '/')
+        {
+          source.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+        else if(source.peek() == '*')
+        {
+          source.get();
+          while(source)
+          {
+            source.ignore(std::numeric_limits<std::streamsize>::max(), '*');
+            if(source.peek() == '/')
+            {
+              source.get();
+              break;
+            }
+          }
+        }
+      }
+      else if(c == '#')
+      {
+        skip_directive_space(source);
+
+        if(read_identifier(source) == "include")
+        {
+          skip_directive_space(source);
+
+          const auto delimiter{source.get()};
+
+          fs::path includedFile{
+            (delimiter == '\"') ? read_header_name(source, '\"') :
+            (delimiter == '<')  ? read_header_name(source, '>')  :
+                                  std::string{}
+          };
+
+          if(!includedFile.empty()) dependencies.includes.push_back(std::move(includedFile));
+        }
+      }
+      else if(!cutoff.empty() && (c == cutoff.front()))
+      {
+        source.unget();
+        if(const std::string pattern{read_until(source, "\n")}; pattern.find(cutoff) != std::string::npos)
+        {
+          break;
+        }
+      }
+    }
+
+    return dependencies;
   }
 
   [[nodiscard]]
