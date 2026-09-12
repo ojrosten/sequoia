@@ -17,6 +17,7 @@
 #include <chrono>
 #include <concepts>
 #include <cstdint>
+#include <expected>
 #include <format>
 #include <fstream>
 #include <optional>
@@ -43,22 +44,30 @@ namespace sequoia::testing
 
   std::istream& operator>>(std::istream& s, prune_record& record)
   {
-    const auto extractField{
-      [&s](std::string_view key) -> std::optional<std::string> {
-        if(std::string line{}; std::getline(s, line) && line.starts_with(key))
-          return line.substr(key.size());
+    // The clean end of the file, which istream_iterator relies on; anything else short of a record is an error
+    if(s.peek() == std::char_traits<char>::eof())
+    {
+      s.setstate(std::ios::failbit);
+      return s;
+    }
 
-        return std::nullopt;
+    const auto extractField{
+      [&s](std::string_view key) -> std::expected<std::string, std::string> {
+        std::string line{};
+        if(!std::getline(s, line))   return std::unexpected{std::format("Expected a line beginning '{}' but found the end of the file", key)};
+        if(!line.starts_with(key))   return std::unexpected{std::format("Expected a line beginning '{}' but found '{}'", key, line)};
+
+        return line.substr(key.size());
       }
     };
 
     const auto toStamp{
-      [](const std::string& text) -> std::optional<prune_record::stamp_type> {
+      [](const std::string& text) -> std::expected<prune_record::stamp_type, std::string> {
         const auto last{text.data() + text.size()};
         if(stream_rep_t count{}; std::from_chars(text.data(), last, count) == std::from_chars_result{last, std::errc{}})
           return prune_record::stamp_type{duration_t{checked_conversion_to<duration_t::rep>(count)}};
 
-        return std::nullopt;
+        return std::unexpected{std::format("'{}' is not a time stamp", text)};
       }
     };
 
@@ -71,9 +80,13 @@ namespace sequoia::testing
         })
     };
 
-    if(parsed) record = *parsed;
-    else       s.setstate(std::ios::failbit);
+    if(!parsed)
+    {
+      s.setstate(std::ios::failbit);
+      throw std::runtime_error{parsed.error()};
+    }
 
+    record = *parsed;
     return s;
   }
 
@@ -552,15 +565,24 @@ namespace sequoia::testing
       if(std::ifstream ifile{file})
       {
         using iter_t = std::istream_iterator<prune_record>;
-        // A call rather than a pipe, to stay identical to `modules-native`. The pipe is
-        // fine here and is rejected there: under `import std`, g++ 15.2 reports
-        // "use of operator| ... before deduction of 'auto'" whenever the adaptor carries a
-        // lambda - a named predicate pipes fine. See gcc-bugs/E in the sequoia-LLM
-        // repository, and PR 120318; fixed in gcc 16.1.
-        tests.append_range(
-            std::views::filter(std::ranges::subrange{iter_t{ifile}, iter_t{}},
-                               [](const prune_record& record) {return !record.test_path.empty();})
-        );
+        try
+        {
+          // A call rather than a pipe, to stay identical to `modules-native`. The pipe is
+          // fine here and is rejected there: under `import std`, g++ 15.2 reports
+          // "use of operator| ... before deduction of 'auto'" whenever the adaptor carries a
+          // lambda - a named predicate pipes fine. See gcc-bugs/E in the sequoia-LLM
+          // repository, and PR 120318; fixed in gcc 16.1.
+          tests.append_range(
+              std::views::filter(std::ranges::subrange{iter_t{ifile}, iter_t{}},
+                                 [](const prune_record& record) {return !record.test_path.empty();})
+          );
+        }
+        catch(const std::exception& e)
+        {
+          throw std::runtime_error{
+            std::format("Unable to read the prune records in {}: {}\nThe prune state may predate a change of format; deleting the directory it is in starts afresh",
+                        file.generic_string(), e.what())};
+        }
       }
 
       return tests;

@@ -1,2 +1,2 @@
 dependency_analyzer_free_test
-Standard Top Level Checks:               232;  Failures:  0  [Deep checks: 830]
+Standard Top Level Checks:               234;  Failures:  0  [Deep checks: 831]
