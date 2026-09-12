@@ -45,7 +45,14 @@ namespace sequoia::testing
     fixed      /// fixed-size thread pool
   };
 
-  enum class return_code : unsigned { success=0, versioned_output_diffs=1, soft_failures=2, critical_failures=4, incomplete_run=8};
+  enum class return_code : unsigned {
+    success                = 0,
+    versioned_output_diffs = 1 << 0,
+    soft_failures          = 1 << 1,
+    critical_failures      = 1 << 2,
+    incomplete_run         = 1 << 3,
+    post_run_failures      = 1 << 4
+  };
 
   [[nodiscard]]
   std::string to_string(return_code code);
@@ -525,7 +532,7 @@ namespace sequoia::testing
 
     void reset_tests();
 
-    void run_tests(std::optional<std::size_t> id);
+    return_code run_tests(std::optional<std::size_t> id);
 
     /** The `select`/`test` options which reproduce this run's filter, for handing to a child process. */
     [[nodiscard]]

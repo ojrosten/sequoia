@@ -7,6 +7,7 @@
 
 #include "TestRunnerEndToEndFreeTest.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "Utilities/TestUtilities.hpp"
 
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
@@ -52,14 +53,9 @@ namespace sequoia::testing
       constexpr auto pollInterval{10ms};
 
       const auto stamp{
-        [probe{probeDir / "TimestampProbe.tmp"}]() {
-          if(std::ofstream file{probe}; !file)
-            throw std::runtime_error{std::format("Unable to write the timestamp probe {}", probe.generic_string())};
-
-          const auto probeStamp{fs::last_write_time(probe)};
-          fs::remove(probe);
-
-          return probeStamp;
+        [&probeDir]() {
+          const transient_file probe{probeDir / "TimestampProbe.tmp", ""};
+          return fs::last_write_time(probe.path());
         }
       };
 
