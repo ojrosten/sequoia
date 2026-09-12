@@ -26,13 +26,13 @@ namespace generatedProject::testing
     {
       if(fs::is_regular_file(e))
       {
-        if(auto contents{read_to_string(e.path())})
+        if(auto contents{read_to_string(e.path(), std::ios_base::in)})
         {
           auto& text{contents.value()};
           if(!text.empty())
           {
             replace_all(text, "Old", "Updated");
-            write_to_file(e.path(), text);
+            write_to_file(e.path(), text, std::ios_base::out);
           }
         }
       }

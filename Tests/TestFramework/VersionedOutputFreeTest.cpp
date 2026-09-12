@@ -89,10 +89,13 @@ namespace sequoia::testing
 
     // Written here rather than committed as materials, since dot-prefixed names are gitignored
     // and so would not survive a checkout.
-    write_to_file(root / "output" / "TestSummaries" / ".DS_Store", "not sequoia's");
+    write_to_file(root / "output" / "TestSummaries" / ".DS_Store", "not sequoia's", std::ios_base::out);
     const auto hidden{root / "output" / "DiagnosticsOutput" / ".hidden"};
     fs::create_directories(hidden);
-    write_to_file(hidden / "inside.txt", "nor this");
+    write_to_file(hidden / "inside.txt", "nor this", std::ios_base::out);
+
+    // Written here so that the bytes are known: a checkout would give them the platform's line endings.
+    write_to_file(root / "output" / "TestSummaries" / "gamma.txt", "gamma\r\n", std::ios_base::out | std::ios_base::binary);
 
     const auto snapshot{take_versioned_output_snapshot(output_paths{root})};
 
@@ -100,9 +103,10 @@ namespace sequoia::testing
           "Both versioned trees are gathered recursively; nothing else under output/ is, nor dot-files, "
           "nor the contents of a dot-directory",
           snapshot | std::views::keys | std::ranges::to<std::vector>(),
-          std::vector<fs::path>{"DiagnosticsOutput/Sub/alpha.txt", "DiagnosticsOutput/empty.txt", "TestSummaries/beta.txt"});
+          std::vector<fs::path>{"DiagnosticsOutput/Sub/alpha.txt", "DiagnosticsOutput/empty.txt", "TestSummaries/beta.txt", "TestSummaries/gamma.txt"});
 
     check(equality, "Content is captured", snapshot.at("TestSummaries/beta.txt"), std::string{"beta\n"});
+    check(equality, "Content is captured byte for byte", snapshot.at("TestSummaries/gamma.txt"), std::string{"gamma\r\n"});
 
     // `versioned_write` truncates rather than deletes, so an empty versioned file is a legitimate
     // state and must be captured rather than skipped.

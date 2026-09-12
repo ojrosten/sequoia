@@ -1,2 +1,2 @@
 file_editors_free_test
-Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 10]
+Standard Top Level Checks:                 9;  Failures:  0  [Deep checks: 17]

@@ -104,7 +104,7 @@ namespace sequoia::testing
     if(tests.empty())
       throw std::logic_error{"No tests specified for registration"};
 
-    auto contents{read_to_string(file)};
+    auto contents{read_to_string(file, std::ios_base::in)};
     if(!contents)
       throw std::runtime_error{report_failed_read(file)};
 
@@ -135,7 +135,7 @@ namespace sequoia::testing
     if(registrations.empty()) return;
 
     contentsStr.insert(linePos, registrations);
-    write_to_file(file, contentsStr);
+    write_to_file(file, contentsStr, std::ios_base::out);
   }
 
   void add_to_cmake(const std::filesystem::path& cmakeLists,
@@ -191,22 +191,46 @@ namespace sequoia::testing
     read_modify_write(cmakeLists, addEntry);
   }
 
+  namespace
+  {
+    /** \brief Contents with no NUL byte, which is the discriminator git uses too. */
+    [[nodiscard]]
+    bool is_text(std::string_view contents)
+    {
+      return contents.find('\0') == std::string_view::npos;
+    }
+
+    /** \brief Text differing only in CRLF versus LF is the same text: the line ending belongs to the tool
+        which last wrote the file, not to the content.
+     */
+    void normalize_line_endings(std::string& contents)
+    {
+      if(is_text(contents)) replace_all(contents, "\r\n", "\n");
+    }
+  }
+
   [[nodiscard]]
   reduced_file_contents get_reduced_file_content(const std::filesystem::path& file, const std::filesystem::path& prediction)
   {
-    reduced_file_contents contents{read_to_string(file), read_to_string(prediction)};
+    constexpr auto binary{std::ios_base::in | std::ios_base::binary};
+
+    reduced_file_contents contents{read_to_string(file, binary), read_to_string(prediction, binary)};
 
     if(contents.working && contents.prediction)
     {
+      normalize_line_endings(contents.working.value());
+      normalize_line_endings(contents.prediction.value());
+
       if(file.extension() != seqpat)
       {
         namespace fs = std::filesystem;
         auto supplPath{[](fs::path f) { return f.replace_extension(seqpat); }(prediction)};
         if(fs::exists(supplPath))
         {
-          if(auto exprContents{read_to_string(supplPath)})
+          if(auto exprContents{read_to_string(supplPath, binary)})
           {
-            const auto& expressions{exprContents.value()};
+            auto& expressions{exprContents.value()};
+            normalize_line_endings(expressions);
 
             std::string::size_type pos{};
             while(pos < expressions.size())

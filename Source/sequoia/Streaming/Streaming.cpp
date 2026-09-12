@@ -38,9 +38,9 @@ namespace sequoia
   }
 
   [[nodiscard]]
-  std::optional<std::string> read_to_string(const std::filesystem::path& file)
+  std::optional<std::string> read_to_string(const std::filesystem::path& file, std::ios_base::openmode mode)
   {
-    if(std::ifstream ifile{file})
+    if(std::ifstream ifile{file, mode})
     {
       std::stringstream buffer{};
       buffer << ifile.rdbuf();
@@ -50,7 +50,7 @@ namespace sequoia
     return std::nullopt;
   }
 
-  void write_to_file(const std::filesystem::path& file, std::string_view text,std::ios_base::openmode mode)
+  void write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode)
   {
     if(std::ofstream ofile{file, mode})
     {
