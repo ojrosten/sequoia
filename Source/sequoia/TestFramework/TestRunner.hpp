@@ -167,7 +167,6 @@ namespace sequoia::testing
       m_pTest->initialize(projPaths, materialsPaths, mode);
     }
   private:
-    static void versioned_write(const std::filesystem::path& file, const failure_output& output);
     static void versioned_write(const std::filesystem::path& file, std::string_view text);
 
     struct soul

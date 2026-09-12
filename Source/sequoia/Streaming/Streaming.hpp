@@ -14,6 +14,7 @@
 #include "sequoia/Core/Meta/Concepts.hpp"
 
 #include <filesystem>
+#include <ios>
 #include <optional>
 
 namespace sequoia
@@ -26,17 +27,17 @@ namespace sequoia
 
 
   [[nodiscard]]
-  std::optional<std::string> read_to_string(const std::filesystem::path& file);
+  std::optional<std::string> read_to_string(const std::filesystem::path& file, std::ios_base::openmode mode);
 
-  void write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode=std::ios_base::out);
+  void write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode);
 
   template<std::invocable<std::string&> Fn>
   void read_modify_write(const std::filesystem::path& file, Fn fn)
   {
-    if(auto text{read_to_string(file)})
+    if(auto text{read_to_string(file, std::ios_base::in)})
     {
       fn(*text);
-      write_to_file(file, *text);
+      write_to_file(file, *text, std::ios_base::out);
     }
     else
     {

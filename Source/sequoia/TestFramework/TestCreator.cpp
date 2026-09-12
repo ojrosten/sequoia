@@ -245,7 +245,7 @@ namespace sequoia::testing
         {
           const auto outputPath{buildPaths.cmake_cache_dir() / "CMakeOutput.txt"};
           invoke(cd_cmd(main.dir()) && cmake_cmd(buildPaths, outputPath));
-          if(auto text{read_to_string(outputPath)})
+          if(auto text{read_to_string(outputPath, std::ios_base::in)})
             return text.value();            
         }
 
@@ -305,14 +305,14 @@ namespace sequoia::testing
     const auto inputFile{(m_Paths.aux_paths().test_templates() / nameStub).concat(nameEnding)};
 
     fs::copy_file(inputFile, outputFile, fs::copy_options::overwrite_existing);
-    if(auto contents{read_to_string(outputFile)})
+    if(auto contents{read_to_string(outputFile, std::ios_base::in)})
     {
       if(std::string& text{contents.value()}; !text.empty())
       {
         set_top_copyright(text, m_Copyright);
         transformer(text);
 
-        write_to_file(outputFile, text);
+        write_to_file(outputFile, text, std::ios_base::out);
       }
     }
     else

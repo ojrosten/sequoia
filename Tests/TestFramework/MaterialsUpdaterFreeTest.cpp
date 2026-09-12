@@ -29,11 +29,11 @@ namespace sequoia::testing
     check(weak_equivalence, "Soft update", working, predictive);
 
     check(equality, "Ensure that a target file equivalent to its replacement is not replaced",
-                   read_to_string(working_materials() /= "DirToBeKept/Comments.txt"),
-                   read_to_string(predictive_materials() /= "DirToBeKept/Comments.txt"));
+                   read_to_string(working_materials() /= "DirToBeKept/Comments.txt", std::ios_base::in),
+                   read_to_string(predictive_materials() /= "DirToBeKept/Comments.txt", std::ios_base::in));
 
     check("Ensure fidelity of previous check",
-              read_to_string(working_materials() /= "DirToBeKept/Comments.txt")
-          !=  read_to_string(auxiliary_materials() /= "DirToBeKept/Comments.txt"));
+              read_to_string(working_materials() /= "DirToBeKept/Comments.txt", std::ios_base::in)
+          !=  read_to_string(auxiliary_materials() /= "DirToBeKept/Comments.txt", std::ios_base::in));
   }
 }
