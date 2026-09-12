@@ -126,6 +126,8 @@ namespace sequoia::testing
 
   //===================================== source_paths =====================================//
 
+  // Guessed from the checkout's name; not deduced from the filesystem, since during `init` the
+  // sole directory under `Source` is still `projectTemplate`
   source_paths::source_paths(const fs::path& projectRoot, const std::optional<fs::path>& folderName)
     : m_Repo{repo(projectRoot)}
     , m_Project{folderName ? repo() / rebase_from(folderName.value(), repo()) : repo() / uncapitalize(back(projectRoot).generic_string())}

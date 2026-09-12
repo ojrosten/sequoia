@@ -35,6 +35,7 @@ namespace sequoia::testing
   void test_runner_test_creation::run_tests()
   {
     test_type_handling();
+    test_project_namespace();
     test_template_data_generation();
     test_creation("FakeProject", std::nullopt);
     test_creation("AnotherFakeProject", "curlew");
@@ -61,6 +62,33 @@ namespace sequoia::testing
     check("tuple<int>",    handle_as_ref("tuple<int>"));
     check("tuple<int >",   handle_as_ref("tuple<int >"));
     check("tuple< int >",  handle_as_ref("tuple< int >"));
+  }
+
+  // Both of create's uses of the source directory - where the files go and what namespace they declare - are settled here
+  void test_runner_test_creation::test_project_namespace()
+  {
+    using namespace std::string_literals;
+
+    const auto root{working_materials() /= "Namespaces"};
+    fs::create_directories(root / "myProject");
+    fs::create_directories(root / "my-project");
+    fs::create_directories(root / "0project");
+
+    check(equality, "A directory whose name is an identifier", project_namespace_for(root / "myProject"), "myProject"s);
+
+    check_exception_thrown<std::runtime_error>(
+      "A directory which does not exist",
+      [&root]() { return project_namespace_for(root / "absent"); });
+
+    check_exception_thrown<std::runtime_error>(
+      "A directory whose name is not an identifier",
+      [&root]() { return project_namespace_for(root / "my-project"); });
+
+    check_exception_thrown<std::runtime_error>(
+      "A directory whose name begins with a digit",
+      [&root]() { return project_namespace_for(root / "0project"); });
+
+    fs::remove_all(root);
   }
 
   void test_runner_test_creation::test_template_data_generation()

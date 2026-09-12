@@ -24,7 +24,7 @@ int main(int argc, char** argv)
                        argv,
                        "Oliver J. Rosten",
                        "  ",
-                       {.main_cpp{"TestAll/TestMain.cpp"}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
+                       {.source_folder{"sequoia"}, .main_cpp{"TestAll/TestMain.cpp"}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
 
     runner.register_test<test_runner_false_negative_test>();
     runner.register_test<test_runner_test>();
