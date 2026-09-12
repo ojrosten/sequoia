@@ -94,7 +94,11 @@ namespace sequoia::testing
     std::filesystem::path m_File{}, m_Dir{}, m_CommonIncludes{};
   };
 
-  /** \brief Paths relating to the source directory */
+  /** \brief Paths relating to the source directory.
+
+      The project directory is computed from the arguments alone and never discovered on disk;
+      clients may rely on constructing `source_paths` before the directory exists.
+   */
 
   class source_paths
   {
