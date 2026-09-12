@@ -105,6 +105,8 @@ int main(int argc, char** argv)
     runner.register_test<commandline_arguments_test>();
     runner.register_test<factory_false_negative_test>();
     runner.register_test<factory_test>();
+    runner.register_test<invoke_handle_inheritance_free_test>();
+    runner.register_test<invoke_interpreter_resolution_free_test>();
     runner.register_test<shell_commands_false_negative_test>();
     runner.register_test<shell_commands_test>();
     runner.register_test<type_name_free_test>();

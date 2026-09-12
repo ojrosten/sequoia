@@ -177,8 +177,7 @@ jobs:
         run: |
           # A column's exec_args replaces the tier's. `||` cannot express this: an
           # explicitly empty string is falsy, so a column asking for NO flags would
-          # silently inherit the tier's. toJSON distinguishes absent from empty, the
-          # same way it does for `matrix.run` above.
+          # silently inherit the tier's. toJSON distinguishes absent from empty.
           if [ '${{ toJSON(matrix.exec_args) }}' = 'null' ]; then
             args='${{ inputs.exec_args }}'
           else
@@ -224,24 +223,17 @@ jobs:
       # macOS ships no GNU coreutils, and the step form additionally distinguishes
       # "the suite timed out" from "the job timed out" in the run summary. One
       # branch has already spun for 36 minutes against an 18s baseline.
-      # A column may set `run: false` to build and not run, or `advisory: true` to
-      # run without gating on the result. Both exist for a platform whose failures
-      # are understood and being worked on; advisory is the better of the two,
-      # because a suite that is not run tells you nothing, whereas one that is run
-      # and reported tells you what is still wrong.
+      # A column may set `advisory: true` to run without gating on the result, for
+      # a platform whose failures are understood and being worked on. There is no
+      # build-without-running option: a suite that is not run tells you nothing,
+      # and the audit below refuses a column whose suite step did not run.
       #
       # The tee is safe only because `shell: bash` runs steps under
       # `--noprofile --norc -eo pipefail`: without pipefail the tee would donate its
       # own exit status to the step, which is how a red suite comes to look green.
       # The Build step above already depends on this; it is written down here
       # because the dependency is invisible at the call site.
-      # `toJSON`, and not `matrix.run != false`, because GitHub coerces both null and
-      # false to 0 when comparing across types: for a column that omits `run` the
-      # comparison is 0 != 0, so the step was skipped and the job went green having
-      # built and run nothing. Every tier was affected from the day it was written;
-      # `toJSON(null)` is the string "null", which does distinguish the two.
       - name: Run the suite
-        if: ${{ toJSON(matrix.run) != 'false' }}
         continue-on-error: ${{ matrix.advisory == true }}
         working-directory: TestAll
         timeout-minutes: 30
@@ -257,7 +249,7 @@ jobs:
       # rows count `check_relative_performance` alone. Every failing file is named either way, so a
       # new one cannot hide behind a tolerated one.
       - name: Triage the advisory run
-        if: ${{ always() && matrix.advisory == true && toJSON(matrix.run) != 'false' }}
+        if: ${{ always() && matrix.advisory == true }}
         run: |
           log="$RUNNER_TEMP/run.log"
           if [ ! -f "$log" ]; then
@@ -337,13 +329,13 @@ jobs:
   audit:
     name: Every column ran the suite
     needs: build-and-test
-    if: always()
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
-      COLUMNS: ${{ inputs.columns }}
+      EXPECTED_COLUMNS: ${{ inputs.columns }}
     steps:
       - name: Read this run's jobs back and check each column's suite step
         run: |
@@ -351,6 +343,9 @@ jobs:
             | jq -s . > jobs.json
           echo "jobs in this run:"
           jq -r '.[] | "  \(.name): \(.conclusion // .status)"' jobs.json
+
+          jq -r '.[].name' <<<"$EXPECTED_COLUMNS" > expected.txt
+          [ -s expected.txt ] || { echo "::error::no columns to audit"; exit 1; }
 
           failed=0
           while IFS= read -r column; do
@@ -362,7 +357,7 @@ jobs:
             case "$verdict" in
               success|failure) echo "ok    $column: Run the suite -> $verdict";;
               JOBS:*)          echo "::error::$column: expected exactly one job, found ${verdict#JOBS:}"; failed=1;;
-              *)               echo "::error::$column: Run the suite -> $verdict; the column reported without running the suite"; failed=1;;
+              *)               echo "::error::$column: Run the suite -> $verdict; the suite did not run on this column"; failed=1;;
             esac
-          done < <(jq -r '.[].name' <<<"$COLUMNS")
+          done < expected.txt
           exit $failed

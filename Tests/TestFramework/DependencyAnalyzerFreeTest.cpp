@@ -14,6 +14,7 @@
 #include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
 #include <fstream>
+#include <sstream>
 
 namespace sequoia::testing
 {
@@ -166,6 +167,7 @@ namespace sequoia::testing
   void dependency_analyzer_free_test::run_tests()
   {
     test_staleness_threshold();
+    test_source_scanning();
 
     m_ResetTime = std::chrono::file_clock::now() + resetOffset;
 
@@ -220,6 +222,180 @@ namespace sequoia::testing
           "A whole number of seconds before the clock's epoch is still on a boundary",
           staleness_threshold(stamp_at(-2000ms)),
           stamp_at(-3000ms));
+  }
+
+  void dependency_analyzer_free_test::check_scan(const reporter& description,
+                                                 std::string_view source,
+                                                 std::string_view cutoff,
+                                                 const std::vector<fs::path>& prediction)
+  {
+    std::istringstream stream{std::string{source}};
+    check(equality, description, scan_dependencies(stream, cutoff).includes, prediction);
+  }
+
+  void dependency_analyzer_free_test::test_source_scanning()
+  {
+    using paths = std::vector<fs::path>;
+
+    check_scan("Nothing at all", "", "", paths{});
+    check_scan("Source with no directives", "int main() { return 0; }\n", "", paths{});
+
+    check_scan("Quoted header name",  "#include \"foo.hpp\"\n", "", paths{"foo.hpp"});
+    check_scan("Angled header name",  "#include <foo.hpp>\n",   "", paths{"foo.hpp"});
+    check_scan("Header name carrying a directory", "#include \"Stuff/Foo.hpp\"\n", "", paths{"Stuff/Foo.hpp"});
+    check_scan("Several includes, in the order written",
+               "#include \"foo.hpp\"\n#include <bar.hpp>\n#include \"baz.hpp\"\n",
+               "",
+               paths{"foo.hpp", "bar.hpp", "baz.hpp"});
+
+    check_scan("A preceding directive does not swallow the include on the next line",
+               "#ifdef SOMETHING\n#endif\n#include \"foo.hpp\"\n",
+               "",
+               paths{"foo.hpp"});
+
+    check_scan("...nor does one carrying a trailing comment",
+               "#ifdef SOMETHING\n#endif // SOMETHING\n#include \"foo.hpp\"\n",
+               "",
+               paths{"foo.hpp"});
+
+    check_scan("A tab separates the directive name from the header name",
+               "#include\t\"foo.hpp\"\n",
+               "",
+               paths{"foo.hpp"});
+
+    check_scan("Nothing at all separates the directive name from the header name",
+               "#include\"foo.hpp\"\n",
+               "",
+               paths{"foo.hpp"});
+
+    check_scan("...and the same for an angled one",
+               "#include<foo.hpp>\n",
+               "",
+               paths{"foo.hpp"});
+
+    check_scan("A space separates the hash from the directive name",
+               "# include \"foo.hpp\"\n",
+               "",
+               paths{"foo.hpp"});
+
+    check_scan("A tab separates the hash from the directive name",
+               "#\tinclude <foo.hpp>\n",
+               "",
+               paths{"foo.hpp"});
+
+    check_scan("Both separations at once, each spelled differently",
+               "#  include\t<foo.hpp>\n",
+               "",
+               paths{"foo.hpp"});
+
+    check_scan("A vertical tab separates the tokens",
+               "#\vinclude\v\"foo.hpp\"\n",
+               "",
+               paths{"foo.hpp"});
+
+    check_scan("A form feed separates the tokens",
+               "#\finclude\f\"foo.hpp\"\n",
+               "",
+               paths{"foo.hpp"});
+
+    check_scan("Indented directive", "  \t#include \"foo.hpp\"\n", "", paths{"foo.hpp"});
+
+    check_scan("Carriage returns do not reach the header name",
+               "#ifdef SOMETHING\r\n#endif\r\n#include \"foo.hpp\"\r\n#include <bar.hpp>\r\n",
+               "",
+               paths{"foo.hpp", "bar.hpp"});
+
+    check_scan("A directive name of which `include` is merely a prefix",
+               "#included \"foo.hpp\"\n",
+               "",
+               paths{});
+
+    check_scan("An undelimited header name is not one",
+               "#include foo.hpp\n#include \"bar.hpp\"\n",
+               "",
+               paths{"bar.hpp"});
+
+    check_scan("A header name which the file ends in the middle of",
+               "#include \"foo.hpp",
+               "",
+               paths{});
+
+    check_scan("A string literal spelled exactly `\"#include\"` opens no header name",
+               "std::string_view tag{\"#include\"};\n#include \"foo.hpp\"\n",
+               "",
+               paths{"foo.hpp"});
+
+    check_scan("...nor does one with a trailing space",
+               "const char* s{\"#include \"};\n#include \"foo.hpp\"\n",
+               "",
+               paths{"foo.hpp"});
+
+    check_scan("...nor one with a trailing angle bracket",
+               "const char* s{\"#include <\"};\n#include \"foo.hpp\"\n",
+               "",
+               paths{"foo.hpp"});
+
+    check_scan("A directive with nothing following it",
+               "#include\n#include \"foo.hpp\"\n",
+               "",
+               paths{"foo.hpp"});
+
+    check_scan("A bare hash", "#\n#include \"foo.hpp\"\n", "", paths{"foo.hpp"});
+
+    check_scan("Standard library headers are lexed; filtering them is the caller's business",
+               "#include <vector>\n#include \"foo.hpp\"\n",
+               "",
+               paths{"vector", "foo.hpp"});
+
+    check_scan("An include commented out line-wise",
+               "// #include \"foo.hpp\"\n#include \"bar.hpp\"\n",
+               "",
+               paths{"bar.hpp"});
+
+    check_scan("An include commented out block-wise",
+               "/* #include \"foo.hpp\" */\n#include \"bar.hpp\"\n",
+               "",
+               paths{"bar.hpp"});
+
+    check_scan("A trailing comment ends where the next include begins",
+               "#include \"foo.hpp\" // why\n#include \"bar.hpp\"\n",
+               "",
+               paths{"foo.hpp", "bar.hpp"});
+
+    check_scan("A solidus which opens no comment",
+               "int x{a/b};\n#include \"foo.hpp\"\n",
+               "",
+               paths{"foo.hpp"});
+
+    check_scan("An unterminated block comment consumes the rest of the file",
+               "/* #include \"foo.hpp\"\n#include \"bar.hpp\"\n",
+               "",
+               paths{});
+
+    check_scan("Scanning stops at the first line containing the cutoff",
+               "#include \"foo.hpp\"\nnamespace stuff {}\n#include \"bar.hpp\"\n",
+               "namespace",
+               paths{"foo.hpp"});
+
+    check_scan("An empty cutoff scans to the end",
+               "#include \"foo.hpp\"\nnamespace stuff {}\n#include \"bar.hpp\"\n",
+               "",
+               paths{"foo.hpp", "bar.hpp"});
+
+    check_scan("A cutoff which never appears",
+               "#include \"foo.hpp\"\n#include \"bar.hpp\"\n",
+               "namespace",
+               paths{"foo.hpp", "bar.hpp"});
+
+    check_scan("Conditional compilation is lexed, not evaluated: the guarded include is reported",
+               "#if 0\n#include \"foo.hpp\"\n#endif\n#include \"bar.hpp\"\n",
+               "",
+               paths{"foo.hpp", "bar.hpp"});
+
+    check_scan("A directive inside a string literal is reported, for the same reason",
+               "const char* s{\"#include <foo.hpp>\"};\n#include \"bar.hpp\"\n",
+               "",
+               paths{"foo.hpp", "bar.hpp"});
   }
 
   void dependency_analyzer_free_test::test_exceptions(const project_paths& projPaths)
@@ -395,6 +571,24 @@ namespace sequoia::testing
                        "namespace",
                        {.stale{{{sourceRepo / "Maths" / "Helper.hpp"}, modification_time::early}},
                          .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
+                       {},
+                       {});
+
+    // The lexer's own coverage is in test_source_scanning; these two put the same spellings
+    // through the whole pipeline, so that an edge the scanner reports is an edge the graph has.
+    check_tests_to_run("Source hpp stale, reached by an include whose hash is followed by whitespace",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{sourceRepo / "Stuff" / "Baz.hpp"}, modification_time::early}},
+                         .to_run{{"Stuff/BarFreeTest.cpp"}}},
+                       {},
+                       {});
+
+    check_tests_to_run("Source hpp stale, reached by an include with no space before the header name",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{sourceRepo / "Stuff" / "Qux.hpp"}, modification_time::early}},
+                         .to_run{{"Stuff/BarFreeTest.cpp"}}},
                        {},
                        {});
 

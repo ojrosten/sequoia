@@ -17,7 +17,9 @@ name: rigorous
 # main. If it is not, the columns run on main, as above. If it is, the run opens
 # the promotion PR instead - set to merge itself when green - and the columns run
 # on THAT, through the pull_request trigger, where the result is spendable as the
-# gate. The two are never both paid for on one night. Work lands on staging
+# gate. The two are never both paid for on one night. (A third case: staging is
+# ahead and the PR is already open, in which case nothing runs anywhere that
+# night; the PR re-runs the gate whenever staging moves.) Work lands on staging
 # silently, and without this it accumulated until someone remembered; the PR is
 # the notification, green or red.
 #
@@ -26,9 +28,8 @@ name: rigorous
 #
 # Which columns run which tests is set out below, at the point it is decided. Both
 # Windows columns exclude the performance tests, for the reason every hosted column
-# has them off bar one. Both leave out TestRunnerTest, whose teardown Windows
-# intermittently refuses - roadmap item 134 - and MSVC Release also leaves out
-# TestRunnerProjectFiles, for the reason given below.
+# has them off bar one. MSVC Release also leaves out TestRunnerProjectFiles, for
+# the reason given below.
 #
 # Every column but Linux · GCC · Release carries `--check-versioned-output`,
 # including the Windows and macOS ones, which for a time did not. That one
@@ -129,14 +130,15 @@ name: rigorous
 # tier's - naming only the exclusion would silently lose the drift check - while
 # this column carries an explicitly empty `exec_args`, which is not the same as
 # omitting the key: it runs with no flags at all, and inherits nothing.
-# Both MSVC columns leave out TestRunnerTest: its instability-analysis cleanup
-# calls fs::remove_all on a folder something on Windows still has open, and the
-# delete is refused. Every check in it passes - the run dies in teardown - and it
-# is close to a coin toss. It was thought ASan-specific, on the strength of one
-# uninstrumented run passing, and the exclusion was scoped accordingly; on
-# 2026-09-11 the uninstrumented MSVC Release column failed the same way (run
-# 34607472086), so it is Windows-wide and ASan only widens the window. Roadmap
-# item 134 tracks the fix; this is a stop-gap, not a verdict.
+# Both MSVC columns run TestRunnerTest again. From 2026-09-09 to 2026-09-11 it was
+# excluded: its teardown's fs::remove_all was refused on Windows, close to a coin
+# toss (ASan 2 of 4, Release 1 of 3, Debug 3 of 38), because std::system spawned
+# children with every open file inherited and a spawn on one thread captured a
+# file another thread had open. invoke now spawns with a handle list naming only
+# the standard streams (roadmap item 134). The mechanism is witnessed by a
+# deterministic test; the CI symptom is witnessed only here, so a sharing
+# violation in either column after 2026-09-11 is evidence against the fix, not a
+# flake to re-run.
 on:
   pull_request:
     branches: [main]
@@ -152,6 +154,14 @@ on:
         default: false
   schedule:
     - cron: '0 3 * * *'
+
+# A push to the head of an open PR into main cancels that PR's run in flight: a
+# superseded run cannot gate anything, and its audit would otherwise compare its
+# jobs against the checks of a commit it is not testing. Scheduled and dispatched
+# runs each get a group of their own, so nothing here ever cancels them.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
 
 jobs:
   # Scheduled runs only: which of the two things this run is. The compare endpoint
@@ -183,15 +193,15 @@ jobs:
     uses: ./.github/workflows/tests.yml
     with:
       warnings_as_errors: true
-      false_negative: ${{ github.event_name == 'workflow_dispatch' && inputs.false_negative == true }}
+      false_negative: ${{ inputs.false_negative == true }}
       exec_args: '--check-versioned-output'
       columns: >-
         [
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerTest.cpp"},
+          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance"},
           {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15", "exec_args": ""},
           {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerProjectFiles.cpp;--exclude;Tests/TestFramework/TestRunnerTest.cpp"},
+          {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerProjectFiles.cpp"},
           {"name": "macOS · Clang · Release",  "os": "macos-latest",   "configure": "llvm-env-release",   "build": "llvm-env-release", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
 
@@ -286,7 +296,10 @@ jobs:
   # repository; when it expires this step fails, loudly, which is the point.
   #
   # One PR at a time. If one is already open it is left alone: the gate re-runs on
-  # it whenever staging moves, and if it is red that is the thing to look at.
+  # it whenever staging moves, and if it is red that is the thing to look at. But
+  # an open PR that is green and mergeable should already have merged itself, so
+  # that is reported as a failure rather than as "nothing to do" - the one shape
+  # in which a wedged promotion would otherwise look fine every night.
   promote:
     name: Promote staging
     needs: staging
@@ -300,9 +313,13 @@ jobs:
     steps:
       - name: Open the promotion PR, unless one is open
         run: |
-          open=$(gh pr list --base main --head staging --state open --json number --jq '.[0].number')
+          open=$(gh pr list --base main --head staging --state open --json number --jq '.[0].number // empty')
           if [ -n "$open" ]; then
-            echo "promotion PR #$open is already open"
+            state=$(gh pr view "$open" --json mergeStateStatus,createdAt --jq '"\(.mergeStateStatus) since \(.createdAt)"')
+            echo "promotion PR #$open is already open: $state"
+            case "$state" in
+              CLEAN*) echo "::error::PR #$open is green and mergeable but has not merged; auto-merge is not working"; exit 1;;
+            esac
             exit 0
           fi
           url=$(gh pr create --base main --head staging \
@@ -326,7 +343,7 @@ jobs:
   audit:
     name: Every job ran as this run's mode requires
     needs: [staging, rigorous, docs, coverage, promote]
-    if: always()
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
@@ -336,7 +353,8 @@ jobs:
       AHEAD: ${{ needs.staging.outputs.ahead }}
       RESULTS: ${{ toJSON(needs) }}
       PR: ${{ github.event.pull_request.number }}
-      FALSE_NEGATIVE: ${{ github.event_name == 'workflow_dispatch' && inputs.false_negative == true }}
+      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+      FALSE_NEGATIVE: ${{ inputs.false_negative == true }}
     steps:
       - name: Check each job's result against the mode
         run: |
@@ -371,6 +389,17 @@ jobs:
       - name: On a promotion PR, insist every job of this run is a required check
         if: ${{ github.event_name == 'pull_request' }}
         run: |
+          # A run whose head is no longer the PR's head has been superseded; the PR's
+          # required checks now belong to another commit, and this run gates nothing.
+          # Needed as well as cancel-in-progress, for the seconds before the
+          # cancellation lands and for a push matched by paths-ignore, which moves
+          # the head without starting a run - in which case nothing else will point
+          # at the PR now waiting on checks that never report (roadmap item 145).
+          current_head=$(gh pr view "$PR" --json headRefOid --jq .headRefOid)
+          if [ "$current_head" != "$HEAD_SHA" ]; then
+            echo "::warning::superseded: the PR's head is now $current_head, this run tested $HEAD_SHA. If no run appears for the new head, the PR is waiting on checks that will never report - see roadmap item 145."
+            exit 0
+          fi
           # Only the jobs that ran: staging and promote are skipped on a PR by design.
           gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --paginate \
               --jq '.jobs[] | select(.conclusion != "skipped") | .name' \

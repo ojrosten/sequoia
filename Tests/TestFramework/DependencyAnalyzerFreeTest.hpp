@@ -56,6 +56,8 @@ namespace sequoia::testing
 
     void test_staleness_threshold();
 
+    void test_source_scanning();
+
     void test_exceptions(const project_paths& projPaths);
 
     void test_dependencies(const project_paths& projPaths);
@@ -76,6 +78,11 @@ namespace sequoia::testing
                             std::vector<prune_record> passes);
 
     void check_data(std::string_view description, const test_outcomes& obtained, const test_outcomes& prediction);
+
+    void check_scan(const reporter& description,
+                    std::string_view source,
+                    std::string_view cutoff,
+                    const std::vector<std::filesystem::path>& prediction);
 
     [[nodiscard]]
     static std::chrono::seconds to_duration(modification_time modTime);

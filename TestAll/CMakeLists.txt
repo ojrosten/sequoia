@@ -138,6 +138,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Physics/VectorNonlinearRepresentationsTest.cpp
                ${TestDir}/Physics/VectorPhysicalValueCompositionsTest.cpp
                ${TestDir}/Physics/VectorPhysicalValueTest.cpp
+               ${TestDir}/Runtime/InvokeHandleInheritanceFreeTest.cpp
+               ${TestDir}/Runtime/InvokeInterpreterResolutionFreeTest.cpp
                ${TestDir}/Runtime/ShellCommandsTest.cpp
                ${TestDir}/Runtime/ShellCommandsTestingDiagnostics.cpp
                ${TestDir}/Streaming/StreamingFreeTest.cpp
