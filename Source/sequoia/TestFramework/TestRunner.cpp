@@ -1199,9 +1199,20 @@ namespace sequoia::testing
   {
     if(m_PruneInfo.mode == prune_mode::passive) return prune_outcome::not_attempted;
 
-    if(auto maybeToRun{tests_to_run(proj_paths(), m_PruneInfo.include_cutoff)})
+    if(auto maybeSelection{tests_to_run(proj_paths(), m_PruneInfo.include_cutoff)})
     {
-      for(const auto& src : maybeToRun.value())
+      using parsing::commandline::warning;
+
+      // Only the client knows what the macro names, so they are told and the prune proceeds
+      for(const auto& [file, tokens] : maybeSelection->opaqueIncludes)
+      {
+        const auto relPath{fs::relative(file, proj_paths().project_root()).generic_string()};
+        stream() << warning({relPath + " has '#include " + tokens + "', which names its header by macro expansion.",
+                             "The dependency graph cannot see what it names, so a change to that header selects no tests.",
+                             "Run without 'prune' if this matters."});
+      }
+
+      for(const auto& src : maybeSelection->tests)
       {
         m_Filter.add_selected_item(src);
       }

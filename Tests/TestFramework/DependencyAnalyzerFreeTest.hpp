@@ -58,6 +58,8 @@ namespace sequoia::testing
 
     void test_source_scanning();
 
+    void test_module_scanning();
+
     void test_exceptions(const project_paths& projPaths);
 
     void test_dependencies(const project_paths& projPaths);
@@ -84,7 +86,7 @@ namespace sequoia::testing
     void check_scan(const reporter& description,
                     std::string_view source,
                     std::string_view cutoff,
-                    const std::vector<std::filesystem::path>& prediction);
+                    const source_dependencies& prediction);
 
     void check_round_trip(const reporter& description,
                           const project_paths& projPaths,
@@ -94,6 +96,8 @@ namespace sequoia::testing
     static std::chrono::seconds to_duration(modification_time modTime);
 
     static auto read(const std::filesystem::path& file) -> opt_prune_records;
+
+    static auto selected_tests(std::optional<prune_selection> selection) -> opt_test_list;
 
     static void write_or_remove(const project_paths& projPaths, const std::filesystem::path& file, const opt_prune_records& tests);
 

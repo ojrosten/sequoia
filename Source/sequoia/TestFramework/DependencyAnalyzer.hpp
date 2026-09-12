@@ -37,24 +37,79 @@ namespace sequoia::testing
     friend std::istream& operator>>(std::istream& s, prune_record& record);
   };
 
+  /** \brief Whether a unit declaring a module supplies its interface or one of its definitions.
+
+      `interface_unit` is `export module M;` or `export module M:P;`; `implementation_unit` is
+      `module M;` or `module M:P;`. Of the four, only `module M;` can be named by no other unit.
+      The enumerators are not spelled `interface`/`implementation` because `interface` is a macro in
+      the Windows SDK.
+   */
+  enum class module_role { interface_unit, implementation_unit };
+
+  /** \brief A module declaration, as written. */
+  struct module_declaration
+  {
+    /// `M`, or `M:P` for a partition, with whitespace removed so that `M : P` compares equal.
+    std::string name{};
+    module_role role{};
+
+    [[nodiscard]]
+    friend bool operator==(const module_declaration&, const module_declaration&) noexcept = default;
+
+    /// Renders the declaration as it would have been written, which is how a failure reports it.
+    friend std::ostream& operator<<(std::ostream& s, const module_declaration& declaration)
+    {
+      return s << ((declaration.role == module_role::interface_unit) ? "export module " : "module ")
+               << declaration.name
+               << ';';
+    }
+
+    /// The module a partition belongs to; the whole name for a unit which is not one.
+    [[nodiscard]]
+    std::string_view primary_name() const noexcept;
+  };
+
   /** \brief The dependencies which the text of a single translation unit declares.
 
       Lexed rather than preprocessed, so an `#include` behind a false `#if` or inside a string
       literal is reported all the same: over-reporting costs a test which need not have run, where
-      under-reporting silently skips one which must. Three spellings do slip through - a header named
-      by a macro, one spliced across lines, and one whose tokens a comment separates - and none
-      occurs in a tree read today.
+      under-reporting silently skips one which must. Two spellings do slip through - a header
+      spliced across lines, and one whose tokens a comment separates - and neither occurs in a tree
+      read today.
    */
   struct source_dependencies
   {
     /// Header names exactly as written, neither resolved against the including file nor filtered.
     std::vector<std::filesystem::path> includes{};
+
+    /** What follows `#include` where it is neither `"..."` nor `<...>` - `PLATFORM_HEADER`, say - as
+        written: the tokens whose macro expansion names the header, which only the preprocessor can
+        perform [cpp.include]. Such a header is a dependency the graph cannot see, so these are
+        reported rather than dropped: what is behind one is for the client to judge.
+     */
+    std::vector<std::string> opaqueIncludes{};
+
+    /** Logical module names, as written. A partition imported from within its own module keeps its
+        leading colon - `:P` - because what it abbreviates is only known once the importing unit's
+        own declaration has been read.
+     */
+    std::vector<std::string> imports{};
+
+    /// Absent unless the unit declares a module; `module;` alone introduces no module and is not one.
+    std::optional<module_declaration> declaration{};
   };
 
   /** \brief Lexes the dependencies declared by a translation unit.
 
       Comments are skipped, as is everything from the first line containing `cutoff`; an empty
       `cutoff` scans to the end.
+
+      A `module` or `import` declaration is recognized only where [cpp.pre] lets a directive appear:
+      first on its line, after whitespace containing no newline, and terminated by a semicolon.
+      Neither word is reserved, so a line which begins with one and turns out to be something else
+      is put back untouched and scanned as ordinary text. `import "header.hpp"` and `import <header>`
+      are header units, and are reported as includes, since they are a dependency on a file rather
+      than on a module.
    */
   [[nodiscard]]
   source_dependencies scan_dependencies(std::istream& source, std::string_view cutoff);
@@ -87,8 +142,36 @@ namespace sequoia::testing
 
   void write_tests(const project_paths& projPaths, const std::filesystem::path& file, std::span<const prune_record> tests);
 
+  /// An `#include` whose header is named by macro expansion, located by the file which contains it.
+  struct opaque_include
+  {
+    std::filesystem::path file{};
+    std::string tokens{};
+
+    [[nodiscard]]
+    friend bool operator==(const opaque_include&, const opaque_include&) noexcept = default;
+
+    friend std::ostream& operator<<(std::ostream& s, const opaque_include& include)
+    {
+      return s << include.file.generic_string() << ": #include " << include.tokens;
+    }
+  };
+
+  /** \brief What a prune selects, and what its selection could not take into account.
+
+      A header named by a macro is invisible to the dependency graph, so a change to it selects
+      nothing; each such include is reported here for the client to weigh, since only they know
+      what the macro names.
+   */
+  struct prune_selection
+  {
+    std::vector<std::filesystem::path> tests{};
+    std::vector<opaque_include> opaqueIncludes{};
+  };
+
+  /// Absent when there is no stamp from a previous run to judge staleness against.
   [[nodiscard]]
-  std::optional<std::vector<std::filesystem::path>> tests_to_run(const project_paths& projPaths, std::string_view cutoff);
+  std::optional<prune_selection> tests_to_run(const project_paths& projPaths, std::string_view cutoff);
 
   void update_prune_files(const project_paths& projPaths,
                           std::span<const std::filesystem::path> failedTests,

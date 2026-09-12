@@ -16,6 +16,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <stdexcept>
 
 namespace sequoia::testing
 {
@@ -147,12 +148,10 @@ namespace sequoia::testing
       fs::last_write_time(f.file, m_ResetTime + to_duration(f.modification));
     }
 
-    opt_test_list actual{tests_to_run(projPaths, cutoff)};
-
     opt_test_list prediction{fileStates.to_run};
     std::ranges::sort(*prediction);
 
-    check(equality, description, actual, prediction);
+    check(equality, description, selected_tests(tests_to_run(projPaths, cutoff)), prediction);
 
     for(const auto& f : fileStates.stale)
     {
@@ -162,13 +161,21 @@ namespace sequoia::testing
     fs::remove(failureFile);
     fs::remove(passesFile);
 
-    check(equality, append_lines(description.message(), "Nothing Stale"), tests_to_run(projPaths, cutoff), opt_test_list{test_list{}});
+    check(equality, append_lines(description.message(), "Nothing Stale"), selected_tests(tests_to_run(projPaths, cutoff)), opt_test_list{test_list{}});
+  }
+
+  auto dependency_analyzer_free_test::selected_tests(std::optional<prune_selection> selection) -> opt_test_list
+  {
+    if(!selection) return std::nullopt;
+
+    return std::move(selection->tests);
   }
 
   void dependency_analyzer_free_test::run_tests()
   {
     test_staleness_threshold();
     test_source_scanning();
+    test_module_scanning();
 
     m_ResetTime = std::chrono::file_clock::now() + resetOffset;
 
@@ -177,7 +184,7 @@ namespace sequoia::testing
     commandline_arguments args{{(fake / "build/CMade/TestAll/TestAll").generic_string()}};
     const project_paths projPaths{args.size(), args.get(), {.additional_dependency_analysis_paths{{"TestUtilities"}, {"dependencies/foo/Source"}}, .main_cpp{main.file()}, .common_includes{main.file()}}};
 
-    check(equality, "No timestamp", tests_to_run(projPaths, ""), opt_test_list{});
+    check(equality, "No timestamp", selected_tests(tests_to_run(projPaths, "")), opt_test_list{});
 
     const auto prunePaths{projPaths.prune()};
     fs::create_directories(prunePaths.dir());
@@ -229,175 +236,338 @@ namespace sequoia::testing
   void dependency_analyzer_free_test::check_scan(const reporter& description,
                                                  std::string_view source,
                                                  std::string_view cutoff,
-                                                 const std::vector<fs::path>& prediction)
+                                                 const source_dependencies& prediction)
   {
-    std::istringstream stream{std::string{source}};
-    check(equality, description, scan_dependencies(stream, cutoff).includes, prediction);
+    auto checkAgainst{
+      [this, &description, &prediction](std::string_view via, const source_dependencies& scanned) {
+        const auto message{append_lines(description.message(), via)};
+
+        check(equality, append_lines(message, "Includes"),        scanned.includes,        prediction.includes);
+        check(equality, append_lines(message, "Opaque Includes"), scanned.opaqueIncludes,  prediction.opaqueIncludes);
+        check(equality, append_lines(message, "Imports"),         scanned.imports,         prediction.imports);
+        check(equality, append_lines(message, "Declaration"),     scanned.declaration,     prediction.declaration);
+      }
+    };
+
+    {
+      std::istringstream stream{std::string{source}};
+      checkAgainst("Scanned from memory", scan_dependencies(stream, cutoff));
+    }
+
+    // A file is not a string: `tellg` on a `std::filebuf` discards the putback area, where a
+    // `std::stringbuf` keeps it, so a scan which rewinds is only witnessed through a file. Binary,
+    // since MSVC's text-mode `tellg` does not round-trip on LF files.
+    const auto file{auxiliary_materials() / "SourceUnderScan.txt"};
+    { std::ofstream{file, std::ios_base::binary} << source; }
+
+    std::ifstream stream{file, std::ios_base::binary};
+    if(!stream) throw std::runtime_error{"Unable to open " + file.generic_string()};
+
+    checkAgainst("Scanned from a file", scan_dependencies(stream, cutoff));
   }
 
   void dependency_analyzer_free_test::test_source_scanning()
   {
-    using paths = std::vector<fs::path>;
+    check_scan("Nothing at all", "", "", {.includes{}});
+    check_scan("Source with no directives", "int main() { return 0; }\n", "", {.includes{}});
 
-    check_scan("Nothing at all", "", "", paths{});
-    check_scan("Source with no directives", "int main() { return 0; }\n", "", paths{});
-
-    check_scan("Quoted header name",  "#include \"foo.hpp\"\n", "", paths{"foo.hpp"});
-    check_scan("Angled header name",  "#include <foo.hpp>\n",   "", paths{"foo.hpp"});
-    check_scan("Header name carrying a directory", "#include \"Stuff/Foo.hpp\"\n", "", paths{"Stuff/Foo.hpp"});
+    check_scan("Quoted header name",  "#include \"foo.hpp\"\n", "", {.includes{"foo.hpp"}});
+    check_scan("Angled header name",  "#include <foo.hpp>\n",   "", {.includes{"foo.hpp"}});
+    check_scan("Header name carrying a directory", "#include \"Stuff/Foo.hpp\"\n", "", {.includes{"Stuff/Foo.hpp"}});
     check_scan("Several includes, in the order written",
                "#include \"foo.hpp\"\n#include <bar.hpp>\n#include \"baz.hpp\"\n",
                "",
-               paths{"foo.hpp", "bar.hpp", "baz.hpp"});
+               {.includes{"foo.hpp", "bar.hpp", "baz.hpp"}});
 
     check_scan("A preceding directive does not swallow the include on the next line",
                "#ifdef SOMETHING\n#endif\n#include \"foo.hpp\"\n",
                "",
-               paths{"foo.hpp"});
+               {.includes{"foo.hpp"}});
 
     check_scan("...nor does one carrying a trailing comment",
                "#ifdef SOMETHING\n#endif // SOMETHING\n#include \"foo.hpp\"\n",
                "",
-               paths{"foo.hpp"});
+               {.includes{"foo.hpp"}});
 
     check_scan("A tab separates the directive name from the header name",
                "#include\t\"foo.hpp\"\n",
                "",
-               paths{"foo.hpp"});
+               {.includes{"foo.hpp"}});
 
     check_scan("Nothing at all separates the directive name from the header name",
                "#include\"foo.hpp\"\n",
                "",
-               paths{"foo.hpp"});
+               {.includes{"foo.hpp"}});
 
     check_scan("...and the same for an angled one",
                "#include<foo.hpp>\n",
                "",
-               paths{"foo.hpp"});
+               {.includes{"foo.hpp"}});
 
     check_scan("A space separates the hash from the directive name",
                "# include \"foo.hpp\"\n",
                "",
-               paths{"foo.hpp"});
+               {.includes{"foo.hpp"}});
 
     check_scan("A tab separates the hash from the directive name",
                "#\tinclude <foo.hpp>\n",
                "",
-               paths{"foo.hpp"});
+               {.includes{"foo.hpp"}});
 
     check_scan("Both separations at once, each spelled differently",
                "#  include\t<foo.hpp>\n",
                "",
-               paths{"foo.hpp"});
+               {.includes{"foo.hpp"}});
 
     check_scan("A vertical tab separates the tokens",
                "#\vinclude\v\"foo.hpp\"\n",
                "",
-               paths{"foo.hpp"});
+               {.includes{"foo.hpp"}});
 
     check_scan("A form feed separates the tokens",
                "#\finclude\f\"foo.hpp\"\n",
                "",
-               paths{"foo.hpp"});
+               {.includes{"foo.hpp"}});
 
-    check_scan("Indented directive", "  \t#include \"foo.hpp\"\n", "", paths{"foo.hpp"});
+    check_scan("Indented directive", "  \t#include \"foo.hpp\"\n", "", {.includes{"foo.hpp"}});
 
     check_scan("Carriage returns do not reach the header name",
                "#ifdef SOMETHING\r\n#endif\r\n#include \"foo.hpp\"\r\n#include <bar.hpp>\r\n",
                "",
-               paths{"foo.hpp", "bar.hpp"});
+               {.includes{"foo.hpp", "bar.hpp"}});
 
     check_scan("A directive name of which `include` is merely a prefix",
                "#included \"foo.hpp\"\n",
                "",
-               paths{});
+               {.includes{}});
 
-    check_scan("An undelimited header name is not one",
+    check_scan("An undelimited header name is not one, and is reported as opaque",
                "#include foo.hpp\n#include \"bar.hpp\"\n",
                "",
-               paths{"bar.hpp"});
+               {.includes{"bar.hpp"}, .opaqueIncludes{"foo.hpp"}});
+
+    check_scan("A header named by a macro is opaque",
+               "#include PLATFORM_HEADER\n",
+               "",
+               {.opaqueIncludes{"PLATFORM_HEADER"}});
+
+    check_scan("...as is one named by a function-like macro, reported as written",
+               "#include BOOST_PP_ITERATE()\n#include \"foo.hpp\"\n",
+               "",
+               {.includes{"foo.hpp"}, .opaqueIncludes{"BOOST_PP_ITERATE()"}});
+
+    check_scan("An opaque include's trailing whitespace and carriage return are not part of it",
+               "#include PLATFORM_HEADER \t\r\n",
+               "",
+               {.opaqueIncludes{"PLATFORM_HEADER"}});
+
+    check_scan("An opaque include does not swallow the line after it",
+               "#include PLATFORM_HEADER\nimport std;\n",
+               "",
+               {.opaqueIncludes{"PLATFORM_HEADER"}, .imports{"std"}});
 
     check_scan("A header name which the file ends in the middle of",
                "#include \"foo.hpp",
                "",
-               paths{});
+               {});
 
     check_scan("A string literal spelled exactly `\"#include\"` opens no header name",
                "std::string_view tag{\"#include\"};\n#include \"foo.hpp\"\n",
                "",
-               paths{"foo.hpp"});
+               {.includes{"foo.hpp"}});
 
     check_scan("...nor does one with a trailing space",
                "const char* s{\"#include \"};\n#include \"foo.hpp\"\n",
                "",
-               paths{"foo.hpp"});
+               {.includes{"foo.hpp"}});
 
     check_scan("...nor one with a trailing angle bracket",
                "const char* s{\"#include <\"};\n#include \"foo.hpp\"\n",
                "",
-               paths{"foo.hpp"});
+               {.includes{"foo.hpp"}});
 
-    check_scan("A directive with nothing following it",
+    check_scan("A directive with nothing following it names nothing, opaquely or otherwise",
                "#include\n#include \"foo.hpp\"\n",
                "",
-               paths{"foo.hpp"});
+               {.includes{"foo.hpp"}});
 
-    check_scan("A bare hash", "#\n#include \"foo.hpp\"\n", "", paths{"foo.hpp"});
+    check_scan("A bare hash", "#\n#include \"foo.hpp\"\n", "", {.includes{"foo.hpp"}});
 
     check_scan("Standard library headers are lexed; filtering them is the caller's business",
                "#include <vector>\n#include \"foo.hpp\"\n",
                "",
-               paths{"vector", "foo.hpp"});
+               {.includes{"vector", "foo.hpp"}});
 
     check_scan("An include commented out line-wise",
                "// #include \"foo.hpp\"\n#include \"bar.hpp\"\n",
                "",
-               paths{"bar.hpp"});
+               {.includes{"bar.hpp"}});
 
     check_scan("An include commented out block-wise",
                "/* #include \"foo.hpp\" */\n#include \"bar.hpp\"\n",
                "",
-               paths{"bar.hpp"});
+               {.includes{"bar.hpp"}});
 
     check_scan("A trailing comment ends where the next include begins",
                "#include \"foo.hpp\" // why\n#include \"bar.hpp\"\n",
                "",
-               paths{"foo.hpp", "bar.hpp"});
+               {.includes{"foo.hpp", "bar.hpp"}});
 
     check_scan("A solidus which opens no comment",
                "int x{a/b};\n#include \"foo.hpp\"\n",
                "",
-               paths{"foo.hpp"});
+               {.includes{"foo.hpp"}});
 
     check_scan("An unterminated block comment consumes the rest of the file",
                "/* #include \"foo.hpp\"\n#include \"bar.hpp\"\n",
                "",
-               paths{});
+               {.includes{}});
 
     check_scan("Scanning stops at the first line containing the cutoff",
                "#include \"foo.hpp\"\nnamespace stuff {}\n#include \"bar.hpp\"\n",
                "namespace",
-               paths{"foo.hpp"});
+               {.includes{"foo.hpp"}});
 
     check_scan("An empty cutoff scans to the end",
                "#include \"foo.hpp\"\nnamespace stuff {}\n#include \"bar.hpp\"\n",
                "",
-               paths{"foo.hpp", "bar.hpp"});
+               {.includes{"foo.hpp", "bar.hpp"}});
 
     check_scan("A cutoff which never appears",
                "#include \"foo.hpp\"\n#include \"bar.hpp\"\n",
                "namespace",
-               paths{"foo.hpp", "bar.hpp"});
+               {.includes{"foo.hpp", "bar.hpp"}});
 
     check_scan("Conditional compilation is lexed, not evaluated: the guarded include is reported",
                "#if 0\n#include \"foo.hpp\"\n#endif\n#include \"bar.hpp\"\n",
                "",
-               paths{"foo.hpp", "bar.hpp"});
+               {.includes{"foo.hpp", "bar.hpp"}});
 
     check_scan("A directive inside a string literal is reported, for the same reason",
                "const char* s{\"#include <foo.hpp>\"};\n#include \"bar.hpp\"\n",
                "",
-               paths{"foo.hpp", "bar.hpp"});
+               {.includes{"foo.hpp", "bar.hpp"}});
+  }
+
+  /** `module` and `import` are not reserved words, so the scan has to be able to try a line and
+      change its mind. Every case which is not a declaration therefore asserts that something later
+      in the file - an include, or the cutoff - is still seen, since a line consumed by a failed
+      attempt is a line the rest of the scan never gets.
+   */
+  void dependency_analyzer_free_test::test_module_scanning()
+  {
+    using enum module_role;
+
+    check_scan("A primary module interface",
+               "export module sequoia.test_framework;\n",
+               "",
+               {.declaration{module_declaration{"sequoia.test_framework", interface_unit}}});
+
+    check_scan("A module partition interface",
+               "export module sequoia.test_framework:DependencyAnalyzer;\n",
+               "",
+               {.declaration{module_declaration{"sequoia.test_framework:DependencyAnalyzer", interface_unit}}});
+
+    check_scan("A partition whose colon is spaced, which names the same module",
+               "export module sequoia.test_framework : DependencyAnalyzer;\n",
+               "",
+               {.declaration{module_declaration{"sequoia.test_framework:DependencyAnalyzer", interface_unit}}});
+
+    check_scan("An implementation unit",
+               "module sequoia.test_framework;\n",
+               "",
+               {.declaration{module_declaration{"sequoia.test_framework", implementation_unit}}});
+
+    check_scan("A partition implementation unit",
+               "module sequoia.test_framework:Internals;\n",
+               "",
+               {.declaration{module_declaration{"sequoia.test_framework:Internals", implementation_unit}}});
+
+    check_scan("A global module fragment introduces no module",
+               "module;\n",
+               "",
+               {});
+
+    check_scan("An implementation unit's whole preamble",
+               "module;\n\n#include \"sequoia/PlatformSpecific/Macros.hpp\"\n\nmodule sequoia.test_framework;\n\nimport std;\nimport sequoia.maths.graph;\n",
+               "",
+               {.includes{"sequoia/PlatformSpecific/Macros.hpp"},
+                .imports{"std", "sequoia.maths.graph"},
+                .declaration{module_declaration{"sequoia.test_framework", implementation_unit}}});
+
+    check_scan("Imports, in the order written",
+               "import std;\nimport sequoia.maths.graph;\nimport sequoia.streaming;\n",
+               "",
+               {.imports{"std", "sequoia.maths.graph", "sequoia.streaming"}});
+
+    check_scan("A partition imported from within its own module keeps its leading colon",
+               "export module sequoia.test_framework:DependencyAnalyzer;\n\nimport :ProjectPaths;\n",
+               "",
+               {.imports{":ProjectPaths"},
+                .declaration{module_declaration{"sequoia.test_framework:DependencyAnalyzer", interface_unit}}});
+
+    check_scan("A re-exported import is an import",
+               "export import :ProjectPaths;\nexport import sequoia.streaming;\n",
+               "",
+               {.imports{":ProjectPaths", "sequoia.streaming"}});
+
+    check_scan("A header unit is a dependency on a file, so it is an include",
+               "import \"foo.hpp\";\nimport <vector>;\n",
+               "",
+               {.includes{"foo.hpp", "vector"}});
+
+    check_scan("Horizontal whitespace may precede a declaration and separate its parts",
+               "  \texport\tmodule\tM;\n\timport\tstd;\n",
+               "",
+               {.imports{"std"}, .declaration{module_declaration{"M", interface_unit}}});
+
+    check_scan("A commented-out import",
+               "// import std;\n#include \"foo.hpp\"\n",
+               "",
+               {.includes{"foo.hpp"}});
+
+    check_scan("An import which is not the first thing on its line is not a declaration",
+               "int x{}; import std;\n#include \"foo.hpp\"\n",
+               "",
+               {.includes{"foo.hpp"}});
+
+    check_scan("An identifier which merely begins with import",
+               "import_thing();\n#include \"foo.hpp\"\n",
+               "",
+               {.includes{"foo.hpp"}});
+
+    check_scan("A variable which happens to be called module",
+               "module = 3;\n#include \"foo.hpp\"\n",
+               "",
+               {.includes{"foo.hpp"}});
+
+    check_scan("An import of something which is not spelled as a module name",
+               "import 3;\n#include \"foo.hpp\"\n",
+               "",
+               {.includes{"foo.hpp"}});
+
+    check_scan("A line beginning with export which declares neither a module nor an import",
+               "export int x{};\n#include \"foo.hpp\"\n",
+               "",
+               {.includes{"foo.hpp"}});
+
+    // Without the rewind, `export namespace` would consume the word the cutoff is looking for and
+    // the scan would run on into the body of the file.
+    check_scan("The cutoff still fires on a line which begins with export",
+               "import std;\nexport namespace stuff {}\n#include \"foo.hpp\"\n",
+               "namespace",
+               {.imports{"std"}});
+
+    check_scan("A cutoff which begins as a declaration might does not hide the declaration",
+               "import std;\nint main() {}\n#include \"foo.hpp\"\n",
+               "int main",
+               {.imports{"std"}});
+
+    check_scan("A test's preamble as the migration writes it",
+               "#include \"DependencyAnalyzerFreeTest.hpp\"\n#include \"sequoia/TestFramework/Macros.hpp\"\n\nimport std;\nimport sequoia.test_framework;\n\nnamespace sequoia::testing\n{\n}\n",
+               "namespace",
+               {.includes{"DependencyAnalyzerFreeTest.hpp", "sequoia/TestFramework/Macros.hpp"},
+                .imports{"std", "sequoia.test_framework"}});
   }
 
   void dependency_analyzer_free_test::test_exceptions(const project_paths& projPaths)
@@ -448,6 +618,11 @@ namespace sequoia::testing
 
     fs::copy(projPaths.prune().external_dependencies(), working_materials());
     check(weak_equivalence, "External Dependencies", working_materials(), predictive_materials());
+
+    check(equality,
+          "Opaque includes are reported, and are not external dependencies",
+          tests_to_run(projPaths, "").value().opaqueIncludes,
+          std::vector<opaque_include>{{sourceRepo / "Utilities" / "Platform.hpp", "PLATFORM_HEADER"}});
 
     check_tests_to_run("Test cpp stale (no cutoff)",
                        projPaths,
@@ -651,6 +826,60 @@ namespace sequoia::testing
                        {},
                        {{"Cycle/FirstFreeTest.cpp", m_ResetTime + to_duration(modification_time::very_early)}});
 
+    /* The Widgets corner of the fake project is built from modules rather than headers, in the
+       shape the migration uses: a primary interface which re-exports its partitions, a partition
+       which imports another by its abbreviated name, and an implementation unit which nothing can
+       name. GadgetTest reaches all of it through one `import fakeProject.widgets;` in its header.
+
+       The implementation unit is the case worth stating plainly. Nothing imports it, so no edge
+       runs from the test to it; the edge runs the other way, from the interface to the unit, because
+       everything importing the module links against the unit and must re-run when it changes.
+    */
+    const auto widgetTests{test_list{{"Widgets/GadgetTest.cpp"}}};
+    const auto widgets{sourceRepo / "Widgets"};
+
+    check_tests_to_run("The primary module interface is stale",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{widgets / "Widgets.cppm"}, modification_time::early}}, .to_run{widgetTests}},
+                       {},
+                       {});
+
+    check_tests_to_run("A partition the primary interface re-exports is stale",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{widgets / "Gadget.cppm"}, modification_time::early}}, .to_run{widgetTests}},
+                       {},
+                       {});
+
+    check_tests_to_run("A partition reached only through another partition is stale",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{widgets / "Doodad.cppm"}, modification_time::early}}, .to_run{widgetTests}},
+                       {},
+                       {});
+
+    check_tests_to_run("An implementation unit, which nothing imports, is stale",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{widgets / "Gadget.cpp"}, modification_time::early}}, .to_run{widgetTests}},
+                       {},
+                       {});
+
+    check_tests_to_run("A partition implementation unit, which only its own module imports, is stale",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{widgets / "Sprocket.cpp"}, modification_time::early}}, .to_run{widgetTests}},
+                       {},
+                       {});
+
+    check_tests_to_run("The test's own header is stale (reached by its include, so a control)",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{testRepo / "Widgets" / "GadgetTest.hpp"}, modification_time::early}}, .to_run{widgetTests}},
+                       {},
+                       {});
+
     check_tests_to_run("Source cpp indirectly stale via cpp definitions for included header",
                        projPaths,
                        "namespace",
@@ -777,13 +1006,13 @@ namespace sequoia::testing
 
     check(equality,
           "A modification recorded at a stamp which lies on a second boundary is stale",
-          tests_to_run(projPaths, ""),
+          selected_tests(tests_to_run(projPaths, "")),
           opt_test_list{test_list{{"HouseAllocationTest.cpp"}}});
 
     fs::last_write_time(stalePath, m_ResetTime);
     fs::last_write_time(projPaths.prune().stamp(), m_ResetTime + pruneStampOffset);
 
-    check(equality, "Nothing Stale", tests_to_run(projPaths, ""), opt_test_list{test_list{}});
+    check(equality, "Nothing Stale", selected_tests(tests_to_run(projPaths, "")), opt_test_list{test_list{}});
   }
 
   void dependency_analyzer_free_test::test_pass_recorded_in_the_modification_second(const project_paths& projPaths)
@@ -810,7 +1039,7 @@ namespace sequoia::testing
 
     check(equality,
           "A pass whose record ties the modification still post-dates it, so the test is not re-run",
-          tests_to_run(projPaths, ""),
+          selected_tests(tests_to_run(projPaths, "")),
           opt_test_list{test_list{}});
 
     fs::last_write_time(testFile, m_ResetTime);
