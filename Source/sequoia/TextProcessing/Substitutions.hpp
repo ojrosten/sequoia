@@ -120,6 +120,13 @@ namespace sequoia
   [[nodiscard]]
   std::string replace_all(std::string_view text, std::string_view anyOfLeft, std::string_view from, std::string_view anyOfRight, std::string_view to);
 
+  /** \brief Replaces every occurrence of `from` whose neighbours both satisfy the given predicates.
+
+      A match at the start or end of the text is offered `\0` for the neighbour it does not have.
+      Where the predicates admit everything this agrees with `replace_all(text, from, to)`.
+
+      \pre `from` is not empty.
+   */
   template<invocable_exact_r<bool, char> LeftPred, invocable_exact_r<bool, char> RightPred>
   std::string& replace_all(std::string& text, LeftPred lPred, std::string_view from, RightPred rPred, std::string_view to)
   {
@@ -133,11 +140,11 @@ namespace sequoia
         )
       {
         text.replace(pos, from.length(), to);
-        pos += (to.length() + 1);
+        pos += to.length();
       }
       else
       {
-        pos += (from.length() + 1) ;
+        ++pos;
       }
     }
 

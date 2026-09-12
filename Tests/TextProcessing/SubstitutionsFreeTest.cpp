@@ -104,6 +104,20 @@ namespace sequoia::testing
     check(equality, "LR multiple replacement", replace_all(",foo,foo,", ",<", "foo", ",>", "bar"), ",bar,bar,"s);
     check(equality, "L single replacement", replace_all(",foo", ",<", "foo", "", "baz"), ",baz"s);
     check(equality, "R single replacement", replace_all("foo,", "", "foo", ",", "baz"), "baz,"s);
+
+    // An empty set of permitted neighbours is no constraint, so this overload must agree with the plain one
+    check(equality, "LR adjacent replacements",          replace_all("foofoo", "", "foo", "", "bar"), replace_all("foofoo", "foo", "bar"));
+    check(equality, "LR three adjacent replacements",    replace_all("aaa",    "", "a",   "", "b"),   "bbb"s);
+    check(equality, "LR adjacent replacements, growing", replace_all("aa",     "", "a",   "", "bb"),  "bbbb"s);
+
+    // A candidate rejected on its neighbours must not hide an overlapping one which qualifies
+    check(equality, "L rejected candidate overlapping an admissible one", replace_all("aaa", "a", "aa", "", "b"), "ab"s);
+
+    // The predicate overload, since no set of characters spells the end of the text
+    check(equality,
+          "R rejected candidate overlapping an admissible one",
+          replace_all("aaa", [](char){ return true; }, "aa", [](char c){ return c == '\0'; }, "b"),
+          "ab"s);
   }
 
   void substitutions_free_test::test_replace_all_recursive()
