@@ -58,6 +58,8 @@ namespace sequoia::testing
 
     void test_source_scanning();
 
+    void test_module_scanning();
+
     void test_exceptions(const project_paths& projPaths);
 
     void test_dependencies(const project_paths& projPaths);
@@ -84,7 +86,7 @@ namespace sequoia::testing
     void check_scan(const reporter& description,
                     std::string_view source,
                     std::string_view cutoff,
-                    const std::vector<std::filesystem::path>& prediction);
+                    const source_dependencies& prediction);
 
     void check_round_trip(const reporter& description,
                           const project_paths& projPaths,
