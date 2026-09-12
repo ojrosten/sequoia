@@ -451,21 +451,42 @@ namespace sequoia::testing
 
       build_dependencies(g, projPaths, cutoff);
 
+      bool changed{};
+
       auto nodesLate{
-        [&g](const std::size_t node) {
+        [&g, &changed](const std::size_t node) {
+          auto& wt{g.begin_node_weights()[node]};
+
           for(const auto& edge : g.cedges(node))
           {
-            auto& wt{g.begin_node_weights()[node]};
-            auto& targetWt{g.cbegin_node_weights()[edge.target_node()]};
+            const auto& targetWt{g.cbegin_node_weights()[edge.target_node()]};
 
-            wt.implicit_modification_time = std::ranges::max(wt.implicit_modification_time, targetWt.implicit_modification_time);
+            if(targetWt.implicit_modification_time > wt.implicit_modification_time)
+            {
+              wt.implicit_modification_time = targetWt.implicit_modification_time;
+              changed = true;
+            }
 
-            if(targetWt.stale) wt.stale = true;
+            if(targetWt.stale && !wt.stale)
+            {
+              wt.stale = true;
+              changed = true;
+            }
           }
         }
       };
 
-      traverse(depth_first, g, find_disconnected_t{0}, null_func_obj{}, nodesLate);
+      /* A single post-order pass is exact only on a DAG, and headers may include one another.
+         Rejecting a cycle is not an option, since mutual inclusion is legal, so the fold is
+         repeated until it changes nothing: it only ever sets a flag or advances a time, and so
+         reaches its fixed point - stale if anything reachable is stale, and the newest time
+         among them. On a DAG that is one pass to do the work and one to confirm it.
+       */
+      do
+      {
+        changed = false;
+        traverse(depth_first, g, find_disconnected_t{0}, null_func_obj{}, nodesLate);
+      } while(changed);
 
       const auto passesFile{projPaths.prune().selected_passes(std::nullopt)};
       const auto passingTestsFromFile{read_tests(passesFile)};
