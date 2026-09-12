@@ -37,6 +37,38 @@ namespace sequoia::testing
     friend std::istream& operator>>(std::istream& s, prune_record& record);
   };
 
+  /** \brief Whether a unit declaring a module supplies its interface or one of its definitions.
+
+      `interface_unit` is `export module M;` or `export module M:P;`; `implementation_unit` is
+      `module M;` or `module M:P;`. Of the four, only `module M;` can be named by no other unit.
+      The enumerators are not spelled `interface`/`implementation` because `interface` is a macro in
+      the Windows SDK.
+   */
+  enum class module_role { interface_unit, implementation_unit };
+
+  /** \brief A module declaration, as written. */
+  struct module_declaration
+  {
+    /// `M`, or `M:P` for a partition, with whitespace removed so that `M : P` compares equal.
+    std::string name{};
+    module_role role{};
+
+    [[nodiscard]]
+    friend bool operator==(const module_declaration&, const module_declaration&) noexcept = default;
+
+    /// Renders the declaration as it would have been written, which is how a failure reports it.
+    friend std::ostream& operator<<(std::ostream& s, const module_declaration& declaration)
+    {
+      return s << ((declaration.role == module_role::interface_unit) ? "export module " : "module ")
+               << declaration.name
+               << ';';
+    }
+
+    /// The module a partition belongs to; the whole name for a unit which is not one.
+    [[nodiscard]]
+    std::string_view primary_name() const noexcept;
+  };
+
   /** \brief The dependencies which the text of a single translation unit declares.
 
       Lexed rather than preprocessed, so an `#include` behind a false `#if` or inside a string
@@ -49,12 +81,27 @@ namespace sequoia::testing
   {
     /// Header names exactly as written, neither resolved against the including file nor filtered.
     std::vector<std::filesystem::path> includes{};
+
+    /** Logical module names, as written. A partition imported from within its own module keeps its
+        leading colon - `:P` - because what it abbreviates is only known once the importing unit's
+        own declaration has been read.
+     */
+    std::vector<std::string> imports{};
+
+    /// Absent unless the unit declares a module; `module;` alone introduces no module and is not one.
+    std::optional<module_declaration> declaration{};
   };
 
   /** \brief Lexes the dependencies declared by a translation unit.
 
       Comments are skipped, as is everything from the first line containing `cutoff`; an empty
       `cutoff` scans to the end.
+
+      A `module` or `import` declaration is recognized only where one may appear: at the start of a
+      line, up to horizontal whitespace, and terminated by a semicolon. Neither word is reserved, so
+      a line which begins with one and turns out to be something else is put back untouched and
+      scanned as ordinary text. `import "header.hpp"` and `import <header>` are header units, and
+      are reported as includes, since they are a dependency on a file rather than on a module.
    */
   [[nodiscard]]
   source_dependencies scan_dependencies(std::istream& source, std::string_view cutoff);

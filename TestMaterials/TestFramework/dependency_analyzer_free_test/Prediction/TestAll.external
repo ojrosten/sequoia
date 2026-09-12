@@ -9,3 +9,4 @@ sequoia/TestFramework/PerformanceTestCore.hpp
 sequoia/TestFramework/RegularAllocationTestCore.hpp
 sequoia/TestFramework/RegularTestCore.hpp
 sequoia/TextProcessing/Substitutions.hpp
+std

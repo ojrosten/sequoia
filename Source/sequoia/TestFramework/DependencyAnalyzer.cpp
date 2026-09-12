@@ -13,15 +13,19 @@
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <algorithm>
 #include <charconv>
 #include <chrono>
 #include <concepts>
 #include <cstdint>
 #include <format>
 #include <fstream>
+#include <map>
 #include <optional>
+#include <ranges>
 #include <string>
 #include <string_view>
+#include <utility>
 
 namespace sequoia::testing
 {
@@ -172,9 +176,9 @@ namespace sequoia::testing
       return str;
     }
 
-    /// Everything [cpp.pre] admits between a directive's tokens: any whitespace but the newline ending it.
+    /// Whitespace which does not end a line: everything [cpp.pre] admits between a directive's tokens.
     [[nodiscard]]
-    bool is_directive_space(char c) noexcept
+    bool is_horizontal_space(char c) noexcept
     {
       return (c == ' ') || (c == '\t') || (c == '\v') || (c == '\f');
     }
@@ -189,9 +193,9 @@ namespace sequoia::testing
              || (c == '_');
     }
 
-    void skip_directive_space(std::istream& istr)
+    void skip_horizontal_space(std::istream& istr)
     {
-      read_while(istr, [](char c){ return is_directive_space(c); });
+      read_while(istr, [](char c){ return is_horizontal_space(c); });
     }
 
     /// Reads an identifier, leaving the first character which cannot extend one unconsumed.
@@ -201,7 +205,8 @@ namespace sequoia::testing
       return read_while(istr, [](char c){ return is_identifier_char(c); });
     }
 
-    /** \brief Reads a header name, or nothing if the line ends before the closing delimiter does.
+    /** \brief Reads a delimited header name, or nothing if there is no opening delimiter or the
+               line ends before the closing one does.
 
         A header name cannot cross a newline [lex.header], so a `"` or `<` left unclosed on its
         line opens none. The scan has no notion of a string literal, so without that bound
@@ -209,8 +214,13 @@ namespace sequoia::testing
         consuming every `#include` up to the next quotation mark.
      */
     [[nodiscard]]
-    std::string read_header_name(std::istream& istr, char closing)
+    std::string read_header_name(std::istream& istr)
     {
+      const auto opening{istr.peek()};
+      const char closing{(opening == '\"') ? '\"' : (opening == '<') ? '>' : '\0'};
+      if(!closing) return {};
+
+      istr.get();
       std::string name{read_while(istr, [closing](char c){ return (c != closing) && (c != '\n'); })};
       if(istr.peek() != closing) return {};
 
@@ -219,21 +229,139 @@ namespace sequoia::testing
       return name;
     }
 
-    /// No rebasing perfomed
-    void write_tests(const fs::path& file, const std::vector<fs::path>& tests)
+    /** \brief Reads to the end of a declaration, returning its subject with all whitespace removed.
+
+        A module name may be written `M : P` as readily as `M:P`, so the spaces cannot be kept if
+        two spellings of one name are to compare equal.
+     */
+    [[nodiscard]]
+    std::string declaration_subject(std::istream& istr)
+    {
+      auto subject{read_until(istr, ";\n")};
+      std::erase_if(subject, [](char c){ return is_horizontal_space(c) || (c == '\r'); });
+
+      return subject;
+    }
+
+    /** \brief Whether a string is spelled as a module name.
+
+        Neither `module` nor `import` is a reserved word, so a line beginning with one may be
+        ordinary code. Requiring what follows to look like a module name - identifier characters and
+        dots, with at most one colon introducing a partition, and a leading colon permitted for a
+        partition of the unit's own module - is what keeps `module = 3;` from declaring a module.
+     */
+    [[nodiscard]]
+    bool is_module_name(std::string_view name)
+    {
+      const auto isIdentifier{
+        [](std::string_view part) {
+          return    !part.empty()
+                 && !((part.front() >= '0') && (part.front() <= '9'))
+                 && std::ranges::all_of(part, [](char c){ return is_identifier_char(c); });
+        }
+      };
+
+      const auto isDottedName{
+        [isIdentifier](std::string_view dotted) {
+          return    !dotted.empty()
+                 && std::ranges::all_of(std::views::split(dotted, '.'), [isIdentifier](const auto& part){ return isIdentifier(std::string_view{part}); });
+        }
+      };
+
+      const auto colon{name.find(':')};
+      if(colon == std::string_view::npos) return isDottedName(name);
+
+      if(name.find(':', colon + 1) != std::string_view::npos) return false;
+
+      // A leading colon abbreviates a partition of the importing unit's own module
+      return    ((colon == 0) || isDottedName(name.substr(0, colon)))
+             && isDottedName(name.substr(colon + 1));
+    }
+
+    /** \brief Consumes a module or import declaration, reporting whether the line was one.
+
+        Neither `module` nor `import` is reserved, so a line which begins with one need not be a
+        declaration. Returning false leaves the stream wherever the attempt reached and asks the
+        caller to rewind, which is what allows the attempt to be made at all.
+     */
+    [[nodiscard]]
+    bool consume_module_declaration(std::istream& istr, std::string_view keyword, module_role role, source_dependencies& dependencies)
+    {
+      if(keyword == "import")
+      {
+        skip_horizontal_space(istr);
+
+        // A header unit is a dependency on a file, so it belongs with the includes
+        if(const auto delimiter{istr.peek()}; (delimiter == '\"') || (delimiter == '<'))
+        {
+          fs::path header{read_header_name(istr)};
+          if(header.empty()) return false;
+
+          dependencies.includes.push_back(std::move(header));
+          return true;
+        }
+
+        auto name{declaration_subject(istr)};
+        if(!is_module_name(name)) return false;
+
+        dependencies.imports.push_back(std::move(name));
+        return true;
+      }
+
+      if(keyword == "module")
+      {
+        auto name{declaration_subject(istr)};
+
+        // `module;` introduces the global module fragment and declares nothing; `export module;` is not a thing
+        if(name.empty()) return role == module_role::implementation_unit;
+
+        // A partition names the module it belongs to when it declares itself; only an import may abbreviate
+        if(name.starts_with(':') || !is_module_name(name)) return false;
+
+        dependencies.declaration = module_declaration{std::move(name), role};
+        return true;
+      }
+
+      return false;
+    }
+
+    /// The extensions under which a module unit is conventionally written; what it declares is the lexer's to say.
+    [[nodiscard]]
+    bool has_module_extension(const fs::path& file)
+    {
+      const auto ext{file.extension()};
+      return (ext == ".cppm") || (ext == ".ixx") || (ext == ".cxxm") || (ext == ".ccm") || (ext == ".c++m") || (ext == ".mpp");
+    }
+
+    /** \brief Whether other units can name what this one declares.
+
+        An interface unit provides its module or partition; a partition provides its qualified name
+        whether exported or not, since `import :P;` from within the module reaches either.
+        `module M;` provides nothing: no unit can name it.
+     */
+    [[nodiscard]]
+    bool provides(const module_declaration& declaration) noexcept
+    {
+      return (declaration.role == module_role::interface_unit) || declaration.name.contains(':');
+    }
+
+    /// Header names as written and module names as declared; nothing here is a path in the tree.
+    void write_external_dependencies(const fs::path& file, std::span<const std::string> names)
     {
       if(std::ofstream ostream{file})
       {
-        for(const auto& test : tests)  ostream << test.generic_string() << "\n";
+        for(const auto& name : names) ostream << name << '\n';
       }
     }
 
+    /// scan_dependencies, with the include names resolved against the file which wrote them.
     [[nodiscard]]
-    std::vector<fs::path> get_includes(const fs::path& file, std::string_view cutoff)
+    source_dependencies get_dependencies(const fs::path& file, std::string_view cutoff)
     {
-      std::vector<fs::path> includes{};
+      source_dependencies dependencies{};
 
-      if(std::ifstream ifile{file})
+      // Binary, since the scan rewinds through `tellg`, which MSVC's text mode does not round-trip on LF files
+      if(std::ifstream ifile{file, std::ios_base::binary})
       {
         auto scanned{scan_dependencies(ifile, cutoff)};
 
@@ -248,11 +376,14 @@ namespace sequoia::testing
             includedFile = file.parent_path() / includedFile;
           }
 
-          includes.push_back(std::move(includedFile));
+          dependencies.includes.push_back(std::move(includedFile));
         }
+
+        dependencies.imports     = std::move(scanned.imports);
+        dependencies.declaration = std::move(scanned.declaration);
       }
 
-      return includes;
+      return dependencies;
     }
 
     using tests_dependency_graph = maths::directed_graph<maths::null_weight, file_info>;
@@ -263,7 +394,7 @@ namespace sequoia::testing
       for(const auto& entry : fs::recursive_directory_iterator(repo))
       {
         const auto file{entry.path()};
-        if(is_cpp(file) || is_header(file))
+        if(is_cpp(file) || is_header(file) || has_module_extension(file))
         {
           info.emplace_back(file, stalenessThreshold, exeTimeStamp);
         }
@@ -274,14 +405,31 @@ namespace sequoia::testing
     void build_dependencies(tests_dependency_graph& g, const project_paths& projPaths, std::string_view cutoff)
     {
       using size_type = tests_dependency_graph::size_type;
-      std::vector<fs::path> externalDependencies{};
+      std::vector<std::string> externalDependencies{};
+
+      std::vector<source_dependencies> scanned{};
+      for(const auto& weight : g.cnode_weights())
+      {
+        scanned.push_back(get_dependencies(weight.file, cutoff));
+      }
+
+      // A partition is keyed on its qualified name, `M:P`, which is what `import :P;` from within M abbreviates
+      std::map<std::string, size_type> providers{};
+      for(size_type pos{}; pos != scanned.size(); ++pos)
+      {
+        if(const auto& declaration{scanned[pos].declaration}; declaration && provides(*declaration))
+        {
+          providers.emplace(declaration->name, pos);
+        }
+      }
 
       for(auto i{g.begin_node_weights()}; i != g.end_node_weights(); ++i)
       {
         const auto nodePos{static_cast<size_type>(std::ranges::distance(g.begin_node_weights(), i))};
         const auto& file{i->file};
+        const auto& dependencies{scanned[nodePos]};
 
-        for(const auto& includedFile : get_includes(file, cutoff))
+        for(const auto& includedFile : dependencies.includes)
         {
           if(auto eqrange{std::ranges::equal_range(g.node_weights(), includedFile.filename(), std::ranges::less{}, [](const file_info& weight){ return weight.file.filename(); })}; !eqrange.empty())
           {
@@ -325,16 +473,14 @@ namespace sequoia::testing
                 }
                 else
                 {
-                  // Furnish the associated header with the same dependencies,
-                  // as these are what ultimately determine whether or not
-                  // the test cpp is considered stale. Sorting of g ensures
-                  // that headers are directly after sources; note that since
-                  // only files considered to be headers or sources are added
-                  // to g, this is robust.
-
-                  if(auto next{std::ranges::next(i)}; next != g.end_node_weights())
+                  /* Furnish the associated header with the same dependencies, as these are what
+                     ultimately determine whether the test cpp is considered stale. Sorting of g
+                     puts the header among the nodes following the source with the same stem; a
+                     module unit sharing the stem may sit between them, so each is inspected.
+                  */
+                  for(auto next{std::ranges::next(i)}; (next != g.end_node_weights()) && (next->file.stem() == file.stem()); ++next)
                   {
-                    if(next->file.stem() == file.stem())
+                    if(is_header(next->file))
                     {
                       const auto nextPos{static_cast<size_type>(std::ranges::distance(g.begin_node_weights(), next))};
                       g.join(nextPos, includeNodePos);
@@ -346,7 +492,47 @@ namespace sequoia::testing
           }
           else
           {
-            externalDependencies.push_back(includedFile);
+            externalDependencies.push_back(includedFile.generic_string());
+          }
+        }
+
+        auto joinToProvider{
+          [&g, &providers, &externalDependencies, nodePos](const std::string& moduleName) {
+            if(const auto found{providers.find(moduleName)}; found != providers.end())
+              g.join(nodePos, found->second);
+            else
+              externalDependencies.push_back(moduleName);
+          }
+        };
+
+        for(const auto& imported : dependencies.imports)
+        {
+          if(!imported.starts_with(':'))
+          {
+            joinToProvider(imported);
+          }
+          else if(dependencies.declaration)
+          {
+            // `import :P;` is only meaningful from within the module which owns P
+            joinToProvider(std::string{dependencies.declaration->primary_name()} + imported);
+          }
+        }
+
+        if(const auto& declaration{dependencies.declaration}; declaration)
+        {
+          if(const auto found{providers.find(std::string{declaration->primary_name()})};
+             (found != providers.end()) && (found->second != nodePos))
+          {
+            /* Every unit of a module is linked into whatever imports it, yet importers name only
+               the primary interface, so a change to any other unit must render the interface stale
+               - the same trade the header path makes when it renders a header stale for its
+               same-stem source. The unit which is `module M;` also depends on the interface, which
+               it imports implicitly; the resulting two-cycle is why the staleness fold iterates to
+               a fixed point.
+            */
+            g.join(found->second, nodePos);
+
+            if(!declaration->name.contains(':')) g.join(nodePos, found->second);
           }
         }
       }
@@ -355,7 +541,7 @@ namespace sequoia::testing
       auto iters{std::ranges::unique(externalDependencies)};
       externalDependencies.erase(iters.begin(), iters.end());
 
-      write_tests(projPaths.prune().external_dependencies(), externalDependencies);
+      write_external_dependencies(projPaths.prune().external_dependencies(), externalDependencies);
     }
 
     [[nodiscard]]
@@ -619,6 +805,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::string_view module_declaration::primary_name() const noexcept
+  {
+    return std::string_view{name}.substr(0, name.find(':'));
+  }
+
+  [[nodiscard]]
   source_dependencies scan_dependencies(std::istream& source, std::string_view cutoff)
   {
     constexpr auto eof{std::ifstream::traits_type::eof()};
@@ -626,14 +818,62 @@ namespace sequoia::testing
 
     source_dependencies dependencies{};
 
+    /* A module or import declaration is recognized only at the start of a line, which is what keeps
+       the words - neither of them reserved - from being found in the middle of ordinary code. Only
+       horizontal whitespace may precede one, so the flag survives that and nothing else.
+    */
+    bool atLineStart{true};
+
     int_type c{};
     while((c = source.get()) != eof)
     {
-      if(c == '/')
+      const bool lineStart{std::exchange(atLineStart, false)};
+
+      if(lineStart && ((c == 'e') || (c == 'm') || (c == 'i')))
+      {
+        /* Only these three characters can begin `export`, `module` or `import`, and a line which
+           begins with one of them and proves to be something else is rewound so that the scan sees
+           it exactly as it would have done - the attempt is made ahead of the other branches so
+           that the character then falls through to them, as a cutoff beginning `int` must.
+
+           The order here is load-bearing: `tellg` on a `std::filebuf` discards the putback area, so
+           an `unget` after it fails - silently, since nothing checks - where the same sequence on a
+           `std::stringbuf` succeeds. Ungetting first and asking where we are second works on both.
+        */
+        source.unget();
+        const auto rewind{source.tellg()};
+
+        auto keyword{read_identifier(source)};
+        auto role{module_role::implementation_unit};
+
+        if(keyword == "export")
+        {
+          role = module_role::interface_unit;
+          skip_horizontal_space(source);
+          keyword = read_identifier(source);
+        }
+
+        if(consume_module_declaration(source, keyword, role, dependencies)) continue;
+
+        source.clear();
+        source.seekg(rewind);
+        source.get();
+      }
+
+      if(is_horizontal_space(static_cast<char>(c)))
+      {
+        atLineStart = lineStart;
+      }
+      else if(c == '\n')
+      {
+        atLineStart = true;
+      }
+      else if(c == '/')
       {
         if(source.peek() == '/')
         {
           source.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+          atLineStart = true;
         }
         else if(source.peek() == '*')
         {
@@ -651,21 +891,14 @@ namespace sequoia::testing
       }
       else if(c == '#')
       {
-        skip_directive_space(source);
+        skip_horizontal_space(source);
 
         if(read_identifier(source) == "include")
         {
-          skip_directive_space(source);
+          skip_horizontal_space(source);
 
-          const auto delimiter{source.get()};
-
-          fs::path includedFile{
-            (delimiter == '\"') ? read_header_name(source, '\"') :
-            (delimiter == '<')  ? read_header_name(source, '>')  :
-                                  std::string{}
-          };
-
-          if(!includedFile.empty()) dependencies.includes.push_back(std::move(includedFile));
+          if(fs::path includedFile{read_header_name(source)}; !includedFile.empty())
+            dependencies.includes.push_back(std::move(includedFile));
         }
       }
       else if(!cutoff.empty() && (c == cutoff.front()))
@@ -675,6 +908,8 @@ namespace sequoia::testing
         {
           break;
         }
+
+        atLineStart = true;
       }
     }
 
