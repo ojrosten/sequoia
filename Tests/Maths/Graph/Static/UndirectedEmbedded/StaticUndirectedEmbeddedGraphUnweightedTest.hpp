@@ -38,5 +38,7 @@ namespace sequoia::testing
     void test_node_1_1_node_0_0();
 
     void test_node_1_1_node_0_0interleaved();
+
+    void test_constexpr_copy_assignment();
   };
 }
