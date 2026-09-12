@@ -36,6 +36,8 @@ namespace sequoia::testing
   {
     using namespace std::string_literals;
 
+    test_project_folder_deduction();
+
     check_exception_thrown<std::runtime_error>(
       reporter{"Empty file"},
       []() { return test_summary_path{"", "foo_test", project_paths{}, std::nullopt}; }
@@ -58,5 +60,40 @@ namespace sequoia::testing
         projPaths.output().test_summaries() / "Tests" / "foo_test.txt");
     }
 
+  }
+
+  void individual_test_paths_free_test::test_project_folder_deduction()
+  {
+    const auto root{working_materials() /= "Deduction"};
+
+    auto make{
+      [&root](std::string_view checkout, std::initializer_list<std::string_view> sourceDirs) {
+        const auto projectRoot{root / checkout};
+        fs::create_directories(projectRoot / "Source");
+        for(auto d : sourceDirs) fs::create_directories(projectRoot / "Source" / d);
+
+        return projectRoot;
+      }
+    };
+
+    {
+      const auto projectRoot{make("MyProject", {"myProject"})};
+      check(equality, "The checkout is named after the project",
+            source_paths{projectRoot}.project(), projectRoot / "Source" / "myProject");
+    }
+
+    {
+      const auto projectRoot{make("myProject-trunk-wt", {"myProject"})};
+      check(equality, "A worktree: the guess is wrong, and left so for create to refuse on",
+            source_paths{projectRoot}.project(), projectRoot / "Source" / "myProject-trunk-wt");
+    }
+
+    {
+      const auto projectRoot{make("myProject-trunk-wt", {"myProject"})};
+      check(equality, "An explicit source_folder settles it",
+            source_paths{projectRoot, "myProject"}.project(), projectRoot / "Source" / "myProject");
+    }
+
+    fs::remove_all(root);
   }
 }
