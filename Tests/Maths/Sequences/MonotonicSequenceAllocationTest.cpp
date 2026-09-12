@@ -29,6 +29,9 @@ namespace sequoia::testing
     using allocator = shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
     using sequence = monotonic_sequence<int, std::ranges::less, std::vector<int, allocator>>;
 
+    // This allocator's instances are never interchangeable, so whether swapping is noexcept is whether it propagates
+    STATIC_CHECK(noexcept(swap(std::declval<sequence&>(), std::declval<sequence&>())) == PropagateSwap);
+
     auto getter{
       [](const sequence& s){ return s.get_allocator(); }
     };
