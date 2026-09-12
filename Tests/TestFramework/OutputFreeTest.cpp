@@ -65,12 +65,36 @@ namespace sequoia::testing
           "coordinates<my_vec_space<1> >"s
     );
 
-    // TO DO: reinstate and fix associated bug
-    /*check(equality,
-          "",
+    // The top hex nibble of a negative float is 8 through F, so its hex form begins with a letter
+    check(equality,
+          "A negative float",
+          tidy_name("<(float)[C048F5C3]>", gcc_type{}),
+          "<-3.140000>"s
+    );
+
+    check(equality,
+          "A negative float of unit magnitude",
+          tidy_name("<(float)[BF800000]>", gcc_type{}),
+          "<-1.000000>"s
+    );
+
+    check(equality,
+          "A hex form with no decimal digit at all",
           tidy_name("<(float)[FF]>", gcc_type{}),
-          std::format("<0.0>")
-    );*/
+          "<0.000000>"s
+    );
+
+    check(equality,
+          "A double whose hex form has no decimal digit",
+          tidy_name("<(double)[FF]>", gcc_type{}),
+          "<0.000000>"s
+    );
+
+    check(equality,
+          "A positive float, as the control",
+          tidy_name("<(float)[4048F5C3]>", gcc_type{}),
+          "<3.140000>"s
+    );
   }
 
   void output_free_test::test_relative_reporting_path()
