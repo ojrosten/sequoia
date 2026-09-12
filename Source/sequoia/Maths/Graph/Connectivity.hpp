@@ -1286,7 +1286,7 @@ namespace sequoia
 
       template<alloc... Allocators>
       [[nodiscard]]
-      edge_storage_type copy_edges(const connectivity_base& in, const Allocators&... as)
+      constexpr edge_storage_type copy_edges(const connectivity_base& in, const Allocators&... as)
         requires direct_copy_v
       {
         return edge_storage_type{in.m_Edges, as...};

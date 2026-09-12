@@ -30,6 +30,25 @@ namespace sequoia::testing
     test_node_node();
     test_node_1_node();
     test_node_1_node_0();
+
+    test_constexpr_copy_assignment();
+  }
+
+  void static_directed_graph_unweighted_test::test_constexpr_copy_assignment()
+  {
+    // The graphs differ before the assignment, so an assignment which did nothing could not pass
+    STATIC_CHECK((
+      [](){
+        using graph_t = static_directed_graph<2, 2, null_weight, null_weight>;
+        using edge_t  = graph_t::edge_init_type;
+
+        graph_t g{{edge_t{1}}, {edge_t{0}}}, h{{edge_t{0}}, {edge_t{1}}};
+        if(h == g) return false;
+
+        h = g;
+        return h == g;
+      }()
+    ));
   }
 
   void static_directed_graph_unweighted_test::test_empty()
