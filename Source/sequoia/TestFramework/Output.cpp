@@ -71,7 +71,9 @@ namespace sequoia::testing
           break;
 
         pos = open+1;
-        while((pos < name.size() - 1) && !std::isdigit(name[pos])) { ++pos; }
+
+        // A reinterpreted floating-point literal, `(float)[FF]`, need not contain a decimal digit
+        while((pos < name.size() - 1) && !std::isdigit(static_cast<unsigned char>(name[pos])) && (name[pos - 1] != '[')) { ++pos; }
         if(pos < name.size() - 1)
         {
           if((name[pos - 1] == '_') || std::isalpha(name[pos - 1]))
