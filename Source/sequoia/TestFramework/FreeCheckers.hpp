@@ -845,12 +845,6 @@ namespace sequoia::testing
     ~checker() = default;
 
     [[nodiscard]]
-    std::size_t checks() const noexcept { return m_Logger.checks(); }
-
-    [[nodiscard]]
-    std::size_t failures() const noexcept { return m_Logger.failures(); }
-
-    [[nodiscard]]
     const uncaught_exception_info& exceptions_detected_by_sentinel() const noexcept
     {
       return m_Logger.exceptions_detected_by_sentinel();
@@ -860,12 +854,6 @@ namespace sequoia::testing
     sentinel<Mode> make_sentinel(std::string message)
     {
       return {m_Logger, std::move(message)};
-    }
-
-    [[nodiscard]]
-    std::string_view top_level_message() const
-    {
-      return m_Logger.top_level_message();
     }
 
     [[nodiscard]]
