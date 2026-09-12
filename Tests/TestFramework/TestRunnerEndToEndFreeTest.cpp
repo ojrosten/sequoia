@@ -313,8 +313,7 @@ namespace sequoia::testing
     fs::copy(generated_project() /= "output/TestSummaries", working_materials() /= "TestSummaries_0", fs::copy_options::recursive);
     check(equivalence, "", working_materials() /= "TestSummaries_0", predictive_materials() /= "TestSummaries_0");
 
-    //=================== Rerun with async execution ===================//
-    // --> async depth should be automatically set to "suite" since number of families is > 4
+    //=================== Rerun serially ===================//
 
     run_and_check(report("Run synchronously"), b, "RunSynchronous", "--serial", return_code::success);
 
@@ -339,31 +338,23 @@ namespace sequoia::testing
     run_and_check(report("Versioned output checked, having drifted"), b, "CheckVersionedOutputDrifted",
                   "--check-versioned-output", return_code::versioned_output_diffs);
 
-    //=================== Rerun with async selecting 3 tests from 3 families ===================//
-    // --> async depth should be automatically set to "test" since number of families is < 4
+    //=================== Rerun asynchronously, selecting 2 tests ===================//
+
+    run_and_check(report("Run asynchronously with 2 selected tests"), b, "RunAsyncTwoTests",
+                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp", return_code::success);
+
+    //=================== Rerun asynchronously, selecting 3 tests ===================//
 
     run_and_check(report("Run asynchronously with 3 selected tests"), b, "RunAsyncThreeTests",
                        "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp", return_code::success);
 
-    //=================== Rerun with async selecting 4 tests from 4 families===================//
-    // --> async depth should be automatically set to "suite"
+    //=================== Rerun asynchronously, selecting 4 tests ===================//
 
     run_and_check(report("Run asynchronously with 4 selected tests"), b, "RunAsyncFourTests",
                        "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
                        " select Stuff/FooTest.cpp", return_code::success);
 
-    //=================== Rerun with async selecting 4 tests from 4 families, and setting async-depth to test===================//
-
-    run_and_check(report("Run asynchronously with 4 selected tests"), b, "RunAsyncFourTestsDepthTest",
-                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
-                       " select Stuff/FooTest.cpp", return_code::success);
-
-    //=================== Rerun with async, selecting 2 tests, and setting async-depth to suite ===================//
-
-    run_and_check(report("Run asynchronously with 2 selected tests"), b, "RunAsyncTwoTestsDepthSuite",
-                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp", return_code::success);
-
-    //=================== Rerun with async, selecting one suite ===================//
+    //=================== Rerun asynchronously, selecting 1 suite ===================//
 
     run_and_check(report("Run asynchronously with 1 suite"), b, "RunAsyncOneTestOneSuite", "test Maths", return_code::success);
 
