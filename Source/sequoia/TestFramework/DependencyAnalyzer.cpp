@@ -8,17 +8,74 @@
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
+#include "sequoia/Maths/Arithmetic/ArithmeticCasts.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <charconv>
 #include <chrono>
 #include <concepts>
+#include <cstdint>
+#include <format>
 #include <fstream>
+#include <optional>
+#include <string>
+#include <string_view>
 
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
+
+  using maths::checked_conversion_to;
+
+  namespace
+  {
+    using duration_t   = prune_record::stamp_type::duration;
+    using stream_rep_t = std::int64_t;
+  }
+
+  std::ostream& operator<<(std::ostream& s, const prune_record& record)
+  {
+    return s << "path: "      << record.test_path.generic_string() << '\n'
+             << "timestamp: " << std::format("{}", checked_conversion_to<stream_rep_t>(record.time_stamp.time_since_epoch().count()));
+  }
+
+  std::istream& operator>>(std::istream& s, prune_record& record)
+  {
+    const auto extractField{
+      [&s](std::string_view key) -> std::optional<std::string> {
+        if(std::string line{}; std::getline(s, line) && line.starts_with(key))
+          return line.substr(key.size());
+
+        return std::nullopt;
+      }
+    };
+
+    const auto toStamp{
+      [](const std::string& text) -> std::optional<prune_record::stamp_type> {
+        const auto last{text.data() + text.size()};
+        if(stream_rep_t count{}; std::from_chars(text.data(), last, count) == std::from_chars_result{last, std::errc{}})
+          return prune_record::stamp_type{duration_t{checked_conversion_to<duration_t::rep>(count)}};
+
+        return std::nullopt;
+      }
+    };
+
+    const auto parsed{
+      extractField("path: ")
+        .and_then([&](std::string path) {
+          return extractField("timestamp: ")
+                   .and_then(toStamp)
+                   .transform([&path](prune_record::stamp_type stamp) { return prune_record{std::move(path), stamp}; });
+        })
+    };
+
+    if(parsed) record = *parsed;
+    else       s.setstate(std::ios::failbit);
+
+    return s;
+  }
 
   namespace
   {

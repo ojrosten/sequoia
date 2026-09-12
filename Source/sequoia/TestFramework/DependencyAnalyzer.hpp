@@ -16,7 +16,6 @@
 
 #include <iostream>
 #include <chrono>
-#include <format>
 #include <limits>
 
 namespace sequoia::testing
@@ -25,28 +24,17 @@ namespace sequoia::testing
 
   struct prune_record
   {
-    using stamp_t    = std::filesystem::file_time_type;
-    using duration_t = stamp_t::duration;
+    using stamp_type = std::filesystem::file_time_type;
 
     std::filesystem::path test_path;
-    stamp_t time_stamp;
-
-    friend std::ostream& operator<<(std::ostream& s, const prune_record& record) {      
-      return s <<  record.test_path.generic_string()
-               << ' '
-               << std::format("{}", record.time_stamp.time_since_epoch().count());
-    }
+    stamp_type time_stamp;
 
     [[nodiscard]]
     friend auto operator<=>(const prune_record&, const prune_record&) noexcept = default;
 
-    friend std::istream& operator>>(std::istream& s, prune_record& record) {
-      std::size_t duration{};
-      s >> record.test_path >> duration;
+    friend std::ostream& operator<<(std::ostream& s, const prune_record& record);
 
-      record.time_stamp = {stamp_t{} + duration_t{duration}};
-      return s;
-    }
+    friend std::istream& operator>>(std::istream& s, prune_record& record);
   };
 
   /** \brief The dependencies which the text of a single translation unit declares.
