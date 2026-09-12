@@ -161,7 +161,7 @@ SEQUOIA_GCC_SUPPRESS_END
     constexpr monotonic_sequence_base& operator=(const monotonic_sequence_base&) = default;
     constexpr monotonic_sequence_base& operator=(monotonic_sequence_base&&)      = default;
 
-    constexpr void swap(monotonic_sequence_base& other) noexcept(impl::noexcept_spec_v<C>)
+    constexpr void swap(monotonic_sequence_base& other) noexcept(impl::swap_is_noexcept_v<C>)
     {
       std::ranges::swap(m_Sequence, other.m_Sequence);
     }

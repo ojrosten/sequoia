@@ -1,2 +1,2 @@
 monotonic_sequence_allocation_test
-Standard Top Level Checks:                24;  Failures:  0  [Deep checks: 1488]
+Standard Top Level Checks:                32;  Failures:  0  [Deep checks: 1496]

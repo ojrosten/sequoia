@@ -104,6 +104,9 @@ namespace sequoia::testing
 
     constexpr static_monotonic_sequence<double, 2> s{5.1, 3.8}, t{-3.4, -4.4};
     check_semantics("", s, t);
+
+    // On the trait, since static_monotonic_sequence has no public swap
+    STATIC_CHECK(maths::impl::swap_is_noexcept_v<std::array<double, 2>>);
   }
 
   template<bool Check>
