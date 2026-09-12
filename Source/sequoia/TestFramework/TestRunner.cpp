@@ -204,20 +204,29 @@ namespace sequoia::testing
         , m_Filtered{isFiltered}
       {}
 
-      void increment_depth() noexcept { ++m_Depth; }
-
-      void decrement_depth() noexcept
+      /// Each is attempted on its own, so that one failure costs neither the other updates nor the prune information
+      void update_materials_and_prune_info()
       {
-        if(--m_Depth == npos)
+        for(const auto& update : m_Updateables)
         {
-          for(const auto& update : m_Updateables)
+          try
           {
             soft_update(update.working_materials, update.predictions);
           }
+          catch(const std::exception& e) { record_update_failure(update.test_file, e.what()); }
+          catch(...)                     { record_update_failure(update.test_file, unrecognized); }
+        }
 
+        try
+        {
           update_prune_info();
         }
+        catch(const std::exception& e) { record_update_failure({}, e.what()); }
+        catch(...)                     { record_update_failure({}, unrecognized); }
       }
+
+      [[nodiscard]]
+      std::span<const std::string> update_failures() const noexcept { return m_UpdateFailures; }
 
       void process_test(const test_paths& files, const log_summary& summary, update_mode updateMode)
       {
@@ -240,14 +249,14 @@ namespace sequoia::testing
         }
       }
     private:
-      constexpr static int npos{-1};
+      constexpr static std::string_view unrecognized{"Unrecognized exception"};
 
-      int m_Depth{npos};
       project_paths m_ProjPaths;
       std::optional<std::size_t> m_Id{};
       is_filtered m_Filtered{};
 
       std::vector<std::filesystem::path> m_FailedTests{}, m_ExecutedTests{};
+      std::vector<std::string> m_UpdateFailures{};
       std::set<test_paths, paths_comparator> m_Updateables{};
       std::set<std::filesystem::path> m_FilesWrittenTo{};
 
@@ -276,6 +285,13 @@ namespace sequoia::testing
         {
           throw std::runtime_error{report_failed_write(filename)};
         }
+      }
+
+      void record_update_failure(const std::filesystem::path& subject, std::string_view what)
+      {
+        m_UpdateFailures.push_back(
+          subject.empty() ? std::format("Prune information not written:\n{}", what)
+                          : std::format("Materials for {} not updated:\n{}", subject.generic_string(), what));
       }
 
       void update_prune_info() const
@@ -983,8 +999,7 @@ namespace sequoia::testing
 
     using namespace maths;
     auto nodeEarly{
-      [&s = m_Suites,&tracker,id,serial{!concurrent_execution()}](auto n) {
-        tracker.increment_depth();
+      [&s = m_Suites,id,serial{!concurrent_execution()}](auto n) {
         if(serial)
         {
           auto& wt{s.begin_node_weights()[n]};
@@ -1017,12 +1032,11 @@ namespace sequoia::testing
             }
           }
         );
-
-        tracker.decrement_depth();
       }
     };
 
     traverse(depth_first, m_Suites, find_disconnected_t{}, nodeEarly, nodeLate, null_func_obj{});
+    tracker.update_materials_and_prune_info();
 
     if(m_Verbosity == verbosity::verbose)
     {
@@ -1078,6 +1092,13 @@ namespace sequoia::testing
 
     stream() << "\n-----------Grand Totals-----------\n";
     stream() << summarize(root_summary(), "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+
+    // Not folded into the totals, which count what the tests found: these are failures of the run itself
+    if(const auto failures{tracker.update_failures()}; !failures.empty())
+    {
+      stream() << "\n-----------Post-Run Failures-----------\n";
+      for(const auto& failure : failures) stream() << sequoia::indent(failure, indentation{"\t"}) << "\n\n";
+    }
   }
 
   [[nodiscard]]

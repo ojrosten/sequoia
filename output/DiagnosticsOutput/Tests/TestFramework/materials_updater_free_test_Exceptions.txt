@@ -1,4 +1,4 @@
-Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 25
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 27
 Empty 'to' path
 
 Expected Exception Type:
@@ -7,12 +7,30 @@ File path is empty
 
 =======================================
 
-Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 26
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 28
 Empty 'from' path
 
 Expected Exception Type:
 [std::runtime_error]
 File path is empty
+
+=======================================
+
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 38
+'to' path exists but is not a directory
+
+Expected Exception Type:
+[std::filesystem::filesystem_error]
+[Message elided: it varies by standard library]
+
+=======================================
+
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 43
+'from' path exists but is not a directory
+
+Expected Exception Type:
+[std::filesystem::filesystem_error]
+[Message elided: it varies by standard library]
 
 =======================================
 

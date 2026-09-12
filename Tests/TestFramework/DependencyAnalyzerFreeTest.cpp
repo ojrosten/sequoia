@@ -866,22 +866,27 @@ namespace sequoia::testing
                      projPaths,
                      {{"HouseAllocationTest.cpp", prune_record::stamp_type{}}});
 
-    // Prune state lives in the build tree, so a file in the superseded format - unkeyed, one record
-    // per line - survives an upgrade and must parse as nothing rather than as data.
     const auto file{projPaths.prune().failures(std::nullopt)};
-    { std::ofstream{file} << "HouseAllocationTest.cpp 12345\nMaths/ProbabilityTest.cpp 12345\n"; }
+
+    { std::ofstream{file} << "path: HouseAllocationTest.cpp\ntimestamp: 0"; }
 
     check(equality,
-          "A prune file in the superseded format yields no records",
+          "A file ending after a complete record, with no trailing newline",
           read_tests(file),
-          prune_records{});
+          prune_records{{"HouseAllocationTest.cpp", prune_record::stamp_type{}}});
+
+    // Prune state lives in the build tree, so a file in a superseded format survives an upgrade
+    { std::ofstream{file} << "HouseAllocationTest.cpp 12345\nMaths/ProbabilityTest.cpp 12345\n"; }
+
+    check_exception_thrown<std::runtime_error>("A prune file in a superseded format", [&file]() { return read_tests(file); });
 
     { std::ofstream{file} << "path: HouseAllocationTest.cpp\ntimestamp: 0\npath: Maths/ProbabilityTest.cpp\ntimestamp: soon\n"; }
 
-    check(equality,
-          "A malformed record ends the read, keeping those before it",
-          read_tests(file),
-          prune_records{{"HouseAllocationTest.cpp", prune_record::stamp_type{}}});
+    check_exception_thrown<std::runtime_error>("A malformed time stamp", [&file]() { return read_tests(file); });
+
+    { std::ofstream{file} << "path: HouseAllocationTest.cpp\n"; }
+
+    check_exception_thrown<std::runtime_error>("A path with no time stamp after it", [&file]() { return read_tests(file); });
 
     fs::remove(file);
   }
