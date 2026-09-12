@@ -593,6 +593,63 @@ namespace sequoia::testing
                        {},
                        {});
 
+    /* Cycle/First.hpp and Cycle/Second.hpp include one another. Each carries a test and includes a
+       leaf of its own, so a staleness which propagates round the cycle in one direction only is
+       caught whichever member the traversal enters by: one leaf or the other lies beyond the member
+       which folds in its neighbour too soon.
+    */
+    const auto cycleTests{test_list{{"Cycle/FirstFreeTest.cpp"}, {"Cycle/SecondFreeTest.cpp"}}};
+
+    check_tests_to_run("The leaf beyond First.hpp is stale",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{sourceRepo / "Cycle" / "FirstLeaf.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {});
+
+    check_tests_to_run("The leaf beyond Second.hpp is stale",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{sourceRepo / "Cycle" / "SecondLeaf.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {});
+
+    check_tests_to_run("One member of the cycle is stale",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{sourceRepo / "Cycle" / "First.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {});
+
+    check_tests_to_run("The other member of the cycle is stale",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{sourceRepo / "Cycle" / "Second.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {});
+
+    // The fold also carries the modification time round the cycle, which is what decides whether a
+    // recorded pass post-dates the newest change.
+    check_tests_to_run("The leaf beyond First.hpp is stale, following a previously successful run",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{sourceRepo / "Cycle" / "FirstLeaf.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {{"Cycle/SecondFreeTest.cpp", m_ResetTime + to_duration(modification_time::very_early)}});
+
+    check_tests_to_run("The leaf beyond Second.hpp is stale, following a previously successful run",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{sourceRepo / "Cycle" / "SecondLeaf.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {{"Cycle/FirstFreeTest.cpp", m_ResetTime + to_duration(modification_time::very_early)}});
+
     check_tests_to_run("Source cpp indirectly stale via cpp definitions for included header",
                        projPaths,
                        "namespace",
