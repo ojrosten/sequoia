@@ -1,0 +1,45 @@
+Tests/Maths/Arithmetic/ArithmeticCastsFreeTest.cpp, Line 53
+Above the range of a narrower signed type
+
+Expected Exception Type:
+[std::domain_error]
+Value 9223372036854775807 is outside the range [-2147483648, 2147483647] of the target type
+
+=======================================
+
+Tests/Maths/Arithmetic/ArithmeticCastsFreeTest.cpp, Line 58
+Above the range of a signed type of the same width
+
+Expected Exception Type:
+[std::domain_error]
+Value 4294967295 is outside the range [-2147483648, 2147483647] of the target type
+
+=======================================
+
+Tests/Maths/Arithmetic/ArithmeticCastsFreeTest.cpp, Line 63
+Above the range of a narrower unsigned type
+
+Expected Exception Type:
+[std::domain_error]
+Value 18446744073709551615 is outside the range [0, 4294967295] of the target type
+
+=======================================
+
+Tests/Maths/Arithmetic/ArithmeticCastsFreeTest.cpp, Line 68
+Negative, to an unsigned type
+
+Expected Exception Type:
+[std::domain_error]
+Value -1 is outside the range [0, 4294967295] of the target type
+
+=======================================
+
+Tests/Maths/Arithmetic/ArithmeticCastsFreeTest.cpp, Line 73
+Below the range of a narrower signed type
+
+Expected Exception Type:
+[std::domain_error]
+Value -9223372036854775808 is outside the range [-2147483648, 2147483647] of the target type
+
+=======================================
+
