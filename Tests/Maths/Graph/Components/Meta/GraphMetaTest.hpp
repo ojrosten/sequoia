@@ -56,7 +56,7 @@ namespace sequoia::testing
     template<class EdgeWeight>
     void test_directed_impl();
 
-    void test_static_edge_index_generator();
+    void test_static_edge_index_type();
   };
 
   template<class T> struct wrapper

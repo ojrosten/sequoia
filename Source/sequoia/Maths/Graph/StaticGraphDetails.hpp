@@ -8,10 +8,16 @@
 #pragma once
 
 /** \file
-    \brief Implementatoin details for static graphs.
+    \brief Implementation details for static graphs.
  */
 
 #include "sequoia/Maths/Graph/GraphDetails.hpp"
+#include "sequoia/Core/Meta/TypeAlgorithms.hpp"
+
+#include <algorithm>
+#include <limits>
+#include <tuple>
+#include <type_traits>
 
 namespace data_structures
 {
@@ -20,48 +26,28 @@ namespace data_structures
 
 namespace sequoia::maths::graph_impl
 {
-  enum class index_type_tag { u_char, u_short, u_int, u_long};
-
-  template<std::size_t Size, std::size_t Order, bool Embedded>
-  [[nodiscard]]
-  constexpr index_type_tag to_index_max() noexcept
+  template<std::size_t MaxValue>
+  struct narrowest_unsigned_holding
   {
-    if constexpr     ((Order < 255) && (!Embedded || (Size < 255)))     return index_type_tag::u_char;
-    else if constexpr((Order < 65535) && (!Embedded || (Size < 65535))) return index_type_tag::u_short;
-    else                                                                return index_type_tag::u_long;
-  }
+    template<class T>
+    using holds = std::bool_constant<(std::numeric_limits<T>::max() >= MaxValue)>;
 
-  template
-  <
-    std::size_t Size,
-    std::size_t Order,
-    bool Embedded,
-    index_type_tag=to_index_max<Size, Order, Embedded>()
-  >
-  struct static_edge_index_type_generator
-  {
-    using index_type = std::size_t;
+    using candidates = std::tuple<unsigned char, unsigned short, unsigned int, std::size_t>;
+
+    using type = std::tuple_element_t<meta::find_if_v<candidates, holds>, candidates>;
   };
 
-  template
-  <
-    std::size_t Size,
-    std::size_t Order,
-    bool Embedded
-  >
-  struct static_edge_index_type_generator<Size, Order, Embedded, index_type_tag::u_char>
-  {
-    using index_type = unsigned char;
-  };
+  template<std::size_t MaxValue>
+  using narrowest_unsigned_holding_t = narrowest_unsigned_holding<MaxValue>::type;
 
-  template
-  <
-    std::size_t Size,
-    std::size_t Order,
-    bool Embedded
-  >
-  struct static_edge_index_type_generator<Size, Order, Embedded, index_type_tag::u_short>
-  {
-    using index_type = unsigned short;
-  };
+  /** \brief The index type shared by a static graph's node indices and its edge-storage offsets.
+
+      Both quantities must fit: a node index runs below `Order`, and a partition offset into the edge
+      storage runs up to `NumEdges`, which for every flavour but `directed` is twice the number of
+      edges the graph declares. `Order` rather than `Order - 1` costs a wider type only at an order of
+      exactly 256, 65536 or 2^32 carrying almost no edges, and leaves no arithmetic to go wrong at
+      `Order == 0`.
+   */
+  template<std::size_t Order, std::size_t NumEdges>
+  using static_edge_index_type = narrowest_unsigned_holding_t<std::ranges::max(Order, NumEdges)>;
 }

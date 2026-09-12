@@ -23,7 +23,7 @@ namespace sequoia::testing
   void test_graph_meta::run_tests()
   {
     test_method_detectors();
-    test_static_edge_index_generator();
+    test_static_edge_index_type();
 
     test_undirected<graph_flavour::undirected, partial_edge>();
     test_undirected<graph_flavour::undirected_embedded, embedded_partial_edge>();
@@ -40,24 +40,36 @@ namespace sequoia::testing
     static_assert(!has_reservable_partitions<partitioned_sequence<int>>);
   }
 
-  void test_graph_meta::test_static_edge_index_generator()
+  void test_graph_meta::test_static_edge_index_type()
   {
+    using namespace maths;
     using namespace maths::graph_impl;
 
-    static_assert(std::is_same_v<unsigned char, typename static_edge_index_type_generator<10, 12, false>::index_type>);
-    static_assert(std::is_same_v<unsigned char, typename static_edge_index_type_generator<254, 12, false>::index_type>);
-    static_assert(std::is_same_v<unsigned char, typename static_edge_index_type_generator<255, 254, false>::index_type>);
-    static_assert(std::is_same_v<unsigned short, typename static_edge_index_type_generator<127, 255, false>::index_type>);
-    static_assert(std::is_same_v<unsigned short, typename static_edge_index_type_generator<65535, 255, false>::index_type>);
-    static_assert(std::is_same_v<unsigned short, typename static_edge_index_type_generator<65535, 65534, false>::index_type>);
-    static_assert(std::is_same_v<std::size_t, typename static_edge_index_type_generator<65535, 65535, false>::index_type>);
+    // Each type's boundary, reached through the order and through the number of edges separately
 
-    static_assert(std::is_same_v<unsigned char, typename static_edge_index_type_generator<10, 12, true>::index_type>);
-    static_assert(std::is_same_v<unsigned char, typename static_edge_index_type_generator<254, 12, true>::index_type>);
-    static_assert(std::is_same_v<unsigned short, typename static_edge_index_type_generator<255, 254, true>::index_type>);
-    static_assert(std::is_same_v<unsigned short, typename static_edge_index_type_generator<127, 255, true>::index_type>);
-    static_assert(std::is_same_v<std::size_t, typename static_edge_index_type_generator<65535, 255, true>::index_type>);
-    static_assert(std::is_same_v<std::size_t, typename static_edge_index_type_generator<255, 65535, true>::index_type>);
+    STATIC_CHECK((std::is_same_v<unsigned char,  static_edge_index_type<10, 12>>));
+    STATIC_CHECK((std::is_same_v<unsigned char,  static_edge_index_type<255, 255>>));
+    STATIC_CHECK((std::is_same_v<unsigned short, static_edge_index_type<256, 0>>));
+    STATIC_CHECK((std::is_same_v<unsigned short, static_edge_index_type<0, 256>>));
+    STATIC_CHECK((std::is_same_v<unsigned short, static_edge_index_type<3, 300>>));
+    STATIC_CHECK((std::is_same_v<unsigned short, static_edge_index_type<65535, 65535>>));
+    STATIC_CHECK((std::is_same_v<unsigned int,   static_edge_index_type<65536, 0>>));
+    STATIC_CHECK((std::is_same_v<unsigned int,   static_edge_index_type<0, 65536>>));
+    STATIC_CHECK((std::is_same_v<unsigned int,   static_edge_index_type<4294967295, 4294967295>>));
+    STATIC_CHECK((std::is_same_v<std::size_t,    static_edge_index_type<4294967296, 0>>));
+    STATIC_CHECK((std::is_same_v<std::size_t,    static_edge_index_type<0, 4294967296>>));
+
+    // Through the configuration, every flavour but `directed` stores two edges for each one declared
+
+    STATIC_CHECK((std::is_same_v<unsigned char,  static_edge_storage_config<graph_flavour::directed, 255, 3>::index_type>));
+    STATIC_CHECK((std::is_same_v<unsigned short, static_edge_storage_config<graph_flavour::directed, 256, 3>::index_type>));
+    STATIC_CHECK((std::is_same_v<unsigned short, static_edge_storage_config<graph_flavour::directed, 300, 3>::index_type>));
+
+    STATIC_CHECK((std::is_same_v<unsigned char,  static_edge_storage_config<graph_flavour::undirected, 127, 3>::index_type>));
+    STATIC_CHECK((std::is_same_v<unsigned short, static_edge_storage_config<graph_flavour::undirected, 128, 3>::index_type>));
+
+    STATIC_CHECK((std::is_same_v<unsigned char,  static_edge_storage_config<graph_flavour::undirected_embedded, 127, 3>::index_type>));
+    STATIC_CHECK((std::is_same_v<unsigned short, static_edge_storage_config<graph_flavour::undirected_embedded, 128, 3>::index_type>));
   }
 
   template
