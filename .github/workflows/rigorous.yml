@@ -19,9 +19,10 @@ name: rigorous
 # on THAT, through the pull_request trigger, where the result is spendable as the
 # gate. The two are never both paid for on one night. (A third case: staging is
 # ahead and the PR is already open, in which case nothing runs anywhere that
-# night; the PR re-runs the gate whenever staging moves.) Work lands on staging
-# silently, and without this it accumulated until someone remembered; the PR is
-# the notification, green or red.
+# night beyond making sure the PR is set to merge itself; the PR re-runs the
+# gate whenever staging moves.) Work lands on staging silently, and without
+# this it accumulated until someone remembered; the PR is the notification,
+# green or red.
 #
 # Over fine, this adds the two questions a sanitized Debug build cannot answer:
 # races, and what the optimizer does.
@@ -302,11 +303,33 @@ jobs:
   # is a fine-grained PAT with Contents and Pull requests read/write on this
   # repository; when it expires this step fails, loudly, which is the point.
   #
-  # One PR at a time. If one is already open it is left alone: the gate re-runs on
-  # it whenever staging moves, and if it is red that is the thing to look at. But
-  # an open PR that is green and mergeable should already have merged itself, so
-  # that is reported as a failure rather than as "nothing to do" - the one shape
-  # in which a wedged promotion would otherwise look fine every night.
+  # One PR at a time, and the step's postcondition is the same whatever the
+  # previous night left behind: one promotion PR is open and set to auto-merge.
+  # An open PR is therefore checked for auto-merge and given it if missing, not
+  # left alone. Creating the PR and enabling auto-merge need different
+  # permissions - Pull requests: write for the first, Contents: write as well for
+  # the second - so the two halves fail separately, and a step that only reported
+  # on an open PR would leave one created without auto-merge stuck for good, as
+  # on 2026-09-13. Whoever opened the PR, this step completes it, so opening one
+  # by hand is fine.
+  #
+  # "Set it to auto-merge" is `gh pr merge --auto`, which on a PR GitHub already
+  # reports mergeable sends a merge instead: GitHub refuses to arm auto-merge on
+  # a clean PR. Either way main advances only when GitHub says it may, so the
+  # postcondition holds; the step re-reads the PR afterwards and reports which
+  # of the two happened rather than assuming.
+  #
+  # The one shape that is an error: the PR is mergeable AND set to auto-merge,
+  # and still open after GitHub has had an hour since its last check completed.
+  # GitHub has everything it needs and has not acted, and that would otherwise
+  # look fine every night. The hour is because auto-merge is not instant: it
+  # took five seconds on 2026-09-12 and did not act at all in the fifteen
+  # minutes before #59 was merged by hand on 2026-09-13, during a GitHub outage
+  # of the Pull Requests service. A nightly landing minutes after a gate went
+  # green would otherwise report a wedge that is not one. A PR whose gate is red is
+  # BLOCKED, not CLEAN, and is left for the PR to report. A conflict (DIRTY)
+  # cannot arise while main moves only by `--merge`-ing staging into it, and is
+  # reported as an error rather than assumed away.
   promote:
     name: Promote staging
     needs: staging
@@ -318,22 +341,47 @@ jobs:
       GH_REPO: ${{ github.repository }}
       AHEAD: ${{ needs.staging.outputs.ahead }}
     steps:
-      - name: Open the promotion PR, unless one is open
+      - name: Open the promotion PR and set it to auto-merge, whichever is missing
         run: |
-          open=$(gh pr list --base main --head staging --state open --json number --jq '.[0].number // empty')
-          if [ -n "$open" ]; then
-            state=$(gh pr view "$open" --json mergeStateStatus,createdAt --jq '"\(.mergeStateStatus) since \(.createdAt)"')
-            echo "promotion PR #$open is already open: $state"
-            case "$state" in
-              CLEAN*) echo "::error::PR #$open is green and mergeable but has not merged; auto-merge is not working"; exit 1;;
-            esac
-            exit 0
+          pr=$(gh pr list --base main --head staging --state open --json number --jq '.[0].number // empty')
+          if [ -n "$pr" ]; then
+            echo "promotion PR #$pr is already open"
+          else
+            url=$(gh pr create --base main --head staging \
+                    --title "Promote staging to main" \
+                    --body "Opened by the scheduled rigorous run: staging is $AHEAD commit(s) ahead of main. Merges itself when the gate is green.")
+            pr=${url##*/}
+            echo "opened $url"
           fi
-          url=$(gh pr create --base main --head staging \
-                  --title "Promote staging to main" \
-                  --body "Opened by the scheduled rigorous run: staging is $AHEAD commit(s) ahead of main. Merges itself when the gate is green.")
-          gh pr merge --auto --merge "$url"
-          echo "opened $url"
+          info=$(gh pr view "$pr" --json autoMergeRequest,mergeStateStatus --jq '"\(.autoMergeRequest != null) \(.mergeStateStatus)"')
+          read -r armed state <<<"$info"
+          case "$armed" in
+            false)
+              gh pr merge --auto --merge "$pr"
+              after=$(gh pr view "$pr" --json state,autoMergeRequest --jq '"\(.state) \(.autoMergeRequest != null)"')
+              case "$after" in
+                "MERGED "*) echo "#$pr was already mergeable and has been merged";;
+                "OPEN true") echo "#$pr is $state and now set to auto-merge";;
+                *) echo "::error::#$pr reads '$after' after gh pr merge --auto"; exit 1;;
+              esac;;
+            true)
+              case "$state" in
+                CLEAN|UNSTABLE)
+                  last_check=$(gh pr view "$pr" --json statusCheckRollup --jq '[.statusCheckRollup[].completedAt // empty] | max')
+                  minutes_since=$(( ($(date -u +%s) - $(date -u -d "$last_check" +%s)) / 60 ))
+                  if [ "$minutes_since" -lt 60 ]; then
+                    echo "#$pr is $state and set to auto-merge, its last check ${minutes_since}m ago; GitHub's move"
+                  else
+                    echo "::error::#$pr is $state and set to auto-merge, its last check ${minutes_since}m ago, yet has not merged"; exit 1
+                  fi;;
+                DIRTY)
+                  echo "::error::#$pr is DIRTY: staging conflicts with main, which merging staging into main cannot produce"; exit 1;;
+                *)
+                  echo "#$pr is $state and set to auto-merge; nothing to do";;
+              esac;;
+            *)
+              echo "::error::cannot read #$pr: '$info'"; exit 1;;
+          esac
 
   # The run's own shape, checked against what its mode requires. A job skipped by
   # a wrong `if:` renders the same as one that passed, and the `needs:` chain
