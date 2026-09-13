@@ -1,0 +1,172 @@
+name: statistical
+
+# The gate answers "does this tree pass" once, and one trial is the right sample
+# for a deterministic question. This answers a different one: how often does
+# main fail? Races and timings are probabilistic, so a single green says almost
+# nothing about them; N greens on a fixed tree bound the per-run failure
+# probability, and by the rule of three, zero failures in N trials puts it below
+# about 3/N with 95% confidence. Nights on the same tree add up - by hand, since
+# nothing here aggregates them, and with the caveat that the hosted images roll,
+# so successive nights sample the same tree on slightly different environments -
+# and the bound tightens until the next promotion changes the tree. Which is why
+# this runs on main, the tree that is supposed to be fixed, and not on staging
+# or a promotion PR. A promotion night simply ends the sample on the old tree;
+# the new one gets its first trials the night after.
+#
+# So it is independent of rigorous: separate schedule, no sequencing, its own
+# runners. Both may be late by GitHub's random hours; whichever main this sees
+# when it starts is the one it samples, and the run pins that SHA for its whole
+# length, so a promotion landing mid-run changes nothing here. The summary names
+# the SHA, since the sample is per tree.
+#
+# The instrument is the runner's own: `locate N` runs the suite N times in one
+# process and reports the tests that failed in some repetitions and not others.
+# A failure common to every repetition is not an instability, and the analysis
+# says "No instabilities detected" over it; the column is still red, and the
+# summary below reads the step's outcome as well as the phrase. In-process
+# rather than `--sandbox` (N child processes, each fresh) because sandbox
+# aggregation reports nothing - roadmap item 161 - at the cost that the trials
+# share a process, so are less independent than the rule of three assumes; the
+# bound is optimistic by that much. Without `--check-versioned-output`: the gate
+# has already applied it to this tree, and item 160 records the composition as
+# verified locally but not here. The performance tests are excluded for the
+# reason coarse.yml gives.
+#
+# Which columns: the ones whose failures are rare by mechanism. TSan reports only
+# the interleavings that actually execute, so repetition is what widens its
+# coverage. ASan+UBSan for timing-dependent memory errors. MSVC ASan because it
+# is the configuration in which item 134's sharing violation showed most often -
+# 2 of 4, against Debug's 3 of 38 - and its recurrence is what rigorous.yml says
+# would be evidence against the fix. Not Release, not coverage, not docs: the
+# optimizer's questions are not statistical.
+#
+# N is an input so the nightly value and a by-hand sweep with a larger one are
+# the same file. The cost is wall-clock, not money - standard runners are free
+# on a public repository - and a run is one build plus N suites, which at the
+# measured two to four minutes a suite puts N=20 at about an hour a column.
+on:
+  # The minute is off the hour on purpose, where GitHub's scheduler is slowest:
+  # see the schedule in rigorous.yml. An hour after the nightly's tick, for no
+  # reason beyond not sharing it.
+  schedule:
+    - cron: '1 2 * * *'
+  workflow_dispatch:
+    inputs:
+      trials:
+        description: 'How many times each column runs the suite. Empty for the nightly value.'
+        required: false
+        type: number
+
+# No concurrency group, as rigorous.yml reasons: a dispatch alongside the
+# scheduled run is a second sample, not a superseded one.
+jobs:
+  # `inputs.trials` is empty on a schedule and on a dispatch that left it blank,
+  # so the nightly value is spelt here, once.
+  trials:
+    name: How many trials
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      TRIALS: ${{ inputs.trials }}
+    outputs:
+      n: ${{ steps.n.outputs.n }}
+    steps:
+      - id: n
+        run: |
+          n=${TRIALS:-20}
+          [ "$n" -ge 2 ] 2>/dev/null || { echo "::error::trials must be an integer of at least 2, not '$n'"; exit 1; }
+          echo "n=$n" >> "$GITHUB_OUTPUT"
+
+  # Warnings are counted, not fatal. A red run here should mean an instability
+  # was found, and a build that dies on a warning produces no trials at all;
+  # nothing reaches main without the gates having built it with warnings fatal.
+  statistical:
+    needs: trials
+    uses: ./.github/workflows/tests.yml
+    with:
+      warnings_as_errors: false
+      exec_args: 'locate;${{ needs.trials.outputs.n }};--exclude-performance'
+      suite_timeout_minutes: 200
+      job_timeout_minutes: 240
+      columns: >-
+        [
+          {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan"},
+          {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan"}
+        ]
+
+  # The sample, stated as a measurement: the tree, the trials, what each column
+  # found, and the bound that zero failures earns. Runs whether or not the
+  # columns were green, since a red column is the finding. Three things it
+  # insists on, each of which would otherwise pass in silence: every column's
+  # artifact is present; the suite ran N times, witnessed by the runner's
+  # "Running tests" line once per repetition - the one check that tells N trials
+  # from one; and a column is clean only if its suite step succeeded AND the
+  # analysis found nothing, since the analysis says "No instabilities detected"
+  # over a failure common to every repetition too.
+  summary:
+    name: The sample
+    needs: [trials, statistical]
+    if: ${{ !cancelled() && needs.trials.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      N: ${{ needs.trials.outputs.n }}
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: '*-output'
+          path: artifacts
+
+      - name: Write the sample up
+        run: |
+          failed=0
+          report=$(mktemp)
+          while IFS='|' read -r build name; do
+            dir="artifacts/$build-output"
+            log="$dir/run-log/run.log"
+            echo "### $name" >> "$report"
+            if [ ! -d "$dir" ]; then
+              echo "::error::$name: no artifact; the column did not run"; failed=1
+              echo "No artifact: the column did not run." >> "$report"
+            elif [ ! -f "$log" ]; then
+              echo "::error::$name: no run log; the column did not reach the suite"; failed=1
+              echo "No run log: the column did not reach the suite." >> "$report"
+            else
+              outcome=$(cat "$dir/run-log/outcome")
+              ran=$(grep -c "Running tests" "$log" || true)
+              if [ "$ran" -ne "$N" ]; then
+                echo "::error::$name: the suite ran $ran times, not $N"; failed=1
+                echo "The suite ran $ran times, not $N." >> "$report"
+              elif [ "$outcome" = success ] && grep -q "No instabilities detected" "$log"; then
+                echo "No instabilities detected in $N trials." >> "$report"
+              else
+                failed=1
+                {
+                  echo "Suite step: $outcome. The end of the log:"
+                  echo '```'
+                  tail -60 "$log"
+                  echo '```'
+                } >> "$report"
+              fi
+            fi
+            echo "" >> "$report"
+          done <<'COLUMNS'
+          llvm-env-tsan|macOS · Clang · TSan
+          gcc-env-asan-ubsan|Linux · GCC · ASan+UBSan
+          msvc-asan|Windows · MSVC · ASan
+          COLUMNS
+
+          {
+            echo "## statistical: $N trials per column on \`${GITHUB_SHA:0:9}\`"
+            echo ""
+            if [ "$failed" -eq 0 ]; then
+              bound=$(awk -v n="$N" 'BEGIN{printf "%.1f", 300/n}')
+              echo "Zero failures in $N trials on every column: the per-run failure probability is below $bound% at 95% confidence (rule of three)."
+            else
+              echo "Not every column was clean; no bound is claimed."
+            fi
+            echo ""
+            cat "$report"
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit $failed
