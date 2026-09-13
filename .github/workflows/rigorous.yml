@@ -152,8 +152,15 @@ on:
         required: false
         type: boolean
         default: false
+  # Off the hour on purpose. GitHub's scheduler queues every run whose cron
+  # names the same minute, and a round hour is where they cluster: at
+  # '0 3 * * *' the nightly arrived at 07:34, 07:32, 07:38 and 07:57 UTC on
+  # 2026-09-10 to 2026-09-13, and GitHub documents that a queued run can be
+  # dropped outright under load. Both the minute and the hour moved, so if the
+  # delay shrinks this does not say which did it. Nothing here would notice a
+  # dropped run, since the audit lives inside it.
   schedule:
-    - cron: '0 3 * * *'
+    - cron: '1 1 * * *'
 
 # A push to the head of an open PR into main cancels that PR's run in flight: a
 # superseded run cannot gate anything, and its audit would otherwise compare its
