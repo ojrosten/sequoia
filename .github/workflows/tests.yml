@@ -30,12 +30,22 @@ on:
         required: false
         type: boolean
         default: false
+      suite_timeout_minutes:
+        description: 'How long the suite may run before the step is killed. The tiers run it once; statistical runs it N times over.'
+        required: false
+        type: number
+        default: 30
+      job_timeout_minutes:
+        description: 'How long a column may take in all, build included.'
+        required: false
+        type: number
+        default: 90
 
 jobs:
   build-and-test:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 90
+    timeout-minutes: ${{ inputs.job_timeout_minutes }}
     strategy:
       # Every column reports. Cancelling the rest on the first red would collect
       # one answer where the point is to collect all of them.
@@ -234,9 +244,10 @@ jobs:
       # The Build step above already depends on this; it is written down here
       # because the dependency is invisible at the call site.
       - name: Run the suite
+        id: suite
         continue-on-error: ${{ matrix.advisory == true }}
         working-directory: TestAll
-        timeout-minutes: 30
+        timeout-minutes: ${{ inputs.suite_timeout_minutes }}
         run: cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/run.log"
 
       # An advisory column still has to be *read*, and its failures are not equally acceptable.
@@ -290,12 +301,16 @@ jobs:
           fi
 
       # Kept with the artifact so an advisory column can be reviewed after the fact,
-      # rather than only through the annotations.
+      # rather than only through the annotations. The step's outcome goes with it:
+      # a caller reading the log back cannot otherwise tell a suite that failed
+      # in every repetition, whose analysis says "No instabilities detected", from
+      # one that passed.
       - name: Keep the run log
         if: always()
         run: |
           mkdir -p run-log
           cp "$RUNNER_TEMP/run.log" run-log/ 2>/dev/null || true
+          echo "${{ steps.suite.outcome }}" > run-log/outcome
 
       # Where drift detection is on, the switch fails the run but reports only
       # that a bit is set; this names the files. It also sees the whole tree,

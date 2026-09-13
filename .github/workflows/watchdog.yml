@@ -36,9 +36,10 @@ name: watchdog
 # cannot see.
 on:
   # The minute is off the hour on purpose, where GitHub's scheduler is slowest:
-  # see the schedule in rigorous.yml. Twelve hours after the nightly's tick: its
-  # two scheduled runs to date arrived 6h37m and 6h56m late, and this one will
-  # be late by as much, in either direction.
+  # see the schedule in rigorous.yml. Twelve hours after the nightly's tick and
+  # eleven after the statistical run's: the nightly's two scheduled runs to date
+  # arrived 6h37m and 6h56m late, and this one will be late by as much, in
+  # either direction.
   schedule:
     - cron: '1 13 * * *'
   workflow_dispatch:
@@ -114,5 +115,6 @@ jobs:
 
           failed=0
           check rigorous.yml "the nightly" || failed=1
+          check statistical.yml "the statistical run" || failed=1
           check false-negative.yml "the false-negative control" || failed=1
           exit $failed
