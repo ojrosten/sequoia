@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class file_editors_free_test final : public free_test
+  class arithmetic_casts_free_test final : public free_test
   {
   public:
     using free_test::free_test;
@@ -22,9 +22,5 @@ namespace sequoia::testing
     static std::filesystem::path source_file();
 
     void run_tests();
-  private:
-    void test_add_include_without_an_existing_block();
-    void test_add_include_to_an_existing_block();
-    void test_comparison_of_file_contents();
   };
 }

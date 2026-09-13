@@ -283,7 +283,7 @@ namespace sequoia::testing
     {
       if(const auto cmakeCache{parentProjectPaths.build().cmake_cache_dir() / "CMakeCache.txt"}; fs::exists(cmakeCache))
       {
-        if(const auto optText{read_to_string(cmakeCache)})
+        if(const auto optText{read_to_string(cmakeCache, std::ios_base::in)})
         {
           const auto [first, last]{find_sandwiched_text(optText.value(), "CMAKE_GENERATOR_INSTANCE:INTERNAL=", "\n")};
           if((first != npos) && (last != npos))

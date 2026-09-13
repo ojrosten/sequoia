@@ -66,6 +66,8 @@ namespace sequoia::testing
 
     void test_pass_recorded_in_the_modification_second(const project_paths& projPaths);
 
+    void test_prune_record_round_trip(const project_paths& projPaths);
+
     void test_prune_update(const project_paths& projPaths);
 
     void test_instability_analysis_prune_upate(const project_paths& projPaths);
@@ -83,6 +85,10 @@ namespace sequoia::testing
                     std::string_view source,
                     std::string_view cutoff,
                     const std::vector<std::filesystem::path>& prediction);
+
+    void check_round_trip(const reporter& description,
+                          const project_paths& projPaths,
+                          const prune_records& records);
 
     [[nodiscard]]
     static std::chrono::seconds to_duration(modification_time modTime);

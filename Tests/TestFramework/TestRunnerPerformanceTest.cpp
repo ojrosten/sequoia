@@ -43,7 +43,7 @@ namespace sequoia::testing
     [[nodiscard]]
     double get_timing(const std::filesystem::path& file)
     {
-      if(const auto optContents{read_to_string(file)})
+      if(const auto optContents{read_to_string(file, std::ios_base::in)})
       {
         std::string_view contents{optContents.value()};
         constexpr std::string_view pattern{"Execution Time:"};

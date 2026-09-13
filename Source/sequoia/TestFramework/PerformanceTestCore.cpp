@@ -80,7 +80,7 @@ namespace sequoia::testing
         [filename{this->diagnostics_file_paths().false_positive_or_negative_file_path()}]() -> std::string {
           if(std::filesystem::exists(filename))
           {
-            if(auto contents{read_to_string(filename)})
+            if(auto contents{read_to_string(filename, std::ios_base::in | std::ios_base::binary)})
               return contents.value();
 
             throw std::runtime_error{report_failed_read(filename)};

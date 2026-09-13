@@ -299,12 +299,11 @@ jobs:
 
       # Where drift detection is on, the switch fails the run but reports only
       # that a bit is set; this names the files. It also sees the whole tree,
-      # where the switch sees only what this toolchain rewrites. `git diff` and
-      # not `git status`, since a Windows run rewrites output/ with CRLF and
-      # .gitattributes normalizes it back on check-in.
+      # where the switch sees only what this toolchain rewrites, and `git status`
+      # names a file the run added, which `git diff` would not.
       - name: Name any file whose versioned output moved
         if: always()
-        run: git diff --stat -- output/ TestMaterials/ || true
+        run: git status --short -- output/ TestMaterials/ || true
 
       - name: Upload the run's output
         if: always()

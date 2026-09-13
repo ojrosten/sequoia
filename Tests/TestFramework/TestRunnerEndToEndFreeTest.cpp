@@ -333,7 +333,7 @@ namespace sequoia::testing
     // detects it, leaving nothing downstream to accommodate.
 
     const auto summaries{generated_project() /= "output/TestSummaries/Tests"};
-    write_to_file(summaries / "Stuff" / "foo_test.txt", "Not what the run will write\n");
+    write_to_file(summaries / "Stuff" / "foo_test.txt", "Not what the run will write\n", std::ios_base::out);
     fs::remove(summaries / "Maybe" / "maybe_test.txt");
 
     run_and_check(report("Versioned output checked, having drifted"), b, "CheckVersionedOutputDrifted",

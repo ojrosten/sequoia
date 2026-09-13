@@ -40,7 +40,7 @@ namespace sequoia::testing
     auto to_snapshot_entry(const fs::path& root)
     {
       return [&root](const fs::directory_entry& entry) {
-        auto text{read_to_string(entry.path())};
+        auto text{read_to_string(entry.path(), std::ios_base::in | std::ios_base::binary)};
         if(!text) throw std::runtime_error{report_failed_read(entry.path())};
 
         return versioned_output_snapshot::value_type{fs::relative(entry.path(), root), std::move(*text)};

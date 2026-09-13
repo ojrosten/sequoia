@@ -256,10 +256,10 @@ namespace sequoia::testing
         const auto& filename{summaryFile.file_path()};
         if(filename.empty()) return;
 
-        auto mode{std::ios_base::out};
+        auto mode{std::ios_base::out | std::ios_base::binary};
         if(auto found{m_FilesWrittenTo.find(filename)}; found != m_FilesWrittenTo.end())
         {
-          mode = std::ios_base::app;
+          mode = std::ios_base::app | std::ios_base::binary;
         }
         else
         {
@@ -383,15 +383,7 @@ namespace sequoia::testing
       // An empty directory cannot be committed, so this one is made only when a file goes into it.
       std::filesystem::create_directories(file.parent_path());
 
-      write_to_file(file, text);
-    }
-  }
-
-  void test_vessel::versioned_write(const std::filesystem::path& file, const failure_output& output)
-  {
-    for(const auto& info : output)
-    {
-      versioned_write(file, info.message);
+      write_to_file(file, text, std::ios_base::out | std::ios_base::binary);
     }
   }
 

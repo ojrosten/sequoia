@@ -195,6 +195,7 @@ namespace sequoia::testing
     test_dependencies(projPaths);
     test_stamp_on_second_boundary(projPaths);
     test_pass_recorded_in_the_modification_second(projPaths);
+    test_prune_record_round_trip(projPaths);
     test_prune_update(projPaths);
     test_instability_analysis_prune_upate(projPaths);
   }
@@ -592,6 +593,63 @@ namespace sequoia::testing
                        {},
                        {});
 
+    /* Cycle/First.hpp and Cycle/Second.hpp include one another. Each carries a test and includes a
+       leaf of its own, so a staleness which propagates round the cycle in one direction only is
+       caught whichever member the traversal enters by: one leaf or the other lies beyond the member
+       which folds in its neighbour too soon.
+    */
+    const auto cycleTests{test_list{{"Cycle/FirstFreeTest.cpp"}, {"Cycle/SecondFreeTest.cpp"}}};
+
+    check_tests_to_run("The leaf beyond First.hpp is stale",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{sourceRepo / "Cycle" / "FirstLeaf.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {});
+
+    check_tests_to_run("The leaf beyond Second.hpp is stale",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{sourceRepo / "Cycle" / "SecondLeaf.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {});
+
+    check_tests_to_run("One member of the cycle is stale",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{sourceRepo / "Cycle" / "First.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {});
+
+    check_tests_to_run("The other member of the cycle is stale",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{sourceRepo / "Cycle" / "Second.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {});
+
+    // The fold also carries the modification time round the cycle, which is what decides whether a
+    // recorded pass post-dates the newest change.
+    check_tests_to_run("The leaf beyond First.hpp is stale, following a previously successful run",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{sourceRepo / "Cycle" / "FirstLeaf.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {{"Cycle/SecondFreeTest.cpp", m_ResetTime + to_duration(modification_time::very_early)}});
+
+    check_tests_to_run("The leaf beyond Second.hpp is stale, following a previously successful run",
+                       projPaths,
+                       "namespace",
+                       {.stale{{{sourceRepo / "Cycle" / "SecondLeaf.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {{"Cycle/FirstFreeTest.cpp", m_ResetTime + to_duration(modification_time::very_early)}});
+
     check_tests_to_run("Source cpp indirectly stale via cpp definitions for included header",
                        projPaths,
                        "namespace",
@@ -756,6 +814,76 @@ namespace sequoia::testing
 
     fs::last_write_time(testFile, m_ResetTime);
     fs::remove(passesFile);
+  }
+
+  void dependency_analyzer_free_test::check_round_trip(const reporter& description,
+                                                       const project_paths& projPaths,
+                                                       const prune_records& records)
+  {
+    const auto file{projPaths.prune().failures(std::nullopt)};
+    write_tests(projPaths, file, records);
+    check(equality, description, read_tests(file), records);
+    fs::remove(file);
+  }
+
+  void dependency_analyzer_free_test::test_prune_record_round_trip(const project_paths& projPaths)
+  {
+    const auto stamp{m_ResetTime};
+
+    check_round_trip("A single record",
+                     projPaths,
+                     {{"HouseAllocationTest.cpp", stamp}});
+
+    check_round_trip("Several records",
+                     projPaths,
+                     {{"HouseAllocationTest.cpp", stamp}, {"Maths/ProbabilityTest.cpp", stamp}});
+
+    check_round_trip("A path containing a space",
+                     projPaths,
+                     {{"Stuff/My Test.cpp", stamp}});
+
+    check_round_trip("A path containing a space does not take the rest of the file with it",
+                     projPaths,
+                     {{"HouseAllocationTest.cpp", stamp}, {"Stuff/My Test.cpp", stamp}, {"Maths/ProbabilityTest.cpp", stamp}});
+
+    check_round_trip("A path beginning with a quotation mark",
+                     projPaths,
+                     {{"\"HouseAllocationTest.cpp", stamp}, {"Maths/ProbabilityTest.cpp", stamp}});
+
+    check_round_trip("A path with a quotation mark elsewhere in it",
+                     projPaths,
+                     {{"House\"AllocationTest.cpp", stamp}});
+
+    check_round_trip("A path containing consecutive spaces, and one which ends in a space",
+                     projPaths,
+                     {{"Stuff/My  Test.cpp", stamp}, {"Stuff/Trailing.cpp ", stamp}});
+
+    check_round_trip("A time stamp before the file clock's epoch, which under libstdc++ is every stamp there is",
+                     projPaths,
+                     {{"HouseAllocationTest.cpp", prune_record::stamp_type{} - std::chrono::seconds{1}}});
+
+    check_round_trip("The file clock's epoch itself",
+                     projPaths,
+                     {{"HouseAllocationTest.cpp", prune_record::stamp_type{}}});
+
+    // Prune state lives in the build tree, so a file in the superseded format - unkeyed, one record
+    // per line - survives an upgrade and must parse as nothing rather than as data.
+    const auto file{projPaths.prune().failures(std::nullopt)};
+    { std::ofstream{file} << "HouseAllocationTest.cpp 12345\nMaths/ProbabilityTest.cpp 12345\n"; }
+
+    check(equality,
+          "A prune file in the superseded format yields no records",
+          read_tests(file),
+          prune_records{});
+
+    { std::ofstream{file} << "path: HouseAllocationTest.cpp\ntimestamp: 0\npath: Maths/ProbabilityTest.cpp\ntimestamp: soon\n"; }
+
+    check(equality,
+          "A malformed record ends the read, keeping those before it",
+          read_tests(file),
+          prune_records{{"HouseAllocationTest.cpp", prune_record::stamp_type{}}});
+
+    fs::remove(file);
   }
 
   void dependency_analyzer_free_test::test_prune_update(const project_paths& projPaths)

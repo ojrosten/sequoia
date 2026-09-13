@@ -8,17 +8,74 @@
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
+#include "sequoia/Maths/Arithmetic/ArithmeticCasts.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <charconv>
 #include <chrono>
 #include <concepts>
+#include <cstdint>
+#include <format>
 #include <fstream>
+#include <optional>
+#include <string>
+#include <string_view>
 
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
+
+  using maths::checked_conversion_to;
+
+  namespace
+  {
+    using duration_t   = prune_record::stamp_type::duration;
+    using stream_rep_t = std::int64_t;
+  }
+
+  std::ostream& operator<<(std::ostream& s, const prune_record& record)
+  {
+    return s << "path: "      << record.test_path.generic_string() << '\n'
+             << "timestamp: " << std::format("{}", checked_conversion_to<stream_rep_t>(record.time_stamp.time_since_epoch().count()));
+  }
+
+  std::istream& operator>>(std::istream& s, prune_record& record)
+  {
+    const auto extractField{
+      [&s](std::string_view key) -> std::optional<std::string> {
+        if(std::string line{}; std::getline(s, line) && line.starts_with(key))
+          return line.substr(key.size());
+
+        return std::nullopt;
+      }
+    };
+
+    const auto toStamp{
+      [](const std::string& text) -> std::optional<prune_record::stamp_type> {
+        const auto last{text.data() + text.size()};
+        if(stream_rep_t count{}; std::from_chars(text.data(), last, count) == std::from_chars_result{last, std::errc{}})
+          return prune_record::stamp_type{duration_t{checked_conversion_to<duration_t::rep>(count)}};
+
+        return std::nullopt;
+      }
+    };
+
+    const auto parsed{
+      extractField("path: ")
+        .and_then([&](std::string path) {
+          return extractField("timestamp: ")
+                   .and_then(toStamp)
+                   .transform([&path](prune_record::stamp_type stamp) { return prune_record{std::move(path), stamp}; });
+        })
+    };
+
+    if(parsed) record = *parsed;
+    else       s.setstate(std::ios::failbit);
+
+    return s;
+  }
 
   namespace
   {
@@ -394,21 +451,42 @@ namespace sequoia::testing
 
       build_dependencies(g, projPaths, cutoff);
 
+      bool changed{};
+
       auto nodesLate{
-        [&g](const std::size_t node) {
+        [&g, &changed](const std::size_t node) {
+          auto& wt{g.begin_node_weights()[node]};
+
           for(const auto& edge : g.cedges(node))
           {
-            auto& wt{g.begin_node_weights()[node]};
-            auto& targetWt{g.cbegin_node_weights()[edge.target_node()]};
+            const auto& targetWt{g.cbegin_node_weights()[edge.target_node()]};
 
-            wt.implicit_modification_time = std::ranges::max(wt.implicit_modification_time, targetWt.implicit_modification_time);
+            if(targetWt.implicit_modification_time > wt.implicit_modification_time)
+            {
+              wt.implicit_modification_time = targetWt.implicit_modification_time;
+              changed = true;
+            }
 
-            if(targetWt.stale) wt.stale = true;
+            if(targetWt.stale && !wt.stale)
+            {
+              wt.stale = true;
+              changed = true;
+            }
           }
         }
       };
 
-      traverse(depth_first, g, find_disconnected_t{0}, null_func_obj{}, nodesLate);
+      /* A single post-order pass is exact only on a DAG, and headers may include one another.
+         Rejecting a cycle is not an option, since mutual inclusion is legal, so the fold is
+         repeated until it changes nothing: it only ever sets a flag or advances a time, and so
+         reaches its fixed point - stale if anything reachable is stale, and the newest time
+         among them. On a DAG that is one pass to do the work and one to confirm it.
+       */
+      do
+      {
+        changed = false;
+        traverse(depth_first, g, find_disconnected_t{0}, null_func_obj{}, nodesLate);
+      } while(changed);
 
       const auto passesFile{projPaths.prune().selected_passes(std::nullopt)};
       const auto passingTestsFromFile{read_tests(passesFile)};
