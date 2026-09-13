@@ -27,6 +27,26 @@ name: rigorous
 # Over fine, this adds the two questions a sanitized Debug build cannot answer:
 # races, and what the optimizer does.
 #
+# Two columns run the suite again, minus the end-to-end test: TSan twenty times,
+# because it reports only the interleavings that actually execute and repetition
+# is what widens them; MSVC ASan five times, the configuration in which item
+# 134's sharing violation showed most often. The end-to-end test is excluded
+# because it dominates a pass and the code where races live is mostly elsewhere
+# (its child project runs the framework's concurrency too, in the child) - but
+# by how much depends on the platform, and the two N differ for that reason.
+# Measured on run 34751872361, 2026-09-13: on TSan a full pass is 79s and a
+# pass of everything else 12-18s, so twenty cost 259s; on MSVC ASan a full
+# pass is 216s and everything else 91-100s a time, creeping up with each
+# repetition, so twenty overran the 30-minute ceiling at the nineteenth and five
+# is about eight minutes. Locally, Release, clang, the end-to-end test was 14.8s
+# of 16s - a share the hosted runners do not reproduce in either direction. The
+# first pass still runs everything once, so no column skips the end-to-end
+# test; the drift flag is carried into the repetitions, since a repetition that
+# rewrote a versioned output would be an instability worth seeing. The
+# statistical workflow repeats the whole suite on main every night, without the
+# drift flag; this repeats everything but the end-to-end test on the candidate,
+# before it lands.
+#
 # Which columns run which tests is set out below, at the point it is decided. Both
 # Windows columns exclude the performance tests, for the reason every hosted column
 # has them off bar one. MSVC Release also leaves out TestRunnerProjectFiles, for
@@ -206,9 +226,9 @@ jobs:
       columns: >-
         [
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance"},
+          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance", "repeat_args": "locate;5;--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp"},
           {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15", "exec_args": ""},
-          {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance"},
+          {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance", "repeat_args": "locate;20;--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp"},
           {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerProjectFiles.cpp"},
           {"name": "macOS · Clang · Release",  "os": "macos-latest",   "configure": "llvm-env-release",   "build": "llvm-env-release", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
