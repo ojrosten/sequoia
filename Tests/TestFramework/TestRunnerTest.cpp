@@ -8,6 +8,7 @@
 #include "TestRunnerTest.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "Utilities/TestUtilities.hpp"
 
 #include <fstream>
 
@@ -381,6 +382,7 @@ namespace sequoia::testing
     test_throwing_tests();
     test_filtered_suites();
     test_prune_basic_output();
+    test_post_run_failure();
     test_nested_suite();
     test_nested_suite_verbose();
     test_excluded_performance_tests();
@@ -674,6 +676,30 @@ namespace sequoia::testing
 
     check(equality, "Prune with no tests return code", runner.execute(), return_code::success);
     check_output("Prune with no tests", "PruneWithNoTests", outputStream);
+  }
+
+  void test_runner_test::test_post_run_failure()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Failing"}};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    runner.register_test<passing_test>();
+    runner.register_test<failing_test>();
+
+    // A filtered run merges its results into the previous failures, so a malformed record there fails the prune write
+    const auto failuresFile{runner.proj_paths().prune().failures(std::nullopt)};
+    fs::create_directories(failuresFile.parent_path());
+    const transient_file malformedFailures{failuresFile, "garbage\n"};
+
+    check(equality, "Post-run failure return code", runner.execute(), return_code::soft_failures | return_code::post_run_failures);
+    check_output("Post-Run Failure Output", "PostRunFailureOutput", outputStream);
   }
 
   void test_runner_test::test_nested_suite()

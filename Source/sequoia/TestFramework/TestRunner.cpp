@@ -159,11 +159,12 @@ namespace sequoia::testing
       nascent_tests.emplace_back(std::move(nascentTest));
     }
 
-    constexpr std::array<std::pair<return_code, std::string_view>, 4> return_code_names{{
+    constexpr std::array<std::pair<return_code, std::string_view>, 5> return_code_names{{
       {return_code::versioned_output_diffs, "versioned_output_diffs"},
       {return_code::soft_failures,          "soft_failures"         },
       {return_code::critical_failures,      "critical_failures"     },
-      {return_code::incomplete_run,         "incomplete_run"        }
+      {return_code::incomplete_run,         "incomplete_run"        },
+      {return_code::post_run_failures,      "post_run_failures"     }
     }};
 
     constexpr return_code dirty_return_codes{
@@ -204,20 +205,40 @@ namespace sequoia::testing
         , m_Filtered{isFiltered}
       {}
 
-      void increment_depth() noexcept { ++m_Depth; }
-
-      void decrement_depth() noexcept
+      void update_materials_and_prune_info()
       {
-        if(--m_Depth == npos)
+        for(const auto& update : m_Updateables)
         {
-          for(const auto& update : m_Updateables)
+          try
           {
             soft_update(update.working_materials, update.predictions);
           }
+          catch(const std::exception& e)
+          {
+            record_materials_update_failure(update.test_file, e.what());
+          }
+          catch(...)
+          {
+            record_materials_update_failure(update.test_file, unrecognized);
+          }
+        }
 
+        try
+        {
           update_prune_info();
         }
+        catch(const std::exception& e)
+        {
+          record_prune_update_failure(e.what());
+        }
+        catch(...)
+        {
+          record_prune_update_failure(unrecognized);
+        }
       }
+
+      [[nodiscard]]
+      std::span<const std::string> post_run_failures() const noexcept { return m_PostRunFailures; }
 
       void process_test(const test_paths& files, const log_summary& summary, update_mode updateMode)
       {
@@ -240,14 +261,14 @@ namespace sequoia::testing
         }
       }
     private:
-      constexpr static int npos{-1};
+      constexpr static std::string_view unrecognized{"Unrecognized exception"};
 
-      int m_Depth{npos};
       project_paths m_ProjPaths;
       std::optional<std::size_t> m_Id{};
       is_filtered m_Filtered{};
 
       std::vector<std::filesystem::path> m_FailedTests{}, m_ExecutedTests{};
+      std::vector<std::string> m_PostRunFailures{};
       std::set<test_paths, paths_comparator> m_Updateables{};
       std::set<std::filesystem::path> m_FilesWrittenTo{};
 
@@ -276,6 +297,16 @@ namespace sequoia::testing
         {
           throw std::runtime_error{report_failed_write(filename)};
         }
+      }
+
+      void record_materials_update_failure(const std::filesystem::path& testFile, std::string_view what)
+      {
+        m_PostRunFailures.push_back(std::format("Materials for {} not updated:\n{}", testFile.generic_string(), what));
+      }
+
+      void record_prune_update_failure(std::string_view what)
+      {
+        m_PostRunFailures.push_back(std::format("Prune information not written:\n{}", what));
       }
 
       void update_prune_info() const
@@ -873,10 +904,7 @@ namespace sequoia::testing
     if(concurrent_execution()) sort_tests();
 
     if(m_InstabilityMode == instability_mode::sandbox)
-    {
-      run_tests(m_RunnerID);
-      return to_return_code(root_summary());
-    }
+      return run_tests(m_RunnerID);
 
     auto code{return_code::success};
     for(std::size_t i{}; i < m_NumReps; ++i)
@@ -884,8 +912,7 @@ namespace sequoia::testing
       if(i) reset_tests();
 
       const auto optIndex{m_NumReps > 1 ? std::optional<std::size_t>{i} : std::nullopt};
-      run_tests(optIndex);
-      code |= to_return_code(root_summary());
+      code |= run_tests(optIndex);
     }
 
     return code;
@@ -948,7 +975,7 @@ namespace sequoia::testing
       });
   }
 
-  void test_runner::run_tests(const std::optional<std::size_t> id)
+  return_code test_runner::run_tests(const std::optional<std::size_t> id)
   {
     const timer t{};
 
@@ -985,8 +1012,7 @@ namespace sequoia::testing
 
     using namespace maths;
     auto nodeEarly{
-      [&s = m_Suites,&tracker,id,serial{!concurrent_execution()}](auto n) {
-        tracker.increment_depth();
+      [&s = m_Suites,id,serial{!concurrent_execution()}](auto n) {
         if(serial)
         {
           auto& wt{s.begin_node_weights()[n]};
@@ -1019,12 +1045,11 @@ namespace sequoia::testing
             }
           }
         );
-
-        tracker.decrement_depth();
       }
     };
 
     traverse(depth_first, m_Suites, find_disconnected_t{}, nodeEarly, nodeLate, null_func_obj{});
+    tracker.update_materials_and_prune_info();
 
     if(m_Verbosity == verbosity::verbose)
     {
@@ -1080,6 +1105,16 @@ namespace sequoia::testing
 
     stream() << "\n-----------Grand Totals-----------\n";
     stream() << summarize(root_summary(), "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+
+    // Not folded into the totals, which count what the tests found: these are failures of the run itself
+    const auto postRunFailures{tracker.post_run_failures()};
+    if(!postRunFailures.empty())
+    {
+      stream() << "\n-----------Post-Run Failures-----------\n";
+      for(const auto& failure : postRunFailures) stream() << sequoia::indent(failure, indentation{"\t"}) << "\n\n";
+    }
+
+    return to_return_code(root_summary()) | (postRunFailures.empty() ? return_code::success : return_code::post_run_failures);
   }
 
   [[nodiscard]]

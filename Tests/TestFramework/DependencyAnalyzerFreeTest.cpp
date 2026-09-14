@@ -9,6 +9,7 @@
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
+#include "Utilities/TestUtilities.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
 #include "sequoia/TestFramework/ChronoCheckers.hpp"
 #include "sequoia/TestFramework/SumTypeCheckers.hpp"
@@ -866,24 +867,35 @@ namespace sequoia::testing
                      projPaths,
                      {{"HouseAllocationTest.cpp", prune_record::stamp_type{}}});
 
-    // Prune state lives in the build tree, so a file in the superseded format - unkeyed, one record
-    // per line - survives an upgrade and must parse as nothing rather than as data.
     const auto file{projPaths.prune().failures(std::nullopt)};
-    { std::ofstream{file} << "HouseAllocationTest.cpp 12345\nMaths/ProbabilityTest.cpp 12345\n"; }
 
-    check(equality,
-          "A prune file in the superseded format yields no records",
-          read_tests(file),
-          prune_records{});
+    {
+      const transient_file noTrailingNewline{file, "path: HouseAllocationTest.cpp\ntimestamp: 0"};
 
-    { std::ofstream{file} << "path: HouseAllocationTest.cpp\ntimestamp: 0\npath: Maths/ProbabilityTest.cpp\ntimestamp: soon\n"; }
+      check(equality,
+            "A file ending after a complete record, with no trailing newline",
+            read_tests(file),
+            prune_records{{"HouseAllocationTest.cpp", prune_record::stamp_type{}}});
+    }
 
-    check(equality,
-          "A malformed record ends the read, keeping those before it",
-          read_tests(file),
-          prune_records{{"HouseAllocationTest.cpp", prune_record::stamp_type{}}});
+    {
+      // Prune state lives in the build tree, so a file in a superseded format survives an upgrade
+      const transient_file supersededFormat{file, "HouseAllocationTest.cpp 12345\nMaths/ProbabilityTest.cpp 12345\n"};
 
-    fs::remove(file);
+      check_exception_thrown<std::runtime_error>("A prune file in a superseded format", [&file]() { return read_tests(file); });
+    }
+
+    {
+      const transient_file malformedStamp{file, "path: HouseAllocationTest.cpp\ntimestamp: 0\npath: Maths/ProbabilityTest.cpp\ntimestamp: soon\n"};
+
+      check_exception_thrown<std::runtime_error>("A malformed time stamp", [&file]() { return read_tests(file); });
+    }
+
+    {
+      const transient_file pathWithoutStamp{file, "path: HouseAllocationTest.cpp\n"};
+
+      check_exception_thrown<std::runtime_error>("A path with no time stamp after it", [&file]() { return read_tests(file); });
+    }
   }
 
   void dependency_analyzer_free_test::test_prune_update(const project_paths& projPaths)
