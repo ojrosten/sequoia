@@ -193,10 +193,11 @@ namespace sequoia::testing
     {
       if constexpr(sizeof(unsigned long) == sizeof(unsigned long long))
       {
-        // Do this first, to avoid the second replace_all potentially 
-        // leading to unsigned long long long long (!)
-        replace_all(name, "long long", "long");
-        replace_all(name, "long", "long long");
+        constexpr auto isWordDelimiter{[](char c){ return !(std::isalnum(static_cast<unsigned char>(c)) || (c == '_')); }};
+
+        // Collapse before expanding; the other way round, the collapse undoes the expansion
+        replace_all(name, isWordDelimiter, "long long", isWordDelimiter, "long");
+        replace_all(name, isWordDelimiter, "long",      isWordDelimiter, "long long");
       }
 
       // It is a pity to have to make the following substitutions, but it appears
