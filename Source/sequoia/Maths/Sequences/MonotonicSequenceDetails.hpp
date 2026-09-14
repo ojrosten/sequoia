@@ -22,12 +22,6 @@ namespace sequoia::maths::impl
     constexpr static std::size_t size() noexcept { return N; }
   };
 
-  /** \brief Whether swapping two instances of `C` is `noexcept`: the allocators propagate or are interchangeable.
-
-      Made from the allocator rather than asked of the container, because `std::is_nothrow_swappable`
-      follows the container's own promise and libc++ marks `vector::swap` unconditionally `noexcept`,
-      so the answer would differ by standard library.
-   */
   template<class C>
   struct swap_is_noexcept
     : std::bool_constant<
