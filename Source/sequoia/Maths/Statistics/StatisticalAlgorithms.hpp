@@ -18,7 +18,7 @@
 
 namespace sequoia::maths
 {
-  template<std::input_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
+  template<std::forward_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
   [[nodiscard]]
   std::optional<T> mean(Iter first, Iter last)
   {
@@ -32,10 +32,10 @@ namespace sequoia::maths
     return m;
   }
 
-  template<std::input_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
+  template<std::forward_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
   [[nodiscard]]
   std::pair<std::optional<T>, std::optional<T>>
-    cummulative_square_diffs(Iter first, Iter last)
+    cumulative_square_diffs(Iter first, Iter last)
   {
     if(std::ranges::distance(first, last))
     {
@@ -53,14 +53,14 @@ namespace sequoia::maths
     return {{}, {}};
   }
 
-  template<std::input_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
+  template<std::forward_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
   [[nodiscard]]
   std::pair<std::optional<T>, std::optional<T>>
     variance(Iter first, Iter last)
   {
     if(const auto dist{std::ranges::distance(first, last)})
     {
-      auto [sq, mean]{cummulative_square_diffs(first, last)};
+      auto [sq, mean]{cumulative_square_diffs(first, last)};
 
       return {sq.value()/dist, mean.value()};
     }
@@ -68,7 +68,7 @@ namespace sequoia::maths
     return {{}, {}};
   }
 
-  template<std::input_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
+  template<std::forward_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
   [[nodiscard]]
   std::pair<std::optional<T>, std::optional<T>>
     sample_variance(Iter first, Iter last)
@@ -83,13 +83,13 @@ namespace sequoia::maths
     }
     else
     {
-      auto [sq, mean]{cummulative_square_diffs(first, last)};
+      auto [sq, mean]{cumulative_square_diffs(first, last)};
 
       return {sq.value()/(dist - 1), mean.value()};
     }
   }
 
-  template<std::input_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
+  template<std::forward_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
   [[nodiscard]]
   std::pair<std::optional<T>, std::optional<T>>
     standard_deviation(Iter first, Iter last)
@@ -108,7 +108,7 @@ namespace sequoia::maths
   {
     struct gaussian_approx_estimator
     {
-      template<std::input_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
+      template<std::forward_iterator Iter, class T = typename std::iterator_traits<Iter>::value_type>
       [[nodiscard]]
       std::pair<std::optional<T>, std::optional<T>>
         operator()(Iter first, Iter last) const
@@ -123,7 +123,7 @@ namespace sequoia::maths
         }
         else
         {
-          auto [sq, mean]{cummulative_square_diffs(first, last)};
+          auto [sq, mean]{cumulative_square_diffs(first, last)};
 
           return {std::sqrt(sq.value()/(dist - 1.5)), mean.value()};
         }
@@ -131,7 +131,7 @@ namespace sequoia::maths
     };
   }
 
-  template<std::input_iterator Iter, class Estimator = bias::gaussian_approx_estimator, class T = typename std::iterator_traits<Iter>::value_type>
+  template<std::forward_iterator Iter, class Estimator = bias::gaussian_approx_estimator, class T = typename std::iterator_traits<Iter>::value_type>
   [[nodiscard]]
   std::pair<std::optional<T>, std::optional<T>>
   sample_standard_deviation(Iter first, Iter last, Estimator estimator = Estimator{})
