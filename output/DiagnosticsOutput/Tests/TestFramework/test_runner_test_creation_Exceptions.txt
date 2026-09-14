@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 46
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 47
 Empty string
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Equivalent type is unspecified
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 47
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 48
 Just spaces
 
 Expected Exception Type:
@@ -16,7 +16,40 @@ Equivalent type is unspecified
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 69
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 79
+A directory which does not exist
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to locate the project's purported source directory, output/TestsTemporaryData/TestFramework/test_runner_test_creation/Auxiliary/Namespaces/absent.
+The source directory is either deduced from the name of the directory into which the project
+is checked out, or overridden by specifying a (different) `source_folder` in the project_paths
+customizer. A worktree, or a checkout named anything but the project, needs `source_folder`
+to be appropriately set.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 84
+A directory whose name is not an identifier
+
+Expected Exception Type:
+[std::runtime_error]
+The project's namespace is taken from its source directory, my-project, which in this case is not a
+permissible namespace name. Please supply `source_folder` in the project_paths customizer.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 89
+A directory whose name begins with a digit
+
+Expected Exception Type:
+[std::runtime_error]
+The project's namespace is taken from its source directory, 0project, which in this case is not a
+permissible namespace name. Please supply `source_folder` in the project_paths customizer.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 97
 Unmatched <
 
 Expected Exception Type:
@@ -25,7 +58,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 71
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 99
 Backwards delimiters
 
 Expected Exception Type:
@@ -34,7 +67,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 73
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 101
 Missing symbol
 
 Expected Exception Type:
@@ -43,7 +76,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 75
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 103
 Missing symbol
 
 Expected Exception Type:
@@ -52,7 +85,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 180
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 208
 Plurgh.h does not exist
 
 Expected Exception Type:
@@ -62,7 +95,7 @@ Unable to locate file Plurgh.h or Plurgh.hpp or Plurgh.hxx in the source reposit
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 189
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 217
 Typo in specified class header
 
 Expected Exception Type:
