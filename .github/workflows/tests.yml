@@ -12,11 +12,16 @@ on:
   workflow_call:
     inputs:
       columns:
-        description: 'JSON array of matrix entries: name, os, configure, build, cc/cxx where the preset takes them from the environment, and pkg where the apt package providing the compiler is not spelt like the binary (clang++ comes from clang; g++-15 is its own package).'
+        description: 'JSON array of matrix entries: name, os, configure, build, cc/cxx where the preset takes them from the environment, pkg where the apt package providing the compiler is not spelt like the binary (clang++ comes from clang; g++-15 is its own package), and optionally exec_args, repeat_args and advisory, explained where they are read.'
         required: true
         type: string
       exec_args:
         description: 'Arguments for the test executable, via the EXEC_ARGS cache variable. Semicolon-separated for more than one.'
+        required: false
+        type: string
+        default: ''
+      repeat_args:
+        description: 'Arguments for a second run of the test executable on the built tree, after the first; empty for none. In practice `locate N` minus the end-to-end test, which is nine-tenths of a run. A column may carry its own, replacing the tier''s, as with exec_args.'
         required: false
         type: string
         default: ''
@@ -30,12 +35,22 @@ on:
         required: false
         type: boolean
         default: false
+      suite_timeout_minutes:
+        description: 'How long one pass of the suite may run before the step is killed; a repeat pass gets the same again. The tiers run it once; statistical runs it N times over in one pass.'
+        required: false
+        type: number
+        default: 30
+      job_timeout_minutes:
+        description: 'How long a column may take in all, build included.'
+        required: false
+        type: number
+        default: 90
 
 jobs:
   build-and-test:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 90
+    timeout-minutes: ${{ inputs.job_timeout_minutes }}
     strategy:
       # Every column reports. Cancelling the rest on the first red would collect
       # one answer where the point is to collect all of them.
@@ -173,6 +188,7 @@ jobs:
       # taking this route out of a tier which passes `--check-versioned-output` must
       # repeat it.
       - name: Configure
+        id: configure
         working-directory: TestAll
         run: |
           # A column's exec_args replaces the tier's. `||` cannot express this: an
@@ -183,6 +199,12 @@ jobs:
           else
             args='${{ matrix.exec_args }}'
           fi
+          if [ '${{ toJSON(matrix.repeat_args) }}' = 'null' ]; then
+            repeat='${{ inputs.repeat_args }}'
+          else
+            repeat='${{ matrix.repeat_args }}'
+          fi
+          echo "repeat_args=$repeat" >> "$GITHUB_OUTPUT"
           cmake --preset ${{ matrix.configure }} \
                 "-DEXEC_ARGS=$args" \
                 -DWARNINGS_AS_ERRORS=${{ inputs.warnings_as_errors && 'ON' || 'OFF' }}
@@ -234,10 +256,37 @@ jobs:
       # The Build step above already depends on this; it is written down here
       # because the dependency is invisible at the call site.
       - name: Run the suite
+        id: suite
         continue-on-error: ${{ matrix.advisory == true }}
         working-directory: TestAll
-        timeout-minutes: 30
+        timeout-minutes: ${{ inputs.suite_timeout_minutes }}
         run: cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/run.log"
+
+      # The second pass, where the column asks for one: the same executable on the
+      # same tree with the repeat arguments. Only EXEC_ARGS changes at the
+      # reconfigure, so nothing rebuilds; the `run` target's command line is all
+      # that changes in what is regenerated, and the cache is read back so the
+      # log says what the pass was configured with. The `if:` carries GitHub's
+      # implicit success(), so a red first pass skips both steps - a suite that
+      # is red once tells you what N more would - and the audit below allows for
+      # that; an advisory column's red first pass counts as success, so there the
+      # repeat runs.
+      - name: Configure the repetitions
+        if: ${{ steps.configure.outputs.repeat_args != '' }}
+        working-directory: TestAll
+        env:
+          REPEAT_ARGS: ${{ steps.configure.outputs.repeat_args }}
+        run: |
+          cmake --preset ${{ matrix.configure }} "-DEXEC_ARGS=$REPEAT_ARGS"
+          grep '^EXEC_ARGS:' ../build/TestAll/${{ matrix.configure }}/CMakeCache.txt
+
+      - name: Run the suite again
+        if: ${{ steps.configure.outputs.repeat_args != '' }}
+        id: repeat
+        continue-on-error: ${{ matrix.advisory == true }}
+        working-directory: TestAll
+        timeout-minutes: ${{ inputs.suite_timeout_minutes }}
+        run: cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/repeat.log"
 
       # An advisory column still has to be *read*, and its failures are not equally acceptable.
       # TestRunnerPerformanceTest asserts absolute wall-clock times - eight 25ms sleeps against a
@@ -290,12 +339,18 @@ jobs:
           fi
 
       # Kept with the artifact so an advisory column can be reviewed after the fact,
-      # rather than only through the annotations.
+      # rather than only through the annotations. The step's outcome goes with it:
+      # a caller reading the log back cannot otherwise tell a suite that failed
+      # in every repetition, whose analysis says "No instabilities detected", from
+      # one that passed.
       - name: Keep the run log
         if: always()
         run: |
           mkdir -p run-log
           cp "$RUNNER_TEMP/run.log" run-log/ 2>/dev/null || true
+          echo "${{ steps.suite.outcome }}" > run-log/outcome
+          cp "$RUNNER_TEMP/repeat.log" run-log/ 2>/dev/null || true
+          [ ! -f run-log/repeat.log ] || echo "${{ steps.repeat.outcome }}" > run-log/repeat-outcome
 
       # Where drift detection is on, the switch fails the run but reports only
       # that a bit is set; this names the files. It also sees the whole tree,
@@ -323,8 +378,11 @@ jobs:
   # run and went green. This reads the run's own jobs back through the API and
   # insists that each column named in `columns` exists, once, and that its
   # `Run the suite` step concluded - success or failure, but not skipped and not
-  # absent. Passing is the column's own business; RUNNING is checked here. The
-  # expectation is the columns input itself, so there is no second list to drift.
+  # absent - and, where the column asked for repetitions, that `Run the suite
+  # again` did too, skipped being allowed only when the first pass failed, which
+  # is the one reason it is skipped by design. Passing is the column's own
+  # business; RUNNING is checked here. The expectation is the columns input
+  # itself, so there is no second list to drift.
   audit:
     name: Every column ran the suite
     needs: build-and-test
@@ -335,28 +393,46 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
       EXPECTED_COLUMNS: ${{ inputs.columns }}
+      TIER_REPEAT_ARGS: ${{ inputs.repeat_args }}
     steps:
-      - name: Read this run's jobs back and check each column's suite step
+      - name: Read this run's jobs back and check each column's suite steps
         run: |
           gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --paginate --jq '.jobs[]' \
             | jq -s . > jobs.json
           echo "jobs in this run:"
           jq -r '.[] | "  \(.name): \(.conclusion // .status)"' jobs.json
 
-          jq -r '.[].name' <<<"$EXPECTED_COLUMNS" > expected.txt
+          # A column's repeat_args replaces the tier's, absent meaning the tier's;
+          # the same rule the Configure step applies.
+          jq -r --arg tier "$TIER_REPEAT_ARGS" '
+            .[] | "\(.name)\t\((.repeat_args // $tier) != "")"' \
+            <<<"$EXPECTED_COLUMNS" > expected.txt
           [ -s expected.txt ] || { echo "::error::no columns to audit"; exit 1; }
 
           failed=0
-          while IFS= read -r column; do
+          while IFS=$'\t' read -r column repeats; do
             verdict=$(jq -r --arg c "$column" '
               [.[] | select(.name | endswith(" / " + $c))]
               | if length != 1 then "JOBS:\(length)"
-                else ([.[0].steps[] | select(.name == "Run the suite") | .conclusion] | first) // "ABSENT"
+                else (([.[0].steps[] | select(.name == "Run the suite") | .conclusion] | first) // "ABSENT")
+                     + "\t"
+                     + (([.[0].steps[] | select(.name == "Run the suite again") | .conclusion] | first) // "ABSENT")
                 end' jobs.json)
-            case "$verdict" in
-              success|failure) echo "ok    $column: Run the suite -> $verdict";;
-              JOBS:*)          echo "::error::$column: expected exactly one job, found ${verdict#JOBS:}"; failed=1;;
-              *)               echo "::error::$column: Run the suite -> $verdict; the suite did not run on this column"; failed=1;;
+            if [[ $verdict == JOBS:* ]]; then
+              echo "::error::$column: expected exactly one job, found ${verdict#JOBS:}"; failed=1; continue
+            fi
+            suite=${verdict%%$'\t'*}
+            repeat=${verdict#*$'\t'}
+            case "$suite" in
+              success|failure) echo "ok    $column: Run the suite -> $suite";;
+              *)               echo "::error::$column: Run the suite -> $suite; the suite did not run on this column"; failed=1;;
             esac
+            if [ "$repeats" = true ]; then
+              case "$suite/$repeat" in
+                */success|*/failure) echo "ok    $column: Run the suite again -> $repeat";;
+                failure/skipped)     echo "ok    $column: Run the suite again -> skipped, after a red first pass";;
+                *)                   echo "::error::$column: Run the suite again -> $repeat; the repetitions did not run on this column"; failed=1;;
+              esac
+            fi
           done < expected.txt
           exit $failed

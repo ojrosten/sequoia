@@ -20,10 +20,12 @@ name: false-negative
 # GITHUB_TOKEN push or PR from triggering workflows exempts workflow_dispatch.
 # Roadmap item 148.
 on:
-  # The minute is off the hour on purpose, where GitHub's scheduler is slowest:
-  # see the schedule in rigorous.yml.
+  # Saturday evening, so that the result is in by Sunday morning even when the
+  # scheduler is hours late, and four hours clear of the nightly's tick. The
+  # minute is off the hour on purpose, where GitHub's scheduler is slowest: see
+  # the schedule in rigorous.yml.
   schedule:
-    - cron: '1 5 * * 0'
+    - cron: '1 21 * * 6'
   workflow_dispatch:
 
 permissions:
