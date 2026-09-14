@@ -204,6 +204,7 @@ jobs:
           else
             repeat='${{ matrix.repeat_args }}'
           fi
+          echo "exec_args=$args" >> "$GITHUB_OUTPUT"
           echo "repeat_args=$repeat" >> "$GITHUB_OUTPUT"
           cmake --preset ${{ matrix.configure }} \
                 "-DEXEC_ARGS=$args" \
@@ -388,6 +389,41 @@ jobs:
               fi
             } >> "$GITHUB_STEP_SUMMARY"
           fi
+
+      # The control's columns go red on a corrupted tree, but red does not say
+      # which detector saw it: the prediction corruption fails a test in every
+      # column, drift check or none. This holds the drift detector to its own
+      # evidence. Where the check is on, the run must have written a patch, and
+      # that patch applied in reverse to the tree the run repaired must give back
+      # HEAD plus the corruption and nothing else - the one appended line, in the
+      # one summary, as the only change under either versioned tree. Where the
+      # check is off, there must be no patch. Reversing rather than applying
+      # because the tree the patch was taken from is gone: the run rewrote it.
+      - name: The drift was reported as a patch which, reversed, restores the corruption
+        if: ${{ always() && inputs.false_negative }}
+        run: |
+          patch=output/Drift/VersionedOutput.patch
+          summary=output/TestSummaries/Tests/Core/Meta/type_algorithms_free_test.txt
+          case '${{ steps.configure.outputs.exec_args }}' in
+            *--check-versioned-output*)
+              [ -f "$patch" ] || { echo "::error::the drift check was on and the run wrote no patch"; exit 1; }
+              git apply --reverse --whitespace=nowarn "$patch"
+              status=$(git status --porcelain -- output/TestSummaries/ output/DiagnosticsOutput/)
+              if [ "$status" != " M $summary" ]; then
+                echo "::error::reversing the patch did not leave exactly the corrupted summary modified"
+                echo "$status"; exit 1
+              fi
+              if [ "$(git diff --numstat -- "$summary" | cut -f1,2)" != "$(printf '1\t0')" ] \
+                 || ! git diff -- "$summary" | grep -qxF '+false-negative control: the run must report this line as drift'; then
+                echo "::error::reversing the patch did not reproduce the one appended line"
+                git diff -- "$summary"; exit 1
+              fi
+              git checkout -- "$summary"
+              echo "ok    the patch, reversed, restores the corruption and nothing else";;
+            *)
+              [ ! -f "$patch" ] || { echo "::error::the drift check was off and a patch was written"; exit 1; }
+              echo "ok    no drift check, so no patch";;
+          esac
 
       # The patch, if there is one, and the logs. Not the versioned trees
       # themselves: what a person would have compared them against is exactly
