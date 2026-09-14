@@ -103,6 +103,19 @@ namespace sequoia::testing
           "<0.000000>"s
     );
 
+    // The top bit of a negative double is set, so its hex form overflows a signed 64-bit read
+    check(equality,
+          "A negative double",
+          tidy_name("<(double)[C00921FB54442D18]>", gcc_type{}),
+          "<-3.141593>"s
+    );
+
+    check(equality,
+          "Negative infinity as a double",
+          tidy_name("<(double)[FFF0000000000000]>", gcc_type{}),
+          "<-inf>"s
+    );
+
     check(equality,
           "A positive float, as the control",
           tidy_name("<(float)[4048F5C3]>", gcc_type{}),

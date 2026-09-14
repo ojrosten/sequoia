@@ -1,2 +1,2 @@
 output_free_test
-Standard Top Level Checks:                35;  Failures:  0  [Deep checks: 35]
+Standard Top Level Checks:                37;  Failures:  0  [Deep checks: 37]
