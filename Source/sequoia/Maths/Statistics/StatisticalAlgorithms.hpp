@@ -9,10 +9,6 @@
 
 /** \file StatisticalAlgorithms.hpp
     \brief Tools for statistical analysis.
-
-    Every algorithm here traverses its range twice, once for the distance and once to accumulate,
-    which is why they are constrained on `std::forward_iterator` rather than `std::input_iterator`:
-    a single-pass iterator is consumed by the first traversal.
 */
 
 #include <cmath>
