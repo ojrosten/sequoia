@@ -1,2 +1,2 @@
 static_undirected_graph_unweighted_test
-Standard Top Level Checks:                19;  Failures:  0  [Deep checks: 143]
+Standard Top Level Checks:                20;  Failures:  0  [Deep checks: 144]

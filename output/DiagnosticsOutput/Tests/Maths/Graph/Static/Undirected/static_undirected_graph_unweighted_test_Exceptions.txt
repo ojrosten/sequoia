@@ -1,4 +1,4 @@
-Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnweightedTest.cpp, Line 41
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnweightedTest.cpp, Line 60
 
 Expected Exception Type:
 [std::logic_error]
@@ -6,7 +6,7 @@ Inconsistent number of elements supplied by initializer lists: expected 0 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnweightedTest.cpp, Line 54
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnweightedTest.cpp, Line 73
 
 Expected Exception Type:
 [std::logic_error]
@@ -14,7 +14,7 @@ Inconsistent number of elements supplied by initializer lists: expected 0 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnweightedTest.cpp, Line 67
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnweightedTest.cpp, Line 86
 
 Expected Exception Type:
 [std::logic_error]
@@ -22,7 +22,7 @@ Inconsistent number of elements supplied by initializer lists: expected 2 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnweightedTest.cpp, Line 68
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnweightedTest.cpp, Line 87
 
 Expected Exception Type:
 [std::logic_error]
@@ -30,7 +30,7 @@ Inconsistent number of elements supplied by initializer lists: expected 2 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnweightedTest.cpp, Line 92
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnweightedTest.cpp, Line 111
 
 Expected Exception Type:
 [std::logic_error]
