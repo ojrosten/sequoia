@@ -13,6 +13,7 @@
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
+#include "sequoia/TestFramework/VersionedOutput.hpp"
 
 #include <array>
 #include <format>
@@ -322,8 +323,14 @@ namespace sequoia::testing
     // Without this control, a check which fired on every run would look just as green as one which
     // works.
 
+    // A patch left by an earlier checked run must not outlive a run which finds nothing to report.
+    const auto patchFile{output_paths{generated_project()}.drift().patch_file()};
+    fs::create_directories(patchFile.parent_path());
+    write_to_file(patchFile, "stale\n", std::ios_base::out);
+
     run_and_check(report("Versioned output checked, nothing having drifted"), b, "CheckVersionedOutputStable",
                   "--check-versioned-output", return_code::success);
+    check("A run which finds no drift removes the previous patch", !fs::exists(patchFile));
 
     //=================== Perturb the versioned output, and check again ===================//
     // Rewriting one summary file and deleting another makes the next run's writes respectively a
@@ -335,8 +342,17 @@ namespace sequoia::testing
     write_to_file(summaries / "Stuff" / "foo_test.txt", "Not what the run will write\n", std::ios_base::out);
     fs::remove(summaries / "Maybe" / "maybe_test.txt");
 
+    const auto drifted{take_versioned_output_snapshot(output_paths{generated_project()})};
     run_and_check(report("Versioned output checked, having drifted"), b, "CheckVersionedOutputDrifted",
                   "--check-versioned-output", return_code::versioned_output_diffs);
+
+    // The run repairs the drift and leaves a patch saying what it did, for a CI job to hand back.
+    const auto repaired{take_versioned_output_snapshot(output_paths{generated_project()})};
+    const auto patch{read_to_string(patchFile, std::ios_base::in | std::ios_base::binary)};
+    if(check("The drift is written as a patch", patch.has_value()))
+    {
+      check(equality, "The patch takes what was on disk to what the run wrote", *patch, unified_diff(drifted, repaired, "output"));
+    }
 
     //=================== Rerun asynchronously, selecting 2 tests ===================//
 

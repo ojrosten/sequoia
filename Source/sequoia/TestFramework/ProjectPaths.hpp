@@ -338,6 +338,37 @@ namespace sequoia::testing
     std::filesystem::path m_Dir{};
   };
 
+  /** \brief Holds details of where a run reports drift in the versioned output as a patch.
+
+    Written only by a run invoked with `--check-versioned-output` which finds that the files it
+    wrote differ from those that were on disk. The runner never reads it back: it exists for
+    continuous integration to upload, and for projects whose output is not under version control.
+ */
+  class drift_paths
+  {
+  public:
+    drift_paths() = default;
+
+    explicit drift_paths(const std::filesystem::path& outputDir);
+
+    [[nodiscard]]
+    const std::filesystem::path& dir() const noexcept
+    {
+      return m_Dir;
+    }
+
+    [[nodiscard]]
+    static std::filesystem::path dir(std::filesystem::path outputDir);
+
+    [[nodiscard]]
+    std::filesystem::path patch_file() const;
+
+    [[nodiscard]]
+    friend bool operator==(const drift_paths&, const drift_paths&) noexcept = default;
+  private:
+    std::filesystem::path m_Dir{};
+  };
+
   /** \brief Paths used when using dependencies to prune the number of tests */
 
   class prune_paths
@@ -442,6 +473,12 @@ namespace sequoia::testing
     recovery_paths recovery() const
     {
       return recovery_paths{dir()};
+    }
+
+    [[nodiscard]]
+    drift_paths drift() const
+    {
+      return drift_paths{dir()};
     }
 
     [[nodiscard]]

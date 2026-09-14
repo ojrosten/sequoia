@@ -80,19 +80,25 @@ jobs:
           # against their declared list, so "at least one" plus "the audit passed"
           # is "all of them". Each must show the corruption step having run and
           # succeeded: a column that is red for some other reason - a genuine
-          # break, an outage - proves nothing about whether it can see.
-          columns=$(jq -r '.[] | select(any(.steps[]; .name == "Run the suite"))
-                            | "\(.conclusion)\t\(([.steps[] | select(.name | startswith("Corrupt the tree")) | .conclusion] | first) // "absent")\t\(.name)"' jobs.json)
+          # break, an outage - proves nothing about whether it can see. And each
+          # must show the drift step having passed: red alone does not say which
+          # detector saw the corruption, and that step is the drift detector's
+          # own account - a patch which, reversed, restores the corruption.
+          step() { echo "([.steps[] | select(.name | startswith(\"$1\")) | .conclusion] | first) // \"absent\""; }
+          columns=$(jq -r ".[] | select(any(.steps[]; .name == \"Run the suite\"))
+                            | \"\\(.conclusion)\\t\\($(step 'Corrupt the tree'))\\t\\($(step 'The drift was reported'))\\t\\(.name)\"" jobs.json)
           [ -n "$columns" ] || { echo "::error::no job in the subject run carries a suite step"; exit 1; }
 
           failed=0
-          while IFS=$'\t' read -r conclusion corrupted name; do
+          while IFS=$'\t' read -r conclusion corrupted drift name; do
             if [ "$corrupted" != success ]; then
               echo "::error::$name: the corruption step concluded '$corrupted', so this is not a false-negative run"; failed=1
-            elif [ "$conclusion" = failure ]; then
-              echo "ok    $name was corrupted and went red"
-            else
+            elif [ "$conclusion" != failure ]; then
               echo "::error::$name came back $conclusion on a corrupted tree: this column cannot see"; failed=1
+            elif [ "$drift" != success ]; then
+              echo "::error::$name went red, but its drift step concluded '$drift': the patch did not account for the corruption"; failed=1
+            else
+              echo "ok    $name was corrupted, went red, and its patch accounts for the corruption"
             fi
           done <<<"$columns"
 
