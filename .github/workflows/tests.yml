@@ -270,7 +270,11 @@ jobs:
       # implicit success(), so a red first pass skips both steps - a suite that
       # is red once tells you what N more would - and the audit below allows for
       # that; an advisory column's red first pass counts as success, so there the
-      # repeat runs.
+      # repeat runs. Such a column must not also check the versioned output: the
+      # second pass's handler removes the first's patch and then finds the tree
+      # already repaired, so the drift would be reported without its patch. No
+      # column is both, and none should be made so without moving the patch aside
+      # between the passes.
       - name: Configure the repetitions
         if: ${{ steps.configure.outputs.repeat_args != '' }}
         working-directory: TestAll
@@ -352,23 +356,50 @@ jobs:
           cp "$RUNNER_TEMP/repeat.log" run-log/ 2>/dev/null || true
           [ ! -f run-log/repeat.log ] || echo "${{ steps.repeat.outcome }}" > run-log/repeat-outcome
 
-      # Where drift detection is on, the switch fails the run but reports only
-      # that a bit is set; this names the files. It also sees the whole tree,
-      # where the switch sees only what this toolchain rewrites, and `git status`
-      # names a file the run added, which `git diff` would not.
-      - name: Name any file whose versioned output moved
+      # Where drift detection is on, a run whose versioned output moved writes
+      # the change to output/Drift/VersionedOutput.patch, one whole-file hunk per
+      # file, and this puts it on the run page: whether the change is the PR
+      # working or the PR breaking is a judgement made by reading it, and reading
+      # it here needs nothing downloaded. `git status` is kept beside it because
+      # it sees the whole tree, where the runner sees only the two trees it
+      # writes - so a prediction file moving would show here and nowhere else.
+      #
+      # A step summary over 1 MiB is dropped whole, with the step still green, so a
+      # patch too big for the page says where to find it instead. `--whitespace=nowarn`
+      # because a whole-file hunk reproduces every trailing space the output has, and
+      # `apply.whitespace=fix` in a user's config would strip them silently, applying
+      # to a tree the run never wrote. The fence is four backticks so that a line of
+      # three in the output cannot close it.
+      - name: Report any versioned output that moved
         if: always()
-        run: git status --short -- output/ TestMaterials/ || true
+        run: |
+          git status --short -- output/ TestMaterials/ || true
+          patch=output/Drift/VersionedOutput.patch
+          if [ -f "$patch" ]; then
+            {
+              echo "### Versioned output moved: ${{ matrix.name }}"
+              echo "Apply from the project root with \`git apply --whitespace=nowarn\`, then read \`git diff\`."
+              if [ "$(wc -c < "$patch")" -gt 900000 ]; then
+                echo "The patch is $(wc -c < "$patch") bytes, too large for this page: it is in the \`${{ matrix.build }}-drift\` artifact."
+              else
+                echo '````diff'
+                cat "$patch"
+                echo '````'
+              fi
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
 
-      - name: Upload the run's output
+      # The patch, if there is one, and the logs. Not the versioned trees
+      # themselves: what a person would have compared them against is exactly
+      # what the patch holds, without the megabytes that did not move.
+      - name: Upload the drift and the run log
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ matrix.build }}-output
+          name: ${{ matrix.build }}-drift
           path: |
-            output/TestSummaries/
-            output/DiagnosticsOutput/
-            output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/WorkingCopy/InitOutput/
+            output/Drift/
+            output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/WorkingCopy/InitOutput/
             run-log/
           if-no-files-found: warn
 

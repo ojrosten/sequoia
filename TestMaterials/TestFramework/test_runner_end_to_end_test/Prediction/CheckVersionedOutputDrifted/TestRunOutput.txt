@@ -34,3 +34,4 @@ Added:
   TestSummaries/Tests/Maybe/maybe_test.txt
 Modified:
   TestSummaries/Tests/Stuff/foo_test.txt
+A patch from what was on disk to what this run wrote: output/Drift/VersionedOutput.patch

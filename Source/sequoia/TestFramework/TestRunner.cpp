@@ -667,7 +667,11 @@ namespace sequoia::testing
                     }
                   }}},
                   {{{"--check-versioned-output", {}, {},
-                    [this](const arg_list&) { m_VersionedOutputMode = versioned_output_mode::checked; }
+                    [this, drift{proj_paths().output().drift()}](const arg_list&) {
+                      std::filesystem::create_directories(drift.dir());
+                      std::filesystem::remove(drift.patch_file());
+                      m_VersionedOutputMode = versioned_output_mode::checked;
+                    }
                   }}},
                   {{{"--exclude-performance", {}, {},
                     [this](const arg_list&) { m_Filter.exclude_performance_tests(); }
@@ -900,7 +904,8 @@ namespace sequoia::testing
   {
     if(!baseline) return return_code::success;
 
-    const auto differences{compare_versioned_output(*baseline, take_versioned_output_snapshot(proj_paths().output()))};
+    const auto after{take_versioned_output_snapshot(proj_paths().output())};
+    const auto differences{compare_versioned_output(*baseline, after)};
 
     if(differences.empty())
     {
@@ -908,7 +913,12 @@ namespace sequoia::testing
       return return_code::success;
     }
 
-    stream() << "\nVersioned output written by this run differs from what was on disk:\n" << to_string(differences);
+    // The patch is to be applied from the project root, so its paths are relative to there
+    const auto outputDir{fs::relative(proj_paths().output().dir(), proj_paths().project_root())};
+    write_to_file(proj_paths().output().drift().patch_file(), unified_diff(*baseline, after, outputDir), std::ios_base::out | std::ios_base::binary);
+
+    stream() << "\nVersioned output written by this run differs from what was on disk:\n" << to_string(differences)
+             << "A patch from what was on disk to what this run wrote: " << drift_paths{outputDir}.patch_file().generic_string() << "\n";
 
     return return_code::versioned_output_diffs;
   }
