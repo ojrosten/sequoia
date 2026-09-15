@@ -567,14 +567,8 @@ namespace sequoia::testing
                   {{{"prune", {"p"}, {},
                     [this](const arg_list&) {
                       m_RunnerMode |= runner_mode::test;
-                      m_PruneInfo.mode = prune_mode::active;
-                    },
-                    {}},
-                    {{{"--cutoff", {"-c"}, {"Cutoff for #include search e.g. 'namespace'"},
-                      [this](const arg_list& args) {
-                        m_PruneInfo.include_cutoff = args[0];
-                      }}}
-                    }
+                      m_PruneMode = prune_mode::active;
+                    }}
                   }},
                   {{{"create", {"c"}, {},
                         [](const arg_list&) {},
@@ -774,16 +768,16 @@ namespace sequoia::testing
     if((m_ConcurrencyMode != concurrency_mode::serial) && (m_RecoveryMode != recovery_mode::none))
       throw std::runtime_error{error("Can't run asynchronously in recovery/dump mode\n")};
 
-    if((m_PruneInfo.mode == prune_mode::active) && m_Filter)
+    if((m_PruneMode == prune_mode::active) && m_Filter)
     {
-      m_PruneInfo.mode = prune_mode::passive;
+      m_PruneMode = prune_mode::passive;
       stream() << warning("'prune' ignored if either test families or test source files are specified\n");
     }
   }
 
   void test_runner::check_for_missing_tests()
   {
-    if(m_PruneInfo.mode == prune_mode::active) return;
+    if(m_PruneMode == prune_mode::active) return;
 
     auto check{
       [this](auto&& r, std::string_view type, auto fn) {
@@ -847,7 +841,7 @@ namespace sequoia::testing
     if(   (m_InstabilityMode == instability_mode::single_instance)
        || (m_InstabilityMode == instability_mode::coordinator))
     {
-      aggregate_instability_analysis_prune_files(proj_paths(), m_PruneInfo.mode, entry_time_stamp, m_NumReps);
+      aggregate_instability_analysis_prune_files(proj_paths(), m_PruneMode, entry_time_stamp, m_NumReps);
       stream() << instability_analysis(proj_paths().output().instability_analysis(), m_NumReps);
     }
 
@@ -1127,7 +1121,7 @@ namespace sequoia::testing
     }
     else if(m_Suites.order() <= 1)
     {
-      if(m_PruneInfo.mode == prune_mode::active)
+      if(m_PruneMode == prune_mode::active)
         stream() << "Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests\n";
 
       return true;
@@ -1167,7 +1161,7 @@ namespace sequoia::testing
 
   void test_runner::prune()
   {
-    if(m_PruneInfo.mode == prune_mode::passive) return;
+    if(m_PruneMode == prune_mode::passive) return;
 
     // Do this here: if pruning throws an exception, this output should make it clearer what's going on
     stream() << "\nAnalyzing dependencies...\n";
@@ -1197,9 +1191,9 @@ namespace sequoia::testing
   [[nodiscard]]
   prune_outcome test_runner::do_prune()
   {
-    if(m_PruneInfo.mode == prune_mode::passive) return prune_outcome::not_attempted;
+    if(m_PruneMode == prune_mode::passive) return prune_outcome::not_attempted;
 
-    if(auto maybeToRun{tests_to_run(proj_paths(), m_PruneInfo.include_cutoff)})
+    if(auto maybeToRun{tests_to_run(proj_paths())})
     {
       for(const auto& src : maybeToRun.value())
       {
@@ -1211,7 +1205,7 @@ namespace sequoia::testing
       return prune_outcome::success;
     }
 
-    m_PruneInfo.mode = prune_mode::passive;
+    m_PruneMode = prune_mode::passive;
 
     return prune_outcome::no_time_stamp;
   }

@@ -14,14 +14,17 @@
 
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
-#include <iostream>
 #include <chrono>
+#include <iostream>
 #include <limits>
+#include <span>
 
 namespace sequoia::testing
 {
+  /** \brief Whether the run selects its tests by what has changed since the last. */
   enum class prune_mode { passive, active };
 
+  /** \brief A test, and the time of the run which recorded it as passing or failing. */
   struct prune_record
   {
     using stamp_type = std::filesystem::file_time_type;
@@ -36,28 +39,6 @@ namespace sequoia::testing
 
     friend std::istream& operator>>(std::istream& s, prune_record& record);
   };
-
-  /** \brief The dependencies which the text of a single translation unit declares.
-
-      Lexed rather than preprocessed, so an `#include` behind a false `#if` or inside a string
-      literal is reported all the same: over-reporting costs a test which need not have run, where
-      under-reporting silently skips one which must. Three spellings do slip through - a header named
-      by a macro, one spliced across lines, and one whose tokens a comment separates - and none
-      occurs in a tree read today.
-   */
-  struct source_dependencies
-  {
-    /// Header names exactly as written, neither resolved against the including file nor filtered.
-    std::vector<std::filesystem::path> includes{};
-  };
-
-  /** \brief Lexes the dependencies declared by a translation unit.
-
-      Comments are skipped, as is everything from the first line containing `cutoff`; an empty
-      `cutoff` scans to the end.
-   */
-  [[nodiscard]]
-  source_dependencies scan_dependencies(std::istream& source, std::string_view cutoff);
 
   /** \brief The time against which a modification is judged to have happened after the run which
              wrote the prune stamp.
@@ -82,26 +63,42 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::file_time_type staleness_threshold(std::filesystem::file_time_type stamp);
 
+  /** \brief Reads the prune records in `file`; none if there is no such file.
+
+      Throws `std::runtime_error` if the records cannot be read.
+   */
   [[nodiscard]]
   std::vector<prune_record> read_tests(const std::filesystem::path& file);
 
+  /** \brief Writes prune records to `file`, each test's path relative to the tests repository. */
   void write_tests(const project_paths& projPaths, const std::filesystem::path& file, std::span<const prune_record> tests);
 
-  [[nodiscard]]
-  std::optional<std::vector<std::filesystem::path>> tests_to_run(const project_paths& projPaths, std::string_view cutoff);
+  /** \brief The tests which must run: those stale since the previous run, and those it left failing.
 
+      Absent when there is no stamp from a previous run to judge staleness against. What a test
+      depends on is read from the record the build which produced the executable left of it, so
+      this throws where there is no such build, or one whose record is not understood - Ninja's and
+      Visual Studio's are.
+   */
+  [[nodiscard]]
+  std::optional<std::vector<std::filesystem::path>> tests_to_run(const project_paths& projPaths);
+
+  /** \brief After a run of every test: records its failures, forgets the selected passes, and stamps the run's time. */
   void update_prune_files(const project_paths& projPaths,
                           std::span<const std::filesystem::path> failedTests,
                           std::filesystem::file_time_type updateTime,
                           std::optional<std::size_t> id);
 
+  /** \brief After a run of a selection: records which of the tests passed and which failed, beside those already recorded, without moving the stamp. */
   void update_prune_files(const project_paths& projPaths,
                           std::span<const std::filesystem::path> executedTests,
                           std::span<const std::filesystem::path> failedTests,
                           std::filesystem::file_time_type updateTime,
                           std::optional<std::size_t> id);
 
+  /** \brief Empties the directory in which the repetitions of an instability analysis leave their prune files. */
   void setup_instability_analysis_prune_folder(const project_paths& projPaths);
 
+  /** \brief Folds the repetitions' prune files into the run's - failures are their union, passes their intersection - and removes them. */
   void aggregate_instability_analysis_prune_files(const project_paths& projPaths, prune_mode mode, std::filesystem::file_time_type timeStamp, std::size_t numReps);
 }
