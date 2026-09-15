@@ -38,9 +38,6 @@ namespace sequoia::maths
 
     [[nodiscard]]
     friend constexpr bool operator==(const linear_sequence&, const linear_sequence&) noexcept = default;
-
-    [[nodiscard]]
-    friend constexpr bool operator!=(const linear_sequence&, const linear_sequence&) noexcept = default;
   private:
     T m_Start, m_Step;
   };

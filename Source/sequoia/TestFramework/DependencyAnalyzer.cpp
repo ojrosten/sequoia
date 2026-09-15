@@ -19,9 +19,11 @@
 #include <cstdint>
 #include <format>
 #include <fstream>
+#include <functional>
 #include <optional>
 #include <string>
 #include <string_view>
+#include <type_traits>
 
 namespace sequoia::testing
 {
@@ -33,6 +35,27 @@ namespace sequoia::testing
   {
     using duration_t   = prune_record::stamp_type::duration;
     using stream_rep_t = std::int64_t;
+
+    template<std::invocable<std::string> Parser>
+    [[nodiscard]]
+    std::remove_cvref_t<std::invoke_result_t<Parser, std::string>> extract_field(std::istream& s, std::string_view key, Parser parse)
+    {
+      std::string line{};
+      if(!std::getline(s, line))   throw std::runtime_error{std::format("Expected a line beginning '{}' but found the end of the file", key)};
+      if(!line.starts_with(key))   throw std::runtime_error{std::format("Expected a line beginning '{}' but found '{}'", key, line)};
+
+      return parse(line.substr(key.size()));
+    }
+
+    [[nodiscard]]
+    prune_record::stamp_type to_stamp(const std::string& text)
+    {
+      const auto last{text.data() + text.size()};
+      if(stream_rep_t count{}; std::from_chars(text.data(), last, count) == std::from_chars_result{last, std::errc{}})
+        return prune_record::stamp_type{duration_t{checked_conversion_to<duration_t::rep>(count)}};
+
+      throw std::runtime_error{std::format("'{}' is not a time stamp", text)};
+    }
   }
 
   std::ostream& operator<<(std::ostream& s, const prune_record& record)
@@ -43,36 +66,13 @@ namespace sequoia::testing
 
   std::istream& operator>>(std::istream& s, prune_record& record)
   {
-    const auto extractField{
-      [&s](std::string_view key) -> std::optional<std::string> {
-        if(std::string line{}; std::getline(s, line) && line.starts_with(key))
-          return line.substr(key.size());
+    if(s.peek() == std::char_traits<char>::eof())
+    {
+      s.setstate(std::ios::failbit);
+      return s;
+    }
 
-        return std::nullopt;
-      }
-    };
-
-    const auto toStamp{
-      [](const std::string& text) -> std::optional<prune_record::stamp_type> {
-        const auto last{text.data() + text.size()};
-        if(stream_rep_t count{}; std::from_chars(text.data(), last, count) == std::from_chars_result{last, std::errc{}})
-          return prune_record::stamp_type{duration_t{checked_conversion_to<duration_t::rep>(count)}};
-
-        return std::nullopt;
-      }
-    };
-
-    const auto parsed{
-      extractField("path: ")
-        .and_then([&](std::string path) {
-          return extractField("timestamp: ")
-                   .and_then(toStamp)
-                   .transform([&path](prune_record::stamp_type stamp) { return prune_record{std::move(path), stamp}; });
-        })
-    };
-
-    if(parsed) record = *parsed;
-    else       s.setstate(std::ios::failbit);
+    record = prune_record{extract_field(s, "path: ", std::identity{}), extract_field(s, "timestamp: ", to_stamp)};
 
     return s;
   }
@@ -551,16 +551,33 @@ namespace sequoia::testing
       
       if(std::ifstream ifile{file})
       {
-        using iter_t = std::istream_iterator<prune_record>;
-        // A call rather than a pipe, to stay identical to `modules-native`. The pipe is
-        // fine here and is rejected there: under `import std`, g++ 15.2 reports
-        // "use of operator| ... before deduction of 'auto'" whenever the adaptor carries a
-        // lambda - a named predicate pipes fine. See gcc-bugs/E in the sequoia-LLM
-        // repository, and PR 120318; fixed in gcc 16.1.
-        tests.append_range(
-            std::views::filter(std::ranges::subrange{iter_t{ifile}, iter_t{}},
-                               [](const prune_record& record) {return !record.test_path.empty();})
-        );
+        try
+        {
+          // A call rather than a pipe, to stay identical to `modules-native`. The pipe is
+          // fine here and is rejected there: under `import std`, g++ 15.2 reports
+          // "use of operator| ... before deduction of 'auto'" whenever the adaptor carries a
+          // lambda - a named predicate pipes fine. See gcc-bugs/E in the sequoia-LLM
+          // repository, and PR 120318; fixed in gcc 16.1.
+          
+          using iter_t = std::istream_iterator<prune_record>;
+          tests.append_range(
+            std::views::filter(
+              std::ranges::subrange{iter_t{ifile}, iter_t{}},
+              [](const prune_record& record) { return !record.test_path.empty(); }
+            )
+          );
+        }
+        catch(const std::exception& e)
+        {
+          throw
+            std::runtime_error{
+              std::format(
+                "Unable to read the prune records in {}: {}\nTry deleting the parent directory and starting afresh",
+                file.generic_string(),
+                e.what()
+              )
+            };
+        }
       }
 
       return tests;

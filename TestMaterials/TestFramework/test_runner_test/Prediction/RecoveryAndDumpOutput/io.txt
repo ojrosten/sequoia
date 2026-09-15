@@ -52,7 +52,7 @@ Running tests, synchronously...
 									Exception thrown during last check
 									Last Recorded Message:
 
-									Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 62
+									Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 63
 									Throw during check
 
 									[sequoia::testing::(anonymous namespace)::foo]

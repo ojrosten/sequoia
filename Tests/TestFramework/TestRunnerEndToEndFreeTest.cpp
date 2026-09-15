@@ -7,12 +7,14 @@
 
 #include "TestRunnerEndToEndFreeTest.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "Utilities/TestUtilities.hpp"
 
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
+#include "sequoia/TestFramework/VersionedOutput.hpp"
 
 #include <array>
 #include <format>
@@ -52,14 +54,9 @@ namespace sequoia::testing
       constexpr auto pollInterval{10ms};
 
       const auto stamp{
-        [probe{probeDir / "TimestampProbe.tmp"}]() {
-          if(std::ofstream file{probe}; !file)
-            throw std::runtime_error{std::format("Unable to write the timestamp probe {}", probe.generic_string())};
-
-          const auto probeStamp{fs::last_write_time(probe)};
-          fs::remove(probe);
-
-          return probeStamp;
+        [&probeDir]() {
+          const transient_file probe{probeDir / "TimestampProbe.tmp", ""};
+          return fs::last_write_time(probe.path());
         }
       };
 
@@ -313,8 +310,7 @@ namespace sequoia::testing
     fs::copy(generated_project() /= "output/TestSummaries", working_materials() /= "TestSummaries_0", fs::copy_options::recursive);
     check(equivalence, "", working_materials() /= "TestSummaries_0", predictive_materials() /= "TestSummaries_0");
 
-    //=================== Rerun with async execution ===================//
-    // --> async depth should be automatically set to "suite" since number of families is > 4
+    //=================== Rerun serially ===================//
 
     run_and_check(report("Run synchronously"), b, "RunSynchronous", "--serial", return_code::success);
 
@@ -323,8 +319,14 @@ namespace sequoia::testing
     // Without this control, a check which fired on every run would look just as green as one which
     // works.
 
+    // A patch left by an earlier checked run must not outlive a run which finds nothing to report.
+    const auto patchFile{output_paths{generated_project()}.drift().patch_file()};
+    fs::create_directories(patchFile.parent_path());
+    write_to_file(patchFile, "stale\n", std::ios_base::out);
+
     run_and_check(report("Versioned output checked, nothing having drifted"), b, "CheckVersionedOutputStable",
                   "--check-versioned-output", return_code::success);
+    check("A run which finds no drift removes the previous patch", !fs::exists(patchFile));
 
     //=================== Perturb the versioned output, and check again ===================//
     // Rewriting one summary file and deleting another makes the next run's writes respectively a
@@ -336,34 +338,35 @@ namespace sequoia::testing
     write_to_file(summaries / "Stuff" / "foo_test.txt", "Not what the run will write\n", std::ios_base::out);
     fs::remove(summaries / "Maybe" / "maybe_test.txt");
 
+    const auto drifted{take_versioned_output_snapshot(output_paths{generated_project()})};
     run_and_check(report("Versioned output checked, having drifted"), b, "CheckVersionedOutputDrifted",
                   "--check-versioned-output", return_code::versioned_output_diffs);
 
-    //=================== Rerun with async selecting 3 tests from 3 families ===================//
-    // --> async depth should be automatically set to "test" since number of families is < 4
+    // The run repairs the drift and leaves a patch saying what it did, for a CI job to hand back.
+    const auto repaired{take_versioned_output_snapshot(output_paths{generated_project()})};
+    const auto patch{read_to_string(patchFile, std::ios_base::in | std::ios_base::binary)};
+    if(check("The drift is written as a patch", patch.has_value()))
+    {
+      check(equality, "The patch takes what was on disk to what the run wrote", *patch, unified_diff(drifted, repaired, "output"));
+    }
+
+    //=================== Rerun asynchronously, selecting 2 tests ===================//
+
+    run_and_check(report("Run asynchronously with 2 selected tests"), b, "RunAsyncTwoTests",
+                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp", return_code::success);
+
+    //=================== Rerun asynchronously, selecting 3 tests ===================//
 
     run_and_check(report("Run asynchronously with 3 selected tests"), b, "RunAsyncThreeTests",
                        "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp", return_code::success);
 
-    //=================== Rerun with async selecting 4 tests from 4 families===================//
-    // --> async depth should be automatically set to "suite"
+    //=================== Rerun asynchronously, selecting 4 tests ===================//
 
     run_and_check(report("Run asynchronously with 4 selected tests"), b, "RunAsyncFourTests",
                        "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
                        " select Stuff/FooTest.cpp", return_code::success);
 
-    //=================== Rerun with async selecting 4 tests from 4 families, and setting async-depth to test===================//
-
-    run_and_check(report("Run asynchronously with 4 selected tests"), b, "RunAsyncFourTestsDepthTest",
-                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
-                       " select Stuff/FooTest.cpp", return_code::success);
-
-    //=================== Rerun with async, selecting 2 tests, and setting async-depth to suite ===================//
-
-    run_and_check(report("Run asynchronously with 2 selected tests"), b, "RunAsyncTwoTestsDepthSuite",
-                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp", return_code::success);
-
-    //=================== Rerun with async, selecting one suite ===================//
+    //=================== Rerun asynchronously, selecting 1 suite ===================//
 
     run_and_check(report("Run asynchronously with 1 suite"), b, "RunAsyncOneTestOneSuite", "test Maths", return_code::success);
 

@@ -120,6 +120,8 @@ namespace sequoia
     {
       text.replace(pos, from.length(), to);
       pos += to.length();
+      // An empty from consumes nothing, so the same gap would be found again
+      if(from.empty()) ++pos;
     }
 
     return text;

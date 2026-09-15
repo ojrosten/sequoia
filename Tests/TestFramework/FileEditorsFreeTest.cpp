@@ -7,9 +7,7 @@
 
 #include "FileEditorsFreeTest.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
-#include "sequoia/Streaming/Streaming.hpp"
-
-#include <system_error>
+#include "Utilities/TestUtilities.hpp"
 
 namespace sequoia::testing
 {
@@ -55,31 +53,6 @@ namespace sequoia::testing
    */
   void file_editors_free_test::test_comparison_of_file_contents()
   {
-    class transient_file
-    {
-    public:
-      transient_file(std::filesystem::path file, std::string_view contents)
-        : m_File{std::move(file)}
-      {
-        write_to_file(m_File, contents, std::ios_base::out | std::ios_base::binary);
-      }
-
-      transient_file(const transient_file&) = delete;
-
-      transient_file& operator=(const transient_file&) = delete;
-
-      ~transient_file()
-      {
-        std::error_code ignored{};
-        std::filesystem::remove(m_File, ignored);
-      }
-
-      [[nodiscard]]
-      const std::filesystem::path& path() const noexcept { return m_File; }
-    private:
-      std::filesystem::path m_File;
-    };
-
     auto compares_equivalent{
       [dir{working_materials()}](std::string_view lhs, std::string_view rhs) {
         const transient_file a{dir / "ContentsUnderComparison.working", lhs}, b{dir / "ContentsUnderComparison.prediction", rhs};

@@ -129,7 +129,7 @@ SEQUOIA_GCC_SUPPRESS_END
     }
 
     [[nodiscard]]
-    friend bool operator==(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs) noexcept = default;
+    friend constexpr bool operator==(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs) noexcept = default;
 
   protected:
     template<alloc Allocator>
@@ -156,22 +156,22 @@ SEQUOIA_GCC_SUPPRESS_END
       : m_Sequence{std::move(s.m_Sequence), allocator}
     {}
 
-    ~monotonic_sequence_base() = default;
+    constexpr ~monotonic_sequence_base() = default;
 
     constexpr monotonic_sequence_base& operator=(const monotonic_sequence_base&) = default;
     constexpr monotonic_sequence_base& operator=(monotonic_sequence_base&&)      = default;
 
-    constexpr void swap(monotonic_sequence_base& other) noexcept(impl::noexcept_spec_v<C>)
+    constexpr void swap(monotonic_sequence_base& other) noexcept(impl::swap_is_noexcept_v<C>)
     {
       std::ranges::swap(m_Sequence, other.m_Sequence);
     }
 
-    auto get_allocator() const
+    constexpr auto get_allocator() const
     {
       return m_Sequence.get_allocator();
     }
 
-    void push_back(T v)
+    constexpr void push_back(T v)
     {
       if(!m_Sequence.empty() && Compare{}(m_Sequence.back(), v))
         throw std::logic_error{"monotonic_sequence_base::push_back - monotonicity violated"};
@@ -179,7 +179,7 @@ SEQUOIA_GCC_SUPPRESS_END
       m_Sequence.push_back(std::move(v));
     }
 
-    const_iterator insert(const_iterator pos, T v)
+    constexpr const_iterator insert(const_iterator pos, T v)
     {
       if(((pos != cend()) && Compare{}(v, *pos)) || ((pos != cbegin()) && Compare{}(*(pos-1), v)))
       {
@@ -189,32 +189,32 @@ SEQUOIA_GCC_SUPPRESS_END
       return m_Sequence.insert(pos, std::move(v));
     }
 
-    const_iterator erase(const_iterator pos)
+    constexpr const_iterator erase(const_iterator pos)
     {
       return m_Sequence.erase(pos);
     }
 
-    const_iterator erase(const_iterator first, const_iterator last)
+    constexpr const_iterator erase(const_iterator first, const_iterator last)
     {
       return m_Sequence.erase(first, last);
     }
 
-    void reserve(const size_type new_cap)
+    constexpr void reserve(const size_type new_cap)
     {
       m_Sequence.reserve(new_cap);
     }
 
-    size_type capacity() const noexcept
+    constexpr size_type capacity() const noexcept
     {
       return m_Sequence.capacity();
     }
 
-    void shrink_to_fit()
+    constexpr void shrink_to_fit()
     {
       m_Sequence.shrink_to_fit();
     }
 
-    void clear() noexcept
+    constexpr void clear() noexcept
     {
       m_Sequence.clear();
     }
@@ -258,48 +258,39 @@ SEQUOIA_GCC_SUPPRESS_END
 
     using allocator_type = C::allocator_type;
 
-    monotonic_sequence() = default;
+    constexpr monotonic_sequence() = default;
 
-    explicit monotonic_sequence(const allocator_type& allocator)
+    constexpr explicit monotonic_sequence(const allocator_type& allocator)
       : monotonic_sequence_base<T, C, Compare>(allocator)
     {}
 
-    monotonic_sequence(std::initializer_list<T> list, const allocator_type& allocator=allocator_type{})
+    constexpr monotonic_sequence(std::initializer_list<T> list, const allocator_type& allocator=allocator_type{})
       : monotonic_sequence_base<T, C, Compare>{list, allocator}
     {}
 
-    monotonic_sequence(const monotonic_sequence&) = default;
+    constexpr monotonic_sequence(const monotonic_sequence&) = default;
 
-    monotonic_sequence(const monotonic_sequence& s, const allocator_type& allocator)
+    constexpr monotonic_sequence(const monotonic_sequence& s, const allocator_type& allocator)
       : monotonic_sequence_base<T, C, Compare>{s, allocator}
     {}
 
-    monotonic_sequence(monotonic_sequence&&) noexcept = default;
+    constexpr monotonic_sequence(monotonic_sequence&&) noexcept = default;
 
-    monotonic_sequence(monotonic_sequence&& s, const allocator_type& allocator)
+    constexpr monotonic_sequence(monotonic_sequence&& s, const allocator_type& allocator)
       : monotonic_sequence_base<T, C, Compare>{std::move(s), allocator}
     {}
 
-    ~monotonic_sequence() = default;
+    constexpr ~monotonic_sequence() = default;
 
-    monotonic_sequence& operator=(const monotonic_sequence&) = default;
-    monotonic_sequence& operator=(monotonic_sequence&&)      = default;
+    constexpr monotonic_sequence& operator=(const monotonic_sequence&) = default;
+    constexpr monotonic_sequence& operator=(monotonic_sequence&&)      = default;
 
-    // `inline` is redundant - a friend defined inside a class is already implicitly
-    // inline - and is written to stay identical to `modules-native`, where g++ 15.2 loses
-    // that for a class template and emits this in every translation unit which
-    // instantiates one, giving "multiple definition" at link time. See gcc-bugs/G in the
-    // sequoia-LLM repository, and PR 122819; fixed in gcc 16.1.
-    friend inline void swap(monotonic_sequence& lhs, monotonic_sequence& rhs) noexcept(noexcept(lhs.swap(rhs)))
+    friend constexpr void swap(monotonic_sequence& lhs, monotonic_sequence& rhs) noexcept(noexcept(lhs.swap(rhs)))
     {
       lhs.swap(rhs);
     }
 
-    allocator_type get_allocator() const
-    {
-      return base_t::get_allocator();
-    }
-
+    using base_t::get_allocator;
     using base_t::push_back;
     using base_t::insert;
     using base_t::erase;

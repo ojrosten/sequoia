@@ -81,6 +81,11 @@ namespace sequoia::testing
     check(equality, "Single replacement", replace("foo", "foo", "bar"), "bar"s);
     check(equality, "Single replacement; multiple instances", replace("foofoo", "foo", "bar"), "barfoo"s);
     check(equality, "Single replacement, arbitrary position", replace("barfoobaz", "foo", "bar"), "barbarbaz"s);
+
+    // The empty string first occurs at the start of the text
+    check(equality, "Empty from in empty string", replace("",   "", "X"), "X"s);
+    check(equality, "Empty from prepends",        replace("ab", "", "X"), "Xab"s);
+    check(equality, "Empty from, empty to",       replace("ab", "", ""),  "ab"s);
   }
 
   void substitutions_free_test::test_replace_all()
@@ -90,7 +95,15 @@ namespace sequoia::testing
     check(equality, "Multiple adjacent replacement", replace_all("foofoo", "foo", "bar"), "barbar"s);
     check(equality, "Multiple separated replacement", replace_all("foo bar foo", "foo", "bar"), "bar bar bar"s);
 
+    // The empty string occurs before every character and after the last
+    check(equality, "Empty from in empty string",      replace_all("",   "", "X"),  "X"s);
+    check(equality, "Empty from in single character",  replace_all("a",  "", "X"),  "XaX"s);
+    check(equality, "Empty from interleaves",          replace_all("ab", "", "X"),  "XaXbX"s);
+    check(equality, "Empty from interleaves, growing", replace_all("ab", "", "XY"), "XYaXYbXY"s);
+    check(equality, "Empty from, empty to",            replace_all("ab", "", ""),   "ab"s);
+
     check(equality, "Mutliple replacement patters", replace_all("foobarbaz", replacement{"foo", "zoo"}, replacement{"bar", "bfg"}, replacement{"baz", "bat"}), "zoobfgbat"s);
+    check(equality, "Empty from among the patterns", replace_all("ab", replacement{"", "X"}, replacement{"a", "b"}), "XbXbX"s);
 
     check(equality, "LR Replace in empty string", replace_all("", ",<", "foo", ",>", "bar"), ""s);
     check(equality, "LR single replacement", replace_all(",foo,", ",<", "foo", ",>", "bar"), ",bar,"s);
@@ -104,12 +117,51 @@ namespace sequoia::testing
     check(equality, "LR multiple replacement", replace_all(",foo,foo,", ",<", "foo", ",>", "bar"), ",bar,bar,"s);
     check(equality, "L single replacement", replace_all(",foo", ",<", "foo", "", "baz"), ",baz"s);
     check(equality, "R single replacement", replace_all("foo,", "", "foo", ",", "baz"), "baz,"s);
+
+    check(equality, "LR adjacent replacements",          replace_all("foofoo", "", "foo", "", "bar"), "barbar"s);
+    check(equality, "LR three adjacent replacements",    replace_all("aaa",    "", "a",   "", "b"),   "bbb"s);
+    check(equality, "LR adjacent replacements, growing", replace_all("aa",     "", "a",   "", "bb"),  "bbbb"s);
+
+    // A candidate rejected on its neighbours must not hide an overlapping one which qualifies
+    check(equality, "L rejected candidate overlapping an admissible one", replace_all("aaa", "a", "aa", "", "b"), "ab"s);
+
+    // The predicate overload, since no set of characters spells the end of the text
+    check(equality,
+          "R rejected candidate overlapping an admissible one",
+          replace_all("aaa", [](char){ return true; }, "aa", [](char c){ return c == '\0'; }, "b"),
+          "ab"s);
+
+    // An empty from matches at every position, whose neighbours are the characters either side of it
+    check(equality, "LR empty from in empty string",   replace_all("",   "",  "", "",  "X"), "X"s);
+    check(equality, "LR empty from interleaves",       replace_all("ab", "",  "", "",  "X"), "XaXbX"s);
+    check(equality, "LR empty from, empty to",         replace_all("ab", "",  "", "",  ""),  "ab"s);
+    check(equality, "L empty from after a character",  replace_all("ab", "a", "", "",  "X"), "aXb"s);
+    check(equality, "R empty from before a character", replace_all("ab", "",  "", "b", "X"), "aXb"s);
+    check(equality, "LR empty from between two",       replace_all("ab", "a", "", "b", "X"), "aXb"s);
+    check(equality, "LR empty from, none qualifies",   replace_all("ab", "b", "", "a", "X"), "ab"s);
+
+    // The predicate overload, since no set of characters spells the start or end of the text
+    check(equality,
+          "L empty from at the start",
+          replace_all("ab", [](char c){ return c == '\0'; }, "", [](char){ return true; }, "X"),
+          "Xab"s);
+    check(equality,
+          "R empty from at the end",
+          replace_all("ab", [](char){ return true; }, "", [](char c){ return c == '\0'; }, "X"),
+          "abX"s);
+    check(equality,
+          "LR empty from in empty string, both ends",
+          replace_all("", [](char c){ return c == '\0'; }, "", [](char c){ return c == '\0'; }, "X"),
+          "X"s);
   }
 
   void substitutions_free_test::test_replace_all_recursive()
   {
     check(equality, "Expand 2 chevrons", replace_all_recursive(">>", ">>", "> >"), "> >"s);
     check(equality, "Expand 3 chevrons", replace_all_recursive(">>>", ">>", "> >"), "> > >"s);
-    check(equality, "Expand 3 chevrons", replace_all_recursive(">>>>", ">>", "> >"), "> > > >"s);
+    check(equality, "Expand 4 chevrons", replace_all_recursive(">>>>", ">>", "> >"), "> > > >"s);
+
+    // Nothing is written, so the rewriting terminates
+    check(equality, "Empty from, empty to", replace_all_recursive("ab", "", ""), "ab"s);
   }
 }

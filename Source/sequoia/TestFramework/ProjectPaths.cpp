@@ -254,6 +254,24 @@ namespace sequoia::testing
     return fs::path{dir()} /= "Dump.txt";
   }
 
+  //===================================== drift_paths =====================================//
+
+  drift_paths::drift_paths(const fs::path& outputDir)
+    : m_Dir{dir(outputDir)}
+  {}
+
+  [[nodiscard]]
+  fs::path drift_paths::dir(fs::path outputDir)
+  {
+    return outputDir /= "Drift";
+  }
+
+  [[nodiscard]]
+  fs::path drift_paths::patch_file() const
+  {
+    return fs::path{dir()} /= "VersionedOutput.patch";
+  }
+
   //===================================== prune_paths =====================================//
 
   prune_paths::prune_paths(fs::path outputDir, const fs::path& buildRoot, const fs::path& buildDir)

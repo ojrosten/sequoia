@@ -43,6 +43,8 @@ namespace sequoia::testing
 
     void test_prune_basic_output();
 
+    void test_post_run_failure();
+
     void test_nested_suite();
 
     void test_nested_suite_verbose();

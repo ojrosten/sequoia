@@ -1,8 +1,16 @@
 name: coarse
 
-# Every push, every branch: does it build, and does the suite pass? Uninstrumented,
-# because this tier is bought for latency, and because it is the only per-push
-# build running at native speed with the system allocator.
+# Every push, every branch but main: does it build, and does the suite pass?
+# Uninstrumented, because this tier is bought for latency, and because it is the
+# only per-push build running at native speed with the system allocator.
+#
+# Not main, because main moves only by promotion and carries nothing but merge
+# commits, so a promotion's tree is staging's tree - which had this tier on the
+# push to staging and rigorous on the promotion PR minutes before, and usually
+# fine on the PR into staging too. A run here would answer a question two tiers
+# have answered, at the price of three runners, Windows the scarce one. staging
+# stays: a merge into it can produce a tree nothing has tested, since "require
+# branches up to date" is deliberately off.
 #
 # Windows is here rather than only in the gates because clang and gcc agreeing is
 # weak evidence about MSVC. macOS joined on 2026-09-11, when work started arriving
@@ -28,6 +36,8 @@ name: coarse
 # anything.
 on:
   push:
+    branches-ignore:
+      - main
     paths-ignore:
       - 'docs/**'
       - 'coverage_reports/**'
