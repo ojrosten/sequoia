@@ -298,12 +298,6 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path prune_paths::external_dependencies() const
-  {
-    return make_path(std::nullopt, ".external");
-  }
-
-  [[nodiscard]]
   fs::path prune_paths::instability_analysis() const
   {
     return m_Dir / "InstabilityAnalysis";
@@ -391,9 +385,6 @@ namespace sequoia::testing
     , m_Materials{project_root()}
     , m_BuildSystem{project_root()}
     , m_AncillaryMainCpps{make_ancillary_info(project_root(), main().common_includes(), customization)}
-    , m_AdditionalDependencyAnalysisPaths{
-        std::views::transform(customization.additional_dependency_analysis_paths, [root{project_root()}](const fs::path& p){ return root / rebase_from(p, root); }) | std::ranges::to<std::vector>()
-    }
   {
     throw_unless_directory(project_root(), "\nRepository root not found");
     throw_unless_regular_file(main().file(), "\nTry ensuring that the application is run from the appropriate directory");

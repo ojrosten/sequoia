@@ -3,7 +3,7 @@ Test Main has empty path
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/  is not a regular file
+output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/  is not a regular file
 
 Try ensuring that the application is run from the appropriate directory
 
@@ -14,7 +14,7 @@ Test Main does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/FooMain.cpp not found
+output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/FooMain.cpp not found
 
 Try ensuring that the application is run from the appropriate directory
 
@@ -25,7 +25,7 @@ Include Target has empty path
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/  is not a regular file
+output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/  is not a regular file
 
 Common includes not found
 
@@ -36,7 +36,7 @@ Include Target does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/FooPath.hpp not found
+output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/FooPath.hpp not found
 
 Common includes not found
 
@@ -56,7 +56,7 @@ Project root does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-canonical - file not found: /output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/FooRepo
+canonical - file not found: /output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/FooRepo
 
 =======================================
 
@@ -66,7 +66,7 @@ Project root not findable
 Expected Exception Type:
 [std::runtime_error]
 Unable to locate project root from path:
-output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/TestShared
+output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/TestShared
 Please ensure that the build directory is a subdirectory of <project>/build.
 
 =======================================

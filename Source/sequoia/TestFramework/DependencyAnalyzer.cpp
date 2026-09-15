@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
+#include "sequoia/TestFramework/BuildArtefacts.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
 #include "sequoia/Maths/Arithmetic/ArithmeticCasts.hpp"
@@ -13,17 +14,21 @@
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <algorithm>
 #include <charconv>
 #include <chrono>
-#include <concepts>
 #include <cstdint>
 #include <format>
 #include <fstream>
 #include <functional>
+#include <iterator>
 #include <optional>
+#include <ranges>
 #include <string>
 #include <string_view>
+#include <map>
 #include <type_traits>
+#include <unordered_map>
 
 namespace sequoia::testing
 {
@@ -41,8 +46,11 @@ namespace sequoia::testing
     std::remove_cvref_t<std::invoke_result_t<Parser, std::string>> extract_field(std::istream& s, std::string_view key, Parser parse)
     {
       std::string line{};
-      if(!std::getline(s, line))   throw std::runtime_error{std::format("Expected a line beginning '{}' but found the end of the file", key)};
-      if(!line.starts_with(key))   throw std::runtime_error{std::format("Expected a line beginning '{}' but found '{}'", key, line)};
+      if(!std::getline(s, line))
+        throw std::runtime_error{std::format("Expected a line beginning '{}' but found the end of the file", key)};
+
+      if(!line.starts_with(key))
+        throw std::runtime_error{std::format("Expected a line beginning '{}' but found '{}'", key, line)};
 
       return parse(line.substr(key.size()));
     }
@@ -83,453 +91,448 @@ namespace sequoia::testing
     {
       const fs::path& operator()(const prune_record& record) const { return record.test_path; }
     };
-    
-    [[nodiscard]]
-    bool is_stale(const fs::path& file, const fs::file_time_type& lastImplicitModTime, const fs::file_time_type& stalenessThreshold, const std::optional<fs::file_time_type>& exeTimeStamp)
-    {
-      if(exeTimeStamp.has_value() && (lastImplicitModTime >= exeTimeStamp.value()))
-        throw std::runtime_error{
-                std::format(
-                  "Executable is out of date; please build it!\nExecutable time stamp: {}\n{} time stamp: {}\n",
-                  exeTimeStamp.value(),
-                  file.generic_string(),
-                  lastImplicitModTime
-                )
-              };
-
-      return lastImplicitModTime > stalenessThreshold;
-    }
-
-    struct file_info
-    {
-      file_info(fs::path f, const fs::file_time_type& stalenessThreshold, const std::optional<fs::file_time_type>& exeTimeStamp)
-        : file{std::move(f)}
-        , implicit_modification_time{fs::last_write_time(file)}
-        , stale{is_stale(file, implicit_modification_time, stalenessThreshold, exeTimeStamp)}
-      {}
-
-      file_info(fs::path f)
-        : file{std::move(f)}
-      {}
-
-      fs::path file;
-      fs::file_time_type implicit_modification_time;
-      bool stale{true};
-    };
 
     [[nodiscard]]
     bool in_repo(const fs::path& file, const fs::path& repo)
     {
-      auto zipped{std::views::zip(file, repo)};
-      return std::ranges::find_if(zipped, [](const auto& e) { return std::get<0>(e) != std::get<1>(e); }) == zipped.end();
+      // TO DO: ranges::starts_with says the same, from libstdc++ 16
+      return std::ranges::mismatch(repo, file).in1 == repo.end();
     }
 
     [[nodiscard]]
-    bool is_cpp(const fs::path& file)
+    bool in_toolchain(const fs::path& file, const build_tree& tree)
     {
-      const auto ext{file.extension()};
-      return (ext == ".cpp") || (ext == ".cc") || (ext == ".cxx");
+      return std::ranges::any_of(tree.implicit_include_directories, [&file](const fs::path& dir){ return in_repo(file, dir); });
     }
 
-    [[nodiscard]]
-    bool is_header(const fs::path& file)
-    {
-      const auto ext{file.extension()};
-      return (ext == ".hpp") || (ext == ".h") || (ext == ".hxx");
-    }
-
-    /// Accumulates characters while `pred` holds, leaving the first which fails it unconsumed.
-    template<std::predicate<char> Pred>
-    std::string read_while(std::istream& istr, Pred pred)
-    {
-      constexpr auto eof{std::ifstream::traits_type::eof()};
-      using int_type = std::ifstream::int_type;
-
-      std::string str{};
-
-      int_type c{};
-      while((c = istr.get()) != eof)
-      {
-        if(!pred(static_cast<char>(c)))
-        {
-          istr.unget();
-          break;
-        }
-
-        str.push_back(static_cast<char>(c));
-      }
-
-      return str;
-    }
-
-    /// Accumulates characters up to the first delimiter, which is consumed.
-    [[nodiscard]]
-    std::string read_until(std::istream& istr, std::string_view delimiters)
-    {
-      const std::string str{read_while(istr, [delimiters](char c){ return !std::ranges::contains(delimiters, c); })};
-      istr.get();
-
-      return str;
-    }
-
-    /// Everything [cpp.pre] admits between a directive's tokens: any whitespace but the newline ending it.
-    [[nodiscard]]
-    bool is_directive_space(char c) noexcept
-    {
-      return (c == ' ') || (c == '\t') || (c == '\v') || (c == '\f');
-    }
-
-    /// The characters which may appear in an identifier; ASCII, and so independent of the locale.
-    [[nodiscard]]
-    bool is_identifier_char(char c) noexcept
-    {
-      return    ((c >= 'a') && (c <= 'z'))
-             || ((c >= 'A') && (c <= 'Z'))
-             || ((c >= '0') && (c <= '9'))
-             || (c == '_');
-    }
-
-    void skip_directive_space(std::istream& istr)
-    {
-      read_while(istr, [](char c){ return is_directive_space(c); });
-    }
-
-    /// Reads an identifier, leaving the first character which cannot extend one unconsumed.
-    [[nodiscard]]
-    std::string read_identifier(std::istream& istr)
-    {
-      return read_while(istr, [](char c){ return is_identifier_char(c); });
-    }
-
-    /** \brief Reads a header name, or nothing if the line ends before the closing delimiter does.
-
-        A header name cannot cross a newline [lex.header], so a `"` or `<` left unclosed on its
-        line opens none. The scan has no notion of a string literal, so without that bound
-        `std::string_view include{"#include"};` opens a header name at its closing quote,
-        consuming every `#include` up to the next quotation mark.
+    /** Every test class may optionally define test materials. For a test class `bar_test`, defined in
+        `Tests/Foo/Bar.cpp`, any materials are in the folder `TestMaterials/Foo/Bar/bar_test`.
+        For the purposes of pruning, we look for modifications one level up, i.e. within
+        `TestMaterials/Foo/Bar/`. This gives pruning the same granularity for both sources and test
+        materials. Per-class granularity for materials is possible, but the trade-off does not
+        currently seem worthwhile.
      */
     [[nodiscard]]
-    std::string read_header_name(std::istream& istr, char closing)
-    {
-      std::string name{read_while(istr, [closing](char c){ return (c != closing) && (c != '\n'); })};
-      if(istr.peek() != closing) return {};
-
-      istr.get();
-
-      return name;
-    }
-
-    /// No rebasing perfomed
-    void write_tests(const fs::path& file, const std::vector<fs::path>& tests)
-    {
-      if(std::ofstream ostream{file})
-      {
-        for(const auto& test : tests)  ostream << test.generic_string() << "\n";
-      }
-    }
-
-    [[nodiscard]]
-    std::vector<fs::path> get_includes(const fs::path& file, std::string_view cutoff)
-    {
-      std::vector<fs::path> includes{};
-
-      if(std::ifstream ifile{file})
-      {
-        auto scanned{scan_dependencies(ifile, cutoff)};
-
-        for(auto& includedFile : scanned.includes)
-        {
-          // An extensionless name is a standard library header, which is never in the tree
-          if(!includedFile.has_extension()) continue;
-
-          if(includedFile.parent_path().empty())
-          {
-            // Maybe check if this file actually exists... if path is absolute
-            includedFile = file.parent_path() / includedFile;
-          }
-
-          includes.push_back(std::move(includedFile));
-        }
-      }
-
-      return includes;
-    }
-
-    using tests_dependency_graph = maths::directed_graph<maths::null_weight, file_info>;
-    using node_iterator = tests_dependency_graph::iterator;
-
-    void add_files(std::vector<file_info>& info, const fs::path& repo, const fs::file_time_type& stalenessThreshold, const std::optional<fs::file_time_type>& exeTimeStamp)
-    {
-      for(const auto& entry : fs::recursive_directory_iterator(repo))
-      {
-        const auto file{entry.path()};
-        if(is_cpp(file) || is_header(file))
-        {
-          info.emplace_back(file, stalenessThreshold, exeTimeStamp);
-        }
-      }
-    }
-
-    /// pre-condition: the nodes of g have been sorted by file path
-    void build_dependencies(tests_dependency_graph& g, const project_paths& projPaths, std::string_view cutoff)
-    {
-      using size_type = tests_dependency_graph::size_type;
-      std::vector<fs::path> externalDependencies{};
-
-      for(auto i{g.begin_node_weights()}; i != g.end_node_weights(); ++i)
-      {
-        const auto nodePos{static_cast<size_type>(std::ranges::distance(g.begin_node_weights(), i))};
-        const auto& file{i->file};
-
-        for(const auto& includedFile : get_includes(file, cutoff))
-        {
-          if(auto eqrange{std::ranges::equal_range(g.node_weights(), includedFile.filename(), std::ranges::less{}, [](const file_info& weight){ return weight.file.filename(); })}; !eqrange.empty())
-          {
-            auto found{
-              std::ranges::find_if(eqrange, [&includedFile,&projPaths,&file](const file_info& wt){
-                  if(includedFile.is_absolute())
-                  {
-                    if(wt.file == includedFile) return true;
-                  }
-                  else
-                  {
-                    if(    (wt.file == (projPaths.source().repo() / includedFile))
-                        || (wt.file == (projPaths.tests().repo() / includedFile))
-                        || std::ranges::contains(projPaths.additional_dependency_analysis_paths(), wt.file, [&includedFile](const fs::path& p) {  return  p / includedFile; })
-                      )
-                      return true;
-
-                    if(const auto trial{file.parent_path() / includedFile}; fs::exists(trial) && (wt.file == fs::canonical(trial)))
-                      return true;
-                  }
-
-                  return false;
-                }
-              )
-            };
-
-            if(found != eqrange.end())
-            {
-              const auto includeNodePos{static_cast<size_type>(std::ranges::distance(g.begin_node_weights(), found))};
-              g.join(nodePos, includeNodePos);
-
-              if(is_cpp(file))
-              {
-                if(file.stem() == includedFile.stem())
-                {
-                  // Ensure that if cpp is stale, then its associated hpp is
-                  // also rendered stale
-                  if(i->stale) found->stale = true;
-
-                  found->implicit_modification_time = std::ranges::max(i->implicit_modification_time, found->implicit_modification_time);
-                }
-                else
-                {
-                  // Furnish the associated header with the same dependencies,
-                  // as these are what ultimately determine whether or not
-                  // the test cpp is considered stale. Sorting of g ensures
-                  // that headers are directly after sources; note that since
-                  // only files considered to be headers or sources are added
-                  // to g, this is robust.
-
-                  if(auto next{std::ranges::next(i)}; next != g.end_node_weights())
-                  {
-                    if(next->file.stem() == file.stem())
-                    {
-                      const auto nextPos{static_cast<size_type>(std::ranges::distance(g.begin_node_weights(), next))};
-                      g.join(nextPos, includeNodePos);
-                    }
-                  }
-                }
-              }
-            }
-          }
-          else
-          {
-            externalDependencies.push_back(includedFile);
-          }
-        }
-      }
-
-      std::ranges::sort(externalDependencies);
-      auto iters{std::ranges::unique(externalDependencies)};
-      externalDependencies.erase(iters.begin(), iters.end());
-
-      write_tests(projPaths.prune().external_dependencies(), externalDependencies);
-    }
-
-    [[nodiscard]]
-    bool materials_modified(const fs::path& relFilePath,
-                            const fs::path& materialsRepo,
-                            const fs::file_time_type stalenessThreshold)
+    std::optional<fs::file_time_type> materials_modification_time(const fs::path& relFilePath, const fs::path& materialsRepo)
     {
       const auto materials{materialsRepo / fs::path{relFilePath}.replace_extension("")};
-      if(fs::exists(materials))
-      {
-        for(const auto& entry : fs::recursive_directory_iterator(materials))
-        {
-          if(fs::last_write_time(entry) > stalenessThreshold) return true;
-        }
-      }
+      if(!fs::exists(materials))
+        return std::nullopt;
 
-      return false;
-    }
+      auto modificationTimes{
+          fs::recursive_directory_iterator(materials)
+        | std::views::transform([](const fs::directory_entry& entry){ return fs::last_write_time(entry); })
+      };
 
-    [[nodiscard]]
-    std::optional<fs::file_time_type> materials_max_write_time(const fs::path& relFilePath, const fs::path& materialsRepo)
-    {
-      const auto materials{materialsRepo / fs::path{relFilePath}.replace_extension("")};
-      if(fs::exists(materials))
-      {
-        fs::file_time_type maxTime{fs::last_write_time(materials)};
-
-        for(const auto& entry : fs::recursive_directory_iterator(materials))
-        {
-          maxTime = std::ranges::max(maxTime, fs::last_write_time(entry));
-        }
-
-        return maxTime;
-      }
-
-      return std::nullopt;
-    }
-
-    void consider_passing_tests(node_iterator i,
-                                const fs::path& relFilePath,
-                                std::span<const prune_record> passingTests,
-                                fs::file_time_type maxModificationTime)
-    {
-      auto iter{std::ranges::lower_bound(passingTests, relFilePath, {}, path_projector{})};
-      if((iter != passingTests.end()) && (iter->test_path == relFilePath) && (iter->time_stamp > maxModificationTime))
-      {
-        i->stale = false;
-      }
+      return std::ranges::fold_left(modificationTimes, fs::last_write_time(materials), std::ranges::max);
     }
 
     [[nodiscard]]
     std::optional<fs::file_time_type> get_stamp(const fs::path& file)
     {
-      if(fs::exists(file)) return fs::last_write_time(file);
+      if(fs::exists(file))
+        return fs::last_write_time(file);
 
       return std::nullopt;
     }
 
-    [[nodiscard]]
-    std::vector<fs::path> find_stale_tests(fs::file_time_type stalenessThreshold, const project_paths& projPaths, std::string_view cutoff)
+    /// Hashes a path's spelling, so that a lookup keyed on a path's native string can take a view of one
+    struct spelling_hash
     {
-      using namespace maths;
+      using is_transparent = void;
 
-      tests_dependency_graph g{};
-
-      const auto exeTimeStamp{get_stamp(projPaths.executable())};
-      std::vector<file_info> files{};
-
-      add_files(files, projPaths.source().repo(), stalenessThreshold, exeTimeStamp);
-      add_files(files, projPaths.tests().repo(), stalenessThreshold, exeTimeStamp);
-      for(const auto& p : projPaths.additional_dependency_analysis_paths())
+      [[nodiscard]]
+      std::size_t operator()(std::basic_string_view<fs::path::value_type> spelling) const noexcept
       {
-        add_files(files, p, stalenessThreshold, exeTimeStamp);
+        return std::hash<std::basic_string_view<fs::path::value_type>>{}(spelling);
+      }
+    };
+
+    /** \brief The dependency graph of the executable, as recorded by the build which produced the executable.
+
+        The build associates each object file with the files consumed to create it. Typically these will be
+        headers. Suppose `Foo.hpp` depends on `Bar.hpp`. This is an explicit dependency. However, it is natural
+        that definitions for declarations within `Bar.hpp` are in its associated source file `Bar.cpp`.
+        Therefore, in principle, changes to `Bar.cpp` can trigger a change in behaviour of functions declared
+        in `Bar.hpp` and consumed by `Foo.hpp`. Therefore there is a dependency of `Foo.hpp` on `Bar.cpp`.
+
+        The build does not record that dependency: how a definition reaches an object is settled at link
+        time, and the record holds only what each compilation read. So prune infers the dependency by
+        name, and relies on a precondition: a definition is either in a file the consuming compilation
+        reads, or in the source named for a header the compilation reads. A definition anywhere else is
+        not seen - in a source of a different name, or in a header of a different name which only some
+        other compilation reads - although the program links either way.
+     */
+    class dependency_graph
+    {
+    public:
+      /** A test's translation unit: its source, relative to the tests repository, and the newest
+          modification among the files the unit was built from.
+       */
+      struct translation_unit
+      {
+        fs::path source;
+        fs::file_time_type newest_modification;
+      };
+
+      /** Every file a test's translation unit was built from is read once and checked against the
+          executable's stamp. Throws where a file post-dates the executable, or where a file's modification
+          time cannot be read.
+       */
+      dependency_graph(const build_tree& tree, const project_paths& projPaths)
+        : m_TestsRepo{projPaths.tests().repo()}
+        , m_Graph{make_graph(tree, projPaths)}
+        , m_TestTranslationUnits{read_test_translation_units(get_stamp(projPaths.executable()))}
+      {}
+
+      /// The translation units built from sources in the tests repository
+      [[nodiscard]]
+      std::span<const translation_unit> get_test_translation_units() const noexcept { return m_TestTranslationUnits; }
+
+      /// Whether the build read any file under `directory`; the object files it wrote there do not count
+      [[nodiscard]]
+      bool reads_from(const fs::path& directory) const
+      {
+        auto readFrom{[&directory](const file_info& info){ return !info.is_object_file() && in_repo(info.file, directory); }};
+
+        return std::ranges::any_of(m_Graph.cnode_weights(), readFrom);
+      }
+    private:
+      /// A file the build names; for an object file, the node of the source it was compiled from
+      struct file_info
+      {
+        fs::path file{};
+        std::optional<std::size_t> source{};
+
+        [[nodiscard]]
+        bool is_object_file() const noexcept { return source.has_value(); }
+      };
+
+      using graph_type = maths::directed_graph<maths::null_weight, file_info>;
+      using node_index = graph_type::edge_index_type;
+
+      fs::path m_TestsRepo;
+      graph_type m_Graph;
+      std::vector<translation_unit> m_TestTranslationUnits;
+
+      [[nodiscard]]
+      const file_info& node(node_index i) const { return node_of(m_Graph, i); }
+
+      [[nodiscard]]
+      const fs::path& file(node_index i) const { return node(i).file; }
+
+      [[nodiscard]]
+      std::size_t file_count() const noexcept { return m_Graph.order(); }
+
+      /// Throws `std::out_of_range` for a node the graph does not have
+      [[nodiscard]]
+      static const file_info& node_of(const graph_type& g, node_index i)
+      {
+        maths::graph_errors::check_node_index_range("dependency_graph::node", g.order(), i);
+        return g.cbegin_node_weights()[i];
       }
 
-      std::ranges::sort(
-        files,
-        [](const auto& lhs, const auto& rhs) {
-          const fs::path& lfile{lhs.file}, rfile{rhs.file};
+      /** The modification time of every file the build read, by node; an object file, being a product
+          rather than something read, holds the earliest time, which no fold for the newest can see.
 
-          const fs::path
-            lname{lfile.filename()},
-            rname{rfile.filename()};
-
-          return lname != rname ? lname < rname : lfile < rfile;
-        }
-      );
-
-      for(const auto& info : files)
+          Throws where a file post-dates the executable, or where a file's modification time cannot be
+          read. Every file is checked, whether or not a test depends on it: an
+          edited `TestMain.cpp` is read by no test's translation unit, and is the case which made the
+          executable stale without prune noticing.
+       */
+      [[nodiscard]]
+      std::vector<fs::file_time_type> modification_times(std::optional<fs::file_time_type> executableStamp) const
       {
-        g.add_node(info);
-      }
+        auto modificationTime{
+          [&executableStamp](const file_info& info) {
+            if(info.is_object_file())
+              return fs::file_time_type::min();
 
-      build_dependencies(g, projPaths, cutoff);
+            std::error_code error{};
+            const auto time{fs::last_write_time(info.file, error)};
+            if(error)
+              throw std::runtime_error{
+                std::format("{} was read by the build but its modification time cannot be read: {}\n"
+                            "Restore the file, or build the executable again\n",
+                            info.file.generic_string(),
+                            error.message())
+              };
 
-      bool changed{};
+            if(executableStamp && (time >= *executableStamp))
+              throw std::runtime_error{
+                std::format("Executable is out of date; please build it!\nExecutable time stamp: {}\n{} time stamp: {}\n",
+                            *executableStamp,
+                            info.file.generic_string(),
+                            time)
+              };
 
-      auto nodesLate{
-        [&g, &changed](const std::size_t node) {
-          auto& wt{g.begin_node_weights()[node]};
-
-          for(const auto& edge : g.cedges(node))
-          {
-            const auto& targetWt{g.cbegin_node_weights()[edge.target_node()]};
-
-            if(targetWt.implicit_modification_time > wt.implicit_modification_time)
-            {
-              wt.implicit_modification_time = targetWt.implicit_modification_time;
-              changed = true;
-            }
-
-            if(targetWt.stale && !wt.stale)
-            {
-              wt.stale = true;
-              changed = true;
-            }
+            return time;
           }
+        };
+
+        return m_Graph.cnode_weights() | std::views::transform(modificationTime) | std::ranges::to<std::vector>();
+      }
+
+      /// The nodes of the object files whose source lies in the tests repository: the leading nodes, by construction
+      [[nodiscard]]
+      auto get_test_object_file_nodes() const
+      {
+        auto isTest{
+          [this](node_index i) {
+            const auto& info{node(i)};
+            return info.is_object_file() && in_repo(file(*info.source), m_TestsRepo);
+          }
+        };
+
+        return std::views::iota(node_index{}, file_count()) | std::views::take_while(isTest);
+      }
+
+      [[nodiscard]]
+      std::vector<translation_unit> read_test_translation_units(std::optional<fs::file_time_type> executableStamp) const
+      {
+        const auto times{modification_times(executableStamp)};
+
+        auto translationUnit{
+          [&](node_index object) {
+            return
+              translation_unit{
+                .source{fs::relative(file(*node(object).source), m_TestsRepo)},
+                .newest_modification{newest_modification(object, times)}
+              };
+          }
+        };
+
+        return get_test_object_file_nodes() | std::views::transform(translationUnit) | std::ranges::to<std::vector>();
+      }
+
+      /// The newest modification among every file on which the object depends
+      [[nodiscard]]
+      fs::file_time_type newest_modification(node_index object, std::span<const fs::file_time_type> times) const
+      {
+        auto newest{fs::file_time_type::min()};
+
+        auto takeNewer{
+          [this, &times, &newest](graph_type::const_edge_iterator edge) {
+            if(const auto target{edge->target_node()}; !node(target).is_object_file())
+              newest = std::ranges::max(newest, times[target]);
+          }
+        };
+
+        maths::traverse(maths::depth_first,
+                        m_Graph,
+                        maths::ignore_disconnected_t{object},
+                        maths::null_func_obj{},
+                        maths::null_func_obj{},
+                        takeNewer);
+
+        return newest;
+      }
+
+      /** A node for every object file and every file read to produce one - the tests' object files first,
+          then in order of first mention - each object file's source on its node; an edge from each object
+          file to each file read to produce it; and the dependencies the convention adds.
+
+          A record spells a path identically each time the record mentions the path, so the lookup is
+          keyed on the spelling and the filesystem is asked once per spelling for the canonical path -
+          which is what project_paths holds, the build having recorded whatever spelling it was
+          configured with, through whatever symlink and in whatever case.
+       */
+      [[nodiscard]]
+      static graph_type make_graph(const build_tree& tree, const project_paths& projPaths)
+      {
+        const auto compilations{read_compilations(tree, projPaths.executable())};
+
+        /* A path whose existing prefix cannot be resolved - a directory without permission, a symlink
+           loop - is kept as recorded, and fails with that reason when its modification time is read
+         */
+        auto canonical{
+          [&tree](const fs::path& p) {
+            const auto asRecorded{(p.is_absolute() ? p : tree.build_directory / p).lexically_normal()};
+            std::error_code error{};
+            auto canonicalized{fs::weakly_canonical(asRecorded, error)};
+
+            return error ? asRecorded : canonicalized;
+          }
+        };
+
+        graph_type g{};
+        std::unordered_map<fs::path::string_type, node_index, spelling_hash, std::ranges::equal_to> nodes{};
+        auto nodeOf{
+          [&g, &nodes, &canonical](const fs::path& p) {
+            if(const auto found{nodes.find(std::basic_string_view{p.native()})}; found != nodes.end())
+              return found->second;
+
+            return nodes.emplace(p.native(), g.add_node(file_info{.file{canonical(p)}})).first->second;
+          }
+        };
+
+        auto isTest{
+          [&canonical, testsRepo{projPaths.tests().repo()}](const compilation_record& record) {
+            return in_repo(canonical(record.inputs.front()), testsRepo);
+          }
+        };
+
+        // The tests' object files take the leading indices, so that they form a block the graph can walk without a filter
+        for(const auto& record : compilations | std::views::filter(isTest))
+        {
+          nodeOf(record.object);
+        }
+
+        for(const auto& record : compilations)
+        {
+          const auto object{nodeOf(record.object)};
+          const auto inputs{record.inputs | std::views::transform(nodeOf) | std::ranges::to<std::vector>()};
+
+          g.mutate_node_weight(g.cbegin_node_weights() + object, [source{inputs.front()}](file_info& info){ info.source = source; });
+          for(const auto input : inputs)
+          {
+            g.join(object, input);
+          }
+        }
+
+        add_dependencies(g, tree);
+
+        return g;
+      }
+
+      /** An edge from each header to each object file whose source both shares the header's stem and
+          includes the header: the convention that `Foo.cpp` implements `Foo.hpp`.
+
+          The toolchain's own headers are excluded, or a source named for one - vector.cpp - would
+          implement <vector>, and every test would depend on the source.
+       */
+      static void add_dependencies(graph_type& g, const build_tree& tree)
+      {
+        auto file{[&g](node_index i) -> const fs::path& { return node_of(g, i).file; }};
+
+        // Per file rather than per edge: a file is the input of many objects
+        const auto stems{
+            std::views::iota(node_index{}, g.order())
+          | std::views::transform([&file](node_index i){ return file(i).stem().string(); })
+          | std::ranges::to<std::vector>()
+        };
+        const auto toolchain{
+            std::views::iota(node_index{}, g.order())
+          | std::views::transform([&file, &tree](node_index i){ return in_toolchain(file(i), tree); })
+          | std::ranges::to<std::vector<bool>>()
+        };
+
+        auto isObjectFile{[&g](node_index i){ return node_of(g, i).is_object_file(); }};
+        auto target{[](const auto& edge){ return edge.target_node(); }};
+
+        for(const auto objectNode : std::views::iota(node_index{}, g.order()) | std::views::filter(isObjectFile))
+        {
+          const auto sourceNode{*node_of(g, objectNode).source};
+
+          auto implements{
+            [&](node_index inputNode) {
+              return (inputNode != sourceNode) && !toolchain[inputNode] && (stems[inputNode] == stems[sourceNode]);
+            }
+          };
+
+          // Copied before joining, which may reallocate the edges being read
+          const auto inputNodes{g.cedges(objectNode) | std::views::transform(target) | std::ranges::to<std::vector>()};
+          for(const auto inputNode : inputNodes | std::views::filter(implements))
+          {
+            g.join(inputNode, objectNode);
+          }
+        }
+      }
+    };
+
+    /// Whether a test has passed since everything it depends on last changed, its materials included
+    class passing_tests
+    {
+    public:
+      passing_tests(const project_paths& projPaths, fs::file_time_type stalenessThreshold)
+        : m_MaterialsRepo{projPaths.test_materials().repo()}
+        , m_StalenessThreshold{stalenessThreshold}
+        , m_Passes{read_tests(projPaths.prune().selected_passes(std::nullopt))}
+        , m_PassesStamp{get_stamp(projPaths.prune().selected_passes(std::nullopt))}
+      {}
+
+      /** A test is stale if its dependencies or its materials moved after the threshold, unless
+          it is recorded as passing since then - see the comment on the comparison.
+       */
+      [[nodiscard]]
+      bool is_stale(const fs::path& relPath, fs::file_time_type newestDependencyModification) const
+      {
+        const auto newestModification{
+          std::ranges::max(newestDependencyModification,
+                           materials_modification_time(relPath, m_MaterialsRepo).value_or(newestDependencyModification))
+        };
+
+        if(newestModification <= m_StalenessThreshold)
+          return false;
+
+        /* `>=` rather than `>`. Following a modification to either code or test materials, a build
+           may be performed and the tests are run. After the tests are executed, the 'passes' file may
+           be written. Therefore, this write happens at a strictly later time than the aforementioned
+           modification. However, the filesystem may not represent times with sufficient accuracy to
+           be able to resolve this difference. For example, libstdc++ on macOS rounds filesystem times
+           down to the nearest second. In this case, a comparison using '>' could return false, in
+           the situation where the 'passes' file was actually written after modifications were made.
+         */
+        const auto passedAt{time_of_recorded_pass(relPath)};
+        const bool passedSince{passedAt && (m_PassesStamp.value() >= newestModification) && (passedAt.value() > newestModification)};
+
+        return !passedSince;
+      }
+    private:
+      fs::path m_MaterialsRepo;
+      fs::file_time_type m_StalenessThreshold;
+      std::vector<prune_record> m_Passes;
+      std::optional<fs::file_time_type> m_PassesStamp;
+
+      [[nodiscard]]
+      std::optional<fs::file_time_type> time_of_recorded_pass(const fs::path& relPath) const
+      {
+        if(!m_PassesStamp)
+          return std::nullopt;
+
+        const auto record{std::ranges::lower_bound(m_Passes, relPath, {}, path_projector{})};
+        if((record == m_Passes.end()) || (record->test_path != relPath))
+          return std::nullopt;
+
+        return record->time_stamp;
+      }
+    };
+
+    [[nodiscard]]
+    std::vector<fs::path> find_stale_tests(fs::file_time_type stalenessThreshold, const project_paths& projPaths)
+    {
+      const auto tree{read_build_tree(projPaths.discovered().cmake_cache())};
+      const dependency_graph graph{tree, projPaths};
+
+      const auto tests{graph.get_test_translation_units()};
+
+      /* With no tests selected, prune runs nothing and reports that nothing has changed. That is the
+         truth when the project has no tests, and a permanent silence when it has tests which the
+         build's record spells under some other path than project_paths expects - a tree configured
+         through a symlink, or in another case - since then nothing would ever be selected again. The
+         two are told apart by whether the record names anything of the project's at all.
+       */
+      if(tests.empty() && !graph.reads_from(projPaths.project_root()))
+        throw std::runtime_error{
+          std::format("The build's record names nothing under {}; "
+                      "was the tree configured with a different spelling of the project's path?",
+                      projPaths.project_root().generic_string())
+        };
+
+      const passing_tests passes{projPaths, stalenessThreshold};
+
+      auto isStale{
+        [&passes](const dependency_graph::translation_unit& unit) {
+          return passes.is_stale(unit.source, unit.newest_modification);
         }
       };
 
-      /* A single post-order pass is exact only on a DAG, and headers may include one another.
-         Rejecting a cycle is not an option, since mutual inclusion is legal, so the fold is
-         repeated until it changes nothing: it only ever sets a flag or advances a time, and so
-         reaches its fixed point - stale if anything reachable is stale, and the newest time
-         among them. On a DAG that is one pass to do the work and one to confirm it.
-       */
-      do
-      {
-        changed = false;
-        traverse(depth_first, g, find_disconnected_t{0}, null_func_obj{}, nodesLate);
-      } while(changed);
-
-      const auto passesFile{projPaths.prune().selected_passes(std::nullopt)};
-      const auto passingTestsFromFile{read_tests(passesFile)};
-      const auto passesStamp{get_stamp(passesFile)};
-
-      std::vector<fs::path> staleTests{};
-
-      for(auto i{g.begin_node_weights()}; i != g.end_node_weights(); ++i)
-      {
-        if(const auto& weight{*i}; is_cpp(weight.file) && in_repo(weight.file, projPaths.tests().repo()))
-        {
-          const auto relPath{fs::relative(weight.file, projPaths.tests().repo())};
-
-          if(passesStamp && std::ranges::binary_search(passingTestsFromFile, relPath, {}, path_projector{}))
-          {
-            const auto materialsWriteTime{materials_max_write_time(relPath, projPaths.test_materials().repo())};
-            if(!weight.stale && (materialsWriteTime > stalenessThreshold))
-              i->stale = true;
-
-            const auto maxModificationTime{materialsWriteTime ? std::ranges::max(materialsWriteTime.value(), weight.implicit_modification_time) : weight.implicit_modification_time};
-
-            /* `>=`, not `>`: the question is whether the record of this test passing is older
-               than the newest modification. Both sides come from `last_write_time`, and the record
-               is written after the modification it supersedes, so wherever the filesystem can
-               represent that difference the two spellings agree. Where it cannot - libstdc++
-               truncates to whole seconds on macOS - "after" collapses onto "equal", and `>` then
-               rejects a record which does post-date the change, so the test is selected again by
-               every later run and never settles.
-            */
-            if(weight.stale && (passesStamp.value() >= maxModificationTime))
-              consider_passing_tests(i, relPath, passingTestsFromFile, maxModificationTime);
-          }
-          else if(!weight.stale)
-          {
-            if(materials_modified(relPath, projPaths.test_materials().repo(), stalenessThreshold))
-            {
-              i->stale = true;
-            }
-          }
-
-          if(weight.stale) staleTests.push_back(relPath);
-        }
-      }
+      auto staleTests{
+          tests
+        | std::views::filter(isStale)
+        | std::views::transform(&dependency_graph::translation_unit::source)
+        | std::ranges::to<std::vector>()
+      };
 
       std::ranges::sort(staleTests);
 
@@ -546,156 +549,63 @@ namespace sequoia::testing
       fs::last_write_time(stamp, time);
     }
 
-    std::vector<prune_record>& read_tests_to(const fs::path& file, std::vector<prune_record>& tests)
+    struct least_path_most_recent
     {
-      
-      if(std::ifstream ifile{file})
-      {
-        try
-        {
-          // A call rather than a pipe, to stay identical to `modules-native`. The pipe is
-          // fine here and is rejected there: under `import std`, g++ 15.2 reports
-          // "use of operator| ... before deduction of 'auto'" whenever the adaptor carries a
-          // lambda - a named predicate pipes fine. See gcc-bugs/E in the sequoia-LLM
-          // repository, and PR 120318; fixed in gcc 16.1.
-          
-          using iter_t = std::istream_iterator<prune_record>;
-          tests.append_range(
-            std::views::filter(
-              std::ranges::subrange{iter_t{ifile}, iter_t{}},
-              [](const prune_record& record) { return !record.test_path.empty(); }
-            )
-          );
-        }
-        catch(const std::exception& e)
-        {
-          throw
-            std::runtime_error{
-              std::format(
-                "Unable to read the prune records in {}: {}\nTry deleting the parent directory and starting afresh",
-                file.generic_string(),
-                e.what()
-              )
-            };
-        }
-      }
-
-      return tests;
-    }
-
-    struct least_path_most_recent{
       [[nodiscard]]
-      bool operator()(const prune_record& lhs, const prune_record& rhs) const {
-        auto comp{lhs.test_path <=> rhs.test_path};
+      bool operator()(const prune_record& lhs, const prune_record& rhs) const
+      {
+        const auto comp{lhs.test_path <=> rhs.test_path};
         return comp == 0 ? lhs.time_stamp > rhs.time_stamp : comp < 0;
       }
     };
 
-    std::vector<prune_record>& to_unique_range(std::vector<prune_record>& r) {
-      auto erased{std::ranges::unique(r, {}, path_projector{})};
-      r.erase(erased.begin(), erased.end());
-      return r;
+    /** Sorted by path; where a path recurs, only its most recent record is kept.
+
+        A path recurs when records of one test from different runs are merged: the repetitions of an
+        instability analysis, or a selected run's results with those already on disk.
+     */
+    [[nodiscard]]
+    std::vector<prune_record> unique_by_path(std::vector<prune_record> records)
+    {
+      std::ranges::sort(records, least_path_most_recent{});
+      const auto duplicates{std::ranges::unique(records, {}, path_projector{})};
+      records.erase(duplicates.begin(), duplicates.end());
+      return records;
     }
-    
+
     [[nodiscard]]
     std::vector<prune_record> aggregate_failures(const prune_paths& prunePaths, const std::size_t numReps)
     {
-      std::vector<prune_record> allTests{};
-      for(auto i : std::views::iota(0uz, numReps))
-      {
-        read_tests_to(prunePaths.failures(i), allTests);
-      }
-
-      return to_unique_range(allTests);
+      return unique_by_path(
+          std::views::iota(0uz, numReps)
+        | std::views::transform([&prunePaths](std::size_t i){ return read_tests(prunePaths.failures(i)); })
+        | std::views::join
+        | std::ranges::to<std::vector>()
+      );
     }
 
     [[nodiscard]]
     std::optional<std::vector<prune_record>> aggregate_passes(const prune_paths& prunePaths, const std::size_t numReps)
     {
-      std::vector<prune_record> intersection{};
-      for(auto i : std::views::iota(0uz, numReps))
-      {
-        const auto file{prunePaths.selected_passes(i)};
-        if(!fs::exists(file)) return std::nullopt;
+      const auto files{
+          std::views::iota(0uz, numReps)
+        | std::views::transform([&prunePaths](std::size_t i){ return prunePaths.selected_passes(i); })
+        | std::ranges::to<std::vector>()
+      };
 
-        std::vector<prune_record> tests{testing::read_tests(file)};
-        if(i)
-        {
-          std::vector<prune_record> currentIntersection{};
-          std::ranges::set_intersection(tests, intersection, std::back_inserter(currentIntersection));
-          intersection = std::move(currentIntersection);
-        }
-        else
-        {
-          intersection = std::move(tests);
-        }
-      }
+      if(!std::ranges::all_of(files, [](const fs::path& file){ return fs::exists(file); }))
+        return std::nullopt;
 
-      return intersection;
+      auto intersect{
+        [](std::vector<prune_record> lhs, const std::vector<prune_record>& rhs) {
+          std::vector<prune_record> common{};
+          std::ranges::set_intersection(lhs, rhs, std::back_inserter(common));
+          return common;
+        }
+      };
+
+      return std::ranges::fold_left_first(files | std::views::transform(read_tests), intersect);
     }
-  }
-
-  [[nodiscard]]
-  source_dependencies scan_dependencies(std::istream& source, std::string_view cutoff)
-  {
-    constexpr auto eof{std::ifstream::traits_type::eof()};
-    using int_type = std::ifstream::int_type;
-
-    source_dependencies dependencies{};
-
-    int_type c{};
-    while((c = source.get()) != eof)
-    {
-      if(c == '/')
-      {
-        if(source.peek() == '/')
-        {
-          source.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        }
-        else if(source.peek() == '*')
-        {
-          source.get();
-          while(source)
-          {
-            source.ignore(std::numeric_limits<std::streamsize>::max(), '*');
-            if(source.peek() == '/')
-            {
-              source.get();
-              break;
-            }
-          }
-        }
-      }
-      else if(c == '#')
-      {
-        skip_directive_space(source);
-
-        if(read_identifier(source) == "include")
-        {
-          skip_directive_space(source);
-
-          const auto delimiter{source.get()};
-
-          fs::path includedFile{
-            (delimiter == '\"') ? read_header_name(source, '\"') :
-            (delimiter == '<')  ? read_header_name(source, '>')  :
-                                  std::string{}
-          };
-
-          if(!includedFile.empty()) dependencies.includes.push_back(std::move(includedFile));
-        }
-      }
-      else if(!cutoff.empty() && (c == cutoff.front()))
-      {
-        source.unget();
-        if(const std::string pattern{read_until(source, "\n")}; pattern.find(cutoff) != std::string::npos)
-        {
-          break;
-        }
-      }
-    }
-
-    return dependencies;
   }
 
   [[nodiscard]]
@@ -712,32 +622,53 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<prune_record> read_tests(const fs::path& file)
   {
-    std::vector<prune_record> tests{};
-    return read_tests_to(file, tests);
+    std::ifstream ifile{file};
+    if(!ifile)
+      return {};
+
+    try
+    {
+      using iter_t = std::istream_iterator<prune_record>;
+      auto hasPath{[](const prune_record& record){ return !record.test_path.empty(); }};
+
+      return std::ranges::subrange{iter_t{ifile}, iter_t{}} | std::views::filter(hasPath) | std::ranges::to<std::vector>();
+    }
+    catch(const std::exception& e)
+    {
+      throw
+        std::runtime_error{
+          std::format(
+            "Unable to read the prune records in {}: {}\nTry deleting the parent directory and starting afresh",
+            file.generic_string(),
+            e.what()
+          )
+        };
+    }
   }
 
   void write_tests(const project_paths& projPaths, const fs::path& file, std::span<const prune_record> tests)
   {
     if(std::ofstream ostream{file})
     {
-      for(const auto& test : tests)
-      {
-        ostream << prune_record{rebase_from(test.test_path, projPaths.tests().repo()), test.time_stamp} << "\n";
-      }
+      auto rebased{
+        [&projPaths](const prune_record& test) {
+          return prune_record{rebase_from(test.test_path, projPaths.tests().repo()), test.time_stamp};
+        }
+      };
+
+      std::ranges::copy(tests | std::views::transform(rebased), std::ostream_iterator<prune_record>{ostream, "\n"});
     }
   }
 
   namespace
   {
     void do_update_prune_files(const project_paths& projPaths,
-                          std::vector<prune_record> failedTests,
-                          fs::file_time_type updateTime,
-                          std::optional<std::size_t> id)
+                               std::vector<prune_record> failedTests,
+                               fs::file_time_type updateTime,
+                               std::optional<std::size_t> id)
     {
-      std::ranges::sort(failedTests, least_path_most_recent{});
-      
       const auto prunePaths{projPaths.prune()};
-      write_tests(projPaths, prunePaths.failures(id), failedTests);
+      write_tests(projPaths, prunePaths.failures(id), unique_by_path(std::move(failedTests)));
       fs::remove(prunePaths.selected_passes(id));
       update_prune_stamp_on_disk(prunePaths, updateTime);
     }
@@ -747,16 +678,11 @@ namespace sequoia::testing
                                std::vector<prune_record> failedTests,
                                std::optional<std::size_t> id)
     {
-      std::ranges::sort(executedTests, least_path_most_recent{});
-      std::ranges::sort(failedTests, least_path_most_recent{});
-      to_unique_range(executedTests);
-
       auto unionize{
         [](std::span<const prune_record> a, std::span<const prune_record> b){
           std::vector<prune_record> tests{};
           std::ranges::set_union(a, b, std::back_inserter(tests), least_path_most_recent{});
-          to_unique_range(tests);
-          return tests;
+          return unique_by_path(std::move(tests));
         }
       };
 
@@ -771,18 +697,22 @@ namespace sequoia::testing
       const auto prunePaths{projPaths.prune()};
       const auto passesFile{prunePaths.selected_passes(id)},
                  failuresFile{prunePaths.failures(id)};
-      
-      const std::vector<prune_record> trialPasses{unionize(executedTests, read_tests(passesFile))};      
-      const std::vector<prune_record> passingTests{difference(trialPasses, failedTests)};
-      const std::vector<prune_record> remainingPreviousFailures{difference(read_tests(failuresFile), passingTests)};
-      const std::vector<prune_record> allFailures{unionize(remainingPreviousFailures, failedTests)};
+
+      const auto executed{unique_by_path(std::move(executedTests))};
+      const auto failed{unique_by_path(std::move(failedTests))};
+
+      const auto trialPasses{unionize(executed, read_tests(passesFile))};
+      const auto passingTests{difference(trialPasses, failed)};
+      const auto remainingPreviousFailures{difference(read_tests(failuresFile), passingTests)};
+      const auto allFailures{unionize(remainingPreviousFailures, failed)};
 
       write_tests(projPaths, failuresFile, allFailures);
       write_tests(projPaths, passesFile, passingTests);
     }
 
     [[nodiscard]]
-    std::vector<prune_record> build_prune_records(std::span<const fs::path> tests, fs::file_time_type updateTime) {
+    std::vector<prune_record> build_prune_records(std::span<const fs::path> tests, fs::file_time_type updateTime)
+    {
       return   std::views::transform(tests, [updateTime](const fs::path& p){ return prune_record{p, updateTime}; })
              | std::ranges::to<std::vector>();
     }
@@ -790,14 +720,15 @@ namespace sequoia::testing
 
   [[nodiscard]]
   std::optional<std::vector<fs::path>>
-  tests_to_run(const project_paths& projPaths, std::string_view cutoff)
+  tests_to_run(const project_paths& projPaths)
   {
     const auto prunePaths{projPaths.prune()};
     const auto pruneTimeStamp{get_stamp(prunePaths.stamp())};
 
-    if(!pruneTimeStamp) return std::nullopt;
+    if(!pruneTimeStamp)
+      return std::nullopt;
 
-    const auto staleTests{find_stale_tests(staleness_threshold(pruneTimeStamp.value()), projPaths, cutoff)};
+    const auto staleTests{find_stale_tests(staleness_threshold(pruneTimeStamp.value()), projPaths)};
 
     const std::vector<fs::path> failingTests{
       std::views::transform(read_tests(prunePaths.failures(std::nullopt)), path_projector{}) | std::ranges::to<std::vector>()
@@ -827,7 +758,7 @@ namespace sequoia::testing
                           std::span<const fs::path> failedTests,
                           fs::file_time_type updateTime,
                           std::optional<std::size_t> id)
-  {    
+  {
     do_update_prune_files(
       projPaths,
       build_prune_records(executedTests, updateTime),
@@ -843,7 +774,10 @@ namespace sequoia::testing
     fs::create_directories(dir);
   }
 
-  void aggregate_instability_analysis_prune_files(const project_paths& projPaths, prune_mode mode, std::filesystem::file_time_type timeStamp, std::size_t numReps)
+  void aggregate_instability_analysis_prune_files(const project_paths& projPaths,
+                                                  prune_mode mode,
+                                                  std::filesystem::file_time_type timeStamp,
+                                                  std::size_t numReps)
   {
     const auto prunePaths{projPaths.prune()};
     auto failingCases{aggregate_failures(prunePaths, numReps)};
@@ -855,7 +789,7 @@ namespace sequoia::testing
       if(auto optPasses{aggregate_passes(prunePaths, numReps)})
       {
         auto& executedCases{optPasses.value()};
-        executedCases.insert(executedCases.end(), failingCases.begin(), failingCases.end());
+        executedCases.append_range(failingCases);
 
         do_update_prune_files(projPaths, std::move(executedCases), std::move(failingCases), std::nullopt);
       }

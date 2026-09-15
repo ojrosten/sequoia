@@ -609,11 +609,16 @@ namespace sequoia
 
       size_type insert_node(const size_type node)
       {
+        const bool displacing{node < order()};
+
         m_Edges.insert_slot(node);
-        fix_edge_data(
-          [node](const auto targetNode) { return targetNode >= node; },
-          [](const auto index) { return index + 1; }
-	);
+        if(displacing)
+        {
+          fix_edge_data(
+            [node](const auto targetNode) { return targetNode >= node; },
+            [](const auto index) { return index + 1; }
+          );
+        }
 
         return node;
       }

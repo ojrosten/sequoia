@@ -39,7 +39,7 @@ Project name clash
 
 Expected Exception Type:
 [std::runtime_error]
-Project location 'output/TestsTemporaryData/TestFramework/test_runner_project_creation/WorkingCopy' is in use
+Project location 'output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/test_runner_project_creation/WorkingCopy' is in use
 
 =======================================
 

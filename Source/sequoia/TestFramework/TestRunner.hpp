@@ -370,11 +370,6 @@ namespace sequoia::testing
     enum class performance_mode { included = 0, excluded = 1 };
     enum class is_performance_test : bool { no, yes };
 
-    struct prune_info
-    {
-      prune_mode mode{prune_mode::passive};
-      std::string include_cutoff{};
-    };
 
     class path_equivalence
     {
@@ -505,7 +500,7 @@ namespace sequoia::testing
     std::set<std::string_view> m_TestNames{};
     std::size_t m_Registered{};
     test_filter m_Filter{path_equivalence{proj_paths().tests().repo()}};
-    prune_info m_PruneInfo{};
+    prune_mode m_PruneMode{prune_mode::passive};
 
     runner_mode           m_RunnerMode{runner_mode::none};
     verbosity             m_Verbosity{verbosity::standard};
