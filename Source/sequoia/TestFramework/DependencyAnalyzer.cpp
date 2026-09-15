@@ -6,11 +6,10 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
+#include "sequoia/TestFramework/BuildArtefacts.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
 #include "sequoia/Maths/Arithmetic/ArithmeticCasts.hpp"
-#include "sequoia/Maths/Graph/DynamicGraph.hpp"
-#include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <algorithm>
@@ -24,6 +23,7 @@
 #include <map>
 #include <optional>
 #include <ranges>
+#include <set>
 #include <string>
 #include <string_view>
 #include <type_traits>
@@ -88,38 +88,7 @@ namespace sequoia::testing
       const fs::path& operator()(const prune_record& record) const { return record.test_path; }
     };
     
-    [[nodiscard]]
-    bool is_stale(const fs::path& file, const fs::file_time_type& lastImplicitModTime, const fs::file_time_type& stalenessThreshold, const std::optional<fs::file_time_type>& exeTimeStamp)
-    {
-      if(exeTimeStamp.has_value() && (lastImplicitModTime >= exeTimeStamp.value()))
-        throw std::runtime_error{
-                std::format(
-                  "Executable is out of date; please build it!\nExecutable time stamp: {}\n{} time stamp: {}\n",
-                  exeTimeStamp.value(),
-                  file.generic_string(),
-                  lastImplicitModTime
-                )
-              };
 
-      return lastImplicitModTime > stalenessThreshold;
-    }
-
-    struct file_info
-    {
-      file_info(fs::path f, const fs::file_time_type& stalenessThreshold, const std::optional<fs::file_time_type>& exeTimeStamp)
-        : file{std::move(f)}
-        , implicit_modification_time{fs::last_write_time(file)}
-        , stale{is_stale(file, implicit_modification_time, stalenessThreshold, exeTimeStamp)}
-      {}
-
-      file_info(fs::path f)
-        : file{std::move(f)}
-      {}
-
-      fs::path file;
-      fs::file_time_type implicit_modification_time;
-      bool stale{true};
-    };
 
     [[nodiscard]]
     bool in_repo(const fs::path& file, const fs::path& repo)
@@ -166,16 +135,6 @@ namespace sequoia::testing
       return str;
     }
 
-    /// Accumulates characters up to the first delimiter, which is consumed.
-    [[nodiscard]]
-    std::string read_until(std::istream& istr, std::string_view delimiters)
-    {
-      const std::string str{read_while(istr, [delimiters](char c){ return !std::ranges::contains(delimiters, c); })};
-      istr.get();
-
-      return str;
-    }
-
     /** \brief Everything [cpp.pre] admits between a directive's tokens: any whitespace but the newline ending it.
 
         The same set is all that may precede a directive on its line, and `module` and `import`
@@ -185,7 +144,8 @@ namespace sequoia::testing
     [[nodiscard]]
     bool is_directive_space(char c) noexcept
     {
-      return (c == ' ') || (c == '\t') || (c == '\v') || (c == '\f');
+      // The carriage return is not [cpp.pre]'s, but a CRLF file read in binary puts one before every newline
+      return (c == ' ') || (c == '\t') || (c == '\v') || (c == '\f') || (c == '\r');
     }
 
     /// The characters which may appear in an identifier; ASCII, and so independent of the locale.
@@ -203,52 +163,11 @@ namespace sequoia::testing
       read_while(istr, [](char c){ return is_directive_space(c); });
     }
 
-    /// The rest of the line, less trailing whitespace; the newline is left unconsumed, as the scan keys on it.
-    [[nodiscard]]
-    std::string read_line_remainder(std::istream& istr)
-    {
-      std::string remainder{read_while(istr, [](char c){ return c != '\n'; })};
-      while(!remainder.empty() && (is_directive_space(remainder.back()) || (remainder.back() == '\r')))
-      {
-        remainder.pop_back();
-      }
-
-      return remainder;
-    }
-
     /// Reads an identifier, leaving the first character which cannot extend one unconsumed.
     [[nodiscard]]
     std::string read_identifier(std::istream& istr)
     {
       return read_while(istr, [](char c){ return is_identifier_char(c); });
-    }
-
-    /** \brief Reads a delimited header name, or nothing if there is no opening delimiter or the
-               line ends before the closing one does.
-
-        A header name cannot cross a newline [lex.header], so a `"` or `<` left unclosed on its
-        line opens none. The scan has no notion of a string literal, so without that bound
-        `std::string_view include{"#include"};` opens a header name at its closing quote,
-        consuming every `#include` up to the next quotation mark.
-     */
-    [[nodiscard]]
-    std::string read_header_name(std::istream& istr)
-    {
-      const auto opening{istr.peek()};
-      const char closing{
-        (opening == '\"') ? '\"' :
-        (opening == '<')  ? '>'  :
-                            '\0'
-      };
-      if(!closing) return {};
-
-      istr.get();
-      std::string name{read_while(istr, [closing](char c){ return (c != closing) && (c != '\n'); })};
-      if(istr.peek() != closing) return {};
-
-      istr.get();
-
-      return name;
     }
 
     /** \brief Reads to the end of a declaration, returning its subject with all whitespace removed.
@@ -259,7 +178,9 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string declaration_subject(std::istream& istr)
     {
-      auto subject{read_until(istr, ";\n")};
+      auto subject{read_while(istr, [](char c){ return (c != ';') && (c != '\n'); })};
+      if(istr.peek() == ';') istr.get();
+
       std::erase_if(subject, [](char c){ return is_directive_space(c) || (c == '\r'); });
 
       return subject;
@@ -267,10 +188,9 @@ namespace sequoia::testing
 
     /** \brief Whether a string is spelled as a module name.
 
-        Neither `module` nor `import` is a reserved word, so a line beginning with one may be
-        ordinary code. Requiring what follows to look like a module name - identifier characters and
-        dots, with at most one colon introducing a partition, and a leading colon permitted for a
-        partition of the unit's own module - is what keeps `module = 3;` from declaring a module.
+        `module` is not a reserved word, so a line beginning with it may be ordinary code. Requiring
+        what follows to look like a module name - identifier characters and dots, with at most one
+        colon introducing a partition - is what keeps `module = 3;` from declaring a module.
      */
     [[nodiscard]]
     bool is_module_name(std::string_view name)
@@ -295,56 +215,7 @@ namespace sequoia::testing
 
       if(name.find(':', colon + 1) != std::string_view::npos) return false;
 
-      // A leading colon abbreviates a partition of the importing unit's own module
-      return    ((colon == 0) || isDottedName(name.substr(0, colon)))
-             && isDottedName(name.substr(colon + 1));
-    }
-
-    /** \brief Consumes a module or import declaration, reporting whether the line was one.
-
-        Neither `module` nor `import` is reserved, so a line which begins with one need not be a
-        declaration. Returning false leaves the stream wherever the attempt reached and asks the
-        caller to rewind, which is what allows the attempt to be made at all.
-     */
-    [[nodiscard]]
-    bool consume_module_declaration(std::istream& istr, std::string_view keyword, module_role role, source_dependencies& dependencies)
-    {
-      if(keyword == "import")
-      {
-        skip_directive_space(istr);
-
-        // A header unit is a dependency on a file, so it belongs with the includes
-        if(const auto delimiter{istr.peek()}; (delimiter == '\"') || (delimiter == '<'))
-        {
-          fs::path header{read_header_name(istr)};
-          if(header.empty()) return false;
-
-          dependencies.includes.push_back(std::move(header));
-          return true;
-        }
-
-        auto name{declaration_subject(istr)};
-        if(!is_module_name(name)) return false;
-
-        dependencies.imports.push_back(std::move(name));
-        return true;
-      }
-
-      if(keyword == "module")
-      {
-        auto name{declaration_subject(istr)};
-
-        // `module;` introduces the global module fragment and declares nothing; `export module;` is not a thing
-        if(name.empty()) return role == module_role::implementation_unit;
-
-        // A partition names the module it belongs to when it declares itself; only an import may abbreviate
-        if(name.starts_with(':') || !is_module_name(name)) return false;
-
-        dependencies.declaration = module_declaration{std::move(name), role};
-        return true;
-      }
-
-      return false;
+      return isDottedName(name.substr(0, colon)) && isDottedName(name.substr(colon + 1));
     }
 
     /// The extensions under which a module unit is conventionally written; what it declares is the lexer's to say.
@@ -355,227 +226,16 @@ namespace sequoia::testing
       return (ext == ".cppm") || (ext == ".ixx") || (ext == ".cxxm") || (ext == ".ccm") || (ext == ".c++m") || (ext == ".mpp");
     }
 
-    /** \brief Whether other units can name what this one declares.
 
-        An interface unit provides its module or partition; a partition provides its qualified name
-        whether exported or not, since `import :P;` from within the module reaches either.
-        `module M;` provides nothing: no unit can name it.
-     */
-    [[nodiscard]]
-    bool provides(const module_declaration& declaration) noexcept
-    {
-      return (declaration.role == module_role::interface_unit) || declaration.name.contains(':');
-    }
-
-    /// Header names as written and module names as declared; nothing here is a path in the tree.
-    void write_external_dependencies(const fs::path& file, std::span<const std::string> names)
+    /// The files outside both the project and the toolchain which the tests were built from: the third parties relied on
+    void write_external_dependencies(const fs::path& file, const std::set<fs::path>& dependencies)
     {
       if(std::ofstream ostream{file})
       {
-        for(const auto& name : names) ostream << name << '\n';
+        for(const auto& dependency : dependencies) ostream << dependency.generic_string() << '\n';
       }
     }
 
-    /// scan_dependencies, with the include names resolved against the file which wrote them.
-    [[nodiscard]]
-    source_dependencies get_dependencies(const fs::path& file, std::string_view cutoff)
-    {
-      source_dependencies dependencies{};
-
-      // Binary, since the scan rewinds through `tellg`, which MSVC's text mode does not round-trip on LF files
-      if(std::ifstream ifile{file, std::ios_base::binary})
-      {
-        auto scanned{scan_dependencies(ifile, cutoff)};
-
-        for(auto& includedFile : scanned.includes)
-        {
-          // An extensionless name is a standard library header, which is never in the tree
-          if(!includedFile.has_extension()) continue;
-
-          if(includedFile.parent_path().empty())
-          {
-            // Maybe check if this file actually exists... if path is absolute
-            includedFile = file.parent_path() / includedFile;
-          }
-
-          dependencies.includes.push_back(std::move(includedFile));
-        }
-
-        dependencies.opaqueIncludes = std::move(scanned.opaqueIncludes);
-        dependencies.imports        = std::move(scanned.imports);
-        dependencies.declaration    = std::move(scanned.declaration);
-      }
-
-      return dependencies;
-    }
-
-    using tests_dependency_graph = maths::directed_graph<maths::null_weight, file_info>;
-    using node_iterator = tests_dependency_graph::iterator;
-
-    void add_files(std::vector<file_info>& info, const fs::path& repo, const fs::file_time_type& stalenessThreshold, const std::optional<fs::file_time_type>& exeTimeStamp)
-    {
-      for(const auto& entry : fs::recursive_directory_iterator(repo))
-      {
-        const auto file{entry.path()};
-        if(is_cpp(file) || is_header(file) || has_module_extension(file))
-        {
-          info.emplace_back(file, stalenessThreshold, exeTimeStamp);
-        }
-      }
-    }
-
-    /// pre-condition: the nodes of g have been sorted by file path
-    /// returns the includes the graph could not follow, in node order
-    [[nodiscard]]
-    std::vector<opaque_include> build_dependencies(tests_dependency_graph& g, const project_paths& projPaths, std::string_view cutoff)
-    {
-      using size_type = tests_dependency_graph::size_type;
-      std::vector<std::string> externalDependencies{};
-      std::vector<opaque_include> opaqueIncludes{};
-
-      std::vector<source_dependencies> scanned{};
-      for(const auto& weight : g.cnode_weights())
-      {
-        scanned.push_back(get_dependencies(weight.file, cutoff));
-      }
-
-      // A partition is keyed on its qualified name, `M:P`, which is what `import :P;` from within M abbreviates
-      std::map<std::string, size_type> providers{};
-      for(size_type pos{}; pos != scanned.size(); ++pos)
-      {
-        if(const auto& declaration{scanned[pos].declaration}; declaration && provides(*declaration))
-        {
-          providers.emplace(declaration->name, pos);
-        }
-      }
-
-      for(auto i{g.begin_node_weights()}; i != g.end_node_weights(); ++i)
-      {
-        const auto nodePos{static_cast<size_type>(std::ranges::distance(g.begin_node_weights(), i))};
-        const auto& file{i->file};
-        const auto& dependencies{scanned[nodePos]};
-
-        for(const auto& tokens : dependencies.opaqueIncludes)
-        {
-          opaqueIncludes.emplace_back(file, tokens);
-        }
-
-        for(const auto& includedFile : dependencies.includes)
-        {
-          if(auto eqrange{std::ranges::equal_range(g.node_weights(), includedFile.filename(), std::ranges::less{}, [](const file_info& weight){ return weight.file.filename(); })}; !eqrange.empty())
-          {
-            auto found{
-              std::ranges::find_if(eqrange, [&includedFile,&projPaths,&file](const file_info& wt){
-                  if(includedFile.is_absolute())
-                  {
-                    if(wt.file == includedFile) return true;
-                  }
-                  else
-                  {
-                    if(    (wt.file == (projPaths.source().repo() / includedFile))
-                        || (wt.file == (projPaths.tests().repo() / includedFile))
-                        || std::ranges::contains(projPaths.additional_dependency_analysis_paths(), wt.file, [&includedFile](const fs::path& p) {  return  p / includedFile; })
-                      )
-                      return true;
-
-                    if(const auto trial{file.parent_path() / includedFile}; fs::exists(trial) && (wt.file == fs::canonical(trial)))
-                      return true;
-                  }
-
-                  return false;
-                }
-              )
-            };
-
-            if(found != eqrange.end())
-            {
-              const auto includeNodePos{static_cast<size_type>(std::ranges::distance(g.begin_node_weights(), found))};
-              g.join(nodePos, includeNodePos);
-
-              if(is_cpp(file))
-              {
-                if(file.stem() == includedFile.stem())
-                {
-                  // Ensure that if cpp is stale, then its associated hpp is
-                  // also rendered stale
-                  if(i->stale) found->stale = true;
-
-                  found->implicit_modification_time = std::ranges::max(i->implicit_modification_time, found->implicit_modification_time);
-                }
-                else
-                {
-                  /* Furnish the associated header with the same dependencies, as these are what
-                     ultimately determine whether the test cpp is considered stale. Sorting of g
-                     puts the header among the nodes following the source with the same stem; a
-                     module unit sharing the stem may sit between them, so each is inspected.
-                  */
-                  for(auto next{std::ranges::next(i)}; (next != g.end_node_weights()) && (next->file.stem() == file.stem()); ++next)
-                  {
-                    if(is_header(next->file))
-                    {
-                      const auto nextPos{static_cast<size_type>(std::ranges::distance(g.begin_node_weights(), next))};
-                      g.join(nextPos, includeNodePos);
-                    }
-                  }
-                }
-              }
-            }
-          }
-          else
-          {
-            externalDependencies.push_back(includedFile.generic_string());
-          }
-        }
-
-        auto joinToProvider{
-          [&g, &providers, &externalDependencies, nodePos](const std::string& moduleName) {
-            if(const auto found{providers.find(moduleName)}; found != providers.end())
-              g.join(nodePos, found->second);
-            else
-              externalDependencies.push_back(moduleName);
-          }
-        };
-
-        for(const auto& imported : dependencies.imports)
-        {
-          if(!imported.starts_with(':'))
-          {
-            joinToProvider(imported);
-          }
-          else if(dependencies.declaration)
-          {
-            // `import :P;` is only meaningful from within the module which owns P
-            joinToProvider(std::string{dependencies.declaration->primary_name()} + imported);
-          }
-        }
-
-        if(const auto& declaration{dependencies.declaration}; declaration)
-        {
-          if(const auto found{providers.find(std::string{declaration->primary_name()})};
-             (found != providers.end()) && (found->second != nodePos))
-          {
-            /* Every unit of a module is linked into whatever imports it, yet importers name only
-               the primary interface, so a change to any other unit must render the interface stale
-               - the same trade the header path makes when it renders a header stale for its
-               same-stem source. The unit which is `module M;` also depends on the interface, which
-               it imports implicitly; the resulting two-cycle is why the staleness fold iterates to
-               a fixed point.
-            */
-            g.join(found->second, nodePos);
-
-            if(!declaration->name.contains(':')) g.join(nodePos, found->second);
-          }
-        }
-      }
-
-      std::ranges::sort(externalDependencies);
-      auto iters{std::ranges::unique(externalDependencies)};
-      externalDependencies.erase(iters.begin(), iters.end());
-
-      write_external_dependencies(projPaths.prune().external_dependencies(), externalDependencies);
-
-      return opaqueIncludes;
-    }
 
     [[nodiscard]]
     bool materials_modified(const fs::path& relFilePath,
@@ -613,7 +273,7 @@ namespace sequoia::testing
       return std::nullopt;
     }
 
-    void consider_passing_tests(node_iterator i,
+    void consider_passing_tests(bool& stale,
                                 const fs::path& relFilePath,
                                 std::span<const prune_record> passingTests,
                                 fs::file_time_type maxModificationTime)
@@ -621,7 +281,7 @@ namespace sequoia::testing
       auto iter{std::ranges::lower_bound(passingTests, relFilePath, {}, path_projector{})};
       if((iter != passingTests.end()) && (iter->test_path == relFilePath) && (iter->time_stamp > maxModificationTime))
       {
-        i->stale = false;
+        stale = false;
       }
     }
 
@@ -633,126 +293,311 @@ namespace sequoia::testing
       return std::nullopt;
     }
 
-    [[nodiscard]]
-    prune_selection find_stale_tests(fs::file_time_type stalenessThreshold, const project_paths& projPaths, std::string_view cutoff)
+    /** \brief The dependency graph of the executable, as the build which produced it recorded it.
+
+        The build gives each object the files the compiler read to produce it, the module interface
+        files it needed and the one it produced - see BuildArtefacts.hpp for where. Two conventions
+        are layered on that, both saying that a definition matters to whoever sees its declaration:
+        an object whose source shares its stem with a header it includes furnishes that header with
+        its own dependencies, as `Foo.cpp` does `Foo.hpp`; and an implementation unit, which nothing
+        can name, furnishes the interface of the module it declares. The second is the one fact no
+        artefact carries, since `module M;` and `import M;` look alike to a scan, so it is read from
+        the source.
+     */
+    class build_graph
     {
-      using namespace maths;
+    public:
+      using index_type = std::size_t;
 
-      tests_dependency_graph g{};
-
-      const auto exeTimeStamp{get_stamp(projPaths.executable())};
-      std::vector<file_info> files{};
-
-      add_files(files, projPaths.source().repo(), stalenessThreshold, exeTimeStamp);
-      add_files(files, projPaths.tests().repo(), stalenessThreshold, exeTimeStamp);
-      for(const auto& p : projPaths.additional_dependency_analysis_paths())
+      build_graph(const build_tree& tree, const fs::path& executable)
       {
-        add_files(files, p, stalenessThreshold, exeTimeStamp);
-      }
-
-      std::ranges::sort(
-        files,
-        [](const auto& lhs, const auto& rhs) {
-          const fs::path& lfile{lhs.file}, rfile{rhs.file};
-
-          const fs::path
-            lname{lfile.filename()},
-            rname{rfile.filename()};
-
-          return lname != rname ? lname < rname : lfile < rfile;
-        }
-      );
-
-      for(const auto& info : files)
-      {
-        g.add_node(info);
-      }
-
-      auto opaqueIncludes{build_dependencies(g, projPaths, cutoff)};
-
-      bool changed{};
-
-      auto nodesLate{
-        [&g, &changed](const std::size_t node) {
-          auto& wt{g.begin_node_weights()[node]};
-
-          for(const auto& edge : g.cedges(node))
-          {
-            const auto& targetWt{g.cbegin_node_weights()[edge.target_node()]};
-
-            if(targetWt.implicit_modification_time > wt.implicit_modification_time)
+        /* A record spells a path identically each time it mentions it, so interning is keyed on the
+           spelling and the filesystem is asked once per spelling for the canonical path - which is
+           what project_paths holds, the build having recorded whatever spelling it was configured
+           with, through whatever symlink and in whatever case.
+         */
+        std::map<std::string, index_type> indices{};
+        auto indexOf{
+          [this, &tree, &indices](const fs::path& p) {
+            const auto [iter, inserted]{indices.try_emplace(p.string(), m_Files.size())};
+            if(inserted)
             {
-              wt.implicit_modification_time = targetWt.implicit_modification_time;
-              changed = true;
+              const auto asRecorded{(p.is_absolute() ? p : tree.root / p).lexically_normal()};
+              std::error_code error{};
+              auto canonical{fs::weakly_canonical(asRecorded, error)};
+              m_Files.push_back(error ? asRecorded : std::move(canonical));
+              m_Objects.emplace_back();
             }
 
-            if(targetWt.stale && !wt.stale)
+            return iter->second;
+          }
+        };
+
+        // Interning may grow m_Objects, so no reference into it is held across a call to indexOf
+        for(const auto& record : read_compilations(tree, executable))
+        {
+          const auto output{indexOf(record.output)};
+          auto inputs{record.inputs | std::views::transform(indexOf) | std::ranges::to<std::vector>()};
+          auto required{record.requiredModules | std::views::transform(indexOf) | std::ranges::to<std::vector>()};
+          const auto provided{record.providedModule ? std::optional{indexOf(*record.providedModule)} : std::nullopt};
+
+          auto& object{m_Objects[output]};
+          if(auto source{std::ranges::find_if(inputs, [this](index_type i){ return is_source(m_Files[i]); })}; source != inputs.end())
+            object.source = *source;
+
+          object.inputs          = std::move(inputs);
+          object.requiredModules = std::move(required);
+          if(provided) m_Objects[*provided].provider = output;
+        }
+
+        // The conventions: which objects furnish a header, and which furnish a module's primary interface
+        const auto stems{m_Files | std::views::transform([](const fs::path& p){ return p.stem().string(); }) | std::ranges::to<std::vector>()};
+        const auto headers{m_Files | std::views::transform(is_header) | std::ranges::to<std::vector<bool>>()};
+
+        std::vector<bool> providesModule(m_Objects.size(), false);
+        for(const auto& object : m_Objects)
+        {
+          if(object.provider) providesModule[*object.provider] = true;
+        }
+
+        for(index_type i{}; i < m_Objects.size(); ++i)
+        {
+          auto& object{m_Objects[i]};
+          if(!object.source) continue;
+
+          for(const auto input : object.inputs)
+          {
+            if(headers[input] && (stems[input] == stems[*object.source])) m_Objects[input].furnishedBy.push_back(i);
+          }
+
+          // A unit which needs a module and provides none is an importer or an implementation unit; only its declaration says which
+          if(is_cpp(m_Files[*object.source]) && !object.requiredModules.empty() && !providesModule[i])
+          {
+            if(const auto declaration{module_declaration_of(m_Files[*object.source])}; declaration && (declaration->role == module_role::implementation_unit))
             {
-              wt.stale = true;
-              changed = true;
+              // CMake names a primary interface's file after its module, `M.pcm` or `M.ifc`, and a partition's `M-P`
+              const auto primary{declaration->primary_name()};
+              for(const auto required : object.requiredModules)
+              {
+                if(stems[required] == primary) m_Objects[required].furnishedBy.push_back(i);
+              }
             }
           }
         }
+      }
+
+      /// The objects whose source lies in `repo`, each with its source
+      [[nodiscard]]
+      std::vector<std::pair<index_type, fs::path>> sources_in(const fs::path& repo) const
+      {
+        std::vector<std::pair<index_type, fs::path>> found{};
+        for(index_type i{}; i < m_Objects.size(); ++i)
+        {
+          if(const auto& source{m_Objects[i].source}; source && in_repo(m_Files[*source], repo)) found.emplace_back(i, m_Files[*source]);
+        }
+
+        return found;
+      }
+
+      /// Every file on which the object depends: its inputs, those of the objects providing what it needs, and those the conventions add
+      [[nodiscard]]
+      std::vector<index_type> dependencies_of(index_type output) const
+      {
+        std::vector<index_type> files{}, pending{output};
+        std::vector<bool> visited(m_Objects.size(), false);
+
+        auto visit{
+          [&](index_type i) {
+            if(!visited[i])
+            {
+              visited[i] = true;
+              pending.push_back(i);
+            }
+          }
+        };
+
+        visited[output] = true;
+        while(!pending.empty())
+        {
+          const auto current{pending.back()};
+          pending.pop_back();
+
+          const auto& object{m_Objects[current]};
+          for(const auto input : object.inputs)
+          {
+            files.push_back(input);
+            for(const auto furnisher : m_Objects[input].furnishedBy) visit(furnisher);
+          }
+
+          for(const auto required : object.requiredModules)
+          {
+            if(const auto& provider{m_Objects[required].provider}) visit(*provider);
+            for(const auto furnisher : m_Objects[required].furnishedBy) visit(furnisher);
+          }
+        }
+
+        std::ranges::sort(files);
+        const auto [first, last]{std::ranges::unique(files)};
+        files.erase(first, last);
+
+        return files;
+      }
+
+      [[nodiscard]]
+      const fs::path& file(index_type i) const noexcept { return m_Files[i]; }
+
+      [[nodiscard]]
+      bool empty() const noexcept { return m_Objects.empty(); }
+    private:
+      /* Every path the build mentions gets an index, and every index an entry here, so an entry
+         is an object where it has inputs, a module file where it has a provider, and a plain
+         input otherwise. `furnishedBy` holds the objects the conventions attach: for a header, the
+         same-stem objects including it; for a primary interface file, the module's
+         implementation units.
+       */
+      struct object_info
+      {
+        std::vector<index_type> inputs{}, requiredModules{}, furnishedBy{};
+        std::optional<index_type> source{}, provider{};
       };
 
-      /* A single post-order pass is exact only on a DAG, and headers may include one another.
-         Rejecting a cycle is not an option, since mutual inclusion is legal, so the fold is
-         repeated until it changes nothing: it only ever sets a flag or advances a time, and so
-         reaches its fixed point - stale if anything reachable is stale, and the newest time
-         among them. On a DAG that is one pass to do the work and one to confirm it.
-       */
-      do
-      {
-        changed = false;
-        traverse(depth_first, g, find_disconnected_t{0}, null_func_obj{}, nodesLate);
-      } while(changed);
+      std::vector<fs::path> m_Files{};
+      std::vector<object_info> m_Objects{};
 
+      [[nodiscard]]
+      static bool is_source(const fs::path& file) { return is_cpp(file) || has_module_extension(file); }
+
+      [[nodiscard]]
+      static std::optional<module_declaration> module_declaration_of(const fs::path& source)
+      {
+        std::ifstream in{source, std::ios_base::binary};
+        if(!in) return std::nullopt;
+
+        return scan_module_declaration(in);
+      }
+    };
+
+    /// The newest modification among `files`, throwing if one of them post-dates the executable or no longer exists
+    [[nodiscard]]
+    fs::file_time_type newest_modification(const build_graph& graph,
+                                          std::span<const build_graph::index_type> files,
+                                          const std::optional<fs::file_time_type>& exeTimeStamp,
+                                          std::vector<std::optional<fs::file_time_type>>& modificationTimes)
+    {
+      fs::file_time_type newest{fs::file_time_type::min()};
+      for(const auto i : files)
+      {
+        const auto& file{graph.file(i)};
+        auto& cached{modificationTimes[i]};
+        if(!cached)
+        {
+          std::error_code error{};
+          cached = fs::last_write_time(file, error);
+          if(error)
+            throw std::runtime_error{std::format("Executable is out of date; please build it!\n{} was read by the build but cannot be found\n", file.generic_string())};
+        }
+
+        if(exeTimeStamp.has_value() && (*cached >= exeTimeStamp.value()))
+          throw std::runtime_error{
+                  std::format(
+                    "Executable is out of date; please build it!\nExecutable time stamp: {}\n{} time stamp: {}\n",
+                    exeTimeStamp.value(),
+                    file.generic_string(),
+                    *cached
+                  )
+                };
+
+        newest = std::ranges::max(newest, *cached);
+      }
+
+      return newest;
+    }
+
+    [[nodiscard]]
+    std::vector<fs::path> find_stale_tests(fs::file_time_type stalenessThreshold, const project_paths& projPaths)
+    {
+      const auto tree{read_build_tree(projPaths.discovered().cmake_cache())};
+      const build_graph graph{tree, projPaths.executable()};
+
+      const auto exeTimeStamp{get_stamp(projPaths.executable())};
       const auto passesFile{projPaths.prune().selected_passes(std::nullopt)};
       const auto passingTestsFromFile{read_tests(passesFile)};
       const auto passesStamp{get_stamp(passesFile)};
 
+      const auto testSources{graph.sources_in(projPaths.tests().repo())};
+      /* An empty selection is what a prune with nothing changed returns, so a build whose record
+         names no test at all must not pass for one: it means the spellings could not be matched,
+         and nothing would ever be selected again.
+       */
+      if(testSources.empty() && !graph.empty())
+        throw std::runtime_error{std::format("The build's record names no source under {}; was the tree configured with a different spelling of the project's path?", projPaths.tests().repo().generic_string())};
+      std::vector<std::optional<fs::file_time_type>> modificationTimes{};
+      std::vector<bool> external{}; // the files any test depends on, filtered to those outside the project once all are known
       std::vector<fs::path> staleTests{};
 
-      for(auto i{g.begin_node_weights()}; i != g.end_node_weights(); ++i)
+      for(const auto& [output, source] : testSources)
       {
-        if(const auto& weight{*i}; is_cpp(weight.file) && in_repo(weight.file, projPaths.tests().repo()))
+        if(!is_cpp(source)) continue;
+
+        const auto relPath{fs::relative(source, projPaths.tests().repo())};
+        const auto dependencies{graph.dependencies_of(output)};
+        if(!dependencies.empty())
         {
-          const auto relPath{fs::relative(weight.file, projPaths.tests().repo())};
-
-          if(passesStamp && std::ranges::binary_search(passingTestsFromFile, relPath, {}, path_projector{}))
-          {
-            const auto materialsWriteTime{materials_max_write_time(relPath, projPaths.test_materials().repo())};
-            if(!weight.stale && (materialsWriteTime > stalenessThreshold))
-              i->stale = true;
-
-            const auto maxModificationTime{materialsWriteTime ? std::ranges::max(materialsWriteTime.value(), weight.implicit_modification_time) : weight.implicit_modification_time};
-
-            /* `>=`, not `>`: the question is whether the record of this test passing is older
-               than the newest modification. Both sides come from `last_write_time`, and the record
-               is written after the modification it supersedes, so wherever the filesystem can
-               represent that difference the two spellings agree. Where it cannot - libstdc++
-               truncates to whole seconds on macOS - "after" collapses onto "equal", and `>` then
-               rejects a record which does post-date the change, so the test is selected again by
-               every later run and never settles.
-            */
-            if(weight.stale && (passesStamp.value() >= maxModificationTime))
-              consider_passing_tests(i, relPath, passingTestsFromFile, maxModificationTime);
-          }
-          else if(!weight.stale)
-          {
-            if(materials_modified(relPath, projPaths.test_materials().repo(), stalenessThreshold))
-            {
-              i->stale = true;
-            }
-          }
-
-          if(weight.stale) staleTests.push_back(relPath);
+          modificationTimes.resize(std::ranges::max(modificationTimes.size(), dependencies.back() + 1));
+          external.resize(modificationTimes.size(), false);
         }
+
+        const auto implicitModificationTime{newest_modification(graph, dependencies, exeTimeStamp, modificationTimes)};
+        bool stale{implicitModificationTime > stalenessThreshold};
+
+        for(const auto i : dependencies) external[i] = true;
+
+        if(passesStamp && std::ranges::binary_search(passingTestsFromFile, relPath, {}, path_projector{}))
+        {
+          const auto materialsWriteTime{materials_max_write_time(relPath, projPaths.test_materials().repo())};
+          if(!stale && (materialsWriteTime > stalenessThreshold))
+            stale = true;
+
+          const auto maxModificationTime{materialsWriteTime ? std::ranges::max(materialsWriteTime.value(), implicitModificationTime) : implicitModificationTime};
+
+          /* `>=`, not `>`: the question is whether the record of this test passing is older
+             than the newest modification. Both sides come from `last_write_time`, and the record
+             is written after the modification it supersedes, so wherever the filesystem can
+             represent that difference the two spellings agree. Where it cannot - libstdc++
+             truncates to whole seconds on macOS - "after" collapses onto "equal", and `>` then
+             rejects a record which does post-date the change, so the test is selected again by
+             every later run and never settles.
+          */
+          if(stale && (passesStamp.value() >= maxModificationTime))
+            consider_passing_tests(stale, relPath, passingTestsFromFile, maxModificationTime);
+        }
+        else if(!stale)
+        {
+          if(materials_modified(relPath, projPaths.test_materials().repo(), stalenessThreshold))
+          {
+            stale = true;
+          }
+        }
+
+        if(stale) staleTests.push_back(relPath);
       }
+
+      // What is neither the project's nor the toolchain's: the third parties relied on
+      auto isToolchains{
+        [&tree](const fs::path& file) { return std::ranges::any_of(tree.implicitIncludeDirs, [&file](const fs::path& dir){ return in_repo(file, dir); }); }
+      };
+
+      std::set<fs::path> externalDependencies{};
+      for(std::size_t i{}; i < external.size(); ++i)
+      {
+        if(const auto& file{graph.file(i)}; external[i] && !in_repo(file, projPaths.project_root()) && !isToolchains(file)) externalDependencies.insert(file);
+      }
+
+      write_external_dependencies(projPaths.prune().external_dependencies(), externalDependencies);
 
       std::ranges::sort(staleTests);
 
-      return {std::move(staleTests), std::move(opaqueIncludes)};
+      return staleTests;
     }
 
     void update_prune_stamp_on_disk(const prune_paths& prunePaths, fs::file_time_type time)
@@ -861,37 +706,39 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  source_dependencies scan_dependencies(std::istream& source, std::string_view cutoff)
+  std::optional<module_declaration> scan_module_declaration(std::istream& source)
   {
     constexpr auto eof{std::ifstream::traits_type::eof()};
     using int_type = std::ifstream::int_type;
 
-    source_dependencies dependencies{};
-
-    /* A module or import declaration is recognized only at the start of a line, which is what keeps
-       the words - neither of them reserved - from being found in the middle of ordinary code. Being
-       directives, only directive space may precede one, so the flag survives that and nothing else.
+    /* A declaration is recognized only at the start of a line, which is what keeps `module` - not
+       a reserved word - from being found in the middle of ordinary code. Being a directive, only
+       directive space may precede one, so the flag survives that and nothing else.
     */
     bool atLineStart{true};
+
+    // A byte order mark, which Visual Studio writes by default, precedes the first line without being part of it
+    for(const char byte : {'\xEF', '\xBB', '\xBF'})
+    {
+      if(source.peek() != std::ifstream::traits_type::to_int_type(byte))
+      {
+        source.clear();
+        source.seekg(0);
+        break;
+      }
+
+      source.get();
+    }
 
     int_type c{};
     while((c = source.get()) != eof)
     {
       const bool lineStart{std::exchange(atLineStart, false)};
 
-      if(lineStart && ((c == 'e') || (c == 'm') || (c == 'i')))
+      if(lineStart && ((c == 'e') || (c == 'm')))
       {
-        /* Only these three characters can begin `export`, `module` or `import`, and a line which
-           begins with one of them and proves to be something else is rewound so that the scan sees
-           it exactly as it would have done - the attempt is made ahead of the other branches so
-           that the character then falls through to them, as a cutoff beginning `int` must.
-
-           The order here is load-bearing: `tellg` on a `std::filebuf` discards the putback area, so
-           an `unget` after it fails - silently, since nothing checks - where the same sequence on a
-           `std::stringbuf` succeeds. Ungetting first and asking where we are second works on both.
-        */
+        // Only these two characters can begin `export` or `module`; a line beginning with either which proves to be something else is ordinary code, and so ends the preamble
         source.unget();
-        const auto rewind{source.tellg()};
 
         auto keyword{read_identifier(source)};
         auto role{module_role::implementation_unit};
@@ -903,11 +750,22 @@ namespace sequoia::testing
           keyword = read_identifier(source);
         }
 
-        if(consume_module_declaration(source, keyword, role, dependencies)) continue;
+        if(keyword != "module") return std::nullopt;
 
-        source.clear();
-        source.seekg(rewind);
-        source.get();
+        auto name{declaration_subject(source)};
+
+        // `module;` introduces the global module fragment and declares nothing; `export module;` is not a thing
+        if(name.empty())
+        {
+          if(role == module_role::interface_unit) return std::nullopt;
+
+          continue;
+        }
+
+        // A partition names the module it belongs to when it declares itself; only an import may abbreviate
+        if(name.starts_with(':') || !is_module_name(name)) return std::nullopt;
+
+        return module_declaration{std::move(name), role};
       }
 
       if(is_directive_space(static_cast<char>(c)))
@@ -937,35 +795,33 @@ namespace sequoia::testing
               break;
             }
           }
+
+          // A comment is whitespace [lex.phases], so what follows one is as much at the start of the line as the comment was
+          atLineStart = lineStart;
+        }
+        else
+        {
+          return std::nullopt;
         }
       }
       else if(c == '#')
       {
-        skip_directive_space(source);
-
-        if(read_identifier(source) == "include")
+        // A directive runs to the end of its line, or beyond it where a backslash precedes the newline - or the CRLF
+        int_type previous{};
+        while(((c = source.get()) != eof) && ((c != '\n') || (previous == '\\')))
         {
-          skip_directive_space(source);
-
-          if(fs::path includedFile{read_header_name(source)}; !includedFile.empty())
-            dependencies.includes.push_back(std::move(includedFile));
-          else if(std::string tokens{read_line_remainder(source)}; !tokens.empty())
-            dependencies.opaqueIncludes.push_back(std::move(tokens));
-        }
-      }
-      else if(!cutoff.empty() && (c == cutoff.front()))
-      {
-        source.unget();
-        if(const std::string pattern{read_until(source, "\n")}; pattern.find(cutoff) != std::string::npos)
-        {
-          break;
+          if(c != '\r') previous = c;
         }
 
         atLineStart = true;
       }
+      else if(lineStart)
+      {
+        return std::nullopt;
+      }
     }
 
-    return dependencies;
+    return std::nullopt;
   }
 
   [[nodiscard]]
@@ -1059,15 +915,15 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::optional<prune_selection>
-  tests_to_run(const project_paths& projPaths, std::string_view cutoff)
+  std::optional<std::vector<fs::path>>
+  tests_to_run(const project_paths& projPaths)
   {
     const auto prunePaths{projPaths.prune()};
     const auto pruneTimeStamp{get_stamp(prunePaths.stamp())};
 
     if(!pruneTimeStamp) return std::nullopt;
 
-    auto [staleTests, opaqueIncludes]{find_stale_tests(staleness_threshold(pruneTimeStamp.value()), projPaths, cutoff)};
+    const auto staleTests{find_stale_tests(staleness_threshold(pruneTimeStamp.value()), projPaths)};
 
     const std::vector<fs::path> failingTests{
       std::views::transform(read_tests(prunePaths.failures(std::nullopt)), path_projector{}) | std::ranges::to<std::vector>()
@@ -1076,7 +932,7 @@ namespace sequoia::testing
     std::vector<fs::path> testsToRun{};
     std::ranges::set_union(staleTests, failingTests, std::back_inserter(testsToRun));
 
-    return prune_selection{std::move(testsToRun), std::move(opaqueIncludes)};
+    return testsToRun;
   }
 
   void update_prune_files(const project_paths& projPaths,

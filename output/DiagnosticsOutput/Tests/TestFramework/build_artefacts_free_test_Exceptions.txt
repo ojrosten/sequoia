@@ -1,0 +1,117 @@
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 97
+A checksum which does not match its record's position
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to read output/TestsTemporaryData/TestFramework/build_artefacts_free_test/WorkingCopy/corrupted.ninja_deps: a path record's checksum does not match its position
+
+=======================================
+
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 101
+Not a ninja log
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to read output/TestsTemporaryData/TestFramework/build_artefacts_free_test/WorkingCopy/not_a_log: not a ninja dependency log
+
+=======================================
+
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 104
+A version which is not understood
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to read output/TestsTemporaryData/TestFramework/build_artefacts_free_test/WorkingCopy/future_version: version 7 is not understood
+
+=======================================
+
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 106
+A log which does not exist
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to open output/TestsTemporaryData/TestFramework/build_artefacts_free_test/WorkingCopy/absent.ninja_deps
+
+=======================================
+
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 140
+A build statement which is not a dyndep
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to read output/TestsTemporaryData/TestFramework/build_artefacts_free_test/WorkingCopy/bad.dd: a build statement which is not a dyndep
+
+=======================================
+
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 142
+A file which does not exist
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to open output/TestsTemporaryData/TestFramework/build_artefacts_free_test/WorkingCopy/absent.dd
+
+=======================================
+
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 223
+Sources compiled together which wrote two interfaces cannot be told apart
+
+Expected Exception Type:
+[std::runtime_error]
+The tracker's log in output/TestsTemporaryData/TestFramework/build_artefacts_free_test/WorkingCopy/collision.tlog does not say which of 2 module interfaces Gadget.cpp produced
+
+=======================================
+
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 226
+An object which bears neither source's name
+
+Expected Exception Type:
+[std::runtime_error]
+The tracker's log in output/TestsTemporaryData/TestFramework/build_artefacts_free_test/WorkingCopy/collision.tlog does not say which of 2 objects Gadget.cpp produced
+
+=======================================
+
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 278
+A cache which does not exist
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to open output/TestsTemporaryData/TestFramework/build_artefacts_free_test/WorkingCopy/elsewhere/CMakeCache.txt
+
+=======================================
+
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 279
+A Ninja tree which has not been built has no log
+
+Expected Exception Type:
+[std::runtime_error]
+output/TestsTemporaryData/TestFramework/build_artefacts_free_test/WorkingCopy/build has no dependency log; has anything been built?
+
+=======================================
+
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 318
+A log none of whose objects build.ninja names is two spellings of one tree, not an empty build
+
+Expected Exception Type:
+[std::runtime_error]
+output/TestsTemporaryData/TestFramework/build_artefacts_free_test/WorkingCopy/build/.ninja_deps records 3 objects, none of which build.ninja names; are the two spelled differently?
+
+=======================================
+
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 324
+Ninja Multi-Config: a generator whose record of dependencies is not understood
+
+Expected Exception Type:
+[std::runtime_error]
+The build in output/TestsTemporaryData/TestFramework/build_artefacts_free_test/WorkingCopy/build was written by the Ninja Multi-Config generator, whose record of dependencies is not understood; Ninja's and Visual Studio's are
+
+=======================================
+
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 324
+Xcode: a generator whose record of dependencies is not understood
+
+Expected Exception Type:
+[std::runtime_error]
+The build in output/TestsTemporaryData/TestFramework/build_artefacts_free_test/WorkingCopy/build was written by the Xcode generator, whose record of dependencies is not understood; Ninja's and Visual Studio's are
+
+=======================================
+

@@ -14,9 +14,10 @@
 
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
-#include <iostream>
 #include <chrono>
+#include <iostream>
 #include <limits>
+#include <span>
 
 namespace sequoia::testing
 {
@@ -69,50 +70,22 @@ namespace sequoia::testing
     std::string_view primary_name() const noexcept;
   };
 
-  /** \brief The dependencies which the text of a single translation unit declares.
+  /** \brief Reads the module declaration with which a translation unit opens, if it has one.
 
-      Lexed rather than preprocessed, so an `#include` behind a false `#if` or inside a string
-      literal is reported all the same: over-reporting costs a test which need not have run, where
-      under-reporting silently skips one which must. Two spellings do slip through - a header
-      spliced across lines, and one whose tokens a comment separates - and neither occurs in a tree
-      read today.
-   */
-  struct source_dependencies
-  {
-    /// Header names exactly as written, neither resolved against the including file nor filtered.
-    std::vector<std::filesystem::path> includes{};
+      Only the preamble is read: a module declaration precedes every other declaration in the
+      unit, with nothing before it but the global module fragment - `module;` and preprocessing
+      directives - and comments, so the first line of anything else ends the scan. `module` is not
+      a reserved word, so a line beginning with it is a declaration only where what follows is
+      spelled as a module name; otherwise it is ordinary code, and likewise ends the scan. The
+      declaration is recognized only where [cpp.pre] lets a directive appear: first on its line,
+      after whitespace containing no newline.
 
-    /** What follows `#include` where it is neither `"..."` nor `<...>` - `PLATFORM_HEADER`, say - as
-        written: the tokens whose macro expansion names the header, which only the preprocessor can
-        perform [cpp.include]. Such a header is a dependency the graph cannot see, so these are
-        reported rather than dropped: what is behind one is for the client to judge.
-     */
-    std::vector<std::string> opaqueIncludes{};
-
-    /** Logical module names, as written. A partition imported from within its own module keeps its
-        leading colon - `:P` - because what it abbreviates is only known once the importing unit's
-        own declaration has been read.
-     */
-    std::vector<std::string> imports{};
-
-    /// Absent unless the unit declares a module; `module;` alone introduces no module and is not one.
-    std::optional<module_declaration> declaration{};
-  };
-
-  /** \brief Lexes the dependencies declared by a translation unit.
-
-      Comments are skipped, as is everything from the first line containing `cutoff`; an empty
-      `cutoff` scans to the end.
-
-      A `module` or `import` declaration is recognized only where [cpp.pre] lets a directive appear:
-      first on its line, after whitespace containing no newline, and terminated by a semicolon.
-      Neither word is reserved, so a line which begins with one and turns out to be something else
-      is put back untouched and scanned as ordinary text. `import "header.hpp"` and `import <header>`
-      are header units, and are reported as includes, since they are a dependency on a file rather
-      than on a module.
+      The build records what a unit includes and imports, so neither is read here; what it cannot
+      record is which module an implementation unit belongs to, since `module M;` and `import M;`
+      look alike to a dependency scan, and that is what this supplies.
    */
   [[nodiscard]]
-  source_dependencies scan_dependencies(std::istream& source, std::string_view cutoff);
+  std::optional<module_declaration> scan_module_declaration(std::istream& source);
 
   /** \brief The time against which a modification is judged to have happened after the run which
              wrote the prune stamp.
@@ -142,36 +115,15 @@ namespace sequoia::testing
 
   void write_tests(const project_paths& projPaths, const std::filesystem::path& file, std::span<const prune_record> tests);
 
-  /// An `#include` whose header is named by macro expansion, located by the file which contains it.
-  struct opaque_include
-  {
-    std::filesystem::path file{};
-    std::string tokens{};
+  /** \brief The tests which must run: those stale since the previous run, and those it left failing.
 
-    [[nodiscard]]
-    friend bool operator==(const opaque_include&, const opaque_include&) noexcept = default;
-
-    friend std::ostream& operator<<(std::ostream& s, const opaque_include& include)
-    {
-      return s << include.file.generic_string() << ": #include " << include.tokens;
-    }
-  };
-
-  /** \brief What a prune selects, and what its selection could not take into account.
-
-      A header named by a macro is invisible to the dependency graph, so a change to it selects
-      nothing; each such include is reported here for the client to weigh, since only they know
-      what the macro names.
+      Absent when there is no stamp from a previous run to judge staleness against. What a test
+      depends on is read from the record the build which produced the executable left of it, so
+      this throws where there is no such build, or one whose record is not understood - Ninja's and
+      Visual Studio's are.
    */
-  struct prune_selection
-  {
-    std::vector<std::filesystem::path> tests{};
-    std::vector<opaque_include> opaqueIncludes{};
-  };
-
-  /// Absent when there is no stamp from a previous run to judge staleness against.
   [[nodiscard]]
-  std::optional<prune_selection> tests_to_run(const project_paths& projPaths, std::string_view cutoff);
+  std::optional<std::vector<std::filesystem::path>> tests_to_run(const project_paths& projPaths);
 
   void update_prune_files(const project_paths& projPaths,
                           std::span<const std::filesystem::path> failedTests,

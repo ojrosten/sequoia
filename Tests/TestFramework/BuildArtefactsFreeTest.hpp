@@ -7,4 +7,28 @@
 
 #pragma once
 
-#include PLATFORM_HEADER
+/** \file */
+
+#include "sequoia/TestFramework/FreeTestCore.hpp"
+
+namespace sequoia::testing
+{
+  class build_artefacts_free_test final : public free_test
+  {
+  public:
+    using free_test::free_test;
+
+    [[nodiscard]]
+    static std::filesystem::path source_file();
+
+    void run_tests();
+  private:
+    void test_ninja_deps();
+
+    void test_dyndep();
+
+    void test_tlogs();
+
+    void test_build_tree();
+  };
+}

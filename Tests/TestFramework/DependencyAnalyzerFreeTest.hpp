@@ -56,8 +56,6 @@ namespace sequoia::testing
 
     void test_staleness_threshold();
 
-    void test_source_scanning();
-
     void test_module_scanning();
 
     void test_exceptions(const project_paths& projPaths);
@@ -76,7 +74,6 @@ namespace sequoia::testing
 
     void check_tests_to_run(const reporter& description,
                             const project_paths& projPaths,
-                            std::string_view cutoff,
                             const file_states& fileStates,
                             std::vector<prune_record> failures,
                             std::vector<prune_record> passes);
@@ -85,8 +82,7 @@ namespace sequoia::testing
 
     void check_scan(const reporter& description,
                     std::string_view source,
-                    std::string_view cutoff,
-                    const source_dependencies& prediction);
+                    const std::optional<module_declaration>& prediction);
 
     void check_round_trip(const reporter& description,
                           const project_paths& projPaths,
@@ -97,7 +93,9 @@ namespace sequoia::testing
 
     static auto read(const std::filesystem::path& file) -> opt_prune_records;
 
-    static auto selected_tests(std::optional<prune_selection> selection) -> opt_test_list;
+    enum class build_system { ninja, ninja_with_msvc, visual_studio };
+
+    void write_build_artefacts(const std::filesystem::path& fake, build_system system);
 
     static void write_or_remove(const project_paths& projPaths, const std::filesystem::path& file, const opt_prune_records& tests);
 

@@ -13,7 +13,6 @@
 
 #include <filesystem>
 #include <optional>
-#include <span>
 #include <string>
 #include <vector>
 
@@ -506,8 +505,6 @@ namespace sequoia::testing
     struct customizer
     {
       std::optional<std::filesystem::path> source_folder{};
-      
-      std::vector<std::filesystem::path> additional_dependency_analysis_paths{};
 
       std::filesystem::path main_cpp{main_paths::default_main_cpp_from_root()};
 
@@ -599,9 +596,6 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::span<const std::filesystem::path> additional_dependency_analysis_paths() const noexcept { return m_AdditionalDependencyAnalysisPaths; }
-
-    [[nodiscard]]
     prune_paths prune() const;
 
     [[nodiscard]]
@@ -619,6 +613,5 @@ namespace sequoia::testing
     build_system_paths   m_BuildSystem;
 
     std::vector<main_paths> m_AncillaryMainCpps{};
-    std::vector<std::filesystem::path> m_AdditionalDependencyAnalysisPaths{};
   };
 }

@@ -1,0 +1,6 @@
+ninja_dyndep_version = 1.0
+build CMakeFiles/x.dir/M.cppm.o | CMakeFiles/x.dir/M.pcm: dyndep | CMakeFiles/x.dir/std.pcm CMakeFiles/x.dir/M-P.pcm
+build CMakeFiles/x.dir/P.cppm.o | CMakeFiles/x.dir/M-P.pcm: dyndep
+build CMakeFiles/x.dir/use.cpp.o: dyndep | CMakeFiles/x.dir/M.pcm
+build CMakeFiles/x.dir/plain.cpp.o: dyndep
+build CMakeFiles/x.dir/odd$ name.cpp.o: dyndep | C$:/with$ colon/M.pcm
