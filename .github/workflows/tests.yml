@@ -141,6 +141,30 @@ jobs:
           echo "CC=$(brew --prefix llvm)/bin/clang"    >> "$GITHUB_ENV"
           echo "CXX=$(brew --prefix llvm)/bin/clang++" >> "$GITHUB_ENV"
 
+      # With the Visual Studio generator CMake finds the toolset itself; with Ninja
+      # it looks for cl.exe on PATH, which nothing puts there. vcvars sets it, but
+      # only within the cmd session that runs it, so its effect is captured and
+      # handed forward: named variables rather than a whole `set` dump, so this
+      # cannot silently clobber the runner's own environment, and PATH through
+      # GITHUB_PATH rather than GITHUB_ENV, because a Windows-form PATH written
+      # into the environment of a later bash step loses every command at once.
+      - name: Enter the MSVC environment (Windows, Ninja)
+        if: runner.os == 'Windows' && matrix.configure == 'msvc-ninja'
+        run: |
+          vswhere="/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe"
+          root=$("$vswhere" -latest -products '*' \
+                   -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 \
+                   -property installationPath)
+          [ -n "$root" ] || { echo "::error::no VC toolset reported by vswhere"; exit 1; }
+          vcvars="$(cygpath -u "$root")/VC/Auxiliary/Build/vcvars64.bat"
+          [ -f "$vcvars" ] || { echo "::error::$vcvars does not exist"; exit 1; }
+
+          dump=$(cmd //c "call \"$(cygpath -w "$vcvars")\" >nul && set" | tr -d '\r')
+          printf '%s\n' "$dump" | grep -iE '^(INCLUDE|LIB|LIBPATH|VCToolsInstallDir|VCINSTALLDIR|VSINSTALLDIR|WindowsSdkDir|WindowsSDKVersion|UCRTVersion|UniversalCRTSdkDir)=' >> "$GITHUB_ENV"
+          printf '%s\n' "$dump" | grep -iE '^PATH=' | head -1 | sed 's/^[Pp][Aa][Tt][Hh]=//' | tr ';' '\n' | grep -v '^$' >> "$GITHUB_PATH"
+
+          command -v ninja || { echo "ninja is not on this image; installing it"; choco install ninja -y; }
+
       # An exit status says the tool ran, not that it did what was asked.
       - name: Report the toolchain actually in use
         run: |
