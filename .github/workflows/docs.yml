@@ -34,16 +34,19 @@ jobs:
           # doxygen itself comes from its release, not apt: noble's 1.9.8 cannot write a
           # C++20 module's page under CREATE_SUBDIRS (it prefixes `module_` to a path that
           # already carries the hash directory, and exits), so the gate could never pass
-          # on a modules build. Pinned to the version the Mac runs, so the two agree on
-          # what is a defect; the checksum is the release tarball's.
+          # on a modules build. Pinned to the version used for local documentation checks,
+          # so the two agree on what is a defect; the checksum is the release tarball's.
+          # The last line insists the doxygen on PATH is the one installed, or a distro
+          # copy could shadow it and the gate would pass on the wrong version until a
+          # modules build arrived.
           version=1.15.0
           sha256=0ec2e5b2c3cd82b7106d19cb42d8466450730b8cb7a9e85af712be38bf4523a1
+          cd "$RUNNER_TEMP"
           curl -fsSL -o doxygen.tgz "https://github.com/doxygen/doxygen/releases/download/Release_${version//./_}/doxygen-$version.linux.bin.tar.gz"
           echo "$sha256  doxygen.tgz" | sha256sum -c -
-          tar xzf doxygen.tgz
-          sudo install -m 755 "doxygen-$version/bin/doxygen" /usr/local/bin/doxygen
-          rm -rf doxygen.tgz "doxygen-$version"
-          doxygen --version
+          tar xzf doxygen.tgz "doxygen-$version/bin/doxygen"
+          sudo install "doxygen-$version/bin/doxygen" /usr/local/bin/doxygen
+          [ "$(doxygen --version)" = "$version" ] || { echo "::error::doxygen on PATH is $(doxygen --version), not $version"; exit 1; }
 
       # The Doxyfile's INPUT is relative to its own directory, so doxygen runs from
       # there; the overrides go in on stdin rather than by editing the file, so what
