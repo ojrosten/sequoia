@@ -30,7 +30,19 @@ jobs:
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
           sudo apt-get update -qq
-          sudo apt-get install -y doxygen texlive-latex-base texlive-latex-extra ghostscript
+          sudo apt-get install -y texlive-latex-base texlive-latex-extra ghostscript
+          # doxygen itself comes from its release, not apt: noble's 1.9.8 cannot write a
+          # C++20 module's page under CREATE_SUBDIRS (it prefixes `module_` to a path that
+          # already carries the hash directory, and exits), so the gate could never pass
+          # on a modules build. Pinned to the version the Mac runs, so the two agree on
+          # what is a defect; the checksum is the release tarball's.
+          version=1.15.0
+          sha256=0ec2e5b2c3cd82b7106d19cb42d8466450730b8cb7a9e85af712be38bf4523a1
+          curl -fsSL -o doxygen.tgz "https://github.com/doxygen/doxygen/releases/download/Release_${version//./_}/doxygen-$version.linux.bin.tar.gz"
+          echo "$sha256  doxygen.tgz" | sha256sum -c -
+          tar xzf doxygen.tgz
+          sudo install -m 755 "doxygen-$version/bin/doxygen" /usr/local/bin/doxygen
+          rm -rf doxygen.tgz "doxygen-$version"
           doxygen --version
 
       # The Doxyfile's INPUT is relative to its own directory, so doxygen runs from
