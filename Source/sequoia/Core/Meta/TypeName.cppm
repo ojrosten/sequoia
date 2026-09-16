@@ -29,16 +29,26 @@ export namespace sequoia::meta
         return std::source_location::current().function_name();
       }
 
+      // The calibration is spelt as dependent on T so that it is evaluated where `name<T>` is
+      // instantiated, not where this template is defined. Under gcc modules the two differ:
+      // an importer's instantiation carries the `@module` attachment in its function name and
+      // the module's own does not, and a non-dependent constant expression is folded at the
+      // definition. See gcc-bugs/I in the sequoia-LLM repository.
+      template<class T>
+      using trial_type_for = trial_type;
+
+      template<class T>
       [[nodiscard]]
       constexpr std::size_t prefix_length() noexcept
       {
-        return name<trial_type>().find(trial_type_name);
+        return name<trial_type_for<T>>().find(trial_type_name);
       }
 
+      template<class T>
       [[nodiscard]]
       constexpr std::size_t suffix_length() noexcept
       {
-        return name<trial_type>().length() - prefix_length() - trial_type_name.length();
+        return name<trial_type_for<T>>().length() - prefix_length<T>() - trial_type_name.length();
       }
     }
   }
@@ -49,8 +59,8 @@ export namespace sequoia::meta
   {
     using namespace impl::wrapped_type;
     constexpr auto wrappedName{name<T>()};
-    constexpr auto prefixLength{prefix_length()};
-    constexpr auto nameLength{wrappedName.length() - prefixLength - suffix_length()};
+    constexpr auto prefixLength{prefix_length<T>()};
+    constexpr auto nameLength{wrappedName.length() - prefixLength - suffix_length<T>()};
     return wrappedName.substr(prefixLength, nameLength);
   }
 

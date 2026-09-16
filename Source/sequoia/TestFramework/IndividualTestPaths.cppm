@@ -65,7 +65,8 @@ export namespace sequoia::testing
   class individual_diagnostics_paths
   {
   public:
-    individual_diagnostics_paths() = default;
+    // A body rather than `= default`, for gcc bug F; see log_summary in TestLogger.cppm.
+    individual_diagnostics_paths() {}
 
     individual_diagnostics_paths(const project_paths& projPaths, std::string_view testName, const std::filesystem::path& source, test_mode mode, const std::optional<std::string>& platform);
 
@@ -91,7 +92,8 @@ export namespace sequoia::testing
 
   class test_summary_path {
   public:
-    test_summary_path() = default;
+    // A body rather than `= default`, as above.
+    test_summary_path() {}
 
     test_summary_path(const std::filesystem::path& sourceFile, std::string_view testName, const project_paths& projectPaths, const std::optional<std::string>& summaryDiscriminator);
 

@@ -1167,9 +1167,10 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> test_runner::groups_of(const fs::path& source) const
   {
-    return rebase_from(source, proj_paths().tests().repo()).parent_path()
-         | std::views::transform([](const fs::path& p){ return p.generic_string(); })
-         | std::ranges::to<std::vector>();
+    // Spelt as calls rather than pipes, for gcc bug E; see read_tests_to in DependencyAnalyzer.cpp.
+    return std::ranges::to<std::vector>(
+             std::views::transform(rebase_from(source, proj_paths().tests().repo()).parent_path(),
+                                   [](const fs::path& p){ return p.generic_string(); }));
   }
 
   [[nodiscard]]
