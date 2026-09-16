@@ -102,7 +102,18 @@ jobs:
           # update, and with it the job.
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
-          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          # Launchpad is a live dependency of every Linux column, and it fails in
+          # more than one shape: a malformed chunked response (PR #19, 2026-09-11)
+          # and an HTTP 503 "temporarily unavailable" (2026-09-16), both before any
+          # compiler ran. So the add is retried on any non-zero exit - not only a
+          # timeout - a bounded number of times with a short back-off. Nothing
+          # else is retried: the install below is guarded on its own terms.
+          for attempt in 1 2 3 4; do
+            sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test && break
+            [ "$attempt" -lt 4 ] || { echo "::error::add-apt-repository failed on all $attempt attempts"; exit 1; }
+            echo "add-apt-repository failed (attempt $attempt); retrying in $((attempt * 15))s"
+            sleep $((attempt * 15))
+          done
           sudo apt-get update -qq
           # The compiler binary and the package providing it are not the same string:
           # g++-15 is both, but clang++ is shipped by `clang`. A column may therefore
