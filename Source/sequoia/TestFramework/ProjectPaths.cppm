@@ -474,7 +474,8 @@ export namespace sequoia::testing
       std::filesystem::path common_includes{main_paths::default_main_cpp_from_root()};
     };
 
-    project_paths() = default;
+    // A body rather than `= default`, for gcc bug F; see log_summary in TestLogger.cppm.
+    project_paths() {}
 
     project_paths(int argc, char** argv, const customizer& customization);
 
