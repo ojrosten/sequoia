@@ -500,7 +500,7 @@
 	maybe invoke `push_back` twice. Should we test `erase` again? And if so back to one element or
 	zero elements, or should we do both? Part of the issue is that the more is done, the more
 	unwieldy the unit test becomes. To alleviate this, `sequoia` provides a graph-based testing
-	solution defined in \ref StateTransitionUtilities.hpp. The idea is that nodes corresponds to
+	solution defined in \ref StateTransitionUtilities.cppm. The idea is that nodes corresponds to
 	states of the type under test. Directed edges define transitions between nodes. When invoked,
 	a breadth-first search is performed, invoking specified checks at each node and determining
 	whether the transition from the previous state matches the expected state specified by the

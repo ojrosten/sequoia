@@ -33,7 +33,7 @@ export import sequoia.text_processing;
 /** \file
     \brief Implementation details for allocation checks.
 
-    For more information see \ref AllocationCheckersCore.hpp
+    For more information see \ref AllocationCheckersCore.cppm
 */
 
 export namespace sequoia::testing::impl
