@@ -1,4 +1,5 @@
 CMake Warning \(dev\)(.|\n)*?-Wno-dev to suppress it\.\n\n
+CMake Warning \(experimental\) at .*\n  CMake's support for `import std;` in C\+\+23 and newer is experimental\.(.|\n)*?-Wno-experimental\nto suppress it\.\n\n
 -- Selecting .*\n
 (?=is ).*
 (?=compiler: ).*
