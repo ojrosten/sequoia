@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.31)
 
 project(SequoiaTestChamber DESCRIPTION "The Sequoia Library plus a test chamber"
                            LANGUAGES CXX)
