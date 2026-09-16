@@ -10,11 +10,15 @@ name: watchdog
 # So this fires on its own schedule and asks the API whether each watched
 # schedule produced a run since its most recent tick - the tick read from the
 # watched file's own `cron:` line, so there is one place a time is written.
-# Every watched schedule is checked every day: a missed weekly run stays red
-# until its next tick, which is the record staying red while the gap exists. A
-# missing run is an error, and the failure email is the alarm. A run that
-# arrived is reported with how late it came, which is the number to watch: the
-# nightly is expected hours after its tick, not minutes.
+# Every watched schedule is checked every day, and a miss is reported once: by
+# the first scheduled run of this workflow after the tick, which goes red, and
+# the failure email is the alarm. Later runs find that earlier one, say so with
+# a link, and stay green on it. The first week of alarms showed why: a weekly
+# tick missed on a Saturday would otherwise be red every day until the next
+# Saturday, the same fact seven times, and an alarm that repeats what it has
+# said is one that stops being read. A run that arrived is reported with how
+# late it came, which is the number to watch: the nightly is expected hours
+# after its tick, not minutes.
 #
 # It shares the failure mode it watches - a cron - but as an independent
 # instance, and the day both are dropped is still followed by a day on which
@@ -103,9 +107,22 @@ jobs:
             if [ -z "$run" ]; then
               if [ "$CONTROL" = true ]; then
                 echo "::error::control: no scheduled run of $2 since now, as there cannot be"
-              else
-                echo "::error::no scheduled run of $2 since its tick at $since"
+                return 1
               fi
+              # Reported once. The reporter is the earliest scheduled run of this
+              # workflow since the tick, other than this one, that went red - a
+              # green one cannot have seen the gap, and a cancelled one did not
+              # report it, so both leave the alarm to this run. `last` because
+              # the list is newest first.
+              prior=$(gh run list --workflow watchdog.yml --event schedule --created ">=$since" \
+                        --json databaseId,createdAt,conclusion \
+                        --jq "map(select(.databaseId != $GITHUB_RUN_ID and .conclusion == \"failure\")) | last // empty") \
+                || { echo "::error::could not list the runs of watchdog.yml"; return 1; }
+              if [ -n "$prior" ]; then
+                echo "gone  $2 missed its tick at $since; reported on $(jq -r .createdAt <<<"$prior") by https://github.com/$GH_REPO/actions/runs/$(jq -r .databaseId <<<"$prior")"
+                return 0
+              fi
+              echo "::error::no scheduled run of $2 since its tick at $since"
               return 1
             fi
             created=$(jq -r .createdAt <<<"$run")
