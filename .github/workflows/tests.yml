@@ -107,7 +107,10 @@ jobs:
           # and an HTTP 503 "temporarily unavailable" (2026-09-16), both before any
           # compiler ran. So the add is retried on any non-zero exit - not only a
           # timeout - a bounded number of times with a short back-off. Nothing
-          # else is retried: the install below is guarded on its own terms.
+          # else is retried. The `apt-get update` below fetches the PPA's index from
+          # Launchpad too, and a failure there is loud - apt exits 100, or the
+          # compiler check after it fires - but is not yet a shape that has been
+          # seen; the two above were both in the add.
           for attempt in 1 2 3 4; do
             sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test && break
             [ "$attempt" -lt 4 ] || { echo "::error::add-apt-repository failed on all $attempt attempts"; exit 1; }
