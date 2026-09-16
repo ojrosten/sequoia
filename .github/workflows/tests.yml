@@ -159,7 +159,13 @@ jobs:
           vcvars="$(cygpath -u "$root")/VC/Auxiliary/Build/vcvars64.bat"
           [ -f "$vcvars" ] || { echo "::error::$vcvars does not exist"; exit 1; }
 
-          dump=$(cmd //c "call \"$(cygpath -w "$vcvars")\" >nul && set" | tr -d '\r')
+          # Via a batch file in RUNNER_TEMP rather than `cmd //c "call ... && set"`:
+          # Git bash's MSYS layer re-quotes an argument containing spaces and
+          # quotes, and cmd then sees the escaping literally. The wrapper's own
+          # path has no spaces, so there is nothing left to mangle.
+          bat="$RUNNER_TEMP/vcvars_dump.bat"
+          printf '@echo off\r\ncall "%s" >nul || exit /b 1\r\nset\r\n' "$(cygpath -w "$vcvars")" > "$bat"
+          dump=$(cmd //c "$(cygpath -w "$bat")" | tr -d '\r')
           printf '%s\n' "$dump" | grep -iE '^(INCLUDE|LIB|LIBPATH|VCToolsInstallDir|VCINSTALLDIR|VSINSTALLDIR|WindowsSdkDir|WindowsSDKVersion|UCRTVersion|UniversalCRTSdkDir)=' >> "$GITHUB_ENV"
           printf '%s\n' "$dump" | grep -iE '^PATH=' | head -1 | sed 's/^[Pp][Aa][Tt][Hh]=//' | tr ';' '\n' | grep -v '^$' >> "$GITHUB_PATH"
 
