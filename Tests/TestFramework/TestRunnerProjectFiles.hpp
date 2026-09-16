@@ -15,10 +15,11 @@ namespace sequoia::testing
 {
   /** \brief Checks the project files a created project's build system generates.
 
-      What there is to check depends on the generator: a `.vcxproj` under Visual Studio,
-      compared against a prediction; a `build.ninja` under Ninja, which must have an edge
-      for the test target. The generator is this build tree's, and the generated project -
-      configured with the preset this tree is named after - is checked to agree. Under any
+      What there is to check depends on the generator. Under Visual Studio the generated
+      project is configured once per committed prediction, each with the preset the
+      prediction is named after, and its `.vcxproj` compared; under Ninja it is configured
+      with this tree's preset and its `build.ninja` must have an edge for the test target.
+      The generator is this build tree's, and each configure is checked to agree. Under any
       other generator the test checks nothing.
 
       It lives here, alone, rather than inside the end-to-end test, so that the far
@@ -39,10 +40,15 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    [[nodiscard]]
-    build_paths configure_generated_project(const cmake_cache& cache);
+    void generate_project();
 
-    void check_visual_studio_project_files(const build_paths& build);
+    [[nodiscard]]
+    build_paths configure_generated_project(const cmake_cache& cache, const std::filesystem::path& preset);
+
+    [[nodiscard]]
+    std::vector<std::filesystem::path> predicted_presets() const;
+
+    void check_visual_studio_project_files(const cmake_cache& cache);
 
     void check_ninja_project_files(const build_paths& build);
 
