@@ -596,8 +596,11 @@
     {
       "name": "msvc-ninja",
       "displayName": "MSVC with Ninja",
-      "description": "Configure for ${displayName}. Needs cl.exe on PATH - a developer command prompt, or a shell vcvars has been applied to - because with Ninja CMake finds the compiler there rather than through the generator. Unqualified 'msvc' stays the Visual Studio generator, which is what a client working in the IDE wants; Ninja is for everything else, CI included, and it separates cl.exe's cost from msbuild's.",
+      "description": "Configure for ${displayName}. Needs cl.exe on PATH - a developer command prompt, or a shell vcvars has been applied to - because with Ninja CMake finds the compiler there rather than through the generator. Unqualified 'msvc' stays the Visual Studio generator, which is what a client working in the IDE wants; Ninja is for everything else, CI included, and it separates cl.exe's cost from msbuild's. The C compiler is named as on the Unix presets, and as there CMake is told not to complain when a project declares only CXX, which a generated project does.",
       "generator": "Ninja",
+      "warnings": {
+        "unusedCli": false
+      },
       "cacheVariables": {
         "CMAKE_C_COMPILER": "cl",
         "CMAKE_CXX_COMPILER": "cl"
