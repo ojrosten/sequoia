@@ -13,6 +13,11 @@ option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 set(EXEC_ARGS "" CACHE STRING "Command-line arguments for the 'run' target.")
 
 FUNCTION(sequoia_init)
+    # From policy version 3.28 (CMP0155) CMake scans every C++20-or-later source for module
+    # imports: a clang-scan-deps run per translation unit under clang, a full preprocess under
+    # gcc, a scan pass under MSVC. Nothing here imports a module yet, so the scan buys nothing.
+    set(CMAKE_CXX_SCAN_FOR_MODULES OFF PARENT_SCOPE)
+
     if(NOT WIN32)
         find_package(Threads REQUIRED)
         find_package(TBB REQUIRED)
