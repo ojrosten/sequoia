@@ -11,6 +11,8 @@
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 
+#include <vector>
+
 namespace sequoia::testing
 {
   /** \brief Checks the project files a created project's build system generates.
@@ -42,15 +44,16 @@ namespace sequoia::testing
   private:
     void generate_project();
 
+    /** \brief Configures the generated project with a preset, returning its cache directory. */
     [[nodiscard]]
-    build_paths configure_generated_project(const cmake_cache& cache, const std::filesystem::path& preset);
+    std::filesystem::path configure_generated_project(const cmake_cache& cache, const std::filesystem::path& preset);
 
     [[nodiscard]]
     std::vector<std::filesystem::path> predicted_presets() const;
 
     void check_visual_studio_project_files(const cmake_cache& cache);
 
-    void check_ninja_project_files(const build_paths& build);
+    void check_ninja_project_files(const std::filesystem::path& cacheDir);
 
     [[nodiscard]]
     std::filesystem::path generated_project() const;

@@ -17,6 +17,7 @@
 #include "sequoia/TestFramework/TestRunner.hpp"
 
 #include <algorithm>
+#include <format>
 #include <sstream>
 #include <stdexcept>
 
@@ -24,6 +25,11 @@ namespace sequoia::testing
 {
   using namespace runtime;
   namespace fs = std::filesystem;
+
+  namespace
+  {
+    const fs::path projectFiles{"ProjectFiles"};
+  }
 
   [[nodiscard]]
   std::filesystem::path test_runner_project_files::source_file()
@@ -94,9 +100,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  build_paths test_runner_project_files::configure_generated_project(const cmake_cache& cache, const fs::path& preset)
+  fs::path test_runner_project_files::configure_generated_project(const cmake_cache& cache, const fs::path& preset)
   {
     const auto cacheDir{generated_project() / "build" / "TestAll" / preset};
+
+    // Only the cache directory is read from this: the executable directory depends on the
+    // configuration, which the preset alone does not fix, and nothing here needs it.
     const build_paths build{generated_project(), cacheDir, cacheDir};
     const main_paths main{generated_project() / main_paths::default_main_cpp_from_root()};
 
@@ -107,14 +116,14 @@ namespace sequoia::testing
     if(check(std::format("CMake cache existence for {}", preset.generic_string()), fs::exists(cacheDir / "CMakeCache.txt")))
       check(equality, std::format("Generator for {}", preset.generic_string()), cmake_cache{build}.variable("CMAKE_GENERATOR"), cache.variable("CMAKE_GENERATOR"));
 
-    return build;
+    return cacheDir;
   }
 
   [[nodiscard]]
   std::vector<std::filesystem::path> test_runner_project_files::predicted_presets() const
   {
     std::vector<fs::path> presets{};
-    for(const auto& entry : fs::directory_iterator{predictive_materials() /= "ProjectFiles"})
+    for(const auto& entry : fs::directory_iterator{predictive_materials() /= projectFiles})
     {
       if(entry.is_directory()) presets.push_back(entry.path().filename());
     }
@@ -127,31 +136,29 @@ namespace sequoia::testing
   {
     // Every prediction is checked, not only the one for the preset this build tree was
     // configured with: a prediction is named after the preset that produces it, and that
-    // name is what the generated project is configured with. So no choice of column
+    // name is what the generated project is configured with. So no choice of build tree
     // leaves a prediction unverified, and a prediction naming no preset fails to configure.
-    const fs::path projectFiles{"ProjectFiles"};
+    // Each is compared on its own, so one that fails costs the others nothing.
     for(const auto& preset : predicted_presets())
     {
-      const auto build{configure_generated_project(cache, preset)};
+      const auto cacheDir{configure_generated_project(cache, preset)};
 
-      // Absent when the configure failed, which its checks have reported; the comparison
-      // below then reports the prediction with nothing to match it.
-      if(const auto vcxproj{build.cmake_cache_dir() / "TestAll.vcxproj"}; fs::exists(vcxproj))
+      // Absent when the configure failed, which its checks have reported.
+      if(const auto vcxproj{cacheDir / "TestAll.vcxproj"}; fs::exists(vcxproj))
       {
         fs::create_directories(working_materials() /= projectFiles / preset);
         fs::copy(vcxproj, working_materials() /= projectFiles / preset);
+        check(equivalence, report(std::format("Project files for {}", preset.generic_string())), working_materials() /= projectFiles / preset, predictive_materials() /= projectFiles / preset);
       }
     }
-
-    check(equivalence, report("Project files"), working_materials() /= projectFiles, predictive_materials() /= projectFiles);
   }
 
-  void test_runner_project_files::check_ninja_project_files(const build_paths& build)
+  void test_runner_project_files::check_ninja_project_files(const fs::path& cacheDir)
   {
     // A build.ninja could be predicted the way a .vcxproj is, but it would take one
     // prediction per Ninja preset per platform. What can be asked of every one of them
     // is whether the graph has an edge for the test target - the one `ninja TestAll` builds.
-    const auto buildFile{read_to_string(build.cmake_cache_dir() / "build.ninja", std::ios_base::in)};
+    const auto buildFile{read_to_string(cacheDir / "build.ninja", std::ios_base::in)};
     check("build.ninja existence", buildFile.has_value());
     check("build.ninja has an edge for TestAll", buildFile.has_value() && buildFile->contains("\nbuild TestAll:"));
   }
