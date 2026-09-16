@@ -172,16 +172,22 @@ jobs:
           # runner's own entries over themselves in a new order, and the first run
           # of this step did exactly that: WindowsApps came to precede Git\bin, so
           # `shell: bash` resolved to the WSL stub for every step after this one.
+          #
+          # And not the CMake and Ninja Visual Studio bundles, which the forwarded
+          # entries would otherwise put ahead of the image's: this column builds
+          # with the same cmake as the msbuild columns, so that a red run here asks
+          # about the generator and nothing else. Whether sequoia builds under the
+          # bundled toolset is a question for a matrix row of its own.
           before=$(printf '%s\n' "$dump" | grep '^PATH_BEFORE=' | sed 's/^[^=]*=//' | tr ';' '\n')
           after=$(printf '%s\n' "$dump"  | grep -iE '^PATH='     | sed 's/^[^=]*=//' | tr ';' '\n')
-          added=$(printf '%s\n' "$after" | grep -vxF -f <(printf '%s\n' "$before") | grep -v '^$')
+          added=$(printf '%s\n' "$after" | grep -vxF -f <(printf '%s\n' "$before") | grep -v '^$' | grep -vF 'CommonExtensions\Microsoft\CMake\')
           printf '%s\n' "$added"
           printf '%s\n' "$added" >> "$GITHUB_PATH"
 
-          # GITHUB_PATH reaches later steps only, so ninja is looked for on the PATH
-          # vcvars produced, which carries the one Visual Studio bundles.
-          PATH="$(cygpath -pu "$(printf '%s\n' "$after" | paste -sd ';')"):$PATH" command -v ninja \
-            || { echo "no ninja on the PATH vcvars produced; installing one"; choco install ninja -y; }
+          # GITHUB_PATH reaches later steps only, so ninja is looked for where a later
+          # step will: the forwarded entries, then this step's own PATH.
+          PATH="$(cygpath -pu "$(printf '%s\n' "$added" | paste -sd ';')"):$PATH" command -v ninja \
+            || { echo "no ninja on the forwarded PATH or the image's; installing one"; choco install ninja -y; }
 
       # An exit status says the tool ran, not that it did what was asked.
       - name: Report the toolchain actually in use
