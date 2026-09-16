@@ -127,10 +127,10 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      std::string output_discriminator() const { return "Platypus"; }
+      static std::string output_discriminator(const cmake_cache&) { return "Platypus"; }
 
       [[nodiscard]]
-      std::string summary_discriminator() const { return "Release"; }
+      static std::string summary_discriminator(const cmake_cache&) { return "Release"; }
 
       void run_tests()
       {

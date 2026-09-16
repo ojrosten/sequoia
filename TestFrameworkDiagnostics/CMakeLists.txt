@@ -34,6 +34,7 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalsePositiveDiagnosticsThreeLevel.cpp
                ${TestDir}/TestFramework/BasicTestInterfaceFreeTest.cpp
                ${TestDir}/TestFramework/ChronoFreeDiagnostics.cpp
+               ${TestDir}/TestFramework/CMakeCacheFreeTest.cpp
                ${TestDir}/TestFramework/CommandsFreeTest.cpp
                ${TestDir}/TestFramework/ComplexFreeDiagnostics.cpp
                ${TestDir}/TestFramework/ContainerFreeDiagnostics.cpp

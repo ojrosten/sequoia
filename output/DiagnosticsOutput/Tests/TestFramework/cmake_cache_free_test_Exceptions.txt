@@ -1,0 +1,18 @@
+Tests/TestFramework/CMakeCacheFreeTest.cpp, Line 38
+No cache file
+
+Expected Exception Type:
+[std::runtime_error]
+cmake_cache: no CMakeCache.txt in output/TestsTemporaryData/TestFramework/cmake_cache_free_test/NoCache
+
+=======================================
+
+Tests/TestFramework/CMakeCacheFreeTest.cpp, Line 60
+No generator recorded
+
+Expected Exception Type:
+[std::runtime_error]
+cmake_cache: the cache does not record CMAKE_GENERATOR
+
+=======================================
+

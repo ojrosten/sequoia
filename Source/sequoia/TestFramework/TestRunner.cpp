@@ -455,6 +455,7 @@ namespace sequoia::testing
                            std::ostream& stream)
     : m_Copyright{std::move(copyright)}
     , m_ProjPaths{project_paths{argc, argv, projectPathsCustomization}}
+    , m_CMakeCache{m_ProjPaths.build()}
     , m_CodeIndent{std::move(codeIndent)}
     , m_Stream{&stream}
   {
@@ -1267,7 +1268,7 @@ namespace sequoia::testing
         }
       }
 
-      vessel.initialize(proj_paths(), materialsPaths, m_RecoveryMode);
+      vessel.initialize(proj_paths(), m_CMakeCache, materialsPaths, m_RecoveryMode);
 
       std::string name{vessel.name()};
       m_Suites.add_node(parent, suite_node{.summary{log_summary{std::move(name)}}, .optTest{std::move(vessel)}});
