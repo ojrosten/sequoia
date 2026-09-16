@@ -32,27 +32,27 @@ ENDFUNCTION()
 # lock or autosave beside a header - Emacs writes `.#Foo.hpp` (a dangling symlink) and `#Foo.hpp#`
 # - would otherwise stop configure with "Cannot find source file" for as long as the buffer is
 # unsaved. A last path component beginning with `#` or `.#` is dropped.
-FUNCTION(sequoia_glob_sources out directory pattern)
+FUNCTION(sequoia_glob_files out directory pattern)
         file(GLOB_RECURSE files ${directory}/${pattern})
         list(FILTER files EXCLUDE REGEX "/[.]?#[^/]*$")
         set(${out} "${files}" PARENT_SCOPE)
 ENDFUNCTION()
 
 FUNCTION(sequoia_set_ide_source_groups target directory)
-        sequoia_glob_sources(HeaderFiles ${directory} *.h*)
+        sequoia_glob_files(HeaderFiles ${directory} *.h*)
         source_group(TREE ${directory} FILES ${HeaderFiles})
         target_sources(${target} PRIVATE ${HeaderFiles})
 
-        sequoia_glob_sources(SourceFiles ${directory} *.c*)
+        sequoia_glob_files(SourceFiles ${directory} *.c*)
         source_group(TREE ${directory} FILES ${SourceFiles})
 ENDFUNCTION()
 
 FUNCTION(sequoia_set_ide_source_groups_with_prefix target directory sourceGroupPrefix)
-        sequoia_glob_sources(HeaderFiles ${directory} *.h*)
+        sequoia_glob_files(HeaderFiles ${directory} *.h*)
         source_group(TREE ${directory} PREFIX ${sourceGroupPrefix} FILES ${HeaderFiles})
         target_sources(${target} PRIVATE ${HeaderFiles})
 
-        sequoia_glob_sources(SourceFiles ${directory} *.c*)
+        sequoia_glob_files(SourceFiles ${directory} *.c*)
         source_group(TREE ${directory} PREFIX ${sourceGroupPrefix} FILES ${SourceFiles})
 ENDFUNCTION()
 
