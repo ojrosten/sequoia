@@ -146,8 +146,8 @@ jobs:
       # only within the cmd session that runs it, so its effect is captured and
       # handed forward: named variables rather than a whole `set` dump, so this
       # cannot silently clobber the runner's own environment, and PATH through
-      # GITHUB_PATH rather than GITHUB_ENV, because a Windows-form PATH written
-      # into the environment of a later bash step loses every command at once.
+      # GITHUB_PATH, the route the runner provides for it, in Windows form, which
+      # is what a later bash step's start-up translates.
       - name: Enter the MSVC environment (Windows, Ninja)
         if: runner.os == 'Windows' && matrix.configure == 'msvc-ninja'
         run: |
@@ -164,12 +164,24 @@ jobs:
           # quotes, and cmd then sees the escaping literally. The wrapper's own
           # path has no spaces, so there is nothing left to mangle.
           bat="$RUNNER_TEMP/vcvars_dump.bat"
-          printf '@echo off\r\ncall "%s" >nul || exit /b 1\r\nset\r\n' "$(cygpath -w "$vcvars")" > "$bat"
+          printf '@echo off\r\necho PATH_BEFORE=%%PATH%%\r\ncall "%s" >nul || exit /b 1\r\nset\r\n' "$(cygpath -w "$vcvars")" > "$bat"
           dump=$(cmd //c "$(cygpath -w "$bat")" | tr -d '\r')
           printf '%s\n' "$dump" | grep -iE '^(INCLUDE|LIB|LIBPATH|VCToolsInstallDir|VCINSTALLDIR|VSINSTALLDIR|WindowsSdkDir|WindowsSDKVersion|UCRTVersion|UniversalCRTSdkDir)=' >> "$GITHUB_ENV"
-          printf '%s\n' "$dump" | grep -iE '^PATH=' | head -1 | sed 's/^[Pp][Aa][Tt][Hh]=//' | tr ';' '\n' | grep -v '^$' >> "$GITHUB_PATH"
 
-          command -v ninja || { echo "ninja is not on this image; installing it"; choco install ninja -y; }
+          # Only what vcvars added. Forwarding its whole PATH would prepend the
+          # runner's own entries over themselves in a new order, and the first run
+          # of this step did exactly that: WindowsApps came to precede Git\bin, so
+          # `shell: bash` resolved to the WSL stub for every step after this one.
+          before=$(printf '%s\n' "$dump" | grep '^PATH_BEFORE=' | sed 's/^[^=]*=//' | tr ';' '\n')
+          after=$(printf '%s\n' "$dump"  | grep -iE '^PATH='     | sed 's/^[^=]*=//' | tr ';' '\n')
+          added=$(printf '%s\n' "$after" | grep -vxF -f <(printf '%s\n' "$before") | grep -v '^$')
+          printf '%s\n' "$added"
+          printf '%s\n' "$added" >> "$GITHUB_PATH"
+
+          # GITHUB_PATH reaches later steps only, so ninja is looked for on the PATH
+          # vcvars produced, which carries the one Visual Studio bundles.
+          PATH="$(cygpath -pu "$(printf '%s\n' "$after" | paste -sd ';')"):$PATH" command -v ninja \
+            || { echo "no ninja on the PATH vcvars produced; installing one"; choco install ninja -y; }
 
       # An exit status says the tool ran, not that it did what was asked.
       - name: Report the toolchain actually in use
@@ -177,6 +189,12 @@ jobs:
           if [ -n "${CXX:-}" ]; then
             command -v "$CXX" || { echo "::error::$CXX is not on PATH"; exit 1; }
             "$CXX" --version
+          elif [ '${{ matrix.configure }}' = msvc-ninja ]; then
+            # Which cl, ninja and cmake the forwarded PATH resolves to, in that order,
+            # so the ordering GITHUB_PATH produced is visible rather than assumed.
+            for tool in cl ninja cmake; do
+              command -v "$tool" || { echo "::error::$tool is not on PATH"; exit 1; }
+            done
           else
             echo "No CXX set; the preset selects the compiler (Windows/MSVC)."
           fi
