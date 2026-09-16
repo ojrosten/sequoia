@@ -13,6 +13,7 @@ set(SourceList
     TestFramework/Advice.cpp
     TestFramework/AllocationCheckersCore.cpp
     TestFramework/AllocationCheckersDetails.cpp
+    TestFramework/CMakeCache.cpp
     TestFramework/Commands.cpp
     TestFramework/ConcreteTypeCheckers.cpp
     TestFramework/DependencyAnalyzer.cpp

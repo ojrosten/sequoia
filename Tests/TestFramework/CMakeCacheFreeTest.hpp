@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-//                Copyright Oliver J. Rosten 2024.                //
+//                Copyright Oliver J. Rosten 2026.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
@@ -9,24 +9,27 @@
 
 /** \file */
 
-#include "PhysicalValueTestingUtilities.hpp"
+#include "sequoia/TestFramework/FreeTestCore.hpp"
 
 namespace sequoia::testing
 {
-  class physical_value_false_negative_test final : public regular_false_negative_test
+  class cmake_cache_free_test final : public free_test
   {
   public:
-    using regular_false_negative_test::regular_false_negative_test;
+    using free_test::free_test;
 
     [[nodiscard]]
     static std::filesystem::path source_file();
 
     void run_tests();
+  private:
+    void test_absent_cache();
+
+    void test_variables();
+
+    void test_generator_families();
 
     [[nodiscard]]
-    static std::string output_discriminator(const cmake_cache&)
-    {
-      return compiler_name();
-    }
+    build_paths tree(std::string_view name) const;
   };
 }
