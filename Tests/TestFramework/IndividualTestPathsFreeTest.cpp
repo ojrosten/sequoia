@@ -108,5 +108,15 @@ namespace sequoia::testing
         projectRoot / "Source" / "myProject"
       );
     }
+
+    {
+      const auto projectRoot{make("myProject", {"myProject"})};
+      check(
+        equality,
+        "An explicit source_folder, in a checkout named after it",
+        source_paths{projectRoot, "myProject"}.project(),
+        projectRoot / "Source" / "myProject"
+      );
+    }
   }
 }

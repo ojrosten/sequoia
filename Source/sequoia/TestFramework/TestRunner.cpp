@@ -428,9 +428,10 @@ namespace sequoia::testing
 
     if(filepath == selectedSource) return true;
 
-    // filepath is relative to where compilation was performed which
-    // cannot be known here. Therefore fallback to assuming the 'selected sources'
-    // live in the test repository
+    // A selection is typed at the command line, from a directory this code cannot know.
+    // Rebasing both paths onto the test repository compares them on the assumption that
+    // the selection names a file beneath the repository. Failing that, a selection which
+    // is a bare filename is looked up in the tree.
 
     if(auto repo{*m_Repo}; !repo.empty())
     {
