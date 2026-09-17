@@ -11,7 +11,7 @@
 #include "sequoia/TestFramework/Output.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
-#include <numeric>
+#include <algorithm>
 
 namespace sequoia::testing
 {
@@ -128,7 +128,7 @@ namespace sequoia::testing
       return p;
 
     if(dir.empty())
-      throw std::runtime_error{"Tring to rebase from an empty path"};
+      throw std::runtime_error{"Trying to rebase from an empty path"};
 
     if(fs::exists(dir) && !fs::is_directory(dir))
       throw std::runtime_error{"Trying to rebase from something other than a directory"};
@@ -136,12 +136,27 @@ namespace sequoia::testing
     if(p.is_absolute() && dir.is_absolute())
       return fs::relative(p, dir);
 
-    auto i{std::ranges::find_if_not(p, [](const fs::path& pth) { return pth == ".."; })};
-    if((i == p.end()) || (i->empty()))
+    // A trailing separator iterates as an empty final component, which would match nothing
+    // in the directory and would survive from the path into the result.
+    const auto trimmed{[](const fs::path& q) { return q.has_filename() ? q : q.parent_path(); }};
+    const fs::path trimmedPath{trimmed(p)}, trimmedDir{trimmed(dir)};
+
+    const auto firstKept{std::ranges::find_if_not(trimmedPath, [](const fs::path& pth) { return pth == ".."; })};
+    if(firstKept == trimmedPath.end())
       throw std::runtime_error{"Path comprises nothing but ../"};
 
-    auto[rebasedPathIter, lastCommonDirIter]{std::ranges::mismatch(i, p.end(), rfind(dir, *i), dir.end())};
+    // An overlap is a prefix of the path which is also a suffix of the directory: the path
+    // was spelt from an ancestor of the directory, and what follows the overlap lies beneath
+    // the directory. The longest overlap starts earliest in the directory, so the first
+    // suffix which matches wins.
+    const auto join{[](fs::path lhs, const fs::path& rhs){ return lhs /= rhs; }};
+    for(auto suffixBegin{trimmedDir.begin()}; suffixBegin != trimmedDir.end(); ++suffixBegin)
+    {
+      const auto [dirIter, rebasedPathIter]{std::ranges::mismatch(suffixBegin, trimmedDir.end(), firstKept, trimmedPath.end())};
+      if(dirIter == trimmedDir.end())
+        return std::ranges::fold_left(rebasedPathIter, trimmedPath.end(), fs::path{}, join);
+    }
 
-    return std::accumulate(rebasedPathIter, p.end(), fs::path{}, [](fs::path lhs, const fs::path& rhs){ return lhs /= rhs; });
+    return std::ranges::fold_left(firstKept, trimmedPath.end(), fs::path{}, join);
   }
 }
