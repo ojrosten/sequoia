@@ -11,15 +11,22 @@
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 
+#include <vector>
+
 namespace sequoia::testing
 {
-  /** \brief Checks the IDE project files a created project's build system generates.
+  /** \brief Checks the project files a created project's build system generates.
 
-      This is the one genuinely platform-dependent thing the test runner produces: a
-      `.vcxproj` exists only under the Visual Studio generator. It lives here, alone,
-      rather than inside the end-to-end test, so that the far larger and more valuable
-      test of project creation and incremental building stays free of a summary
-      discriminator - see the note in run_tests.
+      What there is to check depends on the generator. Under Visual Studio the generated
+      project is configured once per committed prediction, each with the preset the
+      prediction is named after, and its `.vcxproj` compared; under Ninja it is configured
+      with this tree's preset and its `build.ninja` must have an edge for the test target.
+      The generator is this build tree's, and each configure is checked to agree. Under any
+      other generator the test checks nothing.
+
+      It lives here, alone, rather than inside the end-to-end test, so that the far
+      larger and more valuable test of project creation and incremental building stays
+      free of a summary discriminator.
    */
   class test_runner_project_files final : public free_test
   {
@@ -29,16 +36,24 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::filesystem::path source_file();
 
-    /** Only this test's own check count varies by platform, and it is one check. */
+    /** The check count varies with the generator, and with nothing else. */
     [[nodiscard]]
-    std::string summary_discriminator() const
-    {
-      return with_msvc_v ? "msvc" : std::string{};
-    }
+    static std::string summary_discriminator(const cmake_cache& cache);
 
     void run_tests();
   private:
-    void test_project_files();
+    void generate_project();
+
+    /** \brief Configures the generated project with a preset, returning its cache directory. */
+    [[nodiscard]]
+    std::filesystem::path configure_generated_project(const cmake_cache& cache, const std::filesystem::path& preset);
+
+    [[nodiscard]]
+    std::vector<std::filesystem::path> predicted_presets() const;
+
+    void check_visual_studio_project_files(const cmake_cache& cache);
+
+    void check_ninja_project_files(const std::filesystem::path& cacheDir);
 
     [[nodiscard]]
     std::filesystem::path generated_project() const;

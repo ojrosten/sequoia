@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.31)
 
 project(SequoiaTestAll DESCRIPTION "The Sequoia Library plus all tests"
                        LANGUAGES CXX)
@@ -159,6 +159,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalsePositiveDiagnosticsThreeLevel.cpp
                ${TestDir}/TestFramework/BasicTestInterfaceFreeTest.cpp
                ${TestDir}/TestFramework/ChronoFreeDiagnostics.cpp
+               ${TestDir}/TestFramework/CMakeCacheFreeTest.cpp
                ${TestDir}/TestFramework/CommandsFreeTest.cpp
                ${TestDir}/TestFramework/ComplexFreeDiagnostics.cpp
                ${TestDir}/TestFramework/ContainerFreeDiagnostics.cpp

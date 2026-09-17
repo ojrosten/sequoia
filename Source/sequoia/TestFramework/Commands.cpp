@@ -8,14 +8,8 @@
 #include "sequoia/TestFramework/Commands.hpp"
 
 #include "sequoia/FileSystem/FileSystem.hpp"
-#include "sequoia/Parsing/CommandLineArguments.hpp"
-#include "sequoia/PlatformSpecific/Preprocessor.hpp"
-#include "sequoia/Streaming/Streaming.hpp"
-#include "sequoia/TestFramework/FileSystemUtilities.hpp"
-#include "sequoia/TextProcessing/Patterns.hpp"
 
-#include <iostream>
-#include <print>
+#include <format>
 
 namespace sequoia::testing
 {
@@ -41,5 +35,4 @@ namespace sequoia::testing
             std::format("cmake --build --preset {}", back(buildPaths.cmake_cache_dir()).generic_string()),
             output};
   }
-
 }
