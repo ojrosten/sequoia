@@ -23,9 +23,9 @@ Checking for equivalence with:
 [std::filesystem::path]
 
   Path type
-  output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/Stuff/Blah
+  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/Stuff/Blah
   vs
-  output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/Stuff/A
+  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/Stuff/A
 
   [std::filesystem::file_type]
   operator== returned false
@@ -43,9 +43,9 @@ Checking for equivalence with:
 [std::filesystem::path]
 
   Path type
-  output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/Stuff/A
+  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/Stuff/A
   vs
-  output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/Stuff/A/foo.txt
+  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/Stuff/A/foo.txt
 
   [std::filesystem::file_type]
   operator== returned false
@@ -63,9 +63,9 @@ Checking for equivalence with:
 [std::filesystem::path]
 
   Path type
-  output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/Stuff/B/foo.txt
+  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/Stuff/B/foo.txt
   vs
-  output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/Stuff/B/bar.txt
+  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/Stuff/B/bar.txt
 
   [std::filesystem::file_type]
   operator== returned false
@@ -83,9 +83,9 @@ Checking for equivalence with:
 [std::filesystem::path]
 
   Contents of
-  output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/Stuff/A/foo.txt
+  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/Stuff/A/foo.txt
   vs
-  output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/Stuff/B/foo.txt
+  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/Stuff/B/foo.txt
 
   [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
   operator== returned false
@@ -127,9 +127,9 @@ Checking for equivalence with:
 [std::filesystem::path]
 
   Contents of
-  output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/Stuff/A/foo.txt
+  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/Stuff/A/foo.txt
   vs
-  output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/MoreStuff/A/foo.txt
+  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/MoreStuff/A/foo.txt
 
   [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
   operator== returned false
@@ -154,7 +154,7 @@ Comparison performed using:
 Checking for equivalence with:
 [std::filesystem::path]
 
-  Number of directory entries for output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/Stuff/B
+  Number of directory entries for output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/Stuff/B
   [unsigned long long]
   operator== returned false
   Obtained : 1
@@ -163,8 +163,8 @@ Checking for equivalence with:
   First directory entry mismatch
   [std::filesystem::path]
   operator== returned false
-  Obtained : output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/Stuff/B/foo.txt
-  Predicted: output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/MoreStuff/B/bar.txt
+  Obtained : output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/Stuff/B/foo.txt
+  Predicted: output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/MoreStuff/B/bar.txt
 
 =======================================
 
@@ -176,7 +176,7 @@ Comparison performed using:
 Checking for equivalence with:
 [std::filesystem::path]
 
-  Number of directory entries for output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/MoreStuff/B
+  Number of directory entries for output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/MoreStuff/B
   [unsigned long long]
   operator== returned false
   Obtained : 2
@@ -185,8 +185,8 @@ Checking for equivalence with:
   First directory entry mismatch
   [std::filesystem::path]
   operator== returned false
-  Obtained : output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/MoreStuff/B/bar.txt
-  Predicted: output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/Stuff/B/foo.txt
+  Obtained : output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/MoreStuff/B/bar.txt
+  Predicted: output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/Stuff/B/foo.txt
 
 =======================================
 
@@ -199,9 +199,9 @@ Checking for equivalence with:
 [std::filesystem::path]
 
   Contents of
-  output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/CustomComparison/A/DifferingContent.ignore
+  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/CustomComparison/A/DifferingContent.ignore
   vs
-  output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/CustomComparison/B/DifferingContent.ignore
+  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/CustomComparison/B/DifferingContent.ignore
 
   [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
   operator== returned false
@@ -230,9 +230,9 @@ Range inequivalence when default file checking us used
   [std::filesystem::path]
 
     Contents of
-    output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/CustomComparison/A/DifferingContent.ignore
+    output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/CustomComparison/A/DifferingContent.ignore
     vs
-    output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/CustomComparison/B/DifferingContent.ignore
+    output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/CustomComparison/B/DifferingContent.ignore
 
     [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
     operator== returned false
@@ -257,7 +257,7 @@ Comparison performed using:
 Checking for weak equivalence with:
 [std::filesystem::path]
 
-  Number of directory entries for output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/MoreStuff/B
+  Number of directory entries for output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/MoreStuff/B
   [unsigned long long]
   operator== returned false
   Obtained : 2
@@ -266,8 +266,8 @@ Checking for weak equivalence with:
   First directory entry mismatch
   [std::filesystem::path]
   operator== returned false
-  Obtained : output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/MoreStuff/B/bar.txt
-  Predicted: output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/Stuff/B/foo.txt
+  Obtained : output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/MoreStuff/B/bar.txt
+  Predicted: output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/Stuff/B/foo.txt
 
 =======================================
 
@@ -280,9 +280,9 @@ Checking for weak equivalence with:
 [std::filesystem::path]
 
   Contents of
-  output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/CustomComparison/A/DifferingContent.ignore
+  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/CustomComparison/A/DifferingContent.ignore
   vs
-  output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/CustomComparison/B/DifferingContent.ignore
+  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/CustomComparison/B/DifferingContent.ignore
 
   [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
   operator== returned false
@@ -311,9 +311,9 @@ Weak inequivalence of range when default file checking is used
   [std::filesystem::path]
 
     Contents of
-    output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/CustomComparison/A/DifferingContent.ignore
+    output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/CustomComparison/A/DifferingContent.ignore
     vs
-    output/TestsTemporaryData/TestFramework/path_false_negative_free_diagnostics/CustomComparison/B/DifferingContent.ignore
+    output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/CustomComparison/B/DifferingContent.ignore
 
     [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
     operator== returned false

@@ -32,6 +32,8 @@ namespace sequoia::testing
   public:
     explicit cmake_cache(const build_paths& buildPaths);
 
+    explicit cmake_cache(const std::filesystem::path& cacheFile);
+
     /** \brief Disengaged if the cache does not name the variable; an engaged empty string is one it names and leaves empty. */
     [[nodiscard]]
     std::optional<std::string> variable(std::string_view name) const;

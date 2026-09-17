@@ -8,20 +8,30 @@
 #pragma once
 
 /** \file
-    \brief Facility to detect changes on disk and only run the relevant tests.
+    \brief Selects the tests to run from what has changed since the previous run.
 
+    A run leaves three things behind:
+    -# a stamp, holding the run's time;
+    -# its failures;
+    -# the passes of any selection it ran.
+
+    `prune` reads those, and the build's record of what each test was built from, and selects
+    the tests which are stale or were left failing.
  */
 
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
-#include <iostream>
 #include <chrono>
+#include <iostream>
 #include <limits>
+#include <span>
 
 namespace sequoia::testing
 {
+  /** \brief Whether a run selects its tests by what has changed since the previous run. */
   enum class prune_mode { passive, active };
 
+  /** \brief A test's source, and the time of the run which recorded the test as passing or failing. */
   struct prune_record
   {
     using stamp_type = std::filesystem::file_time_type;
@@ -37,71 +47,81 @@ namespace sequoia::testing
     friend std::istream& operator>>(std::istream& s, prune_record& record);
   };
 
-  /** \brief The dependencies which the text of a single translation unit declares.
+  /** \brief The time after which a modification counts as later than the run which wrote `stamp`.
 
-      Lexed rather than preprocessed, so an `#include` behind a false `#if` or inside a string
-      literal is reported all the same: over-reporting costs a test which need not have run, where
-      under-reporting silently skips one which must. Three spellings do slip through - a header named
-      by a macro, one spliced across lines, and one whose tokens a comment separates - and none
-      occurs in a tree read today.
-   */
-  struct source_dependencies
-  {
-    /// Header names exactly as written, neither resolved against the including file nor filtered.
-    std::vector<std::filesystem::path> includes{};
-  };
+      -# Where the filesystem records sub-second times, the threshold is the stamp itself.
+      -# Where the filesystem truncates to whole seconds - libstdc++ does on macOS - a modification
+         made during the run can carry a time up to a second before the stamp. There the threshold
+         is a second earlier, which resolves the ambiguous cases as stale: a re-run, never a
+         missed test.
 
-  /** \brief Lexes the dependencies declared by a translation unit.
-
-      Comments are skipped, as is everything from the first line containing `cutoff`; an empty
-      `cutoff` scans to the end.
-   */
-  [[nodiscard]]
-  source_dependencies scan_dependencies(std::istream& source, std::string_view cutoff);
-
-  /** \brief The time against which a modification is judged to have happened after the run which
-             wrote the prune stamp.
-
-      The stamp is written from a full-resolution clock reading, so whatever comes back is what the
-      filesystem was able to store: a whole number of seconds means the implementation truncates -
-      libstdc++ does so on macOS, where libc++ records nanoseconds - and a modification made after
-      the run began can therefore carry a timestamp up to a second before it. Comparing against the
-      stamp itself loses such a change, and loses it in the direction which makes `prune` skip a
-      test whose materials really did move. So where the filesystem truncates, the threshold is a
-      second earlier than the stamp, which resolves the ambiguous cases as stale.
-
-      One stamp can only separate "sub-second" from "at least a second". A filesystem coarser still
-      - two seconds on exFAT, and on some network mounts - reveals itself identically here and
-      remains partly exposed; establishing more would mean writing a probe and reading it back,
-      which is what the end-to-end test does.
-
-      Where the filesystem records sub-second times the stamp carries them and the threshold is the
-      stamp itself. The exception is a stamp landing exactly on a second, which is indistinguishable
-      from a truncated one and is treated as coarse: that costs an over-run, never a missed test.
+      A stamp landing exactly on a second cannot be told from a truncated one, and is treated as
+      truncated. A filesystem coarser than a second - exFAT, some network mounts - looks the same
+      here and remains partly exposed.
    */
   [[nodiscard]]
   std::filesystem::file_time_type staleness_threshold(std::filesystem::file_time_type stamp);
 
+  /** \brief The prune records in `file`; none if there is no such file.
+
+      Throws `std::runtime_error` if the file does not parse as prune records.
+   */
   [[nodiscard]]
   std::vector<prune_record> read_tests(const std::filesystem::path& file);
 
+  /** \brief Writes `tests` to `file`, each source path made relative to the tests repository. */
   void write_tests(const project_paths& projPaths, const std::filesystem::path& file, std::span<const prune_record> tests);
 
-  [[nodiscard]]
-  std::optional<std::vector<std::filesystem::path>> tests_to_run(const project_paths& projPaths, std::string_view cutoff);
+  /** \brief The tests which should run: those stale since the previous run, and those the previous run
+             left failing.
 
+      A test is stale if any of the following changed after the previous run's stamp:
+      -# the TU containing the test;
+      -# any explicit dependency of the test TU, such as a header on which it transitively depends;
+      -# any implicit dependency of the test TU, such as a source implementing the declarations in the
+         headers of item 2;
+      -# any materials associated with the test.
+
+      A test recorded as passing since that change is not stale.
+
+      \pre Definitions complementing a declaration are found in either:
+      -# one of the headers where the TU sees the declaration;
+      -# a source file with the same stem as one of the headers of the previous item.
+
+      Returns `std::nullopt` if no previous run left a stamp.
+
+      \throws std::runtime_error if the build's record of dependencies:
+      -# does not exist, because nothing has been built;
+      -# is in an unknown format - currently Ninja's and MSBuild's are understood;
+      -# is corrupted.
+   */
+  [[nodiscard]]
+  std::optional<std::vector<std::filesystem::path>> tests_to_run(const project_paths& projPaths);
+
+  /** \brief After a run of every test: records the failures, forgets the selected passes, and stamps the run's time. */
   void update_prune_files(const project_paths& projPaths,
                           std::span<const std::filesystem::path> failedTests,
                           std::filesystem::file_time_type updateTime,
                           std::optional<std::size_t> id);
 
+  /** \brief After a run of a selection: records which of the executed tests passed and which failed,
+             alongside those already recorded. The stamp is untouched.
+   */
   void update_prune_files(const project_paths& projPaths,
                           std::span<const std::filesystem::path> executedTests,
                           std::span<const std::filesystem::path> failedTests,
                           std::filesystem::file_time_type updateTime,
                           std::optional<std::size_t> id);
 
+  /** \brief Empties the directory in which the repetitions of an instability analysis leave their prune files. */
   void setup_instability_analysis_prune_folder(const project_paths& projPaths);
 
-  void aggregate_instability_analysis_prune_files(const project_paths& projPaths, prune_mode mode, std::filesystem::file_time_type timeStamp, std::size_t numReps);
+  /** \brief Folds the repetitions' prune files into the run's, then removes the repetitions' files.
+
+      A test failing in any repetition failed; a test passing in every repetition passed.
+   */
+  void aggregate_instability_analysis_prune_files(const project_paths& projPaths,
+                                                  prune_mode mode,
+                                                  std::filesystem::file_time_type timeStamp,
+                                                  std::size_t numReps);
 }

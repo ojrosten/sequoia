@@ -143,7 +143,7 @@ namespace sequoia::testing
       {"select Plurgh.cpp test Absent select Foo test FooTest.cpp",                                            "FailedSpecifiedSourceOutput.txt"    },
       {"test Stuff",                                                                                            "SpecifiedSuiteOutput.txt"           },
       {"test Stuff prune",                                                                                      "SpecifiedSuitePruneConflictOutput.txt"},
-      {"prune --cutoff namespace",                                                                             "FullyPrunedOutput.txt"             },
+      {"prune",                                                                                                "FullyPrunedOutput.txt"             },
       {"-v",                                                                                                  "VerboseOutput.txt"                  },
       {"-v select FooTest.cpp test Stuff",                                                                       "SelectFromTestedSuiteOutput.txt"   },
       {"--help",                                                                                              "HelpOutput.txt"                     }
@@ -302,7 +302,7 @@ namespace sequoia::testing
 
     //=================== Run the test executable ===================//
 
-    run_and_check(report("Empty Run"), b, "EmptyRunOutput", "", return_code::success);    
+    run_and_check(report("Empty Run"), b, "EmptyRunOutput", "", return_code::success);
 
     //=================== Create tests and run ===================//
 
@@ -380,7 +380,7 @@ namespace sequoia::testing
     copy_aux_materials("ModifiedTests/Stuff/FooTest.cpp", "Tests/Stuff");
     copy_aux_materials("TestMaterials", "TestMaterials");
 
-    rebuild_run_and_check(report("Change Materials (pruned)"), b, "RunWithChangedMaterials", "CMakeOutput3.txt", "BuildOutput3.txt", "prune --cutoff namespace", return_code::soft_failures);
+    rebuild_run_and_check(report("Change Materials (pruned)"), b, "RunWithChangedMaterials", "CMakeOutput3.txt", "BuildOutput3.txt", "prune", return_code::soft_failures);
 
     // Check materials are unchanged
     fs::copy(generated_project() / "TestMaterials", working_materials() /= "OriginalTestMaterials", fs::copy_options::recursive);
@@ -389,12 +389,12 @@ namespace sequoia::testing
     //=================== Run again, locating instabilities, and try to update ===================//
     //--> update should be suppressed by instability location
 
-    run_and_check(report("Instability location suppressing update"), b, "UpdateSuppressedByInstabilityLocation", "locate 2 prune -c namespace u", return_code::soft_failures);
+    run_and_check(report("Instability location suppressing update"), b, "UpdateSuppressedByInstabilityLocation", "locate 2 prune u", return_code::soft_failures);
     check(equivalence, "Original Test Materials", working_materials() /= "OriginalTestMaterials", predictive_materials() /= "OriginalTestMaterials");
 
     //=================== Rerun with prune but update materials ===================//
 
-    run_and_check(report("Updated Materials"), b, "RunWithUpdateOutput", "prune --cutoff namespace u", return_code::soft_failures);
+    run_and_check(report("Updated Materials"), b, "RunWithUpdateOutput", "prune u", return_code::soft_failures);
 
     fs::copy(generated_project() / "TestMaterials", working_materials() /= "UpdatedTestMaterials", fs::copy_options::recursive);
     check(equivalence, "Updated Test Materials", working_materials() /= "UpdatedTestMaterials", predictive_materials() /= "UpdatedTestMaterials");
@@ -406,6 +406,16 @@ namespace sequoia::testing
     //=================== Rerun again with prune, which should do nothing  ===================//
 
     run_and_check(report("Prune again, no tests should run"), b, "NullRunWithPruneOutput", "prune", return_code::success);
+
+    //=================== Touch a passing test's materials, leaving its source alone, and run with prune ===================//
+    //--> foo_test passed when last selected and nothing it was built from has changed, so only its
+    //    materials can select it
+
+    await_tick_past_previous_run();
+    fs::last_write_time(generated_project() / "TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz.txt",
+                        fs::file_time_type::clock::now());
+
+    run_and_check(report("Pruned output, post materials touch"), b, "RunWithTouchedMaterials", "prune", return_code::success);
 
     //=================== Change a file, don't build and run with prune ===================//
 
@@ -424,7 +434,7 @@ namespace sequoia::testing
     copy_aux_materials("ModifiedTests/Thing",             "Tests/Utilities/Thing");
     copy_aux_materials("ModifiedTests/Unstable",          "Tests/Unstable");
 
-    rebuild_run_and_check(report("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune --cutoff namespace", return_code::soft_failures);
+    rebuild_run_and_check(report("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune", return_code::soft_failures);
 
     check(equivalence, "Test Runner Output", working_materials() /= "RebuiltOutput", predictive_materials() /= "RebuiltOutput");
     fs::create_directory(working_materials() /= "TestAll");
@@ -447,7 +457,7 @@ namespace sequoia::testing
     //=================== Rerun with prune ===================//
     // --> only failing tests should rerun
 
-    run_and_check(report("Pruned output, post failures"), b, "RunPrunePostFailureOutput", "prune -c namespace", return_code::soft_failures);
+    run_and_check(report("Pruned output, post failures"), b, "RunPrunePostFailureOutput", "prune", return_code::soft_failures);
 
     //=================== Rerun and locate instabilities ===================//
     // --> UsefulThingsFreeTest.cpp will continue to exhibit a stable failure,
@@ -457,7 +467,7 @@ namespace sequoia::testing
 
     //=================== Rerun and locate instabilities, with pruning ===================//
 
-    run_and_check(report("Locate instabilities"), b, "RunLocateInstabilitiesPrune", "locate 2 prune -c namespace", return_code::soft_failures);
+    run_and_check(report("Locate instabilities"), b, "RunLocateInstabilitiesPrune", "locate 2 prune", return_code::soft_failures);
 
     //=================== Rerun with selected, unstable test in sandbox mode ===================//
     // --> The first of the checks in FlipperFreeTest.cpp is stable in sandbox mode, but the second isn't
@@ -478,7 +488,7 @@ namespace sequoia::testing
     // in order to induce a failure in FooTest.cpp. Recovery mode will cause the final executed check
     // to be recorded.
 
-    const auto generatedWorkingCopy{generated_project() /= "TestMaterials/Stuff/foo_test/WorkingCopy"};
+    const auto generatedWorkingCopy{generated_project() /= "TestMaterials/Stuff/FooTest/foo_test/WorkingCopy"};
     fs::copy(generatedWorkingCopy / "RepresentativeCases", generatedWorkingCopy / "RepresentativeCasesTemp", fs::copy_options::recursive);
     fs::remove_all(generatedWorkingCopy / "RepresentativeCases");
 
@@ -493,7 +503,7 @@ namespace sequoia::testing
     // in order to cause the check in FooTest.cpp to throw mid-check, thereby allowing the recovery
     // mode to be tested. Also test that the Exceptions file is not overwritten.
 
-    const auto generatedPredictive{generated_project() /= "TestMaterials/Stuff/foo_test/Prediction"};
+    const auto generatedPredictive{generated_project() /= "TestMaterials/Stuff/FooTest/foo_test/Prediction"};
     fs::copy(generatedPredictive / "RepresentativeCases", generatedPredictive / "RepresentativeCasesTemp", fs::copy_options::recursive);
     fs::remove_all(generatedPredictive / "RepresentativeCases");
 
@@ -518,7 +528,7 @@ namespace sequoia::testing
 
     //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
 
-    run_and_check(report("Passing test not included by prune"), b, "PassingTestExcludedByPrune", "prune -c namespace", return_code::soft_failures | return_code::critical_failures);
+    run_and_check(report("Passing test not included by prune"), b, "PassingTestExcludedByPrune", "prune", return_code::soft_failures | return_code::critical_failures);
 
     //=================== Fix a failing test and 'select' it ===================//
 
@@ -532,7 +542,7 @@ namespace sequoia::testing
 
     //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
 
-    run_and_check(report("Fixed test not included by prune"), b, "AnotherPassingTestExcludedByPrune", "prune -c namespace", return_code::soft_failures);
+    run_and_check(report("Fixed test not included by prune"), b, "AnotherPassingTestExcludedByPrune", "prune", return_code::soft_failures);
 
     //=================== Fix the final failing test and 'test' it ===================//
 
@@ -544,6 +554,6 @@ namespace sequoia::testing
 
     //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
 
-    run_and_check(report("Final fixed test not included by prune"), b, "FinalPassingTestExcludedByPrune", "prune -c namespace", return_code::success);
+    run_and_check(report("Final fixed test not included by prune"), b, "FinalPassingTestExcludedByPrune", "prune", return_code::success);
   }
 }

@@ -21,7 +21,7 @@ A directory which does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to locate the project's purported source directory, output/TestsTemporaryData/TestFramework/test_runner_test_creation/Auxiliary/Namespaces/absent.
+Unable to locate the project's purported source directory, output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Auxiliary/Namespaces/absent.
 The source directory is either deduced from the name of the directory into which the project
 is checked out, or overridden by specifying a (different) `source_folder` in the project_paths
 customizer. A worktree, or a checkout named anything but the project, needs `source_folder`

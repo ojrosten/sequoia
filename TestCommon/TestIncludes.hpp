@@ -149,6 +149,7 @@
 #include "TestFramework/AllocationTesting/ScopedAllocationTestFalsePositiveDiagnosticsMixed.hpp"
 #include "TestFramework/AllocationTesting/ScopedAllocationTestFalsePositiveDiagnosticsThreeLevel.hpp"
 #include "TestFramework/BasicTestInterfaceFreeTest.hpp"
+#include "TestFramework/BuildArtefactsFreeTest.hpp"
 #include "TestFramework/ChronoFreeDiagnostics.hpp"
 #include "TestFramework/CMakeCacheFreeTest.hpp"
 #include "TestFramework/CommandsFreeTest.hpp"

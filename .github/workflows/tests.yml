@@ -81,7 +81,7 @@ jobs:
         if: ${{ inputs.false_negative }}
         run: |
           summary=output/TestSummaries/Tests/Core/Meta/type_algorithms_free_test.txt
-          prediction=TestMaterials/Streaming/streaming_free_test/Prediction/Foo.txt
+          prediction=TestMaterials/Streaming/StreamingFreeTest/streaming_free_test/Prediction/Foo.txt
           for f in "$summary" "$prediction"; do
             [ -f "$f" ] || { echo "::error::$f is not where the control expects it"; exit 1; }
           done
