@@ -12,7 +12,7 @@
  */
 
 #include <filesystem>
-#include <functional>
+#include <stdexcept>
 
 namespace sequoia
 {
@@ -50,25 +50,5 @@ namespace sequoia
       throw std::runtime_error{"Cannot extract final element from an empty path"};
 
     return *--p.end();
-  }
-
-  /** This function has slightly peculiar semantics, due to the fact that path::iterator isn't
-      strictly bidirectional - which MSVC exploits. Therefore, it returns a forward iterator
-      to the last instance of a pattern or end, otherwise.
-  */
-  template<class Path, class Pattern, class Proj=std::identity>
-    requires std::is_same_v<std::remove_cvref_t<Path>, std::filesystem::path> && std::predicate<std::ranges::equal_to, std::invoke_result_t<Proj, std::filesystem::path> , Pattern>
-  [[nodiscard]]
-  std::conditional_t<std::is_const_v<std::remove_reference_t<Path>>, std::filesystem::path::const_iterator, std::filesystem::path::iterator> 
-    rfind(Path&& p, Pattern pattern, Proj proj = {})
-  {
-    auto i{p.end()};
-    while(i != p.begin())
-    {
-      --i;
-      if(std::ranges::equal_to{}(proj(*i), pattern)) return i;
-    }
-
-    return p.end();
   }
 }

@@ -58,11 +58,20 @@ namespace sequoia::testing
 
     check(equality, "Empty path", rebase_from("", "Baz"), fs::path{""});
     check(equality, "Empty path from empty path", rebase_from("", ""), fs::path{""});
-    check(equality, "Non-existant path", rebase_from("Foo/Bar", "Baz"), fs::path{"Foo/Bar"});
+    check(equality, "Non-existent path", rebase_from("Foo/Bar", "Baz"), fs::path{"Foo/Bar"});
     check(equality, "Rebase absolute", rebase_from(working_materials() /= "Foo", working_materials()), fs::path{"Foo"});
     check(equality, "No overlap", rebase_from(fs::path{"Things/Stuff.txt"}, working_materials()), fs::path{"Things/Stuff.txt"});
     check(equality, "Overlap", rebase_from(fs::path{"Foo/Stuff.txt"}, working_materials() /= "Foo"), fs::path{"Stuff.txt"});
     check(equality, "Relative", rebase_from(fs::path{"../Stuff.txt"}, working_materials()), fs::path{"Stuff.txt"});
+    check(equality, "Relative, then an overlap", rebase_from(fs::path{"../Foo/Stuff.txt"}, working_materials() /= "Foo"), fs::path{"Stuff.txt"});
+    check(equality, "Overlap with a relative dir", rebase_from(fs::path{"Foo/Bar/Stuff.txt"}, "Foo/Bar"), fs::path{"Stuff.txt"});
     check(equality, "Double overlap", rebase_from(fs::path{"Foo/Bar/Stuff.txt"}, working_materials() /= "Foo/Bar"), fs::path{"Stuff.txt"});
+    check(equality, "A name elsewhere in dir is not an overlap", rebase_from(fs::path{"Foo"}, working_materials() /= "Foo/Bar"), fs::path{"Foo"});
+    check(equality, "A name elsewhere in dir, with more following, is not an overlap", rebase_from(fs::path{"Foo/Stuff.txt"}, working_materials() /= "Foo/Bar"), fs::path{"Foo/Stuff.txt"});
+    check(equality, "The longest overlap wins", rebase_from(fs::path{"A/B/A/X"}, working_materials() /= "A/B/A"), fs::path{"X"});
+    check(equality, "A repeated name in dir: the path is spelt from the innermost", rebase_from(fs::path{"Foo/Stuff.txt"}, working_materials() /= "Foo/Bar/Foo"), fs::path{"Stuff.txt"});
+    check(equality, "A repeated name in dir, and the path continues beneath it", rebase_from(fs::path{"Foo/Bar/Stuff.txt"}, working_materials() /= "Foo/Bar/Foo"), fs::path{"Bar/Stuff.txt"});
+    check(equality, "Trailing separator on dir", rebase_from(fs::path{"Foo/Stuff.txt"}, working_materials() /= "Foo/"), fs::path{"Stuff.txt"});
+    check(equality, "Trailing separator on the path", rebase_from(fs::path{"Foo/"}, working_materials()), fs::path{"Foo"});
   }
 }

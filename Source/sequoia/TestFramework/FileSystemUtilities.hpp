@@ -40,6 +40,17 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path find_in_tree(const std::filesystem::path& root, const std::filesystem::path& toFind);
 
+  /** \brief A path naming something beneath `dir`, spelt from `dir` or from an ancestor of
+      it, made relative to `dir`.
+
+      A relative path may begin with the components it shares with the end of `dir`; the
+      longest such prefix is taken to be shared, so a path that could have been spelt from
+      more than one ancestor is read from the outermost. A component matching elsewhere in
+      `dir` is not shared. Leading `..` components are discarded, and a path comprising
+      nothing else throws, as does an empty `dir` or one which exists and is not a directory.
+      An absolute path is made relative to an absolute `dir` by `std::filesystem::relative`,
+      which consults the filesystem; everything else is lexical.
+   */
   [[nodiscard]]
-  std::filesystem::path rebase_from(const std::filesystem::path& filename, const std::filesystem::path& dir);
+  std::filesystem::path rebase_from(const std::filesystem::path& p, const std::filesystem::path& dir);
 }
