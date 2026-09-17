@@ -169,9 +169,9 @@ namespace sequoia::testing
 
     /** \brief Replaces the held test with one which knows where its files are. */
 
-    void initialize(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths, recovery_mode mode)
+    void initialize(const project_paths& projPaths, const cmake_cache& cache, std::vector<std::filesystem::path>& materialsPaths, recovery_mode mode)
     {
-      m_pTest->initialize(projPaths, materialsPaths, mode);
+      m_pTest->initialize(projPaths, cache, materialsPaths, mode);
     }
   private:
     static void versioned_write(const std::filesystem::path& file, std::string_view text);
@@ -188,7 +188,7 @@ namespace sequoia::testing
 
       virtual log_summary execute(std::optional<std::size_t> index) = 0;
       virtual void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) = 0;
-      virtual void initialize(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths, recovery_mode mode) = 0;
+      virtual void initialize(const project_paths& projPaths, const cmake_cache& cache, std::vector<std::filesystem::path>& materialsPaths, recovery_mode mode) = 0;
     };
 
     template<concrete_test Test>
@@ -257,7 +257,7 @@ namespace sequoia::testing
         set_materials(m_Test.source_file(), m_Test.name(), projPaths, materialsPaths);
       }
 
-      void initialize(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths, recovery_mode mode) final
+      void initialize(const project_paths& projPaths, const cmake_cache& cache, std::vector<std::filesystem::path>& materialsPaths, recovery_mode mode) final
       {
         const auto source{Test::source_file()};
 
@@ -266,8 +266,8 @@ namespace sequoia::testing
                       projPaths,
                       set_materials(source, m_Name, projPaths, materialsPaths),
                       make_active_recovery_paths(mode, projPaths),
-                      get_output_discriminator(m_Test),
-                      get_reduction_discriminator(m_Test)};
+                      get_output_discriminator<Test>(cache),
+                      get_reduction_discriminator<Test>(cache)};
       }
     private:
       static constexpr std::string_view m_Name{test_name<Test>()};
@@ -296,18 +296,24 @@ namespace sequoia::testing
 
   template<concrete_test T>
   [[nodiscard]]
-  std::optional<std::string> get_output_discriminator(const T& test){
+  std::optional<std::string> get_output_discriminator(const cmake_cache& cache){
+    static_assert(!requires(const T& t){ t.output_discriminator(); },
+                  "output_discriminator must be static and take const cmake_cache&: this one is neither, and would be silently ignored");
+
     if constexpr(has_discriminated_output_v<T>)
-      return test.output_discriminator();
+      return T::output_discriminator(cache);
     else
       return std::nullopt;
   }
 
   template<concrete_test T>
   [[nodiscard]]
-  std::optional<std::string> get_reduction_discriminator(const T& test){
+  std::optional<std::string> get_reduction_discriminator(const cmake_cache& cache){
+    static_assert(!requires(const T& t){ t.summary_discriminator(); },
+                  "summary_discriminator must be static and take const cmake_cache&: this one is neither, and would be silently ignored");
+
     if constexpr(has_discriminated_summary_v<T>)
-      return test.summary_discriminator();
+      return T::summary_discriminator(cache);
     else
       return std::nullopt;
   }
@@ -492,6 +498,7 @@ namespace sequoia::testing
 
     std::string      m_Copyright{};
     project_paths    m_ProjPaths;
+    cmake_cache      m_CMakeCache;
     indentation      m_CodeIndent{"  "};
     std::ostream*    m_Stream;
 

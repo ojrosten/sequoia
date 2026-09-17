@@ -151,6 +151,7 @@
 #include "TestFramework/BasicTestInterfaceFreeTest.hpp"
 #include "TestFramework/BuildArtefactsFreeTest.hpp"
 #include "TestFramework/ChronoFreeDiagnostics.hpp"
+#include "TestFramework/CMakeCacheFreeTest.hpp"
 #include "TestFramework/CommandsFreeTest.hpp"
 #include "TestFramework/ComplexFreeDiagnostics.hpp"
 #include "TestFramework/ContainerFreeDiagnostics.hpp"

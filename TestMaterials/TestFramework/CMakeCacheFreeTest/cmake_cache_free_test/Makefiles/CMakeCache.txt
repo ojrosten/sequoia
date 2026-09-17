@@ -1,0 +1,2 @@
+# This is the CMakeCache file.
+CMAKE_GENERATOR:INTERNAL=Unix Makefiles

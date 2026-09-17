@@ -37,6 +37,7 @@ int main(int argc, char** argv)
     runner.register_test<file_editors_free_test>();
     runner.register_test<individual_test_paths_free_test>();
     runner.register_test<basic_test_interface_free_test>();
+    runner.register_test<cmake_cache_free_test>();
     runner.register_test<commands_free_test>();
     runner.register_test<failure_info_test>();
     runner.register_test<failure_info_false_negative_test>();
