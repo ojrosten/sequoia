@@ -10,6 +10,7 @@
  */
 
 #include "sequoia/TestFramework/BuildArtefacts.hpp"
+#include "sequoia/TestFramework/CMakeCache.hpp"
 
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
@@ -693,28 +694,11 @@ namespace sequoia::testing
       return std::nullopt;
     }
 
-    /// The value of `NAME:TYPE=value` in a CMake cache
-    [[nodiscard]]
-    std::optional<std::string> cmake_cache_value(std::string_view text, std::string_view name)
-    {
-      const auto [first, last]{find_sandwiched_text(text, std::format("\n{}:", name), "\n")};
-      if(first >= last)
-        return std::nullopt;
-
-      const auto line{text.substr(first, last - first)};
-      const auto entry{line.ends_with('\r') ? line.substr(0, line.size() - 1) : line};
-      const auto equals{entry.find('=')};
-      if(equals == std::string_view::npos)
-        return std::nullopt;
-
-      return std::string{entry.substr(equals + 1)};
-    }
-
     /// The generator a CMake cache names
     [[nodiscard]]
     std::string generator_of(const fs::path& cacheFile)
     {
-      const auto generator{cmake_cache_value(read(cacheFile), "CMAKE_GENERATOR")};
+      const auto generator{cmake_cache{cacheFile}.variable("CMAKE_GENERATOR")};
       if(!generator)
         throw std::runtime_error{malformed_error(cacheFile, "no generator is named")};
 

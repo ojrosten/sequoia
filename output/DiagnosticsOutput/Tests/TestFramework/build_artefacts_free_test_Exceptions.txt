@@ -120,7 +120,7 @@ A cache which does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to open output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/elsewhere/CMakeCache.txt
+cmake_cache: no CMakeCache.txt in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/elsewhere
 
 =======================================
 
