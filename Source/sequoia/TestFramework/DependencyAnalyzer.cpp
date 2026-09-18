@@ -359,38 +359,51 @@ namespace sequoia::testing
           edge from each object file to each such file; and the dependencies the convention adds. The
           toolchain's files are listed apart.
 
-          The readers name each file once and the records refer to it by index, so the filesystem is
-          asked once per file for the canonical path - which is what project_paths holds, the build
-          having recorded whatever spelling it was configured with, through whatever symlink and in
-          whatever case - and once per file whether the file is the toolchain's.
+          Each file's path is made canonical - which is what project_paths holds, the build having
+          recorded whatever spelling it was configured with, through whatever symlink and in whatever
+          case - and each file is classed as the project's or the toolchain's. Both are properties of
+          the file's directory, and the filesystem is asked once per directory.
        */
       [[nodiscard]]
       static files_read_by_build read_files(const build_tree& tree, const project_paths& projPaths)
       {
         const auto compilations{read_compilations(tree, projPaths.executable())};
 
-        /* A path whose existing prefix cannot be resolved - a directory without permission, a symlink
-           loop - is kept as recorded, and fails with that reason when its modification time is read
+        /* A directory whose existing prefix cannot be resolved - a directory without permission, a
+           symlink loop - is kept as recorded, and its files fail with that reason when their modification
+           times are read. A file which is itself a symlink keeps its name, which `last_write_time` follows.
          */
-        auto canonical{
-          [&tree](const fs::path& p) {
-            const auto asRecorded{(p.is_absolute() ? p : tree.build_directory / p).lexically_normal()};
-            std::error_code error{};
-            auto canonicalized{fs::weakly_canonical(asRecorded, error)};
+        struct facts
+        {
+          fs::path canonical;
+          bool toolchain;
+        };
+        std::map<fs::path, facts> directories{};
+        auto directoryFacts{
+          [&tree, &directories](const fs::path& dir) -> const facts& {
+            if(const auto found{directories.find(dir)}; found != directories.end())
+              return found->second;
 
-            return error ? asRecorded : canonicalized;
+            std::error_code error{};
+            auto canonicalized{fs::weakly_canonical(dir, error)};
+            const fs::path& canonical{error ? dir : canonicalized};
+
+            return directories.emplace(dir, facts{.canonical{canonical}, .toolchain{in_toolchain(canonical, tree)}}).first->second;
+          }
+        };
+        auto fileFacts{
+          [&tree, &directoryFacts](const fs::path& p) {
+            const auto asRecorded{(p.is_absolute() ? p : tree.build_directory / p).lexically_normal()};
+            const auto& directory{directoryFacts(asRecorded.parent_path())};
+
+            return facts{.canonical{directory.canonical / asRecorded.filename()}, .toolchain{directory.toolchain}};
           }
         };
 
         const auto& [files, records]{compilations};
 
-        const auto canonicalFiles{files | std::views::transform(canonical) | std::ranges::to<std::vector>()};
-        const auto isToolchainFile{
-            canonicalFiles
-          | std::views::transform([&tree](const fs::path& file){ return in_toolchain(file, tree); })
-          | std::ranges::to<std::vector<bool>>()
-        };
-        auto isProjectFile{[&isToolchainFile](compilations::file_index fileIndex){ return !isToolchainFile[fileIndex]; }};
+        const auto fileFactsTable{files | std::views::transform(fileFacts) | std::ranges::to<std::vector>()};
+        auto isProjectFile{[&fileFactsTable](compilations::file_index fileIndex){ return !fileFactsTable[fileIndex].toolchain; }};
 
         graph_type g{};
         std::vector<std::optional<node_index>> nodeOfFile(files.size());
@@ -400,7 +413,7 @@ namespace sequoia::testing
           [&](compilations::file_index fileIndex) {
             auto& node{nodeOfFile[fileIndex]};
             if(!node)
-              node = g.add_node(file_info{.file{canonicalFiles[fileIndex]}});
+              node = g.add_node(file_info{.file{fileFactsTable[fileIndex].canonical}});
 
             return *node;
           }
@@ -408,8 +421,8 @@ namespace sequoia::testing
 
         // read_compilations puts the source first among the inputs
         auto isTest{
-          [&canonicalFiles, testsRepo{projPaths.tests().repo()}](const compilations::record& record) {
-            return in_repo(canonicalFiles[record.input_indices.front()], testsRepo);
+          [&fileFactsTable, testsRepo{projPaths.tests().repo()}](const compilations::record& record) {
+            return in_repo(fileFactsTable[record.input_indices.front()].canonical, testsRepo);
           }
         };
 
@@ -434,9 +447,9 @@ namespace sequoia::testing
         add_dependencies(g);
 
         auto toolchainFiles{
-            std::views::iota(compilations::file_index{}, files.size())
-          | std::views::filter([&isToolchainFile](compilations::file_index i){ return isToolchainFile[i]; })
-          | std::views::transform([&canonicalFiles](compilations::file_index i){ return canonicalFiles[i]; })
+            fileFactsTable
+          | std::views::filter(&facts::toolchain)
+          | std::views::transform(&facts::canonical)
           | std::ranges::to<std::vector>()
         };
 
