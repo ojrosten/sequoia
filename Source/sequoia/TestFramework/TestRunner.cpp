@@ -29,6 +29,7 @@
 #include <format>
 #include <fstream>
 #include <utility>
+#include <variant>
 
 namespace sequoia::testing
 {
@@ -1168,47 +1169,48 @@ namespace sequoia::testing
     stream() << "\nAnalyzing dependencies...\n";
     const timer t{};
 
-    switch(do_prune())
+    if(const auto fallback{do_prune()})
     {
-    case prune_outcome::not_attempted:
-      break;
-    case prune_outcome::no_time_stamp:
+      using parsing::commandline::warning;
+      switch(*fallback)
       {
-        using parsing::commandline::warning;
+      case prune_fallback_reason::no_previous_stamp:
         stream() << warning({"Time stamp of previous run does not exist, so unable to prune.",
                             "This should be automatically rectified for the next successful run.",
                             "No action required."});
+        break;
+      case prune_fallback_reason::toolchain_changed:
+        stream() << warning({"The toolchain has changed since the previous run, so prune is ignored and every test runs.",
+                            "No action required."});
+        break;
       }
-      break;
-    case prune_outcome::success:
-      {
-        const auto [dur, unit] {testing::stringify_duration(t.time_elapsed())};
-        stream() << "[" << dur << unit << "]\n\n";
-      }
-      break;
+    }
+    else
+    {
+      const auto [dur, unit] {testing::stringify_duration(t.time_elapsed())};
+      stream() << "[" << dur << unit << "]\n\n";
     }
   }
 
   [[nodiscard]]
-  prune_outcome test_runner::do_prune()
+  std::optional<prune_fallback_reason> test_runner::do_prune()
   {
-    if(m_PruneMode == prune_mode::passive) return prune_outcome::not_attempted;
-
-    if(auto maybeToRun{tests_to_run(proj_paths())})
+    const auto selection{tests_to_run(proj_paths())};
+    if(const auto* tests{std::get_if<std::vector<fs::path>>(&selection)})
     {
-      for(const auto& src : maybeToRun.value())
+      for(const auto& src : *tests)
       {
         m_Filter.add_selected_item(src);
       }
 
       if(!m_Filter) m_Filter.select_nothing();
 
-      return prune_outcome::success;
+      return std::nullopt;
     }
 
     m_PruneMode = prune_mode::passive;
 
-    return prune_outcome::no_time_stamp;
+    return std::get<prune_fallback_reason>(selection);
   }
 
   [[nodiscard]]

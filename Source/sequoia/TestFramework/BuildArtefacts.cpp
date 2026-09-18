@@ -851,8 +851,8 @@ namespace sequoia::testing
         alone, and the statement names the source in either case.
 
         \throws std::runtime_error if
-        -# there is no log, nothing having been built;
-        -# no record's object file is named by any statement: the log and the statements then spell one
+        -# There is no log, nothing having been built;
+        -# No record's object file is named by any statement: the log and the statements then spell one
            tree two ways, and nothing would ever be selected.
      */
     [[nodiscard]]

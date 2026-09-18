@@ -29,6 +29,12 @@ namespace sequoia::testing
     check(equality, "", read_to_string(working_materials() /= "Foo.txt", std::ios_base::in), std::optional{"hello, World"s});
     check(equality, "", read_to_string(working_materials() /= "Bar.txt", std::ios_base::in), std::optional<std::string>{});
 
+    write_to_file(working_materials() /= "Empty.txt", "", std::ios_base::out);
+    check(equality, "An empty file", read_to_string(working_materials() /= "Empty.txt", std::ios_base::in), std::optional{""s});
+
+    write_to_file(working_materials() /= "Lines.txt", "a\r\nb", std::ios_base::binary);
+    check(equality, "Binary mode keeps every byte", read_to_string(working_materials() /= "Lines.txt", std::ios_base::binary), std::optional{"a\r\nb"s});
+
     check_exception_thrown<std::runtime_error>(
       reporter{""},
       [this]() { read_modify_write(working_materials() /= "Bar.txt", [](std::string& s) { capitalize(s);  }); });

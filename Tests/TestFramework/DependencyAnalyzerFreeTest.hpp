@@ -25,7 +25,7 @@ namespace sequoia::testing
     void run_tests();
   private:
     using test_list       = std::vector<std::filesystem::path>;
-    using opt_test_list   = std::optional<test_list>;
+    using test_selection  = std::variant<test_list, prune_fallback_reason>;
     using multi_test_list = std::vector<test_list>;
 
     using prune_records     = std::vector<prune_record>;
