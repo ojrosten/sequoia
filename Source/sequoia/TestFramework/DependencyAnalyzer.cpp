@@ -527,12 +527,17 @@ namespace sequoia::testing
         }
       };
 
-      auto staleTests{
+      /* `copy` rather than `to<vector>`: `to` sizes a filtered range by walking it before copying
+         from it, and advancing a `filter` iterator evaluates the predicate, so every unit after the
+         first stale one would be judged twice - and the judgement walks that unit's materials.
+       */
+      std::vector<fs::path> staleTests{};
+      std::ranges::copy(
           tests
         | std::views::filter(isStale)
-        | std::views::transform(&dependency_graph::translation_unit::source)
-        | std::ranges::to<std::vector>()
-      };
+        | std::views::transform(&dependency_graph::translation_unit::source),
+        std::back_inserter(staleTests)
+      );
 
       std::ranges::sort(staleTests);
 
