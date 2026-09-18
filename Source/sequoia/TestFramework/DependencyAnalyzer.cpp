@@ -25,6 +25,7 @@
 #include <map>
 #include <optional>
 #include <ranges>
+#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <type_traits>
@@ -371,7 +372,10 @@ namespace sequoia::testing
 
         /* A directory whose existing prefix cannot be resolved - a directory without permission, a
            symlink loop - is kept as recorded, and its files fail with that reason when their modification
-           times are read. A file which is itself a symlink keeps its name, which `last_write_time` follows.
+           times are read. A file's own name is as the compilation spelled it: a file which is itself a
+           symlink keeps its name, which `last_write_time` follows, and on a filesystem which finds a file
+           whatever its case, a header included under a case other than its own keeps that case, and so
+           does not match the stem of the source named for it.
          */
         struct facts
         {
@@ -558,9 +562,6 @@ namespace sequoia::testing
       const auto tree{read_build_tree(projPaths.discovered().cmake_cache())};
       const dependency_graph graph{tree, projPaths};
 
-      if(graph.toolchain_newest_modification() > stalenessThreshold)
-        return std::nullopt;
-
       const auto tests{graph.get_test_translation_units()};
 
       /* With no tests selected, prune runs nothing and reports that nothing has changed. That is the
@@ -575,6 +576,9 @@ namespace sequoia::testing
                       "was the tree configured with a different spelling of the project's path?",
                       projPaths.project_root().generic_string())
         };
+
+      if(graph.toolchain_newest_modification() > stalenessThreshold)
+        return std::nullopt;
 
       const passing_tests passes{projPaths, stalenessThreshold};
 
@@ -781,18 +785,30 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::optional<std::vector<fs::path>>
+  std::string to_string(prune_fallback_reason reason)
+  {
+    switch(reason)
+    {
+    case prune_fallback_reason::no_previous_stamp: return "no previous stamp";
+    case prune_fallback_reason::toolchain_changed: return "toolchain changed";
+    }
+
+    throw std::logic_error{"Unhandled prune_fallback_reason"};
+  }
+
+  [[nodiscard]]
+  std::variant<std::vector<fs::path>, prune_fallback_reason>
   tests_to_run(const project_paths& projPaths)
   {
     const auto prunePaths{projPaths.prune()};
     const auto pruneTimeStamp{get_stamp(prunePaths.stamp())};
 
     if(!pruneTimeStamp)
-      return std::nullopt;
+      return prune_fallback_reason::no_previous_stamp;
 
     const auto staleTests{find_stale_tests(staleness_threshold(pruneTimeStamp.value()), projPaths)};
     if(!staleTests)
-      return std::nullopt;
+      return prune_fallback_reason::toolchain_changed;
 
     const std::vector<fs::path> failingTests{
       std::views::transform(read_tests(prunePaths.failures(std::nullopt)), path_projector{}) | std::ranges::to<std::vector>()

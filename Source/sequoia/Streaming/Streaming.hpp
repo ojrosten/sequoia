@@ -26,7 +26,7 @@ namespace sequoia
   std::string report_failed_write(const std::filesystem::path& file);
 
 
-  /** \brief The contents of `file`, read in `mode`.
+  /** \brief The contents of a regular file, read in `mode`.
 
       \returns `std::nullopt` if the file cannot be opened, or its size cannot be read.
    */

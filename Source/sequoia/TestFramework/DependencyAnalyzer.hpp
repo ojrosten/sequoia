@@ -22,9 +22,11 @@
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
 #include <chrono>
+#include <format>
 #include <iostream>
 #include <limits>
 #include <span>
+#include <variant>
 
 namespace sequoia::testing
 {
@@ -72,6 +74,12 @@ namespace sequoia::testing
   /** \brief Writes `tests` to `file`, each source path made relative to the tests repository. */
   void write_tests(const project_paths& projPaths, const std::filesystem::path& file, std::span<const prune_record> tests);
 
+  /** \brief Why a requested prune selects every test. */
+  enum class prune_fallback_reason { no_previous_stamp, toolchain_changed };
+
+  [[nodiscard]]
+  std::string to_string(prune_fallback_reason reason);
+
   /** \brief The tests which should run, judged against the previous run's stamp.
 
       A test is stale if any of the following changed after the stamp:
@@ -88,7 +96,7 @@ namespace sequoia::testing
       -# A source file with the same stem as one of the headers of the previous item.
 
       \returns One of:
-      -# `std::nullopt`, meaning every test should run, if:
+      -# A `prune_fallback_reason`, meaning every test should run, if:
          -# No previous run left a stamp;
          -# A toolchain header changed after the stamp.
       -# Otherwise the stale tests together with those the previous run left failing, sorted, each once.
@@ -99,7 +107,7 @@ namespace sequoia::testing
       -# Is corrupted.
    */
   [[nodiscard]]
-  std::optional<std::vector<std::filesystem::path>> tests_to_run(const project_paths& projPaths);
+  std::variant<std::vector<std::filesystem::path>, prune_fallback_reason> tests_to_run(const project_paths& projPaths);
 
   /** \brief After a run of every test: records the failures, forgets the selected passes, and stamps the run's time. */
   void update_prune_files(const project_paths& projPaths,
@@ -127,4 +135,18 @@ namespace sequoia::testing
                                                   prune_mode mode,
                                                   std::filesystem::file_time_type timeStamp,
                                                   std::size_t numReps);
+}
+
+namespace std
+{
+  template<>
+  struct formatter<sequoia::testing::prune_fallback_reason>
+  {
+    constexpr auto parse(auto& ctx) { return ctx.begin(); }
+
+    auto format(sequoia::testing::prune_fallback_reason reason, auto& ctx) const -> decltype(ctx.out())
+    {
+      return std::format_to(ctx.out(), "{}", sequoia::testing::to_string(reason));
+    }
+  };
 }

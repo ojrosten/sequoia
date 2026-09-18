@@ -2,30 +2,30 @@
 Running tests, synchronously...
 
 ..:
-[Execution Time: 89us]
+[Execution Time: 25.3us]
 	..:
-	[Execution Time: 89us]
+	[Execution Time: 25.3us]
 		..:
-		[Execution Time: 89us]
+		[Execution Time: 25.3us]
 			..:
-			[Execution Time: 89us]
+			[Execution Time: 25.3us]
 				..:
-				[Execution Time: 89us]
+				[Execution Time: 25.3us]
 					..:
-					[Execution Time: 89us]
+					[Execution Time: 25.3us]
 						..:
-						[Execution Time: 89us]
+						[Execution Time: 25.3us]
 							..:
-							[Execution Time: 89us]
+							[Execution Time: 25.3us]
 								Tests:
-								[Execution Time: 89us]
+								[Execution Time: 25.3us]
 									Failing:
-									[Execution Time: 89us]
+									[Execution Time: 25.3us]
 										failing_fn_test
-										[Execution Time: 37.8us]
+										[Execution Time: 10.1us]
 											False Positive Checks:                     1;  Failures:  1
 
-											Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 171
+											Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 172
 											False negative failure
 
 											[int]
@@ -36,11 +36,11 @@ Running tests, synchronously...
 											=======================================
 
 										failing_fp_test
-										[Execution Time: 24.7us]
+										[Execution Time: 6.79us]
 											False Negative Checks:                     1;  Failures:  1
 
 											False Negative Failure:
-											Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 154
+											Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 155
 											False positive failure
 
 											[int]
@@ -48,10 +48,10 @@ Running tests, synchronously...
 											=======================================
 
 										failing_test
-										[Execution Time: 26.6us]
+										[Execution Time: 8.42us]
 											Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-											Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 97
+											Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 98
 											Standard Failure
 
 											[int]
@@ -63,8 +63,8 @@ Running tests, synchronously...
 
 
 -----------Grand Totals-----------
-[Total Run Time: 700us]
-[Execution Time: 89us]
+[Total Run Time: 373us]
+[Execution Time: 25.3us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     1;  Failures:  1

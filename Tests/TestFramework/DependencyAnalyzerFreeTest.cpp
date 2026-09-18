@@ -149,8 +149,8 @@ namespace sequoia::testing
       fs::last_write_time(f.file, m_ResetTime + to_duration(f.modification));
     }
 
-    opt_test_list prediction{fileStates.to_run};
-    std::ranges::sort(*prediction);
+    test_selection prediction{fileStates.to_run};
+    std::ranges::sort(std::get<test_list>(prediction));
 
     check(equality, description, (tests_to_run(projPaths)), prediction);
 
@@ -162,7 +162,7 @@ namespace sequoia::testing
     fs::remove(failureFile);
     fs::remove(passesFile);
 
-    check(equality, append_lines(description.message(), "Nothing Stale"), (tests_to_run(projPaths)), opt_test_list{test_list{}});
+    check(equality, append_lines(description.message(), "Nothing Stale"), (tests_to_run(projPaths)), test_selection{test_list{}});
   }
 
   /* The fake project is never built, so what its build would have recorded is written by hand:
@@ -344,7 +344,7 @@ namespace sequoia::testing
     commandline_arguments args{{(fake / "build/CMade/TestAll/TestAll").generic_string()}};
     const project_paths projPaths{args.size(), args.get(), {.main_cpp{main.file()}, .common_includes{main.file()}}};
 
-    check(equality, "No timestamp", (tests_to_run(projPaths)), opt_test_list{});
+    check(equality, "No timestamp", (tests_to_run(projPaths)), test_selection{prune_fallback_reason::no_previous_stamp});
 
     const auto prunePaths{projPaths.prune()};
     fs::create_directories(prunePaths.dir());
@@ -495,7 +495,7 @@ namespace sequoia::testing
     fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
 
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all_but_the_tests);
-    check(equality, "No tests: nothing selected, nothing refused", (tests_to_run(projPaths)), opt_test_list{test_list{}});
+    check(equality, "No tests: nothing selected, nothing refused", (tests_to_run(projPaths)), test_selection{test_list{}});
 
     // The record's inputs must exist for their modification times to be read, so the project's sources are copied to the other root
     const auto anotherRoot{fake.parent_path() / "AnotherRoot"};
@@ -515,6 +515,15 @@ namespace sequoia::testing
       "The record names nothing of the project's",
       [&projPaths]() { return tests_to_run(projPaths); }
     );
+
+    // The refusal comes before the toolchain is consulted: a misconfigured tree is refused, not run in full
+    const auto toolchainHeader{fake_toolchain_header(fake)};
+    fs::last_write_time(toolchainHeader, m_ResetTime + earlyEditOffset);
+    check_exception_thrown<std::runtime_error>(
+      "The record names nothing of the project's, whatever the toolchain did",
+      [&projPaths]() { return tests_to_run(projPaths); }
+    );
+    fs::last_write_time(toolchainHeader, m_ResetTime);
 
     fs::remove_all(anotherRoot);
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
@@ -706,9 +715,9 @@ namespace sequoia::testing
       // Every unit reads the toolchain, so a toolchain header modified since the stamp means every test runs
       const auto toolchainHeader{fake_toolchain_header(projPaths.project_root())};
       fs::last_write_time(toolchainHeader, m_ResetTime + to_duration(modification_time::early));
-      check(equality, "Toolchain header stale: every test runs", (tests_to_run(projPaths)), opt_test_list{});
+      check(equality, "Toolchain header stale: every test runs", (tests_to_run(projPaths)), test_selection{prune_fallback_reason::toolchain_changed});
       fs::last_write_time(toolchainHeader, m_ResetTime);
-      check(equality, "Toolchain header stale: every test runs; Nothing Stale", (tests_to_run(projPaths)), opt_test_list{test_list{}});
+      check(equality, "Toolchain header stale: every test runs; Nothing Stale", (tests_to_run(projPaths)), test_selection{test_list{}});
     }
 
     // Substitutions.cpp shares its stem with a toolchain header FooTest.cpp includes; the toolchain's headers are not furnished
@@ -854,12 +863,12 @@ namespace sequoia::testing
     check(equality,
           "A modification recorded at a stamp which lies on a second boundary is stale",
           (tests_to_run(projPaths)),
-          opt_test_list{test_list{{"HouseAllocationTest.cpp"}}});
+          test_selection{test_list{{"HouseAllocationTest.cpp"}}});
 
     fs::last_write_time(stalePath, m_ResetTime);
     fs::last_write_time(projPaths.prune().stamp(), m_ResetTime + pruneStampOffset);
 
-    check(equality, "Nothing Stale", (tests_to_run(projPaths)), opt_test_list{test_list{}});
+    check(equality, "Nothing Stale", (tests_to_run(projPaths)), test_selection{test_list{}});
   }
 
   void dependency_analyzer_free_test::test_pass_recorded_in_the_modification_second(const project_paths& projPaths)
@@ -887,7 +896,7 @@ namespace sequoia::testing
     check(equality,
           "A pass whose record ties the modification still post-dates it, so the test is not re-run",
           (tests_to_run(projPaths)),
-          opt_test_list{test_list{}});
+          test_selection{test_list{}});
 
     fs::last_write_time(testFile, m_ResetTime);
     fs::remove(passesFile);

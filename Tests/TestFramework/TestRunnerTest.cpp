@@ -9,6 +9,7 @@
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 #include "Utilities/TestUtilities.hpp"
+#include "TestFramework/BuildArtefactsTestingUtilities.hpp"
 
 #include <fstream>
 
@@ -382,6 +383,7 @@ namespace sequoia::testing
     test_throwing_tests();
     test_filtered_suites();
     test_prune_basic_output();
+    test_prune_with_changed_toolchain();
     test_post_run_failure();
     test_nested_suite();
     test_nested_suite_verbose();
@@ -676,6 +678,48 @@ namespace sequoia::testing
 
     check(equality, "Prune with no tests return code", runner.execute(), return_code::success);
     check_output("Prune with no tests", "PruneWithNoTests", outputStream);
+  }
+
+  void test_runner_test::test_prune_with_changed_toolchain()
+  {
+    fs::remove_all(output_paths{fake_project()}.dir());
+
+    // A build of one source which read one toolchain header, the header modified after the previous run's stamp
+    const auto buildDir{minimal_fake_path().parent_path()};
+    const auto source{fake_project() / "Source" / "Thing.cpp"};
+    const auto toolchainHeader{fake_project() / "Toolchain" / "vector"};
+    fs::create_directories(toolchainHeader.parent_path());
+    fs::create_directories(buildDir / "CMakeFiles" / "4.1.2");
+    write_to_file(source, "", std::ios_base::out);
+    write_to_file(toolchainHeader, "", std::ios_base::out);
+    write_to_file(buildDir / "CMakeFiles" / "4.1.2" / "CMakeCXXCompiler.cmake",
+                  std::format("set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"{}\")\n", toolchainHeader.parent_path().generic_string()),
+                  std::ios_base::out);
+    write_to_file(buildDir / "build.ninja", std::format("build CMakeFiles/x.dir/Thing.cpp.o: CXX_COMPILER {}\n", source.generic_string()), std::ios_base::out);
+    write_ninja_deps(buildDir / ".ninja_deps", std::vector<compilation_record>{{"CMakeFiles/x.dir/Thing.cpp.o", {source, toolchainHeader}}});
+
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
+    const project_paths projPaths{args.size(), args.get(), {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}};
+    const auto stamp{projPaths.prune().stamp()};
+    fs::create_directories(stamp.parent_path());
+    write_to_file(stamp, "", std::ios_base::out);
+
+    using namespace std::chrono_literals;
+    const auto now{std::chrono::file_clock::now()};
+    fs::last_write_time(stamp, now - 2s);
+    fs::last_write_time(toolchainHeader, now - 1s);
+    fs::last_write_time(projPaths.executable(), now);
+
+    std::stringstream outputStream{};
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    check(equality, "Prune with changed toolchain return code", runner.execute(), return_code::success);
+    check_output("Prune with changed toolchain", "PruneWithChangedToolchain", outputStream);
   }
 
   void test_runner_test::test_post_run_failure()
