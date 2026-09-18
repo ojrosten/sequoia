@@ -93,7 +93,7 @@ namespace sequoia::testing
   //===================================== individual_materials_paths =====================================//
 
   individual_materials_paths::individual_materials_paths(const fs::path& sourceFile, std::string_view testName, const project_paths& projPaths)
-    : individual_materials_paths{rebase_from(sourceFile, projPaths.tests().repo()).parent_path() /= testName, projPaths.test_materials(), projPaths.output()}
+    : individual_materials_paths{rebase_from(sourceFile, projPaths.tests().repo()).replace_extension("") /= testName, projPaths.test_materials(), projPaths.output()}
   {}
 
   individual_materials_paths::individual_materials_paths(const fs::path& relativePath, const test_materials_paths& materials, const output_paths& output)

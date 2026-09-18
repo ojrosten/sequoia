@@ -143,8 +143,9 @@ namespace sequoia::testing
     {
       const auto cacheDir{configure_generated_project(cache, preset)};
 
-      // Absent when the configure failed, which its checks have reported.
-      if(const auto vcxproj{cacheDir / "TestAll.vcxproj"}; fs::exists(vcxproj))
+      // A configure which dies after writing its cache - a try-compile beyond MAX_PATH does -
+      // leaves no project file, and the checks above are green: so its absence is a failure here.
+      if(const auto vcxproj{cacheDir / "TestAll.vcxproj"}; check(std::format("Project file existence for {}", preset.generic_string()), fs::exists(vcxproj)))
       {
         fs::create_directories(working_materials() /= projectFiles / preset);
         fs::copy(vcxproj, working_materials() /= projectFiles / preset);

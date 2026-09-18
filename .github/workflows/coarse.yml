@@ -28,6 +28,14 @@ name: coarse
 # enough to be made fatal. Compilation is still fatal - that is where MSVC
 # divergences usually appear. The Linux and macOS columns are fatal throughout.
 #
+# The Windows column builds with Ninja, not msbuild: the same cl.exe, the faster
+# of the two builds, and the generator a client outside the IDE would use, so a
+# preset defect only Ninja shows surfaces on every push rather than in someone's
+# next Windows session. The Visual Studio generator keeps running in both gates,
+# which is where the checks on the generated .vcxproj live - and since every
+# committed vcxproj prediction is checked by any Visual Studio column, this
+# column's absence from that generator leaves none of them unverified.
+#
 # The Windows and macOS columns run with `--exclude-performance`, because
 # TestRunnerPerformanceTest asserts absolute wall-clock times - 60ms +- 35 for
 # eight 25ms sleeps run concurrently - which a hosted runner cannot hold: Windows
@@ -62,7 +70,7 @@ jobs:
         [
           {"name": "Linux · GCC · Debug",   "os": "ubuntu-latest",  "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15"},
           {"name": "macOS · Clang · Debug", "os": "macos-latest",   "configure": "llvm-env", "build": "llvm-env", "exec_args": "--exclude-performance"},
-          {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc",   "build": "msvc", "advisory": true, "exec_args": "--exclude-performance"}
+          {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc-ninja", "build": "msvc-ninja", "advisory": true, "exec_args": "--exclude-performance"}
         ]
 
   # Also in rigorous. It costs seconds and no compilation, so there is no reason to

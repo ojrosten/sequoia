@@ -16,17 +16,22 @@
 namespace sequoia::testing
 {
   cmake_cache::cmake_cache(const build_paths& buildPaths)
+    : cmake_cache{buildPaths.cmake_cache_dir() / "CMakeCache.txt"}
+  {}
+
+  cmake_cache::cmake_cache(const std::filesystem::path& cacheFile)
   {
-    const auto text{read_to_string(buildPaths.cmake_cache_dir() / "CMakeCache.txt", std::ios_base::in)};
+    const auto text{read_to_string(cacheFile, std::ios_base::in)};
     if(!text)
-      throw std::runtime_error{std::format("cmake_cache: no CMakeCache.txt in {}", buildPaths.cmake_cache_dir().generic_string())};
+      throw std::runtime_error{std::format("cmake_cache: no CMakeCache.txt in {}", cacheFile.parent_path().generic_string())};
 
     // One entry per line, `NAME:TYPE=VALUE`, among comments opened by `#` or `//` and blank
     // lines. The value may itself contain colons, so the name ends at the first colon before
-    // the first `=`.
+    // the first `=`. A line may end in `\r`, which is not part of the value.
     for(const auto line : std::views::split(text.value(), '\n'))
     {
-      const std::string_view entry{line};
+      const std::string_view full{line};
+      const auto entry{full.ends_with('\r') ? full.substr(0, full.size() - 1) : full};
       if(entry.starts_with('#') || entry.starts_with('/')) continue;
 
       const auto valuePos{entry.find('=')};

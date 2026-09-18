@@ -81,7 +81,7 @@ jobs:
         if: ${{ inputs.false_negative }}
         run: |
           summary=output/TestSummaries/Tests/Core/Meta/type_algorithms_free_test.txt
-          prediction=TestMaterials/Streaming/streaming_free_test/Prediction/Foo.txt
+          prediction=TestMaterials/Streaming/StreamingFreeTest/streaming_free_test/Prediction/Foo.txt
           for f in "$summary" "$prediction"; do
             [ -f "$f" ] || { echo "::error::$f is not where the control expects it"; exit 1; }
           done
@@ -141,12 +141,66 @@ jobs:
           echo "CC=$(brew --prefix llvm)/bin/clang"    >> "$GITHUB_ENV"
           echo "CXX=$(brew --prefix llvm)/bin/clang++" >> "$GITHUB_ENV"
 
+      # With the Visual Studio generator CMake finds the toolset itself; with Ninja
+      # it looks for cl.exe on PATH, which nothing puts there. vcvars sets it, but
+      # only within the cmd session that runs it, so its effect is captured and
+      # handed forward: named variables rather than a whole `set` dump, so this
+      # cannot silently clobber the runner's own environment, and PATH through
+      # GITHUB_PATH, the route the runner provides for it, in Windows form, which
+      # is what a later bash step's start-up translates.
+      - name: Enter the MSVC environment (Windows, Ninja)
+        if: runner.os == 'Windows' && matrix.configure == 'msvc-ninja'
+        run: |
+          vswhere="/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe"
+          root=$("$vswhere" -latest -products '*' \
+                   -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 \
+                   -property installationPath)
+          [ -n "$root" ] || { echo "::error::no VC toolset reported by vswhere"; exit 1; }
+          vcvars="$(cygpath -u "$root")/VC/Auxiliary/Build/vcvars64.bat"
+          [ -f "$vcvars" ] || { echo "::error::$vcvars does not exist"; exit 1; }
+
+          # Via a batch file in RUNNER_TEMP rather than `cmd //c "call ... && set"`:
+          # Git bash's MSYS layer re-quotes an argument containing spaces and
+          # quotes, and cmd then sees the escaping literally. The wrapper's own
+          # path has no spaces, so there is nothing left to mangle.
+          bat="$RUNNER_TEMP/vcvars_dump.bat"
+          printf '@echo off\r\necho PATH_BEFORE=%%PATH%%\r\ncall "%s" >nul || exit /b 1\r\nset\r\n' "$(cygpath -w "$vcvars")" > "$bat"
+          dump=$(cmd //c "$(cygpath -w "$bat")" | tr -d '\r')
+          printf '%s\n' "$dump" | grep -iE '^(INCLUDE|LIB|LIBPATH|VCToolsInstallDir|VCINSTALLDIR|VSINSTALLDIR|WindowsSdkDir|WindowsSDKVersion|UCRTVersion|UniversalCRTSdkDir)=' >> "$GITHUB_ENV"
+
+          # Only what vcvars added. Forwarding its whole PATH would prepend the
+          # runner's own entries over themselves in a new order, and the first run
+          # of this step did exactly that: WindowsApps came to precede Git\bin, so
+          # `shell: bash` resolved to the WSL stub for every step after this one.
+          #
+          # And not the CMake and Ninja Visual Studio bundles, which the forwarded
+          # entries would otherwise put ahead of the image's: this column builds
+          # with the same cmake as the msbuild columns, so that a red run here asks
+          # about the generator and nothing else. Whether sequoia builds under the
+          # bundled toolset is a question for a matrix row of its own.
+          before=$(printf '%s\n' "$dump" | grep '^PATH_BEFORE=' | sed 's/^[^=]*=//' | tr ';' '\n')
+          after=$(printf '%s\n' "$dump"  | grep -iE '^PATH='     | sed 's/^[^=]*=//' | tr ';' '\n')
+          added=$(printf '%s\n' "$after" | grep -vxF -f <(printf '%s\n' "$before") | grep -v '^$' | grep -vF 'CommonExtensions\Microsoft\CMake\')
+          printf '%s\n' "$added"
+          printf '%s\n' "$added" >> "$GITHUB_PATH"
+
+          # GITHUB_PATH reaches later steps only, so ninja is looked for where a later
+          # step will: the forwarded entries, then this step's own PATH.
+          PATH="$(cygpath -pu "$(printf '%s\n' "$added" | paste -sd ';')"):$PATH" command -v ninja \
+            || { echo "no ninja on the forwarded PATH or the image's; installing one"; choco install ninja -y; }
+
       # An exit status says the tool ran, not that it did what was asked.
       - name: Report the toolchain actually in use
         run: |
           if [ -n "${CXX:-}" ]; then
             command -v "$CXX" || { echo "::error::$CXX is not on PATH"; exit 1; }
             "$CXX" --version
+          elif [ '${{ matrix.configure }}' = msvc-ninja ]; then
+            # Which cl, ninja and cmake the forwarded PATH resolves to, in that order,
+            # so the ordering GITHUB_PATH produced is visible rather than assumed.
+            for tool in cl ninja cmake; do
+              command -v "$tool" || { echo "::error::$tool is not on PATH"; exit 1; }
+            done
           else
             echo "No CXX set; the preset selects the compiler (Windows/MSVC)."
           fi
