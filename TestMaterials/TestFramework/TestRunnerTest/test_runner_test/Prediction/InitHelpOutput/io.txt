@@ -1,0 +1,5 @@
+init | i | copyright owner, path ending with project name, code indent
+  --no-build
+  --no-git
+  --to-files output filename
+  --no-ide

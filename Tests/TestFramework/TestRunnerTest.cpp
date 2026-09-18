@@ -378,6 +378,7 @@ namespace sequoia::testing
     test_exceptions();
     test_critical_errors();
     test_basic_output();
+    test_help_output();
     test_verbose_output();
     test_serial_verbose_output();
     test_throwing_tests();
@@ -592,6 +593,25 @@ namespace sequoia::testing
 
     check(equality, "Basic output return code", runner.execute(), return_code::soft_failures);
     check_output("Basic Output", "BasicOutput", outputStream);
+  }
+
+  void test_runner_test::test_help_output()
+  {
+    constexpr std::array<std::pair<const char*, std::string_view>, 3> requests{{
+      {"init",   "InitHelpOutput"  },
+      {"create", "CreateHelpOutput"},
+      {"test",   "TestHelpOutput"  }
+    }};
+
+    // Failing tests are registered so that a run which went ahead would show in the return code
+    for(const auto& [option, dirName] : requests)
+    {
+      std::stringstream outputStream{};
+      auto runner{make_failing_suite({{zeroth_arg(), option, "--help"}}, outputStream)};
+
+      check(equality, std::format("{} --help return code", option), runner.execute(), return_code::success);
+      check_output(std::format("{} --help output", option), dirName, outputStream);
+    }
   }
 
   void test_runner_test::test_verbose_output()
