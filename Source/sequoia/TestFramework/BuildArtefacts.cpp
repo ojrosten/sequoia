@@ -33,21 +33,90 @@
 #include <string_view>
 #include <tuple>
 #include <type_traits>
+#include <unordered_map>
+#include <unordered_set>
 #include <utility>
 
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
-  std::ostream& operator<<(std::ostream& s, const compilation_record& record)
+  namespace
   {
-    s << record.object.generic_string();
-    for(const auto& input : record.inputs)
+    /// Hashes a path's spelling, so that a lookup keyed on a path's native string can take a view of one
+    struct spelling_hash
     {
-      s << "\n  " << input.generic_string();
-    }
+      using is_transparent = void;
 
-    return s;
+      [[nodiscard]]
+      std::size_t operator()(std::basic_string_view<fs::path::value_type> spelling) const noexcept
+      {
+        return std::hash<std::basic_string_view<fs::path::value_type>>{}(spelling);
+      }
+    };
+
+    /** Numbers files as a reader assembles a `compilations`: the file numbered `i` becomes `files[i]`
+        of the result.
+
+        A file is identified by its path exactly as spelled. Two spellings of one file - `C:\a\b.cpp`
+        and `C:/a/b.cpp`, a path through a symlink and its target - are two entries, so a reader must
+        spell a file the same way each time it names it. A file's index is assigned when the file is
+        first inserted, and never changes.
+     */
+    class path_table
+    {
+    public:
+      path_table() = default;
+
+      /// The files of a `compilations`, numbered as they already are
+      /// \pre No two of `files` are spelled alike
+      explicit path_table(std::vector<fs::path> files)
+        : m_Files{std::move(files)}
+        , m_IndexOfSpelling{index_by_spelling(m_Files)}
+      {}
+
+      /// The index of `p`, which is inserted if the table lacks it
+      [[nodiscard]]
+      compilations::file_index insert(const fs::path& p)
+      {
+        if(const auto found{m_IndexOfSpelling.find(std::basic_string_view{p.native()})}; found != m_IndexOfSpelling.end())
+          return found->second;
+
+        m_Files.push_back(p);
+        return m_IndexOfSpelling.emplace(p.native(), m_Files.size() - 1).first->second;
+      }
+
+      /// \pre `i` is an index this table has given
+      [[nodiscard]]
+      const fs::path& operator[](compilations::file_index i) const { return m_Files[i]; }
+
+      /// The files, numbered as they are here; the table is left empty
+      [[nodiscard]]
+      std::vector<fs::path> release_files() &&
+      {
+        m_IndexOfSpelling.clear();
+        return std::move(m_Files);
+      }
+    private:
+      using spelling_index = std::unordered_map<fs::path::string_type, compilations::file_index, spelling_hash, std::ranges::equal_to>;
+
+      // The files in index order, and the inverse of that numbering, so that `insert` can tell in one
+      // lookup whether a file is already numbered - which the tracker reader asks once per input of every record
+      std::vector<fs::path> m_Files{};
+      spelling_index m_IndexOfSpelling{};
+
+      [[nodiscard]]
+      static spelling_index index_by_spelling(const std::vector<fs::path>& files)
+      {
+        spelling_index indices{};
+        for(const auto [i, file] : std::views::enumerate(files))
+        {
+          indices.emplace(file.native(), static_cast<compilations::file_index>(i));
+        }
+
+        return indices;
+      }
+    };
   }
 
   namespace
@@ -238,14 +307,14 @@ namespace sequoia::testing
                   | std::ranges::to<std::vector>();
     }
 
-    /** What `build.ninja` says of the current build: each object's source, keyed by the object's generic
-        spelling. A build statement is `build <outputs> [| <implicit outputs>]: <rule> <inputs> [| <implicit>] [|| <order-only>]`.
+    /** What `build.ninja` says of the current build: each object file's source, both in generic spelling,
+        keyed by the object file. A build statement is `build <outputs> [| <implicit outputs>]: <rule> <inputs> [| <implicit>] [|| <order-only>]`.
      */
     [[nodiscard]]
     std::map<std::string, std::string> read_ninja_sources(const fs::path& buildFile)
     {
       constexpr std::string_view keyword{"build "};
-      std::map<std::string, std::string> sourceOf{};
+      std::map<std::string, std::string> sourcesByObjectFile{};
 
       const auto text{read(buildFile)};
       auto statements{
@@ -271,98 +340,104 @@ namespace sequoia::testing
         const auto inputs{tokens(statement.substr(colon + 1))};
         if((inputs.size() > 1) && (inputs[1] != "|") && (inputs[1] != "||"))
         {
-          // On Windows the generator writes `CMakeFiles\Foo.dir\Bar.cpp.obj` where the log, canonicalized by ninja,
-          // has `CMakeFiles/Foo.dir/Bar.cpp.obj`
+          // Both in generic form: on Windows the generator writes `CMakeFiles\Foo.dir\Bar.cpp.obj` and
+          // `C:\Users\...\Bar.cpp`, where ninja canonicalizes what it logs to `CMakeFiles/Foo.dir/Bar.cpp.obj`
+          // and `C:/Users/.../Bar.cpp`, and the two records are joined on these spellings
+          const auto source{fs::path{inputs[1]}.generic_string()};
           for(const auto& output : outputs)
           {
-            sourceOf.try_emplace(fs::path{output}.generic_string(), inputs[1]);
+            sourcesByObjectFile.try_emplace(fs::path{output}.generic_string(), source);
           }
         }
       }
 
-      return sourceOf;
+      return sourcesByObjectFile;
     }
-  }
 
-  [[nodiscard]]
-  std::vector<compilation_record> read_ninja_deps(const fs::path& file)
-  {
-    const dependency_log log{file};
-    if(!log.begins_with(signature))
-      throw std::runtime_error{log.error("not a ninja dependency log")};
+    /** The log Ninja keeps for a build directory: every object file the log has ever known, including
+        those the build no longer has, in the order the log first names them; the files likewise.
 
-    std::size_t pos{signature.size()};
-    if(const auto version{log.word(pos)}; version != 4)
-      throw std::runtime_error{log.error(std::format("version {} is not supported", version))};
-
-    pos += word_size;
-
-    std::vector<fs::path> paths{};
-    std::map<std::uint32_t, std::vector<std::uint32_t>> deps{};
-
-    while(pos + word_size <= log.size())
+        \throws std::runtime_error if the log cannot be read.
+     */
+    [[nodiscard]]
+    compilations read_ninja_deps(const fs::path& file)
     {
-      constexpr std::size_t stampWidth{8};
-      const auto [size, isDeps]{log.header(pos)};
+      const dependency_log log{file};
+      if(!log.begins_with(signature))
+        throw std::runtime_error{log.error("not a ninja dependency log")};
+
+      std::size_t pos{signature.size()};
+      if(const auto version{log.word(pos)}; version != 4)
+        throw std::runtime_error{log.error(std::format("version {} is not supported", version))};
+
       pos += word_size;
-      // An incomplete final record, which an interrupted ninja leaves
-      if(pos + size > log.size())
-        break;
 
-      if(isDeps)
+      std::vector<fs::path> paths{};
+      std::unordered_set<std::string> spellings{};
+      std::map<std::uint32_t, std::vector<compilations::file_index>> deps{};
+
+      while(pos + word_size <= log.size())
       {
-        if((size < word_size + stampWidth) || ((size - word_size - stampWidth) % word_size))
-          throw std::runtime_error{log.error("a deps record of impossible size")};
+        constexpr std::size_t stampWidth{8};
+        const auto [size, isDeps]{log.header(pos)};
+        pos += word_size;
+        // An incomplete final record, which an interrupted ninja leaves
+        if(pos + size > log.size())
+          break;
 
-        const auto outputId{log.word(pos)};
-        if(outputId >= paths.size())
-          throw std::runtime_error{log.error("a deps record names an output not yet seen")};
+        if(isDeps)
+        {
+          if((size < word_size + stampWidth) || ((size - word_size - stampWidth) % word_size))
+            throw std::runtime_error{log.error("a deps record of impossible size")};
 
-        auto inputIds{
-            std::views::iota(pos + word_size + stampWidth, pos + size)
-          | std::views::stride(word_size)
-          | std::views::transform([&log](std::size_t at){ return log.word(at); })
-          | std::ranges::to<std::vector>()
-        };
+          const auto outputId{log.word(pos)};
+          if(outputId >= paths.size())
+            throw std::runtime_error{log.error("a deps record names an output not yet seen")};
 
-        if(std::ranges::any_of(inputIds, [&paths](std::uint32_t id){ return id >= paths.size(); }))
-          throw std::runtime_error{log.error("a deps record names an input not yet seen")};
+          auto inputIds{
+              std::views::iota(pos + word_size + stampWidth, pos + size)
+            | std::views::stride(word_size)
+            | std::views::transform([&log](std::size_t at){ return compilations::file_index{log.word(at)}; })
+            | std::ranges::to<std::vector>()
+          };
 
-        deps.insert_or_assign(outputId, std::move(inputIds));
+          if(std::ranges::any_of(inputIds, [&paths](compilations::file_index id){ return id >= paths.size(); }))
+            throw std::runtime_error{log.error("a deps record names an input not yet seen")};
+
+          deps.insert_or_assign(outputId, std::move(inputIds));
+        }
+        else
+        {
+          if(size < word_size)
+            throw std::runtime_error{log.error("a path record of impossible size")};
+
+          auto path{log.text(pos, size - word_size)};
+
+          if(log.word(pos + size - word_size) != ~static_cast<std::uint32_t>(paths.size()))
+            throw std::runtime_error{log.error("a path record's checksum does not match its position")};
+
+          if(!spellings.insert(path).second)
+            throw std::runtime_error{log.error("a path record repeats a spelling")};
+
+          paths.emplace_back(std::move(path));
+        }
+
+        pos += size;
       }
-      else
-      {
-        if(size < word_size)
-          throw std::runtime_error{log.error("a path record of impossible size")};
 
-        auto path{log.text(pos, size - word_size)};
+      auto record{
+        [](auto& dep) {
+          auto& [objectId, inputIds]{dep};
+          return compilations::record{.object_index{objectId}, .input_indices{std::move(inputIds)}};
+        }
+      };
 
-        if(log.word(pos + size - word_size) != ~static_cast<std::uint32_t>(paths.size()))
-          throw std::runtime_error{log.error("a path record's checksum does not match its position")};
-
-        paths.emplace_back(std::move(path));
-      }
-
-      pos += size;
+      return compilations{
+        .files{std::move(paths)},
+        .records{deps | std::views::transform(record) | std::ranges::to<std::vector>()}
+      };
     }
 
-    auto pathOf{[&paths](std::uint32_t id){ return paths[id]; }};
-
-    return deps | std::views::transform(
-                    [pathOf](const auto& record){
-                      const auto& [objectId, inputIds]{record};
-                      return
-                        compilation_record{
-                          .object{pathOf(objectId)},
-                          .inputs{inputIds | std::views::transform(pathOf) | std::ranges::to<std::vector>()}
-                        };
-                    }
-                  )
-                | std::ranges::to<std::vector>();
-  }
-
-  namespace
-  {
     constexpr std::string_view byte_order_mark{"\xFF\xFE"};
 
     /// The tracker writes UTF-16, little-endian; a path is built from the code units themselves, so nothing is lost in a narrow encoding
@@ -621,64 +696,68 @@ namespace sequoia::testing
 
       return inputs;
     }
-  }
 
-  /* The tracker's logs, as MSBuild writes them:
+    /** The records of one `.tlog` directory, its files numbered into `files`.
 
-     1. `CL.read.*.tlog` lists, under each source, every file the compiler read; `CL.write.*.tlog`
-        lists what it wrote, which is where the object is named.
-     2. A source is a line beginning `^`. Sources compiled by one invocation share a line, separated
-        by `|`, and so share what is listed beneath it.
-     3. Both are UTF-16 with a byte order mark, and spell paths in upper case, so each path is put
-        through the filesystem to recover its case.
+        The tracker's logs, as MSBuild writes them:
+        -# `CL.read.*.tlog` lists, under each source, every file the compiler read; `CL.write.*.tlog`
+           lists what the compiler wrote, which is where the object file is named.
+        -# A source is a line beginning `^`. Sources compiled by one invocation share a line, separated
+           by `|`, and so share what is listed beneath the line.
+        -# Both are UTF-16 with a byte order mark, and spell paths in upper case, so each path is put
+           through the filesystem to recover its case.
 
-     Hence, where sources share their writes, each object is given to the source whose stem or name
-     it bears; what cannot be told apart is refused rather than guessed.
-   */
-  [[nodiscard]]
-  std::vector<compilation_record> read_tlogs(const fs::path& tlogDir)
-  {
-    const auto reads{read_tlog_entries(tlogDir, "read")};
-    const auto writes{read_tlog_entries(tlogDir, "write")};
-    path_spelling_recoverer recover{};
+        Hence, where sources share their writes, each object file is given to the source whose stem or
+        name the object file bears; what cannot be told apart is refused rather than guessed.
+     */
+    [[nodiscard]]
+    std::vector<compilations::record> read_tlogs(path_table& files, const fs::path& tlogDir)
+    {
+      const auto reads{read_tlog_entries(tlogDir, "read")};
+      const auto writes{read_tlog_entries(tlogDir, "write")};
+      path_spelling_recoverer recover{};
 
-    auto writesOf{
-      [&writes](const std::u16string& source) -> std::span<const std::u16string> {
-        const auto found{writes.find(source)};
-        return (found == writes.end()) ? std::span<const std::u16string>{} : found->second;
-      }
-    };
+      auto indexOf{[&files](const fs::path& p){ return files.insert(p); }};
 
-    // A source which wrote no object is not a compilation, so each source yields at most one
-    auto compilations{
-      [&tlogDir, &recover, writesOf](const tlog_entries::value_type& entry) -> std::vector<compilation_record> {
-        const auto& [source, read]{entry};
-        const auto& sourcePath{recover(source)};
-        const auto object{object_of(tlogDir, sourcePath, writesOf(source), recover)};
-        if(!object)
-          return {};
-
-        return {compilation_record{.object{*object}, .inputs{inputs_of(sourcePath, read, recover)}}};
-      }
-    };
-
-    auto records{
-        reads
-      | std::views::transform(compilations)
-      | std::views::join
-      | std::ranges::to<std::vector>()
-    };
-
-    // One object attributed to two sources is a guess gone wrong, however the logs came to say so
-    std::ranges::sort(records, {}, &compilation_record::object);
-    if(const auto twice{std::ranges::adjacent_find(records, {}, &compilation_record::object)}; twice != records.end())
-      throw std::runtime_error{
-        std::format("The tracker's log in {} attributes {} to more than one source",
-                    tlogDir.generic_string(),
-                    twice->object.filename().generic_string())
+      auto writesOf{
+        [&writes](const std::u16string& source) -> std::span<const std::u16string> {
+          const auto found{writes.find(source)};
+          return (found == writes.end()) ? std::span<const std::u16string>{} : found->second;
+        }
       };
 
-    return records;
+      // A source which wrote no object is not a compilation, so each source yields at most one
+      auto recordOf{
+        [&](const tlog_entries::value_type& entry) -> std::vector<compilations::record> {
+          const auto& [source, read]{entry};
+          const auto& sourcePath{recover(source)};
+          const auto object{object_of(tlogDir, sourcePath, writesOf(source), recover)};
+          if(!object)
+            return {};
+
+          const auto inputs{inputs_of(sourcePath, read, recover)};
+          return {compilations::record{.object_index{indexOf(*object)}, .input_indices{inputs | std::views::transform(indexOf) | std::ranges::to<std::vector>()}}};
+        }
+      };
+
+      auto records{
+          reads
+        | std::views::transform(recordOf)
+        | std::views::join
+        | std::ranges::to<std::vector>()
+      };
+
+      auto objectPath{[&files](const compilations::record& record) -> const fs::path& { return files[record.object_index]; }};
+      std::ranges::sort(records, {}, objectPath);
+      if(const auto twice{std::ranges::adjacent_find(records, {}, objectPath)}; twice != records.end())
+        throw std::runtime_error{
+          std::format("The tracker's log in {} attributes {} to more than one source",
+                      tlogDir.generic_string(),
+                      files[twice->object_index].filename().generic_string())
+        };
+
+      return records;
+    }
   }
 
   namespace
@@ -764,59 +843,74 @@ namespace sequoia::testing
 
   namespace
   {
-    /* Ninja keeps two records, and a compilation is read from both:
+    /** The compilations of a Ninja build, from the log `.ninja_deps` and the statements in `build.ninja`.
 
-       1. `build.ninja` names the objects the build has and, in each object's statement, its source.
-       2. `.ninja_deps` gives each object's inputs, as the compiler reported them. MSVC reports the
-          headers alone, so the source is taken from the statement in every case.
+        The log gives every compilation ninja has ever recorded, and is trimmed to the object files the
+        build currently has, which the statements name. Each record then has its source put first among
+        the inputs: gcc and clang report the source among a compilation's inputs, MSVC reports the headers
+        alone, and the statement names the source in either case.
 
-       The log is append-only, so it describes objects the build no longer has; a record whose object
-       no statement names is not read.
+        \throws std::runtime_error if
+        -# there is no log, nothing having been built;
+        -# no record's object file is named by any statement: the log and the statements then spell one
+           tree two ways, and nothing would ever be selected.
      */
     [[nodiscard]]
-    std::vector<compilation_record> ninja_compilations(const build_tree& tree)
+    compilations ninja_compilations(const build_tree& tree)
     {
       const auto log{tree.build_directory / ".ninja_deps"};
       if(!fs::exists(log))
         throw std::runtime_error{std::format("{} has no dependency log; has anything been built?", tree.build_directory.generic_string())};
 
-      const auto sourceOf{read_ninja_sources(tree.build_directory / "build.ninja")};
-      const auto logged{read_ninja_deps(log)};
+      const auto sourcesByObjectFile{read_ninja_sources(tree.build_directory / "build.ninja")};
+      auto [loggedFiles, loggedRecords]{read_ninja_deps(log)};
+      path_table files{std::move(loggedFiles)};
 
-      auto named{[&sourceOf](const compilation_record& record){ return sourceOf.contains(record.object.generic_string()); }};
-
-      auto withSourceFirst{
-        [&sourceOf](const compilation_record& record) {
-          const fs::path source{sourceOf.at(record.object.generic_string())};
-          std::vector<fs::path> inputs{source};
-          inputs.append_range(record.inputs | std::views::filter([&source](const fs::path& input){ return input != source; }));
-
-          return compilation_record{.object{record.object}, .inputs{std::move(inputs)}};
+      auto buildHasObjectFile{
+        [&sourcesByObjectFile, &files](const compilations::record& record) {
+          return sourcesByObjectFile.contains(files[record.object_index].generic_string());
         }
       };
 
-      const auto records{
-          logged
-        | std::views::filter(named)
+      /* A compiler that reports the source has named the source among the inputs, and the source moves to the
+         front; MSVC reports the headers alone, and the source is inserted - into the table, which the log never
+         gave the source, and at the front of the inputs.
+       */
+      auto withSourceFirst{
+        [&](compilations::record& record) {
+          const auto sourceIndex{files.insert(sourcesByObjectFile.at(files[record.object_index].generic_string()))};
+          auto& inputIndices{record.input_indices};
+          if(const auto found{std::ranges::find(inputIndices, sourceIndex)}; found != inputIndices.end())
+            std::ranges::rotate(inputIndices.begin(), found, found + 1);
+          else
+            inputIndices.insert(inputIndices.begin(), sourceIndex);
+
+          return compilations::record{.object_index{record.object_index}, .input_indices{std::move(inputIndices)}};
+        }
+      };
+
+      auto records{
+          loggedRecords
+        | std::views::filter(buildHasObjectFile)
         | std::views::transform(withSourceFirst)
         | std::ranges::to<std::vector>()
       };
 
-      /* A log every one of whose records fails to match a statement is not an empty build: the log and
-         the statements are two spellings of one tree, and what follows would select nothing, forever, without a word.
-       */
-      if(records.empty() && !logged.empty())
+      if(records.empty() && !loggedRecords.empty())
         throw std::runtime_error{
           std::format("None of the objects {} records is named by build.ninja; are the two spelled differently?", log.generic_string())
         };
 
-      return records;
+      return compilations{.files{std::move(files).release_files()}, .records{std::move(records)}};
     }
 
-    /// Every `*.tlog` directory beneath the build directory in the executable's configuration, which
-    /// names the directory holding the executable
+    /** The compilations of a Visual Studio build: those of every target's tracker logs in the
+        executable's configuration, which is the name of the directory holding the executable.
+
+        Every target's files are numbered into one table, so that a file two targets both read is one file.
+     */
     [[nodiscard]]
-    std::vector<compilation_record> visual_studio_compilations(const build_tree& tree, const fs::path& executable)
+    compilations visual_studio_compilations(const build_tree& tree, const fs::path& executable)
     {
       const auto configuration{executable.parent_path().filename()};
       auto isTlogOfConfiguration{
@@ -827,17 +921,20 @@ namespace sequoia::testing
         }
       };
 
-      return fs::recursive_directory_iterator{tree.build_directory}
-           | std::views::filter(isTlogOfConfiguration)
-           | std::views::transform([](const fs::directory_entry& entry){ return read_tlogs(entry.path()); })
-           | std::views::join
-           | std::ranges::to<std::vector>();
+      path_table files{};
+      std::vector<compilations::record> records{};
+      for(const auto& entry : fs::recursive_directory_iterator{tree.build_directory} | std::views::filter(isTlogOfConfiguration))
+      {
+        records.append_range(read_tlogs(files, entry.path()));
+      }
+
+      return compilations{.files{std::move(files).release_files()}, .records{std::move(records)}};
     }
   }
 
   /// `Ninja Multi-Config` keeps its statements elsewhere and is not understood; nor is any generator but the two
   [[nodiscard]]
-  std::vector<compilation_record> read_compilations(const build_tree& tree, const fs::path& executable)
+  compilations read_compilations(const build_tree& tree, const fs::path& executable)
   {
     if(tree.generator == "Ninja")
       return ninja_compilations(tree);

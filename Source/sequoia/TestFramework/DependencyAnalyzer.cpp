@@ -22,13 +22,12 @@
 #include <fstream>
 #include <functional>
 #include <iterator>
+#include <map>
 #include <optional>
 #include <ranges>
 #include <string>
 #include <string_view>
-#include <map>
 #include <type_traits>
-#include <unordered_map>
 
 namespace sequoia::testing
 {
@@ -136,18 +135,6 @@ namespace sequoia::testing
       return std::nullopt;
     }
 
-    /// Hashes a path's spelling, so that a lookup keyed on a path's native string can take a view of one
-    struct spelling_hash
-    {
-      using is_transparent = void;
-
-      [[nodiscard]]
-      std::size_t operator()(std::basic_string_view<fs::path::value_type> spelling) const noexcept
-      {
-        return std::hash<std::basic_string_view<fs::path::value_type>>{}(spelling);
-      }
-    };
-
     /** \brief The dependency graph of the executable, as recorded by the build which produced the executable.
 
         The build associates each object file with the files consumed to create it. Typically these will be
@@ -176,8 +163,10 @@ namespace sequoia::testing
       };
 
       /** Every file a test's translation unit was built from is read once and checked against the
-          executable's stamp. Throws where a file post-dates the executable, or where a file's modification
-          time cannot be read.
+          executable's stamp.
+
+          \throws std::runtime_error if a file post-dates the executable, or a file's modification time
+          cannot be read.
        */
       dependency_graph(const build_tree& tree, const project_paths& projPaths)
         : m_TestsRepo{projPaths.tests().repo()}
@@ -224,7 +213,7 @@ namespace sequoia::testing
       [[nodiscard]]
       std::size_t file_count() const noexcept { return m_Graph.order(); }
 
-      /// Throws `std::out_of_range` for a node the graph does not have
+      /// \throws std::out_of_range for a node the graph does not have
       [[nodiscard]]
       static const file_info& node_of(const graph_type& g, node_index i)
       {
@@ -235,10 +224,12 @@ namespace sequoia::testing
       /** The modification time of every file the build read, by node; an object file, being a product
           rather than something read, holds the earliest time, which no fold for the newest can see.
 
-          Throws where a file post-dates the executable, or where a file's modification time cannot be
-          read. Every file is checked, whether or not a test depends on it: an
-          edited `TestMain.cpp` is read by no test's translation unit, and is the case which made the
-          executable stale without prune noticing.
+          Every file is checked, whether or not a test depends on it: an edited `TestMain.cpp` is read by
+          no test's translation unit, and is the case which made the executable stale without prune
+          noticing.
+
+          \throws std::runtime_error if a file post-dates the executable, or a file's modification time
+          cannot be read.
        */
       [[nodiscard]]
       std::vector<fs::file_time_type> modification_times(std::optional<fs::file_time_type> executableStamp) const
@@ -332,10 +323,10 @@ namespace sequoia::testing
           then in order of first mention - each object file's source on its node; an edge from each object
           file to each file read to produce it; and the dependencies the convention adds.
 
-          A record spells a path identically each time the record mentions the path, so the lookup is
-          keyed on the spelling and the filesystem is asked once per spelling for the canonical path -
-          which is what project_paths holds, the build having recorded whatever spelling it was
-          configured with, through whatever symlink and in whatever case.
+          The readers name each file once and the records refer to it by index, so the filesystem is
+          asked once per file for the canonical path - which is what project_paths holds, the build
+          having recorded whatever spelling it was configured with, through whatever symlink and in
+          whatever case.
        */
       [[nodiscard]]
       static graph_type make_graph(const build_tree& tree, const project_paths& projPaths)
@@ -355,38 +346,46 @@ namespace sequoia::testing
           }
         };
 
-        graph_type g{};
-        std::unordered_map<fs::path::string_type, node_index, spelling_hash, std::ranges::equal_to> nodes{};
-        auto nodeOf{
-          [&g, &nodes, &canonical](const fs::path& p) {
-            if(const auto found{nodes.find(std::basic_string_view{p.native()})}; found != nodes.end())
-              return found->second;
+        const auto& [files, records]{compilations};
 
-            return nodes.emplace(p.native(), g.add_node(file_info{.file{canonical(p)}})).first->second;
+        const auto canonicalFiles{files | std::views::transform(canonical) | std::ranges::to<std::vector>()};
+
+        graph_type g{};
+        std::vector<std::optional<node_index>> nodeOfFile(files.size());
+
+        // A node per file the records name, on first sight
+        auto nodeOf{
+          [&](compilations::file_index fileIndex) {
+            auto& node{nodeOfFile[fileIndex]};
+            if(!node)
+              node = g.add_node(file_info{.file{canonicalFiles[fileIndex]}});
+
+            return *node;
           }
         };
 
+        // read_compilations puts the source first among the inputs
         auto isTest{
-          [&canonical, testsRepo{projPaths.tests().repo()}](const compilation_record& record) {
-            return in_repo(canonical(record.inputs.front()), testsRepo);
+          [&canonicalFiles, testsRepo{projPaths.tests().repo()}](const compilations::record& record) {
+            return in_repo(canonicalFiles[record.input_indices.front()], testsRepo);
           }
         };
 
         // The tests' object files take the leading indices, so that they form a block the graph can walk without a filter
-        for(const auto& record : compilations | std::views::filter(isTest))
+        for(const auto& record : records | std::views::filter(isTest))
         {
-          nodeOf(record.object);
+          nodeOf(record.object_index);
         }
 
-        for(const auto& record : compilations)
+        for(const auto& record : records)
         {
-          const auto object{nodeOf(record.object)};
-          const auto inputs{record.inputs | std::views::transform(nodeOf) | std::ranges::to<std::vector>()};
+          const auto objectNode{nodeOf(record.object_index)};
+          const auto sourceNode{nodeOf(record.input_indices.front())};
 
-          g.mutate_node_weight(g.cbegin_node_weights() + object, [source{inputs.front()}](file_info& info){ info.source = source; });
-          for(const auto input : inputs)
+          g.mutate_node_weight(g.cbegin_node_weights() + objectNode, [sourceNode](file_info& info){ info.source = sourceNode; });
+          for(const auto inputNode : record.input_indices | std::views::transform(nodeOf))
           {
-            g.join(object, input);
+            g.join(objectNode, inputNode);
           }
         }
 

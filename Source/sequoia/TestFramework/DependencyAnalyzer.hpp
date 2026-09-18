@@ -64,7 +64,7 @@ namespace sequoia::testing
 
   /** \brief The prune records in `file`; none if there is no such file.
 
-      Throws `std::runtime_error` if the file does not parse as prune records.
+      \throws std::runtime_error if the file does not parse as prune records.
    */
   [[nodiscard]]
   std::vector<prune_record> read_tests(const std::filesystem::path& file);

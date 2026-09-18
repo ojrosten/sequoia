@@ -16,12 +16,37 @@
 #include <cstdint>
 #include <fstream>
 #include <map>
+#include <ostream>
 #include <ranges>
 #include <stdexcept>
 
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
+
+  std::ostream& operator<<(std::ostream& s, const compilation_record& record)
+  {
+    s << record.object.generic_string();
+    for(const auto& input : record.inputs)
+    {
+      s << "\n  " << input.generic_string();
+    }
+
+    return s;
+  }
+
+  [[nodiscard]]
+  std::vector<compilation_record> expand(const compilations& c)
+  {
+    auto spelledOut{
+      [&c](const compilations::record& record) {
+        auto file{[&c](compilations::file_index i){ return c.files.at(i); }};
+        return compilation_record{.object{file(record.object_index)}, .inputs{record.input_indices | std::views::transform(file) | std::ranges::to<std::vector>()}};
+      }
+    };
+
+    return c.records | std::views::transform(spelledOut) | std::ranges::to<std::vector>();
+  }
 
   namespace
   {
