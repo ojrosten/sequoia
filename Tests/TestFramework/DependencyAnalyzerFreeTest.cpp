@@ -170,8 +170,9 @@ namespace sequoia::testing
      includes. The sequoia headers the fake sources include lie outside the fake project, as they
      would in a build of it, and are taken from the real one so that they exist.
    */
-  void dependency_analyzer_free_test::write_build_artefacts(const fs::path& fake, build_system system, recorded_sources sources)
+  namespace
   {
+    /// A translation unit of the fake project: its source, the fake project's files it read, and sequoia's
     struct unit
     {
       std::string_view source;
@@ -179,41 +180,60 @@ namespace sequoia::testing
       std::vector<std::string_view> sequoia_inputs{};
     };
 
-    constexpr std::string_view
-      freeTestCore{"sequoia/TestFramework/FreeTestCore.hpp"},
-      regularTestCore{"sequoia/TestFramework/RegularTestCore.hpp"},
-      moveOnlyTestCore{"sequoia/TestFramework/MoveOnlyTestCore.hpp"};
+    /// What the fake project's build would have recorded: for each unit, every file the compiler would have read
+    [[nodiscard]]
+    const std::vector<unit>& fake_units()
+    {
+      constexpr std::string_view
+        freeTestCore{"sequoia/TestFramework/FreeTestCore.hpp"},
+        regularTestCore{"sequoia/TestFramework/RegularTestCore.hpp"},
+        moveOnlyTestCore{"sequoia/TestFramework/MoveOnlyTestCore.hpp"};
 
-    const std::vector<unit> units{
-      {"Source/fakeProject/Maths/Helper.cpp", {"Source/fakeProject/Maths/Helper.hpp"}},
-      {"Source/fakeProject/Maths/Probability.cpp", {"Source/fakeProject/Maths/Probability.hpp", "Source/fakeProject/Maths/Helper.hpp", "dependencies/foo/Source/foo/Utilities/Helper.hpp"}},
-      {"Source/fakeProject/Utilities/Thing/UniqueThing.cpp", {"Source/fakeProject/Utilities/Thing/UniqueThing.hpp"}},
-      {"Source/fakeProject/Stuff/Substitutions.cpp", {}, {"sequoia/TextProcessing/Substitutions.hpp"}},
-      {"Source/fakeProject/Stuff/Foo.cpp", {"Source/fakeProject/Stuff/Foo.hpp"}},
-      {"Source/fakeProject/Stuff/FooDefinitions.cpp", {"Source/fakeProject/Stuff/Foo.hpp"}},
-      {"Source/fakeProject/Stuff/Unrelated.cpp", {"Source/fakeProject/Stuff/MoreFooDefinitions.hpp", "Source/fakeProject/Stuff/Foo.hpp"}},
-      {"Source/fakeProject/Utilities/UsefulThings.cpp", {"Source/fakeProject/Utilities/UsefulThings.hpp", "dependencies/foo/Source/foo/Utilities/Helper.hpp"}},
-      {"TestUtilities/myLib/Utils.cpp", {"TestUtilities/myLib/Utils.hpp"}},
-      {"dependencies/foo/Source/foo/Utilities/Helper.cpp", {"dependencies/foo/Source/foo/Utilities/Helper.hpp"}},
-      {"Tests/Cycle/FirstFreeTest.cpp", {"Tests/Cycle/FirstFreeTest.hpp", "Source/fakeProject/Cycle/First.hpp", "Source/fakeProject/Cycle/Second.hpp", "Source/fakeProject/Cycle/FirstLeaf.hpp", "Source/fakeProject/Cycle/SecondLeaf.hpp"}, {freeTestCore}},
-      {"Tests/Cycle/SecondFreeTest.cpp", {"Tests/Cycle/SecondFreeTest.hpp", "Source/fakeProject/Cycle/Second.hpp", "Source/fakeProject/Cycle/First.hpp", "Source/fakeProject/Cycle/SecondLeaf.hpp", "Source/fakeProject/Cycle/FirstLeaf.hpp"}, {freeTestCore}},
-      {"Tests/HouseAllocationTest.cpp", {"Tests/HouseAllocationTest.hpp"}, {"sequoia/TestFramework/MoveOnlyAllocationTestCore.hpp"}},
-      {"Tests/Maths/ProbabilityTest.cpp", {"Tests/Maths/ProbabilityTest.hpp", "Tests/Maths/ProbabilityTestingUtilities.hpp", "Source/fakeProject/Maths/Probability.hpp"}, {regularTestCore}},
-      {"Tests/Maths/ProbabilityTestingDiagnostics.cpp", {"Tests/Maths/ProbabilityTestingDiagnostics.hpp", "Tests/Maths/ProbabilityTestingUtilities.hpp", "Source/fakeProject/Maths/Probability.hpp"}, {regularTestCore}},
-      {"Tests/Maybe/MaybeTest.cpp", {"Tests/Maybe/MaybeTest.hpp", "Tests/Maybe/MaybeTestingUtilities.hpp", "Tests/Stuff/OldschoolTestingUtilities.hpp", "Source/fakeProject/Stuff/NoTemplate.hpp", "TestUtilities/myLib/Utils.hpp", "Source/fakeProject/Maybe/Maybe.hpp"}, {regularTestCore}},
-      {"Tests/Maybe/MaybeTestingDiagnostics.cpp", {"Tests/Maybe/MaybeTestingDiagnostics.hpp", "Tests/Maybe/MaybeTestingUtilities.hpp", "Source/fakeProject/Maybe/Maybe.hpp"}, {regularTestCore}},
-      {"Tests/Stuff/BarFreeTest.cpp", {"Tests/Stuff/BarFreeTest.hpp", "Source/fakeProject/Stuff/Bar.hpp", "Source/fakeProject/Stuff/Baz.hpp", "Source/fakeProject/Stuff/Qux.hpp"}, {freeTestCore}},
-      {"Tests/Stuff/FooTest.cpp", {"Tests/Stuff/FooTest.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp"}, {"sequoia/TestFramework/FileEditors.hpp", moveOnlyTestCore, "sequoia/TextProcessing/Substitutions.hpp"}},
-      {"Tests/Stuff/FooTestingDiagnostics.cpp", {"Tests/Stuff/FooTestingDiagnostics.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp"}, {moveOnlyTestCore}},
-      {"Tests/Stuff/OldschoolTest.cpp", {"Tests/Stuff/OldschoolTest.hpp", "Tests/Stuff/OldschoolTestingUtilities.hpp", "Source/fakeProject/Stuff/NoTemplate.hpp", "TestUtilities/myLib/Utils.hpp"}, {regularTestCore}},
-      {"Tests/Stuff/OldschoolTestingDiagnostics.cpp", {"Tests/Stuff/OldschoolTestingDiagnostics.hpp", "Tests/Stuff/OldschoolTestingUtilities.hpp", "Source/fakeProject/Stuff/NoTemplate.hpp", "TestUtilities/myLib/Utils.hpp"}, {regularTestCore}},
-      {"Tests/Utilities/ContainerAllocationTest.cpp", {"Tests/Utilities/ContainerAllocationTest.hpp"}, {"sequoia/TestFramework/RegularAllocationTestCore.hpp"}},
-      {"Tests/Utilities/ContainerPerformanceTest.cpp", {"Tests/Utilities/ContainerPerformanceTest.hpp", "Source/fakeProject/Utilities/Container.hpp"}, {"sequoia/TestFramework/PerformanceTestCore.hpp"}},
-      {"Tests/Utilities/Thing/UniqueThingTest.cpp", {"Tests/Utilities/Thing/UniqueThingTest.hpp", "Tests/Utilities/Thing/UniqueThingTestingUtilities.hpp", "Source/fakeProject/Utilities/Thing/UniqueThing.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp"}, {moveOnlyTestCore}},
-      {"Tests/Utilities/Thing/UniqueThingTestingDiagnostics.cpp", {"Tests/Utilities/Thing/UniqueThingTestingDiagnostics.hpp", "Tests/Utilities/Thing/UniqueThingTestingUtilities.hpp", "Source/fakeProject/Utilities/Thing/UniqueThing.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp"}, {moveOnlyTestCore}},
-      {"Tests/Utilities/UsefulThingsFreeTest.cpp", {"Tests/Utilities/UsefulThingsFreeTest.hpp", "Source/fakeProject/Utilities/UsefulThings.hpp"}, {freeTestCore}},
-      {"Tests/Utilities/UtilitiesFreeTest.cpp", {"Tests/Utilities/UtilitiesFreeTest.hpp", "Source/fakeProject/Utilities/Utilities.hpp"}, {freeTestCore}}
-    };
+      static const std::vector<unit> units{
+        {"Source/fakeProject/Maths/Helper.cpp", {"Source/fakeProject/Maths/Helper.hpp"}},
+        {"Source/fakeProject/Maths/Probability.cpp", {"Source/fakeProject/Maths/Probability.hpp", "Source/fakeProject/Maths/Helper.hpp", "dependencies/foo/Source/foo/Utilities/Helper.hpp"}},
+        {"Source/fakeProject/Utilities/Thing/UniqueThing.cpp", {"Source/fakeProject/Utilities/Thing/UniqueThing.hpp"}},
+        {"Source/fakeProject/Stuff/Substitutions.cpp", {}, {"sequoia/TextProcessing/Substitutions.hpp"}},
+        {"Source/fakeProject/Stuff/Foo.cpp", {"Source/fakeProject/Stuff/Foo.hpp"}},
+        {"Source/fakeProject/Stuff/FooDefinitions.cpp", {"Source/fakeProject/Stuff/Foo.hpp"}},
+        {"Source/fakeProject/Stuff/Unrelated.cpp", {"Source/fakeProject/Stuff/MoreFooDefinitions.hpp", "Source/fakeProject/Stuff/Foo.hpp"}},
+        {"Source/fakeProject/Utilities/UsefulThings.cpp", {"Source/fakeProject/Utilities/UsefulThings.hpp", "dependencies/foo/Source/foo/Utilities/Helper.hpp"}},
+        {"TestUtilities/myLib/Utils.cpp", {"TestUtilities/myLib/Utils.hpp"}},
+        {"dependencies/foo/Source/foo/Utilities/Helper.cpp", {"dependencies/foo/Source/foo/Utilities/Helper.hpp"}},
+        {"Tests/Cycle/FirstFreeTest.cpp", {"Tests/Cycle/FirstFreeTest.hpp", "Source/fakeProject/Cycle/First.hpp", "Source/fakeProject/Cycle/Second.hpp", "Source/fakeProject/Cycle/FirstLeaf.hpp", "Source/fakeProject/Cycle/SecondLeaf.hpp"}, {freeTestCore}},
+        {"Tests/Cycle/SecondFreeTest.cpp", {"Tests/Cycle/SecondFreeTest.hpp", "Source/fakeProject/Cycle/Second.hpp", "Source/fakeProject/Cycle/First.hpp", "Source/fakeProject/Cycle/SecondLeaf.hpp", "Source/fakeProject/Cycle/FirstLeaf.hpp"}, {freeTestCore}},
+        {"Tests/HouseAllocationTest.cpp", {"Tests/HouseAllocationTest.hpp"}, {"sequoia/TestFramework/MoveOnlyAllocationTestCore.hpp"}},
+        {"Tests/Maths/ProbabilityTest.cpp", {"Tests/Maths/ProbabilityTest.hpp", "Tests/Maths/ProbabilityTestingUtilities.hpp", "Source/fakeProject/Maths/Probability.hpp"}, {regularTestCore}},
+        {"Tests/Maths/ProbabilityTestingDiagnostics.cpp", {"Tests/Maths/ProbabilityTestingDiagnostics.hpp", "Tests/Maths/ProbabilityTestingUtilities.hpp", "Source/fakeProject/Maths/Probability.hpp"}, {regularTestCore}},
+        {"Tests/Maybe/MaybeTest.cpp", {"Tests/Maybe/MaybeTest.hpp", "Tests/Maybe/MaybeTestingUtilities.hpp", "Tests/Stuff/OldschoolTestingUtilities.hpp", "Source/fakeProject/Stuff/NoTemplate.hpp", "TestUtilities/myLib/Utils.hpp", "Source/fakeProject/Maybe/Maybe.hpp"}, {regularTestCore}},
+        {"Tests/Maybe/MaybeTestingDiagnostics.cpp", {"Tests/Maybe/MaybeTestingDiagnostics.hpp", "Tests/Maybe/MaybeTestingUtilities.hpp", "Source/fakeProject/Maybe/Maybe.hpp"}, {regularTestCore}},
+        {"Tests/Stuff/BarFreeTest.cpp", {"Tests/Stuff/BarFreeTest.hpp", "Source/fakeProject/Stuff/Bar.hpp", "Source/fakeProject/Stuff/Baz.hpp", "Source/fakeProject/Stuff/Qux.hpp"}, {freeTestCore}},
+        {"Tests/Stuff/FooTest.cpp", {"Tests/Stuff/FooTest.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp"}, {"sequoia/TestFramework/FileEditors.hpp", moveOnlyTestCore, "sequoia/TextProcessing/Substitutions.hpp"}},
+        {"Tests/Stuff/FooTestingDiagnostics.cpp", {"Tests/Stuff/FooTestingDiagnostics.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp"}, {moveOnlyTestCore}},
+        {"Tests/Stuff/OldschoolTest.cpp", {"Tests/Stuff/OldschoolTest.hpp", "Tests/Stuff/OldschoolTestingUtilities.hpp", "Source/fakeProject/Stuff/NoTemplate.hpp", "TestUtilities/myLib/Utils.hpp"}, {regularTestCore}},
+        {"Tests/Stuff/OldschoolTestingDiagnostics.cpp", {"Tests/Stuff/OldschoolTestingDiagnostics.hpp", "Tests/Stuff/OldschoolTestingUtilities.hpp", "Source/fakeProject/Stuff/NoTemplate.hpp", "TestUtilities/myLib/Utils.hpp"}, {regularTestCore}},
+        {"Tests/Utilities/ContainerAllocationTest.cpp", {"Tests/Utilities/ContainerAllocationTest.hpp"}, {"sequoia/TestFramework/RegularAllocationTestCore.hpp"}},
+        {"Tests/Utilities/ContainerPerformanceTest.cpp", {"Tests/Utilities/ContainerPerformanceTest.hpp", "Source/fakeProject/Utilities/Container.hpp"}, {"sequoia/TestFramework/PerformanceTestCore.hpp"}},
+        {"Tests/Utilities/Thing/UniqueThingTest.cpp", {"Tests/Utilities/Thing/UniqueThingTest.hpp", "Tests/Utilities/Thing/UniqueThingTestingUtilities.hpp", "Source/fakeProject/Utilities/Thing/UniqueThing.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp"}, {moveOnlyTestCore}},
+        {"Tests/Utilities/Thing/UniqueThingTestingDiagnostics.cpp", {"Tests/Utilities/Thing/UniqueThingTestingDiagnostics.hpp", "Tests/Utilities/Thing/UniqueThingTestingUtilities.hpp", "Source/fakeProject/Utilities/Thing/UniqueThing.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp"}, {moveOnlyTestCore}},
+        {"Tests/Utilities/UsefulThingsFreeTest.cpp", {"Tests/Utilities/UsefulThingsFreeTest.hpp", "Source/fakeProject/Utilities/UsefulThings.hpp"}, {freeTestCore}},
+        {"Tests/Utilities/UtilitiesFreeTest.cpp", {"Tests/Utilities/UtilitiesFreeTest.hpp", "Source/fakeProject/Utilities/Utilities.hpp"}, {freeTestCore}}
+      };
+
+      return units;
+    }
+
+    /// The fake project's stand-in for a toolchain header, read by every unit, which the tests may touch
+    [[nodiscard]]
+    fs::path fake_toolchain_header(const fs::path& fake)
+    {
+      return fake / "Toolchain" / "include" / "vector";
+    }
+  }
+
+  void dependency_analyzer_free_test::write_build_artefacts(const fs::path& fake, build_system system, recorded_sources sources)
+  {
+    const auto& units{fake_units()};
 
     const auto buildDir{fake / "build" / "CMade" / "TestAll"};
     const auto objectDir{fs::path{"CMakeFiles"} / "TestAll.dir"};
@@ -242,10 +262,17 @@ namespace sequoia::testing
       {
         record.inputs.push_back(sequoiaSource / input);
       }
+      record.inputs.push_back(fake_toolchain_header(fake));
       records.push_back(std::move(record));
     }
 
-    // What the build tree says of itself; the fake project's source dir is itself, and one sequoia directory stands in for the toolchain's
+    // What the build tree says of itself; the fake project's source dir is itself, and two directories stand in for the toolchain's: one of sequoia's, and one of the fake project's own
+    if(const auto header{fake_toolchain_header(fake)}; !fs::exists(header))
+    {
+      // Once: the artefacts are written several times over, and the header's modification time is the tests' to set
+      fs::create_directories(header.parent_path());
+      write_to_file(header, "", std::ios_base::out);
+    }
     fs::remove_all(buildDir / "CMakeFiles");
     fs::remove(buildDir / ".ninja_deps");
     fs::remove(buildDir / "build.ninja");
@@ -255,7 +282,7 @@ namespace sequoia::testing
                   std::format("# Fake\nCMAKE_GENERATOR:INTERNAL={}\nCMAKE_HOME_DIRECTORY:INTERNAL={}\n", ninja ? "Ninja" : "Visual Studio 18 2026", fake.generic_string()),
                   std::ios_base::out);
     write_to_file(buildDir / "CMakeFiles" / "4.1.2" / "CMakeCXXCompiler.cmake",
-                  std::format("set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"{}\")\n", (sequoiaSource / "sequoia" / "TextProcessing").generic_string()),
+                  std::format("set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"{};{}\")\n", (sequoiaSource / "sequoia" / "TextProcessing").generic_string(), fake_toolchain_header(fake).parent_path().generic_string()),
                   std::ios_base::out);
 
     if(ninja)
@@ -428,6 +455,20 @@ namespace sequoia::testing
     );
 
     fs::last_write_time(orphan, m_ResetTime);
+
+    // A toolchain header newer than the executable: the executable was built with an older toolchain
+    const auto toolchainHeader{fake_toolchain_header(projPaths.project_root())};
+    check_exception_thrown<std::runtime_error>(
+      "Executable out of date on account of a toolchain header",
+      [this, projPaths, &toolchainHeader]() {
+        fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
+        fs::last_write_time(toolchainHeader, m_ResetTime + lateEditOffset);
+        return tests_to_run(projPaths);
+      },
+      normalise_out_of_date_message
+    );
+
+    fs::last_write_time(toolchainHeader, m_ResetTime);
 
     // A file the build read which cannot be read now: the reason is the platform's, and the normaliser masks it
     const auto hidden{fs::path{orphan}.replace_extension(".hidden")};
@@ -660,6 +701,15 @@ namespace sequoia::testing
                          .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
                        {},
                        {});
+
+    {
+      // Every unit reads the toolchain, so a toolchain header modified since the stamp means every test runs
+      const auto toolchainHeader{fake_toolchain_header(projPaths.project_root())};
+      fs::last_write_time(toolchainHeader, m_ResetTime + to_duration(modification_time::early));
+      check(equality, "Toolchain header stale: every test runs", (tests_to_run(projPaths)), opt_test_list{});
+      fs::last_write_time(toolchainHeader, m_ResetTime);
+      check(equality, "Toolchain header stale: every test runs; Nothing Stale", (tests_to_run(projPaths)), opt_test_list{test_list{}});
+    }
 
     // Substitutions.cpp shares its stem with a toolchain header FooTest.cpp includes; the toolchain's headers are not furnished
     check_tests_to_run("Source cpp named for a toolchain header stale",

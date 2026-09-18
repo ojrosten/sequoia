@@ -149,6 +149,9 @@ namespace sequoia::testing
         reads, or in the source named for a header the compilation reads. A definition anywhere else is
         not seen - in a source of a different name, or in a header of a different name which only some
         other compilation reads - although the program links either way.
+
+        The toolchain's own headers are read by every translation unit, so a change to one is a change
+        to every test; their newest modification is kept apart, and they are left out of the graph.
      */
     class dependency_graph
     {
@@ -162,23 +165,24 @@ namespace sequoia::testing
         fs::file_time_type newest_modification;
       };
 
-      /** Every file a test's translation unit was built from is read once and checked against the
-          executable's stamp.
+      /** Every file the build read is checked once against the executable's stamp.
 
           \throws std::runtime_error if a file post-dates the executable, or a file's modification time
           cannot be read.
        */
       dependency_graph(const build_tree& tree, const project_paths& projPaths)
-        : m_TestsRepo{projPaths.tests().repo()}
-        , m_Graph{make_graph(tree, projPaths)}
-        , m_TestTranslationUnits{read_test_translation_units(get_stamp(projPaths.executable()))}
+        : dependency_graph{projPaths, get_stamp(projPaths.executable()), read_files(tree, projPaths)}
       {}
 
       /// The translation units built from sources in the tests repository
       [[nodiscard]]
       std::span<const translation_unit> get_test_translation_units() const noexcept { return m_TestTranslationUnits; }
 
-      /// Whether the build read any file under `directory`; the object files it wrote there do not count
+      /// The newest modification among the toolchain's files the build read; the earliest time, if it read none
+      [[nodiscard]]
+      fs::file_time_type toolchain_newest_modification() const noexcept { return m_ToolchainNewestModification; }
+
+      /// Whether the build read any file of the project's under `directory`; the object files it wrote there do not count
       [[nodiscard]]
       bool reads_from(const fs::path& directory) const
       {
@@ -200,9 +204,23 @@ namespace sequoia::testing
       using graph_type = maths::directed_graph<maths::null_weight, file_info>;
       using node_index = graph_type::edge_index_type;
 
+      struct files_read_by_build
+      {
+        graph_type project_graph;
+        std::vector<fs::path> toolchain_files;
+      };
+
       fs::path m_TestsRepo;
       graph_type m_Graph;
+      fs::file_time_type m_ToolchainNewestModification;
       std::vector<translation_unit> m_TestTranslationUnits;
+
+      dependency_graph(const project_paths& projPaths, std::optional<fs::file_time_type> executableStamp, files_read_by_build&& filesRead)
+        : m_TestsRepo{projPaths.tests().repo()}
+        , m_Graph{std::move(filesRead.project_graph)}
+        , m_ToolchainNewestModification{newest_modification(filesRead.toolchain_files, executableStamp)}
+        , m_TestTranslationUnits{read_test_translation_units(executableStamp)}
+      {}
 
       [[nodiscard]]
       const file_info& node(node_index i) const { return node_of(m_Graph, i); }
@@ -221,6 +239,44 @@ namespace sequoia::testing
         return g.cbegin_node_weights()[i];
       }
 
+      /** The modification time of a file the build read, checked against the executable's stamp.
+
+          \throws std::runtime_error if the file post-dates the executable, or its modification time
+          cannot be read.
+       */
+      [[nodiscard]]
+      static fs::file_time_type modification_time(const fs::path& file, std::optional<fs::file_time_type> executableStamp)
+      {
+        std::error_code error{};
+        const auto time{fs::last_write_time(file, error)};
+        if(error)
+          throw std::runtime_error{
+            std::format("{} was read by the build but its modification time cannot be read: {}\n"
+                        "Restore the file, or build the executable again\n",
+                        file.generic_string(),
+                        error.message())
+          };
+
+        if(executableStamp && (time >= *executableStamp))
+          throw std::runtime_error{
+            std::format("Executable is out of date; please build it!\nExecutable time stamp: {}\n{} time stamp: {}\n",
+                        *executableStamp,
+                        file.generic_string(),
+                        time)
+          };
+
+        return time;
+      }
+
+      /// The newest modification among `files`, each checked; the earliest time, if there are none
+      [[nodiscard]]
+      static fs::file_time_type newest_modification(std::span<const fs::path> files, std::optional<fs::file_time_type> executableStamp)
+      {
+        auto times{files | std::views::transform([executableStamp](const fs::path& file){ return modification_time(file, executableStamp); })};
+
+        return std::ranges::fold_left(times, fs::file_time_type::min(), std::ranges::max);
+      }
+
       /** The modification time of every file the build read, by node; an object file, being a product
           rather than something read, holds the earliest time, which no fold for the newest can see.
 
@@ -235,29 +291,8 @@ namespace sequoia::testing
       std::vector<fs::file_time_type> modification_times(std::optional<fs::file_time_type> executableStamp) const
       {
         auto modificationTime{
-          [&executableStamp](const file_info& info) {
-            if(info.is_object_file())
-              return fs::file_time_type::min();
-
-            std::error_code error{};
-            const auto time{fs::last_write_time(info.file, error)};
-            if(error)
-              throw std::runtime_error{
-                std::format("{} was read by the build but its modification time cannot be read: {}\n"
-                            "Restore the file, or build the executable again\n",
-                            info.file.generic_string(),
-                            error.message())
-              };
-
-            if(executableStamp && (time >= *executableStamp))
-              throw std::runtime_error{
-                std::format("Executable is out of date; please build it!\nExecutable time stamp: {}\n{} time stamp: {}\n",
-                            *executableStamp,
-                            info.file.generic_string(),
-                            time)
-              };
-
-            return time;
+          [executableStamp](const file_info& info) {
+            return info.is_object_file() ? fs::file_time_type::min() : modification_time(info.file, executableStamp);
           }
         };
 
@@ -319,17 +354,18 @@ namespace sequoia::testing
         return newest;
       }
 
-      /** A node for every object file and every file read to produce one - the tests' object files first,
-          then in order of first mention - each object file's source on its node; an edge from each object
-          file to each file read to produce it; and the dependencies the convention adds.
+      /** A node for every object file and every file of the project's read to produce one - the tests'
+          object files first, then in order of first mention - each object file's source on its node; an
+          edge from each object file to each such file; and the dependencies the convention adds. The
+          toolchain's files are listed apart.
 
           The readers name each file once and the records refer to it by index, so the filesystem is
           asked once per file for the canonical path - which is what project_paths holds, the build
           having recorded whatever spelling it was configured with, through whatever symlink and in
-          whatever case.
+          whatever case - and once per file whether the file is the toolchain's.
        */
       [[nodiscard]]
-      static graph_type make_graph(const build_tree& tree, const project_paths& projPaths)
+      static files_read_by_build read_files(const build_tree& tree, const project_paths& projPaths)
       {
         const auto compilations{read_compilations(tree, projPaths.executable())};
 
@@ -349,6 +385,12 @@ namespace sequoia::testing
         const auto& [files, records]{compilations};
 
         const auto canonicalFiles{files | std::views::transform(canonical) | std::ranges::to<std::vector>()};
+        const auto isToolchainFile{
+            canonicalFiles
+          | std::views::transform([&tree](const fs::path& file){ return in_toolchain(file, tree); })
+          | std::ranges::to<std::vector<bool>>()
+        };
+        auto isProjectFile{[&isToolchainFile](compilations::file_index fileIndex){ return !isToolchainFile[fileIndex]; }};
 
         graph_type g{};
         std::vector<std::optional<node_index>> nodeOfFile(files.size());
@@ -383,24 +425,28 @@ namespace sequoia::testing
           const auto sourceNode{nodeOf(record.input_indices.front())};
 
           g.mutate_node_weight(g.cbegin_node_weights() + objectNode, [sourceNode](file_info& info){ info.source = sourceNode; });
-          for(const auto inputNode : record.input_indices | std::views::transform(nodeOf))
+          for(const auto inputNode : record.input_indices | std::views::filter(isProjectFile) | std::views::transform(nodeOf))
           {
             g.join(objectNode, inputNode);
           }
         }
 
-        add_dependencies(g, tree);
+        add_dependencies(g);
 
-        return g;
+        auto toolchainFiles{
+            std::views::iota(compilations::file_index{}, files.size())
+          | std::views::filter([&isToolchainFile](compilations::file_index i){ return isToolchainFile[i]; })
+          | std::views::transform([&canonicalFiles](compilations::file_index i){ return canonicalFiles[i]; })
+          | std::ranges::to<std::vector>()
+        };
+
+        return files_read_by_build{.project_graph{std::move(g)}, .toolchain_files{std::move(toolchainFiles)}};
       }
 
       /** An edge from each header to each object file whose source both shares the header's stem and
           includes the header: the convention that `Foo.cpp` implements `Foo.hpp`.
-
-          The toolchain's own headers are excluded, or a source named for one - vector.cpp - would
-          implement <vector>, and every test would depend on the source.
        */
-      static void add_dependencies(graph_type& g, const build_tree& tree)
+      static void add_dependencies(graph_type& g)
       {
         auto file{[&g](node_index i) -> const fs::path& { return node_of(g, i).file; }};
 
@@ -409,11 +455,6 @@ namespace sequoia::testing
             std::views::iota(node_index{}, g.order())
           | std::views::transform([&file](node_index i){ return file(i).stem().string(); })
           | std::ranges::to<std::vector>()
-        };
-        const auto toolchain{
-            std::views::iota(node_index{}, g.order())
-          | std::views::transform([&file, &tree](node_index i){ return in_toolchain(file(i), tree); })
-          | std::ranges::to<std::vector<bool>>()
         };
 
         auto isObjectFile{[&g](node_index i){ return node_of(g, i).is_object_file(); }};
@@ -425,7 +466,7 @@ namespace sequoia::testing
 
           auto implements{
             [&](node_index inputNode) {
-              return (inputNode != sourceNode) && !toolchain[inputNode] && (stems[inputNode] == stems[sourceNode]);
+              return (inputNode != sourceNode) && (stems[inputNode] == stems[sourceNode]);
             }
           };
 
@@ -497,11 +538,15 @@ namespace sequoia::testing
       }
     };
 
+    /// The stale tests; none at all if the toolchain changed since the threshold, since then every test is stale
     [[nodiscard]]
-    std::vector<fs::path> find_stale_tests(fs::file_time_type stalenessThreshold, const project_paths& projPaths)
+    std::optional<std::vector<fs::path>> find_stale_tests(fs::file_time_type stalenessThreshold, const project_paths& projPaths)
     {
       const auto tree{read_build_tree(projPaths.discovered().cmake_cache())};
       const dependency_graph graph{tree, projPaths};
+
+      if(graph.toolchain_newest_modification() > stalenessThreshold)
+        return std::nullopt;
 
       const auto tests{graph.get_test_translation_units()};
 
@@ -733,13 +778,15 @@ namespace sequoia::testing
       return std::nullopt;
 
     const auto staleTests{find_stale_tests(staleness_threshold(pruneTimeStamp.value()), projPaths)};
+    if(!staleTests)
+      return std::nullopt;
 
     const std::vector<fs::path> failingTests{
       std::views::transform(read_tests(prunePaths.failures(std::nullopt)), path_projector{}) | std::ranges::to<std::vector>()
     };
 
     std::vector<fs::path> testsToRun{};
-    std::ranges::set_union(staleTests, failingTests, std::back_inserter(testsToRun));
+    std::ranges::set_union(*staleTests, failingTests, std::back_inserter(testsToRun));
 
     return testsToRun;
   }

@@ -11,9 +11,9 @@
     \brief Selects the tests to run from what has changed since the previous run.
 
     A run leaves three things behind:
-    -# a stamp, holding the run's time;
-    -# its failures;
-    -# the passes of any selection it ran.
+    -# A stamp, holding the run's time;
+    -# Its failures;
+    -# The passes of any selection it ran.
 
     `prune` reads those, and the build's record of what each test was built from, and selects
     the tests which are stale or were left failing.
@@ -72,28 +72,31 @@ namespace sequoia::testing
   /** \brief Writes `tests` to `file`, each source path made relative to the tests repository. */
   void write_tests(const project_paths& projPaths, const std::filesystem::path& file, std::span<const prune_record> tests);
 
-  /** \brief The tests which should run: those stale since the previous run, and those the previous run
-             left failing.
+  /** \brief The tests which should run, judged against the previous run's stamp.
 
-      A test is stale if any of the following changed after the previous run's stamp:
-      -# the TU containing the test;
-      -# any explicit dependency of the test TU, such as a header on which it transitively depends;
-      -# any implicit dependency of the test TU, such as a source implementing the declarations in the
+      A test is stale if any of the following changed after the stamp:
+      -# The TU containing the test;
+      -# Any explicit dependency of the test TU, such as a header on which it transitively depends;
+      -# Any implicit dependency of the test TU, such as a source implementing the declarations in the
          headers of item 2;
-      -# any materials associated with the test.
+      -# Any materials associated with the test.
 
       A test recorded as passing since that change is not stale.
 
       \pre Definitions complementing a declaration are found in either:
-      -# one of the headers where the TU sees the declaration;
-      -# a source file with the same stem as one of the headers of the previous item.
+      -# One of the headers where the TU sees the declaration;
+      -# A source file with the same stem as one of the headers of the previous item.
 
-      Returns `std::nullopt` if no previous run left a stamp.
+      \returns One of:
+      -# `std::nullopt`, meaning every test should run, if:
+         -# No previous run left a stamp;
+         -# A toolchain header changed after the stamp.
+      -# Otherwise the stale tests together with those the previous run left failing, sorted, each once.
 
       \throws std::runtime_error if the build's record of dependencies:
-      -# does not exist, because nothing has been built;
-      -# is in an unknown format - currently Ninja's and MSBuild's are understood;
-      -# is corrupted.
+      -# Does not exist, because nothing has been built;
+      -# Is in an unknown format - currently Ninja's and MSBuild's are understood;
+      -# Is corrupted.
    */
   [[nodiscard]]
   std::optional<std::vector<std::filesystem::path>> tests_to_run(const project_paths& projPaths);
