@@ -199,6 +199,27 @@ namespace sequoia::testing
                                                                {{"--async", {}, {}, fo{}}} }},
             outcome{"foo", {}, "create | -c | class_name, directory\n--async\n"});
     }
+
+    check(weak_equivalence,
+          "Help requested after an option without parameters or nested options falls through to the enclosing level",
+          parse({{"foo", "--async", "--help"}},
+                { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
+                  {{"--async", {}, {}, fo{}}}}),
+          outcome{"foo", {{{fo{}, nullptr, {}}}}, "create | -c | class_name, directory\n--async\n"});
+
+    check(weak_equivalence,
+          "Help requested part way through an option's parameters is help, not a parameter",
+          parse({{"foo", "create", "class", "--help"}},
+                { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
+                  {{"--async", {}, {}, fo{}}}}),
+          outcome{"foo", {{{fo{}, nullptr, {"class"}}}}, "create | -c | class_name, directory\n"});
+
+    check(weak_equivalence,
+          "Help requested before an option's parameters is help for that option",
+          parse({{"foo", "create", "--help"}},
+                { {{"create",  {"-c"}, {"class_name", "directory"}, fo{}}},
+                  {{"--async", {}, {}, fo{}}}}),
+          outcome{"foo", {{{fo{}, nullptr, {}}}}, "create | -c | class_name, directory\n"});
   }
 
   void commandline_arguments_test::test_nested_parsing()
@@ -355,7 +376,7 @@ namespace sequoia::testing
                    "qualified::class_name<class T>, equivalent_type\n"});
 
       check(weak_equivalence,
-            "Help requested for nested option",
+            "Help requested after an option without parameters but with nested options is help for that option",
             parse({{"", "create", "--help"}},
                   { {{"create", {"c"}, {}, fo{}, {},
                        {{"regular_test",
@@ -366,7 +387,100 @@ namespace sequoia::testing
                   }} }),
             outcome{"",
                     {{{fo{}, nullptr, {}}}},
+                    "create | c |\n  regular_test | regular | "
+                    "qualified::class_name<class T>, equivalent_type\n"});
+
+      check(weak_equivalence,
+            "Help requested after an option's parameters is help for that option",
+            parse({{"", "create", "class", "dir", "--help"}},
+                  {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
+                       { {{"--equivalent-type", {}, {"type"}}} } } }}),
+            outcome{"", {{{fo{}, nullptr, {"class", "dir"}}}}, "create class_name, directory\n  --equivalent-type type\n"});
+
+      check(weak_equivalence,
+            "Help requested after the parameters of an option without nested options falls through to the enclosing level",
+            parse({{"", "create", "class", "dir", "--help"}},
+                  { {{"create", {}, {"class_name", "directory"}, fo{}}},
+                    {{"--async", {}, {}, fo{}}}}),
+            outcome{"", {{{fo{}, nullptr, {"class", "dir"}}}}, "create class_name, directory\n--async\n"});
+
+      check(weak_equivalence,
+            "Help requested after a completed nested option without nested options of its own is help for the enclosing option",
+            parse({{"", "create", "class", "dir", "--equivalent-type", "foo", "--help"}},
+                  {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
+                       { {{"--equivalent-type", {}, {"type"}}} } } }}),
+            outcome{"", {{{fo{}, nullptr, {"class", "dir", "foo"}}}}, "create class_name, directory\n  --equivalent-type type\n"});
+
+      check(weak_equivalence,
+            "Help requested before a nested option's parameters is help for that option",
+            parse({{"", "create", "regular_test", "--help"}},
+                  { {{"create", {"c"}, {}, fo{}, {},
+                       {{"regular_test",
+                          {"regular"},
+                          {"qualified::class_name<class T>", "equivalent_type"},
+                          fo{}
+                       }}
+                  }} }),
+            outcome{"",
+                    {{{fo{}, nullptr, {}, {{fo{}, nullptr, {}}}}}},
                     "regular_test | regular | "
+                    "qualified::class_name<class T>, equivalent_type\n"});
+
+      check(weak_equivalence,
+            "Help requested before the parameters of an option with nested options is help for the whole sub-tree",
+            parse({{"", "init", "--help"}},
+                  { {{"init", {"i"}, {"copyright owner", "path"}, fo{}, {},
+                       {{"--no-build", {}, {}, fo{}}}
+                  }} }),
+            outcome{"",
+                    {{{fo{}, nullptr, {}}}},
+                    "init | i | copyright owner, path\n  --no-build\n"});
+
+      check(weak_equivalence,
+            "Help requested while a nested option's parameters are being collected, with arguments after it",
+            parse({{"", "create", "regular_test", "--help", "unrecognized"}},
+                  { {{"create", {"c"}, {}, fo{}, {},
+                       {{"regular_test",
+                          {"regular"},
+                          {"qualified::class_name<class T>", "equivalent_type"},
+                          fo{}
+                       }}
+                  }} }),
+            outcome{"",
+                    {{{fo{}, nullptr, {}, {{fo{}, nullptr, {}}}}}},
+                    "regular_test | regular | "
+                    "qualified::class_name<class T>, equivalent_type\n"});
+
+      check(weak_equivalence,
+            "Help requested while the parameters of a nested option without a function object are being collected",
+            parse({{"", "create", "class", "dir", "--equivalent-type", "--help"}},
+                  {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
+                       { {{"--equivalent-type", {}, {"type"}}} } } }}),
+            outcome{"", {{{fo{}, nullptr, {"class", "dir"}}}}, "--equivalent-type type\n"});
+
+      check(weak_equivalence,
+            "Help requested part way through an option's parameters leaves the partial operation in the forest",
+            parse({{"", "init", "owner", "--help"}},
+                  { {{"init", {"i"}, {"copyright owner", "path"}, fo{}, {},
+                       {{"--no-build", {}, {}, fo{}}}
+                  }} }),
+            outcome{"",
+                    {{{fo{}, nullptr, {"owner"}}}},
+                    "init | i | copyright owner, path\n  --no-build\n"});
+
+      check(weak_equivalence,
+            "Nothing after help is parsed",
+            parse({{"", "create", "--help", "unrecognized"}},
+                  { {{"create", {"c"}, {}, fo{}, {},
+                       {{"regular_test",
+                          {"regular"},
+                          {"qualified::class_name<class T>", "equivalent_type"},
+                          fo{}
+                       }}
+                  }} }),
+            outcome{"",
+                    {{{fo{}, nullptr, {}}}},
+                    "create | c |\n  regular_test | regular | "
                     "qualified::class_name<class T>, equivalent_type\n"});
     }
 }

@@ -113,7 +113,13 @@ namespace sequoia::parsing::commandline
   /** \brief The result of parsing command line arguments to build an \ref operation forest
 
       In addition to the forest, the zeroth command line argument (typically the path of the
-      executable) is recorded, together with `help`, if appropriate.
+      executable) is recorded, together with `help`, if appropriate. `--help` is recognised
+      wherever an option or an argument is expected, so it can be neither an option's name nor an
+      argument's value; it asks for the innermost option still open - collecting its parameters,
+      or with nested options to parse - and, once every option is complete, for every option.
+      Parsing stops there, so when `help` is non-empty the forest holds whatever was parsed before
+      the request - possibly an operation with fewer arguments than its option's parameters - and
+      is not to be invoked.
    */
   struct outcome
   {
@@ -197,18 +203,18 @@ namespace sequoia::parsing::commandline
     char** m_Argv{};
     std::string m_ZerothArg{}, m_Help{};
 
-    template<std::input_iterator Iter>
-    void parse(std::ranges::subrange<Iter> options, const operation_data& previousOperationData, top_level topLevel);
+    template<std::ranges::input_range Options>
+    void parse(const Options& options, option_tree enclosingOption, const operation_data& previousOperationData);
 
-    template<std::input_iterator Iter>
+    template<std::ranges::input_range Options>
     [[nodiscard]]
-    bool process_concatenated_aliases(std::ranges::subrange<Iter> options, std::string_view arg, operation_data currentOperationData, top_level topLevel);
+    bool process_concatenated_aliases(const Options& options, std::string_view arg, operation_data currentOperationData, top_level topLevel);
 
     auto process_option(option_tree currentOptionTree, operation_data currentOperationData, top_level topLevel)->operation_data;
 
-    template<std::input_iterator Iter>
+    template<std::ranges::input_range Options>
     [[nodiscard]]
-    static std::string generate_help(std::ranges::subrange<Iter> options);
+    static std::string generate_help(const Options& options);
 
     static bool is_alias(const option& opt, std::string_view s);
   };

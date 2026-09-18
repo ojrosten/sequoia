@@ -15,6 +15,8 @@ namespace sequoia::parsing::commandline
 {
   namespace
   {
+    constexpr std::string_view help_request{"--help"};
+
     [[nodiscard]]
     std::string make(std::string_view type, std::string_view message, std::string_view indent)
     {
@@ -82,19 +84,33 @@ namespace sequoia::parsing::commandline
     using iter_t = decltype(options.begin());
     using forest_iter = maths::forest_iterator<iter_t, maths::const_tree_adaptor<options_tree>>;
 
-    parse(std::ranges::subrange{forest_iter{options.begin()}, forest_iter{options.end()}}, {}, top_level::yes);
+    parse(std::ranges::subrange{forest_iter{options.begin()}, forest_iter{options.end()}}, {}, {});
   }
 
-  template<std::input_iterator Iter>
-  void argument_parser::parse(std::ranges::subrange<Iter> options, const operation_data& previousOperationData, top_level topLevel)
+  template<std::ranges::input_range Options>
+  void argument_parser::parse(const Options& options, option_tree enclosingOption, const operation_data& previousOperationData)
   {
-    if(!m_Help.empty() || options.empty()) return;
+    // An option without nested options has nothing to parse beneath it, so what follows it
+    // - a help request included - belongs to the enclosing level
+    if(std::ranges::empty(options)) return;
+
+    const top_level topLevel{enclosingOption ? top_level::no : top_level::yes};
 
     option_tree currentOptionTree{};
     auto currentOperationData{previousOperationData};
     while(m_Index < m_ArgCount)
     {
       std::string_view arg{m_Argv[m_Index++]};
+
+      // Help is for the innermost option still open - collecting its parameters, or with nested
+      // options to parse - and at the top level for every option
+      if(arg == help_request)
+      {
+        const option_tree openOption{currentOptionTree ? currentOptionTree : enclosingOption};
+        m_Help = openOption ? generate_help(std::views::single(openOption)) : generate_help(options);
+        return;
+      }
+
       if(!currentOperationData.oper_tree || !currentOptionTree)
       {
         if(arg.empty()) continue;
@@ -105,14 +121,8 @@ namespace sequoia::parsing::commandline
           })
         };
 
-        if(optionsIter == options.end())
+        if(optionsIter == std::ranges::end(options))
         {
-          if(arg == "--help")
-          {
-            m_Help = generate_help(options);
-            return;
-          }
-
           if(process_concatenated_aliases(options, arg, currentOperationData, topLevel))
             continue;
 
@@ -149,8 +159,10 @@ namespace sequoia::parsing::commandline
 
         parse(std::ranges::subrange{forest_iter{currentOptionTree.tree().cbegin_edges(node), currentOptionTree.tree()},
                                     forest_iter{currentOptionTree.tree().cend_edges(node), currentOptionTree.tree()}},
-              currentOperationData,
-              top_level::no);
+              currentOptionTree,
+              currentOperationData);
+
+        if(!m_Help.empty()) return;
 
         currentOptionTree = {};
         currentOperationData = previousOperationData;
@@ -213,9 +225,9 @@ namespace sequoia::parsing::commandline
     return currentOperationData;
   }
 
-  template<std::input_iterator Iter>
+  template<std::ranges::input_range Options>
   [[nodiscard]]
-  bool argument_parser::process_concatenated_aliases(std::ranges::subrange<Iter> options, std::string_view arg, operation_data currentOperationData, top_level topLevel)
+  bool argument_parser::process_concatenated_aliases(const Options& options, std::string_view arg, operation_data currentOperationData, top_level topLevel)
   {
     if((arg.size() < 2) || ((arg[0] == '-') && ((arg[1] == ' ') || arg[1] == '-')))
       return false;
@@ -229,7 +241,7 @@ namespace sequoia::parsing::commandline
 
         auto optionsIter{std::ranges::find_if(options, [&alias](const auto& tree) { return is_alias(root_weight(tree), alias); })};
 
-        if(optionsIter == options.end())  return false;
+        if(optionsIter == std::ranges::end(options))  return false;
 
         const option_tree currentOptionTree{*optionsIter};
         process_option(currentOptionTree, currentOperationData, topLevel);
@@ -246,9 +258,9 @@ namespace sequoia::parsing::commandline
     return std::ranges::find(opt.aliases, s) != opt.aliases.end();
   }
 
-  template<std::input_iterator Iter>
+  template<std::ranges::input_range Options>
   [[nodiscard]]
-  std::string argument_parser::generate_help(std::ranges::subrange<Iter> options)
+  std::string argument_parser::generate_help(const Options& options)
   {
     indentation ind{};
     std::string help;
