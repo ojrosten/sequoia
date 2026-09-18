@@ -8,7 +8,7 @@
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <fstream>
-#include <sstream>
+#include <system_error>
 
 namespace sequoia
 {
@@ -40,11 +40,22 @@ namespace sequoia
   [[nodiscard]]
   std::optional<std::string> read_to_string(const std::filesystem::path& file, std::ios_base::openmode mode)
   {
+    std::error_code error{};
+    const auto size{std::filesystem::file_size(file, error)};
+    if(error)
+      return std::nullopt;
+
     if(std::ifstream ifile{file, mode})
     {
-      std::stringstream buffer{};
-      buffer << ifile.rdbuf();
-      return buffer.str();
+      /* Sized from the file, then cut to what arrived: in text mode a platform may deliver fewer characters
+         than the file holds, as Windows does for CRLF. The size is the filesystem's rather than `tellg`'s,
+         which in text mode on MSVC does not give the size of an LF file.
+       */
+      std::string text(size, '\0');
+      ifile.read(text.data(), static_cast<std::streamsize>(size));
+      text.resize(static_cast<std::size_t>(ifile.gcount()));
+
+      return text;
     }
 
     return std::nullopt;
