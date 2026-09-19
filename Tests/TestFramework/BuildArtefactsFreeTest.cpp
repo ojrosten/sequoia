@@ -14,8 +14,6 @@
 #include <cstring>
 #include <format>
 #include <fstream>
-#include <stdexcept>
-#include <string_view>
 
 namespace sequoia::testing
 {

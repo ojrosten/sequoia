@@ -8,7 +8,6 @@
 #pragma once
 
 #include <array>
-#include <concepts>
 #include <iterator>
 #include <type_traits>
 #include <tuple>

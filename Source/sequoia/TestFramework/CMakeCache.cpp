@@ -11,7 +11,6 @@
 
 #include <format>
 #include <ranges>
-#include <stdexcept>
 
 namespace sequoia::testing
 {
