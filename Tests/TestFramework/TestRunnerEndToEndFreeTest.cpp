@@ -20,7 +20,6 @@
 #include <format>
 #include <fstream>
 #include <numeric>
-#include <stdexcept>
 #include <thread>
 
 namespace sequoia::testing
