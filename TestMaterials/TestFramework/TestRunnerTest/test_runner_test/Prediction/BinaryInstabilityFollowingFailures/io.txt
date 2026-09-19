@@ -2,10 +2,10 @@
 Running tests, synchronously...
 
 failing_plus_instabilities_free_test:
-[Execution Time: 286us]
+[Execution Time: 179us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 256
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 257
 	Always fails
 
 	[bool]
@@ -17,8 +17,8 @@ failing_plus_instabilities_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 660us]
-[Execution Time: 286us]
+[Total Run Time: 379us]
+[Execution Time: 179us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -29,10 +29,10 @@ failing_plus_instabilities_free_test:
 Running tests, synchronously...
 
 failing_plus_instabilities_free_test:
-[Execution Time: 101us]
+[Execution Time: 70.3us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 256
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 257
 	Always fails
 
 	[bool]
@@ -42,7 +42,7 @@ failing_plus_instabilities_free_test:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 258
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 259
 	Flipper
 
 	[bool]
@@ -54,8 +54,8 @@ failing_plus_instabilities_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 428us]
-[Execution Time: 101us]
+[Total Run Time: 255us]
+[Execution Time: 70.3us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -67,7 +67,7 @@ Instability detected in file "failing_plus_instabilities_free_test.cpp"
 Outcome frequencies:
 [50.0%,50.0%]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 256
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 257
 	Always fails
 
 	[bool]
@@ -79,7 +79,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 256
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 257
 	Always fails
 
 	[bool]
@@ -89,7 +89,7 @@ vs.
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 258
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 259
 	Flipper
 
 	[bool]

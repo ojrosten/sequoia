@@ -37,8 +37,6 @@ namespace sequoia::testing
 
   enum class recovery_mode : unsigned { none = 0, recovery = 1, dump = 2 };
 
-  enum class prune_outcome { not_attempted, no_time_stamp, success };
-
   enum class concurrency_mode {
     serial,    /// serial execution
     dynamic,   /// determined implicitly by the stl
@@ -571,7 +569,9 @@ namespace sequoia::testing
     void prune();
 
     [[nodiscard]]
-    prune_outcome do_prune();
+    /// The reason prune selected every test, if it did; the filter holds the selection otherwise
+    [[nodiscard]]
+    std::optional<prune_fallback_reason> do_prune();
 
     void build_suite_tree();
 

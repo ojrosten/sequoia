@@ -11,9 +11,9 @@
     \brief Selects the tests to run from what has changed since the previous run.
 
     A run leaves three things behind:
-    -# a stamp, holding the run's time;
-    -# its failures;
-    -# the passes of any selection it ran.
+    -# A stamp, holding the run's time;
+    -# Its failures;
+    -# The passes of any selection it ran.
 
     `prune` reads those, and the build's record of what each test was built from, and selects
     the tests which are stale or were left failing.
@@ -22,9 +22,11 @@
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
 #include <chrono>
+#include <format>
 #include <iostream>
 #include <limits>
 #include <span>
+#include <variant>
 
 namespace sequoia::testing
 {
@@ -64,7 +66,7 @@ namespace sequoia::testing
 
   /** \brief The prune records in `file`; none if there is no such file.
 
-      Throws `std::runtime_error` if the file does not parse as prune records.
+      \throws std::runtime_error if the file does not parse as prune records.
    */
   [[nodiscard]]
   std::vector<prune_record> read_tests(const std::filesystem::path& file);
@@ -72,31 +74,40 @@ namespace sequoia::testing
   /** \brief Writes `tests` to `file`, each source path made relative to the tests repository. */
   void write_tests(const project_paths& projPaths, const std::filesystem::path& file, std::span<const prune_record> tests);
 
-  /** \brief The tests which should run: those stale since the previous run, and those the previous run
-             left failing.
+  /** \brief Why a requested prune selects every test. */
+  enum class prune_fallback_reason { no_previous_stamp, toolchain_changed };
 
-      A test is stale if any of the following changed after the previous run's stamp:
-      -# the TU containing the test;
-      -# any explicit dependency of the test TU, such as a header on which it transitively depends;
-      -# any implicit dependency of the test TU, such as a source implementing the declarations in the
+  [[nodiscard]]
+  std::string to_string(prune_fallback_reason reason);
+
+  /** \brief The tests which should run, judged against the previous run's stamp.
+
+      A test is stale if any of the following changed after the stamp:
+      -# The TU containing the test;
+      -# Any explicit dependency of the test TU, such as a header on which it transitively depends;
+      -# Any implicit dependency of the test TU, such as a source implementing the declarations in the
          headers of item 2;
-      -# any materials associated with the test.
+      -# Any materials associated with the test.
 
       A test recorded as passing since that change is not stale.
 
       \pre Definitions complementing a declaration are found in either:
-      -# one of the headers where the TU sees the declaration;
-      -# a source file with the same stem as one of the headers of the previous item.
+      -# One of the headers where the TU sees the declaration;
+      -# A source file with the same stem as one of the headers of the previous item.
 
-      Returns `std::nullopt` if no previous run left a stamp.
+      \returns One of:
+      -# A `prune_fallback_reason`, meaning every test should run, if:
+         -# No previous run left a stamp;
+         -# A toolchain header changed after the stamp.
+      -# Otherwise the stale tests together with those the previous run left failing, sorted, each once.
 
       \throws std::runtime_error if the build's record of dependencies:
-      -# does not exist, because nothing has been built;
-      -# is in an unknown format - currently Ninja's and MSBuild's are understood;
-      -# is corrupted.
+      -# Does not exist, because nothing has been built;
+      -# Is in an unknown format - currently Ninja's and MSBuild's are understood;
+      -# Is corrupted.
    */
   [[nodiscard]]
-  std::optional<std::vector<std::filesystem::path>> tests_to_run(const project_paths& projPaths);
+  std::variant<std::vector<std::filesystem::path>, prune_fallback_reason> tests_to_run(const project_paths& projPaths);
 
   /** \brief After a run of every test: records the failures, forgets the selected passes, and stamps the run's time. */
   void update_prune_files(const project_paths& projPaths,
@@ -124,4 +135,18 @@ namespace sequoia::testing
                                                   prune_mode mode,
                                                   std::filesystem::file_time_type timeStamp,
                                                   std::size_t numReps);
+}
+
+namespace std
+{
+  template<>
+  struct formatter<sequoia::testing::prune_fallback_reason>
+  {
+    constexpr auto parse(auto& ctx) { return ctx.begin(); }
+
+    auto format(sequoia::testing::prune_fallback_reason reason, auto& ctx) const -> decltype(ctx.out())
+    {
+      return std::format_to(ctx.out(), "{}", sequoia::testing::to_string(reason));
+    }
+  };
 }

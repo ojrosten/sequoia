@@ -4,7 +4,7 @@ Running tests...
 failing_test:
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 97
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 98
 	Standard Failure
 
 	[int]
@@ -16,8 +16,8 @@ failing_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 322us]
-[Execution Time: 30.7us]
+[Total Run Time: 233us]
+[Execution Time: 14.2us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -27,6 +27,6 @@ failing_test:
 
 -----------Post-Run Failures-----------
 	Prune information not written:
-	Unable to read the prune records in /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/output/Prune/CMade/CMade.failures: Expected a line beginning 'path: ' but found 'garbage'
+	Unable to read the prune records in /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/output/Prune/CMade/CMade.failures: Expected a line beginning 'path: ' but found 'garbage'
 	Try deleting the parent directory and starting afresh
 

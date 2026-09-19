@@ -2,10 +2,10 @@
 Running tests, synchronously...
 
 consistently_failing_free_test:
-[Execution Time: 257us]
+[Execution Time: 174us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 275
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 276
 	Always fails
 
 	[bool]
@@ -16,18 +16,18 @@ consistently_failing_free_test:
 	=======================================
 
 consistently_passing_free_test:
-[Execution Time: 151us]
+[Execution Time: 134us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 flipper_free_test:
-[Execution Time: 152us]
+[Execution Time: 97.8us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 multi_periodic_free_test:
-[Execution Time: 162us]
+[Execution Time: 114us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[Total Run Time: 1.45ms]
-[Execution Time: 722us]
+[Total Run Time: 1.04ms]
+[Execution Time: 520us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -38,10 +38,10 @@ multi_periodic_free_test:
 Running tests, synchronously...
 
 consistently_failing_free_test:
-[Execution Time: 97us]
+[Execution Time: 68.3us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 275
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 276
 	Always fails
 
 	[bool]
@@ -52,13 +52,13 @@ consistently_failing_free_test:
 	=======================================
 
 consistently_passing_free_test:
-[Execution Time: 63.2us]
+[Execution Time: 38.5us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 flipper_free_test:
-[Execution Time: 99.3us]
+[Execution Time: 51.2us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 195
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 196
 	Flipper
 
 	[bool]
@@ -69,10 +69,10 @@ flipper_free_test:
 	=======================================
 
 multi_periodic_free_test:
-[Execution Time: 94us]
+[Execution Time: 57.3us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 238
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 239
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -84,8 +84,8 @@ multi_periodic_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 1.24ms]
-[Execution Time: 354us]
+[Total Run Time: 626us]
+[Execution Time: 215us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -96,10 +96,10 @@ multi_periodic_free_test:
 Running tests, synchronously...
 
 consistently_failing_free_test:
-[Execution Time: 97us]
+[Execution Time: 53.8us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 275
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 276
 	Always fails
 
 	[bool]
@@ -110,16 +110,16 @@ consistently_failing_free_test:
 	=======================================
 
 consistently_passing_free_test:
-[Execution Time: 52.5us]
+[Execution Time: 31.9us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 flipper_free_test:
-[Execution Time: 55.5us]
+[Execution Time: 35.6us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 multi_periodic_free_test:
-[Execution Time: 74us]
+[Execution Time: 55.2us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 239
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 240
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -131,8 +131,8 @@ multi_periodic_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 882us]
-[Execution Time: 279us]
+[Total Run Time: 550us]
+[Execution Time: 177us]
 	Standard Top Level Checks:                 5;  Failures:  2  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -143,10 +143,10 @@ multi_periodic_free_test:
 Running tests, synchronously...
 
 consistently_failing_free_test:
-[Execution Time: 64.9us]
+[Execution Time: 49.9us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 275
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 276
 	Always fails
 
 	[bool]
@@ -157,13 +157,13 @@ consistently_failing_free_test:
 	=======================================
 
 consistently_passing_free_test:
-[Execution Time: 51.2us]
+[Execution Time: 33.7us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 flipper_free_test:
-[Execution Time: 64us]
+[Execution Time: 48.6us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 195
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 196
 	Flipper
 
 	[bool]
@@ -174,10 +174,10 @@ flipper_free_test:
 	=======================================
 
 multi_periodic_free_test:
-[Execution Time: 65.2us]
+[Execution Time: 56.5us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 238
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 239
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -189,8 +189,8 @@ multi_periodic_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 735us]
-[Execution Time: 245us]
+[Total Run Time: 573us]
+[Execution Time: 189us]
 	Standard Top Level Checks:                 5;  Failures:  3  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -201,10 +201,10 @@ multi_periodic_free_test:
 Running tests, synchronously...
 
 consistently_failing_free_test:
-[Execution Time: 76.5us]
+[Execution Time: 51.1us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 275
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 276
 	Always fails
 
 	[bool]
@@ -215,18 +215,18 @@ consistently_failing_free_test:
 	=======================================
 
 consistently_passing_free_test:
-[Execution Time: 55us]
+[Execution Time: 33.2us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 flipper_free_test:
-[Execution Time: 50.9us]
+[Execution Time: 32.6us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 multi_periodic_free_test:
-[Execution Time: 70.1us]
+[Execution Time: 42us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 
 -----------Grand Totals-----------
-[Total Run Time: 853us]
-[Execution Time: 253us]
+[Total Run Time: 506us]
+[Execution Time: 159us]
 	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -237,10 +237,10 @@ multi_periodic_free_test:
 Running tests, synchronously...
 
 consistently_failing_free_test:
-[Execution Time: 67.8us]
+[Execution Time: 55.8us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 275
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 276
 	Always fails
 
 	[bool]
@@ -251,13 +251,13 @@ consistently_failing_free_test:
 	=======================================
 
 consistently_passing_free_test:
-[Execution Time: 42.8us]
+[Execution Time: 32.5us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 flipper_free_test:
-[Execution Time: 70.8us]
+[Execution Time: 55.2us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 195
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 196
 	Flipper
 
 	[bool]
@@ -268,10 +268,10 @@ flipper_free_test:
 	=======================================
 
 multi_periodic_free_test:
-[Execution Time: 73us]
+[Execution Time: 96.4us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 238
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 239
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -281,7 +281,7 @@ multi_periodic_free_test:
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 239
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 240
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -293,8 +293,8 @@ multi_periodic_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 847us]
-[Execution Time: 254us]
+[Total Run Time: 593us]
+[Execution Time: 240us]
 	Standard Top Level Checks:                 5;  Failures:  4  [Deep checks: 5]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -310,7 +310,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 195
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 196
 	Flipper
 
 	[bool]
@@ -330,7 +330,7 @@ Outcome frequencies:
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 238
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 239
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -342,7 +342,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 238
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 239
 	Period 2: Pass/Fail/Pass
 
 	[int]
@@ -352,7 +352,7 @@ vs.
 
 	=======================================
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 239
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 240
 	Period 3: Pass/Pass/Fail
 
 	[bool]
@@ -364,7 +364,7 @@ vs.
 
 vs.
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 239
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 240
 	Period 3: Pass/Pass/Fail
 
 	[bool]

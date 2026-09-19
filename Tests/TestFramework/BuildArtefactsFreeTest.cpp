@@ -9,11 +9,13 @@
 #include "BuildArtefactsTestingUtilities.hpp"
 
 #include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <cstring>
 #include <format>
 #include <fstream>
 #include <stdexcept>
+#include <string_view>
 
 namespace sequoia::testing
 {
@@ -60,15 +62,33 @@ namespace sequoia::testing
   {
     const auto scratch{working_materials()};
 
+    /* Each case is a Ninja build tree holding one log, read as the tree's compilations; `build.ninja`
+       names the object files the build has and their sources
+     */
+    struct ninja_log
+    {
+      build_tree tree;
+      fs::path executable, log;
+    };
+    auto tree{
+      [&scratch](std::string_view name, std::string_view statements) {
+        const auto buildDir{scratch / name};
+        fs::create_directories(buildDir);
+        write_to_file(buildDir / "build.ninja", statements, std::ios_base::out);
+        return ninja_log{.tree{.build_directory{buildDir}, .generator{"Ninja"}}, .executable{buildDir / "TestAll"}, .log{buildDir / ".ninja_deps"}};
+      }
+    };
+
     {
       // Written by ninja 1.13 for a two-object build: a.o was compiled twice, the second time with one include fewer
-      const auto records{read_ninja_deps(auxiliary_materials() / "superseded.ninja_deps")};
+      const auto [built, executable, log]{tree("superseded", "build a.o: CXX_COMPILER a.cpp\nbuild c.o: CXX_COMPILER c.cpp\n")};
+      fs::copy_file(auxiliary_materials() / "superseded.ninja_deps", log);
       check(equality,
             "A log ninja wrote: the later record for a.o supersedes the earlier, and c.o has one record",
-            records,
+            expand(read_compilations(built, executable)),
             std::vector<compilation_record>{
-              {"a.o", {"/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/SDKSettings.json", "a.cpp", "a.h"}},
-              {"c.o", {"/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/SDKSettings.json", "c.cpp"}}
+              {"a.o", {"a.cpp", "/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/SDKSettings.json", "a.h"}},
+              {"c.o", {"c.cpp", "/Library/Developer/CommandLineTools/SDKs/MacOSX26.sdk/SDKSettings.json"}}
             });
     }
 
@@ -78,34 +98,52 @@ namespace sequoia::testing
         {"CMakeFiles/x.dir/b.cpp.o", {"/proj/b.cpp", "/proj/a.h"}},
         {"CMakeFiles/x.dir/c.cpp.o", {}}
       };
+      constexpr std::string_view statements{
+        "build CMakeFiles/x.dir/a.cpp.o: CXX_COMPILER /proj/a.cpp\n"
+        "build CMakeFiles/x.dir/b.cpp.o: CXX_COMPILER /proj/b.cpp\n"
+        "build CMakeFiles/x.dir/c.cpp.o: CXX_COMPILER /proj/c.cpp\n"
+      };
 
-      const auto log{scratch / "round_trip.ninja_deps"};
+      const auto [built, executable, log]{tree("round_trip", statements)};
       write_ninja_deps(log, records);
-      check(equality, "Round trip, with a path shared between records and one with a space", read_ninja_deps(log), records);
+      check(equality,
+            "Round trip, with a path shared between records and one with a space; a source the compiler did not report is supplied",
+            expand(read_compilations(built, executable)),
+            std::vector<compilation_record>{
+              {"CMakeFiles/x.dir/a.cpp.o", {"/proj/a.cpp", "/proj/a.h", "/proj/sub dir/b.h"}},
+              {"CMakeFiles/x.dir/b.cpp.o", {"/proj/b.cpp", "/proj/a.h"}},
+              {"CMakeFiles/x.dir/c.cpp.o", {"/proj/c.cpp"}}
+            });
       check(weak_equivalence, "The log as written, byte for byte", log, predictive_materials() / "round_trip.ninja_deps");
 
       // Cutting the last six bytes leaves a final record whose size word promises more than the file holds
       const auto whole{read_to_string(log, std::ios_base::binary).value()};
-      write_to_file(scratch / "interrupted.ninja_deps", std::string_view{whole}.substr(0, whole.size() - 6), std::ios_base::binary);
+      const auto [interruptedTree, interruptedExecutable, interruptedLog]{tree("interrupted", statements)};
+      write_to_file(interruptedLog, std::string_view{whole}.substr(0, whole.size() - 6), std::ios_base::binary);
       check(equality,
             "An incomplete final record, as an interrupted ninja leaves, is ignored and those before it returned",
-            read_ninja_deps(scratch / "interrupted.ninja_deps"),
+            expand(read_compilations(interruptedTree, interruptedExecutable)),
             std::vector<compilation_record>{records.begin(), records.end() - 1});
 
       auto corrupted{whole};
       corrupted[whole.find("/proj/a.h") - 8] ^= 0x01; // a path record ends in its checksum, and the next begins with a size word
-      write_to_file(scratch / "corrupted.ninja_deps", corrupted, std::ios_base::binary);
-      check_exception_thrown<std::runtime_error>("A checksum which does not match its record's position", [&](){ return read_ninja_deps(scratch / "corrupted.ninja_deps"); });
+      const auto [corruptedTree, corruptedExecutable, corruptedLog]{tree("corrupted", statements)};
+      write_to_file(corruptedLog, corrupted, std::ios_base::binary);
+      check_exception_thrown<std::runtime_error>("A checksum which does not match its record's position", [&](){ return read_compilations(corruptedTree, corruptedExecutable); });
     }
 
-    write_to_file(scratch / "not_a_log", "# something else\n", std::ios_base::binary);
-    check_exception_thrown<std::runtime_error>("Not a ninja log", [&](){ return read_ninja_deps(scratch / "not_a_log"); });
+    // A log which does not parse is refused before any statement is consulted, so the statements may be anything
+    auto refused{
+      [&](std::string_view description, std::string_view name, std::string_view bytes) {
+        const auto [built, executable, log]{tree(name, "")};
+        write_to_file(log, bytes, std::ios_base::binary);
+        check_exception_thrown<std::runtime_error>(description, [&](){ return read_compilations(built, executable); });
+      }
+    };
 
-    write_to_file(scratch / "future_version", std::string{"# ninjadeps\n"} + std::string{"\x07\x00\x00\x00", 4}, std::ios_base::binary);
-    check_exception_thrown<std::runtime_error>("A version which is not understood", [&](){ return read_ninja_deps(scratch / "future_version"); });
-
-    write_to_file(scratch / "signature_only", "# ninjadeps\n", std::ios_base::binary);
-    check_exception_thrown<std::runtime_error>("A log cut before its version word", [&](){ return read_ninja_deps(scratch / "signature_only"); });
+    refused("Not a ninja log", "not_a_log", "# something else\n");
+    refused("A version which is not understood", "future_version", std::string{"# ninjadeps\n"} + std::string{"\x07\x00\x00\x00", 4});
+    refused("A log cut before its version word", "signature_only", "# ninjadeps\n");
 
     {
       // Records spelled byte by byte, each malformed in one way the reader refuses
@@ -125,23 +163,45 @@ namespace sequoia::testing
         {"A deps record too small to name an output",    word(depsFlag | 4) + word(0)},
         {"A deps record naming an output not yet seen",  word(depsFlag | 12) + word(0) + stamp},
         {"A deps record naming an input not yet seen",   pathA + word(depsFlag | 16) + word(0) + stamp + word(5)},
-        {"A path record too small to hold its checksum", word(0)}
+        {"A path record too small to hold its checksum", word(0)},
+        {"A path record repeating a spelling",           pathA + word(8) + std::string{"a\0\0\0", 4} + word(~1u)}
       };
 
       for(const auto& [description, body] : malformed)
       {
-        const auto log{scratch / "malformed.ninja_deps"};
-        write_to_file(log, std::string{"# ninjadeps\n"} + word(4) + body, std::ios_base::binary);
-        check_exception_thrown<std::runtime_error>(description, [&](){ return read_ninja_deps(log); });
+        refused(description, "malformed", std::string{"# ninjadeps\n"} + word(4) + body);
       }
     }
 
-    check_exception_thrown<std::runtime_error>("A log which does not exist", [&](){ return read_ninja_deps(scratch / "absent.ninja_deps"); });
+    {
+      const auto [built, executable, log]{tree("absent", "")};
+      check_exception_thrown<std::runtime_error>("A log which does not exist", [&](){ return read_compilations(built, executable); });
+    }
   }
 
   void build_artefacts_free_test::test_tlogs()
   {
     const auto scratch{working_materials()};
+
+    /* Each case is a Visual Studio build tree holding one target's tracker logs, read as the tree's
+       compilations; the logs lie in the configuration directory, which is the executable's
+     */
+    struct target_logs
+    {
+      build_tree tree;
+      fs::path executable, dir;
+    };
+    auto target{
+      [&scratch](std::string_view name) {
+        const auto buildDir{scratch / name};
+        const auto configuration{buildDir / "Debug"};
+        return target_logs{
+                 .tree{.build_directory{buildDir}, .generator{"Visual Studio 18 2026"}},
+                 .executable{configuration / "TestAll.exe"},
+                 .dir{configuration / "TestAll.tlog"}
+               };
+      }
+    };
 
     // The files a tracker log names must exist, since it spells them in upper case and their case is recovered from the filesystem
     const auto project{scratch / "Proj"};
@@ -159,8 +219,9 @@ namespace sequoia::testing
         {project / "c.obj", {project / "c.cpp", project / "a.h"}}
       };
 
-      write_tlogs(scratch / "round.tlog", written);
-      const auto read{read_tlogs(scratch / "round.tlog")};
+      const auto [tree, executable, dir]{target("round")};
+      write_tlogs(dir, written);
+      const auto read{expand(read_compilations(tree, executable))};
       check(equality,
             "Round trip: the source first, then what else was read, sorted and each once",
             read,
@@ -173,12 +234,12 @@ namespace sequoia::testing
 
     {
       // One invocation compiling two sources lists them together; each object goes to the source sharing its stem
-      const auto dir{scratch / "joint.tlog"};
+      const auto [tree, executable, dir]{target("joint")};
       fs::create_directories(dir);
       write_utf16(dir / "CL.read.1.tlog", u"^" + upper(project / "a.cpp") + u"|" + upper(project / "c.cpp") + u"\r\n" + upper(project / "a.h") + u"\r\n");
       write_utf16(dir / "CL.write.1.tlog", u"^" + upper(project / "a.cpp") + u"|" + upper(project / "c.cpp") + u"\r\n" + upper(project / "a.obj") + u"\r\n" + upper(project / "c.obj") + u"\r\n");
 
-      const auto read{read_tlogs(dir)};
+      const auto read{expand(read_compilations(tree, executable))};
       check(equality,
             "Sources compiled together, in upper case",
             read,
@@ -190,7 +251,7 @@ namespace sequoia::testing
 
     {
       // A target's tracker logs may carry a number, as the TestAll tree's write log did on Windows
-      const auto dir{scratch / "numbered.tlog"};
+      const auto [tree, executable, dir]{target("numbered")};
       fs::create_directories(dir);
       write_utf16(dir / "CL.read.1.tlog",        u"^" + upper(project / "a.cpp") + u"\r\n" + upper(project / "a.h") + u"\r\n");
       write_utf16(dir / "CL.11932.write.1.tlog", u"^" + upper(project / "a.cpp") + u"\r\n" + upper(project / "a.obj") + u"\r\n");
@@ -198,13 +259,13 @@ namespace sequoia::testing
 
       check(equality,
             "A numbered write log is read; the command log is not",
-            read_tlogs(dir),
+            expand(read_compilations(tree, executable)),
             std::vector<compilation_record>{{project / "a.obj", {project / "a.cpp", project / "a.h"}}});
     }
 
     {
       // CMake's Visual Studio generator names objects by the whole source name where stems collide
-      const auto dir{scratch / "collision.tlog"};
+      const auto [tree, executable, dir]{target("collision")};
       fs::create_directories(dir);
       for(const auto name : {"Gadget.cpp", "Gadget.cxx", "Gadget.cpp.obj", "Gadget.cxx.obj"})
       {
@@ -215,7 +276,7 @@ namespace sequoia::testing
       write_utf16(dir / "CL.read.1.tlog", roots + upper(project / "a.h") + u"\r\n");
       write_utf16(dir / "CL.write.1.tlog", roots + upper(project / "Gadget.cpp.obj") + u"\r\n" + upper(project / "Gadget.cxx.obj") + u"\r\n");
 
-      const auto read{read_tlogs(dir)};
+      const auto read{expand(read_compilations(tree, executable))};
       check(equality,
             "Objects named by the whole source name go to the right source",
             read,
@@ -225,12 +286,12 @@ namespace sequoia::testing
             });
 
       write_utf16(dir / "CL.write.1.tlog", roots + upper(project / "a.obj") + u"\r\n" + upper(project / "b.obj") + u"\r\n");
-      check_exception_thrown<std::runtime_error>("An object which bears neither source's name", [&](){ return read_tlogs(dir); });
+      check_exception_thrown<std::runtime_error>("An object which bears neither source's name", [&](){ return read_compilations(tree, executable); });
     }
 
     {
       // MSBuild's ObjectFileName may name an object anything; alone under its source, the object is the source's whatever the name
-      const auto dir{scratch / "renamed.tlog"};
+      const auto [tree, executable, dir]{target("renamed")};
       fs::create_directories(dir);
       for(const auto name : {"main.cpp", "main_x64.obj"})
       {
@@ -241,18 +302,18 @@ namespace sequoia::testing
       write_utf16(dir / "CL.write.1.tlog", u"^" + upper(project / "main.cpp") + u"\r\n" + upper(project / "main_x64.obj") + u"\r\n");
       check(equality,
             "A lone object bearing neither the source's stem nor its name is the source's",
-            read_tlogs(dir),
+            expand(read_compilations(tree, executable)),
             std::vector<compilation_record>{{project / "main_x64.obj", {project / "main.cpp", project / "a.h"}}});
     }
 
     {
       // Two sources compiled together, writing one object which bears neither name: each would be given it
-      const auto dir{scratch / "claimed_twice.tlog"};
+      const auto [tree, executable, dir]{target("claimed_twice")};
       fs::create_directories(dir);
       const auto roots{u"^" + upper(project / "a.cpp") + u"|" + upper(project / "c.cpp") + u"\r\n"};
       write_utf16(dir / "CL.read.1.tlog", roots + upper(project / "a.h") + u"\r\n");
       write_utf16(dir / "CL.write.1.tlog", roots + upper(project / "main_x64.obj") + u"\r\n");
-      check_exception_thrown<std::runtime_error>("An object which two sources would each be given", [&](){ return read_tlogs(dir); });
+      check_exception_thrown<std::runtime_error>("An object which two sources would each be given", [&](){ return read_compilations(tree, executable); });
     }
 
     {
@@ -264,29 +325,29 @@ namespace sequoia::testing
         write_to_file(accented / name, "", std::ios_base::out);
       }
 
-      const auto dir{scratch / "accented.tlog"};
+      const auto [tree, executable, dir]{target("accented")};
       fs::create_directories(dir);
       write_utf16(dir / "CL.read.1.tlog", u"^" + upper(accented / "d.cpp") + u"\r\n");
       write_utf16(dir / "CL.write.1.tlog", u"^" + upper(accented / "d.cpp") + u"\r\n" + upper(accented / "d.obj") + u"\r\n");
       check(equality,
             "A directory named outside ASCII",
-            read_tlogs(dir),
+            expand(read_compilations(tree, executable)),
             std::vector<compilation_record>{{accented / "d.obj", {accented / "d.cpp"}}});
     }
 
     {
-      const auto dir{scratch / "narrow.tlog"};
+      const auto [tree, executable, dir]{target("narrow")};
       fs::create_directories(dir);
       write_to_file(dir / "CL.read.1.tlog", "^a.cpp\n", std::ios_base::binary);
-      check_exception_thrown<std::runtime_error>("A log which is not the tracker's UTF-16", [&](){ return read_tlogs(dir); });
+      check_exception_thrown<std::runtime_error>("A log which is not the tracker's UTF-16", [&](){ return read_compilations(tree, executable); });
     }
 
     {
-      const auto dir{scratch / "unwritten.tlog"};
+      const auto [tree, executable, dir]{target("unwritten")};
       fs::create_directories(dir);
       write_utf16(dir / "CL.read.1.tlog", u"^" + upper(project / "a.cpp") + u"\r\n" + upper(project / "a.h") + u"\r\n");
       write_utf16(dir / "CL.write.1.tlog", u"");
-      check(equality, "A source which wrote no object is not a compilation", read_tlogs(dir), std::vector<compilation_record>{});
+      check(equality, "A source which wrote no object is not a compilation", expand(read_compilations(tree, executable)), std::vector<compilation_record>{});
     }
   }
 
@@ -333,7 +394,7 @@ namespace sequoia::testing
                     std::ios_base::out);
       check(equality,
             "The log's record of an object build.ninja no longer names is not read; the source comes first, supplied where the log omits it",
-            read_compilations(tree, executable),
+            expand(read_compilations(tree, executable)),
             std::vector<compilation_record>{
               {"CMakeFiles/x.dir/a.cpp.o", {"/proj/a.cpp", "/proj/a.h"}},
               {"CMakeFiles/x.dir/b.cpp.o", {"/proj/b.cpp", "/proj/b.h"}},
@@ -350,7 +411,7 @@ namespace sequoia::testing
                     std::ios_base::out);
       check(equality,
             "Statements with implicit outputs and inputs, variable lines and CRLF",
-            read_compilations(tree, executable),
+            expand(read_compilations(tree, executable)),
             std::vector<compilation_record>{
               {"CMakeFiles/x.dir/a.cpp.o", {"/proj/a.cpp", "/proj/a.h"}},
               {"CMakeFiles/x.dir/b.cpp.o", {"/proj/b.cpp", "/proj/b.h"}}
@@ -363,15 +424,25 @@ namespace sequoia::testing
                     std::ios_base::out);
       check(equality,
             "A statement's tokens are read in their plain spelling, so its object matches the log and its source is as on disk",
-            read_compilations(tree, executable),
+            expand(read_compilations(tree, executable)),
             std::vector<compilation_record>{{"CMakeFiles/x.dir/odd name.cpp.o", {"C:/proj/odd name$.cpp", "C:/proj/a$b.h"}}});
+
+      // The generator spells the source natively - on Windows `C$:\proj\d.cpp` - where the log has ninja's generic spelling; one file, not two
+      write_ninja_deps(root / ".ninja_deps", std::vector<compilation_record>{{"CMakeFiles/x.dir/d.cpp.o", {"C:/proj/d.cpp", "C:/proj/d.h"}}});
+      write_to_file(root / "build.ninja",
+                    "build CMakeFiles/x.dir/d.cpp.o: CXX_COMPILER " + replace_all(fs::path{"C:/proj/d.cpp"}.make_preferred().string(), ":", "$:") + "\n",
+                    std::ios_base::out);
+      check(equality,
+            "A source the generator spells natively is the log's own file",
+            expand(read_compilations(tree, executable)),
+            std::vector<compilation_record>{{"CMakeFiles/x.dir/d.cpp.o", {"C:/proj/d.cpp", "C:/proj/d.h"}}});
 
       // An escaped dollar escapes nothing after it: the colon immediately after `$$` still ends the outputs, and the space still separates
       write_ninja_deps(root / ".ninja_deps", std::vector<compilation_record>{{"CMakeFiles/x.dir/a$", {"/proj/b$"}}});
       write_to_file(root / "build.ninja", "build CMakeFiles/x.dir/a$$: CXX_COMPILER /proj/b$$ || order\n", std::ios_base::out);
       check(equality,
             "A dollar escaped by another is not itself an escape",
-            read_compilations(tree, executable),
+            expand(read_compilations(tree, executable)),
             std::vector<compilation_record>{{"CMakeFiles/x.dir/a$", {"/proj/b$"}}});
 
       write_to_file(root / "build.ninja", "build CMakeFiles/y.dir/c.cpp.o: CXX_COMPILER /proj/c.cpp\n", std::ios_base::out);

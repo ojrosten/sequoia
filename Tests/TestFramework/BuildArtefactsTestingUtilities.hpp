@@ -13,10 +13,27 @@
 
 #include "sequoia/TestFramework/BuildArtefacts.hpp"
 
+#include <iosfwd>
 #include <span>
 
 namespace sequoia::testing
 {
+  /// An object file and the files read to produce it, spelled out: what the tests write, and what they compare a reading to
+  struct compilation_record
+  {
+    std::filesystem::path object{};
+    std::vector<std::filesystem::path> inputs{};
+
+    [[nodiscard]]
+    friend bool operator==(const compilation_record&, const compilation_record&) noexcept = default;
+
+    friend std::ostream& operator<<(std::ostream& s, const compilation_record& record);
+  };
+
+  /// Every record, its files spelled out
+  [[nodiscard]]
+  std::vector<compilation_record> expand(const compilations& c);
+
   /// Writes a dependency log which ninja would read.
   void write_ninja_deps(const std::filesystem::path& log, std::span<const compilation_record> records);
 
