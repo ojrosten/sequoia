@@ -148,7 +148,8 @@ namespace sequoia::parsing::commandline
       The arguments are read in order. Each is expected to be either an option or the value of a
       parameter:
         -# An option is named by its `name` or by one of its `aliases`. A group of single-character
-           aliases, `-xy`, names the options aliased `-x` and `-y` in turn.
+           aliases, `-xy`, names the options aliased `-x` and `-y` in turn; none of them may have
+           parameters.
         -# The arguments which follow an option supply its `parameters`, one value each.
         -# Once an option's parameters are supplied, the arguments which follow are matched against
            its nested options. One which matches none of them is matched against the enclosing
@@ -163,6 +164,7 @@ namespace sequoia::parsing::commandline
               level or at any enclosing level.
       \throws std::runtime_error if the arguments end before the option most recently encountered has
               all of its parameters.
+      \throws std::runtime_error if a group of aliases names an option with parameters.
       \throws std::logic_error if both the function objects, `early` and `late`, belonging to
               a top-level `option` are null.
 
@@ -217,10 +219,15 @@ namespace sequoia::parsing::commandline
   private:
     enum class top_level { yes, no };
 
+    /** \brief The operation an option contributes its arguments to.
+
+        An option not bound to a function object shares the operation of the option enclosing it,
+        the first `enclosing_args_supplied` arguments of which were supplied to the enclosing options.
+     */
     struct operation_data
     {
       operations_sub_tree oper_tree{};
-      std::size_t    saturated_args{};
+      std::size_t         enclosing_args_supplied{};
     };
 
     operations_forest m_Operations{};
