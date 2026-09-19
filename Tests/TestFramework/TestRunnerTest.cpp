@@ -704,9 +704,12 @@ namespace sequoia::testing
     fs::create_directories(stamp.parent_path());
     write_to_file(stamp, "", std::ios_base::out);
 
+    // Both files the build read are stamped strictly before the executable: where last_write_time
+    // resolves to whole seconds, a file written in the same second as the executable is out of date
     using namespace std::chrono_literals;
     const auto now{std::chrono::file_clock::now()};
     fs::last_write_time(stamp, now - 2s);
+    fs::last_write_time(source, now - 1s);
     fs::last_write_time(toolchainHeader, now - 1s);
     fs::last_write_time(projPaths.executable(), now);
 
