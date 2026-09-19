@@ -8,8 +8,10 @@
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
+#include <algorithm>
+#include <format>
+#include <ranges>
 #include <stdexcept>
-#include <iterator>
 
 namespace sequoia::parsing::commandline
 {
@@ -42,6 +44,15 @@ namespace sequoia::parsing::commandline
       }
 
       return mess;
+    }
+
+    [[nodiscard]]
+    std::string join(const param_list& params, std::string_view separator)
+    {
+      return   params
+             | std::views::transform([](const proper_string& p){ return std::string_view{p}; })
+             | std::views::join_with(separator)
+             | std::ranges::to<std::string>();
     }
   }
 
@@ -139,16 +150,12 @@ namespace sequoia::parsing::commandline
       }
       else
       {
-        if(!currentOptionTree) throw std::logic_error{"Current option not found"};
-
         if(root_weight(currentOperationData.oper_tree).arguments.size()
           < root_weight(currentOptionTree).parameters.size() + currentOperationData.saturated_args)
         {
           mutate_root_weight(currentOperationData.oper_tree, [arg](auto& w) { w.arguments.emplace_back(arg); });
         }
       }
-
-      if(!currentOperationData.oper_tree) throw std::logic_error{"Current option not found"};
 
       if((root_weight(currentOperationData.oper_tree).arguments.size() == root_weight(currentOptionTree).parameters.size() + currentOperationData.saturated_args))
       {
@@ -169,29 +176,24 @@ namespace sequoia::parsing::commandline
       }
     }
 
-    if(!m_Operations.empty()
-      && currentOptionTree
-      && (root_weight(currentOperationData.oper_tree).arguments.size() != root_weight(currentOptionTree).parameters.size()))
+    if(!m_Operations.empty() && currentOptionTree)
     {
       const auto& params{root_weight(currentOptionTree).parameters};
       const auto expected{params.size()};
-      auto mess{std::string{"while parsing option \""}
-                  .append(root_weight(currentOptionTree).name)
-                  .append("\": expected ")
-                  .append(std::to_string(expected))
-                  .append(pluralize(expected, "argument"))
-                  .append(", [")};
+      const auto actual{root_weight(currentOperationData.oper_tree).arguments.size() - currentOperationData.saturated_args};
 
-      for(auto i{params.begin()}; i != params.end(); ++i)
+      if(actual != expected)
       {
-        mess.append(*i);
-        if(std::ranges::distance(i, params.end()) > 1) mess.append(", ");
+        throw std::runtime_error{
+          error(std::format("while parsing option \"{}\": expected {}{}, [{}], but found {}{}",
+                            std::string_view{root_weight(currentOptionTree).name},
+                            expected,
+                            pluralize(expected, "argument"),
+                            join(params, ", "),
+                            actual,
+                            pluralize(actual, "argument")))
+        };
       }
-
-      const auto actual{root_weight(currentOperationData.oper_tree).arguments.size()};
-      mess.append("], but found ").append(std::to_string(actual)).append(pluralize(actual, "argument"));
-
-      throw std::runtime_error{error(mess)};
     }
   }
 
@@ -229,23 +231,46 @@ namespace sequoia::parsing::commandline
   [[nodiscard]]
   bool argument_parser::process_concatenated_aliases(const Options& options, std::string_view arg, operation_data currentOperationData, top_level topLevel)
   {
-    if((arg.size() < 2) || ((arg[0] == '-') && ((arg[1] == ' ') || arg[1] == '-')))
+    // A group is a dash followed by single-character aliases, each spelt without its own dash
+    if((arg.size() < 2) || (arg[0] != '-') || (arg[1] == ' ') || (arg[1] == '-'))
       return false;
 
-    for(auto j{arg.cbegin() + 1}; j != arg.cend(); ++j)
-    {
-      const auto c{*j};
-      if(c != '-')
-      {
+    // Every alias is resolved, and every option it names checked, before any is processed, so a
+    // group which is refused leaves no operation behind
+    const auto findOption{
+      [&options](char c) {
         const auto alias{std::string{'-'} + c};
-
-        auto optionsIter{std::ranges::find_if(options, [&alias](const auto& tree) { return is_alias(root_weight(tree), alias); })};
-
-        if(optionsIter == std::ranges::end(options))  return false;
-
-        const option_tree currentOptionTree{*optionsIter};
-        process_option(currentOptionTree, currentOperationData, topLevel);
+        return std::ranges::find_if(options, [&alias](const auto& tree) { return is_alias(root_weight(tree), alias); });
       }
+    };
+
+    const auto optionsIters{
+        arg.substr(1)
+      | std::views::filter([](char c){ return c != '-'; })
+      | std::views::transform(findOption)
+      | std::ranges::to<std::vector>()
+    };
+
+    if(std::ranges::contains(optionsIters, std::ranges::end(options)))
+      return false;
+
+    for(const auto iter : optionsIters)
+    {
+      if(const auto numParams{root_weight(*iter).parameters.size()}; numParams)
+      {
+        throw std::runtime_error{
+          error(std::format("option \"{}\" expects {}{}, so its alias cannot be concatenated with others, as in '{}'",
+                            std::string_view{root_weight(*iter).name},
+                            numParams,
+                            pluralize(numParams, "argument"),
+                            arg))
+        };
+      }
+    }
+
+    for(const auto iter : optionsIters)
+    {
+      process_option(*iter, currentOperationData, topLevel);
     }
 
     return true;

@@ -70,7 +70,34 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 140
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 119
+Concatenated alias naming an option with parameters
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: option "test" expects 1 argument, so its alias cannot be concatenated with others, as in '-at'
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 124
+Concatenated aliases without the leading dash
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: unrecognized option 'xa'
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 128
+A dash after something other than a dash
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: unrecognized option 'x-'
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 153
 Final argument missing
 
 Expected Exception Type:
@@ -79,7 +106,34 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 351
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 254
+A nested option, not bound to a function object, missing its argument
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: while parsing option "--equivalent-type": expected 1 argument, [type], but found 0 arguments
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 260
+A nested option, not bound to a function object, missing two of its three arguments
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: while parsing option "--equivalent-type": expected 3 arguments, [type, header, namespace], but found 1 argument
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 266
+A dash after something other than a dash, at a nested level
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: unrecognized option 'x-'
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 382
 Two options, one with nesting, illegal argument
 
 Expected Exception Type:

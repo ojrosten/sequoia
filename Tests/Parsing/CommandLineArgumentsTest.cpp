@@ -116,6 +116,19 @@ namespace sequoia::testing
       return parse({{"foo", "-ac"}}, {{{"--async", {"-a"}, {}, fo{}}}});
     });
 
+    check_exception_thrown<std::runtime_error>("Concatenated alias naming an option with parameters", [](){
+      return parse({{"foo", "-at"}}, {{{"--async", {"-a"}, {}, fo{}}},
+                                      {{"test",    {"-t"}, {"case"}, fo{}}}});
+    });
+
+    check_exception_thrown<std::runtime_error>("Concatenated aliases without the leading dash", [](){
+      return parse({{"foo", "xa"}}, {{{"--async", {"-a"}, {}, fo{}}}});
+    });
+
+    check_exception_thrown<std::runtime_error>("A dash after something other than a dash", [](){
+      return parse({{"foo", "x-"}}, {{{"--async", {"-a"}, {}, fo{}}}});
+    });
+
     check(weak_equivalence,
           "Alias without leading dash",
           parse({{"bar", "c"}}, {{{"create", {"c"}, {}, fo{}}}}),
@@ -237,6 +250,24 @@ namespace sequoia::testing
                  {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
                       { {{"--equivalent-type", {}, {"type"}}} } } }}),
            outcome{"bar", {{{fo{}, nullptr, {"class", "dir", "foo"}}}}});
+
+     check_exception_thrown<std::runtime_error>("A nested option, not bound to a function object, missing its argument", [](){
+       return parse({{"bar", "create", "class", "--equivalent-type"}},
+                    {{ {"create", {}, {"class_name"}, fo{}, {},
+                         { {{"--equivalent-type", {}, {"type"}}} } } }});
+     });
+
+     check_exception_thrown<std::runtime_error>("A nested option, not bound to a function object, missing two of its three arguments", [](){
+       return parse({{"bar", "create", "class", "dir", "--equivalent-type", "foo"}},
+                    {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
+                         { {{"--equivalent-type", {}, {"type", "header", "namespace"}}} } } }});
+     });
+
+     check_exception_thrown<std::runtime_error>("A dash after something other than a dash, at a nested level", [](){
+       return parse({{"bar", "create", "class", "dir", "x-"}},
+                    {{ {"create", {}, {"class_name", "directory"}, fo{}, {},
+                         { {{"--equivalent-type", {}, {"type"}}} } } }});
+     });
 
      check(weak_equivalence,
            "A nested option, bound to a function object, utilized",

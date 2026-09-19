@@ -192,6 +192,11 @@ namespace sequoia::parsing::commandline
   private:
     enum class top_level { yes, no };
 
+    /** \brief The operation an option contributes its arguments to.
+
+        An option not bound to a function object shares the operation of the option enclosing it,
+        the first `saturated_args` arguments of which belong to the enclosing options.
+     */
     struct operation_data
     {
       operations_sub_tree oper_tree{};
