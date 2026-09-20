@@ -443,7 +443,7 @@ namespace sequoia::testing
         is lost in a narrow encoding. On a little-endian host the bytes already are the code units.
      */
     [[nodiscard]]
-    std::u16string decode_utf16le(std::string_view bytes)
+    std::u16string decode_utf16le(std::span<const std::byte> bytes)
     {
       constexpr std::size_t unitWidth{sizeof(char16_t)};
 
@@ -455,10 +455,10 @@ namespace sequoia::testing
       }
       else
       {
-        constexpr auto bitsPerByte{std::numeric_limits<unsigned char>::digits};
+        constexpr auto bitsPerByte{std::numeric_limits<std::underlying_type_t<std::byte>>::digits};
         for(std::size_t i{}; i < units.size(); ++i)
         {
-          const auto low{static_cast<unsigned char>(bytes[unitWidth * i])}, high{static_cast<unsigned char>(bytes[unitWidth * i + 1])};
+          const auto low{std::to_integer<unsigned>(bytes[unitWidth * i])}, high{std::to_integer<unsigned>(bytes[unitWidth * i + 1])};
           units[i] = static_cast<char16_t>(low | (high << bitsPerByte));
         }
       }
@@ -499,8 +499,9 @@ namespace sequoia::testing
       if(spelling.size() < extension.size())
         return false;
 
-      auto sameLetter{[](char16_t l, char16_t r){ return ((l < 128) ? std::tolower(static_cast<int>(l)) : l) == r; }};
-      return std::ranges::equal(spelling.substr(spelling.size() - extension.size()), extension, sameLetter);
+      constexpr char16_t asciiEnd{0x80};
+      auto lowered{[asciiEnd](char16_t c){ return (c < asciiEnd) ? static_cast<char16_t>(std::tolower(static_cast<int>(c))) : c; }};
+      return std::ranges::equal(spelling.substr(spelling.size() - extension.size()) | std::views::transform(lowered), extension);
     }
 
     /** The tracker's logs of one kind, decoded: under each source the tracker names, the files that
@@ -539,20 +540,22 @@ namespace sequoia::testing
       [[nodiscard]]
       static std::vector<std::u16string> read_texts(const fs::path& tlogDir, std::string_view kind)
       {
-        std::vector<std::u16string> texts{};
-        for(const auto& entry : fs::directory_iterator(tlogDir))
-        {
-          if(!is_tlog(entry.path(), kind))
-            continue;
+        auto isTlogOfKind{[kind](const fs::directory_entry& entry){ return is_tlog(entry.path(), kind); }};
+        auto decoded{
+          [](const fs::directory_entry& entry) {
+            const auto encoded{read(entry.path())};
+            const auto bytes{std::as_bytes(std::span{encoded})};
+            if(!begins_with(bytes, byte_order_mark))
+              throw std::runtime_error{malformed_error(entry.path(), "not the tracker's UTF-16")};
 
-          const auto encoded{read(entry.path())};
-          if(!encoded.starts_with(byte_order_mark))
-            throw std::runtime_error{malformed_error(entry.path(), "not the tracker's UTF-16")};
+            return decode_utf16le(bytes.subspan(byte_order_mark.size()));
+          }
+        };
 
-          texts.push_back(decode_utf16le(std::string_view{encoded}.substr(byte_order_mark.size())));
-        }
-
-        return texts;
+        return fs::directory_iterator{tlogDir}
+             | std::views::filter(isTlogOfKind)
+             | std::views::transform(decoded)
+             | std::ranges::to<std::vector>();
       }
 
       /** A `^` line names one or more sources, separated by `|`; the lines beneath it, until the next,
@@ -563,18 +566,18 @@ namespace sequoia::testing
       [[nodiscard]]
       static entries_type group_by_source(std::span<const std::u16string> texts)
       {
+        auto withoutReturn{[](std::u16string_view line){ return line.ends_with(u'\r') ? line.substr(0, line.size() - 1) : line; }};
+
         entries_type entries{};
         for(const std::u16string_view text : texts)
         {
+          // A parse: each line is found from the end of the last
           std::vector<entries_type::iterator> sourceEntries{};
           for(std::size_t begin{}; begin < text.size();)
           {
             const auto end{std::ranges::min(text.find(u'\n', begin), text.size())};
-            auto line{text.substr(begin, end - begin)};
+            const auto line{withoutReturn(text.substr(begin, end - begin))};
             begin = end + 1;
-
-            if(line.ends_with(u'\r'))
-              line.remove_suffix(1);
 
             if(line.empty())
               continue;
@@ -621,7 +624,7 @@ namespace sequoia::testing
         return m_Recovered.emplace(std::u16string{spelling}, recover(spelling)).first->second;
       }
     private:
-      std::map<std::u16string, fs::path, std::less<>> m_Recovered{};
+      std::map<std::u16string, fs::path, std::ranges::less> m_Recovered{};
       std::map<fs::path, std::vector<fs::path>> m_Listings{};
 
       [[nodiscard]]
@@ -718,7 +721,9 @@ namespace sequoia::testing
         spelling of both.
      */
     [[nodiscard]]
-    std::optional<std::u16string_view> object_of(const fs::path& tlogDir, std::u16string_view source, std::span<const std::u16string_view> written)
+    std::optional<std::u16string_view> object_of(const fs::path& tlogDir,
+                                                 std::u16string_view source,
+                                                 std::span<const std::u16string_view> written)
     {
       auto objects{written | std::views::filter(spells_object_file)};
       const auto count{std::ranges::distance(objects)};
@@ -769,8 +774,8 @@ namespace sequoia::testing
         rather than guessed. Each record lists its inputs as the compiler opened them, each once, as the
         Ninja reader does.
 
-        The logs name each file once per compilation which touched it, so a spelling is looked up
-        once per record, and its file numbered once.
+        The logs name a file once per compilation which touched it, so each spelling is recovered and
+        numbered once, on first sight, and looked up once per entry thereafter.
      */
     [[nodiscard]]
     std::vector<compilations::record> read_tlogs(path_table& files, const fs::path& tlogDir)
