@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "CommandsFreeTest.hpp"
 #include "sequoia/TestFramework/Commands.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
@@ -16,7 +14,7 @@ namespace sequoia::testing
   using namespace runtime;
 
   [[nodiscard]]
-  std::filesystem::path commands_free_test::source_file() const
+  std::filesystem::path commands_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }

@@ -5,10 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file
-    \brief Definitions for TestCreator.hpp
- */
-
 #include "sequoia/TestFramework/TestCreator.hpp"
 
 #include "sequoia/TestFramework/FileEditors.hpp"
@@ -22,6 +18,7 @@
 
 #include <array>
 #include <chrono>
+#include <format>
 #include <stdexcept>
 
 namespace sequoia::testing
@@ -30,8 +27,64 @@ namespace sequoia::testing
 
   constexpr auto npos{std::string::npos};
 
+  [[nodiscard]]
+  std::string project_namespace_for(const std::filesystem::path& sourceProject)
+  {
+    if(!fs::is_directory(sourceProject))
+      throw std::runtime_error{
+              std::format(
+                "Unable to locate the project's purported source directory, {}.\n"
+                "The source directory is either deduced from the name of the directory into which the project\n"
+                "is checked out, or overridden by specifying a (different) `source_folder` in the project_paths\n"
+                "customizer. A worktree, or a checkout named anything but the project, needs `source_folder`\n"
+                "to be appropriately set.\n",
+                sourceProject.generic_string()
+              )
+            };
+
+    const auto name{back(sourceProject).string()};
+
+    const auto isIdentifier{
+      [&name]() {
+        if(name.empty() || std::isdigit(static_cast<unsigned char>(name.front()))) return false;
+
+        return std::ranges::all_of(name, [](char c){ return std::isalnum(static_cast<unsigned char>(c)) || (c == '_'); });
+      }
+    };
+
+    if(!isIdentifier())
+      throw std::runtime_error{
+              std::format(
+                "The project's namespace is taken from its source directory, {}, which in this case is not a\n"
+                "permissible namespace name. Please supply `source_folder` in the project_paths customizer.\n",
+                name
+              )
+            };
+
+    return name;
+  }
+
   namespace
   {
+    /** \brief Wraps a string in quotation marks, escaping nothing.
+
+        `std::quoted` would do here, and this spelling exists only to stay identical to
+        `modules-native`, where it cannot: libstdc++'s module std exports the manipulator
+        but not the `operator<<` for the `std::__detail::_Quoted_string` it returns, so
+        under `import std` the manipulator is visible and unusable. See gcc-bugs/D in the
+        sequoia-LLM repository. Fixed upstream in gcc 16.1.
+
+        This is not a general substitute. `std::quoted` escapes `"` and `\`; this escapes
+        nothing, and would be wrong for a string containing either. It is exact for what
+        both call sites pass - a project-relative `generic_string()` - and the generated
+        `io.txt` is byte-identical either way, which was checked rather than assumed.
+     */
+    [[nodiscard]]
+    std::string quote_without_escapes(std::string_view relativePath)
+    {
+      return std::format("\"{}\"", relativePath);
+    }
+
     void process_namespace(std::string& text, std::string_view nameSpace)
     {
       if(nameSpace.empty())
@@ -87,7 +140,7 @@ namespace sequoia::testing
       throw std::logic_error{"Unrecognized option for nascent_test_flavour"};
     }
 
-    template<std::invocable<fs::path> Amender, invocable_exactly_r<fs::path, main_paths> PathGenerator>
+    template<std::invocable<fs::path> Amender, invocable_exact_r<fs::path, main_paths> PathGenerator>
     void ammend_file(const project_paths& projPaths, Amender f, PathGenerator g)
     {
       f(g(projPaths.main()));
@@ -229,7 +282,7 @@ namespace sequoia::testing
         {
           const auto outputPath{buildPaths.cmake_cache_dir() / "CMakeOutput.txt"};
           invoke(cd_cmd(main.dir()) && cmake_cmd(buildPaths, outputPath));
-          if(auto text{read_to_string(outputPath)})
+          if(auto text{read_to_string(outputPath, std::ios_base::in)})
             return text.value();            
         }
 
@@ -289,14 +342,14 @@ namespace sequoia::testing
     const auto inputFile{(m_Paths.aux_paths().test_templates() / nameStub).concat(nameEnding)};
 
     fs::copy_file(inputFile, outputFile, fs::copy_options::overwrite_existing);
-    if(auto contents{read_to_string(outputFile)})
+    if(auto contents{read_to_string(outputFile, std::ios_base::in)})
     {
       if(std::string& text{contents.value()}; !text.empty())
       {
         set_top_copyright(text, m_Copyright);
         transformer(text);
 
-        write_to_file(outputFile, text);
+        write_to_file(outputFile, text, std::ios_base::out);
       }
     }
     else
@@ -325,10 +378,10 @@ namespace sequoia::testing
     return std::string{"\""}.append(stringify(outputFile)).append("\"");
   }
 
-  template<invocable_exactly_r<std::filesystem::path, std::filesystem::path> WhenAbsent, std::invocable<std::string&> FileTransformer>
+  template<invocable_exact_r<std::filesystem::path, std::filesystem::path> WhenAbsent, std::invocable<std::string&> FileTransformer>
   void nascent_test_base::finalize(WhenAbsent fn,
                                    const std::vector<std::string>& stubs,
-                                   const std::vector<std::string>& constructors,
+                                   const std::vector<std::string>& testClasses,
                                    std::string_view nameStub,
                                    FileTransformer transformer)
   {
@@ -353,24 +406,15 @@ namespace sequoia::testing
       stream() << create_file(nameStub, stub, transformer) << '\n';
     }
 
-    auto addToSuite{
-      [this, &constructors](const fs::path& mainCpp) {
-        add_to_suite(mainCpp, suite(), m_CodeIndent, constructors);
+    auto registerTests{
+      [this, &testClasses](const fs::path& mainCpp) {
+        add_test_registrations(mainCpp, m_CodeIndent, testClasses);
       }
     };
 
-    ammend_file(m_Paths, addToSuite, [](const main_paths& info) { return info.file(); });
+    ammend_file(m_Paths, registerTests, [](const main_paths& info) { return info.file(); });
 
     stream() << '\n';
-  }
-
-  void nascent_test_base::finalize_suite(std::string_view fallbackIngredient)
-  {
-    if(m_Suite.empty())
-    {
-      m_Suite = fallbackIngredient;
-      camel_to_words(m_Suite);
-    }
   }
 
   void nascent_test_base::finalize_header(const std::filesystem::path& sourcePath)
@@ -404,7 +448,7 @@ namespace sequoia::testing
   {
     const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
 
-    stream() << std::quoted(fs::relative(srcPath, paths().project_root()) .generic_string()) << '\n';
+    stream() << quote_without_escapes(fs::relative(srcPath, paths().project_root()).generic_string()) << '\n';
     fs::copy_file(paths().aux_paths().source_templates() / "MyCpp.cpp", srcPath);
 
     auto setCppText{
@@ -502,12 +546,11 @@ namespace sequoia::testing
     if(surname().empty()) surname(to_surname(flavour()));
 
     camel_name(forename());
-    finalize_suite(camel_name());
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
     nascent_test_base::finalize([this, &nameSpace](const fs::path& filename) { return when_header_absent(filename, nameSpace); },
                                 to_stubs(*this),
-                                constructors(),
+                                test_classes(),
                                 "MyClass",
                                 [this](std::string& text) { transform_file(text); });
   }
@@ -519,7 +562,7 @@ namespace sequoia::testing
 
     const auto headerPath{filename.is_absolute() ? filename : paths().source().project() / rebase_from(m_SourceDir / filename, paths().source().project())};
 
-    stream() << std::quoted(fs::relative(headerPath, paths().project_root()).generic_string()) << '\n';
+    stream() << quote_without_escapes(fs::relative(headerPath, paths().project_root()).generic_string()) << '\n';
     fs::create_directories(headerPath.parent_path());
     fs::copy_file(paths().aux_paths().source_templates() / headerTemplate, headerPath);
 
@@ -534,10 +577,10 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::vector<std::string> nascent_semantics_test::constructors() const
+  std::vector<std::string> nascent_semantics_test::test_classes() const
   {
-    return { {std::string{forename()}.append("_false_negative_").append(surname()).append("{\"False Negative Test\"}")},
-             {std::string{forename()}.append("_").append(surname()).append("{\"Unit Test\"}")}};
+    return { {std::string{forename()}.append("_false_negative_").append(surname())},
+             {std::string{forename()}.append("_").append(surname())}};
   }
 
   void nascent_semantics_test::transform_file(std::string& text) const
@@ -658,20 +701,19 @@ namespace sequoia::testing
   {
     if(surname().empty()) surname(std::string{"allocation_"}.append(to_surname(flavour())));
     camel_name(forename());
-    finalize_suite(camel_name());
     if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
 
     nascent_test_base::finalize([](const fs::path& p) { return p; },
                                 to_stubs(*this),
-                                constructors(),
+                                test_classes(),
                                 "MyClass",
                                 [this](std::string& text) { transform_file(text); });
   }
 
   [[nodiscard]]
-  std::vector<std::string> nascent_allocation_test::constructors() const
+  std::vector<std::string> nascent_allocation_test::test_classes() const
   {
-    return { {std::string{forename()}.append("_").append(surname()).append("{\"Allocation Test\"}")} };
+    return { {std::string{forename()}.append("_").append(surname())} };
   }
 
   void nascent_allocation_test::transform_file(std::string& text) const
@@ -701,7 +743,6 @@ namespace sequoia::testing
   void nascent_behavioural_test::finalize()
   {
     const auto fallbackSuite{capitalize(forename().empty() ? header().filename().replace_extension().string() : forename())};
-    finalize_suite(fallbackSuite);
 
     if(forename().empty()) forename(to_snake_case(fallbackSuite));
 
@@ -711,7 +752,7 @@ namespace sequoia::testing
 
     nascent_test_base::finalize([this](const fs::path& filename) { return when_header_absent(filename); },
                                 to_stubs(*this),
-                                constructors(),
+                                test_classes(),
                                 "MyBehavioural",
                                 [this](std::string& text) { transform_file(text); });
   }
@@ -736,7 +777,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::vector<std::string> nascent_behavioural_test::constructors() const
+  std::vector<std::string> nascent_behavioural_test::test_classes() const
   {
     auto makeClassName{
       [this](std::string_view middlename) -> std::string {
@@ -748,10 +789,7 @@ namespace sequoia::testing
 
     auto make{
       [makeClassName](std::string_view middlename) -> std::string {
-        const auto testClass{makeClassName(middlename)};
-        const auto testName{to_camel_case(testClass, " ")};
-
-        return std::string{testClass}.append("{\"").append(testName).append("\"}");
+        return makeClassName(middlename);
       }
     };
 

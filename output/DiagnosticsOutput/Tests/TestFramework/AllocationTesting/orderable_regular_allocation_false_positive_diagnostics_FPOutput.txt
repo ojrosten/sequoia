@@ -1,0 +1,128 @@
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 38
+
+--Ordered Semantics--
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 45
+
+--Ordered Semantics--
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 38
+
+--Ordered Semantics--
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 45
+
+--Ordered Semantics--
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 0, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 38
+
+--Ordered Semantics--
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 45
+
+--Ordered Semantics--
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 38
+
+--Ordered Semantics--
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 45
+
+--Ordered Semantics--
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 0, 1, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 38
+
+--Ordered Semantics--
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 45
+
+--Ordered Semantics--
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 38
+
+--Ordered Semantics--
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 45
+
+--Ordered Semantics--
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 0, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 38
+
+--Ordered Semantics--
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 45
+
+--Ordered Semantics--
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 0> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 38
+
+--Ordered Semantics--
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/AllocationTesting/OrderableRegularAllocationTestDiagnostics.cpp, Line 45
+
+--Ordered Semantics--
+[sequoia::testing::orderable_regular_beast<int, sequoia::testing::shared_counting_allocator<int, 1, 1, 1> >]
+
+=======================================
+

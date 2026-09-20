@@ -5,10 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file
-    \brief Definitions for FileSystemUtilities.hpp
- */
-
 #include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 

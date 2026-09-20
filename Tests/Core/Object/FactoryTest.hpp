@@ -19,8 +19,20 @@ namespace sequoia::testing
     using regular_test::regular_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
 
     void run_tests();
+  private:
+    void test_erasing_factory();
+
+    /** Checks bulk creation against the same prediction the individual `make` checks use, so the
+        two cannot drift apart. Written once and instantiated for each factory the test builds.
+     */
+
+    template<class Factory, std::size_t N, class... Args>
+    void check_bulk_creation(std::string_view description,
+                             const Factory& f,
+                             const std::array<std::pair<std::string, typename Factory::vessel>, N>& prediction,
+                             const Args&... args);
   };
 }

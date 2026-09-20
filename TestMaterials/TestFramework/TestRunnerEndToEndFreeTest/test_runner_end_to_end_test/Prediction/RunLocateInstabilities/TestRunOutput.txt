@@ -1,0 +1,132 @@
+
+Running tests...
+
+bar_free_test:
+foo_false_negative_test:
+foo_test:
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
+oldschool_false_negative_test:
+oldschool_test:
+container_allocation_test:
+container_performance_test:
+unique_thing_false_negative_test:
+	False Negative Checks:                     2;  Failures:  0
+unique_thing_test:
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
+useful_things_free_test:
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
+
+	[int]
+	operator== returned false
+	Obtained : 43
+	Predicted: 42
+
+	=======================================
+
+utilities_free_test:
+flipper_free_test:
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+house_allocation_test:
+maybe_false_negative_test:
+maybe_test:
+probability_false_negative_test:
+	False Negative Checks:                     2;  Failures:  0
+probability_test:
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+
+-----------Grand Totals-----------
+[Total Run Time: 4.07ms]
+[Execution Time: 2.36ms]
+	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 118]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     4;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Running tests...
+
+bar_free_test:
+foo_false_negative_test:
+foo_test:
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
+oldschool_false_negative_test:
+oldschool_test:
+container_allocation_test:
+container_performance_test:
+unique_thing_false_negative_test:
+	False Negative Checks:                     2;  Failures:  0
+unique_thing_test:
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
+useful_things_free_test:
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
+
+	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
+
+	[int]
+	operator== returned false
+	Obtained : 43
+	Predicted: 42
+
+	=======================================
+
+utilities_free_test:
+flipper_free_test:
+	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
+
+	Tests/Unstable/FlipperFreeTest.cpp, Line 24
+
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
+
+	=======================================
+
+	Tests/Unstable/FlipperFreeTest.cpp, Line 25
+
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
+
+	=======================================
+
+house_allocation_test:
+maybe_false_negative_test:
+maybe_test:
+probability_false_negative_test:
+	False Negative Checks:                     2;  Failures:  0
+probability_test:
+	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
+
+-----------Grand Totals-----------
+[Total Run Time: 3ms]
+[Execution Time: 1.67ms]
+	Standard Top Level Checks:                12;  Failures:  3  [Deep checks: 118]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     4;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Instability detected in file "FlipperFreeTest.cpp"
+Outcome frequencies:
+[50.0%,50.0%]
+
+--No failures--
+
+vs.
+
+	Tests/Unstable/FlipperFreeTest.cpp, Line 24
+
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
+
+	=======================================
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$

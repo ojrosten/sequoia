@@ -17,7 +17,7 @@ namespace sequoia::testing
     using regular_test::regular_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
 
     void run_tests();
 
@@ -38,5 +38,7 @@ namespace sequoia::testing
     void test_node_1_1_node_0_0();
 
     void test_node_1_1_node_0_0interleaved();
+
+    void test_constexpr_copy_assignment();
   };
 }

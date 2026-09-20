@@ -14,32 +14,46 @@
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
 #include "sequoia/TestFramework/TestLogger.hpp"
+#include "sequoia/TestFramework/VersionedOutput.hpp"
 
 #include "sequoia/Core/Logic/Bitmask.hpp"
-#include "sequoia/Core/Object/Suite.hpp"
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
-#include <iostream>
 #include <chrono>
+#include <format>
+#include <iostream>
+#include <optional>
 #include <set>
+#include <span>
+#include <string>
 
 namespace sequoia::testing
 {
-  enum class runner_mode { none=0, help=1, test=2, create=4, init=8};
+  enum class runner_mode : unsigned { none=0, help=1, test=2, create=4, init=8};
 
   enum class update_mode { none = 0, soft };
 
-  enum class recovery_mode { none = 0, recovery = 1, dump = 2 };
-
-  enum class prune_outcome { not_attempted, no_time_stamp, success };
+  enum class recovery_mode : unsigned { none = 0, recovery = 1, dump = 2 };
 
   enum class concurrency_mode {
     serial,    /// serial execution
     dynamic,   /// determined implicitly by the stl
     fixed      /// fixed-size thread pool
   };
+
+  enum class return_code : unsigned {
+    success                = 0,
+    versioned_output_diffs = 1 << 0,
+    soft_failures          = 1 << 1,
+    critical_failures      = 1 << 2,
+    incomplete_run         = 1 << 3,
+    post_run_failures      = 1 << 4
+  };
+
+  [[nodiscard]]
+  std::string to_string(return_code code);
 }
 
 NAMESPACE_SEQUOIA_AS_BITMASK
@@ -49,11 +63,42 @@ NAMESPACE_SEQUOIA_AS_BITMASK
 
   template<>
   struct as_bitmask<sequoia::testing::recovery_mode> : std::true_type {};
+
+  template<>
+  struct as_bitmask<sequoia::testing::return_code> : std::true_type {};
+}
+
+namespace std
+{
+  template<>
+  struct formatter<sequoia::testing::return_code>
+  {
+    constexpr auto parse(auto& ctx) { return ctx.begin(); }
+
+    auto format(sequoia::testing::return_code code, auto& ctx) const -> decltype(ctx.out())
+    {
+      return std::format_to(ctx.out(), "{}", sequoia::testing::to_string(code));
+    }
+  };
 }
 
 namespace sequoia::testing
 {
-  individual_materials_paths set_materials(const std::filesystem::path& sourceFile, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths);
+  [[nodiscard]]
+  return_code to_return_code(const log_summary& summary) noexcept;
+
+  /** Maps the exit status of a process which ran a sequoia test runner back to the code it
+      reported, throwing if the status is not one a runner can produce. */
+  [[nodiscard]]
+  return_code child_return_code(int exitStatus);
+
+  [[nodiscard]]
+  int to_exit_code(return_code code) noexcept;
+
+  individual_materials_paths set_materials(const std::filesystem::path& sourceFile, std::string_view testName, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths);
+
+  [[nodiscard]]
+  active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
 
   class test_vessel
   {
@@ -74,7 +119,7 @@ namespace sequoia::testing
     test_vessel& operator=(test_vessel&&) noexcept = default;
 
     [[nodiscard]]
-    const std::string& name() const noexcept
+    std::string_view name() const noexcept
     {
       return m_pTest->name();
     }
@@ -119,15 +164,21 @@ namespace sequoia::testing
     {
       m_pTest->reset(projPaths, materialsPaths);
     }
+
+    /** \brief Replaces the held test with one which knows where its files are. */
+
+    void initialize(const project_paths& projPaths, const cmake_cache& cache, std::vector<std::filesystem::path>& materialsPaths, recovery_mode mode)
+    {
+      m_pTest->initialize(projPaths, cache, materialsPaths, mode);
+    }
   private:
-    static void versioned_write(const std::filesystem::path& file, const failure_output& output);
     static void versioned_write(const std::filesystem::path& file, std::string_view text);
 
     struct soul
     {
       virtual ~soul() = default;
 
-      virtual const std::string& name() const noexcept                    = 0;
+      virtual std::string_view name() const noexcept                      = 0;
       virtual const test_summary_path& summary_file_path() const noexcept = 0;
       virtual std::filesystem::path source_file() const                   = 0;
       virtual std::filesystem::path working_materials() const             = 0;
@@ -135,6 +186,7 @@ namespace sequoia::testing
 
       virtual log_summary execute(std::optional<std::size_t> index) = 0;
       virtual void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) = 0;
+      virtual void initialize(const project_paths& projPaths, const cmake_cache& cache, std::vector<std::filesystem::path>& materialsPaths, recovery_mode mode) = 0;
     };
 
     template<concrete_test Test>
@@ -147,13 +199,13 @@ namespace sequoia::testing
       [[nodiscard]]
       std::filesystem::path source_file() const final
       {
-        return m_Test.source_file();
+        return Test::source_file();
       }
 
       [[nodiscard]]
-      const std::string& name() const noexcept final
+      std::string_view name() const noexcept final
       {
-        return m_Test.name();
+        return m_Name;
       }
 
       [[nodiscard]]
@@ -200,9 +252,24 @@ namespace sequoia::testing
       void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) final
       {
         m_Test.reset_results();
-        set_materials(m_Test.source_file(), projPaths, materialsPaths);
+        set_materials(m_Test.source_file(), m_Test.name(), projPaths, materialsPaths);
+      }
+
+      void initialize(const project_paths& projPaths, const cmake_cache& cache, std::vector<std::filesystem::path>& materialsPaths, recovery_mode mode) final
+      {
+        const auto source{Test::source_file()};
+
+        m_Test = Test{m_Name,
+                      source,
+                      projPaths,
+                      set_materials(source, m_Name, projPaths, materialsPaths),
+                      make_active_recovery_paths(mode, projPaths),
+                      get_output_discriminator<Test>(cache),
+                      get_reduction_discriminator<Test>(cache)};
       }
     private:
+      static constexpr std::string_view m_Name{test_name<Test>()};
+
       log_summary write_versioned_output(const timer& t) const
       {
         auto summary{m_Test.summarize(t.time_elapsed())};
@@ -227,18 +294,24 @@ namespace sequoia::testing
 
   template<concrete_test T>
   [[nodiscard]]
-  std::optional<std::string> get_output_discriminator(const T& test){
+  std::optional<std::string> get_output_discriminator(const cmake_cache& cache){
+    static_assert(!requires(const T& t){ t.output_discriminator(); },
+                  "output_discriminator must be static and take const cmake_cache&: this one is neither, and would be silently ignored");
+
     if constexpr(has_discriminated_output_v<T>)
-      return test.output_discriminator();
+      return T::output_discriminator(cache);
     else
       return std::nullopt;
   }
 
   template<concrete_test T>
   [[nodiscard]]
-  std::optional<std::string> get_reduction_discriminator(const T& test){
+  std::optional<std::string> get_reduction_discriminator(const cmake_cache& cache){
+    static_assert(!requires(const T& t){ t.summary_discriminator(); },
+                  "summary_discriminator must be static and take const cmake_cache&: this one is neither, and would be silently ignored");
+
     if constexpr(has_discriminated_summary_v<T>)
-      return test.summary_discriminator();
+      return T::summary_discriminator(cache);
     else
       return std::nullopt;
   }
@@ -265,52 +338,42 @@ namespace sequoia::testing
     test_runner& operator=(const test_runner&)     = delete;
     test_runner& operator=(test_runner&&) noexcept = default;
 
-    template<concrete_test... Tests>
-      requires (sizeof...(Tests) > 0)
-    void add_test_suite(std::string_view name, Tests&&... tests)
+    template<concrete_test T>
+    void register_test()
     {
-      using namespace object;
+      ++m_Registered;
 
-      check_for_duplicates(name, tests...);
+      constexpr std::string_view name{test_name<T>()};
+      if(!m_TestNames.insert(name).second)
+        throw std::logic_error{duplication_message(name, T::source_file())};
 
-      extract_suite_tree(name, m_Filter, std::forward<Tests>(tests)...);
+      constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
+
+      if(m_Filter(T::source_file(), groups_of(T::source_file()), isPerformanceTest)) m_Tests.emplace_back(T{});
     }
 
-    template<class... Suites>
-      requires (object::is_suite_v<Suites> && ...)
-    void add_test_suite(std::string_view name, Suites... s)
-    {
-      using namespace object;
+    [[nodiscard]]
+    return_code execute([[maybe_unused]] timer_resolution r={});
 
-      extract_suite_tree(m_Filter, suite{std::string{name}, std::move(s)...});
-    }
-
-    void execute([[maybe_unused]] timer_resolution r={});
-
+    [[nodiscard]]
     std::ostream& stream() noexcept { return *m_Stream; }
 
+    [[nodiscard]]
     const project_paths& proj_paths() const noexcept { return m_ProjPaths; }
 
+    [[nodiscard]]
     const std::string& copyright() const noexcept { return m_Copyright; }
 
+    [[nodiscard]]
     const indentation& code_indent() const noexcept { return m_CodeIndent; }
 
   private:
-    enum class output_mode { standard = 0, verbose = 1 };
+    enum class verbosity { standard = 0, verbose = 1 };
     enum class instability_mode { none = 0, single_instance, coordinator, sandbox };
+    enum class versioned_output_mode { unchecked = 0, checked = 1 };
+    enum class performance_mode { included = 0, excluded = 1 };
+    enum class is_performance_test : bool { no, yes };
 
-    struct prune_info
-    {
-      prune_mode mode{prune_mode::passive};
-      std::string include_cutoff{};
-    };
-
-    struct test_to_path
-    {
-      template<concrete_test Test>
-      [[nodiscard]]
-      normal_path operator()(const Test& test) const { return test.source_file(); }
-    };
 
     class path_equivalence
     {
@@ -326,30 +389,131 @@ namespace sequoia::testing
       const std::filesystem::path* m_Repo;
     };
 
+    /** \brief Selection by source file, or by the name of a directory containing it. */
+
+    class test_filter
+    {
+    public:
+      using items_map_type  = std::vector<std::pair<normal_path, bool>>;
+      using suites_map_type = std::vector<std::pair<std::string, bool>>;
+
+      explicit test_filter(path_equivalence equivalent) : m_Equivalent{equivalent} {}
+
+      void add_selected_suite(std::string name) { add(m_SelectedSuites, std::move(name)); }
+
+      void add_selected_item(normal_path source) { add(m_SelectedItems, std::move(source)); }
+
+      /** \brief Selects nothing, which is not the same as selecting everything. */
+
+      void select_nothing()
+      {
+        m_SelectedItems.emplace();
+        m_SelectedSuites.emplace();
+      }
+
+      void exclude_performance_tests() noexcept { m_PerformanceMode = performance_mode::excluded; }
+
+      void exclude_item(normal_path source) { m_ExcludedItems.emplace_back(std::move(source)); }
+
+      [[nodiscard]]
+      bool operator()(const normal_path& source, std::span<const std::string> groups, is_performance_test isPerformanceTest)
+      {
+        if((isPerformanceTest == is_performance_test::yes) && (m_PerformanceMode == performance_mode::excluded)) return false;
+
+        if(std::ranges::any_of(m_ExcludedItems, [this, &source](const normal_path& excluded){ return m_Equivalent(excluded, source); }))
+          return false;
+
+        if(!m_SelectedItems && !m_SelectedSuites) return true;
+
+        // Both are evaluated: an unreported selection is one nobody can be warned about.
+        const std::array<bool, 2> found{
+          mark(m_SelectedItems,  [this, &source](const normal_path& selected){ return m_Equivalent(selected, source); }),
+          mark(m_SelectedSuites, [groups](const std::string& selected){ return std::ranges::find(groups, selected) != groups.end(); })
+        };
+
+        return std::ranges::any_of(found, [](bool b){ return b; });
+      }
+
+      [[nodiscard]]
+      std::optional<std::ranges::subrange<items_map_type::const_iterator>> selected_items() const noexcept
+      {
+        return as_range(m_SelectedItems);
+      }
+
+      [[nodiscard]]
+      std::optional<std::ranges::subrange<suites_map_type::const_iterator>> selected_suites() const noexcept
+      {
+        return as_range(m_SelectedSuites);
+      }
+
+      [[nodiscard]]
+      operator bool() const noexcept { return m_SelectedItems.has_value() || m_SelectedSuites.has_value(); }
+    private:
+      std::vector<normal_path> m_ExcludedItems{};
+
+      template<class Map>
+      static void add(std::optional<Map>& map, typename Map::value_type::first_type key)
+      {
+        if(!map) map = Map{};
+
+        map->emplace_back(std::move(key), false);
+      }
+
+      template<class Map, class Predicate>
+      static bool mark(std::optional<Map>& map, Predicate pred)
+      {
+        if(!map) return false;
+
+        auto found{std::ranges::find_if(*map, [&pred](const auto& e){ return pred(e.first); })};
+        if(found == map->end()) return false;
+
+        found->second = true;
+        return true;
+      }
+
+      template<class Map>
+      [[nodiscard]]
+      static std::optional<std::ranges::subrange<typename Map::const_iterator>> as_range(const std::optional<Map>& map) noexcept
+      {
+        if(!map) return std::nullopt;
+
+        return std::ranges::subrange{map->begin(), map->end()};
+      }
+
+      std::optional<items_map_type>  m_SelectedItems{};
+      std::optional<suites_map_type> m_SelectedSuites{};
+      path_equivalence m_Equivalent;
+      performance_mode m_PerformanceMode{performance_mode::included};
+    };
+
     struct suite_node
     {
       log_summary summary{};
       std::optional<test_vessel> optTest{};
     };
 
-    using suite_type  = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, suite_node>;
-    using filter_type = object::granular_filter<normal_path, path_equivalence, test_to_path>;
+    using suite_type = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, suite_node>;
 
     std::string      m_Copyright{};
     project_paths    m_ProjPaths;
+    cmake_cache      m_CMakeCache;
     indentation      m_CodeIndent{"  "};
     std::ostream*    m_Stream;
 
     suite_type m_Suites{};
-    filter_type m_Filter{path_equivalence{proj_paths().tests().repo()}, test_to_path{}};
-    prune_info m_PruneInfo{};
+    std::vector<test_vessel> m_Tests{};
+    std::set<std::string_view> m_TestNames{};
+    std::size_t m_Registered{};
+    test_filter m_Filter{path_equivalence{proj_paths().tests().repo()}};
+    prune_mode m_PruneMode{prune_mode::passive};
 
-    runner_mode      m_RunnerMode{runner_mode::none};
-    output_mode      m_OutputMode{output_mode::standard};
-    update_mode      m_UpdateMode{update_mode::none};
-    recovery_mode    m_RecoveryMode{recovery_mode::none};
-    concurrency_mode m_ConcurrencyMode{concurrency_mode::dynamic};
-    instability_mode m_InstabilityMode{instability_mode::none};
+    runner_mode           m_RunnerMode{runner_mode::none};
+    verbosity             m_Verbosity{verbosity::standard};
+    update_mode           m_UpdateMode{update_mode::none};
+    recovery_mode         m_RecoveryMode{recovery_mode::none};
+    concurrency_mode      m_ConcurrencyMode{concurrency_mode::dynamic};
+    instability_mode      m_InstabilityMode{instability_mode::none};
+    versioned_output_mode m_VersionedOutputMode{versioned_output_mode::unchecked};
 
     std::size_t m_NumReps{1},
                 m_RunnerID{},
@@ -368,7 +532,33 @@ namespace sequoia::testing
 
     void reset_tests();
 
-    void run_tests(std::optional<std::size_t> id);
+    return_code run_tests(std::optional<std::size_t> id);
+
+    /** The `select`/`test` options which reproduce this run's filter, for handing to a child process. */
+    [[nodiscard]]
+    std::string selection_options() const;
+
+    /** Runs the tests in child processes, one per repetition, each isolated from the others. */
+    [[nodiscard]]
+    return_code run_tests_in_sandboxes();
+
+    /** Runs the tests here: once if this process is itself a sandbox, otherwise once per repetition. */
+    [[nodiscard]]
+    return_code run_tests_in_this_process();
+
+    [[nodiscard]]
+    const log_summary& root_summary() const;
+
+    /** The state to compare the run's writes against, or nothing at all if the versioned output is
+        not being checked - which is a different thing from an empty snapshot, since a project with
+        no versioned output yet legitimately has one of those. This is the sole place the mode is
+        consulted, and the files are read only when something will be done with them.
+     */
+    [[nodiscard]]
+    std::optional<versioned_output_snapshot> versioned_output_baseline() const;
+
+    [[nodiscard]]
+    return_code report_versioned_output_changes(const std::optional<versioned_output_snapshot>& baseline);
 
     [[nodiscard]]
     bool nothing_to_do();
@@ -379,74 +569,17 @@ namespace sequoia::testing
     void prune();
 
     [[nodiscard]]
-    prune_outcome do_prune();
+    /// The reason prune selected every test, if it did; the filter holds the selection otherwise
+    [[nodiscard]]
+    std::optional<prune_fallback_reason> do_prune();
 
-    template<class Filter, class Suite>
-      requires object::is_suite_v<Suite>
-    void extract_suite_tree(Filter&& filter, Suite&& testSuite)
-    {
-      using namespace object;
-
-      if(!m_Suites.order())
-      {
-        m_Suites.add_node(suite_type::npos);
-      }
-
-      std::vector<std::filesystem::path> materialsPaths{};
-
-      // TO DO: may need generalizing since suites can have arbitrary depth.
-      const std::string suiteName{testSuite.name()};
-
-      extract_tree(std::forward<Suite>(testSuite),
-                   std::forward<Filter>(filter),
-                   overloaded{
-                     [] <class... Ts> (const suite<Ts...>& s) -> suite_node { return {.summary{log_summary{s.name()}}}; },
-                     [this, &suiteName, &materialsPaths]<concrete_test T>(T&& test) -> suite_node {
-                       test = T{test.name(),
-                                suiteName,
-                                test.source_file(),
-                                proj_paths(),
-                                set_materials(test.source_file(), proj_paths(), materialsPaths),
-                                make_active_recovery_paths(m_RecoveryMode, proj_paths()),
-                                get_output_discriminator(test),
-                                get_reduction_discriminator(test)};
-                   
-                       return {.summary{log_summary{test.name()}}, .optTest{std::move(test)}};
-                     }
-                   },
-                   m_Suites,
-                   0);
-    }
-
-    template<class Filter, concrete_test... Tests>
-      requires (sizeof...(Tests) > 0)
-    void extract_suite_tree(std::string_view name, Filter&& filter, Tests&&... tests)
-    {
-      extract_suite_tree(std::forward<Filter>(filter), object::suite{std::string{name}, std::forward<Tests>(tests)...});
-    }
-
-    template<concrete_test... Tests>
-      requires (sizeof...(Tests) > 0)
-    static void check_for_duplicates(std::string_view name, const Tests&... tests)
-    {
-      using duplicate_set = std::set<std::pair<std::string_view, std::filesystem::path>>;
-
-      duplicate_set namesAndSources{};
-
-      auto check{
-        [&,name](concrete_test auto const& test) {
-          if(!namesAndSources.emplace(test.name(), test.source_file()).second)
-            throw std::runtime_error{duplication_message(name, test.name(), test.source_file())};
-        }
-      };
-
-      (check(tests), ...);
-    }
+    void build_suite_tree();
 
     [[nodiscard]]
-    static std::string duplication_message(std::string_view suiteName, std::string_view testName, const std::filesystem::path& source);
+    std::vector<std::string> groups_of(const std::filesystem::path& source) const;
 
     [[nodiscard]]
-    static active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
+    static std::string duplication_message(std::string_view testName, const std::filesystem::path& source);
+
  };
 }

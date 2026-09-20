@@ -1,0 +1,2 @@
+allocation_false_negative_diagnostics_broken_semantics
+False Negative Checks:                    64;  Failures:  0

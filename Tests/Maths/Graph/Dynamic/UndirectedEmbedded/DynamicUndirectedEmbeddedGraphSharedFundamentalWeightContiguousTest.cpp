@@ -5,15 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "DynamicUndirectedEmbeddedGraphSharedFundamentalWeightContiguousTest.hpp"
 #include "DynamicUndirectedEmbeddedGraphWeightedTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path dynamic_undirected_embedded_graph_shared_fundamental_weight_contiguous_test::source_file() const
+  std::filesystem::path dynamic_undirected_embedded_graph_shared_fundamental_weight_contiguous_test::source_file()
   {
     return std::source_location::current().file_name();
   }

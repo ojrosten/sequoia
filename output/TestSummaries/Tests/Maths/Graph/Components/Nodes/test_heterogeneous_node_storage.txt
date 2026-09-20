@@ -1,0 +1,2 @@
+test_heterogeneous_node_storage
+Standard Top Level Checks:                24;  Failures:  0  [Deep checks: 24]

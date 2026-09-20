@@ -1,0 +1,85 @@
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 82
+
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 83
+
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 85
+
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 86
+
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 88
+<
+
+[int]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 89
+<=
+
+[int]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 90
+>
+
+[int]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 91
+>=
+
+[int]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 98
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 103
+<
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 109
+
+[std::vector<double, std::allocator<double> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/RelationalTestDiagnostics.cpp, Line 112
+
+[std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
+
+=======================================
+

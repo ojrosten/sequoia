@@ -1,0 +1,2 @@
+absolute_logarithmic_coordinates_test
+Standard Top Level Checks:                68;  Failures:  0  [Deep checks: 1288]

@@ -5,10 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file
-    \brief Definitions for AllocationCheckersCore.hpp
-*/
-
 #include "sequoia/TestFramework/AllocationCheckersCore.hpp"
 
 #include <stdexcept>

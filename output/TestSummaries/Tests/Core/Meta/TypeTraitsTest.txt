@@ -1,2 +1,0 @@
-Type Traits
-Standard Top Level Checks:                61;  Failures:  0  [Deep checks: 61]

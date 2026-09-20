@@ -19,11 +19,12 @@ namespace sequoia::testing
     using free_test::free_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
 
     void run_tests();
   private:
     void test_add_include_without_an_existing_block();
     void test_add_include_to_an_existing_block();
+    void test_comparison_of_file_contents();
   };
 }

@@ -5,15 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "MonotonicSequenceTest.hpp"
 #include "MonotonicSequenceTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path monotonic_sequence_test::source_file() const
+  std::filesystem::path monotonic_sequence_test::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -106,6 +104,9 @@ namespace sequoia::testing
 
     constexpr static_monotonic_sequence<double, 2> s{5.1, 3.8}, t{-3.4, -4.4};
     check_semantics("", s, t);
+
+    // On the trait, since static_monotonic_sequence has no public swap
+    STATIC_CHECK(maths::impl::swap_is_noexcept_v<std::array<double, 2>>);
   }
 
   template<bool Check>

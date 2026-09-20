@@ -1,2 +1,0 @@
-Complex Vector Coordinates Test
-Standard Top Level Checks:               191;  Failures:  0  [Deep checks: 5093]

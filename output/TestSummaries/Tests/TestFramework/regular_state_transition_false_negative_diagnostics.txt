@@ -1,0 +1,2 @@
+regular_state_transition_false_negative_diagnostics
+False Negative Checks:                     5;  Failures:  0

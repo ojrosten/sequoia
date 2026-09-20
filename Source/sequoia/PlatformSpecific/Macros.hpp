@@ -29,3 +29,20 @@
 #else
   #define NAMESPACE_SEQUOIA_AS_BITMASK namespace sequoia
 #endif
+
+/** Suppresses a gcc warning over a span of code, and expands to nothing elsewhere.
+
+    gcc only: clang lacks some of these warning names, and MSVC warns C4068 on a pragma it does not
+    recognise. Each use should say at the site why the diagnostic is wrong.
+ */
+
+#if defined(__GNUG__) && !defined(__clang__)
+  #define SEQUOIA_DO_PRAGMA(x) _Pragma(#x)
+  #define SEQUOIA_GCC_SUPPRESS_BEGIN(warning) \
+    _Pragma("GCC diagnostic push")            \
+    SEQUOIA_DO_PRAGMA(GCC diagnostic ignored warning)
+  #define SEQUOIA_GCC_SUPPRESS_END _Pragma("GCC diagnostic pop")
+#else
+  #define SEQUOIA_GCC_SUPPRESS_BEGIN(warning)
+  #define SEQUOIA_GCC_SUPPRESS_END
+#endif

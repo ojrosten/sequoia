@@ -19,12 +19,14 @@ namespace sequoia::testing
     using free_test::free_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
 
     void run_tests();
   private:
 
     void test_type_handling();
+
+    void test_project_namespace();
 
     void test_template_data_generation();
 

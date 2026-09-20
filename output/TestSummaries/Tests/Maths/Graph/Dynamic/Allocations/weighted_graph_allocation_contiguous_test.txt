@@ -1,0 +1,2 @@
+weighted_graph_allocation_contiguous_test
+Standard Top Level Checks:                81;  Failures:  0  [Deep checks: 3817]

@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "VectorNonlinearRepresentationsTest.hpp"
 #include "sequoia/Physics/PhysicalValues.hpp"
 
@@ -61,7 +59,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path vector_nonlinear_representations_free_test::source_file() const
+  std::filesystem::path vector_nonlinear_representations_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }

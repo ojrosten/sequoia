@@ -1,2 +1,0 @@
-Bucketed Sequence Allocation Test
-Standard Top Level Checks:                40;  Failures:  0  [Deep checks: 7400]

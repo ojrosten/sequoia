@@ -1,0 +1,19 @@
+  Warning: 'prune' ignored if either test families or test source files are specified
+
+Running tests...
+
+bar_free_test:
+foo_false_negative_test:
+foo_test:
+oldschool_false_negative_test:
+oldschool_test:
+
+-----------Grand Totals-----------
+[Total Run Time: 704us]
+[Execution Time: 116us]
+	Standard Top Level Checks:                 0;  Failures:  0
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

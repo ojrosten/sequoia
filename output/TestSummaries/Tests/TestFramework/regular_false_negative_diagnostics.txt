@@ -1,0 +1,2 @@
+regular_false_negative_diagnostics
+False Negative Checks:                    26;  Failures:  0

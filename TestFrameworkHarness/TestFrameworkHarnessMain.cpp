@@ -11,6 +11,8 @@
 
 int main(int argc, char** argv)
 {
+  auto code{sequoia::testing::return_code::incomplete_run};
+
   try
   {
     using namespace sequoia;
@@ -21,15 +23,12 @@ int main(int argc, char** argv)
                        argv,
                        "Oliver J. Rosten",
                        "  ",
-                       {.main_cpp{"TestFrameworkHarness/TestFrameworkHarnessMain.cpp"}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
+                       {.source_folder{"sequoia"}, .main_cpp{"TestFrameworkHarness/TestFrameworkHarnessMain.cpp"}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
 
-    runner.add_test_suite(
-      "Test Runner",
-      test_runner_end_to_end_test("End to End Test"),
-      test_runner_project_files("Project Files Test")
-    );
+    runner.register_test<test_runner_end_to_end_test>();
+    runner.register_test<test_runner_project_files>();
 
-    runner.execute(timer_resolution{1ms});
+    code = runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)
   {
@@ -40,6 +39,6 @@ int main(int argc, char** argv)
     std::cout << "Unrecognized error\n"; 
   }
   
-  return 0;
+  return sequoia::testing::to_exit_code(code);
 }
 

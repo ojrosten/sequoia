@@ -320,7 +320,7 @@ namespace sequoia::testing
     class E,
     test_mode Mode,
     class Fn,
-    invocable_exactly_r<std::string, project_paths, std::string> Postprocessor=default_exception_message_postprocessor
+    invocable_exact_r<std::string, project_paths, std::string> Postprocessor=default_exception_message_postprocessor
   >
   bool check_exception_thrown(std::string description, test_logger<Mode>& logger, Fn&& function, const project_paths& projPaths, Postprocessor postprocessor={})
   {
@@ -803,7 +803,7 @@ namespace sequoia::testing
     <
       class E,
       class Fn,
-      invocable_exactly_r<std::string, project_paths, std::string> Postprocessor=default_exception_message_postprocessor,
+      invocable_exact_r<std::string, project_paths, std::string> Postprocessor=default_exception_message_postprocessor,
       class Self
     >
     bool check_exception_thrown(this Self& self, const reporter& description, Fn&& function, Postprocessor postprocessor={})
@@ -845,12 +845,6 @@ namespace sequoia::testing
     ~checker() = default;
 
     [[nodiscard]]
-    std::size_t checks() const noexcept { return m_Logger.checks(); }
-
-    [[nodiscard]]
-    std::size_t failures() const noexcept { return m_Logger.failures(); }
-
-    [[nodiscard]]
     const uncaught_exception_info& exceptions_detected_by_sentinel() const noexcept
     {
       return m_Logger.exceptions_detected_by_sentinel();
@@ -860,12 +854,6 @@ namespace sequoia::testing
     sentinel<Mode> make_sentinel(std::string message)
     {
       return {m_Logger, std::move(message)};
-    }
-
-    [[nodiscard]]
-    std::string_view top_level_message() const
-    {
-      return m_Logger.top_level_message();
     }
 
     [[nodiscard]]

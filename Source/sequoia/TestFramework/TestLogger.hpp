@@ -57,16 +57,14 @@ namespace sequoia::testing
       performance_checks{};
   };
 
-  /** \class 
-      \brief Helper class for safe interaction with test_logger.
+  /** \brief Helper class for safe interaction with test_logger.
 
       \anchor sentinel_base_primary
    */
 
   class sentinel_base;
 
-  /** \class
-      \brief Helper class for logging of results.
+  /** \brief Helper class for logging of results.
 
       \anchor test_logger_base_primary
    */
@@ -172,8 +170,7 @@ namespace sequoia::testing
     failure_output& add_to_output(failure_output& output, std::string_view message);
   };
 
-  /** \class
-      \brief Logs test results.
+  /** \brief Logs test results.
 
       \anchor test_logger_primary
    */
@@ -249,8 +246,7 @@ namespace sequoia::testing
       m_PriorDeepChecks{};
   };
 
-  /** \class
-      \brief Marshals the logging of checks and failures.
+  /** \brief Marshals the logging of checks and failures.
 
       The sentinel class template serves several purposes.
 
@@ -300,7 +296,13 @@ namespace sequoia::testing
   public:
     using duration = std::chrono::steady_clock::duration;
 
-    log_summary() = default;
+    // `{}` rather than `= default`, to stay identical to `modules-native`, where the
+    // defaulted constructor of this class is emitted in no translation unit at all and
+    // the link fails. See gcc-bugs/F in the sequoia-LLM repository; fixed upstream in
+    // gcc 15.3. The two spellings differ in value-initialisation - `{}` is
+    // user-provided, so members without initialisers would not be zero-initialised - but
+    // every member below has one, so the object state is identical.
+    log_summary() {}
 
     explicit log_summary(std::string_view name);
 

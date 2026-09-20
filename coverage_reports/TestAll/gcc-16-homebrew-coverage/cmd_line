@@ -1,0 +1,1 @@
+genhtml --demangle-cpp /opt/homebrew/opt/binutils/bin/c++filt --suppress-aliases -o /Users/oliver/sequoia//coverage_reports/TestAll/gcc-16-homebrew-coverage /Users/oliver/sequoia/build/TestAll/gcc-16-homebrew-coverage/coverage.info --ignore-errors inconsistent --ignore-errors range --ignore-errors empty --ignore-errors category

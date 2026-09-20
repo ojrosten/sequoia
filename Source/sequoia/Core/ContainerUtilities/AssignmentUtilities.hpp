@@ -17,13 +17,14 @@
  */
 
 #include "sequoia/Core/Meta/Sequences.hpp"
+#include "sequoia/Core/Meta/Utilities.hpp"
 
 #include <memory>
 
 namespace sequoia::impl
 {
   template<class Excluded, template<class> class TypeToType, class Fn, class... Ts>
-  void invoke_filtered(Fn f, Ts... t)
+  constexpr void invoke_filtered(Fn f, Ts... t)
   {
     invoke_with_specified_args(f, make_filtered_sequence<Excluded, TypeToType, Ts...>{}, t...);
   }

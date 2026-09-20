@@ -27,7 +27,7 @@
     std::totally_ordered.
 
     This file adds functions to the check_semantics overload set: they are
-    appropriate for testing the behaviour of types with regular/std::totally_ordered semantics. Inside the
+    appropriate for testing the behaviour of types with regular/`std::totally_ordered` semantics. Inside the
     functions, consistency of the operators listed above will be checked. One of the overloads
     also accepts a mutator. This will modify a copy of y, checking both that the copy is
     indeed changed and also that y is left alone. The reason for this is to check that classes

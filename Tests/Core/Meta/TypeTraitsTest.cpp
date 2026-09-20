@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "TypeTraitsTest.hpp"
 
 #include "sequoia/Core/Meta/TypeTraits.hpp"
@@ -25,7 +23,7 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  std::filesystem::path type_traits_test::source_file() const
+  std::filesystem::path type_traits_test::source_file()
   {
     return std::source_location::current().file_name();
   }

@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "PartitionedSequenceAllocationTest.hpp"
 #include "PartitionedDataAllocationTestingUtilities.hpp"
 
@@ -26,7 +24,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path partitioned_sequence_allocation_test::source_file() const
+  std::filesystem::path partitioned_sequence_allocation_test::source_file()
   {
     return std::source_location::current().file_name();
   }

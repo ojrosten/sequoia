@@ -21,7 +21,7 @@ namespace sequoia::testing
   public:
     individual_materials_paths() = default;
 
-    individual_materials_paths(std::filesystem::path sourceFile, const project_paths& projPaths);
+    individual_materials_paths(const std::filesystem::path& sourceFile, std::string_view testName, const project_paths& projPaths);
 
     [[nodiscard]]
     std::filesystem::path original_working() const;
@@ -65,7 +65,7 @@ namespace sequoia::testing
   public:
     individual_diagnostics_paths() = default;
 
-    individual_diagnostics_paths(const std::filesystem::path& projectRoot, std::string_view suite, const std::filesystem::path& source, test_mode mode, const std::optional<std::string>& platform);
+    individual_diagnostics_paths(const project_paths& projPaths, std::string_view testName, const std::filesystem::path& source, test_mode mode, const std::optional<std::string>& platform);
 
     [[nodiscard]]
     const std::filesystem::path& false_positive_or_negative_file_path() const noexcept
@@ -91,7 +91,7 @@ namespace sequoia::testing
   public:
     test_summary_path() = default;
 
-    test_summary_path(const std::filesystem::path& sourceFile, const project_paths& projectPaths, const std::optional<std::string>& summaryDiscriminator);
+    test_summary_path(const std::filesystem::path& sourceFile, std::string_view testName, const project_paths& projectPaths, const std::optional<std::string>& summaryDiscriminator);
 
     [[nodiscard]]
     const std::filesystem::path& file_path() const noexcept { return m_Summary; }

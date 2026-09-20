@@ -5,17 +5,18 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "SumTypesFreeDiagnostics.hpp"
 #include "ElementaryFreeDiagnosticsUtilities.hpp"
 
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
 
+#include <expected>
+#include <string>
+
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path sum_types_false_negative_free_diagnostics::source_file() const
+  std::filesystem::path sum_types_false_negative_free_diagnostics::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -24,6 +25,7 @@ namespace sequoia::testing
   {
     test_variant();
     test_optional();
+    test_expected();
     test_any();
   }
 
@@ -106,6 +108,24 @@ namespace sequoia::testing
     }
   }
 
+  void sum_types_false_negative_free_diagnostics::test_expected()
+  {
+    {
+      using expected = std::expected<int, std::string>;
+
+      check(equality, "A value vs an error", expected{0}, expected{std::unexpect, "one"});
+      check(equality, "An error vs a value", expected{std::unexpect, "one"}, expected{0});
+      check(equality, "Two std::expecteds holding different values", expected{2}, expected{0});
+      check(equality, "Two std::expecteds holding different errors", expected{std::unexpect, "one"}, expected{std::unexpect, "two"});
+    }
+
+    {
+      using expected = std::expected<only_equivalence_checkable, std::string>;
+
+      check(equivalence, "Two std::expecteds holding different values", expected{2}, expected{0});
+    }
+  }
+
   void sum_types_false_negative_free_diagnostics::test_any()
   {
     check(equivalence, "Empty std::any", std::any{}, 1);
@@ -123,7 +143,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path sum_types_false_positive_free_diagnostics::source_file() const
+  std::filesystem::path sum_types_false_positive_free_diagnostics::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -132,6 +152,7 @@ namespace sequoia::testing
   {
     test_variant();
     test_optional();
+    test_expected();
     test_any();
   }
 
@@ -185,6 +206,24 @@ namespace sequoia::testing
 
       check(weak_equivalence, "", opt{{0, 0.0}}, opt{{0, 0.0}});
       check(with_best_available, "", opt{{0, 0.0}}, opt{{0, 0.0}});
+    }
+  }
+
+  void sum_types_false_positive_free_diagnostics::test_expected()
+  {
+    {
+      using expected = std::expected<int, std::string>;
+
+      check(equality, "", expected{0}, expected{0});
+      check(equality, "", expected{std::unexpect, "two"}, expected{std::unexpect, "two"});
+      check(with_best_available, "", expected{-1}, expected{-1});
+    }
+
+    {
+      using expected = std::expected<only_equivalence_checkable, std::string>;
+
+      check(equivalence, "", expected{2}, expected{2});
+      check(equivalence, "", expected{std::unexpect, "one"}, expected{std::unexpect, "one"});
     }
   }
 

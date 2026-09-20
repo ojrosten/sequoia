@@ -5,18 +5,22 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "TestRunnerEndToEndFreeTest.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "Utilities/TestUtilities.hpp"
 
+#include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
+#include "sequoia/TestFramework/VersionedOutput.hpp"
 
+#include <array>
+#include <format>
 #include <fstream>
 #include <numeric>
+#include <stdexcept>
 #include <thread>
 
 namespace sequoia::testing
@@ -40,23 +44,42 @@ namespace sequoia::testing
         Self-calibrating rather than a sleep keyed to a platform: one short sleep where the
         resolution is fine, and only as long as it must be where it is coarse. The probe is written
         outside the generated project, since a file appearing inside it would itself be a change.
+
+        Bounded, because the alternative to giving up is a suite which hangs rather than reports.
+        The bound is far above any resolution a filesystem plausibly has, so reaching it means the
+        probe is not measuring what it thinks it is.
      */
-    void await_timestamp_tick(const std::filesystem::path& probeDir)
+    void await_timestamp_tick(const fs::path& probeDir)
     {
-      namespace fs = std::filesystem;
-      const auto probe{probeDir / "TimestampProbe.tmp"};
-      auto stamp{[&probe]() { std::ofstream{probe}; return fs::last_write_time(probe); }};
+      constexpr auto pollInterval{10ms};
 
-      const auto start{stamp()};
-      while(stamp() <= start) std::this_thread::sleep_for(10ms);
+      const auto stamp{
+        [&probeDir]() {
+          const transient_file probe{probeDir / "TimestampProbe.tmp", ""};
+          return fs::last_write_time(probe.path());
+        }
+      };
 
-      fs::remove(probe);
+      const auto initialStamp{stamp()};
+      for(auto requestedSleep{0ms}; stamp() <= initialStamp; requestedSleep += pollInterval)
+      {
+        constexpr auto timeOut{10s};
+        if(requestedSleep > timeOut)
+          throw std::runtime_error{std::format("Filesystem timestamps under {} did not advance within {}", probeDir.generic_string(), timeOut)};
+
+        std::this_thread::sleep_for(pollInterval);
+      }
     }
 
+    // The executable suffix and the path separator are properties of the platform, not of the
+    // compiler which produced the binary: clang builds for Windows too.
     [[nodiscard]]
     std::string run_cmd()
     {
-      return with_msvc_v ? ".\\TestAll.exe" : "./TestAll";
+      std::filesystem::path exe{std::filesystem::path{"."} / "TestAll"};
+      if constexpr(with_windows_v) exe.replace_extension("exe");
+
+      return exe.make_preferred().string();
     }
 
     [[nodiscard]]
@@ -65,7 +88,7 @@ namespace sequoia::testing
       return run_cmd().append(" create free_test Utilities.hpp"
         " create free_test \"Utilities/UsefulThings.hpp\" gen-source utils"
         " create free_test \"Source/generatedProject/Stuff/Bar.hpp\""
-        " create free \"Unstable/Flipper.hpp\" -s Unstable"
+        " create free \"Unstable/Flipper.hpp\""
         " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\" gen-source Maybe"
         " create regular_test \"stuff::oldschool\" double --header \"NoTemplate.hpp\""
         " create regular \"maths::probability\" double gen-source Maths"
@@ -88,7 +111,18 @@ namespace sequoia::testing
     return get_build_paths().cmake_cache_dir();
   }
 
-  void cmd_builder::create_build_run(const std::filesystem::path& creationOutput, std::string_view buildOutput, const std::filesystem::path& output) const
+  [[nodiscard]]
+  return_code cmd_builder::run_nested(std::string_view options, const std::filesystem::path& outputFile) const
+  {
+    auto cmd{run_cmd()};
+    if(!options.empty()) cmd.append(" ").append(options);
+
+    return child_return_code(
+             invoke(cd_cmd(get_build_paths().executable_dir()) && shell_command{"", std::move(cmd), outputFile}));
+  }
+
+  [[nodiscard]]
+  return_code cmd_builder::create_build_run(const std::filesystem::path& creationOutput, std::string_view buildOutput, const std::filesystem::path& output) const
   {   
     invoke(
          cd_cmd(get_build_paths().executable_dir())
@@ -100,48 +134,50 @@ namespace sequoia::testing
          && build_cmd(get_build_paths(), get_build_paths().executable_dir() / buildOutput)
     );
 
-    invoke(
-         cd_cmd(get_build_paths().executable_dir())
-      && shell_command{"", run_cmd(), output / "TestRunOutput.txt"}
-      && shell_command{"",
-                       run_cmd().append(" select ../../../Tests/HouseAllocationTest.cpp")
-                        .append(" select Maybe/MaybeTest.cpp")
-                        .append(" select FooTest.cpp"),
-                       output / "SpecifiedSourceOutput.txt"}
-      && shell_command{"", run_cmd().append(" select FooTest.cpp prune"), output / "SelectedSourcePruneConflictOutput.txt"}
-      && shell_command{"", run_cmd().append(" select Plurgh.cpp test Absent select Foo test FooTest.cpp"), output / "FailedSpecifiedSourceOutput.txt"}
-      && shell_command{"", run_cmd().append(" test Foo"), output / "SpecifiedSuiteOutput.txt"}
-      && shell_command{"", run_cmd().append(" test Foo prune"), output / "SpecifiedSuitePruneConflictOutput.txt"}
-      && shell_command{"", run_cmd().append(" prune --cutoff namespace"), output / "FullyPrunedOutput.txt"}
-      && shell_command{"", run_cmd().append(" -v"), output / "VerboseOutput.txt"}
-      && shell_command{"", run_cmd().append(" -v select FooTest.cpp test Foo"), output / "SelectFromTestedSuiteOutput.txt"}
-      && shell_command{"", run_cmd().append(" --help"), output / "HelpOutput.txt"});
+    // Sequenced rather than chained with `&&`: these runs are independent of one another, and a
+    // shell `&&` would silently skip the rest of them as soon as one reported failures.
+    constexpr std::array<std::pair<std::string_view, std::string_view>, 10> runs{{
+      {"",                                                                                                    "TestRunOutput.txt"                  },
+      {"select ../../../Tests/HouseAllocationTest.cpp select Maybe/MaybeTest.cpp select FooTest.cpp",          "SpecifiedSourceOutput.txt"          },
+      {"select FooTest.cpp prune",                                                                            "SelectedSourcePruneConflictOutput.txt"},
+      {"select Plurgh.cpp test Absent select Foo test FooTest.cpp",                                            "FailedSpecifiedSourceOutput.txt"    },
+      {"test Stuff",                                                                                            "SpecifiedSuiteOutput.txt"           },
+      {"test Stuff prune",                                                                                      "SpecifiedSuitePruneConflictOutput.txt"},
+      {"prune",                                                                                                "FullyPrunedOutput.txt"             },
+      {"-v",                                                                                                  "VerboseOutput.txt"                  },
+      {"-v select FooTest.cpp test Stuff",                                                                       "SelectFromTestedSuiteOutput.txt"   },
+      {"--help",                                                                                              "HelpOutput.txt"                     }
+    }};
+
+    auto code{return_code::success};
+    for(const auto& [options, file] : runs) code |= run_nested(options, output / file);
+
+    return code;
   }
 
-  void cmd_builder::rebuild_run(const std::filesystem::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const
+  [[nodiscard]]
+  return_code cmd_builder::rebuild_run(const std::filesystem::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const
   {
     invoke(
          cd_cmd(get_main_paths().dir())
-      && cmake_cmd(get_build_paths(), cmakeOutput)
+      && cmake_cmd(get_build_paths(), cmakeOutput, "CODE_COVERAGE=OFF")
       && build_cmd(get_build_paths(), buildOutput)
     );
 
-    run_executable(outputDir, options);
+    return run_executable(outputDir, options);
   }
 
-  void cmd_builder::run_executable(const std::filesystem::path& outputDir, std::string_view options) const
+  [[nodiscard]]
+  return_code cmd_builder::run_executable(const std::filesystem::path& outputDir, std::string_view options) const
   {
     if(!fs::exists(outputDir))
       fs::create_directory(outputDir);
 
-    invoke(
-         cd_cmd(get_build_paths().executable_dir())
-      && shell_command("", run_cmd().append(" ").append(options), outputDir / "TestRunOutput.txt")
-    );
+    return run_nested(options, outputDir / "TestRunOutput.txt");
   }
 
   [[nodiscard]]
-  std::filesystem::path test_runner_end_to_end_test::source_file() const
+  std::filesystem::path test_runner_end_to_end_test::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -152,10 +188,21 @@ namespace sequoia::testing
     return working_materials().parent_path() /= "GeneratedProject";
   }
 
-  void test_runner_end_to_end_test::copy_aux_materials(const std::filesystem::path& relativeFrom, const std::filesystem::path& relativeTo) const
+  /** Cross a filesystem timestamp tick, so that everything written afterwards is distinguishable
+      from everything the previous run wrote.
+
+      Required once before each batch of changes, not once per change: what `prune` compares against
+      is the stamp of the previous run, so copies made back to back need no separation from each
+      other. On a filesystem with whole-second resolution each call costs up to a second, which is
+      why this is not simply folded into `copy_aux_materials`.
+   */
+  void test_runner_end_to_end_test::await_tick_past_previous_run() const
   {
     await_timestamp_tick(generated_project().parent_path());
+  }
 
+  void test_runner_end_to_end_test::copy_aux_materials(const std::filesystem::path& relativeFrom, const std::filesystem::path& relativeTo) const
+  {
     const auto absoluteFrom{auxiliary_materials() /= relativeFrom};
     const auto absoluteTo{generated_project() / relativeTo};
     fs::copy(absoluteFrom, absoluteTo, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
@@ -186,24 +233,27 @@ namespace sequoia::testing
     fs::create_directory(working_materials() /= "CreationOutput");
     fs::create_directory(working_materials() /= "Output");
 
-    b.create_build_run(working_materials() /= "CreationOutput", "BuildOutput2.txt", working_materials() /= "Output");
+    const auto code{b.create_build_run(working_materials() /= "CreationOutput", "BuildOutput2.txt", working_materials() /= "Output")};
 
+    check(equality, append_lines(description, "Return code"), code, return_code::success);
     check(equivalence, description, working_materials() /= "CreationOutput", predictive_materials() /= "CreationOutput");
     check(append_lines(description, "Second build output existance"), fs::exists(b.get_build_paths().executable_dir() / "BuildOutput2.txt"));
     check(equivalence, append_lines(description, "Test Runner Output"), working_materials() /= "Output", predictive_materials() /= "Output");
   }
 
-  void test_runner_end_to_end_test::run_and_check(std::string_view description, const cmd_builder& b, std::string_view relOutputDir, std::string_view options)
+  void test_runner_end_to_end_test::run_and_check(std::string_view description, const cmd_builder& b, std::string_view relOutputDir, std::string_view options, return_code expected)
   {
-    b.run_executable(working_materials() /= relOutputDir, options);
+    const auto code{b.run_executable(working_materials() /= relOutputDir, options)};
+    check(equality, append_lines(description, "Return code"), code, expected);
     check(equivalence, description, working_materials() /= relOutputDir, predictive_materials() /= relOutputDir);
   }
 
-  void test_runner_end_to_end_test::rebuild_run_and_check(std::string_view description, const cmd_builder& b, std::string_view relOutputDir, std::string_view CMakeOutput, std::string_view BuildOutput, std::string_view options)
+  void test_runner_end_to_end_test::rebuild_run_and_check(std::string_view description, const cmd_builder& b, std::string_view relOutputDir, std::string_view CMakeOutput, std::string_view BuildOutput, std::string_view options, return_code expected)
   {
     fs::create_directory(working_materials() /= relOutputDir);
 
-    b.rebuild_run(working_materials() /= relOutputDir, CMakeOutput, BuildOutput, options);
+    const auto code{b.rebuild_run(working_materials() /= relOutputDir, CMakeOutput, BuildOutput, options)};
+    check(equality, append_lines(description, "Return code"), code, expected);
     check(equivalence, description, working_materials() /= relOutputDir, predictive_materials() /= relOutputDir);
     check(append_lines(description, "CMake output existance"), fs::exists(b.get_main_paths().dir() / CMakeOutput));
     check(append_lines(description, "Build output existance"), fs::exists(b.get_main_paths().dir() / BuildOutput));
@@ -252,7 +302,7 @@ namespace sequoia::testing
 
     //=================== Run the test executable ===================//
 
-    run_and_check(report("Empty Run"), b, "EmptyRunOutput", "");    
+    run_and_check(report("Empty Run"), b, "EmptyRunOutput", "", return_code::success);
 
     //=================== Create tests and run ===================//
 
@@ -260,49 +310,77 @@ namespace sequoia::testing
     fs::copy(generated_project() /= "output/TestSummaries", working_materials() /= "TestSummaries_0", fs::copy_options::recursive);
     check(equivalence, "", working_materials() /= "TestSummaries_0", predictive_materials() /= "TestSummaries_0");
 
-    //=================== Rerun with async execution ===================//
-    // --> async depth should be automatically set to "suite" since number of families is > 4
+    //=================== Rerun serially ===================//
 
-    run_and_check(report("Run synchronously"), b, "RunSynchronous", "--serial");
+    run_and_check(report("Run synchronously"), b, "RunSynchronous", "--serial", return_code::success);
 
-    //=================== Rerun with async selecting 3 tests from 3 families ===================//
-    // --> async depth should be automatically set to "test" since number of families is < 4
+    //=================== Rerun, checking the versioned output ===================//
+    // The previous run settled output/, so a run writing the same thing again must report nothing.
+    // Without this control, a check which fired on every run would look just as green as one which
+    // works.
+
+    // A patch left by an earlier checked run must not outlive a run which finds nothing to report.
+    const auto patchFile{output_paths{generated_project()}.drift().patch_file()};
+    fs::create_directories(patchFile.parent_path());
+    write_to_file(patchFile, "stale\n", std::ios_base::out);
+
+    run_and_check(report("Versioned output checked, nothing having drifted"), b, "CheckVersionedOutputStable",
+                  "--check-versioned-output", return_code::success);
+    check("A run which finds no drift removes the previous patch", !fs::exists(patchFile));
+
+    //=================== Perturb the versioned output, and check again ===================//
+    // Rewriting one summary file and deleting another makes the next run's writes respectively a
+    // modification and an addition. Drift is a property of what is on disk rather than of the code,
+    // so it is induced here without touching a test - and it is repaired by the very run which
+    // detects it, leaving nothing downstream to accommodate.
+
+    const auto summaries{generated_project() /= "output/TestSummaries/Tests"};
+    write_to_file(summaries / "Stuff" / "foo_test.txt", "Not what the run will write\n", std::ios_base::out);
+    fs::remove(summaries / "Maybe" / "maybe_test.txt");
+
+    const auto drifted{take_versioned_output_snapshot(output_paths{generated_project()})};
+    run_and_check(report("Versioned output checked, having drifted"), b, "CheckVersionedOutputDrifted",
+                  "--check-versioned-output", return_code::versioned_output_diffs);
+
+    // The run repairs the drift and leaves a patch saying what it did, for a CI job to hand back.
+    const auto repaired{take_versioned_output_snapshot(output_paths{generated_project()})};
+    const auto patch{read_to_string(patchFile, std::ios_base::in | std::ios_base::binary)};
+    if(check("The drift is written as a patch", patch.has_value()))
+    {
+      check(equality, "The patch takes what was on disk to what the run wrote", *patch, unified_diff(drifted, repaired, "output"));
+    }
+
+    //=================== Rerun asynchronously, selecting 2 tests ===================//
+
+    run_and_check(report("Run asynchronously with 2 selected tests"), b, "RunAsyncTwoTests",
+                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp", return_code::success);
+
+    //=================== Rerun asynchronously, selecting 3 tests ===================//
 
     run_and_check(report("Run asynchronously with 3 selected tests"), b, "RunAsyncThreeTests",
-                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp");
+                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp", return_code::success);
 
-    //=================== Rerun with async selecting 4 tests from 4 families===================//
-    // --> async depth should be automatically set to "suite"
+    //=================== Rerun asynchronously, selecting 4 tests ===================//
 
     run_and_check(report("Run asynchronously with 4 selected tests"), b, "RunAsyncFourTests",
                        "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
-                       " select Stuff/FooTest.cpp");
+                       " select Stuff/FooTest.cpp", return_code::success);
 
-    //=================== Rerun with async selecting 4 tests from 4 families, and setting async-depth to test===================//
+    //=================== Rerun asynchronously, selecting 1 suite ===================//
 
-    run_and_check(report("Run asynchronously with 4 selected tests"), b, "RunAsyncFourTestsDepthTest",
-                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
-                       " select Stuff/FooTest.cpp");
-
-    //=================== Rerun with async, selecting 2 tests, and setting async-depth to suite ===================//
-
-    run_and_check(report("Run asynchronously with 2 selected tests"), b, "RunAsyncTwoTestsDepthSuite",
-                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp");
-
-    //=================== Rerun with async, selecting one suite ===================//
-
-    run_and_check(report("Run asynchronously with 1 suite"), b, "RunAsyncOneTestOneSuite", "test Probability");
+    run_and_check(report("Run asynchronously with 1 suite"), b, "RunAsyncOneTestOneSuite", "test Maths", return_code::success);
 
     //=================== Rerun, seeking instabilities in sandbox mode ===================//
 
-    run_and_check(report("Run in sandbox mode"), b, "RunLocateInstabilitySandbox", "locate 2 --sandbox");
+    run_and_check(report("Run in sandbox mode"), b, "RunLocateInstabilitySandbox", "locate 2 --sandbox", return_code::success);
 
     //=================== Change some test materials and run with prune ===================//
 
+    await_tick_past_previous_run();
     copy_aux_materials("ModifiedTests/Stuff/FooTest.cpp", "Tests/Stuff");
     copy_aux_materials("TestMaterials", "TestMaterials");
 
-    rebuild_run_and_check(report("Change Materials (pruned)"), b, "RunWithChangedMaterials", "CMakeOutput3.txt", "BuildOutput3.txt", "prune --cutoff namespace");
+    rebuild_run_and_check(report("Change Materials (pruned)"), b, "RunWithChangedMaterials", "CMakeOutput3.txt", "BuildOutput3.txt", "prune", return_code::soft_failures);
 
     // Check materials are unchanged
     fs::copy(generated_project() / "TestMaterials", working_materials() /= "OriginalTestMaterials", fs::copy_options::recursive);
@@ -311,31 +389,43 @@ namespace sequoia::testing
     //=================== Run again, locating instabilities, and try to update ===================//
     //--> update should be suppressed by instability location
 
-    run_and_check(report("Instability location suppressing update"), b, "UpdateSuppressedByInstabilityLocation", "locate 2 prune -c namespace u");
+    run_and_check(report("Instability location suppressing update"), b, "UpdateSuppressedByInstabilityLocation", "locate 2 prune u", return_code::soft_failures);
     check(equivalence, "Original Test Materials", working_materials() /= "OriginalTestMaterials", predictive_materials() /= "OriginalTestMaterials");
 
     //=================== Rerun with prune but update materials ===================//
 
-    run_and_check(report("Updated Materials"), b, "RunWithUpdateOutput", "prune --cutoff namespace u");
+    run_and_check(report("Updated Materials"), b, "RunWithUpdateOutput", "prune u", return_code::soft_failures);
 
     fs::copy(generated_project() / "TestMaterials", working_materials() /= "UpdatedTestMaterials", fs::copy_options::recursive);
     check(equivalence, "Updated Test Materials", working_materials() /= "UpdatedTestMaterials", predictive_materials() /= "UpdatedTestMaterials");
 
     //=================== Rerun with prune, which should detect the change to materials ===================//
 
-    run_and_check(report("Pruned output, post materials update"), b, "RunWithPruneOutput", "prune");
+    run_and_check(report("Pruned output, post materials update"), b, "RunWithPruneOutput", "prune", return_code::success);
 
     //=================== Rerun again with prune, which should do nothing  ===================//
 
-    run_and_check(report("Prune again, no tests should run"), b, "NullRunWithPruneOutput", "prune");
+    run_and_check(report("Prune again, no tests should run"), b, "NullRunWithPruneOutput", "prune", return_code::success);
+
+    //=================== Touch a passing test's materials, leaving its source alone, and run with prune ===================//
+    //--> foo_test passed when last selected and nothing it was built from has changed, so only its
+    //    materials can select it
+
+    await_tick_past_previous_run();
+    fs::last_write_time(generated_project() / "TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz.txt",
+                        fs::file_time_type::clock::now());
+
+    run_and_check(report("Pruned output, post materials touch"), b, "RunWithTouchedMaterials", "prune", return_code::success);
 
     //=================== Change a file, don't build and run with prune ===================//
 
+    await_tick_past_previous_run();
     copy_aux_materials("ModifiedSource/UsefulThings.hpp", "Source/generatedProject/Utilities");
-    run_and_check(report("Attempt to prune when build is out of date"), b, "PruneWithStaleBuild", "prune");
+    run_and_check(report("Attempt to prune when build is out of date"), b, "PruneWithStaleBuild", "prune", return_code::incomplete_run);
 
     //=================== Change several of the tests, and some of the source, rebuild and run asynchronously, with prune ===================//
 
+    await_tick_past_previous_run();
     copy_aux_materials("ModifiedSource/UsefulThings.cpp", "Source/generatedProject/Utilities");
     copy_aux_materials("ModifiedSource/Maths",            "Source/generatedProject/Maths");
     copy_aux_materials("ModifiedSource/Thing",            "Source/generatedProject/Utilities/Thing");
@@ -344,7 +434,7 @@ namespace sequoia::testing
     copy_aux_materials("ModifiedTests/Thing",             "Tests/Utilities/Thing");
     copy_aux_materials("ModifiedTests/Unstable",          "Tests/Unstable");
 
-    rebuild_run_and_check(report("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune --cutoff namespace");
+    rebuild_run_and_check(report("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune", return_code::soft_failures);
 
     check(equivalence, "Test Runner Output", working_materials() /= "RebuiltOutput", predictive_materials() /= "RebuiltOutput");
     fs::create_directory(working_materials() /= "TestAll");
@@ -360,86 +450,85 @@ namespace sequoia::testing
     fs::copy(generated_project() /= "output/TestSummaries", working_materials() /= "TestSummaries_1", fs::copy_options::recursive);
     check(equivalence, "", working_materials() /= "TestSummaries_1", predictive_materials() /= "TestSummaries_1");
 
-    fs::create_directories(working_materials() /= "DiagnosticsOutput_0/Useful_Things");
-    fs::create_directories(working_materials() /= "DiagnosticsOutput_0/Foo");
-    fs::copy(generated_project() /= "output/DiagnosticsOutput/Useful_Things", working_materials() /= "DiagnosticsOutput_0/Useful_Things", fs::copy_options::recursive);
-    fs::copy(generated_project() /= "output/DiagnosticsOutput/Foo", working_materials() /= "DiagnosticsOutput_0/Foo", fs::copy_options::recursive);
+    fs::create_directories(working_materials() /= "DiagnosticsOutput_0");
+    fs::copy(generated_project() /= "output/DiagnosticsOutput", working_materials() /= "DiagnosticsOutput_0", fs::copy_options::recursive);
     check(equivalence, "Diagnostics Output", working_materials() /= "DiagnosticsOutput_0", predictive_materials() /= "DiagnosticsOutput_0");
 
     //=================== Rerun with prune ===================//
     // --> only failing tests should rerun
 
-    run_and_check(report("Pruned output, post failures"), b, "RunPrunePostFailureOutput", "prune -c namespace");
+    run_and_check(report("Pruned output, post failures"), b, "RunPrunePostFailureOutput", "prune", return_code::soft_failures);
 
     //=================== Rerun and locate instabilities ===================//
     // --> UsefulThingsFreeTest.cpp will continue to exhibit a stable failure,
     // whereas  FlipperFreeTest.cpp is unstable
 
-    run_and_check(report("Locate instabilities"), b, "RunLocateInstabilities", "locate 2");
+    run_and_check(report("Locate instabilities"), b, "RunLocateInstabilities", "locate 2", return_code::soft_failures);
 
     //=================== Rerun and locate instabilities, with pruning ===================//
 
-    run_and_check(report("Locate instabilities"), b, "RunLocateInstabilitiesPrune", "locate 2 prune -c namespace");
+    run_and_check(report("Locate instabilities"), b, "RunLocateInstabilitiesPrune", "locate 2 prune", return_code::soft_failures);
 
     //=================== Rerun with selected, unstable test in sandbox mode ===================//
     // --> The first of the checks in FlipperFreeTest.cpp is stable in sandbox mode, but the second isn't
 
     run_and_check(report("Run in sandbox mode with an explicit selection"), b, "SelectRunLocateInstabilitySandbox",
-      "locate 2 --sandbox select FlipperFreeTest.cpp");
+      "locate 2 --sandbox select FlipperFreeTest.cpp", return_code::soft_failures);
 
     //=================== Rerun and do a dump ===================//
 
-    run_and_check(report("Do a dump"), b, "RunPostUpdate", "dump");
+    run_and_check(report("Do a dump"), b, "RunPostUpdate", "dump", return_code::soft_failures);
 
     fs::create_directory(working_materials() /= "Dump");
     fs::copy(generated_project() /= "output/Recovery/Dump.txt", working_materials() /= "Dump");
     check(equivalence, "Dump File", working_materials() /= "Dump", predictive_materials() /= "Dump");
 
     //=================== Rerun in the presence of an exception ===================//
-    // Rename generated_project() / TestMaterials / Stuff / FooTest / WorkingCopy / RepresentativeCases,
+    // Rename generated_project() / TestMaterials / Stuff / foo_test / WorkingCopy / RepresentativeCases,
     // in order to induce a failure in FooTest.cpp. Recovery mode will cause the final executed check
     // to be recorded.
 
-    const auto generatedWorkingCopy{generated_project() /= "TestMaterials/Stuff/FooTest/WorkingCopy"};
+    const auto generatedWorkingCopy{generated_project() /= "TestMaterials/Stuff/FooTest/foo_test/WorkingCopy"};
     fs::copy(generatedWorkingCopy / "RepresentativeCases", generatedWorkingCopy / "RepresentativeCasesTemp", fs::copy_options::recursive);
     fs::remove_all(generatedWorkingCopy / "RepresentativeCases");
 
-    run_and_check(report("Recovery mode"), b, "RunRecovery", "recover");
+    run_and_check(report("Recovery mode"), b, "RunRecovery", "recover", return_code::soft_failures);
 
     fs::create_directory(working_materials() /= "Recovery");
     fs::copy(generated_project() /= "output/Recovery/Recovery.txt", working_materials() /= "Recovery");
     check(equivalence, "Recovery File", working_materials() /= "Recovery", predictive_materials() /= "Recovery");
 
     //=================== Rerun in the presence of an exception mid-check ===================//
-    // Rename generated_project() / TestMaterials / Stuff / FooTest / Prediction / RepresentativeCases,
+    // Rename generated_project() / TestMaterials / Stuff / foo_test / Prediction / RepresentativeCases,
     // in order to cause the check in FooTest.cpp to throw mid-check, thereby allowing the recovery
     // mode to be tested. Also test that the Exceptions file is not overwritten.
 
-    const auto generatedPredictive{generated_project() /= "TestMaterials/Stuff/FooTest/Prediction"};
+    const auto generatedPredictive{generated_project() /= "TestMaterials/Stuff/FooTest/foo_test/Prediction"};
     fs::copy(generatedPredictive / "RepresentativeCases", generatedPredictive / "RepresentativeCasesTemp", fs::copy_options::recursive);
     fs::remove_all(generatedPredictive / "RepresentativeCases");
 
-    run_and_check(report("Recovery mode, throw mid-check"), b, "RunRecoveryMidCheck", "recover");
+    run_and_check(report("Recovery mode, throw mid-check"), b, "RunRecoveryMidCheck", "recover", return_code::soft_failures | return_code::critical_failures);
 
     fs::create_directory(working_materials() /= "RecoveryMidCheck");
     fs::copy(generated_project() /= "output/Recovery/Recovery.txt", working_materials() /= "RecoveryMidCheck");
     check(equivalence, "Recovery File", working_materials() /= "RecoveryMidCheck", predictive_materials() /= "RecoveryMidCheck");
 
-    fs::create_directories(working_materials() /= "DiagnosticsOutput_1/Foo");
-    fs::copy(generated_project() /= "output/DiagnosticsOutput/Foo", working_materials() /= "DiagnosticsOutput_1/Foo", fs::copy_options::recursive);
+    fs::create_directories(working_materials() /= "DiagnosticsOutput_1");
+    fs::copy(generated_project() /= "output/DiagnosticsOutput", working_materials() /= "DiagnosticsOutput_1", fs::copy_options::recursive);
     check(equivalence, "Diagnostics Output", working_materials() /= "DiagnosticsOutput_1", predictive_materials() /= "DiagnosticsOutput_1");
 
     //=================== Change one of the failing tests, and 'select' it at the same time as breaking a different test ===================//
 
+    await_tick_past_previous_run();
     copy_aux_materials("FurtherModifiedTests/UsefulThingsFreeTest.cpp", "Tests/Utilities");
     copy_aux_materials("FurtherModifiedTests/ProbabilityTest.cpp", "Tests/Maths");
-    rebuild_run_and_check(report("Rebuild, run and 'select' after fixing a test"), b, "RunSelectedFixedTest", "CMakeOutput5.txt", "BuildOutput5.txt", "select UsefulThingsFreeTest.cpp");
+    rebuild_run_and_check(report("Rebuild, run and 'select' after fixing a test"), b, "RunSelectedFixedTest", "CMakeOutput5.txt", "BuildOutput5.txt", "select UsefulThingsFreeTest.cpp", return_code::success);
 
     check(equivalence, "Fixed Test Output", working_materials() /= "RunSelectedFixedTest", predictive_materials() /= "RunSelectedFixedTest");
 
     //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
 
-    run_and_check(report("Passing test not included by prune"), b, "PassingTestExcludedByPrune", "prune -c namespace");
+    run_and_check(report("Passing test not included by prune"), b, "PassingTestExcludedByPrune", "prune", return_code::soft_failures | return_code::critical_failures);
 
     //=================== Fix a failing test and 'select' it ===================//
 
@@ -449,21 +538,22 @@ namespace sequoia::testing
     fs::copy(generatedWorkingCopy / "RepresentativeCasesTemp", generatedWorkingCopy / "RepresentativeCases", fs::copy_options::recursive);
     fs::remove_all(generatedWorkingCopy / "RepresentativeCasesTemp");
 
-    run_and_check(report("Critical failure fixed"), b, "RunFixedCriticalFailure", "select FooTest.cpp");
+    run_and_check(report("Critical failure fixed"), b, "RunFixedCriticalFailure", "select FooTest.cpp", return_code::success);
 
     //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
 
-    run_and_check(report("Fixed test not included by prune"), b, "AnotherPassingTestExcludedByPrune", "prune -c namespace");
+    run_and_check(report("Fixed test not included by prune"), b, "AnotherPassingTestExcludedByPrune", "prune", return_code::soft_failures);
 
     //=================== Fix the final failing test and 'test' it ===================//
 
+    await_tick_past_previous_run();
     copy_aux_materials("ModifiedTests/Maths/ProbabilityTest.cpp", "Tests/Maths");
-    rebuild_run_and_check(report("Rebuild, run and 'test' after fixing a test"), b, "RunSuiteWithFixedTest", "CMakeOutput6.txt", "BuildOutput6.txt", "test Probability");
+    rebuild_run_and_check(report("Rebuild, run and 'test' after fixing a test"), b, "RunSuiteWithFixedTest", "CMakeOutput6.txt", "BuildOutput6.txt", "test Maths", return_code::success);
 
     check(equivalence, "Fixed Test Output", working_materials() /= "RunSelectedFixedTest", predictive_materials() /= "RunSelectedFixedTest");
 
     //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
 
-    run_and_check(report("Final fixed test not included by prune"), b, "FinalPassingTestExcludedByPrune", "prune -c namespace");
+    run_and_check(report("Final fixed test not included by prune"), b, "FinalPassingTestExcludedByPrune", "prune", return_code::success);
   }
 }

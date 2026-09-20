@@ -1,0 +1,2 @@
+static_directed_graph_fundamental_weight_test
+Standard Top Level Checks:               323;  Failures:  0  [Deep checks: 10048]

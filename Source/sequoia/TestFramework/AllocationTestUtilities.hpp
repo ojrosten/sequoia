@@ -22,8 +22,8 @@ namespace sequoia::testing
   /** \brief Somewhat similar to std::allocator but logs (de)allocations via an counter
       which is shared upon copying.
 
-      A fundamental ingredient of the allocation testing framework is the capactity to
-      count the number of allocations which have occured before/after some operation and
+      A fundamental ingredient of the allocation testing framework is the capacity to
+      count the number of allocations which have occurred before/after some operation and
       to compare the difference to a prediction. Experimentation has (tentatively)
       suggested that the most robust way to do this is for copies of an allocator to share
       a counter. The benefit of this is that the framework is sensitive to copies of the
@@ -31,12 +31,12 @@ namespace sequoia::testing
       (and has!) detected a typo in an overload of operator== in which one of the arguments
       was accidentally taken by value, leading to unexpected allocations.
 
-      There is also a more subtle difference to std:allocator<T>. Whereas the latter allows
-      construction from std::allocator<U> this possibility is excluded to ensure that
+      There is also a more subtle difference to `std::allocator<T>`. Whereas the latter allows
+      construction from `std::allocator<U>` this possibility is excluded to ensure that
       constructors of classes taking multiple allocators do not confuse them internally.
 
       In addition to taking the usual T as a template parameter, the class template accepts
-      three bools which control whether or not the allocator is propapaged when the
+      three bools which control whether or not the allocator is propagated when the
       associated container is copied, moved or swapped.
    */
 

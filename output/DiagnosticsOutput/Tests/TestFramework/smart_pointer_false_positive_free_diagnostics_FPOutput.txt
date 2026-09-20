@@ -1,0 +1,117 @@
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 132
+Equality of null pointer with itself
+
+[std::unique_ptr<int, std::default_delete<int> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 133
+Equality of non-null pointer with itself
+
+[std::unique_ptr<int, std::default_delete<int> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 134
+Different pointers pointing to identical values
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::unique_ptr<int, std::default_delete<int> > >]
+Checking for equivalence with:
+[std::unique_ptr<int, std::default_delete<int> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 139
+Different pointers pointing to identical values
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::unique_ptr<sequoia::testing::only_equivalence_checkable, std::default_delete<sequoia::testing::only_equivalence_checkable> > >]
+Checking for equivalence with:
+[std::unique_ptr<sequoia::testing::only_equivalence_checkable, std::default_delete<sequoia::testing::only_equivalence_checkable> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 146
+Different pointers pointing to identical values
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::unique_ptr<sequoia::testing::only_weakly_checkable, std::default_delete<sequoia::testing::only_weakly_checkable> > >]
+Checking for equivalence with:
+[std::unique_ptr<sequoia::testing::only_weakly_checkable, std::default_delete<sequoia::testing::only_weakly_checkable> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 154
+Different pointers pointing to identical values
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::unique_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>, std::default_delete<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > > >]
+Checking for equivalence with:
+[std::unique_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable>, std::default_delete<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 165
+Equality of null pointer with itself
+
+[std::shared_ptr<int>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 166
+Equality of non-null pointer with itself
+
+[std::shared_ptr<int>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 167
+Different pointers pointing to identical values
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::shared_ptr<int> >]
+Checking for equivalence with:
+[std::shared_ptr<int>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 173
+Different pointers pointing to identical values
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::shared_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> > >]
+Checking for equivalence with:
+[std::shared_ptr<std::tuple<int, sequoia::testing::only_equivalence_checkable, sequoia::testing::only_weakly_checkable> >]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 184
+Equality of null pointer with itself
+
+[std::weak_ptr<int>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/SmartPointerFreeDiagnostics.cpp, Line 189
+Different pointers weakly pointing to identical values
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::weak_ptr<int> >]
+Checking for equivalence with:
+[std::weak_ptr<int>]
+
+=======================================
+

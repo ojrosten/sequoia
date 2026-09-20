@@ -5,10 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file
-    \brief Definitions for Output.hpp
- */
-
 #include "sequoia/TestFramework/Output.hpp"
 
 #include "sequoia/FileSystem/FileSystem.hpp"
@@ -17,13 +13,14 @@
 
 #include <bit>
 #include <charconv>
+#include <cstdint>
 #include <cstdlib>
 #include <format>
 #include <numeric>
 #include <sstream>
 
 #ifndef _MSC_VER
-  #include <cxxabi.h>
+  #include "cxxabi.h"
 #endif
 
 namespace sequoia::testing
@@ -56,9 +53,10 @@ namespace sequoia::testing
       return name;
     }
 
-    template<std::floating_point To, std::integral From=std::conditional_t<std::is_same_v<To,float>, int, std::conditional_t<sizeof(double) == sizeof(long), long, long long>>>
-    size_type hex_to_floating_point(std::string& name, size_type start, size_type end, long long val)
+    template<std::floating_point To>
+    size_type hex_to_floating_point(std::string& name, size_type start, size_type end, unsigned long long val)
     {
+       using From = std::conditional_t<sizeof(To) == sizeof(std::uint32_t), std::uint32_t, std::uint64_t>;
        name.erase(start, end - start);
        const auto str{std::format("{:f}", std::bit_cast<To>(static_cast<From>(val)))};
        name.insert(start, str);
@@ -75,7 +73,9 @@ namespace sequoia::testing
           break;
 
         pos = open+1;
-        while((pos < name.size() - 1) && !std::isdigit(name[pos])) { ++pos; }
+
+        // A reinterpreted floating-point literal, `(float)[FF]`, need not contain a decimal digit
+        while((pos < name.size() - 1) && !std::isdigit(static_cast<unsigned char>(name[pos])) && (name[pos - 1] != '[')) { ++pos; }
         if(pos < name.size() - 1)
         {
           if((name[pos - 1] == '_') || std::isalpha(name[pos - 1]))
@@ -93,7 +93,8 @@ namespace sequoia::testing
             if(close != npos)
             {
               std::stringstream ss{name.substr(pos, close - pos)};
-              long long hexNum{};
+              // A negative double sets the top bit, which overflows a signed 64-bit read
+              unsigned long long hexNum{};
               if(ss >> std::hex >> hexNum)
               {
                 const auto closeParen{pos - 2};
@@ -197,10 +198,11 @@ namespace sequoia::testing
     {
       if constexpr(sizeof(unsigned long) == sizeof(unsigned long long))
       {
-        // Do this first, to avoid the second replace_all potentially 
-        // leading to unsigned long long long long (!)
-        replace_all(name, "long long", "long");
-        replace_all(name, "long", "long long");
+        constexpr auto isWordDelimiter{[](char c){ return !(std::isalnum(static_cast<unsigned char>(c)) || (c == '_')); }};
+
+        // Collapse before expanding; the other way round, the collapse undoes the expansion
+        replace_all(name, isWordDelimiter, "long long", isWordDelimiter, "long");
+        replace_all(name, isWordDelimiter, "long",      isWordDelimiter, "long long");
       }
 
       // It is a pity to have to make the following substitutions, but it appears

@@ -48,6 +48,13 @@ namespace sequoia::testing
 
   enum class nascent_test_flavour { standard, framework_diagnostics };
 
+  /** \brief The namespace `create` substitutes for the project's: the source directory's name.
+
+      Throws if the directory does not exist or its name cannot be a namespace name.
+   */
+  [[nodiscard]]
+  std::string project_namespace_for(const std::filesystem::path& sourceProject);
+
   class nascent_test_base
   {
   public:
@@ -58,18 +65,13 @@ namespace sequoia::testing
       , m_Copyright{std::move(copyright)}
       , m_CodeIndent{codeIndent}
       , m_Stream{&stream}
-      , m_ProjectNamespace{back(m_Paths.source().project()).string()}
+      , m_ProjectNamespace{project_namespace_for(m_Paths.source().project())}
     {}
 
     [[nodiscard]]
     nascent_test_flavour flavour() const noexcept { return m_Flavour; }
 
     void flavour(nascent_test_flavour f) { m_Flavour = f; }
-
-    [[nodiscard]]
-    const std::string& suite() const noexcept { return m_Suite; }
-
-    void suite(std::string name) { m_Suite = std::move(name); }
 
     [[nodiscard]]
     const std::filesystem::path& header() const noexcept { return m_Header; }
@@ -124,10 +126,10 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path build_source_path(const std::filesystem::path& filename) const;
 
-    template<invocable_exactly_r<std::filesystem::path, std::filesystem::path> WhenAbsent,std::invocable<std::string&> FileTransformer>
+    template<invocable_exact_r<std::filesystem::path, std::filesystem::path> WhenAbsent,std::invocable<std::string&> FileTransformer>
     void finalize(WhenAbsent fn,
                   const std::vector<std::string>& stubs,
-                  const std::vector<std::string>& constructors,
+                  const std::vector<std::string>& testClasses,
                   std::string_view nameStub,
                   FileTransformer transformer);
 
@@ -150,8 +152,6 @@ namespace sequoia::testing
     [[nodiscard]]
     std::ostream& stream() noexcept { return *m_Stream; }
 
-    void finalize_suite(std::string_view fallbackIngredient);
-
     void make_common_replacements(std::string& text) const;
   private:
     constexpr static std::array<std::string_view, 3> st_HeaderExtensions{".hpp", ".h", ".hxx"};
@@ -163,7 +163,6 @@ namespace sequoia::testing
 
     nascent_test_flavour m_Flavour{nascent_test_flavour::standard};
     std::string 
-      m_Suite{},
       m_TestType{},
       m_Forename{},
       m_Surname{},
@@ -196,7 +195,7 @@ namespace sequoia::testing
     void finalize();
 
     [[nodiscard]]
-    std::vector<std::string> constructors() const;
+    std::vector<std::string> test_classes() const;
 
     [[nodiscard]]
     friend bool operator==(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
@@ -231,7 +230,7 @@ namespace sequoia::testing
     void finalize();
 
     [[nodiscard]]
-    std::vector<std::string> constructors() const;
+    std::vector<std::string> test_classes() const;
   private:
     void transform_file(std::string& text) const;
   };
@@ -244,7 +243,7 @@ namespace sequoia::testing
     void finalize();
 
     [[nodiscard]]
-    std::vector<std::string> constructors() const;
+    std::vector<std::string> test_classes() const;
 
     [[nodiscard]]
     friend bool operator==(const nascent_behavioural_test&, const nascent_behavioural_test&) noexcept = default;

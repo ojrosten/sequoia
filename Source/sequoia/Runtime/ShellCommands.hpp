@@ -57,7 +57,13 @@ namespace sequoia::runtime
       return lhs && shell_command{std::move(rhs)};
     }
 
-    friend void invoke(const shell_command& cmd);
+    /** \brief Runs the command, returning its exit status, or -1 if it did not run to completion.
+
+        The spawned process inherits the standard streams and nothing else; in particular it does
+        not inherit files the caller happens to have open, which on Windows would otherwise keep
+        them undeletable for as long as that process lived.
+     */
+    friend int invoke(const shell_command& cmd);
   private:
     std::string m_Command;
 

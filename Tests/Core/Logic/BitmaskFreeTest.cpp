@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "BitmaskFreeTest.hpp"
 
 #include "sequoia/Core/Logic/Bitmask.hpp"
@@ -40,7 +38,7 @@ NAMESPACE_SEQUOIA_AS_BITMASK
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path bitmask_free_test::source_file() const
+  std::filesystem::path bitmask_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }

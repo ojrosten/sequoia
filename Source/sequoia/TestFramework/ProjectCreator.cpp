@@ -5,18 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file
-    \brief Definitions for ProjectCreator.hpp
- */
-
 #include "sequoia/TestFramework/ProjectCreator.hpp"
+#include "sequoia/TestFramework/CMakeCache.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestRunnerUtilities.hpp"
 
 #include "sequoia/FileSystem/FileSystem.hpp"
-#include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
-#include "sequoia/TextProcessing/Patterns.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 namespace sequoia::testing
@@ -255,7 +250,7 @@ namespace sequoia::testing
         const main_paths main{data.project_root / main_paths::default_main_cpp_from_root()};
 
         invoke(cd_cmd(main.dir())
-            && cmake_cmd(build, data.output)
+            && cmake_cmd(build, data.output, "CODE_COVERAGE=OFF")
             && build_cmd(build, data.output)
             && ((data.do_build == build_invocation::launch_ide) ? launch_cmd(parentProjectPaths, data.project_root, build.cmake_cache_dir()) : shell_command{})
         );
@@ -283,24 +278,18 @@ namespace sequoia::testing
   {
     if(root.empty()) return {};
 
-    if constexpr(with_msvc_v)
+    // Every generator records an instance, most of them empty; only Visual Studio's names an installation.
+    if(const cmake_cache cache{parentProjectPaths.build()}; cache.generator_family() == cmake_generator_family::visual_studio)
     {
-      if(const auto cmakeCache{parentProjectPaths.build().cmake_cache_dir() / "CMakeCache.txt"}; fs::exists(cmakeCache))
+      if(const auto instance{cache.variable("CMAKE_GENERATOR_INSTANCE")})
       {
-        if(const auto optText{read_to_string(cmakeCache)})
+        const auto devenv{fs::path(instance.value()).append("Common7/IDE/devenv.exe")};
+        if(fs::exists(devenv))
         {
-          const auto [first, last]{find_sandwiched_text(optText.value(), "CMAKE_GENERATOR_INSTANCE:INTERNAL=", "\n")};
-          if((first != npos) && (last != npos))
-          {
-            const auto devenv{fs::path(optText->substr(first, last - first)).append("Common7/IDE/devenv.exe")};
-            if(fs::exists(devenv))
-            {
-              const auto token{back(root)};
-              const auto sln{(buildDir / token).concat("Tests.sln")};
+          const auto token{back(root)};
+          const auto sln{(buildDir / token).concat("Tests.sln")};
 
-              return {"Attempting to open IDE...", std::string{"\""}.append(devenv.string()).append("\" ").append("/Run ").append(sln.string()), ""};
-            }
-          }
+          return {"Attempting to open IDE...", std::string{"\""}.append(devenv.string()).append("\" ").append("/Run ").append(sln.string()), ""};
         }
       }
     }

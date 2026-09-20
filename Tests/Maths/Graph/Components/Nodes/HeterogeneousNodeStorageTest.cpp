@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "HeterogeneousNodeStorageTest.hpp"
 
 #include "sequoia/Maths/Graph/HeterogeneousNodeStorage.hpp"
@@ -41,7 +39,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path test_heterogeneous_node_storage::source_file() const
+  std::filesystem::path test_heterogeneous_node_storage::source_file()
   {
     return std::source_location::current().file_name();
   }

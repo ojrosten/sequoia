@@ -1,0 +1,2 @@
+elementary_false_negative_free_diagnostics
+False Negative Checks:                    97;  Failures:  0

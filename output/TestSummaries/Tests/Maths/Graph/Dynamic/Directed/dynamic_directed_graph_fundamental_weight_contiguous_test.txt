@@ -1,0 +1,2 @@
+dynamic_directed_graph_fundamental_weight_contiguous_test
+Standard Top Level Checks:               501;  Failures:  0  [Deep checks: 34456]

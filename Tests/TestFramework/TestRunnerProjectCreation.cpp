@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "TestRunnerProjectCreation.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
@@ -17,7 +15,7 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path test_runner_project_creation::source_file() const
+  std::filesystem::path test_runner_project_creation::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -38,7 +36,7 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  make_project_paths(), outputStream};
 
-        tr.execute();
+        return tr.execute();
       });
 
     check_exception_thrown<std::runtime_error>(
@@ -49,7 +47,7 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", make_project_paths(), outputStream};
 
-        tr.execute();
+        return tr.execute();
       });
 
     check_exception_thrown<std::runtime_error>(
@@ -60,7 +58,7 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  make_project_paths(), outputStream};
 
-        tr.execute();
+        return tr.execute();
       });
 
     check_exception_thrown<std::runtime_error>(
@@ -71,7 +69,7 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  make_project_paths(), outputStream};
 
-        tr.execute();
+        return tr.execute();
       });
 
     check_exception_thrown<std::runtime_error>(
@@ -82,7 +80,7 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  make_project_paths(), outputStream};
 
-        tr.execute();
+        return tr.execute();
       });
 
     check_exception_thrown<std::runtime_error>(
@@ -93,7 +91,7 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "\t  x ",  make_project_paths(), outputStream};
 
-        tr.execute();
+        return tr.execute();
       });
 
     check_exception_thrown<std::runtime_error>(
@@ -104,7 +102,7 @@ namespace sequoia::testing
         std::stringstream outputStream{};
         test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ",  make_project_paths(), outputStream};
 
-        tr.execute();
+        return tr.execute();
       });
   }
 
@@ -138,7 +136,7 @@ namespace sequoia::testing
       std::stringstream outputStream{};
       test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "\t ",  make_project_paths(), outputStream};
 
-      tr.execute();
+      check(equality, "Project creation return code", tr.execute(), return_code::success);
 
       if(std::ofstream file{fake_project() / "output" / "io.txt"})
       {
@@ -156,7 +154,7 @@ namespace sequoia::testing
       std::stringstream outputStream{};
       test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "\t ",  make_project_paths(), outputStream};
 
-      tr.execute();
+      check(equality, "Second project creation return code", tr.execute(), return_code::success);
 
       check(equivalence, "", hostDir, predictive_materials() /= "Another_Generated-Project");
     }

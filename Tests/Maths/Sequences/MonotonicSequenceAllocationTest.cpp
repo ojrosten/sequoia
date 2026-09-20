@@ -5,15 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "MonotonicSequenceAllocationTest.hpp"
 #include "MonotonicSequenceTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path monotonic_sequence_allocation_test::source_file() const
+  std::filesystem::path monotonic_sequence_allocation_test::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -30,6 +28,8 @@ namespace sequoia::testing
 
     using allocator = shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
     using sequence = monotonic_sequence<int, std::ranges::less, std::vector<int, allocator>>;
+
+    STATIC_CHECK(noexcept(swap(std::declval<sequence&>(), std::declval<sequence&>())) == PropagateSwap);
 
     auto getter{
       [](const sequence& s){ return s.get_allocator(); }

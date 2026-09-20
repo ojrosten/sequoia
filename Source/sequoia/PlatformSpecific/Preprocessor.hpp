@@ -7,7 +7,9 @@
 
 #pragma once
 
-/** \file Preprocessor logic for dealing with different platforms */
+/** \file
+    \brief Preprocessor logic for dealing with different platforms
+ */
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/PlatformSpecific/PlatformDiscriminators.hpp"
@@ -38,21 +40,39 @@ namespace sequoia
     int iterator_debug_level() noexcept;
   #endif
 
-  #if defined(__clang__)
-    namespace execution
-    {
-      inline constexpr int par{0};
-    }
-  #else
+  #if defined(__cpp_lib_parallel_algorithm)
+    inline constexpr bool has_parallel_algorithms_v{true};
+
     namespace execution
     {
       inline constexpr auto par{std::execution::par};
     }
+  #else
+    inline constexpr bool has_parallel_algorithms_v{false};
+
+    namespace execution
+    {
+      inline constexpr int par{0};
+    }
+  #endif
+
+  #if defined(_WIN32)
+    using platform_constant = windows_type;
+  #elif defined(__APPLE__)
+    using platform_constant = macos_type;
+  #elif defined(__linux__)
+    using platform_constant = linux_type;
+  #else
+    using platform_constant = other_os_type;
   #endif
 
   inline constexpr bool with_msvc_v{std::is_same_v<compiler_constant, msvc_type>};
   inline constexpr bool with_clang_v{std::is_same_v<compiler_constant, clang_type>};
   inline constexpr bool with_gcc_v{std::is_same_v<compiler_constant, gcc_type>};
+
+  inline constexpr bool with_windows_v{std::is_same_v<platform_constant, windows_type>};
+  inline constexpr bool with_macos_v{std::is_same_v<platform_constant, macos_type>};
+  inline constexpr bool with_linux_v{std::is_same_v<platform_constant, linux_type>};
 
   [[nodiscard]]
   inline std::string compiler_name()

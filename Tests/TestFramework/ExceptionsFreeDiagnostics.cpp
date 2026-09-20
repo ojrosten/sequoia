@@ -5,15 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "ExceptionsFreeDiagnostics.hpp"
 #include "sequoia/TestFramework/ConcreteTypeCheckers.hpp"
 
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path exceptions_false_negative_free_diagnostics::source_file() const
+  std::filesystem::path exceptions_false_negative_free_diagnostics::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -26,7 +24,7 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  std::filesystem::path exceptions_false_positive_free_diagnostics::source_file() const
+  std::filesystem::path exceptions_false_positive_free_diagnostics::source_file()
   {
     return std::source_location::current().file_name();
   }

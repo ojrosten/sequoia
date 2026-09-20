@@ -26,7 +26,7 @@ namespace sequoia
     }
   };
 
-  template<invocable_exactly_r<char, char> OnUpper=char_to_char>
+  template<invocable_exact_r<char, char> OnUpper=char_to_char>
   std::string& camel_to_words(std::string& text, std::string_view separator = " ", OnUpper onUpper = OnUpper{})
   {
     auto i{text.begin()};
@@ -49,7 +49,7 @@ namespace sequoia
     return text;
   }
 
-  template<invocable_exactly_r<char, char> OnUpper = char_to_char>
+  template<invocable_exact_r<char, char> OnUpper = char_to_char>
   [[nodiscard]]
   std::string camel_to_words(std::string_view text, std::string_view separator = " ", OnUpper onUpper = OnUpper{})
   {
@@ -77,16 +77,32 @@ namespace sequoia
   [[nodiscard]]
   std::string uncapitalize(std::string_view text);
 
+  /** \brief Replaces the first occurrence of `from`, if there is one.
+
+      The empty string occurs at every position, the first being the start of the text, so an
+      empty `from` prepends `to`.
+   */
   std::string& replace(std::string& text, std::string_view from, std::string_view to);
 
   [[nodiscard]]
   std::string replace(std::string_view text, std::string_view from, std::string_view to);
 
+  /** \brief Replaces every occurrence of `from`.
+
+      The empty string occurs at every position - before each character and after the last - so an
+      empty `from` interleaves `to` throughout the text: `replace_all("ab", "", "X")` is `"XaXbX"`.
+   */
   std::string& replace_all(std::string& text, std::string_view from, std::string_view to);
 
   [[nodiscard]]
   std::string replace_all(std::string_view text, std::string_view from, std::string_view to);
 
+  /** \brief Replaces every occurrence of `from`, including those beginning after the first character of a replacement.
+
+      \pre The rewriting terminates. It does not, once a replacement has been made, if `from`
+           occurs in `to` beyond the first character, since each replacement then writes the next
+           occurrence; an empty `from` with a non-empty `to` is the simplest case.
+   */
   std::string& replace_all_recursive(std::string& text, std::string_view from, std::string_view to);
 
   [[nodiscard]]
@@ -120,31 +136,41 @@ namespace sequoia
   [[nodiscard]]
   std::string replace_all(std::string_view text, std::string_view anyOfLeft, std::string_view from, std::string_view anyOfRight, std::string_view to);
 
-  template<invocable_exactly_r<bool, char> LeftPred, invocable_exactly_r<bool, char> RightPred>
+  /** \brief Replaces every occurrence of `from` whose neighbours both satisfy the given predicates.
+
+      If the match occurs either at the start - where there is no left neighbour - or at the end
+      - where there is no right neighbour - the argument of the associated predicate is taken to
+      be '\0'.
+
+      An empty `from` matches at every position, as for `replace_all(text, from, to)`, with the
+      neighbours of a position being the characters either side of it.
+   */
+  template<invocable_exact_r<bool, char> LeftPred, invocable_exact_r<bool, char> RightPred>
   std::string& replace_all(std::string& text, LeftPred lPred, std::string_view from, RightPred rPred, std::string_view to)
   {
     constexpr auto npos{std::string::npos};
     std::string::size_type pos{};
     while((pos = text.find(from, pos)) != npos)
     {
-      if(    (((pos > 0) && lPred(text[pos - 1])) || ((pos == 0) && lPred('\0')))
+      if(    (   ((pos > 0) && lPred(text[pos - 1])) || ((pos == 0) && lPred('\0')))
           && (   ((pos + from.length() < text.length())  && rPred(text[pos + from.length()]))
               || ((pos + from.length() == text.length()) && rPred('\0')))
         )
       {
         text.replace(pos, from.length(), to);
-        pos += (to.length() + 1);
+        pos += to.length();
+        if(from.empty()) ++pos;
       }
       else
       {
-        pos += (from.length() + 1) ;
+        ++pos;
       }
     }
 
     return text;
   }
 
-  template<invocable_exactly_r<bool, char> LeftPred, invocable_exactly_r<bool, char> RightPred>
+  template<invocable_exact_r<bool, char> LeftPred, invocable_exact_r<bool, char> RightPred>
   [[nodiscard]]
   std::string replace_all(std::string_view text, LeftPred lPred, std::string_view from, RightPred rPred, std::string_view to)
   {

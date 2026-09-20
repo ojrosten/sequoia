@@ -1,0 +1,2 @@
+smart_pointer_false_negative_free_diagnostics
+False Negative Checks:                    24;  Failures:  0

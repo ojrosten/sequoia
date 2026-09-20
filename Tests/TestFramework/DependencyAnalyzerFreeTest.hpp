@@ -20,12 +20,12 @@ namespace sequoia::testing
     using free_test::free_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
 
     void run_tests();
   private:
     using test_list       = std::vector<std::filesystem::path>;
-    using opt_test_list   = std::optional<test_list>;
+    using test_selection  = std::variant<test_list, prune_fallback_reason>;
     using multi_test_list = std::vector<test_list>;
 
     using prune_records     = std::vector<prune_record>;
@@ -54,9 +54,20 @@ namespace sequoia::testing
 
     std::filesystem::file_time_type m_ResetTime{};
 
+    void test_staleness_threshold();
+
+    [[nodiscard]]
+    static std::string normalise_out_of_date_message(const project_paths& paths, std::string message);
+
     void test_exceptions(const project_paths& projPaths);
 
     void test_dependencies(const project_paths& projPaths);
+
+    void test_stamp_on_second_boundary(const project_paths& projPaths);
+
+    void test_pass_recorded_in_the_modification_second(const project_paths& projPaths);
+
+    void test_prune_record_round_trip(const project_paths& projPaths);
 
     void test_prune_update(const project_paths& projPaths);
 
@@ -64,17 +75,29 @@ namespace sequoia::testing
 
     void check_tests_to_run(const reporter& description,
                             const project_paths& projPaths,
-                            std::string_view cutoff,
                             const file_states& fileStates,
                             std::vector<prune_record> failures,
                             std::vector<prune_record> passes);
 
     void check_data(std::string_view description, const test_outcomes& obtained, const test_outcomes& prediction);
 
+    void check_round_trip(const reporter& description,
+                          const project_paths& projPaths,
+                          const prune_records& records);
+
     [[nodiscard]]
     static std::chrono::seconds to_duration(modification_time modTime);
 
     static auto read(const std::filesystem::path& file) -> opt_prune_records;
+
+    enum class build_system { ninja, ninja_with_msvc, visual_studio };
+
+    /// Which of the fake project's sources the build's record names, and where it says they are
+    enum class recorded_sources { all, all_but_the_tests, all_under_another_root };
+
+    void write_build_artefacts(const std::filesystem::path& fake, build_system system, recorded_sources sources);
+
+    void test_recorded_sources(const project_paths& projPaths);
 
     static void write_or_remove(const project_paths& projPaths, const std::filesystem::path& file, const opt_prune_records& tests);
 

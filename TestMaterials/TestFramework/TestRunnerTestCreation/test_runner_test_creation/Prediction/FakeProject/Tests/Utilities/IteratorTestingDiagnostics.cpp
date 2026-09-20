@@ -1,0 +1,26 @@
+////////////////////////////////////////////////////////////////////
+//               Copyright Oliver Jacob Rosten 2026.              //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
+#include "IteratorTestingDiagnostics.hpp"
+
+namespace fakeProject::testing
+{
+    [[nodiscard]]
+    std::filesystem::path iterator_false_negative_test::source_file()
+    {
+        return std::source_location::current().file_name();
+    }
+
+    void iterator_false_negative_test::run_tests()
+    {
+        // For example:
+
+        // utilities::iterator x{args}, y{different args};
+        // check(equivalence, "Useful Description", x, something inequivalent - ordinarily this would fail);
+        // check(equality, "Useful Description", x, y);
+    }
+}

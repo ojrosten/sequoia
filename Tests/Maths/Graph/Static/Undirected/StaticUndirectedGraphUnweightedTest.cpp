@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "StaticUndirectedGraphUnweightedTest.hpp"
 #include "Maths/Graph/GraphTestingUtilities.hpp"
 
@@ -18,7 +16,7 @@ namespace sequoia::testing
   using namespace maths;
 
   [[nodiscard]]
-  std::filesystem::path static_undirected_graph_unweighted_test::source_file() const
+  std::filesystem::path static_undirected_graph_unweighted_test::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -32,6 +30,25 @@ namespace sequoia::testing
     test_node_node();
     test_node_1_node_0();
     test_node_1_1_node_0_0();
+
+    test_constexpr_copy_assignment();
+  }
+
+  void static_undirected_graph_unweighted_test::test_constexpr_copy_assignment()
+  {
+    // The graphs differ before the assignment, so an assignment which did nothing could not pass
+    STATIC_CHECK((
+      [](){
+        using graph_t = static_undirected_graph<1, 3, null_weight, null_weight>;
+        using edge_t  = graph_t::edge_init_type;
+
+        graph_t g{{edge_t{1}}, {edge_t{0}}, {}}, h{{}, {edge_t{2}}, {edge_t{1}}};
+        if(h == g) return false;
+
+        h = g;
+        return h == g;
+      }()
+    ));
   }
 
   void static_undirected_graph_unweighted_test::test_empty()

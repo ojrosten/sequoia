@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "FileSystemUtilitiesFreeTest.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
@@ -15,7 +13,7 @@ namespace sequoia::testing
   namespace fs = std::filesystem;
 
   [[nodiscard]]
-  std::filesystem::path file_system_utilities_free_test::source_file() const
+  std::filesystem::path file_system_utilities_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }

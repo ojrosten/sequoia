@@ -1,2 +1,0 @@
-failure_info False Negative Test
-False Negative Checks:                     4;  Failures:  0

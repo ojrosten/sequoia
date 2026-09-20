@@ -10,6 +10,7 @@
 /** \file */
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
+#include "sequoia/TestFramework/TestRunner.hpp"
 
 namespace sequoia::testing
 {
@@ -21,7 +22,7 @@ namespace sequoia::testing
     using free_test::free_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
 
     void run_tests();
   private:
@@ -42,9 +43,15 @@ namespace sequoia::testing
 
     void test_prune_basic_output();
 
+    void test_prune_with_changed_toolchain();
+
+    void test_post_run_failure();
+
     void test_nested_suite();
 
     void test_nested_suite_verbose();
+
+    void test_excluded_performance_tests();
 
     void test_instability_analysis();
 
@@ -52,6 +59,7 @@ namespace sequoia::testing
     void test_instability_analysis(std::string_view message,
                                    std::string_view outputDirName,
                                    std::string_view numRuns,
+                                   return_code expected,
                                    std::initializer_list<std::string_view> extraArgs,
                                    Manipulator manipulator,
                                    Ts&&... ts);
@@ -60,6 +68,7 @@ namespace sequoia::testing
     void test_instability_analysis(std::string_view message,
                                    std::string_view outputDirName,
                                    std::string_view numRuns,
+                                   return_code expected,
                                    std::initializer_list<std::string_view> extraArgs,
                                    Ts&&... ts);
 
@@ -67,6 +76,7 @@ namespace sequoia::testing
     void test_instability_analysis(std::string_view message,
                                    std::string_view outputDirName,
                                    std::string_view numRuns,
+                                   return_code expected,
                                    Ts&&... ts);
 
     [[nodiscard]]

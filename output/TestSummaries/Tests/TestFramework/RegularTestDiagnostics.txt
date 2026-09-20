@@ -1,4 +1,0 @@
-Regular False Negative Diagnostics
-False Negative Checks:                    26;  Failures:  0
-Regular False Positive Diagnostics
-False Positive Checks:                     4;  Failures:  0

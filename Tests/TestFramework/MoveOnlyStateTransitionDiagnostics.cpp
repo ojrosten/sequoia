@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "MoveOnlyStateTransitionDiagnostics.hpp"
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
@@ -60,7 +58,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path move_only_state_transition_false_positive_diagnostics::source_file() const
+  std::filesystem::path move_only_state_transition_false_positive_diagnostics::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -156,7 +154,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path move_only_state_transition_false_negative_diagnostics::source_file() const
+  std::filesystem::path move_only_state_transition_false_negative_diagnostics::source_file()
   {
     return std::source_location::current().file_name();
   }

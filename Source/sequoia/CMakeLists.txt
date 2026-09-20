@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.31)
 
 include(${CMAKE_CURRENT_LIST_DIR}/../../build_system/Utilities.cmake)
 
@@ -13,6 +13,8 @@ set(SourceList
     TestFramework/Advice.cpp
     TestFramework/AllocationCheckersCore.cpp
     TestFramework/AllocationCheckersDetails.cpp
+    TestFramework/BuildArtefacts.cpp
+    TestFramework/CMakeCache.cpp
     TestFramework/Commands.cpp
     TestFramework/ConcreteTypeCheckers.cpp
     TestFramework/DependencyAnalyzer.cpp
@@ -34,6 +36,7 @@ set(SourceList
     TestFramework/TestLogger.cpp
     TestFramework/TestRunner.cpp
     TestFramework/TestRunnerUtilities.cpp
+    TestFramework/VersionedOutput.cpp
     TextProcessing/Indent.cpp
     TextProcessing/Patterns.cpp
     TextProcessing/Substitutions.cpp)

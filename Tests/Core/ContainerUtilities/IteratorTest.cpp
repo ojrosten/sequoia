@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "IteratorTest.hpp"
 #include "IteratorTestingUtilities.hpp"
 
@@ -63,7 +61,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path iterator_test::source_file() const
+  std::filesystem::path iterator_test::source_file()
   {
     return std::source_location::current().file_name();
   }

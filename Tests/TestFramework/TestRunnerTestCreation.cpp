@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "TestRunnerTestCreation.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
@@ -23,7 +21,7 @@ namespace sequoia::testing
   namespace fs = std::filesystem;
 
   [[nodiscard]]
-  std::filesystem::path test_runner_test_creation::source_file() const
+  std::filesystem::path test_runner_test_creation::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -37,6 +35,7 @@ namespace sequoia::testing
   void test_runner_test_creation::run_tests()
   {
     test_type_handling();
+    test_project_namespace();
     test_template_data_generation();
     test_creation("FakeProject", std::nullopt);
     test_creation("AnotherFakeProject", "curlew");
@@ -63,6 +62,33 @@ namespace sequoia::testing
     check("tuple<int>",    handle_as_ref("tuple<int>"));
     check("tuple<int >",   handle_as_ref("tuple<int >"));
     check("tuple< int >",  handle_as_ref("tuple< int >"));
+  }
+
+  void test_runner_test_creation::test_project_namespace()
+  {
+    using namespace std::string_literals;
+
+    const auto root{auxiliary_materials() /= "Namespaces"};
+    fs::create_directories(root / "myProject");
+    fs::create_directories(root / "my-project");
+    fs::create_directories(root / "0project");
+
+    check(equality, "A directory whose name is an identifier", project_namespace_for(root / "myProject"), "myProject"s);
+
+    check_exception_thrown<std::runtime_error>(
+      "A directory which does not exist",
+      [&root]() { return project_namespace_for(root / "absent"); }
+    );
+
+    check_exception_thrown<std::runtime_error>(
+      "A directory whose name is not an identifier",
+      [&root]() { return project_namespace_for(root / "my-project"); }
+    );
+
+    check_exception_thrown<std::runtime_error>(
+      "A directory whose name begins with a digit",
+      [&root]() { return project_namespace_for(root / "0project"); }
+    );
   }
 
   void test_runner_test_creation::test_template_data_generation()
@@ -122,6 +148,7 @@ namespace sequoia::testing
 
     fs::copy(templateMain.file(), fakeMain.file());
     fs::copy(templateMain.cmake_lists(), fakeMain.cmake_lists());
+    fs::copy(templateMain.dir() / "CMakePresets.json", fakeMain.dir());
     read_modify_write(
       fakeMain.cmake_lists(),
       [projectName,&sourceFolder](std::string& text) {
@@ -129,8 +156,6 @@ namespace sequoia::testing
         replace_all(text, "myProject", sourceFolder ? sourceFolder.value() : uncapitalize(projectName));
       }
     );
-
-    fs::copy(get_project_paths().build_system().repo() / "CMakePresetsCommon.json", fakeMain.dir() / "CMakePresets.json");
 
     commandline_arguments args{{zeroth_arg(projectName)
                                , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
@@ -142,21 +167,21 @@ namespace sequoia::testing
                                , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "g", "Thingummies"
                                , "create", "regular_test", "container<class T>", "const std::vector<T>"
                                , "create", "regular_test", "other::couple<class S, class T>", "std::pair<S, T>",
-                                              "-s", "partners", "-h", "Couple.hpp"
+                                              "-h", "Couple.hpp"
                                , "create", "regular_test", "bar::things", "double", "-h", std::format("{}/Stuff/Things.hpp", sourceFolderName)
-                               , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--suite", "Iterator"
+                               , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T"
                                , "create", "move_only", "variadic<class... T>", "std::tuple<T...>"
                                , "create", "move_only_test", "multiple<class... T>", "std::tuple<T...>", "gen-source", "Utilities"
                                , "create", "move_only_test", "cloud", "double", "gen-source", "Weather"
                                , "create", "free_test", "Utilities.h"
                                , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazzer"
-                               , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazagain", "--suite", "Bazzer"
+                               , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazagain"
                                , "create", "free_test", "Stuff/Doohicky.hpp", "gen-source", "bar::things"
                                , "create", "free_test", "Global/Stuff/Global.hpp", "gen-source", "::"
                                , "create", "free_test", "Global/Stuff/Defs.hpp", "gen-source", ""
                                , "create", "free", std::format("{}/Maths/Angle.hpp", sourceFolderName), "--diagnostics"
                                , "create", "regular_allocation_test", "container"
-                               , "create", "move_only_allocation_test", "foo", "--suite", "Iterator"
+                               , "create", "move_only_allocation_test", "foo"
                                , "create", "performance_test", "Container.hpp"
                                , "create", "performance_test", "Container.hpp"}
     };
@@ -164,7 +189,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     test_runner tr{args.size(), args.get(), "Oliver Jacob Rosten", "    ",  {.source_folder{sourceFolder}, .main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
 
-    tr.execute();
+    check(equality, "Test creation return code", tr.execute(), return_code::success);
 
     if(std::ofstream file{projectPath / "output" / "io.txt"})
     {
@@ -185,7 +210,7 @@ namespace sequoia::testing
           std::stringstream outputStream{};
           commandline_arguments args{{zeroth_arg("FakeProject"), "create", "free", "Plurgh.h"}};
           test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
-          tr.execute();
+          return tr.execute();
         });
 
       check_exception_thrown<std::runtime_error>(

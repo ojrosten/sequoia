@@ -5,11 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file
-    \brief Definitions for GraphError.hpp
-
- */
-
 #include "sequoia/Maths/Graph/GraphErrors.hpp"
 
 namespace sequoia::maths::graph_errors

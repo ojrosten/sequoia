@@ -5,10 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file
-    \brief Definitions for FileEditors.hpp
- */
-
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/Output.hpp"
@@ -103,88 +99,43 @@ namespace sequoia::testing
     read_modify_write(file, inserter);
   }
 
-  void add_to_suite(const std::filesystem::path& file, std::string_view suiteName, indentation indent, const std::vector<std::string>& tests)
+  void add_test_registrations(const std::filesystem::path& file, indentation indent, const std::vector<std::string>& tests)
   {
-    namespace fs = std::filesystem;
-
     if(tests.empty())
-      throw std::logic_error{std::string{"No tests specified to be added to the test suite \""}.append(suiteName).append("\"")};
+      throw std::logic_error{"No tests specified for registration"};
 
-    const auto text{
-      [&file, suiteName, &tests, indent]() -> std::string {
-        constexpr auto npos{std::string::npos};
-        auto contents{read_to_string(file)};
-        if(!contents)
-          throw std::runtime_error{report_failed_read(file)};
+    auto contents{read_to_string(file, std::ios_base::in)};
+    if(!contents)
+      throw std::runtime_error{report_failed_read(file)};
 
+    std::string& contentsStr{contents.value()};
 
-        std::string& contentsStr{contents.value()};
-        replace(contentsStr, "", "");
-        const auto pattern{std::string{"\""}.append(suiteName).append("\",")};
-        if(auto pos{contentsStr.find(pattern)}; pos != npos)
+    const auto pos{contentsStr.find("runner.execute")};
+    if(pos == std::string::npos)
+      throw std::runtime_error{std::string{"Unable to find the point of registration in "}.append(file.generic_string())};
+
+    const auto linePos{contentsStr.rfind('\n', pos)};
+    if(linePos == std::string::npos)
+      throw std::runtime_error{std::string{"Unable to find the point of registration in "}.append(file.generic_string())};
+
+    auto registrations{
+      [&tests, &contentsStr, indent](){
+        std::string str{};
+        for(const auto& test : tests)
         {
-          if(const auto linePos{contentsStr.rfind('\n', pos)}; linePos != npos)
-          {
-            std::string_view preamble{"add_test_suite("};
-            if((linePos > preamble.size()) && (contentsStr.find(preamble, linePos - preamble.size()) != npos))
-            {
-              if(const auto nextLinePos{contentsStr.find('\n', pos)}; nextLinePos != npos)
-              {
-                const auto endpos{contentsStr.find(");", pos)};
-                for(const auto& t : tests)
-                {
-                  std::string_view textView{contentsStr};
-                  std::string_view subtextView{textView.substr(pos, endpos - pos)};
-                  if(subtextView.find(t) == npos)
-                  {
-                    contentsStr.insert(nextLinePos + 1, std::string{indent + indent + indent}.append(t).append(",\n"));
-                  }
-                }
-
-                return contentsStr;
-              }
-            }
-          }
-        }
-        else if(pos = contentsStr.find("runner.execute"); pos != npos)
-        {
-          if(const auto linePos{contentsStr.rfind('\n', pos)}; linePos != npos)
-          {
-            auto builder{
-              [&tests, suiteName, indent](){
-                const indentation indent_0{indent + indent};
-                auto str{std::string{"\n"}.append(indent_0).append("runner.add_test_suite(")};
-                const indentation indent_1{indent_0 + indent};
-
-                append_indented(str, std::string{"\""}.append(suiteName).append("\","), indent_1);
-
-                for(auto i{tests.cbegin()}; i != tests.cend() - 1; ++i)
-                {
-                  append_indented(str, std::string{*i}.append(","), indent_1);
-                }
-
-                append_indented(str, tests.back(), indent_1);
-                append_indented(str, ");\n", indent_0);
-
-                return str;
-              }
-            };
-
-            contentsStr.insert(linePos, builder());
-            return contentsStr;
-          }
+          auto registration{std::string{"runner.register_test<"}.append(test).append(">();")};
+          if(contentsStr.find(registration) == std::string::npos)
+            append_indented(str, registration, indent + indent);
         }
 
-        return "";
+        return str;
       }()
     };
 
-    if(text.empty())
-    {
-      throw std::runtime_error{"Unable to find appropriate place to add test suite"};
-    }
+    if(registrations.empty()) return;
 
-    write_to_file(file, text);
+    contentsStr.insert(linePos, registrations);
+    write_to_file(file, contentsStr, std::ios_base::out);
   }
 
   void add_to_cmake(const std::filesystem::path& cmakeLists,
@@ -192,17 +143,17 @@ namespace sequoia::testing
                     const std::filesystem::path& file,
                     std::string_view patternOpen,
                     std::string_view patternClose,
-                    std::string_view cmakeEntryPrexfix)
+                    std::string_view cmakeEntryPrefix)
   {
     auto addEntry{
-      [file{file.lexically_relative(hostDir)}, &cmakeLists, patternOpen, patternClose, cmakeEntryPrexfix] (std::string& text) {
+      [file{file.lexically_relative(hostDir)}, &cmakeLists, patternOpen, patternClose, cmakeEntryPrefix] (std::string& text) {
         constexpr auto npos{std::string::npos};
 
         if(auto startPos{text.find(patternOpen)}; startPos != npos)
         {
           if(auto endPos{text.find(patternClose, startPos + patternOpen.size())}; endPos != npos)
           {
-            std::vector<std::string> entries{{std::string{cmakeEntryPrexfix}.append(file.generic_string())}};
+            std::vector<std::string> entries{{std::string{cmakeEntryPrefix}.append(file.generic_string())}};
             auto newlinePos{npos}, next{startPos + patternOpen.size()};
             while((newlinePos = text.find("\n", next)) < endPos)
             {
@@ -240,22 +191,46 @@ namespace sequoia::testing
     read_modify_write(cmakeLists, addEntry);
   }
 
+  namespace
+  {
+    /** \brief Contents with no NUL byte, which is the discriminator git uses too. */
+    [[nodiscard]]
+    bool is_text(std::string_view contents)
+    {
+      return contents.find('\0') == std::string_view::npos;
+    }
+
+    /** \brief Text differing only in CRLF versus LF is the same text: the line ending belongs to the tool
+        which last wrote the file, not to the content.
+     */
+    void normalize_line_endings(std::string& contents)
+    {
+      if(is_text(contents)) replace_all(contents, "\r\n", "\n");
+    }
+  }
+
   [[nodiscard]]
   reduced_file_contents get_reduced_file_content(const std::filesystem::path& file, const std::filesystem::path& prediction)
   {
-    reduced_file_contents contents{read_to_string(file), read_to_string(prediction)};
+    constexpr auto binary{std::ios_base::in | std::ios_base::binary};
+
+    reduced_file_contents contents{read_to_string(file, binary), read_to_string(prediction, binary)};
 
     if(contents.working && contents.prediction)
     {
+      normalize_line_endings(contents.working.value());
+      normalize_line_endings(contents.prediction.value());
+
       if(file.extension() != seqpat)
       {
         namespace fs = std::filesystem;
         auto supplPath{[](fs::path f) { return f.replace_extension(seqpat); }(prediction)};
         if(fs::exists(supplPath))
         {
-          if(auto exprContents{read_to_string(supplPath)})
+          if(auto exprContents{read_to_string(supplPath, binary)})
           {
-            const auto& expressions{exprContents.value()};
+            auto& expressions{exprContents.value()};
+            normalize_line_endings(expressions);
 
             std::string::size_type pos{};
             while(pos < expressions.size())

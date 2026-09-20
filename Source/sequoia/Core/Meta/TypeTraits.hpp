@@ -91,7 +91,7 @@ namespace sequoia
 
   /** \brief Primary class template for determining if a type can be brace-initialized
       by Args...
- ` */
+   */
   template<class T, class... Args>
   struct is_initializable : std::false_type
   {};
@@ -212,7 +212,9 @@ namespace sequoia
 
   /** @} */ // end of deep_equality group
 
-  /** @defgroup deep_totally_ordered The deep_totally_ordered Group */
+  /** @defgroup deep_totally_ordered The deep_totally_ordered Group
+      @{
+   */
   
   template<class T>
   struct is_deep_totally_ordered;

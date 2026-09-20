@@ -1,0 +1,91 @@
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 435
+Executable out of date
+
+Expected Exception Type:
+[std::runtime_error]
+Executable is out of date; please build it!
+Executable time stamp:****
+output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/xxFILExx time stamp:****
+
+=======================================
+
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 448
+Executable out of date on account of a source no test depends on
+
+Expected Exception Type:
+[std::runtime_error]
+Executable is out of date; please build it!
+Executable time stamp:****
+output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/xxFILExx time stamp:****
+
+=======================================
+
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 462
+Executable out of date on account of a toolchain header
+
+Expected Exception Type:
+[std::runtime_error]
+Executable is out of date; please build it!
+Executable time stamp:****
+output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/xxFILExx time stamp:****
+
+=======================================
+
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 476
+A file the build read cannot be read
+
+Expected Exception Type:
+[std::runtime_error]
+output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/xxFILExx time cannot be read:****
+Restore the file, or build the executable again
+
+=======================================
+
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 515
+The record names nothing of the project's
+
+Expected Exception Type:
+[std::runtime_error]
+The build's record names nothing under output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject; was the tree configured with a different spelling of the project's path?
+
+=======================================
+
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 523
+The record names nothing of the project's, whatever the toolchain did
+
+Expected Exception Type:
+[std::runtime_error]
+The build's record names nothing under output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject; was the tree configured with a different spelling of the project's path?
+
+=======================================
+
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 970
+A prune file in a superseded format
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to read the prune records in output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/output/Prune/CMade/TestAll/TestAll.failures: Expected a line beginning 'path: ' but found 'HouseAllocationTest.cpp 12345'
+Try deleting the parent directory and starting afresh
+
+=======================================
+
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 976
+A malformed time stamp
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to read the prune records in output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/output/Prune/CMade/TestAll/TestAll.failures: 'soon' is not a time stamp
+Try deleting the parent directory and starting afresh
+
+=======================================
+
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 982
+A path with no time stamp after it
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to read the prune records in output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/output/Prune/CMade/TestAll/TestAll.failures: Expected a line beginning 'timestamp: ' but found the end of the file
+Try deleting the parent directory and starting afresh
+
+=======================================
+

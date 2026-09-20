@@ -19,13 +19,14 @@ namespace sequoia::testing
     using free_false_negative_test::free_false_negative_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
 
     void run_tests();
   private:
 
     void test_variant();
     void test_optional();
+    void test_expected();
     void test_any();
   };
   
@@ -35,13 +36,14 @@ namespace sequoia::testing
     using free_false_positive_test::free_false_positive_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
 
     void run_tests();
   private:
 
     void test_variant();
     void test_optional();
+    void test_expected();
     void test_any();
   };
 }

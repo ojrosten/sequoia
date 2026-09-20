@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.31)
 
 project(SequoiaTestChamber DESCRIPTION "The Sequoia Library plus a test chamber"
                            LANGUAGES CXX)
@@ -14,6 +14,7 @@ set(TestDir ${CMAKE_CURRENT_LIST_DIR}/../Tests)
 target_sources(TestChamber PRIVATE            
                ${TestDir}/Core/Object/CopyableFunctionFreeTest.cpp
                ${TestDir}/Maths/Algebra/RatioFreeTest.cpp
+               ${TestDir}/Maths/Arithmetic/ArithmeticCastsFreeTest.cpp
                ${TestDir}/Maths/Arithmetic/SaturatingArithmeticFreeTest.cpp
                ${TestDir}/Maths/Geometry/AbsoluteCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.cpp

@@ -13,19 +13,27 @@
 
 #include "sequoia/Runtime/ShellCommands.hpp"
 
+#include <optional>
+#include <string>
+
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
 namespace sequoia::testing
 {
+  /** \brief Configures a project, optionally overriding a cache variable.
 
+      \param buildPaths     the project to configure; the preset is the final component of its
+                            cmake cache directory, which is how the build tree names the
+                            configuration that produced it.
+      \param output         file to which the command's output is directed.
+      \param cacheOverride  spelled `VAR=VALUE`, as `cmake -D` expects it.
+   */
   [[nodiscard]]
   runtime::shell_command cmake_cmd(const build_paths& buildPaths,
                                    const std::filesystem::path& output,
-                                   const std::optional<std::string>& args = {});
+                                   const std::optional<std::string>& cacheOverride = {});
 
   [[nodiscard]]
   runtime::shell_command build_cmd(const build_paths& buildPaths, const std::filesystem::path& output);
 
-  [[nodiscard]]
-  runtime::shell_command build_and_run_cmd(const build_paths& buildPaths, const std::filesystem::path& output);
 }

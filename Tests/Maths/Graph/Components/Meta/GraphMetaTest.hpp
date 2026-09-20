@@ -19,7 +19,7 @@ namespace sequoia::testing
     using regular_test::regular_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
 
     void run_tests();
   private:
@@ -56,7 +56,7 @@ namespace sequoia::testing
     template<class EdgeWeight>
     void test_directed_impl();
 
-    void test_static_edge_index_generator();
+    void test_static_edge_index_type();
   };
 
   template<class T> struct wrapper

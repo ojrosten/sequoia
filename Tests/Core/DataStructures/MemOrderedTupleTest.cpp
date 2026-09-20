@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "MemOrderedTupleTest.hpp"
 
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
@@ -14,7 +12,7 @@
 namespace sequoia::testing
 {  
   [[nodiscard]]
-  std::filesystem::path mem_ordered_tuple_test::source_file() const
+  std::filesystem::path mem_ordered_tuple_test::source_file()
   {
     return std::source_location::current().file_name();
   }

@@ -1,0 +1,2 @@
+Scratch file for one trial of invoke_handle_inheritance_free_test.
+The test truncates this, spawns, closes, then removes it.

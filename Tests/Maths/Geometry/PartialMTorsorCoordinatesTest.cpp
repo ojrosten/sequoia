@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "PartialMTorsorCoordinatesTest.hpp"
 
 namespace sequoia::testing
@@ -34,7 +32,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path partial_m_torsor_coordinates_test::source_file() const
+  std::filesystem::path partial_m_torsor_coordinates_test::source_file()
   {
     return std::source_location::current().file_name();
   }

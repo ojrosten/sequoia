@@ -1,0 +1,40 @@
+
+Running tests, synchronously...
+
+another_consistently_passing_free_test:
+[Execution Time: 212us]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+consistently_passing_free_test:
+[Execution Time: 151us]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+
+-----------Grand Totals-----------
+[Total Run Time: 852us]
+[Execution Time: 363us]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Running tests, synchronously...
+
+another_consistently_passing_free_test:
+[Execution Time: 49us]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+consistently_passing_free_test:
+[Execution Time: 42.5us]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+
+-----------Grand Totals-----------
+[Total Run Time: 497us]
+[Execution Time: 91.5us]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+No instabilities detected

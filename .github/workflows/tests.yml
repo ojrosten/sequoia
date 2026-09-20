@@ -1,0 +1,573 @@
+name: tests
+
+# The one place that knows how to build and run sequoia. coarse, fine and rigorous
+# are callers differing only in which columns they ask for and what they pass the
+# runner, so the tiers cannot drift apart in how they build.
+#
+# The tiers are ordered by strictness, not by containment: fine and rigorous replace
+# coarse's plain columns with sanitized ones rather than adding to them. A tier must
+# be at least as strict as the one below, or a pass at one says nothing about the
+# next.
+on:
+  workflow_call:
+    inputs:
+      columns:
+        description: 'JSON array of matrix entries: name, os, configure, build, cc/cxx where the preset takes them from the environment, pkg where the apt package providing the compiler is not spelt like the binary (clang++ comes from clang; g++-15 is its own package), and optionally exec_args, repeat_args and advisory, explained where they are read.'
+        required: true
+        type: string
+      exec_args:
+        description: 'Arguments for the test executable, via the EXEC_ARGS cache variable. Semicolon-separated for more than one.'
+        required: false
+        type: string
+        default: ''
+      repeat_args:
+        description: 'Arguments for a second run of the test executable on the built tree, after the first; empty for none. In practice `locate N` minus the end-to-end test, which is nine-tenths of a run. A column may carry its own, replacing the tier''s, as with exec_args.'
+        required: false
+        type: string
+        default: ''
+      warnings_as_errors:
+        description: 'Fail the build on any compiler warning. The gating tiers set this; the reporting tier counts them instead.'
+        required: false
+        type: boolean
+        default: false
+      false_negative:
+        description: 'Corrupt the checkout so that every column MUST go red, one versioned output and one prediction. The control for the gate itself: a run in this mode that comes back green means the gate cannot see. Roadmap item 148.'
+        required: false
+        type: boolean
+        default: false
+      suite_timeout_minutes:
+        description: 'How long one pass of the suite may run before the step is killed; a repeat pass gets the same again. The tiers run it once; statistical runs it N times over in one pass.'
+        required: false
+        type: number
+        default: 30
+      job_timeout_minutes:
+        description: 'How long a column may take in all, build included.'
+        required: false
+        type: number
+        default: 90
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: ${{ inputs.job_timeout_minutes }}
+    strategy:
+      # Every column reports. Cancelling the rest on the first red would collect
+      # one answer where the point is to collect all of them.
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(inputs.columns) }}
+
+    # bash everywhere, Windows included, so one set of steps serves every column
+    # rather than each acquiring a shell dialect of its own.
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # docs/ is ~96MB of committed doxygen render; nothing here reads it.
+          fetch-depth: 1
+
+      # Two corruptions, because the columns do not share a detector. The summary
+      # file is rewritten by every toolchain, so appending to it is drift wherever
+      # `--check-versioned-output` is on; the prediction is what StreamingFreeTest
+      # compares its output against, so rewriting it is a soft failure everywhere,
+      # including the column that carries no drift check. Each target is checked
+      # to exist first: a control that mutates nothing is the false negative it is
+      # meant to catch.
+      - name: Corrupt the tree, so that every column must go red
+        if: ${{ inputs.false_negative }}
+        run: |
+          summary=output/TestSummaries/Tests/Core/Meta/type_algorithms_free_test.txt
+          prediction=TestMaterials/Streaming/StreamingFreeTest/streaming_free_test/Prediction/Foo.txt
+          for f in "$summary" "$prediction"; do
+            [ -f "$f" ] || { echo "::error::$f is not where the control expects it"; exit 1; }
+          done
+          echo "false-negative control: the run must report this line as drift" >> "$summary"
+          echo "false-negative control: the test must fail against this" > "$prediction"
+          git diff --stat
+
+      # Package presence is tested against `apt-cache pkgnames`, which matches
+      # names exactly. `apt-get install` does not: given a name with regex
+      # metacharacters that matches no package it treats the name as a regex, so
+      # `g++-15` on noble resolves to clang-15, flang-15 and llvm-15, installs all
+      # three, and exits 0.
+      - name: Install the toolchain (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          # The hosted image ships vendor repositories - Chrome and Microsoft - which
+          # nothing here installs from. A bad index served by one of them fails the
+          # update, and with it the job.
+          sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
+                     /etc/apt/sources.list.d/microsoft-prod.list
+          # Launchpad is a live dependency of every Linux column, and it fails in
+          # more than one shape: a malformed chunked response (PR #19, 2026-09-11)
+          # and an HTTP 503 "temporarily unavailable" (2026-09-16), both before any
+          # compiler ran. So the add is retried on any non-zero exit - not only a
+          # timeout - a bounded number of times with a short back-off. Nothing
+          # else is retried. The `apt-get update` below fetches the PPA's index from
+          # Launchpad too, and a failure there is loud - apt exits 100, or the
+          # compiler check after it fires - but is not yet a shape that has been
+          # seen; the two above were both in the add.
+          for attempt in 1 2 3 4; do
+            sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test && break
+            [ "$attempt" -lt 4 ] || { echo "::error::add-apt-repository failed on all $attempt attempts"; exit 1; }
+            echo "add-apt-repository failed (attempt $attempt); retrying in $((attempt * 15))s"
+            sleep $((attempt * 15))
+          done
+          sudo apt-get update -qq
+          # The compiler binary and the package providing it are not the same string:
+          # g++-15 is both, but clang++ is shipped by `clang`. A column may therefore
+          # name the package separately, defaulting to the binary where they agree.
+          for pkg in "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev; do
+            apt-cache pkgnames | grep -qx "$pkg" \
+              || { echo "::error::$pkg is not available on this image"; exit 1; }
+          done
+          sudo apt-get install -y "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev
+          echo "CC=${{ matrix.cc }}"   >> "$GITHUB_ENV"
+          echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"
+
+      # A macOS column carries `--exclude-performance` as the Windows ones do: it is
+      # the suite's timing assertions, not the rest of it, which a hosted runner
+      # cannot hold.
+      - name: Install the toolchain (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          brew list ninja >/dev/null 2>&1 || brew install ninja
+          brew list tbb   >/dev/null 2>&1 || brew install tbb
+          brew list llvm  >/dev/null 2>&1 || brew install llvm
+          echo "CC=$(brew --prefix llvm)/bin/clang"    >> "$GITHUB_ENV"
+          echo "CXX=$(brew --prefix llvm)/bin/clang++" >> "$GITHUB_ENV"
+
+      # With the Visual Studio generator CMake finds the toolset itself; with Ninja
+      # it looks for cl.exe on PATH, which nothing puts there. vcvars sets it, but
+      # only within the cmd session that runs it, so its effect is captured and
+      # handed forward: named variables rather than a whole `set` dump, so this
+      # cannot silently clobber the runner's own environment, and PATH through
+      # GITHUB_PATH, the route the runner provides for it, in Windows form, which
+      # is what a later bash step's start-up translates.
+      - name: Enter the MSVC environment (Windows, Ninja)
+        if: runner.os == 'Windows' && matrix.configure == 'msvc-ninja'
+        run: |
+          vswhere="/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe"
+          root=$("$vswhere" -latest -products '*' \
+                   -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 \
+                   -property installationPath)
+          [ -n "$root" ] || { echo "::error::no VC toolset reported by vswhere"; exit 1; }
+          vcvars="$(cygpath -u "$root")/VC/Auxiliary/Build/vcvars64.bat"
+          [ -f "$vcvars" ] || { echo "::error::$vcvars does not exist"; exit 1; }
+
+          # Via a batch file in RUNNER_TEMP rather than `cmd //c "call ... && set"`:
+          # Git bash's MSYS layer re-quotes an argument containing spaces and
+          # quotes, and cmd then sees the escaping literally. The wrapper's own
+          # path has no spaces, so there is nothing left to mangle.
+          bat="$RUNNER_TEMP/vcvars_dump.bat"
+          printf '@echo off\r\necho PATH_BEFORE=%%PATH%%\r\ncall "%s" >nul || exit /b 1\r\nset\r\n' "$(cygpath -w "$vcvars")" > "$bat"
+          dump=$(cmd //c "$(cygpath -w "$bat")" | tr -d '\r')
+          printf '%s\n' "$dump" | grep -iE '^(INCLUDE|LIB|LIBPATH|VCToolsInstallDir|VCINSTALLDIR|VSINSTALLDIR|WindowsSdkDir|WindowsSDKVersion|UCRTVersion|UniversalCRTSdkDir)=' >> "$GITHUB_ENV"
+
+          # Only what vcvars added. Forwarding its whole PATH would prepend the
+          # runner's own entries over themselves in a new order, and the first run
+          # of this step did exactly that: WindowsApps came to precede Git\bin, so
+          # `shell: bash` resolved to the WSL stub for every step after this one.
+          #
+          # And not the CMake and Ninja Visual Studio bundles, which the forwarded
+          # entries would otherwise put ahead of the image's: this column builds
+          # with the same cmake as the msbuild columns, so that a red run here asks
+          # about the generator and nothing else. Whether sequoia builds under the
+          # bundled toolset is a question for a matrix row of its own.
+          before=$(printf '%s\n' "$dump" | grep '^PATH_BEFORE=' | sed 's/^[^=]*=//' | tr ';' '\n')
+          after=$(printf '%s\n' "$dump"  | grep -iE '^PATH='     | sed 's/^[^=]*=//' | tr ';' '\n')
+          added=$(printf '%s\n' "$after" | grep -vxF -f <(printf '%s\n' "$before") | grep -v '^$' | grep -vF 'CommonExtensions\Microsoft\CMake\')
+          printf '%s\n' "$added"
+          printf '%s\n' "$added" >> "$GITHUB_PATH"
+
+          # GITHUB_PATH reaches later steps only, so ninja is looked for where a later
+          # step will: the forwarded entries, then this step's own PATH.
+          PATH="$(cygpath -pu "$(printf '%s\n' "$added" | paste -sd ';')"):$PATH" command -v ninja \
+            || { echo "no ninja on the forwarded PATH or the image's; installing one"; choco install ninja -y; }
+
+      # An exit status says the tool ran, not that it did what was asked.
+      - name: Report the toolchain actually in use
+        run: |
+          if [ -n "${CXX:-}" ]; then
+            command -v "$CXX" || { echo "::error::$CXX is not on PATH"; exit 1; }
+            "$CXX" --version
+          elif [ '${{ matrix.configure }}' = msvc-ninja ]; then
+            # Which cl, ninja and cmake the forwarded PATH resolves to, in that order,
+            # so the ordering GITHUB_PATH produced is visible rather than assumed.
+            for tool in cl ninja cmake; do
+              command -v "$tool" || { echo "::error::$tool is not on PATH"; exit 1; }
+            done
+          else
+            echo "No CXX set; the preset selects the compiler (Windows/MSVC)."
+          fi
+          cmake --version
+
+      # `--version` does not identify the compiler: Ubuntu ships post-release
+      # snapshots of a branch under the release's version number, so a g++ reporting
+      # 15.2.0 may be well beyond it. The changelog says which. The same is true of
+      # a distro clang, so this reads the changelog of whichever package the column
+      # installed rather than naming one compiler.
+      - name: What the distribution's compiler actually is
+        if: runner.os == 'Linux'
+        # A report must not be able to fail the job - hence the trailing `|| true`,
+        # and `sed` rather than `head`, since head exits early, gzip takes SIGPIPE,
+        # and `-o pipefail` would turn a report into a failure.
+        run: |
+          pkg="${{ matrix.pkg || matrix.cxx }}"
+          log=$(dpkg -L "$pkg" 2>/dev/null | grep -m1 'changelog.Debian.gz$' || true)
+          if [ -n "$log" ]; then
+            zcat "$log" | sed -n '1,20p' || true
+          else
+            echo "No Debian changelog found for $pkg; $CXX --version above is all we have."
+          fi
+
+      # The generated project's `git init` is followed by a commit, and git refuses
+      # to commit without an identity. Every developer machine has one configured;
+      # a fresh runner does not.
+      - name: Give git an identity
+        run: |
+          git config --global user.name "sequoia CI"
+          git config --global user.email "ci@example.invalid"
+          git config --global init.defaultBranch trunk
+
+      # Once a generated project vendors a copy of sequoia inside itself, the
+      # TestMaterials tree passes 260 characters. sequoia declares itself
+      # long-path aware in resources/win/longpaths.manifest, but Windows also
+      # requires the machine-wide switch, and git its own.
+      #
+      # In PowerShell because Git bash's MSYS layer rewrites bare switches like
+      # /v and /f into Windows paths before reg.exe sees them.
+      - name: Let Windows and git see long paths
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          git config --global core.longpaths true
+          New-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' `
+                           -Name LongPathsEnabled -Value 1 -PropertyType DWord -Force | Out-Null
+          Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' `
+                           -Name LongPathsEnabled
+
+      # A column may carry `exec_args` of its own, for a platform which cannot run the
+      # whole suite. It replaces the tier's rather than adding to them, so a column
+      # taking this route out of a tier which passes `--check-versioned-output` must
+      # repeat it.
+      - name: Configure
+        id: configure
+        working-directory: TestAll
+        run: |
+          # A column's exec_args replaces the tier's. `||` cannot express this: an
+          # explicitly empty string is falsy, so a column asking for NO flags would
+          # silently inherit the tier's. toJSON distinguishes absent from empty.
+          if [ '${{ toJSON(matrix.exec_args) }}' = 'null' ]; then
+            args='${{ inputs.exec_args }}'
+          else
+            args='${{ matrix.exec_args }}'
+          fi
+          if [ '${{ toJSON(matrix.repeat_args) }}' = 'null' ]; then
+            repeat='${{ inputs.repeat_args }}'
+          else
+            repeat='${{ matrix.repeat_args }}'
+          fi
+          echo "exec_args=$args" >> "$GITHUB_OUTPUT"
+          echo "repeat_args=$repeat" >> "$GITHUB_OUTPUT"
+          cmake --preset ${{ matrix.configure }} \
+                "-DEXEC_ARGS=$args" \
+                -DWARNINGS_AS_ERRORS=${{ inputs.warnings_as_errors && 'ON' || 'OFF' }}
+
+      # Separate from the run below so a compile failure and a test failure are
+      # distinguishable, and so the suite can carry its own ceiling. The log is kept
+      # so warnings can be counted where they are not fatal.
+      - name: Build
+        working-directory: TestAll
+        run: cmake --build --preset ${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/build.log"
+
+      # Distinct sites rather than raw lines: gcc and clang repeat a warning once per
+      # instantiation, so a raw count says more about templates than about code.
+      # MSVC spells it "warning Cnnnn"; the others "warning:".
+      - name: Report compiler warnings
+        if: ${{ !inputs.warnings_as_errors }}
+        run: |
+          log="$RUNNER_TEMP/build.log"
+          sites=$({ grep -oE '[^ ]+:[0-9]+:[0-9]+: warning:|warning C[0-9]+' "$log" || true; } | sort -u | wc -l | tr -d ' ')
+          total=$(grep -cE 'warning:|warning C[0-9]+' "$log" || true)
+          if [ "${sites:-0}" -gt 0 ]; then
+            echo "::warning title=Compiler warnings::${{ matrix.name }}: $sites distinct site(s), $total line(s)"
+            {
+              echo "### ${{ matrix.name }}: $sites distinct warning site(s)"
+              echo '```'
+              grep -E 'warning:|warning C[0-9]+' "$log" | sort -u | head -40
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No compiler warnings."
+          fi
+
+      # A `run-` preset is named `run-` plus the preset it runs, and builds the
+      # `run` target, whose command is the test executable; the binary is already
+      # built, so this step is the suite and nothing else.
+      #
+      # timeout-minutes on the step rather than timeout(1) around the command:
+      # macOS ships no GNU coreutils, and the step form additionally distinguishes
+      # "the suite timed out" from "the job timed out" in the run summary. One
+      # branch has already spun for 36 minutes against an 18s baseline.
+      # A column may set `advisory: true` to run without gating on the result, for
+      # a platform whose failures are understood and being worked on. There is no
+      # build-without-running option: a suite that is not run tells you nothing,
+      # and the audit below refuses a column whose suite step did not run.
+      #
+      # The tee is safe only because `shell: bash` runs steps under
+      # `--noprofile --norc -eo pipefail`: without pipefail the tee would donate its
+      # own exit status to the step, which is how a red suite comes to look green.
+      # The Build step above already depends on this; it is written down here
+      # because the dependency is invisible at the call site.
+      - name: Run the suite
+        id: suite
+        continue-on-error: ${{ matrix.advisory == true }}
+        working-directory: TestAll
+        timeout-minutes: ${{ inputs.suite_timeout_minutes }}
+        run: cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/run.log"
+
+      # The second pass, where the column asks for one: the same executable on the
+      # same tree with the repeat arguments. Only EXEC_ARGS changes at the
+      # reconfigure, so nothing rebuilds; the `run` target's command line is all
+      # that changes in what is regenerated, and the cache is read back so the
+      # log says what the pass was configured with. The `if:` carries GitHub's
+      # implicit success(), so a red first pass skips both steps - a suite that
+      # is red once tells you what N more would - and the audit below allows for
+      # that; an advisory column's red first pass counts as success, so there the
+      # repeat runs. Such a column must not also check the versioned output: the
+      # second pass's handler removes the first's patch and then finds the tree
+      # already repaired, so the drift would be reported without its patch. No
+      # column is both, and none should be made so without moving the patch aside
+      # between the passes.
+      - name: Configure the repetitions
+        if: ${{ steps.configure.outputs.repeat_args != '' }}
+        working-directory: TestAll
+        env:
+          REPEAT_ARGS: ${{ steps.configure.outputs.repeat_args }}
+        run: |
+          cmake --preset ${{ matrix.configure }} "-DEXEC_ARGS=$REPEAT_ARGS"
+          grep '^EXEC_ARGS:' ../build/TestAll/${{ matrix.configure }}/CMakeCache.txt
+
+      - name: Run the suite again
+        if: ${{ steps.configure.outputs.repeat_args != '' }}
+        id: repeat
+        continue-on-error: ${{ matrix.advisory == true }}
+        working-directory: TestAll
+        timeout-minutes: ${{ inputs.suite_timeout_minutes }}
+        run: cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/repeat.log"
+
+      # An advisory column still has to be *read*, and its failures are not equally acceptable.
+      # TestRunnerPerformanceTest asserts absolute wall-clock times - eight 25ms sleeps against a
+      # 60ms +- 35 window - which a shared hosted runner cannot hold; the same commit has returned
+      # 196ms and 603ms. Everything else is a defect.
+      #
+      # Classified by the *test that failed*, not by the summary row: those timing assertions are
+      # `check(within_tolerance{...}, ...)`, which count in the standard row, since the performance
+      # rows count `check_relative_performance` alone. Every failing file is named either way, so a
+      # new one cannot hide behind a tolerated one.
+      - name: Triage the advisory run
+        if: ${{ always() && matrix.advisory == true }}
+        run: |
+          log="$RUNNER_TEMP/run.log"
+          if [ ! -f "$log" ]; then
+            echo "::error title=Advisory run::${{ matrix.name }}: the suite produced no log"
+            exit 0
+          fi
+
+          # Tests whose failures are understood and tracked: roadmap items 38 and 102.
+          tolerated_tests='TestRunnerPerformanceTest\.cpp'
+
+          failing=$({ grep -oE 'Tests/[A-Za-z0-9/_]+\.cpp, Line [0-9]+' "$log" || true; } \
+                      | sed 's/, Line.*//' | sort -u)
+          actionable=$({ echo "$failing" | grep -vE "$tolerated_tests" || true; } | sed '/^$/d')
+
+          {
+            echo "### ${{ matrix.name }} - advisory run"
+            echo ""
+            if [ -n "$failing" ]; then
+              echo "Failing tests:"
+              echo '```'
+              echo "$failing"
+              echo '```'
+            else
+              echo "No failing tests."
+            fi
+            echo ""
+            echo '```'
+            sed -n '/Grand Totals/,$p' "$log" | head -12
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ -n "$actionable" ]; then
+            echo "::error title=Advisory run needs action::${{ matrix.name }}: $(echo "$actionable" | tr '\n' ' '). This column does not gate, so the job is green; the failures are real."
+          elif [ -n "$failing" ]; then
+            echo "::warning title=Advisory run::${{ matrix.name }}: only the timing assertions this runner cannot hold (roadmap 38, 102). Nothing to act on."
+          else
+            echo "::notice title=Advisory run::${{ matrix.name }}: the suite passed outright."
+          fi
+
+      # Kept with the artifact so an advisory column can be reviewed after the fact,
+      # rather than only through the annotations. The step's outcome goes with it:
+      # a caller reading the log back cannot otherwise tell a suite that failed
+      # in every repetition, whose analysis says "No instabilities detected", from
+      # one that passed.
+      - name: Keep the run log
+        if: always()
+        run: |
+          mkdir -p run-log
+          cp "$RUNNER_TEMP/run.log" run-log/ 2>/dev/null || true
+          echo "${{ steps.suite.outcome }}" > run-log/outcome
+          cp "$RUNNER_TEMP/repeat.log" run-log/ 2>/dev/null || true
+          [ ! -f run-log/repeat.log ] || echo "${{ steps.repeat.outcome }}" > run-log/repeat-outcome
+
+      # Where drift detection is on, a run whose versioned output moved writes
+      # the change to output/Drift/VersionedOutput.patch, one whole-file hunk per
+      # file, and this puts it on the run page: whether the change is the PR
+      # working or the PR breaking is a judgement made by reading it, and reading
+      # it here needs nothing downloaded. `git status` is kept beside it because
+      # it sees the whole tree, where the runner sees only the two trees it
+      # writes - so a prediction file moving would show here and nowhere else.
+      #
+      # A step summary over 1 MiB is dropped whole, with the step still green, so a
+      # patch too big for the page says where to find it instead. `--whitespace=nowarn`
+      # because a whole-file hunk reproduces every trailing space the output has, and
+      # `apply.whitespace=fix` in a user's config would strip them silently, applying
+      # to a tree the run never wrote. The fence is four backticks so that a line of
+      # three in the output cannot close it.
+      - name: Report any versioned output that moved
+        if: always()
+        run: |
+          git status --short -- output/ TestMaterials/ || true
+          patch=output/Drift/VersionedOutput.patch
+          if [ -f "$patch" ]; then
+            {
+              echo "### Versioned output moved: ${{ matrix.name }}"
+              echo "Apply from the project root with \`git apply --whitespace=nowarn\`, then read \`git diff\`."
+              if [ "$(wc -c < "$patch")" -gt 900000 ]; then
+                echo "The patch is $(wc -c < "$patch") bytes, too large for this page: it is in the \`${{ matrix.build }}-drift\` artifact."
+              else
+                echo '````diff'
+                cat "$patch"
+                echo '````'
+              fi
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      # The control's columns go red on a corrupted tree, but red does not say
+      # which detector saw it: the prediction corruption fails a test in every
+      # column, drift check or none. This holds the drift detector to its own
+      # evidence. Where the check is on, the run must have written a patch, and
+      # that patch applied in reverse to the tree the run repaired must give back
+      # HEAD plus the corruption and nothing else - the one appended line, in the
+      # one summary, as the only change under either versioned tree. Where the
+      # check is off, there must be no patch. Reversing rather than applying
+      # because the tree the patch was taken from is gone: the run rewrote it.
+      - name: The drift was reported as a patch which, reversed, restores the corruption
+        if: ${{ always() && inputs.false_negative }}
+        run: |
+          patch=output/Drift/VersionedOutput.patch
+          summary=output/TestSummaries/Tests/Core/Meta/type_algorithms_free_test.txt
+          case '${{ steps.configure.outputs.exec_args }}' in
+            *--check-versioned-output*)
+              [ -f "$patch" ] || { echo "::error::the drift check was on and the run wrote no patch"; exit 1; }
+              git apply --reverse --whitespace=nowarn "$patch"
+              status=$(git status --porcelain -- output/TestSummaries/ output/DiagnosticsOutput/)
+              if [ "$status" != " M $summary" ]; then
+                echo "::error::reversing the patch did not leave exactly the corrupted summary modified"
+                echo "$status"; exit 1
+              fi
+              if [ "$(git diff --numstat -- "$summary" | cut -f1,2)" != "$(printf '1\t0')" ] \
+                 || ! git diff -- "$summary" | grep -qxF '+false-negative control: the run must report this line as drift'; then
+                echo "::error::reversing the patch did not reproduce the one appended line"
+                git diff -- "$summary"; exit 1
+              fi
+              git checkout -- "$summary"
+              echo "ok    the patch, reversed, restores the corruption and nothing else";;
+            *)
+              [ ! -f "$patch" ] || { echo "::error::the drift check was off and a patch was written"; exit 1; }
+              echo "ok    no drift check, so no patch";;
+          esac
+
+      # The patch, if there is one, and the logs. Not the versioned trees
+      # themselves: what a person would have compared them against is exactly
+      # what the patch holds, without the megabytes that did not move.
+      - name: Upload the drift and the run log
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.build }}-drift
+          path: |
+            output/Drift/
+            output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/WorkingCopy/InitOutput/
+            run-log/
+          if-no-files-found: warn
+
+  # A column that reported without running the suite looks exactly like one that
+  # passed: `gh run list` says success either way, and so does the tick. It has
+  # happened - for a day in 2026-09-08/09 every column of every tier skipped the
+  # run and went green. This reads the run's own jobs back through the API and
+  # insists that each column named in `columns` exists, once, and that its
+  # `Run the suite` step concluded - success or failure, but not skipped and not
+  # absent - and, where the column asked for repetitions, that `Run the suite
+  # again` did too, skipped being allowed only when the first pass failed, which
+  # is the one reason it is skipped by design. Passing is the column's own
+  # business; RUNNING is checked here. The expectation is the columns input
+  # itself, so there is no second list to drift.
+  audit:
+    name: Every column ran the suite
+    needs: build-and-test
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      EXPECTED_COLUMNS: ${{ inputs.columns }}
+      TIER_REPEAT_ARGS: ${{ inputs.repeat_args }}
+    steps:
+      - name: Read this run's jobs back and check each column's suite steps
+        run: |
+          gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --paginate --jq '.jobs[]' \
+            | jq -s . > jobs.json
+          echo "jobs in this run:"
+          jq -r '.[] | "  \(.name): \(.conclusion // .status)"' jobs.json
+
+          # A column's repeat_args replaces the tier's, absent meaning the tier's;
+          # the same rule the Configure step applies.
+          jq -r --arg tier "$TIER_REPEAT_ARGS" '
+            .[] | "\(.name)\t\((.repeat_args // $tier) != "")"' \
+            <<<"$EXPECTED_COLUMNS" > expected.txt
+          [ -s expected.txt ] || { echo "::error::no columns to audit"; exit 1; }
+
+          failed=0
+          while IFS=$'\t' read -r column repeats; do
+            verdict=$(jq -r --arg c "$column" '
+              [.[] | select(.name | endswith(" / " + $c))]
+              | if length != 1 then "JOBS:\(length)"
+                else (([.[0].steps[] | select(.name == "Run the suite") | .conclusion] | first) // "ABSENT")
+                     + "\t"
+                     + (([.[0].steps[] | select(.name == "Run the suite again") | .conclusion] | first) // "ABSENT")
+                end' jobs.json)
+            if [[ $verdict == JOBS:* ]]; then
+              echo "::error::$column: expected exactly one job, found ${verdict#JOBS:}"; failed=1; continue
+            fi
+            suite=${verdict%%$'\t'*}
+            repeat=${verdict#*$'\t'}
+            case "$suite" in
+              success|failure) echo "ok    $column: Run the suite -> $suite";;
+              *)               echo "::error::$column: Run the suite -> $suite; the suite did not run on this column"; failed=1;;
+            esac
+            if [ "$repeats" = true ]; then
+              case "$suite/$repeat" in
+                */success|*/failure) echo "ok    $column: Run the suite again -> $repeat";;
+                failure/skipped)     echo "ok    $column: Run the suite again -> skipped, after a red first pass";;
+                *)                   echo "::error::$column: Run the suite again -> $repeat; the repetitions did not run on this column"; failed=1;;
+              esac
+            fi
+          done < expected.txt
+          exit $failed

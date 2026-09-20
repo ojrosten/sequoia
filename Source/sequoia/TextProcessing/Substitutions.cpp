@@ -5,10 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file
-    \brief Definitions for Substitutions.hpp
- */
-
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 namespace sequoia
@@ -124,6 +120,8 @@ namespace sequoia
     {
       text.replace(pos, from.length(), to);
       pos += to.length();
+      // An empty from consumes nothing, so the same gap would be found again
+      if(from.empty()) ++pos;
     }
 
     return text;

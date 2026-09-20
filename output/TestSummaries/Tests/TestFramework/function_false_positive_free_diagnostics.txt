@@ -1,0 +1,2 @@
+function_false_positive_free_diagnostics
+False Positive Checks:                     6;  Failures:  0

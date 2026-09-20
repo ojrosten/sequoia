@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "DynamicSubgraphTest.hpp"
 
 #include "sequoia/Maths/Graph/GraphAlgorithms.hpp"
@@ -16,7 +14,7 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::filesystem::path test_subgraph::source_file() const
+  std::filesystem::path test_subgraph::source_file()
   {
     return std::source_location::current().file_name();
   }

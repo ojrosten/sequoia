@@ -1,0 +1,7 @@
+
+Analyzing dependencies...
+  Warning: The toolchain has changed since the previous run, so prune is ignored and every test runs.
+           No action required.
+
+Nothing to do: try creating some tests!
+Run with --help to see options

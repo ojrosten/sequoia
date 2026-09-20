@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "TypeAlgorithmsFreeTest.hpp"
 #include "sequoia/Core/Meta/TypeAlgorithms.hpp"
 
@@ -40,7 +38,7 @@ namespace sequoia::testing
   using namespace meta;
   
   [[nodiscard]]
-  std::filesystem::path type_algorithms_free_test::source_file() const
+  std::filesystem::path type_algorithms_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -105,6 +103,9 @@ namespace sequoia::testing
   {
     STATIC_CHECK((type_comparator_v<char, void>));
     STATIC_CHECK((!type_comparator_v<int, char>));
+
+    STATIC_CHECK((std::same_as<type_comparator_t<char, void>, std::true_type>));
+    STATIC_CHECK((std::same_as<type_comparator_t<int, char>,  std::false_type>));
   }
   
   template<template<class...> class TT>
@@ -238,7 +239,8 @@ namespace sequoia::testing
     STATIC_CHECK(!all_of_v<TT<int>,                 always_false>);
     STATIC_CHECK( all_of_v<TT<int, float, double>,  always_true>);
 
-    STATIC_CHECK(std::same_as<all_of_t<TT<int>, is_int>,   std::true_type>);
+    STATIC_CHECK(std::same_as<all_of_t<TT<>,      is_int>, std::true_type>);
+    STATIC_CHECK(std::same_as<all_of_t<TT<int>,   is_int>, std::true_type>);
     STATIC_CHECK(std::same_as<all_of_t<TT<float>, is_int>, std::false_type>);
   }
 
@@ -266,7 +268,8 @@ namespace sequoia::testing
     STATIC_CHECK(any_of_v<TT<float>,      is_int> == !all_of_v<TT<float>,      is_not_int>);
     STATIC_CHECK(any_of_v<TT<>,           is_int> == !all_of_v<TT<>,           is_not_int>);
 
-    STATIC_CHECK(std::same_as<any_of_t<TT<int>, is_int>,   std::true_type>);
+    STATIC_CHECK(std::same_as<any_of_t<TT<>,      is_int>, std::false_type>);
+    STATIC_CHECK(std::same_as<any_of_t<TT<int>,   is_int>, std::true_type>);
     STATIC_CHECK(std::same_as<any_of_t<TT<float>, is_int>, std::false_type>);
   }
 

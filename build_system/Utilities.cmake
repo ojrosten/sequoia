@@ -3,9 +3,21 @@ set_property(GLOBAL PROPERTY CTEST_TARGETS_ADDED 1)
 include(CTest)
 
 option(CODE_COVERAGE "Build with Code Coverage" OFF)
+
+# Off by default, and deliberately so: -Werror belongs at a gate, never blanket. A
+# warning which stops a local build stops work on something unrelated to it, and the
+# usual response is to silence rather than to fix. CI turns this on for the tiers
+# which gate a merge, so the accumulation is prevented where prevention is cheap and
+# the interruption falls on nobody.
+option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 set(EXEC_ARGS "" CACHE STRING "Command-line arguments for the 'run' target.")
 
 FUNCTION(sequoia_init)
+    # From policy version 3.28 (CMP0155) CMake scans every C++20-or-later source for module
+    # imports: a clang-scan-deps run per translation unit under clang, a full preprocess under
+    # gcc, a scan pass under MSVC. Nothing here imports a module yet, so the scan buys nothing.
+    set(CMAKE_CXX_SCAN_FOR_MODULES OFF PARENT_SCOPE)
+
     if(NOT WIN32)
         find_package(Threads REQUIRED)
         find_package(TBB REQUIRED)
@@ -21,21 +33,31 @@ FUNCTION(sequoia_link_libraries target)
     endif()
 ENDFUNCTION()
 
+# The globs below feed target_sources, so anything they match must exist as a file: an editor's
+# lock or autosave beside a header - Emacs writes `.#Foo.hpp` (a dangling symlink) and `#Foo.hpp#`
+# - would otherwise stop configure with "Cannot find source file" for as long as the buffer is
+# unsaved. A last path component beginning with `#` or `.#` is dropped.
+FUNCTION(sequoia_glob_files out directory pattern)
+        file(GLOB_RECURSE files ${directory}/${pattern})
+        list(FILTER files EXCLUDE REGEX "/[.]?#[^/]*$")
+        set(${out} "${files}" PARENT_SCOPE)
+ENDFUNCTION()
+
 FUNCTION(sequoia_set_ide_source_groups target directory)
-        file(GLOB_RECURSE HeaderFiles ${directory}/*.h*)
+        sequoia_glob_files(HeaderFiles ${directory} *.h*)
         source_group(TREE ${directory} FILES ${HeaderFiles})
         target_sources(${target} PRIVATE ${HeaderFiles})
 
-        file(GLOB_RECURSE SourceFiles ${directory}/*.c*)
+        sequoia_glob_files(SourceFiles ${directory} *.c*)
         source_group(TREE ${directory} FILES ${SourceFiles})
 ENDFUNCTION()
 
 FUNCTION(sequoia_set_ide_source_groups_with_prefix target directory sourceGroupPrefix)
-        file(GLOB_RECURSE HeaderFiles ${directory}/*.h*)
+        sequoia_glob_files(HeaderFiles ${directory} *.h*)
         source_group(TREE ${directory} PREFIX ${sourceGroupPrefix} FILES ${HeaderFiles})
         target_sources(${target} PRIVATE ${HeaderFiles})
 
-        file(GLOB_RECURSE SourceFiles ${directory}/*.c*)
+        sequoia_glob_files(SourceFiles ${directory} *.c*)
         source_group(TREE ${directory} PREFIX ${sourceGroupPrefix} FILES ${SourceFiles})
 ENDFUNCTION()
 
@@ -64,6 +86,16 @@ FUNCTION(sequoia_set_compile_options target)
     endif()
 
     target_compile_options(${target} PRIVATE ${WARNING_SUPPRESSIONS})
+
+    # After the suppressions, not before: a suppressed warning must not become an
+    # error, or WARNING_SUPPRESSIONS would silently stop meaning anything.
+    if(WARNINGS_AS_ERRORS)
+        if(MSVC)
+            target_compile_options(${target} PUBLIC /WX)
+        else()
+            target_compile_options(${target} PUBLIC -Werror)
+        endif()
+    endif()
 ENDFUNCTION()
 
 FUNCTION(sequoia_set_properties target)
@@ -74,10 +106,10 @@ FUNCTION(sequoia_set_properties target)
     endif()
 ENDFUNCTION()
 
-FUNCTION(sequoia_set_run_target exectuable)
+FUNCTION(sequoia_set_run_target executable)
     add_custom_target(run 
-        COMMAND $<TARGET_FILE:${exectuable}> ${EXEC_ARGS}
-        DEPENDS ${exectuable}
+        COMMAND $<TARGET_FILE:${executable}> ${EXEC_ARGS}
+        DEPENDS ${executable}
     )
 ENDFUNCTION()
 
@@ -122,9 +154,12 @@ FUNCTION(sequoia_copy_asan_runtime target)
     endif()
 ENDFUNCTION()
 
+# Applied per target rather than through CMAKE_CXX_FLAGS, so that CMake's own
+# compiler checks never see it. -fprofile-update=atomic keeps gcov's counters
+# from being torn by the threading inside sequoia.
 FUNCTION(sequoia_add_coverage_options target)
     if(CODE_COVERAGE)
-        target_compile_options(${target} PRIVATE -coverage)
+        target_compile_options(${target} PRIVATE -coverage -fprofile-update=atomic)
         target_link_options(${target} PRIVATE -coverage)
     endif()
 ENDFUNCTION()
@@ -149,6 +184,8 @@ FUNCTION(sequoia_finalize_tests target sourceGroupRoot sourceGroupPrefix)
     sequoia_add_time_trace_options(${target})
     if(CODE_COVERAGE)
         add_test(NAME ${target} COMMAND ${target} "--serial")
+    else()
+        add_test(NAME ${target} COMMAND ${target})
     endif()
     sequoia_set_run_target(${target})
     sequoia_copy_asan_runtime(${target})

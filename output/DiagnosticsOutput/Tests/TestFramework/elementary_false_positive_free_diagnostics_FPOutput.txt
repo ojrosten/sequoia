@@ -1,0 +1,211 @@
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 347
+Boolean test
+
+[bool]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 348
+Comparing booleans
+
+[bool]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 349
+Comparing booleans
+
+[bool]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 351
+Integer test
+
+[int]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 352
+Simple integer test
+
+[int]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 353
+Double test
+
+[double]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 359
+Equality of null pointer with itself
+
+[int*]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 360
+Equality of non-null pointer with itself
+
+[int*]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 361
+Different pointers pointing to the same values
+
+Comparison performed using:
+[sequoia::testing::value_tester<int*>]
+Checking for equivalence with:
+[int*]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 366
+Built-in arrays of the same length
+
+[int [1]]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 422
+Equality checking
+
+[sequoia::testing::perfectly_normal_type]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 427
+Simple Equality Checking
+
+[sequoia::testing::perfectly_serializable_type]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 428
+Simple Equality Checking
+
+[sequoia::testing::perfectly_nonserializable_type]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 372
+Equivalence checking
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+Checking for equivalence with:
+[int]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 373
+Eequivalence checking with advice
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+Checking for equivalence with:
+[int]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 379
+Weak equivalence checking
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+Checking for weak equivalence with:
+[std::pair<int, double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 384
+Weak equivalence checking with advice
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+Checking for weak equivalence with:
+[std::pair<int, double>]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 392
+Best available for int
+
+[int]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 395
+Best available for only_equivalence_checkable
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+Checking for equivalence with:
+[sequoia::testing::only_equivalence_checkable]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 400
+Best available for only_equivalence_checkable compared with an int
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::testing::only_equivalence_checkable>]
+Checking for equivalence with:
+[int]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 405
+Best available for only_weakly_checkable
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+Checking for weak equivalence with:
+[sequoia::testing::only_weakly_checkable]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 410
+Best available for only_weakly_checkable
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::testing::only_weakly_checkable>]
+Checking for weak equivalence with:
+[sequoia::testing::only_weakly_checkable]
+
+=======================================
+
+False Negative Failure:
+Tests/TestFramework/ElementaryFreeDiagnostics.cpp, Line 415
+Best available for perfectly_serializable_type
+
+[sequoia::testing::perfectly_serializable_type]
+
+=======================================
+

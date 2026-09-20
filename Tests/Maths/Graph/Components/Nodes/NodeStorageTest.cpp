@@ -5,8 +5,6 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/** \file */
-
 #include "NodeStorageTest.hpp"
 
 #include "NodeStorageTestingUtilities.hpp"
@@ -14,7 +12,7 @@
 namespace sequoia:: testing
 {
   [[nodiscard]]
-  std::filesystem::path node_storage_test::source_file() const
+  std::filesystem::path node_storage_test::source_file()
   {
     return std::source_location::current().file_name();
   }

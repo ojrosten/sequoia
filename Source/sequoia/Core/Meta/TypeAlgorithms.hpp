@@ -8,8 +8,8 @@
 #pragma once
 
 #include "sequoia/Core/Meta/Sequences.hpp"
+#include "sequoia/Core/Meta/TypeName.hpp"
 
-#include <source_location>
 #include <string_view>
 #include <tuple>
 
@@ -18,45 +18,6 @@
 namespace sequoia::meta
 {
   //==================================================== type_comparator ===================================================//
-
-  namespace impl
-  {
-    using trial_type = void;
-    constexpr std::string_view trial_type_name{"void"};
-
-    namespace wrapped_type
-    {
-      template <typename T>
-      [[nodiscard]]
-      constexpr std::string_view name() noexcept
-      {
-        return std::source_location::current().function_name();
-      }
-
-      [[nodiscard]]
-      constexpr std::size_t prefix_length() noexcept
-      { 
-        return name<trial_type>().find(trial_type_name); 
-      }
-
-      [[nodiscard]]
-      constexpr std::size_t suffix_length() noexcept
-      { 
-        return name<trial_type>().length() - prefix_length() - trial_type_name.length();
-      }
-    }
-  }
-
-  template<class T>
-  [[nodiscard]]
-  consteval std::string_view type_name()
-  {
-    using namespace impl::wrapped_type;
-    constexpr auto wrappedName{name<T>()};
-    constexpr auto prefixLength{prefix_length()};
-    constexpr auto nameLength{wrappedName.length() - prefixLength - suffix_length()};
-    return wrappedName.substr(prefixLength, nameLength);
-  }
 
   template<class T, class U>
   struct type_comparator : std::bool_constant<type_name<T>() < type_name<U>()>
@@ -250,6 +211,7 @@ namespace sequoia::meta
   };
 
   template<template<class...> class TT, class T, class U, template<class, class> class Compare>
+    requires (!Compare<T, U>::value)
   struct merge<TT<T>, TT<U>, Compare>
   {
     using type = TT<U, T>;
@@ -405,6 +367,12 @@ namespace sequoia::meta
 
   //==================================================== all_of ===================================================//
 
+  /** \brief Whether `Trait` holds for every element of the list.
+
+      `Trait` must be well-formed for every element, and not merely up to the
+      first for which it is false. Short-circuiting would make well-formedness
+      depend on the order of a list over which the answer does not depend.
+   */
   template<class T, template<class> class Trait>
   struct all_of;
 
@@ -420,6 +388,10 @@ namespace sequoia::meta
 
   //==================================================== any_of ===================================================//
 
+  /** \brief Whether `Trait` holds for at least one element of the list.
+
+      As for `all_of`, `Trait` must be well-formed for every element.
+   */
   template<class T, template<class> class Trait>
   struct any_of;
 
@@ -435,7 +407,7 @@ namespace sequoia::meta
 
   //==================================================== zip ===================================================//
 
-  /*! \brief Pairs two packs element-wise, under a binary template of the caller's choosing.
+  /** \brief Pairs two packs element-wise, under a binary template of the caller's choosing.
 
       `Pair` is explicit rather than defaulted because what a zipped element should *be* is the
       caller's business: `std::pair` for a value-like pairing, but equally a trait to be evaluated
