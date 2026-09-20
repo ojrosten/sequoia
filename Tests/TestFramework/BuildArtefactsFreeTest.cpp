@@ -221,10 +221,10 @@ namespace sequoia::testing
       write_tlogs(dir, written);
       const auto read{expand(read_compilations(tree, executable))};
       check(equality,
-            "Round trip: the source first, then what else was read, sorted and each once",
+            "Round trip: the source first, then what else was read, in the order it was read and each once",
             read,
             std::vector<compilation_record>{
-              {project / "a.obj", {project / "a.cpp", project / "Sub Dir" / "b.h", project / "a.h"}},
+              {project / "a.obj", {project / "a.cpp", project / "a.h", project / "Sub Dir" / "b.h"}},
               {project / "b.obj", {project / "b.cpp"}},
               {project / "c.obj", {project / "c.cpp", project / "a.h"}}
             });

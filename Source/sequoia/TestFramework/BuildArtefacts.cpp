@@ -16,6 +16,7 @@
 #include "sequoia/TextProcessing/Patterns.hpp"
 
 #include <algorithm>
+#include <bit>
 #include <cctype>
 #include <cstddef>
 #include <cstdint>
@@ -438,25 +439,31 @@ namespace sequoia::testing
 
     constexpr std::string_view byte_order_mark{"\xFF\xFE"};
 
-    /// The tracker writes UTF-16, little-endian; a path is built from the code units themselves, so nothing is lost in a narrow encoding
+    /** The tracker writes UTF-16, little-endian; a path is built from the code units themselves, so nothing
+        is lost in a narrow encoding. On a little-endian host the bytes already are the code units.
+     */
     [[nodiscard]]
-    std::u16string decode_utf16le(std::span<const std::byte> bytes)
+    std::u16string decode_utf16le(std::string_view bytes)
     {
       constexpr std::size_t unitWidth{sizeof(char16_t)};
-      using code_unit_bytes = std::pair<std::byte, std::byte>;
 
-      auto toCodeUnit{
-        [](code_unit_bytes lowHigh) {
-          const auto [low, high]{lowHigh};
-          constexpr auto bitsPerByte{std::numeric_limits<std::underlying_type_t<std::byte>>::digits};
-          return static_cast<char16_t>(std::to_integer<unsigned>(low) | (std::to_integer<unsigned>(high) << bitsPerByte));
+      // A stray final byte is dropped
+      std::u16string units(bytes.size() / unitWidth, u'\0');
+      if constexpr(std::endian::native == std::endian::little)
+      {
+        std::memcpy(units.data(), bytes.data(), units.size() * unitWidth);
+      }
+      else
+      {
+        constexpr auto bitsPerByte{std::numeric_limits<unsigned char>::digits};
+        for(std::size_t i{}; i < units.size(); ++i)
+        {
+          const auto low{static_cast<unsigned char>(bytes[unitWidth * i])}, high{static_cast<unsigned char>(bytes[unitWidth * i + 1])};
+          units[i] = static_cast<char16_t>(low | (high << bitsPerByte));
         }
-      };
+      }
 
-      // The low byte of each unit, the high byte of each; zip ends at the shorter, so a stray final byte is dropped
-      return std::views::zip(bytes | std::views::stride(unitWidth), bytes | std::views::drop(1) | std::views::stride(unitWidth))
-           | std::views::transform(toCodeUnit)
-           | std::ranges::to<std::u16string>();
+      return units;
     }
 
     [[nodiscard]]
@@ -484,63 +491,115 @@ namespace sequoia::testing
       return rest.starts_with(std::string{kind}.append("."));
     }
 
-    /// The files a compilation touched, under each of its sources as the tracker spells them
-    using tlog_entries = std::map<std::u16string, std::vector<std::u16string>>;
-
-    /// The tracker's logs: under each `^`-led line naming one or more sources, the files that compilation touched
+    /// Whether the tracker's spelling of a file ends in `.obj`, whatever its case
     [[nodiscard]]
-    tlog_entries read_tlog_entries(const fs::path& tlogDir, std::string_view kind)
+    bool spells_object_file(std::u16string_view spelling)
     {
-      tlog_entries entries{};
-      for(const auto& entry : fs::directory_iterator(tlogDir))
+      constexpr std::u16string_view extension{u".obj"};
+      if(spelling.size() < extension.size())
+        return false;
+
+      auto sameLetter{[](char16_t l, char16_t r){ return ((l < 128) ? std::tolower(static_cast<int>(l)) : l) == r; }};
+      return std::ranges::equal(spelling.substr(spelling.size() - extension.size()), extension, sameLetter);
+    }
+
+    /** The tracker's logs of one kind, decoded: under each source the tracker names, the files that
+        compilation touched, as the tracker spells them.
+
+        The entries are views into `texts`, which must therefore outlive them; the texts are read
+        first, all of them, so that no view is taken into a string which a later read might move.
+     */
+    class tlog_entries
+    {
+    public:
+      using entries_type = std::map<std::u16string_view, std::vector<std::u16string_view>>;
+
+      tlog_entries(const fs::path& tlogDir, std::string_view kind)
+        : m_Texts{read_texts(tlogDir, kind)}
+        , m_Entries{group_by_source(m_Texts)}
+      {}
+
+      tlog_entries(const tlog_entries&) = delete;
+      tlog_entries& operator=(const tlog_entries&) = delete;
+
+      [[nodiscard]]
+      const entries_type& entries() const noexcept { return m_Entries; }
+
+      /// What the compilation of `source` touched; nothing, for a source the logs do not name
+      [[nodiscard]]
+      std::span<const std::u16string_view> of(std::u16string_view source) const
       {
-        if(!is_tlog(entry.path(), kind))
-          continue;
+        const auto found{m_Entries.find(source)};
+        return (found == m_Entries.end()) ? std::span<const std::u16string_view>{} : found->second;
+      }
+    private:
+      std::vector<std::u16string> m_Texts;
+      entries_type m_Entries;
 
-        const auto encoded{read_bytes(entry.path())};
-        if(!begins_with(encoded, byte_order_mark))
-          throw std::runtime_error{malformed_error(entry.path(), "not the tracker's UTF-16")};
-
-        const auto text{decode_utf16le(std::span{encoded}.subspan(byte_order_mark.size()))};
-        auto withoutReturn{
-          [](auto lineRange) {
-            const std::u16string_view line{lineRange};
-            return line.ends_with(u'\r') ? line.substr(0, line.size() - 1) : line;
-          }
-        };
-
-        auto namesSources{[](std::u16string_view line){ return line.starts_with(u'^'); }};
-
-        // Whatever precedes the first `^` names no source and is skipped
-        auto lines{
-            std::views::split(text, u'\n')
-          | std::views::transform(withoutReturn)
-          | std::views::filter([](std::u16string_view line){ return !line.empty(); })
-          | std::views::drop_while(std::not_fn(namesSources))
-        };
-
-        // A `^` line and the lines beneath it are one group, so each group begins with the line naming its sources
-        auto beneathSameSource{[namesSources](std::u16string_view, std::u16string_view next){ return !namesSources(next); }};
-        for(auto group : lines | std::views::chunk_by(beneathSameSource))
+      [[nodiscard]]
+      static std::vector<std::u16string> read_texts(const fs::path& tlogDir, std::string_view kind)
+      {
+        std::vector<std::u16string> texts{};
+        for(const auto& entry : fs::directory_iterator(tlogDir))
         {
-          const std::u16string_view head{group.front()};
+          if(!is_tlog(entry.path(), kind))
+            continue;
 
-          // A source is an entry even where the compilation touched nothing else
-          auto entryFor{[&entries](auto sourceRange){ return entries.try_emplace(std::u16string{std::u16string_view{sourceRange}}).first; }};
-          const auto sourceEntries{std::views::split(head.substr(1), u'|') | std::views::transform(entryFor) | std::ranges::to<std::vector>()};
+          const auto encoded{read(entry.path())};
+          if(!encoded.starts_with(byte_order_mark))
+            throw std::runtime_error{malformed_error(entry.path(), "not the tracker's UTF-16")};
 
-          for(const std::u16string_view line : group | std::views::drop(1))
+          texts.push_back(decode_utf16le(std::string_view{encoded}.substr(byte_order_mark.size())));
+        }
+
+        return texts;
+      }
+
+      /** A `^` line names one or more sources, separated by `|`; the lines beneath it, until the next,
+          are what their compilation touched, and are listed under each. A source is an entry even where
+          the compilation touched nothing else. Whatever precedes the first `^` names no source and is
+          skipped; a line's carriage return is not part of it.
+       */
+      [[nodiscard]]
+      static entries_type group_by_source(std::span<const std::u16string> texts)
+      {
+        entries_type entries{};
+        for(const std::u16string_view text : texts)
+        {
+          std::vector<entries_type::iterator> sourceEntries{};
+          for(std::size_t begin{}; begin < text.size();)
           {
-            for(const auto sourceEntry : sourceEntries)
+            const auto end{std::ranges::min(text.find(u'\n', begin), text.size())};
+            auto line{text.substr(begin, end - begin)};
+            begin = end + 1;
+
+            if(line.ends_with(u'\r'))
+              line.remove_suffix(1);
+
+            if(line.empty())
+              continue;
+
+            if(line.starts_with(u'^'))
             {
-              sourceEntry->second.emplace_back(line);
+              sourceEntries.clear();
+              for(const auto sourceRange : std::views::split(line.substr(1), u'|'))
+              {
+                sourceEntries.push_back(entries.try_emplace(std::u16string_view{sourceRange}).first);
+              }
+            }
+            else
+            {
+              for(const auto sourceEntry : sourceEntries)
+              {
+                sourceEntry->second.push_back(line);
+              }
             }
           }
         }
-      }
 
-      return entries;
-    }
+        return entries;
+      }
+    };
 
     /** The tracker spells paths in upper case; the directories know how the paths are really spelled, and
         are asked once each:
@@ -554,21 +613,21 @@ namespace sequoia::testing
     {
     public:
       [[nodiscard]]
-      const fs::path& operator()(const std::u16string& spelling)
+      const fs::path& operator()(std::u16string_view spelling)
       {
         if(const auto found{m_Recovered.find(spelling)}; found != m_Recovered.end())
           return found->second;
 
-        return m_Recovered.try_emplace(spelling, recover(spelling)).first->second;
+        return m_Recovered.emplace(std::u16string{spelling}, recover(spelling)).first->second;
       }
     private:
-      std::map<std::u16string, fs::path> m_Recovered{};
+      std::map<std::u16string, fs::path, std::less<>> m_Recovered{};
       std::map<fs::path, std::vector<fs::path>> m_Listings{};
 
       [[nodiscard]]
-      fs::path recover(const std::u16string& spelling)
+      fs::path recover(std::u16string_view spelling)
       {
-        const fs::path asSpelled{spelling};
+        const fs::path asSpelled{std::u16string{spelling}};
         std::error_code error{};
         const auto canonical{fs::weakly_canonical(asSpelled, error)};
         const auto& candidate{error ? asSpelled : canonical};
@@ -637,32 +696,49 @@ namespace sequoia::testing
       }
     };
 
-    /// The object among the files the compilation of `source` wrote; none, if the compilation wrote no object
+    /// What follows the last separator in the tracker's spelling of a path
     [[nodiscard]]
-    std::optional<fs::path> object_of(const fs::path& tlogDir,
-                                      const fs::path& source,
-                                      std::span<const std::u16string> written,
-                                      path_spelling_recoverer& recover)
+    std::u16string_view spelled_filename(std::u16string_view spelling)
     {
-      const auto objects{
-          written
-        | std::views::transform([&recover](const std::u16string& w){ return recover(w); })
-        | std::views::filter([](const fs::path& path){ return lowercase(path.extension().string()) == ".obj"; })
-        | std::ranges::to<std::vector>()
-      };
+      const auto separator{spelling.find_last_of(u"\\/")};
+      return (separator == std::u16string_view::npos) ? spelling : spelling.substr(separator + 1);
+    }
 
-      if(objects.empty())
+    /// A spelled filename up to its last dot
+    [[nodiscard]]
+    std::u16string_view spelled_stem(std::u16string_view filename)
+    {
+      const auto dot{filename.rfind(u'.')};
+      return ((dot == std::u16string_view::npos) || (dot == 0)) ? filename : filename.substr(0, dot);
+    }
+
+    /** The object among the files the compilation of `source` wrote, as the tracker spells it; none, if
+        the compilation wrote no object. Sources compiled by one invocation share their writes; each object
+        bears its source's stem, or the source's whole name where stems collide, in the tracker's own
+        spelling of both.
+     */
+    [[nodiscard]]
+    std::optional<std::u16string_view> object_of(const fs::path& tlogDir, std::u16string_view source, std::span<const std::u16string_view> written)
+    {
+      auto objects{written | std::views::filter(spells_object_file)};
+      const auto count{std::ranges::distance(objects)};
+      if(count == 0)
         return std::nullopt;
 
-      if(objects.size() == 1)
-        return objects.front();
+      if(count == 1)
+        return *objects.begin();
+
+      const auto sourceName{spelled_filename(source)}, sourceStem{spelled_stem(sourceName)};
 
       // Sources compiled by one invocation share their writes. Where the object is named after its source
       // it can be picked out by stem, or by the source's whole name where stems collide; where the build
       // names objects by hash (CMAKE_INTERMEDIATE_DIR_STRATEGY) nothing in the log distinguishes them, so
       // such an entry is refused rather than guessed at.
       auto bearsSourcesName{
-        [&source](const fs::path& o){ return (o.stem() == source.stem()) || (o.stem() == source.filename()); }
+        [sourceName, sourceStem](std::u16string_view object) {
+          const auto stem{spelled_stem(spelled_filename(object))};
+          return (stem == sourceStem) || (stem == sourceName);
+        }
       };
 
       if(const auto own{std::ranges::find_if(objects, bearsSourcesName)}; own != objects.end())
@@ -671,30 +747,9 @@ namespace sequoia::testing
       throw std::runtime_error{
         std::format("The tracker's log in {} does not say which of {} objects {} produced",
                     tlogDir.generic_string(),
-                    objects.size(),
-                    source.filename().generic_string())
+                    count,
+                    fs::path{std::u16string{sourceName}}.generic_string())
       };
-    }
-
-    /// `source`, then the other files the compilation of `source` read, sorted, each once
-    [[nodiscard]]
-    std::vector<fs::path> inputs_of(const fs::path& source,
-                                    std::span<const std::u16string> read,
-                                    path_spelling_recoverer& recover)
-    {
-      auto inputs{
-          read
-        | std::views::transform([&recover](const std::u16string& r){ return recover(r); })
-        | std::views::filter([&source](const fs::path& path){ return path != source; })
-        | std::ranges::to<std::vector>()
-      };
-
-      std::ranges::sort(inputs);
-      const auto [duplicates, end]{std::ranges::unique(inputs)};
-      inputs.erase(duplicates, end);
-      inputs.insert(inputs.begin(), source);
-
-      return inputs;
     }
 
     /** The records of one `.tlog` directory, its files numbered into `files`.
@@ -706,42 +761,64 @@ namespace sequoia::testing
            by `|`, and so share what is listed beneath the line.
         -# Both are UTF-16 with a byte order mark, and spell paths in upper case, so each path is put
            through the filesystem to recover its case.
+        -# A file is listed in the order the compiler opened it, and more than once where it was opened
+           more than once.
 
         Hence, where sources share their writes, each object file is given to the source whose stem or
-        name the object file bears; what cannot be told apart is refused rather than guessed.
+        name the object file bears, the tracker having spelled both; what cannot be told apart is refused
+        rather than guessed. Each record lists its inputs as the compiler opened them, each once, as the
+        Ninja reader does.
+
+        The logs name each file once per compilation which touched it, so a spelling is looked up
+        once per record, and its file numbered once.
      */
     [[nodiscard]]
     std::vector<compilations::record> read_tlogs(path_table& files, const fs::path& tlogDir)
     {
-      const auto reads{read_tlog_entries(tlogDir, "read")};
-      const auto writes{read_tlog_entries(tlogDir, "write")};
+      const tlog_entries reads{tlogDir, "read"};
+      const tlog_entries writes{tlogDir, "write"};
       path_spelling_recoverer recover{};
 
-      auto indexOf{[&files](const fs::path& p){ return files.insert(p); }};
+      std::unordered_map<std::u16string_view, compilations::file_index> indexOfSpelling{};
+      auto indexOf{
+        [&](std::u16string_view spelling) {
+          if(const auto found{indexOfSpelling.find(spelling)}; found != indexOfSpelling.end())
+            return found->second;
 
-      auto writesOf{
-        [&writes](const std::u16string& source) -> std::span<const std::u16string> {
-          const auto found{writes.find(source)};
-          return (found == writes.end()) ? std::span<const std::u16string>{} : found->second;
+          return indexOfSpelling.emplace(spelling, files.insert(recover(spelling))).first->second;
+        }
+      };
+
+      /// `source`, then the other files the compilation of `source` read, in the order it read them, each once
+      auto inputsOf{
+        [&indexOf](compilations::file_index source, std::span<const std::u16string_view> read) {
+          std::vector<compilations::file_index> inputs{source};
+          std::unordered_set<compilations::file_index> seen{source};
+          for(const auto spelling : read)
+          {
+            if(const auto index{indexOf(spelling)}; seen.insert(index).second)
+              inputs.push_back(index);
+          }
+
+          return inputs;
         }
       };
 
       // A source which wrote no object is not a compilation, so each source yields at most one
       auto recordOf{
-        [&](const tlog_entries::value_type& entry) -> std::vector<compilations::record> {
+        [&](const tlog_entries::entries_type::value_type& entry) -> std::vector<compilations::record> {
           const auto& [source, read]{entry};
-          const auto& sourcePath{recover(source)};
-          const auto object{object_of(tlogDir, sourcePath, writesOf(source), recover)};
+          const auto object{object_of(tlogDir, source, writes.of(source))};
           if(!object)
             return {};
 
-          const auto inputs{inputs_of(sourcePath, read, recover)};
-          return {compilations::record{.object_index{indexOf(*object)}, .input_indices{inputs | std::views::transform(indexOf) | std::ranges::to<std::vector>()}}};
+          const auto sourceIndex{indexOf(source)};
+          return {compilations::record{.object_index{indexOf(*object)}, .input_indices{inputsOf(sourceIndex, read)}}};
         }
       };
 
       auto records{
-          reads
+          reads.entries()
         | std::views::transform(recordOf)
         | std::views::join
         | std::ranges::to<std::vector>()
