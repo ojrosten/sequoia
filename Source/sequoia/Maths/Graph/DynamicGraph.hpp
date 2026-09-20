@@ -65,65 +65,65 @@ namespace sequoia::maths
     using edge_storage_type   = connectivity_type::edge_storage_type;
     using edge_allocator_type = edge_storage_type::allocator_type;
 
-    graph_base() = default;
+    constexpr graph_base() = default;
 
-    explicit graph_base(const edge_allocator_type& edgeAllocator)
+    constexpr explicit graph_base(const edge_allocator_type& edgeAllocator)
       : primitive_type(edgeAllocator)
     {}
 
     template<alloc EdgePartitionsAllocator>
       requires allocatable_partitions<edge_storage_type>
-    graph_base(const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
+    constexpr graph_base(const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type(edgeAllocator, edgePartitionsAllocator)
     {}
 
-    graph_base(edges_initializer edges) : primitive_type{edges} {}
+    constexpr graph_base(edges_initializer edges) : primitive_type{edges} {}
 
-    graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator)
+    constexpr graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator)
       : primitive_type{edges, edgeAllocator}
     {}
 
     template<alloc EdgePartitionsAllocator>
       requires allocatable_partitions<edge_storage_type>
-    graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
+    constexpr graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator}
     {}
 
     template<tree_link_direction dir>
       requires (    !heterogeneous_nodes<graph_base>
                  && ((dir == tree_link_direction::symmetric) || is_directed(primitive_type::connectivity::flavour)))
-    graph_base(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_link_direction_constant<dir> tdc)
+    constexpr graph_base(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_link_direction_constant<dir> tdc)
       : primitive_type{forest, tdc}
     {}
 
     template<tree_link_direction dir>
       requires (    !heterogeneous_nodes<graph_base>
                  && ((dir == tree_link_direction::symmetric) || is_directed(primitive_type::connectivity::flavour)))
-    graph_base(tree_initializer<node_weight_type> tree, tree_link_direction_constant<dir> tdc)
+    constexpr graph_base(tree_initializer<node_weight_type> tree, tree_link_direction_constant<dir> tdc)
       : primitive_type{tree, tdc}
     {}
 
-    graph_base(const graph_base&) = default;
+    constexpr graph_base(const graph_base&) = default;
 
-    graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator)
+    constexpr graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator)
       : primitive_type{in, edgeAllocator}
     {}
 
     template<alloc EdgePartitionsAllocator>
       requires allocatable_partitions<edge_storage_type>
-    graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
+    constexpr graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{in, edgeAllocator, edgePartitionsAllocator}
     {}
 
-    graph_base(graph_base&&) noexcept = default;
+    constexpr graph_base(graph_base&&) noexcept = default;
 
-    graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator)
+    constexpr graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator)
       : primitive_type{std::move(in), edgeAllocator}
     {}
 
     template<alloc EdgePartitionsAllocator>
       requires allocatable_partitions<edge_storage_type>
-    graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
+    constexpr graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{std::move(in), edgeAllocator, edgePartitionsAllocator}
     {}
 
@@ -182,54 +182,54 @@ namespace sequoia::maths
     using edge_allocator_type        = edge_storage_type::allocator_type;
     using node_weight_allocator_type = node_storage_type::node_weight_container_type::allocator_type;
 
-    graph_base() = default;
+    constexpr graph_base() = default;
 
-    graph_base(edges_initializer edges) : primitive_type{edges} {}
+    constexpr graph_base(edges_initializer edges) : primitive_type{edges} {}
 
-    graph_base(const edge_allocator_type& edgeAllocator, const node_weight_allocator_type& nodeWeightAllocator)
+    constexpr graph_base(const edge_allocator_type& edgeAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type(edgeAllocator, nodeWeightAllocator)
     {}
 
     template<alloc EdgePartitionsAllocator>
       requires allocatable_partitions<edge_storage_type>
-    graph_base(const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
+    constexpr graph_base(const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type(edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator)
     {}
 
-    graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const node_weight_allocator_type& nodeWeightAllocator)
+    constexpr graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{edges, edgeAllocator, nodeWeightAllocator}
     {}
 
     template<alloc EdgePartitionsAllocator>
       requires allocatable_partitions<edge_storage_type>
-    graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
+    constexpr graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator}
     {}
 
-    graph_base(edges_initializer edges, std::initializer_list<node_weight_type> nodeWeights)
+    constexpr graph_base(edges_initializer edges, std::initializer_list<node_weight_type> nodeWeights)
       : primitive_type{edges, nodeWeights}
     {}
 
-    graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, std::initializer_list<node_weight_type> nodeWeights, const node_weight_allocator_type& nodeWeightAllocator)
+    constexpr graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, std::initializer_list<node_weight_type> nodeWeights, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{edges, edgeAllocator, nodeWeights, nodeWeightAllocator}
     {}
 
     template<alloc EdgePartitionsAllocator>
       requires allocatable_partitions<edge_storage_type>
-    graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, std::initializer_list<node_weight_type> nodeWeights, const node_weight_allocator_type& nodeWeightAllocator)
+    constexpr graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, std::initializer_list<node_weight_type> nodeWeights, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator, nodeWeights, nodeWeightAllocator}
     {}
 
     template<tree_link_direction dir>
       requires ((dir == tree_link_direction::symmetric) || is_directed(primitive_type::connectivity::flavour))
-    graph_base(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_link_direction_constant<dir> tdc)
+    constexpr graph_base(std::initializer_list<tree_initializer<node_weight_type>> forest, tree_link_direction_constant<dir> tdc)
       : primitive_type{forest, tdc}
     {}
 
     template<tree_link_direction dir>
       requires (    !std::is_empty_v<node_weight_type> && !heterogeneous_nodes<graph_base>
                  && ((dir == tree_link_direction::symmetric) || is_directed(primitive_type::connectivity::flavour)))
-    graph_base(tree_initializer<node_weight_type> tree, tree_link_direction_constant<dir> tdc)
+    constexpr graph_base(tree_initializer<node_weight_type> tree, tree_link_direction_constant<dir> tdc)
       : primitive_type{tree, tdc}
     {}
 
@@ -239,23 +239,23 @@ namespace sequoia::maths
 
     template<alloc EdgePartitionsAllocator>
       requires allocatable_partitions<edge_storage_type>
-    graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
+    constexpr graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{in, edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator}
     {}
 
 
-    graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const node_weight_allocator_type& nodeWeightAllocator)
+    constexpr graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{std::move(in), edgeAllocator, nodeWeightAllocator}
     {}
 
     template<alloc EdgePartitionsAllocator>
       requires allocatable_partitions<edge_storage_type>
-    graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
+    constexpr graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{std::move(in), edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator}
     {}
 
-    graph_base(const graph_base&)     = default;
-    graph_base(graph_base&&) noexcept = default;
+    constexpr graph_base(const graph_base&)     = default;
+    constexpr graph_base(graph_base&&) noexcept = default;
 
     graph_base& operator=(const graph_base&)     = default;
     graph_base& operator=(graph_base&&) noexcept = default;

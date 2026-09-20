@@ -106,6 +106,7 @@ int main(int argc, char** argv)
     runner.register_test<patterns_free_test>();
     runner.register_test<substitutions_free_test>();
     runner.register_test<build_artefacts_free_test>();
+    runner.register_test<state_transition_utilities_free_test>();
 
     code = runner.execute(timer_resolution{1ms});
   }

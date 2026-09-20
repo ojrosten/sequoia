@@ -11,6 +11,7 @@
     \brief A collection of functions for formatting test output.
  */
 
+#include "sequoia/Core/Meta/TypeName.hpp"
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
@@ -74,10 +75,33 @@ namespace sequoia::testing
     return std::string(1, static_cast<char>(c));
   }
 
-  void end_block(std::string& s, line_breaks newlines, std::string_view footer="");
+  constexpr void end_block(std::string& s, const line_breaks newlines, std::string_view footer="")
+  {
+    if(!s.empty())
+    {
+      std::size_t n{};
+      for(; n < std::ranges::min(s.size(), newlines.value()); ++n)
+      {
+        if(s[s.size() - 1 - n] != '\n') break;
+      }
+
+      for(; n<newlines.value(); ++n)
+      {
+        s.append("\n");
+      }
+
+      s.append(footer);
+    }
+  }
 
   [[nodiscard]]
-  std::string end_block(std::string_view s, line_breaks newlines, std::string_view footer="");
+  constexpr std::string end_block(std::string_view s, const line_breaks newlines, std::string_view footer="")
+  {
+    std::string text{s};
+    end_block(text, newlines, footer);
+
+    return text;
+  }
 
   [[nodiscard]]
   std::string exception_message(std::string_view tag,
@@ -86,27 +110,52 @@ namespace sequoia::testing
                                 std::string_view exceptionMessage);
 
   [[nodiscard]]
-  std::string operator_message(std::string_view op, std::string_view retVal);
+  constexpr std::string operator_message(std::string_view op, std::string_view opRetVal)
+  {
+    return std::string{"operator"}.append(op).append(" returned ").append(opRetVal);
+  }
 
   [[nodiscard]]
-  std::string nullable_type_message(bool obtainedHoldsValue, bool predictedHoldsValue);
+  constexpr std::string nullable_type_message(const bool holdsValue)
+  {
+    return std::string{holdsValue ? "not " : ""}.append("null");
+  }
 
   [[nodiscard]]
-  std::string equality_operator_failure_message();
+  constexpr std::string nullable_type_message(const bool obtainedHoldsValue, const bool predictedHoldsValue)
+  {
+    return std::string{"Obtained : "}.append(nullable_type_message(obtainedHoldsValue)).append("\n")
+               .append("Predicted: ").append(nullable_type_message(predictedHoldsValue));
+  }
 
   [[nodiscard]]
-  std::string pointer_prediction_message();
+  constexpr std::string equality_operator_failure_message()
+  {
+    return operator_message("==", "false");
+  }
 
   [[nodiscard]]
-  std::string default_prediction_message(std::string_view obtained, std::string_view prediction);
+  constexpr std::string pointer_prediction_message()
+  {
+    return "Pointers both non-null, but they point to different addresses";
+  }
 
   [[nodiscard]]
-  std::string prediction_message(const std::string& obtained, const std::string& prediction);
+  constexpr std::string default_prediction_message(std::string_view obtained, std::string_view prediction)
+  {
+    return append_lines(std::string{"Obtained : "}.append(obtained), std::string{"Predicted: "}.append(prediction));
+  }
+
+  [[nodiscard]]
+  constexpr std::string prediction_message(const std::string& obtained, const std::string& prediction)
+  {
+    return default_prediction_message(obtained, prediction);
+  }
 
   template<class Char>
     requires is_character_v<Char>
   [[nodiscard]]
-  std::string prediction_message(Char obtained, Char prediction)
+  constexpr std::string prediction_message(Char obtained, Char prediction)
   {
     return prediction_message(display_character(obtained), display_character(prediction));
   }
@@ -114,7 +163,7 @@ namespace sequoia::testing
   template<class Ptr>
     requires std::is_pointer_v<Ptr> || is_const_pointer_v<Ptr>
   [[nodiscard]]
-  std::string prediction_message(Ptr obtained, Ptr prediction)
+  constexpr std::string prediction_message(Ptr obtained, Ptr prediction)
   {
     return (obtained && prediction) ? pointer_prediction_message() : nullable_type_message(obtained, prediction);
   }
@@ -122,7 +171,7 @@ namespace sequoia::testing
   template<serializable T>
     requires (!is_character_v<T> && !std::is_pointer_v<T> && !is_const_pointer_v<T>)
   [[nodiscard]]
-  std::string prediction_message(const T& obtained, const T& prediction)
+  constexpr std::string prediction_message(const T& obtained, const T& prediction)
   {
     return default_prediction_message(to_string(obtained), to_string(prediction));
   }
@@ -141,7 +190,7 @@ namespace sequoia::testing
 
   template<reportable T>
   [[nodiscard]]
-  std::string failure_message(is_final_message_t, const T& obtained, const T& prediction)
+  constexpr std::string failure_message(is_final_message_t, const T& obtained, const T& prediction)
   {
     auto message{equality_operator_failure_message()};
 
@@ -152,16 +201,22 @@ namespace sequoia::testing
 
   template<class T>
   [[nodiscard]]
-  std::string failure_message(is_not_final_message_t, const T&, const T&)
+  constexpr std::string failure_message(is_not_final_message_t, const T&, const T&)
   {
     return equality_operator_failure_message();
   }
 
   [[nodiscard]]
-  std::string footer();
+  constexpr std::string footer()
+  {
+    return "=======================================\n";
+  }
 
   [[nodiscard]]
-  std::string instability_footer();
+  constexpr std::string instability_footer()
+  {
+    return "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n";
+  }
 
   [[nodiscard]]
   std::string report_line(std::string_view message, const std::filesystem::path& repository, const std::source_location loc);
@@ -245,9 +300,17 @@ namespace sequoia::testing
   struct type_demangler
   {
     [[nodiscard]]
-    static std::string make()
+    constexpr static std::string make()
     {
-      return demangle<T>();
+      // The demangler reads typeid at run time; a constant evaluation has the compiler's spelling instead
+      if consteval
+      {
+        return std::string{meta::tidy_type_name(meta::type_name<type_normalizer_t<T>>())};
+      }
+      else
+      {
+        return demangle<T>();
+      }
     }
   };
 
@@ -257,7 +320,7 @@ namespace sequoia::testing
   struct type_list_demangler
   {
     [[nodiscard]]
-    static std::string make()
+    constexpr static std::string make()
     {
       auto info{type_demangler<T>::make()};
       if constexpr(sizeof...(U) > 0)
@@ -272,14 +335,14 @@ namespace sequoia::testing
 
   template<class T, class... U>
   [[nodiscard]]
-  std::string make_type_info()
+  constexpr std::string make_type_info()
   {
     return std::string{"["}.append(type_list_demangler<T, U...>::make()).append("]");
   }
 
   template<class T, class... U>
   [[nodiscard]]
-  std::string add_type_info(std::string description)
+  constexpr std::string add_type_info(std::string description)
   {
     return append_lines(std::move(description), make_type_info<T, U...>());
   }

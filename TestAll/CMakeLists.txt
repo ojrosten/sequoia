@@ -25,6 +25,10 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp
                ${TestDir}/Core/DataStructures/PartitionedSequenceAllocationTest.cpp
                ${TestDir}/Core/DataStructures/PartitionedSequenceRegularTest.cpp
+               ${TestDir}/Core/DataStructures/QueueTest.cpp
+               ${TestDir}/Core/DataStructures/QueueTestingDiagnostics.cpp
+               ${TestDir}/Core/DataStructures/StackTest.cpp
+               ${TestDir}/Core/DataStructures/StackTestingDiagnostics.cpp
                ${TestDir}/Core/DataStructures/StaticLinearlyPartitionedSequenceTest.cpp
                ${TestDir}/Core/DataStructures/StaticLinearlyPartitionedSequenceTestingDiagnostics.cpp
                ${TestDir}/Core/DataStructures/StaticPartitionedSequenceTest.cpp
@@ -161,8 +165,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/BasicTestInterfaceFreeTest.cpp
                ${TestDir}/TestFramework/BuildArtefactsFreeTest.cpp
                ${TestDir}/TestFramework/BuildArtefactsTestingUtilities.cpp
-               ${TestDir}/TestFramework/ChronoFreeDiagnostics.cpp
                ${TestDir}/TestFramework/CMakeCacheFreeTest.cpp
+               ${TestDir}/TestFramework/ChronoFreeDiagnostics.cpp
                ${TestDir}/TestFramework/CommandsFreeTest.cpp
                ${TestDir}/TestFramework/ComplexFreeDiagnostics.cpp
                ${TestDir}/TestFramework/ContainerFreeDiagnostics.cpp
@@ -188,6 +192,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/RegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/RelationalTestDiagnostics.cpp
                ${TestDir}/TestFramework/SmartPointerFreeDiagnostics.cpp
+               ${TestDir}/TestFramework/StateTransitionUtilitiesFreeTest.cpp
                ${TestDir}/TestFramework/StringFreeDiagnostics.cpp
                ${TestDir}/TestFramework/SumTypesFreeDiagnostics.cpp
                ${TestDir}/TestFramework/TestRunnerDiagnostics.cpp

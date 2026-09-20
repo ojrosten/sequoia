@@ -182,21 +182,31 @@ namespace sequoia::testing
   {
   public:
     template<class Advisor, class T>
-    advice_data(const tutor<Advisor>&, const T&, const T&)
+    constexpr advice_data(const tutor<Advisor>&, const T&, const T&)
     {}
 
     template<class Advisor, class T>
       requires std::is_invocable_r_v<std::string, tutor<Advisor>, T, T>
-    advice_data(const tutor<Advisor>& advisor, const T& value, const T& prediction)
-    {
-        m_Advice = advisor(value, prediction);
-        m_Prefix = advisor.prefix();
-    }
+    constexpr advice_data(const tutor<Advisor>& advisor, const T& value, const T& prediction)
+      : m_Advice{advisor(value, prediction)}
+      , m_Prefix{advisor.prefix()}
+    {}
 
-    std::string& append_to(std::string& message) const;
+    constexpr std::string& append_to(std::string& message) const
+    {
+      if(!m_Advice.empty())
+      {
+        append_lines(message, m_Prefix).append(m_Advice);
+      }
+
+      return message;
+    }
   private:
     std::string m_Advice{}, m_Prefix{};
   };
 
-  std::string& append_advice(std::string& message, const advice_data& adviceData);
+  constexpr std::string& append_advice(std::string& message, const advice_data& adviceData)
+  {
+    return adviceData.append_to(message);
+  }
 }

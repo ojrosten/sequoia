@@ -25,238 +25,57 @@ namespace sequoia::testing
 
       return str;
     }
+  }
 
-    void record_check_started(const std::filesystem::path& file, std::string_view message)
+  void record_check_started(const active_recovery_files& files, std::string_view message)
+  {
+    if(!files.recovery_file.empty())
     {
-      if(!file.empty())
-      {
-        if(std::ofstream of{file})
-          of << "Check started:\n" << message << "\n";
-      }
-    }
-
-    void record_check_ended(const std::filesystem::path& file)
-    {
-      if(!file.empty())
-      {
-        if(std::ofstream of{file, std::ios_base::app})
-          of << "Check ended\n";
-      }
-    }
-
-    void recored_dump_started(const std::filesystem::path& file, std::string_view message)
-    {
-      if(!file.empty())
-      {
-        if(std::ofstream of{file, std::ios_base::app})
-          of << message << "\n";
-      }
-    }
-
-    void recored_dump_ended(const std::filesystem::path& file)
-    {
-      if(!file.empty())
-      {
-        if(std::ofstream of{file, std::ios_base::app})
-          of << "\n\n";
-      }
-    }
-
-    void recored_critical_failure(const std::filesystem::path& file, std::string_view message)
-    {
-      if(!file.empty())
-      {
-        if(std::ofstream of{file, std::ios_base::app})
-          of << "\nCritical Failure:\n" << message << "\n";
-      }
+      if(std::ofstream of{files.recovery_file})
+        of << "Check started:\n" << message << "\n";
     }
   }
 
-  //================================== sentinel_base ==================================//
-
-  sentinel_base::sentinel_base(test_logger_base& logger, test_mode mode, std::string message)
-    : m_pLogger{&logger}
-    , m_Mode{mode}
-    , m_Message{std::move(message)}
-    , m_PriorFailures{logger.results().failures}
-    , m_PriorCriticalFailures{logger.results().critical_failures}
-    , m_PriorDeepChecks{logger.results().deep_checks}
+  void record_check_ended(const active_recovery_files& files)
   {
-    if(!logger.depth())
+    if(!files.recovery_file.empty())
     {
-      logger.log_top_level_check();
-      record_check_started(get().recovery().recovery_file, m_Message);
-    }
-
-    recored_dump_started(get().recovery().dump_file, m_Message);
-    logger.increment_depth(m_Message);
-  }
-
-  sentinel_base::~sentinel_base()
-  {
-    auto& logger{get()};
-
-    if(logger.depth() == 1)
-    {
-      if(critical_failure_detected())
-      {
-        logger.end_message(m_Mode, test_logger_base::is_critical::yes);
-      }
-      else
-      {
-        if(failure_detected()) logger.end_message(m_Mode, test_logger_base::is_critical::no);
-
-        auto fpMessageMaker{
-          [&logger](){
-            
-            auto mess{append_lines("False Negative Failure:", logger.top_level_message())};
-            end_block(mess, 2_linebreaks, footer());
-
-            return mess;
-          }
-        };
-
-        const bool modeSpecificFailure{
-             ((m_Mode == test_mode::false_negative) && !failure_detected())
-          || ((m_Mode != test_mode::false_negative) && failure_detected())
-        };
-
-        if(modeSpecificFailure)
-        {
-          logger.log_top_level_failure(m_Mode, (m_Mode == test_mode::false_negative) ? fpMessageMaker() : "");
-        }
-        else if (m_Mode == test_mode::false_positive)
-        {
-          if(!critical_failure_detected())
-            logger.append_to_diagnostics_output(fpMessageMaker());
-        }
-
-        record_check_ended(get().recovery().recovery_file);
-      }
-
-      recored_dump_ended(get().recovery().dump_file);
-    }
-
-    logger.decrement_depth();
-  }
-
-  //================================== test_logger ==================================//
-
-  void test_logger_base::failure_message(test_mode mode, std::string_view message, const is_critical isCritical)
-  {
-    std::string msg{};
-    auto build{
-      [&msg](auto&& text, const indentation& ind){
-        if(msg.empty())
-        {
-          msg = indent(std::forward<decltype(text)>(text), ind);
-        }
-        else
-        {
-          append_indented(msg, std::forward<decltype(text)>(text), ind);
-        }
-      }
-    };
-
-    indentation ind{no_indent};
-    std::size_t activeLevels{};
-    for(auto& info : m_SentinelDepth)
-    {
-      if(info.message.empty()) continue;
-
-      if(activeLevels++ > 0) ind.append("  ");
-
-      if(info.written) continue;
-
-      build(info.message, ind);
-      info.written = true;
-    }
-
-    build(message, ind);
-
-    auto& output{add_to_output(output_channel(mode, isCritical), msg)};
-    end_block(output.back().message, 1_linebreaks, "");
-  }
-
-  void test_logger_base::log_critical_failure(test_mode mode, std::string_view message)
-  {
-    ++m_Results.critical_failures;
-    failure_message(mode, message, is_critical::yes);
-    recored_critical_failure(m_Recovery.recovery_file, message);
-  }
-
-  void test_logger_base::log_top_level_failure(test_mode mode, std::string message)
-  {
-    ++m_Results.top_level_failures;
-    if(m_SentinelDepth.empty())
-    {
-      m_SentinelDepth.push_back(level_message{message});
-    }
-    else
-    {
-      m_SentinelDepth.back().message.append(std::move(message));
-    }
-
-    if(mode == test_mode::false_negative)
-    {
-      m_Results.failure_messages.push_back(failure_info{m_Results.top_level_checks, std::string{message}});
+      if(std::ofstream of{files.recovery_file, std::ios_base::app})
+        of << "Check ended\n";
     }
   }
 
-  void test_logger_base::log_caught_exception_message(std::string_view message)
+  void record_dump_started(const active_recovery_files& files, std::string_view message)
   {
-    auto mess{std::string{top_level_message()}.append("\n").append(message)};
-    end_block(mess, 2_linebreaks, footer());
-
-    add_to_output(m_Results.caught_exception_messages, mess);
-  }
-
-  void test_logger_base::append_to_diagnostics_output(std::string message)
-  {
-    m_Results.diagnostics_output.push_back(failure_info{m_Results.top_level_checks, std::move(message)});
-  }
-
-  void test_logger_base::increment_depth(std::string_view message)
-  {
-    m_SentinelDepth.emplace_back(message);
-  }
-
-  void test_logger_base::decrement_depth()
-  {
-    if(m_SentinelDepth.empty())
-      throw std::logic_error{"Cannot pop from TestLogger's empty stack"};
-
-    if(depth() == 1)
+    if(!files.dump_file.empty())
     {
-      m_Results.exception_info = {std::uncaught_exceptions(), std::move(m_SentinelDepth.front().message)}; 
+      if(std::ofstream of{files.dump_file, std::ios_base::app})
+        of << message << "\n";
     }
-
-    m_SentinelDepth.pop_back();
   }
 
-  void test_logger_base::end_message(test_mode mode, const is_critical isCritical)
+  void record_dump_ended(const active_recovery_files& files)
   {
-    auto& output{output_channel(mode, isCritical)};
-    auto& mess{output.back().message};
-    end_block(mess, 2_linebreaks, footer());
-  } 
-
-  failure_output& test_logger_base::output_channel(test_mode mode, const is_critical isCritical) noexcept
-  {
-    const bool toMessages{(mode != test_mode::false_negative) || (isCritical == is_critical::yes)};
-    return toMessages ? m_Results.failure_messages : m_Results.diagnostics_output;
+    if(!files.dump_file.empty())
+    {
+      if(std::ofstream of{files.dump_file, std::ios_base::app})
+        of << "\n\n";
+    }
   }
 
-  failure_output& test_logger_base::add_to_output(failure_output& output, std::string_view message)
+  void record_critical_failure(const active_recovery_files& files, std::string_view message)
   {
-    output.push_back(failure_info{m_Results.top_level_checks, std::string{message}});
-    return output;
+    if(!files.recovery_file.empty())
+    {
+      if(std::ofstream of{files.recovery_file, std::ios_base::app})
+        of << "\nCritical Failure:\n" << message << "\n";
+    }
   }
 
   template class test_logger<test_mode::standard>;
   template class test_logger<test_mode::false_negative>;
   template class test_logger<test_mode::false_positive>;
-  
+
   //================================== log_summary ==================================//
 
   log_summary::log_summary(std::string_view name) : m_Name{name} {}

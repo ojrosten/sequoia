@@ -67,6 +67,7 @@
 #include "sequoia/TestFramework/TestLogger.hpp"
 #include "sequoia/Core/Meta/Utilities.hpp"
 
+#include <array>
 #include <format>
 
 namespace sequoia::testing
@@ -235,7 +236,7 @@ namespace sequoia::testing
 
   template<class CheckType, test_mode Mode, class T, class U, class Advisor>
     requires tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>>
-  void select_test(CheckType flavour, test_logger<Mode>& logger, const T& obtained, const U& prediction, [[maybe_unused]] tutor<Advisor> advisor)
+  constexpr void select_test(CheckType flavour, test_logger<Mode>& logger, const T& obtained, const U& prediction, [[maybe_unused]] tutor<Advisor> advisor)
   {
     if constexpr(tests_against<CheckType, Mode, T, U, tutor<Advisor>>)
     {
@@ -285,7 +286,7 @@ namespace sequoia::testing
 
   template<bool IsFinalMessage, test_mode Mode, class Compare, class T, class Advisor>
     requires std::is_invocable_r_v<bool, Compare, T, T> && (!IsFinalMessage || reportable<T>)
-  void binary_comparison(final_message_constant<IsFinalMessage>, sentinel<Mode>& sentry, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor)
+  constexpr void binary_comparison(final_message_constant<IsFinalMessage>, sentinel<Mode>& sentry, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor)
   {
     sentry.log_check();
     if(!compare(obtained, prediction))
@@ -377,7 +378,7 @@ namespace sequoia::testing
     class Advisor = null_advisor
   >
     requires supports_iterator_range_check<CheckType, Mode, Iter, PredictionIter, Advisor>
-  bool check(CheckType flavour,
+  constexpr bool check(CheckType flavour,
              std::string description,
              test_logger<Mode>& logger,
              Iter first,
@@ -423,7 +424,7 @@ namespace sequoia::testing
 
   template<class Compare, test_mode Mode, class T, class Advisor=null_advisor>
     requires potential_comparator_for<Compare, Mode, T, Advisor>
-  bool check(Compare compare,
+  constexpr bool check(Compare compare,
              std::string description,
              test_logger<Mode>& logger,
              const T& obtained,
@@ -504,7 +505,7 @@ namespace sequoia::testing
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
     requires supports_equality_check<Mode, T, Advisor>
-  bool check(equality_check_t,
+  constexpr bool check(equality_check_t,
              std::string description,
              test_logger<Mode>& logger,
              const T& obtained,
@@ -543,7 +544,7 @@ namespace sequoia::testing
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
     requires supports_simple_equality_check<Mode, T, Advisor>
-  bool check(simple_equality_check_t,
+  constexpr bool check(simple_equality_check_t,
              std::string description,
              test_logger<Mode>& logger,
              const T& obtained,
@@ -587,7 +588,7 @@ namespace sequoia::testing
   
   template<class CheckType, test_mode Mode, class T, class U, class Advisor=null_advisor>
     requires supports_generalized_equivalence_check<CheckType, Mode, T, U, Advisor>
-  bool check(CheckType flavour, std::string description, test_logger<Mode>& logger, const T& obtained, const U& prediction, tutor<Advisor> advisor={})
+  constexpr bool check(CheckType flavour, std::string description, test_logger<Mode>& logger, const T& obtained, const U& prediction, tutor<Advisor> advisor={})
   {
     if constexpr(tests_against_with_or_without_tutor<CheckType, Mode, T, U, tutor<Advisor>>)
     {
@@ -640,7 +641,7 @@ namespace sequoia::testing
 
   template<minimal_reporting_permitted MinimalReporting, test_mode Mode, class T, class U, class Advisor=null_advisor>
     requires supports_best_available_check<MinimalReporting, Mode, T, U, Advisor>
-  bool check(with_best_available_check_t<MinimalReporting>,
+  constexpr bool check(with_best_available_check_t<MinimalReporting>,
              std::string description,
              test_logger<Mode>& logger,
              const T& obtained,
@@ -691,9 +692,53 @@ namespace sequoia::testing
   }
 
   template<test_mode Mode, class Advisor=null_advisor>
-  bool check(std::string description, test_logger<Mode>& logger, const bool obtained, tutor<Advisor> advisor={})
+  constexpr bool check(std::string description, test_logger<Mode>& logger, const bool obtained, tutor<Advisor> advisor={})
   {
     return check(equality, std::move(description), logger, obtained, true, std::move(advisor));
+  }
+
+  /** \brief The failure messages of a constant evaluation, in a form static_assert can print.
+
+      Nothing allocated may leave a constant evaluation, so the messages are copied into a fixed
+      buffer, and cut where it is full.
+   */
+  class constant_evaluation_report
+  {
+  public:
+    constexpr static std::size_t capacity{4096};
+
+    constexpr explicit constant_evaluation_report(const failure_output& failures)
+    {
+      for(const auto& info : failures)
+      {
+        for(const char c : info.message)
+        {
+          if(m_Length == capacity) return;
+
+          m_Text[m_Length++] = c;
+        }
+      }
+    }
+
+    [[nodiscard]]
+    constexpr const char* data() const noexcept { return m_Text.data(); }
+
+    [[nodiscard]]
+    constexpr std::size_t size() const noexcept { return m_Length; }
+  private:
+    std::array<char, capacity> m_Text{};
+    std::size_t m_Length{};
+  };
+
+  /** \brief Invokes a walk on a fresh logger and reports what failed, so that the walk may be a constant evaluation. */
+  template<test_mode Mode, std::invocable<test_logger<Mode>&> Fn>
+  [[nodiscard]]
+  constexpr constant_evaluation_report constant_evaluation(Fn fn)
+  {
+    test_logger<Mode> logger{};
+    fn(logger);
+
+    return constant_evaluation_report{logger.results().failure_messages};
   }
 
   /** \brief Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.
@@ -725,21 +770,21 @@ namespace sequoia::testing
 
     template<class T, class Advisor = null_advisor, class Self>
       requires supports_equality_check<Mode, T, Advisor>
-    bool check(this Self& self, equality_check_t, const reporter& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
+    constexpr bool check(this Self& self, equality_check_t, const reporter& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(equality, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
 
     template<class T, class Advisor = null_advisor, class Self>
       requires supports_simple_equality_check<Mode, T, Advisor>
-    bool check(this Self& self, simple_equality_check_t, const reporter& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
+    constexpr bool check(this Self& self, simple_equality_check_t, const reporter& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
     {
         return testing::check(simple_equality, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
 
     template<class T, class U, minimal_reporting_permitted MinimalReporting, class Advisor = null_advisor, class Self>
       requires supports_best_available_check<MinimalReporting, Mode, T, U, Advisor>
-    bool check(this Self& self, with_best_available_check_t<MinimalReporting>, const reporter& description, const T& obtained, const U& prediction, tutor<Advisor> advisor = {})
+    constexpr bool check(this Self& self, with_best_available_check_t<MinimalReporting>, const reporter& description, const T& obtained, const U& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(with_best_available_check_t<MinimalReporting>{},
                             self.report(description),
@@ -751,27 +796,27 @@ namespace sequoia::testing
 
     template<class ValueBasedCustomizer, class T, class U, class Advisor = null_advisor, class Self>
       requires supports_generalized_equivalence_check<general_equivalence_check_t<ValueBasedCustomizer>, Mode, T, U, Advisor>
-    bool check(this Self& self, general_equivalence_check_t<ValueBasedCustomizer> checker, const reporter& description, const T& obtained, const U& prediction, tutor<Advisor> advisor = {})
+    constexpr bool check(this Self& self, general_equivalence_check_t<ValueBasedCustomizer> checker, const reporter& description, const T& obtained, const U& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(checker, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
 
     template<class ValueBasedCustomizer, class T, class U, class Advisor = null_advisor, class Self>
       requires supports_generalized_equivalence_check<general_weak_equivalence_check_t<ValueBasedCustomizer>, Mode, T, U, Advisor>
-    bool check(this Self& self, general_weak_equivalence_check_t<ValueBasedCustomizer> checker, const reporter& description, const T& obtained, const U& prediction, tutor<Advisor> advisor = {})
+    constexpr bool check(this Self& self, general_weak_equivalence_check_t<ValueBasedCustomizer> checker, const reporter& description, const T& obtained, const U& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(checker, self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
 
     template<class Compare, class T, class Advisor = null_advisor, class Self>
       requires potential_comparator_for<Compare, Mode, T, Advisor>
-    bool check(this Self& self, Compare compare, const reporter& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
+    constexpr bool check(this Self& self, Compare compare, const reporter& description, const T& obtained, const T& prediction, tutor<Advisor> advisor = {})
     {
       return testing::check(std::move(compare), self.report(description), self.m_Logger, obtained, prediction, std::move(advisor));
     }
 
     template<class Advisor=null_advisor, class Self>
-    bool check(this Self& self, const reporter& description, const bool obtained, tutor<Advisor> advisor={})
+    constexpr bool check(this Self& self, const reporter& description, const bool obtained, tutor<Advisor> advisor={})
     {
       return testing::check(self.report(description), self.m_Logger, obtained, std::move(advisor));
     }
@@ -787,7 +832,7 @@ namespace sequoia::testing
       class Self
     >
       requires supports_iterator_range_check<Compare, Mode, Iter, PredictionIter, Advisor>
-    bool check(this Self& self,
+    constexpr bool check(this Self& self,
                Compare compare,
                const reporter& description,
                Iter first,
@@ -812,6 +857,16 @@ namespace sequoia::testing
     }
     
 #define STATIC_CHECK(...) (check("", [&](){ static_assert(__VA_ARGS__); return true; }()))
+
+    /** Performs a walk twice: as a constant evaluation, whose failures the compiler reports, and at run time,
+        where they are counted and reported as usual. The walk is a function of a logger, so that it may be
+        given a fresh one inside the constant evaluation and this test's own outside it.
+     */
+#if __cpp_static_assert >= 202306L
+#define EVALUATE_STATICALLY_AND_DYNAMICALLY(...) (check("", [&](){ constexpr auto report{constant_evaluation<std::remove_cvref_t<decltype(*this)>::mode>(__VA_ARGS__)}; static_assert(report.size() == 0, report); return true; }()), (__VA_ARGS__)(this->logger()))
+#else
+#define EVALUATE_STATICALLY_AND_DYNAMICALLY(...) (check("", [&](){ constexpr auto report{constant_evaluation<std::remove_cvref_t<decltype(*this)>::mode>(__VA_ARGS__)}; static_assert(report.size() == 0); return true; }()), (__VA_ARGS__)(this->logger()))
+#endif
 
     template<class Stream>
       requires serializable_to<Stream, test_logger<Mode>>
@@ -854,6 +909,12 @@ namespace sequoia::testing
     sentinel<Mode> make_sentinel(std::string message)
     {
       return {m_Logger, std::move(message)};
+    }
+
+    [[nodiscard]]
+    test_logger<Mode>& logger() noexcept
+    {
+      return m_Logger;
     }
 
     [[nodiscard]]

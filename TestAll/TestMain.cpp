@@ -142,6 +142,10 @@ int main(int argc, char** argv)
     runner.register_test<test_static_stack>();
     runner.register_test<test_static_queue_false_negatives>();
     runner.register_test<test_static_queue>();
+    runner.register_test<stack_false_negative_test>();
+    runner.register_test<stack_test>();
+    runner.register_test<queue_false_negative_test>();
+    runner.register_test<queue_test>();
     runner.register_test<test_static_priority_queue_false_negatives>();
     runner.register_test<test_static_priority_queue>();
     runner.register_test<test_graph_false_negatives>();
@@ -234,6 +238,7 @@ int main(int argc, char** argv)
     runner.register_test<vector_nonlinear_representations_free_test>();
     runner.register_test<arithmetic_casts_free_test>();
     runner.register_test<build_artefacts_free_test>();
+    runner.register_test<state_transition_utilities_free_test>();
     runner.register_test<copyable_function_free_test>();
 
     code = runner.execute(timer_resolution{1ms});

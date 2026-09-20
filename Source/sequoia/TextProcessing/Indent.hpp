@@ -23,31 +23,31 @@ namespace sequoia
   public:
     using size_type = std::string::size_type;
 
-    indentation() = default;
+    constexpr indentation() = default;
 
-    explicit indentation(std::string s)
+    constexpr explicit indentation(std::string s)
       : m_Data{std::move(s)}
     {}
 
     [[nodiscard]]
-    operator std::string_view() const noexcept
+    constexpr operator std::string_view() const noexcept
     {
       return m_Data;
     }
 
-    indentation& append(size_type count, char c)
+    constexpr indentation& append(size_type count, char c)
     {
       m_Data.append(count, c);
       return *this;
     }
 
-    indentation& append(const std::string& s)
+    constexpr indentation& append(const std::string& s)
     {
       m_Data.append(s);
       return *this;
     }
 
-    indentation& trim(size_type count)
+    constexpr indentation& trim(size_type count)
     {
       const auto pos{m_Data.size() - std::ranges::min(count, m_Data.size())};
       m_Data.erase(pos);
@@ -55,23 +55,46 @@ namespace sequoia
     }
 
     [[nodiscard]]
-    friend indentation operator+(const indentation& lhs, const indentation& rhs)
+    friend constexpr indentation operator+(const indentation& lhs, const indentation& rhs)
     {
       return indentation{lhs.m_Data + rhs.m_Data};
     }
 
     [[nodiscard]]
-    friend bool operator==(const indentation&, const indentation&) noexcept = default;
+    friend constexpr bool operator==(const indentation&, const indentation&) noexcept = default;
   private:
     std::string m_Data;
   };
 
-  const indentation tab{"\t"};
-  const indentation no_indent{""};
-
   /// For a non-empty string_view prepends with an indentation; otherwise returns an empty string
   [[nodiscard]]
-  std::string indent(std::string_view sv, indentation ind);
+  constexpr std::string indent(std::string_view sv, indentation ind)
+  {
+    if(sv.empty()) return {};
+    if(ind == indentation{}) return std::string{sv};
+
+    std::string str{};
+    str.reserve(sv.size());
+
+    std::string::size_type current{};
+
+    while(current < sv.size())
+    {
+      constexpr auto npos{std::string::npos};
+      const auto dist{sv.substr(current).find('\n')};
+
+      const auto count{dist == npos ? npos : dist + 1};
+      auto line{sv.substr(current, count == npos ? npos : count)};
+      if(line.find_first_not_of('\n') != npos)
+        str.append(ind);
+
+      str.append(line);
+
+      current = (count == npos) ? npos : current + count;
+    }
+
+    return str;
+  }
 
   /** \param s1 The target for appending
       \param s2 The text to append
@@ -84,29 +107,51 @@ namespace sequoia
 
       If s2 is empty, no action is taken.
    */
-  std::string& append_indented(std::string& s1, std::string_view s2, indentation ind);
+  constexpr std::string& append_indented(std::string& s1, std::string_view s2, indentation ind)
+  {
+    if(!s2.empty())
+    {
+      if(s1.empty())
+      {
+        s1 = s2;
+      }
+      else
+      {
+        s1.append("\n").append(indent(s2, ind));
+      }
+    }
+
+    return s1;
+  }
 
   [[nodiscard]]
-  std::string append_indented(std::string_view sv1, std::string_view sv2, indentation ind);
+  constexpr std::string append_indented(std::string_view sv1, std::string_view sv2, indentation ind)
+  {
+    std::string str{sv1};
+    return append_indented(str, sv2, std::move(ind));
+  }
+
+  inline constexpr indentation tab{"\t"};
+  inline constexpr indentation no_indent{""};
 
   namespace impl
   {
     template<class... Ts, std::size_t... I>
-    std::string& append_indented(std::string& s, std::tuple<Ts...> strs, std::index_sequence<I...>)
+    constexpr std::string& append_indented(std::string& s, std::tuple<Ts...> strs, std::index_sequence<I...>)
     {
       (append_indented(s, std::get<I>(strs), std::get<sizeof...(Ts) - 1>(strs)), ...);
       return s;
     }
 
     template<class... Ts>
-    std::string& append_indented(std::string& s, const std::tuple<Ts...>& strs)
+    constexpr std::string& append_indented(std::string& s, const std::tuple<Ts...>& strs)
     {
       return append_indented(s, strs, std::make_index_sequence<sizeof...(Ts) - 1>{});
     }
 
     template<class... Ts>
     [[nodiscard]]
-    std::string indent(std::string_view sv, const std::tuple<Ts...>& strs)
+    constexpr std::string indent(std::string_view sv, const std::tuple<Ts...>& strs)
     {
       auto s{indent(sv, std::get<sizeof...(Ts) - 1>(strs))};
       return append_indented(s, strs);
@@ -115,7 +160,7 @@ namespace sequoia
 
   template<class... Ts>
     requires (sizeof...(Ts) > 2)
-  std::string& append_indented(std::string& s, Ts... strs)
+  constexpr std::string& append_indented(std::string& s, Ts... strs)
   {
     return sequoia::impl::append_indented(s, std::tuple<Ts...>{strs...});
   }
@@ -123,7 +168,7 @@ namespace sequoia
   template<class... Ts>
     requires (sizeof...(Ts) > 2)
   [[nodiscard]]
-  std::string append_indented(std::string_view sv, Ts... strs)
+  constexpr std::string append_indented(std::string_view sv, Ts... strs)
   {
     std::string str{sv};
     return append_indented(str, std::forward<Ts>(strs)...);
@@ -132,14 +177,14 @@ namespace sequoia
   template<class... Ts>
     requires (sizeof...(Ts) > 1)
   [[nodiscard]]
-  std::string indent(std::string_view sv, Ts&&... strs)
+  constexpr std::string indent(std::string_view sv, Ts&&... strs)
   {
     return sequoia::impl::indent(sv, std::tuple<Ts...>{std::forward<Ts>(strs)...});
   }
 
   template<class... Ts>
     requires (sizeof...(Ts) > 0)
-  std::string& append_lines(std::string& s, Ts&&... strs)
+  constexpr std::string& append_lines(std::string& s, Ts&&... strs)
   {
     return append_indented(s, std::forward<Ts>(strs)..., no_indent);
   }
@@ -147,7 +192,7 @@ namespace sequoia
   template<class... Ts>
     requires (sizeof...(Ts) > 0)
   [[nodiscard]]
-  std::string append_lines(std::string_view sv, Ts&&... strs)
+  constexpr std::string append_lines(std::string_view sv, Ts&&... strs)
   {
     std::string str{sv};
     return append_lines(str, std::forward<Ts>(strs)...);

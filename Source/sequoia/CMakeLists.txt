@@ -10,7 +10,6 @@ set(SourceList
     PlatformSpecific/Helpers.cpp
     Runtime/ShellCommands.cpp
     Streaming/Streaming.cpp
-    TestFramework/Advice.cpp
     TestFramework/AllocationCheckersCore.cpp
     TestFramework/AllocationCheckersDetails.cpp
     TestFramework/BuildArtefacts.cpp

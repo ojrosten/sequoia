@@ -1,0 +1,214 @@
+Tests/Core/DataStructures/QueueTestingDiagnostics.cpp, Line 27
+Empty against one element
+
+[sequoia::data_structures::queue<int>]
+operator== returned false
+
+  Emptiness incorrect
+  [bool]
+  operator== returned false
+  Obtained : true
+  Predicted: false
+
+  Size incorrect
+  [unsigned long long]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+  Hidden state incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+  Hidden state, symmetry of operator== incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+
+Tests/Core/DataStructures/QueueTestingDiagnostics.cpp, Line 28
+Differing elements
+
+[sequoia::data_structures::queue<int>]
+operator== returned false
+
+  Front element incorrect
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  Back element incorrect
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  Hidden state incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+  Hidden state, symmetry of operator== incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+
+Tests/Core/DataStructures/QueueTestingDiagnostics.cpp, Line 29
+Differing sizes, same front
+
+[sequoia::data_structures::queue<int>]
+operator== returned false
+
+  Size incorrect
+  [unsigned long long]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  Back element incorrect
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  Hidden state incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+  Hidden state, symmetry of operator== incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+
+Tests/Core/DataStructures/QueueTestingDiagnostics.cpp, Line 30
+Differing middle element, same front, back and size
+
+[sequoia::data_structures::queue<int>]
+operator== returned false
+
+  Hidden state incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+  Hidden state, symmetry of operator== incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+
+Tests/Core/DataStructures/QueueTestingDiagnostics.cpp, Line 31
+Wrong element
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::data_structures::queue<int> >]
+Checking for equivalence with:
+[std::vector<int, std::allocator<int> >]
+
+  Back element incorrect
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  Element incorrect
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/Core/DataStructures/QueueTestingDiagnostics.cpp, Line 32
+Wrong size
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::data_structures::queue<int> >]
+Checking for equivalence with:
+[std::vector<int, std::allocator<int> >]
+
+  Size incorrect
+  [unsigned long long]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  Back element incorrect
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/Core/DataStructures/QueueTestingDiagnostics.cpp, Line 33
+Wrong back element
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::data_structures::queue<int> >]
+Checking for equivalence with:
+[std::vector<int, std::allocator<int> >]
+
+  Back element incorrect
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 5
+
+  Element incorrect
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 5
+
+=======================================
+
+Tests/Core/DataStructures/QueueTestingDiagnostics.cpp, Line 38
+Popped queue against one holding its history
+
+[sequoia::data_structures::queue<int>]
+operator== returned false
+
+  Size incorrect
+  [unsigned long long]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  Front element incorrect
+  [int]
+  operator== returned false
+  Obtained : 2
+  Predicted: 1
+
+  Hidden state incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+  Hidden state, symmetry of operator== incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+

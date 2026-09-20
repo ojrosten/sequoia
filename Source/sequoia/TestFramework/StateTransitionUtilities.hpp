@@ -14,6 +14,7 @@
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Object/CopyableFunction.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
+#include "sequoia/TestFramework/CoreInfrastructure.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
@@ -44,10 +45,10 @@ namespace sequoia::testing
   public:
     template<std::invocable Fn>
       requires std::convertible_to<std::invoke_result_t<Fn>, T>
-    object_generator(Fn f) : m_Fn{std::move(f)}
+    constexpr object_generator(Fn f) : m_Fn{std::move(f)}
     {}
 
-    object_generator(T t)
+    constexpr object_generator(T t)
       requires std::movable<T>
       : m_Fn{[t{std::move(t)}]() -> const T& { return t; }}
     {}
@@ -55,20 +56,20 @@ namespace sequoia::testing
     template<class... Args>
       requires (initializable_from<T, Args...> &&
                ((sizeof...(Args) != 1) || (!std::is_same_v<T, std::remove_cvref_t<Args>> && ...)))
-    object_generator(Args&&... args)
+    constexpr object_generator(Args&&... args)
       : object_generator{T{std::forward<Args>(args)...}}
     {}
 
     template<class InitCheckFn, class... Args>
       requires (initializable_from<T, Args...> && std::invocable<InitCheckFn, std::string, T, Args...>)
-    object_generator(std::string_view message, InitCheckFn initCheckFn, const Args&... args)
+    constexpr object_generator(std::string_view message, InitCheckFn initCheckFn, const Args&... args)
       : object_generator{T{args...}}
     {
       initCheckFn(message, m_Fn(), args...);
     }
 
     [[nodiscard]]
-    decltype(auto) operator()() const { return m_Fn(); }
+    constexpr decltype(auto) operator()() const { return m_Fn(); }
   private:
     object::copyable_function<T() const> m_Fn;
   };
@@ -86,7 +87,7 @@ namespace sequoia::testing
     using edge_iterator = transition_graph::const_edge_iterator;
 
     template<class CheckFn, class... Args>
-    static void invoke_check_fn(const transition_graph& g, edge_iterator i, CheckFn fn, const std::string& message, object_generator<T> parentGenerator, size_type target, Args... args)
+    constexpr static void invoke_check_fn(const transition_graph& g, edge_iterator i, CheckFn fn, const std::string& message, object_generator<T> parentGenerator, size_type target, Args... args)
     {
       const auto& w{i->weight()};
       fn(message,
@@ -110,7 +111,7 @@ namespace sequoia::testing
     using edge = transition_graph::edge_type;
 
     template<std::invocable<std::string, T, T> CheckFn>
-    static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
+    constexpr static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{
         [description,&g,checkFn](edge_iterator i) {
@@ -123,7 +124,7 @@ namespace sequoia::testing
     }
 
     template<std::invocable<std::string, T, T, T> CheckFn>
-    static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
+    constexpr static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{
         [description,&g,checkFn](edge_iterator i) {
@@ -136,7 +137,7 @@ namespace sequoia::testing
     }
 
     template<std::invocable<std::string, T, T, T, size_type, size_type> CheckFn>
-    static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
+    constexpr static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{
         [description,&g,checkFn](edge_iterator i) {
@@ -150,7 +151,7 @@ namespace sequoia::testing
 
     template<std::invocable<std::string, T, T, T, std::weak_ordering> CheckFn>
       requires (deep_totally_ordered<T>&& pseudoregular<T>)
-    static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
+    constexpr static void check(std::string_view description, const transition_graph& g, CheckFn checkFn)
     {
       auto edgeFn{
         [description,&g,checkFn](edge_iterator i) {
@@ -186,7 +187,7 @@ namespace sequoia::testing
 
   private:
     template<std::invocable<edge_iterator> EdgeFn>
-    static void check(const transition_graph& g, EdgeFn edgeFn)
+    constexpr static void check(const transition_graph& g, EdgeFn edgeFn)
     {
       using namespace maths;
       traverse(breadth_first, g, find_disconnected_t{0}, null_func_obj{}, null_func_obj{}, edgeFn);
@@ -200,12 +201,12 @@ namespace sequoia::testing
     };
 
     [[nodiscard]]
-    static edge_fn_info make(std::string_view description, const transition_graph& g, edge_iterator i)
+    constexpr static edge_fn_info make(std::string_view description, const transition_graph& g, edge_iterator i)
     {
       const auto& w{i->weight()};
       const auto parent{i.partition_index()}, target{i->target_node()};
       return {append_lines(description,
-                           std::string{"Transition from node "}.append(std::to_string(parent)).append(" to ").append(std::to_string(target)),
+                           std::string{"Transition from node "}.append(to_string(parent)).append(" to ").append(to_string(target)),
                            w.description),
               g.cbegin_node_weights()[parent],
               target};

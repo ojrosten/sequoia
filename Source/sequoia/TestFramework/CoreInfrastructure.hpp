@@ -14,8 +14,11 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 
+#include <array>
+#include <charconv>
 #include <format>
 #include <filesystem>
+#include <limits>
 #include <sstream>
 
 namespace sequoia::testing
@@ -31,9 +34,31 @@ namespace sequoia::testing
   struct serializer<T>
   {
     [[nodiscard]]
-    static std::string make(const T& val)
+    constexpr static std::string make(const T& val)
     {
-      return std::format("{}", val);
+      // std::format is not constexpr; in a constant evaluation an integer is rendered with to_chars
+      // and anything else is named as unrendered
+      if consteval
+      {
+        if constexpr(std::integral<T> && !std::is_same_v<T, bool>)
+        {
+          std::array<char, std::numeric_limits<T>::digits10 + 3> buffer{};
+          const auto [end, ec]{std::to_chars(buffer.data(), buffer.data() + buffer.size(), val)};
+          return std::string{buffer.data(), end};
+        }
+        else if constexpr(std::is_same_v<T, bool>)
+        {
+          return val ? "true" : "false";
+        }
+        else
+        {
+          return "<not rendered in a constant evaluation>";
+        }
+      }
+      else
+      {
+        return std::format("{}", val);
+      }
     }
   };
 
@@ -57,7 +82,7 @@ namespace sequoia::testing
 
   template<serializable T>
   [[nodiscard]]
-  std::string to_string(const T& value)
+  constexpr std::string to_string(const T& value)
   {
     return serializer<T>::make(value);
   }

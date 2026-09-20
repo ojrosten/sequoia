@@ -12,11 +12,13 @@
 
  */
 
+#include "sequoia/Core/DataStructures/Queue.hpp"
+#include "sequoia/Core/DataStructures/Stack.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalDetails.hpp"
 
 #include <queue>
-#include <stack>
 #include <concepts>
+#include <vector>
 #include <type_traits>
 
 namespace sequoia::maths::graph_impl
@@ -28,7 +30,7 @@ namespace sequoia::maths::graph_impl
     using bitset = std::vector<bool>;
 
     [[nodiscard]]
-    static bitset make_bitset(const G& g)
+    constexpr static bitset make_bitset(const G& g)
     {
       return bitset(g.order(), false);
     }
@@ -37,19 +39,19 @@ namespace sequoia::maths::graph_impl
   template<dynamic_network G>
   struct traversal_traits_base<G, traversal_flavour::breadth_first>
   {
-    using queue_type = std::queue<std::size_t>;
+    using queue_type = data_structures::queue<std::size_t>;
 
     [[nodiscard]]
-    static auto get_container_element(const queue_type& q) { return q.front(); }
+    constexpr static auto get_container_element(const queue_type& q) { return q.front(); }
   };
 
   template<dynamic_network G>
   struct traversal_traits_base<G, traversal_flavour::pseudo_depth_first>
   {
-    using queue_type = std::stack<std::size_t>;
+    using queue_type = data_structures::stack<std::size_t>;
 
     [[nodiscard]]
-    static auto get_container_element(const queue_type& s) { return s.top(); }
+    constexpr static auto get_container_element(const queue_type& s) { return s.top(); }
   };
 
   template<dynamic_network G, class Compare>

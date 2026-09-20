@@ -1,0 +1,136 @@
+Tests/Core/DataStructures/StackTestingDiagnostics.cpp, Line 27
+Empty against one element
+
+[sequoia::data_structures::stack<int>]
+operator== returned false
+
+  Emptiness incorrect
+  [bool]
+  operator== returned false
+  Obtained : true
+  Predicted: false
+
+  Size incorrect
+  [unsigned long long]
+  operator== returned false
+  Obtained : 0
+  Predicted: 1
+
+  Hidden state incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+  Hidden state, symmetry of operator== incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+
+Tests/Core/DataStructures/StackTestingDiagnostics.cpp, Line 28
+Differing elements
+
+[sequoia::data_structures::stack<int>]
+operator== returned false
+
+  Top element incorrect
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  Hidden state incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+  Hidden state, symmetry of operator== incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+
+Tests/Core/DataStructures/StackTestingDiagnostics.cpp, Line 29
+Differing sizes, same top
+
+[sequoia::data_structures::stack<int>]
+operator== returned false
+
+  Size incorrect
+  [unsigned long long]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+  Hidden state incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+  Hidden state, symmetry of operator== incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+
+Tests/Core/DataStructures/StackTestingDiagnostics.cpp, Line 30
+Differing bottom element, same top and size
+
+[sequoia::data_structures::stack<int>]
+operator== returned false
+
+  Hidden state incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+  Hidden state, symmetry of operator== incorrect
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+
+Tests/Core/DataStructures/StackTestingDiagnostics.cpp, Line 31
+Wrong element
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::data_structures::stack<int> >]
+Checking for equivalence with:
+[std::vector<int, std::allocator<int> >]
+
+  Element incorrect
+  [int]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+
+Tests/Core/DataStructures/StackTestingDiagnostics.cpp, Line 32
+Wrong size
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::data_structures::stack<int> >]
+Checking for equivalence with:
+[std::vector<int, std::allocator<int> >]
+
+  Size incorrect
+  [unsigned long long]
+  operator== returned false
+  Obtained : 1
+  Predicted: 2
+
+=======================================
+

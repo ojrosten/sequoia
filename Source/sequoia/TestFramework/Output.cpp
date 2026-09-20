@@ -234,53 +234,9 @@ namespace sequoia::testing
 
       return name;
     }
-
-    [[nodiscard]]
-    std::string nullable_type_message(const bool holdsValue)
-    {
-      return std::string{holdsValue ? "not " : ""}.append("null");
-    }
   }
 
-  [[nodiscard]]
-  std::string footer()
-  {
-    return "=======================================\n";
-  }
 
-  [[nodiscard]]
-  std::string instability_footer()
-  {
-    return "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n";
-  }
-
-  void end_block(std::string& s, const line_breaks newlines, std::string_view footer)
-  {
-    if(!s.empty())
-    {
-      std::size_t n{};
-      for(; n < std::ranges::min(s.size(), newlines.value()); ++n)
-      {
-        if(s[s.size() - 1 - n] != '\n') break;
-      }
-
-      for(; n<newlines.value(); ++n)
-      {
-        s.append("\n");
-      }
-
-      s.append(footer);
-    }
-  }
-
-  [[nodiscard]]
-  std::string end_block(std::string_view s, const line_breaks newlines, std::string_view footer)
-  {
-    std::string text{s};
-    end_block(text, newlines, footer);
-
-    return text;
-  }
 
   [[nodiscard]]
   std::string emphasise(std::string_view s)
@@ -311,43 +267,6 @@ namespace sequoia::testing
     }
 
     return mess;
-  }
-
-  [[nodiscard]]
-  std::string operator_message(std::string_view op, std::string_view opRetVal)
-  {
-    return std::string{"operator"}.append(op).append(" returned ").append(opRetVal);
-  }
-
-  [[nodiscard]]
-  std::string equality_operator_failure_message()
-  {
-    return operator_message("==", "false");
-  }
-
-  [[nodiscard]]
-  std::string pointer_prediction_message()
-  {
-    return "Pointers both non-null, but they point to different addresses";
-  }
-
-  [[nodiscard]]
-  std::string default_prediction_message(std::string_view obtained, std::string_view prediction)
-  {
-    return append_lines(std::string{"Obtained : "}.append(obtained), std::string{"Predicted: "}.append(prediction));
-  }
-
-  [[nodiscard]]
-  std::string prediction_message(const std::string& obtained, const std::string& prediction)
-  {
-    return default_prediction_message(obtained, prediction);
-  }
-
-  [[nodiscard]]
-  std::string nullable_type_message(const bool obtainedHoldsValue, const bool predictedHoldsValue)
-  {
-    return std::string{"Obtained : "}.append(nullable_type_message(obtainedHoldsValue)).append("\n")
-               .append("Predicted: ").append(nullable_type_message(predictedHoldsValue));
   }
 
   [[nodiscard]]

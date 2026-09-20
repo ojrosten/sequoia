@@ -79,13 +79,13 @@ namespace sequoia
 
       constexpr static auto npos{partition_iterator::npos};
 
-      bucketed_sequence() noexcept(noexcept(allocator_type{})) = default;
+      constexpr bucketed_sequence() noexcept(noexcept(allocator_type{})) = default;
 
-      explicit bucketed_sequence(const allocator_type& allocator) noexcept
+      constexpr explicit bucketed_sequence(const allocator_type& allocator) noexcept
         : m_Buckets(allocator)
       {}
 
-      bucketed_sequence(std::initializer_list<std::initializer_list<T>> list,
+      constexpr bucketed_sequence(std::initializer_list<std::initializer_list<T>> list,
                        const allocator_type& allocator = allocator_type{})
         : m_Buckets(allocator)
       {
@@ -102,9 +102,9 @@ namespace sequoia
         }
       }
 
-      bucketed_sequence(const bucketed_sequence&) = default;
+      constexpr bucketed_sequence(const bucketed_sequence&) = default;
 
-      bucketed_sequence(const bucketed_sequence& other, const allocator_type& allocator)
+      constexpr bucketed_sequence(const bucketed_sequence& other, const allocator_type& allocator)
        : m_Buckets(std::allocator_traits<allocator_type>::select_on_container_copy_construction(allocator))
       {
         m_Buckets.reserve(other.m_Buckets.size());
@@ -122,36 +122,36 @@ namespace sequoia
         }
       }
 
-      bucketed_sequence(bucketed_sequence&&) noexcept = default;
+      constexpr bucketed_sequence(bucketed_sequence&&) noexcept = default;
 
-      bucketed_sequence(bucketed_sequence&& other, const allocator_type& allocator)
+      constexpr bucketed_sequence(bucketed_sequence&& other, const allocator_type& allocator)
         : m_Buckets(std::move(other).m_Buckets, allocator)
       {}
 
-      bucketed_sequence& operator=(bucketed_sequence&&) noexcept = default;
+      constexpr bucketed_sequence& operator=(bucketed_sequence&&) noexcept = default;
 
-      bucketed_sequence& operator=(const bucketed_sequence&) = default;
+      constexpr bucketed_sequence& operator=(const bucketed_sequence&) = default;
 
-      void swap(bucketed_sequence& other)
+      constexpr void swap(bucketed_sequence& other)
         noexcept(noexcept(std::ranges::swap(this->m_Buckets, other.m_Buckets)))
       {
         std::ranges::swap(m_Buckets, other.m_Buckets);
       }
 
-      friend void swap(bucketed_sequence& lhs, bucketed_sequence& rhs)
+      constexpr friend void swap(bucketed_sequence& lhs, bucketed_sequence& rhs)
         noexcept(noexcept(lhs.swap(rhs)))
       {
         lhs.swap(rhs);
       }
 
       [[nodiscard]]
-      bool empty() const noexcept
+      constexpr bool empty() const noexcept
       {
         return m_Buckets.empty();
       }
 
       [[nodiscard]]
-      size_type size() const
+      constexpr size_type size() const
       {
         return std::accumulate(std::cbegin(m_Buckets), std::cend(m_Buckets), size_type{},
           [](const size_type& current, const auto& bucket){
@@ -160,15 +160,15 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      size_type size_of_partition(size_type i) const
+      constexpr size_type size_of_partition(size_type i) const
       {
         return static_cast<size_type>(std::ranges::distance(partition(i)));
       }
 
       [[nodiscard]]
-      size_type num_partitions() const noexcept { return m_Buckets.size(); }
+      constexpr size_type num_partitions() const noexcept { return m_Buckets.size(); }
 
-      void swap_partitions(const size_type i, const size_type j)
+      constexpr void swap_partitions(const size_type i, const size_type j)
       {
         if((i < num_partitions()) && (j < num_partitions()))
         {
@@ -177,17 +177,17 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      allocator_type get_allocator() const
+      constexpr allocator_type get_allocator() const
       {
         return m_Buckets.get_allocator();
       }
 
-      void add_slot()
+      constexpr void add_slot()
       {
         m_Buckets.emplace_back();
       }
 
-      void insert_slot(const size_type pos)
+      constexpr void insert_slot(const size_type pos)
       {
         if(pos < num_partitions())
         {
@@ -200,7 +200,7 @@ namespace sequoia
         }
       }
 
-      void erase_slot(const size_type n)
+      constexpr void erase_slot(const size_type n)
       {
         if(n < m_Buckets.size())
         {
@@ -208,53 +208,53 @@ namespace sequoia
         }
       }
 
-      void reserve_partition(const size_type partition, const size_type size)
+      constexpr void reserve_partition(const size_type partition, const size_type size)
       {
         if(partition < num_partitions())
           m_Buckets[partition].reserve(size);
       }
 
       [[nodiscard]]
-      size_type partition_capacity(const size_type partition) const
+      constexpr size_type partition_capacity(const size_type partition) const
       {
         return partition < num_partitions() ? m_Buckets[partition].capacity() : 0;
       }
 
-      void reserve_partitions(const size_type numPartitions)
+      constexpr void reserve_partitions(const size_type numPartitions)
       {
         m_Buckets.reserve(numPartitions);
       }
 
       [[nodiscard]]
-      size_type num_partitions_capacity() const noexcept
+      constexpr size_type num_partitions_capacity() const noexcept
       {
 
         return m_Buckets.capacity();
       }
 
-      void shrink_num_partitions_to_fit()
+      constexpr void shrink_num_partitions_to_fit()
       {
         m_Buckets.shrink_to_fit();
       }
 
-      void shrink_to_fit(const size_type partition)
+      constexpr void shrink_to_fit(const size_type partition)
       {
         if(partition < num_partitions()) m_Buckets[partition].shrink_to_fit();
       }
 
-      void shrink_to_fit()
+      constexpr void shrink_to_fit()
       {
         shrink_num_partitions_to_fit();
         for(auto& b : m_Buckets) b.shrink_to_fit();
       }
 
-      void clear() noexcept
+      constexpr void clear() noexcept
       {
         m_Buckets.clear();
       }
 
       template<class... Args>
-      void push_back_to_partition(const size_type index, Args&&... args)
+      constexpr void push_back_to_partition(const size_type index, Args&&... args)
       {
         check_range("push_back_to_partition", index);
 
@@ -262,7 +262,7 @@ namespace sequoia
       }
 
       template<class... Args>
-      partition_iterator insert_to_partition(const_partition_iterator pos, Args&&... args)
+      constexpr partition_iterator insert_to_partition(const_partition_iterator pos, Args&&... args)
       {
         const auto source{pos.partition_index()};
         check_range("insert_to_partition", source);
@@ -273,13 +273,13 @@ namespace sequoia
       }
 
       template<class... Args>
-      partition_iterator insert_to_partition(const size_type index, const size_type pos, Args&&... args)
+      constexpr partition_iterator insert_to_partition(const size_type index, const size_type pos, Args&&... args)
       {
         check_range("insert_to_partition", index, pos);
         return insert_to_partition(std::ranges::next(begin_partition_raw(index), pos, end_partition_raw(index)), std::forward<Args>(args)...);
       }
 
-      partition_iterator erase_from_partition(const_partition_iterator iter)
+      constexpr partition_iterator erase_from_partition(const_partition_iterator iter)
       {
         const auto partition{iter.partition_index()};
         if(const auto n{num_partitions()}; partition >= n)
@@ -295,7 +295,7 @@ namespace sequoia
         return {next, partition};
       }
 
-      partition_iterator erase_from_partition(const_partition_iterator first, const_partition_iterator last)
+      constexpr partition_iterator erase_from_partition(const_partition_iterator first, const_partition_iterator last)
       {
         const auto firstPartition{first.partition_index()}, lastPartition{last.partition_index()};
         if(const auto n{num_partitions()}; (firstPartition >= n) && (lastPartition >= n))
@@ -317,56 +317,56 @@ namespace sequoia
         .append(std::to_string(firstPartition)).append(", ").append(std::to_string(lastPartition)).append("]")};
       }
 
-      partition_iterator erase_from_partition(const size_type index, const size_type pos)
+      constexpr partition_iterator erase_from_partition(const size_type index, const size_type pos)
       {
         check_for_empty("erase_from_partition");
         return erase_from_partition(std::ranges::next(begin_partition_raw(index), pos, end_partition_raw(index)));
       }
 
       [[nodiscard]]
-      partition_iterator begin_partition(const size_type i)
+      constexpr partition_iterator begin_partition(const size_type i)
       {
         check_for_empty("begin_partition");
         return (i < m_Buckets.size()) ? partition_iterator{m_Buckets[i].begin(), i} : partition_iterator{m_Buckets.back().end(), npos};
       }
 
       [[nodiscard]]
-      partition_iterator end_partition(const size_type i)
+      constexpr partition_iterator end_partition(const size_type i)
       {
         check_for_empty("end_partition");
         return (i < m_Buckets.size()) ? partition_iterator{m_Buckets[i].end(), i} : partition_iterator{m_Buckets.back().end(), npos};
       }
 
       [[nodiscard]]
-      const_partition_iterator begin_partition(const size_type i) const
+      constexpr const_partition_iterator begin_partition(const size_type i) const
       {
         check_for_empty("begin_partition");
         return begin_partition_raw(i);
       }
 
       [[nodiscard]]
-      const_partition_iterator end_partition(const size_type i) const
+      constexpr const_partition_iterator end_partition(const size_type i) const
       {
         check_for_empty("end_partition");
         return end_partition_raw(i);
       }
 
       [[nodiscard]]
-      reverse_partition_iterator rbegin_partition(const size_type i)
+      constexpr reverse_partition_iterator rbegin_partition(const size_type i)
       {
         check_for_empty("rbegin_partition");
         return (i < m_Buckets.size()) ? reverse_partition_iterator{m_Buckets[i].rbegin(), i} : reverse_partition_iterator{m_Buckets.front().rend(), npos};
       }
 
       [[nodiscard]]
-      reverse_partition_iterator rend_partition(const size_type i)
+      constexpr reverse_partition_iterator rend_partition(const size_type i)
       {
         check_for_empty("rend_partition");
         return (i < m_Buckets.size()) ? reverse_partition_iterator{m_Buckets[i].rend(), i} : reverse_partition_iterator{m_Buckets.front().rend(), npos};
       }
 
       [[nodiscard]]
-      const_reverse_partition_iterator rbegin_partition(const size_type i) const
+      constexpr const_reverse_partition_iterator rbegin_partition(const size_type i) const
       {
         check_for_empty("rbegin_partition");
         return (i < m_Buckets.size()) ? const_reverse_partition_iterator{m_Buckets[i].crbegin(), i} : const_reverse_partition_iterator{m_Buckets.front().crend(), npos};
@@ -374,38 +374,38 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      const_reverse_partition_iterator rend_partition(const size_type i) const
+      constexpr const_reverse_partition_iterator rend_partition(const size_type i) const
       {
         check_for_empty("rend_partition");
         return (i < m_Buckets.size()) ? const_reverse_partition_iterator{m_Buckets[i].crend(), i} : const_reverse_partition_iterator{m_Buckets.front().crend(), npos};
       }
 
       [[nodiscard]]
-      const_partition_iterator cbegin_partition(const size_type i) const
+      constexpr const_partition_iterator cbegin_partition(const size_type i) const
       {
         return begin_partition(i);
       }
 
       [[nodiscard]]
-      const_partition_iterator cend_partition(const size_type i) const
+      constexpr const_partition_iterator cend_partition(const size_type i) const
       {
         return end_partition(i);
       }
 
       [[nodiscard]]
-      const_reverse_partition_iterator crbegin_partition(const size_type i) const
+      constexpr const_reverse_partition_iterator crbegin_partition(const size_type i) const
       {
         return rbegin_partition(i);
       }
 
       [[nodiscard]]
-      const_reverse_partition_iterator crend_partition(const size_type i) const
+      constexpr const_reverse_partition_iterator crend_partition(const size_type i) const
       {
         return rend_partition(i);
       }
 
       [[nodiscard]]
-      partition_range partition(const size_type i)
+      constexpr partition_range partition(const size_type i)
       {
         check_for_empty("partition");
 
@@ -414,7 +414,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      const_partition_range partition(const size_type i) const
+      constexpr const_partition_range partition(const size_type i) const
       {
         check_for_empty("partition");
 
@@ -423,15 +423,15 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      const_partition_range cpartition(const size_type i) const { return partition(i); }
+      constexpr const_partition_range cpartition(const size_type i) const { return partition(i); }
 
       [[nodiscard]]
-      const_partition_iterator operator[](const size_type i) const { return cbegin_partition(i); }
+      constexpr const_partition_iterator operator[](const size_type i) const { return cbegin_partition(i); }
 
       [[nodiscard]]
-      partition_iterator operator[](const size_type i) { return begin_partition(i); }
+      constexpr partition_iterator operator[](const size_type i) { return begin_partition(i); }
 
-      void reset(const allocator_type& allocator) noexcept
+      constexpr void reset(const allocator_type& allocator) noexcept
         requires (std::allocator_traits<allocator_type>::propagate_on_container_copy_assignment::value)
       {
         const container_type buckets(allocator);
@@ -443,7 +443,7 @@ namespace sequoia
     private:
       container_type m_Buckets;
 
-      void check_range(std::string_view method, const size_type index) const
+      constexpr void check_range(std::string_view method, const size_type index) const
       {
         if(index >= m_Buckets.size())
         {
@@ -451,7 +451,7 @@ namespace sequoia
         }
       }
 
-      void check_range(std::string_view method, const size_type index, const size_type pos) const
+      constexpr void check_range(std::string_view method, const size_type index, const size_type pos) const
       {
         check_range(method, index);
         const auto bucketSize{m_Buckets[index].size()};
@@ -461,19 +461,19 @@ namespace sequoia
         }
       }
 
-      void check_for_empty(std::string_view method) const
+      constexpr void check_for_empty(std::string_view method) const
       {
           if(m_Buckets.empty()) throw std::out_of_range{std::string{"bucketed_sequence::"}.append(method).append(": no buckets\n")};
       }
 
       [[nodiscard]]
-      const_partition_iterator begin_partition_raw(const size_type i) const
+      constexpr const_partition_iterator begin_partition_raw(const size_type i) const
       {
         return (i < m_Buckets.size()) ? const_partition_iterator{m_Buckets[i].cbegin(), i} : const_partition_iterator{m_Buckets.back().cend(), npos};
       }
 
       [[nodiscard]]
-      const_partition_iterator end_partition_raw(const size_type i) const
+      constexpr const_partition_iterator end_partition_raw(const size_type i) const
       {
         return (i < m_Buckets.size()) ? const_partition_iterator{m_Buckets[i].cend(), i} : const_partition_iterator{m_Buckets.back().cend(), npos};
       }
@@ -671,9 +671,9 @@ namespace sequoia
 
       constexpr partitioned_sequence_base& operator=(const partitioned_sequence_base&) = default;
 
-      ~partitioned_sequence_base() = default;
+      constexpr ~partitioned_sequence_base() = default;
 
-      void swap(partitioned_sequence_base& other)
+      constexpr void swap(partitioned_sequence_base& other)
         noexcept(noexcept(std::ranges::swap(this->m_Partitions, other.m_Partitions)) && noexcept(std::ranges::swap(this->m_Data, other.m_Data)))
       {
         std::ranges::swap(m_Partitions, other.m_Partitions);
@@ -681,13 +681,13 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      auto get_allocator() const
+      constexpr auto get_allocator() const
       {
         return m_Data.get_allocator();
       }
 
       [[nodiscard]]
-      auto get_partitions_allocator() const
+      constexpr auto get_partitions_allocator() const
       {
         return m_Partitions.get_allocator();
       }
@@ -723,12 +723,12 @@ namespace sequoia
         , m_Data{std::move(in.m_Data), allocator}
       {}
 
-      void add_slot()
+      constexpr void add_slot()
       {
         m_Partitions.push_back(m_Data.size());
       }
 
-      void insert_slot(const size_t pos)
+      constexpr void insert_slot(const size_t pos)
       {
         if(pos < num_partitions())
         {
@@ -742,7 +742,7 @@ namespace sequoia
         }
       }
 
-      void erase_slot(const index_type n)
+      constexpr void erase_slot(const index_type n)
       {
         if(n < m_Partitions.size())
         {
@@ -758,42 +758,42 @@ namespace sequoia
         }
       }
 
-      void reserve(const size_type size)
+      constexpr void reserve(const size_type size)
       {
         m_Data.reserve(size);
       }
 
       [[nodiscard]]
-      index_type capacity() const noexcept
+      constexpr index_type capacity() const noexcept
       {
         return m_Data.capacity();
       }
 
-      void reserve_partitions(const size_type numPartitions)
+      constexpr void reserve_partitions(const size_type numPartitions)
       {
         m_Partitions.reserve(numPartitions);
       }
 
       [[nodiscard]]
-      index_type num_partitions_capacity() const noexcept
+      constexpr index_type num_partitions_capacity() const noexcept
       {
         return m_Partitions.capacity();
       }
 
-      void shrink_to_fit()
+      constexpr void shrink_to_fit()
       {
         m_Partitions.shrink_to_fit();
         m_Data.shrink_to_fit();
       }
 
-      void clear() noexcept
+      constexpr void clear() noexcept
       {
         m_Partitions.clear();
         m_Data.clear();
       }
 
       template<class... Args>
-      void push_back_to_partition(const index_type index, Args&&... args)
+      constexpr void push_back_to_partition(const index_type index, Args&&... args)
       {
         check_range("push_back_to_partition", index);
 
@@ -812,7 +812,7 @@ namespace sequoia
       }
 
       template<class... Args>
-      partition_iterator insert_to_partition(const_partition_iterator pos, Args&&... args)
+      constexpr partition_iterator insert_to_partition(const_partition_iterator pos, Args&&... args)
       {
         const auto source{pos.partition_index()};
         check_range("insert_to_partition", source);
@@ -824,12 +824,12 @@ namespace sequoia
       }
 
       template<class... Args>
-      partition_iterator insert_to_partition(const size_type index, const size_type pos, Args&&... args)
+      constexpr partition_iterator insert_to_partition(const size_type index, const size_type pos, Args&&... args)
       {
         return insert_to_partition(std::ranges::next(cbegin_partition(index), pos, cend_partition(index)), std::forward<Args>(args)...);
       }
 
-      partition_iterator erase_from_partition(const_partition_iterator iter)
+      constexpr partition_iterator erase_from_partition(const_partition_iterator iter)
       {
         const auto partition{iter.partition_index()};
         if(const auto n{num_partitions()}; partition >= n)
@@ -847,7 +847,7 @@ namespace sequoia
         return {next, iter.partition_index()};
       }
 
-      partition_iterator erase_from_partition(const_partition_iterator first, const_partition_iterator last)
+      constexpr partition_iterator erase_from_partition(const_partition_iterator first, const_partition_iterator last)
       {
         const auto firstPartition{first.partition_index()}, lastPartition{last.partition_index()};
         if(const auto n{num_partitions()}; (firstPartition >= n) && (lastPartition >= n))
@@ -871,7 +871,7 @@ namespace sequoia
           .append(std::to_string(firstPartition)).append(", ").append(std::to_string(lastPartition)).append("]")};
       }
 
-      partition_iterator erase_from_partition(const index_type index, const size_type pos)
+      constexpr partition_iterator erase_from_partition(const index_type index, const size_type pos)
       {
         return erase_from_partition(std::ranges::next(cbegin_partition(index), pos, cend_partition(index)));
       }
@@ -881,12 +881,12 @@ namespace sequoia
       SEQUOIA_NO_UNIQUE_ADDRESS partitions_type m_Partitions;
       container_type m_Data;
 
-      partitioned_sequence_base(std::initializer_list<std::initializer_list<T>> list)
+      constexpr partitioned_sequence_base(std::initializer_list<std::initializer_list<T>> list)
       {
         init(list);
       }
 
-      void init(std::initializer_list<std::initializer_list<T>> list)
+      constexpr void init(std::initializer_list<std::initializer_list<T>> list)
       {
         m_Partitions.reserve(list.size());
         m_Data.reserve(std::accumulate(list.begin(), list.end(), std::size_t{}, [](std::size_t n, auto l) { return n += l.size(); }));
@@ -903,7 +903,7 @@ namespace sequoia
 
       template<alloc Allocator>
       [[nodiscard]]
-      static container_type copy(const container_type& other, const Allocator& a)
+      constexpr static container_type copy(const container_type& other, const Allocator& a)
       {
         container_type container(std::allocator_traits<Allocator>::select_on_container_copy_construction(a));
 
@@ -916,7 +916,7 @@ namespace sequoia
         return container;
       }
 
-      void increment_partition_indices(const size_type first) noexcept
+      constexpr void increment_partition_indices(const size_type first) noexcept
       {
         m_Partitions.mutate(maths::unsafe_t{},
                             std::ranges::next(m_Partitions.begin(), first, m_Partitions.end()),
@@ -924,7 +924,7 @@ namespace sequoia
                             [](index_type index){ return ++index; });
       }
 
-      void decrement_partition_indices(const size_type first, const size_type last, const index_type num) noexcept
+      constexpr void decrement_partition_indices(const size_type first, const size_type last, const index_type num) noexcept
       {
         m_Partitions.mutate(maths::unsafe_t{},
                             std::ranges::next(m_Partitions.begin(), first, m_Partitions.end()),
@@ -932,7 +932,7 @@ namespace sequoia
                             [num](index_type index){ return index -= num; });
       }
 
-      void check_range(std::string_view method, const size_type index) const
+      constexpr void check_range(std::string_view method, const size_type index) const
       {
         if(index >= m_Partitions.size())
         {
@@ -940,7 +940,7 @@ namespace sequoia
         }
       }
 
-      void check_range(std::string_view method, const size_type index, const index_type pos) const
+      constexpr void check_range(std::string_view method, const size_type index, const index_type pos) const
       {
         check_range(method, index);
         const index_type maxPos{index ? m_Partitions[index] - m_Partitions[index - 1] : m_Partitions[index]};
@@ -993,29 +993,29 @@ namespace sequoia
       using allocator_type            = container_type::allocator_type;
       using partitions_allocator_type = partitions_type::allocator_type;
 
-      partitioned_sequence() = default;
+      constexpr partitioned_sequence() = default;
 
-      partitioned_sequence(const allocator_type& allocator, const partitions_allocator_type& partitionAllocator) noexcept
+      constexpr partitioned_sequence(const allocator_type& allocator, const partitions_allocator_type& partitionAllocator) noexcept
         : partitioned_sequence_base<T, Container, Partitions>(allocator, partitionAllocator)
       {}
 
-      partitioned_sequence(std::initializer_list<std::initializer_list<T>> list, const allocator_type& allocator=allocator_type{}, const partitions_allocator_type& partitionAllocator=partitions_allocator_type{})
+      constexpr partitioned_sequence(std::initializer_list<std::initializer_list<T>> list, const allocator_type& allocator=allocator_type{}, const partitions_allocator_type& partitionAllocator=partitions_allocator_type{})
         : partitioned_sequence_base<T, Container, Partitions>(list, allocator, partitionAllocator)
       {}
 
-      partitioned_sequence(const partitioned_sequence&) = default;
+      constexpr partitioned_sequence(const partitioned_sequence&) = default;
 
-      partitioned_sequence(const partitioned_sequence& s, const allocator_type& allocator, const partitions_allocator_type& partitionAllocator)
+      constexpr partitioned_sequence(const partitioned_sequence& s, const allocator_type& allocator, const partitions_allocator_type& partitionAllocator)
         : partitioned_sequence_base<T, Container, Partitions>(s, allocator, partitionAllocator)
       {}
 
-      partitioned_sequence(partitioned_sequence&&) noexcept = default;
+      constexpr partitioned_sequence(partitioned_sequence&&) noexcept = default;
 
-      partitioned_sequence(partitioned_sequence&& s, const allocator_type& allocator, const partitions_allocator_type& partitionAllocator)
+      constexpr partitioned_sequence(partitioned_sequence&& s, const allocator_type& allocator, const partitions_allocator_type& partitionAllocator)
         : partitioned_sequence_base<T, Container, Partitions>(std::move(s), allocator, partitionAllocator)
       {}
 
-      ~partitioned_sequence() = default;
+      constexpr ~partitioned_sequence() = default;
 
       partitioned_sequence& operator=(const partitioned_sequence&)     = default;
       partitioned_sequence& operator=(partitioned_sequence&&) noexcept = default;
