@@ -45,6 +45,14 @@
       direction that keeps retirement a one-line alias.
     - **No allocator, no `target()`, no `target_type()`.** These are the parts of `std::function`
       whose cost this class exists to avoid.
+
+    ## In a constant evaluation
+
+    Bytes cannot be reinterpreted there, so every target is held behind a pointer, and its manager
+    is a `consteval` function: reachable only at compile time and therefore never emitted, which
+    keeps the run-time symbol economy above intact. The cast back from `void*` is C++26's (P2738).
+    A `copyable_function` may live within a constant evaluation but not outlive one: a `constexpr`
+    variable of this type is ill-formed, since its target is an allocation.
  */
 
 #include "sequoia/Core/Meta/TypeTraits.hpp"
@@ -78,7 +86,7 @@ namespace sequoia::object
   public:
     using result_type = R;
 
-    copyable_function() = default;
+    constexpr copyable_function() = default;
 
     /** The constraint is `std::is_invocable_r_v` rather than sequoia's `invocable_r`, and the
         difference is load-bearing: `invocable_r` demands `std::same_as<..., R>`, whereas a wrapper
@@ -94,66 +102,100 @@ namespace sequoia::object
      */
     template<class Fn>
       requires (!resolve_to_copy_v<copyable_function, Fn>) && std::is_invocable_r_v<R, const Fn&, Args...>
-    copyable_function(Fn fn)
+    constexpr copyable_function(Fn fn)
       : m_Call{caller_for<Fn>}, m_Manage{manager_for<Fn>()}
     {
-      if constexpr(fits<Fn>) ::new (static_cast<void*>(m_Buffer)) Fn{std::move(fn)};
-      else                   *reinterpret_cast<Fn**>(m_Buffer) = new Fn{std::move(fn)};
+      // The address of a consteval function may be taken only in an immediate function context,
+      // which the block of an `if consteval` is and a mem-initializer is not
+      if consteval
+      {
+        m_Manage = &manage_in_constant_evaluation<Fn>;
+        m_Storage.pointer = new Fn{std::move(fn)};
+      }
+      else
+      {
+        if constexpr(fits<Fn>)
+          ::new (static_cast<void*>(m_Storage.buffer)) Fn{std::move(fn)};
+        else
+          m_Storage.pointer = new Fn{std::move(fn)};
+      }
     }
 
-    copyable_function(const copyable_function& other) : m_Call{other.m_Call}, m_Manage{other.m_Manage}
+    constexpr copyable_function(const copyable_function& other) : m_Call{other.m_Call}, m_Manage{other.m_Manage}
     {
-      if(m_Manage) m_Manage(op::copy, m_Buffer, other.m_Buffer);
+      if(m_Manage)
+        m_Manage(op::copy, m_Storage, other.m_Storage);
     }
 
-    copyable_function(copyable_function&& other) noexcept : m_Call{other.m_Call}, m_Manage{other.m_Manage}
+    constexpr copyable_function(copyable_function&& other) noexcept : m_Call{other.m_Call}, m_Manage{other.m_Manage}
     {
-      if(m_Manage) m_Manage(op::move, m_Buffer, other.m_Buffer);
+      if(m_Manage)
+        m_Manage(op::move, m_Storage, other.m_Storage);
       other.m_Call   = nullptr;
       other.m_Manage = nullptr;
     }
 
-    copyable_function& operator=(copyable_function other) noexcept
+    constexpr copyable_function& operator=(copyable_function other) noexcept
     {
       swap(*this, other);
       return *this;
     }
 
-    ~copyable_function() { if(m_Manage) m_Manage(op::destroy, m_Buffer, m_Buffer); }
-
-    R operator()(Args... args) const
+    constexpr ~copyable_function()
     {
-      return m_Call(m_Buffer, std::forward<Args>(args)...);
+      if(m_Manage)
+        m_Manage(op::destroy, m_Storage, m_Storage);
+    }
+
+    constexpr R operator()(Args... args) const
+    {
+      return m_Call(m_Storage, std::forward<Args>(args)...);
     }
 
     [[nodiscard]]
-    explicit operator bool() const noexcept { return m_Call != nullptr; }
+    constexpr explicit operator bool() const noexcept { return m_Call != nullptr; }
 
     /** `op::move` hands ownership on exactly once, and the thunk pointers - which are what decide
         whether a buffer is ever destroyed - are exchanged last, so each of the three moves below is
         safe.
 
         What `op::move` leaves behind differs by manager, and deliberately: the general one destroys
-        a small source and leaves a large one's pointer in place, while the shared one leaves the
-        source's bytes alone. Both are correct because the caller always overwrites or abandons what
-        it moved from, and because a trivially managed target has nothing to destroy.
+        a small source and leaves a large one's pointer in place, the shared one leaves the
+        source's bytes alone, and the constant-evaluation one leaves the pointer in place. All are
+        correct because the caller always overwrites or abandons what it moved from, and because a
+        trivially managed target has nothing to destroy.
      */
-    friend void swap(copyable_function& lhs, copyable_function& rhs) noexcept
+    friend constexpr void swap(copyable_function& lhs, copyable_function& rhs) noexcept
     {
       // Without this, a self-swap moves the target out of the buffer and then straight back out of
       // the buffer it has just vacated.
-      if(&lhs == &rhs) return;
+      if(&lhs == &rhs)
+        return;
 
-      alignas(std::max_align_t) std::byte tmp[buffer_size];
+      storage tmp{};
       const auto lm{lhs.m_Manage}, rm{rhs.m_Manage};
-      if(lm) lm(op::move, tmp, lhs.m_Buffer);
-      if(rm) rm(op::move, lhs.m_Buffer, rhs.m_Buffer);
-      if(lm) lm(op::move, rhs.m_Buffer, tmp);
+      if(lm)
+        lm(op::move, tmp, lhs.m_Storage);
+
+      if(rm)
+        rm(op::move, lhs.m_Storage, rhs.m_Storage);
+
+      if(lm)
+        lm(op::move, rhs.m_Storage, tmp);
       std::swap(lhs.m_Call,   rhs.m_Call);
       std::swap(lhs.m_Manage, rhs.m_Manage);
     }
   private:
     constexpr static std::size_t buffer_size{3 * sizeof(void*)};
+
+    /** A small target lives in the buffer; a large one, and in a constant evaluation every one,
+        behind the pointer.
+     */
+    union storage
+    {
+      alignas(std::max_align_t) std::byte buffer[buffer_size];
+      void* pointer;
+    };
 
     /** Three pointers is ample for what the tests present - a closure capturing one or two
         references - and anything larger goes on the heap.
@@ -188,8 +230,8 @@ namespace sequoia::object
         erased type; the price of removing it is one extra pointer per `copyable_function`, which
         for a suite erasing a callable per tested type is the better side of the trade.
      */
-    using call_thunk    = R    (*)(const std::byte*, Args&&...);
-    using manage_thunk  = void (*)(op, std::byte*, const std::byte*);
+    using call_thunk    = R    (*)(const storage&, Args&&...);
+    using manage_thunk  = void (*)(op, storage&, const storage&);
 
     /** The manager shared by every trivially-managed target, and so **not** a template: one symbol
         per signature rather than one per erased type.
@@ -198,9 +240,30 @@ namespace sequoia::object
         and it is reading and writing within a `std::byte` array which is always fully initialized,
         never past the end of an object.
      */
-    static void manage_trivially(op o, std::byte* to, const std::byte* from)
+    static void manage_trivially(op o, storage& to, const storage& from)
     {
-      if(o != op::destroy) std::memcpy(to, from, buffer_size);
+      if(o != op::destroy)
+        std::memcpy(to.buffer, from.buffer, buffer_size);
+    }
+
+    /** The manager of every target in a constant evaluation, where the target is behind the
+        pointer; `consteval`, so that no run-time symbol is added for it.
+     */
+    template<class Fn>
+    consteval static void manage_in_constant_evaluation(op o, storage& to, const storage& from)
+    {
+      switch(o)
+      {
+      case op::copy:
+        to.pointer = new Fn{*static_cast<const Fn*>(from.pointer)};
+        break;
+      case op::move:
+        to.pointer = from.pointer;
+        break;
+      case op::destroy:
+        delete static_cast<Fn*>(from.pointer);
+        break;
+      }
     }
 
     /** Chosen with `if constexpr` rather than a ternary, so that the general manager is instantiated
@@ -210,29 +273,40 @@ namespace sequoia::object
     template<class Fn>
     consteval static manage_thunk manager_for()
     {
-      if constexpr(trivially_managed<Fn>) return &manage_trivially;
-      else return +[](op o, std::byte* to, const std::byte* from) {
-        switch(o)
-        {
-        case op::copy:
-          if constexpr(fits<Fn>) ::new (static_cast<void*>(to)) Fn{*reinterpret_cast<const Fn*>(from)};
-          else                   *reinterpret_cast<Fn**>(to) = new Fn{**reinterpret_cast<const Fn* const*>(from)};
-          break;
-        case op::move:
-          if constexpr(fits<Fn>)
+      if constexpr(trivially_managed<Fn>)
+      {
+        return &manage_trivially;
+      }
+      else
+      {
+        return [](op o, storage& to, const storage& from) {
+          switch(o)
           {
-            auto* f{const_cast<Fn*>(reinterpret_cast<const Fn*>(from))};
-            ::new (static_cast<void*>(to)) Fn{std::move(*f)};
-            f->~Fn();
+          case op::copy:
+            if constexpr(fits<Fn>)
+              ::new (static_cast<void*>(to.buffer)) Fn{*reinterpret_cast<const Fn*>(from.buffer)};
+            else
+              to.pointer = new Fn{*static_cast<const Fn*>(from.pointer)};
+            break;
+          case op::move:
+            if constexpr(fits<Fn>)
+            {
+              auto* const f{const_cast<Fn*>(reinterpret_cast<const Fn*>(from.buffer))};
+              ::new (static_cast<void*>(to.buffer)) Fn{std::move(*f)};
+              f->~Fn();
+            }
+            else
+              to.pointer = from.pointer;
+            break;
+          case op::destroy:
+            if constexpr(fits<Fn>)
+              reinterpret_cast<const Fn*>(from.buffer)->~Fn();
+            else
+              delete static_cast<Fn*>(from.pointer);
+            break;
           }
-          else *reinterpret_cast<Fn**>(to) = *reinterpret_cast<Fn* const*>(from);
-          break;
-        case op::destroy:
-          if constexpr(fits<Fn>) reinterpret_cast<const Fn*>(from)->~Fn();
-          else                   delete *reinterpret_cast<Fn* const*>(from);
-          break;
-        }
-      };
+        };
+      }
     }
 
     /** Where the target lives is decided by `if constexpr` **in place**, and the manager's branches
@@ -245,22 +319,34 @@ namespace sequoia::object
      */
     template<class Fn>
     constexpr static call_thunk caller_for{
-      [](const std::byte* b, Args&&... args) -> R {
+      [](const storage& s, Args&&... args) -> R {
         const Fn* target{};
-        if constexpr(fits<Fn>) target = reinterpret_cast<const Fn*>(b);
-        else                   target = *reinterpret_cast<const Fn* const*>(b);
+        if consteval
+        {
+          target = static_cast<const Fn*>(s.pointer);
+        }
+        else
+        {
+          if constexpr(fits<Fn>)
+            target = reinterpret_cast<const Fn*>(s.buffer);
+          else
+            target = static_cast<const Fn*>(s.pointer);
+        }
 
         // A void signature discards whatever the target returns, exactly as `std::is_invocable_r_v`
         // - and so the constructor's constraint - already promises it may.
-        if constexpr(std::is_void_v<R>)        (*target)(std::forward<Args>(args)...);
-        else                            return (*target)(std::forward<Args>(args)...);
+        if constexpr(std::is_void_v<R>)
+          (*target)(std::forward<Args>(args)...);
+        else
+          return (*target)(std::forward<Args>(args)...);
       }
     };
 
-    // Both thunks are set by the converting constructor and cleared by a move, always together, so
-    // either serves as the test for whether a target is held; each use below reads whichever one it
-    // is about to need.
-    alignas(std::max_align_t) std::byte m_Buffer[buffer_size]{};
+    /** Both thunks are set by the converting constructor and cleared by a move, always together, so
+        either serves as the test for whether a target is held; each use above reads whichever one it
+        is about to need.
+     */
+    storage      m_Storage{};
     call_thunk   m_Call{};
     manage_thunk m_Manage{};
   };

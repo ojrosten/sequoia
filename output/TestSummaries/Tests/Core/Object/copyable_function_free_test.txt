@@ -1,0 +1,2 @@
+copyable_function_free_test
+Standard Top Level Checks:                99;  Failures:  0  [Deep checks: 99]

@@ -19,13 +19,15 @@ namespace sequoia::testing
     using free_test::free_test;
 
     [[nodiscard]]
-    std::filesystem::path source_file() const;
+    static std::filesystem::path source_file();
 
     void run_tests();
   private:
-    /** The two storage paths are the thing to exercise separately: a target which fits the small
-        buffer is constructed in place, one which does not is held by pointer, and every operation
-        below has a distinct implementation for each. Each is run over both.
+    /** The storage paths are the thing to exercise separately: a target which fits the small
+        buffer is constructed in place, one which does not is held by pointer, and in a constant
+        evaluation every one is held by pointer; each of the type's operations has a distinct
+        implementation for each. The lifetime is run over the first two here, and in
+        `test_constant_evaluation` over the third.
      */
     template<class Fn>
     void test_lifetime(std::string_view description, Fn fn, int expected);
@@ -41,5 +43,7 @@ namespace sequoia::testing
     void test_constraints();
 
     void test_swap();
+
+    void test_constant_evaluation();
   };
 }
