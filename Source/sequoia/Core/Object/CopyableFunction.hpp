@@ -49,16 +49,22 @@
     ## In a constant evaluation
 
     Bytes cannot be reinterpreted there, so every target is held behind a pointer, and its manager
-    is a `consteval` function: reachable only at compile time and therefore never emitted, which
-    keeps the run-time symbol economy above intact. The cast back from `void*` is C++26's (P2738).
-    A `copyable_function` may live within a constant evaluation but not outlive one: a `constexpr`
-    variable of this type is ill-formed, since its target is an allocation.
+    is a function whose address is taken only inside `if consteval`, so that no run-time code
+    refers to it and the symbol economy above is kept. The cast back from `void*` is C++26's
+    (P2738). A `copyable_function` may live within a constant evaluation but not outlive one: a
+    `constexpr` variable of this type is ill-formed, since its target is an allocation.
+
+    An empty `copyable_function` holds thunks which do nothing and which throw, rather than null
+    pointers, so that nothing here tests a pointer for null: gcc with `-fsanitize=undefined` cannot
+    evaluate such a test in a constant expression (GCC bug 71962). Invoking an empty function
+    therefore throws `std::bad_function_call`, as `std::function` does.
  */
 
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 
 #include <cstddef>
 #include <cstring>
+#include <functional>
 #include <new>
 #include <type_traits>
 #include <utility>
@@ -105,8 +111,6 @@ namespace sequoia::object
     constexpr copyable_function(Fn fn)
       : m_Call{&call<Fn>}, m_Manage{manager_for<Fn>()}
     {
-      // The address of a consteval function may be taken only in an immediate function context,
-      // which the block of an `if consteval` is and a mem-initializer is not
       if consteval
       {
         m_Manage = &manage_in_constant_evaluation<Fn>;
@@ -123,16 +127,14 @@ namespace sequoia::object
 
     constexpr copyable_function(const copyable_function& other) : m_Call{other.m_Call}, m_Manage{other.m_Manage}
     {
-      if(m_Manage)
-        m_Manage(op::copy, m_Storage, other.m_Storage);
+      m_Manage(op::copy, m_Storage, other.m_Storage);
     }
 
     constexpr copyable_function(copyable_function&& other) noexcept : m_Call{other.m_Call}, m_Manage{other.m_Manage}
     {
-      if(m_Manage)
-        m_Manage(op::move, m_Storage, other.m_Storage);
-      other.m_Call   = nullptr;
-      other.m_Manage = nullptr;
+      m_Manage(op::move, m_Storage, other.m_Storage);
+      other.m_Call   = &call_empty;
+      other.m_Manage = &manage_nothing;
     }
 
     constexpr copyable_function& operator=(copyable_function other) noexcept
@@ -141,19 +143,16 @@ namespace sequoia::object
       return *this;
     }
 
-    constexpr ~copyable_function()
-    {
-      if(m_Manage)
-        m_Manage(op::destroy, m_Storage, m_Storage);
-    }
+    constexpr ~copyable_function() { m_Manage(op::destroy, m_Storage, m_Storage); }
 
     constexpr R operator()(Args... args) const
     {
       return m_Call(m_Storage, std::forward<Args>(args)...);
     }
 
+    /// Not evaluable in a constant expression by gcc with `-fsanitize=undefined` (GCC bug 71962)
     [[nodiscard]]
-    constexpr explicit operator bool() const noexcept { return m_Call != nullptr; }
+    constexpr explicit operator bool() const noexcept { return m_Manage != &manage_nothing; }
 
     /** `op::move` hands ownership on exactly once, and the thunk pointers - which are what decide
         whether a buffer is ever destroyed - are exchanged last, so each of the three moves below is
@@ -174,14 +173,9 @@ namespace sequoia::object
 
       storage tmp{};
       const auto lm{lhs.m_Manage}, rm{rhs.m_Manage};
-      if(lm)
-        lm(op::move, tmp, lhs.m_Storage);
-
-      if(rm)
-        rm(op::move, lhs.m_Storage, rhs.m_Storage);
-
-      if(lm)
-        lm(op::move, rhs.m_Storage, tmp);
+      lm(op::move, tmp, lhs.m_Storage);
+      rm(op::move, lhs.m_Storage, rhs.m_Storage);
+      lm(op::move, rhs.m_Storage, tmp);
       std::swap(lhs.m_Call,   rhs.m_Call);
       std::swap(lhs.m_Manage, rhs.m_Manage);
     }
@@ -233,6 +227,11 @@ namespace sequoia::object
     using call_thunk    = R    (*)(const storage&, Args&&...);
     using manage_thunk  = void (*)(op, storage&, const storage&);
 
+    /// The thunks of an empty function; one symbol each per signature, like the trivial manager.
+    constexpr static void manage_nothing(op, storage&, const storage&) noexcept {}
+
+    constexpr static R call_empty(const storage&, Args&&...) { throw std::bad_function_call{}; }
+
     /** The manager shared by every trivially-managed target, and so **not** a template: one symbol
         per signature rather than one per erased type.
 
@@ -247,10 +246,12 @@ namespace sequoia::object
     }
 
     /** The manager of every target in a constant evaluation, where the target is behind the
-        pointer; `consteval`, so that no run-time symbol is added for it.
+        pointer. Its address is taken only inside `if consteval`, so no run-time code refers to
+        it; `constexpr` rather than `consteval`, since ubsan's null check on a call through the
+        pointer compares an immediate function's address, which gcc then refuses to evaluate.
      */
     template<class Fn>
-    consteval static void manage_in_constant_evaluation(op o, storage& to, const storage& from)
+    constexpr static void manage_in_constant_evaluation(op o, storage& to, const storage& from)
     {
       switch(o)
       {
@@ -346,12 +347,12 @@ namespace sequoia::object
         return (*target)(std::forward<Args>(args)...);
     }
 
-    /** Both thunks are set by the converting constructor and cleared by a move, always together, so
+    /** Both thunks are set by the converting constructor and reset by a move, always together, so
         either serves as the test for whether a target is held; each use above reads whichever one it
         is about to need.
      */
     storage      m_Storage{};
-    call_thunk   m_Call{};
-    manage_thunk m_Manage{};
+    call_thunk   m_Call{&call_empty};
+    manage_thunk m_Manage{&manage_nothing};
   };
 }

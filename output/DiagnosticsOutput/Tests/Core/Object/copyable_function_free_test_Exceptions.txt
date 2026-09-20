@@ -1,0 +1,80 @@
+Tests/Core/Object/CopyableFunctionFreeTest.cpp, Line 79
+Small target
+Invoking an empty function
+
+Expected Exception Type:
+[std::bad_function_call]
+<the standard library's message>
+
+=======================================
+
+Tests/Core/Object/CopyableFunctionFreeTest.cpp, Line 92
+Small target
+Invoking the source of a move
+
+Expected Exception Type:
+[std::bad_function_call]
+<the standard library's message>
+
+=======================================
+
+Tests/Core/Object/CopyableFunctionFreeTest.cpp, Line 79
+Small target, by reference
+Invoking an empty function
+
+Expected Exception Type:
+[std::bad_function_call]
+<the standard library's message>
+
+=======================================
+
+Tests/Core/Object/CopyableFunctionFreeTest.cpp, Line 92
+Small target, by reference
+Invoking the source of a move
+
+Expected Exception Type:
+[std::bad_function_call]
+<the standard library's message>
+
+=======================================
+
+Tests/Core/Object/CopyableFunctionFreeTest.cpp, Line 79
+Function pointer
+Invoking an empty function
+
+Expected Exception Type:
+[std::bad_function_call]
+<the standard library's message>
+
+=======================================
+
+Tests/Core/Object/CopyableFunctionFreeTest.cpp, Line 92
+Function pointer
+Invoking the source of a move
+
+Expected Exception Type:
+[std::bad_function_call]
+<the standard library's message>
+
+=======================================
+
+Tests/Core/Object/CopyableFunctionFreeTest.cpp, Line 79
+Large target
+Invoking an empty function
+
+Expected Exception Type:
+[std::bad_function_call]
+<the standard library's message>
+
+=======================================
+
+Tests/Core/Object/CopyableFunctionFreeTest.cpp, Line 92
+Large target
+Invoking the source of a move
+
+Expected Exception Type:
+[std::bad_function_call]
+<the standard library's message>
+
+=======================================
+

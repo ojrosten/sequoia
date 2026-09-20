@@ -72,7 +72,11 @@ namespace sequoia::testing
   {
     using function_t = copyable_function<int() const>;
 
+    // The message of a bad_function_call is the standard library's own, and the three spell it differently
+    const auto libraryMessage{[](const project_paths&, std::string) -> std::string { return "<the standard library's message>"; }};
+
     check(append_lines(description, "A default-constructed function holds nothing"), !static_cast<bool>(function_t{}));
+    check_exception_thrown<std::bad_function_call>(append_lines(description, "Invoking an empty function"), []() { return function_t{}(); }, libraryMessage);
 
     const function_t f{fn};
     check(append_lines(description, "A function holding a target is engaged"), static_cast<bool>(f));
@@ -85,6 +89,7 @@ namespace sequoia::testing
 
     function_t moved{std::move(copy)};
     check(append_lines(description, "The source of a move is disengaged"), !static_cast<bool>(copy));
+    check_exception_thrown<std::bad_function_call>(append_lines(description, "Invoking the source of a move"), [&copy]() { return copy(); }, libraryMessage);
     check(equality, append_lines(description, "The target of a move invokes"), moved(), expected);
 
     function_t assigned{};
@@ -283,7 +288,9 @@ namespace sequoia::testing
     // managed at run time, since in a constant evaluation both are held behind the pointer. A
     // copy which shared its target rather than cloning it would delete the target twice, and a
     // leaked target would outlive the evaluation; the evaluator refuses both, so it is the
-    // instrument for the lifetime, and the results pin invocation, swap and disengagement.
+    // instrument for the lifetime, and the results pin invocation and swap. Whether the source
+    // of a move is disengaged is asked at run time only, since operator bool is a pointer test
+    // (GCC bug 71962).
     constexpr auto lifetime{
       []() {
         using function_t = copyable_function<int(int) const>;
@@ -308,18 +315,19 @@ namespace sequoia::testing
         // thunk is a lambda called through a function pointer (GCC bug 125000)
         const copyable_function<std::string() const> generating{[captured]() { return captured; }};
 
-        return std::array{assigned(1), copy(1), negating(1), moved(1), f ? 1 : 0, sideEffect, static_cast<int>(generating().size())};
+        return std::array{assigned(1), copy(1), negating(1), moved(1), sideEffect, static_cast<int>(generating().size())};
       }
     };
 
-    constexpr std::array expected{13, -1, 13, 13, 0, 3, 12};
+    constexpr std::array expected{13, -1, 13, 13, 3, 12};
 
     // The cast back from void* in a constant evaluation is C++26's (P2738); a build without it
-    // runs the same lifetime at run time, so that the check count does not depend on the build
+    // runs the same lifetime at run time, as one check either way, so that neither count in the
+    // versioned summary depends on the build
 #if __cpp_constexpr >= 202306L
     STATIC_CHECK(lifetime() == expected);
 #else
-    check(equality, "The lifetime at run time; the constant evaluation is untried below C++26", lifetime(), expected);
+    check("The lifetime at run time; the constant evaluation is untried below C++26", lifetime() == expected);
 #endif
   }
 }
