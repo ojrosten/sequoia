@@ -103,7 +103,7 @@ namespace sequoia::object
     template<class Fn>
       requires (!resolve_to_copy_v<copyable_function, Fn>) && std::is_invocable_r_v<R, const Fn&, Args...>
     constexpr copyable_function(Fn fn)
-      : m_Call{caller_for<Fn>}, m_Manage{manager_for<Fn>()}
+      : m_Call{&call<Fn>}, m_Manage{manager_for<Fn>()}
     {
       // The address of a consteval function may be taken only in an immediate function context,
       // which the block of an `if consteval` is and a mem-initializer is not
@@ -266,6 +266,37 @@ namespace sequoia::object
       }
     }
 
+    /** The manager of a target which is not trivially managed. */
+    template<class Fn>
+    static void manage(op o, storage& to, const storage& from)
+    {
+      switch(o)
+      {
+      case op::copy:
+        if constexpr(fits<Fn>)
+          ::new (static_cast<void*>(to.buffer)) Fn{*reinterpret_cast<const Fn*>(from.buffer)};
+        else
+          to.pointer = new Fn{*static_cast<const Fn*>(from.pointer)};
+        break;
+      case op::move:
+        if constexpr(fits<Fn>)
+        {
+          auto* const f{const_cast<Fn*>(reinterpret_cast<const Fn*>(from.buffer))};
+          ::new (static_cast<void*>(to.buffer)) Fn{std::move(*f)};
+          f->~Fn();
+        }
+        else
+          to.pointer = from.pointer;
+        break;
+      case op::destroy:
+        if constexpr(fits<Fn>)
+          reinterpret_cast<const Fn*>(from.buffer)->~Fn();
+        else
+          delete static_cast<Fn*>(from.pointer);
+        break;
+      }
+    }
+
     /** Chosen with `if constexpr` rather than a ternary, so that the general manager is instantiated
         only for the targets which actually need it - a ternary would odr-use both operands and
         defeat the sharing entirely. `consteval` guarantees this function is itself never emitted.
@@ -274,39 +305,9 @@ namespace sequoia::object
     consteval static manage_thunk manager_for()
     {
       if constexpr(trivially_managed<Fn>)
-      {
         return &manage_trivially;
-      }
       else
-      {
-        return [](op o, storage& to, const storage& from) {
-          switch(o)
-          {
-          case op::copy:
-            if constexpr(fits<Fn>)
-              ::new (static_cast<void*>(to.buffer)) Fn{*reinterpret_cast<const Fn*>(from.buffer)};
-            else
-              to.pointer = new Fn{*static_cast<const Fn*>(from.pointer)};
-            break;
-          case op::move:
-            if constexpr(fits<Fn>)
-            {
-              auto* const f{const_cast<Fn*>(reinterpret_cast<const Fn*>(from.buffer))};
-              ::new (static_cast<void*>(to.buffer)) Fn{std::move(*f)};
-              f->~Fn();
-            }
-            else
-              to.pointer = from.pointer;
-            break;
-          case op::destroy:
-            if constexpr(fits<Fn>)
-              reinterpret_cast<const Fn*>(from.buffer)->~Fn();
-            else
-              delete static_cast<Fn*>(from.pointer);
-            break;
-          }
-        };
-      }
+        return &manage<Fn>;
     }
 
     /** Where the target lives is decided by `if constexpr` **in place**, and the manager's branches
@@ -314,33 +315,36 @@ namespace sequoia::object
         entity carrying `Fn` in its name - a member function template obviously so, but at `-O0` a
         lambda too, which nothing inlines away. Measured on `TestAll` under asan: writing the casts
         through lambdas instead cost **61,281 symbols and 20.5 MB**, 613.1 against 592.6. The
-        duplication below is much the cheaper of the two; a local variable, which carries no name
-        into the symbol table, is cheaper still where one will serve.
+        duplication is much the cheaper of the two; a local variable, which carries no name into
+        the symbol table, is cheaper still where one will serve.
+
+        The two thunks are named functions rather than lambdas: gcc cannot call a lambda through a
+        function pointer in a constant evaluation when the result is a class type with a
+        non-trivial destructor (GCC bug 125000, a regression since 14).
      */
     template<class Fn>
-    constexpr static call_thunk caller_for{
-      [](const storage& s, Args&&... args) -> R {
-        const Fn* target{};
-        if consteval
-        {
-          target = static_cast<const Fn*>(s.pointer);
-        }
-        else
-        {
-          if constexpr(fits<Fn>)
-            target = reinterpret_cast<const Fn*>(s.buffer);
-          else
-            target = static_cast<const Fn*>(s.pointer);
-        }
-
-        // A void signature discards whatever the target returns, exactly as `std::is_invocable_r_v`
-        // - and so the constructor's constraint - already promises it may.
-        if constexpr(std::is_void_v<R>)
-          (*target)(std::forward<Args>(args)...);
-        else
-          return (*target)(std::forward<Args>(args)...);
+    constexpr static R call(const storage& s, Args&&... args)
+    {
+      const Fn* target{};
+      if consteval
+      {
+        target = static_cast<const Fn*>(s.pointer);
       }
-    };
+      else
+      {
+        if constexpr(fits<Fn>)
+          target = reinterpret_cast<const Fn*>(s.buffer);
+        else
+          target = static_cast<const Fn*>(s.pointer);
+      }
+
+      // A void signature discards whatever the target returns, exactly as `std::is_invocable_r_v`
+      // - and so the constructor's constraint - already promises it may.
+      if constexpr(std::is_void_v<R>)
+        (*target)(std::forward<Args>(args)...);
+      else
+        return (*target)(std::forward<Args>(args)...);
+    }
 
     /** Both thunks are set by the converting constructor and cleared by a move, always together, so
         either serves as the test for whether a target is held; each use above reads whichever one it

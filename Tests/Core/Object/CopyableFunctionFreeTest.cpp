@@ -304,11 +304,15 @@ namespace sequoia::testing
         const copyable_function<void(int) const> discarding{[&sideEffect](int x) { sideEffect = x; }};
         discarding(3);
 
-        return std::array{assigned(1), copy(1), negating(1), moved(1), f ? 1 : 0, sideEffect};
+        // A result which is a class type with a non-trivial destructor: the shape gcc rejects when the
+        // thunk is a lambda called through a function pointer (GCC bug 125000)
+        const copyable_function<std::string() const> generating{[captured]() { return captured; }};
+
+        return std::array{assigned(1), copy(1), negating(1), moved(1), f ? 1 : 0, sideEffect, static_cast<int>(generating().size())};
       }
     };
 
-    constexpr std::array expected{13, -1, 13, 13, 0, 3};
+    constexpr std::array expected{13, -1, 13, 13, 0, 3, 12};
 
     // The cast back from void* in a constant evaluation is C++26's (P2738); a build without it
     // runs the same lifetime at run time, so that the check count does not depend on the build
