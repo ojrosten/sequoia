@@ -145,9 +145,9 @@ namespace sequoia::testing
     if(firstKept == trimmedPath.end())
       throw std::runtime_error{"Path comprises nothing but ../"};
 
-    // Each suffix of the directory is tried as a prefix of the path, longest suffix first, so
-    // the first match is the longest. A match which consumes the whole path is declined, as
-    // the contract requires: the path would then name the directory itself.
+    // Each suffix of the directory is tried as a prefix of the path, longest suffix first.
+    // A match which consumes the whole path is declined: otherwise the rebased path would
+    // name the directory itself, which the contract excludes.
     const auto join{[](fs::path lhs, const fs::path& rhs){ return lhs /= rhs; }};
     for(auto suffixBegin{trimmedDir.begin()}; suffixBegin != trimmedDir.end(); ++suffixBegin)
     {
