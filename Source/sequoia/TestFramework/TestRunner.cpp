@@ -783,43 +783,35 @@ namespace sequoia::testing
     if(m_PruneMode == prune_mode::active) return;
 
     auto check{
-      [this](auto&& r, std::string_view type, auto fn) {
-        if(!r) return;
-
-        for(const auto& [id, found] : *r)
+      [this](const auto& listed, std::string_view kind, auto hint) {
+        for(const auto& [id, found] : listed)
         {
           if(!found)
           {
             using namespace parsing::commandline;
-            stream() << warning(std::string{"Test "}.append(type)
-                                                    .append(" '")
-                                                    .append(convert(id))
-                                                    .append("' not found\n")
-                                                    .append(fn(id)));
+            stream() << warning(std::format("{} '{}' not found\n{}", kind, convert(id), hint(id)));
           }
         }
       }
     };
 
-    check(m_Filter.selected_suites(), "Suite", [](const std::string& name) -> std::string {
-      if(auto pos{name.rfind('.')}; pos < std::string::npos)
-      {
-        return "    If trying to select a source file use 'select' rather than 'test'\n";
-      }
+    if(const auto suites{m_Filter.selected_suites()})
+    {
+      check(*suites, "Test Suite", [](const std::string& name) -> std::string {
+        return (name.rfind('.') < std::string::npos) ? "    If trying to select a source file use 'select' rather than 'test'\n" : "";
+      });
+    }
 
-      return "";
-      }
-    );
+    if(const auto items{m_Filter.selected_items()})
+    {
+      check(*items, "Test File", [](const std::filesystem::path& p) -> std::string {
+        return p.has_extension() ? "" : "    If trying to test a suite use 'test' rather than 'select'\n";
+      });
+    }
 
-    check(m_Filter.selected_items(), "File", [](const std::filesystem::path& p) -> std::string {
-      if(!p.has_extension())
-      {
-        return "    If trying to test a suite use 'test' rather than 'select'\n";
-      }
-
-      return "";
-      }
-    );
+    check(m_Filter.excluded_items(), "Excluded Test File", [](const std::filesystem::path& p) -> std::string {
+      return p.has_extension() ? "" : "    '--exclude' takes the source file of a test\n";
+    });
   }
 
   return_code test_runner::execute([[maybe_unused]] timer_resolution r)

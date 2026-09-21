@@ -55,6 +55,8 @@ namespace sequoia::testing
 
     void test_excluded_performance_tests();
 
+    void test_excluded_tests();
+
     void test_instability_analysis();
 
     template<std::invocable<test_runner&> Manipulator, concrete_test... Ts>

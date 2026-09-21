@@ -389,6 +389,7 @@ namespace sequoia::testing
     test_nested_suite();
     test_nested_suite_verbose();
     test_excluded_performance_tests();
+    test_excluded_tests();
     test_instability_analysis();
   }
 
@@ -841,6 +842,44 @@ namespace sequoia::testing
     // The same registrations both ways, so the option is the only thing which differs.
     run("Performance tests included", "IncludedPerformanceOutput", {});
     run("Performance tests excluded", "ExcludedPerformanceOutput", {"--exclude-performance"});
+  }
+
+  void test_runner_test::test_excluded_tests()
+  {
+    auto run{
+      [this](std::string_view description, std::string_view outputDirName, std::initializer_list<std::string> extraArgs, return_code expected){
+        std::stringstream outputStream{};
+
+        std::vector<std::string> argList{(minimal_fake_path()).generic_string()};
+        argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
+        commandline_arguments args{argList};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<passing_test>();
+        runner.register_test<failing_test>();
+        runner.register_test<fake_performance_test>();
+
+        check(equality, append_lines(description, "Return code"), runner.execute(), expected);
+        check_output(description, outputDirName, outputStream);
+      }
+    };
+
+    // The same registrations each way, so the arguments are the only thing which differs; the
+    // failing test's return code says whether it ran
+    const auto failing{failing_test::source_file().generic_string()};
+    const auto performance{fake_performance_test::source_file().generic_string()};
+
+    run("Failing test excluded",                           "ExcludedTestOutput",              {"--exclude", failing},                                 return_code::success);
+    run("Exclusion matching no test",                      "ExclusionNotFoundOutput",         {"--exclude", "Failing/absent_test.cpp"},               return_code::soft_failures);
+    run("Exclusion naming a suite",                        "ExclusionOfSuiteOutput",          {"--exclude", "Failing"},                               return_code::soft_failures);
+    run("Selected test excluded, and so found both ways",  "SelectedTestExcludedOutput",      {"select", failing, "--exclude", failing},              return_code::success);
+    run("Performance test excluded both ways, and found", "PerformanceTestExcludedOutput",   {"--exclude-performance", "--exclude", performance},    return_code::soft_failures);
   }
 
   void test_runner_test::test_instability_analysis()

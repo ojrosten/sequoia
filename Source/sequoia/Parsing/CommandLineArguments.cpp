@@ -6,7 +6,6 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"
-#include "sequoia/TextProcessing/Indent.hpp"
 
 #include <algorithm>
 #include <format>
@@ -20,30 +19,26 @@ namespace sequoia::parsing::commandline
     constexpr std::string_view help_request{"--help"};
 
     [[nodiscard]]
-    std::string make(std::string_view type, std::string_view message, std::string_view indent)
+    std::string make(std::string_view type, std::string_view message, const indentation& indent)
     {
-      return std::string{indent}.append(type).append(": ").append(message);
+      return std::format("{}{}: {}", std::string_view{indent}, type, message);
     }
 
     [[nodiscard]]
-    std::string make(std::string_view type, std::initializer_list<std::string_view> messages, std::string_view indent)
+    std::string make(std::string_view type, std::initializer_list<std::string_view> messages, const indentation& indent)
     {
-      std::string mess{};
+      if(std::ranges::empty(messages)) return {};
 
-      if(messages.size())
+      // Continuation lines start beneath the first message, past "<type>: "
+      const auto continuationIndent{indent + indentation{std::string(type.size() + 2, ' ')}};
+
+      std::string mess{make(type, *messages.begin(), indent)};
+      for(const auto message : messages | std::views::drop(1))
       {
-        auto first{messages.begin()};
-        mess = make(type, *(first++), indent);
-
-        while(first != messages.end())
-        {
-          append_indented(mess, *(first++), indentation{std::string{indent}}.append(std::string(type.size() + 2, ' ')));
-        }
-
-        mess.append(2, '\n');
+        append_indented(mess, message, continuationIndent);
       }
 
-      return mess;
+      return mess.append(2, '\n');
     }
 
     [[nodiscard]]
@@ -54,37 +49,73 @@ namespace sequoia::parsing::commandline
              | std::views::join_with(separator)
              | std::ranges::to<std::string>();
     }
+
+    [[nodiscard]]
+    std::string with_count(std::string_view noun, std::size_t count)
+    {
+      return std::format("{} {}{}", count, noun, (count == 1) ? "" : "s");
+    }
+
+    [[nodiscard]]
+    bool has_function_object(const option& opt) noexcept
+    {
+      return opt.early || opt.late;
+    }
+
+    [[nodiscard]]
+    bool has_parameters(const option_tree& opt)
+    {
+      return !root_weight(opt).parameters.empty();
+    }
+
+    [[nodiscard]]
+    auto nested_options(const option_tree& opt)
+    {
+      using iter_t      = decltype(opt.tree().cbegin_edges(opt.node()));
+      using forest_iter = maths::forest_from_tree_iterator<iter_t, maths::const_tree_adaptor<options_tree>>;
+
+      return std::ranges::subrange{forest_iter{opt.tree().cbegin_edges(opt.node()), opt.tree()},
+                                   forest_iter{opt.tree().cend_edges(opt.node()), opt.tree()}};
+    }
+
+    [[nodiscard]]
+    bool has_nested_options(const option_tree& opt)
+    {
+      return !std::ranges::empty(nested_options(opt));
+    }
+
+    [[nodiscard]]
+    auto top_level_options(const options_forest& options)
+    {
+      using iter_t      = decltype(options.begin());
+      using forest_iter = maths::forest_iterator<iter_t, maths::const_tree_adaptor<options_tree>>;
+
+      return std::ranges::subrange{forest_iter{options.begin()}, forest_iter{options.end()}};
+    }
   }
 
   [[nodiscard]]
-  std::string error(std::string_view message, std::string_view indent)
+  std::string error(std::string_view message, indentation indent)
   {
     return make("Error", message, indent);
   }
 
   [[nodiscard]]
-  std::string error(std::initializer_list<std::string_view> messages, std::string_view indent)
+  std::string error(std::initializer_list<std::string_view> messages, indentation indent)
   {
     return make("Error", messages, indent);
   }
 
   [[nodiscard]]
-  std::string warning(std::string_view message, std::string_view indent)
+  std::string warning(std::string_view message, indentation indent)
   {
     return make("Warning", message, indent);
   }
 
   [[nodiscard]]
-  std::string warning(std::initializer_list<std::string_view> messages, std::string_view indent)
+  std::string warning(std::initializer_list<std::string_view> messages, indentation indent)
   {
     return make("Warning", messages, indent);
-  }
-
-  [[nodiscard]]
-  std::string pluralize(const std::size_t n, std::string_view noun, std::string_view prefix)
-  {
-    auto s{std::string{prefix}.append(noun)};
-    return (n==1) ? s : s.append("s");
   }
 
   argument_parser::argument_parser(int argc, char** argv, const options_forest& options)
@@ -92,10 +123,7 @@ namespace sequoia::parsing::commandline
     , m_Argv{argv}
     , m_ZerothArg{m_ArgCount ? m_Argv[0] : ""}
   {
-    using iter_t = decltype(options.begin());
-    using forest_iter = maths::forest_iterator<iter_t, maths::const_tree_adaptor<options_tree>>;
-
-    parse(std::ranges::subrange{forest_iter{options.begin()}, forest_iter{options.end()}}, {}, top_level::yes);
+    parse(top_level_options(options), {}, top_level::yes);
   }
 
   template<std::ranges::input_range Options>
@@ -134,7 +162,7 @@ namespace sequoia::parsing::commandline
             continue;
 
           if(topLevel == top_level::yes)
-            throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
+            throw std::runtime_error{error(std::format("unrecognized option '{}'", arg))};
 
           // Roll back and see if the current argument makes sense at the previous level
           --m_Index;
@@ -156,15 +184,7 @@ namespace sequoia::parsing::commandline
       if(   root_weight(currentOperationData.oper_tree).arguments.size()
          == root_weight(currentOptionTree).parameters.size() + currentOperationData.enclosing_args_supplied)
       {
-        const auto node{currentOptionTree.node()};
-
-        using iter_t = decltype(currentOptionTree.tree().cbegin_edges(node));
-        using forest_iter = maths::forest_from_tree_iterator<iter_t, maths::const_tree_adaptor<options_tree>>;
-
-        parse(std::ranges::subrange{forest_iter{currentOptionTree.tree().cbegin_edges(node), currentOptionTree.tree()},
-                                    forest_iter{currentOptionTree.tree().cend_edges(node), currentOptionTree.tree()}},
-              currentOperationData,
-              top_level::no);
+        parse(nested_options(currentOptionTree), currentOperationData, top_level::no);
 
         currentOptionTree = {};
         currentOperationData = previousOperationData;
@@ -180,13 +200,11 @@ namespace sequoia::parsing::commandline
       if(actual != expected)
       {
         throw std::runtime_error{
-          error(std::format("while parsing option \"{}\": expected {}{}, [{}], but found {}{}",
+          error(std::format("while parsing option \"{}\": expected {}, [{}], but found {}",
                             std::string_view{root_weight(currentOptionTree).name},
-                            expected,
-                            pluralize(expected, "argument"),
+                            with_count("argument", expected),
                             join(params, ", "),
-                            actual,
-                            pluralize(actual, "argument")))
+                            with_count("argument", actual)))
         };
       }
     }
@@ -196,32 +214,24 @@ namespace sequoia::parsing::commandline
   {
     m_MostRecentlyEncounteredOption = currentOptionTree;
 
+    const option& opt{root_weight(currentOptionTree)};
+
     if(topLevel == top_level::yes)
     {
-      if(!root_weight(currentOptionTree).early && !root_weight(currentOptionTree).late)
+      if(!has_function_object(opt))
         throw std::logic_error{error("Commandline option not bound to a function object")};
 
-      m_Operations.push_back({{{root_weight(currentOptionTree).early, root_weight(currentOptionTree).late, {}}}});
-      currentOperationData = {{m_Operations.back(), 0}};
+      m_Operations.push_back({{{opt.early, opt.late, {}}}});
+      return {{m_Operations.back(), 0}};
     }
-    else
+
+    if(has_function_object(opt))
     {
-      if(m_Operations.empty() || !currentOperationData.oper_tree)
-        throw std::logic_error{"Unable to find commandline operation"};
-
-      if(root_weight(currentOptionTree).early || root_weight(currentOptionTree).late)
-      {
-        auto& operationTree{m_Operations.back()};
-        const auto node{operationTree.add_node(currentOperationData.oper_tree.node(), root_weight(currentOptionTree).early, root_weight(currentOptionTree).late)};
-        currentOperationData = {{m_Operations.back(), node}};
-      }
-      else
-      {
-        currentOperationData = {currentOperationData.oper_tree, maths::root_weight(currentOperationData.oper_tree).arguments.size()};
-      }
+      const auto node{m_Operations.back().add_node(currentOperationData.oper_tree.node(), opt.early, opt.late)};
+      return {{m_Operations.back(), node}};
     }
 
-    return currentOperationData;
+    return {currentOperationData.oper_tree, root_weight(currentOperationData.oper_tree).arguments.size()};
   }
 
   template<std::ranges::input_range Options>
@@ -250,15 +260,23 @@ namespace sequoia::parsing::commandline
     if(std::ranges::contains(groupOptions, option_tree{}))
       return false;
 
-    auto hasParameters{[](const option_tree& option) { return !root_weight(option).parameters.empty(); }};
-    if(const auto refused{std::ranges::find_if(groupOptions, hasParameters)}; refused != groupOptions.end())
+    if(const auto refused{std::ranges::find_if(groupOptions, [](const option_tree& o){ return has_parameters(o); })};
+       refused != groupOptions.end())
     {
-      const auto numParams{root_weight(*refused).parameters.size()};
       throw std::runtime_error{
-        error(std::format("option \"{}\" expects {}{}, so its alias cannot be concatenated with others, as in '{}'",
+        error(std::format("option \"{}\" expects {}, so its alias cannot be concatenated with others, as in '{}'",
                           std::string_view{root_weight(*refused).name},
-                          numParams,
-                          pluralize(numParams, "argument"),
+                          with_count("argument", root_weight(*refused).parameters.size()),
+                          arg))
+      };
+    }
+
+    if(const auto refused{std::ranges::find_if(groupOptions, [](const option_tree& o){ return has_nested_options(o); })};
+       refused != groupOptions.end())
+    {
+      throw std::runtime_error{
+        error(std::format("option \"{}\" has nested options, so its alias cannot be concatenated with others, as in '{}'",
+                          std::string_view{root_weight(*refused).name},
                           arg))
       };
     }
@@ -271,55 +289,40 @@ namespace sequoia::parsing::commandline
     return true;
   }
 
-
   [[nodiscard]]
-  bool argument_parser::is_alias(const option& opt, std::string_view s)
+  bool argument_parser::is_alias(const option& opt, std::string_view s) noexcept
   {
-    return std::ranges::find(opt.aliases, s) != opt.aliases.end();
+    return std::ranges::contains(opt.aliases, s);
   }
 
   template<std::ranges::input_range Options>
   [[nodiscard]]
   std::string argument_parser::generate_help(const Options& options)
   {
+    constexpr std::size_t nestingWidth{2};
+
     indentation ind{};
-    std::string help;
+    std::string help{};
 
     for(const auto& opt : options)
     {
       const auto& optTree{opt.tree()};
-      const auto subTreeRootNode{opt.node()};
 
       auto nodeEarly{
         [&](const auto n) {
-          const auto& wt{optTree.cbegin_node_weights()[n]};
+          const option& wt{optTree.cbegin_node_weights()[n]};
           help += indent(std::string{wt.name}, ind);
-          if(!wt.aliases.empty())
-          {
-            help += " | ";
-            for(const auto& a : wt.aliases)
-            {
-              help.append(a).append(" ");
-            }
-            help += "|";
-          }
+          if(!wt.aliases.empty())    help += std::format(" | {} |", join(wt.aliases, " "));
+          if(!wt.parameters.empty()) help += std::format(" {}", join(wt.parameters, ", "));
+          help += '\n';
 
-          for(const auto& p : wt.parameters)
-          {
-            help.append(" ").append(p).append(",");
-          }
-
-          if(!help.empty() && (help.back() == ','))
-            help.pop_back();
-
-          help += "\n";
-          ind.append(2, ' ');
+          ind.append(nestingWidth, ' ');
         }
       };
 
-      auto nodeLate{ [&ind](auto) { ind.trim(2); } };
+      auto nodeLate{[&ind](auto) { ind.trim(nestingWidth); }};
 
-      traverse(maths::depth_first, optTree, maths::ignore_disconnected_t{subTreeRootNode}, nodeEarly, nodeLate);
+      traverse(maths::depth_first, optTree, maths::ignore_disconnected_t{opt.node()}, nodeEarly, nodeLate);
     }
 
     return help;
