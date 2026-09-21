@@ -598,20 +598,25 @@ namespace sequoia::testing
 
   void test_runner_test::test_help_output()
   {
-    constexpr std::array<std::pair<const char*, std::string_view>, 3> requests{{
-      {"init",   "InitHelpOutput"  },
-      {"create", "CreateHelpOutput"},
-      {"test",   "TestHelpOutput"  }
+    const std::array<std::pair<std::vector<std::string>, std::string_view>, 4> requests{{
+      {{"init"},                   "InitHelpOutput"         },
+      {{"create"},                 "CreateHelpOutput"       },
+      {{"create", "regular_test"}, "CreateRegularHelpOutput"},
+      {{"test"},                   "TestHelpOutput"         }
     }};
 
     // Failing tests are registered so that a run which went ahead would show in the return code
-    for(const auto& [option, dirName] : requests)
+    for(const auto& [commands, dirName] : requests)
     {
-      std::stringstream outputStream{};
-      auto runner{make_failing_suite({{zeroth_arg(), option, "--help"}}, outputStream)};
+      std::vector<std::string> argList{zeroth_arg()};
+      argList.append_range(commands);
+      argList.push_back("--help");
 
-      check(equality, std::format("{} --help return code", option), runner.execute(), return_code::success);
-      check_output(std::format("{} --help output", option), dirName, outputStream);
+      std::stringstream outputStream{};
+      auto runner{make_failing_suite(argList, outputStream)};
+
+      check(equality, std::format("{} return code", dirName), runner.execute(), return_code::success);
+      check_output(std::format("{} output", dirName), dirName, outputStream);
     }
   }
 

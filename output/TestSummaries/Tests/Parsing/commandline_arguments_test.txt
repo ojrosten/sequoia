@@ -1,2 +1,2 @@
 commandline_arguments_test
-Standard Top Level Checks:                71;  Failures:  0  [Deep checks: 944]
+Standard Top Level Checks:                82;  Failures:  0  [Deep checks: 1032]

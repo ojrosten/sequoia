@@ -66,7 +66,7 @@ int main(int argc, char** argv)
   }
   catch(const std::exception& e)
   {
-    std::cout << e.what();
+    std::cout << e.what() << '\n';
   }
   catch(...)
   {

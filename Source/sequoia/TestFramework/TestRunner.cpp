@@ -483,28 +483,34 @@ namespace sequoia::testing
           throw std::logic_error{"Unable to find nascent test"};
 
         std::visit(overloaded{[](auto& nascent) { nascent.flavour(nascent_test_flavour::framework_diagnostics); }}, nascentTests.back());
-      }
+      },
+      {},
+      "Make the test one of the framework's own diagnostics"
     };
 
-    const option headerOption{"--header", {"-h"}, {"header of class to test"},
+    const option headerOption{"--header", {}, {"header"},
       [&nascentTests](const arg_list& args){
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
         std::visit(overloaded{[&args](auto& nascent){ nascent.header(args[0]); }}, nascentTests.back());
-      }
+      },
+      {},
+      "Name the header declaring the class under test"
     };
 
-    const option forenameOption{"--test-class-forename", {"--forename"}, {"test class is named <forename>_..."},
+    const option forenameOption{"--test-class-forename", {"--forename"}, {"forename"},
       [&nascentTests](const arg_list& args){
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
         std::visit(overloaded{[&args](auto& nascent){ nascent.forename(args[0]); }}, nascentTests.back());
-      }
+      },
+      {},
+      "Name the test class <forename>_test rather than after the header"
     };
 
-    const option genFreeSourceOption{"gen-source", {"g"}, {"namespace"},
+    const option genFreeSourceOption{"--gen-source", {"-g"}, {"namespace"},
       [&nascentTests](const arg_list& args) {
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
@@ -522,10 +528,12 @@ namespace sequoia::testing
         };
 
         std::visit(visitor, nascentTests.back());
-      }
+      },
+      {},
+      "Generate a source file too, in <namespace> (:: for the global one)"
     };
 
-    const option genSemanticsSourceOption{"gen-source", {"g"}, {"source dir"},
+    const option genSemanticsSourceOption{"--gen-source", {"-g"}, {"dir"},
       [&nascentTests](const arg_list& args) {
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
@@ -543,7 +551,9 @@ namespace sequoia::testing
         };
 
         std::visit(visitor, nascentTests.back());
-      }
+      },
+      {},
+      "Generate the class's header and source too, under Source/<dir>"
     };
 
     const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{headerOption}, {genSemanticsSourceOption}};
@@ -553,25 +563,31 @@ namespace sequoia::testing
 
     const auto help{
       parse_invoke_depth_first(argc, argv,
-                { {{{"test", {"t"}, {"test suite name"},
+                { {{{"test", {"t"}, {"suite"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
 
                       m_Filter.add_selected_suite(args.front());
-                    }}
+                    },
+                    {},
+                    "Run the tests of a suite: a directory beneath Tests"}
                   }},
-                  {{{"select", {"s"}, {"source file name"},
+                  {{{"select", {"s"}, {"source"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
 
                       m_Filter.add_selected_item(fs::path{args.front()});
-                    }}
+                    },
+                    {},
+                    "Run the test defined in a source file"}
                   }},
                   {{{"prune", {"p"}, {},
                     [this](const arg_list&) {
                       m_RunnerMode |= runner_mode::test;
                       m_PruneMode = prune_mode::active;
-                    }}
+                    },
+                    {},
+                    "Run the tests affected by changes since the previous run"}
                   }},
                   {{{"create", {"c"}, {},
                         [](const arg_list&) {},
@@ -582,28 +598,37 @@ namespace sequoia::testing
                             overloaded visitor{ [](auto& nascent) { nascent.finalize(); } };
                             std::visit(visitor, nascentTests.back());
                           }
-                        }},
-                    { {{"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent type"},
-                        nascent_test_data{"semantic", "regular", *this, nascentTests}, {}}, semanticsOptions
+                        },
+                        "Create a test; the command names its kind\n"
+                        "A class is spelt with its namespace and template parameters, as in foo::bar<class T>; "
+                        "an allocation test takes its bare name"},
+                    { {{"regular_test", {"regular"}, {"class", "equivalent_type"},
+                        nascent_test_data{"semantic", "regular", *this, nascentTests}, {},
+                        "A regular test of the class against an equivalent type"}, semanticsOptions
                       },
-                      {{"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent type"},
-                        nascent_test_data{"semantic", "move_only", *this, nascentTests}, {}}, semanticsOptions
+                      {{"move_only_test", {"move_only"}, {"class", "equivalent_type"},
+                        nascent_test_data{"semantic", "move_only", *this, nascentTests}, {},
+                        "A move-only test of the class against an equivalent type"}, semanticsOptions
                       },
-                      {{"regular_allocation_test", {"regular_allocation", "allocation_test"}, {"raw class name"},
-                        nascent_test_data{"allocation", "regular_allocation", *this, nascentTests}, {}}, allocationOptions
+                      {{"regular_allocation_test", {"regular_allocation", "allocation_test"}, {"class"},
+                        nascent_test_data{"allocation", "regular_allocation", *this, nascentTests}, {},
+                        "An allocation test of the regular class"}, allocationOptions
                       },
-                      {{"move_only_allocation_test", {"move_only_allocation"}, {"raw class name"},
-                        nascent_test_data{"allocation", "move_only_allocation", *this, nascentTests}, {}}, allocationOptions
+                      {{"move_only_allocation_test", {"move_only_allocation"}, {"class"},
+                        nascent_test_data{"allocation", "move_only_allocation", *this, nascentTests}, {},
+                        "An allocation test of the move-only class"}, allocationOptions
                       },
                       {{"free_test", {"free"}, {"header"},
-                        nascent_test_data{"behavioural", "free", *this, nascentTests}, {}}, freeOptions
+                        nascent_test_data{"behavioural", "free", *this, nascentTests}, {},
+                        "A test of the free functions the header declares"}, freeOptions
                       },
                       {{"performance_test", {"performance"}, {"header"},
-                         nascent_test_data{"behavioural", "performance", *this, nascentTests}, {}}, performanceOptions
+                         nascent_test_data{"behavioural", "performance", *this, nascentTests}, {},
+                         "A performance test of what the header declares"}, performanceOptions
                       }
                     }
                   }},
-                  {{{"init", {"i"}, {"copyright owner", "path ending with project name", "code indent"},
+                  {{{"init", {"i"}, {"owner", "path", "indent"},
                     [this,&nascentProjects](const arg_list& args) {
                       m_RunnerMode |= runner_mode::init;
 
@@ -617,28 +642,38 @@ namespace sequoia::testing
 
                       nascentProjects.push_back(project_data{args[0], args[1], ind(args[2])});
                     },
-                    {}},
+                    {},
+                    "Create a project at the path, named after its last directory"},
                     { {{"--no-build", {}, {},
-                        [&nascentProjects](const arg_list&) { nascentProjects.back().do_build = build_invocation::no; }}},
+                        [&nascentProjects](const arg_list&) { nascentProjects.back().do_build = build_invocation::no; },
+                        {},
+                        "Do not build the new project"}},
                       {{"--no-git", {}, {},
-                        [&nascentProjects](const arg_list&) { nascentProjects.back().use_git = git_invocation::no; }}},
-                      {{"--to-files",  {}, {"output filename"},
-                        [&nascentProjects](const arg_list& args) { nascentProjects.back().output = args[0]; }}},
+                        [&nascentProjects](const arg_list&) { nascentProjects.back().use_git = git_invocation::no; },
+                        {},
+                        "Do not put the new project under git"}},
+                      {{"--to-files",  {}, {"path"},
+                        [&nascentProjects](const arg_list& args) { nascentProjects.back().output = args[0]; },
+                        {},
+                        "Send the output of git and the build to the file at the path"}},
                       {{"--no-ide", {}, {},
                         [&nascentProjects](const arg_list&) {
                           auto& build{nascentProjects.back().do_build};
                           if(build == build_invocation::launch_ide) build = build_invocation::yes;
-                        }
-                      }}
+                        },
+                        {},
+                        "Build the new project without opening it in an IDE"}}
                     }
                   }},
                   {{{"update-materials", {"u"}, {},
                     [this](const arg_list&) {
                       m_RunnerMode |= runner_mode::test;
                       m_UpdateMode = update_mode::soft;
-                    }
+                    },
+                    {},
+                    "Run the tests, accepting each working copy as its prediction"
                   }}},
-                  {{{"locate-instabilities", {"locate"}, {"number of repetitions >= 2"},
+                  {{{"locate-instabilities", {"locate"}, {"repetitions"},
                     [this](const arg_list& args) {
                       using parsing::commandline::error;
                       const int i{
@@ -660,16 +695,21 @@ namespace sequoia::testing
                       m_InstabilityMode = instability_mode::single_instance;
                       m_NumReps = i;
                     },
-                    {}},
+                    {},
+                    "Run the tests repeatedly, reporting the checks whose outcome varies"},
                     { {{"--sandbox", {}, {},
                         [this](const arg_list&) {
                           m_InstabilityMode = instability_mode::coordinator;
-                        }}},
-                      {{"--runner-id", {}, {"private option, best avoided"},
+                        },
+                        {},
+                        "Run each repetition in a process of its own"}},
+                      {{"--runner-id", {}, {"id"},
                         [this](const arg_list& args) {
                           m_RunnerID = std::stoi(args.front());
                           m_InstabilityMode = instability_mode::sandbox;
-                        }}}
+                        },
+                        {},
+                        "Mark this run as a sandboxed repetition; not for use by hand"}}
                     }
                   }},
                   {{{"recover", {}, {},
@@ -681,7 +721,9 @@ namespace sequoia::testing
                       m_RecoveryMode |= recovery_mode::recovery;
                       if(m_ConcurrencyMode == concurrency_mode::dynamic)
                         m_ConcurrencyMode = concurrency_mode::serial;
-                    }
+                    },
+                    {},
+                    "Run serially, recording each check before it runs, to find a crash"
                   }}},
                   {{{"dump", {}, {},
                     [this, recovery{proj_paths().output().recovery()}](const arg_list&) {
@@ -692,23 +734,35 @@ namespace sequoia::testing
                       m_RecoveryMode |= recovery_mode::dump;
                       if(m_ConcurrencyMode == concurrency_mode::dynamic)
                         m_ConcurrencyMode = concurrency_mode::serial;
-                    }
+                    },
+                    {},
+                    "Run serially, recording every check, for diffing two runs"
                   }}},
                   {{{"--check-versioned-output", {}, {},
                     [this, drift{proj_paths().output().drift()}](const arg_list&) {
                       std::filesystem::create_directories(drift.dir());
                       std::filesystem::remove(drift.patch_file());
                       m_VersionedOutputMode = versioned_output_mode::checked;
-                    }
+                    },
+                    {},
+                    "Fail the run if it changes anything versioned under output"
                   }}},
                   {{{"--exclude-performance", {}, {},
-                    [this](const arg_list&) { m_Filter.exclude_performance_tests(); }
+                    [this](const arg_list&) { m_Filter.exclude_performance_tests(); },
+                    {},
+                    "Leave out the performance tests"
                   }}},
-                  {{{"--exclude", {}, {"Source file of a test to leave out"},
-                    [this](const arg_list& args) { m_Filter.exclude_item(normal_path{args.front()}); }
+                  {{{"--exclude", {}, {"source"},
+                    [this](const arg_list& args) { m_Filter.exclude_item(normal_path{args.front()}); },
+                    {},
+                    "Leave out the test defined in a source file"
                   }}},
-                  {{{"--serial",  {}, {}, [this](const arg_list&) { m_ConcurrencyMode = concurrency_mode::serial; }}}},
-                  {{{"--thread-pool", {}, {"Number of threads, must be >= 1"},
+                  {{{"--serial",  {}, {},
+                    [this](const arg_list&) { m_ConcurrencyMode = concurrency_mode::serial; },
+                    {},
+                    "Run the tests on one thread"
+                  }}},
+                  {{{"--thread-pool", {}, {"threads"},
                     [this](const arg_list& args) {
                       if(const auto num{std::stoi(args.front())}; num > 0)
                       {
@@ -719,9 +773,15 @@ namespace sequoia::testing
                       {
                         stream() << warning(std::string{"Thread pool size must be non-zero"});
                       }
-                    }
+                    },
+                    {},
+                    "Run the tests on a pool of the given number of threads"
                   }}},
-                  {{{"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_Verbosity = verbosity::verbose; }}}}
+                  {{{"--verbose",  {"-v"}, {},
+                    [this](const arg_list&) { m_Verbosity = verbosity::verbose; },
+                    {},
+                    "Print the suites and their tests as a tree"
+                  }}}
                 },
                 [](std::string_view){})
         };
