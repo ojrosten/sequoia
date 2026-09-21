@@ -73,9 +73,12 @@ namespace sequoia::parsing::commandline
            A set of such values will be referred to as arguments.
         -# Two function objects, `early` and `late`, either of which may be null. Each, if present,
            will ultimately be invoked with the aforementioned arguments - see \ref operation.
+        -# A `description` for the help, which may be empty. Its first line appears beside the option
+           wherever the option is listed; the whole of it heads the option's own help.
 
-       Note that the `option` class does not itself contain children; rather a tree data-structure
-       is used with `option`s as the nodes.
+       An option whose name begins with a dash is presented by the help as an option; any other
+       as a command. Note that the `option` class does not itself contain children; rather a tree
+       data-structure is used with `option`s as the nodes.
    */
   struct option
   {
@@ -84,6 +87,7 @@ namespace sequoia::parsing::commandline
                parameters{};
     executor early{},
              late{};
+    std::string description{};
   };
 
   /** \brief Used to build a forest of operations which will be invoked at the end of the parsing process.
@@ -152,10 +156,11 @@ namespace sequoia::parsing::commandline
         -# Once an option's parameters are supplied, the arguments which follow are matched against
            its nested options. One which matches none of them is matched against the enclosing
            options, and so on outwards.
-        -# `--help` is recognised wherever an option or a value is expected, so it can be neither an
-           option's name nor a parameter's value. It describes the option it follows - the one most
-           recently encountered, whether or not its parameters are complete, together with its
-           nested options - and, following no option, every option. Nothing after it is read.
+        -# `--help`, or `-h`, is recognised wherever an option or a value is expected, so it can be
+           neither an option's name or alias nor a parameter's value, and is not recognised inside
+           a group of aliases. It describes the option it follows - the one most recently
+           encountered, whether or not its parameters are complete, together with its nested
+           options - and, following no option, the top-level options. Nothing after it is read.
         -# An empty argument, where an option is expected, is ignored.
 
       \throws std::runtime_error if an argument, where an option is expected, names no option at its
@@ -166,6 +171,7 @@ namespace sequoia::parsing::commandline
               nested options.
       \throws std::logic_error if both the function objects, `early` and `late`, belonging to
               a top-level `option` are null.
+      \throws std::logic_error if an option's name or alias is spelt as a help request.
 
       \returns The \ref sequoia::parsing::commandline::outcome "outcome".
    */
@@ -232,8 +238,10 @@ namespace sequoia::parsing::commandline
     operations_forest m_Operations{};
     int m_Index{1}, m_ArgCount{};
     char** m_Argv{};
+    const options_forest* m_Options{};
     std::string m_ZerothArg{}, m_Help{};
     option_tree m_MostRecentlyEncounteredOption{};
+    std::vector<option_tree> m_OptionsEntered{};
 
     template<std::ranges::input_range Options>
     void parse(const Options& options, const operation_data& previousOperationData, top_level topLevel);
@@ -244,9 +252,8 @@ namespace sequoia::parsing::commandline
 
     auto process_option(option_tree currentOptionTree, operation_data currentOperationData, top_level topLevel)->operation_data;
 
-    template<std::ranges::input_range Options>
     [[nodiscard]]
-    static std::string generate_help(const Options& options);
+    std::string generate_help() const;
 
     static bool is_alias(const option& opt, std::string_view s) noexcept;
   };

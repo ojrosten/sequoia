@@ -1,16 +1,20 @@
-create | c |
-  regular_test | regular | qualified::class_name<class T>, equivalent type
-    --header | -h | header of class to test
-    gen-source | g | source dir
-  move_only_test | move_only | qualified::class_name<class T>, equivalent type
-    --header | -h | header of class to test
-    gen-source | g | source dir
-  regular_allocation_test | regular_allocation allocation_test | raw class name
-    --header | -h | header of class to test
-  move_only_allocation_test | move_only_allocation | raw class name
-    --header | -h | header of class to test
-  free_test | free | header
-    --test-class-forename | --forename | test class is named <forename>_...
-    gen-source | g | namespace
-    --framework-diagnostics | --diagnostics |
-  performance_test | performance | header
+Usage: FakeExe create [command] [options]
+
+Create a test; the command names its kind
+A class is spelt with its namespace and template parameters, as in foo::bar<class T>; an allocation test takes its bare name
+
+Commands:
+  regular_test, regular <class> <equivalent_type> [options]
+                                        A regular test of the class against an equivalent type
+  move_only_test, move_only <class> <equivalent_type> [options]
+                                        A move-only test of the class against an equivalent type
+  regular_allocation_test, regular_allocation, allocation_test <class> [options]
+                                        An allocation test of the regular class
+  move_only_allocation_test, move_only_allocation <class> [options]
+                                        An allocation test of the move-only class
+  free_test, free <header> [options]    A test of the free functions the header declares
+  performance_test, performance <header>
+                                        A performance test of what the header declares
+
+Options:
+  --help, -h                            Describe the command or option this follows; alone, the top level

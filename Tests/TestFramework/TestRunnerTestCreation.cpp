@@ -160,25 +160,25 @@ namespace sequoia::testing
     commandline_arguments args{{zeroth_arg(projectName)
                                , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
                                , "create", "regular", "utilities::iterator", "int*"
-                               , "create", "regular_test", "stuff::widget", "std::vector<int>", "gen-source", "Stuff"
-                               , "create", "regular_test", "maths::probability", "double", "g", "Maths"
-                               , "create", "regular_test", "maths::angle", "long double", "gen-source", "Maths"
-                               , "create", "regular_test", "human", "std::string", "g", "hominins"
-                               , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "g", "Thingummies"
+                               , "create", "regular_test", "stuff::widget", "std::vector<int>", "--gen-source", "Stuff"
+                               , "create", "regular_test", "maths::probability", "double", "-g", "Maths"
+                               , "create", "regular_test", "maths::angle", "long double", "--gen-source", "Maths"
+                               , "create", "regular_test", "human", "std::string", "-g", "hominins"
+                               , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "-g", "Thingummies"
                                , "create", "regular_test", "container<class T>", "const std::vector<T>"
                                , "create", "regular_test", "other::couple<class S, class T>", "std::pair<S, T>",
-                                              "-h", "Couple.hpp"
-                               , "create", "regular_test", "bar::things", "double", "-h", std::format("{}/Stuff/Things.hpp", sourceFolderName)
+                                              "--header", "Couple.hpp"
+                               , "create", "regular_test", "bar::things", "double", "--header", std::format("{}/Stuff/Things.hpp", sourceFolderName)
                                , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T"
                                , "create", "move_only", "variadic<class... T>", "std::tuple<T...>"
-                               , "create", "move_only_test", "multiple<class... T>", "std::tuple<T...>", "gen-source", "Utilities"
-                               , "create", "move_only_test", "cloud", "double", "gen-source", "Weather"
+                               , "create", "move_only_test", "multiple<class... T>", "std::tuple<T...>", "--gen-source", "Utilities"
+                               , "create", "move_only_test", "cloud", "double", "--gen-source", "Weather"
                                , "create", "free_test", "Utilities.h"
                                , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazzer"
                                , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazagain"
-                               , "create", "free_test", "Stuff/Doohicky.hpp", "gen-source", "bar::things"
-                               , "create", "free_test", "Global/Stuff/Global.hpp", "gen-source", "::"
-                               , "create", "free_test", "Global/Stuff/Defs.hpp", "gen-source", ""
+                               , "create", "free_test", "Stuff/Doohicky.hpp", "--gen-source", "bar::things"
+                               , "create", "free_test", "Global/Stuff/Global.hpp", "--gen-source", "::"
+                               , "create", "free_test", "Global/Stuff/Defs.hpp", "--gen-source", ""
                                , "create", "free", std::format("{}/Maths/Angle.hpp", sourceFolderName), "--diagnostics"
                                , "create", "regular_allocation_test", "container"
                                , "create", "move_only_allocation_test", "foo"
@@ -217,7 +217,7 @@ namespace sequoia::testing
         reporter{"Typo in specified class header"},
         [this]() {
           std::stringstream outputStream{};
-          commandline_arguments args{{zeroth_arg("FakeProject"), "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Thingz.hpp"}};
+          commandline_arguments args{{zeroth_arg("FakeProject"), "create", "regular_test", "bar::things", "double", "--header", "fakeProject/Stuff/Thingz.hpp"}};
           test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
         });
   }

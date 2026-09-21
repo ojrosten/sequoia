@@ -41,7 +41,7 @@ runner.register_test<maybe_false_negative_test>();
 	}
 	catch(const std::exception& e)
 	{
-		std::cout << e.what();
+		std::cout << e.what() << '\n';
 	}
 	catch(...)
 	{

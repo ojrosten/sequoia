@@ -432,11 +432,14 @@ namespace sequoia::testing
           m_SelectedSuites && mark(*m_SelectedSuites, inGroups)
         };
 
-        if(excluded) return false;
+        if(excluded)
+          return false;
 
-        if((isPerformanceTest == is_performance_test::yes) && (m_PerformanceMode == performance_mode::excluded)) return false;
+        if((isPerformanceTest == is_performance_test::yes) && (m_PerformanceMode == performance_mode::excluded))
+          return false;
 
-        if(!m_SelectedItems && !m_SelectedSuites) return true;
+        if(!m_SelectedItems && !m_SelectedSuites)
+          return true;
 
         return std::ranges::any_of(selected, [](bool b){ return b; });
       }
@@ -475,7 +478,8 @@ namespace sequoia::testing
       static bool mark(Map& map, Predicate pred)
       {
         auto found{std::ranges::find_if(map, [&pred](const auto& e){ return pred(e.first); })};
-        if(found == map.end()) return false;
+        if(found == map.end())
+          return false;
 
         found->second = true;
         return true;
