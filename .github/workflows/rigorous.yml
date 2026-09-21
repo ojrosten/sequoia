@@ -170,13 +170,14 @@ on:
         required: false
         type: boolean
         default: false
-  # Off the hour on purpose. GitHub's scheduler queues every run whose cron
-  # names the same minute, and a round hour is where they cluster: at
-  # '0 3 * * *' the nightly arrived at 07:34, 07:32, 07:38 and 07:57 UTC on
-  # 2026-09-10 to 2026-09-13, and GitHub documents that a queued run can be
-  # dropped outright under load. Both the minute and the hour moved, so if the
-  # delay shrinks this does not say which did it. Nothing here would notice a
-  # dropped run, since the audit lives inside it.
+  # Off the hour, on GitHub's advice that the start of an hour is when its
+  # scheduler is most loaded; it did not help. At '0 3 * * *' the nightly
+  # arrived at 07:34, 07:32, 07:38 and 07:57 UTC on 2026-09-10 to 2026-09-13,
+  # and at '1 1 * * *' it has arrived 4h30m to 5h late on every night since, so
+  # the delay is a steady backlog that the minute does not touch. It stays here
+  # because nothing argues for moving it back. GitHub documents that a queued
+  # run can be dropped outright under load, and nothing here would notice a
+  # dropped run, since the audit lives inside it: that is watchdog.yml's job.
   schedule:
     - cron: '1 1 * * *'
 
