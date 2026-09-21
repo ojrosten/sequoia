@@ -66,7 +66,7 @@ namespace sequoia::testing
   build_tree read_build_tree(const std::filesystem::path& cacheFile);
 
   /** \brief Every compilation the build currently has, each with its source first among its inputs, then
-             the rest in the order the build's record names them, each once.
+             the rest in the order the build's record names them.
 
       \throws std::runtime_error if the tree was written by a generator whose record of
       dependencies is not understood, has not been built, or has a record which names none of

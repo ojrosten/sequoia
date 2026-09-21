@@ -500,15 +500,16 @@ namespace sequoia::testing
         return false;
 
       constexpr char16_t asciiEnd{0x80};
-      auto lowered{[asciiEnd](char16_t c){ return (c < asciiEnd) ? static_cast<char16_t>(std::tolower(static_cast<int>(c))) : c; }};
+      auto lowered{[](char16_t c){ return (c < asciiEnd) ? static_cast<char16_t>(std::tolower(static_cast<int>(c))) : c; }};
       return std::ranges::equal(spelling.substr(spelling.size() - extension.size()) | std::views::transform(lowered), extension);
     }
 
     /** The tracker's logs of one kind, decoded: under each source the tracker names, the files that
         compilation touched, as the tracker spells them.
 
-        The entries are views into `texts`, which must therefore outlive them; the texts are read
-        first, all of them, so that no view is taken into a string which a later read might move.
+        The entries are views into the texts the class holds, which must therefore outlive them; the
+        texts are read first, all of them, so that no view is taken into a string which a later read
+        might move.
      */
     class tlog_entries
     {
@@ -520,8 +521,10 @@ namespace sequoia::testing
         , m_Entries{group_by_source(m_Texts)}
       {}
 
-      tlog_entries(const tlog_entries&) = delete;
+      tlog_entries(const tlog_entries&)            = delete;
+      tlog_entries(tlog_entries&&)                 = delete;
       tlog_entries& operator=(const tlog_entries&) = delete;
+      tlog_entries& operator=(tlog_entries&&)      = delete;
 
       [[nodiscard]]
       const entries_type& entries() const noexcept { return m_Entries; }
@@ -552,10 +555,15 @@ namespace sequoia::testing
           }
         };
 
-        return fs::directory_iterator{tlogDir}
-             | std::views::filter(isTlogOfKind)
-             | std::views::transform(decoded)
-             | std::ranges::to<std::vector>();
+        // In name order, so that a source named by two logs of one kind has its entries in one order whatever the directory's
+        auto logs{
+            fs::directory_iterator{tlogDir}
+          | std::views::filter(isTlogOfKind)
+          | std::ranges::to<std::vector>()
+        };
+        std::ranges::sort(logs);
+
+        return logs | std::views::transform(decoded) | std::ranges::to<std::vector>();
       }
 
       /** A `^` line names one or more sources, separated by `|`; the lines beneath it, until the next,
@@ -605,7 +613,7 @@ namespace sequoia::testing
     };
 
     /** The tracker spells paths in upper case; the directories know how the paths are really spelled, and
-        are asked once each:
+        are listed once each:
 
         1. A filesystem which finds a file whatever its case answers through `weakly_canonical`.
         2. One which does not - ext4, where the fixtures also run - is walked a component at a time,
@@ -616,19 +624,7 @@ namespace sequoia::testing
     {
     public:
       [[nodiscard]]
-      const fs::path& operator()(std::u16string_view spelling)
-      {
-        if(const auto found{m_Recovered.find(spelling)}; found != m_Recovered.end())
-          return found->second;
-
-        return m_Recovered.emplace(std::u16string{spelling}, recover(spelling)).first->second;
-      }
-    private:
-      std::map<std::u16string, fs::path, std::ranges::less> m_Recovered{};
-      std::map<fs::path, std::vector<fs::path>> m_Listings{};
-
-      [[nodiscard]]
-      fs::path recover(std::u16string_view spelling)
+      fs::path operator()(std::u16string_view spelling)
       {
         const fs::path asSpelled{std::u16string{spelling}};
         std::error_code error{};
@@ -637,6 +633,8 @@ namespace sequoia::testing
 
         return fs::exists(candidate) ? candidate : walk(candidate);
       }
+    private:
+      std::map<fs::path, std::vector<fs::path>> m_Listings{};
 
       /// The names in `dir`, listed once
       [[nodiscard]]
@@ -707,7 +705,7 @@ namespace sequoia::testing
       return (separator == std::u16string_view::npos) ? spelling : spelling.substr(separator + 1);
     }
 
-    /// A spelled filename up to its last dot
+    /// A spelled filename up to its last dot; the tracker names files, never `.` or `..`
     [[nodiscard]]
     std::u16string_view spelled_stem(std::u16string_view filename)
     {
@@ -771,11 +769,10 @@ namespace sequoia::testing
 
         Hence, where sources share their writes, each object file is given to the source whose stem or
         name the object file bears, the tracker having spelled both; what cannot be told apart is refused
-        rather than guessed. Each record lists its inputs as the compiler opened them, each once, as the
-        Ninja reader does.
+        rather than guessed. Each record lists its inputs as the compiler opened them, each once.
 
-        The logs name a file once per compilation which touched it, so each spelling is recovered and
-        numbered once, on first sight, and looked up once per entry thereafter.
+        The logs name a file once per opening, so each spelling is recovered and numbered on first sight,
+        and looked up once per entry thereafter.
      */
     [[nodiscard]]
     std::vector<compilations::record> read_tlogs(path_table& files, const fs::path& tlogDir)
