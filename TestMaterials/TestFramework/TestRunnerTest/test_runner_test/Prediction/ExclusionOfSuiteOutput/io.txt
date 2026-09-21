@@ -1,5 +1,5 @@
   Warning: Excluded Test File 'Failing' not found
-    '--exclude' takes the source file of a test
+    'exclude' takes the source file of a test
 
 Running tests...
 
@@ -22,8 +22,8 @@ passing_test:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 1.4ms]
-[Execution Time: 569us]
+[Total Run Time: 778us]
+[Execution Time: 113us]
 	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 3]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

@@ -27,6 +27,7 @@
 #include <map>
 #include <set>
 #include <ranges>
+#include <span>
 #include <format>
 #include <fstream>
 #include <utility>
@@ -196,15 +197,44 @@ namespace sequoia::testing
     const std::string& convert(const std::string& s) { return s; }
     std::string convert(const std::filesystem::path& p) { return p.generic_string(); }
 
+    // TO DO: std::views::concat | std::ranges::to<std::vector>, once the MS STL has concat (P2542)
+    [[nodiscard]]
+    std::vector<fs::path> concatenate(std::span<const fs::path> first, std::span<const fs::path> second)
+    {
+      std::vector<fs::path> both{first.begin(), first.end()};
+      both.append_range(second);
+      return both;
+    }
+
+    /** \brief Warns of each request from the command line - a suite or a source, selected or
+        excluded - which matched no registered test, with the hint the request's key suggests.
+     */
+    template<class Key, invocable_exact_r<std::string, const Key&> Hint>
+    void report_unmatched(std::ostream& stream, std::span<const std::pair<Key, bool>> requests, std::string_view kind, Hint hint)
+    {
+      for(const auto& [key, matched] : requests)
+      {
+        if(!matched)
+        {
+          using namespace parsing::commandline;
+          stream << warning(std::format("{} '{}' not found\n{}", kind, convert(key), hint(key)));
+        }
+      }
+    }
+
     enum class is_filtered { no, yes };
 
     class test_tracker
     {
     public:
-      explicit test_tracker(const project_paths& projPaths, std::optional<std::size_t> id, is_filtered isFiltered)
+      explicit test_tracker(const project_paths& projPaths,
+                            std::optional<std::size_t> id,
+                            is_filtered isFiltered,
+                            std::vector<std::filesystem::path> testsLeftOut)
         : m_ProjPaths{projPaths}
         , m_Id{id}
         , m_Filtered{isFiltered}
+        , m_TestsLeftOut{std::move(testsLeftOut)}
       {}
 
       void update_materials_and_prune_info()
@@ -269,7 +299,7 @@ namespace sequoia::testing
       std::optional<std::size_t> m_Id{};
       is_filtered m_Filtered{};
 
-      std::vector<std::filesystem::path> m_FailedTests{}, m_ExecutedTests{};
+      std::vector<std::filesystem::path> m_FailedTests{}, m_ExecutedTests{}, m_TestsLeftOut{};
       std::vector<std::string> m_PostRunFailures{};
       std::set<test_paths, paths_comparator> m_Updateables{};
       std::set<std::filesystem::path> m_FilesWrittenTo{};
@@ -319,7 +349,8 @@ namespace sequoia::testing
         }
         else
         {
-          update_prune_files(m_ProjPaths, m_FailedTests, entry_time_stamp, m_Id);
+          const auto testsToRerun{concatenate(m_FailedTests, m_TestsLeftOut)};
+          update_prune_files(m_ProjPaths, testsToRerun, entry_time_stamp, m_Id);
         }
       }
     };
@@ -421,6 +452,29 @@ namespace sequoia::testing
   }
 
   //=========================================== test_runner ===========================================//
+
+  //===================================== test_filter =====================================//
+
+  [[nodiscard]]
+  bool test_runner::test_filter::operator()(const normal_path& source,
+                                            std::span<const std::string> suites,
+                                            is_performance_test isPerformanceTest)
+  {
+    auto sameSource{[this, &source](const normal_path& listed){ return m_Equivalent(listed, source); }};
+    auto amongSuites{[suites](const std::string& selected){ return std::ranges::contains(suites, selected); }};
+
+    const bool excluded{mark_found(m_ExcludedItems, sameSource)};
+    const bool selectedBySource{m_SelectedItems  && mark_found(*m_SelectedItems,  sameSource)};
+    const bool selectedBySuite {m_SelectedSuites && mark_found(*m_SelectedSuites, amongSuites)};
+
+    const bool leftOut{excluded || ((isPerformanceTest == is_performance_test::yes) && excludes_performance_tests())};
+    if(leftOut)
+      m_TestsLeftOut.push_back(source.path());
+
+    return !leftOut && (!selects() || selectedBySource || selectedBySuite);
+  }
+
+  //===================================== path_equivalence =====================================//
 
   [[nodiscard]]
   bool test_runner::path_equivalence::operator()(const normal_path& selectedSource, const normal_path& filepath) const
@@ -760,7 +814,7 @@ namespace sequoia::testing
                     {},
                     "Leave out the performance tests"
                   }}},
-                  {{{"--exclude", {}, {"source"},
+                  {{{"exclude", {"e"}, {"source"},
                     [this](const arg_list& args) { m_Filter.exclude_item(normal_path{args.front()}); },
                     {},
                     "Leave out the test defined in a source file"
@@ -839,47 +893,48 @@ namespace sequoia::testing
     if((m_ConcurrencyMode != concurrency_mode::serial) && (m_RecoveryMode != recovery_mode::none))
       throw std::runtime_error{error("Can't run asynchronously in recovery/dump mode\n")};
 
-    if((m_PruneMode == prune_mode::active) && m_Filter)
+    if((m_PruneMode == prune_mode::active) && m_Filter.selects())
     {
       m_PruneMode = prune_mode::passive;
-      stream() << warning("'prune' ignored if either test families or test source files are specified\n");
+      stream() << warning("'prune' ignored when tests are selected\n");
     }
   }
 
   void test_runner::check_for_missing_tests()
   {
-    if(m_PruneMode == prune_mode::active) return;
-
-    auto check{
-      [this](const auto& listed, std::string_view kind, auto hint) {
-        for(const auto& [id, found] : listed)
-        {
-          if(!found)
-          {
-            using namespace parsing::commandline;
-            stream() << warning(std::format("{} '{}' not found\n{}", kind, convert(id), hint(id)));
+    if(m_PruneMode == prune_mode::passive)
+    {
+      if(const auto suites{m_Filter.selected_suites()})
+      {
+        auto hint{
+          [](const std::string& name) -> std::string {
+            return (name.rfind('.') < std::string::npos) ? "    If trying to select a source file use 'select' rather than 'test'\n" : "";
           }
-        }
+        };
+
+        report_unmatched(stream(), std::span{*suites}, "Test Suite", hint);
+      }
+
+      if(const auto sources{m_Filter.selected_items()})
+      {
+        auto hint{
+          [](const std::filesystem::path& p) -> std::string {
+            return p.has_extension() ? "" : "    If trying to test a suite use 'test' rather than 'select'\n";
+          }
+        };
+
+        report_unmatched(stream(), std::span{*sources}, "Test File", hint);
+      }
+    }
+
+    auto hint{
+      [](const std::filesystem::path& p) -> std::string {
+        return p.has_extension() ? "" : "    'exclude' takes the source file of a test\n";
       }
     };
 
-    if(const auto suites{m_Filter.selected_suites()})
-    {
-      check(*suites, "Test Suite", [](const std::string& name) -> std::string {
-        return (name.rfind('.') < std::string::npos) ? "    If trying to select a source file use 'select' rather than 'test'\n" : "";
-      });
-    }
-
-    if(const auto items{m_Filter.selected_items()})
-    {
-      check(*items, "Test File", [](const std::filesystem::path& p) -> std::string {
-        return p.has_extension() ? "" : "    If trying to test a suite use 'test' rather than 'select'\n";
-      });
-    }
-
-    check(m_Filter.excluded_items(), "Excluded Test File", [](const std::filesystem::path& p) -> std::string {
-      return p.has_extension() ? "" : "    '--exclude' takes the source file of a test\n";
-    });
+    const auto excluded{m_Filter.excluded_items()};
+    report_unmatched(stream(), std::span{excluded}, "Excluded Test File", hint);
   }
 
   return_code test_runner::execute([[maybe_unused]] timer_resolution r)
@@ -968,7 +1023,8 @@ namespace sequoia::testing
     {
       for(const auto& [file, found] : *items)
       {
-        if(found) options += std::format(" select {}", file.path().generic_string());
+        if(found)
+          options += std::format(" select {}", file.path().generic_string());
       }
     }
 
@@ -976,9 +1032,19 @@ namespace sequoia::testing
     {
       for(const auto& [name, found] : *suites)
       {
-        if(found) options += std::format(" test {}", name);
+        if(found)
+          options += std::format(" test {}", name);
       }
     }
+
+    for(const auto& [file, found] : m_Filter.excluded_items())
+    {
+      if(found)
+        options += std::format(" exclude {}", file.path().generic_string());
+    }
+
+    if(m_Filter.excludes_performance_tests())
+      options += " --exclude-performance";
 
     return options;
   }
@@ -1113,7 +1179,7 @@ namespace sequoia::testing
       asyncDuration = asyncTimer.time_elapsed();
     }
 
-    test_tracker tracker{proj_paths(), id, m_Filter ? is_filtered::yes : is_filtered::no};
+    test_tracker tracker{proj_paths(), id, m_Filter.selects() ? is_filtered::yes : is_filtered::no, m_Filter.tests_left_out()};
 
     using namespace maths;
     auto nodeEarly{
@@ -1312,7 +1378,8 @@ namespace sequoia::testing
         m_Filter.add_selected_item(src);
       }
 
-      if(!m_Filter) m_Filter.select_nothing();
+      if(!m_Filter.selects())
+        m_Filter.select_nothing();
 
       return std::nullopt;
     }
@@ -1323,7 +1390,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::vector<std::string> test_runner::groups_of(const fs::path& source) const
+  std::vector<std::string> test_runner::suites_of(const fs::path& source) const
   {
     return rebase_from(source, proj_paths().tests().repo()).parent_path()
          | std::views::transform([](const fs::path& p){ return p.generic_string(); })

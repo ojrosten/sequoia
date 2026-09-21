@@ -348,7 +348,8 @@ namespace sequoia::testing
 
       constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
 
-      if(m_Filter(T::source_file(), groups_of(T::source_file()), isPerformanceTest)) m_Tests.emplace_back(T{});
+      if(m_Filter(T::source_file(), suites_of(T::source_file()), isPerformanceTest))
+        m_Tests.emplace_back(T{});
     }
 
     [[nodiscard]]
@@ -390,8 +391,11 @@ namespace sequoia::testing
 
     /** \brief Selection by source file, or by the name of a directory containing it; exclusion by source file.
 
-        Every source listed, whether selected or excluded, is marked found when a registered test
-        matches it, so that those which matched nothing can be reported.
+        -# Every source listed, whether selected or excluded, is marked found when a registered test
+           matches it, so that those which matched nothing can be reported.
+        -# A selection has a third state, absent, which is not the same as empty: with no selection
+           every test runs, with an empty one none. Hence the `std::optional`s. An exclusion has no
+           such state, an empty list excluding nothing.
      */
 
     class test_filter
@@ -419,30 +423,11 @@ namespace sequoia::testing
       void exclude_item(normal_path source) { m_ExcludedItems.emplace_back(std::move(source), false); }
 
       [[nodiscard]]
-      bool operator()(const normal_path& source, std::span<const std::string> groups, is_performance_test isPerformanceTest)
-      {
-        auto sameSource{[this, &source](const normal_path& listed){ return m_Equivalent(listed, source); }};
-        auto inGroups{[groups](const std::string& selected){ return std::ranges::contains(groups, selected); }};
-
-        // Every list is marked before anything decides whether the test runs, so a listed source
-        // which names a test is found whether or not the test is then left out
-        const bool excluded{mark(m_ExcludedItems, sameSource)};
-        const std::array<bool, 2> selected{
-          m_SelectedItems  && mark(*m_SelectedItems,  sameSource),
-          m_SelectedSuites && mark(*m_SelectedSuites, inGroups)
-        };
-
-        if(excluded)
-          return false;
-
-        if((isPerformanceTest == is_performance_test::yes) && (m_PerformanceMode == performance_mode::excluded))
-          return false;
-
-        if(!m_SelectedItems && !m_SelectedSuites)
-          return true;
-
-        return std::ranges::any_of(selected, [](bool b){ return b; });
-      }
+      /** \brief Whether the test defined in `source`, in the nested `suites`, is to run. */
+      [[nodiscard]]
+      bool operator()(const normal_path& source,
+                      std::span<const std::string> suites,
+                      is_performance_test isPerformanceTest);
 
       [[nodiscard]]
       std::optional<std::ranges::subrange<items_map_type::const_iterator>> selected_items() const noexcept
@@ -462,8 +447,16 @@ namespace sequoia::testing
         return as_range(m_ExcludedItems);
       }
 
+      /** \brief Whether tests have been selected, which is not the same as whether any matched. */
       [[nodiscard]]
-      operator bool() const noexcept { return m_SelectedItems.has_value() || m_SelectedSuites.has_value(); }
+      bool selects() const noexcept { return m_SelectedItems.has_value() || m_SelectedSuites.has_value(); }
+
+      [[nodiscard]]
+      bool excludes_performance_tests() const noexcept { return m_PerformanceMode == performance_mode::excluded; }
+
+      /** \brief The sources of the tests left out by an exclusion, in the order they were offered. */
+      [[nodiscard]]
+      const std::vector<std::filesystem::path>& tests_left_out() const noexcept { return m_TestsLeftOut; }
     private:
       template<class Map>
       static void add(std::optional<Map>& map, typename Map::value_type::first_type key)
@@ -473,9 +466,9 @@ namespace sequoia::testing
         map->emplace_back(std::move(key), false);
       }
 
-      /** \brief Marks the first entry `pred` accepts as found. */
+      /** \brief Marks the first entry `pred` accepts as found, and says whether there was one. */
       template<class Map, class Predicate>
-      static bool mark(Map& map, Predicate pred)
+      static bool mark_found(Map& map, Predicate pred)
       {
         auto found{std::ranges::find_if(map, [&pred](const auto& e){ return pred(e.first); })};
         if(found == map.end())
@@ -501,9 +494,10 @@ namespace sequoia::testing
         return as_range(*map);
       }
 
-      items_map_type                 m_ExcludedItems{};
-      std::optional<items_map_type>  m_SelectedItems{};
-      std::optional<suites_map_type> m_SelectedSuites{};
+      items_map_type                     m_ExcludedItems{};
+      std::vector<std::filesystem::path> m_TestsLeftOut{};
+      std::optional<items_map_type>      m_SelectedItems{};
+      std::optional<suites_map_type>     m_SelectedSuites{};
       path_equivalence m_Equivalent;
       performance_mode m_PerformanceMode{performance_mode::included};
     };
@@ -607,8 +601,11 @@ namespace sequoia::testing
 
     void build_suite_tree();
 
+    /** \brief The suites a test's source belongs to: the directories beneath the tests repository
+        which hold it, outermost first.
+     */
     [[nodiscard]]
-    std::vector<std::string> groups_of(const std::filesystem::path& source) const;
+    std::vector<std::string> suites_of(const std::filesystem::path& source) const;
 
     [[nodiscard]]
     static std::string duplication_message(std::string_view testName, const std::filesystem::path& source);

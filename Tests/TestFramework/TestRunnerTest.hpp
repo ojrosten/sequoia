@@ -47,6 +47,16 @@ namespace sequoia::testing
 
     void test_prune_with_changed_toolchain();
 
+    void test_prune_selects_a_test_this_executable_lacks();
+
+    struct fake_build
+    {
+      std::filesystem::path source, toolchainHeader;
+    };
+
+    [[nodiscard]]
+    fake_build write_fake_build();
+
     void test_post_run_failure();
 
     void test_nested_suite();
@@ -56,6 +66,8 @@ namespace sequoia::testing
     void test_excluded_performance_tests();
 
     void test_excluded_tests();
+
+    void test_excluded_tests_are_rerun();
 
     void test_dump_comparison();
 

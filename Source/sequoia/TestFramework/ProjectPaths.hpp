@@ -394,8 +394,9 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path stamp() const;
 
+    /** \brief The tests to run next time regardless of staleness: those which failed, and those a run left out. */
     [[nodiscard]]
-    std::filesystem::path failures(std::optional<std::size_t> id) const;
+    std::filesystem::path to_rerun(std::optional<std::size_t> id) const;
 
     [[nodiscard]]
     std::filesystem::path selected_passes(std::optional<std::size_t> id) const;
