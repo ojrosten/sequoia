@@ -68,10 +68,10 @@ namespace sequoia::parsing::commandline
   
       This possesses:
         -# A `name` and a set of `aliases`.
-        -# A set of `paramaters`, values for which must be supplied on the command line.
+        -# A set of `parameters`, values for which must be supplied on the command line.
            A set of such values will be referred to as arguments.
-        -# Two invocables, `early` and `late` which may be null. Each invocable, if present, will
-           ultimately be invoked with the aforementioned arguments - see \ref operation.
+        -# Two function objects, `early` and `late`, either of which may be null. Each, if present,
+           will ultimately be invoked with the aforementioned arguments - see \ref operation.
 
        Note that the `option` class does not itself contain children; rather a tree data-structure
        is used with `option`s as the nodes.
@@ -89,9 +89,9 @@ namespace sequoia::parsing::commandline
 
       As the command line arguments are parsed, a forest of `operation`s is constructed. Each operation
       comprises:
-        -# Two invocables. After the `operation` forest is constructed, a depth-first search in invoked.
-           During this, the `early` invocable, if present, will  be invoked as soon as an operation node
-           is encountered. The `late` invocable, if present, will be invoked after the depth-first search
+        -# Two function objects. After the `operation` forest is constructed, a depth-first search is invoked.
+           During this, the `early` function object, if present, will be invoked as soon as an operation node
+           is encountered. The `late` function object, if present, will be invoked after the depth-first search
            has exhausted an operation node's children.
         -# `arguments`, which have been read in from the command line, and are supplied to `early` and
            `late` (if not null) upon invocation.
@@ -110,10 +110,16 @@ namespace sequoia::parsing::commandline
   using operations_sub_tree = maths::tree_adaptor<operations_tree>;
   using operations_forest   = std::vector<operations_tree>;
 
-  /** \brief The result of parsing command line arguments to build an \ref operation forest
+  /** \brief The result of parse().
 
-      In addition to the forest, the zeroth command line argument (typically the path of the
-      executable) is recorded, together with `help`, if appropriate.
+      -# `zeroth_arg`: the zeroth argument, typically the path of the executable.
+      -# `operations`: one \ref operation tree per top-level option encountered, in the order
+         encountered, the root holding the option's function objects and arguments. A nested option
+         encountered adds a node beneath the node of its enclosing option if the nested option has a
+         function object, and otherwise adds its arguments to that node.
+      -# `help`: empty unless help was requested. When help was requested, `operations` holds
+         whatever was parsed before the request - possibly an operation with fewer arguments than
+         its option has parameters - and is not to be invoked.
    */
   struct outcome
   {
@@ -137,6 +143,31 @@ namespace sequoia::parsing::commandline
   [[nodiscard]]
   std::string pluralize(std::size_t n, std::string_view noun, std::string_view prefix=" ");
 
+  /** \brief Parses the command line arguments against a forest of options, building the \ref sequoia::parsing::commandline::operation "operation" forest.
+
+      The arguments are read in order. Each is expected to be either an option or the value of a
+      parameter:
+        -# An option is named by its `name` or by one of its `aliases`. A group of single-character
+           aliases, `-xy`, names the options aliased `-x` and `-y` in turn.
+        -# The arguments which follow an option supply its `parameters`, one value each.
+        -# Once an option's parameters are supplied, the arguments which follow are matched against
+           its nested options. One which matches none of them is matched against the enclosing
+           options, and so on outwards.
+        -# `--help` is recognised wherever an option or a value is expected, so it can be neither an
+           option's name nor a parameter's value. It describes the option it follows - the one most
+           recently encountered, whether or not its parameters are complete, together with its
+           nested options - and, following no option, every option. Nothing after it is read.
+        -# An empty argument, where an option is expected, is ignored.
+
+      \throws std::runtime_error if an argument, where an option is expected, names no option at its
+              level or at any enclosing level.
+      \throws std::runtime_error if the arguments end before the option most recently encountered has
+              all of its parameters.
+      \throws std::logic_error if both the function objects, `early` and `late`, belonging to
+              a top-level `option` are null.
+
+      \returns The \ref sequoia::parsing::commandline::outcome "outcome".
+   */
   [[nodiscard]]
   outcome parse(int argc, char** argv, const options_forest& options);
 
@@ -196,19 +227,20 @@ namespace sequoia::parsing::commandline
     int m_Index{1}, m_ArgCount{};
     char** m_Argv{};
     std::string m_ZerothArg{}, m_Help{};
+    option_tree m_MostRecentlyEncounteredOption{};
 
-    template<std::input_iterator Iter>
-    void parse(std::ranges::subrange<Iter> options, const operation_data& previousOperationData, top_level topLevel);
+    template<std::ranges::input_range Options>
+    void parse(const Options& options, const operation_data& previousOperationData, top_level topLevel);
 
-    template<std::input_iterator Iter>
+    template<std::ranges::input_range Options>
     [[nodiscard]]
-    bool process_concatenated_aliases(std::ranges::subrange<Iter> options, std::string_view arg, operation_data currentOperationData, top_level topLevel);
+    bool process_concatenated_aliases(const Options& options, std::string_view arg, operation_data currentOperationData, top_level topLevel);
 
     auto process_option(option_tree currentOptionTree, operation_data currentOperationData, top_level topLevel)->operation_data;
 
-    template<std::input_iterator Iter>
+    template<std::ranges::input_range Options>
     [[nodiscard]]
-    static std::string generate_help(std::ranges::subrange<Iter> options);
+    static std::string generate_help(const Options& options);
 
     static bool is_alias(const option& opt, std::string_view s);
   };

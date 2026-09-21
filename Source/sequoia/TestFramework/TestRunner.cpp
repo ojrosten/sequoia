@@ -725,9 +725,9 @@ namespace sequoia::testing
                 [](std::string_view){})
         };
 
+    // A help request is not a mode: nothing was asked for but the text, and execute() has nothing to do
     if(!help.empty())
     {
-      m_RunnerMode &= runner_mode::help;
       stream() << help;
     }
     else

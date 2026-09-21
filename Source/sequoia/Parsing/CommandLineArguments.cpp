@@ -15,6 +15,8 @@ namespace sequoia::parsing::commandline
 {
   namespace
   {
+    constexpr std::string_view help_request{"--help"};
+
     [[nodiscard]]
     std::string make(std::string_view type, std::string_view message, std::string_view indent)
     {
@@ -85,16 +87,25 @@ namespace sequoia::parsing::commandline
     parse(std::ranges::subrange{forest_iter{options.begin()}, forest_iter{options.end()}}, {}, top_level::yes);
   }
 
-  template<std::input_iterator Iter>
-  void argument_parser::parse(std::ranges::subrange<Iter> options, const operation_data& previousOperationData, top_level topLevel)
+  template<std::ranges::input_range Options>
+  void argument_parser::parse(const Options& options, const operation_data& previousOperationData, top_level topLevel)
   {
-    if(!m_Help.empty() || options.empty()) return;
+    if(std::ranges::empty(options)) return;
 
+    // A help request met at any level of nesting ends parsing at every level
     option_tree currentOptionTree{};
     auto currentOperationData{previousOperationData};
-    while(m_Index < m_ArgCount)
+    while((m_Index < m_ArgCount) && m_Help.empty())
     {
       std::string_view arg{m_Argv[m_Index++]};
+
+      if(arg == help_request)
+      {
+        m_Help = m_MostRecentlyEncounteredOption ? generate_help(std::views::single(m_MostRecentlyEncounteredOption))
+                                                 : generate_help(options);
+        break;
+      }
+
       if(!currentOperationData.oper_tree || !currentOptionTree)
       {
         if(arg.empty()) continue;
@@ -105,14 +116,8 @@ namespace sequoia::parsing::commandline
           })
         };
 
-        if(optionsIter == options.end())
+        if(optionsIter == std::ranges::end(options))
         {
-          if(arg == "--help")
-          {
-            m_Help = generate_help(options);
-            return;
-          }
-
           if(process_concatenated_aliases(options, arg, currentOperationData, topLevel))
             continue;
 
@@ -157,7 +162,8 @@ namespace sequoia::parsing::commandline
       }
     }
 
-    if(!m_Operations.empty()
+    if(m_Help.empty()
+      && !m_Operations.empty()
       && currentOptionTree
       && (root_weight(currentOperationData.oper_tree).arguments.size() != root_weight(currentOptionTree).parameters.size()))
     {
@@ -185,6 +191,8 @@ namespace sequoia::parsing::commandline
 
   auto argument_parser::process_option(option_tree currentOptionTree, operation_data currentOperationData, top_level topLevel) -> operation_data
   {
+    m_MostRecentlyEncounteredOption = currentOptionTree;
+
     if(topLevel == top_level::yes)
     {
       if(!root_weight(currentOptionTree).early && !root_weight(currentOptionTree).late)
@@ -213,9 +221,9 @@ namespace sequoia::parsing::commandline
     return currentOperationData;
   }
 
-  template<std::input_iterator Iter>
+  template<std::ranges::input_range Options>
   [[nodiscard]]
-  bool argument_parser::process_concatenated_aliases(std::ranges::subrange<Iter> options, std::string_view arg, operation_data currentOperationData, top_level topLevel)
+  bool argument_parser::process_concatenated_aliases(const Options& options, std::string_view arg, operation_data currentOperationData, top_level topLevel)
   {
     if((arg.size() < 2) || ((arg[0] == '-') && ((arg[1] == ' ') || arg[1] == '-')))
       return false;
@@ -229,7 +237,7 @@ namespace sequoia::parsing::commandline
 
         auto optionsIter{std::ranges::find_if(options, [&alias](const auto& tree) { return is_alias(root_weight(tree), alias); })};
 
-        if(optionsIter == options.end())  return false;
+        if(optionsIter == std::ranges::end(options))  return false;
 
         const option_tree currentOptionTree{*optionsIter};
         process_option(currentOptionTree, currentOperationData, topLevel);
@@ -246,9 +254,9 @@ namespace sequoia::parsing::commandline
     return std::ranges::find(opt.aliases, s) != opt.aliases.end();
   }
 
-  template<std::input_iterator Iter>
+  template<std::ranges::input_range Options>
   [[nodiscard]]
-  std::string argument_parser::generate_help(std::ranges::subrange<Iter> options)
+  std::string argument_parser::generate_help(const Options& options)
   {
     indentation ind{};
     std::string help;
