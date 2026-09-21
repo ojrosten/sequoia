@@ -11,7 +11,7 @@ Commands:
   locate-instabilities, locate <repetitions> [options]
                                         Run the tests repeatedly, reporting the checks whose outcome varies
   recover                               Run serially, recording each check before it runs, to find a crash
-  dump                                  Run serially, recording every check, for diffing two runs
+  dump [options]                        Run serially, recording every check, for comparing two runs
 
 Options:
   --check-versioned-output              Fail the run if it changes anything versioned under output

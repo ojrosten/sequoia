@@ -14,6 +14,7 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
+#include <format>
 #include <numeric>
 #include <ranges>
 
@@ -252,6 +253,12 @@ namespace sequoia::testing
   fs::path recovery_paths::dump_file() const
   {
     return fs::path{dir()} /= "Dump.txt";
+  }
+
+  [[nodiscard]]
+  fs::path recovery_paths::kept_dump(std::string_view name) const
+  {
+    return (fs::path{dir()} /= "Dumps") /= std::format("{}.txt", name);
   }
 
   //===================================== drift_paths =====================================//

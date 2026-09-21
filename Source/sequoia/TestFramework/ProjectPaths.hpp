@@ -335,6 +335,10 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path dump_file() const;
 
+    /** \brief Where a dump kept under a name lives: `<dir>/Dumps/<name>.txt`. */
+    [[nodiscard]]
+    std::filesystem::path kept_dump(std::string_view name) const;
+
     [[nodiscard]]
     friend bool operator==(const recovery_paths&, const recovery_paths&) noexcept = default;
   private:

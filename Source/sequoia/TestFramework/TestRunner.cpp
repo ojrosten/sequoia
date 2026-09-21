@@ -8,6 +8,7 @@
 #include "sequoia/TestFramework/TestRunner.hpp"
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
+#include "sequoia/TestFramework/DumpComparison.hpp"
 #include "sequoia/TestFramework/MaterialsUpdater.hpp"
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
@@ -714,7 +715,7 @@ namespace sequoia::testing
                   }},
                   {{{"recover", {}, {},
                     [this, recovery{proj_paths().output().recovery()}](const arg_list&) {
-                      if(!std::filesystem::create_directory(recovery.dir()))
+                      if(!std::filesystem::create_directories(recovery.dir()))
                       {
                         std::filesystem::remove(recovery.recovery_file());
                       }
@@ -727,7 +728,7 @@ namespace sequoia::testing
                   }}},
                   {{{"dump", {}, {},
                     [this, recovery{proj_paths().output().recovery()}](const arg_list&) {
-                      if(!std::filesystem::create_directory(recovery.dir()))
+                      if(!std::filesystem::create_directories(recovery.dir()))
                       {
                         std::filesystem::remove(recovery.dump_file());
                       }
@@ -736,8 +737,17 @@ namespace sequoia::testing
                         m_ConcurrencyMode = concurrency_mode::serial;
                     },
                     {},
-                    "Run serially, recording every check, for diffing two runs"
-                  }}},
+                    "Run serially, recording every check, for comparing two runs"},
+                    { {{"--as", {}, {"name"},
+                        [this](const arg_list& args) { m_KeepDumpAs = args.front(); },
+                        {},
+                        "Keep the dump under a name, to compare a later run against"}},
+                      {{"--against", {}, {"name"},
+                        [this](const arg_list& args) { m_CompareDumpWith = args.front(); },
+                        {},
+                        "Report the checks missing from, and added since, the dump kept under the name"}}
+                    }
+                  }},
                   {{{"--check-versioned-output", {}, {},
                     [this, drift{proj_paths().output().drift()}](const arg_list&) {
                       std::filesystem::create_directories(drift.dir());
@@ -900,7 +910,35 @@ namespace sequoia::testing
       stream() << instability_analysis(proj_paths().output().instability_analysis(), m_NumReps);
     }
 
+    keep_or_compare_dump();
+
     return code | report_versioned_output_changes(baseline);
+  }
+
+  void test_runner::keep_or_compare_dump()
+  {
+    const auto recovery{proj_paths().output().recovery()};
+
+    if(!m_KeepDumpAs.empty())
+    {
+      const auto kept{recovery.kept_dump(m_KeepDumpAs)};
+      fs::create_directories(kept.parent_path());
+      fs::copy_file(recovery.dump_file(), kept, fs::copy_options::overwrite_existing);
+    }
+
+    if(!m_CompareDumpWith.empty())
+    {
+      const auto kept{recovery.kept_dump(m_CompareDumpWith)};
+      if(!fs::exists(kept))
+      {
+        using parsing::commandline::error;
+        throw std::runtime_error{
+          error(std::format("no dump has been kept as '{}': expected {}", m_CompareDumpWith, kept.generic_string()))
+        };
+      }
+
+      stream() << '\n' << to_string(compare_dumps(kept, recovery.dump_file()), m_CompareDumpWith);
+    }
   }
 
   [[nodiscard]]

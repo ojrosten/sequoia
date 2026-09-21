@@ -390,6 +390,7 @@ namespace sequoia::testing
     test_nested_suite_verbose();
     test_excluded_performance_tests();
     test_excluded_tests();
+    test_dump_comparison();
     test_instability_analysis();
   }
 
@@ -885,6 +886,71 @@ namespace sequoia::testing
     run("Exclusion naming a suite",                        "ExclusionOfSuiteOutput",          {"--exclude", "Failing"},                               return_code::soft_failures);
     run("Selected test excluded, and so found both ways",  "SelectedTestExcludedOutput",      {"select", failing, "--exclude", failing},              return_code::success);
     run("Performance test excluded both ways, and found", "PerformanceTestExcludedOutput",   {"--exclude-performance", "--exclude", performance},    return_code::soft_failures);
+  }
+
+  void test_runner_test::test_dump_comparison()
+  {
+    enum class registrations { two, one, three };
+
+    auto run{
+      [this](std::string_view description,
+             std::string_view outputDirName,
+             std::initializer_list<std::string> extraArgs,
+             registrations registered,
+             return_code expected) {
+        std::vector<std::string> argList{minimal_fake_path().generic_string(), "dump"};
+        argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
+        commandline_arguments args{argList};
+
+        std::stringstream outputStream{};
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<passing_test>();
+        if(registered != registrations::one)
+          runner.register_test<failing_test>();
+
+        if(registered == registrations::three)
+          runner.register_test<fake_performance_test>();
+
+        check(equality, append_lines(description, "Return code"), runner.execute(), expected);
+        check_output(description, outputDirName, outputStream);
+
+        return runner.proj_paths().output().recovery();
+      }
+    };
+
+    fs::remove_all(output_paths{fake_project()}.dir());
+
+    const auto recovery{
+      run("A dump kept under a name", "DumpKeptOutput", {"--as", "before"}, registrations::two, return_code::soft_failures)
+    };
+    check(equality, "The kept dump exists", fs::exists(recovery.kept_dump("before")), true);
+
+    run("The same checks as the kept dump",    "DumpUnchangedOutput",
+        {"--against", "before"}, registrations::two,   return_code::soft_failures);
+    run("A check missing since the kept dump", "DumpMissingOutput",
+        {"--against", "before"}, registrations::one,   return_code::success);
+    run("A check added since the kept dump",   "DumpAddedOutput",
+        {"--against", "before"}, registrations::three, return_code::soft_failures);
+
+    check_exception_thrown<std::runtime_error>("Comparison against a dump never kept", [this](){
+      std::stringstream outputStream{};
+      commandline_arguments args{{minimal_fake_path().generic_string(), "dump", "--against", "never"}};
+      test_runner runner{args.size(),
+                         args.get(),
+                         "Oliver J. Rosten",
+                         "  ",
+                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                         outputStream};
+
+      runner.register_test<passing_test>();
+      return runner.execute();
+    });
   }
 
   void test_runner_test::test_instability_analysis()
