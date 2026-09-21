@@ -35,6 +35,8 @@ namespace sequoia::testing
 
     void test_basic_output();
 
+    void test_help_output();
+
     void test_verbose_output();
 
     void test_serial_verbose_output();

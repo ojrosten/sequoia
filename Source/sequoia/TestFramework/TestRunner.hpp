@@ -30,7 +30,7 @@
 
 namespace sequoia::testing
 {
-  enum class runner_mode : unsigned { none=0, help=1, test=2, create=4, init=8};
+  enum class runner_mode : unsigned { none=0, test=1, create=2, init=4};
 
   enum class update_mode { none = 0, soft };
 
