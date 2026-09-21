@@ -20,6 +20,7 @@
 
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
+#include "sequoia/TextProcessing/Indent.hpp"
 
 #include <vector>
 #include <string>
@@ -129,19 +130,16 @@ namespace sequoia::parsing::commandline
   };
 
   [[nodiscard]]
-  std::string error(std::string_view message, std::string_view indent="  ");
+  std::string error(std::string_view message, indentation indent=indentation{"  "});
 
   [[nodiscard]]
-  std::string error(std::initializer_list<std::string_view> messages, std::string_view indent = "  ");
+  std::string error(std::initializer_list<std::string_view> messages, indentation indent=indentation{"  "});
 
   [[nodiscard]]
-  std::string warning(std::string_view message, std::string_view indent="  ");
+  std::string warning(std::string_view message, indentation indent=indentation{"  "});
 
   [[nodiscard]]
-  std::string warning(std::initializer_list<std::string_view> messages, std::string_view indent = "  ");
-
-  [[nodiscard]]
-  std::string pluralize(std::size_t n, std::string_view noun, std::string_view prefix=" ");
+  std::string warning(std::initializer_list<std::string_view> messages, indentation indent=indentation{"  "});
 
   /** \brief Parses the command line arguments against a forest of options, building the \ref sequoia::parsing::commandline::operation "operation" forest.
 
@@ -149,7 +147,7 @@ namespace sequoia::parsing::commandline
       parameter:
         -# An option is named by its `name` or by one of its `aliases`. A group of single-character
            aliases, `-xy`, names the options aliased `-x` and `-y` in turn; none of them may have
-           parameters.
+           parameters or nested options.
         -# The arguments which follow an option supply its `parameters`, one value each.
         -# Once an option's parameters are supplied, the arguments which follow are matched against
            its nested options. One which matches none of them is matched against the enclosing
@@ -164,7 +162,8 @@ namespace sequoia::parsing::commandline
               level or at any enclosing level.
       \throws std::runtime_error if the arguments end before the option most recently encountered has
               all of its parameters.
-      \throws std::runtime_error if a group of aliases names an option with parameters.
+      \throws std::runtime_error if a group of aliases names an option with parameters or with
+              nested options.
       \throws std::logic_error if both the function objects, `early` and `late`, belonging to
               a top-level `option` are null.
 
@@ -249,6 +248,6 @@ namespace sequoia::parsing::commandline
     [[nodiscard]]
     static std::string generate_help(const Options& options);
 
-    static bool is_alias(const option& opt, std::string_view s);
+    static bool is_alias(const option& opt, std::string_view s) noexcept;
   };
 }

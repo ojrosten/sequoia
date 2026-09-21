@@ -1,0 +1,32 @@
+  Warning: Excluded Test File 'Failing' not found
+    '--exclude' takes the source file of a test
+
+Running tests...
+
+failing_test:
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 98
+	Standard Failure
+
+	[int]
+	operator== returned false
+	Obtained : 43
+	Predicted: 42
+
+	=======================================
+
+fake_performance_test:
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+passing_test:
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+
+-----------Grand Totals-----------
+[Total Run Time: 1.4ms]
+[Execution Time: 569us]
+	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 3]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

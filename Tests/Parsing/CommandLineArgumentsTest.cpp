@@ -124,6 +124,11 @@ namespace sequoia::testing
                                       {{"test",    {"-t"}, {"case"}, fo{}}}});
     });
 
+    check_exception_thrown<std::runtime_error>("Concatenated alias naming an option with nested options", [](){
+      return parse({{"foo", "-cv"}}, {{{"create",    {"-c"}, {}, fo{}, {}, {{"regular_test", {"regular"}, {"class_name"}, fo{}}}}},
+                                      {{"--verbose", {"-v"}, {}, fo{}}}});
+    });
+
     check_exception_thrown<std::runtime_error>("Concatenated aliases without the leading dash", [](){
       return parse({{"foo", "xa"}}, {{{"--async", {"-a"}, {}, fo{}}}});
     });

@@ -89,6 +89,15 @@ Expected Exception Type:
 =======================================
 
 Tests/Parsing/CommandLineArgumentsTest.cpp, Line 127
+Concatenated alias naming an option with nested options
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: option "create" has nested options, so its alias cannot be concatenated with others, as in '-cv'
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 132
 Concatenated aliases without the leading dash
 
 Expected Exception Type:
@@ -97,7 +106,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 131
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 136
 A dash after something other than a dash
 
 Expected Exception Type:
@@ -106,7 +115,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 156
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 161
 Final argument missing
 
 Expected Exception Type:
@@ -115,7 +124,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 271
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 276
 A nested option, not bound to a function object, missing its argument
 
 Expected Exception Type:
@@ -124,7 +133,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 277
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 282
 A nested option, not bound to a function object, missing two of its three arguments
 
 Expected Exception Type:
@@ -133,7 +142,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 283
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 288
 A dash after something other than a dash, at a nested level
 
 Expected Exception Type:
@@ -142,7 +151,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 399
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 404
 Two options, one with nesting, illegal argument
 
 Expected Exception Type:
