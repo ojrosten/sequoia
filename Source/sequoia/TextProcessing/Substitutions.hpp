@@ -13,10 +13,18 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 
+#include <format>
 #include <string>
 
 namespace sequoia
 {
+  /** \brief A count with its noun, "1 argument", "2 arguments". */
+  [[nodiscard]]
+  inline std::string with_count(std::string_view noun, std::size_t count)
+  {
+    return std::format("{} {}{}", count, noun, (count == 1) ? "" : "s");
+  }
+
   struct char_to_char
   {
     [[nodiscard]]

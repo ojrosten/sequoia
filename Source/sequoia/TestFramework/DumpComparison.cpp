@@ -7,8 +7,10 @@
 
 #include "sequoia/TestFramework/DumpComparison.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <format>
 #include <map>
 #include <ranges>
@@ -17,10 +19,6 @@ namespace sequoia::testing
 {
   namespace
   {
-    // A dump is what the logger wrote: each check's message and a newline, then two blank lines.
-    // A message may end in a newline of its own, so a check is taken without its surrounding ones
-    constexpr std::string_view check_terminator{"\n\n\n"};
-
     [[nodiscard]]
     std::string trimmed_of_newlines(std::string_view text)
     {
@@ -32,34 +30,58 @@ namespace sequoia::testing
       return std::string{text.substr(first, last - first + 1)};
     }
 
-    // The dump opens each check with its location, "<file>, Line <number>", then its description
+    // A location is a line "<file>, Line <number>"; a check opens with one, and a check nested in
+    // it may add another
     constexpr std::string_view line_number_prefix{", Line "};
 
     [[nodiscard]]
-    std::string_view first_line(std::string_view text)
+    bool is_location(std::string_view line)
     {
-      return text.substr(0, text.find('\n'));
+      const auto prefix{line.rfind(line_number_prefix)};
+      if(prefix == std::string_view::npos)
+        return false;
+
+      const auto number{line.substr(prefix + line_number_prefix.size())};
+      return !number.empty() && std::ranges::all_of(number, [](char c){ return std::isdigit(static_cast<unsigned char>(c)); });
     }
 
-    /** \brief A check's identity: its text with the line number of its location removed. */
+    [[nodiscard]]
+    std::string_view without_line_number(std::string_view location)
+    {
+      return location.substr(0, location.rfind(line_number_prefix));
+    }
+
+    [[nodiscard]]
+    auto lines_of(std::string_view text)
+    {
+      return text | std::views::split('\n') | std::views::transform([](const auto& line){ return std::string_view{line}; });
+    }
+
+    /** \brief A check's identity: its text with the line number removed from every location in it. */
     [[nodiscard]]
     std::string identity_of(std::string_view check)
     {
-      const auto location{first_line(check)};
-      const auto lineNumber{location.rfind(line_number_prefix)};
+      auto anonymised{[](std::string_view line){ return is_location(line) ? without_line_number(line) : line; }};
 
-      return std::string{location.substr(0, lineNumber)}.append(check.substr(location.size()));
+      return   lines_of(check)
+             | std::views::transform(anonymised)
+             | std::views::join_with('\n')
+             | std::ranges::to<std::string>();
     }
 
-    /** \brief A check's location and description, joined by ": " */
+    /** \brief A check's location and the first line after it which says anything, joined by ": ";
+        the location alone if nothing does.
+     */
     [[nodiscard]]
     std::string location_and_description(std::string_view check)
     {
-      const auto location{first_line(check)};
-      if(location.size() == check.size())
-        return std::string{check};
+      auto lines{lines_of(check)};
+      const std::string_view location{*lines.begin()};
 
-      return std::format("{}: {}", location, first_line(check.substr(location.size() + 1)));
+      auto rest{lines | std::views::drop(1)};
+      const auto description{std::ranges::find_if(rest, [](std::string_view line){ return !line.empty(); })};
+
+      return (description == rest.end()) ? std::string{location} : std::format("{}: {}", location, *description);
     }
 
     /** \brief Each check of the dump keyed by its identity, with how many times it occurs. */
@@ -88,7 +110,8 @@ namespace sequoia::testing
           found->second -= std::ranges::min(count, found->second);
       }
 
-      // Checks are taken in reverse, so that the excess is attributed to the last occurrences
+      // The excess is attributed to the last occurrences: a lost instantiation is reported where
+      // the template's checks end, and a check found again earlier in the dump is not the one lost
       std::vector<std::string> taken{};
       for(const auto& check : checks | std::views::reverse)
       {
@@ -111,7 +134,7 @@ namespace sequoia::testing
       throw std::runtime_error{std::format("Unable to read the dump {}", dump.generic_string())};
 
     return   *text
-           | std::views::split(check_terminator)
+           | std::views::split(dump_format::check_separator)
            | std::views::transform([](const auto& check){ return trimmed_of_newlines(std::string_view{check}); })
            | std::views::filter([](const std::string& check){ return !check.empty(); })
            | std::ranges::to<std::vector>();
@@ -128,13 +151,11 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string to_string(const dump_comparison& comparison, std::string_view baselineName)
   {
-    auto count{[](std::size_t n){ return std::format("{} check{}", n, (n == 1) ? "" : "s"); }};
-
     auto report{
       std::format("Dump compared with '{}': {} missing, {} added\n",
                   baselineName,
-                  count(comparison.missing.size()),
-                  count(comparison.added.size()))
+                  with_count("check", comparison.missing.size()),
+                  with_count("check", comparison.added.size()))
     };
 
     auto section{

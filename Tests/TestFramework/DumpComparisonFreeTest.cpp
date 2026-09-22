@@ -30,15 +30,15 @@ namespace sequoia::testing
 
   namespace
   {
-    // A dump as the logger writes one: each check's message and a newline, then two blank lines;
-    // the message may end in a newline of its own, as the second here does
+    // A dump as the logger writes one: each top-level check's message and the messages nested in
+    // it, one per line, then the separator; a message may end in a newline of its own, as beta does
     [[nodiscard]]
     std::string dump_of(std::initializer_list<std::string_view> checks)
     {
       std::string dump{};
       for(const auto check : checks)
       {
-        dump.append(check).append("\n").append("\n\n");
+        dump.append(check).append("\n").append(dump_format::check_separator);
       }
 
       return dump;
@@ -49,7 +49,14 @@ namespace sequoia::testing
       alphaMoved{"Tests/Alpha.cpp, Line 14\nAlpha holds\n\n[int]"},
       alphaRetyped{"Tests/Alpha.cpp, Line 10\nAlpha holds\n\n[long]"},
       beta{"Tests/Beta.cpp, Line 20\nBeta holds\n\n[bool]\n"},
-      gamma{"Tests/Gamma.cpp, Line 30\nGamma holds\n\n[bool]"};
+      gamma{"Tests/Gamma.cpp, Line 30\nGamma holds\n\n[bool]"},
+      // A check with a nested check of its own location, as a helper taking a reporter produces
+      nested{"Tests/Delta.cpp, Line 40\nTests/Delta.cpp, Line 7\n\nDelta holds\n[int]"},
+      nestedMoved{"Tests/Delta.cpp, Line 44\nTests/Delta.cpp, Line 9\n\nDelta holds\n[int]"},
+      // A semantics check: a message ending in a newline, an empty nested message writing nothing,
+      // then the nested checks' messages
+      semantics{"Tests/Epsilon.cpp, Line 50\n\n[thing]\n\noperator== is inconsistent (x)\n[bool]\noperator< is inconsistent (x)\n[bool]"},
+      undescribed{"Tests/Zeta.cpp, Line 60\n\n[bool]"};
   }
 
   [[nodiscard]]
@@ -72,6 +79,10 @@ namespace sequoia::testing
 
     check(equality, "The checks of a dump, in order, without their surrounding newlines",
           read_dump(dump), std::vector<std::string>{std::string{alpha}, "Tests/Beta.cpp, Line 20\nBeta holds\n\n[bool]"});
+
+    write_to_file(dump, dump_of({semantics, nested}), std::ios_base::out);
+    check(equality, "A check's nested messages, blank lines included, are part of it",
+          read_dump(dump), std::vector<std::string>{std::string{semantics}, std::string{nested}});
     write_to_file(dump, "", std::ios_base::out);
     check(equality, "An empty dump holds no checks", read_dump(dump), std::vector<std::string>{});
 
@@ -104,6 +115,12 @@ namespace sequoia::testing
     compare("A repeated check lost once is one missing check",
             {alpha, alpha, alpha}, {alpha, alpha}, {.missing{std::string{alpha}}});
     compare("Order is not identity",            {alpha, beta}, {beta, alpha}, {});
+    compare("A check moved by an edit above it, with a nested location moved too, is neither",
+            {nested, beta}, {nestedMoved, beta}, {});
+    compare("A semantics check is one check, however many it nests",
+            {semantics, alpha}, {alpha}, {.missing{std::string{semantics}}});
+    compare("The surplus is attributed to the last occurrence",
+            {alpha, alphaMoved}, {alpha}, {.missing{std::string{alphaMoved}}});
     compare("Missing and added checks are reported in the order of the dump holding them",
             {gamma, alpha, beta}, {beta}, {.missing{std::string{gamma}, std::string{alpha}}});
   }
@@ -123,5 +140,13 @@ namespace sequoia::testing
                       "\n"
                       "Added:\n"
                       "  Tests/Beta.cpp, Line 20: Beta holds\n"});
+
+    check(equality, "A check without a description shows the first line which says anything",
+          to_string({.missing{std::string{undescribed}, std::string{semantics}}}, "before"),
+          std::string{"Dump compared with 'before': 2 checks missing, 0 checks added\n"
+                      "\n"
+                      "Missing:\n"
+                      "  Tests/Zeta.cpp, Line 60: [bool]\n"
+                      "  Tests/Epsilon.cpp, Line 50: [thing]\n"});
   }
 }

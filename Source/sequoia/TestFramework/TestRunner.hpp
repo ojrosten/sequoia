@@ -533,7 +533,7 @@ namespace sequoia::testing
     verbosity             m_Verbosity{verbosity::standard};
     update_mode           m_UpdateMode{update_mode::none};
     recovery_mode         m_RecoveryMode{recovery_mode::none};
-    std::string           m_KeepDumpAs{}, m_CompareDumpWith{};
+    std::string           m_KeepDumpAs{}, m_CompareDumpAgainst{};
     concurrency_mode      m_ConcurrencyMode{concurrency_mode::dynamic};
     instability_mode      m_InstabilityMode{instability_mode::none};
     versioned_output_mode m_VersionedOutputMode{versioned_output_mode::unchecked};
@@ -583,7 +583,14 @@ namespace sequoia::testing
     [[nodiscard]]
     return_code report_versioned_output_changes(const std::optional<versioned_output_snapshot>& baseline);
 
-    void keep_or_compare_dump();
+    return_code run();
+
+    [[nodiscard]]
+    static std::string dump_name(std::string name);
+
+    void compare_dump();
+
+    void keep_dump();
 
     [[nodiscard]]
     bool nothing_to_do();

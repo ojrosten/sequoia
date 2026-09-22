@@ -18,15 +18,28 @@
 
 #include <filesystem>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace sequoia::testing
 {
+  /** \brief The form of a dump, shared by the logger which writes one and the reader.
+
+      A top-level check is its message, then the message of every check nested in it, one per
+      line, then the separator. An empty message writes nothing.
+   */
+  namespace dump_format
+  {
+    constexpr std::string_view check_separator{"\n=======================================\n\n"};
+  }
+
   /** \brief The checks in one dump and not the other.
 
-      A check is identified by everything the dump records of it but its line number, so a
-      check moved by an edit above it is neither missing nor new. Checks are counted, so an
-      instantiation lost from a template instantiated several times is one missing check.
+      A check is identified by everything the dump records of it but the line numbers of its
+      locations, so a check moved by an edit above it is neither missing nor added. Checks are
+      counted, so an instantiation lost from a template instantiated several times is one
+      missing check; by the same token a check deleted at one place and written again, with the
+      same text, at another is neither missing nor added.
    */
   struct dump_comparison
   {
@@ -36,7 +49,9 @@ namespace sequoia::testing
     friend bool operator==(const dump_comparison&, const dump_comparison&) noexcept = default;
   };
 
-  /** \brief The checks recorded in a dump, one string each without surrounding newlines, in the order run. */
+  /** \brief The top-level checks recorded in a dump, each with its nested checks, without
+             surrounding newlines, in the order run. A check which recorded nothing is not among them.
+   */
   [[nodiscard]]
   std::vector<std::string> read_dump(const std::filesystem::path& dump);
 
@@ -50,7 +65,7 @@ namespace sequoia::testing
   dump_comparison compare_dumps(const std::filesystem::path& baseline, const std::filesystem::path& dump);
 
   /** \brief A report of a comparison, naming the baseline: a summary line, then the missing and
-             added checks under headings, each as its location and description.
+             added checks under headings, each as its location and the first line after it.
    */
   [[nodiscard]]
   std::string to_string(const dump_comparison& comparison, std::string_view baselineName);

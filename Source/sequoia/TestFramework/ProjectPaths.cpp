@@ -14,7 +14,6 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
-#include <format>
 #include <numeric>
 #include <ranges>
 
@@ -258,7 +257,7 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path recovery_paths::kept_dump(std::string_view name) const
   {
-    return (fs::path{dir()} /= "Dumps") /= std::format("{}.txt", name);
+    return (fs::path{dir()} /= "Dumps") /= std::string{name}.append(".txt");
   }
 
   //===================================== drift_paths =====================================//
