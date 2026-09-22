@@ -728,10 +728,8 @@ namespace sequoia::testing
                   }}},
                   {{{"dump", {}, {},
                     [this, recovery{proj_paths().output().recovery()}](const arg_list&) {
-                      if(!std::filesystem::create_directories(recovery.dir()))
-                      {
-                        std::filesystem::remove(recovery.dump_file());
-                      }
+                      std::filesystem::create_directories(recovery.dir());
+                      write_to_file(recovery.dump_file(), "", std::ios_base::out);
                       m_RecoveryMode |= recovery_mode::dump;
                       if(m_ConcurrencyMode == concurrency_mode::dynamic)
                         m_ConcurrencyMode = concurrency_mode::serial;
@@ -739,13 +737,13 @@ namespace sequoia::testing
                     {},
                     "Run serially, recording every check, for comparing two runs"},
                     { {{"--as", {}, {"name"},
-                        [this](const arg_list& args) { m_KeepDumpAs = args.front(); },
+                        [this](const arg_list& args) { m_KeepDumpAs = dump_name(args.front()); },
                         {},
                         "Keep the dump under a name, to compare a later run against"}},
                       {{"--against", {}, {"name"},
-                        [this](const arg_list& args) { m_CompareDumpWith = args.front(); },
+                        [this](const arg_list& args) { m_CompareDumpAgainst = dump_name(args.front()); },
                         {},
-                        "Report the checks missing from, and added since, the dump kept under the name"}}
+                        "Compare the run's checks with the dump kept under the name"}}
                     }
                   }},
                   {{{"--check-versioned-output", {}, {},
@@ -893,8 +891,17 @@ namespace sequoia::testing
     build_suite_tree();
     check_for_missing_tests();
 
-    if(nothing_to_do()) return return_code::success;
+    // A run with nothing to do still has a dump, an empty one, to compare or keep
+    const auto code{nothing_to_do() ? return_code::success : run()};
 
+    compare_dump();
+    keep_dump();
+
+    return code;
+  }
+
+  return_code test_runner::run()
+  {
     if(m_InstabilityMode != instability_mode::sandbox)
       fs::remove_all(proj_paths().output().instability_analysis());
 
@@ -910,35 +917,46 @@ namespace sequoia::testing
       stream() << instability_analysis(proj_paths().output().instability_analysis(), m_NumReps);
     }
 
-    keep_or_compare_dump();
-
     return code | report_versioned_output_changes(baseline);
   }
 
-  void test_runner::keep_or_compare_dump()
+  [[nodiscard]]
+  std::string test_runner::dump_name(std::string name)
   {
+    if(name.empty())
+      throw std::runtime_error{parsing::commandline::error("a dump is kept under, and compared against, a name; none was given")};
+
+    return name;
+  }
+
+  // Comparison comes before keeping, so that one run may compare against a name and then take it
+  void test_runner::compare_dump()
+  {
+    if(m_CompareDumpAgainst.empty())
+      return;
+
     const auto recovery{proj_paths().output().recovery()};
-
-    if(!m_KeepDumpAs.empty())
+    const auto kept{recovery.kept_dump(m_CompareDumpAgainst)};
+    if(!fs::exists(kept))
     {
-      const auto kept{recovery.kept_dump(m_KeepDumpAs)};
-      fs::create_directories(kept.parent_path());
-      fs::copy_file(recovery.dump_file(), kept, fs::copy_options::overwrite_existing);
+      using parsing::commandline::error;
+      throw std::runtime_error{
+        error(std::format("no dump has been kept as '{}': expected {}", m_CompareDumpAgainst, kept.generic_string()))
+      };
     }
 
-    if(!m_CompareDumpWith.empty())
-    {
-      const auto kept{recovery.kept_dump(m_CompareDumpWith)};
-      if(!fs::exists(kept))
-      {
-        using parsing::commandline::error;
-        throw std::runtime_error{
-          error(std::format("no dump has been kept as '{}': expected {}", m_CompareDumpWith, kept.generic_string()))
-        };
-      }
+    stream() << '\n' << to_string(compare_dumps(kept, recovery.dump_file()), m_CompareDumpAgainst);
+  }
 
-      stream() << '\n' << to_string(compare_dumps(kept, recovery.dump_file()), m_CompareDumpWith);
-    }
+  void test_runner::keep_dump()
+  {
+    if(m_KeepDumpAs.empty())
+      return;
+
+    const auto recovery{proj_paths().output().recovery()};
+    const auto kept{recovery.kept_dump(m_KeepDumpAs)};
+    fs::create_directories(kept.parent_path());
+    fs::copy_file(recovery.dump_file(), kept, fs::copy_options::overwrite_existing);
   }
 
   [[nodiscard]]

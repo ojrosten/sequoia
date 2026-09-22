@@ -1,9 +1,9 @@
-Tests/TestFramework/DumpComparisonFreeTest.cpp, Line 78
+Tests/TestFramework/DumpComparisonFreeTest.cpp, Line 89
 A dump which does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read the dump Absent.txt
+Unable to read the dump output/TestsTemporaryData/TestFramework/DumpComparisonFreeTest/dump_comparison_free_test/Absent.txt
 
 =======================================
 

@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "sequoia/Parsing/CommandLineArguments.hpp"
+#include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
 #include <array>
@@ -62,12 +63,6 @@ namespace sequoia::parsing::commandline
              | std::views::transform([](const auto& s){ return std::string_view{s}; })
              | std::views::join_with(separator)
              | std::ranges::to<std::string>();
-    }
-
-    [[nodiscard]]
-    std::string with_count(std::string_view noun, std::size_t count)
-    {
-      return std::format("{} {}{}", count, noun, (count == 1) ? "" : "s");
     }
 
     [[nodiscard]]

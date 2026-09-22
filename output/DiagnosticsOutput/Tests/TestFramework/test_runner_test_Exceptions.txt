@@ -100,12 +100,30 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 941
+Tests/TestFramework/TestRunnerTest.cpp, Line 927
 Comparison against a dump never kept
 
 Expected Exception Type:
 [std::runtime_error]
   Error: no dump has been kept as 'never': expected output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/output/Recovery/Dumps/never.txt
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 927
+A dump kept under no name
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: a dump is kept under, and compared against, a name; none was given
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 927
+Comparison against no name
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: a dump is kept under, and compared against, a name; none was given
 
 =======================================
 
