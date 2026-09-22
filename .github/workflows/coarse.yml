@@ -1,6 +1,7 @@
 name: coarse
 
-# Every push, every branch but main: does it build, and does the suite pass?
+# Every push, every branch but main: does it build, does the suite pass, and
+# did the output it versions move?
 # Uninstrumented, because this tier is bought for latency, and because it is the
 # only per-push build running at native speed with the system allocator.
 #
@@ -42,6 +43,19 @@ name: coarse
 # returned 196ms and then 603ms for the same commit, and macOS 172ms, which is
 # what cost it its column on 2026-09-08. No tolerance spans that and still means
 # anything.
+#
+# Every column checks the versioned output, since 2026-09-22. The check is a
+# comparison of files the run has just written, and costs nothing this tier's
+# latency can see. It was left to the gates until a commit reached staging by a
+# direct push, which this tier alone sees: its committed diagnostics output was
+# stale, coarse passed it, and the drift surfaced the next morning in every
+# column of the promotion's rigorous run. As in the gates, the flag is spelt
+# per column, because a column's `exec_args` REPLACES the tier's: a column
+# naming only its exclusion would silently lose the check.
+#
+# On the advisory Windows column the suite step cannot go red, so drift there
+# is raised by the triage step, as an error on a green job, the same way as an
+# actionable test failure.
 on:
   push:
     branches-ignore:
@@ -66,11 +80,12 @@ jobs:
       # Counted and annotated, not fatal: a red run here should mean the code is
       # broken rather than untidy. The gates refuse warnings outright.
       warnings_as_errors: false
+      exec_args: '--check-versioned-output'
       columns: >-
         [
           {"name": "Linux · GCC · Debug",   "os": "ubuntu-latest",  "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15"},
-          {"name": "macOS · Clang · Debug", "os": "macos-latest",   "configure": "llvm-env", "build": "llvm-env", "exec_args": "--exclude-performance"},
-          {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc-ninja", "build": "msvc-ninja", "advisory": true, "exec_args": "--exclude-performance"}
+          {"name": "macOS · Clang · Debug", "os": "macos-latest",   "configure": "llvm-env", "build": "llvm-env", "exec_args": "--check-versioned-output;--exclude-performance"},
+          {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc-ninja", "build": "msvc-ninja", "advisory": true, "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
 
   # Also in rigorous. It costs seconds and no compilation, so there is no reason to
