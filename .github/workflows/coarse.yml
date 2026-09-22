@@ -28,8 +28,8 @@ name: coarse
 # from 2026-09-09 - the suite run and triaged, a failure reported on a green job -
 # because it was red on every push from PR #80 onwards for one cause: the nested
 # test projects' compiler probes overran MAX_PATH, roadmap item 197, fixed by
-# hashing the object paths (build_system/ShortObjectPaths.cmake). A column nothing
-# can make red reports; it does not gate, and this one now does.
+# hashing the object paths (build_system/ShortObjectPaths.cmake). A column that
+# nothing can make red is a report rather than a gate; this one gates.
 #
 # The Windows column builds with Ninja, not msbuild: the same cl.exe, the faster
 # of the two builds, and the generator a client outside the IDE would use, so a

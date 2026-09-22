@@ -363,9 +363,9 @@ jobs:
       # that; an advisory column's red first pass counts as success, so there the
       # repeat runs. Such a column must not also check the versioned output: the
       # second pass's handler removes the first's patch and then finds the tree
-      # already repaired, so the drift would be reported without its patch. No
-      # advisory column carries both `repeat_args` and the drift check, and none
-      # should be made to without moving the patch aside between the passes.
+      # already repaired, so the drift would be reported without its patch. No column is
+      # advisory today; the pairing stays forbidden for the next one that is, unless
+      # the patch is moved aside between the passes.
       - name: Configure the repetitions
         if: ${{ steps.configure.outputs.repeat_args != '' }}
         working-directory: TestAll
@@ -452,8 +452,9 @@ jobs:
             echo "::notice title=Advisory run::${{ matrix.name }}: the suite passed outright."
           fi
 
-      # Kept with the artifact so an advisory column can be reviewed after the fact,
-      # rather than only through the annotations. The step's outcome goes with it:
+      # Kept with the artifact so a column can be read after the fact rather than
+      # only through the run page, which is what an advisory column needed and what
+      # statistical reads back. The step's outcome goes with it:
       # a caller reading the log back cannot otherwise tell a suite that failed
       # in every repetition, whose analysis says "No instabilities detected", from
       # one that passed.
