@@ -657,8 +657,10 @@ namespace sequoia::testing
       if(objects.size() == 1)
         return objects.front();
 
-      // Sources compiled by one invocation share their writes; each object bears its source's stem, or the
-      // source's whole name where stems collide
+      // Sources compiled by one invocation share their writes. Where the object is named after its source
+      // it can be picked out by stem, or by the source's whole name where stems collide; where the build
+      // names objects by hash (CMAKE_INTERMEDIATE_DIR_STRATEGY) nothing in the log distinguishes them, so
+      // such an entry is refused rather than guessed at.
       auto bearsSourcesName{
         [&source](const fs::path& o){ return (o.stem() == source.stem()) || (o.stem() == source.filename()); }
       };

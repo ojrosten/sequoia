@@ -284,8 +284,27 @@ jobs:
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
           sudo apt-get install -y g++-15 ninja-build libtbb-dev lcov
+          # The hosted image's CMake is below sequoia's floor of 4.2, the release that added
+          # CMAKE_INTERMEDIATE_DIR_STRATEGY; the Windows presets set it in
+          # build_system/ShortObjectPaths.cmake. The macOS and Windows images ship a release above
+          # the floor, so this column fetches one from Kitware - the host the checkout already
+          # comes from - and puts it first on PATH. An older cmake surviving this step is loud:
+          # the configure step's cmake_minimum_required refuses it. The tarball is the only binary
+          # either job puts on PATH without apt's signatures behind it, so its checksum is pinned.
+          #
+          # Repeated in rigorous.yml's coverage job; change both.
+          cmake_version=4.4.3
+          cmake_sha256=d6c83076c575bc00b823522ac974bda66d0af05d6ddc30e739c12385cf32c6cc
+          cmake_tarball=$RUNNER_TEMP/cmake.tar.gz
+          cmake_url=https://github.com/Kitware/CMake/releases/download/v$cmake_version/cmake-$cmake_version-linux-x86_64.tar.gz
+          if [ "$(uname -m)" != x86_64 ]; then echo "::error::No CMake build is fetched for $(uname -m)"; exit 1; fi
+          if ! curl -fsSL -o "$cmake_tarball" "$cmake_url"; then echo "::error::CMake $cmake_version could not be fetched from Kitware's release page"; exit 1; fi
+          if ! echo "$cmake_sha256  $cmake_tarball" | sha256sum --check --quiet; then echo "::error::The CMake tarball does not match its published checksum"; exit 1; fi
+          tar -xzf "$cmake_tarball" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin" >> "$GITHUB_PATH"
           g++-15 --version | head -1
           lcov --version
+          "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin/cmake" --version | head -1
 
       - name: Give git an identity
         run: |
