@@ -8,7 +8,7 @@
 #pragma once
 
 /** \file
-    \brief Writers for the build artefacts which BuildArtefacts.hpp reads, so that a build can be described without being performed.
+    \brief Writers for the build artefacts which BuildArtefacts.cppm reads, so that a build can be described without being performed.
  */
 
 #include "sequoia/PlatformSpecific/Macros.hpp"

@@ -1386,14 +1386,10 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> test_runner::enclosing_suites(const fs::path& source) const
   {
-    // Spelt as calls rather than pipes: under `import std`, g++ 15.2 rejected the pipe here with
-    // "use of operator| ... before deduction of 'auto'". gcc-bugs/E in the sequoia-LLM repository,
-    // PR 120318; fixed in gcc 16.1.
-    return std::ranges::to<std::vector>(
-             std::views::transform(
-               std::views::drop_while(rebase_from(source, proj_paths().tests().repo()).parent_path(),
-                                      [](const fs::path& component){ return component == ".."; }),
-               [](const fs::path& component){ return component.generic_string(); }));
+    return rebase_from(source, proj_paths().tests().repo()).parent_path()
+         | std::views::drop_while([](const fs::path& component){ return component == ".."; })
+         | std::views::transform([](const fs::path& component){ return component.generic_string(); })
+         | std::ranges::to<std::vector>();
   }
 
   [[nodiscard]]

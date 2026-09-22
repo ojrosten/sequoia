@@ -165,8 +165,10 @@ namespace sequoia::testing
 
   /* The fake project is never built, so what its build would have recorded is written by hand:
      for each unit, every file the compiler would have read, which is the flattened closure of its
-     includes. The sequoia headers the fake sources include lie outside the fake project, as they
-     would in a build of it, and are taken from the real one so that they exist.
+     includes. The fake sources include sequoia headers, which lie outside the fake project, as they
+     would in a build of it. Sequoia is modules here, so its interface units stand in for those
+     headers, taken from the real project so that they exist. A modules build records no such
+     dependency: the deps of a test importing sequoia are its own files and the macros headers.
    */
   namespace
   {

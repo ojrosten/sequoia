@@ -132,10 +132,10 @@ export namespace sequoia::object
     [[nodiscard]]
     std::vector<vessel> make_if(Predicate pred, const Args&... args) const
     {
-      // Spelt as calls rather than pipes, for gcc bug E; see test_runner::enclosing_suites in TestRunner.cpp.
-      return std::ranges::to<std::vector>(
-               std::views::transform(std::views::filter(m_Creators, [&pred](const element& e){ return pred(std::string_view{e.first}); }),
-                                     [&](const element& e){ return make_from(e.second, args...); }));
+      return   m_Creators
+             | std::views::filter([&pred](const element& e){ return pred(std::string_view{e.first}); })
+             | std::views::transform([&](const element& e){ return make_from(e.second, args...); })
+             | std::ranges::to<std::vector>();
     }
 
     /** \brief Every product, in the same stable order as `make_if`. */

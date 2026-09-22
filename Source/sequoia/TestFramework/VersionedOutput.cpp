@@ -52,10 +52,10 @@ namespace sequoia::testing
     {
       if(!fs::exists(dir)) return {};
 
-      // Spelt as calls rather than pipes, for gcc bug E; see test_runner::enclosing_suites in TestRunner.cpp.
-      return std::ranges::to<versioned_output_snapshot>(
-               std::views::transform(std::views::filter(fs::recursive_directory_iterator{dir}, is_versioned_file(dir)),
-                                     to_snapshot_entry(root)));
+      return fs::recursive_directory_iterator{dir}
+           | std::views::filter(is_versioned_file(dir))
+           | std::views::transform(to_snapshot_entry(root))
+           | std::ranges::to<versioned_output_snapshot>();
     }
 
     [[nodiscard]]
@@ -140,10 +140,9 @@ namespace sequoia::testing
       }
     };
 
-    // The pipeline is spelt as calls, as above.
     return {.added    = keys_only_in(after, before),
             .removed  = keys_only_in(before, after),
-            .modified = std::ranges::to<std::vector>(std::views::keys(std::views::filter(after, changed)))};
+            .modified = after | std::views::filter(changed) | std::views::keys | std::ranges::to<std::vector>()};
   }
 
   [[nodiscard]]

@@ -68,7 +68,7 @@
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <DebugInformationFormat>
       </DebugInformationFormat>
-      <ScanSourceForModuleDependencies>false</ScanSourceForModuleDependencies>
+      <ScanSourceForModuleDependencies>true</ScanSourceForModuleDependencies>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;_MBCS;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
@@ -83,7 +83,7 @@
       <ProxyFileName>%(Filename)_p.c</ProxyFileName>
     </Midl>
     <Link>
-      <AdditionalDependencies>sequoia\Release\sequoia.lib;winmm.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
+      <AdditionalDependencies>sequoia\Release\sequoia.lib;sequoia\Release\sequoia_std.lib;winmm.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention></DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -136,6 +136,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ProjectReference Include="C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerProjectFiles\test_runner_project_files\GeneratedProject\build\TestAll\msvc-release\sequoia\sequoia.vcxproj">
       <Project>{FCB07D4B-8038-3FDA-B5DE-54D797A5BAE0}</Project>
       <Name>sequoia</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\olive\sequoia\output\TestsTemporaryData\TestFramework\TestRunnerProjectFiles\test_runner_project_files\GeneratedProject\build\TestAll\msvc-release\sequoia\sequoia_std.vcxproj">
+      <Project>{51880B0D-3597-318E-8D7D-74C677C3541E}</Project>
+      <Name>sequoia_std</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
