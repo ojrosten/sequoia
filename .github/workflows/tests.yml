@@ -126,6 +126,24 @@ jobs:
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
           sudo apt-get install -y "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev
+          # The hosted image's CMake is below sequoia's floor of 4.2, the release that added
+          # CMAKE_INTERMEDIATE_DIR_STRATEGY; the Windows presets set it in
+          # build_system/ShortObjectPaths.cmake. The macOS and Windows images ship a release above
+          # the floor, so this column fetches one from Kitware - the host the checkout already
+          # comes from - and puts it first on PATH. An older cmake surviving this step is loud:
+          # the configure step's cmake_minimum_required refuses it. The tarball is the only binary
+          # either job puts on PATH without apt's signatures behind it, so its checksum is pinned.
+          #
+          # Repeated in rigorous.yml's coverage job; change both.
+          cmake_version=4.4.3
+          cmake_sha256=d6c83076c575bc00b823522ac974bda66d0af05d6ddc30e739c12385cf32c6cc
+          cmake_tarball=$RUNNER_TEMP/cmake.tar.gz
+          cmake_url=https://github.com/Kitware/CMake/releases/download/v$cmake_version/cmake-$cmake_version-linux-x86_64.tar.gz
+          if [ "$(uname -m)" != x86_64 ]; then echo "::error::No CMake build is fetched for $(uname -m)"; exit 1; fi
+          if ! curl -fsSL -o "$cmake_tarball" "$cmake_url"; then echo "::error::CMake $cmake_version could not be fetched from Kitware's release page"; exit 1; fi
+          if ! echo "$cmake_sha256  $cmake_tarball" | sha256sum --check --quiet; then echo "::error::The CMake tarball does not match its published checksum"; exit 1; fi
+          tar -xzf "$cmake_tarball" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin" >> "$GITHUB_PATH"
           echo "CC=${{ matrix.cc }}"   >> "$GITHUB_ENV"
           echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"
 
@@ -342,8 +360,8 @@ jobs:
       # repeat runs. Such a column must not also check the versioned output: the
       # second pass's handler removes the first's patch and then finds the tree
       # already repaired, so the drift would be reported without its patch. No
-      # column is both, and none should be made so without moving the patch aside
-      # between the passes.
+      # advisory column carries both `repeat_args` and the drift check, and none
+      # should be made to without moving the patch aside between the passes.
       - name: Configure the repetitions
         if: ${{ steps.configure.outputs.repeat_args != '' }}
         working-directory: TestAll
@@ -370,6 +388,13 @@ jobs:
       # `check(within_tolerance{...}, ...)`, which count in the standard row, since the performance
       # rows count `check_relative_performance` alone. Every failing file is named either way, so a
       # new one cannot hide behind a tolerated one.
+      #
+      # Drift is a second thing the suite step cannot make red here. Where the column checks the
+      # versioned output, a run whose output moved writes the patch and sets the drift bit of its
+      # exit code, which `continue-on-error` swallows like any other failure; so the patch's
+      # existence is read directly, and raised as an error naming the files it holds. Drift and
+      # failure co-fire, a failing test rewriting its summary, so both are reported when both
+      # occurred. A failed step that names no test and writes no patch is reported as that.
       - name: Triage the advisory run
         if: ${{ always() && matrix.advisory == true }}
         run: |
@@ -385,6 +410,11 @@ jobs:
           failing=$({ grep -oE 'Tests/[A-Za-z0-9/_]+\.cpp, Line [0-9]+' "$log" || true; } \
                       | sed 's/, Line.*//' | sort -u)
           actionable=$({ echo "$failing" | grep -vE "$tolerated_tests" || true; } | sed '/^$/d')
+
+          # Every file in the patch has its `diff --git` header; a removed file has no `+++ b/`
+          # line, and a file created or deleted empty has nothing but the header.
+          patch=output/Drift/VersionedOutput.patch
+          drifted=$({ [ -f "$patch" ] && grep '^diff --git a/' "$patch" | sed 's|^diff --git a/.* b/||'; } || true)
 
           {
             echo "### ${{ matrix.name }} - advisory run"
@@ -403,11 +433,18 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
+          if [ -n "$drifted" ]; then
+            echo "::error title=Advisory run needs action::${{ matrix.name }}: versioned output moved: $(echo "$drifted" | tr '\n' ' '). This column does not gate, so the job is green; the patch is on this page, or in the artifact if too big for it."
+          fi
           if [ -n "$actionable" ]; then
             echo "::error title=Advisory run needs action::${{ matrix.name }}: $(echo "$actionable" | tr '\n' ' '). This column does not gate, so the job is green; the failures are real."
           elif [ -n "$failing" ]; then
             echo "::warning title=Advisory run::${{ matrix.name }}: only the timing assertions this runner cannot hold (roadmap 38, 102). Nothing to act on."
-          else
+          elif [ '${{ steps.suite.outcome }}' != 'success' ]; then
+            # A suite step that failed without naming a test or writing a patch: a run cut short,
+            # a crash, a timeout. Not "passed outright", whatever the log's last lines say.
+            echo "::error title=Advisory run needs action::${{ matrix.name }}: the suite step's outcome is '${{ steps.suite.outcome }}' and the log names no failing test and no drift. Read the log."
+          elif [ -z "$drifted" ]; then
             echo "::notice title=Advisory run::${{ matrix.name }}: the suite passed outright."
           fi
 

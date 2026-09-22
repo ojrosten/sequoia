@@ -638,11 +638,11 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::vector<prune_record> aggregate_failures(const prune_paths& prunePaths, const std::size_t numReps)
+    std::vector<prune_record> aggregate_tests_to_rerun(const prune_paths& prunePaths, const std::size_t numReps)
     {
       return unique_by_path(
           std::views::iota(0uz, numReps)
-        | std::views::transform([&prunePaths](std::size_t i){ return read_tests(prunePaths.failures(i)); })
+        | std::views::transform([&prunePaths](std::size_t i){ return read_tests(prunePaths.to_rerun(i)); })
         | std::views::join
         | std::ranges::to<std::vector>()
       );
@@ -727,12 +727,12 @@ namespace sequoia::testing
   namespace
   {
     void do_update_prune_files(const project_paths& projPaths,
-                               std::vector<prune_record> failedTests,
+                               std::vector<prune_record> testsToRerun,
                                fs::file_time_type updateTime,
                                std::optional<std::size_t> id)
     {
       const auto prunePaths{projPaths.prune()};
-      write_tests(projPaths, prunePaths.failures(id), unique_by_path(std::move(failedTests)));
+      write_tests(projPaths, prunePaths.to_rerun(id), unique_by_path(std::move(testsToRerun)));
       fs::remove(prunePaths.selected_passes(id));
       update_prune_stamp_on_disk(prunePaths, updateTime);
     }
@@ -760,17 +760,17 @@ namespace sequoia::testing
 
       const auto prunePaths{projPaths.prune()};
       const auto passesFile{prunePaths.selected_passes(id)},
-                 failuresFile{prunePaths.failures(id)};
+                 rerunFile{prunePaths.to_rerun(id)};
 
       const auto executed{unique_by_path(std::move(executedTests))};
       const auto failed{unique_by_path(std::move(failedTests))};
 
       const auto trialPasses{unionize(executed, read_tests(passesFile))};
       const auto passingTests{difference(trialPasses, failed)};
-      const auto remainingPreviousFailures{difference(read_tests(failuresFile), passingTests)};
-      const auto allFailures{unionize(remainingPreviousFailures, failed)};
+      const auto stillToRerun{difference(read_tests(rerunFile), passingTests)};
+      const auto testsToRerun{unionize(stillToRerun, failed)};
 
-      write_tests(projPaths, failuresFile, allFailures);
+      write_tests(projPaths, rerunFile, testsToRerun);
       write_tests(projPaths, passesFile, passingTests);
     }
 
@@ -808,24 +808,24 @@ namespace sequoia::testing
     if(!staleTests)
       return prune_fallback_reason::toolchain_changed;
 
-    const std::vector<fs::path> failingTests{
-      std::views::transform(read_tests(prunePaths.failures(std::nullopt)), path_projector{}) | std::ranges::to<std::vector>()
+    const std::vector<fs::path> testsToRerun{
+      std::views::transform(read_tests(prunePaths.to_rerun(std::nullopt)), path_projector{}) | std::ranges::to<std::vector>()
     };
 
     std::vector<fs::path> testsToRun{};
-    std::ranges::set_union(*staleTests, failingTests, std::back_inserter(testsToRun));
+    std::ranges::set_union(*staleTests, testsToRerun, std::back_inserter(testsToRun));
 
     return testsToRun;
   }
 
   void update_prune_files(const project_paths& projPaths,
-                          std::span<const fs::path> failedTests,
+                          std::span<const fs::path> testsToRerun,
                           fs::file_time_type updateTime,
                           std::optional<std::size_t> id)
   {
     do_update_prune_files(
       projPaths,
-      build_prune_records(failedTests, updateTime),
+      build_prune_records(testsToRerun, updateTime),
       updateTime,
       id
     );
@@ -858,7 +858,7 @@ namespace sequoia::testing
                                                   std::size_t numReps)
   {
     const auto prunePaths{projPaths.prune()};
-    auto failingCases{aggregate_failures(prunePaths, numReps)};
+    auto testsToRerun{aggregate_tests_to_rerun(prunePaths, numReps)};
 
     switch(mode)
     {
@@ -867,20 +867,20 @@ namespace sequoia::testing
       if(auto optPasses{aggregate_passes(prunePaths, numReps)})
       {
         auto& executedCases{optPasses.value()};
-        executedCases.append_range(failingCases);
+        executedCases.append_range(testsToRerun);
 
-        do_update_prune_files(projPaths, std::move(executedCases), std::move(failingCases), std::nullopt);
+        do_update_prune_files(projPaths, std::move(executedCases), std::move(testsToRerun), std::nullopt);
       }
       else
       {
-        do_update_prune_files(projPaths, std::move(failingCases), timeStamp, std::nullopt);
+        do_update_prune_files(projPaths, std::move(testsToRerun), timeStamp, std::nullopt);
       }
 
       break;
     }
     case prune_mode::active:
     {
-      do_update_prune_files(projPaths, std::move(failingCases), timeStamp, std::nullopt);
+      do_update_prune_files(projPaths, std::move(testsToRerun), timeStamp, std::nullopt);
       break;
     }
     }

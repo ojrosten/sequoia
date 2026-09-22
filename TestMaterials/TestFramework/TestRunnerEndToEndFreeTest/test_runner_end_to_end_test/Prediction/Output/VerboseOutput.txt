@@ -2,49 +2,49 @@
 Running tests...
 
 Stuff:
-	bar_free_test
-	[Execution Time: 958ns]
-	foo_false_negative_test
-	[Execution Time: 916ns]
-	foo_test
-	[Execution Time: 2.21us]
-	oldschool_false_negative_test
-	[Execution Time: 916ns]
-	oldschool_test
-	[Execution Time: 2.33us]
+    bar_free_test:
+    [Execution Time: 11us]
+    foo_false_negative_test:
+    [Execution Time: 4us]
+    foo_test:
+    [Execution Time: 14us]
+    oldschool_false_negative_test:
+    [Execution Time: 4.42us]
+    oldschool_test:
+    [Execution Time: 13.6us]
 Utilities:
-	container_allocation_test
-	[Execution Time: 1.29us]
-	container_performance_test
-	[Execution Time: 1.25us]
-	Thing:
-		unique_thing_false_negative_test
-		[Execution Time: 1.5us]
-		unique_thing_test
-		[Execution Time: 1.04us]
-	useful_things_free_test
-	[Execution Time: 917ns]
-	utilities_free_test
-	[Execution Time: 958ns]
+    container_allocation_test:
+    [Execution Time: 3.17us]
+    container_performance_test:
+    [Execution Time: 3.42us]
+    Thing:
+        unique_thing_false_negative_test:
+        [Execution Time: 6.5us]
+        unique_thing_test:
+        [Execution Time: 12.9us]
+    useful_things_free_test:
+    [Execution Time: 49.6us]
+    utilities_free_test:
+    [Execution Time: 2.33us]
 Unstable:
-	flipper_free_test
-	[Execution Time: 2.38us]
-house_allocation_test
-[Execution Time: 1.33us]
+    flipper_free_test:
+    [Execution Time: 12.9us]
+house_allocation_test:
+[Execution Time: 5.71us]
 Maybe:
-	maybe_false_negative_test
-	[Execution Time: 917ns]
-	maybe_test
-	[Execution Time: 792ns]
+    maybe_false_negative_test:
+    [Execution Time: 59.5us]
+    maybe_test:
+    [Execution Time: 3us]
 Maths:
-	probability_false_negative_test
-	[Execution Time: 2.67us]
-	probability_test
-	[Execution Time: 792ns]
+    probability_false_negative_test:
+    [Execution Time: 21.1us]
+    probability_test:
+    [Execution Time: 3.67us]
 
 -----------Grand Totals-----------
-[Total Run Time: 1.52ms]
-[Execution Time: 169us]
+[Total Run Time: 2.31ms]
+[Execution Time: 440us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

@@ -12,11 +12,11 @@ Commands:
                                         Run the tests repeatedly, reporting the checks whose outcome varies
   recover                               Run serially, recording each check before it runs, to find a crash
   dump [options]                        Run serially, recording every check, for comparing two runs
+  exclude, e <source>                   Leave out the test defined in a source file
 
 Options:
   --check-versioned-output              Fail the run if it changes anything versioned under output
   --exclude-performance                 Leave out the performance tests
-  --exclude <source>                    Leave out the test defined in a source file
   --serial                              Run the tests on one thread
   --thread-pool <threads>               Run the tests on a pool of the given number of threads
   --verbose, -v                         Print the suites and their tests as a tree

@@ -292,9 +292,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  fs::path prune_paths::failures(std::optional<std::size_t> id) const
+  fs::path prune_paths::to_rerun(std::optional<std::size_t> id) const
   {
-    return make_path(id, ".failures");
+    return make_path(id, ".rerun");
   }
 
   [[nodiscard]]
