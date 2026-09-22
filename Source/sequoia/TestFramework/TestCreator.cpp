@@ -71,8 +71,7 @@ namespace sequoia::testing
         `std::quoted` would do here, and this spelling exists only to stay identical to
         `modules-native`, where it cannot: libstdc++'s module std exports the manipulator
         but not the `operator<<` for the `std::__detail::_Quoted_string` it returns, so
-        under `import std` the manipulator is visible and unusable. See gcc-bugs/D in the
-        sequoia-LLM repository. Fixed upstream in gcc 16.1.
+        under `import std` the manipulator is visible and unusable. Fixed upstream in gcc 16.1.
 
         This is not a general substitute. `std::quoted` escapes `"` and `\`; this escapes
         nothing, and would be wrong for a string containing either. It is exact for what

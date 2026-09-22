@@ -297,11 +297,13 @@ namespace sequoia::testing
     using duration = std::chrono::steady_clock::duration;
 
     // `{}` rather than `= default`, to stay identical to `modules-native`, where the
-    // defaulted constructor of this class is emitted in no translation unit at all and
-    // the link fails. See gcc-bugs/F in the sequoia-LLM repository; fixed upstream in
-    // gcc 15.3. The two spellings differ in value-initialisation - `{}` is
-    // user-provided, so members without initialisers would not be zero-initialised - but
-    // every member below has one, so the object state is identical.
+    // defaulted constructor of this class is emitted in no translation unit at all and the
+    // link fails. Fixed upstream in gcc 15.3, on the gcc-15 branch between releases: the
+    // 15.2.0 release tarball fails, and a later snapshot of that branch - which still calls
+    // itself 15.2.0 - links, so the version string does not settle it. The two spellings
+    // differ in value-initialisation: `{}` is user-provided, so members without initialisers
+    // would not be zero-initialised, but every member below has one, so the object state is
+    // identical.
     log_summary() {}
 
     explicit log_summary(std::string_view name);
