@@ -333,7 +333,11 @@ jobs:
       # "the suite timed out" from "the job timed out" in the run summary. One
       # branch has already spun for 36 minutes against an 18s baseline.
       # A column may set `advisory: true` to run without gating on the result, for
-      # a platform whose failures are understood and being worked on. There is no
+      # a platform whose failures are understood and being worked on. No tier sets
+      # it since 2026-09-22, when coarse's Windows column became fatal; the
+      # mechanism stays for the columns the roadmap still owes - clang with
+      # libstdc++, clang on Windows, the -Og build - each of which arrives knowing
+      # less about itself than this one now does. There is no
       # build-without-running option: a suite that is not run tells you nothing,
       # and the audit below refuses a column whose suite step did not run.
       #

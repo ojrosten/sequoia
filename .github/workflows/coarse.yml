@@ -24,10 +24,12 @@ name: coarse
 # not wasted: it is what keeps an uninstrumented build in the picture once a branch
 # is under review.
 #
-# The Windows column is advisory: it runs the suite, but a test failure is
-# reported and triaged rather than fatal, until it has been green for long
-# enough to be made fatal. Compilation is still fatal - that is where MSVC
-# divergences usually appear. The Linux and macOS columns are fatal throughout.
+# Every column is fatal, the Windows one since 2026-09-22. It had been advisory
+# from 2026-09-09 - the suite run and triaged, a failure reported on a green job -
+# because it was red on every push from PR #80 onwards for one cause: the nested
+# test projects' compiler probes overran MAX_PATH, roadmap item 197, fixed by
+# hashing the object paths (build_system/ShortObjectPaths.cmake). A column nothing
+# can make red reports; it does not gate, and this one now does.
 #
 # The Windows column builds with Ninja, not msbuild: the same cl.exe, the faster
 # of the two builds, and the generator a client outside the IDE would use, so a
@@ -53,9 +55,8 @@ name: coarse
 # per column, because a column's `exec_args` REPLACES the tier's: a column
 # naming only its exclusion would silently lose the check.
 #
-# On the advisory Windows column the suite step cannot go red, so drift there
-# is raised by the triage step, as an error on a green job, the same way as an
-# actionable test failure.
+# Drift fails the column it is found on, Windows included: no column here is
+# advisory any more, so nothing routes a red suite step through the triage step.
 on:
   push:
     branches-ignore:
@@ -85,7 +86,7 @@ jobs:
         [
           {"name": "Linux · GCC · Debug",   "os": "ubuntu-latest",  "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15"},
           {"name": "macOS · Clang · Debug", "os": "macos-latest",   "configure": "llvm-env", "build": "llvm-env", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc-ninja", "build": "msvc-ninja", "advisory": true, "exec_args": "--check-versioned-output;--exclude-performance"}
+          {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc-ninja", "build": "msvc-ninja", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
 
   # Also in rigorous. It costs seconds and no compilation, so there is no reason to
