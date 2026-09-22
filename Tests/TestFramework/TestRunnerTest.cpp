@@ -387,6 +387,25 @@ namespace sequoia::testing
       }
     };
 
+    namespace another_namespace
+    {
+      /// Holds a `foo_test` of its own. `test_name` strips the qualification from both, and a
+      /// test's name is the leaf of its materials path, so the runner must admit only one.
+      class foo_test final : public free_test
+      {
+      public:
+        using free_test::free_test;
+
+        [[nodiscard]]
+        static std::filesystem::path source_file()
+        {
+          return make_fake_file_path<foo_test>();
+        }
+
+        void run_tests() {}
+      };
+    }
+
     test_runner make_failing_suite(commandline_arguments args, std::stringstream& outputStream)
     {
       test_runner runner{args.size(),
@@ -556,6 +575,24 @@ namespace sequoia::testing
 
         runner.register_test<foo_test>();
         runner.register_test<foo_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"Two tests whose unqualified names coincide"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<foo_test>();
+        runner.register_test<another_namespace::foo_test>();
       });
 
     check_exception_thrown<std::runtime_error>(
