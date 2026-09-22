@@ -63,6 +63,8 @@ namespace sequoia::testing
 
     void test_nested_suite_verbose();
 
+    void test_suite_named_as_a_sibling_test();
+
     void test_excluded_performance_tests();
 
     void test_excluded_tests();

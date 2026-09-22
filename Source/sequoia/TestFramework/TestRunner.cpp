@@ -24,7 +24,6 @@
 
 #include <algorithm>
 #include <array>
-#include <map>
 #include <set>
 #include <ranges>
 #include <span>
@@ -1224,35 +1223,43 @@ namespace sequoia::testing
 
     if(m_Verbosity == verbosity::verbose)
     {
-      indentation indent0{no_indent}, indent1{tab};
+      // One step per level of the tree, a test's report being a level below the test. Spaces
+      // rather than a tab: a tab advances to the next tab stop instead of by a fixed amount, so
+      // following the spaces of the levels above it, the gap between a test's name and its report
+      // would vary both with depth and with whatever renders the output.
+      const indentation step{"    "};
+      indentation suiteIndent{no_indent};
       auto printNode{
-        [&s=m_Suites,&indent0,&indent1,&stream=stream(),serial{!concurrent_execution()}](auto n) {
+        [&s = m_Suites, &suiteIndent, &step, &stream = stream(), serial{!concurrent_execution()}](auto n) {
           if(n)
           {
             const auto& wt{s.cbegin_node_weights()[n]};
             if(wt.optTest)
             {
-              stream << summarize(wt.summary, "", summary_detail::failure_messages | summary_detail::timings, indent0, indent1);
+              stream << summarize(wt.summary,
+                                  ":",
+                                  summary_detail::failure_messages | summary_detail::timings,
+                                  suiteIndent,
+                                  step);
             }
             else
             {
-              if(serial)
-              {
-                const auto message{sequoia::indent(wt.summary.name() + ":", indent0)};
-                stream << append_indented(message, report_time(wt.summary, std::nullopt), indent0);
-              }
-              else
-              {
-                stream << sequoia::indent(wt.summary.name() + ":", indent0) << '\n';
-              }
+              const auto heading{sequoia::indent(wt.summary.name() + ":", suiteIndent)};
+              stream << (serial ? append_indented(heading, report_time(wt.summary, std::nullopt), suiteIndent)
+                                : heading + '\n');
             }
 
-            indent0.append("\t");
+            suiteIndent.append(std::string{step});
           }
         }
       };
 
-      auto decreaseIndent{ [&indent0](auto n) { if(n) indent0.trim(1); } };
+      auto decreaseIndent{
+        [&suiteIndent, &step](auto n) {
+          if(n)
+            suiteIndent.trim(std::string_view{step}.size());
+        }
+      };
 
       traverse(depth_first, m_Suites, find_disconnected_t{}, printNode, decreaseIndent, null_func_obj{});
     }
@@ -1390,10 +1397,11 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::vector<std::string> test_runner::suites_of(const fs::path& source) const
+  std::vector<std::string> test_runner::enclosing_suites(const fs::path& source) const
   {
     return rebase_from(source, proj_paths().tests().repo()).parent_path()
-         | std::views::transform([](const fs::path& p){ return p.generic_string(); })
+         | std::views::drop_while([](const fs::path& component){ return component == ".."; })
+         | std::views::transform([](const fs::path& component){ return component.generic_string(); })
          | std::ranges::to<std::vector>();
   }
 
@@ -1411,39 +1419,44 @@ namespace sequoia::testing
   void test_runner::build_suite_tree()
   {
     std::vector<fs::path> materialsPaths{};
-    std::map<fs::path, suite_type::size_type> groups{};
 
     // A runner may be executed more than once, with tests registered in between.
     m_Suites = suite_type{};
-    m_Suites.add_node(suite_type::npos);
+    const auto root{m_Suites.add_node(suite_type::npos)};
 
     // By name, so that where a registration sits in a main does not decide what the output says.
     std::ranges::sort(m_Tests, {}, [](const test_vessel& v){ return v.name(); });
 
+    const auto findOrAddSuite{
+      [this](const suite_node_index enclosingSuiteNode, const std::string& suiteName) {
+        const auto children{m_Suites.cedges(enclosingSuiteNode)};
+
+        // A test is a node beside the suites and may share a name with a sibling directory, so
+        // only a suite may be descended into.
+        const auto existing{
+          std::ranges::find_if(children,
+                               [this, &suiteName](const auto& edge) {
+                                 const auto& weight{m_Suites.cbegin_node_weights()[edge.target_node()]};
+                                 return !weight.optTest && (weight.summary.name() == suiteName);
+                               })
+        };
+
+        return existing != children.end()
+             ? existing->target_node()
+             : m_Suites.add_node(enclosingSuiteNode, suite_node{.summary{log_summary{suiteName}}});
+      }
+    };
+
     for(auto& vessel : m_Tests)
     {
-      const auto directory{rebase_from(vessel.source_file(), proj_paths().tests().repo()).parent_path()};
-
-      auto parent{suite_type::size_type{}};
-      fs::path sofar{};
-      for(const auto& component : directory)
-      {
-        sofar /= component;
-
-        if(const auto found{groups.find(sofar)}; found != groups.end())
-        {
-          parent = found->second;
-        }
-        else
-        {
-          parent = groups.emplace(sofar, m_Suites.add_node(parent, suite_node{.summary{log_summary{component.generic_string()}}})).first->second;
-        }
-      }
+      const auto enclosingSuiteNode{
+        std::ranges::fold_left(enclosing_suites(vessel.source_file()), root, findOrAddSuite)
+      };
 
       vessel.initialize(proj_paths(), m_CMakeCache, materialsPaths, m_RecoveryMode);
 
-      std::string name{vessel.name()};
-      m_Suites.add_node(parent, suite_node{.summary{log_summary{std::move(name)}}, .optTest{std::move(vessel)}});
+      m_Suites.add_node(enclosingSuiteNode,
+                        suite_node{.summary{log_summary{vessel.name()}}, .optTest{std::move(vessel)}});
     }
   }
 

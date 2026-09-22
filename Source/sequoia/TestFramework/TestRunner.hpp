@@ -348,7 +348,7 @@ namespace sequoia::testing
 
       constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
 
-      if(m_Filter(T::source_file(), suites_of(T::source_file()), isPerformanceTest))
+      if(m_Filter(T::source_file(), enclosing_suites(T::source_file()), isPerformanceTest))
         m_Tests.emplace_back(T{});
     }
 
@@ -422,7 +422,6 @@ namespace sequoia::testing
 
       void exclude_item(normal_path source) { m_ExcludedItems.emplace_back(std::move(source), false); }
 
-      [[nodiscard]]
       /** \brief Whether the test defined in `source`, in the nested `suites`, is to run. */
       [[nodiscard]]
       bool operator()(const normal_path& source,
@@ -509,6 +508,7 @@ namespace sequoia::testing
     };
 
     using suite_type = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, suite_node>;
+    using suite_node_index = suite_type::size_type;
 
     std::string      m_Copyright{};
     project_paths    m_ProjPaths;
@@ -594,18 +594,20 @@ namespace sequoia::testing
 
     void prune();
 
-    [[nodiscard]]
     /// The reason prune selected every test, if it did; the filter holds the selection otherwise
     [[nodiscard]]
     std::optional<prune_fallback_reason> do_prune();
 
     void build_suite_tree();
 
-    /** \brief The suites a test's source belongs to: the directories beneath the tests repository
-        which hold it, outermost first.
+    /** \brief The suites enclosing a test's source: the names of the directories beneath the tests
+        repository which hold the source, outermost first.
+
+        A source outside the repository belongs to the suites named by its directories below the
+        deepest one it shares with the repository, so two directories with a common tail share a suite.
      */
     [[nodiscard]]
-    std::vector<std::string> suites_of(const std::filesystem::path& source) const;
+    std::vector<std::string> enclosing_suites(const std::filesystem::path& source) const;
 
     [[nodiscard]]
     static std::string duplication_message(std::string_view testName, const std::filesystem::path& source);
