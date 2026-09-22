@@ -370,6 +370,12 @@ jobs:
       # `check(within_tolerance{...}, ...)`, which count in the standard row, since the performance
       # rows count `check_relative_performance` alone. Every failing file is named either way, so a
       # new one cannot hide behind a tolerated one.
+      #
+      # Drift is a second thing the suite step cannot make red here. Where the column checks the
+      # versioned output, a run whose output moved writes the patch and exits 1, which
+      # `continue-on-error` swallows like any other failure; so the patch's existence is read
+      # directly, and raised as an error naming the files it holds. Drift and failure co-fire, a
+      # failing test rewriting its summary, so both are reported when both occurred.
       - name: Triage the advisory run
         if: ${{ always() && matrix.advisory == true }}
         run: |
@@ -385,6 +391,9 @@ jobs:
           failing=$({ grep -oE 'Tests/[A-Za-z0-9/_]+\.cpp, Line [0-9]+' "$log" || true; } \
                       | sed 's/, Line.*//' | sort -u)
           actionable=$({ echo "$failing" | grep -vE "$tolerated_tests" || true; } | sed '/^$/d')
+
+          patch=output/Drift/VersionedOutput.patch
+          drifted=$({ [ -f "$patch" ] && grep '^+++ b/' "$patch" | sed 's|^+++ b/||'; } || true)
 
           {
             echo "### ${{ matrix.name }} - advisory run"
@@ -403,11 +412,14 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
+          if [ -n "$drifted" ]; then
+            echo "::error title=Advisory run needs action::${{ matrix.name }}: versioned output moved: $(echo "$drifted" | tr '\n' ' '). This column does not gate, so the job is green; the patch is on this page."
+          fi
           if [ -n "$actionable" ]; then
             echo "::error title=Advisory run needs action::${{ matrix.name }}: $(echo "$actionable" | tr '\n' ' '). This column does not gate, so the job is green; the failures are real."
           elif [ -n "$failing" ]; then
             echo "::warning title=Advisory run::${{ matrix.name }}: only the timing assertions this runner cannot hold (roadmap 38, 102). Nothing to act on."
-          else
+          elif [ -z "$drifted" ]; then
             echo "::notice title=Advisory run::${{ matrix.name }}: the suite passed outright."
           fi
 
