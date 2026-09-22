@@ -262,6 +262,25 @@ namespace sequoia::testing
     }
 
     {
+      /* MSBuild's MultiToolTask prefixes the compiler's logs; the prefix alone does not make a log the
+         compiler's, and the MIDL logs here, well-formed, would add a record for b.cpp were they read
+       */
+      const auto [tree, executable, dir]{target("multi_tool_task")};
+      fs::create_directories(dir);
+      const auto aSourceLine{u"^" + upper(project / "a.cpp") + u"\r\n"};
+      const auto bSourceLine{u"^" + upper(project / "b.cpp") + u"\r\n"};
+      write_utf16(dir / "Microsoft.Build.CPPTasks.CL.read.1.tlog",    aSourceLine + upper(project / "a.h") + u"\r\n");
+      write_utf16(dir / "Microsoft.Build.CPPTasks.CL.write.1.tlog",   aSourceLine + upper(project / "a.obj") + u"\r\n");
+      write_utf16(dir / "Microsoft.Build.CPPTasks.MIDL.read.1.tlog",  bSourceLine + upper(project / "a.h") + u"\r\n");
+      write_utf16(dir / "Microsoft.Build.CPPTasks.MIDL.write.1.tlog", bSourceLine + upper(project / "b.obj") + u"\r\n");
+
+      check(equality,
+            "The compiler's logs are read under MultiToolTask's prefix; another tool's are not",
+            expand(read_compilations(tree, executable)),
+            std::vector<compilation_record>{{project / "a.obj", {project / "a.cpp", project / "a.h"}}});
+    }
+
+    {
       // CMake's Visual Studio generator names objects by the whole source name where stems collide
       const auto [tree, executable, dir]{target("collision")};
       fs::create_directories(dir);

@@ -97,7 +97,7 @@ output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_f
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 287
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 306
 An object which bears neither source's name
 
 Expected Exception Type:
@@ -106,7 +106,7 @@ The tracker's log in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeT
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 314
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 333
 An object which two sources would each be given
 
 Expected Exception Type:
@@ -115,7 +115,7 @@ The tracker's log in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeT
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 340
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 359
 A log which is not the tracker's UTF-16
 
 Expected Exception Type:
@@ -124,7 +124,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 376
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 395
 A cache which does not exist
 
 Expected Exception Type:
@@ -133,7 +133,7 @@ cmake_cache: no CMakeCache.txt in output/TestsTemporaryData/TestFramework/BuildA
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 377
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 396
 A Ninja tree which has not been built has no log
 
 Expected Exception Type:
@@ -142,7 +142,7 @@ output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_f
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 403
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 422
 A build statement with no rule
 
 Expected Exception Type:
@@ -151,7 +151,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 447
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 466
 A log none of whose objects build.ninja names is two spellings of one tree, not an empty build
 
 Expected Exception Type:
@@ -160,7 +160,7 @@ None of the objects output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTe
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 453
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 472
 Ninja Multi-Config: a generator whose record of dependencies is not understood
 
 Expected Exception Type:
@@ -169,7 +169,7 @@ The build in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/buil
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 453
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 472
 Xcode: a generator whose record of dependencies is not understood
 
 Expected Exception Type:
@@ -178,7 +178,7 @@ The build in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/buil
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 457
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 476
 A cache which names no generator was not written by CMake
 
 Expected Exception Type:
