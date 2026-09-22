@@ -350,6 +350,43 @@ namespace sequoia::testing
       }
     };
 
+    /// The next two put a suite and a test which are siblings under one name: `namesake_test`
+    /// names the test, and the directory holding `under_namesake_test` beside it. The test sorts
+    /// first, so its node exists by the time the suite of that name is wanted.
+    class namesake_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<namesake_test>("Namesakes");
+      }
+
+      void run_tests()
+      {
+        check(equality, reporter{"Namesake"}, 42, 42);
+      }
+    };
+
+    class under_namesake_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<under_namesake_test>("Namesakes/namesake_test");
+      }
+
+      void run_tests()
+      {
+        check(equality, reporter{"Under the namesake"}, 42, 42);
+      }
+    };
+
     test_runner make_failing_suite(commandline_arguments args, std::stringstream& outputStream)
     {
       test_runner runner{args.size(),
@@ -389,6 +426,7 @@ namespace sequoia::testing
     test_post_run_failure();
     test_nested_suite();
     test_nested_suite_verbose();
+    test_suite_named_as_a_sibling_test();
     test_excluded_performance_tests();
     test_excluded_tests();
     test_excluded_tests_are_rerun();
@@ -861,6 +899,25 @@ namespace sequoia::testing
 
       check(equality, "Nested suite return code", runner.execute(), return_code::soft_failures);
       check_output("Basic Nested Output", "BasicNestedOutput", outputStream);
+  }
+
+  void test_runner_test::test_suite_named_as_a_sibling_test()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v"}};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    runner.register_test<namesake_test>();
+    runner.register_test<under_namesake_test>();
+
+    check(equality, "Suite named as a sibling test return code", runner.execute(), return_code::success);
+    check_output("Suite Named As A Sibling Test", "SuiteNamedAsASiblingTest", outputStream);
   }
 
   void test_runner_test::test_nested_suite_verbose()
