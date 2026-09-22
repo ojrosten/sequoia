@@ -254,6 +254,12 @@ namespace sequoia::testing
     return fs::path{dir()} /= "Dump.txt";
   }
 
+  [[nodiscard]]
+  fs::path recovery_paths::kept_dump(std::string_view name) const
+  {
+    return (fs::path{dir()} /= "Dumps") /= std::string{name}.append(".txt");
+  }
+
   //===================================== drift_paths =====================================//
 
   drift_paths::drift_paths(const fs::path& outputDir)

@@ -35,6 +35,8 @@ namespace sequoia::testing
 
     void test_basic_output();
 
+    void test_help_output();
+
     void test_verbose_output();
 
     void test_serial_verbose_output();
@@ -52,6 +54,10 @@ namespace sequoia::testing
     void test_nested_suite_verbose();
 
     void test_excluded_performance_tests();
+
+    void test_excluded_tests();
+
+    void test_dump_comparison();
 
     void test_instability_analysis();
 

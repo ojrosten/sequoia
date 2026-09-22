@@ -378,6 +378,7 @@ namespace sequoia::testing
     test_exceptions();
     test_critical_errors();
     test_basic_output();
+    test_help_output();
     test_verbose_output();
     test_serial_verbose_output();
     test_throwing_tests();
@@ -388,6 +389,8 @@ namespace sequoia::testing
     test_nested_suite();
     test_nested_suite_verbose();
     test_excluded_performance_tests();
+    test_excluded_tests();
+    test_dump_comparison();
     test_instability_analysis();
   }
 
@@ -592,6 +595,30 @@ namespace sequoia::testing
 
     check(equality, "Basic output return code", runner.execute(), return_code::soft_failures);
     check_output("Basic Output", "BasicOutput", outputStream);
+  }
+
+  void test_runner_test::test_help_output()
+  {
+    const std::array<std::pair<std::vector<std::string>, std::string_view>, 4> requests{{
+      {{"init"},                   "InitHelpOutput"         },
+      {{"create"},                 "CreateHelpOutput"       },
+      {{"create", "regular_test"}, "CreateRegularHelpOutput"},
+      {{"test"},                   "TestHelpOutput"         }
+    }};
+
+    // Failing tests are registered so that a run which went ahead would show in the return code
+    for(const auto& [commands, dirName] : requests)
+    {
+      std::vector<std::string> argList{zeroth_arg()};
+      argList.append_range(commands);
+      argList.push_back("--help");
+
+      std::stringstream outputStream{};
+      auto runner{make_failing_suite(argList, outputStream)};
+
+      check(equality, std::format("{} return code", dirName), runner.execute(), return_code::success);
+      check_output(std::format("{} output", dirName), dirName, outputStream);
+    }
   }
 
   void test_runner_test::test_verbose_output()
@@ -821,6 +848,137 @@ namespace sequoia::testing
     // The same registrations both ways, so the option is the only thing which differs.
     run("Performance tests included", "IncludedPerformanceOutput", {});
     run("Performance tests excluded", "ExcludedPerformanceOutput", {"--exclude-performance"});
+  }
+
+  void test_runner_test::test_excluded_tests()
+  {
+    auto run{
+      [this](std::string_view description, std::string_view outputDirName, std::initializer_list<std::string> extraArgs, return_code expected){
+        std::stringstream outputStream{};
+
+        std::vector<std::string> argList{(minimal_fake_path()).generic_string()};
+        argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
+        commandline_arguments args{argList};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<passing_test>();
+        runner.register_test<failing_test>();
+        runner.register_test<fake_performance_test>();
+
+        check(equality, append_lines(description, "Return code"), runner.execute(), expected);
+        check_output(description, outputDirName, outputStream);
+      }
+    };
+
+    // The same registrations each way, so the arguments are the only thing which differs; the
+    // failing test's return code says whether it ran
+    const auto failing{failing_test::source_file().generic_string()};
+    const auto performance{fake_performance_test::source_file().generic_string()};
+
+    run("Failing test excluded",                           "ExcludedTestOutput",              {"--exclude", failing},                                 return_code::success);
+    run("Exclusion matching no test",                      "ExclusionNotFoundOutput",         {"--exclude", "Failing/absent_test.cpp"},               return_code::soft_failures);
+    run("Exclusion naming a suite",                        "ExclusionOfSuiteOutput",          {"--exclude", "Failing"},                               return_code::soft_failures);
+    run("Selected test excluded, and so found both ways",  "SelectedTestExcludedOutput",      {"select", failing, "--exclude", failing},              return_code::success);
+    run("Performance test excluded both ways, and found", "PerformanceTestExcludedOutput",   {"--exclude-performance", "--exclude", performance},    return_code::soft_failures);
+  }
+
+  void test_runner_test::test_dump_comparison()
+  {
+    enum class registrations { passing_and_failing, passing, passing_failing_and_performance };
+
+    auto run{
+      [this](std::string_view description,
+             std::string_view outputDirName,
+             std::initializer_list<std::string> extraArgs,
+             registrations registered,
+             return_code expected) {
+        std::vector<std::string> argList{minimal_fake_path().generic_string(), "dump"};
+        argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
+        commandline_arguments args{argList};
+
+        std::stringstream outputStream{};
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<passing_test>();
+        if(registered != registrations::passing)
+          runner.register_test<failing_test>();
+
+        if(registered == registrations::passing_failing_and_performance)
+          runner.register_test<fake_performance_test>();
+
+        check(equality, append_lines(description, "Return code"), runner.execute(), expected);
+        check_output(description, outputDirName, outputStream);
+      }
+    };
+
+    auto failing{
+      [this](std::string_view description, std::initializer_list<std::string> extraArgs) {
+        check_exception_thrown<std::runtime_error>(description, [this, extraArgs](){
+          std::vector<std::string> argList{minimal_fake_path().generic_string(), "dump"};
+          argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
+          commandline_arguments args{argList};
+
+          std::stringstream outputStream{};
+          test_runner runner{args.size(),
+                             args.get(),
+                             "Oliver J. Rosten",
+                             "  ",
+                             {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                             outputStream};
+
+          runner.register_test<passing_test>();
+          return runner.execute();
+        });
+      }
+    };
+
+    fs::remove_all(output_paths{fake_project()}.dir());
+    const auto recovery{output_paths{fake_project()}.recovery()};
+
+    run("A dump kept under a name", "DumpKeptOutput", {"--as", "before"}, registrations::passing_and_failing, return_code::soft_failures);
+    check(equality, "The kept dump exists", fs::exists(recovery.kept_dump("before")), true);
+
+    run("The same checks as the kept dump",    "DumpUnchangedOutput",
+        {"--against", "before"}, registrations::passing_and_failing,             return_code::soft_failures);
+    run("A check missing since the kept dump", "DumpMissingOutput",
+        {"--against", "before"}, registrations::passing,                         return_code::success);
+    run("A check added since the kept dump",   "DumpAddedOutput",
+        {"--against", "before"}, registrations::passing_failing_and_performance, return_code::soft_failures);
+
+    // Compared before kept, so one run may take the name it compared against
+    run("A dump compared against a name and then kept under it", "DumpAddedOutput",
+        {"--against", "before", "--as", "before"}, registrations::passing_failing_and_performance, return_code::soft_failures);
+    run("The kept dump is the later one", "DumpUnchangedThreeOutput",
+        {"--against", "before"}, registrations::passing_failing_and_performance, return_code::soft_failures);
+
+    failing("Comparison against a dump never kept", {"--against", "never"});
+    failing("A dump kept under no name",            {"--as", ""});
+    failing("Comparison against no name",           {"--against", ""});
+
+    // recover, like dump, writes under output/Recovery on a tree which has no output directory yet
+    fs::remove_all(output_paths{fake_project()}.dir());
+    std::stringstream recoveringStream{};
+    commandline_arguments recoveringArgs{{minimal_fake_path().generic_string(), "recover"}};
+    test_runner recoveringRunner{recoveringArgs.size(),
+                                 recoveringArgs.get(),
+                                 "Oliver J. Rosten",
+                                 "  ",
+                                 {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                                 recoveringStream};
+
+    recoveringRunner.register_test<passing_test>();
+    check(equality, "recover on a fresh tree", recoveringRunner.execute(), return_code::success);
   }
 
   void test_runner_test::test_instability_analysis()

@@ -85,14 +85,14 @@ namespace sequoia::testing
     std::string create_cmd()
     {
       return run_cmd().append(" create free_test Utilities.hpp"
-        " create free_test \"Utilities/UsefulThings.hpp\" gen-source utils"
+        " create free_test \"Utilities/UsefulThings.hpp\" --gen-source utils"
         " create free_test \"Source/generatedProject/Stuff/Bar.hpp\""
         " create free \"Unstable/Flipper.hpp\""
-        " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\" gen-source Maybe"
+        " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\" --gen-source Maybe"
         " create regular_test \"stuff::oldschool\" double --header \"NoTemplate.hpp\""
-        " create regular \"maths::probability\" double gen-source Maths"
+        " create regular \"maths::probability\" double --gen-source Maths"
         " create move_only_test \"bar::baz::foo<maths::floating_point T>\" T"
-        " create move_only \"stuff::unique_thing\" double gen-source Utilities/Thing"
+        " create move_only \"stuff::unique_thing\" double --gen-source Utilities/Thing"
         " create regular_allocation_test container"
         " create move_only_allocation_test house"
         " create performance_test Container.hpp");
