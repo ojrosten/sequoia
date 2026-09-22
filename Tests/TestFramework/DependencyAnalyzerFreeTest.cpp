@@ -136,7 +136,7 @@ namespace sequoia::testing
     std::ranges::sort(passes);
 
     const auto prune{projPaths.prune()};
-    const auto failureFile{prune.failures(std::nullopt)};
+    const auto failureFile{prune.to_rerun(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
     write_tests(projPaths, failureFile, failures);
     write_tests(projPaths, passesFile, passes);
@@ -906,7 +906,7 @@ namespace sequoia::testing
                                                        const project_paths& projPaths,
                                                        const prune_records& records)
   {
-    const auto file{projPaths.prune().failures(std::nullopt)};
+    const auto file{projPaths.prune().to_rerun(std::nullopt)};
     write_tests(projPaths, file, records);
     check(equality, description, read_tests(file), records);
     fs::remove(file);
@@ -952,7 +952,7 @@ namespace sequoia::testing
                      projPaths,
                      {{"HouseAllocationTest.cpp", prune_record::stamp_type{}}});
 
-    const auto file{projPaths.prune().failures(std::nullopt)};
+    const auto file{projPaths.prune().to_rerun(std::nullopt)};
 
     {
       const transient_file noTrailingNewline{file, "path: HouseAllocationTest.cpp\ntimestamp: 0"};
@@ -988,7 +988,7 @@ namespace sequoia::testing
     const auto updateTime{m_ResetTime};
     const auto lateUpdateTime{m_ResetTime + std::chrono::seconds{1}};
     const auto prune{projPaths.prune()};
-    const auto failureFile{prune.failures(std::nullopt)};
+    const auto failureFile{prune.to_rerun(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
 
     using prune_graph = transition_checker<test_outcomes>::transition_graph;
@@ -1187,7 +1187,7 @@ namespace sequoia::testing
     const auto updateTime{m_ResetTime};
     const auto lateUpdateTime{m_ResetTime + std::chrono::seconds{1}};
     const auto prune{projPaths.prune()};
-    const auto failureFile{prune.failures(std::nullopt)};
+    const auto failureFile{prune.to_rerun(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
 
     fs::remove_all(prune.dir());

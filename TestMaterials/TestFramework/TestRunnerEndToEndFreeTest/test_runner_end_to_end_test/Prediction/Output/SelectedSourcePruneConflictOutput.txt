@@ -1,4 +1,4 @@
-  Warning: 'prune' ignored if either test families or test source files are specified
+  Warning: 'prune' ignored when tests are selected
 
 Running tests...
 

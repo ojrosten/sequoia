@@ -12,11 +12,11 @@
 
     A run leaves three things behind:
     -# A stamp, holding the run's time;
-    -# Its failures;
+    -# The tests to run next time regardless: those which failed, and those the run left out;
     -# The passes of any selection it ran.
 
     `prune` reads those, and the build's record of what each test was built from, and selects
-    the tests which are stale or were left failing.
+    the tests which are stale or are to be rerun.
  */
 
 #include "sequoia/TestFramework/ProjectPaths.hpp"
@@ -109,9 +109,11 @@ namespace sequoia::testing
   [[nodiscard]]
   std::variant<std::vector<std::filesystem::path>, prune_fallback_reason> tests_to_run(const project_paths& projPaths);
 
-  /** \brief After a run of every test: records the failures, forgets the selected passes, and stamps the run's time. */
+  /** \brief After a run of every test not left out: records the tests to rerun - the failures and
+             those left out - forgets the selected passes, and stamps the run's time.
+   */
   void update_prune_files(const project_paths& projPaths,
-                          std::span<const std::filesystem::path> failedTests,
+                          std::span<const std::filesystem::path> testsToRerun,
                           std::filesystem::file_time_type updateTime,
                           std::optional<std::size_t> id);
 
@@ -129,7 +131,7 @@ namespace sequoia::testing
 
   /** \brief Folds the repetitions' prune files into the run's, then removes the repetitions' files.
 
-      A test failing in any repetition failed; a test passing in every repetition passed.
+      A test to rerun after any repetition is to rerun; a test passing in every repetition passed.
    */
   void aggregate_instability_analysis_prune_files(const project_paths& projPaths,
                                                   prune_mode mode,

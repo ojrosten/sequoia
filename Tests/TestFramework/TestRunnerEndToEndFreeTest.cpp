@@ -474,6 +474,12 @@ namespace sequoia::testing
     run_and_check(report("Run in sandbox mode with an explicit selection"), b, "SelectRunLocateInstabilitySandbox",
       "locate 2 --sandbox select FlipperFreeTest.cpp", return_code::soft_failures);
 
+    //=================== Rerun with the unstable test and the performance tests excluded, in sandbox mode ===================//
+    // --> The exclusions reach the sandboxed repetitions, so nothing is unstable and no performance test runs
+
+    run_and_check(report("Run in sandbox mode with exclusions"), b, "ExcludeRunLocateInstabilitySandbox",
+      "locate 2 --sandbox exclude FlipperFreeTest.cpp --exclude-performance", return_code::soft_failures);
+
     //=================== Rerun and do a dump ===================//
 
     run_and_check(report("Do a dump"), b, "RunPostUpdate", "dump", return_code::soft_failures);
