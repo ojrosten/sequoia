@@ -257,6 +257,14 @@ jobs:
       # long-path aware in resources/win/longpaths.manifest, but Windows also
       # requires the machine-wide switch, and git its own.
       #
+      # The switch reaches what asks for it - the checkout, git, and sequoia's own
+      # binaries through that manifest - and no further. cl.exe refuses a path at
+      # 260 whatever the registry says, and MSBuild's file tracker is not
+      # long-path aware either, so the compiler's side of this is held under the
+      # limit rather than allowed past it: build_system/ShortObjectPaths.cmake
+      # hashes the object paths, and UntrackedTryCompiles.cmake keeps the tracker
+      # away from the probes whose logs would be longest.
+      #
       # In PowerShell because Git bash's MSYS layer rewrites bare switches like
       # /v and /f into Windows paths before reg.exe sees them.
       - name: Let Windows and git see long paths
@@ -538,6 +546,10 @@ jobs:
       # The patch, if there is one, and the logs. Not the versioned trees
       # themselves: what a person would have compared them against is exactly
       # what the patch holds, without the megabytes that did not move.
+      #
+      # A working copy lies under <source stem>/<test class>, so the path below
+      # names both. Get it wrong and nothing says so: `if-no-files-found: warn`
+      # leaves the artifact a file short and the run green.
       - name: Upload the drift and the run log
         if: always()
         uses: actions/upload-artifact@v7
@@ -545,7 +557,7 @@ jobs:
           name: ${{ matrix.build }}-drift
           path: |
             output/Drift/
-            output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/WorkingCopy/InitOutput/
+            output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/WorkingCopy/InitOutput/
             run-log/
           if-no-files-found: warn
 
