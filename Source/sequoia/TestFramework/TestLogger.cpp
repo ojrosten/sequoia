@@ -50,7 +50,7 @@ namespace sequoia::testing
 
     void recored_dump_started(const std::filesystem::path& file, std::string_view message)
     {
-      if(!file.empty())
+      if(!file.empty() && !message.empty())
       {
         if(std::ofstream of{file, std::ios_base::app})
           of << message << "\n";
@@ -62,7 +62,7 @@ namespace sequoia::testing
       if(!file.empty())
       {
         if(std::ofstream of{file, std::ios_base::app})
-          of << "\n\n";
+          of << dump_format::check_separator;
       }
     }
 

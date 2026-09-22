@@ -50,7 +50,7 @@ monotonic_sequence_base::monotonic_sequence_base - monotonicity violated
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 142
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 145
 
 Expected Exception Type:
 [std::logic_error]
@@ -58,7 +58,7 @@ monotonic_sequence::mutate - monotonicity violated
 
 =======================================
 
-Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 149
+Tests/Maths/Sequences/MonotonicSequenceTest.cpp, Line 152
 
 Expected Exception Type:
 [std::logic_error]

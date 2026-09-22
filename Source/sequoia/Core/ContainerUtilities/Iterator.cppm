@@ -5,6 +5,10 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+module;
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
 export module sequoia.core.container_utilities:Iterator;
 
 import std;
@@ -303,6 +307,11 @@ export namespace sequoia::utilities
       return tmp;
     }
 
+    // -Warray-bounds fires here on ranges below libstdc++'s sort threshold: __final_insertion_sort
+    // holds `__first + 16` inside `if(__last - __first > 16)`, and gcc evaluates that address for a
+    // range which cannot reach it - a static graph has 2 edges. This wrapper knows no bounds, so
+    // nothing here can be at fault.
+SEQUOIA_GCC_SUPPRESS_BEGIN("-Warray-bounds")
     constexpr iterator& operator+=(const difference_type n)
       requires steppable<Iterator>
     {
@@ -317,6 +326,7 @@ export namespace sequoia::utilities
       iterator tmp{it};
       return tmp+=n;
     }
+SEQUOIA_GCC_SUPPRESS_END
 
     [[nodiscard]]
     friend constexpr iterator operator+(const difference_type n, const iterator& it)

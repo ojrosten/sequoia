@@ -29,8 +29,14 @@ namespace sequoia::testing
   {
     using namespace std::string_literals;
 
-    check(equality, "", read_to_string(working_materials() /= "Foo.txt"), std::optional{"hello, World"s});
-    check(equality, "", read_to_string(working_materials() /= "Bar.txt"), std::optional<std::string>{});
+    check(equality, "", read_to_string(working_materials() /= "Foo.txt", std::ios_base::in), std::optional{"hello, World"s});
+    check(equality, "", read_to_string(working_materials() /= "Bar.txt", std::ios_base::in), std::optional<std::string>{});
+
+    write_to_file(working_materials() /= "Empty.txt", "", std::ios_base::out);
+    check(equality, "An empty file", read_to_string(working_materials() /= "Empty.txt", std::ios_base::in), std::optional{""s});
+
+    write_to_file(working_materials() /= "Lines.txt", "a\r\nb", std::ios_base::binary);
+    check(equality, "Binary mode keeps every byte", read_to_string(working_materials() /= "Lines.txt", std::ios_base::binary), std::optional{"a\r\nb"s});
 
     check_exception_thrown<std::runtime_error>(
       reporter{""},
@@ -38,7 +44,7 @@ namespace sequoia::testing
 
     check_exception_thrown<std::runtime_error>(
       reporter{""},
-      [this]() { write_to_file(working_materials() /= "Baz.txt", "Hello!", std::ios_base::noreplace); });
+      [this]() { write_to_file(working_materials() /= "Baz.txt", "Hello!", std::ios_base::out | std::ios_base::noreplace); });
 
     read_modify_write(working_materials() /= "Foo.txt", [](std::string& s) { capitalize(s);  });
     check(equivalence, "", working_materials() /= "Foo.txt", predictive_materials() /= "Foo.txt");

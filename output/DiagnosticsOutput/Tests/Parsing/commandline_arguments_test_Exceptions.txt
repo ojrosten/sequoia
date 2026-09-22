@@ -25,7 +25,16 @@ Empty string detected
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 78
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 45
+Top-level option with neither invocable
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Commandline option not bound to a function object
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 81
 Typo in argument
 
 Expected Exception Type:
@@ -34,7 +43,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 82
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 85
 Alias mismatch
 
 Expected Exception Type:
@@ -43,7 +52,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 86
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 89
 Missing alias
 
 Expected Exception Type:
@@ -52,7 +61,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 90
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 93
 Extra space in argument
 
 Expected Exception Type:
@@ -61,7 +70,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 115
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 118
 Concatenated alias with only partial match
 
 Expected Exception Type:
@@ -70,7 +79,43 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 140
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 122
+Concatenated alias naming an option with parameters
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: option "test" expects 1 argument, so its alias cannot be concatenated with others, as in '-at'
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 127
+Concatenated alias naming an option with nested options
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: option "create" has nested options, so its alias cannot be concatenated with others, as in '-cv'
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 132
+Concatenated aliases without the leading dash
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: unrecognized option 'xa'
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 136
+A dash after something other than a dash
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: unrecognized option 'x-'
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 161
 Final argument missing
 
 Expected Exception Type:
@@ -79,7 +124,52 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Parsing/CommandLineArgumentsTest.cpp, Line 330
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 328
+An option named as a help request
+
+Expected Exception Type:
+[std::logic_error]
+  Error: option "--help" is spelt as a help request
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 332
+A nested option aliased as a help request
+
+Expected Exception Type:
+[std::logic_error]
+  Error: option "--header" is spelt as a help request
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 388
+A nested option, not bound to a function object, missing its argument
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: while parsing option "--equivalent-type": expected 1 argument, [type], but found 0 arguments
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 394
+A nested option, not bound to a function object, missing two of its three arguments
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: while parsing option "--equivalent-type": expected 3 arguments, [type, header, namespace], but found 1 argument
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 400
+A dash after something other than a dash, at a nested level
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: unrecognized option 'x-'
+
+=======================================
+
+Tests/Parsing/CommandLineArgumentsTest.cpp, Line 516
 Two options, one with nesting, illegal argument
 
 Expected Exception Type:

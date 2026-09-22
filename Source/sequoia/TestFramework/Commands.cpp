@@ -43,5 +43,4 @@ namespace sequoia::testing
             std::format("cmake --build --preset {}", back(buildPaths.cmake_cache_dir()).generic_string()),
             output};
   }
-
 }

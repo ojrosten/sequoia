@@ -48,6 +48,13 @@ export namespace sequoia::testing
 
   enum class nascent_test_flavour { standard, framework_diagnostics };
 
+  /** \brief The namespace `create` substitutes for the project's: the source directory's name.
+
+      Throws if the directory does not exist or its name cannot be a namespace name.
+   */
+  [[nodiscard]]
+  std::string project_namespace_for(const std::filesystem::path& sourceProject);
+
   class nascent_test_base
   {
   public:
@@ -58,7 +65,7 @@ export namespace sequoia::testing
       , m_Copyright{std::move(copyright)}
       , m_CodeIndent{codeIndent}
       , m_Stream{&stream}
-      , m_ProjectNamespace{back(m_Paths.source().project()).string()}
+      , m_ProjectNamespace{project_namespace_for(m_Paths.source().project())}
     {}
 
     [[nodiscard]]

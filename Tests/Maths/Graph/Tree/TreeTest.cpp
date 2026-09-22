@@ -34,6 +34,8 @@ namespace sequoia::testing
     test_tree_unweighted_nodes<directed_tree<tree_link_direction::backward, null_weight, null_weight>>();
     test_tree_unweighted_nodes<directed_tree<tree_link_direction::symmetric, null_weight, null_weight>>();
     test_tree_unweighted_nodes<undirected_tree<tree_link_direction::symmetric, null_weight, null_weight>>();
+
+    test_forest_ranges();
   }
 
   template<maths::dynamic_tree Tree>
@@ -196,5 +198,26 @@ namespace sequoia::testing
     };
 
     transition_checker_type::check(report(""), g, checkerFn);
+  }
+
+  void tree_test::test_forest_ranges()
+  {
+    using tree_type = directed_tree<tree_link_direction::forward, null_weight, int>;
+
+    // 42 with children -7 and 6, the latter with child 3
+    const tree_type tree{{42, {{-7}, {6, {{3}}}}}};
+
+    auto rootWeights{
+      [](const auto& forest) {
+        return forest | std::views::transform([](const auto& adaptor){ return root_weight(adaptor); }) | std::ranges::to<std::vector>();
+      }
+    };
+
+    check(equality, "Subtrees beneath the root",       rootWeights(forest_beneath(tree, 0)), std::vector<int>{-7, 6});
+    check(equality, "Subtrees beneath an inner node",  rootWeights(forest_beneath(tree, 2)), std::vector<int>{3});
+    check(equality, "Subtrees beneath a leaf",         rootWeights(forest_beneath(tree, 1)), std::vector<int>{});
+
+    const std::vector<tree_type> forest{tree, tree_type{{-1}}};
+    check(equality, "A forest's trees, each at its root", rootWeights(forest_of(forest)), std::vector<int>{42, -1});
   }
 }

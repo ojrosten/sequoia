@@ -33,6 +33,7 @@ namespace sequoia::testing
   void test_runner_test_creation::run_tests()
   {
     test_type_handling();
+    test_project_namespace();
     test_template_data_generation();
     test_creation("FakeProject", std::nullopt);
     test_creation("AnotherFakeProject", "curlew");
@@ -59,6 +60,33 @@ namespace sequoia::testing
     check("tuple<int>",    handle_as_ref("tuple<int>"));
     check("tuple<int >",   handle_as_ref("tuple<int >"));
     check("tuple< int >",  handle_as_ref("tuple< int >"));
+  }
+
+  void test_runner_test_creation::test_project_namespace()
+  {
+    using namespace std::string_literals;
+
+    const auto root{auxiliary_materials() /= "Namespaces"};
+    fs::create_directories(root / "myProject");
+    fs::create_directories(root / "my-project");
+    fs::create_directories(root / "0project");
+
+    check(equality, "A directory whose name is an identifier", project_namespace_for(root / "myProject"), "myProject"s);
+
+    check_exception_thrown<std::runtime_error>(
+      "A directory which does not exist",
+      [&root]() { return project_namespace_for(root / "absent"); }
+    );
+
+    check_exception_thrown<std::runtime_error>(
+      "A directory whose name is not an identifier",
+      [&root]() { return project_namespace_for(root / "my-project"); }
+    );
+
+    check_exception_thrown<std::runtime_error>(
+      "A directory whose name begins with a digit",
+      [&root]() { return project_namespace_for(root / "0project"); }
+    );
   }
 
   void test_runner_test_creation::test_template_data_generation()
@@ -130,25 +158,25 @@ namespace sequoia::testing
     commandline_arguments args{{zeroth_arg(projectName)
                                , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
                                , "create", "regular", "utilities::iterator", "int*"
-                               , "create", "regular_test", "stuff::widget", "std::vector<int>", "gen-source", "Stuff"
-                               , "create", "regular_test", "maths::probability", "double", "g", "Maths"
-                               , "create", "regular_test", "maths::angle", "long double", "gen-source", "Maths"
-                               , "create", "regular_test", "human", "std::string", "g", "hominins"
-                               , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "g", "Thingummies"
+                               , "create", "regular_test", "stuff::widget", "std::vector<int>", "--gen-source", "Stuff"
+                               , "create", "regular_test", "maths::probability", "double", "-g", "Maths"
+                               , "create", "regular_test", "maths::angle", "long double", "--gen-source", "Maths"
+                               , "create", "regular_test", "human", "std::string", "-g", "hominins"
+                               , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "-g", "Thingummies"
                                , "create", "regular_test", "container<class T>", "const std::vector<T>"
                                , "create", "regular_test", "other::couple<class S, class T>", "std::pair<S, T>",
-                                              "-h", "Couple.hpp"
-                               , "create", "regular_test", "bar::things", "double", "-h", std::format("{}/Stuff/Things.hpp", sourceFolderName)
+                                              "--header", "Couple.hpp"
+                               , "create", "regular_test", "bar::things", "double", "--header", std::format("{}/Stuff/Things.hpp", sourceFolderName)
                                , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T"
                                , "create", "move_only", "variadic<class... T>", "std::tuple<T...>"
-                               , "create", "move_only_test", "multiple<class... T>", "std::tuple<T...>", "gen-source", "Utilities"
-                               , "create", "move_only_test", "cloud", "double", "gen-source", "Weather"
+                               , "create", "move_only_test", "multiple<class... T>", "std::tuple<T...>", "--gen-source", "Utilities"
+                               , "create", "move_only_test", "cloud", "double", "--gen-source", "Weather"
                                , "create", "free_test", "Utilities.h"
                                , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazzer"
                                , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazagain"
-                               , "create", "free_test", "Stuff/Doohicky.hpp", "gen-source", "bar::things"
-                               , "create", "free_test", "Global/Stuff/Global.hpp", "gen-source", "::"
-                               , "create", "free_test", "Global/Stuff/Defs.hpp", "gen-source", ""
+                               , "create", "free_test", "Stuff/Doohicky.hpp", "--gen-source", "bar::things"
+                               , "create", "free_test", "Global/Stuff/Global.hpp", "--gen-source", "::"
+                               , "create", "free_test", "Global/Stuff/Defs.hpp", "--gen-source", ""
                                , "create", "free", std::format("{}/Maths/Angle.hpp", sourceFolderName), "--diagnostics"
                                , "create", "regular_allocation_test", "container"
                                , "create", "move_only_allocation_test", "foo"
@@ -187,7 +215,7 @@ namespace sequoia::testing
         reporter{"Typo in specified class header"},
         [this]() {
           std::stringstream outputStream{};
-          commandline_arguments args{{zeroth_arg("FakeProject"), "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Thingz.hpp"}};
+          commandline_arguments args{{zeroth_arg("FakeProject"), "create", "regular_test", "bar::things", "double", "--header", "fakeProject/Stuff/Thingz.hpp"}};
           test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
         });
   }

@@ -1,4 +1,4 @@
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 44
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 63
 
 Expected Exception Type:
 [std::logic_error]
@@ -6,7 +6,7 @@ Inconsistent number of elements supplied by initializer lists: expected 0 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 57
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 76
 
 Expected Exception Type:
 [std::logic_error]
@@ -14,7 +14,7 @@ Inconsistent number of elements supplied by initializer lists: expected 0 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 70
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 89
 
 Expected Exception Type:
 [std::logic_error]
@@ -22,7 +22,7 @@ Inconsistent number of elements supplied by initializer lists: expected 1 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 94
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 113
 
 Expected Exception Type:
 [std::logic_error]
@@ -30,7 +30,7 @@ Inconsistent number of elements supplied by initializer lists: expected 2 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 107
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 126
 
 Expected Exception Type:
 [std::logic_error]
@@ -38,7 +38,7 @@ Inconsistent number of elements supplied by initializer lists: expected 2 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 108
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 127
 
 Expected Exception Type:
 [std::logic_error]
@@ -46,7 +46,7 @@ connectivity::process_edges [node: 0, edge: 0]: target index 1 out of range - ma
 
 =======================================
 
-Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 109
+Tests/Maths/Graph/Static/Directed/StaticDirectedGraphUnweightedTest.cpp, Line 128
 
 Expected Exception Type:
 [std::logic_error]

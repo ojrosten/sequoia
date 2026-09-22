@@ -1,8 +1,8 @@
 {
   "version": 10,
     "cmakeMinimumRequired": {
-    "major": 3,
-    "minor": 31,
+    "major": 4,
+    "minor": 2,
     "patch": 0
   },
   "configurePresets": [
@@ -585,6 +585,10 @@
       "description": "Configure for ${displayName}. CMake declines to supply import std under the VS generator, so sequoia builds the standard library module from the toolset's own std.ixx.",
       "generator": "Visual Studio 18 2026",
       "inherits": ["base-binary"],
+      "cacheVariables": {
+        "CMAKE_PROJECT_INCLUDE_BEFORE": "${fileDir}/ShortObjectPaths.cmake;${fileDir}/UntrackedTryCompiles.cmake",
+        "CMAKE_PROJECT_INCLUDE": "${fileDir}/TrackedBuild.cmake"
+      },
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
     },
     {
@@ -595,13 +599,33 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
     },
     {
+      "name": "msvc-release",
+      "displayName": "Visual Studio [Release]",
+      "description": "Configure for ${displayName}. A tree of its own, because a nested project's presets are named after the build directory.",
+      "cacheVariables": { "CMAKE_CONFIGURATION_TYPES": "Release" },
+      "inherits": ["msvc"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+    },
+    {
+      "name": "msvc-relwithdebinfo-asan",
+      "displayName": "Visual Studio [RelWithDebInfo, asan]",
+      "description": "Configure for ${displayName}. A tree of its own, as `msvc-release`.",
+      "cacheVariables": { "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo" },
+      "inherits": ["msvc-asan"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
+    },
+    {
       "name": "msvc-ninja",
       "displayName": "MSVC with Ninja",
-      "description": "Configure for ${displayName}. Needs cl.exe on PATH - a developer command prompt, or a shell vcvars has been applied to - because with Ninja CMake finds the compiler there rather than through the generator. Unqualified 'msvc' stays the Visual Studio generator, which is what a client working in the IDE wants; Ninja is for everything else, CI included, and it separates cl.exe's cost from msbuild's.",
+      "description": "Configure for ${displayName}. Needs cl.exe on PATH: with Ninja, CMake finds the compiler there rather than through the generator.",
       "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "cl",
-        "CMAKE_CXX_COMPILER": "cl"
+        "CMAKE_CXX_COMPILER": "cl",
+        "CMAKE_PROJECT_INCLUDE_BEFORE": "${fileDir}/ShortObjectPaths.cmake"
+      },
+      "warnings": {
+        "unusedCli": false
       },
       "inherits": ["base-debug", "base-binary"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
@@ -1150,7 +1174,7 @@
     {
       "name": "msvc-release",
       "displayName": "MSVC [Release]",
-      "configurePreset": "msvc",
+      "configurePreset": "msvc-release",
       "configuration": "Release",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
     },
@@ -1163,7 +1187,7 @@
     {
       "name": "msvc-relwithdebinfo-asan",
       "displayName": "MSVC [RelWithDebInfo, asan]",
-      "configurePreset": "msvc-asan",
+      "configurePreset": "msvc-relwithdebinfo-asan",
       "configuration": "RelWithDebInfo",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
     },
@@ -1873,14 +1897,14 @@
     {
       "name": "msvc-release",
       "steps": [
-        { "type": "configure", "name": "msvc" },
+        { "type": "configure", "name": "msvc-release" },
         { "type": "build",     "name": "run-msvc-release" }
       ]
     },
     {
       "name": "msvc-relwithdebinfo-asan",
       "steps": [
-        { "type": "configure", "name": "msvc-asan" },
+        { "type": "configure", "name": "msvc-relwithdebinfo-asan" },
         { "type": "build",     "name": "run-msvc-relwithdebinfo-asan" }
       ]
     }

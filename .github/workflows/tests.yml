@@ -81,7 +81,7 @@ jobs:
         if: ${{ inputs.false_negative }}
         run: |
           summary=output/TestSummaries/Tests/Core/Meta/type_algorithms_free_test.txt
-          prediction=TestMaterials/Streaming/streaming_free_test/Prediction/Foo.txt
+          prediction=TestMaterials/Streaming/StreamingFreeTest/streaming_free_test/Prediction/Foo.txt
           for f in "$summary" "$prediction"; do
             [ -f "$f" ] || { echo "::error::$f is not where the control expects it"; exit 1; }
           done
@@ -102,7 +102,21 @@ jobs:
           # update, and with it the job.
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
-          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          # Launchpad is a live dependency of every Linux column, and it fails in
+          # more than one shape: a malformed chunked response (PR #19, 2026-09-11)
+          # and an HTTP 503 "temporarily unavailable" (2026-09-16), both before any
+          # compiler ran. So the add is retried on any non-zero exit - not only a
+          # timeout - a bounded number of times with a short back-off. Nothing
+          # else is retried. The `apt-get update` below fetches the PPA's index from
+          # Launchpad too, and a failure there is loud - apt exits 100, or the
+          # compiler check after it fires - but is not yet a shape that has been
+          # seen; the two above were both in the add.
+          for attempt in 1 2 3 4; do
+            sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test && break
+            [ "$attempt" -lt 4 ] || { echo "::error::add-apt-repository failed on all $attempt attempts"; exit 1; }
+            echo "add-apt-repository failed (attempt $attempt); retrying in $((attempt * 15))s"
+            sleep $((attempt * 15))
+          done
           sudo apt-get update -qq
           # The compiler binary and the package providing it are not the same string:
           # g++-15 is both, but clang++ is shipped by `clang`. A column may therefore
@@ -112,6 +126,24 @@ jobs:
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
           sudo apt-get install -y "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev
+          # The hosted image's CMake is below sequoia's floor of 4.2, the release that added
+          # CMAKE_INTERMEDIATE_DIR_STRATEGY; the Windows presets set it in
+          # build_system/ShortObjectPaths.cmake. The macOS and Windows images ship a release above
+          # the floor, so this column fetches one from Kitware - the host the checkout already
+          # comes from - and puts it first on PATH. An older cmake surviving this step is loud:
+          # the configure step's cmake_minimum_required refuses it. The tarball is the only binary
+          # either job puts on PATH without apt's signatures behind it, so its checksum is pinned.
+          #
+          # Repeated in rigorous.yml's coverage job; change both.
+          cmake_version=4.4.3
+          cmake_sha256=d6c83076c575bc00b823522ac974bda66d0af05d6ddc30e739c12385cf32c6cc
+          cmake_tarball=$RUNNER_TEMP/cmake.tar.gz
+          cmake_url=https://github.com/Kitware/CMake/releases/download/v$cmake_version/cmake-$cmake_version-linux-x86_64.tar.gz
+          if [ "$(uname -m)" != x86_64 ]; then echo "::error::No CMake build is fetched for $(uname -m)"; exit 1; fi
+          if ! curl -fsSL -o "$cmake_tarball" "$cmake_url"; then echo "::error::CMake $cmake_version could not be fetched from Kitware's release page"; exit 1; fi
+          if ! echo "$cmake_sha256  $cmake_tarball" | sha256sum --check --quiet; then echo "::error::The CMake tarball does not match its published checksum"; exit 1; fi
+          tar -xzf "$cmake_tarball" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin" >> "$GITHUB_PATH"
           echo "CC=${{ matrix.cc }}"   >> "$GITHUB_ENV"
           echo "CXX=${{ matrix.cxx }}" >> "$GITHUB_ENV"
 
@@ -127,12 +159,66 @@ jobs:
           echo "CC=$(brew --prefix llvm)/bin/clang"    >> "$GITHUB_ENV"
           echo "CXX=$(brew --prefix llvm)/bin/clang++" >> "$GITHUB_ENV"
 
+      # With the Visual Studio generator CMake finds the toolset itself; with Ninja
+      # it looks for cl.exe on PATH, which nothing puts there. vcvars sets it, but
+      # only within the cmd session that runs it, so its effect is captured and
+      # handed forward: named variables rather than a whole `set` dump, so this
+      # cannot silently clobber the runner's own environment, and PATH through
+      # GITHUB_PATH, the route the runner provides for it, in Windows form, which
+      # is what a later bash step's start-up translates.
+      - name: Enter the MSVC environment (Windows, Ninja)
+        if: runner.os == 'Windows' && matrix.configure == 'msvc-ninja'
+        run: |
+          vswhere="/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe"
+          root=$("$vswhere" -latest -products '*' \
+                   -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 \
+                   -property installationPath)
+          [ -n "$root" ] || { echo "::error::no VC toolset reported by vswhere"; exit 1; }
+          vcvars="$(cygpath -u "$root")/VC/Auxiliary/Build/vcvars64.bat"
+          [ -f "$vcvars" ] || { echo "::error::$vcvars does not exist"; exit 1; }
+
+          # Via a batch file in RUNNER_TEMP rather than `cmd //c "call ... && set"`:
+          # Git bash's MSYS layer re-quotes an argument containing spaces and
+          # quotes, and cmd then sees the escaping literally. The wrapper's own
+          # path has no spaces, so there is nothing left to mangle.
+          bat="$RUNNER_TEMP/vcvars_dump.bat"
+          printf '@echo off\r\necho PATH_BEFORE=%%PATH%%\r\ncall "%s" >nul || exit /b 1\r\nset\r\n' "$(cygpath -w "$vcvars")" > "$bat"
+          dump=$(cmd //c "$(cygpath -w "$bat")" | tr -d '\r')
+          printf '%s\n' "$dump" | grep -iE '^(INCLUDE|LIB|LIBPATH|VCToolsInstallDir|VCINSTALLDIR|VSINSTALLDIR|WindowsSdkDir|WindowsSDKVersion|UCRTVersion|UniversalCRTSdkDir)=' >> "$GITHUB_ENV"
+
+          # Only what vcvars added. Forwarding its whole PATH would prepend the
+          # runner's own entries over themselves in a new order, and the first run
+          # of this step did exactly that: WindowsApps came to precede Git\bin, so
+          # `shell: bash` resolved to the WSL stub for every step after this one.
+          #
+          # And not the CMake and Ninja Visual Studio bundles, which the forwarded
+          # entries would otherwise put ahead of the image's: this column builds
+          # with the same cmake as the msbuild columns, so that a red run here asks
+          # about the generator and nothing else. Whether sequoia builds under the
+          # bundled toolset is a question for a matrix row of its own.
+          before=$(printf '%s\n' "$dump" | grep '^PATH_BEFORE=' | sed 's/^[^=]*=//' | tr ';' '\n')
+          after=$(printf '%s\n' "$dump"  | grep -iE '^PATH='     | sed 's/^[^=]*=//' | tr ';' '\n')
+          added=$(printf '%s\n' "$after" | grep -vxF -f <(printf '%s\n' "$before") | grep -v '^$' | grep -vF 'CommonExtensions\Microsoft\CMake\')
+          printf '%s\n' "$added"
+          printf '%s\n' "$added" >> "$GITHUB_PATH"
+
+          # GITHUB_PATH reaches later steps only, so ninja is looked for where a later
+          # step will: the forwarded entries, then this step's own PATH.
+          PATH="$(cygpath -pu "$(printf '%s\n' "$added" | paste -sd ';')"):$PATH" command -v ninja \
+            || { echo "no ninja on the forwarded PATH or the image's; installing one"; choco install ninja -y; }
+
       # An exit status says the tool ran, not that it did what was asked.
       - name: Report the toolchain actually in use
         run: |
           if [ -n "${CXX:-}" ]; then
             command -v "$CXX" || { echo "::error::$CXX is not on PATH"; exit 1; }
             "$CXX" --version
+          elif [ '${{ matrix.configure }}' = msvc-ninja ]; then
+            # Which cl, ninja and cmake the forwarded PATH resolves to, in that order,
+            # so the ordering GITHUB_PATH produced is visible rather than assumed.
+            for tool in cl ninja cmake; do
+              command -v "$tool" || { echo "::error::$tool is not on PATH"; exit 1; }
+            done
           else
             echo "No CXX set; the preset selects the compiler (Windows/MSVC)."
           fi
@@ -274,8 +360,8 @@ jobs:
       # repeat runs. Such a column must not also check the versioned output: the
       # second pass's handler removes the first's patch and then finds the tree
       # already repaired, so the drift would be reported without its patch. No
-      # column is both, and none should be made so without moving the patch aside
-      # between the passes.
+      # advisory column carries both `repeat_args` and the drift check, and none
+      # should be made to without moving the patch aside between the passes.
       - name: Configure the repetitions
         if: ${{ steps.configure.outputs.repeat_args != '' }}
         working-directory: TestAll
@@ -302,6 +388,13 @@ jobs:
       # `check(within_tolerance{...}, ...)`, which count in the standard row, since the performance
       # rows count `check_relative_performance` alone. Every failing file is named either way, so a
       # new one cannot hide behind a tolerated one.
+      #
+      # Drift is a second thing the suite step cannot make red here. Where the column checks the
+      # versioned output, a run whose output moved writes the patch and sets the drift bit of its
+      # exit code, which `continue-on-error` swallows like any other failure; so the patch's
+      # existence is read directly, and raised as an error naming the files it holds. Drift and
+      # failure co-fire, a failing test rewriting its summary, so both are reported when both
+      # occurred. A failed step that names no test and writes no patch is reported as that.
       - name: Triage the advisory run
         if: ${{ always() && matrix.advisory == true }}
         run: |
@@ -317,6 +410,11 @@ jobs:
           failing=$({ grep -oE 'Tests/[A-Za-z0-9/_]+\.cpp, Line [0-9]+' "$log" || true; } \
                       | sed 's/, Line.*//' | sort -u)
           actionable=$({ echo "$failing" | grep -vE "$tolerated_tests" || true; } | sed '/^$/d')
+
+          # Every file in the patch has its `diff --git` header; a removed file has no `+++ b/`
+          # line, and a file created or deleted empty has nothing but the header.
+          patch=output/Drift/VersionedOutput.patch
+          drifted=$({ [ -f "$patch" ] && grep '^diff --git a/' "$patch" | sed 's|^diff --git a/.* b/||'; } || true)
 
           {
             echo "### ${{ matrix.name }} - advisory run"
@@ -335,11 +433,18 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
+          if [ -n "$drifted" ]; then
+            echo "::error title=Advisory run needs action::${{ matrix.name }}: versioned output moved: $(echo "$drifted" | tr '\n' ' '). This column does not gate, so the job is green; the patch is on this page, or in the artifact if too big for it."
+          fi
           if [ -n "$actionable" ]; then
             echo "::error title=Advisory run needs action::${{ matrix.name }}: $(echo "$actionable" | tr '\n' ' '). This column does not gate, so the job is green; the failures are real."
           elif [ -n "$failing" ]; then
             echo "::warning title=Advisory run::${{ matrix.name }}: only the timing assertions this runner cannot hold (roadmap 38, 102). Nothing to act on."
-          else
+          elif [ '${{ steps.suite.outcome }}' != 'success' ]; then
+            # A suite step that failed without naming a test or writing a patch: a run cut short,
+            # a crash, a timeout. Not "passed outright", whatever the log's last lines say.
+            echo "::error title=Advisory run needs action::${{ matrix.name }}: the suite step's outcome is '${{ steps.suite.outcome }}' and the log names no failing test and no drift. Read the log."
+          elif [ -z "$drifted" ]; then
             echo "::notice title=Advisory run::${{ matrix.name }}: the suite passed outright."
           fi
 

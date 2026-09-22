@@ -8,6 +8,8 @@
 #include "TestRunnerTest.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "Utilities/TestUtilities.hpp"
+#include "TestFramework/BuildArtefactsTestingUtilities.hpp"
 
 import std;
 
@@ -126,10 +128,10 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      std::string output_discriminator() const { return "Platypus"; }
+      static std::string output_discriminator(const cmake_cache&) { return "Platypus"; }
 
       [[nodiscard]]
-      std::string summary_discriminator() const { return "Release"; }
+      static std::string summary_discriminator(const cmake_cache&) { return "Release"; }
 
       void run_tests()
       {
@@ -347,6 +349,43 @@ namespace sequoia::testing
       }
     };
 
+    /// The next two put a suite and a test which are siblings under one name: `namesake_test`
+    /// names the test, and the directory holding `under_namesake_test` beside it. The test sorts
+    /// first, so its node exists by the time the suite of that name is wanted.
+    class namesake_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<namesake_test>("Namesakes");
+      }
+
+      void run_tests()
+      {
+        check(equality, reporter{"Namesake"}, 42, 42);
+      }
+    };
+
+    class under_namesake_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<under_namesake_test>("Namesakes/namesake_test");
+      }
+
+      void run_tests()
+      {
+        check(equality, reporter{"Under the namesake"}, 42, 42);
+      }
+    };
+
     test_runner make_failing_suite(commandline_arguments args, std::stringstream& outputStream)
     {
       test_runner runner{args.size(),
@@ -375,14 +414,22 @@ namespace sequoia::testing
     test_exceptions();
     test_critical_errors();
     test_basic_output();
+    test_help_output();
     test_verbose_output();
     test_serial_verbose_output();
     test_throwing_tests();
     test_filtered_suites();
     test_prune_basic_output();
+    test_prune_with_changed_toolchain();
+    test_prune_selects_a_test_this_executable_lacks();
+    test_post_run_failure();
     test_nested_suite();
     test_nested_suite_verbose();
+    test_suite_named_as_a_sibling_test();
     test_excluded_performance_tests();
+    test_excluded_tests();
+    test_excluded_tests_are_rerun();
+    test_dump_comparison();
     test_instability_analysis();
   }
 
@@ -589,6 +636,30 @@ namespace sequoia::testing
     check_output("Basic Output", "BasicOutput", outputStream);
   }
 
+  void test_runner_test::test_help_output()
+  {
+    const std::array<std::pair<std::vector<std::string>, std::string_view>, 4> requests{{
+      {{"init"},                   "InitHelpOutput"         },
+      {{"create"},                 "CreateHelpOutput"       },
+      {{"create", "regular_test"}, "CreateRegularHelpOutput"},
+      {{"test"},                   "TestHelpOutput"         }
+    }};
+
+    // Failing tests are registered so that a run which went ahead would show in the return code
+    for(const auto& [commands, dirName] : requests)
+    {
+      std::vector<std::string> argList{zeroth_arg()};
+      argList.append_range(commands);
+      argList.push_back("--help");
+
+      std::stringstream outputStream{};
+      auto runner{make_failing_suite(argList, outputStream)};
+
+      check(equality, std::format("{} return code", dirName), runner.execute(), return_code::success);
+      check_output(std::format("{} output", dirName), dirName, outputStream);
+    }
+  }
+
   void test_runner_test::test_verbose_output()
   {
     std::stringstream outputStream{};
@@ -673,6 +744,138 @@ namespace sequoia::testing
 
     check(equality, "Prune with no tests return code", runner.execute(), return_code::success);
     check_output("Prune with no tests", "PruneWithNoTests", outputStream);
+
+    // An exclusion does not turn prune off, and one matching nothing is reported under prune
+    fs::remove_all(output_paths{fake_project()}.dir());
+
+    std::stringstream excludingStream{};
+    commandline_arguments excludingArgs{{minimal_fake_path().generic_string(), "prune", "exclude", "Failing/absent_test.cpp"}};
+
+    test_runner excludingRunner{excludingArgs.size(),
+                                excludingArgs.get(),
+                                "Oliver J. Rosten",
+                                "  ",
+                                {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                                excludingStream};
+
+    check(equality, "Prune with an exclusion return code", excludingRunner.execute(), return_code::success);
+    check_output("Prune with an exclusion", "PruneWithExclusionOutput", excludingStream);
+  }
+
+  [[nodiscard]]
+  test_runner_test::fake_build test_runner_test::write_fake_build()
+  {
+    fs::remove_all(output_paths{fake_project()}.dir());
+
+    // A build of one test's source, Tests/ThingTest.cpp, which read one toolchain header
+    const auto buildDir{minimal_fake_path().parent_path()};
+    const fake_build build{.source{fake_project() / "Tests" / "ThingTest.cpp"}, .toolchainHeader{fake_project() / "Toolchain" / "vector"}};
+    fs::create_directories(build.toolchainHeader.parent_path());
+    fs::create_directories(buildDir / "CMakeFiles" / "4.1.2");
+    write_to_file(build.source, "", std::ios_base::out);
+    write_to_file(build.toolchainHeader, "", std::ios_base::out);
+    write_to_file(buildDir / "CMakeFiles" / "4.1.2" / "CMakeCXXCompiler.cmake",
+                  std::format("set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"{}\")\n", build.toolchainHeader.parent_path().generic_string()),
+                  std::ios_base::out);
+    write_to_file(buildDir / "build.ninja",
+                  std::format("build CMakeFiles/x.dir/ThingTest.cpp.o: CXX_COMPILER {}\n", build.source.generic_string()),
+                  std::ios_base::out);
+    write_ninja_deps(buildDir / ".ninja_deps",
+                     std::vector<compilation_record>{{"CMakeFiles/x.dir/ThingTest.cpp.o", {build.source, build.toolchainHeader}}});
+
+    return build;
+  }
+
+  void test_runner_test::test_prune_with_changed_toolchain()
+  {
+    // The toolchain header modified after the previous run's stamp
+    const auto build{write_fake_build()};
+
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
+    const project_paths projPaths{args.size(), args.get(), {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}};
+    const auto stamp{projPaths.prune().stamp()};
+    fs::create_directories(stamp.parent_path());
+    write_to_file(stamp, "", std::ios_base::out);
+
+    // Both files the build read are stamped strictly before the executable: where last_write_time
+    // resolves to whole seconds, a file written in the same second as the executable is out of date
+    using namespace std::chrono_literals;
+    const auto now{std::chrono::file_clock::now()};
+    fs::last_write_time(stamp, now - 2s);
+    fs::last_write_time(build.source, now - 1s);
+    fs::last_write_time(build.toolchainHeader, now - 1s);
+    fs::last_write_time(projPaths.executable(), now);
+
+    std::stringstream outputStream{};
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    check(equality, "Prune with changed toolchain return code", runner.execute(), return_code::success);
+    check_output("Prune with changed toolchain", "PruneWithChangedToolchain", outputStream);
+  }
+
+  void test_runner_test::test_prune_selects_a_test_this_executable_lacks()
+  {
+    // The source modified after the previous run's stamp, the toolchain before it: prune selects
+    // ThingTest.cpp, which no test registered here defines, and that is not a selection to report
+    const auto build{write_fake_build()};
+
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
+    const project_paths::customizer customization{
+      .main_cpp{"TestSandbox/TestSandbox.cpp"},
+      .common_includes{"TestShared/SharedIncludes.hpp"}
+    };
+    const project_paths projPaths{args.size(), args.get(), customization};
+    const auto stamp{projPaths.prune().stamp()};
+    fs::create_directories(stamp.parent_path());
+    write_to_file(stamp, "", std::ios_base::out);
+
+    using namespace std::chrono_literals;
+    const auto now{std::chrono::file_clock::now()};
+    fs::last_write_time(build.toolchainHeader, now - 3s);
+    fs::last_write_time(stamp, now - 2s);
+    fs::last_write_time(build.source, now - 1s);
+    fs::last_write_time(projPaths.executable(), now);
+
+    std::stringstream outputStream{};
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    runner.register_test<passing_test>();
+    check(equality, "Prune selecting an unregistered test return code", runner.execute(), return_code::success);
+    check_output("Prune selecting an unregistered test", "PruneSelectsUnregisteredOutput", outputStream);
+  }
+
+  void test_runner_test::test_post_run_failure()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Failing"}};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    runner.register_test<passing_test>();
+    runner.register_test<failing_test>();
+
+    // A filtered run merges its results into the previous failures, so a malformed record there fails the prune write
+    const auto failuresFile{runner.proj_paths().prune().to_rerun(std::nullopt)};
+    fs::create_directories(failuresFile.parent_path());
+    const transient_file malformedFailures{failuresFile, "garbage\n"};
+
+    check(equality, "Post-run failure return code", runner.execute(), return_code::soft_failures | return_code::post_run_failures);
+    check_output("Post-Run Failure Output", "PostRunFailureOutput", outputStream);
   }
 
   void test_runner_test::test_nested_suite()
@@ -695,6 +898,25 @@ namespace sequoia::testing
 
       check(equality, "Nested suite return code", runner.execute(), return_code::soft_failures);
       check_output("Basic Nested Output", "BasicNestedOutput", outputStream);
+  }
+
+  void test_runner_test::test_suite_named_as_a_sibling_test()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v"}};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    runner.register_test<namesake_test>();
+    runner.register_test<under_namesake_test>();
+
+    check(equality, "Suite named as a sibling test return code", runner.execute(), return_code::success);
+    check_output("Suite Named As A Sibling Test", "SuiteNamedAsASiblingTest", outputStream);
   }
 
   void test_runner_test::test_nested_suite_verbose()
@@ -747,6 +969,185 @@ namespace sequoia::testing
     // The same registrations both ways, so the option is the only thing which differs.
     run("Performance tests included", "IncludedPerformanceOutput", {});
     run("Performance tests excluded", "ExcludedPerformanceOutput", {"--exclude-performance"});
+  }
+
+  void test_runner_test::test_excluded_tests()
+  {
+    auto run{
+      [this](std::string_view description, std::string_view outputDirName, std::initializer_list<std::string> extraArgs, return_code expected){
+        std::stringstream outputStream{};
+
+        std::vector<std::string> argList{minimal_fake_path().generic_string()};
+        argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
+        commandline_arguments args{argList};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<passing_test>();
+        runner.register_test<failing_test>();
+        runner.register_test<fake_performance_test>();
+
+        check(equality, append_lines(description, "Return code"), runner.execute(), expected);
+        check_output(description, outputDirName, outputStream);
+      }
+    };
+
+    // The same registrations each way, so the arguments are the only thing which differs; the
+    // failing test's return code says whether it ran
+    const auto failing{failing_test::source_file().generic_string()};
+    const auto performance{fake_performance_test::source_file().generic_string()};
+
+    run("Failing test excluded",                          "ExcludedTestOutput",
+        {"exclude", failing},                              return_code::success);
+    run("Exclusion matching no test",                     "ExclusionNotFoundOutput",
+        {"exclude", "Failing/absent_test.cpp"},            return_code::soft_failures);
+    run("Exclusion naming a suite",                       "ExclusionOfSuiteOutput",
+        {"exclude", "Failing"},                            return_code::soft_failures);
+    run("Selected test excluded, and so found both ways", "SelectedTestExcludedOutput",
+        {"select", failing, "exclude", failing},           return_code::success);
+    run("Performance test excluded both ways, and found", "PerformanceTestExcludedOutput",
+        {"--exclude-performance", "exclude", performance}, return_code::soft_failures);
+    run("Exclusion by alias",                             "ExcludedTestOutput",
+        {"e", failing},                                    return_code::success);
+  }
+
+  void test_runner_test::test_excluded_tests_are_rerun()
+  {
+    // A run with no selection is full: it stamps, and whatever it left out is recorded for the
+    // next run, since that test's status is unknown
+    auto run{
+      [this](std::string_view description, std::initializer_list<std::string> extraArgs, std::vector<std::filesystem::path> toRerun) {
+        fs::remove_all(output_paths{fake_project()}.dir());
+
+        std::vector<std::string> argList{minimal_fake_path().generic_string()};
+        argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
+        commandline_arguments args{argList};
+
+        std::stringstream outputStream{};
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<passing_test>();
+        runner.register_test<fake_performance_test>();
+
+        const auto prunePaths{runner.proj_paths().prune()};
+        check(equality, append_lines(description, "Return code"), runner.execute(), return_code::success);
+        check(equality, append_lines(description, "Stamped"),     fs::exists(prunePaths.stamp()), true);
+
+        // The file holds paths relative to the project, so the names are compared
+        auto name{[](const prune_record& r){ return r.test_path.filename(); }};
+        const auto recorded{read_tests(prunePaths.to_rerun(std::nullopt)) | std::views::transform(name) | std::ranges::to<std::vector>()};
+        check(equality, append_lines(description, "To rerun"), recorded, toRerun);
+      }
+    };
+
+    const auto performance{fake_performance_test::source_file()};
+
+    run("A full run",                        {},                                        {});
+    run("A run excluding a test",            {"exclude", performance.generic_string()}, {performance.filename()});
+    run("A run excluding performance tests", {"--exclude-performance"},                 {performance.filename()});
+  }
+
+  void test_runner_test::test_dump_comparison()
+  {
+    enum class registrations { passing_and_failing, passing, passing_failing_and_performance };
+
+    auto run{
+      [this](std::string_view description,
+             std::string_view outputDirName,
+             std::initializer_list<std::string> extraArgs,
+             registrations registered,
+             return_code expected) {
+        std::vector<std::string> argList{minimal_fake_path().generic_string(), "dump"};
+        argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
+        commandline_arguments args{argList};
+
+        std::stringstream outputStream{};
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<passing_test>();
+        if(registered != registrations::passing)
+          runner.register_test<failing_test>();
+
+        if(registered == registrations::passing_failing_and_performance)
+          runner.register_test<fake_performance_test>();
+
+        check(equality, append_lines(description, "Return code"), runner.execute(), expected);
+        check_output(description, outputDirName, outputStream);
+      }
+    };
+
+    auto failing{
+      [this](std::string_view description, std::initializer_list<std::string> extraArgs) {
+        check_exception_thrown<std::runtime_error>(description, [this, extraArgs](){
+          std::vector<std::string> argList{minimal_fake_path().generic_string(), "dump"};
+          argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
+          commandline_arguments args{argList};
+
+          std::stringstream outputStream{};
+          test_runner runner{args.size(),
+                             args.get(),
+                             "Oliver J. Rosten",
+                             "  ",
+                             {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                             outputStream};
+
+          runner.register_test<passing_test>();
+          return runner.execute();
+        });
+      }
+    };
+
+    fs::remove_all(output_paths{fake_project()}.dir());
+    const auto recovery{output_paths{fake_project()}.recovery()};
+
+    run("A dump kept under a name", "DumpKeptOutput", {"--as", "before"}, registrations::passing_and_failing, return_code::soft_failures);
+    check(equality, "The kept dump exists", fs::exists(recovery.kept_dump("before")), true);
+
+    run("The same checks as the kept dump",    "DumpUnchangedOutput",
+        {"--against", "before"}, registrations::passing_and_failing,             return_code::soft_failures);
+    run("A check missing since the kept dump", "DumpMissingOutput",
+        {"--against", "before"}, registrations::passing,                         return_code::success);
+    run("A check added since the kept dump",   "DumpAddedOutput",
+        {"--against", "before"}, registrations::passing_failing_and_performance, return_code::soft_failures);
+
+    // Compared before kept, so one run may take the name it compared against
+    run("A dump compared against a name and then kept under it", "DumpAddedOutput",
+        {"--against", "before", "--as", "before"}, registrations::passing_failing_and_performance, return_code::soft_failures);
+    run("The kept dump is the later one", "DumpUnchangedThreeOutput",
+        {"--against", "before"}, registrations::passing_failing_and_performance, return_code::soft_failures);
+
+    failing("Comparison against a dump never kept", {"--against", "never"});
+    failing("A dump kept under no name",            {"--as", ""});
+    failing("Comparison against no name",           {"--against", ""});
+
+    // recover, like dump, writes under output/Recovery on a tree which has no output directory yet
+    fs::remove_all(output_paths{fake_project()}.dir());
+    std::stringstream recoveringStream{};
+    commandline_arguments recoveringArgs{{minimal_fake_path().generic_string(), "recover"}};
+    test_runner recoveringRunner{recoveringArgs.size(),
+                                 recoveringArgs.get(),
+                                 "Oliver J. Rosten",
+                                 "  ",
+                                 {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                                 recoveringStream};
+
+    recoveringRunner.register_test<passing_test>();
+    check(equality, "recover on a fresh tree", recoveringRunner.execute(), return_code::success);
   }
 
   void test_runner_test::test_instability_analysis()

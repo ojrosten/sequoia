@@ -1,7 +1,4 @@
-# 3.28: consumers of a module library must themselves be scanned for imports,
-# and under CMP0155's OLD behaviour they are not - every import then fails with
-# "module not found" even though the library built.
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 4.2)
 
 project(SequoiaTestAll DESCRIPTION "The Sequoia Library plus all tests"
                        LANGUAGES CXX)
@@ -54,6 +51,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/FileSystem/NormalPathTest.cpp
                ${TestDir}/FileSystem/NormalPathTestingDiagnostics.cpp
                ${TestDir}/Maths/Algebra/RatioFreeTest.cpp
+               ${TestDir}/Maths/Arithmetic/ArithmeticCastsFreeTest.cpp
                ${TestDir}/Maths/Arithmetic/SaturatingArithmeticFreeTest.cpp
                ${TestDir}/Maths/Geometry/AbsoluteCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.cpp
@@ -128,23 +126,21 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Parsing/CommandLineArgumentsTestingUtilities.cpp
                ${TestDir}/Physics/AbsolutePhysicalValueCompositionsTest.cpp
                ${TestDir}/Physics/AbsolutePhysicalValueTest.cpp
-               ${TestDir}/Physics/AbsolutePhysicalValueCompositionsTest.cpp
                ${TestDir}/Physics/AffinePhysicalValueTest.cpp
                ${TestDir}/Physics/ConvexPhysicalValueTest.cpp
                ${TestDir}/Physics/IntegralPhysicalValueTest.cpp
                ${TestDir}/Physics/MixedPhysicalValueTest.cpp
                ${TestDir}/Physics/PhysicalValueConversionsFreeTest.cpp
                ${TestDir}/Physics/PhysicalValueMetaFreeTest.cpp               
-               ${TestDir}/Physics/PhysicalValueConversionsFreeTest.cpp
                ${TestDir}/Physics/PhysicalValueTestingDiagnostics.cpp
                ${TestDir}/Physics/SpaceOrderingMetaFreeTest.cpp
                ${TestDir}/Physics/UnsafeAbsolutePhysicalValueCompositionsTest.cpp
                ${TestDir}/Physics/UnsafeAbsolutePhysicalValueTest.cpp
-               ${TestDir}/Physics/UnsafeAbsolutePhysicalValueCompositionsTest.cpp
                ${TestDir}/Physics/VectorNonlinearRepresentationsTest.cpp
                ${TestDir}/Physics/VectorPhysicalValueCompositionsTest.cpp
                ${TestDir}/Physics/VectorPhysicalValueTest.cpp
-               ${TestDir}/Physics/VectorPhysicalValueCompositionsTest.cpp
+               ${TestDir}/Runtime/InvokeHandleInheritanceFreeTest.cpp
+               ${TestDir}/Runtime/InvokeInterpreterResolutionFreeTest.cpp
                ${TestDir}/Runtime/ShellCommandsTest.cpp
                ${TestDir}/Runtime/ShellCommandsTestingDiagnostics.cpp
                ${TestDir}/Streaming/StreamingFreeTest.cpp
@@ -162,11 +158,15 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalsePositiveDiagnosticsMixed.cpp
                ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalsePositiveDiagnosticsThreeLevel.cpp
                ${TestDir}/TestFramework/BasicTestInterfaceFreeTest.cpp
+               ${TestDir}/TestFramework/BuildArtefactsFreeTest.cpp
+               ${TestDir}/TestFramework/BuildArtefactsTestingUtilities.cpp
+               ${TestDir}/TestFramework/CMakeCacheFreeTest.cpp
                ${TestDir}/TestFramework/ChronoFreeDiagnostics.cpp
                ${TestDir}/TestFramework/CommandsFreeTest.cpp
                ${TestDir}/TestFramework/ComplexFreeDiagnostics.cpp
                ${TestDir}/TestFramework/ContainerFreeDiagnostics.cpp
                ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp
+               ${TestDir}/TestFramework/DumpComparisonFreeTest.cpp
                ${TestDir}/TestFramework/ElementaryFreeDiagnostics.cpp
                ${TestDir}/TestFramework/ExceptionsFreeDiagnostics.cpp
                ${TestDir}/TestFramework/FailureInfoTest.cpp

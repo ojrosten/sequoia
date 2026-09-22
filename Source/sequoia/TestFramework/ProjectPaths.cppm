@@ -90,7 +90,11 @@ export namespace sequoia::testing
     std::filesystem::path m_File{}, m_Dir{}, m_CommonIncludes{};
   };
 
-  /** \brief Paths relating to the source directory */
+  /** \brief Paths relating to the source directory.
+
+      The project directory is computed from the arguments alone and never discovered on disk;
+      clients may rely on constructing `source_paths` before the directory exists.
+   */
 
   class source_paths
   {
@@ -328,8 +332,43 @@ export namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path dump_file() const;
 
+    /** \brief Where a dump kept under a name lives: `<dir>/Dumps/<name>.txt`. */
+    [[nodiscard]]
+    std::filesystem::path kept_dump(std::string_view name) const;
+
     [[nodiscard]]
     friend bool operator==(const recovery_paths&, const recovery_paths&) noexcept = default;
+  private:
+    std::filesystem::path m_Dir{};
+  };
+
+  /** \brief Holds details of where a run reports drift in the versioned output as a patch.
+
+    Written only by a run invoked with `--check-versioned-output` which finds that the files it
+    wrote differ from those that were on disk. The runner never reads it back: it exists for
+    continuous integration to upload, and for projects whose output is not under version control.
+ */
+  class drift_paths
+  {
+  public:
+    drift_paths() = default;
+
+    explicit drift_paths(const std::filesystem::path& outputDir);
+
+    [[nodiscard]]
+    const std::filesystem::path& dir() const noexcept
+    {
+      return m_Dir;
+    }
+
+    [[nodiscard]]
+    static std::filesystem::path dir(std::filesystem::path outputDir);
+
+    [[nodiscard]]
+    std::filesystem::path patch_file() const;
+
+    [[nodiscard]]
+    friend bool operator==(const drift_paths&, const drift_paths&) noexcept = default;
   private:
     std::filesystem::path m_Dir{};
   };
@@ -352,14 +391,12 @@ export namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path stamp() const;
 
+    /** \brief The tests to run next time regardless of staleness: those which failed, and those a run left out. */
     [[nodiscard]]
-    std::filesystem::path failures(std::optional<std::size_t> id) const;
+    std::filesystem::path to_rerun(std::optional<std::size_t> id) const;
 
     [[nodiscard]]
     std::filesystem::path selected_passes(std::optional<std::size_t> id) const;
-
-    [[nodiscard]]
-    std::filesystem::path external_dependencies() const;
 
     [[nodiscard]]
     std::filesystem::path instability_analysis() const;
@@ -440,6 +477,12 @@ export namespace sequoia::testing
     }
 
     [[nodiscard]]
+    drift_paths drift() const
+    {
+      return drift_paths{dir()};
+    }
+
+    [[nodiscard]]
     prune_paths prune(const std::filesystem::path& buildRoot, const std::filesystem::path& buildDir) const
     {
       return {dir(), buildRoot, buildDir};
@@ -464,8 +507,6 @@ export namespace sequoia::testing
     struct customizer
     {
       std::optional<std::filesystem::path> source_folder{};
-      
-      std::vector<std::filesystem::path> additional_dependency_analysis_paths{};
 
       std::filesystem::path main_cpp{main_paths::default_main_cpp_from_root()};
 
@@ -558,9 +599,6 @@ export namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::span<const std::filesystem::path> additional_dependency_analysis_paths() const noexcept { return m_AdditionalDependencyAnalysisPaths; }
-
-    [[nodiscard]]
     prune_paths prune() const;
 
     [[nodiscard]]
@@ -578,6 +616,5 @@ export namespace sequoia::testing
     build_system_paths   m_BuildSystem;
 
     std::vector<main_paths> m_AncillaryMainCpps{};
-    std::vector<std::filesystem::path> m_AdditionalDependencyAnalysisPaths{};
   };
 }

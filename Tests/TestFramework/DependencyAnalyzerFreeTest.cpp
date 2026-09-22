@@ -8,6 +8,9 @@
 #include "DependencyAnalyzerFreeTest.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
+#include "TestFramework/BuildArtefactsTestingUtilities.hpp"
+#include "Utilities/TestUtilities.hpp"
+
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/TestFramework/Macros.hpp"
 
@@ -123,7 +126,6 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::check_tests_to_run(const reporter& description,
                                                          const project_paths& projPaths,
-                                                         std::string_view cutoff,
                                                          const file_states& fileStates,
                                                          std::vector<prune_record> failures,
                                                          std::vector<prune_record> passes)
@@ -132,7 +134,7 @@ namespace sequoia::testing
     std::ranges::sort(passes);
 
     const auto prune{projPaths.prune()};
-    const auto failureFile{prune.failures(std::nullopt)};
+    const auto failureFile{prune.to_rerun(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
     write_tests(projPaths, failureFile, failures);
     write_tests(projPaths, passesFile, passes);
@@ -145,12 +147,10 @@ namespace sequoia::testing
       fs::last_write_time(f.file, m_ResetTime + to_duration(f.modification));
     }
 
-    opt_test_list actual{tests_to_run(projPaths, cutoff)};
+    test_selection prediction{fileStates.to_run};
+    std::ranges::sort(std::get<test_list>(prediction));
 
-    opt_test_list prediction{fileStates.to_run};
-    std::ranges::sort(*prediction);
-
-    check(equality, description, actual, prediction);
+    check(equality, description, (tests_to_run(projPaths)), prediction);
 
     for(const auto& f : fileStates.stale)
     {
@@ -160,7 +160,173 @@ namespace sequoia::testing
     fs::remove(failureFile);
     fs::remove(passesFile);
 
-    check(equality, append_lines(description.message(), "Nothing Stale"), tests_to_run(projPaths, cutoff), opt_test_list{test_list{}});
+    check(equality, append_lines(description.message(), "Nothing Stale"), (tests_to_run(projPaths)), test_selection{test_list{}});
+  }
+
+  /* The fake project is never built, so what its build would have recorded is written by hand:
+     for each unit, every file the compiler would have read, which is the flattened closure of its
+     includes. The sequoia headers the fake sources include lie outside the fake project, as they
+     would in a build of it, and are taken from the real one so that they exist.
+   */
+  namespace
+  {
+    /// A translation unit of the fake project: its source, the fake project's files it read, and sequoia's
+    struct unit
+    {
+      std::string_view source;
+      std::vector<std::string_view> inputs;
+      std::vector<std::string_view> sequoia_inputs{};
+    };
+
+    /// What the fake project's build would have recorded: for each unit, every file the compiler would have read
+    [[nodiscard]]
+    const std::vector<unit>& fake_units()
+    {
+      constexpr std::string_view
+        freeTestCore{"sequoia/TestFramework/FreeTestCore.cppm"},
+        regularTestCore{"sequoia/TestFramework/RegularTestCore.cppm"},
+        moveOnlyTestCore{"sequoia/TestFramework/MoveOnlyTestCore.cppm"};
+
+      static const std::vector<unit> units{
+        {"Source/fakeProject/Maths/Helper.cpp", {"Source/fakeProject/Maths/Helper.hpp"}},
+        {"Source/fakeProject/Maths/Probability.cpp", {"Source/fakeProject/Maths/Probability.hpp", "Source/fakeProject/Maths/Helper.hpp", "dependencies/foo/Source/foo/Utilities/Helper.hpp"}},
+        {"Source/fakeProject/Utilities/Thing/UniqueThing.cpp", {"Source/fakeProject/Utilities/Thing/UniqueThing.hpp"}},
+        {"Source/fakeProject/Stuff/Substitutions.cpp", {}, {"sequoia/TextProcessing/Substitutions.cppm"}},
+        {"Source/fakeProject/Stuff/Foo.cpp", {"Source/fakeProject/Stuff/Foo.hpp"}},
+        {"Source/fakeProject/Stuff/FooDefinitions.cpp", {"Source/fakeProject/Stuff/Foo.hpp"}},
+        {"Source/fakeProject/Stuff/Unrelated.cpp", {"Source/fakeProject/Stuff/MoreFooDefinitions.hpp", "Source/fakeProject/Stuff/Foo.hpp"}},
+        {"Source/fakeProject/Utilities/UsefulThings.cpp", {"Source/fakeProject/Utilities/UsefulThings.hpp", "dependencies/foo/Source/foo/Utilities/Helper.hpp"}},
+        {"TestUtilities/myLib/Utils.cpp", {"TestUtilities/myLib/Utils.hpp"}},
+        {"dependencies/foo/Source/foo/Utilities/Helper.cpp", {"dependencies/foo/Source/foo/Utilities/Helper.hpp"}},
+        {"Tests/Cycle/FirstFreeTest.cpp", {"Tests/Cycle/FirstFreeTest.hpp", "Source/fakeProject/Cycle/First.hpp", "Source/fakeProject/Cycle/Second.hpp", "Source/fakeProject/Cycle/FirstLeaf.hpp", "Source/fakeProject/Cycle/SecondLeaf.hpp"}, {freeTestCore}},
+        {"Tests/Cycle/SecondFreeTest.cpp", {"Tests/Cycle/SecondFreeTest.hpp", "Source/fakeProject/Cycle/Second.hpp", "Source/fakeProject/Cycle/First.hpp", "Source/fakeProject/Cycle/SecondLeaf.hpp", "Source/fakeProject/Cycle/FirstLeaf.hpp"}, {freeTestCore}},
+        {"Tests/HouseAllocationTest.cpp", {"Tests/HouseAllocationTest.hpp"}, {"sequoia/TestFramework/MoveOnlyAllocationTestCore.cppm"}},
+        {"Tests/Maths/ProbabilityTest.cpp", {"Tests/Maths/ProbabilityTest.hpp", "Tests/Maths/ProbabilityTestingUtilities.hpp", "Source/fakeProject/Maths/Probability.hpp"}, {regularTestCore}},
+        {"Tests/Maths/ProbabilityTestingDiagnostics.cpp", {"Tests/Maths/ProbabilityTestingDiagnostics.hpp", "Tests/Maths/ProbabilityTestingUtilities.hpp", "Source/fakeProject/Maths/Probability.hpp"}, {regularTestCore}},
+        {"Tests/Maybe/MaybeTest.cpp", {"Tests/Maybe/MaybeTest.hpp", "Tests/Maybe/MaybeTestingUtilities.hpp", "Tests/Stuff/OldschoolTestingUtilities.hpp", "Source/fakeProject/Stuff/NoTemplate.hpp", "TestUtilities/myLib/Utils.hpp", "Source/fakeProject/Maybe/Maybe.hpp"}, {regularTestCore}},
+        {"Tests/Maybe/MaybeTestingDiagnostics.cpp", {"Tests/Maybe/MaybeTestingDiagnostics.hpp", "Tests/Maybe/MaybeTestingUtilities.hpp", "Source/fakeProject/Maybe/Maybe.hpp"}, {regularTestCore}},
+        {"Tests/Stuff/BarFreeTest.cpp", {"Tests/Stuff/BarFreeTest.hpp", "Source/fakeProject/Stuff/Bar.hpp", "Source/fakeProject/Stuff/Baz.hpp", "Source/fakeProject/Stuff/Qux.hpp"}, {freeTestCore}},
+        {"Tests/Stuff/FooTest.cpp", {"Tests/Stuff/FooTest.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp"}, {"sequoia/TestFramework/FileEditors.cppm", moveOnlyTestCore, "sequoia/TextProcessing/Substitutions.cppm"}},
+        {"Tests/Stuff/FooTestingDiagnostics.cpp", {"Tests/Stuff/FooTestingDiagnostics.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp"}, {moveOnlyTestCore}},
+        {"Tests/Stuff/OldschoolTest.cpp", {"Tests/Stuff/OldschoolTest.hpp", "Tests/Stuff/OldschoolTestingUtilities.hpp", "Source/fakeProject/Stuff/NoTemplate.hpp", "TestUtilities/myLib/Utils.hpp"}, {regularTestCore}},
+        {"Tests/Stuff/OldschoolTestingDiagnostics.cpp", {"Tests/Stuff/OldschoolTestingDiagnostics.hpp", "Tests/Stuff/OldschoolTestingUtilities.hpp", "Source/fakeProject/Stuff/NoTemplate.hpp", "TestUtilities/myLib/Utils.hpp"}, {regularTestCore}},
+        {"Tests/Utilities/ContainerAllocationTest.cpp", {"Tests/Utilities/ContainerAllocationTest.hpp"}, {"sequoia/TestFramework/RegularAllocationTestCore.cppm"}},
+        {"Tests/Utilities/ContainerPerformanceTest.cpp", {"Tests/Utilities/ContainerPerformanceTest.hpp", "Source/fakeProject/Utilities/Container.hpp"}, {"sequoia/TestFramework/PerformanceTestCore.cppm"}},
+        {"Tests/Utilities/Thing/UniqueThingTest.cpp", {"Tests/Utilities/Thing/UniqueThingTest.hpp", "Tests/Utilities/Thing/UniqueThingTestingUtilities.hpp", "Source/fakeProject/Utilities/Thing/UniqueThing.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp"}, {moveOnlyTestCore}},
+        {"Tests/Utilities/Thing/UniqueThingTestingDiagnostics.cpp", {"Tests/Utilities/Thing/UniqueThingTestingDiagnostics.hpp", "Tests/Utilities/Thing/UniqueThingTestingUtilities.hpp", "Source/fakeProject/Utilities/Thing/UniqueThing.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp"}, {moveOnlyTestCore}},
+        {"Tests/Utilities/UsefulThingsFreeTest.cpp", {"Tests/Utilities/UsefulThingsFreeTest.hpp", "Source/fakeProject/Utilities/UsefulThings.hpp"}, {freeTestCore}},
+        {"Tests/Utilities/UtilitiesFreeTest.cpp", {"Tests/Utilities/UtilitiesFreeTest.hpp", "Source/fakeProject/Utilities/Utilities.hpp"}, {freeTestCore}}
+      };
+
+      return units;
+    }
+
+    /// The fake project's stand-in for a toolchain header, read by every unit, which the tests may touch
+    [[nodiscard]]
+    fs::path fake_toolchain_header(const fs::path& fake)
+    {
+      return fake / "Toolchain" / "include" / "vector";
+    }
+  }
+
+  void dependency_analyzer_free_test::write_build_artefacts(const fs::path& fake, build_system system, recorded_sources sources)
+  {
+    const auto& units{fake_units()};
+
+    const auto buildDir{fake / "build" / "CMade" / "TestAll"};
+    const auto objectDir{fs::path{"CMakeFiles"} / "TestAll.dir"};
+    const bool ninja{system != build_system::visual_studio};
+    auto object{[&](std::string_view source){ return objectDir / (std::string{source} + (ninja ? ".o" : ".obj")); }};
+
+    const auto& sequoiaSource{get_project_paths().source().repo()};
+
+    auto recorded{
+      [sources](const unit& u) {
+        return (sources != recorded_sources::all_but_the_tests) || !u.source.starts_with("Tests/");
+      }
+    };
+
+    const auto root{(sources == recorded_sources::all_under_another_root) ? fake.parent_path() / "AnotherRoot" : fake};
+
+    std::vector<compilation_record> records{};
+    for(const auto& [source, inputs, sequoia_inputs] : units | std::views::filter(recorded))
+    {
+      compilation_record record{.object{object(source)}, .inputs{root / source}};
+      for(const auto& input : inputs)
+      {
+        record.inputs.push_back(root / input);
+      }
+      for(const auto& input : sequoia_inputs)
+      {
+        record.inputs.push_back(sequoiaSource / input);
+      }
+      record.inputs.push_back(fake_toolchain_header(fake));
+      records.push_back(std::move(record));
+    }
+
+    // What the build tree says of itself; the fake project's source dir is itself, and two directories stand in for the toolchain's: one of sequoia's, and one of the fake project's own
+    if(const auto header{fake_toolchain_header(fake)}; !fs::exists(header))
+    {
+      // Once: the artefacts are written several times over, and the header's modification time is the tests' to set
+      fs::create_directories(header.parent_path());
+      write_to_file(header, "", std::ios_base::out);
+    }
+    fs::remove_all(buildDir / "CMakeFiles");
+    fs::remove(buildDir / ".ninja_deps");
+    fs::remove(buildDir / "build.ninja");
+    fs::create_directories(buildDir / objectDir);
+    fs::create_directories(buildDir / "CMakeFiles" / "4.1.2");
+    write_to_file(buildDir / "CMakeCache.txt",
+                  std::format("# Fake\nCMAKE_GENERATOR:INTERNAL={}\nCMAKE_HOME_DIRECTORY:INTERNAL={}\n", ninja ? "Ninja" : "Visual Studio 18 2026", fake.generic_string()),
+                  std::ios_base::out);
+    write_to_file(buildDir / "CMakeFiles" / "4.1.2" / "CMakeCXXCompiler.cmake",
+                  std::format("set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"{};{}\")\n", (sequoiaSource / "sequoia" / "TextProcessing").generic_string(), fake_toolchain_header(fake).parent_path().generic_string()),
+                  std::ios_base::out);
+
+    if(ninja)
+    {
+      // The generator spells paths natively and escapes ninja's specials - on Windows `C$:\Users\...` - where the log, which ninja canonicalizes, is generic everywhere
+      auto asWritten{[](fs::path p){ return replace_all(p.make_preferred().string(), ":", "$:"); }};
+
+      // What the build currently has: a statement per object naming its source
+      std::string statements{};
+      for(const auto& record : records)
+      {
+        statements.append("build ").append(asWritten(record.object)).append(": CXX_COMPILER ").append(asWritten(record.inputs.front())).append(" || cmake_object_order_depends\n");
+      }
+
+      // An object the build once had and no longer does keeps its record in the log, and its source may be gone
+      statements.append("build CMakeFiles/TestAll.dir/unrelated.o: CXX_COMPILER unrelated.cpp\n");
+      auto logged{records};
+      logged.push_back({.object{objectDir / "Tests/Retired/RetiredTest.cpp.o"}, .inputs{fake / "Tests/Retired/RetiredTest.cpp", fake / "Tests/Retired/Gone.hpp"}});
+
+      // MSVC reports the headers it read but not the source, which the statement supplies
+      if(system == build_system::ninja_with_msvc)
+      {
+        for(auto& record : logged)
+        {
+          record.inputs.erase(record.inputs.begin());
+        }
+      }
+
+      write_to_file(buildDir / "build.ninja", statements, std::ios_base::out);
+      write_ninja_deps(buildDir / ".ninja_deps", logged);
+    }
+    else
+    {
+      // The tracker spells paths in upper case and the reader recovers their case from the filesystem, so what it
+      // wrote must exist; the logs themselves live beside the objects, under the configuration - here the
+      // executable's own directory name
+      for(auto& record : records)
+      {
+        record.object = buildDir / record.object;
+
+        fs::create_directories(record.object.parent_path());
+        write_to_file(record.object, "", std::ios_base::out);
+      }
+
+      write_tlogs(buildDir / objectDir / "TestAll" / "TestAll.tlog", records);
+    }
   }
 
   void dependency_analyzer_free_test::run_tests()
@@ -170,11 +336,13 @@ namespace sequoia::testing
     m_ResetTime = std::chrono::file_clock::now() + resetOffset;
 
     const auto fake{auxiliary_materials() /= "FakeProject"};
+    write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
+
     const main_paths main{fake / main_paths::default_main_cpp_from_root()};
     commandline_arguments args{{(fake / "build/CMade/TestAll/TestAll").generic_string()}};
-    const project_paths projPaths{args.size(), args.get(), {.additional_dependency_analysis_paths{{"TestUtilities"}, {"dependencies/foo/Source"}}, .main_cpp{main.file()}, .common_includes{main.file()}}};
+    const project_paths projPaths{args.size(), args.get(), {.main_cpp{main.file()}, .common_includes{main.file()}}};
 
-    check(equality, "No timestamp", tests_to_run(projPaths, ""), opt_test_list{});
+    check(equality, "No timestamp", (tests_to_run(projPaths)), test_selection{prune_fallback_reason::no_previous_stamp});
 
     const auto prunePaths{projPaths.prune()};
     fs::create_directories(prunePaths.dir());
@@ -190,9 +358,20 @@ namespace sequoia::testing
     fs::last_write_time(prunePaths.stamp(), m_ResetTime + pruneStampOffset);
 
     test_exceptions(projPaths);
+    test_recorded_sources(projPaths);
     test_dependencies(projPaths);
+
+    // The same build, as ninja records it when the compiler is MSVC, and as Visual Studio's tracker would have recorded it
+    write_build_artefacts(fake, build_system::ninja_with_msvc, recorded_sources::all);
+    test_dependencies(projPaths);
+
+    write_build_artefacts(fake, build_system::visual_studio, recorded_sources::all);
+    test_dependencies(projPaths);
+
+    write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
     test_stamp_on_second_boundary(projPaths);
     test_pass_recorded_in_the_modification_second(projPaths);
+    test_prune_record_round_trip(projPaths);
     test_prune_update(projPaths);
     test_instability_analysis_prune_upate(projPaths);
   }
@@ -222,38 +401,130 @@ namespace sequoia::testing
           stamp_at(-3000ms));
   }
 
+  /// The out-of-date message names a file and two time stamps, none of which is stable across machines
+  std::string dependency_analyzer_free_test::normalise_out_of_date_message(const project_paths& paths, std::string message)
+  {
+    message = default_exception_message_postprocessor{}(paths, std::move(message));
+    {
+      const auto [first, last]{find_sandwiched_text(message, "FakeProject", "time")};
+      if(first < last)
+        message.replace(first, last - first, "/xxFILExx ");
+    }
+
+    std::string::size_type pos{};
+    while(pos < message.size())
+    {
+      std::string_view remaining{message.data() + pos, message.size() - pos};
+      const auto [first, last]{find_sandwiched_text(remaining, ":", "\n")};
+      if(first >= last)
+        break;
+
+      pos += first;
+      message.replace(pos, last - first, "****");
+      pos += 4;
+    }
+
+    return message;
+  }
+
   void dependency_analyzer_free_test::test_exceptions(const project_paths& projPaths)
   {
     check_exception_thrown<std::runtime_error>(
       "Executable out of date",
       [this, projPaths]() {
         fs::last_write_time(projPaths.executable(), m_ResetTime + earlyExecutableOffset);
-        return tests_to_run(projPaths, "");
+        return tests_to_run(projPaths);
       },
-      [](const project_paths& paths, std::string message) {
-        message = default_exception_message_postprocessor{}(paths, std::move(message));
-        {
-          const auto [first, last]{find_sandwiched_text(message, "fakeProject", "time")};
-          if(first < last)
-            message.replace(first, last - first, "/xxFILExx ");
-        }
-
-        std::string::size_type pos{};
-        while(pos < message.size())
-        {
-          std::string_view remaining{message.data() + pos, message.size() - pos};
-          const auto [first, last]{find_sandwiched_text(remaining, ":", "\n")};
-          if(first >= last)
-            break;
-
-          pos += first;
-          message.replace(pos, last - first, "****");
-          pos += 4;
-        }
-
-        return message;
-      }
+      normalise_out_of_date_message
     );
+
+    /* A source no test depends on - TestMain.cpp is the one which matters - still makes the executable
+       out of date when edited: every file the build read is checked, not only the tests' dependencies
+     */
+    const auto orphan{projPaths.source().project() / "Stuff" / "FooDefinitions.cpp"};
+    check_exception_thrown<std::runtime_error>(
+      "Executable out of date on account of a source no test depends on",
+      [this, projPaths, &orphan]() {
+        fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
+        fs::last_write_time(orphan, m_ResetTime + lateEditOffset);
+        return tests_to_run(projPaths);
+      },
+      normalise_out_of_date_message
+    );
+
+    fs::last_write_time(orphan, m_ResetTime);
+
+    // A toolchain header newer than the executable: the executable was built with an older toolchain
+    const auto toolchainHeader{fake_toolchain_header(projPaths.project_root())};
+    check_exception_thrown<std::runtime_error>(
+      "Executable out of date on account of a toolchain header",
+      [this, projPaths, &toolchainHeader]() {
+        fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
+        fs::last_write_time(toolchainHeader, m_ResetTime + lateEditOffset);
+        return tests_to_run(projPaths);
+      },
+      normalise_out_of_date_message
+    );
+
+    fs::last_write_time(toolchainHeader, m_ResetTime);
+
+    // A file the build read which cannot be read now: the reason is the platform's, and the normaliser masks it
+    const auto hidden{fs::path{orphan}.replace_extension(".hidden")};
+    check_exception_thrown<std::runtime_error>(
+      "A file the build read cannot be read",
+      [&projPaths, &orphan, &hidden]() {
+        fs::rename(orphan, hidden);
+        return tests_to_run(projPaths);
+      },
+      normalise_out_of_date_message
+    );
+
+    fs::rename(hidden, orphan);
+    fs::last_write_time(orphan, m_ResetTime);
+  }
+
+  /* A project with no tests selects nothing and says nothing, so that the runner can say "try creating
+     some tests"; a record which names none of the project's files under the path project_paths knows -
+     a tree configured under some other spelling of it - would select nothing forever, and is refused.
+   */
+  void dependency_analyzer_free_test::test_recorded_sources(const project_paths& projPaths)
+  {
+    const auto fake{auxiliary_materials() /= "FakeProject"};
+    fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
+
+    write_build_artefacts(fake, build_system::ninja, recorded_sources::all_but_the_tests);
+    check(equality, "No tests: nothing selected, nothing refused", (tests_to_run(projPaths)), test_selection{test_list{}});
+
+    // The record's inputs must exist for their modification times to be read, so the project's sources are copied to the other root
+    const auto anotherRoot{fake.parent_path() / "AnotherRoot"};
+    fs::create_directory(anotherRoot);
+    for(const auto dir : {"Source", "Tests", "TestUtilities", "dependencies"})
+    {
+      fs::copy(fake / dir, anotherRoot / dir, fs::copy_options::recursive);
+    }
+
+    for(auto& entry : fs::recursive_directory_iterator(anotherRoot))
+    {
+      fs::last_write_time(entry.path(), m_ResetTime);
+    }
+
+    write_build_artefacts(fake, build_system::ninja, recorded_sources::all_under_another_root);
+    check_exception_thrown<std::runtime_error>(
+      "The record names nothing of the project's",
+      [&projPaths]() { return tests_to_run(projPaths); }
+    );
+
+    // The refusal comes before the toolchain is consulted: a misconfigured tree is refused, not run in full
+    const auto toolchainHeader{fake_toolchain_header(fake)};
+    fs::last_write_time(toolchainHeader, m_ResetTime + earlyEditOffset);
+    check_exception_thrown<std::runtime_error>(
+      "The record names nothing of the project's, whatever the toolchain did",
+      [&projPaths]() { return tests_to_run(projPaths); }
+    );
+    fs::last_write_time(toolchainHeader, m_ResetTime);
+
+    fs::remove_all(anotherRoot);
+    write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
   }
 
   void dependency_analyzer_free_test::test_dependencies(const project_paths& projPaths)
@@ -266,49 +537,34 @@ namespace sequoia::testing
     const auto fooPath{projPaths.project_root() / "dependencies" / "foo" / "Source"};
     const auto& materials{projPaths.test_materials().repo()};
 
-    check_tests_to_run("Nothing stale", projPaths, "", {}, {}, {});
+    check_tests_to_run("Nothing stale", projPaths, {}, {}, {});
 
-    fs::copy(projPaths.prune().external_dependencies(), working_materials());
-    check(weak_equivalence, "External Dependencies", working_materials(), predictive_materials());
-
-    check_tests_to_run("Test cpp stale (no cutoff)",
+    check_tests_to_run("Test cpp stale",
                        projPaths,
-                       "",
                        {.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}},
                        {},
                        {});
 
     check_tests_to_run("Test cpp naively stale, but has passed (when selected)",
                        projPaths,
-                       "namespace",
                        {.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{}},
                        {},
                        {{"HouseAllocationTest.cpp", m_ResetTime + to_duration(modification_time::late)}});
 
     check_tests_to_run("Test cpp stale; has previously passed (when selected), but this should be ignored",
                        projPaths,
-                       "namespace",
                        {.stale{{{testRepo / "HouseAllocationTest.cpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}},
                        {},
                        {{"HouseAllocationTest.cpp", m_ResetTime + to_duration(modification_time::very_early)}});
 
-    check_tests_to_run("Test hpp stale (no cutoff)",
-                       projPaths,
-                       "",
-                       {.stale{{{testRepo / "HouseAllocationTest.hpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}},
-                       {},
-                       {});
-
     check_tests_to_run("Test hpp stale",
                        projPaths,
-                       "namespace",
                        {.stale{{{testRepo / "HouseAllocationTest.hpp"}, modification_time::early}}, .to_run{{"HouseAllocationTest.cpp"}}},
                        {},
                        {});
 
     check_tests_to_run("Test utils stale",
                        projPaths,
-                       "namespace",
                        {.stale{{{testRepo / "Maths" / "ProbabilityTestingUtilities.hpp"}, modification_time::early}},
                          .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
                        {},
@@ -316,7 +572,6 @@ namespace sequoia::testing
 
     check_tests_to_run("Reused utils stale",
                        projPaths,
-                       "namespace",
                        {.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
                          .to_run{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}}},
                        {},
@@ -324,7 +579,6 @@ namespace sequoia::testing
 
     check_tests_to_run("Reused utils stale, but one of the tests has passed",
                        projPaths,
-                       "namespace",
                        {.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
                          .to_run{{"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}}},
                        {},
@@ -332,7 +586,6 @@ namespace sequoia::testing
 
     check_tests_to_run("Reused utils stale, but two of the tests have passed",
                        projPaths,
-                       "namespace",
                        {.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
                          .to_run{{"Stuff/OldschoolTestingDiagnostics.cpp"}}},
                        {},
@@ -341,7 +594,6 @@ namespace sequoia::testing
 
     check_tests_to_run("Reused utils stale, but two of the tests have passed and a different one has failed",
                        projPaths,
-                       "namespace",
                        {.stale{{{testRepo / "Stuff" / "OldschoolTestingUtilities.hpp"}, modification_time::early}},
                          .to_run{{"Stuff/OldschoolTestingDiagnostics.cpp"}, {"HouseAllocationTest.cpp"}}},
                        {{"HouseAllocationTest.cpp" , m_ResetTime + to_duration(modification_time::late)}},
@@ -350,7 +602,6 @@ namespace sequoia::testing
 
     check_tests_to_run("Reused utils stale, relative path",
                        projPaths,
-                       "namespace",
                        {.stale{{{testRepo / "Stuff" / "FooTestingUtilities.hpp"}, modification_time::early}},
                          .to_run{{"Stuff/FooTest.cpp"}, {"Stuff/FooTestingDiagnostics.cpp"}, {"Utilities/Thing/UniqueThingTest.cpp"}, {"Utilities/Thing/UniqueThingTestingDiagnostics.cpp"}}},
                        {},
@@ -358,7 +609,6 @@ namespace sequoia::testing
 
     check_tests_to_run("Source cpp stale",
                        projPaths,
-                       "namespace",
                        {.stale{{{sourceRepo / "Maths" / "Probability.cpp"}, modification_time::early}},
                          .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
                        {},
@@ -366,7 +616,6 @@ namespace sequoia::testing
 
     check_tests_to_run("Source hpp stale",
                        projPaths,
-                       "namespace",
                        {.stale{{{sourceRepo / "Maths" / "Probability.hpp"}, modification_time::early}},
                          .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
                        {},
@@ -374,7 +623,6 @@ namespace sequoia::testing
 
     check_tests_to_run("Source hpp stale, following a previously successful run",
                        projPaths,
-                       "namespace",
                        {.stale{{{sourceRepo / "Maths" / "Probability.hpp"}, modification_time::early}},
                          .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
                        {},
@@ -383,7 +631,6 @@ namespace sequoia::testing
 
     check_tests_to_run("Source cpp stale, following a previously successful run",
                        projPaths,
-                       "namespace",
                        {.stale{{{sourceRepo / "Maths" / "Probability.cpp"}, modification_time::early}},
                          .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
                        {},
@@ -392,23 +639,123 @@ namespace sequoia::testing
 
     check_tests_to_run("Source cpp indirectly stale via included header",
                        projPaths,
-                       "namespace",
                        {.stale{{{sourceRepo / "Maths" / "Helper.hpp"}, modification_time::early}},
                          .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
                        {},
                        {});
 
+    check_tests_to_run("Source hpp stale, reached by one test alone",
+                       projPaths,
+                       {.stale{{{sourceRepo / "Stuff" / "Baz.hpp"}, modification_time::early}},
+                         .to_run{{"Stuff/BarFreeTest.cpp"}}},
+                       {},
+                       {});
+
+    /* Cycle/First.hpp and Cycle/Second.hpp include one another. Each carries a test and includes a
+       leaf of its own, so a staleness which propagates round the cycle in one direction only is
+       caught whichever member the traversal enters by: one leaf or the other lies beyond the member
+       which folds in its neighbour too soon.
+    */
+    const auto cycleTests{test_list{{"Cycle/FirstFreeTest.cpp"}, {"Cycle/SecondFreeTest.cpp"}}};
+
+    check_tests_to_run("The leaf beyond First.hpp is stale",
+                       projPaths,
+                       {.stale{{{sourceRepo / "Cycle" / "FirstLeaf.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {});
+
+    check_tests_to_run("The leaf beyond Second.hpp is stale",
+                       projPaths,
+                       {.stale{{{sourceRepo / "Cycle" / "SecondLeaf.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {});
+
+    check_tests_to_run("One member of the cycle is stale",
+                       projPaths,
+                       {.stale{{{sourceRepo / "Cycle" / "First.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {});
+
+    check_tests_to_run("The other member of the cycle is stale",
+                       projPaths,
+                       {.stale{{{sourceRepo / "Cycle" / "Second.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {});
+
+    // The fold also carries the modification time round the cycle, which is what decides whether a
+    // recorded pass post-dates the newest change.
+    check_tests_to_run("The leaf beyond First.hpp is stale, following a previously successful run",
+                       projPaths,
+                       {.stale{{{sourceRepo / "Cycle" / "FirstLeaf.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {{"Cycle/SecondFreeTest.cpp", m_ResetTime + to_duration(modification_time::very_early)}});
+
+    check_tests_to_run("The leaf beyond Second.hpp is stale, following a previously successful run",
+                       projPaths,
+                       {.stale{{{sourceRepo / "Cycle" / "SecondLeaf.hpp"}, modification_time::early}},
+                         .to_run{cycleTests}},
+                       {},
+                       {{"Cycle/FirstFreeTest.cpp", m_ResetTime + to_duration(modification_time::very_early)}});
+
     check_tests_to_run("Source cpp indirectly stale via cpp definitions for included header",
                        projPaths,
-                       "namespace",
                        {.stale{{{sourceRepo / "Maths" / "Helper.cpp"}, modification_time::early}},
                          .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}}},
                        {},
                        {});
 
+    {
+      // Every unit reads the toolchain, so a toolchain header modified since the stamp means every test runs
+      const auto toolchainHeader{fake_toolchain_header(projPaths.project_root())};
+      fs::last_write_time(toolchainHeader, m_ResetTime + to_duration(modification_time::early));
+      check(equality, "Toolchain header stale: every test runs", (tests_to_run(projPaths)), test_selection{prune_fallback_reason::toolchain_changed});
+      fs::last_write_time(toolchainHeader, m_ResetTime);
+      check(equality, "Toolchain header stale: every test runs; Nothing Stale", (tests_to_run(projPaths)), test_selection{test_list{}});
+    }
+
+    // Substitutions.cpp shares its stem with a toolchain header FooTest.cpp includes; the toolchain's headers are not furnished
+    check_tests_to_run("Source cpp named for a toolchain header stale",
+                       projPaths,
+                       {.stale{{{sourceRepo / "Stuff" / "Substitutions.cpp"}, modification_time::early}},
+                         .to_run{}},
+                       {},
+                       {});
+
+    /* The precondition prune relies on, documented by the two cases which break it: definitions for
+       Foo.hpp's declarations in a source not named for it, and in a header read by one other
+       compilation alone. FooTest.cpp includes Foo.hpp and is not selected by either. Should prune
+       learn the link-time dependencies (roadmap item 180), both will select it, and these two
+       checks will fail.
+    */
+    check_tests_to_run("Definitions in a source not named for the header: a limitation, not seen",
+                       projPaths,
+                       {.stale{{{sourceRepo / "Stuff" / "FooDefinitions.cpp"}, modification_time::early}},
+                         .to_run{}},
+                       {},
+                       {});
+
+    check_tests_to_run("Definitions in a header not named for the header, read by one other compilation: a limitation, not seen",
+                       projPaths,
+                       {.stale{{{sourceRepo / "Stuff" / "MoreFooDefinitions.hpp"}, modification_time::early}},
+                         .to_run{}},
+                       {},
+                       {});
+
+    // The control for both: the same definitions in the source named for Foo.hpp are seen
+    check_tests_to_run("Definitions in the source named for the header: seen",
+                       projPaths,
+                       {.stale{{{sourceRepo / "Stuff" / "Foo.cpp"}, modification_time::early}},
+                         .to_run{{"Stuff/FooTest.cpp"}, {"Stuff/FooTestingDiagnostics.cpp"}, {"Utilities/Thing/UniqueThingTest.cpp"}, {"Utilities/Thing/UniqueThingTestingDiagnostics.cpp"}}},
+                       {},
+                       {});
+
     check_tests_to_run("Source cpps indirectly stale via cpp from dependencies with the same name as a project cpp",
                        projPaths,
-                       "namespace",
                        {.stale{{{fooPath / "foo" / "Utilities" / "Helper.cpp"}, modification_time::early}},
                          .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}, {"Utilities/UsefulThingsFreeTest.cpp"}}},
                        {},
@@ -416,7 +763,6 @@ namespace sequoia::testing
 
     check_tests_to_run("Stale header in additional project",
                        projPaths,
-                       "namespace",
                        {.stale{{{testUtilsPath / "myLib" / "Utils.hpp"}, modification_time::early}},
                         .to_run{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}}},
                        {},
@@ -424,7 +770,6 @@ namespace sequoia::testing
 
     check_tests_to_run("Stale cpp in additional project",
                        projPaths,
-                       "namespace",
                        {.stale{{{testUtilsPath / "myLib" / "Utils.cpp"}, modification_time::early}},
                         .to_run{{"Maybe/MaybeTest.cpp"}, {"Stuff/OldschoolTest.cpp"}, {"Stuff/OldschoolTestingDiagnostics.cpp"}}},
                        {},
@@ -432,61 +777,53 @@ namespace sequoia::testing
 
     check_tests_to_run("Materials stale",
                        projPaths,
-                       "namespace",
-                       {.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
+                       {.stale{{{materials / "Stuff" / "FooTest" / "foo_test" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
                          .to_run{{"Stuff/FooTest.cpp"}}},
                        {},
                        {});
 
     check_tests_to_run("Materials naively stale, but test previously passed (when selected)",
                        projPaths,
-                       "namespace",
-                       {.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
+                       {.stale{{{materials / "Stuff" / "FooTest" / "foo_test" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
                          .to_run{}},
                        {},
                        {{"Stuff/FooTest.cpp", m_ResetTime + to_duration(modification_time::late)}});
 
     check_tests_to_run("Materials stale; test previously passed (when selected), but materials subsequently modified",
                        projPaths,
-                       "namespace",
-                       {.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
+                       {.stale{{{materials / "Stuff" / "FooTest" / "foo_test" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early}},
                          .to_run{{"Stuff/FooTest.cpp"}}},
                        {},
                        {{"Stuff/FooTest.cpp", m_ResetTime + to_duration(modification_time::very_early)}});
 
     check_tests_to_run("Materials stale; test previously passed (when selected); materials subsequently modified some early some late",
                        projPaths,
-                       "namespace",
-                       {.stale{{{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early},
-                                {{materials / "Stuff" / "FooTest" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz2.txt"}, modification_time::very_late}},
+                       {.stale{{{materials / "Stuff" / "FooTest" / "foo_test" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz.txt"}, modification_time::early},
+                                {{materials / "Stuff" / "FooTest" / "foo_test" / "Prediction" / "RepresentativeCasesTemp" / "NoSeqpat" / "baz2.txt"}, modification_time::very_late}},
                          .to_run{{"Stuff/FooTest.cpp"}}},
                        {},
                        {{"Stuff/FooTest.cpp", m_ResetTime + to_duration(modification_time::late)}});
 
     check_tests_to_run("Nothing stale, but a previous failure",
                        projPaths,
-                       "namespace",
                        {.stale{}, .to_run{{"Maths/ProbabilityTest.cpp"}}},
                        {{"Maths/ProbabilityTest.cpp", m_ResetTime + to_duration(modification_time::early)}},
                        {});
 
     check_tests_to_run("Inconsistency: both passed and failed; failure wins",
                        projPaths,
-                       "namespace",
                        {.stale{}, .to_run{{"Maths/ProbabilityTest.cpp"}}},
                        {{"Maths/ProbabilityTest.cpp" , m_ResetTime + to_duration(modification_time::late)}},
                        {{"Maths/ProbabilityTest.cpp", m_ResetTime + to_duration(modification_time::late)}});
 
     check_tests_to_run("Stale and a previous failure",
                        projPaths,
-                       "namespace",
                        {.stale{{{testRepo / "Maths/ProbabilityTest.cpp"}, modification_time::early}}, .to_run{{"Maths/ProbabilityTest.cpp"}}},
                        {{"Maths/ProbabilityTest.cpp", m_ResetTime + to_duration(modification_time::late)}},
                        {});
 
     check_tests_to_run("Nothing stale, but two previous failures",
                        projPaths,
-                       "namespace",
                        {.stale{}, .to_run{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}},
                        {{"HouseAllocationTest.cpp"  , m_ResetTime + to_duration(modification_time::late)},
                         {"Maths/ProbabilityTest.cpp", m_ResetTime + to_duration(modification_time::late)}},
@@ -494,7 +831,6 @@ namespace sequoia::testing
 
     check_tests_to_run("Ensure that the staleness of a cpp isn't masked by a cpp which has freshly passed",
                        projPaths,
-                       "namespace",
                        {
                          .stale{{{testRepo / "HouseAllocationTest.cpp"}  , modification_time::early},
                                 {{testRepo / "Maths/ProbabilityTest.cpp"}, modification_time::early}},
@@ -524,13 +860,13 @@ namespace sequoia::testing
 
     check(equality,
           "A modification recorded at a stamp which lies on a second boundary is stale",
-          tests_to_run(projPaths, ""),
-          opt_test_list{test_list{{"HouseAllocationTest.cpp"}}});
+          (tests_to_run(projPaths)),
+          test_selection{test_list{{"HouseAllocationTest.cpp"}}});
 
     fs::last_write_time(stalePath, m_ResetTime);
     fs::last_write_time(projPaths.prune().stamp(), m_ResetTime + pruneStampOffset);
 
-    check(equality, "Nothing Stale", tests_to_run(projPaths, ""), opt_test_list{test_list{}});
+    check(equality, "Nothing Stale", (tests_to_run(projPaths)), test_selection{test_list{}});
   }
 
   void dependency_analyzer_free_test::test_pass_recorded_in_the_modification_second(const project_paths& projPaths)
@@ -557,11 +893,92 @@ namespace sequoia::testing
 
     check(equality,
           "A pass whose record ties the modification still post-dates it, so the test is not re-run",
-          tests_to_run(projPaths, ""),
-          opt_test_list{test_list{}});
+          (tests_to_run(projPaths)),
+          test_selection{test_list{}});
 
     fs::last_write_time(testFile, m_ResetTime);
     fs::remove(passesFile);
+  }
+
+  void dependency_analyzer_free_test::check_round_trip(const reporter& description,
+                                                       const project_paths& projPaths,
+                                                       const prune_records& records)
+  {
+    const auto file{projPaths.prune().to_rerun(std::nullopt)};
+    write_tests(projPaths, file, records);
+    check(equality, description, read_tests(file), records);
+    fs::remove(file);
+  }
+
+  void dependency_analyzer_free_test::test_prune_record_round_trip(const project_paths& projPaths)
+  {
+    const auto stamp{m_ResetTime};
+
+    check_round_trip("A single record",
+                     projPaths,
+                     {{"HouseAllocationTest.cpp", stamp}});
+
+    check_round_trip("Several records",
+                     projPaths,
+                     {{"HouseAllocationTest.cpp", stamp}, {"Maths/ProbabilityTest.cpp", stamp}});
+
+    check_round_trip("A path containing a space",
+                     projPaths,
+                     {{"Stuff/My Test.cpp", stamp}});
+
+    check_round_trip("A path containing a space does not take the rest of the file with it",
+                     projPaths,
+                     {{"HouseAllocationTest.cpp", stamp}, {"Stuff/My Test.cpp", stamp}, {"Maths/ProbabilityTest.cpp", stamp}});
+
+    check_round_trip("A path beginning with a quotation mark",
+                     projPaths,
+                     {{"\"HouseAllocationTest.cpp", stamp}, {"Maths/ProbabilityTest.cpp", stamp}});
+
+    check_round_trip("A path with a quotation mark elsewhere in it",
+                     projPaths,
+                     {{"House\"AllocationTest.cpp", stamp}});
+
+    check_round_trip("A path containing consecutive spaces, and one which ends in a space",
+                     projPaths,
+                     {{"Stuff/My  Test.cpp", stamp}, {"Stuff/Trailing.cpp ", stamp}});
+
+    check_round_trip("A time stamp before the file clock's epoch, which under libstdc++ is every stamp there is",
+                     projPaths,
+                     {{"HouseAllocationTest.cpp", prune_record::stamp_type{} - std::chrono::seconds{1}}});
+
+    check_round_trip("The file clock's epoch itself",
+                     projPaths,
+                     {{"HouseAllocationTest.cpp", prune_record::stamp_type{}}});
+
+    const auto file{projPaths.prune().to_rerun(std::nullopt)};
+
+    {
+      const transient_file noTrailingNewline{file, "path: HouseAllocationTest.cpp\ntimestamp: 0"};
+
+      check(equality,
+            "A file ending after a complete record, with no trailing newline",
+            read_tests(file),
+            prune_records{{"HouseAllocationTest.cpp", prune_record::stamp_type{}}});
+    }
+
+    {
+      // Prune state lives in the build tree, so a file in a superseded format survives an upgrade
+      const transient_file supersededFormat{file, "HouseAllocationTest.cpp 12345\nMaths/ProbabilityTest.cpp 12345\n"};
+
+      check_exception_thrown<std::runtime_error>("A prune file in a superseded format", [&file]() { return read_tests(file); });
+    }
+
+    {
+      const transient_file malformedStamp{file, "path: HouseAllocationTest.cpp\ntimestamp: 0\npath: Maths/ProbabilityTest.cpp\ntimestamp: soon\n"};
+
+      check_exception_thrown<std::runtime_error>("A malformed time stamp", [&file]() { return read_tests(file); });
+    }
+
+    {
+      const transient_file pathWithoutStamp{file, "path: HouseAllocationTest.cpp\n"};
+
+      check_exception_thrown<std::runtime_error>("A path with no time stamp after it", [&file]() { return read_tests(file); });
+    }
   }
 
   void dependency_analyzer_free_test::test_prune_update(const project_paths& projPaths)
@@ -569,7 +986,7 @@ namespace sequoia::testing
     const auto updateTime{m_ResetTime};
     const auto lateUpdateTime{m_ResetTime + std::chrono::seconds{1}};
     const auto prune{projPaths.prune()};
-    const auto failureFile{prune.failures(std::nullopt)};
+    const auto failureFile{prune.to_rerun(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
 
     using prune_graph = transition_checker<test_outcomes>::transition_graph;
@@ -767,7 +1184,7 @@ namespace sequoia::testing
     const auto updateTime{m_ResetTime};
     const auto lateUpdateTime{m_ResetTime + std::chrono::seconds{1}};
     const auto prune{projPaths.prune()};
-    const auto failureFile{prune.failures(std::nullopt)};
+    const auto failureFile{prune.to_rerun(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
 
     fs::remove_all(prune.dir());
@@ -857,6 +1274,10 @@ namespace sequoia::testing
           edge_t{house_prob_fails_null_passes,
                  "Two failures, unfiltered, on different runs",
                  [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{{"Maths/ProbabilityTest.cpp"}}, {{"HouseAllocationTest.cpp"}}}); }
+          },
+          edge_t{house_prob_fails_null_passes,
+                 "Two failures, unfiltered, on both runs",
+                 [update_unfiltered](const test_outcomes& d) { return update_unfiltered(d, {{{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}, {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}}}); }
           },
         }, // End   null_fails_null_passes
         {  // Begin empty_fails_null_passes

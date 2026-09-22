@@ -44,4 +44,15 @@ export namespace sequoia::testing
    */
   [[nodiscard]]
   std::string to_string(const versioned_output_differences& differences);
+
+  /** A patch taking `before` to `after`, in the unified format which `git apply` accepts; empty if
+      the snapshots agree. Each file that differs is one hunk spanning the whole of it - every old
+      line removed, every new line added - rather than a minimal difference: sequoia has no diff
+      algorithm and does not need one, since once the patch is applied `git diff` renders the minimal
+      difference for reading. Each path is `snapshotDir` followed by the snapshot's key, `snapshotDir`
+      being the directory the snapshots were taken of, relative to the one from which the patch is to
+      be applied.
+   */
+  [[nodiscard]]
+  std::string unified_diff(const versioned_output_snapshot& before, const versioned_output_snapshot& after, const std::filesystem::path& snapshotDir);
 }

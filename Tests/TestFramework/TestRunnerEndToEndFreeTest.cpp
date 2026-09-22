@@ -7,6 +7,7 @@
 
 #include "TestRunnerEndToEndFreeTest.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "Utilities/TestUtilities.hpp"
 
 #include "sequoia/PlatformSpecific/Macros.hpp"
 #include "sequoia/TestFramework/Macros.hpp"
@@ -45,14 +46,9 @@ namespace sequoia::testing
       constexpr auto pollInterval{10ms};
 
       const auto stamp{
-        [probe{probeDir / "TimestampProbe.tmp"}]() {
-          if(std::ofstream file{probe}; !file)
-            throw std::runtime_error{std::format("Unable to write the timestamp probe {}", probe.generic_string())};
-
-          const auto probeStamp{fs::last_write_time(probe)};
-          fs::remove(probe);
-
-          return probeStamp;
+        [&probeDir]() {
+          const transient_file probe{probeDir / "TimestampProbe.tmp", ""};
+          return fs::last_write_time(probe.path());
         }
       };
 
@@ -82,14 +78,14 @@ namespace sequoia::testing
     std::string create_cmd()
     {
       return run_cmd().append(" create free_test Utilities.hpp"
-        " create free_test \"Utilities/UsefulThings.hpp\" gen-source utils"
+        " create free_test \"Utilities/UsefulThings.hpp\" --gen-source utils"
         " create free_test \"Source/generatedProject/Stuff/Bar.hpp\""
         " create free \"Unstable/Flipper.hpp\""
-        " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\" gen-source Maybe"
+        " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\" --gen-source Maybe"
         " create regular_test \"stuff::oldschool\" double --header \"NoTemplate.hpp\""
-        " create regular \"maths::probability\" double gen-source Maths"
+        " create regular \"maths::probability\" double --gen-source Maths"
         " create move_only_test \"bar::baz::foo<::maths::floating_point T>\" T"
-        " create move_only \"stuff::unique_thing\" double gen-source Utilities/Thing"
+        " create move_only \"stuff::unique_thing\" double --gen-source Utilities/Thing"
         " create regular_allocation_test container"
         " create move_only_allocation_test house"
         " create performance_test Container.hpp");
@@ -139,7 +135,7 @@ namespace sequoia::testing
       {"select Plurgh.cpp test Absent select Foo test FooTest.cpp",                                            "FailedSpecifiedSourceOutput.txt"    },
       {"test Stuff",                                                                                            "SpecifiedSuiteOutput.txt"           },
       {"test Stuff prune",                                                                                      "SpecifiedSuitePruneConflictOutput.txt"},
-      {"prune --cutoff namespace",                                                                             "FullyPrunedOutput.txt"             },
+      {"prune",                                                                                                "FullyPrunedOutput.txt"             },
       {"-v",                                                                                                  "VerboseOutput.txt"                  },
       {"-v select FooTest.cpp test Stuff",                                                                       "SelectFromTestedSuiteOutput.txt"   },
       {"--help",                                                                                              "HelpOutput.txt"                     }
@@ -297,7 +293,7 @@ namespace sequoia::testing
 
     //=================== Run the test executable ===================//
 
-    run_and_check(report("Empty Run"), b, "EmptyRunOutput", "", return_code::success);    
+    run_and_check(report("Empty Run"), b, "EmptyRunOutput", "", return_code::success);
 
     //=================== Create tests and run ===================//
 
@@ -305,8 +301,7 @@ namespace sequoia::testing
     fs::copy(generated_project() /= "output/TestSummaries", working_materials() /= "TestSummaries_0", fs::copy_options::recursive);
     check(equivalence, "", working_materials() /= "TestSummaries_0", predictive_materials() /= "TestSummaries_0");
 
-    //=================== Rerun with async execution ===================//
-    // --> async depth should be automatically set to "suite" since number of families is > 4
+    //=================== Rerun serially ===================//
 
     run_and_check(report("Run synchronously"), b, "RunSynchronous", "--serial", return_code::success);
 
@@ -315,8 +310,14 @@ namespace sequoia::testing
     // Without this control, a check which fired on every run would look just as green as one which
     // works.
 
+    // A patch left by an earlier checked run must not outlive a run which finds nothing to report.
+    const auto patchFile{output_paths{generated_project()}.drift().patch_file()};
+    fs::create_directories(patchFile.parent_path());
+    write_to_file(patchFile, "stale\n", std::ios_base::out);
+
     run_and_check(report("Versioned output checked, nothing having drifted"), b, "CheckVersionedOutputStable",
                   "--check-versioned-output", return_code::success);
+    check("A run which finds no drift removes the previous patch", !fs::exists(patchFile));
 
     //=================== Perturb the versioned output, and check again ===================//
     // Rewriting one summary file and deleting another makes the next run's writes respectively a
@@ -325,37 +326,38 @@ namespace sequoia::testing
     // detects it, leaving nothing downstream to accommodate.
 
     const auto summaries{generated_project() /= "output/TestSummaries/Tests"};
-    write_to_file(summaries / "Stuff" / "foo_test.txt", "Not what the run will write\n");
+    write_to_file(summaries / "Stuff" / "foo_test.txt", "Not what the run will write\n", std::ios_base::out);
     fs::remove(summaries / "Maybe" / "maybe_test.txt");
 
+    const auto drifted{take_versioned_output_snapshot(output_paths{generated_project()})};
     run_and_check(report("Versioned output checked, having drifted"), b, "CheckVersionedOutputDrifted",
                   "--check-versioned-output", return_code::versioned_output_diffs);
 
-    //=================== Rerun with async selecting 3 tests from 3 families ===================//
-    // --> async depth should be automatically set to "test" since number of families is < 4
+    // The run repairs the drift and leaves a patch saying what it did, for a CI job to hand back.
+    const auto repaired{take_versioned_output_snapshot(output_paths{generated_project()})};
+    const auto patch{read_to_string(patchFile, std::ios_base::in | std::ios_base::binary)};
+    if(check("The drift is written as a patch", patch.has_value()))
+    {
+      check(equality, "The patch takes what was on disk to what the run wrote", *patch, unified_diff(drifted, repaired, "output"));
+    }
+
+    //=================== Rerun asynchronously, selecting 2 tests ===================//
+
+    run_and_check(report("Run asynchronously with 2 selected tests"), b, "RunAsyncTwoTests",
+                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp", return_code::success);
+
+    //=================== Rerun asynchronously, selecting 3 tests ===================//
 
     run_and_check(report("Run asynchronously with 3 selected tests"), b, "RunAsyncThreeTests",
                        "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp", return_code::success);
 
-    //=================== Rerun with async selecting 4 tests from 4 families===================//
-    // --> async depth should be automatically set to "suite"
+    //=================== Rerun asynchronously, selecting 4 tests ===================//
 
     run_and_check(report("Run asynchronously with 4 selected tests"), b, "RunAsyncFourTests",
                        "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
                        " select Stuff/FooTest.cpp", return_code::success);
 
-    //=================== Rerun with async selecting 4 tests from 4 families, and setting async-depth to test===================//
-
-    run_and_check(report("Run asynchronously with 4 selected tests"), b, "RunAsyncFourTestsDepthTest",
-                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp select Maybe/MaybeTest.cpp"
-                       " select Stuff/FooTest.cpp", return_code::success);
-
-    //=================== Rerun with async, selecting 2 tests, and setting async-depth to suite ===================//
-
-    run_and_check(report("Run asynchronously with 2 selected tests"), b, "RunAsyncTwoTestsDepthSuite",
-                       "select HouseAllocationTest.cpp select Maths/ProbabilityTest.cpp", return_code::success);
-
-    //=================== Rerun with async, selecting one suite ===================//
+    //=================== Rerun asynchronously, selecting 1 suite ===================//
 
     run_and_check(report("Run asynchronously with 1 suite"), b, "RunAsyncOneTestOneSuite", "test Maths", return_code::success);
 
@@ -369,7 +371,7 @@ namespace sequoia::testing
     copy_aux_materials("ModifiedTests/Stuff/FooTest.cpp", "Tests/Stuff");
     copy_aux_materials("TestMaterials", "TestMaterials");
 
-    rebuild_run_and_check(report("Change Materials (pruned)"), b, "RunWithChangedMaterials", "CMakeOutput3.txt", "BuildOutput3.txt", "prune --cutoff namespace", return_code::soft_failures);
+    rebuild_run_and_check(report("Change Materials (pruned)"), b, "RunWithChangedMaterials", "CMakeOutput3.txt", "BuildOutput3.txt", "prune", return_code::soft_failures);
 
     // Check materials are unchanged
     fs::copy(generated_project() / "TestMaterials", working_materials() /= "OriginalTestMaterials", fs::copy_options::recursive);
@@ -378,12 +380,12 @@ namespace sequoia::testing
     //=================== Run again, locating instabilities, and try to update ===================//
     //--> update should be suppressed by instability location
 
-    run_and_check(report("Instability location suppressing update"), b, "UpdateSuppressedByInstabilityLocation", "locate 2 prune -c namespace u", return_code::soft_failures);
+    run_and_check(report("Instability location suppressing update"), b, "UpdateSuppressedByInstabilityLocation", "locate 2 prune u", return_code::soft_failures);
     check(equivalence, "Original Test Materials", working_materials() /= "OriginalTestMaterials", predictive_materials() /= "OriginalTestMaterials");
 
     //=================== Rerun with prune but update materials ===================//
 
-    run_and_check(report("Updated Materials"), b, "RunWithUpdateOutput", "prune --cutoff namespace u", return_code::soft_failures);
+    run_and_check(report("Updated Materials"), b, "RunWithUpdateOutput", "prune u", return_code::soft_failures);
 
     fs::copy(generated_project() / "TestMaterials", working_materials() /= "UpdatedTestMaterials", fs::copy_options::recursive);
     check(equivalence, "Updated Test Materials", working_materials() /= "UpdatedTestMaterials", predictive_materials() /= "UpdatedTestMaterials");
@@ -395,6 +397,16 @@ namespace sequoia::testing
     //=================== Rerun again with prune, which should do nothing  ===================//
 
     run_and_check(report("Prune again, no tests should run"), b, "NullRunWithPruneOutput", "prune", return_code::success);
+
+    //=================== Touch a passing test's materials, leaving its source alone, and run with prune ===================//
+    //--> foo_test passed when last selected and nothing it was built from has changed, so only its
+    //    materials can select it
+
+    await_tick_past_previous_run();
+    fs::last_write_time(generated_project() / "TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz.txt",
+                        fs::file_time_type::clock::now());
+
+    run_and_check(report("Pruned output, post materials touch"), b, "RunWithTouchedMaterials", "prune", return_code::success);
 
     //=================== Change a file, don't build and run with prune ===================//
 
@@ -413,7 +425,7 @@ namespace sequoia::testing
     copy_aux_materials("ModifiedTests/Thing",             "Tests/Utilities/Thing");
     copy_aux_materials("ModifiedTests/Unstable",          "Tests/Unstable");
 
-    rebuild_run_and_check(report("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune --cutoff namespace", return_code::soft_failures);
+    rebuild_run_and_check(report("Rebuild and run after source/test changes (pruned)"), b, "RebuiltOutput", "CMakeOutput4.txt", "BuildOutput4.txt", "prune", return_code::soft_failures);
 
     check(equivalence, "Test Runner Output", working_materials() /= "RebuiltOutput", predictive_materials() /= "RebuiltOutput");
     fs::create_directory(working_materials() /= "TestAll");
@@ -436,7 +448,7 @@ namespace sequoia::testing
     //=================== Rerun with prune ===================//
     // --> only failing tests should rerun
 
-    run_and_check(report("Pruned output, post failures"), b, "RunPrunePostFailureOutput", "prune -c namespace", return_code::soft_failures);
+    run_and_check(report("Pruned output, post failures"), b, "RunPrunePostFailureOutput", "prune", return_code::soft_failures);
 
     //=================== Rerun and locate instabilities ===================//
     // --> UsefulThingsFreeTest.cpp will continue to exhibit a stable failure,
@@ -446,13 +458,19 @@ namespace sequoia::testing
 
     //=================== Rerun and locate instabilities, with pruning ===================//
 
-    run_and_check(report("Locate instabilities"), b, "RunLocateInstabilitiesPrune", "locate 2 prune -c namespace", return_code::soft_failures);
+    run_and_check(report("Locate instabilities"), b, "RunLocateInstabilitiesPrune", "locate 2 prune", return_code::soft_failures);
 
     //=================== Rerun with selected, unstable test in sandbox mode ===================//
     // --> The first of the checks in FlipperFreeTest.cpp is stable in sandbox mode, but the second isn't
 
     run_and_check(report("Run in sandbox mode with an explicit selection"), b, "SelectRunLocateInstabilitySandbox",
       "locate 2 --sandbox select FlipperFreeTest.cpp", return_code::soft_failures);
+
+    //=================== Rerun with the unstable test and the performance tests excluded, in sandbox mode ===================//
+    // --> The exclusions reach the sandboxed repetitions, so nothing is unstable and no performance test runs
+
+    run_and_check(report("Run in sandbox mode with exclusions"), b, "ExcludeRunLocateInstabilitySandbox",
+      "locate 2 --sandbox exclude FlipperFreeTest.cpp --exclude-performance", return_code::soft_failures);
 
     //=================== Rerun and do a dump ===================//
 
@@ -467,7 +485,7 @@ namespace sequoia::testing
     // in order to induce a failure in FooTest.cpp. Recovery mode will cause the final executed check
     // to be recorded.
 
-    const auto generatedWorkingCopy{generated_project() /= "TestMaterials/Stuff/foo_test/WorkingCopy"};
+    const auto generatedWorkingCopy{generated_project() /= "TestMaterials/Stuff/FooTest/foo_test/WorkingCopy"};
     fs::copy(generatedWorkingCopy / "RepresentativeCases", generatedWorkingCopy / "RepresentativeCasesTemp", fs::copy_options::recursive);
     fs::remove_all(generatedWorkingCopy / "RepresentativeCases");
 
@@ -482,7 +500,7 @@ namespace sequoia::testing
     // in order to cause the check in FooTest.cpp to throw mid-check, thereby allowing the recovery
     // mode to be tested. Also test that the Exceptions file is not overwritten.
 
-    const auto generatedPredictive{generated_project() /= "TestMaterials/Stuff/foo_test/Prediction"};
+    const auto generatedPredictive{generated_project() /= "TestMaterials/Stuff/FooTest/foo_test/Prediction"};
     fs::copy(generatedPredictive / "RepresentativeCases", generatedPredictive / "RepresentativeCasesTemp", fs::copy_options::recursive);
     fs::remove_all(generatedPredictive / "RepresentativeCases");
 
@@ -507,7 +525,7 @@ namespace sequoia::testing
 
     //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
 
-    run_and_check(report("Passing test not included by prune"), b, "PassingTestExcludedByPrune", "prune -c namespace", return_code::soft_failures | return_code::critical_failures);
+    run_and_check(report("Passing test not included by prune"), b, "PassingTestExcludedByPrune", "prune", return_code::soft_failures | return_code::critical_failures);
 
     //=================== Fix a failing test and 'select' it ===================//
 
@@ -521,7 +539,7 @@ namespace sequoia::testing
 
     //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
 
-    run_and_check(report("Fixed test not included by prune"), b, "AnotherPassingTestExcludedByPrune", "prune -c namespace", return_code::soft_failures);
+    run_and_check(report("Fixed test not included by prune"), b, "AnotherPassingTestExcludedByPrune", "prune", return_code::soft_failures);
 
     //=================== Fix the final failing test and 'test' it ===================//
 
@@ -533,6 +551,6 @@ namespace sequoia::testing
 
     //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
 
-    run_and_check(report("Final fixed test not included by prune"), b, "FinalPassingTestExcludedByPrune", "prune -c namespace", return_code::success);
+    run_and_check(report("Final fixed test not included by prune"), b, "FinalPassingTestExcludedByPrune", "prune", return_code::success);
   }
 }

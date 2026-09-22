@@ -23,6 +23,43 @@ namespace sequoia::testing
 
   constexpr auto npos{std::string::npos};
 
+  [[nodiscard]]
+  std::string project_namespace_for(const std::filesystem::path& sourceProject)
+  {
+    if(!fs::is_directory(sourceProject))
+      throw std::runtime_error{
+              std::format(
+                "Unable to locate the project's purported source directory, {}.\n"
+                "The source directory is either deduced from the name of the directory into which the project\n"
+                "is checked out, or overridden by specifying a (different) `source_folder` in the project_paths\n"
+                "customizer. A worktree, or a checkout named anything but the project, needs `source_folder`\n"
+                "to be appropriately set.\n",
+                sourceProject.generic_string()
+              )
+            };
+
+    const auto name{back(sourceProject).string()};
+
+    const auto isIdentifier{
+      [&name]() {
+        if(name.empty() || std::isdigit(static_cast<unsigned char>(name.front()))) return false;
+
+        return std::ranges::all_of(name, [](char c){ return std::isalnum(static_cast<unsigned char>(c)) || (c == '_'); });
+      }
+    };
+
+    if(!isIdentifier())
+      throw std::runtime_error{
+              std::format(
+                "The project's namespace is taken from its source directory, {}, which in this case is not a\n"
+                "permissible namespace name. Please supply `source_folder` in the project_paths customizer.\n",
+                name
+              )
+            };
+
+    return name;
+  }
+
   namespace
   {
     /*! \brief Wraps a string in quotation marks, escaping nothing.
@@ -247,7 +284,7 @@ namespace sequoia::testing
         {
           const auto outputPath{buildPaths.cmake_cache_dir() / "CMakeOutput.txt"};
           invoke(cd_cmd(main.dir()) && cmake_cmd(buildPaths, outputPath));
-          if(auto text{read_to_string(outputPath)})
+          if(auto text{read_to_string(outputPath, std::ios_base::in)})
             return text.value();            
         }
 
@@ -306,14 +343,14 @@ namespace sequoia::testing
     const auto inputFile{(m_Paths.aux_paths().test_templates() / nameStub).concat(nameEnding)};
 
     fs::copy_file(inputFile, outputFile, fs::copy_options::overwrite_existing);
-    if(auto contents{read_to_string(outputFile)})
+    if(auto contents{read_to_string(outputFile, std::ios_base::in)})
     {
       if(std::string& text{contents.value()}; !text.empty())
       {
         set_top_copyright(text, m_Copyright);
         transformer(text);
 
-        write_to_file(outputFile, text);
+        write_to_file(outputFile, text, std::ios_base::out);
       }
     }
     else

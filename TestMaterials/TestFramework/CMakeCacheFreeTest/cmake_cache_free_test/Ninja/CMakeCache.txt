@@ -1,0 +1,8 @@
+# This is the CMakeCache file.
+# For build in directory: c:/Users/olive/sequoia/build/TestAll/msvc-ninja
+// Rebuilding = costly, so the value: is cached
+CMAKE_COMMAND:INTERNAL=C:/Program Files/CMake/bin/cmake.exe
+CMAKE_CXX_FLAGS:STRING=
+CMAKE_GENERATOR:INTERNAL=Ninja
+CMAKE_GENERATOR_INSTANCE:INTERNAL=
+STRAY

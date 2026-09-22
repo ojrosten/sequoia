@@ -40,7 +40,7 @@ namespace sequoia::testing
     auto to_snapshot_entry(const fs::path& root)
     {
       return [&root](const fs::directory_entry& entry) {
-        auto text{read_to_string(entry.path())};
+        auto text{read_to_string(entry.path(), std::ios_base::in | std::ios_base::binary)};
         if(!text) throw std::runtime_error{report_failed_read(entry.path())};
 
         return versioned_output_snapshot::value_type{fs::relative(entry.path(), root), std::move(*text)};
@@ -52,7 +52,7 @@ namespace sequoia::testing
     {
       if(!fs::exists(dir)) return {};
 
-      // Spelt as calls rather than pipes, for gcc bug E; see read_tests_to in DependencyAnalyzer.cpp.
+      // Spelt as calls rather than pipes, for gcc bug E; see test_runner::enclosing_suites in TestRunner.cpp.
       return std::ranges::to<versioned_output_snapshot>(
                std::views::transform(std::views::filter(fs::recursive_directory_iterator{dir}, is_versioned_file(dir)),
                                      to_snapshot_entry(root)));
@@ -73,6 +73,51 @@ namespace sequoia::testing
 
       text.append(heading).append(":\n");
       for(const auto& p : paths) text.append("  ").append(p.generic_string()).append("\n");
+    }
+
+    /** A final line lacking its newline still counts, as it does for git */
+    [[nodiscard]]
+    std::size_t line_count(std::string_view text)
+    {
+      const auto newlines{static_cast<std::size_t>(std::ranges::count(text, '\n'))};
+      return newlines + ((!text.empty() && !text.ends_with('\n')) ? 1 : 0);
+    }
+
+    void append_hunk_lines(std::string& patch, char marker, std::string_view text)
+    {
+      for(std::size_t pos{}; pos < text.size();)
+      {
+        const auto end{text.find('\n', pos)};
+        patch.push_back(marker);
+        patch.append(text.substr(pos, end - pos)).push_back('\n');
+        if(end == std::string_view::npos)
+        {
+          patch.append("\\ No newline at end of file\n");
+          break;
+        }
+
+        pos = end + 1;
+      }
+    }
+
+    /** An absent `before` is a file added, an absent `after` one removed. A file created or deleted
+        empty is the header alone, which is how git itself writes it.
+     */
+    void append_file_patch(std::string& patch, const fs::path& path, std::optional<std::string_view> before, std::optional<std::string_view> after)
+    {
+      const auto name{path.generic_string()};
+      patch.append("diff --git a/").append(name).append(" b/").append(name).push_back('\n');
+      if(!before) patch.append("new file mode 100644\n");
+      if(!after)  patch.append("deleted file mode 100644\n");
+
+      const auto oldText{before.value_or("")}, newText{after.value_or("")};
+      if(oldText.empty() && newText.empty()) return;
+
+      patch.append(before ? std::format("--- a/{}\n", name) : "--- /dev/null\n");
+      patch.append(after  ? std::format("+++ b/{}\n", name) : "+++ /dev/null\n");
+      patch.append(std::format("@@ -{},{} +{},{} @@\n", oldText.empty() ? 0 : 1, line_count(oldText), newText.empty() ? 0 : 1, line_count(newText)));
+      append_hunk_lines(patch, '-', oldText);
+      append_hunk_lines(patch, '+', newText);
     }
   }
 
@@ -111,5 +156,18 @@ namespace sequoia::testing
     append_group(text, "Modified", differences.modified);
 
     return text;
+  }
+
+  [[nodiscard]]
+  std::string unified_diff(const versioned_output_snapshot& before, const versioned_output_snapshot& after, const fs::path& snapshotDir)
+  {
+    const auto differences{compare_versioned_output(before, after)};
+
+    std::string patch{};
+    for(const auto& p : differences.added)    append_file_patch(patch, snapshotDir / p, std::nullopt, after.at(p));
+    for(const auto& p : differences.removed)  append_file_patch(patch, snapshotDir / p, before.at(p), std::nullopt);
+    for(const auto& p : differences.modified) append_file_patch(patch, snapshotDir / p, before.at(p), after.at(p));
+
+    return patch;
   }
 }

@@ -22,7 +22,7 @@
     Changes may be either to source files or materials exploited by the test.
     In particular:
        -# cpp files should supply definitions only for the header of the same name;
-       -# Given a test file `Tests/Foo/Bar.cpp`, any testing materials should be stored in `TestMaterials/Foo/Bar`.
+       -# Given a test class `bar_test` defined in `Tests/Foo/Bar.cpp`, any testing materials should be stored in `TestMaterials/Foo/Bar/bar_test`.
     - Concurrency: by default, all tests (bar performance tests) are run concurrently. Where supported,
 	  this is done using a `std` algorithm invoked with the parallel execution policy.
 	  For libc++, a thread pool supplied by `sequoia` is utilized instead. This may
@@ -199,11 +199,14 @@
 	Version control is the natural home for all of these files, but it is not the only way to notice
 	when one of them moves. A run invoked with `--check-versioned-output` compares the content of
 	every such file before and after it writes, reports whatever was added, removed or modified, and
-	sets the corresponding bit in the value returned from `main`. This is deliberately off by default:
-	a run which legitimately changes the output - adding a check, adding a test, rewording a
-	diagnostic - would otherwise break the build until the new output had been committed. It exists
-	for continuous integration, where a change to these files is something to be looked at rather
-	than a routine step of the development loop.
+	sets the corresponding bit in the value returned from `main`. It also writes the change to
+	`output/Drift/VersionedOutput.patch`, in the form `git apply` accepts, so that a machine one does
+	not sit at - a continuous integration job, or the one platform able to regenerate its own fork of
+	the output - can hand back what it wrote, for a person to read and then commit. This is
+	deliberately off by default: a run which legitimately changes the output - adding a check, adding
+	a test, rewording a diagnostic - would otherwise break the build until the new output had been
+	committed. It exists for continuous integration, where a change to these files is something to be
+	looked at rather than a routine step of the development loop.
 
     \section sec_extensible Extensibility
 
@@ -325,10 +328,11 @@
 	
 	For some tests it is desirable to utilize auxiliary materials, as alluded to in \ref sec_scale.
 	Given a test class `bar_test`, defined in `Tests/Foo/Bar.cpp`, any testing materials should be
-	stored in `TestMaterials/Foo/bar_test`: the directory mirrors the source file's *directory*, while
-	the leaf is the name of the test's class. A source file defining more than one test therefore gives
-	each of them materials of its own, rather than having them share - and, since tests run
-	concurrently by default, share a staged `WorkingCopy`.
+	stored in `TestMaterials/Foo/Bar/bar_test`: the directory mirrors the source file's path, minus its
+	extension, and the leaf is the name of the test's class. A source file defining more than one test
+	therefore gives each of them materials of its own, rather than having them share - and, since tests
+	run concurrently by default, share a staged `WorkingCopy` - while everything the source's tests
+	rely on lies beneath the one directory named for the source, which is how `prune` finds it.
 	The following conventions then apply. First, if the materials are simply for consumption by the test code,
 	the materials can simply be placed in the aforementioned directory. However, it may be that it is
 	desirable to perform a comparison with materials stored on disk. In this case,

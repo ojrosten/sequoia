@@ -49,8 +49,7 @@ name: rigorous
 #
 # Which columns run which tests is set out below, at the point it is decided. Both
 # Windows columns exclude the performance tests, for the reason every hosted column
-# has them off bar one. MSVC Release also leaves out TestRunnerProjectFiles, for
-# the reason given below.
+# has them off bar one.
 #
 # Every column but Linux · GCC · Release carries `--check-versioned-output`,
 # including the Windows and macOS ones, which for a time did not. That one
@@ -63,13 +62,11 @@ name: rigorous
 # display name the naming branch retired, because it is the one output a Mac cannot
 # regenerate. It is fixed, so the flag can go on. A macOS run matched all 340.
 #
-# TestRunnerProjectFiles is left out of the MSVC Release column. It compares a
-# generated TestAll.vcxproj against a prediction stored per preset -
-# `ProjectFiles/<preset>`, taken from the build directory's name, which for this
-# column is `msvc-release` - and predictions exist for `msvc` and `msvc-asan` only.
-# A third would have to be generated on Windows and committed; until then the column
-# would be comparing against a directory that does not exist. The test is a no-op on
-# clang, so the macOS Release column needs no such exclusion.
+# TestRunnerProjectFiles compares a generated TestAll.vcxproj against a prediction
+# stored per preset - `ProjectFiles/<preset>`, taken from the build directory's
+# name - so a Visual Studio column needs its prediction generated on Windows and
+# committed before it can run the test. The test is a no-op on clang, so the macOS
+# columns need nothing.
 #
 # Note this column configures with `msvc-release`, not `msvc`. The Visual Studio
 # generator is multi-config, so one configure preset can serve both Debug and
@@ -173,13 +170,14 @@ on:
         required: false
         type: boolean
         default: false
-  # Off the hour on purpose. GitHub's scheduler queues every run whose cron
-  # names the same minute, and a round hour is where they cluster: at
-  # '0 3 * * *' the nightly arrived at 07:34, 07:32, 07:38 and 07:57 UTC on
-  # 2026-09-10 to 2026-09-13, and GitHub documents that a queued run can be
-  # dropped outright under load. Both the minute and the hour moved, so if the
-  # delay shrinks this does not say which did it. Nothing here would notice a
-  # dropped run, since the audit lives inside it.
+  # Off the hour, on GitHub's advice that the start of an hour is when its
+  # scheduler is most loaded; it did not help. At '0 3 * * *' the nightly
+  # arrived at 07:34, 07:32, 07:38 and 07:57 UTC on 2026-09-10 to 2026-09-13,
+  # and at '1 1 * * *' it has arrived 4h30m to 5h late on every night since, so
+  # the delay is a steady backlog that the minute does not touch. It stays here
+  # because nothing argues for moving it back. GitHub documents that a queued
+  # run can be dropped outright under load, and nothing here would notice a
+  # dropped run, since the audit lives inside it: that is watchdog.yml's job.
   schedule:
     - cron: '1 1 * * *'
 
@@ -226,10 +224,10 @@ jobs:
       columns: >-
         [
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance", "repeat_args": "locate;5;--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp"},
+          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance", "repeat_args": "locate;5;--check-versioned-output;--exclude-performance;exclude;Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp"},
           {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15", "exec_args": ""},
-          {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance", "repeat_args": "locate;20;--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp"},
-          {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerProjectFiles.cpp"},
+          {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance", "repeat_args": "locate;20;--check-versioned-output;--exclude-performance;exclude;Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp"},
+          {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance"},
           {"name": "macOS · Clang · Release",  "os": "macos-latest",   "configure": "llvm-env-release",   "build": "llvm-env-release", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
 
@@ -265,15 +263,48 @@ jobs:
           # update, and with it the job.
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
-          sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+          # Launchpad is a live dependency of every Linux column, and it fails in
+          # more than one shape: a malformed chunked response (PR #19, 2026-09-11)
+          # and an HTTP 503 "temporarily unavailable" (2026-09-16), both before any
+          # compiler ran. So the add is retried on any non-zero exit - not only a
+          # timeout - a bounded number of times with a short back-off. Nothing
+          # else is retried. The `apt-get update` below fetches the PPA's index from
+          # Launchpad too, and a failure there is loud - apt exits 100, or the
+          # compiler check after it fires - but is not yet a shape that has been
+          # seen; the two above were both in the add.
+          for attempt in 1 2 3 4; do
+            sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test && break
+            [ "$attempt" -lt 4 ] || { echo "::error::add-apt-repository failed on all $attempt attempts"; exit 1; }
+            echo "add-apt-repository failed (attempt $attempt); retrying in $((attempt * 15))s"
+            sleep $((attempt * 15))
+          done
           sudo apt-get update -qq
           for pkg in g++-15 ninja-build libtbb-dev lcov; do
             apt-cache pkgnames | grep -qx "$pkg" \
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
           sudo apt-get install -y g++-15 ninja-build libtbb-dev lcov
+          # The hosted image's CMake is below sequoia's floor of 4.2, the release that added
+          # CMAKE_INTERMEDIATE_DIR_STRATEGY; the Windows presets set it in
+          # build_system/ShortObjectPaths.cmake. The macOS and Windows images ship a release above
+          # the floor, so this column fetches one from Kitware - the host the checkout already
+          # comes from - and puts it first on PATH. An older cmake surviving this step is loud:
+          # the configure step's cmake_minimum_required refuses it. The tarball is the only binary
+          # either job puts on PATH without apt's signatures behind it, so its checksum is pinned.
+          #
+          # Repeated in rigorous.yml's coverage job; change both.
+          cmake_version=4.4.3
+          cmake_sha256=d6c83076c575bc00b823522ac974bda66d0af05d6ddc30e739c12385cf32c6cc
+          cmake_tarball=$RUNNER_TEMP/cmake.tar.gz
+          cmake_url=https://github.com/Kitware/CMake/releases/download/v$cmake_version/cmake-$cmake_version-linux-x86_64.tar.gz
+          if [ "$(uname -m)" != x86_64 ]; then echo "::error::No CMake build is fetched for $(uname -m)"; exit 1; fi
+          if ! curl -fsSL -o "$cmake_tarball" "$cmake_url"; then echo "::error::CMake $cmake_version could not be fetched from Kitware's release page"; exit 1; fi
+          if ! echo "$cmake_sha256  $cmake_tarball" | sha256sum --check --quiet; then echo "::error::The CMake tarball does not match its published checksum"; exit 1; fi
+          tar -xzf "$cmake_tarball" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin" >> "$GITHUB_PATH"
           g++-15 --version | head -1
           lcov --version
+          "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin/cmake" --version | head -1
 
       - name: Give git an identity
         run: |

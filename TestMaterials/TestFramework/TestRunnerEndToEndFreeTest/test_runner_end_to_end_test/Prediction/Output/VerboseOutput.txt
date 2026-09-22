@@ -1,0 +1,53 @@
+
+Running tests...
+
+Stuff:
+    bar_free_test:
+    [Execution Time: 11us]
+    foo_false_negative_test:
+    [Execution Time: 4us]
+    foo_test:
+    [Execution Time: 14us]
+    oldschool_false_negative_test:
+    [Execution Time: 4.42us]
+    oldschool_test:
+    [Execution Time: 13.6us]
+Utilities:
+    container_allocation_test:
+    [Execution Time: 3.17us]
+    container_performance_test:
+    [Execution Time: 3.42us]
+    Thing:
+        unique_thing_false_negative_test:
+        [Execution Time: 6.5us]
+        unique_thing_test:
+        [Execution Time: 12.9us]
+    useful_things_free_test:
+    [Execution Time: 49.6us]
+    utilities_free_test:
+    [Execution Time: 2.33us]
+Unstable:
+    flipper_free_test:
+    [Execution Time: 12.9us]
+house_allocation_test:
+[Execution Time: 5.71us]
+Maybe:
+    maybe_false_negative_test:
+    [Execution Time: 59.5us]
+    maybe_test:
+    [Execution Time: 3us]
+Maths:
+    probability_false_negative_test:
+    [Execution Time: 21.1us]
+    probability_test:
+    [Execution Time: 3.67us]
+
+-----------Grand Totals-----------
+[Total Run Time: 2.31ms]
+[Execution Time: 440us]
+	Standard Top Level Checks:                 0;  Failures:  0
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

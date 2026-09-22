@@ -29,7 +29,7 @@ namespace sequoia::testing
     void run_tests();
 
     [[nodiscard]]
-    std::string output_discriminator() const
+    static std::string output_discriminator(const cmake_cache&)
     {
       return compiler_name();
     }

@@ -30,6 +30,7 @@ namespace sequoia::testing
 
     void test_variant();
     void test_optional();
+    void test_expected();
     void test_any();
   };
   
@@ -46,6 +47,7 @@ namespace sequoia::testing
 
     void test_variant();
     void test_optional();
+    void test_expected();
     void test_any();
   };
 }

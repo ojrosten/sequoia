@@ -11,8 +11,37 @@
     \brief Utilities for use in tests.
 */
 
+import std;
+import sequoia.streaming;
+
 namespace sequoia::testing
 {
+  /*! \brief A file with the given contents, which exists for precisely the lifetime of the object. */
+  class transient_file
+  {
+  public:
+    transient_file(std::filesystem::path file, std::string_view contents)
+      : m_File{std::move(file)}
+    {
+      write_to_file(m_File, contents, std::ios_base::out | std::ios_base::binary);
+    }
+
+    transient_file(const transient_file&) = delete;
+
+    transient_file& operator=(const transient_file&) = delete;
+
+    ~transient_file()
+    {
+      std::error_code ignored{};
+      std::filesystem::remove(m_File, ignored);
+    }
+
+    [[nodiscard]]
+    const std::filesystem::path& path() const noexcept { return m_File; }
+  private:
+    std::filesystem::path m_File;
+  };
+
   class no_default_constructor
   {
   public:

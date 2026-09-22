@@ -12,6 +12,17 @@ import sequoia.maths.statistics;
 
 namespace sequoia::testing
 {
+  namespace
+  {
+    // Parameterized so that an unsatisfiable requirement is a substitution failure rather than an ill-formed program
+    template<class Iter> inline constexpr bool mean_accepts                      {requires(Iter i) { maths::mean(i, i); }};
+    template<class Iter> inline constexpr bool cumulative_square_diffs_accepts   {requires(Iter i) { maths::cumulative_square_diffs(i, i); }};
+    template<class Iter> inline constexpr bool variance_accepts                  {requires(Iter i) { maths::variance(i, i); }};
+    template<class Iter> inline constexpr bool sample_variance_accepts           {requires(Iter i) { maths::sample_variance(i, i); }};
+    template<class Iter> inline constexpr bool standard_deviation_accepts        {requires(Iter i) { maths::standard_deviation(i, i); }};
+    template<class Iter> inline constexpr bool sample_standard_deviation_accepts {requires(Iter i) { maths::sample_standard_deviation(i, i); }};
+  }
+
   [[nodiscard]]
   std::filesystem::path statistical_algorithms_test::source_file()
   {
@@ -22,6 +33,27 @@ namespace sequoia::testing
   {
     using namespace sequoia::maths;
 
+    // Both directions, since a constraint rejecting everything would pass the refusals on its own
+    using single_pass = std::istream_iterator<double>;
+    using multi_pass  = std::vector<double>::const_iterator;
+
+    STATIC_CHECK(( std::input_iterator<single_pass> && !std::forward_iterator<single_pass>));
+    STATIC_CHECK(( std::forward_iterator<multi_pass>));
+
+    STATIC_CHECK(!mean_accepts<single_pass>);
+    STATIC_CHECK(!cumulative_square_diffs_accepts<single_pass>);
+    STATIC_CHECK(!variance_accepts<single_pass>);
+    STATIC_CHECK(!sample_variance_accepts<single_pass>);
+    STATIC_CHECK(!standard_deviation_accepts<single_pass>);
+    STATIC_CHECK(!sample_standard_deviation_accepts<single_pass>);
+
+    STATIC_CHECK(mean_accepts<multi_pass>);
+    STATIC_CHECK(cumulative_square_diffs_accepts<multi_pass>);
+    STATIC_CHECK(variance_accepts<multi_pass>);
+    STATIC_CHECK(sample_variance_accepts<multi_pass>);
+    STATIC_CHECK(standard_deviation_accepts<multi_pass>);
+    STATIC_CHECK(sample_standard_deviation_accepts<multi_pass>);
+
     std::vector<double> data{};
 
     //
@@ -29,7 +61,7 @@ namespace sequoia::testing
     auto m{mean(data.begin(), data.end())};
     check("", !m.has_value());
 
-    auto sq{cummulative_square_diffs(data.begin(), data.end())};
+    auto sq{cumulative_square_diffs(data.begin(), data.end())};
     check("", !sq.first.has_value());
     check("", !sq.second.has_value());
 
@@ -53,7 +85,7 @@ namespace sequoia::testing
     data.push_back(2);
 
     m = mean(data.begin(), data.end());
-    sq = cummulative_square_diffs(data.begin(), data.end());
+    sq = cumulative_square_diffs(data.begin(), data.end());
     var = variance(data.begin(), data.end());
     uvar = sample_variance(data.begin(), data.end());
     sd = standard_deviation(data.begin(), data.end());
@@ -80,7 +112,7 @@ namespace sequoia::testing
     data.push_back(4);
 
     m = mean(data.begin(), data.end());
-    sq = cummulative_square_diffs(data.begin(), data.end());
+    sq = cumulative_square_diffs(data.begin(), data.end());
     var = variance(data.begin(), data.end());
     uvar = sample_variance(data.begin(), data.end());
     sd = standard_deviation(data.begin(), data.end());
@@ -107,7 +139,7 @@ namespace sequoia::testing
     data.push_back(9);
 
     m = mean(data.begin(), data.end());
-    sq = cummulative_square_diffs(data.begin(), data.end());
+    sq = cumulative_square_diffs(data.begin(), data.end());
     var = variance(data.begin(), data.end());
     uvar = sample_variance(data.begin(), data.end());
     sd = standard_deviation(data.begin(), data.end());

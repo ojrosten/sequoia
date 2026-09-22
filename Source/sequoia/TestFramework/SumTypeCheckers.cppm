@@ -102,6 +102,36 @@ export namespace sequoia::testing
     }
   };
 
+  /** \brief Compares instances of `std::expected`: the values where both hold one, the errors where neither does, each as the check asks */
+
+  template<class T, class E>
+  struct value_tester<std::expected<T, E>>
+  {
+    using type = std::expected<T, E>;
+
+    template<class CheckType, test_mode Mode, class Advisor>
+    static void test(CheckType flavour, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
+    {
+      if(obtained.has_value() != prediction.has_value())
+      {
+        auto holds{[](const type& e){ return e.has_value() ? "a value" : "an error"; }};
+        check(equality,
+              std::format("Obtained : {}\nPredicted: {}", holds(obtained), holds(prediction)),
+              logger,
+              obtained.has_value(),
+              prediction.has_value());
+      }
+      else if(obtained)
+      {
+        check(flavour, "Value of expected", logger, *obtained, *prediction, advisor);
+      }
+      else
+      {
+        check(flavour, "Error of expected", logger, obtained.error(), prediction.error(), advisor);
+      }
+    }
+  };
+
   /** \brief Compares an instance of `std::any` to the value of the type it purportedly holds
 
       The semantics are such that, under the hood, `with_best_available` is utilized. Therefore,

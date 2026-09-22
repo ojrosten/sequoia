@@ -1,7 +1,4 @@
-# 3.28: consumers of a module library must themselves be scanned for imports,
-# and under CMP0155's OLD behaviour they are not - every import then fails with
-# "module not found" even though the library built.
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 4.2)
 
 project(SequoiaTestFrameworkHarness DESCRIPTION "End-to-end testing of the Sequoia testing framework"
                                     LANGUAGES CXX)

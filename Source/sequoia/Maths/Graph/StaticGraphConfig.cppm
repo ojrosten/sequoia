@@ -28,7 +28,7 @@ export namespace sequoia::maths
   template<graph_flavour Flavour, std::size_t Size, std::size_t Order>
   struct static_edge_storage_config
   {
-    using index_type = graph_impl::static_edge_index_type_generator<Size, Order, is_embedded(Flavour)>::index_type;
+    using index_type = graph_impl::static_edge_index_type<Order, graph_impl::num_static_edges(Flavour, Size)>;
 
     template <class T> using storage_type
       = data_structures::static_partitioned_sequence<

@@ -37,6 +37,8 @@ namespace sequoia::testing
 
     void test_basic_output();
 
+    void test_help_output();
+
     void test_verbose_output();
 
     void test_serial_verbose_output();
@@ -45,11 +47,33 @@ namespace sequoia::testing
 
     void test_prune_basic_output();
 
+    void test_prune_with_changed_toolchain();
+
+    void test_prune_selects_a_test_this_executable_lacks();
+
+    struct fake_build
+    {
+      std::filesystem::path source, toolchainHeader;
+    };
+
+    [[nodiscard]]
+    fake_build write_fake_build();
+
+    void test_post_run_failure();
+
     void test_nested_suite();
 
     void test_nested_suite_verbose();
 
+    void test_suite_named_as_a_sibling_test();
+
     void test_excluded_performance_tests();
+
+    void test_excluded_tests();
+
+    void test_excluded_tests_are_rerun();
+
+    void test_dump_comparison();
 
     void test_instability_analysis();
 

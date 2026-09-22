@@ -1,48 +1,48 @@
-Tests/TestFramework/TestRunnerTest.cpp, Line 429
+Tests/TestFramework/TestRunnerTest.cpp, Line 476
 Test Main has empty path
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/  is not a regular file
+output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/  is not a regular file
 
 Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 437
+Tests/TestFramework/TestRunnerTest.cpp, Line 484
 Test Main does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/FooMain.cpp not found
+output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/FooMain.cpp not found
 
 Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 445
+Tests/TestFramework/TestRunnerTest.cpp, Line 492
 Include Target has empty path
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/  is not a regular file
+output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/  is not a regular file
 
 Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 453
+Tests/TestFramework/TestRunnerTest.cpp, Line 500
 Include Target does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/FooPath.hpp not found
+output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/FooPath.hpp not found
 
 Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 461
+Tests/TestFramework/TestRunnerTest.cpp, Line 508
 Project root is empty
 
 Expected Exception Type:
@@ -51,27 +51,27 @@ Unable to locate project root as no commandline arguments supplied.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 469
+Tests/TestFramework/TestRunnerTest.cpp, Line 516
 Project root does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-canonical - file not found: /output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/FooRepo
+canonical - file not found: /output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/FooRepo
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 488
+Tests/TestFramework/TestRunnerTest.cpp, Line 535
 Project root not findable
 
 Expected Exception Type:
 [std::runtime_error]
 Unable to locate project root from path:
-output/TestsTemporaryData/TestFramework/test_runner_test/Auxiliary/FakeProject/TestShared
+output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/TestShared
 Please ensure that the build directory is a subdirectory of <project>/build.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 497
+Tests/TestFramework/TestRunnerTest.cpp, Line 544
 The same test registered twice
 
 Expected Exception Type:
@@ -82,7 +82,7 @@ A test's name is that of its class, and determines where its output is written, 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 514
+Tests/TestFramework/TestRunnerTest.cpp, Line 561
 Invalid repetitions for instability analysis
 
 Expected Exception Type:
@@ -91,12 +91,39 @@ locate-instabilities: unable to interpret 'foo' as an integer number of repetiti
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 521
+Tests/TestFramework/TestRunnerTest.cpp, Line 568
 Insufficient repetitions for instability analysis
 
 Expected Exception Type:
 [std::runtime_error]
   Error: Number of repetitions, must be >= 2
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1096
+Comparison against a dump never kept
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: no dump has been kept as 'never': expected output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/output/Recovery/Dumps/never.txt
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1096
+A dump kept under no name
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: a dump is kept under, and compared against, a name; none was given
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1096
+Comparison against no name
+
+Expected Exception Type:
+[std::runtime_error]
+  Error: a dump is kept under, and compared against, a name; none was given
 
 =======================================
 

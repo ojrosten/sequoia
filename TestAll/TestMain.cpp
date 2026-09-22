@@ -24,7 +24,7 @@ int main(int argc, char** argv)
                        argv,
                        "Oliver J. Rosten",
                        "  ",
-                       {.main_cpp{"TestAll/TestMain.cpp"}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
+                       {.source_folder{"sequoia"}, .main_cpp{"TestAll/TestMain.cpp"}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
 
     runner.register_test<test_runner_false_negative_test>();
     runner.register_test<test_runner_test>();
@@ -37,6 +37,7 @@ int main(int argc, char** argv)
     runner.register_test<file_editors_free_test>();
     runner.register_test<individual_test_paths_free_test>();
     runner.register_test<basic_test_interface_free_test>();
+    runner.register_test<cmake_cache_free_test>();
     runner.register_test<commands_free_test>();
     runner.register_test<failure_info_test>();
     runner.register_test<failure_info_false_negative_test>();
@@ -105,6 +106,8 @@ int main(int argc, char** argv)
     runner.register_test<commandline_arguments_test>();
     runner.register_test<factory_false_negative_test>();
     runner.register_test<factory_test>();
+    runner.register_test<invoke_handle_inheritance_free_test>();
+    runner.register_test<invoke_interpreter_resolution_free_test>();
     runner.register_test<shell_commands_false_negative_test>();
     runner.register_test<shell_commands_test>();
     runner.register_test<type_name_free_test>();
@@ -229,12 +232,14 @@ int main(int argc, char** argv)
     runner.register_test<saturating_mul_free_test>();
     runner.register_test<saturating_add_free_test>();
     runner.register_test<vector_nonlinear_representations_free_test>();
-
+    runner.register_test<arithmetic_casts_free_test>();
+    runner.register_test<build_artefacts_free_test>();
+    runner.register_test<dump_comparison_free_test>();
     code = runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)
   {
-    std::cout << e.what();
+    std::cout << e.what() << '\n';
   }
   catch(...)
   {

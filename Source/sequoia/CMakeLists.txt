@@ -1,8 +1,4 @@
-# 3.28 is the floor for FILE_SET CXX_MODULES on a static library.  It also
-# matters for the *implementation* units: under CMP0155's OLD behaviour CMake
-# does not scan sources outside the module file set, so a `module M;` .cpp gets
-# no module map and fails with "module not found" while the interfaces build.
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 4.2)
 
 include(${CMAKE_CURRENT_LIST_DIR}/../../build_system/Utilities.cmake)
 
@@ -17,9 +13,12 @@ set(SourceList
     TestFramework/Advice.cpp
     TestFramework/AllocationCheckersCore.cpp
     TestFramework/AllocationCheckersDetails.cpp
+    TestFramework/BuildArtefacts.cpp
+    TestFramework/CMakeCache.cpp
     TestFramework/Commands.cpp
     TestFramework/ConcreteTypeCheckers.cpp
     TestFramework/DependencyAnalyzer.cpp
+    TestFramework/DumpComparison.cpp
     TestFramework/FailureInfo.cpp
     TestFramework/FileEditors.cpp
     TestFramework/FileSystemUtilities.cpp
@@ -80,6 +79,7 @@ set(ModuleList
     Maths/Algebra/Algebra.cppm
     Maths/Algebra/Ratio.cppm
     Maths/Arithmetic/Arithmetic.cppm
+    Maths/Arithmetic/ArithmeticCasts.cppm
     Maths/Arithmetic/SaturatingArithmetic.cppm
     Maths/Geometry/Geometry.cppm
     Maths/Geometry/Spaces.cppm
@@ -133,11 +133,14 @@ set(ModuleList
     TestFramework/AllocationCheckersTraits.cppm
     TestFramework/AllocationTestUtilities.cppm
     TestFramework/BinaryRelationships.cppm
+    TestFramework/BuildArtefacts.cppm
     TestFramework/ChronoCheckers.cppm
+    TestFramework/CMakeCache.cppm
     TestFramework/Commands.cppm
     TestFramework/ConcreteTypeCheckers.cppm
     TestFramework/CoreInfrastructure.cppm
     TestFramework/DependencyAnalyzer.cppm
+    TestFramework/DumpComparison.cppm
     TestFramework/FailureInfo.cppm
     TestFramework/FileEditors.cppm
     TestFramework/FileSystemUtilities.cppm

@@ -25,7 +25,7 @@ export namespace sequoia::maths::impl
   };
 
   template<class C>
-  struct noexcept_spec
+  struct swap_is_noexcept
     : std::bool_constant<
            std::allocator_traits<typename C::allocator_type>::propagate_on_container_swap::value
         || std::allocator_traits<typename C::allocator_type>::is_always_equal::value
@@ -33,10 +33,10 @@ export namespace sequoia::maths::impl
   {};
 
   template<class C>
-    requires has_allocator_type_v<C>
-  struct noexcept_spec<C> : std::true_type
+    requires (!has_allocator_type_v<C>)
+  struct swap_is_noexcept<C> : std::true_type
   {};
 
   template<class C>
-  inline constexpr bool noexcept_spec_v{noexcept_spec<C>::value};
+  inline constexpr bool swap_is_noexcept_v{swap_is_noexcept<C>::value};
 }

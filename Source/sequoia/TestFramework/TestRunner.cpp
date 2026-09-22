@@ -149,11 +149,12 @@ namespace sequoia::testing
       nascent_tests.emplace_back(std::move(nascentTest));
     }
 
-    constexpr std::array<std::pair<return_code, std::string_view>, 4> return_code_names{{
+    constexpr std::array<std::pair<return_code, std::string_view>, 5> return_code_names{{
       {return_code::versioned_output_diffs, "versioned_output_diffs"},
       {return_code::soft_failures,          "soft_failures"         },
       {return_code::critical_failures,      "critical_failures"     },
-      {return_code::incomplete_run,         "incomplete_run"        }
+      {return_code::incomplete_run,         "incomplete_run"        },
+      {return_code::post_run_failures,      "post_run_failures"     }
     }};
 
     constexpr return_code dirty_return_codes{
@@ -183,31 +184,80 @@ namespace sequoia::testing
     const std::string& convert(const std::string& s) { return s; }
     std::string convert(const std::filesystem::path& p) { return p.generic_string(); }
 
+    // TO DO: std::views::concat | std::ranges::to<std::vector>, once the MS STL has concat (P2542)
+    [[nodiscard]]
+    std::vector<fs::path> concatenate(std::span<const fs::path> first, std::span<const fs::path> second)
+    {
+      std::vector<fs::path> both{first.begin(), first.end()};
+      both.append_range(second);
+      return both;
+    }
+
+    /** \brief Warns of each request from the command line - a suite or a source, selected or
+        excluded - which matched no registered test, with the hint the request's key suggests.
+     */
+    template<class Key, invocable_exact_r<std::string, const Key&> Hint>
+    void report_unmatched(std::ostream& stream, std::span<const std::pair<Key, bool>> requests, std::string_view kind, Hint hint)
+    {
+      for(const auto& [key, matched] : requests)
+      {
+        if(!matched)
+        {
+          using namespace parsing::commandline;
+          stream << warning(std::format("{} '{}' not found\n{}", kind, convert(key), hint(key)));
+        }
+      }
+    }
+
     enum class is_filtered { no, yes };
 
     class test_tracker
     {
     public:
-      explicit test_tracker(const project_paths& projPaths, std::optional<std::size_t> id, is_filtered isFiltered)
+      explicit test_tracker(const project_paths& projPaths,
+                            std::optional<std::size_t> id,
+                            is_filtered isFiltered,
+                            std::vector<std::filesystem::path> testsLeftOut)
         : m_ProjPaths{projPaths}
         , m_Id{id}
         , m_Filtered{isFiltered}
+        , m_TestsLeftOut{std::move(testsLeftOut)}
       {}
 
-      void increment_depth() noexcept { ++m_Depth; }
-
-      void decrement_depth() noexcept
+      void update_materials_and_prune_info()
       {
-        if(--m_Depth == npos)
+        for(const auto& update : m_Updateables)
         {
-          for(const auto& update : m_Updateables)
+          try
           {
             soft_update(update.working_materials, update.predictions);
           }
+          catch(const std::exception& e)
+          {
+            record_materials_update_failure(update.test_file, e.what());
+          }
+          catch(...)
+          {
+            record_materials_update_failure(update.test_file, unrecognized);
+          }
+        }
 
+        try
+        {
           update_prune_info();
         }
+        catch(const std::exception& e)
+        {
+          record_prune_update_failure(e.what());
+        }
+        catch(...)
+        {
+          record_prune_update_failure(unrecognized);
+        }
       }
+
+      [[nodiscard]]
+      std::span<const std::string> post_run_failures() const noexcept { return m_PostRunFailures; }
 
       void process_test(const test_paths& files, const log_summary& summary, update_mode updateMode)
       {
@@ -230,14 +280,14 @@ namespace sequoia::testing
         }
       }
     private:
-      constexpr static int npos{-1};
+      constexpr static std::string_view unrecognized{"Unrecognized exception"};
 
-      int m_Depth{npos};
       project_paths m_ProjPaths;
       std::optional<std::size_t> m_Id{};
       is_filtered m_Filtered{};
 
-      std::vector<std::filesystem::path> m_FailedTests{}, m_ExecutedTests{};
+      std::vector<std::filesystem::path> m_FailedTests{}, m_ExecutedTests{}, m_TestsLeftOut{};
+      std::vector<std::string> m_PostRunFailures{};
       std::set<test_paths, paths_comparator> m_Updateables{};
       std::set<std::filesystem::path> m_FilesWrittenTo{};
 
@@ -246,10 +296,10 @@ namespace sequoia::testing
         const auto& filename{summaryFile.file_path()};
         if(filename.empty()) return;
 
-        auto mode{std::ios_base::out};
+        auto mode{std::ios_base::out | std::ios_base::binary};
         if(auto found{m_FilesWrittenTo.find(filename)}; found != m_FilesWrittenTo.end())
         {
-          mode = std::ios_base::app;
+          mode = std::ios_base::app | std::ios_base::binary;
         }
         else
         {
@@ -268,6 +318,16 @@ namespace sequoia::testing
         }
       }
 
+      void record_materials_update_failure(const std::filesystem::path& testFile, std::string_view what)
+      {
+        m_PostRunFailures.push_back(std::format("Materials for {} not updated:\n{}", testFile.generic_string(), what));
+      }
+
+      void record_prune_update_failure(std::string_view what)
+      {
+        m_PostRunFailures.push_back(std::format("Prune information not written:\n{}", what));
+      }
+
       void update_prune_info() const
       {
         if(m_Filtered == is_filtered::yes)
@@ -276,7 +336,8 @@ namespace sequoia::testing
         }
         else
         {
-          update_prune_files(m_ProjPaths, m_FailedTests, entry_time_stamp, m_Id);
+          const auto testsToRerun{concatenate(m_FailedTests, m_TestsLeftOut)};
+          update_prune_files(m_ProjPaths, testsToRerun, entry_time_stamp, m_Id);
         }
       }
     };
@@ -372,19 +433,34 @@ namespace sequoia::testing
       // An empty directory cannot be committed, so this one is made only when a file goes into it.
       std::filesystem::create_directories(file.parent_path());
 
-      write_to_file(file, text);
-    }
-  }
-
-  void test_vessel::versioned_write(const std::filesystem::path& file, const failure_output& output)
-  {
-    for(const auto& info : output)
-    {
-      versioned_write(file, info.message);
+      write_to_file(file, text, std::ios_base::out | std::ios_base::binary);
     }
   }
 
   //=========================================== test_runner ===========================================//
+
+  //===================================== test_filter =====================================//
+
+  [[nodiscard]]
+  bool test_runner::test_filter::operator()(const normal_path& source,
+                                            std::span<const std::string> suites,
+                                            is_performance_test isPerformanceTest)
+  {
+    auto sameSource{[this, &source](const normal_path& listed){ return m_Equivalent(listed, source); }};
+    auto amongSuites{[suites](const std::string& selected){ return std::ranges::contains(suites, selected); }};
+
+    const bool excluded{mark_found(m_ExcludedItems, sameSource)};
+    const bool selectedBySource{m_SelectedItems  && mark_found(*m_SelectedItems,  sameSource)};
+    const bool selectedBySuite {m_SelectedSuites && mark_found(*m_SelectedSuites, amongSuites)};
+
+    const bool leftOut{excluded || ((isPerformanceTest == is_performance_test::yes) && excludes_performance_tests())};
+    if(leftOut)
+      m_TestsLeftOut.push_back(source.path());
+
+    return !leftOut && (!selects() || selectedBySource || selectedBySuite);
+  }
+
+  //===================================== path_equivalence =====================================//
 
   [[nodiscard]]
   bool test_runner::path_equivalence::operator()(const normal_path& selectedSource, const normal_path& filepath) const
@@ -394,9 +470,10 @@ namespace sequoia::testing
 
     if(filepath == selectedSource) return true;
 
-    // filepath is relative to where compilation was performed which
-    // cannot be known here. Therefore fallback to assuming the 'selected sources'
-    // live in the test repository
+    // A selection is typed at the command line, from a directory this code cannot know.
+    // Rebasing both paths onto the test repository compares them on the assumption that
+    // the selection names a file beneath the repository. Failing that, a selection which
+    // is a bare filename is looked up in the tree.
 
     if(auto repo{*m_Repo}; !repo.empty())
     {
@@ -421,6 +498,7 @@ namespace sequoia::testing
                            std::ostream& stream)
     : m_Copyright{std::move(copyright)}
     , m_ProjPaths{project_paths{argc, argv, projectPathsCustomization}}
+    , m_CMakeCache{m_ProjPaths.build()}
     , m_CodeIndent{std::move(codeIndent)}
     , m_Stream{&stream}
   {
@@ -446,28 +524,34 @@ namespace sequoia::testing
           throw std::logic_error{"Unable to find nascent test"};
 
         std::visit(overloaded{[](auto& nascent) { nascent.flavour(nascent_test_flavour::framework_diagnostics); }}, nascentTests.back());
-      }
+      },
+      {},
+      "Make the test one of the framework's own diagnostics"
     };
 
-    const option headerOption{"--header", {"-h"}, {"header of class to test"},
+    const option headerOption{"--header", {}, {"header"},
       [&nascentTests](const arg_list& args){
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
         std::visit(overloaded{[&args](auto& nascent){ nascent.header(args[0]); }}, nascentTests.back());
-      }
+      },
+      {},
+      "Name the header declaring the class under test"
     };
 
-    const option forenameOption{"--test-class-forename", {"--forename"}, {"test class is named <forename>_..."},
+    const option forenameOption{"--test-class-forename", {"--forename"}, {"forename"},
       [&nascentTests](const arg_list& args){
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
 
         std::visit(overloaded{[&args](auto& nascent){ nascent.forename(args[0]); }}, nascentTests.back());
-      }
+      },
+      {},
+      "Name the test class <forename>_test rather than after the header"
     };
 
-    const option genFreeSourceOption{"gen-source", {"g"}, {"namespace"},
+    const option genFreeSourceOption{"--gen-source", {"-g"}, {"namespace"},
       [&nascentTests](const arg_list& args) {
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
@@ -485,10 +569,12 @@ namespace sequoia::testing
         };
 
         std::visit(visitor, nascentTests.back());
-      }
+      },
+      {},
+      "Generate a source file too, in <namespace> (:: for the global one)"
     };
 
-    const option genSemanticsSourceOption{"gen-source", {"g"}, {"source dir"},
+    const option genSemanticsSourceOption{"--gen-source", {"-g"}, {"dir"},
       [&nascentTests](const arg_list& args) {
         if(nascentTests.empty())
           throw std::logic_error{"Unable to find nascent test"};
@@ -506,7 +592,9 @@ namespace sequoia::testing
         };
 
         std::visit(visitor, nascentTests.back());
-      }
+      },
+      {},
+      "Generate the class's header and source too, under Source/<dir>"
     };
 
     const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{headerOption}, {genSemanticsSourceOption}};
@@ -516,31 +604,31 @@ namespace sequoia::testing
 
     const auto help{
       parse_invoke_depth_first(argc, argv,
-                { {{{"test", {"t"}, {"test suite name"},
+                { {{{"test", {"t"}, {"suite"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
 
                       m_Filter.add_selected_suite(args.front());
-                    }}
+                    },
+                    {},
+                    "Run the tests of a suite: a directory beneath Tests"}
                   }},
-                  {{{"select", {"s"}, {"source file name"},
+                  {{{"select", {"s"}, {"source"},
                     [this](const arg_list& args) {
                       m_RunnerMode |= runner_mode::test;
 
                       m_Filter.add_selected_item(fs::path{args.front()});
-                    }}
+                    },
+                    {},
+                    "Run the test defined in a source file"}
                   }},
                   {{{"prune", {"p"}, {},
                     [this](const arg_list&) {
                       m_RunnerMode |= runner_mode::test;
-                      m_PruneInfo.mode = prune_mode::active;
+                      m_PruneMode = prune_mode::active;
                     },
-                    {}},
-                    {{{"--cutoff", {"-c"}, {"Cutoff for #include search e.g. 'namespace'"},
-                      [this](const arg_list& args) {
-                        m_PruneInfo.include_cutoff = args[0];
-                      }}}
-                    }
+                    {},
+                    "Run the tests affected by changes since the previous run"}
                   }},
                   {{{"create", {"c"}, {},
                         [](const arg_list&) {},
@@ -551,28 +639,37 @@ namespace sequoia::testing
                             overloaded visitor{ [](auto& nascent) { nascent.finalize(); } };
                             std::visit(visitor, nascentTests.back());
                           }
-                        }},
-                    { {{"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent type"},
-                        nascent_test_data{"semantic", "regular", *this, nascentTests}, {}}, semanticsOptions
+                        },
+                        "Create a test; the command names its kind\n"
+                        "A class is spelt with its namespace and template parameters, as in foo::bar<class T>; "
+                        "an allocation test takes its bare name"},
+                    { {{"regular_test", {"regular"}, {"class", "equivalent_type"},
+                        nascent_test_data{"semantic", "regular", *this, nascentTests}, {},
+                        "A regular test of the class against an equivalent type"}, semanticsOptions
                       },
-                      {{"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent type"},
-                        nascent_test_data{"semantic", "move_only", *this, nascentTests}, {}}, semanticsOptions
+                      {{"move_only_test", {"move_only"}, {"class", "equivalent_type"},
+                        nascent_test_data{"semantic", "move_only", *this, nascentTests}, {},
+                        "A move-only test of the class against an equivalent type"}, semanticsOptions
                       },
-                      {{"regular_allocation_test", {"regular_allocation", "allocation_test"}, {"raw class name"},
-                        nascent_test_data{"allocation", "regular_allocation", *this, nascentTests}, {}}, allocationOptions
+                      {{"regular_allocation_test", {"regular_allocation", "allocation_test"}, {"class"},
+                        nascent_test_data{"allocation", "regular_allocation", *this, nascentTests}, {},
+                        "An allocation test of the regular class"}, allocationOptions
                       },
-                      {{"move_only_allocation_test", {"move_only_allocation"}, {"raw class name"},
-                        nascent_test_data{"allocation", "move_only_allocation", *this, nascentTests}, {}}, allocationOptions
+                      {{"move_only_allocation_test", {"move_only_allocation"}, {"class"},
+                        nascent_test_data{"allocation", "move_only_allocation", *this, nascentTests}, {},
+                        "An allocation test of the move-only class"}, allocationOptions
                       },
                       {{"free_test", {"free"}, {"header"},
-                        nascent_test_data{"behavioural", "free", *this, nascentTests}, {}}, freeOptions
+                        nascent_test_data{"behavioural", "free", *this, nascentTests}, {},
+                        "A test of the free functions the header declares"}, freeOptions
                       },
                       {{"performance_test", {"performance"}, {"header"},
-                         nascent_test_data{"behavioural", "performance", *this, nascentTests}, {}}, performanceOptions
+                         nascent_test_data{"behavioural", "performance", *this, nascentTests}, {},
+                         "A performance test of what the header declares"}, performanceOptions
                       }
                     }
                   }},
-                  {{{"init", {"i"}, {"copyright owner", "path ending with project name", "code indent"},
+                  {{{"init", {"i"}, {"owner", "path", "indent"},
                     [this,&nascentProjects](const arg_list& args) {
                       m_RunnerMode |= runner_mode::init;
 
@@ -586,28 +683,38 @@ namespace sequoia::testing
 
                       nascentProjects.push_back(project_data{args[0], args[1], ind(args[2])});
                     },
-                    {}},
+                    {},
+                    "Create a project at the path, named after its last directory"},
                     { {{"--no-build", {}, {},
-                        [&nascentProjects](const arg_list&) { nascentProjects.back().do_build = build_invocation::no; }}},
+                        [&nascentProjects](const arg_list&) { nascentProjects.back().do_build = build_invocation::no; },
+                        {},
+                        "Do not build the new project"}},
                       {{"--no-git", {}, {},
-                        [&nascentProjects](const arg_list&) { nascentProjects.back().use_git = git_invocation::no; }}},
-                      {{"--to-files",  {}, {"output filename"},
-                        [&nascentProjects](const arg_list& args) { nascentProjects.back().output = args[0]; }}},
+                        [&nascentProjects](const arg_list&) { nascentProjects.back().use_git = git_invocation::no; },
+                        {},
+                        "Do not put the new project under git"}},
+                      {{"--to-files",  {}, {"path"},
+                        [&nascentProjects](const arg_list& args) { nascentProjects.back().output = args[0]; },
+                        {},
+                        "Send the output of git and the build to the file at the path"}},
                       {{"--no-ide", {}, {},
                         [&nascentProjects](const arg_list&) {
                           auto& build{nascentProjects.back().do_build};
                           if(build == build_invocation::launch_ide) build = build_invocation::yes;
-                        }
-                      }}
+                        },
+                        {},
+                        "Build the new project without opening it in an IDE"}}
                     }
                   }},
                   {{{"update-materials", {"u"}, {},
                     [this](const arg_list&) {
                       m_RunnerMode |= runner_mode::test;
                       m_UpdateMode = update_mode::soft;
-                    }
+                    },
+                    {},
+                    "Run the tests, accepting each working copy as its prediction"
                   }}},
-                  {{{"locate-instabilities", {"locate"}, {"number of repetitions >= 2"},
+                  {{{"locate-instabilities", {"locate"}, {"repetitions"},
                     [this](const arg_list& args) {
                       using parsing::commandline::error;
                       const int i{
@@ -629,51 +736,81 @@ namespace sequoia::testing
                       m_InstabilityMode = instability_mode::single_instance;
                       m_NumReps = i;
                     },
-                    {}},
+                    {},
+                    "Run the tests repeatedly, reporting the checks whose outcome varies"},
                     { {{"--sandbox", {}, {},
                         [this](const arg_list&) {
                           m_InstabilityMode = instability_mode::coordinator;
-                        }}},
-                      {{"--runner-id", {}, {"private option, best avoided"},
+                        },
+                        {},
+                        "Run each repetition in a process of its own"}},
+                      {{"--runner-id", {}, {"id"},
                         [this](const arg_list& args) {
                           m_RunnerID = std::stoi(args.front());
                           m_InstabilityMode = instability_mode::sandbox;
-                        }}}
+                        },
+                        {},
+                        "Mark this run as a sandboxed repetition; not for use by hand"}}
                     }
                   }},
                   {{{"recover", {}, {},
                     [this, recovery{proj_paths().output().recovery()}](const arg_list&) {
-                      if(!std::filesystem::create_directory(recovery.dir()))
+                      if(!std::filesystem::create_directories(recovery.dir()))
                       {
                         std::filesystem::remove(recovery.recovery_file());
                       }
                       m_RecoveryMode |= recovery_mode::recovery;
                       if(m_ConcurrencyMode == concurrency_mode::dynamic)
                         m_ConcurrencyMode = concurrency_mode::serial;
-                    }
+                    },
+                    {},
+                    "Run serially, recording each check before it runs, to find a crash"
                   }}},
                   {{{"dump", {}, {},
                     [this, recovery{proj_paths().output().recovery()}](const arg_list&) {
-                      if(!std::filesystem::create_directory(recovery.dir()))
-                      {
-                        std::filesystem::remove(recovery.dump_file());
-                      }
+                      std::filesystem::create_directories(recovery.dir());
+                      write_to_file(recovery.dump_file(), "", std::ios_base::out);
                       m_RecoveryMode |= recovery_mode::dump;
                       if(m_ConcurrencyMode == concurrency_mode::dynamic)
                         m_ConcurrencyMode = concurrency_mode::serial;
+                    },
+                    {},
+                    "Run serially, recording every check, for comparing two runs"},
+                    { {{"--as", {}, {"name"},
+                        [this](const arg_list& args) { m_KeepDumpAs = dump_name(args.front()); },
+                        {},
+                        "Keep the dump under a name, to compare a later run against"}},
+                      {{"--against", {}, {"name"},
+                        [this](const arg_list& args) { m_CompareDumpAgainst = dump_name(args.front()); },
+                        {},
+                        "Compare the run's checks with the dump kept under the name"}}
                     }
-                  }}},
+                  }},
                   {{{"--check-versioned-output", {}, {},
-                    [this](const arg_list&) { m_VersionedOutputMode = versioned_output_mode::checked; }
+                    [this, drift{proj_paths().output().drift()}](const arg_list&) {
+                      std::filesystem::create_directories(drift.dir());
+                      std::filesystem::remove(drift.patch_file());
+                      m_VersionedOutputMode = versioned_output_mode::checked;
+                    },
+                    {},
+                    "Fail the run if it changes anything versioned under output"
                   }}},
                   {{{"--exclude-performance", {}, {},
-                    [this](const arg_list&) { m_Filter.exclude_performance_tests(); }
+                    [this](const arg_list&) { m_Filter.exclude_performance_tests(); },
+                    {},
+                    "Leave out the performance tests"
                   }}},
-                  {{{"--exclude", {}, {"Source file of a test to leave out"},
-                    [this](const arg_list& args) { m_Filter.exclude_item(normal_path{args.front()}); }
+                  {{{"exclude", {"e"}, {"source"},
+                    [this](const arg_list& args) { m_Filter.exclude_item(normal_path{args.front()}); },
+                    {},
+                    "Leave out the test defined in a source file"
                   }}},
-                  {{{"--serial",  {}, {}, [this](const arg_list&) { m_ConcurrencyMode = concurrency_mode::serial; }}}},
-                  {{{"--thread-pool", {}, {"Number of threads, must be >= 1"},
+                  {{{"--serial",  {}, {},
+                    [this](const arg_list&) { m_ConcurrencyMode = concurrency_mode::serial; },
+                    {},
+                    "Run the tests on one thread"
+                  }}},
+                  {{{"--thread-pool", {}, {"threads"},
                     [this](const arg_list& args) {
                       if(const auto num{std::stoi(args.front())}; num > 0)
                       {
@@ -684,16 +821,22 @@ namespace sequoia::testing
                       {
                         stream() << warning(std::string{"Thread pool size must be non-zero"});
                       }
-                    }
+                    },
+                    {},
+                    "Run the tests on a pool of the given number of threads"
                   }}},
-                  {{{"--verbose",  {"-v"}, {}, [this](const arg_list&) { m_Verbosity = verbosity::verbose; }}}}
+                  {{{"--verbose",  {"-v"}, {},
+                    [this](const arg_list&) { m_Verbosity = verbosity::verbose; },
+                    {},
+                    "Print the suites and their tests as a tree"
+                  }}}
                 },
                 [](std::string_view){})
         };
 
+    // A help request is not a mode: nothing was asked for but the text, and execute() has nothing to do
     if(!help.empty())
     {
-      m_RunnerMode &= runner_mode::help;
       stream() << help;
     }
     else
@@ -736,55 +879,48 @@ namespace sequoia::testing
     if((m_ConcurrencyMode != concurrency_mode::serial) && (m_RecoveryMode != recovery_mode::none))
       throw std::runtime_error{error("Can't run asynchronously in recovery/dump mode\n")};
 
-    if((m_PruneInfo.mode == prune_mode::active) && m_Filter)
+    if((m_PruneMode == prune_mode::active) && m_Filter.selects())
     {
-      m_PruneInfo.mode = prune_mode::passive;
-      stream() << warning("'prune' ignored if either test families or test source files are specified\n");
+      m_PruneMode = prune_mode::passive;
+      stream() << warning("'prune' ignored when tests are selected\n");
     }
   }
 
   void test_runner::check_for_missing_tests()
   {
-    if(m_PruneInfo.mode == prune_mode::active) return;
-
-    auto check{
-      [this](auto&& r, std::string_view type, auto fn) {
-        if(!r) return;
-
-        for(const auto& [id, found] : *r)
-        {
-          if(!found)
-          {
-            using namespace parsing::commandline;
-            stream() << warning(std::string{"Test "}.append(type)
-                                                    .append(" '")
-                                                    .append(convert(id))
-                                                    .append("' not found\n")
-                                                    .append(fn(id)));
+    if(m_PruneMode == prune_mode::passive)
+    {
+      if(const auto suites{m_Filter.selected_suites()})
+      {
+        auto hint{
+          [](const std::string& name) -> std::string {
+            return (name.rfind('.') < std::string::npos) ? "    If trying to select a source file use 'select' rather than 'test'\n" : "";
           }
-        }
+        };
+
+        report_unmatched(stream(), std::span{*suites}, "Test Suite", hint);
+      }
+
+      if(const auto sources{m_Filter.selected_items()})
+      {
+        auto hint{
+          [](const std::filesystem::path& p) -> std::string {
+            return p.has_extension() ? "" : "    If trying to test a suite use 'test' rather than 'select'\n";
+          }
+        };
+
+        report_unmatched(stream(), std::span{*sources}, "Test File", hint);
+      }
+    }
+
+    auto hint{
+      [](const std::filesystem::path& p) -> std::string {
+        return p.has_extension() ? "" : "    'exclude' takes the source file of a test\n";
       }
     };
 
-    check(m_Filter.selected_suites(), "Suite", [](const std::string& name) -> std::string {
-      if(auto pos{name.rfind('.')}; pos < std::string::npos)
-      {
-        return "    If trying to select a source file use 'select' rather than 'test'\n";
-      }
-
-      return "";
-      }
-    );
-
-    check(m_Filter.selected_items(), "File", [](const std::filesystem::path& p) -> std::string {
-      if(!p.has_extension())
-      {
-        return "    If trying to test a suite use 'test' rather than 'select'\n";
-      }
-
-      return "";
-      }
-    );
+    const auto excluded{m_Filter.excluded_items()};
+    report_unmatched(stream(), std::span{excluded}, "Excluded Test File", hint);
   }
 
   return_code test_runner::execute([[maybe_unused]] timer_resolution r)
@@ -796,8 +932,17 @@ namespace sequoia::testing
     build_suite_tree();
     check_for_missing_tests();
 
-    if(nothing_to_do()) return return_code::success;
+    // A run with nothing to do still has a dump, an empty one, to compare or keep
+    const auto code{nothing_to_do() ? return_code::success : run()};
 
+    compare_dump();
+    keep_dump();
+
+    return code;
+  }
+
+  return_code test_runner::run()
+  {
     if(m_InstabilityMode != instability_mode::sandbox)
       fs::remove_all(proj_paths().output().instability_analysis());
 
@@ -809,11 +954,50 @@ namespace sequoia::testing
     if(   (m_InstabilityMode == instability_mode::single_instance)
        || (m_InstabilityMode == instability_mode::coordinator))
     {
-      aggregate_instability_analysis_prune_files(proj_paths(), m_PruneInfo.mode, entry_time_stamp, m_NumReps);
+      aggregate_instability_analysis_prune_files(proj_paths(), m_PruneMode, entry_time_stamp, m_NumReps);
       stream() << instability_analysis(proj_paths().output().instability_analysis(), m_NumReps);
     }
 
     return code | report_versioned_output_changes(baseline);
+  }
+
+  [[nodiscard]]
+  std::string test_runner::dump_name(std::string name)
+  {
+    if(name.empty())
+      throw std::runtime_error{parsing::commandline::error("a dump is kept under, and compared against, a name; none was given")};
+
+    return name;
+  }
+
+  // Comparison comes before keeping, so that one run may compare against a name and then take it
+  void test_runner::compare_dump()
+  {
+    if(m_CompareDumpAgainst.empty())
+      return;
+
+    const auto recovery{proj_paths().output().recovery()};
+    const auto kept{recovery.kept_dump(m_CompareDumpAgainst)};
+    if(!fs::exists(kept))
+    {
+      using parsing::commandline::error;
+      throw std::runtime_error{
+        error(std::format("no dump has been kept as '{}': expected {}", m_CompareDumpAgainst, kept.generic_string()))
+      };
+    }
+
+    stream() << '\n' << to_string(compare_dumps(kept, recovery.dump_file()), m_CompareDumpAgainst);
+  }
+
+  void test_runner::keep_dump()
+  {
+    if(m_KeepDumpAs.empty())
+      return;
+
+    const auto recovery{proj_paths().output().recovery()};
+    const auto kept{recovery.kept_dump(m_KeepDumpAs)};
+    fs::create_directories(kept.parent_path());
+    fs::copy_file(recovery.dump_file(), kept, fs::copy_options::overwrite_existing);
   }
 
   [[nodiscard]]
@@ -825,7 +1009,8 @@ namespace sequoia::testing
     {
       for(const auto& [file, found] : *items)
       {
-        if(found) options += std::format(" select {}", file.path().generic_string());
+        if(found)
+          options += std::format(" select {}", file.path().generic_string());
       }
     }
 
@@ -833,9 +1018,19 @@ namespace sequoia::testing
     {
       for(const auto& [name, found] : *suites)
       {
-        if(found) options += std::format(" test {}", name);
+        if(found)
+          options += std::format(" test {}", name);
       }
     }
+
+    for(const auto& [file, found] : m_Filter.excluded_items())
+    {
+      if(found)
+        options += std::format(" exclude {}", file.path().generic_string());
+    }
+
+    if(m_Filter.excludes_performance_tests())
+      options += " --exclude-performance";
 
     return options;
   }
@@ -866,10 +1061,7 @@ namespace sequoia::testing
     if(concurrent_execution()) sort_tests();
 
     if(m_InstabilityMode == instability_mode::sandbox)
-    {
-      run_tests(m_RunnerID);
-      return to_return_code(root_summary());
-    }
+      return run_tests(m_RunnerID);
 
     auto code{return_code::success};
     for(std::size_t i{}; i < m_NumReps; ++i)
@@ -877,8 +1069,7 @@ namespace sequoia::testing
       if(i) reset_tests();
 
       const auto optIndex{m_NumReps > 1 ? std::optional<std::size_t>{i} : std::nullopt};
-      run_tests(optIndex);
-      code |= to_return_code(root_summary());
+      code |= run_tests(optIndex);
     }
 
     return code;
@@ -897,11 +1088,21 @@ namespace sequoia::testing
   {
     if(!baseline) return return_code::success;
 
-    const auto differences{compare_versioned_output(*baseline, take_versioned_output_snapshot(proj_paths().output()))};
+    const auto after{take_versioned_output_snapshot(proj_paths().output())};
+    const auto differences{compare_versioned_output(*baseline, after)};
 
-    if(differences.empty()) return return_code::success;
+    if(differences.empty())
+    {
+      stream() << "\nVersioned output written by this run matches what was on disk.\n";
+      return return_code::success;
+    }
 
-    stream() << "\nVersioned output written by this run differs from what was on disk:\n" << to_string(differences);
+    // The patch is to be applied from the project root, so its paths are relative to there
+    const auto outputDir{fs::relative(proj_paths().output().dir(), proj_paths().project_root())};
+    write_to_file(proj_paths().output().drift().patch_file(), unified_diff(*baseline, after, outputDir), std::ios_base::out | std::ios_base::binary);
+
+    stream() << "\nVersioned output written by this run differs from what was on disk:\n" << to_string(differences)
+             << "A patch from what was on disk to what this run wrote: " << drift_paths{outputDir}.patch_file().generic_string() << "\n";
 
     return return_code::versioned_output_diffs;
   }
@@ -931,7 +1132,7 @@ namespace sequoia::testing
       });
   }
 
-  void test_runner::run_tests(const std::optional<std::size_t> id)
+  return_code test_runner::run_tests(const std::optional<std::size_t> id)
   {
     const timer t{};
 
@@ -964,12 +1165,11 @@ namespace sequoia::testing
       asyncDuration = asyncTimer.time_elapsed();
     }
 
-    test_tracker tracker{proj_paths(), id, m_Filter ? is_filtered::yes : is_filtered::no};
+    test_tracker tracker{proj_paths(), id, m_Filter.selects() ? is_filtered::yes : is_filtered::no, m_Filter.tests_left_out()};
 
     using namespace maths;
     auto nodeEarly{
-      [&s = m_Suites,&tracker,id,serial{!concurrent_execution()}](auto n) {
-        tracker.increment_depth();
+      [&s = m_Suites,id,serial{!concurrent_execution()}](auto n) {
         if(serial)
         {
           auto& wt{s.begin_node_weights()[n]};
@@ -1002,44 +1202,51 @@ namespace sequoia::testing
             }
           }
         );
-
-        tracker.decrement_depth();
       }
     };
 
     traverse(depth_first, m_Suites, find_disconnected_t{}, nodeEarly, nodeLate, null_func_obj{});
+    tracker.update_materials_and_prune_info();
 
     if(m_Verbosity == verbosity::verbose)
     {
-      indentation indent0{no_indent}, indent1{tab};
+      // One step per level of the tree, a test's report being a level below the test. Spaces
+      // rather than a tab: a tab advances to the next tab stop instead of by a fixed amount, so
+      // following the spaces of the levels above it, the gap between a test's name and its report
+      // would vary both with depth and with whatever renders the output.
+      const indentation step{"    "};
+      indentation suiteIndent{no_indent};
       auto printNode{
-        [&s=m_Suites,&indent0,&indent1,&stream=stream(),serial{!concurrent_execution()}](auto n) {
+        [&s = m_Suites, &suiteIndent, &step, &stream = stream(), serial{!concurrent_execution()}](auto n) {
           if(n)
           {
             const auto& wt{s.cbegin_node_weights()[n]};
             if(wt.optTest)
             {
-              stream << summarize(wt.summary, "", summary_detail::failure_messages | summary_detail::timings, indent0, indent1);
+              stream << summarize(wt.summary,
+                                  ":",
+                                  summary_detail::failure_messages | summary_detail::timings,
+                                  suiteIndent,
+                                  step);
             }
             else
             {
-              if(serial)
-              {
-                const auto message{sequoia::indent(wt.summary.name() + ":", indent0)};
-                stream << append_indented(message, report_time(wt.summary, std::nullopt), indent0);
-              }
-              else
-              {
-                stream << sequoia::indent(wt.summary.name() + ":", indent0) << '\n';
-              }
+              const auto heading{sequoia::indent(wt.summary.name() + ":", suiteIndent)};
+              stream << (serial ? append_indented(heading, report_time(wt.summary, std::nullopt), suiteIndent)
+                                : heading + '\n');
             }
 
-            indent0.append("\t");
+            suiteIndent.append(std::string{step});
           }
         }
       };
 
-      auto decreaseIndent{ [&indent0](auto n) { if(n) indent0.trim(1); } };
+      auto decreaseIndent{
+        [&suiteIndent, &step](auto n) {
+          if(n)
+            suiteIndent.trim(std::string_view{step}.size());
+        }
+      };
 
       traverse(depth_first, m_Suites, find_disconnected_t{}, printNode, decreaseIndent, null_func_obj{});
     }
@@ -1063,6 +1270,16 @@ namespace sequoia::testing
 
     stream() << "\n-----------Grand Totals-----------\n";
     stream() << summarize(root_summary(), "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
+
+    // Not folded into the totals, which count what the tests found: these are failures of the run itself
+    const auto postRunFailures{tracker.post_run_failures()};
+    if(!postRunFailures.empty())
+    {
+      stream() << "\n-----------Post-Run Failures-----------\n";
+      for(const auto& failure : postRunFailures) stream() << sequoia::indent(failure, indentation{"\t"}) << "\n\n";
+    }
+
+    return to_return_code(root_summary()) | (postRunFailures.empty() ? return_code::success : return_code::post_run_failures);
   }
 
   [[nodiscard]]
@@ -1075,7 +1292,7 @@ namespace sequoia::testing
     }
     else if(m_Suites.order() <= 1)
     {
-      if(m_PruneInfo.mode == prune_mode::active)
+      if(m_PruneMode == prune_mode::active)
         stream() << "Nothing to do: no changes since the last run, therefore 'prune' has pruned all tests\n";
 
       return true;
@@ -1115,62 +1332,68 @@ namespace sequoia::testing
 
   void test_runner::prune()
   {
-    if(m_PruneInfo.mode == prune_mode::passive) return;
+    if(m_PruneMode == prune_mode::passive) return;
 
     // Do this here: if pruning throws an exception, this output should make it clearer what's going on
     stream() << "\nAnalyzing dependencies...\n";
     const timer t{};
 
-    switch(do_prune())
+    if(const auto fallback{do_prune()})
     {
-    case prune_outcome::not_attempted:
-      break;
-    case prune_outcome::no_time_stamp:
+      using parsing::commandline::warning;
+      switch(*fallback)
       {
-        using parsing::commandline::warning;
+      case prune_fallback_reason::no_previous_stamp:
         stream() << warning({"Time stamp of previous run does not exist, so unable to prune.",
                             "This should be automatically rectified for the next successful run.",
                             "No action required."});
+        break;
+      case prune_fallback_reason::toolchain_changed:
+        stream() << warning({"The toolchain has changed since the previous run, so prune is ignored and every test runs.",
+                            "No action required."});
+        break;
       }
-      break;
-    case prune_outcome::success:
-      {
-        const auto [dur, unit] {testing::stringify_duration(t.time_elapsed())};
-        stream() << "[" << dur << unit << "]\n\n";
-      }
-      break;
+    }
+    else
+    {
+      const auto [dur, unit] {testing::stringify_duration(t.time_elapsed())};
+      stream() << "[" << dur << unit << "]\n\n";
     }
   }
 
   [[nodiscard]]
-  prune_outcome test_runner::do_prune()
+  std::optional<prune_fallback_reason> test_runner::do_prune()
   {
-    if(m_PruneInfo.mode == prune_mode::passive) return prune_outcome::not_attempted;
-
-    if(auto maybeToRun{tests_to_run(proj_paths(), m_PruneInfo.include_cutoff)})
+    const auto selection{tests_to_run(proj_paths())};
+    if(const auto* tests{std::get_if<std::vector<fs::path>>(&selection)})
     {
-      for(const auto& src : maybeToRun.value())
+      for(const auto& src : *tests)
       {
         m_Filter.add_selected_item(src);
       }
 
-      if(!m_Filter) m_Filter.select_nothing();
+      if(!m_Filter.selects())
+        m_Filter.select_nothing();
 
-      return prune_outcome::success;
+      return std::nullopt;
     }
 
-    m_PruneInfo.mode = prune_mode::passive;
+    m_PruneMode = prune_mode::passive;
 
-    return prune_outcome::no_time_stamp;
+    return std::get<prune_fallback_reason>(selection);
   }
 
   [[nodiscard]]
-  std::vector<std::string> test_runner::groups_of(const fs::path& source) const
+  std::vector<std::string> test_runner::enclosing_suites(const fs::path& source) const
   {
-    // Spelt as calls rather than pipes, for gcc bug E; see read_tests_to in DependencyAnalyzer.cpp.
+    // Spelt as calls rather than pipes: under `import std`, g++ 15.2 rejected the pipe here with
+    // "use of operator| ... before deduction of 'auto'". gcc-bugs/E in the sequoia-LLM repository,
+    // PR 120318; fixed in gcc 16.1.
     return std::ranges::to<std::vector>(
-             std::views::transform(rebase_from(source, proj_paths().tests().repo()).parent_path(),
-                                   [](const fs::path& p){ return p.generic_string(); }));
+             std::views::transform(
+               std::views::drop_while(rebase_from(source, proj_paths().tests().repo()).parent_path(),
+                                      [](const fs::path& component){ return component == ".."; }),
+               [](const fs::path& component){ return component.generic_string(); }));
   }
 
   [[nodiscard]]
@@ -1187,39 +1410,44 @@ namespace sequoia::testing
   void test_runner::build_suite_tree()
   {
     std::vector<fs::path> materialsPaths{};
-    std::map<fs::path, suite_type::size_type> groups{};
 
     // A runner may be executed more than once, with tests registered in between.
     m_Suites = suite_type{};
-    m_Suites.add_node(suite_type::npos);
+    const auto root{m_Suites.add_node(suite_type::npos)};
 
     // By name, so that where a registration sits in a main does not decide what the output says.
     std::ranges::sort(m_Tests, {}, [](const test_vessel& v){ return v.name(); });
 
+    const auto findOrAddSuite{
+      [this](const suite_node_index enclosingSuiteNode, const std::string& suiteName) {
+        const auto children{m_Suites.cedges(enclosingSuiteNode)};
+
+        // A test is a node beside the suites and may share a name with a sibling directory, so
+        // only a suite may be descended into.
+        const auto existing{
+          std::ranges::find_if(children,
+                               [this, &suiteName](const auto& edge) {
+                                 const auto& weight{m_Suites.cbegin_node_weights()[edge.target_node()]};
+                                 return !weight.optTest && (weight.summary.name() == suiteName);
+                               })
+        };
+
+        return existing != children.end()
+             ? existing->target_node()
+             : m_Suites.add_node(enclosingSuiteNode, suite_node{.summary{log_summary{suiteName}}});
+      }
+    };
+
     for(auto& vessel : m_Tests)
     {
-      const auto directory{rebase_from(vessel.source_file(), proj_paths().tests().repo()).parent_path()};
+      const auto enclosingSuiteNode{
+        std::ranges::fold_left(enclosing_suites(vessel.source_file()), root, findOrAddSuite)
+      };
 
-      auto parent{suite_type::size_type{}};
-      fs::path sofar{};
-      for(const auto& component : directory)
-      {
-        sofar /= component;
+      vessel.initialize(proj_paths(), m_CMakeCache, materialsPaths, m_RecoveryMode);
 
-        if(const auto found{groups.find(sofar)}; found != groups.end())
-        {
-          parent = found->second;
-        }
-        else
-        {
-          parent = groups.emplace(sofar, m_Suites.add_node(parent, suite_node{.summary{log_summary{component.generic_string()}}})).first->second;
-        }
-      }
-
-      vessel.initialize(proj_paths(), materialsPaths, m_RecoveryMode);
-
-      std::string name{vessel.name()};
-      m_Suites.add_node(parent, suite_node{.summary{log_summary{std::move(name)}}, .optTest{std::move(vessel)}});
+      m_Suites.add_node(enclosingSuiteNode,
+                        suite_node{.summary{log_summary{vessel.name()}}, .optTest{std::move(vessel)}});
     }
   }
 

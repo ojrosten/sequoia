@@ -208,6 +208,7 @@ export namespace sequoia::meta
   };
 
   template<template<class...> class TT, class T, class U, template<class, class> class Compare>
+    requires (!Compare<T, U>::value)
   struct merge<TT<T>, TT<U>, Compare>
   {
     using type = TT<U, T>;

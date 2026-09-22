@@ -9,4 +9,5 @@
 
 export module sequoia.maths.arithmetic;
 
+export import :ArithmeticCasts;
 export import :SaturatingArithmetic;

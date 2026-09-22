@@ -23,18 +23,23 @@ export namespace sequoia
   [[nodiscard]]
   std::string report_failed_write(const std::filesystem::path& file);
 
-  [[nodiscard]]
-  std::optional<std::string> read_to_string(const std::filesystem::path& file);
 
-  void write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode=std::ios_base::out);
+  /** \brief The contents of a regular file, read in `mode`.
+
+      \returns `std::nullopt` if the file cannot be opened, or its size cannot be read.
+   */
+  [[nodiscard]]
+  std::optional<std::string> read_to_string(const std::filesystem::path& file, std::ios_base::openmode mode);
+
+  void write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode);
 
   template<std::invocable<std::string&> Fn>
   void read_modify_write(const std::filesystem::path& file, Fn fn)
   {
-    if(auto text{read_to_string(file)})
+    if(auto text{read_to_string(file, std::ios_base::in)})
     {
       fn(*text);
-      write_to_file(file, *text);
+      write_to_file(file, *text, std::ios_base::out);
     }
     else
     {

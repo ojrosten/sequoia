@@ -16,6 +16,7 @@ import std;
 
 import :Advice;
 import :BinaryRelationships;
+import :CMakeCache;
 import :CoreInfrastructure;
 import :FailureInfo;
 import :FileEditors;
@@ -251,17 +252,19 @@ export namespace sequoia::testing
     return unqualified;
   }
 
+  /** \brief Whether a test forks its diagnostics output, by a static `output_discriminator(const cmake_cache&)`. */
   template<concrete_test T>
   inline constexpr bool has_discriminated_output_v{
-    requires(const T& t){
-      { t.output_discriminator() } -> std::convertible_to<std::string>;
+    requires(const cmake_cache& cache){
+      { T::output_discriminator(cache) } -> std::convertible_to<std::string>;
     }
   };
 
+  /** \brief Whether a test forks its summary, by a static `summary_discriminator(const cmake_cache&)`. */
   template<concrete_test T>
   inline constexpr bool has_discriminated_summary_v{
-    requires(const T & t){
-      { t.summary_discriminator() } -> std::convertible_to<std::string>;
+    requires(const cmake_cache& cache){
+      { T::summary_discriminator(cache) } -> std::convertible_to<std::string>;
     }
   };
 

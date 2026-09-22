@@ -69,12 +69,62 @@ namespace sequoia::testing
           "coordinates<my_vec_space<1> >"s
     );
 
-    // TO DO: reinstate and fix associated bug
-    /*check(equality,
-          "",
+    const std::string normalizedLong{(sizeof(unsigned long) == sizeof(unsigned long long)) ? "long long" : "long"};
+
+    check(equality, "long",                                   tidy_name("long",             clang_type{}), normalizedLong);
+    check(equality, "unsigned long",                          tidy_name("unsigned long",    clang_type{}), "unsigned " + normalizedLong);
+    check(equality, "long long",                              tidy_name("long long",        clang_type{}), "long long"s);
+    check(equality, "long as a template argument",            tidy_name("vector<long>",     clang_type{}), "vector<" + normalizedLong + ">");
+    check(equality, "long twice",                             tidy_name("pair<long, long>", clang_type{}), "pair<" + normalizedLong + ", " + normalizedLong + ">");
+
+    check(equality, "An identifier containing long",          tidy_name("my_long_type",     clang_type{}), "my_long_type"s);
+    check(equality, "An identifier ending in long",           tidy_name("prolong",          clang_type{}), "prolong"s);
+    check(equality, "An identifier beginning with long",      tidy_name("longitude",        clang_type{}), "longitude"s);
+    check(equality, "An identifier containing long, beside a long", tidy_name("belongs_to<long>", clang_type{}), "belongs_to<" + normalizedLong + ">");
+
+    // The top hex nibble of a negative float is 8 through F, so its hex form begins with a letter
+    check(equality,
+          "A negative float",
+          tidy_name("<(float)[C048F5C3]>", gcc_type{}),
+          "<-3.140000>"s
+    );
+
+    check(equality,
+          "A negative float of unit magnitude",
+          tidy_name("<(float)[BF800000]>", gcc_type{}),
+          "<-1.000000>"s
+    );
+
+    check(equality,
+          "A hex form with no decimal digit at all",
           tidy_name("<(float)[FF]>", gcc_type{}),
-          std::format("<0.0>")
-    );*/
+          "<0.000000>"s
+    );
+
+    check(equality,
+          "A double whose hex form has no decimal digit",
+          tidy_name("<(double)[FF]>", gcc_type{}),
+          "<0.000000>"s
+    );
+
+    // The top bit of a negative double is set, so its hex form overflows a signed 64-bit read
+    check(equality,
+          "A negative double",
+          tidy_name("<(double)[C00921FB54442D18]>", gcc_type{}),
+          "<-3.141593>"s
+    );
+
+    check(equality,
+          "Negative infinity as a double",
+          tidy_name("<(double)[FFF0000000000000]>", gcc_type{}),
+          "<-inf>"s
+    );
+
+    check(equality,
+          "A positive float, as the control",
+          tidy_name("<(float)[4048F5C3]>", gcc_type{}),
+          "<3.140000>"s
+    );
   }
 
   void output_free_test::test_relative_reporting_path()

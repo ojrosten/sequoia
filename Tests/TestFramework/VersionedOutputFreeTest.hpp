@@ -31,6 +31,10 @@ namespace sequoia::testing
 
     void test_reporting();
 
+    void test_patch();
+
     void test_snapshot();
+
+    void test_patch_round_trip();
   };
 }

@@ -1,7 +1,4 @@
-# 3.28: consumers of a module library must themselves be scanned for imports,
-# and under CMP0155's OLD behaviour they are not - every import then fails with
-# "module not found" even though the library built.
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 4.2)
 
 project(SequoiaTestFrameworkDiagnostics DESCRIPTION "The Sequoia Library plus diagnostics for the testing framework"
                                         LANGUAGES CXX)
@@ -36,11 +33,15 @@ target_sources(TestFrameworkDiagnostics PRIVATE
                ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalsePositiveDiagnosticsMixed.cpp
                ${TestDir}/TestFramework/AllocationTesting/ScopedAllocationTestFalsePositiveDiagnosticsThreeLevel.cpp
                ${TestDir}/TestFramework/BasicTestInterfaceFreeTest.cpp
+               ${TestDir}/TestFramework/BuildArtefactsFreeTest.cpp
+               ${TestDir}/TestFramework/BuildArtefactsTestingUtilities.cpp
                ${TestDir}/TestFramework/ChronoFreeDiagnostics.cpp
+               ${TestDir}/TestFramework/CMakeCacheFreeTest.cpp
                ${TestDir}/TestFramework/CommandsFreeTest.cpp
                ${TestDir}/TestFramework/ComplexFreeDiagnostics.cpp
                ${TestDir}/TestFramework/ContainerFreeDiagnostics.cpp
                ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp
+               ${TestDir}/TestFramework/DumpComparisonFreeTest.cpp
                ${TestDir}/TestFramework/ElementaryFreeDiagnostics.cpp
                ${TestDir}/TestFramework/ExceptionsFreeDiagnostics.cpp
                ${TestDir}/TestFramework/FailureInfoTest.cpp

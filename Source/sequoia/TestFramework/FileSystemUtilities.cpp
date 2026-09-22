@@ -131,7 +131,7 @@ namespace sequoia::testing
       return p;
 
     if(dir.empty())
-      throw std::runtime_error{"Tring to rebase from an empty path"};
+      throw std::runtime_error{"Trying to rebase from an empty path"};
 
     if(fs::exists(dir) && !fs::is_directory(dir))
       throw std::runtime_error{"Trying to rebase from something other than a directory"};
@@ -139,12 +139,26 @@ namespace sequoia::testing
     if(p.is_absolute() && dir.is_absolute())
       return fs::relative(p, dir);
 
-    auto i{std::ranges::find_if_not(p, [](const fs::path& pth) { return pth == ".."; })};
-    if((i == p.end()) || (i->empty()))
+    // A trailing separator iterates as an empty final component. Trimming the separator keeps
+    // that component out of the match and out of the result.
+    const auto withoutTrailingSeparator{[](const fs::path& pth) { return pth.has_filename() ? pth : pth.parent_path(); }};
+    const fs::path trimmedPath{withoutTrailingSeparator(p)}, trimmedDir{withoutTrailingSeparator(dir)};
+
+    const auto firstKept{std::ranges::find_if_not(trimmedPath, [](const fs::path& pth) { return pth == ".."; })};
+    if(firstKept == trimmedPath.end())
       throw std::runtime_error{"Path comprises nothing but ../"};
 
-    auto[rebasedPathIter, lastCommonDirIter]{std::ranges::mismatch(i, p.end(), rfind(dir, *i), dir.end())};
+    // Each suffix of the directory is tried as a prefix of the path, longest suffix first.
+    // A match which consumes the whole path is declined: otherwise the rebased path would
+    // name the directory itself, which the contract excludes.
+    const auto join{[](fs::path lhs, const fs::path& rhs){ return lhs /= rhs; }};
+    for(auto suffixBegin{trimmedDir.begin()}; suffixBegin != trimmedDir.end(); ++suffixBegin)
+    {
+      const auto [dirIter, rebasedPathIter]{std::ranges::mismatch(suffixBegin, trimmedDir.end(), firstKept, trimmedPath.end())};
+      if((dirIter == trimmedDir.end()) && (rebasedPathIter != trimmedPath.end()))
+        return std::ranges::fold_left(rebasedPathIter, trimmedPath.end(), fs::path{}, join);
+    }
 
-    return std::accumulate(rebasedPathIter, p.end(), fs::path{}, [](fs::path lhs, const fs::path& rhs){ return lhs /= rhs; });
+    return std::ranges::fold_left(firstKept, trimmedPath.end(), fs::path{}, join);
   }
 }

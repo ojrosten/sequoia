@@ -1,0 +1,3 @@
+Usage: FakeExe test <suite>
+
+Run the tests of a suite: a directory beneath Tests

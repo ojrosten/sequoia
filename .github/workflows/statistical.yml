@@ -45,11 +45,13 @@ name: statistical
 # on a public repository - and a run is one build plus N suites, which at the
 # measured two to four minutes a suite puts N=20 at about an hour a column.
 on:
-  # The minute is off the hour on purpose, where GitHub's scheduler is slowest:
-  # see the schedule in rigorous.yml. An hour after the nightly's tick, for no
-  # reason beyond not sharing it.
+  # A minute after the nightly's tick, for no reason beyond not sharing it. The
+  # order in which the two are then created is a coin toss - GitHub's delay is
+  # per run, and its night-to-night spread is about the width of the hour this
+  # once trailed the nightly by - and nothing here depends on the order: the
+  # nightly's columns are not a prerequisite, only a neighbour in the queue.
   schedule:
-    - cron: '1 2 * * *'
+    - cron: '2 1 * * *'
   workflow_dispatch:
     inputs:
       trials:
