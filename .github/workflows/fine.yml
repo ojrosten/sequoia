@@ -19,22 +19,19 @@ name: fine
 #
 # Every column also carries `--check-versioned-output`, spelt out per column
 # because a column's `exec_args` REPLACES the tier's rather than adding to it.
-# The Windows one did not until 2026-09-11, on the grounds that the committed
-# `_msvc` forks were stale; that was measured on 2026-09-10 and found false: of
-# the 340 files a real MSVC run writes, 339 already matched, and the one
-# straggler is fixed.
+# The Windows one did not until 2026-09-11, on the claim that the committed
+# `_msvc` forks had decayed past the point where a drift check could mean
+# anything. They had not: a count in rigorous.yml settles it. Do not drop the
+# flag on that reasoning again.
 #
 # macOS joined on 2026-09-11, when work started arriving from a Windows machine
 # and "we develop on the Mac" stopped covering it; see coarse.yml.
 #
-# The MSVC column runs TestRunnerTest again. From 2026-09-09 to 2026-09-11 it was
-# excluded: its teardown's fs::remove_all was refused on Windows, close to a coin
-# toss, because std::system spawned children with every open file inherited and a
-# spawn on one thread captured a file another thread had open. invoke now spawns
-# with a handle list naming only the standard streams (roadmap item 134). The
-# mechanism is witnessed by a deterministic test; the CI symptom is witnessed
-# only here, so a sharing violation in this column after 2026-09-11 is evidence
-# against the fix, not a flake to re-run.
+# TestRunnerTest runs here again, having been excluded from this column between
+# 2026-09-09 and 2026-09-11 over a sharing violation on Windows (roadmap item
+# 134). A violation here after 2026-09-11 is evidence against that fix rather
+# than a flake to re-run; rigorous.yml gives the mechanism and the rates per
+# configuration, and every MSVC column in every tier runs the test.
 on:
   pull_request:
     branches: [staging]

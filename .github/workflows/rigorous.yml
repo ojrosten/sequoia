@@ -113,7 +113,7 @@ name: rigorous
 # for the Windows columns.
 #
 # The Release column exists because -O3 asks questions Debug cannot, and it was
-# withdrawn between 2026-09-10 and this commit while its warnings were understood.
+# withdrawn for three hours on 2026-09-10 while its warnings were understood.
 # All 107 lines were false positives from three sites: 101 from gcc's loop
 # vectorizer, which -fno-tree-loop-vectorize removes while leaving the diagnostics
 # enabled, and 6 from an address computed in a branch of libstdc++'s
@@ -148,15 +148,18 @@ name: rigorous
 # tier's - naming only the exclusion would silently lose the drift check - while
 # this column carries an explicitly empty `exec_args`, which is not the same as
 # omitting the key: it runs with no flags at all, and inherits nothing.
+#
 # Both MSVC columns run TestRunnerTest again. From 2026-09-09 to 2026-09-11 it was
 # excluded: its teardown's fs::remove_all was refused on Windows, close to a coin
 # toss (ASan 2 of 4, Release 1 of 3, Debug 3 of 38), because std::system spawned
 # children with every open file inherited and a spawn on one thread captured a
 # file another thread had open. invoke now spawns with a handle list naming only
-# the standard streams (roadmap item 134). The mechanism is witnessed by a
-# deterministic test; the CI symptom is witnessed only here, so a sharing
-# violation in either column after 2026-09-11 is evidence against the fix, not a
-# flake to re-run.
+# the standard streams (roadmap item 134). A deterministic test witnesses the
+# mechanism; the CI symptom can appear in any MSVC column that runs
+# TestRunnerTest, which today is every MSVC column in every tier - the rates
+# above come from three of them. So a sharing violation on Windows after
+# 2026-09-11, in whichever tier, is evidence against the fix rather than a flake
+# to re-run.
 on:
   pull_request:
     branches: [main]
