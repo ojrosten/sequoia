@@ -102,7 +102,7 @@ An object which bears neither source's name
 
 Expected Exception Type:
 [std::runtime_error]
-The tracker's log in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/collision/Debug/TestAll.tlog does not say which of 2 objects GADGET.CPP produced
+The tracker's log in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/collision/Debug/TestAll.tlog does not say which of 2 objects Gadget.cpp produced
 
 =======================================
 
