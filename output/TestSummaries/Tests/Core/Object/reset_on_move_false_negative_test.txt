@@ -1,0 +1,2 @@
+reset_on_move_false_negative_test
+False Negative Checks:                     4;  Failures:  0

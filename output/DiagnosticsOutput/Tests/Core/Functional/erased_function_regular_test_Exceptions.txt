@@ -1,0 +1,18 @@
+Tests/Core/Functional/ErasedFunctionRegularTest.cpp, Line 400
+Invoking an empty function
+
+Expected Exception Type:
+[std::bad_function_call]
+<the standard library's message>
+
+=======================================
+
+Tests/Core/Functional/ErasedFunctionRegularTest.cpp, Line 408
+Invoking the source of a move
+
+Expected Exception Type:
+[std::bad_function_call]
+<the standard library's message>
+
+=======================================
+

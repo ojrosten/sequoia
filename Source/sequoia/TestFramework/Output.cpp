@@ -441,6 +441,7 @@ namespace sequoia::testing
 
     replace_all(name, "__cdecl(void)", "()");
     replace_all(name, "__cdecl", "");
+    replace_all(name, ")(void)", ")()");
 
     process_array_iterators(name);
 

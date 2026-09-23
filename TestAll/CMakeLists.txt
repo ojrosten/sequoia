@@ -34,6 +34,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/DataStructures/StaticQueueTestingDiagnostics.cpp
                ${TestDir}/Core/DataStructures/StaticStackTest.cpp
                ${TestDir}/Core/DataStructures/StaticStackTestingDiagnostics.cpp
+               ${TestDir}/Core/Functional/ErasedFunctionRegularTest.cpp
+               ${TestDir}/Core/Functional/ErasedFunctionTestingDiagnostics.cpp
                ${TestDir}/Core/Logic/BitmaskFreeTest.cpp
                ${TestDir}/Core/Meta/ConceptsTest.cpp
                ${TestDir}/Core/Meta/SequencesFreeTest.cpp
@@ -45,6 +47,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Object/CreatorFreeTest.cpp               
                ${TestDir}/Core/Object/FactoryTest.cpp
                ${TestDir}/Core/Object/FactoryTestingDiagnostics.cpp
+               ${TestDir}/Core/Object/ResetOnMoveRegularTest.cpp
+               ${TestDir}/Core/Object/ResetOnMoveTestingDiagnostics.cpp
                ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Experimental/FlattenTypeListFreeTest.cpp                              
                ${TestDir}/FileSystem/FileSystemFreeTest.cpp
