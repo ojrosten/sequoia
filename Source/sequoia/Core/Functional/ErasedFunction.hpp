@@ -450,6 +450,20 @@ namespace sequoia
 
     template<class T>
     consteval static caller_type caller_for() { return call_operator_type::template caller_for<T>(); }
+
+    /** A function rather than a conditional expression. C++17 requires a prvalue conditional expression
+        to initialise an object directly, but MSVC (19.40 to 19.44 at least) materialises one whose class
+        type has a user-provided destructor and moves from it, which moves the target once more.
+     */
+    template<class Target, class F>
+    SEQUOIA_FORCE_INLINE
+    constexpr static impl::erased_target erased_target_for(F&& f)
+    {
+      if(impl::is_empty_target(f))
+        return {};
+
+      return impl::erased_target{std::in_place_type_t<Target>{}, std::forward<F>(f)};
+    }
   public:
     template<class T, class... TArgs>
     constexpr static bool target_constructible_from_v{
@@ -470,8 +484,7 @@ namespace sequoia
       requires (!resolve_to_copy_v<erased_function, F>) && target_constructible_from_v<Target, F>
     constexpr erased_function(F&& f)
       : m_Caller{impl::is_empty_target(f) ? empty_caller : caller_for<Target>()}
-      , m_Target{impl::is_empty_target(f) ? impl::erased_target{}
-                                          : impl::erased_target{std::in_place_type_t<Target>{}, std::forward<F>(f)}}
+      , m_Target{erased_target_for<Target>(std::forward<F>(f))}
     {}
 
     template<class T, class... TArgs>
