@@ -94,7 +94,9 @@ namespace sequoia::testing
   [[nodiscard]]
   int to_exit_code(return_code code) noexcept;
 
-  individual_materials_paths set_materials(const std::filesystem::path& sourceFile, std::string_view testName, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths);
+  individual_materials_paths set_materials(const std::filesystem::path& sourceFile,
+                                           std::string_view testName,
+                                           const project_paths& projPaths);
 
   [[nodiscard]]
   active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
@@ -159,16 +161,16 @@ namespace sequoia::testing
       return m_pTest->execute(index);
     }
 
-    void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)
+    void reset(const project_paths& projPaths)
     {
-      m_pTest->reset(projPaths, materialsPaths);
+      m_pTest->reset(projPaths);
     }
 
     /** \brief Replaces the held test with one which knows where its files are. */
 
-    void initialize(const project_paths& projPaths, const cmake_cache& cache, std::vector<std::filesystem::path>& materialsPaths, recovery_mode mode)
+    void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode)
     {
-      m_pTest->initialize(projPaths, cache, materialsPaths, mode);
+      m_pTest->initialize(projPaths, cache, mode);
     }
   private:
     static void versioned_write(const std::filesystem::path& file, std::string_view text);
@@ -184,8 +186,8 @@ namespace sequoia::testing
       virtual std::filesystem::path predictive_materials() const          = 0;
 
       virtual log_summary execute(std::optional<std::size_t> index) = 0;
-      virtual void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) = 0;
-      virtual void initialize(const project_paths& projPaths, const cmake_cache& cache, std::vector<std::filesystem::path>& materialsPaths, recovery_mode mode) = 0;
+      virtual void reset(const project_paths& projPaths) = 0;
+      virtual void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode) = 0;
     };
 
     template<concrete_test Test>
@@ -248,20 +250,20 @@ namespace sequoia::testing
         return write_versioned_output(t);
       }
 
-      void reset(const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths) final
+      void reset(const project_paths& projPaths) final
       {
         m_Test.reset_results();
-        set_materials(m_Test.source_file(), m_Test.name(), projPaths, materialsPaths);
+        set_materials(m_Test.source_file(), m_Test.name(), projPaths);
       }
 
-      void initialize(const project_paths& projPaths, const cmake_cache& cache, std::vector<std::filesystem::path>& materialsPaths, recovery_mode mode) final
+      void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode) final
       {
         const auto source{Test::source_file()};
 
         m_Test = Test{m_Name,
                       source,
                       projPaths,
-                      set_materials(source, m_Name, projPaths, materialsPaths),
+                      set_materials(source, m_Name, projPaths),
                       make_active_recovery_paths(mode, projPaths),
                       get_output_discriminator<Test>(cache),
                       get_reduction_discriminator<Test>(cache)};

@@ -159,8 +159,8 @@ namespace sequoia
       Named rather than spelled inline at each use, where the same `decltype` appeared twice.
       Backported from `modules-native`, which needs it for a further reason that does not apply
       here: MSVC evaluates the inline form as `false` for `std::variant` when the enclosing
-      variable template is instantiated across a module boundary. Reduced repro in `sequoia-LLM`,
-      `msvc-bugs/E-module-fold-get.cpp`.
+      variable template is instantiated across a module boundary; reported 2026-09-07,
+      <https://developercommunity.visualstudio.com/t/C-modules-reject-first-imported-specia/11148618>.
    */
   template<class T, std::size_t I>
   using gettable_element_t = std::remove_cvref_t<decltype(std::get<I>(std::declval<T&>()))>;

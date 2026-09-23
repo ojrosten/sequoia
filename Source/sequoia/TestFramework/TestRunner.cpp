@@ -407,32 +407,31 @@ namespace sequoia::testing
     return static_cast<int>(code);
   }
 
-  individual_materials_paths set_materials(const std::filesystem::path& sourceFile, std::string_view testName, const project_paths& projPaths, std::vector<std::filesystem::path>& materialsPaths)
+  individual_materials_paths set_materials(const std::filesystem::path& sourceFile,
+                                           std::string_view testName,
+                                           const project_paths& projPaths)
   {
     individual_materials_paths materials{sourceFile, testName, projPaths};
     if(!fs::exists(materials.original_materials())) return {};
 
+    // Wiping the whole of this test's temporary tree is safe because the tree is named for the
+    // test, and `test_runner::register_test` admits each name once.
+    fs::remove_all(materials.temporary_materials());
+    fs::create_directories(materials.temporary_materials());
+
     const auto workingCopy{materials.working()};
-    if(std::ranges::find(materialsPaths, workingCopy) == materialsPaths.cend())
+    if(const auto originalWorking{materials.original_working()}; fs::exists(originalWorking))
     {
-      fs::remove_all(materials.temporary_materials());
-      fs::create_directories(materials.temporary_materials());
+      fs::copy(originalWorking, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+    }
+    else
+    {
+      fs::create_directory(workingCopy);
+    }
 
-      if(const auto originalWorking{materials.original_working()}; fs::exists(originalWorking))
-      {
-        fs::copy(originalWorking, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-      }
-      else
-      {
-        fs::create_directory(workingCopy);
-      }
-
-      if(const auto originalAux{materials.original_auxiliary()}; fs::exists(originalAux))
-      {
-        fs::copy(originalAux, materials.auxiliary(), fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-      }
-
-      materialsPaths.emplace_back(workingCopy);
+    if(const auto originalAux{materials.original_auxiliary()}; fs::exists(originalAux))
+    {
+      fs::copy(originalAux, materials.auxiliary(), fs::copy_options::recursive | fs::copy_options::overwrite_existing);
     }
 
     return materials;
@@ -1318,7 +1317,6 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    std::vector<std::filesystem::path> materialsPaths{};
     std::string suiteName{};
 
     auto resetFn{
@@ -1327,7 +1325,7 @@ namespace sequoia::testing
           [&,this](auto& wt){
             if(wt.optTest)
             {
-              wt.optTest->reset(proj_paths(), materialsPaths);
+              wt.optTest->reset(proj_paths());
             }
             else
             {
@@ -1418,8 +1416,6 @@ namespace sequoia::testing
 
   void test_runner::build_suite_tree()
   {
-    std::vector<fs::path> materialsPaths{};
-
     // A runner may be executed more than once, with tests registered in between.
     m_Suites = suite_type{};
     const auto root{m_Suites.add_node(suite_type::npos)};
@@ -1453,7 +1449,7 @@ namespace sequoia::testing
         std::ranges::fold_left(enclosing_suites(vessel.source_file()), root, findOrAddSuite)
       };
 
-      vessel.initialize(proj_paths(), m_CMakeCache, materialsPaths, m_RecoveryMode);
+      vessel.initialize(proj_paths(), m_CMakeCache, m_RecoveryMode);
 
       m_Suites.add_node(enclosingSuiteNode,
                         suite_node{.summary{log_summary{vessel.name()}}, .optTest{std::move(vessel)}});
