@@ -51,6 +51,14 @@ namespace sequoia::testing
     check(equality, "", tidy_name("<2ul, 1f>",    clang_type{}), "<2, 1>"s);
     check(equality, "", tidy_name("<textued_2d>", clang_type{}), "<textued_2d>"s);
     check(equality, "", tidy_name("struct foo", msvc_type{}), "foo"s);
+    check(equality, "MSVC function type",         tidy_name("int __cdecl(void)",    msvc_type{}), "int ()"s);
+    check(equality, "MSVC pointer to function",   tidy_name("int (__cdecl*)(void)", msvc_type{}), "int (*)()"s);
+    check(equality, "MSVC reference to function", tidy_name("int (__cdecl&)(void)", msvc_type{}), "int (&)()"s);
+    check(equality, "MSVC parameter list kept",   tidy_name("int (__cdecl*)(int)",  msvc_type{}), "int (*)(int)"s);
+    check(equality,
+          "MSVC pointer to function as a template argument",
+          tidy_name("reset_on_move<int (__cdecl*)(void),0>", msvc_type{}),
+          "reset_on_move<int (*)(), 0>"s);
     check(equality, "", tidy_name("",  gcc_type{}), ""s);
     check(equality, "", tidy_name(" ", gcc_type{}), " "s);
     check(equality,

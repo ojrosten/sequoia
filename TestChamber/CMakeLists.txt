@@ -12,6 +12,10 @@ add_executable(TestChamber TestChamberMain.cpp)
 set(TestDir ${CMAKE_CURRENT_LIST_DIR}/../Tests)
 
 target_sources(TestChamber PRIVATE            
+               ${TestDir}/Core/Functional/ErasedFunctionRegularTest.cpp
+               ${TestDir}/Core/Functional/ErasedFunctionTestingDiagnostics.cpp
+               ${TestDir}/Core/Object/ResetOnMoveRegularTest.cpp
+               ${TestDir}/Core/Object/ResetOnMoveTestingDiagnostics.cpp
                ${TestDir}/Maths/Algebra/RatioFreeTest.cpp
                ${TestDir}/Maths/Arithmetic/ArithmeticCastsFreeTest.cpp
                ${TestDir}/Maths/Arithmetic/SaturatingArithmeticFreeTest.cpp
