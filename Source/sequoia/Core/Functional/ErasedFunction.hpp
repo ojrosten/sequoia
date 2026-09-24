@@ -41,8 +41,7 @@
 
     ## Exception guarantees
 
-    Copy assignment is strong. Move construction and move assignment never throw, even for a target
-    whose own move may throw.
+    Copy assignment is strong. Move construction and move assignment never throw.
 
     ## In a constant expression
 
