@@ -136,13 +136,13 @@ namespace sequoia::testing
         ;
     }
 
-    template<class Signature, class Target>
+    template<class Signature, class... Args>
     [[nodiscard]]
     constexpr bool constructs_from_as_expected(bool expected)
     {
-      return (std::is_constructible_v<erased_function<Signature>, Target> == expected)
+      return (std::is_constructible_v<erased_function<Signature>, Args...> == expected)
     #if defined(__cpp_lib_copyable_function)
-          && (std::is_constructible_v<std::copyable_function<Signature>, Target> == expected)
+          && (std::is_constructible_v<std::copyable_function<Signature>, Args...> == expected)
     #endif
         ;
     }
@@ -239,12 +239,26 @@ namespace sequoia::testing
       Function function;
     };
 
-    [[nodiscard]]
-    constexpr bool function_holder_is_copyable()
+    template<class Function>
+    struct function_forwarder
     {
-      return std::is_copy_constructible_v<function_holder<erased_function<void()>>>
+      explicit function_forwarder(Function f)
+        : function{std::move(f)}
+      {}
+
+      void operator()() const { function(); }
+
+      Function function;
+    };
+
+    [[nodiscard]]
+    constexpr bool function_holders_are_copyable()
+    {
+      return std::is_copy_constructible_v<function_holder<erased_function<void() const>>>
+          && std::is_copy_constructible_v<function_forwarder<erased_function<void() const>>>
     #if defined(__cpp_lib_copyable_function)
-          && std::is_copy_constructible_v<function_holder<std::copyable_function<void()>>>
+          && std::is_copy_constructible_v<function_holder<std::copyable_function<void() const>>>
+          && std::is_copy_constructible_v<function_forwarder<std::copyable_function<void() const>>>
     #endif
         ;
     }
@@ -305,18 +319,28 @@ namespace sequoia::testing
     STATIC_CHECK(!std::constructible_from<function_t, decltype([i = 0]() mutable { return i; })>);
     STATIC_CHECK(std::constructible_from<function_t, decltype([]() mutable { return 1; })>);
 
-    STATIC_CHECK(!std::constructible_from<function_t, decltype([p = std::unique_ptr<int>{}]() { return 1; })>);
-
     // Alike but for the destructor
     STATIC_CHECK(std::constructible_from<function_t, const_only>);
     STATIC_CHECK(!std::constructible_from<function_t, throws_on_destruction>);
+
+    // Copy constructibility, and for in-place construction an undecayed type, are mandated rather than constrained
+    using move_only_target = decltype([p = std::unique_ptr<int>{}]() { return 1; });
+    using move_only_tag    = std::in_place_type_t<move_only_target>;
+    STATIC_CHECK(constructs_from_as_expected<int() const, move_only_target>(true));
+    STATIC_CHECK(constructs_from_as_expected<int() const, move_only_tag, move_only_target>(true));
+    STATIC_CHECK(constructs_from_as_expected<int() const, std::in_place_type_t<const const_only>>(true));
+    STATIC_CHECK(constructs_from_as_expected<int() const, std::in_place_type_t<const_only&>, const_only&>(true));
+
+    // In-place construction is constrained on callability and on constructibility from the arguments
+    STATIC_CHECK(constructs_from_as_expected<int() const, std::in_place_type_t<mutable_only>>(false));
+    STATIC_CHECK(constructs_from_as_expected<int() const, std::in_place_type_t<const_only>, int>(false));
 
     // A reference result may not bind to a temporary
     STATIC_CHECK(constructs_from_as_expected<const std::string&(), const std::string&(*)()>(true));
     STATIC_CHECK(constructs_from_as_expected<const std::string&(), std::string(*)()>(false));
 
-    // A class constructible from a function, and not callable through its signature, is copyable
-    STATIC_CHECK(function_holder_is_copyable());
+    // A class constructible from a function is copyable, whether or not it is callable through the signature
+    STATIC_CHECK(function_holders_are_copyable());
   }
 
   void erased_function_regular_test::test_admission()

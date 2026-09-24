@@ -30,11 +30,6 @@
     -# **No pointer to member as a target.**
     -# **No target whose destructor may throw**, where the standard makes it a precondition that none
        does.
-    -# **The constructors' requirements are constraints**, where the standard mandates some of them:
-       `std::is_constructible_v` is false for a target which is not copy constructible, rather than
-       true and ill-formed on use. So a class which is both constructible from an `erased_function`
-       and callable through its signature cannot be asked whether it is copy constructible: the
-       question depends on itself.
     -# **No converting assignment.** Assigning a callable converts it and then assigns.
     -# **No `swap` of its own.** `std::ranges::swap` exchanges two functions through the defaulted
        moves; an unqualified `swap(f, g)` finds nothing.
@@ -417,19 +412,14 @@ namespace sequoia
     template<class Signature>
     using call_operator_for_t = call_operator_for<Signature>::type;
 
-    /** A concept rather than a conjunction of `bool`s, which would evaluate every clause, and with
-        callability first, so that a target which is not callable is never asked whether it is copy
-        constructible. For a class constructible from an `erased_function`, whether the class is copy
-        constructible is the question already being asked.
-     */
-    template<class CallOperator, class T, class... TArgs>
-    concept target_constructible_from
-      =  std::is_same_v<T, std::decay_t<T>>
-      && (!std::is_member_pointer_v<T>)
-      && CallOperator::template callable_through_signature_v<T>
+    template<class CallOperator, class T>
+    concept erasable_target
+      =  (!std::is_member_pointer_v<T>)
       && std::destructible<T>
-      && std::is_copy_constructible_v<T>
-      && std::is_constructible_v<T, TArgs...>;
+      && CallOperator::template callable_through_signature_v<T>;
+
+    template<class CallOperator, class T, class... TArgs>
+    concept target_constructible_from = erasable_target<CallOperator, T> && std::is_constructible_v<T, TArgs...>;
   }
 
   /** \brief A signature `erased_function` supports: `R(Args...) cv ref noexcept(noex)`, where `cv` is
@@ -503,9 +493,6 @@ namespace sequoia
       , m_Caller{caller}
     {}
   public:
-    template<class T, class... TArgs>
-    constexpr static bool target_constructible_from_v{impl::target_constructible_from<call_operator_type, T, TArgs...>};
-
     constexpr erased_function() = default;
 
     constexpr erased_function(std::nullptr_t) noexcept
@@ -513,28 +500,40 @@ namespace sequoia
     {}
 
     template<class F, class Target = std::decay_t<F>>
-      requires (!resolve_to_copy_v<erased_function, F>) && target_constructible_from_v<Target, F>
+      requires (!resolve_to_copy_v<erased_function, F>) && impl::erasable_target<call_operator_type, Target>
     constexpr erased_function(F&& f)
       : erased_function{
           impl::is_empty_target(f) ? empty_caller : caller_for<Target>(),
           std::in_place_type_t<Target>{},
           std::forward<F>(f)
         }
-    {}
+    {
+      // Mandated rather than constrained, as the standard does: as constraints, both would ask of a
+      // callable class constructible from an `erased_function` whether it is copy constructible,
+      // which can be the question already being asked
+      static_assert(std::is_constructible_v<Target, F>);
+      static_assert(std::is_copy_constructible_v<Target>);
+    }
 
     template<class T, class... TArgs>
-      requires target_constructible_from_v<T, TArgs...>
+      requires impl::target_constructible_from<call_operator_type, T, TArgs...>
     constexpr explicit erased_function(std::in_place_type_t<T>, TArgs&&... args)
       : m_Target{std::in_place_type_t<T>{}, std::forward<TArgs>(args)...}
       , m_Caller{caller_for<T>()}
-    {}
+    {
+      static_assert(std::is_same_v<T, std::decay_t<T>>);
+      static_assert(std::is_copy_constructible_v<T>);
+    }
 
     template<class T, class U, class... TArgs>
-      requires target_constructible_from_v<T, std::initializer_list<U>&, TArgs...>
+      requires impl::target_constructible_from<call_operator_type, T, std::initializer_list<U>&, TArgs...>
     constexpr explicit erased_function(std::in_place_type_t<T>, std::initializer_list<U> list, TArgs&&... args)
       : m_Target{std::in_place_type_t<T>{}, list, std::forward<TArgs>(args)...}
       , m_Caller{caller_for<T>()}
-    {}
+    {
+      static_assert(std::is_same_v<T, std::decay_t<T>>);
+      static_assert(std::is_copy_constructible_v<T>);
+    }
 
     constexpr erased_function& operator=(std::nullptr_t) noexcept
     {
