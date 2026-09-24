@@ -7,8 +7,10 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Global/Stuff/DefsFreeTest.cpp
                ${TestDir}/Global/Stuff/GlobalFreeTest.cpp
                ${TestDir}/Maths/AngleFreeDiagnostics.cpp
+               ${TestDir}/Maths/AngleRegularTest.cpp
                ${TestDir}/Maths/AngleTest.cpp
                ${TestDir}/Maths/AngleTestingDiagnostics.cpp
+               ${TestDir}/Maths/ProbabilityFamilyTest.cpp
                ${TestDir}/Maths/ProbabilityTest.cpp
                ${TestDir}/Maths/ProbabilityTestingDiagnostics.cpp
                ${TestDir}/Maybe/MaybeTest.cpp
@@ -16,7 +18,9 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Stuff/BazagainFreeTest.cpp
                ${TestDir}/Stuff/BazzerFreeTest.cpp
                ${TestDir}/Stuff/ContainerAllocationTest.cpp
+               ${TestDir}/Stuff/ContainerFamilyAllocationTest.cpp
                ${TestDir}/Stuff/ContainerPerformanceTest.cpp
+               ${TestDir}/Stuff/ContainerSpeedTest.cpp
                ${TestDir}/Stuff/ContainerTest.cpp
                ${TestDir}/Stuff/ContainerTestingDiagnostics.cpp
                ${TestDir}/Stuff/DoohickyFreeTest.cpp
@@ -34,9 +38,12 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Utilities/MultipleTest.cpp
                ${TestDir}/Utilities/MultipleTestingDiagnostics.cpp
                ${TestDir}/Utilities/UtilitiesFreeTest.cpp
+               ${TestDir}/Utilities/UtilityFunctionsTest.cpp
                ${TestDir}/Utilities/VariadicTest.cpp
                ${TestDir}/Utilities/VariadicTestingDiagnostics.cpp
+               ${TestDir}/Weather/CloudMoveOnlyTest.cpp
                ${TestDir}/Weather/CloudTest.cpp
                ${TestDir}/Weather/CloudTestingDiagnostics.cpp
+               ${TestDir}/hominins/HumanSharedTesterTest.cpp
                ${TestDir}/hominins/HumanTest.cpp
                ${TestDir}/hominins/HumanTestingDiagnostics.cpp)

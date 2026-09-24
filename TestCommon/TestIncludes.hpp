@@ -58,7 +58,7 @@
 #include "Maths/Geometry/BoundsFreeTest.hpp"
 #include "Maths/Geometry/ComplexVectorCoordinatesTest.hpp"
 #include "Maths/Geometry/FreeModuleCoordinatesTest.hpp"
-#include "Maths/Geometry/M_AffineCoordinatesTest.hpp"
+#include "Maths/Geometry/MAffineCoordinatesTest.hpp"
 #include "Maths/Geometry/NumericRingsMetaFreeTest.hpp"
 #include "Maths/Geometry/PartialMTorsorCoordinatesTest.hpp"
 #include "Maths/Geometry/SpacesMetaFreeTest.hpp"
