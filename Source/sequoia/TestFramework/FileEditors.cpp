@@ -113,40 +113,58 @@ namespace sequoia::testing
     std::string& contentsStr{contents.value()};
 
     constexpr auto npos{std::string::npos};
-    constexpr std::string_view registrationPrefix{"runner.register_test<"};
+    static constexpr std::string_view blanks{" \t\r"}, blanksAndNewlines{" \t\r\n"};
 
     const auto executionPos{contentsStr.find("runner.execute")};
     if(executionPos == npos)
       throw std::runtime_error{std::format("Unable to find the point of registration in {}", file.generic_string())};
 
-    auto startOfLine{
-      [&contentsStr](std::string::size_type pos) -> std::string::size_type {
-        const auto newlinePos{contentsStr.rfind('\n', pos)};
+    const auto executionLineStart{
+      [&contentsStr, executionPos]() -> std::string::size_type {
+        const auto newlinePos{contentsStr.rfind('\n', executionPos)};
         return newlinePos == npos ? 0 : newlinePos + 1;
+      }()
+    };
+
+    // The registrations go straight after the last line before the execution's which holds anything.
+    // Placing them after the last *registration* would put them inside an `#if` or a block which ends
+    // just before the execution, making them conditional; this way the blank lines which separate
+    // the registrations from the execution also stay where they are.
+    const auto insertionPos{
+      [&contentsStr, executionLineStart]() -> std::string::size_type {
+        if(executionLineStart == 0) return 0;
+
+        const auto lastNonBlankPos{contentsStr.find_last_not_of(blanksAndNewlines, executionLineStart - 1)};
+        if(lastNonBlankPos == npos) return 0;
+
+        const auto lineEnd{contentsStr.find('\n', lastNonBlankPos)};
+        return lineEnd + 1;
+      }()
+    };
+
+    const std::string_view contentsView{contentsStr};
+    const auto executionIndentEnd{contentsView.find_first_not_of(blanks, executionLineStart)};
+    const auto executionIndent{contentsView.substr(executionLineStart, executionIndentEnd - executionLineStart)};
+
+    auto isRegistered{
+      [contentsView](std::string_view registration) {
+        auto startsWithRegistration{
+          [registration](auto&& line) {
+            const std::string_view lineView{std::ranges::begin(line), std::ranges::end(line)};
+            const auto contentStart{std::ranges::min(lineView.find_first_not_of(blanks), lineView.size())};
+            return lineView.substr(contentStart).starts_with(registration);
+          }
+        };
+
+        return std::ranges::any_of(contentsView | std::views::split('\n'), startsWithRegistration);
       }
     };
 
-    // `runner.execute` follows every registration, so the last registration's line ends in a newline.
-    const auto lastRegistrationPos{contentsStr.rfind(registrationPrefix, executionPos)};
-    const auto neighbourLineStart{startOfLine(lastRegistrationPos == npos ? executionPos : lastRegistrationPos)};
-    const auto insertionPos{
-      lastRegistrationPos == npos ? neighbourLineStart : contentsStr.find('\n', lastRegistrationPos) + 1
-    };
-
-    const auto neighbourIndentEnd{contentsStr.find_first_not_of(" \t", neighbourLineStart)};
-    const auto neighbourIndent{contentsStr.substr(neighbourLineStart, neighbourIndentEnd - neighbourLineStart)};
-
-    auto toRegistration{
-      [registrationPrefix](const std::string& test) { return std::format("{}{}>();", registrationPrefix, test); }
-    };
-    auto isUnregistered{
-      [&contentsStr](const std::string& registration) { return !contentsStr.contains(registration); }
-    };
-
     std::string registrations{};
-    for(const auto& registration : tests | std::views::transform(toRegistration) | std::views::filter(isUnregistered))
+    for(const auto& test : tests)
     {
-      registrations.append(neighbourIndent).append(registration).append("\n");
+      if(const auto registration{std::format("runner.register_test<{}>();", test)}; !isRegistered(registration))
+        registrations.append(executionIndent).append(registration).append("\n");
     }
 
     if(registrations.empty()) return;

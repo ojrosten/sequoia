@@ -37,7 +37,6 @@ int main(int argc, char** argv)
 		using namespace std::literals::chrono_literals;
 
 		sequoia::testing::test_runner runner{argc, argv, "Oliver Jacob Rosten", "\t"};
-
 		runner.register_test<utilities_free_test>();
 		runner.register_test<useful_things_free_test>();
 		runner.register_test<bar_free_test>();
@@ -55,6 +54,7 @@ int main(int argc, char** argv)
 		runner.register_test<container_allocation_test>();
 		runner.register_test<house_allocation_test>();
 		runner.register_test<container_performance_test>();
+
 		code = runner.execute(sequoia::timer_resolution{1ms});
 	}
 	catch(const std::exception& e)

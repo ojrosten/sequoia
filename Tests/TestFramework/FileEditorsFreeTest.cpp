@@ -49,10 +49,10 @@ namespace sequoia::testing
     check(equivalence, "Include added to an existing include block", file, predictive_materials() /= "ExistingBlock/Main.cpp");
   }
 
-  /// Registrations are placed on lines of their own after the last existing one, or just before the
-  /// call to `runner.execute` if there is none, and take the indentation of that neighbour, tabs
-  /// included. The cases vary the neighbourhood of the insertion, from which both the placement
-  /// and the indentation are read.
+  /// The point of insertion is straight after the last line before the call to `runner.execute` which
+  /// holds anything; the indentation is the execution line's. The cases vary what that line is - a
+  /// registration, a registration indented differently from the execution, an `#endif`, the runner's
+  /// declaration - and what counts as an existing registration.
   void file_editors_free_test::test_add_test_registrations()
   {
     auto check_registration{
@@ -72,17 +72,41 @@ namespace sequoia::testing
                        "NoBlankLine/Main.cpp",
                        {"gamma_test"});
 
-    check_registration("Before the execution, with no registration to follow",
+    check_registration("After the runner's declaration, with no registration to follow",
                        "NoRegistrations/Main.cpp",
                        {"gamma_test"});
 
-    check_registration("Indented with tabs, as the registration it follows",
+    check_registration("Indented with tabs, as the execution",
                        "TabIndentation/Main.cpp",
                        {"gamma_test"});
 
-    check_registration("Several tests at once, skipping one already registered",
+    check_registration("Indented as the execution, not as the registration it follows",
+                       "DifferentIndentation/Main.cpp",
+                       {"gamma_test"});
+
+    check_registration("After an #endif, so that the registration is unconditional",
+                       "ConditionalRegistration/Main.cpp",
+                       {"gamma_test"});
+
+    check_registration("Before a registration which shares the execution's line",
+                       "RegistrationOnExecutionLine/Main.cpp",
+                       {"gamma_test"});
+
+    check_registration("Despite a commented-out registration and one of another runner",
+                       "LookalikeRegistrations/Main.cpp",
+                       {"gamma_test"});
+
+    check_registration("Several tests at once, in the order given, skipping one already registered",
                        "SeveralTests/Main.cpp",
-                       {"beta_test", "alpha_test", "gamma_test"});
+                       {"gamma_test", "alpha_test", "beta_test"});
+
+    check_exception_thrown<std::runtime_error>(
+      "A main with no call to runner.execute",
+      [this]() { add_test_registrations(working_materials() /= "Registration/NoExecution/Main.cpp", {"gamma_test"}); });
+
+    check_exception_thrown<std::logic_error>(
+      "No tests to register",
+      [this]() { add_test_registrations(working_materials() /= "Registration/NoBlankLine/Main.cpp", {}); });
   }
 
   /** The 0x1A checks are aimed at MSVC's text mode, which stops reading at that byte; POSIX text

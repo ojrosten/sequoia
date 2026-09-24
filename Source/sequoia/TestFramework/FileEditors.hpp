@@ -30,8 +30,13 @@ namespace sequoia::testing
 
   /** \brief Registers each of `tests` not already registered in `file`, a main which calls `runner.execute`.
 
-      The registrations follow the last existing one or, if there is none, precede the line calling
-      `runner.execute`; each is a line of its own, indented as the line it follows or precedes.
+      The point of registration is the first occurrence of the text `runner.execute`, comments included.
+      The registrations are inserted, in the order given, straight after the last line before that one
+      which holds anything, each on a line of its own indented as the line calling `runner.execute`. A
+      test counts as registered when some line, leading whitespace aside, begins with its registration.
+
+      \throws std::logic_error if `tests` is empty.
+      \throws std::runtime_error if `file` cannot be read or holds no `runner.execute`.
    */
   void add_test_registrations(const std::filesystem::path& file, const std::vector<std::string>& tests);
 

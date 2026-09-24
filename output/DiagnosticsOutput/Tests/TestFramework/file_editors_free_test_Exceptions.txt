@@ -1,0 +1,18 @@
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 104
+A main with no call to runner.execute
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to find the point of registration in output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_test/WorkingCopy/Registration/NoExecution/Main.cpp
+
+=======================================
+
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 108
+No tests to register
+
+Expected Exception Type:
+[std::logic_error]
+No tests specified for registration
+
+=======================================
+
