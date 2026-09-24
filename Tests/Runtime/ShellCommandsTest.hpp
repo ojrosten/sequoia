@@ -26,5 +26,7 @@ namespace sequoia::testing
     void test_composition();
 
     void test_success_requirement();
+
+    void test_directory_change();
   };
 }

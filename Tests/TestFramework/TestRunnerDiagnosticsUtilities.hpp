@@ -12,9 +12,20 @@
 #include "sequoia/TestFramework/TestCreator.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"
+#include "sequoia/TextProcessing/Substitutions.hpp"
 
 namespace sequoia::testing
 {
+  /** \brief An exception-message postprocessor which, unlike the default one, makes every path
+             beneath the project root relative to it, not only the first.
+   */
+  [[nodiscard]]
+  inline std::string relative_to_root(const project_paths& projPaths, std::string message)
+  {
+    replace_all(message, projPaths.project_root().generic_string() + "/", "");
+    return message;
+  }
+
   template<>
   struct value_tester<template_spec>
   {

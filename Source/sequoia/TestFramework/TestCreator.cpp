@@ -306,14 +306,13 @@ namespace sequoia::testing
     // Removed first, so that a run which writes nothing cannot hand back the previous run's output.
     const auto outputPath{build.cmake_cache_dir() / "CMakeOutput.txt"};
     fs::remove(outputPath);
-    const auto preset{back(build.cmake_cache_dir()).generic_string()};
     throw_unless_succeeded(invoke(cd_cmd(sourceDir) && cmake_cmd(build, outputPath)),
                            "Running CMake on the new tests",
                            std::format("The new tests' files and registrations are in place.\n"
-                                       "CMake's output is in {}.\n"
-                                       "Once the cause is fixed, run `cmake --preset {}` from {}",
-                                       outputPath.generic_string(),
-                                       preset,
+                                       "CMake's output is {}.\n"
+                                       "Once the cause is fixed, run `{}` from {}",
+                                       where_written(sourceDir, outputPath),
+                                       cmake_invocation(build),
                                        sourceDir.generic_string()));
 
     return read_to_string(outputPath, std::ios_base::in).value_or(std::string{});

@@ -44,6 +44,30 @@ namespace sequoia::testing
     std::filesystem::path m_File;
   };
 
+  /// A directory which something else creates, removed with its contents when this goes out of scope
+  class transient_directory
+  {
+  public:
+    explicit transient_directory(std::filesystem::path dir)
+      : m_Dir{std::move(dir)}
+    {}
+
+    transient_directory(const transient_directory&) = delete;
+
+    transient_directory& operator=(const transient_directory&) = delete;
+
+    ~transient_directory()
+    {
+      std::error_code ignored{};
+      std::filesystem::remove_all(m_Dir, ignored);
+    }
+
+    [[nodiscard]]
+    const std::filesystem::path& path() const noexcept { return m_Dir; }
+  private:
+    std::filesystem::path m_Dir;
+  };
+
   class no_default_constructor
   {
   public:

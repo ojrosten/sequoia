@@ -13,6 +13,7 @@
 
 #include <filesystem>
 #include <optional>
+#include <string>
 #include <string_view>
 
 namespace sequoia::runtime
@@ -64,11 +65,8 @@ namespace sequoia::runtime
         not inherit files the caller happens to have open, which on Windows would otherwise keep
         them undeletable for as long as that process lived.
 
-        The status is the caller's to act on, and ignoring it has so far always been a bug in this
-        codebase: `create` reporting success when its CMake run failed, `init` creating a project
-        whose first commit had failed, and a generated project's failed build surfacing only as an
-        unrelated exception several steps later. Where only success is acceptable, pass the status to
-        `throw_unless_succeeded`.
+        The status is the caller's to act on. Ignoring it is rarely right: where only success is
+        acceptable, `throw_unless_succeeded` is the usual choice.
      */
     friend int invoke(const shell_command& cmd);
   private:
@@ -77,14 +75,33 @@ namespace sequoia::runtime
     shell_command(std::string cmd, const std::filesystem::path& output, append_mode app);
   };
 
+  /** \brief Changes directory, and on Windows the drive with it.
+
+      Without `/d`, cmd.exe changes the current directory of the target drive but not the current
+      drive, so the commands which follow would run wherever the caller was.
+   */
   [[nodiscard]]
   shell_command cd_cmd(const std::filesystem::path& dir);
 
   /** \brief Throws `std::runtime_error` unless `status`, as returned by `invoke`, is zero.
 
-      The message names `step` and says how it failed - a non-zero exit status, or not running to
-      completion - followed by `advice`, which should say what the failure left behind and where
-      the command's output went.
+      The message names `step` and says how it failed, followed by `advice`, which should say what
+      the failure left behind and how to recover. A failure is one of:
+      - not running to completion, reported by `invoke` as -1; on Windows an exit status of
+        0xFFFFFFFF is indistinguishable from it, and is said to be;
+      - on Windows, an exit status of 0x80000000 or more, which `invoke`'s `int` makes negative, and
+        which is reported in hex, the form in which such statuses are documented;
+      - elsewhere, an exit status above 128, which a shell gives a command killed by a signal, and
+        which is said possibly to be one;
+      - any other non-zero exit status.
    */
   void throw_unless_succeeded(int status, std::string_view step, std::string_view advice);
+
+  /** \brief Where the output of a command run from `dir` went: to `output`, resolved against `dir`,
+             or to the console if `output` is empty.
+
+      Phrased to follow "the output is", for the advice given to `throw_unless_succeeded`.
+   */
+  [[nodiscard]]
+  std::string where_written(const std::filesystem::path& dir, const std::filesystem::path& output);
 }

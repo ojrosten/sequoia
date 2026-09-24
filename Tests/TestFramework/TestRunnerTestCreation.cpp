@@ -15,6 +15,7 @@
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <array>
+#include <format>
 #include <fstream>
 
 namespace sequoia::testing
@@ -298,27 +299,30 @@ namespace sequoia::testing
       }
     };
 
-    // The messages name several paths, and the default postprocessor makes only the first relative;
-    // they also name the fake project's build tree, which is named for this one's preset.
-    auto relativeToRoot{
-      [](const project_paths& projPaths, std::string message) {
-        replace_all(message, projPaths.project_root().generic_string() + "/", "");
-        replace_all(message, back(projPaths.build().cmake_cache_dir()).generic_string(), "<preset>");
-        return message;
+    // The messages name the fake project's build tree, which is named for this one's preset; the
+    // message is also kept, so that which step threw can be checked, not only that one did.
+    std::string message{};
+    auto stable{
+      [&message](const project_paths& projPaths, std::string thrown) {
+        message = thrown;
+        const auto preset{back(projPaths.build().cmake_cache_dir()).generic_string()};
+        replace_all(thrown, std::format("/{}/", preset), "/<preset>/");
+        replace_all(thrown, std::format("--preset {}`", preset), "--preset <preset>`");
+        return relative_to_root(projPaths, std::move(thrown));
       }
     };
 
     record_cmake_source_dir(cacheFile, projectPath / "Absent");
-    check_exception_thrown<std::runtime_error>(reporter{"Source directory absent"}, createAgain, relativeToRoot);
+    check_exception_thrown<std::runtime_error>(reporter{"Source directory absent"}, createAgain, stable);
 
     record_cmake_source_dir(cacheFile, auxiliary_materials());
-    check_exception_thrown<std::runtime_error>(reporter{"Source directory outside the project"},
-                                               createAgain,
-                                               relativeToRoot);
+    check_exception_thrown<std::runtime_error>(reporter{"Source directory outside the project"}, createAgain, stable);
 
     // A directory of the project which holds no presets, so that CMake itself fails
     record_cmake_source_dir(cacheFile, projectPath / "Source");
-    check_exception_thrown<std::runtime_error>(reporter{"CMake fails"}, createAgain, relativeToRoot);
+    message.clear();
+    check_exception_thrown<std::runtime_error>(reporter{"CMake fails"}, createAgain, stable);
+    check("The failure reported is CMake's", message.starts_with("Running CMake on the new tests failed"));
   }
 
   void test_runner_test_creation::record_cmake_source_dir(const std::filesystem::path& cacheFile,

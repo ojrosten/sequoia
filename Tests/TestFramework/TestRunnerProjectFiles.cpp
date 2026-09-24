@@ -115,11 +115,16 @@ namespace sequoia::testing
     const auto cmakeOutput{generated_project() / std::format("CMakeOutput_{}.txt", preset.generic_string())};
     const auto status{invoke(cd_cmd(main.dir()) && cmake_cmd(build, cmakeOutput))};
 
-    // The generated project carries this project's presets, so a preset names the same
-    // generator in both - which is what the checks on its project files assume.
     const bool configured{(status == 0) && fs::exists(cacheDir / "CMakeCache.txt")};
     if(check(std::format("CMake configuration of {}", preset.generic_string()), configured))
-      check(equality, std::format("Generator for {}", preset.generic_string()), cmake_cache{build}.variable("CMAKE_GENERATOR"), cache.variable("CMAKE_GENERATOR"));
+    {
+      // The generated project carries this project's presets, so a preset names the same
+      // generator in both - which is what the checks on its project files assume.
+      check(equality,
+            std::format("Generator for {}", preset.generic_string()),
+            cmake_cache{build}.variable("CMAKE_GENERATOR"),
+            cache.variable("CMAKE_GENERATOR"));
+    }
 
     return cacheDir;
   }

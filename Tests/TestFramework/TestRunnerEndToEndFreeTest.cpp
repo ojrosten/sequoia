@@ -127,12 +127,13 @@ namespace sequoia::testing
     const auto create{cd_cmd(get_build_paths().executable_dir()) && shell_command{"", create_cmd(), creationFile}};
     throw_unless_succeeded(invoke(create),
                            "Creating tests in the generated project",
-                           std::format("The output is in {}", creationFile.generic_string()));
+                           std::format("The output is {}",
+                                       where_written(get_build_paths().executable_dir(), creationFile)));
 
     const auto buildFile{get_build_paths().executable_dir() / buildOutput};
     throw_unless_succeeded(invoke(cd_cmd(get_main_paths().dir()) && build_cmd(get_build_paths(), buildFile)),
                            "Building the generated project",
-                           std::format("The output is in {}", buildFile.generic_string()));
+                           std::format("The output is {}", where_written(get_main_paths().dir(), buildFile)));
 
     // Sequenced rather than chained with `&&`: these runs are independent of one another, and a
     // shell `&&` would silently skip the rest of them as soon as one reported failures.
@@ -162,10 +163,9 @@ namespace sequoia::testing
                                   && cmake_cmd(get_build_paths(), cmakeOutput, "CODE_COVERAGE=OFF")
                                   && build_cmd(get_build_paths(), buildOutput)),
                            "Re-running CMake on, and rebuilding, the generated project",
-                           std::format("The output is in {} and {}, in {}",
-                                       cmakeOutput,
-                                       buildOutput,
-                                       get_main_paths().dir().generic_string()));
+                           std::format("The output is {} and {}",
+                                       where_written(get_main_paths().dir(), cmakeOutput),
+                                       where_written(get_main_paths().dir(), buildOutput)));
 
     return run_executable(outputDir, options);
   }
