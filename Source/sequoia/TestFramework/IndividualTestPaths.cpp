@@ -86,6 +86,15 @@ namespace sequoia::testing
       return test_output_directory(source, output_paths::diagnostics(projectPaths.project_root()), projectPaths) /= file;
     }
 
+    /// `dir` with the discriminator's level beneath it; with no discriminator, or an empty one, `dir`
+    [[nodiscard]]
+    fs::path discriminated(fs::path dir, const std::optional<std::string>& discriminator)
+    {
+      if(discriminator && !discriminator->empty()) dir /= discriminator.value();
+
+      return dir;
+    }
+
     [[nodiscard]]
     fs::path test_summary_filename(const fs::path& sourceFile, std::string_view testName, const project_paths& projectPaths, const std::optional<std::string>& discriminator)
     {
@@ -99,12 +108,21 @@ namespace sequoia::testing
 
   //===================================== individual_materials_paths =====================================//
 
-  individual_materials_paths::individual_materials_paths(const fs::path& sourceFile, std::string_view testName, const project_paths& projPaths)
-    : individual_materials_paths{rebase_from(sourceFile, projPaths.tests().repo()).replace_extension("") /= testName, projPaths.test_materials(), projPaths.output()}
+  individual_materials_paths::individual_materials_paths(const fs::path& sourceFile,
+                                                         std::string_view testName,
+                                                         const project_paths& projPaths,
+                                                         const std::optional<std::string>& materialsDiscriminator)
+    : individual_materials_paths{rebase_from(sourceFile, projPaths.tests().repo()).replace_extension("") /= testName,
+                                 projPaths.test_materials(),
+                                 projPaths.output(),
+                                 materialsDiscriminator}
   {}
 
-  individual_materials_paths::individual_materials_paths(const fs::path& relativePath, const test_materials_paths& materials, const output_paths& output)
-    : m_OriginalMaterialsRoot{materials.repo() / relativePath}
+  individual_materials_paths::individual_materials_paths(const fs::path& relativePath,
+                                                         const test_materials_paths& materials,
+                                                         const output_paths& output,
+                                                         const std::optional<std::string>& materialsDiscriminator)
+    : m_OriginalMaterialsRoot{discriminated(materials.repo() / relativePath, materialsDiscriminator)}
     , m_TemporaryMaterialsRoot{output.tests_temporary_data() / relativePath}
   {}
 

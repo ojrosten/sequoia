@@ -28,6 +28,13 @@ namespace sequoia::testing
       same names; predictions are never staged, so `prediction()` is a path beneath the original
       root.
 
+      A test whose committed materials vary with the configuration declares a materials
+      discriminator. Its committed materials then sit one level down, in a directory named by the
+      discriminator, and only that directory is the test's for the run, so a run can neither read
+      nor update another configuration's. An empty discriminator adds no level. The temporary root
+      takes no such level: it is wiped on every staging and holds one configuration's materials at
+      a time.
+
       Every path is returned whether or not anything is there; which of them exist is for the
       caller to ask. A default-constructed instance names no test, and every path it returns is
       empty.
@@ -37,7 +44,10 @@ namespace sequoia::testing
   public:
     individual_materials_paths() = default;
 
-    individual_materials_paths(const std::filesystem::path& sourceFile, std::string_view testName, const project_paths& projPaths);
+    individual_materials_paths(const std::filesystem::path& sourceFile,
+                               std::string_view testName,
+                               const project_paths& projPaths,
+                               const std::optional<std::string>& materialsDiscriminator);
 
     [[nodiscard]]
     const std::filesystem::path& original_materials_root() const noexcept
@@ -73,7 +83,10 @@ namespace sequoia::testing
       m_OriginalMaterialsRoot,
       m_TemporaryMaterialsRoot;
 
-    individual_materials_paths(const std::filesystem::path& relativePath, const test_materials_paths& materials, const output_paths& output);
+    individual_materials_paths(const std::filesystem::path& relativePath,
+                               const test_materials_paths& materials,
+                               const output_paths& output,
+                               const std::optional<std::string>& materialsDiscriminator);
   };
 
   class individual_diagnostics_paths

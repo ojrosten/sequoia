@@ -150,7 +150,7 @@ namespace sequoia::testing
     const auto stagedTest{
       [&projPaths](std::string_view sourceStem) {
         const auto source{projPaths.tests().repo() / "Materials" / std::format("{}.cpp", sourceStem)};
-        const individual_materials_paths materials{source, "fake_test", projPaths};
+        const individual_materials_paths materials{source, "fake_test", projPaths, std::nullopt};
         stage_materials(materials);
         return std::pair{fake_test{"fake_test", source, projPaths, materials, {}, {}, {}}, materials};
       }

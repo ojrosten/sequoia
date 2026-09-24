@@ -356,6 +356,16 @@
 	directory itself, with no committed counterpart, and so nothing for a rename to detach. Within it,
 	`WorkingCopy` and `Auxiliary` are reserved for the staged materials.
 
+	A test whose committed materials must differ between configurations - Visual Studio's project
+	files, say, which no other generator produces - may declare a static
+	`materials_discriminator(const cmake_cache&)`, returning a name. Its materials then sit one level
+	further down, in `TestMaterials/Foo/Bar/bar_test/<name>`, laid out as above, and only that directory
+	is the test's for the run: its materials are staged from it, compared with it and updated into it,
+	so a run in one configuration can neither read nor disturb another's. An empty name adds no level.
+	The temporary directory takes none either, since a run stages one configuration's materials. Like
+	the output and summary discriminators, this is a last resort: materials which do not depend on the
+	configuration are better.
+
 	However, there are some exceptions to this. First, the following files are ignored: `.keep` and
 	`.DS_Store`. More interestingly, clients may specify that particular substrings within a file
 	are ignored when comparing file contents. To motivate this, consider end-to-end testing of the

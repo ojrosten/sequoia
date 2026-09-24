@@ -476,6 +476,53 @@ namespace sequoia::testing
       }
     };
 
+    /** As `stale_predictions_free_test`, but with its predictions in two configurations, `Platypus`
+        and `Echidna`, of which this test declares the first. The update may touch only that one.
+     */
+    class discriminated_stale_predictions_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return "Tests/Updating/DiscriminatedStalePredictionsFreeTest.cpp";
+      }
+
+      [[nodiscard]]
+      static std::string materials_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      void run_tests()
+      {
+        make_update_candidate(*this);
+      }
+    };
+
+    /// Each hook declared as a member, which the runner could not call without an instance
+    class member_discriminators_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<member_discriminators_test>();
+      }
+
+      [[nodiscard]]
+      std::string output_discriminator(const cmake_cache&) const { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string summary_discriminator(const cmake_cache&) const { return "Release"; }
+
+      [[nodiscard]]
+      std::string materials_discriminator(const cmake_cache&) const { return "Platypus"; }
+
+      void run_tests() {}
+    };
+
     test_runner make_failing_suite(commandline_arguments args, std::stringstream& outputStream)
     {
       test_runner runner{args.size(),
@@ -516,6 +563,8 @@ namespace sequoia::testing
     test_materials_update();
     test_no_materials_update_after_critical_failure();
     test_partial_materials_update();
+    test_discriminated_materials_update();
+    test_discriminator_hooks();
     test_materials_staging_failure();
     test_nested_suite();
     test_nested_suite_verbose();
@@ -1077,6 +1126,64 @@ namespace sequoia::testing
           return_code::soft_failures | return_code::post_run_failures);
 
     check_output("Partial Materials Update Output", "PartialMaterialsUpdateOutput", outputStream);
+  }
+
+  /** As `test_materials_update`, for a test whose materials are discriminated: the update
+      rewrites the declared configuration's predictions and leaves the other configuration's alone.
+   */
+  void test_runner_test::test_discriminated_materials_update()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    runner.register_test<discriminated_stale_predictions_free_test>();
+
+    check(equality, "Discriminated materials update return code", runner.execute(), return_code::soft_failures);
+    check_output("Discriminated Materials Update Output", "DiscriminatedMaterialsUpdateOutput", outputStream);
+
+    const auto materials{
+      fake_project() / "TestMaterials/Updating/DiscriminatedStalePredictionsFreeTest"
+                     / "discriminated_stale_predictions_free_test"
+    };
+
+    check(equality,
+          "Declared configuration's prediction overwritten",
+          read_to_string(materials / "Platypus/Prediction/Kept.txt", std::ios_base::in).value_or(""),
+          std::string{"Obtained\n"});
+
+    check("Declared configuration's prediction deleted", !fs::exists(materials / "Platypus/Prediction/Obsolete.txt"));
+
+    check(equality,
+          "Other configuration's prediction not overwritten",
+          read_to_string(materials / "Echidna/Prediction/Kept.txt", std::ios_base::in).value_or(""),
+          std::string{"Predicted\n"});
+
+    check("Other configuration's prediction not deleted", fs::exists(materials / "Echidna/Prediction/Obsolete.txt"));
+  }
+
+  /** A hook is recognised only when static: a member hook is invisible to the traits, which is why
+      the runner's getters `static_assert` against one rather than silently ignoring it.
+   */
+  void test_runner_test::test_discriminator_hooks()
+  {
+    STATIC_CHECK(has_discriminated_output_v<platform_specific_throwing_test>);
+    STATIC_CHECK(has_discriminated_summary_v<platform_specific_throwing_test>);
+    STATIC_CHECK(has_discriminated_materials_v<discriminated_stale_predictions_free_test>);
+
+    STATIC_CHECK(!has_discriminated_output_v<throwing_test>);
+    STATIC_CHECK(!has_discriminated_summary_v<throwing_test>);
+    STATIC_CHECK(!has_discriminated_materials_v<throwing_test>);
+
+    STATIC_CHECK(!has_discriminated_output_v<member_discriminators_test>);
+    STATIC_CHECK(!has_discriminated_summary_v<member_discriminators_test>);
+    STATIC_CHECK(!has_discriminated_materials_v<member_discriminators_test>);
   }
 
   void test_runner_test::test_nested_suite()

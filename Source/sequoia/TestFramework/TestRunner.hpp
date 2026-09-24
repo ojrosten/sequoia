@@ -260,7 +260,7 @@ namespace sequoia::testing
         m_Test = Test{m_Name,
                       source,
                       projPaths,
-                      individual_materials_paths{source, m_Name, projPaths},
+                      individual_materials_paths{source, m_Name, projPaths, get_materials_discriminator<Test>(cache)},
                       make_active_recovery_paths(mode, projPaths),
                       get_output_discriminator<Test>(cache),
                       get_reduction_discriminator<Test>(cache)};
@@ -309,8 +309,10 @@ namespace sequoia::testing
   template<concrete_test T>
   [[nodiscard]]
   std::optional<std::string> get_output_discriminator(const cmake_cache& cache){
-    static_assert(!requires(const T& t){ t.output_discriminator(); },
-                  "output_discriminator must be static and take const cmake_cache&: this one is neither, and would be silently ignored");
+    static_assert(has_discriminated_output_v<T>
+                  || !(   requires(const T& t){ t.output_discriminator(); }
+                       || requires(const T& t){ t.output_discriminator(cache); }),
+                  "output_discriminator must be static and take const cmake_cache&, or it is silently ignored");
 
     if constexpr(has_discriminated_output_v<T>)
       return T::output_discriminator(cache);
@@ -321,11 +323,27 @@ namespace sequoia::testing
   template<concrete_test T>
   [[nodiscard]]
   std::optional<std::string> get_reduction_discriminator(const cmake_cache& cache){
-    static_assert(!requires(const T& t){ t.summary_discriminator(); },
-                  "summary_discriminator must be static and take const cmake_cache&: this one is neither, and would be silently ignored");
+    static_assert(has_discriminated_summary_v<T>
+                  || !(   requires(const T& t){ t.summary_discriminator(); }
+                       || requires(const T& t){ t.summary_discriminator(cache); }),
+                  "summary_discriminator must be static and take const cmake_cache&, or it is silently ignored");
 
     if constexpr(has_discriminated_summary_v<T>)
       return T::summary_discriminator(cache);
+    else
+      return std::nullopt;
+  }
+
+  template<concrete_test T>
+  [[nodiscard]]
+  std::optional<std::string> get_materials_discriminator(const cmake_cache& cache){
+    static_assert(has_discriminated_materials_v<T>
+                  || !(   requires(const T& t){ t.materials_discriminator(); }
+                       || requires(const T& t){ t.materials_discriminator(cache); }),
+                  "materials_discriminator must be static and take const cmake_cache&, or it is silently ignored");
+
+    if constexpr(has_discriminated_materials_v<T>)
+      return T::materials_discriminator(cache);
     else
       return std::nullopt;
   }

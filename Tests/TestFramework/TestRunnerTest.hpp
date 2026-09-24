@@ -65,6 +65,10 @@ namespace sequoia::testing
 
     void test_partial_materials_update();
 
+    void test_discriminated_materials_update();
+
+    void test_discriminator_hooks();
+
     void test_materials_staging_failure();
 
     void test_nested_suite();

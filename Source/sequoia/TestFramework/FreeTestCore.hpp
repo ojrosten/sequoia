@@ -278,6 +278,14 @@ namespace sequoia::testing
     }
   };
 
+  /** \brief Whether a test forks its committed materials, by a static `materials_discriminator(const cmake_cache&)`. */
+  template<concrete_test T>
+  inline constexpr bool has_discriminated_materials_v{
+    requires(const cmake_cache& cache){
+      { T::materials_discriminator(cache) } -> std::convertible_to<std::string>;
+    }
+  };
+
   /** \brief Temporary workaround while waiting for variadic friends */
   class trivial_extender
   {
