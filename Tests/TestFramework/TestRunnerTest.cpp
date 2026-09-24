@@ -451,6 +451,7 @@ namespace sequoia::testing
     test_excluded_tests_are_rerun();
     test_dump_comparison();
     test_instability_analysis();
+    test_exit_statuses();
   }
 
   [[nodiscard]]
@@ -1326,5 +1327,48 @@ namespace sequoia::testing
                                                    Ts&&... ts)
   {
     test_instability_analysis(message, outputDirName, numRuns, expected, {}, [](test_runner&){}, std::forward<Ts>(ts)...);
+  }
+
+  void test_runner_test::test_exit_statuses()
+  {
+    // Every combination of the five flags, in order of their underlying values.
+    constexpr int numCodes{32};
+    const auto codes{
+      std::views::iota(0, numCodes) | std::views::transform([](int i){ return static_cast<return_code>(i); })
+    };
+
+    const auto statuses{codes | std::views::transform(to_exit_code) | std::ranges::to<std::vector>()};
+    const auto expectedStatuses{
+      std::views::iota(0, numCodes)
+        | std::views::transform([](int i){ return i == 0 ? 0 : runner_exit_offset + i; })
+        | std::ranges::to<std::vector>()
+    };
+
+    check(equality, "The runner exits with 0 for success, and with the offset plus the flags otherwise", statuses, expectedStatuses);
+
+    const auto decoded{
+      statuses
+        | std::views::transform([](int status){ return static_cast<int>(std::to_underlying(child_return_code(status))); })
+        | std::ranges::to<std::vector>()
+    };
+
+    check(equality,
+          "Each exit status decodes to the code it encodes",
+          decoded,
+          std::views::iota(0, numCodes) | std::ranges::to<std::vector>());
+
+    check(equality,
+          "A child exiting 88 reports an incomplete run",
+          child_return_code(runner_exit_offset + std::to_underlying(return_code::incomplete_run)),
+          return_code::incomplete_run);
+
+    // Statuses a process gives when it fails for reasons of its own, and the two just outside the runner's range.
+    // Each is worded identically on every platform, being positive and no greater than 128.
+    for(const int status : {1, 2, runner_exit_offset, runner_exit_offset + numCodes, 126, 127})
+    {
+      check_exception_thrown<std::runtime_error>(
+        std::format("Exit status {} is not a runner's", status),
+        [status](){ return child_return_code(status); });
+    }
   }
 }

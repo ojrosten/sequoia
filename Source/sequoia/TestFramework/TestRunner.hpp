@@ -86,11 +86,24 @@ namespace sequoia::testing
   [[nodiscard]]
   return_code to_return_code(const log_summary& summary) noexcept;
 
-  /** Maps the exit status of a process which ran a sequoia test runner back to the code it
-      reported, throwing if the status is not one a runner can produce. */
+  /** \brief Added to a `return_code` other than success to give the runner's exit status.
+
+      A runner therefore exits with 0 or with 81 to 111. That range lies clear of the statuses a
+      process gives when it fails for reasons of its own - 1 and 2 generically, 64 to 78 for BSD's
+      sysexits, 126 and above from a shell - so no such failure can be read as one of the runner's.
+   */
+  inline constexpr int runner_exit_offset{80};
+
+  /** \brief Maps the exit status of a process which ran a sequoia test runner back to the code it
+             reported.
+
+      \throws std::runtime_error for any status other than 0 or `to_exit_code`'s 81 to 111: the
+              process did not complete a test run, being perhaps unbuilt, misconfigured or crashed.
+   */
   [[nodiscard]]
   return_code child_return_code(int exitStatus);
 
+  /// The exit status for `code`: 0 for success, `runner_exit_offset` plus the code otherwise
   [[nodiscard]]
   int to_exit_code(return_code code) noexcept;
 

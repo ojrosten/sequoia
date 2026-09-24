@@ -83,10 +83,10 @@ namespace sequoia::runtime
   [[nodiscard]]
   shell_command cd_cmd(const std::filesystem::path& dir);
 
-  /** \brief Throws `std::runtime_error` unless `status`, as returned by `invoke`, is zero.
+  /** \brief How a command failed, given a non-zero `status` as returned by `invoke`, phrased to
+             follow the command's name.
 
-      The message names `step` and says how it failed, followed by `advice`, which should say what
-      the failure left behind and how to recover. A failure is one of:
+      A failure is one of:
       - not running to completion, reported by `invoke` as -1; on Windows an exit status of
         0xFFFFFFFF is indistinguishable from it, and is said to be;
       - on Windows, an exit status of 0x80000000 or more, which `invoke`'s `int` makes negative, and
@@ -94,6 +94,14 @@ namespace sequoia::runtime
       - elsewhere, an exit status above 128, which a shell gives a command killed by a signal, and
         which is said possibly to be one;
       - any other non-zero exit status.
+   */
+  [[nodiscard]]
+  std::string describe_failure(int status);
+
+  /** \brief Throws `std::runtime_error` unless `status`, as returned by `invoke`, is zero.
+
+      The message names `step` and says how it failed, as `describe_failure` does, followed by
+      `advice`, which should say what the failure left behind and how to recover.
    */
   void throw_unless_succeeded(int status, std::string_view step, std::string_view advice);
 

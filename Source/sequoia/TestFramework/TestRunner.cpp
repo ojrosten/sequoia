@@ -177,6 +177,12 @@ namespace sequoia::testing
       )
     };
 
+    // A POSIX exit status is 8 bits, and above 125 a shell's own statuses begin, so the runner's
+    // cannot grow past it.
+    static_assert(runner_exit_offset + std::to_underlying(dirty_return_codes) <= 125,
+                  "The runner's exit statuses no longer fit below the shell's; report the return_code "
+                  "to a parent process in band - in a file it names - rather than in the exit status");
+
     [[nodiscard]]
     std::string to_async_option(concurrency_mode mode, std::size_t threadPoolSize)
     {
@@ -382,12 +388,21 @@ namespace sequoia::testing
   [[nodiscard]]
   return_code child_return_code(const int exitStatus)
   {
-    const auto code{static_cast<return_code>(exitStatus)};
+    if(exitStatus == 0) return return_code::success;
 
-    if((exitStatus < 0) || ((code & ~dirty_return_codes) != return_code::success))
-      throw std::runtime_error{std::format("Unrecognized return code from child process: {}", exitStatus)};
+    constexpr auto highestFlags{static_cast<int>(std::to_underlying(dirty_return_codes))};
+    const auto flags{exitStatus - runner_exit_offset};
+    if((flags <= 0) || (flags > highestFlags))
+      throw std::runtime_error{
+        std::format("The child process {}, which a test runner never does: a runner exits with 0 or "
+                    "with {} to {}.\nSo the child did not complete a test run; it may not have been "
+                    "built, may be misconfigured, or may have crashed.\n",
+                    runtime::describe_failure(exitStatus),
+                    runner_exit_offset + 1,
+                    runner_exit_offset + highestFlags)
+      };
 
-    return code;
+    return static_cast<return_code>(flags);
   }
 
   [[nodiscard]]
@@ -404,7 +419,7 @@ namespace sequoia::testing
   [[nodiscard]]
   int to_exit_code(const return_code code) noexcept
   {
-    return static_cast<int>(code);
+    return code == return_code::success ? 0 : runner_exit_offset + static_cast<int>(std::to_underlying(code));
   }
 
   individual_materials_paths set_materials(const std::filesystem::path& sourceFile,

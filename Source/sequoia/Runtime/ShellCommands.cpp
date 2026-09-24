@@ -233,36 +233,36 @@ namespace sequoia::runtime
     return std::string{with_windows_v ? "cd /d " : "cd "}.append(dir.string());
   }
 
+  [[nodiscard]]
+  std::string describe_failure(const int status)
+  {
+    if constexpr(with_windows_v)
+    {
+      if(status == -1)
+        return "did not run to completion, or exited with status 0xFFFFFFFF, which cannot be told apart";
+
+      if(status < 0)
+        return std::format("failed with exit status 0x{:08X}", static_cast<std::uint32_t>(status));
+    }
+    else
+    {
+      if(status < 0)
+        return "did not run to completion";
+
+      if(status > 128)
+        return std::format("failed with exit status {}, which may mean it was killed by signal {}",
+                           status,
+                           status - 128);
+    }
+
+    return std::format("failed with exit status {}", status);
+  }
+
   void throw_unless_succeeded(const int status, std::string_view step, std::string_view advice)
   {
     if(status == 0) return;
 
-    auto outcome{
-      [status]() -> std::string {
-        if constexpr(with_windows_v)
-        {
-          if(status == -1)
-            return "did not run to completion, or exited with status 0xFFFFFFFF, which cannot be told apart";
-
-          if(status < 0)
-            return std::format("failed with exit status 0x{:08X}", static_cast<std::uint32_t>(status));
-        }
-        else
-        {
-          if(status < 0)
-            return "did not run to completion";
-
-          if(status > 128)
-            return std::format("failed with exit status {}, which may mean it was killed by signal {}",
-                               status,
-                               status - 128);
-        }
-
-        return std::format("failed with exit status {}", status);
-      }
-    };
-
-    throw std::runtime_error{std::format("{} {}\n{}\n", step, outcome(), advice)};
+    throw std::runtime_error{std::format("{} {}\n{}\n", step, describe_failure(status), advice)};
   }
 
   [[nodiscard]]
