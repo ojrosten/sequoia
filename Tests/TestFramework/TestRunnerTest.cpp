@@ -1339,7 +1339,10 @@ namespace sequoia::testing
     check(equality, "An incomplete run exits with 88",        to_exit_code(return_code::incomplete_run),         88);
     check(equality, "Post-run failures exit with 96",         to_exit_code(return_code::post_run_failures),      96);
     check(equality, "Every flag together exits with 111",     to_exit_code(static_cast<return_code>(31)),         111);
-    check(equality, "Bits no status can carry exit as an incomplete run", to_exit_code(static_cast<return_code>(64)), 88);
+    check(equality,
+          "Bits no status can carry exit as an incomplete run",
+          to_exit_code(static_cast<return_code>(64)),
+          88);
 
     // Every combination of the five flags survives the round trip.
     const auto codes{std::views::iota(0, 32) | std::views::transform([](int i){ return static_cast<return_code>(i); })};
@@ -1349,7 +1352,10 @@ namespace sequoia::testing
           codes | std::views::transform(roundTrip) | std::ranges::to<std::vector>(),
           codes | std::ranges::to<std::vector>());
 
-    check(equality, "A child exiting 88 reports an incomplete run", child_return_code(88, "A child"), return_code::incomplete_run);
+    check(equality,
+          "A child exiting 88 reports an incomplete run",
+          child_return_code(88, "A child"),
+          return_code::incomplete_run);
 
     // Statuses a process gives when it fails for reasons of its own - generic, LeakSanitizer's,
     // sysexits' ends, ThreadSanitizer's, MemorySanitizer's, the shell's - and the two either side of

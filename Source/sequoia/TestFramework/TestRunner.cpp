@@ -177,7 +177,8 @@ namespace sequoia::testing
       )
     };
 
-    static_assert(max_runner_exit_status == runner_exit_offset + static_cast<int>(std::to_underlying(dirty_return_codes)),
+    static_assert(max_runner_exit_status
+                    == runner_exit_offset + static_cast<int>(std::to_underlying(dirty_return_codes)),
                   "Each return_code enumerator needs a row in return_code_names, and max_runner_exit_status "
                   "must be computed from the highest");
 
@@ -1080,7 +1081,8 @@ namespace sequoia::testing
       const auto command{std::format("{} locate {} --runner-id {}{}{}",
                                      proj_paths().executable().string(), m_NumReps, i, selection, async)};
 
-      code |= child_return_code(invoke(runtime::shell_command{command}), std::format("Sandbox run {}, {},", i, command));
+      code |= child_return_code(invoke(runtime::shell_command{command}),
+                                std::format("Sandbox run {}, {},", i, command));
     }
 
     return code;
