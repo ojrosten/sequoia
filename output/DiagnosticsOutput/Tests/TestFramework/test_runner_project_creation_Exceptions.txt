@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 32
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 37
 Project name with space
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Please ensure the project name 'Generated Project' consists of just alpha-numeri
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 43
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 48
 Project name with $
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Please ensure the project name 'Generated$Project' consists of just alpha-numeri
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 54
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 59
 Project path that is not absolute
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Project path 'Generated_Project' should be absolute
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 65
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 70
 Empty project path
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Project path should not be empty
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 76
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 81
 Project name clash
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Project location 'output/TestsTemporaryData/TestFramework/TestRunnerProjectCreat
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 87
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 92
 Illegal indent
 
 Expected Exception Type:
@@ -52,12 +52,48 @@ Code indent must comprise only spaces or tabs
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 98
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 103
 Illegal init indent
 
 Expected Exception Type:
 [std::runtime_error]
 Code indent must comprise only spaces or tabs
+
+=======================================
+
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 178
+git fails when placing the project under version control
+
+Expected Exception Type:
+[std::runtime_error]
+Placing the new project under version control failed with exit status 128
+The project at output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/test_runner_project_creation/WorkingCopy/UnversionedProject is created, but sequoia has not been copied into it.
+git's output is in output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/test_runner_project_creation/WorkingCopy/UnversionedProject/GenerationOutput.txt. One possible cause is git having no identity (user.name and user.email), which sequoia does not supply.
+To start again, delete output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/test_runner_project_creation/WorkingCopy/UnversionedProject and run init once more
+
+=======================================
+
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 178
+git fails when committing sequoia
+
+Expected Exception Type:
+[std::runtime_error]
+Committing sequoia to the new project failed with exit status 1
+sequoia is copied into output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/test_runner_project_creation/WorkingCopy/UncommittedProject but not committed.
+git's output is in output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/test_runner_project_creation/WorkingCopy/UncommittedProject/GenerationOutput.txt.
+To start again, delete output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/test_runner_project_creation/WorkingCopy/UncommittedProject and run init once more
+
+=======================================
+
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 178
+CMake fails when configuring the project
+
+Expected Exception Type:
+[std::runtime_error]
+Configuring and building the new project failed with exit status 1
+The project at output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/test_runner_project_creation/WorkingCopy/UnbuiltProject is otherwise complete.
+The output is in output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/test_runner_project_creation/WorkingCopy/UnbuiltProject/TestAll/GenerationOutput.txt.
+To start again, delete output/TestsTemporaryData/TestFramework/TestRunnerProjectCreation/test_runner_project_creation/WorkingCopy/UnbuiltProject and run init once more
 
 =======================================
 

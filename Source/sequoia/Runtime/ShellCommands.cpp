@@ -9,7 +9,10 @@
 
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
+#include <cstdint>
+#include <format>
 #include <iostream>
+#include <stdexcept>
 
 #ifdef _WIN32
   #ifndef WIN32_LEAN_AND_MEAN
@@ -227,6 +230,45 @@ namespace sequoia::runtime
   [[nodiscard]]
   shell_command cd_cmd(const std::filesystem::path& dir)
   {
-    return std::string{"cd "}.append(dir.string());
+    return std::string{with_windows_v ? "cd /d " : "cd "}.append(dir.string());
+  }
+
+  void throw_unless_succeeded(const int status, std::string_view step, std::string_view advice)
+  {
+    if(status == 0) return;
+
+    auto outcome{
+      [status]() -> std::string {
+        if constexpr(with_windows_v)
+        {
+          if(status == -1)
+            return "did not run to completion, or exited with status 0xFFFFFFFF, which cannot be told apart";
+
+          if(status < 0)
+            return std::format("failed with exit status 0x{:08X}", static_cast<std::uint32_t>(status));
+        }
+        else
+        {
+          if(status < 0)
+            return "did not run to completion";
+
+          if(status > 128)
+            return std::format("failed with exit status {}, which may mean it was killed by signal {}",
+                               status,
+                               status - 128);
+        }
+
+        return std::format("failed with exit status {}", status);
+      }
+    };
+
+    throw std::runtime_error{std::format("{} {}\n{}\n", step, outcome(), advice)};
+  }
+
+  [[nodiscard]]
+  std::string where_written(const std::filesystem::path& dir, const std::filesystem::path& output)
+  {
+    return output.empty() ? std::string{"on the console, above"}
+                          : std::format("in {}", (dir / output).generic_string());
   }
 }

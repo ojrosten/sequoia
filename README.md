@@ -21,7 +21,7 @@ of these charities.
 
 ## Requirements (as of 2026-09-22):
 
-git 2.40.0  
+git 2.40.0, with a configured identity  
 CMake 4.2  
 clang 21.1.5  
 g++ 15.2.0  
