@@ -12,12 +12,25 @@
 */
 
 #include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TestFramework/ProjectPaths.hpp"
+#include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <filesystem>
 #include <format>
+#include <string>
 
 namespace sequoia::testing
 {
+  /** \brief An exception-message postprocessor which, unlike the default one, makes every path
+             beneath the project root relative to it, not only the first.
+   */
+  [[nodiscard]]
+  inline std::string relative_to_root(const project_paths& projPaths, std::string message)
+  {
+    replace_all(message, projPaths.project_root().generic_string() + "/", "");
+    return message;
+  }
+
   /*! \brief A file with the given contents, which exists for precisely the lifetime of the object. */
   class transient_file
   {

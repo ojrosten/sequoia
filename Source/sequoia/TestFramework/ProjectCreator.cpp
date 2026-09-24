@@ -35,6 +35,7 @@ namespace sequoia::testing
       auto advice{
         std::format("To start again, delete {} and run init once more", project.project_root.generic_string())
       };
+
       if(!abandoned.empty())
       {
         const auto roots{
