@@ -22,12 +22,6 @@ namespace sequoia::testing
     static std::filesystem::path source_file();
 
     void run_tests();
-
-    [[nodiscard]]
-    static std::string output_discriminator(const cmake_cache&)
-    {
-      return compiler_name();
-    }
   private:
     template<class AffineCoords>
     void test_affine_1();
