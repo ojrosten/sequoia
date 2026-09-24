@@ -453,12 +453,12 @@ namespace sequoia::testing
                                            const project_paths& projPaths)
   {
     individual_materials_paths materials{sourceFile, testName, projPaths};
-    if(!fs::exists(materials.original_materials())) return {};
+    if(!fs::exists(materials.original_materials_root())) return {};
 
     // Wiping the whole of this test's temporary tree is safe because the tree is named for the
     // test, and `test_runner::register_test` admits each name once.
-    fs::remove_all(materials.temporary_materials());
-    fs::create_directories(materials.temporary_materials());
+    fs::remove_all(materials.temporary_materials_root());
+    fs::create_directories(materials.temporary_materials_root());
 
     const auto workingCopy{materials.working()};
     if(const auto originalWorking{materials.original_working()}; fs::exists(originalWorking))

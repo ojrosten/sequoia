@@ -39,13 +39,13 @@ namespace sequoia::testing
     std::filesystem::path prediction() const;
 
     [[nodiscard]]
-    const std::filesystem::path& original_materials() const noexcept
+    const std::filesystem::path& original_materials_root() const noexcept
     {
       return m_Materials;
     }
 
     [[nodiscard]]
-    const std::filesystem::path& temporary_materials() const noexcept
+    const std::filesystem::path& temporary_materials_root() const noexcept
     {
       return m_TemporaryMaterials;
     }
