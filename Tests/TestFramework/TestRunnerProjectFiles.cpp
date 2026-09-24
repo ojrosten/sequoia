@@ -56,6 +56,19 @@ namespace sequoia::testing
     throw std::logic_error{"Unrecognized case for cmake_generator_family"};
   }
 
+  [[nodiscard]]
+  std::string test_runner_project_files::materials_discriminator(const cmake_cache& cache)
+  {
+    switch(cache.generator_family())
+    {
+    case cmake_generator_family::visual_studio: return "visual_studio";
+    case cmake_generator_family::ninja:         return "ninja";
+    case cmake_generator_family::other:         return "other";
+    }
+
+    throw std::logic_error{"Unrecognized case for cmake_generator_family"};
+  }
+
   void test_runner_project_files::run_tests()
   {
     const cmake_cache cache{get_project_paths().build()};
