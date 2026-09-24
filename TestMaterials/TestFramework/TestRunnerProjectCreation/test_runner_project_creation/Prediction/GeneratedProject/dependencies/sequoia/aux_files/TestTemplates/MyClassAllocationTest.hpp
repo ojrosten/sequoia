@@ -13,7 +13,7 @@
 
 namespace ?::testing
 {
-	using namespace sequoia::testing;class ?forename_?surname final : public ?_allocation_test
+	using namespace sequoia::testing;class ?test_name final : public ?_allocation_test
 	{
 	public:
 		using ?_allocation_test::?_allocation_test;
