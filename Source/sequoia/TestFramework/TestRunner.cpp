@@ -240,9 +240,10 @@ namespace sequoia::testing
       {
         for(const auto& update : m_Updateables)
         {
+          std::vector<fs::path> deleted{};
           try
           {
-            record_deleted_predictions(update, soft_update(update.working_materials, update.predictions));
+            soft_update(update.working_materials, update.predictions, deleted);
           }
           catch(const std::exception& e)
           {
@@ -252,6 +253,8 @@ namespace sequoia::testing
           {
             record_materials_update_failure(update.test_file, unrecognized);
           }
+
+          record_deleted_predictions(update.test_file, deleted);
         }
 
         try
@@ -272,7 +275,7 @@ namespace sequoia::testing
       std::span<const std::string> post_run_failures() const noexcept { return m_PostRunFailures; }
 
       [[nodiscard]]
-      std::span<const std::string> deleted_predictions() const noexcept { return m_DeletedPredictions; }
+      std::span<const std::string> materials_update_report() const noexcept { return m_MaterialsUpdateReport; }
 
       void process_test(const test_paths& files, const log_summary& summary, update_mode updateMode)
       {
@@ -285,14 +288,15 @@ namespace sequoia::testing
 
         if(updateMode != update_mode::none)
         {
-          // A critical failure may have cut the test short, so its working copy may lack files which
-          // the update would then delete from the predictions
-          if(summary.soft_failures() && !summary.critical_failures())
+          if(summary.soft_failures() && fs::exists(files.working_materials) && fs::exists(files.predictions))
           {
-            if(fs::exists(files.working_materials) && fs::exists(files.predictions))
-            {
+            // A critical failure may have cut the test short: its working copy may lack files, which the
+            // update would delete from the predictions, or hold a half-written one, which would replace
+            // a good prediction
+            if(summary.critical_failures())
+              record_update_withheld(files.test_file);
+            else
               m_Updateables.insert(files);
-            }
           }
         }
       }
@@ -304,7 +308,7 @@ namespace sequoia::testing
       is_filtered m_Filtered{};
 
       std::vector<std::filesystem::path> m_FailedTests{}, m_ExecutedTests{}, m_TestsLeftOut{};
-      std::vector<std::string> m_PostRunFailures{}, m_DeletedPredictions{};
+      std::vector<std::string> m_PostRunFailures{}, m_MaterialsUpdateReport{};
       std::set<test_paths, paths_comparator> m_Updateables{};
       std::set<std::filesystem::path> m_FilesWrittenTo{};
 
@@ -335,35 +339,40 @@ namespace sequoia::testing
         }
       }
 
-      void record_materials_update_failure(const std::filesystem::path& testFile, std::string_view what)
+      void record_materials_update_failure(const fs::path& testFile, std::string_view what)
       {
-        m_PostRunFailures.push_back(std::format("Materials for {} not updated:\n{}", testFile.generic_string(), what));
+        m_PostRunFailures.push_back(
+          std::format("Update of materials for {} did not complete:\n{}", testFile.generic_string(), what)
+        );
       }
 
-      void record_deleted_predictions(const test_paths& update, std::span<const std::filesystem::path> removed)
+      void record_deleted_predictions(const fs::path& testFile, std::span<const fs::path> deleted)
       {
-        if(removed.empty())
+        if(deleted.empty())
           return;
 
         const auto relativeToProjectRoot{
-          [&update, &root = m_ProjPaths.project_root()](const fs::path& path) {
-            return (update.predictions / path).lexically_relative(root).generic_string();
+          [&root = m_ProjPaths.project_root()](const fs::path& path) {
+            return path.lexically_relative(root).generic_string();
           }
         };
 
         const auto listing{
-            removed
+            deleted
           | std::views::transform(relativeToProjectRoot)
           | std::views::join_with('\n')
           | std::ranges::to<std::string>()
         };
 
-        m_DeletedPredictions.push_back(
-          std::format(
-            "Predictions for {} deleted by the update, since this run did not produce them:\n{}",
-            update.test_file.generic_string(),
-            listing
-          )
+        m_MaterialsUpdateReport.push_back(
+          std::format("Predictions for {} deleted by the update:\n{}", testFile.generic_string(), listing)
+        );
+      }
+
+      void record_update_withheld(const fs::path& testFile)
+      {
+        m_MaterialsUpdateReport.push_back(
+          std::format("Materials for {} not updated, since the test had critical failures", testFile.generic_string())
         );
       }
 
@@ -756,7 +765,7 @@ namespace sequoia::testing
                       m_UpdateMode = update_mode::soft;
                     },
                     {},
-                    "Run the tests, accepting each working copy as its prediction"
+                    "Run the tests, updating the predictions of tests that fail without throwing"
                   }}},
                   {{{"locate-instabilities", {"locate"}, {"repetitions"},
                     [this](const arg_list& args) {
@@ -1315,12 +1324,12 @@ namespace sequoia::testing
     stream() << "\n-----------Grand Totals-----------\n";
     stream() << summarize(root_summary(), "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
 
-    if(const auto deletedPredictions{tracker.deleted_predictions()}; !deletedPredictions.empty())
+    if(const auto materialsUpdateReport{tracker.materials_update_report()}; !materialsUpdateReport.empty())
     {
-      stream() << "\n-----------Deleted Predictions-----------\n";
-      for(const auto& deletion : deletedPredictions)
+      stream() << "\n-----------Materials Update-----------\n";
+      for(const auto& entry : materialsUpdateReport)
       {
-        stream() << sequoia::indent(deletion, indentation{"\t"}) << "\n\n";
+        stream() << sequoia::indent(entry, indentation{"\t"}) << "\n\n";
       }
     }
 

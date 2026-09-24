@@ -1,2 +1,2 @@
 materials_updater_free_test
-Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 80]
+Standard Top Level Checks:                10;  Failures:  0  [Deep checks: 91]

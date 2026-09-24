@@ -453,6 +453,29 @@ namespace sequoia::testing
       }
     };
 
+    /** Writes a regular file `B` where its predictions hold a directory. The update does not handle
+        a change of type, and throws on copying the file over the directory. `A` sorts before `B`, so
+        the update has by then deleted `A/old.txt`, which the predictions hold and the test does not write.
+     */
+    class type_swapped_predictions_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return "Tests/Updating/TypeSwappedPredictionsFreeTest.cpp";
+      }
+
+      void run_tests()
+      {
+        fs::create_directory(working_materials() /= "A");
+        write_to_file(working_materials() /= "B", "", std::ios_base::out);
+        check("Predictions are stale", false);
+      }
+    };
+
     test_runner make_failing_suite(commandline_arguments args, std::stringstream& outputStream)
     {
       test_runner runner{args.size(),
@@ -492,6 +515,7 @@ namespace sequoia::testing
     test_post_run_failure();
     test_materials_update();
     test_no_materials_update_after_critical_failure();
+    test_partial_materials_update();
     test_nested_suite();
     test_nested_suite_verbose();
     test_suite_named_as_a_sibling_test();
@@ -1030,6 +1054,28 @@ namespace sequoia::testing
           std::string{"Predicted\n"});
 
     check("Prediction not deleted", fs::exists(predictions / "Obsolete.txt"));
+  }
+
+  void test_runner_test::test_partial_materials_update()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    runner.register_test<type_swapped_predictions_free_test>();
+
+    check(equality,
+          "Partial materials update return code",
+          runner.execute(),
+          return_code::soft_failures | return_code::post_run_failures);
+
+    check_output("Partial Materials Update Output", "PartialMaterialsUpdateOutput", outputStream);
   }
 
   void test_runner_test::test_nested_suite()
