@@ -93,6 +93,18 @@ namespace sequoia::testing
 
     void surname(std::string name) { m_Surname = std::move(name); }
 
+    /// The test's name given whole, in place of the one derived from its forename and surname
+    [[nodiscard]]
+    const std::string& full_name() const noexcept { return m_FullName; }
+
+    void full_name(std::string name) { m_FullName = std::move(name); }
+
+    /// An existing header holding the value_tester of the type under test, which the test includes
+    [[nodiscard]]
+    const std::filesystem::path& testing_utilities() const noexcept { return m_TestingUtilities; }
+
+    void testing_utilities(std::filesystem::path header) { m_TestingUtilities = std::move(header); }
+
     void generate_source_files(gen_source_option opt)
     {
       m_SourceOption = opt;
@@ -126,17 +138,41 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path build_source_path(const std::filesystem::path& filename) const;
 
+    /** \brief Creates the files, then registers the test classes in every main.
+
+        The companion files are named for the type under test, `type_file_stem()` followed by the stub;
+        the test's own files, for the test, `test_file_stem()` followed by the stub's extension.
+     */
     template<invocable_exact_r<std::filesystem::path, std::filesystem::path> WhenAbsent,std::invocable<std::string&> FileTransformer>
     void finalize(WhenAbsent fn,
-                  const std::vector<std::string>& stubs,
+                  const std::vector<std::string>& companionStubs,
+                  const std::vector<std::string>& ownStubs,
                   const std::vector<std::string>& testClasses,
                   std::string_view nameStub,
                   FileTransformer transformer);
 
-    [[nodiscard]]
-    const std::string& camel_name() const noexcept { return m_CamelName; }
+    /** \brief The full name if one was given, else `<forename>_<surname>`.
 
-    void camel_name(std::string name);
+        It is the class the test's own files hold, save for a framework-diagnostics pair, whose two
+        classes are named from the forename and surname, and which this names jointly.
+     */
+    [[nodiscard]]
+    std::string test_name() const;
+
+    /// The stem of the test's own files: its name in camel case
+    [[nodiscard]]
+    std::string test_file_stem() const;
+
+    /** \brief The path by which the test's header includes the testing utilities: relative to the
+        test's own directory when they lie within it, else to the tests repository.
+     */
+    [[nodiscard]]
+    std::string testing_utilities_include() const;
+
+    [[nodiscard]]
+    const std::string& type_file_stem() const noexcept { return m_TypeFileStem; }
+
+    void type_file_stem(std::string name);
 
     void set_cpp(const std::filesystem::path& headerPath, std::string_view nameSpace);
 
@@ -166,18 +202,27 @@ namespace sequoia::testing
       m_TestType{},
       m_Forename{},
       m_Surname{},
-      m_CamelName{},
+      m_FullName{},
+      m_TypeFileStem{},
       m_ProjectNamespace{};
-    std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};
+    std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{}, m_TestingUtilities{};
     gen_source_option m_SourceOption{};
 
     void on_source_path_error() const;
 
     void finalize_header(const std::filesystem::path& sourcePath);
 
+    /** \brief Replaces the testing utilities named on the commandline with the file they name beneath
+        the tests repository; throws if there is none.
+     */
+    void locate_testing_utilities();
+
     template<std::invocable<std::string&> FileTransformer>
     [[nodiscard]]
-    std::string create_file(std::string_view inputNameStub, std::string_view nameEnding, FileTransformer transformer) const;
+    std::string create_file(std::string_view inputNameStub,
+                            std::string_view nameEnding,
+                            const std::filesystem::path& outputFile,
+                            FileTransformer transformer) const;
 
   };
 
@@ -200,8 +245,13 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator==(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
 
+    /// The test's own files
     [[nodiscard]]
     static std::vector<std::string> stubs();
+
+    /// The files for the type under test: its value_tester and false-negative diagnostics
+    [[nodiscard]]
+    static std::vector<std::string> companion_stubs();
   private:
     std::string m_QualifiedName{};
 

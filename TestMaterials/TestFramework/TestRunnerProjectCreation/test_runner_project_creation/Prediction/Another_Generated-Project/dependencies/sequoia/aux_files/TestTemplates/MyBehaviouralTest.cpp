@@ -5,18 +5,18 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "?BehaviouralTest.hpp"
+#include "?TestFile.hpp"
 #include "?Header.hpp"
 
 namespace ?::testing
 {
 	[[nodiscard]]
-	std::filesystem::path ?forename_?surname::source_file()
+	std::filesystem::path ?test_name::source_file()
 	{
 		return std::source_location::current().file_name();
 	}
 
-	void ?forename_?surname::run_tests()
+	void ?test_name::run_tests()
 	{
 		// e.g. check(equality, "Useful description", some_function(), 42);
 	}

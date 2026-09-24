@@ -216,7 +216,22 @@ namespace sequoia::testing
                                , "create", "regular_allocation_test", "container"
                                , "create", "move_only_allocation_test", "foo"
                                , "create", "performance_test", "Container.hpp"
-                               , "create", "performance_test", "Container.hpp"}
+                               , "create", "performance_test", "Container.hpp"
+                               , "create", "free_test", "Utilities.h", "--fullname", "utility_functions_test"
+                               , "create", "regular_test", "maths::angle", "long double",
+                                              "--fullname", "angle_regular_test"
+                               , "create", "move_only_test", "cloud", "double", "--fullname", "cloud_move_only_test"
+                               , "create", "regular_test", "maths::probability", "double",
+                                              "--fullname", "probability_family_test",
+                                              "--testing-utilities", "ProbabilityTestingUtilities.hpp"
+                               // A tester shared from another directory is included by its path beneath Tests
+                               , "create", "regular_test", "human", "std::string",
+                                              "--fullname", "human_shared_tester_test",
+                                              "--testing-utilities", "Stuff/WidgetTestingUtilities.hpp"
+                               , "create", "regular_allocation_test", "container",
+                                              "--fullname", "container_family_allocation_test",
+                                              "--testing-utilities", "ContainerTestingUtilities.hpp"
+                               , "create", "performance_test", "Container.hpp", "--fullname", "container_speed_test"}
     };
 
     std::stringstream outputStream{};
@@ -319,6 +334,38 @@ namespace sequoia::testing
           std::stringstream outputStream{};
           commandline_arguments args{{zeroth_arg("FakeProject"), "create", "regular_test", "bar::things", "double", "--header", "fakeProject/Stuff/Thingz.hpp"}};
           test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
+        });
+
+      auto create{
+        [this](std::initializer_list<std::string_view> creationArgs) {
+          std::vector<std::string> argList{zeroth_arg("FakeProject"), "create"};
+          argList.insert(argList.end(), creationArgs.begin(), creationArgs.end());
+
+          std::stringstream outputStream{};
+          commandline_arguments args{argList};
+          test_runner tr{args.size(),
+                         args.get(),
+                         "Oliver J. Rosten",
+                         "  ",
+                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                         outputStream};
+        }
+      };
+
+      check_exception_thrown<std::runtime_error>(
+        reporter{"Both a forename and a full name"},
+        [&create]() {
+          create({"free", "Utilities.h", "--forename", "utils", "--fullname", "utility_functions_test"});
+        });
+
+      check_exception_thrown<std::runtime_error>(
+        reporter{"A full name for a framework-diagnostics pair"},
+        [&create]() { create({"free", "Utilities.h", "--diagnostics", "--fullname", "utilities_diagnostics"}); });
+
+      check_exception_thrown<std::runtime_error>(
+        reporter{"Testing utilities absent"},
+        [&create]() {
+          create({"regular_test", "bar::things", "double", "--testing-utilities", "AbsentTestingUtilities.hpp"});
         });
   }
 

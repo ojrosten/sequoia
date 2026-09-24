@@ -563,6 +563,28 @@ namespace sequoia::testing
       "Name the test class <forename>_test rather than after the header"
     };
 
+    const option fullnameOption{"--fullname", {}, {"name"},
+      [&nascentTests](const arg_list& args){
+        if(nascentTests.empty())
+          throw std::logic_error{"Unable to find nascent test"};
+
+        std::visit(overloaded{[&args](auto& nascent){ nascent.full_name(args[0]); }}, nascentTests.back());
+      },
+      {},
+      "Name the test class <name> exactly, and its files after it"
+    };
+
+    const option testingUtilitiesOption{"--testing-utilities", {}, {"header"},
+      [&nascentTests](const arg_list& args){
+        if(nascentTests.empty())
+          throw std::logic_error{"Unable to find nascent test"};
+
+        std::visit(overloaded{[&args](auto& nascent){ nascent.testing_utilities(args[0]); }}, nascentTests.back());
+      },
+      {},
+      "Take the value_tester from an existing header beneath Tests, and generate none"
+    };
+
     const option genFreeSourceOption{"--gen-source", {"-g"}, {"namespace"},
       [&nascentTests](const arg_list& args) {
         if(nascentTests.empty())
@@ -609,10 +631,11 @@ namespace sequoia::testing
       "Generate the class's header and source too, under Source/<dir>"
     };
 
-    const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{headerOption}, {genSemanticsSourceOption}};
-    const std::initializer_list<maths::tree_initializer<option>> allocationOptions{{headerOption}};
-    const std::initializer_list<maths::tree_initializer<option>> performanceOptions{};
-    const std::initializer_list<maths::tree_initializer<option>> freeOptions{{forenameOption}, {genFreeSourceOption}, {diagnosticsOption}};
+    const std::initializer_list<maths::tree_initializer<option>>
+      semanticsOptions{{headerOption}, {genSemanticsSourceOption}, {fullnameOption}, {testingUtilitiesOption}},
+      allocationOptions{{headerOption}, {fullnameOption}, {testingUtilitiesOption}},
+      performanceOptions{{fullnameOption}},
+      freeOptions{{forenameOption}, {fullnameOption}, {genFreeSourceOption}, {diagnosticsOption}};
 
     const auto help{
       parse_invoke_depth_first(argc, argv,

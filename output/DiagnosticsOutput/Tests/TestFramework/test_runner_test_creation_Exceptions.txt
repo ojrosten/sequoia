@@ -85,7 +85,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 279
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 294
 Source directory absent
 
 Expected Exception Type:
@@ -95,7 +95,7 @@ which is not a directory within this project, output/TestsTemporaryData/TestFram
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 282
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 297
 Source directory outside the project
 
 Expected Exception Type:
@@ -105,7 +105,7 @@ which is not a directory within this project, output/TestsTemporaryData/TestFram
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 279
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 294
 Source directory absent
 
 Expected Exception Type:
@@ -115,7 +115,7 @@ which is not a directory within this project, output/TestsTemporaryData/TestFram
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 282
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 297
 Source directory outside the project
 
 Expected Exception Type:
@@ -125,7 +125,7 @@ which is not a directory within this project, output/TestsTemporaryData/TestFram
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 308
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 323
 Plurgh.h does not exist
 
 Expected Exception Type:
@@ -135,13 +135,40 @@ Unable to locate file Plurgh.h or Plurgh.hpp or Plurgh.hxx in the source reposit
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 317
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 332
 Typo in specified class header
 
 Expected Exception Type:
 [std::runtime_error]
 Unable to locate file fakeProject/Stuff/Thingz.hpp or fakeProject/Stuff/Thingz.h or fakeProject/Stuff/Thingz.hxx in the source repository
 ../Source
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 356
+Both a forename and a full name
+
+Expected Exception Type:
+[std::runtime_error]
+--forename and --fullname both name the test class: give one or the other
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 362
+A full name for a framework-diagnostics pair
+
+Expected Exception Type:
+[std::runtime_error]
+--fullname names one test class, but --framework-diagnostics creates two
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 366
+Testing utilities absent
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to locate the testing utilities AbsentTestingUtilities.hpp in the tests repository Tests
 
 =======================================
 
