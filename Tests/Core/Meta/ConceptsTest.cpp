@@ -66,6 +66,19 @@ namespace sequoia::testing
     [[nodiscard]] const std::vector<int>&  shared_vector()   { static const std::vector<int> v{}; return v; }
     [[nodiscard]] std::vector<int>         fresh_vector()    { return {}; }
     [[nodiscard]] int                      make_int()        { return 0; }
+                  void                     make_nothing()    {}
+
+    // Held against `std::is_invocable_r` where the standard library advertises P2255
+    template<class F, class R>
+    [[nodiscard]]
+    constexpr bool invocable_r_as_expected(bool expected)
+    {
+      return (invocable_r<F, R> == expected)
+    #if defined(__cpp_lib_reference_from_temporary)
+          && (std::is_invocable_r_v<R, F> == expected)
+    #endif
+        ;
+    }
   }
 
   [[nodiscard]]
@@ -107,6 +120,16 @@ namespace sequoia::testing
 
     STATIC_CHECK(!invocable_exact_r<decltype(&make_int), int, int>);
     STATIC_CHECK(!invocable_r<int, int>);
+
+    // A reference result may bind directly, but not to a temporary
+    STATIC_CHECK(invocable_r_as_expected<decltype(&shared_vector), const std::vector<int>&>(true));
+    STATIC_CHECK(invocable_r_as_expected<decltype(&fresh_vector), const std::vector<int>&>(false));
+    STATIC_CHECK(invocable_r_as_expected<decltype(&make_int), const double&>(false));
+    STATIC_CHECK(invocable_r_as_expected<decltype(&make_int), int&&>(false));
+
+    // Unlike std::is_invocable_r, a void R admits only a void result
+    STATIC_CHECK(invocable_r<decltype(&make_nothing), void>);
+    STATIC_CHECK(!invocable_r<decltype(&make_int), void>);
   }
 
   void concepts_test::test_is_range()
