@@ -13,6 +13,7 @@
 #include <array>
 #include <memory>
 #include <optional>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -157,6 +158,46 @@ namespace sequoia::testing
       int operator()() const { return std::ranges::fold_left(values, extra, std::plus{}); }
     };
 
+    struct throws_on_copy
+    {
+      throws_on_copy() = default;
+      throws_on_copy(const throws_on_copy&) { throw std::runtime_error{"The target's copy"}; }
+      throws_on_copy(throws_on_copy&&) noexcept = default;
+    };
+
+    template<bool Noexcept>
+    struct destruction_probe
+    {
+      ~destruction_probe() noexcept(Noexcept) {}
+
+      [[nodiscard]]
+      int operator()() const { return 1; }
+    };
+
+    // Rejected, where `std::copyable_function`, if the library has it, admits it
+    constexpr bool rejects_destructor_that_may_throw{
+      !std::constructible_from<erased_function<int() const>, destruction_probe<false>>
+    #if defined(__cpp_lib_copyable_function)
+      && std::constructible_from<std::copyable_function<int() const>, destruction_probe<false>>
+    #endif
+    };
+
+    enum class counting_mode { uncounted, counted };
+
+    struct small_target_with_throwing_move
+    {
+      counter count{};
+
+      small_target_with_throwing_move() = default;
+      small_target_with_throwing_move(const small_target_with_throwing_move&) = default;
+      small_target_with_throwing_move(small_target_with_throwing_move&&) noexcept(false) = default;
+
+      [[nodiscard]]
+      int operator()() const { return 1; }
+    };
+
+    static_assert(!std::is_nothrow_move_constructible_v<small_target_with_throwing_move>);
+
     struct counted_target
     {
       counter count{};
@@ -206,8 +247,10 @@ namespace sequoia::testing
     test_semantics();
     test_empty_invocation();
     test_self_move_assignment();
+    test_throwing_copy_assignment();
     test_small_target();
     test_large_target();
+    test_small_target_with_throwing_move();
     test_arguments();
     test_conversion();
     test_qualified_invocation();
@@ -243,6 +286,9 @@ namespace sequoia::testing
     STATIC_CHECK(std::constructible_from<function_t, decltype([]() mutable { return 1; })>);
 
     STATIC_CHECK(!std::constructible_from<function_t, decltype([p = std::unique_ptr<int>{}]() { return 1; })>);
+
+    STATIC_CHECK(std::constructible_from<function_t, destruction_probe<true>>);
+    STATIC_CHECK(rejects_destructor_that_may_throw);
   }
 
   void erased_function_regular_test::test_admission()
@@ -269,12 +315,18 @@ namespace sequoia::testing
 
   void erased_function_regular_test::test_noexcept()
   {
+    using function_t       = erased_function<int() const>;
     using nothrow_function = erased_function<int() const noexcept>;
 
     STATIC_CHECK(std::is_nothrow_invocable_v<const nothrow_function&>);
-    STATIC_CHECK(!std::is_nothrow_invocable_v<const erased_function<int() const>&>);
+    STATIC_CHECK(!std::is_nothrow_invocable_v<const function_t&>);
     STATIC_CHECK(std::constructible_from<nothrow_function, decltype([]() noexcept { return 1; })>);
     STATIC_CHECK(!std::constructible_from<nothrow_function, decltype([]() { return 1; })>);
+
+    STATIC_CHECK(!std::is_nothrow_copy_constructible_v<function_t>);
+    STATIC_CHECK(!std::is_nothrow_copy_assignable_v<function_t>);
+    STATIC_CHECK(std::is_nothrow_move_constructible_v<function_t>);
+    STATIC_CHECK(std::is_nothrow_move_assignable_v<function_t>);
   }
 
   void erased_function_regular_test::test_interface()
@@ -432,6 +484,58 @@ namespace sequoia::testing
     }
   }
 
+  void erased_function_regular_test::test_throwing_copy_assignment()
+  {
+    using result = std::optional<int>;
+    using enum counting_mode;
+
+    constexpr result empty{};
+    const int captured{7};
+    const big_payload big{.values{0.0, 0.0, 0.0, 2.5}};
+
+    const auto trivial{[captured]() { return captured; }};
+    const auto ownManager{[c = counter{}]() { return 9; }};
+    const auto onHeap{[big]() { return static_cast<int>(big.values[3] * 2); }};
+
+    const observed_function throwingInBuffer{[t = throws_on_copy{}]() { return 1; }};
+    const observed_function throwingOnHeap{
+      [padding = std::array<double, 8>{}, t = throws_on_copy{}]() { return 2 + static_cast<int>(padding[0]); }
+    };
+
+    const auto checkAssignment{
+      [this](std::string_view description,
+             const observed_function& source,
+             observed_function target,
+             counting_mode counting,
+             result prediction) {
+        counter::reset();
+        check_exception_thrown<std::runtime_error>(
+          append_lines(description, "The throw from the target's copy propagates"),
+          [&source, &target]() { target = source; }
+        );
+
+        if(counting == counting_mode::counted)
+        {
+          check(equality,
+                append_lines(description, "The assigned-to function's target is not destroyed"),
+                counter::destructions,
+                0);
+        }
+
+        check(equivalence, append_lines(description, "The assigned-to function is unchanged"), target, prediction);
+      }
+    };
+
+    checkAssignment("In the buffer, over an empty function",        throwingInBuffer, {},           uncounted, empty);
+    checkAssignment("In the buffer, over a trivially managed one",  throwingInBuffer, {trivial},    uncounted, 7);
+    checkAssignment("In the buffer, over one with its own manager", throwingInBuffer, {ownManager}, counted,   9);
+    checkAssignment("In the buffer, over one on the heap",          throwingInBuffer, {onHeap},     counted,   5);
+    checkAssignment("On the heap, over an empty function",          throwingOnHeap,   {},           uncounted, empty);
+    checkAssignment("On the heap, over a trivially managed one",    throwingOnHeap,   {trivial},    uncounted, 7);
+    checkAssignment("On the heap, over one with its own manager",   throwingOnHeap,   {ownManager}, counted,   9);
+    checkAssignment("On the heap, over one on the heap",            throwingOnHeap,   {onHeap},     counted,   5);
+  }
+
   void erased_function_regular_test::test_small_target()
   {
     const erased_function<int() const> byName{free_function};
@@ -461,10 +565,22 @@ namespace sequoia::testing
       erased_function<int() const> f{[c = counter{}]() { return 1; }};
       counter::reset();
       f = replacement;
+      check(equality, "Copy assignment copies the payload once", counter::copies, 1);
+      check(equality, "Copy assignment moves the payload once", counter::moves, 1);
       check(equality,
             "Assignment over an engaged small target destroys as many payloads as it constructs",
             counter::destructions,
             counter::copies + counter::moves);
+
+      erased_function<int() const> source{[c = counter{}]() { return 3; }};
+      counter::reset();
+      f = std::move(source);
+      check(equality, "Move assignment does not copy the payload", counter::copies, 0);
+      check(equality, "Move assignment moves the payload once", counter::moves, 1);
+      check(equality,
+            "Move assignment destroys the payload it replaces and the one it moves from",
+            counter::destructions,
+            counter::moves + 1);
     }
   }
 
@@ -489,6 +605,15 @@ namespace sequoia::testing
           "Assignment over an engaged large target destroys as many payloads as it constructs",
           counter::destructions,
           counter::copies + counter::moves);
+  }
+
+  void erased_function_regular_test::test_small_target_with_throwing_move()
+  {
+    erased_function<int() const> f{small_target_with_throwing_move{}};
+    counter::reset();
+    const auto g{std::move(f)};
+    check(equality, "Moving the function does not move a target whose move may throw", counter::moves, 0);
+    check(equality, "The target survives the move", g(), 1);
   }
 
   void erased_function_regular_test::test_arguments()
@@ -578,6 +703,7 @@ namespace sequoia::testing
     check("Construction from an empty erased_function gives an empty function", !static_cast<bool>(fromEmpty));
 
     const erased_function<long() const> fromEngaged{function_t{[]() { return 7; }}};
+    check("Construction from an engaged erased_function gives an engaged function", static_cast<bool>(fromEngaged));
     check(equality, "Construction from an engaged erased_function wraps it", fromEngaged(), 7L);
 
     function_t emptied{[c = counter{}]() { return 1; }};
