@@ -1,3 +1,4 @@
+  Warning: Whether the library has changed since this executable was built cannot be checked: the build's record of what it compiled cannot be read
 Creating files for new test:
 "Tests/Maybe/MaybeTestingUtilities.hpp"
 "Tests/Maybe/MaybeTestingDiagnostics.hpp"
