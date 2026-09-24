@@ -30,6 +30,17 @@
   #define NAMESPACE_SEQUOIA_AS_BITMASK namespace sequoia
 #endif
 
+/** Inlines a function even in an unoptimised build, so that no symbol is emitted for it.
+
+    MSVC does not inline at all under `/Od`, so there it takes effect only in an optimised build.
+ */
+
+#if defined(_MSC_VER) && !defined(__clang__)
+  #define SEQUOIA_FORCE_INLINE __forceinline
+#else
+  #define SEQUOIA_FORCE_INLINE [[gnu::always_inline]]
+#endif
+
 /** Suppresses a gcc warning over a span of code, and expands to nothing elsewhere.
 
     gcc only: clang lacks some of these warning names, and MSVC warns C4068 on a pragma it does not

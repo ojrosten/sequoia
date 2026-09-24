@@ -105,6 +105,18 @@ namespace sequoia
   template<class T, class... Args>
   inline constexpr bool is_initializable_v{is_initializable<T, Args...>::value};
 
+  /** \brief Determines whether `std::exchange(t, u)` cannot throw, for `t` a `T&` and `u` a `U` */
+  template<class T, class U>
+  struct is_nothrow_exchangeable
+    : std::bool_constant<std::is_nothrow_move_constructible_v<T> && std::is_nothrow_assignable_v<T&, U>>
+  {};
+
+  template<class T, class U>
+  using is_nothrow_exchangeable_t = is_nothrow_exchangeable<T, U>::type;
+
+  template<class T, class U>
+  inline constexpr bool is_nothrow_exchangeable_v{is_nothrow_exchangeable<T, U>::value};
+
 
   /** \brief Class template for determining if a type defines a nested type `allocator_type` */
   template<class T>

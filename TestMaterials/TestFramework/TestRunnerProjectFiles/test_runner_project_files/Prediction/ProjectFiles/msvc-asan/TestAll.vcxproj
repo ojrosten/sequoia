@@ -24,6 +24,8 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8BF264C0-35C5-3B1A-8282-6DC7B96831AD}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
+    <EnforceProcessCountAcrossBuilds>true</EnforceProcessCountAcrossBuilds>
+    <UseMultiToolTask>true</UseMultiToolTask>
     <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
     <Platform>x64</Platform>
     <ProjectName>TestAll</ProjectName>

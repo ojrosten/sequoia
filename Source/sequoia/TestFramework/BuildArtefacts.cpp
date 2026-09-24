@@ -467,20 +467,28 @@ namespace sequoia::testing
       return text;
     }
 
-    /// `CL.read.1.tlog`, or `CL.11932.read.1.tlog` where MSBuild has numbered the target's logs
+    /** `CL.read.1.tlog`, or `CL.11932.read.1.tlog` where MSBuild has numbered the target's logs; each may be
+        prefixed `Microsoft.Build.CPPTasks.`, where MSBuild compiles through its MultiToolTask
+     */
     [[nodiscard]]
     bool is_tlog(const fs::path& file, std::string_view kind)
     {
-      constexpr std::string_view prefix{"cl."}, suffix{".tlog"};
+      constexpr std::string_view multiToolTaskPrefix{"microsoft.build.cpptasks."},
+                                 compilerPrefix{"cl."},
+                                 suffix{".tlog"};
 
-      const auto name{lowercase(file.filename().string())};
-      if(!name.starts_with(prefix) || !name.ends_with(suffix))
+      const auto lowercaseName{lowercase(file.filename().string())};
+      const auto compilerPartStart{lowercaseName.starts_with(multiToolTaskPrefix) ? multiToolTaskPrefix.size() : 0};
+      const auto unprefixedName{std::string_view{lowercaseName}.substr(compilerPartStart)};
+      if(!unprefixedName.starts_with(compilerPrefix) || !unprefixedName.ends_with(suffix))
         return false;
 
-      const auto afterPrefix{std::string_view{name}.substr(prefix.size())};
-      const auto digitsEnd{afterPrefix.find_first_not_of("0123456789")};
-      const bool numbered{(digitsEnd > 0) && (digitsEnd != std::string_view::npos) && (afterPrefix[digitsEnd] == '.')};
-      const auto rest{numbered ? afterPrefix.substr(digitsEnd + 1) : afterPrefix};
+      const auto afterCompilerPrefix{unprefixedName.substr(compilerPrefix.size())};
+      const auto digitsEnd{afterCompilerPrefix.find_first_not_of("0123456789")};
+      const bool numbered{   (digitsEnd > 0)
+                          && (digitsEnd != std::string_view::npos)
+                          && (afterCompilerPrefix[digitsEnd] == '.')};
+      const auto rest{numbered ? afterCompilerPrefix.substr(digitsEnd + 1) : afterCompilerPrefix};
 
       return rest.starts_with(std::string{kind}.append("."));
     }
@@ -766,8 +774,8 @@ namespace sequoia::testing
     /** The records of one `.tlog` directory, its files numbered into `files`.
 
         The tracker's logs, as MSBuild writes them:
-        -# `CL.read.*.tlog` lists, under each source, every file the compiler read; `CL.write.*.tlog`
-           lists what the compiler wrote, which is where the object file is named.
+        -# The read log lists, under each source, every file the compiler read; the write log lists what
+           the compiler wrote, which is where the object file is named. `is_tlog` gives their names.
         -# A source is a line beginning `^`. Sources compiled by one invocation share a line, separated
            by `|`, and so share what is listed beneath the line.
         -# Both are UTF-16 with a byte order mark, and spell paths in upper case, so each path is put
