@@ -1,2 +1,2 @@
 : .*s\]
-Unexpected Exception:\n\t.*
+.*output.*

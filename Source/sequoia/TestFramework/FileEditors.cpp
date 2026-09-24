@@ -12,6 +12,7 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
+#include <format>
 #include <fstream>
 #include <regex>
 
@@ -207,6 +208,27 @@ namespace sequoia::testing
     {
       if(is_text(contents)) replace_all(contents, "\r\n", "\n");
     }
+
+    /** The regular expression on `line` of `seqpatFile`, or an error naming both, in words of its own:
+        each standard library words `std::regex_error` differently
+     */
+    [[nodiscard]]
+    std::regex seqpat_regex(std::string_view pattern, const std::filesystem::path& seqpatFile, std::size_t line)
+    {
+      try
+      {
+        return std::regex{pattern.begin(), pattern.end()};
+      }
+      catch(const std::regex_error&)
+      {
+        throw std::runtime_error{
+          std::format("Line {} of a .seqpat is not a valid regular expression: {}\n{}",
+                      line,
+                      pattern,
+                      seqpatFile.generic_string())
+        };
+      }
+    }
   }
 
   [[nodiscard]]
@@ -233,15 +255,17 @@ namespace sequoia::testing
             normalize_line_endings(expressions);
 
             std::string::size_type pos{};
+            std::size_t line{1};
             while(pos < expressions.size())
             {
               const auto next{std::min(expressions.find("\n", pos), expressions.size())};
               if(const auto count{next - pos})
               {
-                std::basic_regex rgx{expressions.data() + pos, count};
+                const auto rgx{seqpat_regex(std::string_view{expressions}.substr(pos, count), supplPath, line)};
                 contents.working = std::regex_replace(contents.working.value(), rgx, std::string{});
                 contents.prediction = std::regex_replace(contents.prediction.value(), rgx, std::string{});
                 pos = next + 1;
+                ++line;
               }
               else
               {

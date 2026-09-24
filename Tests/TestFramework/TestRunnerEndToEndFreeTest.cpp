@@ -184,7 +184,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path test_runner_end_to_end_test::generated_project() const
   {
-    return working_materials().parent_path() /= "GeneratedProject";
+    return scratchpad_materials() /= "GeneratedProject";
   }
 
   /** Cross a filesystem timestamp tick, so that everything written afterwards is distinguishable
@@ -437,7 +437,7 @@ namespace sequoia::testing
 
     check(equivalence, "Test Runner Output", working_materials() /= "RebuiltOutput", predictive_materials() /= "RebuiltOutput");
     fs::create_directory(working_materials() /= "TestAll");
-    const auto generatedProject{working_materials().parent_path() /= "GeneratedProject"};
+    const auto generatedProject{generated_project()};
 
     const fs::path mainCpp{main_paths::default_main_cpp_from_root()},
                    mainCmake{main_paths::default_cmake_from_root()};
@@ -489,7 +489,7 @@ namespace sequoia::testing
     check(equivalence, "Dump File", working_materials() /= "Dump", predictive_materials() /= "Dump");
 
     //=================== Rerun in the presence of an exception ===================//
-    // Rename generated_project() / TestMaterials / Stuff / foo_test / WorkingCopy / RepresentativeCases,
+    // Rename generated_project() / TestMaterials / Stuff / FooTest / foo_test / WorkingCopy / RepresentativeCases,
     // in order to induce a failure in FooTest.cpp. Recovery mode will cause the final executed check
     // to be recorded.
 
@@ -504,7 +504,7 @@ namespace sequoia::testing
     check(equivalence, "Recovery File", working_materials() /= "Recovery", predictive_materials() /= "Recovery");
 
     //=================== Rerun in the presence of an exception mid-check ===================//
-    // Restore generated_project() / TestMaterials / Stuff / foo_test / WorkingCopy / RepresentativeCases,
+    // Restore generated_project() / TestMaterials / Stuff / FooTest / foo_test / WorkingCopy / RepresentativeCases,
     // and give one of its predictions a .seqpat holding an invalid regular expression. The check in
     // FooTest.cpp then throws while comparing that file, thereby allowing the recovery mode to be
     // tested mid-check. Also test that the Exceptions file is not overwritten.

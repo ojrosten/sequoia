@@ -18,12 +18,15 @@ namespace sequoia::testing
 {
   /** \brief Where a test's materials are: fixed on construction, whatever exists on disk.
 
-      A test's committed materials are beneath its original materials root, in `TestMaterials`;
-      each run stages them beneath its temporary materials root, in `output/TestsTemporaryData`.
-      Both roots mirror the path of the test's source file, minus its extension, with the name of
-      the test's class as the leaf. Beneath either root the materials are in `WorkingCopy`,
-      `Prediction` and `Auxiliary`, any of which a test may lack; beneath the temporary root alone
-      is `Scratchpad`, which has no committed counterpart.
+      A test's materials have two roots. The *original* root, in `TestMaterials`, holds what is
+      committed; the *temporary* root, in `output/TestsTemporaryData`, holds what each run stages
+      from it. Both mirror the path of the test's source file, minus its extension, with the name
+      of the test's class as the leaf.
+
+      Beneath the original root are `WorkingCopy`, `Prediction` and `Auxiliary`, any of which a
+      test may lack. `WorkingCopy` and `Auxiliary` are staged beneath the temporary root under the
+      same names; predictions are never staged, so `prediction()` is a path beneath the original
+      root.
 
       Every path is returned whether or not anything is there; which of them exist is for the
       caller to ask. A default-constructed instance names no test, and every path it returns is
@@ -62,9 +65,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     std::filesystem::path auxiliary() const;
-
-    [[nodiscard]]
-    std::filesystem::path scratchpad() const;
 
     [[nodiscard]]
     friend bool operator==(const individual_materials_paths&, const individual_materials_paths&) noexcept = default;

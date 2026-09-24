@@ -1,0 +1,32 @@
+
+Running tests...
+
+stray_materials_free_test:
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 0]
+
+******  Critical Failures:  1  ******
+
+
+	Error -- Materials Staging Exception:
+	The materials in /Users/oliver/sequoia-materials-paths/output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/TestMaterials/Staging/StrayMaterialsFreeTest/stray_materials_free_test hold Stray.txt, which would be ignored: only WorkingCopy, Prediction and Auxiliary are read
+
+	Exception thrown before any checks performed in file
+	Tests/Staging/StrayMaterialsFreeTest.cpp
+
+	=======================================
+
+unaffected_free_test:
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+
+-----------Grand Totals-----------
+[Total Run Time: 7.14ms]
+[Execution Time: 3.15ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+******  Critical Failures:  1  ******
+

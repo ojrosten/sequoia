@@ -169,8 +169,9 @@ namespace sequoia::testing
     {
       namespace fs = std::filesystem;
 
-      if(path.empty() || prediction.empty())
-        throw std::logic_error{path_check_preamble("Refusing to check an empty path", path, prediction)};
+      // A relative path - the empty one included - means whatever the current directory makes it
+      if(!path.is_absolute() || !prediction.is_absolute())
+        throw std::logic_error{path_check_preamble("Refusing to check a path which is not absolute", path, prediction)};
 
       const auto pathType{fs::status(path).type()};
       const auto predictionType{fs::status(prediction).type()};
@@ -178,7 +179,9 @@ namespace sequoia::testing
       // Two absent paths are of the same type, and would otherwise agree having compared nothing
       if(predictionType == fs::file_type::not_found)
       {
-        check(path_check_preamble("The predicted path does not exist", path, prediction), logger, false);
+        sentinel<Mode> sentry{logger, path_check_preamble("Path existence", path, prediction)};
+        sentry.log_check();
+        sentry.log_failure("The predicted path does not exist");
         return;
       }
 

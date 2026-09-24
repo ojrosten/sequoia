@@ -135,12 +135,19 @@ namespace sequoia::testing
     }
   }
 
-  /** Four fake tests in the fake project, whose committed materials are inputs alone, predictions
-      alone, auxiliary materials alone, and none at all. Each is staged as the runner stages a test.
+  /** Fake tests in the fake project, whose committed materials are inputs alone, predictions alone,
+      auxiliary materials alone, none at all, and inputs beside a stray file. Each is staged as the
+      runner stages a test.
    */
   void basic_test_interface_free_test::test_materials(const project_paths& projPaths)
   {
-    const auto staged_test{
+    const auto temporaryRoot{
+      [&projPaths](std::string_view sourceStem) {
+        return projPaths.output().tests_temporary_data() / "Materials" / sourceStem / "fake_test";
+      }
+    };
+
+    const auto stagedTest{
       [&projPaths](std::string_view sourceStem) {
         const auto source{projPaths.tests().repo() / "Materials" / std::format("{}.cpp", sourceStem)};
         const individual_materials_paths materials{source, "fake_test", projPaths};
@@ -150,14 +157,15 @@ namespace sequoia::testing
     };
 
     {
-      const auto [test, materials]{staged_test("WithInputs")};
+      const auto [test, materials]{stagedTest("WithInputs")};
 
       check(equality,
             "Working copy of inputs alone",
             test.working_materials(),
-            materials.temporary_materials_root() / "WorkingCopy");
+            temporaryRoot("WithInputs") / "WorkingCopy");
 
-      check("Committed input staged", fs::exists(test.working_materials() / "input.txt"));
+      check("Committed input staged", fs::exists(temporaryRoot("WithInputs") / "WorkingCopy" / "input.txt"));
+      check(equality, "Scratchpad beside the materials", test.scratchpad_materials(), temporaryRoot("WithInputs"));
 
       check_exception_thrown<std::runtime_error>(
         "No predictions",
@@ -169,57 +177,56 @@ namespace sequoia::testing
     }
 
     {
-      const auto [test, materials]{staged_test("WithPredictions")};
+      const auto [test, materials]{stagedTest("WithPredictions")};
 
       check(equality,
             "Working copy of predictions alone",
             test.working_materials(),
-            materials.temporary_materials_root() / "WorkingCopy");
+            temporaryRoot("WithPredictions") / "WorkingCopy");
 
       check("Working copy made empty", fs::is_empty(test.working_materials()));
       check(equality, "Predictions", test.predictive_materials(), materials.original_materials_root() / "Prediction");
+      check("Predictions not staged", !fs::exists(temporaryRoot("WithPredictions") / "Prediction"));
     }
 
     {
-      const auto [test, materials]{staged_test("WithAuxiliary")};
+      const auto [test, materials]{stagedTest("WithAuxiliary")};
 
-      check(equality,
-            "Auxiliary materials alone",
-            test.auxiliary_materials(),
-            materials.temporary_materials_root() / "Auxiliary");
-
-      check("Committed auxiliary material staged", fs::exists(test.auxiliary_materials() / "auxiliary.txt"));
+      const auto staged{temporaryRoot("WithAuxiliary") / "Auxiliary"};
+      check(equality, "Auxiliary materials alone", test.auxiliary_materials(), staged);
+      check("Committed auxiliary material staged", fs::exists(staged / "auxiliary.txt"));
     }
 
     {
-      const auto [test, materials]{staged_test("WithNone")};
+      const auto [test, materials]{stagedTest("WithNone")};
 
       check_exception_thrown<std::runtime_error>("No materials", [&test]() { return test.working_materials(); });
+      check("Scratchpad staged empty", fs::is_empty(temporaryRoot("WithNone")));
 
-      const auto scratchpad{test.scratchpad_materials()};
-      check(equality, "Scratchpad", scratchpad, materials.temporary_materials_root() / "Scratchpad");
-      check("Scratchpad staged empty", fs::is_empty(scratchpad));
-
-      // The scratchpad is beneath the temporary data, never relative to wherever the test runs
-      write_to_file(scratchpad / "scratch.txt", "", std::ios_base::out);
-      check("Scratch file beneath the temporary data",
-            std::ranges::starts_with(scratchpad / "scratch.txt", projPaths.output().tests_temporary_data()));
+      // Where the file lands is checked without asking the scratchpad where it is
+      write_to_file(test.scratchpad_materials() / "scratch.txt", "", std::ios_base::out);
+      check("Scratch file beneath the temporary data", fs::exists(temporaryRoot("WithNone") / "scratch.txt"));
       check("Scratch file not in the current directory", !fs::exists(fs::current_path() / "scratch.txt"));
 
       stage_materials(materials);
-      check("Scratchpad emptied by staging again", fs::is_empty(scratchpad));
+      check("Scratchpad emptied by staging again", fs::is_empty(temporaryRoot("WithNone")));
     }
 
     {
-      const auto [test, materials]{staged_test("WithInputs")};
+      const auto [test, materials]{stagedTest("WithInputs")};
       write_to_file(test.working_materials() / "input.txt", "Changed", std::ios_base::out);
+      write_to_file(test.working_materials() / "extra.txt", "", std::ios_base::out);
 
       stage_materials(materials);
       check(equivalence,
             "Working copy restored by staging again",
-            test.working_materials() / "input.txt",
-            materials.original_working() / "input.txt");
+            temporaryRoot("WithInputs") / "WorkingCopy",
+            materials.original_working());
     }
+
+    check_exception_thrown<std::runtime_error>(
+      "Stray committed materials",
+      [&stagedTest]() { return stagedTest("WithStray"); });
 
     check_exception_thrown<std::logic_error>(
       "Staging the materials of no test",

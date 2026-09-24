@@ -6,15 +6,12 @@ Comparison performed using:
 Checking for equivalence with:
 [std::filesystem::path]
 
-  The predicted path does not exist
+  Path existence
   output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/WorkingCopy/Stuff/Blah
   vs
   output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/WorkingCopy/Stuff/Blurg
 
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
+  The predicted path does not exist
 
 =======================================
 
@@ -26,15 +23,12 @@ Comparison performed using:
 Checking for equivalence with:
 [std::filesystem::path]
 
-  The predicted path does not exist
+  Path existence
   output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/WorkingCopy/Stuff/Blah
   vs
   output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/WorkingCopy/Stuff/Blah
 
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
+  The predicted path does not exist
 
 =======================================
 
@@ -46,15 +40,12 @@ Comparison performed using:
 Checking for weak equivalence with:
 [std::filesystem::path]
 
-  The predicted path does not exist
+  Path existence
   output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/WorkingCopy/Stuff/Blah
   vs
   output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/WorkingCopy/Stuff/Blah
 
-  [bool]
-  operator== returned false
-  Obtained : false
-  Predicted: true
+  The predicted path does not exist
 
 =======================================
 
@@ -106,15 +97,11 @@ Comparison performed using:
 Checking for equivalence with:
 [std::filesystem::path]
 
-  The predicted path does not exist
-  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/WorkingCopy/Stuff/B/foo.txt
-  vs
-  output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_negative_free_diagnostics/WorkingCopy/Stuff/B/bar.txt
-
-  [bool]
+  Final path token
+  [std::filesystem::path]
   operator== returned false
-  Obtained : false
-  Predicted: true
+  Obtained : foo.txt
+  Predicted: bar.txt
 
 =======================================
 

@@ -86,25 +86,53 @@ namespace sequoia::testing
       }
     }
 
+    /** An original materials root holds `WorkingCopy`, `Prediction` and `Auxiliary`, besides a
+        `.keep` or Finder's `.DS_Store`. Anything more was committed for an older layout, and staging
+        would ignore it without a word.
+     */
+    void throw_if_stray_materials(const individual_materials_paths& materials)
+    {
+      constexpr std::array<std::string_view, 5>
+        expected{"WorkingCopy", "Prediction", "Auxiliary", ".keep", ".DS_Store"};
+
+      auto isStray{
+        [&expected](const std::string& name) { return std::ranges::find(expected, name) == expected.end(); }
+      };
+
+      const auto& root{materials.original_materials_root()};
+      auto strays{
+          fs::directory_iterator{root}
+        | std::views::transform([](const fs::directory_entry& e) { return e.path().filename().generic_string(); })
+        | std::views::filter(isStray)
+        | std::ranges::to<std::vector>()
+      };
+
+      if(!strays.empty())
+      {
+        std::ranges::sort(strays);
+        throw std::runtime_error{
+          std::format("The materials in {} hold {}, which would be ignored: "
+                      "only WorkingCopy, Prediction and Auxiliary are read",
+                      root.generic_string(),
+                      strays | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>())
+        };
+      }
+    }
+
     struct test_paths
     {
       test_paths(const std::filesystem::path& sourceFile,
                  const test_summary_path& summaryFile,
-                 const std::filesystem::path& workingMaterials,
-                 const std::filesystem::path& predictiveMaterials,
+                 const individual_materials_paths& materialsPaths,
                  const project_paths& projPaths)
         : summary{summaryFile}
         , test_file{rebase_from(sourceFile, projPaths.tests().repo())}
-        , working_materials{workingMaterials}
-        , predictions{predictiveMaterials}
+        , materials{materialsPaths}
       {}
 
       test_summary_path summary;
-
-      std::filesystem::path
-        test_file,
-        working_materials,
-        predictions;
+      std::filesystem::path test_file;
+      individual_materials_paths materials;
     };
 
     struct paths_comparator
@@ -112,7 +140,7 @@ namespace sequoia::testing
       [[nodiscard]]
       bool operator()(const test_paths& lhs, const test_paths& rhs) const noexcept
       {
-        return lhs.working_materials < rhs.working_materials;
+        return lhs.materials.working() < rhs.materials.working();
       }
     };
 
@@ -243,7 +271,7 @@ namespace sequoia::testing
           std::vector<fs::path> deleted{};
           try
           {
-            soft_update(update.working_materials, update.predictions, deleted);
+            soft_update(update.materials.working(), update.materials.prediction(), deleted);
           }
           catch(const std::exception& e)
           {
@@ -288,7 +316,8 @@ namespace sequoia::testing
 
         if(updateMode != update_mode::none)
         {
-          if(summary.soft_failures() && fs::exists(files.working_materials) && fs::exists(files.predictions))
+          const auto& materials{files.materials};
+          if(summary.soft_failures() && fs::exists(materials.working()) && fs::exists(materials.prediction()))
           {
             // A critical failure may have cut the test short: its working copy may lack files, which the
             // update would delete from the predictions, or hold a half-written one, which would replace
@@ -456,9 +485,11 @@ namespace sequoia::testing
     // Wiping the whole of this test's temporary tree is safe because the tree is named for the
     // test, and `test_runner::register_test` admits each name once.
     fs::remove_all(materials.temporary_materials_root());
-    fs::create_directories(materials.scratchpad());
+    fs::create_directories(materials.temporary_materials_root());
 
     if(!fs::exists(materials.original_materials_root())) return;
+
+    throw_if_stray_materials(materials);
 
     if(const auto originalWorking{materials.original_working()}; fs::exists(originalWorking))
     {
@@ -1242,8 +1273,7 @@ namespace sequoia::testing
                   [this](auto& test) -> test_paths {
                     return {test.source_file(),
                             test.summary_file_path(),
-                            test.materials_paths().working(),
-                            test.materials_paths().prediction(),
+                            test.materials_paths(),
                             proj_paths()};
                   }
               };

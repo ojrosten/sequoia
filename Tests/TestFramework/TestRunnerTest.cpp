@@ -516,6 +516,7 @@ namespace sequoia::testing
     test_materials_update();
     test_no_materials_update_after_critical_failure();
     test_partial_materials_update();
+    test_materials_staging_failure();
     test_nested_suite();
     test_nested_suite_verbose();
     test_suite_named_as_a_sibling_test();
@@ -1488,5 +1489,64 @@ namespace sequoia::testing
                                                    Ts&&... ts)
   {
     test_instability_analysis(message, outputDirName, numRuns, expected, {}, [](test_runner&){}, std::forward<Ts>(ts)...);
+  }
+  namespace
+  {
+    /// Its committed materials hold `Stray.txt` beside the working copy, where nothing is staged or read
+    class stray_materials_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return "Tests/Staging/StrayMaterialsFreeTest.cpp";
+      }
+
+      void run_tests()
+      {
+        check("Run despite stray materials", true);
+      }
+    };
+
+    class unaffected_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return "Tests/Staging/UnaffectedFreeTest.cpp";
+      }
+
+      void run_tests()
+      {
+        check("Run beside a test whose materials could not be staged", true);
+      }
+    };
+  }
+
+  /** A failure to stage a test's materials is that test's critical failure: it does not run, and
+      the run goes on to the next test.
+   */
+  void test_runner_test::test_materials_staging_failure()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    runner.register_test<stray_materials_free_test>();
+    runner.register_test<unaffected_free_test>();
+
+    check(equality, "Materials staging failure return code", runner.execute(), return_code::critical_failures);
+    check_output("Materials Staging Failure Output", "MaterialsStagingFailureOutput", outputStream);
   }
 }

@@ -94,13 +94,15 @@ namespace sequoia::testing
   [[nodiscard]]
   int to_exit_code(return_code code) noexcept;
 
-  /** \brief Wipes a test's temporary materials and stages them afresh.
+  /** \brief Wipes a test's temporary materials root and stages its materials beneath it afresh.
 
-      The committed working copy and auxiliary materials are copied beneath the temporary root; a
-      test with materials but no committed working copy gets an empty one; and every test gets an
-      empty scratchpad.
+      The committed working copy and auxiliary materials are copied beneath the temporary root, and
+      a test with materials but no committed working copy gets an empty one. A test with no
+      materials is left an empty temporary root, which is its scratchpad.
 
       \throws std::logic_error if `materials` names no test
+      \throws std::runtime_error if the original root holds anything but `WorkingCopy`, `Prediction`
+               and `Auxiliary`, besides a `.keep` or `.DS_Store`, naming what else it holds
    */
   void stage_materials(const individual_materials_paths& materials);
 
@@ -217,7 +219,7 @@ namespace sequoia::testing
       [[nodiscard]]
       const individual_materials_paths& materials_paths() const noexcept final
       {
-        return m_Materials;
+        return m_Test.materials_paths();
       }
 
       [[nodiscard]]
@@ -225,17 +227,20 @@ namespace sequoia::testing
       {
         const timer t{};
 
-        try
+        if(stage())
         {
-          m_Test.run_tests();
-        }
-        catch(const std::exception& e)
-        {
-          m_Test.log_critical_failure(m_Test.source_file(), "Unexpected", e.what());
-        }
-        catch(...)
-        {
-          m_Test.log_critical_failure(m_Test.source_file(), "Unknown", "");
+          try
+          {
+            m_Test.run_tests();
+          }
+          catch(const std::exception& e)
+          {
+            m_Test.log_critical_failure(m_Test.source_file(), "Unexpected", e.what());
+          }
+          catch(...)
+          {
+            m_Test.log_critical_failure(m_Test.source_file(), "Unknown", "");
+          }
         }
 
         m_Test.write_instability_analysis_output(m_Test.source_file(), index);
@@ -246,26 +251,38 @@ namespace sequoia::testing
       void reset() final
       {
         m_Test.reset_results();
-        stage_materials(m_Materials);
       }
 
       void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode) final
       {
         const auto source{Test::source_file()};
 
-        m_Materials = individual_materials_paths{source, m_Name, projPaths};
-        stage_materials(m_Materials);
-
         m_Test = Test{m_Name,
                       source,
                       projPaths,
-                      m_Materials,
+                      individual_materials_paths{source, m_Name, projPaths},
                       make_active_recovery_paths(mode, projPaths),
                       get_output_discriminator<Test>(cache),
                       get_reduction_discriminator<Test>(cache)};
       }
     private:
       static constexpr std::string_view m_Name{test_name<Test>()};
+
+      /// Stages the test's materials; a failure is the test's critical failure, and the test does not run
+      [[nodiscard]]
+      bool stage()
+      {
+        try
+        {
+          stage_materials(m_Test.materials_paths());
+          return true;
+        }
+        catch(const std::exception& e)
+        {
+          m_Test.log_critical_failure(m_Test.source_file(), "Materials Staging", e.what());
+          return false;
+        }
+      }
 
       log_summary write_versioned_output(const timer& t) const
       {
@@ -281,7 +298,6 @@ namespace sequoia::testing
       }
 
       Test m_Test;
-      individual_materials_paths m_Materials;
     };
 
     enum class parallelizable_candidate : bool { no, yes };

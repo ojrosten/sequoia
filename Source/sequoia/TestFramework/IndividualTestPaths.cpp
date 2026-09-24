@@ -138,12 +138,6 @@ namespace sequoia::testing
     return beneath(m_TemporaryMaterialsRoot, "Auxiliary");
   }
 
-  [[nodiscard]]
-  fs::path individual_materials_paths::scratchpad() const
-  {
-    return beneath(m_TemporaryMaterialsRoot, "Scratchpad");
-  }
-
   //===================================== individual_diagnostics_paths =====================================//
 
   individual_diagnostics_paths::individual_diagnostics_paths(const project_paths& projPaths, std::string_view testName, const fs::path& source, test_mode mode, const std::optional<std::string>& platform)

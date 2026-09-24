@@ -13,7 +13,8 @@ foo_test:
 
 
 	Error -- Unexpected Exception:
-	The expression contained mismatched ( and ).
+	Line 1 of a .seqpat is not a valid regular expression: (
+	/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz.seqpat
 
 	Exception thrown during last check
 	Last Recorded Message:
