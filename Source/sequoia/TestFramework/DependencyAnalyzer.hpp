@@ -137,9 +137,6 @@ namespace sequoia::testing
   {
     std::filesystem::path file;
     std::filesystem::file_time_type time;
-
-    [[nodiscard]]
-    friend bool operator==(const modified_file&, const modified_file&) noexcept = default;
   };
 
   /** \brief The directory of sources this library was compiled from, as the compiler was given it.
