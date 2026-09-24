@@ -1,0 +1,45 @@
+
+Running tests...
+
+throwing_stale_predictions_free_test:
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 1]
+
+******  Critical Failures:  1  ******
+
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 418
+	Predictions are stale
+
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
+
+	=======================================
+
+	Error -- Unexpected Exception:
+	Thrown after a failed check
+
+	Exception thrown after check completed
+	Last Recorded Message:
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 418
+	Predictions are stale
+
+	[bool]
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[Total Run Time: 663us]
+[Execution Time: 216us]
+	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 1]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+******  Critical Failures:  1  ******
+

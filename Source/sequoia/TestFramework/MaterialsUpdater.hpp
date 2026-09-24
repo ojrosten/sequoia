@@ -12,8 +12,16 @@
  */
 
 #include <filesystem>
+#include <vector>
 
 namespace sequoia::testing
 {
-  void soft_update(const std::filesystem::path& from, const std::filesystem::path& to);
+  /** \brief Makes `to` mirror `from`, rewriting only the files whose contents differ once reduced
+             by any `.seqpat` beside them in `to`.
+
+      Returns the paths removed from `to` because `from` has no counterpart, relative to `to` and
+      sorted. A removed directory is one entry.
+   */
+  [[nodiscard]]
+  std::vector<std::filesystem::path> soft_update(const std::filesystem::path& from, const std::filesystem::path& to);
 }

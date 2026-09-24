@@ -23,8 +23,8 @@ namespace sequoia::testing
   {
     const auto auxiliary{auxiliary_materials()}, working{working_materials()}, predictive{predictive_materials()};
 
-    check_exception_thrown<std::runtime_error>("Empty 'to' path",   [&]() { soft_update("", working); });
-    check_exception_thrown<std::runtime_error>("Empty 'from' path", [&]() { soft_update(auxiliary, ""); });
+    check_exception_thrown<std::runtime_error>("Empty 'to' path",   [&]() { return soft_update("", working); });
+    check_exception_thrown<std::runtime_error>("Empty 'from' path", [&]() { return soft_update(auxiliary, ""); });
 
     // Beside the materials rather than in them, so that neither the update nor the equivalence check below sees it
     const transient_file notADirectory{auxiliary.parent_path() / "NotADirectory.txt", ""};
@@ -34,15 +34,25 @@ namespace sequoia::testing
 
     check_exception_thrown<std::filesystem::filesystem_error>(
       "'to' path exists but is not a directory",
-      [&]() { soft_update(auxiliary, notADirectory.path()); },
+      [&]() { return soft_update(auxiliary, notADirectory.path()); },
       elideMessage);
 
     check_exception_thrown<std::filesystem::filesystem_error>(
       "'from' path exists but is not a directory",
-      [&]() { soft_update(notADirectory.path(), working); },
+      [&]() { return soft_update(notADirectory.path(), working); },
       elideMessage);
 
-    soft_update(auxiliary, working);
+    check(equality,
+          "Paths the update removed",
+          soft_update(auxiliary, working),
+          std::vector<std::filesystem::path>{
+            "AnotherDirToBeRemoved",
+            "DirToBeRemoved",
+            "DirWithFewerFiles/file2.txt",
+            "ToBeRemoved.seqpat",
+            "ToBeRemoved.txt"
+          });
+
     check(weak_equivalence, "Soft update", working, predictive);
 
     check(equality, "Ensure that a target file equivalent to its replacement is not replaced",

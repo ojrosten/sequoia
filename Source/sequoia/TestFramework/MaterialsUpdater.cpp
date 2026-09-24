@@ -82,7 +82,15 @@ namespace sequoia::testing
 
     using paths_iter = std::vector<path_info>::const_iterator;
 
-    void soft_update(const fs::path& from, const fs::path& to, paths_iter fromBegin, paths_iter fromEnd, paths_iter toBegin, paths_iter toEnd)
+    void update_directory(const fs::path& from, const fs::path& to, std::vector<fs::path>& removed);
+
+    void update_entries(const fs::path& from,
+                        const fs::path& to,
+                        paths_iter fromBegin,
+                        paths_iter fromEnd,
+                        paths_iter toBegin,
+                        paths_iter toEnd,
+                        std::vector<fs::path>& removed)
     {
       auto equiv{
         [](const path_info& lhs, const path_info& rhs) {
@@ -113,7 +121,7 @@ namespace sequoia::testing
         }
         case fs::file_type::directory:
         {
-          testing::soft_update(fi->full, ti->full);
+          update_directory(fi->full, ti->full, removed);
           break;
         }
         default:
@@ -142,10 +150,11 @@ namespace sequoia::testing
           while((iters.in2 != toEnd) && compare{}(*iters.in2, *iters.in1))
           {
             fs::remove_all(iters.in2->full);
+            removed.push_back(iters.in2->full);
             ++iters.in2;
           }
 
-          soft_update(from, to, iters.in1, fromEnd, iters.in2, toEnd);
+          update_entries(from, to, iters.in1, fromEnd, iters.in2, toEnd, removed);
         }
       }
       else if(iters.in2 != toEnd)
@@ -153,23 +162,44 @@ namespace sequoia::testing
         for(; iters.in2 != toEnd; ++iters.in2)
         {
           fs::remove_all(iters.in2->full);
+          removed.push_back(iters.in2->full);
         }
       }
     }
+
+    void update_directory(const fs::path& from, const fs::path& to, std::vector<fs::path>& removed)
+    {
+      throw_unless_exists(from);
+      throw_unless_exists(to);
+
+      copy_special_files_back(from, to);
+
+      const std::vector<path_info>
+        sortedFromEntries{sort_dir_entries(from)},
+        sortedToEntries{sort_dir_entries(to)};
+
+      update_entries(
+        from,
+        to,
+        sortedFromEntries.begin(),
+        sortedFromEntries.end(),
+        sortedToEntries.begin(),
+        sortedToEntries.end(),
+        removed
+      );
+    }
   }
 
-  void soft_update(const fs::path& from, const fs::path& to)
+  [[nodiscard]]
+  std::vector<fs::path> soft_update(const fs::path& from, const fs::path& to)
   {
-    throw_unless_exists(from);
-    throw_unless_exists(to);
+    std::vector<fs::path> removed{};
+    update_directory(from, to, removed);
 
-    copy_special_files_back(from, to);
-
-    const std::vector<path_info>
-      sortedFromEntries{sort_dir_entries(from)},
-      sortedToEntries{sort_dir_entries(to)};
-
-    soft_update(from, to, sortedFromEntries.begin(), sortedFromEntries.end(), sortedToEntries.begin(), sortedToEntries.end());
+    const auto relativeToDestination{[&to](const fs::path& path) { return path.lexically_relative(to); }};
+    std::ranges::transform(removed, removed.begin(), relativeToDestination);
+    std::ranges::sort(removed);
+    return removed;
   }
 
 }

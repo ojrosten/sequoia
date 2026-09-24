@@ -406,6 +406,53 @@ namespace sequoia::testing
       };
     }
 
+    /** The source files of the next two are relative, so that their materials resolve inside the
+        fake project. Each test writes a `Kept.txt` which its predictions hold with other contents,
+        and does not write the `Obsolete.txt` its predictions also hold, so an update overwrites
+        `Kept.txt` and deletes `Obsolete.txt`. The failed check makes each a candidate for update.
+     */
+
+    void make_update_candidate(free_test& test)
+    {
+      write_to_file(test.working_materials() /= "Kept.txt", "Obtained\n", std::ios_base::out);
+      test.check("Predictions are stale", false);
+    }
+
+    class stale_predictions_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return "Tests/Updating/StalePredictionsFreeTest.cpp";
+      }
+
+      void run_tests()
+      {
+        make_update_candidate(*this);
+      }
+    };
+
+    class throwing_stale_predictions_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return "Tests/Updating/ThrowingStalePredictionsFreeTest.cpp";
+      }
+
+      void run_tests()
+      {
+        make_update_candidate(*this);
+        throw std::runtime_error{"Thrown after a failed check"};
+      }
+    };
+
     test_runner make_failing_suite(commandline_arguments args, std::stringstream& outputStream)
     {
       test_runner runner{args.size(),
@@ -443,6 +490,8 @@ namespace sequoia::testing
     test_prune_with_changed_toolchain();
     test_prune_selects_a_test_this_executable_lacks();
     test_post_run_failure();
+    test_materials_update();
+    test_no_materials_update_after_critical_failure();
     test_nested_suite();
     test_nested_suite_verbose();
     test_suite_named_as_a_sibling_test();
@@ -914,6 +963,73 @@ namespace sequoia::testing
 
     check(equality, "Post-run failure return code", runner.execute(), return_code::soft_failures | return_code::post_run_failures);
     check_output("Post-Run Failure Output", "PostRunFailureOutput", outputStream);
+  }
+
+  void test_runner_test::test_materials_update()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    runner.register_test<stale_predictions_free_test>();
+
+    check(equality, "Materials update return code", runner.execute(), return_code::soft_failures);
+    check_output("Materials Update Output", "MaterialsUpdateOutput", outputStream);
+
+    const auto predictions{
+      fake_project() / "TestMaterials/Updating/StalePredictionsFreeTest" / "stale_predictions_free_test/Prediction"
+    };
+
+    check(equality,
+          "Prediction overwritten",
+          read_to_string(predictions / "Kept.txt", std::ios_base::in).value_or(""),
+          std::string{"Obtained\n"});
+
+    check("Prediction deleted", !fs::exists(predictions / "Obsolete.txt"));
+  }
+
+  /** As `test_materials_update`, which shows the update happening, except that the fake throws after
+      its failed check. The soft failure is still recorded, so only the critical failure can stop the update.
+   */
+  void test_runner_test::test_no_materials_update_after_critical_failure()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    runner.register_test<throwing_stale_predictions_free_test>();
+
+    check(equality,
+          "No materials update after a critical failure return code",
+          runner.execute(),
+          return_code::soft_failures | return_code::critical_failures);
+
+    check_output("No Materials Update After a Critical Failure Output",
+                 "NoMaterialsUpdateAfterCriticalFailureOutput",
+                 outputStream);
+
+    const auto predictions{
+      fake_project() / "TestMaterials/Updating/ThrowingStalePredictionsFreeTest" / "throwing_stale_predictions_free_test/Prediction"
+    };
+
+    check(equality,
+          "Prediction not overwritten",
+          read_to_string(predictions / "Kept.txt", std::ios_base::in).value_or(""),
+          std::string{"Predicted\n"});
+
+    check("Prediction not deleted", fs::exists(predictions / "Obsolete.txt"));
   }
 
   void test_runner_test::test_nested_suite()

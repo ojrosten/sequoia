@@ -242,7 +242,7 @@ namespace sequoia::testing
         {
           try
           {
-            soft_update(update.working_materials, update.predictions);
+            record_deleted_predictions(update, soft_update(update.working_materials, update.predictions));
           }
           catch(const std::exception& e)
           {
@@ -271,6 +271,9 @@ namespace sequoia::testing
       [[nodiscard]]
       std::span<const std::string> post_run_failures() const noexcept { return m_PostRunFailures; }
 
+      [[nodiscard]]
+      std::span<const std::string> deleted_predictions() const noexcept { return m_DeletedPredictions; }
+
       void process_test(const test_paths& files, const log_summary& summary, update_mode updateMode)
       {
         m_ExecutedTests.push_back(files.test_file);
@@ -282,7 +285,9 @@ namespace sequoia::testing
 
         if(updateMode != update_mode::none)
         {
-          if(summary.soft_failures())
+          // A critical failure may have cut the test short, so its working copy may lack files which
+          // the update would then delete from the predictions
+          if(summary.soft_failures() && !summary.critical_failures())
           {
             if(fs::exists(files.working_materials) && fs::exists(files.predictions))
             {
@@ -299,7 +304,7 @@ namespace sequoia::testing
       is_filtered m_Filtered{};
 
       std::vector<std::filesystem::path> m_FailedTests{}, m_ExecutedTests{}, m_TestsLeftOut{};
-      std::vector<std::string> m_PostRunFailures{};
+      std::vector<std::string> m_PostRunFailures{}, m_DeletedPredictions{};
       std::set<test_paths, paths_comparator> m_Updateables{};
       std::set<std::filesystem::path> m_FilesWrittenTo{};
 
@@ -333,6 +338,33 @@ namespace sequoia::testing
       void record_materials_update_failure(const std::filesystem::path& testFile, std::string_view what)
       {
         m_PostRunFailures.push_back(std::format("Materials for {} not updated:\n{}", testFile.generic_string(), what));
+      }
+
+      void record_deleted_predictions(const test_paths& update, std::span<const std::filesystem::path> removed)
+      {
+        if(removed.empty())
+          return;
+
+        const auto relativeToProjectRoot{
+          [&update, &root = m_ProjPaths.project_root()](const fs::path& path) {
+            return (update.predictions / path).lexically_relative(root).generic_string();
+          }
+        };
+
+        const auto listing{
+            removed
+          | std::views::transform(relativeToProjectRoot)
+          | std::views::join_with('\n')
+          | std::ranges::to<std::string>()
+        };
+
+        m_DeletedPredictions.push_back(
+          std::format(
+            "Predictions for {} deleted by the update, since this run did not produce them:\n{}",
+            update.test_file.generic_string(),
+            listing
+          )
+        );
       }
 
       void record_prune_update_failure(std::string_view what)
@@ -1283,12 +1315,24 @@ namespace sequoia::testing
     stream() << "\n-----------Grand Totals-----------\n";
     stream() << summarize(root_summary(), "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);
 
+    if(const auto deletedPredictions{tracker.deleted_predictions()}; !deletedPredictions.empty())
+    {
+      stream() << "\n-----------Deleted Predictions-----------\n";
+      for(const auto& deletion : deletedPredictions)
+      {
+        stream() << sequoia::indent(deletion, indentation{"\t"}) << "\n\n";
+      }
+    }
+
     // Not folded into the totals, which count what the tests found: these are failures of the run itself
     const auto postRunFailures{tracker.post_run_failures()};
     if(!postRunFailures.empty())
     {
       stream() << "\n-----------Post-Run Failures-----------\n";
-      for(const auto& failure : postRunFailures) stream() << sequoia::indent(failure, indentation{"\t"}) << "\n\n";
+      for(const auto& failure : postRunFailures)
+      {
+        stream() << sequoia::indent(failure, indentation{"\t"}) << "\n\n";
+      }
     }
 
     return to_return_code(root_summary()) | (postRunFailures.empty() ? return_code::success : return_code::post_run_failures);
