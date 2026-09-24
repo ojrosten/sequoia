@@ -17,14 +17,20 @@
 
     `prune` reads those, and the build's record of what each test was built from, and selects
     the tests which are stale or are to be rerun.
+
+    The same record says whether the library itself has changed since the executable was built, which
+    `create` asks before it writes anything from code which may be out of date.
  */
 
+#include "sequoia/TestFramework/BuildArtefacts.hpp"
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
 #include <chrono>
 #include <format>
 #include <iostream>
 #include <limits>
+#include <optional>
+#include <ostream>
 #include <span>
 #include <variant>
 
@@ -125,6 +131,53 @@ namespace sequoia::testing
                           std::span<const std::filesystem::path> failedTests,
                           std::filesystem::file_time_type updateTime,
                           std::optional<std::size_t> id);
+
+  /** \brief A file the build read, and when it was last modified. */
+  struct modified_file
+  {
+    std::filesystem::path file;
+    std::filesystem::file_time_type time;
+
+    [[nodiscard]]
+    friend bool operator==(const modified_file&, const modified_file&) noexcept = default;
+  };
+
+  /** \brief The directory of sources this library was compiled from, as the compiler was given it.
+
+      Relative when the build handed the compiler relative paths - a plain `make`, or a build remapping
+      its paths with `-ffile-prefix-map` - in which case the library's own files cannot be told apart.
+   */
+  [[nodiscard]]
+  std::filesystem::path sequoia_library_root();
+
+  /** \brief The newest of a library's own files which its build read, if it is no older than the executable.
+
+      The library's objects are those compiled from a source beneath `libraryRoot`, and its own files
+      are those of the files read to compile them which lie beneath it too. So a header of the library
+      which only the tests read does not count, and nor does anything of the toolchain's, of another
+      library's, or of the tests'.
+
+      \throws std::runtime_error if the modification time of one of the library's own files cannot be read.
+   */
+  [[nodiscard]]
+  std::optional<modified_file> library_change_since_build(const build_tree& tree,
+                                                          const compilations& compiled,
+                                                          const std::filesystem::path& libraryRoot,
+                                                          std::filesystem::file_time_type executableStamp);
+
+  /** \brief Refuses to go on if the library beneath `libraryRoot` has changed since the executable was
+             built: what the executable would write comes from code older than the library's.
+
+      Where the question cannot be answered - the build's record cannot be read, `libraryRoot` is
+      relative, or the executable cannot be found - a one-line warning to `stream` says so, and nothing
+      is refused.
+
+      \throws std::runtime_error naming the newest of the library's own files, its modification time
+      and the executable's, if the former is no older; or if that file's modification time cannot be read.
+   */
+  void refuse_if_library_changed_since_build(const project_paths& projPaths,
+                                             const std::filesystem::path& libraryRoot,
+                                             std::ostream& stream);
 
   /** \brief Empties the directory in which the repetitions of an instability analysis leave their prune files. */
   void setup_instability_analysis_prune_folder(const project_paths& projPaths);

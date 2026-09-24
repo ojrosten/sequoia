@@ -18,6 +18,7 @@
 #include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
 #include <fstream>
+#include <sstream>
 #include <stdexcept>
 
 namespace sequoia::testing
@@ -362,13 +363,17 @@ namespace sequoia::testing
     test_exceptions(projPaths);
     test_recorded_sources(projPaths);
     test_dependencies(projPaths);
+    test_library_change(projPaths);
+    test_library_change_not_checked(projPaths);
 
     // The same build, as ninja records it when the compiler is MSVC, and as Visual Studio's tracker would have recorded it
     write_build_artefacts(fake, build_system::ninja_with_msvc, recorded_sources::all);
     test_dependencies(projPaths);
+    test_library_change(projPaths);
 
     write_build_artefacts(fake, build_system::visual_studio, recorded_sources::all);
     test_dependencies(projPaths);
+    test_library_change(projPaths);
 
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
     test_stamp_on_second_boundary(projPaths);
@@ -527,6 +532,142 @@ namespace sequoia::testing
 
     fs::remove_all(anotherRoot);
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
+  }
+
+  void dependency_analyzer_free_test::check_library_change(const reporter& description,
+                                                           const project_paths& projPaths,
+                                                           const std::vector<timed_edit>& edits,
+                                                           const std::optional<fs::path>& changed)
+  {
+    for(const auto& [file, offset] : edits)
+    {
+      fs::last_write_time(file, m_ResetTime + offset);
+    }
+
+    const auto tree{read_build_tree(projPaths.discovered().cmake_cache())};
+    const auto compiled{read_compilations(tree, projPaths.executable())};
+    const auto obtained{
+      library_change_since_build(tree, compiled, projPaths.source().project(), fs::last_write_time(projPaths.executable()))
+    };
+
+    check(equality,
+          description,
+          obtained.transform([](const modified_file& m) { return m.file; }),
+          changed.transform([](const fs::path& file) { return fs::weakly_canonical(file); }));
+
+    check(equality,
+          append_lines(description.message(), "Modification time"),
+          obtained.transform([](const modified_file& m) { return m.time; }),
+          changed.transform([](const fs::path& file) { return fs::last_write_time(file); }));
+
+    for(const auto& edit : edits)
+    {
+      fs::last_write_time(edit.file, m_ResetTime);
+    }
+  }
+
+  /* The library is the fake project's own: the objects compiled from its source directory, and of the
+     files read to compile them, those which lie there too. The executable is stamped between an early
+     edit and a late one.
+   */
+  void dependency_analyzer_free_test::test_library_change(const project_paths& projPaths)
+  {
+    fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
+
+    const auto& library{projPaths.source().project()};
+    const auto definitions{library / "Stuff" / "FooDefinitions.cpp"};
+    const auto helper{library / "Maths" / "Helper.hpp"};
+
+    check_library_change("Nothing edited since the build", projPaths, {}, std::nullopt);
+
+    check_library_change("A source of the library's, edited before the build",
+                         projPaths, {{definitions, earlyEditOffset}}, std::nullopt);
+
+    check_library_change("A source of the library's, edited since the build",
+                         projPaths, {{definitions, lateEditOffset}}, definitions);
+
+    check_library_change("A header the library reads, edited since the build",
+                         projPaths, {{helper, lateEditOffset}}, helper);
+
+    check_library_change("Of two edits since the build, the header's is the later",
+                         projPaths, {{definitions, latePassOffset}, {helper, lateEditOffset}}, helper);
+
+    check_library_change("Of two edits since the build, the source's is the later",
+                         projPaths, {{helper, latePassOffset}, {definitions, lateEditOffset}}, definitions);
+
+    check_library_change("A header of the library's which only the tests read",
+                         projPaths, {{library / "Stuff" / "Bar.hpp", lateEditOffset}}, std::nullopt);
+
+    check_library_change("A test's source",
+                         projPaths, {{projPaths.tests().repo() / "Stuff" / "FooTest.cpp", lateEditOffset}}, std::nullopt);
+
+    check_library_change("A header of another library's, which the library reads",
+                         projPaths,
+                         {{projPaths.project_root() / "dependencies" / "foo" / "Source" / "foo" / "Utilities" / "Helper.hpp", lateEditOffset}},
+                         std::nullopt);
+
+    check_library_change("A header of the toolchain's, which the library reads",
+                         projPaths, {{fake_toolchain_header(projPaths.project_root()), lateEditOffset}}, std::nullopt);
+
+    std::ostringstream stream{};
+    refuse_if_library_changed_since_build(projPaths, library, stream);
+    check(equality, "Nothing edited since the build: nothing refused, nothing said", stream.str(), std::string{});
+
+    check_exception_thrown<std::runtime_error>(
+      "A source of the library's, edited since the build: refused",
+      [&]() {
+        fs::last_write_time(definitions, m_ResetTime + lateEditOffset);
+        refuse_if_library_changed_since_build(projPaths, library, stream);
+      },
+      normalise_out_of_date_message
+    );
+
+    fs::last_write_time(definitions, m_ResetTime);
+  }
+
+  /// Where the question cannot be answered, it is not answered silently, and nothing is refused
+  void dependency_analyzer_free_test::test_library_change_not_checked(const project_paths& projPaths)
+  {
+    fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
+
+    const auto& library{projPaths.source().project()};
+    const auto definitions{library / "Stuff" / "FooDefinitions.cpp"};
+    fs::last_write_time(definitions, m_ResetTime + lateEditOffset);
+
+    auto warning{
+      [&projPaths](const fs::path& libraryRoot) {
+        std::ostringstream stream{};
+        refuse_if_library_changed_since_build(projPaths, libraryRoot, stream);
+        return stream.str();
+      }
+    };
+
+    check(equality,
+          "A library compiled from relative paths",
+          warning(fs::relative(library, projPaths.project_root())),
+          std::string{"  Warning: Whether the library has changed since this executable was built cannot be checked: "
+                      "the library was compiled from relative paths\n"});
+
+    const auto log{projPaths.discovered().cmake_cache().parent_path() / ".ninja_deps"};
+    const auto hiddenLog{fs::path{log}.concat(".hidden")};
+    fs::rename(log, hiddenLog);
+    check(equality,
+          "A build whose record cannot be read",
+          warning(library),
+          std::string{"  Warning: Whether the library has changed since this executable was built cannot be checked: "
+                      "the build's record of what it compiled cannot be read\n"});
+    fs::rename(hiddenLog, log);
+
+    const auto hiddenExecutable{fs::path{projPaths.executable()}.concat(".hidden")};
+    fs::rename(projPaths.executable(), hiddenExecutable);
+    check(equality,
+          "An executable which cannot be found",
+          warning(library),
+          std::string{"  Warning: Whether the library has changed since this executable was built cannot be checked: "
+                      "the executable cannot be found\n"});
+    fs::rename(hiddenExecutable, projPaths.executable());
+
+    fs::last_write_time(definitions, m_ResetTime);
   }
 
   void dependency_analyzer_free_test::test_dependencies(const project_paths& projPaths)

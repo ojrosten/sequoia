@@ -12,6 +12,7 @@
 #include "sequoia/Maths/Arithmetic/ArithmeticCasts.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
+#include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <algorithm>
@@ -24,6 +25,7 @@
 #include <map>
 #include <optional>
 #include <ranges>
+#include <source_location>
 #include <stdexcept>
 #include <string>
 #include <type_traits>
@@ -101,6 +103,90 @@ namespace sequoia::testing
     bool in_toolchain(const fs::path& file, const build_tree& tree)
     {
       return std::ranges::any_of(tree.implicit_include_directories, [&file](const fs::path& dir){ return in_repo(file, dir); });
+    }
+
+    /** Each file a build recorded, made canonical - which is what project_paths holds, the build having
+        recorded whatever spelling it was configured with, through whatever symlink and in whatever case -
+        and classed as the project's or the toolchain's. Both are properties of the file's directory, and
+        the filesystem is asked once per directory.
+
+        A directory whose existing prefix cannot be resolved - a directory without permission, a symlink
+        loop - is kept as recorded, and its files fail with that reason when their modification times are
+        read. A file's own name is as the compilation spelled it: a file which is itself a symlink keeps
+        its name, which `last_write_time` follows, and on a filesystem which finds a file whatever its
+        case, a header included under a case other than its own keeps that case, and so does not match the
+        stem of the source named for it.
+     */
+    class recorded_file_facts
+    {
+    public:
+      struct facts
+      {
+        fs::path canonical;
+        bool toolchain;
+      };
+
+      explicit recorded_file_facts(const build_tree& tree) : m_Tree{tree} {}
+
+      [[nodiscard]]
+      facts operator()(const fs::path& recorded)
+      {
+        const auto asRecorded{(recorded.is_absolute() ? recorded : m_Tree.build_directory / recorded).lexically_normal()};
+        const auto& directory{directory_facts(asRecorded.parent_path())};
+
+        return {.canonical{directory.canonical / asRecorded.filename()}, .toolchain{directory.toolchain}};
+      }
+    private:
+      const build_tree& m_Tree;
+      std::map<fs::path, facts> m_Directories{};
+
+      [[nodiscard]]
+      const facts& directory_facts(const fs::path& dir)
+      {
+        if(const auto found{m_Directories.find(dir)}; found != m_Directories.end())
+          return found->second;
+
+        std::error_code error{};
+        auto canonicalized{fs::weakly_canonical(dir, error)};
+        const fs::path& canonical{error ? dir : canonicalized};
+
+        return m_Directories.emplace(dir, facts{.canonical{canonical}, .toolchain{in_toolchain(canonical, m_Tree)}}).first->second;
+      }
+    };
+
+    [[nodiscard]]
+    std::runtime_error executable_out_of_date(fs::file_time_type executableStamp, const fs::path& file, fs::file_time_type time)
+    {
+      return std::runtime_error{
+        std::format("Executable is out of date; please build it!\nExecutable time stamp: {}\n{} time stamp: {}\n",
+                    executableStamp,
+                    file.generic_string(),
+                    time)
+      };
+    }
+
+    /** The modification time of a file the build read, checked against the executable's stamp.
+
+        \throws std::runtime_error if the file post-dates the executable, or its modification time
+        cannot be read.
+     */
+    [[nodiscard]]
+    fs::file_time_type modification_time(const fs::path& file, std::optional<fs::file_time_type> executableStamp)
+    {
+      std::error_code error{};
+      const auto time{fs::last_write_time(file, error)};
+      if(error)
+        throw std::runtime_error{
+          std::format("{} was read by the build but its modification time cannot be read: {}\n"
+                      "Restore the file, or build the executable again\n",
+                      file.generic_string(),
+                      error.message())
+        };
+
+      if(executableStamp && (time >= *executableStamp))
+        throw executable_out_of_date(*executableStamp, file, time);
+
+      return time;
     }
 
     /** Every test class may optionally define test materials. For a test class `bar_test`, defined in
@@ -238,35 +324,6 @@ namespace sequoia::testing
         return g.cbegin_node_weights()[i];
       }
 
-      /** The modification time of a file the build read, checked against the executable's stamp.
-
-          \throws std::runtime_error if the file post-dates the executable, or its modification time
-          cannot be read.
-       */
-      [[nodiscard]]
-      static fs::file_time_type modification_time(const fs::path& file, std::optional<fs::file_time_type> executableStamp)
-      {
-        std::error_code error{};
-        const auto time{fs::last_write_time(file, error)};
-        if(error)
-          throw std::runtime_error{
-            std::format("{} was read by the build but its modification time cannot be read: {}\n"
-                        "Restore the file, or build the executable again\n",
-                        file.generic_string(),
-                        error.message())
-          };
-
-        if(executableStamp && (time >= *executableStamp))
-          throw std::runtime_error{
-            std::format("Executable is out of date; please build it!\nExecutable time stamp: {}\n{} time stamp: {}\n",
-                        *executableStamp,
-                        file.generic_string(),
-                        time)
-          };
-
-        return time;
-      }
-
       /// The newest modification among `files`, each checked; the earliest time, if there are none
       [[nodiscard]]
       static fs::file_time_type newest_modification(std::span<const fs::path> files, std::optional<fs::file_time_type> executableStamp)
@@ -356,55 +413,17 @@ namespace sequoia::testing
       /** A node for every object file and every file of the project's read to produce one - the tests'
           object files first, then in order of first mention - each object file's source on its node; an
           edge from each object file to each such file; and the dependencies the convention adds. The
-          toolchain's files are listed apart.
-
-          Each file's path is made canonical - which is what project_paths holds, the build having
-          recorded whatever spelling it was configured with, through whatever symlink and in whatever
-          case - and each file is classed as the project's or the toolchain's. Both are properties of
-          the file's directory, and the filesystem is asked once per directory.
+          toolchain's files are listed apart. Each file is as `recorded_file_facts` finds it.
        */
       [[nodiscard]]
       static files_read_by_build read_files(const build_tree& tree, const project_paths& projPaths)
       {
         const auto compilations{read_compilations(tree, projPaths.executable())};
 
-        /* A directory whose existing prefix cannot be resolved - a directory without permission, a
-           symlink loop - is kept as recorded, and its files fail with that reason when their modification
-           times are read. A file's own name is as the compilation spelled it: a file which is itself a
-           symlink keeps its name, which `last_write_time` follows, and on a filesystem which finds a file
-           whatever its case, a header included under a case other than its own keeps that case, and so
-           does not match the stem of the source named for it.
-         */
-        struct facts
-        {
-          fs::path canonical;
-          bool toolchain;
-        };
-        std::map<fs::path, facts> directories{};
-        auto directoryFacts{
-          [&tree, &directories](const fs::path& dir) -> const facts& {
-            if(const auto found{directories.find(dir)}; found != directories.end())
-              return found->second;
-
-            std::error_code error{};
-            auto canonicalized{fs::weakly_canonical(dir, error)};
-            const fs::path& canonical{error ? dir : canonicalized};
-
-            return directories.emplace(dir, facts{.canonical{canonical}, .toolchain{in_toolchain(canonical, tree)}}).first->second;
-          }
-        };
-        auto fileFacts{
-          [&tree, &directoryFacts](const fs::path& p) {
-            const auto asRecorded{(p.is_absolute() ? p : tree.build_directory / p).lexically_normal()};
-            const auto& directory{directoryFacts(asRecorded.parent_path())};
-
-            return facts{.canonical{directory.canonical / asRecorded.filename()}, .toolchain{directory.toolchain}};
-          }
-        };
-
         const auto& [files, records]{compilations};
 
-        const auto fileFactsTable{files | std::views::transform(fileFacts) | std::ranges::to<std::vector>()};
+        recorded_file_facts fileFacts{tree};
+        const auto fileFactsTable{files | std::views::transform(std::ref(fileFacts)) | std::ranges::to<std::vector>()};
         auto isProjectFile{[&fileFactsTable](compilations::file_index fileIndex){ return !fileFactsTable[fileIndex].toolchain; }};
 
         graph_type g{};
@@ -450,8 +469,8 @@ namespace sequoia::testing
 
         auto toolchainFiles{
             fileFactsTable
-          | std::views::filter(&facts::toolchain)
-          | std::views::transform(&facts::canonical)
+          | std::views::filter(&recorded_file_facts::facts::toolchain)
+          | std::views::transform(&recorded_file_facts::facts::canonical)
           | std::ranges::to<std::vector>()
         };
 
@@ -780,6 +799,114 @@ namespace sequoia::testing
       return   std::views::transform(tests, [updateTime](const fs::path& p){ return prune_record{p, updateTime}; })
              | std::ranges::to<std::vector>();
     }
+  }
+
+  [[nodiscard]]
+  fs::path sequoia_library_root()
+  {
+    // This file is compiled from TestFramework, one directory below the library's root
+    return fs::path{std::source_location::current().file_name()}.parent_path().parent_path();
+  }
+
+  [[nodiscard]]
+  std::optional<modified_file> library_change_since_build(const build_tree& tree,
+                                                          const compilations& compiled,
+                                                          const fs::path& libraryRoot,
+                                                          const fs::file_time_type executableStamp)
+  {
+    const auto& [files, records]{compiled};
+
+    // Canonical, as the recorded files will be made
+    std::error_code error{};
+    const auto canonicalRoot{fs::weakly_canonical(libraryRoot, error)};
+    const fs::path& root{error ? libraryRoot : canonicalRoot};
+
+    recorded_file_facts factsOf{tree};
+
+    // Only the files of the objects inspected are made canonical, each once
+    std::vector<std::optional<fs::path>> canonicalFiles(files.size());
+    auto canonical{
+      [&](compilations::file_index i) -> const fs::path& {
+        auto& file{canonicalFiles[i]};
+        if(!file)
+          file = factsOf(files[i]).canonical;
+
+        return *file;
+      }
+    };
+
+    auto isOwnFile{[&](compilations::file_index i){ return in_repo(canonical(i), root); }};
+
+    // read_compilations puts the source first among the inputs
+    auto isLibraryObject{[&](const compilations::record& record){ return isOwnFile(record.input_indices.front()); }};
+
+    // A header several objects read is timed once; a stateful filter, so a loop
+    std::vector<bool> timed(files.size());
+    std::optional<modified_file> newest{};
+    for(const auto& record : records | std::views::filter(isLibraryObject))
+    {
+      for(const auto i : record.input_indices | std::views::filter(isOwnFile))
+      {
+        if(timed[i]) continue;
+
+        timed[i] = true;
+        if(const auto time{modification_time(canonical(i), std::nullopt)}; !newest || (time > newest->time))
+          newest = modified_file{canonical(i), time};
+      }
+    }
+
+    return (newest && (newest->time >= executableStamp)) ? newest : std::nullopt;
+  }
+
+  void refuse_if_library_changed_since_build(const project_paths& projPaths, const fs::path& libraryRoot, std::ostream& stream)
+  {
+    auto notChecked{
+      [&stream](std::string_view reason) {
+        stream << parsing::commandline::warning(
+                    std::format("Whether the library has changed since this executable was built cannot be checked: {}", reason))
+               << '\n';
+      }
+    };
+
+    if(!libraryRoot.is_absolute())
+    {
+      notChecked("the library was compiled from relative paths");
+      return;
+    }
+
+    const auto executableStamp{get_stamp(projPaths.executable())};
+    if(!executableStamp)
+    {
+      notChecked("the executable cannot be found");
+      return;
+    }
+
+    const auto record{
+      [&]() -> std::optional<std::pair<build_tree, compilations>> {
+        try
+        {
+          auto tree{read_build_tree(projPaths.discovered().cmake_cache())};
+          auto compiled{read_compilations(tree, projPaths.executable())};
+          return std::pair{std::move(tree), std::move(compiled)};
+        }
+        catch(const std::runtime_error&)
+        {
+          return std::nullopt;
+        }
+      }()
+    };
+
+    if(!record)
+    {
+      notChecked("the build's record of what it compiled cannot be read");
+      return;
+    }
+
+    if(const auto change{library_change_since_build(record->first, record->second, libraryRoot, *executableStamp)})
+      throw std::runtime_error{
+        std::format("The library has changed since this executable was built, so what it writes may be out of date.\n{}",
+                    executable_out_of_date(*executableStamp, change->file, change->time).what())
+      };
   }
 
   [[nodiscard]]

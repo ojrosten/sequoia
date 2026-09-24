@@ -99,6 +99,22 @@ namespace sequoia::testing
 
     void test_recorded_sources(const project_paths& projPaths);
 
+    /// A file of the fake project, and when, relative to the reset time, it was last modified
+    struct timed_edit
+    {
+      std::filesystem::path file;
+      std::chrono::seconds offset;
+    };
+
+    void check_library_change(const reporter& description,
+                              const project_paths& projPaths,
+                              const std::vector<timed_edit>& edits,
+                              const std::optional<std::filesystem::path>& changed);
+
+    void test_library_change(const project_paths& projPaths);
+
+    void test_library_change_not_checked(const project_paths& projPaths);
+
     static void write_or_remove(const project_paths& projPaths, const std::filesystem::path& file, const opt_prune_records& tests);
 
     static void write_or_remove(const project_paths& projPaths, const std::filesystem::path& failureFile, const std::filesystem::path& passesFile, const test_outcomes& d);
