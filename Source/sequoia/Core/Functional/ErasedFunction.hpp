@@ -32,7 +32,9 @@
        does.
     -# **The constructors' requirements are constraints**, where the standard mandates some of them:
        `std::is_constructible_v` is false for a target which is not copy constructible, rather than
-       true and ill-formed on use.
+       true and ill-formed on use. So a class which is both constructible from an `erased_function`
+       and callable through its signature cannot be asked whether it is copy constructible: the
+       question depends on itself.
     -# **No converting assignment.** Assigning a callable converts it and then assigns.
     -# **No `swap` of its own.** `std::ranges::swap` exchanges two functions through the defaulted
        moves; an unqualified `swap(f, g)` finds nothing.
@@ -414,6 +416,20 @@ namespace sequoia
 
     template<class Signature>
     using call_operator_for_t = call_operator_for<Signature>::type;
+
+    /** A concept rather than a conjunction of `bool`s, which would evaluate every clause, and with
+        callability first, so that a target which is not callable is never asked whether it is copy
+        constructible. For a class constructible from an `erased_function`, whether the class is copy
+        constructible is the question already being asked.
+     */
+    template<class CallOperator, class T, class... TArgs>
+    concept target_constructible_from
+      =  std::is_same_v<T, std::decay_t<T>>
+      && (!std::is_member_pointer_v<T>)
+      && CallOperator::template callable_through_signature_v<T>
+      && std::destructible<T>
+      && std::is_copy_constructible_v<T>
+      && std::is_constructible_v<T, TArgs...>;
   }
 
   /** \brief A signature `erased_function` supports: `R(Args...) cv ref noexcept(noex)`, where `cv` is
@@ -488,14 +504,7 @@ namespace sequoia
     {}
   public:
     template<class T, class... TArgs>
-    constexpr static bool target_constructible_from_v{
-         std::is_same_v<T, std::decay_t<T>>
-      && (!std::is_member_pointer_v<T>)
-      && std::destructible<T>
-      && std::is_copy_constructible_v<T>
-      && std::is_constructible_v<T, TArgs...>
-      && call_operator_type::template callable_through_signature_v<T>
-    };
+    constexpr static bool target_constructible_from_v{impl::target_constructible_from<call_operator_type, T, TArgs...>};
 
     constexpr erased_function() = default;
 

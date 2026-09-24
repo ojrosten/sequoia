@@ -21,14 +21,17 @@ namespace sequoia
 {
   /** \brief Supplements `std::invocable`, such that the return type is specified.
 
-      As with `std::is_invocable_r`, the return type must be convertible to
-      `R`, not necessarily identical to it.
+      As with `std::is_invocable_r` since P2255, the return type must be
+      convertible to `R`, not necessarily identical to it, and a reference `R`
+      may not bind to a temporary. Unlike `std::is_invocable_r`, a `void` `R`
+      requires a `void` return type, rather than discarding any other.
    */
   template <class F, class R, class... Args>
-  concept invocable_r =
-    requires(F&& f, Args&&... args) {
-      { std::invoke(std::forward<F>(f), std::forward<Args>(args)...) } -> std::convertible_to<R>;
-  };
+  concept invocable_r
+    =  requires(F&& f, Args&&... args) {
+         { std::invoke(std::forward<F>(f), std::forward<Args>(args)...) } -> std::convertible_to<R>;
+       }
+    && (!std::reference_converts_from_temporary_v<R, std::invoke_result_t<F, Args...>>);
 
   /// \brief Supplements `std::regular_invocable`.
   template <class F, class R, class... Args>

@@ -136,6 +136,17 @@ namespace sequoia::testing
         ;
     }
 
+    template<class Signature, class Target>
+    [[nodiscard]]
+    constexpr bool constructs_from_as_expected(bool expected)
+    {
+      return (std::is_constructible_v<erased_function<Signature>, Target> == expected)
+    #if defined(__cpp_lib_copyable_function)
+          && (std::is_constructible_v<std::copyable_function<Signature>, Target> == expected)
+    #endif
+        ;
+    }
+
     struct adder
     {
       int base{};
@@ -217,6 +228,26 @@ namespace sequoia::testing
       [[nodiscard]]
       int value() const { return 42; }
     };
+
+    template<class Function>
+    struct function_holder
+    {
+      explicit function_holder(Function f)
+        : function{std::move(f)}
+      {}
+
+      Function function;
+    };
+
+    [[nodiscard]]
+    constexpr bool function_holder_is_copyable()
+    {
+      return std::is_copy_constructible_v<function_holder<erased_function<void()>>>
+    #if defined(__cpp_lib_copyable_function)
+          && std::is_copy_constructible_v<function_holder<std::copyable_function<void()>>>
+    #endif
+        ;
+    }
   }
 
   [[nodiscard]]
@@ -279,6 +310,13 @@ namespace sequoia::testing
     // Alike but for the destructor
     STATIC_CHECK(std::constructible_from<function_t, const_only>);
     STATIC_CHECK(!std::constructible_from<function_t, throws_on_destruction>);
+
+    // A reference result may not bind to a temporary
+    STATIC_CHECK(constructs_from_as_expected<const std::string&(), const std::string&(*)()>(true));
+    STATIC_CHECK(constructs_from_as_expected<const std::string&(), std::string(*)()>(false));
+
+    // A class constructible from a function, and not callable through its signature, is copyable
+    STATIC_CHECK(function_holder_is_copyable());
   }
 
   void erased_function_regular_test::test_admission()
