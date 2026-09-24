@@ -11,6 +11,8 @@ set(SourceList
     Maths/Angle.cpp
     Maths/Probability.cpp
     Stuff/Doohicky.cpp
+    Stuff/Gadget.cpp
+    Stuff/Gizmo.cpp
     Stuff/Widget.cpp
     Weather/Cloud.cpp
     hominins/Human.cpp)

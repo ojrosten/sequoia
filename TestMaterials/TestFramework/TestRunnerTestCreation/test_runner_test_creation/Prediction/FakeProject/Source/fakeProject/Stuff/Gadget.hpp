@@ -9,22 +9,20 @@
 
 /** \file */
 
-#include "Stuff/WidgetTestingUtilities.hpp"
+#include <compare>
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
-
-namespace fakeProject::testing
+namespace stuff
 {
-    using namespace sequoia::testing;
-
-    class human_shared_tester_test final : public regular_test
+    class gadget
     {
     public:
-        using regular_test::regular_test;
+        gadget(const gadget&)     = delete;
+        gadget(gadget&&) noexcept = default;
+
+        gadget& operator=(const gadget&)     = delete;
+        gadget& operator=(gadget&&) noexcept = default;
 
         [[nodiscard]]
-        static std::filesystem::path source_file();
-
-        void run_tests();
+        friend auto operator<=>(const gadget&, const gadget&) noexcept = default;
     };
 }

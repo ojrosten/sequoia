@@ -9,18 +9,18 @@
 
 /** \file */
 
-#include "Stuff/WidgetTestingUtilities.hpp"
+#include "WidgetTestingUtilities.hpp"
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
+#include "sequoia/TestFramework/MoveOnlyTestCore.hpp"
 
 namespace fakeProject::testing
 {
     using namespace sequoia::testing;
 
-    class human_shared_tester_test final : public regular_test
+    class gadget_family_test final : public move_only_test
     {
     public:
-        using regular_test::regular_test;
+        using move_only_test::move_only_test;
 
         [[nodiscard]]
         static std::filesystem::path source_file();

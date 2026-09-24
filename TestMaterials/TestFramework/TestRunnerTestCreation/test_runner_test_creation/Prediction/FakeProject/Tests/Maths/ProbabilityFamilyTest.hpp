@@ -11,6 +11,8 @@
 
 #include "ProbabilityTestingUtilities.hpp"
 
+#include "sequoia/TestFramework/RegularTestCore.hpp"
+
 namespace fakeProject::testing
 {
     using namespace sequoia::testing;

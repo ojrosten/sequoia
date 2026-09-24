@@ -14,6 +14,7 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <array>
 #include <fstream>
 
 namespace sequoia::testing
@@ -221,13 +222,27 @@ namespace sequoia::testing
                                , "create", "regular_test", "maths::angle", "long double",
                                               "--fullname", "angle_regular_test"
                                , "create", "move_only_test", "cloud", "double", "--fullname", "cloud_move_only_test"
+                               // Named by a path, normalised, but included from the test's own directory by its name
                                , "create", "regular_test", "maths::probability", "double",
                                               "--fullname", "probability_family_test",
-                                              "--testing-utilities", "ProbabilityTestingUtilities.hpp"
-                               // A tester shared from another directory is included by its path beneath Tests
+                                              "--testing-utilities", "Stuff/../Maths/ProbabilityTestingUtilities.hpp"
+                               // Named bare, but included from another directory by its path beneath Tests
                                , "create", "regular_test", "human", "std::string",
                                               "--fullname", "human_shared_tester_test",
-                                              "--testing-utilities", "Stuff/WidgetTestingUtilities.hpp"
+                                              "--testing-utilities", "WidgetTestingUtilities.hpp"
+                               // Fresh types, so that every class each creation registers is new
+                               , "create", "regular_test", "stuff::gizmo", "int", "-g", "Stuff",
+                                              "--fullname", "gizmo_semantics_test"
+                               , "create", "move_only_test", "stuff::gadget", "int", "-g", "Stuff",
+                                              "--fullname", "gadget_family_test",
+                                              "--testing-utilities", "WidgetTestingUtilities.hpp"
+                               // Named by its full path
+                               , "create", "regular_test", "maths::angle", "long double",
+                                              "--fullname", "angle_family_test",
+                                              "--testing-utilities",
+                                              (projectPath / "Tests/Maths/AngleTestingUtilities.hpp").generic_string()
+                               // A test whose name ends like a tester's is still among the common includes
+                               , "create", "free_test", "Utilities.h", "--fullname", "string_utilities"
                                , "create", "regular_allocation_test", "container",
                                               "--fullname", "container_family_allocation_test",
                                               "--testing-utilities", "ContainerTestingUtilities.hpp"
@@ -255,6 +270,7 @@ namespace sequoia::testing
     check_directory(projectName, "Source");
     check_directory(projectName, "Tests");
     check_directory(projectName, "TestSandbox");
+    check_directory(projectName, "TestShared");
 
     test_foreign_source_dir_refusal(projectName, sourceFolder, cmakeCacheDir / "CMakeCache.txt", fakeMain);
     record_cmake_source_dir(cmakeCacheDir / "CMakeCache.txt", cmakeSourceDir);
@@ -319,59 +335,89 @@ namespace sequoia::testing
 
   void test_runner_test_creation::test_creation_failure()
   {
-      check_exception_thrown<std::runtime_error>(
-        reporter{"Plurgh.h does not exist"},
-        [this]() {
-          std::stringstream outputStream{};
-          commandline_arguments args{{zeroth_arg("FakeProject"), "create", "free", "Plurgh.h"}};
-          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
-          return tr.execute();
-        });
+    const auto project{auxiliary_materials() / "FakeProject"};
 
-      check_exception_thrown<std::runtime_error>(
-        reporter{"Typo in specified class header"},
-        [this]() {
-          std::stringstream outputStream{};
-          commandline_arguments args{{zeroth_arg("FakeProject"), "create", "regular_test", "bar::things", "double", "--header", "fakeProject/Stuff/Thingz.hpp"}};
-          test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
-        });
+    auto create{
+      [this](std::initializer_list<std::string> creationArgs) {
+        const auto argList{
+          [&]() {
+            std::vector<std::string> list{zeroth_arg("FakeProject"), "create"};
+            list.append_range(creationArgs);
+            return list;
+          }()
+        };
 
-      auto create{
-        [this](std::initializer_list<std::string> creationArgs) {
-          const auto argList{
-            [&]() {
-              std::vector<std::string> list{zeroth_arg("FakeProject"), "create"};
-              list.append_range(creationArgs);
-              return list;
-            }()
-          };
+        std::stringstream outputStream{};
+        commandline_arguments args{argList};
+        test_runner tr{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+      }
+    };
 
-          std::stringstream outputStream{};
-          commandline_arguments args{argList};
-          test_runner tr{args.size(),
-                         args.get(),
-                         "Oliver J. Rosten",
-                         "  ",
-                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                         outputStream};
-        }
-      };
+    auto refused{
+      [this, &create](std::string_view description, std::initializer_list<std::string> creationArgs) {
+        check_exception_thrown<std::runtime_error>(reporter{description},
+                                                   [&create, creationArgs]() { create(creationArgs); });
+      }
+    };
 
-      check_exception_thrown<std::runtime_error>(
-        reporter{"Both a forename and a full name"},
-        [&create]() {
-          create({"free", "Utilities.h", "--forename", "utils", "--fullname", "utility_functions_test"});
-        });
+    refused("Plurgh.h does not exist", {"free", "Plurgh.h"});
+    refused("Typo in specified class header",
+            {"regular_test", "bar::things", "double", "--header", "fakeProject/Stuff/Thingz.hpp"});
 
-      check_exception_thrown<std::runtime_error>(
-        reporter{"A full name for a framework-diagnostics pair"},
-        [&create]() { create({"free", "Utilities.h", "--diagnostics", "--fullname", "utilities_diagnostics"}); });
+    refused("Both a forename and a full name",
+            {"free", "Utilities.h", "--forename", "utils", "--fullname", "utility_functions_test"});
+    refused("A full name for a framework-diagnostics pair",
+            {"free", "Utilities.h", "--diagnostics", "--fullname", "utilities_diagnostics"});
+    refused("An empty full name", {"free", "Utilities.h", "--fullname", ""});
+    refused("A full name which is not an identifier", {"free", "Utilities.h", "--fullname", "2nd_utilities_test"});
+    refused("A full name already registered", {"free", "Utilities.h", "--fullname", "widget_test"});
+    refused("A full name whose file is present, ignoring case",
+            {"free", "Stuff/Doohicky.hpp", "--fullname", "widgettest"});
 
-      check_exception_thrown<std::runtime_error>(
-        reporter{"Testing utilities absent"},
-        [&create]() {
-          create({"regular_test", "bar::things", "double", "--testing-utilities", "AbsentTestingUtilities.hpp"});
-        });
+    refused("Testing utilities absent",
+            {"regular_test", "bar::things", "double", "--testing-utilities", "AbsentTestingUtilities.hpp"});
+    refused("Testing utilities outside the tests repository",
+            {"regular_test", "bar::things", "double", "--testing-utilities", "../TestSandbox/TestSandbox.cpp"});
+
+    // A second file of the same name makes a bare name ambiguous; a directory of that name does not.
+    fs::copy(project / "Tests/Stuff/WidgetTestingUtilities.hpp", project / "Tests/Utilities");
+    refused("Testing utilities ambiguous",
+            {"regular_test", "bar::things", "double", "--testing-utilities", "WidgetTestingUtilities.hpp"});
+
+    fs::create_directories(project / "Tests/Decoy/ProbabilityTestingUtilities.hpp");
+    refused("Testing utilities found past a directory of their name, then a full name already registered",
+            {"regular_test", "stuff::widget", "std::vector<int>",
+             "--testing-utilities", "ProbabilityTestingUtilities.hpp",
+             "--fullname", "widget_test"});
+
+    // A refusal comes before anything is written: here the type is new, so every file would be too.
+    refused("A full name whose file is a companion's",
+            {"regular_test", "stuff::sprocket", "int", "-g", "Stuff", "--fullname", "sprocket_testing_utilities"});
+
+    auto namesSprocket{
+      [](const fs::directory_entry& entry) { return entry.path().filename().string().contains("Sprocket"); }
+    };
+
+    check("No file written for a refused test",
+          std::ranges::none_of(fs::recursive_directory_iterator{project}, namesSprocket));
+
+    auto mentionsSprocket{
+      [&project](std::string_view file) {
+        const auto text{read_to_string(project / file, std::ios_base::in).value()};
+        return text.contains("sprocket") || text.contains("Sprocket");
+      }
+    };
+
+    check("No registration for a refused test",
+          std::ranges::none_of(std::array<std::string_view, 3>{"TestSandbox/TestSandbox.cpp",
+                                                               "TestSandbox/CMakeLists.txt",
+                                                               "TestShared/SharedIncludes.hpp"},
+                               mentionsSprocket));
   }
 
   void test_runner_test_creation::check_directory(std::string_view projectName, std::string_view dirName)

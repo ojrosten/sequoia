@@ -185,6 +185,29 @@ Creating files for new test:
 "Tests/hominins/HumanSharedTesterTest.cpp"
 
 Creating files for new test:
+"Source/fakeProject/Stuff/Gizmo.hpp"
+"Source/fakeProject/Stuff/Gizmo.cpp"
+"Tests/Stuff/GizmoTestingUtilities.hpp"
+"Tests/Stuff/GizmoTestingDiagnostics.hpp"
+"Tests/Stuff/GizmoTestingDiagnostics.cpp"
+"Tests/Stuff/GizmoSemanticsTest.hpp"
+"Tests/Stuff/GizmoSemanticsTest.cpp"
+
+Creating files for new test:
+"Source/fakeProject/Stuff/Gadget.hpp"
+"Source/fakeProject/Stuff/Gadget.cpp"
+"Tests/Stuff/GadgetFamilyTest.hpp"
+"Tests/Stuff/GadgetFamilyTest.cpp"
+
+Creating files for new test:
+"Tests/Maths/AngleFamilyTest.hpp"
+"Tests/Maths/AngleFamilyTest.cpp"
+
+Creating files for new test:
+"Tests/Utilities/StringUtilities.hpp"
+"Tests/Utilities/StringUtilities.cpp"
+
+Creating files for new test:
 "Tests/Stuff/ContainerFamilyAllocationTest.hpp"
 "Tests/Stuff/ContainerFamilyAllocationTest.cpp"
 

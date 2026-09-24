@@ -11,6 +11,8 @@
 
 #include "Stuff/WidgetTestingUtilities.hpp"
 
+#include "sequoia/TestFramework/RegularTestCore.hpp"
+
 namespace curlew::testing
 {
     using namespace sequoia::testing;

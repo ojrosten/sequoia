@@ -9,18 +9,16 @@
 
 /** \file */
 
-#include "Stuff/WidgetTestingUtilities.hpp"
+#include "sequoia/TestFramework/FreeTestCore.hpp"
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
-
-namespace fakeProject::testing
+namespace curlew::testing
 {
     using namespace sequoia::testing;
 
-    class human_shared_tester_test final : public regular_test
+    class string_utilities final : public free_test
     {
     public:
-        using regular_test::regular_test;
+        using free_test::free_test;
 
         [[nodiscard]]
         static std::filesystem::path source_file();

@@ -6,6 +6,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/CoupleTestingDiagnostics.cpp
                ${TestDir}/Global/Stuff/DefsFreeTest.cpp
                ${TestDir}/Global/Stuff/GlobalFreeTest.cpp
+               ${TestDir}/Maths/AngleFamilyTest.cpp
                ${TestDir}/Maths/AngleFreeDiagnostics.cpp
                ${TestDir}/Maths/AngleRegularTest.cpp
                ${TestDir}/Maths/AngleTest.cpp
@@ -27,6 +28,9 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Stuff/FooAllocationTest.cpp
                ${TestDir}/Stuff/FooTest.cpp
                ${TestDir}/Stuff/FooTestingDiagnostics.cpp
+               ${TestDir}/Stuff/GadgetFamilyTest.cpp
+               ${TestDir}/Stuff/GizmoSemanticsTest.cpp
+               ${TestDir}/Stuff/GizmoTestingDiagnostics.cpp
                ${TestDir}/Stuff/ThingsTest.cpp
                ${TestDir}/Stuff/ThingsTestingDiagnostics.cpp
                ${TestDir}/Stuff/WidgetTest.cpp
@@ -37,6 +41,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Utilities/IteratorTestingDiagnostics.cpp
                ${TestDir}/Utilities/MultipleTest.cpp
                ${TestDir}/Utilities/MultipleTestingDiagnostics.cpp
+               ${TestDir}/Utilities/StringUtilities.cpp
                ${TestDir}/Utilities/UtilitiesFreeTest.cpp
                ${TestDir}/Utilities/UtilityFunctionsTest.cpp
                ${TestDir}/Utilities/VariadicTest.cpp

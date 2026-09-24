@@ -530,103 +530,78 @@ namespace sequoia::testing
     std::vector<nascent_test_vessel> nascentTests{};
     std::vector<project_data> nascentProjects{};
 
-    const option diagnosticsOption{"--framework-diagnostics", {"--diagnostics"}, {},
-      [&nascentTests](const arg_list&) {
-        if(nascentTests.empty())
-          throw std::logic_error{"Unable to find nascent test"};
+    // Each option acts on the test most recently named on the commandline.
+    auto onNascentTest{
+      [&nascentTests](auto act) {
+        return [&nascentTests, act](const arg_list& args) {
+          if(nascentTests.empty())
+            throw std::logic_error{"Unable to find nascent test"};
 
-        std::visit(overloaded{[](auto& nascent) { nascent.flavour(nascent_test_flavour::framework_diagnostics); }}, nascentTests.back());
-      },
+          std::visit([&act, &args](auto& nascent) { act(nascent, args); }, nascentTests.back());
+        };
+      }
+    };
+
+    using src_opt = nascent_test_base::gen_source_option;
+
+    const option diagnosticsOption{"--framework-diagnostics", {"--diagnostics"}, {},
+      onNascentTest([](auto& nascent, const arg_list&) {
+        nascent.flavour(nascent_test_flavour::framework_diagnostics);
+      }),
       {},
       "Make the test one of the framework's own diagnostics"
     };
 
     const option headerOption{"--header", {}, {"header"},
-      [&nascentTests](const arg_list& args){
-        if(nascentTests.empty())
-          throw std::logic_error{"Unable to find nascent test"};
-
-        std::visit(overloaded{[&args](auto& nascent){ nascent.header(args[0]); }}, nascentTests.back());
-      },
+      onNascentTest([](auto& nascent, const arg_list& args) { nascent.header(args[0]); }),
       {},
       "Name the header declaring the class under test"
     };
 
     const option forenameOption{"--test-class-forename", {"--forename"}, {"forename"},
-      [&nascentTests](const arg_list& args){
-        if(nascentTests.empty())
-          throw std::logic_error{"Unable to find nascent test"};
-
-        std::visit(overloaded{[&args](auto& nascent){ nascent.forename(args[0]); }}, nascentTests.back());
-      },
+      onNascentTest([](auto& nascent, const arg_list& args) { nascent.forename(args[0]); }),
       {},
       "Name the test class <forename>_test rather than after the header"
     };
 
     const option fullnameOption{"--fullname", {}, {"name"},
-      [&nascentTests](const arg_list& args){
-        if(nascentTests.empty())
-          throw std::logic_error{"Unable to find nascent test"};
-
-        std::visit(overloaded{[&args](auto& nascent){ nascent.full_name(args[0]); }}, nascentTests.back());
-      },
+      onNascentTest([](auto& nascent, const arg_list& args) { nascent.full_name(args[0]); }),
       {},
       "Name the test class <name> exactly, and its files after it"
     };
 
     const option testingUtilitiesOption{"--testing-utilities", {}, {"header"},
-      [&nascentTests](const arg_list& args){
-        if(nascentTests.empty())
-          throw std::logic_error{"Unable to find nascent test"};
-
-        std::visit(overloaded{[&args](auto& nascent){ nascent.testing_utilities(args[0]); }}, nascentTests.back());
-      },
+      onNascentTest([](auto& nascent, const arg_list& args) { nascent.testing_utilities(args[0]); }),
       {},
-      "Take the value_tester from an existing header beneath Tests, and generate none"
+      "Take the value_tester from an existing header beneath Tests; a regular or move-only test then "
+      "generates neither testing utilities nor false-negative diagnostics"
     };
 
     const option genFreeSourceOption{"--gen-source", {"-g"}, {"namespace"},
-      [&nascentTests](const arg_list& args) {
-        if(nascentTests.empty())
-          throw std::logic_error{"Unable to find nascent test"};
-
-        using src_opt = nascent_test_base::gen_source_option;
-
-        auto visitor{
-          overloaded{
-            [&args](nascent_behavioural_test& nascent) {
-              nascent.generate_source_files(src_opt::yes);
-              if(args[0] != "::") nascent.set_namespace(args[0]);
-            },
-            [](auto&) {}
-          }
-        };
-
-        std::visit(visitor, nascentTests.back());
-      },
+      onNascentTest(
+        overloaded{
+          [](nascent_behavioural_test& nascent, const arg_list& args) {
+            nascent.generate_source_files(src_opt::yes);
+            if(args[0] != "::")
+              nascent.set_namespace(args[0]);
+          },
+          [](auto&, const arg_list&) {}
+        }
+      ),
       {},
       "Generate a source file too, in <namespace> (:: for the global one)"
     };
 
     const option genSemanticsSourceOption{"--gen-source", {"-g"}, {"dir"},
-      [&nascentTests](const arg_list& args) {
-        if(nascentTests.empty())
-          throw std::logic_error{"Unable to find nascent test"};
-
-        using src_opt = nascent_test_base::gen_source_option;
-
-        auto visitor{
-          overloaded{
-            [&args](nascent_semantics_test& nascent) {
-              nascent.generate_source_files(src_opt::yes);
-              nascent.source_dir(args[0]);
-            },
-            [](auto&) {}
-          }
-        };
-
-        std::visit(visitor, nascentTests.back());
-      },
+      onNascentTest(
+        overloaded{
+          [](nascent_semantics_test& nascent, const arg_list& args) {
+            nascent.generate_source_files(src_opt::yes);
+            nascent.source_dir(args[0]);
+          },
+          [](auto&, const arg_list&) {}
+        }
+      ),
       {},
       "Generate the class's header and source too, under Source/<dir>"
     };

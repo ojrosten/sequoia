@@ -9,18 +9,16 @@
 
 /** \file */
 
-#include "Stuff/WidgetTestingUtilities.hpp"
-
-#include "sequoia/TestFramework/RegularTestCore.hpp"
+#include "GizmoTestingUtilities.hpp"
 
 namespace fakeProject::testing
 {
     using namespace sequoia::testing;
 
-    class human_shared_tester_test final : public regular_test
+    class gizmo_false_negative_test final : public regular_false_negative_test
     {
     public:
-        using regular_test::regular_test;
+        using regular_false_negative_test::regular_false_negative_test;
 
         [[nodiscard]]
         static std::filesystem::path source_file();
