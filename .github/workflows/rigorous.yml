@@ -78,8 +78,9 @@ name: rigorous
 # tree called `msvc`, it therefore rebuilt the nested end-to-end project as Debug
 # while this column was Release, so the executable was never where the test looked.
 # The run reported `versioned_output_diffs`, which was an artefact of
-# `child_return_code` casting a child's exit status of 1 straight onto the
-# bitmask - see roadmap item 146 - and not drift at all. A configure preset per
+# `child_return_code` then casting a child's exit status of 1 straight onto the
+# bitmask, and not drift at all; since roadmap item 146 a runner exits with 0 or
+# 81-111, and any other status is refused as not a test run. A configure preset per
 # configuration keeps directory, preset and configuration in agreement.
 #
 # Note the flag must be spelt out per column here, since `exec_args` REPLACES the

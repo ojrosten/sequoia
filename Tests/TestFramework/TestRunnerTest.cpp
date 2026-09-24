@@ -1344,13 +1344,13 @@ namespace sequoia::testing
         | std::ranges::to<std::vector>()
     };
 
-    check(equality, "The runner exits with 0 for success, and with the offset plus the flags otherwise", statuses, expectedStatuses);
+    check(equality,
+          "The runner exits with 0 for success, and with the offset plus the flags otherwise",
+          statuses,
+          expectedStatuses);
 
-    const auto decoded{
-      statuses
-        | std::views::transform([](int status){ return static_cast<int>(std::to_underlying(child_return_code(status))); })
-        | std::ranges::to<std::vector>()
-    };
+    auto decode{[](int status){ return static_cast<int>(std::to_underlying(child_return_code(status))); }};
+    const auto decoded{statuses | std::views::transform(decode) | std::ranges::to<std::vector>()};
 
     check(equality,
           "Each exit status decodes to the code it encodes",

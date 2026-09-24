@@ -390,16 +390,16 @@ namespace sequoia::testing
   {
     if(exitStatus == 0) return return_code::success;
 
-    constexpr auto highestFlags{static_cast<int>(std::to_underlying(dirty_return_codes))};
+    constexpr auto allFlags{static_cast<int>(std::to_underlying(dirty_return_codes))};
     const auto flags{exitStatus - runner_exit_offset};
-    if((flags <= 0) || (flags > highestFlags))
+    if((flags <= 0) || (flags > allFlags))
       throw std::runtime_error{
         std::format("The child process {}, which a test runner never does: a runner exits with 0 or "
                     "with {} to {}.\nSo the child did not complete a test run; it may not have been "
                     "built, may be misconfigured, or may have crashed.\n",
                     runtime::describe_failure(exitStatus),
                     runner_exit_offset + 1,
-                    runner_exit_offset + highestFlags)
+                    runner_exit_offset + allFlags)
       };
 
     return static_cast<return_code>(flags);
