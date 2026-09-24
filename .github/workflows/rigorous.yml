@@ -79,8 +79,9 @@ name: rigorous
 # while this column was Release, so the executable was never where the test looked.
 # The run reported `versioned_output_diffs`, which was an artefact of
 # `child_return_code` then casting a child's exit status of 1 straight onto the
-# bitmask, and not drift at all; since roadmap item 146 a runner exits with 0 or
-# 81-111, and any other status is refused as not a test run. A configure preset per
+# bitmask, and not drift at all. Since roadmap item 146 a runner's exit statuses
+# are 0 and a range above `runner_exit_offset` (TestRunner.hpp), and a child
+# exiting with any other is refused as not having run its tests. A configure preset per
 # configuration keeps directory, preset and configuration in agreement.
 #
 # Note the flag must be spelt out per column here, since `exec_args` REPLACES the

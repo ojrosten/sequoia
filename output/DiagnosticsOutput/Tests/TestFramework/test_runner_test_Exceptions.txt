@@ -138,63 +138,113 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1370
+Tests/TestFramework/TestRunnerTest.cpp, Line 1360
 Exit status 1 is not a runner's
 
 Expected Exception Type:
 [std::runtime_error]
-The child process failed with exit status 1, which a test runner never does: a runner exits with 0 or with 81 to 111.
-So the child did not complete a test run; it may not have been built, may be misconfigured, or may have crashed.
+A child failed with exit status 1.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1370
+Tests/TestFramework/TestRunnerTest.cpp, Line 1360
 Exit status 2 is not a runner's
 
 Expected Exception Type:
 [std::runtime_error]
-The child process failed with exit status 2, which a test runner never does: a runner exits with 0 or with 81 to 111.
-So the child did not complete a test run; it may not have been built, may be misconfigured, or may have crashed.
+A child failed with exit status 2.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1370
+Tests/TestFramework/TestRunnerTest.cpp, Line 1360
+Exit status 23 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 23.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1360
+Exit status 64 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 64.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1360
+Exit status 66 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 66.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1360
+Exit status 77 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 77.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1360
+Exit status 78 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 78.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1360
 Exit status 80 is not a runner's
 
 Expected Exception Type:
 [std::runtime_error]
-The child process failed with exit status 80, which a test runner never does: a runner exits with 0 or with 81 to 111.
-So the child did not complete a test run; it may not have been built, may be misconfigured, or may have crashed.
+A child failed with exit status 80.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1370
+Tests/TestFramework/TestRunnerTest.cpp, Line 1360
 Exit status 112 is not a runner's
 
 Expected Exception Type:
 [std::runtime_error]
-The child process failed with exit status 112, which a test runner never does: a runner exits with 0 or with 81 to 111.
-So the child did not complete a test run; it may not have been built, may be misconfigured, or may have crashed.
+A child failed with exit status 112.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1370
+Tests/TestFramework/TestRunnerTest.cpp, Line 1360
 Exit status 126 is not a runner's
 
 Expected Exception Type:
 [std::runtime_error]
-The child process failed with exit status 126, which a test runner never does: a runner exits with 0 or with 81 to 111.
-So the child did not complete a test run; it may not have been built, may be misconfigured, or may have crashed.
+A child could not be executed by the shell (exit status 126).
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1370
+Tests/TestFramework/TestRunnerTest.cpp, Line 1360
 Exit status 127 is not a runner's
 
 Expected Exception Type:
 [std::runtime_error]
-The child process failed with exit status 127, which a test runner never does: a runner exits with 0 or with 81 to 111.
-So the child did not complete a test run; it may not have been built, may be misconfigured, or may have crashed.
+A child was not found by the shell (exit status 127).
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
 
 =======================================
 

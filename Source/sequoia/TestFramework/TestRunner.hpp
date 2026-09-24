@@ -27,6 +27,7 @@
 #include <optional>
 #include <set>
 #include <span>
+#include <utility>
 
 namespace sequoia::testing
 {
@@ -42,6 +43,11 @@ namespace sequoia::testing
     fixed      /// fixed-size thread pool
   };
 
+  /** \brief What a run reports, as consecutive bits.
+
+      Each enumerator needs a row in `return_code_names` (TestRunner.cpp), and the highest is named
+      by `max_runner_exit_status`.
+   */
   enum class return_code : unsigned {
     success                = 0,
     versioned_output_diffs = 1 << 0,
@@ -88,22 +94,44 @@ namespace sequoia::testing
 
   /** \brief Added to a `return_code` other than success to give the runner's exit status.
 
-      A runner therefore exits with 0 or with 81 to 111. That range lies clear of the statuses a
-      process gives when it fails for reasons of its own - 1 and 2 generically, 64 to 78 for BSD's
-      sysexits, 126 and above from a shell - so no such failure can be read as one of the runner's.
+      A runner therefore exits with 0, or with `runner_exit_offset + 1` to `max_runner_exit_status`.
+      By POSIX conventions and sanitizer defaults, that range is clear of the statuses a process
+      gives when it fails for reasons of its own: 1 and 2 generically, 23 from LeakSanitizer, 64
+      to 78 for BSD's sysexits, 66 and 77 from ThreadSanitizer and MemorySanitizer, and 126 and
+      above from a shell. Windows tools can exit with Win32 error codes inside it (87, 110 and
+      111 among them), and those are misread.
    */
   inline constexpr int runner_exit_offset{80};
+
+  /// The runner's highest exit status, with every flag set: the enumerators are consecutive bits
+  inline constexpr int max_runner_exit_status{
+    runner_exit_offset + static_cast<int>((std::to_underlying(return_code::post_run_failures) << 1) - 1)
+  };
+
+  static_assert(runner_exit_offset > 78, "The runner's exit statuses would overlap BSD's sysexits");
+
+  // A POSIX exit status is 8 bits, and from 126 a shell's own statuses begin.
+  static_assert(max_runner_exit_status <= 125,
+                "The runner's exit statuses no longer fit below the shell's; report the return_code "
+                "to a parent process through a file it names, rather than in the exit status");
 
   /** \brief Maps the exit status of a process which ran a sequoia test runner back to the code it
              reported.
 
-      \throws std::runtime_error for any status other than 0 or `to_exit_code`'s 81 to 111: the
-              process did not complete a test run, being perhaps unbuilt, misconfigured or crashed.
+      `child` names the process, for the message should it not be a runner's.
+
+      \throws std::runtime_error for any status other than 0 or `runner_exit_offset + 1` to
+              `max_runner_exit_status`: the process did not complete a test run, being perhaps
+              unbuilt, misconfigured or crashed.
    */
   [[nodiscard]]
-  return_code child_return_code(int exitStatus);
+  return_code child_return_code(int exitStatus, std::string_view child);
 
-  /// The exit status for `code`: 0 for success, `runner_exit_offset` plus the code otherwise
+  /** \brief The exit status for `code`: 0 for success, `runner_exit_offset` plus the code otherwise.
+
+      A code with bits outside the enumerators, which no exit status can carry, is reported as an
+      incomplete run: those bits are dropped and `incomplete_run` is set.
+   */
   [[nodiscard]]
   int to_exit_code(return_code code) noexcept;
 

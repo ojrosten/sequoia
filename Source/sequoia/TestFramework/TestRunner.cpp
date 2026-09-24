@@ -177,11 +177,9 @@ namespace sequoia::testing
       )
     };
 
-    // A POSIX exit status is 8 bits, and above 125 a shell's own statuses begin, so the runner's
-    // cannot grow past it.
-    static_assert(runner_exit_offset + std::to_underlying(dirty_return_codes) <= 125,
-                  "The runner's exit statuses no longer fit below the shell's; report the return_code "
-                  "to a parent process in band - in a file it names - rather than in the exit status");
+    static_assert(max_runner_exit_status == runner_exit_offset + static_cast<int>(std::to_underlying(dirty_return_codes)),
+                  "Each return_code enumerator needs a row in return_code_names, and max_runner_exit_status "
+                  "must be computed from the highest");
 
     [[nodiscard]]
     std::string to_async_option(concurrency_mode mode, std::size_t threadPoolSize)
@@ -386,23 +384,24 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  return_code child_return_code(const int exitStatus)
+  return_code child_return_code(const int exitStatus, std::string_view child)
   {
     if(exitStatus == 0) return return_code::success;
 
-    constexpr auto allFlags{static_cast<int>(std::to_underlying(dirty_return_codes))};
-    const auto flags{exitStatus - runner_exit_offset};
-    if((flags <= 0) || (flags > allFlags))
+    // Compared before subtracting: a Windows status of 0x80000000 or more is negative, and near
+    // INT_MIN the subtraction would overflow.
+    if((exitStatus <= runner_exit_offset) || (exitStatus > max_runner_exit_status))
       throw std::runtime_error{
-        std::format("The child process {}, which a test runner never does: a runner exits with 0 or "
-                    "with {} to {}.\nSo the child did not complete a test run; it may not have been "
-                    "built, may be misconfigured, or may have crashed.\n",
+        std::format("{} {}.\nThat is not one of a test runner's exit statuses, which are 0 and {} to {}, so "
+                    "it did not complete a test run: it may not have been built, may be misconfigured, "
+                    "or may have crashed.\n",
+                    child,
                     runtime::describe_failure(exitStatus),
                     runner_exit_offset + 1,
-                    runner_exit_offset + allFlags)
+                    max_runner_exit_status)
       };
 
-    return static_cast<return_code>(flags);
+    return static_cast<return_code>(exitStatus - runner_exit_offset);
   }
 
   [[nodiscard]]
@@ -419,7 +418,13 @@ namespace sequoia::testing
   [[nodiscard]]
   int to_exit_code(const return_code code) noexcept
   {
-    return code == return_code::success ? 0 : runner_exit_offset + static_cast<int>(std::to_underlying(code));
+    if(code == return_code::success) return 0;
+
+    const auto carried{(code & ~dirty_return_codes) == return_code::success
+                         ? code
+                         : (code & dirty_return_codes) | return_code::incomplete_run};
+
+    return runner_exit_offset + static_cast<int>(std::to_underlying(carried));
   }
 
   individual_materials_paths set_materials(const std::filesystem::path& sourceFile,
@@ -1072,9 +1077,10 @@ namespace sequoia::testing
     auto code{return_code::success};
     for(std::size_t i{}; i < m_NumReps; ++i)
     {
-      code |= child_return_code(
-                invoke(runtime::shell_command{std::format("{} locate {} --runner-id {}{}{}",
-                                                          proj_paths().executable().string(), m_NumReps, i, selection, async)}));
+      const auto command{std::format("{} locate {} --runner-id {}{}{}",
+                                     proj_paths().executable().string(), m_NumReps, i, selection, async)};
+
+      code |= child_return_code(invoke(runtime::shell_command{command}), std::format("Sandbox run {}, {},", i, command));
     }
 
     return code;

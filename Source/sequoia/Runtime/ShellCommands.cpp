@@ -243,11 +243,20 @@ namespace sequoia::runtime
 
       if(status < 0)
         return std::format("failed with exit status 0x{:08X}", static_cast<std::uint32_t>(status));
+
+      if(status == 9009)
+        return "was not found by the shell (exit status 9009)";
     }
     else
     {
       if(status < 0)
         return "did not run to completion";
+
+      if(status == 126)
+        return "could not be executed by the shell (exit status 126)";
+
+      if(status == 127)
+        return "was not found by the shell (exit status 127)";
 
       if(status > 128)
         return std::format("failed with exit status {}, which may mean it was killed by signal {}",
