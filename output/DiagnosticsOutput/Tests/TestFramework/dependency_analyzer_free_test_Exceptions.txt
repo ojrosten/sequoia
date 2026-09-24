@@ -1,4 +1,4 @@
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 440
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 506
 Executable out of date
 
 Expected Exception Type:
@@ -9,7 +9,7 @@ output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_an
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 453
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 519
 Executable out of date on account of a source no test depends on
 
 Expected Exception Type:
@@ -20,7 +20,7 @@ output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_an
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 467
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 533
 Executable out of date on account of a toolchain header
 
 Expected Exception Type:
@@ -31,7 +31,7 @@ output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_an
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 481
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 547
 A file the build read cannot be read
 
 Expected Exception Type:
@@ -41,7 +41,7 @@ Restore the file, or build the executable again
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 520
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 586
 The record names nothing of the project's
 
 Expected Exception Type:
@@ -50,7 +50,7 @@ The build's record names nothing under output/TestsTemporaryData/TestFramework/D
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 528
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 594
 The record names nothing of the project's, whatever the toolchain did
 
 Expected Exception Type:
@@ -59,43 +59,7 @@ The build's record names nothing under output/TestsTemporaryData/TestFramework/D
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 623
-A source of the library's, edited since the build: refused
-
-Expected Exception Type:
-[std::runtime_error]
-The library has changed since this executable was built, so what it writes may be out of date.
-Executable is out of date; please build it!
-Executable time stamp:****
-output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/xxFILExx time stamp:****
-
-=======================================
-
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 623
-A source of the library's, edited since the build: refused
-
-Expected Exception Type:
-[std::runtime_error]
-The library has changed since this executable was built, so what it writes may be out of date.
-Executable is out of date; please build it!
-Executable time stamp:****
-output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/xxFILExx time stamp:****
-
-=======================================
-
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 623
-A source of the library's, edited since the build: refused
-
-Expected Exception Type:
-[std::runtime_error]
-The library has changed since this executable was built, so what it writes may be out of date.
-Executable is out of date; please build it!
-Executable time stamp:****
-output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/xxFILExx time stamp:****
-
-=======================================
-
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1117
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1253
 A prune file in a superseded format
 
 Expected Exception Type:
@@ -105,7 +69,7 @@ Try deleting the parent directory and starting afresh
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1123
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1259
 A malformed time stamp
 
 Expected Exception Type:
@@ -115,7 +79,7 @@ Try deleting the parent directory and starting afresh
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1129
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1265
 A path with no time stamp after it
 
 Expected Exception Type:

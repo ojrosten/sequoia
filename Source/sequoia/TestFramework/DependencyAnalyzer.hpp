@@ -22,7 +22,7 @@
     `create` asks before it writes anything from code which may be out of date.
  */
 
-#include "sequoia/TestFramework/BuildArtefacts.hpp"
+#include "sequoia/TestFramework/CMakeCache.hpp"
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
 #include <chrono>
@@ -30,7 +30,6 @@
 #include <iostream>
 #include <limits>
 #include <optional>
-#include <ostream>
 #include <span>
 #include <variant>
 
@@ -132,47 +131,35 @@ namespace sequoia::testing
                           std::filesystem::file_time_type updateTime,
                           std::optional<std::size_t> id);
 
-  /** \brief A file the build read, and when it was last modified. */
-  struct modified_file
-  {
-    std::filesystem::path file;
-    std::filesystem::file_time_type time;
-  };
-
   /** \brief The directory of sources this library was compiled from, as the compiler was given it.
 
-      Relative when the build handed the compiler relative paths - a plain `make`, or a build remapping
-      its paths with `-ffile-prefix-map` - in which case the library's own files cannot be told apart.
+      Relative when the compiler was handed a relative path, or when the build remaps the paths the
+      binary records - `-fmacro-prefix-map`, which `-ffile-prefix-map` implies - in which case the
+      library's own files cannot be told apart.
    */
   [[nodiscard]]
   std::filesystem::path sequoia_library_root();
 
-  /** \brief The newest of a library's own files which its build read, if it is no older than the executable.
-
-      The library's objects are those compiled from a source beneath `libraryRoot`, and its own files
-      are those of the files read to compile them which lie beneath it too. So a header of the library
-      which only the tests read does not count, and nor does anything of the toolchain's, of another
-      library's, or of the tests'.
-
-      \throws std::runtime_error if the modification time of one of the library's own files cannot be read.
-   */
-  [[nodiscard]]
-  std::optional<modified_file> library_change_since_build(const build_tree& tree,
-                                                          const compilations& compiled,
-                                                          const std::filesystem::path& libraryRoot,
-                                                          std::filesystem::file_time_type executableStamp);
-
   /** \brief Refuses to go on if the library beneath `libraryRoot` has changed since the executable was
              built: what the executable would write comes from code older than the library's.
 
-      Where the question cannot be answered - the build's record cannot be read, `libraryRoot` is
-      relative, or the executable cannot be found - a one-line warning to `stream` says so, and nothing
-      is refused.
+      The library's objects are those compiled from a source beneath `libraryRoot`, and its own files are
+      those of the files read to compile them which lie beneath it too. So a header of the library which
+      only the tests read does not count, and nor does anything of the toolchain's, of another library's,
+      or of the tests'. The build's record is read only if something beneath `libraryRoot` - a file, or a
+      directory, whose time a deletion within it moves - is no older than the executable.
 
-      \throws std::runtime_error naming the newest of the library's own files, its modification time
-      and the executable's, if the former is no older; or if that file's modification time cannot be read.
+      Where the question cannot be answered, a one-line warning to `stream` gives the reason, and nothing
+      is refused: `libraryRoot` is relative; the executable cannot be found; the build's record cannot be
+      read; or the record names no object compiled from beneath `libraryRoot`.
+
+      \throws std::runtime_error naming the newest of the library's own files, the object it was read to
+      compile and that object's target, and the time stamps of the file and the executable, if the file is
+      no older than the executable; or naming a file of the library's which the build read and which
+      cannot now be read.
    */
   void refuse_if_library_changed_since_build(const project_paths& projPaths,
+                                             const cmake_cache& cache,
                                              const std::filesystem::path& libraryRoot,
                                              std::ostream& stream);
 

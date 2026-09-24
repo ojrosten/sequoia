@@ -93,25 +93,50 @@ namespace sequoia::testing
     enum class build_system { ninja, ninja_with_msvc, visual_studio };
 
     /// Which of the fake project's sources the build's record names, and where it says they are
-    enum class recorded_sources { all, all_but_the_tests, all_under_another_root };
+    enum class recorded_sources { all, all_but_the_tests, all_under_another_root, library_relative };
 
     void write_build_artefacts(const std::filesystem::path& fake, build_system system, recorded_sources sources);
 
     void test_recorded_sources(const project_paths& projPaths);
 
-    /// A file of the fake project, and when, relative to the reset time, it was last modified
+    /// A file of the fake project, and when, relative to the reset time, it is to be taken as last modified
     struct timed_edit
     {
       std::filesystem::path file;
       std::chrono::seconds offset;
     };
 
+    /// What the library check does to the fake project: its refusal, if any, normalised, and its warnings
+    struct library_check
+    {
+      std::optional<std::string> refusal{};
+      std::string warnings{};
+    };
+
+    [[nodiscard]]
+    static library_check check_library(const project_paths& projPaths, const std::filesystem::path& libraryRoot);
+
+    [[nodiscard]]
+    static std::string normalise_library_message(const project_paths& projPaths, std::string message);
+
+    /// The extension of the fake build's object files, which depends on the build system recorded
+    std::string_view m_ObjectExtension{".o"};
+
+    [[nodiscard]]
+    std::string library_refusal(std::string_view file, std::string_view source) const;
+
     void check_library_change(const reporter& description,
                               const project_paths& projPaths,
                               const std::vector<timed_edit>& edits,
-                              const std::optional<std::filesystem::path>& changed);
+                              const std::optional<std::string>& refusal);
+
+    void test_library_root();
 
     void test_library_change(const project_paths& projPaths);
+
+    void test_library_file_gone(const project_paths& projPaths);
+
+    void test_library_recorded_relative(const std::filesystem::path& fake, const project_paths& projPaths);
 
     void test_library_change_not_checked(const project_paths& projPaths);
 

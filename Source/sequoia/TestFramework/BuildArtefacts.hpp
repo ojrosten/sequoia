@@ -11,6 +11,8 @@
     \brief Utilities to extract dependencies from the build system.
  */
 
+#include "sequoia/TestFramework/CMakeCache.hpp"
+
 #include <cstddef>
 #include <filesystem>
 #include <string>
@@ -64,6 +66,13 @@ namespace sequoia::testing
    */
   [[nodiscard]]
   build_tree read_build_tree(const std::filesystem::path& cacheFile);
+
+  /** \brief As the overload above, for a cache already read from `cacheFile`.
+
+      \throws std::runtime_error if the cache names no generator.
+   */
+  [[nodiscard]]
+  build_tree read_build_tree(const std::filesystem::path& cacheFile, const cmake_cache& cache);
 
   /** \brief Every compilation the build currently has, each with its source first among its inputs.
 

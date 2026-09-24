@@ -649,7 +649,7 @@ namespace sequoia::testing
                             // Once, before anything is written: a registration's form is compiled in
                             if(!libraryChecked)
                             {
-                              refuse_if_library_changed_since_build(proj_paths(), sequoia_library_root(), stream());
+                              refuse_if_library_changed_since_build(proj_paths(), m_CMakeCache, sequoia_library_root(), stream());
                               libraryChecked = true;
                             }
 

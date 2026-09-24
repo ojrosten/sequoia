@@ -870,9 +870,9 @@ namespace sequoia::testing
 
     /// The generator a CMake cache names
     [[nodiscard]]
-    std::string generator_of(const fs::path& cacheFile)
+    std::string generator_of(const fs::path& cacheFile, const cmake_cache& cache)
     {
-      const auto generator{cmake_cache{cacheFile}.variable("CMAKE_GENERATOR")};
+      const auto generator{cache.variable("CMAKE_GENERATOR")};
       if(!generator)
         throw std::runtime_error{malformed_error(cacheFile, "no generator is named")};
 
@@ -927,11 +927,17 @@ namespace sequoia::testing
   [[nodiscard]]
   build_tree read_build_tree(const fs::path& cacheFile)
   {
+    return read_build_tree(cacheFile, cmake_cache{cacheFile});
+  }
+
+  [[nodiscard]]
+  build_tree read_build_tree(const fs::path& cacheFile, const cmake_cache& cache)
+  {
     const auto buildDirectory{cacheFile.parent_path()};
 
     return build_tree{
       .build_directory{buildDirectory},
-      .generator{generator_of(cacheFile)},
+      .generator{generator_of(cacheFile, cache)},
       .implicit_include_directories{implicit_include_directories_of(buildDirectory)}
     };
   }
