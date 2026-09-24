@@ -39,6 +39,11 @@
     -# **Invoking an empty function through a `noexcept` signature terminates**, since the throw
        escapes a `noexcept` call operator.
 
+    ## Exception guarantees
+
+    Copy assignment is strong. Move construction and move assignment never throw, even for a target
+    whose own move may throw.
+
     ## In a constant expression
 
     -# When compiled as C++26 or later (P2738 permits a cast from `void*` in a constant expression),
@@ -450,11 +455,7 @@ namespace sequoia
     }
   }
 
-  /** \brief Owning type erasure for a callable, with the call operator qualified as `Signature` is.
-
-      Copy assignment gives the strong exception guarantee; moves do not throw, and do not move a target
-      whose move may throw.
-   */
+  /** \brief Owning type erasure for a callable, with the call operator qualified as `Signature` is. */
   template<class Signature>
     requires erasable_signature<Signature>
   class erased_function : public impl::call_operator_for_t<Signature>
