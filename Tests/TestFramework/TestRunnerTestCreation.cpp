@@ -337,9 +337,14 @@ namespace sequoia::testing
         });
 
       auto create{
-        [this](std::initializer_list<std::string_view> creationArgs) {
-          std::vector<std::string> argList{zeroth_arg("FakeProject"), "create"};
-          argList.insert(argList.end(), creationArgs.begin(), creationArgs.end());
+        [this](std::initializer_list<std::string> creationArgs) {
+          const auto argList{
+            [&]() {
+              std::vector<std::string> list{zeroth_arg("FakeProject"), "create"};
+              list.append_range(creationArgs);
+              return list;
+            }()
+          };
 
           std::stringstream outputStream{};
           commandline_arguments args{argList};

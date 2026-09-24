@@ -145,7 +145,7 @@ Unable to locate file fakeProject/Stuff/Thingz.hpp or fakeProject/Stuff/Thingz.h
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 356
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 361
 Both a forename and a full name
 
 Expected Exception Type:
@@ -154,7 +154,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 362
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 367
 A full name for a framework-diagnostics pair
 
 Expected Exception Type:
@@ -163,7 +163,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 366
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 371
 Testing utilities absent
 
 Expected Exception Type:

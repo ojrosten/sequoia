@@ -93,13 +93,13 @@ namespace sequoia::testing
 
     void surname(std::string name) { m_Surname = std::move(name); }
 
-    /// The test's name given whole, in place of the one derived from its forename and surname
+    /** \brief The test's name given whole, in place of the one derived from its forename and surname */
     [[nodiscard]]
     const std::string& full_name() const noexcept { return m_FullName; }
 
     void full_name(std::string name) { m_FullName = std::move(name); }
 
-    /// An existing header holding the value_tester of the type under test, which the test includes
+    /** \brief An existing header holding the value_tester of the type under test, which the test includes */
     [[nodiscard]]
     const std::filesystem::path& testing_utilities() const noexcept { return m_TestingUtilities; }
 
@@ -159,7 +159,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string test_name() const;
 
-    /// The stem of the test's own files: its name in camel case
+    /** \brief The stem of the test's own files: its name in camel case */
     [[nodiscard]]
     std::string test_file_stem() const;
 
@@ -245,11 +245,11 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator==(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
 
-    /// The test's own files
+    /** \brief The test's own files */
     [[nodiscard]]
     static std::vector<std::string> stubs();
 
-    /// The files for the type under test: its value_tester and false-negative diagnostics
+    /** \brief The files for the type under test: its value_tester and false-negative diagnostics */
     [[nodiscard]]
     static std::vector<std::string> companion_stubs();
   private:

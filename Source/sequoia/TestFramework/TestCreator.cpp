@@ -434,7 +434,8 @@ namespace sequoia::testing
                                    std::string_view nameStub,
                                    FileTransformer transformer)
   {
-    if(!m_TestingUtilities.empty()) locate_testing_utilities();
+    if(!m_TestingUtilities.empty())
+      locate_testing_utilities();
 
     stream() << "Creating files for new test:\n";
 
@@ -607,7 +608,8 @@ namespace sequoia::testing
     if(surname().empty()) surname(to_surname(flavour()));
 
     type_file_stem(forename());
-    if(header().empty()) header(std::filesystem::path{type_file_stem()}.concat(".hpp"));
+    if(header().empty())
+      header(std::filesystem::path{type_file_stem()}.concat(".hpp"));
 
     // Testing utilities named on the commandline hold the value_tester, and its false-negative
     // diagnostics belong with it, so neither companion is generated.
@@ -643,7 +645,8 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> nascent_semantics_test::test_classes() const
   {
-    if(!testing_utilities().empty()) return { test_name() };
+    if(!testing_utilities().empty())
+      return { test_name() };
 
     return { {std::string{forename()}.append("_false_negative_").append(surname())},
              test_name() };
@@ -770,7 +773,8 @@ namespace sequoia::testing
   {
     if(surname().empty()) surname(std::string{"allocation_"}.append(to_surname(flavour())));
     type_file_stem(forename());
-    if(header().empty()) header(std::filesystem::path{type_file_stem()}.concat(".hpp"));
+    if(header().empty())
+      header(std::filesystem::path{type_file_stem()}.concat(".hpp"));
 
     nascent_test_base::finalize([](const fs::path& p) { return p; },
                                 {},
