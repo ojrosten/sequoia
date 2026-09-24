@@ -9,22 +9,14 @@
 
 /** \file */
 
-#include "Stuff/WidgetTestingUtilities.hpp"
+#include <compare>
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
-
-namespace fakeProject::testing
+namespace stuff
 {
-    using namespace sequoia::testing;
-
-    class human_shared_tester_test final : public regular_test
+    class gizmo
     {
     public:
-        using regular_test::regular_test;
-
         [[nodiscard]]
-        static std::filesystem::path source_file();
-
-        void run_tests();
+        friend auto operator<=>(const gizmo&, const gizmo&) noexcept = default;
     };
 }

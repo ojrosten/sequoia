@@ -9,7 +9,7 @@
 
 /** \file */
 
-#include "Stuff/WidgetTestingUtilities.hpp"
+#include "AngleTestingUtilities.hpp"
 
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 
@@ -17,7 +17,7 @@ namespace fakeProject::testing
 {
     using namespace sequoia::testing;
 
-    class human_shared_tester_test final : public regular_test
+    class angle_family_test final : public regular_test
     {
     public:
         using regular_test::regular_test;
