@@ -131,7 +131,9 @@ namespace sequoia::testing
       [[nodiscard]]
       facts operator()(const fs::path& recorded)
       {
-        const auto asRecorded{(recorded.is_absolute() ? recorded : m_Tree.build_directory / recorded).lexically_normal()};
+        const auto asRecorded{
+          (recorded.is_absolute() ? recorded : m_Tree.build_directory / recorded).lexically_normal()
+        };
         const auto& directory{directory_facts(asRecorded.parent_path())};
 
         return {.canonical{directory.canonical / asRecorded.filename()}, .toolchain{directory.toolchain}};
@@ -150,12 +152,15 @@ namespace sequoia::testing
         auto canonicalized{fs::weakly_canonical(dir, error)};
         const fs::path& canonical{error ? dir : canonicalized};
 
-        return m_Directories.emplace(dir, facts{.canonical{canonical}, .toolchain{in_toolchain(canonical, m_Tree)}}).first->second;
+        const facts found{.canonical{canonical}, .toolchain{in_toolchain(canonical, m_Tree)}};
+        return m_Directories.emplace(dir, found).first->second;
       }
     };
 
     [[nodiscard]]
-    std::runtime_error executable_out_of_date(fs::file_time_type executableStamp, const fs::path& file, fs::file_time_type time)
+    std::runtime_error executable_out_of_date(fs::file_time_type executableStamp,
+                                              const fs::path& file,
+                                              fs::file_time_type time)
     {
       return std::runtime_error{
         std::format("Executable is out of date; please build it!\nExecutable time stamp: {}\n{} time stamp: {}\n",
@@ -858,12 +863,16 @@ namespace sequoia::testing
     return (newest && (newest->time >= executableStamp)) ? newest : std::nullopt;
   }
 
-  void refuse_if_library_changed_since_build(const project_paths& projPaths, const fs::path& libraryRoot, std::ostream& stream)
+  void refuse_if_library_changed_since_build(const project_paths& projPaths,
+                                             const fs::path& libraryRoot,
+                                             std::ostream& stream)
   {
     auto notChecked{
       [&stream](std::string_view reason) {
         stream << parsing::commandline::warning(
-                    std::format("Whether the library has changed since this executable was built cannot be checked: {}", reason))
+                    std::format("Whether the library has changed since this executable was built "
+                                "cannot be checked: {}",
+                                reason))
                << '\n';
       }
     };
@@ -881,7 +890,7 @@ namespace sequoia::testing
       return;
     }
 
-    const auto record{
+    const auto build{
       [&]() -> std::optional<std::pair<build_tree, compilations>> {
         try
         {
@@ -896,15 +905,17 @@ namespace sequoia::testing
       }()
     };
 
-    if(!record)
+    if(!build)
     {
       notChecked("the build's record of what it compiled cannot be read");
       return;
     }
 
-    if(const auto change{library_change_since_build(record->first, record->second, libraryRoot, *executableStamp)})
+    const auto& [tree, compiled]{*build};
+    if(const auto change{library_change_since_build(tree, compiled, libraryRoot, *executableStamp)})
       throw std::runtime_error{
-        std::format("The library has changed since this executable was built, so what it writes may be out of date.\n{}",
+        std::format("The library has changed since this executable was built, "
+                    "so what it writes may be out of date.\n{}",
                     executable_out_of_date(*executableStamp, change->file, change->time).what())
       };
   }

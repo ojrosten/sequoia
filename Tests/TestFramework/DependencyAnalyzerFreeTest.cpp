@@ -547,7 +547,10 @@ namespace sequoia::testing
     const auto tree{read_build_tree(projPaths.discovered().cmake_cache())};
     const auto compiled{read_compilations(tree, projPaths.executable())};
     const auto obtained{
-      library_change_since_build(tree, compiled, projPaths.source().project(), fs::last_write_time(projPaths.executable()))
+      library_change_since_build(tree,
+                                 compiled,
+                                 projPaths.source().project(),
+                                 fs::last_write_time(projPaths.executable()))
     };
 
     check(equality,
@@ -599,11 +602,14 @@ namespace sequoia::testing
                          projPaths, {{library / "Stuff" / "Bar.hpp", lateEditOffset}}, std::nullopt);
 
     check_library_change("A test's source",
-                         projPaths, {{projPaths.tests().repo() / "Stuff" / "FooTest.cpp", lateEditOffset}}, std::nullopt);
+                         projPaths,
+                         {{projPaths.tests().repo() / "Stuff" / "FooTest.cpp", lateEditOffset}},
+                         std::nullopt);
 
+    const auto anotherLibrary{projPaths.project_root() / "dependencies" / "foo" / "Source" / "foo"};
     check_library_change("A header of another library's, which the library reads",
                          projPaths,
-                         {{projPaths.project_root() / "dependencies" / "foo" / "Source" / "foo" / "Utilities" / "Helper.hpp", lateEditOffset}},
+                         {{anotherLibrary / "Utilities" / "Helper.hpp", lateEditOffset}},
                          std::nullopt);
 
     check_library_change("A header of the toolchain's, which the library reads",

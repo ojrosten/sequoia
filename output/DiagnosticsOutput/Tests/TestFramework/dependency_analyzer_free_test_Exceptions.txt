@@ -59,7 +59,7 @@ The build's record names nothing under output/TestsTemporaryData/TestFramework/D
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 617
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 623
 A source of the library's, edited since the build: refused
 
 Expected Exception Type:
@@ -71,7 +71,7 @@ output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_an
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 617
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 623
 A source of the library's, edited since the build: refused
 
 Expected Exception Type:
@@ -83,7 +83,7 @@ output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_an
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 617
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 623
 A source of the library's, edited since the build: refused
 
 Expected Exception Type:
@@ -95,7 +95,7 @@ output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_an
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1111
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1117
 A prune file in a superseded format
 
 Expected Exception Type:
@@ -105,7 +105,7 @@ Try deleting the parent directory and starting afresh
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1117
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1123
 A malformed time stamp
 
 Expected Exception Type:
@@ -115,7 +115,7 @@ Try deleting the parent directory and starting afresh
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1123
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1129
 A path with no time stamp after it
 
 Expected Exception Type:
