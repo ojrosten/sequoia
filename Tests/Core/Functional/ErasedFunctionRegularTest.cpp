@@ -332,6 +332,7 @@ namespace sequoia::testing
 
     STATIC_CHECK(std::constructible_from<function_t, destruction_probe<true>>);
     STATIC_CHECK(rejects_destructor_that_may_throw);
+    STATIC_CHECK(!std::constructible_from<function_t, std::in_place_type_t<destruction_probe<false>>>);
 
     // Copy constructibility, and for in-place construction an undecayed type, are mandated rather than constrained
     using move_only_target = decltype([p = std::unique_ptr<int>{}]() { return 1; });
