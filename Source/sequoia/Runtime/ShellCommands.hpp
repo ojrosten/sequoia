@@ -13,6 +13,7 @@
 
 #include <filesystem>
 #include <optional>
+#include <string_view>
 
 namespace sequoia::runtime
 {
@@ -62,6 +63,12 @@ namespace sequoia::runtime
         The spawned process inherits the standard streams and nothing else; in particular it does
         not inherit files the caller happens to have open, which on Windows would otherwise keep
         them undeletable for as long as that process lived.
+
+        The status is the caller's to act on, and ignoring it has so far always been a bug in this
+        codebase: `create` reporting success when its CMake run failed, `init` creating a project
+        whose first commit had failed, and a generated project's failed build surfacing only as an
+        unrelated exception several steps later. Where only success is acceptable, pass the status to
+        `throw_unless_succeeded`.
      */
     friend int invoke(const shell_command& cmd);
   private:
@@ -72,4 +79,12 @@ namespace sequoia::runtime
 
   [[nodiscard]]
   shell_command cd_cmd(const std::filesystem::path& dir);
+
+  /** \brief Throws `std::runtime_error` unless `status`, as returned by `invoke`, is zero.
+
+      The message names `step` and says how it failed - a non-zero exit status, or not running to
+      completion - followed by `advice`, which should say what the failure left behind and where
+      the command's output went.
+   */
+  void throw_unless_succeeded(int status, std::string_view step, std::string_view advice);
 }

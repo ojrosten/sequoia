@@ -14,6 +14,8 @@
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <format>
+
 namespace sequoia::testing
 {
   using namespace runtime;
@@ -22,6 +24,14 @@ namespace sequoia::testing
   namespace
   {
     constexpr auto npos{std::string::npos};
+
+    /// Where a command run from `dir` sent its output: to the console if `output` is empty
+    [[nodiscard]]
+    std::string where_written(const fs::path& dir, const fs::path& output)
+    {
+      return output.empty() ? std::string{"on the console, above"}
+                            : std::format("in {}", (dir / output).generic_string());
+    }
 
     [[nodiscard]]
     bool is_appropriate_root(const fs::path& root)
@@ -232,16 +242,34 @@ namespace sequoia::testing
       generate_build_system_files(data.project_root);
 
       if(data.use_git == git_invocation::yes)
-        invoke(cd_cmd(data.project_root) && git_first_cmd(data.project_root, data.output));
+      {
+        const auto placeUnderVersionControl{cd_cmd(data.project_root) && git_first_cmd(data.project_root, data.output)};
+        throw_unless_succeeded(invoke(placeUnderVersionControl),
+                               "Placing the new project under version control",
+                               std::format("The project at {} is created, but sequoia has not been copied into it.\n"
+                                           "git's output is {}.\n"
+                                           "Committing needs a configured git identity (user.name and user.email): "
+                                           "sequoia does not invent one",
+                                           data.project_root.generic_string(),
+                                           where_written(data.project_root, data.output)));
+      }
 
       report(stream, "", "\nCopying across sequoia...");
       copy_sequoia(stream, parentProjectPaths, data);
 
       if(data.use_git == git_invocation::yes)
       {
-        invoke(cd_cmd(data.project_root)
-            && shell_command{"git: adding sequoia dependency...", "git add .", data.output }
-            && shell_command{"git: committing...", "git commit -m \"Add sequoia dependency\" --quiet", data.output});
+        const auto commitSequoia{
+             cd_cmd(data.project_root)
+          && shell_command{"git: adding sequoia dependency...", "git add .", data.output }
+          && shell_command{"git: committing...", "git commit -m \"Add sequoia dependency\" --quiet", data.output}
+        };
+
+        throw_unless_succeeded(invoke(commitSequoia),
+                               "Committing sequoia to the new project",
+                               std::format("sequoia is copied into {} but not committed, and git's output is {}",
+                                           data.project_root.generic_string(),
+                                           where_written(data.project_root, data.output)));
       }
 
       if(data.do_build != build_invocation::no)
@@ -249,11 +277,20 @@ namespace sequoia::testing
         const auto build{make_new_build_paths(data.project_root, parentProjectPaths.build())};
         const main_paths main{data.project_root / main_paths::default_main_cpp_from_root()};
 
-        invoke(cd_cmd(main.dir())
-            && cmake_cmd(build, data.output, "CODE_COVERAGE=OFF")
-            && build_cmd(build, data.output)
-            && ((data.do_build == build_invocation::launch_ide) ? launch_cmd(parentProjectPaths, data.project_root, build.cmake_cache_dir()) : shell_command{})
-        );
+        const bool launch{data.do_build == build_invocation::launch_ide};
+        const auto configureAndBuild{
+             cd_cmd(main.dir())
+          && cmake_cmd(build, data.output, "CODE_COVERAGE=OFF")
+          && build_cmd(build, data.output)
+          && (launch ? launch_cmd(parentProjectPaths, data.project_root, build.cmake_cache_dir()) : shell_command{})
+        };
+
+        throw_unless_succeeded(invoke(configureAndBuild),
+                               launch ? "Configuring, building and opening the new project"
+                                      : "Configuring and building the new project",
+                               std::format("The project at {} is otherwise complete, and the output is {}",
+                                           data.project_root.generic_string(),
+                                           where_written(main.dir(), data.output)));
       }
     }
   }

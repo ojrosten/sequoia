@@ -9,7 +9,9 @@
 
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
+#include <format>
 #include <iostream>
+#include <stdexcept>
 
 #ifdef _WIN32
   #ifndef WIN32_LEAN_AND_MEAN
@@ -228,5 +230,17 @@ namespace sequoia::runtime
   shell_command cd_cmd(const std::filesystem::path& dir)
   {
     return std::string{"cd "}.append(dir.string());
+  }
+
+  void throw_unless_succeeded(const int status, std::string_view step, std::string_view advice)
+  {
+    if(status == 0) return;
+
+    // `invoke` gives -1 for a command which never produced an exit status of its own
+    const auto outcome{
+      status < 0 ? std::string{"did not run to completion"} : std::format("failed with exit status {}", status)
+    };
+
+    throw std::runtime_error{std::format("{} {}\n{}\n", step, outcome, advice)};
   }
 }

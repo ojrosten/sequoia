@@ -9,6 +9,7 @@
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 
+#include <algorithm>
 #include <cstdlib>
 #include <fstream>
 
@@ -24,6 +25,7 @@ namespace sequoia::testing
   {
     test_exceptions();
     test_project_creation();
+    test_failed_version_control();
   }
 
   void test_runner_project_creation::test_exceptions()
@@ -158,5 +160,52 @@ namespace sequoia::testing
 
       check(equivalence, "", hostDir, predictive_materials() /= "Another_Generated-Project");
     }
+  }
+
+  void test_runner_project_creation::test_failed_version_control()
+  {
+    namespace fs = std::filesystem;
+
+    // A `.git` which is a file but not a gitfile makes `git init` fail, whatever the machine's
+    // git configuration, so the failure is hermetic; a missing identity would not be. It goes in
+    // the fake project's template, which test_project_creation has copied in.
+    const auto bogusGit{auxiliary_paths::project_template(fake_project()) / ".git"};
+    if(std::ofstream file{bogusGit})
+    {
+      file << "not a gitfile";
+    }
+
+    const auto hostDir{working_materials() /= "UncommittedProject"};
+
+    // The message names the project twice, so both are made relative to this project's root.
+    auto relativeToRoot{
+      [](const project_paths& projPaths, std::string message) {
+        replace_all(message, projPaths.project_root().generic_string() + "/", "");
+        return message;
+      }
+    };
+
+    check_exception_thrown<std::runtime_error>(
+      reporter{"git fails when placing the project under version control"},
+      [this, &hostDir]() {
+        commandline_arguments args{{zeroth_arg(),
+                                    "init", "Oliver Jacob Rosten", hostDir.generic_string(), "  ",
+                                    "--no-build",
+                                    "--to-files", "GenerationOutput.txt"}};
+
+        std::stringstream outputStream{};
+        test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "\t ", make_project_paths(), outputStream};
+      },
+      relativeToRoot);
+
+    // The first failure ends the creation, before sequoia is copied in. A later git step would
+    // fail on the same `.git` and throw too, so the exception alone cannot tell them apart.
+    check("The creation stopped before sequoia was copied",
+          std::ranges::all_of(fs::directory_iterator{dependencies_paths{hostDir}.sequoia_root()},
+                              [](const fs::directory_entry& entry) { return entry.path().filename() == ".keep"; }));
+
+    // Neither is a prediction, and the working copy must stay comparable
+    fs::remove(bogusGit);
+    fs::remove_all(hostDir);
   }
 }

@@ -109,11 +109,16 @@ namespace sequoia::testing
     const build_paths build{generated_project(), cacheDir, cacheDir};
     const main_paths main{generated_project() / main_paths::default_main_cpp_from_root()};
 
-    invoke(cd_cmd(main.dir()) && cmake_cmd(build, generated_project() / std::format("CMakeOutput_{}.txt", preset.generic_string())));
+    // The status is checked rather than required, so that one preset failing to configure
+    // costs the others nothing; it shares a check with the cache, so a run counts the same
+    // checks whichever preset fails.
+    const auto cmakeOutput{generated_project() / std::format("CMakeOutput_{}.txt", preset.generic_string())};
+    const auto status{invoke(cd_cmd(main.dir()) && cmake_cmd(build, cmakeOutput))};
 
     // The generated project carries this project's presets, so a preset names the same
     // generator in both - which is what the checks on its project files assume.
-    if(check(std::format("CMake cache existence for {}", preset.generic_string()), fs::exists(cacheDir / "CMakeCache.txt")))
+    const bool configured{(status == 0) && fs::exists(cacheDir / "CMakeCache.txt")};
+    if(check(std::format("CMake configuration of {}", preset.generic_string()), configured))
       check(equality, std::format("Generator for {}", preset.generic_string()), cmake_cache{build}.variable("CMAKE_GENERATOR"), cache.variable("CMAKE_GENERATOR"));
 
     return cacheDir;
@@ -144,7 +149,8 @@ namespace sequoia::testing
       const auto cacheDir{configure_generated_project(cache, preset)};
 
       // A configure which dies after writing its cache - a try-compile beyond MAX_PATH does -
-      // leaves no project file, and the checks above are green: so its absence is a failure here.
+      // leaves no project file: the configuration check names that failure, and this one keeps
+      // the comparison from running against a file which is not there.
       if(const auto vcxproj{cacheDir / "TestAll.vcxproj"}; check(std::format("Project file existence for {}", preset.generic_string()), fs::exists(vcxproj)))
       {
         fs::create_directories(working_materials() /= projectFiles / preset);
