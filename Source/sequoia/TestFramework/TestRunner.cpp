@@ -820,6 +820,7 @@ namespace sequoia::testing
 
     std::vector<nascent_test_vessel> nascentTests{};
     std::vector<project_data> nascentProjects{};
+    bool libraryChecked{};
 
     auto updateCurrentNascentTest{
       [&nascentTests]<class Act>(Act act) requires acts_on_every_alternative_v<Act, nascent_test_vessel> {
@@ -934,9 +935,16 @@ namespace sequoia::testing
                   }},
                   {{{"create", {"c"}, {},
                         [](const arg_list&) {},
-                        [this,&nascentTests](const arg_list&) {
+                        [this,&nascentTests,&libraryChecked](const arg_list&) {
                           if(!nascentTests.empty())
                           {
+                            // Once, before anything is written: a registration's form is compiled in
+                            if(!libraryChecked)
+                            {
+                              refuse_if_library_changed_since_build(proj_paths(), sequoia_library_root(), stream());
+                              libraryChecked = true;
+                            }
+
                             m_RunnerMode |= runner_mode::create;
                             overloaded visitor{ [](auto& nascent) { nascent.finalize(); } };
                             std::visit(visitor, nascentTests.back());
