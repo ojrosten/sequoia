@@ -37,8 +37,8 @@ namespace sequoia::testing
     test_type_handling();
     test_project_namespace();
     test_template_data_generation();
-    test_creation("FakeProject", std::nullopt);
-    test_creation("AnotherFakeProject", "curlew");
+    test_creation("FakeProject", std::nullopt, main_location::in_source_dir);
+    test_creation("AnotherFakeProject", "curlew", main_location::below_source_dir);
     test_creation_failure();
   }
 
@@ -125,7 +125,9 @@ namespace sequoia::testing
                    generate_template_data("<class ... T>"), template_data{{"class ...", "T"}});
   }
 
-  void test_runner_test_creation::test_creation(std::string_view projectName, std::optional<std::string> sourceFolder)
+  void test_runner_test_creation::test_creation(std::string_view projectName,
+                                                std::optional<std::string> sourceFolder,
+                                                main_location mainLocation)
   {
     const auto projectPath{auxiliary_materials() / projectName};
     const source_paths sourcePaths{projectPath, sourceFolder};
@@ -143,19 +145,44 @@ namespace sequoia::testing
     fs::copy(auxiliary_materials() / "FakeExe.txt", cmakeCacheDir);
     fs::copy(get_project_paths().build().cmake_cache_dir() / "CMakeCache.txt", cmakeCacheDir);
 
-    const main_paths templateMain{auxiliary_paths::project_template(get_project_paths().project_root()) / main_paths::default_main_cpp_from_root()},
-                     fakeMain{projectPath / "TestSandbox" / "TestSandbox.cpp"};
-
-    fs::copy(templateMain.file(), fakeMain.file());
-    fs::copy(templateMain.cmake_lists(), fakeMain.cmake_lists());
-    fs::copy(templateMain.dir() / "CMakePresets.json", fakeMain.dir());
+    // The copied cache names this build's source directory, and `create` runs CMake from the directory
+    // the cache names, so it must name the fake project's instead.
+    const auto cmakeSourceDir{projectPath / "TestSandbox"};
     read_modify_write(
-      fakeMain.cmake_lists(),
-      [projectName,&sourceFolder](std::string& text) {
-        replace_all(text, "TestAllMain.cpp", "TestSandbox.cpp");
-        replace_all(text, "myProject", sourceFolder ? sourceFolder.value() : uncapitalize(projectName));
+      cmakeCacheDir / "CMakeCache.txt",
+      [&cmakeSourceDir](std::string& text) {
+        constexpr std::string_view entry{"CMAKE_HOME_DIRECTORY:INTERNAL="};
+        const auto pos{text.find(entry)};
+        if(pos == std::string::npos)
+          throw std::logic_error{"The copied cache records no CMAKE_HOME_DIRECTORY"};
+
+        const auto start{pos + entry.size()};
+        text.replace(start, text.find_first_of("\r\n", start) - start, cmakeSourceDir.generic_string());
       }
     );
+
+    const main_paths templateMain{auxiliary_paths::project_template(get_project_paths().project_root())
+                                    / main_paths::default_main_cpp_from_root()};
+
+    const auto fakeMainDir{mainLocation == main_location::in_source_dir ? cmakeSourceDir : cmakeSourceDir / "Local"};
+    const main_paths fakeMain{fakeMainDir / "TestSandbox.cpp"};
+
+    fs::copy(templateMain.file(), fakeMain.file());
+    fs::copy(templateMain.dir() / "CMakePresets.json", cmakeSourceDir);
+
+    // The project template has no layout with its main below the CMake source directory, so a project
+    // of that layout brings its CMakeLists.txt files in its auxiliary materials.
+    if(mainLocation == main_location::in_source_dir)
+    {
+      fs::copy(templateMain.cmake_lists(), fakeMain.cmake_lists());
+      read_modify_write(
+        fakeMain.cmake_lists(),
+        [projectName,&sourceFolder](std::string& text) {
+          replace_all(text, "TestAllMain.cpp", "TestSandbox.cpp");
+          replace_all(text, "myProject", sourceFolder ? sourceFolder.value() : uncapitalize(projectName));
+        }
+      );
+    }
 
     commandline_arguments args{{zeroth_arg(projectName)
                                , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
@@ -187,7 +214,14 @@ namespace sequoia::testing
     };
 
     std::stringstream outputStream{};
-    test_runner tr{args.size(), args.get(), "Oliver Jacob Rosten", "    ",  {.source_folder{sourceFolder}, .main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
+    test_runner tr{args.size(),
+                   args.get(),
+                   "Oliver Jacob Rosten",
+                   "    ",
+                   {.source_folder{sourceFolder},
+                    .main_cpp{fs::relative(fakeMain.file(), projectPath).generic_string()},
+                    .common_includes{"TestShared/SharedIncludes.hpp"}},
+                   outputStream};
 
     check(equality, "Test creation return code", tr.execute(), return_code::success);
 

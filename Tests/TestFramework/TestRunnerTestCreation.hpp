@@ -15,6 +15,9 @@ namespace sequoia::testing
 {
   class test_runner_test_creation final : public free_test
   {
+    /** \brief Where a fake project's main sits relative to the directory CMake is configured from. */
+    enum class main_location { in_source_dir, below_source_dir };
+
   public:
     using free_test::free_test;
 
@@ -30,7 +33,9 @@ namespace sequoia::testing
 
     void test_template_data_generation();
 
-    void test_creation(std::string_view projectName, std::optional<std::string> sourceFolder);
+    void test_creation(std::string_view projectName,
+                       std::optional<std::string> sourceFolder,
+                       main_location mainLocation);
 
     void test_creation_failure();
 

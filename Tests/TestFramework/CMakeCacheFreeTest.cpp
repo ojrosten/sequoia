@@ -24,6 +24,7 @@ namespace sequoia::testing
     test_absent_cache();
     test_variables();
     test_generator_families();
+    test_source_dirs();
   }
 
   [[nodiscard]]
@@ -58,5 +59,16 @@ namespace sequoia::testing
     check("Unix Makefiles", cmake_cache{tree("Makefiles")}.generator_family()    == cmake_generator_family::other);
 
     check_exception_thrown<std::runtime_error>("No generator recorded", [this]() { return cmake_cache{tree("NoGenerator")}.generator_family(); });
+  }
+
+  void cmake_cache_free_test::test_source_dirs()
+  {
+    check(equality,
+          "Recorded",
+          cmake_cache{tree("Ninja")}.source_dir(),
+          std::filesystem::path{"C:/Users/olive/sequoia/TestAll"});
+
+    check_exception_thrown<std::runtime_error>("No source directory recorded",
+                                               [this]() { return cmake_cache{tree("NoGenerator")}.source_dir(); });
   }
 }

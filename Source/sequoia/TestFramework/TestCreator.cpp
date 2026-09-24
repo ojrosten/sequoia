@@ -7,6 +7,7 @@
 
 #include "sequoia/TestFramework/TestCreator.hpp"
 
+#include "sequoia/TestFramework/CMakeCache.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestRunnerUtilities.hpp"
@@ -275,21 +276,13 @@ namespace sequoia::testing
   {
     using namespace runtime;
 
-    auto cmake{
-      [](const main_paths& main, const build_paths& buildPaths) {
-        if(fs::exists(main.dir()) && fs::exists(buildPaths.cmake_cache_dir()))
-        {
-          const auto outputPath{buildPaths.cmake_cache_dir() / "CMakeOutput.txt"};
-          invoke(cd_cmd(main.dir()) && cmake_cmd(buildPaths, outputPath));
-          if(auto text{read_to_string(outputPath, std::ios_base::in)})
-            return text.value();            
-        }
+    const auto& build{projPaths.build()};
+    if(!fs::exists(build.cmake_cache_dir())) return {};
 
-        return std::string{};
-      }
-    };
+    const auto outputPath{build.cmake_cache_dir() / "CMakeOutput.txt"};
+    invoke(cd_cmd(cmake_cache{build}.source_dir()) && cmake_cmd(build, outputPath));
 
-    return cmake(projPaths.main(), projPaths.build());
+    return read_to_string(outputPath, std::ios_base::in).value_or(std::string{});
   }
 
 
