@@ -8,3 +8,4 @@
 (?= to: ).*(?=build/TestSandbox/)
 [^/\n]+(?=\n$)
 Preset((.|\n|)*?)(?=--)
+(?=cannot be checked: ).*

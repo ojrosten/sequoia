@@ -767,6 +767,14 @@ namespace sequoia::testing
     fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
 
     const auto& library{projPaths.source().project()};
+
+    {
+      // Nothing of the library's is newer than the executable, so the record is not read, and its absence goes unremarked
+      const hidden_for_scope hidden{projPaths.discovered().cmake_cache().parent_path() / ".ninja_deps"};
+      const auto [refusal, warnings]{check_library(projPaths, library)};
+      check(equality, "Nothing edited since the build: the record is not read", warnings, std::string{});
+    }
+
     const modified_for_scope edited{library / "Stuff" / "FooDefinitions.cpp", m_ResetTime + lateEditOffset};
 
     // A refusal, where a warning was expected, is shown in the warning's place
