@@ -24,7 +24,10 @@ int main(int argc, char** argv)
                        argv,
                        "Oliver J. Rosten",
                        "  ",
-                       {.source_folder{"sequoia"}, .main_cpp{"TestChamber/Local/TestChamberMain.cpp"}, .ancillary_main_cpps{{"TestAll/TestMain.cpp"}}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
+                       {.source_folder{"sequoia"},
+                        .main_cpp{"TestChamber/Local/TestChamberMain.cpp"},
+                        .ancillary_main_cpps{{"TestAll/TestMain.cpp"}},
+                        .common_includes{"TestCommon/TestIncludes.hpp"}}};
 
     code = runner.execute(timer_resolution{1ms});
   }
@@ -34,9 +37,8 @@ int main(int argc, char** argv)
   }
   catch(...)
   {
-    std::cout << "Unrecognized error\n"; 
+    std::cout << "Unrecognized error\n";
   }
-  
+
   return sequoia::testing::to_exit_code(code);
 }
-

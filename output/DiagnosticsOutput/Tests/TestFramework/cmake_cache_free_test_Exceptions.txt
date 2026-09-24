@@ -25,3 +25,12 @@ cmake_cache: the cache does not record CMAKE_HOME_DIRECTORY
 
 =======================================
 
+Tests/TestFramework/CMakeCacheFreeTest.cpp, Line 73
+Empty source directory recorded
+
+Expected Exception Type:
+[std::runtime_error]
+cmake_cache: the cache does not record CMAKE_HOME_DIRECTORY
+
+=======================================
+

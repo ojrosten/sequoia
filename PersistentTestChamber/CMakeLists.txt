@@ -11,7 +11,7 @@ add_executable(PersistentTestChamber PersistentTestChamberMain.cpp)
 
 set(TestDir ${CMAKE_CURRENT_LIST_DIR}/../Tests)
 
-target_sources(PersistentTestChamber PRIVATE            
+target_sources(PersistentTestChamber PRIVATE
                ${TestDir}/Maths/Algebra/RatioFreeTest.cpp
                ${TestDir}/Maths/Arithmetic/ArithmeticCastsFreeTest.cpp
                ${TestDir}/Maths/Arithmetic/SaturatingArithmeticFreeTest.cpp

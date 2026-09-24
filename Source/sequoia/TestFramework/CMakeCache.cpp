@@ -68,7 +68,7 @@ namespace sequoia::testing
   std::filesystem::path cmake_cache::source_dir() const
   {
     const auto dir{variable("CMAKE_HOME_DIRECTORY")};
-    if(!dir)
+    if(!dir || dir->empty())
       throw std::runtime_error{"cmake_cache: the cache does not record CMAKE_HOME_DIRECTORY"};
 
     return *dir;

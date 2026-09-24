@@ -149,6 +149,14 @@ namespace sequoia::testing
         f(g(mainCpp));
       }
     }
+
+    /** \brief Whether `dir` is `root` or lies beneath it, once symbolic links are resolved; both must exist. */
+    [[nodiscard]]
+    bool lies_within(const fs::path& dir, const fs::path& root)
+    {
+      const auto canonicalRoot{fs::canonical(root)};
+      return std::ranges::mismatch(canonicalRoot, fs::canonical(dir)).in1 == canonicalRoot.end();
+    }
   }
 
   [[nodiscard]]
@@ -279,8 +287,20 @@ namespace sequoia::testing
     const auto& build{projPaths.build()};
     if(!fs::exists(build.cmake_cache_dir())) return {};
 
+    // A build tree copied with its checkout still names the source directory of the original.
+    const auto sourceDir{cmake_cache{build}.source_dir()};
+    if(!fs::is_directory(sourceDir) || !lies_within(sourceDir, projPaths.project_root()))
+      throw std::runtime_error{
+              std::format("CMake not run: the build tree was configured from {},\n"
+                          "which is not a directory within this project, {}\n",
+                          sourceDir.generic_string(),
+                          projPaths.project_root().generic_string())
+            };
+
+    // Removed first, so that a run which writes nothing cannot hand back the previous run's output.
     const auto outputPath{build.cmake_cache_dir() / "CMakeOutput.txt"};
-    invoke(cd_cmd(cmake_cache{build}.source_dir()) && cmake_cmd(build, outputPath));
+    fs::remove(outputPath);
+    invoke(cd_cmd(sourceDir) && cmake_cmd(build, outputPath));
 
     return read_to_string(outputPath, std::ios_base::in).value_or(std::string{});
   }

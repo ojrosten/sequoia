@@ -24,7 +24,10 @@ int main(int argc, char** argv)
                        argv,
                        "Oliver J. Rosten",
                        "  ",
-                       {.source_folder{"sequoia"}, .main_cpp{"PersistentTestChamber/PersistentTestChamberMain.cpp"}, .ancillary_main_cpps{{"TestAll/TestMain.cpp"}}, .common_includes{"TestCommon/TestIncludes.hpp"}}};
+                       {.source_folder{"sequoia"},
+                        .main_cpp{"PersistentTestChamber/PersistentTestChamberMain.cpp"},
+                        .ancillary_main_cpps{{"TestAll/TestMain.cpp"}},
+                        .common_includes{"TestCommon/TestIncludes.hpp"}}};
 
     runner.register_test<ratio_free_test>();
     runner.register_test<numeric_rings_meta_free_test>();
@@ -70,9 +73,8 @@ int main(int argc, char** argv)
   }
   catch(...)
   {
-    std::cout << "Unrecognized error\n"; 
+    std::cout << "Unrecognized error\n";
   }
-  
+
   return sequoia::testing::to_exit_code(code);
 }
-

@@ -69,6 +69,8 @@ namespace sequoia::testing
           std::filesystem::path{"C:/Users/olive/sequoia/TestAll"});
 
     check_exception_thrown<std::runtime_error>("No source directory recorded",
-                                               [this]() { return cmake_cache{tree("NoGenerator")}.source_dir(); });
+                                               [this]() { return cmake_cache{tree("NoSourceDir")}.source_dir(); });
+    check_exception_thrown<std::runtime_error>("Empty source directory recorded",
+                                               [this]() { return cmake_cache{tree("EmptySourceDir")}.source_dir(); });
   }
 }

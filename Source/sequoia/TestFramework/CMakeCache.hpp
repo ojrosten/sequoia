@@ -42,7 +42,8 @@ namespace sequoia::testing
     [[nodiscard]]
     cmake_generator_family generator_family() const;
 
-    /** \brief From `CMAKE_HOME_DIRECTORY`, which every cache records: the directory the tree was configured from. */
+    /** \brief From `CMAKE_HOME_DIRECTORY`, which every cache records: the top-level source directory, the one
+               given to `cmake -S`. */
     [[nodiscard]]
     std::filesystem::path source_dir() const;
   private:
