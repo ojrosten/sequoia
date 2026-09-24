@@ -155,7 +155,8 @@ namespace sequoia::testing
           const auto asRecorded{(p.is_absolute() ? p : tree.build_directory / p).lexically_normal()};
           const auto& directory{directoryFacts(asRecorded.parent_path())};
 
-          return recorded_file{.canonical{directory.canonical / asRecorded.filename()}, .toolchain{directory.toolchain}};
+          return recorded_file{.canonical{directory.canonical / asRecorded.filename()},
+                               .toolchain{directory.toolchain}};
         }
       };
 
@@ -167,35 +168,6 @@ namespace sequoia::testing
     bool compiled_from(const compilations::record& record, std::span<const recorded_file> files, const fs::path& dir)
     {
       return in_repo(files[record.input_indices.front()].canonical, dir);
-    }
-
-    /** The modification time of a file the build read, checked against the executable's stamp.
-
-        \throws std::runtime_error if the file post-dates the executable, or its modification time
-        cannot be read.
-     */
-    [[nodiscard]]
-    fs::file_time_type modification_time(const fs::path& file, std::optional<fs::file_time_type> executableStamp)
-    {
-      std::error_code error{};
-      const auto time{fs::last_write_time(file, error)};
-      if(error)
-        throw std::runtime_error{
-          std::format("{} was read by the build but its modification time cannot be read: {}\n"
-                      "Restore the file, or build the executable again\n",
-                      file.generic_string(),
-                      error.message())
-        };
-
-      if(executableStamp && (time >= *executableStamp))
-        throw std::runtime_error{
-          std::format("Executable is out of date; please build it!\nExecutable time stamp: {}\n{} time stamp: {}\n",
-                      *executableStamp,
-                      file.generic_string(),
-                      time)
-        };
-
-      return time;
     }
 
     /** Every test class may optionally define test materials. For a test class `bar_test`, defined in
@@ -331,6 +303,35 @@ namespace sequoia::testing
       {
         maths::graph_errors::check_node_index_range("dependency_graph::node", g.order(), i);
         return g.cbegin_node_weights()[i];
+      }
+
+      /** The modification time of a file the build read, checked against the executable's stamp.
+
+          \throws std::runtime_error if the file post-dates the executable, or its modification time
+          cannot be read.
+       */
+      [[nodiscard]]
+      static fs::file_time_type modification_time(const fs::path& file, std::optional<fs::file_time_type> executableStamp)
+      {
+        std::error_code error{};
+        const auto time{fs::last_write_time(file, error)};
+        if(error)
+          throw std::runtime_error{
+            std::format("{} was read by the build but its modification time cannot be read: {}\n"
+                        "Restore the file, or build the executable again\n",
+                        file.generic_string(),
+                        error.message())
+          };
+
+        if(executableStamp && (time >= *executableStamp))
+          throw std::runtime_error{
+            std::format("Executable is out of date; please build it!\nExecutable time stamp: {}\n{} time stamp: {}\n",
+                        *executableStamp,
+                        file.generic_string(),
+                        time)
+          };
+
+        return time;
       }
 
       /// The newest modification among `files`, each checked; the earliest time, if there are none
@@ -839,7 +840,9 @@ namespace sequoia::testing
                          target ? std::format(", of target {}", *target) : std::string{});
     }
 
-    constexpr std::string_view library_changed{"The library has changed since this executable was built; please build it again."};
+    constexpr std::string_view library_changed{
+      "The library has changed since this executable was built; please build it again."
+    };
 
     /** The newest of a library's own files which its build read: the library's objects are those compiled
         from a source beneath `libraryRoot`, and its own files are those of the files read to compile them
@@ -860,7 +863,9 @@ namespace sequoia::testing
       const auto root{canonical_or_as_given(libraryRoot)};
 
       auto isOwnFile{[&facts, &root](compilations::file_index i){ return in_repo(facts[i].canonical, root); }};
-      auto isLibraryObject{[&facts, &root](const compilations::record& record){ return compiled_from(record, facts, root); }};
+      auto isLibraryObject{
+        [&facts, &root](const compilations::record& record){ return compiled_from(record, facts, root); }
+      };
 
       // A header several objects read is timed once; a stateful filter, so a loop
       std::vector<bool> timed(files.size());
@@ -893,7 +898,9 @@ namespace sequoia::testing
       return newest;
     }
 
-    /// Whether anything beneath `dir` - a file, or a directory, whose time a deletion within it moves - is no older than `stamp`
+    /** Whether `dir`, or anything beneath it, is no older than `stamp`: a file, or a directory, whose time
+        a deletion within it moves. An entry whose time cannot be read counts, so that the record decides.
+     */
     [[nodiscard]]
     bool anything_since(const fs::path& dir, const fs::file_time_type stamp)
     {
@@ -905,9 +912,11 @@ namespace sequoia::testing
         }
       };
 
-      std::error_code error{};
-      return (fs::last_write_time(dir, error) >= stamp) || error
-          || std::ranges::any_of(fs::recursive_directory_iterator{dir, fs::directory_options::skip_permission_denied}, noOlder);
+      if(noOlder(fs::directory_entry{dir}))
+        return true;
+
+      return std::ranges::any_of(fs::recursive_directory_iterator{dir, fs::directory_options::skip_permission_denied},
+                                 noOlder);
     }
 
     /// A reason given on several lines, as one

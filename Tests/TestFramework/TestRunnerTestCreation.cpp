@@ -149,7 +149,8 @@ namespace sequoia::testing
 
     // Older than sequoia's own directory, so that `create`'s check of whether the library has changed since
     // the executable was built reads the fake tree's build record - which it cannot, and says so
-    fs::last_write_time(cmakeCacheDir / "FakeExe.txt", fs::last_write_time(sequoia_library_root()) - std::chrono::hours{1});
+    const auto libraryTime{fs::last_write_time(sequoia_library_root())};
+    fs::last_write_time(cmakeCacheDir / "FakeExe.txt", libraryTime - std::chrono::hours{1});
     fs::copy(get_project_paths().build().cmake_cache_dir() / "CMakeCache.txt", cmakeCacheDir);
 
     // The copied cache records this build's top-level source directory, and `create` runs CMake from
