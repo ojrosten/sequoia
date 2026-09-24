@@ -452,7 +452,8 @@ namespace sequoia
 
   /** \brief Owning type erasure for a callable, with the call operator qualified as `Signature` is.
 
-      Copy assignment gives the strong exception guarantee; moves do not throw.
+      Copy assignment gives the strong exception guarantee; moves do not throw, and do not move a target
+      whose move may throw.
    */
   template<class Signature>
     requires erasable_signature<Signature>
@@ -491,7 +492,7 @@ namespace sequoia
     constexpr static bool target_constructible_from_v{
          std::is_same_v<T, std::decay_t<T>>
       && (!std::is_member_pointer_v<T>)
-      && std::destructible<T>
+      && std::is_nothrow_destructible_v<T>
       && std::is_copy_constructible_v<T>
       && std::is_constructible_v<T, TArgs...>
       && call_operator_type::template callable_through_signature_v<T>

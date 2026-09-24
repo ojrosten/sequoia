@@ -1,2 +1,2 @@
 erased_function_regular_test
-Standard Top Level Checks:               143;  Failures:  0  [Deep checks: 417]
+Standard Top Level Checks:               140;  Failures:  0  [Deep checks: 414]
