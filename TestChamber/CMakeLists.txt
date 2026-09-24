@@ -1,54 +1,23 @@
 cmake_minimum_required(VERSION 4.2)
 
-project(SequoiaTestChamber DESCRIPTION "The Sequoia Library plus a test chamber"
+project(SequoiaTestChamber DESCRIPTION "The Sequoia Library plus a local test chamber"
                            LANGUAGES CXX)
 
 include(${CMAKE_CURRENT_LIST_DIR}/../build_system/Utilities.cmake)
 
 sequoia_init()
 
-add_executable(TestChamber TestChamberMain.cpp)
+# Local/ is untracked, so each developer registers there the tests under their own focus.
+# It is seeded from Template/ only when absent, so no configure discards those registrations;
+# delete it to start again from the template.
+if(NOT EXISTS ${CMAKE_CURRENT_LIST_DIR}/Local)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/Template/ DESTINATION ${CMAKE_CURRENT_LIST_DIR}/Local)
+endif()
+
+add_executable(TestChamber Local/TestChamberMain.cpp)
 
 set(TestDir ${CMAKE_CURRENT_LIST_DIR}/../Tests)
 
-target_sources(TestChamber PRIVATE            
-               ${TestDir}/Core/Functional/ErasedFunctionRegularTest.cpp
-               ${TestDir}/Core/Functional/ErasedFunctionTestingDiagnostics.cpp
-               ${TestDir}/Core/Object/ResetOnMoveRegularTest.cpp
-               ${TestDir}/Core/Object/ResetOnMoveTestingDiagnostics.cpp
-               ${TestDir}/Maths/Algebra/RatioFreeTest.cpp
-               ${TestDir}/Maths/Arithmetic/ArithmeticCastsFreeTest.cpp
-               ${TestDir}/Maths/Arithmetic/SaturatingArithmeticFreeTest.cpp
-               ${TestDir}/Maths/Geometry/AbsoluteCoordinatesTest.cpp
-               ${TestDir}/Maths/Geometry/AbsoluteCoordinatesTestingDiagnostics.cpp
-               ${TestDir}/Maths/Geometry/AbsoluteLogarithmicCoordinatesTest.cpp
-               ${TestDir}/Maths/Geometry/AffineCoordinatesTest.cpp
-               ${TestDir}/Maths/Geometry/AffineCoordinatesTestingDiagnostics.cpp
-               ${TestDir}/Maths/Geometry/BoundsFreeTest.cpp
-               ${TestDir}/Maths/Geometry/ComplexVectorCoordinatesTest.cpp
-               ${TestDir}/Maths/Geometry/FreeModuleCoordinatesTest.cpp
-               ${TestDir}/Maths/Geometry/M_AffineCoordinatesTest.cpp
-               ${TestDir}/Maths/Geometry/NumericRingsMetaFreeTest.cpp
-               ${TestDir}/Maths/Geometry/PartialMTorsorCoordinatesTest.cpp
-               ${TestDir}/Maths/Geometry/SpacesMetaFreeTest.cpp
-               ${TestDir}/Maths/Geometry/ValidatorsFreeTest.cpp
-               ${TestDir}/Maths/Geometry/VectorCoordinatesTest.cpp
-               ${TestDir}/Maths/Geometry/VectorCoordinatesTestingDiagnostics.cpp
-               ${TestDir}/Maths/Geometry/VectorPolarCoordinatesTest.cpp
-               ${TestDir}/Physics/AbsolutePhysicalValueCompositionsTest.cpp
-               ${TestDir}/Physics/AbsolutePhysicalValueTest.cpp
-               ${TestDir}/Physics/AffinePhysicalValueTest.cpp
-               ${TestDir}/Physics/ConvexPhysicalValueTest.cpp
-               ${TestDir}/Physics/IntegralPhysicalValueTest.cpp
-               ${TestDir}/Physics/MixedPhysicalValueTest.cpp
-               ${TestDir}/Physics/PhysicalValueConversionsFreeTest.cpp
-               ${TestDir}/Physics/PhysicalValueMetaFreeTest.cpp
-               ${TestDir}/Physics/PhysicalValueTestingDiagnostics.cpp
-               ${TestDir}/Physics/SpaceOrderingMetaFreeTest.cpp
-               ${TestDir}/Physics/UnsafeAbsolutePhysicalValueCompositionsTest.cpp
-               ${TestDir}/Physics/UnsafeAbsolutePhysicalValueTest.cpp
-               ${TestDir}/Physics/VectorNonlinearRepresentationsTest.cpp
-               ${TestDir}/Physics/VectorPhysicalValueCompositionsTest.cpp
-               ${TestDir}/Physics/VectorPhysicalValueTest.cpp)
+add_subdirectory(Local)
 
 sequoia_finalize_self(TestChamber ${TestDir}/Experimental Experimental)

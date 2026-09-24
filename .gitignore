@@ -30,3 +30,9 @@ out
 
 #ignore python bytecode caches, which the scripts leave beside themselves
 __pycache__/
+
+#ignore each developer's own test chamber, seeded from TestChamber/Template
+TestChamber/Local
+
+#ignore CMake's per-user presets
+CMakeUserPresets.json
