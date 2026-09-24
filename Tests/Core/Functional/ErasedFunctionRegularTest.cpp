@@ -176,13 +176,24 @@ namespace sequoia::testing
       throws_on_copy(throws_on_copy&&) noexcept = default;
     };
 
-    struct throws_on_destruction
+    template<bool Noexcept>
+    struct destruction_probe
     {
-      ~throws_on_destruction() noexcept(false) {}
+      ~destruction_probe() noexcept(Noexcept) {}
 
       [[nodiscard]]
       int operator()() const { return 1; }
     };
+
+    // Rejected, where `std::copyable_function`, if the library has it, admits it
+    constexpr bool rejects_destructor_that_may_throw{
+      !std::constructible_from<erased_function<int() const>, destruction_probe<false>>
+    #if defined(__cpp_lib_copyable_function)
+      && std::constructible_from<std::copyable_function<int() const>, destruction_probe<false>>
+    #endif
+    };
+
+    enum class counting_mode { uncounted, counted };
 
     struct small_target_with_throwing_move
     {
@@ -319,9 +330,8 @@ namespace sequoia::testing
     STATIC_CHECK(!std::constructible_from<function_t, decltype([i = 0]() mutable { return i; })>);
     STATIC_CHECK(std::constructible_from<function_t, decltype([]() mutable { return 1; })>);
 
-    // Alike but for the destructor
-    STATIC_CHECK(std::constructible_from<function_t, const_only>);
-    STATIC_CHECK(!std::constructible_from<function_t, throws_on_destruction>);
+    STATIC_CHECK(std::constructible_from<function_t, destruction_probe<true>>);
+    STATIC_CHECK(rejects_destructor_that_may_throw);
 
     // Copy constructibility, and for in-place construction an undecayed type, are mandated rather than constrained
     using move_only_target = decltype([p = std::unique_ptr<int>{}]() { return 1; });
@@ -539,6 +549,7 @@ namespace sequoia::testing
   void erased_function_regular_test::test_throwing_copy_assignment()
   {
     using result = std::optional<int>;
+    using enum counting_mode;
 
     constexpr result empty{};
     const int captured{7};
@@ -557,6 +568,7 @@ namespace sequoia::testing
       [this](std::string_view description,
              const observed_function& source,
              observed_function target,
+             counting_mode counting,
              result prediction) {
         counter::reset();
         check_exception_thrown<std::runtime_error>(
@@ -564,23 +576,26 @@ namespace sequoia::testing
           [&source, &target]() { target = source; }
         );
 
-        check(equality,
-              append_lines(description, "The assigned-to function's target is not destroyed"),
-              counter::destructions,
-              0);
+        if(counting == counting_mode::counted)
+        {
+          check(equality,
+                append_lines(description, "The assigned-to function's target is not destroyed"),
+                counter::destructions,
+                0);
+        }
 
         check(equivalence, append_lines(description, "The assigned-to function is unchanged"), target, prediction);
       }
     };
 
-    checkAssignment("In the buffer, over an empty function",             throwingInBuffer, {},           empty);
-    checkAssignment("In the buffer, over a trivially managed one",       throwingInBuffer, {trivial},    7);
-    checkAssignment("In the buffer, over one with a manager of its own", throwingInBuffer, {ownManager}, 9);
-    checkAssignment("In the buffer, over one on the heap",               throwingInBuffer, {onHeap},     5);
-    checkAssignment("On the heap, over an empty function",               throwingOnHeap,   {},           empty);
-    checkAssignment("On the heap, over a trivially managed one",         throwingOnHeap,   {trivial},    7);
-    checkAssignment("On the heap, over one with a manager of its own",   throwingOnHeap,   {ownManager}, 9);
-    checkAssignment("On the heap, over one on the heap",                 throwingOnHeap,   {onHeap},     5);
+    checkAssignment("In the buffer, over an empty function",        throwingInBuffer, {},           uncounted, empty);
+    checkAssignment("In the buffer, over a trivially managed one",  throwingInBuffer, {trivial},    uncounted, 7);
+    checkAssignment("In the buffer, over one with its own manager", throwingInBuffer, {ownManager}, counted,   9);
+    checkAssignment("In the buffer, over one on the heap",          throwingInBuffer, {onHeap},     counted,   5);
+    checkAssignment("On the heap, over an empty function",          throwingOnHeap,   {},           uncounted, empty);
+    checkAssignment("On the heap, over a trivially managed one",    throwingOnHeap,   {trivial},    uncounted, 7);
+    checkAssignment("On the heap, over one with its own manager",   throwingOnHeap,   {ownManager}, counted,   9);
+    checkAssignment("On the heap, over one on the heap",            throwingOnHeap,   {onHeap},     counted,   5);
   }
 
   void erased_function_regular_test::test_small_target()
@@ -624,6 +639,10 @@ namespace sequoia::testing
       f = std::move(source);
       check(equality, "Move assignment does not copy the payload", counter::copies, 0);
       check(equality, "Move assignment moves the payload once", counter::moves, 1);
+      check(equality,
+            "Move assignment destroys the payload it replaces and the one it moves from",
+            counter::destructions,
+            counter::moves + 1);
     }
   }
 

@@ -36,6 +36,10 @@
     -# **Invoking an empty function through a `noexcept` signature terminates**, since the throw
        escapes a `noexcept` call operator.
 
+    ## Exception guarantees
+
+    Copy assignment is strong. Move construction and move assignment never throw.
+
     ## In a constant expression
 
     -# When compiled as C++26 or later (P2738 permits a cast from `void*` in a constant expression),
@@ -415,7 +419,7 @@ namespace sequoia
     template<class CallOperator, class T>
     concept erasable_target
       =  (!std::is_member_pointer_v<T>)
-      && std::destructible<T>
+      && std::is_nothrow_destructible_v<T>
       && CallOperator::template callable_through_signature_v<T>;
 
     template<class CallOperator, class T, class... TArgs>
@@ -456,10 +460,7 @@ namespace sequoia
     }
   }
 
-  /** \brief Owning type erasure for a callable, with the call operator qualified as `Signature` is.
-
-      Copy assignment gives the strong exception guarantee; moves do not throw.
-   */
+  /** \brief Owning type erasure for a callable, with the call operator qualified as `Signature` is. */
   template<class Signature>
     requires erasable_signature<Signature>
   class erased_function : public impl::call_operator_for_t<Signature>
