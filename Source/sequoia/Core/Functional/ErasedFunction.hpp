@@ -36,6 +36,16 @@
     -# **Invoking an empty function through a `noexcept` signature terminates**, since the throw
        escapes a `noexcept` call operator.
 
+    ## Requirements on a target
+
+    As for `std::copyable_function`, some requirements are constraints and the rest are mandated: a
+    construction which breaks a mandate is ill-formed, although `std::is_constructible_v` is true for it.
+    -# **Constrained:** the target is callable through the signature, is not a pointer to member, and has
+       a destructor which does not throw. In-place construction also requires the target to be
+       constructible from the arguments.
+    -# **Mandated:** the target is copy constructible. Construction from a callable also requires the
+       target to be constructible from that callable, and in-place construction requires a decayed type.
+
     ## Exception guarantees
 
     Copy assignment is strong. Move construction and move assignment never throw.
@@ -509,9 +519,6 @@ namespace sequoia
           std::forward<F>(f)
         }
     {
-      // Mandated rather than constrained, as the standard does: as constraints, both would ask of a
-      // callable class constructible from an `erased_function` whether it is copy constructible,
-      // which can be the question already being asked
       static_assert(std::is_constructible_v<Target, F>);
       static_assert(std::is_copy_constructible_v<Target>);
     }
