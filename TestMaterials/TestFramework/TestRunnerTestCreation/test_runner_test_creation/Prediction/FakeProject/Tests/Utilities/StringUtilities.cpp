@@ -5,26 +5,19 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
-
-/** \file */
-
-#include "Stuff/WidgetTestingUtilities.hpp"
-
-#include "sequoia/TestFramework/RegularTestCore.hpp"
+#include "StringUtilities.hpp"
+#include "fakeProject/Utilities/Utilities.h"
 
 namespace fakeProject::testing
 {
-    using namespace sequoia::testing;
-
-    class human_shared_tester_test final : public regular_test
+    [[nodiscard]]
+    std::filesystem::path string_utilities::source_file()
     {
-    public:
-        using regular_test::regular_test;
+        return std::source_location::current().file_name();
+    }
 
-        [[nodiscard]]
-        static std::filesystem::path source_file();
-
-        void run_tests();
-    };
+    void string_utilities::run_tests()
+    {
+        // e.g. check(equality, "Useful description", some_function(), 42);
+    }
 }
