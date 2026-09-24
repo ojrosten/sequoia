@@ -1,2 +1,2 @@
 individual_test_paths_free_test
-Standard Top Level Checks:                27;  Failures:  0  [Deep checks: 27]
+Standard Top Level Checks:                31;  Failures:  0  [Deep checks: 31]

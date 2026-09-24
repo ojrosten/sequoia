@@ -103,6 +103,10 @@ namespace sequoia::testing
       \throws std::logic_error if `materials` names no test
       \throws std::runtime_error if the original root holds anything but `WorkingCopy`, `Prediction`
                and `Auxiliary`, besides a `.keep` or `.DS_Store`, naming what else it holds
+      \throws std::runtime_error for a test with a materials discriminator, if the discriminator is
+               not one portable directory name, is a kind of material, or differs only in case from
+               a directory beside it; or if the test's own directory holds a kind of material, or a
+               file other than a `.keep` or `.DS_Store`, beside the configurations' directories
    */
   void stage_materials(const individual_materials_paths& materials);
 
@@ -260,10 +264,13 @@ namespace sequoia::testing
         m_Test = Test{m_Name,
                       source,
                       projPaths,
-                      individual_materials_paths{source, m_Name, projPaths, get_materials_discriminator<Test>(cache)},
+                      individual_materials_paths{source,
+                                                 m_Name,
+                                                 projPaths,
+                                                 get_discriminator<materials_discriminator_probe, Test>(cache)},
                       make_active_recovery_paths(mode, projPaths),
-                      get_output_discriminator<Test>(cache),
-                      get_reduction_discriminator<Test>(cache)};
+                      get_discriminator<output_discriminator_probe, Test>(cache),
+                      get_discriminator<summary_discriminator_probe, Test>(cache)};
       }
     private:
       static constexpr std::string_view m_Name{test_name<Test>()};
@@ -306,44 +313,24 @@ namespace sequoia::testing
     parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
   };
 
-  template<concrete_test T>
+  /** \brief A test's discriminator for the hook the probe names, if it declares one.
+
+      A hook declared in any other form than the one the probe calls is refused at compile time,
+      rather than silently ignored.
+   */
+  template<class Probe, concrete_test T>
   [[nodiscard]]
-  std::optional<std::string> get_output_discriminator(const cmake_cache& cache){
-    static_assert(has_discriminated_output_v<T>
-                  || !(   requires(const T& t){ t.output_discriminator(); }
-                       || requires(const T& t){ t.output_discriminator(cache); }),
-                  "output_discriminator must be static and take const cmake_cache&, or it is silently ignored");
+  std::optional<std::string> get_discriminator(const cmake_cache& cache)
+  {
+    static_assert(!misdeclared_discriminator_v<Probe, T>,
+                  "A discriminator hook must be a public static member function taking const cmake_cache&, "
+                  "or it is silently ignored");
 
-    if constexpr(has_discriminated_output_v<T>)
-      return T::output_discriminator(cache);
-    else
-      return std::nullopt;
-  }
+    static_assert(!mistyped_discriminator_v<Probe, T>,
+                  "A discriminator hook must return something convertible to std::string");
 
-  template<concrete_test T>
-  [[nodiscard]]
-  std::optional<std::string> get_reduction_discriminator(const cmake_cache& cache){
-    static_assert(has_discriminated_summary_v<T>
-                  || !(   requires(const T& t){ t.summary_discriminator(); }
-                       || requires(const T& t){ t.summary_discriminator(cache); }),
-                  "summary_discriminator must be static and take const cmake_cache&, or it is silently ignored");
-
-    if constexpr(has_discriminated_summary_v<T>)
-      return T::summary_discriminator(cache);
-    else
-      return std::nullopt;
-  }
-
-  template<concrete_test T>
-  [[nodiscard]]
-  std::optional<std::string> get_materials_discriminator(const cmake_cache& cache){
-    static_assert(has_discriminated_materials_v<T>
-                  || !(   requires(const T& t){ t.materials_discriminator(); }
-                       || requires(const T& t){ t.materials_discriminator(cache); }),
-                  "materials_discriminator must be static and take const cmake_cache&, or it is silently ignored");
-
-    if constexpr(has_discriminated_materials_v<T>)
-      return T::materials_discriminator(cache);
+    if constexpr(has_discriminator_v<Probe, T>)
+      return Probe::template discriminator<T>(cache);
     else
       return std::nullopt;
   }

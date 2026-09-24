@@ -43,7 +43,9 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::string summary_discriminator(const cmake_cache& cache);
 
-    /** Named for every generator family, so that no family's materials are the undiscriminated ones. */
+    /** Names every generator family: a declared materials discriminator must name a directory, so
+        the summary discriminator's empty name for other generators will not serve.
+     */
     [[nodiscard]]
     static std::string materials_discriminator(const cmake_cache& cache);
 

@@ -138,18 +138,21 @@ namespace sequoia::testing
     check(equality, "Original auxiliary",       materials.original_auxiliary(),       original / "Auxiliary");
     check(equality, "Staged auxiliary",         materials.auxiliary(),                temporary / "Auxiliary");
 
+    check(equality, "Undiscriminated: the test root is the original root", materials.original_test_root(), original);
+
     const individual_materials_paths platypus{source, "bar_test", projPaths, "Platypus"};
     const auto variant{original / "Platypus"};
+    check(equality, "Platypus: test root",             platypus.original_test_root(),       original);
     check(equality, "Platypus: original root",         platypus.original_materials_root(),  variant);
     check(equality, "Platypus: temporary root",        platypus.temporary_materials_root(), temporary);
     check(equality, "Platypus: original working copy", platypus.original_working(),         variant / "WorkingCopy");
     check(equality, "Platypus: predictions",           platypus.prediction(),               variant / "Prediction");
+    check(equality, "Platypus: original auxiliary",    platypus.original_auxiliary(),       variant / "Auxiliary");
     check(equality, "Platypus: staged working copy",   platypus.working(),                  temporary / "WorkingCopy");
-
-    const individual_materials_paths emptilyDiscriminated{source, "bar_test", projPaths, ""};
-    check(equality, "An empty discriminator adds no level", emptilyDiscriminated.original_materials_root(), original);
+    check(equality, "Platypus: staged auxiliary",      platypus.auxiliary(),                temporary / "Auxiliary");
 
     const individual_materials_paths none{};
+    check("No test: no test root",                none.original_test_root().empty());
     check("No test: no original materials root",  none.original_materials_root().empty());
     check("No test: no temporary materials root", none.temporary_materials_root().empty());
     check("No test: no working copy",             none.working().empty());

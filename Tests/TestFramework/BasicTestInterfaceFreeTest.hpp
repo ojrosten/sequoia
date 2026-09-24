@@ -27,6 +27,8 @@ namespace sequoia::testing
 
     void test_materials(const project_paths& projPaths);
 
+    void test_discriminated_materials(const project_paths& projPaths);
+
     [[nodiscard]]
     std::filesystem::path fake_project() const;
 

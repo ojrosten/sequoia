@@ -406,10 +406,11 @@ namespace sequoia::testing
       };
     }
 
-    /** The source files of the next two are relative, so that their materials resolve inside the
-        fake project. Each test writes a `Kept.txt` which its predictions hold with other contents,
-        and does not write the `Obsolete.txt` its predictions also hold, so an update overwrites
-        `Kept.txt` and deletes `Obsolete.txt`. The failed check makes each a candidate for update.
+    /** The source files of the update fakes below are relative, so that their materials resolve
+        inside the fake project. Each test which calls this writes a `Kept.txt` which its predictions
+        hold with other contents, and does not write the `Obsolete.txt` its predictions also hold, so
+        an update overwrites `Kept.txt` and deletes `Obsolete.txt`. The failed check makes each a
+        candidate for update.
      */
 
     void make_update_candidate(free_test& test)
@@ -476,10 +477,12 @@ namespace sequoia::testing
       }
     };
 
-    /** As `stale_predictions_free_test`, but with its predictions in two configurations, `Platypus`
-        and `Echidna`, of which this test declares the first. The update may touch only that one.
+    /** As `stale_predictions_free_test`, but with its materials in two configurations, `Platypus` and
+        `Echidna`, of which it declares the first. Each configuration's working copy and auxiliary
+        materials hold a `Configuration.txt` naming it, and its predictions hold the same, so the update
+        leaves that file alone.
      */
-    class discriminated_stale_predictions_free_test final : public free_test
+    class variant_free_test final : public free_test
     {
     public:
       using free_test::free_test;
@@ -487,7 +490,7 @@ namespace sequoia::testing
       [[nodiscard]]
       static std::filesystem::path source_file()
       {
-        return "Tests/Updating/DiscriminatedStalePredictionsFreeTest.cpp";
+        return "Tests/Updating/VariantFreeTest.cpp";
       }
 
       [[nodiscard]]
@@ -495,27 +498,56 @@ namespace sequoia::testing
 
       void run_tests()
       {
+        check(equality,
+              "Working copy of the declared configuration",
+              read_to_string(working_materials() /= "Configuration.txt", std::ios_base::in).value_or(""),
+              std::string{"Platypus\n"});
+
+        check(equality,
+              "Auxiliary materials of the declared configuration",
+              read_to_string(auxiliary_materials() /= "Configuration.txt", std::ios_base::in).value_or(""),
+              std::string{"Platypus\n"});
+
         make_update_candidate(*this);
       }
     };
 
-    /// Each hook declared as a member, which the runner could not call without an instance
-    class member_discriminators_test final : public free_test
+    /** The fakes below declare each discriminator hook in one shape, for the probes to tell apart:
+        the three hooks are identical but for their names, so each fake declares all three.
+     */
+    class static_hooks_test final : public free_test
     {
     public:
       using free_test::free_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
-      {
-        return make_fake_file_path<member_discriminators_test>();
-      }
+      static std::filesystem::path source_file() { return make_fake_file_path<static_hooks_test>(); }
+
+      [[nodiscard]]
+      static std::string output_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string summary_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string materials_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      void run_tests() {}
+    };
+
+    class const_member_hooks_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file() { return make_fake_file_path<const_member_hooks_test>(); }
 
       [[nodiscard]]
       std::string output_discriminator(const cmake_cache&) const { return "Platypus"; }
 
       [[nodiscard]]
-      std::string summary_discriminator(const cmake_cache&) const { return "Release"; }
+      std::string summary_discriminator(const cmake_cache&) const { return "Platypus"; }
 
       [[nodiscard]]
       std::string materials_discriminator(const cmake_cache&) const { return "Platypus"; }
@@ -523,14 +555,61 @@ namespace sequoia::testing
       void run_tests() {}
     };
 
-    test_runner make_failing_suite(commandline_arguments args, std::stringstream& outputStream)
+    class mutable_member_hooks_test final : public free_test
     {
-      test_runner runner{args.size(),
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file() { return make_fake_file_path<mutable_member_hooks_test>(); }
+
+      [[nodiscard]]
+      std::string output_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string summary_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string materials_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      void run_tests() {}
+    };
+
+    class view_valued_hooks_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file() { return make_fake_file_path<view_valued_hooks_test>(); }
+
+      [[nodiscard]]
+      static std::string_view output_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string_view summary_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string_view materials_discriminator(const cmake_cache&) { return "Platypus"; }
+
+      void run_tests() {}
+    };
+
+    /// A runner over the fake project, writing to `outputStream`
+    [[nodiscard]]
+    test_runner make_fake_runner(commandline_arguments& args, std::stringstream& outputStream)
+    {
+      return test_runner{args.size(),
                          args.get(),
                          "Oliver J. Rosten",
                          "  ",
                          {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                          outputStream};
+    }
+
+    test_runner make_failing_suite(commandline_arguments args, std::stringstream& outputStream)
+    {
+      auto runner{make_fake_runner(args, outputStream)};
 
       runner.register_test<failing_test>();
       runner.register_test<failing_fp_test>();
@@ -548,6 +627,7 @@ namespace sequoia::testing
 
   void test_runner_test::run_tests()
   {
+    test_discriminator_hooks();
     test_exceptions();
     test_critical_errors();
     test_basic_output();
@@ -564,7 +644,6 @@ namespace sequoia::testing
     test_no_materials_update_after_critical_failure();
     test_partial_materials_update();
     test_discriminated_materials_update();
-    test_discriminator_hooks();
     test_materials_staging_failure();
     test_nested_suite();
     test_nested_suite_verbose();
@@ -575,6 +654,37 @@ namespace sequoia::testing
     test_dump_comparison();
     test_instability_analysis();
   }
+  /** Each hook is probed the same way, so a guard which let one shape through would let it through for
+      every hook: the three are checked alike.
+   */
+  void test_runner_test::test_discriminator_hooks()
+  {
+    test_discriminator_probe<output_discriminator_probe>();
+    test_discriminator_probe<summary_discriminator_probe>();
+    test_discriminator_probe<materials_discriminator_probe>();
+  }
+
+  /** A hook is used only when static and string-valued, so each other shape is flagged by one of the
+      two traits on which the runner's `static_assert`s rest, rather than silently ignored.
+   */
+  template<class Probe>
+  void test_runner_test::test_discriminator_probe()
+  {
+    STATIC_CHECK(has_discriminator_v<Probe, static_hooks_test>);
+    STATIC_CHECK(!misdeclared_discriminator_v<Probe, static_hooks_test>);
+    STATIC_CHECK(!mistyped_discriminator_v<Probe, static_hooks_test>);
+
+    STATIC_CHECK(!has_discriminator_v<Probe, throwing_test>);
+    STATIC_CHECK(!misdeclared_discriminator_v<Probe, throwing_test>);
+    STATIC_CHECK(!mistyped_discriminator_v<Probe, throwing_test>);
+
+    STATIC_CHECK(misdeclared_discriminator_v<Probe, const_member_hooks_test>);
+    STATIC_CHECK(misdeclared_discriminator_v<Probe, mutable_member_hooks_test>);
+
+    STATIC_CHECK(mistyped_discriminator_v<Probe, view_valued_hooks_test>);
+    STATIC_CHECK(!misdeclared_discriminator_v<Probe, view_valued_hooks_test>);
+  }
+
 
   [[nodiscard]]
   std::filesystem::path test_runner_test::fake_project() const
@@ -689,12 +799,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
   
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_runner(args, outputStream)};
 
         runner.register_test<foo_test>();
         runner.register_test<foo_test>();
@@ -706,13 +811,7 @@ namespace sequoia::testing
         commandline_arguments args{{zeroth_arg()}};
         std::stringstream outputStream{};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_runner(args, outputStream)};
 
         runner.register_test<foo_test>();
         runner.register_test<another_namespace::foo_test>();
@@ -742,12 +841,7 @@ namespace sequoia::testing
     {
       commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v", "recover", "dump"}};
   
-      test_runner runner{args.size(),
-                         args.get(),
-                         "Oliver J. Rosten",
-                         "  ",
-                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                         outputStream};
+      auto runner{make_fake_runner(args, outputStream)};
 
       runner.register_test<bar_free_test>();
       runner.register_test<foo_test>();
@@ -779,12 +873,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     check(equality, "No tests return code", runner.execute(), return_code::success);
     check_output("No Tests", "NoTests", outputStream);
@@ -844,12 +933,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<throwing_test>();
     runner.register_test<platform_specific_throwing_test>();
@@ -869,12 +953,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Failing"}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
 
@@ -893,12 +972,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "prune"}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     check(equality, "Prune with no stamp return code", runner.execute(), return_code::success);
     check_output("Prune with no stamp", "PruneWithNoStamp", outputStream);
@@ -968,12 +1042,7 @@ namespace sequoia::testing
     fs::last_write_time(projPaths.executable(), now);
 
     std::stringstream outputStream{};
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     check(equality, "Prune with changed toolchain return code", runner.execute(), return_code::success);
     check_output("Prune with changed toolchain", "PruneWithChangedToolchain", outputStream);
@@ -1003,12 +1072,7 @@ namespace sequoia::testing
     fs::last_write_time(projPaths.executable(), now);
 
     std::stringstream outputStream{};
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
     check(equality, "Prune selecting an unregistered test return code", runner.execute(), return_code::success);
@@ -1020,12 +1084,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Failing"}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
     runner.register_test<failing_test>();
@@ -1044,12 +1103,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<stale_predictions_free_test>();
 
@@ -1076,12 +1130,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<throwing_stale_predictions_free_test>();
 
@@ -1111,12 +1160,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<type_swapped_predictions_free_test>();
 
@@ -1128,30 +1172,21 @@ namespace sequoia::testing
     check_output("Partial Materials Update Output", "PartialMaterialsUpdateOutput", outputStream);
   }
 
-  /** As `test_materials_update`, for a test whose materials are discriminated: the update
-      rewrites the declared configuration's predictions and leaves the other configuration's alone.
+  /** As `test_materials_update`, for a test whose materials are discriminated: the declared
+      configuration is staged and updated, and the other one is left alone.
    */
   void test_runner_test::test_discriminated_materials_update()
   {
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "u"}};
+    auto runner{make_fake_runner(args, outputStream)};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
-
-    runner.register_test<discriminated_stale_predictions_free_test>();
+    runner.register_test<variant_free_test>();
 
     check(equality, "Discriminated materials update return code", runner.execute(), return_code::soft_failures);
     check_output("Discriminated Materials Update Output", "DiscriminatedMaterialsUpdateOutput", outputStream);
 
-    const auto materials{
-      fake_project() / "TestMaterials/Updating/DiscriminatedStalePredictionsFreeTest"
-                     / "discriminated_stale_predictions_free_test"
-    };
+    const auto materials{fake_project() / "TestMaterials/Updating/VariantFreeTest/variant_free_test"};
 
     check(equality,
           "Declared configuration's prediction overwritten",
@@ -1168,35 +1203,12 @@ namespace sequoia::testing
     check("Other configuration's prediction not deleted", fs::exists(materials / "Echidna/Prediction/Obsolete.txt"));
   }
 
-  /** A hook is recognised only when static: a member hook is invisible to the traits, which is why
-      the runner's getters `static_assert` against one rather than silently ignoring it.
-   */
-  void test_runner_test::test_discriminator_hooks()
-  {
-    STATIC_CHECK(has_discriminated_output_v<platform_specific_throwing_test>);
-    STATIC_CHECK(has_discriminated_summary_v<platform_specific_throwing_test>);
-    STATIC_CHECK(has_discriminated_materials_v<discriminated_stale_predictions_free_test>);
-
-    STATIC_CHECK(!has_discriminated_output_v<throwing_test>);
-    STATIC_CHECK(!has_discriminated_summary_v<throwing_test>);
-    STATIC_CHECK(!has_discriminated_materials_v<throwing_test>);
-
-    STATIC_CHECK(!has_discriminated_output_v<member_discriminators_test>);
-    STATIC_CHECK(!has_discriminated_summary_v<member_discriminators_test>);
-    STATIC_CHECK(!has_discriminated_materials_v<member_discriminators_test>);
-  }
-
   void test_runner_test::test_nested_suite()
   {
       std::stringstream outputStream{};
       commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-      test_runner runner{args.size(),
-                         args.get(),
-                         "Oliver J. Rosten",
-                         "  ",
-                         {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                         outputStream};
+      auto runner{make_fake_runner(args, outputStream)};
 
       using namespace object;
 
@@ -1213,12 +1225,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v"}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<namesake_test>();
     runner.register_test<under_namesake_test>();
@@ -1232,12 +1239,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "-v"}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     using namespace object;
 
@@ -1259,12 +1261,7 @@ namespace sequoia::testing
         argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
         commandline_arguments args{argList};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         runner.register_test<fake_performance_test>();
@@ -1289,12 +1286,7 @@ namespace sequoia::testing
         argList.insert(argList.end(), extraArgs.begin(), extraArgs.end());
         commandline_arguments args{argList};
 
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         runner.register_test<failing_test>();
@@ -1337,12 +1329,7 @@ namespace sequoia::testing
         commandline_arguments args{argList};
 
         std::stringstream outputStream{};
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         runner.register_test<fake_performance_test>();
@@ -1380,12 +1367,7 @@ namespace sequoia::testing
         commandline_arguments args{argList};
 
         std::stringstream outputStream{};
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
+        auto runner{make_fake_runner(args, outputStream)};
 
         runner.register_test<passing_test>();
         if(registered != registrations::passing)
@@ -1407,12 +1389,7 @@ namespace sequoia::testing
           commandline_arguments args{argList};
 
           std::stringstream outputStream{};
-          test_runner runner{args.size(),
-                             args.get(),
-                             "Oliver J. Rosten",
-                             "  ",
-                             {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                             outputStream};
+          auto runner{make_fake_runner(args, outputStream)};
 
           runner.register_test<passing_test>();
           return runner.execute();
@@ -1551,12 +1528,7 @@ namespace sequoia::testing
     commandline_arguments args{argGenerator()};
 
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     (runner.register_test<std::remove_cvref_t<Ts>>(), ...);
 
@@ -1643,12 +1615,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<stray_materials_free_test>();
     runner.register_test<unaffected_free_test>();

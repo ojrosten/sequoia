@@ -24,6 +24,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cctype>
 #include <set>
 #include <ranges>
 #include <span>
@@ -86,20 +87,41 @@ namespace sequoia::testing
       }
     }
 
+    constexpr std::array<std::string_view, 3> materials_kinds{"WorkingCopy", "Prediction", "Auxiliary"};
+
+    /// A file committed only to keep its directory, or one the platform writes of its own accord
+    [[nodiscard]]
+    bool is_placeholder(std::string_view name)
+    {
+      return (name == ".keep") || (name == ".DS_Store");
+    }
+
+    [[nodiscard]]
+    bool same_ignoring_case(std::string_view lhs, std::string_view rhs)
+    {
+      auto sameLetter{[](unsigned char l, unsigned char r){ return std::tolower(l) == std::tolower(r); }};
+      return std::ranges::equal(lhs, rhs, sameLetter);
+    }
+
+    /// Whether `name` is one of the kinds of material, in any case, as a case-insensitive filesystem reads it
+    [[nodiscard]]
+    bool is_materials_kind(std::string_view name)
+    {
+      auto isName{[name](std::string_view kind){ return same_ignoring_case(name, kind); }};
+      return std::ranges::any_of(materials_kinds, isName);
+    }
+
     /** An original materials root holds `WorkingCopy`, `Prediction` and `Auxiliary`, besides a
         `.keep` or Finder's `.DS_Store`. Anything more was committed for an older layout, and staging
         would ignore it without a word.
      */
     void throw_if_stray_materials(const individual_materials_paths& materials)
     {
-      constexpr std::array<std::string_view, 5>
-        expected{"WorkingCopy", "Prediction", "Auxiliary", ".keep", ".DS_Store"};
-
       auto isStray{
-        [&expected](const std::string& name) { return std::ranges::find(expected, name) == expected.end(); }
+        [](const std::string& name) { return !std::ranges::contains(materials_kinds, name) && !is_placeholder(name); }
       };
 
-      const auto& root{materials.original_materials_root()};
+      const auto root{materials.original_materials_root()};
       auto strays{
           fs::directory_iterator{root}
         | std::views::transform([](const fs::directory_entry& e) { return e.path().filename().generic_string(); })
@@ -115,6 +137,103 @@ namespace sequoia::testing
                       "only WorkingCopy, Prediction and Auxiliary are read",
                       root.generic_string(),
                       strays | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>())
+        };
+      }
+    }
+
+    /// Why `name` cannot be a directory of its own on every platform, or empty if it can
+    [[nodiscard]]
+    std::string portability_defect(std::string_view name)
+    {
+      if(name.empty()) return "is empty, but a test which declares one must name a directory";
+      if((name == ".") || (name == "..")) return "names no directory of its own";
+
+      constexpr std::string_view forbidden{"/\\:*?\"<>|"};
+      if(const auto pos{name.find_first_of(forbidden)}; pos != std::string_view::npos)
+        return std::format("contains '{}', which is not portable", name[pos]);
+
+      if(std::ranges::any_of(name, [](unsigned char c){ return c < 0x20; }))
+        return "contains a control character";
+
+      if((name.back() == '.') || (name.back() == ' '))
+        return "ends in a dot or a space, which Windows strips";
+
+      const auto stem{name.substr(0, name.find('.'))};
+      constexpr std::array<std::string_view, 4> devices{"CON", "PRN", "AUX", "NUL"};
+      const bool numberedDevice{
+           (stem.size() == 4)
+        && (same_ignoring_case(stem.substr(0, 3), "COM") || same_ignoring_case(stem.substr(0, 3), "LPT"))
+        && (stem[3] >= '1') && (stem[3] <= '9')
+      };
+
+      auto isStem{[stem](std::string_view device){ return same_ignoring_case(stem, device); }};
+      if(numberedDevice || std::ranges::any_of(devices, isStem))
+        return "is a device name on Windows";
+
+      return {};
+    }
+
+    /** A materials discriminator names one directory beneath the test's own: so it must be a portable
+        name, not a kind of material, and not a sibling's name spelt in another case, which a
+        case-insensitive filesystem takes for the sibling.
+     */
+    void throw_if_bad_materials_discriminator(const individual_materials_paths& materials)
+    {
+      const auto& name{materials.materials_discriminator().value()};
+
+      auto defect{portability_defect(name)};
+      if(defect.empty() && is_materials_kind(name))
+        defect = "is reserved for a kind of material";
+
+      if(defect.empty() && fs::exists(materials.original_test_root()))
+      {
+        for(const auto& entry : fs::directory_iterator{materials.original_test_root()})
+        {
+          const auto sibling{entry.path().filename().generic_string()};
+          if((sibling != name) && same_ignoring_case(sibling, name))
+          {
+            defect = std::format("differs only in case from {}, "
+                                 "which a case-insensitive filesystem takes for the same directory",
+                                 sibling);
+            break;
+          }
+        }
+      }
+
+      if(!defect.empty())
+        throw std::runtime_error{std::format("The materials discriminator \"{}\" {}", name, defect)};
+    }
+
+    /** A test with a materials discriminator reads only the directory its discriminator names, so
+        materials left beside the configurations' directories - committed before the discriminator
+        was declared, say - would be ignored without a word.
+     */
+    void throw_if_materials_beside_configurations(const individual_materials_paths& materials)
+    {
+      const auto& root{materials.original_test_root()};
+      auto isIgnored{
+        [](const fs::directory_entry& entry) {
+          const auto name{entry.path().filename().generic_string()};
+          return !is_placeholder(name) && (!entry.is_directory() || is_materials_kind(name));
+        }
+      };
+
+      auto ignored{
+          fs::directory_iterator{root}
+        | std::views::filter(isIgnored)
+        | std::views::transform([](const fs::directory_entry& e) { return e.path().filename().generic_string(); })
+        | std::ranges::to<std::vector>()
+      };
+
+      if(!ignored.empty())
+      {
+        std::ranges::sort(ignored);
+        throw std::runtime_error{
+          std::format("The materials in {} hold {} beside the configurations' directories, which would be ignored: "
+                      "only {} is read",
+                      root.generic_string(),
+                      ignored | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>(),
+                      materials.materials_discriminator().value())
         };
       }
     }
@@ -486,6 +605,12 @@ namespace sequoia::testing
     // test, and `test_runner::register_test` admits each name once.
     fs::remove_all(materials.temporary_materials_root());
     fs::create_directories(materials.temporary_materials_root());
+
+    if(materials.materials_discriminator())
+    {
+      throw_if_bad_materials_discriminator(materials);
+      if(fs::exists(materials.original_test_root())) throw_if_materials_beside_configurations(materials);
+    }
 
     if(!fs::exists(materials.original_materials_root())) return;
 
