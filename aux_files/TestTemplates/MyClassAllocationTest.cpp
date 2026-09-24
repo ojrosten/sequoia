@@ -5,23 +5,23 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "?ClassAllocationTest.hpp"
+#include "?TestFile.hpp"
 
 namespace ?::testing
 {
 	[[nodiscard]]
-	std::filesystem::path ?forename_?surname::source_file()
+	std::filesystem::path ?test_name::source_file()
 	{
 		return std::source_location::current().file_name();
 	}
 
-	void ?forename_?surname::run_tests()
+	void ?test_name::run_tests()
 	{
 		do_allocation_tests();
 	}
 
 	template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-	void ?forename_?surname::test_allocation()
+	void ?test_name::test_allocation()
 	{
 		// See e.g RegularAllocationTestDiagnostics.cpp or MoveOnlyAllocationTestDiagostics.cpp
 	}

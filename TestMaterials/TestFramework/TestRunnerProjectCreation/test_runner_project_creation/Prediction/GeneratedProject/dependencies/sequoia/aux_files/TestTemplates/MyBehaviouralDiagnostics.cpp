@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "?BehaviouralDiagnostics.hpp"
+#include "?TestFile.hpp"
 #include "?Header.hpp"
 
 namespace ?::testing

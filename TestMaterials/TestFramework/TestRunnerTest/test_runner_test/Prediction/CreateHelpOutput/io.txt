@@ -13,7 +13,7 @@ Commands:
   move_only_allocation_test, move_only_allocation <class> [options]
                                         An allocation test of the move-only class
   free_test, free <header> [options]    A test of the free functions the header declares
-  performance_test, performance <header>
+  performance_test, performance <header> [options]
                                         A performance test of what the header declares
 
 Options:

@@ -18,6 +18,8 @@
 #include "sequoia/TextProcessing/Indent.hpp"
 
 #include <array>
+#include <optional>
+#include <span>
 #include <vector>
 
 namespace sequoia::testing
@@ -54,6 +56,18 @@ namespace sequoia::testing
    */
   [[nodiscard]]
   std::string project_namespace_for(const std::filesystem::path& sourceProject);
+
+  /** \brief Whether a header create writes is added to the common includes: yes for one declaring
+      a test, which the mains register; no for the testing utilities, which only tests include.
+   */
+  enum class add_to_common_includes { no, yes };
+
+  /** \brief A file create writes for the type under test, rather than for the test. */
+  struct companion_stub
+  {
+    std::string ending;
+    add_to_common_includes include;
+  };
 
   class nascent_test_base
   {
@@ -93,6 +107,18 @@ namespace sequoia::testing
 
     void surname(std::string name) { m_Surname = std::move(name); }
 
+    /** \brief The test's name given whole, in place of the one derived from its forename and surname */
+    [[nodiscard]]
+    const std::optional<std::string>& full_name() const noexcept { return m_FullName; }
+
+    void full_name(std::string name) { m_FullName = std::move(name); }
+
+    /** \brief An existing header holding the value_tester of the type under test, which the test includes */
+    [[nodiscard]]
+    const std::filesystem::path& testing_utilities() const noexcept { return m_TestingUtilities; }
+
+    void testing_utilities(std::filesystem::path header) { m_TestingUtilities = std::move(header); }
+
     void generate_source_files(gen_source_option opt)
     {
       m_SourceOption = opt;
@@ -126,17 +152,55 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path build_source_path(const std::filesystem::path& filename) const;
 
-    template<invocable_exact_r<std::filesystem::path, std::filesystem::path> WhenAbsent,std::invocable<std::string&> FileTransformer>
-    void finalize(WhenAbsent fn,
-                  const std::vector<std::string>& stubs,
+    /** \brief Creates the files, then registers the test classes in every main.
+
+        The companion files are named for the type under test, `type_file_stem()` followed by the stub;
+        the test's own files, for the test, `test_file_stem()` followed by the stub's extension.
+
+        Where the header under test cannot be found and its generation was asked for, `whereAbsent` gives
+        the path at which it is to be generated and `generate` writes it there.
+
+        \throws std::runtime_error, before anything is written, if the header under test cannot be found
+        and is not to be generated, if the testing utilities cannot be found unambiguously, or if a full
+        name was given which is not usable.
+     */
+    template<invocable_exact_r<std::filesystem::path, std::filesystem::path> WhereAbsent,
+             std::invocable<std::filesystem::path> Generator,
+             std::invocable<std::string&> FileTransformer>
+    void finalize(WhereAbsent whereAbsent,
+                  Generator generate,
+                  const std::vector<companion_stub>& companionStubs,
+                  const std::vector<std::string>& ownStubs,
                   const std::vector<std::string>& testClasses,
                   std::string_view nameStub,
                   FileTransformer transformer);
 
-    [[nodiscard]]
-    const std::string& camel_name() const noexcept { return m_CamelName; }
+    /** \brief The full name if one was given, else `<forename>_<surname>`.
 
-    void camel_name(std::string name);
+        It is the class the test's own files hold, save for a framework-diagnostics pair, whose two
+        classes are named from the forename and surname, and which this names jointly.
+     */
+    [[nodiscard]]
+    std::string test_name() const;
+
+    /** \brief The stem of the test's own files: its name in camel case */
+    [[nodiscard]]
+    std::string test_file_stem() const;
+
+    /** \brief The path by which the test's header includes the testing utilities: relative to the
+        test's own directory when they lie within it, else to the tests repository.
+     */
+    [[nodiscard]]
+    std::string testing_utilities_include() const;
+
+    /** \brief The stem of the files named for the type under test: its name in camel case */
+    [[nodiscard]]
+    const std::string& type_file_stem() const noexcept { return m_TypeFileStem; }
+
+    /** \brief Names the type under test, from which follow `type_file_stem()` and, unless one was given,
+        the header declaring the type: the stem followed by `.hpp`.
+     */
+    void set_type_name(std::string_view name);
 
     void set_cpp(const std::filesystem::path& headerPath, std::string_view nameSpace);
 
@@ -162,23 +226,43 @@ namespace sequoia::testing
     std::ostream* m_Stream;
 
     nascent_test_flavour m_Flavour{nascent_test_flavour::standard};
-    std::string 
+    std::string
       m_TestType{},
       m_Forename{},
       m_Surname{},
-      m_CamelName{},
+      m_TypeFileStem{},
       m_ProjectNamespace{};
-    std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{};
+    std::optional<std::string> m_FullName{};
+    std::filesystem::path m_Header{}, m_HostDir{}, m_HeaderPath{}, m_TestingUtilities{};
     gen_source_option m_SourceOption{};
 
     void on_source_path_error() const;
 
     void finalize_header(const std::filesystem::path& sourcePath);
 
+    /** \brief Replaces the testing utilities named on the commandline with the one file beneath the
+        tests repository they name.
+
+        \throws std::runtime_error if they name no such file, or several.
+     */
+    void locate_testing_utilities();
+
+    /** \brief Refuses a full name which is not an identifier, which names a test already registered, or
+        whose files would collide - with each other, with the companions or with a file already present,
+        ignoring case, since the filesystems of macOS and Windows do.
+
+        \throws std::runtime_error naming the collision.
+     */
+    void check_full_name(std::span<const std::filesystem::path> companionFiles,
+                         std::span<const std::filesystem::path> ownFiles) const;
+
     template<std::invocable<std::string&> FileTransformer>
     [[nodiscard]]
-    std::string create_file(std::string_view inputNameStub, std::string_view nameEnding, FileTransformer transformer) const;
-
+    std::string create_file(std::string_view inputNameStub,
+                            std::string_view nameEnding,
+                            const std::filesystem::path& outputFile,
+                            add_to_common_includes include,
+                            FileTransformer transformer) const;
   };
 
   class nascent_semantics_test : public nascent_test_base
@@ -200,8 +284,13 @@ namespace sequoia::testing
     [[nodiscard]]
     friend bool operator==(const nascent_semantics_test&, const nascent_semantics_test&) noexcept = default;
 
+    /** \brief The test's own files */
     [[nodiscard]]
     static std::vector<std::string> stubs();
+
+    /** \brief The files for the type under test: its value_tester and false-negative diagnostics */
+    [[nodiscard]]
+    static std::vector<companion_stub> companion_stubs();
   private:
     std::string m_QualifiedName{};
 
@@ -216,7 +305,9 @@ namespace sequoia::testing
     void set_header_text(std::string& text, std::string_view copyright, std::string_view nameSpace) const;
 
     [[nodiscard]]
-    std::filesystem::path when_header_absent(const std::filesystem::path& filename, const std::string& nameSpace);
+    std::filesystem::path where_header_absent(const std::filesystem::path& filename) const;
+
+    void generate_header(const std::filesystem::path& headerPath, const std::string& nameSpace);
   };
 
   class nascent_allocation_test : public nascent_test_base
@@ -258,8 +349,10 @@ namespace sequoia::testing
     std::string m_Namespace;
 
     [[nodiscard]]
-    std::filesystem::path when_header_absent(const std::filesystem::path& filename);
-   };
+    std::filesystem::path where_header_absent(const std::filesystem::path& filename) const;
+
+    void generate_header(const std::filesystem::path& headerPath);
+  };
 
 
   using nascent_test_factory = object::factory<nascent_semantics_test, nascent_allocation_test, nascent_behavioural_test>;

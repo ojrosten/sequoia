@@ -23,7 +23,7 @@ target_sources(PersistentTestChamber PRIVATE
                ${TestDir}/Maths/Geometry/BoundsFreeTest.cpp
                ${TestDir}/Maths/Geometry/ComplexVectorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/FreeModuleCoordinatesTest.cpp
-               ${TestDir}/Maths/Geometry/M_AffineCoordinatesTest.cpp
+               ${TestDir}/Maths/Geometry/MAffineCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/NumericRingsMetaFreeTest.cpp
                ${TestDir}/Maths/Geometry/PartialMTorsorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/SpacesMetaFreeTest.cpp
