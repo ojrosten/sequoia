@@ -70,7 +70,12 @@ namespace sequoia::testing
                        {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                        outputStream};
 
-    const auto& projPaths{runner.proj_paths()};
+    test_file_paths(runner.proj_paths());
+    test_materials(runner.proj_paths());
+  }
+
+  void basic_test_interface_free_test::test_file_paths(const project_paths& projPaths)
+  {
     const auto rebasedSource{rebase_from(source_file(), get_project_paths().project_root())};
 
     {
@@ -128,5 +133,96 @@ namespace sequoia::testing
             t.diagnostics_file_paths().caught_exceptions_file_path(),
             projPaths.output().diagnostics() / rebasedSource.parent_path() / "fake_test_with_discriminated_exceptions_Exceptions_baz.txt");
     }
+  }
+
+  /** Four fake tests in the fake project, whose committed materials are inputs alone, predictions
+      alone, auxiliary materials alone, and none at all. Each is staged as the runner stages a test.
+   */
+  void basic_test_interface_free_test::test_materials(const project_paths& projPaths)
+  {
+    const auto staged_test{
+      [&projPaths](std::string_view sourceStem) {
+        const auto source{projPaths.tests().repo() / "Materials" / std::format("{}.cpp", sourceStem)};
+        const individual_materials_paths materials{source, "fake_test", projPaths};
+        stage_materials(materials);
+        return std::pair{fake_test{"fake_test", source, projPaths, materials, {}, {}, {}}, materials};
+      }
+    };
+
+    {
+      const auto [test, materials]{staged_test("WithInputs")};
+
+      check(equality,
+            "Working copy of inputs alone",
+            test.working_materials(),
+            materials.temporary_materials_root() / "WorkingCopy");
+
+      check("Committed input staged", fs::exists(test.working_materials() / "input.txt"));
+
+      check_exception_thrown<std::runtime_error>(
+        "No predictions",
+        [&test]() { return test.predictive_materials(); });
+
+      check_exception_thrown<std::runtime_error>(
+        "No auxiliary materials",
+        [&test]() { return test.auxiliary_materials(); });
+    }
+
+    {
+      const auto [test, materials]{staged_test("WithPredictions")};
+
+      check(equality,
+            "Working copy of predictions alone",
+            test.working_materials(),
+            materials.temporary_materials_root() / "WorkingCopy");
+
+      check("Working copy made empty", fs::is_empty(test.working_materials()));
+      check(equality, "Predictions", test.predictive_materials(), materials.original_materials_root() / "Prediction");
+    }
+
+    {
+      const auto [test, materials]{staged_test("WithAuxiliary")};
+
+      check(equality,
+            "Auxiliary materials alone",
+            test.auxiliary_materials(),
+            materials.temporary_materials_root() / "Auxiliary");
+
+      check("Committed auxiliary material staged", fs::exists(test.auxiliary_materials() / "auxiliary.txt"));
+    }
+
+    {
+      const auto [test, materials]{staged_test("WithNone")};
+
+      check_exception_thrown<std::runtime_error>("No materials", [&test]() { return test.working_materials(); });
+
+      const auto scratchpad{test.scratchpad_materials()};
+      check(equality, "Scratchpad", scratchpad, materials.temporary_materials_root() / "Scratchpad");
+      check("Scratchpad staged empty", fs::is_empty(scratchpad));
+
+      // The scratchpad is beneath the temporary data, never relative to wherever the test runs
+      write_to_file(scratchpad / "scratch.txt", "", std::ios_base::out);
+      check("Scratch file beneath the temporary data",
+            std::ranges::starts_with(scratchpad / "scratch.txt", projPaths.output().tests_temporary_data()));
+      check("Scratch file not in the current directory", !fs::exists(fs::current_path() / "scratch.txt"));
+
+      stage_materials(materials);
+      check("Scratchpad emptied by staging again", fs::is_empty(scratchpad));
+    }
+
+    {
+      const auto [test, materials]{staged_test("WithInputs")};
+      write_to_file(test.working_materials() / "input.txt", "Changed", std::ios_base::out);
+
+      stage_materials(materials);
+      check(equivalence,
+            "Working copy restored by staging again",
+            test.working_materials() / "input.txt",
+            materials.original_working() / "input.txt");
+    }
+
+    check_exception_thrown<std::logic_error>(
+      "Staging the materials of no test",
+      []() { stage_materials(individual_materials_paths{}); });
   }
 }

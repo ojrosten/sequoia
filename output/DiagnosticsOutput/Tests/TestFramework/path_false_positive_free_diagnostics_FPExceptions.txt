@@ -1,0 +1,22 @@
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 167
+An empty path is refused
+
+Expected Exception Type:
+[std::logic_error]
+Refusing to check an empty path
+vs
+output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_positive_free_diagnostics/WorkingCopy/Stuff/A
+
+=======================================
+
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 171
+An empty prediction is refused
+
+Expected Exception Type:
+[std::logic_error]
+Refusing to check an empty path
+output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_positive_free_diagnostics/WorkingCopy/Stuff/A
+vs
+
+=======================================
+

@@ -73,13 +73,11 @@ namespace sequoia::testing
 
   void invoke_handle_inheritance_free_test::run_tests()
   {
-    // An unfound materials directory yields an empty path, which would quietly put the scratch
-    // files in the working directory and let every trial below pass without exercising anything.
-    if(!check("Test materials are in place", std::filesystem::exists(working_materials()))) return;
+    const auto scratchpad{scratchpad_materials()};
 
-    const auto noSpawn             {trial(working_materials() / "NoSpawn.txt",              spawn_point::none)},
-               spawnedBeforeOpening{trial(working_materials() / "SpawnedBeforeOpening.txt", spawn_point::before_opening)},
-               spawnedWhileOpen    {trial(working_materials() / "SpawnedWhileOpen.txt",     spawn_point::while_open)};
+    const auto noSpawn             {trial(scratchpad / "NoSpawn.txt",              spawn_point::none)},
+               spawnedBeforeOpening{trial(scratchpad / "SpawnedBeforeOpening.txt", spawn_point::before_opening)},
+               spawnedWhileOpen    {trial(scratchpad / "SpawnedWhileOpen.txt",     spawn_point::while_open)};
 
     // A trial must have got as far as a written file, or its removal proves nothing: a file which
     // was never created is trivially gone.

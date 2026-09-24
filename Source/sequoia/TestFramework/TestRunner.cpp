@@ -448,34 +448,31 @@ namespace sequoia::testing
     return static_cast<int>(code);
   }
 
-  individual_materials_paths set_materials(const std::filesystem::path& sourceFile,
-                                           std::string_view testName,
-                                           const project_paths& projPaths)
+  void stage_materials(const individual_materials_paths& materials)
   {
-    individual_materials_paths materials{sourceFile, testName, projPaths};
-    if(!fs::exists(materials.original_materials_root())) return {};
+    if(materials.temporary_materials_root().empty())
+      throw std::logic_error{"Unable to stage materials whose paths name no test"};
 
     // Wiping the whole of this test's temporary tree is safe because the tree is named for the
     // test, and `test_runner::register_test` admits each name once.
     fs::remove_all(materials.temporary_materials_root());
-    fs::create_directories(materials.temporary_materials_root());
+    fs::create_directories(materials.scratchpad());
 
-    const auto workingCopy{materials.working()};
+    if(!fs::exists(materials.original_materials_root())) return;
+
     if(const auto originalWorking{materials.original_working()}; fs::exists(originalWorking))
     {
-      fs::copy(originalWorking, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+      fs::copy(originalWorking, materials.working(), fs::copy_options::recursive);
     }
     else
     {
-      fs::create_directory(workingCopy);
+      fs::create_directory(materials.working());
     }
 
-    if(const auto originalAux{materials.original_auxiliary()}; fs::exists(originalAux))
+    if(const auto originalAuxiliary{materials.original_auxiliary()}; fs::exists(originalAuxiliary))
     {
-      fs::copy(originalAux, materials.auxiliary(), fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+      fs::copy(originalAuxiliary, materials.auxiliary(), fs::copy_options::recursive);
     }
-
-    return materials;
   }
 
 
@@ -1245,8 +1242,8 @@ namespace sequoia::testing
                   [this](auto& test) -> test_paths {
                     return {test.source_file(),
                             test.summary_file_path(),
-                            test.working_materials(),
-                            test.predictive_materials(),
+                            test.materials_paths().working(),
+                            test.materials_paths().prediction(),
                             proj_paths()};
                   }
               };
@@ -1378,7 +1375,7 @@ namespace sequoia::testing
           [&,this](auto& wt){
             if(wt.optTest)
             {
-              wt.optTest->reset(proj_paths());
+              wt.optTest->reset();
             }
             else
             {

@@ -3,7 +3,7 @@ A dump which does not exist
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read the dump output/TestsTemporaryData/TestFramework/DumpComparisonFreeTest/dump_comparison_free_test/Absent.txt
+Unable to read the dump output/TestsTemporaryData/TestFramework/DumpComparisonFreeTest/dump_comparison_free_test/Scratchpad/Absent.txt
 
 =======================================
 

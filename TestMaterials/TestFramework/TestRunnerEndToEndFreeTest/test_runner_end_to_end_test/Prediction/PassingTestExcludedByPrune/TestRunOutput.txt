@@ -6,13 +6,13 @@ Analyzing dependencies...
 Running tests...
 
 foo_test:
-	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 8]
 
 ******  Critical Failures:  1  ******
 
 
 	Error -- Unexpected Exception:
-	Detailed equivalance check for paths of type 'not found' not currently implemented
+	The expression contained mismatched ( and ).
 
 	Exception thrown during last check
 	Last Recorded Message:
@@ -48,7 +48,7 @@ probability_test:
 -----------Grand Totals-----------
 [Total Run Time: 1ms]
 [Execution Time: 630us]
-	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 41]
+	Standard Top Level Checks:                 5;  Failures:  1  [Deep checks: 47]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0

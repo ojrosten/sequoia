@@ -504,13 +504,20 @@ namespace sequoia::testing
     check(equivalence, "Recovery File", working_materials() /= "Recovery", predictive_materials() /= "Recovery");
 
     //=================== Rerun in the presence of an exception mid-check ===================//
-    // Rename generated_project() / TestMaterials / Stuff / foo_test / Prediction / RepresentativeCases,
-    // in order to cause the check in FooTest.cpp to throw mid-check, thereby allowing the recovery
-    // mode to be tested. Also test that the Exceptions file is not overwritten.
+    // Restore generated_project() / TestMaterials / Stuff / foo_test / WorkingCopy / RepresentativeCases,
+    // and give one of its predictions a .seqpat holding an invalid regular expression. The check in
+    // FooTest.cpp then throws while comparing that file, thereby allowing the recovery mode to be
+    // tested mid-check. Also test that the Exceptions file is not overwritten.
 
-    const auto generatedPredictive{generated_project() /= "TestMaterials/Stuff/FooTest/foo_test/Prediction"};
-    fs::copy(generatedPredictive / "RepresentativeCases", generatedPredictive / "RepresentativeCasesTemp", fs::copy_options::recursive);
-    fs::remove_all(generatedPredictive / "RepresentativeCases");
+    fs::copy(generatedWorkingCopy / "RepresentativeCasesTemp",
+             generatedWorkingCopy / "RepresentativeCases",
+             fs::copy_options::recursive);
+    fs::remove_all(generatedWorkingCopy / "RepresentativeCasesTemp");
+
+    const auto invalidSeqpat{
+      generated_project() /= "TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz.seqpat"
+    };
+    write_to_file(invalidSeqpat, "(", std::ios_base::out);
 
     run_and_check(report("Recovery mode, throw mid-check"), b, "RunRecoveryMidCheck", "recover", return_code::soft_failures | return_code::critical_failures);
 
@@ -537,11 +544,7 @@ namespace sequoia::testing
 
     //=================== Fix a failing test and 'select' it ===================//
 
-    fs::copy(generatedPredictive / "RepresentativeCasesTemp", generatedPredictive / "RepresentativeCases", fs::copy_options::recursive);
-    fs::remove_all(generatedPredictive / "RepresentativeCasesTemp");
-
-    fs::copy(generatedWorkingCopy / "RepresentativeCasesTemp", generatedWorkingCopy / "RepresentativeCases", fs::copy_options::recursive);
-    fs::remove_all(generatedWorkingCopy / "RepresentativeCasesTemp");
+    fs::remove(invalidSeqpat);
 
     run_and_check(report("Critical failure fixed"), b, "RunFixedCriticalFailure", "select FooTest.cpp", return_code::success);
 

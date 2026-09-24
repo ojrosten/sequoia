@@ -1,0 +1,36 @@
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 163
+No predictions
+
+Expected Exception Type:
+[std::runtime_error]
+No predictions for test 'fake_test'; they would be committed in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/TestMaterials/Materials/WithInputs/fake_test/Prediction
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 167
+No auxiliary materials
+
+Expected Exception Type:
+[std::runtime_error]
+No auxiliary materials for test 'fake_test'; they would be committed in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/TestMaterials/Materials/WithInputs/fake_test/Auxiliary
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 197
+No materials
+
+Expected Exception Type:
+[std::runtime_error]
+No materials for test 'fake_test'; they would be committed in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/TestMaterials/Materials/WithNone/fake_test
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 225
+Staging the materials of no test
+
+Expected Exception Type:
+[std::logic_error]
+Unable to stage materials whose paths name no test
+
+=======================================
+

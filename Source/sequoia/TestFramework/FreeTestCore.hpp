@@ -73,23 +73,35 @@ namespace sequoia::testing
       return m_Name;
     }
 
-    [[nodiscard]]
-    std::filesystem::path working_materials() const
-    {
-      return m_Materials.working();
-    }
+    /** \brief The staged copy of the test's committed working copy, or an empty directory if the
+               test has materials but no working copy.
 
+        \throws std::runtime_error if the test has no materials, naming where they would be committed
+     */
     [[nodiscard]]
-    std::filesystem::path predictive_materials() const
-    {
-      return m_Materials.prediction();
-    }
+    std::filesystem::path working_materials() const;
 
+    /** \brief The test's committed predictions.
+
+        \throws std::runtime_error if there are none, naming where they would be committed
+     */
     [[nodiscard]]
-    std::filesystem::path auxiliary_materials() const
-    {
-      return m_Materials.auxiliary();
-    }
+    std::filesystem::path predictive_materials() const;
+
+    /** \brief The staged copy of the test's auxiliary materials.
+
+        \throws std::runtime_error if there are none, naming where they would be committed
+     */
+    [[nodiscard]]
+    std::filesystem::path auxiliary_materials() const;
+
+    /** \brief A directory for the test's own use, with no committed counterpart, and empty whenever
+               the test's materials are staged.
+
+        \throws std::logic_error if the test's materials have not been staged
+     */
+    [[nodiscard]]
+    std::filesystem::path scratchpad_materials() const;
 
     [[nodiscard]]
     const project_paths& get_project_paths() const noexcept

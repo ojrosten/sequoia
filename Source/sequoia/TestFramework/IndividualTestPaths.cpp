@@ -35,6 +35,13 @@ namespace sequoia::testing
       throw std::logic_error{"Unrecognized case for test_mode"};
     }
 
+    /// `root / name`, or empty if `root` is: an empty root names no test, and a path beneath it would be relative
+    [[nodiscard]]
+    fs::path beneath(const fs::path& root, std::string_view name)
+    {
+      return root.empty() ? fs::path{} : root / name;
+    }
+
     /** \brief The directory a test's versioned output belongs in: the mirror of its source
                file's directory, beneath the relevant output root.
 
@@ -97,44 +104,44 @@ namespace sequoia::testing
   {}
 
   individual_materials_paths::individual_materials_paths(const fs::path& relativePath, const test_materials_paths& materials, const output_paths& output)
-    : m_Materials{materials.repo() / relativePath}
-    , m_TemporaryMaterials{output.tests_temporary_data() / relativePath}
+    : m_OriginalMaterialsRoot{materials.repo() / relativePath}
+    , m_TemporaryMaterialsRoot{output.tests_temporary_data() / relativePath}
   {}
-
-  [[nodiscard]]
-  fs::path individual_materials_paths::working() const
-  {
-    if(m_Materials.empty()) return "";
-
-    return fs::exists(prediction()) ? m_TemporaryMaterials / "WorkingCopy" : m_TemporaryMaterials;
-  }
 
   [[nodiscard]]
   fs::path individual_materials_paths::original_working() const
   {
-    if(m_Materials.empty()) return "";
-
-    return fs::exists(prediction()) ? m_Materials / "WorkingCopy" : m_Materials;
+    return beneath(m_OriginalMaterialsRoot, "WorkingCopy");
   }
 
   [[nodiscard]]
-  fs::path individual_materials_paths::original_auxiliary() const
+  fs::path individual_materials_paths::working() const
   {
-    return fs::exists(prediction()) ? m_Materials / "Auxiliary" : "";
-  }
-
-  [[nodiscard]]
-  fs::path individual_materials_paths::auxiliary() const
-  {
-    return fs::exists(prediction()) ? m_TemporaryMaterials / "Auxiliary" : "";
+    return beneath(m_TemporaryMaterialsRoot, "WorkingCopy");
   }
 
   [[nodiscard]]
   fs::path individual_materials_paths::prediction() const
   {
-    const auto p{m_Materials / "Prediction"};
+    return beneath(m_OriginalMaterialsRoot, "Prediction");
+  }
 
-    return fs::exists(p) ? p : "";
+  [[nodiscard]]
+  fs::path individual_materials_paths::original_auxiliary() const
+  {
+    return beneath(m_OriginalMaterialsRoot, "Auxiliary");
+  }
+
+  [[nodiscard]]
+  fs::path individual_materials_paths::auxiliary() const
+  {
+    return beneath(m_TemporaryMaterialsRoot, "Auxiliary");
+  }
+
+  [[nodiscard]]
+  fs::path individual_materials_paths::scratchpad() const
+  {
+    return beneath(m_TemporaryMaterialsRoot, "Scratchpad");
   }
 
   //===================================== individual_diagnostics_paths =====================================//
