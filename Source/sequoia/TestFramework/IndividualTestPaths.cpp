@@ -102,15 +102,6 @@ namespace sequoia::testing
       return test_output_directory(source, output_paths::diagnostics(projectPaths.project_root()), projectPaths) /= file;
     }
 
-    /// `dir` with the discriminator's level beneath it; with no discriminator, or an empty one, `dir`
-    [[nodiscard]]
-    fs::path discriminated(fs::path dir, const std::optional<std::string>& discriminator)
-    {
-      if(discriminator && !discriminator->empty()) dir /= discriminator.value();
-
-      return dir;
-    }
-
     [[nodiscard]]
     fs::path test_summary_filename(const fs::path& sourceFile, std::string_view testName, const project_paths& projectPaths, const std::optional<std::string>& discriminator)
     {
@@ -144,14 +135,21 @@ namespace sequoia::testing
                                                          const test_materials_paths& materials,
                                                          const output_paths& output,
                                                          const std::optional<std::string>& materialsDiscriminator)
-    : m_OriginalMaterialsRoot{discriminated(materials.repo() / relativePath, materialsDiscriminator)}
+    : m_OriginalTestRoot{materials.repo() / relativePath}
     , m_TemporaryMaterialsRoot{output.tests_temporary_data() / relativePath}
+    , m_MaterialsDiscriminator{materialsDiscriminator}
   {}
+
+  [[nodiscard]]
+  fs::path individual_materials_paths::original_materials_root() const
+  {
+    return m_MaterialsDiscriminator ? m_OriginalTestRoot / m_MaterialsDiscriminator.value() : m_OriginalTestRoot;
+  }
 
   [[nodiscard]]
   fs::path individual_materials_paths::original_working() const
   {
-    return materials_directory(m_OriginalMaterialsRoot, "WorkingCopy");
+    return materials_directory(original_materials_root(), "WorkingCopy");
   }
 
   [[nodiscard]]
@@ -163,13 +161,13 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path individual_materials_paths::prediction() const
   {
-    return materials_directory(m_OriginalMaterialsRoot, "Prediction");
+    return materials_directory(original_materials_root(), "Prediction");
   }
 
   [[nodiscard]]
   fs::path individual_materials_paths::original_auxiliary() const
   {
-    return materials_directory(m_OriginalMaterialsRoot, "Auxiliary");
+    return materials_directory(original_materials_root(), "Auxiliary");
   }
 
   [[nodiscard]]
