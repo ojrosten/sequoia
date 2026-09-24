@@ -12,7 +12,9 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
+#include <format>
 #include <fstream>
+#include <ranges>
 #include <regex>
 
 namespace sequoia::testing
@@ -99,7 +101,7 @@ namespace sequoia::testing
     read_modify_write(file, inserter);
   }
 
-  void add_test_registrations(const std::filesystem::path& file, indentation indent, const std::vector<std::string>& tests)
+  void add_test_registrations(const std::filesystem::path& file, const std::vector<std::string>& tests)
   {
     if(tests.empty())
       throw std::logic_error{"No tests specified for registration"};
@@ -110,31 +112,46 @@ namespace sequoia::testing
 
     std::string& contentsStr{contents.value()};
 
-    const auto pos{contentsStr.find("runner.execute")};
-    if(pos == std::string::npos)
-      throw std::runtime_error{std::string{"Unable to find the point of registration in "}.append(file.generic_string())};
+    constexpr auto npos{std::string::npos};
+    constexpr std::string_view registrationPrefix{"runner.register_test<"};
 
-    const auto linePos{contentsStr.rfind('\n', pos)};
-    if(linePos == std::string::npos)
-      throw std::runtime_error{std::string{"Unable to find the point of registration in "}.append(file.generic_string())};
+    const auto executionPos{contentsStr.find("runner.execute")};
+    if(executionPos == npos)
+      throw std::runtime_error{std::format("Unable to find the point of registration in {}", file.generic_string())};
 
-    auto registrations{
-      [&tests, &contentsStr, indent](){
-        std::string str{};
-        for(const auto& test : tests)
-        {
-          auto registration{std::string{"runner.register_test<"}.append(test).append(">();")};
-          if(contentsStr.find(registration) == std::string::npos)
-            append_indented(str, registration, indent + indent);
-        }
-
-        return str;
-      }()
+    auto startOfLine{
+      [&contentsStr](std::string::size_type pos) -> std::string::size_type {
+        const auto newlinePos{contentsStr.rfind('\n', pos)};
+        return newlinePos == npos ? 0 : newlinePos + 1;
+      }
     };
+
+    // `runner.execute` follows every registration, so the last registration's line ends in a newline.
+    const auto lastRegistrationPos{contentsStr.rfind(registrationPrefix, executionPos)};
+    const auto neighbourLineStart{startOfLine(lastRegistrationPos == npos ? executionPos : lastRegistrationPos)};
+    const auto insertionPos{
+      lastRegistrationPos == npos ? neighbourLineStart : contentsStr.find('\n', lastRegistrationPos) + 1
+    };
+
+    const auto neighbourIndentEnd{contentsStr.find_first_not_of(" \t", neighbourLineStart)};
+    const auto neighbourIndent{contentsStr.substr(neighbourLineStart, neighbourIndentEnd - neighbourLineStart)};
+
+    auto toRegistration{
+      [registrationPrefix](const std::string& test) { return std::format("{}{}>();", registrationPrefix, test); }
+    };
+    auto isUnregistered{
+      [&contentsStr](const std::string& registration) { return !contentsStr.contains(registration); }
+    };
+
+    std::string registrations{};
+    for(const auto& registration : tests | std::views::transform(toRegistration) | std::views::filter(isUnregistered))
+    {
+      registrations.append(neighbourIndent).append(registration).append("\n");
+    }
 
     if(registrations.empty()) return;
 
-    contentsStr.insert(linePos, registrations);
+    contentsStr.insert(insertionPos, registrations);
     write_to_file(file, contentsStr, std::ios_base::out);
   }
 

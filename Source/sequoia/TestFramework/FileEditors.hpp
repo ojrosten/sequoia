@@ -12,7 +12,6 @@
  */
 
 #include "sequoia/Core/Meta/Concepts.hpp"
-#include "sequoia/TextProcessing/Indent.hpp"
 
 #include <filesystem>
 #include <optional>
@@ -29,7 +28,12 @@ namespace sequoia::testing
                     std::string_view patternClose,
                     std::string_view cmakeEntryPrefix);
 
-  void add_test_registrations(const std::filesystem::path& file, indentation indent, const std::vector<std::string>& tests);
+  /** \brief Registers each of `tests` not already registered in `file`, a main which calls `runner.execute`.
+
+      The registrations follow the last existing one or, if there is none, precede the line calling
+      `runner.execute`; each is a line of its own, indented as the line it follows or precedes.
+   */
+  void add_test_registrations(const std::filesystem::path& file, const std::vector<std::string>& tests);
 
 
   struct reduced_file_contents

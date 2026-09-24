@@ -37,12 +37,24 @@ int main(int argc, char** argv)
 		using namespace std::literals::chrono_literals;
 
 		sequoia::testing::test_runner runner{argc, argv, "Oliver Jacob Rosten", "\t"};
-runner.register_test<utilities_free_test>();runner.register_test<useful_things_free_test>();runner.register_test<bar_free_test>();runner.register_test<flipper_free_test>();runner.register_test<maybe_false_negative_test>();
-		runner.register_test<maybe_test>();runner.register_test<oldschool_false_negative_test>();
-		runner.register_test<oldschool_test>();runner.register_test<probability_false_negative_test>();
-		runner.register_test<probability_test>();runner.register_test<foo_false_negative_test>();
-		runner.register_test<foo_test>();runner.register_test<unique_thing_false_negative_test>();
-		runner.register_test<unique_thing_test>();runner.register_test<container_allocation_test>();runner.register_test<house_allocation_test>();runner.register_test<container_performance_test>();
+
+		runner.register_test<utilities_free_test>();
+		runner.register_test<useful_things_free_test>();
+		runner.register_test<bar_free_test>();
+		runner.register_test<flipper_free_test>();
+		runner.register_test<maybe_false_negative_test>();
+		runner.register_test<maybe_test>();
+		runner.register_test<oldschool_false_negative_test>();
+		runner.register_test<oldschool_test>();
+		runner.register_test<probability_false_negative_test>();
+		runner.register_test<probability_test>();
+		runner.register_test<foo_false_negative_test>();
+		runner.register_test<foo_test>();
+		runner.register_test<unique_thing_false_negative_test>();
+		runner.register_test<unique_thing_test>();
+		runner.register_test<container_allocation_test>();
+		runner.register_test<house_allocation_test>();
+		runner.register_test<container_performance_test>();
 		code = runner.execute(sequoia::timer_resolution{1ms});
 	}
 	catch(const std::exception& e)

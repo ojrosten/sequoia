@@ -21,6 +21,7 @@ namespace sequoia::testing
   {
     test_add_include_without_an_existing_block();
     test_add_include_to_an_existing_block();
+    test_add_test_registrations();
     test_comparison_of_file_contents();
   }
 
@@ -46,6 +47,42 @@ namespace sequoia::testing
     add_include(file, "Stuff/FooTest.hpp");
 
     check(equivalence, "Include added to an existing include block", file, predictive_materials() /= "ExistingBlock/Main.cpp");
+  }
+
+  /// Registrations are placed on lines of their own after the last existing one, or just before the
+  /// call to `runner.execute` if there is none, and take the indentation of that neighbour, tabs
+  /// included. The cases vary the neighbourhood of the insertion, from which both the placement
+  /// and the indentation are read.
+  void file_editors_free_test::test_add_test_registrations()
+  {
+    auto check_registration{
+      [this](std::string_view description, const std::filesystem::path& main, const std::vector<std::string>& tests) {
+        const auto file{working_materials() /= "Registration" / main};
+        add_test_registrations(file, tests);
+
+        check(equivalence, description, file, predictive_materials() /= "Registration" / main);
+      }
+    };
+
+    check_registration("After the last registration, which a blank line separates from the execution",
+                       "BlankLineBeforeExecution/Main.cpp",
+                       {"gamma_test"});
+
+    check_registration("After the last registration, which the execution immediately follows",
+                       "NoBlankLine/Main.cpp",
+                       {"gamma_test"});
+
+    check_registration("Before the execution, with no registration to follow",
+                       "NoRegistrations/Main.cpp",
+                       {"gamma_test"});
+
+    check_registration("Indented with tabs, as the registration it follows",
+                       "TabIndentation/Main.cpp",
+                       {"gamma_test"});
+
+    check_registration("Several tests at once, skipping one already registered",
+                       "SeveralTests/Main.cpp",
+                       {"beta_test", "alpha_test", "gamma_test"});
   }
 
   /** The 0x1A checks are aimed at MSVC's text mode, which stops reading at that byte; POSIX text
