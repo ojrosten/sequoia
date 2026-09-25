@@ -447,7 +447,7 @@ namespace sequoia::testing
       // The generator spells the source natively - on Windows `C$:\proj\d.cpp` - where the log has ninja's generic spelling; one file, not two
       write_ninja_deps(root / ".ninja_deps", std::vector<compilation_record>{{"CMakeFiles/x.dir/d.cpp.o", {"C:/proj/d.cpp", "C:/proj/d.h"}}});
       write_to_file(root / "build.ninja",
-                    "build CMakeFiles/x.dir/d.cpp.o: CXX_COMPILER " + replace_all(fs::path{"C:/proj/d.cpp"}.make_preferred().string(), ":", "$:") + "\n",
+                    std::format("build CMakeFiles/x.dir/d.cpp.o: CXX_COMPILER {}\n", replace_all(fs::path{"C:/proj/d.cpp"}.make_preferred().string(), ":", "$:")),
                     std::ios_base::out);
       check(equality,
             "A source the generator spells natively is the log's own file",
