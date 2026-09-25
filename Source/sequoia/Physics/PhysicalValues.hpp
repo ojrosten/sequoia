@@ -91,7 +91,7 @@ namespace sequoia::maths
   struct to_base_space<physics::composite_space<Ts...>>
   {
     using sorted_tensor_product_type = meta::stable_sort_t<tensor_product<to_base_space_t<Ts>...>,  meta::type_comparator>;
-    using type = physics::impl::to_composite_space_t<physics::reduction_t<physics::impl::reduce_t<physics::impl::count_and_combine_t<sorted_tensor_product_type>>>>;
+    using type                       = physics::impl::to_composite_space_t<physics::reduction_t<physics::impl::reduce_t<physics::impl::count_and_combine_t<sorted_tensor_product_type>>>>;
   };
 }
 
@@ -479,7 +479,7 @@ namespace sequoia::physics
     };
 
     template<partial_m_torsor RHSValueSpace, class RHSBasisData>
-    constexpr static bool is_multipicable_with_v{
+    constexpr static bool is_multiplicable_with_v{
          is_composable_with_v<RHSValueSpace, RHSBasisData>
       && ((D == 1) || (free_module_type_of_t<RHSValueSpace>::dimension == 1))
     };
@@ -541,7 +541,7 @@ namespace sequoia::physics
       representation_for<RHSValueSpace> RHSRepresentation,
       class RHSOrigin
     >
-      requires is_multipicable_with_v<RHSValueSpace, RHSBasisData> // TO DO: include repr, origin
+      requires is_multiplicable_with_v<RHSValueSpace, RHSBasisData> // TO DO: include repr, origin
     [[nodiscard]]
     // TO DO: move to derived class
     friend constexpr auto operator*(const physical_value& lhs,

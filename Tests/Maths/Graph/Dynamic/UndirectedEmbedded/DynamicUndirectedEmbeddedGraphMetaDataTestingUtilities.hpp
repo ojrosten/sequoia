@@ -61,9 +61,9 @@ namespace sequoia::testing
   {
    public:
     using graph_type            = maths::embedded_graph<EdgeWeight, NodeWeight, EdgeMetaData, EdgeStorageConfig, NodeWeightStorage>;
-    using edge_type             = graph_type::edge_init_type;
+    using edge_init_type        = graph_type::edge_init_type;
     using node_weight_type      = graph_type::node_weight_type;
-    using edges_equivalent_type = std::initializer_list<std::initializer_list<edge_type>>;
+    using edges_equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
     using transition_graph      = transition_checker<graph_type>::transition_graph;
 
     static void execute_operations(regular_test& t)

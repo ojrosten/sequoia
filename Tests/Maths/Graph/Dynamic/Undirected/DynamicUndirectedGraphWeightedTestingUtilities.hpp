@@ -90,9 +90,9 @@ namespace sequoia::testing
   {
    public:
     using graph_type            = maths::undirected_graph<EdgeWeight, NodeWeight, maths::null_meta_data, EdgeStorageConfig, NodeWeightStorage>;
-    using edge_type             = graph_type::edge_init_type;
+    using edge_init_type        = graph_type::edge_init_type;
     using node_weight_type      = graph_type::node_weight_type;
-    using edges_equivalent_type = std::initializer_list<std::initializer_list<edge_type>>;
+    using edges_equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
     using transition_graph      = transition_checker<graph_type>::transition_graph;
 
     constexpr static bool has_shared_weight_v{EdgeStorageConfig::edge_sharing == maths::edge_sharing_preference::shared_weight};
@@ -122,16 +122,16 @@ namespace sequoia::testing
       using nodes = std::initializer_list<node_weight_type>;
 
       // One node
-      t.check_exception_thrown<std::logic_error>("Mismatched loop weights", [](){ return graph_type{{edge_type{0, 1.0}, edge_type{0, 2.0}}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched loop weights", [](){ return graph_type{{edge_init_type{0, 1.0}, edge_init_type{0, 2.0}}}; });
 
       // Two nodes
-      t.check_exception_thrown<std::logic_error>("Mismatched weights", [](){ return graph_type{{edge_type{1, 1.0}}, {edge_type{0, 2.0}}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched weights", [](){ return graph_type{{edge_init_type{1, 1.0}}, {edge_init_type{0, 2.0}}}; });
 
       t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_type{{}, nodes{1.0}}; });
       t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_type{{{}}, nodes{1.0, 2.0}}; });
-      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_type{{{edge_type{0, 1.0}, edge_type{0, 1.0}}}, nodes{1.0, 2.0}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_type{{{edge_init_type{0, 1.0}, edge_init_type{0, 1.0}}}, nodes{1.0, 2.0}}; });
       t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_type{{{}, {}}, nodes{1.0}}; });
-      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_type{{{edge_type{1}}, {edge_type{0}}}, nodes{1.0}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_type{{{edge_init_type{1}}, {edge_init_type{0}}}, nodes{1.0}}; });
     }
 
     [[nodiscard]]

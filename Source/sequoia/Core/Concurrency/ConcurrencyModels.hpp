@@ -127,8 +127,8 @@ namespace sequoia::concurrency
   {
     template<class R, bool MultiChannel> struct queue_details
     {
-      using Q_type = task_queue<R>;
-      using task_type = Q_type::task_type;
+      using Q_type     = task_queue<R>;
+      using task_type  = Q_type::task_type;
       using queue_type = std::vector<Q_type>;
 
       std::size_t push_cycles{};
@@ -136,8 +136,8 @@ namespace sequoia::concurrency
 
     template<class R> struct queue_details<R, false>
     {
-      using Q_type = task_queue<R>;
-      using task_type = Q_type::task_type;
+      using Q_type     = task_queue<R>;
+      using task_type  = Q_type::task_type;
       using queue_type = Q_type;
     };
   }

@@ -172,16 +172,16 @@ namespace sequoia::testing
   {
   public:
     using graph_type            = maths::directed_graph<EdgeWeight, NodeWeight,EdgeStorageConfig, NodeWeightStorage>;
-    using edge_type             = graph_type::edge_init_type;
-    using edges_equivalent_type = std::initializer_list<std::initializer_list<edge_type>>;
+    using edge_init_type        = graph_type::edge_init_type;
+    using edges_equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
     using transition_graph      = transition_checker<graph_type>::transition_graph;
 
     static void check_initialization_exceptions(regular_test& t)
     {
-      t.check_exception_thrown<std::out_of_range>("Zeroth partial index of edge out of range", [](){ return graph_type{{edge_type{1}}}; });
-      t.check_exception_thrown<std::out_of_range>("First partial index of edge out of range", [](){ return graph_type{{edge_type{0}, edge_type{1}}}; });
-      t.check_exception_thrown<std::out_of_range>("First partial index of edge out of range", [](){ return graph_type{{edge_type{0}, edge_type{2}}, {}}; });
-      t.check_exception_thrown<std::out_of_range>("Zeroth partial index of node 1's edge out of range", [](){ return graph_type{{edge_type{0}, edge_type{1}}, {edge_type{2}}}; });
+      t.check_exception_thrown<std::out_of_range>("Zeroth partial index of edge out of range", [](){ return graph_type{{edge_init_type{1}}}; });
+      t.check_exception_thrown<std::out_of_range>("First partial index of edge out of range", [](){ return graph_type{{edge_init_type{0}, edge_init_type{1}}}; });
+      t.check_exception_thrown<std::out_of_range>("First partial index of edge out of range", [](){ return graph_type{{edge_init_type{0}, edge_init_type{2}}, {}}; });
+      t.check_exception_thrown<std::out_of_range>("Zeroth partial index of node 1's edge out of range", [](){ return graph_type{{edge_init_type{0}, edge_init_type{1}}, {edge_init_type{2}}}; });
     }
 
     static void execute_operations(regular_test& t)
@@ -1615,88 +1615,88 @@ namespace sequoia::testing
           make_and_check(t, t.report(""), {{}}),
 
           //  'node_0'
-          make_and_check(t, t.report(""), {{edge_type{0}}}),
+          make_and_check(t, t.report(""), {{edge_init_type{0}}}),
 
           //  'node_0_0'
-          make_and_check(t, t.report(""), {{edge_type{0}, edge_type{0}}}),
+          make_and_check(t, t.report(""), {{edge_init_type{0}, edge_init_type{0}}}),
 
           //  'node_node'
           make_and_check(t, t.report(""), {{}, {}}),
 
           //  'node_1_node'
-          make_and_check(t, t.report(""), {{edge_type{1}}, {}}),
+          make_and_check(t, t.report(""), {{edge_init_type{1}}, {}}),
 
           //  'node_node_0'
-          make_and_check(t, t.report(""), {{}, {edge_type{0}}}),
+          make_and_check(t, t.report(""), {{}, {edge_init_type{0}}}),
 
           //  'node_0_1_node'
-          make_and_check(t, t.report(""), {{edge_type{0}, edge_type{1}}, {}}),
+          make_and_check(t, t.report(""), {{edge_init_type{0}, edge_init_type{1}}, {}}),
 
           //  'node_0_node'
-          make_and_check(t, t.report(""), {{edge_type{0}}, {}}),
+          make_and_check(t, t.report(""), {{edge_init_type{0}}, {}}),
 
           //  'node_node_1'
-          make_and_check(t, t.report(""), {{}, {edge_type{1}}}),
+          make_and_check(t, t.report(""), {{}, {edge_init_type{1}}}),
 
           // 'node_1_1_node'
-          make_and_check(t, t.report(""), {{edge_type{1}, edge_type{1}}, {}}),
+          make_and_check(t, t.report(""), {{edge_init_type{1}, edge_init_type{1}}, {}}),
 
           // 'node_1_node_0'
-          make_and_check(t, t.report(""), {{edge_type{1}}, {edge_type{0}}}),
+          make_and_check(t, t.report(""), {{edge_init_type{1}}, {edge_init_type{0}}}),
 
           //  'node_node_node'
           make_and_check(t, t.report(""), {{}, {}, {}}),
 
           //  'node_1_node_node'
-          make_and_check(t, t.report(""), {{edge_type{1}}, {}, {}}),
+          make_and_check(t, t.report(""), {{edge_init_type{1}}, {}, {}}),
 
           //  'node_node_node_1'
-          make_and_check(t, t.report(""), {{}, {}, {edge_type{1}}}),
+          make_and_check(t, t.report(""), {{}, {}, {edge_init_type{1}}}),
 
           // 'node_1_node_2_node'
-          make_and_check(t, t.report(""), {{edge_type{1}}, {edge_type{2}}, {}}),
+          make_and_check(t, t.report(""), {{edge_init_type{1}}, {edge_init_type{2}}, {}}),
 
           // 'node_1_node_node_1'
-          make_and_check(t, t.report(""), {{edge_type{1}}, {}, {edge_type{1}}}),
+          make_and_check(t, t.report(""), {{edge_init_type{1}}, {}, {edge_init_type{1}}}),
 
           // 'node_1_node_2_node_0'
-          make_and_check(t, t.report(""), {{edge_type{1}}, {edge_type{2}}, {edge_type{0}}}),
+          make_and_check(t, t.report(""), {{edge_init_type{1}}, {edge_init_type{2}}, {edge_init_type{0}}}),
 
           // 'node_node_1_node'
-          make_and_check(t, t.report(""), {{}, {edge_type{1}}, {}}),
+          make_and_check(t, t.report(""), {{}, {edge_init_type{1}}, {}}),
 
           // 'node_1_node_1_node'
-          make_and_check(t, t.report(""), {{edge_type{1}}, {edge_type{1}}, {}}),
+          make_and_check(t, t.report(""), {{edge_init_type{1}}, {edge_init_type{1}}, {}}),
 
           // 'node_1_node_1_0_node'
-          make_and_check(t, t.report(""), {{edge_type{1}}, {edge_type{1}, edge_type{0}}, {}}),
+          make_and_check(t, t.report(""), {{edge_init_type{1}}, {edge_init_type{1}, edge_init_type{0}}, {}}),
 
           // 'node_1_node_1_0_2_node'
-          make_and_check(t, t.report(""), {{edge_type{1}}, {edge_type{1}, edge_type{0}, edge_type{2}}, {}}),
+          make_and_check(t, t.report(""), {{edge_init_type{1}}, {edge_init_type{1}, edge_init_type{0}, edge_init_type{2}}, {}}),
 
           // 'node_1_node_1_2_node'
-          make_and_check(t, t.report(""), {{edge_type{1}}, {edge_type{1}, edge_type{2}}, {}}),
+          make_and_check(t, t.report(""), {{edge_init_type{1}}, {edge_init_type{1}, edge_init_type{2}}, {}}),
 
           // 'node_2_node_node_2'
-          make_and_check(t, t.report(""), {{edge_type{2}}, {}, {edge_type{2}}}),
+          make_and_check(t, t.report(""), {{edge_init_type{2}}, {}, {edge_init_type{2}}}),
 
           // 'node_1_1_2_2_node_2_node'
-          make_and_check(t, t.report(""), {{edge_type{1}, edge_type{1}, edge_type{2}, edge_type{2}}, {edge_type{2}}, {}}),
+          make_and_check(t, t.report(""), {{edge_init_type{1}, edge_init_type{1}, edge_init_type{2}, edge_init_type{2}}, {edge_init_type{2}}, {}}),
 
           // 'node_1_1_2_2_node_2_node_1'
-          make_and_check(t, t.report(""), {{edge_type{1}, edge_type{1}, edge_type{2}, edge_type{2}}, {edge_type{2}}, {edge_type{1}}}),
+          make_and_check(t, t.report(""), {{edge_init_type{1}, edge_init_type{1}, edge_init_type{2}, edge_init_type{2}}, {edge_init_type{2}}, {edge_init_type{1}}}),
 
           // 'node_2_2_1_1_node_2_node_1'
-          make_and_check(t, t.report(""), {{edge_type{2}, edge_type{2}, edge_type{1}, edge_type{1}}, {edge_type{2}}, {edge_type{1}}}),
+          make_and_check(t, t.report(""), {{edge_init_type{2}, edge_init_type{2}, edge_init_type{1}, edge_init_type{1}}, {edge_init_type{2}}, {edge_init_type{1}}}),
 
           // 'node_3_1_node_2_node_node'
-          make_and_check(t, t.report(""), {{edge_type{3}, edge_type{1}}, {edge_type{2}}, {}, {}}),
+          make_and_check(t, t.report(""), {{edge_init_type{3}, edge_init_type{1}}, {edge_init_type{2}}, {}, {}}),
 
           // 'node_1_node_node_node_2'
-          make_and_check(t, t.report(""), {{edge_type{1}}, {}, {}, {edge_type{2}}}),
+          make_and_check(t, t.report(""), {{edge_init_type{1}}, {}, {}, {edge_init_type{2}}}),
 
           // 'node_2_node_node_node_1'
-          make_and_check(t, t.report(""), {{edge_type{2}}, {}, {}, {edge_type{1}}})
+          make_and_check(t, t.report(""), {{edge_init_type{2}}, {}, {}, {edge_init_type{1}}})
         }
       };
     }

@@ -55,9 +55,9 @@ namespace sequoia::testing
   {
    public:
     using graph_type            = maths::undirected_graph<EdgeWeight, NodeWeight, EdgeMetaData, EdgeStorageConfig, NodeWeightStorage>;
-    using edge_type             = graph_type::edge_init_type;
+    using edge_init_type        = graph_type::edge_init_type;
     using node_weight_type      = graph_type::node_weight_type;
-    using edges_equivalent_type = std::initializer_list<std::initializer_list<edge_type>>;
+    using edges_equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
     using transition_graph      = transition_checker<graph_type>::transition_graph;
 
     static void execute_operations(regular_test& t)
@@ -85,12 +85,12 @@ namespace sequoia::testing
       using namespace maths;
 
       // One node
-      t.check_exception_thrown<std::out_of_range>("Target index of edge out of range", [](){ return graph_type{{edge_type{1, 0.5f}}}; });
-      t.check_exception_thrown<std::logic_error>("Mismatched loop", [](){ return graph_type{{edge_type{0, 0.5f}}}; });
+      t.check_exception_thrown<std::out_of_range>("Target index of edge out of range", [](){ return graph_type{{edge_init_type{1, 0.5f}}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched loop", [](){ return graph_type{{edge_init_type{0, 0.5f}}}; });
 
       // Two nodes
-      t.check_exception_thrown<std::logic_error>("Mismatched partial edges", [](){ return graph_type{{edge_type{1, 0.5f}}, {edge_type{1, -0.5f}}}; });
-      t.check_exception_thrown<std::logic_error>("Mismatched loop", [](){ return graph_type{{edge_type{1, 0.5f}}, {edge_type{0, 0.6f}, edge_type{1, -0.5f}}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched partial edges", [](){ return graph_type{{edge_init_type{1, 0.5f}}, {edge_init_type{1, -0.5f}}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched loop", [](){ return graph_type{{edge_init_type{1, 0.5f}}, {edge_init_type{0, 0.6f}, edge_init_type{1, -0.5f}}}; });
     }
 
     [[nodiscard]]

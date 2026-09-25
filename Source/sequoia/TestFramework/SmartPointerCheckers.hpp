@@ -73,7 +73,7 @@ namespace sequoia::testing
   template<class T>
   struct value_tester<std::unique_ptr<T>> : smart_pointer_tester<std::unique_ptr<T>>
   {
-    using type = std::unique_ptr<T>;
+    using type      = std::unique_ptr<T>;
     using base_type = smart_pointer_tester<std::unique_ptr<T>>;
     using base_type::test;
 
@@ -97,7 +97,7 @@ namespace sequoia::testing
   template<class T>
   struct value_tester<std::shared_ptr<T>> : smart_pointer_tester<std::shared_ptr<T>>
   {
-    using type = std::shared_ptr<T>;
+    using type      = std::shared_ptr<T>;
     using base_type = smart_pointer_tester<std::shared_ptr<T>>;
     using base_type::test;
 

@@ -114,9 +114,9 @@ namespace sequoia::testing
   {
    public:
     using graph_type            = maths::directed_graph<EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>;
-    using edge_type             = graph_type::edge_init_type;
+    using edge_init_type        = graph_type::edge_init_type;
     using node_weight_type      = graph_type::node_weight_type;
-    using edges_equivalent_type = std::initializer_list<std::initializer_list<edge_type>>;
+    using edges_equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
     using transition_graph      = transition_checker<graph_type>::transition_graph;
 
     static void execute_operations(regular_test& t)
@@ -137,16 +137,16 @@ namespace sequoia::testing
     {
       using nodes = std::initializer_list<node_weight_type>;
 
-      t.check_exception_thrown<std::out_of_range>("Zeroth partial index of edge out of range", [](){ return graph_type{{edge_type{1, 1.0}}}; });
-      t.check_exception_thrown<std::out_of_range>("First partial index of edge out of range", [](){ return graph_type{{edge_type{0, 1.0}, edge_type{1, 1.0}}}; });
-      t.check_exception_thrown<std::out_of_range>("First partial index of edge out of range", [](){ return graph_type{{edge_type{0, 1.0}, edge_type{2, 1.0}}, {}}; });
-      t.check_exception_thrown<std::out_of_range>("Zeroth partial index of node 1's edge out of range", [](){ return graph_type{{edge_type{0, 1.0}, edge_type{1, 1.0}}, {edge_type{2, 1.0}}}; });
+      t.check_exception_thrown<std::out_of_range>("Zeroth partial index of edge out of range", [](){ return graph_type{{edge_init_type{1, 1.0}}}; });
+      t.check_exception_thrown<std::out_of_range>("First partial index of edge out of range", [](){ return graph_type{{edge_init_type{0, 1.0}, edge_init_type{1, 1.0}}}; });
+      t.check_exception_thrown<std::out_of_range>("First partial index of edge out of range", [](){ return graph_type{{edge_init_type{0, 1.0}, edge_init_type{2, 1.0}}, {}}; });
+      t.check_exception_thrown<std::out_of_range>("Zeroth partial index of node 1's edge out of range", [](){ return graph_type{{edge_init_type{0, 1.0}, edge_init_type{1, 1.0}}, {edge_init_type{2, 1.0}}}; });
 
       t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_type{{}, nodes{1.0}}; });
       t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_type{{{}}, nodes{1.0, 2.0}}; });
-      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_type{{{edge_type{0, 1.0}}}, nodes{1.0, 2.0}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_type{{{edge_init_type{0, 1.0}}}, nodes{1.0, 2.0}}; });
       t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_type{{{}, {}}, nodes{1.0}}; });
-      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_type{{{edge_type{1}}, {edge_type{0}}}, nodes{1.0}}; });
+      t.check_exception_thrown<std::logic_error>("Mismatched edge/node initialization", [](){ return graph_type{{{edge_init_type{1}}, {edge_init_type{0}}}, nodes{1.0}}; });
     }
 
 
