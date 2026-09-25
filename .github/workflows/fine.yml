@@ -72,8 +72,9 @@ jobs:
 
   # The tier's own shape, checked. A job skipped by a wrong `if:` renders the same
   # as one that passed; `needs` reports `skipped` where the tick shows green.
-  # Staging requires this job and none of the others, so a job it does not need
-  # gates nothing, however red: the second step insists it needs every other job.
+  # Staging requires this job and none of the others, so a job missing from this
+  # job's `needs` would gate nothing, however red. The second step fails if any
+  # other job is missing.
   # Same shape as rigorous's audit, without the modes.
   audit:
     name: Every job ran and every job gates
@@ -98,9 +99,9 @@ jobs:
 
       - name: Insist this job needs every other job of the workflow
         run: |
-          # The workflow file is fetched as of the commit this run started from. The
-          # two lists are compared both ways, so that a file which fails to parse
-          # fails here rather than passing with no jobs to compare.
+          # The workflow file is fetched as of the commit this run started from. Its
+          # jobs and this job's `needs` are compared both ways, so that a file which
+          # fails to parse fails here rather than passing with nothing to compare.
           set -o pipefail
           workflow=${GITHUB_WORKFLOW_REF#"$GITHUB_REPOSITORY/"}
           workflow=${workflow%%@*}

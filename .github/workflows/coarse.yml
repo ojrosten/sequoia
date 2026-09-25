@@ -22,7 +22,7 @@ name: coarse
 # One of staging's two gates, beside fine: a PR into staging merges only once this
 # workflow's audit has passed on the PR's head. The run comes from the push, not
 # from the PR, and GitHub runs a fork's push in the fork, so a PR from a fork waits
-# on this check for good.
+# on coarse's audit for good.
 #
 # Every column is fatal, the Windows one since 2026-09-22. It had been advisory
 # from 2026-09-09 - the suite run and triaged, a failure reported on a green job -
@@ -109,8 +109,9 @@ jobs:
 
   # The tier's own shape, checked. A job skipped by a wrong `if:` renders the same
   # as one that passed; `needs` reports `skipped` where the tick shows green.
-  # Staging requires this job and none of the others, so a job it does not need
-  # gates nothing, however red: the second step insists it needs every other job.
+  # Staging requires this job and none of the others, so a job missing from this
+  # job's `needs` would gate nothing, however red. The second step fails if any
+  # other job is missing.
   audit:
     name: Every job ran
     needs: [scope, coarse, docs]
@@ -134,9 +135,9 @@ jobs:
 
       - name: Insist this job needs every other job of the workflow
         run: |
-          # The workflow file is fetched as of the commit this run started from. The
-          # two lists are compared both ways, so that a file which fails to parse
-          # fails here rather than passing with no jobs to compare.
+          # The workflow file is fetched as of the commit this run started from. Its
+          # jobs and this job's `needs` are compared both ways, so that a file which
+          # fails to parse fails here rather than passing with nothing to compare.
           set -o pipefail
           workflow=${GITHUB_WORKFLOW_REF#"$GITHUB_REPOSITORY/"}
           workflow=${workflow%%@*}

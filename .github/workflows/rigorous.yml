@@ -471,8 +471,9 @@ jobs:
   # job's result is read from `needs`, which reports `skipped` where the tick shows
   # green. In the false-negative control the columns must have FAILED.
   #
-  # Main requires this job and none of the others, so a job it does not need gates
-  # nothing, however red: the second step insists it needs every other job.
+  # Main requires this job and none of the others, so a job missing from this
+  # job's `needs` would gate nothing, however red. The second step fails if any
+  # other job is missing.
   audit:
     name: Every job ran as this run's mode requires
     needs: [staging, scope, rigorous, docs, coverage, promote]
@@ -520,9 +521,9 @@ jobs:
 
       - name: Insist this job needs every other job of the workflow
         run: |
-          # The workflow file is fetched as of the commit this run started from. The
-          # two lists are compared both ways, so that a file which fails to parse
-          # fails here rather than passing with no jobs to compare.
+          # The workflow file is fetched as of the commit this run started from. Its
+          # jobs and this job's `needs` are compared both ways, so that a file which
+          # fails to parse fails here rather than passing with nothing to compare.
           set -o pipefail
           workflow=${GITHUB_WORKFLOW_REF#"$GITHUB_REPOSITORY/"}
           workflow=${workflow%%@*}
