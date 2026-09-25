@@ -19,10 +19,10 @@ name: coarse
 # reason a Mac column at the cheap tiers measured nothing new, and it stopped
 # being true - the absence "has gone from convenient to a glaring hole".
 #
-# A push to a branch with an open PR fires both `push` and `synchronize`, so this
-# runs alongside that PR's tier. There is no native way to suppress it, and it is
-# not wasted: it is what keeps an uninstrumented build in the picture once a branch
-# is under review.
+# One of staging's two gates, beside fine: a PR into staging merges only once this
+# workflow's audit has passed on the PR's head. The run comes from the push, not
+# from the PR, and GitHub runs a fork's push in the fork, so a PR from a fork waits
+# on this check for good.
 #
 # Every column is fatal, the Windows one since 2026-09-22. It had been advisory
 # from 2026-09-09 - the suite run and triaged, a failure reported on a green job -
@@ -58,10 +58,8 @@ name: coarse
 # Drift fails the column it is found on, Windows included: no column here is
 # advisory any more, so nothing routes a red suite step through the triage step.
 #
-# No path filter, although this tier gates nothing itself: its docs job is a
-# check staging requires of a PR, and reaches the PR only from here, on the push.
-# scope.yml says why a filter would wedge that PR, and how a
-# job with nothing to test still reports.
+# No path filter: scope.yml says why a filter would wedge a PR, and how a job with
+# nothing to test still reports.
 on:
   push:
     branches-ignore:
@@ -109,9 +107,10 @@ jobs:
     with:
       needs_testing: ${{ needs.scope.outputs.documentation }}
 
-  # The tier's own shape, checked: a job skipped by a wrong `if:` renders the same
-  # as one that passed, and `needs` reports `skipped` where the tick shows green.
-  # Nothing here gates, so there is no required set to hold it against.
+  # The tier's own shape, checked. A job skipped by a wrong `if:` renders the same
+  # as one that passed; `needs` reports `skipped` where the tick shows green.
+  # Staging requires this job and none of the others, so a job it does not need
+  # gates nothing, however red: the second step insists it needs every other job.
   audit:
     name: Every job ran
     needs: [scope, coarse, docs]
@@ -119,6 +118,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
       RESULTS: ${{ toJSON(needs) }}
     steps:
       - name: Check each job's result
@@ -130,3 +131,22 @@ jobs:
             if [ "$actual" = success ]; then echo "ok    $job"; else echo "::error::$job: expected success, was $actual"; failed=1; fi
           done
           exit $failed
+
+      - name: Insist this job needs every other job of the workflow
+        run: |
+          # The workflow file is fetched as of the commit this run started from. The
+          # two lists are compared both ways, so that a file which fails to parse
+          # fails here rather than passing with no jobs to compare.
+          set -o pipefail
+          workflow=${GITHUB_WORKFLOW_REF#"$GITHUB_REPOSITORY/"}
+          workflow=${workflow%%@*}
+          gh api -H 'Accept: application/vnd.github.raw' "repos/$GH_REPO/contents/$workflow?ref=$GITHUB_WORKFLOW_SHA" \
+            | yq -r '.jobs | keys | .[]' | grep -vxF "$GITHUB_JOB" | sort > jobs.txt
+          jq -r 'keys[]' <<<"$RESULTS" | sort > needed.txt
+          echo "jobs of $workflow but this one:"; sed 's/^/  /' jobs.txt
+          echo "jobs this one needs:"; sed 's/^/  /' needed.txt
+          if ! diff -u needed.txt jobs.txt; then
+            echo "::error::$GITHUB_JOB must need every other job of $workflow: a job it does not need gates nothing, however red"
+            exit 1
+          fi
+          echo "$GITHUB_JOB needs every other job of $workflow"

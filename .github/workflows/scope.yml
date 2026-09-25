@@ -7,9 +7,8 @@ name: scope
 # "Expected - waiting for status to be reported", for good. A workflow skipped by
 # a path filter on its trigger reports nothing, so no workflow with a job that is
 # a required check may filter its trigger by path (roadmap item 145). The
-# decision is taken here instead. The jobs that report required checks always run;
-# their expensive steps are conditional on these answers, and a job which skips
-# them still passes.
+# decision is taken here instead. Every job always runs; the expensive steps
+# are conditional on these answers, and a job which skips them still passes.
 #
 # Why once per run. Every job must act on the same answer. Columns deciding for
 # themselves could differ - one fetch failing where another succeeds, or a branch

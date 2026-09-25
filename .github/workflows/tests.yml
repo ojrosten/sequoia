@@ -606,10 +606,6 @@ jobs:
   #   - Both passes, when `needs_testing` is `false`. Then every column's
   #     `Nothing to test` step must have succeeded. A schedule, a dispatch and a
   #     push to staging are always tested, so a skip on one of those is an error.
-  #
-  # The job's name says less than it checks once a change can hold nothing to
-  # test. It keeps the name because the name is a required check: renamed here
-  # and not in the protection rule, it would never report again.
   audit:
     name: Every column ran the suite
     needs: build-and-test

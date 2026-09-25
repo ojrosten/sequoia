@@ -29,8 +29,8 @@ jobs:
         with:
           fetch-depth: 1
 
-      # The job always runs, so that its check always reports: staging and main
-      # both require it. Only the steps below depend on the change; scope.yml says
+      # The job always runs, since the audits of coarse and rigorous insist on its
+      # success. Only the steps below depend on the change; scope.yml says
       # why. As in tests.yml, the conditions test for `true`, so this step insists
       # any other answer is exactly `false`: an empty one fails the job rather than
       # passing it unchecked.
