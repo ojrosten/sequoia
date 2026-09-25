@@ -407,7 +407,7 @@ namespace sequoia::testing
 
     auto registerTests{
       [this, &testClasses](const fs::path& mainCpp) {
-        add_test_registrations(mainCpp, m_CodeIndent, testClasses);
+        add_test_registrations(mainCpp, testClasses);
       }
     };
 

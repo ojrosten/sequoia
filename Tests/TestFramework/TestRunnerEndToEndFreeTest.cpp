@@ -444,7 +444,7 @@ namespace sequoia::testing
     fs::copy_file(generatedProject / mainCpp,   working_materials() /= mainCpp);
     fs::copy_file(generatedProject / mainCmake, working_materials() /= mainCmake);
     check(equivalence, "TestAllMain.cpp",  working_materials() /= mainCpp,   predictive_materials() /= mainCpp);
-    check(equivalence, "CMakeLists.tt", working_materials() /= mainCmake, predictive_materials() /= mainCmake);
+    check(equivalence, "CMakeLists.txt", working_materials() /= mainCmake, predictive_materials() /= mainCmake);
 
     fs::copy(generated_project() /= "output/TestSummaries", working_materials() /= "TestSummaries_1", fs::copy_options::recursive);
     check(equivalence, "", working_materials() /= "TestSummaries_1", predictive_materials() /= "TestSummaries_1");
