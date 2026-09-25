@@ -778,7 +778,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> nascent_behavioural_test::test_classes() const
   {
-    auto makeClassName{
+    const auto makeClassName{
       [this](std::string_view middlename) -> std::string {
         auto testClass{std::string{forename()}.append("_")};
         if(!middlename.empty()) testClass.append(middlename).append("_");
@@ -786,18 +786,12 @@ namespace sequoia::testing
       }
     };
 
-    auto make{
-      [makeClassName](std::string_view middlename) -> std::string {
-        return makeClassName(middlename);
-      }
-    };
-
     switch(flavour())
     {
     case nascent_test_flavour::standard:
-      return { make("") };
+      return { makeClassName("") };
     case nascent_test_flavour::framework_diagnostics:
-      return { make("false_positive"), make("false_negative")};
+      return { makeClassName("false_negative"), makeClassName("false_positive") };
     }
 
     throw std::logic_error{"Unrecognized option for nascent_test_flavour"};
