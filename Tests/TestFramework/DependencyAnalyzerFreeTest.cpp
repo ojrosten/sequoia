@@ -1231,24 +1231,51 @@ namespace sequoia::testing
       }
     };
 
-    // As update_filtered, but each instance stamps its records with its own start, as a sandbox does
+    struct sandboxed_instance
+    {
+      test_list executed;
+      test_list failures;
+      std::filesystem::file_time_type start;
+    };
+
+    // As update_filtered, but each instance is a process of its own, stamping its records with its own start
     auto update_filtered_in_sandboxes{
-      [&](const test_outcomes& d,
-          test_list executed,
-          multi_test_list failures,
-          std::vector<std::filesystem::file_time_type> startTimes) -> test_outcomes {
+      [&](const test_outcomes& d, std::vector<sandboxed_instance> instances) -> test_outcomes {
 
         setup_instability_analysis_prune_folder(projPaths);
 
         write_or_remove(projPaths, failureFile, passesFile, d);
 
-        for(auto i : std::views::iota(0uz, failures.size()))
+        for(const auto& [i, instance] : std::views::zip(std::views::iota(0uz), instances))
         {
-          update_prune_files(projPaths, executed, std::move(failures[i]), startTimes[i], i);
+          update_prune_files(projPaths, instance.executed, instance.failures, instance.start, i);
         }
 
-        const auto coordinatorStart{std::ranges::min(startTimes)};
-        aggregate_instability_analysis_prune_files(projPaths, prune_mode::passive, coordinatorStart, failures.size());
+        // The coordinator starts before any instance, so its stamp is none of theirs
+        const auto coordinatorStart{
+          std::ranges::min(instances, {}, &sandboxed_instance::start).start - std::chrono::seconds{1}
+        };
+
+        aggregate_instability_analysis_prune_files(projPaths, prune_mode::passive, coordinatorStart, instances.size());
+
+        return {read(failureFile), read(passesFile)};
+      }
+    };
+
+    // Each instance's passes file written directly, rather than by update_prune_files
+    auto aggregate_written_passes{
+      [&](const test_outcomes& d, std::vector<prune_records> passesByInstance) -> test_outcomes {
+
+        setup_instability_analysis_prune_folder(projPaths);
+
+        write_or_remove(projPaths, failureFile, passesFile, d);
+
+        for(const auto& [i, passes] : std::views::zip(std::views::iota(0uz), passesByInstance))
+        {
+          write_tests(projPaths, prune.selected_passes(i), passes);
+        }
+
+        aggregate_instability_analysis_prune_files(projPaths, prune_mode::passive, updateTime, passesByInstance.size());
 
         return {read(failureFile), read(passesFile)};
       }
@@ -1298,9 +1325,10 @@ namespace sequoia::testing
                  [update_filtered_in_sandboxes, updateTime, lateUpdateTime](const test_outcomes& d) {
                    return update_filtered_in_sandboxes(
                             d,
-                            {{"HouseAllocationTest.cpp"}},
-                            {{}, {}},
-                            {updateTime, lateUpdateTime}
+                            {
+                              {.executed{{"HouseAllocationTest.cpp"}}, .failures{}, .start{updateTime}},
+                              {.executed{{"HouseAllocationTest.cpp"}}, .failures{}, .start{lateUpdateTime}}
+                            }
                           );
                  }
           },
@@ -1309,9 +1337,10 @@ namespace sequoia::testing
                  [update_filtered_in_sandboxes, updateTime, lateUpdateTime](const test_outcomes& d) {
                    return update_filtered_in_sandboxes(
                             d,
-                            {{"HouseAllocationTest.cpp"}},
-                            {{}, {}},
-                            {lateUpdateTime, updateTime}
+                            {
+                              {.executed{{"HouseAllocationTest.cpp"}}, .failures{}, .start{lateUpdateTime}},
+                              {.executed{{"HouseAllocationTest.cpp"}}, .failures{}, .start{updateTime}}
+                            }
                           );
                  }
           },
@@ -1320,9 +1349,63 @@ namespace sequoia::testing
                  [update_filtered_in_sandboxes, updateTime, lateUpdateTime](const test_outcomes& d) {
                    return update_filtered_in_sandboxes(
                             d,
-                            {{"HouseAllocationTest.cpp"}, {"Maths/ProbabilityTest.cpp"}, {"Maybe/MaybeTest.cpp"}},
-                            {{}, {}},
-                            {updateTime, lateUpdateTime}
+                            {
+                              {
+                                .executed{
+                                  {"HouseAllocationTest.cpp"},
+                                  {"Maths/ProbabilityTest.cpp"},
+                                  {"Maybe/MaybeTest.cpp"}
+                                },
+                                .failures{},
+                                .start{updateTime}
+                              },
+                              {
+                                .executed{
+                                  {"HouseAllocationTest.cpp"},
+                                  {"Maths/ProbabilityTest.cpp"},
+                                  {"Maybe/MaybeTest.cpp"}
+                                },
+                                .failures{},
+                                .start{lateUpdateTime}
+                              }
+                            }
+                          );
+                 }
+          },
+          edge_t{empty_fails_house_passes,
+                 "Two tests run by the first instance, one of them by the second, filtered, sandboxed",
+                 [update_filtered_in_sandboxes, updateTime, lateUpdateTime](const test_outcomes& d) {
+                   return update_filtered_in_sandboxes(
+                            d,
+                            {
+                              {
+                                .executed{
+                                  {"HouseAllocationTest.cpp"},
+                                  {"Maths/ProbabilityTest.cpp"}
+                                },
+                                .failures{},
+                                .start{updateTime}
+                              },
+                              {
+                                .executed{
+                                  {"HouseAllocationTest.cpp"}
+                                },
+                                .failures{},
+                                .start{lateUpdateTime}
+                              }
+                            }
+                          );
+                 }
+          },
+          edge_t{empty_fails_empty_passes,
+                 "A test named twice in the first instance's passes and absent from the second's",
+                 [aggregate_written_passes, updateTime, lateUpdateTime](const test_outcomes& d) {
+                   return aggregate_written_passes(
+                            d,
+                            {
+                              {{"HouseAllocationTest.cpp", updateTime}, {"HouseAllocationTest.cpp", lateUpdateTime}},
+                              {}
+                            }
                           );
                  }
           },
@@ -1424,9 +1507,10 @@ namespace sequoia::testing
                  [update_filtered_in_sandboxes, updateTime, lateUpdateTime](const test_outcomes& d) {
                    return update_filtered_in_sandboxes(
                             d,
-                            {{"HouseAllocationTest.cpp"}},
-                            {{}, {}},
-                            {updateTime, lateUpdateTime}
+                            {
+                              {.executed{{"HouseAllocationTest.cpp"}}, .failures{}, .start{updateTime}},
+                              {.executed{{"HouseAllocationTest.cpp"}}, .failures{}, .start{lateUpdateTime}}
+                            }
                           );
                  }
           },

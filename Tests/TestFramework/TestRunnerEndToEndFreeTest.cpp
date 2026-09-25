@@ -561,8 +561,11 @@ namespace sequoia::testing
 
     run_and_check(report("Final fixed test not included by prune"), b, "FinalPassingTestExcludedByPrune", "prune", return_code::success);
 
-    //=================== Break a passing test and 'select' it ===================//
-    // --> foo_test fails, so it is recorded as a test to rerun
+    //=================== Touch an unselected test, break a passing test and 'select' the latter ===================//
+    // --> probability_test is rebuilt and now stale, but not run; foo_test fails, so it is recorded as a test to rerun
+
+    await_tick_past_previous_run();
+    copy_aux_materials("ModifiedTests/Maths/ProbabilityTest.cpp", "Tests/Maths");
 
     fs::copy(
       generatedWorkingCopy / "RepresentativeCases",
@@ -571,7 +574,8 @@ namespace sequoia::testing
     );
     fs::remove_all(generatedWorkingCopy / "RepresentativeCases");
 
-    run_and_check(report("Test broken"), b, "RunSelectedBrokenTest", "select FooTest.cpp", return_code::soft_failures);
+    rebuild_run_and_check(report("Test broken"), b, "RunSelectedBrokenTest", "CMakeOutput7.txt", "BuildOutput7.txt",
+      "select FooTest.cpp", return_code::soft_failures);
 
     //=================== Fix the test and 'select' it, seeking instabilities in sandbox mode ===================//
 
@@ -585,11 +589,13 @@ namespace sequoia::testing
     run_and_check(report("Broken test fixed, in sandbox mode"), b, "SelectRunLocateInstabilitySandboxFixedTest",
       "locate 2 --sandbox select FooTest.cpp", return_code::success);
 
-    //=================== Rerun with prune: the test, passing in every sandbox, is not run ===================//
-    // --> The materials were restored before the sandboxes started, so foo_test is not stale. Each
-    //     sandbox stamps its records with its own start. Matched by path, the passes remove foo_test
-    //     from the tests to rerun; matched by whole record, no two sandboxes' records would match,
-    //     and foo_test would rerun.
+    //=================== Rerun with prune: the stale test runs, the sandboxed test does not ===================//
+    // --> The materials were restored before the sandboxes started, so foo_test is not stale. Each sandbox
+    //     stamps its records with its own start. Matched by path, the sandboxes' passes remove foo_test
+    //     from the tests to rerun, and leave the prune stamp alone, so probability_test runs alone.
+    //     -# Matched by whole record, no two sandboxes' records would match, and foo_test would rerun too.
+    //     -# Were the passes not aggregated, the tests to rerun would be replaced by the sandboxes' own,
+    //        and the prune stamp moved past the touch, so nothing would run.
 
     run_and_check(report("Test fixed in sandbox mode not included by prune"), b, "SandboxFixedTestExcludedByPrune",
       "prune", return_code::success);

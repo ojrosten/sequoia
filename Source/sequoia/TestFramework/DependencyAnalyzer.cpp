@@ -659,9 +659,9 @@ namespace sequoia::testing
 
         A test's records are matched by path. A repetition run in a process of its own stamps its
         records with that process's start, so one test's records from two such repetitions differ
-        in their stamps. The earliest stamp is kept: a file modified after the first repetition
-        began is then later than the recorded pass, so the test counts as stale - a re-run, never a
-        missed test.
+        in their stamps. The earliest stamp is kept: a file modified after the earliest-starting
+        repetition began is then later than the recorded pass, so the test counts as stale - a
+        re-run, never a missed test.
 
         \returns
         -# `nullopt`, if any repetition wrote no passes file;
@@ -679,10 +679,13 @@ namespace sequoia::testing
       if(!std::ranges::all_of(files, [](const fs::path& file){ return fs::exists(file); }))
         return std::nullopt;
 
+      // Each repetition's records made unique first, so that the size of a group of records sharing
+      // a path is the number of repetitions which passed that test
       const auto passes{
         sort_by_path(
             files
           | std::views::transform(read_tests)
+          | std::views::transform(unique_by_path)
           | std::views::join
           | std::ranges::to<std::vector>()
         )
@@ -696,14 +699,14 @@ namespace sequoia::testing
         [numReps](const auto& recordsOfOneTest) { return recordsOfOneTest.size() == numReps; }
       };
 
-      const auto earliest{
+      const auto earliestRecord{
         [](const auto& recordsOfOneTest) { return std::ranges::min(recordsOfOneTest, {}, &prune_record::time_stamp); }
       };
 
       return passes
         | std::views::chunk_by(samePath)
         | std::views::filter(passedInEveryRepetition)
-        | std::views::transform(earliest)
+        | std::views::transform(earliestRecord)
         | std::ranges::to<std::vector>();
     }
   }
