@@ -22,7 +22,7 @@ connectivity::process_complementary_edges [node: 0, edge: 0]: Indices [target: 0
 
 =======================================
 
-Tests/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphUnweightedTest.cpp, Line 123
+Tests/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphUnweightedTest.cpp, Line 135
 
 Expected Exception Type:
 [std::logic_error]

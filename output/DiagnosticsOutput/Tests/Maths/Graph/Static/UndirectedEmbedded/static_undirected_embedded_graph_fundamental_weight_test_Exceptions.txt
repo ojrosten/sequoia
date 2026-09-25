@@ -86,7 +86,7 @@ connectivity::process_complementary_edges [node: 0, edge: 0]: Mismatch between w
 
 =======================================
 
-Tests/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphFundamentalWeightTest.cpp, Line 521
+Tests/Maths/Graph/Static/UndirectedEmbedded/StaticUndirectedEmbeddedGraphFundamentalWeightTest.cpp, Line 566
 
 Expected Exception Type:
 [std::logic_error]

@@ -70,7 +70,7 @@ connectivity::connectivity_base: Odd number of loop edges for node 0
 
 =======================================
 
-Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphFundamentalWeightTest.cpp, Line 425
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphFundamentalWeightTest.cpp, Line 456
 
 Expected Exception Type:
 [std::logic_error]
