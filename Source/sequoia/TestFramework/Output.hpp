@@ -218,6 +218,15 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string tidy_name(std::string name, other_compiler_type);
 
+  /** \brief Demangles an Itanium-ABI name; a name that does not demangle, as every name under MSVC, is returned
+             unchanged.
+
+      libc++abi's spellings of non-finite floating-point values - `inff` and `infL`, and `nanf`, `nan` and `nanL`,
+      which carry no sign - are respelled `inf`, `nan` or `-nan`, as `tidy_name` renders libstdc++'s bit patterns.
+      A libc++abi spelling is kept in two cases:
+      -# The mangled name may hold an entity with that spelling as its name, such as a type `inff`;
+      -# The value is a NaN, and the name holds NaNs of its type with both signs.
+   */
   [[nodiscard]]
   std::string demangle(std::string mangled);
 
