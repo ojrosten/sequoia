@@ -57,7 +57,7 @@ namespace sequoia::testing
         stream << ec.message() << '\n';
     }
 
-    /** Directories of sequoia which a created project has no use for.
+    /** Entries at the root of sequoia which a created project has no use for.
 
         -# `docs` and `coverage_reports`, the committed doxygen render and lcov html. Between
            them they are the overwhelming majority of the repository by size and by file
@@ -70,12 +70,16 @@ namespace sequoia::testing
         -# `.git`, sequoia's own history, which the created project cannot act on: it runs
            `git init` of its own, and its copy of sequoia is vendored rather than referenced -
            the project template ships `dependencies/sequoia/.keep`, so that path is tracked
-           before sequoia arrives and git never forms a gitlink for it.
+           before sequoia arrives and git never forms a gitlink for it. In a worktree or a
+           submodule checkout, `.git` is a file naming a git directory, and a copy of it would
+           name that directory from the vendored sequoia: a worktree's absolute path would make
+           the vendored sequoia a working tree of the parent's repository, and a submodule's
+           relative path names a directory the created project does not have.
      */
     [[nodiscard]]
-    bool excluded_from_created_projects(const fs::path& dir)
+    bool excluded_from_created_projects(const fs::path& entry)
     {
-      const auto name{back(dir).generic_string()};
+      const auto name{back(entry).generic_string()};
       return (name == "docs")
           || (name == "coverage_reports")
           || (name == "output")
@@ -94,16 +98,12 @@ namespace sequoia::testing
 
       for(auto& entry : fs::directory_iterator{parentSequoiaRoot})
       {
-        if(fs::is_directory(entry))
+        if((entry.path() != parentProjectPaths.build().dir()) && !excluded_from_created_projects(entry.path()))
         {
-          if((entry.path() != parentProjectPaths.build().dir()) && !excluded_from_created_projects(entry.path()))
-          {
+          if(fs::is_directory(entry))
             copy_sequoia_subdir(stream, seqLocation, entry);
-          }
-        }
-        else
-        {
-          fs::copy(entry, seqLocation);
+          else
+            fs::copy(entry, seqLocation);
         }
       }
 
