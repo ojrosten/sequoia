@@ -20,19 +20,13 @@ jobs:
           fetch-depth: 1
 
       # The job always runs, so that its check always reports: staging and main
-      # both require it, and a required check that never reports holds its PR for
-      # good (roadmap item 145). Only the steps below depend on the change. The
-      # committed render under docs/html is doxygen's output, not its input, so a
-      # change confined to it has nothing to check; docs/config holds the Doxyfile
-      # and what it includes, so this list is narrower than the suite's. Should the
-      # Doxyfile ever read from docs/html, this list is wrong.
+      # both require it. Only the steps below depend on the change, and the action
+      # says why.
       - name: Is there anything to document
         id: scope
         uses: ./.github/actions/needs-testing
         with:
-          ignoring: |
-            docs/html/**
-            coverage_reports/**
+          check: documentation
 
       - name: Nothing to document
         if: steps.scope.outputs.needs-testing != 'true'

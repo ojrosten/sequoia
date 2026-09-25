@@ -161,10 +161,8 @@ name: rigorous
 # 2026-09-11, in whichever tier, is evidence against the fix rather than a flake
 # to re-run.
 #
-# No path filter, deliberately. A run a filter skips reports no check at all, and
-# a required check that never reports holds its PR for good (roadmap item 145). So
-# every change runs every column, and each column decides for itself whether the
-# change holds anything to test: .github/actions/needs-testing.
+# No path filter: see .github/actions/needs-testing for why, and for how a
+# column with nothing to test still reports.
 on:
   pull_request:
     branches: [main]
@@ -267,9 +265,7 @@ jobs:
         id: scope
         uses: ./.github/actions/needs-testing
         with:
-          ignoring: |
-            docs/**
-            coverage_reports/**
+          check: suite
 
       - name: Nothing to test
         if: steps.scope.outputs.needs-testing != 'true'
