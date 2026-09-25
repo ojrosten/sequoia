@@ -1385,8 +1385,8 @@ namespace sequoia::testing
 
     check("A status of -1 is refused",                refused(-1));
     check("A status near INT_MIN is refused",         refused(std::numeric_limits<int>::min() + 3));
-    check("A status above 128 is refused",            refused(139));
     check("A shell's 'not executable' is refused",    refused(126));
     check("A shell's 'not found' is refused",         refused(127));
+    check("A status above 128 is refused",            refused(139));
   }
 }
