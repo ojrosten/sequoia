@@ -596,6 +596,13 @@ jobs:
   # is the one reason it is skipped by design. Passing is the column's own
   # business; RUNNING is checked here. The expectation is the columns input
   # itself, so there is no second list to drift.
+  #
+  # The one other way a suite may be skipped is a change with nothing in it to
+  # test. Then the column's `Nothing to test` step ran, and its suite steps must
+  # all have been skipped; and since every column answers the same question of
+  # the same commits, the columns must agree. The job keeps its name, which a
+  # skipped run makes loose, because the name is a required check: renamed here
+  # and not in the protection rule, it would never report again.
   audit:
     name: Every column ran the suite
     needs: build-and-test
@@ -623,19 +630,29 @@ jobs:
           [ -s expected.txt ] || { echo "::error::no columns to audit"; exit 1; }
 
           failed=0
+          answers=()
           while IFS=$'\t' read -r column repeats; do
             verdict=$(jq -r --arg c "$column" '
+              def conclusion($step): ([.[0].steps[] | select(.name == $step) | .conclusion] | first) // "ABSENT";
               [.[] | select(.name | endswith(" / " + $c))]
               | if length != 1 then "JOBS:\(length)"
-                else (([.[0].steps[] | select(.name == "Run the suite") | .conclusion] | first) // "ABSENT")
-                     + "\t"
-                     + (([.[0].steps[] | select(.name == "Run the suite again") | .conclusion] | first) // "ABSENT")
+                else "\(conclusion("Nothing to test"))\t\(conclusion("Run the suite"))\t\(conclusion("Run the suite again"))"
                 end' jobs.json)
             if [[ $verdict == JOBS:* ]]; then
               echo "::error::$column: expected exactly one job, found ${verdict#JOBS:}"; failed=1; continue
             fi
-            suite=${verdict%%$'\t'*}
-            repeat=${verdict#*$'\t'}
+            IFS=$'\t' read -r nothing suite repeat <<<"$verdict"
+            answers+=("$nothing")
+            case "$nothing" in
+              success)
+                case "$suite/$repeat" in
+                  skipped/skipped|skipped/ABSENT) echo "ok    $column: nothing to test, and the suite did not run";;
+                  *) echo "::error::$column: nothing to test, yet Run the suite -> $suite and Run the suite again -> $repeat"; failed=1;;
+                esac
+                continue;;
+              skipped) ;;
+              *) echo "::error::$column: Nothing to test -> $nothing; the column did not decide whether to test"; failed=1; continue;;
+            esac
             case "$suite" in
               success|failure) echo "ok    $column: Run the suite -> $suite";;
               *)               echo "::error::$column: Run the suite -> $suite; the suite did not run on this column"; failed=1;;
@@ -648,4 +665,7 @@ jobs:
               esac
             fi
           done < expected.txt
+          if [ "$(printf '%s\n' "${answers[@]}" | sort -u | wc -l)" -gt 1 ]; then
+            echo "::error::the columns disagree about whether there was anything to test"; failed=1
+          fi
           exit $failed
