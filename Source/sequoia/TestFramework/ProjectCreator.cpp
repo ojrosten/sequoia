@@ -327,7 +327,7 @@ namespace sequoia::testing
         {
           const auto status{invoke(launch_cmd(parentProjectPaths, data.project_root, build.cmake_cache_dir()))};
           if(status != 0)
-            stream << std::format("Opening the IDE failed, with status {}; the project is complete\n", status);
+            stream << std::format("Opening the IDE {}; the project is complete\n", describe_failure(status));
         }
       }
     }

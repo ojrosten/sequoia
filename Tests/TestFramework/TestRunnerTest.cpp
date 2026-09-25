@@ -451,6 +451,7 @@ namespace sequoia::testing
     test_excluded_tests_are_rerun();
     test_dump_comparison();
     test_instability_analysis();
+    test_exit_statuses();
   }
 
   [[nodiscard]]
@@ -1326,5 +1327,66 @@ namespace sequoia::testing
                                                    Ts&&... ts)
   {
     test_instability_analysis(message, outputDirName, numRuns, expected, {}, [](test_runner&){}, std::forward<Ts>(ts)...);
+  }
+
+  void test_runner_test::test_exit_statuses()
+  {
+    // Literal statuses, so that the expectations do not restate the implementation's formula.
+    check(equality, "Success exits with 0",                   to_exit_code(return_code::success),                0);
+    check(equality, "Versioned output diffs exit with 81",    to_exit_code(return_code::versioned_output_diffs), 81);
+    check(equality, "Soft failures exit with 82",             to_exit_code(return_code::soft_failures),          82);
+    check(equality, "Critical failures exit with 84",         to_exit_code(return_code::critical_failures),      84);
+    check(equality, "An incomplete run exits with 88",        to_exit_code(return_code::incomplete_run),         88);
+    check(equality, "Post-run failures exit with 96",         to_exit_code(return_code::post_run_failures),      96);
+    check(equality, "Every flag together exits with 111",     to_exit_code(static_cast<return_code>(31)),         111);
+    check(equality,
+          "Bits no status can carry exit as an incomplete run",
+          to_exit_code(static_cast<return_code>(64)),
+          88);
+
+    // Every combination of the five flags survives the round trip.
+    const auto codes{std::views::iota(0, 32) | std::views::transform([](int i){ return static_cast<return_code>(i); })};
+    auto roundTrip{[](return_code code){ return child_return_code(to_exit_code(code), "A child"); }};
+    check(equality,
+          "Each exit status decodes to the code it encodes",
+          codes | std::views::transform(roundTrip) | std::ranges::to<std::vector>(),
+          codes | std::ranges::to<std::vector>());
+
+    check(equality,
+          "A child exiting 88 reports an incomplete run",
+          child_return_code(88, "A child"),
+          return_code::incomplete_run);
+
+    // Statuses a process gives when it fails for reasons of its own - generic, LeakSanitizer's,
+    // sysexits' ends, ThreadSanitizer's, MemorySanitizer's - and the two either side of the runner's
+    // range. Each is worded alike on every platform, so the whole message is checked.
+    for(const int status : {1, 2, 23, 64, 66, 77, 78, 80, 112})
+    {
+      check_exception_thrown<std::runtime_error>(
+        std::format("Exit status {} is not a runner's", status),
+        [status](){ return child_return_code(status, "A child"); });
+    }
+
+    // Statuses whose wording differs by platform, so that only the refusal is checked.
+    auto refused{
+      [](int status) {
+        try
+        {
+          (void)child_return_code(status, "A child");
+        }
+        catch(const std::runtime_error&)
+        {
+          return true;
+        }
+
+        return false;
+      }
+    };
+
+    check("A status of -1 is refused",                refused(-1));
+    check("A status near INT_MIN is refused",         refused(std::numeric_limits<int>::min() + 3));
+    check("A shell's 'not executable' is refused",    refused(126));
+    check("A shell's 'not found' is refused",         refused(127));
+    check("A status above 128 is refused",            refused(139));
   }
 }

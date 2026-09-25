@@ -82,6 +82,9 @@ namespace sequoia::testing
             "An exit status of 0x80000000 or more",
             messageFor(static_cast<int>(0xC0000005u)),
             expected("failed with exit status 0xC0000005"));
+
+      check(equality, "126, which is no status of cmd.exe's own", messageFor(126), expected("failed with exit status 126"));
+      check(equality, "127, which is no status of cmd.exe's own", messageFor(127), expected("failed with exit status 127"));
     }
     else
     {
@@ -91,6 +94,16 @@ namespace sequoia::testing
             "An exit status above 128",
             messageFor(130),
             expected("failed with exit status 130, which may mean it was killed by signal 2"));
+
+      check(equality,
+            "The shell's own 'not executable'",
+            messageFor(126),
+            expected("could not be executed by the shell (exit status 126)"));
+
+      check(equality,
+            "The shell's own 'not found'",
+            messageFor(127),
+            expected("was not found by the shell (exit status 127)"));
     }
   }
 
