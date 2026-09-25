@@ -986,7 +986,7 @@ namespace sequoia
     class partitioned_sequence : public partitioned_sequence_base<T, Container, Partitions>
     {
     private:
-      using base_t = partitioned_sequence_base<T, Container, Partitions>;
+      using base_type = partitioned_sequence_base<T, Container, Partitions>;
     public:
       using container_type            = partitioned_sequence_base<T, Container, Partitions>::container_type;
       using partitions_type           = partitioned_sequence_base<T, Container, Partitions>::partitions_type;
@@ -1020,7 +1020,7 @@ namespace sequoia
       partitioned_sequence& operator=(const partitioned_sequence&)     = default;
       partitioned_sequence& operator=(partitioned_sequence&&) noexcept = default;
 
-      using base_t::swap;
+      using base_type::swap;
 
       friend void swap(partitioned_sequence& lhs, partitioned_sequence& rhs)
         noexcept(noexcept(lhs.swap(rhs)))
@@ -1028,22 +1028,22 @@ namespace sequoia
         lhs.swap(rhs);
       }
 
-      using base_t::add_slot;
-      using base_t::insert_slot;
-      using base_t::erase_slot;
+      using base_type::add_slot;
+      using base_type::insert_slot;
+      using base_type::erase_slot;
 
-      using base_t::reserve;
-      using base_t::capacity;
-      using base_t::reserve_partitions;
-      using base_t::num_partitions_capacity;
-      using base_t::shrink_to_fit;
-      using base_t::get_allocator;
-      using base_t::get_partitions_allocator;
+      using base_type::reserve;
+      using base_type::capacity;
+      using base_type::reserve_partitions;
+      using base_type::num_partitions_capacity;
+      using base_type::shrink_to_fit;
+      using base_type::get_allocator;
+      using base_type::get_partitions_allocator;
 
-      using base_t::clear;
-      using base_t::push_back_to_partition;
-      using base_t::insert_to_partition;
-      using base_t::erase_from_partition;
+      using base_type::clear;
+      using base_type::push_back_to_partition;
+      using base_type::insert_to_partition;
+      using base_type::erase_from_partition;
     };
 
     template<class T>
@@ -1093,12 +1093,12 @@ namespace sequoia
     class static_partitioned_sequence :
       public partitioned_sequence_base<T, std::array<T, Nelements>, Partitions>
     {
-      using base_t = partitioned_sequence_base<T, std::array<T, Nelements>, Partitions>;
+      using base_type = partitioned_sequence_base<T, std::array<T, Nelements>, Partitions>;
     public:
-      using container_type  = base_t::container_type;
-      using partitions_type = base_t::partitions_type;
-      using size_type       = base_t::size_type;
-      using index_type      = base_t::index_type;
+      using container_type  = base_type::container_type;
+      using partitions_type = base_type::partitions_type;
+      using size_type       = base_type::size_type;
+      using index_type      = base_type::index_type;
 
       constexpr static std::size_t num_partitions_v{Npartitions};
       constexpr static std::size_t num_elements_v{Nelements};
@@ -1106,7 +1106,7 @@ namespace sequoia
       constexpr static_partitioned_sequence() = default;
 
       constexpr static_partitioned_sequence(std::initializer_list<std::initializer_list<T>> list)
-        : base_t{fill(std::make_index_sequence<num_elements_v>(), list)}
+        : base_type{fill(std::make_index_sequence<num_elements_v>(), list)}
       {}
 
       constexpr static_partitioned_sequence(const static_partitioned_sequence&)     = default;
@@ -1115,7 +1115,7 @@ namespace sequoia
       constexpr static_partitioned_sequence& operator=(const static_partitioned_sequence&)     = default;
       constexpr static_partitioned_sequence& operator=(static_partitioned_sequence&&) noexcept = default;
 
-      using base_t::swap;
+      using base_type::swap;
 
       friend void swap(static_partitioned_sequence& lhs, static_partitioned_sequence& rhs)
         noexcept(noexcept(lhs.swap(rhs)))

@@ -36,7 +36,7 @@ namespace sequoia::concurrency
   class task_queue
   {
   public:
-    using task_t = Task;
+    using task_type = Task;
 
     task_queue() = default;
     task_queue(const task_queue&) = delete;
@@ -57,7 +57,7 @@ namespace sequoia::concurrency
       m_CV.notify_all();
     }
 
-    void push(task_t&& task)
+    void push(task_type&& task)
     {
       {
         std::scoped_lock<std::mutex> lock{m_Mutex};
@@ -68,7 +68,7 @@ namespace sequoia::concurrency
     }
 
     [[nodiscard]]
-    bool push(task_t&& task, std::try_to_lock_t t)
+    bool push(task_type&& task, std::try_to_lock_t t)
     {
       if(std::unique_lock<std::mutex> lock{m_Mutex, t}; lock)
       {
@@ -85,7 +85,7 @@ namespace sequoia::concurrency
     }
 
     [[nodiscard]]
-    task_t pop(std::try_to_lock_t t)
+    task_type pop(std::try_to_lock_t t)
     {
       if(std::unique_lock<std::mutex> lock{m_Mutex, t}; lock)
       {
@@ -96,7 +96,7 @@ namespace sequoia::concurrency
     }
 
     [[nodiscard]]
-    task_t pop()
+    task_type pop()
     {
       std::unique_lock<std::mutex> lock{m_Mutex};
       while(m_Q.empty() && !m_Finished) m_CV.wait(lock);
@@ -127,18 +127,18 @@ namespace sequoia::concurrency
   {
     template<class R, bool MultiChannel> struct queue_details
     {
-      using Q_t = task_queue<R>;
-      using task_t = Q_t::task_t;
-      using queue_type = std::vector<Q_t>;
+      using Q_type = task_queue<R>;
+      using task_type = Q_type::task_type;
+      using queue_type = std::vector<Q_type>;
 
       std::size_t push_cycles{};
     };
 
     template<class R> struct queue_details<R, false>
     {
-      using Q_t = task_queue<R>;
-      using task_t = Q_t::task_t;
-      using queue_type = Q_t;
+      using Q_type = task_queue<R>;
+      using task_type = Q_type::task_type;
+      using queue_type = Q_type;
     };
   }
 
@@ -228,7 +228,7 @@ namespace sequoia::concurrency
     [[nodiscard]]
     std::future<R> push(Fn fn)
     {
-      task_t task{std::move(fn)};
+      task_type task{std::move(fn)};
       std::future<R> f{task.get_future()};
 
       if constexpr(MultiPipeline)
@@ -272,10 +272,10 @@ namespace sequoia::concurrency
       joined = true;
     }
   private:
-    using task_t   = impl::queue_details<R, MultiPipeline>::task_t;
-    using Queues_t = impl::queue_details<R, MultiPipeline>::queue_type;
+    using task_type   = impl::queue_details<R, MultiPipeline>::task_type;
+    using Queues_type = impl::queue_details<R, MultiPipeline>::queue_type;
 
-    Queues_t m_Queues;
+    Queues_type m_Queues;
     std::vector<std::thread> m_Threads;
     bool joined{};
 
@@ -290,7 +290,7 @@ namespace sequoia::concurrency
         auto loop{[=,this]() {
             if constexpr(MultiPipeline)
             {
-              task_t task{m_Queues[q].pop()};
+              task_type task{m_Queues[q].pop()};
               if(task.valid())
                 task();
               else
@@ -299,7 +299,7 @@ namespace sequoia::concurrency
 
             while(true)
             {
-              task_t task{};
+              task_type task{};
 
               if constexpr(MultiPipeline)
               {

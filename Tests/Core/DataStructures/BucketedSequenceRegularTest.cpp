@@ -17,7 +17,7 @@ namespace sequoia::testing
     template<class PartitionedData>
     struct bucketed_operations : partitioned_data_operations<PartitionedData>
     {
-      using data_t = partitioned_data_operations<PartitionedData>::data_t;
+      using data_type = partitioned_data_operations<PartitionedData>::data_type;
 
       static void execute(regular_test& t)
       {
@@ -27,7 +27,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    t.check_exception_thrown<std::out_of_range>("begin_partition throws for empty container", [&d]() { return d.begin_partition(0); });
                    return d;
                  }
@@ -36,7 +36,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    t.check_exception_thrown<std::out_of_range>("end_partition throws for empty container", [&d]() { return d.end_partition(0); });
                    return d;
                  }
@@ -45,7 +45,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](const data_t d) -> data_t {
+                 [&t](const data_type d) -> data_type {
                    t.check_exception_thrown<std::out_of_range>("begin_partition throws for empty container in const context", [&d]() { return d.begin_partition(0); });
                    return d;
                  }
@@ -54,7 +54,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](const data_t d) -> data_t {
+                 [&t](const data_type d) -> data_type {
                    t.check_exception_thrown<std::out_of_range>("end_partition throws for empty container in const context", [&d]() { return d.end_partition(0); });
                    return d;
                  }
@@ -63,7 +63,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    t.check_exception_thrown<std::out_of_range>("rbegin_partition throws for empty container", [&d]() { return d.rbegin_partition(0); });
                    return d;
                  }
@@ -72,7 +72,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    t.check_exception_thrown<std::out_of_range>("rend_partition throws for empty container", [&d]() { return d.rend_partition(0); });
                    return d;
                  }
@@ -81,7 +81,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](const data_t d) -> data_t {
+                 [&t](const data_type d) -> data_type {
                    t.check_exception_thrown<std::out_of_range>("rbegin_partition throws for empty container in const context", [&d]() { return d.rbegin_partition(0); });
                    return d;
                  }
@@ -90,7 +90,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](const data_t d) -> data_t {
+                 [&t](const data_type d) -> data_type {
                    t.check_exception_thrown<std::out_of_range>("rend_partition throws for empty container in const context", [&d]() { return d.rend_partition(0); });
                    return d;
                  }
@@ -99,7 +99,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    t.check_exception_thrown<std::out_of_range>("cbegin_partition throws for empty container", [&d]() { return d.cbegin_partition(0); });
                    return d;
                  }
@@ -108,7 +108,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    t.check_exception_thrown<std::out_of_range>("cend_partition throws for empty container", [&d]() { return d.cend_partition(0); });
                    return d;
                  }
@@ -117,7 +117,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    t.check_exception_thrown<std::out_of_range>("crbegin_partition throws for empty container", [&d]() { return d.crbegin_partition(0); });
                    return d;
                  }
@@ -126,7 +126,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    t.check_exception_thrown<std::out_of_range>("crend_partition throws for empty container", [&d]() { return d.crend_partition(0); });
                    return d;
                  }
@@ -135,7 +135,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    t.check_exception_thrown<std::out_of_range>("partition throws for empty container", [&d]() { return d.partition(0); });
                    return d;
                  }
@@ -144,7 +144,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](const data_t d) -> data_t {
+                 [&t](const data_type d) -> data_type {
                    t.check_exception_thrown<std::out_of_range>("partition throws for empty container in const context", [&d]() { return d.partition(0); });
                    return d;
                  }
@@ -153,7 +153,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    t.check_exception_thrown<std::out_of_range>("cpartition throws for empty container", [&d]() { return d.cpartition(0); });
                    return d;
                  }
@@ -162,7 +162,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    t.check_exception_thrown<std::out_of_range>("Erasing from non-existent partition throws", [&d]() { return d.erase_from_partition(d.cbegin_partition(0)); });
                    return d;
                  }
@@ -171,7 +171,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    t.check_exception_thrown<std::out_of_range>("Erasing from non-existent partition throws", [&d]() { return d.erase_from_partition(0, 0); });
                    return d;
                  }
@@ -180,7 +180,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
           data_description::empty,
           t.report(""),
-          [&t](data_t d) -> data_t {
+          [&t](data_type d) -> data_type {
             t.check(equality, "", d.num_partitions_capacity(), 0uz);
             t.check(equality, "", d.partition_capacity(0), 0uz);
             return d;
@@ -190,7 +190,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
           data_description::empty,
           t.report(""),
-          [&t](data_t d) -> data_t {
+          [&t](data_type d) -> data_type {
             d.reserve_partitions(4);
             t.check(equality, "", d.num_partitions_capacity(), 4uz);
             t.check(equality, "", d.partition_capacity(0), 0uz);
@@ -209,7 +209,7 @@ namespace sequoia::testing
         trg.join(data_description::empty_partition,
                  data_description::empty_partition,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    auto i{d.begin_partition(1)};
                    t.check(equality, "", i, {d.end_partition(0).base_iterator(), PartitionedData::npos});
                    return d;
@@ -219,7 +219,7 @@ namespace sequoia::testing
         trg.join(data_description::empty_partition,
                  data_description::empty_partition,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    auto i{d.erase_from_partition(d.cbegin_partition(1))};
                    t.check(equality, "", i, {d.end_partition(0).base_iterator(), PartitionedData::npos});
                    return d;
@@ -229,7 +229,7 @@ namespace sequoia::testing
         trg.join(data_description::empty_partition,
                  data_description::empty_partition,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    t.check(equality, "", d.partition_capacity(0), 0uz);
                    t.check(equality, "", d.partition_capacity(1), 0uz);
                    
@@ -247,13 +247,13 @@ namespace sequoia::testing
         // end 'empty_partition'
 
         auto checker{
-            [&t](std::string_view description, const data_t& obtained, const data_t& prediction, const data_t& parent, std::size_t host, std::size_t target) {
+            [&t](std::string_view description, const data_type& obtained, const data_type& prediction, const data_type& parent, std::size_t host, std::size_t target) {
               t.check(equality, {description, no_source_location}, obtained, prediction);
               if(host != target) t.check_semantics({description, no_source_location}, prediction, parent);
             }
         };
 
-        transition_checker<data_t>::check(t.report(""), trg, checker);
+        transition_checker<data_type>::check(t.report(""), trg, checker);
       }
     };
   }

@@ -252,7 +252,7 @@ SEQUOIA_GCC_SUPPRESS_END
   template<class T, class Compare=std::ranges::less, class C=std::vector<T>>
   class monotonic_sequence : public monotonic_sequence_base<T, C, Compare>
   {
-    using base_t = monotonic_sequence_base<T, C, Compare>;
+    using base_type = monotonic_sequence_base<T, C, Compare>;
   public:
     static_assert(has_allocator_type_v<C>);
 
@@ -290,14 +290,14 @@ SEQUOIA_GCC_SUPPRESS_END
       lhs.swap(rhs);
     }
 
-    using base_t::get_allocator;
-    using base_t::push_back;
-    using base_t::insert;
-    using base_t::erase;
-    using base_t::reserve;
-    using base_t::capacity;
-    using base_t::shrink_to_fit;
-    using base_t::clear;
+    using base_type::get_allocator;
+    using base_type::push_back;
+    using base_type::insert;
+    using base_type::erase;
+    using base_type::reserve;
+    using base_type::capacity;
+    using base_type::shrink_to_fit;
+    using base_type::clear;
   };
 
   template<class T, std::size_t N, class Compare=std::ranges::less>

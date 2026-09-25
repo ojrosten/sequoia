@@ -18,7 +18,7 @@ namespace sequoia::testing
     template<class PartitionedData>
     struct partitioned_operations : partitioned_data_operations<PartitionedData>
     {
-      using data_t = partitioned_data_operations<PartitionedData>::data_t;
+      using data_type = partitioned_data_operations<PartitionedData>::data_type;
 
       static void execute(regular_test& t)
       {
@@ -28,7 +28,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    auto i{d.erase_from_partition(d.cbegin_partition(0))};
                    t.check(equality, "Erase from non-existent partition", i, d.begin_partition(0));
                    return d;
@@ -38,7 +38,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
           data_description::empty,
           t.report(""),
-          [&t](data_t d) -> data_t {
+          [&t](data_type d) -> data_type {
             auto i{d.erase_from_partition(d.cbegin_partition(0), d.cend_partition(0))};
             t.check(equality, "Erase range from non-existent partition", i, d.begin_partition(0));
             return d;
@@ -48,7 +48,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    auto i{d.erase_from_partition(0, 0)};
                    t.check(equality, "Erase from non-existent partition", i, d.begin_partition(0));
                    return d;
@@ -58,7 +58,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    auto i{d.erase_from_partition(1, 0)};
                    t.check(equality, "", i, d.begin_partition(0));
                    return d;
@@ -68,7 +68,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    auto i{d.erase_from_partition(0, 1)};
                    t.check(equality, "", i, d.begin_partition(0));
                    return d;
@@ -78,7 +78,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
                  data_description::empty,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    auto i{d.erase_from_partition(1, 1)};
                    t.check(equality, "", i, d.begin_partition(0));
                    return d;
@@ -88,7 +88,7 @@ namespace sequoia::testing
         trg.join(data_description::empty,
           data_description::empty,
           t.report(""),
-          [&t](data_t d) -> data_t {
+          [&t](data_type d) -> data_type {
             t.check(equality, "", d.capacity(), 0uz);
             t.check(equality, "", d.num_partitions_capacity(), 0uz);
 
@@ -114,7 +114,7 @@ namespace sequoia::testing
         trg.join(data_description::empty_partition,
                  data_description::empty_partition,
                  t.report(""),
-                 [&t](data_t d) -> data_t {
+                 [&t](data_type d) -> data_type {
                    auto i{d.erase_from_partition(d.cbegin_partition(1))};
                    t.check(equality, "Erase from non-existent partition", i, d.begin_partition(1));
                    return d;
@@ -124,13 +124,13 @@ namespace sequoia::testing
         // end 'empty_partition'
 
         auto checker{
-            [&t](std::string_view description, const data_t& obtained, const data_t& prediction, const data_t& parent, std::size_t host, std::size_t target) {
+            [&t](std::string_view description, const data_type& obtained, const data_type& prediction, const data_type& parent, std::size_t host, std::size_t target) {
               t.check(equality, {description, no_source_location}, obtained, prediction);
               if(host != target) t.check_semantics({description, no_source_location}, prediction, parent);
             }
         };
 
-        transition_checker<data_t>::check(t.report(""), trg, checker);
+        transition_checker<data_type>::check(t.report(""), trg, checker);
       }
     };
   }

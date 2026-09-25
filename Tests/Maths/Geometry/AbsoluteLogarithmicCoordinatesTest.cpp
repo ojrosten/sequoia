@@ -86,7 +86,7 @@ namespace sequoia::testing
     STATIC_CHECK(can_subtract<coords_t, delta_t>);
     STATIC_CHECK(has_unary_plus<coords_t>);
     STATIC_CHECK(!has_unary_minus<coords_t>);
-    STATIC_CHECK(!coords_t::has_freely_mutable_components);
+    STATIC_CHECK(!coords_t::has_freely_mutable_components_v);
     STATIC_CHECK(defines_addition_for_single_value_v<space_t, logarithmic_representation<no_bounds<T>>>);
     STATIC_CHECK(defines_subtraction_for_single_value_v<space_t, logarithmic_representation<no_bounds<T>>>);
 

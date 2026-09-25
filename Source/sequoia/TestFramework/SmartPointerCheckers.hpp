@@ -74,13 +74,13 @@ namespace sequoia::testing
   struct value_tester<std::unique_ptr<T>> : smart_pointer_tester<std::unique_ptr<T>>
   {
     using type = std::unique_ptr<T>;
-    using base_t = smart_pointer_tester<std::unique_ptr<T>>;
-    using base_t::test;
+    using base_type = smart_pointer_tester<std::unique_ptr<T>>;
+    using base_type::test;
 
     template<test_mode Mode, class Advisor>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
-      base_t::test_pointees(logger, obtained, prediction, advisor);
+      base_type::test_pointees(logger, obtained, prediction, advisor);
     }
   };
 
@@ -98,13 +98,13 @@ namespace sequoia::testing
   struct value_tester<std::shared_ptr<T>> : smart_pointer_tester<std::shared_ptr<T>>
   {
     using type = std::shared_ptr<T>;
-    using base_t = smart_pointer_tester<std::shared_ptr<T>>;
-    using base_t::test;
+    using base_type = smart_pointer_tester<std::shared_ptr<T>>;
+    using base_type::test;
 
     template<test_mode Mode, class Advisor>
     static void test(equivalence_check_t, test_logger<Mode>& logger, const type& obtained, const type& prediction, const tutor<Advisor>& advisor)
     {
-      base_t::test_pointees(logger, obtained, prediction, advisor);
+      base_type::test_pointees(logger, obtained, prediction, advisor);
     }
   };
 

@@ -3027,46 +3027,45 @@ namespace sequoia::maths
     using frame_type                    = basis_type::frame_type;
     using validator_type                = Validator;
 
-    // TO DO: improve conventions
-    constexpr static bool has_distinguished_origin{has_distinguished_origin_v<space_type>};
-    constexpr static bool has_identity_validator{defines_identity_validator_v<validator_type>};
-    constexpr static bool has_freely_mutable_components{free_module<space_type>};
-    constexpr static bool has_homogeneous_rep{!has_heterogeneous_representation_v<representation_type>};
-    constexpr static bool admits_canonical_basis{admits_canonical_basis_v<free_module_type>};
+    constexpr static bool has_distinguished_origin_v{maths::has_distinguished_origin_v<space_type>};
+    constexpr static bool has_identity_validator_v{defines_identity_validator_v<validator_type>};
+    constexpr static bool has_freely_mutable_components_v{free_module<space_type>};
+    constexpr static bool has_homogeneous_rep_v{!has_heterogeneous_representation_v<representation_type>};
+    constexpr static bool admits_canonical_basis_v{maths::admits_canonical_basis_v<free_module_type>};
 
     constexpr static std::size_t dimension{rank_of_v<free_module_type>};
     constexpr static std::size_t D{dimension};
 
     constexpr coordinates_base() noexcept = default;
 
-    constexpr explicit coordinates_base(std::span<const value_type, D> vals) noexcept(has_identity_validator)
-      requires admits_canonical_basis && has_homogeneous_rep
+    constexpr explicit coordinates_base(std::span<const value_type, D> vals) noexcept(has_identity_validator_v)
+      requires admits_canonical_basis_v && has_homogeneous_rep_v
       : coordinates_base{vals, frame_type{}}
     {}
 
-    constexpr coordinates_base(std::span<const value_type, D> vals, frame_type) noexcept(has_identity_validator)
-      requires has_homogeneous_rep
+    constexpr coordinates_base(std::span<const value_type, D> vals, frame_type) noexcept(has_identity_validator_v)
+      requires has_homogeneous_rep_v
       : m_Values{validate(vals, m_Validator)}
     {}
 
     template<class... Ts>
-      requires admits_canonical_basis && has_homogeneous_rep && (D > 1) && (std::convertible_to<Ts, value_type> && ...)
-    constexpr explicit(sizeof...(Ts) == 1) coordinates_base(Ts... ts) noexcept(has_identity_validator)
+      requires admits_canonical_basis_v && has_homogeneous_rep_v && (D > 1) && (std::convertible_to<Ts, value_type> && ...)
+    constexpr explicit(sizeof...(Ts) == 1) coordinates_base(Ts... ts) noexcept(has_identity_validator_v)
       : coordinates_base{ts..., frame_type{}}
     {}
 
     template<class... Ts>
-      requires has_homogeneous_rep && (D > 1) && (sizeof...(Ts) > 1) && is_units_terminated_pack_v<basis_type, value_type, Ts...>
-    constexpr coordinates_base(Ts... ts) noexcept(has_identity_validator)
+      requires has_homogeneous_rep_v && (D > 1) && (sizeof...(Ts) > 1) && is_units_terminated_pack_v<basis_type, value_type, Ts...>
+    constexpr coordinates_base(Ts... ts) noexcept(has_identity_validator_v)
       : coordinates_base{std::make_index_sequence<sizeof...(Ts) - 1>{}, std::tuple{ts...}}
     {}
 
-    constexpr explicit coordinates_base(value_type val) noexcept(has_identity_validator)      
-      requires admits_canonical_basis && (D == 1)
+    constexpr explicit coordinates_base(value_type val) noexcept(has_identity_validator_v)      
+      requires admits_canonical_basis_v && (D == 1)
       : coordinates_base{val, frame_type{}}
     {}
 
-    constexpr coordinates_base(value_type val, frame_type) noexcept(has_identity_validator)
+    constexpr coordinates_base(value_type val, frame_type) noexcept(has_identity_validator_v)
       requires (D == 1)
       : m_Values{m_Validator(representation_type::bounds_v, val)}
     {}
@@ -3085,28 +3084,28 @@ namespace sequoia::maths
 
     template<class Self>
       requires (!std::same_as<Self, coordinates_base>)
-    constexpr Self& operator+=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator)
+    constexpr Self& operator+=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator_v)
     {
       return self = (self + v);
     }
 
     template<class Self, class Other>
       requires is_addable_to_v<Other, Self>
-    constexpr Self& operator+=(this Self& self, const Other& v) noexcept(has_identity_validator)
+    constexpr Self& operator+=(this Self& self, const Other& v) noexcept(has_identity_validator_v)
     {
       return self = (self + v);
     }
 
     template<class Self>
       requires (!std::same_as<Self, coordinates_base>) 
-    constexpr Self& operator-=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator)
+    constexpr Self& operator-=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator_v)
     {
        return self = (self - v);
     }
 
     template<class Self>
-      requires (!std::same_as<Self, coordinates_base>) && has_distinguished_origin
-    constexpr Self& operator*=(this Self& self, value_type u) noexcept(has_identity_validator)
+      requires (!std::same_as<Self, coordinates_base>) && has_distinguished_origin_v
+    constexpr Self& operator*=(this Self& self, value_type u) noexcept(has_identity_validator_v)
     {
       return self = (self * u);
     }
@@ -3130,11 +3129,11 @@ namespace sequoia::maths
 
     template<class Self>
       requires (!std::same_as<Self, coordinates_base>) 
-            && has_distinguished_origin
+            && has_distinguished_origin_v
             && (!is_non_negative_orthant_v<space_type>)
             && (!std::is_unsigned_v<value_type>)
     [[nodiscard]]
-    constexpr Self operator-(this const Self& self) noexcept(has_identity_validator)
+    constexpr Self operator-(this const Self& self) noexcept(has_identity_validator_v)
     {
       // TO DO: enable refinement through representation
       return Self{self}.for_each_element([](value_type& t) { t = -t; });
@@ -3145,7 +3144,7 @@ namespace sequoia::maths
             && (!std::same_as<Derived, displacement_coordinates_type>)
     [[nodiscard]]
     friend constexpr typename Derived::displacement_coordinates_type operator-(const Derived& lhs, const Derived& rhs)
-      noexcept(Derived::displacement_coordinates_type::has_identity_validator)
+      noexcept(Derived::displacement_coordinates_type::has_identity_validator_v)
     {
       using disp_t = Derived::displacement_coordinates_type;
 
@@ -3174,7 +3173,7 @@ namespace sequoia::maths
     template<class Derived>
       requires std::derived_from<Derived, coordinates_base>
     [[nodiscard]]
-    friend constexpr Derived operator+(const Derived& c, const displacement_coordinates_type& v) noexcept(has_identity_validator)
+    friend constexpr Derived operator+(const Derived& c, const displacement_coordinates_type& v) noexcept(has_identity_validator_v)
     {
       if constexpr(defines_addition_for_v<space_type, representation_type>)
       {
@@ -3193,7 +3192,7 @@ namespace sequoia::maths
               static_assert(covered_by<value_type, displacement_value_type>);
               const displacement_value_type rhsToUse{
                 [&c, lhs, rhs](){
-                  if constexpr(!has_identity_validator)
+                  if constexpr(!has_identity_validator_v)
                   {
                     const auto lhsAsSigned{static_cast<displacement_value_type>(lhs)};
                     const auto bnds{coordinate_bounds<displacement_value_type>{-lhsAsSigned, greatest_upper_bound<displacement_value_type> - lhsAsSigned}};
@@ -3226,7 +3225,7 @@ namespace sequoia::maths
     template<class Derived>
       requires std::derived_from<Derived, coordinates_base>  && (!std::same_as<Derived, displacement_coordinates_type>)
     [[nodiscard]]
-    friend constexpr Derived operator+(const displacement_coordinates_type& v, const Derived& c) noexcept(has_identity_validator)
+    friend constexpr Derived operator+(const displacement_coordinates_type& v, const Derived& c) noexcept(has_identity_validator_v)
     {
       return c + v;
     }
@@ -3234,9 +3233,9 @@ namespace sequoia::maths
     template<class Derived>
       requires std::derived_from<Derived, coordinates_base>
             && (!std::same_as<Derived, displacement_coordinates_type>)
-            && has_distinguished_origin
+            && has_distinguished_origin_v
     [[nodiscard]]
-    friend constexpr Derived operator+(const Derived& c, const Derived& v) noexcept(has_identity_validator)
+    friend constexpr Derived operator+(const Derived& c, const Derived& v) noexcept(has_identity_validator_v)
     {
       if constexpr(defines_addition_for_v<space_type, representation_type>)
       {
@@ -3255,7 +3254,7 @@ namespace sequoia::maths
     template<class Derived>
       requires std::derived_from<Derived, coordinates_base>
     [[nodiscard]]
-    friend constexpr Derived operator-(const Derived& c, const displacement_coordinates_type& v) noexcept(has_identity_validator)
+    friend constexpr Derived operator-(const Derived& c, const displacement_coordinates_type& v) noexcept(has_identity_validator_v)
     {
       if constexpr(defines_subtraction_for_v<space_type, representation_type>)
       {
@@ -3274,7 +3273,7 @@ namespace sequoia::maths
               static_assert(covered_by<value_type, displacement_value_type>);
               const displacement_value_type rhsToUse{
                 [&c, lhs, rhs](){
-                  if constexpr(!has_identity_validator)
+                  if constexpr(!has_identity_validator_v)
                   {
                     const auto lhsAsSigned{static_cast<displacement_value_type>(lhs)};
                     const auto bnds{coordinate_bounds<displacement_value_type>{least_lower_bound<displacement_value_type> + lhsAsSigned, lhsAsSigned}};
@@ -3305,13 +3304,13 @@ namespace sequoia::maths
     }
 
     template<class Derived>
-      requires std::derived_from<Derived, coordinates_base> && has_distinguished_origin
+      requires std::derived_from<Derived, coordinates_base> && has_distinguished_origin_v
     [[nodiscard]]
-    friend constexpr Derived operator*(const Derived& v, value_type u) noexcept(has_identity_validator)
+    friend constexpr Derived operator*(const Derived& v, value_type u) noexcept(has_identity_validator_v)
     {
       if constexpr(defines_scalar_multiplication_for_v<space_type, representation_type>)
       {
-        if constexpr(has_homogeneous_rep)
+        if constexpr(has_homogeneous_rep_v)
           return {representation_type{}.mul(v.values(), u), frame_type{}};
         else
           return
@@ -3331,15 +3330,15 @@ namespace sequoia::maths
     }
 
     template<class Derived>
-      requires std::derived_from<Derived, coordinates_base> && has_distinguished_origin
+      requires std::derived_from<Derived, coordinates_base> && has_distinguished_origin_v
     [[nodiscard]]
-    friend constexpr Derived operator*(value_type u, const Derived& v) noexcept(has_identity_validator)
+    friend constexpr Derived operator*(value_type u, const Derived& v) noexcept(has_identity_validator_v)
     {
       return v * u;
     }
 
     template<class Derived>
-      requires std::derived_from<Derived, coordinates_base> && vector_space<free_module_type> && has_distinguished_origin
+      requires std::derived_from<Derived, coordinates_base> && vector_space<free_module_type> && has_distinguished_origin_v
     // TO DO: remove this: it's a temporary hack while the field / commutative_ring concepts are sorted out
     && (!std::integral<value_type>)
     [[nodiscard]]
@@ -3347,7 +3346,7 @@ namespace sequoia::maths
     {
       if constexpr(defines_scalar_division_for_v<space_type, representation_type>)
       {
-        if constexpr(has_homogeneous_rep)
+        if constexpr(has_homogeneous_rep_v)
           return {representation_type{}.div(v.values(), u), frame_type{}};
         else
           return
@@ -3373,13 +3372,13 @@ namespace sequoia::maths
     constexpr std::span<const value_type, D> values() const noexcept { return m_Values; }
 
     [[nodiscard]]
-    constexpr std::span<value_type, D> values() noexcept requires has_freely_mutable_components { return m_Values; }
+    constexpr std::span<value_type, D> values() noexcept requires has_freely_mutable_components_v { return m_Values; }
 
     [[nodiscard]]
     constexpr const value_type& value() const noexcept requires (D == 1) { return m_Values[0]; }
 
     [[nodiscard]]
-    constexpr value_type& value() noexcept requires (D == 1) && has_freely_mutable_components { return m_Values[0]; }
+    constexpr value_type& value() noexcept requires (D == 1) && has_freely_mutable_components_v { return m_Values[0]; }
 
     /// This is explicit since otherwise, given two vectors a,b, a/b is well-formed due to implicit boolean conversion
     // TO DO: consider restricting to spaces with a privileged origin
@@ -3393,7 +3392,7 @@ namespace sequoia::maths
     constexpr value_type operator[](std::size_t i) const { return m_Values[i]; }
 
     [[nodiscard]]
-    constexpr value_type& operator[](std::size_t i) requires has_freely_mutable_components { return m_Values[i]; }
+    constexpr value_type& operator[](std::size_t i) requires has_freely_mutable_components_v { return m_Values[i]; }
 
     // TO DO: reconsider these (and the above, related, functions) for physical values
     // (more generally, when the basis isomorphism type is non-trivial). The const
@@ -3424,16 +3423,16 @@ namespace sequoia::maths
     constexpr auto crend() const noexcept { return rend(); }
 
     [[nodiscard]]
-    constexpr auto begin() noexcept requires has_freely_mutable_components { return m_Values.begin(); }
+    constexpr auto begin() noexcept requires has_freely_mutable_components_v { return m_Values.begin(); }
 
     [[nodiscard]]
-    constexpr auto end() noexcept requires has_freely_mutable_components { return m_Values.end(); }
+    constexpr auto end() noexcept requires has_freely_mutable_components_v { return m_Values.end(); }
 
     [[nodiscard]]
-    constexpr auto rbegin() noexcept requires has_freely_mutable_components { return m_Values.rbegin(); }
+    constexpr auto rbegin() noexcept requires has_freely_mutable_components_v { return m_Values.rbegin(); }
 
     [[nodiscard]]
-    constexpr auto rend() noexcept requires has_freely_mutable_components { return m_Values.rend(); }
+    constexpr auto rend() noexcept requires has_freely_mutable_components_v { return m_Values.rend(); }
 
 
     [[nodiscard]]
@@ -3458,7 +3457,7 @@ namespace sequoia::maths
       requires std::invocable<Fn, value_type&, value_type>
     constexpr Self&& apply_to_each_element(this Self&& self, std::span<const displacement_value_type, D> rhs, Fn f)
     {
-      if constexpr(has_identity_validator)
+      if constexpr(has_identity_validator_v)
       {
         // gcc's loop vectorizer makes -Wmaybe-uninitialized misread the zip's owning_view. The
         // array cannot be uninitialized: to_array(span<const T, N>) is `array<T, N>{f(data[Is])...}`
@@ -3495,7 +3494,7 @@ SEQUOIA_GCC_SUPPRESS_END
       requires std::invocable<Fn, value_type&>
     constexpr Self&& for_each_element(this Self&& self, Fn f)
     {
-      if constexpr(has_identity_validator)
+      if constexpr(has_identity_validator_v)
       {
         std::ranges::for_each(to_underlying(self.m_Values), f);
         self.m_Values = from_underlying(self.m_Values);
@@ -3553,14 +3552,14 @@ SEQUOIA_GCC_SUPPRESS_END
 
     template<class Coord, class T>
     [[nodiscard]]
-    constexpr static Coord make_coord(T val) noexcept(has_identity_validator) {
+    constexpr static Coord make_coord(T val) noexcept(has_identity_validator_v) {
       using individual_unit_t = Coord::units_type;
       return Coord{val, individual_unit_t{}};
     }
 
     template<std::derived_from<coordinates_base> Derived, class Fn>
     [[nodiscard]]
-    constexpr static Derived make_from_separate_coords(const Derived& v, Fn fn) noexcept(has_identity_validator) {
+    constexpr static Derived make_from_separate_coords(const Derived& v, Fn fn) noexcept(has_identity_validator_v) {
       return
         [&]<std::size_t... Is>(std::index_sequence<Is...>) -> Derived {
           using separate_coords_t = representation_type::coordinates_type;
