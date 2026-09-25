@@ -29,11 +29,8 @@ namespace sequoia::testing
                           const fs::path& output,
                           const std::optional<std::string>& cacheOverride)
   {
-    const auto preset{back(buildPaths.cmake_cache_dir()).generic_string()};
-    const auto cmd{
-      cacheOverride ? std::format("cmake --preset {} -D {}", preset, cacheOverride.value())
-                    : std::format("cmake --preset {}", preset)
-    };
+    auto cmd{std::format("cmake --preset {}", back(buildPaths.cmake_cache_dir()).generic_string())};
+    if(cacheOverride) cmd.append(" -D ").append(cacheOverride.value());
 
     return {"Running CMake...", cmd, output};
   }
@@ -41,11 +38,9 @@ namespace sequoia::testing
   [[nodiscard]]
   shell_command build_cmd(const build_paths& buildPaths, const fs::path& output)
   {
-    const auto cacheDir{buildPaths.cmake_cache_dir().generic_string()};
-    const auto cmd{
-      library_configuration.empty() ? std::format("cmake --build {}", cacheDir)
-                                    : std::format("cmake --build {} --config {}", cacheDir, library_configuration)
-    };
+    auto cmd{std::format("cmake --build \"{}\"", buildPaths.cmake_cache_dir().generic_string())};
+    if(!library_configuration.empty())
+      cmd.append(" --config ").append(library_configuration);
 
     return {"Building...", cmd, output};
   }
