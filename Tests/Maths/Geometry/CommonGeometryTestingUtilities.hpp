@@ -344,21 +344,36 @@ namespace sequoia::testing
 
     void execute()
     {
-      check_row<Expected.point_plus_point,               can_add<point_type, point_type>>              ("point + point");
-      check_row<Expected.point_plus_displacement,        can_add<point_type, displacement_type>>       ("point + displacement");
-      check_row<Expected.point_minus_point,              can_subtract<point_type, point_type>>         ("point - point");
-      check_row<Expected.point_minus_displacement,       can_subtract<point_type, displacement_type>>  ("point - displacement");
-      check_row<Expected.point_unary_plus,               has_unary_plus<point_type>>                   ("+point");
-      check_row<Expected.point_unary_minus,              has_unary_minus<point_type>>                  ("-point");
-      check_row<Expected.point_times_scalar,             can_multiply<point_type, scalar_type>>        ("point * scalar");
-      check_row<Expected.point_over_scalar,              can_divide<point_type, scalar_type>>          ("point / scalar");
-      check_row<Expected.point_over_point,               can_divide<point_type, point_type>>           ("point / point");
-      check_row<Expected.point_over_displacement,        can_divide<point_type, displacement_type>>    ("point / displacement");
-      check_row<Expected.displacement_over_point,        can_divide<displacement_type, point_type>>    ("displacement / point");
-      check_row<Expected.displacement_times_scalar,      can_multiply<displacement_type, scalar_type>> ("displacement * scalar");
-      check_row<Expected.displacement_over_scalar,       can_divide<displacement_type, scalar_type>>   ("displacement / scalar");
-      check_row<Expected.displacement_over_displacement, can_divide<displacement_type, displacement_type>>("displacement / displacement");
-      check_row<Expected.displacement_unary_minus,       has_unary_minus<displacement_type>>           ("-displacement");
+      check_row<Expected.point_plus_point,
+                can_add<point_type, point_type>>                  ("point + point");
+      check_row<Expected.point_plus_displacement,
+                can_add<point_type, displacement_type>>           ("point + displacement");
+      check_row<Expected.point_minus_point,
+                can_subtract<point_type, point_type>>             ("point - point");
+      check_row<Expected.point_minus_displacement,
+                can_subtract<point_type, displacement_type>>      ("point - displacement");
+      check_row<Expected.point_unary_plus,
+                has_unary_plus<point_type>>                       ("+point");
+      check_row<Expected.point_unary_minus,
+                has_unary_minus<point_type>>                      ("-point");
+      check_row<Expected.point_times_scalar,
+                can_multiply<point_type, scalar_type>>            ("point * scalar");
+      check_row<Expected.point_over_scalar,
+                can_divide<point_type, scalar_type>>              ("point / scalar");
+      check_row<Expected.point_over_point,
+                can_divide<point_type, point_type>>               ("point / point");
+      check_row<Expected.point_over_displacement,
+                can_divide<point_type, displacement_type>>        ("point / displacement");
+      check_row<Expected.displacement_over_point,
+                can_divide<displacement_type, point_type>>        ("displacement / point");
+      check_row<Expected.displacement_times_scalar,
+                can_multiply<displacement_type, scalar_type>>     ("displacement * scalar");
+      check_row<Expected.displacement_over_scalar,
+                can_divide<displacement_type, scalar_type>>       ("displacement / scalar");
+      check_row<Expected.displacement_over_displacement,
+                can_divide<displacement_type, displacement_type>> ("displacement / displacement");
+      check_row<Expected.displacement_unary_minus,
+                has_unary_minus<displacement_type>>               ("-displacement");
     }
   private:
     template<admits Row, bool Actual>

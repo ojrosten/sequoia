@@ -78,7 +78,10 @@ namespace sequoia::testing
     }
   struct use_advisor<Advisor, T>
     : std::bool_constant<
-        std::is_same_v<std::common_type_t<advisor_argument_t<Advisor>, std::remove_cvref_t<T>>, advisor_argument_t<Advisor>>
+        std::is_same_v<
+          std::common_type_t<advisor_argument_t<Advisor>, std::remove_cvref_t<T>>,
+          advisor_argument_t<Advisor>
+        >
       >
   {};
 

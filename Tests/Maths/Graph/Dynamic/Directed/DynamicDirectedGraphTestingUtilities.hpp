@@ -1672,7 +1672,9 @@ namespace sequoia::testing
           make_and_check(t, t.report(""), {{edge_init_type{1}}, {edge_init_type{1}, edge_init_type{0}}, {}}),
 
           // 'node_1_node_1_0_2_node'
-          make_and_check(t, t.report(""), {{edge_init_type{1}}, {edge_init_type{1}, edge_init_type{0}, edge_init_type{2}}, {}}),
+          make_and_check(t,
+                         t.report(""),
+                         {{edge_init_type{1}}, {edge_init_type{1}, edge_init_type{0}, edge_init_type{2}}, {}}),
 
           // 'node_1_node_1_2_node'
           make_and_check(t, t.report(""), {{edge_init_type{1}}, {edge_init_type{1}, edge_init_type{2}}, {}}),
@@ -1681,13 +1683,25 @@ namespace sequoia::testing
           make_and_check(t, t.report(""), {{edge_init_type{2}}, {}, {edge_init_type{2}}}),
 
           // 'node_1_1_2_2_node_2_node'
-          make_and_check(t, t.report(""), {{edge_init_type{1}, edge_init_type{1}, edge_init_type{2}, edge_init_type{2}}, {edge_init_type{2}}, {}}),
+          make_and_check(t,
+                         t.report(""),
+                         {{edge_init_type{1}, edge_init_type{1}, edge_init_type{2}, edge_init_type{2}},
+                          {edge_init_type{2}},
+                          {}}),
 
           // 'node_1_1_2_2_node_2_node_1'
-          make_and_check(t, t.report(""), {{edge_init_type{1}, edge_init_type{1}, edge_init_type{2}, edge_init_type{2}}, {edge_init_type{2}}, {edge_init_type{1}}}),
+          make_and_check(t,
+                         t.report(""),
+                         {{edge_init_type{1}, edge_init_type{1}, edge_init_type{2}, edge_init_type{2}},
+                          {edge_init_type{2}},
+                          {edge_init_type{1}}}),
 
           // 'node_2_2_1_1_node_2_node_1'
-          make_and_check(t, t.report(""), {{edge_init_type{2}, edge_init_type{2}, edge_init_type{1}, edge_init_type{1}}, {edge_init_type{2}}, {edge_init_type{1}}}),
+          make_and_check(t,
+                         t.report(""),
+                         {{edge_init_type{2}, edge_init_type{2}, edge_init_type{1}, edge_init_type{1}},
+                          {edge_init_type{2}},
+                          {edge_init_type{1}}}),
 
           // 'node_3_1_node_2_node_node'
           make_and_check(t, t.report(""), {{edge_init_type{3}, edge_init_type{1}}, {edge_init_type{2}}, {}, {}}),

@@ -3049,7 +3049,10 @@ namespace sequoia::maths
     {}
 
     template<class... Ts>
-      requires admits_canonical_basis_v && has_homogeneous_rep_v && (D > 1) && (std::convertible_to<Ts, value_type> && ...)
+      requires admits_canonical_basis_v
+            && has_homogeneous_rep_v
+            && (D > 1)
+            && (std::convertible_to<Ts, value_type> && ...)
     constexpr explicit(sizeof...(Ts) == 1) coordinates_base(Ts... ts) noexcept(has_identity_validator_v)
       : coordinates_base{ts..., frame_type{}}
     {}
@@ -3084,7 +3087,8 @@ namespace sequoia::maths
 
     template<class Self>
       requires (!std::same_as<Self, coordinates_base>)
-    constexpr Self& operator+=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator_v)
+    constexpr Self& operator+=(this Self& self, const displacement_coordinates_type& v)
+      noexcept(has_identity_validator_v)
     {
       return self = (self + v);
     }
@@ -3098,7 +3102,8 @@ namespace sequoia::maths
 
     template<class Self>
       requires (!std::same_as<Self, coordinates_base>) 
-    constexpr Self& operator-=(this Self& self, const displacement_coordinates_type& v) noexcept(has_identity_validator_v)
+    constexpr Self& operator-=(this Self& self, const displacement_coordinates_type& v)
+      noexcept(has_identity_validator_v)
     {
        return self = (self - v);
     }

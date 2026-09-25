@@ -90,8 +90,13 @@ namespace sequoia::maths
   template<partial_m_torsor... Ts>
   struct to_base_space<physics::composite_space<Ts...>>
   {
-    using sorted_tensor_product_type = meta::stable_sort_t<tensor_product<to_base_space_t<Ts>...>,  meta::type_comparator>;
-    using type                       = physics::impl::to_composite_space_t<physics::reduction_t<physics::impl::reduce_t<physics::impl::count_and_combine_t<sorted_tensor_product_type>>>>;
+    using sorted_tensor_product_type =
+      meta::stable_sort_t<tensor_product<to_base_space_t<Ts>...>, meta::type_comparator>;
+
+    using type =
+      physics::impl::to_composite_space_t<
+        physics::reduction_t<physics::impl::reduce_t<physics::impl::count_and_combine_t<sorted_tensor_product_type>>>
+      >;
   };
 }
 
