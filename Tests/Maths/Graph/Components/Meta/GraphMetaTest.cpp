@@ -108,8 +108,8 @@ namespace sequoia::testing
 
     static_assert(big_weight<EdgeWeight>());
 
-    using gen_t = edge_storage_generator<GraphFlavour, EdgeWeight, EdgeMetaData, std::size_t, contiguous_edge_storage_config>;
-    using edge_t       = gen_t::edge_type;
+    using gen_t     = edge_storage_generator<GraphFlavour, EdgeWeight, EdgeMetaData, std::size_t, contiguous_edge_storage_config>;
+    using edge_t    = gen_t::edge_type;
     using handler_t = shared_to_handler_t<true, EdgeWeight>;
     static_assert(std::is_same_v<edge_t, EdgeType<handler_t, EdgeMetaData, std::size_t>>);
   }

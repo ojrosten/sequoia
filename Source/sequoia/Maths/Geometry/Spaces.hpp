@@ -1245,7 +1245,7 @@ namespace sequoia::maths
       if constexpr(requires { index_set_t::size(); })
         return index_set_t::size() == rank_of_v<M>;
       else if constexpr(std::is_enum_v<index_set_t>)
-        // TO DO std::meta::enumerators_of(^^index_set_type).size() == rank_of_v<M>;
+        // TO DO std::meta::enumerators_of(^^index_set_t).size() == rank_of_v<M>;
         return true;
       else
         return false;

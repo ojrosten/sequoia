@@ -56,8 +56,11 @@ namespace sequoia::testing
     using type = T;
   };
 
-  template<class Advisor>
-  using advisor_argument_t = std::remove_cvref_t<typename advisor_invoke_type<decltype(&Advisor::operator())>::type>;
+  namespace impl
+  {
+    template<class Advisor>
+    using advisor_argument_t = std::remove_cvref_t<typename advisor_invoke_type<decltype(&Advisor::operator())>::type>;
+  }
 
   /// \brief meta utility for determining whether a particular Advisor should be used for a given type
   template<class Advisor, class T>
@@ -79,8 +82,8 @@ namespace sequoia::testing
   struct use_advisor<Advisor, T>
     : std::bool_constant<
         std::is_same_v<
-          std::common_type_t<advisor_argument_t<Advisor>, std::remove_cvref_t<T>>,
-          advisor_argument_t<Advisor>
+          std::common_type_t<impl::advisor_argument_t<Advisor>, std::remove_cvref_t<T>>,
+          impl::advisor_argument_t<Advisor>
         >
       >
   {};

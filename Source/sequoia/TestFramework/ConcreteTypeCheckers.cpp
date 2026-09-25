@@ -11,7 +11,7 @@ namespace sequoia::testing
 {
   namespace
   {
-    using path_tester = value_tester<std::filesystem::path>;
+    using path_tester_t = value_tester<std::filesystem::path>;
   }
   
   [[nodiscard]]
@@ -20,9 +20,9 @@ namespace sequoia::testing
     return append_lines(prefix, path.generic_string(), "vs", prediction.generic_string()).append("\n");
   }
 
-  const path_tester::basic_file_checker_type path_tester::basic_file_checker{".*"};
+  const path_tester_t::basic_file_checker_type path_tester_t::basic_file_checker{".*"};
 
-  const general_equivalence_check_t<path_tester::basic_file_checker_type> path_tester::basic_path_equivalence{basic_file_checker};
+  const general_equivalence_check_t<path_tester_t::basic_file_checker_type> path_tester_t::basic_path_equivalence{basic_file_checker};
 
-  const general_weak_equivalence_check_t<path_tester::basic_file_checker_type> path_tester::basic_path_weak_equivalence{basic_file_checker};
+  const general_weak_equivalence_check_t<path_tester_t::basic_file_checker_type> path_tester_t::basic_path_weak_equivalence{basic_file_checker};
 }

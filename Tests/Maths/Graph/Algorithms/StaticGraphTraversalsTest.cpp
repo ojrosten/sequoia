@@ -23,8 +23,8 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    using g_t    = static_directed_graph<1, 2, null_weight, null_weight>;
-    using edge_t = g_t::edge_init_type;
+    using g_t         = static_directed_graph<1, 2, null_weight, null_weight>;
+    using edge_init_t = g_t::edge_init_type;
 
     std::array<std::size_t, 2> ordering{};
     std::size_t index{};
@@ -34,7 +34,7 @@ namespace sequoia::testing
       }
     };
 
-    constexpr g_t g{{edge_t{1}}, {}};
+    constexpr g_t g{{edge_init_t{1}}, {}};
     traverse(pseudo_depth_first, g, find_disconnected_t{}, null_func_obj{}, lateNodeFn);
 
     return ordering;
@@ -43,19 +43,19 @@ namespace sequoia::testing
   //constexpr auto test_static_graph_traversals::bfs()
   //{
   //  using namespace maths;
-  //  using g_type = static_embedded_graph<directed_flavour::directed, 2, 1, null_weight, null_weight>;
-  //  using edge_t = typename g_type::edge_init_type;
+  //  using g_t = static_embedded_graph<directed_flavour::directed, 2, 1, null_weight, null_weight>;
+  //  using edge_init_t = typename g_t::edge_init_type;
 
   //  //   /--<--\ ->-\
   //  //   \   / /    /
   //  //    \ / /    /
 
-  //  constexpr g_type g{
+  //  constexpr g_t g{
   //    {
-  //      edge_t{0, inversion_constant<true>{}, 2},
-  //      edge_t{0, 0, 3},
-  //      edge_t{0, inversion_constant<true>{}, 0},
-  //      edge_t{0, 0, 1}
+  //      edge_init_t{0, inversion_constant<true>{}, 2},
+  //      edge_init_t{0, 0, 3},
+  //      edge_init_t{0, inversion_constant<true>{}, 0},
+  //      edge_init_t{0, 0, 1}
   //    },
   //  };
 
@@ -75,8 +75,8 @@ namespace sequoia::testing
   constexpr auto test_static_graph_traversals::priority_search()
   {
     using namespace maths;
-    using g_t    = static_undirected_graph<3, 4, null_weight, int>;
-    using edge_t = g_t::edge_init_type;
+    using g_t         = static_undirected_graph<3, 4, null_weight, int>;
+    using edge_init_t = g_t::edge_init_type;
 
     // 6  4  2
     //  \ | /
@@ -85,10 +85,10 @@ namespace sequoia::testing
 
     constexpr g_t g{
       {
-        {edge_t{1}, edge_t{2}, edge_t{3}},
-        {edge_t{0}},
-        {edge_t{0}},
-        {edge_t{0}}
+        {edge_init_t{1}, edge_init_t{2}, edge_init_t{3}},
+        {edge_init_t{0}},
+        {edge_init_t{0}},
+        {edge_init_t{0}}
       },
       {
         0, 6, 2, 8
