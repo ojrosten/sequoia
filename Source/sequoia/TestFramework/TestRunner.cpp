@@ -92,11 +92,11 @@ namespace sequoia::testing
      */
     void throw_if_stray_materials(const individual_materials_paths& materials)
     {
-      constexpr std::array<std::string_view, 5>
+      static constexpr std::array<std::string_view, 5>
         expected{"WorkingCopy", "Prediction", "Auxiliary", ".keep", ".DS_Store"};
 
       auto isStray{
-        [&expected](const std::string& name) { return std::ranges::find(expected, name) == expected.end(); }
+        [](const std::string& name) { return std::ranges::find(expected, name) == expected.end(); }
       };
 
       const auto& root{materials.original_materials_root()};
