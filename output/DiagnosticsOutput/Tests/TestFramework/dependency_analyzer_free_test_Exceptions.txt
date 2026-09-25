@@ -1,4 +1,4 @@
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 435
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 436
 Executable out of date
 
 Expected Exception Type:
@@ -9,7 +9,7 @@ output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_an
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 448
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 449
 Executable out of date on account of a source no test depends on
 
 Expected Exception Type:
@@ -20,7 +20,7 @@ output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_an
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 462
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 463
 Executable out of date on account of a toolchain header
 
 Expected Exception Type:
@@ -31,7 +31,7 @@ output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_an
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 476
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 477
 A file the build read cannot be read
 
 Expected Exception Type:
@@ -41,7 +41,7 @@ Restore the file, or build the executable again
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 515
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 516
 The record names nothing of the project's
 
 Expected Exception Type:
@@ -50,7 +50,7 @@ The build's record names nothing under output/TestsTemporaryData/TestFramework/D
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 523
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 524
 The record names nothing of the project's, whatever the toolchain did
 
 Expected Exception Type:
@@ -59,7 +59,7 @@ The build's record names nothing under output/TestsTemporaryData/TestFramework/D
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 970
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 971
 A prune file in a superseded format
 
 Expected Exception Type:
@@ -69,7 +69,7 @@ Try deleting the parent directory and starting afresh
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 976
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 977
 A malformed time stamp
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ Try deleting the parent directory and starting afresh
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 982
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 983
 A path with no time stamp after it
 
 Expected Exception Type:
