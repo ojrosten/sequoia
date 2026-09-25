@@ -10,6 +10,7 @@
 #include "sequoia/FileSystem/FileSystem.hpp"
 
 #include <format>
+#include <string_view>
 
 namespace sequoia::testing
 {
@@ -17,13 +18,22 @@ namespace sequoia::testing
 
   namespace fs = std::filesystem;
 
+  namespace
+  {
+    /// This library's configuration, CMake's `$<CONFIG>`: empty for a single-config build given no build type
+    constexpr std::string_view library_configuration{SEQUOIA_BUILD_CONFIGURATION};
+  }
+
   [[nodiscard]]
   shell_command cmake_cmd(const build_paths& buildPaths,
                           const fs::path& output,
                           const std::optional<std::string>& cacheOverride)
   {
-    auto cmd{std::format("cmake --preset {}", back(buildPaths.cmake_cache_dir()).generic_string())};
-    if(cacheOverride) cmd.append(" -D ").append(cacheOverride.value());
+    const auto preset{back(buildPaths.cmake_cache_dir()).generic_string()};
+    const auto cmd{
+      cacheOverride ? std::format("cmake --preset {} -D {}", preset, cacheOverride.value())
+                    : std::format("cmake --preset {}", preset)
+    };
 
     return {"Running CMake...", cmd, output};
   }
@@ -31,8 +41,12 @@ namespace sequoia::testing
   [[nodiscard]]
   shell_command build_cmd(const build_paths& buildPaths, const fs::path& output)
   {
-    return {"Building...",
-            std::format("cmake --build --preset {}", back(buildPaths.cmake_cache_dir()).generic_string()),
-            output};
+    const auto cacheDir{buildPaths.cmake_cache_dir().generic_string()};
+    const auto cmd{
+      library_configuration.empty() ? std::format("cmake --build {}", cacheDir)
+                                    : std::format("cmake --build {} --config {}", cacheDir, library_configuration)
+    };
+
+    return {"Building...", cmd, output};
   }
 }

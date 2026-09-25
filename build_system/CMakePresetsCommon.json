@@ -497,6 +497,15 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
+      "name": "llvm-homebrew-ninja-multi-config",
+      "displayName": "Homebrew LLVM with Ninja Multi-Config",
+      "description": "Configure for ${displayName}. A multi-config tree: it holds both Debug and Release, and the build preset chooses between them.",
+      "generator": "Ninja Multi-Config",
+      "cacheVariables": { "CMAKE_CONFIGURATION_TYPES": "Debug;Release" },
+      "inherits": ["base-llvm-homebrew"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
       "name": "llvm-env",
       "displayName": "LLVM from the environment [Debug]",
       "description": "Configure for ${displayName}. Set CC and CXX: unset, CMake picks the platform default.",
@@ -584,7 +593,7 @@
     {
       "name": "msvc-release",
       "displayName": "Visual Studio [Release]",
-      "description": "Configure for ${displayName}. A tree of its own, because a nested project's presets are named after the build directory.",
+      "description": "Configure for ${displayName}. A tree of its own, pinned to Release.",
       "cacheVariables": { "CMAKE_CONFIGURATION_TYPES": "Release" },
       "inherits": ["msvc"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
@@ -592,7 +601,7 @@
     {
       "name": "msvc-relwithdebinfo-asan",
       "displayName": "Visual Studio [RelWithDebInfo, asan]",
-      "description": "Configure for ${displayName}. A tree of its own, as `msvc-release`.",
+      "description": "Configure for ${displayName}. A tree of its own, pinned to RelWithDebInfo.",
       "cacheVariables": { "CMAKE_CONFIGURATION_TYPES": "RelWithDebInfo" },
       "inherits": ["msvc-asan"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
@@ -1030,6 +1039,34 @@
       "name": "run-llvm-homebrew-relwithdebinfo-tsan",
       "displayName": "Run Homebrew LLVM [RelWithDebInfo, tsan]",
       "inherits": ["llvm-homebrew-relwithdebinfo-tsan", "base-run"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "llvm-homebrew-ninja-multi-config",
+      "displayName": "Homebrew LLVM with Ninja Multi-Config [Debug]",
+      "configurePreset": "llvm-homebrew-ninja-multi-config",
+      "configuration": "Debug",
+      "inherits": ["base-ninja"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "run-llvm-homebrew-ninja-multi-config",
+      "displayName": "Run Homebrew LLVM with Ninja Multi-Config [Debug]",
+      "inherits": ["llvm-homebrew-ninja-multi-config", "base-run"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "llvm-homebrew-ninja-multi-config-release",
+      "displayName": "Homebrew LLVM with Ninja Multi-Config [Release]",
+      "configurePreset": "llvm-homebrew-ninja-multi-config",
+      "configuration": "Release",
+      "inherits": ["base-ninja"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "run-llvm-homebrew-ninja-multi-config-release",
+      "displayName": "Run Homebrew LLVM with Ninja Multi-Config [Release]",
+      "inherits": ["llvm-homebrew-ninja-multi-config-release", "base-run"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
@@ -1770,6 +1807,20 @@
       "steps": [
         { "type": "configure", "name": "llvm-homebrew-relwithdebinfo-tsan" },
         { "type": "build",     "name": "run-llvm-homebrew-relwithdebinfo-tsan" }
+      ]
+    },
+    {
+      "name": "llvm-homebrew-ninja-multi-config",
+      "steps": [
+        { "type": "configure", "name": "llvm-homebrew-ninja-multi-config" },
+        { "type": "build",     "name": "run-llvm-homebrew-ninja-multi-config" }
+      ]
+    },
+    {
+      "name": "llvm-homebrew-ninja-multi-config-release",
+      "steps": [
+        { "type": "configure", "name": "llvm-homebrew-ninja-multi-config" },
+        { "type": "build",     "name": "run-llvm-homebrew-ninja-multi-config-release" }
       ]
     },
     {
