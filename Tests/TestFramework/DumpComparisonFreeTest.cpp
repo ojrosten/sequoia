@@ -60,7 +60,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path dump_comparison_free_test::source_file()
+  fs::path dump_comparison_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }

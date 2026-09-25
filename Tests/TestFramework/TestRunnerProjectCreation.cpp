@@ -14,8 +14,10 @@
 
 namespace sequoia::testing
 {
+  namespace fs = std::filesystem;
+
   [[nodiscard]]
-  std::filesystem::path test_runner_project_creation::source_file()
+  fs::path test_runner_project_creation::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -113,7 +115,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path test_runner_project_creation::fake_project() const
+  fs::path test_runner_project_creation::fake_project() const
   {
     return working_materials() /= "FakeProject";
   }
@@ -126,7 +128,6 @@ namespace sequoia::testing
 
   void test_runner_project_creation::test_project_creation()
   {
-    namespace fs = std::filesystem;
     fs::copy(auxiliary_paths::repo(get_project_paths().project_root()), auxiliary_paths::repo(fake_project()), fs::copy_options::recursive);
 
     {

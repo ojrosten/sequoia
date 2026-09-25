@@ -15,13 +15,13 @@ namespace sequoia::testing
   namespace fs = std::filesystem;
 
   [[nodiscard]]
-  std::filesystem::path individual_test_paths_free_test::source_file()
+  fs::path individual_test_paths_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }
 
   [[nodiscard]]
-  std::filesystem::path individual_test_paths_free_test::fake_project() const
+  fs::path individual_test_paths_free_test::fake_project() const
   {
     return working_materials() /= "FakeProject";
   }

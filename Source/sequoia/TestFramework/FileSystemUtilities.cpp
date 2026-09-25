@@ -19,8 +19,8 @@ namespace sequoia::testing
 
   namespace
   {
-    template<std::predicate<std::filesystem::path> Pred>
-    void throw_if(const std::filesystem::path& p, std::string_view message, Pred pred)
+    template<std::predicate<fs::path> Pred>
+    void throw_if(const fs::path& p, std::string_view message, Pred pred)
     {
       if(pred(p))
       {

@@ -88,10 +88,10 @@ namespace sequoia::testing
 
     struct test_paths
     {
-      test_paths(const std::filesystem::path& sourceFile,
+      test_paths(const fs::path& sourceFile,
                  const test_summary_path& summaryFile,
-                 const std::filesystem::path& workingMaterials,
-                 const std::filesystem::path& predictiveMaterials,
+                 const fs::path& workingMaterials,
+                 const fs::path& predictiveMaterials,
                  const project_paths& projPaths)
         : summary{summaryFile}
         , test_file{rebase_from(sourceFile, projPaths.tests().repo())}
@@ -101,7 +101,7 @@ namespace sequoia::testing
 
       test_summary_path summary;
 
-      std::filesystem::path
+      fs::path
         test_file,
         working_materials,
         predictions;
@@ -194,7 +194,7 @@ namespace sequoia::testing
     }
 
     const std::string& convert(const std::string& s) { return s; }
-    std::string convert(const std::filesystem::path& p) { return p.generic_string(); }
+    std::string convert(const fs::path& p) { return p.generic_string(); }
 
     // TO DO: std::views::concat | std::ranges::to<std::vector>, once the MS STL has concat (P2542)
     [[nodiscard]]
@@ -229,7 +229,7 @@ namespace sequoia::testing
       explicit test_tracker(const project_paths& projPaths,
                             std::optional<std::size_t> id,
                             is_filtered isFiltered,
-                            std::vector<std::filesystem::path> testsLeftOut)
+                            std::vector<fs::path> testsLeftOut)
         : m_ProjPaths{projPaths}
         , m_Id{id}
         , m_Filtered{isFiltered}
@@ -298,10 +298,10 @@ namespace sequoia::testing
       std::optional<std::size_t> m_Id{};
       is_filtered m_Filtered{};
 
-      std::vector<std::filesystem::path> m_FailedTests{}, m_ExecutedTests{}, m_TestsLeftOut{};
+      std::vector<fs::path> m_FailedTests{}, m_ExecutedTests{}, m_TestsLeftOut{};
       std::vector<std::string> m_PostRunFailures{};
       std::set<test_paths, paths_comparator> m_Updateables{};
-      std::set<std::filesystem::path> m_FilesWrittenTo{};
+      std::set<fs::path> m_FilesWrittenTo{};
 
       void to_file(const test_summary_path& summaryFile, const log_summary& summary)
       {
@@ -318,7 +318,7 @@ namespace sequoia::testing
           m_FilesWrittenTo.insert(filename);
         }
 
-        std::filesystem::create_directories(filename.parent_path());
+        fs::create_directories(filename.parent_path());
 
         if(std::ofstream file{filename, mode})
         {
@@ -330,7 +330,7 @@ namespace sequoia::testing
         }
       }
 
-      void record_materials_update_failure(const std::filesystem::path& testFile, std::string_view what)
+      void record_materials_update_failure(const fs::path& testFile, std::string_view what)
       {
         m_PostRunFailures.push_back(std::format("Materials for {} not updated:\n{}", testFile.generic_string(), what));
       }
@@ -407,7 +407,7 @@ namespace sequoia::testing
     return static_cast<int>(code);
   }
 
-  individual_materials_paths set_materials(const std::filesystem::path& sourceFile,
+  individual_materials_paths set_materials(const fs::path& sourceFile,
                                            std::string_view testName,
                                            const project_paths& projPaths)
   {
@@ -438,12 +438,12 @@ namespace sequoia::testing
   }
 
 
-  void test_vessel::versioned_write(const std::filesystem::path& file, std::string_view text)
+  void test_vessel::versioned_write(const fs::path& file, std::string_view text)
   {
-    if(!text.empty() || std::filesystem::exists(file))
+    if(!text.empty() || fs::exists(file))
     {
       // An empty directory cannot be committed, so this one is made only when a file goes into it.
-      std::filesystem::create_directories(file.parent_path());
+      fs::create_directories(file.parent_path());
 
       write_to_file(file, text, std::ios_base::out | std::ios_base::binary);
     }
@@ -767,9 +767,9 @@ namespace sequoia::testing
                   }},
                   {{{"recover", {}, {},
                     [this, recovery{proj_paths().output().recovery()}](const arg_list&) {
-                      if(!std::filesystem::create_directories(recovery.dir()))
+                      if(!fs::create_directories(recovery.dir()))
                       {
-                        std::filesystem::remove(recovery.recovery_file());
+                        fs::remove(recovery.recovery_file());
                       }
                       m_RecoveryMode |= recovery_mode::recovery;
                       if(m_ConcurrencyMode == concurrency_mode::dynamic)
@@ -780,7 +780,7 @@ namespace sequoia::testing
                   }}},
                   {{{"dump", {}, {},
                     [this, recovery{proj_paths().output().recovery()}](const arg_list&) {
-                      std::filesystem::create_directories(recovery.dir());
+                      fs::create_directories(recovery.dir());
                       write_to_file(recovery.dump_file(), "", std::ios_base::out);
                       m_RecoveryMode |= recovery_mode::dump;
                       if(m_ConcurrencyMode == concurrency_mode::dynamic)
@@ -800,8 +800,8 @@ namespace sequoia::testing
                   }},
                   {{{"--check-versioned-output", {}, {},
                     [this, drift{proj_paths().output().drift()}](const arg_list&) {
-                      std::filesystem::create_directories(drift.dir());
-                      std::filesystem::remove(drift.patch_file());
+                      fs::create_directories(drift.dir());
+                      fs::remove(drift.patch_file());
                       m_VersionedOutputMode = versioned_output_mode::checked;
                     },
                     {},
@@ -916,7 +916,7 @@ namespace sequoia::testing
       if(const auto sources{m_Filter.selected_items()})
       {
         auto hint{
-          [](const std::filesystem::path& p) -> std::string {
+          [](const fs::path& p) -> std::string {
             return p.has_extension() ? "" : "    If trying to test a suite use 'test' rather than 'select'\n";
           }
         };
@@ -926,7 +926,7 @@ namespace sequoia::testing
     }
 
     auto hint{
-      [](const std::filesystem::path& p) -> std::string {
+      [](const fs::path& p) -> std::string {
         return p.has_extension() ? "" : "    'exclude' takes the source file of a test\n";
       }
     };
