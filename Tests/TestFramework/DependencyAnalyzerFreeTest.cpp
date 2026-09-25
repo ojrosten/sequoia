@@ -298,7 +298,7 @@ namespace sequoia::testing
                                : fs::path{"TestAll.dir"} / visualStudioConfiguration};
     m_ObjectExtension = ninja ? ".o" : ".obj";
     auto object{
-      [this, &objectDir](std::string_view source){ return objectDir / (std::string{source} + m_ObjectExtension); }
+      [this, &objectDir](std::string_view source){ return objectDir / std::string{source}.append(m_ObjectExtension); }
     };
 
     const auto& sequoiaSource{get_project_paths().source().repo()};
