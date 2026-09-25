@@ -1,0 +1,36 @@
+
+Running tests...
+
+type_swapped_predictions_free_test:
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 475
+	Predictions are stale
+
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
+
+	=======================================
+
+
+-----------Grand Totals-----------
+[Total Run Time: 9.58ms]
+[Execution Time: 859us]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+-----------Materials Update-----------
+	Predictions for Updating/TypeSwappedPredictionsFreeTest.cpp deleted by the update:
+	TestMaterials/Updating/TypeSwappedPredictionsFreeTest/type_swapped_predictions_free_test/Prediction/A/old.txt
+
+
+-----------Post-Run Failures-----------
+	Update of materials for Updating/TypeSwappedPredictionsFreeTest.cpp did not complete:
+	[the standard library's message, masked by io.seqpat]
+
