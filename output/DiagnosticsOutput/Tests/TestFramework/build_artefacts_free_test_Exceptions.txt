@@ -1,4 +1,4 @@
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 130
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 129
 A checksum which does not match its record's position
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 138
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 137
 Not a ninja log
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 138
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 137
 A version which is not understood
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 138
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 137
 A log cut before its version word
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 138
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 137
 A record larger than ninja ever writes
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 138
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 137
 A deps record too small to name an output
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 138
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 137
 A deps record naming an output not yet seen
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 138
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 137
 A deps record naming an input not yet seen
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 138
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 137
 A path record too small to hold its checksum
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 138
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 137
 A path record repeating a spelling
 
 Expected Exception Type:
@@ -88,7 +88,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 176
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 175
 A log which does not exist
 
 Expected Exception Type:
@@ -97,7 +97,7 @@ output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_f
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 306
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 305
 An object which bears neither source's name
 
 Expected Exception Type:
@@ -106,7 +106,7 @@ The tracker's log in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeT
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 333
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 332
 An object which two sources would each be given
 
 Expected Exception Type:
@@ -115,7 +115,7 @@ The tracker's log in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeT
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 359
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 358
 A log which is not the tracker's UTF-16
 
 Expected Exception Type:
@@ -124,7 +124,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 395
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 394
 A cache which does not exist
 
 Expected Exception Type:
@@ -133,7 +133,7 @@ cmake_cache: no CMakeCache.txt in output/TestsTemporaryData/TestFramework/BuildA
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 396
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 395
 A Ninja tree which has not been built has no log
 
 Expected Exception Type:
@@ -142,7 +142,7 @@ output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_f
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 422
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 421
 A build statement with no rule
 
 Expected Exception Type:
@@ -151,7 +151,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 466
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 465
 A log none of whose objects build.ninja names is two spellings of one tree, not an empty build
 
 Expected Exception Type:
@@ -160,25 +160,25 @@ None of the objects output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTe
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 472
-Ninja Multi-Config: a generator whose record of dependencies is not understood
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 498
+Ninja Multi-Config: a configuration with no statements
 
 Expected Exception Type:
 [std::runtime_error]
-The build in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/build was written by the Ninja Multi-Config generator, whose record of dependencies is not understood; Ninja's and Visual Studio's are
+Unable to open output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/multi_config/CMakeFiles/impl-RelWithDebInfo.ninja
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 472
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 503
 Xcode: a generator whose record of dependencies is not understood
 
 Expected Exception Type:
 [std::runtime_error]
-The build in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/build was written by the Xcode generator, whose record of dependencies is not understood; Ninja's and Visual Studio's are
+The build in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/build was written by the Xcode generator, whose record of dependencies is not understood; Ninja's, Ninja Multi-Config's and Visual Studio's are
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 476
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 506
 A cache which names no generator was not written by CMake
 
 Expected Exception Type:

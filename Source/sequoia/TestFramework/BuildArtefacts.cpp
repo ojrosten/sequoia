@@ -938,7 +938,26 @@ namespace sequoia::testing
 
   namespace
   {
-    /** The compilations of a Ninja build, from the log `.ninja_deps` and the statements in `build.ninja`.
+    /** The file of a Ninja build's statements for the executable's configuration:
+        -# Ninja: `build.ninja`;
+        -# Ninja Multi-Config: `CMakeFiles/impl-<configuration>.ninja`, the configuration being the name of the
+           directory holding the executable. `build.ninja` names no object itself: it includes the default
+           configuration's statements, which need not be the executable's.
+     */
+    [[nodiscard]]
+    fs::path ninja_statements_file(const build_tree& tree, const fs::path& executable)
+    {
+      if(tree.generator == "Ninja Multi-Config")
+      {
+        const auto configuration{executable.parent_path().filename().generic_string()};
+        return tree.build_directory / "CMakeFiles" / std::format("impl-{}.ninja", configuration);
+      }
+
+      return tree.build_directory / "build.ninja";
+    }
+
+    /** The compilations of a Ninja build, from the log `.ninja_deps` and the statements of the executable's
+        configuration.
 
         The log gives every compilation ninja has ever recorded, and is trimmed to the object files the
         build currently has, which the statements name. Each record then has its source put first among
@@ -947,17 +966,19 @@ namespace sequoia::testing
 
         \throws std::runtime_error if
         -# There is no log, nothing having been built;
+        -# The file of statements cannot be read;
         -# No record's object file is named by any statement: the log and the statements then spell one
            tree two ways, and nothing would ever be selected.
      */
     [[nodiscard]]
-    compilations ninja_compilations(const build_tree& tree)
+    compilations ninja_compilations(const build_tree& tree, const fs::path& executable)
     {
       const auto log{tree.build_directory / ".ninja_deps"};
       if(!fs::exists(log))
         throw std::runtime_error{std::format("{} has no dependency log; has anything been built?", tree.build_directory.generic_string())};
 
-      const auto sourcesByObjectFile{read_ninja_sources(tree.build_directory / "build.ninja")};
+      const auto statementsFile{ninja_statements_file(tree, executable)};
+      const auto sourcesByObjectFile{read_ninja_sources(statementsFile)};
       auto [loggedFiles, loggedRecords]{read_ninja_deps(log)};
       path_table files{std::move(loggedFiles)};
 
@@ -993,7 +1014,9 @@ namespace sequoia::testing
 
       if(records.empty() && !loggedRecords.empty())
         throw std::runtime_error{
-          std::format("None of the objects {} records is named by build.ninja; are the two spelled differently?", log.generic_string())
+          std::format("None of the objects {} records is named by {}; are the two spelled differently?",
+                      log.generic_string(),
+                      statementsFile.filename().generic_string())
         };
 
       return compilations{.files{std::move(files).release_files()}, .records{std::move(records)}};
@@ -1027,19 +1050,19 @@ namespace sequoia::testing
     }
   }
 
-  /// `Ninja Multi-Config` keeps its statements elsewhere and is not understood; nor is any generator but the two
+  /// Ninja and Ninja Multi-Config share a log; Visual Studio keeps tracker logs; no other generator is understood
   [[nodiscard]]
   compilations read_compilations(const build_tree& tree, const fs::path& executable)
   {
-    if(tree.generator == "Ninja")
-      return ninja_compilations(tree);
+    if((tree.generator == "Ninja") || (tree.generator == "Ninja Multi-Config"))
+      return ninja_compilations(tree, executable);
 
     if(tree.generator.starts_with("Visual Studio"))
       return visual_studio_compilations(tree, executable);
 
     throw std::runtime_error{
       std::format("The build in {} was written by the {} generator, whose record of dependencies is not understood; "
-                  "Ninja's and Visual Studio's are",
+                  "Ninja's, Ninja Multi-Config's and Visual Studio's are",
                   tree.build_directory.generic_string(),
                   tree.generator)
     };
