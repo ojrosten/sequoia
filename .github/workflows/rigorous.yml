@@ -185,9 +185,8 @@ on:
     - cron: '1 1 * * *'
 
 # A push to the head of an open PR into main cancels that PR's run in flight: a
-# superseded run cannot gate anything, and its audit would otherwise compare its
-# jobs against the checks of a commit it is not testing. Scheduled and dispatched
-# runs each get a group of their own, so nothing here ever cancels them.
+# superseded run gates nothing, and Windows runners are scarce. Scheduled and
+# dispatched runs each get a group of their own, so nothing here ever cancels them.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
@@ -270,9 +269,9 @@ jobs:
         with:
           fetch-depth: 1
 
-      # As in tests.yml: the job always runs, so that its required check always
-      # reports; what it does depends on the change, and any answer but `true` or
-      # `false` fails it.
+      # As in tests.yml: the job runs whatever the change, since in gate mode the
+      # audit insists on its success; what it does depends on the change, and any
+      # answer but `true` or `false` fails it.
       - name: Nothing to test
         if: env.NEEDS_TESTING != 'true'
         run: |
@@ -471,13 +470,14 @@ jobs:
   # job's result is read from `needs`, which reports `skipped` where the tick shows
   # green. In the false-negative control the columns must have FAILED.
   #
-  # On a promotion PR it also insists that every job of this run is a required
-  # check on main. Auto-merge waits on required checks only, so a column that is
-  # not required gates nothing, however red - and a column renamed in this file
-  # but not in the protection rule leaves a promotion waiting for a check that
-  # will never report.
+  # Main requires this job and none of the others, so a job missing from this
+  # job's `needs` would gate nothing, however red. The second step fails if any
+  # other job is missing. In the false-negative control this job passes on red
+  # columns, so it takes another name there: under main's required name it would
+  # satisfy main's rule for the commit it ran on, a promotion PR's head if the
+  # control was dispatched on staging.
   audit:
-    name: Every job ran as this run's mode requires
+    name: ${{ inputs.false_negative == true && 'Every column failed, as the false-negative control requires' || 'Every job ran as this run''s mode requires' }}
     needs: [staging, scope, rigorous, docs, coverage, promote]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
@@ -488,8 +488,6 @@ jobs:
       EVENT: ${{ github.event_name }}
       AHEAD: ${{ needs.staging.outputs.ahead }}
       RESULTS: ${{ toJSON(needs) }}
-      PR: ${{ github.event.pull_request.number }}
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       FALSE_NEGATIVE: ${{ inputs.false_negative == true }}
     steps:
       - name: Check each job's result against the mode
@@ -499,7 +497,9 @@ jobs:
           jq -r 'to_entries[] | "  \(.key): \(.value.result)"' <<<"$RESULTS"
 
           failed=0
+          expected=()
           expect() {
+            expected+=("$1")
             actual=$(jq -r --arg j "$1" '.[$j].result' <<<"$RESULTS")
             if [ "$actual" = "$2" ]; then
               echo "ok    $1: $actual"
@@ -521,35 +521,28 @@ jobs:
               expect docs skipped
               expect coverage skipped;;
           esac
+
+          unexpected=$(comm -23 <(jq -r 'keys[]' <<<"$RESULTS" | sort) <(printf '%s\n' "${expected[@]}" | sort))
+          if [ -n "$unexpected" ]; then
+            echo "::error::no result is expected in $mode mode of: $unexpected"; failed=1
+          fi
           exit $failed
 
-      - name: On a promotion PR, insist every job of this run is a required check
-        if: ${{ github.event_name == 'pull_request' }}
+      - name: Insist this job needs every other job of the workflow
         run: |
-          # A run whose head is no longer the PR's head has been superseded; the PR's
-          # required checks now belong to another commit, and this run gates nothing.
-          # Needed as well as cancel-in-progress, for the seconds before the
-          # cancellation lands.
-          current_head=$(gh pr view "$PR" --json headRefOid --jq .headRefOid)
-          if [ "$current_head" != "$HEAD_SHA" ]; then
-            echo "::warning::superseded: the PR's head is now $current_head, this run tested $HEAD_SHA; the new head's own run gates the PR."
-            exit 0
-          fi
-          # Only the jobs that ran: staging and promote are skipped on a PR by design.
-          # The scope job is not required, and needs no requiring: every required
-          # job needs it and fails on a missing answer, so a failed decision is red
-          # wherever it matters.
-          gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --paginate \
-              --jq '.jobs[] | select(.conclusion != "skipped") | .name' \
-            | grep -vxF 'scope / What needs testing' \
-            | sort > jobs.txt
-          gh pr checks "$PR" --required --json name --jq '.[].name' | sort > required.txt
-          echo "jobs in this run:"; sed 's/^/  /' jobs.txt
-          echo "required on the base branch:"; sed 's/^/  /' required.txt
-          missing=$(comm -23 jobs.txt required.txt)
-          if [ -n "$missing" ]; then
-            echo "::error::these jobs run on every promotion but gate nothing, because main does not require them:"
-            echo "$missing" | sed 's/^/  /'
+          # The workflow file is fetched at GITHUB_WORKFLOW_SHA, the commit this run
+          # read it from. Its jobs and this job's `needs` are compared both ways, so
+          # that a file read wrongly - no jobs, or the wrong ones - fails the step.
+          set -o pipefail
+          workflow=${GITHUB_WORKFLOW_REF#"$GITHUB_REPOSITORY/"}
+          workflow=${workflow%%@*}
+          gh api -H 'Accept: application/vnd.github.raw' "repos/$GH_REPO/contents/$workflow?ref=$GITHUB_WORKFLOW_SHA" \
+            | yq -r '.jobs | keys | .[]' | grep -vxF "$GITHUB_JOB" | sort > jobs.txt
+          jq -r 'keys[]' <<<"$RESULTS" | sort > needed.txt
+          echo "jobs of $workflow but this one:"; sed 's/^/  /' jobs.txt
+          echo "jobs this one needs:"; sed 's/^/  /' needed.txt
+          if ! diff -u needed.txt jobs.txt; then
+            echo "::error::$GITHUB_JOB must need every other job of $workflow: a job it does not need gates nothing, however red"
             exit 1
           fi
-          echo "every job of this run is required on the base branch"
+          echo "$GITHUB_JOB needs every other job of $workflow"
