@@ -405,6 +405,15 @@ namespace sequoia::testing
         [](variant_t p) -> variant_t { return +std::get<coords_t>(p);  }
       );
 
+      add_transition<coords_t>(
+        g,
+        dim_1_label::neg_one,
+        dim_1_label::zero,
+        test.report("(-1) + delta(1)"),
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) + from_underlying<disp_t>(disp_value_t(1)); },
+        std::is_unsigned_v<disp_value_t> ? inverted_ordering::yes : inverted_ordering::no
+      );
+
       if constexpr(Coordinates::has_freely_mutable_components)
       {
         add_transition<coords_t>(
@@ -412,15 +421,6 @@ namespace sequoia::testing
           dim_1_label::neg_one,
           dim_1_label::zero,
           test.report("(-1) += 1"),
-          [](variant_t v) -> variant_t { auto& p{std::get<coords_t>(v)}; auto& val{p.value()}; val += 1; return p; },
-          std::is_unsigned_v<disp_value_t> ? inverted_ordering::yes : inverted_ordering::no
-        );
-
-        add_transition<coords_t>(
-          g,
-          dim_1_label::neg_one,
-          dim_1_label::zero,
-          test.report("(-1) + 1"),
           [](variant_t v) -> variant_t { auto& p{std::get<coords_t>(v)}; auto& val{p.value()}; val += 1; return p; },
           std::is_unsigned_v<disp_value_t> ? inverted_ordering::yes : inverted_ordering::no
         );
@@ -764,7 +764,7 @@ namespace sequoia::testing
         dim_2_label::neg_one_neg_one,
         dim_2_label::zero_neg_one,
         test.report("(-1, -1) += (1, 0)"),
-        [](variant_t v) -> variant_t { return std::get<coords_t>(v) +  from_underlying<disp_t>(std::array{disp_value_t(1), disp_value_t{}}); }
+        [](variant_t v) -> variant_t { return std::get<coords_t>(v) += from_underlying<disp_t>(std::array{disp_value_t(1), disp_value_t{}}); }
      );
 
       if constexpr (has_unary_minus<Coordinates>)
