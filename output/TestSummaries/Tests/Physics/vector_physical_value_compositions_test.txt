@@ -1,2 +1,2 @@
 vector_physical_value_compositions_test
-Standard Top Level Checks:               237;  Failures:  0  [Deep checks: 4962]
+Standard Top Level Checks:               243;  Failures:  0  [Deep checks: 5133]

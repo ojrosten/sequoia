@@ -414,6 +414,15 @@ namespace sequoia::testing
         std::is_unsigned_v<disp_value_t> ? inverted_ordering::yes : inverted_ordering::no
       );
 
+      add_transition<coords_t>(
+        g,
+        dim_1_label::neg_one,
+        dim_1_label::zero,
+        test.report("(-1) += delta(1)"),
+        [](variant_t p) -> variant_t { return std::get<coords_t>(p) += from_underlying<disp_t>(disp_value_t(1)); },
+        std::is_unsigned_v<disp_value_t> ? inverted_ordering::yes : inverted_ordering::no
+      );
+
       if constexpr(Coordinates::has_freely_mutable_components)
       {
         add_transition<coords_t>(
