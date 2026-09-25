@@ -347,7 +347,9 @@ namespace sequoia::testing
           dim_1_label::zero,
           dim_1_label::zero,
           test.report("0 * unit"),
-          [](const variant_type&) -> variant_type { return from_underlying(disp_value_type{}) * frame_type{}; }
+          [](const variant_type&) -> variant_type {
+            return from_underlying(disp_value_type{}) * frame_type{};
+          }
         );
 
         add_transition<coords_type>(
@@ -365,7 +367,9 @@ namespace sequoia::testing
           dim_1_label::one,
           dim_1_label::one,
           test.report("1 * unit"),
-          [](const variant_type&) -> variant_type { return from_underlying(disp_value_type(1)) * frame_type{}; }
+          [](const variant_type&) -> variant_type {
+            return from_underlying(disp_value_type(1)) * frame_type{};
+          }
         );
 
         add_transition<coords_type>(
@@ -392,7 +396,9 @@ namespace sequoia::testing
           dim_1_label::one,
           dim_1_label::neg_one,
           test.report("-(1)"),
-          [](variant_type p) -> variant_type { return -std::get<coords_type>(p); },
+          [](variant_type p) -> variant_type {
+            return -std::get<coords_type>(p);
+          },
           std::is_unsigned_v<disp_value_type> ? inverted_ordering::yes : inverted_ordering::no
         );
       }
@@ -417,7 +423,9 @@ namespace sequoia::testing
           dim_1_label::neg_one,
           dim_1_label::one,
           test.report("- (-1)"),
-          [](variant_type p) -> variant_type { return -std::get<coords_type>(p);  },
+          [](variant_type p) -> variant_type {
+            return -std::get<coords_type>(p);
+          },
           std::is_unsigned_v<disp_value_type> ? inverted_ordering::yes : inverted_ordering::no
         );
       }
@@ -427,7 +435,9 @@ namespace sequoia::testing
         dim_1_label::neg_one,
         dim_1_label::neg_one,
         test.report("+ (-1)"),
-        [](variant_type p) -> variant_type { return +std::get<coords_type>(p);  }
+        [](variant_type p) -> variant_type {
+          return +std::get<coords_type>(p);
+        }
       );
 
       if constexpr(Coordinates::has_freely_mutable_components_v)
@@ -1000,7 +1010,9 @@ namespace sequoia::testing
           dim_2_label::neg_one_neg_one,
           dim_2_label::neg_one_neg_one,
           test.report("(-1, -1) without units"),
-          [](variant_type v) -> variant_type { return coords_type{std::get<coords_type>(v).values()}; }
+          [](variant_type v) -> variant_type {
+            return coords_type{std::get<coords_type>(v).values()};
+          }
         );
       }
     }

@@ -1647,13 +1647,19 @@ namespace sequoia::testing
       },
       {
         //  'empty'
-        make_and_check(t, t.report(""), {}),
+        make_and_check(t,
+                       t.report(""),
+                       {}),
 
         //  'node'
-        make_and_check(t, t.report(""), {{}}),
+        make_and_check(t,
+                       t.report(""),
+                       {{}}),
 
         //  'node_0'
-        make_and_check(t, t.report(""), {{edge_init_type{0, 1}, edge_init_type{0, 0}}}),
+        make_and_check(t,
+                       t.report(""),
+                       {{edge_init_type{0, 1}, edge_init_type{0, 0}}}),
 
         //  'node_0_0'
         make_and_check(t,
@@ -1666,13 +1672,24 @@ namespace sequoia::testing
                        {{edge_init_type{0, 2}, edge_init_type{0, 3}, edge_init_type{0, 0}, edge_init_type{0, 1}}}),
 
         // 'node_0_0_0_interleaved'
-        make_and_check(t, t.report(""), {{edge_init_type{0, 1}, edge_init_type{0, 0}, edge_init_type{0, 4}, edge_init_type{0, 5}, edge_init_type{0, 2}, edge_init_type{0, 3}}}),
+        make_and_check(t,
+                       t.report(""),
+                       {{edge_init_type{0, 1},
+                         edge_init_type{0, 0},
+                         edge_init_type{0, 4},
+                         edge_init_type{0, 5},
+                         edge_init_type{0, 2},
+                         edge_init_type{0, 3}}}),
 
         //  'node_node'
-        make_and_check(t, t.report(""), {{}, {}}),
+        make_and_check(t,
+                       t.report(""),
+                       {{}, {}}),
 
         //  'node_1_node_0'
-        make_and_check(t, t.report(""), {{edge_init_type{1, 0}}, {edge_init_type{0, 0}}}),
+        make_and_check(t,
+                       t.report(""),
+                       {{edge_init_type{1, 0}}, {edge_init_type{0, 0}}}),
 
         //  'node_0_1_node_0'
         make_and_check(t,
@@ -1680,10 +1697,14 @@ namespace sequoia::testing
                        {{edge_init_type{0, 1}, edge_init_type{0, 0}, edge_init_type{1, 0}}, {edge_init_type{0, 2}}}),
 
         //  'node_0_node'
-        make_and_check(t, t.report(""), {{edge_init_type{0, 1}, edge_init_type{0, 0}}, {}}),
+        make_and_check(t,
+                       t.report(""),
+                       {{edge_init_type{0, 1}, edge_init_type{0, 0}}, {}}),
 
         //  'node_node_1'
-        make_and_check(t, t.report(""), {{}, {edge_init_type{1, 1}, edge_init_type{1, 0}}}),
+        make_and_check(t,
+                       t.report(""),
+                       {{}, {edge_init_type{1, 1}, edge_init_type{1, 0}}}),
 
         // 'node_node_1_1_interleaved'
         make_and_check(t,
@@ -1691,10 +1712,27 @@ namespace sequoia::testing
                        {{}, {edge_init_type{1, 2}, edge_init_type{1, 3}, edge_init_type{1, 0}, edge_init_type{1, 1}}}),
 
         // 'node_node_1_1_1_interleaved'
-        make_and_check(t, t.report(""), {{}, {edge_init_type{1, 1}, edge_init_type{1, 0}, edge_init_type{1, 4}, edge_init_type{1, 5}, edge_init_type{1, 2}, edge_init_type{1, 3}}}),
+        make_and_check(t,
+                       t.report(""),
+                       {{},
+                        {edge_init_type{1, 1},
+                         edge_init_type{1, 0},
+                         edge_init_type{1, 4},
+                         edge_init_type{1, 5},
+                         edge_init_type{1, 2},
+                         edge_init_type{1, 3}}}),
 
         // 'node_1_node_1_1_1_0_interleaved'
-        make_and_check(t, t.report(""), {{edge_init_type{1, 4}}, {edge_init_type{1, 1}, edge_init_type{1, 0}, edge_init_type{1, 5}, edge_init_type{1, 6}, edge_init_type{0, 0}, edge_init_type{1, 2}, edge_init_type{1, 3}}}),
+        make_and_check(t,
+                       t.report(""),
+                       {{edge_init_type{1, 4}},
+                        {edge_init_type{1, 1},
+                         edge_init_type{1, 0},
+                         edge_init_type{1, 5},
+                         edge_init_type{1, 6},
+                         edge_init_type{0, 0},
+                         edge_init_type{1, 2},
+                         edge_init_type{1, 3}}}),
 
         // 'node_1_1_node_1_0_1_0_1_interleaved'
         make_and_check(t, t.report(""), {{edge_init_type{1, 4}, edge_init_type{1, 6}},
@@ -1711,13 +1749,19 @@ namespace sequoia::testing
                        {{edge_init_type{1, 1}, edge_init_type{1, 0}}, {edge_init_type{0, 1}, edge_init_type{0, 0}}}),
 
         //  'node_node_node'
-        make_and_check(t, t.report(""), {{}, {}, {}}),
+        make_and_check(t,
+                       t.report(""),
+                       {{}, {}, {}}),
 
         //  'node_1_node_0_node'
-        make_and_check(t, t.report(""), {{edge_init_type{1, 0}}, {edge_init_type{0, 0}}, {}}),
+        make_and_check(t,
+                       t.report(""),
+                       {{edge_init_type{1, 0}}, {edge_init_type{0, 0}}, {}}),
 
         //  'node_node_2_node_1'
-        make_and_check(t, t.report(""), {{}, {edge_init_type{2, 0}}, {edge_init_type{1, 0}}}),
+        make_and_check(t,
+                       t.report(""),
+                       {{}, {edge_init_type{2, 0}}, {edge_init_type{1, 0}}}),
 
         // 'node_1_node_0_2_node_1'
         make_and_check(t,
@@ -1730,7 +1774,9 @@ namespace sequoia::testing
                                               {edge_init_type{1, 1}, edge_init_type{0, 1}}}),
 
         // 'node_node_1_node'
-        make_and_check(t, t.report(""), {{}, {edge_init_type{1, 1}, edge_init_type{1, 0}}, {}}),
+        make_and_check(t,
+                       t.report(""),
+                       {{}, {edge_init_type{1, 1}, edge_init_type{1, 0}}, {}}),
 
         // 'node_1_node_0_1_node'
         make_and_check(t,

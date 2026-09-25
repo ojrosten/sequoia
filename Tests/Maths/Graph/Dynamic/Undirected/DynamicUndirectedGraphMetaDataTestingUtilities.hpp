@@ -85,15 +85,24 @@ namespace sequoia::testing
       using namespace maths;
 
       // One node
-      t.check_exception_thrown<std::out_of_range>("Target index of edge out of range", [](){ return graph_type{{edge_init_type{1, 0.5f}}}; });
+      t.check_exception_thrown<std::out_of_range>(
+        "Target index of edge out of range",
+        [](){ return graph_type{{edge_init_type{1, 0.5f}}}; }
+      );
       t.check_exception_thrown<std::logic_error>(
         "Mismatched loop",
         [](){ return graph_type{{edge_init_type{0, 0.5f}}}; }
       );
 
       // Two nodes
-      t.check_exception_thrown<std::logic_error>("Mismatched partial edges", [](){ return graph_type{{edge_init_type{1, 0.5f}}, {edge_init_type{1, -0.5f}}}; });
-      t.check_exception_thrown<std::logic_error>("Mismatched loop", [](){ return graph_type{{edge_init_type{1, 0.5f}}, {edge_init_type{0, 0.6f}, edge_init_type{1, -0.5f}}}; });
+      t.check_exception_thrown<std::logic_error>(
+        "Mismatched partial edges",
+        [](){ return graph_type{{edge_init_type{1, 0.5f}}, {edge_init_type{1, -0.5f}}}; }
+      );
+      t.check_exception_thrown<std::logic_error>(
+        "Mismatched loop",
+        [](){ return graph_type{{edge_init_type{1, 0.5f}}, {edge_init_type{0, 0.6f}, edge_init_type{1, -0.5f}}}; }
+      );
     }
 
     [[nodiscard]]

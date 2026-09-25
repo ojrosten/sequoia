@@ -700,8 +700,14 @@ namespace sequoia::testing
         // 'graph_description::nodew_1_node_0u'
         [this]() -> graph_t {
           constexpr graph_t g{edges_init_t{{edge_init_t{1}}, {edge_init_t{0, 0.2f}}}, nodes_init_t{2.1, 0.0}};
-          check(equivalence, "", g, std::pair{edges_init_t{{edge_init_t{1}}, {edge_init_t{0, 0.2f}}}, nodes_init_t{2.1, 0.0}});
-          check(equality, "", g, graph_t{edges_init_t{{edge_init_t{1}}, {edge_init_t{0, 0.2f}}}, nodes_init_t{2.1, 0.0}});
+          check(equivalence,
+                "",
+                g,
+                std::pair{edges_init_t{{edge_init_t{1}}, {edge_init_t{0, 0.2f}}}, nodes_init_t{2.1, 0.0}});
+          check(equality,
+                "",
+                g,
+                graph_t{edges_init_t{{edge_init_t{1}}, {edge_init_t{0, 0.2f}}}, nodes_init_t{2.1, 0.0}});
 
           return g;
         },
@@ -709,8 +715,14 @@ namespace sequoia::testing
         // 'graph_description::node_1u_nodew_0'
         [this]() -> graph_t {
           constexpr graph_t g{edges_init_t{{edge_init_t{1, 0.2f}}, {edge_init_t{0}}}, nodes_init_t{0.0, 2.1}};
-          check(equivalence, "", g, std::pair{edges_init_t{{edge_init_t{1, 0.2f}}, {edge_init_t{0}}}, nodes_init_t{0.0, 2.1}});
-          check(equality, "", g, graph_t{edges_init_t{{edge_init_t{1, 0.2f}}, {edge_init_t{0}}}, nodes_init_t{0.0, 2.1}});
+          check(equivalence,
+                "",
+                g,
+                std::pair{edges_init_t{{edge_init_t{1, 0.2f}}, {edge_init_t{0}}}, nodes_init_t{0.0, 2.1}});
+          check(equality,
+                "",
+                g,
+                graph_t{edges_init_t{{edge_init_t{1, 0.2f}}, {edge_init_t{0}}}, nodes_init_t{0.0, 2.1}});
 
           return g;
         }
