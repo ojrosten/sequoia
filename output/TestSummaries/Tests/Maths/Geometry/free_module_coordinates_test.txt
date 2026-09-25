@@ -1,2 +1,2 @@
 free_module_coordinates_test
-Standard Top Level Checks:               152;  Failures:  0  [Deep checks: 4912]
+Standard Top Level Checks:               156;  Failures:  0  [Deep checks: 5098]
