@@ -11,6 +11,8 @@
 
 #include "sequoia/TestFramework/FreeCheckers.hpp"
 
+#include <format>
+
 namespace sequoia::testing
 {
   struct bland

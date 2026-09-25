@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 47
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 48
 Empty string
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Equivalent type is unspecified
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 48
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 49
 Just spaces
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Equivalent type is unspecified
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 79
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 80
 A directory which does not exist
 
 Expected Exception Type:
@@ -29,7 +29,7 @@ to be appropriately set.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 84
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 85
 A directory whose name is not an identifier
 
 Expected Exception Type:
@@ -39,7 +39,7 @@ permissible namespace name. Please supply `source_folder` in the project_paths c
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 89
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 90
 A directory whose name begins with a digit
 
 Expected Exception Type:
@@ -49,7 +49,7 @@ permissible namespace name. Please supply `source_folder` in the project_paths c
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 97
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 98
 Unmatched <
 
 Expected Exception Type:
@@ -58,7 +58,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 99
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 100
 Backwards delimiters
 
 Expected Exception Type:
@@ -67,7 +67,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 101
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 102
 Missing symbol
 
 Expected Exception Type:
@@ -76,7 +76,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 103
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 104
 Missing symbol
 
 Expected Exception Type:
@@ -85,7 +85,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 208
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 209
 Plurgh.h does not exist
 
 Expected Exception Type:
@@ -95,7 +95,7 @@ Unable to locate file Plurgh.h or Plurgh.hpp or Plurgh.hxx in the source reposit
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 217
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 218
 Typo in specified class header
 
 Expected Exception Type:
