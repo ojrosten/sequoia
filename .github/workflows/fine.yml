@@ -74,8 +74,11 @@ jobs:
   # Staging requires this job and none of the others, so a job missing from this
   # job's `needs` would gate nothing, however red. The second step fails if any
   # other job is missing. The third fails unless staging's rule names this job,
-  # pinned to the app that reports it: after a rename here, or an edit to the
-  # rule, a PR would otherwise wait on a name nothing reports, or merge ungated. Same shape as rigorous's audit, without the modes.
+  # pinned to the app that reports this job, so that a rename here, or an edit to
+  # the rule, shows as a red check rather than only as a PR that waits on a name
+  # nothing reports, or merges ungated. The second and third steps run even when
+  # an earlier step fails, so each reports independently. Same shape as
+  # rigorous's audit, without the modes.
   audit:
     name: Every job ran and every job gates
     needs: [scope, fine]
@@ -98,6 +101,7 @@ jobs:
           exit $failed
 
       - name: Insist this job needs every other job of the workflow
+        if: ${{ !cancelled() }}
         run: |
           # The workflow file is fetched at GITHUB_WORKFLOW_SHA, the commit this run
           # read it from. Its jobs and this job's `needs` are compared both ways, so
@@ -117,6 +121,7 @@ jobs:
           echo "$GITHUB_JOB needs every other job of $workflow"
 
       - name: Insist staging requires this job, pinned to the app that reports it
+        if: ${{ !cancelled() }}
         env:
           CHECK_RUN_ID: ${{ job.check_run_id }}
         run: |
