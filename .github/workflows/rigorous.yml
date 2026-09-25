@@ -473,12 +473,15 @@ jobs:
   # Main requires this job and none of the others, so a job missing from this
   # job's `needs` would gate nothing, however red. The second step fails if any
   # other job is missing. The third fails unless main's rule names this job,
-  # pinned to the app that reports it: after a rename here, or an edit to the
-  # rule, a promotion would otherwise wait on a name nothing reports, or merge
-  # ungated. In the false-negative control this job passes on red columns, so it
-  # takes another name there, and the third step insists main does not require
-  # that name: if main did, the control would satisfy main's rule for the commit
-  # it ran on, a promotion PR's head if the control was dispatched on staging.
+  # pinned to the app that reports this job, so that a rename here, or an edit to
+  # the rule, shows as a red check rather than only as a promotion that waits on a
+  # name nothing reports, or merges ungated. The second and third steps run even
+  # when an earlier step fails, so each reports independently.
+  #
+  # In the false-negative control this job passes on red columns, so it takes
+  # another name there, and the third step insists main does not require that
+  # name: if main did, the control would satisfy main's rule for the commit it ran
+  # on, a promotion PR's head if the control was dispatched on staging.
   audit:
     name: ${{ inputs.false_negative == true && 'Every column failed, as the false-negative control requires' || 'Every job ran as this run''s mode requires' }}
     needs: [staging, scope, rigorous, docs, coverage, promote]
@@ -532,6 +535,7 @@ jobs:
           exit $failed
 
       - name: Insist this job needs every other job of the workflow
+        if: ${{ !cancelled() }}
         run: |
           # The workflow file is fetched at GITHUB_WORKFLOW_SHA, the commit this run
           # read it from. Its jobs and this job's `needs` are compared both ways, so
@@ -551,6 +555,7 @@ jobs:
           echo "$GITHUB_JOB needs every other job of $workflow"
 
       - name: Insist main requires this job, pinned to the app that reports it - or, in the false-negative control, does not
+        if: ${{ !cancelled() }}
         env:
           CHECK_RUN_ID: ${{ job.check_run_id }}
         run: |
@@ -570,7 +575,7 @@ jobs:
             exit 0
           fi
           if ! grep -qxF "$check" required.txt; then
-            echo "::error::main does not require '${check#* }' from app ${check%% *}: a PR would wait on a name nothing reports, or merge without this check"
+            echo "::error::main does not require '${check#* }' from app ${check%% *}: a promotion would wait on a name nothing reports, or merge without this check"
             exit 1
           fi
           echo "main requires this job, pinned to the app that reports it"
