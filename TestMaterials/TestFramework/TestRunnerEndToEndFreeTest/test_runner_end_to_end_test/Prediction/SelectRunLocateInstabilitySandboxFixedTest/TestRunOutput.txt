@@ -1,0 +1,32 @@
+
+Running tests...
+
+foo_test:
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 47]
+
+-----------Grand Totals-----------
+[Total Run Time: 8.77ms]
+[Execution Time: 8ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 47]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Running tests...
+
+foo_test:
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 47]
+
+-----------Grand Totals-----------
+[Total Run Time: 8.11ms]
+[Execution Time: 7.65ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 47]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+No instabilities detected
