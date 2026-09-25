@@ -96,7 +96,7 @@ namespace sequoia::testing
 
     void copy_sequoia(std::ostream& stream, const project_paths& parentProjectPaths, const project_data& data)
     {
-      const std::filesystem::path seqLocation{dependencies_paths{data.project_root}.sequoia_root()};
+      const fs::path seqLocation{dependencies_paths{data.project_root}.sequoia_root()};
       const auto parentSequoiaRoot{
           [&parentProjectPaths](){
             const auto sequoiaAsDependency{parentProjectPaths.dependencies().sequoia_root()};
@@ -183,7 +183,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  build_paths make_new_build_paths(const std::filesystem::path& projectRoot, const build_paths& parentBuildPaths)
+  build_paths make_new_build_paths(const fs::path& projectRoot, const build_paths& parentBuildPaths)
   {
     if(!fs::exists(parentBuildPaths.cmake_cache_dir()))
       throw std::logic_error{"init_project: No CMakeCache directory found"};

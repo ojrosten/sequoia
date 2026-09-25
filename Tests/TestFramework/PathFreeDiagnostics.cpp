@@ -17,7 +17,7 @@ namespace sequoia::testing
     struct dummy_file_comparer
     {
       template<test_mode Mode>
-      void operator()(test_logger<Mode>&, const std::filesystem::path&, const std::filesystem::path&) const
+      void operator()(test_logger<Mode>&, const fs::path&, const fs::path&) const
       {}
     };
 
@@ -29,7 +29,7 @@ namespace sequoia::testing
     const general_weak_equivalence_check_t<bespoke_file_checker_t> bespoke_path_weak_equivalence{bespoke_file_checker};
   }
 
-  log_summary& postprocess(log_summary& summary, const std::filesystem::path& projectRoot)
+  log_summary& postprocess(log_summary& summary, const fs::path& projectRoot)
   {
     std::string updatedOutput{summary.diagnostics_output()};
 
@@ -41,7 +41,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path path_false_negative_free_diagnostics::source_file()
+  fs::path path_false_negative_free_diagnostics::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -133,7 +133,7 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  std::filesystem::path path_false_positive_free_diagnostics::source_file()
+  fs::path path_false_positive_free_diagnostics::source_file()
   {
     return std::source_location::current().file_name();
   }

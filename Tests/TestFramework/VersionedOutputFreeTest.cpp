@@ -17,9 +17,10 @@
 namespace sequoia::testing
 {
   using namespace runtime;
+  namespace fs = std::filesystem;
 
   [[nodiscard]]
-  std::filesystem::path versioned_output_free_test::source_file()
+  fs::path versioned_output_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -35,8 +36,6 @@ namespace sequoia::testing
 
   void versioned_output_free_test::test_comparisons()
   {
-    namespace fs = std::filesystem;
-
     auto check_differences{
       [this](std::string_view description,
              const versioned_output_differences& differences,
@@ -69,8 +68,6 @@ namespace sequoia::testing
 
   void versioned_output_free_test::test_reporting()
   {
-    namespace fs = std::filesystem;
-
     check(equality, "Nothing to report", to_string(versioned_output_differences{}), std::string{});
 
     // `fs::path{"Sub"} / "b.txt"` carries the platform's separator, which is what `fs::relative`
@@ -88,8 +85,6 @@ namespace sequoia::testing
 
   void versioned_output_free_test::test_patch()
   {
-    namespace fs = std::filesystem;
-
     // The patch is git's own unified format, so each expectation here is what `git diff` prints
     // for the same change, but for two things: the hunk spans the whole file rather than the least
     // of it, and there is no `index` line, which is why an empty file added or removed is a header
@@ -198,8 +193,6 @@ namespace sequoia::testing
 
   void versioned_output_free_test::test_snapshot()
   {
-    namespace fs = std::filesystem;
-
     const auto root{working_materials()};
 
     // Written here rather than committed as materials, since dot-prefixed names are gitignored
@@ -233,8 +226,6 @@ namespace sequoia::testing
     // The claim the patch exists for: applied by git to the tree it was taken from, the tree
     // becomes the second snapshot, byte for byte. The tree is the one test_snapshot left, so it
     // carries a carriage return and a hidden file, and every kind of change is made to it.
-
-    namespace fs = std::filesystem;
 
     const auto root{working_materials()};
     const auto before{take_versioned_output_snapshot(output_paths{root})};

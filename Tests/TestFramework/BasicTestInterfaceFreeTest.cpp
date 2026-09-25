@@ -41,13 +41,13 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path basic_test_interface_free_test::source_file()
+  fs::path basic_test_interface_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }
 
   [[nodiscard]]
-  std::filesystem::path basic_test_interface_free_test::fake_project() const
+  fs::path basic_test_interface_free_test::fake_project() const
   {
     return working_materials() /= "FakeProject";
   }
