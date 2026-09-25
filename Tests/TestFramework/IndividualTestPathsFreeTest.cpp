@@ -62,7 +62,21 @@ namespace sequoia::testing
         test_summary_path{fs::path{"Tests/Foo.cpp"}, "foo_test", projPaths, std::nullopt}.file_path(),
         projPaths.output().test_summaries() / "Tests" / "foo_test.txt"
       );
+
+      check(
+        equality,
+        reporter{"Execution record, beneath the build tree's records"},
+        test_execution_record_path{working_materials() / "Tests" / "Foo.cpp", "foo_test", projPaths}.file_path(),
+        projPaths.output().dir() / "ExecutionRecords" / "CMade" / "Tests" / "foo_test.txt"
+      );
     }
+
+    check(
+      equality,
+      reporter{"No execution record without a build tree"},
+      test_execution_record_path{"Foo.cpp", "foo_test", project_paths{}}.file_path(),
+      fs::path{}
+    );
   }
 
   void individual_test_paths_free_test::test_project_folder_deduction()

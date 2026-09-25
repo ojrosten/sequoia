@@ -453,7 +453,8 @@ namespace sequoia::testing
                                      const std::chrono::system_clock::time_point start,
                                      const std::optional<log_summary::duration> duration)
   {
-    if(record.empty()) return;
+    if(record.empty())
+      return;
 
     std::error_code error{};
     std::filesystem::create_directories(record.parent_path(), error);

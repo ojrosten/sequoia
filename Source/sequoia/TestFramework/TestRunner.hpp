@@ -178,9 +178,9 @@ namespace sequoia::testing
     /** \brief Overwrites a test's execution record: its start, and its duration once it has one.
 
         Nothing is written for an empty path. A record which cannot be written is skipped rather
-        than reported: nothing in a run depends on it, and the start is written outside the handler
-        which turns a test's exceptions into critical failures, where a throw would end a
-        concurrent run.
+        than reported: nothing in a run depends on the record, and the start is written outside the
+        handler that turns a test's exceptions into critical failures, so a throw from here would
+        end a concurrent run.
      */
     static void record_execution(const std::filesystem::path& record,
                                  std::chrono::system_clock::time_point start,

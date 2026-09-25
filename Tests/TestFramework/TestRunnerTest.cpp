@@ -413,12 +413,14 @@ namespace sequoia::testing
       std::vector<std::string> heads{};
       std::ifstream file{record};
       for(std::string line{}; std::getline(file, line);)
+      {
         heads.push_back(line.substr(0, line.find(' ')));
+      }
 
       return heads;
     }
 
-    /// Reads its own execution record while it executes, which must name its start and no duration
+    /// Reads its own execution record during execution; the record must then name the start and no duration
     class record_reading_free_test final : public free_test
     {
     public:
@@ -808,7 +810,7 @@ namespace sequoia::testing
                                                   .common_includes{"TestShared/SharedIncludes.hpp"}};
 
     const project_paths projPaths{args.size(), args.get(), customization};
-    fs::remove_all(projPaths.output().execution_records(projPaths.build().dir(), projPaths.build().executable_dir()));
+    fs::remove_all(projPaths.execution_records());
 
     test_runner runner{args.size(), args.get(), "Oliver J. Rosten", "  ", customization, outputStream};
 

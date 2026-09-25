@@ -156,9 +156,7 @@ namespace sequoia::testing
                                                          std::string_view testName,
                                                          const project_paths& projectPaths)
   {
-    const auto& build{projectPaths.build()};
-    const auto records{projectPaths.output().execution_records(build.dir(), build.executable_dir())};
-    if(!records.empty())
+    if(const auto records{projectPaths.execution_records()}; !records.empty())
       m_Record = test_output_directory(sourceFile, records, projectPaths) / fs::path{testName}.concat(".txt");
   }
 }

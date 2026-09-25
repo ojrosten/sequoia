@@ -613,6 +613,9 @@ namespace sequoia::testing
     prune_paths prune() const;
 
     [[nodiscard]]
+    std::filesystem::path execution_records() const;
+
+    [[nodiscard]]
     friend bool operator==(const project_paths&, const project_paths&) noexcept = default;
   private:
     discoverable_paths   m_Discovered;

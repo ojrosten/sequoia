@@ -380,7 +380,8 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path output_paths::execution_records(const fs::path& buildRoot, const fs::path& buildDir) const
   {
-    if(buildDir.empty()) return {};
+    if(buildDir.empty())
+      return {};
 
     return (dir() / "ExecutionRecords") /= fs::relative(buildDir, buildRoot);
   }
@@ -409,5 +410,11 @@ namespace sequoia::testing
   prune_paths project_paths::prune() const
   {
     return output().prune(build().dir(), build().executable_dir());
+  }
+
+  [[nodiscard]]
+  fs::path project_paths::execution_records() const
+  {
+    return output().execution_records(build().dir(), build().executable_dir());
   }
 }
