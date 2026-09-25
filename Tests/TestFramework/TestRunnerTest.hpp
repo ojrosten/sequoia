@@ -43,6 +43,8 @@ namespace sequoia::testing
 
     void test_throwing_tests();
 
+    void test_execution_records();
+
     void test_prune_basic_output();
 
     void test_prune_with_changed_toolchain();

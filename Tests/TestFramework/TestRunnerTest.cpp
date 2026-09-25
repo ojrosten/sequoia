@@ -406,6 +406,58 @@ namespace sequoia::testing
       };
     }
 
+    /// The first word of each line of a test's execution record: `started`, then `duration` once the test has finished
+    [[nodiscard]]
+    std::vector<std::string> execution_record_line_heads(const fs::path& record)
+    {
+      std::vector<std::string> heads{};
+      std::ifstream file{record};
+      for(std::string line{}; std::getline(file, line);)
+        heads.push_back(line.substr(0, line.find(' ')));
+
+      return heads;
+    }
+
+    /// Reads its own execution record while it executes, which must name its start and no duration
+    class record_reading_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<record_reading_free_test>();
+      }
+
+      void run_tests()
+      {
+        const test_execution_record_path record{source_file(), name(), get_project_paths()};
+        check(equality,
+              "While a test executes, its record names its start and no duration",
+              execution_record_line_heads(record.file_path()),
+              std::vector<std::string>{"started"});
+      }
+    };
+
+    /// An exception escapes the body of this test, rather than being caught by a check
+    class escaping_exception_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<escaping_exception_free_test>();
+      }
+
+      void run_tests()
+      {
+        throw std::runtime_error{"Escapes the test body"};
+      }
+    };
+
     test_runner make_failing_suite(commandline_arguments args, std::stringstream& outputStream)
     {
       test_runner runner{args.size(),
@@ -438,6 +490,7 @@ namespace sequoia::testing
     test_verbose_output();
     test_serial_verbose_output();
     test_throwing_tests();
+    test_execution_records();
     test_filtered_suites();
     test_prune_basic_output();
     test_prune_with_changed_toolchain();
@@ -739,6 +792,45 @@ namespace sequoia::testing
     fs::copy(fake_project() / "output/DiagnosticsOutput/Tests", diagnosticsDir);
 
     check(equivalence, "Exception Output", predictive_materials() / "ThrowingDiagnostics", diagnosticsDir);
+  }
+
+  /** Every executed test's record ends with its start and its duration. The fake tests tell the
+     mechanism from its rivals: `record_reading_free_test` sees its record while it executes, which a
+     start written only at the end would not produce; `escaping_exception_free_test` throws out of its
+     body, which a duration written only on normal completion would miss. The records left by earlier
+     runs are removed first, so none of them can stand in for this run's.
+   */
+  void test_runner_test::test_execution_records()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+    const project_paths::customizer customization{.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                                                  .common_includes{"TestShared/SharedIncludes.hpp"}};
+
+    const project_paths projPaths{args.size(), args.get(), customization};
+    fs::remove_all(projPaths.output().execution_records(projPaths.build().dir(), projPaths.build().executable_dir()));
+
+    test_runner runner{args.size(), args.get(), "Oliver J. Rosten", "  ", customization, outputStream};
+
+    runner.register_test<record_reading_free_test>();
+    runner.register_test<escaping_exception_free_test>();
+
+    check(equality, "Execution records return code", runner.execute(), return_code::critical_failures);
+
+    const test_execution_record_path
+      passingRecord{record_reading_free_test::source_file(),     test_name<record_reading_free_test>(),     projPaths},
+      throwingRecord{escaping_exception_free_test::source_file(), test_name<escaping_exception_free_test>(), projPaths};
+
+    const std::vector<std::string> finishedRecordHeads{"started", "duration"};
+    check(equality,
+          "The record of a test which passed names its start and its duration",
+          execution_record_line_heads(passingRecord.file_path()),
+          finishedRecordHeads);
+
+    check(equality,
+          "The record of a test whose body threw names its start and its duration",
+          execution_record_line_heads(throwingRecord.file_path()),
+          finishedRecordHeads);
   }
 
   void test_runner_test::test_filtered_suites()

@@ -492,6 +492,14 @@ namespace sequoia::testing
       return {dir(), buildRoot, buildDir};
     }
 
+    /** \brief The directory holding each test's record of its last execution, one per build tree:
+               durations differ severalfold between configurations, so a record is meaningful only
+               for the build which wrote it. Empty when `buildDir` is.
+     */
+    [[nodiscard]]
+    std::filesystem::path execution_records(const std::filesystem::path& buildRoot,
+                                            const std::filesystem::path& buildDir) const;
+
     [[nodiscard]]
     friend bool operator==(const output_paths&, const output_paths&) noexcept = default;
   private:

@@ -449,6 +449,21 @@ namespace sequoia::testing
     }
   }
 
+  void test_vessel::record_execution(const std::filesystem::path& record,
+                                     const std::chrono::system_clock::time_point start,
+                                     const std::optional<log_summary::duration> duration)
+  {
+    if(record.empty()) return;
+
+    std::error_code error{};
+    std::filesystem::create_directories(record.parent_path(), error);
+
+    std::ofstream file{record, std::ios_base::out | std::ios_base::trunc};
+    file << std::format("started {:%FT%TZ}\n", std::chrono::floor<std::chrono::milliseconds>(start));
+    if(duration)
+      file << std::format("duration {}\n", std::chrono::duration_cast<std::chrono::milliseconds>(*duration));
+  }
+
   //=========================================== test_runner ===========================================//
 
   //===================================== test_filter =====================================//

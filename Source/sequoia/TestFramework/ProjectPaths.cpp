@@ -377,6 +377,14 @@ namespace sequoia::testing
     return tests_temporary_data(projectRoot) /= "InstabilityAnalysis";
   }
 
+  [[nodiscard]]
+  fs::path output_paths::execution_records(const fs::path& buildRoot, const fs::path& buildDir) const
+  {
+    if(buildDir.empty()) return {};
+
+    return (dir() / "ExecutionRecords") /= fs::relative(buildDir, buildRoot);
+  }
+
   //===================================== project_paths =====================================//
 
   project_paths::project_paths(int argc, char** argv, const customizer& customization)

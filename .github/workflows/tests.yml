@@ -617,6 +617,29 @@ jobs:
               echo "ok    no drift check, so no patch";;
           esac
 
+      # Every test writes an execution record: its start when it begins, then its
+      # duration too when it finishes, whether or not its body threw. A record
+      # with no duration therefore marks a test that was executing when the run
+      # ended - one that hung, or brought the process down. Listed here so that a
+      # timed-out run names the test in its log; the records themselves go into
+      # the artifact below. The names are paths a fork's PR controls, so they are
+      # printed with workflow commands stopped.
+      - name: Name the tests that started and never finished
+        if: always()
+        run: |
+          records=output/ExecutionRecords
+          [ -d "$records" ] || { echo "no execution records: the suite did not start"; exit 0; }
+          unfinished=$(find "$records" -type f -name '*.txt' -exec grep -L '^duration' {} + || true)
+          if [ -z "$unfinished" ]; then
+            echo "every test that started also finished"
+          else
+            echo "::warning::tests which started and never finished - hung, or brought the process down; listed below"
+            token=$(openssl rand -hex 16)
+            echo "::stop-commands::$token"
+            echo "$unfinished" | sed "s|^$records/|  |; s|\.txt$||"
+            echo "::$token::"
+          fi
+
       # The patch, if there is one, and the logs. Not the versioned trees
       # themselves: what a person would have compared them against is exactly
       # what the patch holds, without the megabytes that did not move.
@@ -631,6 +654,7 @@ jobs:
           name: ${{ matrix.build }}-drift
           path: |
             output/Drift/
+            output/ExecutionRecords/
             output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/WorkingCopy/InitOutput/
             run-log/
           if-no-files-found: warn

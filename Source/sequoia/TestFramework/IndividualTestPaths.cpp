@@ -144,9 +144,21 @@ namespace sequoia::testing
     , m_CaughtExceptions{versioned_diagnostics(source, testName, projPaths, mode, "Exceptions", platform)}
   {}
 
-  //===================================== individual_diagnostics_paths =====================================//
+  //===================================== test_summary_path =====================================//
 
   test_summary_path::test_summary_path(const fs::path& sourceFile, std::string_view testName, const project_paths& projectPaths, const std::optional<std::string>& summaryDiscriminator)
     : m_Summary{test_summary_filename(sourceFile, testName, projectPaths, summaryDiscriminator)}
   {}
+
+  //===================================== test_execution_record_path =====================================//
+
+  test_execution_record_path::test_execution_record_path(const fs::path& sourceFile,
+                                                         std::string_view testName,
+                                                         const project_paths& projectPaths)
+  {
+    const auto& build{projectPaths.build()};
+    const auto records{projectPaths.output().execution_records(build.dir(), build.executable_dir())};
+    if(!records.empty())
+      m_Record = test_output_directory(sourceFile, records, projectPaths) / fs::path{testName}.concat(".txt");
+  }
 }

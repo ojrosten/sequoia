@@ -175,6 +175,17 @@ namespace sequoia::testing
   private:
     static void versioned_write(const std::filesystem::path& file, std::string_view text);
 
+    /** \brief Overwrites a test's execution record: its start, and its duration once it has one.
+
+        Nothing is written for an empty path. A record which cannot be written is skipped rather
+        than reported: nothing in a run depends on it, and the start is written outside the handler
+        which turns a test's exceptions into critical failures, where a throw would end a
+        concurrent run.
+     */
+    static void record_execution(const std::filesystem::path& record,
+                                 std::chrono::system_clock::time_point start,
+                                 std::optional<log_summary::duration> duration);
+
     struct soul
     {
       virtual ~soul() = default;
@@ -230,6 +241,9 @@ namespace sequoia::testing
       [[nodiscard]]
       log_summary execute(std::optional<std::size_t> index) final
       {
+        const auto start{std::chrono::system_clock::now()};
+        record_execution(m_ExecutionRecord.file_path(), start, std::nullopt);
+
         const timer t{};
 
         try
@@ -247,7 +261,10 @@ namespace sequoia::testing
 
         m_Test.write_instability_analysis_output(m_Test.source_file(), index);
 
-        return write_versioned_output(t);
+        auto summary{write_versioned_output(t)};
+        record_execution(m_ExecutionRecord.file_path(), start, summary.execution_time());
+
+        return summary;
       }
 
       void reset(const project_paths& projPaths) final
@@ -267,6 +284,8 @@ namespace sequoia::testing
                       make_active_recovery_paths(mode, projPaths),
                       get_output_discriminator<Test>(cache),
                       get_reduction_discriminator<Test>(cache)};
+
+        m_ExecutionRecord = test_execution_record_path{source, m_Name, projPaths};
       }
     private:
       static constexpr std::string_view m_Name{test_name<Test>()};
@@ -285,6 +304,7 @@ namespace sequoia::testing
       }
 
       Test m_Test;
+      test_execution_record_path m_ExecutionRecord{};
     };
 
     enum class parallelizable_candidate : bool { no, yes };

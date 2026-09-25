@@ -101,4 +101,29 @@ namespace sequoia::testing
   private:
     std::filesystem::path m_Summary;
   };
+
+  /** \brief Where a test records its last execution: when it started and, once it has finished,
+             how long it took.
+
+      A record naming a start and no duration marks a test that was executing when its run ended:
+      one which hung, or which brought the process down. The file is unversioned, and lives beneath
+      `output_paths::execution_records`, keyed on the build tree. The path is empty when the build
+      tree is unknown.
+   */
+  class test_execution_record_path {
+  public:
+    test_execution_record_path() = default;
+
+    test_execution_record_path(const std::filesystem::path& sourceFile,
+                               std::string_view testName,
+                               const project_paths& projectPaths);
+
+    [[nodiscard]]
+    const std::filesystem::path& file_path() const noexcept { return m_Record; }
+
+    [[nodiscard]]
+    friend bool operator==(const test_execution_record_path&, const test_execution_record_path&) noexcept = default;
+  private:
+    std::filesystem::path m_Record;
+  };
 }
