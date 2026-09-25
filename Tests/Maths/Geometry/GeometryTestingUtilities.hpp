@@ -221,7 +221,7 @@ namespace sequoia::testing
         add_dim_1_free_mutations(g, test);
       }
 
-      if constexpr(std::constructible_from<coords_t, disp_value_t, disp_value_t>)
+      if constexpr(std::constructible_from<coords_t, disp_value_t>)
       {
         add_dim_1_no_unit_construction(g, test);
       }
@@ -660,14 +660,46 @@ namespace sequoia::testing
 
     static void add_dim_1_no_unit_construction(maths::network auto& g, regular_test& test)
     {
-      // (0) --> (1)
-      add_transition<coords_t>(
-        g,
-        dim_1_label::zero,
-        dim_1_label::one,
-        test.report("(0) +  (1)"),
-        [&](variant_t p) -> variant_t { return std::get<coords_t>(p) +  from_underlying<disp_t>(disp_value_t(1)); }
-      );
+      if constexpr(!maths::is_non_negative_orthant_v<space_t>)
+      {
+        // (-1) --> (-1)
+
+        add_transition<coords_t>(
+          g,
+          dim_1_label::neg_one,
+          dim_1_label::neg_one,
+          test.report("(-1) without units, from value()"),
+          [](variant_t v) -> variant_t { return coords_t{std::get<coords_t>(v).value()}; }
+        );
+
+        add_transition<coords_t>(
+          g,
+          dim_1_label::neg_one,
+          dim_1_label::neg_one,
+          test.report("(-1) without units, from values()"),
+          [](variant_t v) -> variant_t { return coords_t{std::get<coords_t>(v).values()}; }
+        );
+      }
+      else
+      {
+        // (1) --> (1)
+
+        add_transition<coords_t>(
+          g,
+          dim_1_label::one,
+          dim_1_label::one,
+          test.report("(1) without units, from value()"),
+          [](variant_t v) -> variant_t { return coords_t{std::get<coords_t>(v).value()}; }
+        );
+
+        add_transition<coords_t>(
+          g,
+          dim_1_label::one,
+          dim_1_label::one,
+          test.report("(1) without units, from values()"),
+          [](variant_t v) -> variant_t { return coords_t{std::get<coords_t>(v).values()}; }
+        );
+      }
     }
 
     [[nodiscard]]
@@ -958,7 +990,7 @@ namespace sequoia::testing
           g,
           dim_2_label::neg_one_neg_one,
           dim_2_label::neg_one_neg_one,
-          test.report("(-1, -1) without units"),
+          test.report("(-1, -1) without units, from elements"),
           [](variant_t v) -> variant_t {
             auto& p{std::get<coords_t>(v)};
             return coords_t{p[0], p[1]};
@@ -969,7 +1001,7 @@ namespace sequoia::testing
           g,
           dim_2_label::neg_one_neg_one,
           dim_2_label::neg_one_neg_one,
-          test.report("(-1, -1) without units"),
+          test.report("(-1, -1) without units, from values()"),
           [](variant_t v) -> variant_t { return coords_t{std::get<coords_t>(v).values()}; }
         );
       }
