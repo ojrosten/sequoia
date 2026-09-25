@@ -377,7 +377,7 @@ namespace sequoia::testing
     return std::string{"\""}.append(stringify(outputFile)).append("\"");
   }
 
-  template<invocable_exact_r<fs::path, fs::path> WhenAbsent, std::invocable<std::string&> FileTransformer>
+  template<invocable_exact_r<std::filesystem::path, std::filesystem::path> WhenAbsent, std::invocable<std::string&> FileTransformer>
   void nascent_test_base::finalize(WhenAbsent fn,
                                    const std::vector<std::string>& stubs,
                                    const std::vector<std::string>& testClasses,
