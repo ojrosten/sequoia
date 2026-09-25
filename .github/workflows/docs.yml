@@ -19,10 +19,24 @@ jobs:
         with:
           fetch-depth: 1
 
+      # The job always runs, so that its check always reports: staging and main
+      # both require it. Only the steps below depend on the change, and the action
+      # says why.
+      - name: Is there anything to document
+        id: scope
+        uses: ./.github/actions/needs-testing
+        with:
+          check: documentation
+
+      - name: Nothing to document
+        if: steps.scope.outputs.needs-testing != 'true'
+        run: echo "Nothing to document; the step summary says why."
+
       # USE_MATHJAX is off, so formulas go through LaTeX and then Ghostscript.
       # Missing either leaves every formula silently wrong, which is the failure
       # this job exists to catch.
       - name: Install doxygen
+        if: steps.scope.outputs.needs-testing == 'true'
         run: |
           # The hosted image ships vendor repositories - Chrome and Microsoft - which
           # nothing here installs from. A bad index served by one of them fails the
@@ -56,6 +70,7 @@ jobs:
       # WARN_IF_UNDOCUMENTED is off: per-file documentation is in progress, and
       # those notices outnumber real defects by three orders of magnitude.
       - name: Generate, into a directory nobody keeps
+        if: steps.scope.outputs.needs-testing == 'true'
         working-directory: docs/config
         run: |
           out="$RUNNER_TEMP/doxygen"
@@ -76,7 +91,7 @@ jobs:
       # documentation which is wrong, not documentation which is absent - absence
       # is excluded above.
       - name: Fail on any documentation defect
-        if: always()
+        if: ${{ always() && steps.scope.outputs.needs-testing == 'true' }}
         run: |
           log="$DOXY_LOG"
           [ -f "$log" ] || { echo "::error::doxygen produced no warning log"; exit 1; }
@@ -97,7 +112,7 @@ jobs:
           echo "No documentation defects."
 
       - name: Upload the warning log
-        if: always()
+        if: ${{ always() && steps.scope.outputs.needs-testing == 'true' }}
         uses: actions/upload-artifact@v7
         with:
           name: doxygen-warnings-${{ github.job }}

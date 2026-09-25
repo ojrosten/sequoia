@@ -160,12 +160,12 @@ name: rigorous
 # above come from three of them. So a sharing violation on Windows after
 # 2026-09-11, in whichever tier, is evidence against the fix rather than a flake
 # to re-run.
+#
+# No path filter: see .github/actions/needs-testing for why, and for how a
+# column with nothing to test still reports.
 on:
   pull_request:
     branches: [main]
-    paths-ignore:
-      - 'docs/**'
-      - 'coverage_reports/**'
   workflow_dispatch:
     inputs:
       false_negative:
@@ -259,7 +259,20 @@ jobs:
         with:
           fetch-depth: 1
 
+      # As in tests.yml: the job always runs, so that its required check always
+      # reports, and what it does depends on the change.
+      - name: Is there anything to test
+        id: scope
+        uses: ./.github/actions/needs-testing
+        with:
+          check: suite
+
+      - name: Nothing to test
+        if: steps.scope.outputs.needs-testing != 'true'
+        run: echo "Nothing to test; the step summary says why."
+
       - name: Install the toolchain
+        if: steps.scope.outputs.needs-testing == 'true'
         run: |
           # The hosted image ships vendor repositories - Chrome and Microsoft - which
           # nothing here installs from. A bad index served by one of them fails the
@@ -310,12 +323,14 @@ jobs:
           "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin/cmake" --version | head -1
 
       - name: Give git an identity
+        if: steps.scope.outputs.needs-testing == 'true'
         run: |
           git config --global user.name "sequoia CI"
           git config --global user.email "ci@example.invalid"
           git config --global init.defaultBranch trunk
 
       - name: Configure and build
+        if: steps.scope.outputs.needs-testing == 'true'
         working-directory: TestAll
         run: |
           cmake --preset gcc-env-coverage
@@ -324,10 +339,11 @@ jobs:
       # The script runs the suite through ctest itself, so there is no separate run
       # step. Utilities.cmake registers the test with --serial under CODE_COVERAGE.
       - name: Measure
+        if: steps.scope.outputs.needs-testing == 'true'
         run: ./scripts/generate_coverage_report.sh build/TestAll/gcc-env-coverage
 
       - name: Report
-        if: always()
+        if: ${{ always() && steps.scope.outputs.needs-testing == 'true' }}
         run: |
           info=build/TestAll/gcc-env-coverage/coverage.info
           [ -f "$info" ] || { echo "::error::no tracefile at $info"; exit 1; }
@@ -342,7 +358,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload the tracefile and the report
-        if: always()
+        if: ${{ always() && steps.scope.outputs.needs-testing == 'true' }}
         uses: actions/upload-artifact@v7
         with:
           name: coverage
@@ -501,12 +517,10 @@ jobs:
           # A run whose head is no longer the PR's head has been superseded; the PR's
           # required checks now belong to another commit, and this run gates nothing.
           # Needed as well as cancel-in-progress, for the seconds before the
-          # cancellation lands and for a push matched by paths-ignore, which moves
-          # the head without starting a run - in which case nothing else will point
-          # at the PR now waiting on checks that never report (roadmap item 145).
+          # cancellation lands.
           current_head=$(gh pr view "$PR" --json headRefOid --jq .headRefOid)
           if [ "$current_head" != "$HEAD_SHA" ]; then
-            echo "::warning::superseded: the PR's head is now $current_head, this run tested $HEAD_SHA. If no run appears for the new head, the PR is waiting on checks that will never report - see roadmap item 145."
+            echo "::warning::superseded: the PR's head is now $current_head, this run tested $HEAD_SHA; the new head's own run gates the PR."
             exit 0
           fi
           # Only the jobs that ran: staging and promote are skipped on a PR by design.
