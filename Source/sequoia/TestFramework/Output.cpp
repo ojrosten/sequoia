@@ -288,7 +288,7 @@ namespace sequoia::testing
     if(s.empty()) return "";
 
     constexpr std::string_view emph{"--"};
-    return std::string{emph}.append(s).append(emph);
+    return std::format("{}{}{}", emph, s, emph);
   }
 
   [[nodiscard]]
@@ -297,7 +297,7 @@ namespace sequoia::testing
                                 const uncaught_exception_info& info,
                                 std::string_view exceptionMessage)
   {
-    auto mess{append_lines(std::string{"Error -- "}.append(tag).append(" Exception:"), exceptionMessage).append("\n")};
+    auto mess{append_lines(std::format("Error -- {} Exception:", tag), exceptionMessage).append("\n")};
 
     const auto& currentMessage{info.top_level_message};
     if(!currentMessage.empty())
@@ -370,7 +370,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string report_line(std::string_view message, const fs::path& repository, const std::source_location loc)
   {
-    return append_lines(path_for_reporting(loc.file_name(), repository).generic_string().append(", Line ").append(std::to_string(loc.line())), message).append("\n");
+    return append_lines(std::format("{}, Line {}", path_for_reporting(loc.file_name(), repository).generic_string(), loc.line()), message).append("\n");
   }
 
   [[nodiscard]]

@@ -43,11 +43,11 @@ namespace sequoia::testing
     if(duration)
     {
       const auto [dur, unit]{stringify_duration(*duration)};
-      mess.append("[Total Run Time: ").append(dur).append(unit).append("]\n");
+      mess.append(std::format("[Total Run Time: {}{}]\n", dur, unit));
     }
 
     const auto[dur, unit]{stringify_duration(log.execution_time())};
-    mess.append("[Execution Time: ").append(dur).append(unit).append("]\n");
+    mess.append(std::format("[Execution Time: {}{}]\n", dur, unit));
 
     return mess;
   }
@@ -90,7 +90,7 @@ namespace sequoia::testing
 
     for(std::size_t i{}; i<entries; ++i)
     {
-      summaries[i].append(checkNums[i] + ";").append(len, ' ').append("Failures: ");
+      summaries[i].append(std::format("{};{:{}}Failures: ", checkNums[i], "", len));
     }
 
     std::array<std::string, entries> failures{
@@ -110,7 +110,7 @@ namespace sequoia::testing
     }
 
     if(log.standard_top_level_checks())
-      summaries.front().append("  [Deep checks: " + std::to_string(log.standard_deep_checks()) + "]");
+      summaries.front().append(std::format("  [Deep checks: {}]", log.standard_deep_checks()));
 
     const std::string name{log.name().empty() ? "" : std::string{log.name()} += namesuffix};
     std::string summary{sequoia::indent(name, ind_0)};
@@ -147,9 +147,7 @@ namespace sequoia::testing
 
     if(log.critical_failures())
     {
-      summary.append("\n******  Critical Failures:  ")
-        .append(std::to_string(log.critical_failures()))
-        .append("  ******\n\n");
+      summary.append(std::format("\n******  Critical Failures:  {}  ******\n\n", log.critical_failures()));
     }
 
     if((verbosity & summary_detail::failure_messages) == summary_detail::failure_messages)

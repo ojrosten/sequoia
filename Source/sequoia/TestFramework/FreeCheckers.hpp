@@ -345,7 +345,7 @@ namespace sequoia::testing
     }
     catch(const std::exception& e)
     {
-      std::string msg{append_lines("Unexpected exception thrown (caught by std::exception&):", "\"").append(e.what()).append("\"\n")};
+      std::string msg{append_lines("Unexpected exception thrown (caught by std::exception&):", std::format("\"{}\"\n", e.what()))};
 
       sentry.log_failure(msg);
       return false;

@@ -16,6 +16,7 @@
 #include "sequoia/TestFramework/FileEditors.hpp"
 
 #include <chrono>
+#include <format>
 #include <random>
 #include <future>
 #include <thread>
@@ -168,20 +169,13 @@ namespace sequoia::testing
 
       auto stats{
         [num_sds](std::string_view prefix, const auto mean, const auto sig){
-
-          std::ostringstream message{};
-          message << mean << "s" << " +- " << num_sds << " * " << sig << "s";
-
-          return std::string{prefix}.append(" Task duration: ").append(message.str());
+          return std::format("{} Task duration: {:g}s +- {:g} * {:g}s", prefix, mean, num_sds, sig);
         }
       };
 
       auto summarizer{
         [m_f, m_s, minSpeedUp, maxSpeedUp](){
-          std::ostringstream message{};
-          message << " [" << m_s / m_f << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]";
-
-          return message.str();
+          return std::format(" [{:g}; ({:g}, {:g})]", m_s / m_f, minSpeedUp, maxSpeedUp);
         }
       };
 

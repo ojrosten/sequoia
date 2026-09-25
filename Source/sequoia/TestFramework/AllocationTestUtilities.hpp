@@ -14,8 +14,8 @@
 #include "sequoia/Core/Meta/TypeTraits.hpp"
 #include "sequoia/TestFramework/Output.hpp"
 
+#include <format>
 #include <memory>
-#include <string>
 
 namespace sequoia::testing
 {
@@ -125,15 +125,14 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::string make()
     {
-      auto info{std::string{"shared_counting_allocator<\n\t\t"}.append(demangle<T>()).append(",\n")};
-
-      auto toString{[](bool b){ return b ? "true" : "false";}};
-
-      info.append("\t\tPropagate on copy assignment = ").append(toString(PropagateCopy)).append(",\n");
-      info.append("\t\tPropagate on move assignment = ").append(toString(PropagateMove)).append(",\n");
-      info.append("\t\tPropagate on swap = ").append(toString(PropagateSwap)).append("\n >");
-
-      return info;
+      return std::format("shared_counting_allocator<\n\t\t{},\n"
+                         "\t\tPropagate on copy assignment = {},\n"
+                         "\t\tPropagate on move assignment = {},\n"
+                         "\t\tPropagate on swap = {}\n >",
+                         demangle<T>(),
+                         PropagateCopy,
+                         PropagateMove,
+                         PropagateSwap);
     }
   };
 }

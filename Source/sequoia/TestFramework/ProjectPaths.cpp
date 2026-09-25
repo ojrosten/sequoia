@@ -14,6 +14,7 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
+#include <format>
 #include <numeric>
 #include <ranges>
 
@@ -87,8 +88,11 @@ namespace sequoia::testing
           }
         }
 
-        throw std::runtime_error{std::string{"Unable to locate project root from path:\n"}.append(zeroth)
-                    .append("\nPlease ensure that the build directory is a subdirectory of <project>/build.")};
+        throw std::runtime_error{
+          std::format("Unable to locate project root from path:\n{}\n"
+                      "Please ensure that the build directory is a subdirectory of <project>/build.",
+                      zeroth)
+        };
       }
     }
 
@@ -368,7 +372,7 @@ namespace sequoia::testing
     const auto ext{replace(source.filename().extension().string(), ".", "_")};
 
     return (instability_analysis(std::move(projectRoot)) / source.filename().replace_extension().concat(ext))
-      .append(replace_all(name, " ", "_")).append("Output_" + std::to_string(index) + ".txt");
+      .append(replace_all(name, " ", "_")).append(std::format("Output_{}.txt", index));
   }
 
   [[nodiscard]]

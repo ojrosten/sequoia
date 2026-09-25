@@ -8,6 +8,7 @@
 #include "sequoia/TestFramework/TestRunnerUtilities.hpp"
 
 #include <chrono>
+#include <format>
 
 namespace sequoia::testing
 {
@@ -36,14 +37,14 @@ namespace sequoia::testing
         }()
       };
 
-      const auto newCopyright{std::string{"Copyright "}.append(copyright).append(" ").append(year).append(".")};
+      const auto newCopyright{std::format("Copyright {} {}.", copyright, year)};
       const auto reservedSpace{right - left - 2};
       const auto requiredSpace{newCopyright.size()};
       const auto remainingSpace{reservedSpace > requiredSpace ? reservedSpace - requiredSpace : std::string::size_type{}};
       const auto rightSpace(remainingSpace / 2);
       const auto leftSpace(remainingSpace - rightSpace);
 
-      const auto replacement{std::string(leftSpace, ' ').append(newCopyright).append(std::string(rightSpace, ' '))};
+      const auto replacement{std::format("{:{}}{}{:{}}", "", leftSpace, newCopyright, "", rightSpace)};
 
       text.replace(left + 2, reservedSpace, replacement);
     }
