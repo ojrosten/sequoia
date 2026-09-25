@@ -39,7 +39,7 @@ name: fine
 # change holds anything to test: .github/actions/needs-testing.
 on:
   pull_request:
-    branches: [staging]
+    branches: [staging, scratch-145-base]
 
 # A push to a PR that already has a run in flight cancels that run: a superseded
 # run cannot gate anything, and its audit would otherwise compare its jobs
@@ -90,6 +90,7 @@ jobs:
           fi
 
       - name: Insist every job of this run is a required check on staging
+        if: false
         run: |
           # A run whose head is no longer the PR's head has been superseded; the PR's
           # required checks now belong to another commit, and this run gates nothing.

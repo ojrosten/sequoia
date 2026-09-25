@@ -77,7 +77,7 @@ runs:
                 || answer true "Needs testing: the push's commits could not be fetched; was history rewritten?"
               from=$PUSH_BEFORE
             else
-              fetch "+refs/heads/staging:refs/remotes/origin/staging" "$PUSH_AFTER" \
+              fetch "+refs/heads/scratch-145-base:refs/remotes/origin/staging" "$PUSH_AFTER" \
                 || answer true "Needs testing: staging and the pushed commit could not be fetched."
               from=$(git --git-dir="$git_dir" merge-base refs/remotes/origin/staging "$PUSH_AFTER") \
                 || answer true "Needs testing: the pushed commit has no merge-base with staging."

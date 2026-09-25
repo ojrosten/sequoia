@@ -167,7 +167,7 @@ name: rigorous
 # change holds anything to test: .github/actions/needs-testing.
 on:
   pull_request:
-    branches: [main]
+    branches: [main, scratch-145-base]
   workflow_dispatch:
     inputs:
       false_negative:
@@ -516,7 +516,7 @@ jobs:
           exit $failed
 
       - name: On a promotion PR, insist every job of this run is a required check
-        if: ${{ github.event_name == 'pull_request' }}
+        if: false
         run: |
           # A run whose head is no longer the PR's head has been superseded; the PR's
           # required checks now belong to another commit, and this run gates nothing.

@@ -1,0 +1,17 @@
+name: scratch-matrix
+# Scratch, never merged: does a matrix job skipped at job level report its expanded names?
+on:
+  push:
+    branches: [scratch-145-base]
+jobs:
+  direct:
+    if: false
+    name: ${{ matrix.name }}
+    strategy:
+      matrix:
+        include: ${{ fromJSON('[{"name":"Alpha"},{"name":"Beta"}]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo never
+  called:
+    uses: ./.github/workflows/scratch-matrix-called.yml
