@@ -1,31 +1,31 @@
 name: Needs testing
 description: Whether this run's tree differs from the tree it is compared with, in a path the named check reads.
 
-# Why this exists. A required check that never reports holds a PR at "Expected -
-# waiting for status to be reported", for good. A workflow skipped by a
-# `paths-ignore` trigger reports nothing, so a documentation-only PR, or a push
-# which changes no file, used to wedge the PR it belonged to (roadmap item 145).
-# The decision is therefore taken here, inside a job that always runs and so
-# always reports: the job's expensive steps are conditional on this action's
-# output, and a job which skips them still passes. No workflow may filter its
-# trigger by path while one of its jobs is a required check.
+# A required check that never reports holds its pull request at "Expected -
+# waiting for status to be reported", for good. A workflow skipped by a path
+# filter on its trigger reports nothing, so no workflow with a job that is a
+# required check may filter its trigger by path (roadmap item 145). The decision
+# is taken here instead, inside a job that always runs and so always reports:
+# the job's expensive steps are conditional on this action's output, and a job
+# which skips them still passes.
 #
-# The comparison is with the tree a gate has already certified, not with the
-# previous push, because a gate certifies a tree:
-#   -# A pull request: the head against its merge-base with the base.
-#   -# A push to staging: always tested. Merges land there, and a merge can make
-#      a tree nothing has tested; and a push's own diff is not the tree's, since
-#      a run cancelled by the next push leaves its commits untested.
-#   -# Any other push: the head against its merge-base with staging, which is
-#      the pull request's comparison for the usual PR into staging.
-#   -# Anything else, a schedule or a dispatch: always tested. Someone asked.
+# The comparison is with a tree a gate has already certified, because a gate
+# certifies a tree, not a push:
+#   - A pull request: the head against its merge-base with the base.
+#   - A push to staging: always tested. Merges land there, and a merge can make a
+#     tree nothing has tested. Nor is a push's own diff enough: when a push
+#     cancels the run of the push before it, the earlier push's commits are left
+#     untested.
+#   - Any other push: the head against its merge-base with staging, which is the
+#     pull request's comparison for the usual PR into staging.
+#   - Anything else, a schedule or a dispatch: always tested. Someone asked.
 # A comparison which cannot be made - a fetch that fails, a history with no
 # merge-base - answers "needs testing", with a warning. Skipping is the
 # direction that could let a defect through, so it is taken only on evidence.
 #
 # The clone is blobless: `git diff --name-only` reads trees, never file
-# contents, so the ~96MB of committed documentation render is never fetched. It
-# costs about 11MB and three seconds (measured 2026-09-25).
+# contents, so the ~96MB of committed documentation render is never fetched. The
+# clone costs about 11MB and three seconds (measured 2026-09-25).
 inputs:
   check:
     description: 'Whose inputs to look for: `suite` or `documentation`.'
@@ -104,6 +104,7 @@ runs:
         if [ -n "$changed" ]; then
           echo "Changed since ${from:0:9}, outside ${ignored[*]}:"
           printf '%s\n' "$changed" | sed -n '1,20p' | sed 's/^/  /'
-          answer true "Needs testing: $(printf '%s\n' "$changed" | wc -l | tr -d ' ') path(s) changed since ${from:0:9} outside ${ignored[*]}."
+          count=$(printf '%s\n' "$changed" | wc -l | tr -d ' ')
+          answer true "Needs testing: $count path(s) changed since ${from:0:9} outside ${ignored[*]}."
         fi
         answer false "Nothing to test for the $CHECK: no path outside ${ignored[*]} changed since ${from:0:9}."
