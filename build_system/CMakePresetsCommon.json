@@ -506,6 +506,20 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
+      "name": "llvm-homebrew-xcode",
+      "displayName": "Homebrew LLVM with Xcode",
+      "description": "Configure for ${displayName}. A multi-config tree: it holds both Debug and Release, and the build preset chooses between them. The Xcode generator ignores CMAKE_CXX_COMPILER, so Homebrew's clang is named through Xcode's build settings: CC compiles, LDPLUSPLUS links; CMake's own compiler detection still sees Apple clang. The index store is off because Xcode, indexing while it builds, passes -index-store-path, which only Apple's clang accepts.",
+      "generator": "Xcode",
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
+        "CMAKE_XCODE_ATTRIBUTE_CC": "/opt/homebrew/opt/llvm/bin/clang",
+        "CMAKE_XCODE_ATTRIBUTE_LDPLUSPLUS": "/opt/homebrew/opt/llvm/bin/clang++",
+        "CMAKE_XCODE_ATTRIBUTE_COMPILER_INDEX_STORE_ENABLE": "NO"
+      },
+      "inherits": ["base-llvm"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
       "name": "llvm-env",
       "displayName": "LLVM from the environment [Debug]",
       "description": "Configure for ${displayName}. Set CC and CXX: unset, CMake picks the platform default.",
@@ -1067,6 +1081,32 @@
       "name": "run-llvm-homebrew-ninja-multi-config-release",
       "displayName": "Run Homebrew LLVM with Ninja Multi-Config [Release]",
       "inherits": ["llvm-homebrew-ninja-multi-config-release", "base-run"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "llvm-homebrew-xcode",
+      "displayName": "Homebrew LLVM with Xcode [Debug]",
+      "configurePreset": "llvm-homebrew-xcode",
+      "configuration": "Debug",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "run-llvm-homebrew-xcode",
+      "displayName": "Run Homebrew LLVM with Xcode [Debug]",
+      "inherits": ["llvm-homebrew-xcode", "base-run"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "llvm-homebrew-xcode-release",
+      "displayName": "Homebrew LLVM with Xcode [Release]",
+      "configurePreset": "llvm-homebrew-xcode",
+      "configuration": "Release",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
+    },
+    {
+      "name": "run-llvm-homebrew-xcode-release",
+      "displayName": "Run Homebrew LLVM with Xcode [Release]",
+      "inherits": ["llvm-homebrew-xcode-release", "base-run"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" }
     },
     {
@@ -1821,6 +1861,20 @@
       "steps": [
         { "type": "configure", "name": "llvm-homebrew-ninja-multi-config" },
         { "type": "build",     "name": "run-llvm-homebrew-ninja-multi-config-release" }
+      ]
+    },
+    {
+      "name": "llvm-homebrew-xcode",
+      "steps": [
+        { "type": "configure", "name": "llvm-homebrew-xcode" },
+        { "type": "build",     "name": "run-llvm-homebrew-xcode" }
+      ]
+    },
+    {
+      "name": "llvm-homebrew-xcode-release",
+      "steps": [
+        { "type": "configure", "name": "llvm-homebrew-xcode" },
+        { "type": "build",     "name": "run-llvm-homebrew-xcode-release" }
       ]
     },
     {
