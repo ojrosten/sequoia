@@ -12,7 +12,6 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <cstring>
-#include <format>
 #include <fstream>
 
 namespace sequoia::testing
@@ -466,11 +465,52 @@ namespace sequoia::testing
       check_exception_thrown<std::runtime_error>("A log none of whose objects build.ninja names is two spellings of one tree, not an empty build", [&](){ return read_compilations(tree, executable); });
     }
 
-    for(const auto generator : {"Ninja Multi-Config", "Xcode"})
     {
-      write_to_file(cache, std::format("# CMake cache\nCMAKE_GENERATOR:INTERNAL={}\n", generator), std::ios_base::out);
-      check_exception_thrown<std::runtime_error>(std::format("{}: a generator whose record of dependencies is not understood", generator), [&](){ return read_compilations(read_build_tree(cache), executable); });
+      /* A Ninja Multi-Config tree: one log for every configuration, and each configuration's statements in a
+         file of its own; `build.ninja` names no object itself, but includes the default configuration's
+       */
+      const auto multiConfigRoot{scratch / "multi_config"};
+      fs::create_directories(multiConfigRoot / "CMakeFiles");
+      write_to_file(multiConfigRoot / "CMakeCache.txt",
+                    "# CMake cache\nCMAKE_GENERATOR:INTERNAL=Ninja Multi-Config\n",
+                    std::ios_base::out);
+      const auto multiConfig{read_build_tree(multiConfigRoot / "CMakeCache.txt")};
+
+      write_ninja_deps(multiConfigRoot / ".ninja_deps",
+                       std::vector<compilation_record>{
+                         {"CMakeFiles/x.dir/Debug/a.cpp.o",   {"/proj/a.cpp", "/proj/a.h"}},
+                         {"CMakeFiles/x.dir/Release/a.cpp.o", {"/proj/a.cpp", "/proj/a.h"}}
+                       });
+      write_to_file(multiConfigRoot / "build.ninja", "include CMakeFiles/impl-Debug.ninja\n", std::ios_base::out);
+      write_to_file(multiConfigRoot / "CMakeFiles" / "impl-Debug.ninja",
+                    "build CMakeFiles/x.dir/Debug/a.cpp.o: CXX_COMPILER__x_Debug /proj/a.cpp\n",
+                    std::ios_base::out);
+      write_to_file(multiConfigRoot / "CMakeFiles" / "impl-Release.ninja",
+                    "build CMakeFiles/x.dir/Release/a.cpp.o: CXX_COMPILER__x_Release /proj/a.cpp\n",
+                    std::ios_base::out);
+
+      check(equality,
+            "Ninja Multi-Config: the statements of the executable's configuration, not those build.ninja includes",
+            expand(read_compilations(multiConfig, multiConfigRoot / "Release" / "TestAll")),
+            std::vector<compilation_record>{{"CMakeFiles/x.dir/Release/a.cpp.o", {"/proj/a.cpp", "/proj/a.h"}}});
+      check(equality,
+            "Ninja Multi-Config: an executable of the default configuration",
+            expand(read_compilations(multiConfig, multiConfigRoot / "Debug" / "TestAll")),
+            std::vector<compilation_record>{{"CMakeFiles/x.dir/Debug/a.cpp.o", {"/proj/a.cpp", "/proj/a.h"}}});
+      check_exception_thrown<std::runtime_error>(
+        "Ninja Multi-Config: a configuration with no statements",
+        [&](){ return read_compilations(multiConfig, multiConfigRoot / "RelWithDebInfo" / "TestAll"); });
+
+      write_to_file(multiConfigRoot / "CMakeFiles" / "impl-Release.ninja",
+                    "build CMakeFiles/x.dir/Release/b.cpp.o: CXX_COMPILER__x_Release /proj/b.cpp\n",
+                    std::ios_base::out);
+      check_exception_thrown<std::runtime_error>(
+        "Ninja Multi-Config: a log none of whose objects the configuration's statements name",
+        [&](){ return read_compilations(multiConfig, multiConfigRoot / "Release" / "TestAll"); });
     }
+
+    write_to_file(cache, "# CMake cache\nCMAKE_GENERATOR:INTERNAL=Xcode\n", std::ios_base::out);
+    check_exception_thrown<std::runtime_error>("Xcode: a generator whose record of dependencies is not understood", [&](){ return read_compilations(read_build_tree(cache), executable); });
 
     write_to_file(cache, "# CMake cache\n", std::ios_base::out);
     check_exception_thrown<std::runtime_error>("A cache which names no generator was not written by CMake", [&](){ return read_build_tree(cache); });
