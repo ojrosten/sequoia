@@ -96,7 +96,7 @@ namespace sequoia::testing
         expected{"WorkingCopy", "Prediction", "Auxiliary", ".keep", ".DS_Store"};
 
       auto isStray{
-        [](const std::string& name) { return std::ranges::find(expected, name) == expected.end(); }
+        [](const std::string& name) { return !std::ranges::contains(expected, name); }
       };
 
       const auto& root{materials.original_materials_root()};
