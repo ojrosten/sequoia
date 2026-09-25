@@ -1036,7 +1036,7 @@ namespace sequoia::testing
           g,
           dim_2_label::neg_one_neg_one,
           dim_2_label::neg_one_neg_one,
-          test.report("(-1, -1) without units, from elements"),
+          test.report("(-1, -1) without units, from operator[]"),
           [](variant_type v) -> variant_type {
             auto& p{std::get<coords_type>(v)};
             return coords_type{p[0], p[1]};
@@ -1048,6 +1048,31 @@ namespace sequoia::testing
           dim_2_label::neg_one_neg_one,
           dim_2_label::neg_one_neg_one,
           test.report("(-1, -1) without units, from values()"),
+          [](variant_type v) -> variant_type {
+            return coords_type{std::get<coords_type>(v).values()};
+          }
+        );
+      }
+      else
+      {
+        // (1, 1) --> (1, 1)
+
+        add_transition<coords_type>(
+          g,
+          dim_2_label::one_one,
+          dim_2_label::one_one,
+          test.report("(1, 1) without units, from operator[]"),
+          [](variant_type v) -> variant_type {
+            auto& p{std::get<coords_type>(v)};
+            return coords_type{p[0], p[1]};
+          }
+        );
+
+        add_transition<coords_type>(
+          g,
+          dim_2_label::one_one,
+          dim_2_label::one_one,
+          test.report("(1, 1) without units, from values()"),
           [](variant_type v) -> variant_type {
             return coords_type{std::get<coords_type>(v).values()};
           }
