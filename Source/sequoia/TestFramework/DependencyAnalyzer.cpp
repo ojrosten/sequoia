@@ -824,11 +824,11 @@ namespace sequoia::testing
     [[nodiscard]]
     std::optional<std::string> target_of(const fs::path& object)
     {
-      auto targetDirectories{object | std::views::filter([](const fs::path& p){ return p.extension() == ".dir"; })};
-      if(std::ranges::empty(targetDirectories))
+      const auto targetDirectory{std::ranges::find_if(object, [](const fs::path& p){ return p.extension() == ".dir"; })};
+      if(targetDirectory == object.end())
         return std::nullopt;
 
-      return (*std::ranges::begin(targetDirectories)).stem().string();
+      return targetDirectory->stem().string();
     }
 
     [[nodiscard]]

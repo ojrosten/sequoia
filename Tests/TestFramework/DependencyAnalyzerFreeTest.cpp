@@ -292,7 +292,7 @@ namespace sequoia::testing
     const bool ninja{system != build_system::visual_studio};
     m_ObjectExtension = ninja ? ".o" : ".obj";
     auto object{
-      [this, &objectDir](std::string_view source){ return objectDir / (std::string{source} + m_ObjectExtension); }
+      [this, &objectDir](std::string_view source){ return objectDir / std::string{source}.append(m_ObjectExtension); }
     };
 
     const auto& sequoiaSource{get_project_paths().source().repo()};
