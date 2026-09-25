@@ -24,10 +24,10 @@ namespace ?::testing
 		void run_tests();
 	};
 	
-	class ?forename_false_negative_?surname final : public ?_false_negative_test
+	class ?forename_false_positive_?surname final : public ?_false_positive_test
 	{
 	public:
-		using ?_false_negative_test::?_false_negative_test;
+		using ?_false_positive_test::?_false_positive_test;
 
 		[[nodiscard]]
 		static std::filesystem::path source_file();

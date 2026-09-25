@@ -55,8 +55,8 @@ int main(int argc, char** argv)
 		runner.register_test<doohicky_free_test>();
 		runner.register_test<global_free_test>();
 		runner.register_test<defs_free_test>();
-		runner.register_test<angle_false_positive_free_diagnostics>();
 		runner.register_test<angle_false_negative_free_diagnostics>();
+		runner.register_test<angle_false_positive_free_diagnostics>();
 		runner.register_test<container_allocation_test>();
 		runner.register_test<foo_allocation_test>();
 		runner.register_test<container_performance_test>();
