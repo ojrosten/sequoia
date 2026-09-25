@@ -228,23 +228,3 @@ That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1366
-Exit status 126 is not a runner's
-
-Expected Exception Type:
-[std::runtime_error]
-A child could not be executed by the shell (exit status 126).
-That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
-
-=======================================
-
-Tests/TestFramework/TestRunnerTest.cpp, Line 1366
-Exit status 127 is not a runner's
-
-Expected Exception Type:
-[std::runtime_error]
-A child was not found by the shell (exit status 127).
-That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
-
-=======================================
-

@@ -91,8 +91,7 @@ namespace sequoia::runtime
         0xFFFFFFFF is indistinguishable from it, and is said to be;
       - on Windows, an exit status of 0x80000000 or more, which `invoke`'s `int` makes negative, and
         which is reported in hex, the form in which such statuses are documented;
-      - a shell's own "not found" (127 elsewhere, 9009 from cmd.exe) and, elsewhere, "not
-        executable" (126), which are said to be;
+      - elsewhere, a shell's own "not executable" (126) and "not found" (127), which are said to be;
       - elsewhere, an exit status above 128, which a shell gives a command killed by a signal, and
         which is said possibly to be one;
       - any other non-zero exit status.

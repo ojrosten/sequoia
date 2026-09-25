@@ -1358,9 +1358,9 @@ namespace sequoia::testing
           return_code::incomplete_run);
 
     // Statuses a process gives when it fails for reasons of its own - generic, LeakSanitizer's,
-    // sysexits' ends, ThreadSanitizer's, MemorySanitizer's, the shell's - and the two either side of
-    // the runner's range. Each is positive and at most 128, so is worded alike on every platform.
-    for(const int status : {1, 2, 23, 64, 66, 77, 78, 80, 112, 126, 127})
+    // sysexits' ends, ThreadSanitizer's, MemorySanitizer's - and the two either side of the runner's
+    // range. Each is worded alike on every platform, so the whole message is checked.
+    for(const int status : {1, 2, 23, 64, 66, 77, 78, 80, 112})
     {
       check_exception_thrown<std::runtime_error>(
         std::format("Exit status {} is not a runner's", status),
@@ -1386,5 +1386,7 @@ namespace sequoia::testing
     check("A status of -1 is refused",                refused(-1));
     check("A status near INT_MIN is refused",         refused(std::numeric_limits<int>::min() + 3));
     check("A status above 128 is refused",            refused(139));
+    check("A shell's 'not executable' is refused",    refused(126));
+    check("A shell's 'not found' is refused",         refused(127));
   }
 }
