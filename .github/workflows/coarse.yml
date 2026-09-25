@@ -111,7 +111,9 @@ jobs:
   # as one that passed; `needs` reports `skipped` where the tick shows green.
   # Staging requires this job and none of the others, so a job missing from this
   # job's `needs` would gate nothing, however red. The second step fails if any
-  # other job is missing.
+  # other job is missing. The third fails unless staging's rule names this job,
+  # pinned to the app that reports it: after a rename here, or an edit to the
+  # rule, a PR would otherwise wait on a name nothing reports, or merge ungated.
   audit:
     name: Every job ran
     needs: [scope, coarse, docs]
@@ -151,3 +153,20 @@ jobs:
             exit 1
           fi
           echo "$GITHUB_JOB needs every other job of $workflow"
+
+      - name: Insist staging requires this job, pinned to the app that reports it
+        env:
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+        run: |
+          # The branches endpoint returns a branch's required checks to any token;
+          # the protection endpoint would need admin rights.
+          check=$(gh api "repos/$GH_REPO/check-runs/$CHECK_RUN_ID" --jq '"\(.app.id) \(.name)"')
+          gh api "repos/$GH_REPO/branches/staging" \
+              --jq '.protection.required_status_checks.checks[] | "\(.app_id) \(.context)"' > required.txt
+          echo "this check, as app and name: $check"
+          echo "required on staging:"; sed 's/^/  /' required.txt
+          if ! grep -qxF "$check" required.txt; then
+            echo "::error::staging does not require '${check#* }' from app ${check%% *}: a PR would wait on a name nothing reports, or merge without this check"
+            exit 1
+          fi
+          echo "staging requires this job, pinned to the app that reports it"
