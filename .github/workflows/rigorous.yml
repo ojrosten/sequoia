@@ -160,12 +160,12 @@ name: rigorous
 # above come from three of them. So a sharing violation on Windows after
 # 2026-09-11, in whichever tier, is evidence against the fix rather than a flake
 # to re-run.
+#
+# No path filter: see scope.yml for why, and for how a
+# column with nothing to test still reports.
 on:
   pull_request:
     branches: [main]
-    paths-ignore:
-      - 'docs/**'
-      - 'coverage_reports/**'
   workflow_dispatch:
     inputs:
       false_negative:
@@ -185,9 +185,8 @@ on:
     - cron: '1 1 * * *'
 
 # A push to the head of an open PR into main cancels that PR's run in flight: a
-# superseded run cannot gate anything, and its audit would otherwise compare its
-# jobs against the checks of a commit it is not testing. Scheduled and dispatched
-# runs each get a group of their own, so nothing here ever cancels them.
+# superseded run gates nothing, and Windows runners are scarce. Scheduled and
+# dispatched runs each get a group of their own, so nothing here ever cancels them.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
@@ -213,14 +212,22 @@ jobs:
           echo "staging is $ahead commit(s) ahead of main"
           echo "ahead=$ahead" >> "$GITHUB_OUTPUT"
 
-  # `!cancelled()` rather than the implied success(): the job above is skipped on
+  # One decision for the whole run, which every job below takes as an input. It
+  # runs in promote mode too, where it is not needed, because it costs seconds and
+  # one rule for every mode is simpler for the audit to hold.
+  scope:
+    uses: ./.github/workflows/scope.yml
+
+  # `!cancelled()` rather than the implied success(): the staging job is skipped on
   # every event but the schedule, and a skipped dependency would otherwise skip
-  # these too.
+  # these too; and a failed decision should still run them, so that they fail on
+  # the missing answer.
   rigorous:
-    needs: staging
+    needs: [staging, scope]
     if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
     uses: ./.github/workflows/tests.yml
     with:
+      needs_testing: ${{ needs.scope.outputs.suite }}
       warnings_as_errors: true
       false_negative: ${{ inputs.false_negative == true }}
       exec_args: '--check-versioned-output'
@@ -235,9 +242,11 @@ jobs:
         ]
 
   docs:
-    needs: staging
+    needs: [staging, scope]
     if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
     uses: ./.github/workflows/docs.yml
+    with:
+      needs_testing: ${{ needs.scope.outputs.documentation }}
 
   # Measured and published; no threshold is applied. The uploaded coverage.info is
   # an lcov tracefile, which is what both a per-file regression rule and diff-cover
@@ -247,19 +256,33 @@ jobs:
   # suite through ctest, serially, not through the `run` target.
   coverage:
     name: Coverage · Linux · GCC
-    needs: staging
+    needs: [staging, scope]
     if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
       CC: gcc-15
       CXX: g++-15
+      NEEDS_TESTING: ${{ needs.scope.outputs.suite }}
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
+      # As in tests.yml: the job runs whatever the change, since in gate mode the
+      # audit insists on its success; what it does depends on the change, and any
+      # answer but `true` or `false` fails it.
+      - name: Nothing to test
+        if: env.NEEDS_TESTING != 'true'
+        run: |
+          if [ "$NEEDS_TESTING" != false ]; then
+            echo "::error::the scope job's answer is '$NEEDS_TESTING', neither true nor false"
+            exit 1
+          fi
+          echo "Nothing to test; the scope job's summary says why."
+
       - name: Install the toolchain
+        if: env.NEEDS_TESTING == 'true'
         run: |
           # The hosted image ships vendor repositories - Chrome and Microsoft - which
           # nothing here installs from. A bad index served by one of them fails the
@@ -310,12 +333,14 @@ jobs:
           "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin/cmake" --version | head -1
 
       - name: Give git an identity
+        if: env.NEEDS_TESTING == 'true'
         run: |
           git config --global user.name "sequoia CI"
           git config --global user.email "ci@example.invalid"
           git config --global init.defaultBranch trunk
 
       - name: Configure and build
+        if: env.NEEDS_TESTING == 'true'
         working-directory: TestAll
         run: |
           cmake --preset gcc-env-coverage
@@ -324,10 +349,11 @@ jobs:
       # The script runs the suite through ctest itself, so there is no separate run
       # step. Utilities.cmake registers the test with --serial under CODE_COVERAGE.
       - name: Measure
+        if: env.NEEDS_TESTING == 'true'
         run: ./scripts/generate_coverage_report.sh build/TestAll/gcc-env-coverage
 
       - name: Report
-        if: always()
+        if: ${{ always() && env.NEEDS_TESTING == 'true' }}
         run: |
           info=build/TestAll/gcc-env-coverage/coverage.info
           [ -f "$info" ] || { echo "::error::no tracefile at $info"; exit 1; }
@@ -342,7 +368,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload the tracefile and the report
-        if: always()
+        if: ${{ always() && env.NEEDS_TESTING == 'true' }}
         uses: actions/upload-artifact@v7
         with:
           name: coverage
@@ -444,14 +470,15 @@ jobs:
   # job's result is read from `needs`, which reports `skipped` where the tick shows
   # green. In the false-negative control the columns must have FAILED.
   #
-  # On a promotion PR it also insists that every job of this run is a required
-  # check on main. Auto-merge waits on required checks only, so a column that is
-  # not required gates nothing, however red - and a column renamed in this file
-  # but not in the protection rule leaves a promotion waiting for a check that
-  # will never report.
+  # Main requires this job and none of the others, so a job missing from this
+  # job's `needs` would gate nothing, however red. The second step fails if any
+  # other job is missing. In the false-negative control this job passes on red
+  # columns, so it takes another name there: under main's required name it would
+  # satisfy main's rule for the commit it ran on, a promotion PR's head if the
+  # control was dispatched on staging.
   audit:
-    name: Every job ran as this run's mode requires
-    needs: [staging, rigorous, docs, coverage, promote]
+    name: ${{ inputs.false_negative == true && 'Every column failed, as the false-negative control requires' || 'Every job ran as this run''s mode requires' }}
+    needs: [staging, scope, rigorous, docs, coverage, promote]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -461,8 +488,6 @@ jobs:
       EVENT: ${{ github.event_name }}
       AHEAD: ${{ needs.staging.outputs.ahead }}
       RESULTS: ${{ toJSON(needs) }}
-      PR: ${{ github.event.pull_request.number }}
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       FALSE_NEGATIVE: ${{ inputs.false_negative == true }}
     steps:
       - name: Check each job's result against the mode
@@ -472,7 +497,9 @@ jobs:
           jq -r 'to_entries[] | "  \(.key): \(.value.result)"' <<<"$RESULTS"
 
           failed=0
+          expected=()
           expect() {
+            expected+=("$1")
             actual=$(jq -r --arg j "$1" '.[$j].result' <<<"$RESULTS")
             if [ "$actual" = "$2" ]; then
               echo "ok    $1: $actual"
@@ -481,6 +508,7 @@ jobs:
             fi
           }
           if [ "$EVENT" = schedule ]; then expect staging success; else expect staging skipped; fi
+          expect scope success
           case "$mode" in
             gate)
               if [ "$FALSE_NEGATIVE" = true ]; then expect rigorous failure; else expect rigorous success; fi
@@ -493,33 +521,28 @@ jobs:
               expect docs skipped
               expect coverage skipped;;
           esac
+
+          unexpected=$(comm -23 <(jq -r 'keys[]' <<<"$RESULTS" | sort) <(printf '%s\n' "${expected[@]}" | sort))
+          if [ -n "$unexpected" ]; then
+            echo "::error::no result is expected in $mode mode of: $unexpected"; failed=1
+          fi
           exit $failed
 
-      - name: On a promotion PR, insist every job of this run is a required check
-        if: ${{ github.event_name == 'pull_request' }}
+      - name: Insist this job needs every other job of the workflow
         run: |
-          # A run whose head is no longer the PR's head has been superseded; the PR's
-          # required checks now belong to another commit, and this run gates nothing.
-          # Needed as well as cancel-in-progress, for the seconds before the
-          # cancellation lands and for a push matched by paths-ignore, which moves
-          # the head without starting a run - in which case nothing else will point
-          # at the PR now waiting on checks that never report (roadmap item 145).
-          current_head=$(gh pr view "$PR" --json headRefOid --jq .headRefOid)
-          if [ "$current_head" != "$HEAD_SHA" ]; then
-            echo "::warning::superseded: the PR's head is now $current_head, this run tested $HEAD_SHA. If no run appears for the new head, the PR is waiting on checks that will never report - see roadmap item 145."
-            exit 0
-          fi
-          # Only the jobs that ran: staging and promote are skipped on a PR by design.
-          gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --paginate \
-              --jq '.jobs[] | select(.conclusion != "skipped") | .name' \
-            | sort > jobs.txt
-          gh pr checks "$PR" --required --json name --jq '.[].name' | sort > required.txt
-          echo "jobs in this run:"; sed 's/^/  /' jobs.txt
-          echo "required on the base branch:"; sed 's/^/  /' required.txt
-          missing=$(comm -23 jobs.txt required.txt)
-          if [ -n "$missing" ]; then
-            echo "::error::these jobs run on every promotion but gate nothing, because main does not require them:"
-            echo "$missing" | sed 's/^/  /'
+          # The workflow file is fetched at GITHUB_WORKFLOW_SHA, the commit this run
+          # read it from. Its jobs and this job's `needs` are compared both ways, so
+          # that a file read wrongly - no jobs, or the wrong ones - fails the step.
+          set -o pipefail
+          workflow=${GITHUB_WORKFLOW_REF#"$GITHUB_REPOSITORY/"}
+          workflow=${workflow%%@*}
+          gh api -H 'Accept: application/vnd.github.raw' "repos/$GH_REPO/contents/$workflow?ref=$GITHUB_WORKFLOW_SHA" \
+            | yq -r '.jobs | keys | .[]' | grep -vxF "$GITHUB_JOB" | sort > jobs.txt
+          jq -r 'keys[]' <<<"$RESULTS" | sort > needed.txt
+          echo "jobs of $workflow but this one:"; sed 's/^/  /' jobs.txt
+          echo "jobs this one needs:"; sed 's/^/  /' needed.txt
+          if ! diff -u needed.txt jobs.txt; then
+            echo "::error::$GITHUB_JOB must need every other job of $workflow: a job it does not need gates nothing, however red"
             exit 1
           fi
-          echo "every job of this run is required on the base branch"
+          echo "$GITHUB_JOB needs every other job of $workflow"

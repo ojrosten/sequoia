@@ -86,6 +86,8 @@ jobs:
     needs: trials
     uses: ./.github/workflows/tests.yml
     with:
+      # A sample of the tree as it stands, whatever last changed in it.
+      needs_testing: ${{ 'true' }}
       warnings_as_errors: false
       exec_args: 'locate;${{ needs.trials.outputs.n }};--exclude-performance'
       suite_timeout_minutes: 200

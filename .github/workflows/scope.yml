@@ -1,0 +1,155 @@
+name: scope
+
+# Whether a change holds anything for the suite, or for the Doxygen gate, to test.
+# Called once by each tier, whose jobs take the answers as inputs.
+#
+# Why this exists. A required check that never reports holds its pull request at
+# "Expected - waiting for status to be reported", for good. A workflow skipped by
+# a path filter on its trigger reports nothing, so no workflow with a job that is
+# a required check may filter its trigger by path (roadmap item 145). The
+# decision is taken here instead. No job is skipped for what a change touches;
+# the expensive steps are conditional on these answers, and a job which skips
+# them still passes.
+#
+# Why once per run. Every job must act on the same answer. Columns deciding for
+# themselves could differ - one fetch failing where another succeeds, or a branch
+# reaching staging between two decisions - and on a docs-only PR the column audit
+# would then go red.
+#
+# What a skip rests on. A pull request whose change is confined to the paths a
+# check ignores merges to a tree identical, in every path the check reads, to the
+# tip of its base. That tree is the base's, and testing it is the base's own
+# runs' responsibility, not this pull request's. The comparison, by event:
+#   - A pull request: its head against its merge-base with the base, which is
+#     the change the pull request makes.
+#   - A push to staging: always tested. Merges land there, and a merge can make a
+#     tree nothing has tested. Nor is a push's own diff enough: when a push
+#     cancels the run of the push before it, the earlier push's commits are left
+#     untested.
+#   - Any other push: the head against its merge-base with staging, which is the
+#     pull request's comparison for the usual PR into staging. Should the branch
+#     reach staging before this job runs, the merge-base is the head and the
+#     change looks empty; the push to staging then tests the tree.
+#   - Anything else, a schedule or a dispatch: always tested. Someone asked.
+# A comparison which cannot be made - a fetch that fails, a history with no
+# merge-base - answers "test", with a warning. Skipping is the direction that
+# could let a defect through, so it is taken only on evidence.
+#
+# The clone is blobless and the diff is taken with --no-renames: rename detection
+# compares file contents, which a blobless clone fetches one by one, while a
+# name-only diff without it reads trees alone. So the ~96MB of committed
+# documentation render is never fetched; the clone costs about 11MB and three
+# seconds (measured 2026-09-25). --no-renames also lists both sides of a rename,
+# so a file moved out of an ignored path counts as changed.
+on:
+  workflow_call:
+    outputs:
+      suite:
+        description: '`true` if the change touches a path the suite reads, `false` if not.'
+        value: ${{ jobs.decide.outputs.suite }}
+      documentation:
+        description: '`true` if the change touches a path doxygen reads, `false` if not.'
+        value: ${{ jobs.decide.outputs.documentation }}
+
+jobs:
+  decide:
+    name: What needs testing
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      suite: ${{ steps.decide.outputs.suite }}
+      documentation: ${{ steps.decide.outputs.documentation }}
+    steps:
+      - id: decide
+        env:
+          EVENT: ${{ github.event_name }}
+          REF: ${{ github.ref }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          PUSH_AFTER: ${{ github.event.after }}
+          REPO_URL: ${{ github.server_url }}/${{ github.repository }}
+        run: |
+          # What each check does not read, as git globs. The suite reads nothing
+          # under docs/, and coverage_reports/ is a published record of past runs.
+          # Doxygen reads Source/ and Tests/, named by the Doxyfile's INPUT and
+          # EXAMPLE_PATH, and docs/config, which holds the Doxyfile and what it
+          # includes; its output is docs/html. Should the Doxyfile ever read from
+          # docs/html, the documentation's list is wrong.
+          ignored_by() {
+            case "$1" in
+              suite)         echo 'docs/** coverage_reports/**';;
+              documentation) echo 'docs/html/** coverage_reports/**';;
+            esac
+          }
+          checks=(suite documentation)
+
+          test_everything() {
+            for check in "${checks[@]}"; do echo "$check=true" >> "$GITHUB_OUTPUT"; done
+            echo "$1"
+            exit 0
+          }
+          cannot_compare() {
+            echo "::warning title=Tested in full::$1, so the change could not be compared; testing everything."
+            test_everything "Test everything: $1."
+          }
+
+          git_dir="$RUNNER_TEMP/scope.git"
+          git init -q --bare "$git_dir"
+          git --git-dir="$git_dir" remote add origin "$REPO_URL"
+          fetch() { git --git-dir="$git_dir" fetch -q --filter=blob:none origin "$@"; }
+
+          case "$EVENT/$REF" in
+            pull_request/*)
+              fetch "$PR_BASE" "$PR_HEAD" \
+                || cannot_compare "the pull request's commits could not be fetched"
+              from=$(git --git-dir="$git_dir" merge-base "$PR_BASE" "$PR_HEAD") \
+                || cannot_compare "the pull request's head has no merge-base with its base"
+              to=$PR_HEAD;;
+            push/refs/heads/staging)
+              test_everything "Test everything: a push to staging is always tested.";;
+            push/*)
+              fetch "+refs/heads/staging:refs/remotes/origin/staging" "$PUSH_AFTER" \
+                || cannot_compare "staging and the pushed commit could not be fetched"
+              from=$(git --git-dir="$git_dir" merge-base refs/remotes/origin/staging "$PUSH_AFTER") \
+                || cannot_compare "the pushed commit has no merge-base with staging"
+              to=$PUSH_AFTER;;
+            *)
+              test_everything "Test everything: a $EVENT run tests the tree whatever changed.";;
+          esac
+
+          # A path is a file name from the change, which a fork chooses. The runner
+          # acts on a line of the form `::command::` wherever it appears, so the
+          # listing is printed with commands switched off, under a token nothing in
+          # the listing can guess.
+          print_paths() {
+            local token
+            token=$(openssl rand -hex 16)
+            echo "::stop-commands::$token"
+            printf '%s\n' "$1" | sed -n '1,20p' | sed 's/^/  /'
+            echo "::$token::"
+          }
+
+          answers=()
+          for check in "${checks[@]}"; do
+            ignored=$(ignored_by "$check")
+            # With only exclude pathspecs given, git matches everything else. The
+            # globs are split on spaces and not expanded: none contains a space,
+            # and globbing is switched off around the loop.
+            pathspecs=()
+            set -f
+            for glob in $ignored; do pathspecs+=(":(exclude,glob)$glob"); done
+            set +f
+            changed=$(git --git-dir="$git_dir" diff --no-renames --name-only "$from" "$to" -- "${pathspecs[@]}") \
+              || cannot_compare "the trees of ${from:0:9} and ${to:0:9} could not be compared"
+            if [ -n "$changed" ]; then
+              count=$(printf '%s\n' "$changed" | wc -l | tr -d ' ')
+              echo "The $check: $count path(s) changed since ${from:0:9} outside $ignored:"
+              print_paths "$changed"
+              answers+=("$check=true")
+            else
+              line="Nothing to test for the $check: no path outside $ignored changed since ${from:0:9}."
+              echo "$line"; echo "$line" >> "$GITHUB_STEP_SUMMARY"
+              answers+=("$check=false")
+            fi
+          done
+          printf '%s\n' "${answers[@]}" >> "$GITHUB_OUTPUT"
