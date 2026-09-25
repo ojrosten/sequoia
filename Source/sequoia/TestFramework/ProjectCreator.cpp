@@ -57,41 +57,35 @@ namespace sequoia::testing
         stream << ec.message() << '\n';
     }
 
-    void copy_sequoia_output(std::ostream& stream, const project_paths& parentProjectPaths, const output_paths& output, const fs::directory_entry& dir)
-    {
-      if(!fs::exists(output.dir()))
-        fs::create_directory(output.dir());
+    /** Entries at the root of sequoia which a created project has no use for.
 
-      for(auto& entry : fs::directory_iterator{dir})
-      {
-        if(fs::is_directory(entry))
-        {
-          if((entry.path() == parentProjectPaths.output().diagnostics()) || (entry.path() == parentProjectPaths.output().test_summaries()))
-          {
-            copy_sequoia_subdir(stream, output.dir(), entry);
-          }
-        }
-      }
-    }
-
-    /** Directories of sequoia which a created project has no use for.
-
-        `docs` is the committed doxygen render and `coverage_reports` the committed lcov
-        html: generated output, of no interest to a project which merely builds against
-        sequoia, and between them the overwhelming majority of the repository by size and
-        by file count. `.git` is sequoia's own history, which the new project cannot act
-        on: it runs `git init` of its own, and the copy is vendored rather than referenced
-        - `dependencies/sequoia/.keep` ships in the project template, so that path is
-        already tracked by the time sequoia arrives and git never forms a gitlink for it.
-
-        The cost of copying all this is paid on every run of the end-to-end test, which is
-        why it is worth excluding rather than merely untidy.
+        -# `docs` and `coverage_reports`, the committed doxygen render and lcov html. Between
+           them they are the overwhelming majority of the repository by size and by file
+           count, and the end-to-end test would pay for copying them on every run.
+        -# `build`, the build trees of the checkout the project is created from.
+        -# `output`, what sequoia's own test runs write. Sequoia's tests run `init` on sequoia
+           itself while the rest of the suite writes to `output`, so a copy races those
+           writes. On Windows, a file being copied cannot be opened for writing, so the test
+           writing it throws and the whole run terminates; elsewhere, a half-written file is
+           copied.
+        -# `.git`, sequoia's own history, which the created project cannot act on: it runs
+           `git init` of its own, and its copy of sequoia is vendored rather than referenced -
+           the project template ships `dependencies/sequoia/.keep`, so that path is tracked
+           before sequoia arrives and git never forms a gitlink for it. In a worktree or a
+           submodule checkout, `.git` is a file naming a git directory, and a copy of it would
+           name that directory from the vendored sequoia: a worktree's absolute path would make
+           the vendored sequoia a working tree of the parent's repository, and a submodule's
+           relative path names a directory the created project does not have.
      */
     [[nodiscard]]
-    bool excluded_from_created_projects(const fs::path& dir)
+    bool excluded_from_created_projects(const fs::path& entry)
     {
-      const auto name{back(dir).generic_string()};
-      return (name == "docs") || (name == "coverage_reports") || (name == ".git");
+      const auto name{back(entry).generic_string()};
+      return (name == "docs")
+          || (name == "coverage_reports")
+          || (name == "build")
+          || (name == "output")
+          || (name == ".git");
     }
 
     void copy_sequoia(std::ostream& stream, const project_paths& parentProjectPaths, const project_data& data)
@@ -106,20 +100,12 @@ namespace sequoia::testing
 
       for(auto& entry : fs::directory_iterator{parentSequoiaRoot})
       {
-        if(fs::is_directory(entry))
+        if(!excluded_from_created_projects(entry.path()))
         {
-          if(entry.path() == parentProjectPaths.output().dir())
-          {
-            copy_sequoia_output(stream, parentProjectPaths, output_paths{seqLocation}, entry);
-          }
-          else if((entry.path() != parentProjectPaths.build().dir()) && !excluded_from_created_projects(entry.path()))
-          {
+          if(fs::is_directory(entry))
             copy_sequoia_subdir(stream, seqLocation, entry);
-          }
-        }
-        else
-        {
-          fs::copy(entry, seqLocation);
+          else
+            fs::copy(entry, seqLocation);
         }
       }
 

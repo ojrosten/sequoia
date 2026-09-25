@@ -8,6 +8,7 @@
 #include "TestRunnerProjectCreation.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "Utilities/TestUtilities.hpp"
 
 #include <cstdlib>
 #include <fstream>
@@ -150,6 +151,11 @@ namespace sequoia::testing
     {
       const auto hostDir{working_materials() /= "Another_Generated-Project"};
       commandline_arguments args{{zeroth_arg(), "init", "Oliver Jacob Rosten", hostDir.generic_string(), "  ", "--no-git", "--no-build"}};
+
+      // The .git of a worktree or of a submodule checkout is a file. It is made here because git cannot track a path
+      // named .git, and before the runner because constructing the runner performs the init.
+      const transient_file gitFile{fake_project() / "dependencies/sequoia/.git",
+                                   "gitdir: ../../.git/modules/dependencies/sequoia\n"};
 
       std::stringstream outputStream{};
       test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "\t ",  make_project_paths(), outputStream};
