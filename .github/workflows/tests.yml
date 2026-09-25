@@ -70,18 +70,15 @@ jobs:
           # docs/ is ~96MB of committed doxygen render; nothing here reads it.
           fetch-depth: 1
 
-      # Every column runs whatever changed, so that its check always reports: a
-      # required check that never reports holds its PR for good (roadmap item 145).
-      # What depends on the change is everything after this step, each of which
-      # carries the condition, so a column with nothing to test passes in seconds.
-      # The action says what the comparison is with, and why.
+      # Every column runs whatever changed, so that its check always reports; the
+      # action says why, and what the change is compared with. Every step after
+      # this one carries its condition, so a column with nothing to test passes in
+      # seconds.
       - name: Is there anything to test
         id: scope
         uses: ./.github/actions/needs-testing
         with:
-          ignoring: |
-            docs/**
-            coverage_reports/**
+          check: suite
 
       # The audit below reads this step back: a column whose suite did not run is
       # accepted only where this step did.
@@ -636,7 +633,8 @@ jobs:
               def conclusion($step): ([.[0].steps[] | select(.name == $step) | .conclusion] | first) // "ABSENT";
               [.[] | select(.name | endswith(" / " + $c))]
               | if length != 1 then "JOBS:\(length)"
-                else "\(conclusion("Nothing to test"))\t\(conclusion("Run the suite"))\t\(conclusion("Run the suite again"))"
+                else [conclusion("Nothing to test"), conclusion("Run the suite"), conclusion("Run the suite again")]
+                     | join("\t")
                 end' jobs.json)
             if [[ $verdict == JOBS:* ]]; then
               echo "::error::$column: expected exactly one job, found ${verdict#JOBS:}"; failed=1; continue
@@ -647,11 +645,11 @@ jobs:
               success)
                 case "$suite/$repeat" in
                   skipped/skipped|skipped/ABSENT) echo "ok    $column: nothing to test, and the suite did not run";;
-                  *) echo "::error::$column: nothing to test, yet Run the suite -> $suite and Run the suite again -> $repeat"; failed=1;;
+                  *) echo "::error::$column: nothing to test, yet Run the suite -> $suite, again -> $repeat"; failed=1;;
                 esac
                 continue;;
               skipped) ;;
-              *) echo "::error::$column: Nothing to test -> $nothing; the column did not decide whether to test"; failed=1; continue;;
+              *) echo "::error::$column: Nothing to test -> $nothing; the column never decided"; failed=1; continue;;
             esac
             case "$suite" in
               success|failure) echo "ok    $column: Run the suite -> $suite";;

@@ -1,36 +1,38 @@
 name: Needs testing
-description: Whether this run's tree differs, outside the ignored paths, from the tree it is compared with.
+description: Whether this run's tree differs from the tree it is compared with, in a path the named check reads.
 
-# Why this exists. A required check that never reports holds a PR at "Expected -
-# waiting for status to be reported", for good. A workflow skipped by a
-# `paths-ignore` trigger reports nothing, so a documentation-only PR, or a push
-# which changes no file, used to wedge the PR it belonged to (roadmap item 145).
-# The decision is therefore taken here, inside a job that always runs and so
-# always reports: the job's expensive steps are conditional on this action's
-# output, and a job which skips them still passes.
+# A required check that never reports holds its pull request at "Expected -
+# waiting for status to be reported", for good. A workflow skipped by a path
+# filter on its trigger reports nothing, so no workflow with a job that is a
+# required check may filter its trigger by path (roadmap item 145). The decision
+# is taken here instead, inside a job that always runs and so always reports:
+# the job's expensive steps are conditional on this action's output, and a job
+# which skips them still passes.
 #
-# The comparison is with the tree a gate has already certified, not with the
-# previous push, because a gate certifies a tree:
-#   -# A pull request: the head against its merge-base with the base.
-#   -# A push to staging: the push itself, `before..after`. Staging's previous
-#      tree had this tier on its own push.
-#   -# Any other push: the head against its merge-base with staging, which is
-#      the pull request's comparison for the usual PR into staging.
-#   -# Anything else, a schedule or a dispatch: always tested. Someone asked.
-# A comparison which cannot be made - a first push, a history rewritten under a
-# force push, a fetch that fails - answers "needs testing". Skipping is the
+# The comparison is with a tree a gate has already certified, because a gate
+# certifies a tree, not a push:
+#   - A pull request: the head against its merge-base with the base.
+#   - A push to staging: always tested. Merges land there, and a merge can make a
+#     tree nothing has tested. Nor is a push's own diff enough: when a push
+#     cancels the run of the push before it, the earlier push's commits are left
+#     untested.
+#   - Any other push: the head against its merge-base with staging, which is the
+#     pull request's comparison for the usual PR into staging.
+#   - Anything else, a schedule or a dispatch: always tested. Someone asked.
+# A comparison which cannot be made - a fetch that fails, a history with no
+# merge-base - answers "needs testing", with a warning. Skipping is the
 # direction that could let a defect through, so it is taken only on evidence.
 #
 # The clone is blobless: `git diff --name-only` reads trees, never file
-# contents, so the ~96MB of committed documentation render is never fetched. It
-# costs about 13MB and a few seconds (measured 2026-09-25).
+# contents, so the ~96MB of committed documentation render is never fetched. The
+# clone costs about 11MB and three seconds (measured 2026-09-25).
 inputs:
-  ignoring:
-    description: 'Paths whose changes need no testing, one git glob per line, such as docs/**.'
+  check:
+    description: 'Whose inputs to look for: `suite` or `documentation`.'
     required: true
 outputs:
   needs-testing:
-    description: '`true` unless every changed path matches `ignoring`, or no path changed.'
+    description: '`true` unless no path the check reads has changed.'
     value: ${{ steps.decide.outputs.needs-testing }}
 runs:
   using: composite
@@ -38,20 +40,34 @@ runs:
     - id: decide
       shell: bash
       env:
-        IGNORING: ${{ inputs.ignoring }}
+        CHECK: ${{ inputs.check }}
         EVENT: ${{ github.event_name }}
         REF: ${{ github.ref }}
         PR_BASE: ${{ github.event.pull_request.base.sha }}
         PR_HEAD: ${{ github.event.pull_request.head.sha }}
-        PUSH_BEFORE: ${{ github.event.before }}
         PUSH_AFTER: ${{ github.event.after }}
         REPO_URL: ${{ github.server_url }}/${{ github.repository }}
       run: |
+        # What each check does not read, as git globs. The suite reads nothing
+        # under docs/, and coverage_reports/ is a published record of past runs.
+        # Doxygen's output is docs/html, not its input; its input includes
+        # docs/config, which holds the Doxyfile and what the Doxyfile includes.
+        # Should the Doxyfile ever read from docs/html, the second list is wrong.
+        case "$CHECK" in
+          suite)         ignored=('docs/**'      'coverage_reports/**');;
+          documentation) ignored=('docs/html/**' 'coverage_reports/**');;
+          *)             echo "::error::needs-testing: no check is called '$CHECK'"; exit 1;;
+        esac
+
         answer() {
           echo "needs-testing=$1" >> "$GITHUB_OUTPUT"
           echo "$2"
           [ "$1" = true ] || echo "$2" >> "$GITHUB_STEP_SUMMARY"
           exit 0
+        }
+        cannot_compare() {
+          echo "::warning title=Tested in full::$1, so the change could not be compared; testing everything."
+          answer true "Needs testing: $1."
         }
 
         git_dir="$RUNNER_TEMP/needs-testing.git"
@@ -60,45 +76,35 @@ runs:
         git --git-dir="$git_dir" remote add origin "$REPO_URL"
         fetch() { git --git-dir="$git_dir" fetch -q --filter=blob:none origin "$@"; }
 
-        case "$EVENT" in
-          pull_request)
+        case "$EVENT/$REF" in
+          pull_request/*)
             fetch "$PR_BASE" "$PR_HEAD" \
-              || answer true "Needs testing: the pull request's commits could not be fetched."
+              || cannot_compare "the pull request's commits could not be fetched"
             from=$(git --git-dir="$git_dir" merge-base "$PR_BASE" "$PR_HEAD") \
-              || answer true "Needs testing: the pull request's head has no merge-base with its base."
+              || cannot_compare "the pull request's head has no merge-base with its base"
             to=$PR_HEAD;;
-          push)
-            to=$PUSH_AFTER
-            if [ "$REF" = refs/heads/staging ]; then
-              if [ -z "${PUSH_BEFORE//0/}" ]; then
-                answer true "Needs testing: staging was created by this push."
-              fi
-              fetch "$PUSH_BEFORE" "$PUSH_AFTER" \
-                || answer true "Needs testing: the push's commits could not be fetched; was history rewritten?"
-              from=$PUSH_BEFORE
-            else
-              fetch "+refs/heads/scratch-145-base:refs/remotes/origin/staging" "$PUSH_AFTER" \
-                || answer true "Needs testing: staging and the pushed commit could not be fetched."
-              from=$(git --git-dir="$git_dir" merge-base refs/remotes/origin/staging "$PUSH_AFTER") \
-                || answer true "Needs testing: the pushed commit has no merge-base with staging."
-            fi;;
+          push/refs/heads/staging)
+            answer true "Needs testing: a push to staging is always tested.";;
+          push/*)
+            fetch "+refs/heads/scratch-145-base:refs/remotes/origin/staging" "$PUSH_AFTER" \
+              || cannot_compare "staging and the pushed commit could not be fetched"
+            from=$(git --git-dir="$git_dir" merge-base refs/remotes/origin/staging "$PUSH_AFTER") \
+              || cannot_compare "the pushed commit has no merge-base with staging"
+            to=$PUSH_AFTER;;
           *)
             answer true "Needs testing: a $EVENT run tests the tree whatever changed.";;
         esac
 
-        # One exclude pathspec per ignored glob; with only excludes given, git
-        # matches everything else.
+        # With only exclude pathspecs given, git matches everything else.
         pathspecs=()
-        while IFS= read -r glob; do
-          [ -n "$glob" ] && pathspecs+=(":(exclude,glob)$glob")
-        done <<<"$IGNORING"
-        [ ${#pathspecs[@]} -gt 0 ] || answer true "Needs testing: no path is ignored."
+        for glob in "${ignored[@]}"; do pathspecs+=(":(exclude,glob)$glob"); done
 
         changed=$(git --git-dir="$git_dir" diff --name-only "$from" "$to" -- "${pathspecs[@]}") \
-          || answer true "Needs testing: the trees could not be compared."
+          || cannot_compare "the trees of ${from:0:9} and ${to:0:9} could not be compared"
         if [ -n "$changed" ]; then
-          echo "Changed since ${from:0:9}, outside the ignored paths:"
+          echo "Changed since ${from:0:9}, outside ${ignored[*]}:"
           printf '%s\n' "$changed" | sed -n '1,20p' | sed 's/^/  /'
-          answer true "Needs testing: $(printf '%s\n' "$changed" | wc -l | tr -d ' ') path(s) changed since ${from:0:9} outside $(echo $IGNORING)."
+          count=$(printf '%s\n' "$changed" | wc -l | tr -d ' ')
+          answer true "Needs testing: $count path(s) changed since ${from:0:9} outside ${ignored[*]}."
         fi
-        answer false "Nothing to test: no path outside $(echo $IGNORING) changed since ${from:0:9}."
+        answer false "Nothing to test for the $CHECK: no path outside ${ignored[*]} changed since ${from:0:9}."
