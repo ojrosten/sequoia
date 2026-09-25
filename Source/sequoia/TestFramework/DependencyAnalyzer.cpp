@@ -7,11 +7,13 @@
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/BuildArtefacts.hpp"
+#include "sequoia/TestFramework/CMakeCache.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
 #include "sequoia/Maths/Arithmetic/ArithmeticCasts.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
+#include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <algorithm>
@@ -24,9 +26,11 @@
 #include <map>
 #include <optional>
 #include <ranges>
+#include <source_location>
 #include <stdexcept>
 #include <string>
 #include <type_traits>
+#include <variant>
 
 namespace sequoia::testing
 {
@@ -101,6 +105,69 @@ namespace sequoia::testing
     bool in_toolchain(const fs::path& file, const build_tree& tree)
     {
       return std::ranges::any_of(tree.implicit_include_directories, [&file](const fs::path& dir){ return in_repo(file, dir); });
+    }
+
+    /// `path` made canonical as far as it exists; as given, if even that cannot be resolved
+    [[nodiscard]]
+    fs::path canonical_or_as_given(const fs::path& path)
+    {
+      std::error_code error{};
+      auto canonical{fs::weakly_canonical(path, error)};
+      return error ? path : canonical;
+    }
+
+    /// A file the build recorded, made canonical, and whether it is the toolchain's
+    struct recorded_file
+    {
+      fs::path canonical;
+      bool toolchain;
+    };
+
+    /** Each file a build recorded, made canonical - which is what project_paths holds, the build having
+        recorded whatever spelling it was configured with, through whatever symlink and in whatever case -
+        and classed as the project's or the toolchain's. Both are properties of the file's directory, and
+        the filesystem is asked once per directory.
+
+        A directory whose existing prefix cannot be resolved - a directory without permission, a symlink
+        loop - is kept as recorded, and its files fail with that reason when their modification times are
+        read. A file's own name is as the compilation spelled it: a file which is itself a symlink keeps
+        its name, which `last_write_time` follows, and on a filesystem which finds a file whatever its
+        case, a header included under a case other than its own keeps that case, and so does not match the
+        stem of the source named for it.
+     */
+    [[nodiscard]]
+    std::vector<recorded_file> recorded_files(const build_tree& tree, std::span<const fs::path> files)
+    {
+      std::map<fs::path, recorded_file> directories{};
+      auto directoryFacts{
+        [&tree, &directories](const fs::path& dir) -> const recorded_file& {
+          if(const auto found{directories.find(dir)}; found != directories.end())
+            return found->second;
+
+          const auto canonical{canonical_or_as_given(dir)};
+          const recorded_file facts{.canonical{canonical}, .toolchain{in_toolchain(canonical, tree)}};
+          return directories.emplace(dir, facts).first->second;
+        }
+      };
+
+      auto fileFacts{
+        [&tree, &directoryFacts](const fs::path& p) {
+          const auto asRecorded{(p.is_absolute() ? p : tree.build_directory / p).lexically_normal()};
+          const auto& directory{directoryFacts(asRecorded.parent_path())};
+
+          return recorded_file{.canonical{directory.canonical / asRecorded.filename()},
+                               .toolchain{directory.toolchain}};
+        }
+      };
+
+      return files | std::views::transform(fileFacts) | std::ranges::to<std::vector>();
+    }
+
+    /// Whether a compilation's source - read_compilations puts it first among the inputs - lies in `dir`
+    [[nodiscard]]
+    bool compiled_from(const compilations::record& record, std::span<const recorded_file> files, const fs::path& dir)
+    {
+      return in_repo(files[record.input_indices.front()].canonical, dir);
     }
 
     /** Every test class may optionally define test materials. For a test class `bar_test`, defined in
@@ -356,55 +423,16 @@ namespace sequoia::testing
       /** A node for every object file and every file of the project's read to produce one - the tests'
           object files first, then in order of first mention - each object file's source on its node; an
           edge from each object file to each such file; and the dependencies the convention adds. The
-          toolchain's files are listed apart.
-
-          Each file's path is made canonical - which is what project_paths holds, the build having
-          recorded whatever spelling it was configured with, through whatever symlink and in whatever
-          case - and each file is classed as the project's or the toolchain's. Both are properties of
-          the file's directory, and the filesystem is asked once per directory.
+          toolchain's files are listed apart. Each file is as `recorded_files` finds it.
        */
       [[nodiscard]]
       static files_read_by_build read_files(const build_tree& tree, const project_paths& projPaths)
       {
         const auto compilations{read_compilations(tree, projPaths.executable())};
 
-        /* A directory whose existing prefix cannot be resolved - a directory without permission, a
-           symlink loop - is kept as recorded, and its files fail with that reason when their modification
-           times are read. A file's own name is as the compilation spelled it: a file which is itself a
-           symlink keeps its name, which `last_write_time` follows, and on a filesystem which finds a file
-           whatever its case, a header included under a case other than its own keeps that case, and so
-           does not match the stem of the source named for it.
-         */
-        struct facts
-        {
-          fs::path canonical;
-          bool toolchain;
-        };
-        std::map<fs::path, facts> directories{};
-        auto directoryFacts{
-          [&tree, &directories](const fs::path& dir) -> const facts& {
-            if(const auto found{directories.find(dir)}; found != directories.end())
-              return found->second;
-
-            std::error_code error{};
-            auto canonicalized{fs::weakly_canonical(dir, error)};
-            const fs::path& canonical{error ? dir : canonicalized};
-
-            return directories.emplace(dir, facts{.canonical{canonical}, .toolchain{in_toolchain(canonical, tree)}}).first->second;
-          }
-        };
-        auto fileFacts{
-          [&tree, &directoryFacts](const fs::path& p) {
-            const auto asRecorded{(p.is_absolute() ? p : tree.build_directory / p).lexically_normal()};
-            const auto& directory{directoryFacts(asRecorded.parent_path())};
-
-            return facts{.canonical{directory.canonical / asRecorded.filename()}, .toolchain{directory.toolchain}};
-          }
-        };
-
         const auto& [files, records]{compilations};
 
-        const auto fileFactsTable{files | std::views::transform(fileFacts) | std::ranges::to<std::vector>()};
+        const auto fileFactsTable{recorded_files(tree, files)};
         auto isProjectFile{[&fileFactsTable](compilations::file_index fileIndex){ return !fileFactsTable[fileIndex].toolchain; }};
 
         graph_type g{};
@@ -424,7 +452,7 @@ namespace sequoia::testing
         // read_compilations puts the source first among the inputs
         auto isTest{
           [&fileFactsTable, testsRepo{projPaths.tests().repo()}](const compilations::record& record) {
-            return in_repo(fileFactsTable[record.input_indices.front()].canonical, testsRepo);
+            return compiled_from(record, fileFactsTable, testsRepo);
           }
         };
 
@@ -450,8 +478,8 @@ namespace sequoia::testing
 
         auto toolchainFiles{
             fileFactsTable
-          | std::views::filter(&facts::toolchain)
-          | std::views::transform(&facts::canonical)
+          | std::views::filter(&recorded_file::toolchain)
+          | std::views::transform(&recorded_file::canonical)
           | std::ranges::to<std::vector>()
         };
 
@@ -780,6 +808,212 @@ namespace sequoia::testing
       return   std::views::transform(tests, [updateTime](const fs::path& p){ return prune_record{p, updateTime}; })
              | std::ranges::to<std::vector>();
     }
+  }
+
+  namespace
+  {
+    /// The newest of a library's own files which its build read, and the object it was read to compile
+    struct library_file
+    {
+      fs::path file;
+      fs::path object;
+      fs::file_time_type time;
+    };
+
+    /// The target whose object `object` is: CMake puts a target's objects beneath `<target>.dir`
+    [[nodiscard]]
+    std::optional<std::string> target_of(const fs::path& object)
+    {
+      const auto targetDirectory{std::ranges::find_if(object, [](const fs::path& p){ return p.extension() == ".dir"; })};
+      if(targetDirectory == object.end())
+        return std::nullopt;
+
+      return targetDirectory->stem().string();
+    }
+
+    [[nodiscard]]
+    std::string read_to_compile(const fs::path& object)
+    {
+      const auto target{target_of(object)};
+      return std::format("read to compile {}{}",
+                         object.generic_string(),
+                         target ? std::format(", of target {}", *target) : std::string{});
+    }
+
+    constexpr std::string_view library_changed{
+      "The library has changed since this executable was built; please build it again."
+    };
+
+    /** The newest of a library's own files which its build read: the library's objects are those compiled
+        from a source beneath `libraryRoot`, and its own files are those of the files read to compile them
+        which lie beneath it too. So a header of the library which only the tests read does not count, and
+        nor does anything of the toolchain's, of another library's, or of the tests'.
+
+        \returns Nothing, if no object was compiled from beneath `libraryRoot`.
+
+        \throws std::runtime_error if the modification time of one of the library's own files cannot be read.
+     */
+    [[nodiscard]]
+    std::optional<library_file> newest_library_file(const build_tree& tree,
+                                                    const compilations& compiled,
+                                                    const fs::path& libraryRoot)
+    {
+      const auto& [files, records]{compiled};
+      const auto facts{recorded_files(tree, files)};
+      const auto root{canonical_or_as_given(libraryRoot)};
+
+      auto isOwnFile{[&facts, &root](compilations::file_index i){ return in_repo(facts[i].canonical, root); }};
+      auto isLibraryObject{
+        [&facts, &root](const compilations::record& record){ return compiled_from(record, facts, root); }
+      };
+
+      // A header several objects read is timed once; a stateful filter, so a loop
+      std::vector<bool> timed(files.size());
+      std::optional<library_file> newest{};
+      for(const auto& record : records | std::views::filter(isLibraryObject))
+      {
+        const auto& object{facts[record.object_index].canonical};
+        for(const auto i : record.input_indices | std::views::filter(isOwnFile))
+        {
+          if(timed[i]) continue;
+          timed[i] = true;
+
+          const auto& file{facts[i].canonical};
+          std::error_code error{};
+          const auto time{fs::last_write_time(file, error)};
+          if(error)
+            throw std::runtime_error{
+              std::format("{}\n{}, {}, cannot now be read: {}\n",
+                          library_changed,
+                          file.generic_string(),
+                          read_to_compile(object),
+                          error.message())
+            };
+
+          if(!newest || (time > newest->time))
+            newest = library_file{.file{file}, .object{object}, .time{time}};
+        }
+      }
+
+      return newest;
+    }
+
+    /** Whether `dir`, or anything beneath it, is no older than `stamp`: a file, or a directory, whose time
+        a deletion within it moves. An entry whose time cannot be read counts, so that the record decides.
+     */
+    [[nodiscard]]
+    bool anything_since(const fs::path& dir, const fs::file_time_type stamp)
+    {
+      auto noOlder{
+        [stamp](const fs::directory_entry& entry) {
+          std::error_code error{};
+          const auto time{entry.last_write_time(error)};
+          return error || (time >= stamp);
+        }
+      };
+
+      if(noOlder(fs::directory_entry{dir}))
+        return true;
+
+      return std::ranges::any_of(fs::recursive_directory_iterator{dir, fs::directory_options::skip_permission_denied},
+                                 noOlder);
+    }
+
+    /// A reason given on several lines, as one
+    [[nodiscard]]
+    std::string on_one_line(std::string_view reason)
+    {
+      auto lines{
+          reason
+        | std::views::split('\n')
+        | std::views::filter([](auto&& line){ return !std::ranges::empty(line); })
+        | std::views::transform([](auto&& line){ return std::string_view{line}; })
+      };
+
+      return lines | std::views::join_with(std::string_view{" "}) | std::ranges::to<std::string>();
+    }
+  }
+
+  [[nodiscard]]
+  fs::path sequoia_library_root()
+  {
+    // This file is compiled from TestFramework, one directory below the library's root
+    return fs::path{std::source_location::current().file_name()}.parent_path().parent_path();
+  }
+
+  void refuse_if_library_changed_since_build(const project_paths& projPaths,
+                                             const cmake_cache& cache,
+                                             const fs::path& libraryRoot,
+                                             std::ostream& stream)
+  {
+    auto notChecked{
+      [&stream](std::string_view reason) {
+        stream << parsing::commandline::warning(
+                    std::format("Whether the library has changed since this executable was built "
+                                "cannot be checked: {}",
+                                on_one_line(reason)))
+               << '\n';
+      }
+    };
+
+    if(!libraryRoot.is_absolute())
+    {
+      notChecked("the library was compiled from relative paths");
+      return;
+    }
+
+    // Defensive: the executable can vanish after the runner starts, a rebuild relinking it
+    const auto executableStamp{get_stamp(projPaths.executable())};
+    if(!executableStamp)
+    {
+      notChecked("the executable cannot be found");
+      return;
+    }
+
+    // One stat per file of the library's, and the build's record read only if one of them is no older
+    if(!anything_since(libraryRoot, *executableStamp))
+      return;
+
+    const auto build{
+      [&]() -> std::variant<std::pair<build_tree, compilations>, std::string> {
+        try
+        {
+          auto tree{read_build_tree(projPaths.discovered().cmake_cache(), cache)};
+          auto compiled{read_compilations(tree, projPaths.executable())};
+          return std::pair{std::move(tree), std::move(compiled)};
+        }
+        catch(const std::runtime_error& e)
+        {
+          return std::string{e.what()};
+        }
+      }()
+    };
+
+    if(const auto reason{std::get_if<std::string>(&build)})
+    {
+      notChecked(std::format("the build's record of what it compiled cannot be read: {}", *reason));
+      return;
+    }
+
+    const auto& [tree, compiled]{std::get<0>(build)};
+    const auto newest{newest_library_file(tree, compiled, libraryRoot)};
+    if(!newest)
+    {
+      notChecked(std::format("the build's record names no object compiled from beneath {}",
+                             libraryRoot.generic_string()));
+      return;
+    }
+
+    if(newest->time >= *executableStamp)
+      throw std::runtime_error{
+        std::format("{}\n{}, {}, time stamp: {}\n{}, time stamp: {}\n",
+                    library_changed,
+                    newest->file.generic_string(),
+                    read_to_compile(newest->object),
+                    newest->time,
+                    projPaths.executable().generic_string(),
+                    *executableStamp)
+      };
   }
 
   [[nodiscard]]
