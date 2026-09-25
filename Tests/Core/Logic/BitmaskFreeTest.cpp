@@ -10,6 +10,8 @@
 #include "sequoia/Core/Logic/Bitmask.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
+#include <format>
+
 namespace
 {
   enum class mask { none = 0, a = 1, b = 2, c = 4 };

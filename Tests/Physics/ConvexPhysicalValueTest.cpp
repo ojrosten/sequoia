@@ -12,6 +12,7 @@
 #include "sequoia/TextProcessing/Patterns.hpp"
 
 #include <charconv>
+#include <format>
 
 using namespace sequoia::physics;
 

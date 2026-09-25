@@ -11,6 +11,7 @@
 
 #include "sequoia/Physics/PhysicalValuesDetails.hpp"
 
+#include <format>
 #include <numbers>
 
 namespace sequoia::physics

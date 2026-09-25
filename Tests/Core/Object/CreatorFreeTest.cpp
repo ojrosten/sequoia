@@ -8,6 +8,8 @@
 #include "CreatorFreeTest.hpp"
 #include "sequoia/Core/Object/Creator.hpp"
 
+#include <format>
+
 namespace
 {
   struct aggregate_type

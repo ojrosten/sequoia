@@ -14,6 +14,7 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <format>
 #include <fstream>
 
 namespace sequoia::testing
