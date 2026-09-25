@@ -221,7 +221,7 @@ namespace sequoia::testing
         add_dim_1_free_mutations(g, test);
       }
 
-      if constexpr(std::constructible_from<coords_t, disp_value_t>)
+      if constexpr(std::constructible_from<coords_t, value_t>)
       {
         add_dim_1_no_unit_construction(g, test);
       }
@@ -749,7 +749,7 @@ namespace sequoia::testing
         add_dim_2_free_mutations(g, test);
       }
 
-      if constexpr(std::constructible_from<coords_t, disp_value_t, disp_value_t>)
+      if constexpr(std::constructible_from<coords_t, value_t, value_t>)
       {
         add_dim_2_no_unit_construction(g, test);
       }
