@@ -13,6 +13,8 @@
 #include "sequoia/Core/DataStructures/StaticLinearlyPartitionedSequence.hpp"
 #include "PartitionedDataTestingUtilities.hpp"
 
+#include <format>
+
 namespace sequoia::testing
 {
   template<class T, std::size_t Npartitions, std::size_t NelementsPerPartition, std::integral IndexType>
@@ -31,7 +33,7 @@ namespace sequoia::testing
     {
       for (std::size_t i{}; i < prediction.size(); ++i)
       {
-        const auto message{ std::string{"Partition "}.append(std::to_string(i)) };
+        const auto message{ std::format("Partition {}", i) };
         check(with_best_available, message + ": iterator", logger, actual.begin_partition(i), actual.end_partition(i), (prediction.begin() + i)->begin(), (prediction.begin() + i)->end());
 
         check(with_best_available, message + ": riterator", logger, actual.rbegin_partition(i), actual.rend_partition(i), std::rbegin(*(prediction.begin() + i)), std::rend(*(prediction.begin() + i)));

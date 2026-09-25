@@ -12,6 +12,8 @@
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/Core/DataStructures/MemOrderedTuple.hpp"
 
+#include <format>
+
 namespace sequoia::testing
 {
   template<class... Ts>

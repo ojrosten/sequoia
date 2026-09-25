@@ -9,6 +9,8 @@
 #include "sequoia/TestFramework/DumpComparison.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <format>
+
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
@@ -38,7 +40,7 @@ namespace sequoia::testing
       std::string dump{};
       for(const auto check : checks)
       {
-        dump.append(check).append("\n").append(dump_format::check_separator);
+        dump.append(std::format("{}\n{}", check, dump_format::check_separator));
       }
 
       return dump;

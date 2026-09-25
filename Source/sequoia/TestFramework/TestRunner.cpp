@@ -737,7 +737,7 @@ namespace sequoia::testing
                           }
                           catch(const std::exception&)
                           {
-                            throw std::runtime_error{"locate-instabilities: unable to interpret '" + arg + "' as an integer number of repetitions"};
+                            throw std::runtime_error{std::format("locate-instabilities: unable to interpret '{}' as an integer number of repetitions", arg)};
                           }
                         }()
                       };
@@ -1408,10 +1408,12 @@ namespace sequoia::testing
   {
     using namespace parsing::commandline;
 
-    return error(std::string{"Test: \""}.append(testName).append("\"\n")
-                  .append("Source file: \"").append(source.generic_string()).append("\"\n")
-                  .append("A test's name is that of its class, and determines where its output is"
-                    " written, so each may be registered only once.\n"));
+    return error(std::format("Test: \"{}\"\n"
+                             "Source file: \"{}\"\n"
+                             "A test's name is that of its class, and determines where its output is"
+                             " written, so each may be registered only once.\n",
+                             testName,
+                             source.generic_string()));
   }
 
   void test_runner::build_suite_tree()

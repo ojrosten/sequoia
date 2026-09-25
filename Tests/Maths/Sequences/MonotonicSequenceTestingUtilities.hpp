@@ -13,6 +13,8 @@
 
 #include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
 
+#include <format>
+
 namespace sequoia::testing
 {
   namespace impl
@@ -38,7 +40,7 @@ namespace sequoia::testing
         for(;i_prediction != prediction.end(); ++i_prediction, ++i, ++ci_prediction, ++ci, ++ri_prediction, ++ri, ++cri_prediction, ++cri)
         {
           const auto d{std::ranges::distance(prediction.begin(), i_prediction)};
-          const auto mess{std::string{" for index "}.append(std::to_string(d))};
+          const auto mess{std::format(" for index {}", d)};
 
           check(equality, std::string{"Dereferenced iterator wrong"}.append(mess), logger, *i, *i_prediction);
           check(equality, std::string{"Dereferenced citerator wrong"}.append(mess), logger, *ci, *ci_prediction);

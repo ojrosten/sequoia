@@ -14,6 +14,8 @@
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 
+#include <format>
+
 namespace sequoia::testing
 {
   template<maths::dynamic_tree Tree>
@@ -39,12 +41,12 @@ namespace sequoia::testing
     {
       if (node == tree_type::npos) return node;
 
-      if (testing::check("Insufficient nodes detected while checking node " + std::to_string(node), logger, node < actual.order()))
+      if (testing::check(std::format("Insufficient nodes detected while checking node {}", node), logger, node < actual.order()))
       {
         if constexpr (link_dir != maths::tree_link_direction::backward)
         {
           if constexpr(!std::is_empty_v<node_weight_type>)
-            check(flavour, "Node weight for node " + std::to_string(node), logger, actual.cbegin_node_weights()[node], prediction.node);
+            check(flavour, std::format("Node weight for node {}", node), logger, actual.cbegin_node_weights()[node], prediction.node);
 
           if (auto optIter{ check_num_edges(logger, node, parent, actual, prediction) })
           {
@@ -66,7 +68,7 @@ namespace sequoia::testing
           if (auto optIter{ check_num_edges(logger, node, parent, actual, prediction) })
           {
             if constexpr(!std::is_empty_v<node_weight_type>)
-              check(flavour, "Node weight for node " + std::to_string(node), logger, actual.cbegin_node_weights()[node], prediction.node);
+              check(flavour, std::format("Node weight for node {}", node), logger, actual.cbegin_node_weights()[node], prediction.node);
 
             for (const auto& child : prediction.children)
             {
@@ -79,7 +81,7 @@ namespace sequoia::testing
             {
               if (auto begin{ actual.cbegin_edges(next) }; begin != actual.cend_edges(next))
               {
-                if (!testing::check("Extraneous nodes joined to node " + std::to_string(node), logger, begin->target_node() != optIter->partition_index()))
+                if (!testing::check(std::format("Extraneous nodes joined to node {}", node), logger, begin->target_node() != optIter->partition_index()))
                 {
                   return tree_type::npos;
                 }
@@ -99,7 +101,7 @@ namespace sequoia::testing
     {
       if constexpr (link_dir == maths::tree_link_direction::forward)
       {
-        if (check(equality, "Number of children for node " + std::to_string(node), logger, static_cast<std::size_t>(std::ranges::distance(actual.cbegin_edges(node), actual.cend_edges(node))), prediction.children.size()))
+        if (check(equality, std::format("Number of children for node {}", node), logger, static_cast<std::size_t>(std::ranges::distance(actual.cbegin_edges(node), actual.cend_edges(node))), prediction.children.size()))
           return actual.cbegin_edges(node);
       }
       else
@@ -124,12 +126,12 @@ namespace sequoia::testing
         {
           if constexpr (link_dir == maths::tree_link_direction::symmetric)
           {
-            if (check(equality, "Number of children for node " + std::to_string(node), logger, num.value(), prediction.children.size()))
+            if (check(equality, std::format("Number of children for node {}", node), logger, num.value(), prediction.children.size()))
               return num < dist ? std::ranges::next(begin) : begin;
           }
           else
           {
-            if (check(equality, "No reachable children for node " + std::to_string(node), logger, num.value(), size_type{}))
+            if (check(equality, std::format("No reachable children for node {}", node), logger, num.value(), size_type{}))
               return num < dist ? std::ranges::next(begin) : begin;
           }
         }
@@ -147,7 +149,7 @@ namespace sequoia::testing
       {
         const auto parent{ iter.partition_index() };
         const auto dist{ distance(actual.cbegin_edges(parent), iter) };
-        const auto mess{ std::string{"Index for child "}.append(std::to_string(dist)).append(" of node ").append(std::to_string(parent)) };
+        const auto mess{ std::format("Index for child {} of node {}", dist, parent) };
 
         return check(equality, mess, logger, iter->target_node(), nodeCounter);
       }
@@ -159,7 +161,7 @@ namespace sequoia::testing
       {
         const auto parent{ iter.partition_index() };
         const auto dist{ distance(actual.cbegin_edges(parent), iter) };
-        const auto mess{ std::string{"Index for child "}.append(std::to_string(dist)).append(" of node ").append(std::to_string(parent)) };
+        const auto mess{ std::format("Index for child {} of node {}", dist, parent) };
 
         return check(equality, mess, logger, iter->target_node(), nodeCounter);
       }

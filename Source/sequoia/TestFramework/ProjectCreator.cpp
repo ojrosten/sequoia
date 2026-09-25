@@ -14,6 +14,8 @@
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <format>
+
 namespace sequoia::testing
 {
   using namespace runtime;
@@ -204,10 +206,10 @@ namespace sequoia::testing
         throw std::runtime_error{"Project path should not be empty\n"};
 
       if(!data.project_root.is_absolute())
-        throw std::runtime_error{std::string{"Project path '"}.append(data.project_root.generic_string()).append("' should be absolute\n")};
+        throw std::runtime_error{std::format("Project path '{}' should be absolute\n", data.project_root.generic_string())};
 
       if(!is_appropriate_root(data.project_root))
-        throw std::runtime_error{std::string{"Project location '"}.append(data.project_root.generic_string()).append("' is in use\n")};
+        throw std::runtime_error{std::format("Project location '{}' is in use\n", data.project_root.generic_string())};
 
       const auto name{back(data.project_root).generic_string()};
       if(name.empty())
@@ -215,9 +217,11 @@ namespace sequoia::testing
 
       if(std::ranges::find_if(name, [](char c) { return !(std::isalnum(c) || (c == '_') || (c == '-')); }) != name.cend())
       {
-        throw std::runtime_error{std::string{"Please ensure the project name '"}
-          .append(name)
-          .append("' consists of just alpha-numeric characters, underscores and dashes\n")};
+        throw std::runtime_error{
+          std::format("Please ensure the project name '{}' consists of just alpha-numeric characters, "
+                      "underscores and dashes\n",
+                      name)
+        };
       }
 
       check_indent(data.code_indent);
@@ -289,7 +293,7 @@ namespace sequoia::testing
           const auto token{back(root)};
           const auto sln{(buildDir / token).concat("Tests.sln")};
 
-          return {"Attempting to open IDE...", std::string{"\""}.append(devenv.string()).append("\" ").append("/Run ").append(sln.string()), ""};
+          return {"Attempting to open IDE...", std::format("\"{}\" /Run {}", devenv.string(), sln.string()), ""};
         }
       }
     }

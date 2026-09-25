@@ -12,6 +12,7 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
+#include <format>
 #include <fstream>
 #include <regex>
 
@@ -23,7 +24,7 @@ namespace sequoia::testing
       [&includePath](std::string& text) {
 
         std::string_view include{"#include"};
-        std::vector<std::string> entries{std::string{include}.append(" \"").append(includePath).append("\"\n")};
+        std::vector<std::string> entries{std::format("{} \"{}\"\n", include, includePath)};
 
         constexpr auto npos{std::string::npos};
 
@@ -123,7 +124,7 @@ namespace sequoia::testing
         std::string str{};
         for(const auto& test : tests)
         {
-          auto registration{std::string{"runner.register_test<"}.append(test).append(">();")};
+          auto registration{std::format("runner.register_test<{}>();", test)};
           if(contentsStr.find(registration) == std::string::npos)
             append_indented(str, registration, indent + indent);
         }
@@ -175,7 +176,7 @@ namespace sequoia::testing
             std::ranges::sort(entries);
             std::string sorted{};
             std::ranges::for_each(entries, [&sorted, numSpaces](const std::string& e) {
-              sorted.append("\n").append(numSpaces, ' ').append(e); });
+              sorted.append(std::format("\n{:{}}{}", "", numSpaces, e)); });
 
             const auto startSection{std::ranges::min(text.find("\n", startPos + patternOpen.size()), endPos)};
             text.replace(startSection, endPos - startSection, sorted);

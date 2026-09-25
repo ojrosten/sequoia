@@ -71,7 +71,7 @@ namespace sequoia::testing
       if(paths.empty()) return;
 
       text.append(heading).append(":\n");
-      for(const auto& p : paths) text.append("  ").append(p.generic_string()).append("\n");
+      for(const auto& p : paths) text.append(std::format("  {}\n", p.generic_string()));
     }
 
     /** A final line lacking its newline still counts, as it does for git */
@@ -105,7 +105,7 @@ namespace sequoia::testing
     void append_file_patch(std::string& patch, const fs::path& path, std::optional<std::string_view> before, std::optional<std::string_view> after)
     {
       const auto name{path.generic_string()};
-      patch.append("diff --git a/").append(name).append(" b/").append(name).push_back('\n');
+      patch.append(std::format("diff --git a/{} b/{}\n", name, name));
       if(!before) patch.append("new file mode 100644\n");
       if(!after)  patch.append("deleted file mode 100644\n");
 

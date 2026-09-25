@@ -16,6 +16,7 @@
 
 #include "sequoia/TestFramework/FreeCheckers.hpp"
 
+#include <format>
 #include <tuple>
 #include <utility>
 

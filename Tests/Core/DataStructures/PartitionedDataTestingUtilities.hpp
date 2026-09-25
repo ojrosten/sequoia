@@ -13,6 +13,8 @@
 
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
 
+#include <format>
+
 namespace sequoia::testing
 {
   namespace impl
@@ -28,7 +30,7 @@ namespace sequoia::testing
       {
         for(std::size_t i{}; i<prediction.num_partitions(); ++i)
         {
-          const auto message{std::string{"Partition "}.append(std::to_string(i))};
+          const auto message{std::format("Partition {}", i)};
           check(equality, append_lines(message, "size_of_partition"), logger, data.size_of_partition(i), prediction.size_of_partition(i));
 
           if(check(flavour, append_lines(message, "iterator (const)"), logger, data.begin_partition(i), data.end_partition(i), prediction.begin_partition(i), prediction.end_partition(i)))
@@ -76,7 +78,7 @@ namespace sequoia::testing
       {
         for(std::size_t i{}; i<prediction.size(); ++i)
         {
-          const auto message{std::string{"Partition "}.append(std::to_string(i))};
+          const auto message{std::format("Partition {}", i)};
           check(equality, append_lines(message, "size_of_partition"), logger, data.size_of_partition(i), (prediction.begin() + i)->size());
 
           check(with_best_available, message + ": iterator", logger, data.begin_partition(i), data.end_partition(i), (prediction.begin() + i)->begin(), (prediction.begin() + i)->end());

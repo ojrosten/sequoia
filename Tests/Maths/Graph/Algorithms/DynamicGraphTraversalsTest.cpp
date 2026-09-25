@@ -10,6 +10,8 @@
 
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 
+#include <format>
+
 namespace sequoia::testing
 {
   namespace
@@ -504,7 +506,7 @@ namespace sequoia::testing
         edgeAnswers2 = edge_order{{1, 1}, {3, 0}, {0, 0}, {0, 1}};
       }
 
-      check(equivalence, messageMaker("Second edge traversal, start = " + std::to_string(start) + " "), edgeDiscovery2, edgeAnswers2);
+      check(equivalence, messageMaker(std::format("Second edge traversal, start = {} ", start)), edgeDiscovery2, edgeAnswers2);
     }
     else
     {
@@ -521,9 +523,9 @@ namespace sequoia::testing
       }
     }
 
-    check(equivalence, messageMaker("start = " + std::to_string(start) + " "), nodeDiscovery1, nodeAnswers);
-    check(equivalence, messageMaker("start = " + std::to_string(start) + " "), nodeDiscovery2, nodeAnswers);
-    check(equivalence, messageMaker("First edge traversal, start = " + std::to_string(start) + " "), edgeDiscovery1, edgeAnswers);
+    check(equivalence, messageMaker(std::format("start = {} ", start)), nodeDiscovery1, nodeAnswers);
+    check(equivalence, messageMaker(std::format("start = {} ", start)), nodeDiscovery2, nodeAnswers);
+    check(equivalence, messageMaker(std::format("First edge traversal, start = {} ", start)), edgeDiscovery1, edgeAnswers);
   }
 
   template<maths::dynamic_network G, class MessageMaker>
@@ -567,9 +569,9 @@ namespace sequoia::testing
       }
     }
 
-    check(equivalence, messageMaker("start = " + std::to_string(start) + " "), nodeDiscovery1, nodeAnswers);
-    check(equivalence, messageMaker("start = " + std::to_string(start) + " "), nodeDiscovery2, nodeAnswers2);
-    check(equivalence, messageMaker("Edge traversal to undiscovered node, start = " + std::to_string(start) + " "), edgeDiscovery1, edgeAnswers);
+    check(equivalence, messageMaker(std::format("start = {} ", start)), nodeDiscovery1, nodeAnswers);
+    check(equivalence, messageMaker(std::format("start = {} ", start)), nodeDiscovery2, nodeAnswers2);
+    check(equivalence, messageMaker(std::format("Edge traversal to undiscovered node, start = {} ", start)), edgeDiscovery1, edgeAnswers);
   }
 
   template<maths::dynamic_network G, class MessageMaker>
@@ -597,7 +599,7 @@ namespace sequoia::testing
         edgeAnswers2 = edge_order{{1, 0}, {0, 1}, {3, 0}, {3, 1}};
       }
 
-      check(equivalence, messageMaker("Second edge traversal, start = " + std::to_string(start) + " "), edgeDiscovery2, edgeAnswers2);
+      check(equivalence, messageMaker(std::format("Second edge traversal, start = {} ", start)), edgeDiscovery2, edgeAnswers2);
     }
     else
     {
@@ -614,9 +616,9 @@ namespace sequoia::testing
       }
     }
 
-    check(equivalence, messageMaker("start = " + std::to_string(start) + " "), nodeDiscovery1, nodeAnswers);
-    check(equivalence, messageMaker("start = " + std::to_string(start) + " "), nodeDiscovery2, nodeAnswers);
-    check(equivalence, messageMaker("First edge traversal, start = " + std::to_string(start) + " "), edgeDiscovery1, edgeAnswers);
+    check(equivalence, messageMaker(std::format("start = {} ", start)), nodeDiscovery1, nodeAnswers);
+    check(equivalence, messageMaker(std::format("start = {} ", start)), nodeDiscovery2, nodeAnswers);
+    check(equivalence, messageMaker(std::format("First edge traversal, start = {} ", start)), edgeDiscovery1, edgeAnswers);
   }
 
   //=============================== Priority Search  ===============================//
