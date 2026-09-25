@@ -93,7 +93,7 @@ jobs:
       exec_args: '--check-versioned-output'
       columns: >-
         [
-          {"name": "Linux · GCC · Debug",   "os": "ubuntu-latest",  "configure": "gcc-env", "build": "gcc-env", "cc": "gcc-15", "cxx": "g++-15"},
+          {"name": "Linux · GCC · Debug",   "os": "ubuntu-latest",  "configure": "gcc-env-no-such-preset", "build": "gcc-env-no-such-preset", "cc": "gcc-15", "cxx": "g++-15"},
           {"name": "macOS · Clang · Debug", "os": "macos-latest",   "configure": "llvm-env", "build": "llvm-env", "exec_args": "--check-versioned-output;--exclude-performance"},
           {"name": "Windows · MSVC · Debug", "os": "windows-latest", "configure": "msvc-ninja", "build": "msvc-ninja", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
