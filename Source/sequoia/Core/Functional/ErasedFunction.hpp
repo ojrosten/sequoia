@@ -28,14 +28,27 @@
     -# **No discarded result.** A `void` signature takes only a target returning `void`, where the
        standard type discards whatever a target returns.
     -# **No pointer to member as a target.**
-    -# **The constructors' requirements are constraints**, where the standard mandates some of them:
-       `std::is_constructible_v` is false for a target which is not copy constructible, rather than
-       true and ill-formed on use.
+    -# **No target whose destructor may throw**, where the standard makes it a precondition that none
+       does.
     -# **No converting assignment.** Assigning a callable converts it and then assigns.
     -# **No `swap` of its own.** `std::ranges::swap` exchanges two functions through the defaulted
        moves; an unqualified `swap(f, g)` finds nothing.
     -# **Invoking an empty function through a `noexcept` signature terminates**, since the throw
        escapes a `noexcept` call operator.
+
+    ## Requirements on a target
+
+    As for `std::copyable_function`, some requirements are constraints and the rest are mandated: a
+    construction which breaks a mandate is ill-formed, although `std::is_constructible_v` is true for it.
+    -# **Constrained:** the target is callable through the signature, is not a pointer to member, and has
+       a destructor which does not throw. In-place construction also requires the target to be
+       constructible from the arguments.
+    -# **Mandated:** the target is copy constructible. Construction from a callable also requires the
+       target to be constructible from that callable, and in-place construction requires a decayed type.
+
+    ## Exception guarantees
+
+    Copy assignment is strong. Move construction and move assignment never throw.
 
     ## In a constant expression
 
@@ -94,11 +107,21 @@ namespace sequoia
         m_SpecialMemberManager(operation::move, *this, other);
       }
 
-      constexpr erased_target& operator=(erased_target other) noexcept
+      /** Gives the strong exception guarantee. */
+      constexpr erased_target& operator=(const erased_target& other)
       {
-        m_SpecialMemberManager(operation::destroy, *this, *this);
-        m_SpecialMemberManager = std::exchange(other.m_SpecialMemberManager, &manage_empty);
-        m_SpecialMemberManager(operation::move, *this, other);
+        return *this = erased_target{other};
+      }
+
+      constexpr erased_target& operator=(erased_target&& other) noexcept
+      {
+        if(&other != this)
+        {
+          m_SpecialMemberManager(operation::destroy, *this, *this);
+          m_SpecialMemberManager = std::exchange(other.m_SpecialMemberManager, &manage_empty);
+          m_SpecialMemberManager(operation::move, *this, other);
+        }
+
         return *this;
       }
 
@@ -402,6 +425,15 @@ namespace sequoia
 
     template<class Signature>
     using call_operator_for_t = call_operator_for<Signature>::type;
+
+    template<class CallOperator, class T>
+    concept erasable_target
+      =  (!std::is_member_pointer_v<T>)
+      && std::is_nothrow_destructible_v<T>
+      && CallOperator::template callable_through_signature_v<T>;
+
+    template<class CallOperator, class T, class... TArgs>
+    concept target_constructible_from = erasable_target<CallOperator, T> && std::is_constructible_v<T, TArgs...>;
   }
 
   /** \brief A signature `erased_function` supports: `R(Args...) cv ref noexcept(noex)`, where `cv` is
@@ -464,16 +496,14 @@ namespace sequoia
 
       return impl::erased_target{std::in_place_type_t<Target>{}, std::forward<F>(f)};
     }
-  public:
-    template<class T, class... TArgs>
-    constexpr static bool target_constructible_from_v{
-         std::is_same_v<T, std::decay_t<T>>
-      && (!std::is_member_pointer_v<T>)
-      && std::is_copy_constructible_v<T>
-      && std::is_constructible_v<T, TArgs...>
-      && call_operator_type::template callable_through_signature_v<T>
-    };
 
+    template<class Target, class F>
+    SEQUOIA_FORCE_INLINE
+    constexpr erased_function(caller_type caller, std::in_place_type_t<Target>, F&& f)
+      : m_Target{erased_target_for<Target>(std::forward<F>(f))}
+      , m_Caller{caller}
+    {}
+  public:
     constexpr erased_function() = default;
 
     constexpr erased_function(std::nullptr_t) noexcept
@@ -481,25 +511,37 @@ namespace sequoia
     {}
 
     template<class F, class Target = std::decay_t<F>>
-      requires (!resolve_to_copy_v<erased_function, F>) && target_constructible_from_v<Target, F>
+      requires (!resolve_to_copy_v<erased_function, F>) && impl::erasable_target<call_operator_type, Target>
     constexpr erased_function(F&& f)
-      : m_Caller{impl::is_empty_target(f) ? empty_caller : caller_for<Target>()}
-      , m_Target{erased_target_for<Target>(std::forward<F>(f))}
-    {}
+      : erased_function{
+          impl::is_empty_target(f) ? empty_caller : caller_for<Target>(),
+          std::in_place_type_t<Target>{},
+          std::forward<F>(f)
+        }
+    {
+      static_assert(std::is_constructible_v<Target, F>);
+      static_assert(std::is_copy_constructible_v<Target>);
+    }
 
     template<class T, class... TArgs>
-      requires target_constructible_from_v<T, TArgs...>
+      requires impl::target_constructible_from<call_operator_type, T, TArgs...>
     constexpr explicit erased_function(std::in_place_type_t<T>, TArgs&&... args)
-      : m_Caller{caller_for<T>()}
-      , m_Target{std::in_place_type_t<T>{}, std::forward<TArgs>(args)...}
-    {}
+      : m_Target{std::in_place_type_t<T>{}, std::forward<TArgs>(args)...}
+      , m_Caller{caller_for<T>()}
+    {
+      static_assert(std::is_same_v<T, std::decay_t<T>>);
+      static_assert(std::is_copy_constructible_v<T>);
+    }
 
     template<class T, class U, class... TArgs>
-      requires target_constructible_from_v<T, std::initializer_list<U>&, TArgs...>
+      requires impl::target_constructible_from<call_operator_type, T, std::initializer_list<U>&, TArgs...>
     constexpr explicit erased_function(std::in_place_type_t<T>, std::initializer_list<U> list, TArgs&&... args)
-      : m_Caller{caller_for<T>()}
-      , m_Target{std::in_place_type_t<T>{}, list, std::forward<TArgs>(args)...}
-    {}
+      : m_Target{std::in_place_type_t<T>{}, list, std::forward<TArgs>(args)...}
+      , m_Caller{caller_for<T>()}
+    {
+      static_assert(std::is_same_v<T, std::decay_t<T>>);
+      static_assert(std::is_copy_constructible_v<T>);
+    }
 
     constexpr erased_function& operator=(std::nullptr_t) noexcept
     {
@@ -514,7 +556,8 @@ namespace sequoia
   private:
     constexpr static caller_type empty_caller{call_operator_type::caller_for_empty()};
 
-    object::reset_on_move<caller_type, empty_caller> m_Caller;
+    // Declared first: the strong guarantee of copy assignment depends on it
     impl::erased_target                              m_Target;
+    object::reset_on_move<caller_type, empty_caller> m_Caller;
   };
 }

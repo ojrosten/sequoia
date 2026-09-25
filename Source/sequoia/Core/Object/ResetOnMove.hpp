@@ -61,7 +61,7 @@ namespace sequoia::object
     constexpr const T& value() const noexcept { return m_Value; }
 
     [[nodiscard]]
-    friend constexpr auto operator<=>(const reset_on_move&, const reset_on_move&) noexcept = default;
+    friend constexpr auto operator<=>(const reset_on_move&, const reset_on_move&) = default;
   private:
     T m_Value{Reset};
   };

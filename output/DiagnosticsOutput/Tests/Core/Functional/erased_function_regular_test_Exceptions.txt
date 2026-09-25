@@ -1,4 +1,4 @@
-Tests/Core/Functional/ErasedFunctionRegularTest.cpp, Line 400
+Tests/Core/Functional/ErasedFunctionRegularTest.cpp, Line 515
 Invoking an empty function
 
 Expected Exception Type:
@@ -7,12 +7,92 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Core/Functional/ErasedFunctionRegularTest.cpp, Line 408
+Tests/Core/Functional/ErasedFunctionRegularTest.cpp, Line 523
 Invoking the source of a move
 
 Expected Exception Type:
 [std::bad_function_call]
 <the standard library's message>
+
+=======================================
+
+Tests/Core/Functional/ErasedFunctionRegularTest.cpp, Line 576
+In the buffer, over an empty function
+The throw from the target's copy propagates
+
+Expected Exception Type:
+[std::runtime_error]
+The target's copy
+
+=======================================
+
+Tests/Core/Functional/ErasedFunctionRegularTest.cpp, Line 576
+In the buffer, over a trivially managed one
+The throw from the target's copy propagates
+
+Expected Exception Type:
+[std::runtime_error]
+The target's copy
+
+=======================================
+
+Tests/Core/Functional/ErasedFunctionRegularTest.cpp, Line 576
+In the buffer, over one with its own manager
+The throw from the target's copy propagates
+
+Expected Exception Type:
+[std::runtime_error]
+The target's copy
+
+=======================================
+
+Tests/Core/Functional/ErasedFunctionRegularTest.cpp, Line 576
+In the buffer, over one on the heap
+The throw from the target's copy propagates
+
+Expected Exception Type:
+[std::runtime_error]
+The target's copy
+
+=======================================
+
+Tests/Core/Functional/ErasedFunctionRegularTest.cpp, Line 576
+On the heap, over an empty function
+The throw from the target's copy propagates
+
+Expected Exception Type:
+[std::runtime_error]
+The target's copy
+
+=======================================
+
+Tests/Core/Functional/ErasedFunctionRegularTest.cpp, Line 576
+On the heap, over a trivially managed one
+The throw from the target's copy propagates
+
+Expected Exception Type:
+[std::runtime_error]
+The target's copy
+
+=======================================
+
+Tests/Core/Functional/ErasedFunctionRegularTest.cpp, Line 576
+On the heap, over one with its own manager
+The throw from the target's copy propagates
+
+Expected Exception Type:
+[std::runtime_error]
+The target's copy
+
+=======================================
+
+Tests/Core/Functional/ErasedFunctionRegularTest.cpp, Line 576
+On the heap, over one on the heap
+The throw from the target's copy propagates
+
+Expected Exception Type:
+[std::runtime_error]
+The target's copy
 
 =======================================
 

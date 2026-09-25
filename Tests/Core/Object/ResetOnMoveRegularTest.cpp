@@ -50,6 +50,44 @@ namespace sequoia::testing
 
     using throwing_handle = reset_on_move<throwing_move, throwing_move{}>;
 
+    struct throwing_equality
+    {
+      int value{};
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const throwing_equality& lhs, const throwing_equality& rhs) noexcept(false)
+      {
+        return lhs.value == rhs.value;
+      }
+
+      [[nodiscard]]
+      friend constexpr auto operator<=>(const throwing_equality& lhs, const throwing_equality& rhs) noexcept
+      {
+        return lhs.value <=> rhs.value;
+      }
+    };
+
+    using throwing_equality_handle = reset_on_move<throwing_equality, throwing_equality{}>;
+
+    struct throwing_ordering
+    {
+      int value{};
+
+      [[nodiscard]]
+      friend constexpr bool operator==(const throwing_ordering& lhs, const throwing_ordering& rhs) noexcept
+      {
+        return lhs.value == rhs.value;
+      }
+
+      [[nodiscard]]
+      friend constexpr auto operator<=>(const throwing_ordering& lhs, const throwing_ordering& rhs) noexcept(false)
+      {
+        return lhs.value <=> rhs.value;
+      }
+    };
+
+    using throwing_ordering_handle = reset_on_move<throwing_ordering, throwing_ordering{}>;
+
     struct move_only
     {
       int value{};
@@ -66,6 +104,12 @@ namespace sequoia::testing
 
     template<class T>
     concept holdable_on_reset = requires { typename reset_on_move<T>; };
+
+    template<class T>
+    concept nothrow_equality_comparable = requires(const T& t) { { t == t } noexcept; };
+
+    template<class T>
+    concept nothrow_three_way_comparable = requires(const T& t) { { t <=> t } noexcept; };
   }
 
   [[nodiscard]]
@@ -91,6 +135,13 @@ namespace sequoia::testing
     STATIC_CHECK(std::is_nothrow_move_assignable_v<handle>);
     STATIC_CHECK(!std::is_nothrow_move_constructible_v<throwing_handle>);
     STATIC_CHECK(!std::is_nothrow_move_assignable_v<throwing_handle>);
+
+    STATIC_CHECK(nothrow_equality_comparable<handle>);
+    STATIC_CHECK(nothrow_three_way_comparable<handle>);
+    STATIC_CHECK(!nothrow_equality_comparable<throwing_equality_handle>);
+    STATIC_CHECK(nothrow_three_way_comparable<throwing_equality_handle>);
+    STATIC_CHECK(nothrow_equality_comparable<throwing_ordering_handle>);
+    STATIC_CHECK(!nothrow_three_way_comparable<throwing_ordering_handle>);
   }
 
   void reset_on_move_regular_test::test_constant_evaluation()

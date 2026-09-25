@@ -47,9 +47,13 @@ namespace sequoia::testing
 
     void test_self_move_assignment();
 
+    void test_throwing_copy_assignment();
+
     void test_small_target();
 
     void test_large_target();
+
+    void test_small_target_with_throwing_move();
 
     void test_arguments();
 
