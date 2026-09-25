@@ -3,11 +3,21 @@ name: docs
 # Called by coarse and by rigorous. docs/html is committed and published, so a
 # defect here ships.
 #
+# Both callers report this job as `docs / Docs · Doxygen`, and each decides
+# against its own base: coarse against staging, rigorous against the pull
+# request's base. On a PR into main from a branch other than staging the two can
+# disagree, and the check shows whichever reported last.
+#
 # Built into a temporary directory and discarded: regenerating the committed render
 # would answer a different question from the one asked here, which is whether the
 # documentation is well-formed.
 on:
   workflow_call:
+    inputs:
+      needs_testing:
+        description: 'Whether the change touches anything doxygen reads: `true` or `false`, from scope.yml. Anything else fails the job.'
+        required: true
+        type: string
 
 jobs:
   doxygen:
@@ -19,10 +29,27 @@ jobs:
         with:
           fetch-depth: 1
 
+      # The job always runs, so that its check always reports: staging and main
+      # both require it. Only the steps below depend on the change; scope.yml says
+      # why. As in tests.yml, the conditions test for `true`, so this step insists
+      # any other answer is exactly `false`: an empty one fails the job rather than
+      # passing it unchecked.
+      - name: Nothing to document
+        if: inputs.needs_testing != 'true'
+        env:
+          ANSWER: ${{ inputs.needs_testing }}
+        run: |
+          if [ "$ANSWER" != false ]; then
+            echo "::error::needs_testing is '$ANSWER', neither true nor false: scope.yml's answer did not arrive"
+            exit 1
+          fi
+          echo "Nothing to document; the scope job's summary says why."
+
       # USE_MATHJAX is off, so formulas go through LaTeX and then Ghostscript.
       # Missing either leaves every formula silently wrong, which is the failure
       # this job exists to catch.
       - name: Install doxygen
+        if: inputs.needs_testing == 'true'
         run: |
           # The hosted image ships vendor repositories - Chrome and Microsoft - which
           # nothing here installs from. A bad index served by one of them fails the
@@ -56,6 +83,7 @@ jobs:
       # WARN_IF_UNDOCUMENTED is off: per-file documentation is in progress, and
       # those notices outnumber real defects by three orders of magnitude.
       - name: Generate, into a directory nobody keeps
+        if: inputs.needs_testing == 'true'
         working-directory: docs/config
         run: |
           out="$RUNNER_TEMP/doxygen"
@@ -76,7 +104,7 @@ jobs:
       # documentation which is wrong, not documentation which is absent - absence
       # is excluded above.
       - name: Fail on any documentation defect
-        if: always()
+        if: ${{ always() && inputs.needs_testing == 'true' }}
         run: |
           log="$DOXY_LOG"
           [ -f "$log" ] || { echo "::error::doxygen produced no warning log"; exit 1; }
@@ -97,7 +125,7 @@ jobs:
           echo "No documentation defects."
 
       - name: Upload the warning log
-        if: always()
+        if: ${{ always() && inputs.needs_testing == 'true' }}
         uses: actions/upload-artifact@v7
         with:
           name: doxygen-warnings-${{ github.job }}

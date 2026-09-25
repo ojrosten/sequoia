@@ -30,6 +30,10 @@ on:
         required: false
         type: boolean
         default: false
+      needs_testing:
+        description: 'Whether the change touches anything the suite reads: `true` or `false`, from scope.yml. Anything else fails every column.'
+        required: true
+        type: string
       false_negative:
         description: 'Corrupt the checkout so that every column MUST go red, one versioned output and one prediction. The control for the gate itself: a run in this mode that comes back green means the gate cannot see. Roadmap item 148.'
         required: false
@@ -70,6 +74,25 @@ jobs:
           # docs/ is ~96MB of committed doxygen render; nothing here reads it.
           fetch-depth: 1
 
+      # Every column runs whatever changed, so that its check always reports;
+      # scope.yml says why. Every step after this one is conditional on
+      # `needs_testing`, so a column with nothing to test passes in seconds.
+      #
+      # The conditions test for `true`, so any other answer skips the suite. This
+      # step therefore insists the answer is exactly `false`: an empty one, from a
+      # decision that failed or an output renamed in scope.yml, fails the column
+      # rather than passing it untested. The audit below reads this step back.
+      - name: Nothing to test
+        if: inputs.needs_testing != 'true'
+        env:
+          ANSWER: ${{ inputs.needs_testing }}
+        run: |
+          if [ "$ANSWER" != false ]; then
+            echo "::error::needs_testing is '$ANSWER', neither true nor false: scope.yml's answer did not arrive"
+            exit 1
+          fi
+          echo "Nothing to test; the scope job's summary says why."
+
       # Two corruptions, because the columns do not share a detector. The summary
       # file is rewritten by every toolchain, so appending to it is drift wherever
       # `--check-versioned-output` is on; the prediction is what StreamingFreeTest
@@ -78,7 +101,7 @@ jobs:
       # to exist first: a control that mutates nothing is the false negative it is
       # meant to catch.
       - name: Corrupt the tree, so that every column must go red
-        if: ${{ inputs.false_negative }}
+        if: ${{ inputs.false_negative && inputs.needs_testing == 'true' }}
         run: |
           summary=output/TestSummaries/Tests/Core/Meta/type_algorithms_free_test.txt
           prediction=TestMaterials/Streaming/StreamingFreeTest/streaming_free_test/Prediction/Foo.txt
@@ -95,7 +118,7 @@ jobs:
       # `g++-15` on noble resolves to clang-15, flang-15 and llvm-15, installs all
       # three, and exits 0.
       - name: Install the toolchain (Linux)
-        if: runner.os == 'Linux'
+        if: inputs.needs_testing == 'true' && runner.os == 'Linux'
         run: |
           # The hosted image ships vendor repositories - Chrome and Microsoft - which
           # nothing here installs from. A bad index served by one of them fails the
@@ -151,7 +174,7 @@ jobs:
       # the suite's timing assertions, not the rest of it, which a hosted runner
       # cannot hold.
       - name: Install the toolchain (macOS)
-        if: runner.os == 'macOS'
+        if: inputs.needs_testing == 'true' && runner.os == 'macOS'
         run: |
           brew list ninja >/dev/null 2>&1 || brew install ninja
           brew list tbb   >/dev/null 2>&1 || brew install tbb
@@ -167,7 +190,7 @@ jobs:
       # GITHUB_PATH, the route the runner provides for it, in Windows form, which
       # is what a later bash step's start-up translates.
       - name: Enter the MSVC environment (Windows, Ninja)
-        if: runner.os == 'Windows' && matrix.configure == 'msvc-ninja'
+        if: inputs.needs_testing == 'true' && runner.os == 'Windows' && matrix.configure == 'msvc-ninja'
         run: |
           vswhere="/c/Program Files (x86)/Microsoft Visual Studio/Installer/vswhere.exe"
           root=$("$vswhere" -latest -products '*' \
@@ -209,6 +232,7 @@ jobs:
 
       # An exit status says the tool ran, not that it did what was asked.
       - name: Report the toolchain actually in use
+        if: inputs.needs_testing == 'true'
         run: |
           if [ -n "${CXX:-}" ]; then
             command -v "$CXX" || { echo "::error::$CXX is not on PATH"; exit 1; }
@@ -230,7 +254,7 @@ jobs:
       # a distro clang, so this reads the changelog of whichever package the column
       # installed rather than naming one compiler.
       - name: What the distribution's compiler actually is
-        if: runner.os == 'Linux'
+        if: inputs.needs_testing == 'true' && runner.os == 'Linux'
         # A report must not be able to fail the job - hence the trailing `|| true`,
         # and `sed` rather than `head`, since head exits early, gzip takes SIGPIPE,
         # and `-o pipefail` would turn a report into a failure.
@@ -247,6 +271,7 @@ jobs:
       # to commit without an identity. Every developer machine has one configured;
       # a fresh runner does not.
       - name: Give git an identity
+        if: inputs.needs_testing == 'true'
         run: |
           git config --global user.name "sequoia CI"
           git config --global user.email "ci@example.invalid"
@@ -268,7 +293,7 @@ jobs:
       # In PowerShell because Git bash's MSYS layer rewrites bare switches like
       # /v and /f into Windows paths before reg.exe sees them.
       - name: Let Windows and git see long paths
-        if: runner.os == 'Windows'
+        if: inputs.needs_testing == 'true' && runner.os == 'Windows'
         shell: pwsh
         run: |
           git config --global core.longpaths true
@@ -282,6 +307,7 @@ jobs:
       # taking this route out of a tier which passes `--check-versioned-output` must
       # repeat it.
       - name: Configure
+        if: inputs.needs_testing == 'true'
         id: configure
         working-directory: TestAll
         run: |
@@ -308,6 +334,7 @@ jobs:
       # distinguishable, and so the suite can carry its own ceiling. The log is kept
       # so warnings can be counted where they are not fatal.
       - name: Build
+        if: inputs.needs_testing == 'true'
         working-directory: TestAll
         run: cmake --build --preset ${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/build.log"
 
@@ -315,7 +342,7 @@ jobs:
       # instantiation, so a raw count says more about templates than about code.
       # MSVC spells it "warning Cnnnn"; the others "warning:".
       - name: Report compiler warnings
-        if: ${{ !inputs.warnings_as_errors }}
+        if: ${{ inputs.needs_testing == 'true' && !inputs.warnings_as_errors }}
         run: |
           log="$RUNNER_TEMP/build.log"
           sites=$({ grep -oE '[^ ]+:[0-9]+:[0-9]+: warning:|warning C[0-9]+' "$log" || true; } | sort -u | wc -l | tr -d ' ')
@@ -347,7 +374,8 @@ jobs:
       # libstdc++, clang on Windows, the -Og build - each of which arrives knowing
       # less about itself than this one now does. There is no
       # build-without-running option: a suite that is not run tells you nothing,
-      # and the audit below refuses a column whose suite step did not run.
+      # and the audit below refuses a column whose suite step did not run, unless
+      # the change held nothing to test.
       #
       # The tee is safe only because `shell: bash` runs steps under
       # `--noprofile --norc -eo pipefail`: without pipefail the tee would donate its
@@ -355,6 +383,7 @@ jobs:
       # The Build step above already depends on this; it is written down here
       # because the dependency is invisible at the call site.
       - name: Run the suite
+        if: inputs.needs_testing == 'true'
         id: suite
         continue-on-error: ${{ matrix.advisory == true }}
         working-directory: TestAll
@@ -375,7 +404,7 @@ jobs:
       # advisory today; the pairing stays forbidden for the next one that is, unless
       # the patch is moved aside between the passes.
       - name: Configure the repetitions
-        if: ${{ steps.configure.outputs.repeat_args != '' }}
+        if: ${{ inputs.needs_testing == 'true' && steps.configure.outputs.repeat_args != '' }}
         working-directory: TestAll
         env:
           REPEAT_ARGS: ${{ steps.configure.outputs.repeat_args }}
@@ -384,7 +413,7 @@ jobs:
           grep '^EXEC_ARGS:' ../build/TestAll/${{ matrix.configure }}/CMakeCache.txt
 
       - name: Run the suite again
-        if: ${{ steps.configure.outputs.repeat_args != '' }}
+        if: ${{ inputs.needs_testing == 'true' && steps.configure.outputs.repeat_args != '' }}
         id: repeat
         continue-on-error: ${{ matrix.advisory == true }}
         working-directory: TestAll
@@ -408,7 +437,7 @@ jobs:
       # failure co-fire, a failing test rewriting its summary, so both are reported when both
       # occurred. A failed step that names no test and writes no patch is reported as that.
       - name: Triage the advisory run
-        if: ${{ always() && matrix.advisory == true }}
+        if: ${{ always() && inputs.needs_testing == 'true' && matrix.advisory == true }}
         run: |
           log="$RUNNER_TEMP/run.log"
           if [ ! -f "$log" ]; then
@@ -467,7 +496,7 @@ jobs:
       # in every repetition, whose analysis says "No instabilities detected", from
       # one that passed.
       - name: Keep the run log
-        if: always()
+        if: ${{ always() && inputs.needs_testing == 'true' }}
         run: |
           mkdir -p run-log
           cp "$RUNNER_TEMP/run.log" run-log/ 2>/dev/null || true
@@ -490,7 +519,7 @@ jobs:
       # to a tree the run never wrote. The fence is four backticks so that a line of
       # three in the output cannot close it.
       - name: Report any versioned output that moved
-        if: always()
+        if: ${{ always() && inputs.needs_testing == 'true' }}
         run: |
           git status --short -- output/ TestMaterials/ || true
           patch=output/Drift/VersionedOutput.patch
@@ -518,7 +547,7 @@ jobs:
       # check is off, there must be no patch. Reversing rather than applying
       # because the tree the patch was taken from is gone: the run rewrote it.
       - name: The drift was reported as a patch which, reversed, restores the corruption
-        if: ${{ always() && inputs.false_negative }}
+        if: ${{ always() && inputs.needs_testing == 'true' && inputs.false_negative }}
         run: |
           patch=output/Drift/VersionedOutput.patch
           summary=output/TestSummaries/Tests/Core/Meta/type_algorithms_free_test.txt
@@ -551,7 +580,7 @@ jobs:
       # names both. Get it wrong and nothing says so: `if-no-files-found: warn`
       # leaves the artifact a file short and the run green.
       - name: Upload the drift and the run log
-        if: always()
+        if: ${{ always() && inputs.needs_testing == 'true' }}
         uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.build }}-drift
@@ -568,10 +597,19 @@ jobs:
   # insists that each column named in `columns` exists, once, and that its
   # `Run the suite` step concluded - success or failure, but not skipped and not
   # absent - and, where the column asked for repetitions, that `Run the suite
-  # again` did too, skipped being allowed only when the first pass failed, which
-  # is the one reason it is skipped by design. Passing is the column's own
-  # business; RUNNING is checked here. The expectation is the columns input
-  # itself, so there is no second list to drift.
+  # again` did too. Passing is the column's own business; RUNNING is checked
+  # here. The expectation is the columns input itself, so there is no second list
+  # to drift.
+  #
+  # A suite step may be skipped for exactly two reasons:
+  #   - The repetitions, when the first pass failed.
+  #   - Both passes, when `needs_testing` is `false`. Then every column's
+  #     `Nothing to test` step must have succeeded. A schedule, a dispatch and a
+  #     push to staging are always tested, so a skip on one of those is an error.
+  #
+  # The job's name says less than it checks once a change can hold nothing to
+  # test. It keeps the name because the name is a required check: renamed here
+  # and not in the protection rule, it would never report again.
   audit:
     name: Every column ran the suite
     needs: build-and-test
@@ -583,6 +621,9 @@ jobs:
       GH_REPO: ${{ github.repository }}
       EXPECTED_COLUMNS: ${{ inputs.columns }}
       TIER_REPEAT_ARGS: ${{ inputs.repeat_args }}
+      NEEDS_TESTING: ${{ inputs.needs_testing }}
+      EVENT: ${{ github.event_name }}
+      REF: ${{ github.ref }}
     steps:
       - name: Read this run's jobs back and check each column's suite steps
         run: |
@@ -599,19 +640,37 @@ jobs:
           [ -s expected.txt ] || { echo "::error::no columns to audit"; exit 1; }
 
           failed=0
+          case "$NEEDS_TESTING/$EVENT/$REF" in
+            true/*) ;;
+            false/schedule/*|false/workflow_dispatch/*|false/push/refs/heads/staging)
+              echo "::error::needs_testing is false on a $EVENT run of $REF, which is always tested"; failed=1;;
+            false/*) ;;
+            *) echo "::error::needs_testing is '$NEEDS_TESTING', neither true nor false"; failed=1;;
+          esac
+
           while IFS=$'\t' read -r column repeats; do
             verdict=$(jq -r --arg c "$column" '
+              def conclusion($step): ([.[0].steps[] | select(.name == $step) | .conclusion] | first) // "ABSENT";
               [.[] | select(.name | endswith(" / " + $c))]
               | if length != 1 then "JOBS:\(length)"
-                else (([.[0].steps[] | select(.name == "Run the suite") | .conclusion] | first) // "ABSENT")
-                     + "\t"
-                     + (([.[0].steps[] | select(.name == "Run the suite again") | .conclusion] | first) // "ABSENT")
+                else [conclusion("Nothing to test"), conclusion("Run the suite"), conclusion("Run the suite again")]
+                     | join("\t")
                 end' jobs.json)
             if [[ $verdict == JOBS:* ]]; then
               echo "::error::$column: expected exactly one job, found ${verdict#JOBS:}"; failed=1; continue
             fi
-            suite=${verdict%%$'\t'*}
-            repeat=${verdict#*$'\t'}
+            IFS=$'\t' read -r nothing suite repeat <<<"$verdict"
+            if [ "$NEEDS_TESTING" = false ]; then
+              case "$nothing/$suite/$repeat" in
+                success/skipped/skipped) echo "ok    $column: nothing to test, and the suite did not run";;
+                *) echo "::error::$column: nothing to test, yet Nothing to test / Run the suite / again -> $verdict"
+                   failed=1;;
+              esac
+              continue
+            fi
+            if [ "$nothing" != skipped ]; then
+              echo "::error::$column: needs testing, yet Nothing to test -> $nothing"; failed=1; continue
+            fi
             case "$suite" in
               success|failure) echo "ok    $column: Run the suite -> $suite";;
               *)               echo "::error::$column: Run the suite -> $suite; the suite did not run on this column"; failed=1;;

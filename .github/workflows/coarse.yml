@@ -57,13 +57,15 @@ name: coarse
 #
 # Drift fails the column it is found on, Windows included: no column here is
 # advisory any more, so nothing routes a red suite step through the triage step.
+#
+# No path filter, although this tier gates nothing itself: its docs job is a
+# check staging requires of a PR, and reaches the PR only from here, on the push.
+# scope.yml says why a filter would wedge that PR, and how a
+# job with nothing to test still reports.
 on:
   push:
     branches-ignore:
       - main
-    paths-ignore:
-      - 'docs/**'
-      - 'coverage_reports/**'
   workflow_dispatch:
 
 # A push to a branch that already has a run in flight cancels that run: it
@@ -75,9 +77,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # One decision for the whole run, which every job below takes as an input.
+  scope:
+    uses: ./.github/workflows/scope.yml
+
+  # `!cancelled()` rather than the implied success(), so that a failed decision
+  # still runs the columns and the docs job, which then fail on the missing answer.
   coarse:
+    needs: scope
+    if: ${{ !cancelled() }}
     uses: ./.github/workflows/tests.yml
     with:
+      needs_testing: ${{ needs.scope.outputs.suite }}
       # Counted and annotated, not fatal: a red run here should mean the code is
       # broken rather than untidy. The gates refuse warnings outright.
       warnings_as_errors: false
@@ -92,14 +103,18 @@ jobs:
   # Also in rigorous. It costs seconds and no compilation, so there is no reason to
   # defer it to promotion time.
   docs:
+    needs: scope
+    if: ${{ !cancelled() }}
     uses: ./.github/workflows/docs.yml
+    with:
+      needs_testing: ${{ needs.scope.outputs.documentation }}
 
   # The tier's own shape, checked: a job skipped by a wrong `if:` renders the same
   # as one that passed, and `needs` reports `skipped` where the tick shows green.
   # Nothing here gates, so there is no required set to hold it against.
   audit:
     name: Every job ran
-    needs: [coarse, docs]
+    needs: [scope, coarse, docs]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -110,7 +125,7 @@ jobs:
         run: |
           jq -r 'to_entries[] | "  \(.key): \(.value.result)"' <<<"$RESULTS"
           failed=0
-          for job in coarse docs; do
+          for job in scope coarse docs; do
             actual=$(jq -r --arg j "$job" '.[$j].result' <<<"$RESULTS")
             if [ "$actual" = success ]; then echo "ok    $job"; else echo "::error::$job: expected success, was $actual"; failed=1; fi
           done
