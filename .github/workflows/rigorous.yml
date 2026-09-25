@@ -185,9 +185,8 @@ on:
     - cron: '1 1 * * *'
 
 # A push to the head of an open PR into main cancels that PR's run in flight: a
-# superseded run cannot gate anything, and its audit would otherwise compare its
-# jobs against the checks of a commit it is not testing. Scheduled and dispatched
-# runs each get a group of their own, so nothing here ever cancels them.
+# superseded run gates nothing, and Windows runners are scarce. Scheduled and
+# dispatched runs each get a group of their own, so nothing here ever cancels them.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
@@ -270,9 +269,9 @@ jobs:
         with:
           fetch-depth: 1
 
-      # As in tests.yml: the job always runs, since the audit insists on its
-      # success; what it does depends on the change, and any answer but `true` or
-      # `false` fails it.
+      # As in tests.yml: the job runs whatever the change, since in gate mode the
+      # audit insists on its success; what it does depends on the change, and any
+      # answer but `true` or `false` fails it.
       - name: Nothing to test
         if: env.NEEDS_TESTING != 'true'
         run: |
@@ -473,9 +472,12 @@ jobs:
   #
   # Main requires this job and none of the others, so a job missing from this
   # job's `needs` would gate nothing, however red. The second step fails if any
-  # other job is missing.
+  # other job is missing. In the false-negative control this job passes on red
+  # columns, so it takes another name there: under main's required name it would
+  # satisfy main's rule for the commit it ran on, a promotion PR's head if the
+  # control was dispatched on staging.
   audit:
-    name: Every job ran as this run's mode requires
+    name: ${{ inputs.false_negative == true && 'Every column failed, as the false-negative control requires' || 'Every job ran as this run''s mode requires' }}
     needs: [staging, scope, rigorous, docs, coverage, promote]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
@@ -495,7 +497,9 @@ jobs:
           jq -r 'to_entries[] | "  \(.key): \(.value.result)"' <<<"$RESULTS"
 
           failed=0
+          expected=()
           expect() {
+            expected+=("$1")
             actual=$(jq -r --arg j "$1" '.[$j].result' <<<"$RESULTS")
             if [ "$actual" = "$2" ]; then
               echo "ok    $1: $actual"
@@ -517,13 +521,18 @@ jobs:
               expect docs skipped
               expect coverage skipped;;
           esac
+
+          unexpected=$(comm -23 <(jq -r 'keys[]' <<<"$RESULTS" | sort) <(printf '%s\n' "${expected[@]}" | sort))
+          if [ -n "$unexpected" ]; then
+            echo "::error::no result is expected in $mode mode of: $unexpected"; failed=1
+          fi
           exit $failed
 
       - name: Insist this job needs every other job of the workflow
         run: |
-          # The workflow file is fetched as of the commit this run started from. Its
-          # jobs and this job's `needs` are compared both ways, so that a file which
-          # fails to parse fails here rather than passing with nothing to compare.
+          # The workflow file is fetched at GITHUB_WORKFLOW_SHA, the commit this run
+          # read it from. Its jobs and this job's `needs` are compared both ways, so
+          # that a file read wrongly - no jobs, or the wrong ones - fails the step.
           set -o pipefail
           workflow=${GITHUB_WORKFLOW_REF#"$GITHUB_REPOSITORY/"}
           workflow=${workflow%%@*}

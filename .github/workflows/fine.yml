@@ -40,8 +40,7 @@ on:
     branches: [staging]
 
 # A push to a PR that already has a run in flight cancels that run: a superseded
-# run cannot gate anything, and its audit would otherwise compare its jobs
-# against the checks of a commit it is not testing. The group is per PR, so runs
+# run gates nothing, and Windows runners are scarce. The group is per PR, so runs
 # for different PRs never cancel each other.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -74,8 +73,7 @@ jobs:
   # as one that passed; `needs` reports `skipped` where the tick shows green.
   # Staging requires this job and none of the others, so a job missing from this
   # job's `needs` would gate nothing, however red. The second step fails if any
-  # other job is missing.
-  # Same shape as rigorous's audit, without the modes.
+  # other job is missing. Same shape as rigorous's audit, without the modes.
   audit:
     name: Every job ran and every job gates
     needs: [scope, fine]
@@ -91,7 +89,7 @@ jobs:
         run: |
           jq -r 'to_entries[] | "  \(.key): \(.value.result)"' <<<"$RESULTS"
           failed=0
-          for job in scope fine; do
+          for job in $(jq -r 'keys[]' <<<"$RESULTS"); do
             actual=$(jq -r --arg j "$job" '.[$j].result' <<<"$RESULTS")
             if [ "$actual" = success ]; then echo "ok    $job"; else echo "::error::$job: expected success, was $actual"; failed=1; fi
           done
@@ -99,9 +97,9 @@ jobs:
 
       - name: Insist this job needs every other job of the workflow
         run: |
-          # The workflow file is fetched as of the commit this run started from. Its
-          # jobs and this job's `needs` are compared both ways, so that a file which
-          # fails to parse fails here rather than passing with nothing to compare.
+          # The workflow file is fetched at GITHUB_WORKFLOW_SHA, the commit this run
+          # read it from. Its jobs and this job's `needs` are compared both ways, so
+          # that a file read wrongly - no jobs, or the wrong ones - fails the step.
           set -o pipefail
           workflow=${GITHUB_WORKFLOW_REF#"$GITHUB_REPOSITORY/"}
           workflow=${workflow%%@*}
