@@ -638,6 +638,13 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    std::vector<prune_record> sort_by_path(std::vector<prune_record> records)
+    {
+      std::ranges::sort(records, {}, path_projector{});
+      return records;
+    }
+
+    [[nodiscard]]
     std::vector<prune_record> aggregate_tests_to_rerun(const prune_paths& prunePaths, const std::size_t numReps)
     {
       return unique_by_path(
@@ -648,6 +655,18 @@ namespace sequoia::testing
       );
     }
 
+    /** The tests which passed in every repetition of an instability analysis.
+
+        A test's records are matched by path. A repetition run in a process of its own stamps its
+        records with that process's start, so one test's records from two such repetitions differ
+        in their stamps. The earliest stamp is kept: a file modified after the first repetition
+        began is then later than the recorded pass, so the test counts as stale - a re-run, never a
+        missed test.
+
+        \returns
+        -# `nullopt`, if any repetition wrote no passes file;
+        -# otherwise, the tests which passed in every repetition.
+     */
     [[nodiscard]]
     std::optional<std::vector<prune_record>> aggregate_passes(const prune_paths& prunePaths, const std::size_t numReps)
     {
@@ -660,15 +679,32 @@ namespace sequoia::testing
       if(!std::ranges::all_of(files, [](const fs::path& file){ return fs::exists(file); }))
         return std::nullopt;
 
-      auto intersect{
-        [](std::vector<prune_record> lhs, const std::vector<prune_record>& rhs) {
-          std::vector<prune_record> common{};
-          std::ranges::set_intersection(lhs, rhs, std::back_inserter(common));
-          return common;
-        }
+      const auto passes{
+        sort_by_path(
+            files
+          | std::views::transform(read_tests)
+          | std::views::join
+          | std::ranges::to<std::vector>()
+        )
       };
 
-      return std::ranges::fold_left_first(files | std::views::transform(read_tests), intersect);
+      const auto samePath{
+        [](const prune_record& lhs, const prune_record& rhs) { return lhs.test_path == rhs.test_path; }
+      };
+
+      const auto passedInEveryRepetition{
+        [numReps](const auto& recordsOfOneTest) { return recordsOfOneTest.size() == numReps; }
+      };
+
+      const auto earliest{
+        [](const auto& recordsOfOneTest) { return std::ranges::min(recordsOfOneTest, {}, &prune_record::time_stamp); }
+      };
+
+      return passes
+        | std::views::chunk_by(samePath)
+        | std::views::filter(passedInEveryRepetition)
+        | std::views::transform(earliest)
+        | std::ranges::to<std::vector>();
     }
   }
 

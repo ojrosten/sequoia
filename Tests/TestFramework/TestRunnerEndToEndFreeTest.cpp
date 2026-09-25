@@ -560,5 +560,38 @@ namespace sequoia::testing
     //=================== Rerun with prune to confirm that the previously selected test - now passing - is not run ===================//
 
     run_and_check(report("Final fixed test not included by prune"), b, "FinalPassingTestExcludedByPrune", "prune", return_code::success);
+
+    //=================== Break a passing test and 'select' it ===================//
+    // --> foo_test fails, so it is recorded as a test to rerun
+
+    fs::copy(
+      generatedWorkingCopy / "RepresentativeCases",
+      generatedWorkingCopy / "RepresentativeCasesTemp",
+      fs::copy_options::recursive
+    );
+    fs::remove_all(generatedWorkingCopy / "RepresentativeCases");
+
+    run_and_check(report("Test broken"), b, "RunSelectedBrokenTest", "select FooTest.cpp", return_code::soft_failures);
+
+    //=================== Fix the test and 'select' it, seeking instabilities in sandbox mode ===================//
+
+    fs::copy(
+      generatedWorkingCopy / "RepresentativeCasesTemp",
+      generatedWorkingCopy / "RepresentativeCases",
+      fs::copy_options::recursive
+    );
+    fs::remove_all(generatedWorkingCopy / "RepresentativeCasesTemp");
+
+    run_and_check(report("Broken test fixed, in sandbox mode"), b, "SelectRunLocateInstabilitySandboxFixedTest",
+      "locate 2 --sandbox select FooTest.cpp", return_code::success);
+
+    //=================== Rerun with prune: the test, passing in every sandbox, is not run ===================//
+    // --> The materials were restored before the sandboxes started, so foo_test is not stale. Each
+    //     sandbox stamps its records with its own start. Matched by path, the passes remove foo_test
+    //     from the tests to rerun; matched by whole record, no two sandboxes' records would match,
+    //     and foo_test would rerun.
+
+    run_and_check(report("Test fixed in sandbox mode not included by prune"), b, "SandboxFixedTestExcludedByPrune",
+      "prune", return_code::success);
   }
 }
