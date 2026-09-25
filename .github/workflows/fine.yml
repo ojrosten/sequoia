@@ -32,12 +32,14 @@ name: fine
 # 134). A violation here after 2026-09-11 is evidence against that fix rather
 # than a flake to re-run; rigorous.yml gives the mechanism and the rates per
 # configuration, and every MSVC column in every tier runs the test.
+#
+# No path filter, deliberately. A run a filter skips reports no check at all, and
+# a required check that never reports holds its PR for good (roadmap item 145). So
+# every change runs every column, and each column decides for itself whether the
+# change holds anything to test: .github/actions/needs-testing.
 on:
   pull_request:
     branches: [staging]
-    paths-ignore:
-      - 'docs/**'
-      - 'coverage_reports/**'
 
 # A push to a PR that already has a run in flight cancels that run: a superseded
 # run cannot gate anything, and its audit would otherwise compare its jobs
@@ -92,12 +94,10 @@ jobs:
           # A run whose head is no longer the PR's head has been superseded; the PR's
           # required checks now belong to another commit, and this run gates nothing.
           # Needed as well as cancel-in-progress, for the seconds before the
-          # cancellation lands and for a push matched by paths-ignore, which moves
-          # the head without starting a run - in which case nothing else will point
-          # at the PR now waiting on checks that never report (roadmap item 145).
+          # cancellation lands.
           current_head=$(gh pr view "$PR" --json headRefOid --jq .headRefOid)
           if [ "$current_head" != "$HEAD_SHA" ]; then
-            echo "::warning::superseded: the PR's head is now $current_head, this run tested $HEAD_SHA. If no run appears for the new head, the PR is waiting on checks that will never report - see roadmap item 145."
+            echo "::warning::superseded: the PR's head is now $current_head, this run tested $HEAD_SHA; the new head's own run gates the PR."
             exit 0
           fi
           gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --paginate \

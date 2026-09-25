@@ -57,13 +57,16 @@ name: coarse
 #
 # Drift fails the column it is found on, Windows included: no column here is
 # advisory any more, so nothing routes a red suite step through the triage step.
+#
+# No path filter, although this tier gates nothing itself: its docs job is the
+# check that staging requires of a PR, and it reaches the PR only from here, on
+# the push. A filter that skipped the push would leave the PR waiting for that
+# check for good (roadmap item 145). Each job decides for itself whether the
+# change holds anything to test: .github/actions/needs-testing.
 on:
   push:
     branches-ignore:
       - main
-    paths-ignore:
-      - 'docs/**'
-      - 'coverage_reports/**'
   workflow_dispatch:
 
 # A push to a branch that already has a run in flight cancels that run: it
