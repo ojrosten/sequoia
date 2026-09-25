@@ -81,6 +81,8 @@ namespace sequoia::testing
       return exe.make_preferred().string();
     }
 
+    // The generated project is built after these creations, and nothing else compiles what `create` generates:
+    // a kind of test dropped from this list leaves its templates uncompiled.
     [[nodiscard]]
     std::string create_cmd()
     {
@@ -88,6 +90,7 @@ namespace sequoia::testing
         " create free_test \"Utilities/UsefulThings.hpp\" --gen-source utils"
         " create free_test \"Source/generatedProject/Stuff/Bar.hpp\""
         " create free \"Unstable/Flipper.hpp\""
+        " create free Utilities.hpp --diagnostics"
         " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\" --gen-source Maybe"
         " create regular_test \"stuff::oldschool\" double --header \"NoTemplate.hpp\""
         " create regular \"maths::probability\" double --gen-source Maths"

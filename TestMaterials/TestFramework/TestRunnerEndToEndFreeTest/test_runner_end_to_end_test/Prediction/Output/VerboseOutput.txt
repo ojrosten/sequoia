@@ -3,48 +3,52 @@ Running tests...
 
 Stuff:
     bar_free_test:
-    [Execution Time: 11us]
+    [Execution Time: 4.04us]
     foo_false_negative_test:
-    [Execution Time: 4us]
+    [Execution Time: 4.71us]
     foo_test:
-    [Execution Time: 14us]
+    [Execution Time: 14.6us]
     oldschool_false_negative_test:
-    [Execution Time: 4.42us]
+    [Execution Time: 12.1us]
     oldschool_test:
-    [Execution Time: 13.6us]
+    [Execution Time: 15.4us]
 Utilities:
     container_allocation_test:
-    [Execution Time: 3.17us]
+    [Execution Time: 11.6us]
     container_performance_test:
-    [Execution Time: 3.42us]
+    [Execution Time: 2.88us]
     Thing:
         unique_thing_false_negative_test:
-        [Execution Time: 6.5us]
+        [Execution Time: 55us]
         unique_thing_test:
-        [Execution Time: 12.9us]
+        [Execution Time: 8.79us]
     useful_things_free_test:
-    [Execution Time: 49.6us]
+    [Execution Time: 12.3us]
+    utilities_false_negative_free_diagnostics:
+    [Execution Time: 2.75us]
+    utilities_false_positive_free_diagnostics:
+    [Execution Time: 2.79us]
     utilities_free_test:
-    [Execution Time: 2.33us]
+    [Execution Time: 2.29us]
 Unstable:
     flipper_free_test:
-    [Execution Time: 12.9us]
+    [Execution Time: 15.4us]
 house_allocation_test:
-[Execution Time: 5.71us]
+[Execution Time: 2.67us]
 Maybe:
     maybe_false_negative_test:
-    [Execution Time: 59.5us]
+    [Execution Time: 2.38us]
     maybe_test:
-    [Execution Time: 3us]
+    [Execution Time: 29.4us]
 Maths:
     probability_false_negative_test:
-    [Execution Time: 21.1us]
+    [Execution Time: 17.8us]
     probability_test:
-    [Execution Time: 3.67us]
+    [Execution Time: 2.62us]
 
 -----------Grand Totals-----------
-[Total Run Time: 2.31ms]
-[Execution Time: 440us]
+[Total Run Time: 2.48ms]
+[Execution Time: 428us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
