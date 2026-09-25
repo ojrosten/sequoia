@@ -40,6 +40,25 @@ namespace sequoia::testing
   {
     const auto entry_time_stamp{std::chrono::file_clock::now()};
 
+    /// Beside the tests' execution records; a record whose start precedes this one's was written by an earlier run
+    constexpr std::string_view execution_run_stamp{"run.stamp"};
+
+    [[nodiscard]]
+    std::string started_line(const std::chrono::system_clock::time_point start)
+    {
+      return std::format("started {:%FT%TZ}\n", std::chrono::floor<std::chrono::milliseconds>(start));
+    }
+
+    /// For unversioned records nothing in a run reads: a file which cannot be written is skipped, never reported
+    void overwrite_quietly(const fs::path& file, std::string_view text)
+    {
+      std::error_code selectsTheNonThrowingOverload{};
+      fs::create_directories(file.parent_path(), selectsTheNonThrowingOverload);
+
+      std::ofstream stream{file, std::ios_base::out | std::ios_base::trunc | std::ios_base::binary};
+      stream << text;
+    }
+
     [[nodiscard]]
     std::string running_tests_message(concurrency_mode mode)
     {
@@ -451,18 +470,17 @@ namespace sequoia::testing
 
   void test_vessel::record_execution(const std::filesystem::path& record,
                                      const std::chrono::system_clock::time_point start,
-                                     const std::optional<log_summary::duration> duration)
+                                     const std::optional<log_summary::duration> elapsed)
   {
     if(record.empty())
       return;
 
-    std::error_code error{};
-    std::filesystem::create_directories(record.parent_path(), error);
+    const auto finish{
+      elapsed ? std::format("duration {}\n", std::chrono::duration_cast<std::chrono::milliseconds>(*elapsed))
+              : std::string{}
+    };
 
-    std::ofstream file{record, std::ios_base::out | std::ios_base::trunc};
-    file << std::format("started {:%FT%TZ}\n", std::chrono::floor<std::chrono::milliseconds>(start));
-    if(duration)
-      file << std::format("duration {}\n", std::chrono::duration_cast<std::chrono::milliseconds>(*duration));
+    overwrite_quietly(record, started_line(start) + finish);
   }
 
   //=========================================== test_runner ===========================================//
@@ -972,7 +990,11 @@ namespace sequoia::testing
   return_code test_runner::run()
   {
     if(m_InstabilityMode != instability_mode::sandbox)
+    {
       fs::remove_all(proj_paths().output().instability_analysis());
+      if(const auto& records{proj_paths().execution_records()}; !records.empty())
+        overwrite_quietly(records / execution_run_stamp, started_line(std::chrono::system_clock::now()));
+    }
 
     const auto baseline{versioned_output_baseline()};
     const auto code{  m_InstabilityMode == instability_mode::coordinator

@@ -406,6 +406,17 @@ namespace sequoia::testing
       };
     }
 
+    /// The time a record or the run stamp names after `started`, which sorts as the times do
+    [[nodiscard]]
+    std::string start_named_by(const fs::path& file)
+    {
+      std::ifstream stream{file};
+      std::string word{}, start{};
+      stream >> word >> start;
+
+      return start;
+    }
+
     /// The first word of each line of a test's execution record: `started`, then `duration` once the test has finished
     [[nodiscard]]
     std::vector<std::string> execution_record_line_heads(const fs::path& record)
@@ -439,6 +450,9 @@ namespace sequoia::testing
               "While a test executes, its record names its start and no duration",
               execution_record_line_heads(record.file_path()),
               std::vector<std::string>{"started"});
+
+        check("While a test executes, the run's stamp already exists",
+              fs::exists(get_project_paths().execution_records() / "run.stamp"));
       }
     };
 
@@ -799,8 +813,10 @@ namespace sequoia::testing
   /** Every executed test's record ends with its start and its duration. The fake tests tell the
      mechanism from its rivals: `record_reading_free_test` sees its record while it executes, which a
      start written only at the end would not produce; `escaping_exception_free_test` throws out of its
-     body, which a duration written only on normal completion would miss. The records left by earlier
-     runs are removed first, so none of them can stand in for this run's.
+     body, which a duration written only on normal completion would miss. The run's stamp must exist
+     before any test executes, and name a start no later than either test's, or it would date a fresh
+     record as stale. The runs of the earlier functions here share the fake project, and each leaves a
+     stamp, so the records directory is removed first: only this run can then have written the stamp.
    */
   void test_runner_test::test_execution_records()
   {
@@ -833,6 +849,12 @@ namespace sequoia::testing
           "The record of a test whose body threw names its start and its duration",
           execution_record_line_heads(throwingRecord.file_path()),
           finishedRecordHeads);
+
+    const auto runStart{start_named_by(projPaths.execution_records() / "run.stamp")};
+    check("The run's stamp names a start", !runStart.empty());
+    const bool runStartedFirst{   (runStart <= start_named_by(passingRecord.file_path()))
+                               && (runStart <= start_named_by(throwingRecord.file_path()))};
+    check("The run started no later than either test", runStartedFirst);
   }
 
   void test_runner_test::test_filtered_suites()

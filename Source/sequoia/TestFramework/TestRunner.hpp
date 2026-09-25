@@ -175,16 +175,16 @@ namespace sequoia::testing
   private:
     static void versioned_write(const std::filesystem::path& file, std::string_view text);
 
-    /** \brief Overwrites a test's execution record: its start, and its duration once it has one.
+    /** \brief Overwrites a test's execution record: its start, and how long it took once it has finished.
 
         Nothing is written for an empty path. A record which cannot be written is skipped rather
         than reported: nothing in a run depends on the record, and the start is written outside the
         handler that turns a test's exceptions into critical failures, so a throw from here would
-        end a concurrent run.
+        terminate a concurrent run and end a serial one.
      */
     static void record_execution(const std::filesystem::path& record,
                                  std::chrono::system_clock::time_point start,
-                                 std::optional<log_summary::duration> duration);
+                                 std::optional<log_summary::duration> elapsed);
 
     struct soul
     {

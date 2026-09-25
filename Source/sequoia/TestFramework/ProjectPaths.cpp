@@ -378,12 +378,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  fs::path output_paths::execution_records(const fs::path& buildRoot, const fs::path& buildDir) const
+  fs::path output_paths::execution_records(const fs::path& buildRoot, const fs::path& executableDir) const
   {
-    if(buildDir.empty())
+    if(executableDir.empty())
       return {};
 
-    return (dir() / "ExecutionRecords") /= fs::relative(buildDir, buildRoot);
+    return (dir() / "ExecutionRecords") /= fs::relative(executableDir, buildRoot);
   }
 
   //===================================== project_paths =====================================//
@@ -400,6 +400,7 @@ namespace sequoia::testing
     , m_Materials{project_root()}
     , m_BuildSystem{project_root()}
     , m_AncillaryMainCpps{make_ancillary_info(project_root(), main().common_includes(), customization)}
+    , m_ExecutionRecords{m_Output.execution_records(m_Build.dir(), m_Build.executable_dir())}
   {
     throw_unless_directory(project_root(), "\nRepository root not found");
     throw_unless_regular_file(main().file(), "\nTry ensuring that the application is run from the appropriate directory");
@@ -410,11 +411,5 @@ namespace sequoia::testing
   prune_paths project_paths::prune() const
   {
     return output().prune(build().dir(), build().executable_dir());
-  }
-
-  [[nodiscard]]
-  fs::path project_paths::execution_records() const
-  {
-    return output().execution_records(build().dir(), build().executable_dir());
   }
 }

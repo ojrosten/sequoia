@@ -106,8 +106,10 @@ namespace sequoia::testing
              how long it took.
 
       A record naming a start and no duration marks a test that was executing when its run ended:
-      one which hung, or which brought the process down. The file is unversioned, and lives beneath
-      `output_paths::execution_records`. The path is empty when the build tree is unknown.
+      one which hung, or which brought the process down. Each run stamps its own start beside the
+      records as it begins, so a record whose start precedes the stamp's was written by an earlier
+      run. The file is unversioned, and lives beneath `output_paths::execution_records`. The path is
+      empty when the executable's directory is unknown.
    */
   class test_execution_record_path {
   public:
