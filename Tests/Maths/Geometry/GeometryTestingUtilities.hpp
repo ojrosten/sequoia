@@ -657,7 +657,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::zero,
-        test.report("(1)[0] * disp_value_type{}"),
+        test.report("(1)[0] *= disp_value_type{}"),
         [](variant_type v) -> variant_type { std::get<coords_type>(v)[0] *= disp_value_type{}; return v; }
       );
 
@@ -683,7 +683,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::two,
-        test.report("(1)[0] * disp_value_type{2}"),
+        test.report("(1)[0] *= disp_value_type{2}"),
         [](variant_type v) -> variant_type { std::get<coords_type>(v)[0] *= disp_value_type{2}; return v; }
       );
 
