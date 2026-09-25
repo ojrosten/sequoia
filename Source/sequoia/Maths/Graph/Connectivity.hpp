@@ -155,8 +155,8 @@ namespace sequoia
         [[nodiscard]]
         constexpr bool operator()(const Edge& e1, const Edge& e2) const noexcept
         {
-          using edge_weight_type = Edge::weight_type;
-          constexpr bool sort_weights{!std::is_empty_v<edge_weight_type> && deep_totally_ordered<edge_weight_type>};
+          using edge_weight_t = Edge::weight_type;
+          constexpr bool sort_weights{!std::is_empty_v<edge_weight_t> && deep_totally_ordered<edge_weight_t>};
 
           if constexpr(!sort_weights)
           {

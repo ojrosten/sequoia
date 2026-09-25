@@ -268,16 +268,16 @@ namespace sequoia::testing
    >
   void test_graph_traversals::execute_operations()
   {
-    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>;
+    using graph_t = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>;
 
-    tracker_test<graph_type, Traverser<maths::traversal_flavour::breadth_first>>();
-    tracker_test<graph_type, Traverser<maths::traversal_flavour::depth_first>>();
-    tracker_test<graph_type, Traverser<maths::traversal_flavour::pseudo_depth_first>>();
+    tracker_test<graph_t, Traverser<maths::traversal_flavour::breadth_first>>();
+    tracker_test<graph_t, Traverser<maths::traversal_flavour::depth_first>>();
+    tracker_test<graph_t, Traverser<maths::traversal_flavour::pseudo_depth_first>>();
 
     if constexpr(!std::is_empty_v<NodeWeight>)
     {
-      test_weighted_BFS_tasks<graph_type>();
-      test_priority_traversal<graph_type>();
+      test_weighted_BFS_tasks<graph_t>();
+      test_priority_traversal<graph_t>();
     }
   }
 
@@ -285,26 +285,26 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    using graph_type = embedded_graph<null_weight, int>;
-    graph_type graph;
+    using graph_t = embedded_graph<null_weight, int>;
+    graph_t graph;
 
     graph.add_node(3);
     graph.add_node(2);
 
-    using node_comparer = graph_impl::node_comparer<graph_type, std::ranges::less>;
+    using node_comparer = graph_impl::node_comparer<graph_t, std::ranges::less>;
     node_comparer compare(graph);
 
     check("node_comparer sees that weight_0 > weight_1 and so returns false", !compare(0, 1));
 
-    auto stack = graph_impl::traversal_traits<graph_type, traversal_flavour::pseudo_depth_first>::make();
+    auto stack = graph_impl::traversal_traits<graph_t, traversal_flavour::pseudo_depth_first>::make();
     stack.push(0);
     stack.push(1);
     check(equality, "", stack.top(), 1uz);
     stack.pop();
     check(equality, "", stack.top(), 0uz);
 
-    using compare_t = graph_impl::node_comparer<graph_type, std::ranges::less>;
-    auto pqueue = graph_impl::traversal_traits<graph_type, traversal_flavour::priority, compare_t>::make(compare_t{graph});
+    using compare_t = graph_impl::node_comparer<graph_t, std::ranges::less>;
+    auto pqueue = graph_impl::traversal_traits<graph_t, traversal_flavour::priority, compare_t>::make(compare_t{graph});
     pqueue.push(0);
     pqueue.push(1);
 

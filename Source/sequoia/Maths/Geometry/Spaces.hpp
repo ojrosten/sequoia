@@ -1240,11 +1240,11 @@ namespace sequoia::maths
     requires has_index_set_v<BasisData>
   inline constexpr bool has_consistent_index_set_v{
     []{
-      using index_set_type = BasisData::index_set;
+      using index_set_t = BasisData::index_set;
 
-      if constexpr(requires { index_set_type::size(); })
-        return index_set_type::size() == rank_of_v<M>;
-      else if constexpr(std::is_enum_v<index_set_type>)
+      if constexpr(requires { index_set_t::size(); })
+        return index_set_t::size() == rank_of_v<M>;
+      else if constexpr(std::is_enum_v<index_set_t>)
         // TO DO std::meta::enumerators_of(^^index_set_type).size() == rank_of_v<M>;
         return true;
       else

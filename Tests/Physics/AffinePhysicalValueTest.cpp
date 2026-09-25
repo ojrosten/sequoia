@@ -38,11 +38,11 @@ namespace sequoia::testing
   {
     using quantity_t  = Quantity;
     using delta_q_t   = quantity_t::displacement_type;
-    using space_type  = quantity_t::space_type;
+    using space_t     = quantity_t::space_type;
     using repr_t      = quantity_t::representation_type;
 
-    STATIC_CHECK(affine_space<space_type>);
-    STATIC_CHECK(vector_space<free_module_type_of_t<space_type>>);
+    STATIC_CHECK(affine_space<space_t>);
+    STATIC_CHECK(vector_space<free_module_type_of_t<space_t>>);
     STATIC_CHECK(!can_multiply<quantity_t, float>);
     STATIC_CHECK(!can_divide<quantity_t, float>);
     STATIC_CHECK(!can_divide<quantity_t, quantity_t>);
@@ -62,30 +62,30 @@ namespace sequoia::testing
 
     coordinates_operations<quantity_t>{*this}.execute();
 
-    using units_type      = quantity_t::units_type;
-    using origin_type     = quantity_t::origin_type;
-    using basis_data_type = quantity_t::basis_data_type;
-    using validator_type  = quantity_t::validator_type;
+    using units_t      = quantity_t::units_type;
+    using origin_t     = quantity_t::origin_type;
+    using basis_data_t = quantity_t::basis_data_type;
+    using validator_t  = quantity_t::validator_type;
 
     // Why the dual is inadmissible, stated directly rather than left to be
     // inferred from a failure to compile.
-    STATIC_CHECK(!has_distinguished_origin_v<space_type>);
-    STATIC_CHECK(!permissible_value_space_v<dual<space_type>>);
+    STATIC_CHECK(!has_distinguished_origin_v<space_t>);
+    STATIC_CHECK(!permissible_value_space_v<dual<space_t>>);
 
     // Positive control. Without it the negative check below would pass just as
     // readily if one of its arguments were merely wrong, rather than the space
     // being inadmissible.
     STATIC_CHECK(
-      defines_physical_value_v<space_type, units_type, basis_data_type, repr_t, origin_type, validator_type>);
+      defines_physical_value_v<space_t, units_t, basis_data_t, repr_t, origin_t, validator_t>);
 
     STATIC_CHECK(
       !defines_physical_value_v<
-        dual<space_type>,
-        dual<units_type>,
-        unit_defined_basis_data_for<dual<space_type>, dual<units_type>>,
+        dual<space_t>,
+        dual<units_t>,
+        unit_defined_basis_data_for<dual<space_t>, dual<units_t>>,
         repr_t,
-        dual<origin_type>,
-        validator_type
+        dual<origin_t>,
+        validator_t
       >
     );
   }

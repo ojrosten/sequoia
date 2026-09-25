@@ -90,12 +90,12 @@ namespace sequoia::testing
     STATIC_CHECK(defines_addition_for_single_value_v<space_t, logarithmic_representation<no_bounds<T>>>);
     STATIC_CHECK(defines_subtraction_for_single_value_v<space_t, logarithmic_representation<no_bounds<T>>>);
 
-    using variant_t  = std::variant<coords_t, delta_t>;
-    using graph_type = transition_checker<variant_t>::transition_graph;
+    using variant_t = std::variant<coords_t, delta_t>;
+    using graph_t   = transition_checker<variant_t>::transition_graph;
 
     enum node_label {neg_one, zero, one, one_plus_ln_two, delta_neg_one, delta_zero, delta_one };
 
-    graph_type g{
+    graph_t g{
       {
         { // neg_one
           {

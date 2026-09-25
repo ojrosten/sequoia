@@ -553,8 +553,8 @@ namespace sequoia::physics
             physical_value<RHSValueSpace,RHSUnit, RHSBasisData, RHSRepresentation, RHSOrigin, validator_type>
           >;
 
-      using derived_units_type = physical_value_t::units_type;
-      return physical_value_t{lhs.value() * rhs.value(), derived_units_type{}};
+      using derived_units_t = physical_value_t::units_type;
+      return physical_value_t{lhs.value() * rhs.value(), derived_units_t{}};
     }
 
     template<
@@ -575,10 +575,10 @@ namespace sequoia::physics
             physical_value,
             physical_value<dual_of_t<RHSValueSpace>, dual_of_t<RHSUnit>, dual_of_t<RHSBasisData>,  dual_rep_t, distinguished_origin, validator_type>
           >;
-      using derived_units_type = physical_value_t::units_type;
+      using derived_units_t = physical_value_t::units_type;
 
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
-        return physical_value_t{std::array{(lhs.values()[Is] / rhs.value())...}, derived_units_type{}};
+        return physical_value_t{std::array{(lhs.values()[Is] / rhs.value())...}, derived_units_t{}};
       }(std::make_index_sequence<D>{});
     }
 
@@ -587,8 +587,8 @@ namespace sequoia::physics
     {
       using dual_rep_t = dual_of_t<representation_type>;
       using physical_value_t = physical_value<dual_of_t<ValueSpace>, dual_of_t<Unit>, dual_of_t<basis_data_type>, dual_rep_t, distinguished_origin, validator_type>;
-      using derived_units_type = physical_value_t::units_type;
-      return physical_value_t{value / rhs.value(), derived_units_type{}};
+      using derived_units_t = physical_value_t::units_type;
+      return physical_value_t{value / rhs.value(), derived_units_t{}};
     }
  
     template<class Self, class LoweredValueSpace, basis_data_for<free_module_type_of_t<LoweredValueSpace>> OtherBasisData>    
@@ -1548,9 +1548,9 @@ namespace sequoia::maths
         utilities::to_array(
           pv.values(),
           [](value_type v) -> value_type {
-            using ratio_type = transform_type::dilatation_type::ratio_type;
+            using ratio_t = transform_type::dilatation_type::ratio_type;
 
-            return static_cast<value_type>((v * ratio_type::num / ratio_type::den) + to_displacement());
+            return static_cast<value_type>((v * ratio_t::num / ratio_t::den) + to_displacement());
           }
         ),
         to_units_type{}

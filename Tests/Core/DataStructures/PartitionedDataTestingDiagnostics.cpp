@@ -33,27 +33,27 @@ namespace sequoia::testing
 
   template<class PartitionedData> void partitioned_data_false_negative_test::test()
   {
-    using value_type = PartitionedData::value_type;
-    using expected_t = std::initializer_list<std::initializer_list<value_type>>;
+    using value_t    = PartitionedData::value_type;
+    using expected_t = std::initializer_list<std::initializer_list<value_t>>;
 
     PartitionedData
       d{},
-      e{{value_type{1}}},
-      f{{value_type{2}}},
-      g{{value_type{1}, value_type{2}}},
-      h{{value_type{1}}, {value_type{2}}};
+      e{{value_t{1}}},
+      f{{value_t{2}}},
+      g{{value_t{1}, value_t{2}}},
+      h{{value_t{1}}, {value_t{2}}};
 
     const PartitionedData
-      ce{{value_type{1}}},
-      cg{{value_type{1}, value_type{2}}},
-      ch{{value_type{1}}, {value_type{2}}};
+      ce{{value_t{1}}},
+      cg{{value_t{1}, value_t{2}}},
+      ch{{value_t{1}}, {value_t{2}}};
 
 
-    check(equivalence, "Empty data inequivalent to non-empty data ", d, expected_t{{value_type{1}}});
+    check(equivalence, "Empty data inequivalent to non-empty data ", d, expected_t{{value_t{1}}});
     check(equivalence, "Non-empty data inequivalent to empty data ", e, expected_t{{}});
-    check(equivalence, "Single partitions holding different elements compare not equal", f, expected_t{{value_type{1}}});
-    check(equivalence, "Identical elements divided between different partitions compare notequal", g, expected_t{{value_type{1}}, {value_type{2}}});
-    check(equivalence, "Identical elements divided between different partitions compare notequal", h, expected_t{{value_type{1}, value_type{2}}});
+    check(equivalence, "Single partitions holding different elements compare not equal", f, expected_t{{value_t{1}}});
+    check(equivalence, "Identical elements divided between different partitions compare notequal", g, expected_t{{value_t{1}}, {value_t{2}}});
+    check(equivalence, "Identical elements divided between different partitions compare notequal", h, expected_t{{value_t{1}, value_t{2}}});
 
     check(equality, "", d, e);
     check(equality, "", e, f);
@@ -67,45 +67,45 @@ namespace sequoia::testing
     check(equality, "", g.num_partitions(), 2uz);
     check(equality, "", h.num_partitions(), 1uz);
 
-    check(equality, "", *e.begin_partition(0), value_type{2});
-    check(equality, "", *e.cbegin_partition(0), value_type{2});
-    check(equality, "", *e.rbegin_partition(0), value_type{2});
-    check(equality, "", *e.crbegin_partition(0), value_type{2});
-    check(equality, "", e[0][0], value_type{2});
+    check(equality, "", *e.begin_partition(0), value_t{2});
+    check(equality, "", *e.cbegin_partition(0), value_t{2});
+    check(equality, "", *e.rbegin_partition(0), value_t{2});
+    check(equality, "", *e.crbegin_partition(0), value_t{2});
+    check(equality, "", e[0][0], value_t{2});
 
-    check(equality, "", *(g.end_partition(0) -1), value_type{1});
-    check(equality, "", *(g.cend_partition(0) -1), value_type{1});
-    check(equality, "", *(g.rend_partition(0) - 1), value_type{2});
-    check(equality, "", *(g.crend_partition(0) - 1), value_type{2});
-    check(equality, "", g[0][1], value_type{1});
+    check(equality, "", *(g.end_partition(0) -1), value_t{1});
+    check(equality, "", *(g.cend_partition(0) -1), value_t{1});
+    check(equality, "", *(g.rend_partition(0) - 1), value_t{2});
+    check(equality, "", *(g.crend_partition(0) - 1), value_t{2});
+    check(equality, "", g[0][1], value_t{1});
 
-    check(equality, "", *h.begin_partition(0), value_type{2});
-    check(equality, "", *h.cbegin_partition(0), value_type{2});
-    check(equality, "", *h.rbegin_partition(0), value_type{2});
-    check(equality, "", *h.crbegin_partition(0), value_type{2});
-    check(equality, "", h[0][0], value_type{2});
+    check(equality, "", *h.begin_partition(0), value_t{2});
+    check(equality, "", *h.cbegin_partition(0), value_t{2});
+    check(equality, "", *h.rbegin_partition(0), value_t{2});
+    check(equality, "", *h.crbegin_partition(0), value_t{2});
+    check(equality, "", h[0][0], value_t{2});
 
-    check(equality, "", *h.begin_partition(1), value_type{1});
-    check(equality, "", *h.cbegin_partition(1), value_type{1});
-    check(equality, "", *h.rbegin_partition(1), value_type{1});
-    check(equality, "", *h.crbegin_partition(1), value_type{1});
-    check(equality, "", h[1][0], value_type{1});
+    check(equality, "", *h.begin_partition(1), value_t{1});
+    check(equality, "", *h.cbegin_partition(1), value_t{1});
+    check(equality, "", *h.rbegin_partition(1), value_t{1});
+    check(equality, "", *h.crbegin_partition(1), value_t{1});
+    check(equality, "", h[1][0], value_t{1});
 
 
-    check(equality, "", *ce.begin_partition(0), value_type{2});
-    check(equality, "", *ce.rbegin_partition(0), value_type{2});
-    check(equality, "", ce[0][0], value_type{2});
+    check(equality, "", *ce.begin_partition(0), value_t{2});
+    check(equality, "", *ce.rbegin_partition(0), value_t{2});
+    check(equality, "", ce[0][0], value_t{2});
 
-    check(equality, "", *(cg.end_partition(0) -1), value_type{1});
-    check(equality, "", *(cg.rend_partition(0) - 1), value_type{2});
-    check(equality, "", cg[0][1], value_type{1});
+    check(equality, "", *(cg.end_partition(0) -1), value_t{1});
+    check(equality, "", *(cg.rend_partition(0) - 1), value_t{2});
+    check(equality, "", cg[0][1], value_t{1});
 
-    check(equality, "", *ch.begin_partition(0), value_type{2});
-    check(equality, "", *ch.rbegin_partition(0), value_type{2});
-    check(equality, "", ch[0][0], value_type{2});
+    check(equality, "", *ch.begin_partition(0), value_t{2});
+    check(equality, "", *ch.rbegin_partition(0), value_t{2});
+    check(equality, "", ch[0][0], value_t{2});
 
-    check(equality, "", *ch.begin_partition(1), value_type{1});
-    check(equality, "", *h.crbegin_partition(1), value_type{1});
-    check(equality, "", ch[1][0], value_type{1});
+    check(equality, "", *ch.begin_partition(1), value_t{1});
+    check(equality, "", *h.crbegin_partition(1), value_t{1});
+    check(equality, "", ch[1][0], value_t{1});
   }
 }

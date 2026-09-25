@@ -769,7 +769,7 @@ namespace sequoia::testing
 
     using graph_t = static_undirected_graph<3, 3, float, double>;
     using edge_t = graph_t::edge_init_type;
-    using index_type = graph_t::edge_index_type;
+    using index_t = graph_t::edge_index_type;
     using edges_init_t = std::initializer_list<std::initializer_list<edge_t>>;
     using nodes_init_t = std::initializer_list<double>;
     using transition_graph = transition_checker<graph_t>::transition_graph;
@@ -811,7 +811,7 @@ namespace sequoia::testing
          [this]() -> graph_t {
            constexpr auto g{[](){
               graph_t gr{edges_init_t{{edge_t{1, -0.2f}, edge_t{2, 0.5f}}, {edge_t{0, -0.2f}, edge_t{2}}, {edge_t{0, 0.5f}, edge_t{1}}}, nodes_init_t{0.0, 0.7, 2.1}};
-              for(auto i : std::views::iota(0uz, gr.order())) gr.swap_edges(static_cast<index_type>(i), 0, 1);
+              for(auto i : std::views::iota(0uz, gr.order())) gr.swap_edges(static_cast<index_t>(i), 0, 1);
               return gr;
             }()
            };

@@ -63,8 +63,8 @@ namespace sequoia::testing
         check(with_best_available, "implicitly const range", logger, nodes.node_weights().begin(), nodes.node_weights().end(), prediction.begin(), prediction.end());
         check(with_best_available, "explicitly const range", logger, nodes.cnode_weights().begin(), nodes.cnode_weights().end(), prediction.begin(), prediction.end());
 
-        using iterator_type = Nodes::iterator;
-        if constexpr(std::indirectly_writable<iterator_type, std::iter_value_t<iterator_type>>)
+        using iterator_t = Nodes::iterator;
+        if constexpr(std::indirectly_writable<iterator_t, std::iter_value_t<iterator_t>>)
         {
           auto& n{const_cast<Nodes&>(nodes)};
           check(with_best_available, "range", logger, n.node_weights().begin(), n.node_weights().end(), prediction.begin(), prediction.end());

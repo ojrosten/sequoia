@@ -23,8 +23,8 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    using g_type = static_directed_graph<1, 2, null_weight, null_weight>;
-    using edge_t = g_type::edge_init_type;
+    using g_t    = static_directed_graph<1, 2, null_weight, null_weight>;
+    using edge_t = g_t::edge_init_type;
 
     std::array<std::size_t, 2> ordering{};
     std::size_t index{};
@@ -34,7 +34,7 @@ namespace sequoia::testing
       }
     };
 
-    constexpr g_type g{{edge_t{1}}, {}};
+    constexpr g_t g{{edge_t{1}}, {}};
     traverse(pseudo_depth_first, g, find_disconnected_t{}, null_func_obj{}, lateNodeFn);
 
     return ordering;
@@ -75,15 +75,15 @@ namespace sequoia::testing
   constexpr auto test_static_graph_traversals::priority_search()
   {
     using namespace maths;
-    using g_type = static_undirected_graph<3, 4, null_weight, int>;
-    using edge_t = g_type::edge_init_type;
+    using g_t    = static_undirected_graph<3, 4, null_weight, int>;
+    using edge_t = g_t::edge_init_type;
 
     // 6  4  2
     //  \ | /
     //   \|/
     //    0
 
-    constexpr g_type g{
+    constexpr g_t g{
       {
         {edge_t{1}, edge_t{2}, edge_t{3}},
         {edge_t{0}},
