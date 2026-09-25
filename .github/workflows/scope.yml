@@ -108,7 +108,7 @@ jobs:
             push/refs/heads/staging)
               test_everything "Test everything: a push to staging is always tested.";;
             push/*)
-              fetch "+refs/heads/staging:refs/remotes/origin/staging" "$PUSH_AFTER" \
+              fetch "+refs/heads/scratch-129-base:refs/remotes/origin/staging" "$PUSH_AFTER" \
                 || cannot_compare "staging and the pushed commit could not be fetched"
               from=$(git --git-dir="$git_dir" merge-base refs/remotes/origin/staging "$PUSH_AFTER") \
                 || cannot_compare "the pushed commit has no merge-base with staging"
