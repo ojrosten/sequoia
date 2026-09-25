@@ -99,19 +99,35 @@ namespace sequoia::testing
 
   //===================================== individual_materials_paths =====================================//
 
-  individual_materials_paths::individual_materials_paths(const fs::path& sourceFile, std::string_view testName, const project_paths& projPaths)
-    : individual_materials_paths{rebase_from(sourceFile, projPaths.tests().repo()).replace_extension("") /= testName, projPaths.test_materials(), projPaths.output()}
+  individual_materials_paths::individual_materials_paths(const fs::path& sourceFile,
+                                                         std::string_view testName,
+                                                         const project_paths& projPaths,
+                                                         const std::optional<std::string>& materialsDiscriminator)
+    : individual_materials_paths{rebase_from(sourceFile, projPaths.tests().repo()).replace_extension("") /= testName,
+                                 projPaths.test_materials(),
+                                 projPaths.output(),
+                                 materialsDiscriminator}
   {}
 
-  individual_materials_paths::individual_materials_paths(const fs::path& relativePath, const test_materials_paths& materials, const output_paths& output)
-    : m_OriginalMaterialsRoot{materials.repo() / relativePath}
+  individual_materials_paths::individual_materials_paths(const fs::path& relativePath,
+                                                         const test_materials_paths& materials,
+                                                         const output_paths& output,
+                                                         const std::optional<std::string>& materialsDiscriminator)
+    : m_OriginalTestRoot{materials.repo() / relativePath}
     , m_TemporaryMaterialsRoot{output.tests_temporary_data() / relativePath}
+    , m_MaterialsDiscriminator{materialsDiscriminator}
   {}
+
+  [[nodiscard]]
+  fs::path individual_materials_paths::original_materials_root() const
+  {
+    return m_MaterialsDiscriminator ? m_OriginalTestRoot / m_MaterialsDiscriminator.value() : m_OriginalTestRoot;
+  }
 
   [[nodiscard]]
   fs::path individual_materials_paths::original_working() const
   {
-    return beneath(m_OriginalMaterialsRoot, "WorkingCopy");
+    return beneath(original_materials_root(), "WorkingCopy");
   }
 
   [[nodiscard]]
@@ -123,13 +139,13 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path individual_materials_paths::prediction() const
   {
-    return beneath(m_OriginalMaterialsRoot, "Prediction");
+    return beneath(original_materials_root(), "Prediction");
   }
 
   [[nodiscard]]
   fs::path individual_materials_paths::original_auxiliary() const
   {
-    return beneath(m_OriginalMaterialsRoot, "Auxiliary");
+    return beneath(original_materials_root(), "Auxiliary");
   }
 
   [[nodiscard]]

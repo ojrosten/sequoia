@@ -356,6 +356,27 @@
 	directory itself, with no committed counterpart, and so nothing for a rename to detach. Within it,
 	`WorkingCopy` and `Auxiliary` are reserved for the staged materials.
 
+	What a test records may sometimes have to depend on the configuration of the build tree. A test
+	may therefore declare up to three hooks, each a public static member function taking
+	`const cmake_cache&` and returning a name: `output_discriminator`, which gives the test a diagnostics
+	file per name, `summary_discriminator`, which does the same for its summary, and
+	`materials_discriminator`, which does it for its committed materials. A hook declared in any other
+	form - not static, say, or returning a `std::string_view` - is refused at compile time rather than
+	silently ignored, though a private one cannot be detected and is ignored. A hook sees only the
+	cache, which does not record the active configuration of a multi-config build tree, so none can
+	distinguish Debug from Release there. Each is a last resort: what does not depend on the
+	configuration is better.
+
+	A test with a materials discriminator - Visual Studio's project files, say, which no other generator
+	produces - keeps its materials one level further down, in `TestMaterials/Foo/Bar/bar_test/<name>`,
+	laid out as above, and only that directory is the test's for the run: its materials are staged
+	from it, compared with it and updated into it, so a run in one configuration can neither read nor
+	disturb another's. The name must be one portable directory name, not a kind of material, and not
+	a sibling's name spelt in another case; and nothing but the configurations' directories may sit
+	in `bar_test`, save `.keep` and `.DS_Store`. Staging refuses anything else, as the test's critical
+	failure. The temporary directory takes no such level: within one build tree it holds one
+	configuration's materials at a time, though two build trees run at once share it.
+
 	However, there are some exceptions to this. First, the following files are ignored: `.keep` and
 	`.DS_Store`. More interestingly, clients may specify that particular substrings within a file
 	are ignored when comparing file contents. To motivate this, consider end-to-end testing of the

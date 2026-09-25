@@ -262,21 +262,111 @@ namespace sequoia::testing
     return unqualified;
   }
 
-  /** \brief Whether a test forks its diagnostics output, by a static `output_discriminator(const cmake_cache&)`. */
-  template<concrete_test T>
-  inline constexpr bool has_discriminated_output_v{
-    requires(const cmake_cache& cache){
-      { T::output_discriminator(cache) } -> std::convertible_to<std::string>;
-    }
+  /** \name discriminator_probes
+      \brief The hooks by which a test discriminates what it records by the build tree's configuration.
+
+      Each hook is a public static member function taking `const cmake_cache&` and returning something
+      convertible to `std::string`: `output_discriminator` for the diagnostics files,
+      `summary_discriminator` for the summary, and `materials_discriminator` for the committed
+      materials. A probe asks three things of a test for one hook's name: whether it declares the hook
+      in any form - a member of that name, static or not, of any signature, or, where the name is
+      overloaded, one callable through `T&`, so that a non-const member counts - whether the hook can
+      be called as a static, and whether its result converts to `std::string`.
+
+      A hook which is private is invisible to every probe, since standard C++ cannot detect an
+      inaccessible member: the hooks must be public. A hook sees only the cache, which does not
+      record the active configuration of a multi-config build tree, so a test cannot discriminate by
+      Debug and Release there.
+   */
+  ///@{
+  /** \brief Probes a test for `output_discriminator`, which discriminates its diagnostics files. */
+  struct output_discriminator_probe
+  {
+    template<class T>
+    static constexpr bool declared{
+         requires { &T::output_discriminator; }
+      || requires(T& t, const cmake_cache& cache){ t.output_discriminator(cache); }
+      || requires(T& t){ t.output_discriminator(); }
+    };
+
+    template<class T>
+    static constexpr bool static_hook{
+      requires(const cmake_cache& cache){ T::output_discriminator(cache); }
+    };
+
+    template<class T>
+    static constexpr bool string_valued{
+      requires(const cmake_cache& cache){ { T::output_discriminator(cache) } -> std::convertible_to<std::string>; }
+    };
+
+    template<class T>
+    [[nodiscard]]
+    static std::string discriminator(const cmake_cache& cache) { return T::output_discriminator(cache); }
   };
 
-  /** \brief Whether a test forks its summary, by a static `summary_discriminator(const cmake_cache&)`. */
-  template<concrete_test T>
-  inline constexpr bool has_discriminated_summary_v{
-    requires(const cmake_cache& cache){
-      { T::summary_discriminator(cache) } -> std::convertible_to<std::string>;
-    }
+  /** \brief Probes a test for `summary_discriminator`, which discriminates its summary. */
+  struct summary_discriminator_probe
+  {
+    template<class T>
+    static constexpr bool declared{
+         requires { &T::summary_discriminator; }
+      || requires(T& t, const cmake_cache& cache){ t.summary_discriminator(cache); }
+      || requires(T& t){ t.summary_discriminator(); }
+    };
+
+    template<class T>
+    static constexpr bool static_hook{
+      requires(const cmake_cache& cache){ T::summary_discriminator(cache); }
+    };
+
+    template<class T>
+    static constexpr bool string_valued{
+      requires(const cmake_cache& cache){ { T::summary_discriminator(cache) } -> std::convertible_to<std::string>; }
+    };
+
+    template<class T>
+    [[nodiscard]]
+    static std::string discriminator(const cmake_cache& cache) { return T::summary_discriminator(cache); }
   };
+
+  /** \brief Probes a test for `materials_discriminator`, which discriminates its committed materials. */
+  struct materials_discriminator_probe
+  {
+    template<class T>
+    static constexpr bool declared{
+         requires { &T::materials_discriminator; }
+      || requires(T& t, const cmake_cache& cache){ t.materials_discriminator(cache); }
+      || requires(T& t){ t.materials_discriminator(); }
+    };
+
+    template<class T>
+    static constexpr bool static_hook{
+      requires(const cmake_cache& cache){ T::materials_discriminator(cache); }
+    };
+
+    template<class T>
+    static constexpr bool string_valued{
+      requires(const cmake_cache& cache){ { T::materials_discriminator(cache) } -> std::convertible_to<std::string>; }
+    };
+
+    template<class T>
+    [[nodiscard]]
+    static std::string discriminator(const cmake_cache& cache) { return T::materials_discriminator(cache); }
+  };
+
+  ///@}
+
+  /** \brief A test declares the hook the probe names, but not as a static member callable with the cache. */
+  template<class Probe, concrete_test T>
+  inline constexpr bool misdeclared_discriminator_v{Probe::template declared<T> && !Probe::template static_hook<T>};
+
+  /** \brief A test's static hook, of the name the probe names, returns something not convertible to `std::string`. */
+  template<class Probe, concrete_test T>
+  inline constexpr bool mistyped_discriminator_v{Probe::template static_hook<T> && !Probe::template string_valued<T>};
+
+  /** \brief A test discriminates by the hook the probe names. */
+  template<class Probe, concrete_test T>
+  inline constexpr bool has_discriminator_v{Probe::template string_valued<T>};
 
   /** \brief Temporary workaround while waiting for variadic friends */
   class trivial_extender

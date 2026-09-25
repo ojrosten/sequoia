@@ -63,10 +63,12 @@ name: rigorous
 # regenerate. It is fixed, so the flag can go on. A macOS run matched all 340.
 #
 # TestRunnerProjectFiles compares a generated TestAll.vcxproj against a prediction
-# stored per preset - `ProjectFiles/<preset>`, taken from the build directory's
-# name - so a Visual Studio column needs its prediction generated on Windows and
-# committed before it can run the test. The test is a no-op on clang, so the macOS
-# columns need nothing.
+# stored per preset - `visual_studio/Prediction/ProjectFiles/<preset>`, beneath the
+# test's materials discriminator for the Visual Studio generator - and checks every
+# preset committed there, so a new Visual Studio preset needs its prediction
+# generated on Windows and committed before a column uses it. Under Ninja the test
+# checks only that the generated build.ninja has an edge for TestAll, and reads no
+# predictions.
 #
 # Note this column configures with `msvc-release`, not `msvc`. The Visual Studio
 # generator is multi-config, so one configure preset can serve both Debug and

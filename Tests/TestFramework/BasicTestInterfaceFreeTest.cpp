@@ -72,6 +72,7 @@ namespace sequoia::testing
 
     test_file_paths(runner.proj_paths());
     test_materials(runner.proj_paths());
+    test_discriminated_materials(runner.proj_paths());
   }
 
   void basic_test_interface_free_test::test_file_paths(const project_paths& projPaths)
@@ -150,7 +151,7 @@ namespace sequoia::testing
     const auto stagedTest{
       [&projPaths](std::string_view sourceStem) {
         const auto source{projPaths.tests().repo() / "Materials" / std::format("{}.cpp", sourceStem)};
-        const individual_materials_paths materials{source, "fake_test", projPaths};
+        const individual_materials_paths materials{source, "fake_test", projPaths, std::nullopt};
         stage_materials(materials);
         return std::pair{fake_test{"fake_test", source, projPaths, materials, {}, {}, {}}, materials};
       }
@@ -231,5 +232,46 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       "Staging the materials of no test",
       []() { stage_materials(individual_materials_paths{}); });
+
+  }
+
+  /** A discriminated test's committed materials hold one directory per configuration, `Platypus` and
+      `Echidna`; its discriminator must name one of them portably, and nothing else may sit beside them.
+   */
+  void basic_test_interface_free_test::test_discriminated_materials(const project_paths& projPaths)
+  {
+    const auto stage{
+      [&projPaths](std::string_view sourceStem, std::string discriminator) {
+        const auto source{projPaths.tests().repo() / "Materials" / std::format("{}.cpp", sourceStem)};
+        stage_materials(individual_materials_paths{source, "fake_test", projPaths, std::move(discriminator)});
+      }
+    };
+
+    stage("Discriminated", "Platypus");
+    const auto staged{projPaths.output().tests_temporary_data() / "Materials/Discriminated/fake_test/WorkingCopy"};
+    check(equality,
+          "The declared configuration staged",
+          read_to_string(staged / "input.txt", std::ios_base::in).value_or(""),
+          std::string{"Platypus\n"});
+
+    for(const auto& [description, discriminator] : std::to_array<std::pair<std::string_view, std::string_view>>({
+          {"An empty discriminator",                   ""},
+          {"A discriminator naming the parent",        ".."},
+          {"An absolute discriminator",                "/Platypus"},
+          {"A discriminator holding a separator",      "Platypus/Echidna"},
+          {"A discriminator holding a colon",          "Platypus:Echidna"},
+          {"A discriminator ending in a dot",          "Platypus."},
+          {"A discriminator naming a Windows device",  "COM1"},
+          {"A discriminator naming a kind of material", "prediction"},
+          {"A discriminator differing only in case from a sibling", "platypus"}}))
+    {
+      check_exception_thrown<std::runtime_error>(
+        description,
+        [&stage, discriminator]() { stage("Discriminated", std::string{discriminator}); });
+    }
+
+    check_exception_thrown<std::runtime_error>(
+      "Materials beside the configurations",
+      [&stage]() { stage("DiscriminatedBeside", "Platypus"); });
   }
 }

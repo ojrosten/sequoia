@@ -28,6 +28,15 @@ namespace sequoia::testing
       same names; predictions are never staged, so `prediction()` is a path beneath the original
       root.
 
+      A test whose committed materials vary with the configuration declares a materials
+      discriminator. Its committed materials then sit one level down, beneath the test's own
+      directory in a directory named by the discriminator, and only that directory is the
+      original root, so a run can neither read nor update another configuration's. Whether the
+      discriminator names a directory at all is for staging to judge: an empty one, say, is kept
+      here as it is given and refused there. The temporary root takes no such level: it is wiped
+      on every staging, and within one build tree holds one configuration's materials at a time -
+      though two build trees run at once share it (roadmap item 224).
+
       Every path is returned whether or not anything is there; which of them exist is for the
       caller to ask. A default-constructed instance names no test, and every path it returns is
       empty.
@@ -37,13 +46,28 @@ namespace sequoia::testing
   public:
     individual_materials_paths() = default;
 
-    individual_materials_paths(const std::filesystem::path& sourceFile, std::string_view testName, const project_paths& projPaths);
+    individual_materials_paths(const std::filesystem::path& sourceFile,
+                               std::string_view testName,
+                               const project_paths& projPaths,
+                               const std::optional<std::string>& materialsDiscriminator);
+
+    /** \brief The test's own directory in `TestMaterials`: the original root itself, unless the test
+               declares a materials discriminator, when it holds one directory per configuration.
+     */
+    [[nodiscard]]
+    const std::filesystem::path& original_test_root() const noexcept
+    {
+      return m_OriginalTestRoot;
+    }
 
     [[nodiscard]]
-    const std::filesystem::path& original_materials_root() const noexcept
+    const std::optional<std::string>& materials_discriminator() const noexcept
     {
-      return m_OriginalMaterialsRoot;
+      return m_MaterialsDiscriminator;
     }
+
+    [[nodiscard]]
+    std::filesystem::path original_materials_root() const;
 
     [[nodiscard]]
     const std::filesystem::path& temporary_materials_root() const noexcept
@@ -70,10 +94,15 @@ namespace sequoia::testing
     friend bool operator==(const individual_materials_paths&, const individual_materials_paths&) noexcept = default;
   private:
     std::filesystem::path
-      m_OriginalMaterialsRoot,
+      m_OriginalTestRoot,
       m_TemporaryMaterialsRoot;
 
-    individual_materials_paths(const std::filesystem::path& relativePath, const test_materials_paths& materials, const output_paths& output);
+    std::optional<std::string> m_MaterialsDiscriminator;
+
+    individual_materials_paths(const std::filesystem::path& relativePath,
+                               const test_materials_paths& materials,
+                               const output_paths& output,
+                               const std::optional<std::string>& materialsDiscriminator);
   };
 
   class individual_diagnostics_paths

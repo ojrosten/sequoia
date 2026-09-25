@@ -26,6 +26,10 @@ namespace sequoia::testing
 
     void run_tests();
   private:
+    void test_discriminator_hooks();
+
+    template<class Probe>
+    void test_discriminator_probe();
 
     void test_exceptions();
 
@@ -64,6 +68,8 @@ namespace sequoia::testing
     void test_no_materials_update_after_critical_failure();
 
     void test_partial_materials_update();
+
+    void test_discriminated_materials_update();
 
     void test_materials_staging_failure();
 
