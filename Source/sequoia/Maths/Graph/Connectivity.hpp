@@ -726,7 +726,7 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires (!std::is_empty_v<edge_meta_data_type>, initializable_from<edge_weight_type, Args...>&& is_embedded(flavour) && std::is_copy_constructible_v<edge_type>)
+        requires (!std::is_empty_v<edge_meta_data_type> && initializable_from<edge_weight_type, Args...>&& is_embedded(flavour) && std::is_copy_constructible_v<edge_type>)
       std::pair<const_edge_iterator, const_edge_iterator>
         insert_join(const_edge_iterator citer1, const_edge_iterator citer2, edge_meta_data_type meta1, edge_meta_data_type meta2, Args&&... args)
       {
@@ -752,7 +752,7 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires (!std::is_empty_v<edge_meta_data_type>, initializable_from<edge_weight_type, Args...>&& is_embedded(flavour) && std::is_copy_constructible_v<edge_type>)
+        requires (!std::is_empty_v<edge_meta_data_type> && initializable_from<edge_weight_type, Args...>&& is_embedded(flavour) && std::is_copy_constructible_v<edge_type>)
       std::pair<const_edge_iterator, const_edge_iterator>
         insert_join(const_edge_iterator citer1, const edge_index_type pos2, edge_meta_data_type meta1, edge_meta_data_type meta2, Args&&... args)
       {

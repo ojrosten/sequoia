@@ -177,10 +177,10 @@ namespace sequoia::testing
       trg.add_node(make_and_check(t, t.report(""), {{{1, 0.0}}, {{0, 0.0}}}, {1.0, 0.0}));
       
       // 'weighted_graph_description::node_0w_1_node_0'
-      trg.add_node(make_and_check(t, t.report(""), {{{0, 1.0}, {0, 1.0}, {1, 0.0}}, {{0, 0.0}}}, {0.0, 0.0})),
+      trg.add_node(make_and_check(t, t.report(""), {{{0, 1.0}, {0, 1.0}, {1, 0.0}}, {{0, 0.0}}}, {0.0, 0.0}));
 
       // 'weighted_graph_description::node_1_node_0_1w'
-      trg.add_node(make_and_check(t, t.report(""), {{{1, 0.0}}, {{0, 0.0}, {1, 1.0}, {1, 1.0}}}, {0.0, 0.0})),
+      trg.add_node(make_and_check(t, t.report(""), {{{1, 0.0}}, {{0, 0.0}, {1, 1.0}, {1, 1.0}}}, {0.0, 0.0}));
 
       // 'weighted_graph_description::node_1_1w_node_0_0w'
       trg.add_node(
