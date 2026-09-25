@@ -33,7 +33,7 @@ name: fine
 # than a flake to re-run; rigorous.yml gives the mechanism and the rates per
 # configuration, and every MSVC column in every tier runs the test.
 #
-# No path filter: see .github/actions/needs-testing for why, and for how a
+# No path filter: see scope.yml for why, and for how a
 # column with nothing to test still reports.
 on:
   pull_request:
@@ -48,9 +48,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  # One decision for the whole run, which every job below takes as an input.
+  scope:
+    uses: ./.github/workflows/scope.yml
+
+  # `!cancelled()` rather than the implied success(), so that a failed decision
+  # still runs the columns, which then fail on the missing answer.
   fine:
+    needs: scope
+    if: ${{ !cancelled() }}
     uses: ./.github/workflows/tests.yml
     with:
+      needs_testing: ${{ needs.scope.outputs.suite }}
       # Fatal at the gates, where preventing accumulation interrupts nobody's work.
       warnings_as_errors: true
       exec_args: '--check-versioned-output'
@@ -68,7 +77,7 @@ jobs:
   # the modes.
   audit:
     name: Every job ran and every job gates
-    needs: [fine]
+    needs: [scope, fine]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -82,10 +91,12 @@ jobs:
       - name: Check each job's result
         run: |
           jq -r 'to_entries[] | "  \(.key): \(.value.result)"' <<<"$RESULTS"
-          actual=$(jq -r '.fine.result' <<<"$RESULTS")
-          if [ "$actual" != success ]; then
-            echo "::error::fine: expected success, was $actual"; exit 1
-          fi
+          failed=0
+          for job in scope fine; do
+            actual=$(jq -r --arg j "$job" '.[$j].result' <<<"$RESULTS")
+            if [ "$actual" = success ]; then echo "ok    $job"; else echo "::error::$job: expected success, was $actual"; failed=1; fi
+          done
+          exit $failed
 
       - name: Insist every job of this run is a required check on staging
         run: |
@@ -98,8 +109,12 @@ jobs:
             echo "::warning::superseded: the PR's head is now $current_head, this run tested $HEAD_SHA; the new head's own run gates the PR."
             exit 0
           fi
+          # The scope job is not required, and needs no requiring: every required
+          # job needs it and fails on a missing answer, so a failed decision is red
+          # wherever it matters.
           gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --paginate \
               --jq '.jobs[] | select(.conclusion != "skipped") | .name' \
+            | grep -vxF 'scope / What needs testing' \
             | sort > jobs.txt
           gh pr checks "$PR" --required --json name --jq '.[].name' | sort > required.txt
           echo "jobs in this run:"; sed 's/^/  /' jobs.txt
