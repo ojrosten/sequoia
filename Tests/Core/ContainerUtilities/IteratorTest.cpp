@@ -81,8 +81,8 @@ namespace sequoia::testing
   {
     using namespace utilities;
 
-    using i_type = std::array<int, 3>::iterator;
-    using custom_iter_t = iterator<i_type, identity_dereference_policy<i_type, null_data_policy>>;
+    using i_t = std::array<int, 3>::iterator;
+    using custom_iter_t = iterator<i_t, identity_dereference_policy<i_t, null_data_policy>>;
 
     static_assert(std::is_same_v<custom_iter_t::difference_type, std::ptrdiff_t>);
     static_assert(std::is_same_v<custom_iter_t::value_type, int>);
@@ -129,8 +129,8 @@ namespace sequoia::testing
   {
     using namespace utilities;
 
-    using ci_type = std::array<int, 3>::const_iterator;
-    using custom_citer_t = iterator<ci_type, identity_dereference_policy<ci_type, null_data_policy>>;
+    using ci_t = std::array<int, 3>::const_iterator;
+    using custom_citer_t = iterator<ci_t, identity_dereference_policy<ci_t, null_data_policy>>;
 
     static_assert(std::is_same_v<custom_citer_t::difference_type, std::ptrdiff_t>);
     static_assert(std::is_same_v<custom_citer_t::value_type, int>);
@@ -143,8 +143,8 @@ namespace sequoia::testing
     basic_checks<custom_citer_t>(a.cbegin(), a.cend(), &*a.cbegin(), "Custom const_iterator from const_iterator");
     basic_checks<custom_citer_t>(a.begin(), a.end(), &*a.cbegin(), "Custom const_iterator from iterator");
 
-    using i_type = std::array<int, 3>::iterator;
-    using custom_iter_t = iterator<i_type, identity_dereference_policy<ci_type, null_data_policy>>;
+    using i_t = std::array<int, 3>::iterator;
+    using custom_iter_t = iterator<i_t, identity_dereference_policy<ci_t, null_data_policy>>;
 
     basic_checks<custom_citer_t>(custom_iter_t{a.begin()}, custom_iter_t{a.end()}, &*a.cbegin(), "Custom const_iterator from custom iterator");
   }
@@ -153,8 +153,8 @@ namespace sequoia::testing
   {
     using namespace utilities;
 
-    using ri_type = std::array<int, 3>::reverse_iterator;
-    using custom_riter_t = iterator<ri_type, identity_dereference_policy<ri_type, null_data_policy>>;
+    using ri_t = std::array<int, 3>::reverse_iterator;
+    using custom_riter_t = iterator<ri_t, identity_dereference_policy<ri_t, null_data_policy>>;
 
     static_assert(std::is_same_v<custom_riter_t::difference_type, std::ptrdiff_t>);
     static_assert(std::is_same_v<custom_riter_t::value_type, int>);
@@ -191,8 +191,8 @@ namespace sequoia::testing
   {
     using namespace utilities;
 
-    using cri_type = std::array<int, 3>::const_reverse_iterator;
-    using custom_criter_t = iterator<cri_type, identity_dereference_policy<cri_type, null_data_policy>>;
+    using cri_t = std::array<int, 3>::const_reverse_iterator;
+    using custom_criter_t = iterator<cri_t, identity_dereference_policy<cri_t, null_data_policy>>;
 
     static_assert(std::is_same_v<custom_criter_t::difference_type, std::ptrdiff_t>);
     static_assert(std::is_same_v<custom_criter_t::value_type, int>);
@@ -205,8 +205,8 @@ namespace sequoia::testing
     basic_checks<custom_criter_t>(a.crbegin(), a.crend(), &*a.crbegin(), "Custom const_reverse_iterator from const_reverse_iterator");
     basic_checks<custom_criter_t>(a.rbegin(), a.rend(), &*a.crbegin(), "Custom const_reverse_iterator from reverse_iterator");
 
-    using ri_type = std::array<int, 3>::reverse_iterator;
-    using custom_riter_t = iterator<ri_type, identity_dereference_policy<ri_type, null_data_policy>>;
+    using ri_t = std::array<int, 3>::reverse_iterator;
+    using custom_riter_t = iterator<ri_t, identity_dereference_policy<ri_t, null_data_policy>>;
 
     basic_checks<custom_criter_t>(custom_riter_t{a.rbegin()}, custom_riter_t{a.rend()}, &*a.crbegin(), "Custom const_reverse_iterator from custom reverse_iterator");
   }
@@ -215,8 +215,8 @@ namespace sequoia::testing
   {
     using namespace utilities;
 
-    using ci_type = std::array<int, 3>::const_iterator;
-    using custom_citer_t = iterator<ci_type, scaling_dereference_policy<ci_type>>;
+    using ci_t = std::array<int, 3>::const_iterator;
+    using custom_citer_t = iterator<ci_t, scaling_dereference_policy<ci_t>>;
 
     static_assert(std::is_same_v<custom_citer_t::difference_type, std::ptrdiff_t>);
     static_assert(std::is_same_v<custom_citer_t::value_type, int>);
@@ -237,8 +237,8 @@ namespace sequoia::testing
   {
     using namespace utilities;
 
-    using cri_type = std::array<int, 3>::const_reverse_iterator;
-    using custom_criter_t = iterator<cri_type, scaling_dereference_policy<cri_type>>;
+    using cri_t = std::array<int, 3>::const_reverse_iterator;
+    using custom_criter_t = iterator<cri_t, scaling_dereference_policy<cri_t>>;
 
     static_assert(std::is_same_v<custom_criter_t::difference_type, std::ptrdiff_t>);
     static_assert(std::is_same_v<custom_criter_t::value_type, int>);
@@ -266,7 +266,7 @@ namespace sequoia::testing
   {
     using namespace std;
 
-    using value_type = std::iterator_traits<Iter>::value_type;
+    using value_t = std::iterator_traits<Iter>::value_type;
     using deref_pol = CustomIter::dereference_policy_type;
 
     if(!check(equality, append_lines(message, "Contract violated"), distance(begin, end), ptrdiff_t{3}))
@@ -277,7 +277,7 @@ namespace sequoia::testing
     static_assert(std::totally_ordered<CustomIter>);
 
     const auto scale{
-      []([[maybe_unused]] CustomIter iter) -> value_type {
+      []([[maybe_unused]] CustomIter iter) -> value_t {
         if constexpr(scaling_iterator<typename CustomIter::base_iterator_type, deref_pol>)
         {
           return iter.scale();

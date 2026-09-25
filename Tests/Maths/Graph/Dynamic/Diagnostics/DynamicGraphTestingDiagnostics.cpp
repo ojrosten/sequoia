@@ -34,26 +34,26 @@ namespace sequoia::testing
   void test_graph_false_negatives::execute_operations()
   {
     using namespace maths;
-    using graph_type = graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>::graph_type;
+    using graph_t = graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>::graph_type;
 
-    using edge_init_t = graph_type::edge_init_type;
+    using edge_init_t = graph_t::edge_init_type;
 
-    graph_type g{};
+    graph_t g{};
 
-    check(equality, "Check false positive: empty graph versus single node", g, graph_type{{}});
+    check(equality, "Check false positive: empty graph versus single node", g, graph_t{{}});
 
     std::string message{"Check false positive: empty graph versus single node with loop"};
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check(equality, message, g, graph_type{{edge_init_t{0}}});
+      check(equality, message, g, graph_t{{edge_init_t{0}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check(equality, message, g, graph_type{{edge_init_t{0}, edge_init_t{0}}});
+      check(equality, message, g, graph_t{{edge_init_t{0}, edge_init_t{0}}});
     }
     else
     {
-      check(equality, message, g, graph_type{{edge_init_t{0,1}, edge_init_t{0,0}}});
+      check(equality, message, g, graph_t{{edge_init_t{0,1}, edge_init_t{0,0}}});
     }
   }
 }

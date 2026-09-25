@@ -44,11 +44,11 @@ namespace sequoia::testing
 
   void mem_ordered_tuple_test::check_transitions()
   {
-    using tuple_t    = mem_ordered_tuple<int, int>;
-    using graph_type = transition_checker<tuple_t>::transition_graph;
-    using edge_t     = transition_checker<tuple_t>::edge;
+    using tuple_t = mem_ordered_tuple<int, int>;
+    using graph_t = transition_checker<tuple_t>::transition_graph;
+    using edge_t  = transition_checker<tuple_t>::edge;
 
-    graph_type g{
+    graph_t g{
       {
         { edge_t{1, "", [] (tuple_t t) -> tuple_t { get<0>(t) += 1; return t; }, std::weak_ordering::greater},
           edge_t{2, "", [] (tuple_t t) -> tuple_t { get<1>(t) += 2; return t; }, std::weak_ordering::greater}

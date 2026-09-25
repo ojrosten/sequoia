@@ -14,7 +14,7 @@ Inconsistent number of elements supplied by initializer lists: expected 0 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 165
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 166
 
 Expected Exception Type:
 [std::logic_error]
@@ -22,7 +22,7 @@ Inconsistent number of elements supplied by initializer lists: expected 2 but go
 
 =======================================
 
-Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 166
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 170
 
 Expected Exception Type:
 [std::logic_error]
@@ -30,7 +30,7 @@ connectivity::connectivity_base: Odd number of loop edges for node 0
 
 =======================================
 
-Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 167
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 174
 
 Expected Exception Type:
 [std::logic_error]
@@ -38,7 +38,7 @@ connectivity::connectivity_base: Odd number of loop edges for node 0
 
 =======================================
 
-Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 401
+Tests/Maths/Graph/Static/Undirected/StaticUndirectedGraphUnsortableWeightTest.cpp, Line 429
 
 Expected Exception Type:
 [std::logic_error]

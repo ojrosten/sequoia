@@ -63,8 +63,8 @@ namespace sequoia::testing
         check(with_best_available, "implicitly const range", logger, nodes.node_weights().begin(), nodes.node_weights().end(), prediction.begin(), prediction.end());
         check(with_best_available, "explicitly const range", logger, nodes.cnode_weights().begin(), nodes.cnode_weights().end(), prediction.begin(), prediction.end());
 
-        using iterator_type = Nodes::iterator;
-        if constexpr(std::indirectly_writable<iterator_type, std::iter_value_t<iterator_type>>)
+        using iterator_t = Nodes::iterator;
+        if constexpr(std::indirectly_writable<iterator_t, std::iter_value_t<iterator_t>>)
         {
           auto& n{const_cast<Nodes&>(nodes)};
           check(with_best_available, "range", logger, n.node_weights().begin(), n.node_weights().end(), prediction.begin(), prediction.end());
@@ -169,44 +169,44 @@ namespace sequoia::testing
     : public maths::node_storage_base<Weight, std::vector<Weight, shared_counting_allocator<Weight, PropagateCopy, PropagateMove, PropagateSwap>>>
   {
   private:
-    using base_t = maths::node_storage_base<Weight, std::vector<Weight, shared_counting_allocator<Weight, PropagateCopy, PropagateMove, PropagateSwap>>>;
+    using base_type = maths::node_storage_base<Weight, std::vector<Weight, shared_counting_allocator<Weight, PropagateCopy, PropagateMove, PropagateSwap>>>;
   public:
-    using allocator_type = base_t::node_weight_container_type::allocator_type;
-    using size_type      = base_t::size_type;
-    using weight_type    = base_t::weight_type;
+    using allocator_type = base_type::node_weight_container_type::allocator_type;
+    using size_type      = base_type::size_type;
+    using weight_type    = base_type::weight_type;
 
     node_storage_tester() = default;
 
     explicit node_storage_tester(const allocator_type& allocator)
-      : base_t(allocator)
+      : base_type(allocator)
     {}
 
     explicit node_storage_tester(const size_type n)
-      : base_t(n)
+      : base_type(n)
     {}
 
     node_storage_tester(const size_type n, const allocator_type& allocator)
-      : base_t(n, allocator)
+      : base_type(n, allocator)
     {}
 
     node_storage_tester(std::initializer_list<weight_type> weights)
-      : base_t{weights}
+      : base_type{weights}
     {}
 
     node_storage_tester(std::initializer_list<weight_type> weights, const allocator_type& allocator)
-      : base_t{weights, allocator}
+      : base_type{weights, allocator}
     {}
 
     node_storage_tester(const node_storage_tester&) = default;
 
     node_storage_tester(const node_storage_tester& s, const allocator_type& allocator)
-      : base_t{s, allocator}
+      : base_type{s, allocator}
     {}
 
     node_storage_tester(node_storage_tester&&) noexcept = default;
 
     node_storage_tester(node_storage_tester&& s, const allocator_type& allocator)
-      : base_t{std::move(s), allocator}
+      : base_type{std::move(s), allocator}
     {}
 
     ~node_storage_tester() = default;
@@ -220,15 +220,15 @@ namespace sequoia::testing
       lhs.swap(rhs);
     }
 
-    using base_t::reserve;
-    using base_t::capacity;
-    using base_t::shrink_to_fit;
-    using base_t::add_node;
-    using base_t::insert_node;
-    using base_t::erase_node;
-    using base_t::erase_nodes;
-    using base_t::clear;
-    using base_t::get_node_allocator;
+    using base_type::reserve;
+    using base_type::capacity;
+    using base_type::shrink_to_fit;
+    using base_type::add_node;
+    using base_type::insert_node;
+    using base_type::erase_node;
+    using base_type::erase_nodes;
+    using base_type::clear;
+    using base_type::get_node_allocator;
   };
 
   template<class Weight, std::size_t N>

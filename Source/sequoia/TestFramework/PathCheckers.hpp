@@ -157,12 +157,12 @@ namespace sequoia::testing
     constexpr static std::array<std::string_view, 1>
       excluded_extensions{seqpat};
 
-    using basic_file_checker_t = general_file_checker<string_based_file_comparer>;
+    using basic_file_checker_type = general_file_checker<string_based_file_comparer>;
 
-    static const basic_file_checker_t basic_file_checker;
+    static const basic_file_checker_type basic_file_checker;
 
-    static const general_equivalence_check_t<basic_file_checker_t>      basic_path_equivalence;
-    static const general_weak_equivalence_check_t<basic_file_checker_t> basic_path_weak_equivalence;
+    static const general_equivalence_check_t<basic_file_checker_type>      basic_path_equivalence;
+    static const general_weak_equivalence_check_t<basic_file_checker_type> basic_path_weak_equivalence;
 
     template<test_mode Mode, class Customization, invocable_exact_r<bool, std::filesystem::path, std::filesystem::path> FinalTokenComparison>
     static void check_path(test_logger<Mode>& logger, const Customization& custom, const std::filesystem::path& path, const std::filesystem::path& prediction, FinalTokenComparison compare)

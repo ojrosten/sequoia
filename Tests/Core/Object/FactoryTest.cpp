@@ -147,7 +147,7 @@ namespace sequoia::testing
   void factory_test::run_tests()
   {
     {
-      using prediction_type = std::array<std::pair<std::string, std::variant<int, double>>, 2>;
+      using prediction_t = std::array<std::pair<std::string, std::variant<int, double>>, 2>;
 
       check_exception_thrown<std::logic_error>("Empty string", [](){ factory<int, double> f{"int", ""}; });
       check_exception_thrown<std::logic_error>("Empty string", [](){ factory<int, double> f{"", "bar"}; });
@@ -155,12 +155,12 @@ namespace sequoia::testing
 
       factory<int, double> f{"int", "double"}, g{"bar", std::string{"foo"}};
 
-      check(equivalence, "", f, prediction_type{{{"int", 0}, {"double", 0.0}}});
-      check(equivalence, "", g, prediction_type{{{"bar", 0}, {"foo", 0.0}}});
+      check(equivalence, "", f, prediction_t{{{"int", 0}, {"double", 0.0}}});
+      check(equivalence, "", g, prediction_t{{{"bar", 0}, {"foo", 0.0}}});
 
       check_semantics("", f, g);
 
-      check_bulk_creation("Fundamental products", f, prediction_type{{{"int", 0}, {"double", 0.0}}});
+      check_bulk_creation("Fundamental products", f, prediction_t{{{"int", 0}, {"double", 0.0}}});
 
       check_exception_thrown<std::runtime_error>("", [&f](){ return f.make("plurgh"); });
 
@@ -169,57 +169,57 @@ namespace sequoia::testing
     }
 
     {
-      using prediction_type = std::array<std::pair<std::string, std::variant<std::vector<int>, int, std::complex<float>, double>>, 4>;
+      using prediction_t = std::array<std::pair<std::string, std::variant<std::vector<int>, int, std::complex<float>, double>>, 4>;
 
-      using factory_type = factory<std::vector<int>, int, std::complex<float>, double>;
+      using factory_t = factory<std::vector<int>, int, std::complex<float>, double>;
 
       check_exception_thrown<std::logic_error>("Duplicated names",
-                                               [](){ factory_type f{"baz", "foo", "baz", "huh"}; });
+                                               [](){ factory_t f{"baz", "foo", "baz", "huh"}; });
 
-      factory_type f{"vec", "int", "complex", "double"}, g{"baz", "foo", "bar", "huh"};
+      factory_t f{"vec", "int", "complex", "double"}, g{"baz", "foo", "bar", "huh"};
 
       check(equivalence, "", f,
-                        prediction_type{{{"vec", std::vector<int>{}}, {"int", 0}, {"complex", std::complex<float>{}}, {"double", 0.0}}});
+                        prediction_t{{{"vec", std::vector<int>{}}, {"int", 0}, {"complex", std::complex<float>{}}, {"double", 0.0}}});
 
       check(equivalence, "", g,
-                        prediction_type{{{"baz", std::vector<int>{}}, {"foo", 0}, {"bar", std::complex<float>{}}, {"huh", 0.0}}});
+                        prediction_t{{{"baz", std::vector<int>{}}, {"foo", 0}, {"bar", std::complex<float>{}}, {"huh", 0.0}}});
 
       check_semantics("", f, g);
 
       check_bulk_creation("Four products",
                           f,
-                          prediction_type{{{"vec", std::vector<int>{}}, {"int", 0}, {"complex", std::complex<float>{}}, {"double", 0.0}}});
+                          prediction_t{{{"vec", std::vector<int>{}}, {"int", 0}, {"complex", std::complex<float>{}}, {"double", 0.0}}});
     }
 
     {
-      using prediction_type = std::array<std::pair<std::string, std::variant<regular_type, move_only_type>>, 2>;
+      using prediction_t = std::array<std::pair<std::string, std::variant<regular_type, move_only_type>>, 2>;
 
       factory<regular_type, move_only_type> f{"x", "y"}, g{"make_x", "make_y"};   
-      using check_type = value_tester<factory<regular_type, move_only_type>>::factory_check_type<int>;
+      using check_t = value_tester<factory<regular_type, move_only_type>>::factory_check_type<int>;
 
-      check(check_type{1}, "", f, prediction_type{{{"x", regular_type{1}}, {"y", move_only_type{1}}}});
-      check(check_type{2}, "", g, prediction_type{{{"make_x", regular_type{2}}, {"make_y", move_only_type{2}}}});
+      check(check_t{1}, "", f, prediction_t{{{"x", regular_type{1}}, {"y", move_only_type{1}}}});
+      check(check_t{2}, "", g, prediction_t{{{"make_x", regular_type{2}}, {"make_y", move_only_type{2}}}});
 
       check_semantics("", f, g);
 
       check_bulk_creation("Products taking an argument, one of them move-only",
                           f,
-                          prediction_type{{{"x", regular_type{1}}, {"y", move_only_type{1}}}},
+                          prediction_t{{{"x", regular_type{1}}, {"y", move_only_type{1}}}},
                           1);
     }
 
     {
-      using prediction_type = std::array<std::pair<std::string, std::variant<foo<int>, foo<double>>>, 2>;
+      using prediction_t = std::array<std::pair<std::string, std::variant<foo<int>, foo<double>>>, 2>;
 
       factory<foo<int>, foo<double>> f{}, g{"int", "double"};
-      using check_type = value_tester<factory<foo<int>, foo<double>>>::factory_check_type<int>;
+      using check_t = value_tester<factory<foo<int>, foo<double>>>::factory_check_type<int>;
       
-      check(equivalence, "", f, prediction_type{ {{"foo-int", foo<int>{}}, {"foo-double", foo<double>{}}} });
-      check(check_type{42}, "", g, prediction_type{ {{"int", foo<int>{42}}, {"double", foo<double>{42}}} });
+      check(equivalence, "", f, prediction_t{ {{"foo-int", foo<int>{}}, {"foo-double", foo<double>{}}} });
+      check(check_t{42}, "", g, prediction_t{ {{"int", foo<int>{42}}, {"double", foo<double>{42}}} });
 
       check_semantics("", f, g);
 
-      check_bulk_creation("Products named by nomenclator", f, prediction_type{ {{"foo-int", foo<int>{}}, {"foo-double", foo<double>{}}} });
+      check_bulk_creation("Products named by nomenclator", f, prediction_t{ {{"foo-int", foo<int>{}}, {"foo-double", foo<double>{}}} });
     }
 
     test_erasing_factory();
@@ -228,11 +228,11 @@ namespace sequoia::testing
   void factory_test::test_erasing_factory()
   {
     {
-      using vessel          = std::variant<int, double>;
-      using prediction_type = std::array<std::pair<std::string, vessel>, 2>;
-      using factory_type    = erasing_factory<vessel>;
+      using vessel       = std::variant<int, double>;
+      using prediction_t = std::array<std::pair<std::string, vessel>, 2>;
+      using factory_t    = erasing_factory<vessel>;
 
-      factory_type f{}, g{};
+      factory_t f{}, g{};
       f.register_product<int>("int");
       f.register_product<double>("double");
       g.register_product<int>("bar");
@@ -241,8 +241,8 @@ namespace sequoia::testing
       check(equality, "Number of products", f.size(), std::size_t{2});
 
       // The prediction the typed factory is held to, and the helper written for it.
-      check_bulk_creation("Erased over the same products", f, prediction_type{{{"int", 0}, {"double", 0.0}}});
-      check_bulk_creation("Erased, named differently", g, prediction_type{{{"bar", 0}, {"foo", 0.0}}});
+      check_bulk_creation("Erased over the same products", f, prediction_t{{{"int", 0}, {"double", 0.0}}});
+      check_bulk_creation("Erased, named differently", g, prediction_t{{{"bar", 0}, {"foo", 0.0}}});
 
       check_semantics("", f, g);
 
@@ -255,8 +255,8 @@ namespace sequoia::testing
     }
 
     {
-      using vessel          = std::variant<regular_type, move_only_type>;
-      using prediction_type = std::array<std::pair<std::string, vessel>, 2>;
+      using vessel       = std::variant<regular_type, move_only_type>;
+      using prediction_t = std::array<std::pair<std::string, vessel>, 2>;
 
       erasing_factory<vessel, int> f{};
       f.register_product<regular_type>("x");
@@ -264,7 +264,7 @@ namespace sequoia::testing
 
       check_bulk_creation("Erased, taking an argument, one product move-only",
                           f,
-                          prediction_type{{{"x", regular_type{1}}, {"y", move_only_type{1}}}},
+                          prediction_t{{{"x", regular_type{1}}, {"y", move_only_type{1}}}},
                           1);
     }
 
@@ -272,8 +272,8 @@ namespace sequoia::testing
       // Registered out of order, and with the two product types alternating once sorted, so that
       // an ordering error changes which alternative each element holds. Five identical products
       // would make this check unfalsifiable.
-      using vessel          = std::variant<int, double>;
-      using prediction_type = std::array<std::pair<std::string, vessel>, 5>;
+      using vessel       = std::variant<int, double>;
+      using prediction_t = std::array<std::pair<std::string, vessel>, 5>;
 
       erasing_factory<vessel> f{};
       f.register_product<double>("epsilon");
@@ -284,7 +284,7 @@ namespace sequoia::testing
 
       check_bulk_creation("Erased, registered out of order",
                           f,
-                          prediction_type{{{"epsilon", 0.0}, {"beta", 0.0}, {"delta", 0}, {"alpha", 0}, {"gamma", 0}}});
+                          prediction_t{{{"epsilon", 0.0}, {"beta", 0.0}, {"delta", 0}, {"alpha", 0}, {"gamma", 0}}});
     }
   }
 }

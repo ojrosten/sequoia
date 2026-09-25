@@ -90,8 +90,13 @@ namespace sequoia::maths
   template<partial_m_torsor... Ts>
   struct to_base_space<physics::composite_space<Ts...>>
   {
-    using sorted_tensor_product_t = meta::stable_sort_t<tensor_product<to_base_space_t<Ts>...>,  meta::type_comparator>;
-    using type = physics::impl::to_composite_space_t<physics::reduction_t<physics::impl::reduce_t<physics::impl::count_and_combine_t<sorted_tensor_product_t>>>>;
+    using sorted_tensor_product_type =
+      meta::stable_sort_t<tensor_product<to_base_space_t<Ts>...>, meta::type_comparator>;
+
+    using type =
+      physics::impl::to_composite_space_t<
+        physics::reduction_t<physics::impl::reduce_t<physics::impl::count_and_combine_t<sorted_tensor_product_type>>>
+      >;
   };
 }
 
@@ -112,9 +117,9 @@ namespace sequoia::physics
     requires (free_module<Ts> ||  ...)
   struct composite_space<Ts...>
   {    
-    using tensor_product_t      = tensor_product<Ts...>;
-    using set_type              = reduction<typename tensor_product_t::set_type>;
-    using commutative_ring_type = commutative_ring_type_of_t<tensor_product_t>;
+    using tensor_product_type   = tensor_product<Ts...>;
+    using set_type              = reduction<typename tensor_product_type::set_type>;
+    using commutative_ring_type = commutative_ring_type_of_t<tensor_product_type>;
     using structure             = free_module_tag_t;
     using arena_type            = arena_type_of_t<tensor_product<Ts...>>;
     constexpr static std::size_t dimension{std::ranges::max({dimension_of_v<Ts>...})};
@@ -124,8 +129,8 @@ namespace sequoia::physics
     requires (!affine_space<Ts> && ...)
   struct composite_space<Ts...>
   {
-    using tensor_product_t     = tensor_product<Ts...>;
-    using set_type             = reduction<typename tensor_product_t::set_type>;
+    using tensor_product_type  = tensor_product<Ts...>;
+    using set_type             = reduction<typename tensor_product_type::set_type>;
     using free_module_type     = composite_space<free_module_type_of_t<Ts>...>;
     using structure            = std::conditional_t<(convex_space<Ts> && ...), convex_space_tag_t, partial_m_torsor_tag_t>;
     using arena_type           = arena_type_of_t<tensor_product<Ts...>>;
@@ -436,8 +441,8 @@ namespace sequoia::physics
     requires (!free_module<ValueSpace> && !affine_space<ValueSpace>)
   struct default_representation<ValueSpace, ValueType, Unit>
   {
-    using transform_t = root_transform_t<Unit>;
-    constexpr static auto bounds_v{transform_bounds(half_line_bounds<to_bounds_value_type_t<ValueType>>, transform_t{})};
+    using transform_type = root_transform_t<Unit>;
+    constexpr static auto bounds_v{transform_bounds(half_line_bounds<to_bounds_value_type_t<ValueType>>, transform_type{})};
     using type = canonical_representation<ValueType, bounds_v>;
   };
 
@@ -469,26 +474,26 @@ namespace sequoia::physics
     constexpr static std::size_t dimension{displacement_space_type::dimension};
     constexpr static std::size_t D{dimension};
 
-    constexpr static bool has_identity_validator{coordinates_type::has_identity_validator};
+    constexpr static bool has_identity_validator_v{coordinates_type::has_identity_validator_v};
 
     template<partial_m_torsor RHSValueSpace, class RHSBasisData>
-    constexpr static bool is_composable_with{
+    constexpr static bool is_composable_with_v{
          consistent_basis_data_v<basis_data_type, RHSBasisData>
       && (is_non_negative_orthant_v<space_type>    || vector_space<space_type>)
       && (is_non_negative_orthant_v<RHSValueSpace> || vector_space<RHSValueSpace>)
     };
 
     template<partial_m_torsor RHSValueSpace, class RHSBasisData>
-    constexpr static bool is_multipicable_with{
-         is_composable_with<RHSValueSpace, RHSBasisData>
+    constexpr static bool is_multiplicable_with_v{
+         is_composable_with_v<RHSValueSpace, RHSBasisData>
       && ((D == 1) || (free_module_type_of_t<RHSValueSpace>::dimension == 1))
     };
 
     template<partial_m_torsor RHSValueSpace, class RHSRepresentation, class RHSBasisData>
-    constexpr static bool is_divisible_with{
+    constexpr static bool is_divisible_with_v{
          weak_field<displacement_value_type>
       && weak_field<typename RHSRepresentation::value_type>
-      && is_composable_with<RHSValueSpace, RHSBasisData>
+      && is_composable_with_v<RHSValueSpace, RHSBasisData>
       && (free_module_type_of_t<RHSValueSpace>::dimension == 1)
     };
 
@@ -520,7 +525,7 @@ namespace sequoia::physics
     [[nodiscard]]
     // TO DO: refine this
     friend constexpr auto operator-(const physical_value& lhs, const physical_value<OtherValueSpace, Unit, OtherBasisData, representation_type, OtherOrigin, validator_type>& rhs)
-      noexcept(has_identity_validator)
+      noexcept(has_identity_validator_v)
     {
       using disp_space_t = to_displacement_space_t<ValueSpace, OtherValueSpace>;
       using basis_t      = consistent_basis_data<basis_data_type, OtherBasisData>::template rebind_type<Unit, rank_of_v<free_module_type_of_t<disp_space_t>>>;
@@ -541,7 +546,7 @@ namespace sequoia::physics
       representation_for<RHSValueSpace> RHSRepresentation,
       class RHSOrigin
     >
-      requires is_multipicable_with<RHSValueSpace, RHSBasisData> // TO DO: include repr, origin
+      requires is_multiplicable_with_v<RHSValueSpace, RHSBasisData> // TO DO: include repr, origin
     [[nodiscard]]
     // TO DO: move to derived class
     friend constexpr auto operator*(const physical_value& lhs,
@@ -553,8 +558,8 @@ namespace sequoia::physics
             physical_value<RHSValueSpace,RHSUnit, RHSBasisData, RHSRepresentation, RHSOrigin, validator_type>
           >;
 
-      using derived_units_type = physical_value_t::units_type;
-      return physical_value_t{lhs.value() * rhs.value(), derived_units_type{}};
+      using derived_units_t = physical_value_t::units_type;
+      return physical_value_t{lhs.value() * rhs.value(), derived_units_t{}};
     }
 
     template<
@@ -564,7 +569,7 @@ namespace sequoia::physics
       class RHSOrigin,
       representation_for<RHSValueSpace> RHSRepresentation
     >
-    requires is_divisible_with<RHSValueSpace, RHSRepresentation, RHSBasisData> // TO DO: include origin
+    requires is_divisible_with_v<RHSValueSpace, RHSRepresentation, RHSBasisData> // TO DO: include origin
     [[nodiscard]]
     friend constexpr auto operator/(const physical_value& lhs,
                                     const physical_value<RHSValueSpace, RHSUnit, RHSBasisData, RHSRepresentation, RHSOrigin, validator_type>& rhs)
@@ -575,10 +580,10 @@ namespace sequoia::physics
             physical_value,
             physical_value<dual_of_t<RHSValueSpace>, dual_of_t<RHSUnit>, dual_of_t<RHSBasisData>,  dual_rep_t, distinguished_origin, validator_type>
           >;
-      using derived_units_type = physical_value_t::units_type;
+      using derived_units_t = physical_value_t::units_type;
 
       return[&] <std::size_t... Is>(std::index_sequence<Is...>) {
-        return physical_value_t{std::array{(lhs.values()[Is] / rhs.value())...}, derived_units_type{}};
+        return physical_value_t{std::array{(lhs.values()[Is] / rhs.value())...}, derived_units_t{}};
       }(std::make_index_sequence<D>{});
     }
 
@@ -587,8 +592,8 @@ namespace sequoia::physics
     {
       using dual_rep_t = dual_of_t<representation_type>;
       using physical_value_t = physical_value<dual_of_t<ValueSpace>, dual_of_t<Unit>, dual_of_t<basis_data_type>, dual_rep_t, distinguished_origin, validator_type>;
-      using derived_units_type = physical_value_t::units_type;
-      return physical_value_t{value / rhs.value(), derived_units_type{}};
+      using derived_units_t = physical_value_t::units_type;
+      return physical_value_t{value / rhs.value(), derived_units_t{}};
     }
  
     template<class Self, class LoweredValueSpace, basis_data_for<free_module_type_of_t<LoweredValueSpace>> OtherBasisData>    
@@ -1548,9 +1553,9 @@ namespace sequoia::maths
         utilities::to_array(
           pv.values(),
           [](value_type v) -> value_type {
-            using ratio_type = transform_type::dilatation_type::ratio_type;
+            using ratio_t = transform_type::dilatation_type::ratio_type;
 
-            return static_cast<value_type>((v * ratio_type::num / ratio_type::den) + to_displacement());
+            return static_cast<value_type>((v * ratio_t::num / ratio_t::den) + to_displacement());
           }
         ),
         to_units_type{}
