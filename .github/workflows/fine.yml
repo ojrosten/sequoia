@@ -64,7 +64,7 @@ jobs:
       exec_args: '--check-versioned-output'
       columns: >-
         [
-          {"name": "Linux · GCC · ASan+UBSan",   "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan",  "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
+          {"name": "Linux · GCC · ASan + UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan",  "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
           {"name": "macOS · Clang · ASan+UBSan", "os": "macos-latest",   "configure": "llvm-env-asan-ubsan", "build": "llvm-env-asan-ubsan", "exec_args": "--check-versioned-output;--exclude-performance"},
           {"name": "Windows · MSVC · ASan",      "os": "windows-latest", "configure": "msvc-asan",           "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
