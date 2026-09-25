@@ -868,7 +868,7 @@ namespace sequoia::testing
                           }
                           catch(const std::exception&)
                           {
-                            throw std::runtime_error{"locate-instabilities: unable to interpret '" + arg + "' as an integer number of repetitions"};
+                            throw std::runtime_error{std::format("locate-instabilities: unable to interpret '{}' as an integer number of repetitions", arg)};
                           }
                         }()
                       };
