@@ -67,9 +67,14 @@ namespace sequoia::testing
 
   /** \brief Every compilation the build currently has, each with its source first among its inputs.
 
-      \throws std::runtime_error if the tree was written by a generator whose record of
-      dependencies is not understood, has not been built, or has a record which names none of
-      the objects the build has.
+      For a multi-config generator, the build is of `executable`'s configuration: the name of the
+      directory holding `executable`.
+
+      \throws std::runtime_error if the tree
+      -# Was written by a generator whose record of dependencies is not understood;
+      -# Has not been built;
+      -# Was written by Ninja Multi-Config and holds no statements of `executable`'s configuration;
+      -# Has a record which names none of the objects the build has.
    */
   [[nodiscard]]
   compilations read_compilations(const build_tree& tree, const std::filesystem::path& executable);
