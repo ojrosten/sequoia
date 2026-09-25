@@ -62,6 +62,7 @@ namespace sequoia::testing
         -# `docs` and `coverage_reports`, the committed doxygen render and lcov html. Between
            them they are the overwhelming majority of the repository by size and by file
            count, and the end-to-end test would pay for copying them on every run.
+        -# `build`, the build trees of the checkout the project is created from.
         -# `output`, what sequoia's own test runs write. Sequoia's tests run `init` on sequoia
            itself while the rest of the suite writes to `output`, so a copy races those
            writes. On Windows, a file being copied cannot be opened for writing, so the test
@@ -82,6 +83,7 @@ namespace sequoia::testing
       const auto name{back(entry).generic_string()};
       return (name == "docs")
           || (name == "coverage_reports")
+          || (name == "build")
           || (name == "output")
           || (name == ".git");
     }
@@ -98,7 +100,7 @@ namespace sequoia::testing
 
       for(auto& entry : fs::directory_iterator{parentSequoiaRoot})
       {
-        if((entry.path() != parentProjectPaths.build().dir()) && !excluded_from_created_projects(entry.path()))
+        if(!excluded_from_created_projects(entry.path()))
         {
           if(fs::is_directory(entry))
             copy_sequoia_subdir(stream, seqLocation, entry);

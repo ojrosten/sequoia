@@ -1,0 +1,1 @@
+A file in a build tree of the vendored sequoia
