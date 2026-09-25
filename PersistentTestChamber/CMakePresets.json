@@ -1,0 +1,4 @@
+﻿{
+  "version": 10,
+  "include": ["../build_system/CMakePresetsCommon.json"]
+}

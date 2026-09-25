@@ -41,6 +41,11 @@ namespace sequoia::testing
     /** \brief From `CMAKE_GENERATOR`, which every cache records. */
     [[nodiscard]]
     cmake_generator_family generator_family() const;
+
+    /** \brief From `CMAKE_HOME_DIRECTORY`, which every cache records: the top-level source directory, the one
+               given to `cmake -S`. */
+    [[nodiscard]]
+    std::filesystem::path source_dir() const;
   private:
     std::map<std::string, std::string, std::ranges::less> m_Variables{};
   };

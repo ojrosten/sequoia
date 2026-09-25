@@ -1,4 +1,4 @@
-Tests/TestFramework/CMakeCacheFreeTest.cpp, Line 38
+Tests/TestFramework/CMakeCacheFreeTest.cpp, Line 39
 No cache file
 
 Expected Exception Type:
@@ -7,12 +7,30 @@ cmake_cache: no CMakeCache.txt in output/TestsTemporaryData/TestFramework/CMakeC
 
 =======================================
 
-Tests/TestFramework/CMakeCacheFreeTest.cpp, Line 60
+Tests/TestFramework/CMakeCacheFreeTest.cpp, Line 61
 No generator recorded
 
 Expected Exception Type:
 [std::runtime_error]
 cmake_cache: the cache does not record CMAKE_GENERATOR
+
+=======================================
+
+Tests/TestFramework/CMakeCacheFreeTest.cpp, Line 71
+No source directory recorded
+
+Expected Exception Type:
+[std::runtime_error]
+cmake_cache: the cache does not record CMAKE_HOME_DIRECTORY
+
+=======================================
+
+Tests/TestFramework/CMakeCacheFreeTest.cpp, Line 73
+Empty source directory recorded
+
+Expected Exception Type:
+[std::runtime_error]
+cmake_cache: the cache does not record CMAKE_HOME_DIRECTORY
 
 =======================================
 
