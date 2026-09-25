@@ -471,7 +471,10 @@ namespace sequoia::testing
        */
       const auto multiConfigRoot{scratch / "multi_config"};
       fs::create_directories(multiConfigRoot / "CMakeFiles");
-      const build_tree multiConfig{.build_directory{multiConfigRoot}, .generator{"Ninja Multi-Config"}};
+      write_to_file(multiConfigRoot / "CMakeCache.txt",
+                    "# CMake cache\nCMAKE_GENERATOR:INTERNAL=Ninja Multi-Config\n",
+                    std::ios_base::out);
+      const auto multiConfig{read_build_tree(multiConfigRoot / "CMakeCache.txt")};
 
       write_ninja_deps(multiConfigRoot / ".ninja_deps",
                        std::vector<compilation_record>{
@@ -497,6 +500,13 @@ namespace sequoia::testing
       check_exception_thrown<std::runtime_error>(
         "Ninja Multi-Config: a configuration with no statements",
         [&](){ return read_compilations(multiConfig, multiConfigRoot / "RelWithDebInfo" / "TestAll"); });
+
+      write_to_file(multiConfigRoot / "CMakeFiles" / "impl-Release.ninja",
+                    "build CMakeFiles/x.dir/Release/b.cpp.o: CXX_COMPILER__x_Release /proj/b.cpp\n",
+                    std::ios_base::out);
+      check_exception_thrown<std::runtime_error>(
+        "Ninja Multi-Config: a log none of whose objects the configuration's statements name",
+        [&](){ return read_compilations(multiConfig, multiConfigRoot / "Release" / "TestAll"); });
     }
 
     write_to_file(cache, "# CMake cache\nCMAKE_GENERATOR:INTERNAL=Xcode\n", std::ios_base::out);

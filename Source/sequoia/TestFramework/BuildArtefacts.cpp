@@ -938,26 +938,14 @@ namespace sequoia::testing
 
   namespace
   {
-    /** The file of a Ninja build's statements for the executable's configuration:
-        -# Ninja: `build.ninja`;
-        -# Ninja Multi-Config: `CMakeFiles/impl-<configuration>.ninja`, the configuration being the name of the
-           directory holding the executable. `build.ninja` names no object itself: it includes the default
-           configuration's statements, which need not be the executable's.
-     */
+    /// The configuration of a multi-config build to which an executable belongs: the name of the directory holding it
     [[nodiscard]]
-    fs::path ninja_statements_file(const build_tree& tree, const fs::path& executable)
+    fs::path configuration_of(const fs::path& executable)
     {
-      if(tree.generator == "Ninja Multi-Config")
-      {
-        const auto configuration{executable.parent_path().filename().generic_string()};
-        return tree.build_directory / "CMakeFiles" / std::format("impl-{}.ninja", configuration);
-      }
-
-      return tree.build_directory / "build.ninja";
+      return executable.parent_path().filename();
     }
 
-    /** The compilations of a Ninja build, from the log `.ninja_deps` and the statements of the executable's
-        configuration.
+    /** The compilations of a Ninja build, from the log `.ninja_deps` and the statements in `statementsFile`.
 
         The log gives every compilation ninja has ever recorded, and is trimmed to the object files the
         build currently has, which the statements name. Each record then has its source put first among
@@ -966,18 +954,17 @@ namespace sequoia::testing
 
         \throws std::runtime_error if
         -# There is no log, nothing having been built;
-        -# The file of statements cannot be read;
+        -# `statementsFile` cannot be read;
         -# No record's object file is named by any statement: the log and the statements then spell one
            tree two ways, and nothing would ever be selected.
      */
     [[nodiscard]]
-    compilations ninja_compilations(const build_tree& tree, const fs::path& executable)
+    compilations ninja_compilations(const build_tree& tree, const fs::path& statementsFile)
     {
       const auto log{tree.build_directory / ".ninja_deps"};
       if(!fs::exists(log))
         throw std::runtime_error{std::format("{} has no dependency log; has anything been built?", tree.build_directory.generic_string())};
 
-      const auto statementsFile{ninja_statements_file(tree, executable)};
       const auto sourcesByObjectFile{read_ninja_sources(statementsFile)};
       auto [loggedFiles, loggedRecords]{read_ninja_deps(log)};
       path_table files{std::move(loggedFiles)};
@@ -1016,21 +1003,21 @@ namespace sequoia::testing
         throw std::runtime_error{
           std::format("None of the objects {} records is named by {}; are the two spelled differently?",
                       log.generic_string(),
-                      statementsFile.filename().generic_string())
+                      statementsFile.lexically_relative(tree.build_directory).generic_string())
         };
 
       return compilations{.files{std::move(files).release_files()}, .records{std::move(records)}};
     }
 
     /** The compilations of a Visual Studio build: those of every target's tracker logs in the
-        executable's configuration, which is the name of the directory holding the executable.
+        executable's configuration.
 
         Every target's files are numbered into one table, so that a file two targets both read is one file.
      */
     [[nodiscard]]
     compilations visual_studio_compilations(const build_tree& tree, const fs::path& executable)
     {
-      const auto configuration{executable.parent_path().filename()};
+      const auto configuration{configuration_of(executable)};
       auto isTlogOfConfiguration{
         [&configuration](const fs::directory_entry& entry) {
           return entry.is_directory()
@@ -1050,12 +1037,25 @@ namespace sequoia::testing
     }
   }
 
-  /// Ninja and Ninja Multi-Config share a log; Visual Studio keeps tracker logs; no other generator is understood
+  /** Where each understood generator records a build:
+      -# Ninja: the log `.ninja_deps`, and the statements in `build.ninja`;
+      -# Ninja Multi-Config: one log `.ninja_deps` for every configuration, and the statements of the
+         executable's configuration in `CMakeFiles/impl-<configuration>.ninja`. `build.ninja` names no
+         object itself: it includes the default configuration's statements, which need not be the
+         executable's;
+      -# Visual Studio: the tracker logs of the executable's configuration.
+   */
   [[nodiscard]]
   compilations read_compilations(const build_tree& tree, const fs::path& executable)
   {
-    if((tree.generator == "Ninja") || (tree.generator == "Ninja Multi-Config"))
-      return ninja_compilations(tree, executable);
+    if(tree.generator == "Ninja")
+      return ninja_compilations(tree, tree.build_directory / "build.ninja");
+
+    if(tree.generator == "Ninja Multi-Config")
+    {
+      const auto statementsFile{std::format("impl-{}.ninja", configuration_of(executable).generic_string())};
+      return ninja_compilations(tree, tree.build_directory / "CMakeFiles" / statementsFile);
+    }
 
     if(tree.generator.starts_with("Visual Studio"))
       return visual_studio_compilations(tree, executable);

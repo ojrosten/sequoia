@@ -160,7 +160,7 @@ None of the objects output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTe
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 498
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 501
 Ninja Multi-Config: a configuration with no statements
 
 Expected Exception Type:
@@ -169,7 +169,16 @@ Unable to open output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 503
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 508
+Ninja Multi-Config: a log none of whose objects the configuration's statements name
+
+Expected Exception Type:
+[std::runtime_error]
+None of the objects output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_free_test/WorkingCopy/multi_config/.ninja_deps records is named by CMakeFiles/impl-Release.ninja; are the two spelled differently?
+
+=======================================
+
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 513
 Xcode: a generator whose record of dependencies is not understood
 
 Expected Exception Type:
@@ -178,7 +187,7 @@ The build in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/buil
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 506
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 516
 A cache which names no generator was not written by CMake
 
 Expected Exception Type:
