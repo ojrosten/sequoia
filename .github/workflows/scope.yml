@@ -46,7 +46,7 @@ on:
     outputs:
       suite:
         description: '`true` if the change touches a path the suite reads, `false` if not.'
-        value: ${{ jobs.decide.outputs.suite }}
+        value: ${{ jobs.decide.outputs.suite_renamed }}
       documentation:
         description: '`true` if the change touches a path doxygen reads, `false` if not.'
         value: ${{ jobs.decide.outputs.documentation }}
