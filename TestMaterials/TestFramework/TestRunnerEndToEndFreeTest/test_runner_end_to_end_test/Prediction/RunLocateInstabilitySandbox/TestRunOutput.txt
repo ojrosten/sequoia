@@ -11,6 +11,8 @@ container_performance_test:
 unique_thing_false_negative_test:
 unique_thing_test:
 useful_things_free_test:
+utilities_false_negative_free_diagnostics:
+utilities_false_positive_free_diagnostics:
 utilities_free_test:
 flipper_free_test:
 house_allocation_test:
@@ -20,8 +22,8 @@ probability_false_negative_test:
 probability_test:
 
 -----------Grand Totals-----------
-[Total Run Time: 3.47ms]
-[Execution Time: 2.03ms]
+[Total Run Time: 3.69ms]
+[Execution Time: 1.72ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -41,6 +43,8 @@ container_performance_test:
 unique_thing_false_negative_test:
 unique_thing_test:
 useful_things_free_test:
+utilities_false_negative_free_diagnostics:
+utilities_false_positive_free_diagnostics:
 utilities_free_test:
 flipper_free_test:
 house_allocation_test:
@@ -50,8 +54,8 @@ probability_false_negative_test:
 probability_test:
 
 -----------Grand Totals-----------
-[Total Run Time: 2.2ms]
-[Execution Time: 839us]
+[Total Run Time: 2.66ms]
+[Execution Time: 771us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

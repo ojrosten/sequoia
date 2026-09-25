@@ -22,6 +22,7 @@
 #include "Utilities/Thing/UniqueThingTest.hpp"
 #include "Utilities/Thing/UniqueThingTestingDiagnostics.hpp"
 #include "Utilities/UsefulThingsFreeTest.hpp"
+#include "Utilities/UtilitiesFreeDiagnostics.hpp"
 #include "Utilities/UtilitiesFreeTest.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
 
@@ -37,7 +38,8 @@ int main(int argc, char** argv)
 		using namespace std::literals::chrono_literals;
 
 		sequoia::testing::test_runner runner{argc, argv, "Oliver Jacob Rosten", "\t"};
-runner.register_test<utilities_free_test>();runner.register_test<useful_things_free_test>();runner.register_test<bar_free_test>();runner.register_test<flipper_free_test>();runner.register_test<maybe_false_negative_test>();
+runner.register_test<utilities_free_test>();runner.register_test<useful_things_free_test>();runner.register_test<bar_free_test>();runner.register_test<flipper_free_test>();runner.register_test<utilities_false_negative_free_diagnostics>();
+		runner.register_test<utilities_false_positive_free_diagnostics>();runner.register_test<maybe_false_negative_test>();
 		runner.register_test<maybe_test>();runner.register_test<oldschool_false_negative_test>();
 		runner.register_test<oldschool_test>();runner.register_test<probability_false_negative_test>();
 		runner.register_test<probability_test>();runner.register_test<foo_false_negative_test>();

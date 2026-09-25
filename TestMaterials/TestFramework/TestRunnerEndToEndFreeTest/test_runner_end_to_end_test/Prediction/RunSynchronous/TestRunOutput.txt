@@ -2,43 +2,47 @@
 Running tests, synchronously...
 
 bar_free_test:
-[Execution Time: 959ns]
+[Execution Time: 2.92us]
 foo_false_negative_test:
-[Execution Time: 1.21us]
+[Execution Time: 2.83us]
 foo_test:
-[Execution Time: 1.29us]
+[Execution Time: 1.83us]
 oldschool_false_negative_test:
-[Execution Time: 1.38us]
+[Execution Time: 2.62us]
 oldschool_test:
-[Execution Time: 1.33us]
+[Execution Time: 2.71us]
 container_allocation_test:
-[Execution Time: 1.12us]
+[Execution Time: 2.79us]
 container_performance_test:
-[Execution Time: 1.25us]
+[Execution Time: 2.04us]
 unique_thing_false_negative_test:
-[Execution Time: 1.29us]
+[Execution Time: 3.38us]
 unique_thing_test:
-[Execution Time: 1.12us]
+[Execution Time: 2.92us]
 useful_things_free_test:
-[Execution Time: 1.04us]
+[Execution Time: 2us]
+utilities_false_negative_free_diagnostics:
+[Execution Time: 2.67us]
+utilities_false_positive_free_diagnostics:
+[Execution Time: 4.04us]
 utilities_free_test:
-[Execution Time: 1.04us]
+[Execution Time: 2.12us]
 flipper_free_test:
-[Execution Time: 833ns]
+[Execution Time: 2.38us]
 house_allocation_test:
-[Execution Time: 1.12us]
+[Execution Time: 4.33us]
 maybe_false_negative_test:
-[Execution Time: 1.08us]
+[Execution Time: 2.67us]
 maybe_test:
-[Execution Time: 917ns]
+[Execution Time: 3us]
 probability_false_negative_test:
-[Execution Time: 1.21us]
+[Execution Time: 3.29us]
 probability_test:
-[Execution Time: 917ns]
+[Execution Time: 2.88us]
 
 -----------Grand Totals-----------
-[Total Run Time: 1.47ms]
-[Execution Time: 19.1us]
+[Total Run Time: 2.22ms]
+[Execution Time: 53.4us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

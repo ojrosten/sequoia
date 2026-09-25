@@ -2,11 +2,11 @@
 Running tests, synchronously...
 
 bar_free_test:
-[Execution Time: 1.04us]
+[Execution Time: 3.29us]
 foo_false_negative_test:
-[Execution Time: 1.42us]
+[Execution Time: 2.29us]
 foo_test:
-[Execution Time: 671us]
+[Execution Time: 694us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Stuff/FooTest.cpp, Line 42
@@ -17,9 +17,9 @@ foo_test:
 	[std::filesystem::path]
 
 	  Path type
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases
+	  /Users/oliver/sequoia-diagnostics-template/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases
 	  vs
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases
+	  /Users/oliver/sequoia-diagnostics-template/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases
 
 	  [std::filesystem::file_type]
 	  operator== returned false
@@ -29,21 +29,21 @@ foo_test:
 	=======================================
 
 oldschool_false_negative_test:
-[Execution Time: 1.5us]
+[Execution Time: 1.79us]
 oldschool_test:
-[Execution Time: 1.33us]
+[Execution Time: 1.96us]
 container_allocation_test:
-[Execution Time: 2.08us]
+[Execution Time: 1.83us]
 container_performance_test:
-[Execution Time: 1.71us]
+[Execution Time: 3.21us]
 unique_thing_false_negative_test:
-[Execution Time: 161us]
+[Execution Time: 207us]
 	False Negative Checks:                     2;  Failures:  0
 unique_thing_test:
-[Execution Time: 249us]
+[Execution Time: 379us]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
 useful_things_free_test:
-[Execution Time: 137us]
+[Execution Time: 165us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -55,27 +55,31 @@ useful_things_free_test:
 
 	=======================================
 
+utilities_false_negative_free_diagnostics:
+[Execution Time: 2.04us]
+utilities_false_positive_free_diagnostics:
+[Execution Time: 1.88us]
 utilities_free_test:
-[Execution Time: 1.42us]
+[Execution Time: 1.79us]
 flipper_free_test:
-[Execution Time: 111us]
+[Execution Time: 137us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 house_allocation_test:
-[Execution Time: 1.46us]
+[Execution Time: 3.75us]
 maybe_false_negative_test:
-[Execution Time: 1.12us]
+[Execution Time: 1.92us]
 maybe_test:
-[Execution Time: 1.42us]
+[Execution Time: 2us]
 probability_false_negative_test:
-[Execution Time: 131us]
+[Execution Time: 206us]
 	False Negative Checks:                     2;  Failures:  0
 probability_test:
-[Execution Time: 205us]
+[Execution Time: 348us]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 
 -----------Grand Totals-----------
-[Total Run Time: 3.67ms]
-[Execution Time: 1.68ms]
+[Total Run Time: 4.46ms]
+[Execution Time: 2.16ms]
 	Standard Top Level Checks:                12;  Failures:  2  [Deep checks: 82]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

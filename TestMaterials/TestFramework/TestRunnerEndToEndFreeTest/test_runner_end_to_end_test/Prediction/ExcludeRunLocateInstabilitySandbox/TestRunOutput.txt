@@ -24,6 +24,8 @@ useful_things_free_test:
 
 	=======================================
 
+utilities_false_negative_free_diagnostics:
+utilities_false_positive_free_diagnostics:
 utilities_free_test:
 house_allocation_test:
 maybe_false_negative_test:
@@ -34,8 +36,8 @@ probability_test:
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 
 -----------Grand Totals-----------
-[Total Run Time: 4.83ms]
-[Execution Time: 3.02ms]
+[Total Run Time: 4.96ms]
+[Execution Time: 3.08ms]
 	Standard Top Level Checks:                10;  Failures:  1  [Deep checks: 116]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -68,6 +70,8 @@ useful_things_free_test:
 
 	=======================================
 
+utilities_false_negative_free_diagnostics:
+utilities_false_positive_free_diagnostics:
 utilities_free_test:
 house_allocation_test:
 maybe_false_negative_test:
@@ -78,8 +82,8 @@ probability_test:
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 
 -----------Grand Totals-----------
-[Total Run Time: 5.13ms]
-[Execution Time: 3.19ms]
+[Total Run Time: 4.68ms]
+[Execution Time: 2.57ms]
 	Standard Top Level Checks:                10;  Failures:  1  [Deep checks: 116]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
