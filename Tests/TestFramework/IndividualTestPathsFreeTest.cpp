@@ -48,7 +48,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments args{{minimal_fake_path().generic_string()}};
-      project_paths projPaths{args.size(), args.get(), {}};
+      const project_paths projPaths{args.size(), args.get(), {}};
       check(
         equality,
         reporter{"Absolute Path"},
@@ -79,10 +79,10 @@ namespace sequoia::testing
     }
 
     {
-      // The executable sits a level below its build tree, as under a multi-config generator, so the
-      // records are keyed on both levels where prune keys only on the last
+      // The executable sits a level below its build tree, as under a multi-config generator, so a key
+      // taken from the executable's directory alone differs from the one expected
       commandline_arguments args{{fake_project().append("build/Foo/CMade/FakeExe.txt").generic_string()}};
-      project_paths projPaths{args.size(), args.get(), {}};
+      const project_paths projPaths{args.size(), args.get(), {}};
       check(
         equality,
         reporter{"Execution record of an executable below its build tree"},

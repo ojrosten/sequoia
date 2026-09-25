@@ -40,7 +40,7 @@ namespace sequoia::testing
   {
     const auto entry_time_stamp{std::chrono::file_clock::now()};
 
-    /// Beside the tests' execution records; a record whose start precedes this one's was written by an earlier run
+    /// Beside the tests' execution records; a record whose start precedes the stamp's was written by an earlier run
     constexpr std::string_view execution_run_stamp{"run.stamp"};
 
     [[nodiscard]]
@@ -475,12 +475,12 @@ namespace sequoia::testing
     if(record.empty())
       return;
 
-    const auto finish{
+    const auto durationLine{
       elapsed ? std::format("duration {}\n", std::chrono::duration_cast<std::chrono::milliseconds>(*elapsed))
               : std::string{}
     };
 
-    overwrite_quietly(record, started_line(start) + finish);
+    overwrite_quietly(record, started_line(start) + durationLine);
   }
 
   //=========================================== test_runner ===========================================//

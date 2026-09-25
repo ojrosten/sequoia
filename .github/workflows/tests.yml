@@ -660,21 +660,22 @@ jobs:
           if [ "$SUITE" = success ] && [ "$REPEAT" != failure ] && [ "$REPEAT" != cancelled ]; then succeeded=true; fi
 
           started() { sed -n 's/^started //p' "$1"; }
-          run_start() {
+          start_of_run() {
             dir=$(dirname "$1")
             while [ "$dir" != . ] && [ ! -f "$dir/run.stamp" ]; do dir=$(dirname "$dir"); done
             [ ! -f "$dir/run.stamp" ] || started "$dir/run.stamp"
           }
           unfinished=$(printf '%s\n' "$tests" | while IFS= read -r record; do
                          if [ -z "$record" ] || grep -q '^duration' "$record"; then continue; fi
-                         start=$(started "$record"); runStart=$(run_start "$record")
-                         if [[ -n "$runStart" && "$start" < "$runStart" ]]; then
+                         start=$(started "$record")
+                         run_start=$(start_of_run "$record")
+                         if [[ -n "$run_start" && "$start" < "$run_start" ]]; then
                            echo "$start ${record%.txt} (from an earlier run)"
                          else
                            echo "$start ${record%.txt}"
                          fi
                        done | sort)
-          inFlight=$(printf '%s\n' "$unfinished" | grep -v ' (from an earlier run)$' || true)
+          in_flight=$(printf '%s\n' "$unfinished" | grep -v ' (from an earlier run)$' || true)
 
           if [ "$count" -eq 0 ]; then
             if $ran; then
@@ -683,7 +684,7 @@ jobs:
             else
               echo "the suite did not run"
             fi
-          elif [ -n "$inFlight" ]; then
+          elif [ -n "$in_flight" ]; then
             echo "::warning::tests which started and never finished - hung, or brought the process down;" \
                  "oldest start first, below"
           elif ! $succeeded && $ran; then

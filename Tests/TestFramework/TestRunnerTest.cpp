@@ -406,6 +406,9 @@ namespace sequoia::testing
       };
     }
 
+    /// The file each run writes beside the execution records, naming the run's start
+    constexpr std::string_view execution_run_stamp{"run.stamp"};
+
     /// The time a record or the run stamp names after `started`, which sorts as the times do
     [[nodiscard]]
     std::string start_named_by(const fs::path& file)
@@ -452,7 +455,7 @@ namespace sequoia::testing
               std::vector<std::string>{"started"});
 
         check("While a test executes, the run's stamp already exists",
-              fs::exists(get_project_paths().execution_records() / "run.stamp"));
+              fs::exists(get_project_paths().execution_records() / execution_run_stamp));
       }
     };
 
@@ -850,7 +853,7 @@ namespace sequoia::testing
           execution_record_line_heads(throwingRecord.file_path()),
           finishedRecordHeads);
 
-    const auto runStart{start_named_by(projPaths.execution_records() / "run.stamp")};
+    const auto runStart{start_named_by(projPaths.execution_records() / execution_run_stamp)};
     check("The run's stamp names a start", !runStart.empty());
     const bool runStartedFirst{   (runStart <= start_named_by(passingRecord.file_path()))
                                && (runStart <= start_named_by(throwingRecord.file_path()))};
