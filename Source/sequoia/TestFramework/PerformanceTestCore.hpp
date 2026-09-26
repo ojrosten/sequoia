@@ -17,8 +17,11 @@
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 
 #include <chrono>
+#include <optional>
+#include <ostream>
 #include <random>
 #include <future>
+#include <string>
 #include <thread>
 
 namespace sequoia::testing
@@ -207,9 +210,23 @@ namespace sequoia::testing
     return passed;
   }
 
+  /** \brief A warning if the fastest of several sleeps of `target` took at least twice as long, and
+             `nullopt` otherwise.
+
+      A sleep overrun that large distorts any timing built on sleeps. Load only lengthens a sleep,
+      so the fastest one measures the timer rather than the machine.
+   */
+  [[nodiscard]]
+  std::optional<std::string> coarse_sleep_warning(std::chrono::duration<double, std::milli> fastest, std::chrono::duration<double, std::milli> target);
+
+  /** \brief The duration to sleep for in place of `target`: `target` itself unless seven timed sleeps
+             of it overran measurably, and otherwise their mean plus five standard deviations.
+
+      Writes to `warningStream` any warning from coarse_sleep_warning.
+   */
   template<class T, class Period>
   [[nodiscard]]
-  std::chrono::duration<T, Period> calibrate(std::chrono::duration<T, Period> target)
+  std::chrono::duration<T, Period> calibrate(std::chrono::duration<T, Period> target, std::ostream& warningStream)
   {
     using namespace std::chrono;
 
@@ -222,6 +239,9 @@ namespace sequoia::testing
     }
 
     std::ranges::sort(timings);
+    if(const auto sleepWarning{coarse_sleep_warning(duration<double>{timings.front()}, target)})
+      warningStream << *sleepWarning;
+
     const auto [sig_f, m_f] {maths::sample_standard_deviation(timings.cbegin() + 1, timings.cend() - 1)};
     if (sig_f && m_f)
     {
