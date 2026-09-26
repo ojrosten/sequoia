@@ -92,32 +92,6 @@ namespace sequoia
         }
       };
 
-      template<class Edges>
-      class [[nodiscard]] join_sentinel
-      {
-      public:
-        using edge_index_type = Edges::index_type;
-
-        join_sentinel(Edges& e, const edge_index_type node1, const edge_index_type pos)
-          : m_Edges{e}
-          , m_Node1{node1}
-          , m_Pos{pos}
-          , m_InitialSize{e.size()}
-        {}
-
-        ~join_sentinel()
-        {
-          if(m_Edges.size() == m_InitialSize)
-          {
-            m_Edges.erase_from_partition(m_Node1, m_Pos);
-          }
-        }
-      private:
-        Edges& m_Edges;
-        edge_index_type m_Node1{}, m_Pos{};
-        std::size_t m_InitialSize{};
-      };
-
       struct edge_comparer
       {
         template<class Edge>
@@ -1431,11 +1405,43 @@ namespace sequoia
         return manipulate_partner_edge_weight(citer, [&args...](edge_iterator iter) -> edge_iterator { iter->weight(std::forward<Args>(args)...); return iter; });
       }
 
+      class [[nodiscard]] join_sentinel
+      {
+      public:
+        join_sentinel(connectivity_base& connectivity, const edge_index_type node1, const edge_index_type pos)
+          : m_Connectivity{connectivity}
+          , m_Node1{node1}
+          , m_Pos{pos}
+          , m_InitialSize{connectivity.m_Edges.size()}
+        {}
+
+        ~join_sentinel()
+        {
+          if(m_Connectivity.m_Edges.size() == m_InitialSize)
+          {
+            m_Connectivity.erase_unreciprocated_partial_edge(m_Node1, m_Pos);
+          }
+        }
+      private:
+        connectivity_base& m_Connectivity;
+        edge_index_type m_Node1{}, m_Pos{};
+        std::size_t m_InitialSize{};
+      };
+
+      void erase_unreciprocated_partial_edge(const edge_index_type node, const edge_index_type pos)
+      {
+        const auto next{m_Edges.erase_from_partition(node, pos)};
+        if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
+        {
+          decrement_comp_indices(next, m_Edges.end_partition(node), 1);
+        }
+      }
+
       template<class... MetaData>
         requires std::is_copy_constructible_v<edge_type> && (std::is_same_v<MetaData, edge_meta_data_type> && ...)
       void reciprocal_join(const edge_index_type node1, const edge_index_type node2, MetaData... md)
       {
-        graph_impl::join_sentinel sentinel{m_Edges, node1, m_Edges.size_of_partition(node1) - 1};
+        join_sentinel sentinel{*this, node1, m_Edges.size_of_partition(node1) - 1};
         if constexpr(edge_type::flavour == edge_flavour::partial)
         {
           m_Edges.push_back_to_partition(node2, node1, std::move(md)..., *crbegin_edges(node1));
@@ -1459,7 +1465,7 @@ namespace sequoia
         if(pos2 <= pos1) ++pos1;
 
         const auto dist1{static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(node), citer1))};
-        graph_impl::join_sentinel sentinel{m_Edges, node, dist1};
+        join_sentinel sentinel{*this, node, dist1};
 
         auto citer2{m_Edges.insert_to_partition(cbegin_edges(node) + pos2, node, pos1, std::move(args)..., *citer1)};
         if(pos2 > pos1)
@@ -1485,7 +1491,7 @@ namespace sequoia
         const auto node1{citer1.partition_index()}, node2{citer2.partition_index()};
         const auto dist1{static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(node1), citer1))};
 
-        graph_impl::join_sentinel sentinel{m_Edges, node1, dist1};
+        join_sentinel sentinel{*this, node1, dist1};
         citer2 = m_Edges.insert_to_partition(citer2, node1, dist1, md..., *citer1);
         increment_comp_indices(++to_edge_iterator(citer2), end_edges(node2), 1);
 
