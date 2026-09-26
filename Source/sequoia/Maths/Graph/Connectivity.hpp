@@ -184,6 +184,7 @@ namespace sequoia
       {}
 
       constexpr connectivity_base(const connectivity_base& other)
+        requires std::is_copy_constructible_v<edge_type>
         : m_Edges{copy_edges(other)}
       {}
 
@@ -361,7 +362,7 @@ namespace sequoia
       {}
 
       template<alloc... Allocators>
-        requires (sizeof...(Allocators) > 0)
+        requires ((sizeof...(Allocators) > 0) && std::is_copy_constructible_v<edge_type>)
       constexpr connectivity_base(const connectivity_base& c, const Allocators&... as)
         : m_Edges{copy_edges(c, as...)}
       {}
@@ -378,6 +379,7 @@ namespace sequoia
       constexpr connectivity_base& operator=(connectivity_base&&) = default;
 
       constexpr connectivity_base& operator=(const connectivity_base& other)
+        requires std::is_copy_constructible_v<edge_type>
       {
         if(&other != this)
         {

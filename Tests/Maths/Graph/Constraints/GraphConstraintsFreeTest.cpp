@@ -10,6 +10,8 @@
 
 #include "sequoia/Core/Meta/TypeName.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
+#include "sequoia/Maths/Graph/DynamicTree.hpp"
+#include "sequoia/Maths/Graph/StaticGraph.hpp"
 
 #include <any>
 #include <format>
@@ -84,6 +86,14 @@ namespace sequoia::testing
       non_movable(non_movable&&) = delete;
     };
 
+    struct independent_contiguous_edge_storage_config
+    {
+      template<class T>
+      using storage_type = data_structures::partitioned_sequence<T>;
+
+      constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::independent};
+    };
+
     struct shared_edge_storage_config
     {
       template<class T>
@@ -149,6 +159,7 @@ namespace sequoia::testing
 
   void graph_constraints_free_test::run_tests()
   {
+    test_copyability();
     test_weight_update_constraints();
     test_join_constraints();
     test_mutation_results<maths::bucketed_edge_storage_config>();
@@ -156,6 +167,53 @@ namespace sequoia::testing
     test_shared_move_only_weights();
     test_move_only_meta_data();
     test_shared_weight_copies();
+  }
+
+  void graph_constraints_free_test::test_copyability()
+  {
+    using namespace maths;
+
+    using unshared_move_only_contiguous_graph
+      = undirected_graph<move_only_weight, null_weight, null_meta_data, independent_contiguous_edge_storage_config>;
+    using move_only_node_graph = directed_graph<null_weight, move_only_weight>;
+    using move_only_tree       = undirected_tree<tree_link_direction::symmetric, move_only_weight, null_weight>;
+    using move_only_static     = static_undirected_graph<1, 2, move_only_weight, null_weight>;
+    using shared_copyable_graph
+      = undirected_graph<copyable_weight, null_weight, null_meta_data, shared_edge_storage_config>;
+
+    // A move-only edge weight, whether the halves of an edge hold it independently or share it
+    STATIC_CHECK(!std::is_copy_constructible_v<unshared_move_only_graph>);
+    STATIC_CHECK(!std::is_copy_constructible_v<unshared_move_only_contiguous_graph>);
+    STATIC_CHECK(!std::is_copy_constructible_v<unshared_move_only_embedded_graph>);
+    STATIC_CHECK(!std::is_copy_constructible_v<shared_move_only_graph>);
+    STATIC_CHECK(!std::is_copy_constructible_v<shared_move_only_embedded_graph>);
+    STATIC_CHECK(!std::is_copy_constructible_v<directed_move_only_graph>);
+    STATIC_CHECK(!std::is_copy_assignable_v<unshared_move_only_graph>);
+    STATIC_CHECK(!std::is_copy_assignable_v<shared_move_only_graph>);
+    STATIC_CHECK(!std::is_constructible_v<directed_move_only_graph,
+                                          const directed_move_only_graph&,
+                                          directed_move_only_graph::edge_allocator_type>);
+
+    // A move-only node weight
+    STATIC_CHECK(!std::is_copy_constructible_v<move_only_node_graph>);
+    STATIC_CHECK(!std::is_copy_assignable_v<move_only_node_graph>);
+    STATIC_CHECK(!std::is_constructible_v<move_only_node_graph,
+                                          const move_only_node_graph&,
+                                          move_only_node_graph::edge_allocator_type,
+                                          move_only_node_graph::node_weight_allocator_type>);
+
+    // Trees and static graphs are copied as graphs are
+    STATIC_CHECK(!std::is_copy_constructible_v<move_only_tree>);
+    STATIC_CHECK(!std::is_copy_constructible_v<move_only_static>);
+
+    // Copyable weights
+    STATIC_CHECK(std::is_copy_constructible_v<unshared_copyable_graph>);
+    STATIC_CHECK(std::is_copy_constructible_v<shared_copyable_graph>);
+    STATIC_CHECK(std::is_copy_assignable_v<shared_copyable_graph>);
+    STATIC_CHECK(std::is_constructible_v<unshared_copyable_graph,
+                                         const unshared_copyable_graph&,
+                                         unshared_copyable_graph::edge_allocator_type>);
+    STATIC_CHECK(std::is_copy_constructible_v<directed_graph<null_weight, copyable_weight>>);
   }
 
   void graph_constraints_free_test::test_weight_update_constraints()
