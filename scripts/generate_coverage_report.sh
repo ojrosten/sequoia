@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Any command that fails ends the script with a non-zero status, so the step that runs the
+# script fails with it: a failing suite or a failed capture must not leave a report that looks
+# sound. There is no pipefail: the genhtml probe below pipes genhtml, which always fails there,
+# into grep, and under pipefail every category would read as unsupported.
+set -e
+
 # Check if a test directory was provided as an argument
 if [[ -z "$1" ]]; then
   echo "Usage: $0 <Test Executable Directory>"
@@ -31,12 +37,19 @@ echo "Output Dir: ${output_dir}"
 # Create output directory if it doesn't exist
 mkdir -p "${output_dir}"
 
-# Cleanup lcov
-lcov --zerocounters --directory "${test_exe_dir}"
+# Runs a command and, if it fails, names it before ending the script.
+run_checked() {
+  "$@" && return
+  local status=$?
+  echo "error: exit status ${status} from: $*" >&2
+  exit 1
+}
+
+run_checked lcov --zerocounters --directory "${test_exe_dir}"
 
 # Run the tests to generate fresh .gcda files
 pushd "${test_exe_dir}"
-ctest -T Test
+run_checked ctest -T Test
 popd
 
 # gcov must match the compiler which produced the .gcda files, so take it from the build itself
@@ -54,15 +67,56 @@ if [[ -z "${gcov_tool}" ]]; then
 fi
 echo "gcov: ${gcov_tool}"
 
-# Generate lcov coverage report
-lcov --directory "${test_exe_dir}"  --capture --output-file "${test_exe_dir}/coverage.info" --keep-going --filter range --rc geninfo_unexecuted_blocks=1 --ignore-errors empty --ignore-errors inconsistent,inconsistent --ignore-errors format,format --gcov-tool "${gcov_tool}"
+# lcov checks coverage data for consistency, and repairs what it finds by overriding gcov's
+# counts, in both directions. It checks on every read of a tracefile, and at capture wherever
+# it has to derive the end lines of functions, which llvm-cov never supplies:
+#  - A function gcov says was never called, but with a line that ran, is marked called.
+#    The check exempts the first line of a lambda, which runs when the closure is built,
+#    but it recognises a lambda only by its demangled name, and the tracefile holds mangled
+#    names. So every uncalled lambda whose first line ran is reported as called.
+#  - A function gcov says was called, but with no line that ran, is shown as uncalled in
+#    genhtml's function tables.
+# Turning the check off keeps gcov's counts. The lambda defect is drafted as an upstream
+# lcov report, not yet filed.
+consistency_options=(--rc check_data_consistency=0)
+
+capture="${test_exe_dir}/coverage_capture.info"
+info="${test_exe_dir}/coverage.info"
+run_checked lcov --directory "${test_exe_dir}" --capture --output-file "${capture}" --gcov-tool "${gcov_tool}" \
+                 --keep-going --filter range --rc geninfo_unexecuted_blocks=1 "${consistency_options[@]}" \
+                 --ignore-errors empty --ignore-errors inconsistent,inconsistent --ignore-errors format,format
+
+# A read derives end lines again for functions that have none. The capture has already done
+# so, and a second derivation raises `inconsistent` wherever it fails.
+read_options=("${consistency_options[@]}" --rc derive_function_end_line=0)
+
 foreign=('/usr/*')
+# Writing the tracefile again raises `format` for each function llvm-cov places at line 0.
+# The capture has already raised it and been told to ignore it.
+remove_options=(--keep-going --ignore-errors empty --ignore-errors format)
 if [[ "$(uname -s)" == Darwin ]]; then
   foreign+=('/opt/homebrew/*' '/Library/Developer/*' '/Applications/Xcode.app/*')
+  # The patterns cover every toolchain's system headers, and no one build uses them all.
+  # lcov treats a pattern that removes nothing as an error.
+  remove_options+=(--ignore-errors unused)
 fi
 
-# The doubling is deliberate: it suppresses display too, leaving genhtml the sole reporter
-lcov --remove  "${test_exe_dir}/coverage.info" "${foreign[@]}" --output-file "${test_exe_dir}/coverage.info" --keep-going --ignore-errors inconsistent,inconsistent --ignore-errors empty
+run_checked lcov --remove "${capture}" "${foreign[@]}" --output-file "${info}" \
+                 "${remove_options[@]}" "${read_options[@]}"
+
+# Removal must drop files and change nothing else, and lcov's figures must be counts of the
+# tracefile's records. check_tracefile.py names the first difference. Nothing checks genhtml's
+# function tables, where the second repair above would show.
+summary="${test_exe_dir}/coverage_summary.txt"
+if ! lcov --summary "${info}" "${read_options[@]}" > "${summary}" 2>&1; then
+  cat "${summary}"
+  echo "error: lcov --summary failed on ${info}" >&2
+  exit 1
+fi
+cat "${summary}"
+script_dir=$(cd "$(dirname "$0")" && pwd -P)
+run_checked python3 "${script_dir}/check_tracefile.py" --capture "${capture}" --filtered "${info}" \
+                                                        --summary "${summary}" --removed "${foreign[@]}"
 
 # lcov forces --no-strip-underscores on Darwin, which only GNU c++filt accepts
 gnu_cxxfilt="/opt/homebrew/opt/binutils/bin/c++filt"
@@ -77,7 +131,7 @@ demangle=(--demangle-cpp)
 # parsing, before genhtml looks at its input, which is what makes the probe cheap.
 probe_dir=$(mktemp -d)
 ignore=()
-for category in inconsistent range empty category; do
+for category in range empty category; do
   if ! genhtml --ignore-errors "${category}" -o "${probe_dir}" /dev/null 2>&1 \
        | grep -q "unknown argument for --ignore-errors"; then
     ignore+=(--ignore-errors "${category}")
@@ -88,4 +142,4 @@ done
 rm -rf "${probe_dir}"
 
 # Generate HTML report
-genhtml "${demangle[@]}" --suppress-aliases -o "${output_dir}" "${test_exe_dir}/coverage.info" "${ignore[@]}"
+run_checked genhtml "${demangle[@]}" --suppress-aliases -o "${output_dir}" "${info}" "${ignore[@]}" "${read_options[@]}"

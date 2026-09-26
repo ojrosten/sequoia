@@ -371,6 +371,11 @@ jobs:
           git config --global user.email "ci@example.invalid"
           git config --global init.defaultBranch trunk
 
+      # The checks the Measure step relies on to catch lcov changing the measurement.
+      - name: Test the tracefile checks
+        if: env.NEEDS_TESTING == 'true'
+        run: scripts/tests/check_tracefile_selftest.sh
+
       - name: Configure and build
         if: env.NEEDS_TESTING == 'true'
         working-directory: TestAll
@@ -381,19 +386,20 @@ jobs:
       # The script runs the suite through ctest itself, so there is no separate run
       # step. Utilities.cmake registers the test with --serial under CODE_COVERAGE.
       - name: Measure
+        id: measure
         if: env.NEEDS_TESTING == 'true'
         run: ./scripts/generate_coverage_report.sh build/TestAll/gcc-env-coverage
 
       - name: Report
         if: ${{ always() && env.NEEDS_TESTING == 'true' }}
+        env:
+          MEASURE_OUTCOME: ${{ steps.measure.outcome }}
         run: |
           info=build/TestAll/gcc-env-coverage/coverage.info
           [ -f "$info" ] || { echo "::error::no tracefile at $info"; exit 1; }
-          # lcov 2.5 refuses to read a tracefile holding the inconsistencies its capture was told
-          # to ignore, so the summary takes the `inconsistent` suppression that
-          # generate_coverage_report.sh uses. A tracefile lcov refuses fails the job, since the
-          # tracefile is what the job publishes.
-          if ! lcov_output=$(lcov --summary "$info" --ignore-errors inconsistent,inconsistent 2>&1); then
+          # Read with generate_coverage_report.sh's read_options, which the script explains. A
+          # tracefile lcov refuses fails the job, since the tracefile is what the job publishes.
+          if ! lcov_output=$(lcov --summary "$info" --rc check_data_consistency=0 --rc derive_function_end_line=0 2>&1); then
             echo "::error::lcov refused $info"
             echo "$lcov_output"
             exit 1
@@ -410,6 +416,10 @@ jobs:
             echo "$summary"
             echo '```'
             echo "_Reported only. No threshold is applied yet._"
+            # The step runs even when Measure fails, so the figures say whether they were checked.
+            if [ "$MEASURE_OUTCOME" != success ]; then
+              echo "**The Measure step failed ($MEASURE_OUTCOME): these figures are unchecked.**"
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload the tracefile and the report
