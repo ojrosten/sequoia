@@ -123,8 +123,8 @@ namespace sequoia::testing
       q_t q{};
 
       int a{};
-      check("", q.push(task_t{[&a](){ a+= 1; }}, std::try_to_lock));
-      auto t{q.pop(std::try_to_lock)};
+      q.push(task_t{[&a](){ a+= 1; }});
+      auto t{q.pop()};
 
       t();
       check(equality, "", a, 1);
@@ -144,8 +144,8 @@ namespace sequoia::testing
 
       q_t q{};
 
-      check("", q.push(task_t{[](){ return 1;}}, std::try_to_lock));
-      auto t{q.pop(std::try_to_lock)};
+      q.push(task_t{[](){ return 1;}});
+      auto t{q.pop()};
 
       auto fut{t.get_future()};
       t();
