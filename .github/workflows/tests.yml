@@ -640,7 +640,7 @@ jobs:
       # The names are paths a fork's PR controls, so everything after the warnings
       # is printed with workflow commands stopped.
       - name: Name the tests that started and never finished
-        if: always()
+        if: ${{ always() && inputs.needs_testing == 'true' }}
         env:
           SUITE: ${{ steps.suite.outcome }}
           REPEAT: ${{ steps.repeat.outcome }}
