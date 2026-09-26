@@ -730,7 +730,8 @@ namespace sequoia
       {
         check_index_type_limit("add_slot", num_partitions(), "partitions");
 
-        m_Partitions.push_back(m_Data.size());
+        // The element-count guard at the growth sites keeps the size within the index type
+        m_Partitions.push_back(static_cast<index_type>(m_Data.size()));
       }
 
       void insert_slot(const size_t pos)
