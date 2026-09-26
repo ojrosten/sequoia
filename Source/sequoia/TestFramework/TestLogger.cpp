@@ -188,19 +188,15 @@ namespace sequoia::testing
 
   void test_logger_base::log_top_level_failure(test_mode mode, std::string message)
   {
-    ++m_Results.top_level_failures;
     if(m_SentinelDepth.empty())
-    {
-      m_SentinelDepth.push_back(level_message{message});
-    }
-    else
-    {
-      m_SentinelDepth.back().message.append(std::move(message));
-    }
+      throw std::logic_error{"Cannot log a top-level failure outside a sentinel"};
+
+    ++m_Results.top_level_failures;
+    m_SentinelDepth.back().message.append(message);
 
     if(mode == test_mode::false_negative)
     {
-      m_Results.failure_messages.push_back(failure_info{m_Results.top_level_checks, std::string{message}});
+      m_Results.failure_messages.push_back(failure_info{m_Results.top_level_checks, std::move(message)});
     }
   }
 
