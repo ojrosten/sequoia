@@ -236,10 +236,10 @@ namespace sequoia
 
       /** \brief Applies `fn` to the weight of the edge at `citer`, and returns the result.
 
-          Where the two halves of an undirected edge hold independent weights, `fn` is applied once, to a copy
-          of the weight, which then replaces the weight of both halves. A throw leaves both unchanged, provided
-          the weight's move does not throw. A reference returned by `fn` would refer to the copy, so `fn` may
-          not return one.
+          `fn` is invoked an unspecified number of times. Where the two halves of an undirected edge hold
+          independent weights, `fn` is applied to a copy of the weight, which then replaces the weight of both
+          halves. A throw leaves both unchanged, provided the weight's move does not throw. A reference returned
+          by `fn` would refer to the copy, so `fn` may not return one.
        */
       template<std::invocable<edge_weight_type&> Fn>
         requires (    !std::is_empty_v<edge_weight_type>
