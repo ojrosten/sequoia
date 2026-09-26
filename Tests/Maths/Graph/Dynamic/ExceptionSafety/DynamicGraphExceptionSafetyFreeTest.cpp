@@ -135,7 +135,8 @@ namespace sequoia::testing
     struct fallible_partitions_edge_storage_config
     {
       template<class T>
-      using storage_type = data_structures::bucketed_sequence<T, std::vector<std::vector<T>, fallible_allocator<std::vector<T>>>>;
+      using storage_type
+        = data_structures::bucketed_sequence<T, std::vector<std::vector<T>, fallible_allocator<std::vector<T>>>>;
 
       constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::agnostic};
     };
@@ -159,13 +160,18 @@ namespace sequoia::testing
   template<class EdgeStorageConfig>
   void dynamic_graph_exception_safety_free_test::test_undirected_edge_mutations()
   {
-    using graph_type     = maths::undirected_graph<fallible_weight, maths::null_weight, maths::null_meta_data, EdgeStorageConfig>;
+    using namespace maths;
+    using graph_type     = undirected_graph<fallible_weight, null_weight, null_meta_data, EdgeStorageConfig>;
     using edge_init_type = graph_type::edge_init_type;
 
-    STATIC_CHECK(!maths::graph_impl::has_shared_weight_v<typename graph_type::edge_type>);
+    STATIC_CHECK(!graph_impl::has_shared_weight_v<typename graph_type::edge_type>);
 
     const auto describe{
-      [](std::string_view operation) { return std::format("{} in an undirected graph with {}", operation, meta::tidy_type_name(meta::type_name<EdgeStorageConfig>())); }
+      [](std::string_view operation) {
+        return std::format("{} in an undirected graph with {}",
+                           operation,
+                           meta::tidy_type_name(meta::type_name<EdgeStorageConfig>()));
+      }
     };
 
     const graph_type graph{{edge_init_type{1, 5}}, {edge_init_type{0, 5}}};
@@ -190,13 +196,18 @@ namespace sequoia::testing
   template<class EdgeStorageConfig>
   void dynamic_graph_exception_safety_free_test::test_embedded_edge_mutations()
   {
-    using graph_type     = maths::embedded_graph<fallible_weight, maths::null_weight, maths::null_meta_data, EdgeStorageConfig>;
+    using namespace maths;
+    using graph_type     = embedded_graph<fallible_weight, null_weight, null_meta_data, EdgeStorageConfig>;
     using edge_init_type = graph_type::edge_init_type;
 
-    STATIC_CHECK(!maths::graph_impl::has_shared_weight_v<typename graph_type::edge_type>);
+    STATIC_CHECK(!graph_impl::has_shared_weight_v<typename graph_type::edge_type>);
 
     const auto describe{
-      [](std::string_view operation) { return std::format("{} in an embedded graph with {}", operation, meta::tidy_type_name(meta::type_name<EdgeStorageConfig>())); }
+      [](std::string_view operation) {
+        return std::format("{} in an embedded graph with {}",
+                           operation,
+                           meta::tidy_type_name(meta::type_name<EdgeStorageConfig>()));
+      }
     };
 
     const graph_type graph{
@@ -267,7 +278,8 @@ namespace sequoia::testing
 
   void dynamic_graph_exception_safety_free_test::test_node_insertion()
   {
-    using graph_type     = maths::directed_graph<maths::null_weight, int, fallible_partitions_edge_storage_config>;
+    using namespace maths;
+    using graph_type     = directed_graph<null_weight, int, fallible_partitions_edge_storage_config>;
     using edge_init_type = graph_type::edge_init_type;
     using node_weights   = std::initializer_list<int>;
 
@@ -291,7 +303,11 @@ namespace sequoia::testing
   }
 
   template<class Graph, class Mutation>
-  void dynamic_graph_exception_safety_free_test::check_strong_guarantee(std::string_view description, const Graph& graph, const Graph& prediction, std::size_t numFallibleSteps, Mutation mutation)
+  void dynamic_graph_exception_safety_free_test::check_strong_guarantee(std::string_view description,
+                                                                        const Graph& graph,
+                                                                        const Graph& prediction,
+                                                                        std::size_t numFallibleSteps,
+                                                                        Mutation mutation)
   {
     {
       Graph g{graph};

@@ -221,7 +221,7 @@ bucketed_sequence::erase - Invalid range specified by iterators belonging to par
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 446
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 447
 Inserting beyond the end of a partition throws
 
 Expected Exception Type:
@@ -230,7 +230,7 @@ bucketed_sequence::insert_to_partition: pos 2 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 648
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 651
 
 Expected Exception Type:
 [std::domain_error]
@@ -238,7 +238,7 @@ bucketed_sequence::erase - Invalid range specified by iterators belonging to par
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 860
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 864
 Inserting beyond the end of a partition other than the last throws
 
 Expected Exception Type:

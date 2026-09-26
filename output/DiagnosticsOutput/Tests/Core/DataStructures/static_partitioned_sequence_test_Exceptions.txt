@@ -1,4 +1,4 @@
-Tests/Core/DataStructures/StaticPartitionedSequenceTest.cpp, Line 130
+Tests/Core/DataStructures/StaticPartitionedSequenceTest.cpp, Line 139
 A partition longer than the index type counts throws
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Partition size out of bounds
 
 =======================================
 
-Tests/Core/DataStructures/StaticPartitionedSequenceTest.cpp, Line 135
+Tests/Core/DataStructures/StaticPartitionedSequenceTest.cpp, Line 144
 Partitions each within the index type, but together beyond it, throw
 
 Expected Exception Type:

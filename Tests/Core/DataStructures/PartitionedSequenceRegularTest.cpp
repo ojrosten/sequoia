@@ -150,8 +150,9 @@ namespace sequoia::testing
 
   void partitioned_sequence_regular_test::test_index_type_limit()
   {
-    using index_type    = std::uint8_t;
-    using sequence_type = data_structures::partitioned_sequence<int, std::vector<int>, maths::monotonic_sequence<index_type, std::ranges::greater>>;
+    using index_type      = std::uint8_t;
+    using partitions_type = maths::monotonic_sequence<index_type, std::ranges::greater>;
+    using sequence_type   = data_structures::partitioned_sequence<int, std::vector<int>, partitions_type>;
 
     constexpr std::size_t limit{std::numeric_limits<index_type>::max()};
 

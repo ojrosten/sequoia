@@ -443,7 +443,10 @@ namespace sequoia::testing
               data_description::one_2,
               t.report(""),
               [&t](data_t d) -> data_t {
-                t.check_exception_thrown<std::out_of_range>("Inserting beyond the end of a partition throws", [&d]() { return d.insert_to_partition(0, 2, 3); });
+                t.check_exception_thrown<std::out_of_range>(
+                  "Inserting beyond the end of a partition throws",
+                  [&d]() { return d.insert_to_partition(0, 2, 3); }
+                );
                 return d;
               }
             },
@@ -857,7 +860,10 @@ namespace sequoia::testing
               data_description::two_2__3,
               t.report(""),
               [&t](data_t d) -> data_t {
-                t.check_exception_thrown<std::out_of_range>("Inserting beyond the end of a partition other than the last throws", [&d]() { return d.insert_to_partition(0, 2, 4); });
+                t.check_exception_thrown<std::out_of_range>(
+                  "Inserting beyond the end of a partition other than the last throws",
+                  [&d]() { return d.insert_to_partition(0, 2, 4); }
+                );
                 return d;
               }
             }

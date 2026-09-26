@@ -68,7 +68,7 @@ partitioned_sequence::erase - Invalid range specified by iterators belonging to 
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 446
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 447
 Inserting beyond the end of a partition throws
 
 Expected Exception Type:
@@ -77,7 +77,7 @@ partitioned_sequence::insert_to_partition: pos 2 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 648
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 651
 
 Expected Exception Type:
 [std::domain_error]
@@ -85,7 +85,7 @@ partitioned_sequence::erase - Invalid range specified by iterators belonging to 
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 860
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 864
 Inserting beyond the end of a partition other than the last throws
 
 Expected Exception Type:
@@ -94,7 +94,7 @@ partitioned_sequence::insert_to_partition: pos 2 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 168
+Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 169
 Pushing back beyond what the index type counts throws
 
 Expected Exception Type:
@@ -103,7 +103,7 @@ partitioned_sequence::push_back_to_partition: the index type cannot count more t
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 173
+Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 174
 Inserting beyond what the index type counts throws
 
 Expected Exception Type:
