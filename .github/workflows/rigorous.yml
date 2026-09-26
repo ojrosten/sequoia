@@ -271,6 +271,7 @@ jobs:
           - {variant: serial-atomic,           test_args: '--serial',                 profile_update: atomic, capture_order: 'serial parallel'}
           - {variant: concurrent-atomic,       test_args: '',                         profile_update: atomic, capture_order: 'parallel serial'}
           - {variant: concurrent-single,       test_args: '',                         profile_update: single, capture_order: 'serial parallel'}
+          - {variant: serial-single,           test_args: '--serial',                 profile_update: single, capture_order: 'parallel serial'}
           - {variant: concurrent-atomic-drift, test_args: '--check-versioned-output', profile_update: atomic, capture_order: 'parallel serial'}
     env:
       CC: gcc-15
@@ -440,7 +441,8 @@ jobs:
           git diff --stat -- output/ TestMaterials/ | tail -n 5
           ls -la output/Drift 2>/dev/null || echo "no output/Drift"
           [ -f output/Drift/VersionedOutput.patch ] && cp output/Drift/VersionedOutput.patch "$d/" || true
-          cp "$d/Testing/Temporary/LastTest.log" "$d/trial_LastTest.log" 2>/dev/null || echo "no LastTest.log"
+          # ctest -T names its log after the run's timestamp
+          for log in "$d"/Testing/Temporary/LastTest*.log; do cp "$log" "$d/trial_LastTest.log" && echo "kept $log"; done
           cat "$d/trial_timings.txt"
 
       - name: Upload the tracefile and the report
