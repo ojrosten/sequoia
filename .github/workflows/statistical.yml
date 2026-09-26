@@ -103,11 +103,14 @@ jobs:
   # found, and the bound that zero failures earns. Runs whether or not the
   # columns were green, since a red column is the finding. Three things it
   # insists on, each of which would otherwise pass in silence: every column's
-  # artifact is present; the suite ran N times, witnessed by the runner's
-  # "Running tests" line once per repetition - the one check that tells N trials
-  # from one; and a column is clean only if its suite step succeeded AND the
-  # analysis found nothing, since the analysis says "No instabilities detected"
-  # over a failure common to every repetition too.
+  # artifact is present; the suite started and finished N times, witnessed by
+  # the runner's "Running tests" line as each repetition starts and its "Total
+  # Run Time" line as each ends - the one check that tells N trials from one,
+  # and a trial that hung from one that ended; and a column is clean only if
+  # its suite step succeeded AND the analysis found nothing, since the analysis
+  # says "No instabilities detected" over a failure common to every repetition
+  # too. A column that is not clean is reported with its counts and the end of
+  # its log, whatever the reason.
   summary:
     name: The sample
     needs: [trials, statistical]
@@ -138,16 +141,20 @@ jobs:
               echo "No run log: the column did not reach the suite." >> "$report"
             else
               outcome=$(cat "$dir/run-log/outcome")
-              ran=$(grep -c "Running tests" "$log" || true)
-              if [ "$ran" -ne "$N" ]; then
-                echo "::error::$name: the suite ran $ran times, not $N"; failed=1
-                echo "The suite ran $ran times, not $N." >> "$report"
-              elif [ "$outcome" = success ] && grep -q "No instabilities detected" "$log"; then
+              started=$(grep -c "Running tests" "$log" || true)
+              finished=$(grep -c "Total Run Time" "$log" || true)
+              if [ "$outcome" = success ] && [ "$started" -eq "$N" ] && [ "$finished" -eq "$N" ] \
+                   && grep -q "No instabilities detected" "$log"; then
                 echo "No instabilities detected in $N trials." >> "$report"
               else
-                failed=1
+                echo "::error::$name: suite step $outcome; of $N trials, $started started and $finished finished"; failed=1
                 {
-                  echo "Suite step: $outcome. The end of the log:"
+                  echo "Suite step: $outcome. Of $N trials, $started started and $finished finished."
+                  if [ -f "$dir/run-log/snapshot.txt" ]; then
+                    echo "The suite was still running near its timeout: the column's \`Keep the run log\` step prints" \
+                         "what it was doing, and the artifact holds it as \`run-log/snapshot.txt\`."
+                  fi
+                  echo "The end of the log:"
                   echo '```'
                   tail -60 "$log"
                   echo '```'
