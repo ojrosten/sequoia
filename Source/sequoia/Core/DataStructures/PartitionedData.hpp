@@ -728,15 +728,19 @@ namespace sequoia
 
       void add_slot()
       {
+        check_index_type_limit("add_slot", num_partitions(), "partitions");
+
         m_Partitions.push_back(m_Data.size());
       }
 
       void insert_slot(const size_t pos)
       {
+        check_index_type_limit("insert_slot", num_partitions(), "partitions");
+
         if(pos < num_partitions())
         {
           auto iter{m_Partitions.begin() + pos};
-          const index_type newPartitionBound{(pos == 0) ? 0 : *(iter - 1)};
+          const index_type newPartitionBound{(pos == 0) ? index_type{} : *(iter - 1)};
           m_Partitions.insert(iter, newPartitionBound);
         }
         else
@@ -799,7 +803,7 @@ namespace sequoia
       void push_back_to_partition(const index_type index, Args&&... args)
       {
         check_range("push_back_to_partition", index);
-        check_index_type_limit("push_back_to_partition");
+        check_index_type_limit("push_back_to_partition", m_Data.size(), "elements");
 
         auto iter{m_Data.end()};
         if(index == m_Partitions.size() - 1)
@@ -820,7 +824,7 @@ namespace sequoia
       {
         const auto source{pos.partition_index()};
         check_range("insert_to_partition", source);
-        check_index_type_limit("insert_to_partition");
+        check_index_type_limit("insert_to_partition", m_Data.size(), "elements");
 
         auto iter{m_Data.emplace(pos.base_iterator(), std::forward<Args>(args)...)};
         increment_partition_indices(source);
@@ -956,15 +960,18 @@ namespace sequoia
         }
       }
 
-      void check_index_type_limit(std::string_view method) const
+      static void check_index_type_limit(std::string_view method,
+                                         const std::size_t count,
+                                         std::string_view countedItems)
       {
         constexpr auto limit{std::numeric_limits<index_type>::max()};
-        if(std::cmp_greater_equal(m_Data.size(), limit))
+        if(std::cmp_greater_equal(count, limit))
         {
           throw std::out_of_range{std::format("partitioned_sequence::{}: "
-                                              "the index type cannot count more than {} elements",
+                                              "the index type cannot count more than {} {}",
                                               method,
-                                              limit)};
+                                              limit,
+                                              countedItems)};
         }
       }
 
@@ -1102,7 +1109,8 @@ namespace sequoia
     };
 
     template<class T, std::size_t Npartitions, std::size_t Nelements, class Partitions=maths::static_monotonic_sequence<std::size_t, Npartitions, std::ranges::greater>>
-      requires (std::cmp_less_equal(Nelements, std::numeric_limits<typename Partitions::value_type>::max()))
+      requires (    std::cmp_less_equal(Npartitions, std::numeric_limits<typename Partitions::value_type>::max())
+                && std::cmp_less_equal(Nelements,   std::numeric_limits<typename Partitions::value_type>::max()))
     class static_partitioned_sequence :
       public partitioned_sequence_base<T, std::array<T, Nelements>, Partitions>
     {

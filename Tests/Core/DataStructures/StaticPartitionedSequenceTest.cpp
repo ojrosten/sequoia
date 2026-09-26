@@ -23,8 +23,8 @@ namespace sequoia::testing
           Nelements,
           maths::static_monotonic_sequence<std::uint8_t, Npartitions, std::ranges::greater>>;
 
-    template<std::size_t Nelements>
-    concept byte_indexable = requires { typename byte_indexed_sequence<1, Nelements>; };
+    template<std::size_t Npartitions, std::size_t Nelements>
+    concept byte_indexable = requires { typename byte_indexed_sequence<Npartitions, Nelements>; };
   }
 
   [[nodiscard]]
@@ -44,8 +44,11 @@ namespace sequoia::testing
   {
     constexpr std::size_t limit{std::numeric_limits<std::uint8_t>::max()};
 
-    STATIC_CHECK(byte_indexable<limit>);
-    STATIC_CHECK(!byte_indexable<limit + 1>);
+    STATIC_CHECK( byte_indexable<1, limit>);
+    STATIC_CHECK(!byte_indexable<1, limit + 1>);
+
+    STATIC_CHECK( byte_indexable<limit, 0>);
+    STATIC_CHECK(!byte_indexable<limit + 1, 0>);
   }
 
   void static_partitioned_sequence_test::test_static_storage()

@@ -176,5 +176,30 @@ namespace sequoia::testing
     );
 
     check(equality, "Unchanged by the refused growth", sequence.size_of_partition(0), limit);
+
+    sequence_type manyPartitions{};
+    for(std::size_t i{}; i < limit; ++i)
+    {
+      manyPartitions.add_slot();
+    }
+
+    check(equality, "As many partitions as the index type counts are admitted", manyPartitions.num_partitions(), limit);
+
+    check_exception_thrown<std::out_of_range>(
+      "Adding a partition beyond what the index type counts throws",
+      [&manyPartitions]() { manyPartitions.add_slot(); }
+    );
+
+    check_exception_thrown<std::out_of_range>(
+      "Inserting a partition beyond what the index type counts throws",
+      [refused{manyPartitions}]() mutable { refused.insert_slot(0); }
+    );
+
+    check_exception_thrown<std::out_of_range>(
+      "Inserting a partition at the end beyond what the index type counts throws",
+      [refused{manyPartitions}]() mutable { refused.insert_slot(limit); }
+    );
+
+    check(equality, "Unchanged by the refused partitions", manyPartitions.num_partitions(), limit);
   }
 }
