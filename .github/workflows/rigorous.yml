@@ -305,18 +305,23 @@ jobs:
             sleep $((attempt * 15))
           done
           sudo apt-get update -qq
-          for pkg in g++-15 ninja-build libtbb-dev lcov; do
+          # The Perl packages are for lcov, installed below from its release: Capture::Tiny,
+          # DateTime, Date::Parse and Devel::StackTrace, without which it does not start, and
+          # JSON::XS, which geninfo prefers over the core JSON::PP for reading gcov's output.
+          packages=(g++-15 ninja-build libtbb-dev
+                    libcapture-tiny-perl libdatetime-perl libdevel-stacktrace-perl libjson-xs-perl libtimedate-perl)
+          for pkg in "${packages[@]}"; do
             apt-cache pkgnames | grep -qx "$pkg" \
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
-          sudo apt-get install -y g++-15 ninja-build libtbb-dev lcov
+          sudo apt-get install -y "${packages[@]}"
           # The hosted image's CMake is below sequoia's floor of 4.2, the release that added
           # CMAKE_INTERMEDIATE_DIR_STRATEGY; the Windows presets set it in
           # build_system/ShortObjectPaths.cmake. The macOS and Windows images ship a release above
           # the floor, so this column fetches one from Kitware - the host the checkout already
           # comes from - and puts it first on PATH. An older cmake surviving this step is loud:
-          # the configure step's cmake_minimum_required refuses it. The tarball is the only binary
-          # either job puts on PATH without apt's signatures behind it, so its checksum is pinned.
+          # the configure step's cmake_minimum_required refuses it. The tarball has no apt
+          # signature behind it, so its checksum is pinned.
           #
           # Repeated in rigorous.yml's coverage job; change both.
           cmake_version=4.4.3
@@ -328,8 +333,31 @@ jobs:
           if ! echo "$cmake_sha256  $cmake_tarball" | sha256sum --check --quiet; then echo "::error::The CMake tarball does not match its published checksum"; exit 1; fi
           tar -xzf "$cmake_tarball" -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin" >> "$GITHUB_PATH"
+          # lcov comes from its release rather than apt, so that its version does not move with
+          # ubuntu-latest: the 24.04 archive has 2.0 and the 26.04 one 2.4, and lcov 2.0 and 2.5
+          # write different function records, and count different function totals, from the same
+          # .gcda files. 2.5 is also what Homebrew installs, so CI and a Mac run the same lcov.
+          # Pinned by checksum for the same reason as CMake.
+          lcov_version=2.5
+          lcov_sha256=7e5e5a154bd5f3557659c328cab376764e7abd238bb403c424472c296b175126
+          lcov_tarball=$RUNNER_TEMP/lcov.tar.gz
+          lcov_url=https://github.com/linux-test-project/lcov/releases/download/v$lcov_version/lcov-$lcov_version.tar.gz
+          if ! curl -fsSL -o "$lcov_tarball" "$lcov_url"; then echo "::error::lcov $lcov_version could not be fetched from its release page"; exit 1; fi
+          if ! echo "$lcov_sha256  $lcov_tarball" | sha256sum --check --quiet; then echo "::error::The lcov tarball does not match its published checksum"; exit 1; fi
+          tar -xzf "$lcov_tarball" -C "$RUNNER_TEMP"
+          # --old-file=doc installs the man pages the tarball ships, rather than rebuilding them
+          # with Sphinx.
+          sudo make -C "$RUNNER_TEMP/lcov-$lcov_version" --old-file=doc install
+          # Each tool must report the pinned release; otherwise another lcov earlier on PATH would
+          # measure in its place without a word. The "-0" is the release number in the tarball's
+          # .version file.
+          for tool in lcov geninfo genhtml; do
+            reported=$("$tool" --version)
+            echo "$reported"
+            [ "${reported##* }" = "$lcov_version-0" ] \
+              || { echo "::error::$tool on PATH reports ${reported##* }, not the pinned $lcov_version-0"; exit 1; }
+          done
           g++-15 --version | head -1
-          lcov --version
           "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin/cmake" --version | head -1
 
       - name: Give git an identity

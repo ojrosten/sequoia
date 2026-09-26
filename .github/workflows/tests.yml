@@ -154,8 +154,8 @@ jobs:
           # build_system/ShortObjectPaths.cmake. The macOS and Windows images ship a release above
           # the floor, so this column fetches one from Kitware - the host the checkout already
           # comes from - and puts it first on PATH. An older cmake surviving this step is loud:
-          # the configure step's cmake_minimum_required refuses it. The tarball is the only binary
-          # either job puts on PATH without apt's signatures behind it, so its checksum is pinned.
+          # the configure step's cmake_minimum_required refuses it. The tarball has no apt
+          # signature behind it, so its checksum is pinned.
           #
           # Repeated in rigorous.yml's coverage job; change both.
           cmake_version=4.4.3
