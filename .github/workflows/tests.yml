@@ -542,7 +542,7 @@ jobs:
               cp "$RUNNER_TEMP/$snapshot.txt" run-log/
               echo "::warning title=Suite still running near its timeout::${{ matrix.name }}: the suite was still running $SNAPSHOT_MARGIN_MINUTES minutes before its timeout; run-log/$snapshot.txt, printed below, says what it was doing."
               # Whatever the tools printed is not a workflow command, whatever it begins with.
-              token=snapshot-$RANDOM$RANDOM$RANDOM
+              token=$(openssl rand -hex 16)
               echo "::stop-commands::$token"
               cat "$RUNNER_TEMP/$snapshot.txt"
               echo "::$token::"
