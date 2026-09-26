@@ -8,6 +8,7 @@
 #include "ConcurrencyModelsTest.hpp"
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 
+#include <future>
 #include <queue>
 #include <semaphore>
 #include <thread>
@@ -19,11 +20,14 @@ namespace sequoia::testing
 
   namespace
   {
+    using int_task = std::packaged_task<int()>;
+
     /** \brief A queue whose first push stalls until `release_stall` is called.
 
         When it underlies a `task_queue`, the stall happens with the `task_queue`'s mutex held.
+
+        \pre At most one push is stalled at a time, across every instance.
      */
-    template<class T>
     class stalling_queue
     {
     public:
@@ -31,7 +35,7 @@ namespace sequoia::testing
 
       static void release_stall() { m_StallReleased.release(); }
 
-      void push(T&& task)
+      void push(int_task&& task)
       {
         // Before the stall, so that a try-pop made during the stall can fail only on the mutex, not on an empty queue
         m_Q.push(std::move(task));
@@ -47,23 +51,23 @@ namespace sequoia::testing
       bool empty() const noexcept { return m_Q.empty(); }
 
       [[nodiscard]]
-      T& front() { return m_Q.front(); }
+      int_task& front() { return m_Q.front(); }
 
       void pop() { m_Q.pop(); }
     private:
+      // Static because a task_queue default-constructs its queue and gives no access to it
       inline static std::binary_semaphore m_StallBegun{0}, m_StallReleased{0};
 
-      std::queue<T> m_Q;
+      std::queue<int_task> m_Q;
       bool m_HasStalled{};
     };
 
-    using int_task            = std::packaged_task<int()>;
-    using stalling_task_queue = task_queue<int, int_task, stalling_queue<int_task>>;
+    using stalling_task_queue = task_queue<int, int_task, stalling_queue>;
 
     /** \brief Pushes a task onto a `stalling_task_queue` from another thread.
 
-        Construction completes once the push has stalled, holding the queue's mutex; destruction releases the stall
-        and joins the thread.
+        Construction completes once the push has stalled with the queue's mutex held; destruction releases the stall,
+        after which the thread is joined.
      */
     class stalled_push
     {
@@ -71,10 +75,13 @@ namespace sequoia::testing
       stalled_push(stalling_task_queue& q, int_task task)
         : m_Pusher{[&q, task{std::move(task)}]() mutable { q.push(std::move(task)); }}
       {
-        stalling_queue<int_task>::await_stall();
+        stalling_queue::await_stall();
       }
 
-      ~stalled_push() { stalling_queue<int_task>::release_stall(); }
+      stalled_push(const stalled_push&)            = delete;
+      stalled_push& operator=(const stalled_push&) = delete;
+
+      ~stalled_push() { stalling_queue::release_stall(); }
     private:
       std::jthread m_Pusher;
     };
@@ -174,14 +181,14 @@ namespace sequoia::testing
       check("Try-pop yields an empty task while the mutex is held, though a task is queued", !poppedTask.valid());
     }
 
-    check("A task refused by try-push may be pushed again", q.push(std::move(refusedTask), std::try_to_lock));
+    q.push(std::move(refusedTask));
     q.finish();
 
     q.pop()();
     q.pop()();
 
     check(equality, "The stalled push queues its task", stalledFuture.get(), 1);
-    check(equality, "The task pushed again runs", refusedFuture.get(), 2);
+    check(equality, "The refused task runs once pushed again", refusedFuture.get(), 2);
   }
 
   template<class ThreadModel, class... Args>
