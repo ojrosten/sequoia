@@ -6,8 +6,11 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
+#include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/PathCheckers.hpp"
+
+#include <format>
 
 namespace sequoia::testing
 {
@@ -66,6 +69,16 @@ namespace sequoia::testing
   std::string_view postprocess(std::string_view testOutput, std::string_view referenceOutput)
   {
     return acceptable_mismatch(testOutput, referenceOutput) ? referenceOutput : testOutput;
+  }
+
+  [[nodiscard]]
+  std::optional<std::string> coarse_sleep_warning(std::chrono::duration<double, std::milli> slept, std::chrono::duration<double, std::milli> target)
+  {
+    if(slept < 2 * target) return std::nullopt;
+
+    using parsing::commandline::warning;
+    return warning({std::format("Sleeps of {:.1f} ms repeatedly lasted {:.1f} ms or more, so timings built on sleeps are unreliable", target.count(), slept.count()),
+                    "On Windows, the likely cause is a timer_resolution which is not in effect"});
   }
 
   template<test_mode Mode>

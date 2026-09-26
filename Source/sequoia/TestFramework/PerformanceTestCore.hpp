@@ -17,8 +17,11 @@
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 
 #include <chrono>
+#include <optional>
+#include <ostream>
 #include <random>
 #include <future>
+#include <string>
 #include <thread>
 
 namespace sequoia::testing
@@ -207,9 +210,24 @@ namespace sequoia::testing
     return passed;
   }
 
+  /** \brief A warning if a sleep of `target` lasted `slept`, at least twice as long, and `nullopt`
+             otherwise.
+   */
+  [[nodiscard]]
+  std::optional<std::string> coarse_sleep_warning(std::chrono::duration<double, std::milli> slept, std::chrono::duration<double, std::milli> target);
+
+  /** \brief The duration to sleep for in place of `target`, from seven timed sleeps of it.
+
+      The mean and standard deviation are taken over the middle five. If the mean exceeds `target`
+      by more than a standard deviation, the result is the mean plus five standard deviations,
+      rounded up to a whole `Period`; otherwise it is `target`.
+
+      Writes to `warningStream` any warning from coarse_sleep_warning for the second fastest sleep,
+      since sleeps that long distort any timing built on them.
+   */
   template<class T, class Period>
   [[nodiscard]]
-  std::chrono::duration<T, Period> calibrate(std::chrono::duration<T, Period> target)
+  std::chrono::duration<T, Period> calibrate(std::chrono::duration<T, Period> target, std::ostream& warningStream)
   {
     using namespace std::chrono;
 
@@ -222,6 +240,11 @@ namespace sequoia::testing
     }
 
     std::ranges::sort(timings);
+    // The first sleep can end within the timer tick it starts in, short even when every later one
+    // is rounded up to a whole tick
+    if(const auto sleepWarning{coarse_sleep_warning(duration<double>{timings[1]}, target)})
+      warningStream << *sleepWarning;
+
     const auto [sig_f, m_f] {maths::sample_standard_deviation(timings.cbegin() + 1, timings.cend() - 1)};
     if (sig_f && m_f)
     {

@@ -7,11 +7,15 @@
 
 #include "PerformanceTestDiagnostics.hpp"
 
+#include "sequoia/TestFramework/SumTypeCheckers.hpp"
+
+#include <iostream>
+
 namespace sequoia::testing
 {
   namespace
   {
-    const static auto delta_t{calibrate(std::chrono::milliseconds{5})};
+    const static auto delta_t{calibrate(std::chrono::milliseconds{5}, std::cout)};
 
     void wait(std::chrono::milliseconds t)
     {
@@ -71,6 +75,7 @@ namespace sequoia::testing
   void performance_utilities_test::run_tests()
   {
     test_postprocessing();
+    test_coarse_sleep_warning();
   }
 
   void performance_utilities_test::test_postprocessing()
@@ -171,5 +176,24 @@ namespace sequoia::testing
 
       check(equality, "", postprocess(latest, reference), latest);
     }
+  }
+
+  void performance_utilities_test::test_coarse_sleep_warning()
+  {
+    using fractional_milliseconds = std::chrono::duration<double, std::milli>;
+
+    const std::optional<std::string> tickWarning{
+      "  Warning: Sleeps of 5.0 ms repeatedly lasted 15.2 ms or more, so timings built on sleeps are unreliable\n"
+      "           On Windows, the likely cause is a timer_resolution which is not in effect\n\n"};
+
+    check(equality, "Rounded up to Windows' default tick", coarse_sleep_warning(fractional_milliseconds{15.2}, fractional_milliseconds{5.0}), tickWarning);
+
+    const std::optional<std::string> doubledWarning{
+      "  Warning: Sleeps of 5.0 ms repeatedly lasted 10.0 ms or more, so timings built on sleeps are unreliable\n"
+      "           On Windows, the likely cause is a timer_resolution which is not in effect\n\n"};
+
+    check(equality, "Exactly twice the target", coarse_sleep_warning(fractional_milliseconds{10.0}, fractional_milliseconds{5.0}), doubledWarning);
+    check(equality, "Just under twice the target", coarse_sleep_warning(fractional_milliseconds{9.9}, fractional_milliseconds{5.0}), std::optional<std::string>{});
+    check(equality, "A 1 ms timer resolution in effect", coarse_sleep_warning(fractional_milliseconds{5.4}, fractional_milliseconds{5.0}), std::optional<std::string>{});
   }
 }
