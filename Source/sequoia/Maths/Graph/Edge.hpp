@@ -28,6 +28,7 @@
 #include "sequoia/Core/Object/HandlerTraits.hpp"
 #include "sequoia/Maths/Graph/EdgesAndNodesUtilities.hpp"
 
+#include <functional>
 #include <stdexcept>
 
 namespace sequoia
@@ -71,10 +72,12 @@ namespace sequoia
         WeightHandler::get(m_Weight) = weight_type{std::forward<Args>(args)...};
       }
 
-      template<std::invocable<weight_type&> Fn>
-      constexpr std::invoke_result_t<Fn, weight_type&> mutate_weight(Fn fn)
+      /** \brief Applies `fn` once, in place, to this edge's weight, and returns the result. */
+      template<class Fn>
+        requires std::invocable<Fn&, weight_type&>
+      constexpr std::invoke_result_t<Fn&, weight_type&> mutate_weight(Fn fn)
       {
-        return fn(WeightHandler::get(m_Weight));
+        return std::invoke(fn, WeightHandler::get(m_Weight));
       }
 
       [[nodiscard]]
@@ -269,10 +272,12 @@ namespace sequoia
         m_MetaData = {std::forward<Args>(args)...};
       }
 
-      template<std::invocable<meta_data_type&> Fn>
-      constexpr std::invoke_result_t<Fn, meta_data_type&> mutate_meta_data(Fn fn)
+      /** \brief Applies `fn` once, in place, to this edge's meta-data, and returns the result. */
+      template<class Fn>
+        requires std::invocable<Fn&, meta_data_type&>
+      constexpr std::invoke_result_t<Fn&, meta_data_type&> mutate_meta_data(Fn fn)
       {
-        return fn(m_MetaData);
+        return std::invoke(fn, m_MetaData);
       }
 
       [[nodiscard]]

@@ -20,8 +20,9 @@
 #include "sequoia/Core/ContainerUtilities/Iterator.hpp"
 #include "sequoia/Maths/Graph/EdgesAndNodesUtilities.hpp"
 
-#include <type_traits>
 #include <algorithm>
+#include <functional>
+#include <type_traits>
 #include <vector>
 
 namespace sequoia::maths
@@ -132,13 +133,15 @@ namespace sequoia::maths
       m_NodeWeights[index] = std::move(w);
     }
 
+    /** \brief Applies `fn` once, in place, to the node weight at `pos`, and returns the result. */
     template<class Fn>
-    constexpr decltype(auto) mutate_node_weight(const_iterator pos, Fn fn)
+      requires std::invocable<Fn&, weight_type&>
+    constexpr std::invoke_result_t<Fn&, weight_type&> mutate_node_weight(const_iterator pos, Fn fn)
     {
       if(pos == cend_node_weights()) throw std::out_of_range("node_storage::mutate_node_weight - index out of range!\n");
 
       const auto index{std::ranges::distance(cbegin_node_weights(), pos)};
-      return fn(m_NodeWeights[index]);
+      return std::invoke(fn, m_NodeWeights[index]);
     }
 
     [[nodiscard]]
@@ -176,9 +179,11 @@ namespace sequoia::maths
       : m_NodeWeights{weights, allocator}
     {}
 
-    constexpr node_storage_base(const node_storage_base&) = default;
+    constexpr node_storage_base(const node_storage_base&)
+      requires std::is_copy_constructible_v<weight_type> = default;
 
     template<alloc Allocator>
+      requires std::is_copy_constructible_v<weight_type>
     constexpr node_storage_base(const node_storage_base& other, const Allocator& allocator)
       : m_NodeWeights{other.m_NodeWeights, allocator}
     {}
@@ -192,7 +197,8 @@ namespace sequoia::maths
 
     ~node_storage_base() = default;
 
-    constexpr node_storage_base& operator=(const node_storage_base&)     = default;
+    constexpr node_storage_base& operator=(const node_storage_base&)
+      requires (std::is_copy_constructible_v<weight_type> && std::is_copy_assignable_v<weight_type>) = default;
     constexpr node_storage_base& operator=(node_storage_base&&) noexcept = default;
 
     constexpr void swap(node_storage_base& rhs)

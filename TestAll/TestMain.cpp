@@ -172,6 +172,7 @@ int main(int argc, char** argv)
     runner.register_test<dynamic_undirected_embedded_graph_shared_fundamental_weight_contiguous_test>();
     runner.register_test<dynamic_undirected_embedded_graph_meta_data_test>();
     runner.register_test<dynamic_graph_exception_safety_free_test>();
+    runner.register_test<graph_constraints_free_test>();
     runner.register_test<static_directed_graph_unweighted_test>();
     runner.register_test<static_directed_graph_fundamental_weight_test>();
     runner.register_test<static_undirected_graph_unweighted_test>();

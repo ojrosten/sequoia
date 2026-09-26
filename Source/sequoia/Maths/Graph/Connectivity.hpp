@@ -54,6 +54,7 @@ namespace sequoia
       {
         using edge_type           = EdgeType;
         using edge_weight_type    = edge_type::weight_type;
+        using edge_meta_data_type = edge_type::meta_data_type;
         using edge_index_type     = edge_type::index_type;
         using edge_storage_type   = EdgeStorageType;
         using const_edge_iterator = edge_storage_type::const_partition_iterator;
@@ -84,11 +85,18 @@ namespace sequoia
                  }
             };
 
-            appender(edge_type{i->target_node(), i->weight()});
+            if constexpr(std::is_empty_v<edge_meta_data_type>)
+              appender(edge_type{i->target_node(), i->weight()});
+            else
+              appender(edge_type{i->target_node(), i->meta_data(), i->weight()});
           }
           else
           {
-            m_Storage.push_back_to_partition(node, i->target_node(), *(m_Storage.cbegin_partition(found->node_index) + found->edge_index));
+            const auto& partner{*(m_Storage.cbegin_partition(found->node_index) + found->edge_index)};
+            if constexpr(std::is_empty_v<edge_meta_data_type>)
+              m_Storage.push_back_to_partition(node, i->target_node(), partner);
+            else
+              m_Storage.push_back_to_partition(node, i->target_node(), i->meta_data(), partner);
           }
         }
       };
@@ -177,6 +185,7 @@ namespace sequoia
       {}
 
       constexpr connectivity_base(const connectivity_base& other)
+        requires std::is_copy_constructible_v<edge_type>
         : m_Edges{copy_edges(other)}
       {}
 
@@ -313,17 +322,20 @@ namespace sequoia
       }
 
 
-      template<std::invocable<edge_meta_data_type&> Fn>
-        requires (!std::is_empty_v<edge_meta_data_type>)
-      constexpr std::invoke_result_t<Fn, edge_meta_data_type&> mutate_edge_meta_data(const_edge_iterator citer, Fn fn)
+      /** \brief Applies `fn` once, in place, to the meta-data of the half edge at `citer`, and returns the result. */
+      template<class Fn>
+        requires (!std::is_empty_v<edge_meta_data_type> && std::invocable<Fn&, edge_meta_data_type&>)
+      constexpr std::invoke_result_t<Fn&, edge_meta_data_type&>
+        mutate_edge_meta_data(const_edge_iterator citer, Fn fn)
       {
         return to_edge_iterator(citer)->mutate_meta_data(std::move(fn));
       }
 
 
-      template<std::invocable<edge_meta_data_type&> Fn>
-        requires (!std::is_empty_v<edge_meta_data_type>)
-      constexpr std::invoke_result_t<Fn, edge_meta_data_type&> mutate_edge_meta_data(const_reverse_edge_iterator criter, Fn fn)
+      template<class Fn>
+        requires (!std::is_empty_v<edge_meta_data_type> && std::invocable<Fn&, edge_meta_data_type&>)
+      constexpr std::invoke_result_t<Fn&, edge_meta_data_type&>
+        mutate_edge_meta_data(const_reverse_edge_iterator criter, Fn fn)
       {
         return mutate_edge_meta_data(to_const_edge_iterator(criter), std::move(fn));
       }
@@ -354,7 +366,7 @@ namespace sequoia
       {}
 
       template<alloc... Allocators>
-        requires (sizeof...(Allocators) > 0)
+        requires ((sizeof...(Allocators) > 0) && std::is_copy_constructible_v<edge_type>)
       constexpr connectivity_base(const connectivity_base& c, const Allocators&... as)
         : m_Edges{copy_edges(c, as...)}
       {}
@@ -371,6 +383,7 @@ namespace sequoia
       constexpr connectivity_base& operator=(connectivity_base&&) = default;
 
       constexpr connectivity_base& operator=(const connectivity_base& other)
+        requires (std::is_copy_constructible_v<edge_type> && std::is_move_assignable_v<edge_storage_type>)
       {
         if(&other != this)
         {
@@ -926,7 +939,7 @@ namespace sequoia
 
       template<alloc... Allocators>
       [[nodiscard]]
-      constexpr edge_storage_type make_edges(edges_initializer edges, const Allocators&... as)
+      constexpr static edge_storage_type make_edges(edges_initializer edges, const Allocators&... as)
       {
         return process_edges(validate(preprocess(edges)), as...);
       }
@@ -1097,7 +1110,7 @@ namespace sequoia
 
       template<class Edges, alloc... Allocators>
       [[nodiscard]]
-      constexpr edge_storage_type process_edges(Edges&& orderedEdges, const Allocators&... as)
+      constexpr static edge_storage_type process_edges(Edges&& orderedEdges, const Allocators&... as)
         requires direct_init_v
       {
         return {std::forward<Edges>(orderedEdges), as...};
@@ -1105,7 +1118,7 @@ namespace sequoia
 
       template<alloc... Allocators>
       [[nodiscard]]
-      constexpr edge_storage_type process_edges(edges_initializer edges, const Allocators&... as)
+      constexpr static edge_storage_type process_edges(edges_initializer edges, const Allocators&... as)
         requires (!direct_init_v && !is_embedded(flavour))
       {
         edge_storage_type storage(as...);
@@ -1128,7 +1141,7 @@ namespace sequoia
 
       template<alloc... Allocators>
       [[nodiscard]]
-      constexpr edge_storage_type process_edges(edges_initializer edges, const Allocators&... as)
+      constexpr static edge_storage_type process_edges(edges_initializer edges, const Allocators&... as)
         requires (!direct_init_v && is_embedded(flavour))
       {
         edge_storage_type storage(as...);
@@ -1151,7 +1164,7 @@ namespace sequoia
 
       template<class Edges, alloc... Allocators>
       [[nodiscard]]
-      constexpr edge_storage_type process_edges(const Edges& orderedEdges, const Allocators&... as)
+      constexpr static edge_storage_type process_edges(const Edges& orderedEdges, const Allocators&... as)
         requires (!direct_init_v && !is_embedded(flavour) && !is_directed(flavour))
       {
         using range_t = partition_iterator_range<Edges>;
@@ -1160,9 +1173,12 @@ namespace sequoia
         storage.reserve_partitions(orderedEdges.num_partitions());
 
         auto addToStorage{
-          [&storage,this](edge_index_type host, edge_index_type target, edge_index_type compIndex, range_t hostRange){
-              storage.push_back_to_partition(host, (compIndex == npos) ? edge_type{hostRange.front()}
-                                                                       : edge_type{target, *(cbegin_edges(target) + compIndex)});
+          [&storage](edge_index_type host, edge_index_type target, edge_index_type compIndex, range_t hostRange){
+              storage.push_back_to_partition(
+                host,
+                (compIndex == npos) ? edge_type{hostRange.front()}
+                                    : edge_type{target, *(storage.cbegin_partition(target) + compIndex)}
+              );
           }
         };
 
@@ -1246,14 +1262,14 @@ namespace sequoia
 
       template<alloc... Allocators>
       [[nodiscard]]
-      constexpr edge_storage_type copy_edges(const connectivity_base& in, const Allocators&... as)
+      constexpr static edge_storage_type copy_edges(const connectivity_base& in, const Allocators&... as)
         requires direct_copy_v
       {
         return edge_storage_type{in.m_Edges, as...};
       }
 
       [[nodiscard]]
-      edge_storage_type copy_edges(const connectivity_base& in)
+      static edge_storage_type copy_edges(const connectivity_base& in)
         requires (!direct_copy_v)
       {
         if constexpr(has_partitions_allocator<edge_storage_type>)
@@ -1268,7 +1284,7 @@ namespace sequoia
 
       template<alloc... Allocators>
       [[nodiscard]]
-      edge_storage_type copy_edges(const connectivity_base& in, const Allocators&... as)
+      static edge_storage_type copy_edges(const connectivity_base& in, const Allocators&... as)
         requires (!direct_copy_v && (sizeof...(Allocators) > 0))
       {        
         edge_storage_type storage({std::allocator_traits<Allocators>::select_on_container_copy_construction(as)}...);
@@ -1280,19 +1296,26 @@ namespace sequoia
         else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
         {
           auto processor{
-            [this, &storage](const size_type node, const_edge_iterator first, const_edge_iterator i) {
+            [&storage](const size_type node, const_edge_iterator first, const_edge_iterator i) {
               const auto dist{static_cast<edge_index_type>(std::ranges::distance(first, i))};
               const bool encountered{(i->target_node() < node)
                   || ((i->target_node() == node) && (i->complementary_index() < dist))};
 
+              const auto compI{i->complementary_index()};
               if(!encountered)
               {
-                storage.push_back_to_partition(node, i->target_node(), i->complementary_index(), i->weight());
+                if constexpr(std::is_empty_v<edge_meta_data_type>)
+                  storage.push_back_to_partition(node, i->target_node(), compI, i->weight());
+                else
+                  storage.push_back_to_partition(node, i->target_node(), compI, i->meta_data(), i->weight());
               }
               else
               {
-                const auto compI{i->complementary_index()};
-                storage.push_back_to_partition(node, i->target_node(), compI, *(cbegin_edges(i->target_node()) + compI));
+                const auto& partner{*(storage.cbegin_partition(i->target_node()) + compI)};
+                if constexpr(std::is_empty_v<edge_meta_data_type>)
+                  storage.push_back_to_partition(node, i->target_node(), compI, partner);
+                else
+                  storage.push_back_to_partition(node, i->target_node(), compI, i->meta_data(), partner);
               }
             }
           };
@@ -1304,9 +1327,9 @@ namespace sequoia
       }
 
       template<std::invocable<size_type, const_edge_iterator, const_edge_iterator> Processor>
-      void copy_edges(const connectivity_base& in, edge_storage_type& storage, Processor processor)
+      static void copy_edges(const connectivity_base& in, edge_storage_type& storage, Processor processor)
       {
-        reserve_nodes(in.m_Edges.num_partitions());
+        storage.reserve_partitions(in.m_Edges.num_partitions());
         if constexpr(!graph_impl::has_reservable_partitions<edge_storage_type>)
         {
           storage.reserve(in.m_Edges.size());

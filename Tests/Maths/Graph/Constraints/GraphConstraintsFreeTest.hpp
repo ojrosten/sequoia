@@ -13,7 +13,7 @@
 
 namespace sequoia::testing
 {
-  class dynamic_graph_exception_safety_free_test final : public free_test
+  class graph_constraints_free_test final : public free_test
   {
   public:
     using free_test::free_test;
@@ -23,19 +23,23 @@ namespace sequoia::testing
 
     void run_tests();
   private:
-    template<class EdgeStorageConfig>
-    void test_undirected_edge_mutations();
+    void test_copyability();
+
+    void test_weight_update_constraints();
+
+    void test_join_constraints();
+
+    void test_mutator_constraints();
 
     template<class EdgeStorageConfig>
-    void test_embedded_edge_mutations();
+    void test_mutation_results();
 
-    void test_node_insertion();
+    void test_shared_move_only_weights();
 
-    template<class Graph, class Mutation>
-    void check_strong_guarantee(std::string_view description,
-                                const Graph& graph,
-                                const Graph& prediction,
-                                std::size_t numFallibleSteps,
-                                Mutation mutation);
+    void test_move_only_meta_data();
+
+    void test_shared_weight_copies();
+
+    void test_mutation_by_member_functions();
   };
 }

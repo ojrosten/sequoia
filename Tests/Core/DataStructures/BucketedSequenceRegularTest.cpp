@@ -12,6 +12,22 @@ namespace sequoia::testing
 {
   namespace
   {
+    struct non_assignable_element
+    {
+      const int value{};
+    };
+
+    struct move_only_element
+    {
+      int value{};
+
+      move_only_element() = default;
+
+      move_only_element(move_only_element&&) noexcept = default;
+
+      move_only_element& operator=(move_only_element&&) noexcept = default;
+    };
+
     using namespace partitioned_data;
 
     template<class PartitionedData>
@@ -267,6 +283,30 @@ namespace sequoia::testing
   void bucketed_sequence_regular_test::run_tests()
   {
     using namespace data_structures;
+    test_copyability();
     bucketed_operations<bucketed_sequence<int>>::execute(*this);
+  }
+
+  void bucketed_sequence_regular_test::test_copyability()
+  {
+    using namespace data_structures;
+    using move_only_sequence = bucketed_sequence<move_only_element>;
+    using copyable_sequence  = bucketed_sequence<int>;
+
+    STATIC_CHECK(!std::is_copy_constructible_v<move_only_sequence>);
+    STATIC_CHECK(!std::is_copy_assignable_v<move_only_sequence>);
+    STATIC_CHECK(!std::is_constructible_v<move_only_sequence,
+                                          const move_only_sequence&,
+                                          move_only_sequence::allocator_type>);
+    STATIC_CHECK( std::is_nothrow_move_constructible_v<move_only_sequence>);
+
+    STATIC_CHECK( std::is_copy_constructible_v<copyable_sequence>);
+    STATIC_CHECK( std::is_copy_assignable_v<copyable_sequence>);
+
+    STATIC_CHECK( std::is_copy_constructible_v<bucketed_sequence<non_assignable_element>>);
+    STATIC_CHECK(!std::is_copy_assignable_v<bucketed_sequence<non_assignable_element>>);
+    STATIC_CHECK( std::is_constructible_v<copyable_sequence,
+                                          const copyable_sequence&,
+                                          copyable_sequence::allocator_type>);
   }
 }

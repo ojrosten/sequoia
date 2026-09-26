@@ -76,6 +76,7 @@
 #include "Maths/Graph/Components/Nodes/HeterogeneousNodeStorageTest.hpp"
 #include "Maths/Graph/Components/Nodes/NodeStorageAllocationTest.hpp"
 #include "Maths/Graph/Components/Nodes/NodeStorageTest.hpp"
+#include "Maths/Graph/Constraints/GraphConstraintsFreeTest.hpp"
 #include "Maths/Graph/Dynamic/Allocations/DynamicGraphUnweightedAllocationBucketedTest.hpp"
 #include "Maths/Graph/Dynamic/Allocations/DynamicGraphUnweightedAllocationContiguousTest.hpp"
 #include "Maths/Graph/Dynamic/Allocations/DynamicGraphWeightedAllocationBucketedTest.hpp"
