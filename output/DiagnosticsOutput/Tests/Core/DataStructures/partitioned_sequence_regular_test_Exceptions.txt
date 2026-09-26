@@ -68,11 +68,29 @@ partitioned_sequence::erase - Invalid range specified by iterators belonging to 
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 616
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 446
+Inserting beyond the end of a partition throws
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence::insert_to_partition: pos 2 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 648
 
 Expected Exception Type:
 [std::domain_error]
 partitioned_sequence::erase - Invalid range specified by iterators belonging to partitions [0, 1]
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 860
+Inserting beyond the end of a partition other than the last throws
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence::insert_to_partition: pos 2 out of range
 
 =======================================
 
