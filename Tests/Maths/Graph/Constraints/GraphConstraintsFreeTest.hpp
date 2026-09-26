@@ -23,6 +23,8 @@ namespace sequoia::testing
 
     void run_tests();
   private:
+    void test_copyability();
+
     void test_weight_update_constraints();
 
     void test_join_constraints();
