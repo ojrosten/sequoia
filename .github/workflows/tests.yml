@@ -150,11 +150,12 @@ jobs:
           # The compiler binary and the package providing it are not the same string:
           # g++-15 is both, but clang++ is shipped by `clang`. A column may therefore
           # name the package separately, defaulting to the binary where they agree.
-          for pkg in "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev; do
+          # gdb is for the stacks in a hung suite's snapshot; the image has none.
+          for pkg in "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev gdb; do
             apt-cache pkgnames | grep -qx "$pkg" \
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
-          sudo apt-get install -y "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev
+          sudo apt-get install -y "${{ matrix.pkg || matrix.cxx }}" ninja-build libtbb-dev gdb
           # The hosted image's CMake is below sequoia's floor of 4.2, the release that added
           # CMAKE_INTERMEDIATE_DIR_STRATEGY; the Windows presets set it in
           # build_system/ShortObjectPaths.cmake. The macOS and Windows images ship a release above
@@ -389,14 +390,18 @@ jobs:
       # The Build step above already depends on this; it is written down here
       # because the dependency is invisible at the call site.
       #
-      # A suite that hangs is killed by the timeout without a word, and the runner
-      # prints nothing until a pass ends, so the log cannot say where it stopped;
+      # A suite that hangs is killed by the timeout without a word, and the test
+      # runner reports a pass only when it ends, so the log cannot say where it stopped;
       # statistical's MSVC ASan column hung this way on 2026-09-26, in its
       # eighteenth trial. So the suite runs under a watcher which, if it is still
       # going SNAPSHOT_MARGIN_MINUTES before the timeout, records the processes
       # and the suite's stacks while they can still be seen, and otherwise
       # passes the suite's exit status straight through. "Keep the run log"
-      # reports the snapshot.
+      # reports the snapshot. Not the test runner's `recover` mode, which records
+      # each check before it runs but forces serial execution, and so changes the
+      # concurrency a hang may depend on. `set -u` because a margin missing from
+      # the environment would otherwise read as zero, and the snapshot would be due
+      # only when the step is killed.
       - name: Run the suite
         if: inputs.needs_testing == 'true'
         id: suite
@@ -406,6 +411,7 @@ jobs:
         env:
           SUITE_TIMEOUT_MINUTES: ${{ inputs.suite_timeout_minutes }}
         run: |
+          set -u
           deadline=$(( (SUITE_TIMEOUT_MINUTES - SNAPSHOT_MARGIN_MINUTES) * 60 ))
           ../scripts/snapshot_at_deadline.sh "$deadline" "$RUNNER_TEMP/snapshot.txt" TestAll -- \
             cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/run.log"
@@ -441,6 +447,7 @@ jobs:
         env:
           SUITE_TIMEOUT_MINUTES: ${{ inputs.suite_timeout_minutes }}
         run: |
+          set -u
           deadline=$(( (SUITE_TIMEOUT_MINUTES - SNAPSHOT_MARGIN_MINUTES) * 60 ))
           ../scripts/snapshot_at_deadline.sh "$deadline" "$RUNNER_TEMP/repeat-snapshot.txt" TestAll -- \
             cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/repeat.log"
@@ -534,7 +541,11 @@ jobs:
             if [ -f "$RUNNER_TEMP/$snapshot.txt" ]; then
               cp "$RUNNER_TEMP/$snapshot.txt" run-log/
               echo "::warning title=Suite still running near its timeout::${{ matrix.name }}: the suite was still running $SNAPSHOT_MARGIN_MINUTES minutes before its timeout; run-log/$snapshot.txt, printed below, says what it was doing."
+              # Whatever the tools printed is not a workflow command, whatever it begins with.
+              token=snapshot-$RANDOM$RANDOM$RANDOM
+              echo "::stop-commands::$token"
               cat "$RUNNER_TEMP/$snapshot.txt"
+              echo "::$token::"
             fi
           done
 

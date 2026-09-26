@@ -18,8 +18,16 @@
 #   - at the deadline, the snapshot lists the stand-in among the processes and
 #     shows the function it is blocked in, which a snapshot missing its stacks
 #     would not;
+#   - a snapshot begun is finished before the script returns, even when the
+#     command ends while it is being taken;
 #   - with no process of the name, the snapshot says so, rather than ending
-#     after the listing as though the process had no threads.
+#     after the listing as though the process had no threads;
+#   - a deadline which is not a positive whole number is refused before the
+#     command runs, rather than giving no snapshot, or one at once.
+#
+# The stand-in's name is at most fifteen characters, the part of a process's
+# name Linux keeps and pgrep -x compares against. The Windows and Linux stack
+# dumpers are exercised only in CI, where their tools are.
 
 set -u
 here=$(cd "$(dirname "$0")" && pwd -P)
@@ -44,7 +52,7 @@ check_status() { # check_status <name> <expected> <seconds> <command>...
   [ "$got" -eq "$expected" ] || fail "$description (expected status $expected, got $got)"
 }
 
-name=HungSuiteStandIn
+name=HungStandIn
 cat > "$tmp/standin.c" <<'STANDIN'
 #include <unistd.h>
 void blocked_in_the_stand_in(void) { pause(); }
@@ -76,12 +84,15 @@ done
   || fail "a command ending before the deadline left its watcher running"
 
 # The script killed outright, as a cancelled step kills it, before a deadline
-# three seconds off; its command is killed with it here, as the step's would be.
-bash "$script" 3 "$tmp/killed.txt" "$name" -- sleep 30 &
+# three seconds off. It goes first, so that it cannot see its command end and
+# tell the watcher; the command is then killed as the step's would be. Its
+# temporary directory is put under this one, which a kill -9 leaves behind.
+TMPDIR=$tmp bash "$script" 3 "$tmp/killed.txt" "$name" -- sleep 30 &
 killed=$!
 sleep 1
-pkill -P "$killed" -x sleep
+command=$(pgrep -P "$killed" -x sleep)
 kill -9 "$killed"
+kill "$command"
 sleep 4
 [ ! -e "$tmp/killed.txt" ] || fail "a watcher whose script was killed took a snapshot"
 ! pgrep -f "snapshot_at_deadline.sh 3 " > /dev/null || fail "a watcher whose script was killed is still running"
@@ -90,9 +101,14 @@ sleep 4
 "$tmp/$name" &
 standin=$!
 bash "$script" 1 "$tmp/late.txt" "$name" -- sleep 2
+sed -n "/^== Stacks of '$name', process $standin ==/,\$p" "$tmp/late.txt" > "$tmp/stacks.txt"
 check "the stand-in is in the process list"        yes "^ *$standin .*$name" "$tmp/late.txt"
-check "the stand-in's stacks were taken"           yes "^== Stacks of '$name', process $standin ==" "$tmp/late.txt"
-check "the stacks show where the stand-in blocked" yes "blocked_in_the_stand_in" "$tmp/late.txt"
+check "the stacks show where the stand-in blocked" yes "blocked_in_the_stand_in" "$tmp/stacks.txt"
+
+# A command ending while the snapshot is being taken: the snapshot takes a
+# second's sampling at least, so it is still going when the command ends.
+bash "$script" 1 "$tmp/overlap.txt" "$name" -- sleep 1.2
+check "a snapshot begun is finished before the script returns" yes "^Snapshot finished at" "$tmp/overlap.txt"
 kill "$standin"
 wait "$standin" 2> /dev/null
 standin=
@@ -101,5 +117,14 @@ standin=
 bash "$script" 1 "$tmp/absent.txt" "$name" -- sleep 2
 check "an absent process is reported"           yes "^== No process named '$name' is running ==" "$tmp/absent.txt"
 check "an absent process has no stacks section" no  "^== Stacks of" "$tmp/absent.txt"
+
+# Deadlines which are not positive whole numbers.
+for deadline in abc 1.5 0 -600 ""; do
+  bash "$script" "$deadline" "$tmp/refused.txt" "$name" -- touch "$tmp/ran" 2> /dev/null
+  refusal=$?
+  [ "$refusal" -eq 2 ] || fail "a deadline of '$deadline' was not refused (status $refusal)"
+  [ ! -e "$tmp/ran" ]  || fail "a deadline of '$deadline' was refused after running the command"
+  rm -f "$tmp/ran"
+done
 
 if [ "$fails" -eq 0 ]; then echo "snapshot_at_deadline: all controls pass"; else exit 1; fi

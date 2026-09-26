@@ -27,6 +27,13 @@ fi
 seconds=$1 snapshot=$2 name=$3
 shift 4
 
+# A deadline which is not a positive whole number would otherwise pass in silence:
+# no snapshot for one the arithmetic cannot read, one at once for zero or less.
+if ! [[ $seconds =~ ^[1-9][0-9]*$ ]]; then
+  echo "$0: <seconds> must be a positive whole number, not '$seconds'" >&2
+  exit 2
+fi
+
 cdb_frames_per_thread=50
 sample_duration_seconds=1
 
@@ -36,9 +43,9 @@ case "$(uname -s)" in
   *)                    platform=linux   ;;
 esac
 
-# Git Bash's ps lists only the processes it started itself, so on Windows both
-# the listing and the search go through PowerShell, whose process ids are the
-# ones a debugger takes.
+# On Windows both the listing and the search go through PowerShell, since the
+# debugger takes Windows process ids, which Git Bash's ps does not show by
+# default.
 list_processes() {
   case $platform in
     windows) powershell -NoProfile -Command \
