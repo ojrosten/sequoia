@@ -16,6 +16,7 @@
 
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 #include "sequoia/Parsing/CommandLineArguments.hpp"
+#include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"
 #include "sequoia/TextProcessing/Characters.hpp"
@@ -1271,6 +1272,7 @@ namespace sequoia::testing
     const scoped_terminate_handler terminationReported{report_termination};
     const debug_report_redirector debugReportRedirector{};
     const windows_crash_report_enabler windowsCrashReportEnabler{};
+    const timer_resolution resolution{std::chrono::milliseconds{1}};
 
     fs::create_directories(proj_paths().prune().dir());
     build_suite_tree();
