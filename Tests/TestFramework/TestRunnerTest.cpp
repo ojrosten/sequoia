@@ -406,6 +406,38 @@ namespace sequoia::testing
       };
     }
 
+    /// Its summary, discriminated, is the file `summary_collider_test_twin` writes
+    class summary_collider_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<summary_collider_test>();
+      }
+
+      [[nodiscard]]
+      static std::string summary_discriminator(const cmake_cache&) { return "twin"; }
+
+      void run_tests() {}
+    };
+
+    class summary_collider_test_twin final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<summary_collider_test_twin>();
+      }
+
+      void run_tests() {}
+    };
+
     test_runner make_failing_suite(commandline_arguments args, std::stringstream& outputStream)
     {
       test_runner runner{args.size(),
@@ -451,6 +483,7 @@ namespace sequoia::testing
     test_excluded_tests_are_rerun();
     test_dump_comparison();
     test_thread_pool();
+    test_summary_collision();
     test_instability_analysis();
   }
 
@@ -1224,6 +1257,27 @@ namespace sequoia::testing
 
     run("A pool of no threads is refused, and the run goes ahead", "ThreadPoolOfNoThreadsOutput", "0");
     run("A pool of two threads running one test",                  "ThreadPoolForOneTestOutput",  "2");
+  }
+
+  void test_runner_test::test_summary_collision()
+  {
+    check_exception_thrown<std::runtime_error>(
+      "Two tests whose summaries are one file",
+      [this](){
+        std::stringstream outputStream{};
+        commandline_arguments args{{zeroth_arg()}};
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<summary_collider_test>();
+        runner.register_test<summary_collider_test_twin>();
+        return runner.execute();
+      }
+    );
   }
 
   void test_runner_test::test_instability_analysis()

@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTest.cpp, Line 497
+Tests/TestFramework/TestRunnerTest.cpp, Line 530
 Test Main has empty path
 
 Expected Exception Type:
@@ -9,7 +9,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 505
+Tests/TestFramework/TestRunnerTest.cpp, Line 538
 Test Main does not exist
 
 Expected Exception Type:
@@ -20,7 +20,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 513
+Tests/TestFramework/TestRunnerTest.cpp, Line 546
 Include Target has empty path
 
 Expected Exception Type:
@@ -31,7 +31,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 521
+Tests/TestFramework/TestRunnerTest.cpp, Line 554
 Include Target does not exist
 
 Expected Exception Type:
@@ -42,7 +42,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 529
+Tests/TestFramework/TestRunnerTest.cpp, Line 562
 Project root is empty
 
 Expected Exception Type:
@@ -51,7 +51,7 @@ Unable to locate project root as no commandline arguments supplied.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 537
+Tests/TestFramework/TestRunnerTest.cpp, Line 570
 Project root does not exist
 
 Expected Exception Type:
@@ -60,7 +60,7 @@ canonical - file not found: /output/TestsTemporaryData/TestFramework/TestRunnerT
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 556
+Tests/TestFramework/TestRunnerTest.cpp, Line 589
 Project root not findable
 
 Expected Exception Type:
@@ -71,7 +71,7 @@ Please ensure that the build directory is a subdirectory of <project>/build.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 565
+Tests/TestFramework/TestRunnerTest.cpp, Line 598
 The same test registered twice
 
 Expected Exception Type:
@@ -82,7 +82,7 @@ A test's name is that of its class, and determines where its output is written, 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 582
+Tests/TestFramework/TestRunnerTest.cpp, Line 615
 Two tests whose unqualified names coincide
 
 Expected Exception Type:
@@ -93,7 +93,7 @@ A test's name is that of its class, and determines where its output is written, 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 600
+Tests/TestFramework/TestRunnerTest.cpp, Line 633
 Invalid repetitions for instability analysis
 
 Expected Exception Type:
@@ -102,7 +102,7 @@ locate-instabilities: unable to interpret 'foo' as an integer number of repetiti
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 607
+Tests/TestFramework/TestRunnerTest.cpp, Line 640
 Insufficient repetitions for instability analysis
 
 Expected Exception Type:
@@ -111,7 +111,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1135
+Tests/TestFramework/TestRunnerTest.cpp, Line 1168
 Comparison against a dump never kept
 
 Expected Exception Type:
@@ -120,7 +120,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1135
+Tests/TestFramework/TestRunnerTest.cpp, Line 1168
 A dump kept under no name
 
 Expected Exception Type:
@@ -129,12 +129,21 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1135
+Tests/TestFramework/TestRunnerTest.cpp, Line 1168
 Comparison against no name
 
 Expected Exception Type:
 [std::runtime_error]
   Error: a dump is kept under, and compared against, a name; none was given
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1265
+Two tests whose summaries are one file
+
+Expected Exception Type:
+[std::runtime_error]
+Two tests' summaries are both output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/output/TestSummaries/Tests/summary_collider_test_twin.txt: one test's name, with its summary discriminator, is the other's name
 
 =======================================
 

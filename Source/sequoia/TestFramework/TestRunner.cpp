@@ -308,19 +308,16 @@ namespace sequoia::testing
         const auto& filename{summaryFile.file_path()};
         if(filename.empty()) return;
 
-        auto mode{std::ios_base::out | std::ios_base::binary};
-        if(auto found{m_FilesWrittenTo.find(filename)}; found != m_FilesWrittenTo.end())
-        {
-          mode = std::ios_base::app | std::ios_base::binary;
-        }
-        else
-        {
-          m_FilesWrittenTo.insert(filename);
-        }
+        // Registration makes test names unique; a summary discriminator appended to one name can still spell another
+        if(!m_FilesWrittenTo.insert(filename).second)
+          throw std::runtime_error{
+            std::format("Two tests' summaries are both {}: one test's name, with its summary discriminator, is the other's name",
+                        filename.generic_string())
+          };
 
         std::filesystem::create_directories(filename.parent_path());
 
-        if(std::ofstream file{filename, mode})
+        if(std::ofstream file{filename, std::ios_base::out | std::ios_base::binary})
         {
           file << summarize(summary, "", summary_detail::failure_messages, no_indent, no_indent);
         }
