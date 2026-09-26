@@ -8,6 +8,7 @@
 #include "sequoia/TestFramework/TestLogger.hpp"
 #include "sequoia/TestFramework/DumpComparison.hpp"
 
+#include <format>
 #include <fstream>
 
 namespace sequoia::testing
@@ -109,11 +110,11 @@ namespace sequoia::testing
 
         auto fpMessageMaker{
           [&logger](){
-            
-            auto mess{append_lines("False Negative Failure:", logger.top_level_message())};
-            end_block(mess, 2_linebreaks, footer());
-
-            return mess;
+            return end_block(
+                     append_lines("False Negative Failure:", logger.top_level_message()),
+                     2_linebreaks,
+                     footer()
+                   );
           }
         };
 
@@ -206,10 +207,10 @@ namespace sequoia::testing
 
   void test_logger_base::log_caught_exception_message(std::string_view message)
   {
-    auto mess{std::string{top_level_message()}.append("\n").append(message)};
-    end_block(mess, 2_linebreaks, footer());
-
-    add_to_output(m_Results.caught_exception_messages, mess);
+    add_to_output(
+      m_Results.caught_exception_messages,
+      end_block(std::format("{}\n{}", top_level_message(), message), 2_linebreaks, footer())
+    );
   }
 
   void test_logger_base::append_to_diagnostics_output(std::string message)

@@ -74,10 +74,10 @@ namespace sequoia::testing
     return std::string(1, static_cast<char>(c));
   }
 
-  void end_block(std::string& s, line_breaks newlines, std::string_view footer="");
+  void end_block(std::string& s, line_breaks newlines, std::string_view footer);
 
   [[nodiscard]]
-  std::string end_block(std::string_view s, line_breaks newlines, std::string_view footer="");
+  std::string end_block(std::string_view s, line_breaks newlines, std::string_view footer);
 
   [[nodiscard]]
   std::string exception_message(std::string_view tag,
