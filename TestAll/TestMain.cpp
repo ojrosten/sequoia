@@ -239,6 +239,7 @@ int main(int argc, char** argv)
     runner.register_test<erased_function_false_negative_test>();
     runner.register_test<reset_on_move_regular_test>();
     runner.register_test<reset_on_move_false_negative_test>();
+    runner.register_test<summary_free_test>();
     code = runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)
