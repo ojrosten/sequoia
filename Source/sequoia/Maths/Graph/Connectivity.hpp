@@ -1026,7 +1026,7 @@ namespace sequoia
 
       [[nodiscard]]
       constexpr static const edges_initializer& validate(const edges_initializer& edges)
-        requires (!is_embedded(flavour) && is_directed(flavour))
+        requires (is_directed(flavour))
       {
         for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
         {
