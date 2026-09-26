@@ -96,7 +96,7 @@ namespace sequoia::testing
     {
       int value{};
 
-      [[no_unique_address]] fallible_copy copy{};
+      fallible_copy copy{};
 
       [[nodiscard]]
       friend auto operator<=>(const fallible_weight&, const fallible_weight&) = default;
@@ -180,7 +180,15 @@ namespace sequoia::testing
       describe("Set edge weight"),
       graph,
       graph_type{{edge_init_type{1, 7}}, {edge_init_type{0, 7}}},
-      2,
+      1,
+      [](graph_type& g) { g.set_edge_weight(g.cbegin_edges(0), 7); }
+    );
+
+    check_strong_guarantee(
+      describe("Set loop weight"),
+      graph_type{{edge_init_type{0, 5}, edge_init_type{0, 5}}},
+      graph_type{{edge_init_type{0, 7}, edge_init_type{0, 7}}},
+      1,
       [](graph_type& g) { g.set_edge_weight(g.cbegin_edges(0), 7); }
     );
 
@@ -222,7 +230,7 @@ namespace sequoia::testing
         {edge_init_type{1, 0, 7}, edge_init_type{1, 1, 6}},
         {edge_init_type{0, 0, 7}, edge_init_type{0, 1, 6}}
       },
-      2,
+      1,
       [](graph_type& g) { g.set_edge_weight(g.cbegin_edges(0), 7); }
     );
 
