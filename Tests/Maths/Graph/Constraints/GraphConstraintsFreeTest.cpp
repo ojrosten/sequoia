@@ -15,6 +15,7 @@
 #include "sequoia/Maths/Graph/StaticGraph.hpp"
 
 #include <any>
+#include <memory>
 #include <format>
 #include <utility>
 #include <vector>
@@ -74,14 +75,14 @@ namespace sequoia::testing
       friend auto operator<=>(const move_only_meta_data&, const move_only_meta_data&) = default;
     };
 
-    /** \brief A mutation callable only on an rvalue, which `mutate_edge_weight` does not make of its argument. */
+    /** \brief A mutation callable only on an rvalue, which no graph mutator makes of its argument. */
     template<class Weight>
     struct rvalue_only_mutation
     {
       void operator()(Weight&) &&;
     };
 
-    struct copy_only_weight
+    struct non_assignable_value
     {
       const int value{};
     };
@@ -151,7 +152,7 @@ namespace sequoia::testing
         };
 
     template<class Edge, class Fn>
-    concept edge_weight_mutable_by_value = requires(Edge& e, Fn fn) { e.mutate_weight(std::move(fn)); };
+    concept edge_weight_mutable_in_place_by = requires(Edge& e, Fn fn) { e.mutate_weight(std::move(fn)); };
 
     template<class Edge, class Fn>
     concept edge_meta_data_mutable_by = requires(Edge& e, Fn fn) { e.mutate_meta_data(std::move(fn)); };
@@ -230,16 +231,22 @@ namespace sequoia::testing
     // A move-only node weight
     STATIC_CHECK(!std::is_copy_constructible_v<move_only_node_graph>);
     STATIC_CHECK(!std::is_copy_assignable_v<move_only_node_graph>);
-    STATIC_CHECK( std::is_copy_constructible_v<directed_graph<null_weight, copy_only_weight>>);
-    STATIC_CHECK(!std::is_copy_assignable_v<directed_graph<null_weight, copy_only_weight>>);
     STATIC_CHECK(!std::is_constructible_v<move_only_node_graph,
                                           const move_only_node_graph&,
                                           move_only_node_graph::edge_allocator_type,
                                           move_only_node_graph::node_weight_allocator_type>);
 
+    // A node weight, or a static graph's edge meta-data, that can be copy-constructed but not assigned
+    STATIC_CHECK( std::is_copy_constructible_v<directed_graph<null_weight, non_assignable_value>>);
+    STATIC_CHECK(!std::is_copy_assignable_v<directed_graph<null_weight, non_assignable_value>>);
+    STATIC_CHECK( std::is_copy_constructible_v<static_embedded_graph<1, 2, null_weight, null_weight, non_assignable_value>>);
+    STATIC_CHECK(!std::is_copy_assignable_v<static_embedded_graph<1, 2, null_weight, null_weight, non_assignable_value>>);
+
     // Trees and static graphs are copied as graphs are
     STATIC_CHECK(!std::is_copy_constructible_v<move_only_tree>);
+    STATIC_CHECK(!std::is_copy_assignable_v<move_only_tree>);
     STATIC_CHECK(!std::is_copy_constructible_v<move_only_static>);
+    STATIC_CHECK(!std::is_copy_assignable_v<move_only_static>);
 
     // Copyable weights
     STATIC_CHECK(std::is_copy_constructible_v<unshared_copyable_graph>);
@@ -313,7 +320,7 @@ namespace sequoia::testing
     using namespace maths;
     using namespace object;
 
-    using rvalue_only = rvalue_only_mutation<copyable_weight>;
+    using rvalue_only          = rvalue_only_mutation<copyable_weight>;
     using weighted_edge        = partial_edge<by_value<copyable_weight>, null_meta_data>;
     using decorated_edge       = partial_edge<by_value<null_weight>, copyable_weight>;
     using meta_data_graph      = undirected_graph<null_weight, null_weight, copyable_weight>;
@@ -322,8 +329,8 @@ namespace sequoia::testing
     using tree                 = directed_tree<tree_link_direction::forward, null_weight, copyable_weight>;
     using member_function      = void (copyable_weight::*)();
 
-    STATIC_CHECK(!edge_weight_mutable_by_value<weighted_edge, rvalue_only>);
-    STATIC_CHECK( edge_weight_mutable_by_value<weighted_edge, member_function>);
+    STATIC_CHECK(!edge_weight_mutable_in_place_by<weighted_edge, rvalue_only>);
+    STATIC_CHECK( edge_weight_mutable_in_place_by<weighted_edge, member_function>);
 
     STATIC_CHECK(!edge_meta_data_mutable_by<decorated_edge, rvalue_only>);
     STATIC_CHECK( edge_meta_data_mutable_by<decorated_edge, member_function>);
@@ -333,6 +340,9 @@ namespace sequoia::testing
                                                   rvalue_only,
                                                   meta_data_graph::const_reverse_edge_iterator>);
     STATIC_CHECK( graph_edge_meta_data_mutable_by<meta_data_graph, member_function>);
+    STATIC_CHECK( graph_edge_meta_data_mutable_by<meta_data_graph,
+                                                  member_function,
+                                                  meta_data_graph::const_reverse_edge_iterator>);
 
     STATIC_CHECK(!node_weight_mutable_by<node_weighted_graph, rvalue_only>);
     STATIC_CHECK( node_weight_mutable_by<node_weighted_graph, member_function>);
@@ -340,6 +350,7 @@ namespace sequoia::testing
     STATIC_CHECK(!node_weight_at_mutable_by<heterogeneous_graph, 0, rvalue_only>);
     STATIC_CHECK(!node_weight_of_type_mutable_by<heterogeneous_graph, copyable_weight, rvalue_only>);
     STATIC_CHECK( node_weight_at_mutable_by<heterogeneous_graph, 0, member_function>);
+    STATIC_CHECK( node_weight_of_type_mutable_by<heterogeneous_graph, copyable_weight, member_function>);
 
     STATIC_CHECK(!root_weight_mutable_by<tree, rvalue_only>);
     STATIC_CHECK( root_weight_mutable_by<tree, member_function>);
@@ -533,6 +544,12 @@ namespace sequoia::testing
             g.cbegin_edges(0)->meta_data().value,
             2);
       check(equality, "The partner half's meta-data is its own", g.cbegin_edges(1)->meta_data().value, 5);
+
+      g.mutate_edge_meta_data(g.crbegin_edges(1), &copyable_weight::increment);
+      check(equality,
+            "A graph's edge meta-data is mutated through a reverse iterator by a member function",
+            g.cbegin_edges(1)->meta_data().value,
+            6);
     }
 
     {
@@ -550,6 +567,19 @@ namespace sequoia::testing
             "A heterogeneous node weight is mutated by a member function, by index and by type",
             g.get_node_weight<0>().value,
             3);
+    }
+
+    {
+      directed_tree<tree_link_direction::forward, null_weight, copyable_weight> tree{
+        tree_initializer<copyable_weight>{copyable_weight{1}}
+      };
+      tree_adaptor<decltype(tree)> adaptor{tree, 0};
+      mutate_root_weight(adaptor, &copyable_weight::increment);
+      mutate_root_weight(adaptor, [increment{std::make_unique<int>(3)}](copyable_weight& w) { w.value += *increment; });
+      check(equality,
+            "A tree's root weight is mutated by a member function and by a move-only functor",
+            tree.cbegin_node_weights()->value,
+            5);
     }
   }
 }

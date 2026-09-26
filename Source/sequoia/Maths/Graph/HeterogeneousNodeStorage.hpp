@@ -72,6 +72,7 @@ namespace sequoia::maths
       std::get<T>(m_Weights) = std::move(w);
     }
 
+    /** \brief Applies `fn` once, in place, to the node weight at index `I`, and returns the result. */
     template<std::size_t I, class Fn>
       requires std::invocable<Fn&, std::tuple_element_t<I, std::tuple<Ts...>>&>
     constexpr std::invoke_result_t<Fn&, std::tuple_element_t<I, std::tuple<Ts...>>&> mutate_node_weight(Fn fn)
@@ -79,6 +80,7 @@ namespace sequoia::maths
       return std::invoke(fn, std::get<I>(m_Weights));
     }
 
+    /** \brief Applies `fn` once, in place, to the node weight of type `T`, and returns the result. */
     template<class T, class Fn>
       requires std::invocable<Fn&, T&>
     constexpr std::invoke_result_t<Fn&, T&> mutate_node_weight(Fn fn)

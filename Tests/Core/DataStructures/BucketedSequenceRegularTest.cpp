@@ -12,7 +12,7 @@ namespace sequoia::testing
 {
   namespace
   {
-    struct copy_only_element
+    struct non_assignable_element
     {
       const int value{};
     };
@@ -300,13 +300,13 @@ namespace sequoia::testing
                                           move_only_sequence::allocator_type>);
     STATIC_CHECK( std::is_nothrow_move_constructible_v<move_only_sequence>);
 
-    STATIC_CHECK(std::is_copy_constructible_v<copyable_sequence>);
-    STATIC_CHECK(std::is_copy_assignable_v<copyable_sequence>);
+    STATIC_CHECK( std::is_copy_constructible_v<copyable_sequence>);
+    STATIC_CHECK( std::is_copy_assignable_v<copyable_sequence>);
 
-    STATIC_CHECK( std::is_copy_constructible_v<bucketed_sequence<copy_only_element>>);
-    STATIC_CHECK(!std::is_copy_assignable_v<bucketed_sequence<copy_only_element>>);
-    STATIC_CHECK(std::is_constructible_v<copyable_sequence,
-                                         const copyable_sequence&,
-                                         copyable_sequence::allocator_type>);
+    STATIC_CHECK( std::is_copy_constructible_v<bucketed_sequence<non_assignable_element>>);
+    STATIC_CHECK(!std::is_copy_assignable_v<bucketed_sequence<non_assignable_element>>);
+    STATIC_CHECK( std::is_constructible_v<copyable_sequence,
+                                          const copyable_sequence&,
+                                          copyable_sequence::allocator_type>);
   }
 }
