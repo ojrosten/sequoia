@@ -3,7 +3,7 @@ Pushing back to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::push_back_to_partitionindex 0 out of range
+bucketed_sequence::push_back_to_partition: index 0 out of range
 
 =======================================
 
@@ -21,7 +21,7 @@ Inserting to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::insert_to_partitionindex 0 out of range
+bucketed_sequence::insert_to_partition: index 0 out of range
 
 =======================================
 
@@ -183,7 +183,7 @@ Pushing back to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::push_back_to_partitionindex 1 out of range
+bucketed_sequence::push_back_to_partition: index 1 out of range
 
 =======================================
 
@@ -192,7 +192,7 @@ Inserting to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::insert_to_partitionindex 18446744073709551615 out of range
+bucketed_sequence::insert_to_partition: index 18446744073709551615 out of range
 
 =======================================
 
@@ -201,7 +201,7 @@ Inserting to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-bucketed_sequence::insert_to_partitionindex 1 out of range
+bucketed_sequence::insert_to_partition: index 1 out of range
 
 =======================================
 

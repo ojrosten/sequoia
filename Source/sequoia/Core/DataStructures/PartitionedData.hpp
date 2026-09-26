@@ -18,6 +18,7 @@
 #include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
+#include <format>
 #include <string>
 #include <numeric>
 #include <stdexcept>
@@ -447,7 +448,7 @@ namespace sequoia
       {
         if(index >= m_Buckets.size())
         {
-          throw std::out_of_range{std::string{"bucketed_sequence::"}.append(method).append("index ").append(std::to_string(index)).append(" out of range")};
+          throw std::out_of_range{std::format("bucketed_sequence::{}: index {} out of range", method, index)};
         }
       }
 
@@ -457,7 +458,7 @@ namespace sequoia
         const auto bucketSize{m_Buckets[index].size()};
         if(pos > bucketSize)
         {
-          throw std::out_of_range{std::string{"bucketed_sequence::"}.append(method).append("pos ").append(std::to_string(pos)).append(" out of range")};
+          throw std::out_of_range{std::format("bucketed_sequence::{}: pos {} out of range", method, pos)};
         }
       }
 
@@ -936,7 +937,7 @@ namespace sequoia
       {
         if(index >= m_Partitions.size())
         {
-          throw std::out_of_range{std::string{"partition_sequence::"}.append(method).append("index ").append(std::to_string(index)).append(" out of range")};
+          throw std::out_of_range{std::format("partitioned_sequence::{}: index {} out of range", method, index)};
         }
       }
 
@@ -946,7 +947,7 @@ namespace sequoia
         const index_type maxPos{index ? m_Partitions[index] - m_Partitions[index - 1] : m_Partitions[index]};
         if(pos > maxPos)
         {
-          throw std::out_of_range{std::string{"partition_sequence::"}.append(method).append("pos ").append(std::to_string(pos)).append(" out of range")};
+          throw std::out_of_range{std::format("partitioned_sequence::{}: pos {} out of range", method, pos)};
         }
       }
 
