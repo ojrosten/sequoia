@@ -612,8 +612,12 @@ namespace sequoia::testing
     const auto prediction{
       [num](const std::size_t i, std::string_view sep) {
         std::string p{"prediction"};
-        if(num > 1) p.append("_").append(std::to_string(i));
-        if((i < num - 1) && !sep.empty()) p.append(sep).append(" ");
+        if(num > 1)
+          p.append("_").append(std::to_string(i));
+
+        if((i < num - 1) && !sep.empty())
+          p.append(sep).append(" ");
+
         return p;
       }
     };
@@ -632,7 +636,9 @@ namespace sequoia::testing
 
         args.append(type);
 
-        if(handle_as_ref(type)) args.append("&");
+        if(handle_as_ref(type))
+          args.append("&");
+
         args.append(" ");
 
         args.append(prediction(i, ","));
