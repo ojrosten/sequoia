@@ -84,6 +84,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Graph/Components/Nodes/HeterogeneousNodeStorageTest.cpp
                ${TestDir}/Maths/Graph/Components/Nodes/NodeStorageAllocationTest.cpp
                ${TestDir}/Maths/Graph/Components/Nodes/NodeStorageTest.cpp
+               ${TestDir}/Maths/Graph/Constraints/GraphConstraintsFreeTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/Allocations/DynamicGraphUnweightedAllocationBucketedTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/Allocations/DynamicGraphUnweightedAllocationContiguousTest.cpp
                ${TestDir}/Maths/Graph/Dynamic/Allocations/DynamicGraphWeightedAllocationBucketedTest.cpp
