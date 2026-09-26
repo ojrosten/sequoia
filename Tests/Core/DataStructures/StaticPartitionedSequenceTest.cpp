@@ -13,6 +13,14 @@ namespace sequoia::testing
 {
   using namespace data_structures;
 
+  namespace
+  {
+    template<std::size_t Nelements>
+    concept byte_indexable = requires {
+      typename static_partitioned_sequence<int, 1, Nelements, maths::static_monotonic_sequence<std::uint8_t, 1, std::ranges::greater>>;
+    };
+  }
+
   [[nodiscard]]
   std::filesystem::path static_partitioned_sequence_test::source_file()
   {
@@ -21,7 +29,17 @@ namespace sequoia::testing
 
   void static_partitioned_sequence_test::run_tests()
   {
+    test_index_type_constraint();
     test_static_storage();
+    test_index_type_limit();
+  }
+
+  void static_partitioned_sequence_test::test_index_type_constraint()
+  {
+    constexpr std::size_t limit{std::numeric_limits<std::uint8_t>::max()};
+
+    STATIC_CHECK(byte_indexable<limit>);
+    STATIC_CHECK(!byte_indexable<limit + 1>);
   }
 
   void static_partitioned_sequence_test::test_static_storage()
@@ -85,5 +103,37 @@ namespace sequoia::testing
         check(equivalence, "", storage2, prediction_t{{ndc{1}, ndc{1}}, {ndc{0}}, {ndc{2}, ndc{4}}});
       }
     }
+  }
+
+  void static_partitioned_sequence_test::test_index_type_limit()
+  {
+    using index_type = std::uint8_t;
+    constexpr std::size_t limit{std::numeric_limits<index_type>::max()};
+
+    using one_partition  = static_partitioned_sequence<int, 1, limit, maths::static_monotonic_sequence<index_type, 1, std::ranges::greater>>;
+    using two_partitions = static_partitioned_sequence<int, 2, limit, maths::static_monotonic_sequence<index_type, 2, std::ranges::greater>>;
+
+    const auto makeOnePartition{
+      [] <std::size_t... Is> (std::index_sequence<Is...>) { return one_partition{{static_cast<int>(Is)...}}; }
+    };
+
+    const auto makeTwoEqualPartitions{
+      [] <std::size_t... Is> (std::index_sequence<Is...>) { return two_partitions{{static_cast<int>(Is)...}, {static_cast<int>(Is)...}}; }
+    };
+
+    check(equality,
+          "A partition as long as the index type counts is admitted",
+          makeOnePartition(std::make_index_sequence<limit>{}).size_of_partition(0),
+          limit);
+
+    check_exception_thrown<std::out_of_range>(
+      "A partition longer than the index type counts throws",
+      [&makeOnePartition]() { return makeOnePartition(std::make_index_sequence<limit + 1>{}); }
+    );
+
+    check_exception_thrown<std::out_of_range>(
+      "Partitions each within the index type, but together beyond it, throw",
+      [&makeTwoEqualPartitions]() { return makeTwoEqualPartitions(std::make_index_sequence<limit / 2 + 1>{}); }
+    );
   }
 }

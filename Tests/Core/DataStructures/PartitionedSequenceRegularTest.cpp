@@ -145,5 +145,35 @@ namespace sequoia::testing
   {
     using namespace data_structures;
     partitioned_operations<partitioned_sequence<int>>::execute(*this);
+    test_index_type_limit();
+  }
+
+  void partitioned_sequence_regular_test::test_index_type_limit()
+  {
+    using index_type    = std::uint8_t;
+    using sequence_type = data_structures::partitioned_sequence<int, std::vector<int>, maths::monotonic_sequence<index_type, std::ranges::greater>>;
+
+    constexpr std::size_t limit{std::numeric_limits<index_type>::max()};
+
+    sequence_type sequence{};
+    sequence.add_slot();
+    for(std::size_t i{}; i < limit; ++i)
+    {
+      sequence.push_back_to_partition(0, static_cast<int>(i));
+    }
+
+    check(equality, "A partition as long as the index type counts is admitted", sequence.size_of_partition(0), limit);
+
+    check_exception_thrown<std::out_of_range>(
+      "Pushing back beyond what the index type counts throws",
+      [&sequence]() { sequence.push_back_to_partition(0, 0); }
+    );
+
+    check_exception_thrown<std::out_of_range>(
+      "Inserting beyond what the index type counts throws",
+      [&sequence]() { sequence.insert_to_partition(sequence.cbegin_partition(0), 0); }
+    );
+
+    check(equality, "Unchanged by the refused growth", sequence.size_of_partition(0), limit);
   }
 }

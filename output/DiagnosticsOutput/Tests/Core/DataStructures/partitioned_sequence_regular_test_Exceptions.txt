@@ -94,3 +94,21 @@ partitioned_sequence::insert_to_partition: pos 2 out of range
 
 =======================================
 
+Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 168
+Pushing back beyond what the index type counts throws
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence::push_back_to_partition: the index type cannot count more than 255 elements
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 173
+Inserting beyond what the index type counts throws
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence::insert_to_partition: the index type cannot count more than 255 elements
+
+=======================================
+
