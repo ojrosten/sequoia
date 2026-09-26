@@ -94,6 +94,15 @@ partitioned_sequence::insert_to_partition: pos 2 out of range
 
 =======================================
 
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 875
+Inserting beyond the end of a partition other than the first throws
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence::insert_to_partition: pos 2 out of range
+
+=======================================
+
 Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 169
 Pushing back beyond what the index type counts throws
 

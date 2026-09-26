@@ -866,6 +866,17 @@ namespace sequoia::testing
                 );
                 return d;
               }
+            },
+            {
+              data_description::two_2__3,
+              t.report(""),
+              [&t](data_t d) -> data_t {
+                t.check_exception_thrown<std::out_of_range>(
+                  "Inserting beyond the end of a partition other than the first throws",
+                  [&d]() { return d.insert_to_partition(1, 2, 4); }
+                );
+                return d;
+              }
             }
           }, // end 'two_2__3'
           {  // begin 'two_3__2'

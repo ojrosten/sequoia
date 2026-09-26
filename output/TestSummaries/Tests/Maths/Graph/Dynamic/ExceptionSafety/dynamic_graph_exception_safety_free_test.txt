@@ -1,2 +1,2 @@
 dynamic_graph_exception_safety_free_test
-Standard Top Level Checks:                76;  Failures:  0  [Deep checks: 808]
+Standard Top Level Checks:                76;  Failures:  0  [Deep checks: 784]
