@@ -92,7 +92,7 @@ read_options=("${consistency_options[@]}" --rc derive_function_end_line=0)
 
 foreign=('/usr/*')
 # Writing the tracefile again raises `format` for each function llvm-cov places at line 0.
-# The capture has already raised it and been told to ignore it.
+# The capture has already raised that error and been told to ignore it.
 remove_options=(--keep-going --ignore-errors empty --ignore-errors format)
 if [[ "$(uname -s)" == Darwin ]]; then
   foreign+=('/opt/homebrew/*' '/Library/Developer/*' '/Applications/Xcode.app/*')
