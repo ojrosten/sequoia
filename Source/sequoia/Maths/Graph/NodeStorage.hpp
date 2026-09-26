@@ -195,7 +195,8 @@ namespace sequoia::maths
 
     ~node_storage_base() = default;
 
-    constexpr node_storage_base& operator=(const node_storage_base&) requires std::is_copy_constructible_v<weight_type> = default;
+    constexpr node_storage_base& operator=(const node_storage_base&)
+      requires (std::is_copy_constructible_v<weight_type> && std::is_copy_assignable_v<weight_type>) = default;
     constexpr node_storage_base& operator=(node_storage_base&&) noexcept = default;
 
     constexpr void swap(node_storage_base& rhs)

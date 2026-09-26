@@ -81,6 +81,11 @@ namespace sequoia::testing
       void operator()(Weight&) &&;
     };
 
+    struct copy_only_weight
+    {
+      const int value{};
+    };
+
     struct non_movable
     {
       non_movable() = default;
@@ -225,6 +230,8 @@ namespace sequoia::testing
     // A move-only node weight
     STATIC_CHECK(!std::is_copy_constructible_v<move_only_node_graph>);
     STATIC_CHECK(!std::is_copy_assignable_v<move_only_node_graph>);
+    STATIC_CHECK( std::is_copy_constructible_v<directed_graph<null_weight, copy_only_weight>>);
+    STATIC_CHECK(!std::is_copy_assignable_v<directed_graph<null_weight, copy_only_weight>>);
     STATIC_CHECK(!std::is_constructible_v<move_only_node_graph,
                                           const move_only_node_graph&,
                                           move_only_node_graph::edge_allocator_type,

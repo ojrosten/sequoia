@@ -354,14 +354,14 @@ namespace sequoia
         alloc EdgeAllocator,
         alloc EdgePartitionsAllocator
       >
-        requires ((!enableNodeAllocation<node_weight_type>) && copyable_v)
+        requires (!enableNodeAllocation<node_weight_type> && copyable_v)
       constexpr graph_primitive(const graph_primitive& in, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc)
         : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc, edgeParitionsAlloc}
         , Nodes{static_cast<const Nodes&>(in)}
       {}
 
       template<alloc EdgeAllocator>
-        requires ((!enableNodeAllocation<node_weight_type>) && copyable_v)
+        requires (!enableNodeAllocation<node_weight_type> && copyable_v)
       constexpr graph_primitive(const graph_primitive& in, const EdgeAllocator& edgeAlloc)
         : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc}
         , Nodes{static_cast<const Nodes&>(in)}

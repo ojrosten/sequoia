@@ -1172,8 +1172,11 @@ namespace sequoia
 
         auto addToStorage{
           [&storage](edge_index_type host, edge_index_type target, edge_index_type compIndex, range_t hostRange){
-              storage.push_back_to_partition(host, (compIndex == npos) ? edge_type{hostRange.front()}
-                                                                       : edge_type{target, *(storage.cbegin_partition(target) + compIndex)});
+              storage.push_back_to_partition(
+                host,
+                (compIndex == npos) ? edge_type{hostRange.front()}
+                                    : edge_type{target, *(storage.cbegin_partition(target) + compIndex)}
+              );
           }
         };
 
