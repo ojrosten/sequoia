@@ -439,6 +439,7 @@ namespace sequoia::testing
     test_serial_verbose_output();
     test_throwing_tests();
     test_filtered_suites();
+    test_suites_not_found();
     test_prune_basic_output();
     test_prune_with_changed_toolchain();
     test_prune_selects_a_test_this_executable_lacks();
@@ -761,6 +762,26 @@ namespace sequoia::testing
 
     check(equality, "Filtered suites return code", runner.execute(), return_code::soft_failures);
     check_output("Filtered Suite Output", "FilteredSuiteOutput", outputStream);
+  }
+
+  void test_runner_test::test_suites_not_found()
+  {
+    // Two suites which match no test: the one spelt as a source file draws a hint to use 'select'; the other does not
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Absent", "test", "absent_test.cpp"}};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    runner.register_test<passing_test>();
+    runner.register_test<failing_test>();
+
+    check(equality, "Suites not found return code", runner.execute(), return_code::success);
+    check_output("Suites Not Found Output", "SuitesNotFoundOutput", outputStream);
   }
 
   void test_runner_test::test_prune_basic_output()

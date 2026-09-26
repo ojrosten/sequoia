@@ -151,6 +151,18 @@ Creating files for new test:
 "Tests/Stuff/FooAllocationTest.cpp"
 
 Creating files for new test:
+"Source/fakeProject/Memory/Pool.hpp"
+"Source/fakeProject/Memory/Pool.cpp"
+"Tests/Memory/PoolAllocationTest.hpp"
+"Tests/Memory/PoolAllocationTest.cpp"
+
+Creating files for new test:
+"Source/fakeProject/Memory/Arena.hpp"
+"Source/fakeProject/Memory/Arena.cpp"
+"Tests/Memory/ArenaAllocationTest.hpp"
+"Tests/Memory/ArenaAllocationTest.cpp"
+
+Creating files for new test:
 "Tests/Stuff/ContainerPerformanceTest.hpp"
 "Tests/Stuff/ContainerPerformanceTest.cpp"
 

@@ -146,9 +146,6 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::filesystem::path project_root() const;
-
-    [[nodiscard]]
     friend bool operator==(const tests_paths&, const tests_paths&) noexcept = default;
   private:
     std::filesystem::path m_Repo;
@@ -168,9 +165,6 @@ namespace sequoia::testing
     {
       return m_Repo;
     }
-
-    [[nodiscard]]
-    std::filesystem::path project_root() const;
 
     [[nodiscard]]
     std::filesystem::path sequoia_root() const;

@@ -10,6 +10,8 @@ set(SourceList
     Global/Stuff/Global.cpp
     Maths/Angle.cpp
     Maths/Probability.cpp
+    Memory/Arena.cpp
+    Memory/Pool.cpp
     Stuff/Doohicky.cpp
     Stuff/Widget.cpp
     Weather/Cloud.cpp

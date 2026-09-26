@@ -26,5 +26,7 @@ namespace sequoia::testing
     void check_exceptions();
 
     void check_failure_info();
+
+    void check_round_trip();
   };
 }

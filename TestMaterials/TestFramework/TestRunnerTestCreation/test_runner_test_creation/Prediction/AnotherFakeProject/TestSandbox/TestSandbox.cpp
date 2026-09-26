@@ -36,7 +36,7 @@ runner.register_test<maybe_false_negative_test>();
         runner.register_test<variadic_test>();runner.register_test<multiple_false_negative_test>();
         runner.register_test<multiple_test>();runner.register_test<cloud_false_negative_test>();
         runner.register_test<cloud_test>();runner.register_test<utilities_free_test>();runner.register_test<bazzer_free_test>();runner.register_test<bazagain_free_test>();runner.register_test<doohicky_free_test>();runner.register_test<global_free_test>();runner.register_test<defs_free_test>();runner.register_test<angle_false_positive_free_diagnostics>();
-        runner.register_test<angle_false_negative_free_diagnostics>();runner.register_test<container_allocation_test>();runner.register_test<foo_allocation_test>();runner.register_test<container_performance_test>();
+        runner.register_test<angle_false_negative_free_diagnostics>();runner.register_test<container_allocation_test>();runner.register_test<foo_allocation_test>();runner.register_test<pool_allocation_test>();runner.register_test<arena_allocation_test>();runner.register_test<container_performance_test>();
 		code = runner.execute(sequoia::timer_resolution{1ms});
 	}
 	catch(const std::exception& e)

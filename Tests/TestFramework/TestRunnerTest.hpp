@@ -33,6 +33,8 @@ namespace sequoia::testing
 
     void test_filtered_suites();
 
+    void test_suites_not_found();
+
     void test_basic_output();
 
     void test_help_output();

@@ -56,9 +56,23 @@ namespace sequoia::testing
     check_semantics("Intermediate $", x, z, std::weak_ordering::less);
   }
 
+  void failure_info_test::check_round_trip()
+  {
+    const failure_output written{{0, ""}, {1, "foo"}, {2, "foo\nbar"}, {3, "\n  foo\n\nbar\n"}};
+
+    std::stringstream s{};
+    s << written;
+
+    failure_output readBack{};
+    s >> readBack;
+
+    check(equality, "operator>> reads back what operator<< writes", readBack, written);
+  }
+
   void failure_info_test::run_tests()
   {
     check_exceptions();
     check_failure_info();
+    check_round_trip();
   }
 }

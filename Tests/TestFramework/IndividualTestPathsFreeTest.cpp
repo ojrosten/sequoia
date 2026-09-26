@@ -10,6 +10,8 @@
 
 #include "sequoia/TestFramework/IndividualTestPaths.hpp"
 
+#include <ranges>
+
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
@@ -37,6 +39,7 @@ namespace sequoia::testing
     using namespace std::string_literals;
 
     test_project_folder_deduction();
+    test_ancillary_main_cpps();
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Empty file"},
@@ -118,5 +121,48 @@ namespace sequoia::testing
         projectRoot / "Source" / "myProject"
       );
     }
+  }
+
+  void individual_test_paths_free_test::test_ancillary_main_cpps()
+  {
+    commandline_arguments args{{minimal_fake_path().generic_string()}};
+    const project_paths projPaths{
+      args.size(),
+      args.get(),
+      {
+        .ancillary_main_cpps{
+          "TestChamber/TestChamberMain.cpp",
+          "TestFrameworkDiagnostics/TestFrameworkDiagnosticsMain.cpp"
+        },
+        .common_includes{"TestCommon/TestIncludes.hpp"}
+      }
+    };
+
+    const auto files{
+        projPaths.ancillary_main_cpps()
+      | std::views::transform([](const main_paths& ancillaryMain) { return ancillaryMain.file(); })
+      | std::ranges::to<std::vector>()
+    };
+
+    check(
+      equality,
+      "Each ancillary main is located from the project root",
+      files,
+      std::vector<fs::path>{fake_project() / "TestChamber/TestChamberMain.cpp",
+                            fake_project() / "TestFrameworkDiagnostics/TestFrameworkDiagnosticsMain.cpp"}
+    );
+
+    const auto commonIncludes{
+        projPaths.ancillary_main_cpps()
+      | std::views::transform([](const main_paths& ancillaryMain) { return ancillaryMain.common_includes(); })
+      | std::ranges::to<std::vector>()
+    };
+
+    check(
+      equality,
+      "Each ancillary main shares the common includes of the main",
+      commonIncludes,
+      std::vector<fs::path>(2, fake_project() / "TestCommon/TestIncludes.hpp")
+    );
   }
 }

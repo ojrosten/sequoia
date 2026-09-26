@@ -28,6 +28,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/ProbabilityTestingDiagnostics.cpp
                ${TestDir}/Maybe/MaybeTest.cpp
                ${TestDir}/Maybe/MaybeTestingDiagnostics.cpp
+               ${TestDir}/Memory/ArenaAllocationTest.cpp
+               ${TestDir}/Memory/PoolAllocationTest.cpp
                ${TestDir}/Stuff/BazagainFreeTest.cpp
                ${TestDir}/Stuff/BazzerFreeTest.cpp
                ${TestDir}/Stuff/ContainerAllocationTest.cpp

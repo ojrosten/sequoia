@@ -25,6 +25,8 @@ namespace sequoia::testing
 
     void test_project_folder_deduction();
 
+    void test_ancillary_main_cpps();
+
     [[nodiscard]]
     std::filesystem::path fake_project() const;
 
