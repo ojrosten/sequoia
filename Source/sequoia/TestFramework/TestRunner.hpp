@@ -472,8 +472,13 @@ namespace sequoia::testing
     {
       ++m_Registered;
 
-      register_name(test_name<T>(), T::source_file());
+      constexpr std::string_view name{test_name<T>()};
+      register_name(name, T::source_file());
       register_source(T::source_file());
+
+      const test_summary_path summary{T::source_file(), name, m_ProjPaths, get_discriminator<summary_discriminator_probe, T>(m_CMakeCache)};
+      if(const auto [entry, inserted]{m_SummaryFiles.try_emplace(summary.file_path(), name)}; !inserted)
+        throw std::logic_error{summary_collision_message(entry->second, name, summary.file_path())};
 
       constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
 
@@ -657,6 +662,7 @@ namespace sequoia::testing
     std::vector<test_vessel> m_Tests{};
     std::set<std::string> m_LowerCaseTestNames{};
     std::map<std::string, std::filesystem::path> m_SourcesByLowerCasePrefix{};
+    std::map<std::filesystem::path, std::string_view> m_SummaryFiles{};
     std::size_t m_Registered{};
     test_filter m_Filter{path_equivalence{proj_paths().tests().repo()}};
     prune_mode m_PruneMode{prune_mode::passive};
@@ -779,6 +785,11 @@ namespace sequoia::testing
 
     [[nodiscard]]
     static std::string unplaceable_source_message(const std::filesystem::path& source);
+
+    [[nodiscard]]
+    static std::string summary_collision_message(std::string_view firstTest,
+                                                 std::string_view secondTest,
+                                                 const std::filesystem::path& summaryFile);
 
  };
 }
