@@ -492,6 +492,17 @@ namespace sequoia::testing
       return {dir(), buildRoot, buildDir};
     }
 
+    /** \brief The directory holding each test's record of its last execution, and the stamp of the
+               run that last started, keyed on the executable's directory relative to the build root.
+
+        One directory per executable directory, since durations differ severalfold between
+        configurations. Under a multi-config generator that directory is `<build tree>/<configuration>`,
+        not the build tree. Empty when `executableDir` is.
+     */
+    [[nodiscard]]
+    std::filesystem::path execution_records(const std::filesystem::path& buildRoot,
+                                            const std::filesystem::path& executableDir) const;
+
     [[nodiscard]]
     friend bool operator==(const output_paths&, const output_paths&) noexcept = default;
   private:
@@ -604,6 +615,13 @@ namespace sequoia::testing
     [[nodiscard]]
     prune_paths prune() const;
 
+    /** \brief `output_paths::execution_records` for this project's executable; empty for default paths. */
+    [[nodiscard]]
+    const std::filesystem::path& execution_records() const noexcept
+    {
+      return m_ExecutionRecords;
+    }
+
     [[nodiscard]]
     friend bool operator==(const project_paths&, const project_paths&) noexcept = default;
   private:
@@ -619,5 +637,6 @@ namespace sequoia::testing
     build_system_paths   m_BuildSystem;
 
     std::vector<main_paths> m_AncillaryMainCpps{};
+    std::filesystem::path   m_ExecutionRecords{};
   };
 }

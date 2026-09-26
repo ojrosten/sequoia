@@ -542,7 +542,7 @@ jobs:
               cp "$RUNNER_TEMP/$snapshot.txt" run-log/
               echo "::warning title=Suite still running near its timeout::${{ matrix.name }}: the suite was still running $SNAPSHOT_MARGIN_MINUTES minutes before its timeout; run-log/$snapshot.txt, printed below, says what it was doing."
               # Whatever the tools printed is not a workflow command, whatever it begins with.
-              token=snapshot-$RANDOM$RANDOM$RANDOM
+              token=$(openssl rand -hex 16)
               echo "::stop-commands::$token"
               cat "$RUNNER_TEMP/$snapshot.txt"
               echo "::$token::"
@@ -617,20 +617,111 @@ jobs:
               echo "ok    no drift check, so no patch";;
           esac
 
-      # The patch, if there is one, and the logs. Not the versioned trees
-      # themselves: what a person would have compared them against is exactly
-      # what the patch holds, without the megabytes that did not move.
+      # Every test writes an execution record: its start when it begins, then its
+      # duration too when it finishes, whether or not its body threw. A record
+      # with no duration marks a test that was executing when the run ended - one
+      # that hung, or brought the process down. A concurrent run killed part-way
+      # leaves such a record for every test in flight, so they are listed oldest
+      # start first: the hung test is likeliest the one that has run longest. The
+      # end-to-end test's generated project keeps records of its own, which name
+      # the inner test when a nested run hangs.
+      #
+      # Each run stamps its start beside its records, and the generated project is
+      # run many times over, with different selections; a record older than its
+      # run's stamp was left by an earlier run, and is marked so rather than
+      # counted as in flight.
+      #
+      # Each message says only what the records show. The number found is printed
+      # first, whatever else is: none, after a suite that ran, means the records
+      # were not written or not where this step looks. A suite that did not
+      # succeed with every record finished either failed a test or stopped outside
+      # any test, and the log says which.
+      #
+      # The names are paths a fork's PR controls, so everything after the warnings
+      # is printed with workflow commands stopped.
+      - name: Name the tests that started and never finished
+        if: ${{ always() && inputs.needs_testing == 'true' }}
+        env:
+          SUITE: ${{ steps.suite.outcome }}
+          REPEAT: ${{ steps.repeat.outcome }}
+        run: |
+          generated=output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject
+          roots="output/ExecutionRecords $generated/output/ExecutionRecords"
+          records=$(for root in $roots; do
+                      [ ! -d "$root" ] || find "$root" -type f \( -name '*.txt' -o -name run.stamp \)
+                    done)
+          tests=$(printf '%s\n' "$records" | grep '\.txt$' || true)
+          count=$(printf '%s' "$tests" | grep -c . || true)
+          echo "execution records found: $count"
+
+          ran=false
+          case "$SUITE" in success|failure|cancelled) ran=true;; esac
+          succeeded=false
+          if [ "$SUITE" = success ] && [ "$REPEAT" != failure ] && [ "$REPEAT" != cancelled ]; then succeeded=true; fi
+
+          started() { sed -n 's/^started //p' "$1"; }
+          start_of_run() {
+            dir=$(dirname "$1")
+            while [ "$dir" != . ] && [ ! -f "$dir/run.stamp" ]; do dir=$(dirname "$dir"); done
+            [ ! -f "$dir/run.stamp" ] || started "$dir/run.stamp"
+          }
+          unfinished=$(printf '%s\n' "$tests" | while IFS= read -r record; do
+                         if [ -z "$record" ] || grep -q '^duration' "$record"; then continue; fi
+                         start=$(started "$record")
+                         run_start=$(start_of_run "$record")
+                         if [[ -n "$run_start" && "$start" < "$run_start" ]]; then
+                           echo "$start ${record%.txt} (from an earlier run)"
+                         else
+                           echo "$start ${record%.txt}"
+                         fi
+                       done | sort)
+          in_flight=$(printf '%s\n' "$unfinished" | grep -v ' (from an earlier run)$' || true)
+
+          if [ "$count" -eq 0 ]; then
+            if $ran; then
+              echo "::warning::the suite ran and left no execution records:" \
+                   "they were not written, or not where this step looks"
+            else
+              echo "the suite did not run"
+            fi
+          elif [ -n "$in_flight" ]; then
+            echo "::warning::tests which started and never finished - hung, or brought the process down;" \
+                 "oldest start first, below"
+          elif ! $succeeded && $ran; then
+            echo "::warning::every test that started also finished, yet the suite did not succeed:" \
+                 "a test failed, or the run stopped outside any test; the log says which"
+          else
+            echo "every test that started also finished"
+          fi
+
+          token=$(openssl rand -hex 16)
+          echo "::stop-commands::$token"
+          { printf '%s\n' "$records" | grep 'run\.stamp$' || true; } | while IFS= read -r stamp; do
+            echo "run $(cat "$stamp") - ${stamp%/run.stamp}"
+          done
+          [ -z "$unfinished" ] || echo "$unfinished" \
+            | sed -e "s|^\([^ ]*\) output/ExecutionRecords/|  \1  |" \
+                  -e "s|^\([^ ]*\) $generated/output/ExecutionRecords/|  \1  generated project: |"
+          echo "::$token::"
+
+      # The patch, if there is one, the logs, and the execution records named in
+      # the step above. Not the versioned trees themselves: what a person would
+      # have compared them against is exactly what the patch holds, without the
+      # megabytes that did not move. The artifact keeps its `-drift` name because
+      # statistical.yml collects the artifacts by it.
       #
       # A working copy lies under <source stem>/<test class>, so the path below
       # names both. Get it wrong and nothing says so: `if-no-files-found: warn`
       # leaves the artifact a file short and the run green.
-      - name: Upload the drift and the run log
+      - name: Upload the drift, the run log and the execution records
         if: ${{ always() && inputs.needs_testing == 'true' }}
         uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.build }}-drift
           path: |
             output/Drift/
+            output/ExecutionRecords/
+            output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/ExecutionRecords/
             output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/WorkingCopy/InitOutput/
             run-log/
           if-no-files-found: warn

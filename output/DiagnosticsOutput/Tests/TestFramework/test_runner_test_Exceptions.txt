@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTest.cpp, Line 496
+Tests/TestFramework/TestRunnerTest.cpp, Line 568
 Test Main has empty path
 
 Expected Exception Type:
@@ -9,7 +9,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 504
+Tests/TestFramework/TestRunnerTest.cpp, Line 576
 Test Main does not exist
 
 Expected Exception Type:
@@ -20,7 +20,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 512
+Tests/TestFramework/TestRunnerTest.cpp, Line 584
 Include Target has empty path
 
 Expected Exception Type:
@@ -31,7 +31,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 520
+Tests/TestFramework/TestRunnerTest.cpp, Line 592
 Include Target does not exist
 
 Expected Exception Type:
@@ -42,7 +42,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 528
+Tests/TestFramework/TestRunnerTest.cpp, Line 600
 Project root is empty
 
 Expected Exception Type:
@@ -51,7 +51,7 @@ Unable to locate project root as no commandline arguments supplied.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 536
+Tests/TestFramework/TestRunnerTest.cpp, Line 608
 Project root does not exist
 
 Expected Exception Type:
@@ -60,7 +60,7 @@ canonical - file not found: /output/TestsTemporaryData/TestFramework/TestRunnerT
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 555
+Tests/TestFramework/TestRunnerTest.cpp, Line 627
 Project root not findable
 
 Expected Exception Type:
@@ -71,7 +71,7 @@ Please ensure that the build directory is a subdirectory of <project>/build.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 564
+Tests/TestFramework/TestRunnerTest.cpp, Line 636
 The same test registered twice
 
 Expected Exception Type:
@@ -82,7 +82,7 @@ A test's name is that of its class, and determines where its output is written, 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 581
+Tests/TestFramework/TestRunnerTest.cpp, Line 653
 Two tests whose unqualified names coincide
 
 Expected Exception Type:
@@ -93,7 +93,7 @@ A test's name is that of its class, and determines where its output is written, 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 599
+Tests/TestFramework/TestRunnerTest.cpp, Line 671
 Invalid repetitions for instability analysis
 
 Expected Exception Type:
@@ -102,7 +102,7 @@ locate-instabilities: unable to interpret 'foo' as an integer number of repetiti
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 606
+Tests/TestFramework/TestRunnerTest.cpp, Line 678
 Insufficient repetitions for instability analysis
 
 Expected Exception Type:
@@ -111,7 +111,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1134
+Tests/TestFramework/TestRunnerTest.cpp, Line 1253
 Comparison against a dump never kept
 
 Expected Exception Type:
@@ -120,7 +120,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1134
+Tests/TestFramework/TestRunnerTest.cpp, Line 1253
 A dump kept under no name
 
 Expected Exception Type:
@@ -129,7 +129,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1134
+Tests/TestFramework/TestRunnerTest.cpp, Line 1253
 Comparison against no name
 
 Expected Exception Type:

@@ -1,0 +1,1 @@
+# A cache one level above the executable, as a multi-config generator writes it
