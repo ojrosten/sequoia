@@ -468,9 +468,11 @@ namespace sequoia
       template<class... Args>
       size_type insert_node(const size_type pos, Args&&... args)
       {
-        insertion_sentinel sentinel{*this, pos};
+        const auto node{std::ranges::min(pos, this->order())};
+        insertion_sentinel sentinel{*this, node};
+        insert_node_weight(node, std::forward<Args>(args)...);
 
-        return Connectivity::insert_node(insert_node_impl(pos, std::forward<Args>(args)...));
+        return Connectivity::insert_node(node);
       }
 
       void erase_node(const size_type node)
@@ -577,15 +579,12 @@ namespace sequoia
       pseudo_iterator end() noexcept { return {Connectivity::order(), *this}; }
 
       template<class... Args>
-      size_type insert_node_impl(const size_type pos, Args&&... args)
+      void insert_node_weight(const size_type node, Args&&... args)
       {
-        const auto node{std::ranges::min(pos, this->order())};
         if constexpr (!std::is_empty_v<node_weight_type>)
         {
           Nodes::insert_node(this->cbegin_node_weights() + node, std::forward<Args>(args)...);
         }
-
-        return node;
       }
 
       void remove_excess_node(size_type index)
