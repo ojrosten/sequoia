@@ -158,6 +158,12 @@ namespace sequoia::testing
       friend auto operator<=>(const move_only_weight&, const move_only_weight&) = default;
     };
 
+    struct non_movable
+    {
+      non_movable() = default;
+      non_movable(non_movable&&) = delete;
+    };
+
     struct independent_edge_storage_config
     {
       template<class T>
@@ -228,18 +234,23 @@ namespace sequoia::testing
 
     STATIC_CHECK( edge_weight_settable<unshared_copyable_graph>);
     STATIC_CHECK( edge_weight_mutable_returning<unshared_copyable_graph, void>);
+    STATIC_CHECK( edge_weight_mutable_returning<unshared_copyable_graph, int>);
     STATIC_CHECK(!edge_weight_mutable_returning<unshared_copyable_graph, fallible_weight&>);
     STATIC_CHECK(!edge_weight_mutable_returning<unshared_copyable_graph,
                                                 fallible_weight&,
                                                 unshared_copyable_graph::const_reverse_edge_iterator>);
+    STATIC_CHECK(!edge_weight_mutable_returning<unshared_copyable_graph, non_movable>);
 
-    STATIC_CHECK(edge_weight_settable<shared_move_only_graph>);
-    STATIC_CHECK(edge_weight_mutable_returning<shared_move_only_graph, void>);
-    STATIC_CHECK(edge_weight_mutable_returning<shared_move_only_graph, move_only_weight&>);
+    STATIC_CHECK( edge_weight_settable<shared_move_only_graph>);
+    STATIC_CHECK( edge_weight_mutable_returning<shared_move_only_graph, void>);
+    STATIC_CHECK( edge_weight_mutable_returning<shared_move_only_graph, int>);
+    STATIC_CHECK(!edge_weight_mutable_returning<shared_move_only_graph, move_only_weight&>);
+    STATIC_CHECK(!edge_weight_mutable_returning<shared_move_only_graph, non_movable>);
 
-    STATIC_CHECK(edge_weight_settable<directed_move_only_graph>);
-    STATIC_CHECK(edge_weight_mutable_returning<directed_move_only_graph, void>);
-    STATIC_CHECK(edge_weight_mutable_returning<directed_move_only_graph, move_only_weight&>);
+    STATIC_CHECK( edge_weight_settable<directed_move_only_graph>);
+    STATIC_CHECK( edge_weight_mutable_returning<directed_move_only_graph, void>);
+    STATIC_CHECK(!edge_weight_mutable_returning<directed_move_only_graph, move_only_weight&>);
+    STATIC_CHECK(!edge_weight_mutable_returning<directed_move_only_graph, non_movable>);
   }
 
   template<class EdgeStorageConfig>
