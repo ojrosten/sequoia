@@ -138,9 +138,112 @@ namespace sequoia::testing
 
     STATIC_CHECK(saturating_add(gubT,  gubU) == gub);
     STATIC_CHECK(saturating_add(llbT,  llbU) == llb);
+    STATIC_CHECK(saturating_add(T{1},  U{2}) == value_t{3});
 
     check(equality, "", saturating_add(gubT,  gubU), gub);
     check(equality, "", saturating_add(llbT,  llbU), llb);
+    check(equality, "", saturating_add(T{1},  U{2}), value_t{3});
+
+    if constexpr(std::is_signed_v<T>)
+    {
+      STATIC_CHECK(saturating_add(T{-3}, U{2}) == value_t{-1});
+      check(equality, "", saturating_add(T{-3}, U{2}), value_t{-1});
+    }
+
+    if constexpr(std::is_signed_v<U>)
+    {
+      STATIC_CHECK(saturating_add(T{2}, U{-3}) == value_t{-1});
+      check(equality, "", saturating_add(T{2}, U{-3}), value_t{-1});
+    }
+
+    if constexpr(std::is_signed_v<T> && std::is_signed_v<U>)
+    {
+      STATIC_CHECK(saturating_add(T{-1}, U{-2}) == value_t{-3});
+      check(equality, "", saturating_add(T{-1}, U{-2}), value_t{-3});
+    }
+
+    if constexpr(std::is_integral_v<value_t>)
+    {
+      if constexpr(gubT == gub)
+      {
+        STATIC_CHECK(saturating_add(T{gubT - 2}, U{1}) == value_t{gub - 1});
+        STATIC_CHECK(saturating_add(T{gubT - 1}, U{2}) == gub);
+
+        check(equality, "", saturating_add(T{gubT - 2}, U{1}), value_t{gub - 1});
+        check(equality, "", saturating_add(T{gubT - 1}, U{2}), gub);
+      }
+
+      if constexpr(gubU == gub)
+      {
+        STATIC_CHECK(saturating_add(T{1}, U{gubU - 2}) == value_t{gub - 1});
+        STATIC_CHECK(saturating_add(T{2}, U{gubU - 1}) == gub);
+
+        check(equality, "", saturating_add(T{1}, U{gubU - 2}), value_t{gub - 1});
+        check(equality, "", saturating_add(T{2}, U{gubU - 1}), gub);
+      }
+
+      if constexpr((llbT == llb) && std::is_signed_v<U>)
+      {
+        STATIC_CHECK(saturating_add(T{llbT + 2}, U{-1}) == value_t{llb + 1});
+        STATIC_CHECK(saturating_add(T{llbT + 1}, U{-2}) == llb);
+
+        check(equality, "", saturating_add(T{llbT + 2}, U{-1}), value_t{llb + 1});
+        check(equality, "", saturating_add(T{llbT + 1}, U{-2}), llb);
+      }
+
+      if constexpr((llbU == llb) && std::is_signed_v<T>)
+      {
+        STATIC_CHECK(saturating_add(T{-1}, U{llbU + 2}) == value_t{llb + 1});
+        STATIC_CHECK(saturating_add(T{-2}, U{llbU + 1}) == llb);
+
+        check(equality, "", saturating_add(T{-1}, U{llbU + 2}), value_t{llb + 1});
+        check(equality, "", saturating_add(T{-2}, U{llbU + 1}), llb);
+      }
+    }
+    else if constexpr(std::is_same_v<T, U>)
+    {
+      constexpr value_t
+        max{std::numeric_limits<value_t>::max()},
+        low{std::numeric_limits<value_t>::lowest()};
+
+      // No STATIC_CHECK: gcc does not accept a floating-point overflow in a constant expression.
+      check(equality, "", saturating_add(max, max), gub);
+      check(equality, "", saturating_add(low, low), llb);
+    }
+
+    if constexpr(std::numeric_limits<T>::has_quiet_NaN)
+    {
+      constexpr T nanT{std::numeric_limits<T>::quiet_NaN()};
+
+      STATIC_CHECK(maths::isnan(saturating_add(nanT, U(-1))));
+      STATIC_CHECK(maths::isnan(saturating_add(nanT,   U{})));
+      STATIC_CHECK(maths::isnan(saturating_add(nanT,  U{1})));
+      STATIC_CHECK(maths::isnan(saturating_add(nanT,  gubU)));
+      STATIC_CHECK(maths::isnan(saturating_add(nanT,  llbU)));
+
+      check("", std::isnan(saturating_add(nanT, U(-1))));
+      check("", std::isnan(saturating_add(nanT,   U{})));
+      check("", std::isnan(saturating_add(nanT,  U{1})));
+      check("", std::isnan(saturating_add(nanT,  gubU)));
+      check("", std::isnan(saturating_add(nanT,  llbU)));
+    }
+
+    if constexpr(std::numeric_limits<U>::has_quiet_NaN)
+    {
+      constexpr U nanU{std::numeric_limits<U>::quiet_NaN()};
+
+      STATIC_CHECK(maths::isnan(saturating_add(T(-1), nanU)));
+      STATIC_CHECK(maths::isnan(saturating_add(  T{}, nanU)));
+      STATIC_CHECK(maths::isnan(saturating_add( T{1}, nanU)));
+      STATIC_CHECK(maths::isnan(saturating_add( gubT, nanU)));
+      STATIC_CHECK(maths::isnan(saturating_add( llbT, nanU)));
+
+      check("", std::isnan(saturating_add(T(-1), nanU)));
+      check("", std::isnan(saturating_add(  T{}, nanU)));
+      check("", std::isnan(saturating_add( T{1}, nanU)));
+      check("", std::isnan(saturating_add( gubT, nanU)));
+      check("", std::isnan(saturating_add( llbT, nanU)));
+    }
   }
 
   template class saturating_arithmetic_free_test<saturating_mul_test_base>;
