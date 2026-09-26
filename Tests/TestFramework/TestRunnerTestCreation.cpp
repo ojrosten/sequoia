@@ -408,6 +408,8 @@ namespace sequoia::testing
     };
 
     refused("Plurgh.h does not exist", {"free", "Plurgh.h"});
+    refused("A class generated for an allocation test named with its namespace",
+            {"regular_allocation_test", "stuff::pool", "-g", "Memory"});
     refused("Typo in specified class header",
             {"regular_test", "bar::things", "double", "--header", "fakeProject/Stuff/Thingz.hpp"});
 

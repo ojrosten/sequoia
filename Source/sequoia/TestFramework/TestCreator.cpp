@@ -83,7 +83,7 @@ namespace sequoia::testing
 
         This is not a general substitute. `std::quoted` escapes `"` and `\`; this escapes
         nothing, and would be wrong for a string containing either. It is exact for what
-        both call sites pass - a project-relative `generic_string()` - and the generated
+        every call site passes - a project-relative `generic_string()` - and the generated
         `io.txt` is byte-identical either way, which was checked rather than assumed.
      */
     [[nodiscard]]
@@ -961,6 +961,11 @@ namespace sequoia::testing
 
   void nascent_allocation_test::generate_header(const fs::path& headerPath)
   {
+    if(forename().find_first_of(":<") != npos)
+      throw std::runtime_error{
+        std::format("An allocation test takes a bare class name, so no class is generated for '{}'", forename())
+      };
+
     const auto headerTemplate{test_type() == "move_only_allocation" ? "MyMoveOnlyClass.hpp" : "MyRegularClass.hpp"};
 
     stream() << quote_without_escapes(fs::relative(headerPath, paths().project_root()).generic_string()) << '\n';
