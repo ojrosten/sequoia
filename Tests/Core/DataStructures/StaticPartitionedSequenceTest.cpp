@@ -15,10 +15,16 @@ namespace sequoia::testing
 
   namespace
   {
+    template<std::size_t Npartitions, std::size_t Nelements>
+    using byte_indexed_sequence
+      = static_partitioned_sequence<
+          int,
+          Npartitions,
+          Nelements,
+          maths::static_monotonic_sequence<std::uint8_t, Npartitions, std::ranges::greater>>;
+
     template<std::size_t Nelements>
-    concept byte_indexable = requires {
-      typename static_partitioned_sequence<int, 1, Nelements, maths::static_monotonic_sequence<std::uint8_t, 1, std::ranges::greater>>;
-    };
+    concept byte_indexable = requires { typename byte_indexed_sequence<1, Nelements>; };
   }
 
   [[nodiscard]]
@@ -107,18 +113,21 @@ namespace sequoia::testing
 
   void static_partitioned_sequence_test::test_index_type_limit()
   {
-    using index_type = std::uint8_t;
-    constexpr std::size_t limit{std::numeric_limits<index_type>::max()};
+    constexpr std::size_t limit{std::numeric_limits<std::uint8_t>::max()};
 
-    using one_partition  = static_partitioned_sequence<int, 1, limit, maths::static_monotonic_sequence<index_type, 1, std::ranges::greater>>;
-    using two_partitions = static_partitioned_sequence<int, 2, limit, maths::static_monotonic_sequence<index_type, 2, std::ranges::greater>>;
+    using one_partition  = byte_indexed_sequence<1, limit>;
+    using two_partitions = byte_indexed_sequence<2, limit>;
 
     const auto makeOnePartition{
-      [] <std::size_t... Is> (std::index_sequence<Is...>) { return one_partition{{static_cast<int>(Is)...}}; }
+      [] <std::size_t... Is> (std::index_sequence<Is...>) {
+        return one_partition{{static_cast<int>(Is)...}};
+      }
     };
 
     const auto makeTwoEqualPartitions{
-      [] <std::size_t... Is> (std::index_sequence<Is...>) { return two_partitions{{static_cast<int>(Is)...}, {static_cast<int>(Is)...}}; }
+      [] <std::size_t... Is> (std::index_sequence<Is...>) {
+        return two_partitions{{static_cast<int>(Is)...}, {static_cast<int>(Is)...}};
+      }
     };
 
     check(equality,

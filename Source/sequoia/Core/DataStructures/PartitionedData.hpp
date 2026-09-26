@@ -961,7 +961,10 @@ namespace sequoia
         constexpr auto limit{std::numeric_limits<index_type>::max()};
         if(std::cmp_greater_equal(m_Data.size(), limit))
         {
-          throw std::out_of_range{std::format("partitioned_sequence::{}: the index type cannot count more than {} elements", method, limit)};
+          throw std::out_of_range{std::format("partitioned_sequence::{}: "
+                                              "the index type cannot count more than {} elements",
+                                              method,
+                                              limit)};
         }
       }
 

@@ -32,6 +32,10 @@ namespace sequoia::testing
     void test_node_insertion();
 
     template<class Graph, class Mutation>
-    void check_strong_guarantee(std::string_view description, const Graph& graph, const Graph& prediction, std::size_t numFallibleSteps, Mutation mutation);
+    void check_strong_guarantee(std::string_view description,
+                                const Graph& graph,
+                                const Graph& prediction,
+                                std::size_t numFallibleSteps,
+                                Mutation mutation);
   };
 }
