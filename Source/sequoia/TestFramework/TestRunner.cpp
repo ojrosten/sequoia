@@ -831,7 +831,7 @@ namespace sequoia::testing
                       }
                       else
                       {
-                        stream() << warning(std::string{"Thread pool size must be non-zero"});
+                        stream() << warning("Thread pool size must be positive\n");
                       }
                     },
                     {},
