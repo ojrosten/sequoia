@@ -240,8 +240,6 @@ namespace sequoia::testing
 
   void test_runner_performance_test::run_tests()
   {
-    const timer_resolution resolution{std::chrono::milliseconds{1}};
-
     test_parallel_acceleration();
     test_thread_pool_acceleration();
     test_serial_execution();

@@ -353,6 +353,7 @@ namespace sequoia::testing
         m_Tests.emplace_back(T{});
     }
 
+    /** On Windows, the tests run under a `timer_resolution` of 1 ms. */
     [[nodiscard]]
     return_code execute();
 

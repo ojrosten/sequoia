@@ -100,8 +100,6 @@ namespace sequoia::testing
     using namespace std::chrono;
     using namespace maths;
 
-    const timer_resolution resolution{milliseconds{1}};
-
     std::string summary{};
     std::size_t remainingAttempts{maxAttempts};
     bool passed{};
