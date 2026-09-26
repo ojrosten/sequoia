@@ -103,7 +103,7 @@ partitioned_sequence::insert_to_partition: pos 2 out of range
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 203
+Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 211
 Pushing back beyond what the index type counts throws
 
 Expected Exception Type:
@@ -112,7 +112,7 @@ partitioned_sequence::push_back_to_partition: the index type cannot count more t
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 208
+Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 216
 Inserting beyond what the index type counts throws
 
 Expected Exception Type:
@@ -121,7 +121,7 @@ partitioned_sequence::insert_to_partition: the index type cannot count more than
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 223
+Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 231
 Adding a partition beyond what the index type counts throws
 
 Expected Exception Type:
@@ -130,7 +130,7 @@ partitioned_sequence::add_slot: the index type cannot count more than 255 partit
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 228
+Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 236
 Inserting a partition beyond what the index type counts throws
 
 Expected Exception Type:
@@ -139,7 +139,7 @@ partitioned_sequence::insert_slot: the index type cannot count more than 255 par
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 233
+Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 241
 Inserting a partition at the end beyond what the index type counts throws
 
 Expected Exception Type:

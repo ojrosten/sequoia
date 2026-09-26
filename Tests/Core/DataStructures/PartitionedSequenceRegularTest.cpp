@@ -13,6 +13,11 @@ namespace sequoia::testing
 {
   namespace
   {
+    struct copy_only_element
+    {
+      const int value{};
+    };
+
     struct move_only_element
     {
       int value{};
@@ -176,6 +181,9 @@ namespace sequoia::testing
 
     STATIC_CHECK(std::is_copy_constructible_v<copyable_sequence>);
     STATIC_CHECK(std::is_copy_assignable_v<copyable_sequence>);
+
+    STATIC_CHECK( std::is_copy_constructible_v<partitioned_sequence<copy_only_element>>);
+    STATIC_CHECK(!std::is_copy_assignable_v<partitioned_sequence<copy_only_element>>);
     STATIC_CHECK(std::is_constructible_v<copyable_sequence,
                                          const copyable_sequence&,
                                          copyable_sequence::allocator_type,
