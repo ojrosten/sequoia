@@ -14,6 +14,7 @@
 #include "sequoia/TestFramework/RegularTestCore.hpp"
 #include "sequoia/Maths/Statistics/StatisticalAlgorithms.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
+#include "sequoia/PlatformSpecific/Helpers.hpp"
 
 #include <chrono>
 #include <format>
@@ -99,6 +100,8 @@ namespace sequoia::testing
 
     using namespace std::chrono;
     using namespace maths;
+
+    const timer_resolution resolution{milliseconds{1}};
 
     std::string summary{};
     std::size_t remainingAttempts{maxAttempts};
@@ -205,6 +208,8 @@ namespace sequoia::testing
   std::chrono::duration<T, Period> calibrate(std::chrono::duration<T, Period> target)
   {
     using namespace std::chrono;
+
+    const timer_resolution resolution{milliseconds{1}};
 
     std::array<double, 7> timings{};
     for (auto& t : timings)
