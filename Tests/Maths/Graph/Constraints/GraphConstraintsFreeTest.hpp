@@ -33,5 +33,7 @@ namespace sequoia::testing
     void test_shared_move_only_weights();
 
     void test_move_only_meta_data();
+
+    void test_shared_weight_copies();
   };
 }
