@@ -173,6 +173,10 @@ namespace sequoia::testing
       // Two nodes
       t.check_exception_thrown<std::logic_error>("Mismatched partial edges", [](){ return graph_t{{edge_t{1}}, {edge_t{1}}}; });
       t.check_exception_thrown<std::logic_error>("Mismatched loop", [](){ return graph_t{{edge_t{1}}, {edge_t{0}, edge_t{1}}}; });
+
+      // Three nodes
+      t.check_exception_thrown<std::logic_error>("More partial edges one way than the other", [](){ return graph_t{{edge_t{1}, edge_t{2}, edge_t{2}}, {edge_t{0}}, {edge_t{0}}}; });
+      t.check_exception_thrown<std::logic_error>("Fewer partial edges one way than the other", [](){ return graph_t{{edge_t{2}}, {edge_t{2}}, {edge_t{0}, edge_t{1}, edge_t{1}}}; });
     }
 
     [[nodiscard]]
