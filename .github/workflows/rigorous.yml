@@ -306,9 +306,9 @@ jobs:
           done
           sudo apt-get update -qq
           # The Perl packages are for lcov, installed below from its release: Capture::Tiny,
-          # DateTime, Date::Parse and Devel::StackTrace, without which lcov does not start, and
-          # JSON::XS, which geninfo uses in preference to the core, pure-Perl JSON::PP to read
-          # gcov's output.
+          # DateTime, Date::Parse and Devel::StackTrace, without which lcov's tools do not
+          # start, and JSON::XS, which geninfo uses in preference to the core, pure-Perl JSON::PP
+          # to read gcov's output.
           packages=(g++-15 ninja-build libtbb-dev
                     libcapture-tiny-perl libdatetime-perl libdevel-stacktrace-perl libjson-xs-perl libtimedate-perl)
           for pkg in "${packages[@]}"; do
@@ -319,12 +319,12 @@ jobs:
           # The hosted image's CMake is below sequoia's floor of 4.2, the release that added
           # CMAKE_INTERMEDIATE_DIR_STRATEGY; the Windows presets set it in
           # build_system/ShortObjectPaths.cmake. The macOS and Windows images ship a release above
-          # the floor, so this column fetches one from Kitware - the host the checkout already
+          # the floor, so this job fetches one from Kitware - the host the checkout already
           # comes from - and puts it first on PATH. An older cmake surviving this step is loud:
           # the configure step's cmake_minimum_required refuses it. The tarball has no apt
           # signature behind it, so its checksum is pinned.
           #
-          # Repeated in rigorous.yml's coverage job; change both.
+          # Repeated in tests.yml's "Install the toolchain (Linux)"; change both.
           cmake_version=4.4.3
           cmake_sha256=d6c83076c575bc00b823522ac974bda66d0af05d6ddc30e739c12385cf32c6cc
           cmake_tarball=$RUNNER_TEMP/cmake.tar.gz
@@ -348,11 +348,12 @@ jobs:
           if ! curl -fsSL -o "$lcov_tarball" "$lcov_url"; then echo "::error::lcov $lcov_version could not be fetched from its release page"; exit 1; fi
           if ! echo "$lcov_sha256  $lcov_tarball" | sha256sum --check --quiet; then echo "::error::The lcov tarball does not match its published checksum"; exit 1; fi
           tar -xzf "$lcov_tarball" -C "$RUNNER_TEMP"
-          # --old-file=doc installs the man pages the tarball ships, rather than rebuilding them
-          # with Sphinx.
+          # --old-file=doc stops install rebuilding the documentation the tarball ships, which
+          # needs Sphinx.
           sudo make -C "$RUNNER_TEMP/lcov-$lcov_version" --old-file=doc install
-          # Each tool must report the pinned release; otherwise another lcov earlier on PATH would
-          # measure in its place without a word.
+          # Each tool must report the pinned release. That is the only proof the install worked,
+          # since lcov's Makefile can exit 0 after a partial one, and it stops another lcov earlier
+          # on PATH from measuring in its place without a word.
           pinned=$lcov_version-$lcov_release
           for tool in lcov geninfo genhtml; do
             reported=$("$tool" --version)
@@ -388,15 +389,20 @@ jobs:
         run: |
           info=build/TestAll/gcc-env-coverage/coverage.info
           [ -f "$info" ] || { echo "::error::no tracefile at $info"; exit 1; }
-          # lcov 2.5 refuses to read a tracefile holding the inconsistencies its capture was told to
-          # ignore, so the summary takes the suppression generate_coverage_report.sh uses. A
-          # tracefile lcov cannot read fails the job: it is what the job publishes.
+          # lcov 2.5 refuses to read a tracefile holding the inconsistencies its capture was told
+          # to ignore, so the summary takes the `inconsistent` suppression that
+          # generate_coverage_report.sh uses. A tracefile lcov refuses fails the job, since the
+          # tracefile is what the job publishes.
           if ! lcov_output=$(lcov --summary "$info" --ignore-errors inconsistent,inconsistent 2>&1); then
-            echo "::error::lcov could not read $info"
+            echo "::error::lcov refused $info"
             echo "$lcov_output"
             exit 1
           fi
-          summary=$(grep -E '^ *(lines|functions)\.' <<< "$lcov_output")
+          if ! summary=$(grep -E '^ *(lines|functions)\.' <<< "$lcov_output"); then
+            echo "::error::lcov's summary of $info has no lines or functions figure"
+            echo "$lcov_output"
+            exit 1
+          fi
           echo "$summary"
           {
             echo "### Coverage"
