@@ -827,6 +827,7 @@ namespace sequoia
       template<class... Args>
       partition_iterator insert_to_partition(const size_type index, const size_type pos, Args&&... args)
       {
+        check_range("insert_to_partition", index, pos);
         return insert_to_partition(std::ranges::next(cbegin_partition(index), pos, cend_partition(index)), std::forward<Args>(args)...);
       }
 
@@ -941,7 +942,7 @@ namespace sequoia
         }
       }
 
-      void check_range(std::string_view method, const size_type index, const index_type pos) const
+      void check_range(std::string_view method, const size_type index, const size_type pos) const
       {
         check_range(method, index);
         const index_type maxPos{index ? m_Partitions[index] - m_Partitions[index - 1] : m_Partitions[index]};
