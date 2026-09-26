@@ -18,7 +18,6 @@
 
 #include "sequoia/Core/Logic/Bitmask.hpp"
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
-#include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
 #include <chrono>
@@ -354,8 +353,9 @@ namespace sequoia::testing
         m_Tests.emplace_back(T{});
     }
 
+    /** On Windows, the tests run under a `timer_resolution` of 1 ms. */
     [[nodiscard]]
-    return_code execute([[maybe_unused]] timer_resolution r={});
+    return_code execute();
 
     [[nodiscard]]
     std::ostream& stream() noexcept { return *m_Stream; }

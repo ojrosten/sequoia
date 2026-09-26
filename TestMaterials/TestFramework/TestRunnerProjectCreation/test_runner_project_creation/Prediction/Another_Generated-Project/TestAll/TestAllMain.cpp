@@ -18,11 +18,10 @@ int main(int argc, char** argv)
   try
   {
     using namespace another_Generated-Project::testing;
-    using namespace std::literals::chrono_literals;
 
     sequoia::testing::test_runner runner{argc, argv, "Oliver Jacob Rosten", "  "};
 
-    code = runner.execute(sequoia::timer_resolution{1ms});
+    code = runner.execute();
   }
   catch(const std::exception& e)
   {

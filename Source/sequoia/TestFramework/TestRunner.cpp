@@ -16,6 +16,7 @@
 
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 #include "sequoia/Parsing/CommandLineArguments.hpp"
+#include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
@@ -935,10 +936,12 @@ namespace sequoia::testing
     report_unmatched(stream(), std::span{excluded}, "Excluded Test File", hint);
   }
 
-  return_code test_runner::execute([[maybe_unused]] timer_resolution r)
+  return_code test_runner::execute()
   {
     if(!in_mode(runner_mode::test))
       return return_code::success;
+
+    const timer_resolution resolution{std::chrono::milliseconds{1}};
 
     fs::create_directories(proj_paths().prune().dir());
     build_suite_tree();
