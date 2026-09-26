@@ -147,6 +147,11 @@ namespace sequoia
       constexpr static auto npos{std::numeric_limits<edge_index_type>::max()};
       constexpr static graph_flavour flavour{Flavour};
 
+      /** \brief Whether the two halves of an undirected edge each hold a weight of their own. */
+      constexpr static bool independent_partner_weights_v{
+        !is_directed(flavour) && !graph_impl::has_shared_weight_v<edge_type>
+      };
+
       constexpr connectivity_base() = default;
 
       constexpr connectivity_base(std::initializer_list<std::initializer_list<edge_init_type>> edges)
@@ -207,15 +212,13 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires initializable_from<edge_weight_type, Args...>
+        requires (    initializable_from<edge_weight_type, Args...>
+                  && (!independent_partner_weights_v || std::is_copy_constructible_v<edge_weight_type>))
       constexpr void set_edge_weight(const_edge_iterator citer, Args&&... args)
       {
-        if constexpr(!shared_weight_v && !is_directed(flavour))
+        if constexpr(independent_partner_weights_v)
         {
-          edge_weight_type partnerWeight{std::forward<Args>(args)...};
-          edge_weight_type sourceWeight{partnerWeight};
-          set_partner_edge_weight(citer, std::move(partnerWeight));
-          set_source_edge_weight(to_edge_iterator(citer), std::move(sourceWeight));
+          set_source_and_partner_edge_weights(citer, edge_weight_type{std::forward<Args>(args)...});
         }
         else
         {
@@ -224,26 +227,56 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires initializable_from<edge_weight_type, Args...>
+        requires (    initializable_from<edge_weight_type, Args...>
+                  && (!independent_partner_weights_v || std::is_copy_constructible_v<edge_weight_type>))
       constexpr void set_edge_weight(const_reverse_edge_iterator criter, Args&&... args)
       {
         set_edge_weight(to_const_edge_iterator(criter), std::forward<Args>(args)...);
       }
 
+      /** \brief Applies `fn` to the weight of the edge at `citer`, and returns the result.
+
+          Where the two halves of an undirected edge hold independent weights, `fn` is applied once, to a copy
+          of the weight, which then replaces the weight of both halves. A throw leaves both unchanged, provided
+          the weight's move does not throw. A reference returned by `fn` would refer to the copy, so `fn` may
+          not return one.
+       */
       template<std::invocable<edge_weight_type&> Fn>
-        requires (!std::is_empty_v<edge_weight_type>)
+        requires (    !std::is_empty_v<edge_weight_type>
+                  && (   !independent_partner_weights_v
+                      || (    std::is_copy_constructible_v<edge_weight_type>
+                          && !std::is_reference_v<std::invoke_result_t<Fn, edge_weight_type&>>)))
       constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_edge_iterator citer, Fn fn)
       {
-        if constexpr(!shared_weight_v && !is_directed(flavour))
+        if constexpr(independent_partner_weights_v)
         {
-          mutate_partner_edge_weight(citer, fn);
-        }
+          using result_type = std::invoke_result_t<Fn, edge_weight_type&>;
 
-        return mutate_source_edge_weight(citer, fn);
+          edge_weight_type mutatedWeight{citer->weight()};
+          if constexpr(std::is_void_v<result_type>)
+          {
+            fn(mutatedWeight);
+            set_source_and_partner_edge_weights(citer, std::move(mutatedWeight));
+          }
+          else
+          {
+            // Parentheses, since braces would prefer an initializer-list constructor of result_type
+            result_type result(fn(mutatedWeight));
+            set_source_and_partner_edge_weights(citer, std::move(mutatedWeight));
+            return result;
+          }
+        }
+        else
+        {
+          return mutate_source_edge_weight(citer, std::move(fn));
+        }
       }
 
       template<std::invocable<edge_weight_type&> Fn>
-        requires (!std::is_empty_v<edge_weight_type>)
+        requires (    !std::is_empty_v<edge_weight_type>
+                  && (   !independent_partner_weights_v
+                      || (    std::is_copy_constructible_v<edge_weight_type>
+                          && !std::is_reference_v<std::invoke_result_t<Fn, edge_weight_type&>>)))
       constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_reverse_edge_iterator criter, Fn fn)
       {
         return mutate_edge_weight(to_const_edge_iterator(criter), std::move(fn));
@@ -1378,17 +1411,23 @@ namespace sequoia
         }
       }
 
-      template<std::invocable<edge_weight_type&> Fn>
-      constexpr void mutate_partner_edge_weight(const_edge_iterator citer, Fn fn)
-      {
-        manipulate_partner_edge_weight(citer, [fn](edge_iterator iter) -> edge_iterator { fn(iter->weight()); return iter; });
-      }
-
       template<class... Args>
         requires initializable_from<edge_weight_type, Args...>
       constexpr const_edge_iterator set_partner_edge_weight(const_edge_iterator citer, Args&&... args)
       {
         return manipulate_partner_edge_weight(citer, [&args...](edge_iterator iter) -> edge_iterator { iter->weight(std::forward<Args>(args)...); return iter; });
+      }
+
+      /** \brief Gives the weight `w` to both halves of an edge whose halves hold independent weights.
+
+          Both new weights are made before either half changes, so a throw leaves the halves as they were,
+          provided the weight's move does not throw.
+       */
+      constexpr void set_source_and_partner_edge_weights(const_edge_iterator citer, edge_weight_type w)
+      {
+        edge_weight_type sourceWeight{w};
+        set_partner_edge_weight(citer, std::move(w));
+        set_source_edge_weight(to_edge_iterator(citer), std::move(sourceWeight));
       }
 
       class [[nodiscard]] join_sentinel
