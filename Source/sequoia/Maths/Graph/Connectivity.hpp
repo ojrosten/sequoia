@@ -321,17 +321,19 @@ namespace sequoia
       }
 
 
-      template<std::invocable<edge_meta_data_type&> Fn>
-        requires (!std::is_empty_v<edge_meta_data_type>)
-      constexpr std::invoke_result_t<Fn, edge_meta_data_type&> mutate_edge_meta_data(const_edge_iterator citer, Fn fn)
+      template<class Fn>
+        requires (!std::is_empty_v<edge_meta_data_type> && std::invocable<Fn&, edge_meta_data_type&>)
+      constexpr std::invoke_result_t<Fn&, edge_meta_data_type&>
+        mutate_edge_meta_data(const_edge_iterator citer, Fn fn)
       {
         return to_edge_iterator(citer)->mutate_meta_data(std::move(fn));
       }
 
 
-      template<std::invocable<edge_meta_data_type&> Fn>
-        requires (!std::is_empty_v<edge_meta_data_type>)
-      constexpr std::invoke_result_t<Fn, edge_meta_data_type&> mutate_edge_meta_data(const_reverse_edge_iterator criter, Fn fn)
+      template<class Fn>
+        requires (!std::is_empty_v<edge_meta_data_type> && std::invocable<Fn&, edge_meta_data_type&>)
+      constexpr std::invoke_result_t<Fn&, edge_meta_data_type&>
+        mutate_edge_meta_data(const_reverse_edge_iterator criter, Fn fn)
       {
         return mutate_edge_meta_data(to_const_edge_iterator(criter), std::move(fn));
       }

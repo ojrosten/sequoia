@@ -299,7 +299,8 @@ namespace sequoia::maths
     return adaptor.tree().cbegin_node_weights()[adaptor.node()];
   }
 
-  template<dynamic_tree T, std::invocable<typename T::node_weight_type&> Fn>
+  template<dynamic_tree T, class Fn>
+    requires std::invocable<Fn&, typename T::node_weight_type&>
   void mutate_root_weight(basic_tree_adaptor<T>& adaptor, Fn fn)
   {
     adaptor.tree().mutate_node_weight(root_weight_iter(adaptor), fn);

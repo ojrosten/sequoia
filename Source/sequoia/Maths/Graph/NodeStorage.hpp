@@ -20,8 +20,9 @@
 #include "sequoia/Core/ContainerUtilities/Iterator.hpp"
 #include "sequoia/Maths/Graph/EdgesAndNodesUtilities.hpp"
 
-#include <type_traits>
 #include <algorithm>
+#include <functional>
+#include <type_traits>
 #include <vector>
 
 namespace sequoia::maths
@@ -133,12 +134,13 @@ namespace sequoia::maths
     }
 
     template<class Fn>
-    constexpr decltype(auto) mutate_node_weight(const_iterator pos, Fn fn)
+      requires std::invocable<Fn&, weight_type&>
+    constexpr std::invoke_result_t<Fn&, weight_type&> mutate_node_weight(const_iterator pos, Fn fn)
     {
       if(pos == cend_node_weights()) throw std::out_of_range("node_storage::mutate_node_weight - index out of range!\n");
 
       const auto index{std::ranges::distance(cbegin_node_weights(), pos)};
-      return fn(m_NodeWeights[index]);
+      return std::invoke(fn, m_NodeWeights[index]);
     }
 
     [[nodiscard]]

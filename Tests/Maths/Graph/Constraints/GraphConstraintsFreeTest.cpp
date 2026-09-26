@@ -11,6 +11,7 @@
 #include "sequoia/Core/Meta/TypeName.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
+#include "sequoia/Maths/Graph/HeterogeneousStaticGraph.hpp"
 #include "sequoia/Maths/Graph/StaticGraph.hpp"
 
 #include <any>
@@ -144,6 +145,31 @@ namespace sequoia::testing
           g.mutate_edge_weight(citer, std::move(fn));
         };
 
+    template<class Edge, class Fn>
+    concept edge_weight_mutable_by_value = requires(Edge& e, Fn fn) { e.mutate_weight(std::move(fn)); };
+
+    template<class Edge, class Fn>
+    concept edge_meta_data_mutable_by = requires(Edge& e, Fn fn) { e.mutate_meta_data(std::move(fn)); };
+
+    template<class Graph, class Fn, class EdgeIterator = Graph::const_edge_iterator>
+    concept graph_edge_meta_data_mutable_by
+      = requires(Graph& g, EdgeIterator citer, Fn fn) { g.mutate_edge_meta_data(citer, std::move(fn)); };
+
+    template<class Graph, class Fn>
+    concept node_weight_mutable_by
+      = requires(Graph& g, Fn fn) { g.mutate_node_weight(g.cbegin_node_weights(), std::move(fn)); };
+
+    template<class Graph, std::size_t I, class Fn>
+    concept node_weight_at_mutable_by = requires(Graph& g, Fn fn) { g.template mutate_node_weight<I>(std::move(fn)); };
+
+    template<class Graph, class T, class Fn>
+    concept node_weight_of_type_mutable_by
+      = requires(Graph& g, Fn fn) { g.template mutate_node_weight<T>(std::move(fn)); };
+
+    template<class Tree, class Fn>
+    concept root_weight_mutable_by
+      = requires(maths::basic_tree_adaptor<Tree>& adaptor, Fn fn) { mutate_root_weight(adaptor, std::move(fn)); };
+
     template<class Graph, class Result, class EdgeIterator = Graph::const_edge_iterator>
     concept edge_weight_mutable_returning
       = requires(Graph& g, EdgeIterator citer, Result(*fn)(typename Graph::edge_weight_type&)) {
@@ -162,11 +188,13 @@ namespace sequoia::testing
     test_copyability();
     test_weight_update_constraints();
     test_join_constraints();
+    test_mutator_constraints();
     test_mutation_results<maths::bucketed_edge_storage_config>();
     test_mutation_results<maths::contiguous_edge_storage_config>();
     test_shared_move_only_weights();
     test_move_only_meta_data();
     test_shared_weight_copies();
+    test_mutation_by_member_functions();
   }
 
   void graph_constraints_free_test::test_copyability()
@@ -271,6 +299,43 @@ namespace sequoia::testing
     STATIC_CHECK( joinable<shared_move_only_embedded_graph>);
     STATIC_CHECK( insert_joinable<shared_move_only_embedded_graph>);
     STATIC_CHECK( joinable<directed_move_only_graph>);
+  }
+
+  void graph_constraints_free_test::test_mutator_constraints()
+  {
+    using namespace maths;
+    using namespace object;
+
+    using rvalue_only = rvalue_only_mutation<copyable_weight>;
+    using weighted_edge        = partial_edge<by_value<copyable_weight>, null_meta_data>;
+    using decorated_edge       = partial_edge<by_value<null_weight>, copyable_weight>;
+    using meta_data_graph      = undirected_graph<null_weight, null_weight, copyable_weight>;
+    using node_weighted_graph  = directed_graph<null_weight, copyable_weight>;
+    using heterogeneous_graph  = heterogeneous_directed_graph<0, 1, null_weight, copyable_weight>;
+    using tree                 = directed_tree<tree_link_direction::forward, null_weight, copyable_weight>;
+    using member_function      = void (copyable_weight::*)();
+
+    STATIC_CHECK(!edge_weight_mutable_by_value<weighted_edge, rvalue_only>);
+    STATIC_CHECK( edge_weight_mutable_by_value<weighted_edge, member_function>);
+
+    STATIC_CHECK(!edge_meta_data_mutable_by<decorated_edge, rvalue_only>);
+    STATIC_CHECK( edge_meta_data_mutable_by<decorated_edge, member_function>);
+
+    STATIC_CHECK(!graph_edge_meta_data_mutable_by<meta_data_graph, rvalue_only>);
+    STATIC_CHECK(!graph_edge_meta_data_mutable_by<meta_data_graph,
+                                                  rvalue_only,
+                                                  meta_data_graph::const_reverse_edge_iterator>);
+    STATIC_CHECK( graph_edge_meta_data_mutable_by<meta_data_graph, member_function>);
+
+    STATIC_CHECK(!node_weight_mutable_by<node_weighted_graph, rvalue_only>);
+    STATIC_CHECK( node_weight_mutable_by<node_weighted_graph, member_function>);
+
+    STATIC_CHECK(!node_weight_at_mutable_by<heterogeneous_graph, 0, rvalue_only>);
+    STATIC_CHECK(!node_weight_of_type_mutable_by<heterogeneous_graph, copyable_weight, rvalue_only>);
+    STATIC_CHECK( node_weight_at_mutable_by<heterogeneous_graph, 0, member_function>);
+
+    STATIC_CHECK(!root_weight_mutable_by<tree, rvalue_only>);
+    STATIC_CHECK( root_weight_mutable_by<tree, member_function>);
   }
 
   template<class EdgeStorageConfig>
@@ -430,6 +495,54 @@ namespace sequoia::testing
       g.add_node();
       g.join(0, 1, 7, 8, copyable_weight{5});
       checkCopy("An embedded graph with shared weights and meta-data", g);
+    }
+  }
+
+  void graph_constraints_free_test::test_mutation_by_member_functions()
+  {
+    using namespace maths;
+    using namespace object;
+
+    {
+      partial_edge<by_value<copyable_weight>, null_meta_data> e{0, copyable_weight{1}};
+      e.mutate_weight(&copyable_weight::increment);
+      check(equality, "An edge's weight is mutated by a member function", e.weight().value, 2);
+    }
+
+    {
+      partial_edge<by_value<null_weight>, copyable_weight> e{0, copyable_weight{1}};
+      e.mutate_meta_data(&copyable_weight::increment);
+      check(equality, "An edge's meta-data is mutated by a member function", e.meta_data().value, 2);
+    }
+
+    {
+      undirected_graph<null_weight, null_weight, copyable_weight> g{};
+      g.add_node();
+      g.add_node();
+      g.join(0, 1, copyable_weight{1}, copyable_weight{5});
+      g.mutate_edge_meta_data(g.cbegin_edges(0), &copyable_weight::increment);
+      check(equality,
+            "A graph's edge meta-data is mutated by a member function",
+            g.cbegin_edges(0)->meta_data().value,
+            2);
+      check(equality, "The partner half's meta-data is its own", g.cbegin_edges(1)->meta_data().value, 5);
+    }
+
+    {
+      directed_graph<null_weight, copyable_weight> g{};
+      g.add_node(copyable_weight{1});
+      g.mutate_node_weight(g.cbegin_node_weights(), &copyable_weight::increment);
+      check(equality, "A node weight is mutated by a member function", g.cbegin_node_weights()->value, 2);
+    }
+
+    {
+      heterogeneous_directed_graph<0, 1, null_weight, copyable_weight> g{{{}}, copyable_weight{1}};
+      g.mutate_node_weight<0>(&copyable_weight::increment);
+      g.mutate_node_weight<copyable_weight>(&copyable_weight::increment);
+      check(equality,
+            "A heterogeneous node weight is mutated by a member function, by index and by type",
+            g.get_node_weight<0>().value,
+            3);
     }
   }
 }

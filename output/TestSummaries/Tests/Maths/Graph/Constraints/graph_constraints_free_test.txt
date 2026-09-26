@@ -1,2 +1,2 @@
 graph_constraints_free_test
-Standard Top Level Checks:                74;  Failures:  0  [Deep checks: 128]
+Standard Top Level Checks:                94;  Failures:  0  [Deep checks: 148]
