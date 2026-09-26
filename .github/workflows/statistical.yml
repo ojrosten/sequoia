@@ -110,8 +110,7 @@ jobs:
   # its suite step succeeded AND the analysis found nothing, since the analysis
   # says "No instabilities detected" over a failure common to every repetition
   # too. A column that is not clean is reported with its counts and the end of
-  # its log, whatever the reason; on 2026-09-26 a hang was reported as "ran 18
-  # times, not 20" alone, which counted the trial that hung as run.
+  # its log, whatever the reason.
   summary:
     name: The sample
     needs: [trials, statistical]
@@ -144,14 +143,16 @@ jobs:
               outcome=$(cat "$dir/run-log/outcome")
               started=$(grep -c "Running tests" "$log" || true)
               finished=$(grep -c "Total Run Time" "$log" || true)
-              if [ "$outcome" = success ] && [ "$started" -eq "$N" ] && [ "$finished" -eq "$N" ] && grep -q "No instabilities detected" "$log"; then
+              if [ "$outcome" = success ] && [ "$started" -eq "$N" ] && [ "$finished" -eq "$N" ] \
+                   && grep -q "No instabilities detected" "$log"; then
                 echo "No instabilities detected in $N trials." >> "$report"
               else
                 echo "::error::$name: suite step $outcome; of $N trials, $started started and $finished finished"; failed=1
                 {
                   echo "Suite step: $outcome. Of $N trials, $started started and $finished finished."
                   if [ -f "$dir/run-log/snapshot.txt" ]; then
-                    echo "The suite was still running near its timeout: the column's \`Keep the run log\` step prints what it was doing, and the artifact holds it as \`run-log/snapshot.txt\`."
+                    echo "The suite was still running near its timeout: the column's \`Keep the run log\` step prints" \
+                         "what it was doing, and the artifact holds it as \`run-log/snapshot.txt\`."
                   fi
                   echo "The end of the log:"
                   echo '```'

@@ -27,6 +27,9 @@ fi
 seconds=$1 snapshot=$2 name=$3
 shift 4
 
+cdb_frames_per_thread=50
+sample_duration_seconds=1
+
 case "$(uname -s)" in
   MINGW*|MSYS*|CYGWIN*) platform=windows ;;
   Darwin)               platform=macos   ;;
@@ -63,14 +66,14 @@ dump_stacks() { # dump_stacks <pid>
       for cdb in "/c/Program Files (x86)/Windows Kits/10/Debuggers/x64/cdb.exe" \
                  "/c/Program Files/Windows Kits/10/Debuggers/x64/cdb.exe"; do
         if [ -x "$cdb" ]; then
-          "$cdb" -pv -p "$1" -c "~*k 50; q"
+          "$cdb" -pv -p "$1" -c "~*k $cdb_frames_per_thread; q"
           return
         fi
       done
       echo "No stacks: cdb.exe is not installed where the Windows SDK puts it."
       ;;
     macos)
-      sample "$1" 1 -file /dev/stdout
+      sample "$1" "$sample_duration_seconds" -file /dev/stdout
       ;;
     linux)
       if ! command -v gdb > /dev/null; then
@@ -107,14 +110,13 @@ take_snapshot() {
 }
 
 # The watcher is told the command has ended by a file, and looks for it once a
-# second, rather than being killed: a signal can arrive before the watcher's
+# second. Stopping it by signal is racy: a signal arriving before the watcher's
 # trap is set, or between its sleep starting and that sleep's id being known,
-# and an edition which killed it left its sleep running in one run and hung in
-# another. It also stops if this script has gone, so that a
+# is lost or leaves the sleep running. It also stops if this script has gone, so that a
 # cancelled step does not leave it to take a snapshot of nothing. The cost is
 # that the deadline is kept to within a second, and that a command ending in
 # that second may still be snapshotted.
-watch() {
+watch_for_deadline() {
   local deadline=$((SECONDS + seconds))
   while [ "$SECONDS" -lt "$deadline" ]; do
     if [ -e "$finished" ] || ! kill -0 $$ 2> /dev/null; then
@@ -125,10 +127,10 @@ watch() {
   take_snapshot > "$snapshot" 2>&1
 }
 
-signals=$(mktemp -d)
-finished="$signals/finished"
+flag_dir=$(mktemp -d)
+finished="$flag_dir/finished"
 
-watch < /dev/null > /dev/null 2>&1 &
+watch_for_deadline < /dev/null > /dev/null 2>&1 &
 watcher=$!
 
 "$@"
@@ -136,5 +138,5 @@ status=$?
 
 touch "$finished"
 wait "$watcher"
-rm -rf "$signals"
+rm -rf "$flag_dir"
 exit "$status"

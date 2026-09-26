@@ -11,8 +11,8 @@
 #     the workflow, turned a green suite red with the status of its own wait;
 #   - a command which ends before the deadline returns within the watcher's
 #     second, leaves no snapshot and leaves no watcher behind; an edition
-#     which stopped its watcher by signal hung once in thirty, when the signal
-#     arrived before the watcher's trap was set;
+#     which stopped its watcher by signal left the watcher's sleep behind in
+#     one run and hung in another;
 #   - a watcher whose script has been killed stops, rather than taking a
 #     snapshot of nothing at a deadline nobody is waiting for;
 #   - at the deadline, the snapshot lists the stand-in among the processes and
@@ -45,7 +45,11 @@ check_status() { # check_status <name> <expected> <seconds> <command>...
 }
 
 name=HungSuiteStandIn
-printf '#include <unistd.h>\nvoid blocked_in_the_stand_in(void) { pause(); }\nint main(void) { blocked_in_the_stand_in(); }\n' > "$tmp/standin.c"
+cat > "$tmp/standin.c" <<'STANDIN'
+#include <unistd.h>
+void blocked_in_the_stand_in(void) { pause(); }
+int main(void) { blocked_in_the_stand_in(); }
+STANDIN
 cc -g -O0 -o "$tmp/$name" "$tmp/standin.c" || { echo "FAIL: cannot compile the stand-in"; exit 1; }
 
 # The exit status passes through.
@@ -68,7 +72,8 @@ for trial in $(seq 1 30); do
   fi
 done
 [ ! -e "$tmp/early.txt" ] || fail "a command ending before the deadline left a snapshot"
-! pgrep -f "snapshot_at_deadline.sh 20 " > /dev/null || fail "a command ending before the deadline left its watcher running"
+! pgrep -f "snapshot_at_deadline.sh 20 " > /dev/null \
+  || fail "a command ending before the deadline left its watcher running"
 
 # The script killed outright, as a cancelled step kills it, before a deadline
 # three seconds off; its command is killed with it here, as the step's would be.

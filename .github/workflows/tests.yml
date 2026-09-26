@@ -69,9 +69,8 @@ jobs:
         shell: bash
 
     # How long before a suite step's timeout its watcher records what the suite
-    # is doing; "Run the suite" says why. The snapshot must be finished inside
-    # it, and it states when it began and ended, which is how to tell whether
-    # the margin is generous or tight.
+    # is doing; "Run the suite" says why. Each snapshot records when it began
+    # and ended, which says whether the margin is generous or tight.
     env:
       SNAPSHOT_MARGIN_MINUTES: 10
 
@@ -407,7 +406,8 @@ jobs:
         env:
           SUITE_TIMEOUT_MINUTES: ${{ inputs.suite_timeout_minutes }}
         run: |
-          ../scripts/snapshot_at_deadline.sh $(( (SUITE_TIMEOUT_MINUTES - SNAPSHOT_MARGIN_MINUTES) * 60 )) "$RUNNER_TEMP/snapshot.txt" TestAll -- \
+          deadline=$(( (SUITE_TIMEOUT_MINUTES - SNAPSHOT_MARGIN_MINUTES) * 60 ))
+          ../scripts/snapshot_at_deadline.sh "$deadline" "$RUNNER_TEMP/snapshot.txt" TestAll -- \
             cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/run.log"
 
       # The second pass, where the column asks for one: the same executable on the
@@ -441,7 +441,8 @@ jobs:
         env:
           SUITE_TIMEOUT_MINUTES: ${{ inputs.suite_timeout_minutes }}
         run: |
-          ../scripts/snapshot_at_deadline.sh $(( (SUITE_TIMEOUT_MINUTES - SNAPSHOT_MARGIN_MINUTES) * 60 )) "$RUNNER_TEMP/repeat-snapshot.txt" TestAll -- \
+          deadline=$(( (SUITE_TIMEOUT_MINUTES - SNAPSHOT_MARGIN_MINUTES) * 60 ))
+          ../scripts/snapshot_at_deadline.sh "$deadline" "$RUNNER_TEMP/repeat-snapshot.txt" TestAll -- \
             cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/repeat.log"
 
       # An advisory column still has to be *read*, and its failures are not equally acceptable.
