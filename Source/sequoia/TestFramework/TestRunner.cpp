@@ -599,6 +599,10 @@ namespace sequoia::testing
               nascent.generate_source_files(src_opt::yes);
               nascent.source_dir(args[0]);
             },
+            [&args](nascent_allocation_test& nascent) {
+              nascent.generate_source_files(src_opt::yes);
+              nascent.source_dir(args[0]);
+            },
             [](auto&) {}
           }
         };
@@ -609,10 +613,11 @@ namespace sequoia::testing
       "Generate the class's header and source too, under Source/<dir>"
     };
 
-    const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{headerOption}, {genSemanticsSourceOption}};
-    const std::initializer_list<maths::tree_initializer<option>> allocationOptions{{headerOption}};
-    const std::initializer_list<maths::tree_initializer<option>> performanceOptions{};
-    const std::initializer_list<maths::tree_initializer<option>> freeOptions{{forenameOption}, {genFreeSourceOption}, {diagnosticsOption}};
+    const std::initializer_list<maths::tree_initializer<option>>
+      semanticsOptions{{headerOption}, {genSemanticsSourceOption}},
+      allocationOptions{{headerOption}, {genSemanticsSourceOption}},
+      performanceOptions{},
+      freeOptions{{forenameOption}, {genFreeSourceOption}, {diagnosticsOption}};
 
     const auto help{
       parse_invoke_depth_first(argc, argv,

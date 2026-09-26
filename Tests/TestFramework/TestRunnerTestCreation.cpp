@@ -182,6 +182,8 @@ namespace sequoia::testing
                                , "create", "free", std::format("{}/Maths/Angle.hpp", sourceFolderName), "--diagnostics"
                                , "create", "regular_allocation_test", "container"
                                , "create", "move_only_allocation_test", "foo"
+                               , "create", "regular_allocation_test", "pool", "--gen-source", "Memory"
+                               , "create", "move_only_allocation_test", "arena", "-g", "Memory"
                                , "create", "performance_test", "Container.hpp"
                                , "create", "performance_test", "Container.hpp"}
     };
