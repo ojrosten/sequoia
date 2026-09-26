@@ -1,9 +1,29 @@
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 95
-An invalid pattern is reported by its line in the file, blank lines included
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 103
+A line of spaces is refused, naming its line
 
 Expected Exception Type:
 [std::runtime_error]
-Line 4 of a .seqpat is not a valid regular expression: (
+Line 3 of a .seqpat holds only whitespace, which is ambiguous: delete the line, or write the pattern explicitly, such as [ ] or [ \t]
+output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_test/WorkingCopy/ContentsUnderComparison.seqpat
+
+=======================================
+
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 104
+A line holding only a tab is refused, naming its line
+
+Expected Exception Type:
+[std::runtime_error]
+Line 2 of a .seqpat holds only whitespace, which is ambiguous: delete the line, or write the pattern explicitly, such as [ ] or [ \t]
+output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_test/WorkingCopy/ContentsUnderComparison.seqpat
+
+=======================================
+
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 105
+An invalid pattern is refused, naming its line, empty lines counted
+
+Expected Exception Type:
+[std::runtime_error]
+Line 3 of a .seqpat is not a valid regular expression: (
 output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_test/WorkingCopy/ContentsUnderComparison.seqpat
 
 =======================================

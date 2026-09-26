@@ -210,21 +210,37 @@ namespace sequoia::testing
       if(is_text(contents)) replace_all(contents, "\r\n", "\n");
     }
 
-    /** \brief A line which is empty, or whose every character is a space or a tab. A carriage return is not
-        among them: CRLF line endings are normalised to LF before a `.seqpat` is split into lines.
+    /** \brief A line of at least one character, every one a space or a tab. A carriage return is not among
+        them: CRLF line endings are normalised to LF before a `.seqpat` is split into lines.
      */
     [[nodiscard]]
-    bool is_blank(std::string_view line)
+    bool is_whitespace_only(std::string_view line)
     {
-      return line.find_first_not_of(" \t") == std::string_view::npos;
+      return !line.empty() && (line.find_first_not_of(" \t") == std::string_view::npos);
+    }
+
+    [[nodiscard]]
+    std::string seqpat_error(const std::filesystem::path& seqpatFile, std::size_t line, std::string_view problem)
+    {
+      return std::format("Line {} of a .seqpat {}\n{}", line, problem, seqpatFile.generic_string());
     }
 
     /** The regular expression on `line` of `seqpatFile`, or an error naming both, in words of its own:
-        each standard library words `std::regex_error` differently
+        each standard library words `std::regex_error` differently. A line holding only whitespace is refused.
      */
     [[nodiscard]]
     std::regex seqpat_regex(std::string_view pattern, const std::filesystem::path& seqpatFile, std::size_t line)
     {
+      if(is_whitespace_only(pattern))
+      {
+        throw std::runtime_error{
+          seqpat_error(seqpatFile,
+                       line,
+                       "holds only whitespace, which is ambiguous: delete the line, or write the pattern explicitly, "
+                       "such as [ ] or [ \\t]")
+        };
+      }
+
       try
       {
         return std::regex{pattern.begin(), pattern.end()};
@@ -232,10 +248,7 @@ namespace sequoia::testing
       catch(const std::regex_error&)
       {
         throw std::runtime_error{
-          std::format("Line {} of a .seqpat is not a valid regular expression: {}\n{}",
-                      line,
-                      pattern,
-                      seqpatFile.generic_string())
+          seqpat_error(seqpatFile, line, std::format("is not a valid regular expression: {}", pattern))
         };
       }
     }
@@ -267,7 +280,7 @@ namespace sequoia::testing
             for(const auto [index, text] : std::views::split(expressions, '\n') | std::views::enumerate)
             {
               const std::string_view pattern{text};
-              if(is_blank(pattern))
+              if(pattern.empty())
                 continue;
 
               const auto rgx{seqpat_regex(pattern, supplPath, static_cast<std::size_t>(index) + 1)};
