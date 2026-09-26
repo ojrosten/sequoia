@@ -968,64 +968,25 @@ namespace sequoia
             graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "target", edges.size(), target);
             const auto compIndex{edge.complementary_index()};
 
-            const bool doValidate{
-              [&]() {
-                if constexpr(!is_directed(flavour)) return true;
-                else return (edge.target_node() != nodeIndex) || (edge.source_node() == edge.target_node());
-              }()
-            };
+            auto targetEdgesIter{edges.begin() + target};
+            graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "complementary", targetEdgesIter->size(), compIndex);
 
-            if(doValidate)
+            if((target == nodeIndex) && (compIndex == edgeIndex))
             {
-              auto targetEdgesIter{edges.begin() + target};
-              graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "complementary", targetEdgesIter->size(), compIndex);
-
-              if((target == nodeIndex) && (compIndex == edgeIndex))
-              {
-                throw std::logic_error{graph_errors::self_referential_error({nodeIndex, edgeIndex}, target, compIndex)};
-              }
-              else if(const auto& targetEdge{*(targetEdgesIter->begin() + compIndex)}; targetEdge.complementary_index() != edgeIndex)
-              {
-                throw std::logic_error{graph_errors::reciprocated_error_message({nodeIndex, edgeIndex}, "complementary", targetEdge.complementary_index(), edgeIndex)};
-              }
-              else
-              {
-                if constexpr(!is_directed(flavour))
-                {
-                  graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), nodeIndex);
-                }
-                else
-                {
-                  graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), target);
-                  graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "source", targetEdge.source_node(), edge.source_node());
-
-                  if constexpr(is_embedded(flavour))
-                  {
-                    graph_errors::check_inversion_consistency(nodeIndex, {edgeIndex, edge.inverted()}, {compIndex, targetEdge.inverted()});
-                  }
-                }
-
-                if constexpr(!std::is_empty_v<edge_weight_type>)
-                {
-                  if(edge.weight() != targetEdge.weight())
-                    throw std::logic_error{graph_errors::mismatched_weights_message("process_complementary_edges", {nodeIndex, edgeIndex})};
-                }
-              }
+              throw std::logic_error{graph_errors::self_referential_error({nodeIndex, edgeIndex}, target, compIndex)};
             }
-
-            if constexpr(is_directed(flavour))
+            else if(const auto& targetEdge{*(targetEdgesIter->begin() + compIndex)}; targetEdge.complementary_index() != edgeIndex)
             {
-              const auto source{edge.source_node()};
-              graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "source", edges.size(), source);
-              graph_errors::check_embedded_edge(nodeIndex, source, target);
+              throw std::logic_error{graph_errors::reciprocated_error_message({nodeIndex, edgeIndex}, "complementary", targetEdge.complementary_index(), edgeIndex)};
+            }
+            else
+            {
+              graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), nodeIndex);
 
-              if((edge.target_node() == nodeIndex) && (edge.source_node() != edge.target_node()))
+              if constexpr(!std::is_empty_v<edge_weight_type>)
               {
-                auto sourceEdgesIter{edges.begin() + source};
-                graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "complementary", sourceEdgesIter->size(), compIndex);
-
-                const auto& sourceEdge{*(sourceEdgesIter->begin() + compIndex)};
-                graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", sourceEdge.target_node(), nodeIndex);
+                if(edge.weight() != targetEdge.weight())
+                  throw std::logic_error{graph_errors::mismatched_weights_message("process_complementary_edges", {nodeIndex, edgeIndex})};
               }
             }
           }

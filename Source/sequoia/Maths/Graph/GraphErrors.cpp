@@ -94,16 +94,6 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string embedded_edge_message(const std::size_t nodeIndex, const std::size_t source, const std::size_t target)
-  {
-    return std::format("{}At least one of source {} and target {} must match current node {}",
-                       error_prefix("process_complementary_edges"),
-                       source,
-                       target,
-                       nodeIndex);
-  }
-
-  [[nodiscard]]
   std::string erase_edge_error(const std::size_t partner, const edge_indices indices)
   {
     return std::format("{}partner in partition {} not found for edge {}",
@@ -183,21 +173,5 @@ namespace sequoia::maths::graph_errors
                        "Please ensure these numbers are the same",
                        numNodes,
                        edgeParitions);
-  }
-
-  [[nodiscard]]
-  std::string inversion_consistency_message(std::size_t nodeIndex, edge_inversion_info zerothEdge, edge_inversion_info firstEdge)
-  {
-    auto toString{
-      [](edge_inversion_info info){
-        return std::format("{} / {}", info.edge, info.inverted ? "inverted" : "standard");
-      }
-    };
-
-    return std::format("{}mismatched inverson for node {}, edges ({}, {})",
-                       error_prefix("process_complementary_edges"),
-                       nodeIndex,
-                       toString(zerothEdge),
-                       toString(firstEdge));
   }
 }
