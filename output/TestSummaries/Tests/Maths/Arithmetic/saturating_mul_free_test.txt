@@ -1,2 +1,2 @@
 saturating_mul_free_test
-Standard Top Level Checks:               374;  Failures:  0  [Deep checks: 374]
+Standard Top Level Checks:               434;  Failures:  0  [Deep checks: 434]
