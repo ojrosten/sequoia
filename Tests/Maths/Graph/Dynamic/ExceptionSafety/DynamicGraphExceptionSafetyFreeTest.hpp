@@ -37,6 +37,8 @@ namespace sequoia::testing
 
     void test_shared_move_only_weights();
 
+    void test_move_only_meta_data();
+
     template<class Graph, class Mutation>
     void check_strong_guarantee(std::string_view description,
                                 const Graph& graph,

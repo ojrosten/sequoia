@@ -33,6 +33,7 @@
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
 
+#include <functional>
 #include <limits>
 #include <stdexcept>
 #include <ranges>
@@ -115,15 +116,15 @@ namespace sequoia
 
     struct partitions_allocator_tag{};
 
-    /** \brief A mutation of an edge weight whose result can be held while the mutated weight is written to both
-               halves of an edge.
+    /** \brief A mutation of an edge weight whose result, if any, is an object that can be held while the mutated
+               weight is written back.
      */
     template<class Fn, class Weight>
     concept edge_weight_mutator
-      =    std::invocable<Fn, Weight&>
-        && (   std::is_void_v<std::invoke_result_t<Fn, Weight&>>
-            || (    std::is_object_v<std::invoke_result_t<Fn, Weight&>>
-                && std::move_constructible<std::invoke_result_t<Fn, Weight&>>));
+      =    std::invocable<Fn&, Weight&>
+        && (   std::is_void_v<std::invoke_result_t<Fn&, Weight&>>
+            || (    std::is_object_v<std::invoke_result_t<Fn&, Weight&>>
+                && std::move_constructible<std::invoke_result_t<Fn&, Weight&>>));
 
     /** \brief Graph connectivity_base, used as a building block for concrete graphs.
     
@@ -162,7 +163,9 @@ namespace sequoia
         !is_directed(flavour) && !graph_impl::has_shared_weight_v<edge_type>
       };
 
-      /** \brief Whether the partner half of an undirected edge can be given a weight equal to its own. */
+      /** \brief Whether the weight of one half of an edge can be supplied to its partner: false only where the
+                 halves hold independent weights of a type that cannot be copied.
+       */
       constexpr static bool partner_weight_constructible_v{
         !independent_partner_weights_v || std::is_copy_constructible_v<edge_weight_type>
       };
@@ -254,29 +257,28 @@ namespace sequoia
           `fn` is invoked an unspecified number of times. Where the two halves of an undirected edge hold
           independent weights, `fn` is applied to a copy of the weight, which then replaces the weight of both
           halves. A throw leaves both unchanged, provided the weight's move does not throw. The constraint on
-          `fn` is the same for every graph, whether or not its weights are shared, since under
-          `edge_sharing_preference::agnostic` whether they are shared depends on the weight's size and
-          copyability.
+          `fn` is the same for every graph, whether or not it shares its weights.
        */
       template<edge_weight_mutator<edge_weight_type> Fn>
         requires (    !std::is_empty_v<edge_weight_type>
                   && partner_weight_constructible_v)
-      constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_edge_iterator citer, Fn fn)
+      constexpr std::invoke_result_t<Fn&, edge_weight_type&>
+        mutate_edge_weight(const_edge_iterator citer, Fn fn)
       {
         if constexpr(independent_partner_weights_v)
         {
-          using result_type = std::invoke_result_t<Fn, edge_weight_type&>;
+          using result_type = std::invoke_result_t<Fn&, edge_weight_type&>;
 
           edge_weight_type mutatedWeight{citer->weight()};
           if constexpr(std::is_void_v<result_type>)
           {
-            fn(mutatedWeight);
+            std::invoke(fn, mutatedWeight);
             set_source_and_partner_edge_weights(citer, std::move(mutatedWeight));
           }
           else
           {
             // Parentheses, since braces would prefer an initializer-list constructor of result_type
-            result_type result(fn(mutatedWeight));
+            result_type result(std::invoke(fn, mutatedWeight));
             set_source_and_partner_edge_weights(citer, std::move(mutatedWeight));
             return result;
           }
@@ -290,7 +292,8 @@ namespace sequoia
       template<edge_weight_mutator<edge_weight_type> Fn>
         requires (    !std::is_empty_v<edge_weight_type>
                   && partner_weight_constructible_v)
-      constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_reverse_edge_iterator criter, Fn fn)
+      constexpr std::invoke_result_t<Fn&, edge_weight_type&>
+        mutate_edge_weight(const_reverse_edge_iterator criter, Fn fn)
       {
         return mutate_edge_weight(to_const_edge_iterator(criter), std::move(fn));
       }
@@ -688,7 +691,7 @@ namespace sequoia
       {
         graph_errors::check_node_index_range("join", order(), node1, node2);
 
-        add_to_partition(node1, node2, meta1, std::forward<Args>(args)...);
+        add_to_partition(node1, node2, std::move(meta1), std::forward<Args>(args)...);
 
         if constexpr(!is_directed(flavour))
         {
@@ -706,7 +709,8 @@ namespace sequoia
       {
         const auto node1{citer1.partition_index()}, node2{citer2.partition_index()};
         const auto dist2{static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(node2), citer2))};
-        if(node1 == node2) return insert_join(citer1, dist2, std::forward<Args>(args)...);
+        if(node1 == node2)
+          return insert_join(citer1, dist2, std::forward<Args>(args)...);
 
         citer1 = insert_to_partition(citer1, node2, dist2, std::forward<Args>(args)...);
         return insert_reciprocal_join(citer1, cbegin_edges(node2) + dist2);
@@ -722,10 +726,11 @@ namespace sequoia
       {
         const auto node1{citer1.partition_index()}, node2{citer2.partition_index()};
         const auto dist2{static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(node2), citer2))};
-        if(node1 == node2) return insert_join(citer1, dist2, meta1, meta2, std::forward<Args>(args)...);
+        if(node1 == node2)
+          return insert_join(citer1, dist2, std::move(meta1), std::move(meta2), std::forward<Args>(args)...);
 
-        citer1 = insert_to_partition(citer1, node2, dist2, meta1, std::forward<Args>(args)...);
-        return insert_reciprocal_join(citer1, cbegin_edges(node2) + dist2, meta2);
+        citer1 = insert_to_partition(citer1, node2, dist2, std::move(meta1), std::forward<Args>(args)...);
+        return insert_reciprocal_join(citer1, cbegin_edges(node2) + dist2, std::move(meta2));
       }
 
       template<class... Args>
@@ -755,9 +760,9 @@ namespace sequoia
         const auto node{citer1.partition_index()};
         graph_errors::check_edge_insertion_index("insert_join", node, std::ranges::distance(cedges(node)) + 1, pos2);
 
-        citer1 = insert_to_partition(citer1, node, pos2, meta1, std::forward<Args>(args)...);
+        citer1 = insert_to_partition(citer1, node, pos2, std::move(meta1), std::forward<Args>(args)...);
 
-        return insert_reciprocal_join(citer1, pos2, meta2);
+        return insert_reciprocal_join(citer1, pos2, std::move(meta2));
       }
 
       void erase_edge(const_edge_iterator citer)
@@ -1335,10 +1340,10 @@ namespace sequoia
         return m_Edges.begin_partition(source) + dist;
       }
 
-      template<std::invocable<edge_weight_type&> Fn>
-      constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_source_edge_weight(const_edge_iterator citer, Fn fn)
+      template<edge_weight_mutator<edge_weight_type> Fn>
+      constexpr std::invoke_result_t<Fn&, edge_weight_type&> mutate_source_edge_weight(const_edge_iterator citer, Fn fn)
       {
-        return fn(to_edge_iterator(citer)->weight());
+        return std::invoke(fn, to_edge_iterator(citer)->weight());
       }
 
       template<class... Args>
@@ -1511,7 +1516,7 @@ namespace sequoia
         const auto dist1{static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(node1), citer1))};
 
         join_sentinel sentinel{*this, node1, dist1};
-        citer2 = m_Edges.insert_to_partition(citer2, node1, dist1, md..., *citer1);
+        citer2 = m_Edges.insert_to_partition(citer2, node1, dist1, std::move(md)..., *citer1);
         increment_comp_indices(++to_edge_iterator(citer2), end_edges(node2), 1);
 
         citer1 = cbegin_edges(node1) + dist1;
