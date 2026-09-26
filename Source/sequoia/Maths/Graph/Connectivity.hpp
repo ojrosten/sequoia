@@ -1040,28 +1040,21 @@ namespace sequoia
           [](edge_index_type i, range_t hostRange) {
             if(std::ranges::distance(hostRange) % 2) throw std::logic_error{odd_num_loops_error("connectivity_base", i)};
           },
-          [&](edge_index_type i, edge_index_type target, range_t hostRange, range_t targetRange) {
-            const auto brokenEdge{
-              [&, i, target, hostRange, targetRange]() -> std::optional<edge_indices> {
-                if(auto reciprocalCount{std::ranges::distance(targetRange)}; !reciprocalCount)
-                {
-                  return edge_indices{i, static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(i), hostRange.begin()))};
-                }
-                else if(auto count{std::ranges::distance(hostRange)}; count > reciprocalCount)
-                {
-                  return edge_indices{i, static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(i), hostRange.begin()) + reciprocalCount)};
-                }
-                else if(count < reciprocalCount)
-                {
-                  return edge_indices{target, static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(target), targetRange.begin()) + count)};
-                }
-
-                return {};
-              }()
+          [](edge_index_type i, edge_index_type target, range_t hostRange, range_t targetRange) {
+            const partial_edge_counts counts{
+              .node{i},
+              .target{target},
+              .to_target{static_cast<std::size_t>(std::ranges::distance(hostRange))},
+              .from_target{static_cast<std::size_t>(std::ranges::distance(targetRange))}
             };
 
-            if(brokenEdge)
-              throw std::logic_error{absent_reciprocated_partial_edge_message("connectivity_base", brokenEdge.value())};
+            if(counts.to_target != counts.from_target)
+            {
+              constexpr auto weighting{
+                std::is_empty_v<edge_weight_type> ? edge_weighting::unweighted : edge_weighting::weighted
+              };
+              throw std::logic_error{absent_reciprocated_partial_edge_message("connectivity_base", counts, weighting)};
+            }
           }
         );
 

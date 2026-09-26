@@ -174,15 +174,26 @@ namespace sequoia::testing
       t.check_exception_thrown<std::logic_error>("Mismatched partial edges", [](){ return graph_type{{edge_init_type{1}}, {edge_init_type{1}}}; });
       t.check_exception_thrown<std::logic_error>("Mismatched loop", [](){ return graph_type{{edge_init_type{1}}, {edge_init_type{0}, edge_init_type{1}}}; });
 
-      // Three nodes
+      // Three nodes. In each fixture a node lists its edges out of order, so that the position of an
+      // unreciprocated edge, counted after sorting by target, is that of a reciprocated edge as written
+      t.check_exception_thrown<std::logic_error>(
+        "A partial edge with no reciprocal",
+        [](){ return graph_type{{edge_init_type{2}, edge_init_type{1}}, {edge_init_type{0}}, {}}; }
+      );
+
+      t.check_exception_thrown<std::logic_error>(
+        "Parallel partial edges with no reciprocal",
+        [](){ return graph_type{{edge_init_type{2}, edge_init_type{1}, edge_init_type{2}}, {edge_init_type{0}}, {}}; }
+      );
+
       t.check_exception_thrown<std::logic_error>(
         "More partial edges one way than the other",
-        [](){ return graph_type{{edge_init_type{1}, edge_init_type{2}, edge_init_type{2}}, {edge_init_type{0}}, {edge_init_type{0}}}; }
+        [](){ return graph_type{{edge_init_type{2}, edge_init_type{2}, edge_init_type{1}}, {edge_init_type{0}}, {edge_init_type{0}}}; }
       );
 
       t.check_exception_thrown<std::logic_error>(
         "Fewer partial edges one way than the other",
-        [](){ return graph_type{{edge_init_type{2}}, {edge_init_type{2}}, {edge_init_type{0}, edge_init_type{1}, edge_init_type{1}}}; }
+        [](){ return graph_type{{edge_init_type{2}}, {edge_init_type{2}}, {edge_init_type{1}, edge_init_type{1}, edge_init_type{0}}}; }
       );
     }
 

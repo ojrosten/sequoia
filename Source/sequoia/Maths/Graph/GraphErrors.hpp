@@ -28,6 +28,18 @@ namespace sequoia::maths::graph_errors
     bool inverted{};
   };
 
+  /** \brief The number of partial edges from `node` to `target`, and from `target` back to `node`.
+
+      In a weighted graph, only the partial edges of one weight are counted, since a partial edge is
+      reciprocated only by one of equal weight.
+   */
+  struct partial_edge_counts
+  {
+    std::size_t node{}, target{}, to_target{}, from_target{};
+  };
+
+  enum class edge_weighting { unweighted, weighted };
+
   [[nodiscard]]
   std::string node_index_range_message(std::string_view method, std::size_t order, std::size_t node);
 
@@ -122,8 +134,11 @@ namespace sequoia::maths::graph_errors
   [[nodiscard]]
   std::string mismatched_weights_message(std::string_view method, edge_indices edgeIndices);
 
+  /** \pre `counts.to_target` is non-zero and differs from `counts.from_target` */
   [[nodiscard]]
-  std::string absent_reciprocated_partial_edge_message(std::string_view method, edge_indices edgeIndices);
+  std::string absent_reciprocated_partial_edge_message(std::string_view method,
+                                                       partial_edge_counts counts,
+                                                       edge_weighting weighting);
 
   [[nodiscard]]
   std::string absent_partner_weight_message(std::string_view method, edge_indices edgeIndices);
