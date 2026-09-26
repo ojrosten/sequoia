@@ -17,7 +17,6 @@ int main(int argc, char** argv)
   {
     using namespace sequoia;
     using namespace testing;
-    using namespace std::literals::chrono_literals;
 
     test_runner runner{argc,
                        argv,
@@ -108,7 +107,7 @@ int main(int argc, char** argv)
     runner.register_test<substitutions_free_test>();
     runner.register_test<build_artefacts_free_test>();
 
-    code = runner.execute(timer_resolution{1ms});
+    code = runner.execute();
   }
   catch(const std::exception& e)
   {

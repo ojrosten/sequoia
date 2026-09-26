@@ -935,7 +935,7 @@ namespace sequoia::testing
     report_unmatched(stream(), std::span{excluded}, "Excluded Test File", hint);
   }
 
-  return_code test_runner::execute([[maybe_unused]] timer_resolution r)
+  return_code test_runner::execute()
   {
     if(!in_mode(runner_mode::test))
       return return_code::success;
