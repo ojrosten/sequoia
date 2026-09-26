@@ -79,12 +79,16 @@ capture() {
   echo "TRIAL-CAPTURE-STATUS ${mode} ${status}" | tee -a "${timings}"
   tail -n 30 "${test_exe_dir}/capture.${mode}.log"
 }
+first=""
 for mode in ${TRIAL_CAPTURE_ORDER:-serial parallel}; do
   case "${mode}" in
     serial)   capture serial                ;;
     parallel) capture parallel --parallel 0 ;;
   esac
+  first=${first:-${mode}}
 done
+# The serial capture when there is one, else the only one
+[[ -f "${test_exe_dir}/coverage.serial.info" ]] || cp "${test_exe_dir}/coverage.${first}.info" "${test_exe_dir}/coverage.serial.info"
 cp "${test_exe_dir}/coverage.serial.info" "${test_exe_dir}/coverage.info"
 mark remove-start
 foreign=('/usr/*')
@@ -119,6 +123,12 @@ for category in inconsistent range empty category; do
   fi
 done
 rm -rf "${probe_dir}"
+
+# SCRATCH: the shape proposed for coarse needs only the tracefile
+if [[ -n "${TRIAL_SKIP_GENHTML}" ]]; then
+  echo "TRIAL: genhtml skipped"
+  exit 0
+fi
 
 # Generate HTML report
 mark genhtml-start

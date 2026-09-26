@@ -268,16 +268,20 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {variant: serial-atomic,           test_args: '--serial',                 profile_update: atomic, capture_order: 'serial parallel'}
-          - {variant: concurrent-atomic,       test_args: '',                         profile_update: atomic, capture_order: 'parallel serial'}
-          - {variant: concurrent-single,       test_args: '',                         profile_update: single, capture_order: 'serial parallel'}
-          - {variant: serial-single,           test_args: '--serial',                 profile_update: single, capture_order: 'parallel serial'}
-          - {variant: concurrent-atomic-drift, test_args: '--check-versioned-output', profile_update: atomic, capture_order: 'parallel serial'}
+          # Dispatch 4: the proposed coarse shape (concurrent, drift-checked, parallel capture, no
+          # genhtml) against the trunk's shape, twice each, and a drift false-negative control under
+          # coverage that keeps the trunk's script shape (genhtml last).
+          - {variant: coarse-shape-a,  test_args: '--check-versioned-output', profile_update: atomic, capture_order: parallel, skip_genhtml: '1', corrupt: ''}
+          - {variant: coarse-shape-b,  test_args: '--check-versioned-output', profile_update: atomic, capture_order: parallel, skip_genhtml: '1', corrupt: ''}
+          - {variant: trunk-shape-a,   test_args: '--serial',                 profile_update: atomic, capture_order: serial,   skip_genhtml: '',  corrupt: ''}
+          - {variant: trunk-shape-b,   test_args: '--serial',                 profile_update: atomic, capture_order: serial,   skip_genhtml: '',  corrupt: ''}
+          - {variant: drift-control,   test_args: '--check-versioned-output', profile_update: atomic, capture_order: serial,   skip_genhtml: '',  corrupt: '1'}
     env:
       CC: gcc-15
       CXX: g++-15
       NEEDS_TESTING: ${{ needs.scope.outputs.suite }}
       TRIAL_CAPTURE_ORDER: ${{ matrix.capture_order }}
+      TRIAL_SKIP_GENHTML: ${{ matrix.skip_genhtml }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -397,6 +401,15 @@ jobs:
           echo "lines of build.ninja with -pthread: $(grep -c -- '-pthread' ../build/TestAll/gcc-env-coverage/build.ninja || true)"
           grep -rh --include=CTestTestfile.cmake 'add_test' ../build/TestAll/gcc-env-coverage
           cmake --build --preset gcc-env-coverage
+
+      # SCRATCH: the drift control's single corruption, as tests.yml's false-negative control makes it.
+      - name: Corrupt the versioned output
+        if: ${{ matrix.corrupt == '1' && env.NEEDS_TESTING == 'true' }}
+        run: |
+          summary=output/TestSummaries/Tests/Core/Meta/type_algorithms_free_test.txt
+          [ -f "$summary" ] || { echo "::error::$summary is not where the control expects it"; exit 1; }
+          echo "false-negative control: the run must report this line as drift" >> "$summary"
+          git diff --stat
 
       # The script runs the suite through ctest itself, so there is no separate run
       # step. Utilities.cmake registers the test with --serial under CODE_COVERAGE.
