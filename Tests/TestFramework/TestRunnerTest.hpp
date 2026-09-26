@@ -93,6 +93,8 @@ namespace sequoia::testing
 
     void test_thread_pool();
 
+    void test_summary_collision();
+
     void test_instability_analysis();
 
     void test_exit_statuses();
