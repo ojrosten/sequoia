@@ -1408,10 +1408,10 @@ namespace sequoia::testing
   {
     using namespace parsing::commandline;
 
-    return error(std::string{"Test: \""}.append(testName).append("\"\n")
-                  .append("Source file: \"").append(source.generic_string()).append("\"\n")
-                  .append("A test's name is that of its class, and determines where its output is"
-                    " written, so each may be registered only once.\n"));
+    return error({std::format("Test: \"{}\"", testName),
+                  std::format("Source file: \"{}\"", source.generic_string()),
+                  "A test's name is that of its class, and determines where its output is written,"
+                  " so each may be registered only once."});
   }
 
   void test_runner::build_suite_tree()
