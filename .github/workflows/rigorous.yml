@@ -306,8 +306,9 @@ jobs:
           done
           sudo apt-get update -qq
           # The Perl packages are for lcov, installed below from its release: Capture::Tiny,
-          # DateTime, Date::Parse and Devel::StackTrace, without which it does not start, and
-          # JSON::XS, which geninfo prefers over the core JSON::PP for reading gcov's output.
+          # DateTime, Date::Parse and Devel::StackTrace, without which lcov does not start, and
+          # JSON::XS, which geninfo uses in preference to the core, pure-Perl JSON::PP to read
+          # gcov's output.
           packages=(g++-15 ninja-build libtbb-dev
                     libcapture-tiny-perl libdatetime-perl libdevel-stacktrace-perl libjson-xs-perl libtimedate-perl)
           for pkg in "${packages[@]}"; do
@@ -336,9 +337,11 @@ jobs:
           # lcov comes from its release rather than apt, so that its version does not move with
           # ubuntu-latest: the 24.04 archive has 2.0 and the 26.04 one 2.4, and lcov 2.0 and 2.5
           # write different function records, and count different function totals, from the same
-          # .gcda files. 2.5 is also what Homebrew installs, so CI and a Mac run the same lcov.
-          # Pinned by checksum for the same reason as CMake.
+          # coverage data. Keep it at the version Homebrew installs, so that CI and a Mac run the
+          # same lcov. Pinned by checksum for the same reason as CMake. Each tool prints the
+          # version and, after a hyphen, the release number from the tarball's .version file.
           lcov_version=2.5
+          lcov_release=0
           lcov_sha256=7e5e5a154bd5f3557659c328cab376764e7abd238bb403c424472c296b175126
           lcov_tarball=$RUNNER_TEMP/lcov.tar.gz
           lcov_url=https://github.com/linux-test-project/lcov/releases/download/v$lcov_version/lcov-$lcov_version.tar.gz
@@ -349,13 +352,13 @@ jobs:
           # with Sphinx.
           sudo make -C "$RUNNER_TEMP/lcov-$lcov_version" --old-file=doc install
           # Each tool must report the pinned release; otherwise another lcov earlier on PATH would
-          # measure in its place without a word. The "-0" is the release number in the tarball's
-          # .version file.
+          # measure in its place without a word.
+          pinned=$lcov_version-$lcov_release
           for tool in lcov geninfo genhtml; do
             reported=$("$tool" --version)
             echo "$reported"
-            [ "${reported##* }" = "$lcov_version-0" ] \
-              || { echo "::error::$tool on PATH reports ${reported##* }, not the pinned $lcov_version-0"; exit 1; }
+            [ "${reported##* }" = "$pinned" ] \
+              || { echo "::error::$tool on PATH reports ${reported##* }, not the pinned $pinned"; exit 1; }
           done
           g++-15 --version | head -1
           "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin/cmake" --version | head -1
@@ -385,7 +388,15 @@ jobs:
         run: |
           info=build/TestAll/gcc-env-coverage/coverage.info
           [ -f "$info" ] || { echo "::error::no tracefile at $info"; exit 1; }
-          summary=$(lcov --summary "$info" 2>&1 | grep -E 'lines|functions' || true)
+          # lcov 2.5 refuses to read a tracefile holding the inconsistencies its capture was told to
+          # ignore, so the summary takes the suppression generate_coverage_report.sh uses. A
+          # tracefile lcov cannot read fails the job: it is what the job publishes.
+          if ! lcov_output=$(lcov --summary "$info" --ignore-errors inconsistent,inconsistent 2>&1); then
+            echo "::error::lcov could not read $info"
+            echo "$lcov_output"
+            exit 1
+          fi
+          summary=$(grep -E '^ *(lines|functions)\.' <<< "$lcov_output")
           echo "$summary"
           {
             echo "### Coverage"
