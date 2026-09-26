@@ -462,10 +462,13 @@ namespace sequoia::testing
 
     add_to_cmake(paths().source().cmake_lists(), paths().source().project(), srcPath, "set(SourceList", ")\n", "");
 
-    read_modify_write(paths().main().cmake_lists(), [&root = paths().project_root()](std::string& text) {
-        replace_all(text, "#!", "");
+    auto uncommentMarkedLines{
+      [](const fs::path& cmakeLists) {
+        read_modify_write(cmakeLists, [](std::string& text) { replace_all(text, "#!", ""); });
       }
-    );
+    };
+
+    ammend_file(paths(), uncommentMarkedLines, [](const main_paths& info) { return info.cmake_lists(); });
   }
 
   void nascent_test_base::make_common_replacements(std::string& text) const
