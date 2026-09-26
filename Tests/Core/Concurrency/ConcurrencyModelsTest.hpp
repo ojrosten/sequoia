@@ -28,6 +28,8 @@ namespace sequoia::testing
 
     void test_task_queue();
 
+    void test_try_lock_failures();
+
     template<class ThreadModel, class... Args>
     void test_exceptions(std::string_view message, Args&&... args);
 
