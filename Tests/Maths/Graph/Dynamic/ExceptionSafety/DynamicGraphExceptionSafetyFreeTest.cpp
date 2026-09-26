@@ -23,34 +23,33 @@ namespace sequoia::testing
       using std::runtime_error::runtime_error;
     };
 
-    /** \brief Counts the fallible steps taken during its lifetime, and makes the one numbered
-               `failingStep`, counting from zero, throw `injected_failure`.
+    /** \brief Counts the fallible steps taken during its lifetime and, if `failingStep` holds a value,
+               makes the step so numbered, counting from zero, throw `injected_failure`.
 
-        A fallible step is whatever calls `take_fallible_step`: here, a copy of a
-        `fallible_weight` and an allocation by a `fallible_allocator`. Outside the
-        lifetime of a monitor, neither can fail.
+        A fallible step is a call of `take_fallible_step`; outside the lifetime of a monitor, no step
+        fails.
      */
     class [[nodiscard]] fallible_step_monitor
     {
     public:
       explicit fallible_step_monitor(std::optional<std::size_t> failingStep) noexcept
       {
-        progress() = steps{.failing_step{failingStep}};
+        current_monitoring() = monitoring{.failing_step{failingStep}};
       }
 
-      ~fallible_step_monitor() { progress().reset(); }
+      ~fallible_step_monitor() { current_monitoring().reset(); }
 
       fallible_step_monitor(const fallible_step_monitor&)            = delete;
       fallible_step_monitor& operator=(const fallible_step_monitor&) = delete;
 
       [[nodiscard]]
-      std::size_t steps_taken() const noexcept { return progress()->taken; }
+      std::size_t steps_taken() const noexcept { return current_monitoring()->steps_taken; }
 
       static void take_fallible_step()
       {
-        if(auto& current{progress()})
+        if(auto& current{current_monitoring()})
         {
-          const auto step{current->taken++};
+          const auto step{current->steps_taken++};
           if(step == current->failing_step)
           {
             current->failing_step.reset();
@@ -59,16 +58,16 @@ namespace sequoia::testing
         }
       }
     private:
-      struct steps
+      struct monitoring
       {
         std::optional<std::size_t> failing_step;
-        std::size_t taken{};
+        std::size_t steps_taken{};
       };
 
       [[nodiscard]]
-      static std::optional<steps>& progress() noexcept
+      static std::optional<monitoring>& current_monitoring() noexcept
       {
-        thread_local std::optional<steps> current{};
+        thread_local std::optional<monitoring> current{};
         return current;
       }
     };
@@ -140,9 +139,6 @@ namespace sequoia::testing
 
       constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::agnostic};
     };
-
-    template<class Graph>
-    inline constexpr bool weights_shared_v{maths::graph_impl::has_shared_weight_v<typename Graph::edge_type>};
   }
 
   [[nodiscard]]
@@ -166,7 +162,7 @@ namespace sequoia::testing
     using graph_type     = maths::undirected_graph<fallible_weight, maths::null_weight, maths::null_meta_data, EdgeStorageConfig>;
     using edge_init_type = graph_type::edge_init_type;
 
-    STATIC_CHECK(!weights_shared_v<graph_type>);
+    STATIC_CHECK(!maths::graph_impl::has_shared_weight_v<typename graph_type::edge_type>);
 
     const auto describe{
       [](std::string_view operation) { return std::format("{} in an undirected graph with {}", operation, meta::tidy_type_name(meta::type_name<EdgeStorageConfig>())); }
@@ -197,7 +193,7 @@ namespace sequoia::testing
     using graph_type     = maths::embedded_graph<fallible_weight, maths::null_weight, maths::null_meta_data, EdgeStorageConfig>;
     using edge_init_type = graph_type::edge_init_type;
 
-    STATIC_CHECK(!weights_shared_v<graph_type>);
+    STATIC_CHECK(!maths::graph_impl::has_shared_weight_v<typename graph_type::edge_type>);
 
     const auto describe{
       [](std::string_view operation) { return std::format("{} in an embedded graph with {}", operation, meta::tidy_type_name(meta::type_name<EdgeStorageConfig>())); }
@@ -273,13 +269,14 @@ namespace sequoia::testing
   {
     using graph_type     = maths::directed_graph<maths::null_weight, int, fallible_partitions_edge_storage_config>;
     using edge_init_type = graph_type::edge_init_type;
+    using node_weights   = std::initializer_list<int>;
 
-    const graph_type graph{{{edge_init_type{1}}, {}}, {1, 2}};
+    const graph_type graph{{{edge_init_type{1}}, {}}, node_weights{1, 2}};
 
     check_strong_guarantee(
       "Insert node ahead of the others in a directed graph",
       graph,
-      graph_type{{{}, {edge_init_type{2}}, {}}, {3, 1, 2}},
+      graph_type{{{}, {edge_init_type{2}}, {}}, node_weights{3, 1, 2}},
       1,
       [](graph_type& g) { g.insert_node(0, 3); }
     );
@@ -287,7 +284,7 @@ namespace sequoia::testing
     check_strong_guarantee(
       "Insert node beyond the end of a directed graph",
       graph,
-      graph_type{{{edge_init_type{1}}, {}, {}}, {1, 2, 3}},
+      graph_type{{{edge_init_type{1}}, {}, {}}, node_weights{1, 2, 3}},
       1,
       [](graph_type& g) { g.insert_node(5, 3); }
     );

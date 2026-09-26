@@ -799,7 +799,7 @@ namespace sequoia
       void push_back_to_partition(const index_type index, Args&&... args)
       {
         check_range("push_back_to_partition", index);
-        check_index_type_capacity("push_back_to_partition");
+        check_index_type_limit("push_back_to_partition");
 
         auto iter{m_Data.end()};
         if(index == m_Partitions.size() - 1)
@@ -820,7 +820,7 @@ namespace sequoia
       {
         const auto source{pos.partition_index()};
         check_range("insert_to_partition", source);
-        check_index_type_capacity("insert_to_partition");
+        check_index_type_limit("insert_to_partition");
 
         auto iter{m_Data.emplace(pos.base_iterator(), std::forward<Args>(args)...)};
         increment_partition_indices(source);
@@ -956,12 +956,12 @@ namespace sequoia
         }
       }
 
-      void check_index_type_capacity(std::string_view method) const
+      void check_index_type_limit(std::string_view method) const
       {
-        constexpr auto maxSize{std::numeric_limits<index_type>::max()};
-        if(std::cmp_greater_equal(m_Data.size(), maxSize))
+        constexpr auto limit{std::numeric_limits<index_type>::max()};
+        if(std::cmp_greater_equal(m_Data.size(), limit))
         {
-          throw std::out_of_range{std::format("partitioned_sequence::{}: the index type cannot count more than {} elements", method, maxSize)};
+          throw std::out_of_range{std::format("partitioned_sequence::{}: the index type cannot count more than {} elements", method, limit)};
         }
       }
 

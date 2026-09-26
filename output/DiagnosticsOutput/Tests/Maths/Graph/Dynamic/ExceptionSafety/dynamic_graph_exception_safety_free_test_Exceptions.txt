@@ -1,4 +1,4 @@
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Set edge weight in an undirected graph with sequoia::maths::bucketed_edge_storage_config: failure at fallible step 0
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Injected failure at fallible step 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Set edge weight in an undirected graph with sequoia::maths::bucketed_edge_storage_config: failure at fallible step 1
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Injected failure at fallible step 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Join in an undirected graph with sequoia::maths::bucketed_edge_storage_config: failure at fallible step 0
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ Injected failure at fallible step 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Set edge weight in an undirected graph with sequoia::maths::contiguous_edge_storage_config: failure at fallible step 0
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ Injected failure at fallible step 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Set edge weight in an undirected graph with sequoia::maths::contiguous_edge_storage_config: failure at fallible step 1
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ Injected failure at fallible step 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Join in an undirected graph with sequoia::maths::contiguous_edge_storage_config: failure at fallible step 0
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ Injected failure at fallible step 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Set edge weight in an embedded graph with sequoia::maths::bucketed_edge_storage_config: failure at fallible step 0
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ Injected failure at fallible step 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Set edge weight in an embedded graph with sequoia::maths::bucketed_edge_storage_config: failure at fallible step 1
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ Injected failure at fallible step 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Join in an embedded graph with sequoia::maths::bucketed_edge_storage_config: failure at fallible step 0
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ Injected failure at fallible step 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Insert join ahead of edges whose partners are on another node in an embedded graph with sequoia::maths::bucketed_edge_storage_config: failure at fallible step 0
 
 Expected Exception Type:
@@ -88,7 +88,7 @@ Injected failure at fallible step 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Insert loop ahead of edges whose partners are on another node in an embedded graph with sequoia::maths::bucketed_edge_storage_config: failure at fallible step 0
 
 Expected Exception Type:
@@ -97,7 +97,7 @@ Injected failure at fallible step 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Insert join ahead of a loop in an embedded graph with sequoia::maths::bucketed_edge_storage_config: failure at fallible step 0
 
 Expected Exception Type:
@@ -106,7 +106,7 @@ Injected failure at fallible step 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Set edge weight in an embedded graph with sequoia::maths::contiguous_edge_storage_config: failure at fallible step 0
 
 Expected Exception Type:
@@ -115,7 +115,7 @@ Injected failure at fallible step 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Set edge weight in an embedded graph with sequoia::maths::contiguous_edge_storage_config: failure at fallible step 1
 
 Expected Exception Type:
@@ -124,7 +124,7 @@ Injected failure at fallible step 1
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Join in an embedded graph with sequoia::maths::contiguous_edge_storage_config: failure at fallible step 0
 
 Expected Exception Type:
@@ -133,7 +133,7 @@ Injected failure at fallible step 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Insert join ahead of edges whose partners are on another node in an embedded graph with sequoia::maths::contiguous_edge_storage_config: failure at fallible step 0
 
 Expected Exception Type:
@@ -142,7 +142,7 @@ Injected failure at fallible step 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Insert loop ahead of edges whose partners are on another node in an embedded graph with sequoia::maths::contiguous_edge_storage_config: failure at fallible step 0
 
 Expected Exception Type:
@@ -151,7 +151,7 @@ Injected failure at fallible step 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Insert join ahead of a loop in an embedded graph with sequoia::maths::contiguous_edge_storage_config: failure at fallible step 0
 
 Expected Exception Type:
@@ -160,7 +160,7 @@ Injected failure at fallible step 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Insert node ahead of the others in a directed graph: failure at fallible step 0
 
 Expected Exception Type:
@@ -169,7 +169,7 @@ Injected failure at fallible step 0
 
 =======================================
 
-Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 311
+Tests/Maths/Graph/Dynamic/ExceptionSafety/DynamicGraphExceptionSafetyFreeTest.cpp, Line 308
 Insert node beyond the end of a directed graph: failure at fallible step 0
 
 Expected Exception Type:
