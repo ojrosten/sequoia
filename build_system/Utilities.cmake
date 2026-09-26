@@ -11,6 +11,10 @@ option(CODE_COVERAGE "Build with Code Coverage" OFF)
 # the interruption falls on nobody.
 option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 set(EXEC_ARGS "" CACHE STRING "Command-line arguments for the 'run' target.")
+# SCRATCH (coverage concurrency trial, never merge): the two coverage knobs the trial varies.
+# The defaults reproduce the trunk exactly.
+set(COVERAGE_PROFILE_UPDATE "atomic" CACHE STRING "Scratch: gcc's -fprofile-update method under CODE_COVERAGE")
+set(COVERAGE_TEST_ARGS "--serial" CACHE STRING "Scratch: the test executable's arguments under CODE_COVERAGE")
 
 FUNCTION(sequoia_init)
     # From policy version 3.28 (CMP0155) CMake scans every C++20-or-later source for module
@@ -159,7 +163,7 @@ ENDFUNCTION()
 # from being torn by the threading inside sequoia.
 FUNCTION(sequoia_add_coverage_options target)
     if(CODE_COVERAGE)
-        target_compile_options(${target} PRIVATE -coverage -fprofile-update=atomic)
+        target_compile_options(${target} PRIVATE -coverage -fprofile-update=${COVERAGE_PROFILE_UPDATE})
         target_link_options(${target} PRIVATE -coverage)
     endif()
 ENDFUNCTION()
@@ -183,7 +187,7 @@ FUNCTION(sequoia_finalize_tests target sourceGroupRoot sourceGroupPrefix)
     sequoia_add_coverage_options(${target})
     sequoia_add_time_trace_options(${target})
     if(CODE_COVERAGE)
-        add_test(NAME ${target} COMMAND ${target} "--serial")
+        add_test(NAME ${target} COMMAND ${target} ${COVERAGE_TEST_ARGS})
     else()
         add_test(NAME ${target} COMMAND ${target})
     endif()

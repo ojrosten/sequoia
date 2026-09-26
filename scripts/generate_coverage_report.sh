@@ -34,9 +34,20 @@ mkdir -p "${output_dir}"
 # Cleanup lcov
 lcov --zerocounters --directory "${test_exe_dir}"
 
+# SCRATCH (coverage concurrency trial, never merge): timing marks from the runner's clock, and
+# ctest's own status, which the trunk's script discards.
+timings="${test_exe_dir}/trial_timings.txt"
+: > "${timings}"
+mark() { echo "TRIAL-MARK $1 $(date +%s.%N)" | tee -a "${timings}"; }
+echo "TRIAL-NPROC $(nproc 2>/dev/null || sysctl -n hw.ncpu)" | tee -a "${timings}"
+
 # Run the tests to generate fresh .gcda files
 pushd "${test_exe_dir}"
+mark ctest-start
 ctest -T Test
+ctest_status=$?
+mark ctest-end
+echo "TRIAL-CTEST-STATUS ${ctest_status}" | tee -a "${timings}"
 popd
 
 # gcov must match the compiler which produced the .gcda files, so take it from the build itself
@@ -55,7 +66,27 @@ fi
 echo "gcov: ${gcov_tool}"
 
 # Generate lcov coverage report
-lcov --directory "${test_exe_dir}"  --capture --output-file "${test_exe_dir}/coverage.info" --keep-going --filter range --rc geninfo_unexecuted_blocks=1 --ignore-errors empty --ignore-errors inconsistent,inconsistent --ignore-errors format,format --gcov-tool "${gcov_tool}"
+# SCRATCH: captured twice from the same .gcda files, serially and with --parallel (as many jobs as
+# cores), in the order TRIAL_CAPTURE_ORDER gives, so that the file cache favours neither. The
+# serial capture goes on to the rest of the script, as on the trunk.
+capture() {
+  local mode=$1; shift
+  mark "capture-${mode}-start"
+  lcov --directory "${test_exe_dir}"  --capture --output-file "${test_exe_dir}/coverage.${mode}.info" --keep-going --filter range --rc geninfo_unexecuted_blocks=1 --ignore-errors empty --ignore-errors inconsistent,inconsistent --ignore-errors format,format --gcov-tool "${gcov_tool}" "$@" \
+    > "${test_exe_dir}/capture.${mode}.log" 2>&1
+  local status=$?
+  mark "capture-${mode}-end"
+  echo "TRIAL-CAPTURE-STATUS ${mode} ${status}" | tee -a "${timings}"
+  tail -n 30 "${test_exe_dir}/capture.${mode}.log"
+}
+for mode in ${TRIAL_CAPTURE_ORDER:-serial parallel}; do
+  case "${mode}" in
+    serial)   capture serial                ;;
+    parallel) capture parallel --parallel 0 ;;
+  esac
+done
+cp "${test_exe_dir}/coverage.serial.info" "${test_exe_dir}/coverage.info"
+mark remove-start
 foreign=('/usr/*')
 if [[ "$(uname -s)" == Darwin ]]; then
   foreign+=('/opt/homebrew/*' '/Library/Developer/*' '/Applications/Xcode.app/*')
@@ -63,6 +94,8 @@ fi
 
 # The doubling is deliberate: it suppresses display too, leaving genhtml the sole reporter
 lcov --remove  "${test_exe_dir}/coverage.info" "${foreign[@]}" --output-file "${test_exe_dir}/coverage.info" --keep-going --ignore-errors inconsistent,inconsistent --ignore-errors empty
+
+mark remove-end
 
 # lcov forces --no-strip-underscores on Darwin, which only GNU c++filt accepts
 gnu_cxxfilt="/opt/homebrew/opt/binutils/bin/c++filt"
@@ -88,4 +121,8 @@ done
 rm -rf "${probe_dir}"
 
 # Generate HTML report
+mark genhtml-start
 genhtml "${demangle[@]}" --suppress-aliases -o "${output_dir}" "${test_exe_dir}/coverage.info" "${ignore[@]}"
+genhtml_status=$?
+mark genhtml-end
+exit ${genhtml_status}

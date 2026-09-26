@@ -224,7 +224,7 @@ jobs:
   # the missing answer.
   rigorous:
     needs: [staging, scope]
-    if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
+    if: ${{ false }}  # SCRATCH (coverage concurrency trial): only the coverage job runs
     uses: ./.github/workflows/tests.yml
     with:
       needs_testing: ${{ needs.scope.outputs.suite }}
@@ -243,7 +243,7 @@ jobs:
 
   docs:
     needs: [staging, scope]
-    if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
+    if: ${{ false }}  # SCRATCH (coverage concurrency trial): only the coverage job runs
     uses: ./.github/workflows/docs.yml
     with:
       needs_testing: ${{ needs.scope.outputs.documentation }}
@@ -255,15 +255,28 @@ jobs:
   # The toolchain steps repeat tests.yml rather than calling it: coverage runs the
   # suite through ctest, serially, not through the `run` target.
   coverage:
-    name: Coverage · Linux · GCC
+    name: Coverage · ${{ matrix.variant }}
     needs: [staging, scope]
     if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    # SCRATCH (coverage concurrency trial, never merge). serial-atomic is the trunk's configuration;
+    # concurrent-single is the null for -fprofile-update=atomic, spelled out as `single` because gcc
+    # picks prefer-atomic by itself when -pthread is on the command line, so merely dropping the flag
+    # need not remove atomicity. The capture order alternates so the file cache favours neither.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {variant: serial-atomic,           test_args: '--serial',                 profile_update: atomic, capture_order: 'serial parallel'}
+          - {variant: concurrent-atomic,       test_args: '',                         profile_update: atomic, capture_order: 'parallel serial'}
+          - {variant: concurrent-single,       test_args: '',                         profile_update: single, capture_order: 'serial parallel'}
+          - {variant: concurrent-atomic-drift, test_args: '--check-versioned-output', profile_update: atomic, capture_order: 'parallel serial'}
     env:
       CC: gcc-15
       CXX: g++-15
       NEEDS_TESTING: ${{ needs.scope.outputs.suite }}
+      TRIAL_CAPTURE_ORDER: ${{ matrix.capture_order }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -375,7 +388,13 @@ jobs:
         if: env.NEEDS_TESTING == 'true'
         working-directory: TestAll
         run: |
-          cmake --preset gcc-env-coverage
+          cmake --preset gcc-env-coverage "-DCOVERAGE_TEST_ARGS=${{ matrix.test_args }}" "-DCOVERAGE_PROFILE_UPDATE=${{ matrix.profile_update }}"
+          # SCRATCH: what the variant actually compiled with and registered, read from the build
+          # rather than from the matrix.
+          grep -E '^COVERAGE_(TEST_ARGS|PROFILE_UPDATE):' ../build/TestAll/gcc-env-coverage/CMakeCache.txt
+          grep -o -E -- '-fprofile-update=[a-z-]+' ../build/TestAll/gcc-env-coverage/build.ninja | sort | uniq -c
+          echo "lines of build.ninja with -pthread: $(grep -c -- '-pthread' ../build/TestAll/gcc-env-coverage/build.ninja || true)"
+          grep -rh --include=CTestTestfile.cmake 'add_test' ../build/TestAll/gcc-env-coverage
           cmake --build --preset gcc-env-coverage
 
       # The script runs the suite through ctest itself, so there is no separate run
@@ -412,14 +431,30 @@ jobs:
             echo "_Reported only. No threshold is applied yet._"
           } >> "$GITHUB_STEP_SUMMARY"
 
+      # SCRATCH: what the run did to the versioned output, whatever its arguments.
+      - name: Versioned output
+        if: ${{ always() && env.NEEDS_TESTING == 'true' }}
+        run: |
+          d=build/TestAll/gcc-env-coverage
+          git status --porcelain -- output/ TestMaterials/ | tee "$d/trial_git_status.txt"
+          git diff --stat -- output/ TestMaterials/ | tail -n 5
+          ls -la output/Drift 2>/dev/null || echo "no output/Drift"
+          [ -f output/Drift/VersionedOutput.patch ] && cp output/Drift/VersionedOutput.patch "$d/" || true
+          cp "$d/Testing/Temporary/LastTest.log" "$d/trial_LastTest.log" 2>/dev/null || echo "no LastTest.log"
+          cat "$d/trial_timings.txt"
+
       - name: Upload the tracefile and the report
         if: ${{ always() && env.NEEDS_TESTING == 'true' }}
         uses: actions/upload-artifact@v7
         with:
-          name: coverage
+          name: coverage-${{ matrix.variant }}
           path: |
             build/TestAll/gcc-env-coverage/coverage.info
-            coverage_reports/
+            build/TestAll/gcc-env-coverage/coverage.serial.info
+            build/TestAll/gcc-env-coverage/coverage.parallel.info
+            build/TestAll/gcc-env-coverage/capture.*.log
+            build/TestAll/gcc-env-coverage/trial_*
+            build/TestAll/gcc-env-coverage/VersionedOutput.patch
           if-no-files-found: warn
 
   # Opens the promotion PR and sets it to merge itself once the gate is green.
@@ -524,7 +559,7 @@ jobs:
   audit:
     name: ${{ inputs.false_negative == true && 'Every column failed, as the false-negative control requires' || 'Every job ran as this run''s mode requires' }}
     needs: [staging, scope, rigorous, docs, coverage, promote]
-    if: ${{ !cancelled() }}
+    if: ${{ false }}  # SCRATCH (coverage concurrency trial): the audit would fail on the skipped columns
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
