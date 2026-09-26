@@ -96,6 +96,15 @@ Unable to locate file Plurgh.h or Plurgh.hpp or Plurgh.hxx in the source reposit
 =======================================
 
 Tests/TestFramework/TestRunnerTestCreation.cpp, Line 219
+A class generated for an allocation test named with its namespace
+
+Expected Exception Type:
+[std::runtime_error]
+An allocation test takes a bare class name, so no class is generated for 'stuff::pool'
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 227
 Typo in specified class header
 
 Expected Exception Type:
