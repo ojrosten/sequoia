@@ -22,6 +22,8 @@ namespace sequoia::testing
     test_add_include_without_an_existing_block();
     test_add_include_to_an_existing_block();
     test_comparison_of_file_contents();
+    test_blank_lines_of_a_seqpat();
+    test_line_numbers_of_a_seqpat();
   }
 
   /// A file with no `#include` anywhere has no block to extend. The include must
@@ -53,16 +55,6 @@ namespace sequoia::testing
    */
   void file_editors_free_test::test_comparison_of_file_contents()
   {
-    auto compares_equivalent{
-      [dir{working_materials()}](std::string_view lhs, std::string_view rhs) {
-        const transient_file a{dir / "ContentsUnderComparison.working", lhs}, b{dir / "ContentsUnderComparison.prediction", rhs};
-
-        const auto contents{get_reduced_file_content(a.path(), b.path())};
-
-        return contents.working.value() == contents.prediction.value();
-      }
-    };
-
     using namespace std::string_view_literals;
 
     check("Text differing only in its line endings",   compares_equivalent("alpha\r\nbeta\r\n", "alpha\nbeta\n"));
@@ -78,5 +70,42 @@ namespace sequoia::testing
           !compares_equivalent("head\x1A" "tail", "head\x1A" "different"));
     check("The same, for a file which is not text",
           !compares_equivalent("\0head\x1A" "tail"sv, "\0head\x1A" "different"sv));
+  }
+
+  void file_editors_free_test::test_blank_lines_of_a_seqpat()
+  {
+    const transient_file patterns{
+      working_materials() /= "ContentsUnderComparison.seqpat",
+      "alpha[0-9]\n\nbeta[0-9]\n  \ngamma[0-9]\n\t\ndelta[0-9]\n"
+    };
+
+    check("A pattern after an empty line, a line of spaces or a line holding only a tab is applied",
+           compares_equivalent("alpha1 beta1 gamma1 delta1\n", "alpha2 beta2 gamma2 delta2\n"));
+    check("A line of spaces masks no difference in indentation",
+          !compares_equivalent("    indented\n", "  indented\n"));
+    check("A line holding only a tab masks no difference in indentation",
+          !compares_equivalent("\tindented\n", "indented\n"));
+  }
+
+  void file_editors_free_test::test_line_numbers_of_a_seqpat()
+  {
+    const transient_file patterns{working_materials() /= "ContentsUnderComparison.seqpat", "alpha[0-9]\n\n  \n(\n"};
+
+    check_exception_thrown<std::runtime_error>(
+      "An invalid pattern is reported by its line in the file, blank lines included",
+      [this]() { return compares_equivalent("alpha1\n", "alpha2\n"); }
+    );
+  }
+
+  [[nodiscard]]
+  bool file_editors_free_test::compares_equivalent(std::string_view working, std::string_view prediction) const
+  {
+    const auto dir{working_materials()};
+    const transient_file workingFile{dir / "ContentsUnderComparison.working", working},
+                         predictionFile{dir / "ContentsUnderComparison.prediction", prediction};
+
+    const auto contents{get_reduced_file_content(workingFile.path(), predictionFile.path())};
+
+    return contents.working.value() == contents.prediction.value();
   }
 }

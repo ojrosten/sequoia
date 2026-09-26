@@ -363,7 +363,10 @@
 	can be expected to change, meaning that a given test may regularly fail in way which is not useful.
 	To counter this, each file in `Prediction` and its subfolders can be supplemented by a file of the
 	same name but with the extension `seqpat`. The latter is expected to contain a list of regular expressions,
-	specifying sub-strings to be ignored from the file comparison process.
+	one per line, specifying sub-strings to be ignored from the file comparison process. A line which is
+	empty, or whose every character is a space or a tab, is skipped: a line of spaces, were it a pattern,
+	would strip spaces from both files and so hide a change of indentation. A pattern which is to match
+	whitespace therefore says so visibly, as `[ ]` or `[ \t]` do.
 
 	Suppose now that we are left with a genuine failure after preprocessing the files in the working
 	copy and the predictions. It may be that the code under test is actually correct, but the

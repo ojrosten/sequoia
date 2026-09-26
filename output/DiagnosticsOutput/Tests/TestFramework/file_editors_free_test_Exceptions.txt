@@ -1,0 +1,10 @@
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 95
+An invalid pattern is reported by its line in the file, blank lines included
+
+Expected Exception Type:
+[std::runtime_error]
+Line 4 of a .seqpat is not a valid regular expression: (
+output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_test/WorkingCopy/ContentsUnderComparison.seqpat
+
+=======================================
+

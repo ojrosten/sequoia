@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <format>
 #include <fstream>
+#include <ranges>
 #include <regex>
 
 namespace sequoia::testing
@@ -209,6 +210,15 @@ namespace sequoia::testing
       if(is_text(contents)) replace_all(contents, "\r\n", "\n");
     }
 
+    /** \brief A line which is empty, or whose every character is a space or a tab. A carriage return is not
+        among them: CRLF line endings are normalised to LF before a `.seqpat` is split into lines.
+     */
+    [[nodiscard]]
+    bool is_blank(std::string_view line)
+    {
+      return line.find_first_not_of(" \t") == std::string_view::npos;
+    }
+
     /** The regular expression on `line` of `seqpatFile`, or an error naming both, in words of its own:
         each standard library words `std::regex_error` differently
      */
@@ -254,23 +264,15 @@ namespace sequoia::testing
             auto& expressions{exprContents.value()};
             normalize_line_endings(expressions);
 
-            std::string::size_type pos{};
-            std::size_t line{1};
-            while(pos < expressions.size())
+            for(const auto [index, text] : std::views::split(expressions, '\n') | std::views::enumerate)
             {
-              const auto next{std::min(expressions.find("\n", pos), expressions.size())};
-              if(const auto count{next - pos})
-              {
-                const auto rgx{seqpat_regex(std::string_view{expressions}.substr(pos, count), supplPath, line)};
-                contents.working = std::regex_replace(contents.working.value(), rgx, std::string{});
-                contents.prediction = std::regex_replace(contents.prediction.value(), rgx, std::string{});
-                pos = next + 1;
-                ++line;
-              }
-              else
-              {
-                break;
-              }
+              const std::string_view pattern{text};
+              if(is_blank(pattern))
+                continue;
+
+              const auto rgx{seqpat_regex(pattern, supplPath, static_cast<std::size_t>(index) + 1)};
+              contents.working    = std::regex_replace(contents.working.value(),    rgx, std::string{});
+              contents.prediction = std::regex_replace(contents.prediction.value(), rgx, std::string{});
             }
           }
           else
