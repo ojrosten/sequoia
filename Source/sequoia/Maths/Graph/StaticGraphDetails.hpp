@@ -19,11 +19,6 @@
 #include <tuple>
 #include <type_traits>
 
-namespace data_structures
-{
-  template <class, std::size_t, std::size_t, class> class static_partitioned_sequence;
-}
-
 namespace sequoia::maths::graph_impl
 {
   template<std::size_t MaxValue>
