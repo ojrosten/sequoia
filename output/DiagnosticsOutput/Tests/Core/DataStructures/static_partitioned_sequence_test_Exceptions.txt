@@ -1,0 +1,18 @@
+Tests/Core/DataStructures/StaticPartitionedSequenceTest.cpp, Line 130
+A partition longer than the index type counts throws
+
+Expected Exception Type:
+[std::out_of_range]
+Partition size out of bounds
+
+=======================================
+
+Tests/Core/DataStructures/StaticPartitionedSequenceTest.cpp, Line 135
+Partitions each within the index type, but together beyond it, throw
+
+Expected Exception Type:
+[std::out_of_range]
+Partition index out of bounds
+
+=======================================
+
