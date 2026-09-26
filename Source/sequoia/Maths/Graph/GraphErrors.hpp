@@ -22,11 +22,17 @@ namespace sequoia::maths::graph_errors
     std::size_t node{}, edge{};
   };
 
-  struct edge_inversion_info
+  /** \brief The number of partial edges from `node` to `target`, and from `target` back to `node`.
+
+      In a weighted graph, only the partial edges of one weight are counted, since a partial edge is
+      reciprocated only by one of equal weight.
+   */
+  struct partial_edge_counts
   {
-    std::size_t edge{};
-    bool inverted{};
+    std::size_t node{}, target{}, to_target{}, from_target{};
   };
+
+  enum class edge_weighting { unweighted, weighted };
 
   [[nodiscard]]
   std::string node_index_range_message(std::string_view method, std::size_t order, std::size_t node);
@@ -47,13 +53,7 @@ namespace sequoia::maths::graph_errors
   std::string reciprocated_error_message(const edge_indices edgeIndices, const std::string_view indexName, const std::size_t reciprocatedIndex, const std::size_t index);
 
   [[nodiscard]]
-  std::string embedded_edge_message(const std::size_t nodeIndex, const std::size_t source, const std::size_t target);
-
-  [[nodiscard]]
   std::string inconsistent_initialization_message(std::size_t numNodes, std::size_t edgeParitions);
-
-  [[nodiscard]]
-  std::string inversion_consistency_message(std::size_t nodeIndex, edge_inversion_info zerothEdge, edge_inversion_info firstEdge);
 
   constexpr void check_node_index_range(std::string_view method, const std::size_t order, const std::size_t node)
   {
@@ -98,18 +98,6 @@ namespace sequoia::maths::graph_errors
       throw std::logic_error{reciprocated_error_message(edgeIndices, indexName, reciprocatedIndex, index)};
   }
 
-  constexpr void check_embedded_edge(const std::size_t nodeIndex, const std::size_t source, const std::size_t target)
-  {
-    if((source != nodeIndex) && (target != nodeIndex))
-      throw std::logic_error{embedded_edge_message(nodeIndex, source, target)};
-  }
-
-  constexpr void check_inversion_consistency(std::size_t nodeIndex, edge_inversion_info zerothEdge, edge_inversion_info firstEdge)
-  {
-    if(zerothEdge.inverted != firstEdge.inverted)
-      throw std::logic_error{inversion_consistency_message(nodeIndex, zerothEdge, firstEdge)};
-  }
-
   [[nodiscard]]
   std::string erase_edge_error(std::size_t partner, edge_indices indices);
 
@@ -122,8 +110,11 @@ namespace sequoia::maths::graph_errors
   [[nodiscard]]
   std::string mismatched_weights_message(std::string_view method, edge_indices edgeIndices);
 
+  /** \pre `counts.to_target` is non-zero and differs from `counts.from_target` */
   [[nodiscard]]
-  std::string absent_reciprocated_partial_edge_message(std::string_view method, edge_indices edgeIndices);
+  std::string absent_reciprocated_partial_edge_message(std::string_view method,
+                                                       partial_edge_counts counts,
+                                                       edge_weighting weighting);
 
   [[nodiscard]]
   std::string absent_partner_weight_message(std::string_view method, edge_indices edgeIndices);

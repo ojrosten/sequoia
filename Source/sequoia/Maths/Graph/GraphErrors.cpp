@@ -7,6 +7,8 @@
 
 #include "sequoia/Maths/Graph/GraphErrors.hpp"
 
+#include <format>
+
 namespace sequoia::maths::graph_errors
 {
   namespace
@@ -78,13 +80,6 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string embedded_edge_message(const std::size_t nodeIndex, const std::size_t source, const std::size_t target)
-  {
-    return error_prefix("process_complementary_edges").append("At least one of source ").append(std::to_string(source))
-      .append(" and target ").append(std::to_string(target)).append(" must match current node ").append(std::to_string(nodeIndex));
-  }
-
-  [[nodiscard]]
   std::string erase_edge_error(const std::size_t partner, const edge_indices indices)
   {
     return error_prefix("erase_edge")
@@ -110,9 +105,38 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string absent_reciprocated_partial_edge_message(std::string_view method, edge_indices edgeIndices)
+  std::string absent_reciprocated_partial_edge_message(std::string_view method,
+                                                       const partial_edge_counts counts,
+                                                       const edge_weighting weighting)
   {
-    return error_prefix(method, edgeIndices).append("Reciprocated partial edge does not exist");
+    const bool weighted{weighting == edge_weighting::weighted};
+    const std::string_view ofEqualWeight{weighted ? " of equal weight" : ""},
+                           ofThatWeight{weighted ? " of that weight" : ""};
+
+    if(!counts.from_target)
+    {
+      return error_prefix(method).append(
+               (counts.to_target == 1)
+                 ? std::format("Node {}'s edge to node {} has no reciprocal{}",
+                               counts.node, counts.target, ofEqualWeight)
+                 : std::format("Node {}'s {} edges{} to node {} have no reciprocal{}",
+                               counts.node, counts.to_target, ofEqualWeight, counts.target, ofThatWeight)
+             );
+    }
+
+    const partial_edge_counts reversed{
+      .node{counts.target},
+      .target{counts.node},
+      .to_target{counts.from_target},
+      .from_target{counts.to_target}
+    };
+
+    const auto& [node, target, toTarget, fromTarget]{(counts.to_target > counts.from_target) ? counts : reversed};
+
+    return error_prefix(method).append(
+             std::format("Node {} has {} edges{} to node {}, but node {} has {}{} to node {}",
+                         node, toTarget, ofEqualWeight, target, target, fromTarget, ofThatWeight, node)
+           );
   }
 
   [[nodiscard]]
@@ -128,18 +152,5 @@ namespace sequoia::maths::graph_errors
             .append("Number of node weights:    ").append(std::to_string(numNodes)).append("\n")
             .append("Number of edge paritions:  ").append(std::to_string(edgeParitions)).append("\n")
             .append("Please ensure these numbers are the same");
-  }
-
-  [[nodiscard]]
-  std::string inversion_consistency_message(std::size_t nodeIndex, edge_inversion_info zerothEdge, edge_inversion_info firstEdge)
-  {
-    auto toString{
-      [](edge_inversion_info info){
-        return std::to_string(info.edge).append(" / ").append(info.inverted ? "inverted" : "standard");
-      }
-    };
-
-    return error_prefix("process_complementary_edges").append("mismatched inverson for node ").append(std::to_string(nodeIndex))
-      .append(", edges (").append(toString(zerothEdge)).append(", ").append(toString(firstEdge)).append(")");
   }
 }

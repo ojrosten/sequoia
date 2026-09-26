@@ -11,6 +11,7 @@
     \brief Edge configuration for static graphs.
  */
 
+#include "sequoia/Core/DataStructures/PartitionedData.hpp"
 #include "sequoia/Maths/Graph/StaticGraphDetails.hpp"
 #include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
 

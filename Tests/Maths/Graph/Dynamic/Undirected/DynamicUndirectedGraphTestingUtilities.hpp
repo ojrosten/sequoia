@@ -173,6 +173,28 @@ namespace sequoia::testing
       // Two nodes
       t.check_exception_thrown<std::logic_error>("Mismatched partial edges", [](){ return graph_t{{edge_t{1}}, {edge_t{1}}}; });
       t.check_exception_thrown<std::logic_error>("Mismatched loop", [](){ return graph_t{{edge_t{1}}, {edge_t{0}, edge_t{1}}}; });
+
+      // Three nodes. In each fixture a node lists its edges out of order, so that the position of an
+      // unreciprocated edge, counted after sorting by target, is that of a reciprocated edge as written
+      t.check_exception_thrown<std::logic_error>(
+        "A partial edge with no reciprocal",
+        [](){ return graph_t{{edge_t{2}, edge_t{1}}, {edge_t{0}}, {}}; }
+      );
+
+      t.check_exception_thrown<std::logic_error>(
+        "Parallel partial edges with no reciprocal",
+        [](){ return graph_t{{edge_t{2}, edge_t{1}, edge_t{2}}, {edge_t{0}}, {}}; }
+      );
+
+      t.check_exception_thrown<std::logic_error>(
+        "More partial edges one way than the other",
+        [](){ return graph_t{{edge_t{2}, edge_t{2}, edge_t{1}}, {edge_t{0}}, {edge_t{0}}}; }
+      );
+
+      t.check_exception_thrown<std::logic_error>(
+        "Fewer partial edges one way than the other",
+        [](){ return graph_t{{edge_t{2}}, {edge_t{2}}, {edge_t{1}, edge_t{1}, edge_t{0}}}; }
+      );
     }
 
     [[nodiscard]]

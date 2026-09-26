@@ -18,9 +18,12 @@
 #include "sequoia/Maths/Sequences/MonotonicSequence.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
+#include <format>
+#include <limits>
 #include <string>
 #include <numeric>
 #include <stdexcept>
+#include <utility>
 
 namespace sequoia
 {
@@ -447,7 +450,7 @@ namespace sequoia
       {
         if(index >= m_Buckets.size())
         {
-          throw std::out_of_range{std::string{"bucketed_sequence::"}.append(method).append("index ").append(std::to_string(index)).append(" out of range")};
+          throw std::out_of_range{std::format("bucketed_sequence::{}: index {} out of range", method, index)};
         }
       }
 
@@ -457,7 +460,7 @@ namespace sequoia
         const auto bucketSize{m_Buckets[index].size()};
         if(pos > bucketSize)
         {
-          throw std::out_of_range{std::string{"bucketed_sequence::"}.append(method).append("pos ").append(std::to_string(pos)).append(" out of range")};
+          throw std::out_of_range{std::format("bucketed_sequence::{}: pos {} out of range", method, pos)};
         }
       }
 
@@ -725,15 +728,20 @@ namespace sequoia
 
       void add_slot()
       {
-        m_Partitions.push_back(m_Data.size());
+        check_index_type_limit("add_slot", num_partitions(), "partitions");
+
+        // The element-count guard at the growth sites keeps the size within the index type
+        m_Partitions.push_back(static_cast<index_type>(m_Data.size()));
       }
 
       void insert_slot(const size_t pos)
       {
+        check_index_type_limit("insert_slot", num_partitions(), "partitions");
+
         if(pos < num_partitions())
         {
           auto iter{m_Partitions.begin() + pos};
-          const index_type newPartitionBound{(pos == 0) ? 0 : *(iter - 1)};
+          const index_type newPartitionBound{(pos == 0) ? index_type{} : *(iter - 1)};
           m_Partitions.insert(iter, newPartitionBound);
         }
         else
@@ -796,6 +804,7 @@ namespace sequoia
       void push_back_to_partition(const index_type index, Args&&... args)
       {
         check_range("push_back_to_partition", index);
+        check_index_type_limit("push_back_to_partition", m_Data.size(), "elements");
 
         auto iter{m_Data.end()};
         if(index == m_Partitions.size() - 1)
@@ -816,6 +825,7 @@ namespace sequoia
       {
         const auto source{pos.partition_index()};
         check_range("insert_to_partition", source);
+        check_index_type_limit("insert_to_partition", m_Data.size(), "elements");
 
         auto iter{m_Data.emplace(pos.base_iterator(), std::forward<Args>(args)...)};
         increment_partition_indices(source);
@@ -826,6 +836,7 @@ namespace sequoia
       template<class... Args>
       partition_iterator insert_to_partition(const size_type index, const size_type pos, Args&&... args)
       {
+        check_range("insert_to_partition", index, pos);
         return insert_to_partition(std::ranges::next(cbegin_partition(index), pos, cend_partition(index)), std::forward<Args>(args)...);
       }
 
@@ -936,17 +947,32 @@ namespace sequoia
       {
         if(index >= m_Partitions.size())
         {
-          throw std::out_of_range{std::string{"partition_sequence::"}.append(method).append("index ").append(std::to_string(index)).append(" out of range")};
+          throw std::out_of_range{std::format("partitioned_sequence::{}: index {} out of range", method, index)};
         }
       }
 
-      void check_range(std::string_view method, const size_type index, const index_type pos) const
+      void check_range(std::string_view method, const size_type index, const size_type pos) const
       {
         check_range(method, index);
         const index_type maxPos{index ? m_Partitions[index] - m_Partitions[index - 1] : m_Partitions[index]};
         if(pos > maxPos)
         {
-          throw std::out_of_range{std::string{"partition_sequence::"}.append(method).append("pos ").append(std::to_string(pos)).append(" out of range")};
+          throw std::out_of_range{std::format("partitioned_sequence::{}: pos {} out of range", method, pos)};
+        }
+      }
+
+      static void check_index_type_limit(std::string_view method,
+                                         const std::size_t count,
+                                         std::string_view countedItems)
+      {
+        constexpr auto limit{std::numeric_limits<index_type>::max()};
+        if(std::cmp_greater_equal(count, limit))
+        {
+          throw std::out_of_range{std::format("partitioned_sequence::{}: "
+                                              "the index type cannot count more than {} {}",
+                                              method,
+                                              limit,
+                                              countedItems)};
         }
       }
 
@@ -961,16 +987,10 @@ namespace sequoia
 
       template<class PartitionIterator, std::input_or_output_iterator Iterator>
       [[nodiscard]]
-      constexpr PartitionIterator get_end_iterator(const index_type i, Iterator iter) const
+      constexpr PartitionIterator get_end_iterator(const index_type i, Iterator iter) const noexcept
       {
         index_type index{PartitionIterator::reversed() ? index_type{} : npos};
-        index_type offset{
-          [sz{m_Data.size()}] () {
-            if (sz > std::numeric_limits<index_type>::max())
-              throw std::out_of_range{"Partition offset out of range"};
-            return static_cast<index_type>(sz);
-          }()
-        };
+        index_type offset{static_cast<index_type>(m_Data.size())};
 
         if(i < m_Partitions.size())
         {
@@ -1090,6 +1110,8 @@ namespace sequoia
     };
 
     template<class T, std::size_t Npartitions, std::size_t Nelements, class Partitions=maths::static_monotonic_sequence<std::size_t, Npartitions, std::ranges::greater>>
+      requires (    std::cmp_less_equal(Npartitions, std::numeric_limits<typename Partitions::value_type>::max())
+                && std::cmp_less_equal(Nelements,   std::numeric_limits<typename Partitions::value_type>::max()))
     class static_partitioned_sequence :
       public partitioned_sequence_base<T, std::array<T, Nelements>, Partitions>
     {

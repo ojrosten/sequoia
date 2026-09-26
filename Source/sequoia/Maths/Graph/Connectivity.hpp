@@ -33,6 +33,7 @@
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
 
+#include <functional>
 #include <limits>
 #include <stdexcept>
 #include <ranges>
@@ -92,63 +93,6 @@ namespace sequoia
         }
       };
 
-      template<std::input_or_output_iterator Iter>
-      class [[nodiscard]] weight_sentinel
-      {
-      public:
-        using edge_weight_type = std::remove_cvref_t<decltype(std::declval<Iter>()->weight())>;
-
-        template<class Fn1, class Fn2, class... Args1>
-        constexpr weight_sentinel(Iter i, Fn1 fn1, Fn2 fn2, Args1&&... args1)
-          : m_Iter{i}
-          , m_OldEdgeWeight{m_Iter->weight()}
-        {
-          auto partnerIter{fn1(m_Iter, std::forward<Args1>(args1)...)};
-          m_PartiallyComplete = true;
-
-          fn2(m_Iter, partnerIter);
-          m_PartiallyComplete = false;
-        }
-
-        constexpr ~weight_sentinel()
-        {
-          if(m_PartiallyComplete)
-          {
-            m_Iter->weight(std::move(m_OldEdgeWeight));
-          }
-        }
-      private:
-        bool m_PartiallyComplete{};
-        Iter m_Iter;
-        edge_weight_type m_OldEdgeWeight;
-      };
-
-      template<class Edges>
-      class [[nodiscard]] join_sentinel
-      {
-      public:
-        using edge_index_type = Edges::index_type;
-
-        join_sentinel(Edges& e, const edge_index_type node1, const edge_index_type pos)
-          : m_Edges{e}
-          , m_Node1{node1}
-          , m_Pos{pos}
-          , m_InitialSize{e.size()}
-        {}
-
-        ~join_sentinel()
-        {
-          if(m_Edges.size() == m_InitialSize)
-          {
-            m_Edges.erase_from_partition(m_Node1, m_Pos);
-          }
-        }
-      private:
-        Edges& m_Edges;
-        edge_index_type m_Node1{}, m_Pos{};
-        std::size_t m_InitialSize{};
-      };
-
       struct edge_comparer
       {
         template<class Edge>
@@ -171,6 +115,16 @@ namespace sequoia
     }
 
     struct partitions_allocator_tag{};
+
+    /** \brief A mutation of an edge weight whose result, if any, is an object that can be held while the mutated
+               weight is written back.
+     */
+    template<class Fn, class Weight>
+    concept edge_weight_mutator
+      =    std::invocable<Fn&, Weight&>
+        && (   std::is_void_v<std::invoke_result_t<Fn&, Weight&>>
+            || (    std::is_object_v<std::invoke_result_t<Fn&, Weight&>>
+                && std::move_constructible<std::invoke_result_t<Fn&, Weight&>>));
 
     /** \brief Graph connectivity_base, used as a building block for concrete graphs.
     
@@ -203,6 +157,18 @@ namespace sequoia
 
       constexpr static auto npos{std::numeric_limits<edge_index_type>::max()};
       constexpr static graph_flavour flavour{Flavour};
+
+      /** \brief Whether the two halves of an undirected edge each hold a weight of their own. */
+      constexpr static bool independent_partner_weights_v{
+        !is_directed(flavour) && !graph_impl::has_shared_weight_v<edge_type>
+      };
+
+      /** \brief Whether the weight of one half of an edge can be supplied to its partner: false only where the
+                 halves hold independent weights of a type that cannot be copied.
+       */
+      constexpr static bool partner_weight_constructible_v{
+        !independent_partner_weights_v || std::is_copy_constructible_v<edge_weight_type>
+      };
 
       constexpr connectivity_base() = default;
 
@@ -264,24 +230,13 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires initializable_from<edge_weight_type, Args...>
+        requires (    initializable_from<edge_weight_type, Args...>
+                  && partner_weight_constructible_v)
       constexpr void set_edge_weight(const_edge_iterator citer, Args&&... args)
       {
-        if constexpr(!shared_weight_v && !is_directed(flavour))
+        if constexpr(independent_partner_weights_v)
         {
-          auto partnerSetter{
-            [this] <class... PartnerArgs> (const_edge_iterator iter, PartnerArgs&&... partnerArgs){
-              return this->set_partner_edge_weight(iter, std::forward<PartnerArgs>(partnerArgs)...);
-            }
-          };
-
-          auto sourceSetter{
-            [this](edge_iterator iter, const_edge_iterator partnerIter){
-              this->set_source_edge_weight(iter, partnerIter->weight());
-            }
-          };
-
-          graph_impl::weight_sentinel sentinel{to_edge_iterator(citer), partnerSetter, sourceSetter, std::forward<Args>(args)...};
+          set_source_and_partner_edge_weights(citer, edge_weight_type{std::forward<Args>(args)...});
         }
         else
         {
@@ -290,27 +245,55 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires initializable_from<edge_weight_type, Args...>
+        requires (    initializable_from<edge_weight_type, Args...>
+                  && partner_weight_constructible_v)
       constexpr void set_edge_weight(const_reverse_edge_iterator criter, Args&&... args)
       {
         set_edge_weight(to_const_edge_iterator(criter), std::forward<Args>(args)...);
       }
 
-      template<std::invocable<edge_weight_type&> Fn>
-        requires (!std::is_empty_v<edge_weight_type>)
-      constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_edge_iterator citer, Fn fn)
-      {
-        if constexpr(!shared_weight_v && !is_directed(flavour))
-        {
-          mutate_partner_edge_weight(citer, fn);
-        }
+      /** \brief Applies `fn` to the weight of the edge at `citer`, and returns the result.
 
-        return mutate_source_edge_weight(citer, fn);
+          `fn` is invoked an unspecified number of times. Where the two halves of an undirected edge hold
+          independent weights, `fn` is applied to a copy of the weight, which then replaces the weight of both
+          halves. A throw leaves both unchanged, provided the weight's move does not throw. The constraint on
+          `fn` is the same for every graph, whether or not it shares its weights.
+       */
+      template<edge_weight_mutator<edge_weight_type> Fn>
+        requires (    !std::is_empty_v<edge_weight_type>
+                  && partner_weight_constructible_v)
+      constexpr std::invoke_result_t<Fn&, edge_weight_type&>
+        mutate_edge_weight(const_edge_iterator citer, Fn fn)
+      {
+        if constexpr(independent_partner_weights_v)
+        {
+          using result_type = std::invoke_result_t<Fn&, edge_weight_type&>;
+
+          edge_weight_type mutatedWeight{citer->weight()};
+          if constexpr(std::is_void_v<result_type>)
+          {
+            std::invoke(fn, mutatedWeight);
+            set_source_and_partner_edge_weights(citer, std::move(mutatedWeight));
+          }
+          else
+          {
+            // Parentheses, since braces would prefer an initializer-list constructor of result_type
+            result_type result(std::invoke(fn, mutatedWeight));
+            set_source_and_partner_edge_weights(citer, std::move(mutatedWeight));
+            return result;
+          }
+        }
+        else
+        {
+          return mutate_source_edge_weight(citer, std::move(fn));
+        }
       }
 
-      template<std::invocable<edge_weight_type&> Fn>
-        requires (!std::is_empty_v<edge_weight_type>)
-      constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_reverse_edge_iterator criter, Fn fn)
+      template<edge_weight_mutator<edge_weight_type> Fn>
+        requires (    !std::is_empty_v<edge_weight_type>
+                  && partner_weight_constructible_v)
+      constexpr std::invoke_result_t<Fn&, edge_weight_type&>
+        mutate_edge_weight(const_reverse_edge_iterator criter, Fn fn)
       {
         return mutate_edge_weight(to_const_edge_iterator(criter), std::move(fn));
       }
@@ -685,7 +668,9 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires (std::is_empty_v<edge_meta_data_type>&& initializable_from<edge_weight_type, Args...> && (is_directed(flavour) || std::is_copy_constructible_v<edge_type>))
+        requires (    std::is_empty_v<edge_meta_data_type>
+                  && initializable_from<edge_weight_type, Args...>
+                  && partner_weight_constructible_v)
       void join(const edge_index_type node1, const edge_index_type node2, Args&&... args)
       {
         graph_errors::check_node_index_range("join", order(), node1, node2);
@@ -699,12 +684,14 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires (!std::is_empty_v<edge_meta_data_type>&& initializable_from<edge_weight_type, Args...> && (is_directed(flavour) || std::is_copy_constructible_v<edge_type>))
+        requires (   !std::is_empty_v<edge_meta_data_type>
+                  && initializable_from<edge_weight_type, Args...>
+                  && partner_weight_constructible_v)
       void join(const edge_index_type node1, const edge_index_type node2, edge_meta_data_type meta1, edge_meta_data_type meta2, Args&&... args)
       {
         graph_errors::check_node_index_range("join", order(), node1, node2);
 
-        add_to_partition(node1, node2, meta1, std::forward<Args>(args)...);
+        add_to_partition(node1, node2, std::move(meta1), std::forward<Args>(args)...);
 
         if constexpr(!is_directed(flavour))
         {
@@ -713,33 +700,44 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires (std::is_empty_v<edge_meta_data_type> && initializable_from<edge_weight_type, Args...>&& is_embedded(flavour) && std::is_copy_constructible_v<edge_type>)
+        requires (    std::is_empty_v<edge_meta_data_type>
+                  && initializable_from<edge_weight_type, Args...>
+                  && is_embedded(flavour)
+                  && partner_weight_constructible_v)
       std::pair<const_edge_iterator, const_edge_iterator>
         insert_join(const_edge_iterator citer1, const_edge_iterator citer2, Args&&... args)
       {
         const auto node1{citer1.partition_index()}, node2{citer2.partition_index()};
         const auto dist2{static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(node2), citer2))};
-        if(node1 == node2) return insert_join(citer1, dist2, std::forward<Args>(args)...);
+        if(node1 == node2)
+          return insert_join(citer1, dist2, std::forward<Args>(args)...);
 
         citer1 = insert_to_partition(citer1, node2, dist2, std::forward<Args>(args)...);
         return insert_reciprocal_join(citer1, cbegin_edges(node2) + dist2);
       }
 
       template<class... Args>
-        requires (!std::is_empty_v<edge_meta_data_type>, initializable_from<edge_weight_type, Args...>&& is_embedded(flavour) && std::is_copy_constructible_v<edge_type>)
+        requires (!std::is_empty_v<edge_meta_data_type>,
+                     initializable_from<edge_weight_type, Args...>
+                  && is_embedded(flavour)
+                  && partner_weight_constructible_v)
       std::pair<const_edge_iterator, const_edge_iterator>
         insert_join(const_edge_iterator citer1, const_edge_iterator citer2, edge_meta_data_type meta1, edge_meta_data_type meta2, Args&&... args)
       {
         const auto node1{citer1.partition_index()}, node2{citer2.partition_index()};
         const auto dist2{static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(node2), citer2))};
-        if(node1 == node2) return insert_join(citer1, dist2, meta1, meta2, std::forward<Args>(args)...);
+        if(node1 == node2)
+          return insert_join(citer1, dist2, std::move(meta1), std::move(meta2), std::forward<Args>(args)...);
 
-        citer1 = insert_to_partition(citer1, node2, dist2, meta1, std::forward<Args>(args)...);
-        return insert_reciprocal_join(citer1, cbegin_edges(node2) + dist2, meta2);
+        citer1 = insert_to_partition(citer1, node2, dist2, std::move(meta1), std::forward<Args>(args)...);
+        return insert_reciprocal_join(citer1, cbegin_edges(node2) + dist2, std::move(meta2));
       }
 
       template<class... Args>
-        requires (std::is_empty_v<edge_meta_data_type> && initializable_from<edge_weight_type, Args...>&& is_embedded(flavour) && std::is_copy_constructible_v<edge_type>)
+        requires (    std::is_empty_v<edge_meta_data_type>
+                  && initializable_from<edge_weight_type, Args...>
+                  && is_embedded(flavour)
+                  && partner_weight_constructible_v)
       std::pair<const_edge_iterator, const_edge_iterator>
         insert_join(const_edge_iterator citer1, const edge_index_type pos2, Args&&... args)
       {
@@ -752,16 +750,19 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires (!std::is_empty_v<edge_meta_data_type>, initializable_from<edge_weight_type, Args...>&& is_embedded(flavour) && std::is_copy_constructible_v<edge_type>)
+        requires (!std::is_empty_v<edge_meta_data_type>,
+                     initializable_from<edge_weight_type, Args...>
+                  && is_embedded(flavour)
+                  && partner_weight_constructible_v)
       std::pair<const_edge_iterator, const_edge_iterator>
         insert_join(const_edge_iterator citer1, const edge_index_type pos2, edge_meta_data_type meta1, edge_meta_data_type meta2, Args&&... args)
       {
         const auto node{citer1.partition_index()};
         graph_errors::check_edge_insertion_index("insert_join", node, std::ranges::distance(cedges(node)) + 1, pos2);
 
-        citer1 = insert_to_partition(citer1, node, pos2, meta1, std::forward<Args>(args)...);
+        citer1 = insert_to_partition(citer1, node, pos2, std::move(meta1), std::forward<Args>(args)...);
 
-        return insert_reciprocal_join(citer1, pos2, meta2);
+        return insert_reciprocal_join(citer1, pos2, std::move(meta2));
       }
 
       void erase_edge(const_edge_iterator citer)
@@ -1001,64 +1002,25 @@ namespace sequoia
             graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "target", edges.size(), target);
             const auto compIndex{edge.complementary_index()};
 
-            const bool doValidate{
-              [&]() {
-                if constexpr(!is_directed(flavour)) return true;
-                else return (edge.target_node() != nodeIndex) || (edge.source_node() == edge.target_node());
-              }()
-            };
+            auto targetEdgesIter{edges.begin() + target};
+            graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "complementary", targetEdgesIter->size(), compIndex);
 
-            if(doValidate)
+            if((target == nodeIndex) && (compIndex == edgeIndex))
             {
-              auto targetEdgesIter{edges.begin() + target};
-              graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "complementary", targetEdgesIter->size(), compIndex);
-
-              if((target == nodeIndex) && (compIndex == edgeIndex))
-              {
-                throw std::logic_error{graph_errors::self_referential_error({nodeIndex, edgeIndex}, target, compIndex)};
-              }
-              else if(const auto& targetEdge{*(targetEdgesIter->begin() + compIndex)}; targetEdge.complementary_index() != edgeIndex)
-              {
-                throw std::logic_error{graph_errors::reciprocated_error_message({nodeIndex, edgeIndex}, "complementary", targetEdge.complementary_index(), edgeIndex)};
-              }
-              else
-              {
-                if constexpr(!is_directed(flavour))
-                {
-                  graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), nodeIndex);
-                }
-                else
-                {
-                  graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), target);
-                  graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "source", targetEdge.source_node(), edge.source_node());
-
-                  if constexpr(is_embedded(flavour))
-                  {
-                    graph_errors::check_inversion_consistency(nodeIndex, {edgeIndex, edge.inverted()}, {compIndex, targetEdge.inverted()});
-                  }
-                }
-
-                if constexpr(!std::is_empty_v<edge_weight_type>)
-                {
-                  if(edge.weight() != targetEdge.weight())
-                    throw std::logic_error{graph_errors::mismatched_weights_message("process_complementary_edges", {nodeIndex, edgeIndex})};
-                }
-              }
+              throw std::logic_error{graph_errors::self_referential_error({nodeIndex, edgeIndex}, target, compIndex)};
             }
-
-            if constexpr(is_directed(flavour))
+            else if(const auto& targetEdge{*(targetEdgesIter->begin() + compIndex)}; targetEdge.complementary_index() != edgeIndex)
             {
-              const auto source{edge.source_node()};
-              graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "source", edges.size(), source);
-              graph_errors::check_embedded_edge(nodeIndex, source, target);
+              throw std::logic_error{graph_errors::reciprocated_error_message({nodeIndex, edgeIndex}, "complementary", targetEdge.complementary_index(), edgeIndex)};
+            }
+            else
+            {
+              graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), nodeIndex);
 
-              if((edge.target_node() == nodeIndex) && (edge.source_node() != edge.target_node()))
+              if constexpr(!std::is_empty_v<edge_weight_type>)
               {
-                auto sourceEdgesIter{edges.begin() + source};
-                graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "complementary", sourceEdgesIter->size(), compIndex);
-
-                const auto& sourceEdge{*(sourceEdgesIter->begin() + compIndex)};
-                graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", sourceEdge.target_node(), nodeIndex);
+                if(edge.weight() != targetEdge.weight())
+                  throw std::logic_error{graph_errors::mismatched_weights_message("process_complementary_edges", {nodeIndex, edgeIndex})};
               }
             }
           }
@@ -1069,7 +1031,7 @@ namespace sequoia
 
       [[nodiscard]]
       constexpr static const edges_initializer& validate(const edges_initializer& edges)
-        requires (!is_embedded(flavour) && is_directed(flavour))
+        requires (is_directed(flavour))
       {
         for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
         {
@@ -1106,28 +1068,21 @@ namespace sequoia
           [](edge_index_type i, range_t hostRange) {
             if(std::ranges::distance(hostRange) % 2) throw std::logic_error{odd_num_loops_error("connectivity_base", i)};
           },
-          [&](edge_index_type i, edge_index_type target, range_t hostRange, range_t targetRange) {
-            const auto brokenEdge{
-              [&, i, target, hostRange, targetRange]() -> std::optional<edge_indices> {
-                if(auto reciprocalCount{std::ranges::distance(targetRange)}; !reciprocalCount)
-                {
-                  return edge_indices{i, static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(i), hostRange.begin()))};
-                }
-                else if(auto count{std::ranges::distance(hostRange)}; count > reciprocalCount)
-                {
-                  return edge_indices{i, static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(i), hostRange.begin()) + reciprocalCount)};
-                }
-                else if(count < reciprocalCount)
-                {
-                  return edge_indices{target, static_cast<std::size_t>(std::ranges::distance(edges.cbegin_partition(target), targetRange.begin()) + count)};
-                }
-
-                return {};
-              }()
+          [](edge_index_type i, edge_index_type target, range_t hostRange, range_t targetRange) {
+            const partial_edge_counts counts{
+              .node{i},
+              .target{target},
+              .to_target{static_cast<std::size_t>(std::ranges::distance(hostRange))},
+              .from_target{static_cast<std::size_t>(std::ranges::distance(targetRange))}
             };
 
-            if(brokenEdge)
-              throw std::logic_error{absent_reciprocated_partial_edge_message("connectivity_base", brokenEdge.value())};
+            if(counts.to_target != counts.from_target)
+            {
+              constexpr auto weighting{
+                std::is_empty_v<edge_weight_type> ? edge_weighting::unweighted : edge_weighting::weighted
+              };
+              throw std::logic_error{absent_reciprocated_partial_edge_message("connectivity_base", counts, weighting)};
+            }
           }
         );
 
@@ -1385,10 +1340,10 @@ namespace sequoia
         return m_Edges.begin_partition(source) + dist;
       }
 
-      template<std::invocable<edge_weight_type&> Fn>
-      constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_source_edge_weight(const_edge_iterator citer, Fn fn)
+      template<edge_weight_mutator<edge_weight_type> Fn>
+      constexpr std::invoke_result_t<Fn&, edge_weight_type&> mutate_source_edge_weight(const_edge_iterator citer, Fn fn)
       {
-        return fn(to_edge_iterator(citer)->weight());
+        return std::invoke(fn, to_edge_iterator(citer)->weight());
       }
 
       template<class... Args>
@@ -1451,12 +1406,6 @@ namespace sequoia
         }
       }
 
-      template<std::invocable<edge_weight_type&> Fn>
-      constexpr void mutate_partner_edge_weight(const_edge_iterator citer, Fn fn)
-      {
-        manipulate_partner_edge_weight(citer, [fn](edge_iterator iter) -> edge_iterator { fn(iter->weight()); return iter; });
-      }
-
       template<class... Args>
         requires initializable_from<edge_weight_type, Args...>
       constexpr const_edge_iterator set_partner_edge_weight(const_edge_iterator citer, Args&&... args)
@@ -1464,11 +1413,55 @@ namespace sequoia
         return manipulate_partner_edge_weight(citer, [&args...](edge_iterator iter) -> edge_iterator { iter->weight(std::forward<Args>(args)...); return iter; });
       }
 
+      /** \brief Gives the weight `w` to both halves of an edge whose halves hold independent weights.
+
+          Both new weights are made before either half changes, so a throw leaves the halves as they were,
+          provided the weight's move does not throw.
+       */
+      constexpr void set_source_and_partner_edge_weights(const_edge_iterator citer, edge_weight_type w)
+      {
+        edge_weight_type sourceWeight{w};
+        set_partner_edge_weight(citer, std::move(w));
+        set_source_edge_weight(to_edge_iterator(citer), std::move(sourceWeight));
+      }
+
+      class [[nodiscard]] join_sentinel
+      {
+      public:
+        join_sentinel(connectivity_base& connectivity, const edge_index_type node1, const edge_index_type pos)
+          : m_Connectivity{connectivity}
+          , m_Node1{node1}
+          , m_Pos{pos}
+          , m_InitialSize{connectivity.m_Edges.size()}
+        {}
+
+        ~join_sentinel()
+        {
+          if(m_Connectivity.m_Edges.size() == m_InitialSize)
+          {
+            m_Connectivity.erase_unreciprocated_partial_edge(m_Node1, m_Pos);
+          }
+        }
+      private:
+        connectivity_base& m_Connectivity;
+        edge_index_type m_Node1{}, m_Pos{};
+        std::size_t m_InitialSize{};
+      };
+
+      void erase_unreciprocated_partial_edge(const edge_index_type node, const edge_index_type pos)
+      {
+        const auto next{m_Edges.erase_from_partition(node, pos)};
+        if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
+        {
+          decrement_comp_indices(next, m_Edges.end_partition(node), 1);
+        }
+      }
+
       template<class... MetaData>
-        requires std::is_copy_constructible_v<edge_type> && (std::is_same_v<MetaData, edge_meta_data_type> && ...)
+        requires partner_weight_constructible_v && (std::is_same_v<MetaData, edge_meta_data_type> && ...)
       void reciprocal_join(const edge_index_type node1, const edge_index_type node2, MetaData... md)
       {
-        graph_impl::join_sentinel sentinel{m_Edges, node1, m_Edges.size_of_partition(node1) - 1};
+        join_sentinel sentinel{*this, node1, m_Edges.size_of_partition(node1) - 1};
         if constexpr(edge_type::flavour == edge_flavour::partial)
         {
           m_Edges.push_back_to_partition(node2, node1, std::move(md)..., *crbegin_edges(node1));
@@ -1482,7 +1475,9 @@ namespace sequoia
 
 
       template<class... MetaData>
-        requires (is_embedded(flavour) && std::is_copy_constructible_v<edge_type> && (std::is_same_v<edge_meta_data_type, MetaData> && ...))
+        requires (    is_embedded(flavour)
+                  && partner_weight_constructible_v
+                  && (std::is_same_v<edge_meta_data_type, MetaData> && ...))
       std::pair<const_edge_iterator, const_edge_iterator>
         insert_reciprocal_join(const_edge_iterator citer1, const edge_index_type pos2, MetaData... args)
       {
@@ -1492,7 +1487,7 @@ namespace sequoia
         if(pos2 <= pos1) ++pos1;
 
         const auto dist1{static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(node), citer1))};
-        graph_impl::join_sentinel sentinel{m_Edges, node, dist1};
+        join_sentinel sentinel{*this, node, dist1};
 
         auto citer2{m_Edges.insert_to_partition(cbegin_edges(node) + pos2, node, pos1, std::move(args)..., *citer1)};
         if(pos2 > pos1)
@@ -1511,15 +1506,17 @@ namespace sequoia
       }
 
       template<class... MetaData>
-        requires (is_embedded(flavour) && std::is_copy_constructible_v<edge_type> && (std::is_same_v<edge_meta_data_type, MetaData> && ...))
+        requires (    is_embedded(flavour)
+                  && partner_weight_constructible_v
+                  && (std::is_same_v<edge_meta_data_type, MetaData> && ...))
       std::pair<const_edge_iterator, const_edge_iterator>
         insert_reciprocal_join(const_edge_iterator citer1, const_edge_iterator citer2, MetaData... md)
       {
         const auto node1{citer1.partition_index()}, node2{citer2.partition_index()};
         const auto dist1{static_cast<edge_index_type>(std::ranges::distance(cbegin_edges(node1), citer1))};
 
-        graph_impl::join_sentinel sentinel{m_Edges, node1, dist1};
-        citer2 = m_Edges.insert_to_partition(citer2, node1, dist1, md..., *citer1);
+        join_sentinel sentinel{*this, node1, dist1};
+        citer2 = m_Edges.insert_to_partition(citer2, node1, dist1, std::move(md)..., *citer1);
         increment_comp_indices(++to_edge_iterator(citer2), end_edges(node2), 1);
 
         citer1 = cbegin_edges(node1) + dist1;

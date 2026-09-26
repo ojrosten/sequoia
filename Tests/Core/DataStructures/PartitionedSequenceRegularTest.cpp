@@ -145,5 +145,61 @@ namespace sequoia::testing
   {
     using namespace data_structures;
     partitioned_operations<partitioned_sequence<int>>::execute(*this);
+    test_index_type_limit();
+  }
+
+  void partitioned_sequence_regular_test::test_index_type_limit()
+  {
+    using index_type      = std::uint8_t;
+    using partitions_type = maths::monotonic_sequence<index_type, std::ranges::greater>;
+    using sequence_type   = data_structures::partitioned_sequence<int, std::vector<int>, partitions_type>;
+
+    constexpr std::size_t limit{std::numeric_limits<index_type>::max()};
+
+    sequence_type sequence{};
+    sequence.add_slot();
+    for(std::size_t i{}; i < limit; ++i)
+    {
+      sequence.push_back_to_partition(0, static_cast<int>(i));
+    }
+
+    check(equality, "A partition as long as the index type counts is admitted", sequence.size_of_partition(0), limit);
+
+    check_exception_thrown<std::out_of_range>(
+      "Pushing back beyond what the index type counts throws",
+      [&sequence]() { sequence.push_back_to_partition(0, 0); }
+    );
+
+    check_exception_thrown<std::out_of_range>(
+      "Inserting beyond what the index type counts throws",
+      [&sequence]() { sequence.insert_to_partition(sequence.cbegin_partition(0), 0); }
+    );
+
+    check(equality, "Unchanged by the refused growth", sequence.size_of_partition(0), limit);
+
+    sequence_type manyPartitions{};
+    for(std::size_t i{}; i < limit; ++i)
+    {
+      manyPartitions.add_slot();
+    }
+
+    check(equality, "As many partitions as the index type counts are admitted", manyPartitions.num_partitions(), limit);
+
+    check_exception_thrown<std::out_of_range>(
+      "Adding a partition beyond what the index type counts throws",
+      [&manyPartitions]() { manyPartitions.add_slot(); }
+    );
+
+    check_exception_thrown<std::out_of_range>(
+      "Inserting a partition beyond what the index type counts throws",
+      [refused{manyPartitions}]() mutable { refused.insert_slot(0); }
+    );
+
+    check_exception_thrown<std::out_of_range>(
+      "Inserting a partition at the end beyond what the index type counts throws",
+      [refused{manyPartitions}]() mutable { refused.insert_slot(limit); }
+    );
+
+    check(equality, "Unchanged by the refused partitions", manyPartitions.num_partitions(), limit);
   }
 }

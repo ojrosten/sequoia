@@ -22,6 +22,20 @@ namespace sequoia
     using namespace maths;
     using namespace object;
 
+    namespace
+    {
+      struct move_only_weight
+      {
+        int value{};
+
+        move_only_weight() = default;
+
+        move_only_weight(move_only_weight&&) noexcept = default;
+
+        move_only_weight& operator=(move_only_weight&&) noexcept = default;
+      };
+    }
+
     [[nodiscard]]
     std::filesystem::path test_edges::source_file()
     {
@@ -30,6 +44,8 @@ namespace sequoia
 
     void test_edges::run_tests()
     {
+      test_copyability();
+
       test_plain_partial_edge();
       test_partial_edge_indep_weight();
       test_partial_edge_shared_weight();
@@ -49,6 +65,34 @@ namespace sequoia
       test_embedded_partial_edge_indep_weight_meta_data();
       test_embedded_partial_edge_shared_weight_meta_data();
       test_embedded_partial_edge_meta_data_conversions();
+    }
+
+    void test_edges::test_copyability()
+    {
+      using by_value_edge          = partial_edge<by_value<move_only_weight>, null_meta_data>;
+      using shared_edge            = partial_edge<shared<move_only_weight>, null_meta_data>;
+      using by_value_embedded_edge = embedded_partial_edge<by_value<move_only_weight>, null_meta_data>;
+      using shared_embedded_edge   = embedded_partial_edge<shared<move_only_weight>, null_meta_data>;
+      using copyable_edge          = partial_edge<by_value<int>, null_meta_data>;
+
+      STATIC_CHECK(!std::is_copy_constructible_v<by_value_edge>);
+      STATIC_CHECK(!std::is_copy_assignable_v<by_value_edge>);
+      STATIC_CHECK( std::is_nothrow_move_constructible_v<by_value_edge>);
+
+      STATIC_CHECK(!std::is_copy_constructible_v<shared_edge>);
+      STATIC_CHECK(!std::is_copy_assignable_v<shared_edge>);
+      STATIC_CHECK( std::is_nothrow_move_constructible_v<shared_edge>);
+
+      STATIC_CHECK(!std::is_copy_constructible_v<by_value_embedded_edge>);
+      STATIC_CHECK(!std::is_copy_assignable_v<by_value_embedded_edge>);
+      STATIC_CHECK( std::is_nothrow_move_constructible_v<by_value_embedded_edge>);
+
+      STATIC_CHECK(!std::is_copy_constructible_v<shared_embedded_edge>);
+      STATIC_CHECK(!std::is_copy_assignable_v<shared_embedded_edge>);
+      STATIC_CHECK( std::is_nothrow_move_constructible_v<shared_embedded_edge>);
+
+      STATIC_CHECK(std::is_copy_constructible_v<copyable_edge>);
+      STATIC_CHECK(std::is_copy_assignable_v<copyable_edge>);
     }
 
     void test_edges::test_plain_partial_edge()

@@ -21,7 +21,7 @@ Mismatched partial edges
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::connectivity_base [node: 0, edge: 0]: Reciprocated partial edge does not exist
+connectivity::connectivity_base: Node 0's edge to node 1 has no reciprocal
 
 =======================================
 
@@ -57,7 +57,7 @@ Mismatched partial edges
 
 Expected Exception Type:
 [std::logic_error]
-connectivity::connectivity_base [node: 0, edge: 0]: Reciprocated partial edge does not exist
+connectivity::connectivity_base: Node 0's edge to node 1 has no reciprocal
 
 =======================================
 

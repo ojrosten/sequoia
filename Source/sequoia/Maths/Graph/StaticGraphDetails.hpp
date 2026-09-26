@@ -19,11 +19,6 @@
 #include <tuple>
 #include <type_traits>
 
-namespace data_structures
-{
-  template <class, std::size_t, std::size_t, class> class static_partitioned_sequence;
-}
-
 namespace sequoia::maths::graph_impl
 {
   template<std::size_t MaxValue>
@@ -42,9 +37,10 @@ namespace sequoia::maths::graph_impl
 
   /** \brief The index type shared by a static graph's node indices and its edge-storage offsets.
 
-      A node index runs up to `Order - 1`; a partition offset into the edge storage runs up to `NumEdges`,
-      which also bounds an embedded edge's complementary index.
+      The type holds both `Order`, the number of partitions of the edge storage, and `NumEdges`, the largest
+      partition offset, which also bounds an embedded edge's complementary index. Holding `Order` keeps every
+      node index below the type's maximum, which a partition iterator reserves for `npos`.
    */
   template<std::size_t Order, std::size_t NumEdges>
-  using static_edge_index_type = narrowest_unsigned_holding_t<std::ranges::max(Order ? Order - 1 : Order, NumEdges)>;
+  using static_edge_index_type = narrowest_unsigned_holding_t<std::ranges::max(Order, NumEdges)>;
 }

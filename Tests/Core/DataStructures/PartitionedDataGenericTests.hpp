@@ -326,6 +326,14 @@ namespace sequoia::testing
               }
             },
             {
+              data_description::one_2,
+              t.report(""),
+              [](data_t d) -> data_t {
+                d.insert_to_partition(0, 0, 2);
+                return d;
+              }
+            },
+            {
               data_description::two_empty_partitions,
               t.report(""),
               [](data_t d) -> data_t {
@@ -424,6 +432,25 @@ namespace sequoia::testing
               }
             },
             {
+              data_description::one_2_3,
+              t.report(""),
+              [](data_t d) -> data_t {
+                d.insert_to_partition(0, 1, 3);
+                return d;
+              }
+            },
+            {
+              data_description::one_2,
+              t.report(""),
+              [&t](data_t d) -> data_t {
+                t.check_exception_thrown<std::out_of_range>(
+                  "Inserting beyond the end of a partition throws",
+                  [&d]() { return d.insert_to_partition(0, 2, 3); }
+                );
+                return d;
+              }
+            },
+            {
               data_description::two_2__,
               t.report(""),
               [](data_t d) -> data_t {
@@ -462,6 +489,14 @@ namespace sequoia::testing
               t.report(""),
               [](data_t d) -> data_t {
                 d.insert_to_partition(d.cbegin_partition(0), 2);
+                return d;
+              }
+            },
+            {
+              data_description::one_2_3,
+              t.report(""),
+              [](data_t d) -> data_t {
+                d.insert_to_partition(0, 0, 2);
                 return d;
               }
             }
@@ -706,6 +741,14 @@ namespace sequoia::testing
                 d.swap_partitions(1, 0);
                 return d;
               }
+            },
+            {
+              data_description::two_2__3,
+              t.report(""),
+              [](data_t d) -> data_t {
+                d.insert_to_partition(1, 0, 3);
+                return d;
+              }
             }
           }, // end 'two_2__'
           {  // begin 'two_3__'
@@ -810,6 +853,28 @@ namespace sequoia::testing
               t.report(""),
               [](data_t d) -> data_t {
                 d.insert_slot(2);
+                return d;
+              }
+            },
+            {
+              data_description::two_2__3,
+              t.report(""),
+              [&t](data_t d) -> data_t {
+                t.check_exception_thrown<std::out_of_range>(
+                  "Inserting beyond the end of a partition other than the last throws",
+                  [&d]() { return d.insert_to_partition(0, 2, 4); }
+                );
+                return d;
+              }
+            },
+            {
+              data_description::two_2__3,
+              t.report(""),
+              [&t](data_t d) -> data_t {
+                t.check_exception_thrown<std::out_of_range>(
+                  "Inserting beyond the end of a partition other than the first throws",
+                  [&d]() { return d.insert_to_partition(1, 2, 4); }
+                );
                 return d;
               }
             }

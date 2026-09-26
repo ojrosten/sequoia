@@ -3,7 +3,7 @@ Pushing back to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-partition_sequence::push_back_to_partitionindex 0 out of range
+partitioned_sequence::push_back_to_partition: index 0 out of range
 
 =======================================
 
@@ -12,7 +12,7 @@ Inserting to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-partition_sequence::insert_to_partitionindex 18446744073709551615 out of range
+partitioned_sequence::insert_to_partition: index 18446744073709551615 out of range
 
 =======================================
 
@@ -21,7 +21,7 @@ Inserting to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-partition_sequence::insert_to_partitionindex 18446744073709551615 out of range
+partitioned_sequence::insert_to_partition: index 0 out of range
 
 =======================================
 
@@ -30,7 +30,7 @@ Pushing back to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-partition_sequence::push_back_to_partitionindex 1 out of range
+partitioned_sequence::push_back_to_partition: index 1 out of range
 
 =======================================
 
@@ -39,7 +39,7 @@ Inserting to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-partition_sequence::insert_to_partitionindex 18446744073709551615 out of range
+partitioned_sequence::insert_to_partition: index 18446744073709551615 out of range
 
 =======================================
 
@@ -48,7 +48,7 @@ Inserting to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-partition_sequence::insert_to_partitionindex 18446744073709551615 out of range
+partitioned_sequence::insert_to_partition: index 1 out of range
 
 =======================================
 
@@ -68,11 +68,83 @@ partitioned_sequence::erase - Invalid range specified by iterators belonging to 
 
 =======================================
 
-Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 616
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 447
+Inserting beyond the end of a partition throws
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence::insert_to_partition: pos 2 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 651
 
 Expected Exception Type:
 [std::domain_error]
 partitioned_sequence::erase - Invalid range specified by iterators belonging to partitions [0, 1]
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 864
+Inserting beyond the end of a partition other than the last throws
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence::insert_to_partition: pos 2 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedDataGenericTests.hpp, Line 875
+Inserting beyond the end of a partition other than the first throws
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence::insert_to_partition: pos 2 out of range
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 169
+Pushing back beyond what the index type counts throws
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence::push_back_to_partition: the index type cannot count more than 255 elements
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 174
+Inserting beyond what the index type counts throws
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence::insert_to_partition: the index type cannot count more than 255 elements
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 189
+Adding a partition beyond what the index type counts throws
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence::add_slot: the index type cannot count more than 255 partitions
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 194
+Inserting a partition beyond what the index type counts throws
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence::insert_slot: the index type cannot count more than 255 partitions
+
+=======================================
+
+Tests/Core/DataStructures/PartitionedSequenceRegularTest.cpp, Line 199
+Inserting a partition at the end beyond what the index type counts throws
+
+Expected Exception Type:
+[std::out_of_range]
+partitioned_sequence::insert_slot: the index type cannot count more than 255 partitions
 
 =======================================
 
