@@ -157,6 +157,11 @@ namespace sequoia::testing
       }
     );
 
+    const main_paths ancillaryMain{projectPath / "TestAncillary" / "TestSandbox.cpp"};
+    fs::create_directories(ancillaryMain.dir());
+    fs::copy(fakeMain.file(), ancillaryMain.file());
+    fs::copy(fakeMain.cmake_lists(), ancillaryMain.cmake_lists());
+
     commandline_arguments args{{zeroth_arg(projectName)
                                , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
                                , "create", "regular", "utilities::iterator", "int*"
@@ -187,9 +192,23 @@ namespace sequoia::testing
     };
 
     std::stringstream outputStream{};
-    test_runner tr{args.size(), args.get(), "Oliver Jacob Rosten", "    ",  {.source_folder{sourceFolder}, .main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
+    test_runner tr{args.size(),
+                   args.get(),
+                   "Oliver Jacob Rosten",
+                   "    ",
+                   {.source_folder{sourceFolder},
+                    .main_cpp{"TestSandbox/TestSandbox.cpp"},
+                    .ancillary_main_cpps{{"TestAncillary/TestSandbox.cpp"}},
+                    .common_includes{"TestShared/SharedIncludes.hpp"}},
+                   outputStream};
 
     check(equality, "Test creation return code", tr.execute(), return_code::success);
+
+    check(equivalence, "The ancillary main, edited as the main is", ancillaryMain.file(), fakeMain.file());
+    check(equivalence,
+          "The ancillary main's CMakeLists, edited as the main's is",
+          ancillaryMain.cmake_lists(),
+          fakeMain.cmake_lists());
 
     if(std::ofstream file{projectPath / "output" / "io.txt"})
     {
