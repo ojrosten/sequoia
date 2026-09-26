@@ -450,6 +450,7 @@ namespace sequoia::testing
     test_excluded_tests();
     test_excluded_tests_are_rerun();
     test_dump_comparison();
+    test_thread_pool();
     test_instability_analysis();
   }
 
@@ -1186,6 +1187,43 @@ namespace sequoia::testing
 
     recoveringRunner.register_test<passing_test>();
     check(equality, "recover on a fresh tree", recoveringRunner.execute(), return_code::success);
+    check("A recovery run which ran a check leaves a recovery file", fs::exists(recovery.recovery_file()));
+
+    // A run which records nothing must not leave the previous run's record looking like its own
+    std::stringstream emptyRecoveryStream{};
+    test_runner emptyRecoveryRunner{recoveringArgs.size(),
+                                    recoveringArgs.get(),
+                                    "Oliver J. Rosten",
+                                    "  ",
+                                    {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                                    emptyRecoveryStream};
+
+    check(equality, "recover with no tests", emptyRecoveryRunner.execute(), return_code::success);
+    check("A recovery run which ran no check leaves no recovery file", !fs::exists(recovery.recovery_file()));
+  }
+
+  void test_runner_test::test_thread_pool()
+  {
+    auto run{
+      [this](std::string_view description, std::string_view outputDirName, std::string_view poolSize) {
+        std::stringstream outputStream{};
+        commandline_arguments args{{zeroth_arg(), "--thread-pool", std::string{poolSize}}};
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<passing_test>();
+        check(equality, append_lines(description, "Return code"), runner.execute(), return_code::success);
+        check_output(description, outputDirName, outputStream);
+      }
+    };
+
+    run("A pool of no threads is refused, and the run goes ahead", "ThreadPoolOfNoThreadsOutput", "0");
+    run("A pool of two threads running one test",                  "ThreadPoolForOneTestOutput",  "2");
   }
 
   void test_runner_test::test_instability_analysis()
