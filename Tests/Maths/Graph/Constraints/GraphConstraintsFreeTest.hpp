@@ -29,6 +29,8 @@ namespace sequoia::testing
 
     void test_join_constraints();
 
+    void test_mutator_constraints();
+
     template<class EdgeStorageConfig>
     void test_mutation_results();
 
@@ -37,5 +39,7 @@ namespace sequoia::testing
     void test_move_only_meta_data();
 
     void test_shared_weight_copies();
+
+    void test_mutation_by_member_functions();
   };
 }
