@@ -92,37 +92,6 @@ namespace sequoia
         }
       };
 
-      template<std::input_or_output_iterator Iter>
-      class [[nodiscard]] weight_sentinel
-      {
-      public:
-        using edge_weight_type = std::remove_cvref_t<decltype(std::declval<Iter>()->weight())>;
-
-        template<class Fn1, class Fn2, class... Args1>
-        constexpr weight_sentinel(Iter i, Fn1 fn1, Fn2 fn2, Args1&&... args1)
-          : m_Iter{i}
-          , m_OldEdgeWeight{m_Iter->weight()}
-        {
-          auto partnerIter{fn1(m_Iter, std::forward<Args1>(args1)...)};
-          m_PartiallyComplete = true;
-
-          fn2(m_Iter, partnerIter);
-          m_PartiallyComplete = false;
-        }
-
-        constexpr ~weight_sentinel()
-        {
-          if(m_PartiallyComplete)
-          {
-            m_Iter->weight(std::move(m_OldEdgeWeight));
-          }
-        }
-      private:
-        bool m_PartiallyComplete{};
-        Iter m_Iter;
-        edge_weight_type m_OldEdgeWeight;
-      };
-
       template<class Edges>
       class [[nodiscard]] join_sentinel
       {
@@ -269,19 +238,17 @@ namespace sequoia
       {
         if constexpr(!shared_weight_v && !is_directed(flavour))
         {
-          auto partnerSetter{
-            [this] <class... PartnerArgs> (const_edge_iterator iter, PartnerArgs&&... partnerArgs){
-              return this->set_partner_edge_weight(iter, std::forward<PartnerArgs>(partnerArgs)...);
-            }
-          };
-
-          auto sourceSetter{
-            [this](edge_iterator iter, const_edge_iterator partnerIter){
-              this->set_source_edge_weight(iter, partnerIter->weight());
-            }
-          };
-
-          graph_impl::weight_sentinel sentinel{to_edge_iterator(citer), partnerSetter, sourceSetter, std::forward<Args>(args)...};
+          auto oldWeight{citer->weight()};
+          const auto partner{set_partner_edge_weight(citer, std::forward<Args>(args)...)};
+          try
+          {
+            set_source_edge_weight(to_edge_iterator(citer), partner->weight());
+          }
+          catch(...)
+          {
+            partner->weight(std::move(oldWeight));
+            throw;
+          }
         }
         else
         {
@@ -1399,7 +1366,7 @@ namespace sequoia
 
       template<class Setter>
         requires std::is_invocable_r_v<edge_iterator, Setter, edge_iterator>
-      constexpr const_edge_iterator manipulate_partner_edge_weight(const_edge_iterator citer, Setter setter)
+      constexpr edge_iterator manipulate_partner_edge_weight(const_edge_iterator citer, Setter setter)
       {
         const auto partner{citer->target_node()};
 
@@ -1459,7 +1426,7 @@ namespace sequoia
 
       template<class... Args>
         requires initializable_from<edge_weight_type, Args...>
-      constexpr const_edge_iterator set_partner_edge_weight(const_edge_iterator citer, Args&&... args)
+      constexpr edge_iterator set_partner_edge_weight(const_edge_iterator citer, Args&&... args)
       {
         return manipulate_partner_edge_weight(citer, [&args...](edge_iterator iter) -> edge_iterator { iter->weight(std::forward<Args>(args)...); return iter; });
       }
