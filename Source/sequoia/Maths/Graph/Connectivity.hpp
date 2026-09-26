@@ -115,6 +115,16 @@ namespace sequoia
 
     struct partitions_allocator_tag{};
 
+    /** \brief A mutation of an edge weight whose result can be held while the mutated weight is written to both
+               halves of an edge.
+     */
+    template<class Fn, class Weight>
+    concept edge_weight_mutator
+      =    std::invocable<Fn, Weight&>
+        && (   std::is_void_v<std::invoke_result_t<Fn, Weight&>>
+            || (    std::is_object_v<std::invoke_result_t<Fn, Weight&>>
+                && std::move_constructible<std::invoke_result_t<Fn, Weight&>>));
+
     /** \brief Graph connectivity_base, used as a building block for concrete graphs.
     
         This class is flexible, allowing for representations of many different flavours
@@ -238,14 +248,14 @@ namespace sequoia
 
           `fn` is invoked an unspecified number of times. Where the two halves of an undirected edge hold
           independent weights, `fn` is applied to a copy of the weight, which then replaces the weight of both
-          halves. A throw leaves both unchanged, provided the weight's move does not throw. A reference returned
-          by `fn` would refer to the copy, so `fn` may not return one.
+          halves. A throw leaves both unchanged, provided the weight's move does not throw. The constraint on
+          `fn` is the same for every graph, whether or not its weights are shared, since under
+          `edge_sharing_preference::agnostic` whether they are shared depends on the weight's size and
+          copyability.
        */
-      template<std::invocable<edge_weight_type&> Fn>
+      template<edge_weight_mutator<edge_weight_type> Fn>
         requires (    !std::is_empty_v<edge_weight_type>
-                  && (   !independent_partner_weights_v
-                      || (    std::is_copy_constructible_v<edge_weight_type>
-                          && !std::is_reference_v<std::invoke_result_t<Fn, edge_weight_type&>>)))
+                  && (!independent_partner_weights_v || std::is_copy_constructible_v<edge_weight_type>))
       constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_edge_iterator citer, Fn fn)
       {
         if constexpr(independent_partner_weights_v)
@@ -272,11 +282,9 @@ namespace sequoia
         }
       }
 
-      template<std::invocable<edge_weight_type&> Fn>
+      template<edge_weight_mutator<edge_weight_type> Fn>
         requires (    !std::is_empty_v<edge_weight_type>
-                  && (   !independent_partner_weights_v
-                      || (    std::is_copy_constructible_v<edge_weight_type>
-                          && !std::is_reference_v<std::invoke_result_t<Fn, edge_weight_type&>>)))
+                  && (!independent_partner_weights_v || std::is_copy_constructible_v<edge_weight_type>))
       constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_reverse_edge_iterator criter, Fn fn)
       {
         return mutate_edge_weight(to_const_edge_iterator(criter), std::move(fn));
