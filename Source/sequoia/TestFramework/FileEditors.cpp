@@ -149,7 +149,9 @@ namespace sequoia::testing
     const auto parenthesisPos{patternOpen.find('(')};
     if(parenthesisPos == std::string_view::npos)
       throw std::logic_error{
-        std::format("No parenthesis in '{}' to align the entries of {} with", patternOpen, cmakeLists.generic_string())
+        std::format("'{}' has no parenthesis, so the entries of {} have no column to align with",
+                    patternOpen,
+                    cmakeLists.generic_string())
       };
 
     auto addEntry{

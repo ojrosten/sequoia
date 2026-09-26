@@ -27,7 +27,7 @@ namespace sequoia::testing
       `patternOpen` opens.
 
       \throws std::logic_error if `patternOpen` has no parenthesis
-      \throws std::runtime_error if `cmakeLists` has no section between the patterns
+      \throws std::runtime_error if `cmakeLists` cannot be read, or has no section between the patterns
    */
   void add_to_cmake(const std::filesystem::path& cmakeLists,
                     const std::filesystem::path& hostDir,
