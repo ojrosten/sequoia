@@ -80,13 +80,6 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string embedded_edge_message(const std::size_t nodeIndex, const std::size_t source, const std::size_t target)
-  {
-    return error_prefix("process_complementary_edges").append("At least one of source ").append(std::to_string(source))
-      .append(" and target ").append(std::to_string(target)).append(" must match current node ").append(std::to_string(nodeIndex));
-  }
-
-  [[nodiscard]]
   std::string erase_edge_error(const std::size_t partner, const edge_indices indices)
   {
     return error_prefix("erase_edge")
@@ -159,18 +152,5 @@ namespace sequoia::maths::graph_errors
             .append("Number of node weights:    ").append(std::to_string(numNodes)).append("\n")
             .append("Number of edge paritions:  ").append(std::to_string(edgeParitions)).append("\n")
             .append("Please ensure these numbers are the same");
-  }
-
-  [[nodiscard]]
-  std::string inversion_consistency_message(std::size_t nodeIndex, edge_inversion_info zerothEdge, edge_inversion_info firstEdge)
-  {
-    auto toString{
-      [](edge_inversion_info info){
-        return std::to_string(info.edge).append(" / ").append(info.inverted ? "inverted" : "standard");
-      }
-    };
-
-    return error_prefix("process_complementary_edges").append("mismatched inverson for node ").append(std::to_string(nodeIndex))
-      .append(", edges (").append(toString(zerothEdge)).append(", ").append(toString(firstEdge)).append(")");
   }
 }

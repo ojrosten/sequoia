@@ -22,12 +22,6 @@ namespace sequoia::maths::graph_errors
     std::size_t node{}, edge{};
   };
 
-  struct edge_inversion_info
-  {
-    std::size_t edge{};
-    bool inverted{};
-  };
-
   /** \brief The number of partial edges from `node` to `target`, and from `target` back to `node`.
 
       In a weighted graph, only the partial edges of one weight are counted, since a partial edge is
@@ -59,13 +53,7 @@ namespace sequoia::maths::graph_errors
   std::string reciprocated_error_message(const edge_indices edgeIndices, const std::string_view indexName, const std::size_t reciprocatedIndex, const std::size_t index);
 
   [[nodiscard]]
-  std::string embedded_edge_message(const std::size_t nodeIndex, const std::size_t source, const std::size_t target);
-
-  [[nodiscard]]
   std::string inconsistent_initialization_message(std::size_t numNodes, std::size_t edgeParitions);
-
-  [[nodiscard]]
-  std::string inversion_consistency_message(std::size_t nodeIndex, edge_inversion_info zerothEdge, edge_inversion_info firstEdge);
 
   constexpr void check_node_index_range(std::string_view method, const std::size_t order, const std::size_t node)
   {
@@ -108,18 +96,6 @@ namespace sequoia::maths::graph_errors
   {
     if(reciprocatedIndex != index)
       throw std::logic_error{reciprocated_error_message(edgeIndices, indexName, reciprocatedIndex, index)};
-  }
-
-  constexpr void check_embedded_edge(const std::size_t nodeIndex, const std::size_t source, const std::size_t target)
-  {
-    if((source != nodeIndex) && (target != nodeIndex))
-      throw std::logic_error{embedded_edge_message(nodeIndex, source, target)};
-  }
-
-  constexpr void check_inversion_consistency(std::size_t nodeIndex, edge_inversion_info zerothEdge, edge_inversion_info firstEdge)
-  {
-    if(zerothEdge.inverted != firstEdge.inverted)
-      throw std::logic_error{inversion_consistency_message(nodeIndex, zerothEdge, firstEdge)};
   }
 
   [[nodiscard]]
