@@ -72,6 +72,7 @@ namespace sequoia
       using by_value_edge          = partial_edge<by_value<move_only_weight>, null_meta_data>;
       using shared_edge            = partial_edge<shared<move_only_weight>, null_meta_data>;
       using by_value_embedded_edge = embedded_partial_edge<by_value<move_only_weight>, null_meta_data>;
+      using shared_embedded_edge   = embedded_partial_edge<shared<move_only_weight>, null_meta_data>;
       using copyable_edge          = partial_edge<by_value<int>, null_meta_data>;
 
       STATIC_CHECK(!std::is_copy_constructible_v<by_value_edge>);
@@ -80,9 +81,15 @@ namespace sequoia
 
       STATIC_CHECK(!std::is_copy_constructible_v<shared_edge>);
       STATIC_CHECK(!std::is_copy_assignable_v<shared_edge>);
-      STATIC_CHECK( std::is_constructible_v<shared_edge, std::size_t, const shared_edge&>);
+      STATIC_CHECK( std::is_nothrow_move_constructible_v<shared_edge>);
 
       STATIC_CHECK(!std::is_copy_constructible_v<by_value_embedded_edge>);
+      STATIC_CHECK(!std::is_copy_assignable_v<by_value_embedded_edge>);
+      STATIC_CHECK( std::is_nothrow_move_constructible_v<by_value_embedded_edge>);
+
+      STATIC_CHECK(!std::is_copy_constructible_v<shared_embedded_edge>);
+      STATIC_CHECK(!std::is_copy_assignable_v<shared_embedded_edge>);
+      STATIC_CHECK( std::is_nothrow_move_constructible_v<shared_embedded_edge>);
 
       STATIC_CHECK(std::is_copy_constructible_v<copyable_edge>);
       STATIC_CHECK(std::is_copy_assignable_v<copyable_edge>);
