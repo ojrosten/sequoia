@@ -75,8 +75,6 @@ namespace sequoia::testing
 
     void test_thread_pool();
 
-    void test_summary_collision();
-
     void test_instability_analysis();
 
     template<std::invocable<test_runner&> Manipulator, concrete_test... Ts>

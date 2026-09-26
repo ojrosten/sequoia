@@ -24,6 +24,7 @@
 #include <chrono>
 #include <format>
 #include <iostream>
+#include <map>
 #include <optional>
 #include <set>
 #include <span>
@@ -348,6 +349,10 @@ namespace sequoia::testing
       if(!m_TestNames.insert(name).second)
         throw std::logic_error{duplication_message(name, T::source_file())};
 
+      const test_summary_path summary{T::source_file(), name, m_ProjPaths, get_reduction_discriminator<T>(m_CMakeCache)};
+      if(const auto [entry, inserted]{m_SummaryFiles.try_emplace(summary.file_path(), name)}; !inserted)
+        throw std::logic_error{summary_collision_message(entry->second, name, summary.file_path())};
+
       constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
 
       if(m_Filter(T::source_file(), enclosing_suites(T::source_file()), isPerformanceTest))
@@ -521,6 +526,7 @@ namespace sequoia::testing
     suite_type m_Suites{};
     std::vector<test_vessel> m_Tests{};
     std::set<std::string_view> m_TestNames{};
+    std::map<std::filesystem::path, std::string_view> m_SummaryFiles{};
     std::size_t m_Registered{};
     test_filter m_Filter{path_equivalence{proj_paths().tests().repo()}};
     prune_mode m_PruneMode{prune_mode::passive};
@@ -613,6 +619,11 @@ namespace sequoia::testing
 
     [[nodiscard]]
     static std::string duplication_message(std::string_view testName, const std::filesystem::path& source);
+
+    [[nodiscard]]
+    static std::string summary_collision_message(std::string_view firstTest,
+                                                 std::string_view secondTest,
+                                                 const std::filesystem::path& summaryFile);
 
  };
 }

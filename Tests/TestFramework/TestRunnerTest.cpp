@@ -483,7 +483,6 @@ namespace sequoia::testing
     test_excluded_tests_are_rerun();
     test_dump_comparison();
     test_thread_pool();
-    test_summary_collision();
     test_instability_analysis();
   }
 
@@ -628,6 +627,30 @@ namespace sequoia::testing
         runner.register_test<foo_test>();
         runner.register_test<another_namespace::foo_test>();
       });
+
+    // The check is made whichever tests are selected, since a test run alone would overwrite the other's summary
+    for(const auto& selection : {std::vector<std::string>{}, {"select", summary_collider_test_twin::source_file().generic_string()}})
+    {
+      check_exception_thrown<std::logic_error>(
+        reporter{std::format("Two tests whose summaries are one file, {} selected", selection.empty() ? "both" : "one")},
+        [this, &selection](){
+          std::vector<std::string> argList{zeroth_arg()};
+          argList.append_range(selection);
+          commandline_arguments args{argList};
+          std::stringstream outputStream{};
+
+          test_runner runner{args.size(),
+                             args.get(),
+                             "Oliver J. Rosten",
+                             "  ",
+                             {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                              .common_includes{"TestShared/SharedIncludes.hpp"}},
+                             outputStream};
+
+          runner.register_test<summary_collider_test>();
+          runner.register_test<summary_collider_test_twin>();
+        });
+    }
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Invalid repetitions for instability analysis"},
@@ -1257,27 +1280,6 @@ namespace sequoia::testing
 
     run("A pool of no threads is refused, and the run goes ahead", "ThreadPoolOfNoThreadsOutput", "0");
     run("A pool of two threads running one test",                  "ThreadPoolForOneTestOutput",  "2");
-  }
-
-  void test_runner_test::test_summary_collision()
-  {
-    check_exception_thrown<std::runtime_error>(
-      "Two tests whose summaries are one file",
-      [this](){
-        std::stringstream outputStream{};
-        commandline_arguments args{{zeroth_arg()}};
-        test_runner runner{args.size(),
-                           args.get(),
-                           "Oliver J. Rosten",
-                           "  ",
-                           {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           outputStream};
-
-        runner.register_test<summary_collider_test>();
-        runner.register_test<summary_collider_test_twin>();
-        return runner.execute();
-      }
-    );
   }
 
   void test_runner_test::test_instability_analysis()

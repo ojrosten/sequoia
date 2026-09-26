@@ -301,19 +301,11 @@ namespace sequoia::testing
       std::vector<std::filesystem::path> m_FailedTests{}, m_ExecutedTests{}, m_TestsLeftOut{};
       std::vector<std::string> m_PostRunFailures{};
       std::set<test_paths, paths_comparator> m_Updateables{};
-      std::set<std::filesystem::path> m_FilesWrittenTo{};
 
       void to_file(const test_summary_path& summaryFile, const log_summary& summary)
       {
         const auto& filename{summaryFile.file_path()};
         if(filename.empty()) return;
-
-        if(!m_FilesWrittenTo.insert(filename).second)
-          throw std::runtime_error{
-            std::format("Two tests' summaries are both {}: "
-                        "one test's name, with its summary discriminator, is the other's name",
-                        filename.generic_string())
-          };
 
         std::filesystem::create_directories(filename.parent_path());
 
@@ -1409,6 +1401,19 @@ namespace sequoia::testing
                   .append("Source file: \"").append(source.generic_string()).append("\"\n")
                   .append("A test's name is that of its class, and determines where its output is"
                     " written, so each may be registered only once.\n"));
+  }
+
+  std::string test_runner::summary_collision_message(std::string_view firstTest,
+                                                     std::string_view secondTest,
+                                                     const fs::path& summaryFile)
+  {
+    using namespace parsing::commandline;
+
+    return error(std::format("Tests \"{}\" and \"{}\" would both write their summary to\n\"{}\"\n"
+                             "Rename one, or change its summary discriminator.\n",
+                             firstTest,
+                             secondTest,
+                             summaryFile.generic_string()));
   }
 
   void test_runner::build_suite_tree()
