@@ -123,96 +123,78 @@ namespace sequoia::testing
 
       return "";
     }
-
-    std::istream& read(std::istream& s, failure_info& info, indentation ind)
-    {
-      using traits_t = std::istream::traits_type;
-      auto nextIsWhitespace{
-        [&s](){
-          const auto next{s.peek()};
-          return (next != traits_t::eof()) && ascii::is_whitespace(traits_t::to_char_type(next));
-        }
-      };
-
-      while(s && nextIsWhitespace())
-      {
-        s.get();
-      }
-
-      if(s && (s.peek() != traits_t::eof()))
-      {
-        failure_info newInfo{};
-        if(std::string str{}; (s >> str) && (str == "$Check:"))
-        {
-          s >> newInfo.check_index;
-          if(s.fail())
-            throw std::runtime_error{"Error while parsing failure_info: unable to determine index"};
-
-          s.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        }
-        else
-        {
-          throw std::runtime_error{"Error while parsing failure_info: unable to find $Check:"};
-        }
-
-        auto messageBuilder{
-          [&s,&newInfo,ind]() -> bool {
-            std::string line{};
-            while(std::getline(s, line))
-            {
-              if(line == "$")
-              {
-                if(auto& mess{newInfo.message}; !mess.empty() && (mess.back() == '\n'))
-                {
-                  mess.pop_back();
-                }
-
-                return true;
-              }
-
-              newInfo.message.append(indent(line, ind)).append("\n");
-            }
-
-            return false;
-          }
-        };
-
-        if(!messageBuilder())
-        {
-          throw std::runtime_error{"Error while parsing failure_info: unable to find message"};
-        }
-
-        info = std::move(newInfo);
-      }
-
-      return s;
-    }
-
-    std::istream& read(std::istream& s, failure_output& output, indentation ind)
-    {
-      while(s)
-      {
-        failure_info info{};
-        read(s, info, ind);
-        if(!s.fail())
-          output.push_back(info);
-      }
-
-      return s;
-    }
   }
-  
+
   std::ostream& operator<<(std::ostream& s, const failure_info& info)
   {
     s << "$Check: " << info.check_index << '\n';
     s << info.message << "\n$\n";
-      
+
     return s;
   }
 
   std::istream& operator>>(std::istream& s, failure_info& info)
   {
-    return read(s, info, no_indent);
+    using traits_t = std::istream::traits_type;
+    auto nextIsWhitespace{
+      [&s](){
+        const auto next{s.peek()};
+        return (next != traits_t::eof()) && ascii::is_whitespace(traits_t::to_char_type(next));
+      }
+    };
+
+    while(s && nextIsWhitespace())
+    {
+      s.get();
+    }
+
+    if(s && (s.peek() != traits_t::eof()))
+    {
+      failure_info newInfo{};
+      if(std::string str{}; (s >> str) && (str == "$Check:"))
+      {
+        s >> newInfo.check_index;
+        if(s.fail())
+          throw std::runtime_error{"Error while parsing failure_info: unable to determine index"};
+
+        s.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      }
+      else
+      {
+        throw std::runtime_error{"Error while parsing failure_info: unable to find $Check:"};
+      }
+
+      auto messageBuilder{
+        [&s,&newInfo]() -> bool {
+          std::string line{};
+          while(std::getline(s, line))
+          {
+            if(line == "$")
+            {
+              if(auto& mess{newInfo.message}; !mess.empty() && (mess.back() == '\n'))
+              {
+                mess.pop_back();
+              }
+
+              return true;
+            }
+
+            newInfo.message.append(line).append("\n");
+          }
+
+          return false;
+        }
+      };
+
+      if(!messageBuilder())
+      {
+        throw std::runtime_error{"Error while parsing failure_info: unable to find message"};
+      }
+
+      info = std::move(newInfo);
+    }
+
+    return s;
   }
 
   std::ostream& operator<<(std::ostream& s, const failure_output& output)
@@ -227,7 +209,15 @@ namespace sequoia::testing
 
   std::istream& operator>>(std::istream& s, failure_output& output)
   {
-    return read(s, output, no_indent);
+    while(s)
+    {
+      failure_info info{};
+      s >> info;
+      if(!s.fail())
+        output.push_back(std::move(info));
+    }
+
+    return s;
   }
 
   [[nodiscard]]
@@ -268,11 +258,16 @@ namespace sequoia::testing
         failure_output output{};
         if(std::ifstream ifile{file})
         {
-          read(ifile, output, tab);
+          ifile >> output;
         }
         else
         {
           throw std::runtime_error{report_failed_read(file)};
+        }
+
+        for(auto& info : output)
+        {
+          info.message = indent(info.message, tab);
         }
 
         return output;
