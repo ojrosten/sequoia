@@ -16,6 +16,7 @@ namespace sequoia::testing
   namespace
   {
     const static auto delta_t{calibrate(std::chrono::milliseconds{5}, std::cout)};
+
     void wait(std::chrono::milliseconds t)
     {
       std::this_thread::sleep_for(t);
@@ -179,20 +180,20 @@ namespace sequoia::testing
 
   void performance_utilities_test::test_coarse_sleep_warning()
   {
-    using milliseconds = std::chrono::duration<double, std::milli>;
+    using fractional_milliseconds = std::chrono::duration<double, std::milli>;
 
     const std::optional<std::string> tickWarning{
-      "  Warning: Sleeps of 5.0 ms all took at least 15.2 ms, so timings built on sleeps are unreliable\n"
+      "  Warning: Sleeps of 5.0 ms repeatedly lasted 15.2 ms or more, so timings built on sleeps are unreliable\n"
       "           On Windows, the likely cause is a timer_resolution which is not in effect\n\n"};
 
-    check(equality, "Rounded up to Windows' default tick", coarse_sleep_warning(milliseconds{15.2}, milliseconds{5.0}), tickWarning);
+    check(equality, "Rounded up to Windows' default tick", coarse_sleep_warning(fractional_milliseconds{15.2}, fractional_milliseconds{5.0}), tickWarning);
 
     const std::optional<std::string> doubledWarning{
-      "  Warning: Sleeps of 5.0 ms all took at least 10.0 ms, so timings built on sleeps are unreliable\n"
+      "  Warning: Sleeps of 5.0 ms repeatedly lasted 10.0 ms or more, so timings built on sleeps are unreliable\n"
       "           On Windows, the likely cause is a timer_resolution which is not in effect\n\n"};
 
-    check(equality, "Exactly twice the target", coarse_sleep_warning(milliseconds{10.0}, milliseconds{5.0}), doubledWarning);
-    check(equality, "Just under twice the target", coarse_sleep_warning(milliseconds{9.9}, milliseconds{5.0}), std::optional<std::string>{});
-    check(equality, "A 1 ms timer resolution in effect", coarse_sleep_warning(milliseconds{5.4}, milliseconds{5.0}), std::optional<std::string>{});
+    check(equality, "Exactly twice the target", coarse_sleep_warning(fractional_milliseconds{10.0}, fractional_milliseconds{5.0}), doubledWarning);
+    check(equality, "Just under twice the target", coarse_sleep_warning(fractional_milliseconds{9.9}, fractional_milliseconds{5.0}), std::optional<std::string>{});
+    check(equality, "A 1 ms timer resolution in effect", coarse_sleep_warning(fractional_milliseconds{5.4}, fractional_milliseconds{5.0}), std::optional<std::string>{});
   }
 }

@@ -210,19 +210,20 @@ namespace sequoia::testing
     return passed;
   }
 
-  /** \brief A warning if the fastest of several sleeps of `target` took at least twice as long, and
-             `nullopt` otherwise.
-
-      A sleep overrun that large distorts any timing built on sleeps. Load only lengthens a sleep,
-      so the fastest one measures the timer rather than the machine.
+  /** \brief A warning if a sleep of `target` lasted `slept`, at least twice as long, and `nullopt`
+             otherwise.
    */
   [[nodiscard]]
-  std::optional<std::string> coarse_sleep_warning(std::chrono::duration<double, std::milli> fastest, std::chrono::duration<double, std::milli> target);
+  std::optional<std::string> coarse_sleep_warning(std::chrono::duration<double, std::milli> slept, std::chrono::duration<double, std::milli> target);
 
-  /** \brief The duration to sleep for in place of `target`: `target` itself unless seven timed sleeps
-             of it overran measurably, and otherwise their mean plus five standard deviations.
+  /** \brief The duration to sleep for in place of `target`, from seven timed sleeps of it.
 
-      Writes to `warningStream` any warning from coarse_sleep_warning.
+      The mean and standard deviation are taken over the middle five. If the mean exceeds `target`
+      by more than a standard deviation, the result is the mean plus five standard deviations,
+      rounded up to a whole `Period`; otherwise it is `target`.
+
+      Writes to `warningStream` any warning from coarse_sleep_warning for the second fastest sleep,
+      since sleeps that long distort any timing built on them.
    */
   template<class T, class Period>
   [[nodiscard]]
@@ -239,7 +240,9 @@ namespace sequoia::testing
     }
 
     std::ranges::sort(timings);
-    if(const auto sleepWarning{coarse_sleep_warning(duration<double>{timings.front()}, target)})
+    // The first sleep can end within the timer tick it starts in, short even when every later one
+    // is rounded up to a whole tick
+    if(const auto sleepWarning{coarse_sleep_warning(duration<double>{timings[1]}, target)})
       warningStream << *sleepWarning;
 
     const auto [sig_f, m_f] {maths::sample_standard_deviation(timings.cbegin() + 1, timings.cend() - 1)};
