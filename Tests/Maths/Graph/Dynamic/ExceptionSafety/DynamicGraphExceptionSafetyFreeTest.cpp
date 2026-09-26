@@ -11,8 +11,11 @@
 #include "sequoia/Core/Meta/TypeName.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 
+#include <any>
 #include <format>
 #include <optional>
+#include <utility>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -109,6 +112,15 @@ namespace sequoia::testing
       }
     };
 
+    /** \brief Sets the weight's value to 7, then takes a fallible step, and returns the value it replaced. */
+    [[nodiscard]]
+    int set_value_to_seven_fallibly(fallible_weight& w)
+    {
+      const int previous{std::exchange(w.value, 7)};
+      fallible_step_monitor::take_fallible_step();
+      return previous;
+    }
+
     template<class T>
     struct fallible_allocator
     {
@@ -132,6 +144,40 @@ namespace sequoia::testing
       friend constexpr bool operator==(const fallible_allocator&, const fallible_allocator&) noexcept = default;
     };
 
+    struct move_only_weight
+    {
+      int value{};
+
+      move_only_weight() = default;
+
+      move_only_weight(move_only_weight&&) noexcept = default;
+
+      move_only_weight& operator=(move_only_weight&&) noexcept = default;
+
+      [[nodiscard]]
+      friend auto operator<=>(const move_only_weight&, const move_only_weight&) = default;
+    };
+
+    struct independent_edge_storage_config
+    {
+      template<class T>
+      using storage_type = data_structures::bucketed_sequence<T>;
+
+      constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::independent};
+    };
+
+    template<class Graph, class EdgeIterator = Graph::const_edge_iterator>
+    concept edge_weight_settable
+      = requires(Graph& g, EdgeIterator citer, typename Graph::edge_weight_type w) {
+          g.set_edge_weight(citer, std::move(w));
+        };
+
+    template<class Graph, class Result, class EdgeIterator = Graph::const_edge_iterator>
+    concept edge_weight_mutable_returning
+      = requires(Graph& g, EdgeIterator citer, Result(*fn)(typename Graph::edge_weight_type&)) {
+          g.mutate_edge_weight(citer, fn);
+        };
+
     struct fallible_partitions_edge_storage_config
     {
       template<class T>
@@ -150,11 +196,50 @@ namespace sequoia::testing
 
   void dynamic_graph_exception_safety_free_test::run_tests()
   {
+    test_weight_update_constraints();
     test_undirected_edge_mutations<maths::bucketed_edge_storage_config>();
     test_undirected_edge_mutations<maths::contiguous_edge_storage_config>();
     test_embedded_edge_mutations<maths::bucketed_edge_storage_config>();
     test_embedded_edge_mutations<maths::contiguous_edge_storage_config>();
     test_node_insertion();
+  }
+
+  void dynamic_graph_exception_safety_free_test::test_weight_update_constraints()
+  {
+    using namespace maths;
+
+    using unshared_move_only_graph
+      = undirected_graph<move_only_weight, null_weight, null_meta_data, independent_edge_storage_config>;
+    using unshared_copyable_graph
+      = undirected_graph<fallible_weight, null_weight, null_meta_data, independent_edge_storage_config>;
+    using shared_move_only_graph   = undirected_graph<move_only_weight, null_weight>;
+    using directed_move_only_graph = directed_graph<move_only_weight, null_weight>;
+
+    STATIC_CHECK(!graph_impl::has_shared_weight_v<typename unshared_move_only_graph::edge_type>);
+    STATIC_CHECK( graph_impl::has_shared_weight_v<typename shared_move_only_graph::edge_type>);
+
+    STATIC_CHECK(!edge_weight_settable<unshared_move_only_graph>);
+    STATIC_CHECK(!edge_weight_mutable_returning<unshared_move_only_graph, void>);
+    STATIC_CHECK(!edge_weight_settable<unshared_move_only_graph,
+                                       unshared_move_only_graph::const_reverse_edge_iterator>);
+    STATIC_CHECK(!edge_weight_mutable_returning<unshared_move_only_graph,
+                                                void,
+                                                unshared_move_only_graph::const_reverse_edge_iterator>);
+
+    STATIC_CHECK( edge_weight_settable<unshared_copyable_graph>);
+    STATIC_CHECK( edge_weight_mutable_returning<unshared_copyable_graph, void>);
+    STATIC_CHECK(!edge_weight_mutable_returning<unshared_copyable_graph, fallible_weight&>);
+    STATIC_CHECK(!edge_weight_mutable_returning<unshared_copyable_graph,
+                                                fallible_weight&,
+                                                unshared_copyable_graph::const_reverse_edge_iterator>);
+
+    STATIC_CHECK(edge_weight_settable<shared_move_only_graph>);
+    STATIC_CHECK(edge_weight_mutable_returning<shared_move_only_graph, void>);
+    STATIC_CHECK(edge_weight_mutable_returning<shared_move_only_graph, move_only_weight&>);
+
+    STATIC_CHECK(edge_weight_settable<directed_move_only_graph>);
+    STATIC_CHECK(edge_weight_mutable_returning<directed_move_only_graph, void>);
+    STATIC_CHECK(edge_weight_mutable_returning<directed_move_only_graph, move_only_weight&>);
   }
 
   template<class EdgeStorageConfig>
@@ -190,6 +275,40 @@ namespace sequoia::testing
       graph_type{{edge_init_type{0, 7}, edge_init_type{0, 7}}},
       1,
       [](graph_type& g) { g.set_edge_weight(g.cbegin_edges(0), 7); }
+    );
+
+    check_strong_guarantee(
+      describe("Mutate edge weight"),
+      graph,
+      graph_type{{edge_init_type{1, 7}}, {edge_init_type{0, 7}}},
+      3,
+      [](graph_type& g) { g.mutate_edge_weight(g.cbegin_edges(0), set_value_to_seven_fallibly); }
+    );
+
+    {
+      graph_type g{graph};
+      check(equality,
+            std::format("{}: returns the result of the mutation", describe("Mutate edge weight")),
+            g.mutate_edge_weight(g.cbegin_edges(0), set_value_to_seven_fallibly),
+            5);
+    }
+
+    {
+      graph_type g{graph};
+      const auto returnList{[](fallible_weight&) { return std::vector<std::any>{1, 2, 3}; }};
+      check(equality,
+            std::format("{}: returns a result with an initializer-list constructor unchanged",
+                        describe("Mutate edge weight")),
+            g.mutate_edge_weight(g.cbegin_edges(0), returnList).size(),
+            std::size_t{3});
+    }
+
+    check_strong_guarantee(
+      describe("Mutate loop weight"),
+      graph_type{{edge_init_type{0, 5}, edge_init_type{0, 5}}},
+      graph_type{{edge_init_type{0, 7}, edge_init_type{0, 7}}},
+      3,
+      [](graph_type& g) { g.mutate_edge_weight(g.cbegin_edges(0), set_value_to_seven_fallibly); }
     );
 
     check_strong_guarantee(
@@ -235,6 +354,25 @@ namespace sequoia::testing
     );
 
     check_strong_guarantee(
+      describe("Mutate edge weight"),
+      graph,
+      graph_type{
+        {edge_init_type{1, 0, 7}, edge_init_type{1, 1, 6}},
+        {edge_init_type{0, 0, 7}, edge_init_type{0, 1, 6}}
+      },
+      3,
+      [](graph_type& g) { g.mutate_edge_weight(g.cbegin_edges(0), set_value_to_seven_fallibly); }
+    );
+
+    {
+      graph_type g{graph};
+      check(equality,
+            std::format("{}: returns the result of the mutation", describe("Mutate edge weight")),
+            g.mutate_edge_weight(g.cbegin_edges(0), set_value_to_seven_fallibly),
+            5);
+    }
+
+    check_strong_guarantee(
       describe("Join"),
       graph,
       graph_type{
@@ -271,6 +409,17 @@ namespace sequoia::testing
       {edge_init_type{0, 1, 4}, edge_init_type{0, 0, 4}, edge_init_type{1, 0, 5}},
       {edge_init_type{0, 2, 5}}
     };
+
+    check_strong_guarantee(
+      describe("Mutate loop weight"),
+      graphWithLoop,
+      graph_type{
+        {edge_init_type{0, 1, 7}, edge_init_type{0, 0, 7}, edge_init_type{1, 0, 5}},
+        {edge_init_type{0, 2, 5}}
+      },
+      3,
+      [](graph_type& g) { g.mutate_edge_weight(g.cbegin_edges(0), set_value_to_seven_fallibly); }
+    );
 
     check_strong_guarantee(
       describe("Insert join ahead of a loop"),

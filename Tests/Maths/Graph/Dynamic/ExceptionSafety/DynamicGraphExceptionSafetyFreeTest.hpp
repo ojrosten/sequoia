@@ -23,6 +23,8 @@ namespace sequoia::testing
 
     void run_tests();
   private:
+    void test_weight_update_constraints();
+
     template<class EdgeStorageConfig>
     void test_undirected_edge_mutations();
 
