@@ -21,7 +21,7 @@ Inserting to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-partitioned_sequence::insert_to_partition: index 18446744073709551615 out of range
+partitioned_sequence::insert_to_partition: index 0 out of range
 
 =======================================
 
@@ -48,7 +48,7 @@ Inserting to non-existent partition throws
 
 Expected Exception Type:
 [std::out_of_range]
-partitioned_sequence::insert_to_partition: index 18446744073709551615 out of range
+partitioned_sequence::insert_to_partition: index 1 out of range
 
 =======================================
 
