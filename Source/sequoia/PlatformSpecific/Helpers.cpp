@@ -7,7 +7,7 @@
 
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 
-#ifdef _MSC_VER
+#ifdef _WIN32
   #include "Windows.h"
 #endif
 namespace sequoia
@@ -15,14 +15,14 @@ namespace sequoia
   timer_resolution::timer_resolution(std::chrono::milliseconds t)
     : m_Resolution{resolution(t)}
   {
-    #ifdef _MSC_VER
+    #ifdef _WIN32
       if(m_Resolution > 0) timeBeginPeriod(m_Resolution);
     #endif
   }
 
   timer_resolution::~timer_resolution()
   {
-    #ifdef _MSC_VER
+    #ifdef _WIN32
       if(m_Resolution > 0) timeEndPeriod(m_Resolution);
     #endif
   }
