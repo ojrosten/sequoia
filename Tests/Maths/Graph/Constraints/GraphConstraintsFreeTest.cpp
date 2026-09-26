@@ -84,6 +84,14 @@ namespace sequoia::testing
       non_movable(non_movable&&) = delete;
     };
 
+    struct shared_edge_storage_config
+    {
+      template<class T>
+      using storage_type = data_structures::bucketed_sequence<T>;
+
+      constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_weight};
+    };
+
     struct independent_edge_storage_config
     {
       template<class T>
@@ -147,6 +155,7 @@ namespace sequoia::testing
     test_mutation_results<maths::contiguous_edge_storage_config>();
     test_shared_move_only_weights();
     test_move_only_meta_data();
+    test_shared_weight_copies();
   }
 
   void graph_constraints_free_test::test_weight_update_constraints()
@@ -331,6 +340,38 @@ namespace sequoia::testing
             "The inserted join's partner half takes the second meta-data",
             g.cbegin_edges(1)->meta_data().value,
             4);
+    }
+  }
+
+  void graph_constraints_free_test::test_shared_weight_copies()
+  {
+    using namespace maths;
+
+    const auto checkCopy{
+      [this]<class Graph>(std::string_view description, const Graph& graph) {
+        const Graph copy{graph};
+        check(equality, std::format("{}: the copy is equal", description), copy, graph);
+        check(std::format("{}: the halves of the copy share one weight", description),
+              &copy.cbegin_edges(0)->weight() == &copy.cbegin_edges(1)->weight());
+        check(std::format("{}: the copy's weight is not the original's", description),
+              &copy.cbegin_edges(0)->weight() != &graph.cbegin_edges(0)->weight());
+      }
+    };
+
+    {
+      undirected_graph<copyable_weight, null_weight, int, shared_edge_storage_config> g{};
+      g.add_node();
+      g.add_node();
+      g.join(0, 1, 7, 8, copyable_weight{5});
+      checkCopy("An undirected graph with shared weights and meta-data", g);
+    }
+
+    {
+      embedded_graph<copyable_weight, null_weight, int, shared_edge_storage_config> g{};
+      g.add_node();
+      g.add_node();
+      g.join(0, 1, 7, 8, copyable_weight{5});
+      checkCopy("An embedded graph with shared weights and meta-data", g);
     }
   }
 }

@@ -84,11 +84,18 @@ namespace sequoia
                  }
             };
 
-            appender(edge_type{i->target_node(), i->weight()});
+            if constexpr(std::is_empty_v<typename edge_type::meta_data_type>)
+              appender(edge_type{i->target_node(), i->weight()});
+            else
+              appender(edge_type{i->target_node(), i->meta_data(), i->weight()});
           }
           else
           {
-            m_Storage.push_back_to_partition(node, i->target_node(), *(m_Storage.cbegin_partition(found->node_index) + found->edge_index));
+            const auto& partner{*(m_Storage.cbegin_partition(found->node_index) + found->edge_index)};
+            if constexpr(std::is_empty_v<typename edge_type::meta_data_type>)
+              m_Storage.push_back_to_partition(node, i->target_node(), partner);
+            else
+              m_Storage.push_back_to_partition(node, i->target_node(), i->meta_data(), partner);
           }
         }
       };
@@ -1285,14 +1292,21 @@ namespace sequoia
               const bool encountered{(i->target_node() < node)
                   || ((i->target_node() == node) && (i->complementary_index() < dist))};
 
+              const auto compI{i->complementary_index()};
               if(!encountered)
               {
-                storage.push_back_to_partition(node, i->target_node(), i->complementary_index(), i->weight());
+                if constexpr(std::is_empty_v<edge_meta_data_type>)
+                  storage.push_back_to_partition(node, i->target_node(), compI, i->weight());
+                else
+                  storage.push_back_to_partition(node, i->target_node(), compI, i->meta_data(), i->weight());
               }
               else
               {
-                const auto compI{i->complementary_index()};
-                storage.push_back_to_partition(node, i->target_node(), compI, *(storage.cbegin_partition(i->target_node()) + compI));
+                const auto& partner{*(storage.cbegin_partition(i->target_node()) + compI)};
+                if constexpr(std::is_empty_v<edge_meta_data_type>)
+                  storage.push_back_to_partition(node, i->target_node(), compI, partner);
+                else
+                  storage.push_back_to_partition(node, i->target_node(), compI, i->meta_data(), partner);
               }
             }
           };
