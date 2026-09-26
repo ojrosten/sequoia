@@ -213,14 +213,14 @@ namespace sequoia
         if constexpr(!shared_weight_v && !is_directed(flavour))
         {
           auto oldWeight{citer->weight()};
-          const auto partner{set_partner_edge_weight(citer, std::forward<Args>(args)...)};
+          const auto partnerIter{set_partner_edge_weight(citer, std::forward<Args>(args)...)};
           try
           {
-            set_source_edge_weight(to_edge_iterator(citer), partner->weight());
+            set_source_edge_weight(to_edge_iterator(citer), partnerIter->weight());
           }
           catch(...)
           {
-            partner->weight(std::move(oldWeight));
+            partnerIter->weight(std::move(oldWeight));
             throw;
           }
         }
