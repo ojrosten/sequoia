@@ -608,51 +608,39 @@ namespace sequoia::testing
       }
     }
 
-    if(!m_EquivalentTypes.empty())
-    {
-      const auto num{m_EquivalentTypes.size()};
-      const auto prediction{
-        [num](const std::size_t i, std::string_view sep) {
-          std::string p{"prediction"};
-          if(num > 1) p.append("_").append(std::to_string(i));
-          if((i < num - 1) && !sep.empty()) p.append(sep).append(" ");
-          return p;
-        }
-      };
+    const auto num{m_EquivalentTypes.size()};
+    const auto prediction{
+      [num](const std::size_t i, std::string_view sep) {
+        std::string p{"prediction"};
+        if(num > 1) p.append("_").append(std::to_string(i));
+        if((i < num - 1) && !sep.empty()) p.append(sep).append(" ");
+        return p;
+      }
+    };
 
-      std::string args{};
-      for(std::size_t i{}; i < num; ++i)
+    std::string args{};
+    for(std::size_t i{}; i < num; ++i)
+    {
+      const auto& type{m_EquivalentTypes[i]};
+      if(!type.empty())
       {
-        const auto& type{m_EquivalentTypes[i]};
-        if(!type.empty())
+        constexpr std::string_view pattern{"const "};
+        if(std::string_view{type}.substr(0, pattern.size()) != pattern)
         {
-          constexpr std::string_view pattern{"const "};
-          if(std::string_view{type}.substr(0, pattern.size()) != pattern)
-          {
-            args.append("const ");
-          }
-
-          args.append(type);
-
-          if(handle_as_ref(type)) args.append("&");
-          args.append(" ");
-
-          args.append(prediction(i, ","));
+          args.append("const ");
         }
-      }
 
-      replace_all(text, "?args", args);
-      replace_all(text, "?predictions", prediction(0, ""));
-    }
-    else
-    {
-      const auto start{text.rfind("template<?>")};
-      const auto finish{text.rfind("};")};
-      if((start != npos) && (finish != npos))
-      {
-        text.erase(start, finish + 2 - start);
+        args.append(type);
+
+        if(handle_as_ref(type)) args.append("&");
+        args.append(" ");
+
+        args.append(prediction(i, ","));
       }
     }
+
+    replace_all(text, "?args", args);
+    replace_all(text, "?predictions", prediction(0, ""));
 
     if(!m_TemplateData.empty())
     {
