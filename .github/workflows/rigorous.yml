@@ -422,6 +422,62 @@ jobs:
             fi
           } >> "$GITHUB_STEP_SUMMARY"
 
+      # SCRATCH - removed by the next commit. Two measurements for PR #147, reported only:
+      # it exits 0 whatever it finds.
+      #  1. Whether the capture needs --ignore-errors inconsistent under gcc 15: capture
+      #     again without it and compare with the Measure step's capture.
+      #  2. The upstream lcov report's reproduction on Linux, with lcov 2.5 and lcov master.
+      - name: SCRATCH capture without the suppression, and the lcov repro on Linux
+        if: ${{ always() && env.NEEDS_TESTING == 'true' }}
+        run: |
+          set +e
+          d=build/TestAll/gcc-env-coverage
+          echo "== 1. capture without --ignore-errors inconsistent"
+          lcov --directory "$d" --capture --output-file "$d/capture_without.info" --gcov-tool gcov-15 \
+               --keep-going --filter range --rc geninfo_unexecuted_blocks=1 \
+               --ignore-errors empty --ignore-errors format,format > "$RUNNER_TEMP/capture_without.log" 2>&1
+          echo "capture without the suppression: exit $?"
+          grep -A8 'Message summary' "$RUNNER_TEMP/capture_without.log"
+          if cmp "$d/coverage_capture.info" "$d/capture_without.info"; then
+            echo "RESULT 1: identical to the Measure step's capture"
+          else
+            echo "RESULT 1: DIFFERENT"; diff "$d/coverage_capture.info" "$d/capture_without.info" | head -40
+          fi
+
+          echo "== 2. the lcov repro on Linux"
+          r=$RUNNER_TEMP/repro; mkdir -p "$r"; cd "$r"
+          printf '%s\n' SF:/nonexistent/m.cpp FNL:0,5,5 FNA:0,0,_ZZ4mainENKUlvE_clEv DA:5,1 end_of_record > mangled.info
+          printf '%s\n' SF:/nonexistent/m.cpp FNL:0,5,5 'FNA:0,0,main::{lambda()#1}::operator()() const' DA:5,1 end_of_record > demangled.info
+          curl -fsSL -o master.tar.gz https://codeload.github.com/linux-test-project/lcov/tar.gz/9c9a1cd3bd98c886be4945cc2d1aeb17f7979e08
+          tar -xzf master.tar.gz
+          master=$(ls -d "$r"/lcov-9c9a1cd*)/bin/lcov
+          for tool in lcov "$master"; do
+            echo "-- $tool: $("$tool" --version 2>&1 | tail -1)"
+            for spelling in mangled demangled; do
+              "$tool" -a $spelling.info -o strict_$spelling.info > strict_$spelling.log 2>&1
+              echo "[$spelling] without --ignore-errors: exit $?"; grep -m1 'ERROR' strict_$spelling.log
+              "$tool" -a $spelling.info -o read_$spelling.info --ignore-errors inconsistent > read_$spelling.log 2>&1
+              echo "[$spelling] with --ignore-errors inconsistent: exit $?, $(grep '^FNA' read_$spelling.info)"
+              grep -m1 'WARNING' read_$spelling.log
+            done
+          done
+
+          echo "-- compiled with g++-15"
+          cat > m.cpp <<'EOF'
+          template<class F> int call_if(bool b, F f) { return b ? f() : 0; }
+
+          int main(int argc, char**)
+          {
+            return argc > 1 ? 2 : call_if(false, [] { return 1; });
+          }
+          EOF
+          g++-15 --coverage -O0 m.cpp -o m && ./m
+          lcov -c -d . -o cap.info --gcov-tool gcov-15 > cap.log 2>&1; echo "capture: exit $?, warnings $(grep -c WARNING cap.log)"
+          lcov -a cap.info -o read.info --ignore-errors inconsistent > read.log 2>&1; echo "read: exit $?"
+          echo "captured: $(grep 'UlvE_clEv' cap.info | grep '^FNA')  read back: $(grep 'UlvE_clEv' read.info | grep '^FNA')"
+          grep -m1 'WARNING' read.log
+          exit 0
+
       - name: Upload the tracefile and the report
         if: ${{ always() && env.NEEDS_TESTING == 'true' }}
         uses: actions/upload-artifact@v7
