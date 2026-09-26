@@ -150,6 +150,8 @@ namespace sequoia::testing
 
       move_only_weight() = default;
 
+      explicit move_only_weight(int v) : value{v} {}
+
       move_only_weight(move_only_weight&&) noexcept = default;
 
       move_only_weight& operator=(move_only_weight&&) noexcept = default;
@@ -178,6 +180,13 @@ namespace sequoia::testing
           g.set_edge_weight(citer, std::move(w));
         };
 
+    template<class Graph>
+    concept joinable = requires(Graph& g) { g.join(0, 1); };
+
+    template<class Graph>
+    concept insert_joinable
+      = requires(Graph& g, typename Graph::const_edge_iterator citer) { g.insert_join(citer, citer); };
+
     template<class Graph, class Result, class EdgeIterator = Graph::const_edge_iterator>
     concept edge_weight_mutable_returning
       = requires(Graph& g, EdgeIterator citer, Result(*fn)(typename Graph::edge_weight_type&)) {
@@ -203,11 +212,13 @@ namespace sequoia::testing
   void dynamic_graph_exception_safety_free_test::run_tests()
   {
     test_weight_update_constraints();
+    test_join_constraints();
     test_undirected_edge_mutations<maths::bucketed_edge_storage_config>();
     test_undirected_edge_mutations<maths::contiguous_edge_storage_config>();
     test_embedded_edge_mutations<maths::bucketed_edge_storage_config>();
     test_embedded_edge_mutations<maths::contiguous_edge_storage_config>();
     test_node_insertion();
+    test_shared_move_only_weights();
   }
 
   void dynamic_graph_exception_safety_free_test::test_weight_update_constraints()
@@ -251,6 +262,64 @@ namespace sequoia::testing
     STATIC_CHECK( edge_weight_mutable_returning<directed_move_only_graph, void>);
     STATIC_CHECK(!edge_weight_mutable_returning<directed_move_only_graph, move_only_weight&>);
     STATIC_CHECK(!edge_weight_mutable_returning<directed_move_only_graph, non_movable>);
+  }
+
+  void dynamic_graph_exception_safety_free_test::test_join_constraints()
+  {
+    using namespace maths;
+
+    using unshared_move_only_graph
+      = undirected_graph<move_only_weight, null_weight, null_meta_data, independent_edge_storage_config>;
+    using unshared_move_only_embedded_graph
+      = embedded_graph<move_only_weight, null_weight, null_meta_data, independent_edge_storage_config>;
+    using unshared_copyable_graph
+      = undirected_graph<fallible_weight, null_weight, null_meta_data, independent_edge_storage_config>;
+    using shared_move_only_graph          = undirected_graph<move_only_weight, null_weight>;
+    using shared_move_only_embedded_graph = embedded_graph<move_only_weight, null_weight>;
+    using directed_move_only_graph        = directed_graph<move_only_weight, null_weight>;
+
+    STATIC_CHECK(!joinable<unshared_move_only_graph>);
+    STATIC_CHECK(!joinable<unshared_move_only_embedded_graph>);
+    STATIC_CHECK(!insert_joinable<unshared_move_only_embedded_graph>);
+
+    STATIC_CHECK( joinable<unshared_copyable_graph>);
+    STATIC_CHECK( joinable<shared_move_only_graph>);
+    STATIC_CHECK( joinable<shared_move_only_embedded_graph>);
+    STATIC_CHECK( insert_joinable<shared_move_only_embedded_graph>);
+    STATIC_CHECK( joinable<directed_move_only_graph>);
+  }
+
+  void dynamic_graph_exception_safety_free_test::test_shared_move_only_weights()
+  {
+    using namespace maths;
+
+    {
+      undirected_graph<move_only_weight, null_weight> g{};
+      g.add_node();
+      g.add_node();
+      g.join(0, 1, move_only_weight{5});
+      g.mutate_edge_weight(g.cbegin_edges(0), [](move_only_weight& w) { w.value = 7; });
+
+      check(equality,
+            "An undirected graph joins with a shared, move-only weight, which both halves hold",
+            &g.cbegin_edges(1)->weight(),
+            &g.cbegin_edges(0)->weight());
+      check(equality, "The shared, move-only weight is mutated", g.cbegin_edges(1)->weight().value, 7);
+    }
+
+    {
+      embedded_graph<move_only_weight, null_weight> g{};
+      g.add_node();
+      g.add_node();
+      g.join(0, 1, move_only_weight{5});
+      g.insert_join(g.cbegin_edges(0), g.cbegin_edges(1), move_only_weight{6});
+
+      check(equality,
+            "An embedded graph inserts a join with a shared, move-only weight, which both halves hold",
+            &g.cbegin_edges(1)->weight(),
+            &g.cbegin_edges(0)->weight());
+      check(equality, "The inserted join carries its weight", g.cbegin_edges(1)->weight().value, 6);
+    }
   }
 
   template<class EdgeStorageConfig>
