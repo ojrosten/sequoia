@@ -152,23 +152,11 @@ namespace sequoia::testing
     : m_Repo{std::move(projectRoot /= "Tests")}
   {}
 
-  [[nodiscard]]
-  std::filesystem::path tests_paths::project_root() const
-  {
-    return m_Repo.parent_path();
-  }
-
-  //===================================== tests_paths =====================================//
+  //===================================== dependencies_paths =====================================//
 
   dependencies_paths::dependencies_paths(fs::path projectRoot)
     : m_Repo{std::move(projectRoot /= "dependencies")}
   {}
-
-  [[nodiscard]]
-  std::filesystem::path dependencies_paths::project_root() const
-  {
-    return m_Repo.parent_path();
-  }
 
   [[nodiscard]]
   std::filesystem::path dependencies_paths::sequoia_root() const
