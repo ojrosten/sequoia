@@ -23,6 +23,7 @@ namespace sequoia::testing
     test_add_include_to_an_existing_block();
     test_add_include_without_a_block_or_an_import();
     test_add_test_registrations();
+    test_add_to_cmake_without_a_parenthesis();
     test_comparison_of_file_contents();
     test_empty_lines_of_a_seqpat();
     test_trailing_spaces_of_a_seqpat_pattern();
@@ -123,6 +124,17 @@ namespace sequoia::testing
     check_exception_thrown<std::logic_error>(
       "No tests to register",
       [this]() { add_test_registrations(working_materials() /= "Registration/NoBlankLine/Main.cpp", {}); }
+    );
+  }
+
+  void file_editors_free_test::test_add_to_cmake_without_a_parenthesis()
+  {
+    const auto dir{working_materials()};
+    const transient_file cmakeLists{dir / "CMakeLists.txt", "set SourceList\n    a.cpp\n)\n"};
+
+    check_exception_thrown<std::logic_error>(
+      "An opening pattern with no parenthesis gives no column to align entries with",
+      [&dir, &cmakeLists](){ add_to_cmake(cmakeLists.path(), dir, dir / "b.cpp", "set SourceList", ")\n", ""); }
     );
   }
 
