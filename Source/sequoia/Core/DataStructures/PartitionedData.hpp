@@ -19,9 +19,11 @@
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 
 #include <format>
+#include <limits>
 #include <string>
 #include <numeric>
 #include <stdexcept>
+#include <utility>
 
 namespace sequoia
 {
@@ -797,6 +799,7 @@ namespace sequoia
       void push_back_to_partition(const index_type index, Args&&... args)
       {
         check_range("push_back_to_partition", index);
+        check_index_type_capacity("push_back_to_partition");
 
         auto iter{m_Data.end()};
         if(index == m_Partitions.size() - 1)
@@ -817,6 +820,7 @@ namespace sequoia
       {
         const auto source{pos.partition_index()};
         check_range("insert_to_partition", source);
+        check_index_type_capacity("insert_to_partition");
 
         auto iter{m_Data.emplace(pos.base_iterator(), std::forward<Args>(args)...)};
         increment_partition_indices(source);
@@ -952,6 +956,15 @@ namespace sequoia
         }
       }
 
+      void check_index_type_capacity(std::string_view method) const
+      {
+        constexpr auto maxSize{std::numeric_limits<index_type>::max()};
+        if(std::cmp_greater_equal(m_Data.size(), maxSize))
+        {
+          throw std::out_of_range{std::format("partitioned_sequence::{}: the index type cannot count more than {} elements", method, maxSize)};
+        }
+      }
+
       template<class PartitionIterator, std::input_or_output_iterator Iterator>
       [[nodiscard]]
       constexpr PartitionIterator get_begin_iterator(const index_type i, Iterator iter) const noexcept
@@ -963,16 +976,10 @@ namespace sequoia
 
       template<class PartitionIterator, std::input_or_output_iterator Iterator>
       [[nodiscard]]
-      constexpr PartitionIterator get_end_iterator(const index_type i, Iterator iter) const
+      constexpr PartitionIterator get_end_iterator(const index_type i, Iterator iter) const noexcept
       {
         index_type index{PartitionIterator::reversed() ? index_type{} : npos};
-        index_type offset{
-          [sz{m_Data.size()}] () {
-            if (sz > std::numeric_limits<index_type>::max())
-              throw std::out_of_range{"Partition offset out of range"};
-            return static_cast<index_type>(sz);
-          }()
-        };
+        index_type offset{static_cast<index_type>(m_Data.size())};
 
         if(i < m_Partitions.size())
         {
@@ -1092,6 +1099,7 @@ namespace sequoia
     };
 
     template<class T, std::size_t Npartitions, std::size_t Nelements, class Partitions=maths::static_monotonic_sequence<std::size_t, Npartitions, std::ranges::greater>>
+      requires (std::cmp_less_equal(Nelements, std::numeric_limits<typename Partitions::value_type>::max()))
     class static_partitioned_sequence :
       public partitioned_sequence_base<T, std::array<T, Nelements>, Partitions>
     {
