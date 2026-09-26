@@ -1870,12 +1870,10 @@ namespace sequoia::testing
   {
     using namespace parsing::commandline;
 
-    return error(std::format("Test: \"{}\"\n"
-                             "Source file: \"{}\"\n"
-                             "A test's name is that of its class, and determines where its output is written,"
-                             " so no two tests may share a name, ignoring case.\n",
-                             testName,
-                             source.generic_string()));
+    return error({std::format("Test: \"{}\"", testName),
+                  std::format("Source file: \"{}\"", source.generic_string()),
+                  "A test's name is that of its class, and determines where its output is written,"
+                  " so no two tests may share a name, ignoring case."});
   }
 
   namespace
