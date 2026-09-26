@@ -18,7 +18,7 @@
 
 namespace sequoia::testing
 {
-  /*! \brief A file with the given contents, which exists for precisely the lifetime of the object. */
+  /** \brief A file with the given contents, which exists for precisely the lifetime of the object. */
   class transient_file
   {
   public:
