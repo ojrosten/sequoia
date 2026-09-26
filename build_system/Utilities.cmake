@@ -106,13 +106,11 @@ FUNCTION(sequoia_set_properties target)
     endif()
 ENDFUNCTION()
 
-# USES_TERMINAL puts the command in Ninja's console pool, which passes its output
-# through as it is written; anywhere else Ninja holds a command's output until the
-# command ends, so a suite that hangs leaves nothing to say how far it got.
 FUNCTION(sequoia_set_run_target executable)
     add_custom_target(run
         COMMAND $<TARGET_FILE:${executable}> ${EXEC_ARGS}
         DEPENDS ${executable}
+        # So that Ninja passes the output through as it is written, not when the command ends
         USES_TERMINAL
     )
 ENDFUNCTION()
