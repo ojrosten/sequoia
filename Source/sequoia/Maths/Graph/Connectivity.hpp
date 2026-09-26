@@ -54,6 +54,7 @@ namespace sequoia
       {
         using edge_type           = EdgeType;
         using edge_weight_type    = edge_type::weight_type;
+        using edge_meta_data_type = edge_type::meta_data_type;
         using edge_index_type     = edge_type::index_type;
         using edge_storage_type   = EdgeStorageType;
         using const_edge_iterator = edge_storage_type::const_partition_iterator;
@@ -84,7 +85,7 @@ namespace sequoia
                  }
             };
 
-            if constexpr(std::is_empty_v<typename edge_type::meta_data_type>)
+            if constexpr(std::is_empty_v<edge_meta_data_type>)
               appender(edge_type{i->target_node(), i->weight()});
             else
               appender(edge_type{i->target_node(), i->meta_data(), i->weight()});
@@ -92,7 +93,7 @@ namespace sequoia
           else
           {
             const auto& partner{*(m_Storage.cbegin_partition(found->node_index) + found->edge_index)};
-            if constexpr(std::is_empty_v<typename edge_type::meta_data_type>)
+            if constexpr(std::is_empty_v<edge_meta_data_type>)
               m_Storage.push_back_to_partition(node, i->target_node(), partner);
             else
               m_Storage.push_back_to_partition(node, i->target_node(), i->meta_data(), partner);
@@ -321,6 +322,7 @@ namespace sequoia
       }
 
 
+      /** \brief Applies `fn` once, in place, to the meta-data of the half edge at `citer`, and returns the result. */
       template<class Fn>
         requires (!std::is_empty_v<edge_meta_data_type> && std::invocable<Fn&, edge_meta_data_type&>)
       constexpr std::invoke_result_t<Fn&, edge_meta_data_type&>
@@ -381,7 +383,7 @@ namespace sequoia
       constexpr connectivity_base& operator=(connectivity_base&&) = default;
 
       constexpr connectivity_base& operator=(const connectivity_base& other)
-        requires std::is_copy_constructible_v<edge_type>
+        requires (std::is_copy_constructible_v<edge_type> && std::is_move_assignable_v<edge_storage_type>)
       {
         if(&other != this)
         {

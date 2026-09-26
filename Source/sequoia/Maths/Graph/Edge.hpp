@@ -72,6 +72,7 @@ namespace sequoia
         WeightHandler::get(m_Weight) = weight_type{std::forward<Args>(args)...};
       }
 
+      /** \brief Applies `fn` once, in place, to this edge's weight, and returns the result. */
       template<class Fn>
         requires std::invocable<Fn&, weight_type&>
       constexpr std::invoke_result_t<Fn&, weight_type&> mutate_weight(Fn fn)
@@ -271,6 +272,7 @@ namespace sequoia
         m_MetaData = {std::forward<Args>(args)...};
       }
 
+      /** \brief Applies `fn` once, in place, to this edge's meta-data, and returns the result. */
       template<class Fn>
         requires std::invocable<Fn&, meta_data_type&>
       constexpr std::invoke_result_t<Fn&, meta_data_type&> mutate_meta_data(Fn fn)

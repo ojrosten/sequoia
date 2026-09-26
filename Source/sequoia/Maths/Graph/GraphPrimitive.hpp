@@ -204,7 +204,10 @@ namespace sequoia
       template<class N>
       constexpr static bool enableNodeAllocation{!heterogeneous_nodes<graph_primitive> && !std::is_empty_v<N>};
 
-      constexpr static bool copyable_v{
+      /** \brief Whether the edges and the node weights can be copy-constructed; heterogeneous node weights are not
+                 considered, since a heterogeneous graph has no allocator-extended copy.
+       */
+      constexpr static bool copy_constructible_v{
         std::is_copy_constructible_v<typename Connectivity::edge_type> && std::is_copy_constructible_v<node_weight_type>
       };
 
@@ -332,7 +335,7 @@ namespace sequoia
         alloc EdgePartitionsAllocator,
         alloc NodeAllocator
       >
-        requires (enableNodeAllocation<node_weight_type> && copyable_v)
+        requires enableNodeAllocation<node_weight_type>
       constexpr graph_primitive(const graph_primitive& in, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, const NodeAllocator& nodeAlloc)
         : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc, edgeParitionsAlloc}
         , Nodes{static_cast<const Nodes&>(in), nodeAlloc}
@@ -343,7 +346,7 @@ namespace sequoia
         alloc EdgeAllocator,
         alloc NodeAllocator
       >
-        requires (enableNodeAllocation<node_weight_type> && copyable_v)
+        requires enableNodeAllocation<node_weight_type>
       constexpr graph_primitive(const graph_primitive& in, const EdgeAllocator& edgeAlloc, const NodeAllocator& nodeAlloc)
         : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc}
         , Nodes{static_cast<const Nodes&>(in), nodeAlloc}
@@ -354,14 +357,14 @@ namespace sequoia
         alloc EdgeAllocator,
         alloc EdgePartitionsAllocator
       >
-        requires (!enableNodeAllocation<node_weight_type> && copyable_v)
+        requires (!enableNodeAllocation<node_weight_type>)
       constexpr graph_primitive(const graph_primitive& in, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc)
         : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc, edgeParitionsAlloc}
         , Nodes{static_cast<const Nodes&>(in)}
       {}
 
       template<alloc EdgeAllocator>
-        requires (!enableNodeAllocation<node_weight_type> && copyable_v)
+        requires (!enableNodeAllocation<node_weight_type>)
       constexpr graph_primitive(const graph_primitive& in, const EdgeAllocator& edgeAlloc)
         : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc}
         , Nodes{static_cast<const Nodes&>(in)}

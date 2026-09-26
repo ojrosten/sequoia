@@ -133,6 +133,7 @@ namespace sequoia::maths
       m_NodeWeights[index] = std::move(w);
     }
 
+    /** \brief Applies `fn` once, in place, to the node weight at `pos`, and returns the result. */
     template<class Fn>
       requires std::invocable<Fn&, weight_type&>
     constexpr std::invoke_result_t<Fn&, weight_type&> mutate_node_weight(const_iterator pos, Fn fn)
@@ -178,7 +179,8 @@ namespace sequoia::maths
       : m_NodeWeights{weights, allocator}
     {}
 
-    constexpr node_storage_base(const node_storage_base&) requires std::is_copy_constructible_v<weight_type> = default;
+    constexpr node_storage_base(const node_storage_base&)
+      requires std::is_copy_constructible_v<weight_type> = default;
 
     template<alloc Allocator>
       requires std::is_copy_constructible_v<weight_type>

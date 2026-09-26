@@ -106,12 +106,12 @@ namespace sequoia::maths
     graph_base(const graph_base&) = default;
 
     graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator)
-      requires primitive_type::copyable_v
+      requires primitive_type::copy_constructible_v
       : primitive_type{in, edgeAllocator}
     {}
 
     template<alloc EdgePartitionsAllocator>
-      requires (allocatable_partitions<edge_storage_type> && primitive_type::copyable_v)
+      requires (allocatable_partitions<edge_storage_type> && primitive_type::copy_constructible_v)
     graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{in, edgeAllocator, edgePartitionsAllocator}
     {}
@@ -235,12 +235,12 @@ namespace sequoia::maths
     {}
 
     graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const node_weight_allocator_type& nodeWeightAllocator)
-      requires primitive_type::copyable_v
+      requires primitive_type::copy_constructible_v
       : primitive_type{in, edgeAllocator, nodeWeightAllocator}
     {}
 
     template<alloc EdgePartitionsAllocator>
-      requires (allocatable_partitions<edge_storage_type> && primitive_type::copyable_v)
+      requires (allocatable_partitions<edge_storage_type> && primitive_type::copy_constructible_v)
     graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{in, edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator}
     {}
