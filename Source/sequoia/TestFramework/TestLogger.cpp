@@ -294,11 +294,6 @@ namespace sequoia::testing
     }
   }
 
-  void log_summary::clear() noexcept
-  {
-    *this = log_summary{""};
-  }
-
   [[nodiscard]]
   std::size_t log_summary::soft_failures() const noexcept
   {
@@ -342,12 +337,5 @@ namespace sequoia::testing
     m_RunnerOverhead     += rhs.m_RunnerOverhead;
 
     return *this;
-  }
-
-  [[nodiscard]]
-  log_summary operator+(const log_summary& lhs, const log_summary& rhs)
-  {
-    log_summary s{lhs};
-    return s += rhs;
   }
 }
