@@ -308,10 +308,10 @@ namespace sequoia::testing
         const auto& filename{summaryFile.file_path()};
         if(filename.empty()) return;
 
-        // Registration makes test names unique; a summary discriminator appended to one name can still spell another
         if(!m_FilesWrittenTo.insert(filename).second)
           throw std::runtime_error{
-            std::format("Two tests' summaries are both {}: one test's name, with its summary discriminator, is the other's name",
+            std::format("Two tests' summaries are both {}: "
+                        "one test's name, with its summary discriminator, is the other's name",
                         filename.generic_string())
           };
 
