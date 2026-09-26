@@ -979,6 +979,10 @@ namespace sequoia::testing
             nascent.generate_source_files(src_opt::yes);
             nascent.source_dir(args[0]);
           },
+          [](nascent_allocation_test& nascent, const arg_list& args) {
+            nascent.generate_source_files(src_opt::yes);
+            nascent.source_dir(args[0]);
+          },
           [](auto&, const arg_list&) {}
         }
       ),
@@ -988,7 +992,7 @@ namespace sequoia::testing
 
     const std::initializer_list<maths::tree_initializer<option>>
       semanticsOptions  {{headerOption}, {genSemanticsSourceOption}, {fullnameOption}, {testingUtilitiesOption}},
-      allocationOptions {{headerOption}, {fullnameOption}, {testingUtilitiesOption}},
+      allocationOptions {{headerOption}, {genSemanticsSourceOption}, {fullnameOption}, {testingUtilitiesOption}},
       performanceOptions{{fullnameOption}},
       freeOptions       {{forenameOption}, {fullnameOption}, {genFreeSourceOption}, {diagnosticsOption}};
 

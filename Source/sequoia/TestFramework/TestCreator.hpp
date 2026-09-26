@@ -329,12 +329,21 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::vector<std::string> stubs();
 
+    void source_dir(std::filesystem::path dir) { m_SourceDir = std::move(dir); }
+
     void finalize();
 
     [[nodiscard]]
     std::vector<std::string> test_classes() const;
   private:
+    std::filesystem::path m_SourceDir{};
+
     void transform_file(std::string& text) const;
+
+    [[nodiscard]]
+    std::filesystem::path where_header_absent(const std::filesystem::path& filename) const;
+
+    void generate_header(const std::filesystem::path& headerPath);
   };
 
   class nascent_behavioural_test : public nascent_test_base

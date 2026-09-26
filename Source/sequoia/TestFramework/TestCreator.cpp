@@ -943,14 +943,38 @@ namespace sequoia::testing
       surname(std::format("allocation_{}", to_surname(flavour())));
     name_files_after_type(forename());
 
-    // An allocation test takes no --gen-source, so its header is never generated.
-    nascent_test_base::finalize([](const fs::path& p) { return p; },
-                                [](const fs::path&) {},
+    nascent_test_base::finalize([this](const fs::path& filename) { return where_header_absent(filename); },
+                                [this](const fs::path& headerPath) { generate_header(headerPath); },
                                 {},
                                 to_stubs(*this),
                                 test_classes(),
                                 "MyClass",
                                 [this](std::string& text) { transform_file(text); });
+  }
+
+  [[nodiscard]]
+  fs::path nascent_allocation_test::where_header_absent(const fs::path& filename) const
+  {
+    const auto& project{paths().source().project()};
+    return filename.is_absolute() ? filename : project / rebase_from(m_SourceDir / filename, project);
+  }
+
+  void nascent_allocation_test::generate_header(const fs::path& headerPath)
+  {
+    const auto headerTemplate{test_type() == "move_only_allocation" ? "MyMoveOnlyClass.hpp" : "MyRegularClass.hpp"};
+
+    stream() << quote_without_escapes(fs::relative(headerPath, paths().project_root()).generic_string()) << '\n';
+    fs::create_directories(headerPath.parent_path());
+    fs::copy_file(paths().aux_paths().source_templates() / headerTemplate, headerPath);
+
+    read_modify_write(headerPath, [this](std::string& text) {
+        process_copyright_and_namespace(text, copyright(), "");
+        replace_all(text, replacement{"?type", forename()}, replacement{"template<?>\n", ""});
+        tabs_to_spacing(text, code_indent());
+      }
+    );
+
+    set_cpp(headerPath, "");
   }
 
   [[nodiscard]]
