@@ -67,6 +67,16 @@ namespace sequoia::testing
           working_materials().append("Stuff/Blurg"));
 
     check(equivalence,
+          reporter{"A path which does not exist is not equivalent to itself"},
+          working_materials().append("Stuff/Blah"),
+          working_materials().append("Stuff/Blah"));
+
+    check(weak_equivalence,
+          reporter{"A path which does not exist is not weakly equivalent to itself"},
+          working_materials().append("Stuff/Blah"),
+          working_materials().append("Stuff/Blah"));
+
+    check(equivalence,
           reporter{"Inequivalence of two different paths, one of which exists"},
           working_materials().append("Stuff/Blah"),
           working_materials().append("Stuff/A"));
@@ -78,8 +88,8 @@ namespace sequoia::testing
 
     check(equivalence,
           reporter{"Inequivalence of differently named files"},
-          working_materials().append("Stuff/B/foo.txt"),
-          working_materials().append("Stuff/B/bar.txt"));
+          working_materials().append("MoreStuff/B/foo.txt"),
+          working_materials().append("MoreStuff/B/bar.txt"));
 
     check(equivalence,
           reporter{"Inequivalence of file contents"},
@@ -153,6 +163,20 @@ namespace sequoia::testing
   
   void path_false_positive_free_diagnostics::test_paths()
   {
+    check_exception_thrown<std::logic_error>(
+      reporter{"An empty path is refused"},
+      [this]() { check(equivalence, reporter{""}, std::filesystem::path{}, working_materials().append("Stuff/A")); });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"An empty prediction is refused"},
+      [this]() { check(equivalence, reporter{""}, working_materials().append("Stuff/A"), std::filesystem::path{}); });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"A relative path is refused"},
+      [this]() {
+        check(equivalence, reporter{""}, std::filesystem::path{"Stuff/A"}, working_materials().append("Stuff/A"));
+      });
+
     check(equivalence,
           reporter{"Equivalence of a file to itself"},
           working_materials().append("Stuff/A/foo.txt"),

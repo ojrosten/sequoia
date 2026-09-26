@@ -1,0 +1,34 @@
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 167
+An empty path is refused
+
+Expected Exception Type:
+[std::logic_error]
+Refusing to check a path which is not absolute
+vs
+output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_positive_free_diagnostics/WorkingCopy/Stuff/A
+
+=======================================
+
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 171
+An empty prediction is refused
+
+Expected Exception Type:
+[std::logic_error]
+Refusing to check a path which is not absolute
+output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_positive_free_diagnostics/WorkingCopy/Stuff/A
+vs
+
+=======================================
+
+Tests/TestFramework/PathFreeDiagnostics.cpp, Line 175
+A relative path is refused
+
+Expected Exception Type:
+[std::logic_error]
+Refusing to check a path which is not absolute
+Stuff/A
+vs
+output/TestsTemporaryData/TestFramework/PathFreeDiagnostics/path_false_positive_free_diagnostics/WorkingCopy/Stuff/A
+
+=======================================
+

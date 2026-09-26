@@ -40,7 +40,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path test_runner_project_files::generated_project() const
   {
-    return working_materials().parent_path() /= "GeneratedProject";
+    return scratchpad_materials() /= "GeneratedProject";
   }
 
   [[nodiscard]]

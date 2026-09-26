@@ -86,25 +86,53 @@ namespace sequoia::testing
       }
     }
 
+    /** An original materials root holds `WorkingCopy`, `Prediction` and `Auxiliary`, besides a
+        `.keep` or Finder's `.DS_Store`. Anything more was committed for an older layout, and staging
+        would ignore it without a word.
+     */
+    void throw_if_stray_materials(const individual_materials_paths& materials)
+    {
+      static constexpr std::array<std::string_view, 5>
+        expected{"WorkingCopy", "Prediction", "Auxiliary", ".keep", ".DS_Store"};
+
+      auto isStray{
+        [](const std::string& name) { return !std::ranges::contains(expected, name); }
+      };
+
+      const auto& root{materials.original_materials_root()};
+      auto strays{
+          fs::directory_iterator{root}
+        | std::views::transform([](const fs::directory_entry& e) { return e.path().filename().generic_string(); })
+        | std::views::filter(isStray)
+        | std::ranges::to<std::vector>()
+      };
+
+      if(!strays.empty())
+      {
+        std::ranges::sort(strays);
+        throw std::runtime_error{
+          std::format("The materials in {} hold {}, which would be ignored: "
+                      "only WorkingCopy, Prediction and Auxiliary are read",
+                      root.generic_string(),
+                      strays | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>())
+        };
+      }
+    }
+
     struct test_paths
     {
       test_paths(const std::filesystem::path& sourceFile,
                  const test_summary_path& summaryFile,
-                 const std::filesystem::path& workingMaterials,
-                 const std::filesystem::path& predictiveMaterials,
+                 const individual_materials_paths& materialsPaths,
                  const project_paths& projPaths)
         : summary{summaryFile}
         , test_file{rebase_from(sourceFile, projPaths.tests().repo())}
-        , working_materials{workingMaterials}
-        , predictions{predictiveMaterials}
+        , materials{materialsPaths}
       {}
 
       test_summary_path summary;
-
-      std::filesystem::path
-        test_file,
-        working_materials,
-        predictions;
+      std::filesystem::path test_file;
+      individual_materials_paths materials;
     };
 
     struct paths_comparator
@@ -112,7 +140,7 @@ namespace sequoia::testing
       [[nodiscard]]
       bool operator()(const test_paths& lhs, const test_paths& rhs) const noexcept
       {
-        return lhs.working_materials < rhs.working_materials;
+        return lhs.materials.working() < rhs.materials.working();
       }
     };
 
@@ -243,7 +271,7 @@ namespace sequoia::testing
           std::vector<fs::path> deleted{};
           try
           {
-            soft_update(update.working_materials, update.predictions, deleted);
+            soft_update(update.materials.working(), update.materials.prediction(), deleted);
           }
           catch(const std::exception& e)
           {
@@ -288,7 +316,8 @@ namespace sequoia::testing
 
         if(updateMode != update_mode::none)
         {
-          if(summary.soft_failures() && fs::exists(files.working_materials) && fs::exists(files.predictions))
+          const auto& materials{files.materials};
+          if(summary.soft_failures() && fs::exists(materials.working()) && fs::exists(materials.prediction()))
           {
             // A critical failure may have cut the test short: its working copy may lack files, which the
             // update would delete from the predictions, or hold a half-written one, which would replace
@@ -448,34 +477,33 @@ namespace sequoia::testing
     return static_cast<int>(code);
   }
 
-  individual_materials_paths set_materials(const std::filesystem::path& sourceFile,
-                                           std::string_view testName,
-                                           const project_paths& projPaths)
+  void stage_materials(const individual_materials_paths& materials)
   {
-    individual_materials_paths materials{sourceFile, testName, projPaths};
-    if(!fs::exists(materials.original_materials())) return {};
+    if(materials.temporary_materials_root().empty())
+      throw std::logic_error{"Unable to stage materials whose paths name no test"};
 
     // Wiping the whole of this test's temporary tree is safe because the tree is named for the
     // test, and `test_runner::register_test` admits each name once.
-    fs::remove_all(materials.temporary_materials());
-    fs::create_directories(materials.temporary_materials());
+    fs::remove_all(materials.temporary_materials_root());
+    fs::create_directories(materials.temporary_materials_root());
 
-    const auto workingCopy{materials.working()};
+    if(!fs::exists(materials.original_materials_root())) return;
+
+    throw_if_stray_materials(materials);
+
     if(const auto originalWorking{materials.original_working()}; fs::exists(originalWorking))
     {
-      fs::copy(originalWorking, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+      fs::copy(originalWorking, materials.working(), fs::copy_options::recursive);
     }
     else
     {
-      fs::create_directory(workingCopy);
+      fs::create_directory(materials.working());
     }
 
-    if(const auto originalAux{materials.original_auxiliary()}; fs::exists(originalAux))
+    if(const auto originalAuxiliary{materials.original_auxiliary()}; fs::exists(originalAuxiliary))
     {
-      fs::copy(originalAux, materials.auxiliary(), fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+      fs::copy(originalAuxiliary, materials.auxiliary(), fs::copy_options::recursive);
     }
-
-    return materials;
   }
 
 
@@ -1245,8 +1273,7 @@ namespace sequoia::testing
                   [this](auto& test) -> test_paths {
                     return {test.source_file(),
                             test.summary_file_path(),
-                            test.working_materials(),
-                            test.predictive_materials(),
+                            test.materials_paths(),
                             proj_paths()};
                   }
               };
@@ -1378,7 +1405,7 @@ namespace sequoia::testing
           [&,this](auto& wt){
             if(wt.optTest)
             {
-              wt.optTest->reset(proj_paths());
+              wt.optTest->reset();
             }
             else
             {

@@ -328,40 +328,52 @@
 	
 	For some tests it is desirable to utilize auxiliary materials, as alluded to in \ref sec_scale.
 	Given a test class `bar_test`, defined in `Tests/Foo/Bar.cpp`, any testing materials should be
-	stored in `TestMaterials/Foo/Bar/bar_test`: the directory mirrors the source file's path, minus its
-	extension, and the leaf is the name of the test's class. A source file defining more than one test
-	therefore gives each of them materials of its own, rather than having them share - and, since tests
-	run concurrently by default, share a staged `WorkingCopy` - while everything the source's tests
-	rely on lies beneath the one directory named for the source, which is how `prune` finds it.
-	The following conventions then apply. First, if the materials are simply for consumption by the test code,
-	the materials can simply be placed in the aforementioned directory. However, it may be that it is
-	desirable to perform a comparison with materials stored on disk. In this case,
-	there are three sub-folders with special names: `Auxiliary`, `WorkingCopy`
-	and `Prediction`, of which only the last is necessary. When a test is run that possesses a
-	`Prediction` folder,
-	the `Auxiliary` and `WorkingCopy` folders, should they exist, are copied to a temporary location which is cleared
-	out at the beginning of each test run. If `WorkingCopy` does not exist, it is created on the fly.
-	At some point during the test, the contents of `WorkingCopy` should be compared with `Prediction`;
-	the test framework comes with methods exposing the relevant paths.  The `Auxiliary` folder
-	is useful for holding materials never intended for comparison.
-	Roughly speaking, differences
-	between the `WorkingCopy` and `Prediction` folders and any files they may hold 
+	committed in `TestMaterials/Foo/Bar/bar_test`: the directory mirrors the source file's path, minus
+	its extension, and the leaf is the name of the test's class. A source file defining more than one
+	test therefore gives each of them materials of its own - tests run concurrently by default, so
+	sharing would mean sharing one staged working copy - while everything the source's tests rely on
+	lies beneath the one directory named for the source, which is how `prune` finds it.
+
+	Beneath that directory there are three sub-folders with special names, each optional:
+	`WorkingCopy`, holding the inputs the test works on; `Prediction`, holding what the test's output
+	is compared with; and `Auxiliary`, holding inputs never intended for comparison. Nothing else may
+	sit beside them, save `.keep` and `.DS_Store`: a test whose materials hold anything more fails, naming it.
+	Two words distinguish the copies: the *original* materials are the committed ones, and the
+	*temporary* materials are what each run stages from them, in the same layout, beneath
+	`output/TestsTemporaryData`. Before a test runs, its temporary directory is wiped and its
+	`WorkingCopy` and `Auxiliary` are copied into it; a test with materials but no `WorkingCopy` gets
+	an empty one. Predictions are never staged.
+
+	The test reaches these through `working_materials()` and `auxiliary_materials()`, which return the
+	temporary copies, and `predictive_materials()`, which returns the original predictions. Each
+	throws, naming where the materials would be committed, if the test has none of that kind: a test
+	whose class is renamed, and so no longer matches its materials, fails at once rather than quietly
+	working elsewhere. At some point during the test, the contents of the working copy may be compared
+	with the predictions; roughly speaking, differences between the two, and any files they may hold,
 	will be reported as a test failure.
-	
+
+	A test which needs only somewhere to write takes `scratchpad_materials()`: the test's temporary
+	directory itself, with no committed counterpart, and so nothing for a rename to detach. Within it,
+	`WorkingCopy` and `Auxiliary` are reserved for the staged materials.
+
 	However, there are some exceptions to this. First, the following files are ignored: `.keep` and
 	`.DS_Store`. More interestingly, clients may specify that particular substrings within a file
 	are ignored when comparing file contents. To motivate this, consider end-to-end testing of the
 	testing framework itself. The output includes timings, of the form `[2ms]`. The problem is that timings
 	can be expected to change, meaning that a given test may regularly fail in way which is not useful.
-	To counter this, each file in `Prediction` and it subfolders can be supplemented by a file of the
+	To counter this, each file in `Prediction` and its subfolders can be supplemented by a file of the
 	same name but with the extension `seqpat`. The latter is expected to contain a list of regular expressions,
-	specifying sub-strings to be ignored from the file comparison process.
-	
-	Suppose now that we are left we a genuine failure after preprocessing the files in `WorkingCopy`
-	and `Prediction`. It may be that the code under test is actually correct, but the predictions need
-	updating. This can be achieved by running the test with the additional argument `update`. Updating
-	is discerning: only files exhibiting a failure after preprocessing are updated. This prevents the
-	version-controlled diffs being polluted with noise.
+	one per line, specifying sub-strings to be ignored from the file comparison process. Each line is
+	taken as written, trailing spaces included. An empty line is skipped. A line of whitespace alone - every
+	character a space or a tab - is refused, naming the file and the line, since it could be meant either
+	as a separator or as a pattern; a pattern which is to match whitespace says so explicitly, such as
+	`[ ]` or `[ \t]`.
+
+	Suppose now that we are left with a genuine failure after preprocessing the files in the working
+	copy and the predictions. It may be that the code under test is actually correct, but the
+	predictions need updating. This can be achieved by running the tests with the command
+	`update-materials`, or `u`. Updating is discerning: only files exhibiting a failure after
+	preprocessing are updated. This prevents the version-controlled diffs being polluted with noise.
 
     \section sec_allocators Allocator-Awareness
 

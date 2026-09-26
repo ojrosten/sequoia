@@ -2,7 +2,7 @@ Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 31
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/TestFramework/FileSystemUtilitiesFreeTest/file_system_utilities_free_test/Foo/Bar/baz.txt is not a directory
+output/TestsTemporaryData/TestFramework/FileSystemUtilitiesFreeTest/file_system_utilities_free_test/WorkingCopy/Foo/Bar/baz.txt is not a directory
 
 =======================================
 
@@ -10,7 +10,7 @@ Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 33
 
 Expected Exception Type:
 [std::runtime_error]
-output/TestsTemporaryData/TestFramework/FileSystemUtilitiesFreeTest/file_system_utilities_free_test/Foo/Stuff is not a directory
+output/TestsTemporaryData/TestFramework/FileSystemUtilitiesFreeTest/file_system_utilities_free_test/WorkingCopy/Foo/Stuff is not a directory
 
 =======================================
 

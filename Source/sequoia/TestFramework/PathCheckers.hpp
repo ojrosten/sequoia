@@ -169,29 +169,39 @@ namespace sequoia::testing
     {
       namespace fs = std::filesystem;
 
+      // A relative path - the empty one included - means whatever the current directory makes it
+      if(!path.is_absolute() || !prediction.is_absolute())
+        throw std::logic_error{path_check_preamble("Refusing to check a path which is not absolute", path, prediction)};
+
       const auto pathType{fs::status(path).type()};
       const auto predictionType{fs::status(prediction).type()};
 
+      // Two absent paths are of the same type, and would otherwise agree having compared nothing
+      if(predictionType == fs::file_type::not_found)
+      {
+        sentinel<Mode> sentry{logger, path_check_preamble("Path existence", path, prediction)};
+        sentry.log_check();
+        sentry.log_failure("The predicted path does not exist");
+        return;
+      }
+
       if(check(equality, path_check_preamble("Path type", path, prediction), logger, pathType, predictionType))
       {
-        if(!path.empty())
+        const auto pathFinalToken{back(path)};
+        const auto predictionFinalToken{back(prediction)};
+        if(compare(pathFinalToken, predictionFinalToken))
         {
-          const auto pathFinalToken{back(path)};
-          const auto predictionFinalToken{back(prediction)};
-          if(compare(pathFinalToken, predictionFinalToken))
+          switch(pathType)
           {
-            switch(pathType)
-            {
-            case fs::file_type::regular:
-              check_file(logger, custom, path, prediction);
-              break;
-            case fs::file_type::directory:
-              check_directory(logger, custom, path, prediction, compare);
-              break;
-            default:
-              throw std::logic_error{std::string{"Detailed equivalance check for paths of type '"}
-                .append(serializer<fs::file_type>::make(pathType)).append("' not currently implemented")};
-            }
+          case fs::file_type::regular:
+            check_file(logger, custom, path, prediction);
+            break;
+          case fs::file_type::directory:
+            check_directory(logger, custom, path, prediction, compare);
+            break;
+          default:
+            throw std::logic_error{std::string{"Detailed equivalence check for paths of type '"}
+              .append(serializer<fs::file_type>::make(pathType)).append("' not currently implemented")};
           }
         }
       }

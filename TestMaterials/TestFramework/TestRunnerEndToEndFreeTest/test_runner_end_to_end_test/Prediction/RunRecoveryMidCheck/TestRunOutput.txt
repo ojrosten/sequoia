@@ -7,13 +7,14 @@ foo_false_negative_test:
 [Execution Time: 1.17us]
 foo_test:
 [Execution Time: 785us]
-	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 8]
 
 ******  Critical Failures:  1  ******
 
 
 	Error -- Unexpected Exception:
-	Detailed equivalance check for paths of type 'not found' not currently implemented
+	Line 1 of a .seqpat is not a valid regular expression: (
+	/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz.seqpat
 
 	Exception thrown during last check
 	Last Recorded Message:
@@ -75,7 +76,7 @@ probability_test:
 -----------Grand Totals-----------
 [Total Run Time: 3.79ms]
 [Execution Time: 1.78ms]
-	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 82]
+	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 88]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0

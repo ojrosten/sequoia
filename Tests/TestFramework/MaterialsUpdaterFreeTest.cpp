@@ -49,8 +49,8 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>("Empty 'to' path",   [&]() { update("", working); });
     check_exception_thrown<std::runtime_error>("Empty 'from' path", [&]() { update(auxiliary, ""); });
 
-    // Beside the materials rather than in them, so that neither the update nor the equivalence check below sees it
-    const transient_file notADirectory{auxiliary.parent_path() / "NotADirectory.txt", ""};
+    // In the scratchpad rather than the materials, so that neither the update nor the equivalence check below sees it
+    const transient_file notADirectory{scratchpad_materials() / "NotADirectory.txt", ""};
 
     check_exception_thrown<fs::filesystem_error>(
       "'to' path exists but is not a directory",
@@ -94,7 +94,7 @@ namespace sequoia::testing
    */
   void materials_updater_free_test::test_deletions_recorded_before_a_throw()
   {
-    const auto root{auxiliary_materials().parent_path() / "TypeSwap"};
+    const auto root{scratchpad_materials() / "TypeSwap"};
     const auto from{root / "From"}, to{root / "To"};
 
     fs::create_directories(from / "A");

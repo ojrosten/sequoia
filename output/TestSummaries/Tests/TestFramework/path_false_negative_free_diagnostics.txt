@@ -1,2 +1,2 @@
 path_false_negative_free_diagnostics
-False Negative Checks:                    14;  Failures:  0
+False Negative Checks:                    16;  Failures:  0

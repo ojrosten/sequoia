@@ -73,22 +73,43 @@ namespace sequoia::testing
       return m_Name;
     }
 
+    /** \brief The staged copy of the test's committed working copy, or an empty directory if the
+               test has materials but no working copy.
+
+        \throws std::runtime_error if the test has no materials, naming where they would be committed
+     */
     [[nodiscard]]
-    std::filesystem::path working_materials() const
-    {
-      return m_Materials.working();
-    }
+    std::filesystem::path working_materials() const;
+
+    /** \brief The test's committed predictions: predictions are never staged.
+
+        \throws std::runtime_error if there are none, naming where they would be committed
+     */
+    [[nodiscard]]
+    std::filesystem::path predictive_materials() const;
+
+    /** \brief The staged copy of the test's committed auxiliary materials.
+
+        \throws std::runtime_error if there are none, naming where they would be committed
+     */
+    [[nodiscard]]
+    std::filesystem::path auxiliary_materials() const;
+
+    /** \brief A directory for the test's own use, with no committed counterpart, holding nothing
+               but the staged working copy and auxiliary materials whenever the materials are staged.
+
+        It is the root beneath which those are staged, so `WorkingCopy` and `Auxiliary` are reserved
+        names within it; nothing enforces this.
+
+        \throws std::logic_error if the test was constructed with no materials paths
+     */
+    [[nodiscard]]
+    std::filesystem::path scratchpad_materials() const;
 
     [[nodiscard]]
-    std::filesystem::path predictive_materials() const
+    const individual_materials_paths& materials_paths() const noexcept
     {
-      return m_Materials.prediction();
-    }
-
-    [[nodiscard]]
-    std::filesystem::path auxiliary_materials() const
-    {
-      return m_Materials.auxiliary();
+      return m_Materials;
     }
 
     [[nodiscard]]
@@ -122,6 +143,11 @@ namespace sequoia::testing
 
     void write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index, const failure_output& output) const;
   private:
+    [[nodiscard]]
+    std::filesystem::path materials_or_throw(std::string_view kind,
+                                             const std::filesystem::path& committed,
+                                             std::filesystem::path usable) const;
+
     std::string m_Name{};
     project_paths m_ProjectPaths{};
     individual_materials_paths m_Materials{};

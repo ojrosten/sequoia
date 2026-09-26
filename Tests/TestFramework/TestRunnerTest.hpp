@@ -65,6 +65,8 @@ namespace sequoia::testing
 
     void test_partial_materials_update();
 
+    void test_materials_staging_failure();
+
     void test_nested_suite();
 
     void test_nested_suite_verbose();
