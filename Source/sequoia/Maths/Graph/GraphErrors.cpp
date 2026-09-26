@@ -7,6 +7,8 @@
 
 #include "sequoia/Maths/Graph/GraphErrors.hpp"
 
+#include <format>
+
 namespace sequoia::maths::graph_errors
 {
   namespace
@@ -110,9 +112,38 @@ namespace sequoia::maths::graph_errors
   }
 
   [[nodiscard]]
-  std::string absent_reciprocated_partial_edge_message(std::string_view method, edge_indices edgeIndices)
+  std::string absent_reciprocated_partial_edge_message(std::string_view method,
+                                                       const partial_edge_counts counts,
+                                                       const edge_weighting weighting)
   {
-    return error_prefix(method, edgeIndices).append("Reciprocated partial edge does not exist");
+    const bool weighted{weighting == edge_weighting::weighted};
+    const std::string_view ofEqualWeight{weighted ? " of equal weight" : ""},
+                           ofThatWeight{weighted ? " of that weight" : ""};
+
+    if(!counts.from_target)
+    {
+      return error_prefix(method).append(
+               (counts.to_target == 1)
+                 ? std::format("Node {}'s edge to node {} has no reciprocal{}",
+                               counts.node, counts.target, ofEqualWeight)
+                 : std::format("Node {}'s {} edges{} to node {} have no reciprocal{}",
+                               counts.node, counts.to_target, ofEqualWeight, counts.target, ofThatWeight)
+             );
+    }
+
+    const partial_edge_counts reversed{
+      .node{counts.target},
+      .target{counts.node},
+      .to_target{counts.from_target},
+      .from_target{counts.to_target}
+    };
+
+    const auto& [node, target, toTarget, fromTarget]{(counts.to_target > counts.from_target) ? counts : reversed};
+
+    return error_prefix(method).append(
+             std::format("Node {} has {} edges{} to node {}, but node {} has {}{} to node {}",
+                         node, toTarget, ofEqualWeight, target, target, fromTarget, ofThatWeight, node)
+           );
   }
 
   [[nodiscard]]
