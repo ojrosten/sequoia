@@ -12,6 +12,7 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
+#include <format>
 #include <fstream>
 #include <regex>
 
@@ -145,8 +146,15 @@ namespace sequoia::testing
                     std::string_view patternClose,
                     std::string_view cmakeEntryPrefix)
   {
+    const auto parenthesisPos{patternOpen.find('(')};
+    if(parenthesisPos == std::string_view::npos)
+      throw std::logic_error{
+        std::format("No parenthesis in '{}' to align the entries of {} with", patternOpen, cmakeLists.generic_string())
+      };
+
     auto addEntry{
-      [file{file.lexically_relative(hostDir)}, &cmakeLists, patternOpen, patternClose, cmakeEntryPrefix] (std::string& text) {
+      [file{file.lexically_relative(hostDir)}, &cmakeLists, patternOpen, patternClose, cmakeEntryPrefix,
+       numSpaces{parenthesisPos + 1}] (std::string& text) {
         constexpr auto npos{std::string::npos};
 
         if(auto startPos{text.find(patternOpen)}; startPos != npos)
@@ -162,15 +170,6 @@ namespace sequoia::testing
 
               entries.push_back(text.substr(entryStart, next - entryStart));
             }
-
-            const auto numSpaces{
-              [patternOpen]() {
-                if(const auto pos{patternOpen.find('(')}; pos < std::string_view::npos)
-                  return pos + 1;
-
-                return patternOpen.size();
-              }()
-            };
 
             std::ranges::sort(entries);
             std::string sorted{};

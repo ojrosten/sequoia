@@ -22,6 +22,7 @@ namespace sequoia::testing
     test_add_include_without_an_existing_block();
     test_add_include_to_an_existing_block();
     test_add_include_without_a_block_or_an_import();
+    test_add_to_cmake_without_a_parenthesis();
     test_comparison_of_file_contents();
   }
 
@@ -58,6 +59,17 @@ namespace sequoia::testing
           "Include added to a file with neither an include nor an import",
           file,
           predictive_materials() /= "NoBlockNoImport/Includes.hpp");
+  }
+
+  void file_editors_free_test::test_add_to_cmake_without_a_parenthesis()
+  {
+    const auto dir{working_materials()};
+    const transient_file cmakeLists{dir / "CMakeLists.txt", "set SourceList\n    a.cpp\n)\n"};
+
+    check_exception_thrown<std::logic_error>(
+      "An opening pattern with no parenthesis gives no column to align entries with",
+      [&dir, &cmakeLists](){ add_to_cmake(cmakeLists.path(), dir, dir / "b.cpp", "set SourceList", ")\n", ""); }
+    );
   }
 
   /** The 0x1A checks are aimed at MSVC's text mode, which stops reading at that byte; POSIX text

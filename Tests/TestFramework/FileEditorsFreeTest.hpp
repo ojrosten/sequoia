@@ -26,6 +26,7 @@ namespace sequoia::testing
     void test_add_include_without_an_existing_block();
     void test_add_include_to_an_existing_block();
     void test_add_include_without_a_block_or_an_import();
+    void test_add_to_cmake_without_a_parenthesis();
     void test_comparison_of_file_contents();
   };
 }

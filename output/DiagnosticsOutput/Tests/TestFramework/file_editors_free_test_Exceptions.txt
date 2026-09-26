@@ -1,0 +1,9 @@
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 70
+An opening pattern with no parenthesis gives no column to align entries with
+
+Expected Exception Type:
+[std::logic_error]
+No parenthesis in 'set SourceList' to align the entries of output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_test/WorkingCopy/CMakeLists.txt with
+
+=======================================
+
