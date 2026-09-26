@@ -21,8 +21,8 @@ namespace sequoia
       15.6 ms, so each sleep is rounded up to a whole number of ticks. A request Windows refuses,
       such as one for 0 ms, is not held; nothing is requested on other platforms.
 
-      \throws std::domain_error if the resolution, in milliseconds, is outside the range of
-              `unsigned int`
+      \throws std::domain_error, on every platform, if the resolution, in milliseconds, is outside
+              the range of `unsigned int`
    */
   class [[nodiscard]] timer_resolution
   {
