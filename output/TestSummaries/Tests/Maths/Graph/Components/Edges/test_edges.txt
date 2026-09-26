@@ -1,2 +1,2 @@
 test_edges
-Standard Top Level Checks:               107;  Failures:  0  [Deep checks: 796]
+Standard Top Level Checks:               116;  Failures:  0  [Deep checks: 805]

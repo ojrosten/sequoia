@@ -162,6 +162,11 @@ namespace sequoia
         !is_directed(flavour) && !graph_impl::has_shared_weight_v<edge_type>
       };
 
+      /** \brief Whether the partner half of an undirected edge can be given a weight equal to its own. */
+      constexpr static bool partner_weight_constructible_v{
+        !independent_partner_weights_v || std::is_copy_constructible_v<edge_weight_type>
+      };
+
       constexpr connectivity_base() = default;
 
       constexpr connectivity_base(std::initializer_list<std::initializer_list<edge_init_type>> edges)
@@ -223,7 +228,7 @@ namespace sequoia
 
       template<class... Args>
         requires (    initializable_from<edge_weight_type, Args...>
-                  && (!independent_partner_weights_v || std::is_copy_constructible_v<edge_weight_type>))
+                  && partner_weight_constructible_v)
       constexpr void set_edge_weight(const_edge_iterator citer, Args&&... args)
       {
         if constexpr(independent_partner_weights_v)
@@ -238,7 +243,7 @@ namespace sequoia
 
       template<class... Args>
         requires (    initializable_from<edge_weight_type, Args...>
-                  && (!independent_partner_weights_v || std::is_copy_constructible_v<edge_weight_type>))
+                  && partner_weight_constructible_v)
       constexpr void set_edge_weight(const_reverse_edge_iterator criter, Args&&... args)
       {
         set_edge_weight(to_const_edge_iterator(criter), std::forward<Args>(args)...);
@@ -255,7 +260,7 @@ namespace sequoia
        */
       template<edge_weight_mutator<edge_weight_type> Fn>
         requires (    !std::is_empty_v<edge_weight_type>
-                  && (!independent_partner_weights_v || std::is_copy_constructible_v<edge_weight_type>))
+                  && partner_weight_constructible_v)
       constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_edge_iterator citer, Fn fn)
       {
         if constexpr(independent_partner_weights_v)
@@ -284,7 +289,7 @@ namespace sequoia
 
       template<edge_weight_mutator<edge_weight_type> Fn>
         requires (    !std::is_empty_v<edge_weight_type>
-                  && (!independent_partner_weights_v || std::is_copy_constructible_v<edge_weight_type>))
+                  && partner_weight_constructible_v)
       constexpr std::invoke_result_t<Fn, edge_weight_type&> mutate_edge_weight(const_reverse_edge_iterator criter, Fn fn)
       {
         return mutate_edge_weight(to_const_edge_iterator(criter), std::move(fn));
@@ -660,7 +665,9 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires (std::is_empty_v<edge_meta_data_type>&& initializable_from<edge_weight_type, Args...> && (is_directed(flavour) || std::is_copy_constructible_v<edge_type>))
+        requires (    std::is_empty_v<edge_meta_data_type>
+                  && initializable_from<edge_weight_type, Args...>
+                  && partner_weight_constructible_v)
       void join(const edge_index_type node1, const edge_index_type node2, Args&&... args)
       {
         graph_errors::check_node_index_range("join", order(), node1, node2);
@@ -674,7 +681,9 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires (!std::is_empty_v<edge_meta_data_type>&& initializable_from<edge_weight_type, Args...> && (is_directed(flavour) || std::is_copy_constructible_v<edge_type>))
+        requires (   !std::is_empty_v<edge_meta_data_type>
+                  && initializable_from<edge_weight_type, Args...>
+                  && partner_weight_constructible_v)
       void join(const edge_index_type node1, const edge_index_type node2, edge_meta_data_type meta1, edge_meta_data_type meta2, Args&&... args)
       {
         graph_errors::check_node_index_range("join", order(), node1, node2);
@@ -688,7 +697,10 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires (std::is_empty_v<edge_meta_data_type> && initializable_from<edge_weight_type, Args...>&& is_embedded(flavour) && std::is_copy_constructible_v<edge_type>)
+        requires (    std::is_empty_v<edge_meta_data_type>
+                  && initializable_from<edge_weight_type, Args...>
+                  && is_embedded(flavour)
+                  && partner_weight_constructible_v)
       std::pair<const_edge_iterator, const_edge_iterator>
         insert_join(const_edge_iterator citer1, const_edge_iterator citer2, Args&&... args)
       {
@@ -701,7 +713,10 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires (!std::is_empty_v<edge_meta_data_type>, initializable_from<edge_weight_type, Args...>&& is_embedded(flavour) && std::is_copy_constructible_v<edge_type>)
+        requires (!std::is_empty_v<edge_meta_data_type>,
+                     initializable_from<edge_weight_type, Args...>
+                  && is_embedded(flavour)
+                  && partner_weight_constructible_v)
       std::pair<const_edge_iterator, const_edge_iterator>
         insert_join(const_edge_iterator citer1, const_edge_iterator citer2, edge_meta_data_type meta1, edge_meta_data_type meta2, Args&&... args)
       {
@@ -714,7 +729,10 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires (std::is_empty_v<edge_meta_data_type> && initializable_from<edge_weight_type, Args...>&& is_embedded(flavour) && std::is_copy_constructible_v<edge_type>)
+        requires (    std::is_empty_v<edge_meta_data_type>
+                  && initializable_from<edge_weight_type, Args...>
+                  && is_embedded(flavour)
+                  && partner_weight_constructible_v)
       std::pair<const_edge_iterator, const_edge_iterator>
         insert_join(const_edge_iterator citer1, const edge_index_type pos2, Args&&... args)
       {
@@ -727,7 +745,10 @@ namespace sequoia
       }
 
       template<class... Args>
-        requires (!std::is_empty_v<edge_meta_data_type>, initializable_from<edge_weight_type, Args...>&& is_embedded(flavour) && std::is_copy_constructible_v<edge_type>)
+        requires (!std::is_empty_v<edge_meta_data_type>,
+                     initializable_from<edge_weight_type, Args...>
+                  && is_embedded(flavour)
+                  && partner_weight_constructible_v)
       std::pair<const_edge_iterator, const_edge_iterator>
         insert_join(const_edge_iterator citer1, const edge_index_type pos2, edge_meta_data_type meta1, edge_meta_data_type meta2, Args&&... args)
       {
@@ -1432,7 +1453,7 @@ namespace sequoia
       }
 
       template<class... MetaData>
-        requires std::is_copy_constructible_v<edge_type> && (std::is_same_v<MetaData, edge_meta_data_type> && ...)
+        requires partner_weight_constructible_v && (std::is_same_v<MetaData, edge_meta_data_type> && ...)
       void reciprocal_join(const edge_index_type node1, const edge_index_type node2, MetaData... md)
       {
         join_sentinel sentinel{*this, node1, m_Edges.size_of_partition(node1) - 1};
@@ -1449,7 +1470,9 @@ namespace sequoia
 
 
       template<class... MetaData>
-        requires (is_embedded(flavour) && std::is_copy_constructible_v<edge_type> && (std::is_same_v<edge_meta_data_type, MetaData> && ...))
+        requires (    is_embedded(flavour)
+                  && partner_weight_constructible_v
+                  && (std::is_same_v<edge_meta_data_type, MetaData> && ...))
       std::pair<const_edge_iterator, const_edge_iterator>
         insert_reciprocal_join(const_edge_iterator citer1, const edge_index_type pos2, MetaData... args)
       {
@@ -1478,7 +1501,9 @@ namespace sequoia
       }
 
       template<class... MetaData>
-        requires (is_embedded(flavour) && std::is_copy_constructible_v<edge_type> && (std::is_same_v<edge_meta_data_type, MetaData> && ...))
+        requires (    is_embedded(flavour)
+                  && partner_weight_constructible_v
+                  && (std::is_same_v<edge_meta_data_type, MetaData> && ...))
       std::pair<const_edge_iterator, const_edge_iterator>
         insert_reciprocal_join(const_edge_iterator citer1, const_edge_iterator citer2, MetaData... md)
       {

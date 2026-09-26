@@ -25,6 +25,8 @@ namespace sequoia::testing
   private:
     void test_weight_update_constraints();
 
+    void test_join_constraints();
+
     template<class EdgeStorageConfig>
     void test_undirected_edge_mutations();
 
@@ -32,6 +34,8 @@ namespace sequoia::testing
     void test_embedded_edge_mutations();
 
     void test_node_insertion();
+
+    void test_shared_move_only_weights();
 
     template<class Graph, class Mutation>
     void check_strong_guarantee(std::string_view description,

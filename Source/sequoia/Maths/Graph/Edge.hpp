@@ -93,17 +93,20 @@ namespace sequoia
       {}
 
       constexpr weighting(const weighting& other)
+        requires std::is_copy_constructible_v<weight_type>
         : m_Weight{WeightHandler::producer_type::make(WeightHandler::get(other.m_Weight))}
       {}
 
       template<class Other>
-        requires std::is_base_of_v<weighting, std::remove_cvref_t<Other>>
+        requires (    std::is_base_of_v<weighting, std::remove_cvref_t<Other>>
+                  && !std::is_same_v<weighting, std::remove_cvref_t<Other>>)
       constexpr weighting(Other&& other) : m_Weight{other.m_Weight}
       {}
 
       constexpr weighting(weighting&&) noexcept = default;
 
       constexpr weighting& operator=(const weighting& other)
+        requires std::is_copy_constructible_v<weight_type>
       {
         if(&other != this) m_Weight = WeightHandler::producer_type::make(WeightHandler::get(other.m_Weight));
         return *this;
