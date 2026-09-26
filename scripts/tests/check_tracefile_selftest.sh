@@ -7,14 +7,18 @@
 #   - a count changed by the read, in either direction: a lambda's FNA raised from 0, which
 #     is what lcov 2.5's consistency repair does, and a function's FNA lowered to 0;
 #   - a line count changed, a record added and a record lost;
-#   - a file dropped although it has coverage points, whether they are function records
-#     alone (lcov deletes, without a message, any file with no line records on reading it,
-#     and llvm-cov writes such files) or line records none of which was hit;
+#   - a file dropped although it has records besides function records: line records none
+#     of which was hit, or line records beside function records;
 #   - a file kept although a pattern removes it, and a file absent from the capture;
 #   - a summary figure that disagrees with the records, and a summary with no figures. The
 #     capture holds a function with two aliases, one hit, because lcov counts aliases: a
 #     check that counted functions by their FNL index instead would disagree with lcov;
 #   - malformed input: a second record for one file, a record with no end, no records.
+#
+# One kind of dropped file passes, and is listed: a file with function records but no line
+# records, which lcov deletes on reading any tracefile and llvm-cov writes. Two of them, out
+# of order, so that the listing is shown to be sorted; and the clean pair, which has none,
+# must still print the heading with a count of 0.
 #
 # The capture also holds a file whose path contains a removal pattern's text past its
 # start. lcov removes it, since lcov searches the whole path; a check that anchored the
@@ -98,6 +102,8 @@ edit() { # edit <file> <sed expression>
 reset
 run "a clean pair passes" 0 "1 of 4 captured files kept unchanged; 2 removed by pattern, 1 with no coverage points"
 run "a clean pair reports the figures" 0 "4 of 4 lines, 2 of 4 functions"
+run "a clean pair lists no function-only files" 0 \
+    "Dropped by lcov for having function records but no line records: 0 files"
 
 reset; edit filtered 's/^FNA:1,0,/FNA:1,1,/'; edit summary 's/(2 of 4 functions)/(3 of 4 functions)/'
 run "a lambda marked called is named" 1 \
@@ -116,13 +122,24 @@ run "a record the capture lacks is named" 1 'the capture has "\(nothing\)" where
 reset; edit filtered '/^LH:4$/d'
 run "a lost record is named" 1 'the capture has "LH:4" where the filtered tracefile has "\(nothing\)"'
 
-reset; printf '%s\n' SF:/src/b.hpp FNL:0,30 FNA:0,15,_ZN1bC2ERKS_ FNF:1 FNH:1 LF:0 LH:0 end_of_record >> "$tmp/capture"
-run "a dropped file with only function records is named" 1 \
-    '/src/b.hpp has coverage points and matches no removal pattern, but was dropped'
+reset
+printf '%s\n' SF:/src/z.hpp FNL:0,30 FNA:0,15,_ZN1zC2ERKS_ FNF:1 FNH:1 LF:0 LH:0 end_of_record >> "$tmp/capture"
+printf '%s\n' SF:/src/b.hpp FNL:0,12 FNA:0,0,_ZN1b1fEv     FNF:1 FNH:0 LF:0 LH:0 end_of_record >> "$tmp/capture"
+run "dropped function-only files pass" 0 "1 of 6 captured files kept unchanged"
+printf '%s\n' 'Dropped by lcov for having function records but no line records: 2 files' \
+               '  /src/b.hpp' '  /src/z.hpp' > "$tmp/listing"
+if ! tail -n 3 "$tmp/out" | cmp -s - "$tmp/listing"; then
+  echo "FAIL: dropped function-only files are listed, sorted, under a count"
+  sed 's/^/    /' "$tmp/out"; fails=$((fails+1))
+fi
 
 reset; printf '%s\n' SF:/src/cold.cpp DA:1,0 LF:1 LH:0 end_of_record >> "$tmp/capture"
 run "a dropped file with only unhit lines is named" 1 \
-    '/src/cold.cpp has coverage points and matches no removal pattern, but was dropped'
+    '/src/cold.cpp has records besides function records, matches no removal pattern, and was dropped'
+
+reset; printf '%s\n' SF:/src/c.hpp FNL:0,3,4 FNA:0,5,_ZN1c1gEv DA:3,5 DA:4,5 LF:2 LH:2 end_of_record >> "$tmp/capture"
+run "a dropped file with function and line records is named" 1 \
+    '/src/c.hpp has records besides function records, matches no removal pattern, and was dropped'
 
 reset; capture | awk '/^SF:\/usr\/include\/x\.h$/{p=1} p{print} p && /^end_of_record$/{exit}' >> "$tmp/filtered"
 edit summary 's/(4 of 4 lines)/(5 of 5 lines)/'

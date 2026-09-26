@@ -10,6 +10,11 @@ Every file of the capture must satisfy one of these:
   -# It matches one of the removal patterns, as lcov matches them, and is absent.
   -# It has no coverage points - no record but the per-file totals FNF, FNH, LF, LH, BRF, BRH,
      MCF and MCH - and is absent.
+  -# It has function records but no line records - no record but FNL, FNA and the totals - and
+     is absent. lcov deletes every file without line records when it reads a tracefile, and
+     llvm-cov writes such files for functions it instruments without attributing lines to
+     them. Oliver ruled (2026-09-26) that these files are accepted as removed, and listed on
+     every run rather than kept, so that the loss stays visible and a newly dropped file shows.
 
 And the figures `lcov --summary` gives for the filtered tracefile must be the counts of its
 records: lines found and hit are the DA records and those with a non-zero count, functions
@@ -65,12 +70,25 @@ def read_tracefile(path):
     return records
 
 
+FUNCTION_RECORDS = {'FNL', 'FNA'}
+
+
+def record_tags(lines):
+    return {line.split(':', 1)[0] for line in lines} - TOTAL_RECORDS
+
+
 def has_coverage_points(lines):
-    return any(line.split(':', 1)[0] not in TOTAL_RECORDS for line in lines)
+    return bool(record_tags(lines))
+
+
+def has_only_function_records(lines):
+    tags = record_tags(lines)
+    return bool(tags) and tags <= FUNCTION_RECORDS
 
 
 def check_filtering(captured, filtered, patterns):
-    """The number of files removed by a pattern and removed for having no coverage points."""
+    """The number of files removed by a pattern, the number removed for having no coverage points,
+    and the sorted list of those removed for having function records but no line records."""
     for source, lines in filtered.items():
         if source not in captured:
             raise Failure(f'{source} is in the filtered tracefile but not the capture')
@@ -84,7 +102,7 @@ def check_filtering(captured, filtered, patterns):
                 raise Failure(f'{source}: the capture has "{in_capture}" '
                               f'where the filtered tracefile has "{in_filtered}"')
 
-    by_pattern, without_points = 0, 0
+    by_pattern, without_points, function_only = 0, 0, []
     for source, lines in captured.items():
         if source in filtered:
             continue
@@ -92,9 +110,12 @@ def check_filtering(captured, filtered, patterns):
             by_pattern += 1
         elif not has_coverage_points(lines):
             without_points += 1
+        elif has_only_function_records(lines):
+            function_only.append(source)
         else:
-            raise Failure(f'{source} has coverage points and matches no removal pattern, but was dropped')
-    return by_pattern, without_points
+            raise Failure(f'{source} has records besides function records, matches no removal pattern, '
+                          f'and was dropped')
+    return by_pattern, without_points, sorted(function_only)
 
 
 def summary_figure(summary, kind):
@@ -142,7 +163,7 @@ def main():
         with open(arguments.summary) as summary:
             figures = check_summary(summary.read(), filtered)
         patterns = [removal_pattern(glob) for glob in arguments.removed]
-        by_pattern, without_points = check_filtering(captured, filtered, patterns)
+        by_pattern, without_points, function_only = check_filtering(captured, filtered, patterns)
     except (Failure, OSError) as error:
         print(f'error: {error}', file=sys.stderr)
         return 1
@@ -150,6 +171,9 @@ def main():
           f'{by_pattern} removed by pattern, {without_points} with no coverage points. '
           f'lcov --summary agrees with the records: {figures["lines"][0]} of {figures["lines"][1]} lines, '
           f'{figures["functions"][0]} of {figures["functions"][1]} functions')
+    print(f'Dropped by lcov for having function records but no line records: {len(function_only)} files')
+    for source in function_only:
+        print(f'  {source}')
     return 0
 
 
