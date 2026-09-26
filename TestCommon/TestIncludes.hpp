@@ -184,6 +184,7 @@
 #include "TestFramework/SmartPointerFreeDiagnostics.hpp"
 #include "TestFramework/StringFreeDiagnostics.hpp"
 #include "TestFramework/SumTypesFreeDiagnostics.hpp"
+#include "TestFramework/SummaryFreeTest.hpp"
 #include "TestFramework/TestRunnerDiagnostics.hpp"
 #include "TestFramework/TestRunnerEndToEndFreeTest.hpp"
 #include "TestFramework/TestRunnerPerformanceTest.hpp"

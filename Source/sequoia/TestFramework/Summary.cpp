@@ -15,12 +15,35 @@ namespace sequoia::testing
 {
   namespace
   {
+    /// Rounded, half up, to three significant figures
+    [[nodiscard]]
+    std::chrono::nanoseconds round_to_three_figures(std::chrono::nanoseconds d)
+    {
+      auto scale{std::chrono::nanoseconds::rep{1}};
+      while(d.count() / scale >= 1'000)
+      {
+        scale *= 10;
+      }
+
+      // Compares the remainder, since adding half the scale to the count overflows near the largest count
+      const auto remainder{d.count() % scale}, truncated{d.count() - remainder};
+      return std::chrono::nanoseconds{2 * remainder >= scale ? truncated + scale : truncated};
+    }
+
+    /// In units of `Period`, with as many decimal places as the duration needs
     template<class Period>
     [[nodiscard]]
-    std::string to_string(const log_summary::duration& d)
+    std::string to_string(std::chrono::nanoseconds d)
     {
       using namespace std::chrono;
-      return std::format("{:.3}", duration_cast<duration<double, Period>>(d).count());
+      const auto whole{duration_cast<duration<nanoseconds::rep, Period>>(d)};
+      const auto fraction{(d - whole).count()};
+      if(fraction == 0)
+        return std::to_string(whole.count());
+
+      constexpr auto nanosecondsPerUnit{std::ratio_divide<Period, std::nano>::num};
+      const auto decimals{std::format("{:0{}}", fraction, std::to_string(nanosecondsPerUnit).size() - 1)};
+      return std::format("{}.{}", whole.count(), decimals.substr(0, decimals.find_last_not_of('0') + 1));
     }
   }
 
@@ -28,10 +51,16 @@ namespace sequoia::testing
   stringified_duration stringify_duration(const log_summary::duration& d)
   {
     using namespace std::chrono;
-    const auto count{duration_cast<nanoseconds>(d).count()};
-    if(count >= 1'000'000'000) return {to_string<std::ratio<1>>(d), "s"};
-    if(count >= 1'000'000)     return {to_string<std::milli>(d),   "ms"};
-    if(count >= 1'000)         return {to_string<std::micro>(d),   "us"};
+    const auto rounded{round_to_three_figures(duration_cast<nanoseconds>(d))};
+    const auto count{rounded.count()};
+    if(count >= 1'000'000'000)
+      return {to_string<std::ratio<1>>(rounded), "s"};
+
+    if(count >= 1'000'000)
+      return {to_string<std::milli>(rounded), "ms"};
+
+    if(count >= 1'000)
+      return {to_string<std::micro>(rounded), "us"};
 
     return {std::to_string(count), "ns"};
   }
