@@ -7,6 +7,7 @@
 
 #include "FileEditorsFreeTest.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
+#include "sequoia/Streaming/Streaming.hpp"
 #include "Utilities/TestUtilities.hpp"
 
 namespace sequoia::testing
@@ -21,6 +22,8 @@ namespace sequoia::testing
   {
     test_add_include_without_an_existing_block();
     test_add_include_to_an_existing_block();
+    test_add_include_without_a_block_or_an_import();
+    test_add_to_cmake_without_a_parenthesis();
     test_comparison_of_file_contents();
   }
 
@@ -46,6 +49,34 @@ namespace sequoia::testing
     add_include(file, "Stuff/FooTest.hpp");
 
     check(equivalence, "Include added to an existing include block", file, predictive_materials() /= "ExistingBlock/Main.cpp");
+  }
+
+  void file_editors_free_test::test_add_include_without_a_block_or_an_import()
+  {
+    const auto file{working_materials() /= "NoBlockNoImport/Includes.hpp"};
+    add_include(file, "Stuff/FooTest.hpp");
+
+    check(equivalence,
+          "Include added to a file with neither an include nor an import",
+          file,
+          predictive_materials() /= "NoBlockNoImport/Includes.hpp");
+  }
+
+  void file_editors_free_test::test_add_to_cmake_without_a_parenthesis()
+  {
+    const auto dir{working_materials()};
+    constexpr std::string_view contents{"set SourceList\n    a.cpp\n)\n"};
+    const transient_file cmakeLists{dir / "CMakeLists.txt", contents};
+
+    check_exception_thrown<std::logic_error>(
+      "An opening pattern with no parenthesis gives no column to align entries with",
+      [&dir, &cmakeLists](){ add_to_cmake(cmakeLists.path(), dir, dir / "b.cpp", "set SourceList", ")\n", ""); }
+    );
+
+    check(equality,
+          "The file is not written",
+          read_to_string(cmakeLists.path(), std::ios_base::in).value_or(""),
+          std::string{contents});
   }
 
   /** The 0x1A checks are aimed at MSVC's text mode, which stops reading at that byte; POSIX text

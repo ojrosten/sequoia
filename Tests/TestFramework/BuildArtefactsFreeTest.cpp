@@ -360,6 +360,29 @@ namespace sequoia::testing
     }
 
     {
+      const auto [tree, executable, dir]{target("blank_line")};
+      fs::create_directories(dir);
+      write_utf16(dir / "CL.read.1.tlog", u"^" + upper(project / "a.cpp") + u"\r\n\r\n" + upper(project / "a.h") + u"\r\n");
+      write_utf16(dir / "CL.write.1.tlog", u"^" + upper(project / "a.cpp") + u"\r\n" + upper(project / "a.obj") + u"\r\n");
+      check(equality,
+            "A blank line names no file",
+            expand(read_compilations(tree, executable)),
+            std::vector<compilation_record>{{project / "a.obj", {project / "a.cpp", project / "a.h"}}});
+    }
+
+    {
+      // A header deleted since the build, with its directory: no case of either can be found
+      const auto [tree, executable, dir]{target("deleted")};
+      fs::create_directories(dir);
+      write_utf16(dir / "CL.read.1.tlog", u"^" + upper(project / "a.cpp") + u"\r\n" + upper(project / "Gone" / "x.h") + u"\r\n");
+      write_utf16(dir / "CL.write.1.tlog", u"^" + upper(project / "a.cpp") + u"\r\n" + upper(project / "a.obj") + u"\r\n");
+      check(equality,
+            "A file which no longer exists keeps the log's spelling from the first component not found",
+            expand(read_compilations(tree, executable)),
+            std::vector<compilation_record>{{project / "a.obj", {project / "a.cpp", project / "GONE" / "X.H"}}});
+    }
+
+    {
       const auto [tree, executable, dir]{target("unwritten")};
       fs::create_directories(dir);
       write_utf16(dir / "CL.read.1.tlog", u"^" + upper(project / "a.cpp") + u"\r\n" + upper(project / "a.h") + u"\r\n");
@@ -391,6 +414,30 @@ namespace sequoia::testing
     check(equality, "Build directory", tree.build_directory, root);
     check(equality, "Generator", tree.generator, std::string{"Ninja"});
     check(equality, "Implicit include directories, from every compiler information file", tree.implicit_include_directories, std::vector<fs::path>{"/usr/include/c++/16", "/usr/include", "/usr/include"});
+
+    fs::create_directories(root / "CMakeFiles" / "4.3.0");
+    write_to_file(root / "CMakeFiles" / "4.3.0" / "CMakeCXXCompiler.cmake",
+                  "set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"\")\n",
+                  std::ios_base::out);
+    check(equality,
+          "A compiler information file naming no implicit include directories, as MSVC's does, adds none",
+          read_build_tree(cache).implicit_include_directories,
+          std::vector<fs::path>{"/usr/include/c++/16", "/usr/include", "/usr/include"});
+
+    fs::create_directories(root / "CMakeFiles" / "4.4.0");
+    write_to_file(root / "CMakeFiles" / "4.4.0" / "CMakeCXXCompiler.cmake", "set(CMAKE_CXX_COMPILER \"cl\")\n", std::ios_base::out);
+    check(equality,
+          "A compiler information file which does not set the implicit include directories adds none",
+          read_build_tree(cache).implicit_include_directories,
+          std::vector<fs::path>{"/usr/include/c++/16", "/usr/include", "/usr/include"});
+
+    const auto unconfigured{scratch / "unconfigured"};
+    fs::create_directories(unconfigured);
+    write_to_file(unconfigured / "CMakeCache.txt", "CMAKE_GENERATOR:INTERNAL=Ninja\n", std::ios_base::out);
+    check(equality,
+          "A tree with no CMakeFiles directory has no implicit include directories",
+          read_build_tree(unconfigured / "CMakeCache.txt").implicit_include_directories,
+          std::vector<fs::path>{});
 
     check_exception_thrown<std::runtime_error>("A cache which does not exist", [&](){ return read_build_tree(scratch / "elsewhere" / "CMakeCache.txt"); });
     check_exception_thrown<std::runtime_error>("A Ninja tree which has not been built has no log", [&](){ return read_compilations(tree, executable); });
