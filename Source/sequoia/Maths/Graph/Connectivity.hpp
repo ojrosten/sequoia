@@ -155,8 +155,8 @@ namespace sequoia
         [[nodiscard]]
         constexpr bool operator()(const Edge& e1, const Edge& e2) const noexcept
         {
-          using edge_weight_type = Edge::weight_type;
-          constexpr bool sort_weights{!std::is_empty_v<edge_weight_type> && deep_totally_ordered<edge_weight_type>};
+          using edge_weight_t = Edge::weight_type;
+          constexpr bool sort_weights{!std::is_empty_v<edge_weight_t> && deep_totally_ordered<edge_weight_t>};
 
           if constexpr(!sort_weights)
           {
@@ -1619,10 +1619,10 @@ namespace sequoia
     class edge_weight_dereference_policy
     {
     public:
-      constexpr static bool is_const{is_const_reference_v<typename std::iterator_traits<Iterator>::reference>};
+      constexpr static bool is_const_v{is_const_reference_v<typename std::iterator_traits<Iterator>::reference>};
 
       using value_type = std::iterator_traits<Iterator>::value_type::weight_type;
-      using reference  = std::conditional_t<is_const, const value_type&, value_type&>;
+      using reference  = std::conditional_t<is_const_v, const value_type&, value_type&>;
 
       constexpr edge_weight_dereference_policy() = default;
       constexpr edge_weight_dereference_policy(const edge_weight_dereference_policy&) = default;

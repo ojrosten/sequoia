@@ -20,26 +20,26 @@ namespace sequoia::testing
   void factory_false_negative_test::run_tests()
   {
     {
-      using prediction_type = std::array<std::pair<std::string, std::variant<int>>, 1>;
+      using prediction_t = std::array<std::pair<std::string, std::variant<int>>, 1>;
  
       factory<int> f{"int"};
-      using check_type = value_tester<factory<int>>::factory_check_type<int>;
+      using check_t = value_tester<factory<int>>::factory_check_type<int>;
       
-      check(equivalence, "", f, prediction_type{{{"int", 5}}});
-      check(check_type{4}, "", f, prediction_type{{{"int", 5}}});
+      check(equivalence, "", f, prediction_t{{{"int", 5}}});
+      check(check_t{4}, "", f, prediction_t{{{"int", 5}}});
     }
 
     {
-      using prediction_type = std::array<std::pair<std::string, std::variant<int, double>>, 2>;
+      using prediction_t = std::array<std::pair<std::string, std::variant<int, double>>, 2>;
       factory<int, double> f{"int", "double"};
-      check(equivalence, "", f, prediction_type{{{"int", 0}, {"double", 5.0}}});
+      check(equivalence, "", f, prediction_t{{{"int", 0}, {"double", 5.0}}});
     }
 
     {
-      using factory_type = factory<int, double>;
-      using vessels = std::vector<factory_type::vessel>;
+      using factory_t = factory<int, double>;
+      using vessels = std::vector<factory_t::vessel>;
 
-      factory_type f{"int", "double"};
+      factory_t f{"int", "double"};
 
       // Both products wrong, so the single check this makes is bound to fail, as an entry in a
       // false-negative test must.

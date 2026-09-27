@@ -30,11 +30,11 @@ namespace sequoia::testing
   template<maths::dynamic_tree Tree>
   void tree_false_negative_test::test_tree()
   {
-    using tree_type = Tree;
-    using node_weight_type = Tree::node_weight_type;
-    using initializer = tree_initializer<node_weight_type>;
+    using tree_t = Tree;
+    using node_weight_t = Tree::node_weight_type;
+    using initializer = tree_initializer<node_weight_t>;
 
-    tree_type x{}, y{{1}}, z{{1, {{2}}}}, w{{1, {{2, {{4}, {5}}}, {3}}}};
+    tree_t x{}, y{{1}}, z{{1, {{2}}}}, w{{1, {{2, {{4}, {5}}}, {3}}}};
 
     check(equivalence, "Empty vs non-empty", x, initializer{1, {}});
     check(equivalence, "Incorrect weight", y, initializer{0, {}});

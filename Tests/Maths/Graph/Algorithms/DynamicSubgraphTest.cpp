@@ -42,11 +42,11 @@ namespace sequoia::testing
     using std::complex;
     using namespace maths;
 
-    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>;
-    using edge_init_t = graph_type::edge_init_type;
+    using graph_t = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>;
+    using edge_init_t = graph_t::edge_init_type;
     using edge_init_list_t = std::initializer_list<std::initializer_list<edge_init_t>>;
 
-    graph_type graph{};
+    graph_t graph{};
     graph.add_node(1.0, 1.0);
 
     // Graph:
@@ -143,7 +143,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      graph_type g{{{edge_init_t{0, 2}, edge_init_t{0, 2}, edge_init_t{1,4}},
+      graph_t g{{{edge_init_t{0, 2}, edge_init_t{0, 2}, edge_init_t{1,4}},
               {edge_init_t{0,4}}}, {{1,1}, {1,0}}};
 
       g.swap_edges(0, 0, 2);
@@ -207,7 +207,7 @@ namespace sequoia::testing
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      graph_type g{{{edge_init_t{0, 2}, edge_init_t{0, 2}, edge_init_t{1,4}, edge_init_t{2,0}},
+      graph_t g{{{edge_init_t{0, 2}, edge_init_t{0, 2}, edge_init_t{1,4}, edge_init_t{2,0}},
                 {edge_init_t{0,4}, edge_init_t{2,-3}},
                 {edge_init_t{0,0}, edge_init_t{1,-3}}}, {{1,1}, {1,0}, {1,1}}};
 

@@ -42,7 +42,7 @@ namespace sequoia::testing
   {
     {
       using q_t = task_queue<void>;
-      using task_t = q_t::task_t;
+      using task_t = q_t::task_type;
 
       q_t q{};
 
@@ -64,7 +64,7 @@ namespace sequoia::testing
 
     {
       using q_t = task_queue<int>;
-      using task_t = q_t::task_t;
+      using task_t = q_t::task_type;
 
       q_t q{};
 

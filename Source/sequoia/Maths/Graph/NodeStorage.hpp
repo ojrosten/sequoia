@@ -271,10 +271,10 @@ namespace sequoia::maths
   template<class Weight, class Container = std::vector<Weight>>
   class node_storage : public node_storage_base<Weight, Container>
   {
-    using base_t = node_storage_base<Weight, Container>;
+    using base_type = node_storage_base<Weight, Container>;
   public:
-    using size_type   = base_t::size_type;
-    using weight_type = base_t::weight_type;
+    using size_type   = base_type::size_type;
+    using weight_type = base_type::weight_type;
 
     using node_storage_base<Weight, Container>::node_storage_base;
 
@@ -290,7 +290,7 @@ namespace sequoia::maths
 
     template<alloc Allocator>
     constexpr node_storage(node_storage&& s, const Allocator& allocator) noexcept
-      : base_t{std::move(s), allocator}
+      : base_type{std::move(s), allocator}
     {}
   };
 

@@ -38,12 +38,12 @@ namespace sequoia::testing
   {
     using quantity_t = Quantity;
     using delta_q_t  = quantity_t::displacement_type;
-    using space_type = quantity_t::space_type;
-    using value_type = quantity_t::value_type;
+    using space_t    = quantity_t::space_type;
+    using value_t    = quantity_t::value_type;
 
-    STATIC_CHECK(vector_space<space_type>);
-    STATIC_CHECK(can_multiply<quantity_t, value_type>);
-    STATIC_CHECK(can_divide<quantity_t, value_type>);
+    STATIC_CHECK(vector_space<space_t>);
+    STATIC_CHECK(can_multiply<quantity_t, value_t>);
+    STATIC_CHECK(can_divide<quantity_t, value_t>);
     if constexpr(Quantity::dimension == 1)
     {
       STATIC_CHECK(can_divide<quantity_t, quantity_t>);

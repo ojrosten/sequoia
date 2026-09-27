@@ -32,13 +32,13 @@ namespace sequoia::testing
   void scoped_allocation_false_positive_diagnostics_three_level::test_three_level_scoped()
   {
     using innermost_allocator = shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
-    using innermost_type = perfectly_normal_beast<int, innermost_allocator>;
+    using innermost_t = perfectly_normal_beast<int, innermost_allocator>;
 
-    using middle_allocator = shared_counting_allocator<innermost_type, PropagateCopy, PropagateMove, PropagateSwap>;
-    using middle_type = perfectly_normal_beast<innermost_type, std::scoped_allocator_adaptor<middle_allocator, innermost_allocator>>;
+    using middle_allocator = shared_counting_allocator<innermost_t, PropagateCopy, PropagateMove, PropagateSwap>;
+    using middle_t = perfectly_normal_beast<innermost_t, std::scoped_allocator_adaptor<middle_allocator, innermost_allocator>>;
 
-    using outer_allocator = shared_counting_allocator<middle_type, PropagateCopy, PropagateMove, PropagateSwap>;
-    using beast = perfectly_normal_beast<middle_type, std::scoped_allocator_adaptor<outer_allocator, middle_allocator, innermost_allocator>>;
+    using outer_allocator = shared_counting_allocator<middle_t, PropagateCopy, PropagateMove, PropagateSwap>;
+    using beast = perfectly_normal_beast<middle_t, std::scoped_allocator_adaptor<outer_allocator, middle_allocator, innermost_allocator>>;
 
     auto getter{[](const beast& b) { return b.x.get_allocator(); }};
 

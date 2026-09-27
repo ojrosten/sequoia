@@ -56,37 +56,40 @@ namespace sequoia::testing
     using type = T;
   };
 
+  namespace impl
+  {
+    template<class Advisor>
+    using advisor_argument_t = std::remove_cvref_t<typename advisor_invoke_type<decltype(&Advisor::operator())>::type>;
+  }
+
   /// \brief meta utility for determining whether a particular Advisor should be used for a given type
   template<class Advisor, class T>
-  struct advisor_analyser
-  {
-    constexpr static bool utilize{false};
-  };
+  struct use_advisor : std::false_type
+  {};
 
   template<class Advisor, class T>
     requires std::invocable<Advisor, T, T>
-  struct advisor_analyser<Advisor, T>
-  {
-    constexpr static bool utilize{true};
-  };
+  struct use_advisor<Advisor, T> : std::true_type
+  {};
 
   // Attempt to disallow bindings which involve a narrowing conversion. I can only think
   // how to do this in the case of a single operator(), hence this specialization.
-  // The logic to prohibit narrowing occurs in the definition of `utilize`.
+  // The logic to prohibit narrowing is in the value of this specialization.
   template<class Advisor, class T>
     requires std::invocable<Advisor, T, T> && requires {
       std::declval<decltype(&Advisor::operator())>();
     }
-  struct advisor_analyser<Advisor, T>
-  {
-  private:
-    using type = std::remove_cvref_t<typename advisor_invoke_type<decltype(&Advisor::operator())>::type>;
-  public:
-    constexpr static bool utilize{std::is_same_v<std::common_type_t<type, std::remove_cvref_t<T>>, type>};
-  };
+  struct use_advisor<Advisor, T>
+    : std::bool_constant<
+        std::is_same_v<
+          std::common_type_t<impl::advisor_argument_t<Advisor>, std::remove_cvref_t<T>>,
+          impl::advisor_argument_t<Advisor>
+        >
+      >
+  {};
 
   template<class Advisor, class T>
-  inline constexpr bool use_advisor_v{advisor_analyser<Advisor, T>::utilize};
+  inline constexpr bool use_advisor_v{use_advisor<Advisor, T>::value};
 
   /// \brief Represents the absence of advice
   struct null_advisor
