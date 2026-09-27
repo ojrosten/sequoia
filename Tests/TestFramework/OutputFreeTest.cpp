@@ -394,6 +394,18 @@ namespace sequoia::testing
     );
 
     check(equality,
+          "char32_t is named as itself, not as an unsigned integer of its size",
+          demangle<char32_t>(),
+          "char32_t"s
+    );
+
+    check(equality,
+          "wchar_t is named as itself, not as an unsigned integer of its size where it is unsigned",
+          demangle<wchar_t>(),
+          "wchar_t"s
+    );
+
+    check(equality,
           "A double with more than six decimal places",
           demangle<value_holder<0.1>>(),
           std::format("{0}value_holder<0.100000>", fixtureNamespace)

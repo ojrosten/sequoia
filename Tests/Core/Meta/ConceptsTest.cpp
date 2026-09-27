@@ -95,6 +95,7 @@ namespace sequoia::testing
     test_deep_equality_comparable();
     test_deep_totally_ordered();
     test_initializable_from();
+    test_character();
     test_integer();
     test_invocable_r_concepts();
   }
@@ -202,6 +203,28 @@ namespace sequoia::testing
     STATIC_CHECK(initializable_from<move_only_init, std::vector<int>>);
   }
 
+  void concepts_test::test_character()
+  {
+    STATIC_CHECK(character<char>);
+    STATIC_CHECK(character<wchar_t>);
+    STATIC_CHECK(character<char8_t>);
+    STATIC_CHECK(character<char16_t>);
+    STATIC_CHECK(character<char32_t>);
+
+    STATIC_CHECK(character<const char>);
+    STATIC_CHECK(character<volatile char32_t>);
+
+    // Ordinary character types, but integer types rather than character types: std::int8_t is signed char
+    STATIC_CHECK(!character<signed char>);
+    STATIC_CHECK(!character<unsigned char>);
+    STATIC_CHECK(!character<std::int8_t>);
+
+    STATIC_CHECK(!character<bool>);
+    STATIC_CHECK(!character<int>);
+    STATIC_CHECK(!character<char&>);
+    STATIC_CHECK(!character<char*>);
+  }
+
   void concepts_test::test_integer()
   {
     // The standard's own distinction: these six are integral types but not integer
@@ -229,6 +252,7 @@ namespace sequoia::testing
     // the exclusions are written against the unqualified type.
     STATIC_CHECK(!integer<const bool>);
     STATIC_CHECK(!integer<volatile char>);
+    STATIC_CHECK(!integer<const char32_t>);
     STATIC_CHECK( integer<const int>);
 
     STATIC_CHECK(!integer<float>);

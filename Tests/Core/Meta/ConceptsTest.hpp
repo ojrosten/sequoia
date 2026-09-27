@@ -36,6 +36,8 @@ namespace sequoia::testing
 
     void test_initializable_from();
 
+    void test_character();
+
     void test_integer();
 
     void test_invocable_r_concepts();
