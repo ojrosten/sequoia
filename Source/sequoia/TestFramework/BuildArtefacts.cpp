@@ -13,6 +13,7 @@
 #include "sequoia/TestFramework/CMakeCache.hpp"
 
 #include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
@@ -670,7 +671,7 @@ namespace sequoia::testing
         const auto& listing{listing_of(dir)};
 
         const auto spelled{name.string()};
-        auto sameLetter{[](unsigned char l, unsigned char r){ return std::tolower(l) == std::tolower(r); }};
+        auto sameLetter{[](char l, char r){ return to_lowercase(l) == to_lowercase(r); }};
         auto sameButForCase{
           [&spelled, sameLetter](const fs::path& candidate) {
             return std::ranges::equal(candidate.string(), spelled, sameLetter);

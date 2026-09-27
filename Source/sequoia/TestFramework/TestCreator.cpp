@@ -15,6 +15,7 @@
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/TestFramework/Commands.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
@@ -37,7 +38,7 @@ namespace sequoia::testing
     bool is_identifier(std::string_view name)
     {
       return !name.empty()
-          && !std::isdigit(static_cast<unsigned char>(name.front()))
+          && !is_digit(name.front())
           && std::ranges::all_of(name, is_identifier_character);
     }
   }

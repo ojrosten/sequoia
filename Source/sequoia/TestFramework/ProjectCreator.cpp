@@ -12,6 +12,7 @@
 
 #include "sequoia/FileSystem/FileSystem.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <format>
@@ -200,7 +201,8 @@ namespace sequoia::testing
       if(name.empty())
         throw std::runtime_error{"Project name, deduced as the last token of path, is empty\n"};
 
-      if(std::ranges::find_if(name, [](char c) { return !(std::isalnum(c) || (c == '_') || (c == '-')); }) != name.cend())
+      auto permitted{[](char c) { return is_alphanumeric(c) || (c == '_') || (c == '-'); }};
+      if(!std::ranges::all_of(name, permitted))
       {
         throw std::runtime_error{
           std::format("Please ensure the project name '{}' consists of just alpha-numeric characters, "

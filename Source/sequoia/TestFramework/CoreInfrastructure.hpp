@@ -16,6 +16,7 @@
 
 #include <format>
 #include <filesystem>
+#include <optional>
 #include <sstream>
 
 namespace sequoia::testing
@@ -99,9 +100,15 @@ namespace sequoia::testing
     return static_cast<type_normalizer_t<U>>(x);
   }
 
-  struct uncaught_exception_info
+  /** \brief What a test's logger records as a top-level check ends, to report an exception that escapes the test. */
+  struct last_top_level_check
   {
-    int num{};
-    std::string top_level_message{};
+    /** The value of `std::uncaught_exceptions()` as the check ended. */
+    int uncaught_exceptions{};
+
+    std::string message{};
   };
+
+  /** \brief The last top-level check to have ended; none, if no top-level check has ended. */
+  using uncaught_exception_info = std::optional<last_top_level_check>;
 }

@@ -12,6 +12,7 @@
  */
 
 #include "sequoia/Core/Meta/Concepts.hpp"
+#include "sequoia/TextProcessing/Characters.hpp"
 
 #include <format>
 #include <string>
@@ -41,7 +42,7 @@ namespace sequoia
     while(i != text.end())
     {
       auto& c{*i};
-      if(std::isupper(c))
+      if(is_uppercase(c))
       {
         c = onUpper(c);
         if((std::ranges::distance(text.begin(), i) > 0))
