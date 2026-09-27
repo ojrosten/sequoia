@@ -21,6 +21,7 @@
 
 namespace sequoia::testing
 {
+  /** \brief A count of line breaks, typed so that it cannot be passed where another count is meant. */
   class line_breaks
   {
   public:
@@ -44,6 +45,7 @@ namespace sequoia::testing
     return line_breaks{static_cast<std::size_t>(n)};
   }
 
+  /** \brief `s` between `--` and `--`; empty if `s` is empty. */
   [[nodiscard]]
   std::string emphasise(std::string_view s);
 
@@ -56,6 +58,10 @@ namespace sequoia::testing
     || std::is_same_v<std::remove_cvref_t<Char>, char32_t>
   };
 
+  /** \brief A character as a failure report shows it: an alert, backspace, form feed, newline, carriage return,
+             tab, vertical tab or NUL as its escape sequence, and a space as itself, each in single quotes; any other
+             character as itself, narrowed to a `char`, so that a wide character keeps only its low-order byte.
+   */
   template<class Char>
     requires is_character_v<Char>
   [[nodiscard]]
@@ -74,29 +80,43 @@ namespace sequoia::testing
     return std::string(1, static_cast<char>(c));
   }
 
+  /** \brief Appends line breaks until a non-empty `s` ends with at least `newlines` of them, then appends `footer`;
+             an empty `s` stays empty.
+   */
   void end_block(std::string& s, line_breaks newlines, std::string_view footer="");
 
+  /** \brief `s`, ended as the overload taking a `std::string&` ends it. */
   [[nodiscard]]
   std::string end_block(std::string_view s, line_breaks newlines, std::string_view footer="");
 
+  /** \brief The report of an exception that escaped a test: `tag` and `exceptionMessage`, then, if `info` holds a
+             non-empty message from the last top-level check, that message and whether the exception was thrown
+             during that check or after it; otherwise, the test's `filename`.
+   */
   [[nodiscard]]
   std::string exception_message(std::string_view tag,
                                 const std::filesystem::path& filename,
                                 const uncaught_exception_info& info,
                                 std::string_view exceptionMessage);
 
+  /** \brief A message of the form `operator== returned false`. */
   [[nodiscard]]
   std::string operator_message(std::string_view op, std::string_view retVal);
 
+  /** \brief The obtained and predicted states of a nullable value, each `null` or `not null`, laid out as
+             `default_prediction_message` lays out values.
+   */
   [[nodiscard]]
   std::string nullable_type_message(bool obtainedHoldsValue, bool predictedHoldsValue);
 
   [[nodiscard]]
   std::string equality_operator_failure_message();
 
+  /** \brief The message that two pointers, neither null, point to different addresses. */
   [[nodiscard]]
   std::string pointer_prediction_message();
 
+  /** \brief `obtained` after `Obtained : ` and, on the next line, `prediction` after `Predicted: `. */
   [[nodiscard]]
   std::string default_prediction_message(std::string_view obtained, std::string_view prediction);
 
@@ -127,6 +147,9 @@ namespace sequoia::testing
     return default_prediction_message(to_string(obtained), to_string(prediction));
   }
 
+  /** \brief Whether the failure message of a comparison is final, and so shows the obtained and predicted values, or
+             is followed by finer-grained checks that show them.
+   */
   template<bool IsFinalMessage>
   struct final_message_constant : std::bool_constant<IsFinalMessage> {};
 
@@ -157,21 +180,34 @@ namespace sequoia::testing
     return equality_operator_failure_message();
   }
 
+  /** \brief The line that ends each failure report. */
   [[nodiscard]]
   std::string footer();
 
+  /** \brief The line that ends the report of an instability: a check whose outcome differs between runs. */
   [[nodiscard]]
   std::string instability_footer();
 
+  /** \brief The file and line of `loc`, the file as `path_for_reporting` gives it, then `message` beneath them. */
   [[nodiscard]]
   std::string report_line(std::string_view message, const std::filesystem::path& repository, const std::source_location loc);
 
+  /** \brief `file` as a report shows it.
+      \returns
+      -# For a relative `file`: `file` without its leading `..` components;
+      -# For an absolute `file` and a non-empty `repository`: the last component of `repository`, followed by the part
+         of `file` after its common prefix with `repository`, compared component by component;
+      -# Otherwise: `file`.
+   */
   [[nodiscard]]
   std::filesystem::path path_for_reporting(const std::filesystem::path& file, const std::filesystem::path& repository);
 
   struct no_source_location_t{};
   inline constexpr no_source_location_t no_source_location{};
 
+  /** \brief The description of a check, with the source location of the check; by default, the location of the
+             constructor's call site. A `reporter` made with `no_source_location` has none.
+   */
   class reporter
   {
   public:
@@ -206,18 +242,36 @@ namespace sequoia::testing
     std::optional<std::source_location> m_Loc{};
   };
 
+  /** \brief Respells a type name, as `demangle(std::string)` returns it when compiled by clang, into the spelling
+             shared by every supported toolchain, so that output which names a type does not depend on the compiler.
+             The overload is chosen by compiler, but its respellings are those libc++'s names need.
+   */
   [[nodiscard]]
   std::string tidy_name(std::string name, clang_type);
 
+  /** \brief Respells a type name, as `demangle(std::string)` returns it when compiled by gcc, into the shared
+             spelling; its respellings are those libstdc++'s names need.
+   */
   [[nodiscard]]
   std::string tidy_name(std::string name, gcc_type);
 
+  /** \brief Respells a type name as MSVC's `type_info::name` writes it into the shared spelling. */
   [[nodiscard]]
   std::string tidy_name(std::string name, msvc_type);
 
+  /** \brief `name`, unchanged. */
   [[nodiscard]]
   std::string tidy_name(std::string name, other_compiler_type);
 
+  /** \brief Demangles an Itanium-ABI name; a name that does not demangle, as every name under MSVC, is returned
+             unchanged.
+
+      libc++abi's spellings of non-finite floating-point values - `inff` and `infL`, and `nanf`, `nan` and `nanL`,
+      which carry no sign - are respelled `inf`, `nan` or `-nan`, as `tidy_name` renders libstdc++'s bit patterns.
+      A libc++abi spelling is kept in two cases:
+      -# The mangled name may hold an entity with that spelling as its name, such as a type `inff`;
+      -# The value is a NaN, and the name holds NaNs of its type with both signs.
+   */
   [[nodiscard]]
   std::string demangle(std::string mangled);
 
@@ -228,6 +282,9 @@ namespace sequoia::testing
     return tidy(demangle({typeid(T).name()}));
   }
 
+  /** \brief The name of `T` in the spelling shared by every supported toolchain. If `T` is itself a 32- or 64-bit
+             unsigned type, the name is that of the fixed-width type of its size, as the platform spells it.
+   */
   template<class T>
   [[nodiscard]]
   std::string demangle()
@@ -252,7 +309,9 @@ namespace sequoia::testing
   };
 
 
-  /// Demangles T; if U... is not empty, appends each demangled element of U on a new line
+  /** \brief The name `type_demangler` makes for `T`; then, for each of `U...`, a comma and, on a new line, the
+             name `type_demangler` makes for that type.
+   */
   template<class T, class... U>
   struct type_list_demangler
   {
