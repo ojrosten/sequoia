@@ -7,6 +7,7 @@
 
 #include "sequoia/TestFramework/TestCreator.hpp"
 
+#include "sequoia/TestFramework/CMakeCache.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestRunnerUtilities.hpp"
@@ -148,6 +149,14 @@ namespace sequoia::testing
         f(g(mainCpp));
       }
     }
+
+    /** \brief Whether `dir` is `root` or lies beneath it, once symbolic links are resolved; both must exist. */
+    [[nodiscard]]
+    bool lies_within(const fs::path& dir, const fs::path& root)
+    {
+      const auto canonicalRoot{fs::canonical(root)};
+      return std::ranges::mismatch(canonicalRoot, fs::canonical(dir)).in1 == canonicalRoot.end();
+    }
   }
 
   [[nodiscard]]
@@ -275,21 +284,25 @@ namespace sequoia::testing
   {
     using namespace runtime;
 
-    auto cmake{
-      [](const main_paths& main, const build_paths& buildPaths) {
-        if(fs::exists(main.dir()) && fs::exists(buildPaths.cmake_cache_dir()))
-        {
-          const auto outputPath{buildPaths.cmake_cache_dir() / "CMakeOutput.txt"};
-          invoke(cd_cmd(main.dir()) && cmake_cmd(buildPaths, outputPath));
-          if(auto text{read_to_string(outputPath, std::ios_base::in)})
-            return text.value();            
-        }
+    const auto& build{projPaths.build()};
+    if(!fs::exists(build.cmake_cache_dir())) return {};
 
-        return std::string{};
-      }
-    };
+    // A build tree copied with its checkout still names the source directory of the original.
+    const auto sourceDir{cmake_cache{build}.source_dir()};
+    if(!fs::is_directory(sourceDir) || !lies_within(sourceDir, projPaths.project_root()))
+      throw std::runtime_error{
+              std::format("CMake not run: the build tree was configured from {},\n"
+                          "which is not a directory within this project, {}\n",
+                          sourceDir.generic_string(),
+                          projPaths.project_root().generic_string())
+            };
 
-    return cmake(projPaths.main(), projPaths.build());
+    // Removed first, so that a run which writes nothing cannot hand back the previous run's output.
+    const auto outputPath{build.cmake_cache_dir() / "CMakeOutput.txt"};
+    fs::remove(outputPath);
+    invoke(cd_cmd(sourceDir) && cmake_cmd(build, outputPath));
+
+    return read_to_string(outputPath, std::ios_base::in).value_or(std::string{});
   }
 
 
