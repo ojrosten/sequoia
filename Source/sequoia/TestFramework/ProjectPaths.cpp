@@ -138,7 +138,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  fs::path source_paths::repo(std::filesystem::path projectRoot)
+  fs::path source_paths::repo(fs::path projectRoot)
   {
     if(projectRoot.empty())
       throw std::runtime_error{"Project root required to construct source path"};
@@ -153,7 +153,7 @@ namespace sequoia::testing
   {}
 
   [[nodiscard]]
-  std::filesystem::path tests_paths::project_root() const
+  fs::path tests_paths::project_root() const
   {
     return m_Repo.parent_path();
   }
@@ -165,13 +165,13 @@ namespace sequoia::testing
   {}
 
   [[nodiscard]]
-  std::filesystem::path dependencies_paths::project_root() const
+  fs::path dependencies_paths::project_root() const
   {
     return m_Repo.parent_path();
   }
 
   [[nodiscard]]
-  std::filesystem::path dependencies_paths::sequoia_root() const
+  fs::path dependencies_paths::sequoia_root() const
   {
     return m_Repo / "sequoia";
   }
@@ -310,7 +310,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  fs::path prune_paths::make_stem(const std::filesystem::path& buildDir)
+  fs::path prune_paths::make_stem(const fs::path& buildDir)
   {
     if(buildDir.empty())
       throw std::logic_error{"Build Dir required for pruning"};

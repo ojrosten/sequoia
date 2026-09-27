@@ -75,7 +75,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string run_cmd()
     {
-      std::filesystem::path exe{std::filesystem::path{"."} / "TestAll"};
+      fs::path exe{fs::path{"."} / "TestAll"};
       if constexpr(with_windows_v) exe.replace_extension("exe");
 
       return exe.make_preferred().string();
@@ -99,7 +99,7 @@ namespace sequoia::testing
     }
   }
 
-  cmd_builder::cmd_builder(const std::filesystem::path& projRoot, const build_paths& applicationBuildPaths)
+  cmd_builder::cmd_builder(const fs::path& projRoot, const build_paths& applicationBuildPaths)
     : m_Main{projRoot / main_paths::default_main_cpp_from_root()}
     , m_Build{make_new_build_paths(projRoot, applicationBuildPaths)}
   {}
@@ -111,7 +111,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  return_code cmd_builder::run_nested(std::string_view options, const std::filesystem::path& outputFile) const
+  return_code cmd_builder::run_nested(std::string_view options, const fs::path& outputFile) const
   {
     auto cmd{run_cmd()};
     if(!options.empty()) cmd.append(" ").append(options);
@@ -121,7 +121,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  return_code cmd_builder::create_build_run(const std::filesystem::path& creationOutput, std::string_view buildOutput, const std::filesystem::path& output) const
+  return_code cmd_builder::create_build_run(const fs::path& creationOutput, std::string_view buildOutput, const fs::path& output) const
   {   
     invoke(
          cd_cmd(get_build_paths().executable_dir())
@@ -155,7 +155,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  return_code cmd_builder::rebuild_run(const std::filesystem::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const
+  return_code cmd_builder::rebuild_run(const fs::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const
   {
     invoke(
          cd_cmd(get_main_paths().dir())
@@ -167,7 +167,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  return_code cmd_builder::run_executable(const std::filesystem::path& outputDir, std::string_view options) const
+  return_code cmd_builder::run_executable(const fs::path& outputDir, std::string_view options) const
   {
     if(!fs::exists(outputDir))
       fs::create_directory(outputDir);
@@ -176,13 +176,13 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path test_runner_end_to_end_test::source_file()
+  fs::path test_runner_end_to_end_test::source_file()
   {
     return std::source_location::current().file_name();
   }
 
   [[nodiscard]]
-  std::filesystem::path test_runner_end_to_end_test::generated_project() const
+  fs::path test_runner_end_to_end_test::generated_project() const
   {
     return working_materials().parent_path() /= "GeneratedProject";
   }
@@ -200,7 +200,7 @@ namespace sequoia::testing
     await_timestamp_tick(generated_project().parent_path());
   }
 
-  void test_runner_end_to_end_test::copy_aux_materials(const std::filesystem::path& relativeFrom, const std::filesystem::path& relativeTo) const
+  void test_runner_end_to_end_test::copy_aux_materials(const fs::path& relativeFrom, const fs::path& relativeTo) const
   {
     const auto absoluteFrom{auxiliary_materials() /= relativeFrom};
     const auto absoluteTo{generated_project() / relativeTo};

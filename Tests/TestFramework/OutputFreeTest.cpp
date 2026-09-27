@@ -105,7 +105,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path output_free_test::source_file()
+  fs::path output_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }
