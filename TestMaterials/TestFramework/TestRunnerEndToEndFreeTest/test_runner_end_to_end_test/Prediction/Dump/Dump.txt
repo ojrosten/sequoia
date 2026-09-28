@@ -5,6 +5,12 @@ Comparison performed using:
 Checking for equivalence with:
 [std::filesystem::path]
 
+Path existence
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases
+vs
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases
+
+[bool]
 Path type
 /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases
 vs
@@ -15,6 +21,12 @@ Final path token
 [std::filesystem::path]
 Number of directory entries for /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases
 [unsigned long long]
+Path existence
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/NoSeqpat
+vs
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat
+
+[bool]
 Path type
 /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/NoSeqpat
 vs
@@ -25,6 +37,12 @@ Final path token
 [std::filesystem::path]
 Number of directory entries for /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/NoSeqpat
 [unsigned long long]
+Path existence
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/NoSeqpat/baz.txt
+vs
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz.txt
+
+[bool]
 Path type
 /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/NoSeqpat/baz.txt
 vs
@@ -45,6 +63,12 @@ vs
 /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz.txt
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+Path existence
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/NoSeqpat/baz2.txt
+vs
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz2.txt
+
+[bool]
 Path type
 /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/NoSeqpat/baz2.txt
 vs
@@ -65,6 +89,12 @@ vs
 /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz2.txt
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+Path existence
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RemovedSeqpat
+vs
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RemovedSeqpat
+
+[bool]
 Path type
 /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RemovedSeqpat
 vs
@@ -75,6 +105,12 @@ Final path token
 [std::filesystem::path]
 Number of directory entries for /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RemovedSeqpat
 [unsigned long long]
+Path existence
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RemovedSeqpat/bar2.txt
+vs
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt
+
+[bool]
 Path type
 /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RemovedSeqpat/bar2.txt
 vs
@@ -95,6 +131,12 @@ vs
 /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RemovedSeqpat/bar2.txt
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+Path existence
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RetainedSeqpat
+vs
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RetainedSeqpat
+
+[bool]
 Path type
 /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RetainedSeqpat
 vs
@@ -105,6 +147,12 @@ Final path token
 [std::filesystem::path]
 Number of directory entries for /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RetainedSeqpat
 [unsigned long long]
+Path existence
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo.txt
+vs
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt
+
+[bool]
 Path type
 /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo.txt
 vs
@@ -125,6 +173,12 @@ vs
 /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RetainedSeqpat/foo.txt
 
 [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+Path existence
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo2.txt
+vs
+/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/RetainedSeqpat/foo2.txt
+
+[bool]
 Path type
 /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases/RetainedSeqpat/foo2.txt
 vs

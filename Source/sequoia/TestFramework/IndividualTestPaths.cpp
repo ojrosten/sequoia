@@ -12,6 +12,7 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
+#include <format>
 
 namespace sequoia::testing
 {
@@ -33,6 +34,19 @@ namespace sequoia::testing
       }
 
       throw std::logic_error{"Unrecognized case for test_mode"};
+    }
+
+    [[nodiscard]]
+    fs::path materials_directory(const fs::path& root, std::string_view subdirectory)
+    {
+      // An empty root names no test, and the joined path would be relative: resolved, silently, against
+      // the current directory
+      if(root.empty())
+        throw std::logic_error{
+          std::format("No materials root to hold '{}': these materials paths name no test", subdirectory)
+        };
+
+      return root / subdirectory;
     }
 
     /** \brief The directory a test's versioned output belongs in: the mirror of its source
@@ -97,44 +111,38 @@ namespace sequoia::testing
   {}
 
   individual_materials_paths::individual_materials_paths(const fs::path& relativePath, const test_materials_paths& materials, const output_paths& output)
-    : m_Materials{materials.repo() / relativePath}
-    , m_TemporaryMaterials{output.tests_temporary_data() / relativePath}
+    : m_OriginalMaterialsRoot{materials.repo() / relativePath}
+    , m_TemporaryMaterialsRoot{output.tests_temporary_data() / relativePath}
   {}
-
-  [[nodiscard]]
-  fs::path individual_materials_paths::working() const
-  {
-    if(m_Materials.empty()) return "";
-
-    return fs::exists(prediction()) ? m_TemporaryMaterials / "WorkingCopy" : m_TemporaryMaterials;
-  }
 
   [[nodiscard]]
   fs::path individual_materials_paths::original_working() const
   {
-    if(m_Materials.empty()) return "";
-
-    return fs::exists(prediction()) ? m_Materials / "WorkingCopy" : m_Materials;
+    return materials_directory(m_OriginalMaterialsRoot, "WorkingCopy");
   }
 
   [[nodiscard]]
-  fs::path individual_materials_paths::original_auxiliary() const
+  fs::path individual_materials_paths::working() const
   {
-    return fs::exists(prediction()) ? m_Materials / "Auxiliary" : "";
-  }
-
-  [[nodiscard]]
-  fs::path individual_materials_paths::auxiliary() const
-  {
-    return fs::exists(prediction()) ? m_TemporaryMaterials / "Auxiliary" : "";
+    return materials_directory(m_TemporaryMaterialsRoot, "WorkingCopy");
   }
 
   [[nodiscard]]
   fs::path individual_materials_paths::prediction() const
   {
-    const auto p{m_Materials / "Prediction"};
+    return materials_directory(m_OriginalMaterialsRoot, "Prediction");
+  }
 
-    return fs::exists(p) ? p : "";
+  [[nodiscard]]
+  fs::path individual_materials_paths::original_auxiliary() const
+  {
+    return materials_directory(m_OriginalMaterialsRoot, "Auxiliary");
+  }
+
+  [[nodiscard]]
+  fs::path individual_materials_paths::auxiliary() const
+  {
+    return materials_directory(m_TemporaryMaterialsRoot, "Auxiliary");
   }
 
   //===================================== individual_diagnostics_paths =====================================//

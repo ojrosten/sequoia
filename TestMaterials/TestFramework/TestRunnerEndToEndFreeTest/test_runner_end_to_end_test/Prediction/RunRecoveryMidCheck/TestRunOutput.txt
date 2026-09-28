@@ -2,18 +2,19 @@
 Running tests, synchronously...
 
 bar_free_test:
-[Execution Time: 1us]
+[Execution Time: 125us]
 foo_false_negative_test:
-[Execution Time: 1.17us]
+[Execution Time: 103us]
 foo_test:
-[Execution Time: 785us]
-	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+[Execution Time: 3.64ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 11]
 
 ******  Critical Failures:  1  ******
 
 
 	Error -- Unexpected Exception:
-	Detailed equivalance check for paths of type 'not found' not currently implemented
+	Line 1 of a .seqpat is not a valid regular expression: (
+	/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz.seqpat
 
 	Exception thrown during last check
 	Last Recorded Message:
@@ -28,21 +29,21 @@ foo_test:
 	=======================================
 
 oldschool_false_negative_test:
-[Execution Time: 1.75us]
+[Execution Time: 84.5us]
 oldschool_test:
-[Execution Time: 1.71us]
+[Execution Time: 105us]
 container_allocation_test:
-[Execution Time: 1.33us]
+[Execution Time: 102us]
 container_performance_test:
-[Execution Time: 1.21us]
+[Execution Time: 95us]
 unique_thing_false_negative_test:
-[Execution Time: 158us]
+[Execution Time: 381us]
 	False Negative Checks:                     2;  Failures:  0
 unique_thing_test:
-[Execution Time: 219us]
+[Execution Time: 767us]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
 useful_things_free_test:
-[Execution Time: 127us]
+[Execution Time: 323us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -55,27 +56,27 @@ useful_things_free_test:
 	=======================================
 
 utilities_free_test:
-[Execution Time: 1.17us]
+[Execution Time: 120us]
 flipper_free_test:
-[Execution Time: 119us]
+[Execution Time: 260us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 house_allocation_test:
-[Execution Time: 1.29us]
+[Execution Time: 94.9us]
 maybe_false_negative_test:
-[Execution Time: 1us]
+[Execution Time: 100us]
 maybe_test:
-[Execution Time: 959ns]
+[Execution Time: 97.2us]
 probability_false_negative_test:
-[Execution Time: 140us]
+[Execution Time: 352us]
 	False Negative Checks:                     2;  Failures:  0
 probability_test:
-[Execution Time: 220us]
+[Execution Time: 715us]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 
 -----------Grand Totals-----------
-[Total Run Time: 3.79ms]
-[Execution Time: 1.78ms]
-	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 82]
+[Total Run Time: 10.1ms]
+[Execution Time: 7.46ms]
+	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 91]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0

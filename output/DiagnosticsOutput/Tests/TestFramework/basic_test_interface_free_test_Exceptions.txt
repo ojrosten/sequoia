@@ -1,0 +1,81 @@
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 171
+No predictions
+
+Expected Exception Type:
+[std::runtime_error]
+No predictions for test 'fake_test'; they belong in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/TestMaterials/Materials/WithInputs/fake_test/Prediction
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 175
+No auxiliary materials
+
+Expected Exception Type:
+[std::runtime_error]
+No auxiliary materials for test 'fake_test'; they belong in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/TestMaterials/Materials/WithInputs/fake_test/Auxiliary
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 203
+No materials
+
+Expected Exception Type:
+[std::runtime_error]
+No materials for test 'fake_test'; they belong in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/TestMaterials/Materials/WithNone/fake_test
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 228
+Stray original materials
+
+Expected Exception Type:
+[std::runtime_error]
+The materials in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/TestMaterials/Materials/WithStray/fake_test hold stray.txt, which would be ignored: only WorkingCopy, Prediction and Auxiliary are used
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 232
+Preparing the materials of no test
+
+Expected Exception Type:
+[std::logic_error]
+Unable to prepare materials whose paths name no test
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 246
+Working copy of a test with no materials paths
+
+Expected Exception Type:
+[std::logic_error]
+Test 'fake_test' has no materials paths: it was not constructed with any
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 248
+Predictions of a test with no materials paths
+
+Expected Exception Type:
+[std::logic_error]
+Test 'fake_test' has no materials paths: it was not constructed with any
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 250
+Auxiliary materials of a test with no materials paths
+
+Expected Exception Type:
+[std::logic_error]
+Test 'fake_test' has no materials paths: it was not constructed with any
+
+=======================================
+
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 252
+Scratchpad of a test with no materials paths
+
+Expected Exception Type:
+[std::logic_error]
+Test 'fake_test' has no materials paths: it was not constructed with any
+
+=======================================
+

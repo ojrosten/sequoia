@@ -37,6 +37,7 @@ namespace sequoia::testing
     using namespace std::string_literals;
 
     test_project_folder_deduction();
+    test_materials_paths();
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Empty file"},
@@ -118,5 +119,37 @@ namespace sequoia::testing
         projectRoot / "Source" / "myProject"
       );
     }
+  }
+  void individual_test_paths_free_test::test_materials_paths()
+  {
+    commandline_arguments args{{minimal_fake_path().generic_string()}};
+    const project_paths projPaths{args.size(), args.get(), {}};
+
+    const individual_materials_paths materials{projPaths.tests().repo() / "Foo" / "Bar.cpp", "bar_test", projPaths};
+    const auto original{projPaths.test_materials().repo() / "Foo" / "Bar" / "bar_test"},
+               temporary{projPaths.output().tests_temporary_data() / "Foo" / "Bar" / "bar_test"};
+
+    check(equality, "Original materials root",   materials.original_materials_root(),  original);
+    check(equality, "Temporary materials root",  materials.temporary_materials_root(), temporary);
+    check(equality, "Original working copy",     materials.original_working(),         original / "WorkingCopy");
+    check(equality, "Temporary working copy",    materials.working(),                  temporary / "WorkingCopy");
+    check(equality, "Predictions, never copied", materials.prediction(),               original / "Prediction");
+    check(equality, "Original auxiliary",        materials.original_auxiliary(),       original / "Auxiliary");
+    check(equality, "Temporary auxiliary",       materials.auxiliary(),                temporary / "Auxiliary");
+
+    const individual_materials_paths none{};
+    check("No test: no original materials root",  none.original_materials_root().empty());
+    check("No test: no temporary materials root", none.temporary_materials_root().empty());
+
+    check_exception_thrown<std::logic_error>("No test: no original working copy",
+                                             [&none]() { return none.original_working(); });
+    check_exception_thrown<std::logic_error>("No test: no temporary working copy",
+                                             [&none]() { return none.working(); });
+    check_exception_thrown<std::logic_error>("No test: no predictions",
+                                             [&none]() { return none.prediction(); });
+    check_exception_thrown<std::logic_error>("No test: no original auxiliary",
+                                             [&none]() { return none.original_auxiliary(); });
+    check_exception_thrown<std::logic_error>("No test: no temporary auxiliary",
+                                             [&none]() { return none.auxiliary(); });
   }
 }
