@@ -1,0 +1,10 @@
+Usage: FakeExe init <owner> <path> <indent> [options]
+
+Create a project at the path, named after its last directory
+
+Options:
+  --no-build         Do not build the new project
+  --no-git           Do not put the new project under git
+  --to-files <path>  Send the output of git and the build to the file at the path
+  --no-ide           Build the new project without opening it in an IDE
+  --help, -h         Describe the command or option this follows; alone, the top level

@@ -30,12 +30,12 @@ namespace sequoia::testing
   template<class Quantity>
   void unsafe_absolute_physical_value_test::test_absolute_quantity()
   {
-    using value_type   = Quantity::value_type;
-    using unsafe_qty_t = quantity<typename Quantity::units_type, value_type, canonical_representation<value_type, no_bounds<value_type>>, identity_validator>;
+    using value_t      = Quantity::value_type;
+    using unsafe_qty_t = quantity<typename Quantity::units_type, value_t, canonical_representation<value_t, no_bounds<value_t>>, identity_validator>;
     using delta_q_t    = unsafe_qty_t::displacement_type;
 
-    STATIC_CHECK(can_multiply<unsafe_qty_t, value_type>);
-    STATIC_CHECK(can_divide<unsafe_qty_t, value_type>);
+    STATIC_CHECK(can_multiply<unsafe_qty_t, value_t>);
+    STATIC_CHECK(can_divide<unsafe_qty_t, value_t>);
     STATIC_CHECK(can_add<unsafe_qty_t, unsafe_qty_t>);
     STATIC_CHECK(can_add<unsafe_qty_t, delta_q_t>);
     STATIC_CHECK(can_subtract<unsafe_qty_t, unsafe_qty_t>);

@@ -1,0 +1,22 @@
+
+Running tests...
+
+Tests:
+    Namesakes:
+        namesake_test:
+        [Execution Time: 67us]
+            Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+        namesake_test:
+            under_namesake_test:
+            [Execution Time: 75.6us]
+                Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+
+-----------Grand Totals-----------
+[Total Run Time: 881us]
+[Execution Time: 195us]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0

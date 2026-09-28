@@ -335,6 +335,10 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path dump_file() const;
 
+    /** \brief Where a dump kept under a name lives: `<dir>/Dumps/<name>.txt`. */
+    [[nodiscard]]
+    std::filesystem::path kept_dump(std::string_view name) const;
+
     [[nodiscard]]
     friend bool operator==(const recovery_paths&, const recovery_paths&) noexcept = default;
   private:
@@ -390,8 +394,9 @@ namespace sequoia::testing
     [[nodiscard]]
     std::filesystem::path stamp() const;
 
+    /** \brief The tests to run next time regardless of staleness: those which failed, and those a run left out. */
     [[nodiscard]]
-    std::filesystem::path failures(std::optional<std::size_t> id) const;
+    std::filesystem::path to_rerun(std::optional<std::size_t> id) const;
 
     [[nodiscard]]
     std::filesystem::path selected_passes(std::optional<std::size_t> id) const;

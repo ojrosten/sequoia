@@ -47,7 +47,7 @@ runner.register_test<utilities_free_test>();runner.register_test<useful_things_f
 	}
 	catch(const std::exception& e)
 	{
-		std::cout << e.what();
+		std::cout << e.what() << '\n';
 	}
 	catch(...)
 	{

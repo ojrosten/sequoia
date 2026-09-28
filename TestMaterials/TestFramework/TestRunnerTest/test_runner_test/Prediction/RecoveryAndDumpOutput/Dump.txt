@@ -3,16 +3,18 @@ Phoney equality check
 
 [int]
 
+=======================================
 
 
-
+=======================================
 
 Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 64
 Throw during check
 
 [sequoia::testing::(anonymous namespace)::foo]
 
+=======================================
 
 
-
+=======================================
 

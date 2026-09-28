@@ -1,0 +1,8 @@
+Usage: FakeExe create regular_test <class> <equivalent_type> [options]
+
+A regular test of the class against an equivalent type
+
+Options:
+  --header <header>       Name the header declaring the class under test
+  --gen-source, -g <dir>  Generate the class's header and source too, under Source/<dir>
+  --help, -h              Describe the command or option this follows; alone, the top level

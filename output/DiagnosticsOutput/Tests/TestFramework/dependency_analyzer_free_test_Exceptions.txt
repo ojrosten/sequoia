@@ -64,7 +64,7 @@ A prune file in a superseded format
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read the prune records in output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/output/Prune/CMade/TestAll/TestAll.failures: Expected a line beginning 'path: ' but found 'HouseAllocationTest.cpp 12345'
+Unable to read the prune records in output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/output/Prune/CMade/TestAll/TestAll.rerun: Expected a line beginning 'path: ' but found 'HouseAllocationTest.cpp 12345'
 Try deleting the parent directory and starting afresh
 
 =======================================
@@ -74,7 +74,7 @@ A malformed time stamp
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read the prune records in output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/output/Prune/CMade/TestAll/TestAll.failures: 'soon' is not a time stamp
+Unable to read the prune records in output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/output/Prune/CMade/TestAll/TestAll.rerun: 'soon' is not a time stamp
 Try deleting the parent directory and starting afresh
 
 =======================================
@@ -84,7 +84,7 @@ A path with no time stamp after it
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to read the prune records in output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/output/Prune/CMade/TestAll/TestAll.failures: Expected a line beginning 'timestamp: ' but found the end of the file
+Unable to read the prune records in output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/output/Prune/CMade/TestAll/TestAll.rerun: Expected a line beginning 'timestamp: ' but found the end of the file
 Try deleting the parent directory and starting afresh
 
 =======================================

@@ -1,0 +1,76 @@
+Tests/Core/Functional/ErasedFunctionTestingDiagnostics.cpp, Line 25
+One engaged, one empty
+
+[sequoia::testing::observed_function]
+operator== returned false
+
+  Engaged
+  [bool]
+  operator== returned false
+  Obtained : true
+  Predicted: false
+
+=======================================
+
+Tests/Core/Functional/ErasedFunctionTestingDiagnostics.cpp, Line 26
+Different results
+
+[sequoia::testing::observed_function]
+operator== returned false
+
+  Result
+  [int]
+  operator== returned false
+  Obtained : 7
+  Predicted: 8
+
+=======================================
+
+Tests/Core/Functional/ErasedFunctionTestingDiagnostics.cpp, Line 27
+Engaged, predicted empty
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::testing::observed_function>]
+Checking for equivalence with:
+[std::optional<int>]
+
+  Engaged
+  [bool]
+  operator== returned false
+  Obtained : true
+  Predicted: false
+
+=======================================
+
+Tests/Core/Functional/ErasedFunctionTestingDiagnostics.cpp, Line 28
+Empty, predicted a result
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::testing::observed_function>]
+Checking for equivalence with:
+[std::optional<int>]
+
+  Engaged
+  [bool]
+  operator== returned false
+  Obtained : false
+  Predicted: true
+
+=======================================
+
+Tests/Core/Functional/ErasedFunctionTestingDiagnostics.cpp, Line 29
+Different result
+
+Comparison performed using:
+[sequoia::testing::value_tester<sequoia::testing::observed_function>]
+Checking for equivalence with:
+[std::optional<int>]
+
+  Result
+  [int]
+  operator== returned false
+  Obtained : 7
+  Predicted: 8
+
+=======================================
+

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.31)
+cmake_minimum_required(VERSION 4.2)
 
 project(SequoiaTestAll DESCRIPTION "The Sequoia Library plus all tests"
                        LANGUAGES CXX)
@@ -38,6 +38,8 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/DataStructures/StaticQueueTestingDiagnostics.cpp
                ${TestDir}/Core/DataStructures/StaticStackTest.cpp
                ${TestDir}/Core/DataStructures/StaticStackTestingDiagnostics.cpp
+               ${TestDir}/Core/Functional/ErasedFunctionRegularTest.cpp
+               ${TestDir}/Core/Functional/ErasedFunctionTestingDiagnostics.cpp
                ${TestDir}/Core/Logic/BitmaskFreeTest.cpp
                ${TestDir}/Core/Meta/ConceptsTest.cpp
                ${TestDir}/Core/Meta/SequencesFreeTest.cpp
@@ -46,10 +48,11 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Core/Meta/TypeNameFreeTest.cpp
                ${TestDir}/Core/Meta/TypeTraitsTest.cpp
                ${TestDir}/Core/Meta/UtilitiesTest.cpp
-               ${TestDir}/Core/Object/CopyableFunctionFreeTest.cpp
                ${TestDir}/Core/Object/CreatorFreeTest.cpp               
                ${TestDir}/Core/Object/FactoryTest.cpp
                ${TestDir}/Core/Object/FactoryTestingDiagnostics.cpp
+               ${TestDir}/Core/Object/ResetOnMoveRegularTest.cpp
+               ${TestDir}/Core/Object/ResetOnMoveTestingDiagnostics.cpp
                ${TestDir}/Experimental/ExperimentalTest.cpp
                ${TestDir}/Experimental/FlattenTypeListFreeTest.cpp                              
                ${TestDir}/FileSystem/FileSystemFreeTest.cpp
@@ -171,6 +174,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/ComplexFreeDiagnostics.cpp
                ${TestDir}/TestFramework/ContainerFreeDiagnostics.cpp
                ${TestDir}/TestFramework/DependencyAnalyzerFreeTest.cpp
+               ${TestDir}/TestFramework/DumpComparisonFreeTest.cpp
                ${TestDir}/TestFramework/ElementaryFreeDiagnostics.cpp
                ${TestDir}/TestFramework/ExceptionsFreeDiagnostics.cpp
                ${TestDir}/TestFramework/FailureInfoTest.cpp

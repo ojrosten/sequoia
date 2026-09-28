@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "sequoia/TestFramework/TestLogger.hpp"
+#include "sequoia/TestFramework/DumpComparison.hpp"
 
 #include <fstream>
 
@@ -47,7 +48,7 @@ namespace sequoia::testing
 
   void record_dump_started(const active_recovery_files& files, std::string_view message)
   {
-    if(!files.dump_file.empty())
+    if(!files.dump_file.empty() && !message.empty())
     {
       if(std::ofstream of{files.dump_file, std::ios_base::app})
         of << message << "\n";
@@ -59,7 +60,7 @@ namespace sequoia::testing
     if(!files.dump_file.empty())
     {
       if(std::ofstream of{files.dump_file, std::ios_base::app})
-        of << "\n\n";
+        of << dump_format::check_separator;
     }
   }
 

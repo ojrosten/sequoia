@@ -2,20 +2,20 @@
 Running tests...
 
 Stuff:
-	bar_free_test
-	[Execution Time: 2.17us]
-	foo_false_negative_test
-	[Execution Time: 1.96us]
-	foo_test
-	[Execution Time: 1.96us]
-	oldschool_false_negative_test
-	[Execution Time: 2.12us]
-	oldschool_test
-	[Execution Time: 1.5us]
+    bar_free_test:
+    [Execution Time: 14.1us]
+    foo_false_negative_test:
+    [Execution Time: 15.6us]
+    foo_test:
+    [Execution Time: 17.9us]
+    oldschool_false_negative_test:
+    [Execution Time: 15.8us]
+    oldschool_test:
+    [Execution Time: 17.8us]
 
 -----------Grand Totals-----------
-[Total Run Time: 840us]
-[Execution Time: 133us]
+[Total Run Time: 1.14ms]
+[Execution Time: 217us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

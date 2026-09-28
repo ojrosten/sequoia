@@ -21,7 +21,7 @@ namespace sequoia::testing
   namespace fs = std::filesystem;
 
   [[nodiscard]]
-  std::filesystem::path test_runner_test_creation::source_file()
+  fs::path test_runner_test_creation::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -37,8 +37,8 @@ namespace sequoia::testing
     test_type_handling();
     test_project_namespace();
     test_template_data_generation();
-    test_creation("FakeProject", std::nullopt);
-    test_creation("AnotherFakeProject", "curlew");
+    test_creation("FakeProject", std::nullopt, main_location::in_source_dir);
+    test_creation("AnotherFakeProject", "curlew", main_location::below_source_dir);
     test_creation_failure();
   }
 
@@ -125,7 +125,9 @@ namespace sequoia::testing
                    generate_template_data("<class ... T>"), template_data{{"class ...", "T"}});
   }
 
-  void test_runner_test_creation::test_creation(std::string_view projectName, std::optional<std::string> sourceFolder)
+  void test_runner_test_creation::test_creation(std::string_view projectName,
+                                                std::optional<std::string> sourceFolder,
+                                                main_location mainLocation)
   {
     const auto projectPath{auxiliary_materials() / projectName};
     const source_paths sourcePaths{projectPath, sourceFolder};
@@ -143,42 +145,73 @@ namespace sequoia::testing
     fs::copy(auxiliary_materials() / "FakeExe.txt", cmakeCacheDir);
     fs::copy(get_project_paths().build().cmake_cache_dir() / "CMakeCache.txt", cmakeCacheDir);
 
-    const main_paths templateMain{auxiliary_paths::project_template(get_project_paths().project_root()) / main_paths::default_main_cpp_from_root()},
-                     fakeMain{projectPath / "TestSandbox" / "TestSandbox.cpp"};
+    // The copied cache records this build's top-level source directory, and `create` runs CMake from
+    // the one its cache records, so it must record the fake project's instead.
+    const auto cmakeSourceDir{projectPath / "TestSandbox"};
+    record_cmake_source_dir(cmakeCacheDir / "CMakeCache.txt", cmakeSourceDir);
 
+    const main_paths templateMain{auxiliary_paths::project_template(get_project_paths().project_root())
+                                    / main_paths::default_main_cpp_from_root()};
+
+    const auto fakeMainDir{
+      mainLocation == main_location::in_source_dir ? cmakeSourceDir : cmakeSourceDir / "Outer" / "Inner"
+    };
+    const main_paths fakeMain{fakeMainDir / "TestSandbox.cpp"};
+
+    fs::create_directories(fakeMain.dir());
     fs::copy(templateMain.file(), fakeMain.file());
-    fs::copy(templateMain.cmake_lists(), fakeMain.cmake_lists());
-    fs::copy(templateMain.dir() / "CMakePresets.json", fakeMain.dir());
-    read_modify_write(
-      fakeMain.cmake_lists(),
-      [projectName,&sourceFolder](std::string& text) {
-        replace_all(text, "TestAllMain.cpp", "TestSandbox.cpp");
-        replace_all(text, "myProject", sourceFolder ? sourceFolder.value() : uncapitalize(projectName));
-      }
-    );
+    fs::copy(templateMain.dir() / "CMakePresets.json", cmakeSourceDir);
+
+    auto cmakeLists{read_to_string(templateMain.cmake_lists(), std::ios_base::in).value()};
+    replace_all(cmakeLists, "myProject", sourceFolder ? sourceFolder.value() : uncapitalize(projectName));
+    if(mainLocation == main_location::in_source_dir)
+    {
+      replace_all(cmakeLists, "TestAllMain.cpp", "TestSandbox.cpp");
+    }
+    else
+    {
+      // The template's list of test sources, and the lines `--gen-source` uncomments, move beside the
+      // main, since `create` edits the CMakeLists.txt there.
+      const auto mainDir{fs::relative(fakeMain.dir(), cmakeSourceDir).generic_string()};
+      constexpr std::string_view testSources{"target_sources(TestAll PRIVATE)\n"};
+      const auto first{cmakeLists.find("#!")}, last{cmakeLists.find(testSources)};
+      if((first == std::string::npos) || (last == std::string::npos) || (last < first))
+        throw std::logic_error{"The project template's CMakeLists.txt no longer has the shape this fixture splits"};
+
+      const auto count{last + testSources.size() - first};
+      write_to_file(fakeMain.cmake_lists(), std::string_view{cmakeLists}.substr(first, count), std::ios_base::out);
+      cmakeLists.replace(first, count, std::format("add_subdirectory({})\n", mainDir));
+      replace_all(cmakeLists, "TestAllMain.cpp", mainDir + "/TestSandbox.cpp");
+
+      // Presets between the main and the source directory, so that neither the main's parent nor the
+      // nearest directory with presets is where CMake runs.
+      fs::copy(templateMain.dir() / "CMakePresets.json", fakeMain.dir().parent_path());
+    }
+
+    write_to_file(cmakeSourceDir / "CMakeLists.txt", cmakeLists, std::ios_base::out);
 
     commandline_arguments args{{zeroth_arg(projectName)
                                , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
                                , "create", "regular", "utilities::iterator", "int*"
-                               , "create", "regular_test", "stuff::widget", "std::vector<int>", "gen-source", "Stuff"
-                               , "create", "regular_test", "maths::probability", "double", "g", "Maths"
-                               , "create", "regular_test", "maths::angle", "long double", "gen-source", "Maths"
-                               , "create", "regular_test", "human", "std::string", "g", "hominins"
-                               , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "g", "Thingummies"
+                               , "create", "regular_test", "stuff::widget", "std::vector<int>", "--gen-source", "Stuff"
+                               , "create", "regular_test", "maths::probability", "double", "-g", "Maths"
+                               , "create", "regular_test", "maths::angle", "long double", "--gen-source", "Maths"
+                               , "create", "regular_test", "human", "std::string", "-g", "hominins"
+                               , "create", "regular_test", "stuff::thingummy<class T>", "std::vector<T>", "-g", "Thingummies"
                                , "create", "regular_test", "container<class T>", "const std::vector<T>"
                                , "create", "regular_test", "other::couple<class S, class T>", "std::pair<S, T>",
-                                              "-h", "Couple.hpp"
-                               , "create", "regular_test", "bar::things", "double", "-h", std::format("{}/Stuff/Things.hpp", sourceFolderName)
+                                              "--header", "Couple.hpp"
+                               , "create", "regular_test", "bar::things", "double", "--header", std::format("{}/Stuff/Things.hpp", sourceFolderName)
                                , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T"
                                , "create", "move_only", "variadic<class... T>", "std::tuple<T...>"
-                               , "create", "move_only_test", "multiple<class... T>", "std::tuple<T...>", "gen-source", "Utilities"
-                               , "create", "move_only_test", "cloud", "double", "gen-source", "Weather"
+                               , "create", "move_only_test", "multiple<class... T>", "std::tuple<T...>", "--gen-source", "Utilities"
+                               , "create", "move_only_test", "cloud", "double", "--gen-source", "Weather"
                                , "create", "free_test", "Utilities.h"
                                , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazzer"
                                , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazagain"
-                               , "create", "free_test", "Stuff/Doohicky.hpp", "gen-source", "bar::things"
-                               , "create", "free_test", "Global/Stuff/Global.hpp", "gen-source", "::"
-                               , "create", "free_test", "Global/Stuff/Defs.hpp", "gen-source", ""
+                               , "create", "free_test", "Stuff/Doohicky.hpp", "--gen-source", "bar::things"
+                               , "create", "free_test", "Global/Stuff/Global.hpp", "--gen-source", "::"
+                               , "create", "free_test", "Global/Stuff/Defs.hpp", "--gen-source", ""
                                , "create", "free", std::format("{}/Maths/Angle.hpp", sourceFolderName), "--diagnostics"
                                , "create", "regular_allocation_test", "container"
                                , "create", "move_only_allocation_test", "foo"
@@ -187,7 +220,14 @@ namespace sequoia::testing
     };
 
     std::stringstream outputStream{};
-    test_runner tr{args.size(), args.get(), "Oliver Jacob Rosten", "    ",  {.source_folder{sourceFolder}, .main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
+    test_runner tr{args.size(),
+                   args.get(),
+                   "Oliver Jacob Rosten",
+                   "    ",
+                   {.source_folder{sourceFolder},
+                    .main_cpp{fs::relative(fakeMain.file(), projectPath).generic_string()},
+                    .common_includes{"TestShared/SharedIncludes.hpp"}},
+                   outputStream};
 
     check(equality, "Test creation return code", tr.execute(), return_code::success);
 
@@ -200,6 +240,66 @@ namespace sequoia::testing
     check_directory(projectName, "Source");
     check_directory(projectName, "Tests");
     check_directory(projectName, "TestSandbox");
+
+    test_foreign_source_dir_refusal(projectName, sourceFolder, cmakeCacheDir / "CMakeCache.txt", fakeMain);
+    record_cmake_source_dir(cmakeCacheDir / "CMakeCache.txt", cmakeSourceDir);
+  }
+
+  void test_runner_test_creation::test_foreign_source_dir_refusal(std::string_view projectName,
+                                                                 const std::optional<std::string>& sourceFolder,
+                                                                 const std::filesystem::path& cacheFile,
+                                                                 const main_paths& fakeMain)
+  {
+    const auto projectPath{auxiliary_materials() / projectName};
+
+    auto createAgain{
+      [&]() {
+        std::stringstream outputStream{};
+        commandline_arguments args{{zeroth_arg(projectName), "create", "free_test", "Utilities.h"}};
+        test_runner tr{args.size(),
+                       args.get(),
+                       "Oliver Jacob Rosten",
+                       "    ",
+                       {.source_folder{sourceFolder},
+                        .main_cpp{fs::relative(fakeMain.file(), projectPath).generic_string()},
+                        .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+      }
+    };
+
+    // The refusal names two paths, and the default postprocessor makes only the first relative.
+    auto relativeToRoot{
+      [](const project_paths& projPaths, std::string message) {
+        replace_all(message, projPaths.project_root().generic_string() + "/", "");
+        return message;
+      }
+    };
+
+    record_cmake_source_dir(cacheFile, projectPath / "Absent");
+    check_exception_thrown<std::runtime_error>(reporter{"Source directory absent"}, createAgain, relativeToRoot);
+
+    record_cmake_source_dir(cacheFile, auxiliary_materials());
+    check_exception_thrown<std::runtime_error>(reporter{"Source directory outside the project"},
+                                               createAgain,
+                                               relativeToRoot);
+  }
+
+  void test_runner_test_creation::record_cmake_source_dir(const std::filesystem::path& cacheFile,
+                                                         const std::filesystem::path& sourceDir)
+  {
+    read_modify_write(
+      cacheFile,
+      [&sourceDir](std::string& text) {
+        constexpr std::string_view entry{"\nCMAKE_HOME_DIRECTORY:INTERNAL="};
+        if(const auto pos{text.find(entry)}; pos != std::string::npos)
+        {
+          const auto start{pos + entry.size()};
+          text.replace(start, text.find_first_of("\r\n", start) - start, sourceDir.generic_string());
+        }
+      }
+    );
+
+    check(equality, "Recorded source directory", cmake_cache{cacheFile}.source_dir(), sourceDir);
   }
 
   void test_runner_test_creation::test_creation_failure()
@@ -217,7 +317,7 @@ namespace sequoia::testing
         reporter{"Typo in specified class header"},
         [this]() {
           std::stringstream outputStream{};
-          commandline_arguments args{{zeroth_arg("FakeProject"), "create", "regular_test", "bar::things", "double", "-h", "fakeProject/Stuff/Thingz.hpp"}};
+          commandline_arguments args{{zeroth_arg("FakeProject"), "create", "regular_test", "bar::things", "double", "--header", "fakeProject/Stuff/Thingz.hpp"}};
           test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "  ", {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}}, outputStream};
         });
   }

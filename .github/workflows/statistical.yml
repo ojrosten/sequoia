@@ -45,11 +45,13 @@ name: statistical
 # on a public repository - and a run is one build plus N suites, which at the
 # measured two to four minutes a suite puts N=20 at about an hour a column.
 on:
-  # The minute is off the hour on purpose, where GitHub's scheduler is slowest:
-  # see the schedule in rigorous.yml. An hour after the nightly's tick, for no
-  # reason beyond not sharing it.
+  # A minute after the nightly's tick, for no reason beyond not sharing it. The
+  # order in which the two are then created is a coin toss - GitHub's delay is
+  # per run, and its night-to-night spread is about the width of the hour this
+  # once trailed the nightly by - and nothing here depends on the order: the
+  # nightly's columns are not a prerequisite, only a neighbour in the queue.
   schedule:
-    - cron: '1 2 * * *'
+    - cron: '2 1 * * *'
   workflow_dispatch:
     inputs:
       trials:
@@ -84,6 +86,8 @@ jobs:
     needs: trials
     uses: ./.github/workflows/tests.yml
     with:
+      # A sample of the tree as it stands, whatever last changed in it.
+      needs_testing: ${{ 'true' }}
       warnings_as_errors: false
       exec_args: 'locate;${{ needs.trials.outputs.n }};--exclude-performance'
       suite_timeout_minutes: 200
@@ -99,11 +103,14 @@ jobs:
   # found, and the bound that zero failures earns. Runs whether or not the
   # columns were green, since a red column is the finding. Three things it
   # insists on, each of which would otherwise pass in silence: every column's
-  # artifact is present; the suite ran N times, witnessed by the runner's
-  # "Running tests" line once per repetition - the one check that tells N trials
-  # from one; and a column is clean only if its suite step succeeded AND the
-  # analysis found nothing, since the analysis says "No instabilities detected"
-  # over a failure common to every repetition too.
+  # artifact is present; the suite started and finished N times, witnessed by
+  # the runner's "Running tests" line as each repetition starts and its "Total
+  # Run Time" line as each ends - the one check that tells N trials from one,
+  # and a trial that hung from one that ended; and a column is clean only if
+  # its suite step succeeded AND the analysis found nothing, since the analysis
+  # says "No instabilities detected" over a failure common to every repetition
+  # too. A column that is not clean is reported with its counts and the end of
+  # its log, whatever the reason.
   summary:
     name: The sample
     needs: [trials, statistical]
@@ -134,16 +141,20 @@ jobs:
               echo "No run log: the column did not reach the suite." >> "$report"
             else
               outcome=$(cat "$dir/run-log/outcome")
-              ran=$(grep -c "Running tests" "$log" || true)
-              if [ "$ran" -ne "$N" ]; then
-                echo "::error::$name: the suite ran $ran times, not $N"; failed=1
-                echo "The suite ran $ran times, not $N." >> "$report"
-              elif [ "$outcome" = success ] && grep -q "No instabilities detected" "$log"; then
+              started=$(grep -c "Running tests" "$log" || true)
+              finished=$(grep -c "Total Run Time" "$log" || true)
+              if [ "$outcome" = success ] && [ "$started" -eq "$N" ] && [ "$finished" -eq "$N" ] \
+                   && grep -q "No instabilities detected" "$log"; then
                 echo "No instabilities detected in $N trials." >> "$report"
               else
-                failed=1
+                echo "::error::$name: suite step $outcome; of $N trials, $started started and $finished finished"; failed=1
                 {
-                  echo "Suite step: $outcome. The end of the log:"
+                  echo "Suite step: $outcome. Of $N trials, $started started and $finished finished."
+                  if [ -f "$dir/run-log/snapshot.txt" ]; then
+                    echo "The suite was still running near its timeout: the column's \`Keep the run log\` step prints" \
+                         "what it was doing, and the artifact holds it as \`run-log/snapshot.txt\`."
+                  fi
+                  echo "The end of the log:"
                   echo '```'
                   tail -60 "$log"
                   echo '```'

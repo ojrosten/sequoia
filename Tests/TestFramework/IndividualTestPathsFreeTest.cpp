@@ -15,13 +15,13 @@ namespace sequoia::testing
   namespace fs = std::filesystem;
 
   [[nodiscard]]
-  std::filesystem::path individual_test_paths_free_test::source_file()
+  fs::path individual_test_paths_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }
 
   [[nodiscard]]
-  std::filesystem::path individual_test_paths_free_test::fake_project() const
+  fs::path individual_test_paths_free_test::fake_project() const
   {
     return working_materials() /= "FakeProject";
   }
@@ -104,6 +104,16 @@ namespace sequoia::testing
       check(
         equality,
         "An explicit source_folder settles it",
+        source_paths{projectRoot, "myProject"}.project(),
+        projectRoot / "Source" / "myProject"
+      );
+    }
+
+    {
+      const auto projectRoot{make("myProject", {"myProject"})};
+      check(
+        equality,
+        "An explicit source_folder, in a checkout named after it",
         source_paths{projectRoot, "myProject"}.project(),
         projectRoot / "Source" / "myProject"
       );

@@ -354,13 +354,13 @@ namespace sequoia::physics::impl
     constexpr static bool allOfNotReducibleOrNotFreeModule{((!free_module<Ts>               || !potentially_prunable_v<type_counter<Ts, Is>>) && ...)};
     constexpr static bool allOfNotReducibleOrNotHalfLine  {((!is_non_negative_orthant_v<Ts> || !potentially_prunable_v<type_counter<Ts, Is>>) && ...)};
     
-    using filtered_t = meta::filter_by_trait_t<tensor_product<type_counter<Ts, Is>...>, not_potentially_prunable>;
+    using filtered_type = meta::filter_by_trait_t<tensor_product<type_counter<Ts, Is>...>, not_potentially_prunable>;
 
-    using unpacked_t = unpack_t<filtered_t>;
+    using unpacked_type = unpack_t<filtered_type>;
 
     constexpr static bool anyFreeModule{(free_module<Ts> || ...)};
     
-    using root_space_t =
+    using root_space_type =
       std::conditional_t<
         anyFreeModule,
         tensor_product<euclidean_vector_space<1, std::common_type_t<arena_type_of_t<Ts>...>>>,
@@ -370,8 +370,8 @@ namespace sequoia::physics::impl
     using type
       = std::conditional_t<
           anyOfNotReducibleFreeModule || (allOfNotReducibleOrNotFreeModule && (anyOfNotReducibleHalfLine || allOfNotReducibleOrNotHalfLine)),
-          unpacked_t,
-          meta::merge_t<unpacked_t, root_space_t, meta::type_comparator>
+          unpacked_type,
+          meta::merge_t<unpacked_type, root_space_type, meta::type_comparator>
         >;
   };
 

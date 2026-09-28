@@ -68,12 +68,12 @@ namespace sequoia::testing
           inv_q2_t,  
           q3_t
         >;
-    using graph_type = transition_checker<variant_t>::transition_graph;
-    using edge_t     = transition_checker<variant_t>::edge;
+    using graph_t = transition_checker<variant_t>::transition_graph;
+    using edge_t  = transition_checker<variant_t>::edge;
 
     enum qty_label { qty, dq, inv, dinvq, euc_half, dual_euc_half, euc_vec, dual_euc_vec, pseudo, pseudo_inv, unsafe, unsafe_inv, q2, dq2, inv_q2, q3 };
     
-    graph_type g{
+    graph_t g{
       {
         {
           // Start qty

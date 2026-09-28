@@ -29,5 +29,7 @@ namespace sequoia::testing
 
     template<maths::dynamic_tree Tree>
     void test_tree_unweighted_nodes();
+
+    void test_forest_ranges();
   };
 }

@@ -113,7 +113,7 @@ name: rigorous
 # for the Windows columns.
 #
 # The Release column exists because -O3 asks questions Debug cannot, and it was
-# withdrawn between 2026-09-10 and this commit while its warnings were understood.
+# withdrawn for three hours on 2026-09-10 while its warnings were understood.
 # All 107 lines were false positives from three sites: 101 from gcc's loop
 # vectorizer, which -fno-tree-loop-vectorize removes while leaving the diagnostics
 # enabled, and 6 from an address computed in a branch of libstdc++'s
@@ -148,21 +148,24 @@ name: rigorous
 # tier's - naming only the exclusion would silently lose the drift check - while
 # this column carries an explicitly empty `exec_args`, which is not the same as
 # omitting the key: it runs with no flags at all, and inherits nothing.
+#
 # Both MSVC columns run TestRunnerTest again. From 2026-09-09 to 2026-09-11 it was
 # excluded: its teardown's fs::remove_all was refused on Windows, close to a coin
 # toss (ASan 2 of 4, Release 1 of 3, Debug 3 of 38), because std::system spawned
 # children with every open file inherited and a spawn on one thread captured a
 # file another thread had open. invoke now spawns with a handle list naming only
-# the standard streams (roadmap item 134). The mechanism is witnessed by a
-# deterministic test; the CI symptom is witnessed only here, so a sharing
-# violation in either column after 2026-09-11 is evidence against the fix, not a
-# flake to re-run.
+# the standard streams (roadmap item 134). A deterministic test witnesses the
+# mechanism; the CI symptom can appear in any MSVC column that runs
+# TestRunnerTest, which today is every MSVC column in every tier - the rates
+# above come from three of them. So a sharing violation on Windows after
+# 2026-09-11, in whichever tier, is evidence against the fix rather than a flake
+# to re-run.
+#
+# No path filter: see scope.yml for why, and for how a
+# column with nothing to test still reports.
 on:
   pull_request:
     branches: [main]
-    paths-ignore:
-      - 'docs/**'
-      - 'coverage_reports/**'
   workflow_dispatch:
     inputs:
       false_negative:
@@ -170,20 +173,20 @@ on:
         required: false
         type: boolean
         default: false
-  # Off the hour on purpose. GitHub's scheduler queues every run whose cron
-  # names the same minute, and a round hour is where they cluster: at
-  # '0 3 * * *' the nightly arrived at 07:34, 07:32, 07:38 and 07:57 UTC on
-  # 2026-09-10 to 2026-09-13, and GitHub documents that a queued run can be
-  # dropped outright under load. Both the minute and the hour moved, so if the
-  # delay shrinks this does not say which did it. Nothing here would notice a
-  # dropped run, since the audit lives inside it.
+  # Off the hour, on GitHub's advice that the start of an hour is when its
+  # scheduler is most loaded; it did not help. At '0 3 * * *' the nightly
+  # arrived at 07:34, 07:32, 07:38 and 07:57 UTC on 2026-09-10 to 2026-09-13,
+  # and at '1 1 * * *' it has arrived 4h30m to 5h late on every night since, so
+  # the delay is a steady backlog that the minute does not touch. It stays here
+  # because nothing argues for moving it back. GitHub documents that a queued
+  # run can be dropped outright under load, and nothing here would notice a
+  # dropped run, since the audit lives inside it: that is watchdog.yml's job.
   schedule:
     - cron: '1 1 * * *'
 
 # A push to the head of an open PR into main cancels that PR's run in flight: a
-# superseded run cannot gate anything, and its audit would otherwise compare its
-# jobs against the checks of a commit it is not testing. Scheduled and dispatched
-# runs each get a group of their own, so nothing here ever cancels them.
+# superseded run gates nothing, and Windows runners are scarce. Scheduled and
+# dispatched runs each get a group of their own, so nothing here ever cancels them.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
@@ -209,31 +212,41 @@ jobs:
           echo "staging is $ahead commit(s) ahead of main"
           echo "ahead=$ahead" >> "$GITHUB_OUTPUT"
 
-  # `!cancelled()` rather than the implied success(): the job above is skipped on
+  # One decision for the whole run, which every job below takes as an input. It
+  # runs in promote mode too, where it is not needed, because it costs seconds and
+  # one rule for every mode is simpler for the audit to hold.
+  scope:
+    uses: ./.github/workflows/scope.yml
+
+  # `!cancelled()` rather than the implied success(): the staging job is skipped on
   # every event but the schedule, and a skipped dependency would otherwise skip
-  # these too.
+  # these too; and a failed decision should still run them, so that they fail on
+  # the missing answer.
   rigorous:
-    needs: staging
+    needs: [staging, scope]
     if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
     uses: ./.github/workflows/tests.yml
     with:
+      needs_testing: ${{ needs.scope.outputs.suite }}
       warnings_as_errors: true
       false_negative: ${{ inputs.false_negative == true }}
       exec_args: '--check-versioned-output'
       columns: >-
         [
           {"name": "Linux · GCC · ASan+UBSan", "os": "ubuntu-latest",  "configure": "gcc-env-asan-ubsan", "build": "gcc-env-asan-ubsan", "cc": "gcc-15", "cxx": "g++-15", "exec_args": "--check-versioned-output;--exclude-performance"},
-          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance", "repeat_args": "locate;5;--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp"},
+          {"name": "Windows · MSVC · ASan",    "os": "windows-latest", "configure": "msvc-asan",          "build": "msvc-asan", "exec_args": "--check-versioned-output;--exclude-performance", "repeat_args": "locate;5;--check-versioned-output;--exclude-performance;exclude;Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp"},
           {"name": "Linux · GCC · Release",    "os": "ubuntu-latest",  "configure": "gcc-env-release",    "build": "gcc-env-release",    "cc": "gcc-15", "cxx": "g++-15", "exec_args": ""},
-          {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance", "repeat_args": "locate;20;--check-versioned-output;--exclude-performance;--exclude;Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp"},
+          {"name": "macOS · Clang · TSan",     "os": "macos-latest",   "configure": "llvm-env-tsan",      "build": "llvm-env-tsan", "exec_args": "--check-versioned-output;--exclude-performance", "repeat_args": "locate;20;--check-versioned-output;--exclude-performance;exclude;Tests/TestFramework/TestRunnerEndToEndFreeTest.cpp"},
           {"name": "Windows · MSVC · Release", "os": "windows-latest", "configure": "msvc-release",       "build": "msvc-release", "exec_args": "--check-versioned-output;--exclude-performance"},
           {"name": "macOS · Clang · Release",  "os": "macos-latest",   "configure": "llvm-env-release",   "build": "llvm-env-release", "exec_args": "--check-versioned-output;--exclude-performance"}
         ]
 
   docs:
-    needs: staging
+    needs: [staging, scope]
     if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
     uses: ./.github/workflows/docs.yml
+    with:
+      needs_testing: ${{ needs.scope.outputs.documentation }}
 
   # Measured and published; no threshold is applied. The uploaded coverage.info is
   # an lcov tracefile, which is what both a per-file regression rule and diff-cover
@@ -243,19 +256,33 @@ jobs:
   # suite through ctest, serially, not through the `run` target.
   coverage:
     name: Coverage · Linux · GCC
-    needs: staging
+    needs: [staging, scope]
     if: ${{ !cancelled() && (github.event_name != 'schedule' || needs.staging.outputs.ahead == '0') }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
       CC: gcc-15
       CXX: g++-15
+      NEEDS_TESTING: ${{ needs.scope.outputs.suite }}
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
+      # As in tests.yml: the job runs whatever the change, since in gate mode the
+      # audit insists on its success; what it does depends on the change, and any
+      # answer but `true` or `false` fails it.
+      - name: Nothing to test
+        if: env.NEEDS_TESTING != 'true'
+        run: |
+          if [ "$NEEDS_TESTING" != false ]; then
+            echo "::error::the scope job's answer is '$NEEDS_TESTING', neither true nor false"
+            exit 1
+          fi
+          echo "Nothing to test; the scope job's summary says why."
+
       - name: Install the toolchain
+        if: env.NEEDS_TESTING == 'true'
         run: |
           # The hosted image ships vendor repositories - Chrome and Microsoft - which
           # nothing here installs from. A bad index served by one of them fails the
@@ -278,21 +305,79 @@ jobs:
             sleep $((attempt * 15))
           done
           sudo apt-get update -qq
-          for pkg in g++-15 ninja-build libtbb-dev lcov; do
+          # The Perl packages are for lcov, installed below from its release: Capture::Tiny,
+          # DateTime, Date::Parse and Devel::StackTrace, without which lcov's tools do not
+          # start, and JSON::XS, which geninfo uses in preference to the core, pure-Perl JSON::PP
+          # to read gcov's output.
+          packages=(g++-15 ninja-build libtbb-dev
+                    libcapture-tiny-perl libdatetime-perl libdevel-stacktrace-perl libjson-xs-perl libtimedate-perl)
+          for pkg in "${packages[@]}"; do
             apt-cache pkgnames | grep -qx "$pkg" \
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
-          sudo apt-get install -y g++-15 ninja-build libtbb-dev lcov
+          sudo apt-get install -y "${packages[@]}"
+          # The hosted image's CMake is below sequoia's floor of 4.2, the release that added
+          # CMAKE_INTERMEDIATE_DIR_STRATEGY; the Windows presets set it in
+          # build_system/ShortObjectPaths.cmake. The macOS and Windows images ship a release above
+          # the floor, so this job fetches one from Kitware - the host the checkout already
+          # comes from - and puts it first on PATH. An older cmake surviving this step is loud:
+          # the configure step's cmake_minimum_required refuses it. The tarball has no apt
+          # signature behind it, so its checksum is pinned.
+          #
+          # Repeated in tests.yml's "Install the toolchain (Linux)"; change both.
+          cmake_version=4.4.3
+          cmake_sha256=d6c83076c575bc00b823522ac974bda66d0af05d6ddc30e739c12385cf32c6cc
+          cmake_tarball=$RUNNER_TEMP/cmake.tar.gz
+          cmake_url=https://github.com/Kitware/CMake/releases/download/v$cmake_version/cmake-$cmake_version-linux-x86_64.tar.gz
+          if [ "$(uname -m)" != x86_64 ]; then echo "::error::No CMake build is fetched for $(uname -m)"; exit 1; fi
+          if ! curl -fsSL -o "$cmake_tarball" "$cmake_url"; then echo "::error::CMake $cmake_version could not be fetched from Kitware's release page"; exit 1; fi
+          if ! echo "$cmake_sha256  $cmake_tarball" | sha256sum --check --quiet; then echo "::error::The CMake tarball does not match its published checksum"; exit 1; fi
+          tar -xzf "$cmake_tarball" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin" >> "$GITHUB_PATH"
+          # lcov comes from its release rather than apt, so that its version does not move with
+          # ubuntu-latest: the 24.04 archive has 2.0 and the 26.04 one 2.4, and lcov 2.0 and 2.5
+          # write different function records, and count different function totals, from the same
+          # coverage data. Keep it at the version Homebrew installs, so that CI and a Mac run the
+          # same lcov. Pinned by checksum for the same reason as CMake. Each tool prints the
+          # version and, after a hyphen, the release number from the tarball's .version file.
+          lcov_version=2.5
+          lcov_release=0
+          lcov_sha256=7e5e5a154bd5f3557659c328cab376764e7abd238bb403c424472c296b175126
+          lcov_tarball=$RUNNER_TEMP/lcov.tar.gz
+          lcov_url=https://github.com/linux-test-project/lcov/releases/download/v$lcov_version/lcov-$lcov_version.tar.gz
+          if ! curl -fsSL -o "$lcov_tarball" "$lcov_url"; then echo "::error::lcov $lcov_version could not be fetched from its release page"; exit 1; fi
+          if ! echo "$lcov_sha256  $lcov_tarball" | sha256sum --check --quiet; then echo "::error::The lcov tarball does not match its published checksum"; exit 1; fi
+          tar -xzf "$lcov_tarball" -C "$RUNNER_TEMP"
+          # --old-file=doc stops install rebuilding the documentation the tarball ships, which
+          # needs Sphinx.
+          sudo make -C "$RUNNER_TEMP/lcov-$lcov_version" --old-file=doc install
+          # Each tool must report the pinned release. That is the only proof the install worked,
+          # since lcov's Makefile can exit 0 after a partial one, and it stops another lcov earlier
+          # on PATH from measuring in its place without a word.
+          pinned=$lcov_version-$lcov_release
+          for tool in lcov geninfo genhtml; do
+            reported=$("$tool" --version)
+            echo "$reported"
+            [ "${reported##* }" = "$pinned" ] \
+              || { echo "::error::$tool on PATH reports ${reported##* }, not the pinned $pinned"; exit 1; }
+          done
           g++-15 --version | head -1
-          lcov --version
+          "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin/cmake" --version | head -1
 
       - name: Give git an identity
+        if: env.NEEDS_TESTING == 'true'
         run: |
           git config --global user.name "sequoia CI"
           git config --global user.email "ci@example.invalid"
           git config --global init.defaultBranch trunk
 
+      # The checks the Measure step relies on to catch lcov changing the measurement.
+      - name: Test the tracefile checks
+        if: env.NEEDS_TESTING == 'true'
+        run: scripts/tests/check_tracefile_selftest.sh
+
       - name: Configure and build
+        if: env.NEEDS_TESTING == 'true'
         working-directory: TestAll
         run: |
           cmake --preset gcc-env-coverage
@@ -301,14 +386,29 @@ jobs:
       # The script runs the suite through ctest itself, so there is no separate run
       # step. Utilities.cmake registers the test with --serial under CODE_COVERAGE.
       - name: Measure
+        id: measure
+        if: env.NEEDS_TESTING == 'true'
         run: ./scripts/generate_coverage_report.sh build/TestAll/gcc-env-coverage
 
       - name: Report
-        if: always()
+        if: ${{ always() && env.NEEDS_TESTING == 'true' }}
+        env:
+          MEASURE_OUTCOME: ${{ steps.measure.outcome }}
         run: |
           info=build/TestAll/gcc-env-coverage/coverage.info
           [ -f "$info" ] || { echo "::error::no tracefile at $info"; exit 1; }
-          summary=$(lcov --summary "$info" 2>&1 | grep -E 'lines|functions' || true)
+          # Read with generate_coverage_report.sh's read_options, which the script explains. A
+          # tracefile lcov refuses fails the job, since the tracefile is what the job publishes.
+          if ! lcov_output=$(lcov --summary "$info" --rc check_data_consistency=0 --rc derive_function_end_line=0 2>&1); then
+            echo "::error::lcov refused $info"
+            echo "$lcov_output"
+            exit 1
+          fi
+          if ! summary=$(grep -E '^ *(lines|functions)\.' <<< "$lcov_output"); then
+            echo "::error::lcov's summary of $info has no lines or functions figure"
+            echo "$lcov_output"
+            exit 1
+          fi
           echo "$summary"
           {
             echo "### Coverage"
@@ -316,10 +416,14 @@ jobs:
             echo "$summary"
             echo '```'
             echo "_Reported only. No threshold is applied yet._"
+            # The step runs even when Measure fails, so the figures say whether they were checked.
+            if [ "$MEASURE_OUTCOME" != success ]; then
+              echo "**The Measure step failed ($MEASURE_OUTCOME): these figures are unchecked.**"
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload the tracefile and the report
-        if: always()
+        if: ${{ always() && env.NEEDS_TESTING == 'true' }}
         uses: actions/upload-artifact@v7
         with:
           name: coverage
@@ -421,14 +525,15 @@ jobs:
   # job's result is read from `needs`, which reports `skipped` where the tick shows
   # green. In the false-negative control the columns must have FAILED.
   #
-  # On a promotion PR it also insists that every job of this run is a required
-  # check on main. Auto-merge waits on required checks only, so a column that is
-  # not required gates nothing, however red - and a column renamed in this file
-  # but not in the protection rule leaves a promotion waiting for a check that
-  # will never report.
+  # Main requires this job and none of the others, so a job missing from this
+  # job's `needs` would gate nothing, however red. The second step fails if any
+  # other job is missing. In the false-negative control this job passes on red
+  # columns, so it takes another name there: under main's required name it would
+  # satisfy main's rule for the commit it ran on, a promotion PR's head if the
+  # control was dispatched on staging.
   audit:
-    name: Every job ran as this run's mode requires
-    needs: [staging, rigorous, docs, coverage, promote]
+    name: ${{ inputs.false_negative == true && 'Every column failed, as the false-negative control requires' || 'Every job ran as this run''s mode requires' }}
+    needs: [staging, scope, rigorous, docs, coverage, promote]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -438,8 +543,6 @@ jobs:
       EVENT: ${{ github.event_name }}
       AHEAD: ${{ needs.staging.outputs.ahead }}
       RESULTS: ${{ toJSON(needs) }}
-      PR: ${{ github.event.pull_request.number }}
-      HEAD_SHA: ${{ github.event.pull_request.head.sha }}
       FALSE_NEGATIVE: ${{ inputs.false_negative == true }}
     steps:
       - name: Check each job's result against the mode
@@ -449,7 +552,9 @@ jobs:
           jq -r 'to_entries[] | "  \(.key): \(.value.result)"' <<<"$RESULTS"
 
           failed=0
+          expected=()
           expect() {
+            expected+=("$1")
             actual=$(jq -r --arg j "$1" '.[$j].result' <<<"$RESULTS")
             if [ "$actual" = "$2" ]; then
               echo "ok    $1: $actual"
@@ -458,6 +563,7 @@ jobs:
             fi
           }
           if [ "$EVENT" = schedule ]; then expect staging success; else expect staging skipped; fi
+          expect scope success
           case "$mode" in
             gate)
               if [ "$FALSE_NEGATIVE" = true ]; then expect rigorous failure; else expect rigorous success; fi
@@ -470,33 +576,28 @@ jobs:
               expect docs skipped
               expect coverage skipped;;
           esac
+
+          unexpected=$(comm -23 <(jq -r 'keys[]' <<<"$RESULTS" | sort) <(printf '%s\n' "${expected[@]}" | sort))
+          if [ -n "$unexpected" ]; then
+            echo "::error::no result is expected in $mode mode of: $unexpected"; failed=1
+          fi
           exit $failed
 
-      - name: On a promotion PR, insist every job of this run is a required check
-        if: ${{ github.event_name == 'pull_request' }}
+      - name: Insist this job needs every other job of the workflow
         run: |
-          # A run whose head is no longer the PR's head has been superseded; the PR's
-          # required checks now belong to another commit, and this run gates nothing.
-          # Needed as well as cancel-in-progress, for the seconds before the
-          # cancellation lands and for a push matched by paths-ignore, which moves
-          # the head without starting a run - in which case nothing else will point
-          # at the PR now waiting on checks that never report (roadmap item 145).
-          current_head=$(gh pr view "$PR" --json headRefOid --jq .headRefOid)
-          if [ "$current_head" != "$HEAD_SHA" ]; then
-            echo "::warning::superseded: the PR's head is now $current_head, this run tested $HEAD_SHA. If no run appears for the new head, the PR is waiting on checks that will never report - see roadmap item 145."
-            exit 0
-          fi
-          # Only the jobs that ran: staging and promote are skipped on a PR by design.
-          gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --paginate \
-              --jq '.jobs[] | select(.conclusion != "skipped") | .name' \
-            | sort > jobs.txt
-          gh pr checks "$PR" --required --json name --jq '.[].name' | sort > required.txt
-          echo "jobs in this run:"; sed 's/^/  /' jobs.txt
-          echo "required on the base branch:"; sed 's/^/  /' required.txt
-          missing=$(comm -23 jobs.txt required.txt)
-          if [ -n "$missing" ]; then
-            echo "::error::these jobs run on every promotion but gate nothing, because main does not require them:"
-            echo "$missing" | sed 's/^/  /'
+          # The workflow file is fetched at GITHUB_WORKFLOW_SHA, the commit this run
+          # read it from. Its jobs and this job's `needs` are compared both ways, so
+          # that a file read wrongly - no jobs, or the wrong ones - fails the step.
+          set -o pipefail
+          workflow=${GITHUB_WORKFLOW_REF#"$GITHUB_REPOSITORY/"}
+          workflow=${workflow%%@*}
+          gh api -H 'Accept: application/vnd.github.raw' "repos/$GH_REPO/contents/$workflow?ref=$GITHUB_WORKFLOW_SHA" \
+            | yq -r '.jobs | keys | .[]' | grep -vxF "$GITHUB_JOB" | sort > jobs.txt
+          jq -r 'keys[]' <<<"$RESULTS" | sort > needed.txt
+          echo "jobs of $workflow but this one:"; sed 's/^/  /' jobs.txt
+          echo "jobs this one needs:"; sed 's/^/  /' needed.txt
+          if ! diff -u needed.txt jobs.txt; then
+            echo "::error::$GITHUB_JOB must need every other job of $workflow: a job it does not need gates nothing, however red"
             exit 1
           fi
-          echo "every job of this run is required on the base branch"
+          echo "$GITHUB_JOB needs every other job of $workflow"

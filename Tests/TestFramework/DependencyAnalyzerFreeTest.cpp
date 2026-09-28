@@ -121,7 +121,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path dependency_analyzer_free_test::source_file()
+  fs::path dependency_analyzer_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -136,7 +136,7 @@ namespace sequoia::testing
     std::ranges::sort(passes);
 
     const auto prune{projPaths.prune()};
-    const auto failureFile{prune.failures(std::nullopt)};
+    const auto failureFile{prune.to_rerun(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
     write_tests(projPaths, failureFile, failures);
     write_tests(projPaths, passesFile, passes);
@@ -906,7 +906,7 @@ namespace sequoia::testing
                                                        const project_paths& projPaths,
                                                        const prune_records& records)
   {
-    const auto file{projPaths.prune().failures(std::nullopt)};
+    const auto file{projPaths.prune().to_rerun(std::nullopt)};
     write_tests(projPaths, file, records);
     check(equality, description, read_tests(file), records);
     fs::remove(file);
@@ -952,7 +952,7 @@ namespace sequoia::testing
                      projPaths,
                      {{"HouseAllocationTest.cpp", prune_record::stamp_type{}}});
 
-    const auto file{projPaths.prune().failures(std::nullopt)};
+    const auto file{projPaths.prune().to_rerun(std::nullopt)};
 
     {
       const transient_file noTrailingNewline{file, "path: HouseAllocationTest.cpp\ntimestamp: 0"};
@@ -988,7 +988,7 @@ namespace sequoia::testing
     const auto updateTime{m_ResetTime};
     const auto lateUpdateTime{m_ResetTime + std::chrono::seconds{1}};
     const auto prune{projPaths.prune()};
-    const auto failureFile{prune.failures(std::nullopt)};
+    const auto failureFile{prune.to_rerun(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
 
     using prune_graph = transition_checker<test_outcomes>::transition_graph;
@@ -1004,7 +1004,7 @@ namespace sequoia::testing
     };
 
     auto update_filtered{
-      [&](const test_outcomes& d, test_list executed, test_list failures, std::filesystem::file_time_type targetTime) {
+      [&](const test_outcomes& d, test_list executed, test_list failures, fs::file_time_type targetTime) {
         write_or_remove(projPaths, failureFile, passesFile, d);
 
         update_prune_files(projPaths, std::move(executed), std::move(failures), targetTime, std::nullopt);
@@ -1187,7 +1187,7 @@ namespace sequoia::testing
     const auto updateTime{m_ResetTime};
     const auto lateUpdateTime{m_ResetTime + std::chrono::seconds{1}};
     const auto prune{projPaths.prune()};
-    const auto failureFile{prune.failures(std::nullopt)};
+    const auto failureFile{prune.to_rerun(std::nullopt)};
     const auto passesFile{prune.selected_passes(std::nullopt)};
 
     fs::remove_all(prune.dir());
@@ -1214,7 +1214,7 @@ namespace sequoia::testing
     };
 
     auto update_filtered{
-      [&](const test_outcomes& d, test_list executed, multi_test_list failures, std::filesystem::file_time_type targetTime) -> test_outcomes {
+      [&](const test_outcomes& d, test_list executed, multi_test_list failures, fs::file_time_type targetTime) -> test_outcomes {
 
         setup_instability_analysis_prune_folder(projPaths);
 

@@ -20,7 +20,6 @@
 #include <format>
 #include <fstream>
 #include <numeric>
-#include <stdexcept>
 #include <thread>
 
 namespace sequoia::testing
@@ -76,7 +75,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string run_cmd()
     {
-      std::filesystem::path exe{std::filesystem::path{"."} / "TestAll"};
+      fs::path exe{fs::path{"."} / "TestAll"};
       if constexpr(with_windows_v) exe.replace_extension("exe");
 
       return exe.make_preferred().string();
@@ -86,21 +85,21 @@ namespace sequoia::testing
     std::string create_cmd()
     {
       return run_cmd().append(" create free_test Utilities.hpp"
-        " create free_test \"Utilities/UsefulThings.hpp\" gen-source utils"
+        " create free_test \"Utilities/UsefulThings.hpp\" --gen-source utils"
         " create free_test \"Source/generatedProject/Stuff/Bar.hpp\""
         " create free \"Unstable/Flipper.hpp\""
-        " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\" gen-source Maybe"
+        " create regular_test \"other::functional::maybe<class T>\" \"std::optional<T>\" --gen-source Maybe"
         " create regular_test \"stuff::oldschool\" double --header \"NoTemplate.hpp\""
-        " create regular \"maths::probability\" double gen-source Maths"
+        " create regular \"maths::probability\" double --gen-source Maths"
         " create move_only_test \"bar::baz::foo<maths::floating_point T>\" T"
-        " create move_only \"stuff::unique_thing\" double gen-source Utilities/Thing"
+        " create move_only \"stuff::unique_thing\" double --gen-source Utilities/Thing"
         " create regular_allocation_test container"
         " create move_only_allocation_test house"
         " create performance_test Container.hpp");
     }
   }
 
-  cmd_builder::cmd_builder(const std::filesystem::path& projRoot, const build_paths& applicationBuildPaths)
+  cmd_builder::cmd_builder(const fs::path& projRoot, const build_paths& applicationBuildPaths)
     : m_Main{projRoot / main_paths::default_main_cpp_from_root()}
     , m_Build{make_new_build_paths(projRoot, applicationBuildPaths)}
   {}
@@ -112,7 +111,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  return_code cmd_builder::run_nested(std::string_view options, const std::filesystem::path& outputFile) const
+  return_code cmd_builder::run_nested(std::string_view options, const fs::path& outputFile) const
   {
     auto cmd{run_cmd()};
     if(!options.empty()) cmd.append(" ").append(options);
@@ -122,7 +121,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  return_code cmd_builder::create_build_run(const std::filesystem::path& creationOutput, std::string_view buildOutput, const std::filesystem::path& output) const
+  return_code cmd_builder::create_build_run(const fs::path& creationOutput, std::string_view buildOutput, const fs::path& output) const
   {   
     invoke(
          cd_cmd(get_build_paths().executable_dir())
@@ -156,7 +155,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  return_code cmd_builder::rebuild_run(const std::filesystem::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const
+  return_code cmd_builder::rebuild_run(const fs::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const
   {
     invoke(
          cd_cmd(get_main_paths().dir())
@@ -168,7 +167,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  return_code cmd_builder::run_executable(const std::filesystem::path& outputDir, std::string_view options) const
+  return_code cmd_builder::run_executable(const fs::path& outputDir, std::string_view options) const
   {
     if(!fs::exists(outputDir))
       fs::create_directory(outputDir);
@@ -177,13 +176,13 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path test_runner_end_to_end_test::source_file()
+  fs::path test_runner_end_to_end_test::source_file()
   {
     return std::source_location::current().file_name();
   }
 
   [[nodiscard]]
-  std::filesystem::path test_runner_end_to_end_test::generated_project() const
+  fs::path test_runner_end_to_end_test::generated_project() const
   {
     return working_materials().parent_path() /= "GeneratedProject";
   }
@@ -201,7 +200,7 @@ namespace sequoia::testing
     await_timestamp_tick(generated_project().parent_path());
   }
 
-  void test_runner_end_to_end_test::copy_aux_materials(const std::filesystem::path& relativeFrom, const std::filesystem::path& relativeTo) const
+  void test_runner_end_to_end_test::copy_aux_materials(const fs::path& relativeFrom, const fs::path& relativeTo) const
   {
     const auto absoluteFrom{auxiliary_materials() /= relativeFrom};
     const auto absoluteTo{generated_project() / relativeTo};
@@ -474,6 +473,12 @@ namespace sequoia::testing
 
     run_and_check(report("Run in sandbox mode with an explicit selection"), b, "SelectRunLocateInstabilitySandbox",
       "locate 2 --sandbox select FlipperFreeTest.cpp", return_code::soft_failures);
+
+    //=================== Rerun with the unstable test and the performance tests excluded, in sandbox mode ===================//
+    // --> The exclusions reach the sandboxed repetitions, so nothing is unstable and no performance test runs
+
+    run_and_check(report("Run in sandbox mode with exclusions"), b, "ExcludeRunLocateInstabilitySandbox",
+      "locate 2 --sandbox exclude FlipperFreeTest.cpp --exclude-performance", return_code::soft_failures);
 
     //=================== Rerun and do a dump ===================//
 

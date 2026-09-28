@@ -27,6 +27,6 @@ failing_test:
 
 -----------Post-Run Failures-----------
 	Prune information not written:
-	Unable to read the prune records in /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/output/Prune/CMade/CMade.failures: Expected a line beginning 'path: ' but found 'garbage'
+	Unable to read the prune records in /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/output/Prune/CMade/CMade.rerun: Expected a line beginning 'path: ' but found 'garbage'
 	Try deleting the parent directory and starting afresh
 

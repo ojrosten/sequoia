@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.31)
+cmake_minimum_required(VERSION 4.2)
 
 include(${CMAKE_CURRENT_LIST_DIR}/../../build_system/Utilities.cmake)
 
@@ -17,6 +17,7 @@ set(SourceList
     TestFramework/Commands.cpp
     TestFramework/ConcreteTypeCheckers.cpp
     TestFramework/DependencyAnalyzer.cpp
+    TestFramework/DumpComparison.cpp
     TestFramework/FailureInfo.cpp
     TestFramework/FileEditors.cpp
     TestFramework/FileSystemUtilities.cpp

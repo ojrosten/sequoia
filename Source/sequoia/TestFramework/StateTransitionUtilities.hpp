@@ -12,7 +12,7 @@
  */
 
 #include "sequoia/Core/Meta/Concepts.hpp"
-#include "sequoia/Core/Object/CopyableFunction.hpp"
+#include "sequoia/Core/Functional/ErasedFunction.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 #include "sequoia/TestFramework/CoreInfrastructure.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
@@ -43,9 +43,10 @@ namespace sequoia::testing
   class object_generator
   {
   public:
-    template<std::invocable Fn>
-      requires std::convertible_to<std::invoke_result_t<Fn>, T>
-    constexpr object_generator(Fn f) : m_Fn{std::move(f)}
+    template<class Fn>
+      requires std::invocable<const Fn&> && std::convertible_to<std::invoke_result_t<const Fn&>, T>
+    constexpr object_generator(Fn f)
+      : m_Fn{std::move(f)}
     {}
 
     constexpr object_generator(T t)
@@ -71,7 +72,7 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr decltype(auto) operator()() const { return m_Fn(); }
   private:
-    object::copyable_function<T() const> m_Fn;
+    erased_function<T() const> m_Fn;
   };
 
   template<class T, check_ordering CheckOrdering=check_ordering{deep_totally_ordered<T>}>
@@ -79,7 +80,8 @@ namespace sequoia::testing
   {
   public:
     using transition_graph
-      = maths::directed_graph<transition_info<T, object::copyable_function<T(const T&) const>, CheckOrdering>, object_generator<T>>;
+      = maths::directed_graph<transition_info<T, erased_function<T(const T&) const>, CheckOrdering>,
+                              object_generator<T>>;
 
     using size_type = transition_graph::size_type;
 

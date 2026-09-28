@@ -238,14 +238,17 @@ int main(int argc, char** argv)
     runner.register_test<vector_nonlinear_representations_free_test>();
     runner.register_test<arithmetic_casts_free_test>();
     runner.register_test<build_artefacts_free_test>();
+    runner.register_test<dump_comparison_free_test>();
+    runner.register_test<erased_function_regular_test>();
+    runner.register_test<erased_function_false_negative_test>();
+    runner.register_test<reset_on_move_regular_test>();
+    runner.register_test<reset_on_move_false_negative_test>();
     runner.register_test<state_transition_utilities_free_test>();
-    runner.register_test<copyable_function_free_test>();
-
     code = runner.execute(timer_resolution{1ms});
   }
   catch(const std::exception& e)
   {
-    std::cout << e.what();
+    std::cout << e.what() << '\n';
   }
   catch(...)
   {

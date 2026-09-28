@@ -28,7 +28,7 @@ Attempt to rebase non-empty path from empty path
 
 Expected Exception Type:
 [std::runtime_error]
-Tring to rebase from an empty path
+Trying to rebase from an empty path
 
 =======================================
 
@@ -43,6 +43,15 @@ Path comprises nothing but ../
 
 Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 56
 Attempt to rebase ../../
+
+Expected Exception Type:
+[std::runtime_error]
+Path comprises nothing but ../
+
+=======================================
+
+Tests/TestFramework/FileSystemUtilitiesFreeTest.cpp, Line 59
+Attempt to rebase ..
 
 Expected Exception Type:
 [std::runtime_error]

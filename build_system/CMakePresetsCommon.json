@@ -1,8 +1,8 @@
 ﻿{
   "version": 10,
     "cmakeMinimumRequired": {
-    "major": 3,
-    "minor": 31,
+    "major": 4,
+    "minor": 2,
     "patch": 0
   },
   "configurePresets": [
@@ -565,11 +565,11 @@
     {
       "name": "msvc",
       "displayName": "Visual Studio",
-      "description": "Configure for ${displayName}. The compiler probes run without MSBuild's file tracker, which cannot write past MAX_PATH: see UntrackedTryCompiles.cmake.",
+      "description": "Configure for ${displayName}",
       "generator": "Visual Studio 18 2026",
       "inherits": ["base-binary"],
       "cacheVariables": {
-        "CMAKE_PROJECT_INCLUDE_BEFORE": "${fileDir}/UntrackedTryCompiles.cmake",
+        "CMAKE_PROJECT_INCLUDE_BEFORE": "${fileDir}/ShortObjectPaths.cmake;${fileDir}/UntrackedTryCompiles.cmake",
         "CMAKE_PROJECT_INCLUDE": "${fileDir}/TrackedBuild.cmake"
       },
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
@@ -604,7 +604,8 @@
       "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "cl",
-        "CMAKE_CXX_COMPILER": "cl"
+        "CMAKE_CXX_COMPILER": "cl",
+        "CMAKE_PROJECT_INCLUDE_BEFORE": "${fileDir}/ShortObjectPaths.cmake"
       },
       "warnings": {
         "unusedCli": false

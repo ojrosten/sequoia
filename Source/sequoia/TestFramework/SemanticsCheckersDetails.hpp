@@ -66,7 +66,6 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 
-#include <compare>
 #include <format>
 #include <optional>
 

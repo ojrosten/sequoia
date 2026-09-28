@@ -1,5 +1,6 @@
 # Included at the start of project() under the Visual Studio generator, through
-# CMAKE_PROJECT_INCLUDE_BEFORE in the presets; TrackedBuild.cmake undoes it at the end.
+# CMAKE_PROJECT_INCLUDE_BEFORE in the presets; TrackedBuild.cmake replaces the CMAKE_VS_GLOBALS this
+# file sets at the end.
 #
 # MSBuild's FileTracker writes a log per tool run beneath the try-compile's scratch
 # directory - CMakeFiles/CMakeScratch/TryCompile-xxxxxx/cmTC_xxxxx.dir/Debug/cmTC_xxxxx.tlog/,

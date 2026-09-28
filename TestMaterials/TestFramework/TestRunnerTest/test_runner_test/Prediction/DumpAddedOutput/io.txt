@@ -1,0 +1,38 @@
+
+Running tests, synchronously...
+
+failing_test:
+[Execution Time: 94.9us]
+	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 98
+	Standard Failure
+
+	[int]
+	operator== returned false
+	Obtained : 43
+	Predicted: 42
+
+	=======================================
+
+fake_performance_test:
+[Execution Time: 50.5us]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+passing_test:
+[Execution Time: 47.1us]
+	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+
+-----------Grand Totals-----------
+[Total Run Time: 628us]
+[Execution Time: 193us]
+	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 3]
+	Standard Performance Checks:               0;  Failures:  0
+	False Positive Checks:                     0;  Failures:  0
+	False Positive Performance Checks:         0;  Failures:  0
+	False Negative Checks:                     0;  Failures:  0
+	False Negative Performance Checks:         0;  Failures:  0
+
+Dump compared with 'before': 0 checks missing, 1 check added
+
+Added:
+  Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 331: Performance

@@ -13,6 +13,7 @@
 #include <complex>
 #include <map>
 #include <set>
+#include <utility>
 #include <vector>
 
 namespace sequoia::testing
@@ -20,6 +21,30 @@ namespace sequoia::testing
   namespace
   {
     struct foo { int x{}; };
+
+    struct throwing_move_construction
+    {
+      throwing_move_construction() = default;
+      throwing_move_construction(const throwing_move_construction&) = default;
+      throwing_move_construction(throwing_move_construction&&) noexcept(false) {}
+      throwing_move_construction& operator=(const throwing_move_construction&) = default;
+      throwing_move_construction& operator=(throwing_move_construction&&) noexcept { return *this; }
+    };
+
+    struct throwing_copy_assignment
+    {
+      throwing_copy_assignment() = default;
+      throwing_copy_assignment(const throwing_copy_assignment&) = default;
+      throwing_copy_assignment(throwing_copy_assignment&&) noexcept = default;
+      throwing_copy_assignment& operator=(const throwing_copy_assignment&) noexcept(false) { return *this; }
+      throwing_copy_assignment& operator=(throwing_copy_assignment&&) noexcept = default;
+    };
+
+    /** Whether the trait agrees with the standard library's own `noexcept` on `std::exchange`. */
+    template<class T, class U>
+    constexpr bool agrees_with_library_v{
+      is_nothrow_exchangeable_v<T, U> == noexcept(std::exchange(std::declval<T&>(), std::declval<U>()))
+    };
   }
   
   [[nodiscard]]
@@ -35,6 +60,7 @@ namespace sequoia::testing
     test_is_const_reference();
     test_is_tuple();
     test_is_initializable();
+    test_is_nothrow_exchangeable();
     test_has_allocator_type();
     test_is_compatible();
     test_are_same();
@@ -316,6 +342,21 @@ namespace sequoia::testing
         return true;
       }()
     );
+  }
+
+  void type_traits_test::test_is_nothrow_exchangeable()
+  {
+    STATIC_CHECK(is_nothrow_exchangeable_v<int, int>);
+    STATIC_CHECK(std::is_same_v<is_nothrow_exchangeable_t<int, const int&>, std::true_type>);
+    STATIC_CHECK(!is_nothrow_exchangeable_v<throwing_move_construction, throwing_move_construction>);
+    STATIC_CHECK(is_nothrow_exchangeable_v<throwing_copy_assignment, throwing_copy_assignment>);
+    STATIC_CHECK(!is_nothrow_exchangeable_v<throwing_copy_assignment, const throwing_copy_assignment&>);
+
+    STATIC_CHECK(   agrees_with_library_v<int, int>
+                 && agrees_with_library_v<int, const int&>
+                 && agrees_with_library_v<throwing_move_construction, throwing_move_construction>
+                 && agrees_with_library_v<throwing_copy_assignment, throwing_copy_assignment>
+                 && agrees_with_library_v<throwing_copy_assignment, const throwing_copy_assignment&>);
   }
 
   void type_traits_test::test_is_tuple()

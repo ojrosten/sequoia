@@ -11,7 +11,6 @@
 
 #include <format>
 #include <ranges>
-#include <stdexcept>
 
 namespace sequoia::testing
 {
@@ -63,5 +62,15 @@ namespace sequoia::testing
     if(generator->starts_with("Ninja"))         return cmake_generator_family::ninja;
 
     return cmake_generator_family::other;
+  }
+
+  [[nodiscard]]
+  std::filesystem::path cmake_cache::source_dir() const
+  {
+    const auto dir{variable("CMAKE_HOME_DIRECTORY")};
+    if(!dir || dir->empty())
+      throw std::runtime_error{"cmake_cache: the cache does not record CMAKE_HOME_DIRECTORY"};
+
+    return *dir;
   }
 }

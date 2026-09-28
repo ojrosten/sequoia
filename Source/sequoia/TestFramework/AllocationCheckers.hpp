@@ -424,20 +424,20 @@ namespace sequoia::testing
   class allocation_info : public allocation_info_base<T, Getter>
   {
   private:
-    using base_t = allocation_info_base<T, Getter>;
+    using base_type = allocation_info_base<T, Getter>;
   public:
     using value_type             = T;
-    using allocator_type         = base_t::allocator_type;
+    using allocator_type         = base_type::allocator_type;
     using predictions_type       = type_to_allocation_predictions_t<T>;
     using inner_predictions_type = type_to_inner_allocation_predictions_t<T>;
 
     constexpr allocation_info(Getter allocGetter, const predictions_type& predictions)
-      : base_t{std::move(allocGetter)}
+      : base_type{std::move(allocGetter)}
       , m_Predictions{prediction_shifter{}(predictions)}
     {}
 
     constexpr allocation_info(Getter allocGetter, const inner_predictions_type& predictions)
-      : base_t{std::move(allocGetter)}
+      : base_type{std::move(allocGetter)}
       , m_Predictions{prediction_shifter{}(predictions)}
     {}
 
@@ -502,10 +502,10 @@ namespace sequoia::testing
     : public allocation_info_base<T, Getter>
   {
   private:
-    using base_t = allocation_info_base<T, Getter>;
+    using base_type = allocation_info_base<T, Getter>;
   public:
     using value_type             = T;
-    using allocator_type         = base_t::allocator_type;
+    using allocator_type         = base_type::allocator_type;
     using predictions_type       = type_to_allocation_predictions_t<T>;
     using inner_predictions_type = type_to_inner_allocation_predictions_t<T>;
 
@@ -515,7 +515,7 @@ namespace sequoia::testing
     constexpr allocation_info(Getter allocGetter,
                               predictions_type predictions,
                               std::initializer_list<inner_predictions_type> innerPredictions)
-      : base_t{std::move(allocGetter)}
+      : base_type{std::move(allocGetter)}
       , m_Predictions{predictions}
       , m_InnerPredictions{utilities::to_array<inner_predictions_type, size-1>(innerPredictions)}
     {}

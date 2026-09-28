@@ -13,6 +13,8 @@
 
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
 
+#include <ranges>
+
 namespace sequoia::maths
 {
   template
@@ -371,4 +373,26 @@ namespace sequoia::maths
 
   template<std::input_or_output_iterator Iterator, class Adaptor>
   using forest_iterator = utilities::iterator<Iterator, forest_dereference_policy<Iterator, Adaptor>>;
+
+  /** \brief The subtrees beneath a node, one per edge, each as an adaptor of the tree. */
+  template<dynamic_tree T>
+  [[nodiscard]]
+  auto forest_beneath(const T& tree, typename T::size_type node)
+  {
+    using iterator = forest_from_tree_iterator<typename T::const_edge_iterator, const_tree_adaptor<T>>;
+
+    const auto edges{tree.cedges(node)};
+    return std::ranges::subrange{iterator{edges.begin(), tree}, iterator{edges.end(), tree}};
+  }
+
+  /** \brief A forest's trees, each as an adaptor. */
+  template<std::ranges::input_range Trees>
+    requires dynamic_tree<std::ranges::range_value_t<Trees>>
+  [[nodiscard]]
+  auto forest_of(const Trees& trees)
+  {
+    using iterator = forest_iterator<std::ranges::iterator_t<const Trees>, const_tree_adaptor<std::ranges::range_value_t<Trees>>>;
+
+    return std::ranges::subrange{iterator{std::ranges::begin(trees)}, iterator{std::ranges::end(trees)}};
+  }
 }
