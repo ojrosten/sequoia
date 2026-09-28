@@ -503,9 +503,9 @@ namespace sequoia::testing
     // differs per compiler in the *undiscriminated* output files, which are supposed
     // to be byte-identical everywhere. 42 shared baselines diverged on nothing else.
     //
-    // gcc is expected to use clang's form, both being Itanium ABI, but that is
-    // unverified: gcc 16 cannot yet build a modules tree. If it turns out to spell it
-    // some third way, this is where that goes.
+    // gcc's demangler uses clang's form, both being Itanium ABI: its linker diagnostics
+    // name `swap@mg(...)`. Not yet seen in this runner's output, since gcc cannot yet
+    // build this tree.
     //
     // Each form is removed only on its own compiler's path. gcc's demangler spells a
     // floating-point literal as its bit pattern in brackets, `(float)[40490fdb]`, and

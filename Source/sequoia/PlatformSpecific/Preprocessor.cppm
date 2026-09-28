@@ -19,6 +19,9 @@ module;
   #include <yvals.h>
 #endif
 
+// Likewise __cpp_lib_parallel_algorithm, tested below: on the trunk it arrives with <execution>.
+#include <version>
+
 export module sequoia.platform_specific:Preprocessor;
 
 import std;

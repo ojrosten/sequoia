@@ -11,9 +11,6 @@ import std;
 
 /** @file */
 
-#ifndef __cpp_pack_indexing
-#endif
-
 export namespace sequoia
 {
   namespace impl

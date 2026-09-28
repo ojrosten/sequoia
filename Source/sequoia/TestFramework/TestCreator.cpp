@@ -187,7 +187,7 @@ namespace sequoia::testing
       }
     }
 
-    constexpr std::array<std::string_view, 10> types{"std::size_t", "std::size_t", "std::uint8_t", "std::uint16_t", "std::uint32_t", "std::uint64_t", "std::int8_t", "std::int16_t", "std::int32_t", "std::int64_t"};
+    constexpr std::array<std::string_view, 10> types{"std::size_t", "size_t", "uint8_t", "uint16_t", "uint32_t", "uint64_t", "int8_t", "int16_t", "int32_t", "int64_t"};
     for(auto t : types)
     {
       if(type == t) return false;
