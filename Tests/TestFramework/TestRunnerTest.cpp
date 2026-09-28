@@ -1617,7 +1617,7 @@ namespace sequoia::testing
   }
 
   /** As `test_materials_update`, for a test whose materials are discriminated: the declared
-      configuration is staged and updated, and the other one is left alone.
+      configuration is prepared and updated, and the other one is left alone.
    */
   void test_runner_test::test_discriminated_materials_update()
   {

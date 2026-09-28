@@ -35,14 +35,15 @@ namespace sequoia::testing
       root; predictions are not part of a test's execution context, so `prediction()` is a path
       beneath the original root.
 
-      A test whose committed materials vary with the configuration declares a materials
-      discriminator. Its committed materials then sit one level down, beneath the test's own
+      A test whose original materials vary with the configuration declares a materials
+      discriminator. Its original materials then sit one level down, beneath the test's own
       directory in a directory named by the discriminator, and only that directory is the
       original root, so a run can neither read nor update another configuration's. Whether the
-      discriminator names a directory at all is for staging to judge: an empty one, say, is kept
-      here as it is given and refused there. The temporary root takes no such level: it is wiped
-      on every staging, and within one build tree holds one configuration's materials at a time -
-      though two build trees run at once share it (roadmap item 224).
+      discriminator names a directory at all is judged when the materials are prepared: an empty
+      one, say, is kept here as it is given and refused then. The temporary root takes no such
+      level: it is wiped each time the materials are prepared, and within one build tree holds one
+      configuration's materials at a time - though two build trees run at once share it (roadmap
+      item 224).
 
       Every path is returned whether or not anything is there; which of them exist is for the
       caller to ask. A default-constructed instance names no test: its two roots are empty, and
