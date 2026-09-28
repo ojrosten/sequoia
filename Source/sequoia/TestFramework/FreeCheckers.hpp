@@ -379,13 +379,13 @@ namespace sequoia::testing
   >
     requires supports_iterator_range_check<CheckType, Mode, Iter, PredictionIter, Advisor>
   constexpr bool check(CheckType flavour,
-             std::string description,
-             test_logger<Mode>& logger,
-             Iter first,
-             Sentinel last,
-             PredictionIter predictionFirst,
-             PredictionSentinel predictionLast,
-             tutor<Advisor> advisor = {})
+                       std::string description,
+                       test_logger<Mode>& logger,
+                       Iter first,
+                       Sentinel last,
+                       PredictionIter predictionFirst,
+                       PredictionSentinel predictionLast,
+                       tutor<Advisor> advisor = {})
   {
     auto info{
       [&description]() -> std::string&& {
@@ -425,11 +425,11 @@ namespace sequoia::testing
   template<class Compare, test_mode Mode, class T, class Advisor=null_advisor>
     requires potential_comparator_for<Compare, Mode, T, Advisor>
   constexpr bool check(Compare compare,
-             std::string description,
-             test_logger<Mode>& logger,
-             const T& obtained,
-             const T& prediction,
-             tutor<Advisor> advisor={})
+                       std::string description,
+                       test_logger<Mode>& logger,
+                       const T& obtained,
+                       const T& prediction,
+                       tutor<Advisor> advisor={})
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description))};
 
@@ -506,11 +506,11 @@ namespace sequoia::testing
   template<test_mode Mode, class T, class Advisor=null_advisor>
     requires supports_equality_check<Mode, T, Advisor>
   constexpr bool check(equality_check_t,
-             std::string description,
-             test_logger<Mode>& logger,
-             const T& obtained,
-             const T& prediction,
-             tutor<Advisor> advisor={})
+                       std::string description,
+                       test_logger<Mode>& logger,
+                       const T& obtained,
+                       const T& prediction,
+                       tutor<Advisor> advisor={})
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description))};
 
@@ -545,11 +545,11 @@ namespace sequoia::testing
   template<test_mode Mode, class T, class Advisor=null_advisor>
     requires supports_simple_equality_check<Mode, T, Advisor>
   constexpr bool check(simple_equality_check_t,
-             std::string description,
-             test_logger<Mode>& logger,
-             const T& obtained,
-             const T& prediction,
-             tutor<Advisor> advisor={})
+                       std::string description,
+                       test_logger<Mode>& logger,
+                       const T& obtained,
+                       const T& prediction,
+                       tutor<Advisor> advisor={})
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(std::move(description))};
 
@@ -642,11 +642,11 @@ namespace sequoia::testing
   template<minimal_reporting_permitted MinimalReporting, test_mode Mode, class T, class U, class Advisor=null_advisor>
     requires supports_best_available_check<MinimalReporting, Mode, T, U, Advisor>
   constexpr bool check(with_best_available_check_t<MinimalReporting>,
-             std::string description,
-             test_logger<Mode>& logger,
-             const T& obtained,
-             const U& prediction,
-             tutor<Advisor> advisor={})
+                       std::string description,
+                       test_logger<Mode>& logger,
+                       const T& obtained,
+                       const U& prediction,
+                       tutor<Advisor> advisor={})
   {
     if constexpr(tests_against_with_or_without_tutor<with_best_available_check_t<MinimalReporting>, Mode, T, U, tutor<Advisor>>)
     {
@@ -833,13 +833,13 @@ namespace sequoia::testing
     >
       requires supports_iterator_range_check<Compare, Mode, Iter, PredictionIter, Advisor>
     constexpr bool check(this Self& self,
-               Compare compare,
-               const reporter& description,
-               Iter first,
-               Sentinel last,
-               PredictionIter predictionFirst,
-               PredictionSentinel predictionLast,
-               tutor<Advisor> advisor={})
+                         Compare compare,
+                         const reporter& description,
+                         Iter first,
+                         Sentinel last,
+                         PredictionIter predictionFirst,
+                         PredictionSentinel predictionLast,
+                         tutor<Advisor> advisor={})
     {
       return testing::check(std::move(compare), self.report(description), self.m_Logger, first, last, predictionFirst, predictionLast, std::move(advisor));
     }

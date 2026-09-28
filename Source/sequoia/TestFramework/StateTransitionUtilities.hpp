@@ -14,8 +14,8 @@
 #include "sequoia/Core/Meta/Concepts.hpp"
 #include "sequoia/Core/Functional/ErasedFunction.hpp"
 #include "sequoia/Maths/Graph/DynamicGraph.hpp"
-#include "sequoia/TestFramework/CoreInfrastructure.hpp"
 #include "sequoia/Maths/Graph/GraphTraversalFunctions.hpp"
+#include "sequoia/TestFramework/CoreInfrastructure.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
 namespace sequoia::testing

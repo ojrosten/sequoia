@@ -43,7 +43,7 @@ namespace sequoia::testing
         if constexpr(std::integral<T> && !std::is_same_v<T, bool>)
         {
           std::array<char, std::numeric_limits<T>::digits10 + 3> buffer{};
-          const auto [end, ec]{std::to_chars(buffer.data(), buffer.data() + buffer.size(), val)};
+          const auto end{std::to_chars(buffer.data(), buffer.data() + buffer.size(), val).ptr};
           return std::string{buffer.data(), end};
         }
         else if constexpr(std::is_same_v<T, bool>)

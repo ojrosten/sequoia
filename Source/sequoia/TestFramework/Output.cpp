@@ -699,8 +699,6 @@ namespace sequoia::testing
     }
   }
 
-
-
   [[nodiscard]]
   std::string emphasise(std::string_view s)
   {

@@ -18,9 +18,9 @@ namespace sequoia::testing
     template<test_mode Mode>
     constexpr void walk_doubles(test_logger<Mode>& logger)
     {
-      using checker = transition_checker<double, check_ordering::no>;
-      using graph_t = checker::transition_graph;
-      using edge_t  = graph_t::edge_type;
+      using transition_checker_t = transition_checker<double, check_ordering::no>;
+      using graph_t              = transition_checker_t::transition_graph;
+      using edge_t               = graph_t::edge_type;
 
       // Captured by the transitions and by a generator, so that the walk exercises what a
       // function pointer could not carry into a constant evaluation
@@ -44,7 +44,7 @@ namespace sequoia::testing
         }
       };
 
-      checker::check("Doubles", g, checkerFn);
+      transition_checker_t::check("Doubles", g, checkerFn);
     }
   }
 

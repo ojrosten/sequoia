@@ -12,7 +12,9 @@
  */
 
 #include <algorithm>
+#include <cstddef>
 #include <span>
+#include <utility>
 #include <vector>
 
 namespace sequoia::data_structures

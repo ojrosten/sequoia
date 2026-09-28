@@ -86,7 +86,7 @@ namespace sequoia
       {}
 
       constexpr bucketed_sequence(std::initializer_list<std::initializer_list<T>> list,
-                       const allocator_type& allocator = allocator_type{})
+                                  const allocator_type& allocator = allocator_type{})
         : m_Buckets(allocator)
       {
         m_Buckets.reserve(list.size());
@@ -138,7 +138,7 @@ namespace sequoia
         std::ranges::swap(m_Buckets, other.m_Buckets);
       }
 
-      constexpr friend void swap(bucketed_sequence& lhs, bucketed_sequence& rhs)
+      friend constexpr void swap(bucketed_sequence& lhs, bucketed_sequence& rhs)
         noexcept(noexcept(lhs.swap(rhs)))
       {
         lhs.swap(rhs);

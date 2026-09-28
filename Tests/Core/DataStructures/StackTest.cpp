@@ -20,10 +20,10 @@ namespace sequoia::testing
     template<test_mode Mode>
     constexpr void walk_stack(test_logger<Mode>& logger)
     {
-      using stack_t = stack<int>;
-      using checker = transition_checker<stack_t, check_ordering::no>;
-      using graph_t = checker::transition_graph;
-      using edge_t  = graph_t::edge_type;
+      using stack_t              = stack<int>;
+      using transition_checker_t = transition_checker<stack_t, check_ordering::no>;
+      using graph_t              = transition_checker_t::transition_graph;
+      using edge_t               = graph_t::edge_type;
 
       enum node { empty, one, one_two, one_three };
 
@@ -50,7 +50,7 @@ namespace sequoia::testing
         }
       };
 
-      checker::check("Stack transitions", g, checkerFn);
+      transition_checker_t::check("Stack transitions", g, checkerFn);
     }
   }
 

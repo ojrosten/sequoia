@@ -11,6 +11,8 @@
     \brief A stack which may be used in a constant evaluation, standing in for std::stack.
  */
 
+#include <cstddef>
+#include <utility>
 #include <vector>
 
 namespace sequoia::data_structures
