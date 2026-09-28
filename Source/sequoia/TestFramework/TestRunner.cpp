@@ -241,7 +241,7 @@ namespace sequoia::testing
     }
 
     /** A test with a materials discriminator reads only the directory its discriminator names, so
-        materials left beside the configurations' directories - committed before the discriminator
+        materials left beside the configurations' directories - written before the discriminator
         was declared, say - would be ignored without a word.
      */
     void throw_if_materials_beside_configurations(const individual_materials_paths& materials)
