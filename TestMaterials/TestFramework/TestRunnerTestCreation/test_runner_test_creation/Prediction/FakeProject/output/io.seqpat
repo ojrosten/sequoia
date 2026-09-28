@@ -7,5 +7,6 @@ CMake Warning \(experimental\) at .*\n  CMake's support for `import std;` in C\+
 -- Performing .*\n
 -- Found Threads: .*\n
 \d+\.\d+s
-(?= to: ).*
+(?= to: ).*(?=build/TestSandbox/)
+[^/\n]+(?=\n$)
 Preset((.|\n|)*?)(?=--)

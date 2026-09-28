@@ -54,7 +54,7 @@ namespace sequoia::testing
       using regular_test::regular_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<foo_test>();
       }
@@ -71,7 +71,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<passing_test>();
       }
@@ -88,7 +88,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<failing_test>("Failing");
       }
@@ -105,7 +105,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<throwing_test>();
       }
@@ -122,7 +122,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<platform_specific_throwing_test>();
       }
@@ -145,7 +145,7 @@ namespace sequoia::testing
       using free_false_negative_test::free_false_negative_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<failing_fp_test>("Failing");
       }
@@ -162,7 +162,7 @@ namespace sequoia::testing
       using free_false_positive_test::free_false_positive_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<failing_fn_test>("Failing");
       }
@@ -186,7 +186,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<flipper_free_test>();
       }
@@ -211,7 +211,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<periodic_free_test>();
       }
@@ -228,7 +228,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<multi_periodic_free_test>();
       }
@@ -246,7 +246,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<failing_plus_instabilities_free_test>();
       }
@@ -265,7 +265,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<consistently_failing_free_test>();
       }
@@ -286,7 +286,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<consistently_passing_free_test>();
       }
@@ -303,7 +303,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<another_consistently_passing_free_test>();
       }
@@ -320,7 +320,7 @@ namespace sequoia::testing
       using performance_test::performance_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<fake_performance_test>();
       }
@@ -337,7 +337,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<critical_free_test>();
       }
@@ -358,7 +358,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<namesake_test>("Namesakes");
       }
@@ -375,7 +375,7 @@ namespace sequoia::testing
       using free_test::free_test;
 
       [[nodiscard]]
-      static std::filesystem::path source_file()
+      static fs::path source_file()
       {
         return make_fake_file_path<under_namesake_test>("Namesakes/namesake_test");
       }
@@ -385,6 +385,25 @@ namespace sequoia::testing
         check(equality, reporter{"Under the namesake"}, 42, 42);
       }
     };
+
+    namespace another_namespace
+    {
+      /// Holds a `foo_test` of its own. `test_name` strips the qualification from both, and a
+      /// test's name is the leaf of its materials path, so the runner must admit only one.
+      class foo_test final : public free_test
+      {
+      public:
+        using free_test::free_test;
+
+        [[nodiscard]]
+        static fs::path source_file()
+        {
+          return make_fake_file_path<foo_test>();
+        }
+
+        void run_tests() {}
+      };
+    }
 
     test_runner make_failing_suite(commandline_arguments args, std::stringstream& outputStream)
     {
@@ -404,7 +423,7 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  std::filesystem::path test_runner_test::source_file()
+  fs::path test_runner_test::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -434,7 +453,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path test_runner_test::fake_project() const
+  fs::path test_runner_test::fake_project() const
   {
     return auxiliary_materials() /= "FakeProject";
   }
@@ -555,6 +574,24 @@ namespace sequoia::testing
 
         runner.register_test<foo_test>();
         runner.register_test<foo_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"Two tests whose unqualified names coincide"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<foo_test>();
+        runner.register_test<another_namespace::foo_test>();
       });
 
     check_exception_thrown<std::runtime_error>(
@@ -1021,7 +1058,7 @@ namespace sequoia::testing
     // A run with no selection is full: it stamps, and whatever it left out is recorded for the
     // next run, since that test's status is unknown
     auto run{
-      [this](std::string_view description, std::initializer_list<std::string> extraArgs, std::vector<std::filesystem::path> toRerun) {
+      [this](std::string_view description, std::initializer_list<std::string> extraArgs, std::vector<fs::path> toRerun) {
         fs::remove_all(output_paths{fake_project()}.dir());
 
         std::vector<std::string> argList{minimal_fake_path().generic_string()};

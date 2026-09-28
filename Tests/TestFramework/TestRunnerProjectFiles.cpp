@@ -23,13 +23,13 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path test_runner_project_files::source_file()
+  fs::path test_runner_project_files::source_file()
   {
     return std::source_location::current().file_name();
   }
 
   [[nodiscard]]
-  std::filesystem::path test_runner_project_files::generated_project() const
+  fs::path test_runner_project_files::generated_project() const
   {
     return working_materials().parent_path() /= "GeneratedProject";
   }
@@ -111,7 +111,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::vector<std::filesystem::path> test_runner_project_files::predicted_presets() const
+  std::vector<fs::path> test_runner_project_files::predicted_presets() const
   {
     std::vector<fs::path> presets{};
     for(const auto& entry : fs::directory_iterator{predictive_materials() /= projectFiles})

@@ -53,7 +53,7 @@ namespace sequoia::testing
     STATIC_CHECK(can_subtract<vec_t, delta_t>);
     STATIC_CHECK(has_unary_plus<vec_t>);
     STATIC_CHECK(has_unary_minus<vec_t>);
-    STATIC_CHECK(vec_t::has_freely_mutable_components);
+    STATIC_CHECK(vec_t::has_freely_mutable_components_v);
 
     coordinates_operations<vec_t>{*this}.execute();
        

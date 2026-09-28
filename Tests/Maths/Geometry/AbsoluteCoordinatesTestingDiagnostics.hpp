@@ -11,11 +11,6 @@
 
 #include "GeometryTestingUtilities.hpp"
 
-#include "sequoia/PlatformSpecific/Macros.hpp"
-
-import std;
-import sequoia.platform_specific;
-
 namespace sequoia::testing
 {
   class absolute_coordinates_false_negative_test final : public regular_false_negative_test
@@ -27,12 +22,6 @@ namespace sequoia::testing
     static std::filesystem::path source_file();
 
     void run_tests();
-
-    [[nodiscard]]
-    static std::string output_discriminator(const cmake_cache&)
-    {
-      return compiler_name();
-    }
   private:
     template<std::floating_point T, std::size_t D>
     void test_absolute();

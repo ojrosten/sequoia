@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 45
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 47
 Empty string
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Equivalent type is unspecified
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 46
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 48
 Just spaces
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Equivalent type is unspecified
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 77
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 79
 A directory which does not exist
 
 Expected Exception Type:
@@ -29,7 +29,7 @@ to be appropriately set.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 82
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 84
 A directory whose name is not an identifier
 
 Expected Exception Type:
@@ -39,7 +39,7 @@ permissible namespace name. Please supply `source_folder` in the project_paths c
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 87
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 89
 A directory whose name begins with a digit
 
 Expected Exception Type:
@@ -49,7 +49,7 @@ permissible namespace name. Please supply `source_folder` in the project_paths c
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 95
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 97
 Unmatched <
 
 Expected Exception Type:
@@ -58,7 +58,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 97
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 99
 Backwards delimiters
 
 Expected Exception Type:
@@ -67,7 +67,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 99
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 101
 Missing symbol
 
 Expected Exception Type:
@@ -76,7 +76,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 101
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 103
 Missing symbol
 
 Expected Exception Type:
@@ -85,7 +85,47 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 206
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 279
+Source directory absent
+
+Expected Exception Type:
+[std::runtime_error]
+CMake not run: the build tree was configured from output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Auxiliary/FakeProject/Absent,
+which is not a directory within this project, output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Auxiliary/FakeProject
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 282
+Source directory outside the project
+
+Expected Exception Type:
+[std::runtime_error]
+CMake not run: the build tree was configured from output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Auxiliary,
+which is not a directory within this project, output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Auxiliary/FakeProject
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 279
+Source directory absent
+
+Expected Exception Type:
+[std::runtime_error]
+CMake not run: the build tree was configured from output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Auxiliary/AnotherFakeProject/Absent,
+which is not a directory within this project, output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Auxiliary/AnotherFakeProject
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 282
+Source directory outside the project
+
+Expected Exception Type:
+[std::runtime_error]
+CMake not run: the build tree was configured from output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Auxiliary,
+which is not a directory within this project, output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Auxiliary/AnotherFakeProject
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 308
 Plurgh.h does not exist
 
 Expected Exception Type:
@@ -95,7 +135,7 @@ Unable to locate file Plurgh.h or Plurgh.hpp or Plurgh.hxx in the source reposit
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 215
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 317
 Typo in specified class header
 
 Expected Exception Type:

@@ -305,10 +305,11 @@ export namespace sequoia::testing
     // Spelt with an empty body rather than `= default` to work around a g++ 15.2
     // modules bug: the defaulted default constructor of this module-attached class is
     // emitted in no translation unit, so suite_node's constructor in TestRunner.cppm
-    // fails to link with `undefined reference to log_summary::log_summary()`. See
-    // gcc-bugs/F in the sequoia-LLM repository. Fixed upstream in gcc 15.3 - the
-    // narrowest of these five - so restore `log_summary() = default;` once 15.3 is
-    // the minimum gcc.
+    // fails to link with `undefined reference to log_summary::log_summary()`. Fixed
+    // upstream in gcc 15.3 - the narrowest of these five - on the gcc-15 branch between
+    // releases: the 15.2.0 release tarball fails, and a later snapshot of that branch,
+    // which still calls itself 15.2.0, links, so the version string does not settle it.
+    // Restore `log_summary() = default;` once 15.3 is the minimum gcc.
     log_summary() {}
 
     explicit log_summary(std::string_view name);

@@ -61,14 +61,14 @@ namespace sequoia::testing
   >
   void test_graph_update::execute_operations()
   {
-    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>;
+    using graph_t = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>;
     if constexpr(std::is_same_v<EdgeWeight, std::vector<double>>)
     {
-      test_bf_update<graph_type>();
+      test_bf_update<graph_t>();
     }
     else
     {
-      test_update<graph_type>();
+      test_update<graph_t>();
     }
   }
 

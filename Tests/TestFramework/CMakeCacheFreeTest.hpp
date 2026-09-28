@@ -33,6 +33,8 @@ namespace sequoia::testing
 
     void test_generator_families();
 
+    void test_source_dirs();
+
     [[nodiscard]]
     build_paths tree(std::string_view name) const;
   };

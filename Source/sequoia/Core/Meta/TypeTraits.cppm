@@ -99,6 +99,19 @@ export namespace sequoia
   template<class T, class... Args>
   inline constexpr bool is_initializable_v{is_initializable<T, Args...>::value};
 
+  /** \brief Determines whether `std::exchange(t, u)` cannot throw, for `t` a `T&` and `u` a `U` */
+  template<class T, class U>
+  struct is_nothrow_exchangeable
+    : std::bool_constant<std::is_nothrow_move_constructible_v<T> && std::is_nothrow_assignable_v<T&, U>>
+  {};
+
+  template<class T, class U>
+  using is_nothrow_exchangeable_t = is_nothrow_exchangeable<T, U>::type;
+
+  template<class T, class U>
+  inline constexpr bool is_nothrow_exchangeable_v{is_nothrow_exchangeable<T, U>::value};
+
+
   /** \brief Class template for determining if a type defines a nested type `allocator_type` */
   template<class T>
   struct has_allocator_type : std::bool_constant< requires { typename T::allocator_type; } >
@@ -155,8 +168,8 @@ export namespace sequoia
       the index pack evaluates to `false` for `std::variant` whenever the enclosing
       variable template is instantiated across a module boundary. Hoisting it here makes
       the fold correct again. `std::tuple`, `std::pair` and `std::array` are unaffected,
-      as is the same code in a single translation unit. Reduced repro: sequoia-LLM
-      `msvc-bugs/E-module-fold-get.cpp`, MSVC 19.51.36256.
+      as is the same code in a single translation unit. Reported 2026-09-07,
+      <https://developercommunity.visualstudio.com/t/C-modules-reject-first-imported-specia/11148618>.
    */
   template<class T, std::size_t I>
   using gettable_element_t = std::remove_cvref_t<decltype(std::get<I>(std::declval<T&>()))>;

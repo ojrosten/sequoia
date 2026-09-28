@@ -1,4 +1,4 @@
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 444
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 484
 
 Expected Exception Type:
 [std::domain_error]
@@ -6,31 +6,7 @@ Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 458
-
-Expected Exception Type:
-[std::domain_error]
-Input [-1] has at least one value outside permitted domain [0, inf]
-
-=======================================
-
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 474
-
-Expected Exception Type:
-[std::domain_error]
-Input [-1] has at least one value outside permitted domain [0, inf]
-
-=======================================
-
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 488
-
-Expected Exception Type:
-[std::domain_error]
-Input [-1] has at least one value outside permitted domain [0, inf]
-
-=======================================
-
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 502
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 498
 
 Expected Exception Type:
 [std::domain_error]
@@ -46,7 +22,31 @@ Input [-1] has at least one value outside permitted domain [0, inf]
 
 =======================================
 
-Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 871
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 530
+
+Expected Exception Type:
+[std::domain_error]
+Input [-1] has at least one value outside permitted domain [0, inf]
+
+=======================================
+
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 544
+
+Expected Exception Type:
+[std::domain_error]
+Input [-1] has at least one value outside permitted domain [0, inf]
+
+=======================================
+
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 558
+
+Expected Exception Type:
+[std::domain_error]
+Input [-1] has at least one value outside permitted domain [0, inf]
+
+=======================================
+
+Tests/Maths/Geometry/GeometryTestingUtilities.hpp, Line 915
 
 Expected Exception Type:
 [std::domain_error]

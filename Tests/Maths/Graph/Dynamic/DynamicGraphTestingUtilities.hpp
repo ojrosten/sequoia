@@ -171,12 +171,12 @@ namespace sequoia::testing
   template<maths::network G>
   struct graph_initialization_checker
   {
-    using edge_type        = G::edge_init_type;
+    using edge_init_type   = G::edge_init_type;
     using node_weight_type = G::node_weight_type;
 
     template<class Test>
     [[nodiscard]]
-    static G make_and_check(Test& t, std::string_view description, std::initializer_list<std::initializer_list<edge_type>> init)
+    static G make_and_check(Test& t, std::string_view description, std::initializer_list<std::initializer_list<edge_init_type>> init)
     {
       G g{init};
       t.check(equivalence, description, g, init);
@@ -185,7 +185,7 @@ namespace sequoia::testing
 
     template<class Test>
     [[nodiscard]]
-    static G make_and_check(Test& t, std::string_view description, std::initializer_list<std::initializer_list<edge_type>> edgeInit, std::initializer_list<node_weight_type> nodeInit)
+    static G make_and_check(Test& t, std::string_view description, std::initializer_list<std::initializer_list<edge_init_type>> edgeInit, std::initializer_list<node_weight_type> nodeInit)
     {
       G g{edgeInit, nodeInit};
       t.check(equivalence, description, g, std::pair{edgeInit, nodeInit});

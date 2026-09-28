@@ -30,7 +30,7 @@ namespace sequoia::testing
   template<bool PropagateMove, bool PropagateSwap>
   void orderable_move_only_allocation_false_positive_diagnostics::test_semantics_allocations()
   {
-    using equivalent_type = std::vector<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
+    using equivalent_t = std::vector<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
     auto mutator{[](auto& b) { b.x.shrink_to_fit(); b.x.push_back(3); }};
 
     {
@@ -57,8 +57,8 @@ namespace sequoia::testing
       check_semantics("As unique",
                       beast{},
                       beast{2},
-                      equivalent_type{},
-                      equivalent_type{2},
+                      equivalent_t{},
+                      equivalent_t{2},
                       std::weak_ordering::less,
                       mutator,
                       allocation_info{getter, {0_pm, {1_pm, 1_mu}, {1_manp}}});
@@ -86,10 +86,10 @@ namespace sequoia::testing
       check_semantics("Check moved-from state, as unique",
                       beast{1},
                       beast{2},
-                      equivalent_type{1},
-                      equivalent_type{2},
-                      equivalent_type{},
-                      equivalent_type{},
+                      equivalent_t{1},
+                      equivalent_t{2},
+                      equivalent_t{},
+                      equivalent_t{},
                       std::weak_ordering::less,
                       mutator,
                       allocation_info{allocGetter, {1_pm, {1_pm, 1_mu}, {0_manp}}});
