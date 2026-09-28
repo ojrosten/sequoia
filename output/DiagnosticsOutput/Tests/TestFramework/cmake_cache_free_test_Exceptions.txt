@@ -3,7 +3,7 @@ No cache file
 
 Expected Exception Type:
 [std::runtime_error]
-cmake_cache: no CMakeCache.txt in output/TestsTemporaryData/TestFramework/CMakeCacheFreeTest/cmake_cache_free_test/NoCache
+cmake_cache: no CMakeCache.txt in output/TestsTemporaryData/TestFramework/CMakeCacheFreeTest/cmake_cache_free_test/WorkingCopy/NoCache
 
 =======================================
 

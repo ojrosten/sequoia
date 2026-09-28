@@ -1,4 +1,49 @@
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 42
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 144
+No test: no original working copy
+
+Expected Exception Type:
+[std::logic_error]
+No materials root to hold 'WorkingCopy': these materials paths name no test
+
+=======================================
+
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 146
+No test: no temporary working copy
+
+Expected Exception Type:
+[std::logic_error]
+No materials root to hold 'WorkingCopy': these materials paths name no test
+
+=======================================
+
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 148
+No test: no predictions
+
+Expected Exception Type:
+[std::logic_error]
+No materials root to hold 'Prediction': these materials paths name no test
+
+=======================================
+
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 150
+No test: no original auxiliary
+
+Expected Exception Type:
+[std::logic_error]
+No materials root to hold 'Auxiliary': these materials paths name no test
+
+=======================================
+
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 152
+No test: no temporary auxiliary
+
+Expected Exception Type:
+[std::logic_error]
+No materials root to hold 'Auxiliary': these materials paths name no test
+
+=======================================
+
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 43
 Empty file
 
 Expected Exception Type:

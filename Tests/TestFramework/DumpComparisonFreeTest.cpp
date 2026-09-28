@@ -74,7 +74,7 @@ namespace sequoia::testing
 
   void dump_comparison_free_test::test_reading()
   {
-    const auto dump{working_materials() /= "Dump.txt"};
+    const auto dump{scratchpad_materials() /= "Dump.txt"};
     write_to_file(dump, dump_of({alpha, beta}), std::ios_base::out);
 
     check(equality, "The checks of a dump, in order, without their surrounding newlines",
@@ -87,13 +87,13 @@ namespace sequoia::testing
     check(equality, "An empty dump holds no checks", read_dump(dump), std::vector<std::string>{});
 
     check_exception_thrown<std::runtime_error>("A dump which does not exist", [this](){
-      return read_dump(working_materials() /= "Absent.txt");
+      return read_dump(scratchpad_materials() /= "Absent.txt");
     });
   }
 
   void dump_comparison_free_test::test_comparison()
   {
-    const auto baseline{working_materials() /= "Baseline.txt"}, dump{working_materials() /= "Dump.txt"};
+    const auto baseline{scratchpad_materials() /= "Baseline.txt"}, dump{scratchpad_materials() /= "Dump.txt"};
 
     auto compare{
       [&](std::string_view description,

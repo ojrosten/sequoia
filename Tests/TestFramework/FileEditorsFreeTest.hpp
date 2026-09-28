@@ -26,5 +26,11 @@ namespace sequoia::testing
     void test_add_include_without_an_existing_block();
     void test_add_include_to_an_existing_block();
     void test_comparison_of_file_contents();
+    void test_empty_lines_of_a_seqpat();
+    void test_trailing_spaces_of_a_seqpat_pattern();
+    void test_refused_lines_of_a_seqpat();
+
+    [[nodiscard]]
+    bool compares_equivalent(std::string_view working, std::string_view prediction) const;
   };
 }
