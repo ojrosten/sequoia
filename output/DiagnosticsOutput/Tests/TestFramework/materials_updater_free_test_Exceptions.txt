@@ -1,13 +1,4 @@
-Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 26
-Empty 'to' path
-
-Expected Exception Type:
-[std::runtime_error]
-File path is empty
-
-=======================================
-
-Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 27
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 76
 Empty 'from' path
 
 Expected Exception Type:
@@ -16,21 +7,48 @@ File path is empty
 
 =======================================
 
-Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 36
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 77
+Empty 'to' path
+
+Expected Exception Type:
+[std::runtime_error]
+File path is empty
+
+=======================================
+
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 83
 'to' path exists but is not a directory
 
 Expected Exception Type:
-[std::filesystem::filesystem_error]
+[std::runtime_error]
+output/TestsTemporaryData/TestFramework/MaterialsUpdaterFreeTest/materials_updater_free_test/NotADirectory.txt is not a directory
+
+=======================================
+
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 87
+'from' path exists but is not a directory
+
+Expected Exception Type:
+[std::runtime_error]
+output/TestsTemporaryData/TestFramework/MaterialsUpdaterFreeTest/materials_updater_free_test/NotADirectory.txt is not a directory
+
+=======================================
+
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 178
+A regular file in 'from' where 'to' holds a directory
+
+Expected Exception Type:
+[sequoia::testing::incomplete_update]
 [Message elided: it varies by standard library]
 
 =======================================
 
-Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 41
-'from' path exists but is not a directory
+Tests/TestFramework/MaterialsUpdaterFreeTest.cpp, Line 209
+An entry in both that is neither a regular file nor a directory
 
 Expected Exception Type:
-[std::filesystem::filesystem_error]
-[Message elided: it varies by standard library]
+[sequoia::testing::incomplete_update]
+'output/TestsTemporaryData/TestFramework/MaterialsUpdaterFreeTest/materials_updater_free_test/UnsupportedType/From/Dangling' is of type 'not found': only regular files and directories can be updated
 
 =======================================
 
