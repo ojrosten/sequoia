@@ -854,7 +854,7 @@ namespace sequoia::testing
 
   void aggregate_instability_analysis_prune_files(const project_paths& projPaths,
                                                   prune_mode mode,
-                                                  std::filesystem::file_time_type timeStamp,
+                                                  fs::file_time_type timeStamp,
                                                   std::size_t numReps)
   {
     const auto prunePaths{projPaths.prune()};

@@ -115,14 +115,14 @@ namespace sequoia
         constexpr static graph_flavour flavour{GraphFlavour};
         constexpr static edge_sharing_preference sharing_preference{EdgeStorageConfig::edge_sharing};
 
-        constexpr static bool default_weight_sharing{
+        constexpr static bool default_weight_sharing_v{
               !is_directed(GraphFlavour)
            && (big_weight<EdgeWeight>() || !std::is_copy_constructible_v<EdgeWeight>)
         };
 
         constexpr static bool shared_weight_v{
               (sharing_preference == edge_sharing_preference::shared_weight)
-          || ((sharing_preference == edge_sharing_preference::agnostic) && default_weight_sharing)
+          || ((sharing_preference == edge_sharing_preference::agnostic) && default_weight_sharing_v)
         };
 
         static_assert(!shared_weight_v || (GraphFlavour != graph_flavour::directed));

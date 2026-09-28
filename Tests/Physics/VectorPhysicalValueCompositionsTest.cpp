@@ -33,49 +33,49 @@ namespace sequoia::testing
   {
     using quantity_t = Quantity;
     using delta_q_t  = quantity_t::displacement_type;
-    using value_type = quantity_t::value_type;
-    using units_type = quantity_t::units_type;
+    using value_t    = quantity_t::value_type;
+    using units_t    = quantity_t::units_type;
 
-    if constexpr(has_default_space_v<dual_of_t<units_type>, value_type>)
+    if constexpr(has_default_space_v<dual_of_t<units_t>, value_t>)
     {
       check(
         equality,
         "",
-        physical_value{value_type{2.0}, units_type{} * units_type{}},
-        quantity_t{value_type{2.0}, units_type{}} * quantity_t{value_type{1.0}, units_type{}}
+        physical_value{value_t{2.0}, units_t{} * units_t{}},
+        quantity_t{value_t{2.0}, units_t{}} * quantity_t{value_t{1.0}, units_t{}}
       );
 
       check(
         equality,
         "",
-        physical_value{value_type{2.0}, units_type{} * units_type{}},
-        quantity_t{value_type{1.0}, units_type{}} * quantity_t{value_type{2.0}, units_type{}}
+        physical_value{value_t{2.0}, units_t{} * units_t{}},
+        quantity_t{value_t{1.0}, units_t{}} * quantity_t{value_t{2.0}, units_t{}}
       );
 
-      using inv_quantity_t = quantity<dual<units_type>, value_type>;
+      using inv_quantity_t = quantity<dual<units_t>, value_t>;
       coordinates_operations<inv_quantity_t>{*this}.execute();      
 
-      using euc_vec_space_qty  = euclidean_1d_vector_quantity<value_type>;
-      check(equality, "", quantity_t{-2.0, units_type{}} / quantity_t{1.0, units_type{}}, euc_vec_space_qty{value_type(-2.0), no_unit}); 
-      check(equality, "", quantity_t{-2.0, units_type{}} / delta_q_t{1.0, units_type{}},  euc_vec_space_qty{value_type(-2.0), no_unit});
-      check(equality, "", delta_q_t{2.0, units_type{}}  / quantity_t{-1.0, units_type{}}, euc_vec_space_qty{value_type(-2.0)});
+      using euc_vec_space_qty  = euclidean_1d_vector_quantity<value_t>;
+      check(equality, "", quantity_t{-2.0, units_t{}} / quantity_t{1.0, units_t{}}, euc_vec_space_qty{value_t(-2.0), no_unit}); 
+      check(equality, "", quantity_t{-2.0, units_t{}} / delta_q_t{1.0, units_t{}},  euc_vec_space_qty{value_t(-2.0), no_unit});
+      check(equality, "", delta_q_t{2.0, units_t{}}  / quantity_t{-1.0, units_t{}}, euc_vec_space_qty{value_t(-2.0)});
 
-      check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}  /  quantity_t{2.0, units_type{}}) / quantity_t{2.0, units_type{}},   euc_vec_space_qty{3.0, no_unit});
-      check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) / (quantity_t{2.0, units_type{}}  * quantity_t{2.0, units_type{}}),  euc_vec_space_qty{3.0, no_unit});
-      check(equality, "",  quantity_t{4.0, units_type{}} * (quantity_t{3.0, units_type{}}  / (quantity_t{2.0, units_type{}}  * quantity_t{2.0, units_type{}})), euc_vec_space_qty{3.0, no_unit});
+      check(equality, "", (quantity_t{4.0, units_t{}} *  quantity_t{3.0, units_t{}}  /  quantity_t{2.0, units_t{}}) / quantity_t{2.0, units_t{}},   euc_vec_space_qty{3.0, no_unit});
+      check(equality, "", (quantity_t{4.0, units_t{}} *  quantity_t{3.0, units_t{}}) / (quantity_t{2.0, units_t{}}  * quantity_t{2.0, units_t{}}),  euc_vec_space_qty{3.0, no_unit});
+      check(equality, "",  quantity_t{4.0, units_t{}} * (quantity_t{3.0, units_t{}}  / (quantity_t{2.0, units_t{}}  * quantity_t{2.0, units_t{}})), euc_vec_space_qty{3.0, no_unit});
 
-      check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}  /  delta_q_t{2.0, units_type{}})  / delta_q_t{-2.0, units_type{}},   euc_vec_space_qty{-3.0, no_unit});
-      check(equality, "", (quantity_t{4.0, units_type{}} *  quantity_t{3.0, units_type{}}) / (delta_q_t{2.0, units_type{}}   * delta_q_t{-2.0, units_type{}}),  euc_vec_space_qty{-3.0, no_unit});
-      check(equality, "",  quantity_t{4.0, units_type{}} * (quantity_t{3.0, units_type{}}  / (delta_q_t{2.0, units_type{}}   * delta_q_t{-2.0, units_type{}})), euc_vec_space_qty{-3.0, no_unit});
+      check(equality, "", (quantity_t{4.0, units_t{}} *  quantity_t{3.0, units_t{}}  /  delta_q_t{2.0, units_t{}})  / delta_q_t{-2.0, units_t{}},   euc_vec_space_qty{-3.0, no_unit});
+      check(equality, "", (quantity_t{4.0, units_t{}} *  quantity_t{3.0, units_t{}}) / (delta_q_t{2.0, units_t{}}   * delta_q_t{-2.0, units_t{}}),  euc_vec_space_qty{-3.0, no_unit});
+      check(equality, "",  quantity_t{4.0, units_t{}} * (quantity_t{3.0, units_t{}}  / (delta_q_t{2.0, units_t{}}   * delta_q_t{-2.0, units_t{}})), euc_vec_space_qty{-3.0, no_unit});
 
-      check(equality, "", (delta_q_t{4.0, units_type{}} *  delta_q_t{-3.0, units_type{}}  /  quantity_t{2.0, units_type{}})  / quantity_t{2.0, units_type{}},   euc_vec_space_qty{-3.0, no_unit});
-      check(equality, "", (delta_q_t{4.0, units_type{}} *  delta_q_t{-3.0, units_type{}}) / (quantity_t{2.0, units_type{}}   * quantity_t{2.0, units_type{}}),  euc_vec_space_qty{-3.0, no_unit});
-      check(equality, "",  delta_q_t{4.0, units_type{}} * (delta_q_t{-3.0, units_type{}}  / (quantity_t{2.0, units_type{}}   * quantity_t{2.0, units_type{}})), euc_vec_space_qty{-3.0, no_unit});
+      check(equality, "", (delta_q_t{4.0, units_t{}} *  delta_q_t{-3.0, units_t{}}  /  quantity_t{2.0, units_t{}})  / quantity_t{2.0, units_t{}},   euc_vec_space_qty{-3.0, no_unit});
+      check(equality, "", (delta_q_t{4.0, units_t{}} *  delta_q_t{-3.0, units_t{}}) / (quantity_t{2.0, units_t{}}   * quantity_t{2.0, units_t{}}),  euc_vec_space_qty{-3.0, no_unit});
+      check(equality, "",  delta_q_t{4.0, units_t{}} * (delta_q_t{-3.0, units_t{}}  / (quantity_t{2.0, units_t{}}   * quantity_t{2.0, units_t{}})), euc_vec_space_qty{-3.0, no_unit});
 
-      check(equality, "", 1.0f / (1.0f / quantity_t{2.0, units_type{}}), quantity_t{2.0, units_type{}});
-      check(equality, "", quantity_t{2.0, units_type{}} /(1.0f / quantity_t{2.0, units_type{}}), quantity_t{2.0, units_type{}} * quantity_t{2.0, units_type{}});
+      check(equality, "", 1.0f / (1.0f / quantity_t{2.0, units_t{}}), quantity_t{2.0, units_t{}});
+      check(equality, "", quantity_t{2.0, units_t{}} /(1.0f / quantity_t{2.0, units_t{}}), quantity_t{2.0, units_t{}} * quantity_t{2.0, units_t{}});
 
-      check(equality, "", 4.0f / inv_quantity_t{2.0f, dual<units_type>{}}, quantity_t{2.0, units_type{}});
+      check(equality, "", 4.0f / inv_quantity_t{2.0f, dual<units_t>{}}, quantity_t{2.0, units_t{}});
     }
   }
 }

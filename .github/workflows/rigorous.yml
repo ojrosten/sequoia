@@ -305,20 +305,26 @@ jobs:
             sleep $((attempt * 15))
           done
           sudo apt-get update -qq
-          for pkg in g++-15 ninja-build libtbb-dev lcov; do
+          # The Perl packages are for lcov, installed below from its release: Capture::Tiny,
+          # DateTime, Date::Parse and Devel::StackTrace, without which lcov's tools do not
+          # start, and JSON::XS, which geninfo uses in preference to the core, pure-Perl JSON::PP
+          # to read gcov's output.
+          packages=(g++-15 ninja-build libtbb-dev
+                    libcapture-tiny-perl libdatetime-perl libdevel-stacktrace-perl libjson-xs-perl libtimedate-perl)
+          for pkg in "${packages[@]}"; do
             apt-cache pkgnames | grep -qx "$pkg" \
               || { echo "::error::$pkg is not available on this image"; exit 1; }
           done
-          sudo apt-get install -y g++-15 ninja-build libtbb-dev lcov
+          sudo apt-get install -y "${packages[@]}"
           # The hosted image's CMake is below sequoia's floor of 4.2, the release that added
           # CMAKE_INTERMEDIATE_DIR_STRATEGY; the Windows presets set it in
           # build_system/ShortObjectPaths.cmake. The macOS and Windows images ship a release above
-          # the floor, so this column fetches one from Kitware - the host the checkout already
+          # the floor, so this job fetches one from Kitware - the host the checkout already
           # comes from - and puts it first on PATH. An older cmake surviving this step is loud:
-          # the configure step's cmake_minimum_required refuses it. The tarball is the only binary
-          # either job puts on PATH without apt's signatures behind it, so its checksum is pinned.
+          # the configure step's cmake_minimum_required refuses it. The tarball has no apt
+          # signature behind it, so its checksum is pinned.
           #
-          # Repeated in rigorous.yml's coverage job; change both.
+          # Repeated in tests.yml's "Install the toolchain (Linux)"; change both.
           cmake_version=4.4.3
           cmake_sha256=d6c83076c575bc00b823522ac974bda66d0af05d6ddc30e739c12385cf32c6cc
           cmake_tarball=$RUNNER_TEMP/cmake.tar.gz
@@ -328,8 +334,34 @@ jobs:
           if ! echo "$cmake_sha256  $cmake_tarball" | sha256sum --check --quiet; then echo "::error::The CMake tarball does not match its published checksum"; exit 1; fi
           tar -xzf "$cmake_tarball" -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin" >> "$GITHUB_PATH"
+          # lcov comes from its release rather than apt, so that its version does not move with
+          # ubuntu-latest: the 24.04 archive has 2.0 and the 26.04 one 2.4, and lcov 2.0 and 2.5
+          # write different function records, and count different function totals, from the same
+          # coverage data. Keep it at the version Homebrew installs, so that CI and a Mac run the
+          # same lcov. Pinned by checksum for the same reason as CMake. Each tool prints the
+          # version and, after a hyphen, the release number from the tarball's .version file.
+          lcov_version=2.5
+          lcov_release=0
+          lcov_sha256=7e5e5a154bd5f3557659c328cab376764e7abd238bb403c424472c296b175126
+          lcov_tarball=$RUNNER_TEMP/lcov.tar.gz
+          lcov_url=https://github.com/linux-test-project/lcov/releases/download/v$lcov_version/lcov-$lcov_version.tar.gz
+          if ! curl -fsSL -o "$lcov_tarball" "$lcov_url"; then echo "::error::lcov $lcov_version could not be fetched from its release page"; exit 1; fi
+          if ! echo "$lcov_sha256  $lcov_tarball" | sha256sum --check --quiet; then echo "::error::The lcov tarball does not match its published checksum"; exit 1; fi
+          tar -xzf "$lcov_tarball" -C "$RUNNER_TEMP"
+          # --old-file=doc stops install rebuilding the documentation the tarball ships, which
+          # needs Sphinx.
+          sudo make -C "$RUNNER_TEMP/lcov-$lcov_version" --old-file=doc install
+          # Each tool must report the pinned release. That is the only proof the install worked,
+          # since lcov's Makefile can exit 0 after a partial one, and it stops another lcov earlier
+          # on PATH from measuring in its place without a word.
+          pinned=$lcov_version-$lcov_release
+          for tool in lcov geninfo genhtml; do
+            reported=$("$tool" --version)
+            echo "$reported"
+            [ "${reported##* }" = "$pinned" ] \
+              || { echo "::error::$tool on PATH reports ${reported##* }, not the pinned $pinned"; exit 1; }
+          done
           g++-15 --version | head -1
-          lcov --version
           "$RUNNER_TEMP/cmake-$cmake_version-linux-x86_64/bin/cmake" --version | head -1
 
       - name: Give git an identity
@@ -338,6 +370,11 @@ jobs:
           git config --global user.name "sequoia CI"
           git config --global user.email "ci@example.invalid"
           git config --global init.defaultBranch trunk
+
+      # The checks the Measure step relies on to catch lcov changing the measurement.
+      - name: Test the tracefile checks
+        if: env.NEEDS_TESTING == 'true'
+        run: scripts/tests/check_tracefile_selftest.sh
 
       - name: Configure and build
         if: env.NEEDS_TESTING == 'true'
@@ -349,15 +386,29 @@ jobs:
       # The script runs the suite through ctest itself, so there is no separate run
       # step. Utilities.cmake registers the test with --serial under CODE_COVERAGE.
       - name: Measure
+        id: measure
         if: env.NEEDS_TESTING == 'true'
         run: ./scripts/generate_coverage_report.sh build/TestAll/gcc-env-coverage
 
       - name: Report
         if: ${{ always() && env.NEEDS_TESTING == 'true' }}
+        env:
+          MEASURE_OUTCOME: ${{ steps.measure.outcome }}
         run: |
           info=build/TestAll/gcc-env-coverage/coverage.info
           [ -f "$info" ] || { echo "::error::no tracefile at $info"; exit 1; }
-          summary=$(lcov --summary "$info" 2>&1 | grep -E 'lines|functions' || true)
+          # Read with generate_coverage_report.sh's read_options, which the script explains. A
+          # tracefile lcov refuses fails the job, since the tracefile is what the job publishes.
+          if ! lcov_output=$(lcov --summary "$info" --rc check_data_consistency=0 --rc derive_function_end_line=0 2>&1); then
+            echo "::error::lcov refused $info"
+            echo "$lcov_output"
+            exit 1
+          fi
+          if ! summary=$(grep -E '^ *(lines|functions)\.' <<< "$lcov_output"); then
+            echo "::error::lcov's summary of $info has no lines or functions figure"
+            echo "$lcov_output"
+            exit 1
+          fi
           echo "$summary"
           {
             echo "### Coverage"
@@ -365,6 +416,10 @@ jobs:
             echo "$summary"
             echo '```'
             echo "_Reported only. No threshold is applied yet._"
+            # The step runs even when Measure fails, so the figures say whether they were checked.
+            if [ "$MEASURE_OUTCOME" != success ]; then
+              echo "**The Measure step failed ($MEASURE_OUTCOME): these figures are unchecked.**"
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload the tracefile and the report

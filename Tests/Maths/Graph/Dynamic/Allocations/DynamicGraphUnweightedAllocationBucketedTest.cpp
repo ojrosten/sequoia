@@ -33,9 +33,9 @@ namespace sequoia::testing
   >
   void unweighted_graph_allocation_bucketed_test::execute_operations()
   {
-    using graph_type = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>;
+    using graph_t = graph_type_generator_t<GraphFlavour, EdgeWeight, NodeWeight, EdgeStorageConfig, NodeWeightStorage>;
     
-    bucketed_memory<graph_type>();
+    bucketed_memory<graph_t>();
   }
 
   template<maths::dynamic_network Graph>

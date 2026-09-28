@@ -17,7 +17,9 @@
 
 namespace sequoia::testing
 {
-  void add_include(const std::filesystem::path& file, std::string_view includePath)
+  namespace fs = std::filesystem;
+
+  void add_include(const fs::path& file, std::string_view includePath)
   {
     auto inserter{
       [&includePath](std::string& text) {
@@ -99,7 +101,7 @@ namespace sequoia::testing
     read_modify_write(file, inserter);
   }
 
-  void add_test_registrations(const std::filesystem::path& file, indentation indent, const std::vector<std::string>& tests)
+  void add_test_registrations(const fs::path& file, indentation indent, const std::vector<std::string>& tests)
   {
     if(tests.empty())
       throw std::logic_error{"No tests specified for registration"};
@@ -138,9 +140,9 @@ namespace sequoia::testing
     write_to_file(file, contentsStr, std::ios_base::out);
   }
 
-  void add_to_cmake(const std::filesystem::path& cmakeLists,
-                    const std::filesystem::path& hostDir,
-                    const std::filesystem::path& file,
+  void add_to_cmake(const fs::path& cmakeLists,
+                    const fs::path& hostDir,
+                    const fs::path& file,
                     std::string_view patternOpen,
                     std::string_view patternClose,
                     std::string_view cmakeEntryPrefix)
@@ -210,7 +212,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  reduced_file_contents get_reduced_file_content(const std::filesystem::path& file, const std::filesystem::path& prediction)
+  reduced_file_contents get_reduced_file_content(const fs::path& file, const fs::path& prediction)
   {
     constexpr auto binary{std::ios_base::in | std::ios_base::binary};
 
@@ -223,7 +225,6 @@ namespace sequoia::testing
 
       if(file.extension() != seqpat)
       {
-        namespace fs = std::filesystem;
         auto supplPath{[](fs::path f) { return f.replace_extension(seqpat); }(prediction)};
         if(fs::exists(supplPath))
         {

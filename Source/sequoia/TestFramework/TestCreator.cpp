@@ -7,6 +7,7 @@
 
 #include "sequoia/TestFramework/TestCreator.hpp"
 
+#include "sequoia/TestFramework/CMakeCache.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/TestRunnerUtilities.hpp"
@@ -28,7 +29,7 @@ namespace sequoia::testing
   constexpr auto npos{std::string::npos};
 
   [[nodiscard]]
-  std::string project_namespace_for(const std::filesystem::path& sourceProject)
+  std::string project_namespace_for(const fs::path& sourceProject)
   {
     if(!fs::is_directory(sourceProject))
       throw std::runtime_error{
@@ -147,6 +148,14 @@ namespace sequoia::testing
       {
         f(g(mainCpp));
       }
+    }
+
+    /** \brief Whether `dir` is `root` or lies beneath it, once symbolic links are resolved; both must exist. */
+    [[nodiscard]]
+    bool lies_within(const fs::path& dir, const fs::path& root)
+    {
+      const auto canonicalRoot{fs::canonical(root)};
+      return std::ranges::mismatch(canonicalRoot, fs::canonical(dir)).in1 == canonicalRoot.end();
     }
   }
 
@@ -275,21 +284,25 @@ namespace sequoia::testing
   {
     using namespace runtime;
 
-    auto cmake{
-      [](const main_paths& main, const build_paths& buildPaths) {
-        if(fs::exists(main.dir()) && fs::exists(buildPaths.cmake_cache_dir()))
-        {
-          const auto outputPath{buildPaths.cmake_cache_dir() / "CMakeOutput.txt"};
-          invoke(cd_cmd(main.dir()) && cmake_cmd(buildPaths, outputPath));
-          if(auto text{read_to_string(outputPath, std::ios_base::in)})
-            return text.value();            
-        }
+    const auto& build{projPaths.build()};
+    if(!fs::exists(build.cmake_cache_dir())) return {};
 
-        return std::string{};
-      }
-    };
+    // A build tree copied with its checkout still names the source directory of the original.
+    const auto sourceDir{cmake_cache{build}.source_dir()};
+    if(!fs::is_directory(sourceDir) || !lies_within(sourceDir, projPaths.project_root()))
+      throw std::runtime_error{
+              std::format("CMake not run: the build tree was configured from {},\n"
+                          "which is not a directory within this project, {}\n",
+                          sourceDir.generic_string(),
+                          projPaths.project_root().generic_string())
+            };
 
-    return cmake(projPaths.main(), projPaths.build());
+    // Removed first, so that a run which writes nothing cannot hand back the previous run's output.
+    const auto outputPath{build.cmake_cache_dir() / "CMakeOutput.txt"};
+    fs::remove(outputPath);
+    invoke(cd_cmd(sourceDir) && cmake_cmd(build, outputPath));
+
+    return read_to_string(outputPath, std::ios_base::in).value_or(std::string{});
   }
 
 
@@ -304,7 +317,7 @@ namespace sequoia::testing
   };
 
   [[nodiscard]]
-  std::filesystem::path nascent_test_base::build_source_path(const std::filesystem::path& filename) const
+  fs::path nascent_test_base::build_source_path(const fs::path& filename) const
   {
     if(filename.empty())
       throw std::runtime_error{"Header name is empty"};
@@ -316,7 +329,7 @@ namespace sequoia::testing
     {
       if(e != filename.extension())
       {
-        const auto alternative{std::filesystem::path{filename}.replace_extension(e)};
+        const auto alternative{fs::path{filename}.replace_extension(e)};
         if(const auto path{find_in_tree(m_Paths.source().repo(), alternative)}; !path.empty())
           return path;
       }
@@ -416,7 +429,7 @@ namespace sequoia::testing
     stream() << '\n';
   }
 
-  void nascent_test_base::finalize_header(const std::filesystem::path& sourcePath)
+  void nascent_test_base::finalize_header(const fs::path& sourcePath)
   {
     const auto relSourcePath{fs::relative(sourcePath, m_Paths.source().project())};
     const auto dir{(m_Paths.tests().repo() / relSourcePath).parent_path()};
@@ -443,7 +456,7 @@ namespace sequoia::testing
     throw std::runtime_error{mess};
   }
 
-  void nascent_test_base::set_cpp(const std::filesystem::path& headerPath, std::string_view nameSpace)
+  void nascent_test_base::set_cpp(const fs::path& headerPath, std::string_view nameSpace)
   {
     const auto srcPath{fs::path{headerPath}.replace_extension("cpp")};
 
@@ -545,7 +558,7 @@ namespace sequoia::testing
     if(surname().empty()) surname(to_surname(flavour()));
 
     camel_name(forename());
-    if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
+    if(header().empty()) header(fs::path{camel_name()}.concat(".hpp"));
 
     nascent_test_base::finalize([this, &nameSpace](const fs::path& filename) { return when_header_absent(filename, nameSpace); },
                                 to_stubs(*this),
@@ -555,7 +568,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path nascent_semantics_test::when_header_absent(const std::filesystem::path& filename, const std::string& nameSpace)
+  fs::path nascent_semantics_test::when_header_absent(const fs::path& filename, const std::string& nameSpace)
   {
     const auto headerTemplate{std::string{"My"}.append(capitalize(to_camel_case(test_type()))).append("Class.hpp")};
 
@@ -700,7 +713,7 @@ namespace sequoia::testing
   {
     if(surname().empty()) surname(std::string{"allocation_"}.append(to_surname(flavour())));
     camel_name(forename());
-    if(header().empty()) header(std::filesystem::path{camel_name()}.concat(".hpp"));
+    if(header().empty()) header(fs::path{camel_name()}.concat(".hpp"));
 
     nascent_test_base::finalize([](const fs::path& p) { return p; },
                                 to_stubs(*this),
@@ -757,7 +770,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path nascent_behavioural_test::when_header_absent(const std::filesystem::path& filename)
+  fs::path nascent_behavioural_test::when_header_absent(const fs::path& filename)
   {
     const auto headerPath{filename.is_absolute() ? filename : paths().source().project() / rebase_from(filename, paths().source().project())};
 

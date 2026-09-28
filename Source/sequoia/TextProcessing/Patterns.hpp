@@ -15,8 +15,12 @@
 
 namespace sequoia
 {
-  /// Searchs for matched delimiters; if found returns the positions of the
-  /// opening and one past closing.
+  /** \brief Searches `s`, from `pos`, for the first `open` and the `close` that balances it.
+      \returns
+      -# The positions of that `open` and one past its `close`;
+      -# The position of that `open` twice, if no `close` balances it;
+      -# `npos` twice, if there is no `open`.
+   */
   [[nodiscard]]
   std::pair<std::string::size_type, std::string::size_type>
   find_matched_delimiters(std::string_view s, char open, char close, std::string::size_type pos={});

@@ -215,8 +215,8 @@ namespace sequoia::testing
 
   void regular_state_transition_false_negative_diagnostics::test_broken_constructor()
   {
-    using transition_checker_type  = transition_checker<broken_constructor>;
-    using broken_constructor_graph = transition_checker_type::transition_graph;
+    using transition_checker_t     = transition_checker<broken_constructor>;
+    using broken_constructor_graph = transition_checker_t::transition_graph;
 
     auto initCheckFn{
       [this](std::string_view description, const broken_constructor& bc, int i) {

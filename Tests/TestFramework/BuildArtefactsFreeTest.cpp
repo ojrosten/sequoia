@@ -44,7 +44,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path build_artefacts_free_test::source_file()
+  fs::path build_artefacts_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }

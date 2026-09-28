@@ -24,19 +24,19 @@ namespace sequoia::maths
   >
   class static_node_storage : public node_storage_base<Weight, std::array<Weight, N>>
   {
-    using base_t = node_storage_base<Weight, std::array<Weight, N>>;
+    using base_type = node_storage_base<Weight, std::array<Weight, N>>;
   public:
-    using size_type   = base_t::size_type;
-    using weight_type = base_t::weight_type;
+    using size_type   = base_type::size_type;
+    using weight_type = base_type::weight_type;
 
     constexpr static_node_storage() = default;
 
     constexpr static_node_storage(const size_type)
-      : base_t{}
+      : base_type{}
     {}
 
     constexpr static_node_storage(std::initializer_list<weight_type> weights)
-      : base_t{utilities::to_array<weight_type, N>(weights, std::identity{})}
+      : base_type{utilities::to_array<weight_type, N>(weights, std::identity{})}
     {}
 
     constexpr static_node_storage(const static_node_storage&)                = default;

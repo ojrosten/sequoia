@@ -40,41 +40,41 @@ namespace sequoia::testing
   template<maths::dynamic_tree Tree>
   void tree_test::test_tree()
   {
-    using tree_type = Tree;
+    using tree_t = Tree;
     using initializer = tree_initializer<int>;
 
     auto initCheckFn{
-      [this](std::string_view message, const tree_type& t, initializer i) {
+      [this](std::string_view message, const tree_t& t, initializer i) {
         check(equivalence, message, t, i);
       }
     };
 
-    using transition_checker_type = transition_checker<tree_type>;
-    using tree_state_graph        = transition_checker_type::transition_graph;
-    using edge_t                  = transition_checker_type::edge;
+    using transition_checker_t = transition_checker<tree_t>;
+    using tree_state_graph     = transition_checker_t::transition_graph;
+    using edge_t               = transition_checker_t::edge;
 
     tree_state_graph g{
       {
         {
-          edge_t{1, report("Add node to empty tree"), [](tree_type t) { t.add_node(tree_type::npos, 42); return t; }}
+          edge_t{1, report("Add node to empty tree"), [](tree_t t) { t.add_node(tree_t::npos, 42); return t; }}
         }, // end node 0 edges
         {
-          edge_t{2, report("Add second node"), [](tree_type t) { t.add_node(0, -7); return t; }},
-          edge_t{3, report("Add second node"), [](tree_type t) { t.add_node(0, 6); return t; }}
+          edge_t{2, report("Add second node"), [](tree_t t) { t.add_node(0, -7); return t; }},
+          edge_t{3, report("Add second node"), [](tree_t t) { t.add_node(0, 6); return t; }}
         }, // end node 1 edges
         {
-          edge_t{4, report("Add third node"),    [](tree_type t) { t.add_node(0, 6); return t; }},
-          edge_t{1, report("Prune single node"), [](tree_type t) { t.prune(1); return t; }},
-          edge_t{0, report("Prune both nodes"),  [](tree_type t) { t.prune(0); return t; }}
+          edge_t{4, report("Add third node"),    [](tree_t t) { t.add_node(0, 6); return t; }},
+          edge_t{1, report("Prune single node"), [](tree_t t) { t.prune(1); return t; }},
+          edge_t{0, report("Prune both nodes"),  [](tree_t t) { t.prune(0); return t; }}
         }, // end node 2 edges
         {
-          edge_t{4, report("Insert node"), [](tree_type t) -> tree_type {
+          edge_t{4, report("Insert node"), [](tree_t t) -> tree_t {
               t.insert_node(1, 0, -7);
               t.sort_edges(t.cbegin_edges(0), t.cend_edges(0), [](const auto& l, const auto& r) { return l.target_node() < r.target_node(); });
               return t;
             }
           },
-          edge_t{4, report("Insert node"), [](tree_type t) -> tree_type {
+          edge_t{4, report("Insert node"), [](tree_t t) -> tree_t {
               t.insert_node(1, 0, -7);
               t.stable_sort_edges(t.cbegin_edges(0), t.cend_edges(0), [](const auto& l, const auto& r) { return l.target_node() < r.target_node(); });
               return t;
@@ -82,19 +82,19 @@ namespace sequoia::testing
           }
         }, // end node 3 edges
         {
-          edge_t{0, report("Prune three nodes"),   [](tree_type t) { t.prune(0); return t; }},
-          edge_t{2, report("Prune right node"),    [](tree_type t) { t.prune(2); return t; }},
-          edge_t{3, report("Prune left node"),     [](tree_type t) { t.prune(1); return t; }},
-          edge_t{5, report("Add to right branch"), [](tree_type t) { t.add_node(2, 3); return t; }}
+          edge_t{0, report("Prune three nodes"),   [](tree_t t) { t.prune(0); return t; }},
+          edge_t{2, report("Prune right node"),    [](tree_t t) { t.prune(2); return t; }},
+          edge_t{3, report("Prune left node"),     [](tree_t t) { t.prune(1); return t; }},
+          edge_t{5, report("Add to right branch"), [](tree_t t) { t.add_node(2, 3); return t; }}
         }, // end node 4 edges
         {
-          edge_t{0, report("Prune four nodes"),   [](tree_type t) { t.prune(0); return t; }},
-          edge_t{2, report("Prune right branch"), [](tree_type t) { t.prune(2); return t; }}
+          edge_t{0, report("Prune four nodes"),   [](tree_t t) { t.prune(0); return t; }},
+          edge_t{2, report("Prune right branch"), [](tree_t t) { t.prune(2); return t; }}
         } // end node 5 edges
       }, // end edges
       {
         // empty
-        tree_type{},
+        tree_t{},
         // 42
         {report(""), initCheckFn, initializer{42}},
         // -7
@@ -119,57 +119,57 @@ namespace sequoia::testing
     };
 
     auto checkerFn{
-        [this](std::string_view description, const tree_type& obtained, const tree_type& prediction, const tree_type& parent) {
+        [this](std::string_view description, const tree_t& obtained, const tree_t& prediction, const tree_t& parent) {
           check(equality, description, obtained, prediction);
           check_semantics(description, prediction, parent);
         }
     };
 
-    transition_checker_type::check(report(""), g, checkerFn);
+    transition_checker_t::check(report(""), g, checkerFn);
   }
 
   template<maths::dynamic_tree Tree>
   void tree_test::test_tree_unweighted_nodes()
   {
-    using tree_type   = Tree;
+    using tree_t      = Tree;
     using initializer = tree_initializer<null_weight>;
 
     auto initCheckFn{
-      [this](std::string_view message, const tree_type& t, initializer i) {
+      [this](std::string_view message, const tree_t& t, initializer i) {
         check(equivalence, message, t, i);
       }
     };
 
-    using transition_checker_type = transition_checker<tree_type>;
-    using tree_state_graph        = transition_checker_type::transition_graph;
-    using edge_t                  = transition_checker_type::edge;
+    using transition_checker_t = transition_checker<tree_t>;
+    using tree_state_graph     = transition_checker_t::transition_graph;
+    using edge_t               = transition_checker_t::edge;
 
     tree_state_graph g{
       {
         {
-          edge_t{1, report("Add node to empty tree"), [](tree_type t) { t.add_node(tree_type::npos); return t; }}
+          edge_t{1, report("Add node to empty tree"), [](tree_t t) { t.add_node(tree_t::npos); return t; }}
         }, // end node 0 edges
         {
-          edge_t{2, report("Add second node"), [](tree_type t) { t.add_node(0); return t; }},
+          edge_t{2, report("Add second node"), [](tree_t t) { t.add_node(0); return t; }},
         }, // end node 1 edges
         {
-          edge_t{3, report("Add third node"),    [](tree_type t) { t.add_node(0); return t; }},
-          edge_t{1, report("Prune single node"), [](tree_type t) { t.prune(1); return t; }},
-          edge_t{0, report("Prune both nodes"),  [](tree_type t) { t.prune(0); return t; }}
+          edge_t{3, report("Add third node"),    [](tree_t t) { t.add_node(0); return t; }},
+          edge_t{1, report("Prune single node"), [](tree_t t) { t.prune(1); return t; }},
+          edge_t{0, report("Prune both nodes"),  [](tree_t t) { t.prune(0); return t; }}
         }, // end node 2 edges
         {
-          edge_t{0, report("Prune three nodes"),   [](tree_type t) { t.prune(0); return t; }},
-          edge_t{2, report("Prune right node"),    [](tree_type t) { t.prune(2); return t; }},
-          edge_t{4, report("Add to right branch"), [](tree_type t) { t.add_node(2); return t; }}
+          edge_t{0, report("Prune three nodes"),   [](tree_t t) { t.prune(0); return t; }},
+          edge_t{2, report("Prune right node"),    [](tree_t t) { t.prune(2); return t; }},
+          edge_t{4, report("Add to right branch"), [](tree_t t) { t.add_node(2); return t; }}
         }, // end node 3 edges
         {
-          edge_t{0, report("Prune four nodes"),   [](tree_type t) { t.prune(0); return t; }},
-          edge_t{2, report("Prune right branch"), [](tree_type t) { t.prune(2); return t; }}
+          edge_t{0, report("Prune four nodes"),   [](tree_t t) { t.prune(0); return t; }},
+          edge_t{2, report("Prune right branch"), [](tree_t t) { t.prune(2); return t; }}
         } // end node 4 edges
       }, // end edges
       {
         // empty
-        tree_type{},
+        tree_t{},
         // x
         {report(""), initCheckFn, initializer{}},
         // x
@@ -190,21 +190,21 @@ namespace sequoia::testing
     };
 
     auto checkerFn{
-        [this](std::string_view description, const tree_type& obtained, const tree_type& prediction, const tree_type& parent) {
+        [this](std::string_view description, const tree_t& obtained, const tree_t& prediction, const tree_t& parent) {
           check(equality, description, obtained, prediction);
           check_semantics(description, prediction, parent);
         }
     };
 
-    transition_checker_type::check(report(""), g, checkerFn);
+    transition_checker_t::check(report(""), g, checkerFn);
   }
 
   void tree_test::test_forest_ranges()
   {
-    using tree_type = directed_tree<tree_link_direction::forward, null_weight, int>;
+    using tree_t = directed_tree<tree_link_direction::forward, null_weight, int>;
 
     // 42 with children -7 and 6, the latter with child 3
-    const tree_type tree{{42, {{-7}, {6, {{3}}}}}};
+    const tree_t tree{{42, {{-7}, {6, {{3}}}}}};
 
     auto rootWeights{
       [](const auto& forest) {
@@ -216,7 +216,7 @@ namespace sequoia::testing
     check(equality, "Subtrees beneath an inner node",  rootWeights(forest_beneath(tree, 2)), std::vector<int>{3});
     check(equality, "Subtrees beneath a leaf",         rootWeights(forest_beneath(tree, 1)), std::vector<int>{});
 
-    const std::vector<tree_type> forest{tree, tree_type{{-1}}};
+    const std::vector<tree_t> forest{tree, tree_t{{-1}}};
     check(equality, "A forest's trees, each at its root", rootWeights(forest_of(forest)), std::vector<int>{42, -1});
   }
 }

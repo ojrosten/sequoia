@@ -121,7 +121,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path dependency_analyzer_free_test::source_file()
+  fs::path dependency_analyzer_free_test::source_file()
   {
     return std::source_location::current().file_name();
   }
@@ -1004,7 +1004,7 @@ namespace sequoia::testing
     };
 
     auto update_filtered{
-      [&](const test_outcomes& d, test_list executed, test_list failures, std::filesystem::file_time_type targetTime) {
+      [&](const test_outcomes& d, test_list executed, test_list failures, fs::file_time_type targetTime) {
         write_or_remove(projPaths, failureFile, passesFile, d);
 
         update_prune_files(projPaths, std::move(executed), std::move(failures), targetTime, std::nullopt);
@@ -1214,7 +1214,7 @@ namespace sequoia::testing
     };
 
     auto update_filtered{
-      [&](const test_outcomes& d, test_list executed, multi_test_list failures, std::filesystem::file_time_type targetTime) -> test_outcomes {
+      [&](const test_outcomes& d, test_list executed, multi_test_list failures, fs::file_time_type targetTime) -> test_outcomes {
 
         setup_instability_analysis_prune_folder(projPaths);
 

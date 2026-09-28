@@ -308,8 +308,8 @@ namespace sequoia::maths::graph_impl
     [[nodiscard]]
     constexpr static bool loop_matched(Iter begin, Iter current)
     {
-      using index_type = G::edge_index_type;
-      const auto dist{static_cast<index_type>(std::ranges::distance(begin, current))};
+      using index_t = G::edge_index_type;
+      const auto dist{static_cast<index_t>(std::ranges::distance(begin, current))};
       return (current->complementary_index() < dist);
     }
   };
