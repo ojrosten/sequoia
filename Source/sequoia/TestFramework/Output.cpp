@@ -507,46 +507,46 @@ namespace sequoia::testing
     // unverified: gcc 16 cannot yet build a modules tree. If it turns out to spell it
     // some third way, this is where that goes.
     //
+    // Each form is removed only on its own compiler's path. gcc's demangler spells a
+    // floating-point literal as its bit pattern in brackets, `(float)[40490fdb]`, and
+    // one that is left as it is, such as `(float)[FFF]`, reads as MSVC's form.
+    //
     // A module name is an identifier with optional dots. Insisting that it start with
     // a letter or underscore is what leaves `char [3]` alone.
-    std::string& remove_module_spec(std::string& name)
+    [[nodiscard]]
+    bool is_module_name(std::string_view text)
     {
-      auto isModuleName{
-        [&name](size_type first, size_type last) {
-          if(first >= last) return false;
+      if(text.empty() || !(is_alpha(text.front()) || (text.front() == '_')))
+        return false;
 
-          if(const auto c{static_cast<unsigned char>(name[first])}; !(std::isalpha(c) || (c == '_')))
-            return false;
+      return std::ranges::all_of(text, [](char c){ return !is_word_delimiter(c) || (c == '.'); });
+    }
 
-          for(auto i{first + 1}; i < last; ++i)
-          {
-            const auto c{static_cast<unsigned char>(name[i])};
-            if(!(std::isalnum(c) || (c == '_') || (c == '.'))) return false;
-          }
-
-          return true;
-        }
-      };
-
+    /** Removes each `[module.name]` with which MSVC decorates a module-attached entity. */
+    std::string& remove_bracketed_module_spec(std::string& name)
+    {
       for(auto pos{name.find('[')}; pos != npos; pos = name.find('[', pos))
       {
-        if(const auto close{name.find(']', pos)}; (close != npos) && isModuleName(pos + 1, close))
+        const auto close{name.find(']', pos)};
+        if((close != npos) && is_module_name(std::string_view{name}.substr(pos + 1, close - pos - 1)))
           name.erase(pos, close + 1 - pos);
         else
           ++pos;
       }
 
+      return name;
+    }
+
+    /** Removes each `@module.name` with which the Itanium demangler decorates a module-attached entity. */
+    std::string& remove_attached_module_spec(std::string& name)
+    {
       for(auto pos{name.find('@')}; pos != npos; pos = name.find('@', pos))
       {
         auto end{pos + 1};
-        while(end < name.size())
-        {
-          const auto c{static_cast<unsigned char>(name[end])};
-          if(!(std::isalnum(c) || (c == '_') || (c == '.'))) break;
+        while((end < name.size()) && (!is_word_delimiter(name[end]) || (name[end] == '.')))
           ++end;
-        }
 
-        if(isModuleName(pos + 1, end))
+        if(is_module_name(std::string_view{name}.substr(pos + 1, end - pos - 1)))
           name.erase(pos, end - pos);
         else
           ++pos;
@@ -579,7 +579,7 @@ namespace sequoia::testing
       replace_all(name, " <{", "true",  ",>}", "1");
       replace_all(name, " <{", "false", ",>}", "0");
 
-      remove_module_spec(name);
+      remove_attached_module_spec(name);
       return remove_literal_casts(name);
     }
 
@@ -964,8 +964,8 @@ namespace sequoia::testing
     replace_all(name, ")(void)", ")()");
 
     process_array_iterators(name);
-    remove_module_spec(name);
-    // Must follow remove_module_spec, and mirrors what the clang and gcc paths do.
+    remove_bracketed_module_spec(name);
+    // Must follow remove_bracketed_module_spec, and mirrors what the clang and gcc paths do.
     // MSVC separates adjacent closing brackets with a space only when nothing else
     // is between them, so stripping `>[sequoia.test_framework]>` leaves `>>` where
     // the other compilers have `> >`. Without this the decoration is gone but the
