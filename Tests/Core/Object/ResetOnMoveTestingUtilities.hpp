@@ -9,8 +9,12 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
-#include "sequoia/Core/Object/ResetOnMove.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
+
+import std;
+import sequoia.core.object;
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {

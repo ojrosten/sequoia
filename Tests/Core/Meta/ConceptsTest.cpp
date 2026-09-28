@@ -5,6 +5,10 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+// `import std` exports no macros, so the feature-test macro this file tests comes from <version>,
+// which must precede every import.
+#include <version>
+
 #include "ConceptsTest.hpp"
 
 import std;

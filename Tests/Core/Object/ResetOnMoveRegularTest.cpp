@@ -7,8 +7,7 @@
 
 #include "ResetOnMoveRegularTest.hpp"
 
-#include <array>
-#include <compare>
+import std;
 
 namespace sequoia::testing
 {

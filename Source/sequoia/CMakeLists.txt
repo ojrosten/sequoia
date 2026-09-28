@@ -59,6 +59,8 @@ set(ModuleList
     Core/DataStructures/StaticPriorityQueue.cppm
     Core/DataStructures/StaticQueue.cppm
     Core/DataStructures/StaticStack.cppm
+    Core/Functional/ErasedFunction.cppm
+    Core/Functional/Functional.cppm
     Core/Logic/Bitmask.cppm
     Core/Logic/Logic.cppm
     Core/Meta/Concepts.cppm
@@ -75,6 +77,7 @@ set(ModuleList
     Core/Object/Handlers.cppm
     Core/Object/Nomenclator.cppm
     Core/Object/Object.cppm
+    Core/Object/ResetOnMove.cppm
     FileSystem/FileSystem.cppm
     Maths/Algebra/Algebra.cppm
     Maths/Algebra/Ratio.cppm

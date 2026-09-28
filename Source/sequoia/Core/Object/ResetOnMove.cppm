@@ -5,21 +5,21 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+module;
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+export module sequoia.core.object:ResetOnMove;
+
+import std;
+
+export import sequoia.core.meta;
 
 /** \file
     \brief A value reset when moved from.
  */
 
-#include "sequoia/Core/Meta/TypeTraits.hpp"
-#include "sequoia/PlatformSpecific/Macros.hpp"
-
-#include <compare>
-#include <concepts>
-#include <type_traits>
-#include <utility>
-
-namespace sequoia::object
+export namespace sequoia::object
 {
   /** \brief Wraps a value, defining move semantics such that the moved-from object
       takes the value `Reset`.

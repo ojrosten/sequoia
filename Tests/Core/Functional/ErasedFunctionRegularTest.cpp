@@ -7,15 +7,13 @@
 
 /** \file */
 
+// `import std` exports no macros, so the feature-test macro this file tests comes from <version>,
+// which must precede every import.
+#include <version>
+
 #include "ErasedFunctionRegularTest.hpp"
 
-#include <algorithm>
-#include <array>
-#include <memory>
-#include <optional>
-#include <stdexcept>
-#include <string>
-#include <vector>
+import std;
 
 namespace sequoia::testing
 {

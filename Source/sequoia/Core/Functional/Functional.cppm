@@ -7,11 +7,6 @@
 
 /** \file */
 
-export module sequoia.core.object;
+export module sequoia.core.functional;
 
-export import :Creator;
-export import :Factory;
-export import :HandlerTraits;
-export import :Handlers;
-export import :Nomenclator;
-export import :ResetOnMove;
+export import :ErasedFunction;

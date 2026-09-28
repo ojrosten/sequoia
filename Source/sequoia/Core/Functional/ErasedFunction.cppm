@@ -5,7 +5,16 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+module;
+
+#include "sequoia/PlatformSpecific/Macros.hpp"
+
+export module sequoia.core.functional:ErasedFunction;
+
+import std;
+
+export import sequoia.core.meta;
+export import sequoia.core.object;
 
 /** \file
     \brief A copyable, owning, type-erased callable which sits between `std::function` and
@@ -60,20 +69,7 @@
        evaluated in a constant expression by gcc with `-fsanitize=undefined` (GCC bug 71962).
  */
 
-#include "sequoia/Core/Meta/Concepts.hpp"
-#include "sequoia/Core/Meta/TypeTraits.hpp"
-#include "sequoia/Core/Object/ResetOnMove.hpp"
-#include "sequoia/PlatformSpecific/Macros.hpp"
-
-#include <cstddef>
-#include <cstring>
-#include <functional>
-#include <initializer_list>
-#include <new>
-#include <type_traits>
-#include <utility>
-
-namespace sequoia
+export namespace sequoia
 {
   namespace impl
   {

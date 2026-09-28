@@ -9,10 +9,12 @@
 
 /** \file */
 
-#include "sequoia/TestFramework/RegularTestCore.hpp"
-#include "sequoia/Core/Functional/ErasedFunction.hpp"
+#include "sequoia/PlatformSpecific/Macros.hpp"
+#include "sequoia/TestFramework/Macros.hpp"
 
-#include <optional>
+import std;
+import sequoia.core.functional;
+import sequoia.test_framework;
 
 namespace sequoia::testing
 {
