@@ -309,7 +309,10 @@ export namespace sequoia::testing
     // upstream in gcc 15.3 - the narrowest of these five - on the gcc-15 branch between
     // releases: the 15.2.0 release tarball fails, and a later snapshot of that branch,
     // which still calls itself 15.2.0, links, so the version string does not settle it.
-    // Restore `log_summary() = default;` once 15.3 is the minimum gcc.
+    // Restore `log_summary() = default;` once 15.3 is the minimum gcc. The two spellings
+    // differ in value-initialisation: `{}` is user-provided, so members without initialisers
+    // would not be zero-initialised, but every member below has one, so the object state is
+    // identical.
     log_summary() {}
 
     explicit log_summary(std::string_view name);

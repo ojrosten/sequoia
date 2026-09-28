@@ -292,8 +292,7 @@ SEQUOIA_GCC_SUPPRESS_END
     // already implicitly inline, as is a constexpr function - but g++ 15.2 loses that
     // under modules and emits this hidden friend in every translation unit which
     // instantiates the enclosing class, giving `multiple definition of
-    // sequoia::maths::swap(...)` at link time. See gcc-bugs/G in the sequoia-LLM
-    // repository, and PR 122819; fixed in gcc 16.1.
+    // sequoia::maths::swap(...)` at link time. GCC PR 122819, fixed in gcc 16.1.
     friend inline constexpr void swap(monotonic_sequence& lhs, monotonic_sequence& rhs) noexcept(noexcept(lhs.swap(rhs)))
     {
       lhs.swap(rhs);

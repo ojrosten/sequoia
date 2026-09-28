@@ -33,7 +33,7 @@ export namespace sequoia::meta
       // instantiated, not where this template is defined. Under gcc modules the two differ:
       // an importer's instantiation carries the `@module` attachment in its function name and
       // the module's own does not, and a non-dependent constant expression is folded at the
-      // definition. See gcc-bugs/I in the sequoia-LLM repository.
+      // definition.
       template<class T>
       using trial_type_for = trial_type;
 

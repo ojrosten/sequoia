@@ -14,9 +14,8 @@ module;
 // when the instantiation is reached through the std *module* the friendship is not
 // honoured - `_M_automaton is private within this context`, ten errors from inside
 // regex.tcc, for a plain `std::regex_search(std::string, std::regex)`. The textual
-// include repairs it, as does -fno-module-lazy. See gcc-bugs/D in the sequoia-LLM
-// repository. Fixed upstream in gcc 16.1: delete this include, and rely on
-// `import std` alone, once 16.1 is the minimum gcc.
+// include repairs it, as does -fno-module-lazy. Fixed upstream in gcc 16.1: delete
+// this include, and rely on `import std` alone, once 16.1 is the minimum gcc.
 //
 // It must precede the import: a global module fragment carries its includes into the
 // BMI, so including a standard header *after* importing a module which already has it
