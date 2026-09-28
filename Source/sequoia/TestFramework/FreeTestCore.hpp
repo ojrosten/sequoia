@@ -335,7 +335,7 @@ namespace sequoia::testing
     static std::string discriminator(const cmake_cache& cache) { return T::summary_discriminator(cache); }
   };
 
-  /** \brief Probes a test for `materials_discriminator`, which discriminates its committed materials. */
+  /** \brief Probes a test for `materials_discriminator`, which discriminates its original materials. */
   struct materials_discriminator_probe
   {
     template<class T>
