@@ -25,6 +25,7 @@ namespace sequoia::testing
   private:
     void test_add_include_without_an_existing_block();
     void test_add_include_to_an_existing_block();
+    void test_add_test_registrations();
     void test_comparison_of_file_contents();
     void test_empty_lines_of_a_seqpat();
     void test_trailing_spaces_of_a_seqpat_pattern();
