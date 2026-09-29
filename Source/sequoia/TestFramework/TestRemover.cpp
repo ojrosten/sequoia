@@ -10,6 +10,7 @@
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/IndividualTestPaths.hpp"
+#include "sequoia/TestFramework/TestCreator.hpp"
 
 #include "sequoia/FileSystem/FileSystem.hpp"
 
@@ -27,8 +28,6 @@ namespace sequoia::testing
 
   namespace
   {
-    constexpr std::array<std::string_view, 3> headerExtensions{".hpp", ".h", ".hxx"};
-
     /** \brief A source file, beneath the tests repository, and the names of the tests it defines. */
     struct source_of_tests
     {
@@ -70,8 +69,11 @@ namespace sequoia::testing
       // A test may be named twice, by its class and by its source file.
       located.erase(std::ranges::unique(located).begin(), located.end());
 
-      auto sameSource{[](const test_registration& lhs, const test_registration& rhs) { return lhs.source == rhs.source; }};
-      auto nameOf    {[](const test_registration& reg) { return reg.name; }};
+      auto sameSource{
+        [](const test_registration& lhs, const test_registration& rhs) { return lhs.source == rhs.source; }
+      };
+
+      auto nameOf{[](const test_registration& reg) { return reg.name; }};
 
       auto toSource{
         [&](auto&& group) {
@@ -82,7 +84,8 @@ namespace sequoia::testing
 
           auto remainsBehind{
             [&](const test_registration& reg) {
-              return (within_tests_repo(reg.source, projPaths) == source.file) && !std::ranges::contains(source.tests, reg.name);
+              return (within_tests_repo(reg.source, projPaths) == source.file)
+                  && !std::ranges::contains(source.tests, reg.name);
             }
           };
 
@@ -104,8 +107,8 @@ namespace sequoia::testing
            | std::ranges::to<std::vector>();
     }
 
-    /** \brief The files beyond the project's sources, tests, materials, build trees, output, dependencies and
-               templates which may name a test: C++ sources and headers, and `CMakeLists.txt`.
+    /** \brief The files beyond the project's sources, tests, materials, build trees, build system, output, dependencies
+               and templates which may name a test: C++ sources and headers, and `CMakeLists.txt`.
      */
     [[nodiscard]]
     std::vector<fs::path> files_which_may_name_tests(const project_paths& projPaths)
@@ -131,12 +134,13 @@ namespace sequoia::testing
         [](const fs::path& file) {
           return (file.filename() == "CMakeLists.txt")
               || (file.extension() == ".cpp")
-              || std::ranges::contains(headerExtensions, file.extension().string());
+              || std::ranges::contains(header_extensions, file.extension().string());
         }
       };
 
+      // A loop rather than a view, since an excluded directory must not be entered.
       std::vector<fs::path> files{};
-      for(auto i{fs::recursive_directory_iterator{projPaths.project_root()}}; i != fs::recursive_directory_iterator{}; ++i)
+      for(fs::recursive_directory_iterator i{projPaths.project_root()}, end{}; i != end; ++i)
       {
         if(i->is_directory())
         {
@@ -182,7 +186,7 @@ namespace sequoia::testing
     {
       auto isNamedFor{
         [stem](std::string_view name) {
-          return (stem == name) || (stem.starts_with(name) && (stem.size() > name.size()) && (stem[name.size()] == '_'));
+          return (stem == name) || stem.starts_with(std::format("{}_", name));
         }
       };
 
@@ -238,6 +242,51 @@ namespace sequoia::testing
       return removed;
     }
 
+    void report_path(std::ostream& stream, const fs::path& path, const project_paths& projPaths)
+    {
+      stream << std::format("\"{}\"\n", relative_to_root(path, projPaths));
+    }
+
+    /** \brief Removes the test's materials, and its versioned output for every configuration, reporting what goes.
+
+        `rivals` are the other tests whose versioned output shares the test's directories.
+     */
+    void remove_materials_and_output(const project_paths& projPaths,
+                                     const fs::path& source,
+                                     std::string_view test,
+                                     const std::vector<std::string>& rivals,
+                                     std::ostream& stream)
+    {
+      const individual_materials_paths materials{source, test, projPaths, std::nullopt};
+      if(fs::remove_all(materials.original_test_root()))
+        report_path(stream, materials.original_test_root(), projPaths);
+
+      remove_empty_directories(materials.original_test_root().parent_path(), projPaths.test_materials().repo());
+
+      fs::remove_all(materials.temporary_materials_root());
+      remove_empty_directories(materials.temporary_materials_root().parent_path(),
+                               projPaths.output().tests_temporary_data());
+
+      const auto summaryDir{test_summary_path{source, test, projPaths, std::nullopt}.file_path().parent_path()};
+      const auto diagnosticsDir{
+        individual_diagnostics_paths{projPaths, test, source, test_mode::standard, std::nullopt}
+          .caught_exceptions_file_path()
+          .parent_path()
+      };
+
+      for(const auto& [dir, root] : std::array{std::pair{summaryDir,     projPaths.output().test_summaries()},
+                                               std::pair{diagnosticsDir, projPaths.output().diagnostics()}})
+      {
+        for(const auto& file : output_of(dir, test, rivals))
+        {
+          fs::remove(file);
+          report_path(stream, file, projPaths);
+        }
+
+        remove_empty_directories(dir, root);
+      }
+    }
+
     void remove_source(const project_paths& projPaths,
                        const source_of_tests& source,
                        const std::vector<test_registration>& registered,
@@ -246,90 +295,71 @@ namespace sequoia::testing
     {
       const auto& testsRepo{projPaths.tests().repo()};
 
-      auto withExtension{[&source](std::string_view extension) { return fs::path{source.file}.replace_extension(extension); }};
-      auto exists       {[](const fs::path& file) { return fs::exists(file); }};
+      auto withExtension{
+        [&source](std::string_view extension) { return fs::path{source.file}.replace_extension(extension); }
+      };
+
+      auto exists{[](const fs::path& file) { return fs::exists(file); }};
 
       const auto headers{
-          headerExtensions
+          header_extensions
         | std::views::transform(withExtension)
         | std::views::filter(exists)
         | std::ranges::to<std::vector>()
       };
 
-      auto report{[&stream, &projPaths](const fs::path& path) { stream << std::format("\"{}\"\n", relative_to_root(path, projPaths)); }};
-
-      stream << std::format("Removing {}:\n", source.tests | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>());
-
-      // Rivals in versioned output are the tests whose sources share the directory, and so share its output.
-      auto sharesDirectory{
-        [&](const test_registration& reg) {
-          return within_tests_repo(reg.source, projPaths).parent_path() == source.file.parent_path();
-        }
+      const auto testList{
+          source.tests
+        | std::views::join_with(std::string_view{", "})
+        | std::ranges::to<std::string>()
       };
 
-      auto nameOf{[](const test_registration& reg) { return reg.name; }};
-
-      const auto neighbours{
-          registered
-        | std::views::filter(sharesDirectory)
-        | std::views::transform(nameOf)
-        | std::ranges::to<std::vector>()
-      };
+      stream << std::format("Removing {}:\n", testList);
 
       for(const auto& file : headers)
       {
         fs::remove(file);
-        report(file);
+        report_path(stream, file, projPaths);
       }
 
       fs::remove(source.file);
-      report(source.file);
+      report_path(stream, source.file, projPaths);
       remove_empty_directories(source.file.parent_path(), testsRepo);
+
+      auto nameOf{[](const test_registration& reg) { return reg.name; }};
 
       for(const auto& test : source.tests)
       {
-        const individual_materials_paths materials{source.file, test, projPaths, std::nullopt};
-        if(fs::remove_all(materials.original_test_root()))
-          report(materials.original_test_root());
-
-        remove_empty_directories(materials.original_test_root().parent_path(), projPaths.test_materials().repo());
-
-        fs::remove_all(materials.temporary_materials_root());
-        remove_empty_directories(materials.temporary_materials_root().parent_path(), projPaths.output().tests_temporary_data());
-
-        auto rivals{neighbours};
-        std::erase(rivals, test);
-
-        const auto summaryDir{test_summary_path{source.file, test, projPaths, std::nullopt}.file_path().parent_path()};
-        const auto diagnosticsDir{
-          individual_diagnostics_paths{projPaths, test, source.file, test_mode::standard, std::nullopt}.caught_exceptions_file_path().parent_path()
+        // The tests whose sources share the directory, and so share its versioned output.
+        auto isRival{
+          [&](const test_registration& reg) {
+            return (reg.name != test)
+                && (within_tests_repo(reg.source, projPaths).parent_path() == source.file.parent_path());
+          }
         };
 
-        for(const auto& [dir, root] : std::array{std::pair{summaryDir, projPaths.output().test_summaries()},
-                                                 std::pair{diagnosticsDir, projPaths.output().diagnostics()}})
-        {
-          for(const auto& file : output_of(dir, test, rivals))
-          {
-            fs::remove(file);
-            report(file);
-          }
+        const auto rivals{
+            registered
+          | std::views::filter(isRival)
+          | std::views::transform(nameOf)
+          | std::ranges::to<std::vector>()
+        };
 
-          remove_empty_directories(dir, root);
-        }
+        remove_materials_and_output(projPaths, source.file, test, rivals, stream);
       }
 
       stream << "Editing:\n";
 
-      const auto headerIncludes{
-          headers
-        | std::views::transform([&testsRepo](const fs::path& header) { return header.lexically_relative(testsRepo).generic_string(); })
-        | std::ranges::to<std::vector>()
+      auto includePath{
+        [&testsRepo](const fs::path& header) { return header.lexically_relative(testsRepo).generic_string(); }
       };
+
+      const auto headerIncludes{headers | std::views::transform(includePath) | std::ranges::to<std::vector>()};
 
       for(const auto& file : filesWhichMayNameTests)
       {
         if(remove_lines_naming(file, source, headerIncludes, testsRepo))
-          report(file);
+          report_path(stream, file, projPaths);
       }
 
       stream << '\n';

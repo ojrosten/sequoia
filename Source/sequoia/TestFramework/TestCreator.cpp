@@ -339,7 +339,7 @@ namespace sequoia::testing
     if(const auto path{find_in_tree(m_Paths.source().repo(), filename)}; !path.empty())
       return path;
 
-    for(auto e : st_HeaderExtensions)
+    for(auto e : header_extensions)
     {
       if(e != filename.extension())
       {
@@ -630,7 +630,7 @@ namespace sequoia::testing
   void nascent_test_base::on_source_path_error() const
   {
     auto mess{std::string{"Unable to locate file "}.append(m_Header.generic_string())};
-    for(auto e : st_HeaderExtensions)
+    for(auto e : header_extensions)
     {
       if(e != m_Header.extension())
       {

@@ -326,7 +326,8 @@ namespace sequoia::testing
           edge_t{3, "Remove the last entry", remove("Stuff/BetaTest.cpp")} },                   // 2: both
         { edge_t{2, "Add BetaTest.cpp after AlphaTest.cpp", add("Stuff/BetaTest.cpp")},
           edge_t{0, "Remove the only entry", remove("Stuff/AlphaTest.cpp")} },                  // 3: AlphaTest.cpp
-        { edge_t{4, "Remove Stuff/BetaTest.cpp, where only Other/BetaTest.cpp is listed", remove("Stuff/BetaTest.cpp")} } // 4: elsewhere
+        { edge_t{4, "Remove Stuff/BetaTest.cpp, where only Other/BetaTest.cpp is listed", remove("Stuff/BetaTest.cpp")}
+        } // 4: elsewhere
       },
       {empty, beta, alphaBeta, alpha, elsewhere}
     };
@@ -351,21 +352,33 @@ namespace sequoia::testing
       }
     };
 
-    auto registrationOfGamma{[](const std::filesystem::path& f) { return remove_test_registrations(f, {"gamma_test"}); }};
-    auto includeOfBeta      {[](const std::filesystem::path& f) { return remove_include(f, "Beta.hpp"); }};
+    auto registrationOfGamma{
+      [](const std::filesystem::path& f) { return remove_test_registrations(f, {"gamma_test"}); }
+    };
+
+    auto includeOfBeta{[](const std::filesystem::path& f) { return remove_include(f, "Beta.hpp"); }};
     auto entryForBeta{
       [testsDir{working_materials() / "Tests"}](const std::filesystem::path& f) {
         return remove_from_cmake(f, testsDir, testsDir / "BetaTest.cpp", "target_sources(", ")\n", "${TestDir}/");
       }
     };
 
-    check("A registration removed",           removes("\trunner.register_test<gamma_test>();\n", registrationOfGamma));
-    check("No registration to remove",       !removes("\trunner.register_test<beta_test>();\n",  registrationOfGamma));
-    check("An include removed",               removes("#include \"Beta.hpp\"\n",                   includeOfBeta));
-    check("No include to remove",            !removes("#include \"Alpha.hpp\"\n",                  includeOfBeta));
-    check("An entry removed",                 removes("target_sources(T PRIVATE\n  ${TestDir}/BetaTest.cpp)\n", entryForBeta));
-    check("No entry to remove",              !removes("target_sources(T PRIVATE)\n",                entryForBeta));
-    check("No list to remove an entry from", !removes("add_executable(T main.cpp)\n",               entryForBeta));
+    constexpr std::string_view
+      gammaRegistration{"\trunner.register_test<gamma_test>();\n"},
+      betaRegistration {"\trunner.register_test<beta_test>();\n"},
+      betaInclude      {"#include \"Beta.hpp\"\n"},
+      alphaInclude     {"#include \"Alpha.hpp\"\n"},
+      betaEntry        {"target_sources(T PRIVATE\n  ${TestDir}/BetaTest.cpp)\n"},
+      emptyList        {"target_sources(T PRIVATE)\n"},
+      noList           {"add_executable(T main.cpp)\n"};
+
+    check("A registration removed",           removes(gammaRegistration, registrationOfGamma));
+    check("No registration to remove",       !removes(betaRegistration,  registrationOfGamma));
+    check("An include removed",               removes(betaInclude,       includeOfBeta));
+    check("No include to remove",            !removes(alphaInclude,      includeOfBeta));
+    check("An entry removed",                 removes(betaEntry,         entryForBeta));
+    check("No entry to remove",              !removes(emptyList,         entryForBeta));
+    check("No list to remove an entry from", !removes(noList,            entryForBeta));
   }
 
   /** The 0x1A checks are aimed at MSVC's text mode, which stops reading at that byte; POSIX text

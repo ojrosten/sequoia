@@ -53,7 +53,9 @@ namespace sequoia::testing
         throw std::runtime_error{report_failed_read(file)};
 
       auto isKept{
-        [&shouldRemove](auto&& line) { return !shouldRemove(std::string_view{std::ranges::begin(line), std::ranges::end(line)}); }
+        [&shouldRemove](auto&& line) {
+          return !shouldRemove(std::string_view{std::ranges::begin(line), std::ranges::end(line)});
+        }
       };
 
       // Only whole lines go, each with its newline, so a change in length is a removal.
@@ -85,7 +87,9 @@ namespace sequoia::testing
         The entries begin at the end of the list's first line, and each is on a line of its own.
      */
     [[nodiscard]]
-    std::optional<cmake_list> find_cmake_list(std::string_view text, std::string_view patternOpen, std::string_view patternClose)
+    std::optional<cmake_list> find_cmake_list(std::string_view text,
+                                              std::string_view patternOpen,
+                                              std::string_view patternClose)
     {
       constexpr auto npos{std::string::npos};
 
@@ -229,7 +233,9 @@ namespace sequoia::testing
 
   bool remove_include(const fs::path& file, std::string_view includePath)
   {
-    return remove_lines(file, [directive{include_directive(includePath)}](std::string_view line) { return line == directive; });
+    auto isInclude{[directive{include_directive(includePath)}](std::string_view line) { return line == directive; }};
+
+    return remove_lines(file, isInclude);
   }
 
   void add_test_registrations(const fs::path& file, const std::vector<std::string>& tests)
@@ -316,7 +322,9 @@ namespace sequoia::testing
     auto isRegistration{
       [&tests](std::string_view line) {
         auto registers{
-          [content{without_leading_blanks(line)}](const std::string& test) { return content.starts_with(registration_of(test)); }
+          [content{without_leading_blanks(line)}](const std::string& test) {
+            return content.starts_with(registration_of(test));
+          }
         };
 
         return std::ranges::any_of(tests, registers);

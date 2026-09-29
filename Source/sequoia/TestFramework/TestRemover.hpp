@@ -27,11 +27,12 @@ namespace sequoia::testing
     friend bool operator==(const test_registration&, const test_registration&) noexcept = default;
   };
 
-  /** \brief Removes each of `testsToRemove`, with everything the project holds for it; what it tests is untouched.
+  /** \brief Removes each of `testsToRemove`: its source file and the header of the same stem, every line elsewhere
+      in the project naming them, its materials and its versioned output for every configuration.
 
-      A test's source file goes, with the header of the same stem, and so does every line elsewhere in the project
-      naming either: registrations in the mains, entries in each `CMakeLists.txt`, and includes. The test's
-      materials go, and its versioned output for every configuration. A directory left empty goes too.
+      The lines naming a test are its registrations in the mains, its entry in each `CMakeLists.txt`, and the
+      includes of its header. A directory left empty goes too. The type under test, and the companions `create`
+      wrote for it, are untouched.
 
       `registered` is every test the runner registered. It decides which versioned output is a removed test's, since
       the name of one test may begin that of another.

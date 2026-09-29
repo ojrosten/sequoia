@@ -16,7 +16,7 @@ No tests specified for registration
 
 =======================================
 
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 420
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 433
 A line of spaces is refused, naming its line
 
 Expected Exception Type:
@@ -26,7 +26,7 @@ output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_te
 
 =======================================
 
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 421
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 434
 A line holding only a tab is refused, naming its line
 
 Expected Exception Type:
@@ -36,7 +36,7 @@ output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_te
 
 =======================================
 
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 422
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 435
 An invalid pattern is refused, naming its line, empty lines counted
 
 Expected Exception Type:

@@ -339,15 +339,19 @@ namespace sequoia::testing
     auto widgetTesterTest{[](test_runner& r) { r.register_test<widget_false_negative_test>(); }};
 
     const std::vector<std::string>
-      createExtras {"create", "free_test", "Utilities.h", "--fullname", "utilities_free_test_extras"},
-      createUtilities{"create", "free_test", "Utilities.h"},
-      createWidget {"create", "regular_test", "stuff::widget", "std::vector<int>", "--gen-source", "Stuff"};
+      createExtras        {"create", "free_test", "Utilities.h", "--fullname", "utilities_free_test_extras"},
+      createUtilities     {"create", "free_test", "Utilities.h"},
+      createExtrasThenUtilities{
+        "create", "free_test", "Utilities.h", "--fullname", "utilities_free_test_extras",
+        "create", "free_test", "Utilities.h"
+      },
+      createWidget        {"create", "regular_test", "stuff::widget", "std::vector<int>", "--gen-source", "Stuff"};
 
     const auto states{predictive_materials() / "Lifecycle"};
 
     project_graph g{
       { { edge_t{1, "Create two tests, one named as the other plus a suffix",
-                 creation(std::vector{createExtras, createUtilities} | std::views::join | std::ranges::to<std::vector>())},
+                 creation(createExtrasThenUtilities)},
           edge_t{4, "Create the test whose name is the longer", creation(createExtras)},
           edge_t{5, "Create a regular test, generating the class", creation(createWidget)}
         }, // 0: prepared
@@ -357,10 +361,13 @@ namespace sequoia::testing
           edge_t{4, "Remove the test whose name the other's begins with, by its class",
                  removal({"utilities_free_test"}, utilitiesTests)}
         }, // 1: two tests
-        { edge_t{3, "Remove the test whose name the other's begins with, by its source file, with its output and materials",
+        { edge_t{3,
+                 "Remove the test whose name the other's begins with, by its source file, with output and materials",
                  removal({"Tests/Utilities/UtilitiesFreeTest.cpp"}, utilitiesTests)}
         }, // 2: two tests, run
-        { edge_t{0, "Remove the remaining test, with its output and materials", removal({"utilities_free_test_extras"}, extrasTest)}
+        { edge_t{0,
+                 "Remove the remaining test, with its output and materials",
+                 removal({"utilities_free_test_extras"}, extrasTest)}
         }, // 3: one test, run
         { edge_t{0, "Remove the test", removal({"utilities_free_test_extras"}, extrasTest)},
           edge_t{1, "Create the test whose name is the shorter", creation(createUtilities)}
@@ -441,23 +448,31 @@ namespace sequoia::testing
       }
     };
 
-    check_exception_thrown<std::runtime_error>("A class registering no test",
-                                               removing({"remove-test", "gizmo_test"}, widgetTests));
-    check_exception_thrown<std::runtime_error>("A source file defining no registered test",
-                                               removing({"remove-test", "Tests/Stuff/GizmoTest.cpp"}, widgetTests));
-    check_exception_thrown<std::runtime_error>("The one test a class names, of the two its source file defines",
-                                               removing({"remove-test", "pair_first_test"}, pairTests));
-    check_exception_thrown<std::runtime_error>("A test which is registered, beside one which is not",
-                                               removing({"remove-test", "widget_test", "remove-test", "gizmo_test"}, widgetTests));
-    check_exception_thrown<std::runtime_error>("Removal, with a test to run",
-                                               removing({"remove-test", "widget_test", "select", "WidgetTest.cpp"}, widgetTests));
-    check_exception_thrown<std::runtime_error>("Removal, with a test to exclude",
-                                               removing({"remove-test", "widget_test", "exclude", "WidgetTest.cpp"}, widgetTests));
+    auto refused{
+      [this](std::string_view description, auto removal) {
+        check_exception_thrown<std::runtime_error>(description, removal);
+      }
+    };
+
+    refused("A class registering no test", removing({"remove-test", "gizmo_test"}, widgetTests));
+    refused("A source file defining no registered test",
+            removing({"remove-test", "Tests/Stuff/GizmoTest.cpp"}, widgetTests));
+    refused("The one test a class names, of the two its source file defines",
+            removing({"remove-test", "pair_first_test"}, pairTests));
+    refused("A test which is registered, beside one which is not",
+            removing({"remove-test", "widget_test", "remove-test", "gizmo_test"}, widgetTests));
+    refused("Removal, with a test to run",
+            removing({"remove-test", "widget_test", "select", "WidgetTest.cpp"}, widgetTests));
+    refused("Removal, with a test to exclude",
+            removing({"remove-test", "widget_test", "exclude", "WidgetTest.cpp"}, widgetTests));
 
     check_state("Nothing removed when removal is refused", root, state);
 
     std::stringstream stream{};
-    check(equality, "Removal return code", removal({"remove-test", "widget_test"}, widgetTests, stream), return_code::success);
+    check(equality,
+          "Removal return code",
+          removal({"remove-test", "widget_test"}, widgetTests, stream),
+          return_code::success);
 
     const auto report{working_materials() / "RemovalReport"};
     fs::create_directories(report);
@@ -465,7 +480,9 @@ namespace sequoia::testing
     check(equivalence, "What a removal reports", report, predictive_materials() / "RemovalReport");
   }
 
-  void test_runner_test_creation::check_state(std::string_view description, const fs::path& projectRoot, const fs::path& state)
+  void test_runner_test_creation::check_state(std::string_view description,
+                                              const fs::path& projectRoot,
+                                              const fs::path& state)
   {
     const auto working{working_materials() / "Lifecycle" / back(state)};
     lifecycle::set_state(working, projectRoot);
@@ -473,18 +490,24 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  test_runner_test_creation::fake_project test_runner_test_creation::prepare_fake_project(std::string_view projectName,
-                                                                                          const std::optional<std::string>& sourceFolder,
-                                                                                          main_location mainLocation)
+  test_runner_test_creation::fake_project
+    test_runner_test_creation::prepare_fake_project(std::string_view projectName,
+                                                    const std::optional<std::string>& sourceFolder,
+                                                    main_location mainLocation)
   {
     const auto projectPath{auxiliary_materials() / projectName};
     const auto sourceFolderPath{source_paths{projectPath, sourceFolder}.project()};
 
-    fs::copy(auxiliary_paths::repo(get_project_paths().project_root()), auxiliary_paths::repo(projectPath), fs::copy_options::recursive);
+    fs::copy(auxiliary_paths::repo(get_project_paths().project_root()),
+             auxiliary_paths::repo(projectPath),
+             fs::copy_options::recursive);
 
-    fs::copy(source_paths{auxiliary_paths::project_template(get_project_paths().project_root())}.cmake_lists(), sourceFolderPath);
+    fs::copy(source_paths{auxiliary_paths::project_template(get_project_paths().project_root())}.cmake_lists(),
+             sourceFolderPath);
 
-    fs::copy(get_project_paths().build_system().repo(), projectPath / "dependencies/sequoia/build_system", fs::copy_options::recursive);
+    fs::copy(get_project_paths().build_system().repo(),
+             projectPath / "dependencies/sequoia/build_system",
+             fs::copy_options::recursive);
 
     const auto cmakeCacheDir{projectPath / "build" / back(get_project_paths().build().cmake_cache_dir())};
     fs::create_directory(cmakeCacheDir);

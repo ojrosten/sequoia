@@ -53,6 +53,9 @@ namespace sequoia::testing
    */
   std::string reconfigure_build_tree(const project_paths& projPaths);
 
+  /** \brief The extensions of the headers `create` finds, and of those `remove-test` removes beside a test's source */
+  inline constexpr std::array<std::string_view, 3> header_extensions{".hpp", ".h", ".hxx"};
+
   enum class nascent_test_flavour { standard, framework_diagnostics };
 
   /** \brief The namespace `create` substitutes for the project's: the source directory's name.
@@ -223,8 +226,6 @@ namespace sequoia::testing
 
     void make_common_replacements(std::string& text) const;
   private:
-    constexpr static std::array<std::string_view, 3> st_HeaderExtensions{".hpp", ".h", ".hxx"};
-
     project_paths m_Paths;
     std::string m_Copyright{};
     indentation m_CodeIndent{"  "};

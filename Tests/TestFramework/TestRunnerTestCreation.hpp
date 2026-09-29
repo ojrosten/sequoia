@@ -47,7 +47,9 @@ namespace sequoia::testing
     /** \brief Checks the directories of the project at `projectRoot` which creating or removing a test may change
         against the snapshot of a state.
      */
-    void check_state(std::string_view description, const std::filesystem::path& projectRoot, const std::filesystem::path& state);
+    void check_state(std::string_view description,
+                     const std::filesystem::path& projectRoot,
+                     const std::filesystem::path& state);
 
     [[nodiscard]]
     fake_project prepare_fake_project(std::string_view projectName,
