@@ -2,28 +2,28 @@
 Running tests, synchronously...
 
 bar_free_test:
-[Execution Time: 1.04us]
+[Execution Time: 99.1us]
 foo_false_negative_test:
-[Execution Time: 1.21us]
+[Execution Time: 113us]
 foo_test:
-[Execution Time: 2.27ms]
-	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 38]
+[Execution Time: 5.43ms]
+	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 47]
 oldschool_false_negative_test:
-[Execution Time: 1.58us]
+[Execution Time: 85.8us]
 oldschool_test:
-[Execution Time: 1.46us]
+[Execution Time: 76us]
 container_allocation_test:
-[Execution Time: 1.21us]
+[Execution Time: 77.3us]
 container_performance_test:
-[Execution Time: 1.12us]
+[Execution Time: 78.8us]
 unique_thing_false_negative_test:
-[Execution Time: 133us]
+[Execution Time: 361us]
 	False Negative Checks:                     2;  Failures:  0
 unique_thing_test:
-[Execution Time: 1.05ms]
+[Execution Time: 1.61ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
 useful_things_free_test:
-[Execution Time: 119us]
+[Execution Time: 248us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -36,27 +36,27 @@ useful_things_free_test:
 	=======================================
 
 utilities_free_test:
-[Execution Time: 1.42us]
+[Execution Time: 86.2us]
 flipper_free_test:
-[Execution Time: 99.9us]
+[Execution Time: 256us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 house_allocation_test:
-[Execution Time: 1.38us]
+[Execution Time: 103us]
 maybe_false_negative_test:
-[Execution Time: 1.04us]
+[Execution Time: 105us]
 maybe_test:
-[Execution Time: 1.08us]
+[Execution Time: 96.8us]
 probability_false_negative_test:
-[Execution Time: 156us]
+[Execution Time: 349us]
 	False Negative Checks:                     2;  Failures:  0
 probability_test:
-[Execution Time: 1.16ms]
+[Execution Time: 1.55ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 
 -----------Grand Totals-----------
-[Total Run Time: 6.82ms]
-[Execution Time: 5ms]
-	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 118]
+[Total Run Time: 13.3ms]
+[Execution Time: 10.7ms]
+	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 127]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0

@@ -1,0 +1,2 @@
+: .*s\]
+[^ ]*(?=/output/DiagnosticsOutput/Tests/Output/)

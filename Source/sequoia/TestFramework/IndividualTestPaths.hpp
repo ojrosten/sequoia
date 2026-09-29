@@ -16,6 +16,22 @@
 
 namespace sequoia::testing
 {
+  /** \brief Where a test's materials are: fixed on construction, whatever exists on disk.
+
+      A test's materials have two roots. The *original* root, in `TestMaterials`, holds the test's
+      materials as written; the *temporary* root, in `output/TestsTemporaryData`, holds what a test
+      works with as it runs. Both mirror the path of the test's source file, minus its extension,
+      with the name of the test's class as the leaf.
+
+      Beneath the original root, the directories `WorkingCopy`, `Prediction` and `Auxiliary` carry
+      special meaning. If present, `WorkingCopy` and `Auxiliary` are reproduced beneath the temporary
+      root; predictions are not part of a test's execution context, so `prediction()` is a path
+      beneath the original root.
+
+      Every path is returned whether or not anything is there; which of them exist is for the
+      caller to ask. A default-constructed instance names no test: its two roots are empty, and
+      asking it for any other path throws `std::logic_error`.
+   */
   class individual_materials_paths
   {
   public:
@@ -24,11 +40,26 @@ namespace sequoia::testing
     individual_materials_paths(const std::filesystem::path& sourceFile, std::string_view testName, const project_paths& projPaths);
 
     [[nodiscard]]
+    const std::filesystem::path& original_materials_root() const noexcept
+    {
+      return m_OriginalMaterialsRoot;
+    }
+
+    [[nodiscard]]
+    const std::filesystem::path& temporary_materials_root() const noexcept
+    {
+      return m_TemporaryMaterialsRoot;
+    }
+
+    [[nodiscard]]
     std::filesystem::path original_working() const;
 
     [[nodiscard]]
     std::filesystem::path working() const;
-    
+
+    [[nodiscard]]
+    std::filesystem::path prediction() const;
+
     [[nodiscard]]
     std::filesystem::path original_auxiliary() const;
 
@@ -36,26 +67,11 @@ namespace sequoia::testing
     std::filesystem::path auxiliary() const;
 
     [[nodiscard]]
-    std::filesystem::path prediction() const;
-
-    [[nodiscard]]
-    const std::filesystem::path& original_materials() const noexcept
-    {
-      return m_Materials;
-    }
-
-    [[nodiscard]]
-    const std::filesystem::path& temporary_materials() const noexcept
-    {
-      return m_TemporaryMaterials;
-    }
-
-    [[nodiscard]]
     friend bool operator==(const individual_materials_paths&, const individual_materials_paths&) noexcept = default;
   private:
     std::filesystem::path
-      m_Materials,
-      m_TemporaryMaterials;
+      m_OriginalMaterialsRoot,
+      m_TemporaryMaterialsRoot;
 
     individual_materials_paths(const std::filesystem::path& relativePath, const test_materials_paths& materials, const output_paths& output);
   };

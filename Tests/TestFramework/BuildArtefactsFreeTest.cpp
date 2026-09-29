@@ -58,7 +58,7 @@ namespace sequoia::testing
 
   void build_artefacts_free_test::test_ninja_deps()
   {
-    const auto scratch{working_materials()};
+    const auto scratch{scratchpad_materials()};
 
     /* Each case is a Ninja build tree holding one log, read as the tree's compilations; `build.ninja`
        names the object files the build has and their sources
@@ -112,7 +112,12 @@ namespace sequoia::testing
               {"CMakeFiles/x.dir/b.cpp.o", {"/proj/b.cpp", "/proj/a.h"}},
               {"CMakeFiles/x.dir/c.cpp.o", {"/proj/c.cpp"}}
             });
-      check(weak_equivalence, "The log as written, byte for byte", log, predictive_materials() / "round_trip.ninja_deps");
+      const auto written{working_materials() / "round_trip.ninja_deps"};
+      fs::copy_file(log, written);
+      check(weak_equivalence,
+            "The log as written, byte for byte",
+            written,
+            predictive_materials() / "round_trip.ninja_deps");
 
       // Cutting the last six bytes leaves a final record whose size word promises more than the file holds
       const auto whole{read_to_string(log, std::ios_base::binary).value()};
@@ -179,7 +184,7 @@ namespace sequoia::testing
 
   void build_artefacts_free_test::test_tlogs()
   {
-    const auto scratch{working_materials()};
+    const auto scratch{scratchpad_materials()};
 
     /* Each case is a Visual Studio build tree holding one target's tracker logs, read as the tree's
        compilations; the logs lie in the configuration directory, which is the executable's
@@ -370,7 +375,7 @@ namespace sequoia::testing
 
   void build_artefacts_free_test::test_build_tree()
   {
-    const auto scratch{working_materials()};
+    const auto scratch{scratchpad_materials()};
     const auto root{scratch / "build"};
     fs::create_directories(root / "CMakeFiles" / "4.1.2");
     fs::create_directories(root / "CMakeFiles" / "4.2.0");

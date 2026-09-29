@@ -59,6 +59,16 @@ namespace sequoia::testing
 
     void test_post_run_failure();
 
+    void test_materials_update();
+
+    void test_no_materials_update_after_critical_failure();
+
+    void test_partial_materials_update();
+
+    void test_materials_preparation_failure();
+
+    void test_versioned_output_failure();
+
     void test_nested_suite();
 
     void test_nested_suite_verbose();

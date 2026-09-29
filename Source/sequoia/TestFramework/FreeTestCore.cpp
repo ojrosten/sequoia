@@ -9,6 +9,7 @@
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <format>
 #include <fstream>
 
 namespace sequoia::testing
@@ -17,6 +18,12 @@ namespace sequoia::testing
 
   namespace
   {
+    [[nodiscard]]
+    std::string no_materials_paths_message(std::string_view testName)
+    {
+      return std::format("Test '{}' has no materials paths: it was not constructed with any", testName);
+    }
+
     void serialize(const fs::path& file, const failure_output& output)
     {
       fs::create_directories(file.parent_path());
@@ -29,6 +36,52 @@ namespace sequoia::testing
         throw std::runtime_error{report_failed_write(file)};
       }
     }
+  }
+
+  [[nodiscard]]
+  fs::path test_base::working_materials() const
+  {
+    throw_if_no_materials_paths();
+    return materials_or_throw("materials", m_Materials.original_materials_root(), m_Materials.working());
+  }
+
+  [[nodiscard]]
+  fs::path test_base::predictive_materials() const
+  {
+    throw_if_no_materials_paths();
+    return materials_or_throw("predictions", m_Materials.prediction(), m_Materials.prediction());
+  }
+
+  [[nodiscard]]
+  fs::path test_base::auxiliary_materials() const
+  {
+    throw_if_no_materials_paths();
+    return materials_or_throw("auxiliary materials", m_Materials.original_auxiliary(), m_Materials.auxiliary());
+  }
+
+  [[nodiscard]]
+  fs::path test_base::scratchpad_materials() const
+  {
+    throw_if_no_materials_paths();
+    return m_Materials.temporary_materials_root();
+  }
+
+  void test_base::throw_if_no_materials_paths() const
+  {
+    if(m_Materials.original_materials_root().empty())
+      throw std::logic_error{no_materials_paths_message(m_Name)};
+  }
+
+  /// `usable` if the materials `original` names exist; which kind they are is for the message
+  [[nodiscard]]
+  fs::path test_base::materials_or_throw(std::string_view kind, const fs::path& original, fs::path usable) const
+  {
+    if(!fs::exists(original))
+      throw std::runtime_error{
+        std::format("No {} for test '{}'; they belong in {}", kind, m_Name, original.generic_string())
+      };
+
+    return usable;
   }
 
   void test_base::write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index, const failure_output& output) const
