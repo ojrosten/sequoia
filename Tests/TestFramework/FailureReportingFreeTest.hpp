@@ -18,7 +18,9 @@ namespace sequoia::testing
   public:
     using free_test::free_test;
 
-    /// Serial, since it swaps the terminate handler, which a runner nested in a concurrent test could restore
+    /** Serial, since it swaps the terminate handler and the error mode, which a runner nested in a concurrent test
+        could restore
+     */
     using parallelizable_type = std::false_type;
 
     [[nodiscard]]
@@ -29,9 +31,13 @@ namespace sequoia::testing
     void test_describe_exception();
 
     void test_scoped_terminate_handler();
+
+    void test_windows_crash_report_enabler();
   };
 
-  /** \brief Runs among the parallel tests, on a worker thread, which under MSVC has a terminate handler of its own. */
+  /** \brief Runs among the parallel tests, on a worker thread, which under MSVC has a terminate handler of its own,
+             to check what the runner sets for the run.
+   */
   class failure_reporting_in_parallel_free_test final : public free_test
   {
   public:

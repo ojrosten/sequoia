@@ -1,2 +1,2 @@
 failure_reporting_in_parallel_free_test
-Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
+Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]

@@ -309,6 +309,85 @@ jobs:
           Get-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem' `
                            -Name LongPathsEnabled
 
+      # A suite that crashes ends with an exit status and nothing else: rigorous's Windows
+      # Release column, 2026-09-29, died with 0xC0000409 three seconds in and printed
+      # nothing. So a crash leaves a dump, and "Report any crash" prints its stacks:
+      #   - Windows: Windows Error Reporting's LocalDumps, for every process, with its
+      #     dialogs off (DontShowUI), since nobody is there to dismiss one;
+      #   - Linux: the kernel's core pattern, pointed into RUNNER_TEMP; each suite step
+      #     raises its own core size limit, since a limit set in one step does not carry to
+      #     the next, and records it for "Report any crash" to check;
+      #   - macOS: nothing to arrange, since the system writes a crash report itself.
+      # A control crash then checks that the arrangement took. A control which leaves
+      # nothing makes the step warn rather than fail, since a job whose dumps are lost can
+      # still test; without the control, a suite's crash with no dump would be reported as
+      # no crash at all. The since file, written after the control's dump, is what every
+      # dump is compared against.
+      #
+      # On Windows the control does not check the process's error mode. GitHub's runner
+      # starts every process of a job with a mode under which a crash never reaches Windows
+      # Error Reporting, and the control's FailFast ignores the mode. sequoia's test runner
+      # clears it for a run (windows_crash_report_enabler), which
+      # failure_reporting_in_parallel_free_test checks.
+      #
+      # The registry is written by PowerShell, as in the step above, since Git bash's MSYS
+      # layer rewrites reg.exe's switches.
+      - name: Ask Windows Error Reporting for dumps
+        if: inputs.needs_testing == 'true' && runner.os == 'Windows'
+        timeout-minutes: 2
+        shell: pwsh
+        run: |
+          $dumps = Join-Path $env:RUNNER_TEMP 'dumps'
+          New-Item -ItemType Directory -Force -Path $dumps | Out-Null
+          $wer = 'HKLM:\SOFTWARE\Microsoft\Windows\Windows Error Reporting'
+          New-ItemProperty -Path $wer -Name DontShowUI -Value 1 -PropertyType DWord -Force | Out-Null
+          New-Item -Path "$wer\LocalDumps" -Force | Out-Null
+          New-ItemProperty -Path "$wer\LocalDumps" -Name DumpFolder -Value $dumps -PropertyType ExpandString -Force | Out-Null
+          New-ItemProperty -Path "$wer\LocalDumps" -Name DumpType -Value 1 -PropertyType DWord -Force | Out-Null
+          New-ItemProperty -Path "$wer\LocalDumps" -Name DumpCount -Value 10 -PropertyType DWord -Force | Out-Null
+          Get-ItemProperty -Path "$wer\LocalDumps"
+
+      - name: Let a crash leave a dump
+        if: inputs.needs_testing == 'true'
+        timeout-minutes: 3
+        run: |
+          dumps="$RUNNER_TEMP/dumps"
+          mkdir -p "$dumps"
+          case "$RUNNER_OS" in
+            Windows)
+              powershell -NoProfile -Command "[Environment]::FailFast('A control crash')" || true
+              control_pattern='*.dmp' ;;
+            Linux)
+              # %e, the name the kernel keeps, rather than %E, the whole path: a core whose name
+              # would pass 255 bytes is not written, and the end-to-end test's executables lie
+              # deep. report_crashes.sh recovers the path from the core.
+              sudo sysctl -q -w "kernel.core_pattern=$dumps/core.%e.%p"
+              (ulimit -c unlimited; bash -c 'kill -SEGV $$') || true
+              control_pattern='core.*' ;;
+            macOS)
+              bash -c 'kill -SEGV $$' || true
+              control_pattern= ;;
+          esac
+
+          found=
+          for attempt in $(seq 1 30); do
+            if [ -n "$control_pattern" ]; then
+              found=$(find "$dumps" -maxdepth 1 -name "$control_pattern" | head -1 || true)
+            else
+              found=$(find "$HOME/Library/Logs/DiagnosticReports" -newer "$dumps" -name 'bash*' 2> /dev/null | head -1 || true)
+            fi
+            [ -z "$found" ] || break
+            sleep 1
+          done
+
+          if [ -n "$found" ]; then
+            echo "The control crash left $found"
+          else
+            echo "::warning title=No crash dumps::${{ matrix.name }}: a control crash left no dump, so a crash in the suite would be reported without its stacks."
+          fi
+          sleep 1
+          touch "$dumps/since"
+
       # A column may carry `exec_args` of its own, for a platform which cannot run the
       # whole suite. It replaces the tier's rather than adding to them, so a column
       # taking this route out of a tier which passes `--check-versioned-output` must
@@ -412,6 +491,10 @@ jobs:
           SUITE_TIMEOUT_MINUTES: ${{ inputs.suite_timeout_minutes }}
         run: |
           set -u
+          if [ "$RUNNER_OS" = Linux ]; then
+            ulimit -c unlimited || true
+            ulimit -c > "$RUNNER_TEMP/dumps/core-limit" || true
+          fi
           deadline=$(( (SUITE_TIMEOUT_MINUTES - SNAPSHOT_MARGIN_MINUTES) * 60 ))
           ../scripts/snapshot_at_deadline.sh "$deadline" "$RUNNER_TEMP/snapshot.txt" TestAll -- \
             cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/run.log"
@@ -448,6 +531,10 @@ jobs:
           SUITE_TIMEOUT_MINUTES: ${{ inputs.suite_timeout_minutes }}
         run: |
           set -u
+          if [ "$RUNNER_OS" = Linux ]; then
+            ulimit -c unlimited || true
+            ulimit -c > "$RUNNER_TEMP/dumps/core-limit" || true
+          fi
           deadline=$(( (SUITE_TIMEOUT_MINUTES - SNAPSHOT_MARGIN_MINUTES) * 60 ))
           ../scripts/snapshot_at_deadline.sh "$deadline" "$RUNNER_TEMP/repeat-snapshot.txt" TestAll -- \
             cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/repeat.log"
@@ -548,6 +635,63 @@ jobs:
               echo "::$token::"
             fi
           done
+
+      # Every crash since "Let a crash leave a dump", with its stacks: an error names the
+      # column, the stacks follow on the run page, and the report and any Windows minidumps
+      # go into run-log/, which is uploaded. Linux's cores are not kept: they are large, and
+      # their stacks are already printed.
+      #
+      # macOS writes a crash report, and Windows Error Reporting a dump, some seconds after
+      # the crash, so after a failed suite this waits for one, up to a bound, since the
+      # steps between the suite and this one can take less time than that. Linux writes a
+      # core before the process is gone. On Linux, a core limit the suite step could not
+      # raise is a warning, since its crash would leave no core. The timeout bounds cdb's
+      # downloads of Windows' symbols, and a report which times out does not fail the job.
+      - name: Report any crash
+        if: ${{ always() && inputs.needs_testing == 'true' }}
+        timeout-minutes: 10
+        continue-on-error: true
+        run: |
+          dumps="$RUNNER_TEMP/dumps"
+          if [ ! -f "$dumps/since" ]; then
+            echo "No crash report: the dumps were not arranged."
+            exit 0
+          fi
+
+          if [ "$RUNNER_OS" = Linux ] && [ -f "$dumps/core-limit" ] && [ "$(cat "$dumps/core-limit")" != unlimited ]; then
+            echo "::warning title=No cores::${{ matrix.name }}: the suite's core limit was $(cat "$dumps/core-limit"), so a crash would leave no core."
+          fi
+
+          if [ "${{ steps.suite.outcome }}" = failure ] || [ "${{ steps.repeat.outcome }}" = failure ]; then
+            case "$RUNNER_OS" in
+              macOS)   written=("$HOME/Library/Logs/DiagnosticReports" -newer "$dumps/since" -name '*.ips'
+                                -exec grep -l '"bug_type":"309"' {} +) ;;
+              Windows) written=("$dumps" -maxdepth 1 -newer "$dumps/since" -name '*.dmp') ;;
+              *)       written=() ;;
+            esac
+            if [ ${#written[@]} -gt 0 ]; then
+              for attempt in $(seq 1 60); do
+                find "${written[@]}" 2> /dev/null | grep -q . && break
+                sleep 1
+              done
+              sleep 2
+            fi
+          fi
+
+          report="$RUNNER_TEMP/crashes.txt"
+          scripts/report_crashes.sh "$dumps" "$dumps/since" > "$report" 2>&1
+          count=$(sed -n 's/^Crashes found: //p' "$report")
+          if [ "${count:-0}" -gt 0 ]; then
+            echo "::error title=Crash::${{ matrix.name }}: $count crash(es); their stacks are below, and in run-log/crashes/."
+            mkdir -p run-log/crashes
+            cp "$report" run-log/crashes/
+            find "$dumps" -maxdepth 1 -newer "$dumps/since" -name '*.dmp' -exec cp {} run-log/crashes/ \;
+          fi
+          # Whatever the debuggers printed is not a workflow command, whatever it begins with.
+          token=crashes-$RANDOM$RANDOM$RANDOM
+          echo "::stop-commands::$token"
+          cat "$report"
+          echo "::$token::"
 
       # Where drift detection is on, a run whose versioned output moved writes
       # the change to output/Drift/VersionedOutput.patch, one whole-file hunk per

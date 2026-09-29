@@ -86,4 +86,31 @@ namespace sequoia
       _CrtSetReportHook2(_CRT_RPTHOOK_REMOVE, report_to_stderr);
     #endif
   }
+
+  namespace
+  {
+    /// Returns the replaced error mode
+    [[nodiscard]]
+    unsigned int let_crashes_reach_error_reporting()
+    {
+      #ifdef _WIN32
+        const auto replaced{GetErrorMode()};
+        SetErrorMode(replaced & ~SEM_NOGPFAULTERRORBOX);
+        return replaced;
+      #else
+        return 0;
+      #endif
+    }
+  }
+
+  windows_crash_report_enabler::windows_crash_report_enabler()
+    : m_Replaced{let_crashes_reach_error_reporting()}
+  {}
+
+  windows_crash_report_enabler::~windows_crash_report_enabler()
+  {
+    #ifdef _WIN32
+      SetErrorMode(m_Replaced);
+    #endif
+  }
 }

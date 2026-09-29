@@ -49,4 +49,24 @@ namespace sequoia
 
     ~debug_report_redirection();
   };
+
+  /** \brief An RAII wrapper to ensure a crash reaches Windows Error Reporting.
+
+      A parent process can stop a crash reaching it, as the GitHub Actions runner does for every process of a job,
+      and the crash then leaves no dump. The wrapper clears `SEM_NOGPFAULTERRORBOX` from the process's error mode,
+      which child processes inherit, and restores the replaced mode on destruction. Instances may be nested. Away
+      from Windows, nothing changes.
+   */
+  class [[nodiscard]] windows_crash_report_enabler
+  {
+  public:
+    windows_crash_report_enabler();
+
+    windows_crash_report_enabler(const windows_crash_report_enabler&)            = delete;
+    windows_crash_report_enabler& operator=(const windows_crash_report_enabler&) = delete;
+
+    ~windows_crash_report_enabler();
+  private:
+    [[maybe_unused]] unsigned int m_Replaced;
+  };
 }
