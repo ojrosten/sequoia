@@ -16,6 +16,13 @@
 
 namespace sequoia::testing
 {
+  /** \brief The path of `sourceFile` relative to the tests' repository, less its extension.
+
+      Each test in `sourceFile` keys its materials on this path, with its own name as the leaf.
+   */
+  [[nodiscard]]
+  std::filesystem::path materials_prefix(const std::filesystem::path& sourceFile, const project_paths& projPaths);
+
   /** \brief Where a test's materials are: fixed on construction, whatever exists on disk.
 
       A test's materials have two roots. The *original* root, in `TestMaterials`, holds the test's

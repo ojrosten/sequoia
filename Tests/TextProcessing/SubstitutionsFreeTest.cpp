@@ -25,6 +25,7 @@ namespace sequoia::testing
     test_snake_case();
     test_capitalize();
     test_uncapitalize();
+    test_to_lower_case();
     test_replace();
     test_replace_all();
     test_replace_all_recursive();
@@ -73,6 +74,15 @@ namespace sequoia::testing
     check(equality, "Uncapitalize empty string", uncapitalize(""), ""s);
     check(equality, "Uncapitalize letter", uncapitalize("A"), "a"s);
     check(equality, "Uncapitalize word", uncapitalize("Foo"), "foo"s);
+  }
+
+  void substitutions_free_test::test_to_lower_case()
+  {
+    check(equality, "Lower case of empty string", to_lower_case(""), ""s);
+    check(equality, "Lower case of letter", to_lower_case("A"), "a"s);
+    check(equality, "Lower case of mixed case", to_lower_case("FooBAR"), "foobar"s);
+    check(equality, "Lower case leaves other characters", to_lower_case("Tests/Foo_1.cpp"), "tests/foo_1.cpp"s);
+    check(equality, "Lower case leaves non-ASCII bytes", to_lower_case("\xC3\x89" "A"), "\xC3\x89" "a"s);
   }
 
   void substitutions_free_test::test_replace()

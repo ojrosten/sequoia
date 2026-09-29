@@ -7,6 +7,8 @@
 
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <algorithm>
+
 namespace sequoia
 {
   std::string& to_camel_case(std::string& text, std::string_view separator)
@@ -95,6 +97,22 @@ namespace sequoia
   {
     std::string str{text};
     return uncapitalize(str);
+  }
+
+  std::string& to_lower_case(std::string& text)
+  {
+    // Not std::tolower, which follows the global locale and may alter bytes beyond ASCII
+    auto lowerAscii{[](char c){ return ((c >= 'A') && (c <= 'Z')) ? static_cast<char>(c - 'A' + 'a') : c; }};
+
+    std::ranges::transform(text, text.begin(), lowerAscii);
+    return text;
+  }
+
+  [[nodiscard]]
+  std::string to_lower_case(std::string_view text)
+  {
+    std::string str{text};
+    return to_lower_case(str);
   }
 
   std::string& replace(std::string& text, std::string_view from, std::string_view to)

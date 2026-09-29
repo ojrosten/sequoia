@@ -34,6 +34,8 @@ namespace sequoia::testing
 
     void test_uncapitalize();
 
+    void test_to_lower_case();
+
     void test_replace();
 
     void test_replace_all();

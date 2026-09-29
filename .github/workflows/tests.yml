@@ -621,7 +621,7 @@ jobs:
       # themselves: what a person would have compared them against is exactly
       # what the patch holds, without the megabytes that did not move.
       #
-      # A working copy lies under <source stem>/<test class>, so the path below
+      # A working copy lies under <source path less extension>/<test class>, so the path below
       # names both. Get it wrong and nothing says so: `if-no-files-found: warn`
       # leaves the artifact a file short and the run green.
       - name: Upload the drift and the run log
