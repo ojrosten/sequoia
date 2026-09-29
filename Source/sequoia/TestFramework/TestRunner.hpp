@@ -180,6 +180,26 @@ namespace sequoia::testing
   private:
     static void versioned_write(const std::filesystem::path& file, std::string_view text);
 
+    /** \brief An RAII wrapper to write a test's execution record: when the test started and, on destruction, its
+               duration.
+
+        A record which cannot be written is skipped rather than reported.
+     */
+    class [[nodiscard]] scoped_execution_record
+    {
+    public:
+      explicit scoped_execution_record(std::filesystem::path file);
+
+      scoped_execution_record(const scoped_execution_record&)            = delete;
+      scoped_execution_record& operator=(const scoped_execution_record&) = delete;
+
+      ~scoped_execution_record();
+    private:
+      std::filesystem::path m_File{};
+      std::chrono::system_clock::time_point m_Start{};
+      timer m_Timer{};
+    };
+
     struct soul
     {
       virtual ~soul() = default;
@@ -230,6 +250,7 @@ namespace sequoia::testing
       {
         // Also installed per test, since under MSVC each thread has its own terminate handler
         const scoped_terminate_handler terminationReported{report_termination};
+        const scoped_execution_record record{m_ExecutionRecord.file_path()};
         const timer t{};
 
         if(try_prepare_materials())
@@ -248,21 +269,7 @@ namespace sequoia::testing
           }
         }
 
-        try
-        {
-          m_Test.write_instability_analysis_output(m_Test.source_file(), index);
-          return write_versioned_output(t);
-        }
-        catch(const std::exception& e)
-        {
-          m_Test.log_critical_failure(m_Test.source_file(), "Output Writing", e.what());
-        }
-        catch(...)
-        {
-          m_Test.log_critical_failure(m_Test.source_file(), "Output Writing", "Unknown exception");
-        }
-
-        return m_Test.summarize(t.time_elapsed());
+        return write_output(t, index);
       }
 
       void reset() final
@@ -281,9 +288,31 @@ namespace sequoia::testing
                       make_active_recovery_paths(mode, projPaths),
                       get_output_discriminator<Test>(cache),
                       get_reduction_discriminator<Test>(cache)};
+
+        m_ExecutionRecord = test_execution_record_path{source, m_Name, projPaths};
       }
     private:
       static constexpr std::string_view m_Name{test_name<Test>()};
+
+      [[nodiscard]]
+      log_summary write_output(const timer& t, std::optional<std::size_t> index)
+      {
+        try
+        {
+          m_Test.write_instability_analysis_output(m_Test.source_file(), index);
+          return write_versioned_output(t);
+        }
+        catch(const std::exception& e)
+        {
+          m_Test.log_critical_failure(m_Test.source_file(), "Output Writing", e.what());
+        }
+        catch(...)
+        {
+          m_Test.log_critical_failure(m_Test.source_file(), "Output Writing", "Unknown exception");
+        }
+
+        return m_Test.summarize(t.time_elapsed());
+      }
 
       [[nodiscard]]
       bool try_prepare_materials()
@@ -314,6 +343,7 @@ namespace sequoia::testing
       }
 
       Test m_Test;
+      test_execution_record_path m_ExecutionRecord{};
     };
 
     enum class parallelizable_candidate : bool { no, yes };

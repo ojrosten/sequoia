@@ -81,6 +81,15 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    fs::path execution_record_file(const fs::path& sourceFile,
+                                   std::string_view testName,
+                                   const project_paths& projectPaths)
+    {
+      return test_output_directory(sourceFile, projectPaths.execution_records().dir(), projectPaths)
+               /= fs::path{testName}.concat(".txt");
+    }
+
+    [[nodiscard]]
     fs::path versioned_diagnostics(const fs::path& source, std::string_view testName, const project_paths& projectPaths, test_mode mode, std::string_view suffix, const std::optional<std::string>& platform)
     {
       const auto file{
@@ -160,9 +169,17 @@ namespace sequoia::testing
     , m_CaughtExceptions{versioned_diagnostics(source, testName, projPaths, mode, "Exceptions", platform)}
   {}
 
-  //===================================== individual_diagnostics_paths =====================================//
+  //===================================== test_summary_path =====================================//
 
   test_summary_path::test_summary_path(const fs::path& sourceFile, std::string_view testName, const project_paths& projectPaths, const std::optional<std::string>& summaryDiscriminator)
     : m_Summary{test_summary_filename(sourceFile, testName, projectPaths, summaryDiscriminator)}
+  {}
+
+  //===================================== test_execution_record_path =====================================//
+
+  test_execution_record_path::test_execution_record_path(const fs::path& sourceFile,
+                                                         std::string_view testName,
+                                                         const project_paths& projectPaths)
+    : m_Record{execution_record_file(sourceFile, testName, projectPaths)}
   {}
 }

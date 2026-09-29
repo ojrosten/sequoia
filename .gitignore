@@ -16,6 +16,9 @@ output/TestsTemporaryData
 #ignore file recording prune info
 output/Prune
 
+#ignore each test's record of its last execution
+output/ExecutionRecords
+
 #ignore the patch a checked run writes when the versioned output moved
 output/Drift
 

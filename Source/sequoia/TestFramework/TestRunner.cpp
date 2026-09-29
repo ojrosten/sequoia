@@ -41,6 +41,41 @@ namespace sequoia::testing
     const auto entry_time_stamp{std::chrono::file_clock::now()};
 
     [[nodiscard]]
+    std::string started_at(std::chrono::system_clock::time_point start)
+    {
+      return std::format("started {:%FT%TZ}\n", std::chrono::floor<std::chrono::milliseconds>(start));
+    }
+
+    // Written aside and renamed over the file, so that a process dying mid-write leaves the previous contents
+    void overwrite_quietly(const fs::path& file, std::string_view text)
+    {
+      std::error_code selectsTheNonThrowingOverload{};
+      fs::create_directories(file.parent_path(), selectsTheNonThrowingOverload);
+
+      const auto partial{fs::path{file} += ".partial"};
+      {
+        std::ofstream stream{partial, std::ios_base::out | std::ios_base::trunc | std::ios_base::binary};
+        stream << text;
+      }
+
+      fs::rename(partial, file, selectsTheNonThrowingOverload);
+    }
+
+    // Nothing escapes: the start is written outside the handler that turns a test's exceptions into critical
+    // failures, and the duration from a destructor, where a throw would end the run
+    template<invocable_r<std::string_view> Text>
+    void overwrite_record_quietly(const fs::path& file, Text text) noexcept
+    {
+      try
+      {
+        overwrite_quietly(file, text());
+      }
+      catch(...)
+      {
+      }
+    }
+
+    [[nodiscard]]
     std::string running_tests_message(concurrency_mode mode)
     {
       std::string mess{"\nRunning tests"};
@@ -524,6 +559,25 @@ namespace sequoia::testing
 
       write_to_file(file, text, std::ios_base::out | std::ios_base::binary);
     }
+  }
+
+  test_vessel::scoped_execution_record::scoped_execution_record(std::filesystem::path file)
+    : m_File{std::move(file)}
+    , m_Start{std::chrono::system_clock::now()}
+  {
+    overwrite_record_quietly(m_File, [this](){ return started_at(m_Start); });
+  }
+
+  test_vessel::scoped_execution_record::~scoped_execution_record()
+  {
+    auto finished{
+      [this](){
+        const auto elapsed{std::chrono::duration_cast<std::chrono::milliseconds>(m_Timer.time_elapsed())};
+        return started_at(m_Start) + std::format("duration {}\n", elapsed);
+      }
+    };
+
+    overwrite_record_quietly(m_File, finished);
   }
 
   //=========================================== test_runner ===========================================//
@@ -1037,7 +1091,10 @@ namespace sequoia::testing
   return_code test_runner::run()
   {
     if(m_InstabilityMode != instability_mode::sandbox)
+    {
       fs::remove_all(proj_paths().output().instability_analysis());
+      overwrite_quietly(proj_paths().execution_records().stamp(), started_at(std::chrono::system_clock::now()));
+    }
 
     const auto baseline{versioned_output_baseline()};
     const auto code{  m_InstabilityMode == instability_mode::coordinator

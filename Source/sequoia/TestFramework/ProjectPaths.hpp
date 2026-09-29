@@ -416,6 +416,37 @@ namespace sequoia::testing
     std::filesystem::path make_path(std::optional<std::size_t> id, std::string_view extension) const;
   };
 
+  /** \brief Paths of each test's record of its last execution, and of the stamp of the run that last started,
+             under a directory keyed on the executable's directory relative to the build root.
+   */
+
+  class execution_record_paths
+  {
+  public:
+    execution_record_paths() = default;
+
+    execution_record_paths(std::filesystem::path outputDir,
+                           const std::filesystem::path& buildRoot,
+                           const std::filesystem::path& executableDir);
+
+    [[nodiscard]]
+    const std::filesystem::path& dir() const noexcept
+    {
+      return m_Dir;
+    }
+
+    /** \brief The file in which each run writes its start; a record whose start precedes the run's is from an
+               earlier run.
+     */
+    [[nodiscard]]
+    std::filesystem::path stamp() const;
+
+    [[nodiscard]]
+    friend bool operator==(const execution_record_paths&, const execution_record_paths&) noexcept = default;
+  private:
+    std::filesystem::path m_Dir{};
+  };
+
 
   /** \brief Paths in the output directory */
 
@@ -490,6 +521,13 @@ namespace sequoia::testing
     prune_paths prune(const std::filesystem::path& buildRoot, const std::filesystem::path& buildDir) const
     {
       return {dir(), buildRoot, buildDir};
+    }
+
+    [[nodiscard]]
+    execution_record_paths execution_records(const std::filesystem::path& buildRoot,
+                                             const std::filesystem::path& executableDir) const
+    {
+      return {dir(), buildRoot, executableDir};
     }
 
     [[nodiscard]]
@@ -603,6 +641,9 @@ namespace sequoia::testing
 
     [[nodiscard]]
     prune_paths prune() const;
+
+    [[nodiscard]]
+    execution_record_paths execution_records() const;
 
     [[nodiscard]]
     friend bool operator==(const project_paths&, const project_paths&) noexcept = default;
