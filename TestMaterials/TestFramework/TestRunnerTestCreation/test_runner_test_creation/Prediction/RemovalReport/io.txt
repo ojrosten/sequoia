@@ -1,12 +1,13 @@
-Removing widget_test:
-"Tests/Stuff/WidgetTest.hpp"
-"Tests/Stuff/WidgetTest.cpp"
+Removing widget_test
 Editing:
 "OtherSandbox/CMakeLists.txt"
 "OtherSandbox/TestSandbox.cpp"
 "TestSandbox/CMakeLists.txt"
 "TestSandbox/TestSandbox.cpp"
 "TestShared/SharedIncludes.hpp"
+Deleting:
+"Tests/Stuff/WidgetTest.hpp"
+"Tests/Stuff/WidgetTest.cpp"
 
 
 Running CMake...

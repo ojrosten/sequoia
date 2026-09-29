@@ -614,9 +614,8 @@ namespace sequoia::testing
 
     void check_argument_consistency();
 
-    /** \brief Removes each registered test named, by its class or its source file, for removal.
-
-        \throws std::runtime_error, before anything is removed, if a name matches no registered test.
+    /** \brief Removes each registered test named, by its class or its source file, for removal, as `remove_tests`
+        describes.
      */
     void remove_requested_tests();
 

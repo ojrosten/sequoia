@@ -8,6 +8,7 @@
 #include "TestRunnerTestCreation.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "Utilities/TestUtilities.hpp"
 
 #include "sequoia/TestFramework/TestCreator.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
@@ -94,6 +95,58 @@ namespace sequoia::testing
 
       [[nodiscard]]
       static fs::path source_file() { return "Tests/Stuff/PairTest.cpp"; }
+
+      void run_tests() {}
+    };
+
+    /** \brief Two tests whose sources share a name, in different directories. */
+    class twin_stuff_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file() { return "Tests/Stuff/TwinTest.cpp"; }
+
+      void run_tests() {}
+    };
+
+    class twin_utilities_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file() { return "Tests/Utilities/TwinTest.cpp"; }
+
+      void run_tests() {}
+    };
+
+    /** \brief A test registered with the runner which the fake project's main does not register. */
+    class unlisted_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file() { return "Tests/Stuff/UnlistedTest.cpp"; }
+
+      void run_tests() {}
+    };
+
+    /** \brief A test whose source lies outside the fake project, as in a checkout copied with its build tree: a file,
+        which does not exist, beside this one.
+     */
+    class stray_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return fs::path{std::source_location::current().file_name()}.parent_path() / "StrayTest.cpp";
+      }
 
       void run_tests() {}
     };
@@ -273,13 +326,15 @@ namespace sequoia::testing
     // As every run of the runner leaves them
     fs::create_directories(project.root / "output" / "DiagnosticsOutput");
     fs::create_directories(project.root / "output" / "TestSummaries");
+    fs::create_directories(project.root / "output" / "TestsTemporaryData");
     fs::create_directories(project.root / "TestMaterials");
 
     // A second executable: creation registers each test in its main too, and removal must find it unprompted, as
     // removing from TestAll must find a test PersistentTestChamber registers.
     fs::copy(project.root / "TestSandbox", project.root / "OtherSandbox", fs::copy_options::recursive);
 
-    // Files in the materials naming the tests, as another test's fake project may; removal leaves them be.
+    // Files naming the tests where no main is - in the sources, the tests, the materials (as another test's fake
+    // project may), the output, the dependencies and a hidden directory - which removal leaves be.
     fs::copy(auxiliary_materials() / "LifecycleDecoys", project.root, fs::copy_options::recursive);
 
     auto creation{
@@ -401,10 +456,22 @@ namespace sequoia::testing
     check_state("The fake project as prepared", project.root, states / "Prepared");
 
     transition_checker_t::check(report("Creation and removal"), g, checkState);
+
+    for(const auto dir : {"dependencies/Decoys", ".hidden"})
+    {
+      check(equivalence,
+            std::format("Decoys in {} left be", dir),
+            project.root / dir,
+            auxiliary_materials() / "LifecycleDecoys" / dir);
+    }
   }
 
   /** A refusal comes before anything is removed, and a report names what went, so each is checked on the fake project
       the graph leaves behind, set to the state holding a regular test and its companions.
+   */
+  /** Each refusal is checked on the state holding a regular test and its companions, with whatever else the refusal
+      needs registered, so that nothing but the refusal stands between the request and a removal; and each is checked
+      to leave the project as it was. The report of a removal is checked last.
    */
   void test_runner_test_creation::test_removal_refusals()
   {
@@ -412,10 +479,11 @@ namespace sequoia::testing
 
     const auto root{auxiliary_materials() / projectName};
     const auto state{predictive_materials() / "Lifecycle" / "Widget"};
-    set_state(root, state);
+    const auto main{root / "TestSandbox" / "TestSandbox.cpp"};
+    const auto mainCMakeLists{root / "TestSandbox" / "CMakeLists.txt"};
 
     auto removal{
-      [this, &root](std::vector<std::string> args, auto registerTests, std::ostream& stream) {
+      [this](std::vector<std::string> args, auto registerTests, std::ostream& stream) {
         commandline_arguments cmdArgs{with_zeroth_arg(zeroth_arg(projectName), std::move(args))};
         auto runner{runner_for(cmdArgs, {}, stream)};
         registerTests(runner);
@@ -423,13 +491,49 @@ namespace sequoia::testing
       }
     };
 
-    // A thunk which runs the removal, for a check that it throws
-    auto removing{
-      [&removal](std::vector<std::string> args, auto registerTests) {
-        return [&removal, args, registerTests]() {
-          std::stringstream stream{};
-          return removal(args, registerTests, stream);
+    // Registered in the main, and listed beside it, as `create` writes them
+    auto registerInProject{
+      [&main, &mainCMakeLists, &root](const std::string& test, const fs::path& source) {
+        add_test_registrations(main, {test});
+        add_to_cmake(mainCMakeLists,
+                     root / "Tests",
+                     source.is_absolute() ? source : root / source,
+                     "target_sources(",
+                     ")\n",
+                     "${TestDir}/");
+      }
+    };
+
+    // The refusal of a test whose source lies outside the project names paths on this machine
+    auto withoutRoots{
+      [&root](const project_paths& projPaths, std::string message) {
+        replace_all(message, root.generic_string(), "<project>");
+        replace_all(message, projPaths.project_root().generic_string(), "<repository>");
+        return message;
+      }
+    };
+
+    auto refused{
+      [&, this](const reporter& description, std::vector<std::string> args, auto registerTests, auto prepare) {
+        set_state(root, state);
+        prepare();
+
+        // The same leaf, since the comparison of two directories includes their names
+        const auto before{working_materials() / "BeforeRefusal" / projectName},
+                   after {working_materials() / "AfterRefusal"  / projectName};
+        set_state(before, root);
+
+        auto attempt{
+          [&removal, &args, &registerTests]() {
+            std::stringstream stream{};
+            return removal(args, registerTests, stream);
+          }
         };
+
+        check_exception_thrown<std::runtime_error>(description, attempt, withoutRoots);
+
+        set_state(after, root);
+        check(equivalence, "The project is as it was before the refusal", after, before);
       }
     };
 
@@ -448,25 +552,63 @@ namespace sequoia::testing
       }
     };
 
-    auto refused{
-      [this](std::string_view description, auto attempt) {
-        check_exception_thrown<std::runtime_error>(description, attempt);
+    auto twinTests{
+      [](test_runner& r) {
+        r.register_test<twin_stuff_test>();
+        r.register_test<twin_utilities_test>();
       }
     };
 
-    refused("A class registering no test", removing({"remove-test", "gizmo_test"}, widgetTests));
-    refused("A source file defining no registered test",
-            removing({"remove-test", "Tests/Stuff/GizmoTest.cpp"}, widgetTests));
-    refused("The one test a class names, of the two its source file defines",
-            removing({"remove-test", "pair_first_test"}, pairTests));
-    refused("A test which is registered, beside one which is not",
-            removing({"remove-test", "widget_test", "remove-test", "gizmo_test"}, widgetTests));
-    refused("Removal, with a test to run",
-            removing({"remove-test", "widget_test", "select", "WidgetTest.cpp"}, widgetTests));
-    refused("Removal, with a test to exclude",
-            removing({"remove-test", "widget_test", "exclude", "WidgetTest.cpp"}, widgetTests));
+    auto unlistedTest{[](test_runner& r) { r.register_test<unlisted_test>(); }};
+    auto strayTest   {[](test_runner& r) { r.register_test<stray_test>(); }};
 
-    check_state("Nothing removed when removal is refused", root, state);
+    auto asCreated{[]() {}};
+
+    refused("A class registering no test", {"remove-test", "gizmo_test"}, widgetTests, asCreated);
+    refused("A source file defining no registered test",
+            {"remove-test", "Tests/Stuff/GizmoTest.cpp"},
+            widgetTests,
+            asCreated);
+    refused("A test which is registered, beside one which is not",
+            {"remove-test", "widget_test", "remove-test", "gizmo_test"},
+            widgetTests,
+            asCreated);
+    refused("A source file named by a name two source files have",
+            {"remove-test", "TwinTest.cpp"},
+            twinTests,
+            [&]() {
+              registerInProject("twin_stuff_test", "Tests/Stuff/TwinTest.cpp");
+              registerInProject("twin_utilities_test", "Tests/Utilities/TwinTest.cpp");
+            });
+    refused("A test whose source lies outside the project",
+            {"remove-test", "stray_test"},
+            strayTest,
+            [&]() { registerInProject("stray_test", stray_test::source_file()); });
+    refused("A test the main does not register", {"remove-test", "unlisted_test"}, unlistedTest, asCreated);
+    refused("A test whose source the CMakeLists.txt beside the main does not list",
+            {"remove-test", "widget_test"},
+            widgetTests,
+            [&]() {
+              remove_from_cmake(mainCMakeLists, root / "Tests", root / "Tests/Stuff/WidgetTest.cpp", "${TestDir}/");
+            });
+    refused("The one test a class names, of the two its source file defines",
+            {"remove-test", "pair_first_test"},
+            pairTests,
+            [&]() {
+              write_to_file(root / "Tests/Stuff/PairTest.cpp", "// Two tests\n", std::ios_base::out);
+              registerInProject("pair_first_test", "Tests/Stuff/PairTest.cpp");
+              registerInProject("pair_second_test", "Tests/Stuff/PairTest.cpp");
+            });
+    refused("Removal, with a test to run",
+            {"remove-test", "widget_test", "select", "WidgetTest.cpp"},
+            widgetTests,
+            asCreated);
+    refused("Removal, with a test to exclude",
+            {"remove-test", "widget_test", "exclude", "WidgetTest.cpp"},
+            widgetTests,
+            asCreated);
+
+    set_state(root, state);
 
     std::stringstream stream{};
     check(equality,

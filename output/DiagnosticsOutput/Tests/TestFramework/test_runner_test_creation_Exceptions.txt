@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 176
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 229
 Empty string
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Equivalent type is unspecified
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 177
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 230
 Just spaces
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ Equivalent type is unspecified
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 208
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 261
 A directory which does not exist
 
 Expected Exception Type:
@@ -29,7 +29,7 @@ to be appropriately set.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 213
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 266
 A directory whose name is not an identifier
 
 Expected Exception Type:
@@ -39,7 +39,7 @@ permissible namespace name. Please supply `source_folder` in the project_paths c
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 218
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 271
 A directory whose name begins with a digit
 
 Expected Exception Type:
@@ -49,7 +49,7 @@ permissible namespace name. Please supply `source_folder` in the project_paths c
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 226
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 279
 Unmatched <
 
 Expected Exception Type:
@@ -58,7 +58,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 228
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 281
 Backwards delimiters
 
 Expected Exception Type:
@@ -67,7 +67,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 230
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 283
 Missing symbol
 
 Expected Exception Type:
@@ -76,7 +76,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 232
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 285
 Missing symbol
 
 Expected Exception Type:
@@ -85,7 +85,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 453
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 567
 A class registering no test
 
 Expected Exception Type:
@@ -94,7 +94,7 @@ remove-test: gizmo_test names no test registered with this runner
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 453
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 568
 A source file defining no registered test
 
 Expected Exception Type:
@@ -103,16 +103,7 @@ remove-test: Tests/Stuff/GizmoTest.cpp names no test registered with this runner
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 453
-The one test a class names, of the two its source file defines
-
-Expected Exception Type:
-[std::runtime_error]
-remove-test: Tests/Stuff/PairTest.cpp defines pair_second_test as well as pair_first_test; name the source file to remove both
-
-=======================================
-
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 453
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 572
 A test which is registered, beside one which is not
 
 Expected Exception Type:
@@ -121,7 +112,54 @@ remove-test: gizmo_test names no test registered with this runner
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 453
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 576
+A source file named by a name two source files have
+
+Expected Exception Type:
+[std::runtime_error]
+remove-test: TwinTest.cpp may name any of
+Tests/Stuff/TwinTest.cpp
+Tests/Utilities/TwinTest.cpp
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 583
+A test whose source lies outside the project
+
+Expected Exception Type:
+[std::runtime_error]
+remove-test: the source file of stray_test, <repository>/Tests/TestFramework/StrayTest.cpp, lies outside the tests repository <project>/Tests
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 587
+A test the main does not register
+
+Expected Exception Type:
+[std::runtime_error]
+remove-test: TestSandbox/TestSandbox.cpp has no line registering unlisted_test as create writes it
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 588
+A test whose source the CMakeLists.txt beside the main does not list
+
+Expected Exception Type:
+[std::runtime_error]
+remove-test: TestSandbox/CMakeLists.txt does not list Tests/Stuff/WidgetTest.cpp as create writes it
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 594
+The one test a class names, of the two its source file defines
+
+Expected Exception Type:
+[std::runtime_error]
+remove-test: Tests/Stuff/PairTest.cpp defines pair_second_test as well as pair_first_test; name the source file to remove both
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 602
 Removal, with a test to run
 
 Expected Exception Type:
@@ -130,7 +168,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 453
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 606
 Removal, with a test to exclude
 
 Expected Exception Type:
@@ -139,7 +177,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 690
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 832
 Source directory absent
 
 Expected Exception Type:
@@ -149,7 +187,7 @@ which is not a directory within this project, output/TestsTemporaryData/TestFram
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 693
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 835
 Source directory outside the project
 
 Expected Exception Type:
@@ -159,7 +197,7 @@ which is not a directory within this project, output/TestsTemporaryData/TestFram
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 690
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 832
 Source directory absent
 
 Expected Exception Type:
@@ -169,7 +207,7 @@ which is not a directory within this project, output/TestsTemporaryData/TestFram
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 693
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 835
 Source directory outside the project
 
 Expected Exception Type:
@@ -179,7 +217,7 @@ which is not a directory within this project, output/TestsTemporaryData/TestFram
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 743
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 885
 Plurgh.h does not exist
 
 Expected Exception Type:
@@ -189,7 +227,7 @@ Unable to locate file Plurgh.h or Plurgh.hpp or Plurgh.hxx in the source reposit
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 743
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 885
 Typo in specified class header
 
 Expected Exception Type:
@@ -199,7 +237,7 @@ Unable to locate file fakeProject/Stuff/Thingz.hpp or fakeProject/Stuff/Thingz.h
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 743
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 885
 Both a forename and a full name
 
 Expected Exception Type:
@@ -208,7 +246,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 743
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 885
 A full name for a framework-diagnostics pair
 
 Expected Exception Type:
@@ -217,7 +255,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 743
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 885
 An empty full name
 
 Expected Exception Type:
@@ -226,7 +264,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 743
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 885
 A full name which is not an identifier
 
 Expected Exception Type:
@@ -235,7 +273,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 743
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 885
 A full name already registered
 
 Expected Exception Type:
@@ -244,7 +282,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 743
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 885
 A full name whose file is present, ignoring case
 
 Expected Exception Type:
@@ -253,7 +291,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 743
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 885
 Testing utilities absent
 
 Expected Exception Type:
@@ -262,7 +300,7 @@ The testing utilities AbsentTestingUtilities.hpp cannot be found in the tests re
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 743
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 885
 Testing utilities outside the tests repository
 
 Expected Exception Type:
@@ -271,7 +309,7 @@ The testing utilities ../TestSandbox/TestSandbox.cpp do not lie beneath the test
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 743
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 885
 Testing utilities ambiguous
 
 Expected Exception Type:
@@ -282,7 +320,7 @@ Utilities/WidgetTestingUtilities.hpp
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 743
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 885
 Testing utilities found past a directory of their name, then a full name already registered
 
 Expected Exception Type:
@@ -291,7 +329,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTestCreation.cpp, Line 743
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 885
 A full name whose file is a companion's
 
 Expected Exception Type:

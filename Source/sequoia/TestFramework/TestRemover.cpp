@@ -35,6 +35,10 @@ namespace sequoia::testing
       std::vector<std::string> tests{};
     };
 
+    constexpr auto name_of{[](const test_registration& reg) { return reg.name; }};
+
+    constexpr std::string_view cmakeEntryPrefix{"${TestDir}/"};
+
     [[nodiscard]]
     fs::path within_tests_repo(const fs::path& source, const project_paths& projPaths)
     {
@@ -48,9 +52,55 @@ namespace sequoia::testing
       return path.lexically_relative(projPaths.project_root()).generic_string();
     }
 
+    /** \brief The registered tests `request` names: by class, if it has no directory separator or extension; else by
+               source file, for each test whose source's path ends in the request's.
+
+        \throws std::runtime_error if the request names no registered test, or names a source file ambiguously.
+     */
+    [[nodiscard]]
+    std::vector<test_registration> tests_named_by(const project_paths& projPaths,
+                                                  const std::string& request,
+                                                  const std::vector<test_registration>& registered)
+    {
+      const bool namesClass{request.find_first_of("/\\.") == std::string::npos};
+      const fs::path requestPath{fs::path{request}.lexically_normal()};
+
+      auto isNamed{
+        [&](const test_registration& reg) {
+          return namesClass ? (reg.name == request)
+                            : std::ranges::ends_with(within_tests_repo(reg.source, projPaths), requestPath);
+        }
+      };
+
+      const auto named{registered | std::views::filter(isNamed) | std::ranges::to<std::vector>()};
+      if(named.empty())
+        throw std::runtime_error{std::format("remove-test: {} names no test registered with this runner", request)};
+
+      auto sourceOf{[&projPaths](const test_registration& reg) { return within_tests_repo(reg.source, projPaths); }};
+      auto sources{named | std::views::transform(sourceOf) | std::ranges::to<std::vector>()};
+      std::ranges::sort(sources);
+      sources.erase(std::ranges::unique(sources).begin(), sources.end());
+
+      if(sources.size() > 1)
+      {
+        auto relativeToRoot{[&projPaths](const fs::path& source) { return relative_to_root(source, projPaths); }};
+        const auto candidates{
+            sources
+          | std::views::transform(relativeToRoot)
+          | std::views::join_with('\n')
+          | std::ranges::to<std::string>()
+        };
+
+        throw std::runtime_error{std::format("remove-test: {} may name any of\n{}", request, candidates)};
+      }
+
+      return named;
+    }
+
     /** \brief Each source file holding a test to remove, with those tests, in order of the file's path.
 
-        \throws std::runtime_error if a source file defines a registered test which is not to be removed.
+        \throws std::runtime_error if a source file lies outside the tests repository, or defines a registered test
+        which is not to be removed.
      */
     [[nodiscard]]
     std::vector<source_of_tests> group_by_source(const project_paths& projPaths,
@@ -64,6 +114,21 @@ namespace sequoia::testing
       };
 
       auto located{testsToRemove | std::views::transform(locate) | std::ranges::to<std::vector>()};
+
+      auto liesOutside{
+        [&projPaths](const test_registration& reg) {
+          const auto relative{reg.source.lexically_relative(projPaths.tests().repo())};
+          return relative.empty() || (*relative.begin() == "..");
+        }
+      };
+
+      if(const auto outside{std::ranges::find_if(located, liesOutside)}; outside != located.end())
+        throw std::runtime_error{
+          std::format("remove-test: the source file of {}, {}, lies outside the tests repository {}",
+                      outside->name,
+                      outside->source.generic_string(),
+                      projPaths.tests().repo().generic_string())
+        };
       std::ranges::sort(located, {}, [](const test_registration& reg) { return std::tie(reg.source, reg.name); });
 
       // A test may be named twice, by its class and by its source file.
@@ -73,13 +138,11 @@ namespace sequoia::testing
         [](const test_registration& lhs, const test_registration& rhs) { return lhs.source == rhs.source; }
       };
 
-      auto nameOf{[](const test_registration& reg) { return reg.name; }};
-
       auto toSource{
         [&](auto&& group) {
           const source_of_tests source{
             .file{std::ranges::begin(group)->source},
-            .tests{group | std::views::transform(nameOf) | std::ranges::to<std::vector>()}
+            .tests{group | std::views::transform(name_of) | std::ranges::to<std::vector>()}
           };
 
           auto remainsBehind{
@@ -107,8 +170,9 @@ namespace sequoia::testing
            | std::ranges::to<std::vector>();
     }
 
-    /** \brief The files beyond the project's sources, tests, materials, build trees, build system, output, dependencies
-               and templates which may name a test: C++ sources and headers, and `CMakeLists.txt`.
+    /** \brief The files which may name a test: C++ sources and headers, and `CMakeLists.txt`, beyond the project's
+               sources, tests, materials, build trees, build system, output, dependencies and templates; and, wherever
+               they lie, the runner's own mains, their `CMakeLists.txt` and the common includes.
      */
     [[nodiscard]]
     std::vector<fs::path> files_which_may_name_tests(const project_paths& projPaths)
@@ -153,7 +217,15 @@ namespace sequoia::testing
         }
       }
 
+      auto withItsCMakeLists{
+        [](const main_paths& main) { return std::array{main.file(), main.cmake_lists(), main.common_includes()}; }
+      };
+
+      files.append_range(withItsCMakeLists(projPaths.main()));
+      files.append_range(projPaths.ancillary_main_cpps() | std::views::transform(withItsCMakeLists) | std::views::join);
+
       std::ranges::sort(files);
+      files.erase(std::ranges::unique(files).begin(), files.end());
       return files;
     }
 
@@ -231,7 +303,7 @@ namespace sequoia::testing
                              const fs::path& testsRepo)
     {
       if(file.filename() == "CMakeLists.txt")
-        return remove_from_cmake(file, testsRepo, source.file, "target_sources(", ")\n", "${TestDir}/");
+        return remove_from_cmake(file, testsRepo, source.file, cmakeEntryPrefix);
 
       bool removed{remove_test_registrations(file, source.tests)};
       for(const auto& include : headerIncludes)
@@ -258,7 +330,7 @@ namespace sequoia::testing
                                      std::ostream& stream)
     {
       const individual_materials_paths materials{source, test, projPaths, std::nullopt};
-      if(fs::remove_all(materials.original_test_root()))
+      if(fs::remove_all(materials.original_test_root()) > 0)
         report_path(stream, materials.original_test_root(), projPaths);
 
       remove_empty_directories(materials.original_test_root().parent_path(), projPaths.test_materials().repo());
@@ -314,19 +386,34 @@ namespace sequoia::testing
         | std::ranges::to<std::string>()
       };
 
-      stream << std::format("Removing {}:\n", testList);
+      // The lines naming the files go before the files, so that a failure part-way leaves no line naming a file
+      // which is gone.
+      stream << std::format("Removing {}\nEditing:\n", testList);
+
+      auto includePath{
+        [&testsRepo](const fs::path& header) { return header.lexically_relative(testsRepo).generic_string(); }
+      };
+
+      const auto headerIncludes{headers | std::views::transform(includePath) | std::ranges::to<std::vector>()};
+
+      for(const auto& file : filesWhichMayNameTests)
+      {
+        if(remove_lines_naming(file, source, headerIncludes, testsRepo))
+          report_path(stream, file, projPaths);
+      }
+
+      stream << "Deleting:\n";
 
       for(const auto& file : headers)
       {
-        fs::remove(file);
-        report_path(stream, file, projPaths);
+        if(fs::remove(file))
+          report_path(stream, file, projPaths);
       }
 
-      fs::remove(source.file);
-      report_path(stream, source.file, projPaths);
-      remove_empty_directories(source.file.parent_path(), testsRepo);
+      if(fs::remove(source.file))
+        report_path(stream, source.file, projPaths);
 
-      auto nameOf{[](const test_registration& reg) { return reg.name; }};
+      remove_empty_directories(source.file.parent_path(), testsRepo);
 
       for(const auto& test : source.tests)
       {
@@ -341,38 +428,63 @@ namespace sequoia::testing
         const auto rivals{
             registered
           | std::views::filter(isRival)
-          | std::views::transform(nameOf)
+          | std::views::transform(name_of)
           | std::ranges::to<std::vector>()
         };
 
         remove_materials_and_output(projPaths, source.file, test, rivals, stream);
       }
 
-      stream << "Editing:\n";
+      stream << '\n';
+    }
 
-      auto includePath{
-        [&testsRepo](const fs::path& header) { return header.lexically_relative(testsRepo).generic_string(); }
-      };
+    /** \brief Checks that the runner's own main registers each test in `source` as `create` writes the registration,
+               and that the `CMakeLists.txt` beside it lists the source as `create` writes the entry.
 
-      const auto headerIncludes{headers | std::views::transform(includePath) | std::ranges::to<std::vector>()};
+        What the running executable registers, its main must: so a registration or an entry spelt otherwise shows
+        that the project names the test in ways removal would miss.
 
-      for(const auto& file : filesWhichMayNameTests)
+        \throws std::runtime_error if either is missing.
+     */
+    void check_found_as_created(const project_paths& projPaths, const source_of_tests& source)
+    {
+      const auto& main{projPaths.main()};
+      for(const auto& test : source.tests)
       {
-        if(remove_lines_naming(file, source, headerIncludes, testsRepo))
-          report_path(stream, file, projPaths);
+        if(!registers_test(main.file(), test))
+          throw std::runtime_error{
+            std::format("remove-test: {} has no line registering {} as create writes it",
+                        relative_to_root(main.file(), projPaths),
+                        test)
+          };
       }
 
-      stream << '\n';
+      if(!names_in_cmake(main.cmake_lists(), projPaths.tests().repo(), source.file, cmakeEntryPrefix))
+        throw std::runtime_error{
+          std::format("remove-test: {} does not list {} as create writes it",
+                      relative_to_root(main.cmake_lists(), projPaths),
+                      relative_to_root(source.file, projPaths))
+        };
     }
   }
 
   void remove_tests(const project_paths& projPaths,
-                    const std::vector<test_registration>& testsToRemove,
+                    const std::vector<std::string>& requests,
                     const std::vector<test_registration>& registered,
                     std::ostream& stream)
   {
     // Every refusal comes before anything is removed.
+    auto testsNamed{
+      [&projPaths, &registered](const std::string& request) { return tests_named_by(projPaths, request, registered); }
+    };
+
+    const auto testsToRemove{requests | std::views::transform(testsNamed) | std::views::join | std::ranges::to<std::vector>()};
     const auto sources{group_by_source(projPaths, testsToRemove, registered)};
+    for(const auto& source : sources)
+    {
+      check_found_as_created(projPaths, source);
+    }
+
     const auto filesWhichMayNameTests{files_which_may_name_tests(projPaths)};
 
     for(const auto& source : sources)

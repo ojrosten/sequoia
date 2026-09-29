@@ -1174,37 +1174,10 @@ namespace sequoia::testing
 
     const auto registered{m_Tests | std::views::transform(registrationOf) | std::ranges::to<std::vector>()};
 
-    const path_equivalence isSameSource{proj_paths().tests().repo()};
-
-    // A class is named without a directory or an extension; anything else names a source file.
-    auto registrationsNamedBy{
-      [&registered, &isSameSource](const std::string& request) {
-        const bool namesClass{request.find_first_of("/\\.") == std::string::npos};
-
-        auto isNamed{
-          [&](const test_registration& reg) {
-            return namesClass ? (reg.name == request) : isSameSource(normal_path{request}, normal_path{reg.source});
-          }
-        };
-
-        auto named{registered | std::views::filter(isNamed) | std::ranges::to<std::vector>()};
-        if(named.empty())
-          throw std::runtime_error{std::format("remove-test: {} names no test registered with this runner", request)};
-
-        return named;
-      }
-    };
-
-    const auto testsToRemove{
-        m_RemovalRequests
-      | std::views::transform(registrationsNamedBy)
-      | std::views::join
-      | std::ranges::to<std::vector>()
-    };
-
-    remove_tests(proj_paths(), testsToRemove, registered, stream());
+    remove_tests(proj_paths(), m_RemovalRequests, registered, stream());
     stream() << reconfigure_build_tree(proj_paths());
   }
+
 
   void test_runner::check_for_missing_tests()
   {

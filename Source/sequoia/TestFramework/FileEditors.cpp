@@ -44,6 +44,45 @@ namespace sequoia::testing
       return line.substr(std::ranges::min(line.find_first_not_of(blanks), line.size()));
     }
 
+    /** \brief Whether `line`, leading blanks aside, begins with the registration of `test`. */
+    [[nodiscard]]
+    bool is_registration_of(std::string_view line, std::string_view test)
+    {
+      return without_leading_blanks(line).starts_with(registration_of(test));
+    }
+
+    /** \brief Whether `line`, leading blanks aside, begins with the include of `includePath`. */
+    [[nodiscard]]
+    bool is_include_of(std::string_view line, std::string_view includePath)
+    {
+      return without_leading_blanks(line).starts_with(include_directive(includePath));
+    }
+
+    /** \brief The position in `text` from `from` of `entry` standing as a whole argument of a CMake command: after
+               whitespace or the command's `(`, and before whitespace or its `)`.
+     */
+    [[nodiscard]]
+    std::string::size_type find_cmake_argument(std::string_view text, std::string_view entry, std::string::size_type from)
+    {
+      constexpr std::string_view whitespace{" \t\r\n"};
+
+      auto standsAlone{
+        [&](std::string::size_type pos) {
+          const auto end{pos + entry.size()};
+          return (pos > 0) && (whitespace.contains(text[pos - 1]) || (text[pos - 1] == '('))
+              && ((end == text.size()) || whitespace.contains(text[end]) || (text[end] == ')'));
+        }
+      };
+
+      auto pos{text.find(entry, from)};
+      while((pos != std::string::npos) && !standsAlone(pos))
+      {
+        pos = text.find(entry, pos + 1);
+      }
+
+      return pos;
+    }
+
     /** \brief Removes from `file` each line which `shouldRemove` accepts, and says whether there was one. */
     template<std::predicate<std::string_view> ShouldRemove>
     bool remove_lines(const fs::path& file, ShouldRemove shouldRemove)
@@ -233,9 +272,7 @@ namespace sequoia::testing
 
   bool remove_include(const fs::path& file, std::string_view includePath)
   {
-    auto isInclude{[directive{include_directive(includePath)}](std::string_view line) { return line == directive; }};
-
-    return remove_lines(file, isInclude);
+    return remove_lines(file, [includePath](std::string_view line) { return is_include_of(line, includePath); });
   }
 
   void add_test_registrations(const fs::path& file, const std::vector<std::string>& tests)
@@ -286,13 +323,11 @@ namespace sequoia::testing
 
     auto isRegistered{
       [contentsView](std::string_view test) {
-        auto startsWithRegistration{
-          [registration{registration_of(test)}](auto&& line) {
-            return without_leading_blanks({std::ranges::begin(line), std::ranges::end(line)}).starts_with(registration);
-          }
+        auto registersTest{
+          [test](auto&& line) { return is_registration_of({std::ranges::begin(line), std::ranges::end(line)}, test); }
         };
 
-        return std::ranges::any_of(contentsView | std::views::split('\n'), startsWithRegistration);
+        return std::ranges::any_of(contentsView | std::views::split('\n'), registersTest);
       }
     };
 
@@ -321,17 +356,24 @@ namespace sequoia::testing
   {
     auto isRegistration{
       [&tests](std::string_view line) {
-        auto registers{
-          [content{without_leading_blanks(line)}](const std::string& test) {
-            return content.starts_with(registration_of(test));
-          }
-        };
-
-        return std::ranges::any_of(tests, registers);
+        return std::ranges::any_of(tests, [line](const std::string& test) { return is_registration_of(line, test); });
       }
     };
 
     return remove_lines(file, isRegistration);
+  }
+
+  bool registers_test(const fs::path& file, std::string_view test)
+  {
+    const auto contents{read_to_string(file, std::ios_base::in)};
+    if(!contents)
+      throw std::runtime_error{report_failed_read(file)};
+
+    auto registersTest{
+      [test](auto&& line) { return is_registration_of({std::ranges::begin(line), std::ranges::end(line)}, test); }
+    };
+
+    return std::ranges::any_of(contents.value() | std::views::split('\n'), registersTest);
   }
 
   void add_to_cmake(const fs::path& cmakeLists,
@@ -361,21 +403,42 @@ namespace sequoia::testing
   bool remove_from_cmake(const fs::path& cmakeLists,
                          const fs::path& hostDir,
                          const fs::path& file,
-                         std::string_view patternOpen,
-                         std::string_view patternClose,
                          std::string_view cmakeEntryPrefix)
   {
     auto contents{read_to_string(cmakeLists, std::ios_base::in)};
     if(!contents)
       throw std::runtime_error{report_failed_read(cmakeLists)};
 
-    auto list{find_cmake_list(*contents, patternOpen, patternClose)};
-    if(!list || (std::erase(list->entries, cmake_entry(cmakeEntryPrefix, file, hostDir)) == 0))
+    std::string& text{contents.value()};
+    const auto entry{cmake_entry(cmakeEntryPrefix, file, hostDir)};
+    const auto originalSize{text.size()};
+
+    // A loop rather than a view, since each removal shortens the text the next search runs over.
+    auto pos{find_cmake_argument(text, entry, 0)};
+    while(pos != std::string::npos)
+    {
+      const auto start{text.find_last_not_of(" \t\r\n", pos - 1) + 1};
+      text.erase(start, pos + entry.size() - start);
+      pos = find_cmake_argument(text, entry, start);
+    }
+
+    if(text.size() == originalSize)
       return false;
 
-    write_cmake_list(*contents, *list);
-    write_to_file(cmakeLists, *contents, std::ios_base::out);
+    write_to_file(cmakeLists, text, std::ios_base::out);
     return true;
+  }
+
+  bool names_in_cmake(const fs::path& cmakeLists,
+                      const fs::path& hostDir,
+                      const fs::path& file,
+                      std::string_view cmakeEntryPrefix)
+  {
+    const auto contents{read_to_string(cmakeLists, std::ios_base::in)};
+    if(!contents)
+      throw std::runtime_error{report_failed_read(cmakeLists)};
+
+    return find_cmake_argument(contents.value(), cmake_entry(cmakeEntryPrefix, file, hostDir), 0) != std::string::npos;
   }
 
   namespace

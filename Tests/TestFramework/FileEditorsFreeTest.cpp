@@ -198,8 +198,8 @@ namespace sequoia::testing
     transition_checker_t::check(report("Registrations added and removed"), g, checkerFn);
   }
 
-  /** Only the line `add_include` writes is removed: an include of a header of the same name in another directory
-      stays, as does one written with a comment.
+  /** An include is removed however it is indented, whatever follows it and whatever its line ending; an include of a
+      header of the same name in another directory stays.
    */
   void file_editors_free_test::test_includes_added_and_removed()
   {
@@ -210,14 +210,18 @@ namespace sequoia::testing
     const std::string
       withoutBeta{"#include <vector>\n"
                   "#include \"Alpha.hpp\"\n"
-                  "#include \"Beta.hpp\" // included by hand\n"
                   "#include \"Other/Beta.hpp\"\n"
                   "\n"
                   "int x{};\n"},
       withBeta   {"#include <vector>\n"
                   "#include \"Alpha.hpp\"\n"
                   "#include \"Beta.hpp\"\n"
-                  "#include \"Beta.hpp\" // included by hand\n"
+                  "#include \"Other/Beta.hpp\"\n"
+                  "\n"
+                  "int x{};\n"},
+      byHand     {"#include <vector>\n"
+                  "#include \"Alpha.hpp\"\n"
+                  "  #include \"Beta.hpp\" // by hand\r\n"
                   "#include \"Other/Beta.hpp\"\n"
                   "\n"
                   "int x{};\n"};
@@ -236,10 +240,11 @@ namespace sequoia::testing
 
     header_graph g{
       { { edge_t{1, "Include Beta.hpp", add},
-          edge_t{0, "Remove Beta.hpp, which only the lookalikes name", remove} }, // 0: without Beta.hpp
-        { edge_t{0, "Remove Beta.hpp", remove} }                                             // 1: with Beta.hpp
+          edge_t{0, "Remove Beta.hpp, which only another directory's header names", remove} }, // 0: without Beta.hpp
+        { edge_t{0, "Remove Beta.hpp", remove} },                                                // 1: with Beta.hpp
+        { edge_t{0, "Remove Beta.hpp, included by hand", remove} }                                // 2: by hand
       },
-      {withoutBeta, withBeta}
+      {withoutBeta, withBeta, byHand}
     };
 
     auto checkerFn{
@@ -252,7 +257,8 @@ namespace sequoia::testing
   }
 
   /** The list is emptied back to the one line it started as, and an entry for a file of the same name in another
-      directory is not the entry removed.
+      directory, or one the entry's text begins, is not the entry removed. Lists `add_to_cmake` would not write - an
+      entry on the opening line, a list on one line, tabs and CRLF - lose the entry and keep everything else.
    */
   void file_editors_free_test::test_cmake_entries_added_and_removed()
   {
@@ -290,7 +296,20 @@ namespace sequoia::testing
                 "target_sources(TestAll PRIVATE\n"
                 "               ${TestDir}/Other/BetaTest.cpp)\n"
                 "\n"
-                "target_link_libraries(TestAll PRIVATE sequoia)\n"};
+                "target_link_libraries(TestAll PRIVATE sequoia)\n"},
+      openingLine{"target_sources(Harness PRIVATE ${TestDir}/Stuff/BetaTest.cpp\n"
+                  "                              ${TestDir}/Stuff/AlphaTest.cpp)\n"},
+      openedAlone{"target_sources(Harness PRIVATE\n"
+                  "                              ${TestDir}/Stuff/AlphaTest.cpp)\n"},
+      oneLine    {"target_sources(TestAll PRIVATE ${TestDir}/Stuff/BetaTest.cpp)\n"},
+      emptyLine  {"target_sources(TestAll PRIVATE)\n"},
+      tabsAndCRLF{"target_sources(TestAll PRIVATE\r\n"
+                  "\t${TestDir}/Stuff/AlphaTest.cpp\r\n"
+                  "\t${TestDir}/Stuff/BetaTest.cpp.in\r\n"
+                  "\t${TestDir}/Stuff/BetaTest.cpp)\r\n"},
+      tabsAndCRLFWithoutBeta{"target_sources(TestAll PRIVATE\r\n"
+                             "\t${TestDir}/Stuff/AlphaTest.cpp\r\n"
+                             "\t${TestDir}/Stuff/BetaTest.cpp.in)\r\n"};
 
     const auto testsDir{working_materials() / "Tests"};
 
@@ -309,7 +328,7 @@ namespace sequoia::testing
       [this, &testsDir](std::string_view source) {
         return [this, &testsDir, source](const std::string& text) {
           return edited(text, [&testsDir, source](const std::filesystem::path& file) {
-              remove_from_cmake(file, testsDir, testsDir / source, "target_sources(", ")\n", "${TestDir}/");
+              remove_from_cmake(file, testsDir, testsDir / source, "${TestDir}/");
             }
           );
         };
@@ -327,9 +346,18 @@ namespace sequoia::testing
         { edge_t{2, "Add BetaTest.cpp after AlphaTest.cpp", add("Stuff/BetaTest.cpp")},
           edge_t{0, "Remove the only entry", remove("Stuff/AlphaTest.cpp")} },                  // 3: AlphaTest.cpp
         { edge_t{4, "Remove Stuff/BetaTest.cpp, where only Other/BetaTest.cpp is listed", remove("Stuff/BetaTest.cpp")}
-        } // 4: elsewhere
+        }, // 4: elsewhere
+        { edge_t{6, "Remove the entry on the list's opening line, leaving the rest as it was", remove("Stuff/BetaTest.cpp")}
+        }, // 5: an entry on the opening line
+        { }, // 6: the opening line alone
+        { edge_t{8, "Remove the only entry of a list on one line", remove("Stuff/BetaTest.cpp")}
+        }, // 7: a list on one line
+        { }, // 8: an empty list on one line
+        { edge_t{10, "Remove an entry indented by a tab, leaving one it begins", remove("Stuff/BetaTest.cpp")}
+        }, // 9: tabs and CRLF
+        { }  // 10: tabs and CRLF, without the entry
       },
-      {empty, beta, alphaBeta, alpha, elsewhere}
+      {empty, beta, alphaBeta, alpha, elsewhere, openingLine, openedAlone, oneLine, emptyLine, tabsAndCRLF, tabsAndCRLFWithoutBeta}
     };
 
     auto checkerFn{
@@ -359,7 +387,7 @@ namespace sequoia::testing
     auto includeOfBeta{[](const std::filesystem::path& f) { return remove_include(f, "Beta.hpp"); }};
     auto entryForBeta{
       [testsDir{working_materials() / "Tests"}](const std::filesystem::path& f) {
-        return remove_from_cmake(f, testsDir, testsDir / "BetaTest.cpp", "target_sources(", ")\n", "${TestDir}/");
+        return remove_from_cmake(f, testsDir, testsDir / "BetaTest.cpp", "${TestDir}/");
       }
     };
 
