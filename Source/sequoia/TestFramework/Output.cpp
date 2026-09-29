@@ -19,6 +19,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <format>
+#include <functional>
 #include <limits>
 #include <numeric>
 #include <optional>
@@ -42,9 +43,7 @@ namespace sequoia::testing
     constexpr auto is_hex_digit{[](char c){ return std::isxdigit(static_cast<unsigned char>(c)) != 0; }};
     constexpr auto is_alpha    {[](char c){ return std::isalpha( static_cast<unsigned char>(c)) != 0; }};
 
-    constexpr auto is_word_delimiter{
-      [](char c){ return !(std::isalnum(static_cast<unsigned char>(c)) || (c == '_')); }
-    };
+    constexpr auto is_word_delimiter{std::not_fn(is_identifier_character)};
     
     /** Whether a number, a digit or a `-` then a digit, begins at `pos`. */
     [[nodiscard]]
