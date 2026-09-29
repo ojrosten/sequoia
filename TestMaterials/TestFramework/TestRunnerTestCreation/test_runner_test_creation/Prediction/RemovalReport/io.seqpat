@@ -1,0 +1,10 @@
+-- Selecting .*\n
+(?=is ).*
+(?=compiler: ).*
+-- Checking whether .*\n
+-- Performing .*\n
+-- Found Threads: .*\n
+\d+\.\d+s
+(?= to: ).*(?=build/TestSandbox/)
+[^/\n]+(?=\n$)
+Preset((.|\n|)*?)(?=--)

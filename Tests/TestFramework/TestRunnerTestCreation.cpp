@@ -75,6 +75,65 @@ namespace sequoia::testing
     constexpr std::array<std::string_view, 7>
       editedDirectories{"OtherSandbox", "output", "Source", "TestMaterials", "Tests", "TestSandbox", "TestShared"};
 
+    /** \brief A test class sharing its source file with `pair_second_test`. */
+    class pair_first_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file() { return "Tests/Stuff/PairTest.cpp"; }
+
+      void run_tests() {}
+    };
+
+    class pair_second_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file() { return "Tests/Stuff/PairTest.cpp"; }
+
+      void run_tests() {}
+    };
+
+    constexpr std::string_view projectName{"LifecycleProject"};
+
+    [[nodiscard]]
+    std::vector<std::string> with_zeroth_arg(std::string zerothArg, std::vector<std::string> args)
+    {
+      args.insert(args.begin(), std::move(zerothArg));
+      return args;
+    }
+
+    [[nodiscard]]
+    std::vector<std::string> removal_args(const std::vector<std::string>& tests)
+    {
+      auto removalOf{[](const std::string& test) { return std::array<std::string, 2>{"remove-test", test}; }};
+
+      return tests | std::views::transform(removalOf) | std::views::join | std::ranges::to<std::vector>();
+    }
+
+    /** \brief A runner for the fake project; creation runs as from an executable naming the other as ancillary,
+        removal as from one which does not.
+     */
+    [[nodiscard]]
+    test_runner runner_for(commandline_arguments& args,
+                           std::vector<fs::path> ancillaryMains,
+                           std::ostream& stream)
+    {
+      return test_runner{args.size(),
+                         args.get(),
+                         "Oliver Jacob Rosten",
+                         "    ",
+                         {.source_folder{"fakeProject"},
+                          .main_cpp{"TestSandbox/TestSandbox.cpp"},
+                          .ancillary_main_cpps{std::move(ancillaryMains)},
+                          .common_includes{"TestShared/SharedIncludes.hpp"}},
+                         stream};
+    }
+
     /** \brief Gives `project` the state of `snapshot`, in every directory creating or removing a test may change. */
     void set_state(const fs::path& project, const fs::path& snapshot)
     {
@@ -106,6 +165,7 @@ namespace sequoia::testing
     test_project_namespace();
     test_template_data_generation();
     test_creation_and_removal();
+    test_removal_refusals();
     test_creation("FakeProject", std::nullopt, main_location::in_source_dir);
     test_creation("AnotherFakeProject", "curlew", main_location::below_source_dir);
     test_creation_failure();
@@ -207,7 +267,6 @@ namespace sequoia::testing
     using project_graph        = transition_checker_t::transition_graph;
     using edge_t               = transition_checker_t::edge;
 
-    constexpr std::string_view projectName{"LifecycleProject"};
     fs::copy(auxiliary_materials() / "FakeProject", auxiliary_materials() / projectName, fs::copy_options::recursive);
     const auto project{prepare_fake_project(projectName, "fakeProject", main_location::in_source_dir)};
 
@@ -223,36 +282,14 @@ namespace sequoia::testing
     // Files in the materials naming the tests, as another test's fake project may; removal leaves them be.
     fs::copy(auxiliary_materials() / "LifecycleDecoys", project.root, fs::copy_options::recursive);
 
-    auto withZerothArg{
-      [this, projectName](std::vector<std::string> args) {
-        args.insert(args.begin(), zeroth_arg(projectName));
-        return args;
-      }
-    };
-
-    // Creation is run as from an executable which names the other as ancillary; removal as from one which does not.
-    auto runOn{
-      [&project](commandline_arguments& args, std::vector<fs::path> ancillaryMains, std::ostream& stream) {
-        return test_runner{args.size(),
-                           args.get(),
-                           "Oliver Jacob Rosten",
-                           "    ",
-                           {.source_folder{"fakeProject"},
-                            .main_cpp{fs::relative(project.main.file(), project.root).generic_string()},
-                            .ancillary_main_cpps{std::move(ancillaryMains)},
-                            .common_includes{"TestShared/SharedIncludes.hpp"}},
-                           stream};
-      }
-    };
-
     auto creation{
-      [&project, &withZerothArg, &runOn](std::vector<std::string> creationArgs) {
-        return [&project, &withZerothArg, &runOn, creationArgs](const fs::path& state) {
+      [this, &project](std::vector<std::string> creationArgs) {
+        return [this, &project, creationArgs](const fs::path& state) {
           set_state(project.root, state);
 
-          commandline_arguments args{withZerothArg(creationArgs)};
+          commandline_arguments args{with_zeroth_arg(zeroth_arg(projectName), creationArgs)};
           std::stringstream stream{};
-          [[maybe_unused]] const auto code{runOn(args, {"OtherSandbox/TestSandbox.cpp"}, stream).execute()};
+          [[maybe_unused]] const auto code{runner_for(args, {"OtherSandbox/TestSandbox.cpp"}, stream).execute()};
 
           return project.root;
         };
@@ -260,21 +297,13 @@ namespace sequoia::testing
     };
 
     auto removal{
-      [&project, &withZerothArg, &runOn](std::vector<std::string> tests, auto registerTests) {
-        return [&project, &withZerothArg, &runOn, tests, registerTests](const fs::path& state) {
+      [this, &project](std::vector<std::string> tests, auto registerTests) {
+        return [this, &project, tests, registerTests](const fs::path& state) {
           set_state(project.root, state);
 
-          commandline_arguments args{
-            withZerothArg(
-                tests
-              | std::views::transform([](const std::string& test) { return std::array<std::string, 2>{"remove-test", test}; })
-              | std::views::join
-              | std::ranges::to<std::vector>()
-            )
-          };
-
+          commandline_arguments args{with_zeroth_arg(zeroth_arg(projectName), removal_args(tests))};
           std::stringstream stream{};
-          auto runner{runOn(args, {}, stream)};
+          auto runner{runner_for(args, {}, stream)};
           registerTests(runner);
           [[maybe_unused]] const auto code{runner.execute()};
 
@@ -358,15 +387,89 @@ namespace sequoia::testing
 
     auto checkState{
       [this](std::string_view description, const fs::path& projectRoot, const fs::path& state) {
-        const auto working{working_materials() / "Lifecycle" / back(state)};
-        set_state(working, projectRoot);
-        check(equivalence, description, working, state);
+        check_state(description, projectRoot, state);
       }
     };
 
-    checkState("The fake project as prepared", project.root, states / "Prepared");
+    check_state("The fake project as prepared", project.root, states / "Prepared");
 
     transition_checker_t::check(report("Creation and removal"), g, checkState);
+  }
+
+  /** A refusal comes before anything is removed, and a report names what went, so each is checked on the fake project
+      the graph leaves behind, set to the state holding a regular test and its companions.
+   */
+  void test_runner_test_creation::test_removal_refusals()
+  {
+    using namespace lifecycle;
+
+    const auto root{auxiliary_materials() / projectName};
+    const auto state{predictive_materials() / "Lifecycle" / "Widget"};
+    set_state(root, state);
+
+    auto removal{
+      [this, &root](std::vector<std::string> args, auto registerTests, std::ostream& stream) {
+        commandline_arguments cmdArgs{with_zeroth_arg(zeroth_arg(projectName), std::move(args))};
+        auto runner{runner_for(cmdArgs, {}, stream)};
+        registerTests(runner);
+        return runner.execute();
+      }
+    };
+
+    // A thunk which runs the removal, for a check that it throws
+    auto removing{
+      [&removal](std::vector<std::string> args, auto registerTests) {
+        return [&removal, args, registerTests]() {
+          std::stringstream stream{};
+          return removal(args, registerTests, stream);
+        };
+      }
+    };
+
+    auto widgetTests{
+      [](test_runner& r) {
+        r.register_test<widget_test>();
+        r.register_test<widget_false_negative_test>();
+      }
+    };
+
+    auto pairTests{
+      [](test_runner& r) {
+        r.register_test<widget_test>();
+        r.register_test<pair_first_test>();
+        r.register_test<pair_second_test>();
+      }
+    };
+
+    check_exception_thrown<std::runtime_error>("A class registering no test",
+                                               removing({"remove-test", "gizmo_test"}, widgetTests));
+    check_exception_thrown<std::runtime_error>("A source file defining no registered test",
+                                               removing({"remove-test", "Tests/Stuff/GizmoTest.cpp"}, widgetTests));
+    check_exception_thrown<std::runtime_error>("The one test a class names, of the two its source file defines",
+                                               removing({"remove-test", "pair_first_test"}, pairTests));
+    check_exception_thrown<std::runtime_error>("A test which is registered, beside one which is not",
+                                               removing({"remove-test", "widget_test", "remove-test", "gizmo_test"}, widgetTests));
+    check_exception_thrown<std::runtime_error>("Removal, with a test to run",
+                                               removing({"remove-test", "widget_test", "select", "WidgetTest.cpp"}, widgetTests));
+    check_exception_thrown<std::runtime_error>("Removal, with a test to exclude",
+                                               removing({"remove-test", "widget_test", "exclude", "WidgetTest.cpp"}, widgetTests));
+
+    check_state("Nothing removed when removal is refused", root, state);
+
+    std::stringstream stream{};
+    check(equality, "Removal return code", removal({"remove-test", "widget_test"}, widgetTests, stream), return_code::success);
+
+    const auto report{working_materials() / "RemovalReport"};
+    fs::create_directories(report);
+    write_to_file(report / "io.txt", stream.str(), std::ios_base::out);
+    check(equivalence, "What a removal reports", report, predictive_materials() / "RemovalReport");
+  }
+
+  void test_runner_test_creation::check_state(std::string_view description, const fs::path& projectRoot, const fs::path& state)
+  {
+    const auto working{working_materials() / "Lifecycle" / back(state)};
+    lifecycle::set_state(working, projectRoot);
+    check(equivalence, description, working, state);
   }
 
   [[nodiscard]]

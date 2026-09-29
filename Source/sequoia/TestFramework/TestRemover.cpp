@@ -88,7 +88,7 @@ namespace sequoia::testing
 
           if(const auto kept{std::ranges::find_if(registered, remainsBehind)}; kept != registered.end())
             throw std::runtime_error{
-              std::format("remove-test: {} defines {} as well as {}; remove the source file to remove every test it defines",
+              std::format("remove-test: {} defines {} as well as {}; name the source file to remove both",
                           relative_to_root(source.file, projPaths),
                           kept->name,
                           source.tests.front())

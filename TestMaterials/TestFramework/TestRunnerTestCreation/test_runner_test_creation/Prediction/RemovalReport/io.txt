@@ -1,0 +1,16 @@
+Removing widget_test:
+"Tests/Stuff/WidgetTest.hpp"
+"Tests/Stuff/WidgetTest.cpp"
+Editing:
+"OtherSandbox/CMakeLists.txt"
+"OtherSandbox/TestSandbox.cpp"
+"TestSandbox/CMakeLists.txt"
+"TestSandbox/TestSandbox.cpp"
+"TestShared/SharedIncludes.hpp"
+
+
+Running CMake...
+
+-- Configuring done (0.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/oliver/sequoia-remove-test/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Auxiliary/LifecycleProject/build/TestSandbox/llvm-homebrew-asan

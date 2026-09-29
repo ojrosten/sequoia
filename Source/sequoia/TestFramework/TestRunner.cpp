@@ -1164,8 +1164,7 @@ namespace sequoia::testing
 
     const bool filtersTests{!m_Filter.excluded_items().empty() || m_Filter.excludes_performance_tests()};
     if(in_mode(runner_mode::remove) && (in_mode(runner_mode::test) || filtersTests))
-      throw std::runtime_error{error("remove-test removes tests rather than running them, so cannot be combined with "
-                                     "an option which runs or excludes tests\n")};
+      throw std::runtime_error{error("remove-test cannot be combined with an option which runs or excludes tests\n")};
   }
 
   void test_runner::remove_requested_tests()
@@ -1191,9 +1190,7 @@ namespace sequoia::testing
 
         auto named{registered | std::views::filter(isNamed) | std::ranges::to<std::vector>()};
         if(named.empty())
-          throw std::runtime_error{
-            parsing::commandline::error(std::format("remove-test: {} names no test registered with this runner\n", request))
-          };
+          throw std::runtime_error{std::format("remove-test: {} names no test registered with this runner", request)};
 
         return named;
       }

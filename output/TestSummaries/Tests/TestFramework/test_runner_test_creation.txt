@@ -1,2 +1,176 @@
 test_runner_test_creation
-Standard Top Level Checks:                74;  Failures:  0  [Deep checks: 2154]
+Standard Top Level Checks:               100;  Failures:  5  [Deep checks: 5963]
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 444
+A class registering no test
+
+Expected Exception Type:
+[std::runtime_error]
+No exception thrown
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 446
+A source file defining no registered test
+
+Expected Exception Type:
+[std::runtime_error]
+No exception thrown
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 450
+A test which is registered, beside one which is not
+
+Expected Exception Type:
+[std::runtime_error]
+No exception thrown
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 472
+Nothing removed when removal is refused
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::filesystem::path>]
+Checking for equivalence with:
+[std::filesystem::path]
+
+  Contents of
+  /Users/oliver/sequoia-remove-test/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/WorkingCopy/Lifecycle/Widget/OtherSandbox/CMakeLists.txt
+  vs
+  /Users/oliver/sequoia-remove-test/TestMaterials/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Prediction/Lifecycle/Widget/OtherSandbox/CMakeLists.txt
+
+  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+  operator== returned false
+
+    First difference detected on line 20:
+    [char]
+    operator== returned false
+    Obtained : i
+    Predicted: .
+
+    Surrounding substring(s):
+    Obtained : ...   ${TestDir}/Stuff/WidgetTestingDiagnostics.cpp)...
+    Predicted: ...   ${TestDir}/Stuff/WidgetTest.cpp...
+
+  Contents of
+  /Users/oliver/sequoia-remove-test/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/WorkingCopy/Lifecycle/Widget/OtherSandbox/TestSandbox.cpp
+  vs
+  /Users/oliver/sequoia-remove-test/TestMaterials/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Prediction/Lifecycle/Widget/OtherSandbox/TestSandbox.cpp
+
+  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+  operator== returned false
+
+    First difference detected on line 25:
+    [char]
+    operator== returned false
+    Obtained : '\n'
+    Predicted: '\t'
+
+    Surrounding substring(s):
+    Obtained : ...\n\n...
+    Predicted: ...\n		runner.register_test<widget_test>();
+    ...
+
+  Contents of
+  /Users/oliver/sequoia-remove-test/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/WorkingCopy/Lifecycle/Widget/TestSandbox/CMakeLists.txt
+  vs
+  /Users/oliver/sequoia-remove-test/TestMaterials/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Prediction/Lifecycle/Widget/TestSandbox/CMakeLists.txt
+
+  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+  operator== returned false
+
+    First difference detected on line 20:
+    [char]
+    operator== returned false
+    Obtained : i
+    Predicted: .
+
+    Surrounding substring(s):
+    Obtained : ...   ${TestDir}/Stuff/WidgetTestingDiagnostics.cpp)...
+    Predicted: ...   ${TestDir}/Stuff/WidgetTest.cpp...
+
+  Contents of
+  /Users/oliver/sequoia-remove-test/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/WorkingCopy/Lifecycle/Widget/TestSandbox/TestSandbox.cpp
+  vs
+  /Users/oliver/sequoia-remove-test/TestMaterials/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Prediction/Lifecycle/Widget/TestSandbox/TestSandbox.cpp
+
+  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+  operator== returned false
+
+    First difference detected on line 25:
+    [char]
+    operator== returned false
+    Obtained : '\n'
+    Predicted: '\t'
+
+    Surrounding substring(s):
+    Obtained : ...\n\n...
+    Predicted: ...\n		runner.register_test<widget_test>();
+    ...
+
+  Contents of
+  /Users/oliver/sequoia-remove-test/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/WorkingCopy/Lifecycle/Widget/TestShared/SharedIncludes.hpp
+  vs
+  /Users/oliver/sequoia-remove-test/TestMaterials/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Prediction/Lifecycle/Widget/TestShared/SharedIncludes.hpp
+
+  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+  operator== returned false
+
+    First difference detected on line 8:
+    [char]
+    operator== returned false
+    Obtained : i
+    Predicted: .
+
+    Surrounding substring(s):
+    Obtained : ...\n#include "Stuff/WidgetTestingDiagnostics.hpp"
+    ...
+    Predicted: ...\n#include "Stuff/WidgetTest.hpp"
+    ...
+
+  Number of directory entries for /Users/oliver/sequoia-remove-test/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/WorkingCopy/Lifecycle/Widget/Tests/Stuff
+  [unsigned long long]
+  operator== returned false
+  Obtained : 3
+  Predicted: 5
+
+  First directory entry mismatch
+  [std::filesystem::path]
+  operator== returned false
+  Obtained : /Users/oliver/sequoia-remove-test/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/WorkingCopy/Lifecycle/Widget/Tests/Stuff/WidgetTestingDiagnostics.cpp
+  Predicted: /Users/oliver/sequoia-remove-test/TestMaterials/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Prediction/Lifecycle/Widget/Tests/Stuff/WidgetTest.cpp
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 465
+What a removal reports
+
+Comparison performed using:
+[sequoia::testing::value_tester<std::filesystem::path>]
+Checking for equivalence with:
+[std::filesystem::path]
+
+  Contents of
+  /Users/oliver/sequoia-remove-test/output/TestsTemporaryData/TestFramework/TestRunnerTestCreation/test_runner_test_creation/WorkingCopy/RemovalReport/io.txt
+  vs
+  /Users/oliver/sequoia-remove-test/TestMaterials/TestFramework/TestRunnerTestCreation/test_runner_test_creation/Prediction/RemovalReport/io.txt
+
+  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+  operator== returned false
+
+    First difference detected on line 2:
+    [char]
+    operator== returned false
+    Obtained : c
+    Predicted: h
+
+    Surrounding substring(s):
+    Obtained : ...\n"Tests/Stuff/WidgetTest.cpp"
+    ...
+    Predicted: ...\n"Tests/Stuff/WidgetTest.hpp"
+    ...
+
+=======================================
+
