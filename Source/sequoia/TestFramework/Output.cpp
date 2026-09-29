@@ -922,6 +922,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::string demangle(const std::type_info& info)
+  {
+    return tidy_name(demangle(std::string{info.name()}), compiler_constant{});
+  }
+
+  [[nodiscard]]
   std::string demangle(std::string mangled)
   {
     if constexpr(with_clang_v || with_gcc_v)

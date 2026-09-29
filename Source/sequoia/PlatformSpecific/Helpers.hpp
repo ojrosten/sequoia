@@ -28,4 +28,25 @@ namespace sequoia
 
     ~timer_resolution();
   };
+
+  /** \brief An RAII wrapper to redirect the assertion and error reports of MSVC's debug runtime to standard error.
+
+      The runtime would otherwise show a dialog, which blocks an unattended run until someone dismisses it. A
+      redirected report ends the process.
+
+      A report made while a debugger is attached is left to the runtime to handle.
+      Under any other runtime, nothing changes.
+
+      \throws std::runtime_error if the redirection cannot be installed
+   */
+  class [[nodiscard]] debug_report_redirection
+  {
+  public:
+    debug_report_redirection();
+
+    debug_report_redirection(const debug_report_redirection&)            = delete;
+    debug_report_redirection& operator=(const debug_report_redirection&) = delete;
+
+    ~debug_report_redirection();
+  };
 }

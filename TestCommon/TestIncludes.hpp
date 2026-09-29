@@ -165,6 +165,7 @@
 #include "TestFramework/ExceptionsFreeDiagnostics.hpp"
 #include "TestFramework/FailureInfoTest.hpp"
 #include "TestFramework/FailureInfoTestingDiagnostics.hpp"
+#include "TestFramework/FailureReportingFreeTest.hpp"
 #include "TestFramework/FileEditorsFreeTest.hpp"
 #include "TestFramework/FileSystemUtilitiesFreeTest.hpp"
 #include "TestFramework/FreeCheckersMetaFreeTest.hpp"

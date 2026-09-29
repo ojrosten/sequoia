@@ -175,6 +175,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/ExceptionsFreeDiagnostics.cpp
                ${TestDir}/TestFramework/FailureInfoTest.cpp
                ${TestDir}/TestFramework/FailureInfoTestingDiagnostics.cpp
+               ${TestDir}/TestFramework/FailureReportingFreeTest.cpp
                ${TestDir}/TestFramework/FileEditorsFreeTest.cpp
                ${TestDir}/TestFramework/FileSystemUtilitiesFreeTest.cpp
                ${TestDir}/TestFramework/FreeCheckersMetaFreeTest.cpp
