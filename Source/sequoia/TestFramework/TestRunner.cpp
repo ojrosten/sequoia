@@ -1017,6 +1017,9 @@ namespace sequoia::testing
     if(!in_mode(runner_mode::test))
       return return_code::success;
 
+    const scoped_terminate_handler terminationReported{report_termination};
+    const debug_report_redirection debugReportRedirection{};
+
     fs::create_directories(proj_paths().prune().dir());
     build_suite_tree();
     check_for_missing_tests();

@@ -30,6 +30,14 @@
   #define NAMESPACE_SEQUOIA_AS_BITMASK namespace sequoia
 #endif
 
+/** Defined when the program is built against MSVC's debug runtime, by MSVC or by clang-cl. Only that runtime has
+    `crtdbg.h`'s reporting.
+ */
+
+#if defined(_MSC_VER) && defined(_DEBUG)
+  #define SEQUOIA_MSVC_DEBUG_RUNTIME
+#endif
+
 /** Inlines a function even in an unoptimised build, so that no symbol is emitted for it.
 
     MSVC does not inline at all under `/Od`, so there it takes effect only in an optimised build.

@@ -12,6 +12,7 @@
 */
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
+#include "sequoia/TestFramework/FailureReporting.hpp"
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
 #include "sequoia/TestFramework/TestLogger.hpp"
 #include "sequoia/TestFramework/VersionedOutput.hpp"
@@ -227,6 +228,8 @@ namespace sequoia::testing
       [[nodiscard]]
       log_summary execute(std::optional<std::size_t> index) final
       {
+        // Also installed per test, since under MSVC each thread has its own terminate handler
+        const scoped_terminate_handler terminationReported{report_termination};
         const timer t{};
 
         if(try_prepare_materials())
@@ -379,6 +382,11 @@ namespace sequoia::testing
         m_Tests.emplace_back(T{});
     }
 
+    /** \brief Runs the tests, as the command line asked.
+
+        `report_termination` is the terminate handler for the run, and for each test on the thread running it. Under
+        MSVC's debug runtime, reports are redirected as `debug_report_redirection` describes.
+     */
     [[nodiscard]]
     return_code execute([[maybe_unused]] timer_resolution r={});
 
