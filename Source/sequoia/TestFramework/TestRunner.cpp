@@ -673,8 +673,6 @@ namespace sequoia::testing
       }
     };
 
-    using src_opt = nascent_test_base::gen_source_option;
-
     const option diagnosticsOption{"--framework-diagnostics", {"--diagnostics"}, {},
       onNascentTest([](auto& nascent, const arg_list&) {
         nascent.flavour(nascent_test_flavour::framework_diagnostics);
@@ -707,6 +705,8 @@ namespace sequoia::testing
       "Take the value_tester from an existing header beneath Tests; a regular or move-only test then "
       "generates neither testing utilities nor false-negative diagnostics"
     };
+
+    using src_opt = nascent_test_base::gen_source_option;
 
     const option genFreeSourceOption{"--gen-source", {"-g"}, {"namespace"},
       onNascentTest(

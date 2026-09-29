@@ -65,8 +65,8 @@ namespace sequoia::testing
   /** \brief A file create writes for the type under test, rather than for the test. */
   struct companion_stub
   {
-    std::string ending;
-    add_to_common_includes include;
+    std::string ending{};
+    add_to_common_includes include{};
   };
 
   class nascent_test_base
@@ -247,11 +247,11 @@ namespace sequoia::testing
      */
     void locate_testing_utilities();
 
-    /** \brief Refuses a full name which is not an identifier, which names a test already registered, or
-        whose files would collide - with each other, with the companions or with a file already present,
-        ignoring case, since the filesystems of macOS and Windows do.
+    /** \brief Checks that the full name can name the test.
 
-        \throws std::runtime_error naming the collision.
+        \throws std::runtime_error if the full name is not an identifier, names a test already registered,
+        or would give the test a file whose name, ignoring case, is that of a companion or of a file already
+        present.
      */
     void check_full_name(std::span<const std::filesystem::path> companionFiles,
                          std::span<const std::filesystem::path> ownFiles) const;
