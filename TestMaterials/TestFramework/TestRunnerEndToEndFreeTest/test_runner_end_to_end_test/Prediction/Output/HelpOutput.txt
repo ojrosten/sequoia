@@ -5,6 +5,7 @@ Commands:
   select, s <source>                    Run the test defined in a source file
   prune, p                              Run the tests affected by changes since the previous run
   create, c [command] [options]         Create a test; the command names its kind
+  remove-test <test>                    Remove a test, named by class or source file, with its materials and output
   init, i <owner> <path> <indent> [options]
                                         Create a project at the path, named after its last directory
   update-materials, u                   Run the tests, updating the predictions of tests that fail without throwing
