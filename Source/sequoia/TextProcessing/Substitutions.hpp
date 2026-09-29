@@ -85,6 +85,12 @@ namespace sequoia
   [[nodiscard]]
   std::string uncapitalize(std::string_view text);
 
+  /** \brief Lowers the case of every ASCII letter; other characters are untouched. */
+  std::string& to_lower_case(std::string& text);
+
+  [[nodiscard]]
+  std::string to_lower_case(std::string_view text);
+
   /** \brief Replaces the first occurrence of `from`, if there is one.
 
       The empty string occurs at every position, the first being the start of the text, so an

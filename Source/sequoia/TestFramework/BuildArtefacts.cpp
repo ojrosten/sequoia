@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/*! \file
+/** \file
     \brief Definitions for BuildArtefacts.hpp
  */
 
@@ -14,6 +14,7 @@
 
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
+#include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
 #include <bit>
@@ -460,13 +461,6 @@ namespace sequoia::testing
       return units;
     }
 
-    [[nodiscard]]
-    std::string lowercase(std::string text)
-    {
-      std::ranges::transform(text, text.begin(), [](unsigned char c){ return static_cast<char>(std::tolower(c)); });
-      return text;
-    }
-
     /** `CL.read.1.tlog`, or `CL.11932.read.1.tlog` where MSBuild has numbered the target's logs; each may be
         prefixed `Microsoft.Build.CPPTasks.`, where MSBuild compiles through its MultiToolTask
      */
@@ -477,7 +471,7 @@ namespace sequoia::testing
                                  compilerPrefix{"cl."},
                                  suffix{".tlog"};
 
-      const auto lowercaseName{lowercase(file.filename().string())};
+      const auto lowercaseName{to_lower_case(file.filename().string())};
       const auto compilerPartStart{lowercaseName.starts_with(multiToolTaskPrefix) ? multiToolTaskPrefix.size() : 0};
       const auto unprefixedName{std::string_view{lowercaseName}.substr(compilerPartStart)};
       if(!unprefixedName.starts_with(compilerPrefix) || !unprefixedName.ends_with(suffix))

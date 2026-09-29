@@ -24,6 +24,7 @@
 #include <chrono>
 #include <format>
 #include <iostream>
+#include <map>
 #include <optional>
 #include <set>
 #include <span>
@@ -369,9 +370,8 @@ namespace sequoia::testing
     {
       ++m_Registered;
 
-      constexpr std::string_view name{test_name<T>()};
-      if(!m_TestNames.insert(name).second)
-        throw std::logic_error{duplication_message(name, T::source_file())};
+      register_name(test_name<T>(), T::source_file());
+      register_source(T::source_file());
 
       constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
 
@@ -545,7 +545,8 @@ namespace sequoia::testing
 
     suite_type m_Suites{};
     std::vector<test_vessel> m_Tests{};
-    std::set<std::string_view> m_TestNames{};
+    std::set<std::string> m_LowerCaseTestNames{};
+    std::map<std::string, std::filesystem::path> m_SourcesByLowerCasePrefix{};
     std::size_t m_Registered{};
     test_filter m_Filter{path_equivalence{proj_paths().tests().repo()}};
     prune_mode m_PruneMode{prune_mode::passive};
@@ -638,6 +639,34 @@ namespace sequoia::testing
 
     [[nodiscard]]
     static std::string duplication_message(std::string_view testName, const std::filesystem::path& source);
+
+    /** \brief Admits the name of a test being registered.
+
+        \throws std::logic_error naming `source`, if `name` contains anything non-ASCII
+        \throws std::logic_error naming both, if a test of the same name, ignoring case, was admitted
+     */
+    void register_name(std::string_view name, const std::filesystem::path& source);
+
+    /** \brief Admits the source of a test being registered.
+
+        \throws std::logic_error naming `source`, if its materials prefix is empty
+        \throws std::logic_error naming `source`, if its materials prefix contains anything non-ASCII
+        \throws std::logic_error naming both sources, if the materials prefix of `source` lies beneath
+        that of a source already admitted, or has one beneath it, ignoring ASCII case
+     */
+    void register_source(const std::filesystem::path& source);
+
+    [[nodiscard]]
+    static std::string nesting_message(const std::filesystem::path& source, const std::filesystem::path& nestedWith);
+
+    [[nodiscard]]
+    static std::string non_ascii_name_message(const std::filesystem::path& source);
+
+    [[nodiscard]]
+    static std::string non_ascii_source_message(const std::filesystem::path& source);
+
+    [[nodiscard]]
+    static std::string unplaceable_source_message(const std::filesystem::path& source);
 
  };
 }
