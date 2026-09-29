@@ -584,7 +584,17 @@ namespace sequoia::testing
             {"remove-test", "stray_test"},
             strayTest,
             [&]() { registerInProject("stray_test", stray_test::source_file()); });
-    refused("A test the main does not register", {"remove-test", "unlisted_test"}, unlistedTest, asCreated);
+    refused("A test the main does not register, though its source is listed beside it",
+            {"remove-test", "unlisted_test"},
+            unlistedTest,
+            [&]() {
+              add_to_cmake(mainCMakeLists,
+                           root / "Tests",
+                           root / "Tests/Stuff/UnlistedTest.cpp",
+                           "target_sources(",
+                           ")\n",
+                           "${TestDir}/");
+            });
     refused("A test whose source the CMakeLists.txt beside the main does not list",
             {"remove-test", "widget_test"},
             widgetTests,
