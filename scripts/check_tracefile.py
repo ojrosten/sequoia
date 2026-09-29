@@ -49,7 +49,9 @@ def removed_by(source, patterns):
 def read_tracefile(path):
     """Each source file's records, in the order the tracefile gives them."""
     records, source = {}, None
-    with open(path) as tracefile:
+    # Read so that each byte round-trips, since a tracefile need not be UTF-8: lcov writes a function name's
+    # letters from U+0080 to U+00FF as single Latin-1 bytes, although gcov gives them as UTF-8.
+    with open(path, encoding='utf-8', errors='surrogateescape', newline='') as tracefile:
         for number, line in enumerate(tracefile, 1):
             line = line.rstrip('\n')
             if line.startswith('SF:'):
@@ -157,10 +159,13 @@ def main():
     parser.add_argument('--summary',  required=True)
     parser.add_argument('--removed',  required=True, nargs='+')
     arguments = parser.parse_args()
+    # Write escaped bytes back as themselves, since a message quotes the records it compared.
+    for stream in (sys.stdout, sys.stderr):
+        stream.reconfigure(encoding='utf-8', errors='surrogateescape')
     try:
         captured = read_tracefile(arguments.capture)
         filtered = read_tracefile(arguments.filtered)
-        with open(arguments.summary) as summary:
+        with open(arguments.summary, encoding='utf-8', errors='surrogateescape') as summary:
             figures = check_summary(summary.read(), filtered)
         patterns = [removal_pattern(glob) for glob in arguments.removed]
         by_pattern, without_points, function_only = check_filtering(captured, filtered, patterns)
