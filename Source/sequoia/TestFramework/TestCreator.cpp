@@ -30,6 +30,8 @@ namespace sequoia::testing
 
   namespace
   {
+    constexpr auto path_of{[](const fs::directory_entry& entry) { return entry.path(); }};
+
     /** \brief Whether `name` can name a namespace or a class: letters, digits and underscores, not led by a digit */
     [[nodiscard]]
     bool is_identifier(std::string_view name)
@@ -381,18 +383,15 @@ namespace sequoia::testing
     const auto repoName{fs::relative(repo, m_Paths.project_root()).generic_string()};
     const auto sought{m_TestingUtilities.lexically_normal()};
 
-    auto failure{
+    auto failureMessage{
       [&sought, &repoName](std::string_view problem) {
-        return std::runtime_error{std::format("The testing utilities {} {} the tests repository {}",
-                                              sought.generic_string(),
-                                              problem,
-                                              repoName)};
+        return std::format("The testing utilities {} {} the tests repository {}", sought.generic_string(), problem, repoName);
       }
     };
 
     const auto withinRepo{sought.is_absolute() ? sought.lexically_relative(repo) : sought};
     if(withinRepo.empty() || (*withinRepo.begin() == ".."))
-      throw failure("do not lie beneath");
+      throw std::runtime_error{failureMessage("do not lie beneath")};
 
     const auto suffix{withinRepo.generic_string()};
     auto endsWithSought{
@@ -403,25 +402,32 @@ namespace sequoia::testing
     };
 
     auto candidates{
-         fs::recursive_directory_iterator{repo}
-       | std::views::filter(endsWithSought)
-       | std::views::transform([](const fs::directory_entry& entry) { return entry.path(); })
-       | std::ranges::to<std::vector>()
+        fs::recursive_directory_iterator{repo}
+      | std::views::filter(endsWithSought)
+      | std::views::transform(path_of)
+      | std::ranges::to<std::vector>()
     };
 
     if(candidates.empty())
-      throw failure("cannot be found in");
+      throw std::runtime_error{failureMessage("cannot be found in")};
 
     if(candidates.size() > 1)
     {
       std::ranges::sort(candidates);
       auto relativeToRepo{[&repo](const fs::path& p) { return p.lexically_relative(repo).generic_string(); }};
+
+      const auto candidateList{
+          candidates
+        | std::views::transform(relativeToRepo)
+        | std::views::join_with('\n')
+        | std::ranges::to<std::string>()
+      };
+
       throw std::runtime_error{
         std::format("The testing utilities {} are ambiguous in the tests repository {}; they may be any of\n{}",
                     sought.generic_string(),
                     repoName,
-                    candidates | std::views::transform(relativeToRepo) | std::views::join_with('\n')
-                               | std::ranges::to<std::string>())
+                    candidateList)
       };
     }
 
@@ -451,10 +457,10 @@ namespace sequoia::testing
     if(registersIn(m_Paths.main()) || std::ranges::any_of(m_Paths.ancillary_main_cpps(), registersIn))
       throw std::runtime_error{std::format("--fullname {} names a test which is already registered", name)};
 
+    // Case is ignored, since the filesystems of macOS and Windows ignore it.
     auto sameIgnoringCase{
       [](const fs::path& lhs, const fs::path& rhs) {
-        auto lower{[](char c) { return std::tolower(static_cast<unsigned char>(c)); }};
-        return std::ranges::equal(lhs.filename().string(), rhs.filename().string(), {}, lower, lower);
+        return to_lower_case(lhs.filename().string()) == to_lower_case(rhs.filename().string());
       }
     };
 
@@ -477,8 +483,7 @@ namespace sequoia::testing
 
       if(fs::is_directory(own.parent_path()))
       {
-        auto entries{fs::directory_iterator{own.parent_path()}
-                       | std::views::transform([](const fs::directory_entry& entry) { return entry.path(); })};
+        auto entries{fs::directory_iterator{own.parent_path()} | std::views::transform(path_of)};
 
         if(const auto existing{std::ranges::find_if(entries, collides)}; existing != entries.end())
           throw std::runtime_error{
