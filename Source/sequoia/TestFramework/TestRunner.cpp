@@ -1228,7 +1228,8 @@ namespace sequoia::testing
   {
     const timer t{};
 
-    stream() << running_tests_message(m_ConcurrencyMode);
+    // Without the flush, a run killed while the tests are silent would never show that they had begun
+    stream() << running_tests_message(m_ConcurrencyMode) << std::flush;
 
     std::optional<log_summary::duration> asyncDuration{};
     if(concurrent_execution())
@@ -1436,8 +1437,7 @@ namespace sequoia::testing
   {
     if(m_PruneMode == prune_mode::passive) return;
 
-    // Do this here: if pruning throws an exception, this output should make it clearer what's going on
-    stream() << "\nAnalyzing dependencies...\n";
+    stream() << "\nAnalyzing dependencies...\n" << std::flush;
     const timer t{};
 
     if(const auto fallback{do_prune()})
