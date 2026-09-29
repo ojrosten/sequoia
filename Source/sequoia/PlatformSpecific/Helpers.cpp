@@ -72,7 +72,7 @@ namespace sequoia
     return t <= std::chrono::milliseconds{} ? 0u : static_cast<unsigned int>(t.count());
   }
 
-  debug_report_redirection::debug_report_redirection()
+  debug_report_redirector::debug_report_redirector()
   {
     #if defined(SEQUOIA_MSVC_DEBUG_RUNTIME)
       if(_CrtSetReportHook2(_CRT_RPTHOOK_INSTALL, report_to_stderr) == -1)
@@ -80,7 +80,7 @@ namespace sequoia
     #endif
   }
 
-  debug_report_redirection::~debug_report_redirection()
+  debug_report_redirector::~debug_report_redirector()
   {
     #if defined(SEQUOIA_MSVC_DEBUG_RUNTIME)
       _CrtSetReportHook2(_CRT_RPTHOOK_REMOVE, report_to_stderr);

@@ -385,7 +385,7 @@ namespace sequoia::testing
     /** \brief Runs the tests, as the command line asked.
 
         `report_termination` is the terminate handler for the run, and for each test on the thread running it. Under
-        MSVC's debug runtime, reports are redirected as `debug_report_redirection` describes, and under Windows a
+        MSVC's debug runtime, reports are redirected as `debug_report_redirector` describes, and under Windows a
         crash reaches Windows Error Reporting, as `windows_crash_report_enabler` describes.
      */
     [[nodiscard]]

@@ -39,15 +39,15 @@ namespace sequoia
 
       \throws std::runtime_error if the redirection cannot be installed
    */
-  class [[nodiscard]] debug_report_redirection
+  class [[nodiscard]] debug_report_redirector
   {
   public:
-    debug_report_redirection();
+    debug_report_redirector();
 
-    debug_report_redirection(const debug_report_redirection&)            = delete;
-    debug_report_redirection& operator=(const debug_report_redirection&) = delete;
+    debug_report_redirector(const debug_report_redirector&)            = delete;
+    debug_report_redirector& operator=(const debug_report_redirector&) = delete;
 
-    ~debug_report_redirection();
+    ~debug_report_redirector();
   };
 
   /** \brief An RAII wrapper to ensure a crash reaches Windows Error Reporting.
