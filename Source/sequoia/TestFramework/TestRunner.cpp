@@ -943,8 +943,7 @@ namespace sequoia::testing
                       m_RemovalRequests.push_back(args.front());
                     },
                     {},
-                    "Remove a test, named by its class or its source file, with its registrations, materials and "
-                    "versioned output; what it tests is untouched"}
+                    "Remove a test, named by class or source file, with its materials and output"}
                   }},
                   {{{"init", {"i"}, {"owner", "path", "indent"},
                     [this,&nascentProjects](const arg_list& args) {
