@@ -1,4 +1,22 @@
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 103
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 107
+A main with no call to runner.execute
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to find the point of registration in output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_test/WorkingCopy/Registration/NoExecution/Main.cpp
+
+=======================================
+
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 112
+No tests to register
+
+Expected Exception Type:
+[std::logic_error]
+No tests specified for registration
+
+=======================================
+
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 166
 A line of spaces is refused, naming its line
 
 Expected Exception Type:
@@ -8,7 +26,7 @@ output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_te
 
 =======================================
 
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 104
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 167
 A line holding only a tab is refused, naming its line
 
 Expected Exception Type:
@@ -18,7 +36,7 @@ output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_te
 
 =======================================
 
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 105
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 168
 An invalid pattern is refused, naming its line, empty lines counted
 
 Expected Exception Type:

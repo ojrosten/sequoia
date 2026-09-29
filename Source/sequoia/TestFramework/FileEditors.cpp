@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <format>
 #include <fstream>
+#include <functional>
 #include <ranges>
 #include <regex>
 
@@ -103,7 +104,7 @@ namespace sequoia::testing
     read_modify_write(file, inserter);
   }
 
-  void add_test_registrations(const fs::path& file, indentation indent, const std::vector<std::string>& tests)
+  void add_test_registrations(const fs::path& file, const std::vector<std::string>& tests)
   {
     if(tests.empty())
       throw std::logic_error{"No tests specified for registration"};
@@ -114,31 +115,79 @@ namespace sequoia::testing
 
     std::string& contentsStr{contents.value()};
 
-    const auto pos{contentsStr.find("runner.execute")};
-    if(pos == std::string::npos)
-      throw std::runtime_error{std::string{"Unable to find the point of registration in "}.append(file.generic_string())};
+    constexpr auto npos{std::string::npos};
+    const auto executionPos{contentsStr.find("runner.execute")};
+    if(executionPos == npos)
+      throw std::runtime_error{std::format("Unable to find the point of registration in {}", file.generic_string())};
 
-    const auto linePos{contentsStr.rfind('\n', pos)};
-    if(linePos == std::string::npos)
-      throw std::runtime_error{std::string{"Unable to find the point of registration in "}.append(file.generic_string())};
-
-    auto registrations{
-      [&tests, &contentsStr, indent](){
-        std::string str{};
-        for(const auto& test : tests)
-        {
-          auto registration{std::string{"runner.register_test<"}.append(test).append(">();")};
-          if(contentsStr.find(registration) == std::string::npos)
-            append_indented(str, registration, indent + indent);
-        }
-
-        return str;
+    const auto executionLineStart{
+      [&contentsStr, executionPos]() -> std::string::size_type {
+        const auto newlinePos{contentsStr.rfind('\n', executionPos)};
+        return newlinePos == npos ? 0 : newlinePos + 1;
       }()
     };
 
-    if(registrations.empty()) return;
+    // The registrations go straight after the last line before the execution's which holds anything.
+    // Placing them after the last *registration* would put them inside an `#if` or a block which ends
+    // just before the execution, making them conditional; this way the blank lines which separate
+    // the registrations from the execution also stay where they are.
+    const auto insertionPos{
+      [&contentsStr, executionLineStart]() -> std::string::size_type {
+        if(executionLineStart == 0)
+          return 0;
 
-    contentsStr.insert(linePos, registrations);
+        constexpr std::string_view blanksAndNewlines{" \t\r\n"};
+        const auto lastNonBlankPos{contentsStr.find_last_not_of(blanksAndNewlines, executionLineStart - 1)};
+        if(lastNonBlankPos == npos)
+          return 0;
+
+        const auto lineEnd{contentsStr.find('\n', lastNonBlankPos)};
+        return lineEnd + 1;
+      }()
+    };
+
+    constexpr std::string_view blanks{" \t\r"};
+    std::string_view contentsView      {contentsStr};
+    const auto       executionIndentEnd{contentsView.find_first_not_of(blanks, executionLineStart)};
+    std::string_view executionIndent   {contentsView.substr(executionLineStart, executionIndentEnd - executionLineStart)};
+
+    auto registrationOf{
+      [](std::string_view test) { return std::format("runner.register_test<{}>();", test); }
+    };
+
+    auto isRegistered{
+      [contentsView, blanks, registrationOf](std::string_view test) {
+        const auto registration{registrationOf(test)};
+        auto startsWithRegistration{
+          [&registration, blanks](auto&& line) {
+            std::string_view lineView    {std::ranges::begin(line), std::ranges::end(line)};
+            const auto       contentStart{std::ranges::min(lineView.find_first_not_of(blanks), lineView.size())};
+            return lineView.substr(contentStart).starts_with(registration);
+          }
+        };
+
+        return std::ranges::any_of(contentsView | std::views::split('\n'), startsWithRegistration);
+      }
+    };
+
+    auto registrationLineOf{
+      [executionIndent, registrationOf](std::string_view test) {
+        return std::format("{}{}\n", executionIndent, registrationOf(test));
+      }
+    };
+
+    const auto registrations{
+        tests
+      | std::views::filter(std::not_fn(isRegistered))
+      | std::views::transform(registrationLineOf)
+      | std::views::join
+      | std::ranges::to<std::string>()
+    };
+
+    if(registrations.empty())
+      return;
+
+    contentsStr.insert(insertionPos, registrations);
     write_to_file(file, contentsStr, std::ios_base::out);
   }
 
