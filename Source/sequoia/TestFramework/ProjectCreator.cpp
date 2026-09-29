@@ -66,8 +66,7 @@ namespace sequoia::testing
         -# `output`, what sequoia's own test runs write. Sequoia's tests run `init` on sequoia
            itself while the rest of the suite writes to `output`, so a copy races those
            writes. On Windows, a file being copied cannot be opened for writing, so the test
-           writing it throws and the whole run terminates; elsewhere, a half-written file is
-           copied.
+           writing it fails; elsewhere, a half-written file is copied.
         -# `.git`, sequoia's own history, which the created project cannot act on: it runs
            `git init` of its own, and its copy of sequoia is vendored rather than referenced -
            the project template ships `dependencies/sequoia/.keep`, so that path is tracked
