@@ -13,6 +13,7 @@
 #include "sequoia/TestFramework/ProjectCreator.hpp"
 #include "sequoia/TestFramework/Summary.hpp"
 #include "sequoia/TestFramework/TestCreator.hpp"
+#include "sequoia/TestFramework/TestRemover.hpp"
 
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 #include "sequoia/Parsing/CommandLineArguments.hpp"
@@ -936,6 +937,15 @@ namespace sequoia::testing
                       }
                     }
                   }},
+                  {{{"remove-test", {}, {"test"},
+                    [this](const arg_list& args) {
+                      m_RunnerMode |= runner_mode::remove;
+                      m_RemovalRequests.push_back(args.front());
+                    },
+                    {},
+                    "Remove a test, named by its class or its source file, with its registrations, materials and "
+                    "versioned output; what it tests is untouched"}
+                  }},
                   {{{"init", {"i"}, {"owner", "path", "indent"},
                     [this,&nascentProjects](const arg_list& args) {
                       m_RunnerMode |= runner_mode::init;
@@ -1114,7 +1124,7 @@ namespace sequoia::testing
       check_argument_consistency();
 
       if(in_mode(runner_mode::create))
-        stream() << '\n' << cmake_nascent_tests(proj_paths());
+        stream() << '\n' << reconfigure_build_tree(proj_paths());
   
       if(in_mode(runner_mode::init))
         init_projects(proj_paths(), nascentProjects, stream());
@@ -1151,6 +1161,53 @@ namespace sequoia::testing
       m_PruneMode = prune_mode::passive;
       stream() << warning("'prune' ignored when tests are selected\n");
     }
+
+    const bool filtersTests{!m_Filter.excluded_items().empty() || m_Filter.excludes_performance_tests()};
+    if(in_mode(runner_mode::remove) && (in_mode(runner_mode::test) || filtersTests))
+      throw std::runtime_error{error("remove-test removes tests rather than running them, so cannot be combined with "
+                                     "an option which runs or excludes tests\n")};
+  }
+
+  void test_runner::remove_requested_tests()
+  {
+    auto registrationOf{
+      [](const test_vessel& vessel) { return test_registration{std::string{vessel.name()}, vessel.source_file()}; }
+    };
+
+    const auto registered{m_Tests | std::views::transform(registrationOf) | std::ranges::to<std::vector>()};
+
+    const path_equivalence isSameSource{proj_paths().tests().repo()};
+
+    // A class is named without a directory or an extension; anything else names a source file.
+    auto registrationsNamedBy{
+      [&registered, &isSameSource](const std::string& request) {
+        const bool namesClass{request.find_first_of("/\\.") == std::string::npos};
+
+        auto isNamed{
+          [&](const test_registration& reg) {
+            return namesClass ? (reg.name == request) : isSameSource(normal_path{request}, normal_path{reg.source});
+          }
+        };
+
+        auto named{registered | std::views::filter(isNamed) | std::ranges::to<std::vector>()};
+        if(named.empty())
+          throw std::runtime_error{
+            parsing::commandline::error(std::format("remove-test: {} names no test registered with this runner\n", request))
+          };
+
+        return named;
+      }
+    };
+
+    const auto testsToRemove{
+        m_RemovalRequests
+      | std::views::transform(registrationsNamedBy)
+      | std::views::join
+      | std::ranges::to<std::vector>()
+    };
+
+    remove_tests(proj_paths(), testsToRemove, registered, stream());
+    stream() << reconfigure_build_tree(proj_paths());
   }
 
   void test_runner::check_for_missing_tests()
@@ -1192,6 +1249,9 @@ namespace sequoia::testing
 
   return_code test_runner::execute([[maybe_unused]] timer_resolution r)
   {
+    if(in_mode(runner_mode::remove))
+      remove_requested_tests();
+
     if(!in_mode(runner_mode::test))
       return return_code::success;
 

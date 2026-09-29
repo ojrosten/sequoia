@@ -46,7 +46,12 @@ namespace sequoia::testing
   [[nodiscard]]
   template_spec generate_template_spec(std::string_view str);
 
-  std::string cmake_nascent_tests(const project_paths& projPaths);
+  /** \brief Runs CMake over the build tree, so that it sees the tests created or removed, and returns what CMake
+      printed; nothing, if there is no build tree.
+
+      \throws std::runtime_error if the build tree was configured from a directory which is not within the project.
+   */
+  std::string reconfigure_build_tree(const project_paths& projPaths);
 
   enum class nascent_test_flavour { standard, framework_diagnostics };
 

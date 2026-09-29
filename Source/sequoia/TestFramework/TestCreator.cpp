@@ -289,7 +289,7 @@ namespace sequoia::testing
     return decomposition;
   }
 
-  std::string cmake_nascent_tests(const project_paths& projPaths)
+  std::string reconfigure_build_tree(const project_paths& projPaths)
   {
     using namespace runtime;
 

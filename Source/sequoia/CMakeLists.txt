@@ -36,6 +36,7 @@ set(SourceList
     TestFramework/Summary.cpp
     TestFramework/TestCreator.cpp
     TestFramework/TestLogger.cpp
+    TestFramework/TestRemover.cpp
     TestFramework/TestRunner.cpp
     TestFramework/TestRunnerUtilities.cpp
     TestFramework/VersionedOutput.cpp

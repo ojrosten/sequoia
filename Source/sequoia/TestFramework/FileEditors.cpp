@@ -22,13 +22,136 @@ namespace sequoia::testing
 {
   namespace fs = std::filesystem;
 
+  namespace
+  {
+    constexpr std::string_view blanks{" \t\r"};
+
+    [[nodiscard]]
+    std::string include_directive(std::string_view includePath)
+    {
+      return std::format("#include \"{}\"", includePath);
+    }
+
+    [[nodiscard]]
+    std::string registration_of(std::string_view test)
+    {
+      return std::format("runner.register_test<{}>();", test);
+    }
+
+    [[nodiscard]]
+    std::string_view without_leading_blanks(std::string_view line)
+    {
+      return line.substr(std::ranges::min(line.find_first_not_of(blanks), line.size()));
+    }
+
+    /** \brief Removes from `file` each line which `shouldRemove` accepts, and says whether there was one. */
+    template<std::predicate<std::string_view> ShouldRemove>
+    bool remove_lines(const fs::path& file, ShouldRemove shouldRemove)
+    {
+      const auto contents{read_to_string(file, std::ios_base::in)};
+      if(!contents)
+        throw std::runtime_error{report_failed_read(file)};
+
+      auto isKept{
+        [&shouldRemove](auto&& line) { return !shouldRemove(std::string_view{std::ranges::begin(line), std::ranges::end(line)}); }
+      };
+
+      // Only whole lines go, each with its newline, so a change in length is a removal.
+      const auto edited{
+          contents.value()
+        | std::views::split('\n')
+        | std::views::filter(isKept)
+        | std::views::join_with('\n')
+        | std::ranges::to<std::string>()
+      };
+
+      if(edited.size() == contents->size())
+        return false;
+
+      write_to_file(file, edited, std::ios_base::out);
+      return true;
+    }
+
+    /** \brief The entries of a list in a CMakeLists.txt, and where in its text they lie. */
+    struct cmake_list
+    {
+      std::string::size_type   entries_start{}, entries_end{};
+      std::size_t              entry_indent{};
+      std::vector<std::string> entries{};
+    };
+
+    /** \brief The first list in `text` which `patternOpen` opens and `patternClose` closes, if there is one.
+
+        The entries begin at the end of the list's first line, and each is on a line of its own.
+     */
+    [[nodiscard]]
+    std::optional<cmake_list> find_cmake_list(std::string_view text, std::string_view patternOpen, std::string_view patternClose)
+    {
+      constexpr auto npos{std::string::npos};
+
+      const auto startPos{text.find(patternOpen)};
+      if(startPos == npos)
+        return std::nullopt;
+
+      const auto endPos{text.find(patternClose, startPos + patternOpen.size())};
+      if(endPos == npos)
+        return std::nullopt;
+
+      std::vector<std::string> entries{};
+      auto newlinePos{npos}, next{startPos + patternOpen.size()};
+      while((newlinePos = text.find('\n', next)) < endPos)
+      {
+        next = std::ranges::min(text.find('\n', newlinePos + 1), endPos);
+        const auto entryStart{text.find_first_not_of(' ', newlinePos + 1)};
+
+        entries.emplace_back(text.substr(entryStart, next - entryStart));
+      }
+
+      const auto entryIndent{
+        [patternOpen]() {
+          if(const auto pos{patternOpen.find('(')}; pos < std::string_view::npos)
+            return pos + 1;
+
+          return patternOpen.size();
+        }()
+      };
+
+      return cmake_list{.entries_start{std::ranges::min(text.find('\n', startPos + patternOpen.size()), endPos)},
+                        .entries_end{endPos},
+                        .entry_indent{entryIndent},
+                        .entries{std::move(entries)}};
+    }
+
+    void write_cmake_list(std::string& text, const cmake_list& list)
+    {
+      auto entryLine{
+        [&list](const std::string& entry) { return std::format("\n{}{}", std::string(list.entry_indent, ' '), entry); }
+      };
+
+      const auto entryLines{
+          list.entries
+        | std::views::transform(entryLine)
+        | std::views::join
+        | std::ranges::to<std::string>()
+      };
+
+      text.replace(list.entries_start, list.entries_end - list.entries_start, entryLines);
+    }
+
+    [[nodiscard]]
+    std::string cmake_entry(std::string_view cmakeEntryPrefix, const fs::path& file, const fs::path& hostDir)
+    {
+      return std::format("{}{}", cmakeEntryPrefix, file.lexically_relative(hostDir).generic_string());
+    }
+  }
+
   void add_include(const fs::path& file, std::string_view includePath)
   {
     auto inserter{
       [&includePath](std::string& text) {
 
         std::string_view include{"#include"};
-        std::vector<std::string> entries{std::string{include}.append(" \"").append(includePath).append("\"\n")};
+        std::vector<std::string> entries{std::format("{}\n", include_directive(includePath))};
 
         constexpr auto npos{std::string::npos};
 
@@ -104,6 +227,11 @@ namespace sequoia::testing
     read_modify_write(file, inserter);
   }
 
+  bool remove_include(const fs::path& file, std::string_view includePath)
+  {
+    return remove_lines(file, [directive{include_directive(includePath)}](std::string_view line) { return line == directive; });
+  }
+
   void add_test_registrations(const fs::path& file, const std::vector<std::string>& tests)
   {
     if(tests.empty())
@@ -146,23 +274,15 @@ namespace sequoia::testing
       }()
     };
 
-    constexpr std::string_view blanks{" \t\r"};
     std::string_view contentsView      {contentsStr};
     const auto       executionIndentEnd{contentsView.find_first_not_of(blanks, executionLineStart)};
     std::string_view executionIndent   {contentsView.substr(executionLineStart, executionIndentEnd - executionLineStart)};
 
-    auto registrationOf{
-      [](std::string_view test) { return std::format("runner.register_test<{}>();", test); }
-    };
-
     auto isRegistered{
-      [contentsView, blanks, registrationOf](std::string_view test) {
-        const auto registration{registrationOf(test)};
+      [contentsView](std::string_view test) {
         auto startsWithRegistration{
-          [&registration, blanks](auto&& line) {
-            std::string_view lineView    {std::ranges::begin(line), std::ranges::end(line)};
-            const auto       contentStart{std::ranges::min(lineView.find_first_not_of(blanks), lineView.size())};
-            return lineView.substr(contentStart).starts_with(registration);
+          [registration{registration_of(test)}](auto&& line) {
+            return without_leading_blanks({std::ranges::begin(line), std::ranges::end(line)}).starts_with(registration);
           }
         };
 
@@ -171,8 +291,8 @@ namespace sequoia::testing
     };
 
     auto registrationLineOf{
-      [executionIndent, registrationOf](std::string_view test) {
-        return std::format("{}{}\n", executionIndent, registrationOf(test));
+      [executionIndent](std::string_view test) {
+        return std::format("{}{}\n", executionIndent, registration_of(test));
       }
     };
 
@@ -191,6 +311,21 @@ namespace sequoia::testing
     write_to_file(file, contentsStr, std::ios_base::out);
   }
 
+  bool remove_test_registrations(const fs::path& file, const std::vector<std::string>& tests)
+  {
+    auto isRegistration{
+      [&tests](std::string_view line) {
+        auto registers{
+          [content{without_leading_blanks(line)}](const std::string& test) { return content.starts_with(registration_of(test)); }
+        };
+
+        return std::ranges::any_of(tests, registers);
+      }
+    };
+
+    return remove_lines(file, isRegistration);
+  }
+
   void add_to_cmake(const fs::path& cmakeLists,
                     const fs::path& hostDir,
                     const fs::path& file,
@@ -199,49 +334,40 @@ namespace sequoia::testing
                     std::string_view cmakeEntryPrefix)
   {
     auto addEntry{
-      [file{file.lexically_relative(hostDir)}, &cmakeLists, patternOpen, patternClose, cmakeEntryPrefix] (std::string& text) {
-        constexpr auto npos{std::string::npos};
+      [&](std::string& text) {
+        auto list{find_cmake_list(text, patternOpen, patternClose)};
+        if(!list)
+          throw std::runtime_error{
+            std::format("Unable to find appropriate place to add source file to {}", cmakeLists.generic_string())
+          };
 
-        if(auto startPos{text.find(patternOpen)}; startPos != npos)
-        {
-          if(auto endPos{text.find(patternClose, startPos + patternOpen.size())}; endPos != npos)
-          {
-            std::vector<std::string> entries{{std::string{cmakeEntryPrefix}.append(file.generic_string())}};
-            auto newlinePos{npos}, next{startPos + patternOpen.size()};
-            while((newlinePos = text.find("\n", next)) < endPos)
-            {
-              next = std::ranges::min(text.find("\n", newlinePos + 1), endPos);
-              const auto entryStart{text.find_first_not_of(' ', newlinePos+1)};
-
-              entries.push_back(text.substr(entryStart, next - entryStart));
-            }
-
-            const auto numSpaces{
-              [patternOpen]() {
-                if(const auto pos{patternOpen.find('(')}; pos < std::string_view::npos)
-                  return pos + 1;
-
-                return patternOpen.size();
-              }()
-            };
-
-            std::ranges::sort(entries);
-            std::string sorted{};
-            std::ranges::for_each(entries, [&sorted, numSpaces](const std::string& e) {
-              sorted.append("\n").append(numSpaces, ' ').append(e); });
-
-            const auto startSection{std::ranges::min(text.find("\n", startPos + patternOpen.size()), endPos)};
-            text.replace(startSection, endPos - startSection, sorted);
-
-            return;
-          }
-        }
-
-        throw std::runtime_error{std::string{"Unable to find appropriate place to add source file to "}.append(cmakeLists.generic_string())};
+        list->entries.push_back(cmake_entry(cmakeEntryPrefix, file, hostDir));
+        std::ranges::sort(list->entries);
+        write_cmake_list(text, *list);
       }
     };
 
     read_modify_write(cmakeLists, addEntry);
+  }
+
+  bool remove_from_cmake(const fs::path& cmakeLists,
+                         const fs::path& hostDir,
+                         const fs::path& file,
+                         std::string_view patternOpen,
+                         std::string_view patternClose,
+                         std::string_view cmakeEntryPrefix)
+  {
+    auto contents{read_to_string(cmakeLists, std::ios_base::in)};
+    if(!contents)
+      throw std::runtime_error{report_failed_read(cmakeLists)};
+
+    auto list{find_cmake_list(*contents, patternOpen, patternClose)};
+    if(!list || (std::erase(list->entries, cmake_entry(cmakeEntryPrefix, file, hostDir)) == 0))
+      return false;
+
+    write_cmake_list(*contents, *list);
+    write_to_file(cmakeLists, *contents, std::ios_base::out);
+    return true;
   }
 
   namespace

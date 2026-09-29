@@ -32,7 +32,7 @@
 
 namespace sequoia::testing
 {
-  enum class runner_mode : unsigned { none=0, test=1, create=2, init=4};
+  enum class runner_mode : unsigned { none=0, test=1, create=2, init=4, remove=8};
 
   enum class update_mode { none = 0, soft };
 
@@ -417,7 +417,8 @@ namespace sequoia::testing
         m_Tests.emplace_back(T{});
     }
 
-    /** \brief Runs the tests, as the command line asked.
+    /** \brief Removes the tests the command line named for removal, if it named any; then runs the tests, as it
+        asked.
 
         `report_termination` is the terminate handler for the run, and for each test on the thread running it. Under
         MSVC's debug runtime, reports are redirected as `debug_report_redirector` describes, and under Windows a
@@ -589,6 +590,7 @@ namespace sequoia::testing
 
     suite_type m_Suites{};
     std::vector<test_vessel> m_Tests{};
+    std::vector<std::string> m_RemovalRequests{};
     std::set<std::string> m_LowerCaseTestNames{};
     std::map<std::string, std::filesystem::path> m_SourcesByLowerCasePrefix{};
     std::size_t m_Registered{};
@@ -611,6 +613,12 @@ namespace sequoia::testing
     void process_args(int argc, char** argv);
 
     void check_argument_consistency();
+
+    /** \brief Removes each registered test named, by its class or its source file, for removal.
+
+        \throws std::runtime_error, before anything is removed, if a name matches no registered test.
+     */
+    void remove_requested_tests();
 
     void check_for_missing_tests();
 
