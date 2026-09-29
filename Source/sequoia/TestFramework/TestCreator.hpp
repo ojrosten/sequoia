@@ -52,7 +52,7 @@ namespace sequoia::testing
 
   /** \brief The namespace `create` substitutes for the project's: the source directory's name.
 
-      Throws if the directory does not exist or its name cannot be a namespace name.
+      \throws std::runtime_error if the directory does not exist or its name cannot name a namespace.
    */
   [[nodiscard]]
   std::string project_namespace_for(const std::filesystem::path& sourceProject);
