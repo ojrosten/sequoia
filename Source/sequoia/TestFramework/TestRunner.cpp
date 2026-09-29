@@ -738,10 +738,10 @@ namespace sequoia::testing
     };
 
     const std::initializer_list<maths::tree_initializer<option>>
-      semanticsOptions{{headerOption}, {genSemanticsSourceOption}, {fullnameOption}, {testingUtilitiesOption}},
-      allocationOptions{{headerOption}, {fullnameOption}, {testingUtilitiesOption}},
+      semanticsOptions  {{headerOption}, {genSemanticsSourceOption}, {fullnameOption}, {testingUtilitiesOption}},
+      allocationOptions {{headerOption}, {fullnameOption}, {testingUtilitiesOption}},
       performanceOptions{{fullnameOption}},
-      freeOptions{{forenameOption}, {fullnameOption}, {genFreeSourceOption}, {diagnosticsOption}};
+      freeOptions       {{forenameOption}, {fullnameOption}, {genFreeSourceOption}, {diagnosticsOption}};
 
     const auto help{
       parse_invoke_depth_first(argc, argv,

@@ -368,7 +368,7 @@ namespace sequoia::testing
   std::string nascent_test_base::testing_utilities_include() const
   {
     const auto withinHostDir{m_TestingUtilities.lexically_relative(m_HostDir)};
-    const bool isWithin{!withinHostDir.empty() && (*withinHostDir.begin() != "..")};
+    const bool isWithin     {!withinHostDir.empty() && (*withinHostDir.begin() != "..")};
 
     return (isWithin ? withinHostDir : m_TestingUtilities.lexically_relative(m_Paths.tests().repo())).generic_string();
   }
@@ -380,9 +380,9 @@ namespace sequoia::testing
    */
   void nascent_test_base::locate_testing_utilities()
   {
-    const auto& repo{m_Paths.tests().repo()};
-    const auto repoName{fs::relative(repo, m_Paths.project_root()).generic_string()};
-    const auto sought{m_TestingUtilities.lexically_normal()};
+    const auto& repo    {m_Paths.tests().repo()};
+    const auto  repoName{fs::relative(repo, m_Paths.project_root()).generic_string()};
+    const auto  sought  {m_TestingUtilities.lexically_normal()};
 
     auto failureMessage{
       [&sought, &repoName](std::string_view problem) {
@@ -397,9 +397,8 @@ namespace sequoia::testing
     if(withinRepo.empty() || (*withinRepo.begin() == ".."))
       throw std::runtime_error{failureMessage("do not lie beneath")};
 
-    const auto suffix{withinRepo.generic_string()};
     auto endsWithSought{
-      [&repo, &suffix](const fs::directory_entry& entry) {
+      [&repo, suffix{withinRepo.generic_string()}](const fs::directory_entry& entry) {
         const auto relative{entry.path().lexically_relative(repo).generic_string()};
         return entry.is_regular_file() && ((relative == suffix) || relative.ends_with("/" + suffix));
       }
@@ -446,9 +445,8 @@ namespace sequoia::testing
     if(!is_identifier(name))
       throw std::runtime_error{std::format("--fullname '{}' is not an identifier, so cannot name a test class", name)};
 
-    const auto registration{std::format("register_test<{}>", name)};
     auto registers{
-      [&registration](const fs::path& mainCpp) {
+      [registration{std::format("register_test<{}>", name)}](const fs::path& mainCpp) {
         const auto text{read_to_string(mainCpp, std::ios_base::in)};
         if(!text)
           throw std::runtime_error{report_failed_read(mainCpp)};
@@ -468,7 +466,7 @@ namespace sequoia::testing
       }
     };
 
-    // Lexically, since resolving the path would spell it as the file already present does.
+    // The path is made relative lexically, since resolving it would spell it as the file already present does.
     auto relativeToRoot{
       [this](const fs::path& p) { return p.lexically_relative(m_Paths.project_root()).generic_string(); }
     };
@@ -555,8 +553,8 @@ namespace sequoia::testing
     return std::format("\"{}\"", stringify(outputFile));
   }
 
-  // Spelt as the declaration spells it, not through fs: MSVC matches a constrained definition to its
-  // declaration token by token (C2244).
+  // The template head spells std::filesystem as the declaration does, not through fs: MSVC matches a
+  // constrained definition to its declaration token by token (C2244).
   template<invocable_exact_r<std::filesystem::path, std::filesystem::path> WhereAbsent,
            std::invocable<std::filesystem::path> Generator,
            std::invocable<std::string&> FileTransformer>
@@ -575,7 +573,7 @@ namespace sequoia::testing
 
     const auto existingSource{build_source_path(m_Header)};
     const bool generateSource{existingSource.empty() && (m_SourceOption == gen_source_option::yes)};
-    const auto srcPath{generateSource ? whereAbsent(m_Header) : existingSource};
+    const auto srcPath       {generateSource ? whereAbsent(m_Header) : existingSource};
     if(srcPath.empty())
       on_source_path_error();
 
@@ -590,7 +588,7 @@ namespace sequoia::testing
     };
 
     const auto companionFiles{companionStubs | std::views::transform(companionFile) | std::ranges::to<std::vector>()};
-    const auto ownFiles{ownStubs | std::views::transform(ownFile) | std::ranges::to<std::vector>()};
+    const auto ownFiles      {ownStubs       | std::views::transform(ownFile)       | std::ranges::to<std::vector>()};
 
     // Everything is checked before anything is written.
     if(m_FullName)
@@ -880,12 +878,14 @@ namespace sequoia::testing
 
     make_common_replacements(text);
 
-    constexpr std::string_view generatedUtilities{"#include \"?ClassTestingUtilities.hpp\""};
     if(!testing_utilities().empty())
+    {
+      constexpr std::string_view generatedUtilities{"#include \"?ClassTestingUtilities.hpp\""};
       replace_all(text,
                   generatedUtilities,
                   std::format("#include \"{}\"\n\n#include \"sequoia/TestFramework/?TestCore.hpp\"",
                               testing_utilities_include()));
+    }
 
     replace_all(text, replacement{"::?_class", m_QualifiedName},
                       replacement{"?Class.hpp", header_path().generic_string()},
@@ -924,7 +924,7 @@ namespace sequoia::testing
   void nascent_allocation_test::finalize()
   {
     if(surname().empty())
-      surname(std::string{"allocation_"}.append(to_surname(flavour())));
+      surname(std::format("allocation_{}", to_surname(flavour())));
     set_type_name(forename());
 
     // An allocation test takes no --gen-source, so its header is never generated.
@@ -949,9 +949,11 @@ namespace sequoia::testing
 
     make_common_replacements(text);
 
-    constexpr std::string_view testCore{"#include \"sequoia/TestFramework/?AllocationTestCore.hpp\""};
     if(!testing_utilities().empty())
+    {
+      constexpr std::string_view testCore{"#include \"sequoia/TestFramework/?AllocationTestCore.hpp\""};
       replace_all(text, testCore, std::format("#include \"{}\"\n\n{}", testing_utilities_include(), testCore));
+    }
 
     replace_all(text, replacement{"?Allocation", to_camel_case(test_type())},
                       replacement{"?_allocation", test_type()});
@@ -981,7 +983,9 @@ namespace sequoia::testing
         throw std::runtime_error{"--fullname names one test class, but --framework-diagnostics creates two"};
     }
 
-    const auto fallbackSuite{capitalize(forename().empty() ? header().filename().replace_extension().string() : forename())};
+    const auto fallbackSuite{
+      capitalize(forename().empty() ? header().filename().replace_extension().string() : forename())
+    };
 
     if(forename().empty())
       forename(to_snake_case(fallbackSuite));
