@@ -1018,7 +1018,8 @@ namespace sequoia::testing
       return return_code::success;
 
     const scoped_terminate_handler terminationReported{report_termination};
-    const debug_report_redirection debugReportRedirection{};
+    const debug_report_redirector debugReportRedirector{};
+    const windows_crash_report_enabler windowsCrashReportEnabler{};
 
     fs::create_directories(proj_paths().prune().dir());
     build_suite_tree();

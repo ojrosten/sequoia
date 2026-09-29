@@ -72,7 +72,7 @@ namespace sequoia
     return t <= std::chrono::milliseconds{} ? 0u : static_cast<unsigned int>(t.count());
   }
 
-  debug_report_redirection::debug_report_redirection()
+  debug_report_redirector::debug_report_redirector()
   {
     #if defined(SEQUOIA_MSVC_DEBUG_RUNTIME)
       if(_CrtSetReportHook2(_CRT_RPTHOOK_INSTALL, report_to_stderr) == -1)
@@ -80,10 +80,37 @@ namespace sequoia
     #endif
   }
 
-  debug_report_redirection::~debug_report_redirection()
+  debug_report_redirector::~debug_report_redirector()
   {
     #if defined(SEQUOIA_MSVC_DEBUG_RUNTIME)
       _CrtSetReportHook2(_CRT_RPTHOOK_REMOVE, report_to_stderr);
+    #endif
+  }
+
+  namespace
+  {
+    /// Returns the replaced error mode
+    [[nodiscard]]
+    unsigned int let_crashes_reach_error_reporting()
+    {
+      #ifdef _WIN32
+        const auto replaced{GetErrorMode()};
+        SetErrorMode(replaced & ~SEM_NOGPFAULTERRORBOX);
+        return replaced;
+      #else
+        return 0;
+      #endif
+    }
+  }
+
+  windows_crash_report_enabler::windows_crash_report_enabler()
+    : m_Replaced{let_crashes_reach_error_reporting()}
+  {}
+
+  windows_crash_report_enabler::~windows_crash_report_enabler()
+  {
+    #ifdef _WIN32
+      SetErrorMode(m_Replaced);
     #endif
   }
 }

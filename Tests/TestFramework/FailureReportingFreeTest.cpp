@@ -6,10 +6,15 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "FailureReportingFreeTest.hpp"
+#include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/TestFramework/FailureReporting.hpp"
 
 #include <cstdlib>
 #include <stdexcept>
+
+#ifdef _WIN32
+  #include "Windows.h"
+#endif
 
 namespace sequoia::testing
 {
@@ -23,6 +28,38 @@ namespace sequoia::testing
 
   namespace
   {
+    /// True away from Windows, so that every platform makes the same number of checks
+    [[nodiscard]]
+    bool gp_fault_error_box_cleared()
+    {
+      #ifdef _WIN32
+        return (GetErrorMode() & SEM_NOGPFAULTERRORBOX) == 0;
+      #else
+        return true;
+      #endif
+    }
+
+    #ifdef _WIN32
+      /** \brief An RAII wrapper which sets the process's error mode, and restores the replaced mode on destruction. */
+      class [[nodiscard]] scoped_error_mode
+      {
+      public:
+        explicit scoped_error_mode(UINT mode)
+          : m_Replaced{SetErrorMode(mode)}
+        {}
+
+        scoped_error_mode(const scoped_error_mode&)            = delete;
+        scoped_error_mode& operator=(const scoped_error_mode&) = delete;
+
+        ~scoped_error_mode()
+        {
+          SetErrorMode(m_Replaced);
+        }
+      private:
+        UINT m_Replaced;
+      };
+    #endif
+
     [[noreturn]]
     void first_handler() noexcept
     {
@@ -47,6 +84,7 @@ namespace sequoia::testing
   {
     test_describe_exception();
     test_scoped_terminate_handler();
+    test_windows_crash_report_enabler();
   }
 
   void failure_reporting_free_test::test_describe_exception()
@@ -88,6 +126,25 @@ namespace sequoia::testing
     check("The outermost handler is restored", std::get_terminate() == outermost);
   }
 
+  void failure_reporting_free_test::test_windows_crash_report_enabler()
+  {
+    #ifdef _WIN32
+      const UINT inherited{SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX};
+      const scoped_error_mode inheritedMode{inherited};
+
+      {
+        const windows_crash_report_enabler crashReportEnabler{};
+        check(equality, "Only SEM_NOGPFAULTERRORBOX is cleared", GetErrorMode(), UINT{SEM_FAILCRITICALERRORS});
+      }
+
+      check(equality, "The replaced error mode is restored", GetErrorMode(), inherited);
+    #else
+      const windows_crash_report_enabler crashReportEnabler{};
+      check("Only SEM_NOGPFAULTERRORBOX is cleared", true);
+      check("The replaced error mode is restored", true);
+    #endif
+  }
+
   [[nodiscard]]
   std::filesystem::path failure_reporting_in_parallel_free_test::source_file()
   {
@@ -97,5 +154,6 @@ namespace sequoia::testing
   void failure_reporting_in_parallel_free_test::run_tests()
   {
     check("Termination is reported on the thread running this test", std::get_terminate() == report_termination);
+    check("SEM_NOGPFAULTERRORBOX is cleared for the run", gp_fault_error_box_cleared());
   }
 }
