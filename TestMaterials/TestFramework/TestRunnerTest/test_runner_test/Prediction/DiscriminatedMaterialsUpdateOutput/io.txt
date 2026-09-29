@@ -1,8 +1,8 @@
 
 Running tests...
 
-stale_predictions_free_test:
-	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+variant_free_test:
+	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 3]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 419
 	Predictions are stale
@@ -16,9 +16,9 @@ stale_predictions_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 1.05ms]
-[Execution Time: 254us]
-	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
+[Total Run Time: 1.34ms]
+[Execution Time: 604us]
+	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 3]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
@@ -26,6 +26,6 @@ stale_predictions_free_test:
 	False Negative Performance Checks:         0;  Failures:  0
 
 -----------Materials Update-----------
-	Predictions for Updating/StalePredictionsFreeTest.cpp deleted by the update:
-	TestMaterials/Updating/StalePredictionsFreeTest/stale_predictions_free_test/Prediction/Obsolete.txt
+	Predictions for Updating/VariantFreeTest.cpp deleted by the update:
+	TestMaterials/Updating/VariantFreeTest/variant_free_test/Platypus/Prediction/Obsolete.txt
 

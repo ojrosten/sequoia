@@ -7,7 +7,7 @@ throwing_stale_predictions_free_test:
 ******  Critical Failures:  1  ******
 
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 418
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 419
 	Predictions are stale
 
 	[bool]
@@ -23,7 +23,7 @@ throwing_stale_predictions_free_test:
 	Exception thrown after check completed
 	Last Recorded Message:
 
-	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 418
+	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 419
 	Predictions are stale
 
 	[bool]
@@ -32,8 +32,8 @@ throwing_stale_predictions_free_test:
 
 
 -----------Grand Totals-----------
-[Total Run Time: 3.89ms]
-[Execution Time: 1.4ms]
+[Total Run Time: 463us]
+[Execution Time: 222us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
