@@ -449,8 +449,8 @@ namespace sequoia::testing
     };
 
     auto refused{
-      [this](std::string_view description, auto removal) {
-        check_exception_thrown<std::runtime_error>(description, removal);
+      [this](std::string_view description, auto attempt) {
+        check_exception_thrown<std::runtime_error>(description, attempt);
       }
     };
 
