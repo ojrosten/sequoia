@@ -15,6 +15,7 @@
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/TestFramework/Commands.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TextProcessing/Patterns.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <array>
@@ -32,15 +33,15 @@ namespace sequoia::testing
   {
     constexpr auto path_of{[](const fs::directory_entry& entry) { return entry.path(); }};
 
-    /** \brief Whether `name` can name a namespace or a class: letters, digits and underscores, not led by a digit */
+    /** \brief Whether `name` can name a namespace or a class: ASCII letters, digits and underscores, not led by
+        a digit
+     */
     [[nodiscard]]
     bool is_identifier(std::string_view name)
     {
-      auto isIdentifierChar{[](char c) { return std::isalnum(static_cast<unsigned char>(c)) || (c == '_'); }};
-
       return !name.empty()
           && !std::isdigit(static_cast<unsigned char>(name.front()))
-          && std::ranges::all_of(name, isIdentifierChar);
+          && std::ranges::all_of(name, is_identifier_character);
     }
   }
 
@@ -385,7 +386,10 @@ namespace sequoia::testing
 
     auto failureMessage{
       [&sought, &repoName](std::string_view problem) {
-        return std::format("The testing utilities {} {} the tests repository {}", sought.generic_string(), problem, repoName);
+        return std::format("The testing utilities {} {} the tests repository {}",
+                           sought.generic_string(),
+                           problem,
+                           repoName);
       }
     };
 
