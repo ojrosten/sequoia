@@ -62,7 +62,9 @@ namespace sequoia::testing
                whitespace or the command's `(`, and before whitespace or its `)`.
      */
     [[nodiscard]]
-    std::string::size_type find_cmake_argument(std::string_view text, std::string_view entry, std::string::size_type from)
+    std::string::size_type find_cmake_argument(std::string_view text,
+                                               std::string_view entry,
+                                               std::string::size_type from)
     {
       constexpr std::string_view whitespace{" \t\r\n"};
 

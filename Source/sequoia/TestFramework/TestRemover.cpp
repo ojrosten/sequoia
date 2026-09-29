@@ -478,7 +478,12 @@ namespace sequoia::testing
       [&projPaths, &registered](const std::string& request) { return tests_named_by(projPaths, request, registered); }
     };
 
-    const auto testsToRemove{requests | std::views::transform(testsNamed) | std::views::join | std::ranges::to<std::vector>()};
+    const auto testsToRemove{
+        requests
+      | std::views::transform(testsNamed)
+      | std::views::join
+      | std::ranges::to<std::vector>()
+    };
     const auto sources{group_by_source(projPaths, testsToRemove, registered)};
     for(const auto& source : sources)
     {

@@ -347,7 +347,7 @@ namespace sequoia::testing
           edge_t{0, "Remove the only entry", remove("Stuff/AlphaTest.cpp")} },                  // 3: AlphaTest.cpp
         { edge_t{4, "Remove Stuff/BetaTest.cpp, where only Other/BetaTest.cpp is listed", remove("Stuff/BetaTest.cpp")}
         }, // 4: elsewhere
-        { edge_t{6, "Remove the entry on the list's opening line, leaving the rest as it was", remove("Stuff/BetaTest.cpp")}
+        { edge_t{6, "Remove the entry on the opening line, leaving the rest as it was", remove("Stuff/BetaTest.cpp")}
         }, // 5: an entry on the opening line
         { }, // 6: the opening line alone
         { edge_t{8, "Remove the only entry of a list on one line", remove("Stuff/BetaTest.cpp")}
@@ -357,7 +357,17 @@ namespace sequoia::testing
         }, // 9: tabs and CRLF
         { }  // 10: tabs and CRLF, without the entry
       },
-      {empty, beta, alphaBeta, alpha, elsewhere, openingLine, openedAlone, oneLine, emptyLine, tabsAndCRLF, tabsAndCRLFWithoutBeta}
+      {empty,
+       beta,
+       alphaBeta,
+       alpha,
+       elsewhere,
+       openingLine,
+       openedAlone,
+       oneLine,
+       emptyLine,
+       tabsAndCRLF,
+       tabsAndCRLFWithoutBeta}
     };
 
     auto checkerFn{
