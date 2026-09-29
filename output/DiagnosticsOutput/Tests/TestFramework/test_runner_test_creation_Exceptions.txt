@@ -85,12 +85,39 @@ Expected Exception Type:
 
 =======================================
 
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 444
+A class registering no test
+
+Expected Exception Type:
+[std::runtime_error]
+remove-test: gizmo_test names no test registered with this runner
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 446
+A source file defining no registered test
+
+Expected Exception Type:
+[std::runtime_error]
+remove-test: Tests/Stuff/GizmoTest.cpp names no test registered with this runner
+
+=======================================
+
 Tests/TestFramework/TestRunnerTestCreation.cpp, Line 448
 The one test a class names, of the two its source file defines
 
 Expected Exception Type:
 [std::runtime_error]
 remove-test: Tests/Stuff/PairTest.cpp defines pair_second_test as well as pair_first_test; name the source file to remove both
+
+=======================================
+
+Tests/TestFramework/TestRunnerTestCreation.cpp, Line 450
+A test which is registered, beside one which is not
+
+Expected Exception Type:
+[std::runtime_error]
+remove-test: gizmo_test names no test registered with this runner
 
 =======================================
 
