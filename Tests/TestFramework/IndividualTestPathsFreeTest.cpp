@@ -49,7 +49,7 @@ namespace sequoia::testing
 
     {
       commandline_arguments args{{minimal_fake_path().generic_string()}};
-      project_paths projPaths{args.size(), args.get(), {}};
+      const project_paths projPaths{args.size(), args.get(), {}};
       check(
         equality,
         reporter{"Absolute Path"},
@@ -62,6 +62,32 @@ namespace sequoia::testing
         reporter{"Non-Absolute Path"},
         test_summary_path{fs::path{"Tests/Foo.cpp"}, "foo_test", projPaths, std::nullopt}.file_path(),
         projPaths.output().test_summaries() / "Tests" / "foo_test.txt"
+      );
+
+      check(
+        equality,
+        reporter{"Execution record, Absolute Path"},
+        test_execution_record_path{working_materials() / "Tests" / "Foo.cpp", "foo_test", projPaths}.file_path(),
+        projPaths.output().dir() / "ExecutionRecords" / "CMade" / "Tests" / "foo_test.txt"
+      );
+
+      check(
+        equality,
+        reporter{"Execution record, Non-Absolute Path"},
+        test_execution_record_path{fs::path{"Tests/Foo.cpp"}, "foo_test", projPaths}.file_path(),
+        projPaths.output().dir() / "ExecutionRecords" / "CMade" / "Tests" / "foo_test.txt"
+      );
+    }
+
+    {
+      // As under a multi-config generator, the executable sits a level below its build tree
+      commandline_arguments args{{fake_project().append("build/Foo/CMade/FakeExe.txt").generic_string()}};
+      const project_paths projPaths{args.size(), args.get(), {}};
+      check(
+        equality,
+        reporter{"Execution record of an executable below its build tree"},
+        test_execution_record_path{fs::path{"Tests/Foo.cpp"}, "foo_test", projPaths}.file_path(),
+        projPaths.output().dir() / "ExecutionRecords" / "Foo" / "CMade" / "Tests" / "foo_test.txt"
       );
     }
   }

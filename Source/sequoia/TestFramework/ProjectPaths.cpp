@@ -328,6 +328,20 @@ namespace sequoia::testing
     return (directory /= m_Stem).concat(num).concat(extension);
   }
 
+  //===================================== execution_record_paths =====================================//
+
+  execution_record_paths::execution_record_paths(fs::path outputDir,
+                                                 const fs::path& buildRoot,
+                                                 const fs::path& executableDir)
+    : m_Dir{(outputDir /= "ExecutionRecords") /= fs::relative(executableDir, buildRoot)}
+  {}
+
+  [[nodiscard]]
+  fs::path execution_record_paths::stamp() const
+  {
+    return m_Dir / "run.stamp";
+  }
+
   //===================================== output_paths =====================================//
 
   output_paths::output_paths(const fs::path& projectRoot)
@@ -401,5 +415,11 @@ namespace sequoia::testing
   prune_paths project_paths::prune() const
   {
     return output().prune(build().dir(), build().executable_dir());
+  }
+
+  [[nodiscard]]
+  execution_record_paths project_paths::execution_records() const
+  {
+    return output().execution_records(build().dir(), build().executable_dir());
   }
 }
