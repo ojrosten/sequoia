@@ -13,7 +13,10 @@
 #   - a summary figure that disagrees with the records, and a summary with no figures. The
 #     capture holds a function with two aliases, one hit, because lcov counts aliases: a
 #     check that counted functions by their FNL index instead would disagree with lcov;
-#   - malformed input: a second record for one file, a record with no end, no records.
+#   - malformed input: a second record for one file, a record with no end, no records;
+#   - a symbol holding a byte which is not UTF-8, as lcov writes one: a clean pair passes, the byte
+#     is quoted as itself when a count changes, and a changed byte fails; and a dropped file whose
+#     path holds such a byte is listed as itself.
 #
 # One kind of dropped file passes, and is listed: a file with function records but no line
 # records, which lcov deletes on reading any tracefile and llvm-cov writes. Two of them, out
@@ -88,7 +91,7 @@ run() { # run <name> <0|1> <pattern>; reads $tmp/capture, $tmp/filtered, $tmp/su
   local status=$?
   if [[ $status -ne $2 ]]; then
     echo "FAIL: $1 (expected exit $2, got $status)"; sed 's/^/    /' "$tmp/out"; fails=$((fails+1))
-  elif ! grep -qE -- "$3" "$tmp/out"; then
+  elif ! LC_ALL=C grep -qE -- "$3" "$tmp/out"; then
     echo "FAIL: $1 (output lacks: $3)"; sed 's/^/    /' "$tmp/out"; fails=$((fails+1))
   fi
 }
@@ -121,6 +124,22 @@ run "a record the capture lacks is named" 1 'the capture has "\(nothing\)" where
 
 reset; edit filtered '/^LH:4$/d'
 run "a lost record is named" 1 'the capture has "LH:4" where the filtered tracefile has "\(nothing\)"'
+
+# lcov writes a function name's letters from U+0080 to U+00FF as single Latin-1 bytes, so a tracefile need
+# not be UTF-8: here, sequoia's caf\u00E9_free_test, as lcov 2.5 writes the name gcc 16 mangles.
+nonUtf8Symbol=$'_ZN15caf\xe9_free_test3runEv'
+reset
+LC_ALL=C edit capture  "s/_Z1fv/$nonUtf8Symbol/"
+LC_ALL=C edit filtered "s/_Z1fv/$nonUtf8Symbol/"
+run "a symbol which is not UTF-8 passes" 0 "1 of 4 captured files kept unchanged"
+LC_ALL=C edit filtered 's/^FNA:0,2,/FNA:0,0,/'; edit summary 's/(2 of 4 functions)/(1 of 4 functions)/'
+run "a symbol which is not UTF-8 is quoted as itself when its count changes" 1 "the capture has \"FNA:0,2,$nonUtf8Symbol\""
+reset
+LC_ALL=C edit capture  "s/_Z1fv/$nonUtf8Symbol/"
+LC_ALL=C edit filtered $'s/_Z1fv/_ZN15caf\xe8_free_test3runEv/'
+run "a byte which is not UTF-8, changed, fails" 1 "the capture has \"FNA:0,2,$nonUtf8Symbol\""
+reset; printf '%s\n' $'SF:/src/caf\xe9.hpp' FNL:0,12 FNA:0,0,_ZN1b1fEv FNF:1 FNH:0 LF:0 LH:0 end_of_record >> "$tmp/capture"
+run "a dropped file whose path is not UTF-8 is listed as itself" 0 $'^  /src/caf\xe9.hpp$'
 
 reset
 printf '%s\n' SF:/src/z.hpp FNL:0,30 FNA:0,15,_ZN1zC2ERKS_ FNF:1 FNH:1 LF:0 LH:0 end_of_record >> "$tmp/capture"
