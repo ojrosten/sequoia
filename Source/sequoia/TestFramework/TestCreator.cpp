@@ -555,8 +555,10 @@ namespace sequoia::testing
     return std::string{"\""}.append(stringify(outputFile)).append("\"");
   }
 
-  template<invocable_exact_r<fs::path, fs::path> WhereAbsent,
-           std::invocable<fs::path> Generator,
+  // Spelt as the declaration spells it, not through fs: MSVC matches a constrained definition to its
+  // declaration token by token (C2244).
+  template<invocable_exact_r<std::filesystem::path, std::filesystem::path> WhereAbsent,
+           std::invocable<std::filesystem::path> Generator,
            std::invocable<std::string&> FileTransformer>
   void nascent_test_base::finalize(WhereAbsent whereAbsent,
                                    Generator generate,
