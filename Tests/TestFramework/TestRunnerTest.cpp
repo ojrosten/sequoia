@@ -517,6 +517,7 @@ namespace sequoia::testing
     test_no_materials_update_after_critical_failure();
     test_partial_materials_update();
     test_materials_preparation_failure();
+    test_versioned_output_failure();
     test_nested_suite();
     test_nested_suite_verbose();
     test_suite_named_as_a_sibling_test();
@@ -1548,5 +1549,67 @@ namespace sequoia::testing
 
     check(equality, "Materials preparation failure return code", runner.execute(), return_code::critical_failures);
     check_output("Materials Preparation Failure Output", "MaterialsPreparationFailureOutput", outputStream);
+  }
+
+  namespace
+  {
+    class unwritable_output_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return "Tests/Output/UnwritableOutputFreeTest.cpp";
+      }
+
+      void run_tests()
+      {
+        check("Run, though its versioned output cannot be written", true);
+      }
+    };
+
+    class beside_unwritable_output_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return "Tests/Output/BesideUnwritableOutputFreeTest.cpp";
+      }
+
+      void run_tests()
+      {
+        check("Run beside a test whose versioned output could not be written", true);
+      }
+    };
+  }
+
+  /** A failure to write a test's versioned output is that test's critical failure, and the run
+      completes: the other test's results and the grand totals are still reported. A directory where
+      the test's exceptions file belongs makes the write fail.
+   */
+  void test_runner_test::test_versioned_output_failure()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    runner.register_test<unwritable_output_free_test>();
+    runner.register_test<beside_unwritable_output_free_test>();
+
+    fs::create_directories(fake_project() / "output/DiagnosticsOutput/Tests/Output/unwritable_output_free_test_Exceptions.txt");
+
+    check(equality, "Versioned output failure return code", runner.execute(), return_code::critical_failures);
+    check_output("Versioned Output Failure Output", "VersionedOutputFailureOutput", outputStream);
   }
 }

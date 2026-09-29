@@ -244,9 +244,21 @@ namespace sequoia::testing
           }
         }
 
-        m_Test.write_instability_analysis_output(m_Test.source_file(), index);
+        try
+        {
+          m_Test.write_instability_analysis_output(m_Test.source_file(), index);
+          return write_versioned_output(t);
+        }
+        catch(const std::exception& e)
+        {
+          m_Test.log_critical_failure(m_Test.source_file(), "Output Writing", e.what());
+        }
+        catch(...)
+        {
+          m_Test.log_critical_failure(m_Test.source_file(), "Output Writing", "Unknown exception");
+        }
 
-        return write_versioned_output(t);
+        return m_Test.summarize(t.time_elapsed());
       }
 
       void reset() final
