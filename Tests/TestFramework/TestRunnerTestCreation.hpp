@@ -18,6 +18,13 @@ namespace sequoia::testing
     /** \brief Where a fake project's main sits relative to its top-level CMake source directory. */
     enum class main_location { in_source_dir, below_source_dir };
 
+    /** \brief A fake project prepared as `create` expects to find a project. */
+    struct fake_project
+    {
+      std::filesystem::path root{}, cmake_cache_dir{};
+      main_paths main{};
+    };
+
   public:
     using free_test::free_test;
 
@@ -32,6 +39,13 @@ namespace sequoia::testing
     void test_project_namespace();
 
     void test_template_data_generation();
+
+    void test_creation_and_removal();
+
+    [[nodiscard]]
+    fake_project prepare_fake_project(std::string_view projectName,
+                                      const std::optional<std::string>& sourceFolder,
+                                      main_location mainLocation);
 
     void test_creation(std::string_view projectName,
                        std::optional<std::string> sourceFolder,

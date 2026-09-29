@@ -11,6 +11,7 @@
 
 #include "sequoia/TestFramework/TestCreator.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
+#include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
@@ -20,6 +21,72 @@
 namespace sequoia::testing
 {
   namespace fs = std::filesystem;
+
+  namespace lifecycle
+  {
+    /** \brief Stand-ins for tests `create` writes into the fake project, which `remove-test` removes only once they
+        are registered. Each names its source as the fake project's tests repository holds it.
+     */
+    class utilities_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file() { return "Tests/Utilities/UtilitiesFreeTest.cpp"; }
+
+      void run_tests() {}
+    };
+
+    class utilities_free_test_extras final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file() { return "Tests/Utilities/UtilitiesFreeTestExtras.cpp"; }
+
+      void run_tests() {}
+    };
+
+    class widget_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file() { return "Tests/Stuff/WidgetTest.cpp"; }
+
+      void run_tests() {}
+    };
+
+    class widget_false_negative_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file() { return "Tests/Stuff/WidgetTestingDiagnostics.cpp"; }
+
+      void run_tests() {}
+    };
+
+    /** \brief The directories of a project which creating or removing a test may change. */
+    constexpr std::array<std::string_view, 7>
+      editedDirectories{"OtherSandbox", "output", "Source", "TestMaterials", "Tests", "TestSandbox", "TestShared"};
+
+    /** \brief Gives `project` the state of `snapshot`, in every directory creating or removing a test may change. */
+    void set_state(const fs::path& project, const fs::path& snapshot)
+    {
+      fs::create_directories(project);
+      for(const auto dir : editedDirectories)
+      {
+        fs::remove_all(project / dir);
+        if(fs::exists(snapshot / dir))
+          fs::copy(snapshot / dir, project / dir, fs::copy_options::recursive);
+      }
+    }
+  }
 
   [[nodiscard]]
   fs::path test_runner_test_creation::source_file()
@@ -38,6 +105,7 @@ namespace sequoia::testing
     test_type_handling();
     test_project_namespace();
     test_template_data_generation();
+    test_creation_and_removal();
     test_creation("FakeProject", std::nullopt, main_location::in_source_dir);
     test_creation("AnotherFakeProject", "curlew", main_location::below_source_dir);
     test_creation_failure();
@@ -126,14 +194,188 @@ namespace sequoia::testing
                    generate_template_data("<class ... T>"), template_data{{"class ...", "T"}});
   }
 
-  void test_runner_test_creation::test_creation(std::string_view projectName,
-                                                std::optional<std::string> sourceFolder,
-                                                main_location mainLocation)
+  /** Each node is a state of a fake project, and each edge a run of `create` or `remove-test` taking it from one state
+      to another. So each removal is checked to give back the state before the creation it undoes, and each creation
+      to give back the state before the removal. A removed test's companions stay, and so does the source `create`
+      generated for it, so creating it again restores it. One edge stands for running the tests, writing their
+      versioned output and materials; one test's name begins the other's, and removing it leaves the other's output.
+   */
+  void test_runner_test_creation::test_creation_and_removal()
+  {
+    using namespace lifecycle;
+    using transition_checker_t = transition_checker<fs::path, check_ordering::no>;
+    using project_graph        = transition_checker_t::transition_graph;
+    using edge_t               = transition_checker_t::edge;
+
+    constexpr std::string_view projectName{"LifecycleProject"};
+    fs::copy(auxiliary_materials() / "FakeProject", auxiliary_materials() / projectName, fs::copy_options::recursive);
+    const auto project{prepare_fake_project(projectName, "fakeProject", main_location::in_source_dir)};
+
+    // As every run of the runner leaves them
+    fs::create_directories(project.root / "output" / "DiagnosticsOutput");
+    fs::create_directories(project.root / "output" / "TestSummaries");
+    fs::create_directories(project.root / "TestMaterials");
+
+    // A second executable: creation registers each test in its main too, and removal must find it unprompted, as
+    // removing from TestAll must find a test PersistentTestChamber registers.
+    fs::copy(project.root / "TestSandbox", project.root / "OtherSandbox", fs::copy_options::recursive);
+
+    // Files in the materials naming the tests, as another test's fake project may; removal leaves them be.
+    fs::copy(auxiliary_materials() / "LifecycleDecoys", project.root, fs::copy_options::recursive);
+
+    auto withZerothArg{
+      [this, projectName](std::vector<std::string> args) {
+        args.insert(args.begin(), zeroth_arg(projectName));
+        return args;
+      }
+    };
+
+    // Creation is run as from an executable which names the other as ancillary; removal as from one which does not.
+    auto runOn{
+      [&project](commandline_arguments& args, std::vector<fs::path> ancillaryMains, std::ostream& stream) {
+        return test_runner{args.size(),
+                           args.get(),
+                           "Oliver Jacob Rosten",
+                           "    ",
+                           {.source_folder{"fakeProject"},
+                            .main_cpp{fs::relative(project.main.file(), project.root).generic_string()},
+                            .ancillary_main_cpps{std::move(ancillaryMains)},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           stream};
+      }
+    };
+
+    auto creation{
+      [&project, &withZerothArg, &runOn](std::vector<std::string> creationArgs) {
+        return [&project, &withZerothArg, &runOn, creationArgs](const fs::path& state) {
+          set_state(project.root, state);
+
+          commandline_arguments args{withZerothArg(creationArgs)};
+          std::stringstream stream{};
+          [[maybe_unused]] const auto code{runOn(args, {"OtherSandbox/TestSandbox.cpp"}, stream).execute()};
+
+          return project.root;
+        };
+      }
+    };
+
+    auto removal{
+      [&project, &withZerothArg, &runOn](std::vector<std::string> tests, auto registerTests) {
+        return [&project, &withZerothArg, &runOn, tests, registerTests](const fs::path& state) {
+          set_state(project.root, state);
+
+          commandline_arguments args{
+            withZerothArg(
+                tests
+              | std::views::transform([](const std::string& test) { return std::array<std::string, 2>{"remove-test", test}; })
+              | std::views::join
+              | std::ranges::to<std::vector>()
+            )
+          };
+
+          std::stringstream stream{};
+          auto runner{runOn(args, {}, stream)};
+          registerTests(runner);
+          [[maybe_unused]] const auto code{runner.execute()};
+
+          return project.root;
+        };
+      }
+    };
+
+    auto running{
+      [&project, runOutput{auxiliary_materials() / "LifecycleRunOutput"}](const fs::path& state) {
+        set_state(project.root, state);
+        fs::copy(runOutput, project.root, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+        return project.root;
+      }
+    };
+
+    auto utilitiesTests{
+      [](test_runner& r) {
+        r.register_test<utilities_free_test>();
+        r.register_test<utilities_free_test_extras>();
+      }
+    };
+
+    auto extrasTest{[](test_runner& r) { r.register_test<utilities_free_test_extras>(); }};
+
+    auto widgetTests{
+      [](test_runner& r) {
+        r.register_test<widget_test>();
+        r.register_test<widget_false_negative_test>();
+      }
+    };
+
+    auto widgetTesterTest{[](test_runner& r) { r.register_test<widget_false_negative_test>(); }};
+
+    const std::vector<std::string>
+      createExtras {"create", "free_test", "Utilities.h", "--fullname", "utilities_free_test_extras"},
+      createUtilities{"create", "free_test", "Utilities.h"},
+      createWidget {"create", "regular_test", "stuff::widget", "std::vector<int>", "--gen-source", "Stuff"};
+
+    const auto states{predictive_materials() / "Lifecycle"};
+
+    project_graph g{
+      { { edge_t{1, "Create two tests, one named as the other plus a suffix",
+                 creation(std::vector{createExtras, createUtilities} | std::views::join | std::ranges::to<std::vector>())},
+          edge_t{4, "Create the test whose name is the longer", creation(createExtras)},
+          edge_t{5, "Create a regular test, generating the class", creation(createWidget)}
+        }, // 0: prepared
+        { edge_t{0, "Remove both, by their classes",
+                 removal({"utilities_free_test", "utilities_free_test_extras"}, utilitiesTests)},
+          edge_t{2, "Run the tests", running},
+          edge_t{4, "Remove the test whose name the other's begins with, by its class",
+                 removal({"utilities_free_test"}, utilitiesTests)}
+        }, // 1: two tests
+        { edge_t{3, "Remove the test whose name the other's begins with, by its source file, with its output and materials",
+                 removal({"Tests/Utilities/UtilitiesFreeTest.cpp"}, utilitiesTests)}
+        }, // 2: two tests, run
+        { edge_t{0, "Remove the remaining test, with its output and materials", removal({"utilities_free_test_extras"}, extrasTest)}
+        }, // 3: one test, run
+        { edge_t{0, "Remove the test", removal({"utilities_free_test_extras"}, extrasTest)},
+          edge_t{1, "Create the test whose name is the shorter", creation(createUtilities)}
+        }, // 4: one test
+        { edge_t{6, "Remove the regular test, leaving its companions", removal({"widget_test"}, widgetTests)},
+          edge_t{7, "Remove the regular test and the false-negative test of its testing utilities",
+                 removal({"widget_test", "widget_false_negative_test"}, widgetTests)}
+        }, // 5: regular test
+        { edge_t{5, "Create the regular test again, beside its companions", creation(createWidget)},
+          edge_t{7, "Remove the false-negative test", removal({"widget_false_negative_test"}, widgetTesterTest)}
+        }, // 6: companions of a regular test
+        { edge_t{5, "Create the regular test again, beside its testing utilities", creation(createWidget)}
+        }  // 7: testing utilities
+      },
+      {states / "Prepared",
+       states / "UtilitiesTests",
+       states / "UtilitiesTestsRun",
+       states / "ExtrasRun",
+       states / "Extras",
+       states / "Widget",
+       states / "WidgetCompanions",
+       states / "WidgetTestingUtilities"}
+    };
+
+    auto checkState{
+      [this](std::string_view description, const fs::path& projectRoot, const fs::path& state) {
+        const auto working{working_materials() / "Lifecycle" / back(state)};
+        set_state(working, projectRoot);
+        check(equivalence, description, working, state);
+      }
+    };
+
+    checkState("The fake project as prepared", project.root, states / "Prepared");
+
+    transition_checker_t::check(report("Creation and removal"), g, checkState);
+  }
+
+  [[nodiscard]]
+  test_runner_test_creation::fake_project test_runner_test_creation::prepare_fake_project(std::string_view projectName,
+                                                                                          const std::optional<std::string>& sourceFolder,
+                                                                                          main_location mainLocation)
   {
     const auto projectPath{auxiliary_materials() / projectName};
-    const source_paths sourcePaths{projectPath, sourceFolder};
-    const auto sourceFolderPath{sourcePaths.project()};
-    const auto sourceFolderName{back(sourceFolderPath).generic_string()};
+    const auto sourceFolderPath{source_paths{projectPath, sourceFolder}.project()};
 
     fs::copy(auxiliary_paths::repo(get_project_paths().project_root()), auxiliary_paths::repo(projectPath), fs::copy_options::recursive);
 
@@ -190,6 +432,18 @@ namespace sequoia::testing
     }
 
     write_to_file(cmakeSourceDir / "CMakeLists.txt", cmakeLists, std::ios_base::out);
+
+    return {.root{projectPath}, .cmake_cache_dir{cmakeCacheDir}, .main{fakeMain}};
+  }
+
+  void test_runner_test_creation::test_creation(std::string_view projectName,
+                                                std::optional<std::string> sourceFolder,
+                                                main_location mainLocation)
+  {
+    const auto project{prepare_fake_project(projectName, sourceFolder, mainLocation)};
+    const auto& projectPath{project.root};
+    const auto& fakeMain{project.main};
+    const auto sourceFolderName{back(source_paths{projectPath, sourceFolder}.project()).generic_string()};
 
     commandline_arguments args{{zeroth_arg(projectName)
                                , "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
@@ -272,8 +526,8 @@ namespace sequoia::testing
     check_directory(projectName, "TestSandbox");
     check_directory(projectName, "TestShared");
 
-    test_foreign_source_dir_refusal(projectName, sourceFolder, cmakeCacheDir / "CMakeCache.txt", fakeMain);
-    record_cmake_source_dir(cmakeCacheDir / "CMakeCache.txt", cmakeSourceDir);
+    test_foreign_source_dir_refusal(projectName, sourceFolder, project.cmake_cache_dir / "CMakeCache.txt", fakeMain);
+    record_cmake_source_dir(project.cmake_cache_dir / "CMakeCache.txt", projectPath / "TestSandbox");
   }
 
   void test_runner_test_creation::test_foreign_source_dir_refusal(std::string_view projectName,
