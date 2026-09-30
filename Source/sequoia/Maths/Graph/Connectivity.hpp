@@ -120,7 +120,7 @@ namespace sequoia
     concept edge_weight_mutator
       =    std::invocable<Fn&, Weight&>
         && (   std::is_void_v<std::invoke_result_t<Fn&, Weight&>>
-            || (    std::is_object_v<std::invoke_result_t<Fn&, Weight&>>
+            || (   std::is_object_v<std::invoke_result_t<Fn&, Weight&>>
                 && std::move_constructible<std::invoke_result_t<Fn&, Weight&>>));
 
     /** \brief Graph connectivity_base, used as a building block for concrete graphs.
@@ -269,7 +269,8 @@ namespace sequoia
           }
           else
           {
-            // The result is initialised with parentheses: braces would prefer an initializer-list constructor of result_type
+            // The result is initialised with parentheses:
+            // braces would prefer an initializer-list constructor of result_type
             result_type result(std::invoke(fn, mutatedWeight));
             set_source_and_partner_edge_weights(citer, std::move(mutatedWeight));
             return result;
@@ -991,28 +992,55 @@ namespace sequoia
             const auto& edge{*edgeIter};
             const auto target{edge.target_node()};
 
-            graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "target", edges.size(), target);
+            graph_errors::check_edge_index_range(
+              "process_complementary_edges",
+              {nodeIndex, edgeIndex},
+              "target",
+              edges.size(),
+              target
+            );
             const auto compIndex{edge.complementary_index()};
 
             auto targetEdgesIter{edges.begin() + target};
-            graph_errors::check_edge_index_range("process_complementary_edges", {nodeIndex, edgeIndex}, "complementary", targetEdgesIter->size(), compIndex);
+            graph_errors::check_edge_index_range(
+              "process_complementary_edges",
+              {nodeIndex, edgeIndex},
+              "complementary",
+              targetEdgesIter->size(),
+              compIndex
+            );
 
             if((target == nodeIndex) && (compIndex == edgeIndex))
             {
               throw std::logic_error{graph_errors::self_referential_error({nodeIndex, edgeIndex}, target, compIndex)};
             }
-            else if(const auto& targetEdge{*(targetEdgesIter->begin() + compIndex)}; targetEdge.complementary_index() != edgeIndex)
+            else if(const auto& targetEdge{targetEdgesIter->begin()[compIndex]};
+                    targetEdge.complementary_index() != edgeIndex)
             {
-              throw std::logic_error{graph_errors::reciprocated_error_message({nodeIndex, edgeIndex}, "complementary", targetEdge.complementary_index(), edgeIndex)};
+              throw std::logic_error{
+                graph_errors::reciprocated_error_message(
+                  {nodeIndex, edgeIndex},
+                  "complementary",
+                  targetEdge.complementary_index(),
+                  edgeIndex
+                )
+              };
             }
             else
             {
-              graph_errors::check_reciprocated_index({nodeIndex, edgeIndex}, "target", targetEdge.target_node(), nodeIndex);
+              graph_errors::check_reciprocated_index(
+                {nodeIndex, edgeIndex},
+                "target",
+                targetEdge.target_node(),
+                nodeIndex
+              );
 
               if constexpr(!std::is_empty_v<edge_weight_type>)
               {
                 if(edge.weight() != targetEdge.weight())
-                  throw std::logic_error{graph_errors::mismatched_weights_message("process_complementary_edges", {nodeIndex, edgeIndex})};
+                  throw std::logic_error{
+                    graph_errors::mismatched_weights_message("process_complementary_edges", {nodeIndex, edgeIndex})
+                  };
               }
             }
           }

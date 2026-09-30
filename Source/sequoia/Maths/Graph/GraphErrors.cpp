@@ -129,18 +129,25 @@ namespace sequoia::maths::graph_errors
                                                        const edge_weighting weighting)
   {
     const bool weighted{weighting == edge_weighting::weighted};
-    const std::string_view ofEqualWeight{weighted ? " of equal weight" : ""},
-                           ofThatWeight{weighted ? " of that weight" : ""};
+    std::string_view ofEqualWeight{weighted ? " of equal weight" : ""},
+                     ofThatWeight{weighted ? " of that weight" : ""};
 
     if(!counts.from_target)
     {
-      return error_prefix(method).append(
-               (counts.to_target == 1)
-                 ? std::format("Node {}'s edge to node {} has no reciprocal{}",
-                               counts.node, counts.target, ofEqualWeight)
-                 : std::format("Node {}'s {} edges{} to node {} have no reciprocal{}",
-                               counts.node, counts.to_target, ofEqualWeight, counts.target, ofThatWeight)
-             );
+      if(counts.to_target == 1)
+        return std::format("{}Node {}'s edge to node {} has no reciprocal{}",
+                           error_prefix(method),
+                           counts.node,
+                           counts.target,
+                           ofEqualWeight);
+
+      return std::format("{}Node {}'s {} edges{} to node {} have no reciprocal{}",
+                         error_prefix(method),
+                         counts.node,
+                         counts.to_target,
+                         ofEqualWeight,
+                         counts.target,
+                         ofThatWeight);
     }
 
     const partial_edge_counts reversed{
@@ -152,10 +159,16 @@ namespace sequoia::maths::graph_errors
 
     const auto& [node, target, toTarget, fromTarget]{(counts.to_target > counts.from_target) ? counts : reversed};
 
-    return error_prefix(method).append(
-             std::format("Node {} has {} edges{} to node {}, but node {} has {}{} to node {}",
-                         node, toTarget, ofEqualWeight, target, target, fromTarget, ofThatWeight, node)
-           );
+    return std::format("{}Node {} has {} edges{} to node {}, but node {} has {}{} to node {}",
+                       error_prefix(method),
+                       node,
+                       toTarget,
+                       ofEqualWeight,
+                       target,
+                       target,
+                       fromTarget,
+                       ofThatWeight,
+                       node);
   }
 
   [[nodiscard]]

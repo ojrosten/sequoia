@@ -730,7 +730,6 @@ namespace sequoia
       {
         check_index_type_limit("add_slot", num_partitions(), "partitions");
 
-        // The element-count guard at the growth sites keeps `m_Data.size()` within the index type
         m_Partitions.push_back(static_cast<index_type>(m_Data.size()));
       }
 
@@ -741,7 +740,7 @@ namespace sequoia
         if(pos < num_partitions())
         {
           auto iter{m_Partitions.begin() + pos};
-          const index_type newPartitionBound{(pos == 0) ? index_type{} : *(iter - 1)};
+          const index_type newPartitionBound{(pos == 0) ? index_type{} : m_Partitions[pos - 1]};
           m_Partitions.insert(iter, newPartitionBound);
         }
         else
@@ -890,6 +889,9 @@ namespace sequoia
       constexpr static index_type npos{partition_iterator::npos};
 
       SEQUOIA_NO_UNIQUE_ADDRESS partitions_type m_Partitions;
+
+      // The size of m_Data never exceeds the maximum of index_type, so casting the size to index_type preserves it.
+      // Each growth site checks before it grows; a static sequence's size is bounded at compile time.
       container_type m_Data;
 
       partitioned_sequence_base(std::initializer_list<std::initializer_list<T>> list)

@@ -188,12 +188,24 @@ namespace sequoia::testing
 
       t.check_exception_thrown<std::logic_error>(
         "More partial edges one way than the other",
-        [](){ return graph_type{{edge_init_type{2}, edge_init_type{2}, edge_init_type{1}}, {edge_init_type{0}}, {edge_init_type{0}}}; }
+        [](){
+          return graph_type{
+            {edge_init_type{2}, edge_init_type{2}, edge_init_type{1}},
+            {edge_init_type{0}},
+            {edge_init_type{0}}
+          };
+        }
       );
 
       t.check_exception_thrown<std::logic_error>(
         "Fewer partial edges one way than the other",
-        [](){ return graph_type{{edge_init_type{2}}, {edge_init_type{2}}, {edge_init_type{1}, edge_init_type{1}, edge_init_type{0}}}; }
+        [](){
+          return graph_type{
+            {edge_init_type{2}},
+            {edge_init_type{2}},
+            {edge_init_type{1}, edge_init_type{1}, edge_init_type{0}}
+          };
+        }
       );
     }
 

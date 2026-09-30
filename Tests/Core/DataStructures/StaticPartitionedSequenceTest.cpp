@@ -121,13 +121,13 @@ namespace sequoia::testing
     using one_partition  = byte_indexed_sequence<1, limit>;
     using two_partitions = byte_indexed_sequence<2, limit>;
 
-    const auto makeOnePartition{
+    auto makeOnePartition{
       [] <std::size_t... Is> (std::index_sequence<Is...>) {
         return one_partition{{static_cast<int>(Is)...}};
       }
     };
 
-    const auto makeTwoEqualPartitions{
+    auto makeTwoEqualPartitions{
       [] <std::size_t... Is> (std::index_sequence<Is...>) {
         return two_partitions{{static_cast<int>(Is)...}, {static_cast<int>(Is)...}};
       }

@@ -98,8 +98,9 @@ namespace sequoia
       {}
 
       template<class Other>
-        requires (std::is_base_of_v<weighting, std::remove_cvref_t<Other>> && !resolve_to_copy_v<weighting, Other>)
-      constexpr weighting(Other&& other) : m_Weight{other.m_Weight}
+        requires (std::derived_from<std::remove_cvref_t<Other>, weighting> && !resolve_to_copy_v<weighting, Other>)
+      constexpr weighting(Other&& other)
+        : m_Weight{other.m_Weight}
       {}
 
       constexpr weighting(weighting&&) noexcept = default;

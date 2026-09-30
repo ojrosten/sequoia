@@ -151,7 +151,9 @@ namespace sequoia::testing
 
       move_only_weight() = default;
 
-      explicit move_only_weight(int v) : value{v} {}
+      explicit move_only_weight(int v)
+        : value{v}
+      {}
 
       move_only_weight(move_only_weight&&) noexcept = default;
 
@@ -169,7 +171,9 @@ namespace sequoia::testing
 
       move_only_meta_data() = default;
 
-      explicit move_only_meta_data(int v) : value{v} {}
+      explicit move_only_meta_data(int v)
+        : value{v}
+      {}
 
       move_only_meta_data(move_only_meta_data&&) noexcept = default;
 
@@ -401,7 +405,7 @@ namespace sequoia::testing
 
     STATIC_CHECK(!graph_impl::has_shared_weight_v<typename graph_type::edge_type>);
 
-    const auto describe{
+    auto describe{
       [](std::string_view operation) {
         return std::format("{} in an undirected graph with {}",
                            operation,
@@ -445,7 +449,7 @@ namespace sequoia::testing
 
     {
       graph_type g{graph};
-      const auto returnList{[](fallible_weight&) { return std::vector<std::any>{1, 2, 3}; }};
+      auto returnList{[](fallible_weight&) { return std::vector<std::any>{1, 2, 3}; }};
       check(equality,
             std::format("{}: returns a result with an initializer-list constructor unchanged",
                         describe("Mutate edge weight")),
@@ -488,7 +492,7 @@ namespace sequoia::testing
 
     STATIC_CHECK(!graph_impl::has_shared_weight_v<typename graph_type::edge_type>);
 
-    const auto describe{
+    auto describe{
       [](std::string_view operation) {
         return std::format("{} in an embedded graph with {}",
                            operation,
