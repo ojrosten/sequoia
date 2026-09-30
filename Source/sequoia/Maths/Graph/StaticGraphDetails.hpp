@@ -37,9 +37,10 @@ namespace sequoia::maths::graph_impl
 
   /** \brief The index type shared by a static graph's node indices and its edge-storage offsets.
 
-      The type holds both `Order`, the number of partitions of the edge storage, and `NumEdges`, the largest
-      partition offset, which also bounds an embedded edge's complementary index. Holding `Order` keeps every
-      node index below the type's maximum, which a partition iterator reserves for `npos`.
+      The type holds both `Order` and `NumEdges`. `Order` is the number of partitions of the edge storage.
+      `NumEdges` is the largest partition offset, and also bounds an embedded edge's complementary index.
+      Holding `Order` keeps every node index below the type's maximum. A partition iterator reserves the
+      maximum for `npos`.
    */
   template<std::size_t Order, std::size_t NumEdges>
   using static_edge_index_type = narrowest_unsigned_holding_t<std::ranges::max(Order, NumEdges)>;

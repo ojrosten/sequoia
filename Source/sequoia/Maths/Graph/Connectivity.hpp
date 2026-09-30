@@ -116,8 +116,10 @@ namespace sequoia
 
     struct partitions_allocator_tag{};
 
-    /** \brief A mutation of an edge weight whose result, if any, is an object that can be held while the mutated
-               weight is written back.
+    /** \brief A mutation of an edge weight.
+
+        A result other than `void` is held while the mutated weight is written back, so the result must be a
+        move-constructible object.
      */
     template<class Fn, class Weight>
     concept edge_weight_mutator
@@ -158,14 +160,11 @@ namespace sequoia
       constexpr static auto npos{std::numeric_limits<edge_index_type>::max()};
       constexpr static graph_flavour flavour{Flavour};
 
-      /** \brief Whether the two halves of an undirected edge each hold a weight of their own. */
       constexpr static bool independent_partner_weights_v{
         !is_directed(flavour) && !graph_impl::has_shared_weight_v<edge_type>
       };
 
-      /** \brief Whether the weight of one half of an edge can be supplied to its partner: false only where the
-                 halves hold independent weights of a type that cannot be copied.
-       */
+      /** \brief Whether the weight of one half of an edge can be supplied to the other half. */
       constexpr static bool partner_weight_constructible_v{
         !independent_partner_weights_v || std::is_copy_constructible_v<edge_weight_type>
       };
@@ -254,10 +253,9 @@ namespace sequoia
 
       /** \brief Applies `fn` to the weight of the edge at `citer`, and returns the result.
 
-          `fn` is invoked an unspecified number of times. Where the two halves of an undirected edge hold
-          independent weights, `fn` is applied to a copy of the weight, which then replaces the weight of both
-          halves. A throw leaves both unchanged, provided the weight's move does not throw. The constraint on
-          `fn` is the same for every graph, whether or not it shares its weights.
+          `fn` is invoked an unspecified number of times. `fn` is applied to a copy of the weight if the two halves
+          of an undirected edge hold independent weights. The copy then replaces the weight of both halves, so a
+          throw leaves both halves unchanged, provided the weight's move does not throw.
        */
       template<edge_weight_mutator<edge_weight_type> Fn>
         requires (    !std::is_empty_v<edge_weight_type>
@@ -277,7 +275,7 @@ namespace sequoia
           }
           else
           {
-            // Parentheses, since braces would prefer an initializer-list constructor of result_type
+            // The result is initialised with parentheses: braces would prefer an initializer-list constructor of result_type
             result_type result(std::invoke(fn, mutatedWeight));
             set_source_and_partner_edge_weights(citer, std::move(mutatedWeight));
             return result;
@@ -1415,8 +1413,7 @@ namespace sequoia
 
       /** \brief Gives the weight `w` to both halves of an edge whose halves hold independent weights.
 
-          Both new weights are made before either half changes, so a throw leaves the halves as they were,
-          provided the weight's move does not throw.
+          A throw leaves the halves as they were, provided the weight's move does not throw.
        */
       constexpr void set_source_and_partner_edge_weights(const_edge_iterator citer, edge_weight_type w)
       {

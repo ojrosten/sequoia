@@ -174,8 +174,8 @@ namespace sequoia::testing
       t.check_exception_thrown<std::logic_error>("Mismatched partial edges", [](){ return graph_type{{edge_init_type{1}}, {edge_init_type{1}}}; });
       t.check_exception_thrown<std::logic_error>("Mismatched loop", [](){ return graph_type{{edge_init_type{1}}, {edge_init_type{0}, edge_init_type{1}}}; });
 
-      // Three nodes. In each fixture a node lists its edges out of order, so that the position of an
-      // unreciprocated edge, counted after sorting by target, is that of a reciprocated edge as written
+      // Three nodes. In each fixture a node lists its edges out of order. Sorting them by target puts an
+      // unreciprocated edge at a position that a reciprocated edge holds as written
       t.check_exception_thrown<std::logic_error>(
         "A partial edge with no reciprocal",
         [](){ return graph_type{{edge_init_type{2}, edge_init_type{1}}, {edge_init_type{0}}, {}}; }

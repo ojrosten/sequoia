@@ -24,8 +24,7 @@ namespace sequoia::maths::graph_errors
 
   /** \brief The number of partial edges from `node` to `target`, and from `target` back to `node`.
 
-      In a weighted graph, only the partial edges of one weight are counted, since a partial edge is
-      reciprocated only by one of equal weight.
+      In a weighted graph, only the partial edges of one weight are counted.
    */
   struct partial_edge_counts
   {

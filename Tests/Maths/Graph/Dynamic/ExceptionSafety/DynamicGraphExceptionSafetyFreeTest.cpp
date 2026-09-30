@@ -26,11 +26,11 @@ namespace sequoia::testing
       using std::runtime_error::runtime_error;
     };
 
-    /** \brief Counts the fallible steps taken during its lifetime and, if `failingStep` holds a value,
-               makes the step so numbered, counting from zero, throw `injected_failure`.
+    /** \brief An RAII wrapper to count the fallible steps taken during its lifetime.
 
-        A fallible step is a call of `take_fallible_step`; outside the lifetime of a monitor, no step
-        fails.
+        A fallible step is a call of `take_fallible_step`. Steps are numbered from zero.
+        If `failingStep` holds a value, the step with that number throws `injected_failure`.
+        No step fails outside the lifetime of a monitor.
      */
     class [[nodiscard]] fallible_step_monitor
     {
@@ -114,7 +114,6 @@ namespace sequoia::testing
       }
     };
 
-    /** \brief Sets the weight's value to 7, then takes a fallible step, and returns the value it replaced. */
     [[nodiscard]]
     int set_value_to_seven_fallibly(fallible_weight& w)
     {
@@ -180,7 +179,6 @@ namespace sequoia::testing
       friend auto operator<=>(const move_only_meta_data&, const move_only_meta_data&) = default;
     };
 
-    /** \brief A mutation callable only on an rvalue, which `mutate_edge_weight` does not make of its argument. */
     template<class Weight>
     struct rvalue_only_mutation
     {
@@ -308,6 +306,8 @@ namespace sequoia::testing
     STATIC_CHECK(!edge_weight_mutable_returning<directed_move_only_graph, move_only_weight&>);
     STATIC_CHECK(!edge_weight_mutable_returning<directed_move_only_graph, non_movable>);
 
+    // `mutate_edge_weight` invokes the mutation as an lvalue. So a mutation callable only on an rvalue is
+    // refused, whether or not the graph shares its weights.
     STATIC_CHECK(!edge_weight_mutable_by<unshared_copyable_graph, rvalue_only_mutation<fallible_weight>>);
     STATIC_CHECK(!edge_weight_mutable_by<shared_move_only_graph, rvalue_only_mutation<move_only_weight>>);
   }
