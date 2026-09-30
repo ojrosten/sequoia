@@ -125,6 +125,10 @@ namespace sequoia::testing
 
     constexpr std::array<std::string_view, 3> materials_kinds{"WorkingCopy", "Prediction", "Auxiliary"};
 
+    constexpr auto filename_of{
+      [](const fs::directory_entry& entry) { return entry.path().filename().generic_string(); }
+    };
+
     [[nodiscard]]
     bool is_placeholder(std::string_view name)
     {
@@ -159,7 +163,7 @@ namespace sequoia::testing
       const auto root{materials.original_materials_root()};
       auto strays{
           fs::directory_iterator{root}
-        | std::views::transform([](const fs::directory_entry& e) { return e.path().filename().generic_string(); })
+        | std::views::transform(filename_of)
         | std::views::filter(isStray)
         | std::ranges::to<std::vector>()
       };
@@ -191,9 +195,11 @@ namespace sequoia::testing
       return numberedDevice || std::ranges::any_of(devices, isStem);
     }
 
-    /** Throws if the materials discriminator is not a portable name for one directory, names a kind of
-        material in any case, or differs only in case from the name of an entry in the test's own
-        directory.
+    /** \throws std::runtime_error if one of these holds:
+                 -# The materials discriminator is not a portable name for one directory;
+                 -# The discriminator names a kind of material, ignoring case;
+                 -# The discriminator differs only in case from the name of an entry in the test's own
+                    directory.
      */
     void throw_if_bad_materials_discriminator(const individual_materials_paths& materials)
     {
@@ -232,28 +238,28 @@ namespace sequoia::testing
       if(!fs::exists(root))
         return;
 
-      // A case-insensitive filesystem takes names differing only in case for the same directory
+      // A case-insensitive filesystem takes names differing only in case for the same entry
       auto differsOnlyInCase{
         [&name](const std::string& sibling) { return (sibling != name) && same_ignoring_case(sibling, name); }
       };
 
-      auto namesakes{
+      auto caseVariants{
           fs::directory_iterator{root}
-        | std::views::transform([](const fs::directory_entry& e) { return e.path().filename().generic_string(); })
+        | std::views::transform(filename_of)
         | std::views::filter(differsOnlyInCase)
         | std::ranges::to<std::vector>()
       };
 
-      if(!namesakes.empty())
+      if(!caseVariants.empty())
       {
-        std::ranges::sort(namesakes);
-        const auto namesakeList{
-            namesakes
+        std::ranges::sort(caseVariants);
+        const auto caseVariantList{
+            caseVariants
           | std::views::join_with(std::string_view{", "})
           | std::ranges::to<std::string>()
         };
 
-        throw std::runtime_error{failureMessage(std::format("not differ only in case from {}", namesakeList))};
+        throw std::runtime_error{failureMessage(std::format("not differ only in case from {}", caseVariantList))};
       }
     }
 
@@ -262,7 +268,7 @@ namespace sequoia::testing
       const auto& root{materials.original_test_root()};
       auto isIgnored{
         [](const fs::directory_entry& entry) {
-          const auto name{entry.path().filename().generic_string()};
+          const auto name{filename_of(entry)};
           return !is_placeholder(name) && (!entry.is_directory() || is_materials_kind(name));
         }
       };
@@ -270,7 +276,7 @@ namespace sequoia::testing
       auto ignored{
           fs::directory_iterator{root}
         | std::views::filter(isIgnored)
-        | std::views::transform([](const fs::directory_entry& e) { return e.path().filename().generic_string(); })
+        | std::views::transform(filename_of)
         | std::ranges::to<std::vector>()
       };
 

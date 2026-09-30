@@ -43,7 +43,6 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::string summary_discriminator(const cmake_cache& cache);
 
-    /** A non-empty name for each generator family. */
     [[nodiscard]]
     static std::string materials_discriminator(const cmake_cache& cache);
 

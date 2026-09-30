@@ -36,8 +36,7 @@ namespace sequoia::testing
       beneath the original root.
 
       If a materials discriminator is given, the original root is one level further down, as
-      `original_test_root()` describes. The discriminator is kept as it is given, unchecked. The
-      temporary root has no such level.
+      `original_test_root()` describes. The temporary root has no such level.
 
       Every path is returned whether or not anything is there; which of them exist is for the
       caller to ask. A default-constructed instance names no test: its two roots are empty, and
@@ -56,7 +55,7 @@ namespace sequoia::testing
     /** \brief The path of the test's own directory in `TestMaterials`.
 
         If no materials discriminator was given, this directory is the original root. Otherwise the
-        discriminator names a directory within this directory, and that directory is the original root.
+        discriminator names a subdirectory of this directory, and that subdirectory is the original root.
      */
     [[nodiscard]]
     const std::filesystem::path& original_test_root() const noexcept

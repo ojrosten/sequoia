@@ -278,7 +278,7 @@ namespace sequoia::testing
       -# `summary_discriminator` discriminates the summary;
       -# `materials_discriminator` discriminates the original materials.
 
-      Each probe is for one hook, and asks three things of a test:
+      Each probe is for one hook. For a test `T`, it asks three things:
       -# `declared_v`: whether the test declares the hook in any form. A member of that name counts,
          whether static or not, and whatever its signature. Where the name is overloaded, a member
          callable through `T&`, either with a `const cmake_cache&` or with no arguments, counts;
@@ -292,93 +292,84 @@ namespace sequoia::testing
       such a tree a test cannot discriminate between Debug and Release.
    */
   ///@{
+  template<class T>
   struct output_discriminator_probe
   {
-    template<class T>
     static constexpr bool declared_v{
          requires { &T::output_discriminator; }
       || requires(T& t, const cmake_cache& cache){ t.output_discriminator(cache); }
       || requires(T& t){ t.output_discriminator(); }
     };
 
-    template<class T>
     static constexpr bool static_hook_v{
       requires(const cmake_cache& cache){ T::output_discriminator(cache); }
     };
 
-    template<class T>
     static constexpr bool string_valued_v{
       requires(const cmake_cache& cache){ { T::output_discriminator(cache) } -> std::convertible_to<std::string>; }
     };
 
-    template<class T>
     [[nodiscard]]
     static std::string discriminator(const cmake_cache& cache) { return T::output_discriminator(cache); }
   };
 
+  template<class T>
   struct summary_discriminator_probe
   {
-    template<class T>
     static constexpr bool declared_v{
          requires { &T::summary_discriminator; }
       || requires(T& t, const cmake_cache& cache){ t.summary_discriminator(cache); }
       || requires(T& t){ t.summary_discriminator(); }
     };
 
-    template<class T>
     static constexpr bool static_hook_v{
       requires(const cmake_cache& cache){ T::summary_discriminator(cache); }
     };
 
-    template<class T>
     static constexpr bool string_valued_v{
       requires(const cmake_cache& cache){ { T::summary_discriminator(cache) } -> std::convertible_to<std::string>; }
     };
 
-    template<class T>
     [[nodiscard]]
     static std::string discriminator(const cmake_cache& cache) { return T::summary_discriminator(cache); }
   };
 
+  template<class T>
   struct materials_discriminator_probe
   {
-    template<class T>
     static constexpr bool declared_v{
          requires { &T::materials_discriminator; }
       || requires(T& t, const cmake_cache& cache){ t.materials_discriminator(cache); }
       || requires(T& t){ t.materials_discriminator(); }
     };
 
-    template<class T>
     static constexpr bool static_hook_v{
       requires(const cmake_cache& cache){ T::materials_discriminator(cache); }
     };
 
-    template<class T>
     static constexpr bool string_valued_v{
       requires(const cmake_cache& cache){ { T::materials_discriminator(cache) } -> std::convertible_to<std::string>; }
     };
 
-    template<class T>
     [[nodiscard]]
     static std::string discriminator(const cmake_cache& cache) { return T::materials_discriminator(cache); }
   };
 
   ///@}
 
-  template<class Probe, concrete_test T>
+  template<template<class> class Probe, concrete_test T>
   inline constexpr bool misdeclared_discriminator_v{
-    Probe::template declared_v<T> && !Probe::template static_hook_v<T>
+    Probe<T>::declared_v && !Probe<T>::static_hook_v
   };
 
-  template<class Probe, concrete_test T>
+  template<template<class> class Probe, concrete_test T>
   inline constexpr bool mistyped_discriminator_v{
-    Probe::template static_hook_v<T> && !Probe::template string_valued_v<T>
+    Probe<T>::static_hook_v && !Probe<T>::string_valued_v
   };
 
-  template<class Probe, concrete_test T>
+  template<template<class> class Probe, concrete_test T>
   inline constexpr bool has_discriminator_v{
-    Probe::template string_valued_v<T>
+    Probe<T>::string_valued_v
   };
 
   /** \brief Temporary workaround while waiting for variadic friends */

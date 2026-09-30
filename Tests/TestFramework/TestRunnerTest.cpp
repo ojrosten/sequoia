@@ -891,7 +891,7 @@ namespace sequoia::testing
       -# Every other shape of hook is flagged by one of the two traits behind the runner's
          `static_assert`s.
    */
-  template<class Probe>
+  template<template<class> class Probe>
   void test_runner_test::test_discriminator_probe()
   {
     STATIC_CHECK(has_discriminator_v<Probe, static_hooks_test>);
