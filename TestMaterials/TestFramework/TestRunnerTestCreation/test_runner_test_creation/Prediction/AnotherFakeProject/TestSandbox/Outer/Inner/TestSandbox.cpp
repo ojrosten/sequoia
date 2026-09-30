@@ -60,6 +60,18 @@ int main(int argc, char** argv)
 		runner.register_test<container_allocation_test>();
 		runner.register_test<foo_allocation_test>();
 		runner.register_test<container_performance_test>();
+		runner.register_test<utility_functions_test>();
+		runner.register_test<angle_regular_test>();
+		runner.register_test<cloud_move_only_test>();
+		runner.register_test<probability_family_test>();
+		runner.register_test<human_shared_tester_test>();
+		runner.register_test<gizmo_false_negative_test>();
+		runner.register_test<gizmo_semantics_test>();
+		runner.register_test<gadget_family_test>();
+		runner.register_test<angle_family_test>();
+		runner.register_test<string_utilities>();
+		runner.register_test<container_family_allocation_test>();
+		runner.register_test<container_speed_test>();
 
 		code = runner.execute(sequoia::timer_resolution{1ms});
 	}

@@ -26,5 +26,6 @@ namespace sequoia::testing
 
     void test_find_delimiters();
     void test_find_sandwiched_text();
+    void test_is_identifier_character();
   };
 }
