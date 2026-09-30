@@ -124,7 +124,6 @@ namespace sequoia::testing
 
     constexpr std::array<std::string_view, 3> materials_kinds{"WorkingCopy", "Prediction", "Auxiliary"};
 
-    /// Whether `name` is a file committed only to keep its directory, or a file the platform writes of its own accord
     [[nodiscard]]
     bool is_placeholder(std::string_view name)
     {
@@ -208,8 +207,9 @@ namespace sequoia::testing
       return {};
     }
 
-    /** Throws if the materials discriminator is not a portable name for one directory, is a kind of
-        material, or is the name of a sibling spelt in another case.
+    /** Throws if the materials discriminator is not a portable name for one directory, names a kind of
+        material in any case, or differs only in case from the name of an entry in the test's own
+        directory.
      */
     void throw_if_bad_materials_discriminator(const individual_materials_paths& materials)
     {

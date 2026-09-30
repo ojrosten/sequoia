@@ -108,10 +108,12 @@ namespace sequoia::testing
                and `Auxiliary`, besides a `.keep` or `.DS_Store`, naming what else it holds
       \throws std::runtime_error if the test declares a materials discriminator, and one of these holds:
                -# The discriminator is not one portable directory name;
-               -# The discriminator is a kind of material;
-               -# The discriminator differs only in case from a directory beside it;
-               -# The test's own directory holds a kind of material, or a file other than a `.keep` or
-                  `.DS_Store`, beside the configurations' directories.
+               -# The discriminator names a kind of material, ignoring case;
+               -# The discriminator differs only in case from the name of an entry in the test's own
+                  directory;
+               -# The test's own directory holds a directory named for a kind of material, ignoring case;
+               -# The test's own directory holds an entry which is not a directory, other than a `.keep`
+                  or a `.DS_Store`.
    */
   void prepare_materials(const individual_materials_paths& materials);
 
@@ -361,8 +363,8 @@ namespace sequoia::testing
     parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
   };
 
-  /** \brief The discriminator of `T` for the hook that `Probe` names, or `nullopt` if `T` does not
-             declare the hook.
+  /** \brief The result of calling, with `cache`, the hook of `T` that `Probe` probes for; or `nullopt`
+             if `Probe` finds no such hook.
    */
   template<class Probe, concrete_test T>
   [[nodiscard]]

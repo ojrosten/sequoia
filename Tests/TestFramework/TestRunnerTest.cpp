@@ -408,9 +408,9 @@ namespace sequoia::testing
 
     /** Makes `test` a candidate for update, by failing a check.
 
-        The function writes a `Kept.txt`, which the test's predictions hold with other contents. The
-        predictions also hold an `Obsolete.txt`, which the function does not write. So an update
-        overwrites `Kept.txt` and deletes `Obsolete.txt`.
+        The function writes a `Kept.txt` into the working materials. The test's predictions hold a
+        `Kept.txt` with other contents, and an `Obsolete.txt`, which the function does not write. So an
+        update overwrites `Kept.txt` and deletes `Obsolete.txt`.
 
         The source files of the update fakes below are relative, so that their materials resolve
         inside the fake project.
@@ -885,8 +885,11 @@ namespace sequoia::testing
     test_discriminator_probe<materials_discriminator_probe>();
   }
 
-  /** Checks that a static, string-valued hook is used. Every other shape of hook must be flagged by
-      one of the two traits behind the runner's `static_assert`s.
+  /** Checks the traits for the hook that `Probe` probes for:
+      -# A static, string-valued hook is detected, and not flagged;
+      -# A test without the hook is neither detected nor flagged;
+      -# Every other shape of hook is flagged by one of the two traits behind the runner's
+         `static_assert`s.
    */
   template<class Probe>
   void test_runner_test::test_discriminator_probe()
