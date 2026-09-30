@@ -38,9 +38,7 @@ namespace sequoia::testing
     constexpr auto npos{std::string::npos};
     using size_type = std::string::size_type;
 
-    /** Whether `c` cannot be part of an identifier. Identifiers may hold multi-byte UTF-8 characters, so no byte
-        beyond ASCII is a delimiter.
-     */
+    // Identifiers may hold multi-byte UTF-8 characters, so no byte beyond ASCII is a delimiter
     constexpr auto is_word_delimiter{[](char c){ return is_ascii(c) && !is_identifier_character(c); }};
 
     /** Whether a number, a digit or a `-` then a digit, begins at `pos`. */
@@ -445,8 +443,8 @@ namespace sequoia::testing
       return name;
     }
 
-    /** Respells the dynamic extent of every `span` in `name`: libc++ and libstdc++ write the extent as the maximum
-        `std::size_t`, MSVC as `-1`, which is the spelling kept. A `span` whose `<` has no matching `>` is left
+    /** Respells the dynamic extent of every `span` in `name` as `-1`. MSVC writes the extent as `-1`, and libc++
+        and libstdc++ write the extent as the maximum `std::size_t`. A `span` whose `<` has no matching `>` is left
         unchanged.
      */
     std::string& process_spans(std::string& name)

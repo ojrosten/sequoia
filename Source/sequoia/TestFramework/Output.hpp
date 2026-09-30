@@ -59,8 +59,8 @@ namespace sequoia::testing
          in single quotes;
       -# For a space: the space, in single quotes;
       -# For any other printable ASCII character: the character;
-      -# Otherwise: the escape sequence of the code unit's value in hexadecimal, in single quotes, such as `'\xc3'` for
-         a byte of a multi-byte UTF-8 character or `'\x10a'` for U+010A.
+      -# Otherwise: the code unit's value as a hexadecimal escape sequence, in single quotes. A byte of a multi-byte
+         UTF-8 character shows as, for example, `'\xc3'`, and U+010A shows as `'\x10a'`.
    */
   template<character Char>
   [[nodiscard]]
@@ -93,9 +93,12 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string end_block(std::string_view s, line_breaks newlines, std::string_view footer="");
 
-  /** \brief The report of an exception that escaped a test: `tag` and `exceptionMessage`, then, if `info` holds a
-             top-level check, whether the exception was thrown during that check or after it, and the check's
-             message; otherwise, the test's `filename`.
+  /** \brief The report of an exception that escaped a test.
+
+      The report gives `tag` and `exceptionMessage`, then:
+      -# If `info` holds a top-level check: whether the exception was thrown during that check or after it, and
+         the check's message;
+      -# Otherwise: the test's `filename`.
    */
   [[nodiscard]]
   std::string exception_message(std::string_view tag,
@@ -199,7 +202,7 @@ namespace sequoia::testing
       \returns
       -# For a relative `file`: `file` without its leading `..` components;
       -# For an absolute `file` and an absolute `repository`: the name of the directory `repository`, followed by the
-         part of `file` after its common prefix with that directory, compared component by component;
+         components of `file` after the leading components that `file` shares with the directory `repository`;
       -# Otherwise: `file`.
    */
   [[nodiscard]]

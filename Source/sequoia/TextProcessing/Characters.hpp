@@ -8,9 +8,11 @@
 #pragma once
 
 /** \file
-    \brief Whether a `char` is ASCII; and the classifications and conversions of a `char` that the `<cctype>`
-           functions make in the current locale, defined for every value of `char`, including the negative values a
-           `<cctype>` function does not accept.
+    \brief Classifications and conversions of a `char`.
+
+    `is_ascii` says whether a `char` is ASCII. Each of the others makes the classification or conversion that the
+    corresponding `<cctype>` function makes in the current locale. Each is defined for every value of `char`,
+    including the negative values that a `<cctype>` function does not accept.
  */
 
 #include <cctype>
