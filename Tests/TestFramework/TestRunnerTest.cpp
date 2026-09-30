@@ -909,7 +909,6 @@ namespace sequoia::testing
     STATIC_CHECK(!misdeclared_discriminator_v<Probe, view_valued_hooks_test>);
   }
 
-
   [[nodiscard]]
   fs::path test_runner_test::fake_project() const
   {

@@ -279,12 +279,12 @@ namespace sequoia::testing
       -# `materials_discriminator` discriminates the committed materials.
 
       Each probe asks three things of a test, for the name of one hook:
-      -# `declared`: whether the test declares the hook in any form. A member of that name counts,
+      -# `declared_v`: whether the test declares the hook in any form. A member of that name counts,
          whether static or not, and whatever its signature. Where the name is overloaded, a member
          callable through `T&`, either with a `const cmake_cache&` or with no arguments, counts. So
          a non-const member is detected;
-      -# `static_hook`: whether the hook can be called through the class with a `const cmake_cache&`;
-      -# `string_valued`: whether the result of that call converts to `std::string`.
+      -# `static_hook_v`: whether the hook can be called through the class with a `const cmake_cache&`;
+      -# `string_valued_v`: whether the result of that call converts to `std::string`.
 
       Each probe's `discriminator` makes that call, and returns the result as a `std::string`.
 
@@ -296,19 +296,19 @@ namespace sequoia::testing
   struct output_discriminator_probe
   {
     template<class T>
-    static constexpr bool declared{
+    static constexpr bool declared_v{
          requires { &T::output_discriminator; }
       || requires(T& t, const cmake_cache& cache){ t.output_discriminator(cache); }
       || requires(T& t){ t.output_discriminator(); }
     };
 
     template<class T>
-    static constexpr bool static_hook{
+    static constexpr bool static_hook_v{
       requires(const cmake_cache& cache){ T::output_discriminator(cache); }
     };
 
     template<class T>
-    static constexpr bool string_valued{
+    static constexpr bool string_valued_v{
       requires(const cmake_cache& cache){ { T::output_discriminator(cache) } -> std::convertible_to<std::string>; }
     };
 
@@ -320,19 +320,19 @@ namespace sequoia::testing
   struct summary_discriminator_probe
   {
     template<class T>
-    static constexpr bool declared{
+    static constexpr bool declared_v{
          requires { &T::summary_discriminator; }
       || requires(T& t, const cmake_cache& cache){ t.summary_discriminator(cache); }
       || requires(T& t){ t.summary_discriminator(); }
     };
 
     template<class T>
-    static constexpr bool static_hook{
+    static constexpr bool static_hook_v{
       requires(const cmake_cache& cache){ T::summary_discriminator(cache); }
     };
 
     template<class T>
-    static constexpr bool string_valued{
+    static constexpr bool string_valued_v{
       requires(const cmake_cache& cache){ { T::summary_discriminator(cache) } -> std::convertible_to<std::string>; }
     };
 
@@ -344,19 +344,19 @@ namespace sequoia::testing
   struct materials_discriminator_probe
   {
     template<class T>
-    static constexpr bool declared{
+    static constexpr bool declared_v{
          requires { &T::materials_discriminator; }
       || requires(T& t, const cmake_cache& cache){ t.materials_discriminator(cache); }
       || requires(T& t){ t.materials_discriminator(); }
     };
 
     template<class T>
-    static constexpr bool static_hook{
+    static constexpr bool static_hook_v{
       requires(const cmake_cache& cache){ T::materials_discriminator(cache); }
     };
 
     template<class T>
-    static constexpr bool string_valued{
+    static constexpr bool string_valued_v{
       requires(const cmake_cache& cache){ { T::materials_discriminator(cache) } -> std::convertible_to<std::string>; }
     };
 
@@ -368,13 +368,19 @@ namespace sequoia::testing
   ///@}
 
   template<class Probe, concrete_test T>
-  inline constexpr bool misdeclared_discriminator_v{Probe::template declared<T> && !Probe::template static_hook<T>};
+  inline constexpr bool misdeclared_discriminator_v{
+    Probe::template declared_v<T> && !Probe::template static_hook_v<T>
+  };
 
   template<class Probe, concrete_test T>
-  inline constexpr bool mistyped_discriminator_v{Probe::template static_hook<T> && !Probe::template string_valued<T>};
+  inline constexpr bool mistyped_discriminator_v{
+    Probe::template static_hook_v<T> && !Probe::template string_valued_v<T>
+  };
 
   template<class Probe, concrete_test T>
-  inline constexpr bool has_discriminator_v{Probe::template string_valued<T>};
+  inline constexpr bool has_discriminator_v{
+    Probe::template string_valued_v<T>
+  };
 
   /** \brief Temporary workaround while waiting for variadic friends */
   class trivial_extender
