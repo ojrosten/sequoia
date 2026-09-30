@@ -81,6 +81,15 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    fs::path execution_record_file(const fs::path& sourceFile,
+                                   std::string_view testName,
+                                   const project_paths& projectPaths)
+    {
+      return test_output_directory(sourceFile, projectPaths.execution_records().dir(), projectPaths)
+               /= fs::path{testName}.concat(".txt");
+    }
+
+    [[nodiscard]]
     fs::path versioned_diagnostics(const fs::path& source, std::string_view testName, const project_paths& projectPaths, test_mode mode, std::string_view suffix, const std::optional<std::string>& platform)
     {
       const auto file{
@@ -106,8 +115,16 @@ namespace sequoia::testing
 
   //===================================== individual_materials_paths =====================================//
 
+  [[nodiscard]]
+  fs::path materials_prefix(const fs::path& sourceFile, const project_paths& projPaths)
+  {
+    return rebase_from(sourceFile, projPaths.tests().repo()).replace_extension("");
+  }
+
   individual_materials_paths::individual_materials_paths(const fs::path& sourceFile, std::string_view testName, const project_paths& projPaths)
-    : individual_materials_paths{rebase_from(sourceFile, projPaths.tests().repo()).replace_extension("") /= testName, projPaths.test_materials(), projPaths.output()}
+    : individual_materials_paths{materials_prefix(sourceFile, projPaths) /= testName,
+                                 projPaths.test_materials(),
+                                 projPaths.output()}
   {}
 
   individual_materials_paths::individual_materials_paths(const fs::path& relativePath, const test_materials_paths& materials, const output_paths& output)
@@ -152,9 +169,17 @@ namespace sequoia::testing
     , m_CaughtExceptions{versioned_diagnostics(source, testName, projPaths, mode, "Exceptions", platform)}
   {}
 
-  //===================================== individual_diagnostics_paths =====================================//
+  //===================================== test_summary_path =====================================//
 
   test_summary_path::test_summary_path(const fs::path& sourceFile, std::string_view testName, const project_paths& projectPaths, const std::optional<std::string>& summaryDiscriminator)
     : m_Summary{test_summary_filename(sourceFile, testName, projectPaths, summaryDiscriminator)}
+  {}
+
+  //===================================== test_execution_record_path =====================================//
+
+  test_execution_record_path::test_execution_record_path(const fs::path& sourceFile,
+                                                         std::string_view testName,
+                                                         const project_paths& projectPaths)
+    : m_Record{execution_record_file(sourceFile, testName, projectPaths)}
   {}
 }

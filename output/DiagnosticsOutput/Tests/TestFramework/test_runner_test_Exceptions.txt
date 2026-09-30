@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTest.cpp, Line 571
+Tests/TestFramework/TestRunnerTest.cpp, Line 789
 Test Main has empty path
 
 Expected Exception Type:
@@ -9,7 +9,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 579
+Tests/TestFramework/TestRunnerTest.cpp, Line 797
 Test Main does not exist
 
 Expected Exception Type:
@@ -20,7 +20,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 587
+Tests/TestFramework/TestRunnerTest.cpp, Line 805
 Include Target has empty path
 
 Expected Exception Type:
@@ -31,7 +31,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 595
+Tests/TestFramework/TestRunnerTest.cpp, Line 813
 Include Target does not exist
 
 Expected Exception Type:
@@ -42,7 +42,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 603
+Tests/TestFramework/TestRunnerTest.cpp, Line 821
 Project root is empty
 
 Expected Exception Type:
@@ -51,7 +51,7 @@ Unable to locate project root as no commandline arguments supplied.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 611
+Tests/TestFramework/TestRunnerTest.cpp, Line 829
 Project root does not exist
 
 Expected Exception Type:
@@ -60,7 +60,7 @@ canonical - file not found: /output/TestsTemporaryData/TestFramework/TestRunnerT
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 630
+Tests/TestFramework/TestRunnerTest.cpp, Line 848
 Project root not findable
 
 Expected Exception Type:
@@ -71,29 +71,136 @@ Please ensure that the build directory is a subdirectory of <project>/build.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 639
+Tests/TestFramework/TestRunnerTest.cpp, Line 857
 The same test registered twice
 
 Expected Exception Type:
 [std::logic_error]
   Error: Test: "foo_test"
 Source file: "Tests/foo_test.cpp"
-A test's name is that of its class, and determines where its output is written, so each may be registered only once.
+A test's name is that of its class, and determines where its output is written, so no two tests may share a name, ignoring case.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 656
+Tests/TestFramework/TestRunnerTest.cpp, Line 874
 Two tests whose unqualified names coincide
 
 Expected Exception Type:
 [std::logic_error]
   Error: Test: "foo_test"
 Source file: "Tests/foo_test.cpp"
-A test's name is that of its class, and determines where its output is written, so each may be registered only once.
+A test's name is that of its class, and determines where its output is written, so no two tests may share a name, ignoring case.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 674
+Tests/TestFramework/TestRunnerTest.cpp, Line 892
+A source in the directory sharing another's materials prefix
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: "Tests/Nesting/outer_free_test/inner_free_test.cpp"
+Nests with:  "Tests/Nesting/outer_free_test.cpp"
+Each test's materials are kept beneath the path of its source file less the extension, so, ignoring case, that path must not name a directory holding another test's source file.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 910
+A source whose materials prefix is a directory holding another's source
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: "Tests/Nesting/outer_free_test.cpp"
+Nests with:  "Tests/Nesting/outer_free_test/inner_free_test.cpp"
+Each test's materials are kept beneath the path of its source file less the extension, so, ignoring case, that path must not name a directory holding another test's source file.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 928
+A source in a directory sharing another's materials prefix but for case
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: "Tests/Nesting/OUTER_FREE_TEST/differently_cased_inner_free_test.cpp"
+Nests with:  "Tests/Nesting/outer_free_test.cpp"
+Each test's materials are kept beneath the path of its source file less the extension, so, ignoring case, that path must not name a directory holding another test's source file.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 946
+Two tests whose names differ only in case
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Test: "Foo_test"
+Source file: "Tests/Cased/Foo_test.cpp"
+A test's name is that of its class, and determines where its output is written, so no two tests may share a name, ignoring case.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 964
+A source two directories beneath another's materials prefix
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: "Tests/Nesting/outer_free_test/Deeper/deeply_inner_free_test.cpp"
+Nests with:  "Tests/Nesting/outer_free_test.cpp"
+Each test's materials are kept beneath the path of its source file less the extension, so, ignoring case, that path must not name a directory holding another test's source file.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 982
+A source whose materials prefix, but for case, is a directory holding another's source
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: "Tests/Nesting/outer_free_test.cpp"
+Nests with:  "Tests/Nesting/OUTER_FREE_TEST/differently_cased_inner_free_test.cpp"
+Each test's materials are kept beneath the path of its source file less the extension, so, ignoring case, that path must not name a directory holding another test's source file.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1000
+Sources beside a materials prefix and sharing it are admitted; one beneath it then is not
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: "Tests/Nesting/outer_free_test/inner_free_test.cpp"
+Nests with:  "Tests/Nesting/outer_free_test.cpp"
+Each test's materials are kept beneath the path of its source file less the extension, so, ignoring case, that path must not name a directory holding another test's source file.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1020
+A source whose materials prefix contains a non-ASCII byte
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: "Tests/Nesting/Café/non_ascii_free_test.cpp"
+The path of this source file relative to the tests repository must be ASCII.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1037
+A test whose name contains a non-ASCII letter
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: "Tests/NonAscii/CafeFreeTest.cpp"
+A test's name is that of its class, and the names of the tests in this source file must be ASCII.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1054
+A test with no source file
+
+Expected Exception Type:
+[std::logic_error]
+  Error: Source file: ""
+Each test's materials are kept beneath the path of its source file relative to the tests repository, and this source file has no such path.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 1071
 Invalid repetitions for instability analysis
 
 Expected Exception Type:
@@ -102,7 +209,7 @@ locate-instabilities: unable to interpret 'foo' as an integer number of repetiti
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 681
+Tests/TestFramework/TestRunnerTest.cpp, Line 1078
 Insufficient repetitions for instability analysis
 
 Expected Exception Type:
@@ -111,7 +218,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1298
+Tests/TestFramework/TestRunnerTest.cpp, Line 1741
 Comparison against a dump never kept
 
 Expected Exception Type:
@@ -120,7 +227,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1298
+Tests/TestFramework/TestRunnerTest.cpp, Line 1741
 A dump kept under no name
 
 Expected Exception Type:
@@ -129,7 +236,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1298
+Tests/TestFramework/TestRunnerTest.cpp, Line 1741
 Comparison against no name
 
 Expected Exception Type:

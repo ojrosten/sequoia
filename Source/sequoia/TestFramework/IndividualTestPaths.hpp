@@ -16,6 +16,13 @@
 
 namespace sequoia::testing
 {
+  /** \brief The path of `sourceFile` relative to the tests' repository, less its extension.
+
+      Each test in `sourceFile` keys its materials on this path, with its own name as the leaf.
+   */
+  [[nodiscard]]
+  std::filesystem::path materials_prefix(const std::filesystem::path& sourceFile, const project_paths& projPaths);
+
   /** \brief Where a test's materials are: fixed on construction, whatever exists on disk.
 
       A test's materials have two roots. The *original* root, in `TestMaterials`, holds the test's
@@ -116,5 +123,28 @@ namespace sequoia::testing
     friend bool operator==(const test_summary_path&, const test_summary_path&) noexcept = default;
   private:
     std::filesystem::path m_Summary;
+  };
+
+  /** \brief Where a test records its last execution: when it started and, once it has finished, how long it took.
+
+      A record naming a start and no duration marks a test that was executing when its run ended. The path is empty
+      for default project paths.
+   */
+  class test_execution_record_path
+  {
+  public:
+    test_execution_record_path() = default;
+
+    test_execution_record_path(const std::filesystem::path& sourceFile,
+                               std::string_view testName,
+                               const project_paths& projectPaths);
+
+    [[nodiscard]]
+    const std::filesystem::path& file_path() const noexcept { return m_Record; }
+
+    [[nodiscard]]
+    friend bool operator==(const test_execution_record_path&, const test_execution_record_path&) noexcept = default;
+  private:
+    std::filesystem::path m_Record{};
   };
 }

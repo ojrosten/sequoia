@@ -18,6 +18,7 @@
 #include <cmath>
 #include <filesystem>
 #include <source_location>
+#include <typeinfo>
 
 namespace sequoia::testing
 {
@@ -285,11 +286,15 @@ namespace sequoia::testing
   /** \brief The name of `T` in the spelling shared by every supported toolchain. If `T` is itself a 32- or 64-bit
              unsigned type, the name is that of the fixed-width type of its size, as the platform spells it.
    */
+  /** \brief The name of the type `info` describes, in the spelling shared by every supported toolchain. */
+  [[nodiscard]]
+  std::string demangle(const std::type_info& info);
+
   template<class T>
   [[nodiscard]]
   std::string demangle()
   {
-    return demangle<type_normalizer_t<T>>([](std::string name) -> std::string { return tidy_name(name, compiler_constant{}); });
+    return demangle(typeid(type_normalizer_t<T>));
   }
 
   /** \brief Specialize this struct template to customize the way in which type info is generated for a given class.

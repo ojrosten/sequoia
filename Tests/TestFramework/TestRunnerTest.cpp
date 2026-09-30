@@ -350,9 +350,9 @@ namespace sequoia::testing
       }
     };
 
-    /// The next two put a suite and a test which are siblings under one name: `namesake_test`
-    /// names the test, and the directory holding `under_namesake_test` beside it. The test sorts
-    /// first, so its node exists by the time the suite of that name is wanted.
+    /// The next two put a suite and a test which are siblings under one name: `namesake_test` names the
+    /// test, and the directory holding `under_namesake_test` beside it; the test's source is named otherwise,
+    /// lest the materials prefixes nest. The test sorts first, so its node exists when the suite is wanted.
     class namesake_test final : public free_test
     {
     public:
@@ -361,7 +361,7 @@ namespace sequoia::testing
       [[nodiscard]]
       static fs::path source_file()
       {
-        return make_fake_file_path<namesake_test>("Namesakes");
+        return make_fake_file_path<namesake_test>("Namesakes").replace_filename("NamesakeTest.cpp");
       }
 
       void run_tests()
@@ -491,6 +491,223 @@ namespace sequoia::testing
 
       return runner;
     }
+
+    /// The materials prefixes of the next two nest: `inner_free_test`'s source lies in the directory whose
+    /// path is that of `outer_free_test`'s source less the extension.
+    class outer_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<outer_free_test>("Nesting");
+      }
+
+      void run_tests() {}
+    };
+
+    class inner_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<inner_free_test>("Nesting/outer_free_test");
+      }
+
+      void run_tests() {}
+    };
+
+    /// As `inner_free_test`, but beneath a directory differing from `outer_free_test`'s materials prefix only in case.
+    class differently_cased_inner_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<differently_cased_inner_free_test>("Nesting/OUTER_FREE_TEST");
+      }
+
+      void run_tests() {}
+    };
+
+    /// Beneath a directory whose name begins with `outer_free_test`'s materials prefix but is not it.
+    class adjacent_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<adjacent_free_test>("Nesting/outer_free_test_adjacent");
+      }
+
+      void run_tests() {}
+    };
+
+    /// Shares `outer_free_test`'s source.
+    class cohabiting_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return outer_free_test::source_file();
+      }
+
+      void run_tests() {}
+    };
+
+    /// As `inner_free_test`, but two directories beneath `outer_free_test`'s materials prefix.
+    class deeply_inner_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<deeply_inner_free_test>("Nesting/outer_free_test/Deeper");
+      }
+
+      void run_tests() {}
+    };
+
+    /// Named as `foo_test` but for case, which the filesystems of macOS and Windows ignore.
+    class Foo_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<Foo_test>("Cased");
+      }
+
+      void run_tests() {}
+    };
+
+    /// Beneath a directory whose name has non-ASCII bytes, spelt as escapes so every compiler reads them alike.
+    class non_ascii_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<non_ascii_free_test>("Nesting/Caf\xC3\xA9");
+      }
+
+      void run_tests() {}
+    };
+
+    /// Named with a non-ASCII letter, spelt as a universal character name so every compiler reads it alike.
+    class caf\u00E9_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<caf\u00E9_free_test>("NonAscii").replace_filename("CafeFreeTest.cpp");
+      }
+
+      void run_tests() {}
+    };
+
+    class sourceless_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return {};
+      }
+
+      void run_tests() {}
+    };
+
+    /// The time a record or the run's stamp names after `started`; the times sort as their text does
+    [[nodiscard]]
+    std::string start_named_by(const fs::path& file)
+    {
+      std::ifstream stream{file};
+      std::string word{}, start{};
+      stream >> word >> start;
+
+      return start;
+    }
+
+    /// The first word of each line of a test's execution record
+    [[nodiscard]]
+    std::vector<std::string> execution_record_line_heads(const fs::path& record)
+    {
+      std::vector<std::string> heads{};
+      std::ifstream file{record};
+      for(std::string line{}; std::getline(file, line);)
+      {
+        heads.push_back(line.substr(0, line.find(' ')));
+      }
+
+      return heads;
+    }
+
+    /// Checks its own execution record while it executes
+    class record_reading_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<record_reading_free_test>();
+      }
+
+      void run_tests()
+      {
+        const test_execution_record_path record{source_file(), name(), get_project_paths()};
+        check(equality,
+              "While a test executes, its record names its start and no duration",
+              execution_record_line_heads(record.file_path()),
+              std::vector<std::string>{"started"});
+
+        check("While a test executes, the run's stamp already exists",
+              fs::exists(get_project_paths().execution_records().stamp()));
+      }
+    };
+
+    /// An exception escapes the body of this test, rather than being caught by a check
+    class escaping_exception_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file()
+      {
+        return make_fake_file_path<escaping_exception_free_test>();
+      }
+
+      void run_tests()
+      {
+        throw std::runtime_error{"Escapes the test body"};
+      }
+    };
   }
   
   [[nodiscard]]
@@ -508,6 +725,7 @@ namespace sequoia::testing
     test_verbose_output();
     test_serial_verbose_output();
     test_throwing_tests();
+    test_execution_records();
     test_filtered_suites();
     test_prune_basic_output();
     test_prune_with_changed_toolchain();
@@ -670,6 +888,185 @@ namespace sequoia::testing
         runner.register_test<another_namespace::foo_test>();
       });
 
+    check_exception_thrown<std::logic_error>(
+      reporter{"A source in the directory sharing another's materials prefix"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<outer_free_test>();
+        runner.register_test<inner_free_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"A source whose materials prefix is a directory holding another's source"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<inner_free_test>();
+        runner.register_test<outer_free_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"A source in a directory sharing another's materials prefix but for case"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<outer_free_test>();
+        runner.register_test<differently_cased_inner_free_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"Two tests whose names differ only in case"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<foo_test>();
+        runner.register_test<Foo_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"A source two directories beneath another's materials prefix"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<outer_free_test>();
+        runner.register_test<deeply_inner_free_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"A source whose materials prefix, but for case, is a directory holding another's source"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<differently_cased_inner_free_test>();
+        runner.register_test<outer_free_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"Sources beside a materials prefix and sharing it are admitted; one beneath it then is not"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<outer_free_test>();
+        runner.register_test<adjacent_free_test>();
+        runner.register_test<cohabiting_free_test>();
+        runner.register_test<inner_free_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"A source whose materials prefix contains a non-ASCII byte"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<non_ascii_free_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"A test whose name contains a non-ASCII letter"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<caf\u00E9_free_test>();
+      });
+
+    check_exception_thrown<std::logic_error>(
+      reporter{"A test with no source file"},
+      [this](){
+        commandline_arguments args{{zeroth_arg()}};
+        std::stringstream outputStream{};
+
+        test_runner runner{args.size(),
+                           args.get(),
+                           "Oliver J. Rosten",
+                           "  ",
+                           {.main_cpp{"TestSandbox/TestSandbox.cpp"},
+                            .common_includes{"TestShared/SharedIncludes.hpp"}},
+                           outputStream};
+
+        runner.register_test<sourceless_free_test>();
+      });
+
     check_exception_thrown<std::runtime_error>(
       reporter{"Invalid repetitions for instability analysis"},
       [this](){
@@ -814,6 +1211,52 @@ namespace sequoia::testing
     fs::copy(fake_project() / "output/DiagnosticsOutput/Tests", diagnosticsDir);
 
     check(equivalence, "Exception Output", predictive_materials() / "ThrowingDiagnostics", diagnosticsDir);
+  }
+
+  /** The fake tests tell the mechanism from its rivals: `record_reading_free_test` sees its record while it executes,
+      which a start written only at the end would not produce; `escaping_exception_free_test` throws, which a
+      duration written only on normal completion would miss. The records directory is removed first, so that only
+      this run can have written the stamp.
+   */
+  void test_runner_test::test_execution_records()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{(minimal_fake_path()).generic_string()}};
+    test_runner runner{args.size(),
+                       args.get(),
+                       "Oliver J. Rosten",
+                       "  ",
+                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
+                       outputStream};
+
+    const auto& projPaths{runner.proj_paths()};
+    fs::remove_all(projPaths.execution_records().dir());
+
+    runner.register_test<record_reading_free_test>();
+    runner.register_test<escaping_exception_free_test>();
+
+    check(equality, "Execution records return code", runner.execute(), return_code::critical_failures);
+
+    const test_execution_record_path
+      passingRecord{record_reading_free_test::source_file(),     test_name<record_reading_free_test>(),     projPaths},
+      throwingRecord{escaping_exception_free_test::source_file(), test_name<escaping_exception_free_test>(), projPaths};
+
+    const std::vector<std::string> finishedRecordHeads{"started", "duration"};
+    check(equality,
+          "The record of a test which passed names its start and its duration",
+          execution_record_line_heads(passingRecord.file_path()),
+          finishedRecordHeads);
+
+    check(equality,
+          "The record of a test whose body threw names its start and its duration",
+          execution_record_line_heads(throwingRecord.file_path()),
+          finishedRecordHeads);
+
+    const auto runStart{start_named_by(projPaths.execution_records().stamp())};
+    check("The run's stamp names a start", !runStart.empty());
+    const bool runStartedFirst{   (runStart <= start_named_by(passingRecord.file_path()))
+                               && (runStart <= start_named_by(throwingRecord.file_path()))};
+    check("The run started no later than either test", runStartedFirst);
   }
 
   void test_runner_test::test_filtered_suites()

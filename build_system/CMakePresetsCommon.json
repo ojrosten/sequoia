@@ -585,7 +585,11 @@
       "name": "msvc-release",
       "displayName": "Visual Studio [Release]",
       "description": "Configure for ${displayName}. A tree of its own, because a nested project's presets are named after the build directory.",
-      "cacheVariables": { "CMAKE_CONFIGURATION_TYPES": "Release" },
+      "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Release",
+        "CMAKE_MSVC_DEBUG_INFORMATION_FORMAT": "ProgramDatabase",
+        "CMAKE_EXE_LINKER_FLAGS_RELEASE": "/DEBUG /INCREMENTAL:NO /OPT:REF /OPT:ICF"
+      },
       "inherits": ["msvc"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" }
     },

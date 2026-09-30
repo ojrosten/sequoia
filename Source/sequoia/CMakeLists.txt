@@ -20,6 +20,7 @@ set(SourceList
     TestFramework/DependencyAnalyzer.cpp
     TestFramework/DumpComparison.cpp
     TestFramework/FailureInfo.cpp
+    TestFramework/FailureReporting.cpp
     TestFramework/FileEditors.cpp
     TestFramework/FileSystemUtilities.cpp
     TestFramework/FreeTestCore.cpp

@@ -41,6 +41,41 @@ namespace sequoia::testing
     const auto entry_time_stamp{std::chrono::file_clock::now()};
 
     [[nodiscard]]
+    std::string started_at(std::chrono::system_clock::time_point start)
+    {
+      return std::format("started {:%FT%TZ}\n", std::chrono::floor<std::chrono::milliseconds>(start));
+    }
+
+    // Written aside and renamed over the file, so that a process dying mid-write leaves the previous contents
+    void overwrite_quietly(const fs::path& file, std::string_view text)
+    {
+      std::error_code selectsTheNonThrowingOverload{};
+      fs::create_directories(file.parent_path(), selectsTheNonThrowingOverload);
+
+      const auto partial{fs::path{file} += ".partial"};
+      {
+        std::ofstream stream{partial, std::ios_base::out | std::ios_base::trunc | std::ios_base::binary};
+        stream << text;
+      }
+
+      fs::rename(partial, file, selectsTheNonThrowingOverload);
+    }
+
+    // Nothing escapes: the start is written outside the handler that turns a test's exceptions into critical
+    // failures, and the duration from a destructor, where a throw would end the run
+    template<invocable_r<std::string_view> Text>
+    void overwrite_record_quietly(const fs::path& file, Text text) noexcept
+    {
+      try
+      {
+        overwrite_quietly(file, text());
+      }
+      catch(...)
+      {
+      }
+    }
+
+    [[nodiscard]]
     std::string running_tests_message(concurrency_mode mode)
     {
       std::string mess{"\nRunning tests"};
@@ -489,8 +524,8 @@ namespace sequoia::testing
     if(materials.temporary_materials_root().empty())
       throw std::logic_error{"Unable to prepare materials whose paths name no test"};
 
-    // Wiping the whole of this test's temporary tree is safe because the tree is named for the
-    // test, and `test_runner::register_test` admits each name once.
+    // Wiping the whole of this test's temporary tree is safe because `test_runner::register_test`
+    // admits each name once, ignoring case, and no source whose materials prefix nests with another's.
     fs::remove_all(materials.temporary_materials_root());
     fs::create_directories(materials.temporary_materials_root());
 
@@ -524,6 +559,25 @@ namespace sequoia::testing
 
       write_to_file(file, text, std::ios_base::out | std::ios_base::binary);
     }
+  }
+
+  test_vessel::scoped_execution_record::scoped_execution_record(std::filesystem::path file)
+    : m_File{std::move(file)}
+    , m_Start{std::chrono::system_clock::now()}
+  {
+    overwrite_record_quietly(m_File, [this](){ return started_at(m_Start); });
+  }
+
+  test_vessel::scoped_execution_record::~scoped_execution_record()
+  {
+    auto finished{
+      [this](){
+        const auto elapsed{std::chrono::duration_cast<std::chrono::milliseconds>(m_Timer.time_elapsed())};
+        return started_at(m_Start) + std::format("duration {}\n", elapsed);
+      }
+    };
+
+    overwrite_record_quietly(m_File, finished);
   }
 
   //=========================================== test_runner ===========================================//
@@ -1017,6 +1071,10 @@ namespace sequoia::testing
     if(!in_mode(runner_mode::test))
       return return_code::success;
 
+    const scoped_terminate_handler terminationReported{report_termination};
+    const debug_report_redirector debugReportRedirector{};
+    const windows_crash_report_enabler windowsCrashReportEnabler{};
+
     fs::create_directories(proj_paths().prune().dir());
     build_suite_tree();
     check_for_missing_tests();
@@ -1033,7 +1091,10 @@ namespace sequoia::testing
   return_code test_runner::run()
   {
     if(m_InstabilityMode != instability_mode::sandbox)
+    {
       fs::remove_all(proj_paths().output().instability_analysis());
+      overwrite_quietly(proj_paths().execution_records().stamp(), started_at(std::chrono::system_clock::now()));
+    }
 
     const auto baseline{versioned_output_baseline()};
     const auto code{  m_InstabilityMode == instability_mode::coordinator
@@ -1225,7 +1286,8 @@ namespace sequoia::testing
   {
     const timer t{};
 
-    stream() << running_tests_message(m_ConcurrencyMode);
+    // Without the flush, a run killed while the tests are silent would never show that they had begun
+    stream() << running_tests_message(m_ConcurrencyMode) << std::flush;
 
     std::optional<log_summary::duration> asyncDuration{};
     if(concurrent_execution())
@@ -1433,8 +1495,7 @@ namespace sequoia::testing
   {
     if(m_PruneMode == prune_mode::passive) return;
 
-    // Do this here: if pruning throws an exception, this output should make it clearer what's going on
-    stream() << "\nAnalyzing dependencies...\n";
+    stream() << "\nAnalyzing dependencies...\n" << std::flush;
     const timer t{};
 
     if(const auto fallback{do_prune()})
@@ -1496,10 +1557,113 @@ namespace sequoia::testing
   {
     using namespace parsing::commandline;
 
-    return error(std::string{"Test: \""}.append(testName).append("\"\n")
-                  .append("Source file: \"").append(source.generic_string()).append("\"\n")
-                  .append("A test's name is that of its class, and determines where its output is"
-                    " written, so each may be registered only once.\n"));
+    return error(std::format("Test: \"{}\"\n"
+                             "Source file: \"{}\"\n"
+                             "A test's name is that of its class, and determines where its output is written,"
+                             " so no two tests may share a name, ignoring case.\n",
+                             testName,
+                             source.generic_string()));
+  }
+
+  namespace
+  {
+    [[nodiscard]]
+    bool contains_non_ascii(std::string_view text)
+    {
+      constexpr unsigned char lastAscii{0x7F};
+      return std::ranges::any_of(text, [](char c){ return static_cast<unsigned char>(c) > lastAscii; });
+    }
+  }
+
+  /** A test's materials are wiped and synchronized as a whole, so no two tests' materials may nest.
+      Each test's materials are its source's materials prefix with the test's name appended. The names
+      are distinct single components, ignoring case, so refusing nested prefixes suffices, whatever is
+      appended to the prefixes. Case is ignored because the filesystems of macOS and Windows ignore it.
+      Beyond ASCII they equate names by rules of their own - case folding, and on macOS Unicode
+      normalization - so a name or prefix containing anything non-ASCII is refused.
+   */
+  void test_runner::register_name(std::string_view name, const fs::path& source)
+  {
+    if(contains_non_ascii(name))
+      throw std::logic_error{non_ascii_name_message(source)};
+
+    if(!m_LowerCaseTestNames.insert(to_lower_case(name)).second)
+      throw std::logic_error{duplication_message(name, source)};
+  }
+
+  void test_runner::register_source(const fs::path& source)
+  {
+    const auto prefix{to_lower_case(materials_prefix(source, proj_paths()).lexically_normal().generic_string())};
+    if(prefix.empty())
+      throw std::logic_error{unplaceable_source_message(source)};
+
+    if(contains_non_ascii(prefix))
+      throw std::logic_error{non_ascii_source_message(source)};
+
+    auto isDescendantOf{
+      [](std::string_view path, std::string_view ancestor) {
+        return (path.size() > ancestor.size()) && path.starts_with(ancestor) && (path[ancestor.size()] == '/');
+      }
+    };
+
+    auto nestsWithPrefix{
+      [&prefix, &isDescendantOf](const auto& admitted) {
+        return isDescendantOf(prefix, admitted.first) || isDescendantOf(admitted.first, prefix);
+      }
+    };
+
+    const auto nestedWith{std::ranges::find_if(m_SourcesByLowerCasePrefix, nestsWithPrefix)};
+
+    if(nestedWith != m_SourcesByLowerCasePrefix.end())
+      throw std::logic_error{nesting_message(source, nestedWith->second)};
+
+    m_SourcesByLowerCasePrefix.try_emplace(prefix, source);
+  }
+
+  [[nodiscard]]
+  std::string test_runner::nesting_message(const fs::path& source, const fs::path& nestedWith)
+  {
+    using namespace parsing::commandline;
+
+    return error(std::format("Source file: \"{}\"\n"
+                             "Nests with:  \"{}\"\n"
+                             "Each test's materials are kept beneath the path of its source file less the extension,"
+                             " so, ignoring case, that path must not name a directory"
+                             " holding another test's source file.\n",
+                             source.generic_string(),
+                             nestedWith.generic_string()));
+  }
+
+  [[nodiscard]]
+  std::string test_runner::non_ascii_name_message(const fs::path& source)
+  {
+    using namespace parsing::commandline;
+
+    return error(std::format("Source file: \"{}\"\n"
+                             "A test's name is that of its class, and the names of the tests in this source file"
+                             " must be ASCII.\n",
+                             source.generic_string()));
+  }
+
+  [[nodiscard]]
+  std::string test_runner::non_ascii_source_message(const fs::path& source)
+  {
+    using namespace parsing::commandline;
+
+    return error(std::format("Source file: \"{}\"\n"
+                             "The path of this source file relative to the tests repository must be ASCII.\n",
+                             source.generic_string()));
+  }
+
+  [[nodiscard]]
+  std::string test_runner::unplaceable_source_message(const fs::path& source)
+  {
+    using namespace parsing::commandline;
+
+    return error(std::format("Source file: \"{}\"\n"
+                             "Each test's materials are kept beneath the path of its source file relative to the tests"
+                             " repository, and this source file has no such path.\n",
+                             source.generic_string()));
   }
 
   void test_runner::build_suite_tree()

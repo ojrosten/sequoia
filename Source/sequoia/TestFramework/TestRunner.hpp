@@ -12,6 +12,7 @@
 */
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
+#include "sequoia/TestFramework/FailureReporting.hpp"
 #include "sequoia/TestFramework/PerformanceTestCore.hpp"
 #include "sequoia/TestFramework/TestLogger.hpp"
 #include "sequoia/TestFramework/VersionedOutput.hpp"
@@ -24,6 +25,7 @@
 #include <chrono>
 #include <format>
 #include <iostream>
+#include <map>
 #include <optional>
 #include <set>
 #include <span>
@@ -178,6 +180,26 @@ namespace sequoia::testing
   private:
     static void versioned_write(const std::filesystem::path& file, std::string_view text);
 
+    /** \brief An RAII wrapper to write a test's execution record: when the test started and, on destruction, its
+               duration.
+
+        A record which cannot be written is skipped rather than reported.
+     */
+    class [[nodiscard]] scoped_execution_record
+    {
+    public:
+      explicit scoped_execution_record(std::filesystem::path file);
+
+      scoped_execution_record(const scoped_execution_record&)            = delete;
+      scoped_execution_record& operator=(const scoped_execution_record&) = delete;
+
+      ~scoped_execution_record();
+    private:
+      std::filesystem::path m_File{};
+      std::chrono::system_clock::time_point m_Start{};
+      timer m_Timer{};
+    };
+
     struct soul
     {
       virtual ~soul() = default;
@@ -226,6 +248,9 @@ namespace sequoia::testing
       [[nodiscard]]
       log_summary execute(std::optional<std::size_t> index) final
       {
+        // Also installed per test, since under MSVC each thread has its own terminate handler
+        const scoped_terminate_handler terminationReported{report_termination};
+        const scoped_execution_record record{m_ExecutionRecord.file_path()};
         const timer t{};
 
         if(try_prepare_materials())
@@ -244,21 +269,7 @@ namespace sequoia::testing
           }
         }
 
-        try
-        {
-          m_Test.write_instability_analysis_output(m_Test.source_file(), index);
-          return write_versioned_output(t);
-        }
-        catch(const std::exception& e)
-        {
-          m_Test.log_critical_failure(m_Test.source_file(), "Output Writing", e.what());
-        }
-        catch(...)
-        {
-          m_Test.log_critical_failure(m_Test.source_file(), "Output Writing", "Unknown exception");
-        }
-
-        return m_Test.summarize(t.time_elapsed());
+        return write_output(t, index);
       }
 
       void reset() final
@@ -277,9 +288,31 @@ namespace sequoia::testing
                       make_active_recovery_paths(mode, projPaths),
                       get_output_discriminator<Test>(cache),
                       get_reduction_discriminator<Test>(cache)};
+
+        m_ExecutionRecord = test_execution_record_path{source, m_Name, projPaths};
       }
     private:
       static constexpr std::string_view m_Name{test_name<Test>()};
+
+      [[nodiscard]]
+      log_summary write_output(const timer& t, std::optional<std::size_t> index)
+      {
+        try
+        {
+          m_Test.write_instability_analysis_output(m_Test.source_file(), index);
+          return write_versioned_output(t);
+        }
+        catch(const std::exception& e)
+        {
+          m_Test.log_critical_failure(m_Test.source_file(), "Output Writing", e.what());
+        }
+        catch(...)
+        {
+          m_Test.log_critical_failure(m_Test.source_file(), "Output Writing", "Unknown exception");
+        }
+
+        return m_Test.summarize(t.time_elapsed());
+      }
 
       [[nodiscard]]
       bool try_prepare_materials()
@@ -310,6 +343,7 @@ namespace sequoia::testing
       }
 
       Test m_Test;
+      test_execution_record_path m_ExecutionRecord{};
     };
 
     enum class parallelizable_candidate : bool { no, yes };
@@ -369,9 +403,8 @@ namespace sequoia::testing
     {
       ++m_Registered;
 
-      constexpr std::string_view name{test_name<T>()};
-      if(!m_TestNames.insert(name).second)
-        throw std::logic_error{duplication_message(name, T::source_file())};
+      register_name(test_name<T>(), T::source_file());
+      register_source(T::source_file());
 
       constexpr auto isPerformanceTest{is_performance_test_v<T> ? is_performance_test::yes : is_performance_test::no};
 
@@ -379,6 +412,12 @@ namespace sequoia::testing
         m_Tests.emplace_back(T{});
     }
 
+    /** \brief Runs the tests, as the command line asked.
+
+        `report_termination` is the terminate handler for the run, and for each test on the thread running it. Under
+        MSVC's debug runtime, reports are redirected as `debug_report_redirector` describes, and under Windows a
+        crash reaches Windows Error Reporting, as `windows_crash_report_enabler` describes.
+     */
     [[nodiscard]]
     return_code execute([[maybe_unused]] timer_resolution r={});
 
@@ -545,7 +584,8 @@ namespace sequoia::testing
 
     suite_type m_Suites{};
     std::vector<test_vessel> m_Tests{};
-    std::set<std::string_view> m_TestNames{};
+    std::set<std::string> m_LowerCaseTestNames{};
+    std::map<std::string, std::filesystem::path> m_SourcesByLowerCasePrefix{};
     std::size_t m_Registered{};
     test_filter m_Filter{path_equivalence{proj_paths().tests().repo()}};
     prune_mode m_PruneMode{prune_mode::passive};
@@ -638,6 +678,34 @@ namespace sequoia::testing
 
     [[nodiscard]]
     static std::string duplication_message(std::string_view testName, const std::filesystem::path& source);
+
+    /** \brief Admits the name of a test being registered.
+
+        \throws std::logic_error naming `source`, if `name` contains anything non-ASCII
+        \throws std::logic_error naming both, if a test of the same name, ignoring case, was admitted
+     */
+    void register_name(std::string_view name, const std::filesystem::path& source);
+
+    /** \brief Admits the source of a test being registered.
+
+        \throws std::logic_error naming `source`, if its materials prefix is empty
+        \throws std::logic_error naming `source`, if its materials prefix contains anything non-ASCII
+        \throws std::logic_error naming both sources, if the materials prefix of `source` lies beneath
+        that of a source already admitted, or has one beneath it, ignoring ASCII case
+     */
+    void register_source(const std::filesystem::path& source);
+
+    [[nodiscard]]
+    static std::string nesting_message(const std::filesystem::path& source, const std::filesystem::path& nestedWith);
+
+    [[nodiscard]]
+    static std::string non_ascii_name_message(const std::filesystem::path& source);
+
+    [[nodiscard]]
+    static std::string non_ascii_source_message(const std::filesystem::path& source);
+
+    [[nodiscard]]
+    static std::string unplaceable_source_message(const std::filesystem::path& source);
 
  };
 }
