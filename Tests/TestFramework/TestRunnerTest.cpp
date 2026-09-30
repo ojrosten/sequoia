@@ -406,14 +406,11 @@ namespace sequoia::testing
       };
     }
 
-    /** Makes `test` a candidate for update, by failing a check.
-
-        The function writes a `Kept.txt` into the working materials. The test's predictions hold a
-        `Kept.txt` with other contents, and an `Obsolete.txt`, which the function does not write. So an
-        update overwrites `Kept.txt` and deletes `Obsolete.txt`.
-
-        The source files of the update fakes below are relative, so that their materials resolve
-        inside the fake project.
+    /** Makes `test` a candidate for update, by failing a check. The function writes a `Kept.txt` into
+        the working materials. The test's predictions hold a `Kept.txt` with other contents, and an
+        `Obsolete.txt`, which the function does not write. So an update overwrites `Kept.txt` and
+        deletes `Obsolete.txt`. The source files of the update fakes below are relative, so that their
+        materials resolve inside the fake project.
      */
 
     void make_update_candidate(free_test& test)
@@ -481,11 +478,9 @@ namespace sequoia::testing
     };
 
     /** A variant of `stale_predictions_free_test`, with materials in two configurations: `Platypus`
-        and `Echidna`. The test's materials discriminator names `Platypus`.
-
-        In each configuration, the working copy and the auxiliary materials hold a `Configuration.txt`
-        which names the configuration. The predictions hold the same file, so the update leaves the file
-        alone.
+        and `Echidna`. The test's materials discriminator names `Platypus`. In each configuration, the
+        working copy and the auxiliary materials hold a `Configuration.txt` which names the
+        configuration. The predictions hold the same file, so the update leaves the file alone.
      */
     class variant_free_test final : public free_test
     {
