@@ -107,10 +107,10 @@ namespace sequoia::testing
     friend bool operator==(const individual_materials_paths&, const individual_materials_paths&) noexcept = default;
   private:
     std::filesystem::path
-      m_OriginalTestRoot,
-      m_TemporaryMaterialsRoot;
+      m_OriginalTestRoot{},
+      m_TemporaryMaterialsRoot{};
 
-    std::optional<std::string> m_MaterialsDiscriminator;
+    std::optional<std::string> m_MaterialsDiscriminator{};
 
     individual_materials_paths(const std::filesystem::path& relativePath,
                                const test_materials_paths& materials,

@@ -79,88 +79,88 @@ Test 'fake_test' has no materials paths: it was not constructed with any
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 290
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 293
 An empty discriminator
 
 Expected Exception Type:
 [std::runtime_error]
-The materials discriminator "" is empty, but a test which declares one must name a directory
+The materials discriminator "" must not be empty
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 290
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 293
 A discriminator naming the parent
 
 Expected Exception Type:
 [std::runtime_error]
-The materials discriminator ".." names no directory of its own
+The materials discriminator ".." must name a directory of its own
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 290
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 293
 An absolute discriminator
 
 Expected Exception Type:
 [std::runtime_error]
-The materials discriminator "/Platypus" contains '/', which is not portable
+The materials discriminator "/Platypus" must not contain '/'
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 290
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 293
 A discriminator holding a separator
 
 Expected Exception Type:
 [std::runtime_error]
-The materials discriminator "Platypus/Echidna" contains '/', which is not portable
+The materials discriminator "Platypus/Echidna" must not contain '/'
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 290
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 293
 A discriminator holding a colon
 
 Expected Exception Type:
 [std::runtime_error]
-The materials discriminator "Platypus:Echidna" contains ':', which is not portable
+The materials discriminator "Platypus:Echidna" must not contain ':'
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 290
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 293
 A discriminator ending in a dot
 
 Expected Exception Type:
 [std::runtime_error]
-The materials discriminator "Platypus." ends in a dot or a space, which Windows strips
+The materials discriminator "Platypus." must not end in a dot or a space
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 290
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 293
 A discriminator naming a Windows device
 
 Expected Exception Type:
 [std::runtime_error]
-The materials discriminator "COM1" is a device name on Windows
+The materials discriminator "COM1" must not be a device name on Windows
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 290
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 293
 A discriminator naming a kind of material
 
 Expected Exception Type:
 [std::runtime_error]
-The materials discriminator "prediction" is reserved for a kind of material
+The materials discriminator "prediction" must not name a kind of material
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 290
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 293
 A discriminator differing only in case from a sibling
 
 Expected Exception Type:
 [std::runtime_error]
-The materials discriminator "platypus" differs only in case from Platypus, which a case-insensitive filesystem takes for the same directory
+The materials discriminator "platypus" must not differ only in case from Platypus
 
 =======================================
 
-Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 295
+Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 298
 Materials beside the configurations
 
 Expected Exception Type:

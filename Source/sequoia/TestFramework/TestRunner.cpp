@@ -176,36 +176,19 @@ namespace sequoia::testing
       }
     }
 
-    /// Why `name` cannot name one directory on every platform; empty if `name` is portable
     [[nodiscard]]
-    std::string portability_defect(std::string_view name)
+    bool is_windows_device_name(std::string_view name)
     {
-      if(name.empty()) return "is empty, but a test which declares one must name a directory";
-      if((name == ".") || (name == "..")) return "names no directory of its own";
-
-      constexpr std::string_view forbidden{"/\\:*?\"<>|"};
-      if(const auto pos{name.find_first_of(forbidden)}; pos != std::string_view::npos)
-        return std::format("contains '{}', which is not portable", name[pos]);
-
-      if(std::ranges::any_of(name, [](unsigned char c){ return c < 0x20; }))
-        return "contains a control character";
-
-      if((name.back() == '.') || (name.back() == ' '))
-        return "ends in a dot or a space, which Windows strips";
-
-      const auto stem{name.substr(0, name.find('.'))};
-      constexpr std::array<std::string_view, 4> devices{"CON", "PRN", "AUX", "NUL"};
+      auto stem{name.substr(0, name.find('.'))};
       const bool numberedDevice{
            (stem.size() == 4)
         && (same_ignoring_case(stem.substr(0, 3), "COM") || same_ignoring_case(stem.substr(0, 3), "LPT"))
         && (stem[3] >= '1') && (stem[3] <= '9')
       };
 
+      constexpr std::array<std::string_view, 4> devices{"CON", "PRN", "AUX", "NUL"};
       auto isStem{[stem](std::string_view device){ return same_ignoring_case(stem, device); }};
-      if(numberedDevice || std::ranges::any_of(devices, isStem))
-        return "is a device name on Windows";
-
-      return {};
+      return numberedDevice || std::ranges::any_of(devices, isStem);
     }
 
     /** Throws if the materials discriminator is not a portable name for one directory, names a kind of
@@ -216,27 +199,62 @@ namespace sequoia::testing
     {
       const auto& name{materials.materials_discriminator().value()};
 
-      auto defect{portability_defect(name)};
-      if(defect.empty() && is_materials_kind(name))
-        defect = "is reserved for a kind of material";
-
-      if(defect.empty() && fs::exists(materials.original_test_root()))
-      {
-        for(const auto& entry : fs::directory_iterator{materials.original_test_root()})
-        {
-          const auto sibling{entry.path().filename().generic_string()};
-          if((sibling != name) && same_ignoring_case(sibling, name))
-          {
-            defect = std::format("differs only in case from {}, "
-                                 "which a case-insensitive filesystem takes for the same directory",
-                                 sibling);
-            break;
-          }
+      auto failureMessage{
+        [&name](std::string_view restriction) {
+          return std::format("The materials discriminator \"{}\" must {}", name, restriction);
         }
-      }
+      };
 
-      if(!defect.empty())
-        throw std::runtime_error{std::format("The materials discriminator \"{}\" {}", name, defect)};
+      if(name.empty())
+        throw std::runtime_error{failureMessage("not be empty")};
+
+      if((name == ".") || (name == ".."))
+        throw std::runtime_error{failureMessage("name a directory of its own")};
+
+      constexpr std::string_view forbidden{"/\\:*?\"<>|"};
+      if(const auto pos{name.find_first_of(forbidden)}; pos != std::string::npos)
+        throw std::runtime_error{failureMessage(std::format("not contain '{}'", name[pos]))};
+
+      if(std::ranges::any_of(name, [](unsigned char c){ return c < 0x20; }))
+        throw std::runtime_error{failureMessage("not contain a control character")};
+
+      // Windows strips a trailing dot or space, so two configurations could share one directory
+      if((name.back() == '.') || (name.back() == ' '))
+        throw std::runtime_error{failureMessage("not end in a dot or a space")};
+
+      if(is_windows_device_name(name))
+        throw std::runtime_error{failureMessage("not be a device name on Windows")};
+
+      if(is_materials_kind(name))
+        throw std::runtime_error{failureMessage("not name a kind of material")};
+
+      const auto& root{materials.original_test_root()};
+      if(!fs::exists(root))
+        return;
+
+      // A case-insensitive filesystem takes names differing only in case for the same directory
+      auto differsOnlyInCase{
+        [&name](const std::string& sibling) { return (sibling != name) && same_ignoring_case(sibling, name); }
+      };
+
+      auto namesakes{
+          fs::directory_iterator{root}
+        | std::views::transform([](const fs::directory_entry& e) { return e.path().filename().generic_string(); })
+        | std::views::filter(differsOnlyInCase)
+        | std::ranges::to<std::vector>()
+      };
+
+      if(!namesakes.empty())
+      {
+        std::ranges::sort(namesakes);
+        const auto namesakeList{
+            namesakes
+          | std::views::join_with(std::string_view{", "})
+          | std::ranges::to<std::string>()
+        };
+
+        throw std::runtime_error{failureMessage(std::format("not differ only in case from {}", namesakeList))};
+      }
     }
 
     void throw_if_materials_beside_configurations(const individual_materials_paths& materials)

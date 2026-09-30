@@ -269,21 +269,24 @@ namespace sequoia::testing
     };
 
     prepareMaterials("Discriminated", "Platypus");
-    const auto temporaryWorkingCopy{projPaths.output().tests_temporary_data() / "Materials/Discriminated/fake_test/WorkingCopy"};
+    const auto temporaryWorkingCopy{
+      projPaths.output().tests_temporary_data() / "Materials/Discriminated/fake_test/WorkingCopy"
+    };
+
     check(equality,
           "The declared configuration copied",
           read_to_string(temporaryWorkingCopy / "input.txt", std::ios_base::in).value_or(""),
           std::string{"Platypus\n"});
 
     for(const auto& [description, discriminator] : std::to_array<std::pair<std::string_view, std::string_view>>({
-          {"An empty discriminator",                   ""},
-          {"A discriminator naming the parent",        ".."},
-          {"An absolute discriminator",                "/Platypus"},
-          {"A discriminator holding a separator",      "Platypus/Echidna"},
-          {"A discriminator holding a colon",          "Platypus:Echidna"},
-          {"A discriminator ending in a dot",          "Platypus."},
-          {"A discriminator naming a Windows device",  "COM1"},
-          {"A discriminator naming a kind of material", "prediction"},
+          {"An empty discriminator",                                ""},
+          {"A discriminator naming the parent",                     ".."},
+          {"An absolute discriminator",                             "/Platypus"},
+          {"A discriminator holding a separator",                   "Platypus/Echidna"},
+          {"A discriminator holding a colon",                       "Platypus:Echidna"},
+          {"A discriminator ending in a dot",                       "Platypus."},
+          {"A discriminator naming a Windows device",               "COM1"},
+          {"A discriminator naming a kind of material",             "prediction"},
           {"A discriminator differing only in case from a sibling", "platypus"}}))
     {
       check_exception_thrown<std::runtime_error>(
