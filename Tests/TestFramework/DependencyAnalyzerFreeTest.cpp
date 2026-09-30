@@ -432,13 +432,23 @@ namespace sequoia::testing
 
       writeTracked(objects.directory, records);
 
-      // The other configuration was built without the tests, and its objects lie in a directory of its own. So reading
-      // its record in the place of the executable's changes what prune selects, and the objects a refusal names.
+      // The other configuration was built without the tests, and its objects lie in a directory of its own. They also
+      // read a header which, in the executable's configuration, only the tests read. So reading the other record in
+      // the place of the executable's changes what prune selects and the objects a refusal names; reading it as well
+      // refuses an edit to that header, whichever configuration is listed first.
+      auto alsoReadingTestsHeader{
+        [testsHeader{recordedPath("Source/fakeProject/Stuff/Bar.hpp")}](compilation_record record) {
+          record.inputs.push_back(testsHeader);
+          return record;
+        }
+      };
+
       const auto otherDirectory{objects.directory.parent_path() / otherVisualStudioConfiguration};
       const auto otherRecords{
           units
         | std::views::filter(std::not_fn(isTest))
         | std::views::transform(compiledIn(otherDirectory))
+        | std::views::transform(alsoReadingTestsHeader)
         | std::ranges::to<std::vector>()
       };
 
