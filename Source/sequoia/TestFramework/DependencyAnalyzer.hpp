@@ -130,17 +130,16 @@ namespace sequoia::testing
                           std::filesystem::file_time_type updateTime,
                           std::optional<std::size_t> id);
 
-  /** \brief The directory of the sources this library was compiled from, as the compiler was given it.
+  /** \brief The path of the directory of this library's sources, as the compiler was given it.
 
-      The directory is relative if the compiler was given a relative path. The directory is also
-      relative if the build remaps the paths the binary records, with `-fmacro-prefix-map` or with
-      `-ffile-prefix-map`, which implies `-fmacro-prefix-map`.
+      The path is relative if the compiler was given a relative path. The path is also relative if the
+      build remaps the paths the binary records, with `-fmacro-prefix-map` or with `-ffile-prefix-map`,
+      which implies `-fmacro-prefix-map`.
    */
   [[nodiscard]]
   std::filesystem::path sequoia_library_root();
 
-  /** \brief Refuses to go on if the library beneath `libraryRoot` has changed since the executable was
-             built.
+  /** \brief Throws if the library beneath `libraryRoot` has changed since the executable was built.
 
       The library's objects are the objects compiled from a source beneath `libraryRoot`. The library's
       own files are the files which were read to compile those objects and which lie beneath
@@ -148,8 +147,9 @@ namespace sequoia::testing
       -# A header of the library which only the tests read;
       -# A file of the toolchain's, of another library's or of the tests'.
 
-      The build's record is read only if an entry beneath `libraryRoot` is no older than the executable.
-      The entry may be a file or a directory; a deletion within a directory moves the directory's time.
+      The build's record is read only if `libraryRoot`, or an entry beneath it, is no older than the
+      executable. The entry may be a file or a directory; a deletion within a directory moves the
+      directory's time.
 
       If the check cannot be made, the function writes a one-line warning to `stream` and refuses
       nothing. The warning gives one of these reasons:
@@ -162,7 +162,8 @@ namespace sequoia::testing
       -# The newest of the library's own files is no older than the executable. The message names the
          file, the object the file was read to compile, that object's target, and the time stamps of
          the file and of the executable;
-      -# A file of the library's which the build read cannot now be read. The message names the file.
+      -# The modification time of one of the library's own files cannot now be read. The message
+         names the file and the object the file was read to compile.
    */
   void refuse_if_library_changed_since_build(const project_paths& projPaths,
                                              const cmake_cache& cache,

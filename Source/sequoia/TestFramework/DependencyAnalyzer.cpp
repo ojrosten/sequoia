@@ -115,7 +115,8 @@ namespace sequoia::testing
       return error ? path : canonical;
     }
 
-    /// A file which the build recorded: the file's canonical path, and whether the file is the toolchain's
+    /// A file which the build recorded: the file's path, made canonical where possible, and whether the
+    /// file is the toolchain's
     struct recorded_file
     {
       fs::path canonical;
@@ -848,7 +849,8 @@ namespace sequoia::testing
       "The library has changed since this executable was built; please build it again."
     };
 
-    /** The newest of the library's own files, as `refuse_if_library_changed_since_build` defines them.
+    /** The newest of the library's own files, as `refuse_if_library_changed_since_build` defines them,
+        with the first object in the record which the file was read to compile.
 
         \returns `nullopt` if no object was compiled from beneath `libraryRoot`.
 
@@ -972,8 +974,8 @@ namespace sequoia::testing
       return;
     }
 
-    // This costs one stat per file of the library's. The build's record is read only if one of those
-    // files is no older than the executable.
+    // This costs one stat per entry beneath `libraryRoot`. The build's record is read only if one of
+    // those entries is no older than the executable.
     if(!anything_since(libraryRoot, *executableStamp))
       return;
 

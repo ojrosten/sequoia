@@ -54,7 +54,8 @@ namespace sequoia::testing
     /// The configuration of the fake Visual Studio build, and the name of the directory holding its executable
     constexpr std::string_view visualStudioConfiguration{"Debug"};
 
-    /// An RAII wrapper which sets a file's modification time, and restores the original time on destruction
+    /// An RAII wrapper which sets the modification time of a file or directory, and restores the original
+    /// time on destruction
     class modified_for_scope
     {
     public:
@@ -621,7 +622,8 @@ namespace sequoia::testing
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
   }
 
-  /// Replaces the fake project's root in `message` with `FakeProject`, and masks what varies between machines and runs
+  /// `message`, with the fake project's root, as given and made canonical, replaced by `FakeProject`. Each time
+  /// stamp, and each reason a file cannot now be read, is masked by `****`.
   std::string dependency_analyzer_free_test::normalise_library_message(const project_paths& projPaths,
                                                                        std::string message)
   {
