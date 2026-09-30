@@ -299,7 +299,10 @@ namespace sequoia::maths
     return adaptor.tree().cbegin_node_weights()[adaptor.node()];
   }
 
-  /** \brief Applies `fn` once, in place, to the weight of the adaptor's root node, and returns the result. */
+  /** \brief Applies `fn` to the weight of the root node of `adaptor`, and returns the result.
+
+      `fn` is applied once, in place.
+   */
   template<dynamic_tree T, class Fn>
     requires std::invocable<Fn&, typename T::node_weight_type&>
   std::invoke_result_t<Fn&, typename T::node_weight_type&> mutate_root_weight(basic_tree_adaptor<T>& adaptor, Fn fn)

@@ -315,7 +315,10 @@ namespace sequoia
       }
 
 
-      /** \brief Applies `fn` once, in place, to the meta-data of the half edge at `citer`, and returns the result. */
+      /** \brief Applies `fn` to the meta-data of the half edge at `citer`, and returns the result.
+
+          `fn` is applied once, in place.
+       */
       template<class Fn>
         requires (!std::is_empty_v<edge_meta_data_type> && std::invocable<Fn&, edge_meta_data_type&>)
       constexpr std::invoke_result_t<Fn&, edge_meta_data_type&>

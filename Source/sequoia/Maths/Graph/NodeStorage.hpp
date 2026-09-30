@@ -133,7 +133,12 @@ namespace sequoia::maths
       m_NodeWeights[index] = std::move(w);
     }
 
-    /** \brief Applies `fn` once, in place, to the node weight at `pos`, and returns the result. */
+    /** \brief Applies `fn` to the node weight at `pos`, and returns the result.
+
+        `fn` is applied once, in place.
+
+        \throws std::out_of_range if `pos` is `cend_node_weights()`
+     */
     template<class Fn>
       requires std::invocable<Fn&, weight_type&>
     constexpr std::invoke_result_t<Fn&, weight_type&> mutate_node_weight(const_iterator pos, Fn fn)

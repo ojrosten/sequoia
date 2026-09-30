@@ -75,7 +75,6 @@ namespace sequoia::testing
       friend auto operator<=>(const move_only_meta_data&, const move_only_meta_data&) = default;
     };
 
-    /** \brief A mutation callable only on an rvalue, which no graph mutator makes of its argument. */
     template<class Weight>
     struct rvalue_only_mutation
     {
@@ -236,7 +235,7 @@ namespace sequoia::testing
                                           move_only_node_graph::edge_allocator_type,
                                           move_only_node_graph::node_weight_allocator_type>);
 
-    // A node weight, or a static graph's edge meta-data, that can be copy-constructed but not assigned
+    // A value that can be copy-constructed but not assigned, as a node weight and as a static graph's edge meta-data
     STATIC_CHECK( std::is_copy_constructible_v<directed_graph<null_weight, non_assignable_value>>);
     STATIC_CHECK(!std::is_copy_assignable_v<directed_graph<null_weight, non_assignable_value>>);
     STATIC_CHECK( std::is_copy_constructible_v<static_embedded_graph<1, 2, null_weight, null_weight, non_assignable_value>>);
@@ -329,6 +328,7 @@ namespace sequoia::testing
     using tree                 = directed_tree<tree_link_direction::forward, null_weight, copyable_weight>;
     using member_function      = void (copyable_weight::*)();
 
+    // No mutator invokes its mutation as an rvalue, so none accepts a mutation callable only on an rvalue
     STATIC_CHECK(!edge_weight_mutable_in_place_by<weighted_edge, rvalue_only>);
     STATIC_CHECK( edge_weight_mutable_in_place_by<weighted_edge, member_function>);
 
