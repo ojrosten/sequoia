@@ -678,7 +678,7 @@ namespace sequoia::testing
       void run_tests() {}
     };
 
-    /// Its summary, discriminated, is the file `summary_collider_test_twin` writes
+    /** \brief A test that writes its summary to the same file as `summary_collider_test_twin`, through a summary discriminator */
     class summary_collider_test final : public free_test
     {
     public:
@@ -1357,7 +1357,7 @@ namespace sequoia::testing
         runner.register_test<sourceless_free_test>();
       });
 
-    // The check is made whichever tests are selected, since a test run alone would overwrite the other's summary
+    // The check is made whichever tests are selected: a test that runs alone would overwrite the other test's summary
     for(const auto& selection : {std::vector<std::string>{}, {"select", summary_collider_test_twin::source_file().generic_string()}})
     {
       check_exception_thrown<std::logic_error>(
@@ -2045,7 +2045,7 @@ namespace sequoia::testing
     check(equality, "recover on a fresh tree", recoveringRunner.execute(), return_code::success);
     check("A recovery run which ran a check leaves a recovery file", fs::exists(recovery.recovery_file()));
 
-    // A run which records nothing must not leave the previous run's record looking like its own
+    // A run which records nothing must not leave the previous run's record looking like the new run's
     std::stringstream emptyRecoveryStream{};
     test_runner emptyRecoveryRunner{recoveringArgs.size(),
                                     recoveringArgs.get(),

@@ -21,9 +21,10 @@ namespace sequoia::testing
 {
   void add_include(const std::filesystem::path& file, std::string_view includePath);
 
-  /** \brief Adds `file`, relative to `hostDir` and prefixed by `cmakeEntryPrefix`, to the entries between
-      `patternOpen` and `patternClose` in `cmakeLists`, sorted, each aligned one column after the parenthesis
-      `patternOpen` opens.
+  /** \brief Adds `file` to the entries between `patternOpen` and `patternClose` in `cmakeLists`.
+
+      The new entry is `cmakeEntryPrefix` followed by `file` relative to `hostDir`. The entries are then sorted.
+      Each entry is aligned one column after the parenthesis that `patternOpen` opens.
 
       \throws std::logic_error if `patternOpen` has no parenthesis
       \throws std::runtime_error if `cmakeLists` cannot be read, or has no section between the patterns
