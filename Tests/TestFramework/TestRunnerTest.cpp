@@ -678,7 +678,7 @@ namespace sequoia::testing
       void run_tests() {}
     };
 
-    /** \brief A test that writes its summary to the same file as `summary_collider_test_twin`, through a summary discriminator */
+    /** \brief A test whose summary discriminator gives it the same summary file as `summary_collider_test_twin` */
     class summary_collider_test final : public free_test
     {
     public:
