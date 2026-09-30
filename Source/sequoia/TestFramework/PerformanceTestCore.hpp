@@ -203,20 +203,21 @@ namespace sequoia::testing
     return passed;
   }
 
-  /** \brief A warning if a sleep of `target` lasted `slept`, at least twice as long, and `nullopt`
-             otherwise.
+  /** \brief Returns a warning if `slept` is at least twice `target`, and otherwise returns `nullopt`.
+
+      `slept` is the time taken by a sleep of `target`.
    */
   [[nodiscard]]
   std::optional<std::string> coarse_sleep_warning(std::chrono::duration<double, std::milli> slept, std::chrono::duration<double, std::milli> target);
 
   /** \brief The duration to sleep for in place of `target`, from seven timed sleeps of it.
 
-      The mean and standard deviation are taken over the middle five. If the mean exceeds `target`
-      by more than a standard deviation, the result is the mean plus five standard deviations,
-      rounded up to a whole `Period`; otherwise it is `target`.
+      The mean and standard deviation are taken over the middle five. The result is the mean plus
+      five standard deviations, rounded up to a whole `Period`, if the mean exceeds `target` by more
+      than a standard deviation. Otherwise the result is `target`.
 
-      Writes to `warningStream` any warning from coarse_sleep_warning for the second fastest sleep,
-      since sleeps that long distort any timing built on them.
+      Writes to `warningStream` any warning that `coarse_sleep_warning` gives for the second fastest
+      sleep.
    */
   template<class T, class Period>
   [[nodiscard]]
@@ -231,8 +232,8 @@ namespace sequoia::testing
     }
 
     std::ranges::sort(timings);
-    // The first sleep can end within the timer tick it starts in, short even when every later one
-    // is rounded up to a whole tick
+    // The first sleep can end within the timer tick it starts in. So the first sleep can be short even
+    // when every later sleep is rounded up to a whole tick
     if(const auto sleepWarning{coarse_sleep_warning(duration<double>{timings[1]}, target)})
       warningStream << *sleepWarning;
 
