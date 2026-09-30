@@ -8,17 +8,22 @@
 #pragma once
 
 /** \file
-    \brief Writers for the build artefacts which BuildArtefacts.hpp reads, so that a build can be described without being performed.
+    \brief Writers for the build artefacts which BuildArtefacts.hpp reads, so that a build can be described without
+           being performed.
  */
 
 #include "sequoia/TestFramework/BuildArtefacts.hpp"
 
+#include <initializer_list>
 #include <iosfwd>
 #include <span>
+#include <string_view>
 
 namespace sequoia::testing
 {
-  /// An object file and the files read to produce it, spelled out: what the tests write, and what they compare a reading to
+  /** An object file and the files read to produce it, spelled out: what the tests write, and what they compare a
+      reading to
+   */
   struct compilation_record
   {
     std::filesystem::path object{};
@@ -42,6 +47,20 @@ namespace sequoia::testing
    */
   [[nodiscard]]
   std::u16string to_tracker_spelling(const std::filesystem::path& p);
+
+  /** The line of a tracker log naming `file`. */
+  [[nodiscard]]
+  std::u16string tracker_line(const std::filesystem::path& file);
+
+  /** The `^`-led line of a tracker log naming `sources`, which were compiled together. */
+  [[nodiscard]]
+  std::u16string tracker_sources_line(std::initializer_list<std::filesystem::path> sources);
+
+  /** Writes `text` to `log` in the tracker's encoding: UTF-16, little-endian, behind a byte order mark.
+
+      \throws std::runtime_error if `log` cannot be opened.
+   */
+  void write_tlog(const std::filesystem::path& log, std::u16string_view text);
 
   /// Writes the logs MSBuild's file tracker would.
   void write_tlogs(const std::filesystem::path& tlogDir, std::span<const compilation_record> records);
