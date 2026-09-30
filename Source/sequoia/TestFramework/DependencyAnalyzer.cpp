@@ -366,7 +366,7 @@ namespace sequoia::testing
       [[nodiscard]]
       static files_read_by_build read_files(const build_tree& tree, const project_paths& projPaths)
       {
-        const auto compilations{read_compilations(tree, projPaths.executable())};
+        const auto compilations{read_compilations(tree, projPaths.build().configuration())};
 
         /* A directory whose existing prefix cannot be resolved - a directory without permission, a
            symlink loop - is kept as recorded, and its files fail with that reason when their modification

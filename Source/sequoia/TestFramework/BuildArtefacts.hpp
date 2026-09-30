@@ -14,6 +14,7 @@
 #include <cstddef>
 #include <filesystem>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace sequoia::testing
@@ -67,10 +68,16 @@ namespace sequoia::testing
 
   /** \brief Every compilation the build currently has, each with its source first among its inputs.
 
-      \throws std::runtime_error if the tree was written by a generator whose record of
-      dependencies is not understood, has not been built, or has a record which names none of
-      the objects the build has.
+      If the generator is multi-config, the compilations are those of `configuration`. Otherwise
+      `configuration` is ignored.
+
+      \throws std::runtime_error if the tree
+      -# Was written by a generator whose record of dependencies is not understood;
+      -# Was written by a multi-config generator, and `configuration` is empty;
+      -# Has not been built;
+      -# Was written by a multi-config generator, and holds no record of `configuration`;
+      -# Has a record which names none of the objects the build has.
    */
   [[nodiscard]]
-  compilations read_compilations(const build_tree& tree, const std::filesystem::path& executable);
+  compilations read_compilations(const build_tree& tree, std::string_view configuration);
 }

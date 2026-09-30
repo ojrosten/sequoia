@@ -179,6 +179,7 @@
 #include "TestFramework/OutputFreeTest.hpp"
 #include "TestFramework/PathFreeDiagnostics.hpp"
 #include "TestFramework/PerformanceTestDiagnostics.hpp"
+#include "TestFramework/ProjectPathsFreeTest.hpp"
 #include "TestFramework/RegularStateTransitionDiagnostics.hpp"
 #include "TestFramework/RegularTestDiagnostics.hpp"
 #include "TestFramework/RelationalTestDiagnostics.hpp"
