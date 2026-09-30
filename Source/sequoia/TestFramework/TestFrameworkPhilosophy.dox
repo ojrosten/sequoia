@@ -364,8 +364,8 @@
 	-# `materials_discriminator` gives the test a set of original materials per name.
 
 	A hook declared in any other form is refused at compile time, rather than silently ignored. A hook
-	which is not static is one such form, and a hook returning a `std::string_view` is another. The
-	exception is a private hook, which cannot be detected, and is ignored. A hook sees only the cache.
+	which is not static is one such form, and a hook returning a `std::string_view` is another. A
+	private hook is the exception: no probe can detect it, so it is ignored. A hook sees only the cache.
 	The cache does not record the active configuration of a multi-config build tree, so in such a tree
 	no hook can distinguish Debug from Release. Each hook is a last resort: a record which does not
 	depend on the configuration is better.

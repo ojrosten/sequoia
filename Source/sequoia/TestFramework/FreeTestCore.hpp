@@ -276,13 +276,12 @@ namespace sequoia::testing
       There are three hooks:
       -# `output_discriminator` discriminates the diagnostics files;
       -# `summary_discriminator` discriminates the summary;
-      -# `materials_discriminator` discriminates the committed materials.
+      -# `materials_discriminator` discriminates the original materials.
 
-      Each probe asks three things of a test, for the name of one hook:
+      Each probe is for one hook, and asks three things of a test:
       -# `declared_v`: whether the test declares the hook in any form. A member of that name counts,
          whether static or not, and whatever its signature. Where the name is overloaded, a member
-         callable through `T&`, either with a `const cmake_cache&` or with no arguments, counts. So
-         a non-const member is detected;
+         callable through `T&`, either with a `const cmake_cache&` or with no arguments, counts;
       -# `static_hook_v`: whether the hook can be called through the class with a `const cmake_cache&`;
       -# `string_valued_v`: whether the result of that call converts to `std::string`.
 
