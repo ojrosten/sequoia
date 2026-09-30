@@ -465,6 +465,14 @@ namespace sequoia::testing
         }
       }
     };
+
+    template<class Act, class Vessel>
+    inline constexpr bool acts_on_every_alternative_v{false};
+
+    template<class Act, class... Nascents>
+    inline constexpr bool acts_on_every_alternative_v<Act, std::variant<Nascents...>>{
+      (std::invocable<const Act&, Nascents&, const parsing::commandline::arg_list&> && ...)
+    };
   }
 
   std::string to_string(const return_code code)
@@ -661,9 +669,8 @@ namespace sequoia::testing
     std::vector<nascent_test_vessel> nascentTests{};
     std::vector<project_data> nascentProjects{};
 
-    // Each option acts on the test most recently named on the commandline.
-    auto onNascentTest{
-      [&nascentTests](auto act) {
+    auto updateCurrentNascentTest{
+      [&nascentTests]<class Act>(Act act) requires acts_on_every_alternative_v<Act, nascent_test_vessel> {
         return [&nascentTests, act](const arg_list& args) {
           if(nascentTests.empty())
             throw std::logic_error{"Unable to find nascent test"};
@@ -674,7 +681,7 @@ namespace sequoia::testing
     };
 
     const option diagnosticsOption{"--framework-diagnostics", {"--diagnostics"}, {},
-      onNascentTest([](auto& nascent, const arg_list&) {
+      updateCurrentNascentTest([](auto& nascent, const arg_list&) {
         nascent.flavour(nascent_test_flavour::framework_diagnostics);
       }),
       {},
@@ -682,25 +689,25 @@ namespace sequoia::testing
     };
 
     const option headerOption{"--header", {}, {"header"},
-      onNascentTest([](auto& nascent, const arg_list& args) { nascent.header(args[0]); }),
+      updateCurrentNascentTest([](auto& nascent, const arg_list& args) { nascent.header(args[0]); }),
       {},
       "Name the header declaring the class under test"
     };
 
     const option forenameOption{"--test-class-forename", {"--forename"}, {"forename"},
-      onNascentTest([](auto& nascent, const arg_list& args) { nascent.forename(args[0]); }),
+      updateCurrentNascentTest([](auto& nascent, const arg_list& args) { nascent.forename(args[0]); }),
       {},
       "Name the test class <forename>_test rather than after the header"
     };
 
     const option fullnameOption{"--fullname", {}, {"name"},
-      onNascentTest([](auto& nascent, const arg_list& args) { nascent.full_name(args[0]); }),
+      updateCurrentNascentTest([](auto& nascent, const arg_list& args) { nascent.full_name(args[0]); }),
       {},
       "Name the test class <name> exactly, and its files after it"
     };
 
     const option testingUtilitiesOption{"--testing-utilities", {}, {"header"},
-      onNascentTest([](auto& nascent, const arg_list& args) { nascent.testing_utilities(args[0]); }),
+      updateCurrentNascentTest([](auto& nascent, const arg_list& args) { nascent.testing_utilities(args[0]); }),
       {},
       "Take the value_tester from an existing header beneath Tests; a regular or move-only test then "
       "generates neither testing utilities nor false-negative diagnostics"
@@ -709,7 +716,7 @@ namespace sequoia::testing
     using src_opt = nascent_test_base::gen_source_option;
 
     const option genFreeSourceOption{"--gen-source", {"-g"}, {"namespace"},
-      onNascentTest(
+      updateCurrentNascentTest(
         overloaded{
           [](nascent_behavioural_test& nascent, const arg_list& args) {
             nascent.generate_source_files(src_opt::yes);
@@ -724,7 +731,7 @@ namespace sequoia::testing
     };
 
     const option genSemanticsSourceOption{"--gen-source", {"-g"}, {"dir"},
-      onNascentTest(
+      updateCurrentNascentTest(
         overloaded{
           [](nascent_semantics_test& nascent, const arg_list& args) {
             nascent.generate_source_files(src_opt::yes);
