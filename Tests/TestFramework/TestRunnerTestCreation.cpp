@@ -223,26 +223,29 @@ namespace sequoia::testing
                                , "create", "regular_test", "maths::angle", "long double",
                                               "--fullname", "angle_regular_test"
                                , "create", "move_only_test", "cloud", "double", "--fullname", "cloud_move_only_test"
-                               // Named by a path, normalised, but included from the test's own directory by its name
+                               // The testing utilities are named by a path that needs normalising, and lie in the
+                               // test's own directory, so the test includes them by file name
                                , "create", "regular_test", "maths::probability", "double",
                                               "--fullname", "probability_family_test",
                                               "--testing-utilities", "Stuff/../Maths/ProbabilityTestingUtilities.hpp"
-                               // Named bare, but included from another directory by its path beneath Tests
+                               // The testing utilities are named by file name alone, and lie in another directory,
+                               // so the test includes them by their path beneath Tests
                                , "create", "regular_test", "human", "std::string",
                                               "--fullname", "human_shared_tester_test",
                                               "--testing-utilities", "WidgetTestingUtilities.hpp"
-                               // Fresh types, so that every class each creation registers is new
+                               // The next two creations use new types, so every class they register is new
                                , "create", "regular_test", "stuff::gizmo", "int", "-g", "Stuff",
                                               "--fullname", "gizmo_semantics_test"
                                , "create", "move_only_test", "stuff::gadget", "int", "-g", "Stuff",
                                               "--fullname", "gadget_family_test",
                                               "--testing-utilities", "WidgetTestingUtilities.hpp"
-                               // Named by its full path
+                               // The testing utilities are named by their full path
                                , "create", "regular_test", "maths::angle", "long double",
                                               "--fullname", "angle_family_test",
                                               "--testing-utilities",
                                               (projectPath / "Tests/Maths/AngleTestingUtilities.hpp").generic_string()
-                               // A test whose name ends like a tester's is still among the common includes
+                               // The test's name ends in `utilities`, yet the test's header is added to the common
+                               // includes
                                , "create", "free_test", "Utilities.h", "--fullname", "string_utilities"
                                , "create", "regular_allocation_test", "container",
                                               "--fullname", "container_family_allocation_test",
@@ -396,7 +399,8 @@ namespace sequoia::testing
              "--testing-utilities", "ProbabilityTestingUtilities.hpp",
              "--fullname", "widget_test"});
 
-    // A refusal comes before anything is written: here the type is new, so every file would be too.
+    // The type sprocket is new, so every file for it would be new too: the checks below then see any file
+    // written before the refusal.
     refused("A full name whose file is a companion's",
             {"regular_test", "stuff::sprocket", "int", "-g", "Stuff", "--fullname", "sprocket_testing_utilities"});
 

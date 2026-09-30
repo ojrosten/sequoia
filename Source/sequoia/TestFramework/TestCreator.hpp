@@ -57,12 +57,14 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string project_namespace_for(const std::filesystem::path& sourceProject);
 
-  /** \brief Whether a header create writes is added to the common includes: yes for one declaring
-      a test, which the mains register; no for the testing utilities, which only tests include.
+  /** \brief Whether `create` adds a header it writes to the common includes.
+
+      A header declaring a test is added, since the mains register the test. The testing utilities are
+      not added, since only tests include them.
    */
   enum class add_to_common_includes { no, yes };
 
-  /** \brief A file create writes for the type under test, rather than for the test. */
+  /** \brief A file that `create` writes for the type under test, rather than for the test */
   struct companion_stub
   {
     std::string ending{};
@@ -107,13 +109,17 @@ namespace sequoia::testing
 
     void surname(std::string name) { m_Surname = std::move(name); }
 
-    /** \brief The test's name given whole, in place of the one derived from its forename and surname */
+    /** \brief The test's full name, if one was given. A full name replaces the name derived from the
+        forename and surname.
+     */
     [[nodiscard]]
     const std::optional<std::string>& full_name() const noexcept { return m_FullName; }
 
     void full_name(std::string name) { m_FullName = std::move(name); }
 
-    /** \brief An existing header holding the value_tester of the type under test, which the test includes */
+    /** \brief An existing header that holds the `value_tester` for the type under test, if one was given.
+        The test includes this header.
+     */
     [[nodiscard]]
     const std::filesystem::path& testing_utilities() const noexcept { return m_TestingUtilities; }
 
@@ -154,15 +160,18 @@ namespace sequoia::testing
 
     /** \brief Creates the files, then registers the test classes in every main.
 
-        The companion files are named for the type under test, `type_file_stem()` followed by the stub;
-        the test's own files, for the test, `test_file_stem()` followed by the stub's extension.
+        Each companion file is named `type_file_stem()` followed by its stub. Each of the test's own files
+        is named `test_file_stem()` followed by the extension of its stub.
 
-        Where the header under test cannot be found and its generation was asked for, `whereAbsent` gives
-        the path at which it is to be generated and `generate` writes it there.
+        If the header under test cannot be found and its generation was requested, `whereAbsent` gives the
+        path for the header and `generate` writes the header there.
 
-        \throws std::runtime_error, before anything is written, if the header under test cannot be found
-        and is not to be generated, if the testing utilities cannot be found unambiguously, or if a full
-        name was given which is not usable.
+        \throws std::runtime_error if
+        -# The header under test cannot be found and is not to be generated;
+        -# The testing utilities do not name exactly one file beneath the tests repository;
+        -# A full name was given which cannot name the test.
+
+        Every check is made before any file is written.
      */
     template<invocable_exact_r<std::filesystem::path, std::filesystem::path> WhereAbsent,
              std::invocable<std::filesystem::path> Generator,
@@ -177,28 +186,32 @@ namespace sequoia::testing
 
     /** \brief The full name if one was given, else `<forename>_<surname>`.
 
-        It is the class the test's own files hold, save for a framework-diagnostics pair, whose two
-        classes are named from the forename and surname, and which this names jointly.
+        The test's own files declare a class with this name. A framework-diagnostics test is the exception:
+        its files declare two classes, each named from the forename and surname, and `test_name()` names
+        the pair.
      */
     [[nodiscard]]
     std::string test_name() const;
 
-    /** \brief The stem of the test's own files: its name in camel case */
+    /** \brief The stem of the test's own files: the test's name in camel case */
     [[nodiscard]]
     std::string test_file_stem() const;
 
-    /** \brief The path by which the test's header includes the testing utilities: relative to the
-        test's own directory when they lie within it, else to the tests repository.
+    /** \brief The path by which the test's header includes the testing utilities.
+
+        The path is relative to the test's own directory if the testing utilities lie within that
+        directory, and otherwise relative to the tests repository.
      */
     [[nodiscard]]
     std::string testing_utilities_include() const;
 
-    /** \brief The stem of the files named for the type under test: its name in camel case */
+    /** \brief The stem of the files named for the type under test: the type's name in camel case */
     [[nodiscard]]
     const std::string& type_file_stem() const noexcept { return m_TypeFileStem; }
 
-    /** \brief Names the type under test, from which follow `type_file_stem()` and, unless one was given,
-        the header declaring the type: the stem followed by `.hpp`.
+    /** \brief Sets the name of the type under test, and derives `type_file_stem()` from that name.
+
+        If no header was given for the type, the header is taken to be `type_file_stem()` followed by `.hpp`.
      */
     void set_type_name(std::string_view name);
 
@@ -240,18 +253,20 @@ namespace sequoia::testing
 
     void finalize_header(const std::filesystem::path& sourcePath);
 
-    /** \brief Replaces the testing utilities named on the commandline with the one file beneath the
-        tests repository they name.
+    /** \brief Replaces the path to the testing utilities given on the commandline with the path of the
+        file it names beneath the tests repository.
 
-        \throws std::runtime_error if they name no such file, or several.
+        \throws std::runtime_error if the given path names no such file, or several.
      */
     void locate_testing_utilities();
 
     /** \brief Checks that the full name can name the test.
 
-        \throws std::runtime_error if the full name is not an identifier, names a test already registered,
-        or would give the test a file whose name, ignoring case, is that of a companion or of a file already
-        present.
+        \throws std::runtime_error if the full name
+        -# Is not an identifier;
+        -# Names a test which is already registered;
+        -# Would give one of the test's files the name of a companion file or of a file already present,
+           ignoring case.
      */
     void check_full_name(std::span<const std::filesystem::path> companionFiles,
                          std::span<const std::filesystem::path> ownFiles) const;
@@ -288,7 +303,7 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::vector<std::string> stubs();
 
-    /** \brief The files for the type under test: its value_tester and false-negative diagnostics */
+    /** \brief The files for the type under test: the type's `value_tester` and false-negative diagnostics */
     [[nodiscard]]
     static std::vector<companion_stub> companion_stubs();
   private:

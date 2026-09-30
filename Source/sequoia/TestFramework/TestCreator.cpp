@@ -33,9 +33,6 @@ namespace sequoia::testing
   {
     constexpr auto path_of{[](const fs::directory_entry& entry) { return entry.path(); }};
 
-    /** \brief Whether `name` can name a namespace or a class: ASCII letters, digits and underscores, not led by
-        a digit
-     */
     [[nodiscard]]
     bool is_identifier(std::string_view name)
     {
@@ -373,10 +370,10 @@ namespace sequoia::testing
     return (isWithin ? withinHostDir : m_TestingUtilities.lexically_relative(m_Paths.tests().repo())).generic_string();
   }
 
-  /** The name is normalised, and an absolute one made relative to the tests repository, so that
-      `./Stuff/X.hpp`, `Stuff/../Maths/X.hpp` and a full path are all found. It then names every regular
-      file beneath the repository whose path ends with it, and must name exactly one: a directory of the
-      same name is not a candidate.
+  /** The given path is normalised, and made relative to the tests repository if it is absolute. So
+      `./Stuff/X.hpp`, `Stuff/../Maths/X.hpp` and a full path all find their file. The candidates are
+      the regular files beneath the repository whose paths end with the given path; a directory is never
+      a candidate. Exactly one file must be a candidate.
    */
   void nascent_test_base::locate_testing_utilities()
   {
@@ -466,7 +463,8 @@ namespace sequoia::testing
       }
     };
 
-    // The path is made relative lexically, since resolving it would spell it as the file already present does.
+    // The path is made relative lexically, to keep the spelling requested; resolving the path would give the
+    // spelling of the file already present.
     auto relativeToRoot{
       [this](const fs::path& p) { return p.lexically_relative(m_Paths.project_root()).generic_string(); }
     };
@@ -753,8 +751,8 @@ namespace sequoia::testing
 
     set_type_name(forename());
 
-    // Testing utilities named on the commandline hold the value_tester, and its false-negative
-    // diagnostics belong with it, so neither companion is generated.
+    // No companion is generated if testing utilities were named on the commandline: they hold the
+    // value_tester, and the value_tester's false-negative diagnostics belong with it.
     nascent_test_base::finalize([this](const fs::path& filename) { return where_header_absent(filename); },
                                 [this, &nameSpace](const fs::path& headerPath) {
                                   generate_header(headerPath, nameSpace);

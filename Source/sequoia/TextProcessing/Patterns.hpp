@@ -15,7 +15,6 @@
 
 namespace sequoia
 {
-  /** \brief Whether `c` is an ASCII letter, digit or underscore: a character of an identifier spelt in ASCII */
   inline constexpr auto is_identifier_character{
     [](char c) noexcept {
       return ((c >= 'a') && (c <= 'z'))
