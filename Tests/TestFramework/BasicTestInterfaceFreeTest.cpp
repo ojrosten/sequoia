@@ -255,9 +255,8 @@ namespace sequoia::testing
     }
   }
 
-  /** The original materials of a discriminated test hold one directory per configuration: `Platypus`
-      and `Echidna`. The discriminator must name one of these directories portably. Nothing else may
-      sit beside the directories.
+  /** A discriminated test's original materials hold one directory per configuration: `Platypus` and `Echidna`.
+      The discriminator must name one of these directories portably. Nothing else may sit beside them.
    */
   void basic_test_interface_free_test::test_discriminated_materials(const project_paths& projPaths)
   {
