@@ -558,7 +558,7 @@ namespace sequoia::testing
            std::invocable<std::string&> FileTransformer>
   void nascent_test_base::finalize(WhereAbsent whereAbsent,
                                    Generator generate,
-                                   const std::vector<companion_stub>& companionStubs,
+                                   const std::vector<companion_specification>& companionSpecifications,
                                    const std::vector<std::string>& ownStubs,
                                    const std::vector<std::string>& testClasses,
                                    std::string_view nameStub,
@@ -578,15 +578,15 @@ namespace sequoia::testing
     finalize_header(srcPath);
 
     auto companionFile{
-      [this](const companion_stub& stub) { return (host_dir() / type_file_stem()) += stub.ending; }
+      [this](const companion_specification& specification) { return (host_dir() / type_file_stem()) += specification.stub; }
     };
 
     auto ownFile{
       [this](const std::string& stub) { return (host_dir() / test_file_stem()) += fs::path{stub}.extension(); }
     };
 
-    const auto companionFiles{companionStubs | std::views::transform(companionFile) | std::ranges::to<std::vector>()};
-    const auto ownFiles      {ownStubs       | std::views::transform(ownFile)       | std::ranges::to<std::vector>()};
+    const auto companionFiles{companionSpecifications | std::views::transform(companionFile) | std::ranges::to<std::vector>()};
+    const auto ownFiles      {ownStubs                | std::views::transform(ownFile)       | std::ranges::to<std::vector>()};
 
     // Everything is checked before anything is written.
     if(m_FullName)
@@ -597,9 +597,9 @@ namespace sequoia::testing
 
     fs::create_directories(host_dir());
 
-    for(const auto& [stub, file] : std::views::zip(companionStubs, companionFiles))
+    for(const auto& [specification, file] : std::views::zip(companionSpecifications, companionFiles))
     {
-      stream() << create_file(nameStub, stub.ending, file, stub.include, transformer) << '\n';
+      stream() << create_file(nameStub, specification.stub, file, specification.include, transformer) << '\n';
     }
 
     for(const auto& [stub, file] : std::views::zip(ownStubs, ownFiles))
@@ -688,7 +688,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::vector<companion_stub> nascent_semantics_test::companion_stubs()
+  std::vector<companion_specification> nascent_semantics_test::companion_specifications()
   {
     return {{"TestingUtilities.hpp",   add_to_common_includes::no},
             {"TestingDiagnostics.hpp", add_to_common_includes::yes},
@@ -757,7 +757,7 @@ namespace sequoia::testing
                                 [this, &nameSpace](const fs::path& headerPath) {
                                   generate_header(headerPath, nameSpace);
                                 },
-                                testing_utilities().empty() ? companion_stubs() : std::vector<companion_stub>{},
+                                testing_utilities().empty() ? companion_specifications() : std::vector<companion_specification>{},
                                 to_stubs(*this),
                                 test_classes(),
                                 "MyClass",

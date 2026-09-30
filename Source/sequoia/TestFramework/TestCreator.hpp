@@ -59,14 +59,15 @@ namespace sequoia::testing
 
   enum class add_to_common_includes { no, yes };
 
-  /** \brief The ending shared by the names of a template and of the companion file created from it, and
-      whether to add that file to the common includes.
+  /** \brief The specification of a companion file: its stub, and whether to add the file to the common
+      includes.
 
-      `include` is ignored unless the companion file is a header.
+      `stub` ends both the companion file's name and the name of the file in the test templates directory
+      from which the companion file is created. `include` is ignored unless the companion file is a header.
    */
-  struct companion_stub
+  struct companion_specification
   {
-    std::string ending{};
+    std::string stub{};
     add_to_common_includes include{};
   };
 
@@ -155,9 +156,9 @@ namespace sequoia::testing
 
     /** \brief Creates the files, then registers the test classes such that they are executed.
 
-        Each companion file is named `type_file_stem()` followed by the `ending` of its stub. Each of the
-        test's own files is named `test_file_stem()` followed by the extension of its stub. A file which
-        already exists is not overwritten.
+        Each companion file is named `type_file_stem()` followed by the `stub` of its specification. Each
+        of the test's own files is named `test_file_stem()` followed by the extension of its stub. A file
+        which already exists is not overwritten.
 
         `whereAbsent` is called with the name of the header under test, and `generate` with the path
         `whereAbsent` returns. Neither is called unless the header cannot be found and its generation was
@@ -175,7 +176,7 @@ namespace sequoia::testing
              std::invocable<std::string&> FileTransformer>
     void finalize(WhereAbsent whereAbsent,
                   Generator generate,
-                  const std::vector<companion_stub>& companionStubs,
+                  const std::vector<companion_specification>& companionSpecifications,
                   const std::vector<std::string>& ownStubs,
                   const std::vector<std::string>& testClasses,
                   std::string_view nameStub,
@@ -292,11 +293,11 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::vector<std::string> stubs();
 
-    /** \brief The stubs of the companion files: the testing utilities, and the header and source of the
-        false-negative diagnostics.
+    /** \brief The specifications of the companion files: the testing utilities, and the header and source
+        of the false-negative diagnostics.
      */
     [[nodiscard]]
-    static std::vector<companion_stub> companion_stubs();
+    static std::vector<companion_specification> companion_specifications();
   private:
     std::string m_QualifiedName{};
 
