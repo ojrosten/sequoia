@@ -1,2 +1,2 @@
 characters_free_test
-Standard Top Level Checks:               123;  Failures:  0  [Deep checks: 123]
+Standard Top Level Checks:               133;  Failures:  0  [Deep checks: 133]

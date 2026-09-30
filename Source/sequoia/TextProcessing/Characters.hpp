@@ -8,7 +8,7 @@
 #pragma once
 
 /** \file
-    \brief Classifications and conversions of a `char`, and the lowercase conversion of a string.
+    \brief Classifications and conversions of a `char`, and case conversions of a string.
 
     Only ASCII letters and digits are recognised as letters and digits. `is_identifier_character` also accepts `_`.
     A conversion changes the case of an ASCII letter and leaves every other `char` as it is. None of these helpers
@@ -72,12 +72,28 @@ namespace sequoia
         return str;
       }
     };
+
+    struct to_uppercase_fn
+    {
+      [[nodiscard]]
+      constexpr char operator()(std::same_as<char> auto c) const
+      {
+        return is_lowercase(c) ? static_cast<char>(c - 'a' + 'A') : c;
+      }
+
+      [[nodiscard]]
+      constexpr std::string operator()(std::string_view text) const
+      {
+        std::string str{text};
+        std::ranges::transform(str, str.begin(), *this);
+        return str;
+      }
+    };
   }
 
   /** \brief Converts a `char`, or a copy of a string, to lowercase. */
   inline constexpr impl::to_lowercase_fn to_lowercase{};
 
-  inline constexpr auto to_uppercase{
-    [](std::same_as<char> auto c){ return is_lowercase(c) ? static_cast<char>(c - 'a' + 'A') : c; }
-  };
+  /** \brief Converts a `char`, or a copy of a string, to uppercase. */
+  inline constexpr impl::to_uppercase_fn to_uppercase{};
 }

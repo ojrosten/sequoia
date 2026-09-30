@@ -58,6 +58,9 @@ namespace sequoia::testing
     STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), std::string&>,       std::string>);
     STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), const std::string&>, std::string>);
     STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), std::string>,        std::string>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_uppercase), std::string&>,       std::string>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_uppercase), const std::string&>, std::string>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_uppercase), std::string>,        std::string>);
   }
 
   void characters_free_test::test_classification()
@@ -158,6 +161,7 @@ namespace sequoia::testing
     STATIC_CHECK(to_uppercase('{') == '{');
 
     STATIC_CHECK(to_lowercase(std::string_view{"FooBAR"}) == "foobar");
+    STATIC_CHECK(to_uppercase(std::string_view{"FooBAR"}) == "FOOBAR");
 
     check(equality, "An uppercase letter to lowercase", to_lowercase('A'), 'a');
     check(equality, "A lowercase letter to lowercase",  to_lowercase('a'), 'a');
@@ -178,8 +182,15 @@ namespace sequoia::testing
     check(equality, "The lowercase leaves other characters",   to_lowercase("Tests/Foo_1.cpp"), "tests/foo_1.cpp"s);
     check(equality, "The lowercase leaves bytes beyond ASCII", to_lowercase("\xC3\x89" "A"),    "\xC3\x89" "a"s);
 
+    check(equality, "The uppercase of an empty string",        to_uppercase(""),                ""s);
+    check(equality, "The uppercase of a letter",               to_uppercase("a"),               "A"s);
+    check(equality, "The uppercase of mixed case",             to_uppercase("FooBAR"),          "FOOBAR"s);
+    check(equality, "The uppercase leaves other characters",   to_uppercase("Tests/Foo_1.cpp"), "TESTS/FOO_1.CPP"s);
+    check(equality, "The uppercase leaves bytes beyond ASCII", to_uppercase("\xC3\xA9" "a"),    "\xC3\xA9" "A"s);
+
     std::string original{"FooBAR"};
     check(equality, "The lowercase of a modifiable string", to_lowercase(original), "foobar"s);
+    check(equality, "The uppercase of a modifiable string", to_uppercase(original), "FOOBAR"s);
     check(equality, "A modifiable string is left as it is", original, "FooBAR"s);
   }
 }
