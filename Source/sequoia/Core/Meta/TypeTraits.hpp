@@ -163,19 +163,22 @@ namespace sequoia
       @{
    */
 
-  template<class T>
-  inline constexpr bool has_gettable_elements{requires (T & t) { std::get<0>(t); }};
+  namespace impl
+  {
+    template<class T>
+    inline constexpr bool has_gettable_elements{requires (T & t) { std::get<0>(t); }};
 
-  /** \brief The `I`th element of a heterogeneous container, as a value type.
+    /** \brief The `I`th element of a heterogeneous container, as a value type.
 
-      Named rather than spelled inline at each use, where the same `decltype` appeared twice.
-      Backported from `modules-native`, which needs it for a further reason that does not apply
-      here: MSVC evaluates the inline form as `false` for `std::variant` when the enclosing
-      variable template is instantiated across a module boundary; reported 2026-09-07,
-      <https://developercommunity.visualstudio.com/t/C-modules-reject-first-imported-specia/11148618>.
-   */
-  template<class T, std::size_t I>
-  using gettable_element_t = std::remove_cvref_t<decltype(std::get<I>(std::declval<T&>()))>;
+        Named rather than spelled inline at each use, where the same `decltype` appeared twice.
+        Backported from `modules-native`, which needs it for a further reason that does not apply
+        here: MSVC evaluates the inline form as `false` for `std::variant` when the enclosing
+        variable template is instantiated across a module boundary; reported 2026-09-07,
+        <https://developercommunity.visualstudio.com/t/C-modules-reject-first-imported-specia/11148618>.
+     */
+    template<class T, std::size_t I>
+    using gettable_element_t = std::remove_cvref_t<decltype(std::get<I>(std::declval<T&>()))>;
+  }
 
   template<class T>
   struct is_deep_equality_comparable;
@@ -186,26 +189,30 @@ namespace sequoia
   template<class T>
   using is_deep_equality_comparable_t = is_deep_equality_comparable<T>::type;
 
-  template<class T, std::size_t... I>
-  inline constexpr bool heterogeneous_deep_equality_v{
-    requires(T & t, std::index_sequence<I...>) {
-      requires (is_deep_equality_comparable_v<gettable_element_t<T, I>> && ...);
-    }
-  };
-
-  template<class T, std::size_t...I>
-  constexpr bool has_heterogeneous_deep_equality(std::index_sequence<I...>)
+  namespace impl
   {
-    return heterogeneous_deep_equality_v<T, I...>;
+    template<class T, std::size_t... I>
+    inline constexpr bool heterogeneous_deep_equality_v{
+      requires(T & t, std::index_sequence<I...>) {
+        requires (is_deep_equality_comparable_v<gettable_element_t<T, I>> && ...);
+      }
+    };
+
+    template<class T, std::size_t...I>
+    constexpr bool has_heterogeneous_deep_equality(std::index_sequence<I...>)
+    {
+      return heterogeneous_deep_equality_v<T, I...>;
+    }
+
+    template<class T>
+    struct heterogeneous_deep_equality;
+
+    template<template<class...> class T, class... Ts>
+    struct heterogeneous_deep_equality<T<Ts...>>
+      : std::bool_constant<
+          has_heterogeneous_deep_equality<T<Ts...>>(std::make_index_sequence<sizeof...(Ts)>{})>
+    {};
   }
-
-  template<class T>
-  struct heterogeneous_deep_equality;
-
-  template<template<class...> class T, class... Ts>
-  struct heterogeneous_deep_equality<T<Ts...>>
-    : std::bool_constant<has_heterogeneous_deep_equality<T<Ts...>>(std::make_index_sequence<sizeof...(Ts)>{})>
-  {};
 
   template<class T>
   struct is_deep_equality_comparable : std::bool_constant<std::equality_comparable<T> && !std::is_array_v<T>>
@@ -213,12 +220,16 @@ namespace sequoia
 
   template<class T>
     requires has_value_type_v<T>
-  struct is_deep_equality_comparable<T> : std::bool_constant<std::equality_comparable<T>&& is_deep_equality_comparable<typename T::value_type>::value>
+  struct is_deep_equality_comparable<T>
+    : std::bool_constant<   std::equality_comparable<T>
+                         && is_deep_equality_comparable<typename T::value_type>::value>
   {};
 
   template<template<class...> class T, class... Ts>
-    requires (!has_value_type_v<T<Ts...>> && has_gettable_elements<T<Ts...>>)
-  struct is_deep_equality_comparable<T<Ts...>> : std::bool_constant<std::equality_comparable<T<Ts...>> && heterogeneous_deep_equality<T<Ts...>>::value>
+    requires (!has_value_type_v<T<Ts...>> && impl::has_gettable_elements<T<Ts...>>)
+  struct is_deep_equality_comparable<T<Ts...>>
+    : std::bool_constant<   std::equality_comparable<T<Ts...>>
+                         && impl::heterogeneous_deep_equality<T<Ts...>>::value>
   {};
 
   /** @} */ // end of deep_equality group
@@ -226,7 +237,7 @@ namespace sequoia
   /** @defgroup deep_totally_ordered The deep_totally_ordered Group
       @{
    */
-  
+
   template<class T>
   struct is_deep_totally_ordered;
 
@@ -236,26 +247,30 @@ namespace sequoia
   template<class T>
   using is_deep_totally_ordered_t = is_deep_totally_ordered<T>::type;
 
-  template<class T, std::size_t... I>
-  inline constexpr bool heterogeneous_deep_total_order_v{
-    requires(T & t, std::index_sequence<I...>) {
-      requires (is_deep_totally_ordered_v<gettable_element_t<T, I>> && ...);
-    }
-  };
-
-  template<class T, std::size_t...I>
-  constexpr bool has_heterogeneous_deep_total_order(std::index_sequence<I...>)
+  namespace impl
   {
-    return heterogeneous_deep_total_order_v<T, I...>;
+    template<class T, std::size_t... I>
+    inline constexpr bool heterogeneous_deep_total_order_v{
+      requires(T & t, std::index_sequence<I...>) {
+        requires (is_deep_totally_ordered_v<gettable_element_t<T, I>> && ...);
+      }
+    };
+
+    template<class T, std::size_t...I>
+    constexpr bool has_heterogeneous_deep_total_order(std::index_sequence<I...>)
+    {
+      return heterogeneous_deep_total_order_v<T, I...>;
+    }
+
+    template<class T>
+    struct heterogeneous_deep_total_order;
+
+    template<template<class...> class T, class... Ts>
+    struct heterogeneous_deep_total_order<T<Ts...>>
+      : std::bool_constant<
+          has_heterogeneous_deep_total_order<T<Ts...>>(std::make_index_sequence<sizeof...(Ts)>{})>
+    {};
   }
-
-  template<class T>
-  struct heterogeneous_deep_total_order;
-
-  template<template<class...> class T, class... Ts>
-  struct heterogeneous_deep_total_order<T<Ts...>>
-    : std::bool_constant<has_heterogeneous_deep_total_order<T<Ts...>>(std::make_index_sequence<sizeof...(Ts)>{})>
-  {};
 
   template<class T>
   struct is_deep_totally_ordered : std::bool_constant<std::totally_ordered<T> && !std::is_array_v<T>>
@@ -263,14 +278,18 @@ namespace sequoia
 
   template<class T>
     requires has_value_type_v<T>
-  struct is_deep_totally_ordered<T> : std::bool_constant<std::totally_ordered<T>&& is_deep_totally_ordered<typename T::value_type>::value>
+  struct is_deep_totally_ordered<T>
+    : std::bool_constant<   std::totally_ordered<T>
+                         && is_deep_totally_ordered<typename T::value_type>::value>
   {};
 
   template<template<class...> class T, class... Ts>
-    requires (!has_value_type_v<T<Ts...>> && has_gettable_elements<T<Ts...>>)
-  struct is_deep_totally_ordered<T<Ts...>> : std::bool_constant<std::totally_ordered<T<Ts...>> && heterogeneous_deep_total_order<T<Ts...>>::value>
+    requires (!has_value_type_v<T<Ts...>> && impl::has_gettable_elements<T<Ts...>>)
+  struct is_deep_totally_ordered<T<Ts...>>
+    : std::bool_constant<   std::totally_ordered<T<Ts...>>
+                         && impl::heterogeneous_deep_total_order<T<Ts...>>::value>
   {};
-  
+
   /** @} */ // end of deep_totally_ordered group
 
   /** @defgroup deep_copy_constructible The deep_copy_constructible Group
@@ -293,27 +312,30 @@ namespace sequoia
   template<class T>
   using is_deep_copy_constructible_t = is_deep_copy_constructible<T>::type;
 
-  template<class T, std::size_t... I>
-  inline constexpr bool heterogeneous_deep_copy_constructibility_v{
-    requires(T & t, std::index_sequence<I...>) {
-      requires (is_deep_copy_constructible_v<gettable_element_t<T, I>> && ...);
-    }
-  };
-
-  template<class T, std::size_t...I>
-  constexpr bool has_heterogeneous_deep_copy_constructibility(std::index_sequence<I...>)
+  namespace impl
   {
-    return heterogeneous_deep_copy_constructibility_v<T, I...>;
+    template<class T, std::size_t... I>
+    inline constexpr bool heterogeneous_deep_copy_constructibility_v{
+      requires(T & t, std::index_sequence<I...>) {
+        requires (is_deep_copy_constructible_v<gettable_element_t<T, I>> && ...);
+      }
+    };
+
+    template<class T, std::size_t...I>
+    constexpr bool has_heterogeneous_deep_copy_constructibility(std::index_sequence<I...>)
+    {
+      return heterogeneous_deep_copy_constructibility_v<T, I...>;
+    }
+
+    template<class T>
+    struct heterogeneous_deep_copy_constructibility;
+
+    template<template<class...> class T, class... Ts>
+    struct heterogeneous_deep_copy_constructibility<T<Ts...>>
+      : std::bool_constant<
+          has_heterogeneous_deep_copy_constructibility<T<Ts...>>(std::make_index_sequence<sizeof...(Ts)>{})>
+    {};
   }
-
-  template<class T>
-  struct heterogeneous_deep_copy_constructibility;
-
-  template<template<class...> class T, class... Ts>
-  struct heterogeneous_deep_copy_constructibility<T<Ts...>>
-    : std::bool_constant<
-        has_heterogeneous_deep_copy_constructibility<T<Ts...>>(std::make_index_sequence<sizeof...(Ts)>{})>
-  {};
 
   template<class T>
   struct is_deep_copy_constructible : std::bool_constant<std::is_copy_constructible_v<T>>
@@ -327,10 +349,10 @@ namespace sequoia
   {};
 
   template<template<class...> class T, class... Ts>
-    requires (!has_value_type_v<T<Ts...>> && has_gettable_elements<T<Ts...>>)
+    requires (!has_value_type_v<T<Ts...>> && impl::has_gettable_elements<T<Ts...>>)
   struct is_deep_copy_constructible<T<Ts...>>
     : std::bool_constant<   std::is_copy_constructible_v<T<Ts...>>
-                         && heterogeneous_deep_copy_constructibility<T<Ts...>>::value>
+                         && impl::heterogeneous_deep_copy_constructibility<T<Ts...>>::value>
   {};
 
   /** @} */ // end of deep_copy_constructible group
@@ -359,43 +381,46 @@ namespace sequoia
   template<class T>
   using is_deep_copy_assignable_t = is_deep_copy_assignable<T>::type;
 
-  template<class T, std::size_t... I>
-  inline constexpr bool heterogeneous_deep_copy_assignability_v{
-    requires(T & t, std::index_sequence<I...>) {
-      requires (is_deep_copy_assignable_v<gettable_element_t<T, I>> && ...);
+  namespace impl
+  {
+    template<class T, std::size_t... I>
+    inline constexpr bool heterogeneous_deep_copy_assignability_v{
+      requires(T & t, std::index_sequence<I...>) {
+        requires (is_deep_copy_assignable_v<gettable_element_t<T, I>> && ...);
+      }
+    };
+
+    template<class T, std::size_t...I>
+    constexpr bool has_heterogeneous_deep_copy_assignability(std::index_sequence<I...>)
+    {
+      return heterogeneous_deep_copy_assignability_v<T, I...>;
     }
-  };
 
-  template<class T, std::size_t...I>
-  constexpr bool has_heterogeneous_deep_copy_assignability(std::index_sequence<I...>)
-  {
-    return heterogeneous_deep_copy_assignability_v<T, I...>;
+    template<class T>
+    struct heterogeneous_deep_copy_assignability;
+
+    template<template<class...> class T, class... Ts>
+    struct heterogeneous_deep_copy_assignability<T<Ts...>>
+      : std::bool_constant<
+          has_heterogeneous_deep_copy_assignability<T<Ts...>>(std::make_index_sequence<sizeof...(Ts)>{})>
+    {};
+
+    template<class T>
+    struct copy_assigned_element
+    {
+      using type = T::value_type;
+    };
+
+    template<class T>
+      requires requires { typename T::key_type; typename T::mapped_type; }
+    struct copy_assigned_element<T>
+    {
+      using type = std::pair<typename T::key_type, typename T::mapped_type>;
+    };
+
+    template<class T>
+    using copy_assigned_element_t = copy_assigned_element<T>::type;
   }
-
-  template<class T>
-  struct heterogeneous_deep_copy_assignability;
-
-  template<template<class...> class T, class... Ts>
-  struct heterogeneous_deep_copy_assignability<T<Ts...>>
-    : std::bool_constant<
-        has_heterogeneous_deep_copy_assignability<T<Ts...>>(std::make_index_sequence<sizeof...(Ts)>{})>
-  {};
-
-  template<class T>
-  struct copy_assigned_element
-  {
-    using type = T::value_type;
-  };
-
-  template<class T>
-    requires requires { typename T::key_type; typename T::mapped_type; }
-  struct copy_assigned_element<T>
-  {
-    using type = std::pair<typename T::key_type, typename T::mapped_type>;
-  };
-
-  template<class T>
-  using copy_assigned_element_t = copy_assigned_element<T>::type;
 
   template<class T>
   struct is_deep_copy_assignable : std::bool_constant<std::is_copy_assignable_v<T>>
@@ -406,14 +431,14 @@ namespace sequoia
   struct is_deep_copy_assignable<T>
     : std::bool_constant<   std::is_copy_assignable_v<T>
                          && is_deep_copy_constructible<typename T::value_type>::value
-                         && is_deep_copy_assignable<copy_assigned_element_t<T>>::value>
+                         && is_deep_copy_assignable<impl::copy_assigned_element_t<T>>::value>
   {};
 
   template<template<class...> class T, class... Ts>
-    requires (!has_value_type_v<T<Ts...>> && has_gettable_elements<T<Ts...>>)
+    requires (!has_value_type_v<T<Ts...>> && impl::has_gettable_elements<T<Ts...>>)
   struct is_deep_copy_assignable<T<Ts...>>
     : std::bool_constant<   std::is_copy_assignable_v<T<Ts...>>
-                         && heterogeneous_deep_copy_assignability<T<Ts...>>::value>
+                         && impl::heterogeneous_deep_copy_assignability<T<Ts...>>::value>
   {};
 
   /** @} */ // end of deep_copy_assignable group
