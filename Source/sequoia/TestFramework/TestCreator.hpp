@@ -50,21 +50,16 @@ namespace sequoia::testing
 
   enum class nascent_test_flavour { standard, framework_diagnostics };
 
-  /** \brief The namespace `create` substitutes for the project's: the source directory's name.
+  /** \brief The name of the directory `sourceProject`.
 
-      \throws std::runtime_error if the directory does not exist or its name cannot name a namespace.
+      \throws std::runtime_error if `sourceProject` is not a directory, or its name is not an identifier.
    */
   [[nodiscard]]
   std::string project_namespace_for(const std::filesystem::path& sourceProject);
 
-  /** \brief Whether `create` adds a header it writes to the common includes.
-
-      A header declaring a test is added, since the mains register the test. The testing utilities are
-      not added, since only tests include them.
-   */
   enum class add_to_common_includes { no, yes };
 
-  /** \brief A file that `create` writes for the type under test, rather than for the test */
+  /** \brief A file written for the type under test, rather than for the test */
   struct companion_stub
   {
     std::string ending{};
