@@ -38,14 +38,11 @@ namespace sequoia::testing
     constexpr auto npos{std::string::npos};
     using size_type = std::string::size_type;
 
-    // Identifiers may hold multi-byte UTF-8 characters, so no byte beyond ASCII is a delimiter
-    constexpr auto is_word_delimiter{[](char c){ return is_ascii(c) && !is_identifier_character(c); }};
-
     /** Whether a number, a digit or a `-` then a digit, begins at `pos`. */
     [[nodiscard]]
     bool begins_number(std::string_view text, size_type pos)
     {
-      auto digitAt{[text](size_type i){ return (i < text.size()) && is_digit(text[i]); }};
+      auto digitAt{[text](size_type i){ return (i < text.size()) && ascii::is_digit(text[i]); }};
       return digitAt(pos) || ((pos < text.size()) && (text[pos] == '-') && digitAt(pos + 1));
     }
 
@@ -250,7 +247,7 @@ namespace sequoia::testing
       }
       else
       {
-        const bool wholeBytes{!hex.empty() && (hex.size() % 2 == 0) && std::ranges::all_of(hex, is_hex_digit)};
+        const bool wholeBytes{!hex.empty() && (hex.size() % 2 == 0) && std::ranges::all_of(hex, ascii::is_hex_digit)};
         if(!wholeBytes || (hex.size() > 2 * sizeof(T)))
           return std::nullopt;
 
@@ -320,7 +317,7 @@ namespace sequoia::testing
 
       auto beginsBitPattern{[name](size_type pos){ return (name[pos - 1] == '[') && (name[pos - 2] == ')'); }};
       auto mayBeginLiteral{
-        [name, &beginsBitPattern](size_type pos){ return is_digit(name[pos]) || beginsBitPattern(pos); }
+        [name, &beginsBitPattern](size_type pos){ return ascii::is_digit(name[pos]) || beginsBitPattern(pos); }
       };
 
       const auto candidates{std::views::iota(from, name.size() - 1)};
@@ -390,7 +387,7 @@ namespace sequoia::testing
     [[nodiscard]]
     size_type erase_literal_suffix(std::string& name, size_type pos)
     {
-      if((pos >= name.size()) || !is_alphabetic(name[pos]))
+      if((pos >= name.size()) || !ascii::is_alphabetic(name[pos]))
         return pos;
 
       const auto suffixEnd{name.find_first_of(",>}", pos)};
@@ -418,10 +415,10 @@ namespace sequoia::testing
         if(pos == npos)
           break;
 
-        const bool continuesIdentifier{!is_word_delimiter(name[pos - 1])};
+        const bool continuesIdentifier{!is_identifier_delimiter(name[pos - 1])};
         if(continuesIdentifier)
         {
-          const auto identifierEnd{std::ranges::find_if(name.begin() + pos, name.end(), is_word_delimiter)};
+          const auto identifierEnd{std::ranges::find_if(name.begin() + pos, name.end(), is_identifier_delimiter)};
           pos = std::ranges::distance(name.begin(), identifierEnd);
           continue;
         }
@@ -433,7 +430,7 @@ namespace sequoia::testing
 
         if(pos + 1 < name.size())
         {
-          const auto digitsEnd{std::ranges::find_if_not(name.begin() + pos + 1, name.end(), is_digit)};
+          const auto digitsEnd{std::ranges::find_if_not(name.begin() + pos + 1, name.end(), ascii::is_digit)};
           pos = std::ranges::distance(name.begin(), digitsEnd);
         }
 
@@ -454,7 +451,9 @@ namespace sequoia::testing
 
       // Excludes, for example, mystd::span and foo::std::span
       auto startsQualifiedName{
-        [&name](size_type pos){ return (pos == 0) || (is_word_delimiter(name[pos - 1]) && (name[pos - 1] != ':')); }
+        [&name](size_type pos) {
+          return (pos == 0) || (is_identifier_delimiter(name[pos - 1]) && (name[pos - 1] != ':'));
+        }
       };
 
       for(auto start{name.find(spanOpening)}; start != npos; start = name.find(spanOpening, start + 1))
@@ -519,11 +518,11 @@ namespace sequoia::testing
       if constexpr(sizeof(unsigned long) == sizeof(unsigned long long))
       {
         // Collapse before expanding; the other way round, the collapse undoes the expansion
-        replace_all(name, is_word_delimiter, "long long", is_word_delimiter, "long");
-        replace_all(name, is_word_delimiter, "long",      is_word_delimiter, "long long");
+        replace_all(name, is_identifier_delimiter, "long long", is_identifier_delimiter, "long");
+        replace_all(name, is_identifier_delimiter, "long",      is_identifier_delimiter, "long long");
 
         // The expansion cannot see that `long double` is not a `long`
-        replace_all(name, is_word_delimiter, "long long double", is_word_delimiter, "long double");
+        replace_all(name, is_identifier_delimiter, "long long double", is_identifier_delimiter, "long double");
       }
 
       // It is a pity to have to make the following substitutions, but it appears
@@ -589,7 +588,7 @@ namespace sequoia::testing
       else
       {
         using layout = bit_layout<T>;
-        if((hex.size() != layout::digit_count) || !std::ranges::all_of(hex, is_hex_digit))
+        if((hex.size() != layout::digit_count) || !std::ranges::all_of(hex, ascii::is_hex_digit))
           return std::nullopt;
 
         auto isSet{[hex](std::size_t bitFromBottom){ return pattern_bit(hex, bitFromBottom); }};
@@ -631,7 +630,7 @@ namespace sequoia::testing
       auto respell{
         [&demangled, mangled](std::string_view from, std::string_view to){
           if(!may_hold_source_name(mangled, from))
-            replace_all(demangled, is_word_delimiter, from, is_word_delimiter, to);
+            replace_all(demangled, is_identifier_delimiter, from, is_identifier_delimiter, to);
         }
       };
 

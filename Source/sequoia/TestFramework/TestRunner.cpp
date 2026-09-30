@@ -1578,8 +1578,7 @@ namespace sequoia::testing
     [[nodiscard]]
     bool contains_non_ascii(std::string_view text)
     {
-      constexpr unsigned char lastAscii{0x7F};
-      return std::ranges::any_of(text, [](char c){ return static_cast<unsigned char>(c) > lastAscii; });
+      return !std::ranges::all_of(text, is_ascii);
     }
   }
 
@@ -1595,13 +1594,13 @@ namespace sequoia::testing
     if(contains_non_ascii(name))
       throw std::logic_error{non_ascii_name_message(source)};
 
-    if(!m_LowerCaseTestNames.insert(to_lowercase(name)).second)
+    if(!m_LowerCaseTestNames.insert(ascii::to_lowercase(name)).second)
       throw std::logic_error{duplication_message(name, source)};
   }
 
   void test_runner::register_source(const fs::path& source)
   {
-    const auto prefix{to_lowercase(materials_prefix(source, proj_paths()).lexically_normal().generic_string())};
+    const auto prefix{ascii::to_lowercase(materials_prefix(source, proj_paths()).lexically_normal().generic_string())};
     if(prefix.empty())
       throw std::logic_error{unplaceable_source_message(source)};
 

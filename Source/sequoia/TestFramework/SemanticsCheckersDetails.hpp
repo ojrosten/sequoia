@@ -88,7 +88,7 @@ namespace sequoia::testing
   std::string to_string(comparison_flavour f);
 
   template<class T>
-  using optional_ref = std::optional<std::reference_wrapper<T>>;
+  using opt_ref = std::optional<std::reference_wrapper<T>>;
 
   template<test_mode Mode, std::equality_comparable T, class U>
   inline constexpr bool checkable_against_for_semantics{
@@ -401,7 +401,7 @@ namespace sequoia::testing::impl
                                               [[maybe_unused]] const Actions& actions,
                                               T&& z,
                                               const U& y,
-                                              optional_ref<const V> movedFrom,
+                                              opt_ref<const V> movedFrom,
                                               const Args&... args)
   {
     T w{std::move(z)};
@@ -427,7 +427,7 @@ namespace sequoia::testing::impl
                                            const Actions& actions,
                                            T&& z,
                                            const U& y,
-                                           optional_ref<const V> movedFrom)
+                                           opt_ref<const V> movedFrom)
   {
     return do_check_move_construction(logger, actions, std::forward<T>(z), y, movedFrom);
   }
@@ -441,7 +441,7 @@ namespace sequoia::testing::impl
                             T& z,
                             T&& y,
                             const U& yEquivalent,
-                            optional_ref<const V> movedFrom,
+                            opt_ref<const V> movedFrom,
                             [[maybe_unused]] Mutator&& yMutator,
                             const Args&... args)
   {
@@ -467,7 +467,7 @@ namespace sequoia::testing::impl
                          T& z,
                          T&& y,
                          const U& yEquivalent,
-                         optional_ref<const V> movedFrom,
+                         opt_ref<const V> movedFrom,
                          Mutator m)
   {
     do_check_move_assign(logger, actions, z, std::forward<T>(y), yEquivalent, movedFrom, std::move(m));

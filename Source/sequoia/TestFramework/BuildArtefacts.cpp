@@ -470,30 +470,21 @@ namespace sequoia::testing
                                  compilerPrefix{"cl."},
                                  suffix{".tlog"};
 
-      const auto lowercaseName{to_lowercase(file.filename().string())};
+      const auto lowercaseName{ascii::to_lowercase(file.filename().string())};
       const auto compilerPartStart{lowercaseName.starts_with(multiToolTaskPrefix) ? multiToolTaskPrefix.size() : 0};
       const auto unprefixedName{std::string_view{lowercaseName}.substr(compilerPartStart)};
       if(!unprefixedName.starts_with(compilerPrefix) || !unprefixedName.ends_with(suffix))
         return false;
 
       const auto afterCompilerPrefix{unprefixedName.substr(compilerPrefix.size())};
-      const auto digitsEnd{afterCompilerPrefix.find_first_not_of("0123456789")};
-      const bool numbered{   (digitsEnd > 0)
-                          && (digitsEnd != std::string_view::npos)
-                          && (afterCompilerPrefix[digitsEnd] == '.')};
-      const auto rest{numbered ? afterCompilerPrefix.substr(digitsEnd + 1) : afterCompilerPrefix};
+      const auto digitsEnd{std::ranges::find_if_not(afterCompilerPrefix, ascii::is_digit)};
+      const bool numbered{   (digitsEnd != afterCompilerPrefix.begin())
+                          && (digitsEnd != afterCompilerPrefix.end())
+                          && (*digitsEnd == '.')};
+      const auto rest{numbered ? std::string_view{std::ranges::next(digitsEnd), afterCompilerPrefix.end()}
+                               : afterCompilerPrefix};
 
       return rest.starts_with(std::string{kind}.append("."));
-    }
-
-    /// The tracker's upper case is ASCII, and what lies beyond it is compared as it is
-    [[nodiscard]]
-    bool equal_ignoring_case(tracker_path_view lhs, tracker_path_view rhs)
-    {
-      constexpr char16_t asciiEnd{0x80};
-      auto lower{[](char16_t c){ return (c < asciiEnd) ? static_cast<char16_t>(to_lowercase(static_cast<char>(c))) : c; }};
-
-      return std::ranges::equal(lhs | std::views::transform(lower), rhs | std::views::transform(lower));
     }
 
     [[nodiscard]]
@@ -502,7 +493,7 @@ namespace sequoia::testing
       constexpr tracker_path_view extension{u".obj"};
 
       return    (spelling.size() >= extension.size())
-             && equal_ignoring_case(spelling.substr(spelling.size() - extension.size()), extension);
+             && ascii::same_ignoring_case(spelling.substr(spelling.size() - extension.size()), extension);
     }
 
     /** The tracker's logs of one kind, decoded: under each source the tracker names, the files that
@@ -668,12 +659,9 @@ namespace sequoia::testing
       {
         const auto& listing{listing_of(dir)};
 
-        const auto spelled{name.string()};
-        auto sameLetter{[](char l, char r){ return to_lowercase(l) == to_lowercase(r); }};
+        const auto& spelled{name.native()};
         auto sameButForCase{
-          [&spelled, sameLetter](const fs::path& candidate) {
-            return std::ranges::equal(candidate.string(), spelled, sameLetter);
-          }
+          [&spelled](const fs::path& candidate) { return ascii::same_ignoring_case(candidate.native(), spelled); }
         };
         const auto match{std::ranges::find_if(listing, sameButForCase)};
 
@@ -741,7 +729,7 @@ namespace sequoia::testing
       auto bearsSourcesName{
         [sourceName, sourceStem](tracker_path_view object) {
           const auto stem{spelled_stem(spelled_filename(object))};
-          return equal_ignoring_case(stem, sourceStem) || equal_ignoring_case(stem, sourceName);
+          return ascii::same_ignoring_case(stem, sourceStem) || ascii::same_ignoring_case(stem, sourceName);
         }
       };
 
@@ -771,14 +759,16 @@ namespace sequoia::testing
            the compiler wrote, which is where the object file is named. `is_tlog` gives their names.
         -# A source is a line beginning `^`. Sources compiled by one invocation share a line, separated
            by `|`, and so share what is listed beneath the line.
-        -# Both are UTF-16 with a byte order mark, and spell paths in upper case, so each path is put
-           through the filesystem to recover its case.
+        -# Both are UTF-16 with a byte order mark, and spell paths in upper case, so each path is put through
+           the filesystem to recover its case. A file the compiler read or wrote has its ASCII letters in upper
+           case, and every other character as it is. A source line is upper-cased by MSBuild, in full, except
+           in the CL task's read log, where only its ASCII letters are.
         -# A file is listed in the order the compiler opened it, and more than once where it was opened
            more than once.
 
         Hence, where sources share their writes, each object file is given to the source whose stem or
-        name the object file bears, the tracker having spelled both; what cannot be told apart is refused
-        rather than guessed. Each record lists its inputs as the compiler opened them, each once.
+        name the object file bears, compared without regard to ASCII case; what cannot be told apart is
+        refused rather than guessed. Each record lists its inputs as the compiler opened them, each once.
 
         The logs name a file once per opening, so each spelling is recovered and numbered on first sight,
         and looked up once per entry thereafter.

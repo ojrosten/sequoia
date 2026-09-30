@@ -42,7 +42,7 @@ namespace sequoia::testing
         return false;
 
       const auto number{line.substr(prefix + line_number_prefix.size())};
-      return !number.empty() && std::ranges::all_of(number, is_digit);
+      return !number.empty() && std::ranges::all_of(number, ascii::is_digit);
     }
 
     [[nodiscard]]
