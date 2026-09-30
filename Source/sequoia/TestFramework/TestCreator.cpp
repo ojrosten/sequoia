@@ -314,9 +314,9 @@ namespace sequoia::testing
 
   //=========================================== nascent_test_base ===========================================//
 
-  void nascent_test_base::set_type_name(std::string_view name)
+  void nascent_test_base::name_files_after_type(std::string_view typeName)
   {
-    m_TypeFileStem = to_camel_case(name);
+    m_TypeFileStem = to_camel_case(typeName);
     if(m_Header.empty())
       m_Header = fs::path{m_TypeFileStem}.concat(".hpp");
   }
@@ -749,7 +749,7 @@ namespace sequoia::testing
     if(surname().empty())
       surname(to_surname(flavour()));
 
-    set_type_name(forename());
+    name_files_after_type(forename());
 
     // No companion is generated if testing utilities were named on the commandline: they hold the
     // value_tester, and the value_tester's false-negative diagnostics belong with it.
@@ -923,7 +923,7 @@ namespace sequoia::testing
   {
     if(surname().empty())
       surname(std::format("allocation_{}", to_surname(flavour())));
-    set_type_name(forename());
+    name_files_after_type(forename());
 
     // An allocation test takes no --gen-source, so its header is never generated.
     nascent_test_base::finalize([](const fs::path& p) { return p; },

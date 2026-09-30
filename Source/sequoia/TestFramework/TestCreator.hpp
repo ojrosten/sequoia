@@ -199,11 +199,11 @@ namespace sequoia::testing
     [[nodiscard]]
     const std::string& type_file_stem() const noexcept { return m_TypeFileStem; }
 
-    /** \brief Sets `type_file_stem()` to `name` in camel case.
+    /** \brief Sets `type_file_stem()` to `typeName` in camel case.
 
         If `header()` is empty, also sets `header()` to `type_file_stem()` followed by `.hpp`.
      */
-    void set_type_name(std::string_view name);
+    void name_files_after_type(std::string_view typeName);
 
     void set_cpp(const std::filesystem::path& headerPath, std::string_view nameSpace);
 
