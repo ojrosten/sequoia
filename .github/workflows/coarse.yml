@@ -111,7 +111,11 @@ jobs:
   # as one that passed; `needs` reports `skipped` where the tick shows green.
   # Staging requires this job and none of the others, so a job missing from this
   # job's `needs` would gate nothing, however red. The second step fails if any
-  # other job is missing.
+  # other job is missing. The third fails unless staging's rule names this job,
+  # pinned to the app that reports this job, so that a rename here, or an edit to
+  # the rule, shows as a red check rather than only as a PR that waits on a name
+  # nothing reports, or merges ungated. The second and third steps run even when
+  # an earlier step fails, so each reports independently.
   audit:
     name: Every job ran
     needs: [scope, coarse, docs]
@@ -134,6 +138,7 @@ jobs:
           exit $failed
 
       - name: Insist this job needs every other job of the workflow
+        if: ${{ !cancelled() }}
         run: |
           # The workflow file is fetched at GITHUB_WORKFLOW_SHA, the commit this run
           # read it from. Its jobs and this job's `needs` are compared both ways, so
@@ -151,3 +156,21 @@ jobs:
             exit 1
           fi
           echo "$GITHUB_JOB needs every other job of $workflow"
+
+      - name: Insist staging requires this job, pinned to the app that reports it
+        if: ${{ !cancelled() }}
+        env:
+          CHECK_RUN_ID: ${{ job.check_run_id }}
+        run: |
+          # The branches endpoint returns a branch's required checks to any token;
+          # the protection endpoint would need admin rights.
+          check=$(gh api "repos/$GH_REPO/check-runs/$CHECK_RUN_ID" --jq '"\(.app.id) \(.name)"')
+          gh api "repos/$GH_REPO/branches/staging" \
+              --jq '.protection.required_status_checks.checks[] | "\(.app_id) \(.context)"' > required.txt
+          echo "this check, as app and name: $check"
+          echo "required on staging:"; sed 's/^/  /' required.txt
+          if ! grep -qxF "$check" required.txt; then
+            echo "::error::staging does not require '${check#* }' from app ${check%% *}: a PR would wait on a name nothing reports, or merge without this check"
+            exit 1
+          fi
+          echo "staging requires this job, pinned to the app that reports it"
