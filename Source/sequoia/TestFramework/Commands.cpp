@@ -25,7 +25,8 @@ namespace sequoia::testing
 
   namespace
   {
-    /// This library's configuration, CMake's `$<CONFIG>`: empty for a single-config build given no build type
+    /// The configuration in which this library was built, as CMake's `$<CONFIG>` gives it. The configuration
+    /// is empty for a single-config build given no build type.
     constexpr std::string_view library_configuration{SEQUOIA_BUILD_CONFIGURATION};
   }
 

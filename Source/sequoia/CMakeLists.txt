@@ -45,7 +45,8 @@ set(SourceList
 
 add_library(sequoia STATIC ${SourceList})
 
-# The configuration in which this library is built, for build_cmd (TestFramework/Commands.cpp) to build a nested project in
+# Records the configuration in which this library is built. build_cmd (TestFramework/Commands.cpp) builds a nested
+# project in that configuration.
 target_compile_definitions(sequoia PRIVATE SEQUOIA_BUILD_CONFIGURATION="$<CONFIG>")
 
 target_include_directories(sequoia PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../)

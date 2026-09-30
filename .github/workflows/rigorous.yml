@@ -70,10 +70,10 @@ name: rigorous
 #
 # Note the MSVC Release column configures with `msvc-release`, a tree of its own
 # pinned to Release. The nested end-to-end project is configured from the preset
-# named after that tree, and built in the configuration the runner itself was
-# built in: `build_cmd` passes CMake's `$<CONFIG>` as `--config`. So the nested
-# executable lands in the configuration directory the test searches, whatever
-# the tree holds.
+# named after that tree. The nested project is built in the configuration in which
+# the runner itself was built, since `build_cmd` passes CMake's `$<CONFIG>` as
+# `--config`. So the nested executable lands in the configuration directory which
+# the test searches, whatever configurations the tree holds.
 #
 # Note the flag must be spelt out per column here, since `exec_args` REPLACES the
 # tier's rather than adding to it - a column naming only its exclusions silently

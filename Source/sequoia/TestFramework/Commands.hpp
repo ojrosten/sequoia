@@ -22,8 +22,8 @@ namespace sequoia::testing
 {
   /** \brief Configures a project, optionally overriding a cache variable.
 
-      \param buildPaths     the project to configure; the preset is the final component of its
-                            cmake cache directory, which is how the build tree names the
+      \param buildPaths     the project to configure. The preset is the final component of the
+                            cmake cache directory of `buildPaths`: a build tree is named after the
                             configure preset that produced it.
       \param output         file to which the command's output is directed.
       \param cacheOverride  spelled `VAR=VALUE`, as `cmake -D` expects it.
@@ -33,11 +33,8 @@ namespace sequoia::testing
                                    const std::filesystem::path& output,
                                    const std::optional<std::string>& cacheOverride = {});
 
-  /** \brief Builds a project in the configuration in which this library was built.
-
-      A multi-config build tree can hold several configurations. The runner looks for a nested
-      project's executable under the runner's own configuration, so a nested project built in any
-      other configuration is not found.
+  /** \brief The shell command which builds a project in the configuration in which this library was
+             built.
 
       \param buildPaths  the project to build, by its cmake cache directory.
       \param output      file to which the command's output is directed.
