@@ -24,8 +24,6 @@ namespace sequoia::testing
 
     /** \brief A queue whose first push stalls until `release_stall` is called.
 
-        A `task_queue` over a `stalling_queue` holds its own mutex throughout the stall.
-
         \pre At most one push is stalled at a time, across every instance.
      */
     class stalling_queue
@@ -62,6 +60,8 @@ namespace sequoia::testing
       bool m_HasStalled{};
     };
 
+    // A task_queue holds its mutex while pushing onto its underlying queue. So the first push onto a
+    // stalling_task_queue stalls with the mutex held.
     using stalling_task_queue = task_queue<int, int_task, stalling_queue>;
 
     /** \brief An RAII wrapper to push a task onto a `stalling_task_queue` from another thread.
