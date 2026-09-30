@@ -206,7 +206,6 @@ namespace sequoia::testing
         max{std::numeric_limits<value_t>::max()},
         low{std::numeric_limits<value_t>::lowest()};
 
-      // No STATIC_CHECK: gcc does not accept a floating-point overflow in a constant expression.
       check(equality, "", saturating_add(max, max), gub);
       check(equality, "", saturating_add(low, low), llb);
     }

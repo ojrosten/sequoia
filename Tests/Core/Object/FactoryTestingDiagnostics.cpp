@@ -59,13 +59,13 @@ namespace sequoia::testing
 
       check(equivalence, "", f, prediction_t{{{"int", 0}, {"double", 5.0}}});
 
-      // The product predicted is right, but the factory makes one the prediction lacks
+      // The product predicted is right, but the factory also makes a product the prediction lacks
       check(equivalence, "", f, std::array<std::pair<std::string, vessel>, 1>{{{"int", 0}}});
 
-      // A name the factory does not know
+      // The prediction names a product the factory does not know
       check(equivalence, "", f, prediction_t{{{"int", 0}, {"float", 0.0}}});
 
-      // One name predicted twice, which leaves the other product unchecked unless the names are compared
+      // The prediction names one product twice, so the other product is checked only if the names are compared
       check(equivalence, "", f, prediction_t{{{"int", 0}, {"int", 0}}});
     }
 

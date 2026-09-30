@@ -272,9 +272,9 @@ namespace sequoia::testing
     }
 
     {
-      // Registered out of order, and with the two product types alternating once sorted, so that
-      // an ordering error changes which alternative each element holds. Five identical products
-      // would make these checks unfalsifiable.
+      // The products are registered out of order, and the two product types alternate once the
+      // products are sorted. So an ordering error changes which alternative each element holds.
+      // Five identical products would make these checks unfalsifiable.
       using vessel       = std::variant<int, double>;
       using prediction_t = std::array<std::pair<std::string, vessel>, 5>;
 

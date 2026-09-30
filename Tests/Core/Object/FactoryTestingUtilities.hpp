@@ -32,9 +32,9 @@ namespace sequoia::testing
     check(equality, "Names", logger, actual.begin_names(), actual.end_names(), prediction.begin_names(), prediction.end_names());
   }
 
-  /** Both factories make a product by name, so the arm which checks a prediction is written once. The
-      names are compared first, so that a product is made only by a name the factory knows, and each
-      product is checked only once the names agree.
+  /** Checks the products a factory makes by name against a prediction, for `factory` and `erasing_factory`
+      alike. The names are compared first. Each product is made and checked only once the names agree, so no
+      product is made by a name the factory does not know.
    */
 
   template<test_mode Mode, class Factory, std::size_t N, class... Args>
