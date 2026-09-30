@@ -13,7 +13,9 @@
 #include <complex>
 #include <map>
 #include <set>
+#include <tuple>
 #include <utility>
+#include <variant>
 #include <vector>
 
 namespace sequoia::testing
@@ -38,6 +40,33 @@ namespace sequoia::testing
       throwing_copy_assignment(throwing_copy_assignment&&) noexcept = default;
       throwing_copy_assignment& operator=(const throwing_copy_assignment&) noexcept(false) { return *this; }
       throwing_copy_assignment& operator=(throwing_copy_assignment&&) noexcept = default;
+    };
+
+    struct move_only
+    {
+      int value{};
+
+      move_only() = default;
+
+      move_only(move_only&&) noexcept = default;
+
+      move_only& operator=(move_only&&) noexcept = default;
+    };
+
+    struct assign_only
+    {
+      int value{};
+
+      assign_only() = default;
+
+      assign_only(const assign_only&) = delete;
+
+      assign_only& operator=(const assign_only&) = default;
+    };
+
+    struct non_assignable
+    {
+      const int value{};
     };
 
     /** Whether the trait agrees with the standard library's own `noexcept` on `std::exchange`. */
@@ -65,6 +94,8 @@ namespace sequoia::testing
     test_is_compatible();
     test_are_same();
     test_value_type_of();
+    test_is_deep_copy_constructible();
+    test_is_deep_copy_assignable();
   }
 
   void type_traits_test::test_resolve_to_copy()
@@ -478,5 +509,62 @@ namespace sequoia::testing
     struct foo{ using value_type = int; };
 
     STATIC_CHECK(std::is_same_v<value_type_of_t<foo>, int>);
+  }
+
+  void type_traits_test::test_is_deep_copy_constructible()
+  {
+    STATIC_CHECK( is_deep_copy_constructible_v<int>);
+    STATIC_CHECK( std::is_same_v<is_deep_copy_constructible_t<int>, std::true_type>);
+    STATIC_CHECK(!is_deep_copy_constructible_v<move_only>);
+
+    // Homogeneous containers
+    STATIC_CHECK( std::is_copy_constructible_v<std::vector<move_only>>);
+    STATIC_CHECK(!is_deep_copy_constructible_v<std::vector<move_only>>);
+    STATIC_CHECK(!is_deep_copy_constructible_v<std::vector<std::vector<move_only>>>);
+    STATIC_CHECK( is_deep_copy_constructible_v<std::vector<std::vector<int>>>);
+
+    // Heterogeneous containers
+    STATIC_CHECK( std::is_copy_constructible_v<std::tuple<int, std::vector<move_only>>>);
+    STATIC_CHECK(!is_deep_copy_constructible_v<std::tuple<int, std::vector<move_only>>>);
+    STATIC_CHECK( is_deep_copy_constructible_v<std::pair<int, std::vector<int>>>);
+    STATIC_CHECK( std::is_copy_constructible_v<std::variant<int, std::vector<move_only>>>);
+    STATIC_CHECK(!is_deep_copy_constructible_v<std::variant<int, std::vector<move_only>>>);
+
+    // Maps
+    STATIC_CHECK( is_deep_copy_constructible_v<std::map<int, std::vector<int>>>);
+    STATIC_CHECK(!is_deep_copy_constructible_v<std::map<int, std::vector<move_only>>>);
+  }
+
+  void type_traits_test::test_is_deep_copy_assignable()
+  {
+    STATIC_CHECK( is_deep_copy_assignable_v<int>);
+    STATIC_CHECK( std::is_same_v<is_deep_copy_assignable_t<int>, std::true_type>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<move_only>);
+    STATIC_CHECK( is_deep_copy_assignable_v<assign_only>);
+
+    // Homogeneous containers require elements that are both copy constructible and copy assignable
+    STATIC_CHECK( std::is_copy_assignable_v<std::vector<non_assignable>>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<std::vector<non_assignable>>);
+    STATIC_CHECK( std::is_copy_assignable_v<std::vector<assign_only>>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<std::vector<assign_only>>);
+    STATIC_CHECK( std::is_copy_assignable_v<std::array<assign_only, 2>>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<std::array<assign_only, 2>>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<std::vector<std::vector<assign_only>>>);
+    STATIC_CHECK( is_deep_copy_assignable_v<std::vector<std::vector<int>>>);
+
+    // Heterogeneous containers require elements that are copy assignable
+    STATIC_CHECK( is_deep_copy_assignable_v<std::tuple<int, assign_only>>);
+    STATIC_CHECK( std::is_copy_assignable_v<std::tuple<int, std::vector<assign_only>>>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<std::tuple<int, std::vector<assign_only>>>);
+    STATIC_CHECK( std::is_copy_assignable_v<std::variant<int, std::vector<assign_only>>>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<std::variant<int, std::vector<assign_only>>>);
+
+    // Maps require keys and mapped values that are copy assignable, disregarding the key's const
+    STATIC_CHECK( is_deep_copy_assignable_v<std::map<int, int>>);
+    STATIC_CHECK( is_deep_copy_assignable_v<std::map<int, std::vector<int>>>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<std::map<int, non_assignable>>);
+    STATIC_CHECK( std::is_copy_assignable_v<std::map<int, std::vector<assign_only>>>);
+    STATIC_CHECK(!is_deep_copy_assignable_v<std::map<int, std::vector<assign_only>>>);
+    STATIC_CHECK( is_deep_copy_assignable_v<std::set<int>>);
   }
 }

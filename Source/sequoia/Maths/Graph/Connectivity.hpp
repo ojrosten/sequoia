@@ -92,7 +92,8 @@ namespace sequoia
           }
           else
           {
-            const auto& partner{*(m_Storage.cbegin_partition(found->node_index) + found->edge_index)};
+            const auto partnerPartitionBegin{m_Storage.cbegin_partition(found->node_index)};
+            const auto& partner{partnerPartitionBegin[found->edge_index]};
             if constexpr(std::is_empty_v<edge_meta_data_type>)
               m_Storage.push_back_to_partition(node, i->target_node(), partner);
             else
@@ -168,7 +169,7 @@ namespace sequoia
       };
 
       constexpr static bool partner_weight_constructible_v{
-        !independent_partner_weights_v || std::is_copy_constructible_v<edge_weight_type>
+        !independent_partner_weights_v || is_deep_copy_constructible_v<edge_weight_type>
       };
 
       constexpr connectivity_base() = default;
@@ -1200,7 +1201,7 @@ namespace sequoia
               storage.push_back_to_partition(
                 host,
                 (compIndex == npos) ? edge_type{hostRange.front()}
-                                    : edge_type{target, *(storage.cbegin_partition(target) + compIndex)}
+                                    : edge_type{target, storage.cbegin_partition(target)[compIndex]}
               );
           }
         };

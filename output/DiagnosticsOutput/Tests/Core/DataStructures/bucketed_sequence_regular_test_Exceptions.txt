@@ -25,7 +25,7 @@ bucketed_sequence::insert_to_partition: index 0 out of range
 
 =======================================
 
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 47
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 60
 begin_partition throws for empty container
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ bucketed_sequence::begin_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 56
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 69
 end_partition throws for empty container
 
 Expected Exception Type:
@@ -43,7 +43,7 @@ bucketed_sequence::end_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 65
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 78
 begin_partition throws for empty container in const context
 
 Expected Exception Type:
@@ -52,7 +52,7 @@ bucketed_sequence::begin_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 74
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 87
 end_partition throws for empty container in const context
 
 Expected Exception Type:
@@ -61,7 +61,7 @@ bucketed_sequence::end_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 83
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 96
 rbegin_partition throws for empty container
 
 Expected Exception Type:
@@ -70,7 +70,7 @@ bucketed_sequence::rbegin_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 92
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 105
 rend_partition throws for empty container
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ bucketed_sequence::rend_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 101
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 114
 rbegin_partition throws for empty container in const context
 
 Expected Exception Type:
@@ -88,7 +88,7 @@ bucketed_sequence::rbegin_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 110
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 123
 rend_partition throws for empty container in const context
 
 Expected Exception Type:
@@ -97,7 +97,7 @@ bucketed_sequence::rend_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 119
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 132
 cbegin_partition throws for empty container
 
 Expected Exception Type:
@@ -106,7 +106,7 @@ bucketed_sequence::begin_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 128
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 141
 cend_partition throws for empty container
 
 Expected Exception Type:
@@ -115,7 +115,7 @@ bucketed_sequence::end_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 137
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 150
 crbegin_partition throws for empty container
 
 Expected Exception Type:
@@ -124,7 +124,7 @@ bucketed_sequence::rbegin_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 146
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 159
 crend_partition throws for empty container
 
 Expected Exception Type:
@@ -133,7 +133,7 @@ bucketed_sequence::rend_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 155
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 168
 partition throws for empty container
 
 Expected Exception Type:
@@ -142,7 +142,7 @@ bucketed_sequence::partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 164
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 177
 partition throws for empty container in const context
 
 Expected Exception Type:
@@ -151,7 +151,7 @@ bucketed_sequence::partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 173
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 186
 cpartition throws for empty container
 
 Expected Exception Type:
@@ -160,7 +160,7 @@ bucketed_sequence::partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 182
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 195
 Erasing from non-existent partition throws
 
 Expected Exception Type:
@@ -169,7 +169,7 @@ bucketed_sequence::begin_partition: no buckets
 
 =======================================
 
-Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 191
+Tests/Core/DataStructures/BucketedSequenceRegularTest.cpp, Line 204
 Erasing from non-existent partition throws
 
 Expected Exception Type:

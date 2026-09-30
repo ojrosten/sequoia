@@ -106,10 +106,10 @@ namespace sequoia
       }
 
       bucketed_sequence(const bucketed_sequence&)
-        requires std::is_copy_constructible_v<T> = default;
+        requires is_deep_copy_constructible_v<container_type> = default;
 
       bucketed_sequence(const bucketed_sequence& other, const allocator_type& allocator)
-        requires std::is_copy_constructible_v<T>
+        requires is_deep_copy_constructible_v<container_type>
        : m_Buckets(std::allocator_traits<allocator_type>::select_on_container_copy_construction(allocator))
       {
         m_Buckets.reserve(other.m_Buckets.size());
@@ -136,7 +136,7 @@ namespace sequoia
       bucketed_sequence& operator=(bucketed_sequence&&) noexcept = default;
 
       bucketed_sequence& operator=(const bucketed_sequence&)
-        requires (std::is_copy_constructible_v<T> && std::is_copy_assignable_v<T>) = default;
+        requires is_deep_copy_assignable_v<container_type> = default;
 
       void swap(bucketed_sequence& other)
         noexcept(noexcept(std::ranges::swap(this->m_Buckets, other.m_Buckets)))
@@ -510,7 +510,7 @@ namespace sequoia
       constexpr partitioned_sequence_base() = default;
 
       constexpr partitioned_sequence_base(const partitioned_sequence_base&)
-        requires std::is_copy_constructible_v<T> = default;
+        requires is_deep_copy_constructible_v<container_type> = default;
 
       [[nodiscard]]
       constexpr bool empty() const noexcept { return m_Data.empty(); }
@@ -677,7 +677,7 @@ namespace sequoia
       constexpr partitioned_sequence_base& operator=(partitioned_sequence_base&&) noexcept = default;
 
       constexpr partitioned_sequence_base& operator=(const partitioned_sequence_base&)
-        requires (std::is_copy_constructible_v<T> && std::is_copy_assignable_v<T>) = default;
+        requires is_deep_copy_assignable_v<container_type> = default;
 
       ~partitioned_sequence_base() = default;
 
@@ -721,7 +721,7 @@ namespace sequoia
 
       template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(const partitioned_sequence_base& other, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
-        requires std::is_copy_constructible_v<T>
+        requires is_deep_copy_constructible_v<container_type>
         : m_Partitions{other.m_Partitions, partitionsAllocator}
         , m_Data(copy(other.m_Data, allocator))
       {}
@@ -1034,7 +1034,7 @@ namespace sequoia
       partitioned_sequence(const partitioned_sequence&) = default;
 
       partitioned_sequence(const partitioned_sequence& s, const allocator_type& allocator, const partitions_allocator_type& partitionAllocator)
-        requires std::is_copy_constructible_v<T>
+        requires is_deep_copy_constructible_v<container_type>
         : partitioned_sequence_base<T, Container, Partitions>(s, allocator, partitionAllocator)
       {}
 

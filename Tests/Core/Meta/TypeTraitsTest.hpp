@@ -43,5 +43,9 @@ namespace sequoia::testing
     void test_are_same();
 
     void test_value_type_of();
+
+    void test_is_deep_copy_constructible();
+
+    void test_is_deep_copy_assignable();
   };
 }

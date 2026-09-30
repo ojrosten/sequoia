@@ -273,6 +273,151 @@ namespace sequoia
   
   /** @} */ // end of deep_totally_ordered group
 
+  /** @defgroup deep_copy_constructible The deep_copy_constructible Group
+      `is_deep_copy_constructible<T>` holds if `T` is copy constructible and, where `T` is a container,
+      so are its elements, recursively. Containers are recognised as in \ref deep_equality.
+
+      Some containers of the stl, such as `std::vector`, declare their copy operations for every element
+      type: `std::is_copy_constructible_v<std::vector<T>>` is true even when `T` cannot be copied, and
+      copying the vector then fails to compile. A class that defaults its copy constructor over such a
+      container inherits the defect.
+      @{
+   */
+
+  template<class T>
+  struct is_deep_copy_constructible;
+
+  template<class T>
+  inline constexpr bool is_deep_copy_constructible_v{is_deep_copy_constructible<T>::value};
+
+  template<class T>
+  using is_deep_copy_constructible_t = is_deep_copy_constructible<T>::type;
+
+  template<class T, std::size_t... I>
+  inline constexpr bool heterogeneous_deep_copy_constructibility_v{
+    requires(T & t, std::index_sequence<I...>) {
+      requires (is_deep_copy_constructible_v<gettable_element_t<T, I>> && ...);
+    }
+  };
+
+  template<class T, std::size_t...I>
+  constexpr bool has_heterogeneous_deep_copy_constructibility(std::index_sequence<I...>)
+  {
+    return heterogeneous_deep_copy_constructibility_v<T, I...>;
+  }
+
+  template<class T>
+  struct heterogeneous_deep_copy_constructibility;
+
+  template<template<class...> class T, class... Ts>
+  struct heterogeneous_deep_copy_constructibility<T<Ts...>>
+    : std::bool_constant<
+        has_heterogeneous_deep_copy_constructibility<T<Ts...>>(std::make_index_sequence<sizeof...(Ts)>{})>
+  {};
+
+  template<class T>
+  struct is_deep_copy_constructible : std::bool_constant<std::is_copy_constructible_v<T>>
+  {};
+
+  template<class T>
+    requires has_value_type_v<T>
+  struct is_deep_copy_constructible<T>
+    : std::bool_constant<   std::is_copy_constructible_v<T>
+                         && is_deep_copy_constructible<typename T::value_type>::value>
+  {};
+
+  template<template<class...> class T, class... Ts>
+    requires (!has_value_type_v<T<Ts...>> && has_gettable_elements<T<Ts...>>)
+  struct is_deep_copy_constructible<T<Ts...>>
+    : std::bool_constant<   std::is_copy_constructible_v<T<Ts...>>
+                         && heterogeneous_deep_copy_constructibility<T<Ts...>>::value>
+  {};
+
+  /** @} */ // end of deep_copy_constructible group
+
+  /** @defgroup deep_copy_assignable The deep_copy_assignable Group
+      `is_deep_copy_assignable<T>` holds if `T` is copy assignable and, where `T` is a container, its
+      elements meet the requirements below, recursively.
+      -# The elements of a homogeneous container must be deep copy constructible as well as deep copy
+         assignable, since a container whose size can change copy-constructs the elements that the
+         target lacks. This is required of every homogeneous container, including `std::array`, whose
+         copy assignment constructs nothing.
+      -# A container that maps a `key_type` to a `mapped_type` requires the key and the mapped value to
+         be deep copy assignable, disregarding the `const` on the key in its `value_type`.
+      -# The elements of a heterogeneous container must be deep copy assignable. Anything more that the
+         container's copy assignment needs, such as the copy construction `std::variant` performs, is
+         left to `std::is_copy_assignable_v` of the container.
+      @{
+   */
+
+  template<class T>
+  struct is_deep_copy_assignable;
+
+  template<class T>
+  inline constexpr bool is_deep_copy_assignable_v{is_deep_copy_assignable<T>::value};
+
+  template<class T>
+  using is_deep_copy_assignable_t = is_deep_copy_assignable<T>::type;
+
+  template<class T, std::size_t... I>
+  inline constexpr bool heterogeneous_deep_copy_assignability_v{
+    requires(T & t, std::index_sequence<I...>) {
+      requires (is_deep_copy_assignable_v<gettable_element_t<T, I>> && ...);
+    }
+  };
+
+  template<class T, std::size_t...I>
+  constexpr bool has_heterogeneous_deep_copy_assignability(std::index_sequence<I...>)
+  {
+    return heterogeneous_deep_copy_assignability_v<T, I...>;
+  }
+
+  template<class T>
+  struct heterogeneous_deep_copy_assignability;
+
+  template<template<class...> class T, class... Ts>
+  struct heterogeneous_deep_copy_assignability<T<Ts...>>
+    : std::bool_constant<
+        has_heterogeneous_deep_copy_assignability<T<Ts...>>(std::make_index_sequence<sizeof...(Ts)>{})>
+  {};
+
+  template<class T>
+  struct copy_assigned_element
+  {
+    using type = T::value_type;
+  };
+
+  template<class T>
+    requires requires { typename T::key_type; typename T::mapped_type; }
+  struct copy_assigned_element<T>
+  {
+    using type = std::pair<typename T::key_type, typename T::mapped_type>;
+  };
+
+  template<class T>
+  using copy_assigned_element_t = copy_assigned_element<T>::type;
+
+  template<class T>
+  struct is_deep_copy_assignable : std::bool_constant<std::is_copy_assignable_v<T>>
+  {};
+
+  template<class T>
+    requires has_value_type_v<T>
+  struct is_deep_copy_assignable<T>
+    : std::bool_constant<   std::is_copy_assignable_v<T>
+                         && is_deep_copy_constructible<typename T::value_type>::value
+                         && is_deep_copy_assignable<copy_assigned_element_t<T>>::value>
+  {};
+
+  template<template<class...> class T, class... Ts>
+    requires (!has_value_type_v<T<Ts...>> && has_gettable_elements<T<Ts...>>)
+  struct is_deep_copy_assignable<T<Ts...>>
+    : std::bool_constant<   std::is_copy_assignable_v<T<Ts...>>
+                         && heterogeneous_deep_copy_assignability<T<Ts...>>::value>
+  {};
+
+  /** @} */ // end of deep_copy_assignable group
+
   /** \brief class template for determining if a type is compatible with a floating-point type.
   
       The goal is to forbid e.g. multiplication of a float by a double, but to allow multiplication

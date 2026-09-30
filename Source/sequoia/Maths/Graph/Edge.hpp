@@ -99,7 +99,7 @@ namespace sequoia
       {}
 
       constexpr weighting(const weighting& other)
-        requires std::is_copy_constructible_v<weight_type>
+        requires is_deep_copy_constructible_v<weight_type>
         : m_Weight{WeightHandler::producer_type::make(WeightHandler::get(other.m_Weight))}
       {}
 
@@ -112,7 +112,7 @@ namespace sequoia
       constexpr weighting(weighting&&) noexcept = default;
 
       constexpr weighting& operator=(const weighting& other)
-        requires std::is_copy_constructible_v<weight_type>
+        requires is_deep_copy_constructible_v<weight_type>
       {
         if(&other != this) m_Weight = WeightHandler::producer_type::make(WeightHandler::get(other.m_Weight));
         return *this;
@@ -260,8 +260,11 @@ namespace sequoia
         , m_MetaData{other.meta_data()}
       {}
 
-      constexpr decorated_partial_edge_base(const decorated_partial_edge_base&)            = default;
-      constexpr decorated_partial_edge_base& operator=(const decorated_partial_edge_base&) = default;
+      constexpr decorated_partial_edge_base(const decorated_partial_edge_base&)
+        requires is_deep_copy_constructible_v<meta_data_type> = default;
+
+      constexpr decorated_partial_edge_base& operator=(const decorated_partial_edge_base&)
+        requires is_deep_copy_assignable_v<meta_data_type> = default;
 
 
       [[nodiscard]]

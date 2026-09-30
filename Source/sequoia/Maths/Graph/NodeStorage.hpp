@@ -185,10 +185,10 @@ namespace sequoia::maths
     {}
 
     constexpr node_storage_base(const node_storage_base&)
-      requires std::is_copy_constructible_v<weight_type> = default;
+      requires is_deep_copy_constructible_v<node_weight_container_type> = default;
 
     template<alloc Allocator>
-      requires std::is_copy_constructible_v<weight_type>
+      requires is_deep_copy_constructible_v<node_weight_container_type>
     constexpr node_storage_base(const node_storage_base& other, const Allocator& allocator)
       : m_NodeWeights{other.m_NodeWeights, allocator}
     {}
@@ -203,7 +203,7 @@ namespace sequoia::maths
     ~node_storage_base() = default;
 
     constexpr node_storage_base& operator=(const node_storage_base&)
-      requires (std::is_copy_constructible_v<weight_type> && std::is_copy_assignable_v<weight_type>) = default;
+      requires is_deep_copy_assignable_v<node_weight_container_type> = default;
     constexpr node_storage_base& operator=(node_storage_base&&) noexcept = default;
 
     constexpr void swap(node_storage_base& rhs)

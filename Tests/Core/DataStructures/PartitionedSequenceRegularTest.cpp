@@ -7,6 +7,8 @@
 
 #include "PartitionedSequenceRegularTest.hpp"
 #include "PartitionedDataGenericTests.hpp"
+
+#include <map>
 #include "sequoia/Core/DataStructures/PartitionedData.hpp"
 
 namespace sequoia::testing
@@ -27,6 +29,17 @@ namespace sequoia::testing
       move_only_element(move_only_element&&) noexcept = default;
 
       move_only_element& operator=(move_only_element&&) noexcept = default;
+    };
+
+    struct assign_only_element
+    {
+      int value{};
+
+      assign_only_element() = default;
+
+      assign_only_element(const assign_only_element&) = delete;
+
+      assign_only_element& operator=(const assign_only_element&) = default;
     };
 
     using namespace partitioned_data;
@@ -170,6 +183,7 @@ namespace sequoia::testing
     using namespace data_structures;
     using move_only_sequence = partitioned_sequence<move_only_element>;
     using copyable_sequence  = partitioned_sequence<int>;
+    using move_only_vector_sequence = partitioned_sequence<std::vector<move_only_element>>;
 
     STATIC_CHECK(!std::is_copy_constructible_v<move_only_sequence>);
     STATIC_CHECK(!std::is_copy_assignable_v<move_only_sequence>);
@@ -188,6 +202,21 @@ namespace sequoia::testing
                                           const copyable_sequence&,
                                           copyable_sequence::allocator_type,
                                           copyable_sequence::partitions_allocator_type>);
+
+    STATIC_CHECK(!std::is_copy_constructible_v<partitioned_sequence<assign_only_element>>);
+    STATIC_CHECK(!std::is_copy_assignable_v<partitioned_sequence<assign_only_element>>);
+    STATIC_CHECK(!std::is_copy_assignable_v<static_partitioned_sequence<assign_only_element, 1, 1>>);
+
+    STATIC_CHECK(!std::is_copy_constructible_v<move_only_vector_sequence>);
+    STATIC_CHECK(!std::is_copy_assignable_v<move_only_vector_sequence>);
+    STATIC_CHECK(!std::is_constructible_v<move_only_vector_sequence,
+                                          const move_only_vector_sequence&,
+                                          move_only_vector_sequence::allocator_type,
+                                          move_only_vector_sequence::partitions_allocator_type>);
+
+    STATIC_CHECK( std::is_copy_constructible_v<partitioned_sequence<std::vector<int>>>);
+    STATIC_CHECK( std::is_copy_assignable_v<partitioned_sequence<std::vector<int>>>);
+    STATIC_CHECK( std::is_copy_assignable_v<partitioned_sequence<std::map<int, int>>>);
   }
 
   void partitioned_sequence_regular_test::test_index_type_limit()

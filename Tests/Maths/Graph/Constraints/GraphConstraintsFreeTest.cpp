@@ -17,6 +17,8 @@
 #include <any>
 #include <memory>
 #include <format>
+#include <forward_list>
+#include <map>
 #include <utility>
 #include <vector>
 
@@ -205,6 +207,7 @@ namespace sequoia::testing
   void graph_constraints_free_test::test_copyability()
   {
     using namespace maths;
+    using namespace object;
 
     using unshared_move_only_contiguous_graph
       = undirected_graph<move_only_weight, null_weight, null_meta_data, independent_contiguous_edge_storage_config>;
@@ -213,6 +216,11 @@ namespace sequoia::testing
     using move_only_static     = static_undirected_graph<1, 2, move_only_weight, null_weight>;
     using shared_copyable_graph
       = undirected_graph<copyable_weight, null_weight, null_meta_data, shared_edge_storage_config>;
+    using move_only_weight_vector     = std::vector<move_only_weight>;
+    using move_only_meta_data_vector  = std::vector<move_only_meta_data>;
+    using move_only_vector_node_graph = directed_graph<null_weight, move_only_weight_vector>;
+    using move_only_vector_heterogeneous_graph
+      = heterogeneous_directed_graph<0, 1, null_weight, move_only_weight_vector>;
 
     // A move-only edge weight, whether the halves of an edge hold it independently or share it
     STATIC_CHECK(!std::is_copy_constructible_v<unshared_move_only_graph>);
@@ -247,6 +255,33 @@ namespace sequoia::testing
     STATIC_CHECK(!std::is_copy_constructible_v<move_only_static>);
     STATIC_CHECK(!std::is_copy_assignable_v<move_only_static>);
 
+    // A container of move-only values, as an edge weight, a node weight and edge meta-data
+    STATIC_CHECK(!std::is_copy_constructible_v<unshared_undirected_graph<move_only_weight_vector>>);
+    STATIC_CHECK(!std::is_copy_assignable_v<unshared_undirected_graph<move_only_weight_vector>>);
+    STATIC_CHECK(!std::is_copy_constructible_v<move_only_vector_node_graph>);
+    STATIC_CHECK(!std::is_copy_assignable_v<move_only_vector_node_graph>);
+    STATIC_CHECK(!std::is_constructible_v<move_only_vector_node_graph,
+                                          const move_only_vector_node_graph&,
+                                          move_only_vector_node_graph::edge_allocator_type,
+                                          move_only_vector_node_graph::node_weight_allocator_type>);
+    STATIC_CHECK(!std::is_copy_constructible_v<undirected_graph<null_weight, null_weight, move_only_meta_data_vector>>);
+
+    STATIC_CHECK(!std::is_copy_constructible_v<partial_edge<by_value<move_only_weight_vector>, null_meta_data>>);
+    STATIC_CHECK(!std::is_copy_assignable_v<partial_edge<by_value<move_only_weight_vector>, null_meta_data>>);
+    STATIC_CHECK(!std::is_copy_constructible_v<move_only_vector_heterogeneous_graph>);
+    STATIC_CHECK(!std::is_copy_assignable_v<move_only_vector_heterogeneous_graph>);
+
+    // A container of values that can be copy-constructed but not assigned, as an edge's meta-data
+    STATIC_CHECK( std::is_copy_constructible_v<partial_edge<by_value<null_weight>, std::vector<non_assignable_value>>>);
+    STATIC_CHECK(!std::is_copy_assignable_v<partial_edge<by_value<null_weight>, std::vector<non_assignable_value>>>);
+
+    // Containers of copyable values
+    STATIC_CHECK(std::is_copy_constructible_v<directed_graph<null_weight, std::vector<int>>>);
+    STATIC_CHECK(std::is_copy_assignable_v<directed_graph<null_weight, std::vector<int>>>);
+    STATIC_CHECK(std::is_copy_assignable_v<directed_graph<null_weight, std::map<int, int>>>);
+    STATIC_CHECK(std::is_copy_assignable_v<partial_edge<by_value<null_weight>, std::map<int, int>>>);
+    STATIC_CHECK(std::is_copy_constructible_v<heterogeneous_directed_graph<0, 1, null_weight, std::vector<int>>>);
+
     // Copyable weights
     STATIC_CHECK(std::is_copy_constructible_v<unshared_copyable_graph>);
     STATIC_CHECK(std::is_copy_constructible_v<shared_copyable_graph>);
@@ -260,9 +295,11 @@ namespace sequoia::testing
   void graph_constraints_free_test::test_weight_update_constraints()
   {
     using namespace maths;
+    using default_move_only_list_graph = undirected_graph<std::forward_list<move_only_weight>, null_weight>;
 
     STATIC_CHECK(!graph_impl::has_shared_weight_v<typename unshared_move_only_graph::edge_type>);
     STATIC_CHECK( graph_impl::has_shared_weight_v<typename shared_move_only_graph::edge_type>);
+    STATIC_CHECK( graph_impl::has_shared_weight_v<typename default_move_only_list_graph::edge_type>);
 
     STATIC_CHECK(!edge_weight_settable<unshared_move_only_graph>);
     STATIC_CHECK(!edge_weight_mutable_returning<unshared_move_only_graph, void>);
@@ -304,6 +341,7 @@ namespace sequoia::testing
     using namespace maths;
 
     STATIC_CHECK(!joinable<unshared_move_only_graph>);
+    STATIC_CHECK(!joinable<unshared_undirected_graph<std::vector<move_only_weight>>>);
     STATIC_CHECK(!joinable<unshared_move_only_embedded_graph>);
     STATIC_CHECK(!insert_joinable<unshared_move_only_embedded_graph>);
 
