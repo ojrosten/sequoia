@@ -16,6 +16,7 @@
 
 #include <format>
 #include <filesystem>
+#include <optional>
 #include <sstream>
 
 namespace sequoia::testing
@@ -99,9 +100,11 @@ namespace sequoia::testing
     return static_cast<type_normalizer_t<U>>(x);
   }
 
-  struct uncaught_exception_info
+  struct top_level_check_exit_info
   {
-    int num{};
-    std::string top_level_message{};
+    bool via_exception{};
+    std::string message{};
   };
+
+  using opt_top_level_check_exit_info = std::optional<top_level_check_exit_info>;
 }

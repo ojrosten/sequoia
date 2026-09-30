@@ -13,6 +13,7 @@
 #include <format>
 #include <limits>
 #include <ranges>
+#include <span>
 #include <utility>
 
 namespace sequoia::testing
@@ -115,7 +116,9 @@ namespace sequoia::testing
   {
     test_emphasise();
     test_display_character();
+    test_exception_message();
     test_tidy_name();
+    test_spans();
     test_template_argument_values();
     test_array_iterators();
     test_relative_reporting_path();
@@ -134,6 +137,54 @@ namespace sequoia::testing
     check(equality, "", display_character('\t'), "'\\t'"s);
     check(equality, "", display_character('\0'), "'\\0'"s);
     check(equality, "", display_character(' '), "' '"s);
+
+    check(equality, "The first printable ASCII character after the space", display_character('!'), "!"s);
+    check(equality, "The last printable ASCII character",                   display_character('~'), "~"s);
+    check(equality, "The delete character",                                 display_character('\x7f'), "'\\x7f'"s);
+
+    check(equality, "A printable wide character",               display_character(L'a'), "a"s);
+    check(equality, "A control character with no named escape", display_character('\x1b'), "'\\x1b'"s);
+    check(equality, "A byte of a multi-byte UTF-8 character",   display_character('\xc3'), "'\\xc3'"s);
+    check(equality, "A UTF-8 code unit beyond ASCII",           display_character(char8_t{0xc3}), "'\\xc3'"s);
+    check(equality, "A UTF-16 code unit beyond ASCII",          display_character(u'\u00e9'), "'\\xe9'"s);
+    check(equality, "A code point whose low byte is a newline", display_character(U'\u010a'), "'\\x10a'"s);
+    check(equality,
+          "A code point beyond the basic multilingual plane",
+          display_character(U'\U0001f600'),
+          "'\\x1f600'"s
+    );
+  }
+
+  void output_free_test::test_exception_message()
+  {
+    const fs::path file{"Tests/foo.cpp"};
+    const top_level_check_exit_info duringCheck     {.via_exception{true},  .message{"Check"}},
+                                    duringEmptyCheck{.via_exception{true},  .message{""}},
+                                    afterEmptyCheck {.via_exception{false}, .message{""}};
+
+    check(equality,
+          "An exception thrown before any check",
+          exception_message("Unexpected", file, std::nullopt, "Oops"),
+          "Error -- Unexpected Exception:\nOops\n\nException thrown before any checks performed in file\nTests/foo.cpp"s
+    );
+
+    check(equality,
+          "An exception thrown during a check with a description",
+          exception_message("Unexpected", file, duringCheck, "Oops"),
+          "Error -- Unexpected Exception:\nOops\n\nException thrown during last check\nLast Recorded Message:\n\nCheck"s
+    );
+
+    check(equality,
+          "An exception thrown during a check with an empty description",
+          exception_message("Unexpected", file, duringEmptyCheck, "Oops"),
+          "Error -- Unexpected Exception:\nOops\n\nException thrown during last check\nLast Recorded Message:\n"s
+    );
+
+    check(equality,
+          "An exception thrown after a check with an empty description",
+          exception_message("Unexpected", file, afterEmptyCheck, "Oops"),
+          "Error -- Unexpected Exception:\nOops\n\nException thrown after check completed\nLast Recorded Message:\n"s
+    );
   }
 
   void output_free_test::test_tidy_name()
@@ -333,9 +384,77 @@ namespace sequoia::testing
     );
 
     check(equality,
+          "A digit within an identifier after a non-ASCII character",
+          tidy_name("S<\xc3\xb6" "3u>", gcc_type{}),
+          "S<\xc3\xb6" "3u>"s
+    );
+
+    check(equality,
           "An x87 hex form with a non-zero exponent and a clear integer bit is left as it is",
           tidy_name("<(long double)[3fff0000000000000000]>", gcc_type{}),
           "<(long double)[3fff0000000000000000]>"s
+    );
+  }
+
+  void output_free_test::test_spans()
+  {
+    check(equality, "A span of static extent",  demangle<std::span<int, 3>>(), "std::span<int, 3>"s);
+    check(equality, "A span of dynamic extent", demangle<std::span<int>>(),    "std::span<int, -1>"s);
+
+    check(equality,
+          "Two spans of dynamic extent",
+          demangle<std::pair<std::span<int>, std::span<double>>>(),
+          "std::pair<std::span<int, -1>, std::span<double, -1> >"s
+    );
+
+    check(equality,
+          "A span whose element type is a template specialization",
+          demangle<std::span<std::array<int, 2>>>(),
+          "std::span<std::array<int, 2>, -1>"s
+    );
+
+    check(equality,
+          "A span of spans",
+          demangle<std::span<std::span<int>>>(),
+          "std::span<std::span<int, -1>, -1>"s
+    );
+
+    const auto dynamicExtent{std::format("{}", std::dynamic_extent)};
+
+    check(equality,
+          "libc++'s spelling of a span of dynamic extent",
+          tidy_name(std::format("std::__1::span<int, {}ul>", dynamicExtent), clang_type{}),
+          "std::span<int, -1>"s
+    );
+
+    check(equality,
+          "libstdc++'s spelling of a span of dynamic extent",
+          tidy_name(std::format("std::span<int, {}>", dynamicExtent), gcc_type{}),
+          "std::span<int, -1>"s
+    );
+
+    check(equality,
+          "A span in another namespace keeps its extent",
+          tidy_name(std::format("other::span<int, {}>", dynamicExtent), gcc_type{}),
+          std::format("other::span<int, {}>", dynamicExtent)
+    );
+
+    check(equality,
+          "A span in a namespace whose name ends in std keeps its extent",
+          tidy_name(std::format("mystd::span<int, {}>", dynamicExtent), gcc_type{}),
+          std::format("mystd::span<int, {}>", dynamicExtent)
+    );
+
+    check(equality,
+          "A span in a namespace named std within another keeps its extent",
+          tidy_name(std::format("foo::std::span<int, {}>", dynamicExtent), gcc_type{}),
+          std::format("foo::std::span<int, {}>", dynamicExtent)
+    );
+
+    check(equality,
+          "A span of dynamic extent as a template argument",
+          tidy_name(std::format("S<std::span<int, {}> >", dynamicExtent), gcc_type{}),
+          "S<std::span<int, -1> >"s
     );
   }
 
@@ -811,5 +930,12 @@ namespace sequoia::testing
     const auto testRepo{root / "Tests"}, file{testRepo / "foo.cpp"};
 
     check(equality, "File in repo", path_for_reporting(file, testRepo), fs::path{"Tests/foo.cpp"});
+    check(equality,
+          "File in repo, with a trailing separator",
+          path_for_reporting(file, testRepo / ""),
+          fs::path{"Tests/foo.cpp"}
+    );
+
+    check(equality, "A relative repository leaves the file unchanged", path_for_reporting(file, "Tests"), file);
   }
 }

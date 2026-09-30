@@ -8,6 +8,7 @@
 #include "sequoia/Runtime/ShellCommands.hpp"
 
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
+#include "sequoia/TextProcessing/Characters.hpp"
 
 #include <iostream>
 
@@ -189,7 +190,7 @@ namespace sequoia::runtime
   {
     if(!output.empty())
     {
-      if(!m_Command.empty() && std::isdigit(m_Command.back()))
+      if(!m_Command.empty() && is_digit(m_Command.back()))
         m_Command.append(" ");
 
       m_Command.append(app == append_mode::no ? "> " : ">> ");

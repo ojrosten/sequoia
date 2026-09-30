@@ -45,7 +45,7 @@ namespace sequoia::testing
       diagnostics_output,
       caught_exception_messages;
 
-    uncaught_exception_info exception_info{};
+    opt_top_level_check_exit_info last_check_exit_info{};
 
     std::size_t
       failures{},
@@ -93,9 +93,9 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    const uncaught_exception_info& exceptions_detected_by_sentinel() const noexcept
+    const opt_top_level_check_exit_info& last_check_exit_info() const noexcept
     {
-      return m_Results.exception_info;
+      return m_Results.last_check_exit_info;
     }
   protected:
     test_logger_base() = default;

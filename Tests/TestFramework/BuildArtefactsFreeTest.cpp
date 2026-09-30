@@ -9,6 +9,7 @@
 #include "BuildArtefactsTestingUtilities.hpp"
 
 #include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <cstring>
@@ -38,7 +39,7 @@ namespace sequoia::testing
     std::u16string upper(const fs::path& p)
     {
       auto s{p.u16string()};
-      std::ranges::transform(s, s.begin(), [](char16_t c){ return (c < 0x80) ? static_cast<char16_t>(std::toupper(static_cast<unsigned char>(c))) : c; });
+      std::ranges::transform(s, s.begin(), [](char16_t c){ return (c < 0x80) ? static_cast<char16_t>(to_uppercase(static_cast<char>(c))) : c; });
       return s;
     }
   }

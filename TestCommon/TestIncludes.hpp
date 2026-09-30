@@ -194,6 +194,7 @@
 #include "TestFramework/TestRunnerTest.hpp"
 #include "TestFramework/TestRunnerTestCreation.hpp"
 #include "TestFramework/VersionedOutputFreeTest.hpp"
+#include "TextProcessing/CharactersFreeTest.hpp"
 #include "TextProcessing/IndentFreeTest.hpp"
 #include "TextProcessing/PatternsFreeTest.hpp"
 #include "TextProcessing/SubstitutionsFreeTest.hpp"

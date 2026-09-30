@@ -101,6 +101,7 @@ int main(int argc, char** argv)
     runner.register_test<regular_state_transition_false_positive_diagnostics>();
     runner.register_test<move_only_state_transition_false_positive_diagnostics>();
     runner.register_test<move_only_state_transition_false_negative_diagnostics>();
+    runner.register_test<characters_free_test>();
     runner.register_test<indent_free_test>();
     runner.register_test<patterns_free_test>();
     runner.register_test<substitutions_free_test>();

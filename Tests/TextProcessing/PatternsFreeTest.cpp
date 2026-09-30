@@ -27,7 +27,6 @@ namespace sequoia::testing
   {
     test_find_delimiters();
     test_find_sandwiched_text();
-    test_is_identifier_character();
   }
 
   void patterns_free_test::test_find_delimiters()
@@ -57,28 +56,5 @@ namespace sequoia::testing
     check(equality, "Double match with offset",         find_sandwiched_text("foo foo Hello bar", "foo", "bar", 1), prediction{7, 14});
     check(equality, "Empty string, pos out of bounds",  find_sandwiched_text("", "foo", "bar", 1), prediction{npos, npos});
     check(equality, "Pos out of bounds",                find_sandwiched_text("foo Hello bar", "foo", "bar", 20), prediction{npos, npos});
-  }
-
-  void patterns_free_test::test_is_identifier_character()
-  {
-    STATIC_CHECK(is_identifier_character('a'));
-    STATIC_CHECK(is_identifier_character('z'));
-    STATIC_CHECK(is_identifier_character('A'));
-    STATIC_CHECK(is_identifier_character('Z'));
-    STATIC_CHECK(is_identifier_character('0'));
-    STATIC_CHECK(is_identifier_character('9'));
-    STATIC_CHECK(is_identifier_character('_'));
-
-    // Either side of each range, then characters of no range, bytes beyond ASCII among them
-    STATIC_CHECK(!is_identifier_character('`'));
-    STATIC_CHECK(!is_identifier_character('{'));
-    STATIC_CHECK(!is_identifier_character('@'));
-    STATIC_CHECK(!is_identifier_character('['));
-    STATIC_CHECK(!is_identifier_character('/'));
-    STATIC_CHECK(!is_identifier_character(':'));
-    STATIC_CHECK(!is_identifier_character('-'));
-    STATIC_CHECK(!is_identifier_character('\0'));
-    STATIC_CHECK(!is_identifier_character(static_cast<char>(0x80)));
-    STATIC_CHECK(!is_identifier_character(static_cast<char>(0xff)));
   }
 }

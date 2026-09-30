@@ -15,7 +15,7 @@
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/TestFramework/Commands.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
-#include "sequoia/TextProcessing/Patterns.hpp"
+#include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <array>
@@ -37,7 +37,7 @@ namespace sequoia::testing
     bool is_identifier(std::string_view name)
     {
       return !name.empty()
-          && !std::isdigit(static_cast<unsigned char>(name.front()))
+          && !is_digit(name.front())
           && std::ranges::all_of(name, is_identifier_character);
     }
   }
@@ -465,7 +465,7 @@ namespace sequoia::testing
     // Case is ignored, since the filesystems of macOS and Windows ignore it.
     auto sameIgnoringCase{
       [](const fs::path& lhs, const fs::path& rhs) {
-        return to_lower_case(lhs.filename().string()) == to_lower_case(rhs.filename().string());
+        return to_lowercase(lhs.filename().string()) == to_lowercase(rhs.filename().string());
       }
     };
 

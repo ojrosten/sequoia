@@ -8,22 +8,13 @@
 #pragma once
 
 /** \file
-    \brief A collection of functions for finding and recognising patterns within text.
+    \brief A collection of functions for finding patterns within text.
  */
 
 #include <string>
 
 namespace sequoia
 {
-  inline constexpr auto is_identifier_character{
-    [](char c) noexcept {
-      return ((c >= 'a') && (c <= 'z'))
-          || ((c >= 'A') && (c <= 'Z'))
-          || ((c >= '0') && (c <= '9'))
-          || (c == '_');
-    }
-  };
-
   /** \brief Searches `s`, from `pos`, for the first `open` and the `close` that balances it.
       \returns
       -# The positions of that `open` and one past its `close`;

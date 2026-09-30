@@ -7,10 +7,10 @@
 
 #include "sequoia/TestFramework/DumpComparison.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
-#include <cctype>
 #include <format>
 #include <map>
 #include <ranges>
@@ -42,7 +42,7 @@ namespace sequoia::testing
         return false;
 
       const auto number{line.substr(prefix + line_number_prefix.size())};
-      return !number.empty() && std::ranges::all_of(number, [](char c){ return std::isdigit(static_cast<unsigned char>(c)); });
+      return !number.empty() && std::ranges::all_of(number, is_digit);
     }
 
     [[nodiscard]]

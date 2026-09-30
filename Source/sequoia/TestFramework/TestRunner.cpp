@@ -18,6 +18,7 @@
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"
+#include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
@@ -1594,13 +1595,13 @@ namespace sequoia::testing
     if(contains_non_ascii(name))
       throw std::logic_error{non_ascii_name_message(source)};
 
-    if(!m_LowerCaseTestNames.insert(to_lower_case(name)).second)
+    if(!m_LowerCaseTestNames.insert(to_lowercase(name)).second)
       throw std::logic_error{duplication_message(name, source)};
   }
 
   void test_runner::register_source(const fs::path& source)
   {
-    const auto prefix{to_lower_case(materials_prefix(source, proj_paths()).lexically_normal().generic_string())};
+    const auto prefix{to_lowercase(materials_prefix(source, proj_paths()).lexically_normal().generic_string())};
     if(prefix.empty())
       throw std::logic_error{unplaceable_source_message(source)};
 
