@@ -28,7 +28,7 @@ namespace sequoia::testing
   private:
     void test_discriminator_hooks();
 
-    template<class Probe>
+    template<template<class> class Probe>
     void test_discriminator_probe();
 
     void test_exceptions();

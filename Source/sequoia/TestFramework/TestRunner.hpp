@@ -363,13 +363,13 @@ namespace sequoia::testing
     parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
   };
 
-  /** \brief Calls the hook of `T` that `Probe` probes for, if `T` has one.
+  /** \brief Calls the hook of `T` that `Probe` probes for.
 
       \returns
-      -# The result of calling the hook with `cache`, if `Probe` finds the hook in `T`;
+      -# The hook's result for `cache`, as a `std::string`, if `T` declares the hook;
       -# `nullopt` otherwise.
    */
-  template<class Probe, concrete_test T>
+  template<template<class> class Probe, concrete_test T>
   [[nodiscard]]
   std::optional<std::string> get_discriminator(const cmake_cache& cache)
   {
@@ -381,7 +381,7 @@ namespace sequoia::testing
                   "A discriminator hook must return something convertible to std::string");
 
     if constexpr(has_discriminator_v<Probe, T>)
-      return Probe::template discriminator<T>(cache);
+      return Probe<T>::discriminator(cache);
     else
       return std::nullopt;
   }
