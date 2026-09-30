@@ -242,7 +242,7 @@ A full name whose file is a companion's
 
 Expected Exception Type:
 [std::runtime_error]
---fullname sprocket_testing_utilities would name the test's file Tests/Stuff/SprocketTestingUtilities.hpp, which is also the file of the type under test Tests/Stuff/SprocketTestingUtilities.hpp
+--fullname sprocket_testing_utilities would name the test's file Tests/Stuff/SprocketTestingUtilities.hpp, which clashes with Tests/Stuff/SprocketTestingUtilities.hpp, a file to be written for the type under test
 
 =======================================
 

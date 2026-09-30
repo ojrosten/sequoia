@@ -475,7 +475,7 @@ namespace sequoia::testing
 
       if(const auto companion{std::ranges::find_if(companionFiles, collides)}; companion != companionFiles.end())
         throw std::runtime_error{
-          std::format("--fullname {} would name the test's file {}, which is also the file of the type under test {}",
+          std::format("--fullname {} would name the test's file {}, which clashes with {}, a file to be written for the type under test",
                       name,
                       relativeToRoot(own),
                       relativeToRoot(*companion))
