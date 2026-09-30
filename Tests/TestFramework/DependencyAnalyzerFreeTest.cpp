@@ -17,6 +17,7 @@
 #include "sequoia/TestFramework/ChronoCheckers.hpp"
 #include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
+#include <format>
 #include <fstream>
 #include <stdexcept>
 
@@ -294,7 +295,7 @@ namespace sequoia::testing
       std::string statements{};
       for(const auto& record : records)
       {
-        statements.append("build ").append(asWritten(record.object)).append(": CXX_COMPILER ").append(asWritten(record.inputs.front())).append(" || cmake_object_order_depends\n");
+        statements.append(std::format("build {}: CXX_COMPILER {} || cmake_object_order_depends\n", asWritten(record.object), asWritten(record.inputs.front())));
       }
 
       // An object the build once had and no longer does keeps its record in the log, and its source may be gone

@@ -17,6 +17,8 @@
 #include "sequoia/TestFramework/SemanticsCheckersDetails.hpp"
 #include "sequoia/TestFramework/FreeCheckers.hpp"
 
+#include <format>
+
 namespace sequoia::testing::impl
 {
   struct allocation_advice
@@ -617,7 +619,7 @@ namespace sequoia::testing::impl
     {
       sentinel<Mode> s{logger, ""};
 
-      const auto mess{std::string{"for operator"}.append(to_string(comparison.value)).append(" ").append(tag)};
+      const auto mess{std::format("for operator{} {}", to_string(comparison.value), tag)};
       check_no_allocation<C>(logger, x, mess, checkers...);
 
       return !s.failure_detected();

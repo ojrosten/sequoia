@@ -13,8 +13,8 @@
 
 #include <algorithm>
 #include <cctype>
+#include <format>
 #include <fstream>
-#include <iomanip>
 #include <limits>
 #include <stdexcept>
 
@@ -77,9 +77,7 @@ namespace sequoia::testing
 
               messages.append(messages.empty() ? commonMessage : "\n");
 
-              messages.append("vs.\n\n")
-                      .append(commonMessage)
-                      .append(j->message);
+              messages.append(std::format("vs.\n\n{}{}", commonMessage, j->message));
             }
           }
           else
@@ -98,12 +96,11 @@ namespace sequoia::testing
       {
         freqs += to_percent(std::ranges::distance(current, last)) += "%]\n\n"s;
 
-        return std::string{"\nInstability detected in file \""}
-          .append(filename.string())
-          .append("\"\nOutcome frequencies:\n" + freqs)
-          .append(messages)
-          .append("\n")
-          .append(instability_footer());
+        return std::format("\nInstability detected in file \"{}\"\nOutcome frequencies:\n{}{}\n{}",
+                           filename.string(),
+                           freqs,
+                           messages,
+                           instability_footer());
       }
 
       return "";

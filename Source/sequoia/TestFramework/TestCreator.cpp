@@ -202,7 +202,7 @@ namespace sequoia::testing
     std::string str{"<"};
     for(const auto& d : data)
     {
-      str.append(d.species).append(" ").append(d.symbol).append(", ");
+      str.append(std::format("{} {}, ", d.species, d.symbol));
     }
     str.replace(str.size() - 2, 2, ">");
 
@@ -217,7 +217,7 @@ namespace sequoia::testing
 
     auto mess{
       [str](std::string_view details){
-        return std::string{"<"}.append(str).append(">: ").append(details);
+        return std::format("<{}>: {}", str, details);
       }
     };
 
@@ -387,7 +387,7 @@ namespace sequoia::testing
       ammend_file(m_Paths, addToCMake, [](const main_paths& info) { return info.cmake_lists(); });
     }
 
-    return std::string{"\""}.append(stringify(outputFile)).append("\"");
+    return std::format("\"{}\"", stringify(outputFile));
   }
 
   template<invocable_exact_r<std::filesystem::path, std::filesystem::path> WhenAbsent, std::invocable<std::string&> FileTransformer>
@@ -570,7 +570,7 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path nascent_semantics_test::when_header_absent(const fs::path& filename, const std::string& nameSpace)
   {
-    const auto headerTemplate{std::string{"My"}.append(capitalize(to_camel_case(test_type()))).append("Class.hpp")};
+    const auto headerTemplate{std::format("My{}Class.hpp", capitalize(to_camel_case(test_type())))};
 
     const auto headerPath{filename.is_absolute() ? filename : paths().source().project() / rebase_from(m_SourceDir / filename, paths().source().project())};
 
@@ -591,8 +591,8 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> nascent_semantics_test::test_classes() const
   {
-    return { {std::string{forename()}.append("_false_negative_").append(surname())},
-             {std::string{forename()}.append("_").append(surname())}};
+    return { {std::format("{}_false_negative_{}", forename(), surname())},
+             {std::format("{}_{}", forename(), surname())}};
   }
 
   void nascent_semantics_test::transform_file(std::string& text) const
@@ -624,7 +624,7 @@ namespace sequoia::testing
       const auto prediction{
         [num](const std::size_t i, std::string_view sep) {
           std::string p{"prediction"};
-          if(num > 1) p.append("_").append(std::to_string(i));
+          if(num > 1) p.append(std::format("_{}", i));
           if((i < num - 1) && !sep.empty()) p.append(sep).append(" ");
           return p;
         }
@@ -666,7 +666,7 @@ namespace sequoia::testing
 
     if(!m_TemplateData.empty())
     {
-      replace_all(text, "<?> ", to_string(m_TemplateData).append("\n").append(code_indent()));
+      replace_all(text, "<?> ", std::format("{}\n{}", to_string(m_TemplateData), std::string_view{code_indent()}));
     }
     else
     {
@@ -725,7 +725,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<std::string> nascent_allocation_test::test_classes() const
   {
-    return { {std::string{forename()}.append("_").append(surname())} };
+    return { {std::format("{}_{}", forename(), surname())} };
   }
 
   void nascent_allocation_test::transform_file(std::string& text) const
@@ -758,9 +758,9 @@ namespace sequoia::testing
 
     if(forename().empty()) forename(to_snake_case(fallbackSuite));
 
-    if(surname().empty()) surname(std::string{test_type()}.append("_").append(to_surname(flavour())));
+    if(surname().empty()) surname(std::format("{}_{}", test_type(), to_surname(flavour())));
 
-    camel_name(std::string{forename()}.append("_").append(test_type()));
+    camel_name(std::format("{}_{}", forename(), test_type()));
 
     nascent_test_base::finalize([this](const fs::path& filename) { return when_header_absent(filename); },
                                 to_stubs(*this),
@@ -793,9 +793,8 @@ namespace sequoia::testing
   {
     auto makeClassName{
       [this](std::string_view middlename) -> std::string {
-        auto testClass{std::string{forename()}.append("_")};
-        if(!middlename.empty()) testClass.append(middlename).append("_");
-        return testClass.append(surname());
+        return middlename.empty() ? std::format("{}_{}", forename(), surname())
+                                  : std::format("{}_{}_{}", forename(), middlename, surname());
       }
     };
 

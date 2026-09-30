@@ -14,6 +14,7 @@
 #include "sequoia/TestFramework/AllocationCheckersDetails.hpp"
 #include "sequoia/TestFramework/MoveOnlyCheckersDetails.hpp"
 
+#include <format>
 #include <optional>
 
 namespace sequoia::testing::impl
