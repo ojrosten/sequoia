@@ -54,7 +54,7 @@ namespace sequoia::testing
     STATIC_CHECK(!std::invocable<decltype(to_uppercase),            char16_t>);
     STATIC_CHECK(!std::invocable<decltype(to_uppercase),            int>);
 
-    // Every string is converted in a copy
+    // Every conversion of a string is returned as a std::string
     STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), std::string&>,       std::string>);
     STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), const std::string&>, std::string>);
     STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), std::string>,        std::string>);

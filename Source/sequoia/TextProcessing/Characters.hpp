@@ -91,9 +91,9 @@ namespace sequoia
     };
   }
 
-  /** \brief Converts a `char`, or a copy of a string, to lowercase. */
+  /** \brief The lowercase form of a `char`, or of an argument convertible to `std::string_view`. */
   inline constexpr impl::to_lowercase_fn to_lowercase{};
 
-  /** \brief Converts a `char`, or a copy of a string, to uppercase. */
+  /** \brief The uppercase form of a `char`, or of an argument convertible to `std::string_view`. */
   inline constexpr impl::to_uppercase_fn to_uppercase{};
 }
