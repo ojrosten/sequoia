@@ -1586,7 +1586,7 @@ namespace sequoia::testing
 
   void test_runner_test::test_suites_not_found()
   {
-    // Two suites which match no test: the one spelt as a source file draws a hint to use 'select'; the other does not
+    // Neither suite matches a test. Only the suite spelt as a source file draws a hint to use 'select'
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Absent", "test", "absent_test.cpp"}};
 
