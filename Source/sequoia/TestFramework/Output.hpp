@@ -50,21 +50,11 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string emphasise(std::string_view s);
 
-  template<class Char>
-  inline constexpr bool is_character_v{
-       std::is_same_v<std::remove_cvref_t<Char>, char>
-    || std::is_same_v<std::remove_cvref_t<Char>, wchar_t>
-    || std::is_same_v<std::remove_cvref_t<Char>, char8_t>
-    || std::is_same_v<std::remove_cvref_t<Char>, char16_t>
-    || std::is_same_v<std::remove_cvref_t<Char>, char32_t>
-  };
-
   /** \brief A character as a failure report shows it: an alert, backspace, form feed, newline, carriage return,
              tab, vertical tab or NUL as its escape sequence, and a space as itself, each in single quotes; any other
              character as itself, narrowed to a `char`, so that a wide character keeps only its low-order byte.
    */
-  template<class Char>
-    requires is_character_v<Char>
+  template<character Char>
   [[nodiscard]]
   std::string display_character(Char c)
   {
@@ -124,8 +114,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string prediction_message(const std::string& obtained, const std::string& prediction);
 
-  template<class Char>
-    requires is_character_v<Char>
+  template<character Char>
   [[nodiscard]]
   std::string prediction_message(Char obtained, Char prediction)
   {
@@ -141,7 +130,7 @@ namespace sequoia::testing
   }
 
   template<serializable T>
-    requires (!is_character_v<T> && !std::is_pointer_v<T> && !is_const_pointer_v<T>)
+    requires (!character<T> && !std::is_pointer_v<T> && !is_const_pointer_v<T>)
   [[nodiscard]]
   std::string prediction_message(const T& obtained, const T& prediction)
   {
@@ -161,7 +150,7 @@ namespace sequoia::testing
   inline constexpr is_not_final_message_t is_not_final_message{};
 
   template<class T>
-  concept reportable = serializable<T> || is_character_v<T>;
+  concept reportable = serializable<T> || character<T>;
 
   template<reportable T>
   [[nodiscard]]
@@ -283,13 +272,14 @@ namespace sequoia::testing
     return tidy(demangle({typeid(T).name()}));
   }
 
-  /** \brief The name of `T` in the spelling shared by every supported toolchain. If `T` is itself a 32- or 64-bit
-             unsigned type, the name is that of the fixed-width type of its size, as the platform spells it.
-   */
   /** \brief The name of the type `info` describes, in the spelling shared by every supported toolchain. */
   [[nodiscard]]
   std::string demangle(const std::type_info& info);
 
+  /** \brief The name of `T` in the spelling shared by every supported toolchain.
+
+      A 32- or 64-bit unsigned integer type is named as the fixed-width type of its size, in the platform's spelling.
+   */
   template<class T>
   [[nodiscard]]
   std::string demangle()
