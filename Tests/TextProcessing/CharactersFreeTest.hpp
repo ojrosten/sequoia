@@ -29,6 +29,8 @@ namespace sequoia::testing
 
     void test_is_identifier_character();
 
+    void test_is_identifier_delimiter();
+
     void test_conversion();
   };
 }

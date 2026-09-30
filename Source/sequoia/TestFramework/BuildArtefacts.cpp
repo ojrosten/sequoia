@@ -477,11 +477,12 @@ namespace sequoia::testing
         return false;
 
       const auto afterCompilerPrefix{unprefixedName.substr(compilerPrefix.size())};
-      const auto digitsEnd{afterCompilerPrefix.find_first_not_of("0123456789")};
-      const bool numbered{   (digitsEnd > 0)
-                          && (digitsEnd != std::string_view::npos)
-                          && (afterCompilerPrefix[digitsEnd] == '.')};
-      const auto rest{numbered ? afterCompilerPrefix.substr(digitsEnd + 1) : afterCompilerPrefix};
+      const auto digitsEnd{std::ranges::find_if_not(afterCompilerPrefix, is_digit)};
+      const bool numbered{   (digitsEnd != afterCompilerPrefix.begin())
+                          && (digitsEnd != afterCompilerPrefix.end())
+                          && (*digitsEnd == '.')};
+      const auto rest{numbered ? std::string_view{std::ranges::next(digitsEnd), afterCompilerPrefix.end()}
+                               : afterCompilerPrefix};
 
       return rest.starts_with(std::string{kind}.append("."));
     }

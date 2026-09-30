@@ -1578,8 +1578,7 @@ namespace sequoia::testing
     [[nodiscard]]
     bool contains_non_ascii(std::string_view text)
     {
-      constexpr unsigned char lastAscii{0x7F};
-      return std::ranges::any_of(text, [](char c){ return static_cast<unsigned char>(c) > lastAscii; });
+      return !std::ranges::all_of(text, is_ascii);
     }
   }
 

@@ -38,9 +38,6 @@ namespace sequoia::testing
     constexpr auto npos{std::string::npos};
     using size_type = std::string::size_type;
 
-    // Identifiers may hold multi-byte UTF-8 characters, so no byte beyond ASCII is a delimiter
-    constexpr auto is_word_delimiter{[](char c){ return is_ascii(c) && !is_identifier_character(c); }};
-
     /** Whether a number, a digit or a `-` then a digit, begins at `pos`. */
     [[nodiscard]]
     bool begins_number(std::string_view text, size_type pos)
@@ -418,10 +415,10 @@ namespace sequoia::testing
         if(pos == npos)
           break;
 
-        const bool continuesIdentifier{!is_word_delimiter(name[pos - 1])};
+        const bool continuesIdentifier{!is_identifier_delimiter(name[pos - 1])};
         if(continuesIdentifier)
         {
-          const auto identifierEnd{std::ranges::find_if(name.begin() + pos, name.end(), is_word_delimiter)};
+          const auto identifierEnd{std::ranges::find_if(name.begin() + pos, name.end(), is_identifier_delimiter)};
           pos = std::ranges::distance(name.begin(), identifierEnd);
           continue;
         }
@@ -454,7 +451,9 @@ namespace sequoia::testing
 
       // Excludes, for example, mystd::span and foo::std::span
       auto startsQualifiedName{
-        [&name](size_type pos){ return (pos == 0) || (is_word_delimiter(name[pos - 1]) && (name[pos - 1] != ':')); }
+        [&name](size_type pos) {
+          return (pos == 0) || (is_identifier_delimiter(name[pos - 1]) && (name[pos - 1] != ':'));
+        }
       };
 
       for(auto start{name.find(spanOpening)}; start != npos; start = name.find(spanOpening, start + 1))
@@ -519,11 +518,11 @@ namespace sequoia::testing
       if constexpr(sizeof(unsigned long) == sizeof(unsigned long long))
       {
         // Collapse before expanding; the other way round, the collapse undoes the expansion
-        replace_all(name, is_word_delimiter, "long long", is_word_delimiter, "long");
-        replace_all(name, is_word_delimiter, "long",      is_word_delimiter, "long long");
+        replace_all(name, is_identifier_delimiter, "long long", is_identifier_delimiter, "long");
+        replace_all(name, is_identifier_delimiter, "long",      is_identifier_delimiter, "long long");
 
         // The expansion cannot see that `long double` is not a `long`
-        replace_all(name, is_word_delimiter, "long long double", is_word_delimiter, "long double");
+        replace_all(name, is_identifier_delimiter, "long long double", is_identifier_delimiter, "long double");
       }
 
       // It is a pity to have to make the following substitutions, but it appears
@@ -631,7 +630,7 @@ namespace sequoia::testing
       auto respell{
         [&demangled, mangled](std::string_view from, std::string_view to){
           if(!may_hold_source_name(mangled, from))
-            replace_all(demangled, is_word_delimiter, from, is_word_delimiter, to);
+            replace_all(demangled, is_identifier_delimiter, from, is_identifier_delimiter, to);
         }
       };
 

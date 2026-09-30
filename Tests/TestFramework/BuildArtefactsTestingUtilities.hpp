@@ -37,6 +37,12 @@ namespace sequoia::testing
   /// Writes a dependency log which ninja would read.
   void write_ninja_deps(const std::filesystem::path& log, std::span<const compilation_record> records);
 
+  /** `p` in UTF-16, as MSBuild's file tracker spells a path: its ASCII letters are in upper case, and every other
+      character is as it is.
+   */
+  [[nodiscard]]
+  std::u16string to_tracker_spelling(const std::filesystem::path& p);
+
   /// Writes the logs MSBuild's file tracker would.
   void write_tlogs(const std::filesystem::path& tlogDir, std::span<const compilation_record> records);
 }

@@ -13,7 +13,6 @@
 
 #include "sequoia/TextProcessing/Characters.hpp"
 
-#include <algorithm>
 #include <cstdint>
 #include <fstream>
 #include <map>
@@ -122,8 +121,20 @@ namespace sequoia::testing
     }
   }
 
-  /* UTF-16 with a byte order mark, a `^`-led line naming the source and the files it read beneath
-     it, all in upper case.
+  [[nodiscard]]
+  std::u16string to_tracker_spelling(const fs::path& p)
+  {
+    constexpr char16_t asciiEnd{0x80};
+    auto upper{
+      [](char16_t c){ return (c < asciiEnd) ? static_cast<char16_t>(to_uppercase(static_cast<char>(c))) : c; }
+    };
+
+    return p.u16string() | std::views::transform(upper) | std::ranges::to<std::u16string>();
+  }
+
+  /* Two logs, each UTF-16 behind a byte order mark. For each record with inputs, each log has a `^`-led line naming
+     the first input. Beneath it, the read log lists the other inputs and the write log lists the object. Every path
+     is spelled by `to_tracker_spelling`.
    */
   void write_tlogs(const fs::path& tlogDir, std::span<const compilation_record> records)
   {
@@ -131,14 +142,6 @@ namespace sequoia::testing
     std::ofstream read{tlogDir / "CL.read.1.tlog", std::ios_base::binary}, write{tlogDir / "CL.write.1.tlog", std::ios_base::binary};
     if(!read || !write)
       throw std::runtime_error{"Unable to write tracking logs in " + tlogDir.generic_string()};
-
-    auto upper{
-      [](const fs::path& p) {
-        auto s{p.u16string()};
-        std::ranges::transform(s, s.begin(), [](char16_t c){ return (c < 0x80) ? static_cast<char16_t>(to_uppercase(static_cast<char>(c))) : c; });
-        return s;
-      }
-    };
 
     for(auto& out : {&read, &write})
     {
@@ -150,16 +153,16 @@ namespace sequoia::testing
       if(record.inputs.empty())
         continue;
 
-      const auto source{u"^" + upper(record.inputs.front()) + u"\r\n"};
+      const auto source{u"^" + to_tracker_spelling(record.inputs.front()) + u"\r\n"};
 
       write_utf16le(read, source);
       for(const auto& input : record.inputs | std::views::drop(1))
       {
-        write_utf16le(read, upper(input) + u"\r\n");
+        write_utf16le(read, to_tracker_spelling(input) + u"\r\n");
       }
 
       write_utf16le(write, source);
-      write_utf16le(write, upper(record.object) + u"\r\n");
+      write_utf16le(write, to_tracker_spelling(record.object) + u"\r\n");
     }
   }
 }

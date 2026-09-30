@@ -37,6 +37,7 @@ namespace sequoia::testing
     test_constraints();
     test_classification();
     test_is_identifier_character();
+    test_is_identifier_delimiter();
     test_conversion();
   }
 
@@ -47,6 +48,10 @@ namespace sequoia::testing
     STATIC_CHECK(!std::invocable<decltype(is_digit),                int>);
     STATIC_CHECK( std::invocable<decltype(is_identifier_character), char>);
     STATIC_CHECK(!std::invocable<decltype(is_identifier_character), int>);
+    STATIC_CHECK( std::invocable<decltype(is_identifier_delimiter), char>);
+    STATIC_CHECK(!std::invocable<decltype(is_identifier_delimiter), int>);
+    STATIC_CHECK( std::invocable<decltype(is_whitespace),           char>);
+    STATIC_CHECK(!std::invocable<decltype(is_whitespace),           int>);
     STATIC_CHECK( std::invocable<decltype(to_lowercase),            char>);
     STATIC_CHECK(!std::invocable<decltype(to_lowercase),            char16_t>);
     STATIC_CHECK(!std::invocable<decltype(to_lowercase),            int>);
@@ -108,6 +113,19 @@ namespace sequoia::testing
     STATIC_CHECK( is_hex_digit('F'));
     STATIC_CHECK(!is_hex_digit('@'));
     STATIC_CHECK(!is_hex_digit('G'));
+    STATIC_CHECK( is_whitespace('\t'));
+    STATIC_CHECK( is_whitespace('\n'));
+    STATIC_CHECK( is_whitespace('\v'));
+    STATIC_CHECK( is_whitespace('\f'));
+    STATIC_CHECK( is_whitespace('\r'));
+    STATIC_CHECK(!is_whitespace('\b'));
+    STATIC_CHECK(!is_whitespace('\x0e'));
+    STATIC_CHECK( is_whitespace(' '));
+    STATIC_CHECK(!is_whitespace('\x1f'));
+    STATIC_CHECK(!is_whitespace('!'));
+    // Latin-1's next line and no-break space, which some locales count as whitespace
+    STATIC_CHECK(!is_whitespace('\x85'));
+    STATIC_CHECK(!is_whitespace('\xa0'));
 
     STATIC_CHECK(!is_alphabetic('0'));
     STATIC_CHECK(!is_digit('a'));
@@ -122,6 +140,7 @@ namespace sequoia::testing
       check(describe("A byte beyond ASCII is not a hexadecimal digit", byte), !is_hex_digit(byte));
       check(describe("A byte beyond ASCII is not uppercase",           byte), !is_uppercase(byte));
       check(describe("A byte beyond ASCII is not lowercase",           byte), !is_lowercase(byte));
+      check(describe("A byte beyond ASCII is not whitespace",          byte), !is_whitespace(byte));
     }
   }
 
@@ -146,6 +165,20 @@ namespace sequoia::testing
     STATIC_CHECK(!is_identifier_character('\0'));
     STATIC_CHECK(!is_identifier_character(static_cast<char>(0x80)));
     STATIC_CHECK(!is_identifier_character(static_cast<char>(0xff)));
+  }
+
+  void characters_free_test::test_is_identifier_delimiter()
+  {
+    STATIC_CHECK(!is_identifier_delimiter('_'));
+    STATIC_CHECK(!is_identifier_delimiter('a'));
+    STATIC_CHECK(!is_identifier_delimiter('0'));
+    STATIC_CHECK( is_identifier_delimiter('<'));
+    STATIC_CHECK( is_identifier_delimiter(' '));
+    STATIC_CHECK( is_identifier_delimiter('\0'));
+    STATIC_CHECK( is_identifier_delimiter('\x7f'));
+    STATIC_CHECK(!is_identifier_delimiter(static_cast<char>(0x80)));
+    STATIC_CHECK(!is_identifier_delimiter(static_cast<char>(0xc3)));
+    STATIC_CHECK(!is_identifier_delimiter(static_cast<char>(0xff)));
   }
 
   void characters_free_test::test_conversion()

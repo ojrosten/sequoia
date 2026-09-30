@@ -9,7 +9,6 @@
 #include "BuildArtefactsTestingUtilities.hpp"
 
 #include "sequoia/Streaming/Streaming.hpp"
-#include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <cstring>
@@ -32,15 +31,6 @@ namespace sequoia::testing
         out.put(static_cast<char>(unit & 0xFF));
         out.put(static_cast<char>(unit >> 8));
       }
-    }
-
-    /// As the tracker spells a path, for the ASCII the fixtures use; a character beyond it is left as it is
-    [[nodiscard]]
-    std::u16string upper(const fs::path& p)
-    {
-      auto s{p.u16string()};
-      std::ranges::transform(s, s.begin(), [](char16_t c){ return (c < 0x80) ? static_cast<char16_t>(to_uppercase(static_cast<char>(c))) : c; });
-      return s;
     }
   }
 
@@ -271,8 +261,8 @@ namespace sequoia::testing
       // One invocation compiling two sources lists them together; each object goes to the source sharing its stem
       const auto [tree, configuration, dir]{target("joint")};
       fs::create_directories(dir);
-      write_utf16(dir / "CL.read.1.tlog", u"^" + upper(project / "a.cpp") + u"|" + upper(project / "c.cpp") + u"\r\n" + upper(project / "a.h") + u"\r\n");
-      write_utf16(dir / "CL.write.1.tlog", u"^" + upper(project / "a.cpp") + u"|" + upper(project / "c.cpp") + u"\r\n" + upper(project / "a.obj") + u"\r\n" + upper(project / "c.obj") + u"\r\n");
+      write_utf16(dir / "CL.read.1.tlog", u"^" + to_tracker_spelling(project / "a.cpp") + u"|" + to_tracker_spelling(project / "c.cpp") + u"\r\n" + to_tracker_spelling(project / "a.h") + u"\r\n");
+      write_utf16(dir / "CL.write.1.tlog", u"^" + to_tracker_spelling(project / "a.cpp") + u"|" + to_tracker_spelling(project / "c.cpp") + u"\r\n" + to_tracker_spelling(project / "a.obj") + u"\r\n" + to_tracker_spelling(project / "c.obj") + u"\r\n");
 
       const auto read{expand(read_compilations(tree, configuration))};
       check(equality,
@@ -288,9 +278,9 @@ namespace sequoia::testing
       // A target's tracker logs may carry a number, as the TestAll tree's write log did on Windows
       const auto [tree, configuration, dir]{target("numbered")};
       fs::create_directories(dir);
-      write_utf16(dir / "CL.read.1.tlog",        u"^" + upper(project / "a.cpp") + u"\r\n" + upper(project / "a.h") + u"\r\n");
-      write_utf16(dir / "CL.11932.write.1.tlog", u"^" + upper(project / "a.cpp") + u"\r\n" + upper(project / "a.obj") + u"\r\n");
-      write_utf16(dir / "CL.command.1.tlog",     u"^" + upper(project / "a.cpp") + u"\r\n" + u"/c /Zi\r\n");
+      write_utf16(dir / "CL.read.1.tlog",        u"^" + to_tracker_spelling(project / "a.cpp") + u"\r\n" + to_tracker_spelling(project / "a.h") + u"\r\n");
+      write_utf16(dir / "CL.11932.write.1.tlog", u"^" + to_tracker_spelling(project / "a.cpp") + u"\r\n" + to_tracker_spelling(project / "a.obj") + u"\r\n");
+      write_utf16(dir / "CL.command.1.tlog",     u"^" + to_tracker_spelling(project / "a.cpp") + u"\r\n" + u"/c /Zi\r\n");
 
       check(equality,
             "A numbered write log is read; the command log is not",
@@ -304,12 +294,12 @@ namespace sequoia::testing
        */
       const auto [tree, configuration, dir]{target("multi_tool_task")};
       fs::create_directories(dir);
-      const auto aSourceLine{u"^" + upper(project / "a.cpp") + u"\r\n"};
-      const auto bSourceLine{u"^" + upper(project / "b.cpp") + u"\r\n"};
-      write_utf16(dir / "Microsoft.Build.CPPTasks.CL.read.1.tlog",    aSourceLine + upper(project / "a.h") + u"\r\n");
-      write_utf16(dir / "Microsoft.Build.CPPTasks.CL.write.1.tlog",   aSourceLine + upper(project / "a.obj") + u"\r\n");
-      write_utf16(dir / "Microsoft.Build.CPPTasks.MIDL.read.1.tlog",  bSourceLine + upper(project / "a.h") + u"\r\n");
-      write_utf16(dir / "Microsoft.Build.CPPTasks.MIDL.write.1.tlog", bSourceLine + upper(project / "b.obj") + u"\r\n");
+      const auto aSourceLine{u"^" + to_tracker_spelling(project / "a.cpp") + u"\r\n"};
+      const auto bSourceLine{u"^" + to_tracker_spelling(project / "b.cpp") + u"\r\n"};
+      write_utf16(dir / "Microsoft.Build.CPPTasks.CL.read.1.tlog",    aSourceLine + to_tracker_spelling(project / "a.h") + u"\r\n");
+      write_utf16(dir / "Microsoft.Build.CPPTasks.CL.write.1.tlog",   aSourceLine + to_tracker_spelling(project / "a.obj") + u"\r\n");
+      write_utf16(dir / "Microsoft.Build.CPPTasks.MIDL.read.1.tlog",  bSourceLine + to_tracker_spelling(project / "a.h") + u"\r\n");
+      write_utf16(dir / "Microsoft.Build.CPPTasks.MIDL.write.1.tlog", bSourceLine + to_tracker_spelling(project / "b.obj") + u"\r\n");
 
       check(equality,
             "The compiler's logs are read under MultiToolTask's prefix; another tool's are not",
@@ -326,9 +316,9 @@ namespace sequoia::testing
         write_to_file(project / name, "", std::ios_base::out);
       }
 
-      const auto roots{u"^" + upper(project / "Gadget.cpp") + u"|" + upper(project / "Gadget.cxx") + u"\r\n"};
-      write_utf16(dir / "CL.read.1.tlog", roots + upper(project / "a.h") + u"\r\n");
-      write_utf16(dir / "CL.write.1.tlog", roots + upper(project / "Gadget.cpp.obj") + u"\r\n" + upper(project / "Gadget.cxx.obj") + u"\r\n");
+      const auto roots{u"^" + to_tracker_spelling(project / "Gadget.cpp") + u"|" + to_tracker_spelling(project / "Gadget.cxx") + u"\r\n"};
+      write_utf16(dir / "CL.read.1.tlog", roots + to_tracker_spelling(project / "a.h") + u"\r\n");
+      write_utf16(dir / "CL.write.1.tlog", roots + to_tracker_spelling(project / "Gadget.cpp.obj") + u"\r\n" + to_tracker_spelling(project / "Gadget.cxx.obj") + u"\r\n");
 
       const auto read{expand(read_compilations(tree, configuration))};
       check(equality,
@@ -339,7 +329,7 @@ namespace sequoia::testing
               {project / "Gadget.cxx.obj", {project / "Gadget.cxx", project / "a.h"}}
             });
 
-      write_utf16(dir / "CL.write.1.tlog", roots + upper(project / "a.obj") + u"\r\n" + upper(project / "b.obj") + u"\r\n");
+      write_utf16(dir / "CL.write.1.tlog", roots + to_tracker_spelling(project / "a.obj") + u"\r\n" + to_tracker_spelling(project / "b.obj") + u"\r\n");
       check_exception_thrown<std::runtime_error>(
         "An object which bears neither source's name",
         [&](){ return read_compilations(tree, configuration); });
@@ -354,8 +344,8 @@ namespace sequoia::testing
         write_to_file(project / name, "", std::ios_base::out);
       }
 
-      write_utf16(dir / "CL.read.1.tlog", u"^" + upper(project / "main.cpp") + u"\r\n" + upper(project / "a.h") + u"\r\n");
-      write_utf16(dir / "CL.write.1.tlog", u"^" + upper(project / "main.cpp") + u"\r\n" + upper(project / "main_x64.obj") + u"\r\n");
+      write_utf16(dir / "CL.read.1.tlog", u"^" + to_tracker_spelling(project / "main.cpp") + u"\r\n" + to_tracker_spelling(project / "a.h") + u"\r\n");
+      write_utf16(dir / "CL.write.1.tlog", u"^" + to_tracker_spelling(project / "main.cpp") + u"\r\n" + to_tracker_spelling(project / "main_x64.obj") + u"\r\n");
       check(equality,
             "A lone object bearing neither the source's stem nor its name is the source's",
             expand(read_compilations(tree, configuration)),
@@ -366,9 +356,9 @@ namespace sequoia::testing
       // Two sources compiled together, writing one object which bears neither name: each would be given it
       const auto [tree, configuration, dir]{target("claimed_twice")};
       fs::create_directories(dir);
-      const auto roots{u"^" + upper(project / "a.cpp") + u"|" + upper(project / "c.cpp") + u"\r\n"};
-      write_utf16(dir / "CL.read.1.tlog", roots + upper(project / "a.h") + u"\r\n");
-      write_utf16(dir / "CL.write.1.tlog", roots + upper(project / "main_x64.obj") + u"\r\n");
+      const auto roots{u"^" + to_tracker_spelling(project / "a.cpp") + u"|" + to_tracker_spelling(project / "c.cpp") + u"\r\n"};
+      write_utf16(dir / "CL.read.1.tlog", roots + to_tracker_spelling(project / "a.h") + u"\r\n");
+      write_utf16(dir / "CL.write.1.tlog", roots + to_tracker_spelling(project / "main_x64.obj") + u"\r\n");
       check_exception_thrown<std::runtime_error>(
         "An object which two sources would each be given",
         [&](){ return read_compilations(tree, configuration); });
@@ -385,8 +375,8 @@ namespace sequoia::testing
 
       const auto [tree, configuration, dir]{target("accented")};
       fs::create_directories(dir);
-      write_utf16(dir / "CL.read.1.tlog", u"^" + upper(accented / "d.cpp") + u"\r\n");
-      write_utf16(dir / "CL.write.1.tlog", u"^" + upper(accented / "d.cpp") + u"\r\n" + upper(accented / "d.obj") + u"\r\n");
+      write_utf16(dir / "CL.read.1.tlog", u"^" + to_tracker_spelling(accented / "d.cpp") + u"\r\n");
+      write_utf16(dir / "CL.write.1.tlog", u"^" + to_tracker_spelling(accented / "d.cpp") + u"\r\n" + to_tracker_spelling(accented / "d.obj") + u"\r\n");
       check(equality,
             "A directory named outside ASCII",
             expand(read_compilations(tree, configuration)),
@@ -405,7 +395,7 @@ namespace sequoia::testing
     {
       const auto [tree, configuration, dir]{target("unwritten")};
       fs::create_directories(dir);
-      write_utf16(dir / "CL.read.1.tlog", u"^" + upper(project / "a.cpp") + u"\r\n" + upper(project / "a.h") + u"\r\n");
+      write_utf16(dir / "CL.read.1.tlog", u"^" + to_tracker_spelling(project / "a.cpp") + u"\r\n" + to_tracker_spelling(project / "a.h") + u"\r\n");
       write_utf16(dir / "CL.write.1.tlog", u"");
       check(equality,
             "A source which wrote no object is not a compilation",

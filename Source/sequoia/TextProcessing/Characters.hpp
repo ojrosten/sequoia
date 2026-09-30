@@ -11,6 +11,8 @@
     \brief Classifications and conversions of a `char`, and case conversions of a string.
 
     Only ASCII letters and digits are recognised as letters and digits. `is_identifier_character` also accepts `_`.
+    The whitespace characters are those of the C locale: space, horizontal tab, line feed, vertical tab, form feed
+    and carriage return.
     A conversion changes the case of an ASCII letter and leaves every other `char` as it is. None of these helpers
     depends on the locale.
  */
@@ -52,6 +54,18 @@ namespace sequoia
 
   inline constexpr auto is_identifier_character{
     [](std::same_as<char> auto c){ return is_alphanumeric(c) || (c == '_'); }
+  };
+
+  /** Whether `c` is ASCII and not an identifier character. Every byte beyond ASCII counts as part of an identifier,
+      so an identifier holding multi-byte UTF-8 characters is never split. This approximates C++'s rules for
+      identifiers.
+   */
+  inline constexpr auto is_identifier_delimiter{
+    [](std::same_as<char> auto c){ return is_ascii(c) && !is_identifier_character(c); }
+  };
+
+  inline constexpr auto is_whitespace{
+    [](std::same_as<char> auto c){ return (c == ' ') || ((c >= '\t') && (c <= '\r')); }
   };
 
   namespace impl

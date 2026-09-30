@@ -8,11 +8,11 @@
 #include "sequoia/TestFramework/FailureInfo.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/Output.hpp"
+#include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <algorithm>
-#include <cctype>
 #include <format>
 #include <fstream>
 #include <limits>
@@ -126,12 +126,20 @@ namespace sequoia::testing
 
     std::istream& read(std::istream& s, failure_info& info, indentation ind)
     {
-      while(s && std::isspace(s.peek()))
+      using traits_t = std::istream::traits_type;
+      auto nextIsWhitespace{
+        [&s](){
+          const auto next{s.peek()};
+          return (next != traits_t::eof()) && is_whitespace(traits_t::to_char_type(next));
+        }
+      };
+
+      while(s && nextIsWhitespace())
       {
         s.get();
       }
 
-      if(s && (s.peek() != std::istream::traits_type::eof()))
+      if(s && (s.peek() != traits_t::eof()))
       {
         failure_info newInfo{};
         if(std::string str{}; (s >> str) && (str == "$Check:"))

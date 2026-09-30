@@ -56,9 +56,23 @@ namespace sequoia::testing
     check_semantics("Intermediate $", x, z, std::weak_ordering::less);
   }
 
+  void failure_info_test::check_whitespace_skipped()
+  {
+    using namespace std::string_literals;
+
+    std::stringstream s{" \t\n\v\f\r"};
+    failure_info x{1, "foo"};
+    s >> x;
+    check(equivalence,
+          "A stream holding only whitespace is read without a throw, leaving the failure as it is",
+          x,
+          std::pair{1, "foo"s});
+  }
+
   void failure_info_test::run_tests()
   {
     check_exceptions();
     check_failure_info();
+    check_whitespace_skipped();
   }
 }
