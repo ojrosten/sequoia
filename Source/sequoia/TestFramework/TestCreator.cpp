@@ -372,8 +372,8 @@ namespace sequoia::testing
 
   /** The given path is normalised, and made relative to the tests repository if it is absolute. So
       `./Stuff/X.hpp`, `Stuff/../Maths/X.hpp` and a full path all find their file. The candidates are
-      the regular files beneath the repository whose paths end with the given path; a directory is never
-      a candidate. Exactly one file must be a candidate.
+      the regular files whose paths end with the given path, sought anywhere within the repository; a
+      directory is never a candidate. Exactly one file must be a candidate.
    */
   void nascent_test_base::locate_testing_utilities()
   {
@@ -392,7 +392,7 @@ namespace sequoia::testing
 
     const auto withinRepo{sought.is_absolute() ? sought.lexically_relative(repo) : sought};
     if(withinRepo.empty() || (*withinRepo.begin() == ".."))
-      throw std::runtime_error{failureMessage("do not lie beneath")};
+      throw std::runtime_error{failureMessage("do not lie within")};
 
     auto endsWithSought{
       [&repo, suffix{withinRepo.generic_string()}](const fs::directory_entry& entry) {

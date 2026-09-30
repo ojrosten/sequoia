@@ -166,7 +166,7 @@ namespace sequoia::testing
 
         \throws std::runtime_error if
         -# The header under test cannot be found and is not to be generated;
-        -# `testing_utilities()` does not name exactly one regular file beneath the tests repository;
+        -# `testing_utilities()` does not name exactly one regular file anywhere within the tests repository;
         -# A full name was given which cannot name the test.
 
         These conditions are checked before any file is written.
@@ -243,8 +243,8 @@ namespace sequoia::testing
 
     void finalize_header(const std::filesystem::path& sourcePath);
 
-    /** \brief Replaces `testing_utilities()` with the path of the regular file it names beneath the tests
-        repository.
+    /** \brief Replaces `testing_utilities()` with the path of the regular file it names anywhere within the
+        tests repository.
 
         \throws std::runtime_error if `testing_utilities()` names no such file, or several.
      */

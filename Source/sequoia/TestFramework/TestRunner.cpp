@@ -711,7 +711,7 @@ namespace sequoia::testing
     const option testingUtilitiesOption{"--testing-utilities", {}, {"header"},
       updateCurrentNascentTest([](auto& nascent, const arg_list& args) { nascent.testing_utilities(args[0]); }),
       {},
-      "Take the value_tester from an existing header beneath Tests; a regular or move-only test then "
+      "Take the value_tester from an existing header within Tests; a regular or move-only test then "
       "generates neither testing utilities nor false-negative diagnostics"
     };
 

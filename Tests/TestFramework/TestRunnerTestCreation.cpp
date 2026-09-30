@@ -229,7 +229,7 @@ namespace sequoia::testing
                                               "--fullname", "probability_family_test",
                                               "--testing-utilities", "Stuff/../Maths/ProbabilityTestingUtilities.hpp"
                                // The testing utilities are named by file name alone, and lie in another directory,
-                               // so the test includes them by their path beneath Tests
+                               // so the test includes them by their path relative to Tests
                                , "create", "regular_test", "human", "std::string",
                                               "--fullname", "human_shared_tester_test",
                                               "--testing-utilities", "WidgetTestingUtilities.hpp"

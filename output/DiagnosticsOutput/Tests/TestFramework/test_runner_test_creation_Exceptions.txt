@@ -213,7 +213,7 @@ Testing utilities outside the tests repository
 
 Expected Exception Type:
 [std::runtime_error]
-The testing utilities ../TestSandbox/TestSandbox.cpp do not lie beneath the tests repository Tests
+The testing utilities ../TestSandbox/TestSandbox.cpp do not lie within the tests repository Tests
 
 =======================================
 
