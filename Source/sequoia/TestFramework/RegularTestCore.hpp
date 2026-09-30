@@ -43,8 +43,8 @@ namespace sequoia::testing
                                self.m_Logger,
                                x,
                                y,
-                               optional_ref<const T>{},
-                               optional_ref<const T>{});
+                               opt_ref<const T>{},
+                               opt_ref<const T>{});
     }
 
     /** Prerequisites:
@@ -67,8 +67,8 @@ namespace sequoia::testing
                                y,
                                xEquivalent,
                                yEquivalent,
-                               optional_ref<const T>{},
-                               optional_ref<const T>{});
+                               opt_ref<const T>{},
+                               opt_ref<const T>{});
     }
 
     /** Prerequisites:
@@ -93,8 +93,8 @@ namespace sequoia::testing
                                y,
                                xEquivalent,
                                yEquivalent,
-                               optional_ref<const V>{movedFromPostConstruction},
-                               optional_ref<const V>{movedFromPostAssignment});
+                               opt_ref<const V>{movedFromPostConstruction},
+                               opt_ref<const V>{movedFromPostAssignment});
     }
 
     /// Prerequisite: x != y, with values consistent with order
@@ -106,8 +106,8 @@ namespace sequoia::testing
                                self.m_Logger,
                                x,
                                y,
-                               optional_ref<const T>{},
-                               optional_ref<const T>{},
+                               opt_ref<const T>{},
+                               opt_ref<const T>{},
                                order);
     }
 
@@ -132,8 +132,8 @@ namespace sequoia::testing
                                y,
                                xEquivalent,
                                yEquivalent,
-                               optional_ref<const T>{},
-                               optional_ref<const T>{},
+                               opt_ref<const T>{},
+                               opt_ref<const T>{},
                                order);
     }
 
@@ -160,8 +160,8 @@ namespace sequoia::testing
                                y,
                                xEquivalent,
                                yEquivalent,
-                               optional_ref<const V>{movedFromPostConstruction},
-                               optional_ref<const V>{movedFromPostAssignment},
+                               opt_ref<const V>{movedFromPostConstruction},
+                               opt_ref<const V>{movedFromPostAssignment},
                                order);
     }
 
@@ -173,8 +173,8 @@ namespace sequoia::testing
                                self.m_Logger,
                                x,
                                y,
-                               optional_ref<const T>{},
-                               optional_ref<const T>{},
+                               opt_ref<const T>{},
+                               opt_ref<const T>{},
                                std::move(m));
     }
 
@@ -199,8 +199,8 @@ namespace sequoia::testing
                                y,
                                xEquivalent,
                                yEquivalent,
-                               optional_ref<const T>{},
-                               optional_ref<const T>{},
+                               opt_ref<const T>{},
+                               opt_ref<const T>{},
                                std::move(m));
     }
 
@@ -227,8 +227,8 @@ namespace sequoia::testing
                                y,
                                xEquivalent,
                                yEquivalent,
-                               optional_ref<const V>{movedFromPostConstruction},
-                               optional_ref<const V>{movedFromPostAssignment},
+                               opt_ref<const V>{movedFromPostConstruction},
+                               opt_ref<const V>{movedFromPostAssignment},
                                std::move(m));
     }
 
@@ -241,8 +241,8 @@ namespace sequoia::testing
                                self.m_Logger,
                                x,
                                y,
-                               optional_ref<const T>{},
-                               optional_ref<const T>{},
+                               opt_ref<const T>{},
+                               opt_ref<const T>{},
                                order,
                                std::move(m));
     }
@@ -269,8 +269,8 @@ namespace sequoia::testing
                                y,
                                xEquivalent,
                                yEquivalent,
-                               optional_ref<const T>{},
-                               optional_ref<const T>{},
+                               opt_ref<const T>{},
+                               opt_ref<const T>{},
                                order,
                                std::move(m));
     }
@@ -299,8 +299,8 @@ namespace sequoia::testing
                                y,
                                xEquivalent,
                                yEquivalent,
-                               optional_ref<const V>{movedFromPostConstruction},
-                               optional_ref<const V>{movedFromPostAssignment},
+                               opt_ref<const V>{movedFromPostConstruction},
+                               opt_ref<const V>{movedFromPostAssignment},
                                order,
                                std::move(m));
     }
