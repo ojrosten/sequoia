@@ -10,9 +10,13 @@
 
 #include <concepts>
 #include <format>
+#include <string>
+#include <type_traits>
 
 namespace sequoia::testing
 {
+  using namespace std::string_literals;
+
   namespace
   {
     [[nodiscard]]
@@ -45,24 +49,67 @@ namespace sequoia::testing
     STATIC_CHECK(!std::invocable<decltype(is_identifier_character), int>);
     STATIC_CHECK( std::invocable<decltype(to_lowercase),            char>);
     STATIC_CHECK(!std::invocable<decltype(to_lowercase),            char16_t>);
+    STATIC_CHECK(!std::invocable<decltype(to_lowercase),            int>);
+    STATIC_CHECK( std::invocable<decltype(to_uppercase),            char>);
+    STATIC_CHECK(!std::invocable<decltype(to_uppercase),            char16_t>);
+    STATIC_CHECK(!std::invocable<decltype(to_uppercase),            int>);
+
+    // Every string is converted in a copy
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), std::string&>,       std::string>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), const std::string&>, std::string>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), std::string>,        std::string>);
   }
 
   void characters_free_test::test_classification()
   {
-    check("An ASCII character",                   is_ascii('\x7f'));
-    check("A byte beyond ASCII",                 !is_ascii('\x80'));
-    check("A letter",                             is_alphabetic('a'));
-    check("A digit is not a letter",             !is_alphabetic('1'));
-    check("A letter is alphanumeric",             is_alphanumeric('Z'));
-    check("A digit is alphanumeric",              is_alphanumeric('0'));
-    check("An underscore is not alphanumeric",   !is_alphanumeric('_'));
-    check("A decimal digit",                      is_digit('9'));
-    check("A hexadecimal letter is not a digit", !is_digit('a'));
-    check("A lowercase hexadecimal digit",        is_hex_digit('f'));
-    check("An uppercase hexadecimal digit",       is_hex_digit('F'));
-    check("A letter beyond f",                   !is_hex_digit('g'));
-    check("An uppercase letter",                  is_uppercase('Q'));
-    check("A lowercase letter is not uppercase", !is_uppercase('q'));
+    // Either side of the ends of each range
+    STATIC_CHECK( is_ascii('\0'));
+    STATIC_CHECK( is_ascii('\x7f'));
+    STATIC_CHECK(!is_ascii('\x80'));
+    STATIC_CHECK( is_digit('0'));
+    STATIC_CHECK( is_digit('9'));
+    STATIC_CHECK(!is_digit('/'));
+    STATIC_CHECK(!is_digit(':'));
+    STATIC_CHECK( is_uppercase('A'));
+    STATIC_CHECK( is_uppercase('Z'));
+    STATIC_CHECK(!is_uppercase('@'));
+    STATIC_CHECK(!is_uppercase('['));
+    STATIC_CHECK( is_lowercase('a'));
+    STATIC_CHECK( is_lowercase('z'));
+    STATIC_CHECK(!is_lowercase('`'));
+    STATIC_CHECK(!is_lowercase('{'));
+    STATIC_CHECK( is_alphabetic('A'));
+    STATIC_CHECK( is_alphabetic('Z'));
+    STATIC_CHECK( is_alphabetic('a'));
+    STATIC_CHECK( is_alphabetic('z'));
+    STATIC_CHECK(!is_alphabetic('@'));
+    STATIC_CHECK(!is_alphabetic('['));
+    STATIC_CHECK(!is_alphabetic('`'));
+    STATIC_CHECK(!is_alphabetic('{'));
+    STATIC_CHECK( is_alphanumeric('0'));
+    STATIC_CHECK( is_alphanumeric('9'));
+    STATIC_CHECK( is_alphanumeric('A'));
+    STATIC_CHECK( is_alphanumeric('z'));
+    STATIC_CHECK(!is_alphanumeric('/'));
+    STATIC_CHECK(!is_alphanumeric(':'));
+    STATIC_CHECK(!is_alphanumeric('_'));
+    STATIC_CHECK( is_hex_digit('0'));
+    STATIC_CHECK( is_hex_digit('9'));
+    STATIC_CHECK(!is_hex_digit('/'));
+    STATIC_CHECK(!is_hex_digit(':'));
+    STATIC_CHECK( is_hex_digit('a'));
+    STATIC_CHECK( is_hex_digit('f'));
+    STATIC_CHECK(!is_hex_digit('`'));
+    STATIC_CHECK(!is_hex_digit('g'));
+    STATIC_CHECK( is_hex_digit('A'));
+    STATIC_CHECK( is_hex_digit('F'));
+    STATIC_CHECK(!is_hex_digit('@'));
+    STATIC_CHECK(!is_hex_digit('G'));
+
+    STATIC_CHECK(!is_alphabetic('0'));
+    STATIC_CHECK(!is_digit('a'));
+    STATIC_CHECK(!is_uppercase('a'));
+    STATIC_CHECK(!is_lowercase('A'));
 
     for(const char byte : {'\x80', '\xc3', '\xff'})
     {
@@ -71,6 +118,7 @@ namespace sequoia::testing
       check(describe("A byte beyond ASCII is not a digit",             byte), !is_digit(byte));
       check(describe("A byte beyond ASCII is not a hexadecimal digit", byte), !is_hex_digit(byte));
       check(describe("A byte beyond ASCII is not uppercase",           byte), !is_uppercase(byte));
+      check(describe("A byte beyond ASCII is not lowercase",           byte), !is_lowercase(byte));
     }
   }
 
@@ -99,6 +147,18 @@ namespace sequoia::testing
 
   void characters_free_test::test_conversion()
   {
+    // Either side of each range of letters
+    STATIC_CHECK(to_lowercase('@') == '@');
+    STATIC_CHECK(to_lowercase('A') == 'a');
+    STATIC_CHECK(to_lowercase('Z') == 'z');
+    STATIC_CHECK(to_lowercase('[') == '[');
+    STATIC_CHECK(to_uppercase('`') == '`');
+    STATIC_CHECK(to_uppercase('a') == 'A');
+    STATIC_CHECK(to_uppercase('z') == 'Z');
+    STATIC_CHECK(to_uppercase('{') == '{');
+
+    STATIC_CHECK(to_lowercase(std::string_view{"FooBAR"}) == "foobar");
+
     check(equality, "An uppercase letter to lowercase", to_lowercase('A'), 'a');
     check(equality, "A lowercase letter to lowercase",  to_lowercase('a'), 'a');
     check(equality, "A digit to lowercase",             to_lowercase('1'), '1');
@@ -111,5 +171,15 @@ namespace sequoia::testing
       check(equality, describe("A byte beyond ASCII to lowercase", byte), to_lowercase(byte), byte);
       check(equality, describe("A byte beyond ASCII to uppercase", byte), to_uppercase(byte), byte);
     }
+
+    check(equality, "The lowercase of an empty string",        to_lowercase(""),                ""s);
+    check(equality, "The lowercase of a letter",               to_lowercase("A"),               "a"s);
+    check(equality, "The lowercase of mixed case",             to_lowercase("FooBAR"),          "foobar"s);
+    check(equality, "The lowercase leaves other characters",   to_lowercase("Tests/Foo_1.cpp"), "tests/foo_1.cpp"s);
+    check(equality, "The lowercase leaves bytes beyond ASCII", to_lowercase("\xC3\x89" "A"),    "\xC3\x89" "a"s);
+
+    std::string original{"FooBAR"};
+    check(equality, "The lowercase of a modifiable string", to_lowercase(original), "foobar"s);
+    check(equality, "A modifiable string is left as it is", original, "FooBAR"s);
   }
 }

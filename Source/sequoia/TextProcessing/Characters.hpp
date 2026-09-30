@@ -8,16 +8,17 @@
 #pragma once
 
 /** \file
-    \brief Classifications and conversions of a `char`.
+    \brief Classifications and conversions of a `char`, and the lowercase conversion of a string.
 
-    `is_ascii` says whether a `char` is ASCII. `is_identifier_character` says whether a `char` is an ASCII letter,
-    an ASCII digit or `_`. Neither depends on the locale. Each of the others makes the classification or conversion
-    that the corresponding `<cctype>` function makes in the current locale. All of them are defined for every value
-    of `char`, including the negative values that a `<cctype>` function does not accept.
+    Only ASCII letters and digits are recognised as letters and digits. `is_identifier_character` also accepts `_`.
+    A conversion changes the case of an ASCII letter and leaves every other `char` as it is. None of these helpers
+    depends on the locale.
  */
 
-#include <cctype>
+#include <algorithm>
 #include <concepts>
+#include <string>
+#include <string_view>
 
 namespace sequoia
 {
@@ -25,40 +26,58 @@ namespace sequoia
     [](std::same_as<char> auto c){ return static_cast<unsigned char>(c) < 0x80; }
   };
 
-  inline constexpr auto is_identifier_character{
-    [](std::same_as<char> auto c){
-      return ((c >= 'a') && (c <= 'z'))
-          || ((c >= 'A') && (c <= 'Z'))
-          || ((c >= '0') && (c <= '9'))
-          || (c == '_');
-    }
-  };
-
-  inline constexpr auto is_alphabetic{
-    [](std::same_as<char> auto c){ return std::isalpha( static_cast<unsigned char>(c)) != 0; }
-  };
-
-  inline constexpr auto is_alphanumeric{
-    [](std::same_as<char> auto c){ return std::isalnum( static_cast<unsigned char>(c)) != 0; }
-  };
-
   inline constexpr auto is_digit{
-    [](std::same_as<char> auto c){ return std::isdigit( static_cast<unsigned char>(c)) != 0; }
-  };
-
-  inline constexpr auto is_hex_digit{
-    [](std::same_as<char> auto c){ return std::isxdigit(static_cast<unsigned char>(c)) != 0; }
+    [](std::same_as<char> auto c){ return (c >= '0') && (c <= '9'); }
   };
 
   inline constexpr auto is_uppercase{
-    [](std::same_as<char> auto c){ return std::isupper( static_cast<unsigned char>(c)) != 0; }
+    [](std::same_as<char> auto c){ return (c >= 'A') && (c <= 'Z'); }
   };
 
-  inline constexpr auto to_lowercase{
-    [](std::same_as<char> auto c){ return static_cast<char>(std::tolower(static_cast<unsigned char>(c))); }
+  inline constexpr auto is_lowercase{
+    [](std::same_as<char> auto c){ return (c >= 'a') && (c <= 'z'); }
   };
+
+  inline constexpr auto is_alphabetic{
+    [](std::same_as<char> auto c){ return is_uppercase(c) || is_lowercase(c); }
+  };
+
+  inline constexpr auto is_alphanumeric{
+    [](std::same_as<char> auto c){ return is_alphabetic(c) || is_digit(c); }
+  };
+
+  inline constexpr auto is_hex_digit{
+    [](std::same_as<char> auto c){ return is_digit(c) || ((c >= 'a') && (c <= 'f')) || ((c >= 'A') && (c <= 'F')); }
+  };
+
+  inline constexpr auto is_identifier_character{
+    [](std::same_as<char> auto c){ return is_alphanumeric(c) || (c == '_'); }
+  };
+
+  namespace impl
+  {
+    struct to_lowercase_fn
+    {
+      [[nodiscard]]
+      constexpr char operator()(std::same_as<char> auto c) const
+      {
+        return is_uppercase(c) ? static_cast<char>(c - 'A' + 'a') : c;
+      }
+
+      [[nodiscard]]
+      constexpr std::string operator()(std::string_view text) const
+      {
+        std::string str{text};
+        std::ranges::transform(str, str.begin(), *this);
+        return str;
+      }
+    };
+  }
+
+  /** \brief Converts a `char`, or a copy of a string, to lowercase. */
+  inline constexpr impl::to_lowercase_fn to_lowercase{};
 
   inline constexpr auto to_uppercase{
-    [](std::same_as<char> auto c){ return static_cast<char>(std::toupper(static_cast<unsigned char>(c))); }
+    [](std::same_as<char> auto c){ return is_lowercase(c) ? static_cast<char>(c - 'a' + 'A') : c; }
   };
 }

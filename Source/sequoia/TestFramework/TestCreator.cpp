@@ -465,7 +465,7 @@ namespace sequoia::testing
     // Case is ignored, since the filesystems of macOS and Windows ignore it.
     auto sameIgnoringCase{
       [](const fs::path& lhs, const fs::path& rhs) {
-        return to_lower_case(lhs.filename().string()) == to_lower_case(rhs.filename().string());
+        return to_lowercase(lhs.filename().string()) == to_lowercase(rhs.filename().string());
       }
     };
 

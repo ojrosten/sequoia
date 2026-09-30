@@ -11,8 +11,9 @@
 
 #include "BuildArtefactsTestingUtilities.hpp"
 
+#include "sequoia/TextProcessing/Characters.hpp"
+
 #include <algorithm>
-#include <cctype>
 #include <cstdint>
 #include <fstream>
 #include <map>
@@ -122,7 +123,7 @@ namespace sequoia::testing
   }
 
   /* UTF-16 with a byte order mark, a `^`-led line naming the source and the files it read beneath
-     it, all in upper case - which for the ASCII the fixtures use is what std::toupper does.
+     it, all in upper case.
    */
   void write_tlogs(const fs::path& tlogDir, std::span<const compilation_record> records)
   {
@@ -134,7 +135,7 @@ namespace sequoia::testing
     auto upper{
       [](const fs::path& p) {
         auto s{p.u16string()};
-        std::ranges::transform(s, s.begin(), [](char16_t c){ return (c < 0x80) ? static_cast<char16_t>(std::toupper(static_cast<unsigned char>(c))) : c; });
+        std::ranges::transform(s, s.begin(), [](char16_t c){ return (c < 0x80) ? static_cast<char16_t>(to_uppercase(static_cast<char>(c))) : c; });
         return s;
       }
     };

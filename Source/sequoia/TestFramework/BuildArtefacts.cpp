@@ -15,11 +15,9 @@
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
-#include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
 #include <bit>
-#include <cctype>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -472,7 +470,7 @@ namespace sequoia::testing
                                  compilerPrefix{"cl."},
                                  suffix{".tlog"};
 
-      const auto lowercaseName{to_lower_case(file.filename().string())};
+      const auto lowercaseName{to_lowercase(file.filename().string())};
       const auto compilerPartStart{lowercaseName.starts_with(multiToolTaskPrefix) ? multiToolTaskPrefix.size() : 0};
       const auto unprefixedName{std::string_view{lowercaseName}.substr(compilerPartStart)};
       if(!unprefixedName.starts_with(compilerPrefix) || !unprefixedName.ends_with(suffix))
@@ -493,7 +491,7 @@ namespace sequoia::testing
     bool equal_ignoring_case(tracker_path_view lhs, tracker_path_view rhs)
     {
       constexpr char16_t asciiEnd{0x80};
-      auto lower{[](char16_t c){ return (c < asciiEnd) ? static_cast<char16_t>(std::tolower(static_cast<int>(c))) : c; }};
+      auto lower{[](char16_t c){ return (c < asciiEnd) ? static_cast<char16_t>(to_lowercase(static_cast<char>(c))) : c; }};
 
       return std::ranges::equal(lhs | std::views::transform(lower), rhs | std::views::transform(lower));
     }
