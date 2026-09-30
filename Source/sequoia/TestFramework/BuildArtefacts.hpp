@@ -68,8 +68,8 @@ namespace sequoia::testing
   [[nodiscard]]
   build_tree read_build_tree(const std::filesystem::path& cacheFile);
 
-  /** \brief Reads a build tree's description of itself, taking the generator from `cache`, which was
-             read from `cacheFile`.
+  /** \brief The description of the build tree whose cache is `cacheFile`. The generator is taken from
+             `cache`, which was read from `cacheFile`.
 
       \throws std::runtime_error if the cache names no generator.
    */

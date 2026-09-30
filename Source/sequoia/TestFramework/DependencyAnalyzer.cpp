@@ -903,8 +903,8 @@ namespace sequoia::testing
     }
 
     /** Whether `dir`, or any entry beneath `dir`, is no older than `stamp`. The entries include
-        directories, whose times move when an entry within them is deleted. An entry whose time cannot
-        be read counts as no older, so that the build's record decides.
+        directories. A directory's time moves when an entry within the directory is deleted. An entry
+        whose time cannot be read counts as no older, so that the build's record decides.
      */
     [[nodiscard]]
     bool anything_since(const fs::path& dir, const fs::file_time_type stamp)
