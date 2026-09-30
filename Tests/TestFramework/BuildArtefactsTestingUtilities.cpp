@@ -118,7 +118,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::u16string to_tracker_spelling(const fs::path& p)
   {
-    return to_uppercase(p.u16string());
+    return ascii::to_uppercase(p.u16string());
   }
 
   [[nodiscard]]

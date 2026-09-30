@@ -42,7 +42,7 @@ namespace sequoia::testing
     [[nodiscard]]
     bool begins_number(std::string_view text, size_type pos)
     {
-      auto digitAt{[text](size_type i){ return (i < text.size()) && is_digit(text[i]); }};
+      auto digitAt{[text](size_type i){ return (i < text.size()) && ascii::is_digit(text[i]); }};
       return digitAt(pos) || ((pos < text.size()) && (text[pos] == '-') && digitAt(pos + 1));
     }
 
@@ -247,7 +247,7 @@ namespace sequoia::testing
       }
       else
       {
-        const bool wholeBytes{!hex.empty() && (hex.size() % 2 == 0) && std::ranges::all_of(hex, is_hex_digit)};
+        const bool wholeBytes{!hex.empty() && (hex.size() % 2 == 0) && std::ranges::all_of(hex, ascii::is_hex_digit)};
         if(!wholeBytes || (hex.size() > 2 * sizeof(T)))
           return std::nullopt;
 
@@ -317,7 +317,7 @@ namespace sequoia::testing
 
       auto beginsBitPattern{[name](size_type pos){ return (name[pos - 1] == '[') && (name[pos - 2] == ')'); }};
       auto mayBeginLiteral{
-        [name, &beginsBitPattern](size_type pos){ return is_digit(name[pos]) || beginsBitPattern(pos); }
+        [name, &beginsBitPattern](size_type pos){ return ascii::is_digit(name[pos]) || beginsBitPattern(pos); }
       };
 
       const auto candidates{std::views::iota(from, name.size() - 1)};
@@ -387,7 +387,7 @@ namespace sequoia::testing
     [[nodiscard]]
     size_type erase_literal_suffix(std::string& name, size_type pos)
     {
-      if((pos >= name.size()) || !is_alphabetic(name[pos]))
+      if((pos >= name.size()) || !ascii::is_alphabetic(name[pos]))
         return pos;
 
       const auto suffixEnd{name.find_first_of(",>}", pos)};
@@ -430,7 +430,7 @@ namespace sequoia::testing
 
         if(pos + 1 < name.size())
         {
-          const auto digitsEnd{std::ranges::find_if_not(name.begin() + pos + 1, name.end(), is_digit)};
+          const auto digitsEnd{std::ranges::find_if_not(name.begin() + pos + 1, name.end(), ascii::is_digit)};
           pos = std::ranges::distance(name.begin(), digitsEnd);
         }
 
@@ -588,7 +588,7 @@ namespace sequoia::testing
       else
       {
         using layout = bit_layout<T>;
-        if((hex.size() != layout::digit_count) || !std::ranges::all_of(hex, is_hex_digit))
+        if((hex.size() != layout::digit_count) || !std::ranges::all_of(hex, ascii::is_hex_digit))
           return std::nullopt;
 
         auto isSet{[hex](std::size_t bitFromBottom){ return pattern_bit(hex, bitFromBottom); }};

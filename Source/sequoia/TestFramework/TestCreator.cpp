@@ -37,8 +37,8 @@ namespace sequoia::testing
     bool is_identifier(std::string_view name)
     {
       return !name.empty()
-          && !is_digit(name.front())
-          && std::ranges::all_of(name, is_identifier_character);
+          && !ascii::is_digit(name.front())
+          && std::ranges::all_of(name, ascii::is_identifier_character);
     }
   }
 
@@ -465,7 +465,7 @@ namespace sequoia::testing
     // Case is ignored, since the filesystems of macOS and Windows ignore it.
     auto sameIgnoringCase{
       [](const fs::path& lhs, const fs::path& rhs) {
-        return same_ignoring_case(lhs.filename().native(), rhs.filename().native());
+        return ascii::same_ignoring_case(lhs.filename().native(), rhs.filename().native());
       }
     };
 

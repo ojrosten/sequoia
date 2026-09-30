@@ -130,7 +130,7 @@ namespace sequoia::testing
       auto nextIsWhitespace{
         [&s](){
           const auto next{s.peek()};
-          return (next != traits_t::eof()) && is_whitespace(traits_t::to_char_type(next));
+          return (next != traits_t::eof()) && ascii::is_whitespace(traits_t::to_char_type(next));
         }
       };
 

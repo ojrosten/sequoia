@@ -11,13 +11,14 @@
     \brief Classifications and conversions of a character of any character type, and conversions and comparisons of
            strings of characters.
 
-    The helpers answer for ASCII alone. A code unit whose value, read as unsigned, is below 0x80 is taken to be its
-    ASCII character, as it is in UTF-8, UTF-16 and UTF-32. No other code unit is a letter, a digit, whitespace or an
-    identifier character.
-    `is_identifier_character` accepts `_` as well as the ASCII letters and digits. The whitespace characters are those
-    of the C locale: space, horizontal tab, line feed, vertical tab, form feed and carriage return.
-    A conversion changes the case of an ASCII letter and leaves every other code unit as it is, and a comparison
-    ignoring case compares the converted code units. None of these helpers depends on the locale.
+    `is_ascii` says whether a code unit, read as unsigned, is below 0x80. Such a code unit is its ASCII character in
+    UTF-8, UTF-16 and UTF-32 alike.
+    The helpers in the namespace `ascii` answer for ASCII alone. No other code unit is a letter, a digit, whitespace
+    or an identifier character, and a conversion leaves it as it is. `ascii::is_identifier_character` accepts `_` as
+    well as the ASCII letters and digits. The whitespace characters are those of the C locale: space, horizontal tab,
+    line feed, vertical tab, form feed and carriage return. A comparison ignoring case compares the lowercase forms.
+    `is_identifier_delimiter` is not an ASCII classification: every code unit beyond ASCII counts as part of an
+    identifier. None of these helpers depends on the locale.
  */
 
 #include "sequoia/Core/Meta/Concepts.hpp"
@@ -36,44 +37,47 @@ namespace sequoia
     [](character auto c){ return static_cast<std::make_unsigned_t<decltype(c)>>(c) < 0x80; }
   };
 
-  inline constexpr auto is_digit{
-    [](character auto c){ return (c >= '0') && (c <= '9'); }
-  };
+  namespace ascii
+  {
+    inline constexpr auto is_digit{
+      [](character auto c){ return (c >= '0') && (c <= '9'); }
+    };
 
-  inline constexpr auto is_uppercase{
-    [](character auto c){ return (c >= 'A') && (c <= 'Z'); }
-  };
+    inline constexpr auto is_uppercase{
+      [](character auto c){ return (c >= 'A') && (c <= 'Z'); }
+    };
 
-  inline constexpr auto is_lowercase{
-    [](character auto c){ return (c >= 'a') && (c <= 'z'); }
-  };
+    inline constexpr auto is_lowercase{
+      [](character auto c){ return (c >= 'a') && (c <= 'z'); }
+    };
 
-  inline constexpr auto is_alphabetic{
-    [](character auto c){ return is_uppercase(c) || is_lowercase(c); }
-  };
+    inline constexpr auto is_alphabetic{
+      [](character auto c){ return is_uppercase(c) || is_lowercase(c); }
+    };
 
-  inline constexpr auto is_alphanumeric{
-    [](character auto c){ return is_alphabetic(c) || is_digit(c); }
-  };
+    inline constexpr auto is_alphanumeric{
+      [](character auto c){ return is_alphabetic(c) || is_digit(c); }
+    };
 
-  inline constexpr auto is_hex_digit{
-    [](character auto c){ return is_digit(c) || ((c >= 'a') && (c <= 'f')) || ((c >= 'A') && (c <= 'F')); }
-  };
+    inline constexpr auto is_hex_digit{
+      [](character auto c){ return is_digit(c) || ((c >= 'a') && (c <= 'f')) || ((c >= 'A') && (c <= 'F')); }
+    };
 
-  inline constexpr auto is_identifier_character{
-    [](character auto c){ return is_alphanumeric(c) || (c == '_'); }
-  };
+    inline constexpr auto is_identifier_character{
+      [](character auto c){ return is_alphanumeric(c) || (c == '_'); }
+    };
+
+    inline constexpr auto is_whitespace{
+      [](character auto c){ return (c == ' ') || ((c >= '\t') && (c <= '\r')); }
+    };
+  }
 
   /** Whether `c` is ASCII and not an identifier character. Every code unit beyond ASCII counts as part of an
       identifier, so an identifier holding a character that spans several code units is never split. This
       approximates C++'s rules for identifiers.
    */
   inline constexpr auto is_identifier_delimiter{
-    [](character auto c){ return is_ascii(c) && !is_identifier_character(c); }
-  };
-
-  inline constexpr auto is_whitespace{
-    [](character auto c){ return (c == ' ') || ((c >= '\t') && (c <= '\r')); }
+    [](character auto c){ return is_ascii(c) && !ascii::is_identifier_character(c); }
   };
 
   namespace impl
@@ -138,7 +142,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr Char operator()(Char c) const
       {
-        return is_uppercase(c) ? static_cast<Char>(c - 'A' + 'a') : c;
+        return ascii::is_uppercase(c) ? static_cast<Char>(c - 'A' + 'a') : c;
       }
     };
 
@@ -148,7 +152,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr Char operator()(Char c) const
       {
-        return is_lowercase(c) ? static_cast<Char>(c - 'a' + 'A') : c;
+        return ascii::is_lowercase(c) ? static_cast<Char>(c - 'a' + 'A') : c;
       }
     };
 
@@ -167,18 +171,21 @@ namespace sequoia
     };
   }
 
-  /** \brief The lowercase form of a character, of the same type, or of a string, as a `std::basic_string` of its
-             character type. A string may be a `std::basic_string_view`, a `std::basic_string`, or a pointer to a
-             null-terminated string such as a literal.
-   */
-  inline constexpr impl::case_conversion<impl::to_lowercase_character> to_lowercase{};
+  namespace ascii
+  {
+    /** \brief The lowercase form of a character, of the same type, or of a string, as a `std::basic_string` of its
+               character type. A string may be a `std::basic_string_view`, a `std::basic_string`, or a pointer to a
+               null-terminated string such as a literal.
+     */
+    inline constexpr impl::case_conversion<impl::to_lowercase_character> to_lowercase{};
 
-  /** \brief The uppercase form of a character, of the same type, or of a string, as a `std::basic_string` of its
-             character type. A string may be a `std::basic_string_view`, a `std::basic_string`, or a pointer to a
-             null-terminated string such as a literal.
-   */
-  inline constexpr impl::case_conversion<impl::to_uppercase_character> to_uppercase{};
+    /** \brief The uppercase form of a character, of the same type, or of a string, as a `std::basic_string` of its
+               character type. A string may be a `std::basic_string_view`, a `std::basic_string`, or a pointer to a
+               null-terminated string such as a literal.
+     */
+    inline constexpr impl::case_conversion<impl::to_uppercase_character> to_uppercase{};
 
-  /** \brief Whether two strings of the same character type are equal once each is converted to lowercase. */
-  inline constexpr impl::same_ignoring_case_fn same_ignoring_case{};
+    /** \brief Whether two strings of the same character type are equal once each is converted to lowercase. */
+    inline constexpr impl::same_ignoring_case_fn same_ignoring_case{};
+  }
 }

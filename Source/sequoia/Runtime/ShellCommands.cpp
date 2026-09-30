@@ -190,7 +190,7 @@ namespace sequoia::runtime
   {
     if(!output.empty())
     {
-      if(!m_Command.empty() && is_digit(m_Command.back()))
+      if(!m_Command.empty() && ascii::is_digit(m_Command.back()))
         m_Command.append(" ");
 
       m_Command.append(app == append_mode::no ? "> " : ">> ");

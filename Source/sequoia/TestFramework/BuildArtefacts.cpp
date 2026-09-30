@@ -470,14 +470,14 @@ namespace sequoia::testing
                                  compilerPrefix{"cl."},
                                  suffix{".tlog"};
 
-      const auto lowercaseName{to_lowercase(file.filename().string())};
+      const auto lowercaseName{ascii::to_lowercase(file.filename().string())};
       const auto compilerPartStart{lowercaseName.starts_with(multiToolTaskPrefix) ? multiToolTaskPrefix.size() : 0};
       const auto unprefixedName{std::string_view{lowercaseName}.substr(compilerPartStart)};
       if(!unprefixedName.starts_with(compilerPrefix) || !unprefixedName.ends_with(suffix))
         return false;
 
       const auto afterCompilerPrefix{unprefixedName.substr(compilerPrefix.size())};
-      const auto digitsEnd{std::ranges::find_if_not(afterCompilerPrefix, is_digit)};
+      const auto digitsEnd{std::ranges::find_if_not(afterCompilerPrefix, ascii::is_digit)};
       const bool numbered{   (digitsEnd != afterCompilerPrefix.begin())
                           && (digitsEnd != afterCompilerPrefix.end())
                           && (*digitsEnd == '.')};
@@ -493,7 +493,7 @@ namespace sequoia::testing
       constexpr tracker_path_view extension{u".obj"};
 
       return    (spelling.size() >= extension.size())
-             && same_ignoring_case(spelling.substr(spelling.size() - extension.size()), extension);
+             && ascii::same_ignoring_case(spelling.substr(spelling.size() - extension.size()), extension);
     }
 
     /** The tracker's logs of one kind, decoded: under each source the tracker names, the files that
@@ -661,7 +661,7 @@ namespace sequoia::testing
 
         const auto& spelled{name.native()};
         auto sameButForCase{
-          [&spelled](const fs::path& candidate) { return same_ignoring_case(candidate.native(), spelled); }
+          [&spelled](const fs::path& candidate) { return ascii::same_ignoring_case(candidate.native(), spelled); }
         };
         const auto match{std::ranges::find_if(listing, sameButForCase)};
 
@@ -729,7 +729,7 @@ namespace sequoia::testing
       auto bearsSourcesName{
         [sourceName, sourceStem](tracker_path_view object) {
           const auto stem{spelled_stem(spelled_filename(object))};
-          return same_ignoring_case(stem, sourceStem) || same_ignoring_case(stem, sourceName);
+          return ascii::same_ignoring_case(stem, sourceStem) || ascii::same_ignoring_case(stem, sourceName);
         }
       };
 
