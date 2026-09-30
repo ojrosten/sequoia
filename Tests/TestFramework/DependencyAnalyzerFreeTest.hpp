@@ -92,6 +92,16 @@ namespace sequoia::testing
 
     enum class build_system { ninja, ninja_with_msvc, visual_studio };
 
+    /** Where, within the fake build tree, the fake build puts its objects, and their extension */
+    struct object_layout
+    {
+      std::filesystem::path directory;
+      std::string_view extension;
+    };
+
+    [[nodiscard]]
+    static object_layout objects_of(build_system system);
+
     /// Which of the fake project's sources the build's record names, and where it says they are
     enum class recorded_sources { all, all_but_the_tests, all_under_another_root, library_relative };
 
@@ -119,13 +129,8 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::string normalise_library_message(const project_paths& projPaths, std::string message);
 
-    /// The directory, within the fake build tree, of the fake build's object files, and their extension.
-    /// Both depend on the build system recorded.
-    std::filesystem::path m_ObjectDirectory{"CMakeFiles/TestAll.dir"};
-    std::string_view m_ObjectExtension{".o"};
-
     [[nodiscard]]
-    std::string library_refusal(const project_paths& projPaths, std::string_view file, std::string_view source) const;
+    static std::string library_refusal(build_system system, std::string_view file, std::string_view source);
 
     void check_library_change(const reporter& description,
                               const project_paths& projPaths,
@@ -134,7 +139,9 @@ namespace sequoia::testing
 
     void test_library_root();
 
-    void test_library_change(const project_paths& projPaths);
+    void test_library_change(const project_paths& projPaths, build_system system);
+
+    void test_library_change_without_configuration(const project_paths& projPaths);
 
     void test_library_file_gone(const project_paths& projPaths);
 
