@@ -286,12 +286,41 @@ namespace sequoia::testing
           {"A discriminator holding a colon",                       "Platypus:Echidna"},
           {"A discriminator ending in a dot",                       "Platypus."},
           {"A discriminator naming a Windows device",               "COM1"},
+          {"A Windows device numbered with a superscript digit",    "lpt\xC2\xB3.txt"},
           {"A discriminator naming a kind of material",             "prediction"},
           {"A discriminator differing only in case from a sibling", "platypus"}}))
     {
       check_exception_thrown<std::runtime_error>(
         description,
         [&prepareMaterials, discriminator]() { prepareMaterials("Discriminated", std::string{discriminator}); });
+    }
+
+    {
+      // Directories differing only in case from Platypus can be made only on a case-sensitive filesystem
+      const individual_materials_paths discriminated{
+        projPaths.tests().repo() / "Materials/Discriminated.cpp", "fake_test", projPaths, "Platypus"
+      };
+
+      const auto& root{discriminated.original_test_root()};
+      const bool caseSensitive{fs::create_directory(root / "PLATYPUS")};
+      for(const auto variant : {"platyPUS", "PlatyPus", "pLATYPUS"})
+        fs::create_directory(root / variant);
+
+      std::string message{};
+      try
+      {
+        prepareMaterials("Discriminated", "platypus");
+      }
+      catch(const std::runtime_error& e)
+      {
+        message = e.what();
+      }
+
+      check(equality,
+            "Every case variant of the discriminator, sorted",
+            message,
+            std::format("The materials discriminator \"platypus\" must not differ only in case from {}",
+                        caseSensitive ? "PLATYPUS, PlatyPus, Platypus, pLATYPUS, platyPUS" : "Platypus"));
     }
 
     check_exception_thrown<std::runtime_error>(

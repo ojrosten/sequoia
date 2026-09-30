@@ -184,10 +184,16 @@ namespace sequoia::testing
     bool is_windows_device_name(std::string_view name)
     {
       auto stem{name.substr(0, name.find('.'))};
+
+      // Windows reads the superscript digits of ISO/IEC 8859-1 as digits; here they are UTF-8 encoded
+      constexpr std::array<std::string_view, 12> portNumbers{
+        "1", "2", "3", "4", "5", "6", "7", "8", "9", "\xC2\xB9", "\xC2\xB2", "\xC2\xB3"
+      };
+
       const bool numberedDevice{
-           (stem.size() == 4)
+           (stem.size() > 3)
         && (same_ignoring_case(stem.substr(0, 3), "COM") || same_ignoring_case(stem.substr(0, 3), "LPT"))
-        && (stem[3] >= '1') && (stem[3] <= '9')
+        && std::ranges::contains(portNumbers, stem.substr(3))
       };
 
       constexpr std::array<std::string_view, 4> devices{"CON", "PRN", "AUX", "NUL"};
