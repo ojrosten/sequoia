@@ -36,7 +36,7 @@ namespace sequoia::testing
       beneath the original root.
 
       A test whose original materials vary with the configuration declares a materials
-      discriminator. The test's original materials then sit one level down, in a directory beneath
+      discriminator. The test's original materials then sit one level down, in a directory within
       the test's own directory. The discriminator names that directory, and only that directory is
       the original root. So a run can neither read nor update the materials of another configuration.
 
@@ -65,7 +65,7 @@ namespace sequoia::testing
     /** \brief The path of the test's own directory in `TestMaterials`.
 
         If no materials discriminator was given, this directory is the original root. Otherwise the
-        original root is the directory beneath it which the discriminator names.
+        discriminator names a directory within this directory, and that directory is the original root.
      */
     [[nodiscard]]
     const std::filesystem::path& original_test_root() const noexcept
