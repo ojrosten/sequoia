@@ -158,13 +158,13 @@ namespace sequoia::testing
   void output_free_test::test_exception_message()
   {
     const fs::path file{"Tests/foo.cpp"};
-    const top_level_check_end duringCheck     {.uncaught_exceptions{1}, .message{"Check"}},
-                              duringEmptyCheck{.uncaught_exceptions{1}, .message{""}},
-                              afterEmptyCheck {.uncaught_exceptions{0}, .message{""}};
+    const top_level_check_exit_info duringCheck     {.via_exception{true},  .message{"Check"}},
+                                    duringEmptyCheck{.via_exception{true},  .message{""}},
+                                    afterEmptyCheck {.via_exception{false}, .message{""}};
 
     check(equality,
           "An exception thrown before any check",
-          exception_message("Unexpected", file, last_top_level_check_end{}, "Oops"),
+          exception_message("Unexpected", file, std::nullopt, "Oops"),
           "Error -- Unexpected Exception:\nOops\n\nException thrown before any checks performed in file\nTests/foo.cpp"s
     );
 

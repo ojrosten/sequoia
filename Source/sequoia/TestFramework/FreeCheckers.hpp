@@ -849,9 +849,9 @@ namespace sequoia::testing
     ~checker() = default;
 
     [[nodiscard]]
-    const last_top_level_check_end& last_check_end() const noexcept
+    const opt_top_level_check_exit_info& last_check_exit_info() const noexcept
     {
-      return m_Logger.last_check_end();
+      return m_Logger.last_check_exit_info();
     }
 
     [[nodiscard]]

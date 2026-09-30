@@ -229,10 +229,10 @@ namespace sequoia::testing
 
     if(depth() == 1)
     {
-      m_Results.last_check_end = top_level_check_end{
-                                   .uncaught_exceptions{std::uncaught_exceptions()},
-                                   .message{std::move(m_SentinelDepth.front().message)}
-                                 };
+      m_Results.last_check_exit_info = top_level_check_exit_info{
+                                         .via_exception{std::uncaught_exceptions() > 0},
+                                         .message{std::move(m_SentinelDepth.front().message)}
+                                       };
     }
 
     m_SentinelDepth.pop_back();

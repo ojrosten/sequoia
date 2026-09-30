@@ -100,11 +100,11 @@ namespace sequoia::testing
     return static_cast<type_normalizer_t<U>>(x);
   }
 
-  struct top_level_check_end
+  struct top_level_check_exit_info
   {
-    int uncaught_exceptions{};
+    bool via_exception{};
     std::string message{};
   };
 
-  using last_top_level_check_end = std::optional<top_level_check_end>;
+  using opt_top_level_check_exit_info = std::optional<top_level_check_exit_info>;
 }
