@@ -116,11 +116,6 @@ namespace sequoia
 
     struct partitions_allocator_tag{};
 
-    /** \brief A mutation of an edge weight.
-
-        A result other than `void` is held while the mutated weight is written back, so the result must be a
-        move-constructible object.
-     */
     template<class Fn, class Weight>
     concept edge_weight_mutator
       =    std::invocable<Fn&, Weight&>
@@ -164,7 +159,6 @@ namespace sequoia
         !is_directed(flavour) && !graph_impl::has_shared_weight_v<edge_type>
       };
 
-      /** \brief Whether the weight of one half of an edge can be supplied to the other half. */
       constexpr static bool partner_weight_constructible_v{
         !independent_partner_weights_v || std::is_copy_constructible_v<edge_weight_type>
       };
@@ -253,9 +247,9 @@ namespace sequoia
 
       /** \brief Applies `fn` to the weight of the edge at `citer`, and returns the result.
 
-          `fn` is invoked an unspecified number of times. `fn` is applied to a copy of the weight if the two halves
-          of an undirected edge hold independent weights. The copy then replaces the weight of both halves, so a
-          throw leaves both halves unchanged, provided the weight's move does not throw.
+          `fn` is invoked an unspecified number of times. `fn` is applied to a copy of the weight if the graph is
+          undirected and the two halves of each edge hold independent weights. The copy then replaces the weight of
+          both halves, so a throw leaves both halves unchanged, provided the weight's move does not throw.
        */
       template<edge_weight_mutator<edge_weight_type> Fn>
         requires (    !std::is_empty_v<edge_weight_type>
@@ -1411,7 +1405,7 @@ namespace sequoia
         return manipulate_partner_edge_weight(citer, [&args...](edge_iterator iter) -> edge_iterator { iter->weight(std::forward<Args>(args)...); return iter; });
       }
 
-      /** \brief Gives the weight `w` to both halves of an edge whose halves hold independent weights.
+      /** \brief Gives the weight `w` to both halves of the edge at `citer`.
 
           A throw leaves the halves as they were, provided the weight's move does not throw.
        */

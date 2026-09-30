@@ -22,10 +22,7 @@ namespace sequoia::maths::graph_errors
     std::size_t node{}, edge{};
   };
 
-  /** \brief The number of partial edges from `node` to `target`, and from `target` back to `node`.
-
-      In a weighted graph, only the partial edges of one weight are counted.
-   */
+  /** \brief The numbers of partial edges from `node` to `target`, and from `target` back to `node`. */
   struct partial_edge_counts
   {
     std::size_t node{}, target{}, to_target{}, from_target{};
