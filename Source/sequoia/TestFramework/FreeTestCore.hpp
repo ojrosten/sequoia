@@ -281,9 +281,12 @@ namespace sequoia::testing
       Each probe asks three things of a test, for the name of one hook:
       -# `declared`: whether the test declares the hook in any form. A member of that name counts,
          whether static or not, and whatever its signature. Where the name is overloaded, a member
-         callable through `T&` counts, so that a non-const member is detected;
-      -# `static_hook`: whether the hook can be called as a static member;
-      -# `string_valued`: whether the result of the hook converts to `std::string`.
+         callable through `T&`, either with a `const cmake_cache&` or with no arguments, counts. So
+         a non-const member is detected;
+      -# `static_hook`: whether the hook can be called through the class with a `const cmake_cache&`;
+      -# `string_valued`: whether the result of that call converts to `std::string`.
+
+      Each probe's `discriminator` makes that call, and returns the result as a `std::string`.
 
       The hooks must be public: a private hook is invisible to every probe. A hook sees only the
       cache. The cache does not record the active configuration of a multi-config build tree, so in

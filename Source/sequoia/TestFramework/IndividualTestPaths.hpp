@@ -62,10 +62,10 @@ namespace sequoia::testing
                                const project_paths& projPaths,
                                const std::optional<std::string>& materialsDiscriminator);
 
-    /** \brief The test's own directory in `TestMaterials`.
+    /** \brief The path of the test's own directory in `TestMaterials`.
 
-        If the test declares no materials discriminator, this directory is the original root.
-        Otherwise it holds one directory per configuration.
+        If no materials discriminator was given, this directory is the original root. Otherwise the
+        original root is the directory beneath it which the discriminator names.
      */
     [[nodiscard]]
     const std::filesystem::path& original_test_root() const noexcept
