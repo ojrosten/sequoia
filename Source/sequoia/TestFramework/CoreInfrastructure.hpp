@@ -100,15 +100,11 @@ namespace sequoia::testing
     return static_cast<type_normalizer_t<U>>(x);
   }
 
-  /** \brief The record that a test's logger makes when a top-level check ends. */
-  struct last_top_level_check
+  struct top_level_check_end
   {
-    /** The value of `std::uncaught_exceptions()` as the check ended. */
     int uncaught_exceptions{};
-
     std::string message{};
   };
 
-  /** \brief The record of the last top-level check to have ended, or `nullopt` if no top-level check has ended. */
-  using uncaught_exception_info = std::optional<last_top_level_check>;
+  using last_top_level_check_end = std::optional<top_level_check_end>;
 }

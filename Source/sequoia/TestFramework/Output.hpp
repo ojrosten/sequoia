@@ -96,14 +96,14 @@ namespace sequoia::testing
   /** \brief The report of an exception that escaped a test.
 
       The report gives `tag` and `exceptionMessage`, then:
-      -# If `info` holds a top-level check: whether the exception was thrown during that check or after it, and
-         the check's message;
+      -# If `lastCheckEnd` holds the end of a top-level check: whether the exception was thrown during that check
+         or after it, and the check's message;
       -# Otherwise: the test's `filename`.
    */
   [[nodiscard]]
   std::string exception_message(std::string_view tag,
                                 const std::filesystem::path& filename,
-                                const uncaught_exception_info& info,
+                                const last_top_level_check_end& lastCheckEnd,
                                 std::string_view exceptionMessage);
 
   /** \brief A message of the form `operator== returned false`. */

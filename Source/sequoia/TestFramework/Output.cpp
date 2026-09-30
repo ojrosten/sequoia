@@ -753,19 +753,19 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string exception_message(std::string_view tag,
                                 const fs::path& filename,
-                                const uncaught_exception_info& info,
+                                const last_top_level_check_end& lastCheckEnd,
                                 std::string_view exceptionMessage)
   {
     auto mess{append_lines(std::format("Error -- {} Exception:", tag), exceptionMessage).append("\n")};
 
-    if(info)
+    if(lastCheckEnd)
     {
-      const std::string_view suffix{info->uncaught_exceptions ? "during last check" : "after check completed"};
+      const std::string_view suffix{lastCheckEnd->uncaught_exceptions ? "during last check" : "after check completed"};
       append_lines(
         mess,
         std::string{"Exception thrown "}.append(suffix),
         "Last Recorded Message:\n",
-        info->message
+        lastCheckEnd->message
       );
     }
     else

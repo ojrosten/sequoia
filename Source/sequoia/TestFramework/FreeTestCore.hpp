@@ -212,7 +212,7 @@ namespace sequoia::testing
     void log_critical_failure(const normal_path& srcFile, std::string_view tag, std::string_view what)
     {
       auto sentry{checker_type::make_sentinel("")};
-      sentry.log_critical_failure(exception_message(tag, srcFile, checker_type::exceptions_detected_by_sentinel(), what));
+      sentry.log_critical_failure(exception_message(tag, srcFile, checker_type::last_check_end(), what));
     }
 
     void write_instability_analysis_output(const normal_path& srcFile, std::optional<std::size_t> index) const

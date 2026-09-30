@@ -849,9 +849,9 @@ namespace sequoia::testing
     ~checker() = default;
 
     [[nodiscard]]
-    const uncaught_exception_info& exceptions_detected_by_sentinel() const noexcept
+    const last_top_level_check_end& last_check_end() const noexcept
     {
-      return m_Logger.exceptions_detected_by_sentinel();
+      return m_Logger.last_check_end();
     }
 
     [[nodiscard]]
