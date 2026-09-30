@@ -32,16 +32,19 @@ namespace sequoia::testing
   {
     test_constraints();
     test_classification();
+    test_is_identifier_character();
     test_conversion();
   }
 
   void characters_free_test::test_constraints()
   {
-    STATIC_CHECK( std::invocable<decltype(is_digit),     char>);
-    STATIC_CHECK(!std::invocable<decltype(is_digit),     wchar_t>);
-    STATIC_CHECK(!std::invocable<decltype(is_digit),     int>);
-    STATIC_CHECK( std::invocable<decltype(to_lowercase), char>);
-    STATIC_CHECK(!std::invocable<decltype(to_lowercase), char16_t>);
+    STATIC_CHECK( std::invocable<decltype(is_digit),                char>);
+    STATIC_CHECK(!std::invocable<decltype(is_digit),                wchar_t>);
+    STATIC_CHECK(!std::invocable<decltype(is_digit),                int>);
+    STATIC_CHECK( std::invocable<decltype(is_identifier_character), char>);
+    STATIC_CHECK(!std::invocable<decltype(is_identifier_character), int>);
+    STATIC_CHECK( std::invocable<decltype(to_lowercase),            char>);
+    STATIC_CHECK(!std::invocable<decltype(to_lowercase),            char16_t>);
   }
 
   void characters_free_test::test_classification()
@@ -69,6 +72,29 @@ namespace sequoia::testing
       check(describe("A byte beyond ASCII is not a hexadecimal digit", byte), !is_hex_digit(byte));
       check(describe("A byte beyond ASCII is not uppercase",           byte), !is_uppercase(byte));
     }
+  }
+
+  void characters_free_test::test_is_identifier_character()
+  {
+    STATIC_CHECK(is_identifier_character('a'));
+    STATIC_CHECK(is_identifier_character('z'));
+    STATIC_CHECK(is_identifier_character('A'));
+    STATIC_CHECK(is_identifier_character('Z'));
+    STATIC_CHECK(is_identifier_character('0'));
+    STATIC_CHECK(is_identifier_character('9'));
+    STATIC_CHECK(is_identifier_character('_'));
+
+    // Either side of each range, then characters of no range, bytes beyond ASCII among them
+    STATIC_CHECK(!is_identifier_character('`'));
+    STATIC_CHECK(!is_identifier_character('{'));
+    STATIC_CHECK(!is_identifier_character('@'));
+    STATIC_CHECK(!is_identifier_character('['));
+    STATIC_CHECK(!is_identifier_character('/'));
+    STATIC_CHECK(!is_identifier_character(':'));
+    STATIC_CHECK(!is_identifier_character('-'));
+    STATIC_CHECK(!is_identifier_character('\0'));
+    STATIC_CHECK(!is_identifier_character(static_cast<char>(0x80)));
+    STATIC_CHECK(!is_identifier_character(static_cast<char>(0xff)));
   }
 
   void characters_free_test::test_conversion()

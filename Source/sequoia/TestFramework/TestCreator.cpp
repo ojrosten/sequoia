@@ -16,7 +16,6 @@
 #include "sequoia/TestFramework/Commands.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Characters.hpp"
-#include "sequoia/TextProcessing/Patterns.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <array>

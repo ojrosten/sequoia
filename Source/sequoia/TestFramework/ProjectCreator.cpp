@@ -201,7 +201,7 @@ namespace sequoia::testing
       if(name.empty())
         throw std::runtime_error{"Project name, deduced as the last token of path, is empty\n"};
 
-      auto permitted{[](char c) { return is_alphanumeric(c) || (c == '_') || (c == '-'); }};
+      auto permitted{[](char c) { return is_identifier_character(c) || (c == '-'); }};
       if(!std::ranges::all_of(name, permitted))
       {
         throw std::runtime_error{
