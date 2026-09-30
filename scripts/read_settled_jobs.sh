@@ -10,8 +10,9 @@
 # The jobs are read with 10 s between reads, for up to 420 s. Each read that waits logs
 # what the filter awaits. A read that fails is retried. If the time runs out, a warning
 # names what the filter still awaits, or says that the last read failed. The script then
-# still succeeds, leaving <jobs file> for the caller's checks to judge. If no read succeeds, the script fails with an error. A caller's job
-# needs a timeout long enough for the wait.
+# still succeeds, leaving <jobs file> for the caller's checks to judge. If no read
+# succeeds, the script fails with an error. A caller's job needs a timeout long enough
+# for the wait.
 #
 # The wait exists because the jobs API can lag behind the run it describes. In run
 # 36726395452, the API was read at 14:20:01:
