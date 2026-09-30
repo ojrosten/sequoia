@@ -286,7 +286,9 @@ namespace sequoia::testing
           {"A discriminator holding a colon",                       "Platypus:Echidna"},
           {"A discriminator ending in a dot",                       "Platypus."},
           {"A discriminator naming a Windows device",               "COM1"},
-          {"A Windows device numbered with a superscript digit",    "lpt\xC2\xB3.txt"},
+          {"A Windows device numbered with superscript one",        "COM\xC2\xB9"},
+          {"A Windows device numbered with superscript two",        "Lpt\xC2\xB2"},
+          {"A Windows device numbered with superscript three",      "lpt\xC2\xB3.txt"},
           {"A discriminator naming a kind of material",             "prediction"},
           {"A discriminator differing only in case from a sibling", "platypus"}}))
     {
@@ -296,20 +298,23 @@ namespace sequoia::testing
     }
 
     {
-      // Directories differing only in case from Platypus can be made only on a case-sensitive filesystem
-      const individual_materials_paths discriminated{
-        projPaths.tests().repo() / "Materials/Discriminated.cpp", "fake_test", projPaths, "Platypus"
+      // Only a case-sensitive filesystem holds directories differing only in case, so the variants
+      // listed depend on the filesystem. The sort is the implementation's choice, checked so that a
+      // change to it shows.
+      const individual_materials_paths materials{
+        projPaths.tests().repo() / "Materials/CaseVariants.cpp", "fake_test", projPaths, "platypus"
       };
 
-      const auto& root{discriminated.original_test_root()};
-      const bool caseSensitive{fs::create_directory(root / "PLATYPUS")};
-      for(const auto variant : {"platyPUS", "PlatyPus", "pLATYPUS"})
-        fs::create_directory(root / variant);
+      const auto& root{materials.original_test_root()};
+      for(const auto variant : {"Platypus", "PLATYPUS", "platyPUS", "PlatyPus", "pLATYPUS"})
+        fs::create_directories(root / variant);
+
+      const bool caseSensitive{!fs::equivalent(root / "PLATYPUS", root / "Platypus")};
 
       std::string message{};
       try
       {
-        prepareMaterials("Discriminated", "platypus");
+        prepare_materials(materials);
       }
       catch(const std::runtime_error& e)
       {

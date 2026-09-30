@@ -185,18 +185,21 @@ namespace sequoia::testing
     {
       auto stem{name.substr(0, name.find('.'))};
 
-      // Windows reads the superscript digits of ISO/IEC 8859-1 as digits; here they are UTF-8 encoded
-      constexpr std::array<std::string_view, 12> portNumbers{
-        "1", "2", "3", "4", "5", "6", "7", "8", "9", "\xC2\xB9", "\xC2\xB2", "\xC2\xB3"
+      // Windows reads the ISO/IEC 8859-1 superscript digits U+00B9, U+00B2 and U+00B3 as port numbers.
+      // They are matched in their UTF-8 encoding.
+      constexpr auto portNumbers{
+        std::to_array<std::string_view>({"1", "2", "3", "4", "5", "6", "7", "8", "9", "\xC2\xB9", "\xC2\xB2", "\xC2\xB3"})
       };
 
+      constexpr std::size_t portNameLength{3};
+      const auto portName{stem.substr(0, portNameLength)};
       const bool numberedDevice{
-           (stem.size() > 3)
-        && (same_ignoring_case(stem.substr(0, 3), "COM") || same_ignoring_case(stem.substr(0, 3), "LPT"))
-        && std::ranges::contains(portNumbers, stem.substr(3))
+           (stem.size() > portNameLength)
+        && (same_ignoring_case(portName, "COM") || same_ignoring_case(portName, "LPT"))
+        && std::ranges::contains(portNumbers, stem.substr(portNameLength))
       };
 
-      constexpr std::array<std::string_view, 4> devices{"CON", "PRN", "AUX", "NUL"};
+      constexpr auto devices{std::to_array<std::string_view>({"CON", "PRN", "AUX", "NUL"})};
       auto isStem{[stem](std::string_view device){ return same_ignoring_case(stem, device); }};
       return numberedDevice || std::ranges::any_of(devices, isStem);
     }
