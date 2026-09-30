@@ -257,7 +257,6 @@ namespace sequoia::testing
 
       if(!caseVariants.empty())
       {
-        std::ranges::sort(caseVariants);
         const auto caseVariantList{
             caseVariants
           | std::views::join_with(std::string_view{", "})
