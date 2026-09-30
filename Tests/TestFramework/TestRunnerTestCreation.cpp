@@ -187,6 +187,23 @@ namespace sequoia::testing
                          stream};
     }
 
+    /** \brief A state of the fake project, by the snapshot holding the directories creating or removing a test may
+        change, as they stand in that state.
+     */
+    struct project_state
+    {
+      fs::path snapshot{};
+
+      [[nodiscard]]
+      friend bool operator==(const project_state&, const project_state&) noexcept = default;
+    };
+
+    /** \brief A fake project as it stands on disk. */
+    struct project_on_disk
+    {
+      fs::path root{};
+    };
+
     /** \brief Gives `project` the state of `snapshot`, in every directory creating or removing a test may change. */
     void set_state(const fs::path& project, const fs::path& snapshot)
     {
@@ -199,6 +216,35 @@ namespace sequoia::testing
       }
     }
   }
+
+  template<>
+  struct value_tester<lifecycle::project_state>
+  {
+    template<test_mode Mode>
+    static void test(equality_check_t,
+                     test_logger<Mode>& logger,
+                     const lifecycle::project_state& obtained,
+                     const lifecycle::project_state& predicted)
+    {
+      check(equality, "Snapshot", logger, obtained.snapshot, predicted.snapshot);
+    }
+  };
+
+  template<>
+  struct value_tester<lifecycle::project_on_disk>
+  {
+    template<test_mode Mode>
+    static void test(weak_equivalence_check_t,
+                     test_logger<Mode>& logger,
+                     const lifecycle::project_on_disk& project,
+                     const lifecycle::project_state& state)
+    {
+      for(const auto dir : lifecycle::editedDirectories)
+      {
+        check(equivalence, std::string{dir}, logger, project.root / dir, state.snapshot / dir);
+      }
+    }
+  };
 
   [[nodiscard]]
   fs::path test_runner_test_creation::source_file()
@@ -316,7 +362,7 @@ namespace sequoia::testing
   void test_runner_test_creation::test_creation_and_removal()
   {
     using namespace lifecycle;
-    using transition_checker_t = transition_checker<fs::path, check_ordering::no>;
+    using transition_checker_t = transition_checker<project_state>;
     using project_graph        = transition_checker_t::transition_graph;
     using edge_t               = transition_checker_t::edge;
 
@@ -338,23 +384,23 @@ namespace sequoia::testing
     fs::copy(auxiliary_materials() / "LifecycleDecoys", project.root, fs::copy_options::recursive);
 
     auto creation{
-      [this, &project](std::vector<std::string> creationArgs) {
-        return [this, &project, creationArgs](const fs::path& state) {
-          set_state(project.root, state);
+      [this, &project](std::vector<std::string> creationArgs, project_state target) {
+        return [this, &project, creationArgs, target](const project_state& state) {
+          set_state(project.root, state.snapshot);
 
           commandline_arguments args{with_zeroth_arg(zeroth_arg(projectName), creationArgs)};
           std::stringstream stream{};
           [[maybe_unused]] const auto code{runner_for(args, {"OtherSandbox/TestSandbox.cpp"}, stream).execute()};
 
-          return project.root;
+          return target;
         };
       }
     };
 
     auto removal{
-      [this, &project](std::vector<std::string> tests, auto registerTests) {
-        return [this, &project, tests, registerTests](const fs::path& state) {
-          set_state(project.root, state);
+      [this, &project](std::vector<std::string> tests, auto registerTests, project_state target) {
+        return [this, &project, tests, registerTests, target](const project_state& state) {
+          set_state(project.root, state.snapshot);
 
           commandline_arguments args{with_zeroth_arg(zeroth_arg(projectName), removal_args(tests))};
           std::stringstream stream{};
@@ -362,16 +408,18 @@ namespace sequoia::testing
           registerTests(runner);
           [[maybe_unused]] const auto code{runner.execute()};
 
-          return project.root;
+          return target;
         };
       }
     };
 
     auto running{
-      [&project, runOutput{auxiliary_materials() / "LifecycleRunOutput"}](const fs::path& state) {
-        set_state(project.root, state);
-        fs::copy(runOutput, project.root, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
-        return project.root;
+      [&project, runOutput{auxiliary_materials() / "LifecycleRunOutput"}](project_state target) {
+        return [&project, runOutput, target](const project_state& state) {
+          set_state(project.root, state.snapshot);
+          fs::copy(runOutput, project.root, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+          return target;
+        };
       }
     };
 
@@ -402,58 +450,68 @@ namespace sequoia::testing
       },
       createWidget        {"create", "regular_test", "stuff::widget", "std::vector<int>", "--gen-source", "Stuff"};
 
-    const auto states{predictive_materials() / "Lifecycle"};
+    auto stateNamed{
+      [states{predictive_materials() / "Lifecycle"}](std::string_view name) { return project_state{states / name}; }
+    };
 
+    const project_state
+      prepared              {stateNamed("Prepared")},
+      twoTests              {stateNamed("UtilitiesTests")},
+      twoTestsRun           {stateNamed("UtilitiesTestsRun")},
+      longerNamedRun        {stateNamed("ExtrasRun")},
+      longerNamed           {stateNamed("Extras")},
+      regularTest           {stateNamed("Widget")},
+      companions            {stateNamed("WidgetCompanions")},
+      testingUtilities      {stateNamed("WidgetTestingUtilities")};
+
+    // Each edge names the state it means to reach, which the check holds to the node it reaches.
     project_graph g{
       { { edge_t{1, "Create two tests, one named as the other plus a suffix",
-                 creation(createExtrasThenUtilities)},
-          edge_t{4, "Create the test whose name is the longer", creation(createExtras)},
-          edge_t{5, "Create a regular test, generating the class", creation(createWidget)}
+                 creation(createExtrasThenUtilities, twoTests)},
+          edge_t{4, "Create the test whose name is the longer", creation(createExtras, longerNamed)},
+          edge_t{5, "Create a regular test, generating the class", creation(createWidget, regularTest)}
         }, // 0: prepared
         { edge_t{0, "Remove both, by their classes",
-                 removal({"utilities_free_test", "utilities_free_test_extras"}, utilitiesTests)},
-          edge_t{2, "Run the tests", running},
+                 removal({"utilities_free_test", "utilities_free_test_extras"}, utilitiesTests, prepared)},
+          edge_t{2, "Run the tests", running(twoTestsRun)},
           edge_t{4, "Remove the test whose name the other's begins with, by its class",
-                 removal({"utilities_free_test"}, utilitiesTests)}
+                 removal({"utilities_free_test"}, utilitiesTests, longerNamed)}
         }, // 1: two tests
         { edge_t{3,
                  "Remove the test whose name the other's begins with, by its source file, with output and materials",
-                 removal({"Tests/Utilities/UtilitiesFreeTest.cpp"}, utilitiesTests)}
+                 removal({"Tests/Utilities/UtilitiesFreeTest.cpp"}, utilitiesTests, longerNamedRun)}
         }, // 2: two tests, run
         { edge_t{0,
                  "Remove the remaining test, with its output and materials",
-                 removal({"utilities_free_test_extras"}, extrasTest)}
+                 removal({"utilities_free_test_extras"}, extrasTest, prepared)}
         }, // 3: one test, run
-        { edge_t{0, "Remove the test", removal({"utilities_free_test_extras"}, extrasTest)},
-          edge_t{1, "Create the test whose name is the shorter", creation(createUtilities)}
+        { edge_t{0, "Remove the test", removal({"utilities_free_test_extras"}, extrasTest, prepared)},
+          edge_t{1, "Create the test whose name is the shorter", creation(createUtilities, twoTests)}
         }, // 4: one test
-        { edge_t{6, "Remove the regular test, leaving its companions", removal({"widget_test"}, widgetTests)},
+        { edge_t{6, "Remove the regular test, leaving its companions",
+                 removal({"widget_test"}, widgetTests, companions)},
           edge_t{7, "Remove the regular test and the false-negative test of its testing utilities",
-                 removal({"widget_test", "widget_false_negative_test"}, widgetTests)}
+                 removal({"widget_test", "widget_false_negative_test"}, widgetTests, testingUtilities)}
         }, // 5: regular test
-        { edge_t{5, "Create the regular test again, beside its companions", creation(createWidget)},
-          edge_t{7, "Remove the false-negative test", removal({"widget_false_negative_test"}, widgetTesterTest)}
+        { edge_t{5, "Create the regular test again, beside its companions", creation(createWidget, regularTest)},
+          edge_t{7, "Remove the false-negative test",
+                 removal({"widget_false_negative_test"}, widgetTesterTest, testingUtilities)}
         }, // 6: companions of a regular test
-        { edge_t{5, "Create the regular test again, beside its testing utilities", creation(createWidget)}
+        { edge_t{5, "Create the regular test again, beside its testing utilities",
+                 creation(createWidget, regularTest)}
         }  // 7: testing utilities
       },
-      {states / "Prepared",
-       states / "UtilitiesTests",
-       states / "UtilitiesTestsRun",
-       states / "ExtrasRun",
-       states / "Extras",
-       states / "Widget",
-       states / "WidgetCompanions",
-       states / "WidgetTestingUtilities"}
+      {prepared, twoTests, twoTestsRun, longerNamedRun, longerNamed, regularTest, companions, testingUtilities}
     };
 
     auto checkState{
-      [this](std::string_view description, const fs::path& projectRoot, const fs::path& state) {
-        check_state(description, projectRoot, state);
+      [this, &project](std::string_view description, const project_state& obtained, const project_state& predicted) {
+        check(equality, description, obtained, predicted);
+        check_state(description, project.root, predicted.snapshot);
       }
     };
 
-    check_state("The fake project as prepared", project.root, states / "Prepared");
+    check_state("The fake project as prepared", project.root, prepared.snapshot);
 
     transition_checker_t::check(report("Creation and removal"), g, checkState);
 
@@ -636,9 +694,10 @@ namespace sequoia::testing
                                               const fs::path& projectRoot,
                                               const fs::path& state)
   {
+    // Through the working copy, so that updating the materials updates the snapshot
     const auto working{working_materials() / "Lifecycle" / back(state)};
     lifecycle::set_state(working, projectRoot);
-    check(equivalence, description, working, state);
+    check(weak_equivalence, description, lifecycle::project_on_disk{working}, lifecycle::project_state{state});
   }
 
   [[nodiscard]]

@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <array>
 #include <format>
+#include <iterator>
 #include <ostream>
 #include <ranges>
 #include <stdexcept>
@@ -46,6 +47,18 @@ namespace sequoia::testing
       return (repo / rebase_from(source, repo)).lexically_normal();
     }
 
+    /** \brief Whether the last components of `path` are those of `suffix`.
+
+        Not `std::ranges::ends_with`: libstdc++ 15 and the MS STL do not admit `fs::path` to it.
+     */
+    [[nodiscard]]
+    bool ends_with_components(const fs::path& path, const fs::path& suffix)
+    {
+      const auto pathEnd{std::make_reverse_iterator(path.begin())}, suffixEnd{std::make_reverse_iterator(suffix.begin())};
+      return std::mismatch(std::make_reverse_iterator(suffix.end()), suffixEnd,
+                           std::make_reverse_iterator(path.end()),   pathEnd).first == suffixEnd;
+    }
+
     [[nodiscard]]
     std::string relative_to_root(const fs::path& path, const project_paths& projPaths)
     {
@@ -68,7 +81,7 @@ namespace sequoia::testing
       auto isNamed{
         [&](const test_registration& reg) {
           return namesClass ? (reg.name == request)
-                            : std::ranges::ends_with(within_tests_repo(reg.source, projPaths), requestPath);
+                            : ends_with_components(within_tests_repo(reg.source, projPaths), requestPath);
         }
       };
 
