@@ -25,6 +25,10 @@ namespace sequoia::testing
   private:
     void test_constraints();
 
+    void test_equal_ignoring_case();
+
+    void test_character_types();
+
     void test_classification();
 
     void test_is_identifier_character();

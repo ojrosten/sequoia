@@ -487,16 +487,6 @@ namespace sequoia::testing
       return rest.starts_with(std::string{kind}.append("."));
     }
 
-    /// The tracker's upper case is ASCII, and what lies beyond it is compared as it is
-    [[nodiscard]]
-    bool equal_ignoring_case(tracker_path_view lhs, tracker_path_view rhs)
-    {
-      constexpr char16_t asciiEnd{0x80};
-      auto lower{[](char16_t c){ return (c < asciiEnd) ? static_cast<char16_t>(to_lowercase(static_cast<char>(c))) : c; }};
-
-      return std::ranges::equal(lhs | std::views::transform(lower), rhs | std::views::transform(lower));
-    }
-
     [[nodiscard]]
     bool spells_windows_object_file(tracker_path_view spelling)
     {
@@ -670,11 +660,8 @@ namespace sequoia::testing
         const auto& listing{listing_of(dir)};
 
         const auto spelled{name.string()};
-        auto sameLetter{[](char l, char r){ return to_lowercase(l) == to_lowercase(r); }};
         auto sameButForCase{
-          [&spelled, sameLetter](const fs::path& candidate) {
-            return std::ranges::equal(candidate.string(), spelled, sameLetter);
-          }
+          [&spelled](const fs::path& candidate) { return equal_ignoring_case(candidate.string(), spelled); }
         };
         const auto match{std::ranges::find_if(listing, sameButForCase)};
 
@@ -772,8 +759,8 @@ namespace sequoia::testing
            the compiler wrote, which is where the object file is named. `is_tlog` gives their names.
         -# A source is a line beginning `^`. Sources compiled by one invocation share a line, separated
            by `|`, and so share what is listed beneath the line.
-        -# Both are UTF-16 with a byte order mark, and spell paths in upper case, so each path is put
-           through the filesystem to recover its case.
+        -# Both are UTF-16 with a byte order mark, and spell paths with their ASCII letters in upper case, so
+           each path is put through the filesystem to recover its case.
         -# A file is listed in the order the compiler opened it, and more than once where it was opened
            more than once.
 

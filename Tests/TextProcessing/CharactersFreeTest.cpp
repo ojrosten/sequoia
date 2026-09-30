@@ -9,6 +9,7 @@
 #include "sequoia/TextProcessing/Characters.hpp"
 
 #include <concepts>
+#include <filesystem>
 #include <format>
 #include <string>
 #include <type_traits>
@@ -19,11 +20,23 @@ namespace sequoia::testing
 
   namespace
   {
+    template<character Char>
     [[nodiscard]]
-    std::string describe(std::string_view what, char byte)
+    std::string describe(std::string_view what, Char unit)
     {
-      return std::format("{}: {:#x}", what, static_cast<unsigned char>(byte));
+      return std::format("{}: {:#x}", what, static_cast<std::make_unsigned_t<Char>>(unit));
     }
+
+    template<class Fn>
+    constexpr bool accepts_every_character_type_v{
+         std::invocable<Fn, char>     && std::invocable<Fn, wchar_t>  && std::invocable<Fn, char8_t>
+      && std::invocable<Fn, char16_t> && std::invocable<Fn, char32_t> && std::invocable<Fn, const char>
+    };
+
+    template<class Fn>
+    constexpr bool refuses_integers_v{
+      !std::invocable<Fn, int> && !std::invocable<Fn, signed char> && !std::invocable<Fn, unsigned char>
+    };
   }
 
   [[nodiscard]]
@@ -35,6 +48,8 @@ namespace sequoia::testing
   void characters_free_test::run_tests()
   {
     test_constraints();
+    test_equal_ignoring_case();
+    test_character_types();
     test_classification();
     test_is_identifier_character();
     test_is_identifier_delimiter();
@@ -43,29 +58,138 @@ namespace sequoia::testing
 
   void characters_free_test::test_constraints()
   {
-    STATIC_CHECK( std::invocable<decltype(is_digit),                char>);
-    STATIC_CHECK(!std::invocable<decltype(is_digit),                wchar_t>);
-    STATIC_CHECK(!std::invocable<decltype(is_digit),                int>);
-    STATIC_CHECK( std::invocable<decltype(is_identifier_character), char>);
-    STATIC_CHECK(!std::invocable<decltype(is_identifier_character), int>);
-    STATIC_CHECK( std::invocable<decltype(is_identifier_delimiter), char>);
-    STATIC_CHECK(!std::invocable<decltype(is_identifier_delimiter), int>);
-    STATIC_CHECK( std::invocable<decltype(is_whitespace),           char>);
-    STATIC_CHECK(!std::invocable<decltype(is_whitespace),           int>);
-    STATIC_CHECK( std::invocable<decltype(to_lowercase),            char>);
-    STATIC_CHECK(!std::invocable<decltype(to_lowercase),            char16_t>);
-    STATIC_CHECK(!std::invocable<decltype(to_lowercase),            int>);
-    STATIC_CHECK( std::invocable<decltype(to_uppercase),            char>);
-    STATIC_CHECK(!std::invocable<decltype(to_uppercase),            char16_t>);
-    STATIC_CHECK(!std::invocable<decltype(to_uppercase),            int>);
+    STATIC_CHECK(accepts_every_character_type_v<decltype(is_ascii)>);
+    STATIC_CHECK(accepts_every_character_type_v<decltype(is_digit)>);
+    STATIC_CHECK(accepts_every_character_type_v<decltype(is_uppercase)>);
+    STATIC_CHECK(accepts_every_character_type_v<decltype(is_lowercase)>);
+    STATIC_CHECK(accepts_every_character_type_v<decltype(is_alphabetic)>);
+    STATIC_CHECK(accepts_every_character_type_v<decltype(is_alphanumeric)>);
+    STATIC_CHECK(accepts_every_character_type_v<decltype(is_hex_digit)>);
+    STATIC_CHECK(accepts_every_character_type_v<decltype(is_identifier_character)>);
+    STATIC_CHECK(accepts_every_character_type_v<decltype(is_identifier_delimiter)>);
+    STATIC_CHECK(accepts_every_character_type_v<decltype(is_whitespace)>);
+    STATIC_CHECK(accepts_every_character_type_v<decltype(to_lowercase)>);
+    STATIC_CHECK(accepts_every_character_type_v<decltype(to_uppercase)>);
 
-    // Every conversion of a string is returned as a std::string
-    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), std::string&>,       std::string>);
-    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), const std::string&>, std::string>);
-    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), std::string>,        std::string>);
-    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_uppercase), std::string&>,       std::string>);
-    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_uppercase), const std::string&>, std::string>);
-    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_uppercase), std::string>,        std::string>);
+    STATIC_CHECK(refuses_integers_v<decltype(is_ascii)>);
+    STATIC_CHECK(refuses_integers_v<decltype(is_digit)>);
+    STATIC_CHECK(refuses_integers_v<decltype(is_uppercase)>);
+    STATIC_CHECK(refuses_integers_v<decltype(is_lowercase)>);
+    STATIC_CHECK(refuses_integers_v<decltype(is_alphabetic)>);
+    STATIC_CHECK(refuses_integers_v<decltype(is_alphanumeric)>);
+    STATIC_CHECK(refuses_integers_v<decltype(is_hex_digit)>);
+    STATIC_CHECK(refuses_integers_v<decltype(is_identifier_character)>);
+    STATIC_CHECK(refuses_integers_v<decltype(is_identifier_delimiter)>);
+    STATIC_CHECK(refuses_integers_v<decltype(is_whitespace)>);
+    STATIC_CHECK(refuses_integers_v<decltype(to_lowercase)>);
+    STATIC_CHECK(refuses_integers_v<decltype(to_uppercase)>);
+
+    // A converted character keeps its type; a converted string is a std::basic_string of its character type
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), char16_t>,                 char16_t>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_uppercase), const char32_t&>,          char32_t>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), std::string&>,             std::string>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), const std::string&>,       std::string>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), std::string>,              std::string>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), std::string_view>,         std::string>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), const char(&)[4]>,         std::string>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), const char*>,              std::string>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), std::u16string_view>,      std::u16string>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_lowercase), const char16_t(&)[4]>,     std::u16string>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_uppercase), std::string&>,             std::string>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_uppercase), const std::string&>,       std::string>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_uppercase), std::string>,              std::string>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_uppercase), const std::u32string&>,    std::u32string>);
+    STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_uppercase), const wchar_t*>,           std::wstring>);
+
+    STATIC_CHECK( std::invocable<decltype(equal_ignoring_case), std::string_view,   std::string_view>);
+    STATIC_CHECK( std::invocable<decltype(equal_ignoring_case), const std::string&, const char(&)[4]>);
+    STATIC_CHECK( std::invocable<decltype(equal_ignoring_case), std::u16string_view, const char16_t*>);
+    STATIC_CHECK(!std::invocable<decltype(equal_ignoring_case), std::string_view,   std::u16string_view>);
+    STATIC_CHECK(!std::invocable<decltype(equal_ignoring_case), std::u16string_view, std::string_view>);
+    STATIC_CHECK(!std::invocable<decltype(equal_ignoring_case), char,               char>);
+
+    // Strings of integers, a path, and a string of a volatile type, are refused without a hard error
+    STATIC_CHECK(!std::invocable<decltype(to_lowercase),        const unsigned char*>);
+    STATIC_CHECK(!std::invocable<decltype(to_lowercase),        const signed char*>);
+    STATIC_CHECK(!std::invocable<decltype(to_lowercase),        const std::filesystem::path&>);
+    STATIC_CHECK(!std::invocable<decltype(to_lowercase),        const volatile char*>);
+    STATIC_CHECK(!std::invocable<decltype(equal_ignoring_case), const std::filesystem::path&, std::string_view>);
+  }
+
+  void characters_free_test::test_equal_ignoring_case()
+  {
+    STATIC_CHECK( equal_ignoring_case("", ""));
+    STATIC_CHECK( equal_ignoring_case("FooBar", "fOObAR"));
+    STATIC_CHECK( equal_ignoring_case("fOObAR", "FooBar"));
+    STATIC_CHECK(!equal_ignoring_case("Foo", "Foob"));
+    STATIC_CHECK(!equal_ignoring_case("Foob", "Foo"));
+    STATIC_CHECK(!equal_ignoring_case("", "a"));
+    STATIC_CHECK(!equal_ignoring_case("a", ""));
+    STATIC_CHECK(!equal_ignoring_case("Fop", "foo"));
+
+    // Non-letters 0x20 apart, as a letter's two cases are
+    STATIC_CHECK(!equal_ignoring_case("[", "{"));
+    STATIC_CHECK(!equal_ignoring_case("@", "`"));
+
+    // UTF-8's capital and small e with acute
+    STATIC_CHECK(!equal_ignoring_case("\xC3\x89", "\xC3\xA9"));
+    STATIC_CHECK(!equal_ignoring_case("\xC3\xA9", "\xC3\x89"));
+    STATIC_CHECK( equal_ignoring_case("\xC3\x89" "A", "\xC3\x89" "a"));
+
+    STATIC_CHECK( equal_ignoring_case(u"FooBar", u"fOObAR"));
+    STATIC_CHECK( equal_ignoring_case(std::u16string_view{u"fOObAR"}, u"FooBar"));
+    STATIC_CHECK( equal_ignoring_case(u"", u""));
+    STATIC_CHECK(!equal_ignoring_case(u"", u"a"));
+    STATIC_CHECK(!equal_ignoring_case(u"Foo", u"fOOb"));
+    STATIC_CHECK(!equal_ignoring_case(u"fOOb", u"Foo"));
+    STATIC_CHECK(!equal_ignoring_case(u"\u00c9", u"\u00e9"));
+    STATIC_CHECK(!equal_ignoring_case(u"\u00e9", u"\u00c9"));
+    // A code unit whose low byte is `S`
+    STATIC_CHECK(!equal_ignoring_case(u"\u0153", u"s"));
+    STATIC_CHECK(!equal_ignoring_case(u"s", u"\u0153"));
+    STATIC_CHECK( equal_ignoring_case(std::string{"Tests/Foo.cpp"}, "tests/foo.CPP"));
+  }
+
+  void characters_free_test::test_character_types()
+  {
+    STATIC_CHECK( is_digit(u'7'));
+    STATIC_CHECK( is_uppercase(U'Q'));
+    STATIC_CHECK( is_lowercase(L'q'));
+    STATIC_CHECK( is_whitespace(u8'\t'));
+    STATIC_CHECK( is_hex_digit(u'F'));
+    STATIC_CHECK( is_identifier_character(U'_'));
+    STATIC_CHECK( is_identifier_delimiter(u'<'));
+    STATIC_CHECK( is_ascii(u'\x7f'));
+    STATIC_CHECK(!is_ascii(u'\x80'));
+    STATIC_CHECK(!is_ascii(static_cast<wchar_t>(-1)));
+    STATIC_CHECK(to_lowercase(u'A') == u'a');
+    STATIC_CHECK(to_uppercase(U'z') == U'Z');
+    STATIC_CHECK(to_lowercase(L'Q') == L'q');
+    STATIC_CHECK(to_uppercase(u8'q') == u8'Q');
+    STATIC_CHECK(to_lowercase(u"FooBAR") == u"foobar");
+    STATIC_CHECK(to_uppercase(std::u32string_view{U"foo\u00e9"}) == U"FOO\u00e9");
+
+    // A code point beyond the basic multilingual plane, and one whose low byte is `a`
+    STATIC_CHECK(!is_alphanumeric(U'\U0001F600'));
+    STATIC_CHECK(!is_alphanumeric(U'\U00010061'));
+    STATIC_CHECK(to_uppercase(U'\U00010061') == U'\U00010061');
+
+    // An accented letter, a surrogate, and code units whose low bytes are `a`, a tab and a digit
+    for(const char16_t unit : {u'\u00e9', u'\xd800', u'\u0161', u'\u0109', u'\u0131'})
+    {
+      check(describe("A code unit beyond ASCII is not ASCII",                   unit), !is_ascii(unit));
+      check(describe("A code unit beyond ASCII is not a letter",                unit), !is_alphabetic(unit));
+      check(describe("A code unit beyond ASCII is not alphanumeric",            unit), !is_alphanumeric(unit));
+      check(describe("A code unit beyond ASCII is not a digit",                 unit), !is_digit(unit));
+      check(describe("A code unit beyond ASCII is not a hexadecimal digit",     unit), !is_hex_digit(unit));
+      check(describe("A code unit beyond ASCII is not uppercase",               unit), !is_uppercase(unit));
+      check(describe("A code unit beyond ASCII is not lowercase",               unit), !is_lowercase(unit));
+      check(describe("A code unit beyond ASCII is not whitespace",              unit), !is_whitespace(unit));
+      check(describe("A code unit beyond ASCII is not an identifier character", unit), !is_identifier_character(unit));
+      check(describe("A code unit beyond ASCII is not an identifier delimiter", unit), !is_identifier_delimiter(unit));
+      check(equality, describe("A code unit beyond ASCII to lowercase", unit), to_lowercase(unit), unit);
+      check(equality, describe("A code unit beyond ASCII to uppercase", unit), to_uppercase(unit), unit);
+    }
   }
 
   void characters_free_test::test_classification()

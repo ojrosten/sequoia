@@ -48,11 +48,11 @@ namespace sequoia::testing
   [[nodiscard]]
   std::u16string to_tracker_spelling(const std::filesystem::path& p);
 
-  /** The line of a tracker log naming `file`. */
+  /** The line of a tracker log naming `file`, ended by CRLF. */
   [[nodiscard]]
   std::u16string tracker_line(const std::filesystem::path& file);
 
-  /** The `^`-led line of a tracker log naming `sources`, which were compiled together. */
+  /** The `^`-led line of a tracker log naming `sources`, which were compiled together, ended by CRLF. */
   [[nodiscard]]
   std::u16string tracker_sources_line(std::initializer_list<std::filesystem::path> sources);
 

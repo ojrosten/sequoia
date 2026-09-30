@@ -118,12 +118,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::u16string to_tracker_spelling(const fs::path& p)
   {
-    constexpr char16_t asciiEnd{0x80};
-    auto upper{
-      [](char16_t c){ return (c < asciiEnd) ? static_cast<char16_t>(to_uppercase(static_cast<char>(c))) : c; }
-    };
-
-    return p.u16string() | std::views::transform(upper) | std::ranges::to<std::u16string>();
+    return to_uppercase(p.u16string());
   }
 
   [[nodiscard]]
@@ -160,8 +155,8 @@ namespace sequoia::testing
     }
   }
 
-  /* Two logs. For each record with inputs, each log has a line naming the first input. Beneath it, the read log lists
-     the other inputs and the write log lists the object.
+  /* The read log and the write log both have a line naming the first input of each record with inputs. Beneath it,
+     the read log lists the other inputs and the write log lists the object.
    */
   void write_tlogs(const fs::path& tlogDir, std::span<const compilation_record> records)
   {

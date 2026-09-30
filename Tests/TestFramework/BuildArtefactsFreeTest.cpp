@@ -13,7 +13,6 @@
 
 #include <cstring>
 #include <format>
-#include <fstream>
 
 namespace sequoia::testing
 {
