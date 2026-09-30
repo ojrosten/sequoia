@@ -335,6 +335,9 @@ namespace sequoia::testing
 
     [[nodiscard]]
     std::vector<std::string> test_classes() const;
+
+    [[nodiscard]]
+    friend bool operator==(const nascent_allocation_test&, const nascent_allocation_test&) noexcept = default;
   private:
     std::filesystem::path m_SourceDir{};
 

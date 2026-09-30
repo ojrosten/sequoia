@@ -408,8 +408,39 @@ namespace sequoia::testing
     };
 
     refused("Plurgh.h does not exist", {"free", "Plurgh.h"});
+
+    // No directory is named Pools yet, so every file these creations could write, within Source or Tests, would
+    // be new. The checks below then see any file written, and any CMakeLists.txt amended, before a refusal.
+    auto readCMakeLists{
+      [&project]() {
+        constexpr std::array<std::string_view, 2> cmakeLists{"Source/fakeProject/CMakeLists.txt",
+                                                             "TestSandbox/CMakeLists.txt"};
+
+        auto contents{
+          [&project](std::string_view file) { return read_to_string(project / file, std::ios_base::in).value(); }
+        };
+
+        return cmakeLists | std::views::transform(contents) | std::ranges::to<std::vector>();
+      }
+    };
+
+    const auto cmakeListsBefore{readCMakeLists()};
+
     refused("A class generated for an allocation test named with its namespace",
-            {"regular_allocation_test", "stuff::pool", "-g", "Memory"});
+            {"regular_allocation_test", "stuff::pool", "-g", "Pools"});
+    refused("A class generated for an allocation test named as a template-id",
+            {"regular_allocation_test", "pool<T>", "-g", "Pools"});
+    refused("A class generated for an allocation test named with a space",
+            {"regular_allocation_test", "my pool", "-g", "Pools"});
+    refused("A class generated for an allocation test named with a leading digit",
+            {"regular_allocation_test", "2pool", "-g", "Pools"});
+    refused("A class generated for an allocation test with an empty name",
+            {"regular_allocation_test", "", "-g", "Pools"});
+
+    check("No file written for a refused allocation test",
+          !fs::exists(project / "Source/fakeProject/Pools") && !fs::exists(project / "Tests/Pools"));
+    check(equality, "No CMakeLists.txt amended for a refused allocation test", readCMakeLists(), cmakeListsBefore);
+
     refused("Typo in specified class header",
             {"regular_test", "bar::things", "double", "--header", "fakeProject/Stuff/Thingz.hpp"});
 

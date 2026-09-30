@@ -961,9 +961,11 @@ namespace sequoia::testing
 
   void nascent_allocation_test::generate_header(const fs::path& headerPath)
   {
-    if(forename().find_first_of(":<") != npos)
+    if(!is_identifier(forename()))
       throw std::runtime_error{
-        std::format("An allocation test takes a bare class name, so no class is generated for '{}'", forename())
+        std::format("An allocation test takes a bare class name: an identifier. "
+                    "'{}' is not an identifier, so no class is generated",
+                    forename())
       };
 
     const auto headerTemplate{test_type() == "move_only_allocation" ? "MyMoveOnlyClass.hpp" : "MyRegularClass.hpp"};
