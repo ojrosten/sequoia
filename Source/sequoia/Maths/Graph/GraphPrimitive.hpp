@@ -204,12 +204,12 @@ namespace sequoia
       template<class N>
       constexpr static bool enable_node_allocation_v{!heterogeneous_nodes<graph_primitive> && !std::is_empty_v<N>};
 
-      /** \brief Whether the edge type and the node weight type are deep copy-constructible.
+      /** \brief Whether the edge type is copy-constructible and the node weight type is deep copy-constructible.
 
           A heterogeneous graph's node weight type is a tag, so the weights of its nodes are not considered.
        */
       constexpr static bool copy_constructible_v{
-        is_deep_copy_constructible_v<typename Connectivity::edge_type> && is_deep_copy_constructible_v<node_weight_type>
+        std::is_copy_constructible_v<typename Connectivity::edge_type> && is_deep_copy_constructible_v<node_weight_type>
       };
 
       template
