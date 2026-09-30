@@ -681,9 +681,11 @@ namespace sequoia::testing
     };
 
     const option diagnosticsOption{"--framework-diagnostics", {"--diagnostics"}, {},
-      updateCurrentNascentTest([](auto& nascent, const arg_list&) {
-        nascent.flavour(nascent_test_flavour::framework_diagnostics);
-      }),
+      updateCurrentNascentTest(
+        [](auto& nascent, const arg_list&) {
+          nascent.flavour(nascent_test_flavour::framework_diagnostics);
+        }
+      ),
       {},
       "Make the test one of the framework's own diagnostics"
     };
