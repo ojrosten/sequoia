@@ -241,7 +241,7 @@ namespace sequoia::testing
 
     const auto buildDir{fake / "build" / "CMade" / "TestAll"};
     const bool ninja{system != build_system::visual_studio};
-    // Ninja puts a target's objects in CMakeFiles/<target>.dir, and Visual Studio in <target>.dir/<configuration>
+    // By default, objects lie in CMakeFiles/<target>.dir (Ninja) or <target>.dir/<configuration> (Visual Studio)
     const auto objectDir{ninja ? fs::path{"CMakeFiles"} / "TestAll.dir"
                                : fs::path{"TestAll.dir"} / visualStudioConfiguration};
     auto object{[&](std::string_view source){ return objectDir / (std::string{source} + (ninja ? ".o" : ".obj")); }};
