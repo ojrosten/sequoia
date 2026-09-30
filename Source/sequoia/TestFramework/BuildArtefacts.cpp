@@ -493,7 +493,7 @@ namespace sequoia::testing
       constexpr tracker_path_view extension{u".obj"};
 
       return    (spelling.size() >= extension.size())
-             && equal_ignoring_case(spelling.substr(spelling.size() - extension.size()), extension);
+             && same_ignoring_case(spelling.substr(spelling.size() - extension.size()), extension);
     }
 
     /** The tracker's logs of one kind, decoded: under each source the tracker names, the files that
@@ -659,9 +659,9 @@ namespace sequoia::testing
       {
         const auto& listing{listing_of(dir)};
 
-        const auto spelled{name.string()};
+        const auto& spelled{name.native()};
         auto sameButForCase{
-          [&spelled](const fs::path& candidate) { return equal_ignoring_case(candidate.string(), spelled); }
+          [&spelled](const fs::path& candidate) { return same_ignoring_case(candidate.native(), spelled); }
         };
         const auto match{std::ranges::find_if(listing, sameButForCase)};
 
@@ -729,7 +729,7 @@ namespace sequoia::testing
       auto bearsSourcesName{
         [sourceName, sourceStem](tracker_path_view object) {
           const auto stem{spelled_stem(spelled_filename(object))};
-          return equal_ignoring_case(stem, sourceStem) || equal_ignoring_case(stem, sourceName);
+          return same_ignoring_case(stem, sourceStem) || same_ignoring_case(stem, sourceName);
         }
       };
 

@@ -152,7 +152,7 @@ namespace sequoia
       }
     };
 
-    struct equal_ignoring_case_fn
+    struct same_ignoring_case_fn
     {
       template<character_string Lhs, character_string Rhs>
         requires std::same_as<character_of_t<Lhs>, character_of_t<Rhs>>
@@ -180,5 +180,5 @@ namespace sequoia
   inline constexpr impl::case_conversion<impl::to_uppercase_character> to_uppercase{};
 
   /** \brief Whether two strings of the same character type are equal once each is converted to lowercase. */
-  inline constexpr impl::equal_ignoring_case_fn equal_ignoring_case{};
+  inline constexpr impl::same_ignoring_case_fn same_ignoring_case{};
 }

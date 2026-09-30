@@ -48,7 +48,7 @@ namespace sequoia::testing
   void characters_free_test::run_tests()
   {
     test_constraints();
-    test_equal_ignoring_case();
+    test_same_ignoring_case();
     test_character_types();
     test_classification();
     test_is_identifier_character();
@@ -101,53 +101,53 @@ namespace sequoia::testing
     STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_uppercase), const std::u32string&>,    std::u32string>);
     STATIC_CHECK(std::same_as<std::invoke_result_t<decltype(to_uppercase), const wchar_t*>,           std::wstring>);
 
-    STATIC_CHECK( std::invocable<decltype(equal_ignoring_case), std::string_view,   std::string_view>);
-    STATIC_CHECK( std::invocable<decltype(equal_ignoring_case), const std::string&, const char(&)[4]>);
-    STATIC_CHECK( std::invocable<decltype(equal_ignoring_case), std::u16string_view, const char16_t*>);
-    STATIC_CHECK(!std::invocable<decltype(equal_ignoring_case), std::string_view,   std::u16string_view>);
-    STATIC_CHECK(!std::invocable<decltype(equal_ignoring_case), std::u16string_view, std::string_view>);
-    STATIC_CHECK(!std::invocable<decltype(equal_ignoring_case), char,               char>);
+    STATIC_CHECK( std::invocable<decltype(same_ignoring_case), std::string_view,   std::string_view>);
+    STATIC_CHECK( std::invocable<decltype(same_ignoring_case), const std::string&, const char(&)[4]>);
+    STATIC_CHECK( std::invocable<decltype(same_ignoring_case), std::u16string_view, const char16_t*>);
+    STATIC_CHECK(!std::invocable<decltype(same_ignoring_case), std::string_view,   std::u16string_view>);
+    STATIC_CHECK(!std::invocable<decltype(same_ignoring_case), std::u16string_view, std::string_view>);
+    STATIC_CHECK(!std::invocable<decltype(same_ignoring_case), char,               char>);
 
     // Strings of integers, a path, and a string of a volatile type, are refused without a hard error
     STATIC_CHECK(!std::invocable<decltype(to_lowercase),        const unsigned char*>);
     STATIC_CHECK(!std::invocable<decltype(to_lowercase),        const signed char*>);
     STATIC_CHECK(!std::invocable<decltype(to_lowercase),        const std::filesystem::path&>);
     STATIC_CHECK(!std::invocable<decltype(to_lowercase),        const volatile char*>);
-    STATIC_CHECK(!std::invocable<decltype(equal_ignoring_case), const std::filesystem::path&, std::string_view>);
+    STATIC_CHECK(!std::invocable<decltype(same_ignoring_case), const std::filesystem::path&, std::string_view>);
   }
 
-  void characters_free_test::test_equal_ignoring_case()
+  void characters_free_test::test_same_ignoring_case()
   {
-    STATIC_CHECK( equal_ignoring_case("", ""));
-    STATIC_CHECK( equal_ignoring_case("FooBar", "fOObAR"));
-    STATIC_CHECK( equal_ignoring_case("fOObAR", "FooBar"));
-    STATIC_CHECK(!equal_ignoring_case("Foo", "Foob"));
-    STATIC_CHECK(!equal_ignoring_case("Foob", "Foo"));
-    STATIC_CHECK(!equal_ignoring_case("", "a"));
-    STATIC_CHECK(!equal_ignoring_case("a", ""));
-    STATIC_CHECK(!equal_ignoring_case("Fop", "foo"));
+    STATIC_CHECK( same_ignoring_case("", ""));
+    STATIC_CHECK( same_ignoring_case("FooBar", "fOObAR"));
+    STATIC_CHECK( same_ignoring_case("fOObAR", "FooBar"));
+    STATIC_CHECK(!same_ignoring_case("Foo", "Foob"));
+    STATIC_CHECK(!same_ignoring_case("Foob", "Foo"));
+    STATIC_CHECK(!same_ignoring_case("", "a"));
+    STATIC_CHECK(!same_ignoring_case("a", ""));
+    STATIC_CHECK(!same_ignoring_case("Fop", "foo"));
 
     // Non-letters 0x20 apart, as a letter's two cases are
-    STATIC_CHECK(!equal_ignoring_case("[", "{"));
-    STATIC_CHECK(!equal_ignoring_case("@", "`"));
+    STATIC_CHECK(!same_ignoring_case("[", "{"));
+    STATIC_CHECK(!same_ignoring_case("@", "`"));
 
     // UTF-8's capital and small e with acute
-    STATIC_CHECK(!equal_ignoring_case("\xC3\x89", "\xC3\xA9"));
-    STATIC_CHECK(!equal_ignoring_case("\xC3\xA9", "\xC3\x89"));
-    STATIC_CHECK( equal_ignoring_case("\xC3\x89" "A", "\xC3\x89" "a"));
+    STATIC_CHECK(!same_ignoring_case("\xC3\x89", "\xC3\xA9"));
+    STATIC_CHECK(!same_ignoring_case("\xC3\xA9", "\xC3\x89"));
+    STATIC_CHECK( same_ignoring_case("\xC3\x89" "A", "\xC3\x89" "a"));
 
-    STATIC_CHECK( equal_ignoring_case(u"FooBar", u"fOObAR"));
-    STATIC_CHECK( equal_ignoring_case(std::u16string_view{u"fOObAR"}, u"FooBar"));
-    STATIC_CHECK( equal_ignoring_case(u"", u""));
-    STATIC_CHECK(!equal_ignoring_case(u"", u"a"));
-    STATIC_CHECK(!equal_ignoring_case(u"Foo", u"fOOb"));
-    STATIC_CHECK(!equal_ignoring_case(u"fOOb", u"Foo"));
-    STATIC_CHECK(!equal_ignoring_case(u"\u00c9", u"\u00e9"));
-    STATIC_CHECK(!equal_ignoring_case(u"\u00e9", u"\u00c9"));
+    STATIC_CHECK( same_ignoring_case(u"FooBar", u"fOObAR"));
+    STATIC_CHECK( same_ignoring_case(std::u16string_view{u"fOObAR"}, u"FooBar"));
+    STATIC_CHECK( same_ignoring_case(u"", u""));
+    STATIC_CHECK(!same_ignoring_case(u"", u"a"));
+    STATIC_CHECK(!same_ignoring_case(u"Foo", u"fOOb"));
+    STATIC_CHECK(!same_ignoring_case(u"fOOb", u"Foo"));
+    STATIC_CHECK(!same_ignoring_case(u"\u00c9", u"\u00e9"));
+    STATIC_CHECK(!same_ignoring_case(u"\u00e9", u"\u00c9"));
     // A code unit whose low byte is `S`
-    STATIC_CHECK(!equal_ignoring_case(u"\u0153", u"s"));
-    STATIC_CHECK(!equal_ignoring_case(u"s", u"\u0153"));
-    STATIC_CHECK( equal_ignoring_case(std::string{"Tests/Foo.cpp"}, "tests/foo.CPP"));
+    STATIC_CHECK(!same_ignoring_case(u"\u0153", u"s"));
+    STATIC_CHECK(!same_ignoring_case(u"s", u"\u0153"));
+    STATIC_CHECK( same_ignoring_case(std::string{"Tests/Foo.cpp"}, "tests/foo.CPP"));
   }
 
   void characters_free_test::test_character_types()
