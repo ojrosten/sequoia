@@ -12,8 +12,11 @@
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <fstream>
 #include <iomanip>
+#include <limits>
+#include <stdexcept>
 
 namespace sequoia::testing
 {
@@ -126,7 +129,10 @@ namespace sequoia::testing
 
     std::istream& read(std::istream& s, failure_info& info, indentation ind)
     {
-      while(s && std::isspace(static_cast<unsigned char>(s.peek()))) s.get();
+      while(s && std::isspace(s.peek()))
+      {
+        s.get();
+      }
 
       if(s && (s.peek() != std::istream::traits_type::eof()))
       {
