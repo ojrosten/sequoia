@@ -182,9 +182,13 @@ namespace sequoia::testing
                   std::string_view nameStub,
                   FileTransformer transformer);
 
-    /** \brief The full name if one was given, else `<forename>_<surname>` */
+    /** \brief The full name if one was given, else `name_from_forename_and_surname()` */
     [[nodiscard]]
     std::string test_name() const;
+
+    /** \brief `<forename>_<surname>` */
+    [[nodiscard]]
+    std::string name_from_forename_and_surname() const;
 
     /** \brief `test_name()` in camel case */
     [[nodiscard]]

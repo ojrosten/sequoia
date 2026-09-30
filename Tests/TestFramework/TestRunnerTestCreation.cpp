@@ -210,7 +210,8 @@ namespace sequoia::testing
                                , "create", "move_only_test", "cloud", "double", "--gen-source", "Weather"
                                , "create", "free_test", "Utilities.h"
                                , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazzer"
-                               , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazagain"
+                               , "create", "free_test", std::format("Source/{}/Stuff/Baz.h", sourceFolderName), "--forename", "bazagain",
+                                              "--fullname", "bazagain_free_test"
                                , "create", "free_test", "Stuff/Doohicky.hpp", "--gen-source", "bar::things"
                                , "create", "free_test", "Global/Stuff/Global.hpp", "--gen-source", "::"
                                , "create", "free_test", "Global/Stuff/Defs.hpp", "--gen-source", ""
@@ -373,7 +374,7 @@ namespace sequoia::testing
     refused("Typo in specified class header",
             {"regular_test", "bar::things", "double", "--header", "fakeProject/Stuff/Thingz.hpp"});
 
-    refused("Both a forename and a full name",
+    refused("A forename and a full name which disagree",
             {"free", "Utilities.h", "--forename", "utils", "--fullname", "utility_functions_test"});
     refused("A full name for a framework-diagnostics pair",
             {"free", "Utilities.h", "--diagnostics", "--fullname", "utilities_diagnostics"});

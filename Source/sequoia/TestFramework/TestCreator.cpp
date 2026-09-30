@@ -352,7 +352,13 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string nascent_test_base::test_name() const
   {
-    return m_FullName.value_or(std::format("{}_{}", m_Forename, m_Surname));
+    return m_FullName.value_or(name_from_forename_and_surname());
+  }
+
+  [[nodiscard]]
+  std::string nascent_test_base::name_from_forename_and_surname() const
+  {
+    return std::format("{}_{}", m_Forename, m_Surname);
   }
 
   [[nodiscard]]
@@ -972,10 +978,18 @@ namespace sequoia::testing
 
   void nascent_behavioural_test::finalize()
   {
+    if(surname().empty())
+      surname(std::format("{}_{}", test_type(), to_surname(flavour())));
+
     if(full_name())
     {
-      if(!forename().empty())
-        throw std::runtime_error{"--forename and --fullname both name the test class: give one or the other"};
+      if(!forename().empty() && (full_name() != name_from_forename_and_surname()))
+        throw std::runtime_error{
+          std::format("--forename {} names the test class {}, but --fullname names it {}: give one, or make them agree",
+                      forename(),
+                      name_from_forename_and_surname(),
+                      full_name().value())
+        };
 
       if(flavour() == nascent_test_flavour::framework_diagnostics)
         throw std::runtime_error{"--fullname names one test class, but --framework-diagnostics creates two"};
@@ -987,9 +1001,6 @@ namespace sequoia::testing
 
     if(forename().empty())
       forename(to_snake_case(fallbackSuite));
-
-    if(surname().empty())
-      surname(std::format("{}_{}", test_type(), to_surname(flavour())));
 
     nascent_test_base::finalize([this](const fs::path& filename) { return where_header_absent(filename); },
                                 [this](const fs::path& headerPath) { generate_header(headerPath); },
