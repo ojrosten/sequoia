@@ -24,7 +24,7 @@ namespace sequoia::testing
 
     /** \brief A queue whose first push stalls until `release_stall` is called.
 
-        When it underlies a `task_queue`, the stall happens with the `task_queue`'s mutex held.
+        A `task_queue` over a `stalling_queue` holds its own mutex throughout the stall.
 
         \pre At most one push is stalled at a time, across every instance.
      */
@@ -37,7 +37,7 @@ namespace sequoia::testing
 
       void push(int_task&& task)
       {
-        // Before the stall, so that a try-pop made during the stall can fail only on the mutex, not on an empty queue
+        // The task is queued first, so a try-pop during the stall can fail only on the mutex, not on an empty queue
         m_Q.push(std::move(task));
 
         if(!std::exchange(m_HasStalled, true))
@@ -55,7 +55,7 @@ namespace sequoia::testing
 
       void pop() { m_Q.pop(); }
     private:
-      // Static because a task_queue default-constructs its queue and gives no access to it
+      // The semaphores are static: a task_queue default-constructs its queue and gives no access to the queue
       inline static std::binary_semaphore m_StallBegun{0}, m_StallReleased{0};
 
       std::queue<int_task> m_Q;
@@ -64,10 +64,10 @@ namespace sequoia::testing
 
     using stalling_task_queue = task_queue<int, int_task, stalling_queue>;
 
-    /** \brief Pushes a task onto a `stalling_task_queue` from another thread.
+    /** \brief An RAII wrapper to push a task onto a `stalling_task_queue` from another thread.
 
-        Construction completes once the push has stalled with the queue's mutex held; destruction releases the stall,
-        after which the thread is joined.
+        The constructor returns once the push has stalled with the queue's mutex held. The destructor releases the
+        stall, then joins the thread.
      */
     class stalled_push
     {
