@@ -108,8 +108,8 @@ namespace sequoia
   {
     template<class T>
     inline constexpr bool character_type_v{
-         std::same_as<T, char>     || std::same_as<T, wchar_t>  || std::same_as<T, char8_t>
-      || std::same_as<T, char16_t> || std::same_as<T, char32_t>
+         std::is_same_v<T, char>     || std::is_same_v<T, wchar_t>  || std::is_same_v<T, char8_t>
+      || std::is_same_v<T, char16_t> || std::is_same_v<T, char32_t>
     };
   }
 
