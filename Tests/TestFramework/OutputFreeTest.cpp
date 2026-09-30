@@ -418,6 +418,44 @@ namespace sequoia::testing
           demangle<std::span<std::span<int>>>(),
           "std::span<std::span<int, -1>, -1>"s
     );
+
+    const auto dynamicExtent{std::format("{}", std::dynamic_extent)};
+
+    check(equality,
+          "libc++'s spelling of a span of dynamic extent",
+          tidy_name(std::format("std::__1::span<int, {}ul>", dynamicExtent), clang_type{}),
+          "std::span<int, -1>"s
+    );
+
+    check(equality,
+          "libstdc++'s spelling of a span of dynamic extent",
+          tidy_name(std::format("std::span<int, {}>", dynamicExtent), gcc_type{}),
+          "std::span<int, -1>"s
+    );
+
+    check(equality,
+          "A span in another namespace keeps its extent",
+          tidy_name(std::format("other::span<int, {}>", dynamicExtent), gcc_type{}),
+          std::format("other::span<int, {}>", dynamicExtent)
+    );
+
+    check(equality,
+          "A span in a namespace whose name ends in std keeps its extent",
+          tidy_name(std::format("mystd::span<int, {}>", dynamicExtent), gcc_type{}),
+          std::format("mystd::span<int, {}>", dynamicExtent)
+    );
+
+    check(equality,
+          "A span in a namespace named std within another keeps its extent",
+          tidy_name(std::format("foo::std::span<int, {}>", dynamicExtent), gcc_type{}),
+          std::format("foo::std::span<int, {}>", dynamicExtent)
+    );
+
+    check(equality,
+          "A span of dynamic extent as a template argument",
+          tidy_name(std::format("S<std::span<int, {}> >", dynamicExtent), gcc_type{}),
+          "S<std::span<int, -1> >"s
+    );
   }
 
   void output_free_test::test_template_argument_values()

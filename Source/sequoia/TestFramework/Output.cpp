@@ -443,16 +443,25 @@ namespace sequoia::testing
       return name;
     }
 
-    /** Respells the dynamic extent of every `span` in `name` as `-1`. MSVC writes the extent as `-1`, and libc++
-        and libstdc++ write the extent as the maximum `std::size_t`. A `span` whose `<` has no matching `>` is left
-        unchanged.
+    /** Respells the dynamic extent of every `std::span` in `name` as `-1`. MSVC writes the extent as `-1`, and
+        libc++ and libstdc++ write the extent as the maximum `std::size_t`. A `std::span` whose `<` has no matching
+        `>` is left unchanged.
      */
     std::string& process_spans(std::string& name)
     {
-      constexpr std::string_view spanOpening{"::span<"};
+      constexpr std::string_view spanOpening{"std::span<"};
       const auto dynamicExtent{std::to_string(std::dynamic_extent)};
+
+      // Excludes, for example, mystd::span and foo::std::span
+      auto startsQualifiedName{
+        [&name](size_type pos){ return (pos == 0) || (is_word_delimiter(name[pos - 1]) && (name[pos - 1] != ':')); }
+      };
+
       for(auto start{name.find(spanOpening)}; start != npos; start = name.find(spanOpening, start + 1))
       {
+        if(!startsQualifiedName(start))
+          continue;
+
         const auto [open, close]{find_matched_delimiters(name, '<', '>', start)};
         if(close == open)
           continue;
