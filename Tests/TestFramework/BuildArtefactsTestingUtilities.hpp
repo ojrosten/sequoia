@@ -42,8 +42,8 @@ namespace sequoia::testing
   /// Writes a dependency log which ninja would read.
   void write_ninja_deps(const std::filesystem::path& log, std::span<const compilation_record> records);
 
-  /** `p` in UTF-16, as MSBuild's file tracker spells a path: its ASCII letters are in upper case, and every other
-      character is as it is.
+  /** `p` in UTF-16, as MSBuild's file tracker spells a file the compiler read or wrote: its ASCII letters are in
+      upper case, and every other character is as it is.
    */
   [[nodiscard]]
   std::u16string to_tracker_spelling(const std::filesystem::path& p);
@@ -52,7 +52,11 @@ namespace sequoia::testing
   [[nodiscard]]
   std::u16string tracker_line(const std::filesystem::path& file);
 
-  /** The `^`-led line of a tracker log naming `sources`, which were compiled together, ended by CRLF. */
+  /** The `^`-led line of a tracker log naming `sources`, which were compiled together, ended by CRLF.
+
+      Each source is spelled by `to_tracker_spelling`, as only the CL task's read log spells it. In every other log
+      MSBuild upper-cases a source line in full, which this does not reproduce for a character beyond ASCII.
+   */
   [[nodiscard]]
   std::u16string tracker_sources_line(std::initializer_list<std::filesystem::path> sources);
 

@@ -759,14 +759,16 @@ namespace sequoia::testing
            the compiler wrote, which is where the object file is named. `is_tlog` gives their names.
         -# A source is a line beginning `^`. Sources compiled by one invocation share a line, separated
            by `|`, and so share what is listed beneath the line.
-        -# Both are UTF-16 with a byte order mark, and spell paths with their ASCII letters in upper case, so
-           each path is put through the filesystem to recover its case.
+        -# Both are UTF-16 with a byte order mark, and spell paths in upper case, so each path is put through
+           the filesystem to recover its case. A file the compiler read or wrote has its ASCII letters in upper
+           case, and every other character as it is. A source line is upper-cased by MSBuild, in full, except
+           in the CL task's read log, where only its ASCII letters are.
         -# A file is listed in the order the compiler opened it, and more than once where it was opened
            more than once.
 
         Hence, where sources share their writes, each object file is given to the source whose stem or
-        name the object file bears, the tracker having spelled both; what cannot be told apart is refused
-        rather than guessed. Each record lists its inputs as the compiler opened them, each once.
+        name the object file bears, compared without regard to ASCII case; what cannot be told apart is
+        refused rather than guessed. Each record lists its inputs as the compiler opened them, each once.
 
         The logs name a file once per opening, so each spelling is recovered and numbered on first sight,
         and looked up once per entry thereafter.
