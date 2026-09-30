@@ -19,6 +19,8 @@
 #include "Maths/ProbabilityTestingDiagnostics.hpp"
 #include "Maybe/MaybeTest.hpp"
 #include "Maybe/MaybeTestingDiagnostics.hpp"
+#include "Memory/ArenaAllocationTest.hpp"
+#include "Memory/PoolAllocationTest.hpp"
 #include "Stuff/BazagainFreeTest.hpp"
 #include "Stuff/BazzerFreeTest.hpp"
 #include "Stuff/ContainerAllocationTest.hpp"
