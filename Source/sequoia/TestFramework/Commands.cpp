@@ -46,7 +46,7 @@ namespace sequoia::testing
   {
     auto cmd{std::format("cmake --build \"{}\"", buildPaths.cmake_cache_dir().generic_string())};
     if(!library_configuration.empty())
-      cmd.append(" --config ").append(library_configuration);
+      cmd.append(std::format(" --config {}", library_configuration));
 
     return {"Building...", cmd, output};
   }
