@@ -39,8 +39,8 @@ namespace sequoia::maths::graph_impl
 
       The type can represent both `Order` and `NumEdges`. `Order` is the number of partitions of the edge storage.
       `NumEdges` is the largest partition offset, and also bounds an embedded edge's complementary index.
-      Every node index is therefore below the type's maximum. A partition iterator reserves the
-      maximum for `npos`.
+      Every node index is below `Order`, and therefore below the type's maximum. A partition iterator
+      reserves the maximum for `npos`.
    */
   template<std::size_t Order, std::size_t NumEdges>
   using static_edge_index_type = narrowest_unsigned_holding_t<std::ranges::max(Order, NumEdges)>;
