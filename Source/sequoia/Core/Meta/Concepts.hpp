@@ -113,8 +113,9 @@ namespace sequoia
     };
   }
 
-  /** \brief A character type, as the standard defines one ([basic.fundamental]): `char`, `wchar_t`, `char8_t`,
-             `char16_t` or `char32_t`, cv-qualified or not.
+  /** \brief A character type: `char`, `wchar_t`, `char8_t`, `char16_t` or `char32_t`, cv-qualified or not.
+
+      These are the types that [basic.fundamental] calls character types.
    */
   template<class T>
   concept character = impl::character_type_v<std::remove_cv_t<T>>;

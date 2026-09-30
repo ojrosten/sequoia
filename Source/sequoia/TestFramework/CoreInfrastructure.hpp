@@ -62,8 +62,10 @@ namespace sequoia::testing
     return serializer<T>::make(value);
   }
 
-  /** \brief Primary class template for converting unsigned integer types of implementation-defined size into
-             fixed-width types; a `character` type is left as it is.
+  /** \brief Primary class template mapping a type to itself.
+
+      The specializations map an unsigned integer type of 32 or 64 bits to the fixed-width type of its size. A
+      `character` type is left as it is.
    */
   template<class T>
   struct type_normalizer

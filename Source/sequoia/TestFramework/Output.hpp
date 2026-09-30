@@ -272,13 +272,14 @@ namespace sequoia::testing
     return tidy(demangle({typeid(T).name()}));
   }
 
-  /** \brief The name of `T` in the spelling shared by every supported toolchain. If `T` is itself a 32- or 64-bit
-             unsigned integer type, the name is that of the fixed-width type of its size, as the platform spells it.
-   */
   /** \brief The name of the type `info` describes, in the spelling shared by every supported toolchain. */
   [[nodiscard]]
   std::string demangle(const std::type_info& info);
 
+  /** \brief The name of `T` in the spelling shared by every supported toolchain.
+
+      A 32- or 64-bit unsigned integer type is named as the fixed-width type of its size, in the platform's spelling.
+   */
   template<class T>
   [[nodiscard]]
   std::string demangle()

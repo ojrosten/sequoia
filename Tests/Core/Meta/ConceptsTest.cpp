@@ -214,7 +214,8 @@ namespace sequoia::testing
     STATIC_CHECK(character<const char>);
     STATIC_CHECK(character<volatile char32_t>);
 
-    // Ordinary character types, but integer types rather than character types: std::int8_t is signed char
+    // signed char and unsigned char are ordinary character types, but they are integer types, not character types.
+    // std::int8_t is signed char.
     STATIC_CHECK(!character<signed char>);
     STATIC_CHECK(!character<unsigned char>);
     STATIC_CHECK(!character<std::int8_t>);
