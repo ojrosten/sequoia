@@ -11,6 +11,7 @@
 
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
+#include "sequoia/TextProcessing/Substitutions.hpp"
 
 namespace sequoia::testing
 {
@@ -370,9 +371,13 @@ namespace sequoia::testing
        tabsAndCRLFWithoutBeta}
     };
 
+    // The editors read and write in text mode, which under MSVC turns a file's CRLF into LF and back, so the text
+    // read back can differ from the prediction in line endings alone; as the framework's own comparison of files
+    // does, the line endings are not compared.
     auto checkerFn{
       [this](std::string_view description, const std::string& obtained, const std::string& prediction) {
-        check(equality, description, obtained, prediction);
+        auto withLF{[](std::string text) { replace_all(text, "\r\n", "\n"); return text; }};
+        check(equality, description, withLF(obtained), withLF(prediction));
       }
     };
 

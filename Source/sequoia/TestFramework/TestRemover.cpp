@@ -49,14 +49,18 @@ namespace sequoia::testing
 
     /** \brief Whether the last components of `path` are those of `suffix`.
 
-        Not `std::ranges::ends_with`: libstdc++ 15 and the MS STL do not admit `fs::path` to it.
+        Forwards only. The MS STL's path iterator holds the component it hands out, so a `std::reverse_iterator`
+        over it returns a reference into a temporary; and `std::ranges::ends_with` does not admit it.
      */
     [[nodiscard]]
     bool ends_with_components(const fs::path& path, const fs::path& suffix)
     {
-      const auto pathEnd{std::make_reverse_iterator(path.begin())}, suffixEnd{std::make_reverse_iterator(suffix.begin())};
-      return std::mismatch(std::make_reverse_iterator(suffix.end()), suffixEnd,
-                           std::make_reverse_iterator(path.end()),   pathEnd).first == suffixEnd;
+      const auto pathSize  {std::distance(path.begin(),   path.end())},
+                 suffixSize{std::distance(suffix.begin(), suffix.end())};
+      if(suffixSize > pathSize)
+        return false;
+
+      return std::equal(suffix.begin(), suffix.end(), std::next(path.begin(), pathSize - suffixSize));
     }
 
     [[nodiscard]]
