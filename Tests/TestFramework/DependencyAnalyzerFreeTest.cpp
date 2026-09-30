@@ -54,7 +54,7 @@ namespace sequoia::testing
     /// The configuration of the fake Visual Studio build, and the name of the directory holding its executable
     constexpr std::string_view visualStudioConfiguration{"Debug"};
 
-    /// A file's modification time, set for the object's lifetime and then restored
+    /// An RAII wrapper which sets a file's modification time, and restores the original time on destruction
     class modified_for_scope
     {
     public:
@@ -78,7 +78,8 @@ namespace sequoia::testing
       fs::file_time_type m_Original;
     };
 
-    /// A file moved aside for the object's lifetime and then put back, its directory's modification time restored too
+    /// An RAII wrapper which moves a file aside. On destruction, the wrapper puts the file back and restores
+    /// the modification time of the file's directory.
     class hidden_for_scope
     {
     public:
@@ -311,7 +312,8 @@ namespace sequoia::testing
 
     const auto root{(sources == recorded_sources::all_under_another_root) ? fake.parent_path() / "AnotherRoot" : fake};
 
-    // As a build handed relative paths records them: relative to the build directory, and not lexically normal
+    // For `library_relative`, the library's paths are recorded as a build handed relative paths records
+    // them: relative to the build directory, and not lexically normal
     auto recordedPath{
       [&](std::string_view file) -> fs::path {
         constexpr std::string_view source{"Source/"};
@@ -619,7 +621,7 @@ namespace sequoia::testing
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
   }
 
-  /// Paths made relative to the fake project, and what varies between machines and runs masked
+  /// Replaces the fake project's root in `message` with `FakeProject`, and masks what varies between machines and runs
   std::string dependency_analyzer_free_test::normalise_library_message(const project_paths& projPaths,
                                                                        std::string message)
   {
@@ -677,7 +679,8 @@ namespace sequoia::testing
     check(equality, append_lines(description.message(), "No warning"), warnings, std::string{});
   }
 
-  /// The library a binary was compiled from is found from the binary itself, so sequoia's own tests find sequoia's
+  /// sequoia_library_root finds the library that the binary was compiled from. So in sequoia's own tests,
+  /// the library found is sequoia.
   void dependency_analyzer_free_test::test_library_root()
   {
     check(equality,
@@ -686,7 +689,7 @@ namespace sequoia::testing
           fs::weakly_canonical(get_project_paths().source().project()));
   }
 
-  /// The refusal naming `file`, as read to compile the object of `source`, normalised
+  /// The normalised refusal which names `file` as read to compile the object of `source`
   std::string dependency_analyzer_free_test::library_refusal(std::string_view file, std::string_view source) const
   {
     return std::format("The library has changed since this executable was built; please build it again.\n"
@@ -698,10 +701,11 @@ namespace sequoia::testing
                        m_ObjectExtension);
   }
 
-  /* The library is the fake project's own: the objects compiled from its source directory, and of the
-     files read to compile them, those which lie there too. The executable is stamped between an early
-     edit and a late one. The build's record is read only if one of the library's files, or one of its
-     directories, is no older than the executable.
+  /** The library is the fake project's own. The library's objects are those compiled from the fake
+      project's source directory. The library's own files are the files which were read to compile
+      those objects and which lie in that directory too. The executable is stamped between an early edit
+      and a late one. The build's record is read only if a file or a directory of the library's is no
+      older than the executable.
    */
   void dependency_analyzer_free_test::test_library_change(const project_paths& projPaths)
   {
@@ -741,7 +745,7 @@ namespace sequoia::testing
                          {{helper, latePassOffset}, {definitions, lateEditOffset}},
                          library_refusal(fooDefinitions, fooDefinitions));
 
-    // The record is read, since a file of the library's is newer than the executable, and the record decides
+    // The record is read, since a file of the library's is newer than the executable. The record then decides.
     check_library_change("A header of the library's which only the tests read",
                          projPaths, {{testsOnly, lateEditOffset}}, std::nullopt);
 
@@ -754,7 +758,8 @@ namespace sequoia::testing
                          std::nullopt);
   }
 
-  /// A file of the library's, gone since the build: its directory's time moved, and the record names it
+  /// A file of the library's has gone since the build. The time of the file's directory has moved, and the
+  /// record names the file.
   void dependency_analyzer_free_test::test_library_file_gone(const project_paths& projPaths)
   {
     fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
@@ -774,7 +779,7 @@ namespace sequoia::testing
             "of target TestAll, cannot now be read: ****\n"});
   }
 
-  /// A build handed relative paths records them relative to its directory, and perhaps not lexically normal
+  /// A build handed relative paths records them relative to the build directory, and perhaps not lexically normal
   void dependency_analyzer_free_test::test_library_recorded_relative(const fs::path& fake,
                                                                      const project_paths& projPaths)
   {
@@ -790,7 +795,7 @@ namespace sequoia::testing
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
   }
 
-  /// Where the question cannot be answered, it is not answered silently, and nothing is refused
+  /// If the check cannot be made, a warning says so, and nothing is refused
   void dependency_analyzer_free_test::test_library_change_not_checked(const project_paths& projPaths)
   {
     fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
@@ -798,8 +803,8 @@ namespace sequoia::testing
     const auto& library{projPaths.source().project()};
 
     {
-      // Nothing of the library's is newer than the executable, so the record is not read, and its absence
-      // goes unremarked
+      // Nothing of the library's is newer than the executable, so the record is not read. The record's
+      // absence then goes unremarked.
       const hidden_for_scope hidden{projPaths.discovered().cmake_cache().parent_path() / ".ninja_deps"};
       const auto [refusal, warnings]{check_library(projPaths, library)};
       check(equality, "Nothing edited since the build: the record is not read", warnings, std::string{});
@@ -807,7 +812,7 @@ namespace sequoia::testing
 
     const modified_for_scope edited{library / "Stuff" / "FooDefinitions.cpp", m_ResetTime + lateEditOffset};
 
-    // A refusal, where a warning was expected, is shown in the warning's place
+    // A refusal is shown in the place of the warning expected
     auto warningFor{
       [&projPaths](const fs::path& libraryRoot) {
         const auto [refusal, warnings]{check_library(projPaths, libraryRoot)};

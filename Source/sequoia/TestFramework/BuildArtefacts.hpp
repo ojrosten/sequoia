@@ -68,7 +68,7 @@ namespace sequoia::testing
   [[nodiscard]]
   build_tree read_build_tree(const std::filesystem::path& cacheFile);
 
-  /** \brief As the overload above, for a cache already read from `cacheFile`.
+  /** \brief Reads a build tree's description of itself from `cache`, which was read from `cacheFile`.
 
       \throws std::runtime_error if the cache names no generator.
    */

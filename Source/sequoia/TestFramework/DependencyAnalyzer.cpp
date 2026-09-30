@@ -107,7 +107,6 @@ namespace sequoia::testing
       return std::ranges::any_of(tree.implicit_include_directories, [&file](const fs::path& dir){ return in_repo(file, dir); });
     }
 
-    /// `path` made canonical as far as it exists; as given, if even that cannot be resolved
     [[nodiscard]]
     fs::path canonical_or_as_given(const fs::path& path)
     {
@@ -116,24 +115,29 @@ namespace sequoia::testing
       return error ? path : canonical;
     }
 
-    /// A file the build recorded, made canonical, and whether it is the toolchain's
+    /// A file which the build recorded: the file's canonical path, and whether the file is the toolchain's
     struct recorded_file
     {
       fs::path canonical;
       bool toolchain;
     };
 
-    /** Each file a build recorded, made canonical - which is what project_paths holds, the build having
-        recorded whatever spelling it was configured with, through whatever symlink and in whatever case -
-        and classed as the project's or the toolchain's. Both are properties of the file's directory, and
-        the filesystem is asked once per directory.
+    /** Each of `files`, made canonical and classed as the project's or the toolchain's.
 
-        A directory whose existing prefix cannot be resolved - a directory without permission, a symlink
-        loop - is kept as recorded, and its files fail with that reason when their modification times are
-        read. A file's own name is as the compilation spelled it: a file which is itself a symlink keeps
-        its name, which `last_write_time` follows, and on a filesystem which finds a file whatever its
-        case, a header included under a case other than its own keeps that case, and so does not match the
-        stem of the source named for it.
+        The build recorded whatever spelling it was configured with, through whatever symlink and in
+        whatever case. project_paths holds canonical paths, so each recorded path is made canonical.
+        The canonical path and the class are both properties of the file's directory, so the filesystem
+        is asked once per directory.
+
+        A directory whose existing prefix cannot be resolved is kept as recorded. A directory without
+        permission is one such directory, and a symlink loop is another. Reading the modification time
+        of a file in such a directory fails, and the failure gives the reason.
+
+        A file's own name is kept as the compilation spelled it:
+        -# A file which is itself a symlink keeps its name. `last_write_time` follows the symlink;
+        -# On a filesystem which finds a file whatever its case, a header included under a case other
+           than its own keeps that case. So the header does not match the stem of the source named for
+           it.
      */
     [[nodiscard]]
     std::vector<recorded_file> recorded_files(const build_tree& tree, std::span<const fs::path> files)
@@ -163,7 +167,7 @@ namespace sequoia::testing
       return files | std::views::transform(fileFacts) | std::ranges::to<std::vector>();
     }
 
-    /// Whether a compilation's source - read_compilations puts it first among the inputs - lies in `dir`
+    /// Whether the source of `record` lies in `dir`. read_compilations puts the source first among the inputs.
     [[nodiscard]]
     bool compiled_from(const compilations::record& record, std::span<const recorded_file> files, const fs::path& dir)
     {
@@ -423,7 +427,7 @@ namespace sequoia::testing
       /** A node for every object file and every file of the project's read to produce one - the tests'
           object files first, then in order of first mention - each object file's source on its node; an
           edge from each object file to each such file; and the dependencies the convention adds. The
-          toolchain's files are listed apart. Each file is as `recorded_files` finds it.
+          toolchain's files are listed apart. Each file's path and class are those `recorded_files` gives.
        */
       [[nodiscard]]
       static files_read_by_build read_files(const build_tree& tree, const project_paths& projPaths)
@@ -812,7 +816,7 @@ namespace sequoia::testing
 
   namespace
   {
-    /// The newest of a library's own files which its build read, and the object it was read to compile
+    /// A library's own file, the object which the file was read to compile, and the file's modification time
     struct library_file
     {
       fs::path file;
@@ -820,7 +824,7 @@ namespace sequoia::testing
       fs::file_time_type time;
     };
 
-    /// The target whose object `object` is: CMake puts a target's objects beneath `<target>.dir`
+    /// The target which `object` belongs to, if any. CMake puts a target's objects beneath `<target>.dir`.
     [[nodiscard]]
     std::optional<std::string> target_of(const fs::path& object)
     {
@@ -844,12 +848,9 @@ namespace sequoia::testing
       "The library has changed since this executable was built; please build it again."
     };
 
-    /** The newest of a library's own files which its build read: the library's objects are those compiled
-        from a source beneath `libraryRoot`, and its own files are those of the files read to compile them
-        which lie beneath it too. So a header of the library which only the tests read does not count, and
-        nor does anything of the toolchain's, of another library's, or of the tests'.
+    /** The newest of the library's own files, as `refuse_if_library_changed_since_build` defines them.
 
-        \returns Nothing, if no object was compiled from beneath `libraryRoot`.
+        \returns `nullopt` if no object was compiled from beneath `libraryRoot`.
 
         \throws std::runtime_error if the modification time of one of the library's own files cannot be read.
      */
@@ -867,7 +868,8 @@ namespace sequoia::testing
         [&facts, &root](const compilations::record& record){ return compiled_from(record, facts, root); }
       };
 
-      // A header several objects read is timed once; a stateful filter, so a loop
+      // A header which several objects read is timed once. That needs a stateful filter, so this is a
+      // loop rather than a view.
       std::vector<bool> timed(files.size());
       std::optional<library_file> newest{};
       for(const auto& record : records | std::views::filter(isLibraryObject))
@@ -898,8 +900,9 @@ namespace sequoia::testing
       return newest;
     }
 
-    /** Whether `dir`, or anything beneath it, is no older than `stamp`: a file, or a directory, whose time
-        a deletion within it moves. An entry whose time cannot be read counts, so that the record decides.
+    /** Whether `dir`, or any entry beneath `dir`, is no older than `stamp`. The entries include
+        directories, whose times move when an entry within them is deleted. An entry whose time cannot
+        be read counts as no older, so that the build's record decides.
      */
     [[nodiscard]]
     bool anything_since(const fs::path& dir, const fs::file_time_type stamp)
@@ -919,7 +922,6 @@ namespace sequoia::testing
                                  noOlder);
     }
 
-    /// A reason given on several lines, as one
     [[nodiscard]]
     std::string on_one_line(std::string_view reason)
     {
@@ -962,7 +964,7 @@ namespace sequoia::testing
       return;
     }
 
-    // Defensive: the executable can vanish after the runner starts, a rebuild relinking it
+    // The executable can vanish after the runner starts, if a rebuild relinks it
     const auto executableStamp{get_stamp(projPaths.executable())};
     if(!executableStamp)
     {
@@ -970,7 +972,8 @@ namespace sequoia::testing
       return;
     }
 
-    // One stat per file of the library's, and the build's record read only if one of them is no older
+    // This costs one stat per file of the library's. The build's record is read only if one of those
+    // files is no older than the executable.
     if(!anything_since(libraryRoot, *executableStamp))
       return;
 

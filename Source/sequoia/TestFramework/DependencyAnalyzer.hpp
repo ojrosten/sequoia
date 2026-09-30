@@ -18,8 +18,7 @@
     `prune` reads those, and the build's record of what each test was built from, and selects
     the tests which are stale or are to be rerun.
 
-    The same record says whether the library itself has changed since the executable was built, which
-    `create` asks before it writes anything from code which may be out of date.
+    The same record says whether the library itself has changed since the executable was built.
  */
 
 #include "sequoia/TestFramework/CMakeCache.hpp"
@@ -131,32 +130,39 @@ namespace sequoia::testing
                           std::filesystem::file_time_type updateTime,
                           std::optional<std::size_t> id);
 
-  /** \brief The directory of sources this library was compiled from, as the compiler was given it.
+  /** \brief The directory of the sources this library was compiled from, as the compiler was given it.
 
-      Relative when the compiler was handed a relative path, or when the build remaps the paths the
-      binary records - `-fmacro-prefix-map`, which `-ffile-prefix-map` implies - in which case the
-      library's own files cannot be told apart.
+      The directory is relative if the compiler was given a relative path. The directory is also
+      relative if the build remaps the paths the binary records, with `-fmacro-prefix-map` or with
+      `-ffile-prefix-map`, which implies `-fmacro-prefix-map`.
    */
   [[nodiscard]]
   std::filesystem::path sequoia_library_root();
 
   /** \brief Refuses to go on if the library beneath `libraryRoot` has changed since the executable was
-             built: what the executable would write comes from code older than the library's.
+             built.
 
-      The library's objects are those compiled from a source beneath `libraryRoot`, and its own files are
-      those of the files read to compile them which lie beneath it too. So a header of the library which
-      only the tests read does not count, and nor does anything of the toolchain's, of another library's,
-      or of the tests'. The build's record is read only if something beneath `libraryRoot` - a file, or a
-      directory, whose time a deletion within it moves - is no older than the executable.
+      The library's objects are the objects compiled from a source beneath `libraryRoot`. The library's
+      own files are the files which were read to compile those objects and which lie beneath
+      `libraryRoot` too. So none of these files counts:
+      -# A header of the library which only the tests read;
+      -# A file of the toolchain's, of another library's or of the tests'.
 
-      Where the question cannot be answered, a one-line warning to `stream` gives the reason, and nothing
-      is refused: `libraryRoot` is relative; the executable cannot be found; the build's record cannot be
-      read; or the record names no object compiled from beneath `libraryRoot`.
+      The build's record is read only if an entry beneath `libraryRoot` is no older than the executable.
+      The entry may be a file or a directory; a deletion within a directory moves the directory's time.
 
-      \throws std::runtime_error naming the newest of the library's own files, the object it was read to
-      compile and that object's target, and the time stamps of the file and the executable, if the file is
-      no older than the executable; or naming a file of the library's which the build read and which
-      cannot now be read.
+      If the check cannot be made, the function writes a one-line warning to `stream` and refuses
+      nothing. The warning gives one of these reasons:
+      -# `libraryRoot` is relative;
+      -# The executable cannot be found;
+      -# The build's record cannot be read;
+      -# The record names no object compiled from beneath `libraryRoot`.
+
+      \throws std::runtime_error if
+      -# The newest of the library's own files is no older than the executable. The message names the
+         file, the object the file was read to compile, that object's target, and the time stamps of
+         the file and of the executable;
+      -# A file of the library's which the build read cannot now be read. The message names the file.
    */
   void refuse_if_library_changed_since_build(const project_paths& projPaths,
                                              const cmake_cache& cache,

@@ -938,7 +938,8 @@ namespace sequoia::testing
                         [this,&nascentTests,&libraryChecked](const arg_list&) {
                           if(!nascentTests.empty())
                           {
-                            // Once, before anything is written: a registration's form is compiled in
+                            // The library is checked once, before anything is written, since the form of
+                            // a registration is compiled into the executable
                             if(!libraryChecked)
                             {
                               refuse_if_library_changed_since_build(proj_paths(),

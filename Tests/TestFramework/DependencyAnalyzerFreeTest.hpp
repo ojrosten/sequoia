@@ -99,14 +99,14 @@ namespace sequoia::testing
 
     void test_recorded_sources(const project_paths& projPaths);
 
-    /// A file of the fake project, and when, relative to the reset time, it is to be taken as last modified
+    /// A file of the fake project, and the offset from the reset time at which the file is taken to be last modified
     struct timed_edit
     {
       std::filesystem::path file;
       std::chrono::seconds offset;
     };
 
-    /// What the library check does to the fake project: its refusal, if any, normalised, and its warnings
+    /// The outcome of the library check on the fake project: the normalised refusal, if there is one, and the warnings
     struct library_check
     {
       std::optional<std::string> refusal{};
@@ -119,7 +119,7 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::string normalise_library_message(const project_paths& projPaths, std::string message);
 
-    /// The extension of the fake build's object files, which depends on the build system recorded
+    /// The extension of the fake build's object files. The extension depends on the build system recorded.
     std::string_view m_ObjectExtension{".o"};
 
     [[nodiscard]]
