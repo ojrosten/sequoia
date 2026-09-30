@@ -932,11 +932,17 @@ namespace sequoia::testing
 
   namespace
   {
-    /// The name of the directory holding `executable`. In a multi-config build, that name is the executable's configuration.
     [[nodiscard]]
-    fs::path configuration_of(const fs::path& executable)
+    std::string_view required_configuration(const build_tree& tree, std::string_view configuration)
     {
-      return executable.parent_path().filename();
+      if(configuration.empty())
+        throw std::runtime_error{
+          std::format("A configuration is required to read the build in {}, written by the {} generator",
+                      tree.build_directory.generic_string(),
+                      tree.generator)
+        };
+
+      return configuration;
     }
 
     /** The compilations of a Ninja build, from the log `.ninja_deps` and the statements in `statementsFile`.
@@ -1003,26 +1009,38 @@ namespace sequoia::testing
       return compilations{.files{std::move(files).release_files()}, .records{std::move(records)}};
     }
 
-    /** The compilations of a Visual Studio build: those of every target's tracker logs in the
-        executable's configuration.
+    /** The compilations of a Visual Studio build: those of every target's tracker logs in `configuration`.
 
         Every target's files are numbered into one table, so that a file two targets both read is one file.
      */
     [[nodiscard]]
-    compilations visual_studio_compilations(const build_tree& tree, const fs::path& executable)
+    compilations visual_studio_compilations(const build_tree& tree, std::string_view configuration)
     {
-      const auto configuration{configuration_of(executable)};
       auto isTlogOfConfiguration{
-        [&configuration](const fs::directory_entry& entry) {
+        [configuration](const fs::directory_entry& entry) {
           return entry.is_directory()
               && (entry.path().extension() == ".tlog")
               && (entry.path().parent_path().filename() == configuration);
         }
       };
 
+      const auto tlogDirectories{
+          fs::recursive_directory_iterator{tree.build_directory}
+        | std::views::filter(isTlogOfConfiguration)
+        | std::ranges::to<std::vector>()
+      };
+
+      if(tlogDirectories.empty())
+        throw std::runtime_error{
+          std::format("The build in {} holds no tracker logs of the {} configuration; "
+                      "has it been built in that configuration?",
+                      tree.build_directory.generic_string(),
+                      configuration)
+        };
+
       path_table files{};
       std::vector<compilations::record> records{};
-      for(const auto& entry : fs::recursive_directory_iterator{tree.build_directory} | std::views::filter(isTlogOfConfiguration))
+      for(const auto& entry : tlogDirectories)
       {
         records.append_range(read_tlogs(files, entry.path()));
       }
@@ -1034,25 +1052,25 @@ namespace sequoia::testing
   /** Each understood generator records a build in its own place:
       -# Ninja: the log `.ninja_deps`, and the statements in `build.ninja`;
       -# Ninja Multi-Config: one log `.ninja_deps`, shared by every configuration, and the statements of
-         the executable's configuration in `CMakeFiles/impl-<configuration>.ninja`. `build.ninja` names
-         no object itself: it includes the statements of the default configuration, which need not be
-         the executable's;
-      -# Visual Studio: the tracker logs of the executable's configuration.
+         `configuration` in `CMakeFiles/impl-<configuration>.ninja`. `build.ninja` names no object
+         itself: it includes the statements of the default configuration, which need not be
+         `configuration`;
+      -# Visual Studio: the tracker logs of `configuration`.
    */
   [[nodiscard]]
-  compilations read_compilations(const build_tree& tree, const fs::path& executable)
+  compilations read_compilations(const build_tree& tree, std::string_view configuration)
   {
     if(tree.generator == "Ninja")
       return ninja_compilations(tree, tree.build_directory / "build.ninja");
 
     if(tree.generator == "Ninja Multi-Config")
     {
-      const auto statementsFile{std::format("impl-{}.ninja", configuration_of(executable).generic_string())};
+      const auto statementsFile{std::format("impl-{}.ninja", required_configuration(tree, configuration))};
       return ninja_compilations(tree, tree.build_directory / "CMakeFiles" / statementsFile);
     }
 
     if(tree.generator.starts_with("Visual Studio"))
-      return visual_studio_compilations(tree, executable);
+      return visual_studio_compilations(tree, required_configuration(tree, configuration));
 
     throw std::runtime_error{
       std::format("The build in {} was written by the {} generator, whose record of dependencies is not understood; "

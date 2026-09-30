@@ -49,7 +49,7 @@ namespace sequoia::testing
       opt_path cacheFile{get(executableDir)};
       if(!cacheFile)
       {
-        // Try one level back, mainly for MSVC
+        // The executable may lie in a directory directly within the build tree, as a multi-config build puts it
         cacheFile = get(executableDir.parent_path());
       }
 
@@ -199,6 +199,13 @@ namespace sequoia::testing
     , m_ExecutableDir{std::move(executableDir)}
     , m_CMakeCacheDir{std::move(cmakeCacheDir)}
   {}
+
+  [[nodiscard]]
+  std::string build_paths::configuration() const
+  {
+    return m_ExecutableDir.parent_path() == m_CMakeCacheDir ? m_ExecutableDir.filename().generic_string()
+                                                            : std::string{};
+  }
 
   //===================================== auxiliary_paths =====================================//
 

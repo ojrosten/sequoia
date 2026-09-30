@@ -247,6 +247,15 @@ namespace sequoia::testing
       return m_CMakeCacheDir;
     }
 
+    /** \brief The name of `executable_dir()` if its parent is `cmake_cache_dir()`; otherwise empty.
+
+        By default, a multi-config build puts each configuration's executable in a directory named
+        after the configuration, directly within the build tree. For such a build, the name is the
+        executable's configuration.
+     */
+    [[nodiscard]]
+    std::string configuration() const;
+
     [[nodiscard]]
     friend bool operator==(const build_paths&, const build_paths&) noexcept = default;
   private:

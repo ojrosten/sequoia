@@ -49,6 +49,9 @@ namespace sequoia::testing
     constexpr auto latePassOffset{std::chrono::seconds{6}};   // late
     constexpr auto lateEditOffset{std::chrono::seconds{7}};   // very_late
 
+    /// The configuration of the fake Visual Studio build, and the name of the directory holding its executable
+    constexpr std::string_view visualStudioConfiguration{"Debug"};
+
     [[nodiscard]]
     constexpr fs::file_time_type stamp_at(std::chrono::milliseconds sinceEpoch)
     {
@@ -318,8 +321,7 @@ namespace sequoia::testing
     else
     {
       // The tracker spells paths in upper case and the reader recovers their case from the filesystem, so what it
-      // wrote must exist; the logs themselves live beside the objects, under the configuration - here the
-      // executable's own directory name
+      // wrote must exist. The logs themselves live beside the objects, in a directory named after the configuration.
       for(auto& record : records)
       {
         record.object = buildDir / record.object;
@@ -328,7 +330,7 @@ namespace sequoia::testing
         write_to_file(record.object, "", std::ios_base::out);
       }
 
-      write_tlogs(buildDir / objectDir / "TestAll" / "TestAll.tlog", records);
+      write_tlogs(buildDir / objectDir / visualStudioConfiguration / "TestAll.tlog", records);
     }
   }
 
@@ -368,8 +370,19 @@ namespace sequoia::testing
     write_build_artefacts(fake, build_system::ninja_with_msvc, recorded_sources::all);
     test_dependencies(projPaths);
 
+    // Visual Studio is multi-config: the executable lies in a directory named after its configuration,
+    // within the build tree
     write_build_artefacts(fake, build_system::visual_studio, recorded_sources::all);
-    test_dependencies(projPaths);
+    const auto visualStudioExecutable{fake / "build/CMade/TestAll" / visualStudioConfiguration / "TestAll"};
+    commandline_arguments visualStudioArgs{{visualStudioExecutable.generic_string()}};
+    const project_paths visualStudioPaths{visualStudioArgs.size(),
+                                          visualStudioArgs.get(),
+                                          {.main_cpp{main.file()}, .common_includes{main.file()}}};
+    const auto visualStudioPrunePaths{visualStudioPaths.prune()};
+    fs::create_directories(visualStudioPrunePaths.dir());
+    { std::ofstream s{visualStudioPrunePaths.stamp()}; }
+    fs::last_write_time(visualStudioPrunePaths.stamp(), m_ResetTime + pruneStampOffset);
+    test_dependencies(visualStudioPaths);
 
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
     test_stamp_on_second_boundary(projPaths);
