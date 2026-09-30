@@ -699,17 +699,18 @@ namespace sequoia::testing
       );
     }
 
-    /** The tests which passed in every repetition of an instability analysis.
+    /** The tests which passed in every repetition of an instability analysis, each with the earliest
+        stamp any repetition gave it.
 
-        A test's records are matched by path. A repetition run in a process of its own stamps its
-        records with that process's start, so one test's records from two such repetitions differ
-        in their stamps. The earliest stamp is kept: a file modified after the earliest-starting
-        repetition began is then later than the recorded pass, so the test counts as stale - a
-        re-run, never a missed test.
+        A test's records are matched by path. A repetition which runs in a process of its own stamps its
+        records with the start of that process. So the records of one test from two such repetitions
+        differ in their stamps. The earliest stamp is kept. A file modified after the earliest
+        repetition began is then later than the recorded pass, so the test counts as stale. The cost is
+        at worst a needless re-run, never a missed test.
 
         \returns
         -# `nullopt`, if any repetition wrote no passes file;
-        -# otherwise, the tests which passed in every repetition.
+        -# Otherwise, the tests which passed in every repetition.
      */
     [[nodiscard]]
     std::optional<std::vector<prune_record>> aggregate_passes(const prune_paths& prunePaths, const std::size_t numReps)
@@ -723,8 +724,8 @@ namespace sequoia::testing
       if(!std::ranges::all_of(files, [](const fs::path& file){ return fs::exists(file); }))
         return std::nullopt;
 
-      // Each repetition's records made unique first, so that the size of a group of records sharing
-      // a path is the number of repetitions which passed that test
+      // Each repetition's records are made unique by path first. The size of a group of records
+      // sharing a path is then the number of repetitions which passed that test.
       const auto passes{
         sort_by_path(
             files

@@ -1860,7 +1860,7 @@ namespace sequoia::testing
       std::filesystem::file_time_type start;
     };
 
-    // As update_filtered, but each instance is a process of its own, stamping its records with its own start
+    // Updates as update_filtered does, but each instance is a process of its own, which stamps its records with its own start
     auto update_filtered_in_sandboxes{
       [&](const test_outcomes& d, std::vector<sandboxed_instance> instances) -> test_outcomes {
 
@@ -1873,7 +1873,7 @@ namespace sequoia::testing
           update_prune_files(projPaths, instance.executed, instance.failures, instance.start, i);
         }
 
-        // The coordinator starts before any instance, so its stamp is none of theirs
+        // The coordinator starts before any instance, so the coordinator's stamp differs from every instance's
         const auto coordinatorStart{
           std::ranges::min(instances, {}, &sandboxed_instance::start).start - std::chrono::seconds{1}
         };
@@ -1884,7 +1884,7 @@ namespace sequoia::testing
       }
     };
 
-    // Each instance's passes file written directly, rather than by update_prune_files
+    // Each instance's passes file is written directly, rather than by update_prune_files
     auto aggregate_written_passes{
       [&](const test_outcomes& d, std::vector<prune_records> passesByInstance) -> test_outcomes {
 
