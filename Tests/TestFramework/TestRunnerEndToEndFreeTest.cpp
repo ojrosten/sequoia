@@ -81,8 +81,8 @@ namespace sequoia::testing
       return exe.make_preferred().string();
     }
 
-    // The generated project is built after these creations, and nothing else compiles what `create` generates:
-    // a kind of test dropped from this list leaves its templates uncompiled.
+    // The generated project is built after these creations. Nothing else compiles what `create` generates, so a
+    // kind of test dropped from this list leaves its templates uncompiled.
     [[nodiscard]]
     std::string create_cmd()
     {
