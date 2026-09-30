@@ -24,8 +24,8 @@ namespace sequoia::testing
       The generator is this build tree's, and each configure is checked to agree. Under any
       other generator the test checks nothing.
 
-      The predictions are Visual Studio's alone, so the materials are discriminated by the
-      generator family: a run under any other generator neither reads nor updates them.
+      The materials are discriminated by the generator family. A run under any other generator
+      than Visual Studio neither reads nor updates the predictions.
 
       It lives here, alone, rather than inside the end-to-end test, so that the far
       larger and more valuable test of project creation and incremental building stays
@@ -43,8 +43,9 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::string summary_discriminator(const cmake_cache& cache);
 
-    /** Names every generator family: a declared materials discriminator must name a directory, so
-        the summary discriminator's empty name for other generators will not serve.
+    /** Names every generator family, since a declared materials discriminator must name a
+        directory. `summary_discriminator` gives other generators an empty name, so
+        `summary_discriminator` cannot serve.
      */
     [[nodiscard]]
     static std::string materials_discriminator(const cmake_cache& cache);

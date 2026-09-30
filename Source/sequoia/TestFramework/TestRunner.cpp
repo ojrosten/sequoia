@@ -124,7 +124,7 @@ namespace sequoia::testing
 
     constexpr std::array<std::string_view, 3> materials_kinds{"WorkingCopy", "Prediction", "Auxiliary"};
 
-    /// A file committed only to keep its directory, or one the platform writes of its own accord
+    /// Whether `name` is a file committed only to keep its directory, or a file the platform writes of its own accord
     [[nodiscard]]
     bool is_placeholder(std::string_view name)
     {
@@ -138,7 +138,7 @@ namespace sequoia::testing
       return std::ranges::equal(lhs, rhs, sameLetter);
     }
 
-    /// Whether `name` is one of the kinds of material, in any case, as a case-insensitive filesystem reads it
+    /// Whether `name` is one of the kinds of material, ignoring case
     [[nodiscard]]
     bool is_materials_kind(std::string_view name)
     {
@@ -176,7 +176,7 @@ namespace sequoia::testing
       }
     }
 
-    /// Why `name` cannot be a directory of its own on every platform, or empty if it can
+    /// Why `name` cannot name one directory on every platform; empty if `name` is portable
     [[nodiscard]]
     std::string portability_defect(std::string_view name)
     {
@@ -208,9 +208,8 @@ namespace sequoia::testing
       return {};
     }
 
-    /** A materials discriminator names one directory beneath the test's own: so it must be a portable
-        name, not a kind of material, and not a sibling's name spelt in another case, which a
-        case-insensitive filesystem takes for the sibling.
+    /** Throws if the materials discriminator is not a portable name for one directory, is a kind of
+        material, or is the name of a sibling spelt in another case.
      */
     void throw_if_bad_materials_discriminator(const individual_materials_paths& materials)
     {
@@ -239,10 +238,6 @@ namespace sequoia::testing
         throw std::runtime_error{std::format("The materials discriminator \"{}\" {}", name, defect)};
     }
 
-    /** A test with a materials discriminator reads only the directory its discriminator names, so
-        materials left beside the configurations' directories - written before the discriminator
-        was declared, say - would be ignored without a word.
-     */
     void throw_if_materials_beside_configurations(const individual_materials_paths& materials)
     {
       const auto& root{materials.original_test_root()};

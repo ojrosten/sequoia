@@ -36,14 +36,17 @@ namespace sequoia::testing
       beneath the original root.
 
       A test whose original materials vary with the configuration declares a materials
-      discriminator. Its original materials then sit one level down, beneath the test's own
-      directory in a directory named by the discriminator, and only that directory is the
-      original root, so a run can neither read nor update another configuration's. Whether the
-      discriminator names a directory at all is judged when the materials are prepared: an empty
-      one, say, is kept here as it is given and refused then. The temporary root takes no such
-      level: it is wiped each time the materials are prepared, and within one build tree holds one
-      configuration's materials at a time - though two build trees run at once share it (roadmap
-      item 224).
+      discriminator. The test's original materials then sit one level down, in a directory beneath
+      the test's own directory. The discriminator names that directory, and only that directory is
+      the original root. So a run can neither read nor update the materials of another configuration.
+
+      The discriminator is kept here as it is given. Whether the discriminator names a directory at
+      all is judged when the materials are prepared. An empty discriminator, for example, is refused
+      then.
+
+      The temporary root has no such level. The temporary root is wiped each time the materials are
+      prepared. Within one build tree, it holds the materials of one configuration at a time. Two
+      build trees run at once share it (roadmap item 224).
 
       Every path is returned whether or not anything is there; which of them exist is for the
       caller to ask. A default-constructed instance names no test: its two roots are empty, and
@@ -59,8 +62,10 @@ namespace sequoia::testing
                                const project_paths& projPaths,
                                const std::optional<std::string>& materialsDiscriminator);
 
-    /** \brief The test's own directory in `TestMaterials`: the original root itself, unless the test
-               declares a materials discriminator, when it holds one directory per configuration.
+    /** \brief The test's own directory in `TestMaterials`.
+
+        If the test declares no materials discriminator, this directory is the original root.
+        Otherwise it holds one directory per configuration.
      */
     [[nodiscard]]
     const std::filesystem::path& original_test_root() const noexcept

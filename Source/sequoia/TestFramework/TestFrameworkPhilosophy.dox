@@ -357,25 +357,31 @@
 	`WorkingCopy` and `Auxiliary` are reserved for the temporary materials.
 
 	What a test records may sometimes have to depend on the configuration of the build tree. A test
-	may therefore declare up to three hooks, each a public static member function taking
-	`const cmake_cache&` and returning a name: `output_discriminator`, which gives the test a diagnostics
-	file per name, `summary_discriminator`, which does the same for its summary, and
-	`materials_discriminator`, which does it for its original materials. A hook declared in any other
-	form - not static, say, or returning a `std::string_view` - is refused at compile time rather than
-	silently ignored, though a private one cannot be detected and is ignored. A hook sees only the
-	cache, which does not record the active configuration of a multi-config build tree, so none can
-	distinguish Debug from Release there. Each is a last resort: what does not depend on the
-	configuration is better.
+	may therefore declare up to three hooks. Each hook is a public static member function which takes
+	`const cmake_cache&` and returns a name:
+	-# `output_discriminator` gives the test a diagnostics file per name;
+	-# `summary_discriminator` gives the test a summary per name;
+	-# `materials_discriminator` gives the test a set of original materials per name.
 
-	A test with a materials discriminator - Visual Studio's project files, say, which no other generator
-	produces - keeps its materials one level further down, in `TestMaterials/Foo/Bar/bar_test/<name>`,
-	laid out as above, and only that directory is the test's for the run: its materials are copied
-	from it, compared with it and updated into it, so a run in one configuration can neither read nor
-	disturb another's. The name must be one portable directory name, not a kind of material, and not
-	a sibling's name spelt in another case; and nothing but the configurations' directories may sit
-	in `bar_test`, save `.keep` and `.DS_Store`. Preparing the materials refuses anything else, as the test's critical
-	failure. The temporary directory takes no such level: within one build tree it holds one
-	configuration's materials at a time, though two build trees run at once share it.
+	A hook declared in any other form is refused at compile time, rather than silently ignored. A hook
+	which is not static is one such form, and a hook returning a `std::string_view` is another. The
+	exception is a private hook, which cannot be detected, and is ignored. A hook sees only the cache.
+	The cache does not record the active configuration of a multi-config build tree, so in such a tree
+	no hook can distinguish Debug from Release. Each hook is a last resort: a record which does not
+	depend on the configuration is better.
+
+	A test with a materials discriminator keeps its materials one level further down, in
+	`TestMaterials/Foo/Bar/bar_test/<name>`, laid out as above. The test of Visual Studio's project
+	files is an example, since no other generator produces them. For a run, only the directory
+	`<name>` belongs to the test. The test's materials are copied from that directory, compared with it
+	and updated into it. So a run in one configuration can neither read nor disturb the materials of
+	another.
+
+	The name must be one portable directory name. It must not be a kind of material, nor the name of a
+	sibling spelt in another case. `bar_test` may hold nothing but the configurations' directories, a
+	`.keep` and a `.DS_Store`. Preparing the materials refuses anything else, as the test's critical
+	failure. The temporary directory has no such level. Within one build tree, the temporary directory
+	holds the materials of one configuration at a time. Two build trees run at once share it.
 
 	However, there are some exceptions to this. First, the following files are ignored: `.keep` and
 	`.DS_Store`. More interestingly, clients may specify that particular substrings within a file

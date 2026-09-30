@@ -406,11 +406,14 @@ namespace sequoia::testing
       };
     }
 
-    /** The source files of the update fakes below are relative, so that their materials resolve
-        inside the fake project. Each test which calls this writes a `Kept.txt` which its predictions
-        hold with other contents, and does not write the `Obsolete.txt` its predictions also hold, so
-        an update overwrites `Kept.txt` and deletes `Obsolete.txt`. The failed check makes each a
-        candidate for update.
+    /** Makes `test` a candidate for update, by failing a check.
+
+        The function writes a `Kept.txt`, which the test's predictions hold with other contents. The
+        predictions also hold an `Obsolete.txt`, which the function does not write. So an update
+        overwrites `Kept.txt` and deletes `Obsolete.txt`.
+
+        The source files of the update fakes below are relative, so that their materials resolve
+        inside the fake project.
      */
 
     void make_update_candidate(free_test& test)
@@ -477,10 +480,12 @@ namespace sequoia::testing
       }
     };
 
-    /** As `stale_predictions_free_test`, but with its materials in two configurations, `Platypus` and
-        `Echidna`, of which it declares the first. Each configuration's working copy and auxiliary
-        materials hold a `Configuration.txt` naming it, and its predictions hold the same, so the update
-        leaves that file alone.
+    /** A variant of `stale_predictions_free_test`, with materials in two configurations: `Platypus`
+        and `Echidna`. The test's materials discriminator names `Platypus`.
+
+        In each configuration, the working copy and the auxiliary materials hold a `Configuration.txt`
+        which names the configuration. The predictions hold the same file, so the update leaves the file
+        alone.
      */
     class variant_free_test final : public free_test
     {
@@ -512,8 +517,8 @@ namespace sequoia::testing
       }
     };
 
-    /** The fakes below declare each discriminator hook in one shape, for the probes to tell apart:
-        the three hooks are identical but for their names, so each fake declares all three.
+    /** Each fake below declares the discriminator hooks in one shape, for the probes to tell the
+        shapes apart. Each fake declares all three hooks, which differ only in their names.
      */
     class static_hooks_test final : public free_test
     {
@@ -595,7 +600,6 @@ namespace sequoia::testing
       void run_tests() {}
     };
 
-    /// A runner over the fake project, writing to `outputStream`
     [[nodiscard]]
     test_runner make_fake_runner(commandline_arguments& args, std::stringstream& outputStream)
     {
@@ -873,9 +877,7 @@ namespace sequoia::testing
     test_dump_comparison();
     test_instability_analysis();
   }
-  /** Each hook is probed the same way, so a guard which let one shape through would let it through for
-      every hook: the three are checked alike.
-   */
+
   void test_runner_test::test_discriminator_hooks()
   {
     test_discriminator_probe<output_discriminator_probe>();
@@ -883,8 +885,8 @@ namespace sequoia::testing
     test_discriminator_probe<materials_discriminator_probe>();
   }
 
-  /** A hook is used only when static and string-valued, so each other shape is flagged by one of the
-      two traits on which the runner's `static_assert`s rest, rather than silently ignored.
+  /** Checks that a static, string-valued hook is used. Every other shape of hook must be flagged by
+      one of the two traits behind the runner's `static_assert`s.
    */
   template<class Probe>
   void test_runner_test::test_discriminator_probe()
@@ -1616,8 +1618,8 @@ namespace sequoia::testing
     check_output("Partial Materials Update Output", "PartialMaterialsUpdateOutput", outputStream);
   }
 
-  /** As `test_materials_update`, for a test whose materials are discriminated: the declared
-      configuration is prepared and updated, and the other one is left alone.
+  /** The counterpart of `test_materials_update` for a test whose materials are discriminated. The
+      declared configuration is prepared and updated, and the other configuration is left alone.
    */
   void test_runner_test::test_discriminated_materials_update()
   {

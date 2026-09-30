@@ -269,23 +269,27 @@ namespace sequoia::testing
   }
 
   /** \name discriminator_probes
-      \brief The hooks by which a test discriminates what it records by the build tree's configuration.
+      \brief Probes for the hooks a test may declare to discriminate what it records.
 
-      Each hook is a public static member function taking `const cmake_cache&` and returning something
-      convertible to `std::string`: `output_discriminator` for the diagnostics files,
-      `summary_discriminator` for the summary, and `materials_discriminator` for the committed
-      materials. A probe asks three things of a test for one hook's name: whether it declares the hook
-      in any form - a member of that name, static or not, of any signature, or, where the name is
-      overloaded, one callable through `T&`, so that a non-const member counts - whether the hook can
-      be called as a static, and whether its result converts to `std::string`.
+      A hook discriminates by the configuration of the build tree. Each hook is a public static member
+      function which takes `const cmake_cache&` and returns something convertible to `std::string`.
+      There are three hooks:
+      -# `output_discriminator` discriminates the diagnostics files;
+      -# `summary_discriminator` discriminates the summary;
+      -# `materials_discriminator` discriminates the committed materials.
 
-      A hook which is private is invisible to every probe, since standard C++ cannot detect an
-      inaccessible member: the hooks must be public. A hook sees only the cache, which does not
-      record the active configuration of a multi-config build tree, so a test cannot discriminate by
-      Debug and Release there.
+      Each probe asks three things of a test, for the name of one hook:
+      -# `declared`: whether the test declares the hook in any form. A member of that name counts,
+         whether static or not, and whatever its signature. Where the name is overloaded, a member
+         callable through `T&` counts, so that a non-const member is detected;
+      -# `static_hook`: whether the hook can be called as a static member;
+      -# `string_valued`: whether the result of the hook converts to `std::string`.
+
+      The hooks must be public: a private hook is invisible to every probe. A hook sees only the
+      cache. The cache does not record the active configuration of a multi-config build tree, so in
+      such a tree a test cannot discriminate between Debug and Release.
    */
   ///@{
-  /** \brief Probes a test for `output_discriminator`, which discriminates its diagnostics files. */
   struct output_discriminator_probe
   {
     template<class T>
@@ -310,7 +314,6 @@ namespace sequoia::testing
     static std::string discriminator(const cmake_cache& cache) { return T::output_discriminator(cache); }
   };
 
-  /** \brief Probes a test for `summary_discriminator`, which discriminates its summary. */
   struct summary_discriminator_probe
   {
     template<class T>
@@ -335,7 +338,6 @@ namespace sequoia::testing
     static std::string discriminator(const cmake_cache& cache) { return T::summary_discriminator(cache); }
   };
 
-  /** \brief Probes a test for `materials_discriminator`, which discriminates its original materials. */
   struct materials_discriminator_probe
   {
     template<class T>
@@ -362,15 +364,12 @@ namespace sequoia::testing
 
   ///@}
 
-  /** \brief A test declares the hook the probe names, but not as a static member callable with the cache. */
   template<class Probe, concrete_test T>
   inline constexpr bool misdeclared_discriminator_v{Probe::template declared<T> && !Probe::template static_hook<T>};
 
-  /** \brief A test's static hook, of the name the probe names, returns something not convertible to `std::string`. */
   template<class Probe, concrete_test T>
   inline constexpr bool mistyped_discriminator_v{Probe::template static_hook<T> && !Probe::template string_valued<T>};
 
-  /** \brief A test discriminates by the hook the probe names. */
   template<class Probe, concrete_test T>
   inline constexpr bool has_discriminator_v{Probe::template string_valued<T>};
 
