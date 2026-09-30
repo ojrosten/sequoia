@@ -349,7 +349,7 @@ namespace sequoia::testing
     }
     catch(const std::exception& e)
     {
-      std::string msg{append_lines("Unexpected exception thrown (caught by std::exception&):", "\"").append(e.what()).append("\"\n")};
+      std::string msg{append_lines("Unexpected exception thrown (caught by std::exception&):", std::format("\"{}\"\n", e.what()))};
 
       sentry.log_failure(msg);
       return false;
@@ -849,9 +849,9 @@ namespace sequoia::testing
     ~checker() = default;
 
     [[nodiscard]]
-    const uncaught_exception_info& exceptions_detected_by_sentinel() const noexcept
+    const opt_top_level_check_exit_info& last_check_exit_info() const noexcept
     {
-      return m_Logger.exceptions_detected_by_sentinel();
+      return m_Logger.last_check_exit_info();
     }
 
     [[nodiscard]]

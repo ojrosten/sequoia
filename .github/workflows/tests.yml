@@ -876,7 +876,8 @@ jobs:
     needs: build-and-test
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    # Long enough for the wait in scripts/read_settled_jobs.sh.
+    timeout-minutes: 10
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
@@ -886,19 +887,38 @@ jobs:
       EVENT: ${{ github.event_name }}
       REF: ${{ github.ref }}
     steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: scripts
+
       - name: Read this run's jobs back and check each column's suite steps
         run: |
-          gh api "repos/$GH_REPO/actions/runs/$GITHUB_RUN_ID/jobs?per_page=100" --paginate --jq '.jobs[]' \
-            | jq -s . > jobs.json
-          echo "jobs in this run:"
-          jq -r '.[] | "  \(.name): \(.conclusion // .status)"' jobs.json
-
           # A column's repeat_args replaces the tier's, absent meaning the tier's;
           # the same rule the Configure step applies.
           jq -r --arg tier "$TIER_REPEAT_ARGS" '
             .[] | "\(.name)\t\((.repeat_args // $tier) != "")"' \
             <<<"$EXPECTED_COLUMNS" > expected.txt
           [ -s expected.txt ] || { echo "::error::no columns to audit"; exit 1; }
+
+          # The jq functions through which both the wait and the checks below read a column.
+          column_readers='
+            def column_jobs($c): [.[] | select(.name | endswith(" / " + $c))];
+            def conclusion($step): ([.[0].steps[]? | select(.name == $step) | .conclusion] | first) // "ABSENT";
+            def audited_conclusions:
+              [conclusion("Nothing to test"), conclusion("Run the suite"), conclusion("Run the suite again")];'
+
+          # The jobs are read until every column's job gives a conclusion to each step
+          # that `audited_conclusions` reads. `needs:` starts this job once the columns
+          # have finished, but the jobs API can lag behind them. read_settled_jobs.sh gives
+          # the measurement, and what happens if the conclusions never arrive.
+          scripts/read_settled_jobs.sh "$GITHUB_RUN_ID" jobs.json "$column_readers"'
+            . as $jobs
+            | [$columns | split("\n")[]
+               | select(. as $c | $jobs | column_jobs($c)
+                        | length == 0 or (audited_conclusions | any(. == "ABSENT")))]
+            | join(", ")' --arg columns "$(cut -f1 expected.txt)"
+          echo "jobs in this run:"
+          jq -r '.[] | "  \(.name): \(.conclusion // .status)"' jobs.json
 
           failed=0
           case "$NEEDS_TESTING/$EVENT/$REF" in
@@ -910,12 +930,10 @@ jobs:
           esac
 
           while IFS=$'\t' read -r column repeats; do
-            verdict=$(jq -r --arg c "$column" '
-              def conclusion($step): ([.[0].steps[] | select(.name == $step) | .conclusion] | first) // "ABSENT";
-              [.[] | select(.name | endswith(" / " + $c))]
+            verdict=$(jq -r --arg c "$column" "$column_readers"'
+              column_jobs($c)
               | if length != 1 then "JOBS:\(length)"
-                else [conclusion("Nothing to test"), conclusion("Run the suite"), conclusion("Run the suite again")]
-                     | join("\t")
+                else audited_conclusions | join("\t")
                 end' jobs.json)
             if [[ $verdict == JOBS:* ]]; then
               echo "::error::$column: expected exactly one job, found ${verdict#JOBS:}"; failed=1; continue

@@ -28,7 +28,7 @@ namespace sequoia::testing
       [&includePath](std::string& text) {
 
         std::string_view include{"#include"};
-        std::vector<std::string> entries{std::string{include}.append(" \"").append(includePath).append("\"\n")};
+        std::vector<std::string> entries{std::format("{} \"{}\"\n", include, includePath)};
 
         constexpr auto npos{std::string::npos};
 
@@ -228,7 +228,7 @@ namespace sequoia::testing
             std::ranges::sort(entries);
             std::string sorted{};
             std::ranges::for_each(entries, [&sorted, numSpaces](const std::string& e) {
-              sorted.append("\n").append(numSpaces, ' ').append(e); });
+              sorted.append(std::format("\n{:{}}{}", "", numSpaces, e)); });
 
             const auto startSection{std::ranges::min(text.find("\n", startPos + patternOpen.size()), endPos)};
             text.replace(startSection, endPos - startSection, sorted);

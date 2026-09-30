@@ -10,12 +10,25 @@
 #include "sequoia/FileSystem/FileSystem.hpp"
 
 #include <format>
+#include <string_view>
+
+#ifndef SEQUOIA_BUILD_CONFIGURATION
+  #warning "SEQUOIA_BUILD_CONFIGURATION is not defined, so build_cmd omits --config; CMake defines it for the sequoia target"
+  #define SEQUOIA_BUILD_CONFIGURATION ""
+#endif
 
 namespace sequoia::testing
 {
   using namespace runtime;
 
   namespace fs = std::filesystem;
+
+  namespace
+  {
+    /// The configuration in which this library was built, as CMake's `$<CONFIG>` gives it. The configuration
+    /// is empty for a single-config build given no build type.
+    constexpr std::string_view library_configuration{SEQUOIA_BUILD_CONFIGURATION};
+  }
 
   [[nodiscard]]
   shell_command cmake_cmd(const build_paths& buildPaths,
@@ -31,8 +44,10 @@ namespace sequoia::testing
   [[nodiscard]]
   shell_command build_cmd(const build_paths& buildPaths, const fs::path& output)
   {
-    return {"Building...",
-            std::format("cmake --build --preset {}", back(buildPaths.cmake_cache_dir()).generic_string()),
-            output};
+    auto cmd{std::format("cmake --build \"{}\"", buildPaths.cmake_cache_dir().generic_string())};
+    if(!library_configuration.empty())
+      cmd.append(std::format(" --config {}", library_configuration));
+
+    return {"Building...", cmd, output};
   }
 }

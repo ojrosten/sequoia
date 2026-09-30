@@ -18,6 +18,7 @@
 #include "sequoia/Parsing/CommandLineArguments.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"
+#include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
@@ -465,6 +466,14 @@ namespace sequoia::testing
         }
       }
     };
+
+    template<class Act, class Vessel>
+    inline constexpr bool acts_on_every_alternative_v{false};
+
+    template<class Act, class... Nascents>
+    inline constexpr bool acts_on_every_alternative_v<Act, std::variant<Nascents...>>{
+      (std::invocable<const Act&, Nascents&, const parsing::commandline::arg_list&> && ...)
+    };
   }
 
   std::string to_string(const return_code code)
@@ -661,89 +670,88 @@ namespace sequoia::testing
     std::vector<nascent_test_vessel> nascentTests{};
     std::vector<project_data> nascentProjects{};
 
-    const option diagnosticsOption{"--framework-diagnostics", {"--diagnostics"}, {},
-      [&nascentTests](const arg_list&) {
-        if(nascentTests.empty())
-          throw std::logic_error{"Unable to find nascent test"};
+    auto updateCurrentNascentTest{
+      [&nascentTests]<class Act>(Act act) requires acts_on_every_alternative_v<Act, nascent_test_vessel> {
+        return [&nascentTests, act](const arg_list& args) {
+          if(nascentTests.empty())
+            throw std::logic_error{"Unable to find nascent test"};
 
-        std::visit(overloaded{[](auto& nascent) { nascent.flavour(nascent_test_flavour::framework_diagnostics); }}, nascentTests.back());
-      },
+          std::visit([&act, &args](auto& nascent) { act(nascent, args); }, nascentTests.back());
+        };
+      }
+    };
+
+    const option diagnosticsOption{"--framework-diagnostics", {"--diagnostics"}, {},
+      updateCurrentNascentTest(
+        [](auto& nascent, const arg_list&) {
+          nascent.flavour(nascent_test_flavour::framework_diagnostics);
+        }
+      ),
       {},
       "Make the test one of the framework's own diagnostics"
     };
 
     const option headerOption{"--header", {}, {"header"},
-      [&nascentTests](const arg_list& args){
-        if(nascentTests.empty())
-          throw std::logic_error{"Unable to find nascent test"};
-
-        std::visit(overloaded{[&args](auto& nascent){ nascent.header(args[0]); }}, nascentTests.back());
-      },
+      updateCurrentNascentTest([](auto& nascent, const arg_list& args) { nascent.header(args[0]); }),
       {},
       "Name the header declaring the class under test"
     };
 
     const option forenameOption{"--test-class-forename", {"--forename"}, {"forename"},
-      [&nascentTests](const arg_list& args){
-        if(nascentTests.empty())
-          throw std::logic_error{"Unable to find nascent test"};
-
-        std::visit(overloaded{[&args](auto& nascent){ nascent.forename(args[0]); }}, nascentTests.back());
-      },
+      updateCurrentNascentTest([](auto& nascent, const arg_list& args) { nascent.forename(args[0]); }),
       {},
       "Name the test class <forename>_test rather than after the header"
     };
 
+    const option fullnameOption{"--fullname", {}, {"name"},
+      updateCurrentNascentTest([](auto& nascent, const arg_list& args) { nascent.full_name(args[0]); }),
+      {},
+      "Name the test class <name> exactly, and its files after it"
+    };
+
+    const option testingUtilitiesOption{"--testing-utilities", {}, {"header"},
+      updateCurrentNascentTest([](auto& nascent, const arg_list& args) { nascent.testing_utilities(args[0]); }),
+      {},
+      "Take the value_tester from an existing header within Tests; a regular or move-only test then "
+      "generates neither testing utilities nor false-negative diagnostics"
+    };
+
+    using src_opt = nascent_test_base::gen_source_option;
+
     const option genFreeSourceOption{"--gen-source", {"-g"}, {"namespace"},
-      [&nascentTests](const arg_list& args) {
-        if(nascentTests.empty())
-          throw std::logic_error{"Unable to find nascent test"};
-
-        using src_opt = nascent_test_base::gen_source_option;
-
-        auto visitor{
-          overloaded{
-            [&args](nascent_behavioural_test& nascent) {
-              nascent.generate_source_files(src_opt::yes);
-              if(args[0] != "::") nascent.set_namespace(args[0]);
-            },
-            [](auto&) {}
-          }
-        };
-
-        std::visit(visitor, nascentTests.back());
-      },
+      updateCurrentNascentTest(
+        overloaded{
+          [](nascent_behavioural_test& nascent, const arg_list& args) {
+            nascent.generate_source_files(src_opt::yes);
+            if(args[0] != "::")
+              nascent.set_namespace(args[0]);
+          },
+          [](auto&, const arg_list&) {}
+        }
+      ),
       {},
       "Generate a source file too, in <namespace> (:: for the global one)"
     };
 
     const option genSemanticsSourceOption{"--gen-source", {"-g"}, {"dir"},
-      [&nascentTests](const arg_list& args) {
-        if(nascentTests.empty())
-          throw std::logic_error{"Unable to find nascent test"};
-
-        using src_opt = nascent_test_base::gen_source_option;
-
-        auto visitor{
-          overloaded{
-            [&args](nascent_semantics_test& nascent) {
-              nascent.generate_source_files(src_opt::yes);
-              nascent.source_dir(args[0]);
-            },
-            [](auto&) {}
-          }
-        };
-
-        std::visit(visitor, nascentTests.back());
-      },
+      updateCurrentNascentTest(
+        overloaded{
+          [](nascent_semantics_test& nascent, const arg_list& args) {
+            nascent.generate_source_files(src_opt::yes);
+            nascent.source_dir(args[0]);
+          },
+          [](auto&, const arg_list&) {}
+        }
+      ),
       {},
       "Generate the class's header and source too, under Source/<dir>"
     };
 
-    const std::initializer_list<maths::tree_initializer<option>> semanticsOptions{{headerOption}, {genSemanticsSourceOption}};
-    const std::initializer_list<maths::tree_initializer<option>> allocationOptions{{headerOption}};
-    const std::initializer_list<maths::tree_initializer<option>> performanceOptions{};
-    const std::initializer_list<maths::tree_initializer<option>> freeOptions{{forenameOption}, {genFreeSourceOption}, {diagnosticsOption}};
+    const std::initializer_list<maths::tree_initializer<option>>
+      semanticsOptions  {{headerOption}, {genSemanticsSourceOption}, {fullnameOption}, {testingUtilitiesOption}},
+      allocationOptions {{headerOption}, {fullnameOption}, {testingUtilitiesOption}},
+      performanceOptions{{fullnameOption}},
+      freeOptions       {{forenameOption}, {fullnameOption}, {genFreeSourceOption}, {diagnosticsOption}};
 
     const auto help{
       parse_invoke_depth_first(argc, argv,
@@ -868,7 +876,7 @@ namespace sequoia::testing
                           }
                           catch(const std::exception&)
                           {
-                            throw std::runtime_error{"locate-instabilities: unable to interpret '" + arg + "' as an integer number of repetitions"};
+                            throw std::runtime_error{std::format("locate-instabilities: unable to interpret '{}' as an integer number of repetitions", arg)};
                           }
                         }()
                       };
@@ -1587,13 +1595,13 @@ namespace sequoia::testing
     if(contains_non_ascii(name))
       throw std::logic_error{non_ascii_name_message(source)};
 
-    if(!m_LowerCaseTestNames.insert(to_lower_case(name)).second)
+    if(!m_LowerCaseTestNames.insert(to_lowercase(name)).second)
       throw std::logic_error{duplication_message(name, source)};
   }
 
   void test_runner::register_source(const fs::path& source)
   {
-    const auto prefix{to_lower_case(materials_prefix(source, proj_paths()).lexically_normal().generic_string())};
+    const auto prefix{to_lowercase(materials_prefix(source, proj_paths()).lexically_normal().generic_string())};
     if(prefix.empty())
       throw std::logic_error{unplaceable_source_message(source)};
 

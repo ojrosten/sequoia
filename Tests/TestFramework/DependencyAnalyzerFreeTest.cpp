@@ -17,6 +17,7 @@
 #include "sequoia/TestFramework/ChronoCheckers.hpp"
 #include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
+#include <format>
 #include <fstream>
 #include <stdexcept>
 
@@ -47,6 +48,9 @@ namespace sequoia::testing
     constexpr auto lateExecutableOffset{std::chrono::seconds{5}};
     constexpr auto latePassOffset{std::chrono::seconds{6}};   // late
     constexpr auto lateEditOffset{std::chrono::seconds{7}};   // very_late
+
+    /// The configuration of the fake Visual Studio build, and the name of the directory holding its executable
+    constexpr std::string_view visualStudioConfiguration{"Debug"};
 
     [[nodiscard]]
     constexpr fs::file_time_type stamp_at(std::chrono::milliseconds sinceEpoch)
@@ -236,8 +240,10 @@ namespace sequoia::testing
     const auto& units{fake_units()};
 
     const auto buildDir{fake / "build" / "CMade" / "TestAll"};
-    const auto objectDir{fs::path{"CMakeFiles"} / "TestAll.dir"};
     const bool ninja{system != build_system::visual_studio};
+    // By default, objects lie in CMakeFiles/<target>.dir (Ninja) or <target>.dir/<configuration> (Visual Studio)
+    const auto objectDir{ninja ? fs::path{"CMakeFiles"} / "TestAll.dir"
+                               : fs::path{"TestAll.dir"} / visualStudioConfiguration};
     auto object{[&](std::string_view source){ return objectDir / (std::string{source} + (ninja ? ".o" : ".obj")); }};
 
     const auto& sequoiaSource{get_project_paths().source().repo()};
@@ -274,6 +280,7 @@ namespace sequoia::testing
       write_to_file(header, "", std::ios_base::out);
     }
     fs::remove_all(buildDir / "CMakeFiles");
+    fs::remove_all(buildDir / "TestAll.dir");
     fs::remove(buildDir / ".ninja_deps");
     fs::remove(buildDir / "build.ninja");
     fs::create_directories(buildDir / objectDir);
@@ -294,7 +301,7 @@ namespace sequoia::testing
       std::string statements{};
       for(const auto& record : records)
       {
-        statements.append("build ").append(asWritten(record.object)).append(": CXX_COMPILER ").append(asWritten(record.inputs.front())).append(" || cmake_object_order_depends\n");
+        statements.append(std::format("build {}: CXX_COMPILER {} || cmake_object_order_depends\n", asWritten(record.object), asWritten(record.inputs.front())));
       }
 
       // An object the build once had and no longer does keeps its record in the log, and its source may be gone
@@ -317,8 +324,7 @@ namespace sequoia::testing
     else
     {
       // The tracker spells paths in upper case and the reader recovers their case from the filesystem, so what it
-      // wrote must exist; the logs themselves live beside the objects, under the configuration - here the
-      // executable's own directory name
+      // wrote must exist. The logs themselves live beside the objects, in a directory named after the configuration.
       for(auto& record : records)
       {
         record.object = buildDir / record.object;
@@ -327,7 +333,7 @@ namespace sequoia::testing
         write_to_file(record.object, "", std::ios_base::out);
       }
 
-      write_tlogs(buildDir / objectDir / "TestAll" / "TestAll.tlog", records);
+      write_tlogs(buildDir / objectDir / "TestAll.tlog", records);
     }
   }
 
@@ -367,8 +373,19 @@ namespace sequoia::testing
     write_build_artefacts(fake, build_system::ninja_with_msvc, recorded_sources::all);
     test_dependencies(projPaths);
 
+    // Visual Studio is multi-config: the executable lies in a directory named after its configuration,
+    // within the build tree
     write_build_artefacts(fake, build_system::visual_studio, recorded_sources::all);
-    test_dependencies(projPaths);
+    const auto visualStudioExecutable{fake / "build/CMade/TestAll" / visualStudioConfiguration / "TestAll"};
+    commandline_arguments visualStudioArgs{{visualStudioExecutable.generic_string()}};
+    const project_paths visualStudioPaths{visualStudioArgs.size(),
+                                          visualStudioArgs.get(),
+                                          {.main_cpp{main.file()}, .common_includes{main.file()}}};
+    const auto visualStudioPrunePaths{visualStudioPaths.prune()};
+    fs::create_directories(visualStudioPrunePaths.dir());
+    { std::ofstream s{visualStudioPrunePaths.stamp()}; }
+    fs::last_write_time(visualStudioPrunePaths.stamp(), m_ResetTime + pruneStampOffset);
+    test_dependencies(visualStudioPaths);
 
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
     test_stamp_on_second_boundary(projPaths);

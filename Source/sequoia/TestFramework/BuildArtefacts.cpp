@@ -13,12 +13,11 @@
 #include "sequoia/TestFramework/CMakeCache.hpp"
 
 #include "sequoia/Streaming/Streaming.hpp"
+#include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Patterns.hpp"
-#include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
 #include <bit>
-#include <cctype>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -471,7 +470,7 @@ namespace sequoia::testing
                                  compilerPrefix{"cl."},
                                  suffix{".tlog"};
 
-      const auto lowercaseName{to_lower_case(file.filename().string())};
+      const auto lowercaseName{to_lowercase(file.filename().string())};
       const auto compilerPartStart{lowercaseName.starts_with(multiToolTaskPrefix) ? multiToolTaskPrefix.size() : 0};
       const auto unprefixedName{std::string_view{lowercaseName}.substr(compilerPartStart)};
       if(!unprefixedName.starts_with(compilerPrefix) || !unprefixedName.ends_with(suffix))
@@ -492,7 +491,7 @@ namespace sequoia::testing
     bool equal_ignoring_case(tracker_path_view lhs, tracker_path_view rhs)
     {
       constexpr char16_t asciiEnd{0x80};
-      auto lower{[](char16_t c){ return (c < asciiEnd) ? static_cast<char16_t>(std::tolower(static_cast<int>(c))) : c; }};
+      auto lower{[](char16_t c){ return (c < asciiEnd) ? static_cast<char16_t>(to_lowercase(static_cast<char>(c))) : c; }};
 
       return std::ranges::equal(lhs | std::views::transform(lower), rhs | std::views::transform(lower));
     }
@@ -670,7 +669,7 @@ namespace sequoia::testing
         const auto& listing{listing_of(dir)};
 
         const auto spelled{name.string()};
-        auto sameLetter{[](unsigned char l, unsigned char r){ return std::tolower(l) == std::tolower(r); }};
+        auto sameLetter{[](char l, char r){ return to_lowercase(l) == to_lowercase(r); }};
         auto sameButForCase{
           [&spelled, sameLetter](const fs::path& candidate) {
             return std::ranges::equal(candidate.string(), spelled, sameLetter);
@@ -932,7 +931,20 @@ namespace sequoia::testing
 
   namespace
   {
-    /** The compilations of a Ninja build, from the log `.ninja_deps` and the statements in `build.ninja`.
+    [[nodiscard]]
+    std::string_view required_configuration(const build_tree& tree, std::string_view configuration)
+    {
+      if(configuration.empty())
+        throw std::runtime_error{
+          std::format("A configuration is required to read the build in {}, written by the {} generator",
+                      tree.build_directory.generic_string(),
+                      tree.generator)
+        };
+
+      return configuration;
+    }
+
+    /** The compilations of a Ninja build, from the log `.ninja_deps` and the statements in `statementsFile`.
 
         The log gives every compilation ninja has ever recorded, and is trimmed to the object files the
         build currently has, which the statements name. Each record then has its source put first among
@@ -941,17 +953,18 @@ namespace sequoia::testing
 
         \throws std::runtime_error if
         -# There is no log, nothing having been built;
+        -# `statementsFile` cannot be read;
         -# No record's object file is named by any statement: the log and the statements then spell one
            tree two ways, and nothing would ever be selected.
      */
     [[nodiscard]]
-    compilations ninja_compilations(const build_tree& tree)
+    compilations ninja_compilations(const build_tree& tree, const fs::path& statementsFile)
     {
       const auto log{tree.build_directory / ".ninja_deps"};
       if(!fs::exists(log))
         throw std::runtime_error{std::format("{} has no dependency log; has anything been built?", tree.build_directory.generic_string())};
 
-      const auto sourcesByObjectFile{read_ninja_sources(tree.build_directory / "build.ninja")};
+      const auto sourcesByObjectFile{read_ninja_sources(statementsFile)};
       auto [loggedFiles, loggedRecords]{read_ninja_deps(log)};
       path_table files{std::move(loggedFiles)};
 
@@ -987,53 +1000,93 @@ namespace sequoia::testing
 
       if(records.empty() && !loggedRecords.empty())
         throw std::runtime_error{
-          std::format("None of the objects {} records is named by build.ninja; are the two spelled differently?", log.generic_string())
+          std::format("None of the objects {} records is named by {}; are the two spelled differently?",
+                      log.generic_string(),
+                      statementsFile.lexically_relative(tree.build_directory).generic_string())
         };
 
       return compilations{.files{std::move(files).release_files()}, .records{std::move(records)}};
     }
 
-    /** The compilations of a Visual Studio build: those of every target's tracker logs in the
-        executable's configuration, which is the name of the directory holding the executable.
+    /** Every target's tracker-log directory in `configuration`: a `.tlog` directory whose parent is named
+        after the configuration.
+
+        No `CMakeFiles` directory is searched. CMake keeps its own projects there - the compiler's
+        identification, `try_compile`'s scratch builds - and none of them is a target of the build.
+     */
+    [[nodiscard]]
+    std::vector<fs::path> tlog_directories(const fs::path& buildDirectory, std::string_view configuration)
+    {
+      std::vector<fs::path> directories{};
+      const fs::recursive_directory_iterator end{};
+      for(auto walk{fs::recursive_directory_iterator{buildDirectory}}; walk != end; ++walk)
+      {
+        if(!walk->is_directory())
+          continue;
+
+        const auto& path{walk->path()};
+        if(path.filename() == "CMakeFiles")
+          walk.disable_recursion_pending();
+        else if((path.extension() == ".tlog") && (path.parent_path().filename() == configuration))
+          directories.push_back(path);
+      }
+
+      return directories;
+    }
+
+    /** The compilations of a Visual Studio build: those of every target's tracker logs in `configuration`.
 
         Every target's files are numbered into one table, so that a file two targets both read is one file.
      */
     [[nodiscard]]
-    compilations visual_studio_compilations(const build_tree& tree, const fs::path& executable)
+    compilations visual_studio_compilations(const build_tree& tree, std::string_view configuration)
     {
-      const auto configuration{executable.parent_path().filename()};
-      auto isTlogOfConfiguration{
-        [&configuration](const fs::directory_entry& entry) {
-          return entry.is_directory()
-              && (entry.path().extension() == ".tlog")
-              && (entry.path().parent_path().filename() == configuration);
-        }
-      };
+      const auto tlogDirectories{tlog_directories(tree.build_directory, configuration)};
+      if(tlogDirectories.empty())
+        throw std::runtime_error{
+          std::format("The build in {} holds no tracker logs of the {} configuration; "
+                      "has it been built in that configuration?",
+                      tree.build_directory.generic_string(),
+                      configuration)
+        };
 
       path_table files{};
       std::vector<compilations::record> records{};
-      for(const auto& entry : fs::recursive_directory_iterator{tree.build_directory} | std::views::filter(isTlogOfConfiguration))
+      for(const auto& directory : tlogDirectories)
       {
-        records.append_range(read_tlogs(files, entry.path()));
+        records.append_range(read_tlogs(files, directory));
       }
 
       return compilations{.files{std::move(files).release_files()}, .records{std::move(records)}};
     }
   }
 
-  /// `Ninja Multi-Config` keeps its statements elsewhere and is not understood; nor is any generator but the two
+  /** Each understood generator records a build in its own place:
+      -# Ninja: the log `.ninja_deps`, and the statements in `build.ninja`;
+      -# Ninja Multi-Config: one log `.ninja_deps`, shared by every configuration, and the statements of
+         `configuration` in `CMakeFiles/impl-<configuration>.ninja`. `build.ninja` names no object
+         itself: it includes the statements of the default configuration, which need not be
+         `configuration`;
+      -# Visual Studio: the tracker logs of `configuration`.
+   */
   [[nodiscard]]
-  compilations read_compilations(const build_tree& tree, const fs::path& executable)
+  compilations read_compilations(const build_tree& tree, std::string_view configuration)
   {
     if(tree.generator == "Ninja")
-      return ninja_compilations(tree);
+      return ninja_compilations(tree, tree.build_directory / "build.ninja");
+
+    if(tree.generator == "Ninja Multi-Config")
+    {
+      const auto statementsFile{std::format("impl-{}.ninja", required_configuration(tree, configuration))};
+      return ninja_compilations(tree, tree.build_directory / "CMakeFiles" / statementsFile);
+    }
 
     if(tree.generator.starts_with("Visual Studio"))
-      return visual_studio_compilations(tree, executable);
+      return visual_studio_compilations(tree, required_configuration(tree, configuration));
 
     throw std::runtime_error{
       std::format("The build in {} was written by the {} generator, whose record of dependencies is not understood; "
-                  "Ninja's and Visual Studio's are",
+                  "Ninja's, Ninja Multi-Config's and Visual Studio's are",
                   tree.build_directory.generic_string(),
                   tree.generator)
     };

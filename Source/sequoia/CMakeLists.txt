@@ -45,6 +45,8 @@ set(SourceList
 
 add_library(sequoia STATIC ${SourceList})
 
+target_compile_definitions(sequoia PRIVATE SEQUOIA_BUILD_CONFIGURATION="$<CONFIG>")
+
 target_include_directories(sequoia PUBLIC ${CMAKE_CURRENT_LIST_DIR}/../)
 
 sequoia_finalize_library(sequoia)

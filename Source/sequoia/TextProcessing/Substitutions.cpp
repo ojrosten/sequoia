@@ -7,23 +7,15 @@
 
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
-#include <algorithm>
-
 namespace sequoia
 {
   std::string& to_camel_case(std::string& text, std::string_view separator)
   {
     if(text.empty()) return text;
 
-    auto upper{
-      [](char c) {
-        return static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
-      }
-    };
-
-    if(std::isalpha(text.front()))
+    if(is_alphabetic(text.front()))
     {
-      text.front() = upper(text.front());
+      text.front() = to_uppercase(text.front());
     }
 
     using size_t = std::string::size_type;
@@ -33,9 +25,9 @@ namespace sequoia
     {
       text.replace(pos, 1, separator);
       const auto next{pos + separator.size()};
-      if((next < text.length()) && std::isalpha(text[next]))
+      if((next < text.length()) && is_alphabetic(text[next]))
       {
-        text[next] = upper(text[next]);
+        text[next] = to_uppercase(text[next]);
       }
 
       pos += (separator.size() + 1);
@@ -53,7 +45,7 @@ namespace sequoia
 
   std::string& to_snake_case(std::string& text)
   {
-    return camel_to_words(text, "_", [](char c) { return static_cast<char>(std::tolower(static_cast<unsigned char>(c))); });
+    return camel_to_words(text, "_", to_lowercase);
   }
 
   [[nodiscard]]
@@ -67,8 +59,7 @@ namespace sequoia
   {
     if(!text.empty())
     {
-      auto& c{text.front()};
-      c = static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
+      text.front() = to_uppercase(text.front());
     }
 
     return text;
@@ -85,8 +76,7 @@ namespace sequoia
   {
     if(!text.empty())
     {
-      auto& c{text.front()};
-      c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+      text.front() = to_lowercase(text.front());
     }
 
     return text;
@@ -97,22 +87,6 @@ namespace sequoia
   {
     std::string str{text};
     return uncapitalize(str);
-  }
-
-  std::string& to_lower_case(std::string& text)
-  {
-    // Not std::tolower, which follows the global locale and may alter bytes beyond ASCII
-    auto lowerAscii{[](char c){ return ((c >= 'A') && (c <= 'Z')) ? static_cast<char>(c - 'A' + 'a') : c; }};
-
-    std::ranges::transform(text, text.begin(), lowerAscii);
-    return text;
-  }
-
-  [[nodiscard]]
-  std::string to_lower_case(std::string_view text)
-  {
-    std::string str{text};
-    return to_lower_case(str);
   }
 
   std::string& replace(std::string& text, std::string_view from, std::string_view to)

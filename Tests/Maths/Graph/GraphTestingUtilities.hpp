@@ -16,6 +16,8 @@
 #include "sequoia/Maths/Graph/GraphPrimitive.hpp"
 #include "sequoia/Maths/Graph/GraphTraits.hpp"
 
+#include <format>
+
 namespace sequoia::testing
 {
   template<maths::graph_flavour Flavour, class EdgeStorage>
@@ -36,7 +38,7 @@ namespace sequoia::testing
       {
         for(edge_index_type i{}; i<connectivity.order(); ++i)
         {
-          const auto message{std::string{"Partition "}.append(std::to_string(i))};
+          const auto message{std::format("Partition {}", i)};
           check(flavour, append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), prediction.cbegin_edges(i), prediction.cend_edges(i));
         }
       }
@@ -55,7 +57,7 @@ namespace sequoia::testing
       {
         for(edge_index_type i{}; i < connectivity.order(); ++i)
         {
-          const auto message{"Partition " + std::to_string(i)};
+          const auto message{std::format("Partition {}", i)};
           check(flavour, append_lines(message, "cedge_iterator"),  logger, connectivity.cbegin_edges(i),   connectivity.cend_edges(i),   std::begin(*(prediction.begin() + i)),  std::end(*(prediction.begin() + i)));
           check(flavour, append_lines(message, "credge_iterator"), logger, connectivity.crbegin_edges(i),  connectivity.crend_edges(i),  std::rbegin(*(prediction.begin() + i)), std::rend(*(prediction.begin() + i)));
           check(flavour, append_lines(message, "cedges"),          logger, connectivity.cedges(i).begin(), connectivity.cedges(i).end(), std::begin(*(prediction.begin() + i)),  std::end(*(prediction.begin() + i)));

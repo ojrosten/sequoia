@@ -15,6 +15,7 @@
 #include "sequoia/TestFramework/StateTransitionUtilities.hpp"
 
 #include <complex>
+#include <format>
 
 namespace sequoia::testing
 {

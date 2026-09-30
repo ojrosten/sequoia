@@ -65,7 +65,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Maths/Geometry/BoundsFreeTest.cpp
                ${TestDir}/Maths/Geometry/ComplexVectorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/FreeModuleCoordinatesTest.cpp
-               ${TestDir}/Maths/Geometry/M_AffineCoordinatesTest.cpp
+               ${TestDir}/Maths/Geometry/MAffineCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/NumericRingsMetaFreeTest.cpp
                ${TestDir}/Maths/Geometry/PartialMTorsorCoordinatesTest.cpp
                ${TestDir}/Maths/Geometry/SpacesMetaFreeTest.cpp
@@ -189,6 +189,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/OutputFreeTest.cpp
                ${TestDir}/TestFramework/PathFreeDiagnostics.cpp
                ${TestDir}/TestFramework/PerformanceTestDiagnostics.cpp
+               ${TestDir}/TestFramework/ProjectPathsFreeTest.cpp
                ${TestDir}/TestFramework/RegularStateTransitionDiagnostics.cpp
                ${TestDir}/TestFramework/RegularTestDiagnostics.cpp
                ${TestDir}/TestFramework/RelationalTestDiagnostics.cpp
@@ -204,6 +205,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/TestFramework/TestRunnerTest.cpp
                ${TestDir}/TestFramework/TestRunnerTestCreation.cpp
                ${TestDir}/TestFramework/VersionedOutputFreeTest.cpp
+               ${TestDir}/TextProcessing/CharactersFreeTest.cpp
                ${TestDir}/TextProcessing/IndentFreeTest.cpp
                ${TestDir}/TextProcessing/PatternsFreeTest.cpp
                ${TestDir}/TextProcessing/SubstitutionsFreeTest.cpp)

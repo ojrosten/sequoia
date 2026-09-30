@@ -17,6 +17,8 @@
 
 #include "sequoia/TestFramework/AllocationTestUtilities.hpp"
 
+#include <format>
+
 namespace sequoia::testing
 {
   namespace impl
@@ -144,7 +146,7 @@ namespace sequoia::testing
     {
       if constexpr(I < sizeof...(Ts))
       {
-        const std::string message{std::to_string(I) + "th element incorrect"};
+        const std::string message{std::format("{}th element incorrect", I)};
         check(equality, message, logger, nodes.template node_weight<I>(), prediction.template get_node_weight<I>());
         check_elements<Mode, I+1>(logger, nodes, prediction);
       }
@@ -157,7 +159,7 @@ namespace sequoia::testing
     {
       if constexpr (I < sizeof...(Ts))
       {
-        const auto message{ std::to_string(I).append("th element incorrect") };
+        const auto message{ std::format("{}th element incorrect", I) };
         check(equality, message, logger, nodes.template get_node_weight<I>(), std::get<I>(prediction));
         check_elements<Mode, I + 1>(logger, nodes, prediction);
       }

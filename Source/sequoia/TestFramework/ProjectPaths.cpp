@@ -14,6 +14,7 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
 #include <algorithm>
+#include <format>
 #include <numeric>
 #include <ranges>
 
@@ -48,7 +49,7 @@ namespace sequoia::testing
       opt_path cacheFile{get(executableDir)};
       if(!cacheFile)
       {
-        // Try one level back, mainly for MSVC
+        // The executable may lie in a directory directly within the build tree, as a multi-config build puts it
         cacheFile = get(executableDir.parent_path());
       }
 
@@ -87,8 +88,11 @@ namespace sequoia::testing
           }
         }
 
-        throw std::runtime_error{std::string{"Unable to locate project root from path:\n"}.append(zeroth)
-                    .append("\nPlease ensure that the build directory is a subdirectory of <project>/build.")};
+        throw std::runtime_error{
+          std::format("Unable to locate project root from path:\n{}\n"
+                      "Please ensure that the build directory is a subdirectory of <project>/build.",
+                      zeroth)
+        };
       }
     }
 
@@ -195,6 +199,13 @@ namespace sequoia::testing
     , m_ExecutableDir{std::move(executableDir)}
     , m_CMakeCacheDir{std::move(cmakeCacheDir)}
   {}
+
+  [[nodiscard]]
+  std::string build_paths::configuration() const
+  {
+    return m_ExecutableDir.parent_path() == m_CMakeCacheDir ? m_ExecutableDir.filename().generic_string()
+                                                            : std::string{};
+  }
 
   //===================================== auxiliary_paths =====================================//
 
@@ -382,7 +393,7 @@ namespace sequoia::testing
     const auto ext{replace(source.filename().extension().string(), ".", "_")};
 
     return (instability_analysis(std::move(projectRoot)) / source.filename().replace_extension().concat(ext))
-      .append(replace_all(name, " ", "_")).append("Output_" + std::to_string(index) + ".txt");
+      .append(replace_all(name, " ", "_")).append(std::format("Output_{}.txt", index));
   }
 
   [[nodiscard]]

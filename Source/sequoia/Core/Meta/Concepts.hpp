@@ -104,6 +104,22 @@ namespace sequoia
   template<class T>
   concept arithmetic = std::is_arithmetic_v<T>;
 
+  namespace impl
+  {
+    template<class T>
+    inline constexpr bool character_type_v{
+         std::is_same_v<T, char>     || std::is_same_v<T, wchar_t>  || std::is_same_v<T, char8_t>
+      || std::is_same_v<T, char16_t> || std::is_same_v<T, char32_t>
+    };
+  }
+
+  /** \brief A character type: `char`, `wchar_t`, `char8_t`, `char16_t` or `char32_t`, cv-qualified or not.
+
+      These are the types that [basic.fundamental] calls character types.
+   */
+  template<class T>
+  concept character = impl::character_type_v<std::remove_cv_t<T>>;
+
   /** \brief A concept for the integer types, as distinct from the integral
              types.
 
@@ -118,18 +134,8 @@ namespace sequoia
       follow their unqualified type, as they do for `std::integral` - which
       sees through cv where `std::same_as` does not.
    */
-  namespace impl
-  {
-    template<class T>
-    inline constexpr bool bool_or_character_type_v{
-         std::same_as<T, bool>     || std::same_as<T, char>
-      || std::same_as<T, wchar_t>  || std::same_as<T, char8_t>
-      || std::same_as<T, char16_t> || std::same_as<T, char32_t>
-    };
-  }
-
   template<class T>
-  concept integer = std::integral<T> && (!impl::bool_or_character_type_v<std::remove_cv_t<T>>);
+  concept integer = std::integral<T> && !character<T> && !std::same_as<std::remove_cv_t<T>, bool>;
 
   /** \brief Similar to std::range but excludes the case where dereferencing yields the same type as the range.
   
