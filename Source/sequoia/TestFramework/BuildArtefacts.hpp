@@ -67,8 +67,8 @@ namespace sequoia::testing
 
   /** \brief Every compilation the build currently has, each with its source first among its inputs.
 
-      For a multi-config generator, the build is of `executable`'s configuration: the name of the
-      directory holding `executable`.
+      If the generator is multi-config, the compilations are those of `executable`'s configuration.
+      That configuration is the name of the directory holding `executable`.
 
       \throws std::runtime_error if the tree
       -# Was written by a generator whose record of dependencies is not understood;

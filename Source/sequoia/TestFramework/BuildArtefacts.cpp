@@ -932,7 +932,7 @@ namespace sequoia::testing
 
   namespace
   {
-    /// The configuration of a multi-config build to which an executable belongs: the name of the directory holding it
+    /// The name of the directory holding `executable`. In a multi-config build, that name is the executable's configuration.
     [[nodiscard]]
     fs::path configuration_of(const fs::path& executable)
     {
@@ -1031,12 +1031,12 @@ namespace sequoia::testing
     }
   }
 
-  /** Where each understood generator records a build:
+  /** Each understood generator records a build in its own place:
       -# Ninja: the log `.ninja_deps`, and the statements in `build.ninja`;
-      -# Ninja Multi-Config: one log `.ninja_deps` for every configuration, and the statements of the
-         executable's configuration in `CMakeFiles/impl-<configuration>.ninja`. `build.ninja` names no
-         object itself: it includes the default configuration's statements, which need not be the
-         executable's;
+      -# Ninja Multi-Config: one log `.ninja_deps`, shared by every configuration, and the statements of
+         the executable's configuration in `CMakeFiles/impl-<configuration>.ninja`. `build.ninja` names
+         no object itself: it includes the statements of the default configuration, which need not be
+         the executable's;
       -# Visual Studio: the tracker logs of the executable's configuration.
    */
   [[nodiscard]]

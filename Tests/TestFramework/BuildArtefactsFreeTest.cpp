@@ -472,8 +472,8 @@ namespace sequoia::testing
     }
 
     {
-      /* A Ninja Multi-Config tree: one log for every configuration, and each configuration's statements in a
-         file of its own; `build.ninja` names no object itself, but includes the default configuration's
+      /* A Ninja Multi-Config tree has one log for every configuration, and each configuration's statements in a
+         file of its own. `build.ninja` names no object itself, but includes the statements of the default configuration.
        */
       const auto multiConfigRoot{scratch / "multi_config"};
       fs::create_directories(multiConfigRoot / "CMakeFiles");
