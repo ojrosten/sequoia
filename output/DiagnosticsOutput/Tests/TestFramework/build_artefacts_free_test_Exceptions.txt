@@ -115,7 +115,7 @@ The build in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/buil
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 324
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 343
 An object which bears neither source's name
 
 Expected Exception Type:
@@ -124,7 +124,7 @@ The tracker's log in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeT
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 353
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 372
 An object which two sources would each be given
 
 Expected Exception Type:
@@ -133,7 +133,7 @@ The tracker's log in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeT
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 381
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 400
 A log which is not the tracker's UTF-16
 
 Expected Exception Type:
@@ -142,7 +142,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 419
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 438
 A cache which does not exist
 
 Expected Exception Type:
@@ -151,7 +151,7 @@ cmake_cache: no CMakeCache.txt in output/TestsTemporaryData/TestFramework/BuildA
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 421
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 440
 A Ninja tree which has not been built has no log
 
 Expected Exception Type:
@@ -160,7 +160,7 @@ output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/build_artefacts_f
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 449
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 468
 A build statement with no rule
 
 Expected Exception Type:
@@ -169,7 +169,7 @@ Unable to read output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 495
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 514
 A log none of whose objects build.ninja names is two spellings of one tree, not an empty build
 
 Expected Exception Type:
@@ -178,7 +178,7 @@ None of the objects output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTe
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 532
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 551
 Ninja Multi-Config: a configuration with no statements
 
 Expected Exception Type:
@@ -187,7 +187,7 @@ Unable to open output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/bu
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 535
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 554
 Ninja Multi-Config: no configuration
 
 Expected Exception Type:
@@ -196,7 +196,7 @@ A configuration is required to read the build in output/TestsTemporaryData/TestF
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 542
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 561
 Ninja Multi-Config: a log none of whose objects the configuration's statements name
 
 Expected Exception Type:
@@ -205,7 +205,7 @@ None of the objects output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTe
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 548
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 567
 Xcode: a generator whose record of dependencies is not understood
 
 Expected Exception Type:
@@ -214,7 +214,7 @@ The build in output/TestsTemporaryData/TestFramework/BuildArtefactsFreeTest/buil
 
 =======================================
 
-Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 552
+Tests/TestFramework/BuildArtefactsFreeTest.cpp, Line 571
 A cache which names no generator was not written by CMake
 
 Expected Exception Type:

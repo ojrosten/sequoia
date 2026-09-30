@@ -248,6 +248,25 @@ namespace sequoia::testing
     }
 
     {
+      // CMake's own projects keep tracker logs in CMakeFiles directories, at the top of the build tree and
+      // within its subdirectories
+      const auto [tree, configuration, dir]{target("cmake_projects")};
+      const auto& root{tree.build_directory};
+      const auto compilerIdentification{root / "CMakeFiles" / "4.4.3" / "CompilerIdCXX" / configuration};
+      const auto scratchBuild{root / "Sub" / "CMakeFiles" / "CMakeScratch" / "cmTC.dir" / configuration};
+      write_tlogs(dir, std::vector<compilation_record>{{project / "a.obj", {project / "a.cpp"}}});
+      write_tlogs(compilerIdentification / "CompilerIdCXX.tlog",
+                  std::vector<compilation_record>{{project / "b.obj", {project / "b.cpp"}}});
+      write_tlogs(scratchBuild / "cmTC.tlog",
+                  std::vector<compilation_record>{{project / "c.obj", {project / "c.cpp"}}});
+
+      check(equality,
+            "Visual Studio: tracker logs within a CMakeFiles directory are CMake's, not the build's",
+            expand(read_compilations(tree, configuration)),
+            std::vector<compilation_record>{{project / "a.obj", {project / "a.cpp"}}});
+    }
+
+    {
       // One invocation compiling two sources lists them together; each object goes to the source sharing its stem
       const auto [tree, configuration, dir]{target("joint")};
       fs::create_directories(dir);

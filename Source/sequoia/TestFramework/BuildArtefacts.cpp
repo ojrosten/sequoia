@@ -1009,6 +1009,32 @@ namespace sequoia::testing
       return compilations{.files{std::move(files).release_files()}, .records{std::move(records)}};
     }
 
+    /** Every target's tracker-log directory in `configuration`: a `.tlog` directory whose parent is named
+        after the configuration.
+
+        No `CMakeFiles` directory is searched. CMake keeps its own projects there - the compiler's
+        identification, `try_compile`'s scratch builds - and none of them is a target of the build.
+     */
+    [[nodiscard]]
+    std::vector<fs::path> tlog_directories(const fs::path& buildDirectory, std::string_view configuration)
+    {
+      std::vector<fs::path> directories{};
+      const fs::recursive_directory_iterator end{};
+      for(auto walk{fs::recursive_directory_iterator{buildDirectory}}; walk != end; ++walk)
+      {
+        if(!walk->is_directory())
+          continue;
+
+        const auto& path{walk->path()};
+        if(path.filename() == "CMakeFiles")
+          walk.disable_recursion_pending();
+        else if((path.extension() == ".tlog") && (path.parent_path().filename() == configuration))
+          directories.push_back(path);
+      }
+
+      return directories;
+    }
+
     /** The compilations of a Visual Studio build: those of every target's tracker logs in `configuration`.
 
         Every target's files are numbered into one table, so that a file two targets both read is one file.
@@ -1016,20 +1042,7 @@ namespace sequoia::testing
     [[nodiscard]]
     compilations visual_studio_compilations(const build_tree& tree, std::string_view configuration)
     {
-      auto isTlogOfConfiguration{
-        [configuration](const fs::directory_entry& entry) {
-          return entry.is_directory()
-              && (entry.path().extension() == ".tlog")
-              && (entry.path().parent_path().filename() == configuration);
-        }
-      };
-
-      const auto tlogDirectories{
-          fs::recursive_directory_iterator{tree.build_directory}
-        | std::views::filter(isTlogOfConfiguration)
-        | std::ranges::to<std::vector>()
-      };
-
+      const auto tlogDirectories{tlog_directories(tree.build_directory, configuration)};
       if(tlogDirectories.empty())
         throw std::runtime_error{
           std::format("The build in {} holds no tracker logs of the {} configuration; "
@@ -1040,9 +1053,9 @@ namespace sequoia::testing
 
       path_table files{};
       std::vector<compilations::record> records{};
-      for(const auto& entry : tlogDirectories)
+      for(const auto& directory : tlogDirectories)
       {
-        records.append_range(read_tlogs(files, entry.path()));
+        records.append_range(read_tlogs(files, directory));
       }
 
       return compilations{.files{std::move(files).release_files()}, .records{std::move(records)}};

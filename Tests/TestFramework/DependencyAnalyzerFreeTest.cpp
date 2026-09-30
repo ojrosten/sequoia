@@ -240,8 +240,10 @@ namespace sequoia::testing
     const auto& units{fake_units()};
 
     const auto buildDir{fake / "build" / "CMade" / "TestAll"};
-    const auto objectDir{fs::path{"CMakeFiles"} / "TestAll.dir"};
     const bool ninja{system != build_system::visual_studio};
+    // Ninja puts a target's objects in CMakeFiles/<target>.dir, and Visual Studio in <target>.dir/<configuration>
+    const auto objectDir{ninja ? fs::path{"CMakeFiles"} / "TestAll.dir"
+                               : fs::path{"TestAll.dir"} / visualStudioConfiguration};
     auto object{[&](std::string_view source){ return objectDir / (std::string{source} + (ninja ? ".o" : ".obj")); }};
 
     const auto& sequoiaSource{get_project_paths().source().repo()};
@@ -278,6 +280,7 @@ namespace sequoia::testing
       write_to_file(header, "", std::ios_base::out);
     }
     fs::remove_all(buildDir / "CMakeFiles");
+    fs::remove_all(buildDir / "TestAll.dir");
     fs::remove(buildDir / ".ninja_deps");
     fs::remove(buildDir / "build.ninja");
     fs::create_directories(buildDir / objectDir);
@@ -330,7 +333,7 @@ namespace sequoia::testing
         write_to_file(record.object, "", std::ios_base::out);
       }
 
-      write_tlogs(buildDir / objectDir / visualStudioConfiguration / "TestAll.tlog", records);
+      write_tlogs(buildDir / objectDir / "TestAll.tlog", records);
     }
   }
 
