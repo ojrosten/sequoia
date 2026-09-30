@@ -54,8 +54,7 @@ namespace sequoia::testing
     /// The configuration of the fake Visual Studio build, and the name of the directory holding its executable
     constexpr std::string_view visualStudioConfiguration{"Debug"};
 
-    /// An RAII wrapper which sets the modification time of a file or directory, and restores the original
-    /// time on destruction
+    /// An RAII wrapper which sets the modification time of a file or directory, and restores the original time on destruction
     class modified_for_scope
     {
     public:
@@ -79,8 +78,7 @@ namespace sequoia::testing
       fs::file_time_type m_Original;
     };
 
-    /// An RAII wrapper which moves a file aside. On destruction, the wrapper puts the file back and restores
-    /// the modification time of the file's directory.
+    /// An RAII wrapper which moves a file aside, then on destruction puts the file back and restores the modification time of the file's directory
     class hidden_for_scope
     {
     public:
@@ -313,8 +311,7 @@ namespace sequoia::testing
 
     const auto root{(sources == recorded_sources::all_under_another_root) ? fake.parent_path() / "AnotherRoot" : fake};
 
-    // For `library_relative`, the library's paths are recorded as a build handed relative paths records
-    // them: relative to the build directory, and not lexically normal
+    // For `library_relative`, the library's paths are recorded as a build handed relative paths records them: relative to the build directory, and not lexically normal
     auto recordedPath{
       [&](std::string_view file) -> fs::path {
         constexpr std::string_view source{"Source/"};
@@ -622,8 +619,7 @@ namespace sequoia::testing
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
   }
 
-  /// `message`, with the fake project's root, as given and made canonical, replaced by `FakeProject`. Each time
-  /// stamp, and each reason a file cannot now be read, is masked by `****`.
+  /// `message`, with the fake project's root, as given and made canonical, replaced by `FakeProject`, and each time stamp and each reason a file cannot now be read masked by `****`
   std::string dependency_analyzer_free_test::normalise_library_message(const project_paths& projPaths,
                                                                        std::string message)
   {
@@ -681,8 +677,7 @@ namespace sequoia::testing
     check(equality, append_lines(description.message(), "No warning"), warnings, std::string{});
   }
 
-  /// sequoia_library_root finds the library that the binary was compiled from. So in sequoia's own tests,
-  /// the library found is sequoia.
+  /// sequoia_library_root finds the library that the binary was compiled from, so in sequoia's own tests the library found is sequoia
   void dependency_analyzer_free_test::test_library_root()
   {
     check(equality,
@@ -703,11 +698,10 @@ namespace sequoia::testing
                        m_ObjectExtension);
   }
 
-  /** The library is the fake project's own. The library's objects are those compiled from the fake
-      project's source directory. The library's own files are the files which were read to compile
-      those objects and which lie in that directory too. The executable is stamped between an early edit
-      and a late one. The build's record is read only if a file or a directory of the library's is no
-      older than the executable.
+  /** The library is the fake project's own. The library's objects are those compiled from the fake project's source
+      directory. The library's own files are the files which were read to compile those objects and which lie in that
+      directory too. The executable is stamped between an early edit and a late one. The build's record is read only
+      if a file or a directory of the library's is no older than the executable.
    */
   void dependency_analyzer_free_test::test_library_change(const project_paths& projPaths)
   {
@@ -760,8 +754,7 @@ namespace sequoia::testing
                          std::nullopt);
   }
 
-  /// A file of the library's has gone since the build. The time of the file's directory has moved, and the
-  /// record names the file.
+  /// A file of the library's has gone since the build. The time of the file's directory has moved, and the record names the file.
   void dependency_analyzer_free_test::test_library_file_gone(const project_paths& projPaths)
   {
     fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
