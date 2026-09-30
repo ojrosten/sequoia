@@ -984,7 +984,7 @@ namespace sequoia::testing
         try
         {
           auto tree{read_build_tree(projPaths.discovered().cmake_cache(), cache)};
-          auto compiled{read_compilations(tree, projPaths.executable())};
+          auto compiled{read_compilations(tree, projPaths.build().configuration())};
           return std::pair{std::move(tree), std::move(compiled)};
         }
         catch(const std::runtime_error& e)

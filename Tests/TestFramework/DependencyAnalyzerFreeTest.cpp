@@ -294,11 +294,11 @@ namespace sequoia::testing
     const auto buildDir{fake / "build" / "CMade" / "TestAll"};
     const bool ninja{system != build_system::visual_studio};
     // By default, objects lie in CMakeFiles/<target>.dir (Ninja) or <target>.dir/<configuration> (Visual Studio)
-    const auto objectDir{ninja ? fs::path{"CMakeFiles"} / "TestAll.dir"
-                               : fs::path{"TestAll.dir"} / visualStudioConfiguration};
+    m_ObjectDirectory = ninja ? fs::path{"CMakeFiles"} / "TestAll.dir"
+                              : fs::path{"TestAll.dir"} / visualStudioConfiguration;
     m_ObjectExtension = ninja ? ".o" : ".obj";
     auto object{
-      [this, &objectDir](std::string_view source){ return objectDir / std::string{source}.append(m_ObjectExtension); }
+      [this](std::string_view source){ return m_ObjectDirectory / std::string{source}.append(m_ObjectExtension); }
     };
 
     const auto& sequoiaSource{get_project_paths().source().repo()};
@@ -349,7 +349,7 @@ namespace sequoia::testing
     fs::remove_all(buildDir / "TestAll.dir");
     fs::remove(buildDir / ".ninja_deps");
     fs::remove(buildDir / "build.ninja");
-    fs::create_directories(buildDir / objectDir);
+    fs::create_directories(buildDir / m_ObjectDirectory);
     fs::create_directories(buildDir / "CMakeFiles" / "4.1.2");
     write_to_file(buildDir / "CMakeCache.txt",
                   std::format("# Fake\nCMAKE_GENERATOR:INTERNAL={}\nCMAKE_HOME_DIRECTORY:INTERNAL={}\n", ninja ? "Ninja" : "Visual Studio 18 2026", fake.generic_string()),
@@ -373,7 +373,7 @@ namespace sequoia::testing
       // An object the build once had and no longer does keeps its record in the log, and its source may be gone
       statements.append("build CMakeFiles/TestAll.dir/unrelated.o: CXX_COMPILER unrelated.cpp\n");
       auto logged{records};
-      logged.push_back({.object{objectDir / "Tests/Retired/RetiredTest.cpp.o"}, .inputs{fake / "Tests/Retired/RetiredTest.cpp", fake / "Tests/Retired/Gone.hpp"}});
+      logged.push_back({.object{m_ObjectDirectory / "Tests/Retired/RetiredTest.cpp.o"}, .inputs{fake / "Tests/Retired/RetiredTest.cpp", fake / "Tests/Retired/Gone.hpp"}});
 
       // MSVC reports the headers it read but not the source, which the statement supplies
       if(system == build_system::ninja_with_msvc)
@@ -399,7 +399,7 @@ namespace sequoia::testing
         write_to_file(record.object, "", std::ios_base::out);
       }
 
-      write_tlogs(buildDir / objectDir / "TestAll.tlog", records);
+      write_tlogs(buildDir / m_ObjectDirectory / "TestAll.tlog", records);
     }
   }
 
@@ -686,16 +686,20 @@ namespace sequoia::testing
           fs::weakly_canonical(get_project_paths().source().project()));
   }
 
-  /// The normalised refusal which names `file` as read to compile the object of `source`
-  std::string dependency_analyzer_free_test::library_refusal(std::string_view file, std::string_view source) const
+  /// The normalised refusal which names `file` as read to compile the object of `source`, and names the executable of `projPaths`
+  std::string dependency_analyzer_free_test::library_refusal(const project_paths& projPaths,
+                                                             std::string_view file,
+                                                             std::string_view source) const
   {
     return std::format("The library has changed since this executable was built; please build it again.\n"
-                       "FakeProject/{}, read to compile FakeProject/build/CMade/TestAll/CMakeFiles/TestAll.dir/{}{}, "
+                       "FakeProject/{}, read to compile FakeProject/build/CMade/TestAll/{}/{}{}, "
                        "of target TestAll, time stamp: ****\n"
-                       "FakeProject/build/CMade/TestAll/TestAll, time stamp: ****\n",
+                       "{}, time stamp: ****\n",
                        file,
+                       m_ObjectDirectory.generic_string(),
                        source,
-                       m_ObjectExtension);
+                       m_ObjectExtension,
+                       normalise_library_message(projPaths, projPaths.executable().generic_string()));
   }
 
   /** The library is the fake project's own. The library's objects are those compiled from the fake project's source
@@ -724,22 +728,22 @@ namespace sequoia::testing
     check_library_change("A source of the library's, edited since the build",
                          projPaths,
                          {{definitions, lateEditOffset}},
-                         library_refusal(fooDefinitions, fooDefinitions));
+                         library_refusal(projPaths, fooDefinitions, fooDefinitions));
 
     check_library_change("A header the library reads, edited since the build: named with the first object to read it",
                          projPaths,
                          {{helper, lateEditOffset}},
-                         library_refusal("Source/fakeProject/Maths/Helper.hpp", "Source/fakeProject/Maths/Helper.cpp"));
+                         library_refusal(projPaths, "Source/fakeProject/Maths/Helper.hpp", "Source/fakeProject/Maths/Helper.cpp"));
 
     check_library_change("Of two edits since the build, the header's is the later",
                          projPaths,
                          {{definitions, latePassOffset}, {helper, lateEditOffset}},
-                         library_refusal("Source/fakeProject/Maths/Helper.hpp", "Source/fakeProject/Maths/Helper.cpp"));
+                         library_refusal(projPaths, "Source/fakeProject/Maths/Helper.hpp", "Source/fakeProject/Maths/Helper.cpp"));
 
     check_library_change("Of two edits since the build, the source's is the later",
                          projPaths,
                          {{helper, latePassOffset}, {definitions, lateEditOffset}},
-                         library_refusal(fooDefinitions, fooDefinitions));
+                         library_refusal(projPaths, fooDefinitions, fooDefinitions));
 
     // The record is read, since a file of the library's is newer than the executable. The record then decides.
     check_library_change("A header of the library's which only the tests read",
@@ -785,7 +789,7 @@ namespace sequoia::testing
     check_library_change("A source of the library's, recorded relative to the build, edited since the build",
                          projPaths,
                          {{projPaths.source().project() / "Stuff" / "FooDefinitions.cpp", lateEditOffset}},
-                         library_refusal(fooDefinitions, fooDefinitions));
+                         library_refusal(projPaths, fooDefinitions, fooDefinitions));
 
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
   }

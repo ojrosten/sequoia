@@ -119,11 +119,13 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::string normalise_library_message(const project_paths& projPaths, std::string message);
 
-    /// The extension of the fake build's object files. The extension depends on the build system recorded.
+    /// The directory, within the fake build tree, of the fake build's object files, and their extension.
+    /// Both depend on the build system recorded.
+    std::filesystem::path m_ObjectDirectory{"CMakeFiles/TestAll.dir"};
     std::string_view m_ObjectExtension{".o"};
 
     [[nodiscard]]
-    std::string library_refusal(std::string_view file, std::string_view source) const;
+    std::string library_refusal(const project_paths& projPaths, std::string_view file, std::string_view source) const;
 
     void check_library_change(const reporter& description,
                               const project_paths& projPaths,
