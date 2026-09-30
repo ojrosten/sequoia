@@ -163,8 +163,8 @@ namespace sequoia::testing
         Each companion file is named `type_file_stem()` followed by its stub. Each of the test's own files
         is named `test_file_stem()` followed by the extension of its stub.
 
-        If the header under test cannot be found and its generation was requested, `whereAbsent` gives the
-        path for the header and `generate` writes the header there.
+        `whereAbsent` gives the path at which to generate the header under test, and `generate` writes the
+        header there. Both are called only if the header cannot be found and its generation was requested.
 
         \throws std::runtime_error if
         -# The header under test cannot be found and is not to be generated;
