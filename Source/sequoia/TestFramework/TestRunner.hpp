@@ -363,8 +363,11 @@ namespace sequoia::testing
     parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
   };
 
-  /** \brief The result of calling, with `cache`, the hook of `T` that `Probe` probes for; or `nullopt`
-             if `Probe` finds no such hook.
+  /** \brief Calls the hook of `T` that `Probe` probes for, if `T` has one.
+
+      \returns
+      -# The result of calling the hook with `cache`, if `Probe` finds the hook in `T`;
+      -# `nullopt` otherwise.
    */
   template<class Probe, concrete_test T>
   [[nodiscard]]
