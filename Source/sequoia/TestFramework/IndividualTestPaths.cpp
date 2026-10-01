@@ -147,6 +147,17 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  fs::path individual_materials_paths::discarded_materials_root() const
+  {
+    if(m_TemporaryMaterialsRoot.empty())
+      throw std::logic_error{"No discarded materials root: these materials paths name no test"};
+
+    // The temporary root ends in the test's name. A test's name holds no '.', so this is no test's temporary root,
+    // and since no two materials prefixes nest, no test's temporary root lies within it.
+    return fs::path{m_TemporaryMaterialsRoot} += ".discarded";
+  }
+
+  [[nodiscard]]
   fs::path individual_materials_paths::original_working() const
   {
     return materials_directory(original_materials_root(), "WorkingCopy");

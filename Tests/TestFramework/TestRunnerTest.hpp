@@ -79,6 +79,10 @@ namespace sequoia::testing
 
     void test_versioned_output_failure();
 
+    void test_discarded_materials_removal();
+
+    void test_discarded_materials_removal_failure();
+
     void test_nested_suite();
 
     void test_nested_suite_verbose();
