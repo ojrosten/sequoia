@@ -860,18 +860,32 @@ namespace sequoia::testing
       return start;
     }
 
-    /// The first word of each line of a test's execution record
+    /// The label of each line of a test's execution record: the text before the line's last space
     [[nodiscard]]
-    std::vector<std::string> execution_record_line_heads(const fs::path& record)
+    std::vector<std::string> execution_record_labels(const fs::path& record)
     {
-      std::vector<std::string> heads{};
+      std::vector<std::string> labels{};
       std::ifstream file{record};
       for(std::string line{}; std::getline(file, line);)
       {
-        heads.push_back(line.substr(0, line.find(' ')));
+        labels.push_back(line.substr(0, line.rfind(' ')));
       }
 
-      return heads;
+      return labels;
+    }
+
+    /// The value of the line of a test's execution record labelled `label`, or nothing if there is no such line
+    [[nodiscard]]
+    std::string execution_record_value(const fs::path& record, std::string_view label)
+    {
+      std::ifstream file{record};
+      for(std::string line{}; std::getline(file, line);)
+      {
+        if(line.starts_with(label) && (line.size() > label.size()) && (line[label.size()] == ' '))
+          return line.substr(label.size() + 1);
+      }
+
+      return "";
     }
 
     /// Checks its own execution record while it executes
@@ -890,8 +904,8 @@ namespace sequoia::testing
       {
         const test_execution_record_path record{source_file(), name(), get_project_paths()};
         check(equality,
-              "While a test executes, its record names its start and no duration",
-              execution_record_line_heads(record.file_path()),
+              "While a test executes, its record names its start and no execution time",
+              execution_record_labels(record.file_path()),
               std::vector<std::string>{"started"});
 
         check("While a test executes, the run's stamp already exists",
@@ -1441,9 +1455,9 @@ namespace sequoia::testing
   }
 
   /** The fake tests tell the mechanism from its rivals: `record_reading_free_test` sees its record while it executes,
-      which a start written only at the end would not produce; `escaping_exception_free_test` throws, which a
-      duration written only on normal completion would miss. The records directory is removed first, so that only
-      this run can have written the stamp.
+      which a start written only at the end would not produce; `escaping_exception_free_test` throws, which an
+      execution time written only on normal completion would miss. The records directory is removed first, so that
+      only this run can have written the stamp.
    */
   void test_runner_test::test_execution_records()
   {
@@ -1468,16 +1482,16 @@ namespace sequoia::testing
       passingRecord{record_reading_free_test::source_file(),     test_name<record_reading_free_test>(),     projPaths},
       throwingRecord{escaping_exception_free_test::source_file(), test_name<escaping_exception_free_test>(), projPaths};
 
-    const std::vector<std::string> finishedRecordHeads{"started", "duration"};
+    const std::vector<std::string> finishedRecordLabels{"started", "execution time", "runner overhead"};
     check(equality,
-          "The record of a test which passed names its start and its duration",
-          execution_record_line_heads(passingRecord.file_path()),
-          finishedRecordHeads);
+          "The record of a test which passed names its start, its execution time and the runner's overhead",
+          execution_record_labels(passingRecord.file_path()),
+          finishedRecordLabels);
 
     check(equality,
-          "The record of a test whose body threw names its start and its duration",
-          execution_record_line_heads(throwingRecord.file_path()),
-          finishedRecordHeads);
+          "The record of a test whose body threw names its start, its execution time and the runner's overhead",
+          execution_record_labels(throwingRecord.file_path()),
+          finishedRecordLabels);
 
     const auto runStart{start_named_by(projPaths.execution_records().stamp())};
     check("The run's stamp names a start", !runStart.empty());
@@ -2160,6 +2174,14 @@ namespace sequoia::testing
 
     check(equality, "Materials preparation failure return code", runner.execute(), return_code::critical_failures);
     check_output("Materials Preparation Failure Output", "MaterialsPreparationFailureOutput", outputStream);
+
+    const test_execution_record_path
+      record{stray_materials_free_test::source_file(), test_name<stray_materials_free_test>(), runner.proj_paths()};
+
+    check(equality,
+          "A test whose materials could not be prepared has no execution time: preparing them is the runner's overhead",
+          execution_record_value(record.file_path(), "execution time"),
+          std::string{"0us"});
   }
 
   namespace

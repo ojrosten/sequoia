@@ -34,6 +34,7 @@ throwing_stale_predictions_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 463us]
 [Execution Time: 222us]
+[Runner Overhead: 572us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

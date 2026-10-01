@@ -11,7 +11,11 @@
 #include "sequoia/TestFramework/TestRunner.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <algorithm>
+#include <array>
 #include <charconv>
+#include <cmath>
+#include <format>
 #include <fstream>
 
 namespace sequoia::testing
@@ -40,32 +44,67 @@ namespace sequoia::testing
       throw std::runtime_error{"Unable to extract timing from: " + std::string{timing}};
     }
     
+    /** A time as the runner prints it, a number followed by its unit, converted to milliseconds. */
     [[nodiscard]]
-    double get_timing(const fs::path& file)
+    double to_milliseconds(std::string_view time)
+    {
+      constexpr std::array<std::pair<std::string_view, double>, 4> millisecondsPerUnit{
+        {{"s", 1e3}, {"ms", 1.0}, {"us", 1e-3}, {"ns", 1e-6}}
+      };
+
+      const auto unitStart{std::ranges::min(time.find_first_not_of("0123456789.e+"), time.size())};
+      auto unitOf{[](const auto& entry){ return entry.first; }};
+      const auto conversion{std::ranges::find(millisecondsPerUnit, time.substr(unitStart), unitOf)};
+      if(conversion == millisecondsPerUnit.end())
+        throw std::runtime_error{std::format("Unable to read the unit of the time {}", time)};
+
+      return to_number<double>(time.substr(0, unitStart)) * conversion->second;
+    }
+
+    /** The run's time labelled `label`, such as "Execution Time", in milliseconds. It is read from the grand
+        totals, since every test reports times of its own and the run's are the only ones these checks measure.
+     */
+    [[nodiscard]]
+    double get_grand_total(const fs::path& file, std::string_view label)
     {
       if(const auto optContents{read_to_string(file, std::ios_base::in)})
       {
         std::string_view contents{optContents.value()};
-        constexpr std::string_view pattern{"Execution Time:"};
+        const auto pattern{std::format("[{}: ", label)};
 
-        // From the grand totals, since every test reports a time of its own and the run's total is
-        // the only one this measures.
-        if(auto pos{contents.find(pattern, contents.find("Grand Totals"))}; pos != std::string::npos)
+        if(const auto pos{contents.find(pattern, contents.find("Grand Totals"))}; pos != std::string::npos)
         {
-          auto start{pos + pattern.size() + 1};
-          if(auto end{contents.find("ms]", start)}; end > start)
-          {
-            auto timing{contents.substr(start, end - start)};
-            return to_number<double>(timing);
-          }
+          const auto start{pos + pattern.size()};
+          if(const auto end{contents.find(']', start)}; end != std::string::npos)
+            return to_milliseconds(contents.substr(start, end - start));
         }
       }
 
-      throw std::runtime_error{"Unable to extract timing from: " + file.generic_string()};
+      throw std::runtime_error{std::format("Unable to extract the {} from: {}", label, file.generic_string())};
+    }
+
+    /** The time labelled `label`, such as "execution time", in the execution record `runner` keeps for `Test`, in
+        milliseconds.
+     */
+    template<concrete_test Test>
+    [[nodiscard]]
+    double get_recorded_time(const test_runner& runner, std::string_view label)
+    {
+      const test_execution_record_path record{Test::source_file(), test_name<Test>(), runner.proj_paths()};
+      std::ifstream file{record.file_path()};
+      for(std::string line{}; std::getline(file, line);)
+      {
+        if(line.starts_with(label))
+          return to_milliseconds(std::string_view{line}.substr(label.size() + 1));
+      }
+
+      throw std::runtime_error{
+        std::format("Unable to extract the {} from: {}", label, record.file_path().generic_string())
+      };
     }
 
     /** Eight tests are wanted, each sleeping the same amount, so that the timings below can
-        measure how the runner schedules them. They are eight *classes* because a test's name is
+        measure how the runner distributes them over threads. They are eight *classes* because a test's name is
         synthesized from its class: a class template cannot supply a file-system-safe name, and
         registering one class twice - which is what these used to do - would ask two tests to
         share it.
@@ -174,14 +213,86 @@ namespace sequoia::testing
       void run_tests() { sleep_and_check(7); }
     };
 
-    test_runner make_slow_suite(commandline_arguments args, std::stringstream& outputStream)
+    constexpr double execution_sleep_ms{20.0}, summarizing_sleep_ms{60.0};
+
+    /** The runner prints a time to three significant figures, so it prints one below a second to within half a
+        millisecond.
+     */
+    constexpr double printed_time_tolerance_ms{1.0};
+
+    /** Sleeps while its tests run, and sleeps again while the runner summarizes it. The runner summarizes a test after
+        its tests have run, so the first sleep falls in the test's execution time and the second in the runner's
+        overhead.
+     */
+    class slow_to_summarize_test_base : public free_test
     {
-      test_runner runner{args.size(),
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return std::source_location::current().file_name();
+      }
+
+      void run_tests()
+      {
+        std::this_thread::sleep_for(std::chrono::duration<double, std::milli>{execution_sleep_ms});
+        check("Slept", true);
+      }
+
+      [[nodiscard]]
+      log_summary summarize(duration delta) const
+      {
+        std::this_thread::sleep_for(std::chrono::duration<double, std::milli>{summarizing_sleep_ms});
+        return free_test::summarize(delta);
+      }
+    protected:
+      ~slow_to_summarize_test_base() = default;
+
+      slow_to_summarize_test_base(slow_to_summarize_test_base&&)            noexcept = default;
+      slow_to_summarize_test_base& operator=(slow_to_summarize_test_base&&) noexcept = default;
+    };
+
+    class slow_to_summarize_test_0 final : public slow_to_summarize_test_base
+    {
+    public:
+      using slow_to_summarize_test_base::slow_to_summarize_test_base;
+    };
+
+    class slow_to_summarize_test_1 final : public slow_to_summarize_test_base
+    {
+    public:
+      using slow_to_summarize_test_base::slow_to_summarize_test_base;
+    };
+
+    class slow_to_summarize_test_2 final : public slow_to_summarize_test_base
+    {
+    public:
+      using slow_to_summarize_test_base::slow_to_summarize_test_base;
+    };
+
+    class unparallelizable_slow_to_summarize_test final : public slow_to_summarize_test_base
+    {
+    public:
+      using parallelizable_type = std::false_type;
+
+      using slow_to_summarize_test_base::slow_to_summarize_test_base;
+    };
+
+    test_runner make_runner(commandline_arguments& args, std::stringstream& outputStream)
+    {
+      return test_runner{args.size(),
                          args.get(),
                          "Oliver J. Rosten",
                          "  ",
                          {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
                          outputStream};
+    }
+
+    test_runner make_slow_suite(commandline_arguments args, std::stringstream& outputStream)
+    {
+      auto runner{make_runner(args, outputStream)};
 
       runner.register_test<slow_test_0>();
       runner.register_test<slow_test_1>();
@@ -243,6 +354,8 @@ namespace sequoia::testing
     test_parallel_acceleration();
     test_thread_pool_acceleration();
     test_serial_execution();
+    test_runner_overhead_reported_apart();
+    test_execution_time_of_busiest_thread();
   }
 
   void test_runner_performance_test::test_parallel_acceleration()
@@ -252,7 +365,7 @@ namespace sequoia::testing
     check(equality, "Parallel acceleration return code", runner.execute(), return_code::success);
 
     auto outputFile{check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream)};
-    check(within_tolerance{35.0}, "", get_timing(outputFile), 60.0);
+    check(within_tolerance{35.0}, "", get_grand_total(outputFile, "Execution Time"), 60.0);
   }
 
   void test_runner_performance_test::test_thread_pool_acceleration()
@@ -263,7 +376,7 @@ namespace sequoia::testing
       check(equality, "Thread pool (8) return code", runner.execute(), return_code::success);
 
       auto outputFile{check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream)};
-      check(within_tolerance{30.0}, "", get_timing(outputFile), 55.0);
+      check(within_tolerance{30.0}, "", get_grand_total(outputFile, "Execution Time"), 55.0);
     }
 
     {
@@ -272,7 +385,7 @@ namespace sequoia::testing
       check(equality, "Thread pool (2) return code", runner.execute(), return_code::success);
 
       auto outputFile{check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream)};
-      check(within_tolerance{40.0}, "", get_timing(outputFile), 140.0);
+      check(within_tolerance{40.0}, "", get_grand_total(outputFile, "Execution Time"), 140.0);
     }
   }
 
@@ -283,6 +396,92 @@ namespace sequoia::testing
     check(equality, "Serial execution return code", runner.execute(), return_code::success);
 
     auto outputFile{check_output(report({"Serial Output"}), "Serial Output", outputStream)};
-    check(within_tolerance{55.0}, "", get_timing(outputFile), 255.0);
+    check(within_tolerance{55.0}, "", get_grand_total(outputFile, "Execution Time"), 255.0);
+  }
+
+  /** One test sleeps while its tests run, and again while the runner summarizes it. Its execution time must lie
+      between the first sleep and the sum of the two sleeps. The sum is what the execution time would be if it
+      included the runner's overhead. The printed output and the test's execution record must both say so.
+   */
+  void test_runner_performance_test::test_runner_overhead_reported_apart()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{minimal_fake_path().generic_string(), "--serial"}};
+    auto runner{make_runner(args, outputStream)};
+    runner.register_test<slow_to_summarize_test_0>();
+    check(equality, "Runner overhead return code", runner.execute(), return_code::success);
+
+    const auto outputFile{check_output(report({"Runner Overhead Output"}), "RunnerOverheadOutput", outputStream)};
+    check(within_tolerance{summarizing_sleep_ms / 2},
+          "The printed execution time excludes the sleep while summarizing",
+          get_grand_total(outputFile, "Execution Time"),
+          execution_sleep_ms + summarizing_sleep_ms / 2);
+
+    check(std::ranges::greater_equal{},
+          "The printed runner overhead includes the sleep while summarizing",
+          get_grand_total(outputFile, "Runner Overhead"),
+          summarizing_sleep_ms);
+
+    check(within_tolerance{summarizing_sleep_ms / 2},
+          "The recorded execution time excludes the sleep while summarizing",
+          get_recorded_time<slow_to_summarize_test_0>(runner, "execution time"),
+          execution_sleep_ms + summarizing_sleep_ms / 2);
+
+    check(std::ranges::greater_equal{},
+          "The recorded runner overhead includes the sleep while summarizing",
+          get_recorded_time<slow_to_summarize_test_0>(runner, "runner overhead"),
+          summarizing_sleep_ms);
+  }
+
+  /** Four tests, each sleeping while its tests run and again while the runner summarizes it. One is not
+      parallelizable, so it runs first, alone. The other three then run over a pool of two threads, so one thread runs
+      two of them. The run's execution time must therefore be the first test's recorded execution time plus those of
+      two others. Each rival misses by at least a test's execution time, far more than the printed time's rounding:
+      -# summing every test's execution time adds the third of the others;
+      -# leaving out the first test subtracts its execution time;
+      -# taking the longest test rather than the busiest thread subtracts the execution time of one of a pair;
+      -# a wall clock adds the runner's overhead.
+   */
+  void test_runner_performance_test::test_execution_time_of_busiest_thread()
+  {
+    std::stringstream outputStream{};
+    commandline_arguments args{{minimal_fake_path().generic_string(), "--thread-pool", "2"}};
+    auto runner{make_runner(args, outputStream)};
+    runner.register_test<unparallelizable_slow_to_summarize_test>();
+    runner.register_test<slow_to_summarize_test_0>();
+    runner.register_test<slow_to_summarize_test_1>();
+    runner.register_test<slow_to_summarize_test_2>();
+    check(equality, "Busiest thread return code", runner.execute(), return_code::success);
+
+    const auto outputFile{check_output(report({"Busiest Thread Output"}), "BusiestThreadOutput", outputStream)};
+
+    const auto firstTime{get_recorded_time<unparallelizable_slow_to_summarize_test>(runner, "execution time")};
+    const std::array othersTimes{
+      get_recorded_time<slow_to_summarize_test_0>(runner, "execution time"),
+      get_recorded_time<slow_to_summarize_test_1>(runner, "execution time"),
+      get_recorded_time<slow_to_summarize_test_2>(runner, "execution time")
+    };
+
+    const std::array pairedTimes{
+      othersTimes[0] + othersTimes[1],
+      othersTimes[0] + othersTimes[2],
+      othersTimes[1] + othersTimes[2]
+    };
+
+    const auto executionTime{get_grand_total(outputFile, "Execution Time")};
+    auto distanceFromExecutionTime{
+      [executionTime, firstTime](double paired){ return std::abs(executionTime - (firstTime + paired)); }
+    };
+
+    const auto nearestPairedTime{std::ranges::min(pairedTimes, std::ranges::less{}, distanceFromExecutionTime)};
+    check(within_tolerance{printed_time_tolerance_ms},
+          "The execution time is the unparallelizable test's plus those of the two others one thread ran",
+          executionTime,
+          firstTime + nearestPairedTime);
+
+    check(std::ranges::greater_equal{},
+          "The runner overhead includes the summarizing sleeps of the unparallelizable test and the busiest thread",
+          get_grand_total(outputFile, "Runner Overhead"),
+          3 * summarizing_sleep_ms);
   }
 }

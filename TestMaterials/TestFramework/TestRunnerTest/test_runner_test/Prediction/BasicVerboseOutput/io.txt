@@ -5,6 +5,7 @@ Tests:
     Failing:
         failing_fn_test:
         [Execution Time: 57.9us]
+        [Runner Overhead: 1.28ms]
             False Positive Checks:                     1;  Failures:  1
 
             Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 172
@@ -19,6 +20,7 @@ Tests:
 
         failing_fp_test:
         [Execution Time: 56.5us]
+        [Runner Overhead: 1.39ms]
             False Negative Checks:                     1;  Failures:  1
 
             False Negative Failure:
@@ -31,6 +33,7 @@ Tests:
 
         failing_test:
         [Execution Time: 72.2us]
+        [Runner Overhead: 1.53ms]
             Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
             Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 98
@@ -47,6 +50,7 @@ Tests:
 -----------Grand Totals-----------
 [Total Run Time: 1.39ms]
 [Execution Time: 223us]
+[Runner Overhead: 1.65ms]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     1;  Failures:  1

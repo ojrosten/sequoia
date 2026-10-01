@@ -3,6 +3,7 @@ Running tests, synchronously...
 
 critical_free_test:
 [Execution Time: 207us]
+[Runner Overhead: 605us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 0]
 
 ******  Critical Failures:  1  ******
@@ -20,6 +21,7 @@ critical_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 501us]
 [Execution Time: 207us]
+[Runner Overhead: 605us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 0]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -34,10 +36,12 @@ Running tests, synchronously...
 
 critical_free_test:
 [Execution Time: 50.6us]
+[Runner Overhead: 437us]
 
 -----------Grand Totals-----------
 [Total Run Time: 330us]
 [Execution Time: 50.6us]
+[Runner Overhead: 437us]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

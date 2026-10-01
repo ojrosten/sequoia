@@ -5,15 +5,18 @@ Tests:
     Namesakes:
         namesake_test:
         [Execution Time: 67us]
+        [Runner Overhead: 558us]
             Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
         namesake_test:
             under_namesake_test:
             [Execution Time: 75.6us]
+            [Runner Overhead: 569us]
                 Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
 [Total Run Time: 881us]
 [Execution Time: 195us]
+[Runner Overhead: 650us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

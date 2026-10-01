@@ -18,6 +18,7 @@ type_swapped_predictions_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 9.58ms]
 [Execution Time: 859us]
+[Runner Overhead: 431us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

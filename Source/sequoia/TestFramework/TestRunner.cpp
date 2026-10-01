@@ -30,6 +30,7 @@
 #include <span>
 #include <format>
 #include <fstream>
+#include <functional>
 #include <utility>
 #include <variant>
 
@@ -63,7 +64,7 @@ namespace sequoia::testing
     }
 
     // Nothing escapes: the start is written outside the handler that turns a test's exceptions into critical
-    // failures, and the duration from a destructor, where a throw would end the run
+    // failures, and the times from a destructor, where a throw would end the run
     template<invocable_r<std::string_view> Text>
     void overwrite_record_quietly(const fs::path& file, Text text) noexcept
     {
@@ -120,6 +121,58 @@ namespace sequoia::testing
       {
         accelerate(thread_pool_policy{.num{8}}, weights, std::move(f));
       }
+    }
+
+    struct run_timings
+    {
+      log_summary::duration execution_time{}, runner_overhead{};
+    };
+
+    template<class Weight>
+    [[nodiscard]]
+    log_summary::duration summed_execution_time(std::span<Weight> weights)
+    {
+      auto executionTime{[](const Weight& wt){ return wt.summary.execution_time(); }};
+      return std::ranges::fold_left(
+               weights | std::views::transform(executionTime),
+               log_summary::duration{},
+               std::plus{}
+             );
+    }
+
+    /** Groups the tests by the thread which executed each, and returns the largest of the groups' summed execution
+        times.
+     */
+    template<class Weight>
+    [[nodiscard]]
+    log_summary::duration busiest_thread_execution_time(std::span<Weight> weights)
+    {
+      auto threadAndExecutionTime{
+        [](const Weight& wt){ return std::pair{wt.executing_thread, wt.summary.execution_time()}; }
+      };
+
+      auto timesByThread{
+          weights
+        | std::views::transform(threadAndExecutionTime)
+        | std::ranges::to<std::vector>()
+      };
+
+      std::ranges::sort(timesByThread);
+
+      auto sameThread{[](const auto& lhs, const auto& rhs){ return lhs.first == rhs.first; }};
+      auto threadTotal{
+        [](auto threadTimes){
+          return std::ranges::fold_left(threadTimes | std::views::values, log_summary::duration{}, std::plus{});
+        }
+      };
+
+      auto threadTotals{
+          timesByThread
+        | std::views::chunk_by(sameThread)
+        | std::views::transform(threadTotal)
+      };
+
+      return std::ranges::fold_left(threadTotals, log_summary::duration{}, std::ranges::max);
     }
 
     constexpr std::array<std::string_view, 3> materials_kinds{"WorkingCopy", "Prediction", "Auxiliary"};
@@ -721,9 +774,11 @@ namespace sequoia::testing
     }
   }
 
-  test_vessel::scoped_execution_record::scoped_execution_record(std::filesystem::path file)
+  test_vessel::scoped_execution_record::scoped_execution_record(std::filesystem::path file,
+                                                                const execution_timer& executionTimer)
     : m_File{std::move(file)}
     , m_Start{std::chrono::system_clock::now()}
+    , m_ExecutionTimer{executionTimer}
   {
     overwrite_record_quietly(m_File, [this](){ return started_at(m_Start); });
   }
@@ -732,8 +787,11 @@ namespace sequoia::testing
   {
     auto finished{
       [this](){
-        const auto elapsed{std::chrono::duration_cast<std::chrono::milliseconds>(m_Timer.time_elapsed())};
-        return started_at(m_Start) + std::format("duration {}\n", elapsed);
+        using std::chrono::microseconds, std::chrono::duration_cast;
+        return std::format("{}execution time {}us\nrunner overhead {}us\n",
+                           started_at(m_Start),
+                           duration_cast<microseconds>(m_ExecutionTimer.execution_time()).count(),
+                           duration_cast<microseconds>(m_ExecutionTimer.runner_overhead()).count());
       }
     };
 
@@ -1448,31 +1506,44 @@ namespace sequoia::testing
     // Without the flush, a run killed while the tests are silent would never show that they had begun
     stream() << running_tests_message(m_ConcurrencyMode) << std::flush;
 
-    std::optional<log_summary::duration> asyncDuration{};
+    std::optional<run_timings> concurrentTimings{};
     if(concurrent_execution())
     {
       auto first{std::ranges::find_if(m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest != std::nullopt; })};
       auto next{std::ranges::find_if(first, m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest->parallelizable(); })};
 
-      auto executor{[id](auto& wt){ wt.summary = wt.optTest->execute(id); }};
+      auto executor{
+        [id](suite_node& wt){
+          wt.summary          = wt.optTest->execute(id);
+          wt.executing_thread = std::this_thread::get_id();
+        }
+      };
+
+      std::span nonParallelizable{first, next}, parallelizable{next, m_Suites.end_node_weights()};
 
       const timer asyncTimer{};
-      std::ranges::for_each(first, next, executor);
+      std::ranges::for_each(nonParallelizable, executor);
 
       switch(m_ConcurrencyMode)
       {
         using enum concurrency_mode;
       case dynamic:
-        accelerate(sequoia::execution::par, std::span{next, m_Suites.end_node_weights()}, executor);
+        accelerate(sequoia::execution::par, parallelizable, executor);
         break;
       case fixed:
-        accelerate(thread_pool_policy{.num{m_PoolSize}}, std::span{next, m_Suites.end_node_weights()}, executor);
+        accelerate(thread_pool_policy{.num{m_PoolSize}}, parallelizable, executor);
         break;
       default:
         throw std::logic_error{"Unexpected concurrency_mode"};
       }
 
-      asyncDuration = asyncTimer.time_elapsed();
+      const auto wallClock{asyncTimer.time_elapsed()};
+
+      // The longest the tests ran one after another: those which are not parallelizable, then the busiest thread's
+      const auto executionTime{
+        summed_execution_time(nonParallelizable) + busiest_thread_execution_time(parallelizable)
+      };
+      concurrentTimings = run_timings{.execution_time{executionTime}, .runner_overhead{wallClock - executionTime}};
     }
 
     test_tracker tracker{proj_paths(), id, m_Filter.selects() ? is_filtered::yes : is_filtered::no, m_Filter.tests_left_out()};
@@ -1575,7 +1646,12 @@ namespace sequoia::testing
       traverse(depth_first, m_Suites, find_disconnected_t{}, printTest, null_func_obj{}, null_func_obj{});
     }
 
-    if(asyncDuration) m_Suites.begin_node_weights()->summary.execution_time(*asyncDuration);
+    if(concurrentTimings)
+    {
+      auto& rootSummary{m_Suites.begin_node_weights()->summary};
+      rootSummary.execution_time(concurrentTimings->execution_time);
+      rootSummary.runner_overhead(concurrentTimings->runner_overhead);
+    }
 
     stream() << "\n-----------Grand Totals-----------\n";
     stream() << summarize(root_summary(), "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);

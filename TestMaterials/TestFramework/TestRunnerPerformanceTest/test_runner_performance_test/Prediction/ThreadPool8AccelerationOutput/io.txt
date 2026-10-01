@@ -21,6 +21,7 @@ slow_test_7:
 -----------Grand Totals-----------
 [Total Run Time: 30.9ms]
 [Execution Time: 30.1ms]
+[Runner Overhead: 1.08ms]
 	Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 8]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

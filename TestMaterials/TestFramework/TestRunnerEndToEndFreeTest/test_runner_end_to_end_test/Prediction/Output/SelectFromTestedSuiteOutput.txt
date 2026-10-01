@@ -4,18 +4,24 @@ Running tests...
 Stuff:
     bar_free_test:
     [Execution Time: 14.1us]
+    [Runner Overhead: 836us]
     foo_false_negative_test:
     [Execution Time: 15.6us]
+    [Runner Overhead: 942us]
     foo_test:
     [Execution Time: 17.9us]
+    [Runner Overhead: 724us]
     oldschool_false_negative_test:
     [Execution Time: 15.8us]
+    [Runner Overhead: 874us]
     oldschool_test:
     [Execution Time: 17.8us]
+    [Runner Overhead: 909us]
 
 -----------Grand Totals-----------
 [Total Run Time: 1.14ms]
 [Execution Time: 217us]
+[Runner Overhead: 1.11ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

@@ -3,11 +3,13 @@ Running tests, synchronously...
 
 flipper_free_test:
 [Execution Time: 135us]
+[Runner Overhead: 548us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
 [Total Run Time: 301us]
 [Execution Time: 135us]
+[Runner Overhead: 548us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -19,6 +21,7 @@ Running tests, synchronously...
 
 flipper_free_test:
 [Execution Time: 54.3us]
+[Runner Overhead: 519us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 196
@@ -35,6 +38,7 @@ flipper_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 210us]
 [Execution Time: 54.3us]
+[Runner Overhead: 519us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

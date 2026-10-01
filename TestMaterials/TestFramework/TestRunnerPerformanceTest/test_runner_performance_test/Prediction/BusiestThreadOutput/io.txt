@@ -1,28 +1,20 @@
 
 Running tests...
 
-slow_test_0:
+slow_to_summarize_test_0:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-slow_test_1:
+slow_to_summarize_test_1:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-slow_test_2:
+slow_to_summarize_test_2:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-slow_test_3:
-	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-slow_test_4:
-	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-slow_test_5:
-	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-slow_test_6:
-	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
-slow_test_7:
+unparallelizable_slow_to_summarize_test:
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
-[Total Run Time: 31.1ms]
-[Execution Time: 30.2ms]
-[Runner Overhead: 1.28ms]
-	Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 8]
+[Total Run Time: 296ms]
+[Execution Time: 80.6ms]
+[Runner Overhead: 211ms]
+	Standard Top Level Checks:                 4;  Failures:  0  [Deep checks: 4]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0

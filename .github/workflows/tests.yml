@@ -761,13 +761,13 @@ jobs:
               echo "ok    no drift check, so no patch";;
           esac
 
-      # Every test writes an execution record: its start when it begins, and its duration when it finishes,
-      # whether or not its body threw. A record with no duration names a test that was executing when the run
-      # ended; such tests are listed oldest start first, since the hung test is likeliest the one that has run
-      # longest. The end-to-end test's generated project keeps records of its own. A record older than its
-      # run's stamp is from an earlier run, and is marked so. The count comes first: none, after a suite that
-      # ran, means the records were not written, or not where this step looks. The names are paths a fork's
-      # PR controls, so they are printed with workflow commands stopped.
+      # Every test writes an execution record: its start when it begins, and its execution time and the runner's
+      # overhead when it finishes, whether or not its body threw. A record with no execution time names a test that
+      # was executing when the run ended; such tests are listed oldest start first, since the hung test is likeliest
+      # the one that has run longest. The end-to-end test's generated project keeps records of its own. A record
+      # older than its run's stamp is from an earlier run, and is marked so. The count comes first: none, after a
+      # suite that ran, means the records were not written, or not where this step looks. The names are paths a
+      # fork's PR controls, so they are printed with workflow commands stopped.
       - name: Name the tests that started and never finished
         if: ${{ always() && inputs.needs_testing == 'true' }}
         env:
@@ -795,7 +795,7 @@ jobs:
             [ ! -f "$dir/run.stamp" ] || started "$dir/run.stamp"
           }
           unfinished=$(printf '%s\n' "$tests" | while IFS= read -r record; do
-                         if [ -z "$record" ] || grep -q '^duration' "$record"; then continue; fi
+                         if [ -z "$record" ] || grep -q '^execution time' "$record"; then continue; fi
                          start=$(started "$record")
                          run_start=$(start_of_run "$record")
                          if [[ -n "$run_start" && "$start" < "$run_start" ]]; then
@@ -833,14 +833,15 @@ jobs:
                   -e "s|^\([^ ]*\) $generated/output/ExecutionRecords/|  \1  generated project: |"
           echo "::$token::"
 
-      # Prints, for each check of the performance test, the Execution Time in the Grand Totals of the
-      # output the check wrote, which is the value the check asserts on. A check prints its value only
-      # when it fails, and roadmap item 38 needs the distribution, not only the tail. The time is printed
-      # with its unit, since the runner writes one of a second or more in seconds. The checks are found
-      # from the io.txt files in the working copy, so a renamed check is still printed. A column that
-      # excludes the performance tests has no working copy, and says so. A check's name is a directory
-      # name and its time is read through a filter of digits, letters, dots and plus signs, and neither
-      # begins a line, so nothing printed here can be a workflow command. A report cannot fail the job.
+      # Prints, for each check of the performance test, two times from the Grand Totals of the output the
+      # check wrote: the Execution Time, which the timing checks assert on, and the Runner Overhead. A check
+      # prints its value only when it fails, and roadmap item 38 needs the distribution, not only the
+      # tail. Each time is printed with its unit, since the runner writes one of a second or more in
+      # seconds. The checks are found from the io.txt files in the working copy, so a renamed check is
+      # still printed. A column that excludes the performance tests has no working copy, and says so. A
+      # check's name is a directory name and its times are read through a filter of digits, letters, dots
+      # and plus signs, and neither begins a line, so nothing printed here can be a workflow command. A
+      # report cannot fail the job.
       - name: Report the performance test's timings
         if: ${{ always() && inputs.needs_testing == 'true' }}
         continue-on-error: true
@@ -850,13 +851,15 @@ jobs:
             echo "no performance timings: the performance test did not run"
             exit 0
           fi
+          grand_total() { sed -n '/Grand Totals/,$p' "$1" | sed -n "s/.*$2: \([0-9.e+]*[a-z]*\)\].*/\1/p" | head -1; }
           found=0
           for file in "$dir"/*/io.txt; do
             [ -f "$file" ] || continue
             found=$((found + 1))
             check=$(basename "$(dirname "$file")")
-            time=$(sed -n '/Grand Totals/,$p' "$file" | sed -n 's/.*Execution Time: \([0-9.e+]*[a-z]*\)\].*/\1/p' | head -1)
-            echo "performance timing: $check: ${time:-unparsed}"
+            time=$(grand_total "$file" 'Execution Time')
+            overhead=$(grand_total "$file" 'Runner Overhead')
+            echo "performance timing: $check: ${time:-unparsed}, runner overhead ${overhead:-unparsed}"
           done
           [ "$found" -gt 0 ] || echo "no performance timings: the working copy holds no io.txt"
 

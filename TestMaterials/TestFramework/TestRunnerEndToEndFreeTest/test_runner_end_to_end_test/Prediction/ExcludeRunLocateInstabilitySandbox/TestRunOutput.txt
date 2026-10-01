@@ -38,6 +38,7 @@ probability_test:
 -----------Grand Totals-----------
 [Total Run Time: 15.4ms]
 [Execution Time: 11.9ms]
+[Runner Overhead: 6.9ms]
 	Standard Top Level Checks:                10;  Failures:  1  [Deep checks: 125]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -84,6 +85,7 @@ probability_test:
 -----------Grand Totals-----------
 [Total Run Time: 15.5ms]
 [Execution Time: 8.78ms]
+[Runner Overhead: 7.21ms]
 	Standard Top Level Checks:                10;  Failures:  1  [Deep checks: 125]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
