@@ -1,4 +1,4 @@
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 170
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 185
 No test: no original working copy
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ No materials root to hold 'WorkingCopy': these materials paths name no test
 
 =======================================
 
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 172
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 187
 No test: no temporary working copy
 
 Expected Exception Type:
@@ -16,7 +16,7 @@ No materials root to hold 'WorkingCopy': these materials paths name no test
 
 =======================================
 
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 174
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 189
 No test: no predictions
 
 Expected Exception Type:
@@ -25,7 +25,7 @@ No materials root to hold 'Prediction': these materials paths name no test
 
 =======================================
 
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 176
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 191
 No test: no original auxiliary
 
 Expected Exception Type:
@@ -34,7 +34,7 @@ No materials root to hold 'Auxiliary': these materials paths name no test
 
 =======================================
 
-Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 178
+Tests/TestFramework/IndividualTestPathsFreeTest.cpp, Line 193
 No test: no temporary auxiliary
 
 Expected Exception Type:

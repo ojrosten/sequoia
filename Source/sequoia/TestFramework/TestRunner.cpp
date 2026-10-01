@@ -122,23 +122,40 @@ namespace sequoia::testing
       }
     }
 
+    constexpr std::array<std::string_view, 3> materials_kinds{"WorkingCopy", "Prediction", "Auxiliary"};
+
+    constexpr auto filename_of{
+      [](const fs::directory_entry& entry) { return entry.path().filename().generic_string(); }
+    };
+
+    [[nodiscard]]
+    bool is_placeholder(std::string_view name)
+    {
+      return (name == ".keep") || (name == ".DS_Store");
+    }
+
+    /// Whether `name` is one of the kinds of material, ignoring case
+    [[nodiscard]]
+    bool is_materials_kind(std::string_view name)
+    {
+      auto isName{[name](std::string_view kind){ return ascii::same_ignoring_case(name, kind); }};
+      return std::ranges::any_of(materials_kinds, isName);
+    }
+
     /** An original materials root holds `WorkingCopy`, `Prediction` and `Auxiliary`, besides a
         `.keep` or Finder's `.DS_Store`. Anything more was committed for an older layout, and preparing
         the materials would ignore it without a word.
      */
     void throw_if_stray_materials(const individual_materials_paths& materials)
     {
-      static constexpr std::array<std::string_view, 5>
-        expected{"WorkingCopy", "Prediction", "Auxiliary", ".keep", ".DS_Store"};
-
       auto isStray{
-        [](const std::string& name) { return !std::ranges::contains(expected, name); }
+        [](const std::string& name) { return !std::ranges::contains(materials_kinds, name) && !is_placeholder(name); }
       };
 
-      const auto& root{materials.original_materials_root()};
+      const auto root{materials.original_materials_root()};
       auto strays{
           fs::directory_iterator{root}
-        | std::views::transform([](const fs::directory_entry& e) { return e.path().filename().generic_string(); })
+        | std::views::transform(filename_of)
         | std::views::filter(isStray)
         | std::ranges::to<std::vector>()
       };
@@ -151,6 +168,133 @@ namespace sequoia::testing
                       "only WorkingCopy, Prediction and Auxiliary are used",
                       root.generic_string(),
                       strays | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>())
+        };
+      }
+    }
+
+    /** Whether `name` is a name Windows reserves for a device, alone or followed immediately by an
+        extension, ignoring case. The reserved names are those listed in Microsoft's "Naming Files,
+        Paths, and Namespaces".
+     */
+    [[nodiscard]]
+    bool is_windows_device_name(std::string_view name)
+    {
+      auto stem{name.substr(0, name.find('.'))};
+
+      // The superscript digits U+00B9, U+00B2 and U+00B3 are matched in their UTF-8 encoding
+      constexpr auto portNumbers{
+        std::to_array<std::string_view>({
+          "1", "2", "3", "4", "5", "6", "7", "8", "9", "\xC2\xB9", "\xC2\xB2", "\xC2\xB3"
+        })
+      };
+
+      constexpr std::size_t portNameLength{3};
+      const auto portName{stem.substr(0, portNameLength)};
+      const bool numberedDevice{
+           (stem.size() > portNameLength)
+        && (ascii::same_ignoring_case(portName, "COM") || ascii::same_ignoring_case(portName, "LPT"))
+        && std::ranges::contains(portNumbers, stem.substr(portNameLength))
+      };
+
+      constexpr auto devices{std::to_array<std::string_view>({"CON", "PRN", "AUX", "NUL"})};
+      auto isStem{[stem](std::string_view device){ return ascii::same_ignoring_case(stem, device); }};
+      return numberedDevice || std::ranges::any_of(devices, isStem);
+    }
+
+    /** \throws std::runtime_error if one of these holds:
+                 -# The materials discriminator is not a portable name for one directory;
+                 -# The discriminator names a kind of material, ignoring case;
+                 -# The discriminator differs only in case from the name of an entry in the test's own
+                    directory.
+     */
+    void throw_if_bad_materials_discriminator(const individual_materials_paths& materials)
+    {
+      const auto& name{materials.materials_discriminator().value()};
+
+      auto failureMessage{
+        [&name](std::string_view restriction) {
+          return std::format("The materials discriminator \"{}\" must {}", name, restriction);
+        }
+      };
+
+      if(name.empty())
+        throw std::runtime_error{failureMessage("not be empty")};
+
+      if((name == ".") || (name == ".."))
+        throw std::runtime_error{failureMessage("name a directory of its own")};
+
+      constexpr std::string_view forbidden{"/\\:*?\"<>|"};
+      if(const auto pos{name.find_first_of(forbidden)}; pos != std::string::npos)
+        throw std::runtime_error{failureMessage(std::format("not contain '{}'", name[pos]))};
+
+      if(std::ranges::any_of(name, [](unsigned char c){ return c < 0x20; }))
+        throw std::runtime_error{failureMessage("not contain a control character")};
+
+      // Windows strips a trailing dot or space, so two discriminators could share one directory
+      if((name.back() == '.') || (name.back() == ' '))
+        throw std::runtime_error{failureMessage("not end in a dot or a space")};
+
+      if(is_windows_device_name(name))
+        throw std::runtime_error{failureMessage("not be a device name on Windows")};
+
+      if(is_materials_kind(name))
+        throw std::runtime_error{failureMessage("not name a kind of material")};
+
+      const auto& root{materials.original_test_root()};
+      if(!fs::exists(root))
+        return;
+
+      // A case-insensitive filesystem takes names differing only in case for the same entry
+      auto differsOnlyInCase{
+        [&name](const std::string& sibling) { return (sibling != name) && ascii::same_ignoring_case(sibling, name); }
+      };
+
+      auto caseVariants{
+          fs::directory_iterator{root}
+        | std::views::transform(filename_of)
+        | std::views::filter(differsOnlyInCase)
+        | std::ranges::to<std::vector>()
+      };
+
+      if(!caseVariants.empty())
+      {
+        std::ranges::sort(caseVariants);
+        const auto caseVariantList{
+            caseVariants
+          | std::views::join_with(std::string_view{", "})
+          | std::ranges::to<std::string>()
+        };
+
+        throw std::runtime_error{failureMessage(std::format("not differ only in case from {}", caseVariantList))};
+      }
+    }
+
+    void throw_if_materials_beside_discriminated_directories(const individual_materials_paths& materials)
+    {
+      const auto& root{materials.original_test_root()};
+      auto isIgnored{
+        [](const fs::directory_entry& entry) {
+          const auto name{filename_of(entry)};
+          return !is_placeholder(name) && (!entry.is_directory() || is_materials_kind(name));
+        }
+      };
+
+      auto ignored{
+          fs::directory_iterator{root}
+        | std::views::filter(isIgnored)
+        | std::views::transform(filename_of)
+        | std::ranges::to<std::vector>()
+      };
+
+      if(!ignored.empty())
+      {
+        std::ranges::sort(ignored);
+        throw std::runtime_error{
+          std::format("The materials in {} hold {} beside the discriminated directories, which would be ignored: "
+                      "only {} is read",
+                      root.generic_string(),
+                      ignored | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>(),
+                      materials.materials_discriminator().value())
         };
       }
     }
@@ -537,6 +681,13 @@ namespace sequoia::testing
     // admits each name once, ignoring case, and no source whose materials prefix nests with another's.
     fs::remove_all(materials.temporary_materials_root());
     fs::create_directories(materials.temporary_materials_root());
+
+    if(materials.materials_discriminator())
+    {
+      throw_if_bad_materials_discriminator(materials);
+      if(fs::exists(materials.original_test_root()))
+        throw_if_materials_beside_discriminated_directories(materials);
+    }
 
     if(!fs::exists(materials.original_materials_root()))
       return;

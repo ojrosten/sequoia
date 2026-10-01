@@ -106,6 +106,14 @@ namespace sequoia::testing
       \throws std::logic_error if `materials` names no test
       \throws std::runtime_error if the original root holds anything but `WorkingCopy`, `Prediction`
                and `Auxiliary`, besides a `.keep` or `.DS_Store`, naming what else it holds
+      \throws std::runtime_error if the test declares a materials discriminator, and one of these holds:
+               -# The discriminator is not one portable directory name;
+               -# The discriminator names a kind of material, ignoring case;
+               -# The discriminator differs only in case from the name of an entry in the test's own
+                  directory;
+               -# The test's own directory holds a directory named for a kind of material, ignoring case;
+               -# The test's own directory holds an entry which is not a directory, other than a `.keep`
+                  or a `.DS_Store`.
    */
   void prepare_materials(const individual_materials_paths& materials);
 
@@ -284,10 +292,15 @@ namespace sequoia::testing
         m_Test = Test{m_Name,
                       source,
                       projPaths,
-                      individual_materials_paths{source, m_Name, projPaths},
+                      individual_materials_paths{
+                        source,
+                        m_Name,
+                        projPaths,
+                        get_discriminator<materials_discriminator_probe, Test>(cache)
+                      },
                       make_active_recovery_paths(mode, projPaths),
-                      get_output_discriminator<Test>(cache),
-                      get_reduction_discriminator<Test>(cache)};
+                      get_discriminator<output_discriminator_probe, Test>(cache),
+                      get_discriminator<summary_discriminator_probe, Test>(cache)};
 
         m_ExecutionRecord = test_execution_record_path{source, m_Name, projPaths};
       }
@@ -352,28 +365,24 @@ namespace sequoia::testing
     parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
   };
 
-  template<concrete_test T>
+  /** \brief Calls the hook of `T` that `Probe` probes for.
+
+      \returns
+      -# The hook's result for `cache`, as a `std::string`, if `T` declares the hook;
+      -# `null_discriminator` otherwise.
+   */
+  template<template<class> class Probe, concrete_test T>
   [[nodiscard]]
-  std::optional<std::string> get_output_discriminator(const cmake_cache& cache){
-    static_assert(!requires(const T& t){ t.output_discriminator(); },
-                  "output_discriminator must be static and take const cmake_cache&: this one is neither, and would be silently ignored");
+  std::optional<std::string> get_discriminator(const cmake_cache& cache)
+  {
+    static_assert(!Probe<T>::declared_v || Probe<T>::conforming_v,
+                  "A discriminator hook must be a public static member function taking const cmake_cache& "
+                  "and returning something convertible to std::string");
 
-    if constexpr(has_discriminated_output_v<T>)
-      return T::output_discriminator(cache);
+    if constexpr(Probe<T>::conforming_v)
+      return Probe<T>::discriminator(cache);
     else
-      return std::nullopt;
-  }
-
-  template<concrete_test T>
-  [[nodiscard]]
-  std::optional<std::string> get_reduction_discriminator(const cmake_cache& cache){
-    static_assert(!requires(const T& t){ t.summary_discriminator(); },
-                  "summary_discriminator must be static and take const cmake_cache&: this one is neither, and would be silently ignored");
-
-    if constexpr(has_discriminated_summary_v<T>)
-      return T::summary_discriminator(cache);
-    else
-      return std::nullopt;
+      return null_discriminator;
   }
 
   /** \brief Consumes command-line arguments and holds all test suites.

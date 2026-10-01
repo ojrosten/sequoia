@@ -41,10 +41,10 @@ namespace sequoia::testing
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Empty file"},
-      []() { return test_summary_path{"", "foo_test", project_paths{}, std::nullopt}; }
+      []() { return test_summary_path{"", "foo_test", project_paths{}, null_discriminator}; }
     );
 
-    check(equality, "", test_summary_path{"Foo.cpp", "foo_test", project_paths{}, std::nullopt}.file_path().generic_string(), "foo_test.txt"s);
+    check(equality, "", test_summary_path{"Foo.cpp", "foo_test", project_paths{}, null_discriminator}.file_path().generic_string(), "foo_test.txt"s);
     check(equality, "", test_summary_path{"Foo.cpp", "foo_test", project_paths{}, "xyz"}.file_path().generic_string(), "foo_test_xyz.txt"s);
 
     {
@@ -53,14 +53,14 @@ namespace sequoia::testing
       check(
         equality,
         reporter{"Absolute Path"},
-        test_summary_path{working_materials() / "Tests" / "Foo.cpp", "foo_test", projPaths, std::nullopt}.file_path(),
+        test_summary_path{working_materials() / "Tests" / "Foo.cpp", "foo_test", projPaths, null_discriminator}.file_path(),
         projPaths.output().test_summaries() / "Tests" / "foo_test.txt"
       );
 
       check(
         equality,
         reporter{"Non-Absolute Path"},
-        test_summary_path{fs::path{"Tests/Foo.cpp"}, "foo_test", projPaths, std::nullopt}.file_path(),
+        test_summary_path{fs::path{"Tests/Foo.cpp"}, "foo_test", projPaths, null_discriminator}.file_path(),
         projPaths.output().test_summaries() / "Tests" / "foo_test.txt"
       );
 
@@ -151,7 +151,8 @@ namespace sequoia::testing
     commandline_arguments args{{minimal_fake_path().generic_string()}};
     const project_paths projPaths{args.size(), args.get(), {}};
 
-    const individual_materials_paths materials{projPaths.tests().repo() / "Foo" / "Bar.cpp", "bar_test", projPaths};
+    const auto source{projPaths.tests().repo() / "Foo" / "Bar.cpp"};
+    const individual_materials_paths materials{source, "bar_test", projPaths, null_discriminator};
     const auto original{projPaths.test_materials().repo() / "Foo" / "Bar" / "bar_test"},
                temporary{projPaths.output().tests_temporary_data() / "Foo" / "Bar" / "bar_test"};
 
@@ -163,7 +164,21 @@ namespace sequoia::testing
     check(equality, "Original auxiliary",        materials.original_auxiliary(),       original / "Auxiliary");
     check(equality, "Temporary auxiliary",       materials.auxiliary(),                temporary / "Auxiliary");
 
+    check(equality, "Undiscriminated: the test root is the original root", materials.original_test_root(), original);
+
+    const individual_materials_paths platypus{source, "bar_test", projPaths, "Platypus"};
+    const auto variant{original / "Platypus"};
+    check(equality, "Platypus: test root",              platypus.original_test_root(),       original);
+    check(equality, "Platypus: original root",          platypus.original_materials_root(),  variant);
+    check(equality, "Platypus: temporary root",         platypus.temporary_materials_root(), temporary);
+    check(equality, "Platypus: original working copy",  platypus.original_working(),         variant / "WorkingCopy");
+    check(equality, "Platypus: predictions",            platypus.prediction(),               variant / "Prediction");
+    check(equality, "Platypus: original auxiliary",     platypus.original_auxiliary(),       variant / "Auxiliary");
+    check(equality, "Platypus: temporary working copy", platypus.working(),                  temporary / "WorkingCopy");
+    check(equality, "Platypus: temporary auxiliary",    platypus.auxiliary(),                temporary / "Auxiliary");
+
     const individual_materials_paths none{};
+    check("No test: no test root",                none.original_test_root().empty());
     check("No test: no original materials root",  none.original_materials_root().empty());
     check("No test: no temporary materials root", none.temporary_materials_root().empty());
 
