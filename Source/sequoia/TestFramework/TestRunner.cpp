@@ -1272,9 +1272,7 @@ namespace sequoia::testing
     const scoped_terminate_handler terminationReported{report_termination};
     const debug_report_redirector debugReportRedirector{};
     const windows_crash_report_enabler windowsCrashReportEnabler{};
-    // Windows otherwise ends a sleep only on a tick of its default timer. The timer ticks about every
-    // 15.6 ms, so each sleep is rounded up to a whole number of ticks.
-    const timer_resolution resolution{std::chrono::milliseconds{1}};
+    hold_timer_resolution_of_one_millisecond();
 
     fs::create_directories(proj_paths().prune().dir());
     build_suite_tree();

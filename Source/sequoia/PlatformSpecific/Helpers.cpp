@@ -83,6 +83,13 @@ namespace sequoia
     end_request(m_Resolution);
   }
 
+  void hold_timer_resolution_of_one_millisecond()
+  {
+    // Without a request for a timer resolution, Windows ends a sleep only on a tick of its default timer.
+    // The timer ticks about every 15.6 ms, so each sleep is rounded up to a whole number of ticks.
+    static const timer_resolution resolution{std::chrono::milliseconds{1}};
+  }
+
   debug_report_redirector::debug_report_redirector()
   {
     #if defined(SEQUOIA_MSVC_DEBUG_RUNTIME)

@@ -35,6 +35,12 @@ namespace sequoia
     ~timer_resolution();
   };
 
+  /** \brief Holds a `timer_resolution` of 1 ms from the first call until the process exits.
+
+      Later calls do nothing.
+   */
+  void hold_timer_resolution_of_one_millisecond();
+
   /** \brief An RAII wrapper to redirect the assertion and error reports of MSVC's debug runtime to standard error.
 
       The runtime would otherwise show a dialog, which blocks an unattended run until someone dismisses it. A

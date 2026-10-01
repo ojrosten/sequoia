@@ -207,7 +207,7 @@ namespace sequoia::testing
   {
     using namespace std::chrono;
 
-    const timer_resolution resolution{milliseconds{1}};
+    hold_timer_resolution_of_one_millisecond();
 
     std::array<double, 7> timings{};
     for (auto& t : timings)
