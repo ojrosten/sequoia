@@ -183,7 +183,9 @@ namespace sequoia::testing
 
       // The superscript digits U+00B9, U+00B2 and U+00B3 are matched in their UTF-8 encoding
       constexpr auto portNumbers{
-        std::to_array<std::string_view>({"1", "2", "3", "4", "5", "6", "7", "8", "9", "\xC2\xB9", "\xC2\xB2", "\xC2\xB3"})
+        std::to_array<std::string_view>({
+          "1", "2", "3", "4", "5", "6", "7", "8", "9", "\xC2\xB9", "\xC2\xB2", "\xC2\xB3"
+        })
       };
 
       constexpr std::size_t portNameLength{3};

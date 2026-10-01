@@ -292,10 +292,12 @@ namespace sequoia::testing
         m_Test = Test{m_Name,
                       source,
                       projPaths,
-                      individual_materials_paths{source,
-                                                 m_Name,
-                                                 projPaths,
-                                                 get_discriminator<materials_discriminator_probe, Test>(cache)},
+                      individual_materials_paths{
+                        source,
+                        m_Name,
+                        projPaths,
+                        get_discriminator<materials_discriminator_probe, Test>(cache)
+                      },
                       make_active_recovery_paths(mode, projPaths),
                       get_discriminator<output_discriminator_probe, Test>(cache),
                       get_discriminator<summary_discriminator_probe, Test>(cache)};
