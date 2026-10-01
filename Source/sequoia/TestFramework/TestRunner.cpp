@@ -172,13 +172,16 @@ namespace sequoia::testing
       }
     }
 
+    /** Whether `name` is a name Windows reserves for a device, alone or followed immediately by an
+        extension, ignoring case. The reserved names are those listed in Microsoft's "Naming Files,
+        Paths, and Namespaces".
+     */
     [[nodiscard]]
     bool is_windows_device_name(std::string_view name)
     {
       auto stem{name.substr(0, name.find('.'))};
 
-      // Windows reads the ISO/IEC 8859-1 superscript digits U+00B9, U+00B2 and U+00B3 as port numbers.
-      // They are matched in their UTF-8 encoding.
+      // The superscript digits U+00B9, U+00B2 and U+00B3 are matched in their UTF-8 encoding
       constexpr auto portNumbers{
         std::to_array<std::string_view>({"1", "2", "3", "4", "5", "6", "7", "8", "9", "\xC2\xB9", "\xC2\xB2", "\xC2\xB3"})
       };
