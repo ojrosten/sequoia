@@ -869,9 +869,11 @@ namespace sequoia::testing
                          target ? std::format(", of target {}", *target) : std::string{});
     }
 
-    constexpr std::string_view sequoia_changed{
-      "sequoia has changed since this executable was built; please build the executable again."
-    };
+    [[nodiscard]]
+    std::string sequoia_changed_message()
+    {
+      return "sequoia has changed since this executable was built; please build the executable again.";
+    }
 
     /** The newest of sequoia's own files, as `throw_if_sequoia_changed_since_build` defines those files.
 
@@ -896,19 +898,19 @@ namespace sequoia::testing
         [&facts, &root](const compilations::record& record){ return compiled_from(record, facts, root); }
       };
 
-      // The loop times each file once, however many objects read the file. A view would need a stateful
-      // filter for that.
-      std::vector<bool> timed(files.size());
+      // The loop asks for each file's modification time once, however many objects' compilations read the file.
+      // A view would need a stateful filter for that.
+      std::vector<bool> visited(files.size());
       std::optional<sequoia_file> newest{};
       for(const auto& record : records | std::views::filter(isSequoiaObject))
       {
         const auto& object{facts[record.object_index].path};
         for(const auto i : record.input_indices | std::views::filter(isOwnFile))
         {
-          if(timed[i])
+          if(visited[i])
             continue;
 
-          timed[i] = true;
+          visited[i] = true;
 
           const auto& file{facts[i].path};
           std::error_code error{};
@@ -916,7 +918,7 @@ namespace sequoia::testing
           if(error)
             throw std::runtime_error{
               std::format("{}\n{}, {}, cannot now be read: {}\n",
-                          sequoia_changed,
+                          sequoia_changed_message(),
                           file.generic_string(),
                           read_to_compile(object, tree.build_directory),
                           error.message())
@@ -1042,7 +1044,7 @@ namespace sequoia::testing
     if(newest->time >= *executableStamp)
       throw std::runtime_error{
         std::format("{}\n{}, {}, time stamp: {}\n{}, time stamp: {}\n",
-                    sequoia_changed,
+                    sequoia_changed_message(),
                     newest->file.generic_string(),
                     read_to_compile(newest->object, tree.build_directory),
                     newest->time,
