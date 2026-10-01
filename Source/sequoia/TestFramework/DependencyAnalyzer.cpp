@@ -828,8 +828,8 @@ namespace sequoia::testing
 
   namespace
   {
-    /// One of the library's own files. `object` is the first object in the record whose compilation read the file.
-    struct library_file
+    /// One of sequoia's own files. `object` is the first object in the record whose compilation read the file.
+    struct sequoia_file
     {
       fs::path file{};
       fs::path object{};
@@ -869,38 +869,38 @@ namespace sequoia::testing
                          target ? std::format(", of target {}", *target) : std::string{});
     }
 
-    constexpr std::string_view library_changed{
-      "The library has changed since this executable was built; please build it again."
+    constexpr std::string_view sequoia_changed{
+      "sequoia has changed since this executable was built; please build it again."
     };
 
-    /** The newest of the library's own files, as `throw_if_library_changed_since_build` defines those files.
+    /** The newest of sequoia's own files, as `throw_if_sequoia_changed_since_build` defines those files.
 
         \returns
         -# The file, with the first object in the record whose compilation read the file;
-        -# `nullopt` if no object in the record has its source within `libraryRoot`.
+        -# `nullopt` if no object in the record has its source within `sequoiaSources`.
 
-        \throws std::runtime_error if this function cannot read the modification time of one of the
-        library's own files.
+        \throws std::runtime_error if this function cannot read the modification time of one of sequoia's own
+        files.
      */
     [[nodiscard]]
-    std::optional<library_file> newest_library_file(const build_tree& tree,
+    std::optional<sequoia_file> newest_sequoia_file(const build_tree& tree,
                                                     const compilations& compiled,
-                                                    const fs::path& libraryRoot)
+                                                    const fs::path& sequoiaSources)
     {
       const auto& [files, records]{compiled};
       const auto facts{recorded_files(tree, files)};
-      const auto root{weakly_canonical_or_as_given(libraryRoot)};
+      const auto root{weakly_canonical_or_as_given(sequoiaSources)};
 
       auto isOwnFile{[&facts, &root](compilations::file_index i){ return in_repo(facts[i].path, root); }};
-      auto isLibraryObject{
+      auto isSequoiaObject{
         [&facts, &root](const compilations::record& record){ return compiled_from(record, facts, root); }
       };
 
       // The loop times each file once, however many objects read the file. A view would need a stateful
       // filter for that.
       std::vector<bool> timed(files.size());
-      std::optional<library_file> newest{};
-      for(const auto& record : records | std::views::filter(isLibraryObject))
+      std::optional<sequoia_file> newest{};
+      for(const auto& record : records | std::views::filter(isSequoiaObject))
       {
         const auto& object{facts[record.object_index].path};
         for(const auto i : record.input_indices | std::views::filter(isOwnFile))
@@ -916,14 +916,14 @@ namespace sequoia::testing
           if(error)
             throw std::runtime_error{
               std::format("{}\n{}, {}, cannot now be read: {}\n",
-                          library_changed,
+                          sequoia_changed,
                           file.generic_string(),
                           read_to_compile(object, tree.build_directory),
                           error.message())
             };
 
           if(!newest || (time > newest->time))
-            newest = library_file{.file{file}, .object{object}, .time{time}};
+            newest = sequoia_file{.file{file}, .object{object}, .time{time}};
         }
       }
 
@@ -970,29 +970,29 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  fs::path sequoia_library_root()
+  fs::path sequoia_sources()
   {
-    // This file lies in TestFramework, one directory below the library's root
+    // This file lies in TestFramework, one directory below the directory of sequoia's sources
     return fs::path{std::source_location::current().file_name()}.parent_path().parent_path();
   }
 
-  void throw_if_library_changed_since_build(const project_paths& projPaths,
-                                            const fs::path& libraryRoot,
+  void throw_if_sequoia_changed_since_build(const project_paths& projPaths,
+                                            const fs::path& sequoiaSources,
                                             std::ostream& stream)
   {
     auto notChecked{
       [&stream](std::string_view reason) {
         stream << parsing::commandline::warning(
-                    std::format("Whether the library has changed since this executable was built "
+                    std::format("Whether sequoia has changed since this executable was built "
                                 "cannot be checked: {}",
                                 join_nonempty_lines(reason)))
                << '\n';
       }
     };
 
-    if(!libraryRoot.is_absolute())
+    if(!sequoiaSources.is_absolute())
     {
-      notChecked("the library was compiled from relative paths");
+      notChecked("sequoia was compiled from relative paths");
       return;
     }
 
@@ -1004,9 +1004,9 @@ namespace sequoia::testing
       return;
     }
 
-    // The walk costs one stat per entry within `libraryRoot`. The function reads the build's record only if
+    // The walk costs one stat per entry within `sequoiaSources`. The function reads the build's record only if
     // one of those entries is no older than the executable.
-    if(!anything_since(libraryRoot, *executableStamp))
+    if(!anything_since(sequoiaSources, *executableStamp))
       return;
 
     const auto build{
@@ -1031,18 +1031,18 @@ namespace sequoia::testing
     }
 
     const auto& [tree, compiled]{std::get<0>(build)};
-    const auto newest{newest_library_file(tree, compiled, libraryRoot)};
+    const auto newest{newest_sequoia_file(tree, compiled, sequoiaSources)};
     if(!newest)
     {
       notChecked(std::format("the build's record names no object compiled from within {}",
-                             libraryRoot.generic_string()));
+                             sequoiaSources.generic_string()));
       return;
     }
 
     if(newest->time >= *executableStamp)
       throw std::runtime_error{
         std::format("{}\n{}, {}, time stamp: {}\n{}, time stamp: {}\n",
-                    library_changed,
+                    sequoia_changed,
                     newest->file.generic_string(),
                     read_to_compile(newest->object, tree.build_directory),
                     newest->time,

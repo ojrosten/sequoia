@@ -103,7 +103,7 @@ namespace sequoia::testing
     static object_layout objects_of(build_system system);
 
     /// Which of the fake project's sources the build's record names, and where it says they are
-    enum class recorded_sources { all, all_but_the_tests, all_under_another_root, library_relative };
+    enum class recorded_sources { all, all_but_the_tests, all_under_another_root, sequoia_relative };
 
     void write_build_artefacts(const std::filesystem::path& fake, build_system system, recorded_sources sources);
 
@@ -116,40 +116,40 @@ namespace sequoia::testing
       std::chrono::seconds offset{};
     };
 
-    /// The outcome of the library check on the fake project: the normalised refusal, if there is one, and the warnings
-    struct library_check
+    /// The outcome of checking sequoia on the fake project: the normalised refusal, if there is one, and the warnings
+    struct sequoia_check
     {
       std::optional<std::string> refusal{};
       std::string warnings{};
     };
 
     [[nodiscard]]
-    static library_check check_library(const project_paths& projPaths, const std::filesystem::path& libraryRoot);
+    static sequoia_check check_sequoia(const project_paths& projPaths, const std::filesystem::path& sequoiaSources);
 
     [[nodiscard]]
-    static std::string normalise_library_message(const project_paths& projPaths, std::string message);
+    static std::string normalise_sequoia_message(const project_paths& projPaths, std::string message);
 
     [[nodiscard]]
-    static std::string library_refusal_message(build_system system, std::string_view file, std::string_view source);
+    static std::string sequoia_refusal_message(build_system system, std::string_view file, std::string_view source);
 
-    void check_library_change(const reporter& description,
+    void check_sequoia_change(const reporter& description,
                               const project_paths& projPaths,
                               const std::vector<timed_edit>& edits,
                               const std::optional<std::string>& refusal);
 
-    void test_library_root();
+    void test_sequoia_sources();
 
-    void test_library_change(const project_paths& projPaths, build_system system);
+    void test_sequoia_change(const project_paths& projPaths, build_system system);
 
-    void test_library_change_without_configuration(const project_paths& projPaths);
+    void test_sequoia_change_without_configuration(const project_paths& projPaths);
 
-    void test_library_file_gone(const project_paths& projPaths);
+    void test_sequoia_file_gone(const project_paths& projPaths);
 
-    void test_library_recorded_relative(const std::filesystem::path& fake, const project_paths& projPaths);
+    void test_sequoia_recorded_relative(const std::filesystem::path& fake, const project_paths& projPaths);
 
-    void test_library_change_not_checked(const project_paths& projPaths);
+    void test_sequoia_change_not_checked(const project_paths& projPaths);
 
-    void test_library_target_within_build_tree(const std::filesystem::path& fake);
+    void test_sequoia_target_within_build_tree(const std::filesystem::path& fake);
 
     static void write_or_remove(const project_paths& projPaths, const std::filesystem::path& file, const opt_prune_records& tests);
 
