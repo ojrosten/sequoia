@@ -807,7 +807,8 @@ namespace sequoia::testing
   {
     check_indent(m_CodeIndent);
 
-    // The check precedes reading the command line, which may itself write: `recover` removes the previous recovery file
+    // The check precedes reading the command line, since reading it may write: `recover` removes the previous
+    // recovery file, and `dump` writes an empty dump
     throw_if_sequoia_changed_since_build(proj_paths(), sequoia_sources(), stream);
 
     process_args(argc, argv);

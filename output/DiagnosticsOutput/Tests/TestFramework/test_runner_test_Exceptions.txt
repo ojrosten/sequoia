@@ -308,7 +308,7 @@ sequoia has changed since this executable was built; please build the executable
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 2013
+Tests/TestFramework/TestRunnerTest.cpp, Line 2015
 Comparison against a dump never kept
 
 Expected Exception Type:
@@ -317,7 +317,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 2013
+Tests/TestFramework/TestRunnerTest.cpp, Line 2015
 A dump kept under no name
 
 Expected Exception Type:
@@ -326,7 +326,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 2013
+Tests/TestFramework/TestRunnerTest.cpp, Line 2015
 Comparison against no name
 
 Expected Exception Type:

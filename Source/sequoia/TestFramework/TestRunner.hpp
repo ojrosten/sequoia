@@ -394,9 +394,10 @@ namespace sequoia::testing
   class test_runner
   {
   public:
-    /** \throws std::runtime_error if sequoia has changed since this executable was built, as
-                `throw_if_sequoia_changed_since_build` decides. The constructor checks this before it reads the
-                command line, so a refusal writes no file.
+    /** Before acting on any argument, the constructor checks whether sequoia has changed since this executable was
+        built, as `throw_if_sequoia_changed_since_build` decides. The check may write a warning to `stream`.
+
+        \throws std::runtime_error if sequoia has changed since the build. The constructor has then written no file.
      */
     test_runner(int argc,
                 char** argv,

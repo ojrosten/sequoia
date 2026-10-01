@@ -1329,7 +1329,7 @@ namespace sequoia::testing
     );
   }
 
-  /** Every command refuses to run from an executable older than one of sequoia's own files, and writes nothing.
+  /** Every command refuses to run from an executable no newer than one of sequoia's own files, and writes nothing.
 
       Each command runs in a fresh copy of the fake project, which plays a stale build. The build's record says that an
       object of sequoia's was compiled from `TestRunner.cpp`, and the fake executable is dated an hour before that file.
@@ -1337,7 +1337,7 @@ namespace sequoia::testing
   void test_runner_test::test_refusal_by_stale_executable()
   {
     // The path checker compares the final tokens of the paths, so the copy kept untouched has the same name
-    const auto staleProject{auxiliary_materials() /= "StaleProject"},
+    const auto staleProject{auxiliary_materials() / "StaleProject"},
                untouchedProject{auxiliary_materials() / "Untouched" / "StaleProject"};
     const transient_directory staleProjectRemoval{staleProject},
                               untouchedProjectRemoval{untouchedProject.parent_path()};
@@ -1663,6 +1663,7 @@ namespace sequoia::testing
     fs::create_directories(stamp.parent_path());
     write_to_file(stamp, "", std::ios_base::out);
 
+    // `run_tests` dates the fake executable a day ahead, so the files the build read are older than the executable
     using namespace std::chrono_literals;
     const auto now{std::chrono::file_clock::now()};
     fs::last_write_time(stamp, now - 2s);
@@ -1692,6 +1693,7 @@ namespace sequoia::testing
     fs::create_directories(stamp.parent_path());
     write_to_file(stamp, "", std::ios_base::out);
 
+    // `run_tests` dates the fake executable a day ahead, so the files the build read are older than the executable
     using namespace std::chrono_literals;
     const auto now{std::chrono::file_clock::now()};
     fs::last_write_time(build.toolchainHeader, now - 3s);
