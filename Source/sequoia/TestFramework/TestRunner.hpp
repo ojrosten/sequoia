@@ -17,6 +17,7 @@
 #include "sequoia/TestFramework/TestLogger.hpp"
 #include "sequoia/TestFramework/VersionedOutput.hpp"
 
+#include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 #include "sequoia/Core/Logic/Bitmask.hpp"
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
 #include "sequoia/PlatformSpecific/Helpers.hpp"
@@ -97,7 +98,39 @@ namespace sequoia::testing
   [[nodiscard]]
   int to_exit_code(return_code code) noexcept;
 
-  /** \brief Wipes a test's temporary materials root and copies its materials afresh.
+  /** \brief A directory which could not be removed, and the error which removing it gave. */
+  struct removal_failure
+  {
+    std::filesystem::path dir{};
+    std::error_code error{};
+  };
+
+  /** \brief An RAII wrapper for a thread which removes each directory passed to `queue_removal`, with everything
+             within it.
+
+      `join` returns once the thread has finished with every directory queued before the call, and returns the
+      failures. The destructor joins likewise if `join` has not been called. A directory queued after `join` is never
+      removed, and one which cannot be removed is left in place.
+   */
+  class background_directory_remover
+  {
+  public:
+    void queue_removal(std::filesystem::path dir);
+
+    [[nodiscard]]
+    std::vector<removal_failure> join();
+  private:
+    // Declared before the pool, so that the pool's thread is joined before the failures it writes are destroyed
+    std::vector<removal_failure> m_Failures{};
+
+    // A single pipeline, since only its `push` is safe to call from several threads at once
+    concurrency::thread_pool<void, false> m_Pool{1};
+  };
+
+  /** \brief Replaces a test's temporary materials root with a fresh copy of its materials.
+
+      Moves the existing temporary root to `materials.discarded_materials_root()`, and queues the discarded root's
+      removal with `remover`.
 
       The `WorkingCopy` and `Auxiliary` in the original root are copied beneath the temporary root.
       If the original root exists but holds no `WorkingCopy`, an empty `WorkingCopy` is made beneath
@@ -116,7 +149,7 @@ namespace sequoia::testing
                -# The test's own directory holds an entry which is not a directory, other than a `.keep`
                   or a `.DS_Store`.
    */
-  void prepare_materials(const individual_materials_paths& materials);
+  void prepare_materials(const individual_materials_paths& materials, background_directory_remover& remover);
 
   [[nodiscard]]
   active_recovery_files make_active_recovery_paths(recovery_mode mode, const project_paths& projPaths);
@@ -170,9 +203,9 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    log_summary execute(std::optional<std::size_t> index)
+    log_summary execute(std::optional<std::size_t> index, background_directory_remover& remover)
     {
-      return m_pTest->execute(index);
+      return m_pTest->execute(index, remover);
     }
 
     void reset()
@@ -244,7 +277,7 @@ namespace sequoia::testing
       virtual std::filesystem::path source_file() const                   = 0;
       virtual const individual_materials_paths& materials_paths() const noexcept = 0;
 
-      virtual log_summary execute(std::optional<std::size_t> index) = 0;
+      virtual log_summary execute(std::optional<std::size_t> index, background_directory_remover& remover) = 0;
       virtual void reset() = 0;
       virtual void initialize(const project_paths& projPaths, const cmake_cache& cache, recovery_mode mode) = 0;
     };
@@ -281,10 +314,10 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      log_summary execute(std::optional<std::size_t> index) final
+      log_summary execute(std::optional<std::size_t> index, background_directory_remover& remover) final
       {
         execution_timer executionTimer{};
-        auto summary{execute_and_record(index, executionTimer)};
+        auto summary{execute_and_record(index, executionTimer, remover)};
         summary.runner_overhead(executionTimer.runner_overhead());
 
         return summary;
@@ -321,13 +354,15 @@ namespace sequoia::testing
           record finishes only after this function has made the summary.
        */
       [[nodiscard]]
-      log_summary execute_and_record(std::optional<std::size_t> index, execution_timer& executionTimer)
+      log_summary execute_and_record(std::optional<std::size_t> index,
+                                     execution_timer& executionTimer,
+                                     background_directory_remover& remover)
       {
         // Also installed per test, since under MSVC each thread has its own terminate handler
         const scoped_terminate_handler terminationReported{report_termination};
         const scoped_execution_record record{m_ExecutionRecord.file_path(), executionTimer};
 
-        if(try_prepare_materials())
+        if(try_prepare_materials(remover))
           executionTimer.time_execution([this](){ try_run_tests(); });
 
         return write_output(executionTimer.execution_duration(), index);
@@ -370,11 +405,11 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      bool try_prepare_materials()
+      bool try_prepare_materials(background_directory_remover& remover)
       {
         try
         {
-          prepare_materials(m_Test.materials_paths());
+          prepare_materials(m_Test.materials_paths(), remover);
           return true;
         }
         catch(const std::exception& e)
@@ -669,6 +704,10 @@ namespace sequoia::testing
     void reset_tests();
 
     return_code run_tests(std::optional<std::size_t> id);
+
+    /** \brief Removes the discarded materials root of each test to be run, returning the failures. */
+    [[nodiscard]]
+    std::vector<removal_failure> remove_discarded_materials() const;
 
     /** The `select`/`test` options which reproduce this run's filter, for handing to a child process. */
     [[nodiscard]]

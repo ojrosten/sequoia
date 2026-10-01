@@ -31,10 +31,12 @@ namespace sequoia::testing
       -# The original root, `original_materials_root()`, is in `TestMaterials`, and holds the test's
          materials as written;
       -# The temporary root, `temporary_materials_root()`, is in `output/TestsTemporaryData`, and holds
-         what the test works with as it runs.
+         what the test works with as it runs;
+      -# The discarded root, `discarded_materials_root()`, is the temporary root's sibling, and holds the
+         temporary root of the test's previous run until that tree is removed.
 
-      Both roots mirror the path of the test's source file, less its extension, with the name of the
-      test's class as the leaf. If a materials discriminator was given, the original root is one level
+      The original and temporary roots mirror the path of the test's source file, less its extension, with the
+      name of the test's class as the leaf. If a materials discriminator was given, the original root is one level
       further down, as `original_materials_root()` describes. The temporary root has no such level.
 
       `original_working()`, `prediction()` and `original_auxiliary()` are the paths of `WorkingCopy`,
@@ -42,10 +44,10 @@ namespace sequoia::testing
       paths of `WorkingCopy` and `Auxiliary` under the temporary root. `Prediction` has no temporary
       counterpart, since the predictions are not part of the test's execution context.
 
-      A default-constructed instance names no test, and its two roots are empty.
+      A default-constructed instance names no test, and its original and temporary roots are empty.
 
-      \throws std::logic_error if a default-constructed instance is asked for the path of
-      `WorkingCopy`, `Prediction` or `Auxiliary`.
+      \throws std::logic_error if a default-constructed instance is asked for the discarded root, or
+      for the path of `WorkingCopy`, `Prediction` or `Auxiliary`.
    */
   class individual_materials_paths
   {
@@ -80,6 +82,10 @@ namespace sequoia::testing
     {
       return m_TemporaryMaterialsRoot;
     }
+
+    /** \brief The temporary root, followed by `.discarded`. */
+    [[nodiscard]]
+    std::filesystem::path discarded_materials_root() const;
 
     [[nodiscard]]
     std::filesystem::path original_working() const;
