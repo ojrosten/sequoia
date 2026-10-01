@@ -114,21 +114,22 @@ namespace sequoia::testing
       return error ? path : canonical;
     }
 
-    /** A file which the build recorded: the file's path, made canonical where possible, and whether the
-        file is the toolchain's
+    /** A file which the build recorded, and whether the file is the toolchain's. The path is the one by which
+        the analysis knows the file: the file's directory made canonical where the filesystem can resolve it,
+        and the file's own name as the compilation spelled it.
      */
     struct recorded_file
     {
-      fs::path canonical{};
+      fs::path path{};
       bool toolchain{};
     };
 
-    /** Each of `files`, made canonical and classed as the project's or the toolchain's.
+    /** Each of `files`, with its directory resolved, and classed as the project's or the toolchain's.
 
         The build records each path as the build's configuration spelled the path: through whatever
-        symlink, and in whatever case. project_paths holds canonical paths, so this function makes each
-        recorded path canonical. The canonical path and the class are both properties of the file's
-        directory, so this function asks the filesystem once per directory.
+        symlink, and in whatever case. project_paths holds canonical paths, so this function makes the
+        directory of each recorded path canonical. The directory's canonical path and the class are both
+        properties of the directory, so this function asks the filesystem once per directory.
 
         If the filesystem cannot resolve the existing prefix of a directory, the directory keeps its
         recorded spelling. A directory without permission is one cause, and a symlink loop is another.
@@ -150,8 +151,8 @@ namespace sequoia::testing
           if(const auto found{directories.find(dir)}; found != directories.end())
             return found->second;
 
-          const auto canonical{canonical_or_as_given(dir)};
-          const recorded_file facts{.canonical{canonical}, .toolchain{in_toolchain(canonical, tree)}};
+          const auto path{canonical_or_as_given(dir)};
+          const recorded_file facts{.path{path}, .toolchain{in_toolchain(path, tree)}};
           return directories.emplace(dir, facts).first->second;
         }
       };
@@ -161,7 +162,7 @@ namespace sequoia::testing
           const auto asRecorded{(p.is_absolute() ? p : tree.build_directory / p).lexically_normal()};
           const auto& directory{directoryFacts(asRecorded.parent_path())};
 
-          return recorded_file{.canonical{directory.canonical / asRecorded.filename()},
+          return recorded_file{.path{directory.path / asRecorded.filename()},
                                .toolchain{directory.toolchain}};
         }
       };
@@ -173,7 +174,7 @@ namespace sequoia::testing
     [[nodiscard]]
     bool compiled_from(const compilations::record& record, std::span<const recorded_file> files, const fs::path& dir)
     {
-      return in_repo(files[record.input_indices.front()].canonical, dir);
+      return in_repo(files[record.input_indices.front()].path, dir);
     }
 
     /** Every test class may optionally define test materials. For a test class `bar_test`, defined in
@@ -450,7 +451,7 @@ namespace sequoia::testing
           [&](compilations::file_index fileIndex) {
             auto& node{nodeOfFile[fileIndex]};
             if(!node)
-              node = g.add_node(file_info{.file{fileFactsTable[fileIndex].canonical}});
+              node = g.add_node(file_info{.file{fileFactsTable[fileIndex].path}});
 
             return *node;
           }
@@ -486,7 +487,7 @@ namespace sequoia::testing
         auto toolchainFiles{
             fileFactsTable
           | std::views::filter(&recorded_file::toolchain)
-          | std::views::transform(&recorded_file::canonical)
+          | std::views::transform(&recorded_file::path)
           | std::ranges::to<std::vector>()
         };
 
@@ -876,7 +877,7 @@ namespace sequoia::testing
       const auto facts{recorded_files(tree, files)};
       const auto root{canonical_or_as_given(libraryRoot)};
 
-      auto isOwnFile{[&facts, &root](compilations::file_index i){ return in_repo(facts[i].canonical, root); }};
+      auto isOwnFile{[&facts, &root](compilations::file_index i){ return in_repo(facts[i].path, root); }};
       auto isLibraryObject{
         [&facts, &root](const compilations::record& record){ return compiled_from(record, facts, root); }
       };
@@ -887,7 +888,7 @@ namespace sequoia::testing
       std::optional<library_file> newest{};
       for(const auto& record : records | std::views::filter(isLibraryObject))
       {
-        const auto& object{facts[record.object_index].canonical};
+        const auto& object{facts[record.object_index].path};
         for(const auto i : record.input_indices | std::views::filter(isOwnFile))
         {
           if(timed[i])
@@ -895,7 +896,7 @@ namespace sequoia::testing
 
           timed[i] = true;
 
-          const auto& file{facts[i].canonical};
+          const auto& file{facts[i].path};
           std::error_code error{};
           const auto time{fs::last_write_time(file, error)};
           if(error)
