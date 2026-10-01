@@ -13,9 +13,9 @@ name: fine
 #
 # Every column runs with `--exclude-performance`: TestRunnerPerformanceTest
 # asserts 60ms +- 35 for eight 25ms sleeps run concurrently, which a hosted
-# runner cannot hold - Windows returned 196ms and then 603ms for the same
-# commit, and Linux 164ms under ASan's slowdown on 2026-09-10 - so excluding
-# those buys back everything else.
+# runner may not hold - as wall-clock times, Windows returned 196ms and then
+# 603ms for the same commit, and Linux 164ms under ASan's slowdown on
+# 2026-09-10 - so excluding those buys back everything else.
 #
 # Every column also carries `--check-versioned-output`, spelt out per column
 # because a column's `exec_args` REPLACES the tier's rather than adding to it.

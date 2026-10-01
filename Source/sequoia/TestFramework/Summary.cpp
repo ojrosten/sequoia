@@ -26,8 +26,8 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string timing_line(std::string_view label, const log_summary::duration& d)
     {
-      const auto [time, unit]{stringify_duration(d)};
-      return std::format("[{}: {}{}]\n", label, time, unit);
+      const auto [dur, unit]{stringify_duration(d)};
+      return std::format("[{}: {}{}]\n", label, dur, unit);
     }
   }
 

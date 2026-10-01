@@ -2179,7 +2179,7 @@ namespace sequoia::testing
       record{stray_materials_free_test::source_file(), test_name<stray_materials_free_test>(), runner.proj_paths()};
 
     check(equality,
-          "A test whose materials could not be prepared has no execution duration: preparing them is overhead",
+          "A test whose materials could not be prepared has an execution duration of zero: preparing them is overhead",
           execution_record_value(record.file_path(), "execution duration"),
           std::string{"0us"});
   }

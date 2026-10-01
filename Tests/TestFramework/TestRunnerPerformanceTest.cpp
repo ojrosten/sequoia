@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <array>
 #include <charconv>
+#include <chrono>
 #include <cmath>
 #include <format>
 #include <fstream>
@@ -107,7 +108,7 @@ namespace sequoia::testing
       };
     }
 
-    /** When a test's tests began and ended running. */
+    /** When a slow test's sleep began and ended. */
     struct execution_interval
     {
       std::chrono::steady_clock::time_point start{}, end{};
@@ -126,7 +127,6 @@ namespace sequoia::testing
         }
       };
 
-      // At one instant an end, -1, sorts before a start, +1
       auto changes{
           intervals
         | std::views::transform(endpoints)
@@ -134,6 +134,7 @@ namespace sequoia::testing
         | std::ranges::to<std::vector>()
       };
 
+      // At one instant an end, -1, sorts before a start, +1
       std::ranges::sort(changes);
 
       std::ptrdiff_t overlap{}, peak{};
@@ -146,6 +147,19 @@ namespace sequoia::testing
       return peak;
     }
 
+    /** \brief A line for the run's output giving `peak`, which CI reports for every run, passing or not. */
+    [[nodiscard]]
+    std::string peak_overlap_line(std::ptrdiff_t peak)
+    {
+      return std::format("[Peak Overlap: {}]\n", peak);
+    }
+
+    /** More than half of eight threads. A test which starts only after the others have finished, delayed by its
+        execution record perhaps, lowers the peak by one, so this tolerates three such tests and still fails if half
+        the threads are lost.
+     */
+    constexpr std::ptrdiff_t eight_thread_peak_floor{5};
+
     /** Eight tests are wanted, each sleeping the same amount, so that the checks below can
         measure how the runner distributes them over threads, and how many it runs at once. They
         are eight *classes* because a test's name is synthesized from its class: a class template
@@ -153,7 +167,6 @@ namespace sequoia::testing
         these used to do - would ask two tests to share it.
      */
     constexpr std::size_t slow_test_count{8};
-
 
     class slow_test_base : public free_test
     {
@@ -204,7 +217,8 @@ namespace sequoia::testing
         check(equality, {"Integer equality"}, index, index);
       }
     private:
-      // Each test writes only its own element, and the checks read them once the run has joined its threads
+      // Each test writes only its own element, and the checks read them once execute has returned, which waits for
+      // every test
       inline static std::array<execution_interval, slow_test_count> st_ExecutionIntervals{};
     };
 
@@ -424,12 +438,17 @@ namespace sequoia::testing
     auto runner{make_slow_suite({{(minimal_fake_path()).generic_string()}}, outputStream)};
     check(equality, "Parallel acceleration return code", runner.execute(), return_code::success);
 
+    const auto peak{peak_overlap(slow_test_base::execution_intervals())};
+    outputStream << peak_overlap_line(peak);
+
     auto outputFile{check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream)};
     check(within_tolerance{35.0}, "", get_grand_total(outputFile, "Execution Time"), 60.0);
+
+    // Without parallel algorithms, the runner runs the tests on a pool of eight threads instead
     check(std::ranges::greater_equal{},
           "Tests execute at once in parallel",
-          peak_overlap(slow_test_base::execution_intervals()),
-          std::ptrdiff_t{2});
+          peak,
+          has_parallel_algorithms_v ? std::ptrdiff_t{2} : eight_thread_peak_floor);
   }
 
   void test_runner_performance_test::test_thread_pool_acceleration()
@@ -439,13 +458,15 @@ namespace sequoia::testing
       auto runner{make_slow_suite({{(minimal_fake_path()).generic_string(), "--thread-pool", "8"}}, outputStream)};
       check(equality, "Thread pool (8) return code", runner.execute(), return_code::success);
 
+      const auto peak{peak_overlap(slow_test_base::execution_intervals())};
+      outputStream << peak_overlap_line(peak);
+
       auto outputFile{check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream)};
       check(within_tolerance{30.0}, "", get_grand_total(outputFile, "Execution Time"), 55.0);
-      // One test may start after the others have finished, delayed by its execution record, without failing this
       check(std::ranges::greater_equal{},
-            "At least seven of the pool's eight threads execute tests at once",
-            peak_overlap(slow_test_base::execution_intervals()),
-            std::ptrdiff_t{7});
+            "More than half of the pool's eight threads execute tests at once",
+            peak,
+            eight_thread_peak_floor);
     }
 
     {
@@ -453,12 +474,12 @@ namespace sequoia::testing
       auto runner{make_slow_suite({{(minimal_fake_path()).generic_string(), "--thread-pool", "2"}}, outputStream)};
       check(equality, "Thread pool (2) return code", runner.execute(), return_code::success);
 
+      const auto peak{peak_overlap(slow_test_base::execution_intervals())};
+      outputStream << peak_overlap_line(peak);
+
       auto outputFile{check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream)};
       check(within_tolerance{40.0}, "", get_grand_total(outputFile, "Execution Time"), 140.0);
-      check(equality,
-            "Both threads of the pool, and no more, execute tests at once",
-            peak_overlap(slow_test_base::execution_intervals()),
-            std::ptrdiff_t{2});
+      check(equality, "Both threads of the pool, and no more, execute tests at once", peak, std::ptrdiff_t{2});
     }
   }
 
@@ -468,12 +489,12 @@ namespace sequoia::testing
     auto runner{make_slow_suite({{(minimal_fake_path()).generic_string(), "--serial"}}, outputStream)};
     check(equality, "Serial execution return code", runner.execute(), return_code::success);
 
+    const auto peak{peak_overlap(slow_test_base::execution_intervals())};
+    outputStream << peak_overlap_line(peak);
+
     auto outputFile{check_output(report({"Serial Output"}), "Serial Output", outputStream)};
     check(within_tolerance{55.0}, "", get_grand_total(outputFile, "Execution Time"), 255.0);
-    check(equality,
-          "Tests execute one at a time in a serial run",
-          peak_overlap(slow_test_base::execution_intervals()),
-          std::ptrdiff_t{1});
+    check(equality, "Tests execute one at a time in a serial run", peak, std::ptrdiff_t{1});
   }
 
   /** One test sleeps while its tests run, and again while the runner summarizes it. Its execution duration must
