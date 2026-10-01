@@ -11,8 +11,6 @@ namespace sequoia::testing
 {
   namespace
   {
-    const static auto delta_t{calibrate(std::chrono::milliseconds{5})};
-
     void wait(std::chrono::milliseconds t)
     {
       std::this_thread::sleep_for(t);
@@ -32,17 +30,19 @@ namespace sequoia::testing
 
   void performance_false_negative_diagnostics::test_relative_performance()
   {
+    const auto deltaT{calibrate(std::chrono::milliseconds{5})};
+
     check_relative_performance("Performance Test for which fast task is too slow, [1, (2.0, 2.0)",
-                               []() { wait(delta_t); },
-                               []() { wait(delta_t); }, 2.0, 2.0);
+                               [deltaT]() { wait(deltaT); },
+                               [deltaT]() { wait(deltaT); }, 2.0, 2.0);
 
     check_relative_performance("Performance Test for which fast task is too slow [1, (2.0, 3.0)",
-                               []() { wait(delta_t); },
-                               []() { wait(delta_t); }, 2.0, 3.0);
+                               [deltaT]() { wait(deltaT); },
+                               [deltaT]() { wait(deltaT); }, 2.0, 3.0);
 
     check_relative_performance("Performance Test for which fast task is too fast [4, (2.0, 2.5)]",
-      []() { wait(delta_t); },
-      []() { wait(4 * delta_t); }, 2.0, 2.5);
+                               [deltaT]() { wait(deltaT); },
+                               [deltaT]() { wait(4 * deltaT); }, 2.0, 2.5);
   }
 
   [[nodiscard]]
@@ -58,8 +58,15 @@ namespace sequoia::testing
 
   void performance_false_positive_diagnostics::test_relative_performance()
   {
-    check_relative_performance("Performance Test which should pass", []() { wait(delta_t); }, []() { wait(2 * delta_t); }, 1.8, 2.1, 5);
-    check_relative_performance("Performance Test which should pass", []() { wait(delta_t); }, []() { wait(4 * delta_t); }, 3.4, 4.1, 5);
+    const auto deltaT{calibrate(std::chrono::milliseconds{5})};
+
+    check_relative_performance("Performance Test which should pass",
+                               [deltaT]() { wait(deltaT); },
+                               [deltaT]() { wait(2 * deltaT); }, 1.8, 2.1, 5);
+
+    check_relative_performance("Performance Test which should pass",
+                               [deltaT]() { wait(deltaT); },
+                               [deltaT]() { wait(4 * deltaT); }, 3.4, 4.1, 5);
   }
 
   [[nodiscard]]

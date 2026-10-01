@@ -11,23 +11,13 @@
     \brief Platform-dependent utilities
  */
 
-#include <chrono>
-
 namespace sequoia
 {
-  class [[nodiscard]] timer_resolution
-  {
-    unsigned int m_Resolution{};
+  /** \brief Sets the timer resolution of the process to the finest that Windows offers, until the process exits.
 
-    [[nodiscard]]
-    static unsigned int resolution(std::chrono::milliseconds t) noexcept;
-  public:
-    timer_resolution() = default;
-
-    explicit timer_resolution(std::chrono::milliseconds t);
-
-    ~timer_resolution();
-  };
+      If Windows refuses, nothing changes. Later calls do nothing. On other platforms, the function does nothing.
+   */
+  void set_finest_windows_timer_resolution();
 
   /** \brief An RAII wrapper to redirect the assertion and error reports of MSVC's debug runtime to standard error.
 

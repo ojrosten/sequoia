@@ -18,7 +18,6 @@ int main(int argc, char** argv)
     using namespace sequoia;
     using namespace object;
     using namespace testing;
-    using namespace std::literals::chrono_literals;
 
     test_runner runner{argc,
                        argv,
@@ -243,7 +242,7 @@ int main(int argc, char** argv)
     runner.register_test<reset_on_move_regular_test>();
     runner.register_test<reset_on_move_false_negative_test>();
     runner.register_test<project_paths_free_test>();
-    code = runner.execute(timer_resolution{1ms});
+    code = runner.execute();
   }
   catch(const std::exception& e)
   {

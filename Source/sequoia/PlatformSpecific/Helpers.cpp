@@ -51,25 +51,52 @@ namespace sequoia
     }
   #endif
 
-  timer_resolution::timer_resolution(std::chrono::milliseconds t)
-    : m_Resolution{resolution(t)}
+  #ifdef _WIN32
+    namespace
+    {
+      /** \brief Requests the finest timer period that Windows offers.
+
+          \returns The period granted, or 0 if none was.
+       */
+      [[nodiscard]]
+      unsigned int request_finest_timer_period() noexcept
+      {
+        TIMECAPS capabilities{};
+        if(timeGetDevCaps(&capabilities, sizeof(capabilities)) != MMSYSERR_NOERROR)
+          return 0;
+
+        return timeBeginPeriod(capabilities.wPeriodMin) == TIMERR_NOERROR ? capabilities.wPeriodMin : 0;
+      }
+
+      /** \brief RAII type holding a request for the finest timer resolution that Windows offers. */
+      class [[nodiscard]] finest_timer_resolution
+      {
+      public:
+        finest_timer_resolution()
+          : m_Period{request_finest_timer_period()}
+        {}
+
+        finest_timer_resolution(const finest_timer_resolution&)            = delete;
+        finest_timer_resolution& operator=(const finest_timer_resolution&) = delete;
+
+        ~finest_timer_resolution()
+        {
+          if(m_Period > 0)
+            timeEndPeriod(m_Period);
+        }
+      private:
+        unsigned int m_Period{};
+      };
+    }
+  #endif
+
+  void set_finest_windows_timer_resolution()
   {
     #ifdef _WIN32
-      if(m_Resolution > 0) timeBeginPeriod(m_Resolution);
+      // Without a request for a timer resolution, Windows ends a sleep only on a tick of its default timer.
+      // The timer ticks about every 15.6 ms, so each sleep is rounded up to a whole number of ticks.
+      static const finest_timer_resolution resolution{};
     #endif
-  }
-
-  timer_resolution::~timer_resolution()
-  {
-    #ifdef _WIN32
-      if(m_Resolution > 0) timeEndPeriod(m_Resolution);
-    #endif
-  }
-
-  [[nodiscard]]
-  unsigned int timer_resolution::resolution(std::chrono::milliseconds t) noexcept
-  {
-    return t <= std::chrono::milliseconds{} ? 0u : static_cast<unsigned int>(t.count());
   }
 
   debug_report_redirector::debug_report_redirector()
