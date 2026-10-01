@@ -17,10 +17,8 @@
 
 #include <chrono>
 #include <format>
-#include <optional>
 #include <random>
 #include <future>
-#include <string>
 #include <thread>
 
 namespace sequoia::testing
@@ -202,10 +200,15 @@ namespace sequoia::testing
     return passed;
   }
 
-  /** \brief Returns a warning if `slept` is at least twice `target`, and otherwise returns `nullopt`. */
+  /** \brief Whether `slept`, beside `target`, indicates sleeps rounded up to a coarse timer tick. */
   [[nodiscard]]
-  std::optional<std::string> coarse_sleep_warning(std::chrono::duration<double, std::milli> slept,
-                                                  std::chrono::duration<double, std::milli> target);
+  bool is_coarse_sleep(std::chrono::duration<double, std::milli> slept,
+                       std::chrono::duration<double, std::milli> target);
+
+  /** \brief A warning that sleeps of `target` lasted `slept` or more, so timings built on sleeps are unreliable. */
+  [[nodiscard]]
+  std::string coarse_sleep_message(std::chrono::duration<double, std::milli> slept,
+                                   std::chrono::duration<double, std::milli> target);
 
   /** \brief Calibrates the duration of a sleep for timings built on sleeps.
 

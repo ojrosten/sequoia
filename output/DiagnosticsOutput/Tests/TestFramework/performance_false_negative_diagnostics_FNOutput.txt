@@ -1,24 +1,24 @@
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 37
 Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-Fast Task duration: 0.00876947s +- 4 * 2.69724e-05s
-Slow Task duration: 0.00821347s +- 4 * 0.000800415s [0.936598; (2, 2)]
+Fast Task duration: 0.00856736s +- 4 * 0.000319443s
+Slow Task duration: 0.00877256s +- 4 * 1.58453e-06s [1.02395; (2, 2)]
 
 =======================================
 
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 41
 Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-Fast Task duration: 0.00852431s +- 4 * 0.000509569s
-Slow Task duration: 0.00878501s +- 4 * 7.65671e-06s [1.03058; (2, 3)]
+Fast Task duration: 0.00841531s +- 4 * 0.000352534s
+Slow Task duration: 0.00877063s +- 4 * 2.33673e-06s [1.04222; (2, 3)]
 
 =======================================
 
 Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 45
 Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-Fast Task duration: 0.00878564s +- 4 * 1.22243e-05s
-Slow Task duration: 0.0315309s +- 4 * 0.00118608s [3.58892; (2, 2.5)]
+Fast Task duration: 0.00877204s +- 4 * 3.66073e-06s
+Slow Task duration: 0.0330036s +- 4 * 4.81791e-05s [3.76236; (2, 2.5)]
 
 =======================================
 

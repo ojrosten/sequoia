@@ -53,6 +53,6 @@ namespace sequoia::testing
 
     void test_postprocessing();
 
-    void test_coarse_sleep_warning();
+    void test_coarse_sleep();
   };
 }

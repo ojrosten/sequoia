@@ -72,12 +72,16 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::optional<std::string> coarse_sleep_warning(std::chrono::duration<double, std::milli> slept,
-                                                  std::chrono::duration<double, std::milli> target)
+  bool is_coarse_sleep(std::chrono::duration<double, std::milli> slept,
+                       std::chrono::duration<double, std::milli> target)
   {
-    if(slept < 2 * target)
-      return std::nullopt;
+    return slept >= 2 * target;
+  }
 
+  [[nodiscard]]
+  std::string coarse_sleep_message(std::chrono::duration<double, std::milli> slept,
+                                   std::chrono::duration<double, std::milli> target)
+  {
     using parsing::commandline::warning;
     return warning({std::format("Sleeps of {:.1f} ms repeatedly lasted {:.1f} ms or more, "
                                 "so timings built on sleeps are unreliable",

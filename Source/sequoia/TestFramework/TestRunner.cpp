@@ -1248,8 +1248,8 @@ namespace sequoia::testing
     auto warnIfCoarse{
       [this]() {
         constexpr std::chrono::milliseconds target{5};
-        if(const auto sleepWarning{coarse_sleep_warning(typical_sleep_duration(target), target)})
-          stream() << *sleepWarning << std::flush;
+        if(const auto typicalSleep{typical_sleep_duration(target)}; is_coarse_sleep(typicalSleep, target))
+          stream() << coarse_sleep_message(typicalSleep, target) << std::flush;
       }
     };
 
