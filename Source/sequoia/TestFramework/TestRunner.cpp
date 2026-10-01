@@ -25,7 +25,6 @@
 
 #include <algorithm>
 #include <array>
-#include <cctype>
 #include <set>
 #include <ranges>
 #include <span>
@@ -135,18 +134,11 @@ namespace sequoia::testing
       return (name == ".keep") || (name == ".DS_Store");
     }
 
-    [[nodiscard]]
-    bool same_ignoring_case(std::string_view lhs, std::string_view rhs)
-    {
-      auto sameLetter{[](unsigned char l, unsigned char r){ return std::tolower(l) == std::tolower(r); }};
-      return std::ranges::equal(lhs, rhs, sameLetter);
-    }
-
     /// Whether `name` is one of the kinds of material, ignoring case
     [[nodiscard]]
     bool is_materials_kind(std::string_view name)
     {
-      auto isName{[name](std::string_view kind){ return same_ignoring_case(name, kind); }};
+      auto isName{[name](std::string_view kind){ return ascii::same_ignoring_case(name, kind); }};
       return std::ranges::any_of(materials_kinds, isName);
     }
 
@@ -195,12 +187,12 @@ namespace sequoia::testing
       const auto portName{stem.substr(0, portNameLength)};
       const bool numberedDevice{
            (stem.size() > portNameLength)
-        && (same_ignoring_case(portName, "COM") || same_ignoring_case(portName, "LPT"))
+        && (ascii::same_ignoring_case(portName, "COM") || ascii::same_ignoring_case(portName, "LPT"))
         && std::ranges::contains(portNumbers, stem.substr(portNameLength))
       };
 
       constexpr auto devices{std::to_array<std::string_view>({"CON", "PRN", "AUX", "NUL"})};
-      auto isStem{[stem](std::string_view device){ return same_ignoring_case(stem, device); }};
+      auto isStem{[stem](std::string_view device){ return ascii::same_ignoring_case(stem, device); }};
       return numberedDevice || std::ranges::any_of(devices, isStem);
     }
 
@@ -249,7 +241,7 @@ namespace sequoia::testing
 
       // A case-insensitive filesystem takes names differing only in case for the same entry
       auto differsOnlyInCase{
-        [&name](const std::string& sibling) { return (sibling != name) && same_ignoring_case(sibling, name); }
+        [&name](const std::string& sibling) { return (sibling != name) && ascii::same_ignoring_case(sibling, name); }
       };
 
       auto caseVariants{
