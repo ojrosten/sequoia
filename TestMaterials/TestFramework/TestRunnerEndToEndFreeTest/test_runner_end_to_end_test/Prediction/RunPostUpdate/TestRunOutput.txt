@@ -2,28 +2,28 @@
 Running tests, synchronously...
 
 bar_free_test:
-[Execution Time: 99.1us]
+[Execution Time: 123us]
 foo_false_negative_test:
-[Execution Time: 113us]
+[Execution Time: 111us]
 foo_test:
-[Execution Time: 5.43ms]
+[Execution Time: 8.06ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 47]
 oldschool_false_negative_test:
-[Execution Time: 85.8us]
+[Execution Time: 111us]
 oldschool_test:
-[Execution Time: 76us]
+[Execution Time: 105us]
 container_allocation_test:
-[Execution Time: 77.3us]
+[Execution Time: 116us]
 container_performance_test:
-[Execution Time: 78.8us]
+[Execution Time: 107us]
 unique_thing_false_negative_test:
-[Execution Time: 361us]
+[Execution Time: 462us]
 	False Negative Checks:                     2;  Failures:  0
 unique_thing_test:
-[Execution Time: 1.61ms]
+[Execution Time: 1.51ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
 useful_things_free_test:
-[Execution Time: 248us]
+[Execution Time: 285us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -35,27 +35,31 @@ useful_things_free_test:
 
 	=======================================
 
+utilities_false_negative_free_diagnostics:
+[Execution Time: 111us]
+utilities_false_positive_free_diagnostics:
+[Execution Time: 105us]
 utilities_free_test:
-[Execution Time: 86.2us]
+[Execution Time: 108us]
 flipper_free_test:
-[Execution Time: 256us]
+[Execution Time: 263us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 house_allocation_test:
-[Execution Time: 103us]
+[Execution Time: 109us]
 maybe_false_negative_test:
-[Execution Time: 105us]
+[Execution Time: 107us]
 maybe_test:
-[Execution Time: 96.8us]
+[Execution Time: 106us]
 probability_false_negative_test:
-[Execution Time: 349us]
+[Execution Time: 29.2ms]
 	False Negative Checks:                     2;  Failures:  0
 probability_test:
-[Execution Time: 1.55ms]
+[Execution Time: 5.7ms]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 
 -----------Grand Totals-----------
-[Total Run Time: 13.3ms]
-[Execution Time: 10.7ms]
+[Total Run Time: 58.6ms]
+[Execution Time: 46.8ms]
 	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 127]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

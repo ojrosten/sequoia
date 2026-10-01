@@ -26,10 +26,10 @@ namespace fakeProject::testing
         void run_tests();
     };
     
-    class angle_false_negative_free_diagnostics final : public free_false_negative_test
+    class angle_false_positive_free_diagnostics final : public free_false_positive_test
     {
     public:
-        using free_false_negative_test::free_false_negative_test;
+        using free_false_positive_test::free_false_positive_test;
 
         [[nodiscard]]
         static std::filesystem::path source_file();
