@@ -149,6 +149,8 @@ namespace sequoia::testing
 
     void test_library_change_not_checked(const project_paths& projPaths);
 
+    void test_library_target_within_build_tree(const std::filesystem::path& fake);
+
     static void write_or_remove(const project_paths& projPaths, const std::filesystem::path& file, const opt_prune_records& tests);
 
     static void write_or_remove(const project_paths& projPaths, const std::filesystem::path& failureFile, const std::filesystem::path& passesFile, const test_outcomes& d);

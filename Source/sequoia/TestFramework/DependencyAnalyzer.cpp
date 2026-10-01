@@ -827,22 +827,30 @@ namespace sequoia::testing
       fs::file_time_type time{};
     };
 
-    /// The target which `object` belongs to, if any. CMake puts a target's objects within `<target>.dir`.
+    /** The target which `object` belongs to, if any. CMake puts a target's objects within a directory
+        `<target>.dir` of the build tree. The target is the first such directory on the path of `object`
+        within `buildDirectory`.
+     */
     [[nodiscard]]
-    std::optional<std::string> target_of(const fs::path& object)
+    std::optional<std::string> target_of(const fs::path& object, const fs::path& buildDirectory)
     {
+      const auto canonicalBuildDirectory{canonical_or_as_given(buildDirectory)};
+      if(!in_repo(object, canonicalBuildDirectory))
+        return std::nullopt;
+
+      const auto withinBuild{object.lexically_relative(canonicalBuildDirectory)};
       auto isTargetDirectory{[](const fs::path& p){ return p.extension() == ".dir"; }};
-      const auto targetDirectory{std::ranges::find_if(object, isTargetDirectory)};
-      if(targetDirectory == object.end())
+      const auto targetDirectory{std::ranges::find_if(withinBuild, isTargetDirectory)};
+      if(targetDirectory == withinBuild.end())
         return std::nullopt;
 
       return targetDirectory->stem().string();
     }
 
     [[nodiscard]]
-    std::string read_to_compile(const fs::path& object)
+    std::string read_to_compile(const fs::path& object, const fs::path& buildDirectory)
     {
-      const auto target{target_of(object)};
+      const auto target{target_of(object, buildDirectory)};
       return std::format("read to compile {}{}",
                          object.generic_string(),
                          target ? std::format(", of target {}", *target) : std::string{});
@@ -896,7 +904,7 @@ namespace sequoia::testing
               std::format("{}\n{}, {}, cannot now be read: {}\n",
                           library_changed,
                           file.generic_string(),
-                          read_to_compile(object),
+                          read_to_compile(object, tree.build_directory),
                           error.message())
             };
 
@@ -1023,7 +1031,7 @@ namespace sequoia::testing
         std::format("{}\n{}, {}, time stamp: {}\n{}, time stamp: {}\n",
                     library_changed,
                     newest->file.generic_string(),
-                    read_to_compile(newest->object),
+                    read_to_compile(newest->object, tree.build_directory),
                     newest->time,
                     projPaths.executable().generic_string(),
                     *executableStamp)

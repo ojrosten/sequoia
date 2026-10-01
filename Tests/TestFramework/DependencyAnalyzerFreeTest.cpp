@@ -500,6 +500,7 @@ namespace sequoia::testing
     test_library_file_gone(projPaths);
     test_library_recorded_relative(fake, projPaths);
     test_library_change_not_checked(projPaths);
+    test_library_target_within_build_tree(fake);
 
     // The same build, as ninja records it when the compiler is MSVC, and as Visual Studio's tracker would have recorded it
     write_build_artefacts(fake, build_system::ninja_with_msvc, recorded_sources::all);
@@ -968,6 +969,34 @@ namespace sequoia::testing
             warningFor(library),
             std::format("{}the executable cannot be found\n", notCheckedPreface));
     }
+  }
+
+  /** CMake puts a target's objects within a directory `<target>.dir` of the build tree. A copy of the fake project
+      lies within `Projects.dir`, so a directory above the copy's build tree has a name of that form too. The refusal
+      still names the target `TestAll`.
+   */
+  void dependency_analyzer_free_test::test_library_target_within_build_tree(const fs::path& fake)
+  {
+    const auto copy{fake.parent_path() / "Projects.dir" / "FakeProject"};
+    fs::remove_all(copy.parent_path());
+    fs::create_directories(copy.parent_path());
+    fs::copy(fake, copy, fs::copy_options::recursive);
+    write_build_artefacts(copy, build_system::ninja, recorded_sources::all);
+
+    for(const auto& entry : fs::recursive_directory_iterator(copy))
+    {
+      fs::last_write_time(entry.path(), m_ResetTime);
+    }
+
+    const main_paths main{copy / main_paths::default_main_cpp_from_root()};
+    commandline_arguments args{{(copy / "build/CMade/TestAll/TestAll").generic_string()}};
+    const project_paths copyPaths{args.size(), args.get(), {.main_cpp{main.file()}, .common_includes{main.file()}}};
+    fs::last_write_time(copyPaths.executable(), m_ResetTime + lateExecutableOffset);
+
+    check_library_change("A directory above the build tree, whose name ends in .dir",
+                         copyPaths,
+                         {{copyPaths.source().project() / "Stuff" / "FooDefinitions.cpp", lateEditOffset}},
+                         library_refusal_message(build_system::ninja, fooDefinitionsSource, fooDefinitionsSource));
   }
 
   void dependency_analyzer_free_test::test_dependencies(const project_paths& projPaths)
