@@ -130,7 +130,7 @@ namespace sequoia::testing
   void dump_comparison_free_test::test_report()
   {
     auto checkReport{
-      [this](std::string_view description, std::string_view report, std::string_view fileName) {
+      [this](const reporter& description, std::string_view report, std::string_view fileName) {
         write_to_file(working_materials() /= fileName, report, std::ios_base::out);
         check(equivalence, description, working_materials() /= fileName, predictive_materials() /= fileName);
       }

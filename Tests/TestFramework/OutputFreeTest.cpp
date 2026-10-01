@@ -164,7 +164,7 @@ namespace sequoia::testing
                                     afterEmptyCheck {.via_exception{false}, .message{""}};
 
     auto checkMessage{
-      [this](std::string_view description, std::string_view message, std::string_view fileName) {
+      [this](const reporter& description, std::string_view message, std::string_view fileName) {
         write_to_file(working_materials() /= fileName, message, std::ios_base::out);
         check(equivalence, description, working_materials() /= fileName, predictive_materials() /= fileName);
       }
