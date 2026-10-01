@@ -12,6 +12,8 @@
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 
+#include <array>
+
 namespace sequoia::testing
 {
   class dependency_analyzer_free_test final : public free_test
@@ -92,15 +94,40 @@ namespace sequoia::testing
 
     enum class build_system { ninja, ninja_with_msvc, visual_studio };
 
-    /// The directory, relative to the fake build tree, in which the fake build puts its objects, and their extension
+    /** A target of the fake build: its name, and the directory of its sources relative to the fake project's root.
+        TestAll's directory is empty. CMake builds every other target within a directory of the build tree named after
+        the target.
+     */
+    struct fake_target
+    {
+      std::string_view name{}, source_directory{};
+    };
+
+    /// The fake build's targets. The first, TestAll, compiles every source which no other target compiles.
+    const static std::array<fake_target, 4> st_FakeTargets;
+
+    /// The target which compiles `source`, a path relative to the fake project's root
+    [[nodiscard]]
+    static const fake_target& target_compiling(std::string_view source);
+
+    /** The directory, relative to the fake build tree, in which the fake build puts a target's objects, and the
+        objects' extension
+     */
     struct object_layout
     {
       std::filesystem::path directory{};
       std::string_view extension{};
     };
 
+    /// A Visual Studio build keeps the objects of each configuration apart; a Ninja build ignores `configuration`
     [[nodiscard]]
-    static object_layout objects_of(build_system system);
+    static object_layout objects_of(build_system system, const fake_target& target, std::string_view configuration);
+
+    /// The object, relative to the fake build tree, which the fake build compiles from `source`
+    [[nodiscard]]
+    static std::filesystem::path object_compiled_from(build_system system,
+                                                      std::string_view source,
+                                                      std::string_view configuration);
 
     /// Which of the fake project's sources the build's record names, and where it says they are
     enum class recorded_sources { all, all_but_the_tests, all_under_another_root, sources_relative };
