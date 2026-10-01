@@ -766,10 +766,12 @@ namespace sequoia::testing
           fs::weakly_canonical(get_project_paths().source().project()));
   }
 
-  /** The normalised refusal of the fake build by `system`, naming `file` as read to compile the object of `source` */
-  std::string dependency_analyzer_free_test::library_refusal(build_system system,
-                                                             std::string_view file,
-                                                             std::string_view source)
+  /** The normalised message of a refusal for the fake build by `system`. The message names `file` as a file which the
+      compilation of the object of `source` read.
+   */
+  std::string dependency_analyzer_free_test::library_refusal_message(build_system system,
+                                                                     std::string_view file,
+                                                                     std::string_view source)
   {
     const auto [objectDirectory, objectExtension]{objects_of(system)};
     const auto executable{
@@ -803,7 +805,7 @@ namespace sequoia::testing
     const auto definitions{library / "Stuff" / "FooDefinitions.cpp"};
     const auto helper     {library / "Maths" / "Helper.hpp"};
     const auto testsOnly  {library / "Stuff" / "Bar.hpp"};
-    const auto anotherLibrarys{
+    const auto anotherLibrarysHeader{
       projPaths.project_root() / "dependencies" / "foo" / "Source" / "foo" / "Utilities" / "Helper.hpp"
     };
 
@@ -815,33 +817,35 @@ namespace sequoia::testing
     check_library_change("A source of the library's, edited since the build",
                          projPaths,
                          {{definitions, lateEditOffset}},
-                         library_refusal(system, fooDefinitionsSource, fooDefinitionsSource));
+                         library_refusal_message(system, fooDefinitionsSource, fooDefinitionsSource));
 
     check_library_change("A header the library reads, edited since the build: named with the first object to read it",
                          projPaths,
                          {{helper, lateEditOffset}},
-                         library_refusal(system,
-                                         "Source/fakeProject/Maths/Helper.hpp",
-                                         "Source/fakeProject/Maths/Helper.cpp"));
+                         library_refusal_message(system,
+                                                 "Source/fakeProject/Maths/Helper.hpp",
+                                                 "Source/fakeProject/Maths/Helper.cpp"));
 
     check_library_change("Of two edits since the build, the header's is the later",
                          projPaths,
                          {{definitions, latePassOffset}, {helper, lateEditOffset}},
-                         library_refusal(system,
-                                         "Source/fakeProject/Maths/Helper.hpp",
-                                         "Source/fakeProject/Maths/Helper.cpp"));
+                         library_refusal_message(system,
+                                                 "Source/fakeProject/Maths/Helper.hpp",
+                                                 "Source/fakeProject/Maths/Helper.cpp"));
 
     check_library_change("Of two edits since the build, the source's is the later",
                          projPaths,
                          {{helper, latePassOffset}, {definitions, lateEditOffset}},
-                         library_refusal(system, fooDefinitionsSource, fooDefinitionsSource));
+                         library_refusal_message(system, fooDefinitionsSource, fooDefinitionsSource));
 
     // A file of the library's is newer than the executable, so the check reads the record. The record then decides.
     check_library_change("A header of the library's which only the tests read",
                          projPaths, {{testsOnly, lateEditOffset}}, std::nullopt);
 
     check_library_change("A header of another library's, which the library reads, with the record read",
-                         projPaths, {{testsOnly, latePassOffset}, {anotherLibrarys, lateEditOffset}}, std::nullopt);
+                         projPaths,
+                         {{testsOnly, latePassOffset}, {anotherLibrarysHeader, lateEditOffset}},
+                         std::nullopt);
 
     check_library_change("A test's source",
                          projPaths,
@@ -902,7 +906,7 @@ namespace sequoia::testing
     check_library_change("A source of the library's, recorded relative to the build, edited since the build",
                          projPaths,
                          {{projPaths.source().project() / "Stuff" / "FooDefinitions.cpp", lateEditOffset}},
-                         library_refusal(build_system::ninja, fooDefinitionsSource, fooDefinitionsSource));
+                         library_refusal_message(build_system::ninja, fooDefinitionsSource, fooDefinitionsSource));
 
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
   }

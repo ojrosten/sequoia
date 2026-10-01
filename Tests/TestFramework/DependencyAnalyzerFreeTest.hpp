@@ -130,7 +130,7 @@ namespace sequoia::testing
     static std::string normalise_library_message(const project_paths& projPaths, std::string message);
 
     [[nodiscard]]
-    static std::string library_refusal(build_system system, std::string_view file, std::string_view source);
+    static std::string library_refusal_message(build_system system, std::string_view file, std::string_view source);
 
     void check_library_change(const reporter& description,
                               const project_paths& projPaths,
