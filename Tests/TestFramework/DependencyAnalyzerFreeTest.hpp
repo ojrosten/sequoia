@@ -134,12 +134,15 @@ namespace sequoia::testing
 
     void check_sequoia_change(const reporter& description,
                               const project_paths& projPaths,
+                              const std::filesystem::path& sequoiaSources,
                               const std::vector<timed_edit>& edits,
                               const std::optional<std::string>& refusal);
 
     void test_sequoia_sources();
 
     void test_sequoia_change(const project_paths& projPaths, build_system system);
+
+    void test_sequoia_change_in_client(const project_paths& projPaths, build_system system);
 
     void test_sequoia_change_without_configuration(const project_paths& projPaths);
 

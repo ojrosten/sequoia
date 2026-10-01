@@ -512,6 +512,7 @@ namespace sequoia::testing
     test_dependencies(projPaths);
     test_sequoia_sources();
     test_sequoia_change(projPaths, build_system::ninja);
+    test_sequoia_change_in_client(projPaths, build_system::ninja);
     test_sequoia_file_gone(projPaths);
     test_sequoia_recorded_relative(fake, projPaths);
     test_sequoia_change_not_checked(projPaths);
@@ -521,6 +522,7 @@ namespace sequoia::testing
     write_build_artefacts(fake, build_system::ninja_with_msvc, recorded_sources::all);
     test_dependencies(projPaths);
     test_sequoia_change(projPaths, build_system::ninja_with_msvc);
+    test_sequoia_change_in_client(projPaths, build_system::ninja_with_msvc);
 
     // Visual Studio is multi-config, so the analyzer reads the record of the executable's configuration. An
     // executable lying directly within the build tree has no configuration.
@@ -539,6 +541,7 @@ namespace sequoia::testing
     fs::last_write_time(visualStudioPrunePaths.stamp(), m_ResetTime + pruneStampOffset);
     test_dependencies(visualStudioPaths);
     test_sequoia_change(visualStudioPaths, build_system::visual_studio);
+    test_sequoia_change_in_client(visualStudioPaths, build_system::visual_studio);
 
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
     test_stamp_on_second_boundary(projPaths);
@@ -752,6 +755,7 @@ namespace sequoia::testing
 
   void dependency_analyzer_free_test::check_sequoia_change(const reporter& description,
                                                            const project_paths& projPaths,
+                                                           const fs::path& sequoiaSources,
                                                            const std::vector<timed_edit>& edits,
                                                            const std::optional<std::string>& refusal)
   {
@@ -761,7 +765,7 @@ namespace sequoia::testing
       modifications.emplace_back(file, m_ResetTime + offset);
     }
 
-    const auto [obtainedRefusal, warnings]{check_sequoia(projPaths, projPaths.source().project())};
+    const auto [obtainedRefusal, warnings]{check_sequoia(projPaths, sequoiaSources)};
     check(equality, description, obtainedRefusal, refusal);
     check(equality, append_lines(description.message(), "No warning"), warnings, std::string{});
   }
@@ -812,18 +816,20 @@ namespace sequoia::testing
       projPaths.project_root() / "dependencies" / "foo" / "Source" / "foo" / "Utilities" / "Helper.hpp"
     };
 
-    check_sequoia_change("Nothing edited since the build", projPaths, {}, std::nullopt);
+    check_sequoia_change("Nothing edited since the build", projPaths, sequoiaSources, {}, std::nullopt);
 
     check_sequoia_change("A source of sequoia's, edited before the build",
-                         projPaths, {{definitions, earlyEditOffset}}, std::nullopt);
+                         projPaths, sequoiaSources, {{definitions, earlyEditOffset}}, std::nullopt);
 
     check_sequoia_change("A source of sequoia's, edited since the build",
                          projPaths,
+                         sequoiaSources,
                          {{definitions, lateEditOffset}},
                          sequoia_refusal_message(system, fooDefinitionsSource, fooDefinitionsSource));
 
     check_sequoia_change("A header sequoia reads, edited since the build: named with the first object to read it",
                          projPaths,
+                         sequoiaSources,
                          {{helper, lateEditOffset}},
                          sequoia_refusal_message(system,
                                                  "Source/fakeProject/Maths/Helper.hpp",
@@ -831,6 +837,7 @@ namespace sequoia::testing
 
     check_sequoia_change("Of two edits since the build, the header's is the later",
                          projPaths,
+                         sequoiaSources,
                          {{definitions, latePassOffset}, {helper, lateEditOffset}},
                          sequoia_refusal_message(system,
                                                  "Source/fakeProject/Maths/Helper.hpp",
@@ -838,21 +845,64 @@ namespace sequoia::testing
 
     check_sequoia_change("Of two edits since the build, the source's is the later",
                          projPaths,
+                         sequoiaSources,
                          {{helper, latePassOffset}, {definitions, lateEditOffset}},
                          sequoia_refusal_message(system, fooDefinitionsSource, fooDefinitionsSource));
 
     // A file of sequoia's is newer than the executable, so the check reads the record. The record then decides.
     check_sequoia_change("A header of sequoia's which only the tests read",
-                         projPaths, {{testsOnly, lateEditOffset}}, std::nullopt);
+                         projPaths, sequoiaSources, {{testsOnly, lateEditOffset}}, std::nullopt);
 
     check_sequoia_change("A header of another library's, which sequoia reads, with the record read",
                          projPaths,
+                         sequoiaSources,
                          {{testsOnly, latePassOffset}, {anotherLibrarysHeader, lateEditOffset}},
                          std::nullopt);
 
     check_sequoia_change("A test's source",
                          projPaths,
+                         sequoiaSources,
                          {{projPaths.tests().repo() / "Stuff" / "FooTest.cpp", lateEditOffset}},
+                         std::nullopt);
+  }
+
+  /** A client's build, as in a project which `init` created: the fake project plays the client, and its dependency
+      `foo`, which the client's build compiles, plays the client's copy of sequoia. So sequoia's sources are foo's,
+      and the client's own sources and tests are not sequoia's.
+   */
+  void dependency_analyzer_free_test::test_sequoia_change_in_client(const project_paths& projPaths, build_system system)
+  {
+    fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
+
+    constexpr std::string_view fooHelperSource{"dependencies/foo/Source/foo/Utilities/Helper.cpp"};
+    constexpr std::string_view fooHelperHeader{"dependencies/foo/Source/foo/Utilities/Helper.hpp"};
+
+    const auto& projectRoot  {projPaths.project_root()};
+    const auto sequoiaSources{projectRoot / "dependencies" / "foo" / "Source" / "foo"};
+
+    check_sequoia_change("A client: nothing edited since the build", projPaths, sequoiaSources, {}, std::nullopt);
+
+    check_sequoia_change("A client: a source of sequoia's, edited since the build",
+                         projPaths,
+                         sequoiaSources,
+                         {{projectRoot / fooHelperSource, lateEditOffset}},
+                         sequoia_refusal_message(system, fooHelperSource, fooHelperSource));
+
+    // The client's Probability.cpp reads the header first, but its object is not sequoia's
+    check_sequoia_change("A client: a header of sequoia's, edited since the build: named with sequoia's first object "
+                         "to read it",
+                         projPaths,
+                         sequoiaSources,
+                         {{projectRoot / fooHelperHeader, lateEditOffset}},
+                         sequoia_refusal_message(system, fooHelperHeader, fooHelperSource));
+
+    // The directory of sequoia's sources is newer than the executable, so the check reads the record
+    check_sequoia_change("A client: the client's own source and test, edited since the build, with the record read",
+                         projPaths,
+                         sequoiaSources,
+                         {{sequoiaSources, latePassOffset},
+                          {projectRoot / fooDefinitionsSource, lateEditOffset},
+                          {projPaths.tests().repo() / "Stuff" / "FooTest.cpp", lateEditOffset}},
                          std::nullopt);
   }
 
@@ -908,6 +958,7 @@ namespace sequoia::testing
 
     check_sequoia_change("A source of sequoia's, recorded relative to the build, edited since the build",
                          projPaths,
+                         projPaths.source().project(),
                          {{projPaths.project_root() / fooDefinitionsSource, lateEditOffset}},
                          sequoia_refusal_message(build_system::ninja, fooDefinitionsSource, fooDefinitionsSource));
 
@@ -933,8 +984,8 @@ namespace sequoia::testing
 
     // If the check throws, the lambda returns the refusal in place of the warnings, so that a failure shows it
     auto warningFor{
-      [&projPaths](const fs::path& sequoiaSources) {
-        const auto [refusal, warnings]{check_sequoia(projPaths, sequoiaSources)};
+      [&projPaths](const fs::path& checkedSources) {
+        const auto [refusal, warnings]{check_sequoia(projPaths, checkedSources)};
         return refusal ? *refusal : warnings;
       }
     };
@@ -999,6 +1050,7 @@ namespace sequoia::testing
 
     check_sequoia_change("A directory above the build tree, whose name ends in .dir",
                          relocatedPaths,
+                         relocatedPaths.source().project(),
                          {{relocated / fooDefinitionsSource, lateEditOffset}},
                          sequoia_refusal_message(build_system::ninja, fooDefinitionsSource, fooDefinitionsSource));
 
