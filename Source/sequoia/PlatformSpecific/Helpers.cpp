@@ -8,8 +8,6 @@
 #include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/PlatformSpecific/Macros.hpp"
 
-#include "sequoia/Maths/Arithmetic/ArithmeticCasts.hpp"
-
 #ifdef _WIN32
   #include "Windows.h"
 #endif
@@ -53,41 +51,52 @@ namespace sequoia
     }
   #endif
 
-  namespace
+  #ifdef _WIN32
+    namespace
+    {
+      /** \brief Requests the finest timer period that Windows offers.
+
+          \returns The period granted, or 0 if none was.
+       */
+      [[nodiscard]]
+      unsigned int request_finest_timer_period() noexcept
+      {
+        TIMECAPS capabilities{};
+        if(timeGetDevCaps(&capabilities, sizeof(capabilities)) != MMSYSERR_NOERROR)
+          return 0;
+
+        return timeBeginPeriod(capabilities.wPeriodMin) == TIMERR_NOERROR ? capabilities.wPeriodMin : 0;
+      }
+
+      /** \brief RAII type holding a request for the finest timer resolution that Windows offers. */
+      class [[nodiscard]] finest_timer_resolution
+      {
+      public:
+        finest_timer_resolution()
+          : m_Period{request_finest_timer_period()}
+        {}
+
+        finest_timer_resolution(const finest_timer_resolution&)            = delete;
+        finest_timer_resolution& operator=(const finest_timer_resolution&) = delete;
+
+        ~finest_timer_resolution()
+        {
+          if(m_Period > 0)
+            timeEndPeriod(m_Period);
+        }
+      private:
+        unsigned int m_Period{};
+      };
+    }
+  #endif
+
+  void set_finest_windows_timer_resolution()
   {
     #ifdef _WIN32
-      [[nodiscard]]
-      unsigned int request(unsigned int resolution) noexcept
-      {
-        return timeBeginPeriod(resolution) == TIMERR_NOERROR ? resolution : 0;
-      }
-
-      void end_request(unsigned int resolution) noexcept
-      {
-        if(resolution > 0) timeEndPeriod(resolution);
-      }
-    #else
-      [[nodiscard]]
-      unsigned int request(unsigned int) noexcept { return 0; }
-
-      void end_request(unsigned int) noexcept {}
+      // Without a request for a timer resolution, Windows ends a sleep only on a tick of its default timer.
+      // The timer ticks about every 15.6 ms, so each sleep is rounded up to a whole number of ticks.
+      static const finest_timer_resolution resolution{};
     #endif
-  }
-
-  timer_resolution::timer_resolution(std::chrono::milliseconds t)
-    : m_Resolution{request(maths::checked_conversion_to<unsigned int>(t.count()))}
-  {}
-
-  timer_resolution::~timer_resolution()
-  {
-    end_request(m_Resolution);
-  }
-
-  void hold_timer_resolution_of_one_millisecond()
-  {
-    // Without a request for a timer resolution, Windows ends a sleep only on a tick of its default timer.
-    // The timer ticks about every 15.6 ms, so each sleep is rounded up to a whole number of ticks.
-    static const timer_resolution resolution{std::chrono::milliseconds{1}};
   }
 
   debug_report_redirector::debug_report_redirector()

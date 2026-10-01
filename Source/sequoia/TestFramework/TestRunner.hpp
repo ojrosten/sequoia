@@ -466,8 +466,8 @@ namespace sequoia::testing
 
         `report_termination` is the terminate handler for the run, and for each test on the thread running it. Under
         MSVC's debug runtime, reports are redirected as `debug_report_redirector` describes, and under Windows a
-        crash reaches Windows Error Reporting, as `windows_crash_report_enabler` describes. The tests run under a
-        `timer_resolution` of 1 ms, as `hold_timer_resolution_of_one_millisecond` describes.
+        crash reaches Windows Error Reporting, as `windows_crash_report_enabler` describes. On Windows, the tests
+        run under the finest timer resolution, as `set_finest_windows_timer_resolution` describes.
      */
     [[nodiscard]]
     return_code execute();

@@ -11,35 +11,13 @@
     \brief Platform-dependent utilities
  */
 
-#include <chrono>
-
 namespace sequoia
 {
-  /** \brief RAII type holding a request to Windows for a timer resolution.
+  /** \brief Sets the timer resolution of the process to the finest that Windows offers, until the process exits.
 
-      A request Windows refuses, such as a request for 0 ms, is not held. Nothing is requested on
-      other platforms.
-
-      \throws std::domain_error if the resolution in milliseconds is outside the range of
-              `unsigned int`. The check is made on every platform.
+      If Windows refuses, nothing changes. Later calls do nothing. On other platforms, the function does nothing.
    */
-  class [[nodiscard]] timer_resolution
-  {
-    unsigned int m_Resolution{};
-  public:
-    explicit timer_resolution(std::chrono::milliseconds t);
-
-    timer_resolution(const timer_resolution&)            = delete;
-    timer_resolution& operator=(const timer_resolution&) = delete;
-
-    ~timer_resolution();
-  };
-
-  /** \brief Holds a `timer_resolution` of 1 ms from the first call until the process exits.
-
-      Later calls do nothing.
-   */
-  void hold_timer_resolution_of_one_millisecond();
+  void set_finest_windows_timer_resolution();
 
   /** \brief An RAII wrapper to redirect the assertion and error reports of MSVC's debug runtime to standard error.
 
