@@ -1605,11 +1605,10 @@ namespace sequoia::testing
     }
 
     {
-      // A directory where the records are first written, so that writing them fails. The name of that path is the
-      // implementation's choice, which this pins.
+      // The records are written first to <file>.partial, a name this pins. A read-only file there, holding other
+      // records, cannot be opened to write them, but could be renamed over the file if the failure went unseen.
       const transient_file previous{file, "path: HouseAllocationTest.cpp\ntimestamp: 0\n"};
-      const transient_directory blocking{fs::path{file} += ".partial"};
-      fs::create_directories(blocking.path());
+      const read_only_file stale{fs::path{file} += ".partial", "path: Maths/ProbabilityTest.cpp\ntimestamp: 0\n"};
 
       check_exception_thrown<std::runtime_error>(
         "Prune records which cannot be written",
@@ -1622,8 +1621,9 @@ namespace sequoia::testing
     }
 
     {
-      // A directory at the file's path, over which the written records cannot be renamed
-      const transient_directory blocking{file};
+      // A directory at the file's path, over which the written records cannot be renamed. They stay in
+      // <file>.partial, which is removed on leaving the scope.
+      const transient_directory blocking{file}, leftover{fs::path{file} += ".partial"};
       fs::create_directories(blocking.path());
 
       check_exception_thrown<std::runtime_error>(
