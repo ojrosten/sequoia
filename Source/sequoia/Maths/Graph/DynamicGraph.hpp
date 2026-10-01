@@ -112,7 +112,9 @@ namespace sequoia::maths
 
     template<alloc EdgePartitionsAllocator>
       requires (allocatable_partitions<edge_storage_type> && primitive_type::copy_constructible_v)
-    graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
+    graph_base(const graph_base& in,
+               const edge_allocator_type& edgeAllocator,
+               const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{in, edgeAllocator, edgePartitionsAllocator}
     {}
 
@@ -124,7 +126,9 @@ namespace sequoia::maths
 
     template<alloc EdgePartitionsAllocator>
       requires allocatable_partitions<edge_storage_type>
-    graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
+    graph_base(graph_base&& in,
+               const edge_allocator_type& edgeAllocator,
+               const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{std::move(in), edgeAllocator, edgePartitionsAllocator}
     {}
 
@@ -234,25 +238,35 @@ namespace sequoia::maths
       : primitive_type{tree, tdc}
     {}
 
-    graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const node_weight_allocator_type& nodeWeightAllocator)
+    graph_base(const graph_base& in,
+               const edge_allocator_type& edgeAllocator,
+               const node_weight_allocator_type& nodeWeightAllocator)
       requires primitive_type::copy_constructible_v
       : primitive_type{in, edgeAllocator, nodeWeightAllocator}
     {}
 
     template<alloc EdgePartitionsAllocator>
       requires (allocatable_partitions<edge_storage_type> && primitive_type::copy_constructible_v)
-    graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
+    graph_base(const graph_base& in,
+               const edge_allocator_type& edgeAllocator,
+               const EdgePartitionsAllocator& edgePartitionsAllocator,
+               const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{in, edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator}
     {}
 
 
-    graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const node_weight_allocator_type& nodeWeightAllocator)
+    graph_base(graph_base&& in,
+               const edge_allocator_type& edgeAllocator,
+               const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{std::move(in), edgeAllocator, nodeWeightAllocator}
     {}
 
     template<alloc EdgePartitionsAllocator>
       requires allocatable_partitions<edge_storage_type>
-    graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
+    graph_base(graph_base&& in,
+               const edge_allocator_type& edgeAllocator,
+               const EdgePartitionsAllocator& edgePartitionsAllocator,
+               const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{std::move(in), edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator}
     {}
 

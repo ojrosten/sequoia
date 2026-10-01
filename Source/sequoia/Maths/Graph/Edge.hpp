@@ -114,7 +114,8 @@ namespace sequoia
       constexpr weighting& operator=(const weighting& other)
         requires is_deep_copy_constructible_v<weight_type>
       {
-        if(&other != this) m_Weight = WeightHandler::producer_type::make(WeightHandler::get(other.m_Weight));
+        if(&other != this)
+          m_Weight = WeightHandler::producer_type::make(WeightHandler::get(other.m_Weight));
         return *this;
       }
 

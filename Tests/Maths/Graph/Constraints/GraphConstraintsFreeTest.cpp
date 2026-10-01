@@ -49,7 +49,9 @@ namespace sequoia::testing
 
       move_only_weight() = default;
 
-      explicit move_only_weight(int v) : value{v} {}
+      explicit move_only_weight(int v)
+        : value{v}
+      {}
 
       move_only_weight(move_only_weight&&) noexcept = default;
 
@@ -67,7 +69,9 @@ namespace sequoia::testing
 
       move_only_meta_data() = default;
 
-      explicit move_only_meta_data(int v) : value{v} {}
+      explicit move_only_meta_data(int v)
+        : value{v}
+      {}
 
       move_only_meta_data(move_only_meta_data&&) noexcept = default;
 
@@ -221,6 +225,9 @@ namespace sequoia::testing
     using move_only_vector_node_graph = directed_graph<null_weight, move_only_weight_vector>;
     using move_only_vector_heterogeneous_graph
       = heterogeneous_directed_graph<0, 1, null_weight, move_only_weight_vector>;
+    using non_assignable_node_graph = directed_graph<null_weight, non_assignable_value>;
+    using non_assignable_meta_data_graph
+      = static_embedded_graph<1, 2, null_weight, null_weight, non_assignable_value>;
 
     // A move-only edge weight, whether the halves of an edge hold it independently or share it
     STATIC_CHECK(!std::is_copy_constructible_v<unshared_move_only_graph>);
@@ -244,10 +251,10 @@ namespace sequoia::testing
                                           move_only_node_graph::node_weight_allocator_type>);
 
     // A value that can be copy-constructed but not assigned, as a node weight and as a static graph's edge meta-data
-    STATIC_CHECK( std::is_copy_constructible_v<directed_graph<null_weight, non_assignable_value>>);
-    STATIC_CHECK(!std::is_copy_assignable_v<directed_graph<null_weight, non_assignable_value>>);
-    STATIC_CHECK( std::is_copy_constructible_v<static_embedded_graph<1, 2, null_weight, null_weight, non_assignable_value>>);
-    STATIC_CHECK(!std::is_copy_assignable_v<static_embedded_graph<1, 2, null_weight, null_weight, non_assignable_value>>);
+    STATIC_CHECK( std::is_copy_constructible_v<non_assignable_node_graph>);
+    STATIC_CHECK(!std::is_copy_assignable_v<non_assignable_node_graph>);
+    STATIC_CHECK( std::is_copy_constructible_v<non_assignable_meta_data_graph>);
+    STATIC_CHECK(!std::is_copy_assignable_v<non_assignable_meta_data_graph>);
 
     // Trees and static graphs are copied as graphs are
     STATIC_CHECK(!std::is_copy_constructible_v<move_only_tree>);
@@ -399,7 +406,7 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    const auto describe{
+    auto describe{
       [](std::string_view graphKind, std::string_view outcome) {
         return std::format("Mutate edge weight in {} with {}: {}",
                            graphKind,
@@ -408,7 +415,7 @@ namespace sequoia::testing
       }
     };
 
-    const auto replaceWithSeven{
+    auto replaceWithSeven{
       [](copyable_weight& w) { return std::exchange(w.value, 7); }
     };
 
@@ -428,7 +435,7 @@ namespace sequoia::testing
 
       {
         graph_type g{graph};
-        const auto returnList{[](copyable_weight&) { return std::vector<std::any>{1, 2, 3}; }};
+        auto returnList{[](copyable_weight&) { return std::vector<std::any>{1, 2, 3}; }};
         check(equality,
               describe("an undirected graph", "returns a result with an initializer-list constructor unchanged"),
               g.mutate_edge_weight(g.cbegin_edges(0), returnList).size(),
@@ -526,7 +533,7 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    const auto checkCopy{
+    auto checkCopy{
       [this]<class Graph>(std::string_view description, const Graph& graph) {
         const Graph copy{graph};
         check(equality, std::format("{}: the copy is equal", description), copy, graph);
