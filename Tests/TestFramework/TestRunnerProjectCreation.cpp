@@ -29,6 +29,8 @@ namespace sequoia::testing
 
   void test_runner_project_creation::run_tests()
   {
+    date_after_every_edit(zeroth_arg());
+
     test_exceptions();
     test_project_creation();
     test_init_failures();

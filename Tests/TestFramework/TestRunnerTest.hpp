@@ -33,6 +33,8 @@ namespace sequoia::testing
 
     void test_exceptions();
 
+    void test_refusal_by_stale_executable();
+
     void test_critical_errors();
 
     void test_filtered_suites();

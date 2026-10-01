@@ -7,6 +7,7 @@
 
 #include "BasicTestInterfaceFreeTest.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "Utilities/TestUtilities.hpp"
 
 #include "sequoia/TestFramework/FreeTestCore.hpp"
 #include "sequoia/TestFramework/TestRunner.hpp"
@@ -60,6 +61,8 @@ namespace sequoia::testing
 
   void basic_test_interface_free_test::run_tests()
   {
+    date_after_every_edit(minimal_fake_path());
+
     commandline_arguments args{{(minimal_fake_path()).generic_string()}};
 
     std::stringstream outputStream{};

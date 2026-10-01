@@ -7,6 +7,7 @@
 
 #include "TestRunnerPerformanceTest.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "Utilities/TestUtilities.hpp"
 
 #include "sequoia/TestFramework/TestRunner.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
@@ -240,6 +241,8 @@ namespace sequoia::testing
 
   void test_runner_performance_test::run_tests()
   {
+    date_after_every_edit(minimal_fake_path());
+
     test_parallel_acceleration();
     test_thread_pool_acceleration();
     test_serial_execution();

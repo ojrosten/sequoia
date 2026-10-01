@@ -15,6 +15,7 @@
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 
+#include <chrono>
 #include <filesystem>
 #include <format>
 #include <string>
@@ -27,6 +28,18 @@ namespace sequoia::testing
   {
     replace_all(message, projPaths.project_root().generic_string() + "/", "");
     return message;
+  }
+
+  /** \brief Sets the modification time of `executable` to a decade from now, later than any edit made while the
+             tests run.
+
+      A runner refuses to start from an executable older than one of sequoia's own files. prune refuses to analyse a
+      build whose executable is older than a file the build read. A fake executable dated by this function passes
+      both checks, whatever is edited while the tests run.
+   */
+  inline void date_after_every_edit(const std::filesystem::path& executable)
+  {
+    std::filesystem::last_write_time(executable, std::chrono::file_clock::now() + std::chrono::years{10});
   }
 
   /** \brief A file with the given contents, which exists for precisely the lifetime of the object. */

@@ -11,6 +11,8 @@
 #include "Utilities/TestUtilities.hpp"
 #include "TestFramework/BuildArtefactsTestingUtilities.hpp"
 
+#include "sequoia/TestFramework/DependencyAnalyzer.hpp"
+
 #include <fstream>
 
 namespace sequoia::testing
@@ -926,8 +928,11 @@ namespace sequoia::testing
 
   void test_runner_test::run_tests()
   {
+    date_after_every_edit(minimal_fake_path());
+
     test_discriminator_hooks();
     test_exceptions();
+    test_refusal_by_stale_executable();
     test_critical_errors();
     test_basic_output();
     test_help_output();
@@ -1324,6 +1329,94 @@ namespace sequoia::testing
     );
   }
 
+  /** Every command refuses to run from an executable older than one of sequoia's own files, and writes nothing.
+
+      Each command runs in a fresh copy of the fake project, which plays a stale build. The build's record says that an
+      object of sequoia's was compiled from `TestRunner.cpp`, and the fake executable is dated an hour before that file.
+   */
+  void test_runner_test::test_refusal_by_stale_executable()
+  {
+    // The path checker compares the final tokens of the paths, so the copy kept untouched has the same name
+    const auto staleProject{auxiliary_materials() /= "StaleProject"},
+               untouchedProject{auxiliary_materials() / "Untouched" / "StaleProject"};
+    const transient_directory staleProjectRemoval{staleProject},
+                              untouchedProjectRemoval{untouchedProject.parent_path()};
+
+    auto writeStaleProject{
+      [this](const fs::path& root) {
+        fs::create_directories(root.parent_path());
+        fs::copy(fake_project(), root, fs::copy_options::recursive);
+
+        const auto buildDir{root / "build" / "CMade"};
+        const auto sequoiaSource{sequoia_sources() / "TestFramework" / "TestRunner.cpp"};
+        const fs::path sequoiaObject{"CMakeFiles/sequoia.dir/TestFramework/TestRunner.cpp.o"};
+        write_to_file(buildDir / "build.ninja",
+                      std::format("build {}: CXX_COMPILER {}\n",
+                                  sequoiaObject.generic_string(),
+                                  sequoiaSource.generic_string()),
+                      std::ios_base::out);
+        write_ninja_deps(buildDir / ".ninja_deps", std::vector<compilation_record>{{sequoiaObject, {sequoiaSource}}});
+        fs::last_write_time(buildDir / "FakeExe.txt", fs::last_write_time(sequoiaSource) - std::chrono::hours{1});
+
+        // `recover` removes the previous run's recovery file as the command line is read
+        const auto recoveryFile{output_paths{root}.recovery().recovery_file()};
+        fs::create_directories(recoveryFile.parent_path());
+        write_to_file(recoveryFile, "The last check of a previous run\n", std::ios_base::out);
+      }
+    };
+
+    writeStaleProject(untouchedProject);
+
+    std::string message{};
+    auto keepFirstLine{
+      [&message](const project_paths&, std::string thrown) {
+        message = thrown;
+        return thrown.substr(0, thrown.find('\n'));
+      }
+    };
+
+    auto refused{
+      [&](std::string_view description, std::initializer_list<std::string> commandLine) {
+        fs::remove_all(staleProject);
+        writeStaleProject(staleProject);
+
+        const auto argList{
+          [&]() {
+            std::vector<std::string> list{(staleProject / "build" / "CMade" / "FakeExe.txt").generic_string()};
+            list.append_range(commandLine);
+            return list;
+          }()
+        };
+
+        commandline_arguments args{argList};
+        std::stringstream outputStream{};
+        message.clear();
+        check_exception_thrown<std::runtime_error>(
+          reporter{description},
+          [&args, &outputStream]() { return make_fake_runner(args, outputStream).execute(); },
+          keepFirstLine
+        );
+
+        check(std::format("{}: the refusal is sequoia's", description),
+              message.starts_with("sequoia has changed since this executable was built"));
+        check(equivalence, std::format("{}: nothing is written", description), staleProject, untouchedProject);
+      }
+    };
+
+    refused("A plain run", {});
+    refused("A run of a suite", {"test", "Failing"});
+    refused("A run of a selected source", {"select", "FooTest.cpp"});
+    refused("prune", {"prune"});
+    refused("locate-instabilities", {"locate", "2"});
+    refused("recover", {"recover"});
+    refused("dump", {"dump"});
+    refused("create", {"create", "free_test", "TestShared/SharedIncludes.hpp"});
+    refused("init",
+            {"init", "Oliver Jacob Rosten", (staleProject / "GeneratedProject").generic_string(), "  ",
+             "--no-build", "--no-git"});
+    refused("help", {"--help"});
+  }
+
   void test_runner_test::test_critical_errors()
   {
     std::stringstream outputStream{};
@@ -1570,14 +1663,11 @@ namespace sequoia::testing
     fs::create_directories(stamp.parent_path());
     write_to_file(stamp, "", std::ios_base::out);
 
-    // Both files the build read are stamped strictly before the executable: where last_write_time
-    // resolves to whole seconds, a file written in the same second as the executable is out of date
     using namespace std::chrono_literals;
     const auto now{std::chrono::file_clock::now()};
     fs::last_write_time(stamp, now - 2s);
     fs::last_write_time(build.source, now - 1s);
     fs::last_write_time(build.toolchainHeader, now - 1s);
-    fs::last_write_time(projPaths.executable(), now);
 
     std::stringstream outputStream{};
     auto runner{make_fake_runner(args, outputStream)};
@@ -1607,7 +1697,6 @@ namespace sequoia::testing
     fs::last_write_time(build.toolchainHeader, now - 3s);
     fs::last_write_time(stamp, now - 2s);
     fs::last_write_time(build.source, now - 1s);
-    fs::last_write_time(projPaths.executable(), now);
 
     std::stringstream outputStream{};
     auto runner{make_fake_runner(args, outputStream)};
