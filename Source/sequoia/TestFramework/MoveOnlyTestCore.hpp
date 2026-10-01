@@ -61,8 +61,8 @@ namespace sequoia::testing
                std::forward<T>(y),
                xEquivalent,
                yEquivalent,
-               optional_ref<const V>{movedFromPostConstruction},
-               optional_ref<const V>{movedFromPostAssignment}
+               opt_ref<const V>{movedFromPostConstruction},
+               opt_ref<const V>{movedFromPostAssignment}
              );
     }
 
@@ -82,8 +82,8 @@ namespace sequoia::testing
                std::forward<T>(y),
                xEquivalent,
                yEquivalent,
-               optional_ref<const U>{},
-               optional_ref<const U>{}
+               opt_ref<const U>{},
+               opt_ref<const U>{}
              );
     }
 
@@ -151,8 +151,8 @@ namespace sequoia::testing
                std::forward<T>(y),
                xEquivalent,
                yEquivalent,
-               optional_ref<const V>{movedFromPostConstruction},
-               optional_ref<const V>{movedFromPostAssignment},
+               opt_ref<const V>{movedFromPostConstruction},
+               opt_ref<const V>{movedFromPostAssignment},
                order
              );
     }
@@ -179,8 +179,8 @@ namespace sequoia::testing
                std::forward<T>(y),
                xEquivalent,
                yEquivalent,
-               optional_ref<const U>{},
-               optional_ref<const U>{},
+               opt_ref<const U>{},
+               opt_ref<const U>{},
                order
              );
     }

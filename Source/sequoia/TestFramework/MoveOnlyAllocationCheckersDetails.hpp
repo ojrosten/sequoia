@@ -92,8 +92,8 @@ namespace sequoia::testing::impl
                        T&& y,
                        const U& xEquivalent,
                        const U& yEquivalent,
-                       optional_ref<const U> movedFromPostConstruction,
-                       optional_ref<const U> movedFromPostAssignment,
+                       opt_ref<const U> movedFromPostConstruction,
+                       opt_ref<const U> movedFromPostAssignment,
                        Mutator m,
                        const allocation_info<T, Getters>&... info)
   {
@@ -131,8 +131,8 @@ namespace sequoia::testing::impl
                                  const Actions& actions,
                                  xMaker xFn,
                                  yMaker yFn,
-                                 optional_ref<const T> movedFromPostConstruction,
-                                 optional_ref<const T> movedFromPostAssignment,
+                                 opt_ref<const T> movedFromPostConstruction,
+                                 opt_ref<const T> movedFromPostAssignment,
                                  Mutator m,
                                  const allocation_info<T, Getters>&... info)
   {
@@ -156,8 +156,8 @@ namespace sequoia::testing::impl
                        T&& y,
                        const U& xEquivalent,
                        const U& yEquivalent,
-                       optional_ref<const U> movedFromPostConstruction,
-                       optional_ref<const U> movedFromPostAssignment,
+                       opt_ref<const U> movedFromPostConstruction,
+                       opt_ref<const U> movedFromPostAssignment,
                        Mutator m,
                        const std::tuple<dual_allocation_checker<T, Getters>...>& checkers)
   {

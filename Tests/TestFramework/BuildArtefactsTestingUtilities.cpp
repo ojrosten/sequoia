@@ -13,7 +13,6 @@
 
 #include "sequoia/TextProcessing/Characters.hpp"
 
-#include <algorithm>
 #include <cstdint>
 #include <fstream>
 #include <map>
@@ -41,7 +40,10 @@ namespace sequoia::testing
     auto spelledOut{
       [&c](const compilations::record& record) {
         auto file{[&c](compilations::file_index i){ return c.files.at(i); }};
-        return compilation_record{.object{file(record.object_index)}, .inputs{record.input_indices | std::views::transform(file) | std::ranges::to<std::vector>()}};
+        return compilation_record{
+                 .object{file(record.object_index)},
+                 .inputs{record.input_indices | std::views::transform(file) | std::ranges::to<std::vector>()}
+               };
       }
     };
 
@@ -53,15 +55,6 @@ namespace sequoia::testing
     void write_word(std::ostream& out, std::uint32_t word)
     {
       out.write(reinterpret_cast<const char*>(&word), sizeof(word));
-    }
-
-    void write_utf16le(std::ostream& out, std::u16string_view text)
-    {
-      for(const char16_t unit : text)
-      {
-        out.put(static_cast<char>(unit & 0xFF));
-        out.put(static_cast<char>(unit >> 8));
-      }
     }
   }
 
@@ -122,44 +115,70 @@ namespace sequoia::testing
     }
   }
 
-  /* UTF-16 with a byte order mark, a `^`-led line naming the source and the files it read beneath
-     it, all in upper case.
+  [[nodiscard]]
+  std::u16string to_tracker_spelling(const fs::path& p)
+  {
+    return ascii::to_uppercase(p.u16string());
+  }
+
+  [[nodiscard]]
+  std::u16string tracker_line(const fs::path& file)
+  {
+    return to_tracker_spelling(file) + u"\r\n";
+  }
+
+  [[nodiscard]]
+  std::u16string tracker_sources_line(std::initializer_list<fs::path> sources)
+  {
+    auto spelling{[](const fs::path& source){ return to_tracker_spelling(source); }};
+    const auto spellings{
+        sources
+      | std::views::transform(spelling)
+      | std::views::join_with(u'|')
+      | std::ranges::to<std::u16string>()
+    };
+
+    return u"^" + spellings + u"\r\n";
+  }
+
+  void write_tlog(const fs::path& log, std::u16string_view text)
+  {
+    std::ofstream out{log, std::ios_base::binary};
+    if(!out)
+      throw std::runtime_error{"Unable to write tracker log " + log.generic_string()};
+
+    out.write("\xFF\xFE", 2);
+    for(const char16_t unit : text)
+    {
+      out.put(static_cast<char>(unit & 0xFF));
+      out.put(static_cast<char>(unit >> 8));
+    }
+  }
+
+  /* The read log and the write log both have a line naming the first input of each record with inputs. Beneath it,
+     the read log lists the other inputs and the write log lists the object.
    */
   void write_tlogs(const fs::path& tlogDir, std::span<const compilation_record> records)
   {
-    fs::create_directories(tlogDir);
-    std::ofstream read{tlogDir / "CL.read.1.tlog", std::ios_base::binary}, write{tlogDir / "CL.write.1.tlog", std::ios_base::binary};
-    if(!read || !write)
-      throw std::runtime_error{"Unable to write tracking logs in " + tlogDir.generic_string()};
-
-    auto upper{
-      [](const fs::path& p) {
-        auto s{p.u16string()};
-        std::ranges::transform(s, s.begin(), [](char16_t c){ return (c < 0x80) ? static_cast<char16_t>(to_uppercase(static_cast<char>(c))) : c; });
-        return s;
-      }
-    };
-
-    for(auto& out : {&read, &write})
-    {
-      out->write("\xFF\xFE", 2);
-    }
-
+    std::u16string read{}, write{};
     for(const auto& record : records)
     {
       if(record.inputs.empty())
         continue;
 
-      const auto source{u"^" + upper(record.inputs.front()) + u"\r\n"};
+      const auto source{tracker_sources_line({record.inputs.front()})};
 
-      write_utf16le(read, source);
+      read.append(source);
       for(const auto& input : record.inputs | std::views::drop(1))
       {
-        write_utf16le(read, upper(input) + u"\r\n");
+        read.append(tracker_line(input));
       }
 
-      write_utf16le(write, source);
-      write_utf16le(write, upper(record.object) + u"\r\n");
+      write.append(source).append(tracker_line(record.object));
     }
+
+    fs::create_directories(tlogDir);
+    write_tlog(tlogDir / "CL.read.1.tlog",  read);
+    write_tlog(tlogDir / "CL.write.1.tlog", write);
   }
 }
