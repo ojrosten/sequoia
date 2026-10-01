@@ -85,6 +85,73 @@ namespace sequoia::testing
     private:
       std::jthread m_Pusher;
     };
+
+    /** \brief A queue which signals the first time it is found empty.
+
+        \pre At most one signal is unawaited at a time, across every instance.
+     */
+    class wait_signalling_queue
+    {
+    public:
+      static void await_found_empty() { st_FoundEmpty.acquire(); }
+
+      void push(int_task&& task) { m_Q.push(std::move(task)); }
+
+      [[nodiscard]]
+      bool empty()
+      {
+        const bool isEmpty{m_Q.empty()};
+        if(isEmpty && !std::exchange(m_HasSignalled, true))
+        {
+          st_FoundEmpty.release();
+        }
+
+        return isEmpty;
+      }
+
+      [[nodiscard]]
+      int_task& front() { return m_Q.front(); }
+
+      void pop() { m_Q.pop(); }
+    private:
+      // The semaphore is static: a task_queue default-constructs its queue and gives no access to the queue
+      inline static std::binary_semaphore st_FoundEmpty{0};
+
+      std::queue<int_task> m_Q;
+      bool m_HasSignalled{};
+    };
+
+    // A blocking pop from a task_queue holds the mutex from finding the queue empty until the pop waits. So once a
+    // pop from a wait_signalling_task_queue has signalled, a push can take the mutex only after the pop has begun
+    // waiting.
+    using wait_signalling_task_queue = task_queue<int, int_task, wait_signalling_queue>;
+
+    /** \brief An RAII wrapper to pop a task from a `wait_signalling_task_queue` on another thread.
+
+        The constructor returns once the pop has found the queue empty. The destructor finishes the queue, so that a
+        pop still waiting returns, then waits for the pop to return.
+     */
+    class waiting_pop
+    {
+    public:
+      explicit waiting_pop(wait_signalling_task_queue& q)
+        : m_Queue{q}
+        , m_Pop{std::async(std::launch::async, [&q](){ return q.pop(); })}
+      {
+        wait_signalling_queue::await_found_empty();
+      }
+
+      waiting_pop(const waiting_pop&)            = delete;
+      waiting_pop& operator=(const waiting_pop&) = delete;
+
+      ~waiting_pop() { m_Queue.finish(); }
+
+      [[nodiscard]]
+      int_task wait_for_task() { return m_Pop.get(); }
+    private:
+      wait_signalling_task_queue& m_Queue;
+      std::future<int_task> m_Pop;
+    };
   }
 
   [[nodiscard]]
@@ -98,6 +165,7 @@ namespace sequoia::testing
     test_task_queue();
     test_try_lock_successes();
     test_try_lock_failures();
+    test_pushes_wake_a_waiting_pop();
 
     test_exceptions<thread_pool<void>>("pool_2M", 2u);
     test_exceptions<thread_pool<void, false>>("pool_2", 2u);
@@ -227,6 +295,36 @@ namespace sequoia::testing
 
     check(equality, "The stalled push queues its task", stalledFuture.get(), 1);
     check(equality, "The refused task runs once pushed again", refusedFuture.get(), 2);
+  }
+
+  void threading_models_test::test_pushes_wake_a_waiting_pop()
+  {
+    // A push which does not wake the waiting pop leaves wait_for_task blocked, so the test hangs rather than fails
+    {
+      wait_signalling_task_queue q{};
+      waiting_pop waitingPop{q};
+
+      int_task pushedTask{[](){ return 1; }};
+      auto pushedFuture{pushedTask.get_future()};
+      q.push(std::move(pushedTask));
+
+      waitingPop.wait_for_task()();
+      check(equality, "The waiting pop yields the pushed task", pushedFuture.get(), 1);
+    }
+
+    {
+      wait_signalling_task_queue q{};
+      waiting_pop waitingPop{q};
+
+      int_task tryPushedTask{[](){ return 2; }};
+      auto tryPushedFuture{tryPushedTask.get_future()};
+
+      // The try-push fails until the pop waits, and may also fail spuriously
+      while(!q.push(std::move(tryPushedTask), std::try_to_lock)) {}
+
+      waitingPop.wait_for_task()();
+      check(equality, "The waiting pop yields the try-pushed task", tryPushedFuture.get(), 2);
+    }
   }
 
   template<class ThreadModel, class... Args>

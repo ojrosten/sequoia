@@ -32,6 +32,8 @@ namespace sequoia::testing
 
     void test_try_lock_failures();
 
+    void test_pushes_wake_a_waiting_pop();
+
     template<class ThreadModel, class... Args>
     void test_exceptions(std::string_view message, Args&&... args);
 
