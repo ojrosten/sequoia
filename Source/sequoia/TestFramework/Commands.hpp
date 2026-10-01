@@ -20,6 +20,12 @@
 
 namespace sequoia::testing
 {
+  /** \brief The command line `cmake --preset <preset>`, in which `<preset>` is the final component of
+             the cmake cache directory of `buildPaths`.
+   */
+  [[nodiscard]]
+  std::string cmake_invocation(const build_paths& buildPaths);
+
   /** \brief Configures a project, optionally overriding a cache variable.
 
       \param buildPaths     The project to configure. The preset is the final component of the

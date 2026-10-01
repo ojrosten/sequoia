@@ -8,6 +8,7 @@
 #include "TestRunnerTestCreation.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
+#include "Utilities/TestUtilities.hpp"
 
 #include "sequoia/TestFramework/TestCreator.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
@@ -277,14 +278,14 @@ namespace sequoia::testing
     check_directory(projectName, "TestSandbox");
     check_directory(projectName, "TestShared");
 
-    test_foreign_source_dir_refusal(projectName, sourceFolder, cmakeCacheDir / "CMakeCache.txt", fakeMain);
+    test_cmake_rerun_failures(projectName, sourceFolder, cmakeCacheDir / "CMakeCache.txt", fakeMain);
     record_cmake_source_dir(cmakeCacheDir / "CMakeCache.txt", cmakeSourceDir);
   }
 
-  void test_runner_test_creation::test_foreign_source_dir_refusal(std::string_view projectName,
-                                                                 const std::optional<std::string>& sourceFolder,
-                                                                 const std::filesystem::path& cacheFile,
-                                                                 const main_paths& fakeMain)
+  void test_runner_test_creation::test_cmake_rerun_failures(std::string_view projectName,
+                                                           const std::optional<std::string>& sourceFolder,
+                                                           const std::filesystem::path& cacheFile,
+                                                           const main_paths& fakeMain)
   {
     const auto projectPath{auxiliary_materials() / projectName};
 
@@ -303,21 +304,33 @@ namespace sequoia::testing
       }
     };
 
-    // The refusal names two paths, and the default postprocessor makes only the first relative.
-    auto relativeToRoot{
-      [](const project_paths& projPaths, std::string message) {
-        replace_all(message, projPaths.project_root().generic_string() + "/", "");
-        return message;
+    // The fake project's build tree is named for this project's preset, and the messages name the tree,
+    // so `stabilizeMessage` masks the preset. `stabilizeMessage` also keeps the whole message, so that a
+    // check can tell which step threw, not only that one did.
+    std::string message{};
+    auto stabilizeMessage{
+      [&message](const project_paths& projPaths, std::string thrown) {
+        message = thrown;
+        const auto preset{back(projPaths.build().cmake_cache_dir()).generic_string()};
+        replace_all(thrown, std::format("/{}/", preset), "/<preset>/");
+        replace_all(thrown, std::format("--preset {}`", preset), "--preset <preset>`");
+        return relative_to_root(projPaths, std::move(thrown));
       }
     };
 
     record_cmake_source_dir(cacheFile, projectPath / "Absent");
-    check_exception_thrown<std::runtime_error>(reporter{"Source directory absent"}, createAgain, relativeToRoot);
+    check_exception_thrown<std::runtime_error>(reporter{"Source directory absent"}, createAgain, stabilizeMessage);
 
     record_cmake_source_dir(cacheFile, auxiliary_materials());
     check_exception_thrown<std::runtime_error>(reporter{"Source directory outside the project"},
                                                createAgain,
-                                               relativeToRoot);
+                                               stabilizeMessage);
+
+    // The source directory recorded now holds no presets, so CMake itself fails
+    record_cmake_source_dir(cacheFile, projectPath / "Source");
+    message.clear();
+    check_exception_thrown<std::runtime_error>(reporter{"CMake fails"}, createAgain, stabilizeMessage);
+    check("The failure reported is CMake's", message.starts_with("Running CMake on the new tests failed"));
   }
 
   void test_runner_test_creation::record_cmake_source_dir(const std::filesystem::path& cacheFile,
