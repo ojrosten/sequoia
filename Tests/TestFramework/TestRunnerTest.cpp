@@ -904,7 +904,7 @@ namespace sequoia::testing
       {
         const test_execution_record_path record{source_file(), name(), get_project_paths()};
         check(equality,
-              "While a test executes, its record names its start and no execution time",
+              "While a test executes, its record names its start and no execution duration",
               execution_record_labels(record.file_path()),
               std::vector<std::string>{"started"});
 
@@ -1456,7 +1456,7 @@ namespace sequoia::testing
 
   /** The fake tests tell the mechanism from its rivals: `record_reading_free_test` sees its record while it executes,
       which a start written only at the end would not produce; `escaping_exception_free_test` throws, which an
-      execution time written only on normal completion would miss. The records directory is removed first, so that
+      execution duration written only on normal completion would miss. The records directory is removed first, so that
       only this run can have written the stamp.
    */
   void test_runner_test::test_execution_records()
@@ -1482,14 +1482,14 @@ namespace sequoia::testing
       passingRecord{record_reading_free_test::source_file(),     test_name<record_reading_free_test>(),     projPaths},
       throwingRecord{escaping_exception_free_test::source_file(), test_name<escaping_exception_free_test>(), projPaths};
 
-    const std::vector<std::string> finishedRecordLabels{"started", "execution time", "runner overhead"};
+    const std::vector<std::string> finishedRecordLabels{"started", "execution duration", "runner overhead"};
     check(equality,
-          "The record of a test which passed names its start, its execution time and the runner's overhead",
+          "The record of a test which passed names its start, its execution duration and the runner's overhead",
           execution_record_labels(passingRecord.file_path()),
           finishedRecordLabels);
 
     check(equality,
-          "The record of a test whose body threw names its start, its execution time and the runner's overhead",
+          "The record of a test whose body threw names its start, its execution duration and the runner's overhead",
           execution_record_labels(throwingRecord.file_path()),
           finishedRecordLabels);
 
@@ -2179,8 +2179,8 @@ namespace sequoia::testing
       record{stray_materials_free_test::source_file(), test_name<stray_materials_free_test>(), runner.proj_paths()};
 
     check(equality,
-          "A test whose materials could not be prepared has no execution time: preparing them is the runner's overhead",
-          execution_record_value(record.file_path(), "execution time"),
+          "A test whose materials could not be prepared has no execution duration: preparing them is overhead",
+          execution_record_value(record.file_path(), "execution duration"),
           std::string{"0us"});
   }
 

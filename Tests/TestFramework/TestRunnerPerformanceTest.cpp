@@ -47,25 +47,26 @@ namespace sequoia::testing
       throw std::runtime_error{"Unable to extract timing from: " + std::string{timing}};
     }
     
-    /** A time as the runner prints it, a number followed by its unit, converted to milliseconds. */
+    /** A duration as the runner prints it, a number followed by its unit, converted to milliseconds. */
     [[nodiscard]]
-    double to_milliseconds(std::string_view time)
+    double to_milliseconds(std::string_view printedDuration)
     {
       constexpr std::array<std::pair<std::string_view, double>, 4> millisecondsPerUnit{
         {{"s", 1e3}, {"ms", 1.0}, {"us", 1e-3}, {"ns", 1e-6}}
       };
 
-      const auto unitStart{std::ranges::min(time.find_first_not_of("0123456789.e+"), time.size())};
+      const auto numberEnd{printedDuration.find_first_not_of("0123456789.e+")};
+      const auto unitStart{std::ranges::min(numberEnd, printedDuration.size())};
       auto unitOf{[](const auto& entry){ return entry.first; }};
-      const auto conversion{std::ranges::find(millisecondsPerUnit, time.substr(unitStart), unitOf)};
+      const auto conversion{std::ranges::find(millisecondsPerUnit, printedDuration.substr(unitStart), unitOf)};
       if(conversion == millisecondsPerUnit.end())
-        throw std::runtime_error{std::format("Unable to read the unit of the time {}", time)};
+        throw std::runtime_error{std::format("Unable to read the unit of the duration {}", printedDuration)};
 
-      return to_number<double>(time.substr(0, unitStart)) * conversion->second;
+      return to_number<double>(printedDuration.substr(0, unitStart)) * conversion->second;
     }
 
-    /** The run's time labelled `label`, such as "Execution Time", in milliseconds. It is read from the grand
-        totals, since every test reports times of its own and the run's are the only ones these checks measure.
+    /** The run's duration labelled `label`, such as "Execution Time", in milliseconds. It is read from the grand
+        totals, since every test reports durations of its own and the run's are the only ones these checks measure.
      */
     [[nodiscard]]
     double get_grand_total(const fs::path& file, std::string_view label)
@@ -86,12 +87,12 @@ namespace sequoia::testing
       throw std::runtime_error{std::format("Unable to extract the {} from: {}", label, file.generic_string())};
     }
 
-    /** The time labelled `label`, such as "execution time", in the execution record `runner` keeps for `Test`, in
-        milliseconds.
+    /** The duration labelled `label`, such as "execution duration", in the execution record `runner` keeps for
+        `Test`, in milliseconds.
      */
     template<concrete_test Test>
     [[nodiscard]]
-    double get_recorded_time(const test_runner& runner, std::string_view label)
+    double get_recorded_duration(const test_runner& runner, std::string_view label)
     {
       const test_execution_record_path record{Test::source_file(), test_name<Test>(), runner.proj_paths()};
       std::ifstream file{record.file_path()};
@@ -273,13 +274,13 @@ namespace sequoia::testing
 
     constexpr double execution_sleep_ms{20.0}, summarizing_sleep_ms{60.0};
 
-    /** The runner prints a time to three significant figures, so it prints one below a second to within half a
+    /** The runner prints a duration to three significant figures, so it prints one below a second to within half a
         millisecond.
      */
-    constexpr double printed_time_tolerance_ms{1.0};
+    constexpr double printed_duration_tolerance_ms{1.0};
 
     /** Sleeps while its tests run, and sleeps again while the runner summarizes it. The runner summarizes a test after
-        its tests have run, so the first sleep falls in the test's execution time and the second in the runner's
+        its tests have run, so the first sleep falls in the test's execution duration and the second in the runner's
         overhead.
      */
     class slow_to_summarize_test_base : public free_test
@@ -414,7 +415,7 @@ namespace sequoia::testing
     test_thread_pool_acceleration();
     test_serial_execution();
     test_runner_overhead_reported_apart();
-    test_execution_time_of_busiest_thread();
+    test_execution_duration_of_busiest_thread();
   }
 
   void test_runner_performance_test::test_parallel_acceleration()
@@ -475,9 +476,9 @@ namespace sequoia::testing
           std::ptrdiff_t{1});
   }
 
-  /** One test sleeps while its tests run, and again while the runner summarizes it. Its execution time must lie
-      between the first sleep and the sum of the two sleeps. The sum is what the execution time would be if it
-      included the runner's overhead. The printed output and the test's execution record must both say so.
+  /** One test sleeps while its tests run, and again while the runner summarizes it. Its execution duration must
+      lie between the first sleep and the sum of the two sleeps. The sum is what the execution duration would be if
+      it included the runner's overhead. The printed output and the test's execution record must both say so.
    */
   void test_runner_performance_test::test_runner_overhead_reported_apart()
   {
@@ -489,7 +490,7 @@ namespace sequoia::testing
 
     const auto outputFile{check_output(report({"Runner Overhead Output"}), "RunnerOverheadOutput", outputStream)};
     check(within_tolerance{summarizing_sleep_ms / 2},
-          "The printed execution time excludes the sleep while summarizing",
+          "The printed execution duration excludes the sleep while summarizing",
           get_grand_total(outputFile, "Execution Time"),
           execution_sleep_ms + summarizing_sleep_ms / 2);
 
@@ -499,26 +500,27 @@ namespace sequoia::testing
           summarizing_sleep_ms);
 
     check(within_tolerance{summarizing_sleep_ms / 2},
-          "The recorded execution time excludes the sleep while summarizing",
-          get_recorded_time<slow_to_summarize_test_0>(runner, "execution time"),
+          "The recorded execution duration excludes the sleep while summarizing",
+          get_recorded_duration<slow_to_summarize_test_0>(runner, "execution duration"),
           execution_sleep_ms + summarizing_sleep_ms / 2);
 
     check(std::ranges::greater_equal{},
           "The recorded runner overhead includes the sleep while summarizing",
-          get_recorded_time<slow_to_summarize_test_0>(runner, "runner overhead"),
+          get_recorded_duration<slow_to_summarize_test_0>(runner, "runner overhead"),
           summarizing_sleep_ms);
   }
 
   /** Four tests, each sleeping while its tests run and again while the runner summarizes it. One is not
       parallelizable, so it runs first, alone. The other three then run over a pool of two threads, so one thread runs
-      two of them. The run's execution time must therefore be the first test's recorded execution time plus those of
-      two others. Each rival misses by at least a test's execution time, far more than the printed time's rounding:
-      -# summing every test's execution time adds the third of the others;
-      -# leaving out the first test subtracts its execution time;
-      -# taking the longest test rather than the busiest thread subtracts the execution time of one of a pair;
+      two of them. The run's execution duration must therefore be the first test's recorded execution duration plus
+      those of two others. Each rival misses by at least a test's execution duration, far more than the printed
+      duration's rounding:
+      -# summing every test's execution duration adds the third of the others;
+      -# leaving out the first test subtracts its execution duration;
+      -# taking the longest test rather than the busiest thread subtracts the execution duration of one of a pair;
       -# a wall clock adds the runner's overhead.
    */
-  void test_runner_performance_test::test_execution_time_of_busiest_thread()
+  void test_runner_performance_test::test_execution_duration_of_busiest_thread()
   {
     std::stringstream outputStream{};
     commandline_arguments args{{minimal_fake_path().generic_string(), "--thread-pool", "2"}};
@@ -531,29 +533,35 @@ namespace sequoia::testing
 
     const auto outputFile{check_output(report({"Busiest Thread Output"}), "BusiestThreadOutput", outputStream)};
 
-    const auto firstTime{get_recorded_time<unparallelizable_slow_to_summarize_test>(runner, "execution time")};
-    const std::array othersTimes{
-      get_recorded_time<slow_to_summarize_test_0>(runner, "execution time"),
-      get_recorded_time<slow_to_summarize_test_1>(runner, "execution time"),
-      get_recorded_time<slow_to_summarize_test_2>(runner, "execution time")
+    const auto firstDuration{
+      get_recorded_duration<unparallelizable_slow_to_summarize_test>(runner, "execution duration")
+    };
+    const std::array othersDurations{
+      get_recorded_duration<slow_to_summarize_test_0>(runner, "execution duration"),
+      get_recorded_duration<slow_to_summarize_test_1>(runner, "execution duration"),
+      get_recorded_duration<slow_to_summarize_test_2>(runner, "execution duration")
     };
 
-    const std::array pairedTimes{
-      othersTimes[0] + othersTimes[1],
-      othersTimes[0] + othersTimes[2],
-      othersTimes[1] + othersTimes[2]
+    const std::array pairedDurations{
+      othersDurations[0] + othersDurations[1],
+      othersDurations[0] + othersDurations[2],
+      othersDurations[1] + othersDurations[2]
     };
 
-    const auto executionTime{get_grand_total(outputFile, "Execution Time")};
-    auto distanceFromExecutionTime{
-      [executionTime, firstTime](double paired){ return std::abs(executionTime - (firstTime + paired)); }
+    const auto executionDuration{get_grand_total(outputFile, "Execution Time")};
+    auto distanceFromExecutionDuration{
+      [executionDuration, firstDuration](double paired){
+        return std::abs(executionDuration - (firstDuration + paired));
+      }
     };
 
-    const auto nearestPairedTime{std::ranges::min(pairedTimes, std::ranges::less{}, distanceFromExecutionTime)};
-    check(within_tolerance{printed_time_tolerance_ms},
-          "The execution time is the unparallelizable test's plus those of the two others one thread ran",
-          executionTime,
-          firstTime + nearestPairedTime);
+    const auto nearestPairedDuration{
+      std::ranges::min(pairedDurations, std::ranges::less{}, distanceFromExecutionDuration)
+    };
+    check(within_tolerance{printed_duration_tolerance_ms},
+          "The execution duration is the unparallelizable test's plus those of the two others one thread ran",
+          executionDuration,
+          firstDuration + nearestPairedDuration);
 
     check(std::ranges::greater_equal{},
           "The runner overhead includes the summarizing sleeps of the unparallelizable test and the busiest thread",

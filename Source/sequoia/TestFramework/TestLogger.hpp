@@ -380,14 +380,14 @@ namespace sequoia::testing
         are not parallelizable, then those of the thread which spent longest executing tests.
      */
     [[nodiscard]]
-    duration execution_time() const noexcept { return m_ExecutionTime; }
+    duration execution_duration() const noexcept { return m_ExecutionDuration; }
 
-    void execution_time(const duration delta) { m_ExecutionTime = delta; }
+    void execution_duration(const duration delta) { m_ExecutionDuration = delta; }
 
-    /** \brief The time the runner spent executing the tests, beyond their execution time.
+    /** \brief How long the runner spent executing the tests, beyond their execution duration.
 
-        For a run whose tests ran concurrently, this is the wall clock less the execution time, so it includes any time
-        in which a thread was not executing a test.
+        For a run whose tests ran concurrently, this is the wall clock less the execution duration, so it includes any
+        time in which a thread was not executing a test.
      */
     [[nodiscard]]
     duration runner_overhead() const noexcept { return m_RunnerOverhead; }
@@ -430,7 +430,7 @@ namespace sequoia::testing
     int m_ExceptionsInFlight{};
 
     duration
-      m_ExecutionTime{},
+      m_ExecutionDuration{},
       m_RunnerOverhead{};
 
     log_summary(std::string_view name, const test_logger_base& logger, test_mode mode, const duration delta);

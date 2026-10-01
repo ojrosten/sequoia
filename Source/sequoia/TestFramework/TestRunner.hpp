@@ -191,8 +191,8 @@ namespace sequoia::testing
 
     /** \brief Times a test's execution apart from the runner's overhead.
 
-        The execution time is the time spent in the calls to `time_execution`. The runner's overhead is the rest of
-        the time since construction.
+        The execution duration is the time spent in the calls to `time_execution`. The runner's overhead is the rest
+        of the time since construction.
      */
     class execution_timer
     {
@@ -202,21 +202,21 @@ namespace sequoia::testing
       {
         const timer t{};
         fn();
-        m_ExecutionTime += t.time_elapsed();
+        m_ExecutionDuration += t.time_elapsed();
       }
 
       [[nodiscard]]
-      log_summary::duration execution_time() const noexcept { return m_ExecutionTime; }
+      log_summary::duration execution_duration() const noexcept { return m_ExecutionDuration; }
 
       [[nodiscard]]
-      log_summary::duration runner_overhead() const { return m_Timer.time_elapsed() - m_ExecutionTime; }
+      log_summary::duration runner_overhead() const { return m_Timer.time_elapsed() - m_ExecutionDuration; }
     private:
       timer m_Timer{};
-      log_summary::duration m_ExecutionTime{};
+      log_summary::duration m_ExecutionDuration{};
     };
 
     /** \brief An RAII wrapper to write a test's execution record: when the test started and, on destruction, its
-               execution time and the runner's overhead so far, as `executionTimer` gives them.
+               execution duration and the runner's overhead so far, as `executionTimer` gives them.
 
         A record which cannot be written is skipped rather than reported.
      */
@@ -330,7 +330,7 @@ namespace sequoia::testing
         if(try_prepare_materials())
           executionTimer.time_execution([this](){ try_run_tests(); });
 
-        return write_output(executionTimer.execution_time(), index);
+        return write_output(executionTimer.execution_duration(), index);
       }
 
       void try_run_tests()
@@ -350,12 +350,12 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      log_summary write_output(const log_summary::duration executionTime, std::optional<std::size_t> index)
+      log_summary write_output(const log_summary::duration executionDuration, std::optional<std::size_t> index)
       {
         try
         {
           m_Test.write_instability_analysis_output(m_Test.source_file(), index);
-          return write_versioned_output(executionTime);
+          return write_versioned_output(executionDuration);
         }
         catch(const std::exception& e)
         {
@@ -366,7 +366,7 @@ namespace sequoia::testing
           m_Test.log_critical_failure(m_Test.source_file(), "Output Writing", "Unknown exception");
         }
 
-        return m_Test.summarize(executionTime);
+        return m_Test.summarize(executionDuration);
       }
 
       [[nodiscard]]
@@ -384,9 +384,9 @@ namespace sequoia::testing
         }
       }
 
-      log_summary write_versioned_output(const log_summary::duration executionTime) const
+      log_summary write_versioned_output(const log_summary::duration executionDuration) const
       {
-        auto summary{m_Test.summarize(executionTime)};
+        auto summary{m_Test.summarize(executionDuration)};
 
         if(!m_Test.has_critical_failures())
         {

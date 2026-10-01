@@ -32,7 +32,7 @@ namespace sequoia::testing
 
     void test_runner_overhead_reported_apart();
 
-    void test_execution_time_of_busiest_thread();
+    void test_execution_duration_of_busiest_thread();
 
     [[nodiscard]]
     std::filesystem::path fake_project() const;

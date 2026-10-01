@@ -48,7 +48,7 @@ namespace sequoia::testing
   {
     return std::format("{}{}{}",
                        duration ? timing_line("Total Run Time", *duration) : "",
-                       timing_line("Execution Time",  log.execution_time()),
+                       timing_line("Execution Time",  log.execution_duration()),
                        timing_line("Runner Overhead", log.runner_overhead()));
   }
 
