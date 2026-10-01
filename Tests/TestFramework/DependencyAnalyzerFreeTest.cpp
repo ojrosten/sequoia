@@ -43,9 +43,15 @@ namespace sequoia::testing
        and a modification a clear second above it. The boundary itself - a file whose stamp equals
        the threshold exactly - is deliberately not asserted on here: its answer is a property of the
        filesystem rather than of the analyzer.
+
+       The reset time itself lies ten seconds before the clock at the start of the run. A file or
+       directory which the test writes, renames or removes, rather than stamps, takes the clock's time,
+       which is later than every point of the timeline. So a time which the test leaves behind in the
+       fake project is newer than the executable on every machine, not only on a machine slow enough
+       to make the change after the executable's stamp.
     */
     constexpr auto earlyExecutableOffset{std::chrono::seconds{-1}};
-    constexpr auto resetOffset{std::chrono::seconds{0}};
+    constexpr auto resetOffset{std::chrono::seconds{-10}};
     constexpr auto pruneStampOffset{std::chrono::seconds{2}};
     constexpr auto earlyPassOffset{std::chrono::seconds{3}}; // very_early
     constexpr auto earlyEditOffset{std::chrono::seconds{4}};  // early
@@ -645,8 +651,6 @@ namespace sequoia::testing
       },
       normalise_out_of_date_message
     );
-
-    fs::last_write_time(orphan, m_ResetTime);
   }
 
   /* A project with no tests selects nothing and says nothing, so that the runner can say "try creating
