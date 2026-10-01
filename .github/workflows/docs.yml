@@ -23,7 +23,7 @@ jobs:
   doxygen:
     name: Docs · Doxygen
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
         with:
@@ -50,10 +50,11 @@ jobs:
       # this job exists to catch.
       #
       # A slow mirror fails this step by name, instead of running on until the job's
-      # limit cancels the job.
+      # limit cancels the job. So the job's limit exceeds this one by more than
+      # checkout and generation take, about a minute.
       - name: Install doxygen
         if: inputs.needs_testing == 'true'
-        timeout-minutes: 10
+        timeout-minutes: 25
         run: |
           # The hosted image ships vendor repositories - Chrome and Microsoft - which
           # nothing here installs from. A bad index served by one of them fails the
