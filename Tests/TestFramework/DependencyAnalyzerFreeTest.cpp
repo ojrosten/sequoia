@@ -637,17 +637,15 @@ namespace sequoia::testing
     fs::last_write_time(toolchainHeader, m_ResetTime);
 
     // A file the build read which cannot be read now: the reason is the platform's, and the normaliser masks it
-    const auto hidden{fs::path{orphan}.replace_extension(".hidden")};
     check_exception_thrown<std::runtime_error>(
       "A file the build read cannot be read",
-      [&projPaths, &orphan, &hidden]() {
-        fs::rename(orphan, hidden);
+      [&projPaths, &orphan]() {
+        const hidden_for_scope hidden{orphan};
         return tests_to_run(projPaths);
       },
       normalise_out_of_date_message
     );
 
-    fs::rename(hidden, orphan);
     fs::last_write_time(orphan, m_ResetTime);
   }
 
