@@ -480,11 +480,11 @@ namespace sequoia::testing
       }
     };
 
-    /** A variant of `stale_predictions_free_test`, with materials in two configurations: `Platypus`
-        and `Echidna`. The test's materials discriminator names `Platypus`.
+    /** A variant of `stale_predictions_free_test`, with materials under two discriminators: `Platypus`
+        and `Echidna`. The test's materials discriminator is `Platypus`.
 
-        In each configuration, the working copy and the auxiliary materials hold a `Configuration.txt`
-        which names the configuration. The predictions hold the same file, so the update leaves the file
+        Under each discriminator, the working copy and the auxiliary materials hold a `Discriminator.txt`
+        which holds the discriminator. The predictions hold the same file, so the update leaves the file
         alone.
      */
     class variant_free_test final : public free_test
@@ -504,13 +504,13 @@ namespace sequoia::testing
       void run_tests()
       {
         check(equality,
-              "Working copy of the declared configuration",
-              read_to_string(working_materials() /= "Configuration.txt", std::ios_base::in).value_or(""),
+              "Working copy of the declared discriminator",
+              read_to_string(working_materials() /= "Discriminator.txt", std::ios_base::in).value_or(""),
               std::string{"Platypus\n"});
 
         check(equality,
-              "Auxiliary materials of the declared configuration",
-              read_to_string(auxiliary_materials() /= "Configuration.txt", std::ios_base::in).value_or(""),
+              "Auxiliary materials of the declared discriminator",
+              read_to_string(auxiliary_materials() /= "Discriminator.txt", std::ios_base::in).value_or(""),
               std::string{"Platypus\n"});
 
         make_update_candidate(*this);
@@ -1711,7 +1711,7 @@ namespace sequoia::testing
   }
 
   /** The counterpart of `test_materials_update` for a test whose materials are discriminated. The
-      declared configuration is prepared and updated, and the other configuration is left alone.
+      declared discriminator's materials are prepared and updated, and the other's are left alone.
    */
   void test_runner_test::test_discriminated_materials_update()
   {
@@ -1727,18 +1727,18 @@ namespace sequoia::testing
     const auto materials{fake_project() / "TestMaterials/Updating/VariantFreeTest/variant_free_test"};
 
     check(equality,
-          "Declared configuration's prediction overwritten",
+          "Declared discriminator's prediction overwritten",
           read_to_string(materials / "Platypus/Prediction/Kept.txt", std::ios_base::in).value_or(""),
           std::string{"Obtained\n"});
 
-    check("Declared configuration's prediction deleted", !fs::exists(materials / "Platypus/Prediction/Obsolete.txt"));
+    check("Declared discriminator's prediction deleted", !fs::exists(materials / "Platypus/Prediction/Obsolete.txt"));
 
     check(equality,
-          "Other configuration's prediction not overwritten",
+          "Other discriminator's prediction not overwritten",
           read_to_string(materials / "Echidna/Prediction/Kept.txt", std::ios_base::in).value_or(""),
           std::string{"Predicted\n"});
 
-    check("Other configuration's prediction not deleted", fs::exists(materials / "Echidna/Prediction/Obsolete.txt"));
+    check("Other discriminator's prediction not deleted", fs::exists(materials / "Echidna/Prediction/Obsolete.txt"));
   }
 
   void test_runner_test::test_nested_suite()

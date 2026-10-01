@@ -255,7 +255,7 @@ namespace sequoia::testing
     }
   }
 
-  /** The original materials of a discriminated test hold one directory per configuration: `Platypus`
+  /** The original materials of a discriminated test hold one directory per discriminator: `Platypus`
       and `Echidna`. The discriminator must be a portable name for one directory. Nothing else may sit
       beside the directories.
    */
@@ -274,7 +274,7 @@ namespace sequoia::testing
     };
 
     check(equality,
-          "The declared configuration copied",
+          "The declared discriminator's materials copied",
           read_to_string(temporaryWorkingCopy / "input.txt", std::ios_base::in).value_or(""),
           std::string{"Platypus\n"});
 
