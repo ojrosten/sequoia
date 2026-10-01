@@ -68,10 +68,10 @@ namespace sequoia::testing
   [[nodiscard]]
   build_tree read_build_tree(const std::filesystem::path& cacheFile);
 
-  /** \brief The description of the build tree whose cache is `cacheFile`. The generator is taken from
-             `cache`, which was read from `cacheFile`.
+  /** \brief Reads a build tree's description of itself. `cacheFile` is the tree's `CMakeCache.txt`, and `cache`
+             holds what the file held when the caller read the file.
 
-      \throws std::runtime_error if the cache names no generator.
+      \throws std::runtime_error if `cache` names no generator.
    */
   [[nodiscard]]
   build_tree read_build_tree(const std::filesystem::path& cacheFile, const cmake_cache& cache);

@@ -92,11 +92,11 @@ namespace sequoia::testing
 
     enum class build_system { ninja, ninja_with_msvc, visual_studio };
 
-    /** Where, within the fake build tree, the fake build puts its objects, and their extension */
+    /// The directory, relative to the fake build tree, in which the fake build puts its objects, and their extension
     struct object_layout
     {
-      std::filesystem::path directory;
-      std::string_view extension;
+      std::filesystem::path directory{};
+      std::string_view extension{};
     };
 
     [[nodiscard]]
@@ -109,11 +109,11 @@ namespace sequoia::testing
 
     void test_recorded_sources(const project_paths& projPaths);
 
-    /// A file of the fake project, and the offset from the reset time at which the file is taken to be last modified
+    /// A file of the fake project, and the file's modification time as an offset from the reset time
     struct timed_edit
     {
-      std::filesystem::path file;
-      std::chrono::seconds offset;
+      std::filesystem::path file{};
+      std::chrono::seconds offset{};
     };
 
     /// The outcome of the library check on the fake project: the normalised refusal, if there is one, and the warnings

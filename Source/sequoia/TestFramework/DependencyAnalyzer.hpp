@@ -139,15 +139,15 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path sequoia_library_root();
 
-  /** \brief Throws if the library beneath `libraryRoot` has changed since the executable was built.
+  /** \brief Throws if the library within `libraryRoot` has changed since the executable was built.
 
-      The library's objects are the objects compiled from a source beneath `libraryRoot`. The library's
-      own files are the files which were read to compile those objects and which lie beneath
+      The library's objects are the objects compiled from a source within `libraryRoot`. The library's
+      own files are the files which were read to compile those objects and which lie within
       `libraryRoot` too. So none of these files counts:
       -# A header of the library which only the tests read;
       -# A file of the toolchain's, of another library's or of the tests'.
 
-      The build's record is read only if `libraryRoot`, or an entry beneath it, is no older than the
+      The build's record is read only if `libraryRoot`, or an entry anywhere within it, is no older than the
       executable. The entry may be a file or a directory; a deletion within a directory moves the
       directory's time.
 
@@ -156,7 +156,7 @@ namespace sequoia::testing
       -# `libraryRoot` is relative;
       -# The executable cannot be found;
       -# The build's record cannot be read;
-      -# The record names no object compiled from beneath `libraryRoot`.
+      -# The record names no object compiled from within `libraryRoot`.
 
       \throws std::runtime_error if
       -# The newest of the library's own files is no older than the executable. The message names the

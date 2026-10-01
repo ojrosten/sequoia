@@ -111,34 +111,36 @@ namespace sequoia::testing
     fs::path canonical_or_as_given(const fs::path& path)
     {
       std::error_code error{};
-      auto canonical{fs::weakly_canonical(path, error)};
+      const auto canonical{fs::weakly_canonical(path, error)};
       return error ? path : canonical;
     }
 
-    /// A file which the build recorded: the file's path, made canonical where possible, and whether the
-    /// file is the toolchain's
+    /** A file which the build recorded: the file's path, made canonical where possible, and whether the
+        file is the toolchain's
+     */
     struct recorded_file
     {
-      fs::path canonical;
-      bool toolchain;
+      fs::path canonical{};
+      bool toolchain{};
     };
 
     /** Each of `files`, made canonical and classed as the project's or the toolchain's.
 
-        The build recorded whatever spelling it was configured with, through whatever symlink and in
-        whatever case. project_paths holds canonical paths, so each recorded path is made canonical.
-        The canonical path and the class are both properties of the file's directory, so the filesystem
-        is asked once per directory.
+        The build records each path as the build's configuration spelled the path: through whatever
+        symlink, and in whatever case. project_paths holds canonical paths, so this function makes each
+        recorded path canonical. The canonical path and the class are both properties of the file's
+        directory, so this function asks the filesystem once per directory.
 
-        A directory whose existing prefix cannot be resolved is kept as recorded. A directory without
-        permission is one such directory, and a symlink loop is another. Reading the modification time
-        of a file in such a directory fails, and the failure gives the reason.
+        If the filesystem cannot resolve the existing prefix of a directory, the directory keeps its
+        recorded spelling. A directory without permission is one cause, and a symlink loop is another.
+        Reading the modification time of a file in such a directory then fails, and the failure gives
+        the reason.
 
-        A file's own name is kept as the compilation spelled it:
+        A file's own name keeps the compilation's spelling:
         -# A file which is itself a symlink keeps its name. `last_write_time` follows the symlink;
-        -# On a filesystem which finds a file whatever its case, a header included under a case other
-           than its own keeps that case. So the header does not match the stem of the source named for
-           it.
+        -# A header keeps the case in which the compilation spelled the header's name. On a filesystem
+           which finds a file whatever its case, that case may differ from the header's own. The header
+           then does not match the stem of the source with the same name.
      */
     [[nodiscard]]
     std::vector<recorded_file> recorded_files(const build_tree& tree, std::span<const fs::path> files)
@@ -168,7 +170,7 @@ namespace sequoia::testing
       return files | std::views::transform(fileFacts) | std::ranges::to<std::vector>();
     }
 
-    /// Whether the source of `record` lies in `dir`. read_compilations puts the source first among the inputs.
+    /// Whether the source of `record` lies within `dir`. read_compilations puts the source first among the inputs.
     [[nodiscard]]
     bool compiled_from(const compilations::record& record, std::span<const recorded_file> files, const fs::path& dir)
     {
@@ -817,19 +819,20 @@ namespace sequoia::testing
 
   namespace
   {
-    /// A library's own file, the object which the file was read to compile, and the file's modification time
+    /// A library's own file, the first object whose compilation read the file, and the file's modification time
     struct library_file
     {
-      fs::path file;
-      fs::path object;
-      fs::file_time_type time;
+      fs::path file{};
+      fs::path object{};
+      fs::file_time_type time{};
     };
 
-    /// The target which `object` belongs to, if any. CMake puts a target's objects beneath `<target>.dir`.
+    /// The target which `object` belongs to, if any. CMake puts a target's objects within `<target>.dir`.
     [[nodiscard]]
     std::optional<std::string> target_of(const fs::path& object)
     {
-      const auto targetDirectory{std::ranges::find_if(object, [](const fs::path& p){ return p.extension() == ".dir"; })};
+      auto isTargetDirectory{[](const fs::path& p){ return p.extension() == ".dir"; }};
+      const auto targetDirectory{std::ranges::find_if(object, isTargetDirectory)};
       if(targetDirectory == object.end())
         return std::nullopt;
 
@@ -850,11 +853,12 @@ namespace sequoia::testing
     };
 
     /** The newest of the library's own files, as `refuse_if_library_changed_since_build` defines them,
-        with the first object in the record which the file was read to compile.
+        with the first object in the record whose compilation read the file.
 
-        \returns `nullopt` if no object was compiled from beneath `libraryRoot`.
+        \returns `nullopt` if no object in the record has its source within `libraryRoot`.
 
-        \throws std::runtime_error if the modification time of one of the library's own files cannot be read.
+        \throws std::runtime_error if this function cannot read the modification time of one of the
+        library's own files.
      */
     [[nodiscard]]
     std::optional<library_file> newest_library_file(const build_tree& tree,
@@ -870,8 +874,8 @@ namespace sequoia::testing
         [&facts, &root](const compilations::record& record){ return compiled_from(record, facts, root); }
       };
 
-      // A header which several objects read is timed once. That needs a stateful filter, so this is a
-      // loop rather than a view.
+      // The loop times each file once, however many objects read the file. A view would need a stateful
+      // filter for that.
       std::vector<bool> timed(files.size());
       std::optional<library_file> newest{};
       for(const auto& record : records | std::views::filter(isLibraryObject))
@@ -879,7 +883,9 @@ namespace sequoia::testing
         const auto& object{facts[record.object_index].canonical};
         for(const auto i : record.input_indices | std::views::filter(isOwnFile))
         {
-          if(timed[i]) continue;
+          if(timed[i])
+            continue;
+
           timed[i] = true;
 
           const auto& file{facts[i].canonical};
@@ -902,9 +908,9 @@ namespace sequoia::testing
       return newest;
     }
 
-    /** Whether `dir`, or any entry beneath `dir`, is no older than `stamp`. The entries include
-        directories. A directory's time moves when an entry within the directory is deleted. An entry
-        whose time cannot be read counts as no older, so that the build's record decides.
+    /** Whether `dir`, or any entry anywhere within `dir`, is no older than `stamp`. The entries include
+        directories, since deleting an entry moves the time of the entry's directory. An entry whose time
+        this function cannot read counts as no older, so that the build's record decides.
      */
     [[nodiscard]]
     bool anything_since(const fs::path& dir, const fs::file_time_type stamp)
@@ -927,11 +933,14 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string on_one_line(std::string_view reason)
     {
+      auto isNonEmpty{[](auto&& line){ return !std::ranges::empty(line); }};
+      auto asView    {[](auto&& line){ return std::string_view{line}; }};
+
       auto lines{
           reason
         | std::views::split('\n')
-        | std::views::filter([](auto&& line){ return !std::ranges::empty(line); })
-        | std::views::transform([](auto&& line){ return std::string_view{line}; })
+        | std::views::filter(isNonEmpty)
+        | std::views::transform(asView)
       };
 
       return lines | std::views::join_with(std::string_view{" "}) | std::ranges::to<std::string>();
@@ -941,7 +950,7 @@ namespace sequoia::testing
   [[nodiscard]]
   fs::path sequoia_library_root()
   {
-    // This file is compiled from TestFramework, one directory below the library's root
+    // This file lies in TestFramework, one directory below the library's root
     return fs::path{std::source_location::current().file_name()}.parent_path().parent_path();
   }
 
@@ -974,8 +983,8 @@ namespace sequoia::testing
       return;
     }
 
-    // This costs one stat per entry beneath `libraryRoot`. The build's record is read only if one of
-    // those entries is no older than the executable.
+    // This costs one stat per entry within `libraryRoot`. The function reads the build's record only if
+    // one of those entries is no older than the executable.
     if(!anything_since(libraryRoot, *executableStamp))
       return;
 
@@ -1004,7 +1013,7 @@ namespace sequoia::testing
     const auto newest{newest_library_file(tree, compiled, libraryRoot)};
     if(!newest)
     {
-      notChecked(std::format("the build's record names no object compiled from beneath {}",
+      notChecked(std::format("the build's record names no object compiled from within {}",
                              libraryRoot.generic_string()));
       return;
     }
