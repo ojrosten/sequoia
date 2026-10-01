@@ -144,7 +144,7 @@ namespace sequoia::testing
       -# Lie within `libraryRoot`;
       -# Were read by the compilation of an object whose source lies within `libraryRoot`.
 
-      None of these is one of the library's own files:
+      So these do not count:
       -# A header of the library which only the tests read;
       -# A file of the toolchain's, of another library's or of the tests'.
 
