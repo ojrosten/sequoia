@@ -107,15 +107,15 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    fs::path canonical_or_as_given(const fs::path& path)
+    fs::path weakly_canonical_or_as_given(const fs::path& path)
     {
       std::error_code error{};
-      const auto canonical{fs::weakly_canonical(path, error)};
-      return error ? path : canonical;
+      const auto weaklyCanonical{fs::weakly_canonical(path, error)};
+      return error ? path : weaklyCanonical;
     }
 
     /** A file which the build recorded, and whether the file is the toolchain's. The path has two parts:
-        -# The file's directory, made canonical if the filesystem can resolve the directory;
+        -# The file's directory, made weakly canonical if the filesystem can resolve the directory;
         -# The file's own name, as the compilation spelled it.
      */
     struct recorded_file
@@ -128,7 +128,7 @@ namespace sequoia::testing
 
         The build records each path as the build's configuration spelled the path: through whatever symlink, and
         in whatever case. project_paths holds canonical paths, so this function resolves each file's directory:
-        -# A directory which the filesystem can resolve is made canonical;
+        -# A directory which the filesystem can resolve is made weakly canonical;
         -# A directory which the filesystem cannot resolve keeps its recorded spelling. A directory without
            permission is one cause, and a symlink loop is another. Reading the modification time of a file in
            such a directory then fails, and the failure gives the reason.
@@ -139,7 +139,7 @@ namespace sequoia::testing
            finds a file whatever its case, that case may differ from the header's own. The header then does not
            match the stem of the source with the same name.
 
-        The function asks the filesystem once per directory, for the directory's canonical path and for whether
+        The function asks the filesystem once per directory, for the directory's weakly canonical path and for whether
         the directory is the toolchain's.
      */
     [[nodiscard]]
@@ -151,7 +151,7 @@ namespace sequoia::testing
           if(const auto found{directories.find(dir)}; found != directories.end())
             return found->second;
 
-          const auto path{canonical_or_as_given(dir)};
+          const auto path{weakly_canonical_or_as_given(dir)};
           const recorded_file facts{.path{path}, .toolchain{in_toolchain(path, tree)}};
           return directories.emplace(dir, facts).first->second;
         }
@@ -889,7 +889,7 @@ namespace sequoia::testing
     {
       const auto& [files, records]{compiled};
       const auto facts{recorded_files(tree, files)};
-      const auto root{canonical_or_as_given(libraryRoot)};
+      const auto root{weakly_canonical_or_as_given(libraryRoot)};
 
       auto isOwnFile{[&facts, &root](compilations::file_index i){ return in_repo(facts[i].path, root); }};
       auto isLibraryObject{
