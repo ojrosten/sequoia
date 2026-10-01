@@ -41,7 +41,7 @@ namespace sequoia::maths
     {}
 
     [[nodiscard]]
-    constexpr std::size_t size() const noexcept
+    constexpr static std::size_t size() noexcept
     {
       return std::tuple_size_v<std::tuple<Ts...>>;
     }
