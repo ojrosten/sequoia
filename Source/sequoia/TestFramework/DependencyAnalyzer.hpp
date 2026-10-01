@@ -141,15 +141,14 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path sequoia_sources();
 
-  /** \brief Throws if sequoia, whose sources are within `sequoiaSources`, has changed since the executable's
-             build.
+  /** \brief Throws if sequoia has changed since the executable's build.
 
-      sequoia's own files are the files which both:
+      sequoia's sources lie within `sequoiaSources`. sequoia's own files are the files which both:
       -# Lie within `sequoiaSources`;
       -# Were read by the compilation of an object whose source lies within `sequoiaSources`.
 
       So these do not count:
-      -# A header of sequoia's which only the tests read;
+      -# A header of sequoia's which only the tests, or the project which uses sequoia, read;
       -# A file of the toolchain's, of another library's, of the tests' or of the project which uses sequoia.
 
       If the function cannot make the check, the function writes a warning to `stream` and throws nothing.

@@ -103,7 +103,7 @@ namespace sequoia::testing
     static object_layout objects_of(build_system system);
 
     /// Which of the fake project's sources the build's record names, and where it says they are
-    enum class recorded_sources { all, all_but_the_tests, all_under_another_root, sequoia_relative };
+    enum class recorded_sources { all, all_but_the_tests, all_under_another_root, sources_relative };
 
     void write_build_artefacts(const std::filesystem::path& fake, build_system system, recorded_sources sources);
 

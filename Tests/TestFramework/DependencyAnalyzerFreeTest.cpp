@@ -64,10 +64,10 @@ namespace sequoia::testing
     /// A second configuration of the fake Visual Studio build, whose record differs from the executable's
     constexpr std::string_view otherVisualStudioConfiguration{"Release"};
 
-    /// A source of the fake project's own, relative to the project's root
+    /// One of the fake project's own sources, relative to the project's root
     constexpr std::string_view fooDefinitionsSource{"Source/fakeProject/Stuff/FooDefinitions.cpp"};
 
-    /// The start of the warning which the check of sequoia gives when it cannot make the check
+    /// The start of the warning written when the check cannot say whether sequoia has changed
     constexpr std::string_view notCheckedPreface{
       "  Warning: Whether sequoia has changed since this executable was built cannot be checked: "
     };
@@ -343,13 +343,12 @@ namespace sequoia::testing
 
     const auto root{(sources == recorded_sources::all_under_another_root) ? fake.parent_path() / "AnotherRoot" : fake};
 
-    // Under `sequoia_relative`, the record spells the paths of the fake project's sources as a build given relative
-    // paths spells them:
-    // relative to the build directory, and not lexically normal
+    // Under `sources_relative`, the record spells the paths of the fake project's sources as a build given relative
+    // paths spells them: relative to the build directory, and not lexically normal
     auto recordedPath{
       [&](std::string_view file) -> fs::path {
         constexpr std::string_view source{"Source/"};
-        if((sources != recorded_sources::sequoia_relative) || !file.starts_with(source))
+        if((sources != recorded_sources::sources_relative) || !file.starts_with(source))
           return root / file;
 
         return fake.lexically_relative(buildDir) / "Source" / "." / file.substr(source.size());
@@ -724,7 +723,8 @@ namespace sequoia::testing
     return message;
   }
 
-  /** Checks sequoia, whose sources are within `sequoiaSources`, and returns the normalised refusal and warnings.
+  /** Checks whether sequoia has changed, and returns the normalised refusal and warnings. sequoia's sources lie
+      within `sequoiaSources`.
 
       The contract of `throw_if_sequoia_changed_since_build` leaves open the text of the refusal and of the warnings.
       The checks of that text pin the implementation's choice, and change with it.
@@ -792,7 +792,7 @@ namespace sequoia::testing
                                               : std::string{"TestAll"}
     };
 
-    return std::format("sequoia has changed since this executable was built; please build it again.\n"
+    return std::format("sequoia has changed since this executable was built; please build the executable again.\n"
                        "FakeProject/{}, read to compile FakeProject/build/CMade/TestAll/{}/{}{}, "
                        "of target TestAll, time stamp: ****\n"
                        "FakeProject/build/CMade/TestAll/{}, time stamp: ****\n",
@@ -866,9 +866,9 @@ namespace sequoia::testing
                          std::nullopt);
   }
 
-  /** A client's build, as in a project which `init` created: the fake project plays the client, and its dependency
-      `foo`, which the client's build compiles, plays the client's copy of sequoia. So sequoia's sources are foo's,
-      and the client's own sources and tests are not sequoia's.
+  /** The fake project plays a client which `init` created. Its dependency `foo` plays the client's copy of sequoia,
+      and the client's build compiles `foo`. So sequoia's sources are foo's, and the client's own sources and tests
+      are not sequoia's.
    */
   void dependency_analyzer_free_test::test_sequoia_change_in_client(const project_paths& projPaths, build_system system)
   {
@@ -896,11 +896,11 @@ namespace sequoia::testing
                          {{projectRoot / fooHelperHeader, lateEditOffset}},
                          sequoia_refusal_message(system, fooHelperHeader, fooHelperSource));
 
-    // The directory of sequoia's sources is newer than the executable, so the check reads the record
+    // A header of sequoia's which no object reads is newer than the executable, so the check reads the record
     check_sequoia_change("A client: the client's own source and test, edited since the build, with the record read",
                          projPaths,
                          sequoiaSources,
-                         {{sequoiaSources, latePassOffset},
+                         {{sequoiaSources / "Utilities" / "Bar.hpp", latePassOffset},
                           {projectRoot / fooDefinitionsSource, lateEditOffset},
                           {projPaths.tests().repo() / "Stuff" / "FooTest.cpp", lateEditOffset}},
                          std::nullopt);
@@ -943,7 +943,7 @@ namespace sequoia::testing
           "A source of sequoia's, removed since the build",
           refusal,
           std::optional<std::string>{
-            "sequoia has changed since this executable was built; please build it again.\n"
+            "sequoia has changed since this executable was built; please build the executable again.\n"
             "FakeProject/Source/fakeProject/Stuff/FooDefinitions.cpp, read to compile "
             "FakeProject/build/CMade/TestAll/CMakeFiles/TestAll.dir/Source/fakeProject/Stuff/FooDefinitions.cpp.o, "
             "of target TestAll, cannot now be read: ****\n"});
@@ -953,7 +953,7 @@ namespace sequoia::testing
   void dependency_analyzer_free_test::test_sequoia_recorded_relative(const fs::path& fake,
                                                                      const project_paths& projPaths)
   {
-    write_build_artefacts(fake, build_system::ninja, recorded_sources::sequoia_relative);
+    write_build_artefacts(fake, build_system::ninja, recorded_sources::sources_relative);
     fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
 
     check_sequoia_change("A source of sequoia's, recorded relative to the build, edited since the build",

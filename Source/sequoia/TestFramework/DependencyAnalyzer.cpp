@@ -870,7 +870,7 @@ namespace sequoia::testing
     }
 
     constexpr std::string_view sequoia_changed{
-      "sequoia has changed since this executable was built; please build it again."
+      "sequoia has changed since this executable was built; please build the executable again."
     };
 
     /** The newest of sequoia's own files, as `throw_if_sequoia_changed_since_build` defines those files.
