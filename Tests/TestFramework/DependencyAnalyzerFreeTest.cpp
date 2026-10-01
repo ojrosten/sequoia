@@ -304,13 +304,22 @@ namespace sequoia::testing
     }
   }
 
-  /** By default, objects lie in CMakeFiles/<target>.dir (Ninja) or <target>.dir/<configuration> (Visual Studio) */
+  /** By default, objects lie in CMakeFiles/<target>.dir (Ninja) or <target>.dir/<configuration> (Visual Studio). MSVC
+      names its objects `.obj` under either generator.
+   */
   auto dependency_analyzer_free_test::objects_of(build_system system) -> object_layout
   {
-    if(system == build_system::visual_studio)
-      return {.directory{fs::path{"TestAll.dir"} / visualStudioConfiguration}, .extension{".obj"}};
+    const auto ninjaDirectory{fs::path{"CMakeFiles"} / "TestAll.dir"};
 
-    return {.directory{fs::path{"CMakeFiles"} / "TestAll.dir"}, .extension{".o"}};
+    switch(system)
+    {
+    case build_system::ninja:           return {.directory{ninjaDirectory}, .extension{".o"}};
+    case build_system::ninja_with_msvc: return {.directory{ninjaDirectory}, .extension{".obj"}};
+    case build_system::visual_studio:   return {.directory{fs::path{"TestAll.dir"} / visualStudioConfiguration},
+                                                .extension{".obj"}};
+    }
+
+    throw std::logic_error{"Unhandled build_system"};
   }
 
   void dependency_analyzer_free_test::write_build_artefacts(const fs::path& fake, build_system system, recorded_sources sources)
@@ -403,9 +412,10 @@ namespace sequoia::testing
       }
 
       // An object the build once had and no longer does keeps its record in the log, and its source may be gone
-      statements.append("build CMakeFiles/TestAll.dir/unrelated.o: CXX_COMPILER unrelated.cpp\n");
+      statements.append(std::format("build CMakeFiles/TestAll.dir/unrelated{}: CXX_COMPILER unrelated.cpp\n",
+                                    objects.extension));
       auto logged{records};
-      logged.push_back({.object{objects.directory / "Tests/Retired/RetiredTest.cpp.o"},
+      logged.push_back({.object{objects.directory / std::format("Tests/Retired/RetiredTest.cpp{}", objects.extension)},
                         .inputs{fake / "Tests/Retired/RetiredTest.cpp", fake / "Tests/Retired/Gone.hpp"}});
 
       // MSVC reports the headers it read but not the source, which the statement supplies
