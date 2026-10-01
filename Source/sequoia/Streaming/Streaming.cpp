@@ -7,6 +7,7 @@
 
 #include "sequoia/Streaming/Streaming.hpp"
 
+#include <format>
 #include <fstream>
 #include <system_error>
 
@@ -15,13 +16,13 @@ namespace sequoia
   [[nodiscard]]
   std::string report_failed_read(const std::filesystem::path& file)
   {
-    return std::string{"Unable to open file "}.append(file.generic_string()).append(" for reading\n");
+    return std::format("Unable to open file {} for reading\n", file.generic_string());
   }
 
   [[nodiscard]]
   std::string report_failed_write(const std::filesystem::path& file)
   {
-    return std::string{"Unable to write to file "}.append(file.generic_string()).append("\n");
+    return std::format("Unable to write to file {}\n", file.generic_string());
   }
 
   [[nodiscard]]
