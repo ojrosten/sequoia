@@ -32,6 +32,7 @@
 #include <format>
 #include <fstream>
 #include <functional>
+#include <mutex>
 #include <utility>
 #include <variant>
 
@@ -47,6 +48,21 @@ namespace sequoia::testing
     std::string started_at(std::chrono::system_clock::time_point start)
     {
       return std::format("started {:%FT%TZ}\n", std::chrono::floor<std::chrono::milliseconds>(start));
+    }
+
+    /** \brief Times three sleeps of `target`, and returns the second fastest. */
+    [[nodiscard]]
+    std::chrono::duration<double> second_fastest_sleep(std::chrono::milliseconds target)
+    {
+      auto sleepForTarget{[target]() { std::this_thread::sleep_for(target); }};
+
+      std::array<std::chrono::duration<double>, 3> durations{};
+      std::ranges::generate(durations, [&sleepForTarget]() { return profile(sleepForTarget); });
+      std::ranges::sort(durations);
+
+      // The first sleep can end within the timer tick it starts in. So the first sleep can be short even
+      // when every later sleep is rounded up to a whole tick.
+      return durations[1];
     }
 
     // Written to <file>.partial and renamed over <file>, so that a process dying mid-write leaves the previous contents
@@ -1227,6 +1243,25 @@ namespace sequoia::testing
     }
   }
 
+  void test_runner::check_for_coarse_sleeps()
+  {
+    auto isPerformanceTest{[](const suite_node& node) { return node.optTest && node.optTest->performance_test(); }};
+    if(std::ranges::none_of(m_Suites.cnode_weights(), isPerformanceTest))
+      return;
+
+    auto warnIfCoarse{
+      [this]() {
+        constexpr std::chrono::milliseconds target{5};
+        if(const auto sleepWarning{coarse_sleep_warning(second_fastest_sleep(target), target)})
+          stream() << *sleepWarning << std::flush;
+      }
+    };
+
+    // The timer resolution belongs to the process, so the first runner's check serves every later runner in it
+    static std::once_flag checked{};
+    std::call_once(checked, warnIfCoarse);
+  }
+
   void test_runner::check_for_missing_tests()
   {
     if(m_PruneMode == prune_mode::passive)
@@ -1407,6 +1442,8 @@ namespace sequoia::testing
   [[nodiscard]]
   return_code test_runner::run_tests_in_this_process()
   {
+    check_for_coarse_sleeps();
+
     if(concurrent_execution()) sort_tests();
 
     if(m_InstabilityMode == instability_mode::sandbox)

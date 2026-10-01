@@ -9,8 +9,6 @@
 
 #include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
-#include <iostream>
-
 namespace sequoia::testing
 {
   namespace
@@ -34,7 +32,7 @@ namespace sequoia::testing
 
   void performance_false_negative_diagnostics::test_relative_performance()
   {
-    const auto deltaT{calibrate(std::chrono::milliseconds{5}, std::cout)};
+    const auto deltaT{calibrate(std::chrono::milliseconds{5})};
 
     check_relative_performance("Performance Test for which fast task is too slow, [1, (2.0, 2.0)",
                                [deltaT]() { wait(deltaT); },
@@ -62,7 +60,7 @@ namespace sequoia::testing
 
   void performance_false_positive_diagnostics::test_relative_performance()
   {
-    const auto deltaT{calibrate(std::chrono::milliseconds{5}, std::cout)};
+    const auto deltaT{calibrate(std::chrono::milliseconds{5})};
 
     check_relative_performance("Performance Test which should pass",
                                [deltaT]() { wait(deltaT); },

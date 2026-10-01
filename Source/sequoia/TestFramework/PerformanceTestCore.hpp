@@ -18,7 +18,6 @@
 #include <chrono>
 #include <format>
 #include <optional>
-#include <ostream>
 #include <random>
 #include <future>
 #include <string>
@@ -212,12 +211,10 @@ namespace sequoia::testing
 
       Returns `target` if this machine's sleeps of `target` last about that long. Otherwise returns a duration longer
       than those sleeps typically last.
-
-      Writes a warning to `warningStream` if sleeps are rounded up to a coarse timer tick.
    */
   template<class T, class Period>
   [[nodiscard]]
-  std::chrono::duration<T, Period> calibrate(std::chrono::duration<T, Period> target, std::ostream& warningStream)
+  std::chrono::duration<T, Period> calibrate(std::chrono::duration<T, Period> target)
   {
     using namespace std::chrono;
 
@@ -228,11 +225,6 @@ namespace sequoia::testing
     }
 
     std::ranges::sort(timings);
-    // The first sleep can end within the timer tick it starts in. So the first sleep can be short even
-    // when every later sleep is rounded up to a whole tick.
-    if(const auto sleepWarning{coarse_sleep_warning(duration<double>{timings[1]}, target)})
-      warningStream << *sleepWarning << std::flush;
-
     const auto [sig_f, m_f] {maths::sample_standard_deviation(timings.cbegin() + 1, timings.cend() - 1)};
     if (sig_f && m_f)
     {

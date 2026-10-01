@@ -169,6 +169,12 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    bool performance_test() const noexcept
+    {
+      return m_pTest->performance_test();
+    }
+
+    [[nodiscard]]
     log_summary execute(std::optional<std::size_t> index)
     {
       return m_pTest->execute(index);
@@ -242,6 +248,7 @@ namespace sequoia::testing
       virtual const test_summary_path& summary_file_path() const noexcept = 0;
       virtual std::filesystem::path source_file() const                   = 0;
       virtual const individual_materials_paths& materials_paths() const noexcept = 0;
+      virtual bool performance_test() const noexcept                      = 0;
 
       virtual log_summary execute(std::optional<std::size_t> index) = 0;
       virtual void reset() = 0;
@@ -265,6 +272,12 @@ namespace sequoia::testing
       std::string_view name() const noexcept final
       {
         return m_Name;
+      }
+
+      [[nodiscard]]
+      bool performance_test() const noexcept final
+      {
+        return is_performance_test_v<Test>;
       }
 
       [[nodiscard]]
@@ -660,6 +673,8 @@ namespace sequoia::testing
     void check_argument_consistency();
 
     void check_for_missing_tests();
+
+    void check_for_coarse_sleeps();
 
     [[nodiscard]]
     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }
