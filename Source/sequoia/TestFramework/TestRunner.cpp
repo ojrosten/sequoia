@@ -114,48 +114,38 @@ namespace sequoia::testing
       log_summary::duration execution_duration{}, runner_overhead{};
     };
 
-    template<class Weight>
-    [[nodiscard]]
-    log_summary::duration summed_execution_duration(std::span<Weight> weights)
+    struct execution_info
     {
-      auto executionDuration{[](const Weight& wt){ return wt.summary.execution_duration(); }};
+      std::thread::id       thread_id{};
+      log_summary::duration duration{};
+    };
+
+    [[nodiscard]]
+    log_summary::duration summed_duration(std::span<const execution_info> executions)
+    {
       return std::ranges::fold_left(
-               weights | std::views::transform(executionDuration),
+               executions | std::views::transform(&execution_info::duration),
                log_summary::duration{},
                std::plus{}
              );
     }
 
-    /** Groups the tests by the thread which executed each, and returns the largest of the groups' summed execution
-        durations.
-     */
-    template<class Weight>
+    /** Groups the executions by thread, and returns the largest of the groups' summed durations. */
     [[nodiscard]]
-    log_summary::duration busiest_thread_execution_duration(std::span<Weight> weights)
+    log_summary::duration busiest_thread_execution_duration(std::vector<execution_info> executions)
     {
-      auto threadAndExecutionDuration{
-        [](const Weight& wt){ return std::pair{wt.executing_thread, wt.summary.execution_duration()}; }
-      };
+      std::ranges::sort(executions, std::ranges::less{}, &execution_info::thread_id);
 
-      auto durationsByThread{
-          weights
-        | std::views::transform(threadAndExecutionDuration)
-        | std::ranges::to<std::vector>()
-      };
-
-      std::ranges::sort(durationsByThread);
-
-      auto sameThread{[](const auto& lhs, const auto& rhs){ return lhs.first == rhs.first; }};
-      auto threadTotal{
-        [](auto threadDurations){
-          return std::ranges::fold_left(threadDurations | std::views::values, log_summary::duration{}, std::plus{});
+      auto sameThread{
+        [](const execution_info& lhs, const execution_info& rhs){
+          return lhs.thread_id == rhs.thread_id;
         }
       };
 
       auto threadTotals{
-          durationsByThread
+          executions
         | std::views::chunk_by(sameThread)
-        | std::views::transform(threadTotal)
+        | std::views::transform(summed_duration)
       };
 
       return std::ranges::fold_left(threadTotals, log_summary::duration{}, std::ranges::max);
@@ -1495,8 +1485,8 @@ namespace sequoia::testing
 
       auto executor{
         [id](suite_node& wt){
-          wt.summary          = wt.optTest->execute(id);
-          wt.executing_thread = std::this_thread::get_id();
+          wt.summary             = wt.optTest->execute(id);
+          wt.executing_thread_id = std::this_thread::get_id();
         }
       };
 
@@ -1520,9 +1510,22 @@ namespace sequoia::testing
 
       const auto wallClock{asyncTimer.time_elapsed()};
 
+      auto executionInfoOf{
+        [](const suite_node& wt){
+          return execution_info{.thread_id{wt.executing_thread_id}, .duration{wt.summary.execution_duration()}};
+        }
+      };
+
+      auto executionInfos{
+        [executionInfoOf](std::span<const suite_node> nodes){
+          return nodes | std::views::transform(executionInfoOf) | std::ranges::to<std::vector>();
+        }
+      };
+
       // The longest the tests ran one after another: those which are not parallelizable, then the busiest thread's
       const auto executionDuration{
-        summed_execution_duration(nonParallelizable) + busiest_thread_execution_duration(parallelizable)
+          summed_duration(executionInfos(nonParallelizable))
+        + busiest_thread_execution_duration(executionInfos(parallelizable))
       };
       concurrentDurations = run_durations{
         .execution_duration{executionDuration},

@@ -622,7 +622,7 @@ namespace sequoia::testing
     {
       log_summary summary{};
       std::optional<test_vessel> optTest{};
-      std::thread::id executing_thread{};
+      std::thread::id executing_thread_id{};
     };
 
     using suite_type = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, suite_node>;
