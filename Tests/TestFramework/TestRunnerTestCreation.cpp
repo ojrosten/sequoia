@@ -10,6 +10,7 @@
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 #include "Utilities/TestUtilities.hpp"
 
+#include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/TestCreator.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
@@ -146,6 +147,12 @@ namespace sequoia::testing
     const auto cmakeCacheDir{projectPath / "build" / back(get_project_paths().build().cmake_cache_dir())};
     fs::create_directory(cmakeCacheDir);
     fs::copy(auxiliary_materials() / "FakeExe.txt", cmakeCacheDir);
+
+    // The test makes the fake executable older than the directory of sequoia's sources. `create`'s check of whether
+    // sequoia has changed since the build then reads the fake tree's build record. The check cannot read that record,
+    // and says so in a warning.
+    const auto sequoiaTime{fs::last_write_time(sequoia_sources())};
+    fs::last_write_time(cmakeCacheDir / "FakeExe.txt", sequoiaTime - std::chrono::hours{1});
     fs::copy(get_project_paths().build().cmake_cache_dir() / "CMakeCache.txt", cmakeCacheDir);
 
     // The copied cache records this build's top-level source directory, and `create` runs CMake from

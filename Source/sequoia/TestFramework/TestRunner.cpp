@@ -937,6 +937,15 @@ namespace sequoia::testing
                         [this,&nascentTests](const arg_list&) {
                           if(!nascentTests.empty())
                           {
+                            // The first `create` checks that sequoia has not changed since the build. The
+                            // executable writes registrations in the form compiled into it.
+                            if(!in_mode(runner_mode::create))
+                            {
+                              throw_if_sequoia_changed_since_build(proj_paths(),
+                                                                   sequoia_sources(),
+                                                                   stream());
+                            }
+
                             m_RunnerMode |= runner_mode::create;
                             overloaded visitor{ [](auto& nascent) { nascent.finalize(); } };
                             std::visit(visitor, nascentTests.back());
