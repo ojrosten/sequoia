@@ -245,17 +245,23 @@ namespace sequoia::testing
 
   /* The fake project is never built, so what its build would have recorded is written by hand:
      for each unit, every file the compiler would have read, which is the flattened closure of its
-     includes. The sequoia headers the fake sources include lie outside the fake project, as they
-     would in a build of it, and are taken from the real one so that they exist.
+     includes. The fake project has the layout of a project which `init` created, so the sequoia
+     headers which its tests include lie within the project's copy of sequoia.
+
+     The fake build names a directory of the real sequoia as one of the toolchain's. The toolchain
+     headers which a unit reads from that directory therefore exist, and lie outside the fake project,
+     as a toolchain's headers would.
    */
   namespace
   {
-    /// A translation unit of the fake project: its source, the fake project's files it read, and sequoia's
+    /** A translation unit of the fake project: its source, the fake project's files it read, and the toolchain's files
+        it read from the real sequoia
+     */
     struct unit
     {
       std::string_view source;
       std::vector<std::string_view> inputs;
-      std::vector<std::string_view> sequoia_inputs{};
+      std::vector<std::string_view> toolchain_inputs{};
     };
 
     /// What the fake project's build would have recorded: for each unit, every file the compiler would have read
@@ -263,39 +269,44 @@ namespace sequoia::testing
     const std::vector<unit>& fake_units()
     {
       constexpr std::string_view
-        freeTestCore{"sequoia/TestFramework/FreeTestCore.hpp"},
-        regularTestCore{"sequoia/TestFramework/RegularTestCore.hpp"},
-        moveOnlyTestCore{"sequoia/TestFramework/MoveOnlyTestCore.hpp"};
+        freeTestCore    {"dependencies/sequoia/Source/sequoia/TestFramework/FreeTestCore.hpp"},
+        regularTestCore {"dependencies/sequoia/Source/sequoia/TestFramework/RegularTestCore.hpp"},
+        moveOnlyTestCore{"dependencies/sequoia/Source/sequoia/TestFramework/MoveOnlyTestCore.hpp"},
+        fileEditors     {"dependencies/sequoia/Source/sequoia/TestFramework/FileEditors.hpp"},
+        substitutions   {"sequoia/TextProcessing/Substitutions.hpp"};
 
+      // sequoia's unit comes last, so that in the ninja log the compilation of a test reads FileEditors.hpp before
+      // sequoia's does. Visual Studio's records follow the order in which the filesystem lists the targets' logs.
       static const std::vector<unit> units{
         {"Source/fakeProject/Maths/Helper.cpp", {"Source/fakeProject/Maths/Helper.hpp"}},
         {"Source/fakeProject/Maths/Probability.cpp", {"Source/fakeProject/Maths/Probability.hpp", "Source/fakeProject/Maths/Helper.hpp", "dependencies/foo/Source/foo/Utilities/Helper.hpp"}},
         {"Source/fakeProject/Utilities/Thing/UniqueThing.cpp", {"Source/fakeProject/Utilities/Thing/UniqueThing.hpp"}},
-        {"Source/fakeProject/Stuff/Substitutions.cpp", {}, {"sequoia/TextProcessing/Substitutions.hpp"}},
+        {"Source/fakeProject/Stuff/Substitutions.cpp", {}, {substitutions}},
         {"Source/fakeProject/Stuff/Foo.cpp", {"Source/fakeProject/Stuff/Foo.hpp"}},
         {"Source/fakeProject/Stuff/FooDefinitions.cpp", {"Source/fakeProject/Stuff/Foo.hpp"}},
         {"Source/fakeProject/Stuff/Unrelated.cpp", {"Source/fakeProject/Stuff/MoreFooDefinitions.hpp", "Source/fakeProject/Stuff/Foo.hpp"}},
         {"Source/fakeProject/Utilities/UsefulThings.cpp", {"Source/fakeProject/Utilities/UsefulThings.hpp", "dependencies/foo/Source/foo/Utilities/Helper.hpp"}},
         {"TestUtilities/myLib/Utils.cpp", {"TestUtilities/myLib/Utils.hpp"}},
         {"dependencies/foo/Source/foo/Utilities/Helper.cpp", {"dependencies/foo/Source/foo/Utilities/Helper.hpp"}},
-        {"Tests/Cycle/FirstFreeTest.cpp", {"Tests/Cycle/FirstFreeTest.hpp", "Source/fakeProject/Cycle/First.hpp", "Source/fakeProject/Cycle/Second.hpp", "Source/fakeProject/Cycle/FirstLeaf.hpp", "Source/fakeProject/Cycle/SecondLeaf.hpp"}, {freeTestCore}},
-        {"Tests/Cycle/SecondFreeTest.cpp", {"Tests/Cycle/SecondFreeTest.hpp", "Source/fakeProject/Cycle/Second.hpp", "Source/fakeProject/Cycle/First.hpp", "Source/fakeProject/Cycle/SecondLeaf.hpp", "Source/fakeProject/Cycle/FirstLeaf.hpp"}, {freeTestCore}},
-        {"Tests/HouseAllocationTest.cpp", {"Tests/HouseAllocationTest.hpp"}, {"sequoia/TestFramework/MoveOnlyAllocationTestCore.hpp"}},
-        {"Tests/Maths/ProbabilityTest.cpp", {"Tests/Maths/ProbabilityTest.hpp", "Tests/Maths/ProbabilityTestingUtilities.hpp", "Source/fakeProject/Maths/Probability.hpp"}, {regularTestCore}},
-        {"Tests/Maths/ProbabilityTestingDiagnostics.cpp", {"Tests/Maths/ProbabilityTestingDiagnostics.hpp", "Tests/Maths/ProbabilityTestingUtilities.hpp", "Source/fakeProject/Maths/Probability.hpp"}, {regularTestCore}},
-        {"Tests/Maybe/MaybeTest.cpp", {"Tests/Maybe/MaybeTest.hpp", "Tests/Maybe/MaybeTestingUtilities.hpp", "Tests/Stuff/OldschoolTestingUtilities.hpp", "Source/fakeProject/Stuff/NoTemplate.hpp", "TestUtilities/myLib/Utils.hpp", "Source/fakeProject/Maybe/Maybe.hpp"}, {regularTestCore}},
-        {"Tests/Maybe/MaybeTestingDiagnostics.cpp", {"Tests/Maybe/MaybeTestingDiagnostics.hpp", "Tests/Maybe/MaybeTestingUtilities.hpp", "Source/fakeProject/Maybe/Maybe.hpp"}, {regularTestCore}},
-        {"Tests/Stuff/BarFreeTest.cpp", {"Tests/Stuff/BarFreeTest.hpp", "Source/fakeProject/Stuff/Bar.hpp", "Source/fakeProject/Stuff/Baz.hpp", "Source/fakeProject/Stuff/Qux.hpp"}, {freeTestCore}},
-        {"Tests/Stuff/FooTest.cpp", {"Tests/Stuff/FooTest.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp"}, {"sequoia/TestFramework/FileEditors.hpp", moveOnlyTestCore, "sequoia/TextProcessing/Substitutions.hpp"}},
-        {"Tests/Stuff/FooTestingDiagnostics.cpp", {"Tests/Stuff/FooTestingDiagnostics.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp"}, {moveOnlyTestCore}},
-        {"Tests/Stuff/OldschoolTest.cpp", {"Tests/Stuff/OldschoolTest.hpp", "Tests/Stuff/OldschoolTestingUtilities.hpp", "Source/fakeProject/Stuff/NoTemplate.hpp", "TestUtilities/myLib/Utils.hpp"}, {regularTestCore}},
-        {"Tests/Stuff/OldschoolTestingDiagnostics.cpp", {"Tests/Stuff/OldschoolTestingDiagnostics.hpp", "Tests/Stuff/OldschoolTestingUtilities.hpp", "Source/fakeProject/Stuff/NoTemplate.hpp", "TestUtilities/myLib/Utils.hpp"}, {regularTestCore}},
-        {"Tests/Utilities/ContainerAllocationTest.cpp", {"Tests/Utilities/ContainerAllocationTest.hpp"}, {"sequoia/TestFramework/RegularAllocationTestCore.hpp"}},
-        {"Tests/Utilities/ContainerPerformanceTest.cpp", {"Tests/Utilities/ContainerPerformanceTest.hpp", "Source/fakeProject/Utilities/Container.hpp"}, {"sequoia/TestFramework/PerformanceTestCore.hpp"}},
-        {"Tests/Utilities/Thing/UniqueThingTest.cpp", {"Tests/Utilities/Thing/UniqueThingTest.hpp", "Tests/Utilities/Thing/UniqueThingTestingUtilities.hpp", "Source/fakeProject/Utilities/Thing/UniqueThing.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp"}, {moveOnlyTestCore}},
-        {"Tests/Utilities/Thing/UniqueThingTestingDiagnostics.cpp", {"Tests/Utilities/Thing/UniqueThingTestingDiagnostics.hpp", "Tests/Utilities/Thing/UniqueThingTestingUtilities.hpp", "Source/fakeProject/Utilities/Thing/UniqueThing.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp"}, {moveOnlyTestCore}},
-        {"Tests/Utilities/UsefulThingsFreeTest.cpp", {"Tests/Utilities/UsefulThingsFreeTest.hpp", "Source/fakeProject/Utilities/UsefulThings.hpp"}, {freeTestCore}},
-        {"Tests/Utilities/UtilitiesFreeTest.cpp", {"Tests/Utilities/UtilitiesFreeTest.hpp", "Source/fakeProject/Utilities/Utilities.hpp"}, {freeTestCore}}
+        {"Tests/Cycle/FirstFreeTest.cpp", {"Tests/Cycle/FirstFreeTest.hpp", "Source/fakeProject/Cycle/First.hpp", "Source/fakeProject/Cycle/Second.hpp", "Source/fakeProject/Cycle/FirstLeaf.hpp", "Source/fakeProject/Cycle/SecondLeaf.hpp", freeTestCore}},
+        {"Tests/Cycle/SecondFreeTest.cpp", {"Tests/Cycle/SecondFreeTest.hpp", "Source/fakeProject/Cycle/Second.hpp", "Source/fakeProject/Cycle/First.hpp", "Source/fakeProject/Cycle/SecondLeaf.hpp", "Source/fakeProject/Cycle/FirstLeaf.hpp", freeTestCore}},
+        {"Tests/HouseAllocationTest.cpp", {"Tests/HouseAllocationTest.hpp", "dependencies/sequoia/Source/sequoia/TestFramework/MoveOnlyAllocationTestCore.hpp"}},
+        {"Tests/Maths/ProbabilityTest.cpp", {"Tests/Maths/ProbabilityTest.hpp", "Tests/Maths/ProbabilityTestingUtilities.hpp", "Source/fakeProject/Maths/Probability.hpp", regularTestCore}},
+        {"Tests/Maths/ProbabilityTestingDiagnostics.cpp", {"Tests/Maths/ProbabilityTestingDiagnostics.hpp", "Tests/Maths/ProbabilityTestingUtilities.hpp", "Source/fakeProject/Maths/Probability.hpp", regularTestCore}},
+        {"Tests/Maybe/MaybeTest.cpp", {"Tests/Maybe/MaybeTest.hpp", "Tests/Maybe/MaybeTestingUtilities.hpp", "Tests/Stuff/OldschoolTestingUtilities.hpp", "Source/fakeProject/Stuff/NoTemplate.hpp", "TestUtilities/myLib/Utils.hpp", "Source/fakeProject/Maybe/Maybe.hpp", regularTestCore}},
+        {"Tests/Maybe/MaybeTestingDiagnostics.cpp", {"Tests/Maybe/MaybeTestingDiagnostics.hpp", "Tests/Maybe/MaybeTestingUtilities.hpp", "Source/fakeProject/Maybe/Maybe.hpp", regularTestCore}},
+        {"Tests/Stuff/BarFreeTest.cpp", {"Tests/Stuff/BarFreeTest.hpp", "Source/fakeProject/Stuff/Bar.hpp", "Source/fakeProject/Stuff/Baz.hpp", "Source/fakeProject/Stuff/Qux.hpp", freeTestCore}},
+        {"Tests/Stuff/FooTest.cpp", {"Tests/Stuff/FooTest.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp", fileEditors, moveOnlyTestCore}, {substitutions}},
+        {"Tests/Stuff/FooTestingDiagnostics.cpp", {"Tests/Stuff/FooTestingDiagnostics.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp", moveOnlyTestCore}},
+        {"Tests/Stuff/OldschoolTest.cpp", {"Tests/Stuff/OldschoolTest.hpp", "Tests/Stuff/OldschoolTestingUtilities.hpp", "Source/fakeProject/Stuff/NoTemplate.hpp", "TestUtilities/myLib/Utils.hpp", regularTestCore}},
+        {"Tests/Stuff/OldschoolTestingDiagnostics.cpp", {"Tests/Stuff/OldschoolTestingDiagnostics.hpp", "Tests/Stuff/OldschoolTestingUtilities.hpp", "Source/fakeProject/Stuff/NoTemplate.hpp", "TestUtilities/myLib/Utils.hpp", regularTestCore}},
+        {"Tests/Utilities/ContainerAllocationTest.cpp", {"Tests/Utilities/ContainerAllocationTest.hpp", "dependencies/sequoia/Source/sequoia/TestFramework/RegularAllocationTestCore.hpp"}},
+        {"Tests/Utilities/ContainerPerformanceTest.cpp", {"Tests/Utilities/ContainerPerformanceTest.hpp", "Source/fakeProject/Utilities/Container.hpp", "dependencies/sequoia/Source/sequoia/TestFramework/PerformanceTestCore.hpp"}},
+        {"Tests/Utilities/Thing/UniqueThingTest.cpp", {"Tests/Utilities/Thing/UniqueThingTest.hpp", "Tests/Utilities/Thing/UniqueThingTestingUtilities.hpp", "Source/fakeProject/Utilities/Thing/UniqueThing.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp", moveOnlyTestCore}},
+        {"Tests/Utilities/Thing/UniqueThingTestingDiagnostics.cpp", {"Tests/Utilities/Thing/UniqueThingTestingDiagnostics.hpp", "Tests/Utilities/Thing/UniqueThingTestingUtilities.hpp", "Source/fakeProject/Utilities/Thing/UniqueThing.hpp", "Tests/Stuff/FooTestingUtilities.hpp", "Source/fakeProject/Stuff/Foo.hpp", moveOnlyTestCore}},
+        {"Tests/Utilities/UsefulThingsFreeTest.cpp", {"Tests/Utilities/UsefulThingsFreeTest.hpp", "Source/fakeProject/Utilities/UsefulThings.hpp", freeTestCore}},
+        {"Tests/Utilities/UtilitiesFreeTest.cpp", {"Tests/Utilities/UtilitiesFreeTest.hpp", "Source/fakeProject/Utilities/Utilities.hpp", freeTestCore}},
+        {"dependencies/sequoia/Source/sequoia/TestFramework/FileEditors.cpp", {fileEditors}}
       };
 
       return units;
@@ -309,20 +320,60 @@ namespace sequoia::testing
     }
   }
 
-  /// The layout which CMake gives a target's objects by default, under each fake build system
-  auto dependency_analyzer_free_test::objects_of(build_system system) -> object_layout
+  /// As the fake project's CMakeLists.txt files make them
+  const std::array<dependency_analyzer_free_test::fake_target, 4> dependency_analyzer_free_test::st_FakeTargets{
+    fake_target{.name{"TestAll"}},
+    fake_target{.name{"FakeProject"}, .source_directory{"Source/fakeProject"}},
+    fake_target{.name{"foo"},         .source_directory{"dependencies/foo/Source/foo"}},
+    fake_target{.name{"sequoia"},     .source_directory{"dependencies/sequoia/Source/sequoia"}}
+  };
+
+  auto dependency_analyzer_free_test::target_compiling(std::string_view source) -> const fake_target&
   {
-    const auto ninjaDirectory{fs::path{"CMakeFiles"} / "TestAll.dir"};
+    auto compiles{
+      [source](const fake_target& target) {
+        return !target.source_directory.empty() && source.starts_with(std::format("{}/", target.source_directory));
+      }
+    };
+
+    const auto found{std::ranges::find_if(st_FakeTargets, compiles)};
+    return (found != st_FakeTargets.end()) ? *found : st_FakeTargets.front();
+  }
+
+  /// The directory in which CMake puts a target's objects by default, under each fake build system
+  auto dependency_analyzer_free_test::objects_of(build_system system,
+                                                 const fake_target& target,
+                                                 std::string_view configuration) -> object_layout
+  {
+    const fs::path binaryDirectory{target.source_directory.empty() ? std::string_view{} : target.name};
+    const auto visualStudioDirectory{binaryDirectory / std::format("{}.dir", target.name)};
+    const auto ninjaDirectory       {binaryDirectory / "CMakeFiles" / std::format("{}.dir", target.name)};
 
     switch(system)
     {
     case build_system::ninja:           return {.directory{ninjaDirectory}, .extension{".o"}};
     case build_system::ninja_with_msvc: return {.directory{ninjaDirectory}, .extension{".obj"}};
-    case build_system::visual_studio:   return {.directory{fs::path{"TestAll.dir"} / visualStudioConfiguration},
-                                                .extension{".obj"}};
+    case build_system::visual_studio:   return {.directory{visualStudioDirectory / configuration}, .extension{".obj"}};
     }
 
     throw std::logic_error{"Unhandled build_system"};
+  }
+
+  /** The fake build names an object for its source's path within the target's source directory, or, for TestAll,
+      within the fake project. CMake's own names differ in ways the analyzer does not read: Ninja prefixes the path of
+      a source outside TestAll's directory with `__`, and Visual Studio names an object for its source's stem.
+   */
+  auto dependency_analyzer_free_test::object_compiled_from(build_system system,
+                                                          std::string_view source,
+                                                          std::string_view configuration) -> fs::path
+  {
+    const auto& target{target_compiling(source)};
+    const auto [directory, extension]{objects_of(system, target, configuration)};
+    const auto withinTarget{
+      target.source_directory.empty() ? fs::path{source} : fs::path{source}.lexically_relative(target.source_directory)
+    };
+
+    return directory / std::format("{}{}", withinTarget.generic_string(), extension);
   }
 
   void dependency_analyzer_free_test::write_build_artefacts(const fs::path& fake, build_system system, recorded_sources sources)
@@ -331,9 +382,8 @@ namespace sequoia::testing
 
     const auto buildDir{fake / "build" / "CMade" / "TestAll"};
     const bool ninja{system != build_system::visual_studio};
-    const auto objects{objects_of(system)};
 
-    const auto& sequoiaSource{get_project_paths().source().repo()};
+    const auto& realSequoiaSourceRepo{get_project_paths().source().repo()};
 
     auto isTest{[](const unit& u) { return u.source.starts_with("Tests/"); }};
 
@@ -355,19 +405,19 @@ namespace sequoia::testing
       }
     };
 
-    // The record of a unit's compilation, with the unit's object in `objectDirectory`
+    // The record of a unit's compilation in `configuration`
     auto compiledIn{
-      [&](const fs::path& objectDirectory) {
-        return [&, objectDirectory](const unit& u) {
-          compilation_record record{.object{objectDirectory / std::string{u.source}.append(objects.extension)},
+      [&](std::string_view configuration) {
+        return [&, configuration](const unit& u) {
+          compilation_record record{.object{object_compiled_from(system, u.source, configuration)},
                                     .inputs{recordedPath(u.source)}};
           for(const auto& input : u.inputs)
           {
             record.inputs.push_back(recordedPath(input));
           }
-          for(const auto& input : u.sequoia_inputs)
+          for(const auto& input : u.toolchain_inputs)
           {
-            record.inputs.push_back(sequoiaSource / input);
+            record.inputs.push_back(realSequoiaSourceRepo / input);
           }
           record.inputs.push_back(fake_toolchain_header(fake));
           return record;
@@ -375,14 +425,8 @@ namespace sequoia::testing
       }
     };
 
-    const auto records{
-        units
-      | std::views::filter(recorded)
-      | std::views::transform(compiledIn(objects.directory))
-      | std::ranges::to<std::vector>()
-    };
-
-    // What the build tree says of itself; the fake project's source dir is itself, and two directories stand in for the toolchain's: one of sequoia's, and one of the fake project's own
+    // What the build tree says of itself; the fake project's source dir is itself, and two directories stand in for
+    // the toolchain's: one of the real sequoia's, and one of the fake project's own
     if(const auto header{fake_toolchain_header(fake)}; !fs::exists(header))
     {
       // Once: the artefacts are written several times over, and the header's modification time is the tests' to set
@@ -391,21 +435,37 @@ namespace sequoia::testing
     }
     fs::remove_all(buildDir / "CMakeFiles");
     fs::remove_all(buildDir / "TestAll.dir");
+    for(const auto& target : st_FakeTargets | std::views::drop(1))
+    {
+      fs::remove_all(buildDir / target.name);
+    }
     fs::remove(buildDir / ".ninja_deps");
     fs::remove(buildDir / "build.ninja");
-    fs::create_directories(buildDir / objects.directory);
+    for(const auto& target : st_FakeTargets)
+    {
+      fs::create_directories(buildDir / objects_of(system, target, visualStudioConfiguration).directory);
+    }
     fs::create_directories(buildDir / "CMakeFiles" / "4.1.2");
     write_to_file(buildDir / "CMakeCache.txt",
                   std::format("# Fake\nCMAKE_GENERATOR:INTERNAL={}\nCMAKE_HOME_DIRECTORY:INTERNAL={}\n", ninja ? "Ninja" : "Visual Studio 18 2026", fake.generic_string()),
                   std::ios_base::out);
     write_to_file(buildDir / "CMakeFiles" / "4.1.2" / "CMakeCXXCompiler.cmake",
-                  std::format("set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"{};{}\")\n", (sequoiaSource / "sequoia" / "TextProcessing").generic_string(), fake_toolchain_header(fake).parent_path().generic_string()),
+                  std::format("set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES \"{};{}\")\n",
+                              (realSequoiaSourceRepo / "sequoia" / "TextProcessing").generic_string(),
+                              fake_toolchain_header(fake).parent_path().generic_string()),
                   std::ios_base::out);
 
     if(ninja)
     {
       // The generator spells paths natively and escapes ninja's specials - on Windows `C$:\Users\...` - where the log, which ninja canonicalizes, is generic everywhere
       auto asWritten{[](fs::path p){ return replace_all(p.make_preferred().string(), ":", "$:"); }};
+
+      const auto records{
+          units
+        | std::views::filter(recorded)
+        | std::views::transform(compiledIn(std::string_view{}))
+        | std::ranges::to<std::vector>()
+      };
 
       // What the build currently has: a statement per object naming its source
       std::string statements{};
@@ -415,11 +475,13 @@ namespace sequoia::testing
       }
 
       // An object the build once had and no longer does keeps its record in the log, and its source may be gone
+      const auto testAllObjects{objects_of(system, st_FakeTargets.front(), std::string_view{})};
       statements.append(std::format("build {}/unrelated{}: CXX_COMPILER unrelated.cpp\n",
-                                    objects.directory.generic_string(),
-                                    objects.extension));
+                                    testAllObjects.directory.generic_string(),
+                                    testAllObjects.extension));
       auto logged{records};
-      logged.push_back({.object{objects.directory / std::format("Tests/Retired/RetiredTest.cpp{}", objects.extension)},
+      logged.push_back({.object{testAllObjects.directory
+                                  / std::format("Tests/Retired/RetiredTest.cpp{}", testAllObjects.extension)},
                         .inputs{fake / "Tests/Retired/RetiredTest.cpp", fake / "Tests/Retired/Gone.hpp"}});
 
       // MSVC reports the headers it read but not the source, which the statement supplies
@@ -437,9 +499,10 @@ namespace sequoia::testing
     else
     {
       // The tracker spells paths in upper case and the reader recovers their case from the filesystem, so what it
-      // wrote must exist. The logs themselves live beside the objects, in a directory named after the configuration.
+      // wrote must exist. A target's logs live beside the target's objects, in a directory named after the
+      // configuration.
       auto writeTracked{
-        [&buildDir](const fs::path& objectDirectory, std::vector<compilation_record> tracked) {
+        [&](const fake_target& target, std::string_view configuration, std::vector<compilation_record> tracked) {
           for(auto& record : tracked)
           {
             record.object = buildDir / record.object;
@@ -448,11 +511,10 @@ namespace sequoia::testing
             write_to_file(record.object, "", std::ios_base::out);
           }
 
-          write_tlogs(buildDir / objectDirectory / "TestAll.tlog", tracked);
+          const auto objectDirectory{objects_of(system, target, configuration).directory};
+          write_tlogs(buildDir / objectDirectory / std::format("{}.tlog", target.name), tracked);
         }
       };
-
-      writeTracked(objects.directory, records);
 
       // The other configuration's build left out the tests, and put its objects in a directory of its own. Those
       // objects also read a header which only the tests read in the executable's configuration. Reading the other
@@ -465,16 +527,30 @@ namespace sequoia::testing
         }
       };
 
-      const auto otherDirectory{objects.directory.parent_path() / otherVisualStudioConfiguration};
-      const auto otherRecords{
-          units
-        | std::views::filter(std::not_fn(isTest))
-        | std::views::transform(compiledIn(otherDirectory))
-        | std::views::transform(alsoReadingTestsHeader)
-        | std::ranges::to<std::vector>()
-      };
+      for(const auto& target : st_FakeTargets)
+      {
+        auto compiledByTarget{[&target](const unit& u){ return target_compiling(u.source).name == target.name; }};
 
-      writeTracked(otherDirectory, otherRecords);
+        const auto records{
+            units
+          | std::views::filter(recorded)
+          | std::views::filter(compiledByTarget)
+          | std::views::transform(compiledIn(visualStudioConfiguration))
+          | std::ranges::to<std::vector>()
+        };
+
+        const auto otherRecords{
+            units
+          | std::views::filter(std::not_fn(isTest))
+          | std::views::filter(compiledByTarget)
+          | std::views::transform(compiledIn(otherVisualStudioConfiguration))
+          | std::views::transform(alsoReadingTestsHeader)
+          | std::ranges::to<std::vector>()
+        };
+
+        writeTracked(target, visualStudioConfiguration, records);
+        writeTracked(target, otherVisualStudioConfiguration, otherRecords);
+      }
     }
   }
 
@@ -780,30 +856,28 @@ namespace sequoia::testing
   }
 
   /** The normalised refusal for the fake build by `system`. The refusal names `file`, and names the object compiled
-      from `source` as the first object whose compilation read `file`.
+      from `source` as the first of sequoia's objects whose compilation read `file`.
    */
   std::string dependency_analyzer_free_test::sequoia_refusal_message(build_system system,
                                                                      std::string_view file,
                                                                      std::string_view source)
   {
-    const auto [objectDirectory, objectExtension]{objects_of(system)};
     const auto executable{
       (system == build_system::visual_studio) ? std::format("{}/TestAll", visualStudioConfiguration)
                                               : std::string{"TestAll"}
     };
 
     return std::format("sequoia has changed since this executable was built; please build the executable again.\n"
-                       "FakeProject/{}, read to compile FakeProject/build/CMade/TestAll/{}/{}{}, "
-                       "of target TestAll, time stamp: ****\n"
+                       "FakeProject/{}, read to compile FakeProject/build/CMade/TestAll/{}, "
+                       "of target {}, time stamp: ****\n"
                        "FakeProject/build/CMade/TestAll/{}, time stamp: ****\n",
                        file,
-                       objectDirectory.generic_string(),
-                       source,
-                       objectExtension,
+                       object_compiled_from(system, source, visualStudioConfiguration).generic_string(),
+                       target_compiling(source).name,
                        executable);
   }
 
-  /// The fake project plays sequoia in sequoia's own build: sequoia's sources are the fake project's own
+  /// The fake project plays sequoia in sequoia's own repository: sequoia's sources are the fake project's own
   void dependency_analyzer_free_test::test_sequoia_change(const project_paths& projPaths, build_system system)
   {
     fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
@@ -849,7 +923,8 @@ namespace sequoia::testing
                          {{helper, latePassOffset}, {definitions, lateEditOffset}},
                          sequoia_refusal_message(system, fooDefinitionsSource, fooDefinitionsSource));
 
-    // A file of sequoia's is newer than the executable, so the check reads the record. The record then decides.
+    // A file within sequoia's sources is newer than the executable, so the check reads the record. The record then
+    // decides.
     check_sequoia_change("A header of sequoia's which only the tests read",
                          projPaths, sequoiaSources, {{testsOnly, lateEditOffset}}, std::nullopt);
 
@@ -866,41 +941,45 @@ namespace sequoia::testing
                          std::nullopt);
   }
 
-  /** The fake project plays a client which `init` created. Its dependency `foo` plays the client's copy of sequoia,
-      and the client's build compiles `foo`. So sequoia's sources are foo's, and the client's own sources and tests
-      are not sequoia's.
+  /** The fake project plays a client which `init` created, and the client's build compiles the client's copy of
+      sequoia. So sequoia's sources are those of the copy, and the client's own sources and tests are not sequoia's.
    */
   void dependency_analyzer_free_test::test_sequoia_change_in_client(const project_paths& projPaths, build_system system)
   {
     fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
 
-    constexpr std::string_view fooHelperSource{"dependencies/foo/Source/foo/Utilities/Helper.cpp"};
-    constexpr std::string_view fooHelperHeader{"dependencies/foo/Source/foo/Utilities/Helper.hpp"};
+    constexpr std::string_view fileEditorsSource{"dependencies/sequoia/Source/sequoia/TestFramework/FileEditors.cpp"};
+    constexpr std::string_view fileEditorsHeader{"dependencies/sequoia/Source/sequoia/TestFramework/FileEditors.hpp"};
 
     const auto& projectRoot  {projPaths.project_root()};
-    const auto sequoiaSources{projectRoot / "dependencies" / "foo" / "Source" / "foo"};
+    const auto sequoiaSources{projPaths.dependencies().sequoia_root() / "Source" / "sequoia"};
+    const auto testsOnly     {sequoiaSources / "TestFramework" / "RegularAllocationTestCore.hpp"};
 
     check_sequoia_change("A client: nothing edited since the build", projPaths, sequoiaSources, {}, std::nullopt);
 
     check_sequoia_change("A client: a source of sequoia's, edited since the build",
                          projPaths,
                          sequoiaSources,
-                         {{projectRoot / fooHelperSource, lateEditOffset}},
-                         sequoia_refusal_message(system, fooHelperSource, fooHelperSource));
+                         {{projectRoot / fileEditorsSource, lateEditOffset}},
+                         sequoia_refusal_message(system, fileEditorsSource, fileEditorsSource));
 
-    // The client's Probability.cpp reads the header first, but its object is not sequoia's
+    // In the ninja log, the client's FooTest.cpp reads the header first. FooTest.cpp's object is not sequoia's.
     check_sequoia_change("A client: a header of sequoia's, edited since the build: named with sequoia's first object "
                          "to read it",
                          projPaths,
                          sequoiaSources,
-                         {{projectRoot / fooHelperHeader, lateEditOffset}},
-                         sequoia_refusal_message(system, fooHelperHeader, fooHelperSource));
+                         {{projectRoot / fileEditorsHeader, lateEditOffset}},
+                         sequoia_refusal_message(system, fileEditorsHeader, fileEditorsSource));
 
-    // A header of sequoia's which no object reads is newer than the executable, so the check reads the record
+    // A file within sequoia's sources is newer than the executable, so the check reads the record. The record then
+    // decides.
+    check_sequoia_change("A client: a header of sequoia's which only the tests read",
+                         projPaths, sequoiaSources, {{testsOnly, lateEditOffset}}, std::nullopt);
+
     check_sequoia_change("A client: the client's own source and test, edited since the build, with the record read",
                          projPaths,
                          sequoiaSources,
-                         {{sequoiaSources / "Utilities" / "Bar.hpp", latePassOffset},
+                         {{testsOnly, latePassOffset},
                           {projectRoot / fooDefinitionsSource, lateEditOffset},
                           {projPaths.tests().repo() / "Stuff" / "FooTest.cpp", lateEditOffset}},
                          std::nullopt);
@@ -945,8 +1024,8 @@ namespace sequoia::testing
           std::optional<std::string>{
             "sequoia has changed since this executable was built; please build the executable again.\n"
             "FakeProject/Source/fakeProject/Stuff/FooDefinitions.cpp, read to compile "
-            "FakeProject/build/CMade/TestAll/CMakeFiles/TestAll.dir/Source/fakeProject/Stuff/FooDefinitions.cpp.o, "
-            "of target TestAll, cannot now be read: ****\n"});
+            "FakeProject/build/CMade/TestAll/FakeProject/CMakeFiles/FakeProject.dir/Stuff/FooDefinitions.cpp.o, "
+            "of target FakeProject, cannot now be read: ****\n"});
   }
 
   /// A build given relative paths records them relative to the build directory, and perhaps not lexically normal
@@ -1026,7 +1105,7 @@ namespace sequoia::testing
 
   /** CMake puts a target's objects within a directory `<target>.dir` of the build tree. The test relocates a copy of
       the fake project to within `Projects.dir`, so a directory above the copy's build tree has a name of that form
-      too. The refusal must still name the target `TestAll`.
+      too. The refusal must still name the target `FakeProject`.
    */
   void dependency_analyzer_free_test::test_sequoia_target_within_build_tree(const fs::path& fake)
   {
@@ -1065,6 +1144,7 @@ namespace sequoia::testing
     const auto& sourceRepo{projPaths.source().project()};
     const auto testUtilsPath{projPaths.project_root() / "TestUtilities"};
     const auto fooPath{projPaths.project_root() / "dependencies" / "foo" / "Source"};
+    const auto sequoiaTestFramework{projPaths.dependencies().sequoia_root() / "Source" / "sequoia" / "TestFramework"};
     const auto& materials{projPaths.test_materials().repo()};
 
     check_tests_to_run("Nothing stale", projPaths, {}, {}, {});
@@ -1288,6 +1368,20 @@ namespace sequoia::testing
                        projPaths,
                        {.stale{{{fooPath / "foo" / "Utilities" / "Helper.cpp"}, modification_time::early}},
                          .to_run{{"Maths/ProbabilityTest.cpp"}, {"Maths/ProbabilityTestingDiagnostics.cpp"}, {"Utilities/UsefulThingsFreeTest.cpp"}}},
+                       {},
+                       {});
+
+    check_tests_to_run("Source cpp of the project's copy of sequoia stale: the test reading the header it implements",
+                       projPaths,
+                       {.stale{{{sequoiaTestFramework / "FileEditors.cpp"}, modification_time::early}},
+                         .to_run{{"Stuff/FooTest.cpp"}}},
+                       {},
+                       {});
+
+    check_tests_to_run("Header of the project's copy of sequoia stale, which only the tests read",
+                       projPaths,
+                       {.stale{{{sequoiaTestFramework / "RegularAllocationTestCore.hpp"}, modification_time::early}},
+                         .to_run{{"Utilities/ContainerAllocationTest.cpp"}}},
                        {},
                        {});
 
