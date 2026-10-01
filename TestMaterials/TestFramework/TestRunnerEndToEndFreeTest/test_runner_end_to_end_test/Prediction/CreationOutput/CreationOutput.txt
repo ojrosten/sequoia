@@ -17,6 +17,10 @@ Creating files for new test:
 "Tests/Unstable/FlipperFreeTest.cpp"
 
 Creating files for new test:
+"Tests/Utilities/UtilitiesFreeDiagnostics.hpp"
+"Tests/Utilities/UtilitiesFreeDiagnostics.cpp"
+
+Creating files for new test:
 "Source/generatedProject/Maybe/Maybe.hpp"
 "Tests/Maybe/MaybeTestingUtilities.hpp"
 "Tests/Maybe/MaybeTestingDiagnostics.hpp"
@@ -72,7 +76,6 @@ Creating files for new test:
 
 Running CMake...
 
--- Selecting Windows SDK version 10.0.22000.0 to target Windows 10.0.22631.
--- Configuring done (0.0s)
--- Generating done (0.1s)
--- Build files have been written to: C:/Users/olive/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/GeneratedProject/build/CMade/win/TestAll
+-- Configuring done (0.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: /Users/oliver/sequoia-diagnostics-template/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/build/TestAll/llvm-homebrew-asan

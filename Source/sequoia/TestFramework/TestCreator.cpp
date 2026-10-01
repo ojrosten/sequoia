@@ -1051,7 +1051,7 @@ namespace sequoia::testing
     case nascent_test_flavour::standard:
       return { test_name() };
     case nascent_test_flavour::framework_diagnostics:
-      return { diagnostics("false_positive"), diagnostics("false_negative")};
+      return { diagnostics("false_negative"), diagnostics("false_positive") };
     }
 
     throw std::logic_error{"Unrecognized option for nascent_test_flavour"};

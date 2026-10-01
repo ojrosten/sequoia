@@ -2,11 +2,11 @@
 Running tests, synchronously...
 
 bar_free_test:
-[Execution Time: 125us]
+[Execution Time: 244us]
 foo_false_negative_test:
-[Execution Time: 103us]
+[Execution Time: 251us]
 foo_test:
-[Execution Time: 3.64ms]
+[Execution Time: 4.17ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 11]
 
 ******  Critical Failures:  1  ******
@@ -14,7 +14,7 @@ foo_test:
 
 	Error -- Unexpected Exception:
 	Line 1 of a .seqpat is not a valid regular expression: (
-	/Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz.seqpat
+	/Users/oliver/sequoia-diagnostics-template/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases/NoSeqpat/baz.seqpat
 
 	Exception thrown during last check
 	Last Recorded Message:
@@ -29,21 +29,21 @@ foo_test:
 	=======================================
 
 oldschool_false_negative_test:
-[Execution Time: 84.5us]
+[Execution Time: 111us]
 oldschool_test:
-[Execution Time: 105us]
+[Execution Time: 106us]
 container_allocation_test:
-[Execution Time: 102us]
+[Execution Time: 105us]
 container_performance_test:
-[Execution Time: 95us]
+[Execution Time: 106us]
 unique_thing_false_negative_test:
-[Execution Time: 381us]
+[Execution Time: 475us]
 	False Negative Checks:                     2;  Failures:  0
 unique_thing_test:
-[Execution Time: 767us]
+[Execution Time: 722us]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
 useful_things_free_test:
-[Execution Time: 323us]
+[Execution Time: 356us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -55,27 +55,31 @@ useful_things_free_test:
 
 	=======================================
 
+utilities_false_negative_free_diagnostics:
+[Execution Time: 95.3us]
+utilities_false_positive_free_diagnostics:
+[Execution Time: 84us]
 utilities_free_test:
-[Execution Time: 120us]
+[Execution Time: 103us]
 flipper_free_test:
-[Execution Time: 260us]
+[Execution Time: 396us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 house_allocation_test:
-[Execution Time: 94.9us]
+[Execution Time: 93.5us]
 maybe_false_negative_test:
-[Execution Time: 100us]
+[Execution Time: 126us]
 maybe_test:
-[Execution Time: 97.2us]
+[Execution Time: 94.5us]
 probability_false_negative_test:
-[Execution Time: 352us]
+[Execution Time: 380us]
 	False Negative Checks:                     2;  Failures:  0
 probability_test:
-[Execution Time: 715us]
+[Execution Time: 812us]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 
 -----------Grand Totals-----------
-[Total Run Time: 10.1ms]
-[Execution Time: 7.46ms]
+[Total Run Time: 21ms]
+[Execution Time: 8.83ms]
 	Standard Top Level Checks:                12;  Failures:  1  [Deep checks: 91]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
