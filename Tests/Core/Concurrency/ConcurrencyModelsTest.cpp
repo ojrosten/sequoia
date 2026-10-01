@@ -29,9 +29,9 @@ namespace sequoia::testing
     class stalling_queue
     {
     public:
-      static void await_stall() { m_StallBegun.acquire(); }
+      static void await_stall() { st_StallBegun.acquire(); }
 
-      static void release_stall() { m_StallReleased.release(); }
+      static void release_stall() { st_StallReleased.release(); }
 
       void push(int_task&& task)
       {
@@ -40,8 +40,8 @@ namespace sequoia::testing
 
         if(!std::exchange(m_HasStalled, true))
         {
-          m_StallBegun.release();
-          m_StallReleased.acquire();
+          st_StallBegun.release();
+          st_StallReleased.acquire();
         }
       }
 
@@ -54,7 +54,7 @@ namespace sequoia::testing
       void pop() { m_Q.pop(); }
     private:
       // The semaphores are static: a task_queue default-constructs its queue and gives no access to the queue
-      inline static std::binary_semaphore m_StallBegun{0}, m_StallReleased{0};
+      inline static std::binary_semaphore st_StallBegun{0}, st_StallReleased{0};
 
       std::queue<int_task> m_Q;
       bool m_HasStalled{};
@@ -96,6 +96,7 @@ namespace sequoia::testing
   void threading_models_test::run_tests()
   {
     test_task_queue();
+    test_try_lock_successes();
     test_try_lock_failures();
 
     test_exceptions<thread_pool<void>>("pool_2M", 2u);
@@ -164,6 +165,40 @@ namespace sequoia::testing
     }
   }
 
+  void threading_models_test::test_try_lock_successes()
+  {
+    // std::mutex::try_lock may fail spuriously, so each try-pop and try-push below is repeated until it succeeds
+    task_queue<int> q{};
+
+    {
+      int_task queuedTask{[](){ return 1; }};
+      auto queuedFuture{queuedTask.get_future()};
+      q.push(std::move(queuedTask));
+
+      int_task poppedTask{};
+      while(!poppedTask.valid())
+      {
+        poppedTask = q.pop(std::try_to_lock);
+      }
+
+      poppedTask();
+      check(equality, "A successful try-pop yields the queued task", queuedFuture.get(), 1);
+    }
+
+    {
+      int_task tryPushedTask{[](){ return 2; }};
+      auto tryPushedFuture{tryPushedTask.get_future()};
+      while(!q.push(std::move(tryPushedTask), std::try_to_lock)) {}
+
+      // Finishing the queue turns a missing task into an exception, not a hang. A pop on a finished, empty queue
+      // returns an empty task, and invoking that task throws.
+      q.finish();
+
+      q.pop()();
+      check(equality, "A successful try-push queues its task", tryPushedFuture.get(), 2);
+    }
+  }
+
   void threading_models_test::test_try_lock_failures()
   {
     stalling_task_queue q{};
@@ -182,6 +217,9 @@ namespace sequoia::testing
     }
 
     q.push(std::move(refusedTask));
+
+    // Finishing the queue turns a missing task into an exception, not a hang. A pop on a finished, empty queue
+    // returns an empty task, and invoking that task throws.
     q.finish();
 
     q.pop()();
