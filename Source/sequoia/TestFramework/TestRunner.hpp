@@ -218,7 +218,7 @@ namespace sequoia::testing
     /** \brief An RAII wrapper to write a test's execution record: when the test started and, on destruction, its
                execution duration and the runner's overhead so far, as `executionTimer` gives them.
 
-        A record which cannot be written is skipped rather than reported.
+        A record which cannot be written is skipped rather than reported; an allocation failure is not caught.
      */
     class [[nodiscard]] scoped_execution_record
     {

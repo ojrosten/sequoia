@@ -48,7 +48,7 @@ namespace sequoia::testing
       return std::format("started {:%FT%TZ}\n", std::chrono::floor<std::chrono::milliseconds>(start));
     }
 
-    // Written aside and renamed over the file, so that a process dying mid-write leaves the previous contents
+    // Written to <file>.partial and renamed over <file>, so that a process dying mid-write leaves the previous contents
     void overwrite_quietly(const fs::path& file, std::string_view text)
     {
       std::error_code selectsTheNonThrowingOverload{};
@@ -61,20 +61,6 @@ namespace sequoia::testing
       }
 
       fs::rename(partial, file, selectsTheNonThrowingOverload);
-    }
-
-    // Nothing escapes: the start is written outside the handler that turns a test's exceptions into critical
-    // failures, and the durations from a destructor, where a throw would end the run
-    template<invocable_r<std::string_view> Text>
-    void overwrite_record_quietly(const fs::path& file, Text text) noexcept
-    {
-      try
-      {
-        overwrite_quietly(file, text());
-      }
-      catch(...)
-      {
-      }
     }
 
     [[nodiscard]]
@@ -780,22 +766,17 @@ namespace sequoia::testing
     , m_Start{std::chrono::system_clock::now()}
     , m_ExecutionTimer{executionTimer}
   {
-    overwrite_record_quietly(m_File, [this](){ return started_at(m_Start); });
+    overwrite_quietly(m_File, started_at(m_Start));
   }
 
   test_vessel::scoped_execution_record::~scoped_execution_record()
   {
-    auto finished{
-      [this](){
-        using std::chrono::microseconds, std::chrono::duration_cast;
-        return std::format("{}execution duration {}us\nrunner overhead {}us\n",
-                           started_at(m_Start),
-                           duration_cast<microseconds>(m_ExecutionTimer.execution_duration()).count(),
-                           duration_cast<microseconds>(m_ExecutionTimer.runner_overhead()).count());
-      }
-    };
-
-    overwrite_record_quietly(m_File, finished);
+    using std::chrono::microseconds, std::chrono::duration_cast;
+    overwrite_quietly(m_File,
+                      std::format("{}execution duration {}us\nrunner overhead {}us\n",
+                                  started_at(m_Start),
+                                  duration_cast<microseconds>(m_ExecutionTimer.execution_duration()).count(),
+                                  duration_cast<microseconds>(m_ExecutionTimer.runner_overhead()).count()));
   }
 
   //=========================================== test_runner ===========================================//
