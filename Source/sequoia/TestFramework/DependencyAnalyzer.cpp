@@ -932,14 +932,15 @@ namespace sequoia::testing
       return newest;
     }
 
-    /** Whether `dir`, or any entry anywhere within `dir`, is no older than `stamp`.
-        -# Directories count, since deleting an entry moves the time of the entry's directory;
-        -# An entry whose time this function cannot read counts as no older.
+    /** Whether `dir`, or any entry within `dir`, may have changed since `stamp`. An entry may have changed if:
+        -# The entry is no older than `stamp`. Directories count, since deleting an entry moves the time of the
+           entry's directory;
+        -# This function cannot read the entry's time.
      */
     [[nodiscard]]
-    bool anything_since(const fs::path& dir, const fs::file_time_type stamp)
+    bool may_have_changed_since(const fs::path& dir, const fs::file_time_type stamp)
     {
-      auto noOlder{
+      auto mayHaveChanged{
         [stamp](const fs::directory_entry& entry) {
           std::error_code error{};
           const auto time{entry.last_write_time(error)};
@@ -947,11 +948,11 @@ namespace sequoia::testing
         }
       };
 
-      if(noOlder(fs::directory_entry{dir}))
+      if(mayHaveChanged(fs::directory_entry{dir}))
         return true;
 
       return std::ranges::any_of(fs::recursive_directory_iterator{dir, fs::directory_options::skip_permission_denied},
-                                 noOlder);
+                                 mayHaveChanged);
     }
 
     [[nodiscard]]
@@ -1006,9 +1007,8 @@ namespace sequoia::testing
       return;
     }
 
-    // The walk costs one stat per entry within `sequoiaSources`. The function reads the build's record only if
-    // one of those entries is no older than the executable.
-    if(!anything_since(sequoiaSources, *executableStamp))
+    // The walk costs one stat per entry within `sequoiaSources`
+    if(!may_have_changed_since(sequoiaSources, *executableStamp))
       return;
 
     const auto build{
