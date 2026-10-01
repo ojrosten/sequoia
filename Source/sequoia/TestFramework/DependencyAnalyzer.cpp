@@ -767,7 +767,7 @@ namespace sequoia::testing
     const auto partial{fs::path{file} += ".partial"};
     std::ofstream ostream{partial};
     std::ranges::copy(tests | std::views::transform(rebased), std::ostream_iterator<prune_record>{ostream, "\n"});
-    throw_unless_closed(ostream, file);
+    throw_unless_closed(ostream, partial);
 
     std::error_code error{};
     fs::rename(partial, file, error);

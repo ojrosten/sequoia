@@ -89,12 +89,12 @@ Try deleting the parent directory and starting afresh
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1615
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1614
 Prune records which cannot be written
 
 Expected Exception Type:
 [std::runtime_error]
-Unable to write to file output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/output/Prune/CMade/TestAll/TestAll.rerun
+Unable to write to file output/TestsTemporaryData/TestFramework/DependencyAnalyzerFreeTest/dependency_analyzer_free_test/Auxiliary/FakeProject/output/Prune/CMade/TestAll/TestAll.rerun.partial
 
 =======================================
 
