@@ -1247,17 +1247,13 @@ namespace sequoia::testing
   {
     auto warnIfCoarse{
       [this]() {
-        auto isPerformanceTest{[](const suite_node& node) { return node.optTest && node.optTest->performance_test(); }};
-        if(std::ranges::none_of(m_Suites.cnode_weights(), isPerformanceTest))
-          return;
-
         constexpr std::chrono::milliseconds target{5};
         if(const auto sleepWarning{coarse_sleep_warning(typical_sleep_duration(target), target)})
           stream() << *sleepWarning << std::flush;
       }
     };
 
-    // The timer resolution belongs to the process, so the first runner decides for every later runner in it
+    // The timer resolution belongs to the process, so the first runner's check serves every later runner in it
     static std::once_flag checked{};
     std::call_once(checked, warnIfCoarse);
   }
