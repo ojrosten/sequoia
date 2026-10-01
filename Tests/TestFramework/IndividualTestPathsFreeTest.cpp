@@ -41,10 +41,10 @@ namespace sequoia::testing
 
     check_exception_thrown<std::runtime_error>(
       reporter{"Empty file"},
-      []() { return test_summary_path{"", "foo_test", project_paths{}, std::nullopt}; }
+      []() { return test_summary_path{"", "foo_test", project_paths{}, null_discriminator}; }
     );
 
-    check(equality, "", test_summary_path{"Foo.cpp", "foo_test", project_paths{}, std::nullopt}.file_path().generic_string(), "foo_test.txt"s);
+    check(equality, "", test_summary_path{"Foo.cpp", "foo_test", project_paths{}, null_discriminator}.file_path().generic_string(), "foo_test.txt"s);
     check(equality, "", test_summary_path{"Foo.cpp", "foo_test", project_paths{}, "xyz"}.file_path().generic_string(), "foo_test_xyz.txt"s);
 
     {
@@ -53,14 +53,14 @@ namespace sequoia::testing
       check(
         equality,
         reporter{"Absolute Path"},
-        test_summary_path{working_materials() / "Tests" / "Foo.cpp", "foo_test", projPaths, std::nullopt}.file_path(),
+        test_summary_path{working_materials() / "Tests" / "Foo.cpp", "foo_test", projPaths, null_discriminator}.file_path(),
         projPaths.output().test_summaries() / "Tests" / "foo_test.txt"
       );
 
       check(
         equality,
         reporter{"Non-Absolute Path"},
-        test_summary_path{fs::path{"Tests/Foo.cpp"}, "foo_test", projPaths, std::nullopt}.file_path(),
+        test_summary_path{fs::path{"Tests/Foo.cpp"}, "foo_test", projPaths, null_discriminator}.file_path(),
         projPaths.output().test_summaries() / "Tests" / "foo_test.txt"
       );
 
@@ -152,7 +152,7 @@ namespace sequoia::testing
     const project_paths projPaths{args.size(), args.get(), {}};
 
     const auto source{projPaths.tests().repo() / "Foo" / "Bar.cpp"};
-    const individual_materials_paths materials{source, "bar_test", projPaths, std::nullopt};
+    const individual_materials_paths materials{source, "bar_test", projPaths, null_discriminator};
     const auto original{projPaths.test_materials().repo() / "Foo" / "Bar" / "bar_test"},
                temporary{projPaths.output().tests_temporary_data() / "Foo" / "Bar" / "bar_test"};
 

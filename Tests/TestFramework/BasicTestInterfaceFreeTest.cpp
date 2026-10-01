@@ -80,7 +80,7 @@ namespace sequoia::testing
     const auto rebasedSource{rebase_from(source_file(), get_project_paths().project_root())};
 
     {
-      fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, {}, {}};
+      fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, null_discriminator, null_discriminator};
 
       check(equality,
             reporter{"Summary File Path"},
@@ -108,7 +108,7 @@ namespace sequoia::testing
     }
 
     {
-      fake_test_with_discriminated_summary t{test_name<fake_test_with_discriminated_summary>(), source_file(), projPaths, {}, {}, {}, {"bar"}};
+      fake_test_with_discriminated_summary t{test_name<fake_test_with_discriminated_summary>(), source_file(), projPaths, {}, {}, null_discriminator, {"bar"}};
 
       check(equality,
             reporter{"Summary File Path"},
@@ -122,7 +122,7 @@ namespace sequoia::testing
     }
 
     {
-      fake_test_with_discriminated_exceptions t{test_name<fake_test_with_discriminated_exceptions>(), source_file(), projPaths, {}, {}, {"baz"}, {}};
+      fake_test_with_discriminated_exceptions t{test_name<fake_test_with_discriminated_exceptions>(), source_file(), projPaths, {}, {}, {"baz"}, null_discriminator};
 
       check(equality,
             reporter{"Summary File Path"},
@@ -151,9 +151,9 @@ namespace sequoia::testing
     const auto preparedTest{
       [&projPaths](std::string_view sourceStem) {
         const auto source{projPaths.tests().repo() / "Materials" / std::format("{}.cpp", sourceStem)};
-        const individual_materials_paths materials{source, "fake_test", projPaths, std::nullopt};
+        const individual_materials_paths materials{source, "fake_test", projPaths, null_discriminator};
         prepare_materials(materials);
-        return std::pair{fake_test{"fake_test", source, projPaths, materials, {}, {}, {}}, materials};
+        return std::pair{fake_test{"fake_test", source, projPaths, materials, {}, null_discriminator, null_discriminator}, materials};
       }
     };
 
@@ -240,8 +240,8 @@ namespace sequoia::testing
         projPaths,
         individual_materials_paths{},
         {},
-        {},
-        {}
+        null_discriminator,
+        null_discriminator
       };
 
       check_exception_thrown<std::logic_error>("Working copy of a test with no materials paths",

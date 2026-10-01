@@ -367,7 +367,7 @@ namespace sequoia::testing
 
       \returns
       -# The hook's result for `cache`, as a `std::string`, if `T` declares the hook;
-      -# `nullopt` otherwise.
+      -# `null_discriminator` otherwise.
    */
   template<template<class> class Probe, concrete_test T>
   [[nodiscard]]
@@ -380,7 +380,7 @@ namespace sequoia::testing
     if constexpr(Probe<T>::conforming_v)
       return Probe<T>::discriminator(cache);
     else
-      return std::nullopt;
+      return null_discriminator;
   }
 
   /** \brief Consumes command-line arguments and holds all test suites.
