@@ -150,8 +150,8 @@ namespace sequoia::testing
       Moves the existing temporary root to `materials.discarded_materials_root()`, and queues the discarded root's
       removal with `remover`.
 
-      The `WorkingCopy` and `Auxiliary` in the original root are copied beneath the temporary root.
-      If the original root exists but holds no `WorkingCopy`, an empty `WorkingCopy` is made beneath
+      The `WorkingCopy` and `Auxiliary` in the original root are copied into the temporary root.
+      If the original root exists but holds no `WorkingCopy`, an empty `WorkingCopy` is made within
       the temporary root instead. A test with no original root is left an empty temporary root, which
       is its scratchpad.
 
