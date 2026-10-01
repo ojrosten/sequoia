@@ -94,9 +94,10 @@ namespace sequoia::testing
 
     enum class build_system { ninja, ninja_with_msvc, visual_studio };
 
-    /** A target of the fake build: its name, and the directory of its sources relative to the fake project's root.
-        TestAll's directory is empty. CMake builds every other target within a directory of the build tree named after
-        the target.
+    /** A target of the fake build: its name, and the directory, relative to the fake project's root, which holds the
+        target's sources. TestAll's is empty: TestAll compiles every source which no other target compiles. The fake
+        project's CMakeLists.txt files build every other target within a directory of the build tree named after the
+        target.
      */
     struct fake_target
     {

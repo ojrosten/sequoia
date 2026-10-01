@@ -275,7 +275,8 @@ namespace sequoia::testing
         fileEditors     {"dependencies/sequoia/Source/sequoia/TestFramework/FileEditors.hpp"},
         substitutions   {"sequoia/TextProcessing/Substitutions.hpp"};
 
-      // sequoia's unit comes last, so that the compilation of a test reads FileEditors.hpp before sequoia's does
+      // sequoia's unit comes last, so that in the ninja log the compilation of a test reads FileEditors.hpp before
+      // sequoia's does. Visual Studio's records follow the order in which the filesystem lists the targets' logs.
       static const std::vector<unit> units{
         {"Source/fakeProject/Maths/Helper.cpp", {"Source/fakeProject/Maths/Helper.hpp"}},
         {"Source/fakeProject/Maths/Probability.cpp", {"Source/fakeProject/Maths/Probability.hpp", "Source/fakeProject/Maths/Helper.hpp", "dependencies/foo/Source/foo/Utilities/Helper.hpp"}},
@@ -339,27 +340,28 @@ namespace sequoia::testing
     return (found != st_FakeTargets.end()) ? *found : st_FakeTargets.front();
   }
 
-  /// The layout which CMake gives a target's objects by default, under each fake build system
+  /// The directory in which CMake puts a target's objects by default, under each fake build system
   auto dependency_analyzer_free_test::objects_of(build_system system,
                                                  const fake_target& target,
                                                  std::string_view configuration) -> object_layout
   {
     const fs::path binaryDirectory{target.source_directory.empty() ? std::string_view{} : target.name};
-    const auto targetDirectory{binaryDirectory / std::format("{}.dir", target.name)};
-    const auto ninjaDirectory {binaryDirectory / "CMakeFiles" / std::format("{}.dir", target.name)};
+    const auto visualStudioDirectory{binaryDirectory / std::format("{}.dir", target.name)};
+    const auto ninjaDirectory       {binaryDirectory / "CMakeFiles" / std::format("{}.dir", target.name)};
 
     switch(system)
     {
     case build_system::ninja:           return {.directory{ninjaDirectory}, .extension{".o"}};
     case build_system::ninja_with_msvc: return {.directory{ninjaDirectory}, .extension{".obj"}};
-    case build_system::visual_studio:   return {.directory{targetDirectory / configuration}, .extension{".obj"}};
+    case build_system::visual_studio:   return {.directory{visualStudioDirectory / configuration}, .extension{".obj"}};
     }
 
     throw std::logic_error{"Unhandled build_system"};
   }
 
-  /** CMake names the object of a subdirectory's source for the source's path within the subdirectory. The fake build
-      names the object of TestAll's source for the source's path within the fake project.
+  /** The fake build names an object for its source's path within the target's source directory, or, for TestAll,
+      within the fake project. CMake's own names differ in ways the analyzer does not read: Ninja prefixes the path of
+      a source outside TestAll's directory with `__`, and Visual Studio names an object for its source's stem.
    */
   auto dependency_analyzer_free_test::object_compiled_from(build_system system,
                                                           std::string_view source,
@@ -854,7 +856,7 @@ namespace sequoia::testing
   }
 
   /** The normalised refusal for the fake build by `system`. The refusal names `file`, and names the object compiled
-      from `source` as the first object whose compilation read `file`.
+      from `source` as the first of sequoia's objects whose compilation read `file`.
    */
   std::string dependency_analyzer_free_test::sequoia_refusal_message(build_system system,
                                                                      std::string_view file,
@@ -875,7 +877,7 @@ namespace sequoia::testing
                        executable);
   }
 
-  /// The fake project plays sequoia in sequoia's own build: sequoia's sources are the fake project's own
+  /// The fake project plays sequoia in sequoia's own repository: sequoia's sources are the fake project's own
   void dependency_analyzer_free_test::test_sequoia_change(const project_paths& projPaths, build_system system)
   {
     fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
@@ -921,7 +923,8 @@ namespace sequoia::testing
                          {{helper, latePassOffset}, {definitions, lateEditOffset}},
                          sequoia_refusal_message(system, fooDefinitionsSource, fooDefinitionsSource));
 
-    // A file of sequoia's is newer than the executable, so the check reads the record. The record then decides.
+    // A file within sequoia's sources is newer than the executable, so the check reads the record. The record then
+    // decides.
     check_sequoia_change("A header of sequoia's which only the tests read",
                          projPaths, sequoiaSources, {{testsOnly, lateEditOffset}}, std::nullopt);
 
@@ -949,8 +952,8 @@ namespace sequoia::testing
     constexpr std::string_view fileEditorsHeader{"dependencies/sequoia/Source/sequoia/TestFramework/FileEditors.hpp"};
 
     const auto& projectRoot  {projPaths.project_root()};
-    const auto sequoiaSources{projectRoot / "dependencies" / "sequoia" / "Source" / "sequoia"};
-    const auto freeTestCore  {sequoiaSources / "TestFramework" / "FreeTestCore.hpp"};
+    const auto sequoiaSources{projPaths.dependencies().sequoia_root() / "Source" / "sequoia"};
+    const auto testsOnly     {sequoiaSources / "TestFramework" / "RegularAllocationTestCore.hpp"};
 
     check_sequoia_change("A client: nothing edited since the build", projPaths, sequoiaSources, {}, std::nullopt);
 
@@ -960,7 +963,7 @@ namespace sequoia::testing
                          {{projectRoot / fileEditorsSource, lateEditOffset}},
                          sequoia_refusal_message(system, fileEditorsSource, fileEditorsSource));
 
-    // The client's FooTest.cpp reads the header first. FooTest.cpp's object is not sequoia's.
+    // In the ninja log, the client's FooTest.cpp reads the header first. FooTest.cpp's object is not sequoia's.
     check_sequoia_change("A client: a header of sequoia's, edited since the build: named with sequoia's first object "
                          "to read it",
                          projPaths,
@@ -968,14 +971,15 @@ namespace sequoia::testing
                          {{projectRoot / fileEditorsHeader, lateEditOffset}},
                          sequoia_refusal_message(system, fileEditorsHeader, fileEditorsSource));
 
-    // A file of sequoia's is newer than the executable, so the check reads the record. The record then decides.
+    // A file within sequoia's sources is newer than the executable, so the check reads the record. The record then
+    // decides.
     check_sequoia_change("A client: a header of sequoia's which only the tests read",
-                         projPaths, sequoiaSources, {{freeTestCore, lateEditOffset}}, std::nullopt);
+                         projPaths, sequoiaSources, {{testsOnly, lateEditOffset}}, std::nullopt);
 
     check_sequoia_change("A client: the client's own source and test, edited since the build, with the record read",
                          projPaths,
                          sequoiaSources,
-                         {{freeTestCore, latePassOffset},
+                         {{testsOnly, latePassOffset},
                           {projectRoot / fooDefinitionsSource, lateEditOffset},
                           {projPaths.tests().repo() / "Stuff" / "FooTest.cpp", lateEditOffset}},
                          std::nullopt);
@@ -1140,9 +1144,7 @@ namespace sequoia::testing
     const auto& sourceRepo{projPaths.source().project()};
     const auto testUtilsPath{projPaths.project_root() / "TestUtilities"};
     const auto fooPath{projPaths.project_root() / "dependencies" / "foo" / "Source"};
-    const auto sequoiaTestFramework{
-      projPaths.project_root() / "dependencies" / "sequoia" / "Source" / "sequoia" / "TestFramework"
-    };
+    const auto sequoiaTestFramework{projPaths.dependencies().sequoia_root() / "Source" / "sequoia" / "TestFramework"};
     const auto& materials{projPaths.test_materials().repo()};
 
     check_tests_to_run("Nothing stale", projPaths, {}, {}, {});
@@ -1378,9 +1380,8 @@ namespace sequoia::testing
 
     check_tests_to_run("Header of the project's copy of sequoia stale, which only the tests read",
                        projPaths,
-                       {.stale{{{sequoiaTestFramework / "FreeTestCore.hpp"}, modification_time::early}},
-                         .to_run{{"Cycle/FirstFreeTest.cpp"}, {"Cycle/SecondFreeTest.cpp"}, {"Stuff/BarFreeTest.cpp"},
-                                 {"Utilities/UsefulThingsFreeTest.cpp"}, {"Utilities/UtilitiesFreeTest.cpp"}}},
+                       {.stale{{{sequoiaTestFramework / "RegularAllocationTestCore.hpp"}, modification_time::early}},
+                         .to_run{{"Utilities/ContainerAllocationTest.cpp"}}},
                        {},
                        {});
 
