@@ -188,11 +188,11 @@ The materials discriminator "platypus" must not differ only in case from Platypu
 =======================================
 
 Tests/TestFramework/BasicTestInterfaceFreeTest.cpp, Line 332
-Materials beside the configurations
+Materials beside the discriminated directories
 
 Expected Exception Type:
 [std::runtime_error]
-The materials in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/TestMaterials/Materials/DiscriminatedBeside/fake_test hold Prediction, stray.txt beside the configurations' directories, which would be ignored: only Platypus is read
+The materials in output/TestsTemporaryData/TestFramework/BasicTestInterfaceFreeTest/basic_test_interface_free_test/WorkingCopy/FakeProject/TestMaterials/Materials/DiscriminatedBeside/fake_test hold Prediction, stray.txt beside the discriminated directories, which would be ignored: only Platypus is read
 
 =======================================
 

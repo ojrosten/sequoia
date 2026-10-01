@@ -329,7 +329,7 @@ namespace sequoia::testing
     }
 
     check_exception_thrown<std::runtime_error>(
-      "Materials beside the configurations",
+      "Materials beside the discriminated directories",
       [&prepareMaterials]() { prepareMaterials("DiscriminatedBeside", "Platypus"); });
   }
 }

@@ -230,7 +230,7 @@ namespace sequoia::testing
       if(std::ranges::any_of(name, [](unsigned char c){ return c < 0x20; }))
         throw std::runtime_error{failureMessage("not contain a control character")};
 
-      // Windows strips a trailing dot or space, so two configurations could share one directory
+      // Windows strips a trailing dot or space, so two discriminators could share one directory
       if((name.back() == '.') || (name.back() == ' '))
         throw std::runtime_error{failureMessage("not end in a dot or a space")};
 
@@ -269,7 +269,7 @@ namespace sequoia::testing
       }
     }
 
-    void throw_if_materials_beside_configurations(const individual_materials_paths& materials)
+    void throw_if_materials_beside_discriminated_directories(const individual_materials_paths& materials)
     {
       const auto& root{materials.original_test_root()};
       auto isIgnored{
@@ -290,7 +290,7 @@ namespace sequoia::testing
       {
         std::ranges::sort(ignored);
         throw std::runtime_error{
-          std::format("The materials in {} hold {} beside the configurations' directories, which would be ignored: "
+          std::format("The materials in {} hold {} beside the discriminated directories, which would be ignored: "
                       "only {} is read",
                       root.generic_string(),
                       ignored | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>(),
@@ -686,7 +686,7 @@ namespace sequoia::testing
     {
       throw_if_bad_materials_discriminator(materials);
       if(fs::exists(materials.original_test_root()))
-        throw_if_materials_beside_configurations(materials);
+        throw_if_materials_beside_discriminated_directories(materials);
     }
 
     if(!fs::exists(materials.original_materials_root()))
