@@ -23,7 +23,7 @@ jobs:
   doxygen:
     name: Docs · Doxygen
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v7
         with:
@@ -53,7 +53,7 @@ jobs:
       # limit cancels the job.
       - name: Install doxygen
         if: inputs.needs_testing == 'true'
-        timeout-minutes: 10
+        timeout-minutes: 20
         run: |
           # The hosted image ships vendor repositories - Chrome and Microsoft - which
           # nothing here installs from. A bad index served by one of them fails the
