@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTest.cpp, Line 1056
+Tests/TestFramework/TestRunnerTest.cpp, Line 1058
 Test Main has empty path
 
 Expected Exception Type:
@@ -9,7 +9,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1064
+Tests/TestFramework/TestRunnerTest.cpp, Line 1066
 Test Main does not exist
 
 Expected Exception Type:
@@ -20,7 +20,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1072
+Tests/TestFramework/TestRunnerTest.cpp, Line 1074
 Include Target has empty path
 
 Expected Exception Type:
@@ -31,7 +31,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1080
+Tests/TestFramework/TestRunnerTest.cpp, Line 1082
 Include Target does not exist
 
 Expected Exception Type:
@@ -42,7 +42,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1088
+Tests/TestFramework/TestRunnerTest.cpp, Line 1090
 Project root is empty
 
 Expected Exception Type:
@@ -51,7 +51,7 @@ Unable to locate project root as no commandline arguments supplied.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1096
+Tests/TestFramework/TestRunnerTest.cpp, Line 1098
 Project root does not exist
 
 Expected Exception Type:
@@ -60,7 +60,7 @@ canonical - file not found: /output/TestsTemporaryData/TestFramework/TestRunnerT
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1115
+Tests/TestFramework/TestRunnerTest.cpp, Line 1117
 Project root not findable
 
 Expected Exception Type:
@@ -71,7 +71,7 @@ Please ensure that the build directory is a subdirectory of <project>/build.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1124
+Tests/TestFramework/TestRunnerTest.cpp, Line 1126
 The same test registered twice
 
 Expected Exception Type:
@@ -82,7 +82,7 @@ A test's name is that of its class, and determines where its output is written, 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1136
+Tests/TestFramework/TestRunnerTest.cpp, Line 1138
 Two tests whose unqualified names coincide
 
 Expected Exception Type:
@@ -93,7 +93,7 @@ A test's name is that of its class, and determines where its output is written, 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1148
+Tests/TestFramework/TestRunnerTest.cpp, Line 1150
 A source in the directory sharing another's materials prefix
 
 Expected Exception Type:
@@ -104,7 +104,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1166
+Tests/TestFramework/TestRunnerTest.cpp, Line 1168
 A source whose materials prefix is a directory holding another's source
 
 Expected Exception Type:
@@ -115,7 +115,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1184
+Tests/TestFramework/TestRunnerTest.cpp, Line 1186
 A source in a directory sharing another's materials prefix but for case
 
 Expected Exception Type:
@@ -126,7 +126,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1202
+Tests/TestFramework/TestRunnerTest.cpp, Line 1204
 Two tests whose names differ only in case
 
 Expected Exception Type:
@@ -137,7 +137,7 @@ A test's name is that of its class, and determines where its output is written, 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1220
+Tests/TestFramework/TestRunnerTest.cpp, Line 1222
 A source two directories beneath another's materials prefix
 
 Expected Exception Type:
@@ -148,7 +148,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1238
+Tests/TestFramework/TestRunnerTest.cpp, Line 1240
 A source whose materials prefix, but for case, is a directory holding another's source
 
 Expected Exception Type:
@@ -159,7 +159,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1256
+Tests/TestFramework/TestRunnerTest.cpp, Line 1258
 Sources beside a materials prefix and sharing it are admitted; one beneath it then is not
 
 Expected Exception Type:
@@ -170,7 +170,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1276
+Tests/TestFramework/TestRunnerTest.cpp, Line 1278
 A source whose materials prefix contains a non-ASCII byte
 
 Expected Exception Type:
@@ -180,7 +180,7 @@ The path of this source file relative to the tests repository must be ASCII.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1293
+Tests/TestFramework/TestRunnerTest.cpp, Line 1295
 A test whose name contains a non-ASCII letter
 
 Expected Exception Type:
@@ -190,7 +190,7 @@ A test's name is that of its class, and the names of the tests in this source fi
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1310
+Tests/TestFramework/TestRunnerTest.cpp, Line 1312
 A test with no source file
 
 Expected Exception Type:
@@ -200,7 +200,7 @@ Each test's materials are kept beneath the path of its source file relative to t
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1327
+Tests/TestFramework/TestRunnerTest.cpp, Line 1329
 Invalid repetitions for instability analysis
 
 Expected Exception Type:
@@ -209,7 +209,7 @@ locate-instabilities: unable to interpret 'foo' as an integer number of repetiti
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1334
+Tests/TestFramework/TestRunnerTest.cpp, Line 1336
 Insufficient repetitions for instability analysis
 
 Expected Exception Type:
@@ -218,7 +218,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1938
+Tests/TestFramework/TestRunnerTest.cpp, Line 1940
 Comparison against a dump never kept
 
 Expected Exception Type:
@@ -227,7 +227,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1938
+Tests/TestFramework/TestRunnerTest.cpp, Line 1940
 A dump kept under no name
 
 Expected Exception Type:
@@ -236,7 +236,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1938
+Tests/TestFramework/TestRunnerTest.cpp, Line 1940
 Comparison against no name
 
 Expected Exception Type:
