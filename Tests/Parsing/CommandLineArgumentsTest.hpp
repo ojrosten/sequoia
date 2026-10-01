@@ -31,5 +31,10 @@ namespace sequoia::testing
     void test_nested_parsing();
 
     void test_nested_parsing_help();
+
+    void check_help(const reporter& description,
+                    parsing::commandline::outcome obtained,
+                    const parsing::commandline::outcome& prediction,
+                    const std::filesystem::path& helpFile);
   };
 }

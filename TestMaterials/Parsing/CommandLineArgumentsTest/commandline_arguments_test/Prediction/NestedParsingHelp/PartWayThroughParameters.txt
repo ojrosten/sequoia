@@ -1,0 +1,5 @@
+Usage: init <copyright owner> <path> [options]
+
+Options:
+  --no-build
+  --help, -h  Describe the command or option this follows; alone, the top level
