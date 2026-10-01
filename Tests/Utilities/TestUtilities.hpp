@@ -30,8 +30,7 @@ namespace sequoia::testing
     return message;
   }
 
-  /** \brief Sets the modification time of `executable` to a decade from now, later than any edit made while the
-             tests run.
+  /** \brief Sets the modification time of `executable` to a decade from now.
 
       A runner refuses to start from an executable older than one of sequoia's own files. prune refuses to analyse a
       build whose executable is older than a file the build read. A fake executable dated by this function passes

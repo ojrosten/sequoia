@@ -1347,7 +1347,7 @@ namespace sequoia::testing
         fs::create_directories(root.parent_path());
         fs::copy(fake_project(), root, fs::copy_options::recursive);
 
-        const auto buildDir{root / "build" / "CMade"};
+        const auto buildDir     {root / "build" / "CMade"};
         const auto sequoiaSource{sequoia_sources() / "TestFramework" / "TestRunner.cpp"};
         const fs::path sequoiaObject{"CMakeFiles/sequoia.dir/TestFramework/TestRunner.cpp.o"};
         write_to_file(buildDir / "build.ninja",
@@ -1367,11 +1367,11 @@ namespace sequoia::testing
 
     writeStaleProject(untouchedProject);
 
-    std::string message{};
-    auto keepFirstLine{
-      [&message](const project_paths&, std::string thrown) {
-        message = thrown;
-        return thrown.substr(0, thrown.find('\n'));
+    std::string firstLine{};
+    auto recordFirstLine{
+      [&firstLine](const project_paths&, std::string thrown) {
+        firstLine = thrown.substr(0, thrown.find('\n'));
+        return firstLine;
       }
     };
 
@@ -1390,15 +1390,15 @@ namespace sequoia::testing
 
         commandline_arguments args{argList};
         std::stringstream outputStream{};
-        message.clear();
+        firstLine.clear();
         check_exception_thrown<std::runtime_error>(
           reporter{description},
           [&args, &outputStream]() { return make_fake_runner(args, outputStream).execute(); },
-          keepFirstLine
+          recordFirstLine
         );
 
         check(std::format("{}: the refusal is sequoia's", description),
-              message.starts_with("sequoia has changed since this executable was built"));
+              firstLine.starts_with("sequoia has changed since this executable was built"));
         check(equivalence, std::format("{}: nothing is written", description), staleProject, untouchedProject);
       }
     };
