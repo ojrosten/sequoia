@@ -17,6 +17,9 @@
 #include <cmath>
 #include <format>
 #include <fstream>
+#include <ranges>
+#include <span>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -103,12 +106,53 @@ namespace sequoia::testing
       };
     }
 
-    /** Eight tests are wanted, each sleeping the same amount, so that the timings below can
-        measure how the runner distributes them over threads. They are eight *classes* because a test's name is
-        synthesized from its class: a class template cannot supply a file-system-safe name, and
-        registering one class twice - which is what these used to do - would ask two tests to
-        share it.
+    /** When a test's tests began and ended running. */
+    struct execution_interval
+    {
+      std::chrono::steady_clock::time_point start{}, end{};
+    };
+
+    /** The largest number of `intervals` which overlap at any instant. An interval contains its start but not its
+        end, so one which ends as another starts does not overlap it, and an empty interval overlaps nothing.
      */
+    [[nodiscard]]
+    std::ptrdiff_t peak_overlap(std::span<const execution_interval> intervals)
+    {
+      using change_type = std::pair<std::chrono::steady_clock::time_point, std::ptrdiff_t>;
+      auto endpoints{
+        [](const execution_interval& interval){
+          return std::array{change_type{interval.start, 1}, change_type{interval.end, -1}};
+        }
+      };
+
+      // At one instant an end, -1, sorts before a start, +1
+      auto changes{
+          intervals
+        | std::views::transform(endpoints)
+        | std::views::join
+        | std::ranges::to<std::vector>()
+      };
+
+      std::ranges::sort(changes);
+
+      std::ptrdiff_t overlap{}, peak{};
+      for(const auto& change : changes)
+      {
+        overlap += change.second;
+        peak = std::ranges::max(peak, overlap);
+      }
+
+      return peak;
+    }
+
+    /** Eight tests are wanted, each sleeping the same amount, so that the checks below can
+        measure how the runner distributes them over threads, and how many it runs at once. They
+        are eight *classes* because a test's name is synthesized from its class: a class template
+        cannot supply a file-system-safe name, and registering one class twice - which is what
+        these used to do - would ask two tests to share it.
+     */
+    constexpr std::size_t slow_test_count{8};
+
 
     class slow_test_base : public free_test
     {
@@ -120,6 +164,15 @@ namespace sequoia::testing
       {
         return std::source_location::current().file_name();
       }
+
+      /** \brief When each test's tests ran, by the index the test passes to `sleep_and_check`. */
+      [[nodiscard]]
+      static std::span<const execution_interval, slow_test_count> execution_intervals() noexcept
+      {
+        return st_ExecutionIntervals;
+      }
+
+      static void clear_execution_intervals() noexcept { st_ExecutionIntervals = {}; }
     protected:
       ~slow_test_base() = default;
 
@@ -144,9 +197,14 @@ namespace sequoia::testing
       void sleep_and_check(std::size_t index)
       {
         using namespace std::chrono_literals;
+        const auto start{std::chrono::steady_clock::now()};
         std::this_thread::sleep_for(25ms);
+        st_ExecutionIntervals[index] = {start, std::chrono::steady_clock::now()};
         check(equality, {"Integer equality"}, index, index);
       }
+    private:
+      // Each test writes only its own element, and the checks read them once the run has joined its threads
+      inline static std::array<execution_interval, slow_test_count> st_ExecutionIntervals{};
     };
 
     class slow_test_0 final : public slow_test_base
@@ -293,6 +351,7 @@ namespace sequoia::testing
     test_runner make_slow_suite(commandline_arguments args, std::stringstream& outputStream)
     {
       auto runner{make_runner(args, outputStream)};
+      slow_test_base::clear_execution_intervals();
 
       runner.register_test<slow_test_0>();
       runner.register_test<slow_test_1>();
@@ -366,6 +425,10 @@ namespace sequoia::testing
 
     auto outputFile{check_output(report({"Parallel Acceleration Output"}), "ParallelAccelerationOutput", outputStream)};
     check(within_tolerance{35.0}, "", get_grand_total(outputFile, "Execution Time"), 60.0);
+    check(std::ranges::greater_equal{},
+          "Tests execute at once in parallel",
+          peak_overlap(slow_test_base::execution_intervals()),
+          std::ptrdiff_t{2});
   }
 
   void test_runner_performance_test::test_thread_pool_acceleration()
@@ -377,6 +440,11 @@ namespace sequoia::testing
 
       auto outputFile{check_output(report({"Thread Pool (8) Acceleration Output"}), "ThreadPool8AccelerationOutput", outputStream)};
       check(within_tolerance{30.0}, "", get_grand_total(outputFile, "Execution Time"), 55.0);
+      // One test may start after the others have finished, delayed by its execution record, without failing this
+      check(std::ranges::greater_equal{},
+            "At least seven of the pool's eight threads execute tests at once",
+            peak_overlap(slow_test_base::execution_intervals()),
+            std::ptrdiff_t{7});
     }
 
     {
@@ -386,6 +454,10 @@ namespace sequoia::testing
 
       auto outputFile{check_output(report({"Thread Pool (2) Acceleration Output"}), "ThreadPool2AccelerationOutput", outputStream)};
       check(within_tolerance{40.0}, "", get_grand_total(outputFile, "Execution Time"), 140.0);
+      check(equality,
+            "Both threads of the pool, and no more, execute tests at once",
+            peak_overlap(slow_test_base::execution_intervals()),
+            std::ptrdiff_t{2});
     }
   }
 
@@ -397,6 +469,10 @@ namespace sequoia::testing
 
     auto outputFile{check_output(report({"Serial Output"}), "Serial Output", outputStream)};
     check(within_tolerance{55.0}, "", get_grand_total(outputFile, "Execution Time"), 255.0);
+    check(equality,
+          "Tests execute one at a time in a serial run",
+          peak_overlap(slow_test_base::execution_intervals()),
+          std::ptrdiff_t{1});
   }
 
   /** One test sleeps while its tests run, and again while the runner summarizes it. Its execution time must lie
