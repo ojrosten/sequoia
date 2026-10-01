@@ -11,13 +11,6 @@ namespace sequoia::testing
 {
   namespace
   {
-    [[nodiscard]]
-    std::chrono::milliseconds calibrated_delta_t()
-    {
-      static const auto calibrated{calibrate(std::chrono::milliseconds{5})};
-      return calibrated;
-    }
-
     void wait(std::chrono::milliseconds t)
     {
       std::this_thread::sleep_for(t);
@@ -37,7 +30,7 @@ namespace sequoia::testing
 
   void performance_false_negative_diagnostics::test_relative_performance()
   {
-    const auto deltaT{calibrated_delta_t()};
+    const auto deltaT{calibrate(std::chrono::milliseconds{5})};
 
     check_relative_performance("Performance Test for which fast task is too slow, [1, (2.0, 2.0)",
                                [deltaT]() { wait(deltaT); },
@@ -65,7 +58,7 @@ namespace sequoia::testing
 
   void performance_false_positive_diagnostics::test_relative_performance()
   {
-    const auto deltaT{calibrated_delta_t()};
+    const auto deltaT{calibrate(std::chrono::milliseconds{5})};
 
     check_relative_performance("Performance Test which should pass",
                                [deltaT]() { wait(deltaT); },
