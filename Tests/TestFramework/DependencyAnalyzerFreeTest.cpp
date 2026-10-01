@@ -1603,6 +1603,33 @@ namespace sequoia::testing
 
       check_exception_thrown<std::runtime_error>("A path with no time stamp after it", [&file]() { return read_tests(file); });
     }
+
+    {
+      // The records are written first to <file>.partial, a name this pins. A read-only file there, holding other
+      // records, cannot be opened to write them, but could be renamed over the file if the failure went unseen.
+      const transient_file previous{file, "path: HouseAllocationTest.cpp\ntimestamp: 0\n"};
+      const read_only_file stale{fs::path{file} += ".partial", "path: Maths/ProbabilityTest.cpp\ntimestamp: 0\n"};
+
+      check_exception_thrown<std::runtime_error>(
+        "Prune records which cannot be written",
+        [&projPaths, &file, stamp]() { write_tests(projPaths, file, prune_records{{"Maths/ProbabilityTest.cpp", stamp}}); });
+
+      check(equality,
+            "A failed write leaves the previous records",
+            read_tests(file),
+            prune_records{{"HouseAllocationTest.cpp", prune_record::stamp_type{}}});
+    }
+
+    {
+      // A directory at the file's path, over which the written records cannot be renamed. They stay in
+      // <file>.partial, which is removed on leaving the scope.
+      const transient_directory blocking{file}, leftover{fs::path{file} += ".partial"};
+      fs::create_directories(blocking.path());
+
+      check_exception_thrown<std::runtime_error>(
+        "Prune records which cannot replace the file",
+        [&projPaths, &file, stamp]() { write_tests(projPaths, file, prune_records{{"HouseAllocationTest.cpp", stamp}}); });
+    }
   }
 
   void dependency_analyzer_free_test::test_prune_update(const project_paths& projPaths)

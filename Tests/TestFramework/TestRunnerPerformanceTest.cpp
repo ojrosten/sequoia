@@ -413,10 +413,7 @@ namespace sequoia::testing
     fs::create_directory(outputDir);
 
     const auto filePath{outputDir / "io.txt"};
-    if(std::ofstream file{filePath})
-    {
-      file << output.str();
-    }
+    write_to_file(filePath, output.str(), std::ios_base::out);
 
     output.str("");
 

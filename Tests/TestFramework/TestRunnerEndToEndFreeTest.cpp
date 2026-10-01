@@ -296,10 +296,7 @@ namespace sequoia::testing
     //=================== Initialize, cmake and build new project ===================//
 
     fs::create_directory(working_materials() /= "InitOutput");
-    if(std::ofstream file{working_materials() /= "InitOutput/io.txt"})
-    {
-      file << outputStream.rdbuf();
-    }
+    write_to_file(working_materials() /= "InitOutput/io.txt", outputStream.str(), std::ios_base::out);
 
     const cmd_builder b{generated_project(), get_project_paths().build()};
 

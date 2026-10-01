@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "StreamingFreeTest.hpp"
+#include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/TestFramework/SumTypeCheckers.hpp"
@@ -42,6 +43,13 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(
       reporter{""},
       [this]() { write_to_file(working_materials() /= "Baz.txt", "Hello!", std::ios_base::out | std::ios_base::noreplace); });
+
+    // Under Linux, /dev/full opens and then fails every write, which is the failure this check is for. No path does
+    // that portably, so elsewhere a directory, which fails to open, stands in and keeps the check count the same.
+    const fs::path unwritable{with_linux_v ? fs::path{"/dev/full"} : working_materials()};
+    check("The stand-in for a failing write is present",
+          with_linux_v ? fs::is_character_file(unwritable) : fs::is_directory(unwritable));
+    check("A write which fails is reported", !try_write_to_file(unwritable, "Hello!", std::ios_base::out));
 
     read_modify_write(working_materials() /= "Foo.txt", [](std::string& s) { capitalize(s);  });
     check(equivalence, "", working_materials() /= "Foo.txt", predictive_materials() /= "Foo.txt");

@@ -274,10 +274,7 @@ namespace sequoia::testing
 
     check(equality, "Test creation return code", tr.execute(), return_code::success);
 
-    if(std::ofstream file{projectPath / "output" / "io.txt"})
-    {
-      file << outputStream.str();
-    }
+    write_to_file(projectPath / "output" / "io.txt", outputStream.str(), std::ios_base::out);
 
     check_directory(projectName, "output");
     check_directory(projectName, "Source");

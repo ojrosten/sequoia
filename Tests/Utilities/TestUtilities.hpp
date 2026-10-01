@@ -81,6 +81,37 @@ namespace sequoia::testing
     std::filesystem::path m_Dir{};
   };
 
+  /** \brief A file with the given contents and no write permissions, which exists for precisely the lifetime of the
+             object.
+
+      Opening the file to write it fails, for any user but root. The object restores the permissions before removing
+      the file, which Windows refuses to remove while it is read-only.
+   */
+  class read_only_file
+  {
+  public:
+    read_only_file(std::filesystem::path file, std::string_view contents)
+      : m_File{std::move(file), contents}
+    {
+      std::filesystem::permissions(m_File.path(), st_WritePermissions, std::filesystem::perm_options::remove);
+    }
+
+    ~read_only_file()
+    {
+      std::error_code ignored{};
+      std::filesystem::permissions(m_File.path(), st_WritePermissions, std::filesystem::perm_options::add, ignored);
+    }
+
+    [[nodiscard]]
+    const std::filesystem::path& path() const noexcept { return m_File.path(); }
+  private:
+    constexpr static auto st_WritePermissions{
+      std::filesystem::perms::owner_write | std::filesystem::perms::group_write | std::filesystem::perms::others_write
+    };
+
+    transient_file m_File;
+  };
+
   class no_default_constructor
   {
   public:

@@ -61,7 +61,7 @@ Code indent must comprise only spaces or tabs
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 183
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 180
 git fails when placing the project under version control
 
 Expected Exception Type:
@@ -73,7 +73,7 @@ To start again, delete output/TestsTemporaryData/TestFramework/TestRunnerProject
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 183
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 180
 A failure ends the run before a later project
 
 Expected Exception Type:
@@ -86,7 +86,7 @@ Not attempted, since this failure ended the run: output/TestsTemporaryData/TestF
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 183
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 180
 git fails when committing sequoia
 
 Expected Exception Type:
@@ -98,7 +98,7 @@ To start again, delete output/TestsTemporaryData/TestFramework/TestRunnerProject
 
 =======================================
 
-Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 183
+Tests/TestFramework/TestRunnerProjectCreation.cpp, Line 180
 CMake fails when configuring the project
 
 Expected Exception Type:
