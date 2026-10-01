@@ -1103,10 +1103,7 @@ namespace sequoia::testing
     const auto outputDir{working_materials() /= dirName};
     fs::create_directory(outputDir);
 
-    if(const auto filePath{outputDir / "io.txt"}; std::ofstream file{filePath})
-    {
-      file << output.str();
-    }
+    write_to_file(outputDir / "io.txt", output.str(), std::ios_base::out);
 
     output.str("");
   }
@@ -1451,10 +1448,7 @@ namespace sequoia::testing
     const auto outputDir{working_materials() /= "RecoveryAndDumpOutput"};
     fs::create_directory(outputDir);
 
-    if(std::ofstream file{outputDir / "io.txt"})
-    {
-      file << outputStream.str();
-    }
+    write_to_file(outputDir / "io.txt", outputStream.str(), std::ios_base::out);
 
     fs::copy(fake_project() / "output" / "Recovery" / "Recovery.txt", working_materials() /= "RecoveryAndDumpOutput");
     fs::copy(fake_project() / "output" / "Recovery" / "Dump.txt", working_materials() /= "RecoveryAndDumpOutput");
@@ -2271,10 +2265,7 @@ namespace sequoia::testing
     const auto outputDir{working_materials() /= outputDirName};
     fs::create_directory(outputDir);
 
-    if(std::ofstream file{outputDir / "io.txt"})
-    {
-      file << outputStream.str();
-    }
+    write_to_file(outputDir / "io.txt", outputStream.str(), std::ios_base::out);
 
     check(equivalence, reporter(append_lines(message, make_type_info<Ts...>())),
                       outputDir,

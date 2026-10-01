@@ -292,10 +292,7 @@ namespace sequoia::testing
           ancillaryMain.cmake_lists(),
           fakeMain.cmake_lists());
 
-    if(std::ofstream file{projectPath / "output" / "io.txt"})
-    {
-      file << outputStream.str();
-    }
+    write_to_file(projectPath / "output" / "io.txt", outputStream.str(), std::ios_base::out);
 
     check_directory(projectName, "output");
     check_directory(projectName, "Source");

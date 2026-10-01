@@ -33,7 +33,6 @@
 #include <span>
 #include <system_error>
 #include <format>
-#include <fstream>
 #include <functional>
 #include <mutex>
 #include <utility>
@@ -68,19 +67,16 @@ namespace sequoia::testing
       return durations[1];
     }
 
-    // Written to <file>.partial and renamed over <file>, so that a process dying mid-write leaves the previous contents
+    // Written to <file>.partial and renamed over <file> only once all of `text` is written, so that neither a process
+    // dying mid-write nor a failed write disturbs the previous contents
     void overwrite_quietly(const fs::path& file, std::string_view text)
     {
       std::error_code selectsTheNonThrowingOverload{};
       fs::create_directories(file.parent_path(), selectsTheNonThrowingOverload);
 
       const auto partial{fs::path{file} += ".partial"};
-      {
-        std::ofstream stream{partial, std::ios_base::out | std::ios_base::trunc | std::ios_base::binary};
-        stream << text;
-      }
-
-      fs::rename(partial, file, selectsTheNonThrowingOverload);
+      if(try_write_to_file(partial, text, std::ios_base::out | std::ios_base::trunc | std::ios_base::binary))
+        fs::rename(partial, file, selectsTheNonThrowingOverload);
     }
 
     [[nodiscard]]
@@ -721,14 +717,9 @@ namespace sequoia::testing
 
         fs::create_directories(filename.parent_path());
 
-        if(std::ofstream file{filename, std::ios_base::out | std::ios_base::binary})
-        {
-          file << summarize(summary, "", summary_detail::failure_messages, no_indent, no_indent);
-        }
-        else
-        {
-          throw std::runtime_error{report_failed_write(filename)};
-        }
+        write_to_file(filename,
+                      summarize(summary, "", summary_detail::failure_messages, no_indent, no_indent),
+                      std::ios_base::out | std::ios_base::binary);
       }
 
       void record_materials_update_failure(const fs::path& testFile, std::string_view what)

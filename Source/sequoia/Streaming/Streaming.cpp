@@ -16,29 +16,16 @@
 
 namespace sequoia
 {
-  namespace
-  {
-    [[nodiscard]]
-    std::string report_file_issue(const std::filesystem::path& file, std::string_view description)
-    {
-      auto mess{std::string{"Unable to open file "}.append(file.generic_string())};
-      if(!description.empty()) mess.append(" ").append(description);
-      mess.append("\n");
-
-      return mess;
-    }
-  }
-
   [[nodiscard]]
   std::string report_failed_read(const std::filesystem::path& file)
   {
-    return report_file_issue(file, " for reading");
+    return std::string{"Unable to open file "}.append(file.generic_string()).append(" for reading\n");
   }
 
   [[nodiscard]]
   std::string report_failed_write(const std::filesystem::path& file)
   {
-    return report_file_issue(file, " for writing");
+    return std::string{"Unable to write to file "}.append(file.generic_string()).append("\n");
   }
 
   [[nodiscard]]
@@ -99,15 +86,31 @@ namespace sequoia
     return text;
   }
 
+  [[nodiscard]]
+  bool try_close(std::ofstream& stream)
+  {
+    stream.close();
+    return !stream.fail();
+  }
+
+  void throw_unless_closed(std::ofstream& stream, const std::filesystem::path& file)
+  {
+    if(!try_close(stream))
+      throw std::runtime_error{report_failed_write(file)};
+  }
+
+  [[nodiscard]]
+  bool try_write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode)
+  {
+    // A stream which fails to open is failed already, so the write does nothing and `try_close` reports the failure
+    std::ofstream ofile{file, mode};
+    ofile.write(text.data(), static_cast<std::streamsize>(text.size()));
+    return try_close(ofile);
+  }
+
   void write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode)
   {
-    if(std::ofstream ofile{file, mode})
-    {
-      ofile.write(text.data(), text.size());
-    }
-    else
-    {
+    if(!try_write_to_file(file, text, mode))
       throw std::runtime_error{report_failed_write(file)};
-    }
   }
 }
