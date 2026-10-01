@@ -123,15 +123,19 @@ namespace sequoia::testing
   [[nodiscard]]
   return_code cmd_builder::create_build_run(const fs::path& creationOutput, std::string_view buildOutput, const fs::path& output) const
   {   
-    invoke(
-         cd_cmd(get_build_paths().executable_dir())
-      && shell_command{"", create_cmd(), creationOutput / "CreationOutput.txt"}
-    );
+    const auto creationFile{creationOutput / "CreationOutput.txt"};
+    const auto createTests{cd_cmd(get_build_paths().executable_dir()) && shell_command{"", create_cmd(), creationFile}};
+    throw_unless_succeeded(invoke(createTests),
+                           "Creating tests in the generated project",
+                           std::format("The output is {}",
+                                       describe_output_location(get_build_paths().executable_dir(), creationFile)));
 
-    invoke(
-         cd_cmd(get_main_paths().dir())
-         && build_cmd(get_build_paths(), get_build_paths().executable_dir() / buildOutput)
-    );
+    const auto buildFile{get_build_paths().executable_dir() / buildOutput};
+    const auto buildProject{cd_cmd(get_main_paths().dir()) && build_cmd(get_build_paths(), buildFile)};
+    throw_unless_succeeded(invoke(buildProject),
+                           "Building the generated project",
+                           std::format("The output is {}",
+                                       describe_output_location(get_main_paths().dir(), buildFile)));
 
     // Sequenced rather than chained with `&&`: these runs are independent of one another, and a
     // shell `&&` would silently skip the rest of them as soon as one reported failures.
@@ -157,11 +161,17 @@ namespace sequoia::testing
   [[nodiscard]]
   return_code cmd_builder::rebuild_run(const fs::path& outputDir, std::string_view cmakeOutput, std::string_view buildOutput, std::string_view options) const
   {
-    invoke(
+    const auto configureAndBuild{
          cd_cmd(get_main_paths().dir())
       && cmake_cmd(get_build_paths(), cmakeOutput, "CODE_COVERAGE=OFF")
       && build_cmd(get_build_paths(), buildOutput)
-    );
+    };
+
+    throw_unless_succeeded(invoke(configureAndBuild),
+                           "Re-running CMake on, and rebuilding, the generated project",
+                           std::format("The output is {} and {}",
+                                       describe_output_location(get_main_paths().dir(), cmakeOutput),
+                                       describe_output_location(get_main_paths().dir(), buildOutput)));
 
     return run_executable(outputDir, options);
   }

@@ -26,6 +26,7 @@ namespace sequoia::testing
 
     void test_exceptions();
     void test_project_creation();
+    void test_init_failures();
 
     [[nodiscard]]
     std::filesystem::path fake_project() const;

@@ -8,11 +8,13 @@
 #pragma once
 
 /** \file
-    \brief Utilties for creating, composing and invoking commandline input.
+    \brief Utilities for building, composing and running shell commands.
  */
 
 #include <filesystem>
 #include <optional>
+#include <string>
+#include <string_view>
 
 namespace sequoia::runtime
 {
@@ -57,11 +59,17 @@ namespace sequoia::runtime
       return lhs && shell_command{std::move(rhs)};
     }
 
-    /** \brief Runs the command, returning its exit status, or -1 if it did not run to completion.
+    /** \brief Runs the command, and waits for it to finish.
 
-        The spawned process inherits the standard streams and nothing else; in particular it does
-        not inherit files the caller happens to have open, which on Windows would otherwise keep
-        them undeletable for as long as that process lived.
+        \returns
+        -# -1, if the command did not run to completion;
+        -# Otherwise, the command's exit status. On Windows, an exit status of 0x80000000 or more
+           is negative: the `int` keeps the status's 32 bits.
+
+        Apart from the standard streams, the command inherits none of the caller's open files. So
+        the caller can delete a file it has open while the command runs, on Windows as elsewhere.
+
+        `invoke` does not act on the status; see `throw_unless_succeeded`.
      */
     friend int invoke(const shell_command& cmd);
   private:
@@ -70,6 +78,33 @@ namespace sequoia::runtime
     shell_command(std::string cmd, const std::filesystem::path& output, append_mode app);
   };
 
+  /** \brief The shell command to change the current directory to `dir`. On Windows, the command also
+             changes the current drive to the drive of `dir`.
+   */
   [[nodiscard]]
   shell_command cd_cmd(const std::filesystem::path& dir);
+
+  /** \brief Checks that a status returned by `invoke` is zero.
+
+      \throws std::runtime_error if `status` is not zero. The message names `step`, then says how the
+      command failed, then gives `advice`. The message tells these failures apart:
+      -# On Windows, a status of -1: the command either did not run to completion or exited with
+         0xFFFFFFFF, and the message says that the two cannot be told apart;
+      -# On Windows, any other negative status: an exit status of 0x80000000 or more, which the
+         message gives in hex;
+      -# Elsewhere, a negative status: the command did not run to completion;
+      -# Elsewhere, a status above 128: an exit status which the message says may mean that a signal
+         killed the command;
+      -# Any other non-zero status: an exit status.
+   */
+  void throw_unless_succeeded(int status, std::string_view step, std::string_view advice);
+
+  /** \brief Describes where a command run from `dir` wrote its output.
+
+      \returns A phrase which completes the sentence "The output is ...":
+      -# If `output` is empty, a phrase naming the console;
+      -# Otherwise, a phrase naming the path `output` resolved against `dir`, in generic form.
+   */
+  [[nodiscard]]
+  std::string describe_output_location(const std::filesystem::path& dir, const std::filesystem::path& output);
 }
