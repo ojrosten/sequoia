@@ -208,14 +208,12 @@ namespace sequoia::testing
   std::optional<std::string> coarse_sleep_warning(std::chrono::duration<double, std::milli> slept,
                                                   std::chrono::duration<double, std::milli> target);
 
-  /** \brief The duration to sleep for in place of `target`, from seven timed sleeps of it.
+  /** \brief Calibrates the duration of a sleep for timings built on sleeps.
 
-      The mean and standard deviation are taken over the middle five. The result is the mean plus
-      five standard deviations, rounded up to a whole `Period`, if the mean exceeds `target` by more
-      than a standard deviation. Otherwise the result is `target`.
+      Returns `target` if this machine's sleeps of `target` last about that long. Otherwise returns a duration longer
+      than those sleeps typically last.
 
-      Writes to `warningStream` any warning that `coarse_sleep_warning` gives for the second fastest
-      sleep.
+      Writes a warning to `warningStream` if sleeps are rounded up to a coarse timer tick.
    */
   template<class T, class Period>
   [[nodiscard]]
@@ -231,9 +229,9 @@ namespace sequoia::testing
 
     std::ranges::sort(timings);
     // The first sleep can end within the timer tick it starts in. So the first sleep can be short even
-    // when every later sleep is rounded up to a whole tick
+    // when every later sleep is rounded up to a whole tick.
     if(const auto sleepWarning{coarse_sleep_warning(duration<double>{timings[1]}, target)})
-      warningStream << *sleepWarning;
+      warningStream << *sleepWarning << std::flush;
 
     const auto [sig_f, m_f] {maths::sample_standard_deviation(timings.cbegin() + 1, timings.cend() - 1)};
     if (sig_f && m_f)
