@@ -72,13 +72,18 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::optional<std::string> coarse_sleep_warning(std::chrono::duration<double, std::milli> slept, std::chrono::duration<double, std::milli> target)
+  std::optional<std::string> coarse_sleep_warning(std::chrono::duration<double, std::milli> slept,
+                                                  std::chrono::duration<double, std::milli> target)
   {
-    if(slept < 2 * target) return std::nullopt;
+    if(slept < 2 * target)
+      return std::nullopt;
 
     using parsing::commandline::warning;
-    return warning({std::format("Sleeps of {:.1f} ms repeatedly lasted {:.1f} ms or more, so timings built on sleeps are unreliable", target.count(), slept.count()),
-                    "On Windows, the likely cause is a timer_resolution which is not in effect"});
+    return warning({std::format("Sleeps of {:.1f} ms repeatedly lasted {:.1f} ms or more, "
+                                "so timings built on sleeps are unreliable",
+                                target.count(),
+                                slept.count()),
+                    "On Windows, the likely cause is that the finest timer resolution is not in effect"});
   }
 
   template<test_mode Mode>

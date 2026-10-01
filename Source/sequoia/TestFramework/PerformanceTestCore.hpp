@@ -205,7 +205,8 @@ namespace sequoia::testing
 
   /** \brief Returns a warning if `slept` is at least twice `target`, and otherwise returns `nullopt`. */
   [[nodiscard]]
-  std::optional<std::string> coarse_sleep_warning(std::chrono::duration<double, std::milli> slept, std::chrono::duration<double, std::milli> target);
+  std::optional<std::string> coarse_sleep_warning(std::chrono::duration<double, std::milli> slept,
+                                                  std::chrono::duration<double, std::milli> target);
 
   /** \brief The duration to sleep for in place of `target`, from seven timed sleeps of it.
 
