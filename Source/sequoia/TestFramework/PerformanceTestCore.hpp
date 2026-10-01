@@ -200,7 +200,7 @@ namespace sequoia::testing
     return passed;
   }
 
-  /** \brief Whether `slept`, beside `target`, indicates sleeps rounded up to a coarse timer tick. */
+  /** \brief Whether `slept`, compared to `target`, indicates sleeps rounded up to a coarse timer tick. */
   [[nodiscard]]
   bool is_coarse_sleep(std::chrono::duration<double, std::milli> slept,
                        std::chrono::duration<double, std::milli> target);
