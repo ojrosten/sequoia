@@ -18,7 +18,7 @@
     `prune` reads those, and the build's record of what each test was built from, and selects
     the tests which are stale or are to be rerun.
 
-    The same record says whether the library itself has changed since the executable was built.
+    The same record shows whether the library itself has changed since the executable's build.
  */
 
 #include "sequoia/TestFramework/CMakeCache.hpp"
@@ -130,40 +130,33 @@ namespace sequoia::testing
                           std::filesystem::file_time_type updateTime,
                           std::optional<std::size_t> id);
 
-  /** \brief The path of the directory of this library's sources, as the compiler was given it.
+  /** \brief The directory of this library's sources, as the compiler recorded the path in the binary.
 
-      The path is relative if the compiler was given a relative path. The path is also relative if the
-      build remaps the paths the binary records, with `-fmacro-prefix-map` or with `-ffile-prefix-map`,
-      which implies `-fmacro-prefix-map`.
+      The path may be relative. If the build remaps the paths which a binary records, the path may name
+      another directory.
    */
   [[nodiscard]]
   std::filesystem::path sequoia_library_root();
 
   /** \brief Throws if the library within `libraryRoot` has changed since the executable was built.
 
-      The library's objects are the objects compiled from a source within `libraryRoot`. The library's
-      own files are the files which were read to compile those objects and which lie within
+      The library's objects are the objects whose sources lie within `libraryRoot`. The library's own
+      files are the files which the compilations of those objects read, and which lie within
       `libraryRoot` too. So none of these files counts:
       -# A header of the library which only the tests read;
       -# A file of the toolchain's, of another library's or of the tests'.
 
-      The build's record is read only if `libraryRoot`, or an entry anywhere within it, is no older than the
-      executable. The entry may be a file or a directory; a deletion within a directory moves the
-      directory's time.
-
-      If the check cannot be made, the function writes a one-line warning to `stream` and throws
-      nothing. The warning gives one of these reasons:
+      The function cannot make the check if:
       -# `libraryRoot` is relative;
       -# The executable cannot be found;
       -# The build's record cannot be read;
-      -# The record names no object compiled from within `libraryRoot`.
+      -# The record names no object whose source lies within `libraryRoot`.
+
+      In each of these cases, the function writes a warning to `stream` and throws nothing.
 
       \throws std::runtime_error if
-      -# The newest of the library's own files is no older than the executable. The message names the
-         file, the object the file was read to compile, that object's target, and the time stamps of
-         the file and of the executable;
-      -# The modification time of one of the library's own files cannot now be read. The message
-         names the file and the object the file was read to compile.
+      -# One of the library's own files is no older than the executable;
+      -# The modification time of one of the library's own files cannot be read.
    */
   void throw_if_library_changed_since_build(const project_paths& projPaths,
                                             const cmake_cache& cache,

@@ -709,6 +709,11 @@ namespace sequoia::testing
     return message;
   }
 
+  /** Checks the library within `libraryRoot`, and returns the normalised refusal and warnings.
+
+      The contract of `throw_if_library_changed_since_build` leaves open the text of the refusal and of the warnings.
+      The checks of that text pin the implementation's choice, and change with it.
+   */
   auto dependency_analyzer_free_test::check_library(const project_paths& projPaths,
                                                     const fs::path& libraryRoot) -> library_check
   {
@@ -910,8 +915,8 @@ namespace sequoia::testing
     const auto& library{projPaths.source().project()};
 
     {
-      // Nothing of the library's is newer than the executable, so the record is not read. The record's
-      // absence then goes unremarked.
+      // Nothing of the library's is newer than the executable, so the check skips the record, and the record's
+      // absence goes unremarked. The contract does not promise the skip; this check pins the implementation's choice.
       const hidden_for_scope hidden{projPaths.discovered().cmake_cache().parent_path() / ".ninja_deps"};
       const auto [refusal, warnings]{check_library(projPaths, library)};
       check(equality, "Nothing edited since the build: the record is not read", warnings, std::string{});
