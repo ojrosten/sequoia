@@ -27,14 +27,10 @@ namespace sequoia::testing
     void serialize(const fs::path& file, const failure_output& output)
     {
       fs::create_directories(file.parent_path());
-      if(std::ofstream ofile{file})
-      {
-        ofile << output;
-      }
-      else
-      {
-        throw std::runtime_error{report_failed_write(file)};
-      }
+
+      std::ofstream ofile{file};
+      ofile << output;
+      throw_unless_closed(ofile, file);
     }
   }
 

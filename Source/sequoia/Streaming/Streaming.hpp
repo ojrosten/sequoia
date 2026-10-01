@@ -33,6 +33,32 @@ namespace sequoia
   [[nodiscard]]
   std::optional<std::string> read_to_string(const std::filesystem::path& file, std::ios_base::openmode mode);
 
+  /** \brief Closes `stream`, and returns `false` if it failed to open, or if any write to it failed, closing included.
+
+      This function closes the stream, rather than leaving it to the destructor, because only a caller of `close`
+      learns that closing failed. A networked filesystem may report a full disk, an exceeded quota or an I/O error
+      only then. The destructor still closes a stream which an exception leaves open.
+   */
+  [[nodiscard]]
+  bool try_close(std::ofstream& stream);
+
+  /** \brief Closes `stream`, which writes to `file`.
+
+      \throws std::runtime_error naming `file`, if `stream` failed to open, or if any write to it failed, closing
+              included
+   */
+  void throw_unless_closed(std::ofstream& stream, const std::filesystem::path& file);
+
+  /** \brief Writes `text` to `file`, opened in `mode`, and returns whether the file was opened, all of `text` written
+             to it and the file closed.
+   */
+  [[nodiscard]]
+  bool try_write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode);
+
+  /** \brief Writes `text` to `file`, opened in `mode`.
+
+      \throws std::runtime_error naming `file`, if the file cannot be opened, or `text` cannot be written to it
+   */
   void write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode);
 
   template<std::invocable<std::string&> Fn>

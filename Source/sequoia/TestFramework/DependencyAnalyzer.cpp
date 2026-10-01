@@ -756,16 +756,23 @@ namespace sequoia::testing
 
   void write_tests(const project_paths& projPaths, const fs::path& file, std::span<const prune_record> tests)
   {
-    if(std::ofstream ostream{file})
-    {
-      auto rebased{
-        [&projPaths](const prune_record& test) {
-          return prune_record{rebase_from(test.test_path, projPaths.tests().repo()), test.time_stamp};
-        }
-      };
+    auto rebased{
+      [&projPaths](const prune_record& test) {
+        return prune_record{rebase_from(test.test_path, projPaths.tests().repo()), test.time_stamp};
+      }
+    };
 
-      std::ranges::copy(tests | std::views::transform(rebased), std::ostream_iterator<prune_record>{ostream, "\n"});
-    }
+    // Written to <file>.partial and renamed over <file>, so that a failed write leaves the previous records in place.
+    // A truncated file would parse, and prune would then silently leave out the tests it no longer names.
+    const auto partial{fs::path{file} += ".partial"};
+    std::ofstream ostream{partial};
+    std::ranges::copy(tests | std::views::transform(rebased), std::ostream_iterator<prune_record>{ostream, "\n"});
+    throw_unless_closed(ostream, file);
+
+    std::error_code error{};
+    fs::rename(partial, file, error);
+    if(error)
+      throw std::runtime_error{report_failed_write(file)};
   }
 
   namespace
