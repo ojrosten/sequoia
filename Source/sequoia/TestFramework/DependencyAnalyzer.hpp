@@ -140,25 +140,28 @@ namespace sequoia::testing
 
   /** \brief Throws if the library within `libraryRoot` has changed since the executable's build.
 
-      The library's objects are the objects whose sources lie within `libraryRoot`. The library's own
-      files are the files which the compilations of those objects read, and which lie within
-      `libraryRoot` too. So none of these files counts:
+      The library's own files are the files which both:
+      -# Lie within `libraryRoot`;
+      -# Were read by the compilation of an object whose source lies within `libraryRoot`.
+
+      None of these is one of the library's own files:
       -# A header of the library which only the tests read;
       -# A file of the toolchain's, of another library's or of the tests'.
 
+      If the function cannot make the check, the function writes a warning to `stream` and throws nothing.
       The function cannot make the check if:
       -# `libraryRoot` is relative;
-      -# The executable cannot be found;
+      -# The function cannot find the executable;
       -# The function needs the build's record, but cannot read the record;
       -# The function needs the build's record, but the record names no object whose source lies within
          `libraryRoot`.
 
-      In each of these cases, the function writes a warning to `stream` and throws nothing. The function may
-      find from modification times alone that the library is unchanged, and then does not need the record.
+      The function may find from modification times alone that the library is unchanged, and then does not
+      need the record.
 
       \throws std::runtime_error if
       -# One of the library's own files is no older than the executable;
-      -# The modification time of one of the library's own files cannot be read.
+      -# The function cannot read the modification time of one of the library's own files.
    */
   void throw_if_library_changed_since_build(const project_paths& projPaths,
                                             const std::filesystem::path& libraryRoot,

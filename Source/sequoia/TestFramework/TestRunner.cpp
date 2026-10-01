@@ -937,8 +937,8 @@ namespace sequoia::testing
                         [this,&nascentTests](const arg_list&) {
                           if(!nascentTests.empty())
                           {
-                            // The executable writes registrations in the form compiled into it, so the first
-                            // `create` checks that the library has not changed since the build
+                            // The first `create` checks that the library has not changed since the build. The
+                            // executable writes registrations in the form compiled into it.
                             if(!in_mode(runner_mode::create))
                             {
                               throw_if_library_changed_since_build(proj_paths(),

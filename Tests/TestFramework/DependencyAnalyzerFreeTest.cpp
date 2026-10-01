@@ -44,11 +44,10 @@ namespace sequoia::testing
        the threshold exactly - is deliberately not asserted on here: its answer is a property of the
        filesystem rather than of the analyzer.
 
-       The reset time itself lies ten seconds before the clock at the start of the run. A file or
-       directory which the test writes, renames or removes, rather than stamps, takes the clock's time,
-       which is later than every point of the timeline. So a time which the test leaves behind in the
-       fake project is newer than the executable on every machine, not only on a machine slow enough
-       to make the change after the executable's stamp.
+       The reset time itself lies ten seconds before the clock at the start of the run. A write, a rename
+       or a removal takes the clock's time, which is later than every point of the timeline. So any such
+       time which the test leaves behind in the fake project is newer than the executable, on every
+       machine.
     */
     constexpr auto earlyExecutableOffset{std::chrono::seconds{-1}};
     constexpr auto resetOffset{std::chrono::seconds{-10}};
@@ -68,7 +67,7 @@ namespace sequoia::testing
     /// A source of the fake project's library, relative to the project's root
     constexpr std::string_view fooDefinitionsSource{"Source/fakeProject/Stuff/FooDefinitions.cpp"};
 
-    /// The start of the warning which the library check gives when the check cannot be made
+    /// The start of the warning which the library check gives when it cannot make the check
     constexpr std::string_view notCheckedPreface{
       "  Warning: Whether the library has changed since this executable was built cannot be checked: "
     };
@@ -310,9 +309,7 @@ namespace sequoia::testing
     }
   }
 
-  /** By default, objects lie in CMakeFiles/<target>.dir (Ninja) or <target>.dir/<configuration> (Visual Studio). MSVC
-      names its objects `.obj` under either generator.
-   */
+  /// The layout which CMake gives a target's objects by default, under each fake build system
   auto dependency_analyzer_free_test::objects_of(build_system system) -> object_layout
   {
     const auto ninjaDirectory{fs::path{"CMakeFiles"} / "TestAll.dir"};
@@ -346,7 +343,7 @@ namespace sequoia::testing
 
     const auto root{(sources == recorded_sources::all_under_another_root) ? fake.parent_path() / "AnotherRoot" : fake};
 
-    // For `library_relative`, the record spells the library's paths as a build handed relative paths spells them:
+    // Under `library_relative`, the record spells the library's paths as a build given relative paths spells them:
     // relative to the build directory, and not lexically normal
     auto recordedPath{
       [&](std::string_view file) -> fs::path {
@@ -358,7 +355,7 @@ namespace sequoia::testing
       }
     };
 
-    // The record of a unit's compilation, whose object lies in `objectDirectory`
+    // The record of a unit's compilation, with the unit's object in `objectDirectory`
     auto compiledIn{
       [&](const fs::path& objectDirectory) {
         return [&, objectDirectory](const unit& u) {
@@ -768,9 +765,7 @@ namespace sequoia::testing
     check(equality, append_lines(description.message(), "No warning"), warnings, std::string{});
   }
 
-  /** sequoia_library_root finds the sources that the compiler built this binary from. In sequoia's own tests, those
-      sources are sequoia's.
-   */
+  /// This binary was built from sequoia's sources, so sequoia_library_root names sequoia's source directory
   void dependency_analyzer_free_test::test_library_root()
   {
     check(equality,
@@ -779,8 +774,8 @@ namespace sequoia::testing
           fs::weakly_canonical(get_project_paths().source().project()));
   }
 
-  /** The normalised message of a refusal for the fake build by `system`. The message names `file` as a file which the
-      compilation of the object of `source` read.
+  /** The normalised refusal for the fake build by `system`. The refusal names `file`, and names the object compiled
+      from `source` as the first object whose compilation read `file`.
    */
   std::string dependency_analyzer_free_test::library_refusal_message(build_system system,
                                                                      std::string_view file,
@@ -803,13 +798,7 @@ namespace sequoia::testing
                        executable);
   }
 
-  /** The library is the fake project's own:
-      -# The library's objects are the objects whose sources lie within the fake project's source directory;
-      -# The library's own files are the files which the compilations of those objects read, and which lie within
-         that directory too.
-
-      The test stamps the executable between an early edit and a late one.
-   */
+  /// The library is the fake project's own: its root is the fake project's source directory
   void dependency_analyzer_free_test::test_library_change(const project_paths& projPaths, build_system system)
   {
     fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
@@ -909,7 +898,7 @@ namespace sequoia::testing
             "of target TestAll, cannot now be read: ****\n"});
   }
 
-  /// A build handed relative paths records them relative to the build directory, and perhaps not lexically normal
+  /// A build given relative paths records them relative to the build directory, and perhaps not lexically normal
   void dependency_analyzer_free_test::test_library_recorded_relative(const fs::path& fake,
                                                                      const project_paths& projPaths)
   {
@@ -932,8 +921,8 @@ namespace sequoia::testing
     const auto& library{projPaths.source().project()};
 
     {
-      // Nothing of the library's is newer than the executable, so the check skips the record, and the record's
-      // absence goes unremarked. The contract does not promise the skip; this check pins the implementation's choice.
+      // Nothing of the library's is newer than the executable, so the check skips the record. The record's absence
+      // then goes unremarked. The contract does not promise the skip: this check pins the implementation's choice.
       const hidden_for_scope hidden{projPaths.discovered().cmake_cache().parent_path() / ".ninja_deps"};
       const auto [refusal, warnings]{check_library(projPaths, library)};
       check(equality, "Nothing edited since the build: the record is not read", warnings, std::string{});
