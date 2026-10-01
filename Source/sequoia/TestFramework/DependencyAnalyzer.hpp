@@ -18,7 +18,8 @@
     `prune` reads those, and the build's record of what each test was built from, and selects
     the tests which are stale or are to be rerun.
 
-    The same record shows whether the library itself has changed since the executable's build.
+    The same record names the files which the library's compilations read, and so shows whether the
+    library itself has changed since the executable's build.
  */
 
 #include "sequoia/TestFramework/CMakeCache.hpp"
@@ -138,7 +139,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path sequoia_library_root();
 
-  /** \brief Throws if the library within `libraryRoot` has changed since the executable was built.
+  /** \brief Throws if the library within `libraryRoot` has changed since the executable's build.
 
       The library's objects are the objects whose sources lie within `libraryRoot`. The library's own
       files are the files which the compilations of those objects read, and which lie within
@@ -149,10 +150,12 @@ namespace sequoia::testing
       The function cannot make the check if:
       -# `libraryRoot` is relative;
       -# The executable cannot be found;
-      -# The build's record cannot be read;
-      -# The record names no object whose source lies within `libraryRoot`.
+      -# The function needs the build's record, but cannot read the record;
+      -# The function needs the build's record, but the record names no object whose source lies within
+         `libraryRoot`.
 
-      In each of these cases, the function writes a warning to `stream` and throws nothing.
+      In each of these cases, the function writes a warning to `stream` and throws nothing. The function may
+      find from modification times alone that the library is unchanged, and then does not need the record.
 
       \throws std::runtime_error if
       -# One of the library's own files is no older than the executable;

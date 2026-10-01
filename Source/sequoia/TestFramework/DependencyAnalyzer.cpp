@@ -430,7 +430,8 @@ namespace sequoia::testing
       /** A node for every object file and every file of the project's read to produce one - the tests'
           object files first, then in order of first mention - each object file's source on its node; an
           edge from each object file to each such file; and the dependencies the convention adds. The
-          toolchain's files are listed apart. Each file's path and class are those `recorded_files` gives.
+          result lists the toolchain's files apart. Each file's path and class are those `recorded_files`
+          gives.
        */
       [[nodiscard]]
       static files_read_by_build read_files(const build_tree& tree, const project_paths& projPaths)
@@ -827,18 +828,17 @@ namespace sequoia::testing
       fs::file_time_type time{};
     };
 
-    /** The target which `object` belongs to, if any. CMake puts a target's objects within a directory
-        `<target>.dir` of the build tree. The first such directory on the path of `object` within
-        `buildDirectory` names the target.
+    /** The target which `object` belongs to, if any. By default, CMake puts a target's objects within a
+        directory `<target>.dir` of the build tree. The first such directory on the path of `object`
+        within `buildDirectory` names the target.
      */
     [[nodiscard]]
     std::optional<std::string> target_of(const fs::path& object, const fs::path& buildDirectory)
     {
-      const auto canonicalBuildDirectory{canonical_or_as_given(buildDirectory)};
-      if(!in_repo(object, canonicalBuildDirectory))
+      if(!in_repo(object, buildDirectory))
         return std::nullopt;
 
-      const auto objectWithinBuild{object.lexically_relative(canonicalBuildDirectory)};
+      const auto objectWithinBuild{object.lexically_relative(buildDirectory)};
       auto isTargetDirectory{[](const fs::path& p){ return p.extension() == ".dir"; }};
       const auto targetDirectory{std::ranges::find_if(objectWithinBuild, isTargetDirectory)};
       if(targetDirectory == objectWithinBuild.end())

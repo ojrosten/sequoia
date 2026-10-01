@@ -412,7 +412,8 @@ namespace sequoia::testing
       }
 
       // An object the build once had and no longer does keeps its record in the log, and its source may be gone
-      statements.append(std::format("build CMakeFiles/TestAll.dir/unrelated{}: CXX_COMPILER unrelated.cpp\n",
+      statements.append(std::format("build {}/unrelated{}: CXX_COMPILER unrelated.cpp\n",
+                                    objects.directory.generic_string(),
                                     objects.extension));
       auto logged{records};
       logged.push_back({.object{objects.directory / std::format("Tests/Retired/RetiredTest.cpp{}", objects.extension)},
@@ -916,7 +917,7 @@ namespace sequoia::testing
 
     check_library_change("A source of the library's, recorded relative to the build, edited since the build",
                          projPaths,
-                         {{projPaths.source().project() / "Stuff" / "FooDefinitions.cpp", lateEditOffset}},
+                         {{projPaths.project_root() / fooDefinitionsSource, lateEditOffset}},
                          library_refusal_message(build_system::ninja, fooDefinitionsSource, fooDefinitionsSource));
 
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
@@ -1007,8 +1008,10 @@ namespace sequoia::testing
 
     check_library_change("A directory above the build tree, whose name ends in .dir",
                          relocatedPaths,
-                         {{relocatedPaths.source().project() / "Stuff" / "FooDefinitions.cpp", lateEditOffset}},
+                         {{relocated / fooDefinitionsSource, lateEditOffset}},
                          library_refusal_message(build_system::ninja, fooDefinitionsSource, fooDefinitionsSource));
+
+    fs::remove_all(relocated.parent_path());
   }
 
   void dependency_analyzer_free_test::test_dependencies(const project_paths& projPaths)
