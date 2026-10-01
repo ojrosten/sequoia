@@ -271,25 +271,26 @@ namespace sequoia::testing
   /** \name discriminator_probes
       \brief Probes for the hooks a test may declare to discriminate what it records.
 
-      A hook discriminates by the configuration of the build tree. Each hook is a public static member
-      function which takes `const cmake_cache&` and returns something convertible to `std::string`.
-      There are three hooks:
+      Each hook is a public static member function which takes `const cmake_cache&` and returns
+      something convertible to `std::string`. A hook may compute the string from the cache or from any
+      other source, such as hardware found at run time. There are three hooks:
       -# `output_discriminator` discriminates the diagnostics files;
       -# `summary_discriminator` discriminates the summary;
       -# `materials_discriminator` discriminates the original materials.
 
-      Each probe is for one hook. For a test `T`, it asks three things:
+      Each probe is for one hook. For a test `T`, it asks two things:
       -# `declared_v`: whether the test declares the hook in any form. A member of that name counts,
          whether static or not, and whatever its signature. Where the name is overloaded, a member
          callable through `T&`, either with a `const cmake_cache&` or with no arguments, counts;
-      -# `static_hook_v`: whether the hook can be called through the class with a `const cmake_cache&`;
-      -# `string_valued_v`: whether the result of that call converts to `std::string`.
+      -# `conforming_v`: whether the hook can be called through the class with a `const cmake_cache&`,
+         and whether that call returns something convertible to `std::string`.
 
       Each probe's `discriminator` makes that call, and returns the result as a `std::string`.
 
-      The hooks must be public: a private hook is invisible to every probe. A hook sees only the
-      cache. The cache does not record the active configuration of a multi-config build tree, so in
-      such a tree a test cannot discriminate between Debug and Release.
+      The hooks must be public: a hook which is not public is invisible to every probe. The cache does
+      not record the active configuration of a multi-config build tree. A hook which discriminates
+      between Debug and Release must find the configuration some other way, such as by whether `NDEBUG`
+      is defined.
    */
   ///@{
   template<class T>
@@ -301,16 +302,16 @@ namespace sequoia::testing
       || requires(T& t){ t.output_discriminator(); }
     };
 
-    static constexpr bool static_hook_v{
-      requires(const cmake_cache& cache){ T::output_discriminator(cache); }
-    };
-
-    static constexpr bool string_valued_v{
+    static constexpr bool conforming_v{
       requires(const cmake_cache& cache){ { T::output_discriminator(cache) } -> std::convertible_to<std::string>; }
     };
 
     [[nodiscard]]
-    static std::string discriminator(const cmake_cache& cache) { return T::output_discriminator(cache); }
+    static std::string discriminator(const cmake_cache& cache)
+      requires conforming_v
+    {
+      return T::output_discriminator(cache);
+    }
   };
 
   template<class T>
@@ -322,16 +323,16 @@ namespace sequoia::testing
       || requires(T& t){ t.summary_discriminator(); }
     };
 
-    static constexpr bool static_hook_v{
-      requires(const cmake_cache& cache){ T::summary_discriminator(cache); }
-    };
-
-    static constexpr bool string_valued_v{
+    static constexpr bool conforming_v{
       requires(const cmake_cache& cache){ { T::summary_discriminator(cache) } -> std::convertible_to<std::string>; }
     };
 
     [[nodiscard]]
-    static std::string discriminator(const cmake_cache& cache) { return T::summary_discriminator(cache); }
+    static std::string discriminator(const cmake_cache& cache)
+      requires conforming_v
+    {
+      return T::summary_discriminator(cache);
+    }
   };
 
   template<class T>
@@ -343,34 +344,19 @@ namespace sequoia::testing
       || requires(T& t){ t.materials_discriminator(); }
     };
 
-    static constexpr bool static_hook_v{
-      requires(const cmake_cache& cache){ T::materials_discriminator(cache); }
-    };
-
-    static constexpr bool string_valued_v{
+    static constexpr bool conforming_v{
       requires(const cmake_cache& cache){ { T::materials_discriminator(cache) } -> std::convertible_to<std::string>; }
     };
 
     [[nodiscard]]
-    static std::string discriminator(const cmake_cache& cache) { return T::materials_discriminator(cache); }
+    static std::string discriminator(const cmake_cache& cache)
+      requires conforming_v
+    {
+      return T::materials_discriminator(cache);
+    }
   };
 
   ///@}
-
-  template<template<class> class Probe, concrete_test T>
-  inline constexpr bool misdeclared_discriminator_v{
-    Probe<T>::declared_v && !Probe<T>::static_hook_v
-  };
-
-  template<template<class> class Probe, concrete_test T>
-  inline constexpr bool mistyped_discriminator_v{
-    Probe<T>::static_hook_v && !Probe<T>::string_valued_v
-  };
-
-  template<template<class> class Probe, concrete_test T>
-  inline constexpr bool has_discriminator_v{
-    Probe<T>::string_valued_v
-  };
 
   /** \brief Temporary workaround while waiting for variadic friends */
   class trivial_extender

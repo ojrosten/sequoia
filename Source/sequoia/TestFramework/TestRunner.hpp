@@ -373,14 +373,11 @@ namespace sequoia::testing
   [[nodiscard]]
   std::optional<std::string> get_discriminator(const cmake_cache& cache)
   {
-    static_assert(!misdeclared_discriminator_v<Probe, T>,
-                  "A discriminator hook must be a public static member function taking const cmake_cache&, "
-                  "or it is silently ignored");
+    static_assert(!Probe<T>::declared_v || Probe<T>::conforming_v,
+                  "A discriminator hook must be a public static member function taking const cmake_cache& "
+                  "and returning something convertible to std::string");
 
-    static_assert(!mistyped_discriminator_v<Probe, T>,
-                  "A discriminator hook must return something convertible to std::string");
-
-    if constexpr(has_discriminator_v<Probe, T>)
+    if constexpr(Probe<T>::conforming_v)
       return Probe<T>::discriminator(cache);
     else
       return std::nullopt;

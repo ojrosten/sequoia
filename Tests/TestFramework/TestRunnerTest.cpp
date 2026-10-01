@@ -580,6 +580,84 @@ namespace sequoia::testing
       void run_tests() {}
     };
 
+    class nullary_hooks_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file() { return make_fake_file_path<nullary_hooks_test>(); }
+
+      [[nodiscard]]
+      static std::string output_discriminator() { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string summary_discriminator() { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string materials_discriminator() { return "Platypus"; }
+
+      void run_tests() {}
+    };
+
+    class overloaded_member_hooks_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file() { return make_fake_file_path<overloaded_member_hooks_test>(); }
+
+      [[nodiscard]]
+      std::string output_discriminator(const cmake_cache&) const { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string output_discriminator(int) const { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string summary_discriminator(const cmake_cache&) const { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string summary_discriminator(int) const { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string materials_discriminator(const cmake_cache&) const { return "Platypus"; }
+
+      [[nodiscard]]
+      std::string materials_discriminator(int) const { return "Platypus"; }
+
+      void run_tests() {}
+    };
+
+    class overloaded_nullary_hooks_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static std::filesystem::path source_file() { return make_fake_file_path<overloaded_nullary_hooks_test>(); }
+
+      [[nodiscard]]
+      static std::string output_discriminator() { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string output_discriminator(int) { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string summary_discriminator() { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string summary_discriminator(int) { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string materials_discriminator() { return "Platypus"; }
+
+      [[nodiscard]]
+      static std::string materials_discriminator(int) { return "Platypus"; }
+
+      void run_tests() {}
+    };
+
     class view_valued_hooks_test final : public free_test
     {
     public:
@@ -886,27 +964,39 @@ namespace sequoia::testing
   }
 
   /** Checks the traits for the hook that `Probe` probes for:
-      -# A static, string-valued hook is detected, and not flagged;
-      -# A test without the hook is neither detected nor flagged;
-      -# Every other shape of hook is flagged by one of the two traits behind the runner's
-         `static_assert`s.
+      -# A static, string-valued hook taking `const cmake_cache&` is declared and conforming;
+      -# A test without the hook is neither;
+      -# Each of these other shapes of hook is declared but not conforming: a const member, a non-const
+         member, a static hook taking no arguments, and a view-valued hook;
+      -# So is an overloaded hook, either a const member with an overload taking `const cmake_cache&`,
+         or static with an overload taking no arguments.
    */
   template<template<class> class Probe>
   void test_runner_test::test_discriminator_probe()
   {
-    STATIC_CHECK(has_discriminator_v<Probe, static_hooks_test>);
-    STATIC_CHECK(!misdeclared_discriminator_v<Probe, static_hooks_test>);
-    STATIC_CHECK(!mistyped_discriminator_v<Probe, static_hooks_test>);
+    STATIC_CHECK(Probe<static_hooks_test>::declared_v);
+    STATIC_CHECK(Probe<static_hooks_test>::conforming_v);
 
-    STATIC_CHECK(!has_discriminator_v<Probe, throwing_test>);
-    STATIC_CHECK(!misdeclared_discriminator_v<Probe, throwing_test>);
-    STATIC_CHECK(!mistyped_discriminator_v<Probe, throwing_test>);
+    STATIC_CHECK(!Probe<throwing_test>::declared_v);
+    STATIC_CHECK(!Probe<throwing_test>::conforming_v);
 
-    STATIC_CHECK(misdeclared_discriminator_v<Probe, const_member_hooks_test>);
-    STATIC_CHECK(misdeclared_discriminator_v<Probe, mutable_member_hooks_test>);
+    STATIC_CHECK(Probe<const_member_hooks_test>::declared_v);
+    STATIC_CHECK(!Probe<const_member_hooks_test>::conforming_v);
 
-    STATIC_CHECK(mistyped_discriminator_v<Probe, view_valued_hooks_test>);
-    STATIC_CHECK(!misdeclared_discriminator_v<Probe, view_valued_hooks_test>);
+    STATIC_CHECK(Probe<mutable_member_hooks_test>::declared_v);
+    STATIC_CHECK(!Probe<mutable_member_hooks_test>::conforming_v);
+
+    STATIC_CHECK(Probe<nullary_hooks_test>::declared_v);
+    STATIC_CHECK(!Probe<nullary_hooks_test>::conforming_v);
+
+    STATIC_CHECK(Probe<view_valued_hooks_test>::declared_v);
+    STATIC_CHECK(!Probe<view_valued_hooks_test>::conforming_v);
+
+    STATIC_CHECK(Probe<overloaded_member_hooks_test>::declared_v);
+    STATIC_CHECK(!Probe<overloaded_member_hooks_test>::conforming_v);
+
+    STATIC_CHECK(Probe<overloaded_nullary_hooks_test>::declared_v);
+    STATIC_CHECK(!Probe<overloaded_nullary_hooks_test>::conforming_v);
   }
 
   [[nodiscard]]
