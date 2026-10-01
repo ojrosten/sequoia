@@ -828,8 +828,8 @@ namespace sequoia::testing
     };
 
     /** The target which `object` belongs to, if any. CMake puts a target's objects within a directory
-        `<target>.dir` of the build tree. The target is the first such directory on the path of `object`
-        within `buildDirectory`.
+        `<target>.dir` of the build tree. The first such directory on the path of `object` within
+        `buildDirectory` names the target.
      */
     [[nodiscard]]
     std::optional<std::string> target_of(const fs::path& object, const fs::path& buildDirectory)
@@ -838,10 +838,10 @@ namespace sequoia::testing
       if(!in_repo(object, canonicalBuildDirectory))
         return std::nullopt;
 
-      const auto withinBuild{object.lexically_relative(canonicalBuildDirectory)};
+      const auto objectWithinBuild{object.lexically_relative(canonicalBuildDirectory)};
       auto isTargetDirectory{[](const fs::path& p){ return p.extension() == ".dir"; }};
-      const auto targetDirectory{std::ranges::find_if(withinBuild, isTargetDirectory)};
-      if(targetDirectory == withinBuild.end())
+      const auto targetDirectory{std::ranges::find_if(objectWithinBuild, isTargetDirectory)};
+      if(targetDirectory == objectWithinBuild.end())
         return std::nullopt;
 
       return targetDirectory->stem().string();
@@ -939,13 +939,13 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::string on_one_line(std::string_view reason)
+    std::string join_nonempty_lines(std::string_view text)
     {
       auto isNonEmpty{[](auto&& line){ return !std::ranges::empty(line); }};
       auto asView    {[](auto&& line){ return std::string_view{line}; }};
 
       auto lines{
-          reason
+          text
         | std::views::split('\n')
         | std::views::filter(isNonEmpty)
         | std::views::transform(asView)
@@ -972,7 +972,7 @@ namespace sequoia::testing
         stream << parsing::commandline::warning(
                     std::format("Whether the library has changed since this executable was built "
                                 "cannot be checked: {}",
-                                on_one_line(reason)))
+                                join_nonempty_lines(reason)))
                << '\n';
       }
     };
