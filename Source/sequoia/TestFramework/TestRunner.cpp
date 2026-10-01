@@ -941,10 +941,10 @@ namespace sequoia::testing
                             // `create` checks that the library has not changed since the build
                             if(!in_mode(runner_mode::create))
                             {
-                              refuse_if_library_changed_since_build(proj_paths(),
-                                                                    m_CMakeCache,
-                                                                    sequoia_library_root(),
-                                                                    stream());
+                              throw_if_library_changed_since_build(proj_paths(),
+                                                                   m_CMakeCache,
+                                                                   sequoia_library_root(),
+                                                                   stream());
                             }
 
                             m_RunnerMode |= runner_mode::create;

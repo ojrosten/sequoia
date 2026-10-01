@@ -852,7 +852,7 @@ namespace sequoia::testing
       "The library has changed since this executable was built; please build it again."
     };
 
-    /** The newest of the library's own files, as `refuse_if_library_changed_since_build` defines them,
+    /** The newest of the library's own files, as `throw_if_library_changed_since_build` defines them,
         with the first object in the record whose compilation read the file.
 
         \returns `nullopt` if no object in the record has its source within `libraryRoot`.
@@ -954,10 +954,10 @@ namespace sequoia::testing
     return fs::path{std::source_location::current().file_name()}.parent_path().parent_path();
   }
 
-  void refuse_if_library_changed_since_build(const project_paths& projPaths,
-                                             const cmake_cache& cache,
-                                             const fs::path& libraryRoot,
-                                             std::ostream& stream)
+  void throw_if_library_changed_since_build(const project_paths& projPaths,
+                                            const cmake_cache& cache,
+                                            const fs::path& libraryRoot,
+                                            std::ostream& stream)
   {
     auto notChecked{
       [&stream](std::string_view reason) {

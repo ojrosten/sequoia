@@ -151,7 +151,7 @@ namespace sequoia::testing
       executable. The entry may be a file or a directory; a deletion within a directory moves the
       directory's time.
 
-      If the check cannot be made, the function writes a one-line warning to `stream` and refuses
+      If the check cannot be made, the function writes a one-line warning to `stream` and throws
       nothing. The warning gives one of these reasons:
       -# `libraryRoot` is relative;
       -# The executable cannot be found;
@@ -165,10 +165,10 @@ namespace sequoia::testing
       -# The modification time of one of the library's own files cannot now be read. The message
          names the file and the object the file was read to compile.
    */
-  void refuse_if_library_changed_since_build(const project_paths& projPaths,
-                                             const cmake_cache& cache,
-                                             const std::filesystem::path& libraryRoot,
-                                             std::ostream& stream);
+  void throw_if_library_changed_since_build(const project_paths& projPaths,
+                                            const cmake_cache& cache,
+                                            const std::filesystem::path& libraryRoot,
+                                            std::ostream& stream);
 
   /** \brief Empties the directory in which the repetitions of an instability analysis leave their prune files. */
   void setup_instability_analysis_prune_folder(const project_paths& projPaths);

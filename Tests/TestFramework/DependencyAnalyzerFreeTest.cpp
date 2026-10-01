@@ -718,7 +718,7 @@ namespace sequoia::testing
         try
         {
           const cmake_cache cache{projPaths.discovered().cmake_cache()};
-          refuse_if_library_changed_since_build(projPaths, cache, libraryRoot, stream);
+          throw_if_library_changed_since_build(projPaths, cache, libraryRoot, stream);
           return std::nullopt;
         }
         catch(const std::runtime_error& e)
@@ -902,7 +902,7 @@ namespace sequoia::testing
     write_build_artefacts(fake, build_system::ninja, recorded_sources::all);
   }
 
-  /// A library check which cannot be made gives a warning with the reason, and refuses nothing
+  /// A library check which cannot be made gives a warning with the reason, and throws nothing
   void dependency_analyzer_free_test::test_library_change_not_checked(const project_paths& projPaths)
   {
     fs::last_write_time(projPaths.executable(), m_ResetTime + lateExecutableOffset);
@@ -919,7 +919,7 @@ namespace sequoia::testing
 
     const modified_for_scope edited{library / "Stuff" / "FooDefinitions.cpp", m_ResetTime + lateEditOffset};
 
-    // If the check refuses, the lambda returns the refusal in place of the warnings, so that a failure shows it
+    // If the check throws, the lambda returns the refusal in place of the warnings, so that a failure shows it
     auto warningFor{
       [&projPaths](const fs::path& libraryRoot) {
         const auto [refusal, warnings]{check_library(projPaths, libraryRoot)};
