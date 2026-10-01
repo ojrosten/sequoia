@@ -954,22 +954,6 @@ namespace sequoia::testing
       return std::ranges::any_of(fs::recursive_directory_iterator{dir, fs::directory_options::skip_permission_denied},
                                  mayHaveChanged);
     }
-
-    [[nodiscard]]
-    std::string join_nonempty_lines(std::string_view text)
-    {
-      auto isNonEmpty{[](auto&& line){ return !std::ranges::empty(line); }};
-      auto asView    {[](auto&& line){ return std::string_view{line}; }};
-
-      auto lines{
-          text
-        | std::views::split('\n')
-        | std::views::filter(isNonEmpty)
-        | std::views::transform(asView)
-      };
-
-      return lines | std::views::join_with(std::string_view{" "}) | std::ranges::to<std::string>();
-    }
   }
 
   [[nodiscard]]
@@ -988,7 +972,7 @@ namespace sequoia::testing
         stream << parsing::commandline::warning(
                     std::format("Whether sequoia has changed since this executable was built "
                                 "cannot be checked: {}",
-                                join_nonempty_lines(reason)))
+                                reason))
                << '\n';
       }
     };
