@@ -59,7 +59,7 @@ The build's record names nothing under output/TestsTemporaryData/TestFramework/D
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1457
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1456
 A prune file in a superseded format
 
 Expected Exception Type:
@@ -69,7 +69,7 @@ Try deleting the parent directory and starting afresh
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1463
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1462
 A malformed time stamp
 
 Expected Exception Type:
@@ -79,7 +79,7 @@ Try deleting the parent directory and starting afresh
 
 =======================================
 
-Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1469
+Tests/TestFramework/DependencyAnalyzerFreeTest.cpp, Line 1468
 A path with no time stamp after it
 
 Expected Exception Type:

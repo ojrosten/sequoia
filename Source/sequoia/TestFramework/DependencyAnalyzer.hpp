@@ -22,7 +22,6 @@
     library itself has changed since the executable's build.
  */
 
-#include "sequoia/TestFramework/CMakeCache.hpp"
 #include "sequoia/TestFramework/ProjectPaths.hpp"
 
 #include <chrono>
@@ -162,7 +161,6 @@ namespace sequoia::testing
       -# The modification time of one of the library's own files cannot be read.
    */
   void throw_if_library_changed_since_build(const project_paths& projPaths,
-                                            const cmake_cache& cache,
                                             const std::filesystem::path& libraryRoot,
                                             std::ostream& stream);
 

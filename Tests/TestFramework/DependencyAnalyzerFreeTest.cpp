@@ -736,8 +736,7 @@ namespace sequoia::testing
       [&]() -> std::optional<std::string> {
         try
         {
-          const cmake_cache cache{projPaths.discovered().cmake_cache()};
-          throw_if_library_changed_since_build(projPaths, cache, libraryRoot, stream);
+          throw_if_library_changed_since_build(projPaths, libraryRoot, stream);
           return std::nullopt;
         }
         catch(const std::runtime_error& e)

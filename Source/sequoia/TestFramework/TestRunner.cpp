@@ -942,7 +942,6 @@ namespace sequoia::testing
                             if(!in_mode(runner_mode::create))
                             {
                               throw_if_library_changed_since_build(proj_paths(),
-                                                                   m_CMakeCache,
                                                                    sequoia_library_root(),
                                                                    stream());
                             }

@@ -7,7 +7,6 @@
 
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/BuildArtefacts.hpp"
-#include "sequoia/TestFramework/CMakeCache.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 
 #include "sequoia/Maths/Arithmetic/ArithmeticCasts.hpp"
@@ -963,7 +962,6 @@ namespace sequoia::testing
   }
 
   void throw_if_library_changed_since_build(const project_paths& projPaths,
-                                            const cmake_cache& cache,
                                             const fs::path& libraryRoot,
                                             std::ostream& stream)
   {
@@ -1000,7 +998,7 @@ namespace sequoia::testing
       [&]() -> std::variant<std::pair<build_tree, compilations>, std::string> {
         try
         {
-          auto tree{read_build_tree(projPaths.discovered().cmake_cache(), cache)};
+          auto tree{read_build_tree(projPaths.discovered().cmake_cache())};
           auto compiled{read_compilations(tree, projPaths.build().configuration())};
           return std::pair{std::move(tree), std::move(compiled)};
         }
