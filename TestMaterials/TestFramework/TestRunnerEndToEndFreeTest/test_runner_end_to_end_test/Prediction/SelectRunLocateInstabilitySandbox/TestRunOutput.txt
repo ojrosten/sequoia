@@ -7,6 +7,7 @@ flipper_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 412us]
 [Execution Time: 147us]
+[Runner Overhead: 1.1ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -32,6 +33,7 @@ flipper_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 360us]
 [Execution Time: 127us]
+[Runner Overhead: 1.06ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

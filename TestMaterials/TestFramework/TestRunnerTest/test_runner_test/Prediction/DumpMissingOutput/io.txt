@@ -3,11 +3,13 @@ Running tests, synchronously...
 
 passing_test:
 [Execution Time: 105us]
+[Runner Overhead: 366us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
 [Total Run Time: 407us]
 [Execution Time: 105us]
+[Runner Overhead: 366us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

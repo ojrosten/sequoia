@@ -4,51 +4,71 @@ Running tests...
 Stuff:
     bar_free_test:
     [Execution Time: 4.04us]
+    [Runner Overhead: 1.7ms]
     foo_false_negative_test:
     [Execution Time: 4.71us]
+    [Runner Overhead: 1.68ms]
     foo_test:
     [Execution Time: 14.6us]
+    [Runner Overhead: 1.49ms]
     oldschool_false_negative_test:
     [Execution Time: 12.1us]
+    [Runner Overhead: 1.93ms]
     oldschool_test:
     [Execution Time: 15.4us]
+    [Runner Overhead: 1.16ms]
 Utilities:
     container_allocation_test:
     [Execution Time: 11.6us]
+    [Runner Overhead: 1.49ms]
     container_performance_test:
     [Execution Time: 2.88us]
+    [Runner Overhead: 420us]
     Thing:
         unique_thing_false_negative_test:
         [Execution Time: 55us]
+        [Runner Overhead: 1.37ms]
         unique_thing_test:
         [Execution Time: 8.79us]
+        [Runner Overhead: 2.33ms]
     useful_things_free_test:
     [Execution Time: 12.3us]
+    [Runner Overhead: 1.67ms]
     utilities_false_negative_free_diagnostics:
     [Execution Time: 2.75us]
+    [Runner Overhead: 1.91ms]
     utilities_false_positive_free_diagnostics:
     [Execution Time: 2.79us]
+    [Runner Overhead: 1.04ms]
     utilities_free_test:
     [Execution Time: 2.29us]
+    [Runner Overhead: 774us]
 Unstable:
     flipper_free_test:
     [Execution Time: 15.4us]
+    [Runner Overhead: 1.19ms]
 house_allocation_test:
 [Execution Time: 2.67us]
+[Runner Overhead: 1.12ms]
 Maybe:
     maybe_false_negative_test:
     [Execution Time: 2.38us]
+    [Runner Overhead: 1.74ms]
     maybe_test:
     [Execution Time: 29.4us]
+    [Runner Overhead: 1.77ms]
 Maths:
     probability_false_negative_test:
     [Execution Time: 17.8us]
+    [Runner Overhead: 1.49ms]
     probability_test:
     [Execution Time: 2.62us]
+    [Runner Overhead: 1.94ms]
 
 -----------Grand Totals-----------
 [Total Run Time: 2.48ms]
 [Execution Time: 428us]
+[Runner Overhead: 4.5ms]
 	Standard Top Level Checks:                 0;  Failures:  0
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

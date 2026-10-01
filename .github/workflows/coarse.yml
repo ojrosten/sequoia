@@ -40,10 +40,10 @@ name: coarse
 # column's absence from that generator leaves none of them unverified.
 #
 # The Windows and macOS columns run with `--exclude-performance`, because
-# TestRunnerPerformanceTest asserts absolute wall-clock times - 60ms +- 35 for
-# eight 25ms sleeps run concurrently - which a hosted runner cannot hold: Windows
-# returned 196ms and then 603ms for the same commit, and macOS 172ms, which is
-# what cost it its column on 2026-09-08. No tolerance spans that and still means
+# TestRunnerPerformanceTest asserts absolute durations - 60ms +- 35 for eight
+# 25ms sleeps run concurrently - which a hosted runner may not hold: as wall-clock
+# times, Windows returned 196ms and then 603ms for the same commit, and macOS
+# 172ms, which is what cost it its column on 2026-09-08. No tolerance spans that and still means
 # anything.
 #
 # Every column checks the versioned output, since 2026-09-22. The check is a

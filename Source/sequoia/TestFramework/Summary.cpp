@@ -22,6 +22,13 @@ namespace sequoia::testing
       using namespace std::chrono;
       return std::format("{:.3}", duration_cast<duration<double, Period>>(d).count());
     }
+
+    [[nodiscard]]
+    std::string timing_line(std::string_view label, const log_summary::duration& d)
+    {
+      const auto [dur, unit]{stringify_duration(d)};
+      return std::format("[{}: {}{}]\n", label, dur, unit);
+    }
   }
 
   [[nodiscard]]
@@ -39,17 +46,10 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string report_time(const log_summary& log, const opt_duration duration)
   {
-    std::string mess{};
-    if(duration)
-    {
-      const auto [dur, unit]{stringify_duration(*duration)};
-      mess.append(std::format("[Total Run Time: {}{}]\n", dur, unit));
-    }
-
-    const auto[dur, unit]{stringify_duration(log.execution_time())};
-    mess.append(std::format("[Execution Time: {}{}]\n", dur, unit));
-
-    return mess;
+    return std::format("{}{}{}",
+                       duration ? timing_line("Total Run Time", *duration) : "",
+                       timing_line("Execution Time",  log.execution_duration()),
+                       timing_line("Runner Overhead", log.runner_overhead()));
   }
 
   [[nodiscard]]

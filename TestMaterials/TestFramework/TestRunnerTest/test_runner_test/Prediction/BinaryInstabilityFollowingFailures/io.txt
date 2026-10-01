@@ -3,6 +3,7 @@ Running tests, synchronously...
 
 failing_plus_instabilities_free_test:
 [Execution Time: 179us]
+[Runner Overhead: 746us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 257
@@ -19,6 +20,7 @@ failing_plus_instabilities_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 379us]
 [Execution Time: 179us]
+[Runner Overhead: 746us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -30,6 +32,7 @@ Running tests, synchronously...
 
 failing_plus_instabilities_free_test:
 [Execution Time: 70.3us]
+[Runner Overhead: 582us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 257
@@ -56,6 +59,7 @@ failing_plus_instabilities_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 255us]
 [Execution Time: 70.3us]
+[Runner Overhead: 582us]
 	Standard Top Level Checks:                 2;  Failures:  2  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

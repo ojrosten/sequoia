@@ -3,6 +3,7 @@ Running tests, synchronously...
 
 failing_test:
 [Execution Time: 94.9us]
+[Runner Overhead: 431us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 98
@@ -17,14 +18,17 @@ failing_test:
 
 fake_performance_test:
 [Execution Time: 50.5us]
+[Runner Overhead: 452us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 passing_test:
 [Execution Time: 47.1us]
+[Runner Overhead: 531us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
 [Total Run Time: 628us]
 [Execution Time: 193us]
+[Runner Overhead: 1.41ms]
 	Standard Top Level Checks:                 3;  Failures:  1  [Deep checks: 3]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

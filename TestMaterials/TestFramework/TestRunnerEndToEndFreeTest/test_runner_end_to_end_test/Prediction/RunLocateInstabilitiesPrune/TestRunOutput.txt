@@ -23,6 +23,7 @@ useful_things_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 730us]
 [Execution Time: 354us]
+[Runner Overhead: 1.03ms]
 	Standard Top Level Checks:                 4;  Failures:  1  [Deep checks: 4]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -69,6 +70,7 @@ useful_things_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 523us]
 [Execution Time: 201us]
+[Runner Overhead: 760us]
 	Standard Top Level Checks:                 4;  Failures:  3  [Deep checks: 4]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

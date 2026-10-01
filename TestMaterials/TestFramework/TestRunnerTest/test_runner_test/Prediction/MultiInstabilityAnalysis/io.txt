@@ -3,11 +3,13 @@ Running tests, synchronously...
 
 periodic_free_test:
 [Execution Time: 111us]
+[Runner Overhead: 720us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
 [Total Run Time: 298us]
 [Execution Time: 111us]
+[Runner Overhead: 720us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -19,6 +21,7 @@ Running tests, synchronously...
 
 periodic_free_test:
 [Execution Time: 50.3us]
+[Runner Overhead: 524us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 221
@@ -35,6 +38,7 @@ periodic_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 210us]
 [Execution Time: 50.3us]
+[Runner Overhead: 524us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -46,6 +50,7 @@ Running tests, synchronously...
 
 periodic_free_test:
 [Execution Time: 53.9us]
+[Runner Overhead: 551us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 221
@@ -62,6 +67,7 @@ periodic_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 217us]
 [Execution Time: 53.9us]
+[Runner Overhead: 551us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -73,6 +79,7 @@ Running tests, synchronously...
 
 periodic_free_test:
 [Execution Time: 53us]
+[Runner Overhead: 577us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 
 	Tests/Tests/TestFramework/TestRunnerTest.cpp, Line 221
@@ -89,6 +96,7 @@ periodic_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 202us]
 [Execution Time: 53us]
+[Runner Overhead: 577us]
 	Standard Top Level Checks:                 1;  Failures:  1  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

@@ -29,6 +29,7 @@
 #include <optional>
 #include <set>
 #include <span>
+#include <thread>
 
 namespace sequoia::testing
 {
@@ -188,15 +189,41 @@ namespace sequoia::testing
   private:
     static void versioned_write(const std::filesystem::path& file, std::string_view text);
 
-    /** \brief An RAII wrapper to write a test's execution record: when the test started and, on destruction, its
-               duration.
+    /** \brief Times a test's execution apart from the runner's overhead.
 
-        A record which cannot be written is skipped rather than reported.
+        The execution duration is the time spent in the calls to `time_execution`. The runner's overhead is the rest
+        of the time since construction.
+     */
+    class execution_timer
+    {
+    public:
+      template<std::invocable Fn>
+      void time_execution(Fn fn)
+      {
+        const timer t{};
+        fn();
+        m_ExecutionDuration += t.time_elapsed();
+      }
+
+      [[nodiscard]]
+      log_summary::duration execution_duration() const noexcept { return m_ExecutionDuration; }
+
+      [[nodiscard]]
+      log_summary::duration runner_overhead() const { return m_Timer.time_elapsed() - m_ExecutionDuration; }
+    private:
+      timer m_Timer{};
+      log_summary::duration m_ExecutionDuration{};
+    };
+
+    /** \brief An RAII wrapper to write a test's execution record: when the test started and, on destruction, its
+               execution duration and the runner's overhead so far, as `executionTimer` gives them.
+
+        A record which cannot be written is skipped rather than reported; an allocation failure is not caught.
      */
     class [[nodiscard]] scoped_execution_record
     {
     public:
-      explicit scoped_execution_record(std::filesystem::path file);
+      scoped_execution_record(std::filesystem::path file, const execution_timer& executionTimer);
 
       scoped_execution_record(const scoped_execution_record&)            = delete;
       scoped_execution_record& operator=(const scoped_execution_record&) = delete;
@@ -205,7 +232,7 @@ namespace sequoia::testing
     private:
       std::filesystem::path m_File{};
       std::chrono::system_clock::time_point m_Start{};
-      timer m_Timer{};
+      const execution_timer& m_ExecutionTimer;
     };
 
     struct soul
@@ -256,28 +283,11 @@ namespace sequoia::testing
       [[nodiscard]]
       log_summary execute(std::optional<std::size_t> index) final
       {
-        // Also installed per test, since under MSVC each thread has its own terminate handler
-        const scoped_terminate_handler terminationReported{report_termination};
-        const scoped_execution_record record{m_ExecutionRecord.file_path()};
-        const timer t{};
+        execution_timer executionTimer{};
+        auto summary{execute_and_record(index, executionTimer)};
+        summary.runner_overhead(executionTimer.runner_overhead());
 
-        if(try_prepare_materials())
-        {
-          try
-          {
-            m_Test.run_tests();
-          }
-          catch(const std::exception& e)
-          {
-            m_Test.log_critical_failure(m_Test.source_file(), "Unexpected", e.what());
-          }
-          catch(...)
-          {
-            m_Test.log_critical_failure(m_Test.source_file(), "Unknown", "");
-          }
-        }
-
-        return write_output(t, index);
+        return summary;
       }
 
       void reset() final
@@ -307,13 +317,45 @@ namespace sequoia::testing
     private:
       static constexpr std::string_view m_Name{test_name<Test>()};
 
+      /** Returns the test's summary but for the runner's overhead. The overhead includes finishing the record, and the
+          record finishes only after this function has made the summary.
+       */
       [[nodiscard]]
-      log_summary write_output(const timer& t, std::optional<std::size_t> index)
+      log_summary execute_and_record(std::optional<std::size_t> index, execution_timer& executionTimer)
+      {
+        // Also installed per test, since under MSVC each thread has its own terminate handler
+        const scoped_terminate_handler terminationReported{report_termination};
+        const scoped_execution_record record{m_ExecutionRecord.file_path(), executionTimer};
+
+        if(try_prepare_materials())
+          executionTimer.time_execution([this](){ try_run_tests(); });
+
+        return write_output(executionTimer.execution_duration(), index);
+      }
+
+      void try_run_tests()
+      {
+        try
+        {
+          m_Test.run_tests();
+        }
+        catch(const std::exception& e)
+        {
+          m_Test.log_critical_failure(m_Test.source_file(), "Unexpected", e.what());
+        }
+        catch(...)
+        {
+          m_Test.log_critical_failure(m_Test.source_file(), "Unknown", "");
+        }
+      }
+
+      [[nodiscard]]
+      log_summary write_output(const log_summary::duration executionDuration, std::optional<std::size_t> index)
       {
         try
         {
           m_Test.write_instability_analysis_output(m_Test.source_file(), index);
-          return write_versioned_output(t);
+          return write_versioned_output(executionDuration);
         }
         catch(const std::exception& e)
         {
@@ -324,7 +366,7 @@ namespace sequoia::testing
           m_Test.log_critical_failure(m_Test.source_file(), "Output Writing", "Unknown exception");
         }
 
-        return m_Test.summarize(t.time_elapsed());
+        return m_Test.summarize(executionDuration);
       }
 
       [[nodiscard]]
@@ -342,9 +384,9 @@ namespace sequoia::testing
         }
       }
 
-      log_summary write_versioned_output(const timer& t) const
+      log_summary write_versioned_output(const log_summary::duration executionDuration) const
       {
-        auto summary{m_Test.summarize(t.time_elapsed())};
+        auto summary{m_Test.summarize(executionDuration)};
 
         if(!m_Test.has_critical_failures())
         {
@@ -580,6 +622,7 @@ namespace sequoia::testing
     {
       log_summary summary{};
       std::optional<test_vessel> optTest{};
+      std::thread::id executing_thread_id{};
     };
 
     using suite_type = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, suite_node>;
