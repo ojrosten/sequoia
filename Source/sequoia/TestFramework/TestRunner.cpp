@@ -50,9 +50,9 @@ namespace sequoia::testing
       return std::format("started {:%FT%TZ}\n", std::chrono::floor<std::chrono::milliseconds>(start));
     }
 
-    /** \brief Times three sleeps of `target`, and returns the second fastest. */
+    /** \brief How long a sleep of `target` typically lasts on this machine. */
     [[nodiscard]]
-    std::chrono::duration<double> second_fastest_sleep(std::chrono::milliseconds target)
+    std::chrono::duration<double> typical_sleep_duration(std::chrono::milliseconds target)
     {
       auto sleepForTarget{[target]() { std::this_thread::sleep_for(target); }};
 
@@ -60,7 +60,7 @@ namespace sequoia::testing
       std::ranges::generate(durations, [&sleepForTarget]() { return profile(sleepForTarget); });
       std::ranges::sort(durations);
 
-      // The first sleep can end within the timer tick it starts in. So the first sleep can be short even
+      // The fastest sleep is not typical: the first sleep can end within the timer tick it starts in, even
       // when every later sleep is rounded up to a whole tick.
       return durations[1];
     }
@@ -1245,19 +1245,19 @@ namespace sequoia::testing
 
   void test_runner::check_for_coarse_sleeps()
   {
-    auto isPerformanceTest{[](const suite_node& node) { return node.optTest && node.optTest->performance_test(); }};
-    if(std::ranges::none_of(m_Suites.cnode_weights(), isPerformanceTest))
-      return;
-
     auto warnIfCoarse{
       [this]() {
+        auto isPerformanceTest{[](const suite_node& node) { return node.optTest && node.optTest->performance_test(); }};
+        if(std::ranges::none_of(m_Suites.cnode_weights(), isPerformanceTest))
+          return;
+
         constexpr std::chrono::milliseconds target{5};
-        if(const auto sleepWarning{coarse_sleep_warning(second_fastest_sleep(target), target)})
+        if(const auto sleepWarning{coarse_sleep_warning(typical_sleep_duration(target), target)})
           stream() << *sleepWarning << std::flush;
       }
     };
 
-    // The timer resolution belongs to the process, so the first runner's check serves every later runner in it
+    // The timer resolution belongs to the process, so the first runner decides for every later runner in it
     static std::once_flag checked{};
     std::call_once(checked, warnIfCoarse);
   }
@@ -1328,6 +1328,7 @@ namespace sequoia::testing
     {
       fs::remove_all(proj_paths().output().instability_analysis());
       overwrite_quietly(proj_paths().execution_records().stamp(), started_at(std::chrono::system_clock::now()));
+      check_for_coarse_sleeps();
     }
 
     const auto baseline{versioned_output_baseline()};
@@ -1442,8 +1443,6 @@ namespace sequoia::testing
   [[nodiscard]]
   return_code test_runner::run_tests_in_this_process()
   {
-    check_for_coarse_sleeps();
-
     if(concurrent_execution()) sort_tests();
 
     if(m_InstabilityMode == instability_mode::sandbox)
