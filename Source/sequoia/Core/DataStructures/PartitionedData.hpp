@@ -777,7 +777,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      index_type capacity() const noexcept
+      auto capacity() const noexcept
       {
         return m_Data.capacity();
       }
@@ -788,7 +788,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      index_type num_partitions_capacity() const noexcept
+      auto num_partitions_capacity() const noexcept
       {
         return m_Partitions.capacity();
       }

@@ -248,6 +248,9 @@ namespace sequoia::testing
 
     check(equality, "Unchanged by the refused growth", sequence.size_of_partition(0), limit);
 
+    check("A sequence as long as the index type counts has a capacity no less than its size",
+          sequence.capacity() >= sequence.size());
+
     sequence_type manyPartitions{};
     for(std::size_t i{}; i < limit; ++i)
     {
@@ -272,5 +275,14 @@ namespace sequoia::testing
     );
 
     check(equality, "Unchanged by the refused partitions", manyPartitions.num_partitions(), limit);
+
+    sequence_type reserved{};
+    reserved.reserve(limit + 1);
+    reserved.reserve_partitions(limit + 1);
+
+    check("A capacity beyond what the index type counts is reported in full",
+          reserved.capacity() > limit);
+    check("A capacity for partitions beyond what the index type counts is reported in full",
+          reserved.num_partitions_capacity() > limit);
   }
 }
