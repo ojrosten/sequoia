@@ -16,6 +16,7 @@
 #include <fstream>
 #include <iterator>
 #include <ranges>
+#include <span>
 #include <stdexcept>
 
 namespace sequoia::testing
@@ -169,25 +170,24 @@ namespace sequoia::testing
   {
     if(trials <= 1) return "";
 
-    std::string message{};
-
     const auto files{
       [&root](){
-        std::vector<fs::path> outputFiles{};
-        for(const auto& entry : fs::recursive_directory_iterator(root))
-        {
-          if(is_regular_file(entry))
-          {
-            const auto& path{entry.path()};
-            if(path.extension() == ".txt")
-            {
-              outputFiles.push_back(path);
-            }
+        auto isOutputFile{
+          [](const fs::directory_entry& entry) {
+            return entry.is_regular_file() && (entry.path().extension() == ".txt");
           }
-        }
+        };
+
+        auto pathOf{[](const fs::directory_entry& entry) { return entry.path(); }};
+
+        auto outputFiles{
+            fs::recursive_directory_iterator{root}
+          | std::views::filter(isOutputFile)
+          | std::views::transform(pathOf)
+          | std::ranges::to<std::vector>()
+        };
 
         std::ranges::sort(outputFiles);
-
         return outputFiles;
       }()
     };
@@ -222,19 +222,26 @@ namespace sequoia::testing
       }
     };
 
-    for(auto i{files.begin()}; i != files.end(); i+=trials)
-    {
-      std::vector<failure_output> failuresFromFiles{};
-      std::ranges::transform(
-        i,
-        std::ranges::next(i, trials),
-        std::back_inserter(failuresFromFiles),
-        readAndIndentFailureOutput
-      );
+    auto analyseTestFrom{
+      [&files, trials, &readAndIndentFailureOutput](std::size_t first) {
+        auto testFiles{std::span{files}.subspan(first, trials)};
+        auto failuresFromFiles{
+          testFiles | std::views::transform(readAndIndentFailureOutput) | std::ranges::to<std::vector>()
+        };
 
-      std::ranges::sort(failuresFromFiles);
-      message += analyse_output(source_from_instability_analysis(i->parent_path()), failuresFromFiles);
-    }
+        std::ranges::sort(failuresFromFiles);
+        return analyse_output(source_from_instability_analysis(testFiles.front().parent_path()), failuresFromFiles);
+      }
+    };
+
+    // TO DO: files | std::views::chunk(trials), in place of the stride and the subspan, once libc++ has chunk (P2442)
+    const auto message{
+        std::views::iota(std::size_t{}, files.size())
+      | std::views::stride(trials)
+      | std::views::transform(analyseTestFrom)
+      | std::views::join
+      | std::ranges::to<std::string>()
+    };
 
     return !message.empty() ? message : "\nNo instabilities detected\n";
   }

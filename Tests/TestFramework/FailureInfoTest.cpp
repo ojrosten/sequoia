@@ -87,6 +87,20 @@ namespace sequoia::testing
     check(equality, "A read at the end of a stream leaves the failure as it was", info, failure_info{1, "foo"});
   }
 
+  void failure_info_test::check_instability_analysis()
+  {
+    write_to_file(working_materials() / "StableAnalysis.txt",
+                  instability_analysis(working_materials() / "Stable", 2),
+                  std::ios_base::binary);
+
+    check(
+      equivalence,
+      "Outputs which agree, beside a file which is not a .txt file",
+      working_materials() / "StableAnalysis.txt",
+      predictive_materials() / "StableAnalysis.txt"
+    );
+  }
+
   void failure_info_test::check_written_format()
   {
     std::stringstream s{};
@@ -107,6 +121,7 @@ namespace sequoia::testing
     check_failure_info();
     check_round_trip();
     check_end_of_stream();
+    check_instability_analysis();
     check_written_format();
   }
 }

@@ -1,0 +1,3 @@
+check: 0
+length: 3
+foo
