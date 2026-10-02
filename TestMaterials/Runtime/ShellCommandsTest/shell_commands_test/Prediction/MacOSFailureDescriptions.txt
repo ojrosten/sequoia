@@ -1,0 +1,15 @@
+-2147483648: did not run to completion
+-1073741819: did not run to completion
+-2: did not run to completion
+-1: did not run to completion
+0: failed with exit status 0
+1: failed with exit status 1
+2: failed with exit status 2
+125: failed with exit status 125
+126: could not be executed by the shell (exit status 126)
+127: was not found by the shell (exit status 127)
+128: failed with exit status 128
+129: failed with exit status 129, which may mean it was killed by signal 1
+130: failed with exit status 130, which may mean it was killed by signal 2
+255: failed with exit status 255, which may mean it was killed by signal 127
+256: failed with exit status 256, which may mean it was killed by signal 128

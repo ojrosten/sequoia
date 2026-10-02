@@ -1,2 +1,2 @@
 shell_commands_test
-Standard Top Level Checks:                16;  Failures:  0  [Deep checks: 76]
+Standard Top Level Checks:                16;  Failures:  0  [Deep checks: 86]

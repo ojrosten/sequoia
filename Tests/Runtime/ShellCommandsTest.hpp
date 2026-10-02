@@ -25,6 +25,8 @@ namespace sequoia::testing
   private:
     void test_composition();
 
+    void test_failure_descriptions();
+
     void test_success_requirement();
 
     void test_directory_change();
