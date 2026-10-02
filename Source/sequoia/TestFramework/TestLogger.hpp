@@ -374,10 +374,25 @@ namespace sequoia::testing
     [[nodiscard]]
     const std::string& caught_exceptions_output() const noexcept { return m_CaughtExceptionMessages; }
 
-    [[nodiscard]]
-    duration execution_time() const noexcept { return m_Duration; }
+    /** \brief How long the tests ran, excluding the runner's overhead.
 
-    void execution_time(const duration delta) { m_Duration = delta; }
+        For a run whose tests ran concurrently, this is the longest the tests ran one after another: the tests which
+        are not parallelizable, then those of the thread which spent longest executing tests.
+     */
+    [[nodiscard]]
+    duration execution_duration() const noexcept { return m_ExecutionDuration; }
+
+    void execution_duration(const duration delta) { m_ExecutionDuration = delta; }
+
+    /** \brief How long the runner spent executing the tests, beyond their execution duration.
+
+        For a run whose tests ran concurrently, this is the wall clock less the execution duration, so it includes any
+        time in which a thread was not executing a test.
+     */
+    [[nodiscard]]
+    duration runner_overhead() const noexcept { return m_RunnerOverhead; }
+
+    void runner_overhead(const duration delta) { m_RunnerOverhead = delta; }
 
     log_summary& operator+=(const log_summary& rhs);
 
@@ -414,7 +429,9 @@ namespace sequoia::testing
 
     int m_ExceptionsInFlight{};
 
-    duration m_Duration{};
+    duration
+      m_ExecutionDuration{},
+      m_RunnerOverhead{};
 
     log_summary(std::string_view name, const test_logger_base& logger, test_mode mode, const duration delta);
   };

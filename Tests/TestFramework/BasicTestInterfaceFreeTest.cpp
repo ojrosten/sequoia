@@ -72,6 +72,7 @@ namespace sequoia::testing
 
     test_file_paths(runner.proj_paths());
     test_materials(runner.proj_paths());
+    test_discriminated_materials(runner.proj_paths());
   }
 
   void basic_test_interface_free_test::test_file_paths(const project_paths& projPaths)
@@ -79,7 +80,7 @@ namespace sequoia::testing
     const auto rebasedSource{rebase_from(source_file(), get_project_paths().project_root())};
 
     {
-      fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, {}, {}};
+      fake_test t{test_name<fake_test>(), source_file(), projPaths, {}, {}, null_discriminator, null_discriminator};
 
       check(equality,
             reporter{"Summary File Path"},
@@ -107,7 +108,7 @@ namespace sequoia::testing
     }
 
     {
-      fake_test_with_discriminated_summary t{test_name<fake_test_with_discriminated_summary>(), source_file(), projPaths, {}, {}, {}, {"bar"}};
+      fake_test_with_discriminated_summary t{test_name<fake_test_with_discriminated_summary>(), source_file(), projPaths, {}, {}, null_discriminator, {"bar"}};
 
       check(equality,
             reporter{"Summary File Path"},
@@ -121,7 +122,7 @@ namespace sequoia::testing
     }
 
     {
-      fake_test_with_discriminated_exceptions t{test_name<fake_test_with_discriminated_exceptions>(), source_file(), projPaths, {}, {}, {"baz"}, {}};
+      fake_test_with_discriminated_exceptions t{test_name<fake_test_with_discriminated_exceptions>(), source_file(), projPaths, {}, {}, {"baz"}, null_discriminator};
 
       check(equality,
             reporter{"Summary File Path"},
@@ -150,9 +151,9 @@ namespace sequoia::testing
     const auto preparedTest{
       [&projPaths](std::string_view sourceStem) {
         const auto source{projPaths.tests().repo() / "Materials" / std::format("{}.cpp", sourceStem)};
-        const individual_materials_paths materials{source, "fake_test", projPaths};
+        const individual_materials_paths materials{source, "fake_test", projPaths, null_discriminator};
         prepare_materials(materials);
-        return std::pair{fake_test{"fake_test", source, projPaths, materials, {}, {}, {}}, materials};
+        return std::pair{fake_test{"fake_test", source, projPaths, materials, {}, null_discriminator, null_discriminator}, materials};
       }
     };
 
@@ -239,8 +240,8 @@ namespace sequoia::testing
         projPaths,
         individual_materials_paths{},
         {},
-        {},
-        {}
+        null_discriminator,
+        null_discriminator
       };
 
       check_exception_thrown<std::logic_error>("Working copy of a test with no materials paths",
@@ -252,5 +253,83 @@ namespace sequoia::testing
       check_exception_thrown<std::logic_error>("Scratchpad of a test with no materials paths",
                                                [&test]() { return test.scratchpad_materials(); });
     }
+  }
+
+  /** The original materials of a discriminated test hold one directory per discriminator: `Platypus`
+      and `Echidna`. The discriminator must be a portable name for one directory. Nothing else may sit
+      beside the directories.
+   */
+  void basic_test_interface_free_test::test_discriminated_materials(const project_paths& projPaths)
+  {
+    auto prepareMaterials{
+      [&projPaths](std::string_view sourceStem, std::string discriminator) {
+        const auto source{projPaths.tests().repo() / "Materials" / std::format("{}.cpp", sourceStem)};
+        prepare_materials(individual_materials_paths{source, "fake_test", projPaths, std::move(discriminator)});
+      }
+    };
+
+    prepareMaterials("Discriminated", "Platypus");
+    const auto temporaryWorkingCopy{
+      projPaths.output().tests_temporary_data() / "Materials/Discriminated/fake_test/WorkingCopy"
+    };
+
+    check(equality,
+          "The declared discriminator's materials copied",
+          read_to_string(temporaryWorkingCopy / "input.txt", std::ios_base::in).value_or(""),
+          std::string{"Platypus\n"});
+
+    for(const auto& [description, discriminator] : std::to_array<std::pair<std::string_view, std::string_view>>({
+          {"An empty discriminator",                                ""},
+          {"A discriminator naming the parent",                     ".."},
+          {"An absolute discriminator",                             "/Platypus"},
+          {"A discriminator holding a separator",                   "Platypus/Echidna"},
+          {"A discriminator holding a colon",                       "Platypus:Echidna"},
+          {"A discriminator ending in a dot",                       "Platypus."},
+          {"A discriminator naming a Windows device",               "COM1"},
+          {"A Windows device numbered with superscript one",        "COM\xC2\xB9"},
+          {"A Windows device numbered with superscript two",        "Lpt\xC2\xB2"},
+          {"A Windows device numbered with superscript three",      "lpt\xC2\xB3.txt"},
+          {"A discriminator naming a kind of material",             "prediction"},
+          {"A discriminator differing only in case from a sibling", "platypus"}}))
+    {
+      check_exception_thrown<std::runtime_error>(
+        description,
+        [&prepareMaterials, discriminator]() { prepareMaterials("Discriminated", std::string{discriminator}); });
+    }
+
+    {
+      // Only a case-sensitive filesystem holds directories differing only in case, so the variants
+      // listed depend on the filesystem. The sort is the implementation's choice, checked so that a
+      // change to it shows.
+      const individual_materials_paths materials{
+        projPaths.tests().repo() / "Materials/CaseVariants.cpp", "fake_test", projPaths, "platypus"
+      };
+
+      const auto& root{materials.original_test_root()};
+      for(const auto variant : {"Platypus", "PLATYPUS", "platyPUS", "PlatyPus", "pLATYPUS"})
+        fs::create_directories(root / variant);
+
+      const bool caseSensitive{!fs::equivalent(root / "PLATYPUS", root / "Platypus")};
+
+      std::string message{};
+      try
+      {
+        prepare_materials(materials);
+      }
+      catch(const std::runtime_error& e)
+      {
+        message = e.what();
+      }
+
+      check(equality,
+            "Every case variant of the discriminator, sorted",
+            message,
+            std::format("The materials discriminator \"platypus\" must not differ only in case from {}",
+                        caseSensitive ? "PLATYPUS, PlatyPus, Platypus, pLATYPUS, platyPUS" : "Platypus"));
+    }
+
+    check_exception_thrown<std::runtime_error>(
+      "Materials beside the discriminated directories",
+      [&prepareMaterials]() { prepareMaterials("DiscriminatedBeside", "Platypus"); });
   }
 }

@@ -16,6 +16,7 @@
 
 #include "sequoia/Core/Concurrency/ConcurrencyModels.hpp"
 #include "sequoia/Parsing/CommandLineArguments.hpp"
+#include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/Runtime/ShellCommands.hpp"
 #include "sequoia/TextProcessing/Characters.hpp"
@@ -30,6 +31,8 @@
 #include <span>
 #include <format>
 #include <fstream>
+#include <functional>
+#include <mutex>
 #include <utility>
 #include <variant>
 
@@ -47,7 +50,22 @@ namespace sequoia::testing
       return std::format("started {:%FT%TZ}\n", std::chrono::floor<std::chrono::milliseconds>(start));
     }
 
-    // Written aside and renamed over the file, so that a process dying mid-write leaves the previous contents
+    /** \brief How long a sleep of `target` typically lasts on this machine. */
+    [[nodiscard]]
+    std::chrono::duration<double> typical_sleep_duration(std::chrono::milliseconds target)
+    {
+      auto sleepForTarget{[target]() { std::this_thread::sleep_for(target); }};
+
+      std::array<std::chrono::duration<double>, 3> durations{};
+      std::ranges::generate(durations, [&sleepForTarget]() { return profile(sleepForTarget); });
+      std::ranges::sort(durations);
+
+      // The fastest sleep is not typical: the first sleep can end within the timer tick it starts in, even
+      // when every later sleep is rounded up to a whole tick.
+      return durations[1];
+    }
+
+    // Written to <file>.partial and renamed over <file>, so that a process dying mid-write leaves the previous contents
     void overwrite_quietly(const fs::path& file, std::string_view text)
     {
       std::error_code selectsTheNonThrowingOverload{};
@@ -60,20 +78,6 @@ namespace sequoia::testing
       }
 
       fs::rename(partial, file, selectsTheNonThrowingOverload);
-    }
-
-    // Nothing escapes: the start is written outside the handler that turns a test's exceptions into critical
-    // failures, and the duration from a destructor, where a throw would end the run
-    template<invocable_r<std::string_view> Text>
-    void overwrite_record_quietly(const fs::path& file, Text text) noexcept
-    {
-      try
-      {
-        overwrite_quietly(file, text());
-      }
-      catch(...)
-      {
-      }
     }
 
     [[nodiscard]]
@@ -122,23 +126,82 @@ namespace sequoia::testing
       }
     }
 
+    struct run_durations
+    {
+      log_summary::duration execution_duration{}, runner_overhead{};
+    };
+
+    struct execution_info
+    {
+      std::thread::id       thread_id{};
+      log_summary::duration duration{};
+    };
+
+    [[nodiscard]]
+    log_summary::duration summed_duration(std::span<const execution_info> executions)
+    {
+      return std::ranges::fold_left(
+               executions | std::views::transform(&execution_info::duration),
+               log_summary::duration{},
+               std::plus{}
+             );
+    }
+
+    /** Groups the executions by thread, and returns the largest of the groups' summed durations. */
+    [[nodiscard]]
+    log_summary::duration busiest_thread_execution_duration(std::vector<execution_info> executions)
+    {
+      std::ranges::sort(executions, std::ranges::less{}, &execution_info::thread_id);
+
+      auto sameThread{
+        [](const execution_info& lhs, const execution_info& rhs){
+          return lhs.thread_id == rhs.thread_id;
+        }
+      };
+
+      auto threadTotals{
+          executions
+        | std::views::chunk_by(sameThread)
+        | std::views::transform(summed_duration)
+      };
+
+      return std::ranges::fold_left(threadTotals, log_summary::duration{}, std::ranges::max);
+    }
+
+    constexpr std::array<std::string_view, 3> materials_kinds{"WorkingCopy", "Prediction", "Auxiliary"};
+
+    constexpr auto filename_of{
+      [](const fs::directory_entry& entry) { return entry.path().filename().generic_string(); }
+    };
+
+    [[nodiscard]]
+    bool is_placeholder(std::string_view name)
+    {
+      return (name == ".keep") || (name == ".DS_Store");
+    }
+
+    /// Whether `name` is one of the kinds of material, ignoring case
+    [[nodiscard]]
+    bool is_materials_kind(std::string_view name)
+    {
+      auto isName{[name](std::string_view kind){ return ascii::same_ignoring_case(name, kind); }};
+      return std::ranges::any_of(materials_kinds, isName);
+    }
+
     /** An original materials root holds `WorkingCopy`, `Prediction` and `Auxiliary`, besides a
         `.keep` or Finder's `.DS_Store`. Anything more was committed for an older layout, and preparing
         the materials would ignore it without a word.
      */
     void throw_if_stray_materials(const individual_materials_paths& materials)
     {
-      static constexpr std::array<std::string_view, 5>
-        expected{"WorkingCopy", "Prediction", "Auxiliary", ".keep", ".DS_Store"};
-
       auto isStray{
-        [](const std::string& name) { return !std::ranges::contains(expected, name); }
+        [](const std::string& name) { return !std::ranges::contains(materials_kinds, name) && !is_placeholder(name); }
       };
 
-      const auto& root{materials.original_materials_root()};
+      const auto root{materials.original_materials_root()};
       auto strays{
           fs::directory_iterator{root}
-        | std::views::transform([](const fs::directory_entry& e) { return e.path().filename().generic_string(); })
+        | std::views::transform(filename_of)
         | std::views::filter(isStray)
         | std::ranges::to<std::vector>()
       };
@@ -151,6 +214,133 @@ namespace sequoia::testing
                       "only WorkingCopy, Prediction and Auxiliary are used",
                       root.generic_string(),
                       strays | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>())
+        };
+      }
+    }
+
+    /** Whether `name` is a name Windows reserves for a device, alone or followed immediately by an
+        extension, ignoring case. The reserved names are those listed in Microsoft's "Naming Files,
+        Paths, and Namespaces".
+     */
+    [[nodiscard]]
+    bool is_windows_device_name(std::string_view name)
+    {
+      auto stem{name.substr(0, name.find('.'))};
+
+      // The superscript digits U+00B9, U+00B2 and U+00B3 are matched in their UTF-8 encoding
+      constexpr auto portNumbers{
+        std::to_array<std::string_view>({
+          "1", "2", "3", "4", "5", "6", "7", "8", "9", "\xC2\xB9", "\xC2\xB2", "\xC2\xB3"
+        })
+      };
+
+      constexpr std::size_t portNameLength{3};
+      const auto portName{stem.substr(0, portNameLength)};
+      const bool numberedDevice{
+           (stem.size() > portNameLength)
+        && (ascii::same_ignoring_case(portName, "COM") || ascii::same_ignoring_case(portName, "LPT"))
+        && std::ranges::contains(portNumbers, stem.substr(portNameLength))
+      };
+
+      constexpr auto devices{std::to_array<std::string_view>({"CON", "PRN", "AUX", "NUL"})};
+      auto isStem{[stem](std::string_view device){ return ascii::same_ignoring_case(stem, device); }};
+      return numberedDevice || std::ranges::any_of(devices, isStem);
+    }
+
+    /** \throws std::runtime_error if one of these holds:
+                 -# The materials discriminator is not a portable name for one directory;
+                 -# The discriminator names a kind of material, ignoring case;
+                 -# The discriminator differs only in case from the name of an entry in the test's own
+                    directory.
+     */
+    void throw_if_bad_materials_discriminator(const individual_materials_paths& materials)
+    {
+      const auto& name{materials.materials_discriminator().value()};
+
+      auto failureMessage{
+        [&name](std::string_view restriction) {
+          return std::format("The materials discriminator \"{}\" must {}", name, restriction);
+        }
+      };
+
+      if(name.empty())
+        throw std::runtime_error{failureMessage("not be empty")};
+
+      if((name == ".") || (name == ".."))
+        throw std::runtime_error{failureMessage("name a directory of its own")};
+
+      constexpr std::string_view forbidden{"/\\:*?\"<>|"};
+      if(const auto pos{name.find_first_of(forbidden)}; pos != std::string::npos)
+        throw std::runtime_error{failureMessage(std::format("not contain '{}'", name[pos]))};
+
+      if(std::ranges::any_of(name, [](unsigned char c){ return c < 0x20; }))
+        throw std::runtime_error{failureMessage("not contain a control character")};
+
+      // Windows strips a trailing dot or space, so two discriminators could share one directory
+      if((name.back() == '.') || (name.back() == ' '))
+        throw std::runtime_error{failureMessage("not end in a dot or a space")};
+
+      if(is_windows_device_name(name))
+        throw std::runtime_error{failureMessage("not be a device name on Windows")};
+
+      if(is_materials_kind(name))
+        throw std::runtime_error{failureMessage("not name a kind of material")};
+
+      const auto& root{materials.original_test_root()};
+      if(!fs::exists(root))
+        return;
+
+      // A case-insensitive filesystem takes names differing only in case for the same entry
+      auto differsOnlyInCase{
+        [&name](const std::string& sibling) { return (sibling != name) && ascii::same_ignoring_case(sibling, name); }
+      };
+
+      auto caseVariants{
+          fs::directory_iterator{root}
+        | std::views::transform(filename_of)
+        | std::views::filter(differsOnlyInCase)
+        | std::ranges::to<std::vector>()
+      };
+
+      if(!caseVariants.empty())
+      {
+        std::ranges::sort(caseVariants);
+        const auto caseVariantList{
+            caseVariants
+          | std::views::join_with(std::string_view{", "})
+          | std::ranges::to<std::string>()
+        };
+
+        throw std::runtime_error{failureMessage(std::format("not differ only in case from {}", caseVariantList))};
+      }
+    }
+
+    void throw_if_materials_beside_discriminated_directories(const individual_materials_paths& materials)
+    {
+      const auto& root{materials.original_test_root()};
+      auto isIgnored{
+        [](const fs::directory_entry& entry) {
+          const auto name{filename_of(entry)};
+          return !is_placeholder(name) && (!entry.is_directory() || is_materials_kind(name));
+        }
+      };
+
+      auto ignored{
+          fs::directory_iterator{root}
+        | std::views::filter(isIgnored)
+        | std::views::transform(filename_of)
+        | std::ranges::to<std::vector>()
+      };
+
+      if(!ignored.empty())
+      {
+        std::ranges::sort(ignored);
+        throw std::runtime_error{
+          std::format("The materials in {} hold {} beside the discriminated directories, which would be ignored: "
+                      "only {} is read",
+                      root.generic_string(),
+                      ignored | std::views::join_with(std::string_view{", "}) | std::ranges::to<std::string>(),
+                      materials.materials_discriminator().value())
         };
       }
     }
@@ -538,6 +728,13 @@ namespace sequoia::testing
     fs::remove_all(materials.temporary_materials_root());
     fs::create_directories(materials.temporary_materials_root());
 
+    if(materials.materials_discriminator())
+    {
+      throw_if_bad_materials_discriminator(materials);
+      if(fs::exists(materials.original_test_root()))
+        throw_if_materials_beside_discriminated_directories(materials);
+    }
+
     if(!fs::exists(materials.original_materials_root()))
       return;
 
@@ -570,23 +767,23 @@ namespace sequoia::testing
     }
   }
 
-  test_vessel::scoped_execution_record::scoped_execution_record(std::filesystem::path file)
+  test_vessel::scoped_execution_record::scoped_execution_record(std::filesystem::path file,
+                                                                const execution_timer& executionTimer)
     : m_File{std::move(file)}
     , m_Start{std::chrono::system_clock::now()}
+    , m_ExecutionTimer{executionTimer}
   {
-    overwrite_record_quietly(m_File, [this](){ return started_at(m_Start); });
+    overwrite_quietly(m_File, started_at(m_Start));
   }
 
   test_vessel::scoped_execution_record::~scoped_execution_record()
   {
-    auto finished{
-      [this](){
-        const auto elapsed{std::chrono::duration_cast<std::chrono::milliseconds>(m_Timer.time_elapsed())};
-        return started_at(m_Start) + std::format("duration {}\n", elapsed);
-      }
-    };
-
-    overwrite_record_quietly(m_File, finished);
+    using std::chrono::microseconds, std::chrono::duration_cast;
+    overwrite_quietly(m_File,
+                      std::format("{}execution duration {}us\nrunner overhead {}us\n",
+                                  started_at(m_Start),
+                                  duration_cast<microseconds>(m_ExecutionTimer.execution_duration()).count(),
+                                  duration_cast<microseconds>(m_ExecutionTimer.runner_overhead()).count()));
   }
 
   //=========================================== test_runner ===========================================//
@@ -786,6 +983,15 @@ namespace sequoia::testing
                         [this,&nascentTests](const arg_list&) {
                           if(!nascentTests.empty())
                           {
+                            // The first `create` checks that sequoia has not changed since the build. The
+                            // executable writes registrations in the form compiled into it.
+                            if(!in_mode(runner_mode::create))
+                            {
+                              throw_if_sequoia_changed_since_build(proj_paths(),
+                                                                   sequoia_sources(),
+                                                                   stream());
+                            }
+
                             m_RunnerMode |= runner_mode::create;
                             overloaded visitor{ [](auto& nascent) { nascent.finalize(); } };
                             std::visit(visitor, nascentTests.back());
@@ -1037,6 +1243,21 @@ namespace sequoia::testing
     }
   }
 
+  void test_runner::check_for_coarse_sleeps()
+  {
+    auto warnIfCoarse{
+      [this]() {
+        constexpr std::chrono::milliseconds target{5};
+        if(const auto typicalSleep{typical_sleep_duration(target)}; is_coarse_sleep(typicalSleep, target))
+          stream() << coarse_sleep_message(typicalSleep, target) << std::flush;
+      }
+    };
+
+    // The timer resolution belongs to the process, so the first runner's check serves every later runner in it
+    static std::once_flag checked{};
+    std::call_once(checked, warnIfCoarse);
+  }
+
   void test_runner::check_for_missing_tests()
   {
     if(m_PruneMode == prune_mode::passive)
@@ -1074,7 +1295,7 @@ namespace sequoia::testing
     report_unmatched(stream(), std::span{excluded}, "Excluded Test File", hint);
   }
 
-  return_code test_runner::execute([[maybe_unused]] timer_resolution r)
+  return_code test_runner::execute()
   {
     if(!in_mode(runner_mode::test))
       return return_code::success;
@@ -1082,6 +1303,7 @@ namespace sequoia::testing
     const scoped_terminate_handler terminationReported{report_termination};
     const debug_report_redirector debugReportRedirector{};
     const windows_crash_report_enabler windowsCrashReportEnabler{};
+    set_finest_windows_timer_resolution();
 
     fs::create_directories(proj_paths().prune().dir());
     build_suite_tree();
@@ -1102,6 +1324,7 @@ namespace sequoia::testing
     {
       fs::remove_all(proj_paths().output().instability_analysis());
       overwrite_quietly(proj_paths().execution_records().stamp(), started_at(std::chrono::system_clock::now()));
+      check_for_coarse_sleeps();
     }
 
     const auto baseline{versioned_output_baseline()};
@@ -1297,31 +1520,60 @@ namespace sequoia::testing
     // Without the flush, a run killed while the tests are silent would never show that they had begun
     stream() << running_tests_message(m_ConcurrencyMode) << std::flush;
 
-    std::optional<log_summary::duration> asyncDuration{};
+    std::optional<run_durations> concurrentDurations{};
     if(concurrent_execution())
     {
       auto first{std::ranges::find_if(m_Suites.begin_node_weights(), m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest != std::nullopt; })};
       auto next{std::ranges::find_if(first, m_Suites.end_node_weights(), [](const auto& wt) -> bool { return wt.optTest->parallelizable(); })};
 
-      auto executor{[id](auto& wt){ wt.summary = wt.optTest->execute(id); }};
+      auto executor{
+        [id](suite_node& wt){
+          wt.summary             = wt.optTest->execute(id);
+          wt.executing_thread_id = std::this_thread::get_id();
+        }
+      };
+
+      std::span nonParallelizable{first, next}, parallelizable{next, m_Suites.end_node_weights()};
 
       const timer asyncTimer{};
-      std::ranges::for_each(first, next, executor);
+      std::ranges::for_each(nonParallelizable, executor);
 
       switch(m_ConcurrencyMode)
       {
         using enum concurrency_mode;
       case dynamic:
-        accelerate(sequoia::execution::par, std::span{next, m_Suites.end_node_weights()}, executor);
+        accelerate(sequoia::execution::par, parallelizable, executor);
         break;
       case fixed:
-        accelerate(thread_pool_policy{.num{m_PoolSize}}, std::span{next, m_Suites.end_node_weights()}, executor);
+        accelerate(thread_pool_policy{.num{m_PoolSize}}, parallelizable, executor);
         break;
       default:
         throw std::logic_error{"Unexpected concurrency_mode"};
       }
 
-      asyncDuration = asyncTimer.time_elapsed();
+      const auto wallClock{asyncTimer.time_elapsed()};
+
+      auto executionInfoOf{
+        [](const suite_node& wt){
+          return execution_info{.thread_id{wt.executing_thread_id}, .duration{wt.summary.execution_duration()}};
+        }
+      };
+
+      auto executionInfos{
+        [executionInfoOf](std::span<const suite_node> nodes){
+          return nodes | std::views::transform(executionInfoOf) | std::ranges::to<std::vector>();
+        }
+      };
+
+      // The longest the tests ran one after another: those which are not parallelizable, then the busiest thread's
+      const auto executionDuration{
+          summed_duration(executionInfos(nonParallelizable))
+        + busiest_thread_execution_duration(executionInfos(parallelizable))
+      };
+      concurrentDurations = run_durations{
+        .execution_duration{executionDuration},
+        .runner_overhead{wallClock - executionDuration}
+      };
     }
 
     test_tracker tracker{proj_paths(), id, m_Filter.selects() ? is_filtered::yes : is_filtered::no, m_Filter.tests_left_out()};
@@ -1424,7 +1676,12 @@ namespace sequoia::testing
       traverse(depth_first, m_Suites, find_disconnected_t{}, printTest, null_func_obj{}, null_func_obj{});
     }
 
-    if(asyncDuration) m_Suites.begin_node_weights()->summary.execution_time(*asyncDuration);
+    if(concurrentDurations)
+    {
+      auto& rootSummary{m_Suites.begin_node_weights()->summary};
+      rootSummary.execution_duration(concurrentDurations->execution_duration);
+      rootSummary.runner_overhead(concurrentDurations->runner_overhead);
+    }
 
     stream() << "\n-----------Grand Totals-----------\n";
     stream() << summarize(root_summary(), "", t.time_elapsed(), summary_detail::absent_checks | summary_detail::timings, indentation{"\t"}, no_indent);

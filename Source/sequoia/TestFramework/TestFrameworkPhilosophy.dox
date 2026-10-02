@@ -356,6 +356,33 @@
 	directory itself, with no original counterpart, and so nothing for a rename to detach. Within it,
 	`WorkingCopy` and `Auxiliary` are reserved for the temporary materials.
 
+	What a test records may sometimes have to vary, for example with the configuration of the build
+	tree or with the hardware found at run time. A test may therefore declare up to three hooks. Each
+	hook is a public static member function which takes `const cmake_cache&` and returns a name. A hook
+	may compute the name from the cache or from any other source. The three hooks are:
+	-# `output_discriminator` gives the test a diagnostics file per name;
+	-# `summary_discriminator` gives the test a summary per name;
+	-# `materials_discriminator` gives the test a set of original materials per name.
+
+	A hook declared in any other form is refused at compile time, rather than silently ignored. A hook
+	which is not static is one such form, and a hook returning a `std::string_view` is another. A hook
+	which is not public is the exception: no probe can detect it, so it is ignored. The cache does not
+	record the active configuration of a multi-config build tree. A hook which distinguishes Debug from
+	Release must find the configuration some other way, such as by whether `NDEBUG` is defined. Each
+	hook is a last resort: a record which does not vary is better.
+
+	A test with a materials discriminator keeps its materials one level further down, in
+	`TestMaterials/Foo/Bar/bar_test/<name>`, laid out as above. The test of Visual Studio's project
+	files is an example, since no other generator produces them. For a run, only the directory
+	`<name>` belongs to the test. The test's materials are copied from that directory, compared with it
+	and updated into it. So a run under one name can neither read nor disturb the materials of another.
+
+	The name must be one portable directory name. It must not be a kind of material, nor the name of a
+	sibling spelt in another case. `bar_test` may hold nothing but a directory per name, a `.keep`
+	and a `.DS_Store`. Preparing the materials refuses anything else, as the test's critical
+	failure. The temporary directory has no such level. Within one build tree, the temporary directory
+	holds the materials of one name at a time. Two build trees run at once share it.
+
 	However, there are some exceptions to this. First, the following files are ignored: `.keep` and
 	`.DS_Store`. More interestingly, clients may specify that particular substrings within a file
 	are ignored when comparing file contents. To motivate this, consider end-to-end testing of the

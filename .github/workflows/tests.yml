@@ -540,9 +540,9 @@ jobs:
             cmake --build --preset run-${{ matrix.build }} 2>&1 | tee "$RUNNER_TEMP/repeat.log"
 
       # An advisory column still has to be *read*, and its failures are not equally acceptable.
-      # TestRunnerPerformanceTest asserts absolute wall-clock times - eight 25ms sleeps against a
-      # 60ms +- 35 window - which a shared hosted runner cannot hold; the same commit has returned
-      # 196ms and 603ms. Everything else is a defect.
+      # TestRunnerPerformanceTest asserts absolute durations - eight 25ms sleeps against a 60ms +- 35
+      # window - which a shared hosted runner may not hold; as wall-clock times, the same commit
+      # returned 196ms and 603ms. Everything else is a defect.
       #
       # Classified by the *test that failed*, not by the summary row: those timing assertions are
       # `check(within_tolerance{...}, ...)`, which count in the standard row, since the performance
@@ -761,13 +761,13 @@ jobs:
               echo "ok    no drift check, so no patch";;
           esac
 
-      # Every test writes an execution record: its start when it begins, and its duration when it finishes,
-      # whether or not its body threw. A record with no duration names a test that was executing when the run
-      # ended; such tests are listed oldest start first, since the hung test is likeliest the one that has run
-      # longest. The end-to-end test's generated project keeps records of its own. A record older than its
-      # run's stamp is from an earlier run, and is marked so. The count comes first: none, after a suite that
-      # ran, means the records were not written, or not where this step looks. The names are paths a fork's
-      # PR controls, so they are printed with workflow commands stopped.
+      # Every test writes an execution record: its start when it begins, and its execution duration and the
+      # runner's overhead when it finishes, whether or not its body threw. A record with no execution duration names a
+      # test that was executing when the run ended; such tests are listed oldest start first, since the hung test is
+      # likeliest the one that has run longest. The end-to-end test's generated project keeps records of its own. A
+      # record older than its run's stamp is from an earlier run, and is marked so. The count comes first: none, after
+      # a suite that ran, means the records were not written, or not where this step looks. The names are paths a
+      # fork's PR controls, so they are printed with workflow commands stopped.
       - name: Name the tests that started and never finished
         if: ${{ always() && inputs.needs_testing == 'true' }}
         env:
@@ -795,7 +795,7 @@ jobs:
             [ ! -f "$dir/run.stamp" ] || started "$dir/run.stamp"
           }
           unfinished=$(printf '%s\n' "$tests" | while IFS= read -r record; do
-                         if [ -z "$record" ] || grep -q '^duration' "$record"; then continue; fi
+                         if [ -z "$record" ] || grep -q '^execution duration' "$record"; then continue; fi
                          start=$(started "$record")
                          run_start=$(start_of_run "$record")
                          if [[ -n "$run_start" && "$start" < "$run_start" ]]; then
@@ -833,16 +833,50 @@ jobs:
                   -e "s|^\([^ ]*\) $generated/output/ExecutionRecords/|  \1  generated project: |"
           echo "::$token::"
 
-      # The patch, if there is one, the logs, and the execution records named in
-      # the step above. Not the versioned trees themselves: what a person would
-      # have compared them against is exactly what the patch holds, without the
-      # megabytes that did not move. The artifact keeps its `-drift` name because
-      # statistical.yml collects the artifacts by it.
+      # Prints, for each check of the performance test, two durations from the Grand Totals of the output
+      # the check wrote: the Execution Time, which the timing checks assert on, and the Runner Overhead.
+      # Where the check measured one, it then prints the peak number of the check's tests which ran at
+      # once. A check prints its values only when it fails, and roadmap item 38 needs the distribution,
+      # not only the tail. Each duration is printed with its unit, since the runner writes one of a
+      # second or more in seconds. The checks are found from the io.txt files in the working copy, so a
+      # renamed check is still printed. A column that excludes the performance tests has no working copy,
+      # and says so. A check's name is a directory name and its values are read through a filter of
+      # digits, letters, dots and plus signs, and neither begins a line, so nothing printed here can be a
+      # workflow command. A report cannot fail the job.
+      - name: Report the performance test's timings
+        if: ${{ always() && inputs.needs_testing == 'true' }}
+        continue-on-error: true
+        run: |
+          dir="output/TestsTemporaryData/TestFramework/TestRunnerPerformanceTest/test_runner_performance_test/WorkingCopy"
+          if [ ! -d "$dir" ]; then
+            echo "no performance timings: the performance test did not run"
+            exit 0
+          fi
+          grand_total() { sed -n '/Grand Totals/,$p' "$1" | sed -n "s/.*$2: \([0-9.e+]*[a-z]*\)\].*/\1/p" | head -1; }
+          found=0
+          for file in "$dir"/*/io.txt; do
+            [ -f "$file" ] || continue
+            found=$((found + 1))
+            check=$(basename "$(dirname "$file")")
+            execution=$(grand_total "$file" 'Execution Time')
+            overhead=$(grand_total "$file" 'Runner Overhead')
+            peak=$(sed -n 's/^\[Peak Overlap: \([0-9]*\)\]$/\1/p' "$file" | head -1)
+            echo "performance timing: $check: ${execution:-unparsed}," \
+                 "runner overhead ${overhead:-unparsed}${peak:+, peak overlap $peak}"
+          done
+          [ "$found" -gt 0 ] || echo "no performance timings: the working copy holds no io.txt"
+
+      # The patch, if there is one, the logs, the execution records, and the
+      # performance test's working copy, whose io.txt files hold the timings that
+      # "Report the performance test's timings" prints. Not the versioned trees
+      # themselves: what a person would have compared them against is exactly what
+      # the patch holds, without the megabytes that did not move. The artifact keeps
+      # its `-drift` name because statistical.yml collects the artifacts by it.
       #
-      # A working copy lies under <source path less extension>/<test class>, so the path below
-      # names both. Get it wrong and nothing says so: `if-no-files-found: warn`
+      # A working copy lies under <source path less extension>/<test class>, so the paths below
+      # name both. Get it wrong and nothing says so: `if-no-files-found: warn`
       # leaves the artifact a file short and the run green.
-      - name: Upload the drift, the run log and the execution records
+      - name: Upload the drift, the run log, the execution records and the performance timings
         if: ${{ always() && inputs.needs_testing == 'true' }}
         uses: actions/upload-artifact@v7
         with:
@@ -850,6 +884,7 @@ jobs:
           path: |
             output/Drift/
             output/ExecutionRecords/
+            output/TestsTemporaryData/TestFramework/TestRunnerPerformanceTest/test_runner_performance_test/WorkingCopy/
             output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/ExecutionRecords/
             output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/WorkingCopy/InitOutput/
             run-log/

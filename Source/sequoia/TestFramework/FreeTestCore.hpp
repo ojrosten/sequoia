@@ -268,21 +268,95 @@ namespace sequoia::testing
     return unqualified;
   }
 
-  /** \brief Whether a test forks its diagnostics output, by a static `output_discriminator(const cmake_cache&)`. */
-  template<concrete_test T>
-  inline constexpr bool has_discriminated_output_v{
-    requires(const cmake_cache& cache){
-      { T::output_discriminator(cache) } -> std::convertible_to<std::string>;
+  /** \name discriminator_probes
+      \brief Probes for the hooks a test may declare to discriminate what it records.
+
+      Each hook is a public static member function which takes `const cmake_cache&` and returns
+      something convertible to `std::string`. A hook may compute the string from the cache or from any
+      other source, such as hardware found at run time. There are three hooks:
+      -# `output_discriminator` discriminates the diagnostics files;
+      -# `summary_discriminator` discriminates the summary;
+      -# `materials_discriminator` discriminates the original materials.
+
+      Each probe is for one hook. For a test `T`, it asks two things:
+      -# `declared_v`: whether the test declares the hook in any form. A member of that name counts,
+         whether static or not, and whatever its signature. Where the name is overloaded, a member
+         callable through `T&`, either with a `const cmake_cache&` or with no arguments, counts;
+      -# `conforming_v`: whether the hook can be called through the class with a `const cmake_cache&`,
+         and whether that call returns something convertible to `std::string`.
+
+      Each probe's `discriminator` makes that call, and returns the result as a `std::string`.
+
+      The hooks must be public: a hook which is not public is invisible to every probe. The cache does
+      not record the active configuration of a multi-config build tree. A hook which discriminates
+      between Debug and Release must find the configuration some other way, such as by whether `NDEBUG`
+      is defined.
+   */
+  ///@{
+  template<class T>
+  struct output_discriminator_probe
+  {
+    static constexpr bool declared_v{
+         requires { &T::output_discriminator; }
+      || requires(T& t, const cmake_cache& cache){ t.output_discriminator(cache); }
+      || requires(T& t){ t.output_discriminator(); }
+    };
+
+    static constexpr bool conforming_v{
+      requires(const cmake_cache& cache){ { T::output_discriminator(cache) } -> std::convertible_to<std::string>; }
+    };
+
+    [[nodiscard]]
+    static std::string discriminator(const cmake_cache& cache)
+      requires conforming_v
+    {
+      return T::output_discriminator(cache);
     }
   };
 
-  /** \brief Whether a test forks its summary, by a static `summary_discriminator(const cmake_cache&)`. */
-  template<concrete_test T>
-  inline constexpr bool has_discriminated_summary_v{
-    requires(const cmake_cache& cache){
-      { T::summary_discriminator(cache) } -> std::convertible_to<std::string>;
+  template<class T>
+  struct summary_discriminator_probe
+  {
+    static constexpr bool declared_v{
+         requires { &T::summary_discriminator; }
+      || requires(T& t, const cmake_cache& cache){ t.summary_discriminator(cache); }
+      || requires(T& t){ t.summary_discriminator(); }
+    };
+
+    static constexpr bool conforming_v{
+      requires(const cmake_cache& cache){ { T::summary_discriminator(cache) } -> std::convertible_to<std::string>; }
+    };
+
+    [[nodiscard]]
+    static std::string discriminator(const cmake_cache& cache)
+      requires conforming_v
+    {
+      return T::summary_discriminator(cache);
     }
   };
+
+  template<class T>
+  struct materials_discriminator_probe
+  {
+    static constexpr bool declared_v{
+         requires { &T::materials_discriminator; }
+      || requires(T& t, const cmake_cache& cache){ t.materials_discriminator(cache); }
+      || requires(T& t){ t.materials_discriminator(); }
+    };
+
+    static constexpr bool conforming_v{
+      requires(const cmake_cache& cache){ { T::materials_discriminator(cache) } -> std::convertible_to<std::string>; }
+    };
+
+    [[nodiscard]]
+    static std::string discriminator(const cmake_cache& cache)
+      requires conforming_v
+    {
+      return T::materials_discriminator(cache);
+    }
+  };
+
+  ///@}
 
   /** \brief Temporary workaround while waiting for variadic friends */
   class trivial_extender

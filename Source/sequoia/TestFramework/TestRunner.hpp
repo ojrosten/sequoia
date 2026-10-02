@@ -19,7 +19,6 @@
 
 #include "sequoia/Core/Logic/Bitmask.hpp"
 #include "sequoia/Maths/Graph/DynamicTree.hpp"
-#include "sequoia/PlatformSpecific/Helpers.hpp"
 #include "sequoia/TextProcessing/Indent.hpp"
 
 #include <chrono>
@@ -29,6 +28,7 @@
 #include <optional>
 #include <set>
 #include <span>
+#include <thread>
 
 namespace sequoia::testing
 {
@@ -106,6 +106,14 @@ namespace sequoia::testing
       \throws std::logic_error if `materials` names no test
       \throws std::runtime_error if the original root holds anything but `WorkingCopy`, `Prediction`
                and `Auxiliary`, besides a `.keep` or `.DS_Store`, naming what else it holds
+      \throws std::runtime_error if the test declares a materials discriminator, and one of these holds:
+               -# The discriminator is not one portable directory name;
+               -# The discriminator names a kind of material, ignoring case;
+               -# The discriminator differs only in case from the name of an entry in the test's own
+                  directory;
+               -# The test's own directory holds a directory named for a kind of material, ignoring case;
+               -# The test's own directory holds an entry which is not a directory, other than a `.keep`
+                  or a `.DS_Store`.
    */
   void prepare_materials(const individual_materials_paths& materials);
 
@@ -180,15 +188,41 @@ namespace sequoia::testing
   private:
     static void versioned_write(const std::filesystem::path& file, std::string_view text);
 
-    /** \brief An RAII wrapper to write a test's execution record: when the test started and, on destruction, its
-               duration.
+    /** \brief Times a test's execution apart from the runner's overhead.
 
-        A record which cannot be written is skipped rather than reported.
+        The execution duration is the time spent in the calls to `time_execution`. The runner's overhead is the rest
+        of the time since construction.
+     */
+    class execution_timer
+    {
+    public:
+      template<std::invocable Fn>
+      void time_execution(Fn fn)
+      {
+        const timer t{};
+        fn();
+        m_ExecutionDuration += t.time_elapsed();
+      }
+
+      [[nodiscard]]
+      log_summary::duration execution_duration() const noexcept { return m_ExecutionDuration; }
+
+      [[nodiscard]]
+      log_summary::duration runner_overhead() const { return m_Timer.time_elapsed() - m_ExecutionDuration; }
+    private:
+      timer m_Timer{};
+      log_summary::duration m_ExecutionDuration{};
+    };
+
+    /** \brief An RAII wrapper to write a test's execution record: when the test started and, on destruction, its
+               execution duration and the runner's overhead so far, as `executionTimer` gives them.
+
+        A record which cannot be written is skipped rather than reported; an allocation failure is not caught.
      */
     class [[nodiscard]] scoped_execution_record
     {
     public:
-      explicit scoped_execution_record(std::filesystem::path file);
+      scoped_execution_record(std::filesystem::path file, const execution_timer& executionTimer);
 
       scoped_execution_record(const scoped_execution_record&)            = delete;
       scoped_execution_record& operator=(const scoped_execution_record&) = delete;
@@ -197,7 +231,7 @@ namespace sequoia::testing
     private:
       std::filesystem::path m_File{};
       std::chrono::system_clock::time_point m_Start{};
-      timer m_Timer{};
+      const execution_timer& m_ExecutionTimer;
     };
 
     struct soul
@@ -248,28 +282,11 @@ namespace sequoia::testing
       [[nodiscard]]
       log_summary execute(std::optional<std::size_t> index) final
       {
-        // Also installed per test, since under MSVC each thread has its own terminate handler
-        const scoped_terminate_handler terminationReported{report_termination};
-        const scoped_execution_record record{m_ExecutionRecord.file_path()};
-        const timer t{};
+        execution_timer executionTimer{};
+        auto summary{execute_and_record(index, executionTimer)};
+        summary.runner_overhead(executionTimer.runner_overhead());
 
-        if(try_prepare_materials())
-        {
-          try
-          {
-            m_Test.run_tests();
-          }
-          catch(const std::exception& e)
-          {
-            m_Test.log_critical_failure(m_Test.source_file(), "Unexpected", e.what());
-          }
-          catch(...)
-          {
-            m_Test.log_critical_failure(m_Test.source_file(), "Unknown", "");
-          }
-        }
-
-        return write_output(t, index);
+        return summary;
       }
 
       void reset() final
@@ -284,23 +301,60 @@ namespace sequoia::testing
         m_Test = Test{m_Name,
                       source,
                       projPaths,
-                      individual_materials_paths{source, m_Name, projPaths},
+                      individual_materials_paths{
+                        source,
+                        m_Name,
+                        projPaths,
+                        get_discriminator<materials_discriminator_probe, Test>(cache)
+                      },
                       make_active_recovery_paths(mode, projPaths),
-                      get_output_discriminator<Test>(cache),
-                      get_reduction_discriminator<Test>(cache)};
+                      get_discriminator<output_discriminator_probe, Test>(cache),
+                      get_discriminator<summary_discriminator_probe, Test>(cache)};
 
         m_ExecutionRecord = test_execution_record_path{source, m_Name, projPaths};
       }
     private:
       static constexpr std::string_view m_Name{test_name<Test>()};
 
+      /** Returns the test's summary but for the runner's overhead. The overhead includes finishing the record, and the
+          record finishes only after this function has made the summary.
+       */
       [[nodiscard]]
-      log_summary write_output(const timer& t, std::optional<std::size_t> index)
+      log_summary execute_and_record(std::optional<std::size_t> index, execution_timer& executionTimer)
+      {
+        // Also installed per test, since under MSVC each thread has its own terminate handler
+        const scoped_terminate_handler terminationReported{report_termination};
+        const scoped_execution_record record{m_ExecutionRecord.file_path(), executionTimer};
+
+        if(try_prepare_materials())
+          executionTimer.time_execution([this](){ try_run_tests(); });
+
+        return write_output(executionTimer.execution_duration(), index);
+      }
+
+      void try_run_tests()
+      {
+        try
+        {
+          m_Test.run_tests();
+        }
+        catch(const std::exception& e)
+        {
+          m_Test.log_critical_failure(m_Test.source_file(), "Unexpected", e.what());
+        }
+        catch(...)
+        {
+          m_Test.log_critical_failure(m_Test.source_file(), "Unknown", "");
+        }
+      }
+
+      [[nodiscard]]
+      log_summary write_output(const log_summary::duration executionDuration, std::optional<std::size_t> index)
       {
         try
         {
           m_Test.write_instability_analysis_output(m_Test.source_file(), index);
-          return write_versioned_output(t);
+          return write_versioned_output(executionDuration);
         }
         catch(const std::exception& e)
         {
@@ -311,7 +365,7 @@ namespace sequoia::testing
           m_Test.log_critical_failure(m_Test.source_file(), "Output Writing", "Unknown exception");
         }
 
-        return m_Test.summarize(t.time_elapsed());
+        return m_Test.summarize(executionDuration);
       }
 
       [[nodiscard]]
@@ -329,9 +383,9 @@ namespace sequoia::testing
         }
       }
 
-      log_summary write_versioned_output(const timer& t) const
+      log_summary write_versioned_output(const log_summary::duration executionDuration) const
       {
-        auto summary{m_Test.summarize(t.time_elapsed())};
+        auto summary{m_Test.summarize(executionDuration)};
 
         if(!m_Test.has_critical_failures())
         {
@@ -352,28 +406,24 @@ namespace sequoia::testing
     parallelizable_candidate m_Parallelizable{parallelizable_candidate::yes};
   };
 
-  template<concrete_test T>
+  /** \brief Calls the hook of `T` that `Probe` probes for.
+
+      \returns
+      -# The hook's result for `cache`, as a `std::string`, if `T` declares the hook;
+      -# `null_discriminator` otherwise.
+   */
+  template<template<class> class Probe, concrete_test T>
   [[nodiscard]]
-  std::optional<std::string> get_output_discriminator(const cmake_cache& cache){
-    static_assert(!requires(const T& t){ t.output_discriminator(); },
-                  "output_discriminator must be static and take const cmake_cache&: this one is neither, and would be silently ignored");
+  std::optional<std::string> get_discriminator(const cmake_cache& cache)
+  {
+    static_assert(!Probe<T>::declared_v || Probe<T>::conforming_v,
+                  "A discriminator hook must be a public static member function taking const cmake_cache& "
+                  "and returning something convertible to std::string");
 
-    if constexpr(has_discriminated_output_v<T>)
-      return T::output_discriminator(cache);
+    if constexpr(Probe<T>::conforming_v)
+      return Probe<T>::discriminator(cache);
     else
-      return std::nullopt;
-  }
-
-  template<concrete_test T>
-  [[nodiscard]]
-  std::optional<std::string> get_reduction_discriminator(const cmake_cache& cache){
-    static_assert(!requires(const T& t){ t.summary_discriminator(); },
-                  "summary_discriminator must be static and take const cmake_cache&: this one is neither, and would be silently ignored");
-
-    if constexpr(has_discriminated_summary_v<T>)
-      return T::summary_discriminator(cache);
-    else
-      return std::nullopt;
+      return null_discriminator;
   }
 
   /** \brief Consumes command-line arguments and holds all test suites.
@@ -416,10 +466,11 @@ namespace sequoia::testing
 
         `report_termination` is the terminate handler for the run, and for each test on the thread running it. Under
         MSVC's debug runtime, reports are redirected as `debug_report_redirector` describes, and under Windows a
-        crash reaches Windows Error Reporting, as `windows_crash_report_enabler` describes.
+        crash reaches Windows Error Reporting, as `windows_crash_report_enabler` describes. On Windows, the tests
+        run under the finest timer resolution, as `set_finest_windows_timer_resolution` describes.
      */
     [[nodiscard]]
-    return_code execute([[maybe_unused]] timer_resolution r={});
+    return_code execute();
 
     [[nodiscard]]
     std::ostream& stream() noexcept { return *m_Stream; }
@@ -571,6 +622,7 @@ namespace sequoia::testing
     {
       log_summary summary{};
       std::optional<test_vessel> optTest{};
+      std::thread::id executing_thread_id{};
     };
 
     using suite_type = maths::directed_tree<maths::tree_link_direction::forward, maths::null_weight, suite_node>;
@@ -608,6 +660,8 @@ namespace sequoia::testing
     void check_argument_consistency();
 
     void check_for_missing_tests();
+
+    void check_for_coarse_sleeps();
 
     [[nodiscard]]
     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }

@@ -200,6 +200,21 @@ namespace sequoia::testing
     return passed;
   }
 
+  /** \brief Whether `slept`, compared to `target`, indicates sleeps rounded up to a coarse timer tick. */
+  [[nodiscard]]
+  bool is_coarse_sleep(std::chrono::duration<double, std::milli> slept,
+                       std::chrono::duration<double, std::milli> target);
+
+  /** \brief A warning that sleeps of `target` lasted `slept` or more, so timings built on sleeps are unreliable. */
+  [[nodiscard]]
+  std::string coarse_sleep_message(std::chrono::duration<double, std::milli> slept,
+                                   std::chrono::duration<double, std::milli> target);
+
+  /** \brief Calibrates the duration of a sleep for timings built on sleeps.
+
+      Returns `target` if this machine's sleeps of `target` last about that long. Otherwise returns a duration longer
+      than those sleeps typically last.
+   */
   template<class T, class Period>
   [[nodiscard]]
   std::chrono::duration<T, Period> calibrate(std::chrono::duration<T, Period> target)

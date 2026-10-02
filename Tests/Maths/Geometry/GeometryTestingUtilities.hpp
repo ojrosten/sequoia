@@ -222,7 +222,7 @@ namespace sequoia::testing
         add_dim_1_free_mutations(g, test);
       }
 
-      if constexpr(std::constructible_from<coords_type, disp_value_type, disp_value_type>)
+      if constexpr(std::constructible_from<coords_type, value_type>)
       {
         add_dim_1_no_unit_construction(g, test);
       }
@@ -247,7 +247,7 @@ namespace sequoia::testing
         g,
         dim_1_label::zero,
         dim_1_label::one,
-        test.report("(0) += delta((1)"),
+        test.report("(0) += delta(1)"),
         [](variant_type p) -> variant_type {
           return std::get<coords_type>(p) += from_underlying<disp_type>(disp_value_type(1));
         }
@@ -269,7 +269,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::zero,
-        test.report("(1)  - delta((1)"),
+        test.report("(1)  - delta(1)"),
         [](variant_type p) -> variant_type {
           return std::get<coords_type>(p) -  from_underlying<disp_type>(disp_value_type(1));
         }
@@ -279,7 +279,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::zero,
-        test.report("(1) -= delta((1)"),
+        test.report("(1) -= delta(1)"),
         [](variant_type p) -> variant_type {
           return std::get<coords_type>(p) -= from_underlying<disp_type>(disp_value_type(1));
         }
@@ -297,7 +297,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::two,
-        test.report("(1) + delta((1)"),
+        test.report("(1) + delta(1)"),
         [](variant_type p) -> variant_type {
           return std::get<coords_type>(p) +  from_underlying<disp_type>(disp_value_type(1));
         }
@@ -307,7 +307,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::two,
-        test.report("(1) += delta((1)"),
+        test.report("(1) += delta(1)"),
         [](variant_type p) -> variant_type {
           return std::get<coords_type>(p) += from_underlying<disp_type>(disp_value_type(1));
         }
@@ -319,7 +319,7 @@ namespace sequoia::testing
         g,
         dim_1_label::two,
         dim_1_label::one,
-        test.report("(2) - delta((1)"),
+        test.report("(2) - delta(1)"),
         [](variant_type p) -> variant_type {
           return std::get<coords_type>(p) - from_underlying<disp_type>(disp_value_type(1));
         }
@@ -407,7 +407,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::neg_one,
-        test.report("(1) - (2)"),
+        test.report("(1) - delta(2)"),
         [](variant_type p) -> variant_type {
           return std::get<coords_type>(p) - from_underlying<disp_type>(disp_value_type(2));
         },
@@ -440,27 +440,35 @@ namespace sequoia::testing
         }
       );
 
+      add_transition<coords_type>(
+        g,
+        dim_1_label::neg_one,
+        dim_1_label::zero,
+        test.report("(-1) + delta(1)"),
+        [](variant_type p) -> variant_type {
+          return std::get<coords_type>(p) + from_underlying<disp_type>(disp_value_type(1));
+        },
+        std::is_unsigned_v<disp_value_type> ? inverted_ordering::yes : inverted_ordering::no
+      );
+
+      add_transition<coords_type>(
+        g,
+        dim_1_label::neg_one,
+        dim_1_label::zero,
+        test.report("(-1) += delta(1)"),
+        [](variant_type p) -> variant_type {
+          return std::get<coords_type>(p) += from_underlying<disp_type>(disp_value_type(1));
+        },
+        std::is_unsigned_v<disp_value_type> ? inverted_ordering::yes : inverted_ordering::no
+      );
+
       if constexpr(Coordinates::has_freely_mutable_components_v)
       {
         add_transition<coords_type>(
           g,
           dim_1_label::neg_one,
           dim_1_label::zero,
-          test.report("(-1) += 1"),
-          [](variant_type v) -> variant_type {
-            auto& p{std::get<coords_type>(v)};
-            auto& val{p.value()};
-            val += 1;
-            return p;
-          },
-          std::is_unsigned_v<disp_value_type> ? inverted_ordering::yes : inverted_ordering::no
-        );
-
-        add_transition<coords_type>(
-          g,
-          dim_1_label::neg_one,
-          dim_1_label::zero,
-          test.report("(-1) + 1"),
+          test.report("(-1).value() += 1"),
           [](variant_type v) -> variant_type {
             auto& p{std::get<coords_type>(v)};
             auto& val{p.value()};
@@ -478,7 +486,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::one,
-        test.report("(1) -= (2)"),
+        test.report("(1) -= delta(2)"),
         [&](variant_type p) -> variant_type {
           test.check_exception_thrown<std::domain_error>(
             "",
@@ -492,7 +500,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::one,
-        test.report("(1) - (2)"),
+        test.report("(1) - delta(2)"),
         [&](variant_type v) -> variant_type {
           test.check_exception_thrown<std::domain_error>(
             "",
@@ -566,7 +574,7 @@ namespace sequoia::testing
 
     static void add_dim_1_distinguished_origin_transitions(maths::network auto& g, regular_test& test)
     {
-      // (0) --> (1)
+      // (1) --> (0)
       add_transition<coords_type>(
         g,
         dim_1_label::one,
@@ -649,7 +657,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::zero,
-        test.report("(1)[0] * disp_value_type{}"),
+        test.report("(1)[0] *= disp_value_type{}"),
         [](variant_type v) -> variant_type { std::get<coords_type>(v)[0] *= disp_value_type{}; return v; }
       );
 
@@ -675,7 +683,7 @@ namespace sequoia::testing
         g,
         dim_1_label::one,
         dim_1_label::two,
-        test.report("(1)[0] * disp_value_type{2}"),
+        test.report("(1)[0] *= disp_value_type{2}"),
         [](variant_type v) -> variant_type { std::get<coords_type>(v)[0] *= disp_value_type{2}; return v; }
       );
 
@@ -698,16 +706,46 @@ namespace sequoia::testing
 
     static void add_dim_1_no_unit_construction(maths::network auto& g, regular_test& test)
     {
-      // (0) --> (1)
-      add_transition<coords_type>(
-        g,
-        dim_1_label::zero,
-        dim_1_label::one,
-        test.report("(0) +  (1)"),
-        [&](variant_type p) -> variant_type {
-          return std::get<coords_type>(p) +  from_underlying<disp_type>(disp_value_type(1));
-        }
-      );
+      if constexpr(!maths::is_non_negative_orthant_v<space_type>)
+      {
+        // (-1) --> (-1)
+
+        add_transition<coords_type>(
+          g,
+          dim_1_label::neg_one,
+          dim_1_label::neg_one,
+          test.report("(-1) without units, from value()"),
+          [](variant_type v) -> variant_type { return coords_type{std::get<coords_type>(v).value()}; }
+        );
+
+        add_transition<coords_type>(
+          g,
+          dim_1_label::neg_one,
+          dim_1_label::neg_one,
+          test.report("(-1) without units, from values()"),
+          [](variant_type v) -> variant_type { return coords_type{std::get<coords_type>(v).values()}; }
+        );
+      }
+      else
+      {
+        // (1) --> (1)
+
+        add_transition<coords_type>(
+          g,
+          dim_1_label::one,
+          dim_1_label::one,
+          test.report("(1) without units, from value()"),
+          [](variant_type v) -> variant_type { return coords_type{std::get<coords_type>(v).value()}; }
+        );
+
+        add_transition<coords_type>(
+          g,
+          dim_1_label::one,
+          dim_1_label::one,
+          test.report("(1) without units, from values()"),
+          [](variant_type v) -> variant_type { return coords_type{std::get<coords_type>(v).values()}; }
+        );
+      }
     }
 
     [[nodiscard]]
@@ -757,7 +795,7 @@ namespace sequoia::testing
         add_dim_2_free_mutations(g, test);
       }
 
-      if constexpr(std::constructible_from<coords_type, disp_value_type, disp_value_type>)
+      if constexpr(std::constructible_from<coords_type, value_type, value_type>)
       {
         add_dim_2_no_unit_construction(g, test);
       }
@@ -785,7 +823,7 @@ namespace sequoia::testing
         g,
         dim_2_label::neg_one_neg_one,
         dim_2_label::neg_one_zero,
-        test.report("(-1, -1) +  (0, 1)"),
+        test.report("(-1, -1) +  delta(0, 1)"),
         [](variant_type v) -> variant_type { return std::get<coords_type>(v) + from_underlying<disp_type>(std::array{disp_value_type{}, disp_value_type(1)}); }
       );
 
@@ -794,7 +832,7 @@ namespace sequoia::testing
         g,
         dim_2_label::neg_one_neg_one,
         dim_2_label::neg_one_zero,
-        test.report("(-1, -1) += (0, 1)"),
+        test.report("(-1, -1) += delta(0, 1)"),
         [](variant_type v) -> variant_type { return std::get<coords_type>(v) += from_underlying<disp_type>(std::array{disp_value_type{}, disp_value_type(1)}); }
       );
 
@@ -803,7 +841,7 @@ namespace sequoia::testing
         g,
         dim_2_label::neg_one_neg_one,
         dim_2_label::zero_neg_one,
-        test.report("(-1, -1) +  (1, 0)"),
+        test.report("(-1, -1) +  delta(1, 0)"),
         [](variant_type v) -> variant_type { return std::get<coords_type>(v) +  from_underlying<disp_type>(std::array{disp_value_type(1), disp_value_type{}}); }
      );
 
@@ -812,8 +850,8 @@ namespace sequoia::testing
         g,
         dim_2_label::neg_one_neg_one,
         dim_2_label::zero_neg_one,
-        test.report("(-1, -1) += (1, 0)"),
-        [](variant_type v) -> variant_type { return std::get<coords_type>(v) +  from_underlying<disp_type>(std::array{disp_value_type(1), disp_value_type{}}); }
+        test.report("(-1, -1) += delta(1, 0)"),
+        [](variant_type v) -> variant_type { return std::get<coords_type>(v) += from_underlying<disp_type>(std::array{disp_value_type(1), disp_value_type{}}); }
      );
 
       if constexpr (has_unary_minus<Coordinates>)
@@ -873,7 +911,7 @@ namespace sequoia::testing
         g,
         dim_2_label::neg_one_zero,
         dim_2_label::neg_one_neg_one,
-        test.report("(-1, 0) -  (0, 1)"),
+        test.report("(-1, 0) -  delta(0, 1)"),
         [](variant_type v) -> variant_type { return std::get<coords_type>(v) -  from_underlying<disp_type>(std::array{disp_value_type{}, disp_value_type(1)}); }
       );
 
@@ -881,7 +919,7 @@ namespace sequoia::testing
         g,
         dim_2_label::neg_one_zero,
         dim_2_label::neg_one_neg_one,
-        test.report("(-1, 0) -= (0, 1)"),
+        test.report("(-1, 0) -= delta(0, 1)"),
         [](variant_type v) -> variant_type { return std::get<coords_type>(v) -= from_underlying<disp_type>(std::array{disp_value_type{}, disp_value_type(1)}); }
       );
 
@@ -890,7 +928,7 @@ namespace sequoia::testing
         g,
         dim_2_label::zero_neg_one,
         dim_2_label::neg_one_neg_one,
-        test.report("(0, -1) -  (1, 0)"),
+        test.report("(0, -1) -  delta(1, 0)"),
         [](variant_type v) -> variant_type { return std::get<coords_type>(v) -  from_underlying<disp_type>(std::array{disp_value_type{1}, disp_value_type(0)}); }
       );
 
@@ -898,7 +936,7 @@ namespace sequoia::testing
         g,
         dim_2_label::zero_neg_one,
         dim_2_label::neg_one_neg_one,
-        test.report("(0, -1) -= (1, 0)"),
+        test.report("(0, -1) -= delta(1, 0)"),
         [](variant_type v) -> variant_type { return std::get<coords_type>(v) -= from_underlying<disp_type>(std::array{disp_value_type{1}, disp_value_type(0)}); }
       );
     }
@@ -909,7 +947,7 @@ namespace sequoia::testing
         g,
         dim_2_label::one_one,
         dim_2_label::one_one,
-        test.report("(1, 1) -= (2, 2)"),
+        test.report("(1, 1) -= delta(2, 2)"),
         [&](variant_type v) -> variant_type {
           test.check_exception_thrown<std::domain_error>(
             "",
@@ -993,12 +1031,12 @@ namespace sequoia::testing
       if constexpr(!maths::is_non_negative_orthant_v<space_type>)
       {
         // (-1, -1) --> (-1, -1)
-   
+
         add_transition<coords_type>(
           g,
           dim_2_label::neg_one_neg_one,
           dim_2_label::neg_one_neg_one,
-          test.report("(-1, -1) without units"),
+          test.report("(-1, -1) without units, from operator[]"),
           [](variant_type v) -> variant_type {
             auto& p{std::get<coords_type>(v)};
             return coords_type{p[0], p[1]};
@@ -1009,7 +1047,32 @@ namespace sequoia::testing
           g,
           dim_2_label::neg_one_neg_one,
           dim_2_label::neg_one_neg_one,
-          test.report("(-1, -1) without units"),
+          test.report("(-1, -1) without units, from values()"),
+          [](variant_type v) -> variant_type {
+            return coords_type{std::get<coords_type>(v).values()};
+          }
+        );
+      }
+      else
+      {
+        // (1, 1) --> (1, 1)
+
+        add_transition<coords_type>(
+          g,
+          dim_2_label::one_one,
+          dim_2_label::one_one,
+          test.report("(1, 1) without units, from operator[]"),
+          [](variant_type v) -> variant_type {
+            auto& p{std::get<coords_type>(v)};
+            return coords_type{p[0], p[1]};
+          }
+        );
+
+        add_transition<coords_type>(
+          g,
+          dim_2_label::one_one,
+          dim_2_label::one_one,
+          test.report("(1, 1) without units, from values()"),
           [](variant_type v) -> variant_type {
             return coords_type{std::get<coords_type>(v).values()};
           }

@@ -21,6 +21,7 @@ unaffected_free_test:
 -----------Grand Totals-----------
 [Total Run Time: 7.14ms]
 [Execution Time: 3.15ms]
+[Runner Overhead: 770us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 1]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

@@ -18,7 +18,6 @@ int main(int argc, char** argv)
 	try
 	{
 		using namespace myProject::testing;
-		using namespace std::literals::chrono_literals;
 
 		sequoia::testing::test_runner runner{argc, argv, "Oliver J. Rosten", "\t"};
 		runner.register_test<maybe_false_negative_test>();
@@ -55,8 +54,8 @@ int main(int argc, char** argv)
 		runner.register_test<doohicky_free_test>();
 		runner.register_test<global_free_test>();
 		runner.register_test<defs_free_test>();
-		runner.register_test<angle_false_positive_free_diagnostics>();
 		runner.register_test<angle_false_negative_free_diagnostics>();
+		runner.register_test<angle_false_positive_free_diagnostics>();
 		runner.register_test<container_allocation_test>();
 		runner.register_test<foo_allocation_test>();
 		runner.register_test<container_performance_test>();
@@ -73,7 +72,7 @@ int main(int argc, char** argv)
 		runner.register_test<container_family_allocation_test>();
 		runner.register_test<container_speed_test>();
 
-		code = runner.execute(sequoia::timer_resolution{1ms});
+		code = runner.execute();
 	}
 	catch(const std::exception& e)
 	{

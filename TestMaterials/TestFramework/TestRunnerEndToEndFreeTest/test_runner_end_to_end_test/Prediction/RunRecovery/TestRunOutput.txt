@@ -2,11 +2,14 @@
 Running tests, synchronously...
 
 bar_free_test:
-[Execution Time: 143us]
+[Execution Time: 261us]
+[Runner Overhead: 444us]
 foo_false_negative_test:
-[Execution Time: 104us]
+[Execution Time: 2.19ms]
+[Runner Overhead: 444us]
 foo_test:
-[Execution Time: 2.74ms]
+[Execution Time: 3.17ms]
+[Runner Overhead: 2.28ms]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 3]
 
 	Tests/Stuff/FooTest.cpp, Line 42
@@ -17,9 +20,9 @@ foo_test:
 	[std::filesystem::path]
 
 	  Path type
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases
+	  /Users/oliver/sequoia-diagnostics-template/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/output/TestsTemporaryData/Stuff/FooTest/foo_test/WorkingCopy/RepresentativeCases
 	  vs
-	  /Users/oliver/sequoia/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases
+	  /Users/oliver/sequoia-diagnostics-template/output/TestsTemporaryData/TestFramework/TestRunnerEndToEndFreeTest/test_runner_end_to_end_test/GeneratedProject/TestMaterials/Stuff/FooTest/foo_test/Prediction/RepresentativeCases
 
 	  [std::filesystem::file_type]
 	  operator== returned false
@@ -29,21 +32,28 @@ foo_test:
 	=======================================
 
 oldschool_false_negative_test:
-[Execution Time: 76.2us]
+[Execution Time: 133us]
+[Runner Overhead: 452us]
 oldschool_test:
-[Execution Time: 94.3us]
+[Execution Time: 107us]
+[Runner Overhead: 427us]
 container_allocation_test:
-[Execution Time: 104us]
+[Execution Time: 109us]
+[Runner Overhead: 489us]
 container_performance_test:
-[Execution Time: 85.2us]
+[Execution Time: 118us]
+[Runner Overhead: 528us]
 unique_thing_false_negative_test:
-[Execution Time: 375us]
+[Execution Time: 459us]
+[Runner Overhead: 549us]
 	False Negative Checks:                     2;  Failures:  0
 unique_thing_test:
-[Execution Time: 748us]
+[Execution Time: 830us]
+[Runner Overhead: 541us]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 37]
 useful_things_free_test:
-[Execution Time: 361us]
+[Execution Time: 374us]
+[Runner Overhead: 517us]
 	Standard Top Level Checks:                 2;  Failures:  1  [Deep checks: 2]
 
 	Tests/Utilities/UsefulThingsFreeTest.cpp, Line 21
@@ -55,27 +65,41 @@ useful_things_free_test:
 
 	=======================================
 
+utilities_false_negative_free_diagnostics:
+[Execution Time: 103us]
+[Runner Overhead: 382us]
+utilities_false_positive_free_diagnostics:
+[Execution Time: 146us]
+[Runner Overhead: 524us]
 utilities_free_test:
-[Execution Time: 99.5us]
+[Execution Time: 126us]
+[Runner Overhead: 513us]
 flipper_free_test:
-[Execution Time: 329us]
+[Execution Time: 469us]
+[Runner Overhead: 434us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 house_allocation_test:
-[Execution Time: 86.1us]
+[Execution Time: 111us]
+[Runner Overhead: 394us]
 maybe_false_negative_test:
-[Execution Time: 104us]
+[Execution Time: 90.9us]
+[Runner Overhead: 462us]
 maybe_test:
-[Execution Time: 106us]
+[Execution Time: 119us]
+[Runner Overhead: 479us]
 probability_false_negative_test:
-[Execution Time: 373us]
+[Execution Time: 381us]
+[Runner Overhead: 724us]
 	False Negative Checks:                     2;  Failures:  0
 probability_test:
-[Execution Time: 691us]
+[Execution Time: 849us]
+[Runner Overhead: 437us]
 	Standard Top Level Checks:                 3;  Failures:  0  [Deep checks: 39]
 
 -----------Grand Totals-----------
-[Total Run Time: 9.32ms]
-[Execution Time: 6.61ms]
+[Total Run Time: 22.4ms]
+[Execution Time: 10.2ms]
+[Runner Overhead: 11ms]
 	Standard Top Level Checks:                12;  Failures:  2  [Deep checks: 83]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

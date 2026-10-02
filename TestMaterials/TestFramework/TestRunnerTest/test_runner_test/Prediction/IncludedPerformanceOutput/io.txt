@@ -9,6 +9,7 @@ passing_test:
 -----------Grand Totals-----------
 [Total Run Time: 330us]
 [Execution Time: 30us]
+[Runner Overhead: 831us]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 2]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0

@@ -23,34 +23,57 @@ namespace sequoia::testing
   [[nodiscard]]
   std::filesystem::path materials_prefix(const std::filesystem::path& sourceFile, const project_paths& projPaths);
 
-  /** \brief Where a test's materials are: fixed on construction, whatever exists on disk.
+  inline constexpr std::optional<std::string> null_discriminator{};
 
-      A test's materials have two roots. The *original* root, in `TestMaterials`, holds the test's
-      materials as written; the *temporary* root, in `output/TestsTemporaryData`, holds what a test
-      works with as it runs. Both mirror the path of the test's source file, minus its extension,
-      with the name of the test's class as the leaf.
+  /** \brief Paths for the test's materials.
 
-      Beneath the original root, the directories `WorkingCopy`, `Prediction` and `Auxiliary` carry
-      special meaning. If present, `WorkingCopy` and `Auxiliary` are reproduced beneath the temporary
-      root; predictions are not part of a test's execution context, so `prediction()` is a path
-      beneath the original root.
+      The test's materials have two roots:
+      -# The original root, `original_materials_root()`, is in `TestMaterials`, and holds the test's
+         materials as written;
+      -# The temporary root, `temporary_materials_root()`, is in `output/TestsTemporaryData`, and holds
+         what the test works with as it runs.
 
-      Every path is returned whether or not anything is there; which of them exist is for the
-      caller to ask. A default-constructed instance names no test: its two roots are empty, and
-      asking it for any other path throws `std::logic_error`.
+      Both roots mirror the path of the test's source file, less its extension, with the name of the
+      test's class as the leaf. If a materials discriminator was given, the original root is one level
+      further down, as `original_materials_root()` describes. The temporary root has no such level.
+
+      `original_working()`, `prediction()` and `original_auxiliary()` are the paths of `WorkingCopy`,
+      `Prediction` and `Auxiliary` under the original root. `working()` and `auxiliary()` are the
+      paths of `WorkingCopy` and `Auxiliary` under the temporary root. `Prediction` has no temporary
+      counterpart, since the predictions are not part of the test's execution context.
+
+      A default-constructed instance names no test, and its two roots are empty.
+
+      \throws std::logic_error if a default-constructed instance is asked for the path of
+      `WorkingCopy`, `Prediction` or `Auxiliary`.
    */
   class individual_materials_paths
   {
   public:
     individual_materials_paths() = default;
 
-    individual_materials_paths(const std::filesystem::path& sourceFile, std::string_view testName, const project_paths& projPaths);
+    individual_materials_paths(const std::filesystem::path& sourceFile,
+                               std::string_view testName,
+                               const project_paths& projPaths,
+                               const std::optional<std::string>& materialsDiscriminator);
 
     [[nodiscard]]
-    const std::filesystem::path& original_materials_root() const noexcept
+    const std::filesystem::path& original_test_root() const noexcept
     {
-      return m_OriginalMaterialsRoot;
+      return m_OriginalTestRoot;
     }
+
+    [[nodiscard]]
+    const std::optional<std::string>& materials_discriminator() const noexcept
+    {
+      return m_MaterialsDiscriminator;
+    }
+
+    /** \brief The original root: `original_test_root()`, followed by the materials discriminator if one
+        was given.
+     */
+    [[nodiscard]]
+    std::filesystem::path original_materials_root() const;
 
     [[nodiscard]]
     const std::filesystem::path& temporary_materials_root() const noexcept
@@ -77,10 +100,15 @@ namespace sequoia::testing
     friend bool operator==(const individual_materials_paths&, const individual_materials_paths&) noexcept = default;
   private:
     std::filesystem::path
-      m_OriginalMaterialsRoot,
-      m_TemporaryMaterialsRoot;
+      m_OriginalTestRoot{},
+      m_TemporaryMaterialsRoot{};
 
-    individual_materials_paths(const std::filesystem::path& relativePath, const test_materials_paths& materials, const output_paths& output);
+    std::optional<std::string> m_MaterialsDiscriminator{};
+
+    individual_materials_paths(const std::filesystem::path& relativePath,
+                               const test_materials_paths& materials,
+                               const output_paths& output,
+                               const std::optional<std::string>& materialsDiscriminator);
   };
 
   class individual_diagnostics_paths
@@ -125,10 +153,11 @@ namespace sequoia::testing
     std::filesystem::path m_Summary;
   };
 
-  /** \brief Where a test records its last execution: when it started and, once it has finished, how long it took.
+  /** \brief Where a test records its last execution: when it started and, once it has finished, its execution
+             duration and the runner's overhead.
 
-      A record naming a start and no duration marks a test that was executing when its run ended. The path is empty
-      for default project paths.
+      A record naming a start and no execution duration marks a test that was executing when its run ended. The path is
+      empty for default project paths.
    */
   class test_execution_record_path
   {

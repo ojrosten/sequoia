@@ -10,7 +10,10 @@
 #include "sequoia/PlatformSpecific/Preprocessor.hpp"
 #include "sequoia/TextProcessing/Characters.hpp"
 
+#include <cstdint>
+#include <format>
 #include <iostream>
+#include <stdexcept>
 
 #ifdef _WIN32
   #ifndef WIN32_LEAN_AND_MEAN
@@ -47,58 +50,60 @@ namespace sequoia::runtime
           && (flags & HANDLE_FLAG_INHERIT);
     }
 
-    /** \brief The command interpreter, named absolutely.
+    /** \brief The absolute path of `cmd.exe` in the Windows system directory.
 
-        Supplying this as the application name matters. Left to resolve the interpreter from the
-        command line alone, CreateProcessW searches the **current directory** ahead of the system
-        one, and sequoia spawns from directories it has itself just generated - so a stray
-        executable among a generated project's artefacts would be run in preference to the shell.
-        The runtime's own system() had no such exposure, resolving through COMSPEC.
+        \returns
+        -# The path, if Windows reports the path of the system directory;
+        -# Otherwise, an empty string.
      */
     [[nodiscard]]
     std::wstring command_interpreter()
     {
       std::wstring directory(MAX_PATH, L'\0');
       const auto length{GetSystemDirectoryW(directory.data(), static_cast<UINT>(directory.size()))};
-      if(!length || (length > directory.size())) return {};
+      if(!length || (length > directory.size()))
+        return {};
 
       directory.resize(length);
       return directory.append(L"\\cmd.exe");
     }
 
-    /** \brief Runs a command through the interpreter, passing on the standard streams and nothing else.
+    /** \brief Runs `command` through `cmd.exe`, and waits for the command to finish. The child
+               inherits at most the standard streams.
 
-        std::system would do the same job in a line, but spawns with bInheritHandles = TRUE, which
-        hands the child a duplicate of *every* inheritable handle the process holds at that instant
-        - and the MSVC runtime opens files inheritably by default. Since sequoia runs its top-level
-        tests concurrently, a spawn on one thread can therefore capture a file another thread has
-        open, and on Windows a file cannot be deleted while any handle to it remains. The duplicate
-        outlives the stream that created it, so a delete issued long afterwards fails with a
-        sharing violation - intermittently, according to which thread was where.
+        \returns
+        -# -1, if the child fails to start, or its exit status is unavailable;
+        -# Otherwise, the child's exit status.
 
-        Restricting inheritance to an explicit list closes that off at the only point where sequoia
-        creates a process, rather than at the delete sites where it happened to show.
+        `std::system` would make the child inherit every inheritable handle the process holds, and
+        the MSVC runtime opens files inheritably by default. sequoia runs tests concurrently, so a
+        child spawned on one thread could hold a duplicate of a handle to a file another thread has
+        open. The duplicate stays open after that thread closes the file. On Windows, a file cannot
+        be deleted while any handle to it remains, so a later delete of the file would fail with a
+        sharing violation, intermittently.
      */
     [[nodiscard]]
     int spawn_and_wait(const std::string& command)
     {
       const auto interpreter{command_interpreter()};
-      if(interpreter.empty()) return -1;
+      if(interpreter.empty())
+        return -1;
 
       const std::array<HANDLE, 3> standardStreams{GetStdHandle(STD_INPUT_HANDLE),
                                                   GetStdHandle(STD_OUTPUT_HANDLE),
                                                   GetStdHandle(STD_ERROR_HANDLE)};
 
-      // All three or none. Passing only some, with STARTF_USESTDHANDLES set, would leave the child
-      // holding nothing at all for the remainder, whereas inheriting nothing lets it fall back to
-      // the console it is attached to.
+      // The child inherits either all three standard streams or none of them. With
+      // STARTF_USESTDHANDLES set, the child gets no handle at all for a stream missing from the
+      // list. A child which inherits no streams uses its console.
       // Not const: UpdateProcThreadAttribute takes the handle list through a PVOID.
       auto inherited{
         [&standardStreams]() -> std::vector<HANDLE> {
-          if(!std::ranges::all_of(standardStreams, is_inheritable)) return {};
+          if(!std::ranges::all_of(standardStreams, [](HANDLE handle) { return is_inheritable(handle); }))
+            return {};
 
-          // A handle may appear more than once - stdout and stderr are the same when one is
-          // redirected onto the other - and the attribute list will not accept a duplicate.
+          // The attribute list refuses a duplicate handle. stdout and stderr share a handle when
+          // one is redirected onto the other.
           auto handles{standardStreams | std::ranges::to<std::vector>()};
           std::ranges::sort(handles);
           handles.erase(std::ranges::unique(handles).begin(), handles.end());
@@ -121,7 +126,8 @@ namespace sequoia::runtime
         if(auto* candidate{reinterpret_cast<LPPROC_THREAD_ATTRIBUTE_LIST>(attributeStorage.data())};
            InitializeProcThreadAttributeList(candidate, 1, 0, &size))
         {
-          // Initialized, and so owed a matching deletion however the rest of this turns out.
+          // An initialized list needs a matching DeleteProcThreadAttributeList, whatever happens
+          // next. `attributes` holds the list only once the list is initialized.
           attributes = candidate;
 
           if(UpdateProcThreadAttribute(attributes, 0, PROC_THREAD_ATTRIBUTE_HANDLE_LIST, inherited.data(), inherited.size() * sizeof(HANDLE), nullptr, nullptr))
@@ -136,15 +142,20 @@ namespace sequoia::runtime
         }
       }
 
-      // With no attribute list there is nothing to inherit selectively, so inherit nothing at all.
+      // The child inherits handles only through the attribute list. Without the list, the child
+      // inherits no handles, rather than every inheritable one.
       const BOOL inheritHandles{startupInfo.lpAttributeList != nullptr};
 
-      // Everything after /c reaches the interpreter verbatim, which is what lets a composite
-      // command carrying quotes and redirections through unaltered. Widening via path is exactly
-      // the inverse of the conversion which built the narrow string, so the two cannot disagree.
-      // Not const: CreateProcessW is documented to modify this buffer in place.
+      // cmd.exe receives everything after /c verbatim, so a composite command keeps its quotes
+      // and redirections. `path::wstring` reverses the conversion `path::string` made when the
+      // command was built, so no character changes.
+      // Not const: CreateProcessW may write to this buffer.
       auto commandLine{std::wstring{L"cmd.exe /c "}.append(std::filesystem::path{command}.wstring())};
 
+      // `interpreter` names cmd.exe by its absolute path. Given only the command line, CreateProcessW
+      // looks for the interpreter in the current directory before the system directory. sequoia
+      // runs commands from directories it has just generated, so a stray `cmd.exe` there would run
+      // in place of the shell.
       PROCESS_INFORMATION processInfo{};
       const auto created{
         CreateProcessW(interpreter.data(),
@@ -159,14 +170,16 @@ namespace sequoia::runtime
                        &processInfo)
       };
 
-      if(attributes) DeleteProcThreadAttributeList(attributes);
+      if(attributes)
+        DeleteProcThreadAttributeList(attributes);
 
-      if(!created) return -1;
+      if(!created)
+        return -1;
 
       const auto waited{WaitForSingleObject(processInfo.hProcess, INFINITE) == WAIT_OBJECT_0};
 
-      // Without a successful wait the exit code reads as STILL_ACTIVE, which would otherwise be
-      // returned as though it were the child's own status.
+      // `reported` requires a successful wait. Before the child ends, GetExitCodeProcess reports
+      // STILL_ACTIVE, and that value would pass for the child's status.
       DWORD exitCode{};
       const auto reported{waited && GetExitCodeProcess(processInfo.hProcess, &exitCode)};
 
@@ -220,7 +233,8 @@ namespace sequoia::runtime
   int invoke(const shell_command& cmd)
   {
     std::cout << std::flush;
-    if(cmd.empty()) return 0;
+    if(cmd.empty())
+      return 0;
 
     return spawn_and_wait(cmd.m_Command);
   }
@@ -228,6 +242,46 @@ namespace sequoia::runtime
   [[nodiscard]]
   shell_command cd_cmd(const std::filesystem::path& dir)
   {
-    return std::string{"cd "}.append(dir.string());
+    return std::string{with_windows_v ? "cd /d " : "cd "}.append(dir.string());
+  }
+
+  void throw_unless_succeeded(const int status, std::string_view step, std::string_view advice)
+  {
+    if(status == 0)
+      return;
+
+    auto outcome{
+      [status]() -> std::string {
+        if constexpr(with_windows_v)
+        {
+          if(status == -1)
+            return "did not run to completion, or exited with status 0xFFFFFFFF, which cannot be told apart";
+
+          if(status < 0)
+            return std::format("failed with exit status 0x{:08X}", static_cast<std::uint32_t>(status));
+        }
+        else
+        {
+          if(status < 0)
+            return "did not run to completion";
+
+          if(status > 128)
+            return std::format("failed with exit status {}, which may mean it was killed by signal {}",
+                               status,
+                               status - 128);
+        }
+
+        return std::format("failed with exit status {}", status);
+      }
+    };
+
+    throw std::runtime_error{std::format("{} {}\n{}\n", step, outcome(), advice)};
+  }
+
+  [[nodiscard]]
+  std::string describe_output_location(const std::filesystem::path& dir, const std::filesystem::path& output)
+  {
+    return output.empty() ? std::string{"on the console, above"}
+                          : std::format("in {}", (dir / output).generic_string());
   }
 }

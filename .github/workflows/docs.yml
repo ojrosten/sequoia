@@ -23,7 +23,7 @@ jobs:
   doxygen:
     name: Docs · Doxygen
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
         with:
@@ -48,16 +48,24 @@ jobs:
       # USE_MATHJAX is off, so formulas go through LaTeX and then Ghostscript.
       # Missing either leaves every formula silently wrong, which is the failure
       # this job exists to catch.
+      #
+      # A slow mirror fails this step by name, instead of running on until the job's
+      # limit cancels the job. So the job's limit exceeds this one by more than
+      # checkout and generation take, about a minute.
       - name: Install doxygen
         if: inputs.needs_testing == 'true'
+        timeout-minutes: 25
         run: |
           # The hosted image ships vendor repositories - Chrome and Microsoft - which
           # nothing here installs from. A bad index served by one of them fails the
           # update, and with it the job.
           sudo rm -f /etc/apt/sources.list.d/google-chrome.list \
                      /etc/apt/sources.list.d/microsoft-prod.list
-          sudo apt-get update -qq
-          sudo apt-get install -y texlive-latex-base texlive-latex-extra ghostscript
+          # Quiet rather than silent, so that a slow index shows which repository it is.
+          sudo apt-get update -q
+          # Formulas need latex, dvips, gs and amssymb; these packages provide them
+          # without their recommendations.
+          sudo apt-get install -y --no-install-recommends texlive-latex-base texlive-latex-extra ghostscript
           # doxygen itself comes from its release, not apt: noble's 1.9.8 cannot write a
           # C++20 module's page under CREATE_SUBDIRS (it prefixes `module_` to a path that
           # already carries the hash directory, and exits), so the gate could never pass
@@ -107,25 +115,33 @@ jobs:
         if: ${{ always() && inputs.needs_testing == 'true' }}
         run: |
           log="$DOXY_LOG"
+          [ -n "$log" ] || { echo "::error::doxygen did not run: an earlier step failed, or the run was cancelled"; exit 1; }
           [ -f "$log" ] || { echo "::error::doxygen produced no warning log"; exit 1; }
           defects=$(grep -cE 'warning|error' "$log" || true)
+          lines=$(wc -l < "$log")
+          # The first `n` lines of the log, with paths relative to the checkout, and a
+          # count of the lines left out
+          show() {
+            sed -n "1,$1{s#$GITHUB_WORKSPACE/##g;p;}" "$log"
+            [ "$lines" -le "$1" ] || echo "... and $((lines - $1)) more line(s) in the uploaded log"
+          }
           {
             echo "### Doxygen: $defects defect(s)"
             if [ "$defects" -gt 0 ]; then
               echo '```'
-              sed -n '1,40s#.*/sequoia/##p' "$log"
+              show 40
               echo '```'
             fi
           } >> "$GITHUB_STEP_SUMMARY"
           if [ "$defects" -gt 0 ]; then
             echo "::error title=Doxygen::$defects documentation defect(s)"
-            sed -n '1,20s#.*/sequoia/##p' "$log"
+            show 20
             exit 1
           fi
           echo "No documentation defects."
 
       - name: Upload the warning log
-        if: ${{ always() && inputs.needs_testing == 'true' }}
+        if: ${{ always() && inputs.needs_testing == 'true' && env.DOXY_LOG != '' }}
         uses: actions/upload-artifact@v7
         with:
           name: doxygen-warnings-${{ github.job }}

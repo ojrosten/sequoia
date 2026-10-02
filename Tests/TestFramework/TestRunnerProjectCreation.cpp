@@ -10,8 +10,12 @@
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 #include "Utilities/TestUtilities.hpp"
 
+#include <algorithm>
 #include <cstdlib>
+#include <format>
 #include <fstream>
+#include <string>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -27,6 +31,7 @@ namespace sequoia::testing
   {
     test_exceptions();
     test_project_creation();
+    test_init_failures();
   }
 
   void test_runner_project_creation::test_exceptions()
@@ -164,6 +169,103 @@ namespace sequoia::testing
       check(equality, "Second project creation return code", tr.execute(), return_code::success);
 
       check(equivalence, "", hostDir, predictive_materials() /= "Another_Generated-Project");
+    }
+  }
+
+  void test_runner_project_creation::test_init_failures()
+  {
+    // Runs init into `hostDir`, and checks that init throws. Returns the message thrown, so that
+    // the caller can check which step failed, not only that one did.
+    auto initFailure{
+      [this](std::string_view description, const fs::path& hostDir, std::initializer_list<std::string> options) {
+        std::string message{};
+        check_exception_thrown<std::runtime_error>(
+          reporter{description},
+          [&]() {
+            const auto argList{
+              [&]() {
+                std::vector<std::string> list{zeroth_arg(),
+                                              "init", "Oliver Jacob Rosten", hostDir.generic_string(), "  ",
+                                              "--to-files", "GenerationOutput.txt"};
+                list.append_range(options);
+                return list;
+              }()
+            };
+
+            commandline_arguments args{argList};
+            std::stringstream outputStream{};
+            test_runner tr{args.size(), args.get(), "Oliver J. Rosten", "\t ", make_project_paths(), outputStream};
+          },
+          [&message](const project_paths& projPaths, std::string thrown) {
+            message = thrown;
+            return relative_to_root(projPaths, std::move(thrown));
+          }
+        );
+
+        return message;
+      }
+    };
+
+    // Each trigger goes in the fake project's template. test_project_creation has copied the
+    // template in.
+    const auto fakeTemplate{auxiliary_paths::project_template(fake_project())};
+
+    {
+      // A `.git` which is a file but not a gitfile makes `git init` fail. git's configuration
+      // cannot prevent the failure, but a GIT_DIR in the environment would direct git past the file.
+      const transient_file bogusGit{fakeTemplate / ".git", "not a gitfile"};
+      const transient_directory host{working_materials() /= "UnversionedProject"};
+
+      const auto message{
+        initFailure("git fails when placing the project under version control", host.path(), {"--no-build"})
+      };
+      check("The failure reported is the first git step's",
+            message.starts_with("Placing the new project under version control failed"));
+
+      check("The creation stopped before sequoia was copied",
+            std::ranges::all_of(fs::directory_iterator{dependencies_paths{host.path()}.sequoia_root()},
+                                [](const fs::directory_entry& entry) { return entry.path().filename() == ".keep"; }));
+    }
+
+    {
+      // A failure in the first project ends the run, so init never reaches the second project.
+      const transient_file bogusGit{fakeTemplate / ".git", "not a gitfile"};
+      const transient_directory host{working_materials() /= "FailingProject"};
+      const transient_directory abandoned{working_materials() /= "AbandonedProject"};
+
+      const auto message{
+        initFailure("A failure ends the run before a later project",
+                    host.path(),
+                    {"--no-build",
+                     "init", "Oliver Jacob Rosten", abandoned.path().generic_string(), "  ", "--no-build"})
+      };
+
+      check("The message names the project the failure abandoned",
+            message.contains(std::format("Not attempted, since this failure ended the run: {}",
+                                         abandoned.path().generic_string())));
+    }
+
+    {
+      // Copying sequoia gives git nothing to commit, since everything under dependencies is
+      // ignored. The first commit must succeed, so this case needs a git identity, as init always
+      // needs one.
+      const transient_file ignoreDependencies{fakeTemplate / "dependencies" / ".gitignore", "*\n"};
+      const transient_directory host{working_materials() /= "UncommittedProject"};
+
+      const auto message{initFailure("git fails when committing sequoia", host.path(), {"--no-build"})};
+      check("The failure reported is the second git step's",
+            message.starts_with("Committing sequoia to the new project failed"));
+    }
+
+    {
+      // The new project's configure fails, since the fake project's build tree is named for no preset
+      const transient_directory host{working_materials() /= "UnbuiltProject"};
+
+      const auto message{
+        initFailure("CMake fails when configuring the project", host.path(), {"--no-git", "--no-ide"})
+      };
+      check("The failure reported is the configure and build step's",
+            message.starts_with("Configuring and building the new project failed"));
     }
   }
 }

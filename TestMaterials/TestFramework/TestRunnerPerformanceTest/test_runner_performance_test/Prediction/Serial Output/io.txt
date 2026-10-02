@@ -3,35 +3,45 @@ Running tests, synchronously...
 
 slow_test_0:
 [Execution Time: 30ms]
+[Runner Overhead: 677us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 slow_test_1:
 [Execution Time: 30ms]
+[Runner Overhead: 846us]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 slow_test_2:
 [Execution Time: 27ms]
+[Runner Overhead: 1.67ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 slow_test_3:
 [Execution Time: 30ms]
+[Runner Overhead: 2.99ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 slow_test_4:
 [Execution Time: 27ms]
+[Runner Overhead: 2.84ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 slow_test_5:
 [Execution Time: 30ms]
+[Runner Overhead: 2.4ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 slow_test_6:
 [Execution Time: 30ms]
+[Runner Overhead: 3.11ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 slow_test_7:
 [Execution Time: 30ms]
+[Runner Overhead: 2.44ms]
 	Standard Top Level Checks:                 1;  Failures:  0  [Deep checks: 1]
 
 -----------Grand Totals-----------
 [Total Run Time: 235ms]
 [Execution Time: 234ms]
+[Runner Overhead: 17ms]
 	Standard Top Level Checks:                 8;  Failures:  0  [Deep checks: 8]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
 	False Positive Performance Checks:         0;  Failures:  0
 	False Negative Checks:                     0;  Failures:  0
 	False Negative Performance Checks:         0;  Failures:  0
+[Peak Overlap: 1]
