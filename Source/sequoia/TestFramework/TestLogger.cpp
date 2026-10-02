@@ -108,7 +108,7 @@ namespace sequoia::testing
       {
         if(failure_detected()) logger.end_message(m_Mode, test_logger_base::is_critical::no);
 
-        auto fpMessageMaker{
+        auto falseNegativeFailureMessage{
           [&logger](){
             return end_block(
                      append_lines("False Negative Failure:", logger.top_level_message()),
@@ -125,12 +125,15 @@ namespace sequoia::testing
 
         if(modeSpecificFailure)
         {
-          logger.log_top_level_failure(m_Mode, (m_Mode == test_mode::false_negative) ? fpMessageMaker() : "");
+          logger.log_top_level_failure(
+            m_Mode,
+            (m_Mode == test_mode::false_negative) ? falseNegativeFailureMessage() : ""
+          );
         }
         else if (m_Mode == test_mode::false_positive)
         {
           if(!critical_failure_detected())
-            logger.append_to_diagnostics_output(fpMessageMaker());
+            logger.append_to_diagnostics_output(falseNegativeFailureMessage());
         }
 
         record_check_ended(get().recovery().recovery_file);

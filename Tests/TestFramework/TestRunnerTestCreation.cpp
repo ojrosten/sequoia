@@ -409,8 +409,8 @@ namespace sequoia::testing
 
     refused("Plurgh.h does not exist", {"free", "Plurgh.h"});
 
-    // No directory is named Pools yet, so every file these creations could write, within Source or Tests, would
-    // be new. The checks below then see any file written, and any CMakeLists.txt amended, before a refusal.
+    // No directory named Pools exists yet. A check after the refusals fails if a creation creates one within
+    // Source or Tests, or amends a CMakeLists.txt, before it refuses.
     auto readCMakeLists{
       [&project]() {
         constexpr std::array<std::string_view, 2> cmakeLists{"Source/fakeProject/CMakeLists.txt",

@@ -212,10 +212,9 @@ namespace sequoia::testing
       }
     };
 
+    auto fileOf{[](const main_paths& ancillaryMain) { return ancillaryMain.file(); }};
     const auto files{
-        projPaths.ancillary_main_cpps()
-      | std::views::transform([](const main_paths& ancillaryMain) { return ancillaryMain.file(); })
-      | std::ranges::to<std::vector>()
+      projPaths.ancillary_main_cpps() | std::views::transform(fileOf) | std::ranges::to<std::vector>()
     };
 
     check(
@@ -226,10 +225,9 @@ namespace sequoia::testing
                             fake_project() / "TestFrameworkDiagnostics/TestFrameworkDiagnosticsMain.cpp"}
     );
 
+    auto commonIncludesOf{[](const main_paths& ancillaryMain) { return ancillaryMain.common_includes(); }};
     const auto commonIncludes{
-        projPaths.ancillary_main_cpps()
-      | std::views::transform([](const main_paths& ancillaryMain) { return ancillaryMain.common_includes(); })
-      | std::ranges::to<std::vector>()
+      projPaths.ancillary_main_cpps() | std::views::transform(commonIncludesOf) | std::ranges::to<std::vector>()
     };
 
     check(

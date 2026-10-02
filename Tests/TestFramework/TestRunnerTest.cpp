@@ -1586,16 +1586,11 @@ namespace sequoia::testing
 
   void test_runner_test::test_suites_not_found()
   {
-    // Neither suite matches a test. Only the suite spelt as a source file draws a hint to use 'select'
+    // No suite matches either request. Only the request naming a source file draws a hint to use 'select'.
     std::stringstream outputStream{};
     commandline_arguments args{{(minimal_fake_path()).generic_string(), "test", "Absent", "test", "absent_test.cpp"}};
 
-    test_runner runner{args.size(),
-                       args.get(),
-                       "Oliver J. Rosten",
-                       "  ",
-                       {.main_cpp{"TestSandbox/TestSandbox.cpp"}, .common_includes{"TestShared/SharedIncludes.hpp"}},
-                       outputStream};
+    auto runner{make_fake_runner(args, outputStream)};
 
     runner.register_test<passing_test>();
     runner.register_test<failing_test>();

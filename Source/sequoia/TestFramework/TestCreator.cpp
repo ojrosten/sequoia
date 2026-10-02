@@ -974,7 +974,9 @@ namespace sequoia::testing
     fs::create_directories(headerPath.parent_path());
     fs::copy_file(paths().aux_paths().source_templates() / headerTemplate, headerPath);
 
-    read_modify_write(headerPath, [this](std::string& text) {
+    read_modify_write(
+      headerPath,
+      [this](std::string& text) {
         process_copyright_and_namespace(text, copyright(), "");
         replace_all(text, replacement{"?type", forename()}, replacement{"template<?>\n", ""});
         tabs_to_spacing(text, code_indent());
