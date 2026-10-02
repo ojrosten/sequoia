@@ -29,6 +29,7 @@ namespace sequoia::testing
   void streaming_free_test::run_tests()
   {
     test_files();
+    test_peek_for_more();
     test_parse_integer();
     test_extract_field();
     test_extract_text();
@@ -57,6 +58,23 @@ namespace sequoia::testing
 
     read_modify_write(working_materials() /= "Foo.txt", [](std::string& s) { capitalize(s);  });
     check(equivalence, "", working_materials() /= "Foo.txt", predictive_materials() /= "Foo.txt");
+  }
+
+  void streaming_free_test::test_peek_for_more()
+  {
+    {
+      std::stringstream s{};
+      check("Peeking finds nothing more in an exhausted stream", !peek_for_more(s));
+      check("A stream with nothing left fails", s.fail());
+      check("A stream with nothing left is not bad", !s.bad());
+    }
+
+    {
+      std::stringstream s{"a"};
+      check("Peeking finds a character left", static_cast<bool>(peek_for_more(s)));
+      check("A stream with a character left does not fail", s.good());
+      check(equality, "The character left is not consumed", static_cast<char>(s.get()), 'a');
+    }
   }
 
   void streaming_free_test::test_parse_integer()

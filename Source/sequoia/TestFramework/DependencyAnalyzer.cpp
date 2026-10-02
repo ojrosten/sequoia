@@ -57,11 +57,8 @@ namespace sequoia::testing
 
   std::istream& operator>>(std::istream& s, prune_record& record)
   {
-    if(s.peek() == std::char_traits<char>::eof())
-    {
-      s.setstate(std::ios::failbit);
+    if(!peek_for_more(s))
       return s;
-    }
 
     record = prune_record{extract_field(s, "path: ", std::identity{}), extract_field(s, "timestamp: ", to_stamp)};
 

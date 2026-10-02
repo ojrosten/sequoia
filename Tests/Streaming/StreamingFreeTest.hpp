@@ -24,6 +24,8 @@ namespace sequoia::testing
   private:
     void test_files();
 
+    void test_peek_for_more();
+
     void test_parse_integer();
 
     void test_extract_field();

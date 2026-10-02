@@ -41,6 +41,12 @@ namespace sequoia
 
   void write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode);
 
+  /** \brief Peeks at `s`, consuming nothing, and sets `failbit` on `s` if no character can be peeked.
+
+      \returns `s`, which converts to `false` if no character could be peeked.
+   */
+  std::istream& peek_for_more(std::istream& s);
+
   /** \brief Reads the next line of `s`, and returns `parse` applied to the rest of the line after `key`.
 
       \throws std::runtime_error if `s` has no next line, or the line does not begin with `key`. Whatever `parse`

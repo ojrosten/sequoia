@@ -1,4 +1,4 @@
-Tests/Streaming/StreamingFreeTest.cpp, Line 51
+Tests/Streaming/StreamingFreeTest.cpp, Line 52
 
 Expected Exception Type:
 [std::runtime_error]
@@ -6,7 +6,7 @@ Unable to open file output/TestsTemporaryData/Streaming/StreamingFreeTest/stream
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 55
+Tests/Streaming/StreamingFreeTest.cpp, Line 56
 
 Expected Exception Type:
 [std::runtime_error]
@@ -14,7 +14,7 @@ Unable to open file output/TestsTemporaryData/Streaming/StreamingFreeTest/stream
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 68
+Tests/Streaming/StreamingFreeTest.cpp, Line 86
 Characters after the integer
 
 Expected Exception Type:
@@ -23,7 +23,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 70
+Tests/Streaming/StreamingFreeTest.cpp, Line 88
 Whitespace before the integer
 
 Expected Exception Type:
@@ -32,7 +32,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 72
+Tests/Streaming/StreamingFreeTest.cpp, Line 90
 No characters at all
 
 Expected Exception Type:
@@ -41,7 +41,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 74
+Tests/Streaming/StreamingFreeTest.cpp, Line 92
 An integer beyond the type's range
 
 Expected Exception Type:
@@ -50,7 +50,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 76
+Tests/Streaming/StreamingFreeTest.cpp, Line 94
 A negative integer, for an unsigned type
 
 Expected Exception Type:
@@ -59,7 +59,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 101
+Tests/Streaming/StreamingFreeTest.cpp, Line 119
 A line not beginning with the key
 
 Expected Exception Type:
@@ -68,7 +68,7 @@ Expected a line beginning 'key: ' but found 'other: value'
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 102
+Tests/Streaming/StreamingFreeTest.cpp, Line 120
 No line left
 
 Expected Exception Type:
@@ -77,7 +77,7 @@ Expected a line beginning 'key: ' but there are no more lines
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 130
+Tests/Streaming/StreamingFreeTest.cpp, Line 148
 Fewer characters than asked for
 
 Expected Exception Type:
@@ -86,7 +86,7 @@ Expected 3 characters but the stream ended after 2
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 131
+Tests/Streaming/StreamingFreeTest.cpp, Line 149
 No line break after the text
 
 Expected Exception Type:
@@ -95,7 +95,7 @@ Expected a line break after 3 characters
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 132
+Tests/Streaming/StreamingFreeTest.cpp, Line 150
 The end of the stream after the text
 
 Expected Exception Type:
@@ -104,7 +104,7 @@ Expected a line break after 3 characters
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 135
+Tests/Streaming/StreamingFreeTest.cpp, Line 153
 A stream which has failed
 
 Expected Exception Type:
@@ -113,7 +113,7 @@ Text cannot be read from a stream which has failed
 
 =======================================
 
-Tests/Streaming/StreamingFreeTest.cpp, Line 144
+Tests/Streaming/StreamingFreeTest.cpp, Line 162
 A length more than a stream iterator can count
 
 Expected Exception Type:

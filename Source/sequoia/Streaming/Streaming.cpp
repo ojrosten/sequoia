@@ -65,6 +65,14 @@ namespace sequoia
     return std::nullopt;
   }
 
+  std::istream& peek_for_more(std::istream& s)
+  {
+    if(s.peek() == std::char_traits<char>::eof())
+      s.setstate(std::ios_base::failbit);
+
+    return s;
+  }
+
   [[nodiscard]]
   std::string extract_text(std::istream& s, std::size_t length)
   {

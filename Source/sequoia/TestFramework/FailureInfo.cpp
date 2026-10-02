@@ -135,11 +135,8 @@ namespace sequoia::testing
 
   std::istream& operator>>(std::istream& s, failure_info& info)
   {
-    if(s.peek() == std::char_traits<char>::eof())
-    {
-      s.setstate(std::ios::failbit);
+    if(!peek_for_more(s))
       return s;
-    }
 
     auto toCheckIndex{[](const std::string& text) { return parse_integer<std::size_t>(text, "a check index"); }};
     auto toLength    {[](const std::string& text) { return parse_integer<std::size_t>(text, "a length"); }};
@@ -203,21 +200,24 @@ namespace sequoia::testing
           }
         };
 
-        std::ifstream ifile{file, std::ios_base::binary};
-        if(!ifile)
-          throw std::runtime_error{report_failed_read(file)};
-
-        try
+        if(std::ifstream ifile{file, std::ios_base::binary})
         {
-          failure_output output{};
-          ifile >> output;
-          return output | std::views::transform(indented) | std::ranges::to<failure_output>();
+          try
+          {
+            failure_output output{};
+            ifile >> output;
+            return output | std::views::transform(indented) | std::ranges::to<failure_output>();
+          }
+          catch(const std::exception& e)
+          {
+            throw std::runtime_error{
+              std::format("Unable to read the failures in {}: {}", file.generic_string(), e.what())
+            };
+          }
         }
-        catch(const std::exception& e)
+        else
         {
-          throw std::runtime_error{
-            std::format("Unable to read the failures in {}: {}", file.generic_string(), e.what())
-          };
+          throw std::runtime_error{report_failed_read(file)};
         }
       }
     };
