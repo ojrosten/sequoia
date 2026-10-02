@@ -405,7 +405,7 @@ namespace sequoia::testing
 
             nascent.test_type(species);
             nascent.qualified_name(args[0]);
-            nascent.add_equivalent_type(args[1]);
+            nascent.equivalent_type(args[1]);
           },
           [&args,&species = species](nascent_allocation_test& nascent) {
             nascent.test_type(species);
