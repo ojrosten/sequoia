@@ -716,28 +716,35 @@ namespace sequoia::testing
   [[nodiscard]]
   std::vector<prune_record> read_tests(const fs::path& file)
   {
-    std::ifstream ifile{file};
-    if(!ifile)
-      return {};
-
-    try
+    if(std::ifstream ifile{file})
     {
-      using iter_t = std::istream_iterator<prune_record>;
-      auto hasPath{[](const prune_record& record){ return !record.test_path.empty(); }};
+      try
+      {
+        using iter_t = std::istream_iterator<prune_record>;
+        auto hasPath{[](const prune_record& record){ return !record.test_path.empty(); }};
 
-      return std::ranges::subrange{iter_t{ifile}, iter_t{}} | std::views::filter(hasPath) | std::ranges::to<std::vector>();
-    }
-    catch(const std::exception& e)
-    {
-      throw
-        std::runtime_error{
-          std::format(
-            "Unable to read the prune records in {}: {}\nTry deleting the parent directory and starting afresh",
-            file.generic_string(),
-            e.what()
-          )
+        const auto records{
+            std::ranges::subrange{iter_t{ifile}, iter_t{}}
+          | std::views::filter(hasPath)
+          | std::ranges::to<std::vector>()
         };
+
+        return records;
+      }
+      catch(const std::exception& e)
+      {
+        throw
+          std::runtime_error{
+            std::format(
+              "Unable to read the prune records in {}: {}\nTry deleting the parent directory and starting afresh",
+              file.generic_string(),
+              e.what()
+            )
+          };
+      }
     }
+
+    return {};
   }
 
   void write_tests(const project_paths& projPaths, const fs::path& file, std::span<const prune_record> tests)
