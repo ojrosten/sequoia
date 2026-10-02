@@ -7,6 +7,7 @@
 
 #include "OutputFreeTest.hpp"
 #include "sequoia/TestFramework/Output.hpp"
+#include "sequoia/Streaming/Streaming.hpp"
 
 #include <array>
 #include <concepts>
@@ -162,29 +163,28 @@ namespace sequoia::testing
                                     duringEmptyCheck{.via_exception{true},  .message{""}},
                                     afterEmptyCheck {.via_exception{false}, .message{""}};
 
-    check(equality,
-          "An exception thrown before any check",
-          exception_message("Unexpected", file, std::nullopt, "Oops"),
-          "Error -- Unexpected Exception:\nOops\n\nException thrown before any checks performed in file\nTests/foo.cpp"s
-    );
+    auto checkMessage{
+      [this](const reporter& description, std::string_view message, std::string_view fileName) {
+        write_to_file(working_materials() /= fileName, message, std::ios_base::out);
+        check(equivalence, description, working_materials() /= fileName, predictive_materials() /= fileName);
+      }
+    };
 
-    check(equality,
-          "An exception thrown during a check with a description",
-          exception_message("Unexpected", file, duringCheck, "Oops"),
-          "Error -- Unexpected Exception:\nOops\n\nException thrown during last check\nLast Recorded Message:\n\nCheck"s
-    );
+    checkMessage("An exception thrown before any check",
+                 exception_message("Unexpected", file, std::nullopt, "Oops"),
+                 "ExceptionBeforeAnyCheck.txt");
 
-    check(equality,
-          "An exception thrown during a check with an empty description",
-          exception_message("Unexpected", file, duringEmptyCheck, "Oops"),
-          "Error -- Unexpected Exception:\nOops\n\nException thrown during last check\nLast Recorded Message:\n"s
-    );
+    checkMessage("An exception thrown during a check with a description",
+                 exception_message("Unexpected", file, duringCheck, "Oops"),
+                 "ExceptionDuringCheck.txt");
 
-    check(equality,
-          "An exception thrown after a check with an empty description",
-          exception_message("Unexpected", file, afterEmptyCheck, "Oops"),
-          "Error -- Unexpected Exception:\nOops\n\nException thrown after check completed\nLast Recorded Message:\n"s
-    );
+    checkMessage("An exception thrown during a check with an empty description",
+                 exception_message("Unexpected", file, duringEmptyCheck, "Oops"),
+                 "ExceptionDuringEmptyCheck.txt");
+
+    checkMessage("An exception thrown after a check with an empty description",
+                 exception_message("Unexpected", file, afterEmptyCheck, "Oops"),
+                 "ExceptionAfterEmptyCheck.txt");
   }
 
   void output_free_test::test_tidy_name()

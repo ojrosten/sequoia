@@ -1,0 +1,5 @@
+Usage: create regular_test <qualified::class_name<class T>> <equivalent_type> [options]
+
+Options:
+  --header, -H <header>
+  --help, -h             Describe the command or option this follows; alone, the top level

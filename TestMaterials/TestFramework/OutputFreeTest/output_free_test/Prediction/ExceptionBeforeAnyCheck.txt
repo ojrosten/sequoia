@@ -1,0 +1,5 @@
+Error -- Unexpected Exception:
+Oops
+
+Exception thrown before any checks performed in file
+Tests/foo.cpp
