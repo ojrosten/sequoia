@@ -121,14 +121,22 @@ namespace sequoia::testing
       t.check(equality, "size_of_partition is zero", d.size_of_partition(i), 0uz);
     }
 
+    /** The contract does not say which partition index the iterators of a missing partition carry.
+        These checks pin the implementation's choice, and change with it.
+     */
     static void check_iterator_partition_indices_are_npos(regular_test& t, data_type& d, const std::size_t i)
     {
       constexpr auto npos{data_type::partition_iterator::npos};
+      const data_type& c{d};
 
-      t.check(equality, "Partition index of begin_partition",  d.begin_partition(i).partition_index(),  npos);
-      t.check(equality, "Partition index of end_partition",    d.end_partition(i).partition_index(),    npos);
-      t.check(equality, "Partition index of rbegin_partition", d.rbegin_partition(i).partition_index(), npos);
-      t.check(equality, "Partition index of rend_partition",   d.rend_partition(i).partition_index(),   npos);
+      t.check(equality, "Partition index of begin_partition",          d.begin_partition(i).partition_index(),  npos);
+      t.check(equality, "Partition index of end_partition",            d.end_partition(i).partition_index(),    npos);
+      t.check(equality, "Partition index of rbegin_partition",         d.rbegin_partition(i).partition_index(), npos);
+      t.check(equality, "Partition index of rend_partition",           d.rend_partition(i).partition_index(),   npos);
+      t.check(equality, "Partition index of begin_partition (const)",  c.begin_partition(i).partition_index(),  npos);
+      t.check(equality, "Partition index of end_partition (const)",    c.end_partition(i).partition_index(),    npos);
+      t.check(equality, "Partition index of rbegin_partition (const)", c.rbegin_partition(i).partition_index(), npos);
+      t.check(equality, "Partition index of rend_partition (const)",   c.rend_partition(i).partition_index(),   npos);
     }
 
     [[nodiscard]]
@@ -917,6 +925,15 @@ namespace sequoia::testing
               [&t](data_type d) -> data_type {
                 check_partition_is_empty(t, d, 2);
                 check_iterator_partition_indices_are_npos(t, d, 2);
+                return d;
+              }
+            },
+            {
+              data_description::two_2__3,
+              t.report("A sequence of two partitions treats index 7 as the index of an empty partition"),
+              [&t](data_type d) -> data_type {
+                check_partition_is_empty(t, d, 7);
+                check_iterator_partition_indices_are_npos(t, d, 7);
                 return d;
               }
             },
