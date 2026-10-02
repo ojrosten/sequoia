@@ -24,6 +24,10 @@
 
 namespace sequoia::testing
 {
+  /** \brief Whether to append `&` to `type` in the declaration of a parameter.
+
+      \throws std::logic_error if `type` is empty or holds only spaces.
+   */
   [[nodiscard]]
   bool handle_as_ref(std::string_view type);
 
