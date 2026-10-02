@@ -5,8 +5,9 @@ foo_test:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 47]
 
 -----------Grand Totals-----------
-[Total Run Time: 8.77ms]
-[Execution Time: 8ms]
+[Total Run Time: 5.14ms]
+[Execution Time: 2.2ms]
+[Runner Overhead: 2.55ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 47]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
@@ -20,8 +21,9 @@ foo_test:
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 47]
 
 -----------Grand Totals-----------
-[Total Run Time: 8.11ms]
-[Execution Time: 7.65ms]
+[Total Run Time: 5.06ms]
+[Execution Time: 2.23ms]
+[Runner Overhead: 2.45ms]
 	Standard Top Level Checks:                 2;  Failures:  0  [Deep checks: 47]
 	Standard Performance Checks:               0;  Failures:  0
 	False Positive Checks:                     0;  Failures:  0
