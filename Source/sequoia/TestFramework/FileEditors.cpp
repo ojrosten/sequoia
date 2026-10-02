@@ -219,12 +219,20 @@ namespace sequoia::testing
               entries.push_back(text.substr(entryStart, next - entryStart));
             }
 
-            const auto numSpaces{command.name.size() + 1};
-
             std::ranges::sort(entries);
-            std::string sorted{};
-            std::ranges::for_each(entries, [&sorted, numSpaces](const std::string& e) {
-              sorted.append(std::format("\n{:{}}{}", "", numSpaces, e)); });
+
+            auto entryLineOf{
+              [numSpaces{command.name.size() + 1}](const std::string& entryText) {
+                return std::format("\n{:{}}{}", "", numSpaces, entryText);
+              }
+            };
+
+            const auto sorted{
+                entries
+              | std::views::transform(entryLineOf)
+              | std::views::join
+              | std::ranges::to<std::string>()
+            };
 
             const auto startSection{std::ranges::min(text.find("\n", startPos + opening.size()), endPos)};
             text.replace(startSection, endPos - startSection, sorted);
