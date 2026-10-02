@@ -215,20 +215,6 @@ namespace sequoia::meta
     using type = TT<Ts...>;
   };
 
-  template<template<class...> class TT, class T, class U, template<class, class> class Compare>
-    requires (Compare<U, T>::value)
-  struct merge<TT<T>, TT<U>, Compare>
-  {
-    using type = TT<U, T>;
-  };
-
-  template<template<class...> class TT, class T, class U, template<class, class> class Compare>
-    requires (!Compare<U, T>::value)
-  struct merge<TT<T>, TT<U>, Compare>
-  {
-    using type = TT<T, U>;
-  };
-
   namespace impl
   {
     template<class T, class U, std::size_t I, template<class, class> class Compare>
@@ -237,16 +223,9 @@ namespace sequoia::meta
     template<class T, class U, std::size_t I, template<class, class> class Compare>
     using merge_from_position_t = merge_from_position<T, U, I, Compare>::type;
 
-    template<template<class...> class TT, class... Us, std::size_t I, template<class, class> class Compare>
-    struct merge_from_position<std::tuple<>, TT<Us...>, I, Compare>
-    {
-      using type = TT<Us...>;
-    };
-    
     template<template<class...> class TT, class T, class... Us, std::size_t I, template<class, class> class Compare>
     struct merge_from_position<TT<T>, TT<Us...>, I, Compare>
     {
-      constexpr static auto N{sizeof...(Us)};
       constexpr static auto Pos{I + lower_bound_v<drop_t<TT<Us...>, I>, T, Compare>};
       using type = insert_t<TT<Us...>, T, Pos>;
     };
