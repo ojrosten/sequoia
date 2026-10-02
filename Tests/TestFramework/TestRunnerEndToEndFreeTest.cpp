@@ -578,7 +578,7 @@ namespace sequoia::testing
     run_and_check(report("Final fixed test not included by prune"), b, "FinalPassingTestExcludedByPrune", "prune", return_code::success);
 
     //=================== Touch an unselected test, break a passing test and 'select' the latter ===================//
-    // --> probability_test is rebuilt and now stale, but not run. foo_test fails, so foo_test is recorded as a test to rerun
+    // --> probability_test is rebuilt and now stale, but not run. foo_test fails, so the run records foo_test as a test to rerun
 
     await_tick_past_previous_run();
     copy_aux_materials("ModifiedTests/Maths/ProbabilityTest.cpp", "Tests/Maths");
@@ -605,13 +605,14 @@ namespace sequoia::testing
     run_and_check(report("Broken test fixed, in sandbox mode"), b, "SelectRunLocateInstabilitySandboxFixedTest",
       "locate 2 --sandbox select FooTest.cpp", return_code::success);
 
-    //=================== Rerun with prune: the stale test runs, the sandboxed test does not ===================//
+    //=================== Rerun with prune: the stale test runs, but the sandboxed test does not ===================//
     // --> The materials were restored before the sandboxes started, so foo_test is not stale. Each sandbox
-    //     stamps its records with its own start. The sandboxes' passes are matched by path. They remove foo_test
-    //     from the tests to rerun, and leave the prune stamp alone, so probability_test runs alone.
-    //     -# If records were matched whole, no two sandboxes' records would match, and foo_test would rerun too.
-    //     -# If the passes were not aggregated, the sandboxes' tests to rerun would replace the run's, and the
-    //        prune stamp would move past the touch, so nothing would run.
+    //     stamps its records with its own start. The coordinator matches the sandboxes' passes by path, removes
+    //     foo_test from the tests to rerun, and leaves the prune stamp unchanged. So prune runs only probability_test.
+    //     -# If the coordinator matched records whole, no two sandboxes' records would match, and foo_test would
+    //        rerun too.
+    //     -# If the coordinator did not aggregate the passes, the sandboxes' tests to rerun would replace the
+    //        run's, and the prune stamp would move past the touch, so nothing would run.
 
     run_and_check(report("Test fixed in sandbox mode not included by prune"), b, "SandboxFixedTestExcludedByPrune",
       "prune", return_code::success);

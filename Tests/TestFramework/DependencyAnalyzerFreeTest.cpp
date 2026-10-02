@@ -1860,7 +1860,8 @@ namespace sequoia::testing
       std::filesystem::file_time_type start;
     };
 
-    // Updates as update_filtered does, but each instance is a process of its own, which stamps its records with its own start
+    // Updates the prune files as sandboxed instances would. Each instance runs in a process of its own, and
+    // stamps its records with that process's start
     auto update_filtered_in_sandboxes{
       [&](const test_outcomes& d, std::vector<sandboxed_instance> instances) -> test_outcomes {
 
@@ -1884,7 +1885,8 @@ namespace sequoia::testing
       }
     };
 
-    // Each instance's passes file is written directly, rather than by update_prune_files
+    // Writes each instance's passes file directly. Each instance's passes file may then hold what
+    // update_prune_files never writes, such as a test named twice
     auto aggregate_written_passes{
       [&](const test_outcomes& d, std::vector<prune_records> passesByInstance) -> test_outcomes {
 

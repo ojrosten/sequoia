@@ -699,18 +699,12 @@ namespace sequoia::testing
       );
     }
 
-    /** The tests which passed in every repetition of an instability analysis, each with the earliest
-        stamp any repetition gave it.
-
-        A test's records are matched by path. A repetition which runs in a process of its own stamps its
-        records with the start of that process. So the records of one test from two such repetitions
-        differ in their stamps. The earliest stamp is kept. A file modified after the earliest
-        repetition began is then later than the recorded pass, so the test counts as stale. The cost is
-        at worst a needless re-run, never a missed test.
+    /** Aggregates the passes which the repetitions of an instability analysis recorded.
 
         \returns
         -# `nullopt`, if any repetition wrote no passes file;
-        -# Otherwise, the tests which passed in every repetition.
+        -# Otherwise, a record of each test which passed in every repetition. The record carries the
+           earliest of the stamps which the repetitions gave the test.
      */
     [[nodiscard]]
     std::optional<std::vector<prune_record>> aggregate_passes(const prune_paths& prunePaths, const std::size_t numReps)
@@ -724,8 +718,8 @@ namespace sequoia::testing
       if(!std::ranges::all_of(files, [](const fs::path& file){ return fs::exists(file); }))
         return std::nullopt;
 
-      // Each repetition's records are made unique by path first. The size of a group of records
-      // sharing a path is then the number of repetitions which passed that test.
+      // Each repetition contributes at most one record per test. The number of records sharing a path is
+      // then the number of repetitions which passed that test.
       const auto passes{
         sort_by_path(
             files
@@ -736,15 +730,17 @@ namespace sequoia::testing
         )
       };
 
-      const auto samePath{
+      auto samePath{
         [](const prune_record& lhs, const prune_record& rhs) { return lhs.test_path == rhs.test_path; }
       };
 
-      const auto passedInEveryRepetition{
+      auto passedInEveryRepetition{
         [numReps](const auto& recordsOfOneTest) { return recordsOfOneTest.size() == numReps; }
       };
 
-      const auto earliestRecord{
+      // A file may change after the earliest repetition began and before another repetition began. With the
+      // other repetition's stamp, prune would judge the test fresh and not run it.
+      auto earliestRecord{
         [](const auto& recordsOfOneTest) { return std::ranges::min(recordsOfOneTest, {}, &prune_record::time_stamp); }
       };
 
