@@ -33,7 +33,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string cmake_invocation(const build_paths& buildPaths)
   {
-    return std::format("cmake --preset {}", back(buildPaths.cmake_cache_dir()).generic_string());
+    return std::format("cmake --preset {}", quote_for_shell(back(buildPaths.cmake_cache_dir()).generic_string()));
   }
 
   [[nodiscard]]
@@ -50,7 +50,7 @@ namespace sequoia::testing
   [[nodiscard]]
   shell_command build_cmd(const build_paths& buildPaths, const fs::path& output)
   {
-    auto cmd{std::format("cmake --build \"{}\"", buildPaths.cmake_cache_dir().generic_string())};
+    auto cmd{std::format("cmake --build {}", quote_for_shell(buildPaths.cmake_cache_dir().generic_string()))};
     if(!library_configuration.empty())
       cmd.append(std::format(" --config {}", library_configuration));
 

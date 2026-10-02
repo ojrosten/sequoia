@@ -698,7 +698,9 @@ namespace sequoia::testing
 
     return_code run_tests(std::optional<std::size_t> id);
 
-    /** The `select`/`test` options which reproduce this run's filter, for handing to a child process. */
+    /** The `select`, `test` and `exclude` options which reproduce this run's filter, for handing to a
+        child process. Each value is quoted for the shell.
+     */
     [[nodiscard]]
     std::string selection_options() const;
 

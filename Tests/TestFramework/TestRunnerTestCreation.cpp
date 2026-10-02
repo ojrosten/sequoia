@@ -10,6 +10,7 @@
 #include "Parsing/CommandLineArgumentsTestingUtilities.hpp"
 #include "Utilities/TestUtilities.hpp"
 
+#include "sequoia/Runtime/ShellCommands.hpp"
 #include "sequoia/TestFramework/DependencyAnalyzer.hpp"
 #include "sequoia/TestFramework/TestCreator.hpp"
 #include "sequoia/TestFramework/FileEditors.hpp"
@@ -332,7 +333,9 @@ namespace sequoia::testing
         message = thrown;
         const auto preset{back(projPaths.build().cmake_cache_dir()).generic_string()};
         replace_all(thrown, std::format("/{}/", preset), "/<preset>/");
-        replace_all(thrown, std::format("--preset {}`", preset), "--preset <preset>`");
+        replace_all(thrown,
+                    std::format("--preset {}`", runtime::quote_for_shell(preset)),
+                    std::format("--preset {}`", runtime::quote_for_shell("<preset>")));
         return relative_to_root(projPaths, std::move(thrown));
       }
     };

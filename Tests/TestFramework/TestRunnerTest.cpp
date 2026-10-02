@@ -11,6 +11,9 @@
 #include "Utilities/TestUtilities.hpp"
 #include "TestFramework/BuildArtefactsTestingUtilities.hpp"
 
+#include "sequoia/PlatformSpecific/Preprocessor.hpp"
+#include "sequoia/Runtime/ShellCommands.hpp"
+
 #include <fstream>
 
 namespace sequoia::testing
@@ -1003,6 +1006,7 @@ namespace sequoia::testing
     test_dump_comparison();
     test_thread_pool();
     test_instability_analysis();
+    test_instability_analysis_in_sandboxes_from_a_path_with_a_space();
     test_exit_statuses();
   }
 
@@ -2215,6 +2219,95 @@ namespace sequoia::testing
   {
     test_instability_analysis(message, outputDirName, numRuns, expected, {}, [](test_runner&){}, std::forward<Ts>(ts)...);
   }
+
+  namespace
+  {
+    class selected_in_spaced_suite_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<selected_in_spaced_suite_free_test>("Spaced Suite");
+      }
+
+      void run_tests() {}
+    };
+
+    class excluded_from_spaced_suite_free_test final : public free_test
+    {
+    public:
+      using free_test::free_test;
+
+      [[nodiscard]]
+      static fs::path source_file()
+      {
+        return make_fake_file_path<excluded_from_spaced_suite_free_test>("Spaced Suite");
+      }
+
+      void run_tests() {}
+    };
+  }
+
+  /** A copy of the fake project lies in a directory whose name holds a space, and so does the name of
+      its executable. The executable is a script which stands in for the test runner in each sandbox: it
+      records its arguments, one per line, and creates the directory to which a sandboxed run writes its
+      analysis. The run selects a suite and a source, and excludes a source, each named with a space. The
+      shell splits an unquoted word at the space. So if the coordinator does not quote the path, no
+      sandbox runs, and if it does not quote a selection, the sandboxes record it as two arguments.
+   */
+  void test_runner_test::test_instability_analysis_in_sandboxes_from_a_path_with_a_space()
+  {
+    using runtime::quote_for_shell;
+
+    const auto spacedProject{scratchpad_materials() /= "Spaced Fake Project"};
+    fs::remove_all(spacedProject);
+    fs::copy(fake_project(), spacedProject, fs::copy_options::recursive);
+
+    const auto outputDir{working_materials() /= "SandboxesFromAPathWithASpace"};
+    fs::create_directory(outputDir);
+
+    const auto quotedArgumentsFile{quote_for_shell((outputDir / "Arguments.txt").string())},
+               quotedAnalysisDir{quote_for_shell(output_paths::instability_analysis(fs::canonical(spacedProject)).string())};
+
+    const auto executable{spacedProject / "build/CMade" / (with_windows_v ? "Run Tests.bat" : "Run Tests")};
+    const auto script{
+      with_windows_v ? std::format("@echo off\n"
+                                   "mkdir {} 2>nul\n"
+                                   "for %%a in (%*) do >>{} echo %%~a\n"
+                                   "exit /b 0\n",
+                                   quotedAnalysisDir,
+                                   quotedArgumentsFile)
+                     : std::format("#!/bin/sh\n"
+                                   "mkdir -p {}\n"
+                                   "printf '%s\\n' \"$@\" >> {}\n",
+                                   quotedAnalysisDir,
+                                   quotedArgumentsFile)
+    };
+
+    write_to_file(executable, script, std::ios_base::out);
+    fs::permissions(executable, fs::perms::owner_exec, fs::perm_options::add);
+
+    std::stringstream outputStream{};
+    commandline_arguments args{{executable.generic_string(),
+                                "locate", "2", "--sandbox",
+                                "test", "Spaced Suite",
+                                "select", selected_in_spaced_suite_free_test::source_file().generic_string(),
+                                "exclude", excluded_from_spaced_suite_free_test::source_file().generic_string()}};
+
+    auto runner{make_fake_runner(args, outputStream)};
+    runner.register_test<selected_in_spaced_suite_free_test>();
+    runner.register_test<excluded_from_spaced_suite_free_test>();
+
+    check(equality, "Both sandboxes run, and the run succeeds", runner.execute(), return_code::success);
+    check(equivalence,
+          "Each sandbox is given the repetitions, its runner id and the selections, each as one argument",
+          outputDir,
+          predictive_materials() /= "SandboxesFromAPathWithASpace");
+  }
+
   namespace
   {
     /// Its original materials hold `Stray.txt` beside the working copy, where nothing uses it

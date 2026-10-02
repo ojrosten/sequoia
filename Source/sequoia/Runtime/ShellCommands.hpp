@@ -80,8 +80,44 @@ namespace sequoia::runtime
     shell_command(std::string cmd, const std::filesystem::path& output, append_mode app);
   };
 
+  /** \brief Quotes `word` so that the shell of the platform the program is built for reads it as one word,
+             unchanged.
+   */
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word);
+
+  /** \brief Quotes `word` so that cmd.exe passes it as one word to a program which splits its command
+             line as Microsoft's C runtime does, and the program reads it unchanged.
+
+      cmd.exe's own commands read the same word, except that each backslash which ends it is doubled.
+
+      \throws std::runtime_error if `word` contains any of the following, for which cmd.exe has no
+      escape within double quotes:
+      -# A double quote, which ends the quotation;
+      -# A percent sign, which can begin the name of an environment variable;
+      -# A carriage return or a line feed, which ends the command.
+   */
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word, windows_type);
+
+  /** \brief Quotes `word` so that the POSIX shell of macOS reads it as one word, unchanged. */
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word, macos_type);
+
+  /** \brief Quotes `word` so that the POSIX shell of Linux reads it as one word, unchanged. */
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word, linux_type);
+
+  /** \brief Quotes `word` so that the POSIX shell of any other platform reads it as one word,
+             unchanged.
+   */
+  [[nodiscard]]
+  std::string quote_for_shell(std::string_view word, other_os_type);
+
   /** \brief The shell command to change the current directory to `dir`. On Windows, the command also
              changes the current drive to the drive of `dir`.
+
+      \throws std::runtime_error if `quote_for_shell` cannot quote `dir`.
    */
   [[nodiscard]]
   shell_command cd_cmd(const std::filesystem::path& dir);

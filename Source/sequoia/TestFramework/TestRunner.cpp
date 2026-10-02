@@ -1433,7 +1433,7 @@ namespace sequoia::testing
       for(const auto& [file, found] : *items)
       {
         if(found)
-          options += std::format(" select {}", file.path().generic_string());
+          options += std::format(" select {}", runtime::quote_for_shell(file.path().generic_string()));
       }
     }
 
@@ -1442,14 +1442,14 @@ namespace sequoia::testing
       for(const auto& [name, found] : *suites)
       {
         if(found)
-          options += std::format(" test {}", name);
+          options += std::format(" test {}", runtime::quote_for_shell(name));
       }
     }
 
     for(const auto& [file, found] : m_Filter.excluded_items())
     {
       if(found)
-        options += std::format(" exclude {}", file.path().generic_string());
+        options += std::format(" exclude {}", runtime::quote_for_shell(file.path().generic_string()));
     }
 
     if(m_Filter.excludes_performance_tests())
@@ -1471,7 +1471,11 @@ namespace sequoia::testing
     for(std::size_t i{}; i < m_NumReps; ++i)
     {
       const auto command{std::format("{} locate {} --runner-id {}{}{}",
-                                     proj_paths().executable().string(), m_NumReps, i, selection, async)};
+                                     runtime::quote_for_shell(proj_paths().executable().string()),
+                                     m_NumReps,
+                                     i,
+                                     selection,
+                                     async)};
 
       code |= child_return_code(invoke(runtime::shell_command{command}),
                                 std::format("Sandbox run {}, {},", i, command));
