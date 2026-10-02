@@ -248,32 +248,52 @@ namespace sequoia::runtime
   [[nodiscard]]
   std::string describe_failure(const int status)
   {
-    if constexpr(with_windows_v)
-    {
-      if(status == -1)
-        return "did not run to completion, or exited with status 0xFFFFFFFF, which cannot be told apart";
+    return describe_failure(status, platform_constant{});
+  }
 
-      if(status < 0)
-        return std::format("failed with exit status 0x{:08X}", static_cast<std::uint32_t>(status));
-    }
-    else
-    {
-      if(status < 0)
-        return "did not run to completion";
+  [[nodiscard]]
+  std::string describe_failure(const int status, windows_type)
+  {
+    if(status == -1)
+      return "did not run to completion, or exited with status 0xFFFFFFFF, which cannot be told apart";
 
-      if(status == 126)
-        return "could not be executed by the shell (exit status 126)";
-
-      if(status == 127)
-        return "was not found by the shell (exit status 127)";
-
-      if(status > 128)
-        return std::format("failed with exit status {}, which may mean it was killed by signal {}",
-                           status,
-                           status - 128);
-    }
+    if(status < 0)
+      return std::format("failed with exit status 0x{:08X}", static_cast<std::uint32_t>(status));
 
     return std::format("failed with exit status {}", status);
+  }
+
+  [[nodiscard]]
+  std::string describe_failure(const int status, macos_type)
+  {
+    if(status < 0)
+      return "did not run to completion";
+
+    if(status == 126)
+      return "could not be executed by the shell (exit status 126)";
+
+    if(status == 127)
+      return "was not found by the shell (exit status 127)";
+
+    constexpr int signalOffset{128};
+    if(status > signalOffset)
+      return std::format("failed with exit status {}, which may mean it was killed by signal {}",
+                         status,
+                         status - signalOffset);
+
+    return std::format("failed with exit status {}", status);
+  }
+
+  [[nodiscard]]
+  std::string describe_failure(const int status, linux_type)
+  {
+    return describe_failure(status, macos_type{});
+  }
+
+  [[nodiscard]]
+  std::string describe_failure(const int status, other_os_type)
+  {
+    return describe_failure(status, macos_type{});
   }
 
   void throw_unless_succeeded(const int status, std::string_view step, std::string_view advice)
