@@ -571,10 +571,10 @@ namespace sequoia::testing
 
   // The template head spells std::filesystem as the declaration does, not through fs: MSVC matches a
   // constrained definition to its declaration token by token (C2244).
-  template<invocable_exact_r<std::filesystem::path, std::filesystem::path> WhereAbsent,
+  template<invocable_exact_r<std::filesystem::path, std::filesystem::path> GeneratedHeaderPath,
            std::invocable<std::filesystem::path> Generator,
            std::invocable<std::string&> FileTransformer>
-  void nascent_test_base::finalize(WhereAbsent whereAbsent,
+  void nascent_test_base::finalize(GeneratedHeaderPath generatedHeaderPath,
                                    Generator generate,
                                    const std::vector<companion_specification>& companionSpecifications,
                                    const std::vector<std::string>& ownStubs,
@@ -589,7 +589,7 @@ namespace sequoia::testing
 
     const auto existingSource{build_source_path(m_Header)};
     const bool generateSource{existingSource.empty() && (m_SourceOption == gen_source_option::yes)};
-    const auto srcPath       {generateSource ? whereAbsent(m_Header) : existingSource};
+    const auto srcPath       {generateSource ? generatedHeaderPath(m_Header) : existingSource};
     if(srcPath.empty())
       on_source_path_error();
 
@@ -713,7 +713,7 @@ namespace sequoia::testing
   //=========================================== nascent_class_test_base ===========================================//
 
   [[nodiscard]]
-  fs::path nascent_class_test_base::where_header_absent(const fs::path& filename) const
+  fs::path nascent_class_test_base::generated_header_path(const fs::path& filename) const
   {
     const auto& project{paths().source().project()};
     return filename.is_absolute() ? filename : project / rebase_from(m_SourceDir / filename, project);
@@ -835,7 +835,7 @@ namespace sequoia::testing
 
     // No companion is generated if testing utilities were named on the commandline: they hold the
     // value_tester, and the value_tester's false-negative diagnostics belong with it.
-    nascent_test_base::finalize([this](const fs::path& filename) { return where_header_absent(filename); },
+    nascent_test_base::finalize([this](const fs::path& filename) { return generated_header_path(filename); },
                                 [this, &nameSpace](const fs::path& headerPath) {
                                   generate_header(headerPath, test_type(), nameSpace, m_TemplateData);
                                 },
@@ -968,7 +968,7 @@ namespace sequoia::testing
 
     std::string_view semantics{test_type() == "move_only_allocation" ? "move_only" : "regular"};
 
-    nascent_test_base::finalize([this](const fs::path& filename) { return where_header_absent(filename); },
+    nascent_test_base::finalize([this](const fs::path& filename) { return generated_header_path(filename); },
                                 [this, semantics](const fs::path& headerPath) {
                                   generate_header(headerPath, semantics, "", {});
                                 },
@@ -1040,7 +1040,7 @@ namespace sequoia::testing
     if(forename().empty())
       forename(to_snake_case(fallbackSuite));
 
-    nascent_test_base::finalize([this](const fs::path& filename) { return where_header_absent(filename); },
+    nascent_test_base::finalize([this](const fs::path& filename) { return generated_header_path(filename); },
                                 [this](const fs::path& headerPath) { generate_header(headerPath); },
                                 {},
                                 to_stubs(*this),
@@ -1050,7 +1050,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  fs::path nascent_behavioural_test::where_header_absent(const fs::path& filename) const
+  fs::path nascent_behavioural_test::generated_header_path(const fs::path& filename) const
   {
     const auto& project{paths().source().project()};
     return filename.is_absolute() ? filename : project / rebase_from(filename, project);

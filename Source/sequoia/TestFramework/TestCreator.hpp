@@ -160,8 +160,8 @@ namespace sequoia::testing
         of the test's own files is named `test_file_stem()` followed by the extension of its stub. A file
         which already exists is not overwritten.
 
-        `whereAbsent` is called with the name of the header under test, and `generate` with the path
-        `whereAbsent` returns. Neither is called unless the header cannot be found and its generation was
+        `generatedHeaderPath` is called with the name of the header under test, and `generate` with the path
+        `generatedHeaderPath` returns. Neither is called unless the header cannot be found and its generation was
         requested. If its generation was requested but the header is found, a warning names the header found, which
         may lie outside the directory requested.
 
@@ -172,10 +172,10 @@ namespace sequoia::testing
 
         These conditions are checked before any file is written.
      */
-    template<invocable_exact_r<std::filesystem::path, std::filesystem::path> WhereAbsent,
+    template<invocable_exact_r<std::filesystem::path, std::filesystem::path> GeneratedHeaderPath,
              std::invocable<std::filesystem::path> Generator,
              std::invocable<std::string&> FileTransformer>
-    void finalize(WhereAbsent whereAbsent,
+    void finalize(GeneratedHeaderPath generatedHeaderPath,
                   Generator generate,
                   const std::vector<companion_specification>& companionSpecifications,
                   const std::vector<std::string>& ownStubs,
@@ -298,7 +298,7 @@ namespace sequoia::testing
     ~nascent_class_test_base() = default;
 
     [[nodiscard]]
-    std::filesystem::path where_header_absent(const std::filesystem::path& filename) const;
+    std::filesystem::path generated_header_path(const std::filesystem::path& filename) const;
 
     /** \brief Generates a header declaring the class `forename()` in `nameSpace`, and a source file if
         `templateData` is empty.
@@ -394,7 +394,7 @@ namespace sequoia::testing
     std::string m_Namespace;
 
     [[nodiscard]]
-    std::filesystem::path where_header_absent(const std::filesystem::path& filename) const;
+    std::filesystem::path generated_header_path(const std::filesystem::path& filename) const;
 
     void generate_header(const std::filesystem::path& headerPath);
   };
