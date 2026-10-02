@@ -692,6 +692,13 @@ namespace sequoia::testing
       );
     }
 
+    /** Aggregates the passes which the repetitions of an instability analysis recorded.
+
+        \returns
+        -# `nullopt`, if any repetition wrote no passes file;
+        -# Otherwise, a record of each test which passed in every repetition. The record carries the
+           first repetition's stamp.
+     */
     [[nodiscard]]
     std::optional<std::vector<prune_record>> aggregate_passes(const prune_paths& prunePaths, const std::size_t numReps)
     {
@@ -707,7 +714,7 @@ namespace sequoia::testing
       auto intersect{
         [](std::vector<prune_record> lhs, const std::vector<prune_record>& rhs) {
           std::vector<prune_record> common{};
-          std::ranges::set_intersection(lhs, rhs, std::back_inserter(common));
+          std::ranges::set_intersection(lhs, rhs, std::back_inserter(common), {}, path_projector{}, path_projector{});
           return common;
         }
       };
