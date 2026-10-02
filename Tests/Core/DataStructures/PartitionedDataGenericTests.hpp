@@ -103,6 +103,34 @@ namespace sequoia::testing
       return d;
     }
 
+    static void check_partition_is_empty(regular_test& t, data_type& d, const std::size_t i)
+    {
+      const data_type& c{d};
+
+      t.check("begin_partition equals end_partition",           d.begin_partition(i)   == d.end_partition(i));
+      t.check("begin_partition equals end_partition (const)",   c.begin_partition(i)   == c.end_partition(i));
+      t.check("cbegin_partition equals cend_partition",         d.cbegin_partition(i)  == d.cend_partition(i));
+      t.check("rbegin_partition equals rend_partition",         d.rbegin_partition(i)  == d.rend_partition(i));
+      t.check("rbegin_partition equals rend_partition (const)", c.rbegin_partition(i)  == c.rend_partition(i));
+      t.check("crbegin_partition equals crend_partition",       d.crbegin_partition(i) == d.crend_partition(i));
+      t.check("operator[] equals end_partition",                d[i]                   == d.end_partition(i));
+      t.check("operator[] equals end_partition (const)",        c[i]                   == c.end_partition(i));
+      t.check("partition is empty",                             d.partition(i).empty());
+      t.check("partition is empty (const)",                     c.partition(i).empty());
+      t.check("cpartition is empty",                            d.cpartition(i).empty());
+      t.check(equality, "size_of_partition is zero", d.size_of_partition(i), 0uz);
+    }
+
+    static void check_partition_index_is_npos(regular_test& t, data_type& d, const std::size_t i)
+    {
+      constexpr auto npos{data_type::partition_iterator::npos};
+
+      t.check(equality, "Partition index of begin_partition",  d.begin_partition(i).partition_index(),  npos);
+      t.check(equality, "Partition index of end_partition",    d.end_partition(i).partition_index(),    npos);
+      t.check(equality, "Partition index of rbegin_partition", d.rbegin_partition(i).partition_index(), npos);
+      t.check(equality, "Partition index of rend_partition",   d.rend_partition(i).partition_index(),   npos);
+    }
+
     [[nodiscard]]
     static transition_graph make_transition_graph(regular_test& t)
     {
@@ -875,6 +903,15 @@ namespace sequoia::testing
                   "Inserting beyond the end of a partition other than the first throws",
                   [&d]() { return d.insert_to_partition(1, 2, 4); }
                 );
+                return d;
+              }
+            },
+            {
+              data_description::two_2__3,
+              t.report("An index one past the last partition names an empty partition, with iterators tagged npos"),
+              [&t](data_type d) -> data_type {
+                check_partition_is_empty(t, d, 2);
+                check_partition_index_is_npos(t, d, 2);
                 return d;
               }
             }
