@@ -1,4 +1,4 @@
-Tests/TestFramework/TestRunnerTest.cpp, Line 1056
+Tests/TestFramework/TestRunnerTest.cpp, Line 1057
 Test Main has empty path
 
 Expected Exception Type:
@@ -9,7 +9,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1064
+Tests/TestFramework/TestRunnerTest.cpp, Line 1065
 Test Main does not exist
 
 Expected Exception Type:
@@ -20,7 +20,7 @@ Try ensuring that the application is run from the appropriate directory
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1072
+Tests/TestFramework/TestRunnerTest.cpp, Line 1073
 Include Target has empty path
 
 Expected Exception Type:
@@ -31,7 +31,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1080
+Tests/TestFramework/TestRunnerTest.cpp, Line 1081
 Include Target does not exist
 
 Expected Exception Type:
@@ -42,7 +42,7 @@ Common includes not found
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1088
+Tests/TestFramework/TestRunnerTest.cpp, Line 1089
 Project root is empty
 
 Expected Exception Type:
@@ -51,7 +51,7 @@ Unable to locate project root as no commandline arguments supplied.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1096
+Tests/TestFramework/TestRunnerTest.cpp, Line 1097
 Project root does not exist
 
 Expected Exception Type:
@@ -60,7 +60,7 @@ canonical - file not found: /output/TestsTemporaryData/TestFramework/TestRunnerT
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1115
+Tests/TestFramework/TestRunnerTest.cpp, Line 1116
 Project root not findable
 
 Expected Exception Type:
@@ -71,7 +71,7 @@ Please ensure that the build directory is a subdirectory of <project>/build.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1124
+Tests/TestFramework/TestRunnerTest.cpp, Line 1125
 The same test registered twice
 
 Expected Exception Type:
@@ -82,7 +82,7 @@ A test's name is that of its class, and determines where its output is written, 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1136
+Tests/TestFramework/TestRunnerTest.cpp, Line 1137
 Two tests whose unqualified names coincide
 
 Expected Exception Type:
@@ -93,7 +93,7 @@ A test's name is that of its class, and determines where its output is written, 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1148
+Tests/TestFramework/TestRunnerTest.cpp, Line 1149
 A source in the directory sharing another's materials prefix
 
 Expected Exception Type:
@@ -104,7 +104,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1166
+Tests/TestFramework/TestRunnerTest.cpp, Line 1167
 A source whose materials prefix is a directory holding another's source
 
 Expected Exception Type:
@@ -115,7 +115,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1184
+Tests/TestFramework/TestRunnerTest.cpp, Line 1185
 A source in a directory sharing another's materials prefix but for case
 
 Expected Exception Type:
@@ -126,7 +126,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1202
+Tests/TestFramework/TestRunnerTest.cpp, Line 1203
 Two tests whose names differ only in case
 
 Expected Exception Type:
@@ -137,7 +137,7 @@ A test's name is that of its class, and determines where its output is written, 
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1220
+Tests/TestFramework/TestRunnerTest.cpp, Line 1221
 A source two directories beneath another's materials prefix
 
 Expected Exception Type:
@@ -148,7 +148,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1238
+Tests/TestFramework/TestRunnerTest.cpp, Line 1239
 A source whose materials prefix, but for case, is a directory holding another's source
 
 Expected Exception Type:
@@ -159,7 +159,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1256
+Tests/TestFramework/TestRunnerTest.cpp, Line 1257
 Sources beside a materials prefix and sharing it are admitted; one beneath it then is not
 
 Expected Exception Type:
@@ -170,7 +170,7 @@ Each test's materials are kept beneath the path of its source file less the exte
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1276
+Tests/TestFramework/TestRunnerTest.cpp, Line 1277
 A source whose materials prefix contains a non-ASCII byte
 
 Expected Exception Type:
@@ -180,7 +180,7 @@ The path of this source file relative to the tests repository must be ASCII.
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1293
+Tests/TestFramework/TestRunnerTest.cpp, Line 1294
 A test whose name contains a non-ASCII letter
 
 Expected Exception Type:
@@ -190,7 +190,7 @@ A test's name is that of its class, and the names of the tests in this source fi
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1310
+Tests/TestFramework/TestRunnerTest.cpp, Line 1311
 A test with no source file
 
 Expected Exception Type:
@@ -200,7 +200,7 @@ Each test's materials are kept beneath the path of its source file relative to t
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1327
+Tests/TestFramework/TestRunnerTest.cpp, Line 1328
 Invalid repetitions for instability analysis
 
 Expected Exception Type:
@@ -209,7 +209,7 @@ locate-instabilities: unable to interpret 'foo' as an integer number of repetiti
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1334
+Tests/TestFramework/TestRunnerTest.cpp, Line 1335
 Insufficient repetitions for instability analysis
 
 Expected Exception Type:
@@ -218,7 +218,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1938
+Tests/TestFramework/TestRunnerTest.cpp, Line 1939
 Comparison against a dump never kept
 
 Expected Exception Type:
@@ -227,7 +227,7 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1938
+Tests/TestFramework/TestRunnerTest.cpp, Line 1939
 A dump kept under no name
 
 Expected Exception Type:
@@ -236,12 +236,102 @@ Expected Exception Type:
 
 =======================================
 
-Tests/TestFramework/TestRunnerTest.cpp, Line 1938
+Tests/TestFramework/TestRunnerTest.cpp, Line 1939
 Comparison against no name
 
 Expected Exception Type:
 [std::runtime_error]
   Error: a dump is kept under, and compared against, a name; none was given
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2284
+Exit status 1 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 1.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2284
+Exit status 2 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 2.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2284
+Exit status 23 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 23.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2284
+Exit status 64 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 64.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2284
+Exit status 66 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 66.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2284
+Exit status 77 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 77.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2284
+Exit status 78 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 78.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2284
+Exit status 80 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 80.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
+
+=======================================
+
+Tests/TestFramework/TestRunnerTest.cpp, Line 2284
+Exit status 112 is not a runner's
+
+Expected Exception Type:
+[std::runtime_error]
+A child failed with exit status 112.
+That is not one of a test runner's exit statuses, which are 0 and 81 to 111, so it did not complete a test run: it may not have been built, may be misconfigured, or may have crashed.
 
 =======================================
 

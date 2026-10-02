@@ -6,8 +6,14 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "ShellCommandsTest.hpp"
+#include "sequoia/PlatformSpecific/Preprocessor.hpp"
+#include "sequoia/Streaming/Streaming.hpp"
 
+#include <array>
+#include <concepts>
 #include <format>
+#include <limits>
+#include <ranges>
 
 namespace sequoia::testing
 {
@@ -22,6 +28,7 @@ namespace sequoia::testing
   void shell_commands_test::run_tests()
   {
     test_composition();
+    test_exit_status_descriptions();
     test_success_requirement();
     test_directory_change();
   }
@@ -48,49 +55,67 @@ namespace sequoia::testing
     check(equivalence, "Space after digit, before >>", shell_command{"", "foo1", "dir", append_mode::yes}, "foo1 >> dir 2>&1");
   }
 
-  void shell_commands_test::test_success_requirement()
+  void shell_commands_test::test_exit_status_descriptions()
   {
-    auto messageFor{
-      [](int status) -> std::string {
-        try
-        {
-          throw_unless_succeeded(status, "Doing the thing", "Some advice");
-        }
-        catch(const std::runtime_error& e)
-        {
-          return e.what();
-        }
+    auto tabulate{
+      [](std::invocable<int> auto describe) {
+        constexpr std::array statuses{
+          std::numeric_limits<int>::min(), static_cast<int>(0xC0000005u), -2, -1,
+          0, 1, 2, 125, 126, 127, 128, 129, 130, 159, 160, 192, 193, 255, 256
+        };
 
-        return {};
+        auto row{[&describe](int status) { return std::format("{}: {}\n", status, describe(status)); }};
+
+        return   statuses
+               | std::views::transform(row)
+               | std::views::join
+               | std::ranges::to<std::string>();
       }
     };
 
-    auto expected{[](std::string_view outcome) { return std::format("Doing the thing {}\nSome advice\n", outcome); }};
+    auto describerFor{
+      [](auto platform) {
+        return [platform](int status) { return describe_exit_status(status, platform); };
+      }
+    };
 
-    check(equality, "A zero status", messageFor(0), std::string{});
-    check(equality, "A non-zero exit status", messageFor(2), expected("failed with exit status 2"));
+    auto checkDescriptions{
+      [this](const reporter& description, std::string_view table, std::string_view fileName) {
+        write_to_file(working_materials() /= fileName, table, std::ios_base::out);
+        check(equivalence, description, working_materials() /= fileName, predictive_materials() /= fileName);
+      }
+    };
 
-    if constexpr(with_windows_v)
-    {
-      check(equality,
-            "No exit status of its own, or 0xFFFFFFFF",
-            messageFor(-1),
-            expected("did not run to completion, or exited with status 0xFFFFFFFF, which cannot be told apart"));
+    checkDescriptions("Exit statuses as described on Windows",
+                      tabulate(describerFor(windows_type{})),
+                      "WindowsExitStatusDescriptions.txt");
 
-      check(equality,
-            "An exit status of 0x80000000 or more",
-            messageFor(static_cast<int>(0xC0000005u)),
-            expected("failed with exit status 0xC0000005"));
-    }
-    else
-    {
-      check(equality, "No exit status of its own", messageFor(-1), expected("did not run to completion"));
+    checkDescriptions("Exit statuses as described on macOS",
+                      tabulate(describerFor(macos_type{})),
+                      "MacOSExitStatusDescriptions.txt");
 
-      check(equality,
-            "An exit status above 128",
-            messageFor(130),
-            expected("failed with exit status 130, which may mean it was killed by signal 2"));
-    }
+    checkDescriptions("Exit statuses as described on Linux",
+                      tabulate(describerFor(linux_type{})),
+                      "LinuxExitStatusDescriptions.txt");
+
+    checkDescriptions("Exit statuses as described on any other platform",
+                      tabulate(describerFor(other_os_type{})),
+                      "OtherOSExitStatusDescriptions.txt");
+
+    check(equality,
+          "By default, exit statuses are described as on the platform the program is built for",
+          tabulate([](int status) { return describe_exit_status(status); }),
+          tabulate(describerFor(platform_constant{})));
+  }
+
+  void shell_commands_test::test_success_requirement()
+  {
+    // A zero status must not throw. A throw here ends the test with a critical failure.
+    throw_unless_succeeded(0, "Succeeding", "No advice");
+
+    check_exception_thrown<std::runtime_error>(
+      "The message names the step, says how the step failed, then gives the advice",
+      []() { throw_unless_succeeded(2, "Doing the thing", "Some advice"); });
   }
 
   void shell_commands_test::test_directory_change()

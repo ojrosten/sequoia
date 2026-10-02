@@ -196,6 +196,34 @@ namespace sequoia::runtime
       return WIFEXITED(status) ? WEXITSTATUS(status) : -1;
     }
   #endif
+
+    /** \brief Describes how a command ended, by a POSIX shell's conventions.
+
+        The platform numbers its signals from 1 to `highestSignal`.
+     */
+    [[nodiscard]]
+    std::string describe_posix_exit_status(const int status, const int highestSignal)
+    {
+      if(status == 0)
+        return "succeeded (exit status 0)";
+
+      if(status < 0)
+        return "did not run to completion";
+
+      if(status == 126)
+        return "could not be executed by the shell (exit status 126)";
+
+      if(status == 127)
+        return "was not found by the shell (exit status 127)";
+
+      constexpr int signalOffset{128};
+      if((status > signalOffset) && (status - signalOffset <= highestSignal))
+        return std::format("failed with exit status {}, which may mean it was killed by signal {}",
+                           status,
+                           status - signalOffset);
+
+      return std::format("failed with exit status {}", status);
+    }
   }
 
   shell_command::shell_command(std::string cmd, const std::filesystem::path& output, append_mode app)
@@ -245,37 +273,57 @@ namespace sequoia::runtime
     return std::string{with_windows_v ? "cd /d " : "cd "}.append(dir.string());
   }
 
+  [[nodiscard]]
+  std::string describe_exit_status(const int status)
+  {
+    return describe_exit_status(status, platform_constant{});
+  }
+
+  [[nodiscard]]
+  std::string describe_exit_status(const int status, windows_type)
+  {
+    if(status == 0)
+      return "succeeded (exit status 0)";
+
+    if(status == -1)
+      return "did not run to completion, or exited with status 0xFFFFFFFF, which cannot be told apart";
+
+    if(status < 0)
+      return std::format("failed with exit status 0x{:08X}", static_cast<std::uint32_t>(status));
+
+    return std::format("failed with exit status {}", status);
+  }
+
+  [[nodiscard]]
+  std::string describe_exit_status(const int status, macos_type)
+  {
+    // macOS numbers its signals up to 31: NSIG is 32.
+    constexpr int highestSignal{31};
+    return describe_posix_exit_status(status, highestSignal);
+  }
+
+  [[nodiscard]]
+  std::string describe_exit_status(const int status, linux_type)
+  {
+    // Linux numbers its signals up to SIGRTMAX: 64 with glibc on x86-64 and AArch64, but 127 on MIPS.
+    constexpr int highestSignal{64};
+    return describe_posix_exit_status(status, highestSignal);
+  }
+
+  [[nodiscard]]
+  std::string describe_exit_status(const int status, other_os_type)
+  {
+    // An exit status has 8 bits, so 128 plus a signal is at most 255, and the signal at most 127.
+    constexpr int highestSignal{127};
+    return describe_posix_exit_status(status, highestSignal);
+  }
+
   void throw_unless_succeeded(const int status, std::string_view step, std::string_view advice)
   {
     if(status == 0)
       return;
 
-    auto outcome{
-      [status]() -> std::string {
-        if constexpr(with_windows_v)
-        {
-          if(status == -1)
-            return "did not run to completion, or exited with status 0xFFFFFFFF, which cannot be told apart";
-
-          if(status < 0)
-            return std::format("failed with exit status 0x{:08X}", static_cast<std::uint32_t>(status));
-        }
-        else
-        {
-          if(status < 0)
-            return "did not run to completion";
-
-          if(status > 128)
-            return std::format("failed with exit status {}, which may mean it was killed by signal {}",
-                               status,
-                               status - 128);
-        }
-
-        return std::format("failed with exit status {}", status);
-      }
-    };
-
-    throw std::runtime_error{std::format("{} {}\n{}\n", step, outcome(), advice)};
+    throw std::runtime_error{std::format("{} {}\n{}\n", step, describe_exit_status(status), advice)};
   }
 
   [[nodiscard]]

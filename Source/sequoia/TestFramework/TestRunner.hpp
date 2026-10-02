@@ -29,6 +29,7 @@
 #include <set>
 #include <span>
 #include <thread>
+#include <utility>
 
 namespace sequoia::testing
 {
@@ -44,6 +45,11 @@ namespace sequoia::testing
     fixed      /// fixed-size thread pool
   };
 
+  /** \brief The outcome of a test run: `success`, or a set of flags, one for each kind of failure.
+
+      The flags occupy consecutive bits, from the lowest. A new flag needs a row in
+      `return_code_names` (TestRunner.cpp). No check catches a missing row for the highest flag.
+   */
   enum class return_code : unsigned {
     success                = 0,
     versioned_output_diffs = 1 << 0,
@@ -88,11 +94,24 @@ namespace sequoia::testing
   [[nodiscard]]
   return_code to_return_code(const log_summary& summary) noexcept;
 
-  /** Maps the exit status of a process which ran a sequoia test runner back to the code it
-      reported, throwing if the status is not one a runner can produce. */
-  [[nodiscard]]
-  return_code child_return_code(int exitStatus);
+  /** \brief The `return_code` which `exitStatus` carries, as `to_exit_code` encodes it.
 
+      On Windows, a tool can exit with a Win32 error code, such as 87, 110 or 111, which `to_exit_code`
+      also returns. This function reads that status as a runner's.
+
+      \throws std::runtime_error if `exitStatus` is not a status which `to_exit_code` returns. The
+              message begins with `childDescription`.
+   */
+  [[nodiscard]]
+  return_code child_return_code(int exitStatus, std::string_view childDescription);
+
+  /** \brief Encodes `code` as a runner's exit status.
+
+      \returns
+      -# 0, if `code` is `return_code::success`;
+      -# 80 plus the value of `code`, if every bit of `code` is a flag;
+      -# Otherwise, 80 plus the value of the flags of `code`, with `incomplete_run` set.
+   */
   [[nodiscard]]
   int to_exit_code(return_code code) noexcept;
 

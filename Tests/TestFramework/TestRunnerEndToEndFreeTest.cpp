@@ -120,7 +120,8 @@ namespace sequoia::testing
     if(!options.empty()) cmd.append(" ").append(options);
 
     return child_return_code(
-             invoke(cd_cmd(get_build_paths().executable_dir()) && shell_command{"", std::move(cmd), outputFile}));
+             invoke(cd_cmd(get_build_paths().executable_dir()) && shell_command{"", cmd, outputFile}),
+             std::format("The nested run, {},", cmd));
   }
 
   [[nodiscard]]
