@@ -193,6 +193,79 @@ namespace sequoia::testing
                 d.insert_slot(0);
                 return d;
               }
+            },
+            {
+              data_description::empty,
+              t.report("Partition 0 of an empty sequence is an empty partition, with iterators tagged npos"),
+              [&t](data_type d) -> data_type {
+                check_partition_is_empty(t, d, 0);
+                check_partition_index_is_npos(t, d, 0);
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report("Partition 0 of a default-constructed sequence is an empty partition, with iterators tagged npos"),
+              [&t](data_type) -> data_type {
+                data_type d{};
+                check_partition_is_empty(t, d, 0);
+                check_partition_index_is_npos(t, d, 0);
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report(""),
+              [&t](data_type d) -> data_type {
+                auto i{d.erase_from_partition(d.cbegin_partition(0))};
+                t.check(equality, "Erase from non-existent partition", i, d.begin_partition(0));
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report(""),
+              [&t](data_type d) -> data_type {
+                auto i{d.erase_from_partition(d.cbegin_partition(0), d.cend_partition(0))};
+                t.check(equality, "Erase range from non-existent partition", i, d.begin_partition(0));
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report(""),
+              [&t](data_type d) -> data_type {
+                auto i{d.erase_from_partition(0, 0)};
+                t.check(equality, "Erase from non-existent partition", i, d.begin_partition(0));
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report(""),
+              [&t](data_type d) -> data_type {
+                auto i{d.erase_from_partition(1, 0)};
+                t.check(equality, "", i, d.begin_partition(0));
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report(""),
+              [&t](data_type d) -> data_type {
+                auto i{d.erase_from_partition(0, 1)};
+                t.check(equality, "", i, d.begin_partition(0));
+                return d;
+              }
+            },
+            {
+              data_description::empty,
+              t.report(""),
+              [&t](data_type d) -> data_type {
+                auto i{d.erase_from_partition(1, 1)};
+                t.check(equality, "", i, d.begin_partition(0));
+                return d;
+              }
             }
           }, // end 'empty'
           {  // begin 'empty_partition'
@@ -405,9 +478,11 @@ namespace sequoia::testing
             },
             {
               data_description::empty,
-              t.report(""),
-              [](data_type d) -> data_type {
+              t.report("Once the only slot is erased, partition 0 is an empty partition, with iterators tagged npos"),
+              [&t](data_type d) -> data_type {
                 d.erase_slot(0);
+                check_partition_is_empty(t, d, 0);
+                check_partition_index_is_npos(t, d, 0);
                 return d;
               }
             },
