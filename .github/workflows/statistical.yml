@@ -39,10 +39,10 @@ name: statistical
 # trials that independence if the test runner counted a refused child as a
 # failed trial and carried on.
 #
-# The column runs without `--check-versioned-output`: the gate
-# has already applied it to this tree, and item 160 records the composition as
-# verified locally but not here. The performance tests are excluded for the
-# reason coarse.yml gives.
+# The column runs without `--check-versioned-output`: the gate has already
+# applied it to this tree, and item 160 records the composition as verified
+# locally but not here. The performance tests are excluded for the reason
+# coarse.yml gives.
 #
 # Which columns: the ones whose failures are rare by mechanism. TSan reports only
 # the interleavings that actually execute, so repetition is what widens its
