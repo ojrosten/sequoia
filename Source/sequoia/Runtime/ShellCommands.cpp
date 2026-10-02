@@ -197,8 +197,9 @@ namespace sequoia::runtime
     }
   #endif
 
-    /** \brief Describes how a command ended, by a POSIX shell's conventions, on a platform which
-               numbers its signals from 1 to `highestSignal`.
+    /** \brief Describes how a command ended, by a POSIX shell's conventions.
+
+        The platform numbers its signals from 1 to `highestSignal`.
      */
     [[nodiscard]]
     std::string describe_posix_exit_status(const int status, const int highestSignal)

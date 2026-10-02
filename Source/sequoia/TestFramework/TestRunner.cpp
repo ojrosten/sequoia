@@ -416,13 +416,15 @@ namespace sequoia::testing
       nascent_tests.emplace_back(std::move(nascentTest));
     }
 
-    constexpr std::array<std::pair<return_code, std::string_view>, 5> return_code_names{{
-      {return_code::versioned_output_diffs, "versioned_output_diffs"},
-      {return_code::soft_failures,          "soft_failures"         },
-      {return_code::critical_failures,      "critical_failures"     },
-      {return_code::incomplete_run,         "incomplete_run"        },
-      {return_code::post_run_failures,      "post_run_failures"     }
-    }};
+    constexpr auto return_code_names{
+      std::to_array<std::pair<return_code, std::string_view>>({
+        {return_code::versioned_output_diffs, "versioned_output_diffs"},
+        {return_code::soft_failures,          "soft_failures"         },
+        {return_code::critical_failures,      "critical_failures"     },
+        {return_code::incomplete_run,         "incomplete_run"        },
+        {return_code::post_run_failures,      "post_run_failures"     }
+      })
+    };
 
     constexpr return_code dirty_return_codes{
       std::ranges::fold_left(
@@ -448,7 +450,7 @@ namespace sequoia::testing
         -# 66 and 77, from ThreadSanitizer and MemorySanitizer;
         -# 126 and above, from a shell.
 
-        The contracts of `child_return_code` and `to_exit_code`, in TestRunner.hpp, state its value.
+        TestRunner.hpp states this value in the contract of `to_exit_code`.
      */
     constexpr int runner_exit_offset{80};
 

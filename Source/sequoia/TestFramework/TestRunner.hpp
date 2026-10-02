@@ -29,6 +29,7 @@
 #include <set>
 #include <span>
 #include <thread>
+#include <utility>
 
 namespace sequoia::testing
 {
@@ -47,7 +48,7 @@ namespace sequoia::testing
   /** \brief The outcome of a test run: `success`, or a set of flags, one for each kind of failure.
 
       The flags occupy consecutive bits, from the lowest. A new flag needs a row in
-      `return_code_names` (TestRunner.cpp). No check catches a flag without one.
+      `return_code_names` (TestRunner.cpp). No check catches a missing row for the highest flag.
    */
   enum class return_code : unsigned {
     success                = 0,
@@ -95,11 +96,11 @@ namespace sequoia::testing
 
   /** \brief The `return_code` which `exitStatus` carries, as `to_exit_code` encodes it.
 
-      On Windows, a tool can exit with a Win32 error code which is also a runner's exit status, such
-      as 87, 110 or 111. This function reads such a status as a runner's.
+      On Windows, a tool can exit with a Win32 error code, such as 87, 110 or 111, which `to_exit_code`
+      also returns. This function reads that status as a runner's.
 
-      \throws std::runtime_error if `exitStatus` is neither 0 nor 80 plus the value of a non-empty set
-              of flags. The message begins with `child`.
+      \throws std::runtime_error if `exitStatus` is not a status which `to_exit_code` returns. The
+              message begins with `child`.
    */
   [[nodiscard]]
   return_code child_return_code(int exitStatus, std::string_view child);
