@@ -167,31 +167,15 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  bool names_no_type(std::string_view spelling)
+  bool is_empty_or_whitespace(std::string_view spelling) noexcept
   {
-    auto isSeparator{[](char c) { return ascii::is_whitespace(c) || (c == '&') || (c == '*'); }};
-    auto sameKind{[isSeparator](char lhs, char rhs) { return isSeparator(lhs) == isSeparator(rhs); }};
-    auto isWord{[isSeparator](auto run) { return !isSeparator(run.front()); }};
-    auto isQualifier{
-      [](auto word) {
-        const std::string_view text{word.begin(), word.end()};
-        return (text == "const") || (text == "volatile");
-      }
-    };
-
-    auto words{
-        spelling
-      | std::views::chunk_by(sameKind)
-      | std::views::filter(isWord)
-    };
-
-    return std::ranges::all_of(words, isQualifier);
+    return std::ranges::all_of(spelling, ascii::is_whitespace);
   }
 
   [[nodiscard]]
   bool handle_as_ref(std::string_view type)
   {
-    if(names_no_type(type))
+    if(is_empty_or_whitespace(type))
       throw std::logic_error{"Equivalent type is unspecified"};
 
     if((type.back() == '*') || (type.back() == '&')) return false;

@@ -27,7 +27,7 @@ namespace sequoia::testing
     void run_tests();
   private:
 
-    void test_names_no_type();
+    void test_is_empty_or_whitespace();
 
     void test_type_handling();
 
