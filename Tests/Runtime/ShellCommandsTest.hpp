@@ -25,7 +25,7 @@ namespace sequoia::testing
   private:
     void test_composition();
 
-    void test_failure_descriptions();
+    void test_exit_status_descriptions();
 
     void test_success_requirement();
 

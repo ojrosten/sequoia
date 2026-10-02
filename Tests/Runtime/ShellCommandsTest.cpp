@@ -28,7 +28,7 @@ namespace sequoia::testing
   void shell_commands_test::run_tests()
   {
     test_composition();
-    test_failure_descriptions();
+    test_exit_status_descriptions();
     test_success_requirement();
     test_directory_change();
   }
@@ -55,7 +55,7 @@ namespace sequoia::testing
     check(equivalence, "Space after digit, before >>", shell_command{"", "foo1", "dir", append_mode::yes}, "foo1 >> dir 2>&1");
   }
 
-  void shell_commands_test::test_failure_descriptions()
+  void shell_commands_test::test_exit_status_descriptions()
   {
     auto tabulate{
       [](std::invocable<int> auto describe) {
@@ -75,7 +75,7 @@ namespace sequoia::testing
 
     auto describerFor{
       [](auto platform) {
-        return [platform](int status) { return describe_failure(status, platform); };
+        return [platform](int status) { return describe_exit_status(status, platform); };
       }
     };
 
@@ -86,25 +86,25 @@ namespace sequoia::testing
       }
     };
 
-    checkDescriptions("Failures as described on Windows",
+    checkDescriptions("Exit statuses as described on Windows",
                       tabulate(describerFor(windows_type{})),
-                      "WindowsFailureDescriptions.txt");
+                      "WindowsExitStatusDescriptions.txt");
 
-    checkDescriptions("Failures as described on macOS",
+    checkDescriptions("Exit statuses as described on macOS",
                       tabulate(describerFor(macos_type{})),
-                      "MacOSFailureDescriptions.txt");
+                      "MacOSExitStatusDescriptions.txt");
 
-    checkDescriptions("Failures as described on Linux",
+    checkDescriptions("Exit statuses as described on Linux",
                       tabulate(describerFor(linux_type{})),
-                      "LinuxFailureDescriptions.txt");
+                      "LinuxExitStatusDescriptions.txt");
 
-    checkDescriptions("Failures as described on any other platform",
+    checkDescriptions("Exit statuses as described on any other platform",
                       tabulate(describerFor(other_os_type{})),
-                      "OtherOSFailureDescriptions.txt");
+                      "OtherOSExitStatusDescriptions.txt");
 
     check(equality,
-          "By default, failures are described as on the platform the program is built for",
-          tabulate([](int status) { return describe_failure(status); }),
+          "By default, exit statuses are described as on the platform the program is built for",
+          tabulate([](int status) { return describe_exit_status(status); }),
           tabulate(describerFor(platform_constant{})));
   }
 

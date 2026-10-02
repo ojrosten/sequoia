@@ -197,11 +197,11 @@ namespace sequoia::runtime
     }
   #endif
 
-    /** \brief Describes how a command failed, by a POSIX shell's conventions, on a platform which
+    /** \brief Describes how a command ended, by a POSIX shell's conventions, on a platform which
                numbers its signals from 1 to `highestSignal`.
      */
     [[nodiscard]]
-    std::string describe_posix_failure(const int status, const int highestSignal)
+    std::string describe_posix_exit_status(const int status, const int highestSignal)
     {
       if(status == 0)
         return "succeeded (exit status 0)";
@@ -273,13 +273,13 @@ namespace sequoia::runtime
   }
 
   [[nodiscard]]
-  std::string describe_failure(const int status)
+  std::string describe_exit_status(const int status)
   {
-    return describe_failure(status, platform_constant{});
+    return describe_exit_status(status, platform_constant{});
   }
 
   [[nodiscard]]
-  std::string describe_failure(const int status, windows_type)
+  std::string describe_exit_status(const int status, windows_type)
   {
     if(status == 0)
       return "succeeded (exit status 0)";
@@ -294,27 +294,27 @@ namespace sequoia::runtime
   }
 
   [[nodiscard]]
-  std::string describe_failure(const int status, macos_type)
+  std::string describe_exit_status(const int status, macos_type)
   {
     // macOS numbers its signals up to 31: NSIG is 32.
     constexpr int highestSignal{31};
-    return describe_posix_failure(status, highestSignal);
+    return describe_posix_exit_status(status, highestSignal);
   }
 
   [[nodiscard]]
-  std::string describe_failure(const int status, linux_type)
+  std::string describe_exit_status(const int status, linux_type)
   {
     // Linux numbers its signals up to SIGRTMAX: 64 with glibc on x86-64 and AArch64, but 127 on MIPS.
     constexpr int highestSignal{64};
-    return describe_posix_failure(status, highestSignal);
+    return describe_posix_exit_status(status, highestSignal);
   }
 
   [[nodiscard]]
-  std::string describe_failure(const int status, other_os_type)
+  std::string describe_exit_status(const int status, other_os_type)
   {
     // An exit status has 8 bits, so 128 plus a signal is at most 255, and the signal at most 127.
     constexpr int highestSignal{127};
-    return describe_posix_failure(status, highestSignal);
+    return describe_posix_exit_status(status, highestSignal);
   }
 
   void throw_unless_succeeded(const int status, std::string_view step, std::string_view advice)
@@ -322,7 +322,7 @@ namespace sequoia::runtime
     if(status == 0)
       return;
 
-    throw std::runtime_error{std::format("{} {}\n{}\n", step, describe_failure(status), advice)};
+    throw std::runtime_error{std::format("{} {}\n{}\n", step, describe_exit_status(status), advice)};
   }
 
   [[nodiscard]]

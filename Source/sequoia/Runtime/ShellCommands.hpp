@@ -86,15 +86,15 @@ namespace sequoia::runtime
   [[nodiscard]]
   shell_command cd_cmd(const std::filesystem::path& dir);
 
-  /** \brief Describes how a command failed, given the `status` which `invoke` returned for it.
+  /** \brief Describes how a command ended, given the `status` which `invoke` returned for it.
 
       \returns A phrase to follow the command's name, in the words of the platform the program is
       built for.
    */
   [[nodiscard]]
-  std::string describe_failure(int status);
+  std::string describe_exit_status(int status);
 
-  /** \brief Describes how a command failed on Windows, given the `status` which `invoke` returned
+  /** \brief Describes how a command ended on Windows, given the `status` which `invoke` returned
              for it.
 
       \returns A phrase to follow the command's name:
@@ -108,9 +108,9 @@ namespace sequoia::runtime
       told from a command which exits with 1.
    */
   [[nodiscard]]
-  std::string describe_failure(int status, windows_type);
+  std::string describe_exit_status(int status, windows_type);
 
-  /** \brief Describes how a command failed on macOS, given the `status` which `invoke` returned
+  /** \brief Describes how a command ended on macOS, given the `status` which `invoke` returned
              for it.
 
       \returns A phrase to follow the command's name:
@@ -123,9 +123,9 @@ namespace sequoia::runtime
       -# Otherwise, a phrase giving the exit status.
    */
   [[nodiscard]]
-  std::string describe_failure(int status, macos_type);
+  std::string describe_exit_status(int status, macos_type);
 
-  /** \brief Describes how a command failed on Linux, given the `status` which `invoke` returned
+  /** \brief Describes how a command ended on Linux, given the `status` which `invoke` returned
              for it.
 
       \returns A phrase to follow the command's name:
@@ -138,9 +138,9 @@ namespace sequoia::runtime
       -# Otherwise, a phrase giving the exit status.
    */
   [[nodiscard]]
-  std::string describe_failure(int status, linux_type);
+  std::string describe_exit_status(int status, linux_type);
 
-  /** \brief Describes how a command failed on any other platform, given the `status` which
+  /** \brief Describes how a command ended on any other platform, given the `status` which
              `invoke` returned for it.
 
       \returns A phrase to follow the command's name:
@@ -153,12 +153,12 @@ namespace sequoia::runtime
       -# Otherwise, a phrase giving the exit status.
    */
   [[nodiscard]]
-  std::string describe_failure(int status, other_os_type);
+  std::string describe_exit_status(int status, other_os_type);
 
   /** \brief Checks that a status returned by `invoke` is zero.
 
       \throws std::runtime_error if `status` is not zero. The message is `step`, followed by
-      `describe_failure(status)` and then `advice`.
+      `describe_exit_status(status)` and then `advice`.
    */
   void throw_unless_succeeded(int status, std::string_view step, std::string_view advice);
 

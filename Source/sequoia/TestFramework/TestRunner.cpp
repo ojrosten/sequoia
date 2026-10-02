@@ -26,6 +26,7 @@
 
 #include <algorithm>
 #include <array>
+#include <bit>
 #include <set>
 #include <ranges>
 #include <span>
@@ -431,10 +432,30 @@ namespace sequoia::testing
       )
     };
 
-    static_assert(max_runner_exit_status
-                    == runner_exit_offset + static_cast<int>(std::to_underlying(dirty_return_codes)),
-                  "return_code_names does not hold exactly the flags up to the one max_runner_exit_status names; "
-                  "give a new return_code enumerator a row, and name it in max_runner_exit_status's initialiser");
+    static_assert(std::has_single_bit(std::to_underlying(dirty_return_codes) + 1),
+                  "The flags with rows in return_code_names do not occupy consecutive bits from the lowest; "
+                  "give every return_code flag a row, and keep the flags consecutive");
+
+    /** \brief The number a runner adds to its `return_code` to give its exit status, unless the
+               code is success.
+
+        A runner therefore exits either with 0 or with a status from `runner_exit_offset + 1` to
+        `max_runner_exit_status`. That range is clear of these statuses, which a process gives when
+        it fails for reasons of its own:
+        -# 1 and 2, generically;
+        -# 23, from LeakSanitizer;
+        -# 64 to 78, from BSD's sysexits;
+        -# 66 and 77, from ThreadSanitizer and MemorySanitizer;
+        -# 126 and above, from a shell.
+
+        The contracts of `child_return_code` and `to_exit_code`, in TestRunner.hpp, state its value.
+     */
+    constexpr int runner_exit_offset{80};
+
+    /** \brief The highest exit status a runner gives: the one which carries every flag. */
+    constexpr int max_runner_exit_status{
+      runner_exit_offset + static_cast<int>(std::to_underlying(dirty_return_codes))
+    };
 
     static_assert(runner_exit_offset > 78, "The runner's exit statuses would overlap BSD's sysexits");
 
@@ -716,7 +737,7 @@ namespace sequoia::testing
                     "it did not complete a test run: it may not have been built, may be misconfigured, "
                     "or may have crashed.\n",
                     child,
-                    runtime::describe_failure(exitStatus),
+                    runtime::describe_exit_status(exitStatus),
                     runner_exit_offset + 1,
                     max_runner_exit_status)
       };

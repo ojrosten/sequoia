@@ -29,7 +29,6 @@
 #include <set>
 #include <span>
 #include <thread>
-#include <utility>
 
 namespace sequoia::testing
 {
@@ -48,8 +47,7 @@ namespace sequoia::testing
   /** \brief The outcome of a test run: `success`, or a set of flags, one for each kind of failure.
 
       The flags occupy consecutive bits, from the lowest. A new flag needs a row in
-      `return_code_names` (TestRunner.cpp), and replaces the highest flag in the initialiser of
-      `max_runner_exit_status`. No check catches a flag missing from both.
+      `return_code_names` (TestRunner.cpp). No check catches a flag without one.
    */
   enum class return_code : unsigned {
     success                = 0,
@@ -95,33 +93,13 @@ namespace sequoia::testing
   [[nodiscard]]
   return_code to_return_code(const log_summary& summary) noexcept;
 
-  /** \brief The number a runner adds to its `return_code` to give its exit status, unless the code
-             is success.
-
-      A runner therefore exits either with 0 or with a status from `runner_exit_offset + 1` to
-      `max_runner_exit_status`. That range is clear of these statuses, which a process gives when it
-      fails for reasons of its own:
-      -# 1 and 2, generically;
-      -# 23, from LeakSanitizer;
-      -# 64 to 78, from BSD's sysexits;
-      -# 66 and 77, from ThreadSanitizer and MemorySanitizer;
-      -# 126 and above, from a shell.
-   */
-  inline constexpr int runner_exit_offset{80};
-
-  /** \brief The highest exit status a runner gives: the one which carries every flag. */
-  inline constexpr int max_runner_exit_status{
-    runner_exit_offset + static_cast<int>((std::to_underlying(return_code::post_run_failures) << 1) - 1)
-  };
-
   /** \brief The `return_code` which `exitStatus` carries, as `to_exit_code` encodes it.
 
-      On Windows, a tool can exit with a Win32 error code from `runner_exit_offset + 1` to
-      `max_runner_exit_status`, such as 87, 110 or 111. This function reads such a status as a
-      runner's.
+      On Windows, a tool can exit with a Win32 error code which is also a runner's exit status, such
+      as 87, 110 or 111. This function reads such a status as a runner's.
 
-      \throws std::runtime_error if `exitStatus` is neither 0 nor from `runner_exit_offset + 1` to
-              `max_runner_exit_status`. The message begins with `child`.
+      \throws std::runtime_error if `exitStatus` is neither 0 nor 80 plus the value of a non-empty set
+              of flags. The message begins with `child`.
    */
   [[nodiscard]]
   return_code child_return_code(int exitStatus, std::string_view child);
@@ -130,9 +108,8 @@ namespace sequoia::testing
 
       \returns
       -# 0, if `code` is `return_code::success`;
-      -# `runner_exit_offset` plus the value of `code`, if every bit of `code` is a flag;
-      -# Otherwise, `runner_exit_offset` plus the value of the flags of `code`, with
-         `incomplete_run` set.
+      -# 80 plus the value of `code`, if every bit of `code` is a flag;
+      -# Otherwise, 80 plus the value of the flags of `code`, with `incomplete_run` set.
    */
   [[nodiscard]]
   int to_exit_code(return_code code) noexcept;
