@@ -892,10 +892,6 @@ namespace sequoia::testing
       }
     };
 
-    auto isSpecified{
-      [](const auto& indexedType) { return !std::get<1>(indexedType).empty(); }
-    };
-
     auto argumentOf{
       [prediction](const auto& indexedType) {
         const auto& [i, type]{indexedType};
@@ -910,7 +906,6 @@ namespace sequoia::testing
     const auto args{
         m_EquivalentTypes
       | std::views::enumerate
-      | std::views::filter(isSpecified)
       | std::views::transform(argumentOf)
       | std::views::join
       | std::ranges::to<std::string>()
