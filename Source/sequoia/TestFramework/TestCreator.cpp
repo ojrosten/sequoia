@@ -21,6 +21,7 @@
 #include <array>
 #include <chrono>
 #include <format>
+#include <ranges>
 #include <stdexcept>
 
 namespace sequoia::testing
@@ -855,28 +856,29 @@ namespace sequoia::testing
       }
     };
 
-    std::string args{};
-    for(std::size_t i{}; i < num; ++i)
-    {
-      const auto& type{m_EquivalentTypes[i]};
-      if(!type.empty())
-      {
-        constexpr std::string_view pattern{"const "};
-        if(std::string_view{type}.substr(0, pattern.size()) != pattern)
-        {
-          args.append("const ");
-        }
+    auto isSpecified{
+      [](const auto& indexedType) { return !std::get<1>(indexedType).empty(); }
+    };
 
-        args.append(type);
-
-        if(handle_as_ref(type))
-          args.append("&");
-
-        args.append(" ");
-
-        args.append(prediction(i, ","));
+    auto argumentOf{
+      [prediction](const auto& indexedType) {
+        const auto& [i, type]{indexedType};
+        return std::format("{}{}{} {}",
+                           type.starts_with("const ") ? "" : "const ",
+                           type,
+                           handle_as_ref(type) ? "&" : "",
+                           prediction(static_cast<std::size_t>(i), ","));
       }
-    }
+    };
+
+    const auto args{
+        m_EquivalentTypes
+      | std::views::enumerate
+      | std::views::filter(isSpecified)
+      | std::views::transform(argumentOf)
+      | std::views::join
+      | std::ranges::to<std::string>()
+    };
 
     replace_all(text, "?args", args);
     replace_all(text, "?predictions", prediction(0, ""));
