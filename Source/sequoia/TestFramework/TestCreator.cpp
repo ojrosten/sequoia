@@ -878,41 +878,17 @@ namespace sequoia::testing
       }
     }
 
-    const auto num{m_EquivalentTypes.size()};
-    auto prediction{
-      [num](const std::size_t i, std::string_view sep) {
-        std::string p{"prediction"};
-        if(num > 1)
-          p.append(std::format("_{}", i));
-
-        if((i < num - 1) && !sep.empty())
-          p.append(sep).append(" ");
-
-        return p;
-      }
+    constexpr std::string_view predictionName{"prediction"};
+    const auto predictionParameter{
+      std::format("{}{}{} {}",
+                  m_EquivalentType.starts_with("const ") ? "" : "const ",
+                  m_EquivalentType,
+                  handle_as_ref(m_EquivalentType) ? "&" : "",
+                  predictionName)
     };
 
-    auto argumentOf{
-      [prediction](const auto& indexedType) {
-        const auto& [i, type]{indexedType};
-        return std::format("{}{}{} {}",
-                           type.starts_with("const ") ? "" : "const ",
-                           type,
-                           handle_as_ref(type) ? "&" : "",
-                           prediction(static_cast<std::size_t>(i), ","));
-      }
-    };
-
-    const auto args{
-        m_EquivalentTypes
-      | std::views::enumerate
-      | std::views::transform(argumentOf)
-      | std::views::join
-      | std::ranges::to<std::string>()
-    };
-
-    replace_all(text, "?args", args);
-    replace_all(text, "?predictions", prediction(0, ""));
+    replace_all(text, "?args", predictionParameter);
+    replace_all(text, "?predictions", predictionName);
 
     if(!m_TemplateData.empty())
     {

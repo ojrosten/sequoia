@@ -323,7 +323,7 @@ namespace sequoia::testing
 
     void qualified_name(std::string name) { m_QualifiedName = std::move(name); }
 
-    void add_equivalent_type(std::string name) { m_EquivalentTypes.emplace_back(std::move(name)); }
+    void equivalent_type(std::string name) { m_EquivalentType = std::move(name); }
 
     void finalize();
 
@@ -347,7 +347,7 @@ namespace sequoia::testing
 
     template_data m_TemplateData{};
 
-    std::vector<std::string> m_EquivalentTypes{};
+    std::string m_EquivalentType{};
 
     void transform_file(std::string& text) const;
   };
