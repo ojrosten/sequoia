@@ -165,7 +165,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      size_type size_of_partition(size_type i) const
+      size_type size_of_partition(size_type i) const noexcept
       {
         return static_cast<size_type>(std::ranges::distance(partition(i)));
       }
@@ -469,7 +469,9 @@ namespace sequoia
       static PartitionIterator get_out_of_range_iterator(Buckets& buckets) noexcept
       {
         if(buckets.empty())
+        {
           return PartitionIterator{typename PartitionIterator::base_iterator_type{}, npos};
+        }
 
         if constexpr(PartitionIterator::reversed())
         {
@@ -521,7 +523,7 @@ namespace sequoia
       constexpr auto size() const noexcept { return m_Data.size(); }
 
       [[nodiscard]]
-      constexpr size_type size_of_partition(index_type i) const
+      constexpr size_type size_of_partition(index_type i) const noexcept
       {
         return static_cast<size_type>(std::ranges::distance(partition(i)));
       }
