@@ -433,8 +433,8 @@ namespace sequoia::testing
 
     static_assert(max_runner_exit_status
                     == runner_exit_offset + static_cast<int>(std::to_underlying(dirty_return_codes)),
-                  "Each return_code enumerator needs a row in return_code_names, and max_runner_exit_status "
-                  "must be computed from the highest");
+                  "return_code_names does not hold exactly the flags up to the one max_runner_exit_status names; "
+                  "give a new return_code enumerator a row, and name it in max_runner_exit_status's initialiser");
 
     [[nodiscard]]
     std::string to_async_option(concurrency_mode mode, std::size_t threadPoolSize)
