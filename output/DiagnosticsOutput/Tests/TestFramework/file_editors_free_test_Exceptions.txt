@@ -1,4 +1,4 @@
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 121
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 119
 A main with no call to runner.execute
 
 Expected Exception Type:
@@ -7,7 +7,7 @@ Unable to find the point of registration in output/TestsTemporaryData/TestFramew
 
 =======================================
 
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 126
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 124
 No tests to register
 
 Expected Exception Type:
@@ -16,16 +16,7 @@ No tests specified for registration
 
 =======================================
 
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 138
-An opening pattern with no parenthesis gives no column to align entries with
-
-Expected Exception Type:
-[std::logic_error]
-'set SourceList' has no parenthesis, so the entries of output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_test/WorkingCopy/CMakeLists.txt have no column to align with
-
-=======================================
-
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 197
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 178
 A line of spaces is refused, naming its line
 
 Expected Exception Type:
@@ -35,7 +26,7 @@ output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_te
 
 =======================================
 
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 198
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 179
 A line holding only a tab is refused, naming its line
 
 Expected Exception Type:
@@ -45,7 +36,7 @@ output/TestsTemporaryData/TestFramework/FileEditorsFreeTest/file_editors_free_te
 
 =======================================
 
-Tests/TestFramework/FileEditorsFreeTest.cpp, Line 199
+Tests/TestFramework/FileEditorsFreeTest.cpp, Line 180
 An invalid pattern is refused, naming its line, empty lines counted
 
 Expected Exception Type:
