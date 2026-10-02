@@ -726,7 +726,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  return_code child_return_code(const int exitStatus, std::string_view child)
+  return_code child_return_code(const int exitStatus, std::string_view childDescription)
   {
     if(exitStatus == 0)
       return return_code::success;
@@ -738,7 +738,7 @@ namespace sequoia::testing
         std::format("{} {}.\nThat is not one of a test runner's exit statuses, which are 0 and {} to {}, so "
                     "it did not complete a test run: it may not have been built, may be misconfigured, "
                     "or may have crashed.\n",
-                    child,
+                    childDescription,
                     runtime::describe_exit_status(exitStatus),
                     runner_exit_offset + 1,
                     max_runner_exit_status)

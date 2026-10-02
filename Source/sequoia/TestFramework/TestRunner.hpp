@@ -100,10 +100,10 @@ namespace sequoia::testing
       also returns. This function reads that status as a runner's.
 
       \throws std::runtime_error if `exitStatus` is not a status which `to_exit_code` returns. The
-              message begins with `child`.
+              message begins with `childDescription`.
    */
   [[nodiscard]]
-  return_code child_return_code(int exitStatus, std::string_view child);
+  return_code child_return_code(int exitStatus, std::string_view childDescription);
 
   /** \brief Encodes `code` as a runner's exit status.
 
