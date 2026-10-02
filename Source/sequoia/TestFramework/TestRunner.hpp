@@ -205,10 +205,8 @@ namespace sequoia::testing
     test_vessel(Test&& t, test_summary_path summaryFile)
       : m_pTest{std::make_unique<essence<Test>>(std::forward<Test>(t))}
       , m_SummaryFile{std::move(summaryFile)}
-    {
-      if constexpr(!is_parallelizable_v<Test>)
-        m_Parallelizable = parallelizable_candidate::no;
-    }
+      , m_Parallelizable{is_parallelizable_v<Test> ? parallelizable_candidate::yes : parallelizable_candidate::no}
+    {}
 
     test_vessel(const test_vessel&)     = delete;
     test_vessel(test_vessel&&) noexcept = default;
