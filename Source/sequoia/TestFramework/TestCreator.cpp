@@ -167,17 +167,20 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  bool is_empty_or_whitespace(std::string_view spelling) noexcept
+  {
+    return std::ranges::all_of(spelling, ascii::is_whitespace);
+  }
+
+  [[nodiscard]]
   bool handle_as_ref(std::string_view type)
   {
-    if(type.empty())
-      throw std::logic_error{"Equivalent type is unspecified"};
-
-    const auto startPos{type.find_first_not_of(' ')};
-    if(startPos == npos)
+    if(is_empty_or_whitespace(type))
       throw std::logic_error{"Equivalent type is unspecified"};
 
     if((type.back() == '*') || (type.back() == '&')) return false;
 
+    const auto startPos{type.find_first_not_of(' ')};
     const auto endPos{type.find_first_of(' ', startPos)};
     auto token{std::string_view{type}.substr(startPos, endPos - startPos)};
 
@@ -842,46 +845,17 @@ namespace sequoia::testing
       }
     }
 
-    const auto num{m_EquivalentTypes.size()};
-    auto prediction{
-      [num](const std::size_t i, std::string_view sep) {
-        std::string p{"prediction"};
-        if(num > 1)
-          p.append(std::format("_{}", i));
-
-        if((i < num - 1) && !sep.empty())
-          p.append(sep).append(" ");
-
-        return p;
-      }
+    constexpr std::string_view predictionName{"prediction"};
+    const auto predictionParameter{
+      std::format("{}{}{} {}",
+                  m_EquivalentType.starts_with("const ") ? "" : "const ",
+                  m_EquivalentType,
+                  handle_as_ref(m_EquivalentType) ? "&" : "",
+                  predictionName)
     };
 
-    auto isSpecified{
-      [](const auto& indexedType) { return !std::get<1>(indexedType).empty(); }
-    };
-
-    auto argumentOf{
-      [prediction](const auto& indexedType) {
-        const auto& [i, type]{indexedType};
-        return std::format("{}{}{} {}",
-                           type.starts_with("const ") ? "" : "const ",
-                           type,
-                           handle_as_ref(type) ? "&" : "",
-                           prediction(static_cast<std::size_t>(i), ","));
-      }
-    };
-
-    const auto args{
-        m_EquivalentTypes
-      | std::views::enumerate
-      | std::views::filter(isSpecified)
-      | std::views::transform(argumentOf)
-      | std::views::join
-      | std::ranges::to<std::string>()
-    };
-
-    replace_all(text, "?args", args);
-    replace_all(text, "?predictions", prediction(0, ""));
+    replace_all(text, "?parameter", predictionParameter);
+    replace_all(text, "?prediction", predictionName);
 
     if(!m_TemplateData.empty())
     {

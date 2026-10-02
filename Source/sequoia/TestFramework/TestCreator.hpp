@@ -24,6 +24,14 @@
 
 namespace sequoia::testing
 {
+  /** \brief Whether `spelling` is empty or holds only ASCII whitespace, as `ascii::is_whitespace` classifies it. */
+  [[nodiscard]]
+  bool is_empty_or_whitespace(std::string_view spelling) noexcept;
+
+  /** \brief Whether to append `&` to `type` in the declaration of a parameter.
+
+      \throws std::logic_error if `is_empty_or_whitespace(type)`.
+   */
   [[nodiscard]]
   bool handle_as_ref(std::string_view type);
 
@@ -281,7 +289,7 @@ namespace sequoia::testing
 
     void qualified_name(std::string name) { m_QualifiedName = std::move(name); }
 
-    void add_equivalent_type(std::string name) { m_EquivalentTypes.emplace_back(std::move(name)); }
+    void equivalent_type(std::string name) { m_EquivalentType = std::move(name); }
 
     void source_dir(std::filesystem::path dir) { m_SourceDir = std::move(dir); }
 
@@ -307,7 +315,7 @@ namespace sequoia::testing
 
     template_data m_TemplateData{};
 
-    std::vector<std::string> m_EquivalentTypes{};
+    std::string m_EquivalentType{};
 
     std::filesystem::path m_SourceDir{};
 

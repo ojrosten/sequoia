@@ -39,12 +39,27 @@ namespace sequoia::testing
 
   void test_runner_test_creation::run_tests()
   {
+    test_is_empty_or_whitespace();
     test_type_handling();
     test_project_namespace();
     test_template_data_generation();
     test_creation("FakeProject", std::nullopt, main_location::in_source_dir);
     test_creation("AnotherFakeProject", "curlew", main_location::below_source_dir);
     test_creation_failure();
+  }
+
+  void test_runner_test_creation::test_is_empty_or_whitespace()
+  {
+    check("Empty",                          is_empty_or_whitespace(""));
+    check("A space",                        is_empty_or_whitespace(" "));
+    check("A tab",                          is_empty_or_whitespace("\t"));
+    check("A carriage return",              is_empty_or_whitespace("\r"));
+    check("Whitespace of every kind",       is_empty_or_whitespace(" \t\n\v\f\r"));
+
+    check("int",                           !is_empty_or_whitespace("int"));
+    check("A single letter",               !is_empty_or_whitespace("T"));
+    check("Whitespace around a type",      !is_empty_or_whitespace(" \tint "));
+    check("const&, left to the compiler",  !is_empty_or_whitespace("const&"));
   }
 
   void test_runner_test_creation::test_type_handling()
@@ -436,7 +451,10 @@ namespace sequoia::testing
              "--fullname", "widget_test"});
 
     // The type sprocket is new, so every file for it would be new too: the checks below then see any file
-    // written before the refusal.
+    // written before a refusal. Each creation generates sprocket's header rather than seeking it. A header
+    // that cannot be found is refused too, so it would mask the removal of the refusal under test.
+    refused("An empty equivalent type", {"regular_test", "stuff::sprocket", "", "-g", "Stuff"});
+    refused("An equivalent type of only spaces", {"move_only_test", "stuff::sprocket", " ", "-g", "Stuff"});
     refused("A full name whose file is a companion's",
             {"regular_test", "stuff::sprocket", "int", "-g", "Stuff", "--fullname", "sprocket_testing_utilities"});
 

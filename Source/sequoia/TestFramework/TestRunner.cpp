@@ -398,9 +398,14 @@ namespace sequoia::testing
       std::visit(
         overloaded{
           [&args,&species = species](nascent_semantics_test& nascent) {
+            if(is_empty_or_whitespace(args[1]))
+              throw std::runtime_error{
+                std::format("{}_test {} '{}': the equivalent_type names no type", species, args[0], args[1])
+              };
+
             nascent.test_type(species);
             nascent.qualified_name(args[0]);
-            nascent.add_equivalent_type(args[1]);
+            nascent.equivalent_type(args[1]);
           },
           [&args,&species = species](nascent_allocation_test& nascent) {
             nascent.test_type(species);
