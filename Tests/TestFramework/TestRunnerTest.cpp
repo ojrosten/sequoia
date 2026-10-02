@@ -1364,7 +1364,7 @@ namespace sequoia::testing
                                  {"select", summary_collider_test_twin::source_file().generic_string()}})
     {
       std::string_view selected{selection.empty() ? "both" : "one"};
-      check_exception_thrown<std::logic_error>(
+      check_exception_thrown<std::runtime_error>(
         reporter{std::format("Two tests whose summaries are one file, {} selected", selected)},
         [this, &selection](){
           std::vector<std::string> argList{zeroth_arg()};

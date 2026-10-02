@@ -1936,7 +1936,7 @@ namespace sequoia::testing
     };
 
     if(!inserted)
-      throw std::logic_error{summary_collision_message(admitted->second, name, file)};
+      throw std::runtime_error{summary_collision_message(admitted->second, name, file)};
   }
 
   [[nodiscard]]

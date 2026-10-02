@@ -777,8 +777,8 @@ namespace sequoia::testing
 
     /** \brief Admits the summary file of a test being registered.
 
-        \throws std::logic_error naming both tests and the file, if the file of `summary` is that of a test already
-        admitted, ignoring ASCII case
+        \throws std::runtime_error naming both tests and the file, if the file of `summary` is that of a test
+        already admitted, ignoring ASCII case
      */
     void register_summary(std::string_view name, const test_summary_path& summary);
 

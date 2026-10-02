@@ -204,7 +204,7 @@ Tests/TestFramework/TestRunnerTest.cpp, Line 1368
 Two tests whose summaries are one file, both selected
 
 Expected Exception Type:
-[std::logic_error]
+[std::runtime_error]
   Error: Tests "summary_collider_test" and "summary_collider_test_twin" would write their summaries to one file, ignoring case:
 "output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/output/TestSummaries/Tests/summary_collider_test_twin.txt"
 Rename one, or change its summary discriminator.
@@ -215,7 +215,7 @@ Tests/TestFramework/TestRunnerTest.cpp, Line 1368
 Two tests whose summaries are one file, one selected
 
 Expected Exception Type:
-[std::logic_error]
+[std::runtime_error]
   Error: Tests "summary_collider_test" and "summary_collider_test_twin" would write their summaries to one file, ignoring case:
 "output/TestsTemporaryData/TestFramework/TestRunnerTest/test_runner_test/Auxiliary/FakeProject/output/TestSummaries/Tests/summary_collider_test_twin.txt"
 Rename one, or change its summary discriminator.
