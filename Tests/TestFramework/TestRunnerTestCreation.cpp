@@ -473,7 +473,10 @@ namespace sequoia::testing
              "--fullname", "widget_test"});
 
     // The type sprocket is new, so every file for it would be new too: the checks below then see any file
-    // written before the refusal.
+    // written before a refusal. Each creation generates sprocket's header rather than seeking it. A header
+    // that cannot be found is refused too, so it would mask the removal of the refusal under test.
+    refused("An empty equivalent type", {"regular_test", "stuff::sprocket", "", "-g", "Stuff"});
+    refused("An equivalent type of only spaces", {"move_only_test", "stuff::sprocket", " ", "-g", "Stuff"});
     refused("A full name whose file is a companion's",
             {"regular_test", "stuff::sprocket", "int", "-g", "Stuff", "--fullname", "sprocket_testing_utilities"});
 
