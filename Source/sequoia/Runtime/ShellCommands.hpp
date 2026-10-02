@@ -84,18 +84,31 @@ namespace sequoia::runtime
   [[nodiscard]]
   shell_command cd_cmd(const std::filesystem::path& dir);
 
+  /** \brief The failure of a command for which `invoke` returned `status`, described in a phrase to
+             follow the command's name.
+
+      The phrase tells these failures apart:
+      -# On Windows, a status of -1: the command either did not run to completion or exited with
+         0xFFFFFFFF, and the phrase says that the two cannot be told apart;
+      -# On Windows, any other negative status: an exit status of 0x80000000 or more, which the phrase
+         gives in hex;
+      -# Elsewhere, a negative status: the command did not run to completion;
+      -# Elsewhere, a status of 126: the shell's own "not executable";
+      -# Elsewhere, a status of 127: the shell's own "not found";
+      -# Elsewhere, a status above 128: an exit status which the phrase says may mean that a signal
+         killed the command;
+      -# Any other status: an exit status.
+
+      cmd.exe exits with 1 for a command it cannot find. So on Windows, a command which is not found
+      cannot be told from a command which exits with 1.
+   */
+  [[nodiscard]]
+  std::string describe_failure(int status);
+
   /** \brief Checks that a status returned by `invoke` is zero.
 
-      \throws std::runtime_error if `status` is not zero. The message names `step`, then says how the
-      command failed, then gives `advice`. The message tells these failures apart:
-      -# On Windows, a status of -1: the command either did not run to completion or exited with
-         0xFFFFFFFF, and the message says that the two cannot be told apart;
-      -# On Windows, any other negative status: an exit status of 0x80000000 or more, which the
-         message gives in hex;
-      -# Elsewhere, a negative status: the command did not run to completion;
-      -# Elsewhere, a status above 128: an exit status which the message says may mean that a signal
-         killed the command;
-      -# Any other non-zero status: an exit status.
+      \throws std::runtime_error if `status` is not zero. The message is `step`, followed by
+      `describe_failure(status)` and then `advice`.
    */
   void throw_unless_succeeded(int status, std::string_view step, std::string_view advice);
 
