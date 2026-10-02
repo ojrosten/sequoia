@@ -169,7 +169,23 @@ namespace sequoia::testing
   [[nodiscard]]
   bool names_no_type(std::string_view spelling)
   {
-    return spelling.find_first_not_of(' ') == npos;
+    auto isSeparator{[](char c) { return ascii::is_whitespace(c) || (c == '&') || (c == '*'); }};
+    auto sameKind{[isSeparator](char lhs, char rhs) { return isSeparator(lhs) == isSeparator(rhs); }};
+    auto isWord{[isSeparator](auto run) { return !isSeparator(run.front()); }};
+    auto isQualifier{
+      [](auto word) {
+        const std::string_view text{word.begin(), word.end()};
+        return (text == "const") || (text == "volatile");
+      }
+    };
+
+    auto words{
+        spelling
+      | std::views::chunk_by(sameKind)
+      | std::views::filter(isWord)
+    };
+
+    return std::ranges::all_of(words, isQualifier);
   }
 
   [[nodiscard]]

@@ -24,7 +24,11 @@
 
 namespace sequoia::testing
 {
-  /** \brief Whether `spelling` is empty or holds only spaces, and so names no type. */
+  /** \brief Whether `spelling` holds nothing but the following, and so names no type:
+      -# ASCII whitespace;
+      -# `&` and `*`;
+      -# The words `const` and `volatile`, each delimited by the characters above or by the ends of `spelling`.
+   */
   [[nodiscard]]
   bool names_no_type(std::string_view spelling);
 
