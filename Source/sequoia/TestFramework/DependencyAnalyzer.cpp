@@ -16,7 +16,6 @@
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <algorithm>
-#include <charconv>
 #include <chrono>
 #include <cstdint>
 #include <format>
@@ -28,7 +27,6 @@
 #include <source_location>
 #include <stdexcept>
 #include <string>
-#include <type_traits>
 #include <variant>
 
 namespace sequoia::testing
@@ -42,35 +40,19 @@ namespace sequoia::testing
     using duration_t   = prune_record::stamp_type::duration;
     using stream_rep_t = std::int64_t;
 
-    template<std::invocable<std::string> Parser>
-    [[nodiscard]]
-    std::remove_cvref_t<std::invoke_result_t<Parser, std::string>> extract_field(std::istream& s, std::string_view key, Parser parse)
-    {
-      std::string line{};
-      if(!std::getline(s, line))
-        throw std::runtime_error{std::format("Expected a line beginning '{}' but found the end of the file", key)};
-
-      if(!line.starts_with(key))
-        throw std::runtime_error{std::format("Expected a line beginning '{}' but found '{}'", key, line)};
-
-      return parse(line.substr(key.size()));
-    }
-
     [[nodiscard]]
     prune_record::stamp_type to_stamp(const std::string& text)
     {
-      const auto last{text.data() + text.size()};
-      if(stream_rep_t count{}; std::from_chars(text.data(), last, count) == std::from_chars_result{last, std::errc{}})
-        return prune_record::stamp_type{duration_t{checked_conversion_to<duration_t::rep>(count)}};
-
-      throw std::runtime_error{std::format("'{}' is not a time stamp", text)};
+      const auto count{parse_integer<stream_rep_t>(text, "a time stamp")};
+      return prune_record::stamp_type{duration_t{checked_conversion_to<duration_t::rep>(count)}};
     }
   }
 
   std::ostream& operator<<(std::ostream& s, const prune_record& record)
   {
+    const auto stamp{checked_conversion_to<stream_rep_t>(record.time_stamp.time_since_epoch().count())};
     return s << "path: "      << record.test_path.generic_string() << '\n'
-             << "timestamp: " << std::format("{}", checked_conversion_to<stream_rep_t>(record.time_stamp.time_since_epoch().count()));
+             << "timestamp: " << std::format("{}", stamp)            << '\n';
   }
 
   std::istream& operator>>(std::istream& s, prune_record& record)
@@ -771,7 +753,7 @@ namespace sequoia::testing
         }
       };
 
-      std::ranges::copy(tests | std::views::transform(rebased), std::ostream_iterator<prune_record>{ostream, "\n"});
+      std::ranges::copy(tests | std::views::transform(rebased), std::ostream_iterator<prune_record>{ostream});
     }
   }
 

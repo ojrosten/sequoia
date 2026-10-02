@@ -8,14 +8,14 @@
 #include "sequoia/TestFramework/FailureInfo.hpp"
 #include "sequoia/TestFramework/FileSystemUtilities.hpp"
 #include "sequoia/TestFramework/Output.hpp"
-#include "sequoia/TextProcessing/Characters.hpp"
 #include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <algorithm>
 #include <format>
 #include <fstream>
-#include <limits>
+#include <iterator>
+#include <ranges>
 #include <stdexcept>
 
 namespace sequoia::testing
@@ -127,96 +127,40 @@ namespace sequoia::testing
 
   std::ostream& operator<<(std::ostream& s, const failure_info& info)
   {
-    s << "$Check: " << info.check_index << '\n';
-    s << info.message << "\n$\n";
-
-    return s;
+    return s << "check: "  << info.check_index    << '\n'
+             << "length: " << info.message.size() << '\n'
+             << info.message << '\n';
   }
 
   std::istream& operator>>(std::istream& s, failure_info& info)
   {
-    using traits_t = std::istream::traits_type;
-    auto nextIsWhitespace{
-      [&s](){
-        const auto next{s.peek()};
-        return (next != traits_t::eof()) && ascii::is_whitespace(traits_t::to_char_type(next));
-      }
+    if(s.peek() == std::char_traits<char>::eof())
+    {
+      s.setstate(std::ios::failbit);
+      return s;
+    }
+
+    auto toCheckIndex{[](const std::string& text) { return parse_integer<std::size_t>(text, "a check index"); }};
+    auto toLength    {[](const std::string& text) { return parse_integer<std::size_t>(text, "a length"); }};
+
+    info = failure_info{
+      .check_index{extract_field(s, "check: ", toCheckIndex)},
+      .message{extract_text(s, extract_field(s, "length: ", toLength))}
     };
-
-    while(s && nextIsWhitespace())
-    {
-      s.get();
-    }
-
-    if(s && (s.peek() != traits_t::eof()))
-    {
-      failure_info newInfo{};
-      if(std::string str{}; (s >> str) && (str == "$Check:"))
-      {
-        s >> newInfo.check_index;
-        if(s.fail())
-          throw std::runtime_error{"Error while parsing failure_info: unable to determine index"};
-
-        s.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-      }
-      else
-      {
-        throw std::runtime_error{"Error while parsing failure_info: unable to find $Check:"};
-      }
-
-      auto messageBuilder{
-        [&s,&newInfo]() -> bool {
-          std::string line{};
-          while(std::getline(s, line))
-          {
-            if(line == "$")
-            {
-              if(auto& mess{newInfo.message}; !mess.empty() && (mess.back() == '\n'))
-              {
-                mess.pop_back();
-              }
-
-              return true;
-            }
-
-            newInfo.message.append(line).append("\n");
-          }
-
-          return false;
-        }
-      };
-
-      if(!messageBuilder())
-      {
-        throw std::runtime_error{"Error while parsing failure_info: unable to find message"};
-      }
-
-      info = std::move(newInfo);
-    }
 
     return s;
   }
 
   std::ostream& operator<<(std::ostream& s, const failure_output& output)
   {
-    for(const auto& info : output)
-    {
-      s << info << '\n';
-    }
-    
+    std::ranges::copy(output, std::ostream_iterator<failure_info>{s});
     return s;
   }
 
   std::istream& operator>>(std::istream& s, failure_output& output)
   {
-    while(s)
-    {
-      failure_info info{};
-      s >> info;
-      if(!s.fail())
-        output.push_back(std::move(info));
-    }
-
+    using iter_t = std::istream_iterator<failure_info>;
+    output = std::ranges::subrange{iter_t{s}, iter_t{}} | std::ranges::to<failure_output>();
     return s;
   }
 
@@ -253,22 +197,28 @@ namespace sequoia::testing
 
     auto readAndIndentFailureOutput{
       [](const fs::path& file) {
-        failure_output output{};
-        if(std::ifstream ifile{file})
-        {
-          ifile >> output;
-        }
-        else
-        {
+        auto indented{
+          [](const failure_info& info) {
+            return failure_info{info.check_index, indent(info.message, tab)};
+          }
+        };
+
+        std::ifstream ifile{file, std::ios_base::binary};
+        if(!ifile)
           throw std::runtime_error{report_failed_read(file)};
-        }
 
-        for(auto& info : output)
+        try
         {
-          info.message = indent(info.message, tab);
+          failure_output output{};
+          ifile >> output;
+          return output | std::views::transform(indented) | std::ranges::to<failure_output>();
         }
-
-        return output;
+        catch(const std::exception& e)
+        {
+          throw std::runtime_error{
+            std::format("Unable to read the failures in {}: {}", file.generic_string(), e.what())
+          };
+        }
       }
     };
 

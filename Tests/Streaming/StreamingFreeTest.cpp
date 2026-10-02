@@ -10,7 +10,11 @@
 #include "sequoia/TextProcessing/Substitutions.hpp"
 #include "sequoia/TestFramework/SumTypeCheckers.hpp"
 
+#include <cstdint>
 #include <fstream>
+#include <functional>
+#include <limits>
+#include <sstream>
 
 namespace sequoia::testing
 {
@@ -23,6 +27,14 @@ namespace sequoia::testing
   }
 
   void streaming_free_test::run_tests()
+  {
+    test_files();
+    test_parse_integer();
+    test_extract_field();
+    test_extract_text();
+  }
+
+  void streaming_free_test::test_files()
   {
     using namespace std::string_literals;
 
@@ -45,5 +57,95 @@ namespace sequoia::testing
 
     read_modify_write(working_materials() /= "Foo.txt", [](std::string& s) { capitalize(s);  });
     check(equivalence, "", working_materials() /= "Foo.txt", predictive_materials() /= "Foo.txt");
+  }
+
+  void streaming_free_test::test_parse_integer()
+  {
+    check(equality, "A decimal integer", parse_integer<int>("42", "a count"), 42);
+    check(equality, "A negative integer", parse_integer<int>("-7", "a count"), -7);
+    check(equality, "The largest value of the type", parse_integer<std::uint8_t>("255", "a count"), std::uint8_t{255});
+
+    check_exception_thrown<std::runtime_error>("Characters after the integer",
+                                               []() { return parse_integer<int>("42x", "a count"); });
+    check_exception_thrown<std::runtime_error>("Whitespace before the integer",
+                                               []() { return parse_integer<int>(" 42", "a count"); });
+    check_exception_thrown<std::runtime_error>("No characters at all",
+                                               []() { return parse_integer<int>("", "a count"); });
+    check_exception_thrown<std::runtime_error>("An integer beyond the type's range",
+                                               []() { return parse_integer<std::uint8_t>("256", "a count"); });
+    check_exception_thrown<std::runtime_error>("A negative integer, for an unsigned type",
+                                               []() { return parse_integer<unsigned>("-1", "a count"); });
+  }
+
+  void streaming_free_test::test_extract_field()
+  {
+    {
+      std::stringstream s{"key: value\n"};
+      check(
+        equality,
+        "The rest of a line after its key",
+        extract_field(s, "key: ", std::identity{}),
+        std::string{"value"}
+      );
+    }
+
+    auto extractKey{
+      [](std::string text) {
+        return [text{std::move(text)}]() {
+          std::stringstream s{text};
+          return extract_field(s, "key: ", std::identity{});
+        };
+      }
+    };
+
+    check_exception_thrown<std::runtime_error>("A line not beginning with the key", extractKey("other: value\n"));
+    check_exception_thrown<std::runtime_error>("No line left", extractKey(""));
+  }
+
+  void streaming_free_test::test_extract_text()
+  {
+    {
+      std::stringstream s{"a\nb\nrest\n"};
+      check(equality, "Text holding a line break", extract_text(s, 3), std::string{"a\nb"});
+
+      std::string next{};
+      std::getline(s, next);
+      check(equality, "The line break after the text is read too", next, std::string{"rest"});
+    }
+
+    {
+      std::stringstream s{"\n"};
+      check(equality, "No text, then a line break", extract_text(s, 0), std::string{});
+    }
+
+    auto extractThree{
+      [](std::string text) {
+        return [text{std::move(text)}]() {
+          std::stringstream s{text};
+          return extract_text(s, 3);
+        };
+      }
+    };
+
+    check_exception_thrown<std::runtime_error>("Fewer characters than asked for", extractThree("ab"));
+    check_exception_thrown<std::runtime_error>("No line break after the text", extractThree("abcd\n"));
+    check_exception_thrown<std::runtime_error>("The end of the stream after the text", extractThree("abc"));
+
+    check_exception_thrown<std::runtime_error>(
+      "A stream which has failed",
+      []() {
+        std::stringstream s{"abc\n"};
+        s.setstate(std::ios_base::failbit);
+        return extract_text(s, 3);
+      }
+    );
+
+    check_exception_thrown<std::runtime_error>(
+      "A length more than a stream iterator can count",
+      []() {
+        std::stringstream s{"abc\n"};
+        return extract_text(s, std::numeric_limits<std::size_t>::max());
+      }
+    );
   }
 }

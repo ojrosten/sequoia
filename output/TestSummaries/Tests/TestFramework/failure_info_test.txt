@@ -1,2 +1,2 @@
 failure_info_test
-Standard Top Level Checks:                 9;  Failures:  0  [Deep checks: 119]
+Standard Top Level Checks:                14;  Failures:  0  [Deep checks: 89]

@@ -8,7 +8,11 @@
 #include "sequoia/Streaming/Streaming.hpp"
 
 #include <fstream>
+#include <iterator>
+#include <ranges>
+#include <limits>
 #include <system_error>
+#include <utility>
 
 namespace sequoia
 {
@@ -59,6 +63,32 @@ namespace sequoia
     }
 
     return std::nullopt;
+  }
+
+  [[nodiscard]]
+  std::string extract_text(std::istream& s, std::size_t length)
+  {
+    if(!s)
+      throw std::runtime_error{"Text cannot be read from a stream which has failed"};
+
+    using iter_t  = std::istreambuf_iterator<char>;
+    using count_t = std::iter_difference_t<iter_t>;
+    if(std::cmp_greater(length, std::numeric_limits<count_t>::max()))
+      throw std::runtime_error{std::format("A length of {} is more characters than a stream iterator can count", length)};
+
+    const auto text{
+        std::ranges::subrange{iter_t{s}, iter_t{}}
+      | std::views::take(static_cast<count_t>(length))
+      | std::ranges::to<std::string>()
+    };
+
+    if(text.size() < length)
+      throw std::runtime_error{std::format("Expected {} characters but the stream ended after {}", length, text.size())};
+
+    if(s.get() != '\n')
+      throw std::runtime_error{std::format("Expected a line break after {} characters", length)};
+
+    return text;
   }
 
   void write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode)

@@ -1,27 +1,63 @@
-Tests/TestFramework/FailureInfoTest.cpp, Line 20
-Stream does not start with expected pattern
+Tests/TestFramework/FailureInfoTest.cpp, Line 30
+A record not beginning with its check index
 
 Expected Exception Type:
 [std::runtime_error]
-Error while parsing failure_info: unable to find $Check:
+Expected a line beginning 'check: ' but found 'foo'
 
 =======================================
 
-Tests/TestFramework/FailureInfoTest.cpp, Line 28
-Stream does not contain index
+Tests/TestFramework/FailureInfoTest.cpp, Line 32
+A check index which is not a number
 
 Expected Exception Type:
 [std::runtime_error]
-Error while parsing failure_info: unable to determine index
+'foo' is not a check index
+
+=======================================
+
+Tests/TestFramework/FailureInfoTest.cpp, Line 34
+A record with no length
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a line beginning 'length: ' but there are no more lines
 
 =======================================
 
 Tests/TestFramework/FailureInfoTest.cpp, Line 36
-Stream does not contain message
+A length which is not a number
 
 Expected Exception Type:
 [std::runtime_error]
-Error while parsing failure_info: unable to find message
+'x' is not a length
+
+=======================================
+
+Tests/TestFramework/FailureInfoTest.cpp, Line 38
+A message shorter than its length
+
+Expected Exception Type:
+[std::runtime_error]
+Expected 5 characters but the stream ended after 4
+
+=======================================
+
+Tests/TestFramework/FailureInfoTest.cpp, Line 40
+A message longer than its length
+
+Expected Exception Type:
+[std::runtime_error]
+Expected a line break after 3 characters
+
+=======================================
+
+Tests/TestFramework/FailureInfoTest.cpp, Line 44
+A malformed file of failures, named by the instability analysis
+
+Expected Exception Type:
+[std::runtime_error]
+Unable to read the failures in output/TestsTemporaryData/TestFramework/FailureInfoTest/failure_info_test/WorkingCopy/Malformed/Output_0.txt: Expected 9 characters but the stream ended after 4
 
 =======================================
 

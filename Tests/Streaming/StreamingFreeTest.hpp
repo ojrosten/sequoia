@@ -21,5 +21,13 @@ namespace sequoia::testing
     static std::filesystem::path source_file();
 
     void run_tests();
+  private:
+    void test_files();
+
+    void test_parse_integer();
+
+    void test_extract_field();
+
+    void test_extract_text();
   };
 }

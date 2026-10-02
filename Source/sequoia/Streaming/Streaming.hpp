@@ -13,9 +13,15 @@
 
 #include "sequoia/Core/Meta/Concepts.hpp"
 
+#include <charconv>
 #include <filesystem>
+#include <format>
 #include <ios>
+#include <istream>
 #include <optional>
+#include <stdexcept>
+#include <string>
+#include <string_view>
 
 namespace sequoia
 {
@@ -34,6 +40,51 @@ namespace sequoia
   std::optional<std::string> read_to_string(const std::filesystem::path& file, std::ios_base::openmode mode);
 
   void write_to_file(const std::filesystem::path& file, std::string_view text, std::ios_base::openmode mode);
+
+  /** \brief Reads the next line of `s`, and returns `parse` applied to the rest of the line after `key`.
+
+      \throws std::runtime_error if `s` has no next line, or the line does not begin with `key`. Whatever `parse`
+      throws propagates.
+   */
+  template<std::invocable<std::string> Parser>
+  [[nodiscard]]
+  auto extract_field(std::istream& s, std::string_view key, Parser parse)
+  {
+    std::string line{};
+    if(!std::getline(s, line))
+      throw std::runtime_error{std::format("Expected a line beginning '{}' but there are no more lines", key)};
+
+    if(!line.starts_with(key))
+      throw std::runtime_error{std::format("Expected a line beginning '{}' but found '{}'", key, line)};
+
+    return parse(line.substr(key.size()));
+  }
+
+  /** \brief Reads the next `length` characters of `s`, then a line break, and returns the characters.
+
+      \throws std::runtime_error if
+      -# `s` has failed;
+      -# `length` is more characters than a stream iterator can count;
+      -# Fewer than `length` characters remain, or they are not followed by a line break.
+   */
+  [[nodiscard]]
+  std::string extract_text(std::istream& s, std::size_t length);
+
+  /** \brief Parses the whole of `text` as an integer of type `T`: an optional `-`, then decimal digits.
+
+      \throws std::runtime_error if `text` is not, in its entirety, such an integer representable as `T`. The
+      message says that `text` is not `description`.
+   */
+  template<integer T>
+  [[nodiscard]]
+  T parse_integer(std::string_view text, std::string_view description)
+  {
+    const auto last{text.data() + text.size()};
+    if(T value{}; std::from_chars(text.data(), last, value) == std::from_chars_result{last, std::errc{}})
+      return value;
+
+    throw std::runtime_error{std::format("'{}' is not {}", text, description)};
+  }
 
   template<std::invocable<std::string&> Fn>
   void read_modify_write(const std::filesystem::path& file, Fn fn)
