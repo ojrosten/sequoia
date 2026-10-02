@@ -234,6 +234,9 @@ namespace sequoia::testing
                                , "create", "move_only_allocation_test", "foo"
                                , "create", "regular_allocation_test", "pool", "--gen-source", "Memory"
                                , "create", "move_only_allocation_test", "arena", "-g", "Memory"
+                               // An earlier creation generated Widget.hpp in Stuff, so this one does not generate it
+                               // in Memory
+                               , "create", "regular_allocation_test", "widget", "-g", "Memory"
                                , "create", "performance_test", "Container.hpp"
                                , "create", "performance_test", "Container.hpp"
                                , "create", "free_test", "Utilities.h", "--fullname", "utility_functions_test"

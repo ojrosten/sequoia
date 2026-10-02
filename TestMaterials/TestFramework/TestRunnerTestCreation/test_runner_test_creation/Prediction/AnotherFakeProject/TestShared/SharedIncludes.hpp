@@ -38,6 +38,7 @@
 #include "Stuff/GizmoTestingDiagnostics.hpp"
 #include "Stuff/ThingsTest.hpp"
 #include "Stuff/ThingsTestingDiagnostics.hpp"
+#include "Stuff/WidgetAllocationTest.hpp"
 #include "Stuff/WidgetTest.hpp"
 #include "Stuff/WidgetTestingDiagnostics.hpp"
 #include "TestRunner.hpp"

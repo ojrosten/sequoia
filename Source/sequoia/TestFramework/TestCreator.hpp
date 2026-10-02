@@ -162,7 +162,8 @@ namespace sequoia::testing
 
         `whereAbsent` is called with the name of the header under test, and `generate` with the path
         `whereAbsent` returns. Neither is called unless the header cannot be found and its generation was
-        requested.
+        requested. If its generation was requested but the header is found, a warning names the header found, which
+        may lie outside the directory requested.
 
         \throws std::runtime_error if
         -# The header under test cannot be found and is not to be generated;

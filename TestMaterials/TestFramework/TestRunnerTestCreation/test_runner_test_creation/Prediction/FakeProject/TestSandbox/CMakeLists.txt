@@ -50,6 +50,7 @@ target_sources(TestAll PRIVATE
                ${TestDir}/Stuff/GizmoTestingDiagnostics.cpp
                ${TestDir}/Stuff/ThingsTest.cpp
                ${TestDir}/Stuff/ThingsTestingDiagnostics.cpp
+               ${TestDir}/Stuff/WidgetAllocationTest.cpp
                ${TestDir}/Stuff/WidgetTest.cpp
                ${TestDir}/Stuff/WidgetTestingDiagnostics.cpp
                ${TestDir}/Thingummies/ThingummyTest.cpp

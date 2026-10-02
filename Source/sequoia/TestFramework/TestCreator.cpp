@@ -593,6 +593,14 @@ namespace sequoia::testing
     if(srcPath.empty())
       on_source_path_error();
 
+    if(!generateSource && (m_SourceOption == gen_source_option::yes))
+    {
+      using namespace parsing::commandline;
+      stream() << warning(std::format("{} already exists, so not generated",
+                                      fs::relative(srcPath, m_Paths.project_root()).generic_string()))
+               << '\n';
+    }
+
     finalize_header(srcPath);
 
     auto companionFile{

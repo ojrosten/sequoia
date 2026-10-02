@@ -60,6 +60,7 @@ int main(int argc, char** argv)
 		runner.register_test<foo_allocation_test>();
 		runner.register_test<pool_allocation_test>();
 		runner.register_test<arena_allocation_test>();
+		runner.register_test<widget_allocation_test>();
 		runner.register_test<container_performance_test>();
 		runner.register_test<utility_functions_test>();
 		runner.register_test<angle_regular_test>();
